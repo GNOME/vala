@@ -6635,7 +6635,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void gc_release (Gdk.GC gc);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static weak Gdk.Event get_current_event ();
+	public static Gdk.Event get_current_event ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool get_current_event_state (Gdk.ModifierType state);
 	[CCode (cheader_filename = "gtk/gtk.h")]

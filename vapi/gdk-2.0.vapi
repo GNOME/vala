@@ -555,209 +555,6 @@ namespace Gdk {
 		public GLib.Callback window_at_pointer;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventAny {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventButton {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public uint time;
-		public double x;
-		public double y;
-		public double axes;
-		public uint state;
-		public uint button;
-		public weak Gdk.Device device;
-		public double x_root;
-		public double y_root;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventClient {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public Gdk.Atom message_type;
-		public ushort data_format;
-		public void* data;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventConfigure {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public int x;
-		public int y;
-		public int width;
-		public int height;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventCrossing {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public weak Gdk.Window subwindow;
-		public uint time;
-		public double x;
-		public double y;
-		public double x_root;
-		public double y_root;
-		public Gdk.CrossingMode mode;
-		public Gdk.NotifyType detail;
-		public bool focus;
-		public uint state;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventDND {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public weak Gdk.DragContext context;
-		public uint time;
-		public short x_root;
-		public short y_root;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventExpose {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public Gdk.Rectangle area;
-		public weak Gdk.Region region;
-		public int count;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventFocus {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public short @in;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventGrabBroken {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public bool keyboard;
-		public bool implicit;
-		public weak Gdk.Window grab_window;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventKey {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public uint time;
-		public uint state;
-		public uint keyval;
-		public int length;
-		[CCode (cname = "string")]
-		public weak string str;
-		public ushort hardware_keycode;
-		public uchar group;
-		public uint is_modifier;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventMotion {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public uint time;
-		public double x;
-		public double y;
-		public double axes;
-		public uint state;
-		public short is_hint;
-		public weak Gdk.Device device;
-		public double x_root;
-		public double y_root;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventNoExpose {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventOwnerChange {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public weak Gdk.NativeWindow owner;
-		public Gdk.OwnerChange reason;
-		public Gdk.Atom selection;
-		public uint time;
-		public uint selection_time;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventProperty {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public Gdk.Atom atom;
-		public uint time;
-		public uint state;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventProximity {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public uint time;
-		public weak Gdk.Device device;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventScroll {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public uint time;
-		public double x;
-		public double y;
-		public uint state;
-		public Gdk.ScrollDirection direction;
-		public weak Gdk.Device device;
-		public double x_root;
-		public double y_root;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventSelection {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public Gdk.Atom selection;
-		public Gdk.Atom target;
-		public Gdk.Atom property;
-		public uint time;
-		public weak Gdk.NativeWindow requestor;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventSetting {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public Gdk.SettingAction action;
-		public weak string name;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventVisibility {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public Gdk.VisibilityState state;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class EventWindowState {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public Gdk.WindowState changed_mask;
-		public Gdk.WindowState new_window_state;
-	}
-	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Font {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -910,48 +707,6 @@ namespace Gdk {
 		public Cursor.from_pixbuf (Gdk.Display display, Gdk.Pixbuf pixbuf, int x, int y);
 		public Cursor.from_pixmap (Gdk.Pixmap source, Gdk.Pixmap mask, Gdk.Color fg, Gdk.Color bg, int x, int y);
 	}
-	[CCode (copy_function = "gdk_event_copy", cheader_filename = "gdk/gdk.h")]
-	public class Event : GLib.Boxed {
-		public Gdk.EventType type;
-		public weak Gdk.EventAny any;
-		public weak Gdk.EventExpose expose;
-		public weak Gdk.EventNoExpose no_expose;
-		public weak Gdk.EventVisibility visibility;
-		public weak Gdk.EventMotion motion;
-		public weak Gdk.EventButton button;
-		public weak Gdk.EventScroll scroll;
-		public weak Gdk.EventKey key;
-		public weak Gdk.EventCrossing crossing;
-		public weak Gdk.EventFocus focus_change;
-		public weak Gdk.EventConfigure configure;
-		public weak Gdk.EventProperty property;
-		public weak Gdk.EventSelection selection;
-		public weak Gdk.EventOwnerChange owner_change;
-		public weak Gdk.EventProximity proximity;
-		public weak Gdk.EventClient client;
-		public weak Gdk.EventDND dnd;
-		public weak Gdk.EventWindowState window_state;
-		public weak Gdk.EventSetting setting;
-		public weak Gdk.EventGrabBroken grab_broken;
-		public weak Gdk.Event copy ();
-		public static weak Gdk.Event get ();
-		public bool get_axis (Gdk.AxisUse axis_use, double value);
-		public bool get_coords (double x_win, double y_win);
-		public static weak Gdk.Event get_graphics_expose (Gdk.Window window);
-		public bool get_root_coords (double x_root, double y_root);
-		public weak Gdk.Screen get_screen ();
-		public bool get_state (Gdk.ModifierType state);
-		public uint get_time ();
-		public static void handler_set (Gdk.EventFunc func, void* data, GLib.DestroyNotify notify);
-		public Event (Gdk.EventType type);
-		public static weak Gdk.Event peek ();
-		public void put ();
-		public static void request_motions (Gdk.EventMotion event);
-		public bool send_client_message (Gdk.NativeWindow winid);
-		public static bool send_client_message_for_display (Gdk.Display display, Gdk.Event event, Gdk.NativeWindow winid);
-		public void send_clientmessage_toall ();
-		public void set_screen (Gdk.Screen screen);
-	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Colormap : GLib.Object {
 		public int size;
@@ -1013,7 +768,7 @@ namespace Gdk {
 		public static weak Gdk.Display get_default ();
 		public uint get_default_cursor_size ();
 		public weak Gdk.Window get_default_group ();
-		public weak Gdk.Event get_event ();
+		public Gdk.Event get_event ();
 		public void get_maximal_cursor_size (uint width, uint height);
 		public weak string get_name ();
 		public void get_pointer (out weak Gdk.Screen screen, int x, int y, Gdk.ModifierType mask);
@@ -1022,7 +777,7 @@ namespace Gdk {
 		public weak GLib.List list_devices ();
 		public static weak Gdk.Display open (string display_name);
 		public static weak Gdk.Display open_default_libgtk_only ();
-		public weak Gdk.Event peek_event ();
+		public Gdk.Event peek_event ();
 		public bool pointer_is_grabbed ();
 		public void pointer_ungrab (uint time_);
 		public void put_event (Gdk.Event event);
@@ -1408,6 +1163,209 @@ namespace Gdk {
 		public weak string name ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventAny {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventButton {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public uint time;
+		public double x;
+		public double y;
+		public double axes;
+		public uint state;
+		public uint button;
+		public weak Gdk.Device device;
+		public double x_root;
+		public double y_root;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventClient {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public Gdk.Atom message_type;
+		public ushort data_format;
+		public void* data;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventConfigure {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public int x;
+		public int y;
+		public int width;
+		public int height;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventCrossing {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public weak Gdk.Window subwindow;
+		public uint time;
+		public double x;
+		public double y;
+		public double x_root;
+		public double y_root;
+		public Gdk.CrossingMode mode;
+		public Gdk.NotifyType detail;
+		public bool focus;
+		public uint state;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventDND {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public weak Gdk.DragContext context;
+		public uint time;
+		public short x_root;
+		public short y_root;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventExpose {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public Gdk.Rectangle area;
+		public weak Gdk.Region region;
+		public int count;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventFocus {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public short @in;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventGrabBroken {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public bool keyboard;
+		public bool implicit;
+		public weak Gdk.Window grab_window;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventKey {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public uint time;
+		public uint state;
+		public uint keyval;
+		public int length;
+		[CCode (cname = "string")]
+		public weak string str;
+		public ushort hardware_keycode;
+		public uchar group;
+		public uint is_modifier;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventMotion {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public uint time;
+		public double x;
+		public double y;
+		public double axes;
+		public uint state;
+		public short is_hint;
+		public weak Gdk.Device device;
+		public double x_root;
+		public double y_root;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventNoExpose {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventOwnerChange {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public weak Gdk.NativeWindow owner;
+		public Gdk.OwnerChange reason;
+		public Gdk.Atom selection;
+		public uint time;
+		public uint selection_time;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventProperty {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public Gdk.Atom atom;
+		public uint time;
+		public uint state;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventProximity {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public uint time;
+		public weak Gdk.Device device;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventScroll {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public uint time;
+		public double x;
+		public double y;
+		public uint state;
+		public Gdk.ScrollDirection direction;
+		public weak Gdk.Device device;
+		public double x_root;
+		public double y_root;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventSelection {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public Gdk.Atom selection;
+		public Gdk.Atom target;
+		public Gdk.Atom property;
+		public uint time;
+		public weak Gdk.NativeWindow requestor;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventSetting {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public Gdk.SettingAction action;
+		public weak string name;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventVisibility {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public Gdk.VisibilityState state;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct EventWindowState {
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public char send_event;
+		public Gdk.WindowState changed_mask;
+		public Gdk.WindowState new_window_state;
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct WindowAttr {
 		public weak string title;
 		public int event_mask;
@@ -1437,6 +1395,50 @@ namespace Gdk {
 		public uint hash ();
 		public static bool parse (string spec, out Gdk.Color color);
 		public weak string to_string ();
+	}
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public struct Event {
+		public Gdk.EventType type;
+		public Gdk.EventAny any;
+		public Gdk.EventExpose expose;
+		public Gdk.EventNoExpose no_expose;
+		public Gdk.EventVisibility visibility;
+		public Gdk.EventMotion motion;
+		public Gdk.EventButton button;
+		public Gdk.EventScroll scroll;
+		public Gdk.EventKey key;
+		public Gdk.EventCrossing crossing;
+		public Gdk.EventFocus focus_change;
+		public Gdk.EventConfigure configure;
+		public Gdk.EventProperty property;
+		public Gdk.EventSelection selection;
+		public Gdk.EventOwnerChange owner_change;
+		public Gdk.EventProximity proximity;
+		public Gdk.EventClient client;
+		public Gdk.EventDND dnd;
+		public Gdk.EventWindowState window_state;
+		public Gdk.EventSetting setting;
+		public Gdk.EventGrabBroken grab_broken;
+		public Gdk.Event copy ();
+		public void free ();
+		public static Gdk.Event get ();
+		public bool get_axis (Gdk.AxisUse axis_use, double value);
+		public bool get_coords (double x_win, double y_win);
+		public static Gdk.Event get_graphics_expose (Gdk.Window window);
+		public bool get_root_coords (double x_root, double y_root);
+		public weak Gdk.Screen get_screen ();
+		public bool get_state (Gdk.ModifierType state);
+		public uint get_time ();
+		public static void handler_set (Gdk.EventFunc func, void* data, GLib.DestroyNotify notify);
+		[CCode (cname = "gdk_event_new")]
+		public Event (Gdk.EventType type);
+		public static Gdk.Event peek ();
+		public void put ();
+		public static void request_motions (Gdk.EventMotion event);
+		public bool send_client_message (Gdk.NativeWindow winid);
+		public static bool send_client_message_for_display (Gdk.Display display, Gdk.Event event, Gdk.NativeWindow winid);
+		public void send_clientmessage_toall ();
+		public void set_screen (Gdk.Screen screen);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Rectangle {

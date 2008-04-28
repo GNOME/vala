@@ -1,5 +1,11 @@
 2008-04-28  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-2.0/: fix GdkEvent* bindings
+
+	* vapi/gdk-2.0.vapi, vapi/gtk+-2.0.vapi: regenerated
+
+2008-04-28  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/libsexy/: fix sexy_icon_entry_set_icon binding,
 	patch by Evan Nemerson
 
