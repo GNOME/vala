@@ -1961,7 +1961,7 @@ namespace Gtk {
 		public void pack_end_defaults (Gtk.Widget widget);
 		public void pack_start (Gtk.Widget child, bool expand, bool fill, uint padding);
 		public void pack_start_defaults (Gtk.Widget widget);
-		public void query_child_packing (Gtk.Widget child, bool expand, bool fill, uint padding, Gtk.PackType pack_type);
+		public void query_child_packing (Gtk.Widget child, out bool expand, out bool fill, out uint padding, out Gtk.PackType pack_type);
 		public void reorder_child (Gtk.Widget child, int position);
 		public void set_child_packing (Gtk.Widget child, bool expand, bool fill, uint padding, Gtk.PackType pack_type);
 		public void set_homogeneous (bool homogeneous);
@@ -2541,7 +2541,7 @@ namespace Gtk {
 		public static weak GLib.ParamSpec class_find_child_property (GLib.ObjectClass cclass, string property_name);
 		public static void class_install_child_property (void* cclass, uint property_id, GLib.ParamSpec pspec);
 		public static weak GLib.ParamSpec class_list_child_properties (GLib.ObjectClass cclass, uint n_properties);
-		public void @foreach (Gtk.Callback callback, void* callback_data);
+		public void @foreach (Gtk.Callback callback);
 		public uint get_border_width ();
 		public weak GLib.List get_children ();
 		public bool get_focus_chain (GLib.List focusable_widgets);
