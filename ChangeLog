@@ -1,5 +1,13 @@
 2008-05-01  Jürg Billeter  <j@bitron.ch>
 
+	* doc/vala/types.xml:
+	* doc/vala/default.css:
+	* doc/vala/xhtml.xsl:
+
+	Extend types section, based on patch by Phil Housley
+
+2008-05-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacfgbuilder.vala:
 	* vala/valanullchecker.vala:
 	* vala/valasemanticanalyzer.vala:

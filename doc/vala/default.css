@@ -8,7 +8,7 @@ h1, h2, h3, h4 {
 	color: #005a9c;
 }
 
-a {
+a:link, a:visited, a:hover, a:active {
 	color: #005a9c;
 	text-decoration: none;
 }
@@ -69,3 +69,8 @@ blockquote {
 	white-space: pre;
 }
 
+blockquote span.literal {
+	font-family: monospace;
+	font-style: normal;
+	font-weight: bold;
+}

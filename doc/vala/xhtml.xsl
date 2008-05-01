@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <xsl:stylesheet xmlns="http://www.w3.org/1999/xhtml" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.1">
 	<xsl:output method="xml" indent="yes" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"/>
+	<xsl:strip-space elements="blockquote/l"/>
 	<xsl:template match="/">
 		<xsl:apply-templates select="html"/>
 	</xsl:template>
@@ -52,7 +53,7 @@
 					<div class="header">
 						<a href="index.html"><xsl:value-of select="//title/text()"/></a>
 					</div>
-					<xsl:apply-templates select="h|p|section"/>
+					<xsl:apply-templates select="h|p|section|div|blockcode|blockquote|ol|ul"/>
 				</body>
 			</html>
 		</xsl:document>
@@ -61,10 +62,16 @@
 		<h2><xsl:value-of select="text()"/></h2>
 	</xsl:template>
 	<xsl:template match="body/section/section">
-		<xsl:apply-templates select="h|p|div|blockcode|blockquote|section"/>
+		<xsl:apply-templates select="h|p|div|blockcode|blockquote|section|ol|ul"/>
 	</xsl:template>
 	<xsl:template match="body/section/section/h">
 		<h3><xsl:value-of select="text()"/><a id="{../@id}"><xsl:text> </xsl:text></a></h3>
+	</xsl:template>
+	<xsl:template match="body/section/section/section">
+		<xsl:apply-templates select="h|p|div|blockcode|blockquote|section|ol|ul"/>
+	</xsl:template>
+	<xsl:template match="body/section/section/section/h">
+		<h4><xsl:value-of select="text()"/><a id="{../@id}"><xsl:text> </xsl:text></a></h4>
 	</xsl:template>
 	<xsl:template match="div[@role='note']">
 		<div class="note"><xsl:apply-templates select="h|p|blockcode|blockquote"/></div>
@@ -82,7 +89,19 @@
 		<pre><xsl:value-of select="text()"/></pre>
 	</xsl:template>
 	<xsl:template match="blockquote">
-		<blockquote><xsl:value-of select="text()"/></blockquote>
+		<blockquote><xsl:apply-templates select="text()|l"/></blockquote>
+	</xsl:template>
+	<xsl:template match="blockquote/l">
+		<span class="literal"><xsl:value-of select="text()"/></span>
+	</xsl:template>
+	<xsl:template match="ol">
+		<ol><xsl:apply-templates select="item"/></ol>
+	</xsl:template>
+	<xsl:template match="ul">
+		<ul><xsl:apply-templates select="item"/></ul>
+	</xsl:template>
+	<xsl:template match="ol/item|ul/item">
+		<li><xsl:value-of select="text()"/></li>
 	</xsl:template>
 </xsl:stylesheet>
 
