@@ -1,3 +1,14 @@
+2008-05-01  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacfgbuilder.vala:
+	* vala/valanullchecker.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasymbolresolver.vala:
+	* vapigen/valagidlparser.vala:
+
+	Fix crash when using errordomain methods,
+	based on patch by Phil Housley, fixes bug 530537
+
 2008-04-28  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gdk-2.0/: fix GdkEvent* bindings

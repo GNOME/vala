@@ -310,6 +310,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		ev.accept_children (this);
 	}
 
+	public override void visit_error_domain (ErrorDomain ed) {
+		ed.accept_children (this);
+	}
+
 	public override void visit_delegate (Delegate d) {
 		d.accept_children (this);
 	}

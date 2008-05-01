@@ -77,6 +77,10 @@ public class Vala.NullChecker : CodeVisitor {
 		en.accept_children (this);
 	}
 
+	public override void visit_error_domain (ErrorDomain ed) {
+		ed.accept_children (this);
+	}
+
 	public override void visit_field (Field f) {
 		f.accept_children (this);
 	}

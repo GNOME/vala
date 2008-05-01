@@ -77,6 +77,10 @@ public class Vala.GIdlParser : CodeVisitor {
 		visit_type (en);
 	}
 
+	public override void visit_error_domain (ErrorDomain ed) {
+		visit_type (ed);
+	}
+
 	public override void visit_delegate (Delegate d) {
 		visit_type (d);
 	}

@@ -114,6 +114,10 @@ public class Vala.CFGBuilder : CodeVisitor {
 		en.accept_children (this);
 	}
 
+	public override void visit_error_domain (ErrorDomain ed) {
+		ed.accept_children (this);
+	}
+
 	public override void visit_method (Method m) {
 		if (m.body == null) {
 			return;

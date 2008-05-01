@@ -109,6 +109,14 @@ public class Vala.SymbolResolver : CodeVisitor {
 		current_scope = current_scope.parent_scope;
 	}
 
+	public override void visit_error_domain (ErrorDomain ed) {
+		current_scope = ed.scope;
+
+		ed.accept_children (this);
+
+		current_scope = current_scope.parent_scope;
+	}
+
 	public override void visit_delegate (Delegate cb) {
 		current_scope = cb.scope;
 
