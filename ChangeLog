@@ -1,3 +1,10 @@
+2008-05-02  Jürg Billeter  <j@bitron.ch>
+
+	* gobject-introspection/scanner.c: (g_igenerator_add_symbol):
+
+	Do not add duplicate symbols,
+	patch by Étienne Bersac, fixes bug 528254
+
 2008-05-01  Jürg Billeter  <j@bitron.ch>
 
 	* doc/vala/types.xml:

@@ -1186,6 +1186,7 @@ g_igenerator_add_symbol (GIGenerator * igenerator, CSymbol * symbol)
 {
   /* only add symbols of main file */
   gboolean found_filename = FALSE;
+
   GList *l;
   for (l = igenerator->filenames; l != NULL; l = l->next)
     {
@@ -1198,6 +1199,16 @@ g_igenerator_add_symbol (GIGenerator * igenerator, CSymbol * symbol)
 
   symbol->directives = g_slist_reverse (igenerator->directives);
   igenerator->directives = NULL;
+
+  /* that's not very optimized ! */
+  for (l = igenerator->symbol_list; l != NULL; l = l->next)
+    {
+      if (g_str_equal (((CSymbol*)l->data)->ident, symbol->ident))
+        {
+          g_printerr ("Dropping %s duplicate\n", symbol->ident);
+          return;
+        }
+  }
 
   if (found_filename || igenerator->macro_scan)
     {
