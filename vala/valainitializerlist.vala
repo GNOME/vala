@@ -1,6 +1,6 @@
 /* valainitializerlist.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,6 +37,7 @@ public class Vala.InitializerList : Expression {
 	 */
 	public void append (Expression expr) {
 		initializers.add (expr);
+		expr.parent_node = this;
 	}
 	
 	/**
@@ -82,5 +83,13 @@ public class Vala.InitializerList : Expression {
 			}
 		}
 		return true;
+	}
+
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		for (int i = 0; i < initializers.size; i++) {
+			if (initializers[i] == old_node) {
+				initializers[i] = new_node;
+			}
+		}
 	}
 }

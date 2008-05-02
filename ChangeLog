@@ -1,5 +1,9 @@
 2008-05-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainitializerlist.vala: implement replace_expression
+
+2008-05-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacatchclause.vala:
 	* gobject/valaccodegenerator.vala:
 
