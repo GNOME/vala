@@ -234,6 +234,12 @@ public class Vala.Struct : Typesymbol {
 	 * @return true if this is an integer type, false otherwise
 	 */
 	public bool is_integer_type () {
+		foreach (DataType type in base_types) {
+			var st = type.data_type as Struct;
+			if (st != null && st.is_integer_type ()) {
+				return true;
+			}
+		}
 		return integer_type;
 	}
 	
@@ -243,6 +249,12 @@ public class Vala.Struct : Typesymbol {
 	 * @return true if this is a floating point type, false otherwise
 	 */
 	public bool is_floating_type () {
+		foreach (DataType type in base_types) {
+			var st = type.data_type as Struct;
+			if (st != null && st.is_floating_type ()) {
+				return true;
+			}
+		}
 		return floating_type;
 	}
 	

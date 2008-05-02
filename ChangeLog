@@ -1,5 +1,10 @@
 2008-05-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valastruct.vala: inherit integer_type and floating_type,
+	fixes bug 530600
+
+2008-05-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraytype.vala:
 	* vala/valadatatype.vala:
 	* gobject/valaccodegeneratorsignal.vala:
