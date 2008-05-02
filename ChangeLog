@@ -1,5 +1,13 @@
 2008-05-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarraytype.vala:
+	* vala/valadatatype.vala:
+	* gobject/valaccodegeneratorsignal.vala:
+
+	Fix crash when using arrays in D-Bus services, fixes bug 530455
+
+2008-05-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainitializerlist.vala: implement replace_expression
 
 2008-05-02  Jürg Billeter  <j@bitron.ch>

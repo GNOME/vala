@@ -169,4 +169,14 @@ public class Vala.ArrayType : ReferenceType {
 	public override bool is_reference_type_or_type_parameter () {
 		return true;
 	}
+
+	public override string? get_type_signature () {
+		string element_type_signature = element_type.get_type_signature ();
+
+		if (element_type_signature == null) {
+			return null;
+		}
+
+		return "a" + element_type_signature;
+	}
 }

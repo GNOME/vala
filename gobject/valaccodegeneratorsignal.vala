@@ -29,6 +29,8 @@ public class Vala.CCodeGenerator {
 			return ("POINTER");
 		} else if (t is ErrorType) {
 			return ("POINTER");
+		} else if (t is ArrayType) {
+			return ("POINTER");
 		} else if (t is VoidType) {
 			return ("VOID");
 		} else {
