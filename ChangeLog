@@ -1,5 +1,10 @@
 2008-05-02  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: fix g_rand*_int and g_rand*_double bindings,
+	patch Ondrej Jirman, fixes bug 530207
+
+2008-05-02  Jürg Billeter  <j@bitron.ch>
+
 	* gobject-introspection/scanner.c: (g_igenerator_add_symbol):
 
 	Do not add duplicate symbols,

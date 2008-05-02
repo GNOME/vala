@@ -1690,8 +1690,10 @@ namespace GLib {
 		[NoArrayLength ()]
 		public void set_seed_array (uint32[] seed, uint seed_length);
 		public bool boolean ();
+		[CCode (cname = "g_rand_int")]
 		public uint32 next_int ();
 		public int32 int_range (int32 begin, int32 end);
+		[CCode (cname = "g_rand_double")]
 		public double next_double ();
 		public double double_range (double begin, double end);
 	}
@@ -1699,8 +1701,10 @@ namespace GLib {
 	public static class Random {
 		public static void set_seed (uint32 seed);
 		public static bool boolean ();
+		[CCode (cname = "g_random_int")]
 		public static uint32 next_int ();
 		public static int32 int_range (int32 begin, int32 end);
+		[CCode (cname = "g_random_double")]
 		public static double next_double ();
 		public static double double_range (double begin, double end);
 	}
