@@ -1488,7 +1488,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var cerror_block = new CCodeBlock ();
 			foreach (CatchClause clause in current_try.get_catch_clauses ()) {
 				// go to catch clause if error domain matches
-				var cgoto_stmt = new CCodeGotoStatement ("__catch%d_%s".printf (current_try_id, clause.error_type.get_lower_case_cname ()));
+				var cgoto_stmt = new CCodeGotoStatement (clause.clabel_name);
 
 				if (clause.error_type.equals (gerror_type)) {
 					// general catch clause
@@ -2278,23 +2278,44 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_try_statement (TryStatement stmt) {
+		int this_try_id = next_try_id++;
+
 		var old_try = current_try;
 		var old_try_id = current_try_id;
 		current_try = stmt;
-		current_try_id = next_try_id++;
+		current_try_id = this_try_id;
 
-		stmt.accept_children (this);
+		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
+			clause.clabel_name = "__catch%d_%s".printf (this_try_id, clause.error_type.get_lower_case_cname ());
+		}
+
+		if (stmt.finally_body != null) {
+			stmt.finally_body.accept (this);
+		}
+
+		stmt.body.accept (this);
+
+		current_try = old_try;
+		current_try_id = old_try_id;
+
+		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
+			clause.accept (this);
+		}
+
+		if (stmt.finally_body != null) {
+			stmt.finally_body.accept (this);
+		}
 
 		var cfrag = new CCodeFragment ();
 		cfrag.append (stmt.body.ccodenode);
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
-			cfrag.append (new CCodeGotoStatement ("__finally%d".printf (current_try_id)));
+			cfrag.append (new CCodeGotoStatement ("__finally%d".printf (this_try_id)));
 
 			cfrag.append (clause.ccodenode);
 		}
 
-		cfrag.append (new CCodeLabel ("__finally%d".printf (current_try_id)));
+		cfrag.append (new CCodeLabel ("__finally%d".printf (this_try_id)));
 		if (stmt.finally_body != null) {
 			cfrag.append (stmt.finally_body.ccodenode);
 		} else {
@@ -2303,9 +2324,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		stmt.ccodenode = cfrag;
-
-		current_try = old_try;
-		current_try_id = old_try_id;
 	}
 
 	public override void visit_catch_clause (CatchClause clause) {
@@ -2314,7 +2332,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		clause.accept_children (this);
 
 		var cfrag = new CCodeFragment ();
-		cfrag.append (new CCodeLabel ("__catch%d_%s".printf (current_try_id, clause.error_type.get_lower_case_cname ())));
+		cfrag.append (new CCodeLabel (clause.clabel_name));
 
 		var cblock = new CCodeBlock ();
 

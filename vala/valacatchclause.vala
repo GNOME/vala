@@ -54,6 +54,11 @@ public class Vala.CatchClause : CodeNode {
 	 */
 	public LocalVariable error_variable { get; set; }
 
+	/**
+	 * Specifies the label used for this catch clause in the C code.
+	 */
+	public string? clabel_name { get; set; }
+
 	private DataType _data_type;
 
 	/**
