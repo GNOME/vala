@@ -188,6 +188,12 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		
 		write_indent ();
 
+		write_string ("[CCode (");
+
+		if (st.get_cname () != st.get_default_cname ()) {
+			write_string ("cname = \"%s\", ".printf (st.get_cname ()));
+		}
+
 		var first = true;
 		string cheaders;
 		foreach (string cheader in st.get_cheader_filenames ()) {
@@ -198,7 +204,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				cheaders = "%s,%s".printf (cheaders, cheader);
 			}
 		}
-		write_string ("[CCode (cheader_filename = \"%s\")]".printf (cheaders));
+		write_string ("cheader_filename = \"%s\")]".printf (cheaders));
 		write_newline ();
 
 		if (st.is_simple_type ()) {

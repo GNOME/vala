@@ -1,3 +1,10 @@
+2008-05-03  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterfacewriter.vala:
+	* vala/valastruct.vala:
+
+	Support custom cname for structs in InterfaceWriter
+
 2008-05-02  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valastruct.vala: inherit integer_type and floating_type,
