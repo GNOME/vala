@@ -1,3 +1,9 @@
+2008-05-07  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodeclassbinding.vala:
+
+	Support signals in D-Bus services, patch by Yu Feng
+
 2008-05-03  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valainterfacewriter.vala:

@@ -844,6 +844,16 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 
 		dbus_methods.append ("}\n");
 
+		var dbus_signals = new StringBuilder ();
+		dbus_signals.append_c ('"');
+		foreach (Signal sig in cl.get_signals ()) {
+			dbus_signals.append (dbus_iface_name);
+			dbus_signals.append ("\\0");
+			dbus_signals.append (sig.name);
+			dbus_signals.append ("\\0");
+		}
+		dbus_signals.append_c('"');
+
 		var dbus_methods_decl = new CCodeDeclaration ("const DBusGMethodInfo");
 		dbus_methods_decl.modifiers = CCodeModifiers.STATIC;
 		dbus_methods_decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_dbus_methods[]".printf (cl.get_lower_case_cname ()), new CCodeConstant (dbus_methods.str)));
@@ -851,7 +861,7 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 
 		var dbus_object_info = new CCodeDeclaration ("const DBusGObjectInfo");
 		dbus_object_info.modifiers = CCodeModifiers.STATIC;
-		dbus_object_info.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_dbus_object_info".printf (cl.get_lower_case_cname ()), new CCodeConstant ("{ 0, %s_dbus_methods, %d, %s, \"\\0\", \"\\0\" }".printf (cl.get_lower_case_cname (), method_count, blob.str))));
+		dbus_object_info.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_dbus_object_info".printf (cl.get_lower_case_cname ()), new CCodeConstant ("{ 0, %s_dbus_methods, %d, %s, %s, \"\\0\" }".printf (cl.get_lower_case_cname (), method_count, blob.str, dbus_signals.str))));
 		codegen.class_init_fragment.append (dbus_object_info);
 
 		var install_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_object_type_install_info"));
