@@ -764,7 +764,8 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 		int method_count = 0;
 		long blob_len = 0;
 		foreach (Method m in cl.get_methods ()) {
-			if (m is CreationMethod || m.binding != MemberBinding.INSTANCE) {
+			if (m is CreationMethod || m.binding != MemberBinding.INSTANCE
+			    || m.overrides || m.access != SymbolAccessibility.PUBLIC) {
 				continue;
 			}
 
@@ -847,6 +848,10 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 		var dbus_signals = new StringBuilder ();
 		dbus_signals.append_c ('"');
 		foreach (Signal sig in cl.get_signals ()) {
+			if (sig.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+
 			dbus_signals.append (dbus_iface_name);
 			dbus_signals.append ("\\0");
 			dbus_signals.append (sig.name);
