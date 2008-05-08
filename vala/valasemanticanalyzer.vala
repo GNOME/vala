@@ -2313,8 +2313,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.static_type = expr.type_reference.copy ();
 		expr.static_type.transfers_ownership = true;
 
+		int given_num_type_args = expr.type_reference.get_type_arguments ().size;
+		int expected_num_type_args = 0;
+
 		if (type is Class) {
 			var cl = (Class) type;
+
+			expected_num_type_args = cl.get_type_parameters ().size;
 
 			if (expr.struct_creation) {
 				expr.error = true;
@@ -2344,6 +2349,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (type is Struct) {
 			var st = (Struct) type;
 
+			expected_num_type_args = st.get_type_parameters ().size;
+
 			if (!expr.struct_creation) {
 				Report.warning (expr.source_reference, "deprecated syntax, don't use `new' to initialize structs");
 			}
@@ -2353,6 +2360,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (expr.symbol_reference == null) {
 				expr.symbol_reference = st.default_construction_method;
 			}
+		}
+
+		if (expected_num_type_args > given_num_type_args) {
+			expr.error = true;
+			Report.error (expr.source_reference, "too few type arguments");
+			return;
+		} else if (expected_num_type_args < given_num_type_args) {
+			expr.error = true;
+			Report.error (expr.source_reference, "too many type arguments");
+			return;
 		}
 
 		if (expr.symbol_reference == null && expr.get_argument_list ().size != 0) {

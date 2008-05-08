@@ -80,6 +80,15 @@ public class Vala.Struct : Typesymbol {
 	}
 	
 	/**
+	 * Returns a copy of the type parameter list.
+	 *
+	 * @return list of type parameters
+	 */
+	public Collection<TypeParameter> get_type_parameters () {
+		return new ReadOnlyCollection<TypeParameter> (type_parameters);
+	}
+
+	/**
 	 * Adds the specified constant as a member to this struct.
 	 *
 	 * @param c a constant

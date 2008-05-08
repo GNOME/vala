@@ -1,3 +1,11 @@
+2008-05-08  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala:
+	* vala/valastruct.vala:
+
+	Check number of type arguments in object creation expression,
+	patch by Andreas Brauchli, fixes bug 528833
+
 2008-05-08  Jaap A. Haitsma  <jaap@haitsma.org>
 
 	reviewed by: Jürg Billeter
