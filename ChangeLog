@@ -1,6 +1,13 @@
 2008-05-08  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala:
+
+	Report error when trying to create instance of static class,
+	patch by Andreas Brauchli, fixes bug 516779
+
+2008-05-08  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala:
 	* vala/valastruct.vala:
 
 	Check number of type arguments in object creation expression,
