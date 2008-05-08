@@ -99,6 +99,8 @@ namespace DBus {
 		public Object get_object (string name, string path, string interface_);
 		[CCode (cname = "dbus_g_connection_register_g_object")]
 		public void register_object (string at_path, GLib.Object object);
+		[CCode (cname = "dbus_g_connection_lookup_g_object")]
+		public weak GLib.Object lookup_object (string at_path);
 	}
 
 	[CCode (cname = "DBusGProxy", lower_case_csuffix = "g_proxy")]
@@ -107,6 +109,9 @@ namespace DBus {
 		public weak ProxyCall begin_call (string method, ProxyCallNotify notify, GLib.DestroyNotify destroy, GLib.Type first_arg_type, ...);
 		public bool end_call (ProxyCall call, out GLib.Error error, GLib.Type first_arg_type, ...);
 		public void cancel_call (ProxyCall call);
+		public weak string get_path ();
+		public weak string get_bus_name ();
+		public weak string get_interface ();
 	}
 
 	[CCode (cname = "DBusGProxyCallNotify")]

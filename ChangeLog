@@ -1,5 +1,12 @@
 2008-05-08  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/dbus-glib-1.vapi:
+
+	Add dbus_g_connection_lookup_g_object and dbus_g_proxy_get_*
+	bindings, patch by Yu Feng, fixes bug 531131
+
+2008-05-08  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valastruct.vala:
 	* gobject/valaccodetypesymbolbinding.vala:
 
