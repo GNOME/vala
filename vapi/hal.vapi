@@ -34,9 +34,9 @@ namespace Hal {
 		public void* get_user_data ();
 		public bool set_device_added (DeviceAdded _callback);
 		public bool set_device_removed (DeviceRemoved _callback);
-		[NoArrayLength]
 		[CCode (cname = "libhal_find_device_by_capability")]
-		public string[] find_device_by_capability (string capability, ref int num_devices, ref DBus.RawError error);
+		[CCode (array_length_pos = 1.9)]
+		public string[] find_device_by_capability (string capability, ref DBus.RawError error);
 
 		[CCode (cname = "libhal_device_get_property_string")]
 		public string device_get_property_string (string udi, string key, ref DBus.RawError error);

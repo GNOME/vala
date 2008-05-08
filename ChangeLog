@@ -1,3 +1,11 @@
+2008-05-08  Jaap A. Haitsma  <jaap@haitsma.org>
+
+	reviewed by: Jürg Billeter
+
+	* vapi/hal.vapi:
+	Also return length in string array returned from
+	libhal_find_device_by_capability. Fixes bug #530738
+
 2008-05-07  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodeclassbinding.vala:
