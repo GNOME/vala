@@ -2,6 +2,13 @@
 
 	* gobject/valaccodeclassbinding.vala:
 
+	Support properties in D-Bus services,
+	based on patch by Yu Feng, fixes bug 531132
+
+2008-05-08  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodeclassbinding.vala:
+
 	Don't export override methods to D-Bus, fixes bug 531135
 
 2008-05-08  Jürg Billeter  <j@bitron.ch>
