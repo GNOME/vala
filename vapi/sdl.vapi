@@ -396,6 +396,13 @@ namespace SDL {
 		public uint16 y;
 	}// MouseButtonEvent
 
+	[CCode (cheader_filename="SDL_active.h", cprefix="SDL_APP")]
+	public enum ActiveState {
+		MOUSEFOCUS,
+		INPUTFOCUS,
+		ACTIVE
+	}// ActiveState
+
 	[CCode (cname="SDL_ActiveEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
 	public struct ActiveEvent {
 		public uchar type;

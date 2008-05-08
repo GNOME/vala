@@ -1,5 +1,10 @@
 2008-05-08  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/sdl.vapi: add SDL ActiveState enum,
+	patch by Levi Bard, fixes bug 530429
+
+2008-05-08  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 
 	Report error when trying to create instance of static class,
