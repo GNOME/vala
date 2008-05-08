@@ -354,6 +354,12 @@ public class Vala.Struct : Typesymbol {
 
 	public override string? get_type_id () {
 		if (type_id == null) {
+			foreach (DataType type in base_types) {
+				var st = type.data_type as Struct;
+				if (st != null) {
+					return st.get_type_id ();;
+				}
+			}
 			if (simple_type) {
 				Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (get_full_name ()));
 			} else {
@@ -369,6 +375,12 @@ public class Vala.Struct : Typesymbol {
 
 	public override string? get_marshaller_type_name () {
 		if (marshaller_type_name == null) {
+			foreach (DataType type in base_types) {
+				var st = type.data_type as Struct;
+				if (st != null) {
+					return st.get_marshaller_type_name ();
+				}
+			}
 			if (simple_type) {
 				Report.error (source_reference, "The type `%s` doesn't declare a marshaller type name".printf (get_full_name ()));
 			} else {
@@ -384,6 +396,12 @@ public class Vala.Struct : Typesymbol {
 	
 	public override string? get_get_value_function () {
 		if (get_value_function == null) {
+			foreach (DataType type in base_types) {
+				var st = type.data_type as Struct;
+				if (st != null) {
+					return st.get_get_value_function ();
+				}
+			}
 			if (simple_type) {
 				Report.error (source_reference, "The value type `%s` doesn't declare a GValue get function".printf (get_full_name ()));
 				return null;
@@ -397,6 +415,12 @@ public class Vala.Struct : Typesymbol {
 	
 	public override string? get_set_value_function () {
 		if (set_value_function == null) {
+			foreach (DataType type in base_types) {
+				var st = type.data_type as Struct;
+				if (st != null) {
+					return st.get_set_value_function ();
+				}
+			}
 			if (simple_type) {
 				Report.error (source_reference, "The value type `%s` doesn't declare a GValue set function".printf (get_full_name ()));
 				return null;

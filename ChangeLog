@@ -1,5 +1,18 @@
 2008-05-08  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valastruct.vala:
+	* gobject/valaccodetypesymbolbinding.vala:
+
+	Support inheritance for type_id, marshaller_type_name,
+	get_value_function, and set_value_function
+
+	* vapi/glib-2.0.vapi:
+
+	Set type_id, marshaller_type_name, get_value_function, and
+	set_value_function for uint32, fixes bug 530603
+
+2008-05-08  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/sdl.vapi: add SDL ActiveState enum,
 	patch by Levi Bard, fixes bug 530429
 
