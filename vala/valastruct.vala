@@ -125,7 +125,7 @@ public class Vala.Struct : Typesymbol {
 	public void add_method (Method m) {
 		return_if_fail (m != null);
 		
-		if (m.binding == MemberBinding.INSTANCE) {
+		if (m.binding == MemberBinding.INSTANCE || m is CreationMethod) {
 			m.this_parameter = new FormalParameter ("this", new ValueType (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}

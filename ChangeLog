@@ -1,5 +1,12 @@
 2008-05-08  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valastruct.vala:
+
+	Support `this' in struct creation methods,
+	patch by Jared Moore, fixes bug 527770
+
+2008-05-08  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorsignal.vala:
 
 	Fix string return type for marshallers,
