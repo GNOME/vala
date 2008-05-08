@@ -251,10 +251,10 @@ public class Vala.CCodeGenerator {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
 			} else if (return_type is ErrorType) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
-			} else if (return_type.data_type is Class || return_type.data_type is Interface) {
-				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_object"));
 			} else if (return_type.data_type == string_type.data_type) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_string"));
+			} else if (return_type.data_type is Class || return_type.data_type is Interface) {
+				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_object"));
 			} else {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier (return_type.data_type.get_set_value_function ()));
 			}
