@@ -1801,7 +1801,15 @@ public class Vala.Parser : CodeVisitor {
 		var ns = new Namespace (sym.name, get_src_com (begin));
 		set_attributes (ns, attrs);
 		parse_declarations (ns);
-		return ns;
+
+		Namespace result = ns;
+		while (sym.inner != null) {
+			sym = sym.inner;
+			ns = new Namespace (sym.name, result.source_reference);
+			ns.add_namespace ((Namespace) result);
+			result = ns;
+		}
+		return result;
 	}
 
 	void parse_namespace_member (Namespace ns) throws ParseError {

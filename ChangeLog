@@ -1,5 +1,11 @@
 2008-05-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala:
+
+	Fix `namespace Foo.Bar {...}' parsing, fixes bug 531379
+
+2008-05-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaattributeprocessor.vala:
 	* vala/valaenumvalue.vala:
 
