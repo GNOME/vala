@@ -1,5 +1,12 @@
 2008-05-10  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodedynamicsignalbinding.vala:
+
+	Fix connecting to the same dynamic signal multiple times,
+	patch by Yu Feng, fixes bug 532053
+
+2008-05-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 
 	Fix `namespace Foo.Bar {...}' parsing, fixes bug 531379
