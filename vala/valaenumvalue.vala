@@ -95,6 +95,18 @@ public class Vala.EnumValue : Symbol {
 	}
 
 	/**
+	 * Process all associated attributes.
+	 */
+	public void process_attributes () {
+		foreach (Attribute a in attributes) {
+			if (a.name == "CCode" && a.has_argument("cname")) {
+				cname = a.get_string ("cname");
+			}
+		}
+	}
+
+
+	/**
 	 * Returns the name of this enum value as it is used in C code.
 	 *
 	 * @return the name to be used in C code

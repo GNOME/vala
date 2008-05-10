@@ -1,5 +1,13 @@
 2008-05-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaattributeprocessor.vala:
+	* vala/valaenumvalue.vala:
+
+	Support cname attribute for enum values,
+	patch by Jared Moore, fixes bug 529288
+
+2008-05-10  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_dialog_new_with_buttons and gtk_file_chooser_dialog_new*

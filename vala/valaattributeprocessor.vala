@@ -68,6 +68,12 @@ public class Vala.AttributeProcessor : CodeVisitor {
 
 	public override void visit_enum (Enum en) {
 		en.process_attributes ();
+
+		en.accept_children (this);
+	}
+
+	public override void visit_enum_value (EnumValue ev) {
+		ev.process_attributes ();
 	}
 
 	public override void visit_error_domain (ErrorDomain edomain) {
