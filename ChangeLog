@@ -1,3 +1,8 @@
+2008-05-11  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi: fix g_io_channel_set_encoding binding,
+	fixes bug 530926
+
 2008-05-10  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valainterfacewriter.vala: support base types for structs

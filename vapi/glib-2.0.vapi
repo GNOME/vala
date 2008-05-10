@@ -1369,7 +1369,7 @@ namespace GLib {
 		public bool get_buffered ();
 		public void set_buffered (bool buffered);
 		public weak string get_encoding ();
-		public IOStatus set_encoding (string encoding) throws IOChannelError;
+		public IOStatus set_encoding (string? encoding) throws IOChannelError;
 		public bool get_close_on_unref ();
 		public void set_close_on_unref (bool do_close);
 	}
