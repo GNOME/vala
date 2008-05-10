@@ -96,7 +96,7 @@ namespace Gdk {
 		public int get_rowstride ();
 		public int get_width ();
 		public Pixbuf (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
-		public Pixbuf.from_data (uchar[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify destroy_fn, void* destroy_fn_data);
+		public Pixbuf.from_data (uchar[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify? destroy_fn);
 		public Pixbuf.from_file (string filename) throws GLib.Error;
 		public Pixbuf.from_file_at_scale (string filename, int width, int height, bool preserve_aspect_ratio) throws GLib.Error;
 		public Pixbuf.from_file_at_size (string filename, int width, int height) throws GLib.Error;
@@ -105,7 +105,7 @@ namespace Gdk {
 		public Pixbuf.subpixbuf (Gdk.Pixbuf src_pixbuf, int src_x, int src_y, int width, int height);
 		public weak Gdk.Pixbuf rotate_simple (Gdk.PixbufRotation angle);
 		public void saturate_and_pixelate (Gdk.Pixbuf dest, float saturation, bool pixelate);
-		public bool save (string filename, string type) throws GLib.Error;
+		public bool save (string filename, string type, ...) throws GLib.Error;
 		public bool save_to_buffer (string buffer, ulong buffer_size, string type) throws GLib.Error;
 		public bool save_to_bufferv (string buffer, ulong buffer_size, string type, string[] option_keys, string[] option_values) throws GLib.Error;
 		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, string type) throws GLib.Error;
