@@ -1181,7 +1181,8 @@ public class Vala.Parser : CodeVisitor {
 					stmt = parse_expression_statement ();
 					break;
 				default:
-					if (is_expression ()) {
+					bool is_expr = is_expression ();
+					if (is_expr) {
 						stmt = parse_expression_statement ();
 					} else {
 						is_decl = true;
@@ -1431,7 +1432,9 @@ public class Vala.Parser : CodeVisitor {
 				is_expr = true;
 				break;
 			default:
-				is_expr = is_expression ();
+				// workaround for current limitation of exception handling
+				bool local_is_expr = is_expression ();
+				is_expr = local_is_expr;
 				break;
 			}
 
