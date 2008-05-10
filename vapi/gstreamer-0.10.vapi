@@ -514,7 +514,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Buffer {
 		public weak Gst.MiniObject mini_object;
-		public uchar data;
+		[NoArrayLength]
+		public uchar[] data;
 		public uint size;
 		public weak Gst.ClockTime timestamp;
 		public weak Gst.ClockTime duration;

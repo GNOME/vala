@@ -1,5 +1,14 @@
 2008-05-10  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix GstBuffer.data binding,
+	patch by Jaap A. Haitsma, fixes bug 531431
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-05-10  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gdk-pixbuf-2.0/:
 
 	Fix gdk_pixbuf_new_from_data and gdk_pixbuf_save bindings,
