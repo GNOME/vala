@@ -1,3 +1,10 @@
+2008-05-11  Marc-André Lureau  <marcandre.lureau@gmail.com>
+
+	* ccode/valaccodestruct.vala:
+
+	Add an empty line after struct declaration to please gtk-doc,
+	fixes bug 532350
+
 2008-05-10  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodedynamicsignalbinding.vala:

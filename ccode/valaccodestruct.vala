@@ -69,5 +69,6 @@ public class Vala.CCodeStruct : CCodeNode {
 		writer.write_end_block ();
 		writer.write_string (";");
 		writer.write_newline ();
+		writer.write_newline ();
 	}
 }
