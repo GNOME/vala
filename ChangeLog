@@ -1,5 +1,14 @@
 2008-05-10  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_dialog_new_with_buttons and gtk_file_chooser_dialog_new*
+	bindings, patch by Nicolas Joseph, fixes bug 531436
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-05-10  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Fix GstBuffer.data binding,

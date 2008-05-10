@@ -2620,7 +2620,7 @@ namespace Gtk {
 		public bool get_has_separator ();
 		public int get_response_for_widget (Gtk.Widget widget);
 		public Dialog ();
-		public Dialog.with_buttons (string title, Gtk.Window parent, Gtk.DialogFlags flags, ...);
+		public Dialog.with_buttons (string? title, Gtk.Window? parent, Gtk.DialogFlags flags, ...);
 		public int run ();
 		[CCode (sentinel = "-1")]
 		public void set_alternative_button_order (...);
@@ -2826,8 +2826,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class FileChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.FileChooser {
-		public FileChooserDialog (string title, Gtk.Window parent, Gtk.FileChooserAction action, ...);
-		public FileChooserDialog.with_backend (string title, Gtk.Window parent, Gtk.FileChooserAction action, string backend, ...);
+		public FileChooserDialog (string? title, Gtk.Window? parent, Gtk.FileChooserAction action, ...);
+		public FileChooserDialog.with_backend (string? title, Gtk.Window? parent, Gtk.FileChooserAction action, string backend, ...);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class FileChooserWidget : Gtk.VBox, Atk.Implementor, Gtk.Buildable, Gtk.FileChooser, Gtk.FileChooserEmbed {
