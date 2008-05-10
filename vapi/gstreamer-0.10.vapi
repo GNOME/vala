@@ -517,8 +517,8 @@ namespace Gst {
 		[NoArrayLength]
 		public uchar[] data;
 		public uint size;
-		public weak Gst.ClockTime timestamp;
-		public weak Gst.ClockTime duration;
+		public Gst.ClockTime timestamp;
+		public Gst.ClockTime duration;
 		public weak Gst.Caps caps;
 		public uint64 offset;
 		public uint64 offset_end;
@@ -548,8 +548,8 @@ namespace Gst {
 		public int refcount;
 		public weak Gst.Clock clock;
 		public Gst.ClockEntryType type;
-		public weak Gst.ClockTime time;
-		public weak Gst.ClockTime interval;
+		public Gst.ClockTime time;
+		public Gst.ClockTime interval;
 		public Gst.ClockReturn status;
 		public Gst.ClockCallback func;
 		public void* user_data;
@@ -557,16 +557,10 @@ namespace Gst {
 	[CCode (ref_function = "gst_clock_id_ref", unref_function = "gst_clock_id_unref", cheader_filename = "gst/gst.h")]
 	public class ClockID {
 		public static int compare_func (void* id1, void* id2);
-		public weak Gst.ClockTime get_time ();
+		public Gst.ClockTime get_time ();
 		public void unschedule ();
 		public Gst.ClockReturn wait (Gst.ClockTimeDiff jitter);
 		public Gst.ClockReturn wait_async (Gst.ClockCallback func);
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class ClockTime {
-	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class ClockTimeDiff {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class DebugCategory {
@@ -1133,34 +1127,34 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Clock : Gst.Object {
 		public weak GLib.Mutex slave_lock;
-		public weak Gst.ClockTime internal_calibration;
-		public weak Gst.ClockTime external_calibration;
-		public weak Gst.ClockTime rate_numerator;
-		public weak Gst.ClockTime rate_denominator;
-		public weak Gst.ClockTime last_time;
+		public Gst.ClockTime internal_calibration;
+		public Gst.ClockTime external_calibration;
+		public Gst.ClockTime rate_numerator;
+		public Gst.ClockTime rate_denominator;
+		public Gst.ClockTime last_time;
 		public weak GLib.List entries;
 		public weak GLib.Cond entries_changed;
-		public weak Gst.ClockTime resolution;
+		public Gst.ClockTime resolution;
 		public weak Gst.Clock master;
 		public bool filling;
 		public int time_index;
-		public weak Gst.ClockTime times;
+		public Gst.ClockTime times;
 		public weak Gst.ClockID clockid;
 		public bool add_observation (Gst.ClockTime slave, Gst.ClockTime master, double r_squared);
-		public weak Gst.ClockTime adjust_unlocked (Gst.ClockTime internal);
+		public Gst.ClockTime adjust_unlocked (Gst.ClockTime internal);
 		public void get_calibration (Gst.ClockTime internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
 		public weak Gst.Clock get_master ();
-		public weak Gst.ClockTime get_time ();
+		public Gst.ClockTime get_time ();
 		public Clock.periodic_id (Gst.Clock clock, Gst.ClockTime start_time, Gst.ClockTime interval);
 		public Clock.single_shot_id (Gst.Clock clock, Gst.ClockTime time);
 		public void set_calibration (Gst.ClockTime internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
 		public bool set_master (Gst.Clock master);
-		public weak Gst.ClockTime set_resolution (Gst.ClockTime resolution);
-		public weak Gst.ClockTime unadjust_unlocked (Gst.ClockTime external);
+		public Gst.ClockTime set_resolution (Gst.ClockTime resolution);
+		public Gst.ClockTime unadjust_unlocked (Gst.ClockTime external);
 		[NoWrapper]
-		public virtual weak Gst.ClockTime change_resolution (Gst.ClockTime old_resolution, Gst.ClockTime new_resolution);
-		public virtual weak Gst.ClockTime get_internal_time ();
-		public virtual weak Gst.ClockTime get_resolution ();
+		public virtual Gst.ClockTime change_resolution (Gst.ClockTime old_resolution, Gst.ClockTime new_resolution);
+		public virtual Gst.ClockTime get_internal_time ();
+		public virtual Gst.ClockTime get_resolution ();
 		[NoWrapper]
 		public virtual void unschedule (Gst.ClockEntry entry);
 		[NoWrapper]
@@ -1189,7 +1183,7 @@ namespace Gst {
 		public Gst.StateChangeReturn last_return;
 		public weak Gst.Bus bus;
 		public weak Gst.Clock clock;
-		public weak Gst.ClockTimeDiff base_time;
+		public Gst.ClockTimeDiff base_time;
 		public ushort numpads;
 		public weak GLib.List pads;
 		public ushort numsrcpads;
@@ -1210,7 +1204,7 @@ namespace Gst {
 		public void create_all_pads ();
 		public void found_tags (Gst.TagList list);
 		public void found_tags_for_pad (Gst.Pad pad, Gst.TagList list);
-		public weak Gst.ClockTime get_base_time ();
+		public Gst.ClockTime get_base_time ();
 		public weak Gst.Bus get_bus ();
 		public weak Gst.Clock get_clock ();
 		public weak Gst.Pad get_compatible_pad (Gst.Pad pad, Gst.Caps caps);
@@ -1523,13 +1517,13 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pipeline : Gst.Bin, Gst.ChildProxy {
 		public weak Gst.Clock fixed_clock;
-		public weak Gst.ClockTime stream_time;
+		public Gst.ClockTime stream_time;
 		public void auto_clock ();
 		public bool get_auto_flush_bus ();
 		public weak Gst.Bus get_bus ();
 		public weak Gst.Clock get_clock ();
-		public weak Gst.ClockTime get_delay ();
-		public weak Gst.ClockTime get_last_stream_time ();
+		public Gst.ClockTime get_delay ();
+		public Gst.ClockTime get_last_stream_time ();
 		public Pipeline (string name);
 		public void set_auto_flush_bus (bool auto_flush);
 		public bool set_clock (Gst.Clock clock);
@@ -1709,6 +1703,14 @@ namespace Gst {
 		public abstract bool set_uri (string uri);
 		[HasEmitter]
 		public signal void new_uri (string uri);
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	[SimpleType]
+	public struct ClockTime : uint64 {
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	[SimpleType]
+	public struct ClockTimeDiff : int64 {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool BusFunc (Gst.Bus bus, Gst.Message message);
@@ -2067,7 +2069,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint64 util_gdouble_to_guint64 (double value);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static weak Gst.ClockTime util_get_timestamp ();
+	public static Gst.ClockTime util_get_timestamp ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static double util_guint64_to_gdouble (uint64 value);
 	[CCode (cheader_filename = "gst/gst.h")]

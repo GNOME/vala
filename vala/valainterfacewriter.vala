@@ -217,6 +217,22 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_accessibility (st);
 		write_string ("struct ");
 		write_identifier (st.name);
+
+		var base_types = st.get_base_types ();
+		if (base_types.size > 0) {
+			write_string (" : ");
+		
+			bool first = true;
+			foreach (DataType base_type in base_types) {
+				if (!first) {
+					write_string (", ");
+				} else {
+					first = false;
+				}
+				write_type (base_type);
+			}
+		}
+
 		write_begin_block ();
 
 		st.accept_children (this);

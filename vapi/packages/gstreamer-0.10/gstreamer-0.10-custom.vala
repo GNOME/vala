@@ -22,4 +22,10 @@
 
 namespace Gst {
 	public extern void init ([CCode (array_length_pos = 0.9)] ref string[] args);
+
+	public struct ClockTime : uint64 {
+	}
+
+	public struct ClockTimeDiff : int64 {
+	}
 }
