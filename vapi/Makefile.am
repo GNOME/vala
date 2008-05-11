@@ -25,12 +25,14 @@ dist_vapi_DATA = \
 	gio-2.0.vapi \
 	gio-unix-2.0.deps \
 	gio-unix-2.0.vapi \
+	gmodule-2.0.vapi \
 	gnome-desktop-2.0.deps \
 	gnome-desktop-2.0.vapi \
 	gnome-keyring-1.vapi \
 	gnome-vfs-2.0.vapi \
 	goocanvas.deps \
 	goocanvas.vapi \
+	gstreamer-0.10.deps \
 	gstreamer-0.10.vapi \
 	gstreamer-audio-0.10.deps \
 	gstreamer-audio-0.10.vapi \

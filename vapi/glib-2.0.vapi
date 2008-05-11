@@ -1276,27 +1276,7 @@ namespace GLib {
 		public int length_unlocked ();
 		public void sort_unlocked (CompareDataFunc func, void* user_data);
 	}
-	
-	/* Dynamic Loading of Modules */
-	
-	[CCode (free_function = "g_module_close")]
-	public class Module {
-		public static bool supported ();
-		public static string build_path (string directory, string module_name);
-		public static Module open (string file_name, ModuleFlags @flags);
-		public bool symbol (string symbol_name, void** symbol);
-		public weak string name ();
-		public void make_resident ();
-		public static weak string error ();
-	}
-	
-	[CCode (cprefix = "G_MODULE_")]
-	public enum ModuleFlags {
-		BIND_LAZY,
-		BIND_LOCAL,
-		BIND_MASK
-	}
-	
+
 	/* Memory Allocation */
 	
 	public static void* malloc (ulong n_bytes);

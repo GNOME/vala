@@ -1,5 +1,15 @@
 2008-05-11  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am:
+	* vapi/glib-2.0.vapi:
+	* vapi/gmodule-2.0.vapi:
+	* vapi/gstreamer-0.10.deps:
+
+	Move dynamic module loading support into separate VAPI file and
+	improve bindings, fixes bug 531583
+
+2008-05-11  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add g_strv_length binding
 
 2008-05-11  Jürg Billeter  <j@bitron.ch>
