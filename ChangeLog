@@ -1,5 +1,9 @@
 2008-05-11  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libxml-2.0.vapi: specify free functions, fixes bug 531631
+
+2008-05-11  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaintegertype.vala: fix assignment of integer literals to
 	derived integer types, fixes bug 530809
 

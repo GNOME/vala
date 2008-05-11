@@ -33,7 +33,7 @@ namespace Xml {
 	[CCode (cname = "ftpListCallback", cheader_filename = "libxml/nanoftp.h")]
 	public static delegate void FtpListCallback (void* userData, string filename, string attrib, string owner, string group, ulong size, int links, int year, string month, int day, int hour, int minute);
 
-	[CCode (cname = "void*", cheader_filename = "libxml/nanoftp.h")]
+	[CCode (cname = "void*", free_function = "xmlNanoFTPFreeCtxt", cheader_filename = "libxml/nanoftp.h")]
 	public class NanoFTP {
 		[CCode (cname = "xmlNanoFTPCheckResponse")]
 		public int check_response ();
@@ -58,9 +58,6 @@ namespace Xml {
 
 		[CCode (cname = "xmlNanoFTPDele")]
 		public int dele (string file);
-
-		[CCode (cname = "xmlNanoFTPFreeCtxt")]
-		public void free_ctxt ();
 
 		[CCode (cname = "xmlNanoFTPGet")]
 		public int get (FtpDataCallback cb, void* user_data, string filename);
@@ -287,7 +284,7 @@ namespace Xml {
 		NOTATION
 	}
 
-	[CCode (cname = "xmlDoc", cheader_filename = "libxml/tree.h,libxml/parser.h")]
+	[CCode (cname = "xmlDoc", free_function = "xmlFreeDoc", cheader_filename = "libxml/tree.h,libxml/parser.h")]
 	public class Doc {
 		public void* _private;
 		public ElementType type;
@@ -340,9 +337,6 @@ namespace Xml {
 
 		[CCode (cname = "xmlElemDump")]
 		public static void elem_dump (GLib.FileStream f, Doc* doc, Node* cur);
-
-		[CCode (cname = "xmlFreeDoc")]
-		public void free ();
 
 		[CCode (cname = "xmlGetDocCompressMode")]
 		public int get_compress_mode ();
@@ -477,7 +471,7 @@ namespace Xml {
 		DOCB_DOCUMENT_NODE
 	}
 
-	[CCode (cname = "xmlNode", cheader_filename = "libxml/tree.h")]
+	[CCode (cname = "xmlNode", free_function = "xmlFreeNode", cheader_filename = "libxml/tree.h")]
 	public class Node {
 		public void* _private;
 		public ElementType type;
@@ -521,9 +515,6 @@ namespace Xml {
 
 		[CCode (cname = "xmlDocCopyNodeList")]
 		public Node* doc_copy_list (Doc* doc);
-
-		[CCode (cname = "xmlFreeNode")]
-		public void free ();
 
 		[CCode (cname = "xmlFreeNodeList")]
 		public void free_list ();
@@ -674,7 +665,7 @@ namespace Xml {
 
 	/* uri - library of generic URI related routines */
 
-	[CCode (cname = "xmlURI", cheader_filename = "libxml/uri.h")]
+	[CCode (cname = "xmlURI", free_function = "xmlFreeURI", cheader_filename = "libxml/uri.h")]
 	public class URI {
 		[CCode (cname = "xmlBuildRelativeURI")]
 		public static string build_relative (string uri, string @base);
@@ -687,9 +678,6 @@ namespace Xml {
 
 		[CCode (cname = "xmlCreateURI")]
 		public URI ();
-
-		[CCode (cname = "xmlFreeURI")]
-		public void free ();
 
 		[CCode (cname = "xmlNormalizeURIPath")]
 		public static int normalize_uri_path (string path);
@@ -793,11 +781,8 @@ namespace Xml {
 		XML_DECLARATION
 	}
 
-	[CCode (cname = "xmlTextReader", cheader_filename = "libxml/xmlreader.h")]
+	[CCode (cname = "xmlTextReader", free_function = "xmlFreeTextReader", cheader_filename = "libxml/xmlreader.h")]
 	public class TextReader {
-		[CCode (cname = "xmlFreeTextReader")]
-		public void free ();
-
 		[CCode (cname = "xmlNewTextReaderFilename")]
 		public TextReader.filename (string uri);
 
