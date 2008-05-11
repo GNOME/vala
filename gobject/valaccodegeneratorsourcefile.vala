@@ -297,6 +297,10 @@ public class Vala.CCodeGenerator {
 		}
 
 		var writer = new CCodeWriter (source_file.get_cheader_filename ());
+		if (!writer.open ()) {
+			Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
+			return;
+		}
 		if (comment != null) {
 			comment.write (writer);
 		}
@@ -323,6 +327,10 @@ public class Vala.CCodeGenerator {
 		writer.close ();
 		
 		writer = new CCodeWriter (source_file.get_csource_filename ());
+		if (!writer.open ()) {
+			Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
+			return;
+		}
 		writer.line_directives = context.debug;
 		if (comment != null) {
 			comment.write (writer);

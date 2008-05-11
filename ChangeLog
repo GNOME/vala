@@ -1,5 +1,12 @@
 2008-05-11  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/valaccodewriter.vala:
+	* gobject/valaccodegeneratorsourcefile.vala:
+
+	Fix crash when opening output file fails, fixes bug 466573
+
+2008-05-11  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: fix freeing nested GLists and
 	GSLists, fixes bug 443514
 

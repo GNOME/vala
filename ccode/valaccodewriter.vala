@@ -35,13 +35,6 @@ public class Vala.CCodeWriter : Object {
 		}
 		construct {
 			_filename = value;
-			file_exists = FileUtils.test (_filename, FileTest.EXISTS);
-			if (file_exists) {
-				temp_filename = "%s.valatmp".printf (_filename);
-				stream = FileStream.open (temp_filename, "w");
-			} else {
-				stream = FileStream.open (_filename, "w");
-			}
 		}
 	}
 
@@ -71,7 +64,25 @@ public class Vala.CCodeWriter : Object {
 	public CCodeWriter (string _filename) {
 		filename = _filename;
 	}
-	
+
+	/**
+	 * Opens the file.
+	 *
+	 * @return true if the file has been opened successfully,
+	 *         false otherwise
+	 */
+	public bool open () {
+		file_exists = FileUtils.test (_filename, FileTest.EXISTS);
+		if (file_exists) {
+			temp_filename = "%s.valatmp".printf (_filename);
+			stream = FileStream.open (temp_filename, "w");
+		} else {
+			stream = FileStream.open (_filename, "w");
+		}
+
+		return (stream != null);
+	}
+
 	/**
 	 * Closes the file.
 	 */
