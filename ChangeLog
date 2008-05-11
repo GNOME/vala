@@ -1,5 +1,12 @@
 2008-05-11  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/: fix gtk_message_dialog_new* bindings,
+	fixes bug 531628
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-05-11  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am:
 	* vapi/glib-2.0.vapi:
 	* vapi/gmodule-2.0.vapi:
