@@ -1477,7 +1477,12 @@ namespace GLib {
 	[Diagnostics]
 	[PrintfFormat]
 	public void debug (string format, ...);
-	
+
+	/* String Utility Functions */
+
+	[NoArrayLength]
+	public uint strv_length (string[] str_array);
+
 	/* Character Set Conversions */
 	
 	public static string convert (string str, long len, string to_codeset, string from_codeset, out int bytes_read = null, out int bytes_written = null) throws ConvertError;

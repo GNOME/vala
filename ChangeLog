@@ -1,5 +1,9 @@
 2008-05-11  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: add g_strv_length binding
+
+2008-05-11  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: remove obsolete InstanceLast attributes
 
 2008-05-11  Jürg Billeter  <j@bitron.ch>
