@@ -124,7 +124,7 @@ public abstract class Vala.CCodeTypesymbolBinding : CCodeBinding {
 				} else {
 					cspec.add_argument (new CCodeConstant ("0.0F"));
 				}
-			} else if (st.get_type_id () == "G_TYPE_FLOAT") {
+			} else if (st.get_type_id () == "G_TYPE_DOUBLE") {
 				cspec.call = new CCodeIdentifier ("g_param_spec_double");
 				cspec.add_argument (new CCodeConstant ("-G_MAXDOUBLE"));
 				cspec.add_argument (new CCodeConstant ("G_MAXDOUBLE"));
