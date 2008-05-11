@@ -37,7 +37,6 @@ public struct constpointer {
 [CCode (cname = "gchar", cprefix = "g_ascii_", cheader_filename = "glib.h", type_id = "G_TYPE_CHAR", marshaller_type_name = "CHAR", get_value_function = "g_value_get_char", set_value_function = "g_value_set_char", default_value = "\'\\0\'", type_signature = "y")]
 [IntegerType (rank = 2, min = 0, max = 127)]
 public struct char {
-	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hhi");
 	public bool isalnum ();
@@ -61,7 +60,6 @@ public struct char {
 [CCode (cname = "guchar", cheader_filename = "glib.h", type_id = "G_TYPE_UCHAR", marshaller_type_name = "UCHAR", get_value_function = "g_value_get_uchar", set_value_function = "g_value_set_uchar", default_value = "\'\\0\'")]
 [IntegerType (rank = 3, min = 0, max = 255)]
 public struct uchar {
-	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hhu");
 }
@@ -75,7 +73,6 @@ public struct int {
 	[CCode (cname = "G_MAXINT")]
 	public static int MAX;
 
-	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%i");
 
@@ -95,7 +92,6 @@ public struct uint {
 	[CCode (cname = "G_MAXUINT")]
 	public static uint MAX;
 
-	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%u");
 
@@ -115,7 +111,6 @@ public struct short {
 	[CCode (cname = "G_MAXSHORT")]
 	public static short MAX;
 
-	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hi");
 }
@@ -129,7 +124,6 @@ public struct ushort {
 	[CCode (cname = "G_MAXUSHORT")]
 	public static ushort MAX;
 
-	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hu");
 }
@@ -143,7 +137,6 @@ public struct long {
 	[CCode (cname = "G_MAXLONG")]
 	public static long MAX;
 
-	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%li");
 }
@@ -157,7 +150,6 @@ public struct ulong {
 	[CCode (cname = "G_MAXULONG")]
 	public static ulong MAX;
 
-	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%lu");
 }
@@ -171,7 +163,6 @@ public struct size_t {
 	[CCode (cname = "G_MAXSIZE")]
 	public static ulong MAX;
 
-	[InstanceLast]
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%zu");
 
@@ -188,7 +179,6 @@ public struct ssize_t {
 	[CCode (cname = "G_MAXSSIZE")]
 	public static long MAX;
 
-	[InstanceLast]
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%zi");
 }
@@ -202,7 +192,7 @@ public struct int8 {
 	[CCode (cname = "G_MAXINT8")]
 	public static int8 MAX;
 
-	[CCode (cname = "g_strdup_printf", instance_pos = -1), InstanceLast]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hhi");
 }
 
@@ -215,7 +205,7 @@ public struct uint8 {
 	[CCode (cname = "G_MAXUINT8")]
 	public static uint8 MAX;
 
-	[CCode (cname = "g_strdup_printf", instance_pos = -1), InstanceLast]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hhu");
 }
 
@@ -228,7 +218,7 @@ public struct int16 {
 	[CCode (cname = "G_MAXINT16")]
 	public static int16 MAX;
 
-	[CCode (cname = "g_strdup_printf", instance_pos = -1), InstanceLast]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hi");
 }
 
@@ -241,7 +231,7 @@ public struct uint16 {
 	[CCode (cname = "G_MAXUINT16")]
 	public static uint16 MAX;
 
-	[CCode (cname = "g_strdup_printf", instance_pos = -1), InstanceLast]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hu");
 }
 
@@ -254,7 +244,7 @@ public struct int32 {
 	[CCode (cname = "G_MAXINT32")]
 	public static int32 MAX;
 
-	[CCode (cname = "g_strdup_printf", instance_pos = -1), InstanceLast]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%i");
 }
 
@@ -267,7 +257,6 @@ public struct uint32 {
 	[CCode (cname = "G_MAXUINT32")]
 	public static uint32 MAX;
 
-	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%u");
 }
@@ -281,7 +270,6 @@ public struct int64 {
 	[CCode (cname = "G_MAXINT64")]
 	public static int64 MAX;
 
-	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%lli");
 }
@@ -295,7 +283,6 @@ public struct uint64 {
 	[CCode (cname = "G_MAXUINT64")]
 	public static uint64 MAX;
 
-	[InstanceLast ()]
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%llu");
 }
@@ -340,7 +327,7 @@ public struct float {
 	[CCode (cname = "isinf")]
 	public int is_infinity ();
 
-	[CCode (cname = "g_strdup_printf", instance_pos = -1), InstanceLast]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%g");
 }
 
@@ -384,7 +371,7 @@ public struct double {
 	[CCode (cname = "isinf")]
 	public int is_infinity ();
 
-	[CCode (cname = "g_strdup_printf", instance_pos = -1), InstanceLast]
+	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%g");
 }
 
@@ -2074,15 +2061,12 @@ namespace GLib {
 		[CCode (cname = "fprintf")]
 		[PrintfFormat ()]
 		public void printf (string format, ...);
-		[InstanceLast ()]
 		[CCode (cname = "fputc", instance_pos = -1)]
 		public void putc (char c);
-		[InstanceLast ()]
 		[CCode (cname = "fputs", instance_pos = -1)]
 		public void puts (string s);
 		[CCode (cname = "fgetc")]
 		public int getc ();
-		[InstanceLast ()]
 		[CCode (cname = "fgets", instance_pos = -1)]
 		public weak string gets (string s, int size);
 		[CCode (cname = "feof")]
@@ -2824,10 +2808,6 @@ namespace GLib {
 		public string str;
 		public long len;
 		public long allocated_len;
-	}
-
-	// will be removed in Vala 0.3.2
-	public class String {
 	}
 
 	/* Pointer Arrays */
