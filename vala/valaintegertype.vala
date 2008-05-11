@@ -47,9 +47,12 @@ public class Vala.IntegerType : ValueType {
 			var target_st = (Struct) target_type.data_type;
 			if (target_st.is_integer_type ()) {
 				var int_attr = target_st.get_attribute ("IntegerType");
-				if (int_attr.has_argument ("min") && int_attr.has_argument ("max")) {
+				if (int_attr != null && int_attr.has_argument ("min") && int_attr.has_argument ("max")) {
 					int val = literal.value.to_int ();
 					return (val >= int_attr.get_integer ("min") && val <= int_attr.get_integer ("max"));
+				} else {
+					// assume to be compatible if the target type doesn't specify limits
+					return true;
 				}
 			}
 		} else if (target_type.data_type is Enum && literal.get_type_name () == "int") {

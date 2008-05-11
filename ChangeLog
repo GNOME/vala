@@ -1,5 +1,10 @@
 2008-05-11  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaintegertype.vala: fix assignment of integer literals to
+	derived integer types, fixes bug 530809
+
+2008-05-11  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: fix gtk_message_dialog_new* bindings,
 	fixes bug 531628
 
