@@ -2818,28 +2818,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var ccomma = new CCodeCommaExpression ();
 			ccomma.append_expression (new CCodeAssignment (ctemp, (CCodeExpression) expr.ccodenode));
 
-			if (expr.static_type.data_type == glist_type) {
-				bool is_ref = false;
-				bool is_class = false;
-				bool is_interface = false;
-
-				foreach (DataType type_arg in expr.static_type.get_type_arguments ()) {
-					is_ref |= type_arg.takes_ownership;
-					is_class |= type_arg.data_type is Class;
-					is_interface |= type_arg.data_type is Interface;
-				}
-			
-				if (is_ref && (is_class || is_interface)) {
-					var crefcall = new CCodeFunctionCall (new CCodeIdentifier ("g_list_foreach"));
-
-					crefcall.add_argument (ctemp);
-					crefcall.add_argument (new CCodeIdentifier ("(GFunc) g_object_ref"));
-					crefcall.add_argument (new CCodeConstant ("NULL"));
-
-					ccomma.append_expression (crefcall);
-				}
-			}
-
 			CCodeExpression cifnull;
 			if (expr.static_type.data_type != null) {
 				cifnull = new CCodeConstant ("NULL");

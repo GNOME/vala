@@ -1,5 +1,9 @@
 2008-05-11  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: remove obsolete GList copy code
+
+2008-05-11  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorsignal.vala:
 
 	Use correct marshaller for string arrays,
