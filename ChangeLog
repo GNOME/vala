@@ -1,5 +1,13 @@
 2008-05-11  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am:
+	* vala/valafieldprototype.vala:
+	* vala/valasemanticanalyzer.vala:
+
+	Set appropriate static type for field prototypes, fixes bug 532314
+
+2008-05-11  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/libxml-2.0.vapi: specify free functions, fixes bug 531631
 
 2008-05-11  Jürg Billeter  <j@bitron.ch>

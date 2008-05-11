@@ -1701,9 +1701,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (instance && !may_access_instance_members) {
 			expr.prototype_access = true;
 
-			// also set static type for prototype access
-			// required when using instance methods as delegates in constants
-			expr.static_type = get_static_type_for_symbol (expr.symbol_reference);
+			if (expr.symbol_reference is Method) {
+				// also set static type for prototype access
+				// required when using instance methods as delegates in constants
+				// TODO replace by MethodPrototype
+				expr.static_type = get_static_type_for_symbol (expr.symbol_reference);
+			} else if (expr.symbol_reference is Field) {
+				expr.static_type = new FieldPrototype ((Field) expr.symbol_reference);
+			}
 		} else {
 			expr.static_type = get_static_type_for_symbol (expr.symbol_reference);
 

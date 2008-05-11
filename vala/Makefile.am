@@ -65,6 +65,7 @@ libvalacore_la_VALASOURCES = \
 	valaexpression.vala \
 	valaexpressionstatement.vala \
 	valafield.vala \
+	valafieldprototype.vala \
 	valaforeachstatement.vala \
 	valaformalparameter.vala \
 	valaforstatement.vala \
