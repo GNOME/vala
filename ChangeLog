@@ -1,5 +1,12 @@
 2008-05-11  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valastringliteral.vala:
+
+	Fix syntax error in .vapi file when using string literal as default
+	argument, patch by Jared Moore, fixes bug 532564
+
+2008-05-11  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/valaccodewriter.vala:
 	* gobject/valaccodegeneratorsourcefile.vala:
 
