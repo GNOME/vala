@@ -1,5 +1,10 @@
 2008-05-11  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: fix freeing nested GLists and
+	GSLists, fixes bug 443514
+
+2008-05-11  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: remove obsolete GList copy code
 
 2008-05-11  Jürg Billeter  <j@bitron.ch>

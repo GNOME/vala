@@ -1285,7 +1285,25 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	private CCodeExpression? get_destroy_func_expression (DataType type) {
-		if (type.data_type != null) {
+		if (type.data_type == glist_type || type.data_type == gslist_type) {
+			// create wrapper function to free list elements if necessary
+
+			bool takes_ownership = false;
+			CCodeExpression element_destroy_func_expression = null;
+
+			foreach (DataType type_arg in type.get_type_arguments ()) {
+				takes_ownership = type_arg.takes_ownership;
+				if (takes_ownership) {
+					element_destroy_func_expression = get_destroy_func_expression (type_arg);
+				}
+			}
+			
+			if (takes_ownership && element_destroy_func_expression is CCodeIdentifier) {
+				return new CCodeIdentifier (generate_glist_free_wrapper (type, (CCodeIdentifier) element_destroy_func_expression));
+			} else {
+				return new CCodeIdentifier (type.data_type.get_free_function ());
+			}
+		} else if (type.data_type != null) {
 			string unref_function;
 			if (type.data_type.is_reference_counting ()) {
 				unref_function = type.data_type.get_unref_function ();
@@ -1307,6 +1325,52 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else {
 			return new CCodeConstant ("NULL");
 		}
+	}
+
+	private string generate_glist_free_wrapper (DataType list_type, CCodeIdentifier element_destroy_func_expression) {
+		string destroy_func = "_%s_%s".printf (list_type.data_type.get_free_function (), element_destroy_func_expression.name);
+
+		if (!add_wrapper (destroy_func)) {
+			// wrapper already defined
+			return destroy_func;
+		}
+
+		// declaration
+
+		var function = new CCodeFunction (destroy_func, "void");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+
+		function.add_parameter (new CCodeFormalParameter ("self", list_type.get_cname ()));
+
+		// definition
+
+		var block = new CCodeBlock ();
+
+		CCodeFunctionCall element_free_call;
+		if (list_type.data_type == glist_type) {
+			element_free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_list_foreach"));
+		} else {
+			element_free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_slist_foreach"));
+		}
+		element_free_call.add_argument (new CCodeIdentifier ("self"));
+		element_free_call.add_argument (new CCodeCastExpression (element_destroy_func_expression, "GFunc"));
+		element_free_call.add_argument (new CCodeConstant ("NULL"));
+		block.add_statement (new CCodeExpressionStatement (element_free_call));
+
+		var cfreecall = new CCodeFunctionCall (new CCodeIdentifier (list_type.data_type.get_free_function ()));
+		cfreecall.add_argument (new CCodeIdentifier ("self"));
+		block.add_statement (new CCodeExpressionStatement (cfreecall));
+
+		// append to file
+
+		source_type_member_declaration.append (function.copy ());
+
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return destroy_func;
 	}
 
 	public CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression expr) {
@@ -1334,30 +1398,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		/* set freed references to NULL to prevent further use */
 		var ccomma = new CCodeCommaExpression ();
 
-		if (type.data_type == glist_type || type.data_type == gslist_type) {
-			bool takes_ownership = false;
-			CCodeExpression destroy_func_expression = null;
-
-			foreach (DataType type_arg in type.get_type_arguments ()) {
-				takes_ownership = type_arg.takes_ownership;
-				if (takes_ownership) {
-					destroy_func_expression = get_destroy_func_expression (type_arg);
-				}
-			}
-			
-			if (takes_ownership) {
-				CCodeFunctionCall cunrefcall;
-				if (type.data_type == glist_type) {
-					cunrefcall = new CCodeFunctionCall (new CCodeIdentifier ("g_list_foreach"));
-				} else {
-					cunrefcall = new CCodeFunctionCall (new CCodeIdentifier ("g_slist_foreach"));
-				}
-				cunrefcall.add_argument (cvar);
-				cunrefcall.add_argument (new CCodeCastExpression (destroy_func_expression, "GFunc"));
-				cunrefcall.add_argument (new CCodeConstant ("NULL"));
-				ccomma.append_expression (cunrefcall);
-			}
-		} else if (type.data_type == gstringbuilder_type) {
+		if (type.data_type == gstringbuilder_type) {
 			ccall.add_argument (new CCodeConstant ("TRUE"));
 		} else if (type is ArrayType) {
 			var array_type = (ArrayType) type;
