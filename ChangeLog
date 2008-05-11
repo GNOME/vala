@@ -1,5 +1,12 @@
 2008-05-11  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorsignal.vala:
+
+	Use correct marshaller for string arrays,
+	patch by Ali Sabil, fixes bug 531251
+
+2008-05-11  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am:
 	* vala/valafieldprototype.vala:
 	* vala/valasemanticanalyzer.vala:

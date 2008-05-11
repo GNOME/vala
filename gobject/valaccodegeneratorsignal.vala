@@ -30,7 +30,11 @@ public class Vala.CCodeGenerator {
 		} else if (t is ErrorType) {
 			return ("POINTER");
 		} else if (t is ArrayType) {
-			return ("POINTER");
+			if (((ArrayType) t).element_type.data_type == string_type.data_type) {
+				return ("BOXED");
+			} else {
+				return ("POINTER");
+			}
 		} else if (t is VoidType) {
 			return ("VOID");
 		} else {
@@ -195,7 +199,7 @@ public class Vala.CCodeGenerator {
 		
 		CCodeFunctionCall fc;
 		
-		if (return_type.data_type != null) {
+		if (return_type.data_type != null || return_type.is_array ()) {
 			var_decl = new CCodeDeclaration (get_value_type_name_from_type_reference (return_type));
 			var_decl.add_declarator (new CCodeVariableDeclarator ("v_return"));
 			marshaller_body.add_statement (var_decl);
@@ -243,11 +247,17 @@ public class Vala.CCodeGenerator {
 		}
 		fc.add_argument (new CCodeIdentifier ("data2"));
 		
-		if (return_type.data_type != null) {
+		if (return_type.data_type != null || return_type.is_array ()) {
 			marshaller_body.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("v_return"), fc)));
 			
 			CCodeFunctionCall set_fc;
-			if (return_type.type_parameter != null) {
+			if (return_type.is_array ()) {
+				if (((ArrayType)return_type).element_type.data_type == string_type.data_type) {
+					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
+				} else {
+					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
+				}
+			} else if (return_type.type_parameter != null) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
 			} else if (return_type is ErrorType) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
