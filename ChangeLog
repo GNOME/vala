@@ -1,5 +1,10 @@
 2008-05-12  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeclassbinding.vala: support methods throwing
+	exceptions in D-Bus services, patch by Ali Sabil
+
+2008-05-12  Jürg Billeter  <j@bitron.ch>
+
 	* doc/vala/namespaces.xml:
 
 	Extend namespaces section, based on patch by Phil Housley

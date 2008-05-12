@@ -769,15 +769,27 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 				continue;
 			}
 
+			Gee.Collection<FormalParameter> parameters;
+
+			if (m.get_error_domains ().size > 0) {
+				parameters = new Gee.ArrayList<FormalParameter> ();
+				foreach (FormalParameter param in m.get_parameters ()) {
+					parameters.add (param);
+				}
+				parameters.add (new FormalParameter ("error", codegen.gerror_type));
+			} else {
+				parameters = m.get_parameters ();
+			}
+
 			dbus_methods.append ("{ (GCallback) ");
 			dbus_methods.append (m.get_cname ());
 			dbus_methods.append (", ");
-			dbus_methods.append (codegen.get_marshaller_function (m.get_parameters (), m.return_type));
+			dbus_methods.append (codegen.get_marshaller_function (parameters, m.return_type));
 			dbus_methods.append (", ");
 			dbus_methods.append (blob_len.to_string ());
 			dbus_methods.append (" },\n");
 
-			codegen.generate_marshaller (m.get_parameters (), m.return_type);
+			codegen.generate_marshaller (parameters, m.return_type);
 
 			long start = blob.len;
 
