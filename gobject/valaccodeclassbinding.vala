@@ -769,27 +769,24 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 				continue;
 			}
 
-			Gee.Collection<FormalParameter> parameters;
-
-			if (m.get_error_domains ().size > 0) {
-				parameters = new Gee.ArrayList<FormalParameter> ();
-				foreach (FormalParameter param in m.get_parameters ()) {
-					parameters.add (param);
-				}
-				parameters.add (new FormalParameter ("error", codegen.gerror_type));
-			} else {
-				parameters = m.get_parameters ();
+			var parameters = new Gee.ArrayList<FormalParameter> ();
+			foreach (FormalParameter param in m.get_parameters ()) {
+				parameters.add (param);
 			}
+			if (!(m.return_type is VoidType)) {
+				parameters.add (new FormalParameter ("result", new PointerType (new VoidType ())));
+			}
+			parameters.add (new FormalParameter ("error", codegen.gerror_type));
 
 			dbus_methods.append ("{ (GCallback) ");
-			dbus_methods.append (m.get_cname ());
+			dbus_methods.append (generate_dbus_wrapper (m));
 			dbus_methods.append (", ");
-			dbus_methods.append (codegen.get_marshaller_function (parameters, m.return_type));
+			dbus_methods.append (codegen.get_marshaller_function (parameters, codegen.bool_type));
 			dbus_methods.append (", ");
 			dbus_methods.append (blob_len.to_string ());
 			dbus_methods.append (" },\n");
 
-			codegen.generate_marshaller (parameters, m.return_type);
+			codegen.generate_marshaller (parameters, codegen.bool_type);
 
 			long start = blob.len;
 
@@ -837,7 +834,7 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 				start++;
 				blob.append ("F\\0");
 				start++;
-				blob.append ("R\\0");
+				blob.append ("N\\0");
 				start++;
 
 				blob.append (m.return_type.get_type_signature ());
@@ -899,6 +896,63 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 		install_call.add_argument (new CCodeIdentifier (cl.get_type_id ()));
 		install_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("%s_dbus_object_info".printf (cl.get_lower_case_cname ()))));
 		codegen.class_init_fragment.append (new CCodeExpressionStatement (install_call));
+	}
+
+	string generate_dbus_wrapper (Method m) {
+		string wrapper_name = "_dbus_%s".printf (m.get_cname ());
+
+		// declaration
+
+		var function = new CCodeFunction (wrapper_name, "gboolean");
+		function.modifiers = CCodeModifiers.STATIC;
+		m.ccodenode = function;
+
+		function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
+
+		foreach (FormalParameter param in m.get_parameters ()) {
+			function.add_parameter ((CCodeFormalParameter) param.ccodenode);
+		}
+
+		if (!(m.return_type is VoidType)) {
+			function.add_parameter (new CCodeFormalParameter ("result", m.return_type.get_cname () + "*"));
+		}
+
+		function.add_parameter (new CCodeFormalParameter ("error", "GError**"));
+
+		// definition
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
+
+		ccall.add_argument (new CCodeIdentifier ("self"));
+
+		foreach (FormalParameter param in m.get_parameters ()) {
+			ccall.add_argument (new CCodeIdentifier (param.name));
+		}
+
+		if (m.get_error_domains ().size > 0) {
+			ccall.add_argument (new CCodeIdentifier ("error"));
+		}
+
+		CCodeExpression expr;
+		if (m.return_type is VoidType) {
+			expr = ccall;
+		} else {
+			expr = new CCodeAssignment (new CCodeIdentifier ("*result"), ccall);
+		}
+
+		var block = new CCodeBlock ();
+		block.add_statement (new CCodeExpressionStatement (expr));
+		var no_error = new CCodeBinaryExpression (CCodeBinaryOperator.OR, new CCodeIdentifier ("!error"), new CCodeIdentifier ("!*error"));
+		block.add_statement (new CCodeReturnStatement (no_error));
+
+		// append to file
+
+		codegen.source_type_member_declaration.append (function.copy ());
+
+		function.block = block;
+		codegen.source_type_member_definition.append (function);
+
+		return wrapper_name;
 	}
 }
 
