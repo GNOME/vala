@@ -8,12 +8,14 @@ chapter_data = \
 	expressions.html \
 	statements.html \
 	namespaces.html \
+	methods.html \
 	classes.html \
 	structs.html \
 	interfaces.html \
 	enums.html \
 	delegates.html \
 	exceptions.html \
+	attributes.html \
 	$(NULL)
 
 built_data = \
@@ -44,12 +46,14 @@ book_sources = \
 	expressions.xml \
 	statements.xml \
 	namespaces.xml \
+	methods.xml \
 	classes.xml \
 	structs.xml \
 	interfaces.xml \
 	enums.xml \
 	delegates.xml \
 	exceptions.xml \
+	attributes.xml \
 	$(NULL)
 
 MOSTLYCLEANFILES = $(built_data)

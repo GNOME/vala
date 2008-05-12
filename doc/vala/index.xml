@@ -10,12 +10,14 @@
 		<xi:include href="expressions.xml"/>
 		<xi:include href="statements.xml"/>
 		<xi:include href="namespaces.xml"/>
+		<xi:include href="methods.xml"/>
 		<xi:include href="classes.xml"/>
 		<xi:include href="structs.xml"/>
 		<xi:include href="interfaces.xml"/>
 		<xi:include href="enums.xml"/>
 		<xi:include href="delegates.xml"/>
 		<xi:include href="exceptions.xml"/>
+		<xi:include href="attributes.xml"/>
 	</body>
 </html>
 

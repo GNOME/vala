@@ -1,5 +1,14 @@
 2008-05-12  Jürg Billeter  <j@bitron.ch>
 
+	* doc/vala/Makefile.am:
+	* doc/vala/attributes.xml:
+	* doc/vala/index.xml:
+	* doc/vala/methods.xml:
+
+	Add sections for methods and attributes
+
+2008-05-12  Jürg Billeter  <j@bitron.ch>
+
 	* doc/vala/expressions.xml:
 
 	Extend expressions section, based on patch by Phil Housley
