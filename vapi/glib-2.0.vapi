@@ -1421,9 +1421,18 @@ namespace GLib {
 	public static void set_printerr_handler (PrintFunc func);
 
 	public static void return_if_fail (bool expr);
+	public static void return_if_reached ();
+	public static void warn_if_fail (bool expr);
+	public static void warn_if_reached ();
+
 	public static void assert (bool expr);
 	[NoReturn]
 	public static void assert_not_reached ();
+
+	public static void on_error_query (string? prg_name = null);
+	public static void on_error_stack_trace (string? prg_name = null);
+	[CCode (cname = "G_BREAKPOINT")]
+	public static void breakpoint ();
 
 	/* Message Logging */
 	
