@@ -1,5 +1,10 @@
 2008-05-12  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala: fix `var' with pointer types,
+	fixes bug 527779
+
+2008-05-12  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Add time_t and struct tm bindings,

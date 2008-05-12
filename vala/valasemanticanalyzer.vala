@@ -816,6 +816,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			local.variable_type = local.initializer.static_type.copy ();
 			local.variable_type.takes_ownership = (local.variable_type.data_type == null || local.variable_type.data_type.is_reference_type ());
 			local.variable_type.transfers_ownership = false;
+
+			if (local.variable_type is PointerType) {
+				local.variable_type.takes_ownership = false;
+			}
 		}
 
 		if (local.initializer != null) {
