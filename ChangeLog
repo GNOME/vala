@@ -1,3 +1,8 @@
+2008-05-12  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala: add basic support for
+	instance_pos attribute to struct creation methods, fixes bug 530774
+
 2008-05-11  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodetypesymbolbinding.vala: fix double properties

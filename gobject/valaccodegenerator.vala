@@ -2942,7 +2942,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			creation_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
 
-			if (expr.type_reference.data_type is Struct) {
+			if (expr.type_reference.data_type is Struct && !(m.cinstance_parameter_position < 0)) {
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 			} else if (expr.type_reference.data_type is Class) {
 				var cl = (Class) expr.type_reference.data_type;
@@ -3038,6 +3038,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			
 				creation_call.add_argument ((CCodeExpression) param.default_expression.ccodenode);
 				i++;
+			}
+
+			if (expr.type_reference.data_type is Struct && m.cinstance_parameter_position < 0) {
+				// instance parameter is at the end in a struct creation method
+				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 			}
 
 			if (expr.can_fail) {
