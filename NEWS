@@ -1,3 +1,14 @@
+Vala 0.3.2
+==========
+
+ * Add support for class constructors, class fields, and class methods.
+ * Various improvements to methods in D-Bus services.
+ * Add support for properties and signals in D-Bus services (Yu Feng)
+ * Add Time API to GLib bindings.
+ * Documentation improvements (Phil Housley)
+ * Updates to the GLib and GTK+ bindings.
+ * Many bug fixes.
+
 Vala 0.3.1
 ==========
 

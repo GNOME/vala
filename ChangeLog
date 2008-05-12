@@ -1,5 +1,9 @@
 2008-05-12  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS: update for 0.3.2 release
+
+2008-05-12  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeclassbinding.vala: improve D-Bus service support
 	for arbitrary return types
 
