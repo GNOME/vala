@@ -1,5 +1,11 @@
 2008-05-12  Jürg Billeter  <j@bitron.ch>
 
+	* doc/vala/namespaces.xml:
+
+	Extend namespaces section, based on patch by Phil Housley
+
+2008-05-12  Jürg Billeter  <j@bitron.ch>
+
 	* doc/vala/statements.xml:
 
 	Small improvements to statements section
