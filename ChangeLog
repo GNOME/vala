@@ -1,5 +1,11 @@
 2008-05-12  Jürg Billeter  <j@bitron.ch>
 
+	* doc/vala/statements.xml:
+
+	Small improvements to statements section
+
+2008-05-12  Jürg Billeter  <j@bitron.ch>
+
 	* doc/vala/Makefile.am:
 	* doc/vala/attributes.xml:
 	* doc/vala/index.xml:
