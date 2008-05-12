@@ -1,5 +1,12 @@
 2008-05-12  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Add time_t and struct tm bindings,
+	based on patch by Evan Nemerson, fixes bug 527778
+
+2008-05-12  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala: add basic support for
 	instance_pos attribute to struct creation methods, fixes bug 530774
 

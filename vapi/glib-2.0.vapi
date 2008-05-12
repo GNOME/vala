@@ -375,6 +375,12 @@ public struct double {
 	public string to_string (string format = "%g");
 }
 
+[CCode (cheader_filename = "time.h")]
+public struct time_t {
+	[CCode (cname = "time")]
+	public time_t ();
+}
+
 [SimpleType]
 [CCode (cname = "gunichar", cprefix = "g_unichar_", cheader_filename = "glib.h", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0U")]
 [IntegerType (rank = 7)]
@@ -1603,16 +1609,12 @@ namespace GLib {
 		public bool valid (); 
 	}
 
-	[CCode (free_function = "g_date_free")]
-	public class Date : Boxed {
-		public Date ();
-		public Date.dmy (DateDay day, DateMonth month, DateYear year);
-		public Date.julian (uint julian_day);
+	public struct Date {
 		public void clear (uint n_dates = 1);
 		public void set_day (DateDay day);
 		public void set_month (DateMonth month);
 		public void set_year (DateYear year);
-		public void set_dmy (DateDay day, DateMonth month, DateYear y);
+		public void set_dmy (DateDay day, int month, DateYear y);
 		public void set_julian (uint julian_day);
 		public void set_time_val (TimeVal timeval);
 		public void set_parse (string str);
@@ -1639,6 +1641,8 @@ namespace GLib {
 		public uint get_iso8601_week_of_year ();
 		[CCode (instance_pos = -1)]
 		public size_t strftime (char[] s, string format);
+		[CCode (cname = "g_date_to_struct_tm")]
+		public void to_time (out Time tm);
 		public bool valid ();
 		public static uchar get_days_in_month (DateMonth month, DateYear year);
 		public static bool valid_day (DateDay day);
@@ -1647,7 +1651,40 @@ namespace GLib {
 		public static bool valid_weekday (DateWeekday weekday);
 	}
 
-	public struct Time : int32 {
+	[CCode (cname = "struct tm", cheader_filename="time.h")]
+	public struct Time {
+		[CCode (cname = "tm_sec")]
+		public int second;
+		[CCode (cname = "tm_min")]
+		public int minute;
+		[CCode (cname = "tm_hour")]
+		public int hour;
+		[CCode (cname = "tm_mday")]
+		public int day;
+		[CCode (cname = "tm_mon")]
+		public int month;
+		[CCode (cname = "tm_year")]
+		public int year;
+		[CCode (cname = "tm_wday")]
+		public int weekday;
+		[CCode (cname = "tm_yday")]
+		public int day_of_year;
+		[CCode (cname = "tm_isdst")]
+		public int isdst;
+
+		[CCode (cname = "gmtime_r", instance_pos = -1)]
+		public Time.gm (time_t time);
+		[CCode (cname = "localtime_r", instance_pos = -1)]
+		public Time.local (time_t time);
+
+		[CCode (cname = "asctime_r")]
+		public string to_string (char* buffer = new char[26]);
+		public time_t mktime ();
+
+		[CCode (instance_pos = -1)]
+		public size_t strftime (char[] s, string format);
+		[CCode (instance_pos = -1)]
+		public weak string? strptime (string buf, string format);
 	}
 
 	/* Random Numbers */
