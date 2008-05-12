@@ -1,3 +1,9 @@
+2008-05-12  Jürg Billeter  <j@bitron.ch>
+
+	* doc/vala/expressions.xml:
+
+	Extend expressions section, based on patch by Phil Housley
+
 2008-05-12  Marc-André Lureau  <marcandre.lureau@gmail.com>
 
 	* vapi/glib-2.0.vapi: add some debug and logging function
