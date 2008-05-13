@@ -245,7 +245,7 @@ public class Vala.SourceFile : Object {
 			s = sym;
 		} else if (sym is FormalParameter) {
 			var fp = (FormalParameter) sym;
-			s = fp.type_reference.data_type;
+			s = fp.parameter_type.data_type;
 			if (s == null) {
 				/* generic type parameter */
 				return;

@@ -549,22 +549,22 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (context.non_null && p.default_expression != null) {
 			if (p.default_expression is NullLiteral
-			    && !p.type_reference.nullable
+			    && !p.parameter_type.nullable
 			    && p.direction != ParameterDirection.OUT) {
-				Report.warning (p.source_reference, "`null' incompatible with parameter type `%s`".printf (p.type_reference.to_string ()));
+				Report.warning (p.source_reference, "`null' incompatible with parameter type `%s`".printf (p.parameter_type.to_string ()));
 			}
 		}
 
 		if (!p.ellipsis) {
 			if (!p.is_internal_symbol ()) {
-				current_source_file.add_type_dependency (p.type_reference, SourceFileDependencyType.HEADER_SHALLOW);
+				current_source_file.add_type_dependency (p.parameter_type, SourceFileDependencyType.HEADER_SHALLOW);
 			}
-			current_source_file.add_type_dependency (p.type_reference, SourceFileDependencyType.SOURCE);
+			current_source_file.add_type_dependency (p.parameter_type, SourceFileDependencyType.SOURCE);
 
 			// check whether parameter type is at least as accessible as the method
-			if (!is_type_accessible (p, p.type_reference)) {
+			if (!is_type_accessible (p, p.parameter_type)) {
 				p.error = true;
-				Report.error (p.source_reference, "parameter type `%s` is less accessible than method `%s`".printf (p.type_reference.to_string (), p.parent_symbol.get_full_name ()));
+				Report.error (p.source_reference, "parameter type `%s` is less accessible than method `%s`".printf (p.parameter_type.to_string (), p.parent_symbol.get_full_name ()));
 				return;
 			}
 		}
@@ -1397,7 +1397,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return type;
 		} else if (sym is FormalParameter) {
 			var p = (FormalParameter) sym;
-			var type = p.type_reference.copy ();
+			var type = p.parameter_type.copy ();
 			type.transfers_ownership = false;
 			return type;
 		} else if (sym is DataType) {
@@ -1785,7 +1785,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Expression arg = arg_it.get ();
 
 				/* store expected type for callback parameters */
-				arg.expected_type = param.type_reference;
+				arg.expected_type = param.parameter_type;
 			}
 		}
 
@@ -1856,7 +1856,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			/* header file necessary if we need to cast argument */
-			current_source_file.add_type_dependency (param.type_reference, SourceFileDependencyType.SOURCE);
+			current_source_file.add_type_dependency (param.parameter_type, SourceFileDependencyType.SOURCE);
 
 			if (!arg_it.next ()) {
 				if (param.default_expression == null) {
@@ -1872,15 +1872,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return false;
 				} else if (arg.value_type == null) {
 					// disallow untyped arguments except for type inference of callbacks
-					if (!(param.type_reference is DelegateType) || !(arg.symbol_reference is Method)) {
+					if (!(param.parameter_type is DelegateType) || !(arg.symbol_reference is Method)) {
 						expr.error = true;
 						Report.error (arg.source_reference, "Invalid type for argument %d".printf (i + 1));
 						return false;
 					}
-				} else if (!arg.value_type.compatible (param.type_reference)
+				} else if (!arg.value_type.compatible (param.parameter_type)
 				           && !(arg is NullLiteral && param.direction == ParameterDirection.OUT)) {
 					expr.error = true;
-					Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.value_type.to_string (), param.type_reference.to_string ()));
+					Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.value_type.to_string (), param.parameter_type.to_string ()));
 					return false;
 				} else {
 					// 0 => null, 1 => in, 2 => ref, 3 => out
@@ -1901,7 +1901,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 							expr.error = true;
 							Report.error (arg.source_reference, "Argument %d: Cannot pass null to reference parameter".printf (i + 1));
 							return false;
-						} else if (context.non_null && param.direction != ParameterDirection.OUT && !param.type_reference.nullable) {
+						} else if (context.non_null && param.direction != ParameterDirection.OUT && !param.parameter_type.nullable) {
 							Report.warning (arg.source_reference, "Argument %d: Cannot pass null to non-null parameter type".printf (i + 1));
 						}
 					} else if (arg_type == 1) {
@@ -2159,9 +2159,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			get_params_it.next ();
 			var get_param = get_params_it.get ();
 
-			var index_type = get_param.type_reference;
+			var index_type = get_param.parameter_type;
 			if (index_type.type_parameter != null) {
-				index_type = get_actual_type (expr.container.value_type, get_method, get_param.type_reference, expr);
+				index_type = get_actual_type (expr.container.value_type, get_method, get_param.parameter_type, expr);
 			}
 
 			if (!index.value_type.compatible (index_type)) {
@@ -2409,7 +2409,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Expression arg = arg_it.get ();
 
 					/* store expected type for callback parameters */
-					arg.expected_type = param.type_reference;
+					arg.expected_type = param.parameter_type;
 				}
 			}
 
@@ -2931,7 +2931,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			string lambda_param = lambda_param_it.get ();
 
-			var param = new FormalParameter (lambda_param, cb_param.type_reference);
+			var param = new FormalParameter (lambda_param, cb_param.parameter_type);
 
 			l.method.add_parameter (param);
 		}

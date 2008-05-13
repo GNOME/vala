@@ -193,12 +193,12 @@ public abstract class Vala.CCodeTypesymbolBinding : CCodeBinding {
 		}
 		csignew.add_argument (new CCodeConstant ("%d".printf (params_len)));
 		foreach (FormalParameter param in params) {
-			if (param.type_reference is PointerType || param.type_reference.type_parameter != null || param.direction != ParameterDirection.IN) {
+			if (param.parameter_type is PointerType || param.parameter_type.type_parameter != null || param.direction != ParameterDirection.IN) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
-			} else if (param.type_reference is ErrorType) {
+			} else if (param.parameter_type is ErrorType) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 			} else {
-				csignew.add_argument (new CCodeConstant (param.type_reference.data_type.get_type_id ()));
+				csignew.add_argument (new CCodeConstant (param.parameter_type.data_type.get_type_id ()));
 			}
 		}
 

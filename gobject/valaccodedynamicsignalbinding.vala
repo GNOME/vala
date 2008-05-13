@@ -126,8 +126,8 @@ public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 				first = false;
 				continue;
 			}
-			if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type != codegen.string_type.data_type) {
-				var array_type = (ArrayType) param.type_reference;
+			if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type != codegen.string_type.data_type) {
+				var array_type = (ArrayType) param.parameter_type;
 				if (array_type.element_type.data_type.get_type_id () == null) {
 					Report.error (param.source_reference, "unsupported parameter type for D-Bus signals");
 					return;
@@ -139,13 +139,13 @@ public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 				register_call.add_argument (carray_type);
 				add_call.add_argument (carray_type);
 			} else {
-				if (param.type_reference.get_type_id () == null) {
+				if (param.parameter_type.get_type_id () == null) {
 					Report.error (param.source_reference, "unsupported parameter type for D-Bus signals");
 					return;
 				}
 
-				register_call.add_argument (new CCodeIdentifier (param.type_reference.get_type_id ()));
-				add_call.add_argument (new CCodeIdentifier (param.type_reference.get_type_id ()));
+				register_call.add_argument (new CCodeIdentifier (param.parameter_type.get_type_id ()));
+				add_call.add_argument (new CCodeIdentifier (param.parameter_type.get_type_id ()));
 			}
 		}
 		register_call.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));

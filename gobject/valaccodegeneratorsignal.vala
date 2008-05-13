@@ -46,7 +46,7 @@ public class Vala.CCodeGenerator {
 		if (param.direction != ParameterDirection.IN) {
 			return ("POINTER");
 		} else {
-			return get_marshaller_type_name (param.type_reference);
+			return get_marshaller_type_name (param.parameter_type);
 		}
 	}
 	
@@ -106,7 +106,7 @@ public class Vala.CCodeGenerator {
 		if (p.direction != ParameterDirection.IN) {
 			return "gpointer";
 		} else {
-			return get_value_type_name_from_type_reference (p.type_reference);
+			return get_value_type_name_from_type_reference (p.parameter_type);
 		}
 	}
 	
@@ -233,12 +233,12 @@ public class Vala.CCodeGenerator {
 		i = 1;
 		foreach (FormalParameter p in params) {
 			string get_value_function;
-			if (p.type_reference is PointerType || p.type_reference.type_parameter != null || p.direction != ParameterDirection.IN) {
+			if (p.parameter_type is PointerType || p.parameter_type.type_parameter != null || p.direction != ParameterDirection.IN) {
 				get_value_function = "g_value_get_pointer";
-			} else if (p.type_reference is ErrorType) {
+			} else if (p.parameter_type is ErrorType) {
 				get_value_function = "g_value_get_pointer";
 			} else {
-				get_value_function = p.type_reference.data_type.get_get_value_function ();
+				get_value_function = p.parameter_type.data_type.get_get_value_function ();
 			}
 			var inner_fc = new CCodeFunctionCall (new CCodeIdentifier (get_value_function));
 			inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));

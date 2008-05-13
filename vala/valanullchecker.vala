@@ -102,7 +102,7 @@ public class Vala.NullChecker : CodeVisitor {
 		p.accept_children (this);
 
 		if (p.default_expression != null) {
-			check_compatible (p.default_expression, p.type_reference);
+			check_compatible (p.default_expression, p.parameter_type);
 		}
 	}
 

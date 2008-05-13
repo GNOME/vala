@@ -177,7 +177,7 @@ public class Vala.Delegate : Typesymbol {
 
 			// method is allowed to accept arguments of looser types (weaker precondition)
 			var method_param = method_params_it.get ();
-			if (!param.type_reference.stricter (method_param.type_reference)) {
+			if (!param.parameter_type.stricter (method_param.parameter_type)) {
 				return false;
 			}
 		}

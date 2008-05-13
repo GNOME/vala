@@ -405,7 +405,7 @@ public class Vala.Method : Member {
 				return false;
 			}
 			
-			if (!base_param.type_reference.equals (method_params_it.get ().type_reference)) {
+			if (!base_param.parameter_type.equals (method_params_it.get ().parameter_type)) {
 				invalid_match = "incompatible type of parameter %d".printf (param_index);
 				return false;
 			}

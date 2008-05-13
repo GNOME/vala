@@ -244,7 +244,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (context.module_init_method != null) {
 			module_init_fragment = new CCodeFragment ();
 			foreach (FormalParameter parameter in context.module_init_method.get_parameters ()) {
-				if (parameter.type_reference.data_type == type_module_type) {
+				if (parameter.parameter_type.data_type == type_module_type) {
 					in_plugin = true;
 					module_init_param_name = parameter.name;
 					break;
@@ -715,13 +715,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		p.accept_children (this);
 
 		if (!p.ellipsis) {
-			string ctypename = p.type_reference.get_cname ();
+			string ctypename = p.parameter_type.get_cname ();
 			string cname = p.name;
 
 			// pass non-simple structs always by reference
-			if (p.type_reference.data_type is Struct) {
-				var st = (Struct) p.type_reference.data_type;
-				if (!st.is_simple_type () && p.direction == ParameterDirection.IN && !p.type_reference.nullable) {
+			if (p.parameter_type.data_type is Struct) {
+				var st = (Struct) p.parameter_type.data_type;
+				if (!st.is_simple_type () && p.direction == ParameterDirection.IN && !p.parameter_type.nullable) {
 					ctypename += "*";
 				}
 			}
@@ -1081,10 +1081,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (b.parent_symbol is Method) {
 			var m = (Method) b.parent_symbol;
 			foreach (FormalParameter param in m.get_parameters ()) {
-				if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && param.type_reference.takes_ownership && param.direction == ParameterDirection.IN) {
+				if (param.parameter_type.data_type != null && param.parameter_type.data_type.is_reference_type () && param.parameter_type.takes_ownership && param.direction == ParameterDirection.IN) {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
-					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.type_reference, ma)));
+					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.parameter_type, ma)));
 				}
 			}
 		}
@@ -2139,10 +2139,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	private void append_param_free (Method m, CCodeFragment cfrag) {
 		foreach (FormalParameter param in m.get_parameters ()) {
-			if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && param.type_reference.takes_ownership && param.direction == ParameterDirection.IN) {
+			if (param.parameter_type.data_type != null && param.parameter_type.data_type.is_reference_type () && param.parameter_type.takes_ownership && param.direction == ParameterDirection.IN) {
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = param;
-				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.type_reference, ma)));
+				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.parameter_type, ma)));
 			}
 		}
 	}
@@ -2184,11 +2184,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		bool found = false;
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && param.type_reference.takes_ownership && param.direction == ParameterDirection.IN) {
+			if (param.parameter_type.data_type != null && param.parameter_type.data_type.is_reference_type () && param.parameter_type.takes_ownership && param.direction == ParameterDirection.IN) {
 				found = true;
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = param;
-				ccomma.append_expression (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.type_reference, ma));
+				ccomma.append_expression (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.parameter_type, ma));
 			}
 		}
 
@@ -2981,10 +2981,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					param = params_it.get ();
 					ellipsis = param.ellipsis;
 					if (!param.ellipsis) {
-						cexpr = get_implicit_cast_expression (cexpr, arg.value_type, param.type_reference);
+						cexpr = get_implicit_cast_expression (cexpr, arg.value_type, param.parameter_type);
 
 						// pass non-simple struct instances always by reference
-						if (param.type_reference.data_type is Struct && !((Struct) param.type_reference.data_type).is_simple_type ()) {
+						if (param.parameter_type.data_type is Struct && !((Struct) param.parameter_type.data_type).is_simple_type ()) {
 							// we already use a reference for arguments of ref and out parameters
 							if (param.direction == ParameterDirection.IN) {
 								if (cexpr is CCodeIdentifier) {
@@ -3008,8 +3008,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			
 				creation_call.add_argument (cexpr);
 
-				if (param != null && param.type_reference is DelegateType) {
-					var deleg_type = (DelegateType) param.type_reference;
+				if (param != null && param.parameter_type is DelegateType) {
+					var deleg_type = (DelegateType) param.parameter_type;
 					var d = deleg_type.delegate_symbol;
 					if (d.has_target) {
 						creation_call.add_argument (get_delegate_target_cexpression (arg));
@@ -3448,8 +3448,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
 
 			// handle array parameters
-			if (!param.no_array_length && param.type_reference is ArrayType) {
-				var array_type = (ArrayType) param.type_reference;
+			if (!param.no_array_length && param.parameter_type is ArrayType) {
+				var array_type = (ArrayType) param.parameter_type;
 				
 				var length_ctype = "int";
 				if (param.direction != ParameterDirection.IN) {
@@ -3510,8 +3510,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			carg_map.set (get_param_pos (param.cparameter_position), arg);
 
 			// handle array arguments
-			if (!param.no_array_length && param.type_reference is ArrayType) {
-				var array_type = (ArrayType) param.type_reference;
+			if (!param.no_array_length && param.parameter_type is ArrayType) {
+				var array_type = (ArrayType) param.parameter_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					CCodeExpression clength;
 					if (d_params.get (i).no_array_length) {

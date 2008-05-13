@@ -176,30 +176,30 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 					// http://bugzilla.gnome.org/show_bug.cgi?id=519597
 					bool multiple_cargs = false;
 
-					if (!param.no_array_length && param.type_reference is ArrayType) {
-						var array_type = (ArrayType) param.type_reference;
+					if (!param.no_array_length && param.parameter_type is ArrayType) {
+						var array_type = (ArrayType) param.parameter_type;
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							carg_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), codegen.get_array_length_cexpression (arg, dim));
 						}
 						multiple_cargs = true;
-					} else if (param.type_reference is DelegateType) {
-						var deleg_type = (DelegateType) param.type_reference;
+					} else if (param.parameter_type is DelegateType) {
+						var deleg_type = (DelegateType) param.parameter_type;
 						var d = deleg_type.delegate_symbol;
 						if (d.has_target) {
 							carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), codegen.get_delegate_target_cexpression (arg));
 							multiple_cargs = true;
 						}
-					} else if (param.type_reference is MethodType) {
+					} else if (param.parameter_type is MethodType) {
 						carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), codegen.get_delegate_target_cexpression (arg));
 						multiple_cargs = true;
 					}
 					if (param.direction == ParameterDirection.IN) {
 						// don't cast arguments passed by reference
-						cexpr = codegen.get_implicit_cast_expression (cexpr, arg.value_type, param.type_reference);
+						cexpr = codegen.get_implicit_cast_expression (cexpr, arg.value_type, param.parameter_type);
 					}
 
 					// pass non-simple struct instances always by reference
-					if (!(arg.value_type is NullType) && param.type_reference.data_type is Struct && !((Struct) param.type_reference.data_type).is_simple_type ()) {
+					if (!(arg.value_type is NullType) && param.parameter_type.data_type is Struct && !((Struct) param.parameter_type.data_type).is_simple_type ()) {
 						// we already use a reference for arguments of ref and out parameters
 						if (param.direction == ParameterDirection.IN) {
 							if (cexpr is CCodeIdentifier) {
@@ -239,7 +239,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 					}
 
 					// unref old value for non-null non-weak out arguments
-					if (param.direction == ParameterDirection.OUT && param.type_reference.takes_ownership && !(arg.value_type is NullType)) {
+					if (param.direction == ParameterDirection.OUT && param.parameter_type.takes_ownership && !(arg.value_type is NullType)) {
 						var unary = (UnaryExpression) arg;
 
 						// (ret_tmp = call (&tmp), free (var1), var1 = tmp, ret_tmp)
@@ -301,9 +301,9 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 			 * parameter yet */
 			param.default_expression.accept (codegen);
 		
-			if (!param.no_array_length && param.type_reference != null &&
-			    param.type_reference is ArrayType) {
-				var array_type = (ArrayType) param.type_reference;
+			if (!param.no_array_length && param.parameter_type != null &&
+			    param.parameter_type is ArrayType) {
+				var array_type = (ArrayType) param.parameter_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					carg_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), codegen.get_array_length_cexpression (param.default_expression, dim));
 				}

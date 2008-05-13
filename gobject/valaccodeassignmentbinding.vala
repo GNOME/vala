@@ -349,8 +349,8 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			set_params_it.next ();
 			var set_param = set_params_it.get ();
 
-			if (set_param.type_reference.type_parameter != null) {
-				var index_type = SemanticAnalyzer.get_actual_type (expr.container.value_type, set_method, set_param.type_reference, assignment);
+			if (set_param.parameter_type.type_parameter != null) {
+				var index_type = SemanticAnalyzer.get_actual_type (expr.container.value_type, set_method, set_param.parameter_type, assignment);
 				cindex = codegen.convert_to_generic_pointer (cindex, index_type);
 			}
 

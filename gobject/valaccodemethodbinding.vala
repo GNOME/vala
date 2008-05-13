@@ -251,10 +251,10 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 						break;
 					}
 
-					var t = param.type_reference.data_type;
+					var t = param.parameter_type.data_type;
 					if (t != null && t.is_reference_type ()) {
 						if (param.direction != ParameterDirection.OUT) {
-							var type_check = create_method_type_check_statement (m, creturn_type, t, (codegen.context.non_null && !param.type_reference.nullable), param.name);
+							var type_check = create_method_type_check_statement (m, creturn_type, t, (codegen.context.non_null && !param.parameter_type.nullable), param.name);
 							if (type_check != null) {
 								type_check.line = codegen.function.line;
 								cinit.append (type_check);
@@ -403,8 +403,8 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 		
 			var params = m.get_parameters ();
 			foreach (FormalParameter param in params) {
-				if (!param.no_array_length && param.type_reference is ArrayType) {
-					var array_type = (ArrayType) param.type_reference;
+				if (!param.no_array_length && param.parameter_type is ArrayType) {
+					var array_type = (ArrayType) param.parameter_type;
 					
 					var length_ctype = "int";
 					if (param.direction != ParameterDirection.IN) {
@@ -421,8 +421,8 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 				cparam_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
 				carg_map.set (codegen.get_param_pos (param.cparameter_position), new CCodeIdentifier (param.name));
 
-				if (param.type_reference is DelegateType) {
-					var deleg_type = (DelegateType) param.type_reference;
+				if (param.parameter_type is DelegateType) {
+					var deleg_type = (DelegateType) param.parameter_type;
 					var d = deleg_type.delegate_symbol;
 					if (d.has_target) {
 						var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname (param.name), "void*");
@@ -588,8 +588,8 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 
 	public void generate_cparameters (Method m, DataType creturn_type, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null) {
 		foreach (FormalParameter param in m.get_parameters ()) {
-			if (!param.no_array_length && param.type_reference is ArrayType) {
-				var array_type = (ArrayType) param.type_reference;
+			if (!param.no_array_length && param.parameter_type is ArrayType) {
+				var array_type = (ArrayType) param.parameter_type;
 				
 				var length_ctype = "int";
 				if (param.direction != ParameterDirection.IN) {
@@ -604,14 +604,14 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 
 			cparam_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
 
-			if (param.type_reference is DelegateType) {
-				var deleg_type = (DelegateType) param.type_reference;
+			if (param.parameter_type is DelegateType) {
+				var deleg_type = (DelegateType) param.parameter_type;
 				var d = deleg_type.delegate_symbol;
 				if (d.has_target) {
 					var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname (param.name), "void*");
 					cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), cparam);
 				}
-			} else if (param.type_reference is MethodType) {
+			} else if (param.parameter_type is MethodType) {
 				var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname (param.name), "void*");
 				cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), cparam);
 			}
@@ -746,12 +746,12 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			return false;
 		}
 		
-		if (!(param.type_reference is ArrayType)) {
+		if (!(param.parameter_type is ArrayType)) {
 			// parameter must be an array
 			return false;
 		}
 		
-		var array_type = (ArrayType) param.type_reference;
+		var array_type = (ArrayType) param.parameter_type;
 		if (array_type.element_type.data_type != codegen.string_type.data_type) {
 			// parameter must be an array of strings
 			return false;

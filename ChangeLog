@@ -1,5 +1,31 @@
 2008-05-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadelegate.vala:
+	* vala/valaformalparameter.vala:
+	* vala/valainterfacewriter.vala:
+	* vala/valamemorymanager.vala:
+	* vala/valamethod.vala:
+	* vala/valanullchecker.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasourcefile.vala:
+	* gobject/valaccodeassignmentbinding.vala:
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodedynamicmethodbinding.vala:
+	* gobject/valaccodedynamicsignalbinding.vala:
+	* gobject/valaccodeelementaccessbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodegeneratorsignal.vala:
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+	* gobject/valaccodememberaccessbinding.vala:
+	* gobject/valaccodemethodbinding.vala:
+	* gobject/valaccodetypesymbolbinding.vala:
+	* gobject/valagidlwriter.vala:
+
+	Rename FormalParameter.type_reference to
+	FormalParameter.parameter_type
+
+2008-05-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraytype.vala:
 	* vala/valafield.vala:
 	* vala/valainterfacewriter.vala:

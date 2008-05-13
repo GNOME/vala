@@ -245,12 +245,12 @@ public class Vala.MemoryManager : CodeVisitor {
 			if (params_it.next ()) {
 				var param = params_it.get ();
 				if (!param.ellipsis
-				    && param.type_reference.is_reference_type_or_type_parameter ()) {
-					bool is_ref = param.type_reference.transfers_ownership;
-					if (is_ref && param.type_reference.type_parameter != null) {
+				    && param.parameter_type.is_reference_type_or_type_parameter ()) {
+					bool is_ref = param.parameter_type.transfers_ownership;
+					if (is_ref && param.parameter_type.type_parameter != null) {
 						if (expr.call is MemberAccess) {
 							var ma = (MemberAccess) expr.call;
-							var param_type = SemanticAnalyzer.get_actual_type (ma.inner.value_type, ma.symbol_reference, param.type_reference, expr);
+							var param_type = SemanticAnalyzer.get_actual_type (ma.inner.value_type, ma.symbol_reference, param.parameter_type, expr);
 							if (param_type != null) {
 								is_ref = param_type.takes_ownership;
 							}
@@ -286,10 +286,10 @@ public class Vala.MemoryManager : CodeVisitor {
 			if (params_it.next ()) {
 				var param = params_it.get ();
 				if (!param.ellipsis
-				    && param.type_reference.is_reference_type_or_type_parameter ()) {
-					bool is_ref = param.type_reference.transfers_ownership;
-					if (is_ref && param.type_reference.type_parameter != null) {
-						var param_type = SemanticAnalyzer.get_actual_type (expr.type_reference, msym, param.type_reference, expr);
+				    && param.parameter_type.is_reference_type_or_type_parameter ()) {
+					bool is_ref = param.parameter_type.transfers_ownership;
+					if (is_ref && param.parameter_type.type_parameter != null) {
+						var param_type = SemanticAnalyzer.get_actual_type (expr.type_reference, msym, param.parameter_type, expr);
 						if (param_type != null) {
 							is_ref = param_type.takes_ownership;
 						}

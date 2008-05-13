@@ -190,7 +190,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 			if (p.name == "this") {
 				expr.ccodenode = pub_inst;
 			} else {
-				var type_as_struct = p.type_reference.data_type as Struct;
+				var type_as_struct = p.parameter_type.data_type as Struct;
 				if (p.direction != ParameterDirection.IN
 				    || (type_as_struct != null && !type_as_struct.is_simple_type ())) {
 					expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (p.name));

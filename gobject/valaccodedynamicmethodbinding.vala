@@ -131,8 +131,8 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 					// error parameter
 					break;
 				}
-				if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type != codegen.string_type.data_type) {
-					var array_type = (ArrayType) param.type_reference;
+				if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type != codegen.string_type.data_type) {
+					var array_type = (ArrayType) param.parameter_type;
 					var cdecl = new CCodeDeclaration ("GArray*");
 					cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
 					cb_fun.block.add_statement (cdecl);
@@ -141,19 +141,19 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "data"));
 					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "len"));
 				} else {
-					var cdecl = new CCodeDeclaration (param.type_reference.get_cname ());
+					var cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
 					cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
 					cb_fun.block.add_statement (cdecl);
-					if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type == codegen.string_type.data_type) {
+					if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type == codegen.string_type.data_type) {
 						// special case string array
 						cend_call.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
 					} else {
-						cend_call.add_argument (new CCodeIdentifier (param.type_reference.data_type.get_type_id ()));
+						cend_call.add_argument (new CCodeIdentifier (param.parameter_type.data_type.get_type_id ()));
 					}
 					cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 					creply_call.add_argument (new CCodeIdentifier (param.name));
 
-					if (param.type_reference is ArrayType && ((ArrayType) param.type_reference).element_type.data_type == codegen.string_type.data_type) {
+					if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type == codegen.string_type.data_type) {
 						var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
 						cstrvlen.add_argument (new CCodeIdentifier (param.name));
 						creply_call.add_argument (cstrvlen);
@@ -179,12 +179,12 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 		}
 
 		foreach (FormalParameter param in method.get_parameters ()) {
-			if (param.type_reference is MethodType) {
+			if (param.parameter_type is MethodType) {
 				// callback parameter
 				break;
 			}
 
-			ccall.add_argument (new CCodeIdentifier (param.type_reference.data_type.get_type_id ()));
+			ccall.add_argument (new CCodeIdentifier (param.parameter_type.data_type.get_type_id ()));
 			ccall.add_argument (new CCodeIdentifier (param.name));
 		}
 

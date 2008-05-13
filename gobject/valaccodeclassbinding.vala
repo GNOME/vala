@@ -821,7 +821,7 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 					Report.error (param.source_reference, "unsupported parameter direction for D-Bus method");
 				}
 
-				blob.append (param.type_reference.get_type_signature ());
+				blob.append (param.parameter_type.get_type_signature ());
 				blob.append ("\\0");
 				start++;
 			}

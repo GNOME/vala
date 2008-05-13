@@ -31,7 +31,7 @@ public class Vala.FormalParameter : Symbol {
 	/**
 	 * The parameter type.
 	 */
-	public DataType type_reference {
+	public DataType parameter_type {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -92,10 +92,10 @@ public class Vala.FormalParameter : Symbol {
 	 * @param source reference to source code
 	 * @return       newly created formal parameter
 	 */
-	public FormalParameter (string _name, DataType type, SourceReference? source = null) {
-		name = _name;
-		type_reference = type;
-		source_reference = source;
+	public FormalParameter (string name, DataType parameter_type, SourceReference? source_reference = null) {
+		this.name = name;
+		this.parameter_type = parameter_type;
+		this.source_reference = source_reference;
 	}
 	
 	/**
@@ -117,7 +117,7 @@ public class Vala.FormalParameter : Symbol {
 
 	public override void accept_children (CodeVisitor visitor) {
 		if (!ellipsis) {
-			type_reference.accept (visitor);
+			parameter_type.accept (visitor);
 			
 			if (default_expression != null) {
 				default_expression.accept (visitor);
@@ -126,8 +126,8 @@ public class Vala.FormalParameter : Symbol {
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
-		if (type_reference == old_type) {
-			type_reference = new_type;
+		if (parameter_type == old_type) {
+			parameter_type = new_type;
 		}
 	}
 
@@ -153,7 +153,7 @@ public class Vala.FormalParameter : Symbol {
 
 	public FormalParameter copy () {
 		if (!ellipsis) {
-			var result = new FormalParameter (name, type_reference, source_reference);
+			var result = new FormalParameter (name, parameter_type, source_reference);
 			return result;
 		} else {
 			return new FormalParameter.with_ellipsis ();

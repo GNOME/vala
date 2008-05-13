@@ -538,14 +538,14 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				} else if (param.direction == ParameterDirection.OUT) {
 					write_string ("out ");
 				}
-				if (param.type_reference.data_type != null && param.type_reference.data_type.is_reference_type () && !param.type_reference.takes_ownership) {
+				if (param.parameter_type.data_type != null && param.parameter_type.data_type.is_reference_type () && !param.parameter_type.takes_ownership) {
 					write_string ("weak ");
 				}
 			}
 
-			write_type (param.type_reference);
+			write_type (param.parameter_type);
 
-			if (param.type_reference.transfers_ownership) {
+			if (param.parameter_type.transfers_ownership) {
 				write_string ("#");
 			}
 
@@ -625,7 +625,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (m.no_array_length) {
 			bool array_found = (m.return_type is ArrayType);
 			foreach (FormalParameter param in m.get_parameters ()) {
-				if (param.type_reference is ArrayType) {
+				if (param.parameter_type is ArrayType) {
 					array_found = true;
 					break;
 				}
