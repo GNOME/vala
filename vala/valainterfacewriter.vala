@@ -733,13 +733,13 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		} else if (prop.is_virtual) {
 			write_string ("virtual ");
 		}
-		if (!prop.type_reference.takes_ownership) {
+		if (!prop.property_type.takes_ownership) {
 			write_string ("weak ");
 		}
 
-		write_type (prop.type_reference);
+		write_type (prop.property_type);
 
-		if (prop.type_reference.transfers_ownership) {
+		if (prop.property_type.transfers_ownership) {
 			write_string ("#");
 		}
 

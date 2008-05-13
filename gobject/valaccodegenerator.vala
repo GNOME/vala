@@ -746,7 +746,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		// FIXME: omit real struct types for now since they cannot be expressed as gobject property yet
 		// don't register private properties
-		if (prop.parent_symbol is Class && !prop.type_reference.is_real_struct_type () && prop.access != SymbolAccessibility.PRIVATE) {
+		if (prop.parent_symbol is Class && !prop.property_type.is_real_struct_type () && prop.access != SymbolAccessibility.PRIVATE) {
 			prop_enum.add_value (new CCodeEnumValue (prop.get_upper_case_cname ()));
 		}
 	}
@@ -757,10 +757,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var prop = (Property) acc.prop;
 
-		bool returns_real_struct = prop.type_reference.is_real_struct_type ();
+		bool returns_real_struct = prop.property_type.is_real_struct_type ();
 
 		if (acc.readable && !returns_real_struct) {
-			current_return_type = prop.type_reference;
+			current_return_type = prop.property_type;
 		} else {
 			current_return_type = new VoidType ();
 		}
@@ -778,13 +778,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			this_type = new InterfaceInstanceType ((Interface) t);
 		}
 		var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
-		var value_type = prop.type_reference.copy ();
+		var value_type = prop.property_type.copy ();
 		value_type.takes_ownership = value_type.transfers_ownership;
 		var cvalueparam = new CCodeFormalParameter ("value", value_type.get_cname ());
 
 		if (prop.is_abstract || prop.is_virtual) {
 			if (acc.readable) {
-				function = new CCodeFunction ("%s_get_%s".printf (t.get_lower_case_cname (null), prop.name), prop.type_reference.get_cname ());
+				function = new CCodeFunction ("%s_get_%s".printf (t.get_lower_case_cname (null), prop.name), prop.property_type.get_cname ());
 			} else {
 				function = new CCodeFunction ("%s_set_%s".printf (t.get_lower_case_cname (null), prop.name), "void");
 			}
@@ -806,7 +806,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			if (acc.readable) {
 				// declare temporary variable to save the property value
-				var decl = new CCodeDeclaration (prop.type_reference.get_cname ());
+				var decl = new CCodeDeclaration (prop.property_type.get_cname ());
 				decl.add_declarator (new CCodeVariableDeclarator ("value"));
 				block.add_statement (decl);
 			
@@ -826,9 +826,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				block.add_statement (new CCodeExpressionStatement (ccall));
 
 				// HACK: decrement the refcount before returning the value to simulate a weak reference getter function
-				if (prop.type_reference.data_type != null && prop.type_reference.data_type.is_reference_counting ()) {
+				if (prop.property_type.data_type != null && prop.property_type.data_type.is_reference_counting ()) {
 					var unref_cond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("value"), new CCodeConstant ("NULL"));
-					var unref_function = new CCodeFunctionCall (get_destroy_func_expression (prop.type_reference));
+					var unref_function = new CCodeFunctionCall (get_destroy_func_expression (prop.property_type));
 					unref_function.add_argument (new CCodeIdentifier ("value"));
 					var unref_block = new CCodeBlock ();
 					unref_block.add_statement (new CCodeExpressionStatement (unref_function));
@@ -868,7 +868,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					// return non simple structs as out parameter
 					function = new CCodeFunction ("%s_get_%s".printf (prefix, prop.name), "void");
 				} else {
-					function = new CCodeFunction ("%s_get_%s".printf (prefix, prop.name), prop.type_reference.get_cname ());
+					function = new CCodeFunction ("%s_get_%s".printf (prefix, prop.name), prop.property_type.get_cname ());
 				}
 			} else {
 				function = new CCodeFunction ("%s_set_%s".printf (prefix, prop.name), "void");
@@ -879,7 +879,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			function.add_parameter (cselfparam);
 			if (returns_real_struct) {
 				// return non simple structs as out parameter
-				var coutparamname = "%s*".printf (prop.type_reference.get_cname ());
+				var coutparamname = "%s*".printf (prop.property_type.get_cname ());
 				var coutparam = new CCodeFormalParameter ("value", coutparamname);
 				function.add_parameter (coutparam);
 			} else {
@@ -2283,7 +2283,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			// paramenter and insert an empty return statement afterwards.
 			if (current_property_accessor != null &&
 			    current_property_accessor.readable &&
-			    current_property_accessor.prop.type_reference.is_real_struct_type()) {
+			    current_property_accessor.prop.property_type.is_real_struct_type()) {
 			    	var cfragment = new CCodeFragment ();
 				cfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("*value"), (CCodeExpression) stmt.return_expression.ccodenode)));
 				cfragment.append (new CCodeReturnStatement ());
@@ -2768,7 +2768,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var ccomma = new CCodeCommaExpression ();
 			
 			// assign current value to temp variable
-			var temp_decl = get_temp_variable (prop.type_reference, true, expr);
+			var temp_decl = get_temp_variable (prop.property_type, true, expr);
 			temp_vars.insert (0, temp_decl);
 			ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), (CCodeExpression) expr.inner.ccodenode));
 			
@@ -3703,7 +3703,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	
 	private CCodeStatement create_property_type_check_statement (Property prop, bool check_return_type, Typesymbol t, bool non_null, string var_name) {
 		if (check_return_type) {
-			return create_type_check_statement (prop, prop.type_reference, t, non_null, var_name);
+			return create_type_check_statement (prop, prop.property_type, t, non_null, var_name);
 		} else {
 			return create_type_check_statement (prop, new VoidType (), t, non_null, var_name);
 		}

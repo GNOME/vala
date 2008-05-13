@@ -29,14 +29,14 @@ public abstract class Vala.CCodeTypesymbolBinding : CCodeBinding {
 		cspec.add_argument (prop.get_canonical_cconstant ());
 		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.nick)));
 		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.blurb)));
-		if ((prop.type_reference.data_type is Class && ((Class) prop.type_reference.data_type).is_subtype_of (codegen.gobject_type)) || prop.type_reference.data_type is Interface) {
+		if ((prop.property_type.data_type is Class && ((Class) prop.property_type.data_type).is_subtype_of (codegen.gobject_type)) || prop.property_type.data_type is Interface) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_object");
-			cspec.add_argument (new CCodeIdentifier (prop.type_reference.data_type.get_upper_case_cname ("TYPE_")));
-		} else if (prop.type_reference.data_type == codegen.string_type.data_type) {
+			cspec.add_argument (new CCodeIdentifier (prop.property_type.data_type.get_upper_case_cname ("TYPE_")));
+		} else if (prop.property_type.data_type == codegen.string_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_string");
 			cspec.add_argument (new CCodeConstant ("NULL"));
-		} else if (prop.type_reference.data_type is Enum) {
-			var e = prop.type_reference.data_type as Enum;
+		} else if (prop.property_type.data_type is Enum) {
+			var e = prop.property_type.data_type as Enum;
 			if (e.has_type_id) {
 				if (e.is_flags) {
 					cspec.call = new CCodeIdentifier ("g_param_spec_flags");
@@ -59,10 +59,10 @@ public abstract class Vala.CCodeTypesymbolBinding : CCodeBinding {
 			if (prop.default_expression != null) {
 				cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
 			} else {
-				cspec.add_argument (new CCodeConstant (prop.type_reference.data_type.get_default_value ()));
+				cspec.add_argument (new CCodeConstant (prop.property_type.data_type.get_default_value ()));
 			}
-		} else if (prop.type_reference.data_type is Struct) {
-			var st = (Struct) prop.type_reference.data_type;
+		} else if (prop.property_type.data_type is Struct) {
+			var st = (Struct) prop.property_type.data_type;
 			if (st.get_type_id () == "G_TYPE_INT") {
 				cspec.call = new CCodeIdentifier ("g_param_spec_int");
 				cspec.add_argument (new CCodeConstant ("G_MININT"));

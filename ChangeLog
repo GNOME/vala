@@ -1,5 +1,21 @@
 2008-05-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* vala/valainterfacewriter.vala:
+	* vala/valamemorymanager.vala:
+	* vala/valaproperty.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodeassignmentbinding.vala:
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodememberaccessbinding.vala:
+	* gobject/valaccodetypesymbolbinding.vala:
+	* gobject/valagidlwriter.vala:
+
+	Rename Property.type_reference to Property.property_type
+
+2008-05-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadelegate.vala:
 	* vala/valaformalparameter.vala:
 	* vala/valainterfacewriter.vala:

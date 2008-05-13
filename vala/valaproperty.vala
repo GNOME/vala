@@ -29,7 +29,7 @@ public class Vala.Property : Member, Lockable {
 	/**
 	 * The property type.
 	 */
-	public DataType type_reference {
+	public DataType property_type {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -160,12 +160,12 @@ public class Vala.Property : Member, Lockable {
 	 * @param source       reference to source code
 	 * @return             newly created property
 	 */
-	public Property (string _name, DataType type, PropertyAccessor? _get_accessor, PropertyAccessor? _set_accessor, SourceReference source) {
-		name = _name;
-		type_reference = type;
-		get_accessor = _get_accessor;
-		set_accessor = _set_accessor;
-		source_reference = source;
+	public Property (string name, DataType property_type, PropertyAccessor? get_accessor, PropertyAccessor? set_accessor, SourceReference source_reference) {
+		this.name = name;
+		this.property_type = property_type;
+		this.get_accessor = get_accessor;
+		this.set_accessor = set_accessor;
+		this.source_reference = source_reference;
 	}
 
 	public override void accept (CodeVisitor visitor) {
@@ -175,7 +175,7 @@ public class Vala.Property : Member, Lockable {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		type_reference.accept (visitor);
+		property_type.accept (visitor);
 		
 		if (get_accessor != null) {
 			get_accessor.accept (visitor);
@@ -265,7 +265,7 @@ public class Vala.Property : Member, Lockable {
 	 *             property
 	 */
 	public bool equals (Property prop2) {
-		if (!prop2.type_reference.equals (type_reference)) {
+		if (!prop2.property_type.equals (property_type)) {
 			return false;
 		}
 
@@ -292,8 +292,8 @@ public class Vala.Property : Member, Lockable {
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
-		if (type_reference == old_type) {
-			type_reference = new_type;
+		if (property_type == old_type) {
+			property_type = new_type;
 		}
 	}
 }

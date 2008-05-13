@@ -419,7 +419,7 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 			var props = cl.get_properties ();
 			foreach (Property prop in props) {
 				// FIXME: omit real struct types for now since they cannot be expressed as gobject property yet
-				if (prop.type_reference.is_real_struct_type ()) {
+				if (prop.property_type.is_real_struct_type ()) {
 					continue;
 				}
 				if (prop.access == SymbolAccessibility.PRIVATE) {
@@ -601,7 +601,7 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
 			// FIXME: omit real struct types for now since they cannot be expressed as gobject property yet
-			if (prop.get_accessor == null || prop.is_abstract || prop.type_reference.is_real_struct_type ()) {
+			if (prop.get_accessor == null || prop.is_abstract || prop.property_type.is_real_struct_type ()) {
 				continue;
 			}
 			if (prop.access == SymbolAccessibility.PRIVATE) {
@@ -620,7 +620,7 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
 			ccall.add_argument (new CCodeIdentifier ("self"));
 			var csetcall = new CCodeFunctionCall ();
-			csetcall.call = get_value_setter_function (prop.type_reference);
+			csetcall.call = get_value_setter_function (prop.property_type);
 			csetcall.add_argument (new CCodeIdentifier ("value"));
 			csetcall.add_argument (ccall);
 			ccase.add_statement (new CCodeExpressionStatement (csetcall));
@@ -656,7 +656,7 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
 			// FIXME: omit real struct types for now since they cannot be expressed as gobject property yet
-			if (prop.set_accessor == null || prop.is_abstract || prop.type_reference.is_real_struct_type ()) {
+			if (prop.set_accessor == null || prop.is_abstract || prop.property_type.is_real_struct_type ()) {
 				continue;
 			}
 			if (prop.access == SymbolAccessibility.PRIVATE) {
@@ -675,8 +675,8 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_set_%s".printf (prefix, prop.name)));
 			ccall.add_argument (new CCodeIdentifier ("self"));
 			var cgetcall = new CCodeFunctionCall ();
-			if (prop.type_reference.data_type != null) {
-				cgetcall.call = new CCodeIdentifier (prop.type_reference.data_type.get_get_value_function ());
+			if (prop.property_type.data_type != null) {
+				cgetcall.call = new CCodeIdentifier (prop.property_type.data_type.get_get_value_function ());
 			} else {
 				cgetcall.call = new CCodeIdentifier ("g_value_get_pointer");
 			}

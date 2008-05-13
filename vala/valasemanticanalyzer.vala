@@ -654,9 +654,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		prop.accept_children (this);
 
 		// check whether property type is at least as accessible as the property
-		if (!is_type_accessible (prop, prop.type_reference)) {
+		if (!is_type_accessible (prop, prop.property_type)) {
 			prop.error = true;
-			Report.error (prop.source_reference, "property type `%s` is less accessible than property `%s`".printf (prop.type_reference.to_string (), prop.get_full_name ()));
+			Report.error (prop.source_reference, "property type `%s` is less accessible than property `%s`".printf (prop.property_type.to_string (), prop.get_full_name ()));
 			return;
 		}
 
@@ -667,21 +667,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		 * Reference counting types can simulate to return a weak
 		 * reference */
 		if ((prop.is_abstract || prop.is_virtual) &&
-		    prop.type_reference.data_type != null &&
-		    prop.type_reference.data_type.is_reference_type () &&
-		    !prop.type_reference.data_type.is_reference_counting () &&
-		    !prop.type_reference.transfers_ownership)
+		    prop.property_type.data_type != null &&
+		    prop.property_type.data_type.is_reference_type () &&
+		    !prop.property_type.data_type.is_reference_counting () &&
+		    !prop.property_type.transfers_ownership)
 		{
-			Report.error (prop.source_reference, "%s: abstract or virtual properties using reference types not supporting reference counting, like `%s', have to mark their return value to transfer ownership.".printf (prop.get_full_name (), prop.type_reference.data_type.get_full_name ()));
+			Report.error (prop.source_reference, "%s: abstract or virtual properties using reference types not supporting reference counting, like `%s', have to mark their return value to transfer ownership.".printf (prop.get_full_name (), prop.property_type.data_type.get_full_name ()));
 			prop.error = true;
 		}
 
 		current_symbol = current_symbol.parent_symbol;
 
 		if (!prop.is_internal_symbol ()) {
-			current_source_file.add_type_dependency (prop.type_reference, SourceFileDependencyType.HEADER_SHALLOW);
+			current_source_file.add_type_dependency (prop.property_type, SourceFileDependencyType.HEADER_SHALLOW);
 		}
-		current_source_file.add_type_dependency (prop.type_reference, SourceFileDependencyType.SOURCE);
+		current_source_file.add_type_dependency (prop.property_type, SourceFileDependencyType.SOURCE);
 
 		if (prop.parent_symbol is Class) {
 			var cl = (Class) prop.parent_symbol;
@@ -712,7 +712,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		acc.prop = (Property) current_symbol;
 
 		if (acc.readable) {
-			current_return_type = acc.prop.type_reference;
+			current_return_type = acc.prop.property_type;
 		} else {
 			// void
 			current_return_type = new VoidType ();
@@ -739,7 +739,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			if (acc.body != null && (acc.writable || acc.construction)) {
-				var value_type = acc.prop.type_reference.copy ();
+				var value_type = acc.prop.property_type.copy ();
 				value_type.takes_ownership = value_type.transfers_ownership;
 				acc.value_parameter = new FormalParameter ("value", value_type, acc.source_reference);
 				acc.body.scope.add (acc.value_parameter.name, acc.value_parameter);
@@ -1392,7 +1392,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return c.type_reference;
 		} else if (sym is Property) {
 			var prop = (Property) sym;
-			var type = prop.type_reference.copy ();
+			var type = prop.property_type.copy ();
 			type.takes_ownership = false;
 			return type;
 		} else if (sym is FormalParameter) {
@@ -2463,7 +2463,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			member_type = f.field_type;
 		} else if (init.symbol_reference is Property) {
 			var prop = (Property) init.symbol_reference;
-			member_type = prop.type_reference;
+			member_type = prop.property_type;
 			if (prop.set_accessor == null || !prop.set_accessor.writable) {
 				init.error = true;
 				Report.error (init.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));

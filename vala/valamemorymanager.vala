@@ -189,7 +189,7 @@ public class Vala.MemoryManager : CodeVisitor {
 			} else if (current_symbol is Property) {
 				/* property get accessor */
 				var prop = (Property) current_symbol;
-				if (prop.type_reference.transfers_ownership) {
+				if (prop.property_type.transfers_ownership) {
 					visit_possibly_missing_copy_expression (stmt.return_expression);
 				} else {
 					visit_possibly_leaked_expression (stmt.return_expression);

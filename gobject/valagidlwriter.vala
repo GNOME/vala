@@ -432,7 +432,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		stream.printf ("<property name=\"%s\" type=\"%s\"", prop.name, get_gidl_type_name (prop.type_reference));
+		stream.printf ("<property name=\"%s\" type=\"%s\"", prop.name, get_gidl_type_name (prop.property_type));
 		if (prop.get_accessor != null) {
 			stream.printf (" readable=\"1\"");
 		}

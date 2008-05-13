@@ -141,9 +141,9 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 
 				// Property acesses to real struct types are handeled different to other properties.
 				// They are returned as out parameter.
-				if (base_property.type_reference.is_real_struct_type ()) {
+				if (base_property.property_type.is_real_struct_type ()) {
 					var ccomma = new CCodeCommaExpression ();
-					var temp_var = codegen.get_temp_variable (base_property.type_reference);
+					var temp_var = codegen.get_temp_variable (base_property.property_type);
 					var ctemp = new CCodeIdentifier (temp_var.name);
 					codegen.temp_vars.add (temp_var);
 					ccall.add_argument (new CCodeUnaryExpression(CCodeUnaryOperator.ADDRESS_OF, ctemp));
@@ -201,7 +201,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 					if (codegen.current_property_accessor != null &&
 					    codegen.current_property_accessor.writable &&
 					    codegen.current_property_accessor.value_parameter == p &&
-					    codegen.current_property_accessor.prop.type_reference.is_real_struct_type ()) {
+					    codegen.current_property_accessor.prop.property_type.is_real_struct_type ()) {
 						expr.ccodenode = new CCodeIdentifier ("(*value)");
 					} else {
 						expr.ccodenode = new CCodeIdentifier (p.name);
