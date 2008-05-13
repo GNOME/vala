@@ -515,7 +515,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		CCodeExpression lhs = null;
 		CCodeStruct st = null;
 		
-		string field_ctype = f.type_reference.get_cname ();
+		string field_ctype = f.field_type.get_cname ();
 		if (f.is_volatile) {
 			field_ctype = "volatile " + field_ctype;
 		}
@@ -534,7 +534,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				header_type_member_declaration.append (cdecl);
 
 				var var_decl = new CCodeVariableDeclarator (f.get_cname ());
-				var_decl.initializer = default_value_for_type (f.type_reference, true);
+				var_decl.initializer = default_value_for_type (f.field_type, true);
 
 				if (f.initializer != null) {
 					var init = (CCodeExpression) f.initializer.ccodenode;
@@ -578,17 +578,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		if (f.binding == MemberBinding.INSTANCE)  {
 			st.add_field (field_ctype, f.get_cname ());
-			if (f.type_reference is ArrayType && !f.no_array_length) {
+			if (f.field_type is ArrayType && !f.no_array_length) {
 				// create fields to store array dimensions
-				var array_type = (ArrayType) f.type_reference;
+				var array_type = (ArrayType) f.field_type;
 				
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var len_type = int_type.copy ();
 
 					st.add_field (len_type.get_cname (), get_array_length_cname (f.name, dim));
 				}
-			} else if (f.type_reference is DelegateType) {
-				var delegate_type = (DelegateType) f.type_reference;
+			} else if (f.field_type is DelegateType) {
+				var delegate_type = (DelegateType) f.field_type;
 				if (delegate_type.delegate_symbol.has_target) {
 					// create field to store delegate target
 					st.add_field ("gpointer", get_delegate_target_cname (f.name));
@@ -597,13 +597,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			if (f.initializer != null) {
 				var rhs = (CCodeExpression) f.initializer.ccodenode;
-				rhs = get_implicit_cast_expression (rhs, f.initializer.value_type, f.type_reference);
+				rhs = get_implicit_cast_expression (rhs, f.initializer.value_type, f.field_type);
 
 				instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, rhs)));
 
-				if (f.type_reference is ArrayType && !f.no_array_length &&
+				if (f.field_type is ArrayType && !f.no_array_length &&
 				    f.initializer is ArrayCreationExpression) {
-					var array_type = (ArrayType) f.type_reference;
+					var array_type = (ArrayType) f.field_type;
 					var ma = new MemberAccess.simple (f.name);
 					ma.symbol_reference = f;
 					
@@ -616,17 +616,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				}
 			}
 			
-			if (f.type_reference.takes_ownership && instance_dispose_fragment != null) {
+			if (f.field_type.takes_ownership && instance_dispose_fragment != null) {
 				var ma = new MemberAccess.simple (f.name);
 				ma.symbol_reference = f;
-				instance_dispose_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.type_reference, ma)));
+				instance_dispose_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.field_type, ma)));
 			}
 		} else if (f.binding == MemberBinding.CLASS)  {
 			st.add_field (field_ctype, f.get_cname ());
 		} else {
 			/* add array length fields where necessary */
-			if (f.type_reference is ArrayType && !f.no_array_length) {
-				var array_type = (ArrayType) f.type_reference;
+			if (f.field_type is ArrayType && !f.no_array_length) {
+				var array_type = (ArrayType) f.field_type;
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var len_type = int_type.copy ();
@@ -641,8 +641,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 						source_type_member_declaration.append (cdecl);
 					}
 				}
-			} else if (f.type_reference is DelegateType) {
-				var delegate_type = (DelegateType) f.type_reference;
+			} else if (f.field_type is DelegateType) {
+				var delegate_type = (DelegateType) f.field_type;
 				if (delegate_type.delegate_symbol.has_target) {
 					// create field to store delegate target
 					var cdecl = new CCodeDeclaration ("gpointer");

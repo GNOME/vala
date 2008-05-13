@@ -1,5 +1,17 @@
 2008-05-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarraytype.vala:
+	* vala/valafield.vala:
+	* vala/valainterfacewriter.vala:
+	* vala/valamemorymanager.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodememberaccessbinding.vala:
+
+	Rename Field.type_reference to Field.field_type
+
+2008-05-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaexpression.vala:
 	* vala/valamemorymanager.vala:
 	* vala/valanullchecker.vala:

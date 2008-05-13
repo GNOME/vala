@@ -457,7 +457,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string ("[CCode (cname = \"%s\")]".printf (f.get_cname ()));
 		}
 
-		if (f.no_array_length && f.type_reference is ArrayType) {
+		if (f.no_array_length && f.field_type is ArrayType) {
 			write_indent ();
 			write_string ("[NoArrayLength]");
 		}
@@ -465,13 +465,13 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_indent ();
 		write_accessibility (f);
 
-		if (f.type_reference.data_type != null &&
-		    f.type_reference.data_type.is_reference_type () &&
-		    !f.type_reference.takes_ownership) {
+		if (f.field_type.data_type != null &&
+		    f.field_type.data_type.is_reference_type () &&
+		    !f.field_type.takes_ownership) {
 			write_string ("weak ");
 		}
 
-		write_type (f.type_reference);
+		write_type (f.field_type);
 			
 		write_string (" ");
 		write_identifier (f.name);

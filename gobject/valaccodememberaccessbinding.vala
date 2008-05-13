@@ -108,7 +108,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 				expr.ccodenode = new CCodeIdentifier (f.get_cname ());
 			}
 
-			if (f.type_reference.type_parameter != null && expr.value_type.type_parameter == null) {
+			if (f.field_type.type_parameter != null && expr.value_type.type_parameter == null) {
 				expr.ccodenode = codegen.convert_from_generic_pointer ((CCodeExpression) expr.ccodenode, expr.value_type);
 			}
 		} else if (expr.symbol_reference is Constant) {

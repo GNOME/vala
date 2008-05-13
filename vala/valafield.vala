@@ -30,7 +30,7 @@ public class Vala.Field : Member, Lockable {
 	/**
 	 * The data type of this field.
 	 */
-	public DataType type_reference {
+	public DataType field_type {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -76,11 +76,11 @@ public class Vala.Field : Member, Lockable {
 	 * @param source reference to source code
 	 * @return       newly created field
 	 */
-	public Field (string name, DataType type_reference, Expression? initializer, SourceReference? source_reference = null) {
-		this.type_reference = type_reference;
+	public Field (string name, DataType field_type, Expression? initializer, SourceReference? source_reference = null) {
+		this.name = name;
+		this.field_type = field_type;
 		this.initializer = initializer;
 		this.source_reference = source_reference;
-		this.name = name;
 	}
 
 	public override void accept (CodeVisitor visitor) {
@@ -90,7 +90,7 @@ public class Vala.Field : Member, Lockable {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		type_reference.accept (visitor);
+		field_type.accept (visitor);
 		
 		if (initializer != null) {
 			initializer.accept (visitor);
@@ -165,8 +165,8 @@ public class Vala.Field : Member, Lockable {
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
-		if (type_reference == old_type) {
-			type_reference = new_type;
+		if (field_type == old_type) {
+			field_type = new_type;
 		}
 	}
 }

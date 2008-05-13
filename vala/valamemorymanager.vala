@@ -77,8 +77,8 @@ public class Vala.MemoryManager : CodeVisitor {
 
 	public override void visit_field (Field f) {
 		if (f.initializer != null) {
-			if (!(f.type_reference is PointerType)) {
-				if (f.type_reference.takes_ownership) {
+			if (!(f.field_type is PointerType)) {
+				if (f.field_type.takes_ownership) {
 					visit_possibly_missing_copy_expression (f.initializer);
 				} else {
 					visit_possibly_leaked_expression (f.initializer);

@@ -67,10 +67,10 @@ public class Vala.ArrayType : ReferenceType {
 			if (rank > 1) {
 				// length is an int[] containing the dimensions of the array, starting at 0
 				ValueType integer = new ValueType((Typesymbol) root_symbol.scope.lookup("int"));
-				length_field.type_reference = new ArrayType (integer, 1, source_reference);
-				length_field.type_reference.add_type_argument (integer);
+				length_field.field_type = new ArrayType (integer, 1, source_reference);
+				length_field.field_type.add_type_argument (integer);
 			} else {
-				length_field.type_reference = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int"));
+				length_field.field_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int"));
 			}
 
 		}

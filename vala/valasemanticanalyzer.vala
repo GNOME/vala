@@ -343,7 +343,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (!f.is_internal_symbol ()) {
-			current_source_file.add_type_dependency (f.type_reference, SourceFileDependencyType.HEADER_SHALLOW);
+			current_source_file.add_type_dependency (f.field_type, SourceFileDependencyType.HEADER_SHALLOW);
 		} else {
 			if (f.parent_symbol is Namespace) {
 				f.error = true;
@@ -351,7 +351,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
-			current_source_file.add_type_dependency (f.type_reference, SourceFileDependencyType.SOURCE);
+			current_source_file.add_type_dependency (f.field_type, SourceFileDependencyType.SOURCE);
 		}
 	}
 
@@ -911,7 +911,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					}
 				}
 
-				e.expected_type = field.type_reference.copy ();
+				e.expected_type = field.field_type.copy ();
 			}
 		} else if (list.expected_type == null) {
 			list.error = true;
@@ -1386,7 +1386,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	private DataType? get_value_type_for_symbol (Symbol sym) {
 		if (sym is Field) {
 			var f = (Field) sym;
-			return f.type_reference;
+			return f.field_type;
 		} else if (sym is Constant) {
 			var c = (Constant) sym;
 			return c.type_reference;
@@ -2460,7 +2460,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		DataType member_type;
 		if (init.symbol_reference is Field) {
 			var f = (Field) init.symbol_reference;
-			member_type = f.type_reference;
+			member_type = f.field_type;
 		} else if (init.symbol_reference is Property) {
 			var prop = (Property) init.symbol_reference;
 			member_type = prop.type_reference;
@@ -3110,9 +3110,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				var f = (Field) ma.symbol_reference;
 
 				if (a.right.symbol_reference is Method &&
-				    f.type_reference is DelegateType) {
+				    f.field_type is DelegateType) {
 					var m = (Method) a.right.symbol_reference;
-					var dt = (DelegateType) f.type_reference;
+					var dt = (DelegateType) f.field_type;
 					var cb = dt.delegate_symbol;
 
 					/* check whether method matches callback type */
@@ -3122,7 +3122,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						return;
 					}
 
-					a.right.value_type = f.type_reference;
+					a.right.value_type = f.field_type;
 				} else {
 					a.error = true;
 					Report.error (a.source_reference, "Assignment: Invalid callback assignment attempt");
