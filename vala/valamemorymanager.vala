@@ -41,17 +41,17 @@ public class Vala.MemoryManager : CodeVisitor {
 	}
 	
 	private void visit_possibly_leaked_expression (Expression expr) {
-		if (expr.static_type != null
-		    && expr.static_type.transfers_ownership) {
+		if (expr.value_type != null
+		    && expr.value_type.transfers_ownership) {
 			/* mark reference as leaked */
 			expr.ref_leaked = true;
 		}
 	}
 
 	private void visit_possibly_missing_copy_expression (Expression expr) {
-		if (expr.static_type != null
-		    && !expr.static_type.transfers_ownership
-		    && !(expr.static_type is NullType)) {
+		if (expr.value_type != null
+		    && !expr.value_type.transfers_ownership
+		    && !(expr.value_type is NullType)) {
 			/* mark reference as missing */
 			expr.ref_missing = true;
 		}
@@ -215,7 +215,7 @@ public class Vala.MemoryManager : CodeVisitor {
 	public override void visit_array_creation_expression (ArrayCreationExpression e) {
 		if (e.initializer_list != null) {
 			foreach (Expression init in e.initializer_list.get_initializers ()) {
-				if (init.static_type.is_reference_type_or_type_parameter ()) {
+				if (init.value_type.is_reference_type_or_type_parameter ()) {
 					visit_possibly_missing_copy_expression (init);
 				} else {
 					visit_possibly_leaked_expression (init);
@@ -237,7 +237,7 @@ public class Vala.MemoryManager : CodeVisitor {
 	public override void visit_invocation_expression (InvocationExpression expr) {
 		expr.accept_children (this);
 
-		var mtype = expr.call.static_type;
+		var mtype = expr.call.value_type;
 		Collection<FormalParameter> params = mtype.get_parameters ();
 
 		Iterator<FormalParameter> params_it = params.iterator ();
@@ -250,7 +250,7 @@ public class Vala.MemoryManager : CodeVisitor {
 					if (is_ref && param.type_reference.type_parameter != null) {
 						if (expr.call is MemberAccess) {
 							var ma = (MemberAccess) expr.call;
-							var param_type = SemanticAnalyzer.get_actual_type (ma.inner.static_type, ma.symbol_reference, param.type_reference, expr);
+							var param_type = SemanticAnalyzer.get_actual_type (ma.inner.value_type, ma.symbol_reference, param.type_reference, expr);
 							if (param_type != null) {
 								is_ref = param_type.takes_ownership;
 							}
@@ -323,8 +323,8 @@ public class Vala.MemoryManager : CodeVisitor {
 
 		if (a.left is PointerIndirection || a.left.symbol_reference is Signal) {
 		} else {
-			if (!(a.left.static_type is PointerType)) {
-				if (a.left.static_type.takes_ownership) {
+			if (!(a.left.value_type is PointerType)) {
+				if (a.left.value_type.takes_ownership) {
 					visit_possibly_missing_copy_expression (a.right);
 				} else {
 					visit_possibly_leaked_expression (a.right);

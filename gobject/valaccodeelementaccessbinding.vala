@@ -41,7 +41,7 @@ public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
 		Gee.List<Expression> indices = expr.get_indices ();
 		int rank = indices.size;
 
-		var container_type = expr.container.static_type.data_type;
+		var container_type = expr.container.value_type.data_type;
 
 		var ccontainer = (CCodeExpression) expr.container.ccodenode;
 		var cindex = (CCodeExpression) indices[0].ccodenode;
@@ -78,7 +78,7 @@ public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
 			var get_param = get_params_it.get ();
 
 			if (get_param.type_reference.type_parameter != null) {
-				var index_type = SemanticAnalyzer.get_actual_type (expr.container.static_type, get_method, get_param.type_reference, expr);
+				var index_type = SemanticAnalyzer.get_actual_type (expr.container.value_type, get_method, get_param.type_reference, expr);
 				cindex = codegen.convert_to_generic_pointer (cindex, index_type);
 			}
 
@@ -86,7 +86,7 @@ public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
 			get_ccall.add_argument (new CCodeCastExpression (ccontainer, collection_iface.get_cname () + "*"));
 			get_ccall.add_argument (cindex);
 
-			codenode = codegen.convert_from_generic_pointer (get_ccall, expr.static_type);
+			codenode = codegen.convert_from_generic_pointer (get_ccall, expr.value_type);
 		} else {
 			// access to element in an array
 			for (int i = 1; i < rank; i++) {

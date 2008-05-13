@@ -376,7 +376,7 @@ class Vala.ProjectGenerator : Dialog {
 
 		TimeVal tv;
 		tv.get_current_time ();
-		Date d = new Date ();
+		Date d = Date ();
 		d.set_time_val (tv);
 
 		s.append_printf ("/* %s\n", filename);

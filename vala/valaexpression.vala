@@ -28,11 +28,11 @@ using Gee;
  */
 public abstract class Vala.Expression : CodeNode {
 	/**
-	 * The static type of this expression.
+	 * The static type of the value of this expression.
 	 * 
 	 * The semantic analyzer computes this value.
 	 */
-	public DataType static_type { get; set; }
+	public DataType value_type { get; set; }
 	
 	/*
 	 * The static type this expression is expected to have.

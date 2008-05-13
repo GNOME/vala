@@ -59,7 +59,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 					if (expr.inner != null && !expr.inner.is_pure ()) {
 						// instance expression has side-effects
 						// store in temp. variable
-						var temp_var = codegen.get_temp_variable (expr.inner.static_type);
+						var temp_var = codegen.get_temp_variable (expr.inner.value_type);
 						codegen.temp_vars.insert (0, temp_var);
 						var ctemp = new CCodeIdentifier (temp_var.name);
 						inst = new CCodeAssignment (ctemp, pub_inst);
@@ -94,7 +94,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 				} else {
 					inst = typed_inst;
 				}
-				if (instance_target_type.data_type.is_reference_type () || (expr.inner != null && expr.inner.static_type is PointerType)) {
+				if (instance_target_type.data_type.is_reference_type () || (expr.inner != null && expr.inner.value_type is PointerType)) {
 					expr.ccodenode = new CCodeMemberAccess.pointer (inst, f.get_cname ());
 				} else {
 					expr.ccodenode = new CCodeMemberAccess (inst, f.get_cname ());
@@ -108,8 +108,8 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 				expr.ccodenode = new CCodeIdentifier (f.get_cname ());
 			}
 
-			if (f.type_reference.type_parameter != null && expr.static_type.type_parameter == null) {
-				expr.ccodenode = codegen.convert_from_generic_pointer ((CCodeExpression) expr.ccodenode, expr.static_type);
+			if (f.type_reference.type_parameter != null && expr.value_type.type_parameter == null) {
+				expr.ccodenode = codegen.convert_from_generic_pointer ((CCodeExpression) expr.ccodenode, expr.value_type);
 			}
 		} else if (expr.symbol_reference is Constant) {
 			var c = (Constant) expr.symbol_reference;
@@ -165,7 +165,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 				
 				
 				// we need a temporary variable to save the property value
-				var temp_var = codegen.get_temp_variable (expr.static_type);
+				var temp_var = codegen.get_temp_variable (expr.value_type);
 				codegen.temp_vars.insert (0, temp_var);
 
 				var ctemp = new CCodeIdentifier (temp_var.name);
@@ -258,8 +258,8 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 		} else {
 			pub_inst = (CCodeExpression) expr.inner.ccodenode;
 
-			if (expr.inner.static_type != null) {
-				base_type = expr.inner.static_type;
+			if (expr.inner.value_type != null) {
+				base_type = expr.inner.value_type;
 			}
 		}
 

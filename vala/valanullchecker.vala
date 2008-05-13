@@ -41,18 +41,18 @@ public class Vala.NullChecker : CodeVisitor {
 
 	void check_compatible (Expression expr, DataType target_type) {
 		if (!target_type.nullable) {
-			if (expr.static_type is NullType) {
+			if (expr.value_type is NullType) {
 				Report.error (expr.source_reference, "`null' incompatible with `%s'".printf (target_type.to_string ()));
-			} else if (expr.static_type.nullable) {
-				Report.warning (expr.source_reference, "`%s' incompatible with `%s'".printf (expr.static_type.to_string (), target_type.to_string ()));
+			} else if (expr.value_type.nullable) {
+				Report.warning (expr.source_reference, "`%s' incompatible with `%s'".printf (expr.value_type.to_string (), target_type.to_string ()));
 			}
 		}
 	}
 
 	void check_non_null (Expression expr) {
-		if (expr.static_type is NullType) {
+		if (expr.value_type is NullType) {
 			Report.error (expr.source_reference, "null dereference");
-		} else if (expr.static_type.nullable) {
+		} else if (expr.value_type.nullable) {
 			Report.warning (expr.source_reference, "possible null dereference");
 		}
 	}
@@ -197,7 +197,7 @@ public class Vala.NullChecker : CodeVisitor {
 	public override void visit_invocation_expression (InvocationExpression expr) {
 		expr.accept_children (this);
 
-		var mtype = expr.call.static_type as MethodType;
+		var mtype = expr.call.value_type as MethodType;
 		var ma = expr.call as MemberAccess;
 		if (mtype != null && mtype.method_symbol.binding == MemberBinding.INSTANCE && ma != null) {
 			if (ma.inner == null) {
@@ -240,6 +240,6 @@ public class Vala.NullChecker : CodeVisitor {
 	public override void visit_assignment (Assignment a) {
 		a.accept_children (this);
 
-		check_compatible (a.right, a.left.static_type);
+		check_compatible (a.right, a.left.value_type);
 	}
 }

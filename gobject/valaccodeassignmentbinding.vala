@@ -46,7 +46,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			CCodeExpression cexpr = (CCodeExpression) assignment.right.ccodenode;
 
 			// ensure to pass the value correctly typed (especially important for varargs)
-			cexpr = codegen.get_implicit_cast_expression (cexpr, assignment.right.static_type, prop.type_reference);
+			cexpr = codegen.get_implicit_cast_expression (cexpr, assignment.right.value_type, prop.type_reference);
 
 			if (!prop.no_accessor_method) {
 				if (prop.type_reference.is_real_struct_type ()) {
@@ -323,10 +323,10 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		// custom element access
 		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
 
-		rhs = codegen.get_implicit_cast_expression (rhs, assignment.right.static_type, assignment.left.static_type);
+		rhs = codegen.get_implicit_cast_expression (rhs, assignment.right.value_type, assignment.left.value_type);
 
 		var expr = (ElementAccess) assignment.left;
-		var container_type = expr.container.static_type.data_type;
+		var container_type = expr.container.value_type.data_type;
 		Collection<Expression> indices = expr.get_indices ();
 		Iterator<Expression> indices_it = indices.iterator ();
 		indices_it.next ();
@@ -350,14 +350,14 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			var set_param = set_params_it.get ();
 
 			if (set_param.type_reference.type_parameter != null) {
-				var index_type = SemanticAnalyzer.get_actual_type (expr.container.static_type, set_method, set_param.type_reference, assignment);
+				var index_type = SemanticAnalyzer.get_actual_type (expr.container.value_type, set_method, set_param.type_reference, assignment);
 				cindex = codegen.convert_to_generic_pointer (cindex, index_type);
 			}
 
 			var set_ccall = new CCodeFunctionCall (new CCodeIdentifier (set_method.get_cname ()));
 			set_ccall.add_argument (new CCodeCastExpression (ccontainer, collection_iface.get_cname () + "*"));
 			set_ccall.add_argument (cindex);
-			set_ccall.add_argument (codegen.convert_to_generic_pointer (rhs, expr.static_type));
+			set_ccall.add_argument (codegen.convert_to_generic_pointer (rhs, expr.value_type));
 
 			codenode = set_ccall;
 		} else {
@@ -369,38 +369,38 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 	private void emit_simple_assignment () {
 		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
 
-		rhs = codegen.get_implicit_cast_expression (rhs, assignment.right.static_type, assignment.left.static_type);
+		rhs = codegen.get_implicit_cast_expression (rhs, assignment.right.value_type, assignment.left.value_type);
 
-		bool unref_old = (assignment.left.static_type.takes_ownership);
+		bool unref_old = (assignment.left.value_type.takes_ownership);
 		bool array = false;
 		bool instance_delegate = false;
-		if (assignment.left.static_type is ArrayType) {
+		if (assignment.left.value_type is ArrayType) {
 			array = !(codegen.get_array_length_cexpression (assignment.left, 1) is CCodeConstant);
-		} else if (assignment.left.static_type is DelegateType) {
-			var delegate_type = (DelegateType) assignment.left.static_type;
+		} else if (assignment.left.value_type is DelegateType) {
+			var delegate_type = (DelegateType) assignment.left.value_type;
 			instance_delegate = delegate_type.delegate_symbol.has_target;
 		}
 		
 		if (unref_old || array || instance_delegate) {
 			var ccomma = new CCodeCommaExpression ();
 			
-			var temp_decl = codegen.get_temp_variable (assignment.left.static_type);
+			var temp_decl = codegen.get_temp_variable (assignment.left.value_type);
 			codegen.temp_vars.insert (0, temp_decl);
 			ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), rhs));
 			if (unref_old) {
 				/* unref old value */
-				ccomma.append_expression (codegen.get_unref_expression ((CCodeExpression) assignment.left.ccodenode, assignment.left.static_type, assignment.left));
+				ccomma.append_expression (codegen.get_unref_expression ((CCodeExpression) assignment.left.ccodenode, assignment.left.value_type, assignment.left));
 			}
 			
 			if (array) {
-				var array_type = (ArrayType) assignment.left.static_type;
+				var array_type = (ArrayType) assignment.left.value_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var lhs_array_len = codegen.get_array_length_cexpression (assignment.left, dim);
 					var rhs_array_len = codegen.get_array_length_cexpression (assignment.right, dim);
 					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
 				}
 			} else if (instance_delegate) {
-				var delegate_type = (DelegateType) assignment.left.static_type;
+				var delegate_type = (DelegateType) assignment.left.value_type;
 				var lhs_delegate_target = codegen.get_delegate_target_cexpression (assignment.left);
 				var rhs_delegate_target = codegen.get_delegate_target_cexpression (assignment.right);
 				ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
@@ -463,8 +463,8 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		} else if (assignment.left.symbol_reference is Signal) {
 			emit_signal_assignment ();
 		} else if (assignment.left is ElementAccess
-		           && !(((ElementAccess) assignment.left).container.static_type is ArrayType)
-		           && !(((ElementAccess) assignment.left).container.static_type is PointerType)) {
+		           && !(((ElementAccess) assignment.left).container.value_type is ArrayType)
+		           && !(((ElementAccess) assignment.left).container.value_type is PointerType)) {
 			emit_non_array_element_access ();
 		} else {
 			emit_simple_assignment ();

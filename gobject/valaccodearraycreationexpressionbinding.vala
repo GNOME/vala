@@ -79,7 +79,7 @@ public class Vala.CCodeArrayCreationExpressionBinding : CCodeExpressionBinding {
 			}
 
 			var ce = new CCodeCommaExpression ();
-			var temp_var = codegen.get_temp_variable (expr.static_type, true, expr);
+			var temp_var = codegen.get_temp_variable (expr.value_type, true, expr);
 			var name_cnode = new CCodeIdentifier (temp_var.name);
 			int i = 0;
 			

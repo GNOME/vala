@@ -51,7 +51,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		
 		var ma = (MemberAccess) expr.call;
 		
-		var itype = expr.call.static_type;
+		var itype = expr.call.value_type;
 		params = itype.get_parameters ();
 		
 		if (itype is MethodType) {
@@ -66,7 +66,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
 		if (m is ArrayResizeMethod) {
-			var array_type = (ArrayType) ma.inner.static_type;
+			var array_type = (ArrayType) ma.inner.value_type;
 			carg_map.set (codegen.get_param_pos (0), new CCodeIdentifier (array_type.element_type.get_cname ()));
 		} else if (m is ArrayMoveMethod) {
 			codegen.requires_array_move = true;
@@ -87,7 +87,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 				instance_expression_type = codegen.get_data_type_for_symbol (codegen.current_type_symbol);
 			} else {
 				instance = (CCodeExpression) ma.inner.ccodenode;
-				instance_expression_type = ma.inner.static_type;
+				instance_expression_type = ma.inner.value_type;
 			}
 
 			if (instance_expression_type.data_type is Struct
@@ -111,7 +111,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 
 			// parent_symbol may be null for late bound methods
 			if (base_method.parent_symbol != null) {
-				var instance_target_type = ma.static_type.copy ();
+				var instance_target_type = ma.value_type.copy ();
 				instance_target_type.data_type = (Typesymbol) base_method.parent_symbol;
 				instance = codegen.get_implicit_cast_expression (instance, instance_expression_type, instance_target_type);
 			}
@@ -126,7 +126,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		}
 
 		if (m is ArrayMoveMethod) {
-			var array_type = (ArrayType) ma.inner.static_type;
+			var array_type = (ArrayType) ma.inner.value_type;
 			var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 			csizeof.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
 			carg_map.set (codegen.get_param_pos (0.1), csizeof);
@@ -137,17 +137,17 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 				var unary = arg as UnaryExpression;
 				if (unary != null && unary.operator == UnaryOperator.OUT) {
 					// out argument
-					var param = new FormalParameter ("param%d".printf (param_nr), unary.inner.static_type);
+					var param = new FormalParameter ("param%d".printf (param_nr), unary.inner.value_type);
 					param.direction = ParameterDirection.OUT;
 					m.add_parameter (param);
 				} else if (unary != null && unary.operator == UnaryOperator.REF) {
 					// ref argument
-					var param = new FormalParameter ("param%d".printf (param_nr), unary.inner.static_type);
+					var param = new FormalParameter ("param%d".printf (param_nr), unary.inner.value_type);
 					param.direction = ParameterDirection.REF;
 					m.add_parameter (param);
 				} else {
 					// in argument
-					m.add_parameter (new FormalParameter ("param%d".printf (param_nr), arg.static_type));
+					m.add_parameter (new FormalParameter ("param%d".printf (param_nr), arg.value_type));
 				}
 				param_nr++;
 			}
@@ -195,11 +195,11 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 					}
 					if (param.direction == ParameterDirection.IN) {
 						// don't cast arguments passed by reference
-						cexpr = codegen.get_implicit_cast_expression (cexpr, arg.static_type, param.type_reference);
+						cexpr = codegen.get_implicit_cast_expression (cexpr, arg.value_type, param.type_reference);
 					}
 
 					// pass non-simple struct instances always by reference
-					if (!(arg.static_type is NullType) && param.type_reference.data_type is Struct && !((Struct) param.type_reference.data_type).is_simple_type ()) {
+					if (!(arg.value_type is NullType) && param.type_reference.data_type is Struct && !((Struct) param.type_reference.data_type).is_simple_type ()) {
 						// we already use a reference for arguments of ref and out parameters
 						if (param.direction == ParameterDirection.IN) {
 							if (cexpr is CCodeIdentifier) {
@@ -209,7 +209,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 								// (tmp = expr, &tmp)
 								var ccomma = new CCodeCommaExpression ();
 
-								var temp_var = codegen.get_temp_variable (arg.static_type);
+								var temp_var = codegen.get_temp_variable (arg.value_type);
 								codegen.temp_vars.insert (0, temp_var);
 								ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), cexpr));
 								ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name)));
@@ -227,7 +227,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 
 						var ccomma = new CCodeCommaExpression ();
 
-						var temp_decl = codegen.get_temp_variable (arg.static_type);
+						var temp_decl = codegen.get_temp_variable (arg.value_type);
 						codegen.temp_vars.insert (0, temp_decl);
 						ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), cexpr));
 
@@ -239,13 +239,13 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 					}
 
 					// unref old value for non-null non-weak out arguments
-					if (param.direction == ParameterDirection.OUT && param.type_reference.takes_ownership && !(arg.static_type is NullType)) {
+					if (param.direction == ParameterDirection.OUT && param.type_reference.takes_ownership && !(arg.value_type is NullType)) {
 						var unary = (UnaryExpression) arg;
 
 						// (ret_tmp = call (&tmp), free (var1), var1 = tmp, ret_tmp)
 						var ccomma = new CCodeCommaExpression ();
 
-						var temp_var = codegen.get_temp_variable (unary.inner.static_type);
+						var temp_var = codegen.get_temp_variable (unary.inner.value_type);
 						codegen.temp_vars.insert (0, temp_var);
 						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name));
 
@@ -260,7 +260,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 						}
 
 						// unref old value
-						ccomma.append_expression (codegen.get_unref_expression ((CCodeExpression) unary.inner.ccodenode, arg.static_type, arg));
+						ccomma.append_expression (codegen.get_unref_expression ((CCodeExpression) unary.inner.ccodenode, arg.value_type, arg));
 
 						// assign new value
 						ccomma.append_expression (new CCodeAssignment ((CCodeExpression) unary.inner.ccodenode, new CCodeIdentifier (temp_var.name)));
@@ -387,8 +387,8 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 			expr.ccodenode = new CCodeAssignment (instance, ccall_expr);
 		} else {
 			/* cast pointer to actual type if this is a generic method return value */
-			if (m != null && m.return_type.type_parameter != null && expr.static_type.data_type != null) {
-				expr.ccodenode = codegen.convert_from_generic_pointer (ccall_expr, expr.static_type);
+			if (m != null && m.return_type.type_parameter != null && expr.value_type.data_type != null) {
+				expr.ccodenode = codegen.convert_from_generic_pointer (ccall_expr, expr.value_type);
 			} else {
 				expr.ccodenode = ccall_expr;
 			}
@@ -412,7 +412,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 
 			var clen = codegen.get_array_length_cexpression (ma.inner, 1);
 			var celems = (CCodeExpression) ma.inner.ccodenode;
-			var array_type = (ArrayType) ma.inner.static_type;
+			var array_type = (ArrayType) ma.inner.value_type;
 			var csizeof = new CCodeIdentifier ("sizeof (%s)".printf (array_type.element_type.get_cname ()));
 			var cdelta = new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, temp_ref, clen));
 			var ccheck = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, temp_ref, clen);
