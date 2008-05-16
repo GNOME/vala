@@ -273,8 +273,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 
 		type.source_reference = unresolved_type.source_reference;
-		type.takes_ownership = unresolved_type.takes_ownership;
-		type.transfers_ownership = unresolved_type.transfers_ownership;
+		type.value_owned = unresolved_type.value_owned;
 		type.nullable = unresolved_type.nullable;
 		type.is_dynamic = unresolved_type.is_dynamic;
 		foreach (DataType type_arg in unresolved_type.get_type_arguments ()) {
@@ -283,36 +282,23 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		for (int pointer_level = unresolved_type.pointer_level; pointer_level > 0; pointer_level--) {
 			var base_type = type;
-			base_type.takes_ownership = false;
-			base_type.transfers_ownership = false;
+			base_type.value_owned = false;
 			base_type.nullable = false;
 			base_type.is_dynamic = false;
 
 			type = new PointerType (base_type);
 		}
 
-		if (!type.is_reference_type_or_type_parameter ()) {
-			/* reset takes_ownership and transfers_ownership of
-			 * value-types for contexts where types are ref by
-			 * default (field declarations and method return types)
-			 */
-			type.takes_ownership = false;
-			type.transfers_ownership = false;
-		}
-
 		/* check for array */
 		if (unresolved_type.array_rank > 0) {
 			var element_type = type;
 			// array contains strong references by default
-			element_type.takes_ownership = element_type.is_reference_type_or_type_parameter ();
-			element_type.transfers_ownership = false;
+			element_type.value_owned = true;
 			element_type.nullable = false;
 
 			type = new ArrayType (element_type, unresolved_type.array_rank, unresolved_type.source_reference);
-			type.add_type_argument (element_type);
 
-			type.takes_ownership = unresolved_type.takes_ownership;
-			type.transfers_ownership = unresolved_type.transfers_ownership;
+			type.value_owned = unresolved_type.value_owned;
 			type.nullable = unresolved_type.nullable;
 		}
 
@@ -393,6 +379,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 	}
 
 	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
+		expr.accept_children (this);
+	}
+
+	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
 		expr.accept_children (this);
 	}
 

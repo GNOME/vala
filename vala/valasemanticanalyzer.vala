@@ -670,7 +670,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		    prop.property_type.data_type != null &&
 		    prop.property_type.data_type.is_reference_type () &&
 		    !prop.property_type.data_type.is_reference_counting () &&
-		    !prop.property_type.transfers_ownership)
+		    !prop.property_type.value_owned)
 		{
 			Report.error (prop.source_reference, "%s: abstract or virtual properties using reference types not supporting reference counting, like `%s', have to mark their return value to transfer ownership.".printf (prop.get_full_name (), prop.property_type.data_type.get_full_name ()));
 			prop.error = true;
@@ -740,7 +740,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			if (acc.body != null && (acc.writable || acc.construction)) {
 				var value_type = acc.prop.property_type.copy ();
-				value_type.takes_ownership = value_type.transfers_ownership;
 				acc.value_parameter = new FormalParameter ("value", value_type, acc.source_reference);
 				acc.body.scope.add (acc.value_parameter.name, acc.value_parameter);
 			}
@@ -814,12 +813,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			local.variable_type = local.initializer.value_type.copy ();
-			local.variable_type.takes_ownership = (local.variable_type.data_type == null || local.variable_type.data_type.is_reference_type ());
-			local.variable_type.transfers_ownership = false;
-
-			if (local.variable_type is PointerType) {
-				local.variable_type.takes_ownership = false;
-			}
+			local.variable_type.value_owned = true;
 		}
 
 		if (local.initializer != null) {
@@ -857,9 +851,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
-			if (local.initializer.value_type.transfers_ownership) {
+			if (local.initializer.value_type.value_owned) {
 				/* rhs transfers ownership of the expression */
-				if (!(local.variable_type is PointerType) && !local.variable_type.takes_ownership) {
+				if (!(local.variable_type is PointerType) && !local.variable_type.value_owned) {
 					/* lhs doesn't own the value */
 					local.error = true;
 					Report.error (local.source_reference, "Invalid assignment from owned expression to unowned variable");
@@ -1073,8 +1067,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		var collection_type = stmt.collection.value_type.copy ();
-		collection_type.transfers_ownership = false;
-		collection_type.takes_ownership = stmt.collection.value_type.transfers_ownership;
 		stmt.collection_variable = new LocalVariable (collection_type, "%s_collection".printf (stmt.variable_name));
 
 		stmt.add_local_variable (stmt.collection_variable);
@@ -1094,7 +1086,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else if (iterable_type != null && collection_type.compatible (iterable_type)) {
 			var foreach_iterator_type = new InterfaceInstanceType (iterator_type);
-			foreach_iterator_type.takes_ownership = true;
+			foreach_iterator_type.value_owned = true;
 			foreach_iterator_type.add_type_argument (stmt.type_reference);
 			stmt.iterator_variable = new LocalVariable (foreach_iterator_type, "%s_it".printf (stmt.variable_name));
 
@@ -1162,8 +1154,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (stmt.return_expression != null &&
-		    stmt.return_expression.value_type.transfers_ownership &&
-		    !current_return_type.transfers_ownership) {
+		    stmt.return_expression.value_type.value_owned &&
+		    !current_return_type.value_owned) {
 			stmt.error = true;
 			Report.error (stmt.source_reference, "Return value transfers ownership but method return type hasn't been declared to transfer ownership");
 			return;
@@ -1171,8 +1163,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (stmt.return_expression != null &&
 		    stmt.return_expression.symbol_reference is LocalVariable &&
-		    stmt.return_expression.value_type.takes_ownership &&
-		    !current_return_type.transfers_ownership) {
+		    stmt.return_expression.value_type.value_owned &&
+		    !current_return_type.value_owned) {
 			Report.warning (stmt.source_reference, "Local variable with strong reference used as return value and method return type hasn't been declared to transfer ownership");
 		}
 
@@ -1343,18 +1335,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		/* arrays of struct type elements do not take ownership since they are copied into the array */
-		if (expr.element_type.data_type is Struct) {
-			expr.element_type.takes_ownership = false;
-		} else {
-			expr.element_type.takes_ownership = true;
-		}
+		expr.element_type.value_owned = true;
 
 		expr.value_type = new ArrayType (expr.element_type, expr.rank, expr.source_reference);
-		expr.value_type.transfers_ownership = true;
-		expr.value_type.takes_ownership = true;
-
-		expr.value_type.add_type_argument (expr.element_type);
+		expr.value_type.value_owned = true;
 	}
 
 	public override void visit_boolean_literal (BooleanLiteral expr) {
@@ -1383,28 +1367,36 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.value_type = new NullType (expr.source_reference);
 	}
 
-	private DataType? get_value_type_for_symbol (Symbol sym) {
+	private DataType? get_value_type_for_symbol (Symbol sym, bool lvalue) {
 		if (sym is Field) {
 			var f = (Field) sym;
-			return f.field_type;
+			var type = f.field_type.copy ();
+			if (!lvalue) {
+				type.value_owned = false;
+			}
+			return type;
 		} else if (sym is Constant) {
 			var c = (Constant) sym;
 			return c.type_reference;
 		} else if (sym is Property) {
 			var prop = (Property) sym;
 			var type = prop.property_type.copy ();
-			type.takes_ownership = false;
+			type.value_owned = false;
 			return type;
 		} else if (sym is FormalParameter) {
 			var p = (FormalParameter) sym;
 			var type = p.parameter_type.copy ();
-			type.transfers_ownership = false;
+			if (!lvalue) {
+				type.value_owned = false;
+			}
 			return type;
-		} else if (sym is DataType) {
-			return (DataType) sym;
 		} else if (sym is LocalVariable) {
 			var local = (LocalVariable) sym;
-			return local.variable_type;
+			var type = local.variable_type.copy ();
+			if (!lvalue) {
+				type.value_owned = false;
+			}
+			return type;
 		} else if (sym is EnumValue) {
 			return new ValueType ((Typesymbol) sym.parent_symbol);
 		} else if (sym is Method) {
@@ -1598,7 +1590,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					DataType ret_type;
 					if (invoc.expected_type != null) {
 						ret_type = invoc.expected_type.copy ();
-						ret_type.transfers_ownership = ret_type.is_reference_type_or_type_parameter ();
+						ret_type.value_owned = true;
 					} else {
 						ret_type = new VoidType ();
 					}
@@ -1709,12 +1701,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				// also set static type for prototype access
 				// required when using instance methods as delegates in constants
 				// TODO replace by MethodPrototype
-				expr.value_type = get_value_type_for_symbol (expr.symbol_reference);
+				expr.value_type = get_value_type_for_symbol (expr.symbol_reference, expr.lvalue);
 			} else if (expr.symbol_reference is Field) {
 				expr.value_type = new FieldPrototype ((Field) expr.symbol_reference);
 			}
 		} else {
-			expr.value_type = get_value_type_for_symbol (expr.symbol_reference);
+			expr.value_type = get_value_type_for_symbol (expr.symbol_reference, expr.lvalue);
 
 			// resolve generic return values
 			if (expr.value_type != null && expr.value_type.type_parameter != null) {
@@ -2094,8 +2086,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return generic_type;
 		}
 		actual_type = actual_type.copy ();
-		actual_type.transfers_ownership = actual_type.takes_ownership && generic_type.transfers_ownership;
-		actual_type.takes_ownership = actual_type.takes_ownership && generic_type.takes_ownership;
+		actual_type.value_owned = actual_type.value_owned && generic_type.value_owned;
 		return actual_type;
 	}
 
@@ -2114,15 +2105,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		/* assign a value_type when possible */
 		if (expr.container.value_type is ArrayType) {
-			var args = expr.container.value_type.get_type_arguments ();
-
-			if (args.size != 1) {
-				expr.error = true;
-				Report.error (expr.source_reference, "internal error: array reference with %d type arguments, expected 1".printf (args.size));
-				return;
+			var array_type = (ArrayType) expr.container.value_type;
+			expr.value_type = array_type.element_type.copy ();
+			if (!expr.lvalue) {
+				expr.value_type.value_owned = false;
 			}
-
-			expr.value_type = args.get (0);
 		} else if (pointer_type != null && !pointer_type.base_type.is_reference_type_or_type_parameter ()) {
 			expr.value_type = pointer_type.base_type.copy ();
 		} else if (container_type == string_type.data_type) {
@@ -2171,7 +2158,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			expr.value_type = get_actual_type (expr.container.value_type, get_method, get_method.return_type, expr).copy ();
-			expr.value_type.takes_ownership = false;
+			if (expr.lvalue) {
+				// get () returns owned value, set () accepts unowned value
+				expr.value_type.value_owned = false;
+			}
 		} else {
 			expr.error = true;
 			Report.error (expr.source_reference, "The expression `%s' does not denote an Array".printf (expr.container.value_type.to_string ()));
@@ -2320,7 +2310,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_source_file.add_symbol_dependency (type, SourceFileDependencyType.SOURCE);
 
 		expr.value_type = expr.type_reference.copy ();
-		expr.value_type.transfers_ownership = true;
+		expr.value_type.value_owned = true;
 
 		int given_num_type_args = expr.type_reference.get_type_arguments ().size;
 		int expected_num_type_args = 0;
@@ -2370,8 +2360,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (!expr.struct_creation) {
 				Report.warning (expr.source_reference, "deprecated syntax, don't use `new' to initialize structs");
 			}
-
-			expr.value_type.transfers_ownership = false;
 
 			if (expr.symbol_reference == null) {
 				expr.symbol_reference = st.default_construction_method;
@@ -2601,7 +2589,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_source_file.add_type_dependency (expr.type_reference, SourceFileDependencyType.SOURCE);
 
 		expr.value_type = expr.type_reference;
-		expr.value_type.transfers_ownership = expr.inner.value_type.transfers_ownership;
+		expr.value_type.value_owned = expr.inner.value_type.value_owned;
 	}
 
 	public override void visit_pointer_indirection (PointerIndirection expr) {
@@ -2649,6 +2637,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
+		expr.inner.lvalue = true;
+
+		expr.accept_children (this);
+
 		if (expr.inner.error) {
 			/* if there was an error in the inner expression, skip type check */
 			expr.error = true;
@@ -2661,7 +2653,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		if (!expr.inner.value_type.takes_ownership
+		if (!expr.inner.value_type.value_owned
 		    && !(expr.inner.value_type is PointerType)) {
 			expr.error = true;
 			Report.error (expr.source_reference, "No reference to be transferred");
@@ -2669,8 +2661,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		expr.value_type = expr.inner.value_type.copy ();
-		expr.value_type.transfers_ownership = true;
-		expr.value_type.takes_ownership = false;
+		expr.value_type.value_owned = true;
 	}
 
 	private DataType? get_arithmetic_result_type (DataType left_type, DataType right_type) {
@@ -3138,14 +3129,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return;
 				}
 
-				if (a.right.value_type.transfers_ownership) {
+				if (a.right.value_type.value_owned) {
 					/* rhs transfers ownership of the expression */
-					if (!(a.left.value_type is PointerType) && !a.left.value_type.takes_ownership) {
+					if (!(a.left.value_type is PointerType) && !a.left.value_type.value_owned) {
 						/* lhs doesn't own the value */
 						a.error = true;
 						Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
 					}
-				} else if (a.left.value_type.takes_ownership) {
+				} else if (a.left.value_type.value_owned) {
 					/* lhs wants to own the value
 					 * rhs doesn't transfer the ownership
 					 * code generator needs to add reference
@@ -3161,24 +3152,27 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
-			if (a.right.value_type.transfers_ownership) {
+			if (a.right.value_type.value_owned) {
 				/* rhs transfers ownership of the expression */
 
-				var args = ea.container.value_type.get_type_arguments ();
-				if (args.size != 1) {
-					a.error = true;
-					Report.error (ea.source_reference, "internal error: array reference with %d type arguments".printf (args.size));
-					return;
-				}
-				var element_type = args.get (0);
+				DataType element_type;
 
-				if (!(element_type is PointerType) && !element_type.takes_ownership) {
+				if (ea.container.value_type is ArrayType) {
+					var array_type = (ArrayType) ea.container.value_type;
+					element_type = array_type.element_type;
+				} else {
+					var args = ea.container.value_type.get_type_arguments ();
+					assert (args.size == 1);
+					element_type = args.get (0);
+				}
+
+				if (!(element_type is PointerType) && !element_type.value_owned) {
 					/* lhs doesn't own the value */
 					a.error = true;
 					Report.error (a.source_reference, "Invalid assignment from owned expression to unowned variable");
 					return;
 				}
-			} else if (a.left.value_type.takes_ownership) {
+			} else if (a.left.value_type.value_owned) {
 				/* lhs wants to own the value
 				 * rhs doesn't transfer the ownership
 				 * code generator needs to add reference
@@ -3192,7 +3186,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			a.value_type = a.left.value_type.copy ();
 			if (a.parent_node is ExpressionStatement) {
 				// Gee.List.get () transfers ownership but void function Gee.List.set () doesn't
-				a.value_type.transfers_ownership = false;
+				a.value_type.value_owned = false;
 			}
 		} else {
 			a.value_type = null;

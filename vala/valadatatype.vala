@@ -30,15 +30,9 @@ using Gee;
  */
 public abstract class Vala.DataType : CodeNode {
 	/**
-	 * Specifies that the expression transfers ownership of its value.
+	 * Specifies that the expression or variable owns the value.
 	 */
-	public bool transfers_ownership { get; set; }
-	
-	/**
-	 * Specifies that the expression assumes ownership if used as an lvalue
-	 * in an assignment.
-	 */
-	public bool takes_ownership { get; set; }
+	public bool value_owned { get; set; }
 
 	/**
 	 * Specifies that the expression may be null.
@@ -171,7 +165,7 @@ public abstract class Vala.DataType : CodeNode {
 				} else {
 					first = false;
 				}
-				if (type_arg.is_reference_type_or_type_parameter () && !type_arg.takes_ownership) {
+				if (!type_arg.value_owned) {
 					s += "weak ";
 				}
 				s += type_arg.to_string ();
@@ -201,10 +195,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *              otherwise
 	 */
 	public virtual bool equals (DataType type2) {
-		if (type2.transfers_ownership != transfers_ownership) {
-			return false;
-		}
-		if (type2.takes_ownership != takes_ownership) {
+		if (type2.value_owned != value_owned) {
 			return false;
 		}
 		if (type2.nullable != nullable) {
@@ -236,10 +227,7 @@ public abstract class Vala.DataType : CodeNode {
 	 * @return      true if this type reference is stricter or equal
 	 */
 	public virtual bool stricter (DataType type2) {
-		if (type2.transfers_ownership != transfers_ownership) {
-			return false;
-		}
-		if (type2.takes_ownership != takes_ownership) {
+		if (type2.value_owned != value_owned) {
 			return false;
 		}
 		

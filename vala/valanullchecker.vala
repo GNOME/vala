@@ -229,6 +229,10 @@ public class Vala.NullChecker : CodeVisitor {
 		}
 	}
 
+	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
+		expr.accept_children (this);
+	}
+
 	public override void visit_conditional_expression (ConditionalExpression expr) {
 		check_non_null (expr.condition);
 	}

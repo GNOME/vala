@@ -2212,7 +2212,7 @@ namespace GLib {
 		public void get_description ();
 		public void set_translate_func (TranslateFunc func, DestroyNotify? destroy_notify);
 		public void set_translation_domain (string domain);
-		public bool parse ([CCode (array_length_pos = 0.9)] ref string[] argv) throws OptionError;
+		public bool parse ([CCode (array_length_pos = 0.9)] ref weak string[] argv) throws OptionError;
 		public void set_help_enabled (bool help_enabled);
 		public bool get_help_enabled ();
 		public void set_ignore_unknown_options (bool ignore_unknown);
@@ -2539,7 +2539,7 @@ namespace GLib {
 		public static void minimized_result (double minimized_quantity, string format, ...);
 		[PrintfFormat]
 		public static void maximized_result (double maximized_quantity, string format, ...);
-		public static void init ([CCode (array_length_pos = 0.9)] ref string[] args, ...);
+		public static void init ([CCode (array_length_pos = 0.9)] ref weak string[] args, ...);
 		public static bool quick ();
 		public static bool slow ();
 		public static bool thorough ();

@@ -38,8 +38,7 @@ public class Vala.ClassType : ReferenceType {
 	public override DataType copy () {
 		var result = new ClassType (class_symbol);
 		result.source_reference = source_reference;
-		result.transfers_ownership = transfers_ownership;
-		result.takes_ownership = takes_ownership;
+		result.value_owned = value_owned;
 		result.nullable = nullable;
 		result.is_dynamic = is_dynamic;
 		result.floating_reference = floating_reference;

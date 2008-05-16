@@ -39,8 +39,7 @@ public class Vala.InterfaceInstanceType : ReferenceType {
 	public override DataType copy () {
 		var result = new InterfaceInstanceType (interface_symbol);
 		result.source_reference = source_reference;
-		result.transfers_ownership = transfers_ownership;
-		result.takes_ownership = takes_ownership;
+		result.value_owned = value_owned;
 		result.nullable = nullable;
 		result.is_dynamic = is_dynamic;
 		result.floating_reference = floating_reference;
@@ -53,6 +52,6 @@ public class Vala.InterfaceInstanceType : ReferenceType {
 	}
 
 	public override string? get_cname () {
-		return "%s*".printf (interface_symbol.get_cname (!takes_ownership && !transfers_ownership));
+		return "%s*".printf (interface_symbol.get_cname (!value_owned));
 	}
 }

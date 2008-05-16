@@ -616,7 +616,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				}
 			}
 			
-			if (f.field_type.takes_ownership && instance_dispose_fragment != null) {
+			if (requires_destroy (f.field_type) && instance_dispose_fragment != null) {
 				var ma = new MemberAccess.simple (f.name);
 				ma.symbol_reference = f;
 				instance_dispose_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.field_type, ma)));
@@ -779,7 +779,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 		var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
 		var value_type = prop.property_type.copy ();
-		value_type.takes_ownership = value_type.transfers_ownership;
 		var cvalueparam = new CCodeFormalParameter ("value", value_type.get_cname ());
 
 		if (prop.is_abstract || prop.is_virtual) {
@@ -1071,7 +1070,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		foreach (LocalVariable local in local_vars) {
-			if (local.variable_type.takes_ownership) {
+			if (requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (local.name)), local.variable_type, ma)));
@@ -1081,7 +1080,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (b.parent_symbol is Method) {
 			var m = (Method) b.parent_symbol;
 			foreach (FormalParameter param in m.get_parameters ()) {
-				if (param.parameter_type.data_type != null && param.parameter_type.data_type.is_reference_type () && param.parameter_type.takes_ownership && param.direction == ParameterDirection.IN) {
+				if (requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
 					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.parameter_type, ma)));
@@ -1231,9 +1230,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		list.ccodenode = clist;
 	}
 
-	public LocalVariable get_temp_variable (DataType type, bool takes_ownership = true, CodeNode? node_reference = null) {
+	public LocalVariable get_temp_variable (DataType type, bool value_owned = true, CodeNode? node_reference = null) {
 		var var_type = type.copy ();
-		var_type.takes_ownership = takes_ownership;
+		var_type.value_owned = value_owned;
 		var local = new LocalVariable (var_type, "_tmp%d".printf (next_temp_var_id));
 
 		if (node_reference != null) {
@@ -1263,6 +1262,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				dup_function = type.data_type.get_ref_function ();
 			} else if (type.data_type == string_type.data_type) {
 				dup_function = type.data_type.get_dup_function ();
+			} else if (type is ValueType) {
+				dup_function = "";
 			} else {
 				// duplicating non-reference counted structs may cause side-effects (and performance issues)
 				Report.error (source_reference, "duplicating %s instance, use weak variable or explicitly invoke copy method".printf (type.data_type.name));
@@ -1288,17 +1289,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (type.data_type == glist_type || type.data_type == gslist_type) {
 			// create wrapper function to free list elements if necessary
 
-			bool takes_ownership = false;
+			bool elements_require_free = false;
 			CCodeExpression element_destroy_func_expression = null;
 
 			foreach (DataType type_arg in type.get_type_arguments ()) {
-				takes_ownership = type_arg.takes_ownership;
-				if (takes_ownership) {
+				elements_require_free = requires_destroy (type_arg);
+				if (elements_require_free) {
 					element_destroy_func_expression = get_destroy_func_expression (type_arg);
 				}
 			}
 			
-			if (takes_ownership && element_destroy_func_expression is CCodeIdentifier) {
+			if (elements_require_free && element_destroy_func_expression is CCodeIdentifier) {
 				return new CCodeIdentifier (generate_glist_free_wrapper (type, (CCodeIdentifier) element_destroy_func_expression));
 			} else {
 				return new CCodeIdentifier (type.data_type.get_free_function ());
@@ -1311,8 +1312,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				unref_function = type.data_type.get_free_function ();
 			}
 			if (unref_function == null) {
-				Report.error (type.data_type.source_reference, "The type `%s` doesn't contain a free function".printf (type.data_type.get_full_name ()));
-				return null;
+				return new CCodeConstant ("NULL");
 			}
 			return new CCodeIdentifier (unref_function);
 		} else if (type.type_parameter != null && current_type_symbol is Class) {
@@ -1891,7 +1891,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 				element_expr = get_implicit_cast_expression (element_expr, array_type.element_type, stmt.type_reference);
 
-				if (stmt.type_reference.takes_ownership) {
+				if (requires_copy (stmt.type_reference)) {
 					var ma = new MemberAccess.simple (stmt.variable_name);
 					ma.value_type = stmt.type_reference;
 					ma.ccodenode = element_expr;
@@ -1935,7 +1935,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 				element_expr = get_implicit_cast_expression (element_expr, array_type.element_type, stmt.type_reference);
 
-				if (stmt.type_reference.takes_ownership) {
+				if (requires_copy (stmt.type_reference)) {
 					var ma = new MemberAccess.simple (stmt.variable_name);
 					ma.value_type = stmt.type_reference;
 					ma.ccodenode = element_expr;
@@ -2003,7 +2003,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			element_expr = convert_from_generic_pointer (element_expr, stmt.type_reference);
 
-			if (stmt.type_reference.takes_ownership) {
+			if (requires_copy (stmt.type_reference)) {
 				var ma = new MemberAccess.simple (stmt.variable_name);
 				ma.value_type = stmt.type_reference;
 				ma.ccodenode = element_expr;
@@ -2058,7 +2058,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			element_expr = get_implicit_cast_expression (element_expr, it_type, stmt.type_reference);
 
-			if (stmt.type_reference.takes_ownership && !it_type.takes_ownership) {
+			if (requires_copy (stmt.type_reference) && !it_type.value_owned) {
 				var ma = new MemberAccess.simple (stmt.variable_name);
 				ma.value_type = stmt.type_reference;
 				ma.ccodenode = element_expr;
@@ -2088,7 +2088,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		foreach (LocalVariable local in stmt.get_local_variables ()) {
-			if (local.variable_type.takes_ownership) {
+			if (requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				var cunref = new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (local.name)), local.variable_type, ma));
@@ -2115,7 +2115,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var local_vars = b.get_local_variables ();
 		foreach (LocalVariable local in local_vars) {
-			if (local.active && local.variable_type.is_reference_type_or_type_parameter () && local.variable_type.takes_ownership) {
+			if (local.active && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (local.name)), local.variable_type, ma)));
@@ -2139,7 +2139,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	private void append_param_free (Method m, CCodeFragment cfrag) {
 		foreach (FormalParameter param in m.get_parameters ()) {
-			if (param.parameter_type.data_type != null && param.parameter_type.data_type.is_reference_type () && param.parameter_type.takes_ownership && param.direction == ParameterDirection.IN) {
+			if (requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = param;
 				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.parameter_type, ma)));
@@ -2163,7 +2163,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var local_vars = b.get_local_variables ();
 		foreach (LocalVariable local in local_vars) {
-			if (local.active && local.variable_type.is_reference_type_or_type_parameter () && local.variable_type.takes_ownership) {
+			if (local.active && requires_destroy (local.variable_type)) {
 				found = true;
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
@@ -2184,7 +2184,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		bool found = false;
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			if (param.parameter_type.data_type != null && param.parameter_type.data_type.is_reference_type () && param.parameter_type.takes_ownership && param.direction == ParameterDirection.IN) {
+			if (requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
 				found = true;
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = param;
@@ -2218,7 +2218,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			if (stmt.return_expression.ref_missing &&
 			    stmt.return_expression.symbol_reference is LocalVariable) {
 				var local = (LocalVariable) stmt.return_expression.symbol_reference;
-				if (local.variable_type.takes_ownership) {
+				if (local.variable_type.value_owned) {
 					/* return expression is local variable taking ownership and
 					 * current method is transferring ownership */
 					
@@ -2243,7 +2243,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			if (stmt.return_expression.ref_sink &&
 			    stmt.return_expression.symbol_reference is LocalVariable) {
 				var local = (LocalVariable) stmt.return_expression.symbol_reference;
-				if (local.variable_type.takes_ownership) {
+				if (local.variable_type.value_owned) {
 					/* return expression is local variable taking ownership and
 					 * current method is transferring ownership */
 					
@@ -2809,7 +2809,45 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		
 		return null;
 	}
-	
+
+	public bool requires_copy (DataType type) {
+		if (!type.value_owned) {
+			return false;
+		}
+
+		if (type.is_reference_type_or_type_parameter ()) {
+			if (type.type_parameter != null) {
+				if (!(current_type_symbol is Class) || !current_class.is_subtype_of (gobject_type)) {
+					return false;
+				}
+			}
+			return true;
+		} else if (type is ValueType) {
+			// nullable structs are heap allocated
+			return type.nullable;
+		}
+		return false;
+	}
+
+	public bool requires_destroy (DataType type) {
+		if (!type.value_owned) {
+			return false;
+		}
+
+		if (type.is_reference_type_or_type_parameter ()) {
+			if (type.type_parameter != null) {
+				if (!(current_type_symbol is Class) || !current_class.is_subtype_of (gobject_type)) {
+					return false;
+				}
+			}
+			return true;
+		} else if (type is ValueType) {
+			// nullable structs are heap allocated
+			return type.nullable;
+		}
+		return false;
+	}
+
 	private CCodeExpression? get_ref_expression (Expression expr) {
 		/* (temp = expr, temp == NULL ? NULL : ref (temp))
 		 *
@@ -2878,7 +2916,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	
 	public void visit_expression (Expression expr) {
 		if (expr.value_type != null &&
-		    expr.value_type.transfers_ownership &&
+		    expr.value_type.value_owned &&
+		    !expr.lvalue &&
 		    expr.value_type.floating_reference) {
 			/* constructor of GInitiallyUnowned subtype
 			 * returns floating reference, sink it
@@ -2889,13 +2928,20 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			expr.ccodenode = csink;
 		}
 	
-		if (expr.ref_leaked) {
+		if (expr.ref_leaked && requires_destroy (expr.value_type)) {
 			var decl = get_temp_variable (expr.value_type, true, expr);
 			temp_vars.insert (0, decl);
 			temp_ref_vars.insert (0, decl);
 			expr.ccodenode = new CCodeParenthesizedExpression (new CCodeAssignment (new CCodeIdentifier (get_variable_cname (decl.name)), (CCodeExpression) expr.ccodenode));
 		} else if (expr.ref_missing) {
-			expr.ccodenode = get_ref_expression (expr);
+			// ref_missing => assignment of unowned expression to owned expression
+			// requires_copy should be called on target type but we don't have this
+			// information available here, so construct approximation of target type
+			var target_type = expr.value_type.copy ();
+			target_type.value_owned = true;
+			if (requires_copy (target_type)) {
+				expr.ccodenode = get_ref_expression (expr);
+			}
 		}
 	}
 
@@ -2954,7 +3000,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			if (expr.type_reference.data_type is Class && expr.type_reference.data_type.is_subtype_of (gobject_type)) {
 				foreach (DataType type_arg in expr.type_reference.get_type_arguments ()) {
 					creation_call.add_argument (get_type_id_expression (type_arg));
-					if (type_arg.takes_ownership) {
+					if (requires_copy (type_arg)) {
 						var dup_func = get_dup_func_expression (type_arg, type_arg.source_reference);
 						if (dup_func == null) {
 							// type doesn't contain a copy function
@@ -3189,6 +3235,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
+		expr.accept_children (this);
+
 		/* (tmp = var, var = null, tmp) */
 		var ccomma = new CCodeCommaExpression ();
 		var temp_decl = get_temp_variable (expr.value_type, true, expr);

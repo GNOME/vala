@@ -287,6 +287,10 @@ public class Vala.Class : Typesymbol {
 			if (empty_get && empty_set) {
 				/* automatic property accessor body generation */
 				var field_type = prop.property_type.copy ();
+				var ut = field_type as UnresolvedType;
+				if (ut != null) {
+					field_type.value_owned = !ut.is_weak;
+				}
 				var f = new Field ("_%s".printf (prop.name), field_type, prop.default_expression, prop.source_reference);
 				f.access = SymbolAccessibility.PRIVATE;
 				prop.field = f;

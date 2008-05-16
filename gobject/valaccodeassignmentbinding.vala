@@ -371,7 +371,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 
 		rhs = codegen.get_implicit_cast_expression (rhs, assignment.right.value_type, assignment.left.value_type);
 
-		bool unref_old = (assignment.left.value_type.takes_ownership);
+		bool unref_old = codegen.requires_destroy (assignment.left.value_type);
 		bool array = false;
 		bool instance_delegate = false;
 		if (assignment.left.value_type is ArrayType) {

@@ -33,8 +33,7 @@ public class Vala.TypeParameterType : DataType {
 	public override DataType copy () {
 		var result = new TypeParameterType (type_parameter);
 		result.source_reference = source_reference;
-		result.transfers_ownership = transfers_ownership;
-		result.takes_ownership = takes_ownership;
+		result.value_owned = value_owned;
 		result.nullable = nullable;
 		result.floating_reference = floating_reference;
 
@@ -42,7 +41,7 @@ public class Vala.TypeParameterType : DataType {
 	}
 
 	public override string? get_cname () {
-		if (takes_ownership || transfers_ownership) {
+		if (value_owned) {
 			return "gpointer";
 		} else {
 			return "gconstpointer";

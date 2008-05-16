@@ -1138,7 +1138,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		return false;
 	}
-	
+
 	private DataType parse_type_string (string n) {
 		if (n == "va_list") {
 			// unsupported
@@ -1267,7 +1267,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "transfer_ownership") {
 					if (eval (nv[1]) == "1") {
-						return_type.transfers_ownership = true;
+						return_type.value_owned = true;
 					}
 				} else if (nv[0] == "sentinel") {
 					m.sentinel = eval (nv[1]);
@@ -1289,7 +1289,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					var type_args = eval (nv[1]).split (",");
 					foreach (string type_arg in type_args) {
 						var arg_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, type_arg));
-						arg_type.takes_ownership = true;
+						arg_type.value_owned = true;
 						return_type.add_type_argument (arg_type);
 					}
 				}
@@ -1366,11 +1366,17 @@ public class Vala.GIdlParser : CodeVisitor {
 						}
 					} else if (nv[0] == "transfer_ownership") {
 						if (eval (nv[1]) == "1") {
-							param_type.transfers_ownership = true;
+							param_type.value_owned = true;
 						}
 					} else if (nv[0] == "takes_ownership") {
 						if (eval (nv[1]) == "1") {
-							param_type.takes_ownership = true;
+							param_type.value_owned = true;
+						}
+					} else if (nv[0] == "value_owned") {
+						if (eval (nv[1]) == "0") {
+							param_type.value_owned = false;
+						} else if (eval (nv[1]) == "1") {
+							param_type.value_owned = true;
 						}
 					} else if (nv[0] == "hidden") {
 						if (eval (nv[1]) == "1") {
@@ -1390,7 +1396,7 @@ public class Vala.GIdlParser : CodeVisitor {
 						var type_args = eval (nv[1]).split (",");
 						foreach (string type_arg in type_args) {
 							var arg_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, type_arg));
-							arg_type.takes_ownership = true;
+							arg_type.value_owned = true;
 							param_type.add_type_argument (arg_type);
 						}
 					}
@@ -1588,7 +1594,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "weak") {
 					if (eval (nv[1]) == "0") {
-						type.takes_ownership = true;
+						type.value_owned = true;
 					}
 				} else if (nv[0] == "type_name") {
 					((UnresolvedType) type).unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));

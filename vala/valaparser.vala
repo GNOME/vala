@@ -377,7 +377,7 @@ public class Vala.Parser : CodeVisitor {
 			Report.warning (get_last_src (), "obsolete syntax, types are non-null by default");
 		}
 
-		bool transfers_ownership = accept (TokenType.HASH);
+		bool value_owned = accept (TokenType.HASH);
 
 		var type = new UnresolvedType.from_symbol (sym, get_src (begin));
 		if (type_arg_list != null) {
@@ -390,7 +390,7 @@ public class Vala.Parser : CodeVisitor {
 		type.pointer_level = stars;
 		type.array_rank = array_rank;
 		type.nullable = nullable;
-		type.transfers_ownership = transfers_ownership;
+		type.value_owned = value_owned;
 		return type;
 	}
 
@@ -1314,7 +1314,7 @@ public class Vala.Parser : CodeVisitor {
 			variable_type = parse_type ();
 			var ut = variable_type as UnresolvedType;
 			if (ut != null && !ut.is_weak) {
-				variable_type.takes_ownership = true;
+				variable_type.value_owned = true;
 			}
 		}
 		do {
@@ -1451,7 +1451,7 @@ public class Vala.Parser : CodeVisitor {
 					variable_type = parse_type ();
 					var ut = variable_type as UnresolvedType;
 					if (ut != null && !ut.is_weak) {
-						variable_type.takes_ownership = true;
+						variable_type.value_owned = true;
 					}
 				}
 				var local = parse_local_variable (variable_type);
@@ -1495,7 +1495,7 @@ public class Vala.Parser : CodeVisitor {
 		var type = parse_type ();
 		var unresolved_type = type as UnresolvedType;
 		if (unresolved_type != null && !unresolved_type.is_weak) {
-			unresolved_type.takes_ownership = true;
+			unresolved_type.value_owned = true;
 		}
 		string id = parse_identifier ();
 		expect (TokenType.IN);
@@ -1986,7 +1986,7 @@ public class Vala.Parser : CodeVisitor {
 		var type = parse_type ();
 		var unresolved_type = type as UnresolvedType;
 		if (unresolved_type != null && !unresolved_type.is_weak) {
-			unresolved_type.takes_ownership = true;
+			unresolved_type.value_owned = true;
 		}
 		string id = parse_identifier ();
 		var f = new Field (id, type, null, get_src_com (begin));
@@ -2034,7 +2034,7 @@ public class Vala.Parser : CodeVisitor {
 		var type = parse_type ();
 		var unresolved_type = type as UnresolvedType;
 		if (unresolved_type != null && !unresolved_type.is_weak) {
-			unresolved_type.transfers_ownership = true;
+			unresolved_type.value_owned = true;
 		}
 		string id = parse_identifier ();
 		parse_type_parameter_list ();
@@ -2095,10 +2095,6 @@ public class Vala.Parser : CodeVisitor {
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
 		var type = parse_type ();
-		var ut = type as UnresolvedType;
-		if (ut != null && !ut.is_weak) {
-			type.takes_ownership = true;
-		}
 		string id = parse_identifier ();
 		var prop = new Property (id, type, null, null, get_src_com (begin));
 		prop.access = access;
@@ -2550,12 +2546,12 @@ public class Vala.Parser : CodeVisitor {
 		var type = parse_type ();
 		var ut = type as UnresolvedType;
 		if (ut != null) {
-			if (!ut.is_weak) {
-				ut.takes_ownership = true;
-			}
-			if (direction == ParameterDirection.IN && !ut.transfers_ownership) {
-				//  take_ownership for in parameters that don't transfer ownership is not supported
-				ut.takes_ownership = false;
+			if (direction != ParameterDirection.IN && !ut.is_weak) {
+				ut.value_owned = true;
+			} else if (direction == ParameterDirection.IN && ut.is_weak) {
+				Report.error (type.source_reference, "in parameters are weak by default");
+			} else if (direction != ParameterDirection.IN && ut.value_owned) {
+				Report.error (type.source_reference, "out parameters own the value by default");
 			}
 		}
 		string id = parse_identifier ();
@@ -2610,7 +2606,7 @@ public class Vala.Parser : CodeVisitor {
 		var type = parse_type ();
 		var unresolved_type = type as UnresolvedType;
 		if (unresolved_type != null && !unresolved_type.is_weak) {
-			unresolved_type.transfers_ownership = true;
+			unresolved_type.value_owned = true;
 		}
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
@@ -2689,7 +2685,7 @@ public class Vala.Parser : CodeVisitor {
 					var type = parse_type ();
 					var ut = type as UnresolvedType;
 					if (ut != null && !ut.is_weak) {
-						type.takes_ownership = true;
+						type.value_owned = true;
 					}
 					list.add (type);
 					break;

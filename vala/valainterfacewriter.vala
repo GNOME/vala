@@ -465,9 +465,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_indent ();
 		write_accessibility (f);
 
-		if (f.field_type.data_type != null &&
-		    f.field_type.data_type.is_reference_type () &&
-		    !f.field_type.takes_ownership) {
+		if (is_weak (f.field_type)) {
 			write_string ("weak ");
 		}
 
@@ -538,14 +536,14 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				} else if (param.direction == ParameterDirection.OUT) {
 					write_string ("out ");
 				}
-				if (param.parameter_type.data_type != null && param.parameter_type.data_type.is_reference_type () && !param.parameter_type.takes_ownership) {
+				if (is_weak (param.parameter_type)) {
 					write_string ("weak ");
 				}
 			}
 
 			write_type (param.parameter_type);
 
-			if (param.parameter_type.transfers_ownership) {
+			if (param.direction == ParameterDirection.IN && param.parameter_type.value_owned) {
 				write_string ("#");
 			}
 
@@ -733,13 +731,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		} else if (prop.is_virtual) {
 			write_string ("virtual ");
 		}
-		if (!prop.property_type.takes_ownership) {
-			write_string ("weak ");
-		}
 
 		write_type (prop.property_type);
 
-		if (prop.property_type.transfers_ownership) {
+		if (prop.property_type.value_owned) {
 			write_string ("#");
 		}
 
@@ -817,13 +812,29 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	private void write_return_type (DataType type) {
-		if (type.is_reference_type_or_type_parameter ()) {
-			if (!type.transfers_ownership) {
-				write_string ("weak ");
-			}
+		if (is_weak (type)) {
+			write_string ("weak ");
 		}
 
 		write_type (type);
+	}
+
+	private bool is_weak (DataType type) {
+		if (type.value_owned) {
+			return false;
+		} else if (type is VoidType || type is PointerType) {
+			return false;
+		} else if (type is ValueType) {
+			if (type.nullable) {
+				// nullable structs are heap allocated
+				return false;
+			}
+
+			// TODO return true for structs with destroy
+			return false;
+		}
+
+		return true;
 	}
 
 	private void write_type (DataType type) {

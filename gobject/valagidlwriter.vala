@@ -323,18 +323,18 @@ public class Vala.GIdlWriter : CodeVisitor {
 			if (param.direction == ParameterDirection.REF) {
 				stream.printf (" direction=\"inout\"");
 				// in/out paramter
-				if (param.parameter_type.takes_ownership) {
+				if (param.parameter_type.value_owned) {
 					stream.printf (" transfer=\"full\"");
 				}
 			} else if (param.direction == ParameterDirection.OUT) {
 				// out paramter
 				stream.printf (" direction=\"out\"");
-				if (param.parameter_type.takes_ownership) {
+				if (param.parameter_type.value_owned) {
 					stream.printf (" transfer=\"full\"");
 				}
 			} else {
 				// normal in paramter
-				if (param.parameter_type.transfers_ownership) {
+				if (param.parameter_type.value_owned) {
 					stream.printf (" transfer=\"full\"");
 				}
 			}
@@ -472,7 +472,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	private void write_return_type (DataType type) {
 		write_indent ();
 		stream.printf ("<return-type type=\"%s\"", get_gidl_type_name (type));
-		if (type.transfers_ownership) {
+		if (type.value_owned) {
 			stream.printf (" transfer=\"full\"");
 		}
 		stream.printf ("/>\n");

@@ -1,6 +1,6 @@
 /* valareferencetransferexpression.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -48,14 +48,16 @@ public class Vala.ReferenceTransferExpression : Expression {
 	 * @return      newly created reference transfer expression
 	 */
 	public ReferenceTransferExpression (Expression inner, SourceReference? source_reference = null) {
-		this.source_reference = source_reference;
 		this.inner = inner;
+		this.source_reference = source_reference;
 	}
 	
 	public override void accept (CodeVisitor visitor) {
-		inner.accept (visitor);
-
 		visitor.visit_reference_transfer_expression (this);
+	}
+	
+	public override void accept_children (CodeVisitor visitor) {
+		inner.accept (visitor);
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {

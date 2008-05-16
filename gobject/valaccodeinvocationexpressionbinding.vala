@@ -239,7 +239,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 					}
 
 					// unref old value for non-null non-weak out arguments
-					if (param.direction == ParameterDirection.OUT && param.parameter_type.takes_ownership && !(arg.value_type is NullType)) {
+					if (param.direction == ParameterDirection.OUT && codegen.requires_destroy (param.parameter_type) && !(arg.value_type is NullType)) {
 						var unary = (UnaryExpression) arg;
 
 						// (ret_tmp = call (&tmp), free (var1), var1 = tmp, ret_tmp)

@@ -105,8 +105,7 @@ public class Vala.UnresolvedType : DataType {
 	public override DataType copy () {
 		var result = new UnresolvedType ();
 		result.source_reference = source_reference;
-		result.transfers_ownership = transfers_ownership;
-		result.takes_ownership = takes_ownership;
+		result.value_owned = value_owned;
 		result.nullable = nullable;
 		result.is_dynamic = is_dynamic;
 		result.unresolved_symbol = unresolved_symbol.copy ();

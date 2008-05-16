@@ -29,7 +29,7 @@ public class Vala.ArrayType : ReferenceType {
 	/**
 	 * The element type.
 	 */
-	public weak DataType element_type { get; construct set; }
+	public DataType element_type { get; construct set; }
 
 	/**
 	 * The rank of this array.
@@ -68,7 +68,6 @@ public class Vala.ArrayType : ReferenceType {
 				// length is an int[] containing the dimensions of the array, starting at 0
 				ValueType integer = new ValueType((Typesymbol) root_symbol.scope.lookup("int"));
 				length_field.field_type = new ArrayType (integer, 1, source_reference);
-				length_field.field_type.add_type_argument (integer);
 			} else {
 				length_field.field_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int"));
 			}
@@ -117,14 +116,9 @@ public class Vala.ArrayType : ReferenceType {
 
 	public override DataType copy () {
 		var result = new ArrayType (element_type, rank, source_reference);
-		result.transfers_ownership = transfers_ownership;
-		result.takes_ownership = takes_ownership;
+		result.value_owned = value_owned;
 		result.nullable = nullable;
 		result.floating_reference = floating_reference;
-		
-		foreach (DataType arg in get_type_arguments ()) {
-			result.add_type_argument (arg.copy ());
-		}
 		
 		return result;
 	}

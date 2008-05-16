@@ -42,7 +42,7 @@ public class Vala.MemoryManager : CodeVisitor {
 	
 	private void visit_possibly_leaked_expression (Expression expr) {
 		if (expr.value_type != null
-		    && expr.value_type.transfers_ownership) {
+		    && expr.value_type.value_owned) {
 			/* mark reference as leaked */
 			expr.ref_leaked = true;
 		}
@@ -50,7 +50,7 @@ public class Vala.MemoryManager : CodeVisitor {
 
 	private void visit_possibly_missing_copy_expression (Expression expr) {
 		if (expr.value_type != null
-		    && !expr.value_type.transfers_ownership
+		    && !expr.value_type.value_owned
 		    && !(expr.value_type is NullType)) {
 			/* mark reference as missing */
 			expr.ref_missing = true;
@@ -78,7 +78,7 @@ public class Vala.MemoryManager : CodeVisitor {
 	public override void visit_field (Field f) {
 		if (f.initializer != null) {
 			if (!(f.field_type is PointerType)) {
-				if (f.field_type.takes_ownership) {
+				if (f.field_type.value_owned) {
 					visit_possibly_missing_copy_expression (f.initializer);
 				} else {
 					visit_possibly_leaked_expression (f.initializer);
@@ -131,7 +131,7 @@ public class Vala.MemoryManager : CodeVisitor {
 
 		if (local.initializer != null) {
 			if (!(local.variable_type is PointerType)) {
-				if (local.variable_type.takes_ownership) {
+				if (local.variable_type.value_owned) {
 					visit_possibly_missing_copy_expression (local.initializer);
 				} else {
 					visit_possibly_leaked_expression (local.initializer);
@@ -180,7 +180,7 @@ public class Vala.MemoryManager : CodeVisitor {
 				var m = (Method) current_symbol;
 				
 				if (!(m.return_type is PointerType)) {
-					if (m.return_type.transfers_ownership) {
+					if (m.return_type.value_owned) {
 						visit_possibly_missing_copy_expression (stmt.return_expression);
 					} else {
 						visit_possibly_leaked_expression (stmt.return_expression);
@@ -189,7 +189,7 @@ public class Vala.MemoryManager : CodeVisitor {
 			} else if (current_symbol is Property) {
 				/* property get accessor */
 				var prop = (Property) current_symbol;
-				if (prop.property_type.transfers_ownership) {
+				if (prop.property_type.value_owned) {
 					visit_possibly_missing_copy_expression (stmt.return_expression);
 				} else {
 					visit_possibly_leaked_expression (stmt.return_expression);
@@ -215,11 +215,7 @@ public class Vala.MemoryManager : CodeVisitor {
 	public override void visit_array_creation_expression (ArrayCreationExpression e) {
 		if (e.initializer_list != null) {
 			foreach (Expression init in e.initializer_list.get_initializers ()) {
-				if (init.value_type.is_reference_type_or_type_parameter ()) {
-					visit_possibly_missing_copy_expression (init);
-				} else {
-					visit_possibly_leaked_expression (init);
-				}
+				visit_possibly_missing_copy_expression (init);
 			}
 		}
 	}
@@ -245,14 +241,14 @@ public class Vala.MemoryManager : CodeVisitor {
 			if (params_it.next ()) {
 				var param = params_it.get ();
 				if (!param.ellipsis
-				    && param.parameter_type.is_reference_type_or_type_parameter ()) {
-					bool is_ref = param.parameter_type.transfers_ownership;
+				    && param.direction == ParameterDirection.IN) {
+					bool is_ref = param.parameter_type.value_owned;
 					if (is_ref && param.parameter_type.type_parameter != null) {
 						if (expr.call is MemberAccess) {
 							var ma = (MemberAccess) expr.call;
 							var param_type = SemanticAnalyzer.get_actual_type (ma.inner.value_type, ma.symbol_reference, param.parameter_type, expr);
 							if (param_type != null) {
-								is_ref = param_type.takes_ownership;
+								is_ref = param_type.value_owned;
 							}
 						}
 					}
@@ -286,12 +282,12 @@ public class Vala.MemoryManager : CodeVisitor {
 			if (params_it.next ()) {
 				var param = params_it.get ();
 				if (!param.ellipsis
-				    && param.parameter_type.is_reference_type_or_type_parameter ()) {
-					bool is_ref = param.parameter_type.transfers_ownership;
+				    && param.direction == ParameterDirection.IN) {
+					bool is_ref = param.parameter_type.value_owned;
 					if (is_ref && param.parameter_type.type_parameter != null) {
 						var param_type = SemanticAnalyzer.get_actual_type (expr.type_reference, msym, param.parameter_type, expr);
 						if (param_type != null) {
-							is_ref = param_type.takes_ownership;
+							is_ref = param_type.value_owned;
 						}
 					}
 					
@@ -309,6 +305,10 @@ public class Vala.MemoryManager : CodeVisitor {
 		}
 	}
 
+	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
+		expr.accept_children (this);
+	}
+
 	public override void visit_binary_expression (BinaryExpression expr) {
 		visit_possibly_leaked_expression (expr.left);
 		visit_possibly_leaked_expression (expr.right);
@@ -324,7 +324,7 @@ public class Vala.MemoryManager : CodeVisitor {
 		if (a.left is PointerIndirection || a.left.symbol_reference is Signal) {
 		} else {
 			if (!(a.left.value_type is PointerType)) {
-				if (a.left.value_type.takes_ownership) {
+				if (a.left.value_type.value_owned) {
 					visit_possibly_missing_copy_expression (a.right);
 				} else {
 					visit_possibly_leaked_expression (a.right);
