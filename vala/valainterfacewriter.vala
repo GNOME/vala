@@ -687,6 +687,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string (" ");
 		} else if (m.binding == MemberBinding.STATIC) {
 			write_string ("static ");
+		} else if (m.binding == MemberBinding.CLASS) {
+			write_string ("class ");
 		} else if (m.is_abstract) {
 			write_string ("abstract ");
 		} else if (m.is_virtual) {
