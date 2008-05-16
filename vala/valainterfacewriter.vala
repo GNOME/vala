@@ -431,6 +431,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
+		if (c.get_cname () != c.get_default_cname ()) {
+			write_indent ();
+			write_string ("[CCode (cname = \"%s\")]".printf (c.get_cname ()));
+		}
+
 		write_indent ();
 		write_accessibility (c);
 		write_string ("const ");

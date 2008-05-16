@@ -265,9 +265,11 @@ public class Vala.GIdlParser : CodeVisitor {
 				parse_interface ((IdlNodeInterface) node, ns, module);
 			} else if (node.type == IdlNodeTypeId.CONSTANT) {
 				var c = parse_constant ((IdlNodeConstant) node);
-				c.name = fix_const_name (c.name, ns);
-				ns.add_constant (c);
-				current_source_file.add_node (c);
+				if (c != null) {
+					c.name = fix_const_name (c.name, ns);
+					ns.add_constant (c);
+					current_source_file.add_node (c);
+				}
 			} else if (node.type == IdlNodeTypeId.FUNCTION) {
 				var m = parse_function ((IdlNodeFunction) node);
 				if (m != null) {
@@ -1565,7 +1567,19 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (type == null) {
 			return null;
 		}
-		
+
+		string[] attributes = get_attributes (node.name);
+		if (attributes != null) {
+			foreach (string attr in attributes) {
+				var nv = attr.split ("=", 2);
+				if (nv[0] == "hidden") {
+					if (eval (nv[1]) == "1") {
+						return null;
+					}
+				}
+			}
+		}
+
 		var c = new Constant (node.name, type, null, current_source_reference);
 		c.access = SymbolAccessibility.PUBLIC;
 		

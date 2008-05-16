@@ -1,3 +1,12 @@
+2008-05-16  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaconstant.vala:
+	* vala/valainterfacewriter.vala:
+	* vapigen/valagidlparser.vala:
+
+	Allow hiding constants in the metadata file for vapigen,
+	based on patch by Ali Sabil
+
 2008-05-16  Ali Sabil  <ali.sabil@gmail.com>
 
 	* vala/valainterfacewriter.vala: Add support for class

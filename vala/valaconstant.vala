@@ -85,16 +85,26 @@ public class Vala.Constant : Member, Lockable {
 	 */
 	public string get_cname () {
 		if (cname == null) {
-			if (parent_symbol == null) {
-				// global constant
-				cname = name;
-			} else {
-				cname = "%s%s".printf (parent_symbol.get_lower_case_cprefix ().up (), name);
-			}
+			cname = get_default_cname ();
 		}
 		return cname;
 	}
-	
+
+	/**
+	 * Returns the default name of this constant as it is used in C
+	 * code.
+	 *
+	 * @return the name to be used in C code by default
+	 */
+	public string get_default_cname () {
+		if (parent_symbol == null) {
+			// global constant
+			return name;
+		} else {
+			return "%s%s".printf (parent_symbol.get_lower_case_cprefix ().up (), name);
+		}
+	}
+
 	public bool get_lock_used () {
 		return lock_used;
 	}
