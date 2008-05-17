@@ -1,5 +1,10 @@
 2008-05-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: fix typo in GSpawnFlags binding,
+	fixes bug 533046
+
+2008-05-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add clamp method to all integer and floating
 	point types
 

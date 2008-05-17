@@ -2034,7 +2034,7 @@ namespace GLib {
 
 	[CCode (cprefix = "G_SPAWN_")]
 	public enum SpawnFlags {
-		LEAVE_DESCRIPTOR_OPEN,
+		LEAVE_DESCRIPTORS_OPEN,
 		DO_NOT_REAP_CHILD,
 		SEARCH_PATH,
 		STDOUT_TO_DEV_NULL,
