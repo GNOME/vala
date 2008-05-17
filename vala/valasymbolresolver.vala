@@ -280,32 +280,12 @@ public class Vala.SymbolResolver : CodeVisitor {
 			type.add_type_argument (type_arg);
 		}
 
-		for (int pointer_level = unresolved_type.pointer_level; pointer_level > 0; pointer_level--) {
-			var base_type = type;
-			base_type.value_owned = false;
-			base_type.nullable = false;
-			base_type.is_dynamic = false;
-
-			type = new PointerType (base_type);
-		}
-
-		/* check for array */
-		if (unresolved_type.array_rank > 0) {
-			var element_type = type;
-			// array contains strong references by default
-			element_type.value_owned = true;
-			element_type.nullable = false;
-
-			type = new ArrayType (element_type, unresolved_type.array_rank, unresolved_type.source_reference);
-
-			type.value_owned = unresolved_type.value_owned;
-			type.nullable = unresolved_type.nullable;
-		}
-
 		return type;
 	}
 
 	public override void visit_data_type (DataType data_type) {
+		data_type.accept_children (this);
+
 		if (!(data_type is UnresolvedType)) {
 			return;
 		}

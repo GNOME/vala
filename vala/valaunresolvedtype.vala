@@ -33,23 +33,6 @@ public class Vala.UnresolvedType : DataType {
 	 */
 	public UnresolvedSymbol unresolved_symbol { get; set; }
 
-	/**
-	 * Specifies the rank of the array this reference is possibly referring
-	 * to. "0" indicates no array.
-	 */
-	public int array_rank { get; set; }
-
-	/**
-	 * Specifies the level of the pointer if this is a pointer-type. "0"
-	 * indicates no pointer-type.
-	 */
-	public int pointer_level { get; set; }
-
-	/**
-	 * The weak modifier has been specified.
-	 */
-	public bool is_weak { get; set; }
-
 	public UnresolvedType () {
 	}
 
@@ -109,9 +92,6 @@ public class Vala.UnresolvedType : DataType {
 		result.nullable = nullable;
 		result.is_dynamic = is_dynamic;
 		result.unresolved_symbol = unresolved_symbol.copy ();
-		result.array_rank = array_rank;
-		result.pointer_level = pointer_level;
-		result.is_weak = is_weak;
 		
 		foreach (DataType arg in get_type_arguments ()) {
 			result.add_type_argument (arg.copy ());

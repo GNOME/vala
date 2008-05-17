@@ -30,11 +30,20 @@ public class Vala.PointerType : DataType {
 	/**
 	 * The base type the pointer is referring to.
 	 */
-	public DataType base_type { get; set; }
+	public DataType base_type {
+		get { return _base_type; }
+		set {
+			_base_type = value;
+			_base_type.parent_node = this;
+		}
+	}
 
-	public PointerType (DataType base_type) {
+	private DataType _base_type;
+
+	public PointerType (DataType base_type, SourceReference? source_reference = null) {
 		this.base_type = base_type;
 		nullable = true;
+		this.source_reference = source_reference;
 	}
 
 	public override string to_string () {
@@ -87,5 +96,15 @@ public class Vala.PointerType : DataType {
 
 	public override string? get_type_id () {
 		return "G_TYPE_POINTER";
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
+		base_type.accept (visitor);
+	}
+
+	public override void replace_type (DataType old_type, DataType new_type) {
+		if (base_type == old_type) {
+			base_type = new_type;
+		}
 	}
 }

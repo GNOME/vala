@@ -1,3 +1,16 @@
+2008-05-17  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaarraytype.vala:
+	* vala/valaclass.vala:
+	* vala/valaparser.vala:
+	* vala/valapointertype.vala:
+	* vala/valasymbolresolver.vala:
+	* vala/valaunresolvedtype.vala:
+	* vapigen/valagidlparser.vala:
+
+	Don't use UnresolvedType for array and pointer types, add basic
+	support for arrays of arrays
+
 2008-05-17  Ali Sabil  <ali.sabil@gmail.com>
 
 	* vapigen/valagidlparser.vala: Automatically hide fields

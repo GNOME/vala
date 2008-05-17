@@ -319,7 +319,7 @@ public class Vala.Parser : CodeVisitor {
 		skip_type_argument_list ();
 		while (accept (TokenType.STAR)) {
 		}
-		if (accept (TokenType.OPEN_BRACKET)) {
+		while (accept (TokenType.OPEN_BRACKET)) {
 			do {
 				if (current () != TokenType.COMMA && current () != TokenType.CLOSE_BRACKET) {
 					parse_expression ();
@@ -332,7 +332,7 @@ public class Vala.Parser : CodeVisitor {
 		accept (TokenType.HASH);
 	}
 
-	DataType parse_type () throws ParseError {
+	DataType parse_type (bool owned_by_default = true) throws ParseError {
 		var begin = get_location ();
 
 		if (accept (TokenType.VOID)) {
@@ -345,20 +345,34 @@ public class Vala.Parser : CodeVisitor {
 
 		bool is_dynamic = accept (TokenType.DYNAMIC);
 
-		bool is_weak = accept (TokenType.WEAK);
+		bool value_owned = owned_by_default;
+		if (owned_by_default) {
+			value_owned = !accept (TokenType.WEAK);
+		}
 
 		var sym = parse_symbol_name ();
 		Gee.List<DataType> type_arg_list = parse_type_argument_list (false);
 
-		int stars = 0;
-		while (accept (TokenType.STAR)) {
-			stars++;
+		DataType type = new UnresolvedType.from_symbol (sym, get_src (begin));
+		if (type_arg_list != null) {
+			foreach (DataType type_arg in type_arg_list) {
+				type.add_type_argument (type_arg);
+			}
 		}
 
-		bool nullable = stars > 0 || accept (TokenType.INTERR);
+		while (accept (TokenType.STAR)) {
+			type = new PointerType (type, get_src (begin));
+		}
 
-		int array_rank = 0;
-		if (accept (TokenType.OPEN_BRACKET)) {
+		if (!(type is PointerType)) {
+			type.nullable = accept (TokenType.INTERR);
+		}
+
+		// array brackets in types are read from right to left,
+		// this is more logical, especially when nullable arrays
+		// or pointers are involved
+		while (accept (TokenType.OPEN_BRACKET)) {
+			int array_rank = 0;
 			do {
 				array_rank++;
 				// support for stack-allocated arrays
@@ -370,26 +384,22 @@ public class Vala.Parser : CodeVisitor {
 			while (accept (TokenType.COMMA));
 			expect (TokenType.CLOSE_BRACKET);
 
-			nullable = accept (TokenType.INTERR);
+			// arrays contain strong references by default
+			type.value_owned = true;
+
+			type = new ArrayType (type, array_rank, get_src (begin));
+			type.nullable = accept (TokenType.INTERR);
 		}
 
 		if (accept (TokenType.OP_NEG)) {
 			Report.warning (get_last_src (), "obsolete syntax, types are non-null by default");
 		}
 
-		bool value_owned = accept (TokenType.HASH);
-
-		var type = new UnresolvedType.from_symbol (sym, get_src (begin));
-		if (type_arg_list != null) {
-			foreach (DataType type_arg in type_arg_list) {
-				type.add_type_argument (type_arg);
-			}
+		if (!owned_by_default) {
+			value_owned = accept (TokenType.HASH);
 		}
+
 		type.is_dynamic = is_dynamic;
-		type.is_weak = is_weak;
-		type.pointer_level = stars;
-		type.array_rank = array_rank;
-		type.nullable = nullable;
 		type.value_owned = value_owned;
 		return type;
 	}
@@ -646,21 +656,34 @@ public class Vala.Parser : CodeVisitor {
 
 	Expression parse_array_creation_expression (SourceLocation begin, MemberAccess member) throws ParseError {
 		bool size_specified = false;
-		var size_specifier_list = new ArrayList<Expression> ();
+		Gee.List<Expression> size_specifier_list;
+		bool first = true;
+		DataType element_type = UnresolvedType.new_from_expression (member);
 		do {
-			Expression size = null;
-			if (current () != TokenType.CLOSE_BRACKET && current () != TokenType.COMMA) {
-				size = parse_expression ();
-				size_specified = true;
+			if (!first) {
+				// array of arrays: new T[][42]
+				element_type = new ArrayType (element_type, size_specifier_list.size, element_type.source_reference);
+			} else {
+				first = false;
 			}
-			size_specifier_list.add (size);
-		} while (accept (TokenType.COMMA));
-		expect (TokenType.CLOSE_BRACKET);
+
+			size_specifier_list = new ArrayList<Expression> ();
+			do {
+				Expression size = null;
+				if (current () != TokenType.CLOSE_BRACKET && current () != TokenType.COMMA) {
+					size = parse_expression ();
+					size_specified = true;
+				}
+				size_specifier_list.add (size);
+			} while (accept (TokenType.COMMA));
+			expect (TokenType.CLOSE_BRACKET);
+		} while (accept (TokenType.OPEN_BRACKET));
+
 		InitializerList initializer = null;
 		if (current () == TokenType.OPEN_BRACE) {
 			initializer = parse_initializer ();
 		}
-		var expr = new ArrayCreationExpression (UnresolvedType.new_from_expression (member), size_specifier_list.size, initializer, get_src (begin));
+		var expr = new ArrayCreationExpression (element_type, size_specifier_list.size, initializer, get_src (begin));
 		if (size_specified) {
 			foreach (Expression size in size_specifier_list) {
 				expr.append_size (size);
@@ -763,8 +786,7 @@ public class Vala.Parser : CodeVisitor {
 					case TokenType.SIZEOF:
 					case TokenType.TYPEOF:
 					case TokenType.IDENTIFIER:
-						var ut = type as UnresolvedType;
-						if (ut != null && ut.is_weak) {
+						if (!type.value_owned) {
 							Report.warning (get_src (begin), "obsolete syntax, weak type modifier unused in cast expressions");
 						}
 						var inner = parse_unary_expression ();
@@ -1312,10 +1334,6 @@ public class Vala.Parser : CodeVisitor {
 			variable_type = null;
 		} else {
 			variable_type = parse_type ();
-			var ut = variable_type as UnresolvedType;
-			if (ut != null && !ut.is_weak) {
-				variable_type.value_owned = true;
-			}
 		}
 		do {
 			DataType type_copy = null;
@@ -1449,10 +1467,6 @@ public class Vala.Parser : CodeVisitor {
 					variable_type = null;
 				} else {
 					variable_type = parse_type ();
-					var ut = variable_type as UnresolvedType;
-					if (ut != null && !ut.is_weak) {
-						variable_type.value_owned = true;
-					}
 				}
 				var local = parse_local_variable (variable_type);
 				block.add_statement (new DeclarationStatement (local, local.source_reference));
@@ -1493,10 +1507,6 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.FOREACH);
 		expect (TokenType.OPEN_PARENS);
 		var type = parse_type ();
-		var unresolved_type = type as UnresolvedType;
-		if (unresolved_type != null && !unresolved_type.is_weak) {
-			unresolved_type.value_owned = true;
-		}
 		string id = parse_identifier ();
 		expect (TokenType.IN);
 		var collection = parse_expression ();
@@ -1966,7 +1976,7 @@ public class Vala.Parser : CodeVisitor {
 		var access = parse_access_modifier ();
 		parse_member_declaration_modifiers ();
 		expect (TokenType.CONST);
-		var type = parse_type ();
+		var type = parse_type (false);
 		string id = parse_identifier ();
 		Expression initializer = null;
 		if (accept (TokenType.ASSIGN)) {
@@ -1984,10 +1994,6 @@ public class Vala.Parser : CodeVisitor {
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
 		var type = parse_type ();
-		var unresolved_type = type as UnresolvedType;
-		if (unresolved_type != null && !unresolved_type.is_weak) {
-			unresolved_type.value_owned = true;
-		}
 		string id = parse_identifier ();
 		var f = new Field (id, type, null, get_src_com (begin));
 		f.access = access;
@@ -2032,10 +2038,6 @@ public class Vala.Parser : CodeVisitor {
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
 		var type = parse_type ();
-		var unresolved_type = type as UnresolvedType;
-		if (unresolved_type != null && !unresolved_type.is_weak) {
-			unresolved_type.value_owned = true;
-		}
 		string id = parse_identifier ();
 		parse_type_parameter_list ();
 		var method = new Method (id, type, get_src_com (begin));
@@ -2094,7 +2096,8 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
-		var type = parse_type ();
+		bool is_weak = accept (TokenType.WEAK);
+		var type = parse_type (false);
 		string id = parse_identifier ();
 		var prop = new Property (id, type, null, null, get_src_com (begin));
 		prop.access = access;
@@ -2161,6 +2164,29 @@ public class Vala.Parser : CodeVisitor {
 			}
 		}
 		expect (TokenType.CLOSE_BRACE);
+
+		if (!prop.is_abstract && !scanner.source_file.external_package) {
+			bool empty_get = (prop.get_accessor != null && prop.get_accessor.body == null);
+			bool empty_set = (prop.set_accessor != null && prop.set_accessor.body == null);
+
+			if (empty_get != empty_set) {
+				if (empty_get) {
+					Report.error (prop.source_reference, "property getter must have a body");
+				} else if (empty_set) {
+					Report.error (prop.source_reference, "property setter must have a body");
+				}
+				prop.error = true;
+			}
+
+			if (empty_get && empty_set) {
+				/* automatic property accessor body generation */
+				var field_type = prop.property_type.copy ();
+				field_type.value_owned = !is_weak;
+				prop.field = new Field ("_%s".printf (prop.name), field_type, prop.default_expression, prop.source_reference);
+				prop.field.access = SymbolAccessibility.PRIVATE;
+			}
+		}
+
 		return prop;
 	}
 
@@ -2543,16 +2569,13 @@ public class Vala.Parser : CodeVisitor {
 			direction = ParameterDirection.REF;
 		}
 
-		var type = parse_type ();
-		var ut = type as UnresolvedType;
-		if (ut != null) {
-			if (direction != ParameterDirection.IN && !ut.is_weak) {
-				ut.value_owned = true;
-			} else if (direction == ParameterDirection.IN && ut.is_weak) {
-				Report.error (type.source_reference, "in parameters are weak by default");
-			} else if (direction != ParameterDirection.IN && ut.value_owned) {
-				Report.error (type.source_reference, "out parameters own the value by default");
-			}
+		DataType type;
+		if (direction == ParameterDirection.IN) {
+			// in parameters are weak by default
+			type = parse_type (false);
+		} else {
+			// out parameters own the value by default
+			type = parse_type (true);
 		}
 		string id = parse_identifier ();
 		var param = new FormalParameter (id, type, get_src (begin));
@@ -2604,10 +2627,6 @@ public class Vala.Parser : CodeVisitor {
 		var flags = parse_member_declaration_modifiers ();
 		expect (TokenType.DELEGATE);
 		var type = parse_type ();
-		var unresolved_type = type as UnresolvedType;
-		if (unresolved_type != null && !unresolved_type.is_weak) {
-			unresolved_type.value_owned = true;
-		}
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
 		var d = new Delegate (sym.name, type, get_src_com (begin));
@@ -2683,10 +2702,6 @@ public class Vala.Parser : CodeVisitor {
 				case TokenType.WEAK:
 				case TokenType.IDENTIFIER:
 					var type = parse_type ();
-					var ut = type as UnresolvedType;
-					if (ut != null && !ut.is_weak) {
-						type.value_owned = true;
-					}
 					list.add (type);
 					break;
 				default:

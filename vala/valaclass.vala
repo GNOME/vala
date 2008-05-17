@@ -263,39 +263,15 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @param prop a property
 	 */
-	public void add_property (Property prop, bool no_field = false) {
+	public void add_property (Property prop) {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 
 		prop.this_parameter = new FormalParameter ("this", new ClassInstanceType (this));
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
-		
-		if (!no_field && !external_package) {
-			bool empty_get = (prop.get_accessor != null && prop.get_accessor.body == null);
-			bool empty_set = (prop.set_accessor != null && prop.set_accessor.body == null);
 
-			if (empty_get != empty_set) {
-				if (empty_get) {
-					Report.error (prop.source_reference, "property getter must have a body");
-				} else if (empty_set) {
-					Report.error (prop.source_reference, "property setter must have a body");
-				}
-				prop.error = true;
-				return;
-			}
-
-			if (empty_get && empty_set) {
-				/* automatic property accessor body generation */
-				var field_type = prop.property_type.copy ();
-				var ut = field_type as UnresolvedType;
-				if (ut != null) {
-					field_type.value_owned = !ut.is_weak;
-				}
-				var f = new Field ("_%s".printf (prop.name), field_type, prop.default_expression, prop.source_reference);
-				f.access = SymbolAccessibility.PRIVATE;
-				prop.field = f;
-				add_field (f);
-			}
+		if (prop.field != null) {
+			add_field (prop.field);
 		}
 	}
 	

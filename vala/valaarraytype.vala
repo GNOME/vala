@@ -29,13 +29,21 @@ public class Vala.ArrayType : ReferenceType {
 	/**
 	 * The element type.
 	 */
-	public DataType element_type { get; construct set; }
+	public DataType element_type {
+		get { return _element_type; }
+		set {
+			_element_type = value;
+			_element_type.parent_node = this;
+		}
+	}
 
 	/**
 	 * The rank of this array.
 	 */
-	public int rank { get; construct set; }
-	
+	public int rank { get; set; }
+
+	private DataType _element_type;
+
 	private ArrayLengthField length_field;
 	private ArrayResizeMethod resize_method;
 	private ArrayMoveMethod move_method;
@@ -172,5 +180,15 @@ public class Vala.ArrayType : ReferenceType {
 		}
 
 		return "a" + element_type_signature;
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
+		element_type.accept (visitor);
+	}
+
+	public override void replace_type (DataType old_type, DataType new_type) {
+		if (element_type == old_type) {
+			element_type = new_type;
+		}
 	}
 }
