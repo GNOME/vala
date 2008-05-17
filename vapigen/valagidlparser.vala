@@ -1599,7 +1599,8 @@ public class Vala.GIdlParser : CodeVisitor {
 
 	private Field? parse_field (IdlNodeField field_node) {
 		weak IdlNode node = (IdlNode) field_node;
-		
+		bool unhidden = false;
+
 		var type = parse_type (field_node.type);
 		if (type == null) {
 			return null;
@@ -1612,6 +1613,8 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (nv[0] == "hidden") {
 					if (eval (nv[1]) == "1") {
 						return null;
+					} else {
+						unhidden = true;
 					}
 				} else if (nv[0] == "is_array") {
 					if (eval (nv[1]) == "1") {
@@ -1626,7 +1629,11 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 		}
-		
+
+		if (node.name.has_prefix("_") && !unhidden) {
+			return null;
+		}
+
 		if (current_type_symbol_set != null) {
 			current_type_symbol_set.add (node.name);
 		}
