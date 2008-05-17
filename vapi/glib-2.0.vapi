@@ -54,6 +54,9 @@ public struct char {
 	public int xdigit_value ();
 	public char tolower ();
 	public char toupper ();
+
+	[CCode (cname = "CLAMP")]
+	public char clamp (char low, char high);
 }
 
 [SimpleType]
@@ -62,6 +65,9 @@ public struct char {
 public struct uchar {
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hhu");
+
+	[CCode (cname = "CLAMP")]
+	public uchar clamp (uchar low, uchar high);
 }
 
 [SimpleType]
@@ -113,6 +119,9 @@ public struct short {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hi");
+
+	[CCode (cname = "CLAMP")]
+	public short clamp (short low, short high);
 }
 
 [SimpleType]
@@ -126,6 +135,9 @@ public struct ushort {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hu");
+
+	[CCode (cname = "CLAMP")]
+	public ushort clamp (ushort low, ushort high);
 }
 
 [SimpleType]
@@ -139,6 +151,9 @@ public struct long {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%li");
+
+	[CCode (cname = "CLAMP")]
+	public long clamp (long low, long high);
 }
 
 [SimpleType]
@@ -152,6 +167,9 @@ public struct ulong {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%lu");
+
+	[CCode (cname = "CLAMP")]
+	public ulong clamp (ulong low, ulong high);
 }
 
 [SimpleType]
@@ -168,6 +186,9 @@ public struct size_t {
 
 	[CCode (cname = "GSIZE_TO_POINTER")]
 	public void* to_pointer ();
+
+	[CCode (cname = "CLAMP")]
+	public size_t clamp (size_t low, size_t high);
 }
 
 [SimpleType]
@@ -181,6 +202,9 @@ public struct ssize_t {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%zi");
+
+	[CCode (cname = "CLAMP")]
+	public ssize_t clamp (ssize_t low, ssize_t high);
 }
 
 [SimpleType]
@@ -194,6 +218,9 @@ public struct int8 {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hhi");
+
+	[CCode (cname = "CLAMP")]
+	public int8 clamp (int8 low, int8 high);
 }
 
 [SimpleType]
@@ -207,6 +234,9 @@ public struct uint8 {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hhu");
+
+	[CCode (cname = "CLAMP")]
+	public uint8 clamp (uint8 low, uint8 high);
 }
 
 [SimpleType]
@@ -220,6 +250,9 @@ public struct int16 {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hi");
+
+	[CCode (cname = "CLAMP")]
+	public int16 clamp (int16 low, int16 high);
 }
 
 [SimpleType]
@@ -233,6 +266,9 @@ public struct uint16 {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hu");
+
+	[CCode (cname = "CLAMP")]
+	public uint16 clamp (uint16 low, uint16 high);
 }
 
 [SimpleType]
@@ -246,6 +282,9 @@ public struct int32 {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%i");
+
+	[CCode (cname = "CLAMP")]
+	public int32 clamp (int32 low, int32 high);
 }
 
 [SimpleType]
@@ -259,6 +298,9 @@ public struct uint32 {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%u");
+
+	[CCode (cname = "CLAMP")]
+	public uint32 clamp (uint32 low, uint32 high);
 }
 
 [SimpleType]
@@ -272,6 +314,9 @@ public struct int64 {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%lli");
+
+	[CCode (cname = "CLAMP")]
+	public int64 clamp (int64 low, int64 high);
 }
 
 [SimpleType]
@@ -285,6 +330,9 @@ public struct uint64 {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%llu");
+
+	[CCode (cname = "CLAMP")]
+	public uint64 clamp (uint64 low, uint64 high);
 }
 
 [SimpleType]
@@ -329,6 +377,9 @@ public struct float {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%g");
+
+	[CCode (cname = "CLAMP")]
+	public float clamp (float low, float high);
 }
 
 [SimpleType]
@@ -373,6 +424,9 @@ public struct double {
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%g");
+
+	[CCode (cname = "CLAMP")]
+	public double clamp (double low, double high);
 }
 
 [CCode (cheader_filename = "time.h")]
@@ -411,6 +465,9 @@ public struct unichar {
 	public UnicodeBreakType break_type ();
 
 	public int to_utf8 (string? outbuf);
+
+	[CCode (cname = "CLAMP")]
+	public unichar clamp (unichar low, unichar high);
 }
 
 [CCode (cprefix = "G_UNICODE_")]
