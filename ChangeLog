@@ -1,3 +1,7 @@
+2008-05-17  Ali Sabil  <ali.sabil@gmail.com>
+
+	* vapigen/valagidlparser.vala: Add class method detection
+
 2008-05-16  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaconstant.vala:

@@ -1315,6 +1315,17 @@ public class Vala.GIdlParser : CodeVisitor {
 				     param.type.@interface.has_suffix (current_data_type.get_cname ()))) {
 					// instance method
 					continue;
+				} else if (!(m is CreationMethod) &&
+				    current_data_type != null &&
+				    param.type.is_interface &&
+				    (param_node.name == "klass" ||
+				     param.type.@interface.has_suffix ("%sClass".printf(current_data_type.get_cname ())))) {
+					// class method
+					m.binding = MemberBinding.CLASS;
+					if (m.name.has_prefix ("class_")) {
+						m.name = m.name.substring ("class_".len (), m.name.len () - "class_".len ());
+					}
+					continue;
 				} else {
 					// static method
 					m.binding = MemberBinding.STATIC;
