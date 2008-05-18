@@ -1306,10 +1306,19 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 		} else if (type.data_type != null) {
 			string unref_function;
-			if (type.data_type.is_reference_counting ()) {
-				unref_function = type.data_type.get_unref_function ();
+			if (type is ReferenceType) {
+				if (type.data_type.is_reference_counting ()) {
+					unref_function = type.data_type.get_unref_function ();
+				} else {
+					unref_function = type.data_type.get_free_function ();
+				}
 			} else {
-				unref_function = type.data_type.get_free_function ();
+				if (type.nullable) {
+					unref_function = type.data_type.get_free_function ();
+					if (unref_function == null) {
+						unref_function = "g_free";
+					}
+				}
 			}
 			if (unref_function == null) {
 				return new CCodeConstant ("NULL");

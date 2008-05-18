@@ -1,5 +1,11 @@
 2008-05-18  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala:
+
+	Use g_free as default free function for nullable value types
+
+2008-05-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadatatype.vala:
 	* vala/valapointertype.vala:
 	* vala/valasemanticanalyzer.vala:
