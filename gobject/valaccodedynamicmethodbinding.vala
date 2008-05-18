@@ -39,7 +39,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		var instance_param = new CCodeFormalParameter ("obj", "gpointer");
+		var instance_param = new CCodeFormalParameter ("obj", dynamic_method.dynamic_type.get_cname ());
 		cparam_map.set (codegen.get_param_pos (method.cinstance_parameter_position), instance_param);
 
 		generate_cparameters (method, method.return_type, cparam_map, func);

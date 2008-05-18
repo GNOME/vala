@@ -3629,6 +3629,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 			var base_property_type = (Typesymbol) base_property.parent_symbol;
 			set_func = "%s_set_%s".printf (base_property_type.get_lower_case_cname (null), base_property.name);
+			if (prop is DynamicProperty) {
+				set_func = dynamic_property_binding ((DynamicProperty) prop).get_setter_cname ();
+			}
 		}
 		
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (set_func));
@@ -3875,6 +3878,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return null;
 	}
 
+	public override CodeBinding? create_dynamic_property_binding (DynamicProperty node) {
+		return new CCodeDynamicPropertyBinding (this, node);
+	}
+
 	public override CodeBinding? create_property_accessor_binding (PropertyAccessor node) {
 		return null;
 	}
@@ -4101,6 +4108,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public CCodeDynamicMethodBinding dynamic_method_binding (DynamicMethod node) {
 		return (CCodeDynamicMethodBinding) node.get_code_binding (this);
+	}
+
+	public CCodeDynamicPropertyBinding dynamic_property_binding (DynamicProperty node) {
+		return (CCodeDynamicPropertyBinding) node.get_code_binding (this);
 	}
 
 	public CCodeDynamicSignalBinding dynamic_signal_binding (DynamicSignal node) {

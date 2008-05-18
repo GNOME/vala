@@ -1380,9 +1380,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return c.type_reference;
 		} else if (sym is Property) {
 			var prop = (Property) sym;
-			var type = prop.property_type.copy ();
-			type.value_owned = false;
-			return type;
+			if (prop.property_type != null) {
+				var type = prop.property_type.copy ();
+				type.value_owned = false;
+				return type;
+			}
 		} else if (sym is FormalParameter) {
 			var p = (FormalParameter) sym;
 			var type = p.parameter_type.copy ();
@@ -1587,31 +1589,64 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				// allow late bound members for dynamic types
 				if (expr.parent_node is InvocationExpression) {
 					var invoc = (InvocationExpression) expr.parent_node;
-					DataType ret_type;
-					if (invoc.expected_type != null) {
-						ret_type = invoc.expected_type.copy ();
-						ret_type.value_owned = true;
-					} else {
-						ret_type = new VoidType ();
+					if (invoc.call == expr) {
+						// dynamic method
+						DataType ret_type;
+						if (invoc.expected_type != null) {
+							ret_type = invoc.expected_type.copy ();
+							ret_type.value_owned = true;
+						} else if (invoc.parent_node is ExpressionStatement) {
+							ret_type = new VoidType ();
+						} else {
+							// expect dynamic object of the same type
+							ret_type = expr.inner.value_type.copy ();
+						}
+						var m = new DynamicMethod (expr.inner.value_type, expr.member_name, ret_type, expr.source_reference);
+						m.invocation = invoc;
+						m.add_error_domain (new ErrorType (null));
+						m.access = SymbolAccessibility.PUBLIC;
+						m.add_parameter (new FormalParameter.with_ellipsis ());
+						context.add_dynamic_member (m);
+						expr.symbol_reference = m;
 					}
-					var m = new DynamicMethod (expr.inner.value_type, expr.member_name, ret_type, expr.source_reference);
-					m.invocation = invoc;
-					m.add_error_domain (new ErrorType (null));
-					m.access = SymbolAccessibility.PUBLIC;
-					m.add_parameter (new FormalParameter.with_ellipsis ());
-					context.add_dynamic_member (m);
-					expr.symbol_reference = m;
 				} else if (expr.parent_node is Assignment) {
 					var a = (Assignment) expr.parent_node;
 					if (a.left == expr
 					    && (a.operator == AssignmentOperator.ADD
 					        || a.operator == AssignmentOperator.SUB)) {
+						// dynamic signal
 						var s = new DynamicSignal (expr.inner.value_type, expr.member_name, new VoidType (), expr.source_reference);
 						s.handler = a.right;
 						s.access = SymbolAccessibility.PUBLIC;
 						context.add_dynamic_member (s);
 						expr.symbol_reference = s;
+					} else if (a.left == expr) {
+						// dynamic property assignment
+						var prop = new DynamicProperty (expr.inner.value_type, expr.member_name, expr.source_reference);
+						prop.access = SymbolAccessibility.PUBLIC;
+						prop.set_accessor = new PropertyAccessor (false, true, false, null, null);
+						prop.set_accessor.access = SymbolAccessibility.PUBLIC;
+						prop.owner = expr.inner.value_type.data_type.scope;
+						context.add_dynamic_member (prop);
+						expr.symbol_reference = prop;
 					}
+				}
+				if (expr.symbol_reference == null) {
+					// dynamic property read access
+					var prop = new DynamicProperty (expr.inner.value_type, expr.member_name, expr.source_reference);
+					if (expr.expected_type != null) {
+						prop.property_type = expr.expected_type;
+					} else {
+						// expect dynamic object of the same type
+						prop.property_type = expr.inner.value_type.copy ();
+					}
+					prop.access = SymbolAccessibility.PUBLIC;
+					prop.get_accessor = new PropertyAccessor (true, false, false, null, null);
+					prop.get_accessor.access = SymbolAccessibility.PUBLIC;
+					prop.owner = expr.inner.value_type.data_type.scope;
+					// maybe better move add_dynamic_member to Symbol class
+					context.add_dynamic_member (prop);
+					expr.symbol_reference = prop;
 				}
 				if (expr.symbol_reference != null) {
 					may_access_instance_members = true;
@@ -2970,7 +3005,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (a.left is MemberAccess) {
 			var ma = (MemberAccess) a.left;
 
-			if (!(ma.symbol_reference is Signal) && ma.value_type == null) {
+			if (!(ma.symbol_reference is Signal || ma.symbol_reference is DynamicProperty) && ma.value_type == null) {
 				a.error = true;
 				Report.error (a.source_reference, "unsupported lvalue in assignment");
 				return;
@@ -3068,6 +3103,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			} else if (ma.symbol_reference is Property) {
 				var prop = (Property) ma.symbol_reference;
+
+				var dynamic_prop = prop as DynamicProperty;
+				if (dynamic_prop != null) {
+					dynamic_prop.property_type = a.right.value_type.copy ();
+					a.left.value_type = dynamic_prop.property_type.copy ();
+				}
 
 				if (prop.set_accessor == null
 				    || (!prop.set_accessor.writable && !(find_current_method () is CreationMethod || is_in_constructor ()))) {

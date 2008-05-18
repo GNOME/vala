@@ -1,3 +1,17 @@
+2008-05-18  Jürg Billeter  <j@bitron.ch>
+
+	* vala/Makefile.am:
+	* vala/valacodegenerator.vala:
+	* vala/valadynamicproperty.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/Makefile.am:
+	* gobject/valaccodedynamicmethodbinding.vala:
+	* gobject/valaccodedynamicpropertybinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodememberaccessbinding.vala:
+
+	Add support for dynamic properties
+
 2008-05-17  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi: fix typo in GSpawnFlags binding,

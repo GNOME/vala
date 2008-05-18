@@ -54,6 +54,7 @@ libvalacore_la_VALASOURCES = \
 	valadestructor.vala \
 	valadostatement.vala \
 	valadynamicmethod.vala \
+	valadynamicproperty.vala \
 	valadynamicsignal.vala \
 	valaelementaccess.vala \
 	valaemptystatement.vala \

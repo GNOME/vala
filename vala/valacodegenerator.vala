@@ -98,6 +98,10 @@ public class Vala.CodeGenerator : CodeVisitor {
 		return null;
 	}
 
+	public virtual CodeBinding? create_dynamic_property_binding (DynamicProperty node) {
+		return null;
+	}
+
 	public virtual CodeBinding? create_property_accessor_binding (PropertyAccessor node) {
 		return null;
 	}

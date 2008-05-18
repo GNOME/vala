@@ -131,7 +131,13 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 					base_property = prop.base_interface_property;
 				}
 				var base_property_type = (Typesymbol) base_property.parent_symbol;
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (base_property_type.get_lower_case_cname (null), base_property.name)));
+				string getter_cname;
+				if (prop is DynamicProperty) {
+					getter_cname = codegen.dynamic_property_binding ((DynamicProperty) prop).get_getter_cname ();
+				} else {
+					getter_cname = "%s_get_%s".printf (base_property_type.get_lower_case_cname (null), base_property.name);
+				}
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier (getter_cname));
 
 				var instance_expression_type = base_type;
 				var instance_target_type = codegen.get_data_type_for_symbol (base_property_type);
