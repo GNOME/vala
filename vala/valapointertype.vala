@@ -107,4 +107,8 @@ public class Vala.PointerType : DataType {
 			base_type = new_type;
 		}
 	}
+
+	public override bool is_disposable () {
+		return false;
+	}
 }

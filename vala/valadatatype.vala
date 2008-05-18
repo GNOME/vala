@@ -414,4 +414,23 @@ public abstract class Vala.DataType : CodeNode {
 			return null;
 		}
 	}
+
+	/**
+	 * Returns whether the value needs to be disposed, i.e. whether
+	 * allocated memory or other resources need to be released when
+	 * the value is no longer needed.
+	 */
+	public virtual bool is_disposable () {
+		if (!value_owned) {
+			return false;
+		}
+
+		if (is_reference_type_or_type_parameter ()) {
+			return true;
+		} else if (this is ValueType) {
+			// nullable structs are heap allocated
+			return nullable;
+		}
+		return false;
+	}
 }

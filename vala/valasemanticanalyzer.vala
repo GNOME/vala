@@ -851,7 +851,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
-			if (local.initializer.value_type.value_owned) {
+			if (local.initializer.value_type.is_disposable ()) {
 				/* rhs transfers ownership of the expression */
 				if (!(local.variable_type is PointerType) && !local.variable_type.value_owned) {
 					/* lhs doesn't own the value */
@@ -1154,7 +1154,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (stmt.return_expression != null &&
-		    stmt.return_expression.value_type.value_owned &&
+		    stmt.return_expression.value_type.is_disposable () &&
 		    !current_return_type.value_owned) {
 			stmt.error = true;
 			Report.error (stmt.source_reference, "Return value transfers ownership but method return type hasn't been declared to transfer ownership");
@@ -1163,7 +1163,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (stmt.return_expression != null &&
 		    stmt.return_expression.symbol_reference is LocalVariable &&
-		    stmt.return_expression.value_type.value_owned &&
+		    stmt.return_expression.value_type.is_disposable () &&
 		    !current_return_type.value_owned) {
 			Report.warning (stmt.source_reference, "Local variable with strong reference used as return value and method return type hasn't been declared to transfer ownership");
 		}
@@ -2688,7 +2688,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		if (!expr.inner.value_type.value_owned
+		if (!expr.inner.value_type.is_disposable ()
 		    && !(expr.inner.value_type is PointerType)) {
 			expr.error = true;
 			Report.error (expr.source_reference, "No reference to be transferred");
@@ -3170,7 +3170,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return;
 				}
 
-				if (a.right.value_type.value_owned) {
+				if (a.right.value_type.is_disposable ()) {
 					/* rhs transfers ownership of the expression */
 					if (!(a.left.value_type is PointerType) && !a.left.value_type.value_owned) {
 						/* lhs doesn't own the value */
@@ -3193,7 +3193,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
-			if (a.right.value_type.value_owned) {
+			if (a.right.value_type.is_disposable ()) {
 				/* rhs transfers ownership of the expression */
 
 				DataType element_type;

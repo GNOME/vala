@@ -2811,41 +2811,31 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public bool requires_copy (DataType type) {
-		if (!type.value_owned) {
+		if (!type.is_disposable ()) {
 			return false;
 		}
 
-		if (type.is_reference_type_or_type_parameter ()) {
-			if (type.type_parameter != null) {
-				if (!(current_type_symbol is Class) || !current_class.is_subtype_of (gobject_type)) {
-					return false;
-				}
+		if (type.type_parameter != null) {
+			if (!(current_type_symbol is Class) || !current_class.is_subtype_of (gobject_type)) {
+				return false;
 			}
-			return true;
-		} else if (type is ValueType) {
-			// nullable structs are heap allocated
-			return type.nullable;
 		}
-		return false;
+
+		return true;
 	}
 
 	public bool requires_destroy (DataType type) {
-		if (!type.value_owned) {
+		if (!type.is_disposable ()) {
 			return false;
 		}
 
-		if (type.is_reference_type_or_type_parameter ()) {
-			if (type.type_parameter != null) {
-				if (!(current_type_symbol is Class) || !current_class.is_subtype_of (gobject_type)) {
-					return false;
-				}
+		if (type.type_parameter != null) {
+			if (!(current_type_symbol is Class) || !current_class.is_subtype_of (gobject_type)) {
+				return false;
 			}
-			return true;
-		} else if (type is ValueType) {
-			// nullable structs are heap allocated
-			return type.nullable;
 		}
-		return false;
+
+		return true;
 	}
 
 	private CCodeExpression? get_ref_expression (Expression expr) {

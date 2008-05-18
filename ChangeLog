@@ -1,5 +1,14 @@
 2008-05-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadatatype.vala:
+	* vala/valapointertype.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Don't report value ownership errors for non-disposable types
+
+2008-05-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am:
 	* vala/valacodegenerator.vala:
 	* vala/valadynamicproperty.vala:
