@@ -70,6 +70,9 @@ libvalacore_la_VALASOURCES = \
 	valaforeachstatement.vala \
 	valaformalparameter.vala \
 	valaforstatement.vala \
+	valagenieparser.vala \
+	valageniescanner.vala \
+	valagenietokentype.vala \
 	valaifstatement.vala \
 	valainitializerlist.vala \
 	valainstancecast.vala \

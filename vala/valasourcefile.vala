@@ -180,6 +180,11 @@ public class Vala.SourceFile : Object {
 		return "%s/%s".printf (context.directory, get_subdir ());
 	}
 
+	private string get_basename () {
+		long dot = filename.pointer_to_offset (filename.rchr (-1, '.'));
+		return Path.get_basename (filename.substring (0, dot));
+	}
+
 	/**
 	 * Returns the filename to use when generating C header files.
 	 *
@@ -187,9 +192,7 @@ public class Vala.SourceFile : Object {
 	 */
 	public string get_cheader_filename () {
 		if (cheader_filename == null) {
-			var basename = filename.ndup ((uint) (filename.len () - ".vala".len ()));
-			basename = Path.get_basename (basename);
-			cheader_filename = "%s%s.h".printf (get_destination_directory (), basename);
+			cheader_filename = "%s%s.h".printf (get_destination_directory (), get_basename ());
 		}
 		return cheader_filename;
 	}
@@ -201,9 +204,7 @@ public class Vala.SourceFile : Object {
 	 */
 	public string get_csource_filename () {
 		if (csource_filename == null) {
-			var basename = filename.ndup ((uint) (filename.len () - ".vala".len ()));
-			basename = Path.get_basename (basename);
-			csource_filename = "%s%s.c".printf (get_destination_directory (), basename);
+			csource_filename = "%s%s.c".printf (get_destination_directory (), get_basename ());
 		}
 		return csource_filename;
 	}
@@ -216,9 +217,7 @@ public class Vala.SourceFile : Object {
 	 */
 	public string get_cinclude_filename () {
 		if (cinclude_filename == null) {
-			var basename = filename.ndup ((uint) (filename.len () - ".vala".len ()));
-			basename = Path.get_basename (basename);
-			cinclude_filename = "%s%s.h".printf (get_subdir (), basename);
+			cinclude_filename = "%s%s.h".printf (get_subdir (), get_basename ());
 		}
 		return cinclude_filename;
 	}

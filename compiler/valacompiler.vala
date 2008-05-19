@@ -199,14 +199,14 @@ class Vala.Compiler : Object {
 		foreach (string source in sources) {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
 				var rpath = realpath (source);
-				if (source.has_suffix (".vala")) {
+				if (source.has_suffix (".vala") || source.has_suffix (".gs")) {
 					context.add_source_file (new SourceFile (context, rpath));
 				} else if (source.has_suffix (".vapi")) {
 					context.add_source_file (new SourceFile (context, rpath, true));
 				} else if (source.has_suffix (".c")) {
 					context.add_c_source_file (rpath);
 				} else {
-					Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, and .c files are supported.".printf (source));
+					Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.".printf (source));
 				}
 			} else {
 				Report.error (null, "%s not found".printf (source));
@@ -220,7 +220,10 @@ class Vala.Compiler : Object {
 		
 		var parser = new Parser ();
 		parser.parse (context);
-		
+
+		var genie_parser = new Genie.Parser ();
+		genie_parser.parse (context);
+
 		if (Report.get_errors () > 0) {
 			return quit ();
 		}

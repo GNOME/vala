@@ -1,3 +1,15 @@
+2008-05-19  Jürg Billeter  <j@bitron.ch>
+
+	* vala/Makefile.am:
+	* vala/valagenieparser.vala:
+	* vala/valageniescanner.vala:
+	* vala/valagenietokentype.vala:
+	* vala/valaparser.vala:
+	* vala/valasourcefile.vala:
+	* compiler/valacompiler.vala:
+
+	Add parser for Genie, patch by Jamie McCracken
+
 2008-05-18  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegenerator.vala:
