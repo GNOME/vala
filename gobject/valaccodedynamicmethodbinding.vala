@@ -207,13 +207,14 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 
 				block.add_statement (new CCodeExpressionStatement (ccall));
 
-				block.add_statement (new CCodeReturnStatement (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), "data")));
+				// *result_length1 = result->len;
+				var garray_length = new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), "len");
+				var result_length = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length1"));
+				var assign = new CCodeAssignment (result_length, garray_length);
+				block.add_statement (new CCodeExpressionStatement (assign));
 
-				if (!method.no_array_length) {
-					expr.append_array_size (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), "len"));
-				} else {
-					expr.append_array_size (new CCodeConstant ("-1"));
-				}
+				// return result->data;
+				block.add_statement (new CCodeReturnStatement (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), "data")));
 			} else {
 				// string arrays or other datatypes
 
@@ -234,18 +235,18 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 
 				block.add_statement (new CCodeExpressionStatement (ccall));
 
-				block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
-
 				if (array_type != null) {
 					// special case string array
-					if (!method.no_array_length) {
-						var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
-						cstrvlen.add_argument (new CCodeIdentifier ("result"));
-						expr.append_array_size (cstrvlen);
-					} else {
-						expr.append_array_size (new CCodeConstant ("-1"));
-					}
+
+					// *result_length1 = g_strv_length (result);
+					var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+					cstrvlen.add_argument (new CCodeIdentifier ("result"));
+					var result_length = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length1"));
+					var assign = new CCodeAssignment (result_length, cstrvlen);
+					block.add_statement (new CCodeExpressionStatement (assign));
 				}
+
+				block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
 			}
 		} else {
 			block.add_statement (new CCodeExpressionStatement (ccall));
