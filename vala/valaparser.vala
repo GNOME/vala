@@ -265,6 +265,11 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.STRING_LITERAL:
 			next ();
 			return new StringLiteral (get_last_string (), get_src (begin));
+		case TokenType.VERBATIM_STRING_LITERAL:
+			next ();
+			string raw_string = get_last_string ();
+			string escaped_string = raw_string.substring (3, raw_string.len () - 6).escape ("");
+			return new StringLiteral ("\"%s\"".printf (escaped_string), get_src (begin));
 		case TokenType.NULL:
 			next ();
 			return new NullLiteral (get_src (begin));
@@ -426,6 +431,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.REAL_LITERAL:
 		case TokenType.CHARACTER_LITERAL:
 		case TokenType.STRING_LITERAL:
+		case TokenType.VERBATIM_STRING_LITERAL:
 		case TokenType.NULL:
 			expr = parse_literal ();
 			break;
@@ -779,6 +785,7 @@ public class Vala.Parser : CodeVisitor {
 					case TokenType.REAL_LITERAL:
 					case TokenType.CHARACTER_LITERAL:
 					case TokenType.STRING_LITERAL:
+					case TokenType.VERBATIM_STRING_LITERAL:
 					case TokenType.NULL:
 					case TokenType.THIS:
 					case TokenType.BASE:

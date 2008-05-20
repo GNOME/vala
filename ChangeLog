@@ -1,5 +1,13 @@
 2008-05-20  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala:
+	* vala/valascanner.vala:
+	* vala/valatokentype.vala:
+
+	Add support for """verbatim strings"""
+
+2008-05-20  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodedynamicmethodbinding.vala:
 
 	Fix D-Bus method calls returning arrays, fixes bug 529351

@@ -132,6 +132,7 @@ public enum Vala.TokenType {
 	TYPEOF,
 	USING,
 	VAR,
+	VERBATIM_STRING_LITERAL,
 	VIRTUAL,
 	VOID,
 	VOLATILE,

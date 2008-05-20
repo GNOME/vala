@@ -610,6 +610,28 @@ public class Vala.Scanner : Object {
 			case '"':
 				if (begin[0] == '\'') {
 					type = TokenType.CHARACTER_LITERAL;
+				} else if (current < end - 6 && begin[1] == '"' && begin[2] == '"') {
+					type = TokenType.VERBATIM_STRING_LITERAL;
+					token_length_in_chars = 6;
+					current += 3;
+					while (current < end - 4) {
+						if (current[0] == '"' && current[1] == '"' && current[2] == '"') {
+							break;
+						}
+						unichar u = ((string) current).get_char_validated ((long) (end - current));
+						if (u != (unichar) (-1)) {
+							current += u.to_utf8 (null);
+							token_length_in_chars++;
+						} else {
+							Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "invalid UTF-8 character");
+						}
+					}
+					if (current[0] == '"' && current[1] == '"' && current[2] == '"') {
+						current += 3;
+					} else {
+						Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "syntax error, expected \"\"\"");
+					}
+					break;
 				} else {
 					type = TokenType.STRING_LITERAL;
 				}
