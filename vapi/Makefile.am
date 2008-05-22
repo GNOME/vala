@@ -115,6 +115,7 @@ dist_vapi_DATA = \
 	sdl-ttf.vapi \
 	sqlite3.vapi \
 	taglib_c.vapi \
+	tiff.vapi \
 	vala-1.0.vapi \
 	vte.deps \
 	vte.vapi \
