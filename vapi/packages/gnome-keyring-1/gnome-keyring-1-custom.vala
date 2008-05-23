@@ -1,7 +1,7 @@
 namespace GnomeKeyring
 {
 	public const string DEFAULT;
-	public const weak GnomeKeyring.PasswordSchema NETWORK_PASSWORD;
+	public const GnomeKeyring.PasswordSchema NETWORK_PASSWORD;
 
 	[CCode (free_function = "gnome_keyring_attribute_list_free")]
 	public class AttributeList {
