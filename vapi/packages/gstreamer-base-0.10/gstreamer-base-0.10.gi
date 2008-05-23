@@ -410,7 +410,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="src" type="GstBaseSrc*"/>
-					<parameter name="live" type="gboolean"/>
+					<parameter name="timestamp" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="set_format" symbol="gst_base_src_set_format">
@@ -826,6 +826,14 @@
 					<parameter name="size" type="guint"/>
 				</parameters>
 			</method>
+			<method name="read_buffer" symbol="gst_collect_pads_read_buffer">
+				<return-type type="GstBuffer*"/>
+				<parameters>
+					<parameter name="pads" type="GstCollectPads*"/>
+					<parameter name="data" type="GstCollectData*"/>
+					<parameter name="size" type="guint"/>
+				</parameters>
+			</method>
 			<method name="remove_pad" symbol="gst_collect_pads_remove_pad">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -858,6 +866,14 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="pads" type="GstCollectPads*"/>
+				</parameters>
+			</method>
+			<method name="take_buffer" symbol="gst_collect_pads_take_buffer">
+				<return-type type="GstBuffer*"/>
+				<parameters>
+					<parameter name="pads" type="GstCollectPads*"/>
+					<parameter name="data" type="GstCollectData*"/>
+					<parameter name="size" type="guint"/>
 				</parameters>
 			</method>
 			<field name="data" type="GSList*"/>

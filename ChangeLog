@@ -1,5 +1,16 @@
 2008-05-23  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-base-0.10/:
+
+	Fix the newsegment virtual method in GstBaseSrc, move the
+	GST_BASE_TRANSFORM_* constants to the GstBaseTransform class,
+	fix weak fields in GstBase*, and hide the abidata fields,
+	patch by Ali Sabil
+
+	* vapi/gstreamer-base-0.10.vapi: regenerated
+
+2008-05-23  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Improve the GstBuffer binding, base class fixes in metadata,
