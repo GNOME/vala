@@ -1,5 +1,14 @@
 2008-05-23  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Improve the GstBuffer binding, base class fixes in metadata,
+	patch by Ali Sabil, fixes bug 510693 and bug 533011
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-05-23  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeclassbinding.vala:
 
 	Support [DBus (visible = false)] for methods, properties, and

@@ -775,6 +775,12 @@
 				<parameter name="src" type="gchar*"/>
 			</parameters>
 		</function>
+		<function name="value_dup_mini_object" symbol="gst_value_dup_mini_object">
+			<return-type type="GstMiniObject*"/>
+			<parameters>
+				<parameter name="value" type="GValue*"/>
+			</parameters>
+		</function>
 		<function name="value_fraction_multiply" symbol="gst_value_fraction_multiply">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -1714,6 +1720,13 @@
 					<parameter name="event" type="GstEvent*"/>
 				</parameters>
 			</method>
+			<method name="has_name" symbol="gst_event_has_name">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="event" type="GstEvent*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="new_buffer_size" symbol="gst_event_new_buffer_size">
 				<return-type type="GstEvent*"/>
 				<parameters>
@@ -2181,6 +2194,16 @@
 					<parameter name="percent" type="gint*"/>
 				</parameters>
 			</method>
+			<method name="parse_buffering_stats" symbol="gst_message_parse_buffering_stats">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="message" type="GstMessage*"/>
+					<parameter name="mode" type="GstBufferingMode*"/>
+					<parameter name="avg_in" type="gint*"/>
+					<parameter name="avg_out" type="gint*"/>
+					<parameter name="buffering_left" type="gint64*"/>
+				</parameters>
+			</method>
 			<method name="parse_clock_lost" symbol="gst_message_parse_clock_lost">
 				<return-type type="void"/>
 				<parameters>
@@ -2265,6 +2288,16 @@
 					<parameter name="message" type="GstMessage*"/>
 					<parameter name="gerror" type="GError**"/>
 					<parameter name="debug" type="gchar**"/>
+				</parameters>
+			</method>
+			<method name="set_buffering_stats" symbol="gst_message_set_buffering_stats">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="message" type="GstMessage*"/>
+					<parameter name="mode" type="GstBufferingMode"/>
+					<parameter name="avg_in" type="gint"/>
+					<parameter name="avg_out" type="gint"/>
+					<parameter name="buffering_left" type="gint64"/>
 				</parameters>
 			</method>
 			<method name="type_get_name" symbol="gst_message_type_get_name">
@@ -2356,6 +2389,9 @@
 			<field name="def_num" type="gint"/>
 			<field name="def_den" type="gint"/>
 		</struct>
+		<struct name="GstParamSpecMiniObject">
+			<field name="parent_instance" type="GParamSpec"/>
+		</struct>
 		<struct name="GstPluginDesc">
 			<field name="major_version" type="gint"/>
 			<field name="minor_version" type="gint"/>
@@ -2369,6 +2405,122 @@
 			<field name="origin" type="gchar*"/>
 			<field name="_gst_reserved" type="gpointer[]"/>
 		</struct>
+		<struct name="GstPoll">
+			<method name="add_fd" symbol="gst_poll_add_fd">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+					<parameter name="fd" type="GstPollFD*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="gst_poll_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+				</parameters>
+			</method>
+			<method name="new" symbol="gst_poll_new">
+				<return-type type="GstPoll*"/>
+				<parameters>
+					<parameter name="controllable" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="remove_fd" symbol="gst_poll_remove_fd">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+					<parameter name="fd" type="GstPollFD*"/>
+				</parameters>
+			</method>
+			<method name="restart" symbol="gst_poll_restart">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+				</parameters>
+			</method>
+			<method name="set_controllable" symbol="gst_poll_set_controllable">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+					<parameter name="controllable" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_flushing" symbol="gst_poll_set_flushing">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+					<parameter name="flushing" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="wait" symbol="gst_poll_wait">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+					<parameter name="timeout" type="GstClockTime"/>
+				</parameters>
+			</method>
+		</struct>
+		<struct name="GstPollFD">
+			<method name="can_read" symbol="gst_poll_fd_can_read">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+					<parameter name="fd" type="GstPollFD*"/>
+				</parameters>
+			</method>
+			<method name="can_write" symbol="gst_poll_fd_can_write">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+					<parameter name="fd" type="GstPollFD*"/>
+				</parameters>
+			</method>
+			<method name="ctl_read" symbol="gst_poll_fd_ctl_read">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+					<parameter name="fd" type="GstPollFD*"/>
+					<parameter name="active" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="ctl_write" symbol="gst_poll_fd_ctl_write">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+					<parameter name="fd" type="GstPollFD*"/>
+					<parameter name="active" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="has_closed" symbol="gst_poll_fd_has_closed">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+					<parameter name="fd" type="GstPollFD*"/>
+				</parameters>
+			</method>
+			<method name="has_error" symbol="gst_poll_fd_has_error">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+					<parameter name="fd" type="GstPollFD*"/>
+				</parameters>
+			</method>
+			<method name="ignored" symbol="gst_poll_fd_ignored">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="set" type="GstPoll*"/>
+					<parameter name="fd" type="GstPollFD*"/>
+				</parameters>
+			</method>
+			<method name="init" symbol="gst_poll_fd_init">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="fd" type="GstPollFD*"/>
+				</parameters>
+			</method>
+			<field name="fd" type="int"/>
+			<field name="idx" type="gint"/>
+		</struct>
 		<struct name="GstQuery">
 			<method name="get_structure" symbol="gst_query_get_structure">
 				<return-type type="GstStructure*"/>
@@ -2381,6 +2533,12 @@
 				<parameters>
 					<parameter name="type" type="GstQueryType"/>
 					<parameter name="structure" type="GstStructure*"/>
+				</parameters>
+			</method>
+			<method name="new_buffering" symbol="gst_query_new_buffering">
+				<return-type type="GstQuery*"/>
+				<parameters>
+					<parameter name="format" type="GstFormat"/>
 				</parameters>
 			</method>
 			<method name="new_convert" symbol="gst_query_new_convert">
@@ -2419,6 +2577,34 @@
 				<return-type type="GstQuery*"/>
 				<parameters>
 					<parameter name="format" type="GstFormat"/>
+				</parameters>
+			</method>
+			<method name="parse_buffering_percent" symbol="gst_query_parse_buffering_percent">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="query" type="GstQuery*"/>
+					<parameter name="busy" type="gboolean*"/>
+					<parameter name="percent" type="gint*"/>
+				</parameters>
+			</method>
+			<method name="parse_buffering_range" symbol="gst_query_parse_buffering_range">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="query" type="GstQuery*"/>
+					<parameter name="format" type="GstFormat*"/>
+					<parameter name="start" type="gint64*"/>
+					<parameter name="stop" type="gint64*"/>
+					<parameter name="estimated_total" type="gint64*"/>
+				</parameters>
+			</method>
+			<method name="parse_buffering_stats" symbol="gst_query_parse_buffering_stats">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="query" type="GstQuery*"/>
+					<parameter name="mode" type="GstBufferingMode*"/>
+					<parameter name="avg_in" type="gint*"/>
+					<parameter name="avg_out" type="gint*"/>
+					<parameter name="buffering_left" type="gint64*"/>
 				</parameters>
 			</method>
 			<method name="parse_convert" symbol="gst_query_parse_convert">
@@ -2489,6 +2675,34 @@
 					<parameter name="format" type="GstFormat*"/>
 					<parameter name="start_value" type="gint64*"/>
 					<parameter name="stop_value" type="gint64*"/>
+				</parameters>
+			</method>
+			<method name="set_buffering_percent" symbol="gst_query_set_buffering_percent">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="query" type="GstQuery*"/>
+					<parameter name="busy" type="gboolean"/>
+					<parameter name="percent" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_buffering_range" symbol="gst_query_set_buffering_range">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="query" type="GstQuery*"/>
+					<parameter name="format" type="GstFormat"/>
+					<parameter name="start" type="gint64"/>
+					<parameter name="stop" type="gint64"/>
+					<parameter name="estimated_total" type="gint64"/>
+				</parameters>
+			</method>
+			<method name="set_buffering_stats" symbol="gst_query_set_buffering_stats">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="query" type="GstQuery*"/>
+					<parameter name="mode" type="GstBufferingMode"/>
+					<parameter name="avg_in" type="gint"/>
+					<parameter name="avg_out" type="gint"/>
+					<parameter name="buffering_left" type="gint64"/>
 				</parameters>
 			</method>
 			<method name="set_convert" symbol="gst_query_set_convert">
@@ -3383,6 +3597,12 @@
 					<parameter name="clip_stop" type="gint64*"/>
 				</parameters>
 			</method>
+			<method name="copy" symbol="gst_segment_copy">
+				<return-type type="GstSegment*"/>
+				<parameters>
+					<parameter name="segment" type="GstSegment*"/>
+				</parameters>
+			</method>
 			<method name="free" symbol="gst_segment_free">
 				<return-type type="void"/>
 				<parameters>
@@ -3830,21 +4050,27 @@
 		</boxed>
 		<boxed name="GstTagList" type-name="GstTagList" get-type="gst_tag_list_get_type">
 		</boxed>
-		<enum name="GstActivateMode">
+		<enum name="GstActivateMode" type-name="GstActivateMode" get-type="gst_activate_mode_get_type">
 			<member name="GST_ACTIVATE_NONE" value="0"/>
 			<member name="GST_ACTIVATE_PUSH" value="1"/>
 			<member name="GST_ACTIVATE_PULL" value="2"/>
 		</enum>
-		<enum name="GstBusSyncReply">
+		<enum name="GstBufferingMode" type-name="GstBufferingMode" get-type="gst_buffering_mode_get_type">
+			<member name="GST_BUFFERING_STREAM" value="0"/>
+			<member name="GST_BUFFERING_DOWNLOAD" value="1"/>
+			<member name="GST_BUFFERING_TIMESHIFT" value="2"/>
+			<member name="GST_BUFFERING_LIVE" value="3"/>
+		</enum>
+		<enum name="GstBusSyncReply" type-name="GstBusSyncReply" get-type="gst_bus_sync_reply_get_type">
 			<member name="GST_BUS_DROP" value="0"/>
 			<member name="GST_BUS_PASS" value="1"/>
 			<member name="GST_BUS_ASYNC" value="2"/>
 		</enum>
-		<enum name="GstClockEntryType">
+		<enum name="GstClockEntryType" type-name="GstClockEntryType" get-type="gst_clock_entry_type_get_type">
 			<member name="GST_CLOCK_ENTRY_SINGLE" value="0"/>
 			<member name="GST_CLOCK_ENTRY_PERIODIC" value="1"/>
 		</enum>
-		<enum name="GstClockReturn">
+		<enum name="GstClockReturn" type-name="GstClockReturn" get-type="gst_clock_return_get_type">
 			<member name="GST_CLOCK_OK" value="0"/>
 			<member name="GST_CLOCK_EARLY" value="1"/>
 			<member name="GST_CLOCK_UNSCHEDULED" value="2"/>
@@ -3853,7 +4079,7 @@
 			<member name="GST_CLOCK_ERROR" value="5"/>
 			<member name="GST_CLOCK_UNSUPPORTED" value="6"/>
 		</enum>
-		<enum name="GstCoreError">
+		<enum name="GstCoreError" type-name="GstCoreError" get-type="gst_core_error_get_type">
 			<member name="GST_CORE_ERROR_FAILED" value="1"/>
 			<member name="GST_CORE_ERROR_TOO_LAZY" value="2"/>
 			<member name="GST_CORE_ERROR_NOT_IMPLEMENTED" value="3"/>
@@ -3870,7 +4096,7 @@
 			<member name="GST_CORE_ERROR_DISABLED" value="14"/>
 			<member name="GST_CORE_ERROR_NUM_ERRORS" value="15"/>
 		</enum>
-		<enum name="GstDebugColorFlags">
+		<enum name="GstDebugColorFlags" type-name="GstDebugColorFlags" get-type="gst_debug_color_flags_get_type">
 			<member name="GST_DEBUG_FG_BLACK" value="0"/>
 			<member name="GST_DEBUG_FG_RED" value="1"/>
 			<member name="GST_DEBUG_FG_GREEN" value="2"/>
@@ -3890,7 +4116,7 @@
 			<member name="GST_DEBUG_BOLD" value="256"/>
 			<member name="GST_DEBUG_UNDERLINE" value="512"/>
 		</enum>
-		<enum name="GstDebugLevel">
+		<enum name="GstDebugLevel" type-name="GstDebugLevel" get-type="gst_debug_level_get_type">
 			<member name="GST_LEVEL_NONE" value="0"/>
 			<member name="GST_LEVEL_ERROR" value="1"/>
 			<member name="GST_LEVEL_WARNING" value="2"/>
@@ -3899,7 +4125,7 @@
 			<member name="GST_LEVEL_LOG" value="5"/>
 			<member name="GST_LEVEL_COUNT" value="6"/>
 		</enum>
-		<enum name="GstEventType">
+		<enum name="GstEventType" type-name="GstEventType" get-type="gst_event_type_get_type">
 			<member name="GST_EVENT_UNKNOWN" value="0"/>
 			<member name="GST_EVENT_FLUSH_START" value="19"/>
 			<member name="GST_EVENT_FLUSH_STOP" value="39"/>
@@ -3917,7 +4143,7 @@
 			<member name="GST_EVENT_CUSTOM_BOTH" value="519"/>
 			<member name="GST_EVENT_CUSTOM_BOTH_OOB" value="515"/>
 		</enum>
-		<enum name="GstFlowReturn">
+		<enum name="GstFlowReturn" type-name="GstFlowReturn" get-type="gst_flow_return_get_type">
 			<member name="GST_FLOW_CUSTOM_SUCCESS" value="100"/>
 			<member name="GST_FLOW_RESEND" value="1"/>
 			<member name="GST_FLOW_OK" value="0"/>
@@ -3929,7 +4155,7 @@
 			<member name="GST_FLOW_NOT_SUPPORTED" value="-6"/>
 			<member name="GST_FLOW_CUSTOM_ERROR" value="-100"/>
 		</enum>
-		<enum name="GstFormat">
+		<enum name="GstFormat" type-name="GstFormat" get-type="gst_format_get_type">
 			<member name="GST_FORMAT_UNDEFINED" value="0"/>
 			<member name="GST_FORMAT_DEFAULT" value="1"/>
 			<member name="GST_FORMAT_BYTES" value="2"/>
@@ -3937,39 +4163,39 @@
 			<member name="GST_FORMAT_BUFFERS" value="4"/>
 			<member name="GST_FORMAT_PERCENT" value="5"/>
 		</enum>
-		<enum name="GstIndexCertainty">
+		<enum name="GstIndexCertainty" type-name="GstIndexCertainty" get-type="gst_index_certainty_get_type">
 			<member name="GST_INDEX_UNKNOWN" value="0"/>
 			<member name="GST_INDEX_CERTAIN" value="1"/>
 			<member name="GST_INDEX_FUZZY" value="2"/>
 		</enum>
-		<enum name="GstIndexEntryType">
+		<enum name="GstIndexEntryType" type-name="GstIndexEntryType" get-type="gst_index_entry_type_get_type">
 			<member name="GST_INDEX_ENTRY_ID" value="0"/>
 			<member name="GST_INDEX_ENTRY_ASSOCIATION" value="1"/>
 			<member name="GST_INDEX_ENTRY_OBJECT" value="2"/>
 			<member name="GST_INDEX_ENTRY_FORMAT" value="3"/>
 		</enum>
-		<enum name="GstIndexLookupMethod">
+		<enum name="GstIndexLookupMethod" type-name="GstIndexLookupMethod" get-type="gst_index_lookup_method_get_type">
 			<member name="GST_INDEX_LOOKUP_EXACT" value="0"/>
 			<member name="GST_INDEX_LOOKUP_BEFORE" value="1"/>
 			<member name="GST_INDEX_LOOKUP_AFTER" value="2"/>
 		</enum>
-		<enum name="GstIndexResolverMethod">
+		<enum name="GstIndexResolverMethod" type-name="GstIndexResolverMethod" get-type="gst_index_resolver_method_get_type">
 			<member name="GST_INDEX_RESOLVER_CUSTOM" value="0"/>
 			<member name="GST_INDEX_RESOLVER_GTYPE" value="1"/>
 			<member name="GST_INDEX_RESOLVER_PATH" value="2"/>
 		</enum>
-		<enum name="GstIteratorItem">
+		<enum name="GstIteratorItem" type-name="GstIteratorItem" get-type="gst_iterator_item_get_type">
 			<member name="GST_ITERATOR_ITEM_SKIP" value="0"/>
 			<member name="GST_ITERATOR_ITEM_PASS" value="1"/>
 			<member name="GST_ITERATOR_ITEM_END" value="2"/>
 		</enum>
-		<enum name="GstIteratorResult">
+		<enum name="GstIteratorResult" type-name="GstIteratorResult" get-type="gst_iterator_result_get_type">
 			<member name="GST_ITERATOR_DONE" value="0"/>
 			<member name="GST_ITERATOR_OK" value="1"/>
 			<member name="GST_ITERATOR_RESYNC" value="2"/>
 			<member name="GST_ITERATOR_ERROR" value="3"/>
 		</enum>
-		<enum name="GstLibraryError">
+		<enum name="GstLibraryError" type-name="GstLibraryError" get-type="gst_library_error_get_type">
 			<member name="GST_LIBRARY_ERROR_FAILED" value="1"/>
 			<member name="GST_LIBRARY_ERROR_TOO_LAZY" value="2"/>
 			<member name="GST_LIBRARY_ERROR_INIT" value="3"/>
@@ -3978,12 +4204,12 @@
 			<member name="GST_LIBRARY_ERROR_ENCODE" value="6"/>
 			<member name="GST_LIBRARY_ERROR_NUM_ERRORS" value="7"/>
 		</enum>
-		<enum name="GstPadDirection">
+		<enum name="GstPadDirection" type-name="GstPadDirection" get-type="gst_pad_direction_get_type">
 			<member name="GST_PAD_UNKNOWN" value="0"/>
 			<member name="GST_PAD_SRC" value="1"/>
 			<member name="GST_PAD_SINK" value="2"/>
 		</enum>
-		<enum name="GstPadLinkReturn">
+		<enum name="GstPadLinkReturn" type-name="GstPadLinkReturn" get-type="gst_pad_link_return_get_type">
 			<member name="GST_PAD_LINK_OK" value="0"/>
 			<member name="GST_PAD_LINK_WRONG_HIERARCHY" value="-1"/>
 			<member name="GST_PAD_LINK_WAS_LINKED" value="-2"/>
@@ -3992,12 +4218,12 @@
 			<member name="GST_PAD_LINK_NOSCHED" value="-5"/>
 			<member name="GST_PAD_LINK_REFUSED" value="-6"/>
 		</enum>
-		<enum name="GstPadPresence">
+		<enum name="GstPadPresence" type-name="GstPadPresence" get-type="gst_pad_presence_get_type">
 			<member name="GST_PAD_ALWAYS" value="0"/>
 			<member name="GST_PAD_SOMETIMES" value="1"/>
 			<member name="GST_PAD_REQUEST" value="2"/>
 		</enum>
-		<enum name="GstParseError">
+		<enum name="GstParseError" type-name="GstParseError" get-type="gst_parse_error_get_type">
 			<member name="GST_PARSE_ERROR_SYNTAX" value="0"/>
 			<member name="GST_PARSE_ERROR_NO_SUCH_ELEMENT" value="1"/>
 			<member name="GST_PARSE_ERROR_NO_SUCH_PROPERTY" value="2"/>
@@ -4006,12 +4232,12 @@
 			<member name="GST_PARSE_ERROR_EMPTY_BIN" value="5"/>
 			<member name="GST_PARSE_ERROR_EMPTY" value="6"/>
 		</enum>
-		<enum name="GstPluginError">
+		<enum name="GstPluginError" type-name="GstPluginError" get-type="gst_plugin_error_get_type">
 			<member name="GST_PLUGIN_ERROR_MODULE" value="0"/>
 			<member name="GST_PLUGIN_ERROR_DEPENDENCIES" value="1"/>
 			<member name="GST_PLUGIN_ERROR_NAME_MISMATCH" value="2"/>
 		</enum>
-		<enum name="GstQueryType">
+		<enum name="GstQueryType" type-name="GstQueryType" get-type="gst_query_type_get_type">
 			<member name="GST_QUERY_NONE" value="0"/>
 			<member name="GST_QUERY_POSITION" value="1"/>
 			<member name="GST_QUERY_DURATION" value="2"/>
@@ -4022,14 +4248,15 @@
 			<member name="GST_QUERY_SEGMENT" value="7"/>
 			<member name="GST_QUERY_CONVERT" value="8"/>
 			<member name="GST_QUERY_FORMATS" value="9"/>
+			<member name="GST_QUERY_BUFFERING" value="10"/>
 		</enum>
-		<enum name="GstRank">
+		<enum name="GstRank" type-name="GstRank" get-type="gst_rank_get_type">
 			<member name="GST_RANK_NONE" value="0"/>
 			<member name="GST_RANK_MARGINAL" value="64"/>
 			<member name="GST_RANK_SECONDARY" value="128"/>
 			<member name="GST_RANK_PRIMARY" value="256"/>
 		</enum>
-		<enum name="GstResourceError">
+		<enum name="GstResourceError" type-name="GstResourceError" get-type="gst_resource_error_get_type">
 			<member name="GST_RESOURCE_ERROR_FAILED" value="1"/>
 			<member name="GST_RESOURCE_ERROR_TOO_LAZY" value="2"/>
 			<member name="GST_RESOURCE_ERROR_NOT_FOUND" value="3"/>
@@ -4046,20 +4273,20 @@
 			<member name="GST_RESOURCE_ERROR_NO_SPACE_LEFT" value="14"/>
 			<member name="GST_RESOURCE_ERROR_NUM_ERRORS" value="15"/>
 		</enum>
-		<enum name="GstSeekType">
+		<enum name="GstSeekType" type-name="GstSeekType" get-type="gst_seek_type_get_type">
 			<member name="GST_SEEK_TYPE_NONE" value="0"/>
 			<member name="GST_SEEK_TYPE_CUR" value="1"/>
 			<member name="GST_SEEK_TYPE_SET" value="2"/>
 			<member name="GST_SEEK_TYPE_END" value="3"/>
 		</enum>
-		<enum name="GstState">
+		<enum name="GstState" type-name="GstState" get-type="gst_state_get_type">
 			<member name="GST_STATE_VOID_PENDING" value="0"/>
 			<member name="GST_STATE_NULL" value="1"/>
 			<member name="GST_STATE_READY" value="2"/>
 			<member name="GST_STATE_PAUSED" value="3"/>
 			<member name="GST_STATE_PLAYING" value="4"/>
 		</enum>
-		<enum name="GstStateChange">
+		<enum name="GstStateChange" type-name="GstStateChange" get-type="gst_state_change_get_type">
 			<member name="GST_STATE_CHANGE_NULL_TO_READY" value="10"/>
 			<member name="GST_STATE_CHANGE_READY_TO_PAUSED" value="19"/>
 			<member name="GST_STATE_CHANGE_PAUSED_TO_PLAYING" value="28"/>
@@ -4067,13 +4294,13 @@
 			<member name="GST_STATE_CHANGE_PAUSED_TO_READY" value="26"/>
 			<member name="GST_STATE_CHANGE_READY_TO_NULL" value="17"/>
 		</enum>
-		<enum name="GstStateChangeReturn">
+		<enum name="GstStateChangeReturn" type-name="GstStateChangeReturn" get-type="gst_state_change_return_get_type">
 			<member name="GST_STATE_CHANGE_FAILURE" value="0"/>
 			<member name="GST_STATE_CHANGE_SUCCESS" value="1"/>
 			<member name="GST_STATE_CHANGE_ASYNC" value="2"/>
 			<member name="GST_STATE_CHANGE_NO_PREROLL" value="3"/>
 		</enum>
-		<enum name="GstStreamError">
+		<enum name="GstStreamError" type-name="GstStreamError" get-type="gst_stream_error_get_type">
 			<member name="GST_STREAM_ERROR_FAILED" value="1"/>
 			<member name="GST_STREAM_ERROR_TOO_LAZY" value="2"/>
 			<member name="GST_STREAM_ERROR_NOT_IMPLEMENTED" value="3"/>
@@ -4085,16 +4312,18 @@
 			<member name="GST_STREAM_ERROR_DEMUX" value="9"/>
 			<member name="GST_STREAM_ERROR_MUX" value="10"/>
 			<member name="GST_STREAM_ERROR_FORMAT" value="11"/>
-			<member name="GST_STREAM_ERROR_NUM_ERRORS" value="12"/>
+			<member name="GST_STREAM_ERROR_DECRYPT" value="12"/>
+			<member name="GST_STREAM_ERROR_DECRYPT_NOKEY" value="13"/>
+			<member name="GST_STREAM_ERROR_NUM_ERRORS" value="14"/>
 		</enum>
-		<enum name="GstTagFlag">
+		<enum name="GstTagFlag" type-name="GstTagFlag" get-type="gst_tag_flag_get_type">
 			<member name="GST_TAG_FLAG_UNDEFINED" value="0"/>
 			<member name="GST_TAG_FLAG_META" value="1"/>
 			<member name="GST_TAG_FLAG_ENCODED" value="2"/>
 			<member name="GST_TAG_FLAG_DECODED" value="3"/>
 			<member name="GST_TAG_FLAG_COUNT" value="4"/>
 		</enum>
-		<enum name="GstTagMergeMode">
+		<enum name="GstTagMergeMode" type-name="GstTagMergeMode" get-type="gst_tag_merge_mode_get_type">
 			<member name="GST_TAG_MERGE_UNDEFINED" value="0"/>
 			<member name="GST_TAG_MERGE_REPLACE_ALL" value="1"/>
 			<member name="GST_TAG_MERGE_REPLACE" value="2"/>
@@ -4104,42 +4333,42 @@
 			<member name="GST_TAG_MERGE_KEEP_ALL" value="6"/>
 			<member name="GST_TAG_MERGE_COUNT" value="7"/>
 		</enum>
-		<enum name="GstTaskState">
+		<enum name="GstTaskState" type-name="GstTaskState" get-type="gst_task_state_get_type">
 			<member name="GST_TASK_STARTED" value="0"/>
 			<member name="GST_TASK_STOPPED" value="1"/>
 			<member name="GST_TASK_PAUSED" value="2"/>
 		</enum>
-		<enum name="GstTypeFindProbability">
+		<enum name="GstTypeFindProbability" type-name="GstTypeFindProbability" get-type="gst_type_find_probability_get_type">
 			<member name="GST_TYPE_FIND_MINIMUM" value="1"/>
 			<member name="GST_TYPE_FIND_POSSIBLE" value="50"/>
 			<member name="GST_TYPE_FIND_LIKELY" value="80"/>
 			<member name="GST_TYPE_FIND_NEARLY_CERTAIN" value="99"/>
 			<member name="GST_TYPE_FIND_MAXIMUM" value="100"/>
 		</enum>
-		<enum name="GstURIType">
+		<enum name="GstURIType" type-name="GstURIType" get-type="gst_uri_type_get_type">
 			<member name="GST_URI_UNKNOWN" value="0"/>
 			<member name="GST_URI_SINK" value="1"/>
 			<member name="GST_URI_SRC" value="2"/>
 		</enum>
-		<flags name="GstAllocTraceFlags">
+		<flags name="GstAllocTraceFlags" type-name="GstAllocTraceFlags" get-type="gst_alloc_trace_flags_get_type">
 			<member name="GST_ALLOC_TRACE_LIVE" value="1"/>
 			<member name="GST_ALLOC_TRACE_MEM_LIVE" value="2"/>
 		</flags>
-		<flags name="GstAssocFlags">
+		<flags name="GstAssocFlags" type-name="GstAssocFlags" get-type="gst_assoc_flags_get_type">
 			<member name="GST_ASSOCIATION_FLAG_NONE" value="0"/>
 			<member name="GST_ASSOCIATION_FLAG_KEY_UNIT" value="1"/>
 			<member name="GST_ASSOCIATION_FLAG_DELTA_UNIT" value="2"/>
 			<member name="GST_ASSOCIATION_FLAG_LAST" value="256"/>
 		</flags>
-		<flags name="GstBinFlags">
+		<flags name="GstBinFlags" type-name="GstBinFlags" get-type="gst_bin_flags_get_type">
 			<member name="GST_BIN_FLAG_LAST" value="33554432"/>
 		</flags>
-		<flags name="GstBufferCopyFlags">
+		<flags name="GstBufferCopyFlags" type-name="GstBufferCopyFlags" get-type="gst_buffer_copy_flags_get_type">
 			<member name="GST_BUFFER_COPY_FLAGS" value="1"/>
 			<member name="GST_BUFFER_COPY_TIMESTAMPS" value="2"/>
 			<member name="GST_BUFFER_COPY_CAPS" value="4"/>
 		</flags>
-		<flags name="GstBufferFlag">
+		<flags name="GstBufferFlag" type-name="GstBufferFlag" get-type="gst_buffer_flag_get_type">
 			<member name="GST_BUFFER_FLAG_READONLY" value="1"/>
 			<member name="GST_BUFFER_FLAG_PREROLL" value="16"/>
 			<member name="GST_BUFFER_FLAG_DISCONT" value="32"/>
@@ -4148,14 +4377,14 @@
 			<member name="GST_BUFFER_FLAG_DELTA_UNIT" value="256"/>
 			<member name="GST_BUFFER_FLAG_LAST" value="4096"/>
 		</flags>
-		<flags name="GstBusFlags">
+		<flags name="GstBusFlags" type-name="GstBusFlags" get-type="gst_bus_flags_get_type">
 			<member name="GST_BUS_FLUSHING" value="16"/>
 			<member name="GST_BUS_FLAG_LAST" value="32"/>
 		</flags>
-		<flags name="GstCapsFlags">
+		<flags name="GstCapsFlags" type-name="GstCapsFlags" get-type="gst_caps_flags_get_type">
 			<member name="GST_CAPS_FLAGS_ANY" value="1"/>
 		</flags>
-		<flags name="GstClockFlags">
+		<flags name="GstClockFlags" type-name="GstClockFlags" get-type="gst_clock_flags_get_type">
 			<member name="GST_CLOCK_FLAG_CAN_DO_SINGLE_SYNC" value="16"/>
 			<member name="GST_CLOCK_FLAG_CAN_DO_SINGLE_ASYNC" value="32"/>
 			<member name="GST_CLOCK_FLAG_CAN_DO_PERIODIC_SYNC" value="64"/>
@@ -4164,30 +4393,30 @@
 			<member name="GST_CLOCK_FLAG_CAN_SET_MASTER" value="512"/>
 			<member name="GST_CLOCK_FLAG_LAST" value="4096"/>
 		</flags>
-		<flags name="GstDebugGraphDetails">
+		<flags name="GstDebugGraphDetails" type-name="GstDebugGraphDetails" get-type="gst_debug_graph_details_get_type">
 			<member name="GST_DEBUG_GRAPH_SHOW_MEDIA_TYPE" value="1"/>
 			<member name="GST_DEBUG_GRAPH_SHOW_CAPS_DETAILS" value="2"/>
 			<member name="GST_DEBUG_GRAPH_SHOW_NON_DEFAULT_PARAMS" value="4"/>
 			<member name="GST_DEBUG_GRAPH_SHOW_STATES" value="8"/>
 			<member name="GST_DEBUG_GRAPH_SHOW_ALL" value="15"/>
 		</flags>
-		<flags name="GstElementFlags">
+		<flags name="GstElementFlags" type-name="GstElementFlags" get-type="gst_element_flags_get_type">
 			<member name="GST_ELEMENT_LOCKED_STATE" value="16"/>
 			<member name="GST_ELEMENT_IS_SINK" value="32"/>
 			<member name="GST_ELEMENT_UNPARENTING" value="64"/>
 			<member name="GST_ELEMENT_FLAG_LAST" value="1048576"/>
 		</flags>
-		<flags name="GstEventTypeFlags">
+		<flags name="GstEventTypeFlags" type-name="GstEventTypeFlags" get-type="gst_event_type_flags_get_type">
 			<member name="GST_EVENT_TYPE_UPSTREAM" value="1"/>
 			<member name="GST_EVENT_TYPE_DOWNSTREAM" value="2"/>
 			<member name="GST_EVENT_TYPE_SERIALIZED" value="4"/>
 		</flags>
-		<flags name="GstIndexFlags">
+		<flags name="GstIndexFlags" type-name="GstIndexFlags" get-type="gst_index_flags_get_type">
 			<member name="GST_INDEX_WRITABLE" value="16"/>
 			<member name="GST_INDEX_READABLE" value="32"/>
 			<member name="GST_INDEX_FLAG_LAST" value="4096"/>
 		</flags>
-		<flags name="GstMessageType">
+		<flags name="GstMessageType" type-name="GstMessageType" get-type="gst_message_type_get_type">
 			<member name="GST_MESSAGE_UNKNOWN" value="0"/>
 			<member name="GST_MESSAGE_EOS" value="1"/>
 			<member name="GST_MESSAGE_ERROR" value="2"/>
@@ -4213,16 +4442,16 @@
 			<member name="GST_MESSAGE_ASYNC_DONE" value="2097152"/>
 			<member name="GST_MESSAGE_ANY" value="-1"/>
 		</flags>
-		<flags name="GstMiniObjectFlags">
+		<flags name="GstMiniObjectFlags" type-name="GstMiniObjectFlags" get-type="gst_mini_object_flags_get_type">
 			<member name="GST_MINI_OBJECT_FLAG_READONLY" value="1"/>
 			<member name="GST_MINI_OBJECT_FLAG_LAST" value="16"/>
 		</flags>
-		<flags name="GstObjectFlags">
+		<flags name="GstObjectFlags" type-name="GstObjectFlags" get-type="gst_object_flags_get_type">
 			<member name="GST_OBJECT_DISPOSING" value="1"/>
 			<member name="GST_OBJECT_FLOATING" value="2"/>
 			<member name="GST_OBJECT_FLAG_LAST" value="16"/>
 		</flags>
-		<flags name="GstPadFlags">
+		<flags name="GstPadFlags" type-name="GstPadFlags" get-type="gst_pad_flags_get_type">
 			<member name="GST_PAD_BLOCKED" value="16"/>
 			<member name="GST_PAD_FLUSHING" value="32"/>
 			<member name="GST_PAD_IN_GETCAPS" value="64"/>
@@ -4230,18 +4459,18 @@
 			<member name="GST_PAD_BLOCKING" value="256"/>
 			<member name="GST_PAD_FLAG_LAST" value="4096"/>
 		</flags>
-		<flags name="GstPadTemplateFlags">
+		<flags name="GstPadTemplateFlags" type-name="GstPadTemplateFlags" get-type="gst_pad_template_flags_get_type">
 			<member name="GST_PAD_TEMPLATE_FIXED" value="16"/>
 			<member name="GST_PAD_TEMPLATE_FLAG_LAST" value="256"/>
 		</flags>
-		<flags name="GstPipelineFlags">
+		<flags name="GstPipelineFlags" type-name="GstPipelineFlags" get-type="gst_pipeline_flags_get_type">
 			<member name="GST_PIPELINE_FLAG_FIXED_CLOCK" value="33554432"/>
 			<member name="GST_PIPELINE_FLAG_LAST" value="536870912"/>
 		</flags>
-		<flags name="GstPluginFlags">
+		<flags name="GstPluginFlags" type-name="GstPluginFlags" get-type="gst_plugin_flags_get_type">
 			<member name="GST_PLUGIN_FLAG_CACHED" value="1"/>
 		</flags>
-		<flags name="GstSeekFlags">
+		<flags name="GstSeekFlags" type-name="GstSeekFlags" get-type="gst_seek_flags_get_type">
 			<member name="GST_SEEK_FLAG_NONE" value="0"/>
 			<member name="GST_SEEK_FLAG_FLUSH" value="1"/>
 			<member name="GST_SEEK_FLAG_ACCURATE" value="2"/>
@@ -5636,6 +5865,15 @@
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
 			</method>
+			<method name="set_resolver_full" symbol="gst_index_set_resolver_full">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="index" type="GstIndex*"/>
+					<parameter name="resolver" type="GstIndexResolver"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="user_data_destroy" type="GDestroyNotify"/>
+				</parameters>
+			</method>
 			<property name="resolver" type="GstIndexResolver" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="entry-added" when="LAST">
 				<return-type type="void"/>
@@ -5690,6 +5928,7 @@
 			<field name="filter_user_data_destroy" type="GDestroyNotify"/>
 			<field name="writers" type="GHashTable*"/>
 			<field name="last_id" type="gint"/>
+			<field name="resolver_user_data_destroy" type="GDestroyNotify"/>
 		</object>
 		<object name="GstIndexFactory" parent="GstPluginFeature" type-name="GstIndexFactory" get-type="gst_index_factory_get_type">
 			<method name="create" symbol="gst_index_factory_create">
@@ -5930,6 +6169,15 @@
 					<parameter name="data" type="gpointer"/>
 				</parameters>
 			</method>
+			<method name="add_buffer_probe_full" symbol="gst_pad_add_buffer_probe_full">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="handler" type="GCallback"/>
+					<parameter name="data" type="gpointer"/>
+					<parameter name="notify" type="GDestroyNotify"/>
+				</parameters>
+			</method>
 			<method name="add_data_probe" symbol="gst_pad_add_data_probe">
 				<return-type type="gulong"/>
 				<parameters>
@@ -5938,12 +6186,30 @@
 					<parameter name="data" type="gpointer"/>
 				</parameters>
 			</method>
+			<method name="add_data_probe_full" symbol="gst_pad_add_data_probe_full">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="handler" type="GCallback"/>
+					<parameter name="data" type="gpointer"/>
+					<parameter name="notify" type="GDestroyNotify"/>
+				</parameters>
+			</method>
 			<method name="add_event_probe" symbol="gst_pad_add_event_probe">
 				<return-type type="gulong"/>
 				<parameters>
 					<parameter name="pad" type="GstPad*"/>
 					<parameter name="handler" type="GCallback"/>
 					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="add_event_probe_full" symbol="gst_pad_add_event_probe_full">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="pad" type="GstPad*"/>
+					<parameter name="handler" type="GCallback"/>
+					<parameter name="data" type="gpointer"/>
+					<parameter name="notify" type="GDestroyNotify"/>
 				</parameters>
 			</method>
 			<method name="alloc_buffer" symbol="gst_pad_alloc_buffer">
@@ -7437,6 +7703,8 @@
 		<constant name="GST_MESSAGE_TRACE_NAME" type="char*" value="GstMessage"/>
 		<constant name="GST_MSECOND" type="int" value="0"/>
 		<constant name="GST_NSECOND" type="int" value="0"/>
+		<constant name="GST_PARAM_CONTROLLABLE" type="int" value="2"/>
+		<constant name="GST_PARAM_USER_SHIFT" type="int" value="256"/>
 		<constant name="GST_SECOND" type="int" value="0"/>
 		<constant name="GST_TAG_ALBUM" type="char*" value="album"/>
 		<constant name="GST_TAG_ALBUM_GAIN" type="char*" value="replaygain-album-gain"/>
@@ -7491,8 +7759,8 @@
 		<constant name="GST_VALUE_LESS_THAN" type="int" value="-1"/>
 		<constant name="GST_VALUE_UNORDERED" type="int" value="2"/>
 		<constant name="GST_VERSION_MAJOR" type="int" value="0"/>
-		<constant name="GST_VERSION_MICRO" type="int" value="17"/>
+		<constant name="GST_VERSION_MICRO" type="int" value="19"/>
 		<constant name="GST_VERSION_MINOR" type="int" value="10"/>
-		<constant name="GST_VERSION_NANO" type="int" value="0"/>
+		<constant name="GST_VERSION_NANO" type="int" value="1"/>
 	</namespace>
 </api>

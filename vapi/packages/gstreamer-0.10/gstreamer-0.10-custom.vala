@@ -28,4 +28,11 @@ namespace Gst {
 
 	public struct ClockTimeDiff : int64 {
 	}
+
+	[CCode (ref_function = "gst_buffer_ref", unref_function = "gst_buffer_unref")]
+	public class Buffer : Gst.MiniObject {
+		public Buffer ();
+		public weak Buffer @ref ();
+		public void unref ();
+	}
 }
