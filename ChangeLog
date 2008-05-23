@@ -1,5 +1,9 @@
 2008-05-23  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/sdl.vapi: fix syntax errors
+
+2008-05-23  Jürg Billeter  <j@bitron.ch>
+
 	* THANKS: thank contributors
 
 2008-05-23  Jürg Billeter  <j@bitron.ch>

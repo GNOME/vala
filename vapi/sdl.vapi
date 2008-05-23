@@ -199,10 +199,10 @@ namespace SDL {
 		public uint32 map_rgba(uchar r, uchar g, uchar b, uchar a);
 
 		[CCode (cname="SDL_GetRGB")]
-		public static void get_rgb(uint32 pixel, weak PixelFormat fmt, ref uchar r, ref uchar g, ref uchar b);
+		public static void get_rgb(uint32 pixel, PixelFormat fmt, ref uchar r, ref uchar g, ref uchar b);
 
 		[CCode (cname="SDL_GetRGBA")]
-		public static void get_rgba(uint32 pixel, weak PixelFormat fmt, ref uchar r, ref uchar g, ref uchar b, ref uchar a);
+		public static void get_rgba(uint32 pixel, PixelFormat fmt, ref uchar r, ref uchar g, ref uchar b, ref uchar a);
 	}// PixelFormat
 
 	[CCode (cname="SDL_Rect")]
@@ -518,7 +518,7 @@ namespace SDL {
 		public static void pump();
 
 		[CCode (cname="SDL_PeepEvents")]
-		public static void peep(weak Event* events, int numevents, 
+		public static void peep(Event* events, int numevents, 
 			EventAction action, EventMask mask);
 
 		[CCode (cname="SDL_PollEvent")]
