@@ -22,6 +22,7 @@ TESTS = \
 	expressions-assignments.vala \
 	expressions-lambda.vala \
 	statements-selection.vala \
+	statements-iteration.vala \
 	statements-jump.vala \
 	namespaces.vala \
 	classes.vala \
@@ -59,6 +60,7 @@ EXTRA_DIST = \
 	expressions-assignments.exp \
 	expressions-lambda.exp \
 	statements-selection.exp \
+	statements-iteration.exp \
 	statements-jump.exp \
 	namespaces.exp \
 	classes.exp \

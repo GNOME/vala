@@ -1,3 +1,16 @@
+2008-05-23  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala:
+
+	Allow invocation of void methods as initializer and iterator in
+	for statements, patch by Jared Moore, fixes bug 514801
+
+	* tests/Makefile.am:
+	* tests/statements-iteration.exp:
+	* tests/statements-iteration.vala:
+
+	Test void methods in for statements
+
 2008-05-22  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/Makefile.am:

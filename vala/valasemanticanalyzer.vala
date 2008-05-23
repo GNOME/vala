@@ -1827,7 +1827,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (ret_type is VoidType) {
 			// void return type
-			if (!(expr.parent_node is ExpressionStatement)) {
+			if (!(expr.parent_node is ExpressionStatement)
+			    && !(expr.parent_node is ForStatement)) {
+				// A void method invocation can be in the initializer or
+				// iterator of a for statement
 				expr.error = true;
 				Report.error (expr.source_reference, "invocation of void method not allowed as expression");
 				return;
