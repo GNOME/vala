@@ -1,5 +1,9 @@
 2008-05-23  Jürg Billeter  <j@bitron.ch>
 
+	* THANKS: thank contributors
+
+2008-05-23  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: add GLogFunc and g_log_set_handler bindings,
 	patch by Nicolas Joseph, fixes bug 533601
 
