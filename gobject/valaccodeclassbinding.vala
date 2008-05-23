@@ -743,6 +743,17 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 		return new CCodeExpressionStatement (cwarn);
 	}
 
+	bool is_dbus_visible (CodeNode node) {
+		var dbus_attribute = node.get_attribute ("DBus");
+		if (dbus_attribute != null
+		    && dbus_attribute.has_argument ("visible")
+		    && !dbus_attribute.get_bool ("visible")) {
+			return false;
+		}
+
+		return true;
+	}
+
 	void register_dbus_info () {
 		var dbus = cl.get_attribute ("DBus");
 		if (dbus == null) {
@@ -766,6 +777,9 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 		foreach (Method m in cl.get_methods ()) {
 			if (m is CreationMethod || m.binding != MemberBinding.INSTANCE
 			    || m.overrides || m.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+			if (!is_dbus_visible (m)) {
 				continue;
 			}
 
@@ -860,6 +874,9 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 			if (sig.access != SymbolAccessibility.PUBLIC) {
 				continue;
 			}
+			if (!is_dbus_visible (sig)) {
+				continue;
+			}
 
 			dbus_signals.append (dbus_iface_name);
 			dbus_signals.append ("\\0");
@@ -872,6 +889,9 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 		dbus_props.append_c ('"');
 		foreach (Property prop in cl.get_properties ()) {
 			if (prop.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+			if (!is_dbus_visible (prop)) {
 				continue;
 			}
 
