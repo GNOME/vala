@@ -1,5 +1,9 @@
 2008-05-23  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/dbus-glib-1.vapi: add DBus.ObjectPath class
+
+2008-05-23  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/sdl.vapi: fix syntax errors
 
 2008-05-23  Jürg Billeter  <j@bitron.ch>
