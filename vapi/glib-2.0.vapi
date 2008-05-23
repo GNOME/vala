@@ -1530,6 +1530,12 @@ namespace GLib {
 	[PrintfFormat]
 	public void debug (string format, ...);
 
+	public delegate void LogFunc (string? log_domain, LogLevelFlags log_levels, string message);
+
+	namespace Log {
+		public uint set_handler (string? log_domain, LogLevelFlags log_levels, LogFunc log_func);
+	}
+
 	/* String Utility Functions */
 
 	[NoArrayLength]
