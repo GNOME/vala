@@ -19,7 +19,98 @@ namespace Gst {
 		ARGB,
 		ABGR,
 		RGB,
-		BGR
+		BGR,
+		Y41B,
+		Y42B
+	}
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static class VideoMask32 {
+		[CCode (cname = "GST_VIDEO_BYTE1_MASK_32")]
+		public const string BYTE1;
+		[CCode (cname = "GST_VIDEO_BYTE2_MASK_32")]
+		public const string BYTE2;
+		[CCode (cname = "GST_VIDEO_BYTE3_MASK_32")]
+		public const string BYTE3;
+		[CCode (cname = "GST_VIDEO_BYTE4_MASK_32")]
+		public const string BYTE4;
+		[CCode (cname = "GST_VIDEO_BYTE1_MASK_32_INT")]
+		public const int BYTE1_INT;
+		[CCode (cname = "GST_VIDEO_BYTE2_MASK_32_INT")]
+		public const int BYTE2_INT;
+		[CCode (cname = "GST_VIDEO_BYTE3_MASK_32_INT")]
+		public const int BYTE3_INT;
+		[CCode (cname = "GST_VIDEO_BYTE4_MASK_32_INT")]
+		public const int BYTE4_INT;
+	}
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static class VideoMask24 {
+		[CCode (cname = "GST_VIDEO_BYTE1_MASK_24")]
+		public const string BYTE1;
+		[CCode (cname = "GST_VIDEO_BYTE2_MASK_24")]
+		public const string BYTE2;
+		[CCode (cname = "GST_VIDEO_BYTE3_MASK_24")]
+		public const string BYTE3;
+		[CCode (cname = "GST_VIDEO_BYTE1_MASK_24_INT")]
+		public const int BYTE1_INT;
+		[CCode (cname = "GST_VIDEO_BYTE2_MASK_24_INT")]
+		public const int BYTE2_INT;
+		[CCode (cname = "GST_VIDEO_BYTE3_MASK_24_INT")]
+		public const int BYTE3_INT;
+	}
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static class VideoMask16 {
+		[CCode (cname = "GST_VIDEO_RED_MASK_16")]
+		public const string RED;
+		[CCode (cname = "GST_VIDEO_GREEN_MASK_16")]
+		public const string GREEN;
+		[CCode (cname = "GST_VIDEO_BLUE_MASK_16")]
+		public const string BLUE;
+		[CCode (cname = "GST_VIDEO_RED_MASK_16_INT")]
+		public const int RED_INT;
+		[CCode (cname = "GST_VIDEO_GREEN_MASK_16_INT")]
+		public const int GREEN_INT;
+		[CCode (cname = "GST_VIDEO_BLUE_MASK_16_INT")]
+		public const int BLUE_INT;
+	}
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static class VideoMask15 {
+		[CCode (cname = "GST_VIDEO_RED_MASK_15")]
+		public const string RED;
+		[CCode (cname = "GST_VIDEO_GREEN_MASK_15")]
+		public const string GREEN;
+		[CCode (cname = "GST_VIDEO_BLUE_MASK_15")]
+		public const string BLUE;
+		[CCode (cname = "GST_VIDEO_RED_MASK_15_INT")]
+		public const int RED_INT;
+		[CCode (cname = "GST_VIDEO_GREEN_MASK_15_INT")]
+		public const int GREEN_INT;
+		[CCode (cname = "GST_VIDEO_BLUE_MASK_15_INT")]
+		public const int BLUE_INT;
+	}
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static class VideoRange {
+		[CCode (cname = "GST_VIDEO_SIZE_RANGE")]
+		public const string SIZE;
+		[CCode (cname = "GST_VIDEO_FPS_RANGE")]
+		public const string FPS;
+	}
+	[CCode (cheader_filename = "gst/video/video.h")]
+	public static class VideoCaps {
+		public const string RGB;
+		public const string BGR;
+		public const string RGBx;
+		public const string xRGB;
+		public const string BGRx;
+		public const string xBGR;
+		public const string RGBA;
+		public const string ARGB;
+		public const string BGRA;
+		public const string ABGR;
+		public const string xRGB_HOST_ENDIAN;
+		public const string BGRx_HOST_ENDIAN;
+		public const string RGB_16;
+		public const string RGB_15;
+		public static string YUV (string fourcc);
 	}
 	[CCode (cheader_filename = "gst/video/gstvideosink.h")]
 	public class VideoRectangle {
@@ -38,54 +129,24 @@ namespace Gst {
 		public int height;
 		public static void center_rect (Gst.VideoRectangle src, Gst.VideoRectangle dst, Gst.VideoRectangle _result, bool scaling);
 	}
-	public const string VIDEO_BLUE_MASK_15;
-	public const int VIDEO_BLUE_MASK_15_INT;
-	public const string VIDEO_BLUE_MASK_16;
-	public const int VIDEO_BLUE_MASK_16_INT;
-	public const string VIDEO_BYTE1_MASK_24;
-	public const int VIDEO_BYTE1_MASK_24_INT;
-	public const string VIDEO_BYTE1_MASK_32;
-	public const int VIDEO_BYTE1_MASK_32_INT;
-	public const string VIDEO_BYTE2_MASK_24;
-	public const int VIDEO_BYTE2_MASK_24_INT;
-	public const string VIDEO_BYTE2_MASK_32;
-	public const int VIDEO_BYTE2_MASK_32_INT;
-	public const string VIDEO_BYTE3_MASK_24;
-	public const int VIDEO_BYTE3_MASK_24_INT;
-	public const string VIDEO_BYTE3_MASK_32;
-	public const int VIDEO_BYTE3_MASK_32_INT;
-	public const string VIDEO_BYTE4_MASK_32;
-	public const int VIDEO_BYTE4_MASK_32_INT;
-	public const string VIDEO_CAPS_RGB_15;
-	public const string VIDEO_CAPS_RGB_16;
-	public const string VIDEO_FPS_RANGE;
-	public const string VIDEO_GREEN_MASK_15;
-	public const int VIDEO_GREEN_MASK_15_INT;
-	public const string VIDEO_GREEN_MASK_16;
-	public const int VIDEO_GREEN_MASK_16_INT;
-	public const string VIDEO_RED_MASK_15;
-	public const int VIDEO_RED_MASK_15_INT;
-	public const string VIDEO_RED_MASK_16;
-	public const int VIDEO_RED_MASK_16_INT;
-	public const string VIDEO_SIZE_RANGE;
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static bool video_calculate_display_ratio (uint dar_n, uint dar_d, uint video_width, uint video_height, uint video_par_n, uint video_par_d, uint display_par_n, uint display_par_d);
+	public static bool video_calculate_display_ratio (ref uint dar_n, ref uint dar_d, uint video_width, uint video_height, uint video_par_n, uint video_par_d, uint display_par_n, uint display_par_d);
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static bool video_format_convert (Gst.VideoFormat format, int width, int height, int fps_n, int fps_d, Gst.Format src_format, int64 src_value, Gst.Format dest_format, int64 dest_value);
+	public static bool video_format_convert (Gst.VideoFormat format, int width, int height, int fps_n, int fps_d, Gst.Format src_format, int64 src_value, Gst.Format dest_format, ref int64 dest_value);
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static Gst.VideoFormat video_format_from_fourcc (uint fourcc);
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static int video_format_get_component_height (Gst.VideoFormat format, int component, int height);
+	public static int video_format_get_component_height (Gst.VideoFormat format, ref int component, ref int height);
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static int video_format_get_component_offset (Gst.VideoFormat format, int component, int width, int height);
+	public static int video_format_get_component_offset (Gst.VideoFormat format, ref int component, ref int width, ref int height);
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static int video_format_get_component_width (Gst.VideoFormat format, int component, int width);
+	public static int video_format_get_component_width (Gst.VideoFormat format, ref int component, ref int width);
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static int video_format_get_pixel_stride (Gst.VideoFormat format, int component);
+	public static int video_format_get_pixel_stride (Gst.VideoFormat format, ref int component);
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static int video_format_get_row_stride (Gst.VideoFormat format, int component, int width);
+	public static int video_format_get_row_stride (Gst.VideoFormat format, ref int component, ref int width);
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static int video_format_get_size (Gst.VideoFormat format, int width, int height);
+	public static int video_format_get_size (Gst.VideoFormat format, ref int width, ref int height);
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static bool video_format_has_alpha (Gst.VideoFormat format);
 	[CCode (cheader_filename = "gst/video/video.h")]
@@ -95,15 +156,15 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static weak Gst.Caps video_format_new_caps (Gst.VideoFormat format, int width, int height, int framerate_n, int framerate_d, int par_n, int par_d);
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static bool video_format_parse_caps (Gst.Caps caps, Gst.VideoFormat format, int width, int height);
+	public static bool video_format_parse_caps (Gst.Caps caps, ref Gst.VideoFormat format, ref int width, ref int height);
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static uint video_format_to_fourcc (Gst.VideoFormat format);
 	[CCode (cheader_filename = "gst/video/video.h")]
 	public static GLib.Value video_frame_rate (Gst.Pad pad);
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static bool video_get_size (Gst.Pad pad, int width, int height);
+	public static bool video_get_size (Gst.Pad pad, ref int width, ref int height);
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static bool video_parse_caps_framerate (Gst.Caps caps, int fps_n, int fps_d);
+	public static bool video_parse_caps_framerate (Gst.Caps caps, ref int fps_n, ref int fps_d);
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static bool video_parse_caps_pixel_aspect_ratio (Gst.Caps caps, int par_n, int par_d);
+	public static bool video_parse_caps_pixel_aspect_ratio (Gst.Caps caps, ref int par_n, ref int par_d);
 }

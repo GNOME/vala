@@ -180,6 +180,8 @@
 			<member name="GST_VIDEO_FORMAT_ABGR" value="13"/>
 			<member name="GST_VIDEO_FORMAT_RGB" value="14"/>
 			<member name="GST_VIDEO_FORMAT_BGR" value="15"/>
+			<member name="GST_VIDEO_FORMAT_Y41B" value="16"/>
+			<member name="GST_VIDEO_FORMAT_Y42B" value="17"/>
 		</enum>
 		<object name="GstVideoFilter" parent="GstBaseTransform" type-name="GstVideoFilter" get-type="gst_video_filter_get_type">
 			<field name="inited" type="gboolean"/>
@@ -204,7 +206,7 @@
 		<constant name="GST_VIDEO_BYTE1_MASK_24" type="char*" value="0x00FF0000"/>
 		<constant name="GST_VIDEO_BYTE1_MASK_24_INT" type="int" value="16711680"/>
 		<constant name="GST_VIDEO_BYTE1_MASK_32" type="char*" value="0xFF000000"/>
-		<constant name="GST_VIDEO_BYTE1_MASK_32_INT" type="int" value="-16777216"/>
+		<constant name="GST_VIDEO_BYTE1_MASK_32_INT" type="int" value="2147483647"/>
 		<constant name="GST_VIDEO_BYTE2_MASK_24" type="char*" value="0x0000FF00"/>
 		<constant name="GST_VIDEO_BYTE2_MASK_24_INT" type="int" value="65280"/>
 		<constant name="GST_VIDEO_BYTE2_MASK_32" type="char*" value="0x00FF0000"/>

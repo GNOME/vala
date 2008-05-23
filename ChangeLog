@@ -1,5 +1,14 @@
 2008-05-23  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-video-0.10/:
+
+	Add bindings for constants, fix parameter direction for the
+	gst_format_* functions, patch by Ali Sabil
+
+	* vapi/gstreamer-video-0.10.vapi: regenerated
+
+2008-05-23  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-base-0.10/:
 
 	Fix the newsegment virtual method in GstBaseSrc, move the
