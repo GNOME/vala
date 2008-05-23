@@ -559,6 +559,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					st = instance_struct;
 					lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
 				}
+			} else if (f.binding == MemberBinding.CLASS) {
+				st = type_struct;
 			} else {
 				var cdecl = new CCodeDeclaration (field_ctype);
 				var var_decl = new CCodeVariableDeclarator (f.get_cname ());

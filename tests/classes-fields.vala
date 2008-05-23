@@ -9,6 +9,8 @@ class Maman.Bar : Foo {
 	private int private_field = 4;
 	private static int private_static_field = 5;
 	public static int public_static_field = 6;
+	public class int public_class_field = 7;
+	private class int private_class_field = 8;
 	
 	void do_action () {
 		stdout.printf (" %d %d %d %d %d", public_base_field, public_field,

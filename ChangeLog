@@ -1,5 +1,15 @@
 2008-05-23  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala:
+
+	Fix private class fields, patch by Jared Moore, fixes bug 532898
+
+	* tests/classes-fields.vala:
+
+	Test class fields
+
+2008-05-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 
 	Allow invocation of void methods as initializer and iterator in
