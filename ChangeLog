@@ -1,5 +1,13 @@
 2008-05-23  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+	* gobject/valaccodegenerator.vala: 
+
+	Use GStaticRecMutex for lock statements,
+	patch by Philip Van Hoof, fixes bug 532329
+
+2008-05-23  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: fix gtk_window_get_default_size binding,
 	patch by Phil Housley
 

@@ -1286,7 +1286,16 @@ namespace GLib {
 		public bool trylock ();
 		public void unlock ();
 	}
-	
+
+	[CCode (destroy_function = "g_static_rec_mutex_free")]
+	public struct StaticRecMutex {
+		public StaticRecMutex ();
+		public void lock ();
+		public bool trylock ();
+		public void unlock ();
+		public void lock_full ();
+	}
+
 	[CCode (free_function = "g_cond_free")]
 	public class Cond {
 		public Cond ();

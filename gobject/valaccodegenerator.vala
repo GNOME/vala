@@ -109,7 +109,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public Typesymbol gstringbuilder_type;
 	public Typesymbol garray_type;
 	public DataType gquark_type;
-	public DataType mutex_type;
+	public Struct mutex_type;
 	public Typesymbol type_module_type;
 	public Interface iterable_type;
 	public Interface iterator_type;
@@ -237,7 +237,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		garray_type = (Typesymbol) glib_ns.scope.lookup ("Array");
 
 		gquark_type = new ValueType ((Typesymbol) glib_ns.scope.lookup ("Quark"));
-		mutex_type = new ClassInstanceType ((Class) glib_ns.scope.lookup ("Mutex"));
+		mutex_type = (Struct) glib_ns.scope.lookup ("StaticRecMutex");
 		
 		type_module_type = (Typesymbol) glib_ns.scope.lookup ("TypeModule");
 
@@ -456,27 +456,25 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public override void visit_member (Member m) {
 		/* stuff meant for all lockable members */
 		if (m is Lockable && ((Lockable)m).get_lock_used ()) {
+			CCodeExpression l = new CCodeIdentifier ("self");
+			l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (m));	
+
 			instance_priv_struct.add_field (mutex_type.get_cname (), get_symbol_lock_name (m));
-			
-			instance_init_fragment.append (
-				new CCodeExpressionStatement (
-					new CCodeAssignment (
-						new CCodeMemberAccess.pointer (
-							new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"),
-							get_symbol_lock_name (m)),
-					new CCodeFunctionCall (new CCodeIdentifier (((Class)mutex_type.data_type).default_construction_method.get_cname ())))));
-			
+
+			var initf = new CCodeFunctionCall (
+				new CCodeIdentifier (mutex_type.default_construction_method.get_cname ()));
+
+			initf.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, l));		
+
+			instance_init_fragment.append (new CCodeExpressionStatement (initf));
+		
 			requires_free_checked = true;
-			var fc = new CCodeFunctionCall (new CCodeIdentifier ("VALA_FREE_CHECKED"));
-			fc.add_argument (
-				new CCodeMemberAccess.pointer (
-					new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"),
-					get_symbol_lock_name (m)));
-			if (mutex_type.data_type.get_free_function () == null) {
-				Report.error (mutex_type.data_type.source_reference, "The type `%s` doesn't contain a free function".printf (mutex_type.data_type.get_full_name ()));
-				return;
-			}
-			fc.add_argument (new CCodeIdentifier (mutex_type.data_type.get_free_function ()));
+
+
+			var fc = new CCodeFunctionCall (new CCodeIdentifier ("g_static_rec_mutex_free"));
+
+			fc.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, l));
+
 			if (instance_dispose_fragment != null) {
 				instance_dispose_fragment.append (new CCodeExpressionStatement (fc));
 			}
@@ -2424,14 +2422,15 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 		l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (stmt.resource.symbol_reference));
 		
-		fc = new CCodeFunctionCall (new CCodeIdentifier (((Method) mutex_type.data_type.scope.lookup ("lock")).get_cname ()));
-		fc.add_argument (l);
+		fc = new CCodeFunctionCall (new CCodeIdentifier (((Method) mutex_type.scope.lookup ("lock")).get_cname ()));
+		fc.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, l));
+
 		cn.append (new CCodeExpressionStatement (fc));
 		
 		cn.append (stmt.body.ccodenode);
 		
-		fc = new CCodeFunctionCall (new CCodeIdentifier (((Method) mutex_type.data_type.scope.lookup ("unlock")).get_cname ()));
-		fc.add_argument (l);
+		fc = new CCodeFunctionCall (new CCodeIdentifier (((Method) mutex_type.scope.lookup ("unlock")).get_cname ()));
+		fc.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, l));
 		cn.append (new CCodeExpressionStatement (fc));
 		
 		stmt.ccodenode = cn;
