@@ -174,15 +174,9 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			// fifth argument: closure
 			ccall.add_argument (new CCodeConstant ("NULL"));
 		}
-
+		
 		// third resp. sixth argument: handler
-		if (sig is DynamicSignal) {
-			// signal handler wrappers not used for dynamic signals
-			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (m.get_cname ()), "GCallback"));
-			m.cinstance_parameter_position = -1;
-		} else {
-			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (generate_signal_handler_wrapper (m, sig)), "GCallback"));
-		}
+		ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (generate_signal_handler_wrapper (m, sig)), "GCallback"));
 
 		if (m.binding == MemberBinding.INSTANCE) {
 			// g_signal_connect_object or g_signal_handlers_disconnect_matched
@@ -217,7 +211,14 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 	}
 
 	private string generate_signal_handler_wrapper (Method m, Signal sig) {
-		string wrapper_name = "_%s_%s%s".printf (m.get_cname (), sig.parent_symbol.get_lower_case_cprefix (), sig.get_cname ());
+		var dynamic_signal = sig as DynamicSignal;
+
+		string wrapper_name;
+		if (dynamic_signal != null) {
+			wrapper_name = "_%s_%s".printf (m.get_cname (), codegen.dynamic_signal_binding (dynamic_signal).get_dynamic_cname ());
+		} else {
+			wrapper_name = "_%s_%s%s".printf (m.get_cname (), sig.parent_symbol.get_lower_case_cprefix (), sig.get_cname ());
+		}
 
 		if (!codegen.add_wrapper (wrapper_name)) {
 			// wrapper already defined
@@ -235,15 +236,22 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		var cparam = new CCodeFormalParameter ("self", "gpointer");
 		cparam_map.set (codegen.get_param_pos (-1), cparam);
 
-		cparam = new CCodeFormalParameter ("sender", ((Typesymbol) sig.parent_symbol).get_cname () + "*");
-		cparam_map.set (codegen.get_param_pos (0), cparam);
+		if (sig is DynamicSignal) {
+			foreach (FormalParameter param in m.get_parameters()) {
+				// ensure that C code node has been generated
+				param.accept (codegen);
 
-		var sig_params = sig.get_parameters ();
-		foreach (FormalParameter param in sig_params) {
-			// ensure that C code node has been generated
-			param.accept (codegen);
+				cparam_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+			}
+		} else {
+			cparam = new CCodeFormalParameter ("sender", ((Typesymbol) sig.parent_symbol).get_cname () + "*");
+			cparam_map.set (codegen.get_param_pos (0), cparam);
+			foreach (FormalParameter param in sig.get_parameters()) {
+				// ensure that C code node has been generated
+				param.accept (codegen);
 
-			cparam_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+				cparam_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+			}
 		}
 
 		// append C parameters in the right order
@@ -272,18 +280,26 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			carg_map.set (codegen.get_param_pos (m.cinstance_parameter_position), new CCodeIdentifier ("self"));
 		}
 
-		int i = -1;
-		foreach (FormalParameter param in m.get_parameters ()) {
-			CCodeExpression arg;
-			if (i < 0) {
-				arg = new CCodeIdentifier ("sender");
-			} else {
-				arg = new CCodeIdentifier ((sig_params.get (i).ccodenode as CCodeFormalParameter).name);
+		if (sig is DynamicSignal) {
+			foreach (FormalParameter param in m.get_parameters ()) {
+				CCodeExpression arg;
+				arg = new CCodeIdentifier ((param.ccodenode as CCodeFormalParameter).name);
+				carg_map.set (codegen.get_param_pos (param.cparameter_position), arg);
 			}
-			carg_map.set (codegen.get_param_pos (param.cparameter_position), arg);
-			i++;
-		}
-
+		} else {
+			int i = -1;
+			var sig_params = sig.get_parameters ();
+			foreach (FormalParameter param in m.get_parameters ()) {
+				CCodeExpression arg;
+				if (i < 0) {
+					arg = new CCodeIdentifier ("sender");
+				} else {
+					arg = new CCodeIdentifier ((sig_params.get (i).ccodenode as CCodeFormalParameter).name);
+				}
+				carg_map.set (codegen.get_param_pos (param.cparameter_position), arg);
+				i++;
+			}
+		} 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
 
 		// append C arguments in the right order

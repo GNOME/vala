@@ -1,5 +1,12 @@
 2008-05-24  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeassignmentbinding.vala:
+
+	Use signal handler wrappers for dynamic signals,
+	patch by Yu Feng, fixes bug 532290
+
+2008-05-24  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodedynamicsignalbinding.vala:
 
 	Add get_dynamic_cname method to CCodeDynamicSignalBinding class,
