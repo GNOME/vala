@@ -29,8 +29,6 @@ using Gee;
 public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 	public Signal node { get; set; }
 
-	private static int signal_wrapper_id;
-
 	public CCodeDynamicSignalBinding (CCodeGenerator codegen, DynamicSignal node) {
 		this.node = node;
 		this.codegen = codegen;
@@ -39,11 +37,22 @@ public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 	string? connect_wrapper_name;
 	string? disconnect_wrapper_name;
 
+	string? dynamic_cname;
+
+	private static int signal_wrapper_id;
+
+	public string get_dynamic_cname () {
+		if (dynamic_cname == null) {
+			dynamic_cname = "dynamic_%s%d_".printf (node.name, signal_wrapper_id++);
+		}
+		return dynamic_cname;
+	}
+
 	public string get_connect_wrapper_name () {
 		var dynamic_signal = (DynamicSignal) node;
 
 		if (connect_wrapper_name == null) {
-			connect_wrapper_name = "_dynamic_%s%d_connect".printf (node.name, signal_wrapper_id++);
+			connect_wrapper_name = "_%sconnect".printf (get_dynamic_cname ());
 			var func = new CCodeFunction (connect_wrapper_name, "void");
 			func.add_parameter (new CCodeFormalParameter ("obj", "gpointer"));
 			func.add_parameter (new CCodeFormalParameter ("signal_name", "const char *"));
@@ -70,7 +79,7 @@ public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 		var dynamic_signal = (DynamicSignal) node;
 
 		if (disconnect_wrapper_name == null) {
-			disconnect_wrapper_name = "_dynamic_%s%d_disconnect".printf (node.name, signal_wrapper_id++);
+			disconnect_wrapper_name = "_%sdisconnect".printf (get_dynamic_cname ());
 			var func = new CCodeFunction (disconnect_wrapper_name, "void");
 			func.add_parameter (new CCodeFormalParameter ("obj", "gpointer"));
 			func.add_parameter (new CCodeFormalParameter ("signal_name", "const char *"));

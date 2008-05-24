@@ -1,3 +1,10 @@
+2008-05-24  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodedynamicsignalbinding.vala:
+
+	Add get_dynamic_cname method to CCodeDynamicSignalBinding class,
+	based on patch by Yu Feng
+
 2008-05-23  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi:
