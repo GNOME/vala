@@ -1,5 +1,17 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeclassbinding.vala:
+
+	Support destructors for non-GObject classes,
+	patch by Jared Moore, fixes bug 522135
+
+	* tests/classes.exp:
+	* tests/classes.vala:
+
+	Test destructors for non-GObject classes
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodenode.vala:
 	* vala/valacreationmethod.vala:
 	* vala/valaexpression.vala:

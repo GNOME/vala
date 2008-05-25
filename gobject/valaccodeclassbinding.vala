@@ -264,6 +264,10 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 
 			cblock.add_statement (codegen.instance_dispose_fragment);
 
+			if (cl.destructor != null) {
+				cblock.add_statement (cl.destructor.body.ccodenode);
+			}
+
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 			ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
 			ccall.add_argument (new CCodeIdentifier ("self"));

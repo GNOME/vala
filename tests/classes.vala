@@ -4,6 +4,15 @@ class SimpleClass {
 	public int field;
 }
 
+class ClassWithDestructor {
+	~ClassWithDestructor () {
+		stdout.printf ("~ClassWithDestructor\n");
+	}
+
+	/* FIXME bug 533977 */
+	public char dummy;
+}
+
 class DerivedClass : SimpleClass {
 }
 
@@ -91,6 +100,9 @@ static class ClassesTest {
 		var class_with_creation_method = new ClassWithCreationMethod ();
 		stdout.printf ("new ClassWithNamedCreationMethod ()\n");
 		var class_with_named_creation_method = new ClassWithNamedCreationMethod.named ();
+		stdout.printf ("new ClassWithDestructor ()\n");
+		var class_with_destructor = new ClassWithDestructor ();
+		class_with_destructor = null;
 
 		stdout.printf ("new SimpleGTypeInstanceClass ()\n");
 		var simple_gtypeinstance_class = new SimpleGTypeInstanceClass ();

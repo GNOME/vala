@@ -6,6 +6,8 @@ new ClassWithCreationMethod ()
 ClassWithCreationMethod
 new ClassWithNamedCreationMethod ()
 ClassWithNamedCreationMethod
+new ClassWithDestructor ()
+~ClassWithDestructor
 new SimpleGTypeInstanceClass ()
 new DerivedGTypeInstanceClass ()
 new PublicGTypeInstanceClass ()
