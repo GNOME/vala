@@ -1,29 +1,34 @@
 using GLib;
 
-class SimpleClass {
+[Compact]
+class CompactClass {
 	public int field;
 }
 
-class ClassWithDestructor {
-	~ClassWithDestructor () {
-		stdout.printf ("~ClassWithDestructor\n");
+[Compact]
+class CompactClassWithDestructor {
+	~CompactClassWithDestructor () {
+		stdout.printf ("~CompactClassWithDestructor\n");
 	}
 
 	/* FIXME bug 533977 */
 	public char dummy;
 }
 
-class DerivedClass : SimpleClass {
+class DerivedClass : CompactClass {
 }
 
+[Compact]
 public class PublicClass {
 	public int field;
 }
 
+[Compact]
 abstract class AbstractClass {
 	public int field;
 }
 
+[Compact]
 class ClassWithCreationMethod {
 	public ClassWithCreationMethod () {
 		stdout.printf ("ClassWithCreationMethod\n");
@@ -32,6 +37,7 @@ class ClassWithCreationMethod {
 	public int field;
 }
 
+[Compact]
 class ClassWithNamedCreationMethod {
 	public ClassWithNamedCreationMethod.named () {
 		stdout.printf ("ClassWithNamedCreationMethod\n");
@@ -40,22 +46,22 @@ class ClassWithNamedCreationMethod {
 	public int field;
 }
 
-class SimpleGTypeInstanceClass : TypeInstance {
+class SimpleGTypeInstanceClass {
 }
 
 class DerivedGTypeInstanceClass : SimpleGTypeInstanceClass {
 }
 
-public class PublicGTypeInstanceClass : TypeInstance {
+public class PublicGTypeInstanceClass {
 }
 
-class GTypeInstanceClassWithCreationMethod : TypeInstance {
+class GTypeInstanceClassWithCreationMethod {
 	public GTypeInstanceClassWithCreationMethod () {
 		stdout.printf ("GTypeInstanceClassWithCreationMethod\n");
 	}
 }
 
-class GTypeInstanceClassWithNamedCreationMethod : TypeInstance {
+class GTypeInstanceClassWithNamedCreationMethod {
 	public GTypeInstanceClassWithNamedCreationMethod.named () {
 		stdout.printf ("GTypeInstanceClassWithNamedCreationMethod\n");
 	}
@@ -86,8 +92,8 @@ class GObjectClassWithNamedCreationMethod : Object {
 void main () {
 	stdout.printf ("Classes Test:\n");
 
-	stdout.printf ("new SimpleClass ()\n");
-	var simple_class = new SimpleClass ();
+	stdout.printf ("new CompactClass ()\n");
+	var compact_class = new CompactClass ();
 	stdout.printf ("new DerivedClass ()\n");
 	var derived_class = new DerivedClass ();
 	stdout.printf ("new PublicClass ()\n");
@@ -96,9 +102,9 @@ void main () {
 	var class_with_creation_method = new ClassWithCreationMethod ();
 	stdout.printf ("new ClassWithNamedCreationMethod ()\n");
 	var class_with_named_creation_method = new ClassWithNamedCreationMethod.named ();
-	stdout.printf ("new ClassWithDestructor ()\n");
-	var class_with_destructor = new ClassWithDestructor ();
-	class_with_destructor = null;
+	stdout.printf ("new CompactClassWithDestructor ()\n");
+	var compact_class_with_destructor = new CompactClassWithDestructor ();
+	compact_class_with_destructor = null;
 
 	stdout.printf ("new SimpleGTypeInstanceClass ()\n");
 	var simple_gtypeinstance_class = new SimpleGTypeInstanceClass ();
@@ -122,9 +128,9 @@ void main () {
 	stdout.printf ("new GObjectClassWithNamedCreationMethod ()\n");
 	var gobject_class_with_named_creation_method = new GObjectClassWithNamedCreationMethod.named ();
 
-	stdout.printf ("new SimpleClass () { field = 1 }\n");
-	simple_class = new SimpleClass () { field = 1 };
-	stdout.printf ("simple_class.field = %d\n", simple_class.field);
+	stdout.printf ("new CompactClass () { field = 1 }\n");
+	compact_class = new CompactClass () { field = 1 };
+	stdout.printf ("compact_class.field = %d\n", compact_class.field);
 
 	stdout.printf (".\n");
 }

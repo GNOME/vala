@@ -152,6 +152,7 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 		clear ();
 	}
 
+	[Compact]
 	private class Node<G> {
 		public G key;
 		public Node<G> next;

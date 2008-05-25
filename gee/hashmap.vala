@@ -168,6 +168,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		clear ();
 	}
 
+	[Compact]
 	private class Node<K,V> {
 		public K key;
 		public V value;

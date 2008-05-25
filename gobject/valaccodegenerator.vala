@@ -101,7 +101,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public DataType float_type;
 	public DataType double_type;
 	public Typesymbol gtype_type;
-	public Typesymbol gtypeinstance_type;
 	public Typesymbol gobject_type;
 	public ErrorType gerror_type;
 	public Class glist_type;
@@ -228,7 +227,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 
 		gtype_type = (Typesymbol) glib_ns.scope.lookup ("Type");
-		gtypeinstance_type = (Typesymbol) glib_ns.scope.lookup ("TypeInstance");
 		gobject_type = (Typesymbol) glib_ns.scope.lookup ("Object");
 		gerror_type = new ErrorType (null, null);
 		glist_type = (Class) glib_ns.scope.lookup ("List");
@@ -508,7 +506,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		f.accept_children (this);
 
 		var cl = f.parent_symbol as Class;
-		bool is_gtypeinstance = (cl != null && cl.is_subtype_of (gtypeinstance_type));
+		bool is_gtypeinstance = (cl != null && !cl.is_compact);
 
 		CCodeExpression lhs = null;
 		CCodeStruct st = null;
@@ -2991,7 +2989,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 			} else if (expr.type_reference.data_type is Class) {
 				var cl = (Class) expr.type_reference.data_type;
-				if (cl.base_class == gtypeinstance_type) {
+				if (!cl.is_compact && cl.base_class == null) {
 					creation_call.add_argument (new CCodeIdentifier (cl.get_type_id ()));
 				}
 			}
@@ -3190,9 +3188,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {
-		if (expr.type_reference.data_type != null
-		    && expr.type_reference.data_type.is_subtype_of (gtypeinstance_type)
-		    && expr.type_reference.data_type != gtypeinstance_type) {
+		var cl = expr.type_reference.data_type as Class;
+		var iface = expr.type_reference.data_type as Interface;
+		if (iface != null || (cl != null && !cl.is_compact)) {
 			// checked cast for strict subtypes of GTypeInstance
 			if (expr.is_silent_cast) {
 				var ccomma = new CCodeCommaExpression ();
@@ -3436,9 +3434,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			return cexpr;
 		}
 
-		if (context.checking && target_type.data_type != null
-		    && target_type.data_type.is_subtype_of (gtypeinstance_type)
-		    && target_type.data_type != gtypeinstance_type) {
+		var cl = target_type.data_type as Class;
+		var iface = target_type.data_type as Interface;
+		if (context.checking && (iface != null || (cl != null && !cl.is_compact))) {
 			// checked cast for strict subtypes of GTypeInstance
 			return new InstanceCast (cexpr, target_type.data_type);
 		} else if (target_type.data_type != null && expression_type.get_cname () != target_type.get_cname ()) {

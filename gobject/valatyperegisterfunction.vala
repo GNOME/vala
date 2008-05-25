@@ -36,7 +36,7 @@ public abstract class Vala.TypeRegisterFunction : Object {
 	public void init_from_type (bool plugin = false) {
 		bool fundamental = false;
 		Class cl = get_type_declaration () as Class;
-		if (cl != null && cl.base_class != null && cl.base_class.name == "TypeInstance" && cl.base_class.parent_symbol.name == "GLib") {
+		if (cl != null && !cl.is_compact && cl.base_class == null) {
 			fundamental = true;
 		}
 

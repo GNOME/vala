@@ -544,6 +544,7 @@ public enum UnicodeBreakType {
 	HANGUL_LVT_SYLLABLE
 }
 
+[Compact]
 [CCode (cname = "char", const_cname = "const char", copy_function = "g_strdup", free_function = "g_free", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING", get_value_function = "g_value_get_string", set_value_function = "g_value_set_string", type_signature = "s")]
 public class string {
 	[CCode (cname = "strstr")]
@@ -692,12 +693,12 @@ namespace GLib {
 		public uint instance_size;
 	}
 
+	// deprecated
 	[CCode (has_type_id = true)]
 	public class TypeInstance {
-		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
-		public Type get_type ();
 	}
 
+	[Compact]
 	[CCode (ref_function = "g_type_class_ref", unref_function = "g_type_class_unref")]
 	public class TypeClass {
 		[CCode (cname = "G_TYPE_FROM_CLASS")]
@@ -715,6 +716,7 @@ namespace GLib {
 	public interface TypePlugin {
 	}
 
+	[Compact]
 	public class TypeModule : TypePlugin {
 		public bool use ();
 		public void unuse ();
@@ -722,8 +724,7 @@ namespace GLib {
 	}
 
 	[CCode (ref_function = "g_param_spec_ref", unref_function = "g_param_spec_unref")]
-	public class ParamSpec : TypeInstance {
-		public TypeInstance g_type_instance;
+	public class ParamSpec {
 		public string name;
 		public ParamFlags flags;
 		public Type value_type;
@@ -798,6 +799,7 @@ namespace GLib {
 		public weak EnumValue? get_value_by_nick (string name);
 	}
 
+	[Compact]
 	public class EnumValue {
 		public int value;
 		public weak string value_name;
@@ -811,12 +813,14 @@ namespace GLib {
 		public weak FlagsValue? get_value_by_nick (string name);
 	}
 
+	[Compact]
 	public class FlagsValue {
 		public int value;
 		public weak string value_name;
 		public weak string value_nick;
 	}
 
+	[Compact]
 	[CCode (cname = "gpointer", has_type_id = true, type_id = "G_TYPE_BOXED", marshaller_type_name = "BOXED", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed")]
 	public abstract class Boxed {
 	}
@@ -917,6 +921,7 @@ namespace GLib {
 
 	public static delegate void Callback ();
 
+	[Compact]
 	public class Closure : Boxed {
 	}
 
@@ -1104,7 +1109,8 @@ namespace GLib {
 	}
 
 	/* The Main Event Loop */
-	
+
+	[Compact]
 	[CCode (ref_function = "g_main_loop_ref", unref_function = "g_main_loop_unref")]
 	public class MainLoop {
 		public MainLoop (MainContext? context, bool is_running);
@@ -1121,7 +1127,8 @@ namespace GLib {
 		DEFAULT_IDLE,
 		LOW
 	}
-	
+
+	[Compact]
 	[CCode (ref_function = "g_main_context_ref", unref_function = "g_main_context_unref")]
 	public class MainContext {
 		public MainContext ();
@@ -1195,7 +1202,8 @@ namespace GLib {
 		public IOCondition events;
 		public IOCondition revents;
 	}
-	
+
+	[Compact]
 	[CCode (ref_function = "g_source_ref", unref_function = "g_source_unref")]
 	public class Source {
 		public Source (SourceFuncs source_funcs, uint struct_size /* = sizeof (Source) */);
@@ -1226,6 +1234,7 @@ namespace GLib {
 	public static delegate bool SourceDispatchFunc (Source source, SourceFunc _callback);
 	public static delegate void SourceFinalizeFunc (Source source);
 	
+	[Compact]
 	public class SourceFuncs {
 		public SourcePrepareFunc prepare;
 		public SourceCheckFunc check;
@@ -1237,6 +1246,7 @@ namespace GLib {
 	public static delegate void SourceCallbackUnrefFunc (void* cb_data);
 	public static delegate void SourceCallbackGetFunc (void* cb_data, Source source, SourceFunc func);
 	
+	[Compact]
 	public class SourceCallbackFuncs {
 		public SourceCallbackRefFunc @ref;
 		public SourceCallbackUnrefFunc unref;
@@ -1250,6 +1260,7 @@ namespace GLib {
 	}
 
 	/* Thread support */
+	[Compact]
 	public class ThreadFunctions {
 	}
 	
@@ -1263,6 +1274,7 @@ namespace GLib {
 		URGENT
 	}
 	
+	[Compact]
 	public class Thread {
 		public static void init (ThreadFunctions? vtable = null);
 		public static bool supported ();
@@ -1279,6 +1291,7 @@ namespace GLib {
 		public static void usleep (ulong microseconds);
 	}
 	
+	[Compact]
 	[CCode (free_function = "g_mutex_free")]
 	public class Mutex {
 		public Mutex ();
@@ -1296,6 +1309,7 @@ namespace GLib {
 		public void lock_full ();
 	}
 
+	[Compact]
 	[CCode (free_function = "g_cond_free")]
 	public class Cond {
 		public Cond ();
@@ -1306,7 +1320,8 @@ namespace GLib {
 	}
 	
 	/* Thread Pools */
-	
+
+	[Compact]
 	[CCode (free_function = "g_thread_pool_free")]
 	public class ThreadPool {
 		public ThreadPool (Func func, void* user_data, int max_threads, bool exclusive) throws ThreadError;
@@ -1325,7 +1340,8 @@ namespace GLib {
 	}
 	
 	/* Asynchronous Queues */
-	
+
+	[Compact]
 	[CCode (ref_function = "g_async_queue_ref", unref_function = "g_async_queue_unref")]
 	public class AsyncQueue {
 		public AsyncQueue ();
@@ -1374,7 +1390,8 @@ namespace GLib {
 	}
 
 	/* IO Channels */
-	
+
+	[Compact]
 	[CCode (ref_function = "g_io_channel_ref", unref_function = "g_io_channel_unref")]
 	public class IOChannel : Boxed {
 		[CCode (cname = "g_io_channel_unix_new")]
@@ -1465,6 +1482,7 @@ namespace GLib {
 
 	/* Error Reporting */
 
+	[Compact]
 	[ErrorBase]
 	[CCode (copy_function = "g_error_copy", free_function = "g_error_free")]
 	public class Error {
@@ -1602,6 +1620,7 @@ namespace GLib {
 		public ssize_t get_length ();
 	}
 
+	[Compact]
 	[CCode (free_function = "g_checksum_free")]
 	public class Checksum {
 		public Checksum (ChecksumType checksum_type);
@@ -1769,7 +1788,8 @@ namespace GLib {
 	}
 
 	/* Random Numbers */
-	
+
+	[Compact]
 	[CCode (copy_function = "g_rand_copy", free_function = "g_rand_free")]
 	public class Rand {
 		public Rand.with_seed (uint32 seed);
@@ -1884,6 +1904,7 @@ namespace GLib {
 
 	/* Lexical Scanner */
 
+	[Compact]
 	[CCode (free_function = "g_scanner_destroy")]
 	public class Scanner {
 		public Scanner (ScannerConfig config_templ);
@@ -2012,6 +2033,7 @@ namespace GLib {
 
 	/* Timers */
 
+	[Compact]
 	[CCode (free_function = "g_timer_destroy")]
 	public class Timer {
 		public Timer ();
@@ -2155,6 +2177,7 @@ namespace GLib {
 		EXISTS
 	}
 
+	[Compact]
 	[CCode (cname = "FILE", free_function = "fclose", cheader_filename = "stdio.h")]
 	public class FileStream {
 		[CCode (cname = "fopen")]
@@ -2205,6 +2228,7 @@ namespace GLib {
 	public struct Stat {
 	}
 
+	[Compact]
 	[CCode (free_function = "g_dir_close")]
 	public class Dir {
 		public static Dir open (string filename, uint _flags = 0) throws FileError;
@@ -2220,7 +2244,8 @@ namespace GLib {
 		[CCode (cname = "mkdtemp")]
 		public static weak string mkdtemp (string template);
 	}
-	
+
+	[Compact]
 	[CCode (free_function = "g_mapped_file_free")]
 	public class MappedFile {
 		public MappedFile (string filename, bool writable) throws FileError;
@@ -2275,6 +2300,7 @@ namespace GLib {
 		FAILED
 	}
 
+	[Compact]
 	[CCode (free_function = "g_option_context_free")]
 	public class OptionContext {
 		public OptionContext (string parameter_string);
@@ -2335,6 +2361,7 @@ namespace GLib {
 		public weak string arg_description;
 	}
 
+	[Compact]
 	[CCode (free_function = "g_option_group_free")]
 	public class OptionGroup {
 		public OptionGroup (string name, string description, string help_description, void* user_data, DestroyNotify? destroy);
@@ -2389,6 +2416,7 @@ namespace GLib {
 		NEWLINE_ANY
 	}
 
+	[Compact]
 	[CCode (ref_function = "g_regex_ref", unref_function = "g_regex_unref")]
 	public class Regex : Boxed {
 		public Regex (string pattern, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0) throws RegexError;
@@ -2416,6 +2444,7 @@ namespace GLib {
 
 	public static delegate bool RegexEvalCallback (MatchInfo match_info, StringBuilder result, void* user_data);
 
+	[Compact]
 	[CCode (free_function = "g_match_info_free")]
 	public class MatchInfo {
 		public weak Regex get_regex ();
@@ -2448,7 +2477,8 @@ namespace GLib {
 	public enum MarkupParseFlags {
 		TREAT_CDATA_AS_TEXT
 	}
-	
+
+	[Compact]
 	[CCode (free_function = "g_markup_parse_context_free")]
 	public class MarkupParseContext {
 		public MarkupParseContext (MarkupParser parser, MarkupParseFlags _flags, void* user_data, DestroyNotify? user_data_dnotify);
@@ -2493,6 +2523,7 @@ namespace GLib {
 		INVALID_VALUE
 	}
 
+	[Compact]
 	[CCode (free_function = "g_key_file_free")]
 	public class KeyFile {
 		public KeyFile ();
@@ -2551,6 +2582,7 @@ namespace GLib {
 
 	/* Bookmark file parser */
 
+	[Compact]
 	[CCode (free_function = "g_bookmark_file_free")]
 	public class BookmarkFile {
 		public BookmarkFile ();
@@ -2652,7 +2684,8 @@ namespace GLib {
 	}
 
 	/* Doubly-Linked Lists */
-	
+
+	[Compact]
 	[CCode (dup_function = "g_list_copy", free_function = "g_list_free")]
 	public class List<G> {
 		[ReturnsModifiedPointer ()]
@@ -2705,7 +2738,8 @@ namespace GLib {
 	}
 	
 	/* Singly-Linked Lists */
-	
+
+	[Compact]
 	[CCode (dup_function = "g_slist_copy", free_function = "g_slist_free")]
 	public class SList<G> {
 		[ReturnsModifiedPointer ()]
@@ -2762,7 +2796,8 @@ namespace GLib {
 	public static GLib.CompareFunc strcmp;
 	
 	/* Double-ended Queues */
-	
+
+	[Compact]
 	[CCode (dup_function = "g_queue_copy", free_function = "g_queue_free")]
 	public class Queue<G> {
 		public weak List<G> head;
@@ -2797,6 +2832,7 @@ namespace GLib {
 
 	/* Sequences */
 
+	[Compact]
 	[CCode (free_function = "g_sequence_free")]
 	public class Sequence<G> {
 		public Sequence (DestroyNotify? data_destroy);
@@ -2827,6 +2863,7 @@ namespace GLib {
 		public static weak SequenceIter<G> range_get_midpoint (SequenceIter<G> begin, SequenceIter<G> end);
 	}
 
+	[Compact]
 	[CCode (ref_function = "", unref_function = "")]
 	public class SequenceIter<G> {
 		public bool is_begin ();
@@ -2842,7 +2879,8 @@ namespace GLib {
 	public delegate int SequenceIterCompareFunc<G> (SequenceIter<G> a, SequenceIter<G> b);
 
 	/* Hash Tables */
-	
+
+	[Compact]
 	[CCode (ref_function = "g_hash_table_ref", unref_function = "g_hash_table_unref")]
 	public class HashTable<K,V> : Boxed {
 		public HashTable (HashFunc hash_func, EqualFunc key_equal_func);
@@ -2886,6 +2924,7 @@ namespace GLib {
 
 	/* Strings */
 
+	[Compact]
 	[CCode (cname = "GString", cprefix = "g_string_", free_function = "g_string_free", type_id = "G_TYPE_GSTRING")]
 	public class StringBuilder : Boxed {
 		public StringBuilder (string init = "");
@@ -2914,19 +2953,22 @@ namespace GLib {
 	}
 
 	/* Pointer Arrays */
-	
+
+	[Compact]
 	[CCode (free_function = "g_ptr_array_free")]
 	public class PtrArray {
 	}
 
 	/* Byte Arrays */
 
+	[Compact]
 	[CCode (free_function = "g_byte_array_free")]
 	public class ByteArray {
 	}
 
 	/* N-ary Trees */
 
+	[Compact]
 	[CCode (free_function = "g_node_destroy")]
 	public class Node<G> {
 		public G data;
@@ -2965,7 +3007,8 @@ namespace GLib {
 	public delegate void DataForeachFunc<G> (Quark key_id, G data);
 
 	/* GArray */
-	
+
+	[Compact]
 	public class Array<G> {
 		public Array (bool zero_terminated, bool clear, uint element_size);
 		[CCode (cname = "g_array_sized_new")]
@@ -3006,7 +3049,8 @@ namespace GLib {
 		POST_ORDER,
 		LEVEL_ORDER
 	}
-	
+
+	[Compact]
 	[CCode (free_function = "g_tree_destroy")]
 	public class Tree<K,V> {
 		public Tree (CompareFunc key_compare_func);
@@ -3120,6 +3164,7 @@ namespace GLib {
 		UNBLOCKED
 	}
 
+	[Compact]
 	public class PatternSpec {
 		public PatternSpec (string pattern);
 		public void free ();

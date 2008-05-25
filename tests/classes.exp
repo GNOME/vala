@@ -1,13 +1,13 @@
 Classes Test:
-new SimpleClass ()
+new CompactClass ()
 new DerivedClass ()
 new PublicClass ()
 new ClassWithCreationMethod ()
 ClassWithCreationMethod
 new ClassWithNamedCreationMethod ()
 ClassWithNamedCreationMethod
-new ClassWithDestructor ()
-~ClassWithDestructor
+new CompactClassWithDestructor ()
+~CompactClassWithDestructor
 new SimpleGTypeInstanceClass ()
 new DerivedGTypeInstanceClass ()
 new PublicGTypeInstanceClass ()
@@ -20,6 +20,6 @@ new DerivedGObjectClass ()
 new PublicGObjectClass ()
 new GObjectClassWithCreationMethod ()
 new GObjectClassWithNamedCreationMethod ()
-new SimpleClass () { field = 1 }
-simple_class.field = 1
+new CompactClass () { field = 1 }
+compact_class.field = 1
 .

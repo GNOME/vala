@@ -1,5 +1,27 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* vala/valainterfacewriter.vala:
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodememberaccessbinding.vala:
+	* gobject/valaccodemethodbinding.vala:
+	* gobject/valatyperegisterfunction.vala:
+
+	Add support for [Compact] class attribute, register non-compact
+	classes with GType, fixes bug 532518
+
+	* gee/hashmap.vala:
+	* gee/hashset.vala:
+	* gobject-introspection/gidl.vapi:
+	* tests/classes.exp:
+	* tests/classes.vala:
+	* vapi/glib-2.0.vapi:
+
+	Update to use compact classes where appropriate
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 	* vala/valascanner.vala:
 	* vala/valasymbolresolver.vala:

@@ -46,9 +46,9 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 		codegen.current_type_symbol = cl;
 		codegen.current_class = cl;
 		
-		bool is_gtypeinstance = cl.is_subtype_of (codegen.gtypeinstance_type);
+		bool is_gtypeinstance = !cl.is_compact;
 		bool is_gobject = cl.is_subtype_of (codegen.gobject_type);
-		bool is_fundamental = (cl.base_class == codegen.gtypeinstance_type);
+		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
 
 		if (cl.get_cname().len () < 3) {
 			cl.error = true;
@@ -106,9 +106,9 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 
 		if (cl.base_class != null) {
 			codegen.instance_struct.add_field (cl.base_class.get_cname (), "parent_instance");
-			if (is_fundamental) {
-				codegen.instance_struct.add_field ("volatile int", "ref_count");
-			}
+		} else if (is_fundamental) {
+			codegen.instance_struct.add_field ("GTypeInstance", "parent_instance");
+			codegen.instance_struct.add_field ("volatile int", "ref_count");
 		}
 
 		if (is_gtypeinstance) {

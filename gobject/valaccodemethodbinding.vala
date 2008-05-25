@@ -60,9 +60,9 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 		if (m is CreationMethod) {
 			codegen.in_creation_method = true;
 			var cl = codegen.current_type_symbol as Class;
-			if (cl != null && cl.is_subtype_of (codegen.gtypeinstance_type)) {
+			if (cl != null && !cl.is_compact) {
 				in_gtypeinstance_creation_method = true;
-				if (cl.base_class == codegen.gtypeinstance_type) {
+				if (cl.base_class == null) {
 					in_fundamental_creation_method = true;
 				} else if (cl.is_subtype_of (codegen.gobject_type)) {
 					in_gobject_creation_method = true;
@@ -785,7 +785,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 
 	private Class find_fundamental_class (Class cl) {
 		var fundamental_class = cl;
-		while (fundamental_class != null && fundamental_class.base_class != codegen.gtypeinstance_type) {
+		while (fundamental_class != null && fundamental_class.base_class != null) {
 			fundamental_class = fundamental_class.base_class;
 		}
 		return fundamental_class;

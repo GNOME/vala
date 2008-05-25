@@ -45,6 +45,23 @@ public class Vala.Class : Typesymbol {
 	public bool is_static { get; set; }
 
 	/**
+	 * Instances of compact classes are fast to create and have a
+	 * compact memory layout. Compact classes don't support runtime
+	 * type information or virtual methods.
+	 */
+	public bool is_compact {
+		get {
+			if (base_class != null) {
+				return base_class.is_compact;
+			}
+			return _is_compact;
+		}
+		set {
+			_is_compact = value;
+		}
+	}
+
+	/**
 	 * Specifies whether this class has private fields.
 	 */
 	public bool has_private_fields { get; private set; }
@@ -53,7 +70,6 @@ public class Vala.Class : Typesymbol {
 	private string const_cname;
 	private string lower_case_cprefix;
 	private string lower_case_csuffix;
-	private bool has_type_id;
 	private string type_id;
 	private string ref_function;
 	private string unref_function;
@@ -63,6 +79,7 @@ public class Vala.Class : Typesymbol {
 	private string get_value_function;
 	private string set_value_function;
 	private string? type_signature;
+	private bool _is_compact;
 
 	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
@@ -498,9 +515,6 @@ public class Vala.Class : Typesymbol {
 		if (a.has_argument ("free_function")) {
 			set_free_function (a.get_string ("free_function"));
 		}
-		if (a.has_argument ("has_type_id")) {
-			has_type_id = a.get_bool ("has_type_id");
-		}
 		if (a.has_argument ("type_id")) {
 			type_id = a.get_string ("type_id");
 		}
@@ -546,17 +560,15 @@ public class Vala.Class : Typesymbol {
 				process_ccode_attribute (a);
 			} else if (a.name == "ErrorBase") {
 				is_error_base = true;
+			} else if (a.name == "Compact") {
+				is_compact = true;
 			}
 		}
 	}
 
-	private bool get_has_type_id () {
-		return has_type_id || (base_class != null && base_class.get_has_type_id ());
-	}
-
 	public override string? get_type_id () {
 		if (type_id == null) {
-			if (get_has_type_id ()) {
+			if (!is_compact) {
 				type_id = get_upper_case_cname ("TYPE_");
 			} else {
 				type_id = "G_TYPE_POINTER";
@@ -611,9 +623,7 @@ public class Vala.Class : Typesymbol {
 	}
 
 	bool is_fundamental () {
-		if (base_class != null
-		    && base_class.name == "TypeInstance"
-		    && base_class.parent_symbol.name == "GLib") {
+		if (!is_compact && base_class == null) {
 			return true;
 		}
 		return false;

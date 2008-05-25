@@ -92,7 +92,13 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (!check_accessibility (cl)) {
 			return;
 		}
-		
+
+		if (cl.is_compact) {
+			write_indent ();
+			write_string ("[Compact]");
+			write_newline ();
+		}
+
 		write_indent ();
 		
 		write_string ("[CCode (");

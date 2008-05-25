@@ -86,7 +86,8 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 				var instance_target_type = codegen.get_data_type_for_symbol ((Typesymbol) f.parent_symbol);
 				CCodeExpression typed_inst = codegen.get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 
-				bool is_gtypeinstance = (instance_target_type.data_type.is_subtype_of (codegen.gtypeinstance_type));
+				var cl = instance_target_type.data_type as Class;
+				bool is_gtypeinstance = (cl == null || !cl.is_compact);
 
 				CCodeExpression inst;
 				if (is_gtypeinstance && f.access == SymbolAccessibility.PRIVATE) {
