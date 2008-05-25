@@ -1,5 +1,12 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/: improve GstValue binding,
+	patch by Jaap A. Haitsma, fixes bug 533805
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraytype.vala:
 	* vala/valapointertype.vala:
 	* vala/valasemanticanalyzer.vala:
