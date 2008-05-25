@@ -1,5 +1,9 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaerrortype.vala: fix qualified error type string
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraytype.vala:
 	* vala/valadatatype.vala:
 	* vala/valadelegatetype.vala:

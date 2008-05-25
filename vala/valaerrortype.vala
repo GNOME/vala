@@ -60,7 +60,7 @@ public class Vala.ErrorType : ReferenceType {
 		return et.error_domain == error_domain;
 	}
 
-	public override string to_string () {
+	public override string to_qualified_string (Scope? scope) {
 		if (error_domain == null) {
 			return "GLib.Error";
 		} else {
