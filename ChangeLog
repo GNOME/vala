@@ -1,5 +1,9 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala: fix warning with pointer casts
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamemberaccess.vala:
 	* vala/valaparser.vala:
 	* vala/valasemanticanalyzer.vala:
