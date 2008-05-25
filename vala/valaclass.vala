@@ -62,6 +62,21 @@ public class Vala.Class : Typesymbol {
 	}
 
 	/**
+	 * Instances of immutable classes are immutable after construction.
+	 */
+	public bool is_immutable {
+		get {
+			if (base_class != null) {
+				return base_class.is_immutable;
+			}
+			return _is_immutable;
+		}
+		set {
+			_is_immutable = value;
+		}
+	}
+
+	/**
 	 * Specifies whether this class has private fields.
 	 */
 	public bool has_private_fields { get; private set; }
@@ -80,6 +95,7 @@ public class Vala.Class : Typesymbol {
 	private string set_value_function;
 	private string? type_signature;
 	private bool _is_compact;
+	private bool _is_immutable;
 
 	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
@@ -562,6 +578,8 @@ public class Vala.Class : Typesymbol {
 				is_error_base = true;
 			} else if (a.name == "Compact") {
 				is_compact = true;
+			} else if (a.name == "Immutable") {
+				is_immutable = true;
 			}
 		}
 	}

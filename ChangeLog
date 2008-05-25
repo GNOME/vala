@@ -1,5 +1,14 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* gobject/valaccodegenerator.vala:
+	* vapi/glib-2.0.vapi:
+
+	Add support for [Immutable] class attribute, allow duplication of
+	immutable instances
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala: fix warning with pointer casts
 
 2008-05-25  Jürg Billeter  <j@bitron.ch>
