@@ -1,3 +1,8 @@
+2008-05-25  Jaap A. Haitsma  <jaap@haitsma.org>
+
+	* vapi/hal.vapi: use [Compact] attribute for Hal.Context class.
+	Fixes bug #534809
+
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gstreamer-0.10/: improve GstValue binding,

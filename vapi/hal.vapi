@@ -26,6 +26,7 @@ namespace Hal {
 	public static delegate void DeviceRemoved (Context ctx, string udi);
 
 	[CCode (free_function = "libhal_ctx_free", cprefix = "libhal_ctx_")]
+	[Compact]
 	public class Context {
 		public Context ();
 		public bool init (ref DBus.RawError error);
