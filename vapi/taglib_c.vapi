@@ -66,7 +66,7 @@ namespace TagLib
 		public int channels ();
 	}
 
-	public static class TagLib
+	namespace TagLib
 	{
 		/* By default all strings coming into or out of TagLib's C API are in UTF8.
 		 * However, it may be desirable for TagLib to operate on Latin1 (ISO-8859-1)

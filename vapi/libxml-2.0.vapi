@@ -160,7 +160,7 @@ namespace Xml {
 	/* parser - the core parser module */
 
 	[CCode (cheader_filename = "libxml/parser.h")]
-	public static class Parser {
+	namespace Parser {
 		[CCode (cname = "xmlCleanupParser")]
 		public static void cleanup ();
 
@@ -214,7 +214,7 @@ namespace Xml {
 	/* tree - interfaces for tree manipulation */
 
 	[CCode (cheader_filename = "libxml/tree.h")]
-	public static class Tree {
+	namespace Tree {
 		[CCode (cname = "xmlGetCompressMode")]
 		public static int get_compress_mode ();
 
@@ -1032,7 +1032,7 @@ namespace Xml {
 	/* xpath - XML Path Language implementation */
 
 	[CCode (cheader_filename = "libxml/xpath.h")]
-	public static class XPath {
+	namespace XPath {
 		[CCode (cname = "xmlXPathOrderDocElems")]
 		public static long order_doc_elements (Doc* doc);
 	}

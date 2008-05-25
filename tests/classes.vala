@@ -24,9 +24,6 @@ abstract class AbstractClass {
 	public int field;
 }
 
-static class StaticClass {
-}
-
 class ClassWithCreationMethod {
 	public ClassWithCreationMethod () {
 		stdout.printf ("ClassWithCreationMethod\n");
@@ -86,53 +83,49 @@ class GObjectClassWithNamedCreationMethod : Object {
 	}
 }
 
-static class ClassesTest {
-	static int main (string[] args) {
-		stdout.printf ("Classes Test:\n");
+void main () {
+	stdout.printf ("Classes Test:\n");
 
-		stdout.printf ("new SimpleClass ()\n");
-		var simple_class = new SimpleClass ();
-		stdout.printf ("new DerivedClass ()\n");
-		var derived_class = new DerivedClass ();
-		stdout.printf ("new PublicClass ()\n");
-		var public_class = new PublicClass ();
-		stdout.printf ("new ClassWithCreationMethod ()\n");
-		var class_with_creation_method = new ClassWithCreationMethod ();
-		stdout.printf ("new ClassWithNamedCreationMethod ()\n");
-		var class_with_named_creation_method = new ClassWithNamedCreationMethod.named ();
-		stdout.printf ("new ClassWithDestructor ()\n");
-		var class_with_destructor = new ClassWithDestructor ();
-		class_with_destructor = null;
+	stdout.printf ("new SimpleClass ()\n");
+	var simple_class = new SimpleClass ();
+	stdout.printf ("new DerivedClass ()\n");
+	var derived_class = new DerivedClass ();
+	stdout.printf ("new PublicClass ()\n");
+	var public_class = new PublicClass ();
+	stdout.printf ("new ClassWithCreationMethod ()\n");
+	var class_with_creation_method = new ClassWithCreationMethod ();
+	stdout.printf ("new ClassWithNamedCreationMethod ()\n");
+	var class_with_named_creation_method = new ClassWithNamedCreationMethod.named ();
+	stdout.printf ("new ClassWithDestructor ()\n");
+	var class_with_destructor = new ClassWithDestructor ();
+	class_with_destructor = null;
 
-		stdout.printf ("new SimpleGTypeInstanceClass ()\n");
-		var simple_gtypeinstance_class = new SimpleGTypeInstanceClass ();
-		stdout.printf ("new DerivedGTypeInstanceClass ()\n");
-		var derived_gtypeinstance_class = new DerivedGTypeInstanceClass ();
-		stdout.printf ("new PublicGTypeInstanceClass ()\n");
-		var public_gtypeinstance_class = new PublicGTypeInstanceClass ();
-		stdout.printf ("new GTypeInstanceClassWithCreationMethod ()\n");
-		var gtypeinstance_class_with_creation_method = new GTypeInstanceClassWithCreationMethod ();
-		stdout.printf ("new GTypeInstanceClassWithNamedCreationMethod ()\n");
-		var gtypeinstance_class_with_named_creation_method = new GTypeInstanceClassWithNamedCreationMethod.named ();
+	stdout.printf ("new SimpleGTypeInstanceClass ()\n");
+	var simple_gtypeinstance_class = new SimpleGTypeInstanceClass ();
+	stdout.printf ("new DerivedGTypeInstanceClass ()\n");
+	var derived_gtypeinstance_class = new DerivedGTypeInstanceClass ();
+	stdout.printf ("new PublicGTypeInstanceClass ()\n");
+	var public_gtypeinstance_class = new PublicGTypeInstanceClass ();
+	stdout.printf ("new GTypeInstanceClassWithCreationMethod ()\n");
+	var gtypeinstance_class_with_creation_method = new GTypeInstanceClassWithCreationMethod ();
+	stdout.printf ("new GTypeInstanceClassWithNamedCreationMethod ()\n");
+	var gtypeinstance_class_with_named_creation_method = new GTypeInstanceClassWithNamedCreationMethod.named ();
 
-		stdout.printf ("new SimpleGObjectClass ()\n");
-		var simple_gobject_class = new SimpleGObjectClass ();
-		stdout.printf ("new DerivedGObjectClass ()\n");
-		var derived_gobject_class = new DerivedGObjectClass ();
-		stdout.printf ("new PublicGObjectClass ()\n");
-		var public_gobject_class = new PublicGObjectClass ();
-		stdout.printf ("new GObjectClassWithCreationMethod ()\n");
-		var gobject_class_with_creation_method = new GObjectClassWithCreationMethod ();
-		stdout.printf ("new GObjectClassWithNamedCreationMethod ()\n");
-		var gobject_class_with_named_creation_method = new GObjectClassWithNamedCreationMethod.named ();
+	stdout.printf ("new SimpleGObjectClass ()\n");
+	var simple_gobject_class = new SimpleGObjectClass ();
+	stdout.printf ("new DerivedGObjectClass ()\n");
+	var derived_gobject_class = new DerivedGObjectClass ();
+	stdout.printf ("new PublicGObjectClass ()\n");
+	var public_gobject_class = new PublicGObjectClass ();
+	stdout.printf ("new GObjectClassWithCreationMethod ()\n");
+	var gobject_class_with_creation_method = new GObjectClassWithCreationMethod ();
+	stdout.printf ("new GObjectClassWithNamedCreationMethod ()\n");
+	var gobject_class_with_named_creation_method = new GObjectClassWithNamedCreationMethod.named ();
 
-		stdout.printf ("new SimpleClass () { field = 1 }\n");
-		simple_class = new SimpleClass () { field = 1 };
-		stdout.printf ("simple_class.field = %d\n", simple_class.field);
+	stdout.printf ("new SimpleClass () { field = 1 }\n");
+	simple_class = new SimpleClass () { field = 1 };
+	stdout.printf ("simple_class.field = %d\n", simple_class.field);
 
-		stdout.printf (".\n");
-
-		return 0;
-	}
+	stdout.printf (".\n");
 }
 

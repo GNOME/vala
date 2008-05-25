@@ -926,8 +926,8 @@ namespace GLib {
 	public struct ValueArray {
 	}
 
-	[CCode (cprefix = "", cheader_filename = "math.h")]
-	public static class Math {
+	[CCode (lower_case_cprefix = "", cheader_filename = "math.h")]
+	namespace Math {
 		[CCode (cname = "G_E")]
 		public static double E;
 		
@@ -1087,7 +1087,7 @@ namespace GLib {
 
 	/* Atomic Operations */
 
-	public static class AtomicInt {
+	namespace AtomicInt {
 		public static int get (ref int atomic);
 		public static void set (ref int atomic, int newval);
 		public static void add (ref int atomic, int val);
@@ -1097,7 +1097,7 @@ namespace GLib {
 		public static bool dec_and_test (ref int atomic);
 	}
 
-	public static class AtomicPointer {
+	namespace AtomicPointer {
 		public static void* get (void** atomic);
 		public static void set (void** atomic, void* newval);
 		public static bool compare_and_exchange (void** atomic, void* oldval, void* newval);
@@ -1156,7 +1156,7 @@ namespace GLib {
 		public TimeoutSource (uint interval);
 	}
 
-	public static class Timeout {
+	namespace Timeout {
 		public static uint add (uint interval, SourceFunc function);
 		public static uint add_full (int priority, uint interval, SourceFunc function, DestroyNotify? notify);
 		public static uint add_seconds (uint interval, SourceFunc function);
@@ -1168,7 +1168,7 @@ namespace GLib {
 		public IdleSource ();
 	}
 
-	public static class Idle {
+	namespace Idle {
 		public static uint add (SourceFunc function);
 		public static uint add_full (int priority, SourceFunc function, DestroyNotify? notify);
 		public static bool remove_by_data (void* data);
@@ -1185,7 +1185,7 @@ namespace GLib {
 		public ChildWatchSource (Pid pid, int status, void* data);
 	}
 	
-	public static class ChildWatch {
+	namespace ChildWatch {
 		public static uint add (Pid pid, ChildWatchFunc function);
 		public static uint add_full (int priority, Pid pid, ChildWatchFunc function, DestroyNotify? notify);
 	}
@@ -1362,7 +1362,7 @@ namespace GLib {
 	public static void free (void* mem);
 
 	[CCode (cheader_filename = "string.h")]
-	public static class Memory {
+	namespace Memory {
 		[CCode (cname = "memcmp")]
 		public static int cmp (void* s1, void* s2, size_t n);
 		[CCode (cname = "memcpy")]
@@ -1562,7 +1562,7 @@ namespace GLib {
 		public int close ();
 	}
 
-	public static class Filename {
+	namespace Filename {
 		public static string to_utf8 (string opsysstring, out ulong bytes_read, out ulong bytes_written) throws ConvertError;
 		public static string from_utf8 (string utf8string, long len, out ulong bytes_read, out ulong bytes_written) throws ConvertError;
 		public static string from_uri (string uri, out string hostname = null) throws ConvertError;
@@ -1582,7 +1582,7 @@ namespace GLib {
 
 	/* Base64 Encoding */
 	
-	public static class Base64 {
+	namespace Base64 {
 		public static size_t encode_step (uchar[] _in, bool break_lines, char* _out, ref int state, ref int save);
 		public static size_t encode_close (bool break_lines, char* _out, ref int state, ref int save);
 		public static string encode (uchar[] data);
@@ -1788,7 +1788,7 @@ namespace GLib {
 		public double double_range (double begin, double end);
 	}
 	
-	public static class Random {
+	namespace Random {
 		public static void set_seed (uint32 seed);
 		public static bool boolean ();
 		[CCode (cname = "g_random_int")]
@@ -1801,7 +1801,7 @@ namespace GLib {
 	
 	/* Miscellaneous Utility Functions */
 	
-	public static class Environment {
+	namespace Environment {
 		[CCode (cname = "g_get_application_name")]
 		public static weak string? get_application_name ();
 		[CCode (cname = "g_set_application_name")]
@@ -1854,7 +1854,7 @@ namespace GLib {
 		VIDEOS
 	}
 
-	public static class Path {
+	namespace Path {
 		public static bool is_absolute (string file_name);
 		public static weak string skip_root (string file_name);
 		public static string get_basename (string file_name);
@@ -1870,13 +1870,13 @@ namespace GLib {
 		public static bool is_dir_separator (unichar c);
 	}
 
-	public static class Bit {
+	namespace Bit {
 		public static int nth_lsf (ulong mask, int nth_bit);
 		public static int nth_msf (ulong mask, int nth_bit);
 		public static uint storage (ulong number);
 	}
 
-	public static class SpacedPrimes {
+	namespace SpacedPrimes {
 		public static uint closest (uint num);
 	}
 
@@ -1939,7 +1939,7 @@ namespace GLib {
 		public uint store_int64;
 	}
 
-	public static class CharacterSet {
+	namespace CharacterSet {
 		[CCode (cname = "G_CSET_A_2_Z")]
 		public const string A_2_Z;
 		[CCode (cname = "G_CSET_a_2_z")]
@@ -2060,8 +2060,8 @@ namespace GLib {
 
 	public delegate void SpawnChildSetupFunc ();
 
-	[CCode (cprefix = "g_")]
-	public static class Process {
+	[CCode (lower_case_cprefix = "g_")]
+	namespace Process {
 		[NoArrayLength ()]
 		public static bool spawn_async_with_pipes (string? working_directory, string[] argv, string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
 		[NoArrayLength ()]
@@ -2180,8 +2180,8 @@ namespace GLib {
 		public int flush ();
 	}
 
-	[CCode (cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]
-	public static class FileUtils {
+	[CCode (lower_case_cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]
+	namespace FileUtils {
 		public static bool get_contents (string filename, out string contents, out ulong length = null) throws FileError;
 		public static bool set_contents (string filename, string contents, long length = -1) throws FileError;
 		public static bool test (string filename, FileTest test);
@@ -2212,7 +2212,7 @@ namespace GLib {
 		public void rewind ();
 	}
 	
-	public static class DirUtils {
+	namespace DirUtils {
 		[CCode (cname = "g_mkdir")]
 		public static int create (string pathname, int mode);
 		[CCode (cname = "g_mkdir_with_parents")]
@@ -2240,7 +2240,7 @@ namespace GLib {
 
 	/* URI Functions */
 
-	public static class Uri {
+	namespace Uri {
 		public const string RESERVED_CHARS_ALLOWED_IN_PATH;
 		public const string RESERVED_CHARS_ALLOWED_IN_PATH_ELEMENT;
 		public const string RESERVED_CHARS_ALLOWED_IN_USERINFO;
@@ -2261,7 +2261,7 @@ namespace GLib {
 		FAILED
 	}
 
-	public static class Shell {
+	namespace Shell {
 		public static bool parse_argv (string command_line, [CCode (array_length_pos = 1.9)] out string[] argvp) throws ShellError;
 		public static string quote (string unquoted_string);
 		public static string unquote (string quoted_string) throws ShellError;
@@ -2476,7 +2476,7 @@ namespace GLib {
 		public MarkupParserErrorFunc error;
 	}
 
-	public static class Markup {
+	namespace Markup {
 		public static string escape_text (string text, long length = -1);
 		[PrintfFormat]
 		public static string printf_escaped (string format, ...);
@@ -2606,7 +2606,7 @@ namespace GLib {
 
 	/* Testing */
 
-	public static class Test {
+	namespace Test {
 		[PrintfFormat]
 		public static void minimized_result (double minimized_quantity, string format, ...);
 		[PrintfFormat]
@@ -3044,7 +3044,7 @@ namespace GLib {
 		TIME
 	}
 	
-	public static class Intl {
+	namespace Intl {
 		[CCode (cname = "setlocale", cheader_filename = "locale.h")]
 		public static weak string setlocale (LocaleCategory category, string locale);
 		[CCode (cname = "bindtextdomain", cheader_filename = "glib/gi18n-lib.h")]
@@ -3053,7 +3053,7 @@ namespace GLib {
 		public static weak string textdomain (string domainname);
 	}
 
-	public static class Signal {
+	namespace Signal {
 		public static void query (uint signal_id, out SignalQuery query);
 		public static uint lookup (string name, Type itype);
 		public static weak string name (uint signal_id);
@@ -3078,7 +3078,7 @@ namespace GLib {
 		public static bool parse_name (string detailed_signal, Type itype, out uint signal_id, out Quark detail, bool force_detail_quark);
 	}
 
-	public static class SignalHandler {
+	namespace SignalHandler {
 		public static void block (void* instance, ulong handler_id);
 		public static void unblock (void* instance, ulong handler_id);
 		public static void disconnect (void* instance, ulong handler_id);

@@ -23,8 +23,8 @@
 [CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "glib.h")]
 namespace GLib {
 	[CCode (cheader_filename = "gidlparser.h")]
-	public static class Idl {
-		public static List<IdlModule> parse_file (string filename) throws MarkupError;
+	namespace Idl {
+		public List<IdlModule> parse_file (string filename) throws MarkupError;
 	}
 	
 	[CCode (free_function = "g_idl_module_free", cheader_filename = "gidlmodule.h")]

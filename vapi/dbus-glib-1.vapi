@@ -29,7 +29,7 @@ namespace DBus {
 		STARTER
 	}
 
-	public static class RawBus {
+	namespace RawBus {
 		[CCode (cname = "dbus_bus_get")]
 		public static RawConnection get (BusType type, ref RawError error);
 	}

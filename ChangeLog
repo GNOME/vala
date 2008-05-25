@@ -1,5 +1,25 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala:
+
+	Deprecate static classes, patch by Jared Moore, fixes bug 524509
+
+	* vala/valareport.vala:
+	* tests/classes.vala:
+	* tests/structs.vala:
+	* gobject-introspection/gidl.vapi:
+	* vapi/dbus-glib-1.vapi:
+	* vapi/glib-2.0.vapi:
+	* vapi/libxml-2.0.vapi:
+	* vapi/taglib_c.vapi:
+	* vapi/packages/gstreamer-video-0.10/:
+
+	Replace static classes by namespaces
+
+	* vapi/gstreamer-video-0.10.vapi: regenerated
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeclassbinding.vala:
 
 	Support destructors for non-GObject classes,

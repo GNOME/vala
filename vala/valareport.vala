@@ -23,39 +23,39 @@
 using GLib;
 
 /**
- * Static class to centralize reporting warnings and errors.
+ * Namespace to centralize reporting warnings and errors.
  */
-public static class Vala.Report {
-	private static int warnings;
-	private static int errors;
+namespace Vala.Report {
+	public int warnings;
+	public int errors;
 
-	private static bool verbose_errors;
+	public bool verbose_errors;
 	
 	/**
 	 * Set the error verbosity.
 	 */
-	public static void set_verbose_errors (bool verbose) {
+	public void set_verbose_errors (bool verbose) {
 		verbose_errors = verbose;
 	}
 
 	/**
 	 * Returns the total number of warnings reported.
 	 */
-	public static int get_warnings () {
+	public int get_warnings () {
 		return warnings;
 	}
 	
 	/**
 	 * Returns the total number of errors reported.
 	 */
-	public static int get_errors () {
+	public int get_errors () {
 		return errors;
 	}
 
 	/**
 	 * Pretty-print the actual line of offending code if possible.
 	 */
-	private static void report_source (SourceReference source) {
+	public void report_source (SourceReference source) {
 		if (source.first_line != source.last_line) {
 			// FIXME Cannot report multi-line issues currently
 			return;
@@ -96,7 +96,7 @@ public static class Vala.Report {
 	 * @param source  reference to source code
 	 * @param message warning message
 	 */
-	public static void warning (SourceReference? source, string message) {
+	public void warning (SourceReference? source, string message) {
 		warnings++;
 		if (source == null) {
 			stderr.printf ("warning: %s\n", message);
@@ -114,7 +114,7 @@ public static class Vala.Report {
 	 * @param source  reference to source code
 	 * @param message error message
 	 */
-	public static void error (SourceReference? source, string message) {
+	public void error (SourceReference? source, string message) {
 		errors++;
 		if (source == null) {
 			stderr.printf ("error: %s\n", message);

@@ -22,7 +22,7 @@
 
 namespace Gst {
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static class VideoMask32 {
+	namespace VideoMask32 {
 		[CCode (cname = "GST_VIDEO_BYTE1_MASK_32")]
 		public const string BYTE1;
 		[CCode (cname = "GST_VIDEO_BYTE2_MASK_32")]
@@ -42,7 +42,7 @@ namespace Gst {
 		public const int BYTE4_INT;
 	}
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static class VideoMask24 {
+	namespace VideoMask24 {
 		[CCode (cname = "GST_VIDEO_BYTE1_MASK_24")]
 		public const string BYTE1;
 		[CCode (cname = "GST_VIDEO_BYTE2_MASK_24")]
@@ -59,7 +59,7 @@ namespace Gst {
 	}
 
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static class VideoMask16 {
+	namespace VideoMask16 {
 		[CCode (cname = "GST_VIDEO_RED_MASK_16")]
 		public const string RED;
 		[CCode (cname = "GST_VIDEO_GREEN_MASK_16")]
@@ -76,7 +76,7 @@ namespace Gst {
 	}
 
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static class VideoMask15 {
+	namespace VideoMask15 {
 		[CCode (cname = "GST_VIDEO_RED_MASK_15")]
 		public const string RED;
 		[CCode (cname = "GST_VIDEO_GREEN_MASK_15")]
@@ -93,7 +93,7 @@ namespace Gst {
 	}
 
 	[CCode (cheader_filename = "gst/video/video.h")]
-	public static class VideoRange {
+	namespace VideoRange {
 		[CCode (cname = "GST_VIDEO_SIZE_RANGE")]
 		public const string SIZE;
 		[CCode (cname = "GST_VIDEO_FPS_RANGE")]
@@ -101,7 +101,7 @@ namespace Gst {
 	}
 
 	[CCode (cprefix = "GST_VIDEO_CAPS_", cheader_filename = "gst/video/video.h")]
-	public static class VideoCaps {
+	namespace VideoCaps {
 		public const string RGB;
 		public const string BGR;
 
@@ -122,6 +122,6 @@ namespace Gst {
 		public const string RGB_15;
 
 		[CCode (cname = "GST_VIDEO_CAPS_YUV")]
-		public static string YUV (string fourcc);
+		public string YUV (string fourcc);
 	}
 }
