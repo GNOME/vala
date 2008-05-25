@@ -103,6 +103,7 @@ namespace Tiff {
 		public string field_name;
 	}
 
+	[Compact]
 	private class PutUnion {
 		public delegate void any (RGBAImage p1);
 		TileContigRoutine contig;
@@ -111,7 +112,6 @@ namespace Tiff {
 
 	[CCode (cname = "TIFFRGBAImage")]
 	public struct RGBAImage {
-		/* Not sure whether third parameter is out or ref */
 		public int get;
 		public TIFF tif;
 		public int stoponerr;
@@ -167,10 +167,12 @@ namespace Tiff {
 	public struct RGBValue : uchar { }
 
 	[CCode (cname = "void")]
+	[Compact]
 	public class tdata_t { }
 	[CCode (cname = "uint16")]
 	public struct tdir_t : uint16 { }
 	[CCode (cname = "void")]
+	[Compact]
 	public class thandle_t { }
 	[CCode (cname = "uint32")]
 	public struct toff_t : uint32 { }
@@ -593,15 +595,16 @@ namespace Tiff {
 	public const int YCBCRPOSITION_COSITED;
 
 	[CCode (cname = "TIFF", free_function = "TIFFClose")]
+	[Compact]
 	public class TIFF {
 		[CCode (cname = "TIFFOpen")]
 		public TIFF (string path, string mode);
 		[CCode (cname = "TIFFAccessTagMethods")]
 		public TagMethods AccessTagMethods ();
 		[CCode (cname = "TIFFCheckTile")]
-		public int CheckTile (uint32 p1, uint32 p2, uint32 p3, tsample_t p4);
+		public bool CheckTile (uint32 p1, uint32 p2, uint32 p3, tsample_t p4);
 		[CCode (cname = "TIFFCheckpointDirectory")]
-		public int CheckpointDirectory ();
+		public bool CheckpointDirectory ();
 		[CCode (cname = "TIFFCleanup")]
 		public void Cleanup ();
 		[CCode (cname = "TIFFClientdata")]
@@ -613,35 +616,35 @@ namespace Tiff {
 		[CCode (cname = "TIFFCreateDirectory")]
 		public int CreateDirectory ();
 		[CCode (cname = "TIFFCurrentDirOffset")]
-		public uint CurrentDirOffset ();
+		public uint32 CurrentDirOffset ();
 		[CCode (cname = "TIFFCurrentDirectory")]
 		public tdir_t CurrentDirectory ();
 		[CCode (cname = "TIFFCurrentRow")]
-		public uint CurrentRow ();
+		public uint32 CurrentRow ();
 		[CCode (cname = "TIFFCurrentStrip")]
 		public tstrip_t CurrentStrip ();
 		[CCode (cname = "TIFFCurrentTile")]
 		public ttile_t CurrentTile ();
 		[CCode (cname = "TIFFDefaultStripSize")]
-		public uint DefaultStripSize (uint32 p1);
+		public uint32 DefaultStripSize (uint32 p1);
 		[CCode (cname = "TIFFDefaultTileSize")]
 		public void DefaultTileSize (out uint32 p1, out uint32 p2);
 		[CCode (cname = "TIFFFieldWithName")]
-		public FieldInfo FieldWithName (string p1);
+		public weak FieldInfo FieldWithName (string p1);
 		[CCode (cname = "TIFFFieldWithTag")]
-		public FieldInfo FieldWithTag (ttag_t p1);
+		public weak FieldInfo FieldWithTag (ttag_t p1);
 		[CCode (cname = "TIFFFileName")]
-		public string FileName ();
+		public weak string FileName ();
 		[CCode (cname = "TIFFFileno")]
 		public int Fileno ();
 		[CCode (cname = "TIFFFindFieldInfo")]
-		public FieldInfo FindFieldInfo (ttag_t p1, DataType p2);
+		public weak FieldInfo FindFieldInfo (ttag_t p1, DataType p2);
 		[CCode (cname = "TIFFFindFieldInfoByName")]
-		public FieldInfo FindFieldInfoByName (string p1, DataType p2);
+		public weak FieldInfo FindFieldInfoByName (string p1, DataType p2);
 		[CCode (cname = "TIFFFlush")]
-		public int Flush ();
+		public bool Flush ();
 		[CCode (cname = "TIFFFlushData")]
-		public int FlushData ();
+		public bool FlushData ();
 		[CCode (cname = "TIFFFreeDirectory")]
 		public void FreeDirectory ();
 		[CCode (cname = "TIFFGetClientInfo")]
@@ -671,17 +674,17 @@ namespace Tiff {
 		[CCode (cname = "TIFFGetWriteProc")]
 		public ReadWriteProc GetWriteProc ();
 		[CCode (cname = "TIFFIsBigEndian")]
-		public int IsBigEndian ();
+		public bool IsBigEndian ();
 		[CCode (cname = "TIFFIsByteSwapped")]
-		public int IsByteSwapped ();
+		public bool IsByteSwapped ();
 		[CCode (cname = "TIFFIsMSB2LSB")]
-		public int IsMSB2LSB ();
+		public bool IsMSB2LSB ();
 		[CCode (cname = "TIFFIsTiled")]
-		public int IsTiled ();
+		public bool IsTiled ();
 		[CCode (cname = "TIFFIsUpSampled")]
-		public int IsUpSampled ();
+		public bool IsUpSampled ();
 		[CCode (cname = "TIFFLastDirectory")]
-		public int LastDirectory ();
+		public bool LastDirectory ();
 		[CCode (cname = "TIFFMergeFieldInfo")]
 		public void MergeFieldInfo (FieldInfo[] p1, int p2);
 		[CCode (cname = "TIFFNumberOfDirectories")]
@@ -693,33 +696,35 @@ namespace Tiff {
 		[CCode (cname = "TIFFPrintDirectory")]
 		public void PrintDirectory (GLib.FileStream p1, long p2);
 		[CCode (cname = "TIFFRGBAImageOK")]
-		public int RGBAImageOK (string[] p1);
+		public bool RGBAImageOK (string p1);
 		[CCode (cname = "TIFFRasterScanlineSize")]
 		public tsize_t RasterScanlineSize ();
 		[CCode (cname = "TIFFRawStripSize")]
 		public tsize_t RawStripSize (tstrip_t p1);
 		[CCode (cname = "TIFFReadBufferSetup")]
-		public int ReadBufferSetup (tdata_t p1, tsize_t p2);
+		public bool ReadBufferSetup (tdata_t p1, tsize_t p2);
 		[CCode (cname = "TIFFReadCustomDirectory")]
-		public int ReadCustomDirectory (toff_t p1, FieldInfo[] p2, size_t p3);
+		public bool ReadCustomDirectory (toff_t p1, FieldInfo[] p2, size_t p3);
 		[CCode (cname = "TIFFReadDirectory")]
-		public int ReadDirectory ();
+		public bool ReadDirectory ();
 		[CCode (cname = "TIFFReadEXIFDirectory")]
-		public int ReadEXIFDirectory (toff_t p1);
+		public bool ReadEXIFDirectory (toff_t p1);
 		[CCode (cname = "TIFFReadEncodedStrip")]
 		public tsize_t ReadEncodedStrip (tstrip_t p1, tdata_t p2, tsize_t p3);
 		[CCode (cname = "TIFFReadEncodedTile")]
 		public tsize_t ReadEncodedTile (ttile_t p1, tdata_t p2, tsize_t p3);
 		[NoArrayLength]
 		[CCode (cname = "TIFFReadRGBAImage")]
-		public int ReadRGBAImage (uint32 p1, uint32 p2, out uint32[] p3, int p4);
+		public bool ReadRGBAImage (uint32 p1, uint32 p2, out uint32[] p3, int p4);
 		[NoArrayLength]
 		[CCode (cname = "TIFFReadRGBAImageOriented")]
-		public int ReadRGBAImageOriented (uint32 p1, uint32 p2, out uint32[] p3, int p4, int p5);
+		public bool ReadRGBAImageOriented (uint32 p1, uint32 p2, out uint32[] p3, int p4, int p5);
+		[NoArrayLength]
 		[CCode (cname = "TIFFReadRGBAStrip")]
-		public int ReadRGBAStrip (tstrip_t p1, out uint32[] p2);
-		[CCode (cname = "TIFFReadRawTile")]
-		public int ReadRGBATile (uint32 p1, uint32 p2, out uint32[] p3);
+		public bool ReadRGBAStrip (tstrip_t p1, out uint32[] p2);
+		[NoArrayLength]
+		[CCode (cname = "TIFFReadRGBATile")]
+		public bool ReadRGBATile (uint32 p1, uint32 p2, out uint32[] p3);
 		[CCode (cname = "TIFFReadRawStrip")]
 		public tsize_t ReadRawStrip (tstrip_t p1, tdata_t p2, tsize_t p3);
 		[CCode (cname = "TIFFReadRawTile")]
@@ -739,9 +744,9 @@ namespace Tiff {
 		[CCode (cname = "TIFFSetDirectory")]
 		public int SetDirectory (tdir_t p1);
 		[CCode (cname = "TIFFSetField")]
-		public int SetField (ttag_t p1, ...);
+		public bool SetField (ttag_t p1, ...);
 		[CCode (cname = "TIFFSetFileName")]
-		public string SetFileName (string p1);
+		public weak string SetFileName (string p1);
 		[CCode (cname = "TIFFSetFileno")]
 		public int SetFileno (int p1);
 		[CCode (cname = "TIFFSetMode")]
@@ -751,7 +756,7 @@ namespace Tiff {
 		[CCode (cname = "TIFFSetWriteOffset")]
 		public void SetWriteOffset (toff_t p1);
 		[CCode (cname = "TIFFSetupStrips")]
-		public int SetupStrips ();
+		public bool SetupStrips ();
 		[CCode (cname = "TIFFStripSize")]
 		public tsize_t StripSize ();
 		[CCode (cname = "TIFFTileRowSize")]
@@ -759,7 +764,7 @@ namespace Tiff {
 		[CCode (cname = "TIFFTileSize")]
 		public tsize_t TileSize ();
 		[CCode (cname = "TIFFUnlinkDirectory")]
-		public int UnlinkDirectory (tdir_t p1);
+		public bool UnlinkDirectory (tdir_t p1);
 		/* *************************************************
 		[CCode (cname = "TIFFVGetField")]
 		public int VGetField (ttag_t p1, void* p2);
@@ -773,11 +778,11 @@ namespace Tiff {
 		[CCode (cname = "TIFFVTileSize")]
 		public tsize_t VTileSize (uint32 p1);
 		[CCode (cname = "TIFFWriteBufferSetup")]
-		public int WriteBufferSetup (tdata_t p1, tsize_t p2);
+		public bool WriteBufferSetup (tdata_t p1, tsize_t p2);
 		[CCode (cname = "TIFFWriteCheck")]
-		public int WriteCheck (int p1, string p2);
+		public bool WriteCheck (int p1, string p2);
 		[CCode (cname = "TIFFWriteDirectory")]
-		public int WriteDirectory ();
+		public bool WriteDirectory ();
 		[CCode (cname = "TIFFWriteEncodedStrip")]
 		public tsize_t WriteEncodedStrip (tstrip_t p1, tdata_t p2, tsize_t p3);
 		[CCode (cname = "TIFFWriteEncodedTile")]
@@ -790,6 +795,9 @@ namespace Tiff {
 		public int WriteScanline (tdata_t p1, uint32 p2, tsample_t p3);
 		[CCode (cname = "TIFFWriteTile")]
 		public tsize_t WriteTile (tdata_t p1, uint32 p2, uint32 p3, uint32 p4, tsample_t p5);
+	}
+
+	namespace TIFFUtils {
 		[CCode (cname = "TIFFGetR")]
 		public static int GetRed (int32 abgr);
 		[CCode (cname = "TIFFGetG")]
@@ -813,11 +821,11 @@ namespace Tiff {
 		[CCode (cname = "TIFFFdOpen")]
 		public static TIFF FdOpen (int p1, string p2, string p3);
 		[CCode (cname = "TIFFGetVersion")]
-		public static string GetVersion ();
+		public static weak string GetVersion ();
 		[CCode (cname = "TIFFFindCODEC")]
-		public static Codec FindCODEC (ushort p1);
+		public static weak Codec FindCODEC (ushort p1);
 		[CCode (cname = "TIFFGetBitRevTable")]
-		public static uint GetBitRevTable (int p1);
+		public static weak string GetBitRevTable (int p1);
 		[CCode (cname = "TIFFGetConfiguredCODECs")]
 		public static Codec GetConfiguredCODECs ();
 		[CCode (cname = "TIFFRGBAImageBegin")]
@@ -826,6 +834,7 @@ namespace Tiff {
 		public static int IsCODECConfigured (ushort p1);
 		[CCode (cname = "TIFFRGBAImageEnd")]
 		public static void RGBAImageEnd (RGBAImage p1);
+		[NoArrayLength]
 		[CCode (cname = "TIFFRGBAImageGet")]
 		public static int RGBAImageGet (RGBAImage p1, out uint32[] p2, uint32 p3, uint32 p4);
 		[CCode (cname = "TIFFReassignTagToIgnore")]
