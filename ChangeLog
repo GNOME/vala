@@ -1,5 +1,14 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarraytype.vala:
+	* vala/valapointertype.vala:
+	* vala/valasemanticanalyzer.vala:
+
+	Fix type resolving for arrays and pointers when declaring multiple
+	variables in a single statement
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix mktime binding
 
 2008-05-25  Jürg Billeter  <j@bitron.ch>

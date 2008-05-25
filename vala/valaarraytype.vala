@@ -123,7 +123,7 @@ public class Vala.ArrayType : ReferenceType {
 	}
 
 	public override DataType copy () {
-		var result = new ArrayType (element_type, rank, source_reference);
+		var result = new ArrayType (element_type.copy (), rank, source_reference);
 		result.value_owned = value_owned;
 		result.nullable = nullable;
 		result.floating_reference = floating_reference;

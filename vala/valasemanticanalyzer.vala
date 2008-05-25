@@ -1356,7 +1356,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		var calc_sizes = new ArrayList<Literal> ();
 		if (initlist != null) {
 			initlist.expected_type = new ArrayType (expr.element_type, expr.rank, expr.source_reference);
-			initlist.expected_type.add_type_argument (expr.element_type);
 
 			initlist.accept (this);
 

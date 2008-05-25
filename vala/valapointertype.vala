@@ -59,7 +59,7 @@ public class Vala.PointerType : DataType {
 	}
 
 	public override DataType copy () {
-		return new PointerType (base_type);
+		return new PointerType (base_type.copy ());
 	}
 
 	public override bool compatible (DataType target_type) {
