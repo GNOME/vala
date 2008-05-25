@@ -1,5 +1,9 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/sqlite3.vapi: use [Compact] attribute
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 
 	Report error when declaring virtual methods in compact classes,

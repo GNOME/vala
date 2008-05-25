@@ -23,6 +23,7 @@
 [CCode (lower_case_cprefix = "sqlite3_", cheader_filename = "sqlite3.h")]
 namespace Sqlite {
 	/* Database Connection Handle */
+	[Compact]
 	[CCode (free_function = "sqlite3_close", cname = "sqlite3", cprefix = "sqlite3_")]
 	public class Database {
 		public int busy_timeout (int ms);
@@ -45,6 +46,7 @@ namespace Sqlite {
 	}
 
 	/* Dynamically Typed Value Object */
+	[Compact]
 	[CCode (cname = "sqlite3_value")]
 	public class Value {
 		[CCode (cname = "sqlite3_value_blob")]
@@ -145,6 +147,7 @@ namespace Sqlite {
 	public const int TEXT;
 
 	/* SQL Statement Object */
+	[Compact]
 	[CCode (free_function = "sqlite3_finalize", cname = "sqlite3_stmt", cprefix = "sqlite3_")]
 	public class Statement {
 		public int bind_parameter_count ();
