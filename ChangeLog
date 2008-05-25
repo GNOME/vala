@@ -1,5 +1,9 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi: fix mktime binding
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraytype.vala:
 
 	Fix type string for multi-dimensional arrays

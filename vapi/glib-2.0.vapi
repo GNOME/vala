@@ -1780,6 +1780,8 @@ namespace GLib {
 
 		[CCode (cname = "asctime_r")]
 		public string to_string (char* buffer = new char[26]);
+
+		[CCode (cname = "mktime")]
 		public time_t mktime ();
 
 		[CCode (instance_pos = -1)]
