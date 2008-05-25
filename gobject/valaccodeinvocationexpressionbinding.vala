@@ -345,7 +345,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 			}
 		}
 
-		if (expr.can_fail) {
+		if (expr.tree_can_fail) {
 			// method can fail
 			codegen.current_method_inner_error = true;
 			// add &inner_error before the ellipsis arguments

@@ -68,11 +68,6 @@ public abstract class Vala.Expression : CodeNode {
 	public bool ref_sink { get; set; }
 
 	/**
-	 * Specifies that this expression may throw an exception.
-	 */
-	public bool can_fail { get; set; }
-
-	/**
 	 * Specifies that this expression is used as lvalue, i.e. the
 	 * left hand side of an assignment.
 	 */

@@ -87,7 +87,7 @@ public class Vala.Namespace : Symbol {
 			foreach (Enum en in ns.get_enums ()) {
 				old_ns.add_enum (en);
 			}
-			foreach (ErrorDomain ed in ns.get_error_domains ()) {
+			foreach (ErrorDomain ed in ns.get_error_types ()) {
 				old_ns.add_error_domain (ed);
 			}
 			foreach (Constant c in ns.get_constants ()) {
@@ -237,7 +237,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return error domain list
 	 */
-	public Collection<ErrorDomain> get_error_domains () {
+	public Collection<ErrorDomain> get_error_types () {
 		return new ReadOnlyCollection<ErrorDomain> (error_domains);
 	}
 	

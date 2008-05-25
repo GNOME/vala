@@ -21,6 +21,7 @@
  */
 
 using GLib;
+using Gee;
 
 /**
  * Represents a part of the parsed source code.
@@ -43,7 +44,7 @@ public abstract class Vala.CodeNode : Object {
 	/**
 	 * Contains all attributes that have been specified for this code node.
 	 */
-	public List<Attribute> attributes;
+	public GLib.List<Attribute> attributes;
 	
 	/**
 	 * Generated CCodeNode that corresponds to this code node.
@@ -71,7 +72,38 @@ public abstract class Vala.CodeNode : Object {
 	/**
 	 * Specifies that this node or a child node may throw an exception.
 	 */
-	public bool tree_can_fail { get; set; }
+	public bool tree_can_fail { 
+		get { return _error_types.size > 0; }
+	}
+
+	/**
+	 * Specifies the exceptions that can be thrown by this node or a child node
+	 */
+	public Gee.List<DataType> get_error_types () { 
+		return _error_types;
+	}
+
+	private Gee.List<DataType> _error_types = new ArrayList<DataType> ();
+
+	/**
+	 * Adds an error type to the exceptions that can be thrown by this node
+	 * or a child node 
+	 */
+	public void add_error_type (DataType error_type) {
+		_error_types.add (error_type);
+		error_type.parent_node = this;
+	}
+
+	/**
+	 * Adds a collection of error types to the exceptions that can be thrown by this node
+	 * or a child node 
+	 */
+	public void add_error_types (Gee.Collection<DataType> error_types) {
+		foreach (DataType error_type in error_types) {
+			_error_types.add (error_type);
+			error_type.parent_node = this;
+		}
+	}
 
 	/**
 	 * Visits this code node with the specified CodeVisitor.

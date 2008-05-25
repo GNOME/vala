@@ -949,7 +949,7 @@ public class Vala.CCodeClassBinding : CCodeTypesymbolBinding {
 			ccall.add_argument (new CCodeIdentifier (param.name));
 		}
 
-		if (m.get_error_domains ().size > 0) {
+		if (m.get_error_types ().size > 0) {
 			ccall.add_argument (new CCodeIdentifier ("error"));
 		}
 

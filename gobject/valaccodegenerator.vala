@@ -1206,7 +1206,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		cdecl.add_declarator (cvar);
 		cfrag.append (cdecl);
 
-		if (local.initializer != null && local.initializer.can_fail) {
+		if (local.initializer != null && local.initializer.tree_can_fail) {
 			add_simple_check (local.initializer, cfrag);
 		}
 
@@ -1559,7 +1559,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"));
 
 			cfrag.append (new CCodeIfStatement (ccond, cerror_block));
-		} else if (current_method != null && current_method.get_error_domains ().size > 0) {
+		} else if (current_method != null && current_method.get_error_types ().size > 0) {
 			// current method can fail, propagate error
 			// TODO ensure one of the error domains matches
 
@@ -1580,8 +1580,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			cfrag.append (new CCodeIfStatement (ccond, cerror_block));
 		} else {
-			// TODO improve check and move to semantic analyzer
-			Report.warning (node.source_reference, "unhandled error");
+			// unhandled error
 
 			var cerror_block = new CCodeBlock ();
 			// print critical message
@@ -1597,7 +1596,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public override void visit_expression_statement (ExpressionStatement stmt) {
 		stmt.ccodenode = new CCodeExpressionStatement ((CCodeExpression) stmt.expression.ccodenode);
 
-		if (stmt.tree_can_fail && stmt.expression.can_fail) {
+		if (stmt.tree_can_fail && stmt.expression.tree_can_fail) {
 			// simple case, no node breakdown necessary
 
 			var cfrag = new CCodeFragment ();
@@ -1874,7 +1873,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		ccoldecl.add_declarator (ccolvardecl);
 		cblock.add_statement (ccoldecl);
 		
-		if (stmt.tree_can_fail && stmt.collection.can_fail) {
+		if (stmt.tree_can_fail && stmt.collection.tree_can_fail) {
 			// exception handling
 			var cfrag = new CCodeFragment ();
 			add_simple_check (stmt.collection, cfrag);
@@ -3091,7 +3090,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 			}
 
-			if (expr.can_fail) {
+			if (expr.tree_can_fail) {
 				// method can fail
 				current_method_inner_error = true;
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
@@ -3512,7 +3511,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		}
 
-		if (m.get_error_domains ().size > 0) {
+		if (m.get_error_types ().size > 0) {
 			var cparam = new CCodeFormalParameter ("error", "GError**");
 			cparam_map.set (get_param_pos (-1), cparam);
 		}
@@ -3574,7 +3573,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			i++;
 		}
 
-		if (m.get_error_domains ().size > 0) {
+		if (m.get_error_types ().size > 0) {
 			carg_map.set (get_param_pos (-1), new CCodeIdentifier ("error"));
 		}
 

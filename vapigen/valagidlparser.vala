@@ -1334,7 +1334,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 
 			if (suppress_throws == false && param_is_exception (param)) {
-				m.add_error_domain (parse_type (param.type));
+				m.add_error_type (parse_type (param.type));
 				continue;
 			}
 

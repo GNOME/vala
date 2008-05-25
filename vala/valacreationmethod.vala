@@ -60,8 +60,8 @@ public class Vala.CreationMethod : Method {
 			param.accept (visitor);
 		}
 
-		foreach (DataType error_domain in get_error_domains ()) {
-			error_domain.accept (visitor);
+		foreach (DataType error_type in get_error_types ()) {
+			error_type.accept (visitor);
 		}
 
 		if (body != null) {

@@ -189,7 +189,6 @@ public class Vala.Method : Member {
 	private string _vfunc_name;
 	private string _sentinel;
 	private bool _no_array_length;
-	private Gee.List<DataType> error_domains = new ArrayList<DataType> ();
 	private Gee.List<Expression> preconditions = new ArrayList<Expression> ();
 	private Gee.List<Expression> postconditions = new ArrayList<Expression> ();
 	private DataType _return_type;
@@ -263,8 +262,8 @@ public class Vala.Method : Member {
 			param.accept (visitor);
 		}
 
-		foreach (DataType error_domain in error_domains) {
-			error_domain.accept (visitor);
+		foreach (DataType error_type in get_error_types ()) {
+			error_type.accept (visitor);
 		}
 
 		if (result_var != null) {
@@ -419,41 +418,22 @@ public class Vala.Method : Member {
 		}
 
 		/* this method may throw more but not less errors than the base method */
-		foreach (DataType method_error_domain in error_domains) {
+		foreach (DataType method_error_type in get_error_types ()) {
 			bool match = false;
-			foreach (DataType base_method_error_domain in base_method.error_domains) {
-				if (method_error_domain.compatible (base_method_error_domain)) {
+			foreach (DataType base_method_error_type in base_method.get_error_types ()) {
+				if (method_error_type.compatible (base_method_error_type)) {
 					match = true;
 					break;
 				}
 			}
 
 			if (!match) {
-				invalid_match = "incompatible error domain `%s'".printf (method_error_domain.to_string ());
+				invalid_match = "incompatible error type `%s'".printf (method_error_type.to_string ());
 				return false;
 			}
 		}
 
 		return true;
-	}
-
-	/**
-	 * Adds an error domain to this method.
-	 *
-	 * @param error_domain an error domain
-	 */
-	public void add_error_domain (DataType error_domain) {
-		error_domains.add (error_domain);
-		error_domain.parent_node = this;
-	}
-
-	/**
-	 * Returns a copy of the list of error domains of this method.
-	 *
-	 * @return list of error domains
-	 */
-	public Collection<DataType> get_error_domains () {
-		return new ReadOnlyCollection<DataType> (error_domains);
 	}
 
 	/**
@@ -499,9 +479,10 @@ public class Vala.Method : Member {
 			return_type = new_type;
 			return;
 		}
-		for (int i = 0; i < error_domains.size; i++) {
-			if (error_domains[i] == old_type) {
-				error_domains[i] = new_type;
+		var error_types = get_error_types ();
+		for (int i = 0; i < error_types.size; i++) {
+			if (error_types[i] == old_type) {
+				error_types[i] = new_type;
 				return;
 			}
 		}

@@ -406,7 +406,12 @@ public class Vala.SourceFile : Object {
 
 	public char* get_mapped_contents () {
 		if (mapped_file == null) {
-			mapped_file = new MappedFile (filename, false);
+			try {
+				mapped_file = new MappedFile (filename, false);
+			} catch (FileError e) {
+				Report.error (null, "Unable to map file `%s': %s".printf (filename, e.message));
+				return null;
+			}
 		}
 
 		return mapped_file.get_contents ();

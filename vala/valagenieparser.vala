@@ -2385,7 +2385,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		if (accept (TokenType.RAISES)) {
 			do {
-				method.add_error_domain (parse_type ());
+				method.add_error_type (parse_type ());
 			} while (accept (TokenType.COMMA));
 		}
 
@@ -3031,7 +3031,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		expect (TokenType.CLOSE_PARENS);
 		if (accept (TokenType.RAISES)) {
 			do {
-				method.add_error_domain (parse_type ());
+				method.add_error_type (parse_type ());
 			} while (accept (TokenType.COMMA));
 		}
 		method.access = SymbolAccessibility.PUBLIC;

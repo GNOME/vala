@@ -469,6 +469,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 		}
+
+		// check that all errors that can be thrown in the method body are declared
+		if (m.body != null) { 
+			foreach (DataType body_error_type in m.body.get_error_types ()) {
+				bool can_propagate_error = false;
+				foreach (DataType method_error_type in m.get_error_types ()) {
+					if (body_error_type.compatible (method_error_type)) {
+						can_propagate_error = true;
+					}
+				}
+				if (!can_propagate_error) {
+					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+				}
+			}
+		}
 	}
 
 	private void find_base_class_method (Method m, Class cl) {
@@ -788,7 +803,24 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			local.active = false;
 		}
 
+		foreach (Statement stmt in b.get_statements()) {
+			b.add_error_types (stmt.get_error_types ());
+		}
+
 		current_symbol = current_symbol.parent_symbol;
+	}
+
+	public override void visit_declaration_statement (DeclarationStatement stmt) {
+		var local = stmt.declaration as LocalVariable;
+		if (local != null && local.initializer != null) {
+			foreach (DataType error_type in local.initializer.get_error_types ()) {
+				// ensure we can trace back which expression may throw errors of this type
+				var initializer_error_type = error_type.copy ();
+				initializer_error_type.source_reference = local.initializer.source_reference;
+
+				stmt.add_error_type (initializer_error_type);
+			}
+		}
 	}
 
 	public override void visit_local_variable (LocalVariable local) {
@@ -949,7 +981,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		stmt.tree_can_fail = stmt.expression.tree_can_fail;
+		stmt.add_error_types (stmt.expression.get_error_types ());
 	}
 
 	public override void visit_if_statement (IfStatement stmt) {
@@ -965,6 +997,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			stmt.error = true;
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
 			return;
+		}
+
+		stmt.add_error_types (stmt.condition.get_error_types ());
+		stmt.add_error_types (stmt.true_statement.get_error_types ());
+
+		if (stmt.false_statement != null) {
+			stmt.add_error_types (stmt.false_statement.get_error_types ());
 		}
 	}
 
@@ -1001,6 +1040,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
 			return;
 		}
+
+		stmt.add_error_types (stmt.condition.get_error_types ());
+		stmt.add_error_types (stmt.body.get_error_types ());
 	}
 
 	public override void visit_do_statement (DoStatement stmt) {
@@ -1017,6 +1059,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
 			return;
 		}
+
+		stmt.add_error_types (stmt.condition.get_error_types ());
+		stmt.add_error_types (stmt.body.get_error_types ());
 	}
 
 	public override void visit_for_statement (ForStatement stmt) {
@@ -1032,6 +1077,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			stmt.error = true;
 			Report.error (stmt.condition.source_reference, "Condition must be boolean");
 			return;
+		}
+
+		if (stmt.condition != null) {
+			stmt.add_error_types (stmt.condition.get_error_types ());
+		}
+
+		stmt.add_error_types (stmt.body.get_error_types ());
+		foreach (Expression exp in stmt.get_initializer ()) {
+			stmt.add_error_types (exp.get_error_types ());
+		}
+		foreach (Expression exp in stmt.get_iterator ()) {
+			stmt.add_error_types (exp.get_error_types ());
 		}
 	}
 
@@ -1118,7 +1175,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
-		stmt.tree_can_fail = stmt.collection.tree_can_fail || stmt.body.tree_can_fail;
+		stmt.add_error_types (stmt.collection.get_error_types ());
+		stmt.add_error_types (stmt.body.get_error_types ());
 	}
 
 	public override void visit_return_statement (ReturnStatement stmt) {
@@ -1171,6 +1229,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (context.non_null && stmt.return_expression is NullLiteral
 		    && !current_return_type.nullable) {
 			Report.warning (stmt.source_reference, "`null' incompatible with return type `%s`".printf (current_return_type.to_string ()));
+		}
+
+		if (stmt.return_expression != null) {
+			stmt.add_error_types (stmt.return_expression.get_error_types ());
 		}
 	}
 
@@ -1603,7 +1665,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						}
 						var m = new DynamicMethod (expr.inner.value_type, expr.member_name, ret_type, expr.source_reference);
 						m.invocation = invoc;
-						m.add_error_domain (new ErrorType (null));
+						m.add_error_type (new ErrorType (null));
 						m.access = SymbolAccessibility.PUBLIC;
 						m.add_parameter (new FormalParameter.with_ellipsis ());
 						context.add_dynamic_member (m);
@@ -1863,7 +1925,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (mtype is MethodType) {
 			var m = ((MethodType) mtype).method_symbol;
-			expr.tree_can_fail = expr.can_fail = (m.get_error_domains ().size > 0);
+			foreach (DataType error_type in m.get_error_types ()) {
+				// ensure we can trace back which expression may throw errors of this type
+				var call_error_type = error_type.copy ();
+				call_error_type.source_reference = expr.source_reference;
+
+				expr.add_error_type (call_error_type);
+			}
 		}
 
 		expr.value_type = ret_type;
@@ -2445,7 +2513,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			check_arguments (expr, new MethodType (m), m.get_parameters (), args);
 
-			expr.tree_can_fail = expr.can_fail = (m.get_error_domains ().size > 0);
+			foreach (DataType error_type in m.get_error_types ()) {
+				// ensure we can trace back which expression may throw errors of this type
+				var call_error_type = error_type.copy ();
+				call_error_type.source_reference = expr.source_reference;
+
+				expr.add_error_type (call_error_type);
+			}
 		} else if (expr.type_reference is ErrorType) {
 			expr.accept_children (this);
 
@@ -3236,6 +3310,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			a.value_type = null;
 		}
 
-		a.tree_can_fail = a.left.tree_can_fail || a.right.tree_can_fail;
+		a.add_error_types (a.left.get_error_types ());
+		a.add_error_types (a.right.get_error_types ());
 	}
 }

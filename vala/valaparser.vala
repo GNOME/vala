@@ -2080,7 +2080,7 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.CLOSE_PARENS);
 		if (accept (TokenType.THROWS)) {
 			do {
-				method.add_error_domain (parse_type ());
+				method.add_error_type (parse_type ());
 			} while (accept (TokenType.COMMA));
 		}
 		while (accept (TokenType.REQUIRES)) {
@@ -2616,7 +2616,7 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.CLOSE_PARENS);
 		if (accept (TokenType.THROWS)) {
 			do {
-				method.add_error_domain (parse_type ());
+				method.add_error_type (parse_type ());
 			} while (accept (TokenType.COMMA));
 		}
 		method.access = access;

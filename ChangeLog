@@ -1,3 +1,25 @@
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodenode.vala:
+	* vala/valacreationmethod.vala:
+	* vala/valaexpression.vala:
+	* vala/valagenieparser.vala:
+	* vala/valainterfacewriter.vala:
+	* vala/valamethod.vala:
+	* vala/valanamespace.vala:
+	* vala/valaparser.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasourcefile.vala:
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+	* gobject/valaccodemethodbinding.vala:
+	* vapigen/valagidlparser.vala:
+	* vapigen/valavapigen.vala:
+
+	Track error types that expressions can throw,
+	based on patch by Jared Moore, fixes bug 482999
+
 2008-05-24  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodeassignmentbinding.vala:

@@ -452,7 +452,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 				}
 			}
 
-			if (m.get_error_domains ().size > 0) {
+			if (m.get_error_types ().size > 0) {
 				var cparam = new CCodeFormalParameter ("error", "GError**");
 				cparam_map.set (codegen.get_param_pos (-1), cparam);
 				carg_map.set (codegen.get_param_pos (-1), new CCodeIdentifier (cparam.name));
@@ -635,7 +635,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			}
 		}
 
-		if (m.get_error_domains ().size > 0) {
+		if (m.get_error_types ().size > 0) {
 			var cparam = new CCodeFormalParameter ("error", "GError**");
 			cparam_map.set (codegen.get_param_pos (-1), cparam);
 		}

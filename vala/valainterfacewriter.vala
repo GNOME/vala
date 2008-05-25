@@ -709,7 +709,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		
 		write_params (m.get_parameters ());
-		write_error_domains (m.get_error_domains ());
+		write_error_domains (m.get_error_types ());
 
 		write_string (";");
 
