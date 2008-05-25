@@ -93,6 +93,7 @@ namespace DBus {
 		
 	}
 
+	[Compact]
 	[CCode (ref_function = "dbus_g_connection_ref", unref_function = "dbus_g_connection_unref", cname = "DBusGConnection")]
 	public class Connection {
 		[CCode (cname = "dbus_g_proxy_new_for_name")]

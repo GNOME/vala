@@ -1,5 +1,9 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/dbus-glib-1.vapi: use [Compact] attribute
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala:
 	* gobject/valaccodegenerator.vala:
 	* vapi/glib-2.0.vapi:
