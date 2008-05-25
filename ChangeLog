@@ -1,5 +1,15 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala:
+	* vala/valascanner.vala:
+	* vala/valasymbolresolver.vala:
+	* vala/valatokentype.vala:
+	* vala/valaunresolvedsymbol.vala:
+
+	Support qualified access to global symbols with `global::'
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/tiff.vapi: various binding fixes, patch by Christian Meyer
 
 2008-05-25  Jürg Billeter  <j@bitron.ch>

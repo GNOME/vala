@@ -299,7 +299,7 @@ public class Vala.Parser : CodeVisitor {
 	void skip_symbol_name () throws ParseError {
 		do {
 			skip_identifier ();
-		} while (accept (TokenType.DOT));
+		} while (accept (TokenType.DOT) || accept (TokenType.DOUBLE_COLON));
 	}
 
 	UnresolvedSymbol parse_symbol_name () throws ParseError {
@@ -307,6 +307,14 @@ public class Vala.Parser : CodeVisitor {
 		UnresolvedSymbol sym = null;
 		do {
 			string name = parse_identifier ();
+			if (name == "global" && accept (TokenType.DOUBLE_COLON)) {
+				// global::Name
+				// qualified access to global symbol
+				name = parse_identifier ();
+				sym = new UnresolvedSymbol (sym, name, get_src (begin));
+				sym.qualified = true;
+				continue;
+			}
 			sym = new UnresolvedSymbol (sym, name, get_src (begin));
 		} while (accept (TokenType.DOT));
 		return sym;

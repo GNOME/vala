@@ -36,6 +36,11 @@ public class Vala.UnresolvedSymbol : CodeNode {
 	 */
 	public string name { get; set; }
 
+	/**
+	 * Qualified access to global symbol.
+	 */
+	public bool qualified { get; set; }
+
 	public UnresolvedSymbol (UnresolvedSymbol? inner, string name, SourceReference? source_reference = null) {
 		this.inner = inner;
 		this.name = name;

@@ -189,7 +189,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 	}
 
 	private Symbol? resolve_symbol (UnresolvedSymbol unresolved_symbol) {
-		if (unresolved_symbol.inner == null) {
+		if (unresolved_symbol.qualified) {
+			// qualified access to global symbol
+			return root_symbol.scope.lookup (unresolved_symbol.name);
+		} else if (unresolved_symbol.inner == null) {
 			Symbol sym = null;
 			Scope scope = current_scope;
 			while (sym == null && scope != null) {

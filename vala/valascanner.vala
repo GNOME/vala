@@ -433,6 +433,10 @@ public class Vala.Scanner : Object {
 			case ':':
 				type = TokenType.COLON;
 				current++;
+				if (current < end && current[0] == ':') {
+					type = TokenType.DOUBLE_COLON;
+					current++;
+				}
 				break;
 			case ',':
 				type = TokenType.COMMA;

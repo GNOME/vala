@@ -58,6 +58,7 @@ public enum Vala.TokenType {
 	DELETE,
 	DIV,
 	DO,
+	DOUBLE_COLON,
 	DOT,
 	DYNAMIC,
 	ELLIPSIS,
