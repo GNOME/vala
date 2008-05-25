@@ -1,3 +1,7 @@
+2008-05-26  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/tiff.vapi: more fixes, patch by Christian Meyer
+
 2008-05-25  Philip Van Hoof  <pvanhoof@gnome.org>
 
 	* vala/valainterface.vala:
