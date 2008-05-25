@@ -102,6 +102,7 @@ libvalacore_la_VALASOURCES = \
 	valanullliteral.vala \
 	valanulltype.vala \
 	valaobjectcreationexpression.vala \
+	valaobjecttypesymbol.vala \
 	valaparenthesizedexpression.vala \
 	valaparser.vala \
 	valapointerindirection.vala \

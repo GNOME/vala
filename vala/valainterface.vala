@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a class declaration in the source code.
  */
-public class Vala.Interface : Typesymbol {
+public class Vala.Interface : ObjectTypesymbol {
 	/**
 	 * Specifies whether this interface is static. Static interfaces are not
 	 * available at run-time. They can be implemented by structs.
@@ -145,7 +145,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @return list of methods
 	 */
-	public Collection<Method> get_methods () {
+	public override Collection<Method> get_methods () {
 		return new ReadOnlyCollection<Method> (methods);
 	}
 	
@@ -184,7 +184,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @return list of properties
 	 */
-	public Collection<Property> get_properties () {
+	public override Collection<Property> get_properties () {
 		return new ReadOnlyCollection<Property> (properties);
 	}
 	
@@ -203,7 +203,7 @@ public class Vala.Interface : Typesymbol {
 	 *
 	 * @return list of signals
 	 */
-	public Collection<Signal> get_signals () {
+	public override Collection<Signal> get_signals () {
 		return new ReadOnlyCollection<Signal> (signals);
 	}
 

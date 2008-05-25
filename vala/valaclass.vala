@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a class declaration in the source code.
  */
-public class Vala.Class : Typesymbol {
+public class Vala.Class : ObjectTypesymbol {
 	/**
 	 * Specifies the base class.
 	 */
@@ -287,7 +287,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @return list of methods
 	 */
-	public Collection<Method> get_methods () {
+	public override Collection<Method> get_methods () {
 		return new ReadOnlyCollection<Method> (methods);
 	}
 	
@@ -313,7 +313,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @return list of properties
 	 */
-	public Collection<Property> get_properties () {
+	public override Collection<Property> get_properties () {
 		return new ReadOnlyCollection<Property> (properties);
 	}
 	
@@ -332,7 +332,7 @@ public class Vala.Class : Typesymbol {
 	 *
 	 * @return list of signals
 	 */
-	public Collection<Signal> get_signals () {
+	public override Collection<Signal> get_signals () {
 		return new ReadOnlyCollection<Signal> (signals);
 	}
 

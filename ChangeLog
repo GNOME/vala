@@ -1,3 +1,16 @@
+2008-05-25  Philip Van Hoof  <pvanhoof@gnome.org>
+
+	* vala/valainterface.vala:
+	* vala/Makefile.am:
+	* vala/valaobjecttypesymbol.vala:
+	* vala/valaclass.vala:
+	* gobject/valaccodeinterfacebinding.vala:
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/Makefile.am:
+	* gobject/valaccodeobjecttypesymbolbinding.vala:
+
+	Support interfaces for D-Bus services
+
 2008-05-25  Jaap A. Haitsma  <jaap@haitsma.org>
 
 	* vapi/hal.vapi: use [Compact] attribute for Hal.Context class.
