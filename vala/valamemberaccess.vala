@@ -63,6 +63,11 @@ public class Vala.MemberAccess : Expression {
 	 */
 	public bool creation_member { get; set; }
 
+	/**
+	 * Qualified access to global symbol.
+	 */
+	public bool qualified { get; set; }
+
 	private Expression? _inner;
 	private Gee.List<DataType> type_argument_list = new ArrayList<DataType> ();
 	

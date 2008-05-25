@@ -1563,7 +1563,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		expr.symbol_reference = null;
 
-		if (expr.inner == null) {
+		if (expr.qualified) {
+			base_symbol = root_symbol;
+			expr.symbol_reference = root_symbol.scope.lookup (expr.member_name);
+		} else if (expr.inner == null) {
 			if (expr.member_name == "this") {
 				if (!is_in_instance_method ()) {
 					expr.error = true;

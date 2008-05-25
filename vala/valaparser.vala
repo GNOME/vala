@@ -510,8 +510,14 @@ public class Vala.Parser : CodeVisitor {
 	Expression parse_simple_name () throws ParseError {
 		var begin = get_location ();
 		string id = parse_identifier ();
+		bool qualified = false;
+		if (id == "global" && accept (TokenType.DOUBLE_COLON)) {
+			id = parse_identifier ();
+			qualified = true;
+		}
 		Gee.List<DataType> type_arg_list = parse_type_argument_list (true);
 		var expr = new MemberAccess (null, id, get_src (begin));
+		expr.qualified = qualified;
 		if (type_arg_list != null) {
 			foreach (DataType type_arg in type_arg_list) {
 				expr.add_type_argument (type_arg);
