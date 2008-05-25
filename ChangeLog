@@ -1,5 +1,11 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarraytype.vala:
+
+	Fix type string for multi-dimensional arrays
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/tiff.vapi: use [Compact] attribute and fix return types,
 	patch by Christian Meyer
 
