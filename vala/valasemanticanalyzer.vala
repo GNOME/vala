@@ -375,6 +375,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Report.error (m.source_reference, "Virtual methods may not be declared outside of classes and interfaces");
 				return;
 			}
+
+			if (m.parent_symbol is Class) {
+				var cl = (Class) m.parent_symbol;
+				if (cl.is_compact) {
+					Report.error (m.source_reference, "Virtual methods may not be declared in compact classes");
+					return;
+				}
+			}
 		} else if (m.overrides) {
 			if (!(m.parent_symbol is Class)) {
 				m.error = true;

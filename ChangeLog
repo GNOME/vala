@@ -1,5 +1,12 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+
+	Report error when declaring virtual methods in compact classes,
+	based on patch by Jared Moore, fixes bug 514844
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala:
 	* vala/valainterfacewriter.vala:
 	* gobject/valaccodeclassbinding.vala:
