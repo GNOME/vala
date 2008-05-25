@@ -1,5 +1,9 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/tiff.vapi: various binding fixes, patch by Christian Meyer
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 
 	Deprecate static classes, patch by Jared Moore, fixes bug 524509
