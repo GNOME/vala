@@ -1,5 +1,19 @@
 2008-05-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarraytype.vala:
+	* vala/valadatatype.vala:
+	* vala/valadelegatetype.vala:
+	* vala/valafieldprototype.vala:
+	* vala/valainterfacewriter.vala:
+	* vala/valamethodtype.vala:
+	* vala/valapointertype.vala:
+	* vala/valaunresolvedtype.vala:
+	* vala/valavoidtype.vala:
+
+	Write qualified types in the interface writer
+
+2008-05-25  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/dbus-glib-1.vapi: use [Compact] attribute
 
 2008-05-25  Jürg Billeter  <j@bitron.ch>

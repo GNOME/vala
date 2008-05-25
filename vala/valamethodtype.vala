@@ -59,7 +59,7 @@ public class Vala.MethodType : DataType {
 		return dt.delegate_symbol.matches_method (method_symbol);
 	}
 
-	public override string to_string () {
+	public override string to_qualified_string (Scope? scope) {
 		return method_symbol.get_full_name ();
 	}
 

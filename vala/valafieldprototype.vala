@@ -37,7 +37,7 @@ public class Vala.FieldPrototype : DataType {
 		return result;
 	}
 
-	public override string to_string () {
+	public override string to_qualified_string (Scope? scope) {
 		return field_symbol.get_full_name ();
 	}
 }

@@ -45,7 +45,7 @@ public class Vala.DelegateType : DataType {
 		return delegate_symbol.get_parameters ();
 	}
 
-	public override string to_string () {
+	public override string to_qualified_string (Scope? scope) {
 		string s = delegate_symbol.get_full_name ();
 		if (nullable) {
 			s += "?";

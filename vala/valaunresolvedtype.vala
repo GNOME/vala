@@ -100,7 +100,7 @@ public class Vala.UnresolvedType : DataType {
 		return result;
 	}
 
-	public override string to_string () {
+	public override string to_qualified_string (Scope? scope) {
 		return unresolved_symbol.to_string ();
 	}
 }

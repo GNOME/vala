@@ -145,10 +145,30 @@ public abstract class Vala.DataType : CodeNode {
 	}
 
 	public override string to_string () {
+		return to_qualified_string (null);
+	}
+
+	public virtual string to_qualified_string (Scope? scope = null) {
 		string s;
 
 		if (data_type != null) {
-			s = data_type.get_full_name ();
+			Symbol global_symbol = data_type;
+			while (global_symbol.parent_symbol.name != null) {
+				global_symbol = global_symbol.parent_symbol;
+			}
+
+			Symbol sym = null;
+			Scope parent_scope = scope;
+			while (sym == null && parent_scope != null) {
+				sym = parent_scope.lookup (global_symbol.name);
+				parent_scope = parent_scope.parent_scope;
+			}
+
+			if (sym != null && global_symbol != sym) {
+				s = "global::" + data_type.get_full_name ();;
+			} else {
+				s = data_type.get_full_name ();
+			}
 		} else if (type_parameter != null) {
 			s = type_parameter.name;
 		} else {
@@ -168,7 +188,7 @@ public abstract class Vala.DataType : CodeNode {
 				if (!type_arg.value_owned) {
 					s += "weak ";
 				}
-				s += type_arg.to_string ();
+				s += type_arg.to_qualified_string (scope);
 			}
 			s += ">";
 		}

@@ -140,8 +140,8 @@ public class Vala.ArrayType : ReferenceType {
 		return true;
 	}
 
-	public override string to_string () {
-		return element_type.to_string () + "[]";
+	public override string to_qualified_string (Scope? scope) {
+		return element_type.to_qualified_string (scope) + "[]";
 	}
 
 	public override bool compatible (DataType target_type) {

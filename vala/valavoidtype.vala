@@ -33,7 +33,7 @@ public class Vala.VoidType : DataType {
 		return (type2 is VoidType);
 	}
 
-	public override string to_string () {
+	public override string to_qualified_string (Scope? scope) {
 		return "void";
 	}
 

@@ -46,8 +46,8 @@ public class Vala.PointerType : DataType {
 		this.source_reference = source_reference;
 	}
 
-	public override string to_string () {
-		return base_type.to_string () + "*";
+	public override string to_qualified_string (Scope? scope) {
+		return base_type.to_qualified_string (scope) + "*";
 	}
 
 	public override string? get_cname () {

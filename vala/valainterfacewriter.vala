@@ -38,6 +38,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 
 	string current_cheader_filename;
 
+	Scope current_scope;
+
 	/**
 	 * Writes the public interface of the specified code context into the
 	 * specified file.
@@ -54,8 +56,12 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 		write_newline ();
 
+		current_scope = context.root.scope;
+
 		context.accept (this);
-		
+
+		current_scope = null;
+
 		stream = null;
 	}
 
@@ -78,7 +84,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_identifier (ns.name);
 		write_begin_block ();
 
+		current_scope = ns.scope;
 		ns.accept_children (this);
+		current_scope = current_scope.parent_scope;
 
 		write_end_block ();
 		write_newline ();
@@ -177,7 +185,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		write_begin_block ();
 
+		current_scope = cl.scope;
 		cl.accept_children (this);
+		current_scope = current_scope.parent_scope;
 
 		write_end_block ();
 		write_newline ();
@@ -241,7 +251,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 
 		write_begin_block ();
 
+		current_scope = st.scope;
 		st.accept_children (this);
+		current_scope = current_scope.parent_scope;
 
 		write_end_block ();
 		write_newline ();
@@ -311,7 +323,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		write_begin_block ();
 
+		current_scope = iface.scope;
 		iface.accept_children (this);
+		current_scope = current_scope.parent_scope;
 
 		write_end_block ();
 		write_newline ();
@@ -378,9 +392,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_newline ();
 		}
 
+		current_scope = en.scope;
 		foreach (Method m in en.get_methods ()) {
 			m.accept (this);
 		}
+		current_scope = current_scope.parent_scope;
 
 		write_end_block ();
 		write_newline ();
@@ -851,7 +867,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	private void write_type (DataType type) {
-		write_string (type.to_string ());
+		write_string (type.to_qualified_string (current_scope));
 	}
 
 	private void write_string (string s) {
