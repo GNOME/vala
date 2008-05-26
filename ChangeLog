@@ -1,5 +1,9 @@
 2008-05-26  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libxml-2.0.vapi: use [Compact] attribute
+
+2008-05-26  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeinvocationexpressionbinding.vala:
 
 	Fix implicit casts for instances in invocation expressions,

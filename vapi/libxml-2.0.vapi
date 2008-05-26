@@ -33,7 +33,8 @@ namespace Xml {
 	[CCode (cname = "ftpListCallback", cheader_filename = "libxml/nanoftp.h")]
 	public static delegate void FtpListCallback (void* userData, string filename, string attrib, string owner, string group, ulong size, int links, int year, string month, int day, int hour, int minute);
 
-	[CCode (cname = "void*", free_function = "xmlNanoFTPFreeCtxt", cheader_filename = "libxml/nanoftp.h")]
+	[Compact]
+	[CCode (cname = "void", free_function = "xmlNanoFTPFreeCtxt", cheader_filename = "libxml/nanoftp.h")]
 	public class NanoFTP {
 		[CCode (cname = "xmlNanoFTPCheckResponse")]
 		public int check_response ();
@@ -102,7 +103,8 @@ namespace Xml {
 
 	/* nanohttp - minimal HTTP implementation */
 
-	[CCode (cname = "void*", cheader_filename = "libxml/nanohttp.h")]
+	[Compact]
+	[CCode (cname = "void", cheader_filename = "libxml/nanohttp.h")]
 	public class NanoHTTP {
 		[CCode (cname = "xmlNanoHTTPAuthHeader")]
 		public weak string auth_header ();
@@ -225,9 +227,9 @@ namespace Xml {
 		public static void set_compress_mode (int mode);
 	}
 
+	[Compact]
 	[CCode (cname = "xmlAttr", cheader_filename = "libxml/tree.h")]
 	public class Attr {
-		public void* _private;
 		public ElementType type;
 		public weak string name;
 		public Node* children;
@@ -243,9 +245,9 @@ namespace Xml {
 		public int remove();
 	}
 
+	[Compact]
 	[CCode (cname = "xmlAttribute", cheader_filename = "libxml/tree.h")]
 	public class Attribute {
-		public void* _private;
 		public ElementType type;
 		public weak string name;
 		public Node* children;
@@ -284,9 +286,9 @@ namespace Xml {
 		NOTATION
 	}
 
+	[Compact]
 	[CCode (cname = "xmlDoc", free_function = "xmlFreeDoc", cheader_filename = "libxml/tree.h,libxml/parser.h")]
 	public class Doc {
-		public void* _private;
 		public ElementType type;
 		public string name;
 		public Node* children;
@@ -409,9 +411,9 @@ namespace Xml {
 		public Node* string_len_get_node_list (string str, int len);
 	}
 
+	[Compact]
 	[CCode (cname = "xmlDtd", cheader_filename = "libxml/tree.h")]
 	public class Dtd {
-		public void* _private;
 		public ElementType type;
 		public string name;
 		public Node* children;
@@ -431,9 +433,9 @@ namespace Xml {
 		public Dtd* copy();
 	}
 
+	[Compact]
 	[CCode (cname = "xmlElement", cheader_filename = "libxml/tree.h")]
 	public class Element {
-		public void* _private;
 		public ElementType type;
 		public weak string name;
 		public Node* children;
@@ -471,9 +473,9 @@ namespace Xml {
 		DOCB_DOCUMENT_NODE
 	}
 
+	[Compact]
 	[CCode (cname = "xmlNode", free_function = "xmlFreeNode", cheader_filename = "libxml/tree.h")]
 	public class Node {
-		public void* _private;
 		public ElementType type;
 		public weak string name;
 		public Node* children;
@@ -643,16 +645,17 @@ namespace Xml {
 		public int unset_prop (string name);
 	}
 
+	[Compact]
 	[CCode (cname = "xmlNs", cheader_filename = "libxml/tree.h")]
 	public class Ns {
 		public Ns next;
 		public ElementType type;
 		public string href;
 		public string prefix;
-		public void* _private;
 		public Doc context;
 	}
 
+	[Compact]
 	[CCode (cname = "xmlParserCtxt")]
 	public class ParserCtxt {
 		public SAXHandler* sax;
@@ -665,6 +668,7 @@ namespace Xml {
 
 	/* uri - library of generic URI related routines */
 
+	[Compact]
 	[CCode (cname = "xmlURI", free_function = "xmlFreeURI", cheader_filename = "libxml/uri.h")]
 	public class URI {
 		[CCode (cname = "xmlBuildRelativeURI")]
@@ -736,6 +740,7 @@ namespace Xml {
 
 	/* xmlschemas - incomplete XML Schemas structure implementation */
 
+	[Compact]
 	[CCode (cname = "xmlSchemaValidCtxt", cheader_filename = "libxml/xmlreader.h")]
 	public class SchemaValidCtxt {
 	}
@@ -781,6 +786,7 @@ namespace Xml {
 		XML_DECLARATION
 	}
 
+	[Compact]
 	[CCode (cname = "xmlTextReader", free_function = "xmlFreeTextReader", cheader_filename = "libxml/xmlreader.h")]
 	public class TextReader {
 		[CCode (cname = "xmlNewTextReaderFilename")]
@@ -1012,7 +1018,8 @@ namespace Xml {
 		public string xml_lang ();
 	}
 
-	[CCode (cname = "void*", cheader_filename = "libxml/xmlreader.h")]
+	[Compact]
+	[CCode (cname = "void", cheader_filename = "libxml/xmlreader.h")]
 	public class TextReaderLocator {
 	}
 
@@ -1037,6 +1044,7 @@ namespace Xml {
 		public static long order_doc_elements (Doc* doc);
 	}
 
+	[Compact]
 	[CCode (cname = "xmlNodeSet", cheader_filename = "libxml/xpath.h")]
 	public class NodeSet {
 		[CCode (cname = "xmlXPathNodeSetGetLength")]
@@ -1049,6 +1057,7 @@ namespace Xml {
 		public Node* item (int index);
 	}
 
+	[Compact]
 	[CCode (cname = "xmlXPathContext", free_function = "xmlXPathFreeContext", cheader_filename = "libxml/xpath.h")]
 	public class XPathContext {
 		public Doc* doc;
@@ -1096,6 +1105,7 @@ namespace Xml {
 		XPATH_INVALID_CTXT
 	}
 
+	[Compact]
 	[CCode (cname = "xmlXPathObject", cheader_filename = "libxml/xpath.h")]
 	public class XPathObject {
 		public XPathObjectType type;
@@ -1188,6 +1198,7 @@ namespace Xml {
 
 	public static delegate void warningSAXFunc (void* ctx, string msg, ...);
 
+	[Compact]
 	[CCode (cname = "xmlSAXHandler")]
 	public class SAXHandler {
 		public internalSubsetSAXFunc internalSubset;
