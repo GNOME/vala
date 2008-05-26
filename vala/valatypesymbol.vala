@@ -1,4 +1,4 @@
-/* valatype.vala
+/* valatypesymbol.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -28,7 +28,7 @@ using Gee;
  * Represents a runtime data type. This data type may be defined in Vala source
  * code or imported from an external library with a Vala API file.
  */
-public abstract class Vala.Typesymbol : Symbol {
+public abstract class Vala.TypeSymbol : Symbol {
 	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
 
 	/* holds the array types of this type; each rank is a separate one */
@@ -223,7 +223,7 @@ public abstract class Vala.Typesymbol : Symbol {
 	 * @param t a data type
 	 * @return  true if t is a supertype of this data type, false otherwise
 	 */
-	public virtual bool is_subtype_of (Typesymbol t) {
+	public virtual bool is_subtype_of (TypeSymbol t) {
 		return (this == t);
 	}
 	

@@ -28,7 +28,7 @@ using Gee;
  * be defined in Vala source code or imported from an external library with a 
  * Vala API file.
  */
-public abstract class Vala.ObjectTypesymbol : Typesymbol {
+public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	public abstract Collection<Method> get_methods ();
 	public abstract Collection<Signal> get_signals ();
 	public abstract Collection<Property> get_properties ();

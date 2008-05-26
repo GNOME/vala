@@ -708,7 +708,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_accessibility (m);
 		
 		if (m is CreationMethod) {
-			var datatype = (Typesymbol) m.parent_symbol;
+			var datatype = (TypeSymbol) m.parent_symbol;
 			write_identifier (datatype.name);
 			write_identifier (m.name.offset (".new".len ()));
 			write_string (" ");

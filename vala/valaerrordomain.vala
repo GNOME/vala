@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents an error domain declaration in the source code.
  */
-public class Vala.ErrorDomain : Typesymbol {
+public class Vala.ErrorDomain : TypeSymbol {
 	private Gee.List<ErrorCode> codes = new ArrayList<ErrorCode> ();
 	private Gee.List<Method> methods = new ArrayList<Method> ();
 	private string cname;

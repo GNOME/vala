@@ -28,7 +28,7 @@ using GLib;
 public class Vala.IntegerType : ValueType {
 	public IntegerLiteral literal { get; set; }
 
-	public IntegerType (Typesymbol type_symbol) {
+	public IntegerType (TypeSymbol type_symbol) {
 		this.type_symbol = type_symbol;
 		data_type = type_symbol;
 	}

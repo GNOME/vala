@@ -70,7 +70,7 @@ public class Vala.CreationMethod : Method {
 	}
 
 	public override string get_default_cname () {
-		var parent = parent_symbol as Typesymbol;
+		var parent = parent_symbol as TypeSymbol;
 
 		string infix = "new";
 		if (parent is Struct) {

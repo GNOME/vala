@@ -236,7 +236,7 @@ public class Vala.SourceFile : Object {
 
 		Symbol s;
 		
-		if (sym is Typesymbol ||
+		if (sym is TypeSymbol ||
 		    sym is Method ||
 		    sym is Field ||
 		    sym is Property ||
@@ -274,7 +274,7 @@ public class Vala.SourceFile : Object {
 			return;
 		}
 		
-		if (dep_type == SourceFileDependencyType.HEADER_FULL || (s is Typesymbol && !((Typesymbol)s).is_reference_type ())) {
+		if (dep_type == SourceFileDependencyType.HEADER_FULL || (s is TypeSymbol && !((TypeSymbol)s).is_reference_type ())) {
 			foreach (string fn in s.get_cheader_filenames ()) {
 				header_internal_includes.add (fn);
 			}

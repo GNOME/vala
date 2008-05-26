@@ -48,7 +48,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	DataType unichar_type;
 	DataType type_type;
 	Class object_type;
-	Typesymbol initially_unowned_type;
+	TypeSymbol initially_unowned_type;
 	DataType glist_type;
 	DataType gslist_type;
 	Class gerror_type;
@@ -72,22 +72,22 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		root_symbol = context.root;
 
-		bool_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("bool"));
+		bool_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("bool"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
 
-		int_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int"));
-		uint_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint"));
-		ulong_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("ulong"));
-		size_t_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("size_t"));
-		unichar_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("unichar"));
+		int_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int"));
+		uint_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint"));
+		ulong_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("ulong"));
+		size_t_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("size_t"));
+		unichar_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("unichar"));
 
 		// TODO: don't require GLib namespace in semantic analyzer
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 		if (glib_ns != null) {
 			object_type = (Class) glib_ns.scope.lookup ("Object");
-			initially_unowned_type = (Typesymbol) glib_ns.scope.lookup ("InitiallyUnowned");
+			initially_unowned_type = (TypeSymbol) glib_ns.scope.lookup ("InitiallyUnowned");
 
-			type_type = new ValueType ((Typesymbol) glib_ns.scope.lookup ("Type"));
+			type_type = new ValueType ((TypeSymbol) glib_ns.scope.lookup ("Type"));
 
 			glist_type = new ObjectType ((Class) glib_ns.scope.lookup ("List"));
 			gslist_type = new ObjectType ((Class) glib_ns.scope.lookup ("SList"));
@@ -136,7 +136,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		cl.accept_children (this);
 
 		/* gather all prerequisites */
-		Gee.List<Typesymbol> prerequisites = new ArrayList<Typesymbol> ();
+		Gee.List<TypeSymbol> prerequisites = new ArrayList<TypeSymbol> ();
 		foreach (DataType base_type in cl.get_base_types ()) {
 			if (base_type.data_type is Interface) {
 				get_all_prerequisites ((Interface) base_type.data_type, prerequisites);
@@ -144,7 +144,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		/* check whether all prerequisites are met */
 		Gee.List<string> missing_prereqs = new ArrayList<string> ();
-		foreach (Typesymbol prereq in prerequisites) {
+		foreach (TypeSymbol prereq in prerequisites) {
 			if (!class_is_a (cl, prereq)) {
 				missing_prereqs.insert (0, prereq.get_full_name ());
 			}
@@ -218,9 +218,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_class = null;
 	}
 
-	private void get_all_prerequisites (Interface iface, Collection<Typesymbol> list) {
+	private void get_all_prerequisites (Interface iface, Collection<TypeSymbol> list) {
 		foreach (DataType prereq in iface.get_prerequisites ()) {
-			Typesymbol type = prereq.data_type;
+			TypeSymbol type = prereq.data_type;
 			/* skip on previous errors */
 			if (type == null) {
 				continue;
@@ -234,7 +234,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	private bool class_is_a (Class cl, Typesymbol t) {
+	private bool class_is_a (Class cl, TypeSymbol t) {
 		if (cl == t) {
 			return true;
 		}
@@ -279,7 +279,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		/* check prerequisites */
 		Class prereq_class;
 		foreach (DataType prereq in iface.get_prerequisites ()) {
-			Typesymbol class_or_interface = prereq.data_type;
+			TypeSymbol class_or_interface = prereq.data_type;
 			/* skip on previous errors */
 			if (class_or_interface == null) {
 				iface.error = true;
@@ -1424,17 +1424,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_character_literal (CharacterLiteral expr) {
-		expr.value_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("char"));
+		expr.value_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("char"));
 	}
 
 	public override void visit_integer_literal (IntegerLiteral expr) {
-		var int_type = new IntegerType ((Typesymbol) root_symbol.scope.lookup (expr.get_type_name ()));
+		var int_type = new IntegerType ((TypeSymbol) root_symbol.scope.lookup (expr.get_type_name ()));
 		int_type.literal = expr;
 		expr.value_type = int_type;
 	}
 
 	public override void visit_real_literal (RealLiteral expr) {
-		expr.value_type = new ValueType ((Typesymbol) root_symbol.scope.lookup (expr.get_type_name ()));
+		expr.value_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup (expr.get_type_name ()));
 	}
 
 	public override void visit_string_literal (StringLiteral expr) {
@@ -1478,7 +1478,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 			return type;
 		} else if (sym is EnumValue) {
-			return new ValueType ((Typesymbol) sym.parent_symbol);
+			return new ValueType ((TypeSymbol) sym.parent_symbol);
 		} else if (sym is Method) {
 			return new MethodType ((Method) sym);
 		} else if (sym is Signal) {
@@ -1630,12 +1630,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (expr.inner is MemberAccess || expr.inner is BaseAccess) {
 				base_symbol = expr.inner.symbol_reference;
 
-				if (expr.creation_member && base_symbol is Typesymbol) {
+				if (expr.creation_member && base_symbol is TypeSymbol) {
 					// check for named creation method
 					expr.symbol_reference = base_symbol.scope.lookup (".new." + expr.member_name);
 				}
 
-				if (expr.symbol_reference == null && (base_symbol is Namespace || base_symbol is Typesymbol)) {
+				if (expr.symbol_reference == null && (base_symbol is Namespace || base_symbol is TypeSymbol)) {
 					expr.symbol_reference = base_symbol.scope.lookup (expr.member_name);
 					if (expr.inner is BaseAccess) {
 						// inner expression is base access
@@ -2371,7 +2371,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			expr.member_name.accept (this);
 		}
 
-		Typesymbol type = null;
+		TypeSymbol type = null;
 
 		if (expr.type_reference == null) {
 			if (expr.member_name == null) {
@@ -2410,10 +2410,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			if (type_sym is Class) {
-				type = (Typesymbol) type_sym;
+				type = (TypeSymbol) type_sym;
 				expr.type_reference = new ObjectType ((Class) type);
 			} else if (type_sym is Struct) {
-				type = (Typesymbol) type_sym;
+				type = (TypeSymbol) type_sym;
 				expr.type_reference = new ValueType (type);
 			} else if (type_sym is ErrorDomain) {
 				expr.type_reference = new ErrorType ((ErrorDomain) type_sym, expr.source_reference);

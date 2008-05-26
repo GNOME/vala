@@ -29,9 +29,9 @@ public class Vala.ValueType : DataType {
 	/**
 	 * The referred struct or enum.
 	 */
-	public weak Typesymbol type_symbol { get; set; }
+	public weak TypeSymbol type_symbol { get; set; }
 
-	public ValueType (Typesymbol type_symbol) {
+	public ValueType (TypeSymbol type_symbol) {
 		this.type_symbol = type_symbol;
 		data_type = type_symbol;
 	}

@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents an enum declaration in the source code.
  */
-public class Vala.Enum : Typesymbol {
+public class Vala.Enum : TypeSymbol {
 	/**
 	 * Specifies whether this is a flags enum.
 	 */

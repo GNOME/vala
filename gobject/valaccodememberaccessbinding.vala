@@ -83,7 +83,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 			var f = (Field) expr.symbol_reference;
 			if (f.binding == MemberBinding.INSTANCE) {
 				var instance_expression_type = base_type;
-				var instance_target_type = codegen.get_data_type_for_symbol ((Typesymbol) f.parent_symbol);
+				var instance_target_type = codegen.get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 				CCodeExpression typed_inst = codegen.get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 
 				var cl = instance_target_type.data_type as Class;
@@ -131,7 +131,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 				} else if (prop.base_interface_property != null) {
 					base_property = prop.base_interface_property;
 				}
-				var base_property_type = (Typesymbol) base_property.parent_symbol;
+				var base_property_type = (TypeSymbol) base_property.parent_symbol;
 				string getter_cname;
 				if (prop is DynamicProperty) {
 					getter_cname = codegen.dynamic_property_binding ((DynamicProperty) prop).get_getter_cname ();
@@ -217,7 +217,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 			}
 		} else if (expr.symbol_reference is Signal) {
 			var sig = (Signal) expr.symbol_reference;
-			var cl = (Typesymbol) sig.parent_symbol;
+			var cl = (TypeSymbol) sig.parent_symbol;
 			
 			if (sig.has_emitter) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_%s".printf (cl.get_lower_case_cname (null), sig.name)));

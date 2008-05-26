@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a function callback type.
  */
-public class Vala.Delegate : Typesymbol {
+public class Vala.Delegate : TypeSymbol {
 	/**
 	 * The return type of this callback.
 	 */

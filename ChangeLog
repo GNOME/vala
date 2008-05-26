@@ -1,5 +1,46 @@
 2008-05-26  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarraytype.vala:
+	* vala/valaclass.vala:
+	* vala/valacreationmethod.vala:
+	* vala/valadatatype.vala:
+	* vala/valadelegate.vala:
+	* vala/valaenum.vala:
+	* vala/valaerrordomain.vala:
+	* vala/valainstancecast.vala:
+	* vala/valaintegertype.vala:
+	* vala/valainterface.vala:
+	* vala/valainterfacewriter.vala:
+	* vala/valaobjecttype.vala:
+	* vala/valaobjecttypesymbol.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasourcefile.vala:
+	* vala/valastruct.vala:
+	* vala/valasymbolresolver.vala:
+	* vala/valatypeparameter.vala:
+	* vala/valatypesymbol.vala:
+	* vala/valavaluetype.vala:
+	* gobject/valaccodeassignmentbinding.vala:
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodeelementaccessbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodegeneratorsignal.vala:
+	* gobject/valaccodeinterfacebinding.vala:
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+	* gobject/valaccodememberaccessbinding.vala:
+	* gobject/valaccodemethodbinding.vala:
+	* gobject/valaccodeobjecttypesymbolbinding.vala:
+	* gobject/valaccodetypesymbolbinding.vala:
+	* gobject/valaclassregisterfunction.vala:
+	* gobject/valagidlwriter.vala:
+	* gobject/valainterfaceregisterfunction.vala:
+	* gobject/valatyperegisterfunction.vala:
+	* vapigen/valagidlparser.vala:
+
+	s/Typesymbol/TypeSymbol/
+
+2008-05-26  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/libxml-2.0.vapi: use [Compact] attribute
 
 2008-05-26  Jürg Billeter  <j@bitron.ch>

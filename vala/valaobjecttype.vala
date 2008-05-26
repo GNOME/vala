@@ -29,9 +29,9 @@ public class Vala.ObjectType : ReferenceType {
 	/**
 	 * The referred class or interface.
 	 */
-	public weak ObjectTypesymbol type_symbol { get; set; }
+	public weak ObjectTypeSymbol type_symbol { get; set; }
 
-	public ObjectType (ObjectTypesymbol type_symbol) {
+	public ObjectType (ObjectTypeSymbol type_symbol) {
 		this.type_symbol = type_symbol;
 		data_type = type_symbol;
 	}

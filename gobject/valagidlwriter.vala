@@ -33,7 +33,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	
 	int indent;
 
-	private Typesymbol gobject_type;
+	private TypeSymbol gobject_type;
 
 	/**
 	 * Writes the public interface of the specified code context into the
@@ -47,7 +47,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 
 		var root_symbol = context.root;
 		var glib_ns = root_symbol.scope.lookup ("GLib");
-		gobject_type = (Typesymbol) glib_ns.scope.lookup ("Object");
+		gobject_type = (TypeSymbol) glib_ns.scope.lookup ("Object");
 
 		stream = FileStream.open (filename, "w");
 
@@ -385,7 +385,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 
 		DataType instance_type = null;
 		if (m.binding == MemberBinding.INSTANCE) {
-			instance_type = CCodeGenerator.get_data_type_for_symbol ((Typesymbol) m.parent_symbol);
+			instance_type = CCodeGenerator.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
 		}
 
 		write_params (m.get_parameters (), instance_type);
@@ -418,7 +418,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 
 		write_params (m.get_parameters ());
 
-		write_return_type (CCodeGenerator.get_data_type_for_symbol ((Typesymbol) m.parent_symbol));
+		write_return_type (CCodeGenerator.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol));
 
 		indent--;
 		write_indent ();

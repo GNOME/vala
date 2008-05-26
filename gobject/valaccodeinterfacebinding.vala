@@ -23,7 +23,7 @@
 
 using GLib;
 
-public class Vala.CCodeInterfaceBinding : CCodeObjectTypesymbolBinding {
+public class Vala.CCodeInterfaceBinding : CCodeObjectTypeSymbolBinding {
 	public Interface iface { get; set; }
 
 	public CCodeInterfaceBinding (CCodeGenerator codegen, Interface iface) {

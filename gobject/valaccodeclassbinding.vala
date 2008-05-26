@@ -23,7 +23,7 @@
 
 using GLib;
 
-public class Vala.CCodeClassBinding : CCodeObjectTypesymbolBinding {
+public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 	public Class cl { get; set; }
 
 	public CCodeClassBinding (CCodeGenerator codegen, Class cl) {

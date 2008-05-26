@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a class declaration in the source code.
  */
-public class Vala.Class : ObjectTypesymbol {
+public class Vala.Class : ObjectTypeSymbol {
 	/**
 	 * Specifies the base class.
 	 */
@@ -702,7 +702,7 @@ public class Vala.Class : ObjectTypesymbol {
 		this.free_function = name;
 	}
 	
-	public override bool is_subtype_of (Typesymbol t) {
+	public override bool is_subtype_of (TypeSymbol t) {
 		if (this == t) {
 			return true;
 		}

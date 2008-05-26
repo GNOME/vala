@@ -22,7 +22,7 @@
 
 using GLib;
 
-public abstract class Vala.CCodeObjectTypesymbolBinding : Vala.CCodeTypesymbolBinding {
+public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBinding {
 
 	bool is_dbus_visible (CodeNode node) {
 		var dbus_attribute = node.get_attribute ("DBus");
@@ -35,7 +35,7 @@ public abstract class Vala.CCodeObjectTypesymbolBinding : Vala.CCodeTypesymbolBi
 		return true;
 	}
 
-	public CCodeFragment register_dbus_info (ObjectTypesymbol bindable) {
+	public CCodeFragment register_dbus_info (ObjectTypeSymbol bindable) {
 
 		CCodeFragment fragment = new CCodeFragment ();
 
@@ -207,7 +207,7 @@ public abstract class Vala.CCodeObjectTypesymbolBinding : Vala.CCodeTypesymbolBi
 		return fragment;
 	}
 
-	string generate_dbus_wrapper (Method m, ObjectTypesymbol bindable) {
+	string generate_dbus_wrapper (Method m, ObjectTypeSymbol bindable) {
 		string wrapper_name = "_dbus_%s".printf (m.get_cname ());
 
 		// declaration

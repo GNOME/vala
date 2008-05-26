@@ -23,7 +23,7 @@
 
 using GLib;
 
-public abstract class Vala.CCodeTypesymbolBinding : CCodeBinding {
+public abstract class Vala.CCodeTypeSymbolBinding : CCodeBinding {
 	public CCodeFunctionCall get_param_spec (Property prop) {
 		var cspec = new CCodeFunctionCall ();
 		cspec.add_argument (prop.get_canonical_cconstant ());
@@ -166,7 +166,7 @@ public abstract class Vala.CCodeTypesymbolBinding : CCodeBinding {
 		return cspec;
 	}
 
-	public CCodeFunctionCall get_signal_creation (Signal sig, Typesymbol type) {	
+	public CCodeFunctionCall get_signal_creation (Signal sig, TypeSymbol type) {	
 		var csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
 		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
 		csignew.add_argument (new CCodeIdentifier (type.get_upper_case_cname ("TYPE_")));

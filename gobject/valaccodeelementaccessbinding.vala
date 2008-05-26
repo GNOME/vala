@@ -65,7 +65,7 @@ public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
 			codenode = ccall;
 		} else if (container_type != null && codegen.list_type != null && codegen.map_type != null &&
 		           (container_type.is_subtype_of (codegen.list_type) || container_type.is_subtype_of (codegen.map_type))) {
-			Typesymbol collection_iface = null;
+			TypeSymbol collection_iface = null;
 			if (container_type.is_subtype_of (codegen.list_type)) {
 				collection_iface = codegen.list_type;
 			} else if (container_type.is_subtype_of (codegen.map_type)) {

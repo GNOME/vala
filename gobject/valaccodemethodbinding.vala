@@ -139,7 +139,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 		CCodeFunctionDeclarator vdeclarator = null;
 
 		if (m.binding == MemberBinding.INSTANCE || (m.parent_symbol is Struct && m is CreationMethod)) {
-			Typesymbol parent_type = find_parent_type (m);
+			TypeSymbol parent_type = find_parent_type (m);
 			DataType this_type;
 			if (parent_type is Class) {
 				this_type = new ObjectType ((Class) parent_type);
@@ -172,7 +172,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 				codegen.type_struct.add_declaration (vdecl);
 			}
 		} else if (m.binding == MemberBinding.CLASS) {
-			Typesymbol parent_type = find_parent_type (m);
+			TypeSymbol parent_type = find_parent_type (m);
 			DataType this_type;
 			this_type = new ClassType ((Class) parent_type);
 			var class_param = new CCodeFormalParameter ("klass", this_type.get_cname ());
@@ -661,7 +661,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 		}
 	}
 
-	private CCodeStatement create_method_type_check_statement (Method m, DataType return_type, Typesymbol t, bool non_null, string var_name) {
+	private CCodeStatement create_method_type_check_statement (Method m, DataType return_type, TypeSymbol t, bool non_null, string var_name) {
 		return codegen.create_type_check_statement (m, return_type, t, non_null, var_name);
 	}
 
@@ -695,10 +695,10 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 		return new CCodeExpressionStatement (cassert);
 	}
 
-	private Typesymbol? find_parent_type (Symbol sym) {
+	private TypeSymbol? find_parent_type (Symbol sym) {
 		while (sym != null) {
-			if (sym is Typesymbol) {
-				return (Typesymbol) sym;
+			if (sym is TypeSymbol) {
+				return (TypeSymbol) sym;
 			}
 			sym = sym.parent_symbol;
 		}

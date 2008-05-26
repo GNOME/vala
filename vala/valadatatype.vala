@@ -42,7 +42,7 @@ public abstract class Vala.DataType : CodeNode {
 	/**
 	 * The referred data type.
 	 */
-	public weak Typesymbol data_type { get; set; }
+	public weak TypeSymbol data_type { get; set; }
 	
 	/**
 	 * The referred generic type parameter.
@@ -116,7 +116,7 @@ public abstract class Vala.DataType : CodeNode {
 	 */
 	public string get_const_cname () {
 		string ptr;
-		Typesymbol t;
+		TypeSymbol t;
 		// FIXME: workaround to make constant arrays possible
 		if (this is ArrayType) {
 			t = ((ArrayType) this).element_type.data_type;

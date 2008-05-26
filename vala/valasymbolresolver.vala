@@ -248,7 +248,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		if (sym is TypeParameter) {
 			type = new TypeParameterType ((TypeParameter) sym);
-		} else if (sym is Typesymbol) {
+		} else if (sym is TypeSymbol) {
 			if (sym is Delegate) {
 				type = new DelegateType ((Delegate) sym);
 			} else if (sym is Class) {

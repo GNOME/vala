@@ -41,7 +41,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 		class_reference = cl;
 	}
 	
-	public override Typesymbol get_type_declaration () {
+	public override TypeSymbol get_type_declaration () {
 		return class_reference;
 	}
 	

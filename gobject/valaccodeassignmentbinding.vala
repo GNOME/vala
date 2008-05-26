@@ -158,7 +158,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			codegen.temp_vars.insert (0, temp_decl);
 			var parse_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_parse_name"));
 			parse_call.add_argument (sig.get_canonical_cconstant ());
-			var decl_type = (Typesymbol) sig.parent_symbol;
+			var decl_type = (TypeSymbol) sig.parent_symbol;
 			parse_call.add_argument (new CCodeIdentifier (decl_type.get_type_id ()));
 			parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
 			parse_call.add_argument (new CCodeConstant ("NULL"));
@@ -244,7 +244,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 				cparam_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
 			}
 		} else {
-			cparam = new CCodeFormalParameter ("sender", ((Typesymbol) sig.parent_symbol).get_cname () + "*");
+			cparam = new CCodeFormalParameter ("sender", ((TypeSymbol) sig.parent_symbol).get_cname () + "*");
 			cparam_map.set (codegen.get_param_pos (0), cparam);
 			foreach (FormalParameter param in sig.get_parameters()) {
 				// ensure that C code node has been generated
@@ -353,7 +353,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		if (container_type != null && codegen.list_type != null && codegen.map_type != null &&
 		    (container_type.is_subtype_of (codegen.list_type) || container_type.is_subtype_of (codegen.map_type))) {
 			// lookup symbol in interface instead of class as implemented interface methods are not in VAPI files
-			Typesymbol collection_iface = null;
+			TypeSymbol collection_iface = null;
 			if (container_type.is_subtype_of (codegen.list_type)) {
 				collection_iface = codegen.list_type;
 			} else if (container_type.is_subtype_of (codegen.map_type)) {
