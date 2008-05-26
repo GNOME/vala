@@ -1,3 +1,10 @@
+2008-05-26  Jamie McCracken  <jamiemcc@gnome.org>
+
+	* vala/valagenieparser.vala: 
+	
+	Fix initialiser expression in for statement
+
+
 2008-05-26  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaarraytype.vala:

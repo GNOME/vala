@@ -1724,6 +1724,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 
 		if (is_expr) {
+			var expr_begin = get_location ();
+			id = parse_identifier ();
+			rollback (expr_begin);
 			initializer = parse_statement_expression ();
 		} else {
 			block = new Block (get_src (begin));
