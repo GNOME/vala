@@ -251,7 +251,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.FINAL:
 		case TokenType.FINALLY:
 		case TokenType.FOR:
-		case TokenType.FOREACH:
 		case TokenType.GET:
 		case TokenType.IDENTIFIER:
 		case TokenType.IF:
@@ -1282,6 +1281,30 @@ public class Vala.Genie.Parser : CodeVisitor {
 		return expr;
 	}
 
+
+	Statement get_for_statement_type () {
+	
+		var begin = get_location ();
+		bool is_foreach = false;
+										
+		while (current () != TokenType.EOL && current () != TokenType.DO) {
+			next ();
+			if (accept (TokenType.IN)) {
+				is_foreach = true;
+				break;
+			}
+		}
+					
+		rollback (begin);
+					
+		if (is_foreach) {
+			return parse_foreach_statement ();
+		} else {
+			return parse_for_statement ();
+		}
+
+	}
+
 	void parse_statements (Block block) throws ParseError {
 		while (current () != TokenType.DEDENT
 		       && current () != TokenType.WHEN
@@ -1340,10 +1363,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 					stmt = parse_do_statement ();
 					break;
 				case TokenType.FOR:
-					stmt = parse_for_statement ();
-					break;
-				case TokenType.FOREACH:
-					stmt = parse_foreach_statement ();
+					stmt = get_for_statement_type ();
 					break;
 				case TokenType.BREAK:
 					stmt = parse_break_statement ();
@@ -1472,8 +1492,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.CASE:      return parse_switch_statement ();
 		case TokenType.WHILE:     return parse_while_statement ();
 		case TokenType.DO:        return parse_do_statement ();
-		case TokenType.FOR:       return parse_for_statement ();
-		case TokenType.FOREACH:   return parse_foreach_statement ();
+		case TokenType.FOR:       return get_for_statement_type ();
 		case TokenType.BREAK:     return parse_break_statement ();
 		case TokenType.CONTINUE:  return parse_continue_statement ();
 		case TokenType.RETURN:    return parse_return_statement ();
@@ -1752,7 +1771,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 			iterator = new PostfixExpression (left, false, downto_src);
 		}
 
-		expect (TokenType.EOL);
+		if (!accept (TokenType.EOL)) {
+			expect (TokenType.DO);
+		}
 
 		var src = get_src_com (begin);
 		var body = parse_embedded_statement ();
@@ -1776,19 +1797,22 @@ public class Vala.Genie.Parser : CodeVisitor {
 		DataType type = null;
 		string id = null;
 
-		expect (TokenType.FOREACH);
+		expect (TokenType.FOR);
 
 		if (accept (TokenType.VAR)) {
 			 id = parse_identifier ();
 		} else {
 			id = parse_identifier ();
-			expect (TokenType.COLON);
-			type = parse_type ();
+			if (accept (TokenType.COLON)) {
+				type = parse_type ();
+			}
 		}
 
 		expect (TokenType.IN);
 		var collection = parse_expression ();
-		expect (TokenType.EOL);
+		if (!accept (TokenType.EOL)) {
+			expect (TokenType.DO);
+		}
 		var src = get_src_com (begin);
 		var body = parse_embedded_statement ();
 		return new ForeachStatement (type, id, collection, body, src);
@@ -2052,7 +2076,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 			case TokenType.DELETE:
 			case TokenType.DO:
 			case TokenType.FOR:
-			case TokenType.FOREACH:
 			case TokenType.IF:
 			case TokenType.LOCK:
 			case TokenType.RETURN:
