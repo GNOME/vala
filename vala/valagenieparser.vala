@@ -914,7 +914,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 					case TokenType.SIZEOF:
 					case TokenType.TYPEOF:
 					case TokenType.IDENTIFIER:
-						if (!type.value_owned) {
+						if (!(type is PointerType) && !type.value_owned) {
 							Report.warning (get_src (begin), "obsolete syntax, weak type modifier unused in cast expressions");
 						}
 						var inner = parse_unary_expression ();
