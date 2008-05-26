@@ -1952,7 +1952,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 	}
 
-	Symbol parse_declaration () throws ParseError {
+	Symbol parse_declaration (bool is_root = false) throws ParseError {
 		comment = scanner.pop_comment ();
 		var attrs = parse_attributes ();
 		
@@ -1964,6 +1964,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.CLASS:
 			return parse_class_declaration (attrs);
 		case TokenType.INIT:
+			if (is_root) {
+				return parse_main_method_declaration (attrs);
+			}
 			return parse_constructor_declaration (attrs);
 		case TokenType.DELEGATE:	
 			return parse_delegate_declaration (attrs);	
@@ -2104,7 +2107,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 
 	void parse_namespace_member (Namespace ns) throws ParseError {
-		var sym = parse_declaration ();
+
+		var sym = parse_declaration ((ns == context.root));
 		if (sym is Namespace) {
 			ns.add_namespace ((Namespace) sym);
 		} else if (sym is Class) {
@@ -2363,6 +2367,39 @@ public class Vala.Genie.Parser : CodeVisitor {
 			var expr = parse_expression ();
 			return expr;
 		}
+	}
+
+
+	Method parse_main_method_declaration (Gee.List<Attribute>? attrs) throws ParseError {
+		var id = "main";
+		var begin = get_location ();
+		DataType type = new VoidType ();
+		expect (TokenType.INIT);
+		
+		var method = new Method (id, type, get_src_com (begin));
+		method.access = SymbolAccessibility.PUBLIC;
+		
+		set_attributes (method, attrs);
+
+		method.binding = MemberBinding.STATIC;
+				
+		var sym = new UnresolvedSymbol (null, "string", get_src (begin));
+		type = new UnresolvedType.from_symbol (sym, get_src (begin));
+		type.value_owned = true;
+		type = new ArrayType (type, 1, get_src (begin));
+		type.nullable = false;
+				
+		var param = new FormalParameter ("args", type, get_src (begin));
+		method.add_parameter (param);
+		
+		
+		expect (TokenType.EOL);
+
+		if (accept_block ()) {
+			method.body = parse_block ();
+		}
+		
+		return method;
 	}
 
 	Method parse_method_declaration (Gee.List<Attribute>? attrs) throws ParseError {

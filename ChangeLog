@@ -1,5 +1,12 @@
 2008-05-26  Jamie McCracken  <jamiemcc@gnome.org>
 
+	* vala/valagenieparser.vala: 
+	
+	allow init block to be used in context.root namespace where
+	its parsed and converted to the "main" function
+
+2008-05-26  Jamie McCracken  <jamiemcc@gnome.org>
+
 	* vala/valagenieparser.vala: added missing throws ParseError to get_for_statement_type method
 
 2008-05-26  Jamie McCracken  <jamiemcc@gnome.org>
