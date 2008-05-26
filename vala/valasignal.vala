@@ -98,9 +98,9 @@ public class Vala.Signal : Member, Lockable {
 			
 			ReferenceType sender_type;
 			if (parent_symbol is Class) {
-				sender_type = new ClassInstanceType ((Class) parent_symbol);
+				sender_type = new ObjectType ((Class) parent_symbol);
 			} else {
-				sender_type = new InterfaceInstanceType ((Interface) parent_symbol);
+				sender_type = new ObjectType ((Interface) parent_symbol);
 			}
 			var sender_param = new FormalParameter ("sender", sender_type);
 			generated_delegate.add_parameter (sender_param);

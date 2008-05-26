@@ -221,7 +221,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		uint64_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint64"));
 		float_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("float"));
 		double_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("double"));
-		string_type = new ClassInstanceType ((Class) root_symbol.scope.lookup ("string"));
+		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
 		substring_method = (Method) string_type.data_type.scope.lookup ("substring");
 
 		var glib_ns = root_symbol.scope.lookup ("GLib");
@@ -771,9 +771,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		ReferenceType this_type;
 		if (t is Class) {
-			this_type = new ClassInstanceType ((Class) t);
+			this_type = new ObjectType ((Class) t);
 		} else {
-			this_type = new InterfaceInstanceType ((Interface) t);
+			this_type = new ObjectType ((Interface) t);
 		}
 		var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
 		var value_type = prop.property_type.copy ();
@@ -1987,7 +1987,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (it_name), new CCodeConstant ("1"))));
 				cblock.add_statement (cfor);
 			}
-		} else if (stmt.collection.value_type.compatible (new ClassInstanceType (glist_type)) || stmt.collection.value_type.compatible (new ClassInstanceType (gslist_type))) {
+		} else if (stmt.collection.value_type.compatible (new ObjectType (glist_type)) || stmt.collection.value_type.compatible (new ObjectType (gslist_type))) {
 			var it_name = "%s_it".printf (stmt.variable_name);
 		
 			var citdecl = new CCodeDeclaration (collection_type.get_cname ());
@@ -2039,7 +2039,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeMemberAccess.pointer (new CCodeIdentifier (it_name), "next")));
 			cblock.add_statement (cfor);
-		} else if (iterable_type != null && stmt.collection.value_type.compatible (new InterfaceInstanceType (iterable_type))) {
+		} else if (iterable_type != null && stmt.collection.value_type.compatible (new ObjectType (iterable_type))) {
 			var it_name = "%s_it".printf (stmt.variable_name);
 
 			var citdecl = new CCodeDeclaration (iterator_type.get_cname () + "*");
@@ -3715,9 +3715,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		DataType type = null;
 
 		if (sym is Class) {
-			type = new ClassInstanceType ((Class) sym);
+			type = new ObjectType ((Class) sym);
 		} else if (sym is Interface) {
-			type = new InterfaceInstanceType ((Interface) sym);
+			type = new ObjectType ((Interface) sym);
 		} else if (sym is Struct) {
 			type = new ValueType ((Struct) sym);
 		} else if (sym is Enum) {

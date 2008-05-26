@@ -1,3 +1,19 @@
+2008-05-26  Jürg Billeter  <j@bitron.ch>
+
+	* vala/Makefile.am:
+	* vala/valaclass.vala:
+	* vala/valainterface.vala:
+	* vala/valaobjecttype.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasignal.vala:
+	* vala/valasymbolresolver.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodememberaccessbinding.vala:
+	* gobject/valaccodemethodbinding.vala:
+	* gobject/valagidlwriter.vala:
+
+	Replace ClassInstanceType and InterfaceInstanceType by ObjectType
+
 2008-05-26  Jamie McCracken  <jamiemcc@gnome.org>
 
 	* vala/valagenieparser.vala: 
@@ -22,7 +38,6 @@
 2008-05-26  Jamie McCracken  <jamiemcc@gnome.org>
 
 	* vala/valgenieparser.vala: replaced foreach with for..in
-
 
 2008-05-26  Jürg Billeter  <j@bitron.ch>
 

@@ -254,9 +254,9 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 			if (codegen.current_type_symbol != null) {
 				/* base type is available if this is a type method */
 				if (codegen.current_type_symbol is Class) {
-					base_type = new ClassInstanceType ((Class) codegen.current_type_symbol);
+					base_type = new ObjectType ((Class) codegen.current_type_symbol);
 				} else if (codegen.current_type_symbol is Interface) {
-					base_type = new InterfaceInstanceType ((Interface) codegen.current_type_symbol);
+					base_type = new ObjectType ((Interface) codegen.current_type_symbol);
 				} else {
 					base_type = new ValueType (codegen.current_type_symbol);
 					pub_inst = new CCodeIdentifier ("(*self)");

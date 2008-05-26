@@ -70,7 +70,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			}
 
 			if (cl != null) {
-				creturn_type = new ClassInstanceType (cl);
+				creturn_type = new ObjectType (cl);
 			}
 		}
 
@@ -142,19 +142,19 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			Typesymbol parent_type = find_parent_type (m);
 			DataType this_type;
 			if (parent_type is Class) {
-				this_type = new ClassInstanceType ((Class) parent_type);
+				this_type = new ObjectType ((Class) parent_type);
 			} else if (parent_type is Interface) {
-				this_type = new InterfaceInstanceType ((Interface) parent_type);
+				this_type = new ObjectType ((Interface) parent_type);
 			} else {
 				this_type = new ValueType (parent_type);
 			}
 
 			CCodeFormalParameter instance_param = null;
 			if (m.base_interface_method != null && !m.is_abstract && !m.is_virtual) {
-				var base_type = new InterfaceInstanceType ((Interface) m.base_interface_method.parent_symbol);
+				var base_type = new ObjectType ((Interface) m.base_interface_method.parent_symbol);
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else if (m.overrides) {
-				var base_type = new ClassInstanceType ((Class) m.base_method.parent_symbol);
+				var base_type = new ObjectType ((Class) m.base_method.parent_symbol);
 				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
 			} else {
 				if (m.parent_symbol is Struct && !((Struct) m.parent_symbol).is_simple_type ()) {
@@ -228,12 +228,12 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 						ReferenceType base_expression_type;
 						if (m.overrides) {
 							base_method = m.base_method;
-							base_expression_type = new ClassInstanceType ((Class) base_method.parent_symbol);
+							base_expression_type = new ObjectType ((Class) base_method.parent_symbol);
 						} else {
 							base_method = m.base_interface_method;
-							base_expression_type = new InterfaceInstanceType ((Interface) base_method.parent_symbol);
+							base_expression_type = new ObjectType ((Interface) base_method.parent_symbol);
 						}
-						var self_target_type = new ClassInstanceType (cl);
+						var self_target_type = new ObjectType (cl);
 						CCodeExpression cself = codegen.get_implicit_cast_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
 
 						var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
@@ -369,9 +369,9 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 
 			ReferenceType this_type;
 			if (m.parent_symbol is Class) {
-				this_type = new ClassInstanceType ((Class) m.parent_symbol);
+				this_type = new ObjectType ((Class) m.parent_symbol);
 			} else {
-				this_type = new InterfaceInstanceType ((Interface) m.parent_symbol);
+				this_type = new ObjectType ((Interface) m.parent_symbol);
 			}
 
 			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);

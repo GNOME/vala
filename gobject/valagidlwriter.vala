@@ -105,8 +105,8 @@ public class Vala.GIdlWriter : CodeVisitor {
 			// write implemented interfaces
 			bool first = true;
 			foreach (DataType base_type in cl.get_base_types ()) {
-				var iface_type = base_type as InterfaceInstanceType;
-				if (iface_type != null) {
+				var object_type = (ObjectType) base_type;
+				if (object_type.type_symbol is Interface) {
 					if (first) {
 						write_indent ();
 						stream.printf ("<implements>\n");
@@ -114,7 +114,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 						first = false;
 					}
 					write_indent ();
-					stream.printf ("<interface name=\"%s\"/>\n", iface_type.interface_symbol.get_full_name ());
+					stream.printf ("<interface name=\"%s\"/>\n", object_type.type_symbol.get_full_name ());
 				}
 			}
 			if (!first) {
@@ -185,14 +185,13 @@ public class Vala.GIdlWriter : CodeVisitor {
 			indent++;
 
 			foreach (DataType base_type in iface.get_prerequisites ()) {
-				var class_type = base_type as ClassInstanceType;
-				var iface_type = base_type as InterfaceInstanceType;
-				if (class_type != null) {
+				var object_type = (ObjectType) base_type;
+				if (object_type.type_symbol is Class) {
 					write_indent ();
-					stream.printf ("<object name=\"%s\"/>\n", class_type.class_symbol.get_full_name ());
-				} else if (iface_type != null) {
+					stream.printf ("<object name=\"%s\"/>\n", object_type.type_symbol.get_full_name ());
+				} else if (object_type.type_symbol is Interface) {
 					write_indent ();
-					stream.printf ("<interface name=\"%s\"/>\n", iface_type.interface_symbol.get_full_name ());
+					stream.printf ("<interface name=\"%s\"/>\n", object_type.type_symbol.get_full_name ());
 				} else {
 					assert_not_reached ();
 				}

@@ -144,7 +144,7 @@ public class Vala.Class : ObjectTypesymbol {
 				if (_destructor.this_parameter != null) {
 					_destructor.scope.remove (_destructor.this_parameter.name);
 				}
-				_destructor.this_parameter = new FormalParameter ("this", new ClassInstanceType (this));
+				_destructor.this_parameter = new FormalParameter ("this", new ObjectType (this));
 				_destructor.scope.add (_destructor.this_parameter.name, _destructor.this_parameter);
 			}
 		}
@@ -251,7 +251,7 @@ public class Vala.Class : ObjectTypesymbol {
 			if (m.this_parameter != null) {
 				m.scope.remove (m.this_parameter.name);
 			}
-			m.this_parameter = new FormalParameter ("this", new ClassInstanceType (this));
+			m.this_parameter = new FormalParameter ("this", new ObjectType (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
@@ -300,7 +300,7 @@ public class Vala.Class : ObjectTypesymbol {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 
-		prop.this_parameter = new FormalParameter ("this", new ClassInstanceType (this));
+		prop.this_parameter = new FormalParameter ("this", new ObjectType (this));
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 
 		if (prop.field != null) {

@@ -73,7 +73,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		root_symbol = context.root;
 
 		bool_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("bool"));
-		string_type = new ClassInstanceType ((Class) root_symbol.scope.lookup ("string"));
+		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
 
 		int_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("int"));
 		uint_type = new ValueType ((Typesymbol) root_symbol.scope.lookup ("uint"));
@@ -89,15 +89,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			type_type = new ValueType ((Typesymbol) glib_ns.scope.lookup ("Type"));
 
-			glist_type = new ClassInstanceType ((Class) glib_ns.scope.lookup ("List"));
-			gslist_type = new ClassInstanceType ((Class) glib_ns.scope.lookup ("SList"));
+			glist_type = new ObjectType ((Class) glib_ns.scope.lookup ("List"));
+			gslist_type = new ObjectType ((Class) glib_ns.scope.lookup ("SList"));
 
 			gerror_type = (Class) glib_ns.scope.lookup ("Error");
 		}
 
 		var gee_ns = root_symbol.scope.lookup ("Gee");
 		if (gee_ns != null) {
-			iterable_type = new InterfaceInstanceType ((Interface) gee_ns.scope.lookup ("Iterable"));
+			iterable_type = new ObjectType ((Interface) gee_ns.scope.lookup ("Iterable"));
 			iterator_type = (Interface) gee_ns.scope.lookup ("Iterator");
 			list_type = (Interface) gee_ns.scope.lookup ("List");
 			map_type = (Interface) gee_ns.scope.lookup ("Map");
@@ -778,7 +778,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_constructor (Constructor c) {
-		c.this_parameter = new FormalParameter ("this", new ClassInstanceType (current_class));
+		c.this_parameter = new FormalParameter ("this", new ObjectType (current_class));
 		c.scope.add (c.this_parameter.name, c.this_parameter);
 
 		c.owner = current_symbol.scope;
@@ -1150,7 +1150,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				need_type_check = true;
 			}
 		} else if (iterable_type != null && collection_type.compatible (iterable_type)) {
-			var foreach_iterator_type = new InterfaceInstanceType (iterator_type);
+			var foreach_iterator_type = new ObjectType (iterator_type);
 			foreach_iterator_type.value_owned = true;
 			foreach_iterator_type.add_type_argument (stmt.type_reference);
 			stmt.iterator_variable = new LocalVariable (foreach_iterator_type, "%s_it".printf (stmt.variable_name));
@@ -2077,9 +2077,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		// construct a new type reference for the base type with correctly linked type arguments
 		ReferenceType instance_base_type;
 		if (base_type.data_type is Class) {
-			instance_base_type = new ClassInstanceType ((Class) base_type.data_type);
+			instance_base_type = new ObjectType ((Class) base_type.data_type);
 		} else {
-			instance_base_type = new InterfaceInstanceType ((Interface) base_type.data_type);
+			instance_base_type = new ObjectType ((Interface) base_type.data_type);
 		}
 		foreach (DataType type_arg in base_type.get_type_arguments ()) {
 			if (type_arg.type_parameter != null) {
@@ -2347,7 +2347,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (expr.source_reference, "Base access invalid without base class");
 			return;
 		} else {
-			expr.value_type = new ClassInstanceType (current_class.base_class);
+			expr.value_type = new ObjectType (current_class.base_class);
 		}
 
 		expr.symbol_reference = expr.value_type.data_type;
@@ -2402,7 +2402,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			if (type_sym is Class) {
 				type = (Typesymbol) type_sym;
-				expr.type_reference = new ClassInstanceType ((Class) type);
+				expr.type_reference = new ObjectType ((Class) type);
 			} else if (type_sym is Struct) {
 				type = (Typesymbol) type_sym;
 				expr.type_reference = new ValueType (type);
@@ -2743,8 +2743,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 		if (!(expr.inner.value_type is ValueType
-		      || expr.inner.value_type is ClassInstanceType
-		      || expr.inner.value_type is InterfaceInstanceType
+		      || expr.inner.value_type is ObjectType
 		      || expr.inner.value_type is PointerType)) {
 			expr.error = true;
 			Report.error (expr.source_reference, "Address-of operator not supported for this expression");
