@@ -1,5 +1,14 @@
 2008-05-26  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaforeachstatement.vala:
+	* vala/valaparser.vala:
+	* vala/valasemanticanalyzer.vala:
+
+	Support `var' in foreach statements,
+	based on patch by Jamie McCracken
+
+2008-05-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am:
 	* vala/valaclass.vala:
 	* vala/valainterface.vala:
@@ -23,7 +32,8 @@
 
 2008-05-26  Jamie McCracken  <jamiemcc@gnome.org>
 
-	* vala/valagenieparser.vala: added missing throws ParseError to get_for_statement_type method
+	* vala/valagenieparser.vala: added missing throws ParseError to
+	get_for_statement_type method
 
 2008-05-26  Jamie McCracken  <jamiemcc@gnome.org>
 

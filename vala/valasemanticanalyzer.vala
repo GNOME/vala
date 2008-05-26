@@ -1101,25 +1101,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_foreach_statement (ForeachStatement stmt) {
-		current_source_file.add_type_dependency (stmt.type_reference, SourceFileDependencyType.SOURCE);
-
-		stmt.element_variable = new LocalVariable (stmt.type_reference, stmt.variable_name);
-
-		stmt.body.scope.add (stmt.variable_name, stmt.element_variable);
-
-		stmt.body.add_local_variable (stmt.element_variable);
-		stmt.element_variable.active = true;
-
-		stmt.owner = current_symbol.scope;
-		current_symbol = stmt;
-
-		stmt.accept_children (this);
-
-		foreach (LocalVariable local in stmt.get_local_variables ()) {
-			local.active = false;
-		}
-
-		current_symbol = current_symbol.parent_symbol;
+		// analyze collection expression first, used for type inference
+		stmt.collection.accept (this);
 
 		if (stmt.collection.error) {
 			// ignore inner error
@@ -1132,22 +1115,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		var collection_type = stmt.collection.value_type.copy ();
-		stmt.collection_variable = new LocalVariable (collection_type, "%s_collection".printf (stmt.variable_name));
-
-		stmt.add_local_variable (stmt.collection_variable);
-		stmt.collection_variable.active = true;
-	
+		
 		DataType element_data_type = null;
-		bool need_type_check = false;
 	
 		if (collection_type.is_array ()) {
 			var array_type = (ArrayType) collection_type;
 			element_data_type = array_type.element_type;
-			need_type_check = true;
 		} else if (collection_type.compatible (glist_type) || collection_type.compatible (gslist_type)) {
 			if (collection_type.get_type_arguments ().size > 0) {
 				element_data_type = (DataType) collection_type.get_type_arguments ().get (0);
-				need_type_check = true;
 			}
 		} else if (iterable_type != null && collection_type.compatible (iterable_type)) {
 			var foreach_iterator_type = new ObjectType (iterator_type);
@@ -1166,7 +1142,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				} else {
 					element_data_type = type_arg;
 				}
-				need_type_check = true;
 			}
 		} else {
 			stmt.error = true;
@@ -1174,14 +1149,48 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		if (need_type_check && element_data_type != null) {
-			/* allow implicit upcasts ? */
-			if (!element_data_type.compatible (stmt.type_reference)) {
-				stmt.error = true;
-				Report.error (stmt.source_reference, "Foreach: Cannot convert from `%s' to `%s'".printf (element_data_type.to_string (), stmt.type_reference.to_string ()));
-				return;
-			}
+		if (element_data_type == null) {
+			stmt.error = true;
+			Report.error (stmt.collection.source_reference, "missing type argument for collection");
+			return;
 		}
+
+		// analyze element type
+		if (stmt.type_reference == null) {
+			// var type
+			stmt.type_reference = element_data_type.copy ();
+		} else if (!element_data_type.compatible (stmt.type_reference)) {
+			stmt.error = true;
+			Report.error (stmt.source_reference, "Foreach: Cannot convert from `%s' to `%s'".printf (element_data_type.to_string (), stmt.type_reference.to_string ()));
+			return;
+		}
+		
+		current_source_file.add_type_dependency (stmt.type_reference, SourceFileDependencyType.SOURCE);
+
+		stmt.element_variable = new LocalVariable (stmt.type_reference, stmt.variable_name);
+
+		stmt.body.scope.add (stmt.variable_name, stmt.element_variable);
+
+		stmt.body.add_local_variable (stmt.element_variable);
+		stmt.element_variable.active = true;
+
+		// analyze body
+		stmt.owner = current_symbol.scope;
+		current_symbol = stmt;
+
+		stmt.body.accept (this);
+
+		foreach (LocalVariable local in stmt.get_local_variables ()) {
+			local.active = false;
+		}
+
+		current_symbol = current_symbol.parent_symbol;
+
+		stmt.collection_variable = new LocalVariable (collection_type, "%s_collection".printf (stmt.variable_name));
+
+		stmt.add_local_variable (stmt.collection_variable);
+		stmt.collection_variable.active = true;
+
 
 		stmt.add_error_types (stmt.collection.get_error_types ());
 		stmt.add_error_types (stmt.body.get_error_types ());
@@ -1555,7 +1564,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		// don't call g_object_ref_sink on inner and outer expression
 		expr.value_type.floating_reference = false;
 	}
-
+	
 	public override void visit_member_access (MemberAccess expr) {
 		Symbol base_symbol = null;
 		bool may_access_instance_members = false;

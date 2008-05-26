@@ -30,11 +30,13 @@ public class Vala.ForeachStatement : Block {
 	/**
 	 * Specifies the element type.
 	 */
-	public DataType type_reference {
+	public DataType? type_reference {
 		get { return _data_type; }
 		set {
 			_data_type = value;
-			_data_type.parent_node = this;
+			if (_data_type != null) {
+				_data_type.parent_node = this;
+			}
 		}
 	}
 	
@@ -98,7 +100,7 @@ public class Vala.ForeachStatement : Block {
 	 * @param source reference to source code
 	 * @return       newly created foreach statement
 	 */
-	public ForeachStatement (DataType type_reference, string variable_name, Expression collection, Block body, SourceReference source_reference) {
+	public ForeachStatement (DataType? type_reference, string variable_name, Expression collection, Block body, SourceReference source_reference) {
 		this.variable_name = variable_name;
 		this.collection = collection;
 		this.body = body;
@@ -111,10 +113,12 @@ public class Vala.ForeachStatement : Block {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		type_reference.accept (visitor);
-
 		collection.accept (visitor);
 		visitor.visit_end_full_expression (collection);
+
+		if (type_reference != null) {
+			type_reference.accept (visitor);
+		}
 
 		body.accept (visitor);
 	}

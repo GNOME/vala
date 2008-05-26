@@ -1527,7 +1527,10 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		expect (TokenType.FOREACH);
 		expect (TokenType.OPEN_PARENS);
-		var type = parse_type ();
+		DataType type = null;
+		if (!accept (TokenType.VAR)) {
+			type = parse_type ();
+		}
 		string id = parse_identifier ();
 		expect (TokenType.IN);
 		var collection = parse_expression ();
