@@ -1,5 +1,10 @@
 2008-05-26  Marc-André Lureau  <marcandre.lureau@gmail.com>
 
+	* vapi/glib-2.0.vapi (Memory): add atexit () and memory profile
+	bindings, fixes bug #530627
+
+2008-05-26  Marc-André Lureau  <marcandre.lureau@gmail.com>
+
 	* vapi/glib-2.0.vapi (Object): add weak pointer references
 	bindings and {freeze,thaw}_notify ()
 

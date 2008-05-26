@@ -1385,6 +1385,15 @@ namespace GLib {
 	
 	public static void free (void* mem);
 
+	public class MemVTable {
+	}
+
+	[CCode (cname = "glib_mem_profiler_table")]
+	public static MemVTable mem_profiler_table;
+
+	public static void mem_set_vtable (MemVTable vtable);
+	public static void mem_profile ();
+
 	[CCode (cheader_filename = "string.h")]
 	namespace Memory {
 		[CCode (cname = "memcmp")]
@@ -1871,6 +1880,8 @@ namespace GLib {
 		public static string get_current_dir ();
 		[CCode (cname = "g_find_program_in_path")]
 		public static string find_program_in_path (string program);
+		[CCode (cname = "g_atexit")]
+		public static void atexit (VoidFunc func);
 	}
 
 	public enum UserDirectory {
@@ -1911,6 +1922,7 @@ namespace GLib {
 	}
 
 	public static delegate void FreeFunc (void* data);
+	public static delegate void VoidFunc ();
 
 	/* Lexical Scanner */
 
