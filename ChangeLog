@@ -1,5 +1,12 @@
 2008-05-26  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+
+	Fix implicit casts for instances in invocation expressions,
+	fixes bug 530369
+
+2008-05-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaforeachstatement.vala:
 	* vala/valaparser.vala:
 	* vala/valasemanticanalyzer.vala:
