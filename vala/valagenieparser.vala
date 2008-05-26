@@ -2205,6 +2205,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 		if (ModifierFlags.STATIC in flags) {
 			cl.is_static = true;
+			Report.warning (get_last_src (), "static classes are deprecated, use namespaces");
 		}
 		set_attributes (cl, attrs);
 		foreach (TypeParameter type_param in type_param_list) {

@@ -1,5 +1,11 @@
 2008-05-26  Jamie McCracken  <jamiemcc@gnome.org>
 
+	* vala/valagenieparser.vala:
+
+	Deprecate static classes
+
+2008-05-26  Jamie McCracken  <jamiemcc@gnome.org>
+
 	* vala/valgenieparser.vala: replaced foreach with for..in
 
 
