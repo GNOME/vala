@@ -1,3 +1,8 @@
+2008-05-26  Marc-André Lureau  <marcandre.lureau@gmail.com>
+
+	* vapi/glib-2.0.vapi (Object): add weak pointer references
+	bindings and {freeze,thaw}_notify ()
+
 2008-05-26  Jamie McCracken  <jamiemcc@gnome.org>
 
 	* vala/valagenieparser.vala: 
