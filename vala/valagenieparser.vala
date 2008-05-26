@@ -1282,7 +1282,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 
 
-	Statement get_for_statement_type () {
+	Statement get_for_statement_type () throws ParseError {
 	
 		var begin = get_location ();
 		bool is_foreach = false;

@@ -1,5 +1,9 @@
 2008-05-26  Jamie McCracken  <jamiemcc@gnome.org>
 
+	* vala/valagenieparser.vala: added missing throws ParseError to get_for_statement_type method
+
+2008-05-26  Jamie McCracken  <jamiemcc@gnome.org>
+
 	* vala/valagenieparser.vala: fix warning with pointer casts
 
 2008-05-26  Jamie McCracken  <jamiemcc@gnome.org>
