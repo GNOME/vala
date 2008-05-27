@@ -1,6 +1,6 @@
 /* valathrowstatement.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -62,6 +62,8 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 	public override void accept_children (CodeVisitor visitor) {
 		if (error_expression != null) {
 			error_expression.accept (visitor);
+
+			visitor.visit_end_full_expression (error_expression);
 		}
 	}
 

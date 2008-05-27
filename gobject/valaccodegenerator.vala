@@ -2313,9 +2313,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var cfrag = new CCodeFragment ();
 
-		/* declare temporary objects */
-		append_temp_decl (cfrag, temp_vars);
-
 		// method will fail
 		current_method_inner_error = true;
 		var cassign = new CCodeAssignment (new CCodeIdentifier ("inner_error"), (CCodeExpression) stmt.error_expression.ccodenode);
@@ -2324,6 +2321,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		add_simple_check (stmt, cfrag);
 
 		stmt.ccodenode = cfrag;
+
+		create_temp_decl (stmt, stmt.error_expression.temp_vars);
 	}
 
 	public override void visit_try_statement (TryStatement stmt) {

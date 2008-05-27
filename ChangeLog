@@ -1,3 +1,11 @@
+2008-05-27  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala:
+	* vala/valathrowstatement.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Fix temporary variable handling for throw statements
+
 2008-05-27  Jamie McCracken  <jamiemcc@gnome.org>
 
 	* vala/valagenieparser.vala: 
@@ -10,7 +18,6 @@
 	* vala/valageniescanner.vala: 
 	
 	Added optional indent attribute to allow spaces to be used in lieu of tabs for indents
-
 
 2008-05-27  Jamie McCracken  <jamiemcc@gnome.org>
 
