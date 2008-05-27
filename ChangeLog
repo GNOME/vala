@@ -1,3 +1,9 @@
+2008-05-27  Jamie McCracken  <jamiemcc@gnome.org>
+
+	* vala/valagenieparser.vala: 
+	
+	Made GLib using directive optional 
+
 2008-05-26  Marc-André Lureau  <marcandre.lureau@gmail.com>
 
 	* vapi/glib-2.0.vapi (Memory): add atexit () and memory profile

@@ -2146,15 +2146,19 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 
 
-	void add_uses_clause () throws ParseError {
+	bool add_uses_clause () throws ParseError {
 		var begin = get_location ();
 		var sym = parse_symbol_name ();
 		var ns_ref = new NamespaceReference (sym.name, get_src (begin));
 
 		scanner.source_file.add_using_directive (ns_ref);
+		
+		return (sym.name == "GLib");
 	}
 
 	void parse_using_directives () throws ParseError {
+		var has_glib = false;
+		var begin = get_location ();
 		while (accept (TokenType.USES)) {
 			var begin = get_location ();
 
@@ -2162,7 +2166,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 				expect (TokenType.INDENT);
 
 				while (current () != TokenType.DEDENT && current () != TokenType.EOF) {
-					add_uses_clause ();
+					if (add_uses_clause ()) {
+						has_glib = true;
+					}
 					expect (TokenType.EOL);	
 				}
 
@@ -2175,6 +2181,12 @@ public class Vala.Genie.Parser : CodeVisitor {
 				expect_terminator ();
 			}
 		}
+		
+		if (!has_glib) {
+			var ns_ref = new NamespaceReference ("GLib", get_src (begin));
+			scanner.source_file.add_using_directive (ns_ref);
+		}
+		
 	}
 
 	Symbol parse_class_declaration (Gee.List<Attribute>? attrs) throws ParseError {
