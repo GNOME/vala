@@ -1,6 +1,14 @@
 2008-05-27  Jamie McCracken  <jamiemcc@gnome.org>
 
 	* vala/valagenieparser.vala: 
+	* vala/valageniescanner.vala: 
+	
+	Added optional indent attribute to allow spaces to be used in lieu of tabs for indents
+
+
+2008-05-27  Jamie McCracken  <jamiemcc@gnome.org>
+
+	* vala/valagenieparser.vala: 
 	
 	Made GLib using directive optional 
 

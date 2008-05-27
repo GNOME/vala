@@ -346,6 +346,21 @@ public class Vala.Genie.Parser : CodeVisitor {
 		next ();
 
 		try {
+			var begin = get_location ();
+			/* see if there is an indent attribute */
+			if (accept (TokenType.OPEN_BRACKET)) {
+				var id = parse_identifier ();
+				if (id == "indent") {
+					expect (TokenType.ASSIGN);
+					expect (TokenType.INTEGER_LITERAL);
+					scanner.indent_spaces = get_last_string().to_int();
+					expect (TokenType.CLOSE_BRACKET);
+					expect (TokenType.EOL);
+				} else {
+					rollback (begin);
+				}
+			}
+			
 			parse_using_directives ();
 			parse_declarations (context.root, true);
 		} catch (ParseError e) {

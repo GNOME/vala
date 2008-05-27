@@ -30,6 +30,8 @@ using Gee;
 public class Vala.Genie.Scanner : Object {
 	public SourceFile source_file { get; construct; }
 
+	public int indent_spaces { get;set;}
+
 	char* begin;
 	char* current;
 	char* end;
@@ -45,6 +47,8 @@ public class Vala.Genie.Scanner : Object {
 	bool parse_started;
 
 	string _comment;
+	
+	
 
 	public Scanner (SourceFile source_file) {
 		this.source_file = source_file;
@@ -56,6 +60,7 @@ public class Vala.Genie.Scanner : Object {
 
 		current = begin;
 
+		_indent_spaces = 0;
 		line = 1;
 		column = 1;
 		current_indent_level = 0;
@@ -423,9 +428,11 @@ public class Vala.Genie.Scanner : Object {
 		}
 
 
-		/* scrub whitespace (excluding newlines) and comments */
-		space ();
-
+		if ((_indent_spaces == 0 ) || (last_token != TokenType.EOL)) {
+			/* scrub whitespace (excluding newlines) and comments */		
+			space ();
+		}
+		
 		/* handle line continuation */
 		while (current < end && current[0] == '\\' && current[1] == '\n') {
 			current += 2;
@@ -863,14 +870,27 @@ public class Vala.Genie.Scanner : Object {
 
 	int count_tabs ()
 	{
+		
 		int tab_count = 0;
 
-		while (current < end && current[0] == '\t') {
-			current++;
-			column++;
-			tab_count++;
-		}
 
+		if (_indent_spaces == 0) {
+			while (current < end && current[0] == '\t') {
+				current++;
+				column++;
+				tab_count++;
+			}
+		} else {
+			int space_count = 0;
+			while (current < end && current[0] == ' ') {
+				current++;
+				column++;
+				space_count++;
+			}
+			
+			tab_count = space_count / _indent_spaces;
+		
+		}
 
 		/* ignore comments and whitspace and other lines that contain no code */
 
