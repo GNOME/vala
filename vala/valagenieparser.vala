@@ -638,9 +638,22 @@ public class Vala.Genie.Parser : CodeVisitor {
 					i++;
 					
 					if (p_expr != null) { 
-						string s = "\"\\n\"";
-						var rhs = new StringLiteral (s, get_src (begin));
-						p_expr = new BinaryExpression (BinaryOperator.PLUS, p_expr, rhs, get_src (begin));
+						string s = "\\n\"";
+						
+						if (p_expr is StringLiteral) {
+							var s_exp = (StringLiteral) p_expr;
+							var len = s_exp.value.size ();
+							
+							if (len > 2) {
+								var st =  s_exp.value.ndup (len-1);
+								st += s;
+								s_exp.value = st;
+							}
+						} else {
+							string s = "\"\\n\"";
+							var rhs = new StringLiteral (s, get_src (begin));
+							p_expr = new BinaryExpression (BinaryOperator.PLUS, p_expr, rhs, get_src (begin));
+						}
 					}
 				
 				} 
