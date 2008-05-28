@@ -1,5 +1,12 @@
 2008-05-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala:
+
+	Don't generate default creation method for abstract classes,
+	patch by Marc-André Lureau, fixes bug 531190
+
+2008-05-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valanamespace.vala:
 	* vala/valaparser.vala:
 
