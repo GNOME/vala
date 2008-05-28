@@ -38,6 +38,8 @@ public class Vala.NullLiteral : Literal {
 	
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_null_literal (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override string to_string () {

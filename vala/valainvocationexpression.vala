@@ -93,6 +93,8 @@ public class Vala.InvocationExpression : Expression {
 
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_invocation_expression (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override void accept_children (CodeVisitor visitor) {

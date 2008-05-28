@@ -76,6 +76,8 @@ public class Vala.Assignment : Expression {
 	
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_assignment (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override void accept_children (CodeVisitor visitor) {

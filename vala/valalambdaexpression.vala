@@ -91,6 +91,8 @@ public class Vala.LambdaExpression : Expression {
 	
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_lambda_expression (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override void accept_children (CodeVisitor visitor) {

@@ -45,27 +45,6 @@ public abstract class Vala.Expression : CodeNode {
 	 * The symbol this expression refers to.
 	 */
 	public weak Symbol symbol_reference { get; set; }
-	
-	/**
-	 * Specifies that this expression transfers ownership without a receiver
-	 * being present.
-	 *
-	 * The memory manager computes this value, the code generator uses it.
-	 */
-	public bool ref_leaked { get; set; }
-	
-	/**
-	 * Specifies that this expression is expected to transfer ownership but
-	 * doesn't.
-	 *
-	 * The memory manager computes this value, the code generator uses it.
-	 */
-	public bool ref_missing { get; set; }
-	
-	/**
-	 * Specifies that this expression successfully transfers ownership.
-	 */
-	public bool ref_sink { get; set; }
 
 	/**
 	 * Specifies that this expression is used as lvalue, i.e. the

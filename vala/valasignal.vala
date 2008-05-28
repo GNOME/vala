@@ -108,6 +108,8 @@ public class Vala.Signal : Member, Lockable {
 			foreach (FormalParameter param in parameters) {
 				generated_delegate.add_parameter (param);
 			}
+
+			scope.add (null, generated_delegate);
 		}
 		
 		return generated_delegate;

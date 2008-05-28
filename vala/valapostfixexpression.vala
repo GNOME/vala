@@ -54,6 +54,8 @@ public class Vala.PostfixExpression : Expression {
 		inner.accept (visitor);
 
 		visitor.visit_postfix_expression (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override bool is_pure () {

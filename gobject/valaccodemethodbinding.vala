@@ -234,7 +234,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 							base_expression_type = new ObjectType ((Interface) base_method.parent_symbol);
 						}
 						var self_target_type = new ObjectType (cl);
-						CCodeExpression cself = codegen.get_implicit_cast_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
+						CCodeExpression cself = codegen.transform_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
 
 						var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", cself));

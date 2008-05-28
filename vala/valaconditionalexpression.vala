@@ -62,6 +62,8 @@ public class Vala.ConditionalExpression : Expression {
 		false_expression.accept (visitor);			
 
 		visitor.visit_conditional_expression (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override bool is_pure () {

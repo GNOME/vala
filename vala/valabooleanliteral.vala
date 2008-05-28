@@ -45,6 +45,8 @@ public class Vala.BooleanLiteral : Literal {
 	
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_boolean_literal (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override string to_string () {

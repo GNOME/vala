@@ -45,9 +45,6 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		} else {
 			CCodeExpression cexpr = (CCodeExpression) assignment.right.ccodenode;
 
-			// ensure to pass the value correctly typed (especially important for varargs)
-			cexpr = codegen.get_implicit_cast_expression (cexpr, assignment.right.value_type, prop.property_type);
-
 			if (!prop.no_accessor_method) {
 				if (prop.property_type.is_real_struct_type ()) {
 					cexpr = codegen.get_address_of_expression (assignment.right, cexpr);
@@ -176,7 +173,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		}
 		
 		// third resp. sixth argument: handler
-		ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier (generate_signal_handler_wrapper (m, sig)), "GCallback"));
+		ccall.add_argument (new CCodeCastExpression ((CCodeExpression) assignment.right.ccodenode, "GCallback"));
 
 		if (m.binding == MemberBinding.INSTANCE) {
 			// g_signal_connect_object or g_signal_handlers_disconnect_matched
@@ -210,119 +207,9 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		codenode = ccall;
 	}
 
-	private string generate_signal_handler_wrapper (Method m, Signal sig) {
-		var dynamic_signal = sig as DynamicSignal;
-
-		string wrapper_name;
-		if (dynamic_signal != null) {
-			wrapper_name = "_%s_%s".printf (m.get_cname (), codegen.dynamic_signal_binding (dynamic_signal).get_dynamic_cname ());
-		} else {
-			wrapper_name = "_%s_%s%s".printf (m.get_cname (), sig.parent_symbol.get_lower_case_cprefix (), sig.get_cname ());
-		}
-
-		if (!codegen.add_wrapper (wrapper_name)) {
-			// wrapper already defined
-			return wrapper_name;
-		}
-
-		// declaration
-
-		var function = new CCodeFunction (wrapper_name, m.return_type.get_cname ());
-		function.modifiers = CCodeModifiers.STATIC;
-		m.ccodenode = function;
-
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
-
-		var cparam = new CCodeFormalParameter ("self", "gpointer");
-		cparam_map.set (codegen.get_param_pos (-1), cparam);
-
-		cparam = new CCodeFormalParameter ("_sender", ((TypeSymbol) sig.parent_symbol).get_cname () + "*");
-		cparam_map.set (codegen.get_param_pos (0), cparam);
-		foreach (FormalParameter param in sig.get_parameters()) {
-			// ensure that C code node has been generated
-			param.accept (codegen);
-
-			cparam_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
-		}
-
-		// append C parameters in the right order
-		int last_pos = -1;
-		int min_pos;
-		while (true) {
-			min_pos = -1;
-			foreach (int pos in cparam_map.get_keys ()) {
-				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
-					min_pos = pos;
-				}
-			}
-			if (min_pos == -1) {
-				break;
-			}
-			function.add_parameter (cparam_map.get (min_pos));
-			last_pos = min_pos;
-		}
-
-
-		// definition
-
-		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
-
-		if (m.binding == MemberBinding.INSTANCE) {
-			carg_map.set (codegen.get_param_pos (m.cinstance_parameter_position), new CCodeIdentifier ("self"));
-		}
-
-		int i = -1;
-		var sig_params = sig.get_parameters ();
-		foreach (FormalParameter param in m.get_parameters ()) {
-			CCodeExpression arg;
-			if (i < 0) {
-				arg = new CCodeIdentifier ("_sender");
-			} else {
-				arg = new CCodeIdentifier ((sig_params.get (i).ccodenode as CCodeFormalParameter).name);
-			}
-			carg_map.set (codegen.get_param_pos (param.cparameter_position), arg);
-			i++;
-		}
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
-
-		// append C arguments in the right order
-		last_pos = -1;
-		while (true) {
-			min_pos = -1;
-			foreach (int pos in carg_map.get_keys ()) {
-				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
-					min_pos = pos;
-				}
-			}
-			if (min_pos == -1) {
-				break;
-			}
-			ccall.add_argument (carg_map.get (min_pos));
-			last_pos = min_pos;
-		}
-
-		var block = new CCodeBlock ();
-		if (m.return_type is VoidType) {
-			block.add_statement (new CCodeExpressionStatement (ccall));
-		} else {
-			block.add_statement (new CCodeReturnStatement (ccall));
-		}
-
-		// append to file
-
-		codegen.source_type_member_declaration.append (function.copy ());
-
-		function.block = block;
-		codegen.source_type_member_definition.append (function);
-
-		return wrapper_name;
-	}
-
 	private void emit_non_array_element_access () {
 		// custom element access
 		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
-
-		rhs = codegen.get_implicit_cast_expression (rhs, assignment.right.value_type, assignment.left.value_type);
 
 		var expr = (ElementAccess) assignment.left;
 		var container_type = expr.container.value_type.data_type;
@@ -367,8 +254,6 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 
 	private void emit_simple_assignment () {
 		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
-
-		rhs = codegen.get_implicit_cast_expression (rhs, assignment.right.value_type, assignment.left.value_type);
 
 		bool unref_old = codegen.requires_destroy (assignment.left.value_type);
 		bool array = false;
@@ -470,7 +355,5 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		}
 
 		assignment.ccodenode = codenode;
-
-		codegen.visit_expression (assignment);
 	}
 }

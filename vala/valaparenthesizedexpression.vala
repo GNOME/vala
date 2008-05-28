@@ -55,6 +55,8 @@ public class Vala.ParenthesizedExpression : Expression {
 	
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_parenthesized_expression (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override void accept_children (CodeVisitor visitor) {

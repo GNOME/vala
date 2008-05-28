@@ -61,6 +61,8 @@ public class Vala.StringLiteral : Literal {
 	
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_string_literal (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override bool is_pure () {

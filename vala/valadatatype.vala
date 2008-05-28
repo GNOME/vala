@@ -40,6 +40,11 @@ public abstract class Vala.DataType : CodeNode {
 	public bool nullable { get; set; }
 
 	/**
+	 * Specifies that this type is a generic type argument.
+	 */
+	public bool is_type_argument { get; set; }
+
+	/**
 	 * The referred data type.
 	 */
 	public weak TypeSymbol data_type { get; set; }

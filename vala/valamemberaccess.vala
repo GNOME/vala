@@ -126,6 +126,8 @@ public class Vala.MemberAccess : Expression {
 		}
 
 		visitor.visit_member_access (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override string to_string () {

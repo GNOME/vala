@@ -43,6 +43,7 @@ public class Vala.ValueType : DataType {
 		result.nullable = nullable;
 		result.is_dynamic = is_dynamic;
 		result.floating_reference = floating_reference;
+		result.is_type_argument = is_type_argument;
 		
 		foreach (DataType arg in get_type_arguments ()) {
 			result.add_type_argument (arg.copy ());

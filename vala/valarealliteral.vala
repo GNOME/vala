@@ -45,6 +45,8 @@ public class Vala.RealLiteral : Literal {
 	
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_real_literal (this);
+
+		visitor.visit_expression (this);
 	}
 	
 	/**

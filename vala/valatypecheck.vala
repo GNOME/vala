@@ -64,6 +64,8 @@ public class Vala.TypeCheck : Expression {
 		type_reference.accept (visitor);
 	
 		visitor.visit_type_check (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override bool is_pure () {

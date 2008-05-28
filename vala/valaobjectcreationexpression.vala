@@ -110,6 +110,8 @@ public class Vala.ObjectCreationExpression : Expression {
 
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_object_creation_expression (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override void accept_children (CodeVisitor visitor) {

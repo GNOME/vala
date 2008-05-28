@@ -51,7 +51,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 					return;
 				}
 			}
-			
+
 			if (m.base_method != null) {
 				var binding = method_binding (m.base_method);
 				if (!binding.has_wrapper) {
@@ -84,16 +84,15 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 			if (f.binding == MemberBinding.INSTANCE) {
 				var instance_expression_type = base_type;
 				var instance_target_type = codegen.get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
-				CCodeExpression typed_inst = codegen.get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 
 				var cl = instance_target_type.data_type as Class;
 				bool is_gtypeinstance = (cl == null || !cl.is_compact);
 
 				CCodeExpression inst;
 				if (is_gtypeinstance && f.access == SymbolAccessibility.PRIVATE) {
-					inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
+					inst = new CCodeMemberAccess.pointer (pub_inst, "priv");
 				} else {
-					inst = typed_inst;
+					inst = pub_inst;
 				}
 				if (instance_target_type.data_type.is_reference_type () || (expr.inner != null && expr.inner.value_type is PointerType)) {
 					expr.ccodenode = new CCodeMemberAccess.pointer (inst, f.get_cname ());
@@ -140,11 +139,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 				}
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (getter_cname));
 
-				var instance_expression_type = base_type;
-				var instance_target_type = codegen.get_data_type_for_symbol (base_property_type);
-				CCodeExpression typed_pub_inst = codegen.get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
-
-				ccall.add_argument (typed_pub_inst);
+				ccall.add_argument (pub_inst);
 
 				// Property acesses to real struct types are handeled different to other properties.
 				// They are returned as out parameter.
@@ -195,7 +190,12 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 		} else if (expr.symbol_reference is FormalParameter) {
 			var p = (FormalParameter) expr.symbol_reference;
 			if (p.name == "this") {
-				expr.ccodenode = pub_inst;
+				var st = codegen.current_type_symbol as Struct;
+				if (st != null && !st.is_simple_type ()) {
+					expr.ccodenode = new CCodeIdentifier ("(*self)");
+				} else {
+					expr.ccodenode = new CCodeIdentifier ("self");
+				}
 			} else {
 				var type_as_struct = p.parameter_type.data_type as Struct;
 				if (p.direction != ParameterDirection.IN
@@ -221,11 +221,8 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 			
 			if (sig.has_emitter) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_%s".printf (cl.get_lower_case_cname (null), sig.name)));
-				var instance_expression_type = base_type;
-				var instance_target_type = codegen.get_data_type_for_symbol (cl);
-				CCodeExpression typed_pub_inst = codegen.get_implicit_cast_expression (pub_inst, instance_expression_type, instance_target_type);
 
-				ccall.add_argument (typed_pub_inst);
+				ccall.add_argument (pub_inst);
 				expr.ccodenode = ccall;
 			} else {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
@@ -248,21 +245,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 		CCodeExpression pub_inst = null;
 		DataType base_type = null;
 	
-		if (expr.inner == null) {
-			pub_inst = new CCodeIdentifier ("self");
-
-			if (codegen.current_type_symbol != null) {
-				/* base type is available if this is a type method */
-				if (codegen.current_type_symbol is Class) {
-					base_type = new ObjectType ((Class) codegen.current_type_symbol);
-				} else if (codegen.current_type_symbol is Interface) {
-					base_type = new ObjectType ((Interface) codegen.current_type_symbol);
-				} else {
-					base_type = new ValueType (codegen.current_type_symbol);
-					pub_inst = new CCodeIdentifier ("(*self)");
-				}
-			}
-		} else {
+		if (expr.inner != null) {
 			pub_inst = (CCodeExpression) expr.inner.ccodenode;
 
 			if (expr.inner.value_type != null) {
@@ -271,8 +254,6 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 		}
 
 		process_cmember (expr, pub_inst, base_type);
-
-		codegen.visit_expression (expr);
 	}
 }
 

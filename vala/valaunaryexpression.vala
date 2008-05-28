@@ -66,6 +66,8 @@ public class Vala.UnaryExpression : Expression {
 		inner.accept (visitor);
 	
 		visitor.visit_unary_expression (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {

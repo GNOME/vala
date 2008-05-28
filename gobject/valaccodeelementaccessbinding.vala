@@ -97,7 +97,5 @@ public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
 		}
 
 		expr.ccodenode = codenode;
-
-		codegen.visit_expression (expr);
 	}
 }

@@ -90,7 +90,6 @@ libvalacore_la_VALASOURCES = \
 	valamember.vala \
 	valamemberaccess.vala \
 	valamemberinitializer.vala \
-	valamemorymanager.vala \
 	valamethod.vala \
 	valamethodtype.vala \
 	valanamedargument.vala \

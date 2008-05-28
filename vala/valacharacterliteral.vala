@@ -66,6 +66,8 @@ public class Vala.CharacterLiteral : Literal {
 	
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_character_literal (this);
+
+		visitor.visit_expression (this);
 	}
 	
 	/**

@@ -59,6 +59,8 @@ public class Vala.ElementAccess : Expression {
 		}
 
 		visitor.visit_element_access (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {

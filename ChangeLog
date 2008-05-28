@@ -1,5 +1,56 @@
 2008-05-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am:
+	* vala/valaaddressofexpression.vala:
+	* vala/valaarraycreationexpression.vala:
+	* vala/valaassignment.vala:
+	* vala/valabaseaccess.vala:
+	* vala/valabinaryexpression.vala:
+	* vala/valabooleanliteral.vala:
+	* vala/valacastexpression.vala:
+	* vala/valacharacterliteral.vala:
+	* vala/valacodevisitor.vala:
+	* vala/valaconditionalexpression.vala:
+	* vala/valadatatype.vala:
+	* vala/valaelementaccess.vala:
+	* vala/valaexpression.vala:
+	* vala/valaintegerliteral.vala:
+	* vala/valaintegertype.vala:
+	* vala/valainvocationexpression.vala:
+	* vala/valalambdaexpression.vala:
+	* vala/valamemberaccess.vala:
+	* vala/valanullchecker.vala:
+	* vala/valanullliteral.vala:
+	* vala/valanulltype.vala:
+	* vala/valaobjectcreationexpression.vala:
+	* vala/valaparenthesizedexpression.vala:
+	* vala/valapointerindirection.vala:
+	* vala/valapostfixexpression.vala:
+	* vala/valarealliteral.vala:
+	* vala/valareferencetransferexpression.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasignal.vala:
+	* vala/valasizeofexpression.vala:
+	* vala/valastringliteral.vala:
+	* vala/valatypecheck.vala:
+	* vala/valatypeofexpression.vala:
+	* vala/valaunaryexpression.vala:
+	* vala/valaunresolvedtype.vala:
+	* vala/valavaluetype.vala:
+	* gobject/valaccodeassignmentbinding.vala:
+	* gobject/valaccodeelementaccessbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+	* gobject/valaccodememberaccessbinding.vala:
+	* gobject/valaccodemethodbinding.vala:
+	* compiler/valacompiler.vala:
+
+	Move memory management into CCodeGenerator.transform_expression
+	as preparation to properly support nullable structs, fixes memory
+	leak in internal substring method, fixes bug 527775
+
+2008-05-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 	* vala/valasignal.vala:
 	* gobject/valaccodeassignmentbinding.vala:

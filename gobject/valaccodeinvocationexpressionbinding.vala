@@ -74,21 +74,8 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 
 		CCodeExpression instance;
 		if (m != null && m.binding == MemberBinding.INSTANCE) {
-			var base_method = m;
-			if (m.base_method != null) {
-				base_method = m.base_method;
-			} else if (m.base_interface_method != null) {
-				base_method = m.base_interface_method;
-			}
-
-			DataType instance_expression_type;
-			if (ma.inner == null) {
-				instance = new CCodeIdentifier ("self");
-				instance_expression_type = codegen.get_data_type_for_symbol (codegen.current_type_symbol);
-			} else {
-				instance = (CCodeExpression) ma.inner.ccodenode;
-				instance_expression_type = ma.inner.value_type;
-			}
+			instance = (CCodeExpression) ma.inner.ccodenode;
+			var instance_expression_type = ma.inner.value_type;
 
 			if (instance_expression_type.data_type is Struct
 			    && !((Struct) instance_expression_type.data_type).is_simple_type ()
@@ -107,12 +94,6 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 
 					instance = ccomma;
 				}
-			}
-
-			// parent_symbol may be null for late bound methods
-			if (base_method.parent_symbol != null) {
-				var instance_target_type = codegen.get_data_type_for_symbol ((TypeSymbol) base_method.parent_symbol);
-				instance = codegen.get_implicit_cast_expression (instance, instance_expression_type, instance_target_type);
 			}
 
 			carg_map.set (codegen.get_param_pos (m.cinstance_parameter_position), instance);
@@ -191,10 +172,6 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 					} else if (param.parameter_type is MethodType) {
 						carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), codegen.get_delegate_target_cexpression (arg));
 						multiple_cargs = true;
-					}
-					if (param.direction == ParameterDirection.IN) {
-						// don't cast arguments passed by reference
-						cexpr = codegen.get_implicit_cast_expression (cexpr, arg.value_type, param.parameter_type);
 					}
 
 					// pass non-simple struct instances always by reference
@@ -391,8 +368,6 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 			} else {
 				expr.ccodenode = ccall_expr;
 			}
-		
-			codegen.visit_expression (expr);
 		}
 		
 		if (m is ArrayResizeMethod) {

@@ -78,6 +78,8 @@ public class Vala.CastExpression : Expression {
 		type_reference.accept (visitor);
 
 		visitor.visit_cast_expression (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {

@@ -83,6 +83,8 @@ public class Vala.BinaryExpression : Expression {
 		right.accept (visitor);			
 
 		visitor.visit_binary_expression (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {

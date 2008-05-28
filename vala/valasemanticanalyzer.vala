@@ -59,6 +59,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	private int next_lambda_id = 0;
 
+	// keep replaced alive to make sure they remain valid
+	// for the whole execution of CodeNode.accept
+	Gee.List<CodeNode> replaced_nodes = new ArrayList<CodeNode> ();
+
 	public SemanticAnalyzer () {
 	}
 
@@ -344,6 +348,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_field (Field f) {
+		if (f.initializer != null) {
+			f.initializer.target_type = f.field_type;
+		}
+
 		f.accept_children (this);
 
 		if (f.binding == MemberBinding.INSTANCE && f.parent_symbol is Interface) {
@@ -747,6 +755,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			local.variable_type = local.initializer.value_type.copy ();
 			local.variable_type.value_owned = true;
+			local.variable_type.floating_reference = false;
+
+			local.initializer.target_type = local.variable_type;
 		}
 
 		if (local.initializer != null) {
@@ -1008,6 +1019,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		var collection_type = stmt.collection.value_type.copy ();
+		stmt.collection.target_type = collection_type.copy ();
 		
 		DataType element_data_type = null;
 	
@@ -1090,6 +1102,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_return_statement (ReturnStatement stmt) {
+		if (stmt.return_expression != null) {
+			stmt.return_expression.target_type = current_return_type;
+		}
+
 		stmt.accept_children (this);
 
 		if (stmt.return_expression != null && stmt.return_expression.error) {
@@ -1456,10 +1472,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.value_type = expr.inner.value_type.copy ();
 		// don't call g_object_ref_sink on inner and outer expression
 		expr.value_type.floating_reference = false;
+
+		// don't transform expression twice
+		expr.inner.target_type = expr.inner.value_type.copy ();
 	}
 	
 	public override void visit_member_access (MemberAccess expr) {
 		Symbol base_symbol = null;
+		FormalParameter this_parameter = null;
 		bool may_access_instance_members = false;
 
 		expr.symbol_reference = null;
@@ -1480,11 +1500,28 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			var sym = current_symbol;
 			while (sym != null && expr.symbol_reference == null) {
-				if (sym is CreationMethod || sym is Property || sym is Constructor || sym is Destructor) {
-					may_access_instance_members = true;
-				} else if (sym is Method) {
-					var m = (Method) sym;
-					may_access_instance_members = (m.binding == MemberBinding.INSTANCE);
+				if (this_parameter == null) {
+					if (sym is CreationMethod) {
+						var cm = (CreationMethod) sym;
+						this_parameter = cm.this_parameter;
+						may_access_instance_members = true;
+					} else if (sym is Property) {
+						var prop = (Property) sym;
+						this_parameter = prop.this_parameter;
+						may_access_instance_members = true;
+					} else if (sym is Constructor) {
+						var c = (Constructor) sym;
+						this_parameter = c.this_parameter;
+						may_access_instance_members = true;
+					} else if (sym is Destructor) {
+						var d = (Destructor) sym;
+						this_parameter = d.this_parameter;
+						may_access_instance_members = true;
+					} else if (sym is Method) {
+						var m = (Method) sym;
+						this_parameter = m.this_parameter;
+						may_access_instance_members = (m.binding == MemberBinding.INSTANCE);
+					}
 				}
 
 				expr.symbol_reference = symbol_lookup_inherited (sym, expr.member_name);
@@ -1715,6 +1752,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				expr.value_type = new FieldPrototype ((Field) expr.symbol_reference);
 			}
 		} else {
+			// implicit this access
+			if (instance && expr.inner == null) {
+				expr.inner = new MemberAccess (null, "this", expr.source_reference);
+				expr.inner.value_type = this_parameter.parameter_type.copy ();
+				expr.inner.symbol_reference = this_parameter;
+			}
+
 			expr.value_type = get_value_type_for_symbol (expr.symbol_reference, expr.lvalue);
 
 			// resolve generic return values
@@ -1726,9 +1770,64 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					}
 				}
 			}
+
+			if (expr.symbol_reference is Method) {
+				var m = (Method) expr.symbol_reference;
+
+				Method base_method;
+				if (m.base_method != null) {
+					base_method = m.base_method;
+				} else if (m.base_interface_method != null) {
+					base_method = m.base_interface_method;
+				} else {
+					base_method = m;
+				}
+
+				if (instance && base_method.parent_symbol != null) {
+					expr.inner.target_type = get_data_type_for_symbol ((TypeSymbol) base_method.parent_symbol);
+				}
+			} else if (expr.symbol_reference is Property) {
+				var prop = (Property) expr.symbol_reference;
+
+				Property base_property;
+				if (prop.base_property != null) {
+					base_property = prop.base_property;
+				} else if (prop.base_interface_property != null) {
+					base_property = prop.base_interface_property;
+				} else {
+					base_property = prop;
+				}
+
+				if (instance && base_property.parent_symbol != null) {
+					expr.inner.target_type = get_data_type_for_symbol ((TypeSymbol) base_property.parent_symbol);
+				}
+			} else if ((expr.symbol_reference is Field
+			            || expr.symbol_reference is Signal)
+			           && instance && expr.symbol_reference.parent_symbol != null) {
+				expr.inner.target_type = get_data_type_for_symbol ((TypeSymbol) expr.symbol_reference.parent_symbol);
+			}
 		}
 
 		current_source_file.add_symbol_dependency (expr.symbol_reference, SourceFileDependencyType.SOURCE);
+	}
+
+	public static DataType get_data_type_for_symbol (TypeSymbol sym) {
+		DataType type = null;
+
+		if (sym is ObjectTypeSymbol) {
+			type = new ObjectType ((ObjectTypeSymbol) sym);
+		} else if (sym is Struct) {
+			type = new ValueType ((Struct) sym);
+		} else if (sym is Enum) {
+			type = new ValueType ((Enum) sym);
+		} else if (sym is ErrorDomain) {
+			type = new ErrorType ((ErrorDomain) sym);
+		} else {
+			Report.error (null, "internal error: `%s' is not a supported type".printf (sym.get_full_name ()));
+			return new InvalidType ();
+		}
+
+		return type;
 	}
 
 	public override void visit_invocation_expression (InvocationExpression expr) {
@@ -1760,6 +1859,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			foreach (Expression arg in expr.get_argument_list ()) {
 				struct_creation_expression.add_argument (arg);
 			}
+			struct_creation_expression.target_type = expr.target_type;
+			replaced_nodes.add (expr);
 			expr.parent_node.replace_expression (expr, struct_creation_expression);
 			struct_creation_expression.accept (this);
 			return;
@@ -1787,6 +1888,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 				/* store expected type for callback parameters */
 				arg.target_type = param.parameter_type;
+
+				// resolve generic type parameters
+				var ma = expr.call as MemberAccess;
+				if (arg.target_type.type_parameter != null) {
+					if (ma != null && ma.inner != null) {
+						arg.target_type = get_actual_type (ma.inner.value_type, ma.symbol_reference, arg.target_type, arg);
+						assert (arg.target_type != null);
+					}
+				}
 			}
 		}
 
@@ -1887,10 +1997,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						Report.error (arg.source_reference, "Invalid type for argument %d".printf (i + 1));
 						return false;
 					}
-				} else if (!arg.value_type.compatible (param.parameter_type)
+				} else if (arg.target_type != null && !arg.value_type.compatible (arg.target_type)
 				           && !(arg is NullLiteral && param.direction == ParameterDirection.OUT)) {
 					expr.error = true;
-					Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.value_type.to_string (), param.parameter_type.to_string ()));
+					Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.value_type.to_string (), arg.target_type.to_string ()));
 					return false;
 				} else {
 					// 0 => null, 1 => in, 2 => ref, 3 => out
@@ -2104,6 +2214,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return generic_type;
 		}
 		actual_type = actual_type.copy ();
+		actual_type.is_type_argument = true;
 		actual_type.value_owned = actual_type.value_owned && generic_type.value_owned;
 		return actual_type;
 	}
@@ -2569,6 +2680,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			var assignment = new Assignment (ma, bin, AssignmentOperator.SIMPLE, expr.source_reference);
 			var parenthexp = new ParenthesizedExpression (assignment, expr.source_reference);
+			parenthexp.target_type = expr.target_type;
+			replaced_nodes.add (expr);
 			expr.parent_node.replace_expression (expr, parenthexp);
 			parenthexp.accept (this);
 			return;
@@ -2613,6 +2726,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		expr.value_type = expr.type_reference;
 		expr.value_type.value_owned = expr.inner.value_type.value_owned;
+
+		expr.inner.target_type = expr.inner.value_type.copy ();
 	}
 
 	public override void visit_pointer_indirection (PointerIndirection expr) {
@@ -2749,7 +2864,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			var concat_call = new InvocationExpression (new MemberAccess (expr.left, "concat"));
 			concat_call.add_argument (expr.right);
+			concat_call.target_type = expr.target_type;
 
+			replaced_nodes.add (expr);
 			expr.parent_node.replace_expression (expr, concat_call);
 
 			concat_call.accept (this);
@@ -3018,9 +3135,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				a.right.target_type = ma.value_type;
 			}
 		} else if (a.left is ElementAccess) {
-			// do nothing
+			a.right.target_type = a.left.value_type;
 		} else if (a.left is PointerIndirection) {
-			// do nothing
+			a.right.target_type = a.left.value_type;
 		} else {
 			a.error = true;
 			Report.error (a.source_reference, "unsupported lvalue in assignment");
@@ -3046,6 +3163,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				var old_value = new MemberAccess (ma.inner, ma.member_name);
 
 				var bin = new BinaryExpression (BinaryOperator.PLUS, old_value, new ParenthesizedExpression (a.right, a.right.source_reference));
+				bin.target_type = a.right.target_type;
+				a.right.target_type = a.right.target_type.copy ();
+				a.right.target_type.value_owned = false;
 
 				if (a.operator == AssignmentOperator.BITWISE_OR) {
 					bin.operator = BinaryOperator.BITWISE_OR;
@@ -3225,10 +3345,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (a.left.value_type != null) {
 			a.value_type = a.left.value_type.copy ();
-			if (a.parent_node is ExpressionStatement) {
-				// Gee.List.get () transfers ownership but void function Gee.List.set () doesn't
-				a.value_type.value_owned = false;
-			}
+			a.value_type.value_owned = false;
 		} else {
 			a.value_type = null;
 		}

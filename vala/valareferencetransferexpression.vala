@@ -54,6 +54,8 @@ public class Vala.ReferenceTransferExpression : Expression {
 	
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_reference_transfer_expression (this);
+
+		visitor.visit_expression (this);
 	}
 	
 	public override void accept_children (CodeVisitor visitor) {

@@ -265,13 +265,6 @@ class Vala.Compiler : Object {
 			}
 		}
 
-		var memory_manager = new MemoryManager ();
-		memory_manager.analyze (context);
-
-		if (Report.get_errors () > 0) {
-			return quit ();
-		}
-
 		context.codegen.emit (context);
 		
 		if (Report.get_errors () > 0) {

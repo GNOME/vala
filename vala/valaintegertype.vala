@@ -36,6 +36,7 @@ public class Vala.IntegerType : ValueType {
 	public override DataType copy () {
 		var type = new IntegerType (type_symbol);
 		type.literal = literal;
+		type.is_type_argument = is_type_argument;
 		return type;
 	}
 

@@ -60,4 +60,8 @@ public class Vala.NullType : ReferenceType {
 	public override string? get_cname () {
 		return "gpointer";
 	}
+
+	public override bool is_disposable () {
+		return false;
+	}
 }

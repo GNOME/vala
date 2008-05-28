@@ -404,6 +404,14 @@ public abstract class Vala.CodeVisitor : Object {
 	}
 
 	/**
+	 * Visit operations called for expresions.
+	 *
+	 * @param expr an expression
+	 */
+	public virtual void visit_expression (Expression expr) {
+	}
+
+	/**
 	 * Visit operations called for array creation expresions.
 	 *
 	 * @param expr an array creation expression

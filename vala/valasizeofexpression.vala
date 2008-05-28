@@ -55,6 +55,8 @@ public class Vala.SizeofExpression : Expression {
 		type_reference.accept (visitor);
 	
 		visitor.visit_sizeof_expression (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override bool is_pure () {

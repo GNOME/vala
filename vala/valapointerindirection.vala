@@ -56,6 +56,8 @@ public class Vala.PointerIndirection : Expression {
 		inner.accept (visitor);
 
 		visitor.visit_pointer_indirection (this);
+
+		visitor.visit_expression (this);
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {

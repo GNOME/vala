@@ -72,6 +72,8 @@ public class Vala.UnresolvedType : DataType {
 			}
 			
 			if (type_ref != null) {
+				type_ref.value_owned = true;
+
 				var type_args = ma.get_type_arguments ();
 				foreach (DataType arg in type_args) {
 					type_ref.add_type_argument (arg);
