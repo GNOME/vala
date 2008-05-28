@@ -717,8 +717,7 @@ namespace GLib {
 	public interface TypePlugin {
 	}
 
-	[Compact]
-	public class TypeModule : TypePlugin {
+	public class TypeModule : Object, TypePlugin {
 		public bool use ();
 		public void unuse ();
 		public void set_name (string name);
