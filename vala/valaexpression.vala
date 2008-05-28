@@ -39,7 +39,7 @@ public abstract class Vala.Expression : CodeNode {
 	 *
 	 * The semantic analyzer computes this value, lambda expressions use it.
 	 */
-	public DataType expected_type { get; set; }
+	public DataType target_type { get; set; }
 	
 	/**
 	 * The symbol this expression refers to.

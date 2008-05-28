@@ -1,5 +1,13 @@
 2008-05-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaexpression.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Rename Expression.expected_type to Expression.target_type
+
+2008-05-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala:
 	* vala/valamethod.vala:
 	* vala/valaproperty.vala:

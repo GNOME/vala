@@ -326,7 +326,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				c.error = true;
 				Report.error (c.source_reference, "A const field requires a initializer to be provided");
 			} else {
-				c.initializer.expected_type = c.type_reference;
+				c.initializer.target_type = c.type_reference;
 
 				c.initializer.accept (this);
 			}
@@ -716,7 +716,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_local_variable (LocalVariable local) {
 		if (local.initializer != null) {
-			local.initializer.expected_type = local.variable_type;
+			local.initializer.target_type = local.variable_type;
 		}
 
 		local.accept_children (this);
@@ -801,16 +801,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	 * @param list an initializer list
 	 */
 	public override void visit_initializer_list (InitializerList list) {
-		if (list.expected_type is ArrayType) {
+		if (list.target_type is ArrayType) {
 			/* initializer is used as array initializer */
-			var array_type = (ArrayType) list.expected_type;
+			var array_type = (ArrayType) list.target_type;
 
 			foreach (Expression e in list.get_initializers ()) {
-				e.expected_type = array_type.element_type.copy ();
+				e.target_type = array_type.element_type.copy ();
 			}
-		} else if (list.expected_type != null && list.expected_type.data_type is Struct) {
+		} else if (list.target_type != null && list.target_type.data_type is Struct) {
 			/* initializer is used as struct initializer */
-			var st = (Struct) list.expected_type.data_type;
+			var st = (Struct) list.target_type.data_type;
 
 			var field_it = st.get_fields ().iterator ();
 			foreach (Expression e in list.get_initializers ()) {
@@ -818,7 +818,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				while (field == null) {
 					if (!field_it.next ()) {
 						list.error = true;
-						Report.error (e.source_reference, "too many expressions in initializer list for `%s'".printf (list.expected_type.to_string ()));
+						Report.error (e.source_reference, "too many expressions in initializer list for `%s'".printf (list.target_type.to_string ()));
 						return;
 					}
 					field = field_it.get ();
@@ -828,15 +828,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					}
 				}
 
-				e.expected_type = field.field_type.copy ();
+				e.target_type = field.field_type.copy ();
 			}
-		} else if (list.expected_type == null) {
+		} else if (list.target_type == null) {
 			list.error = true;
 			Report.error (list.source_reference, "initializer list used for unknown type");
 			return;
 		} else {
 			list.error = true;
-			Report.error (list.source_reference, "initializer list used for `%s', which is neither array nor struct".printf (list.expected_type.to_string ()));
+			Report.error (list.source_reference, "initializer list used for `%s', which is neither array nor struct".printf (list.target_type.to_string ()));
 			return;
 		}
 
@@ -852,16 +852,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var unary = e as UnaryExpression;
 			if (unary != null && (unary.operator == UnaryOperator.REF || unary.operator == UnaryOperator.OUT)) {
 				// TODO check type for ref and out expressions
-			} else if (!e.value_type.compatible (e.expected_type)) {
+			} else if (!e.value_type.compatible (e.target_type)) {
 				error = true;
 				e.error = true;
-				Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (e.expected_type.to_string (), e.value_type.to_string ()));
+				Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (e.target_type.to_string (), e.value_type.to_string ()));
 			}
 		}
 
 		if (!error) {
 			/* everything seems to be correct */
-			list.value_type = list.expected_type;
+			list.value_type = list.target_type;
 		}
 	}
 
@@ -1247,7 +1247,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		var calc_sizes = new ArrayList<Literal> ();
 		if (initlist != null) {
-			initlist.expected_type = new ArrayType (expr.element_type, expr.rank, expr.source_reference);
+			initlist.target_type = new ArrayType (expr.element_type, expr.rank, expr.source_reference);
 
 			initlist.accept (this);
 
@@ -1426,7 +1426,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_parenthesized_expression (ParenthesizedExpression expr) {
-		expr.inner.expected_type = expr.expected_type;
+		expr.inner.target_type = expr.target_type;
 
 		expr.accept_children (this);
 
@@ -1556,8 +1556,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					if (invoc.call == expr) {
 						// dynamic method
 						DataType ret_type;
-						if (invoc.expected_type != null) {
-							ret_type = invoc.expected_type.copy ();
+						if (invoc.target_type != null) {
+							ret_type = invoc.target_type.copy ();
 							ret_type.value_owned = true;
 						} else if (invoc.parent_node is ExpressionStatement) {
 							ret_type = new VoidType ();
@@ -1598,8 +1598,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (expr.symbol_reference == null) {
 					// dynamic property read access
 					var prop = new DynamicProperty (expr.inner.value_type, expr.member_name, expr.source_reference);
-					if (expr.expected_type != null) {
-						prop.property_type = expr.expected_type;
+					if (expr.target_type != null) {
+						prop.property_type = expr.target_type;
 					} else {
 						// expect dynamic object of the same type
 						prop.property_type = expr.inner.value_type.copy ();
@@ -1776,7 +1776,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Expression arg = arg_it.get ();
 
 				/* store expected type for callback parameters */
-				arg.expected_type = param.parameter_type;
+				arg.target_type = param.parameter_type;
 			}
 		}
 
@@ -2405,7 +2405,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Expression arg = arg_it.get ();
 
 					/* store expected type for callback parameters */
-					arg.expected_type = param.parameter_type;
+					arg.target_type = param.parameter_type;
 				}
 			}
 
@@ -2903,7 +2903,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_lambda_expression (LambdaExpression l) {
-		if (!(l.expected_type is DelegateType)) {
+		if (!(l.target_type is DelegateType)) {
 			l.error = true;
 			Report.error (l.source_reference, "lambda expression not allowed in this context");
 			return;
@@ -2917,7 +2917,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			in_instance_method = is_in_constructor ();
 		}
 
-		var cb = (Delegate) ((DelegateType) l.expected_type).delegate_symbol;
+		var cb = (Delegate) ((DelegateType) l.target_type).delegate_symbol;
 		l.method = new Method (get_lambda_name (), cb.return_type);
 		if (!cb.has_target || !in_instance_method) {
 			l.method.binding = MemberBinding.STATIC;
@@ -3003,10 +3003,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				var sig = (Signal) ma.symbol_reference;
 				var deleg = sig.get_delegate ();
 				if (deleg != null) {
-					a.right.expected_type = new DelegateType (deleg);
+					a.right.target_type = new DelegateType (deleg);
 				}
 			} else {
-				a.right.expected_type = ma.value_type;
+				a.right.target_type = ma.value_type;
 			}
 		} else if (a.left is ElementAccess) {
 			// do nothing

@@ -1223,7 +1223,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var clist = new CCodeInitializerList ();
 		foreach (Expression expr in list.get_initializers ()) {
-			clist.append (get_implicit_cast_expression ((CCodeExpression) expr.ccodenode, expr.value_type, expr.expected_type));
+			clist.append (get_implicit_cast_expression ((CCodeExpression) expr.ccodenode, expr.value_type, expr.target_type));
 		}
 		list.ccodenode = clist;
 	}
@@ -3362,7 +3362,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public override void visit_lambda_expression (LambdaExpression l) {
 		// use instance position from delegate
-		var dt = (DelegateType) l.expected_type;
+		var dt = (DelegateType) l.target_type;
 		l.method.cinstance_parameter_position = dt.delegate_symbol.cinstance_parameter_position;
 
 		var old_temp_vars = temp_vars;
