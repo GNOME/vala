@@ -279,11 +279,11 @@ namespace GConf {
 		public void suggest_sync () throws GLib.Error;
 		public bool unset (string key) throws GLib.Error;
 		[HasEmitter]
-		public signal void error (void* error);
+		public virtual signal void error (void* error);
 		[HasEmitter]
-		public signal void unreturned_error (void* error);
+		public virtual signal void unreturned_error (void* error);
 		[HasEmitter]
-		public signal void value_changed (string key, void* value);
+		public virtual signal void value_changed (string key, void* value);
 	}
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public delegate void ChangeSetForeachFunc (GConf.ChangeSet cs, string key, GConf.Value value);

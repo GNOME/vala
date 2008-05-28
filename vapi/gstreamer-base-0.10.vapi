@@ -309,8 +309,8 @@ namespace Gst {
 		public uint64 current_level_time { get; }
 		[NoAccessorMethod]
 		public uint current_level_visible { get; }
-		public signal void empty ();
-		public signal void full ();
+		public virtual signal void empty ();
+		public virtual signal void full ();
 	}
 	[CCode (cheader_filename = "gst/base/gstpushsrc.h")]
 	public class PushSrc : Gst.BaseSrc {

@@ -100,15 +100,15 @@ namespace Json {
 		public bool load_from_data (string data, ulong length) throws GLib.Error;
 		public bool load_from_file (string filename) throws GLib.Error;
 		public Parser ();
-		public signal void array_element (Json.Array array, int index_);
-		public signal void array_end (Json.Array array);
-		public signal void array_start ();
-		public signal void error (void* error);
-		public signal void object_end (Json.Object object);
-		public signal void object_member (Json.Object object, string member_name);
-		public signal void object_start ();
-		public signal void parse_end ();
-		public signal void parse_start ();
+		public virtual signal void array_element (Json.Array array, int index_);
+		public virtual signal void array_end (Json.Array array);
+		public virtual signal void array_start ();
+		public virtual signal void error (void* error);
+		public virtual signal void object_end (Json.Object object);
+		public virtual signal void object_member (Json.Object object, string member_name);
+		public virtual signal void object_start ();
+		public virtual signal void parse_end ();
+		public virtual signal void parse_start ();
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public interface Serializable {

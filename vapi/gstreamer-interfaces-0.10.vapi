@@ -49,7 +49,7 @@ namespace Gst {
 		public weak string label;
 		public int min_value;
 		public int max_value;
-		public signal void value_changed (int value);
+		public virtual signal void value_changed (int value);
 	}
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public class MixerOptions : Gst.MixerTrack {
@@ -81,8 +81,8 @@ namespace Gst {
 		public int min_signal;
 		public int max_signal;
 		public static void changed (Gst.Tuner tuner, Gst.TunerChannel channel);
-		public signal void frequency_changed (ulong frequency);
-		public signal void signal_changed (int @signal);
+		public virtual signal void frequency_changed (ulong frequency);
+		public virtual signal void signal_changed (int @signal);
 	}
 	[CCode (cheader_filename = "gst/interfaces/tuner.h")]
 	public class TunerNorm : GLib.Object {
@@ -96,7 +96,7 @@ namespace Gst {
 		public abstract weak GLib.List list_channels ();
 		public abstract void set_value (Gst.ColorBalanceChannel channel, int value);
 		[HasEmitter]
-		public signal void value_changed (Gst.ColorBalanceChannel channel, int value);
+		public virtual signal void value_changed (Gst.ColorBalanceChannel channel, int value);
 	}
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public interface Mixer : Gst.ImplementsInterface, Gst.Element {
@@ -114,13 +114,13 @@ namespace Gst {
 		public abstract void set_record (Gst.MixerTrack track, bool record);
 		public abstract void set_volume (Gst.MixerTrack track, int volumes);
 		[HasEmitter]
-		public signal void mute_toggled (Gst.MixerTrack channel, bool mute);
+		public virtual signal void mute_toggled (Gst.MixerTrack channel, bool mute);
 		[HasEmitter]
-		public signal void option_changed (Gst.MixerOptions opts, string option);
+		public virtual signal void option_changed (Gst.MixerOptions opts, string option);
 		[HasEmitter]
-		public signal void record_toggled (Gst.MixerTrack channel, bool record);
+		public virtual signal void record_toggled (Gst.MixerTrack channel, bool record);
 		[HasEmitter]
-		public signal void volume_changed (Gst.MixerTrack channel, void* volumes);
+		public virtual signal void volume_changed (Gst.MixerTrack channel, void* volumes);
 	}
 	[CCode (cheader_filename = "gst/interfaces/navigation.h")]
 	public interface Navigation {
@@ -140,7 +140,7 @@ namespace Gst {
 		public abstract GLib.ValueArray get_values (GLib.ParamSpec pspec);
 		public abstract bool needs_probe (GLib.ParamSpec pspec);
 		public abstract void probe_property (GLib.ParamSpec pspec);
-		public signal void probe_needed (void* pspec);
+		public virtual signal void probe_needed (void* pspec);
 	}
 	[CCode (cheader_filename = "gst/interfaces/tunerchannel.h")]
 	public interface Tuner : Gst.ImplementsInterface, Gst.Element {
@@ -155,12 +155,12 @@ namespace Gst {
 		public abstract void set_frequency (Gst.TunerChannel channel, ulong frequency);
 		public abstract void set_norm (Gst.TunerNorm norm);
 		public abstract int signal_strength (Gst.TunerChannel channel);
-		public signal void channel_changed (Gst.TunerChannel channel);
+		public virtual signal void channel_changed (Gst.TunerChannel channel);
 		[HasEmitter]
-		public signal void frequency_changed (Gst.TunerChannel channel, ulong frequency);
-		public signal void norm_changed (Gst.TunerNorm norm);
+		public virtual signal void frequency_changed (Gst.TunerChannel channel, ulong frequency);
+		public virtual signal void norm_changed (Gst.TunerNorm norm);
 		[HasEmitter]
-		public signal void signal_changed (Gst.TunerChannel channel, int @signal);
+		public virtual signal void signal_changed (Gst.TunerChannel channel, int @signal);
 	}
 	[CCode (cheader_filename = "gst/interfaces/videoorientation.h")]
 	public interface VideoOrientation : Gst.ImplementsInterface, Gst.Element {

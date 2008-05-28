@@ -345,7 +345,7 @@ namespace Gst {
 		public abstract Gst.RTSPResult setup_media (Gst.SDPMedia media);
 		public abstract Gst.RTSPResult stream_select (Gst.RTSPUrl url);
 		[HasEmitter]
-		public signal Gst.RTSPResult send (void* req, void* resp);
+		public virtual signal Gst.RTSPResult send (void* req, void* resp);
 	}
 	public const int RTSP_DEFAULT_PORT;
 	[CCode (cheader_filename = "gst/gst.h")]

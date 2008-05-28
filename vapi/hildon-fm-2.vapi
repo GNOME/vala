@@ -192,13 +192,13 @@ namespace Hildon {
 		public bool show_upnp { get; set construct; }
 		[NoAccessorMethod]
 		public int visible_columns { get; construct; }
-		public signal void content_pane_context_menu ();
-		public signal void current_folder_changed ();
-		public signal void file_activated ();
-		public signal void location_insensitive (Gtk.TreeIter iter);
-		public signal void navigation_pane_context_menu ();
-		public signal void selection_changed ();
-		public signal void uris_dropped (string destination, void* sources);
+		public virtual signal void content_pane_context_menu ();
+		public virtual signal void current_folder_changed ();
+		public virtual signal void file_activated ();
+		public virtual signal void location_insensitive (Gtk.TreeIter iter);
+		public virtual signal void navigation_pane_context_menu ();
+		public virtual signal void selection_changed ();
+		public virtual signal void uris_dropped (string destination, void* sources);
 	}
 	[CCode (cheader_filename = "hildon/hildon-file-system-model.h")]
 	public class FileSystemModel : GLib.Object, Gtk.TreeModel, Gtk.TreeDragSource {
@@ -222,8 +222,8 @@ namespace Hildon {
 		public string root_dir { get; construct; }
 		[NoAccessorMethod]
 		public void* thumbnail_callback { get; set; }
-		public signal void device_disconnected (Gtk.TreeIter iter);
-		public signal void finished_loading (Gtk.TreeIter iter);
+		public virtual signal void device_disconnected (Gtk.TreeIter iter);
+		public virtual signal void finished_loading (Gtk.TreeIter iter);
 	}
 	[CCode (cheader_filename = "hildon/hildon-file-system-storage-dialog.h")]
 	public class FileSystemStorageDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {

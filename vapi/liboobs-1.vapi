@@ -137,7 +137,7 @@ namespace Oobs {
 		public bool configured { get; set; }
 		[NoAccessorMethod]
 		public string device { get; construct; }
-		public signal void state_changed ();
+		public virtual signal void state_changed ();
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class IfaceEthernet : Oobs.Iface {
@@ -285,9 +285,9 @@ namespace Oobs {
 		public virtual void update ();
 		[NoAccessorMethod]
 		public string remote_object { construct; }
-		public signal void changed ();
-		public signal void committed ();
-		public signal void updated ();
+		public virtual signal void changed ();
+		public virtual signal void committed ();
+		public virtual signal void updated ();
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class SMBConfig : Oobs.Object {

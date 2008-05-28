@@ -1722,7 +1722,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 		}
-		
+
+		sig.is_virtual = true;
+
 		bool first = true;
 		
 		foreach (weak IdlNodeParam param in sig_node.parameters) {

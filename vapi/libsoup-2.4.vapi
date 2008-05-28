@@ -397,25 +397,25 @@ namespace Soup {
 		public uint status_code { get; set; }
 		public Soup.URI uri { get; set; }
 		[HasEmitter]
-		public signal void finished ();
+		public virtual signal void finished ();
 		[HasEmitter]
-		public signal void got_body ();
+		public virtual signal void got_body ();
 		[HasEmitter]
-		public signal void got_chunk (Soup.Buffer chunk);
+		public virtual signal void got_chunk (Soup.Buffer chunk);
 		[HasEmitter]
-		public signal void got_headers ();
+		public virtual signal void got_headers ();
 		[HasEmitter]
-		public signal void got_informational ();
+		public virtual signal void got_informational ();
 		[HasEmitter]
-		public signal void restarted ();
+		public virtual signal void restarted ();
 		[HasEmitter]
-		public signal void wrote_body ();
+		public virtual signal void wrote_body ();
 		[HasEmitter]
-		public signal void wrote_chunk ();
+		public virtual signal void wrote_chunk ();
 		[HasEmitter]
-		public signal void wrote_headers ();
+		public virtual signal void wrote_headers ();
 		[HasEmitter]
-		public signal void wrote_informational ();
+		public virtual signal void wrote_informational ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Server : GLib.Object {
@@ -447,10 +447,10 @@ namespace Soup {
 		public string ssl_cert_file { get; construct; }
 		[NoAccessorMethod]
 		public string ssl_key_file { get; construct; }
-		public signal void request_aborted (Soup.Message msg, Soup.ClientContext client);
-		public signal void request_finished (Soup.Message msg, Soup.ClientContext client);
-		public signal void request_read (Soup.Message msg, Soup.ClientContext client);
-		public signal void request_started (Soup.Message msg, Soup.ClientContext client);
+		public virtual signal void request_aborted (Soup.Message msg, Soup.ClientContext client);
+		public virtual signal void request_finished (Soup.Message msg, Soup.ClientContext client);
+		public virtual signal void request_read (Soup.Message msg, Soup.ClientContext client);
+		public virtual signal void request_started (Soup.Message msg, Soup.ClientContext client);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Session : GLib.Object {
@@ -478,8 +478,8 @@ namespace Soup {
 		public bool use_ntlm { get; set; }
 		[NoAccessorMethod]
 		public string user_agent { get; set; }
-		public signal void authenticate (Soup.Message msg, Soup.Auth auth, bool retrying);
-		public signal void request_started (Soup.Message msg, Soup.Socket socket);
+		public virtual signal void authenticate (Soup.Message msg, Soup.Auth auth, bool retrying);
+		public virtual signal void request_started (Soup.Message msg, Soup.Socket socket);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class SessionAsync : Soup.Session {
@@ -521,10 +521,10 @@ namespace Soup {
 		public void* ssl_creds { get; set; }
 		[NoAccessorMethod]
 		public uint timeout { get; set; }
-		public signal void disconnected ();
-		public signal void new_connection (Soup.Socket p0);
-		public signal void readable ();
-		public signal void writable ();
+		public virtual signal void disconnected ();
+		public virtual signal void new_connection (Soup.Socket p0);
+		public virtual signal void readable ();
+		public virtual signal void writable ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void AddressCallback (Soup.Address addr, uint status);

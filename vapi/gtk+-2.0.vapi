@@ -1097,87 +1097,87 @@ namespace Gtk {
 		public bool visible { get; set; }
 		[NoAccessorMethod]
 		public int width_request { get; set; }
-		public signal void accel_closures_changed ();
-		public signal bool button_press_event (Gdk.Event event);
-		public signal bool button_release_event (Gdk.Event event);
+		public virtual signal void accel_closures_changed ();
+		public virtual signal bool button_press_event (Gdk.Event event);
+		public virtual signal bool button_release_event (Gdk.Event event);
 		[HasEmitter]
-		public signal bool can_activate_accel (uint signal_id);
+		public virtual signal bool can_activate_accel (uint signal_id);
 		[HasEmitter]
-		public signal void child_notify (GLib.ParamSpec pspec);
-		public signal bool client_event (Gdk.Event event);
-		public signal void composited_changed ();
-		public signal bool configure_event (Gdk.Event event);
-		public signal bool delete_event (Gdk.Event event);
-		public signal bool destroy_event (Gdk.Event event);
-		public signal void direction_changed (Gtk.TextDirection previous_direction);
-		public signal void drag_begin (Gdk.DragContext context);
-		public signal void drag_data_delete (Gdk.DragContext context);
-		public signal void drag_data_get (Gdk.DragContext context, Gtk.SelectionData selection_data, uint info, uint time_);
-		public signal void drag_data_received (Gdk.DragContext context, int x, int y, Gtk.SelectionData selection_data, uint info, uint time_);
-		public signal bool drag_drop (Gdk.DragContext context, int x, int y, uint time_);
-		public signal void drag_end (Gdk.DragContext context);
-		public signal bool drag_failed (Gdk.DragContext p0, Gtk.DragResult p1);
-		public signal void drag_leave (Gdk.DragContext context, uint time_);
-		public signal bool drag_motion (Gdk.DragContext context, int x, int y, uint time_);
-		public signal bool enter_notify_event (Gdk.Event event);
+		public virtual signal void child_notify (GLib.ParamSpec pspec);
+		public virtual signal bool client_event (Gdk.Event event);
+		public virtual signal void composited_changed ();
+		public virtual signal bool configure_event (Gdk.Event event);
+		public virtual signal bool delete_event (Gdk.Event event);
+		public virtual signal bool destroy_event (Gdk.Event event);
+		public virtual signal void direction_changed (Gtk.TextDirection previous_direction);
+		public virtual signal void drag_begin (Gdk.DragContext context);
+		public virtual signal void drag_data_delete (Gdk.DragContext context);
+		public virtual signal void drag_data_get (Gdk.DragContext context, Gtk.SelectionData selection_data, uint info, uint time_);
+		public virtual signal void drag_data_received (Gdk.DragContext context, int x, int y, Gtk.SelectionData selection_data, uint info, uint time_);
+		public virtual signal bool drag_drop (Gdk.DragContext context, int x, int y, uint time_);
+		public virtual signal void drag_end (Gdk.DragContext context);
+		public virtual signal bool drag_failed (Gdk.DragContext p0, Gtk.DragResult p1);
+		public virtual signal void drag_leave (Gdk.DragContext context, uint time_);
+		public virtual signal bool drag_motion (Gdk.DragContext context, int x, int y, uint time_);
+		public virtual signal bool enter_notify_event (Gdk.Event event);
 		[HasEmitter]
-		public signal bool event (Gdk.Event event);
-		public signal void event_after (Gdk.Event p0);
-		public signal bool expose_event (Gdk.Event event);
-		public signal bool focus (Gtk.DirectionType direction);
-		public signal bool focus_in_event (Gdk.Event event);
-		public signal bool focus_out_event (Gdk.Event event);
-		public signal bool grab_broken_event (Gdk.Event event);
+		public virtual signal bool event (Gdk.Event event);
+		public virtual signal void event_after (Gdk.Event p0);
+		public virtual signal bool expose_event (Gdk.Event event);
+		public virtual signal bool focus (Gtk.DirectionType direction);
+		public virtual signal bool focus_in_event (Gdk.Event event);
+		public virtual signal bool focus_out_event (Gdk.Event event);
+		public virtual signal bool grab_broken_event (Gdk.Event event);
 		[HasEmitter]
-		public signal void grab_focus ();
-		public signal void grab_notify (bool was_grabbed);
+		public virtual signal void grab_focus ();
+		public virtual signal void grab_notify (bool was_grabbed);
 		[HasEmitter]
-		public signal void hide ();
-		public signal void hierarchy_changed (Gtk.Widget previous_toplevel);
-		public signal bool key_press_event (Gdk.EventKey event);
-		public signal bool key_release_event (Gdk.EventKey event);
+		public virtual signal void hide ();
+		public virtual signal void hierarchy_changed (Gtk.Widget previous_toplevel);
+		public virtual signal bool key_press_event (Gdk.EventKey event);
+		public virtual signal bool key_release_event (Gdk.EventKey event);
 		[HasEmitter]
-		public signal bool keynav_failed (Gtk.DirectionType p0);
-		public signal bool leave_notify_event (Gdk.Event event);
+		public virtual signal bool keynav_failed (Gtk.DirectionType p0);
+		public virtual signal bool leave_notify_event (Gdk.Event event);
 		[HasEmitter]
-		public signal void map ();
-		public signal bool map_event (Gdk.Event event);
+		public virtual signal void map ();
+		public virtual signal bool map_event (Gdk.Event event);
 		[HasEmitter]
-		public signal bool mnemonic_activate (bool group_cycling);
-		public signal bool motion_notify_event (Gdk.Event event);
-		public signal void move_focus (Gtk.DirectionType p0);
-		public signal bool no_expose_event (Gdk.Event event);
-		public signal void parent_set (Gtk.Widget previous_parent);
-		public signal bool popup_menu ();
-		public signal bool property_notify_event (Gdk.Event event);
-		public signal bool proximity_in_event (Gdk.Event event);
-		public signal bool proximity_out_event (Gdk.Event event);
-		public signal bool query_tooltip (int x, int y, bool keyboard_tooltip, Gtk.Tooltip tooltip);
+		public virtual signal bool mnemonic_activate (bool group_cycling);
+		public virtual signal bool motion_notify_event (Gdk.Event event);
+		public virtual signal void move_focus (Gtk.DirectionType p0);
+		public virtual signal bool no_expose_event (Gdk.Event event);
+		public virtual signal void parent_set (Gtk.Widget previous_parent);
+		public virtual signal bool popup_menu ();
+		public virtual signal bool property_notify_event (Gdk.Event event);
+		public virtual signal bool proximity_in_event (Gdk.Event event);
+		public virtual signal bool proximity_out_event (Gdk.Event event);
+		public virtual signal bool query_tooltip (int x, int y, bool keyboard_tooltip, Gtk.Tooltip tooltip);
 		[HasEmitter]
-		public signal void realize ();
-		public signal void screen_changed (Gdk.Screen previous_screen);
-		public signal bool scroll_event (Gdk.Event event);
-		public signal bool selection_clear_event (Gdk.Event event);
-		public signal void selection_get (Gtk.SelectionData selection_data, uint info, uint time_);
-		public signal bool selection_notify_event (Gdk.Event event);
-		public signal void selection_received (Gtk.SelectionData selection_data, uint time_);
-		public signal bool selection_request_event (Gdk.Event event);
+		public virtual signal void realize ();
+		public virtual signal void screen_changed (Gdk.Screen previous_screen);
+		public virtual signal bool scroll_event (Gdk.Event event);
+		public virtual signal bool selection_clear_event (Gdk.Event event);
+		public virtual signal void selection_get (Gtk.SelectionData selection_data, uint info, uint time_);
+		public virtual signal bool selection_notify_event (Gdk.Event event);
+		public virtual signal void selection_received (Gtk.SelectionData selection_data, uint time_);
+		public virtual signal bool selection_request_event (Gdk.Event event);
 		[HasEmitter]
-		public signal void show ();
-		public signal bool show_help (Gtk.WidgetHelpType help_type);
+		public virtual signal void show ();
+		public virtual signal bool show_help (Gtk.WidgetHelpType help_type);
 		[HasEmitter]
-		public signal void size_allocate (Gdk.Rectangle allocation);
+		public virtual signal void size_allocate (Gdk.Rectangle allocation);
 		[HasEmitter]
-		public signal void size_request (Gtk.Requisition requisition);
-		public signal void state_changed (Gtk.StateType previous_state);
-		public signal void style_set (Gtk.Style previous_style);
+		public virtual signal void size_request (Gtk.Requisition requisition);
+		public virtual signal void state_changed (Gtk.StateType previous_state);
+		public virtual signal void style_set (Gtk.Style previous_style);
 		[HasEmitter]
-		public signal void unmap ();
-		public signal bool unmap_event (Gdk.Event event);
+		public virtual signal void unmap ();
+		public virtual signal bool unmap_event (Gdk.Event event);
 		[HasEmitter]
-		public signal void unrealize ();
-		public signal bool visibility_notify_event (Gdk.Event event);
-		public signal bool window_state_event (Gdk.Event event);
+		public virtual signal void unrealize ();
+		public virtual signal bool visibility_notify_event (Gdk.Event event);
+		public virtual signal bool window_state_event (Gdk.Event event);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -1775,8 +1775,8 @@ namespace Gtk {
 		public AccelGroup ();
 		public weak Gtk.AccelGroupEntry query (uint accel_key, Gdk.ModifierType accel_mods, uint n_entries);
 		public void unlock ();
-		public signal bool accel_activate (GLib.Object p0, uint p1, Gdk.ModifierType p2);
-		public signal void accel_changed (uint keyval, Gdk.ModifierType modifier, GLib.Closure accel_closure);
+		public virtual signal bool accel_activate (GLib.Object p0, uint p1, Gdk.ModifierType p2);
+		public virtual signal void accel_changed (uint keyval, Gdk.ModifierType modifier, GLib.Closure accel_closure);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class AccelLabel : Gtk.Label, Atk.Implementor, Gtk.Buildable {
@@ -1811,7 +1811,7 @@ namespace Gtk {
 		public static void save (string file_name);
 		public static void save_fd (int fd);
 		public static void unlock_path (string accel_path);
-		public signal void changed (string p0, uint p1, Gdk.ModifierType p2);
+		public virtual signal void changed (string p0, uint p1, Gdk.ModifierType p2);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Accessible : Atk.Object {
@@ -1869,7 +1869,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool visible_vertical { get; set; }
 		[HasEmitter]
-		public signal void activate ();
+		public virtual signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ActionGroup : GLib.Object, Gtk.Buildable {
@@ -1896,10 +1896,10 @@ namespace Gtk {
 		public string name { get; construct; }
 		public bool sensitive { get; set; }
 		public bool visible { get; set; }
-		public signal void connect_proxy (Gtk.Action p0, Gtk.Widget p1);
-		public signal void disconnect_proxy (Gtk.Action p0, Gtk.Widget p1);
-		public signal void post_activate (Gtk.Action p0);
-		public signal void pre_activate (Gtk.Action p0);
+		public virtual signal void connect_proxy (Gtk.Action p0, Gtk.Widget p1);
+		public virtual signal void disconnect_proxy (Gtk.Action p0, Gtk.Widget p1);
+		public virtual signal void post_activate (Gtk.Action p0);
+		public virtual signal void pre_activate (Gtk.Action p0);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Adjustment : Gtk.Object {
@@ -1919,9 +1919,9 @@ namespace Gtk {
 		public double upper { get; set; }
 		public double value { get; set; }
 		[HasEmitter]
-		public signal void changed ();
+		public virtual signal void changed ();
 		[HasEmitter]
-		public signal void value_changed ();
+		public virtual signal void value_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Alignment : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
@@ -1996,10 +1996,10 @@ namespace Gtk {
 		public void set_page_title (Gtk.Widget page, string title);
 		public void set_page_type (Gtk.Widget page, Gtk.AssistantPageType type);
 		public void update_buttons_state ();
-		public signal void apply ();
-		public signal void cancel ();
-		public signal void close ();
-		public signal void prepare (Gtk.Widget page);
+		public virtual signal void apply ();
+		public virtual signal void cancel ();
+		public virtual signal void close ();
+		public virtual signal void prepare (Gtk.Widget page);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Bin : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -2081,17 +2081,17 @@ namespace Gtk {
 		public float xalign { get; set; }
 		[NoAccessorMethod]
 		public float yalign { get; set; }
-		public signal void activate ();
+		public virtual signal void activate ();
 		[HasEmitter]
-		public signal void clicked ();
+		public virtual signal void clicked ();
 		[HasEmitter]
-		public signal void enter ();
+		public virtual signal void enter ();
 		[HasEmitter]
-		public signal void leave ();
+		public virtual signal void leave ();
 		[HasEmitter]
-		public signal void pressed ();
+		public virtual signal void pressed ();
 		[HasEmitter]
-		public signal void released ();
+		public virtual signal void released ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ButtonBox : Gtk.Box, Atk.Implementor, Gtk.Buildable {
@@ -2150,13 +2150,13 @@ namespace Gtk {
 		public bool show_week_numbers { get; set; }
 		[NoAccessorMethod]
 		public int year { get; set; }
-		public signal void day_selected ();
-		public signal void day_selected_double_click ();
-		public signal void month_changed ();
-		public signal void next_month ();
-		public signal void next_year ();
-		public signal void prev_month ();
-		public signal void prev_year ();
+		public virtual signal void day_selected ();
+		public virtual signal void day_selected_double_click ();
+		public virtual signal void month_changed ();
+		public virtual signal void next_month ();
+		public virtual signal void next_year ();
+		public virtual signal void prev_month ();
+		public virtual signal void prev_year ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class CellRenderer : Gtk.Object {
@@ -2197,8 +2197,8 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public uint ypad { get; set; }
 		[HasEmitter]
-		public signal void editing_canceled ();
-		public signal void editing_started (Gtk.CellEditable editable, string path);
+		public virtual signal void editing_canceled ();
+		public virtual signal void editing_started (Gtk.CellEditable editable, string path);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class CellRendererAccel : Gtk.CellRendererText {
@@ -2214,8 +2214,8 @@ namespace Gtk {
 		public Gdk.ModifierType accel_mods { get; set; }
 		[NoAccessorMethod]
 		public uint keycode { get; set; }
-		public signal void accel_cleared (string path_string);
-		public signal void accel_edited (string path_string, uint accel_key, Gdk.ModifierType accel_mods, uint hardware_keycode);
+		public virtual signal void accel_cleared (string path_string);
+		public virtual signal void accel_edited (string path_string, uint accel_key, Gdk.ModifierType accel_mods, uint hardware_keycode);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class CellRendererCombo : Gtk.CellRendererText {
@@ -2371,7 +2371,7 @@ namespace Gtk {
 		public Pango.WrapMode wrap_mode { get; set; }
 		[NoAccessorMethod]
 		public int wrap_width { get; set; }
-		public signal void edited (string path, string new_text);
+		public virtual signal void edited (string path, string new_text);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class CellRendererToggle : Gtk.CellRenderer {
@@ -2388,7 +2388,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public int indicator_size { get; set; }
 		public bool radio { get; set; }
-		public signal void toggled (string path);
+		public virtual signal void toggled (string path);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class CellView : Gtk.Widget, Atk.Implementor, Gtk.Buildable, Gtk.CellLayout {
@@ -2437,7 +2437,7 @@ namespace Gtk {
 		public bool draw_as_radio { get; set; }
 		public bool inconsistent { get; set; }
 		[HasEmitter]
-		public signal void toggled ();
+		public virtual signal void toggled ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Clipboard : GLib.Object {
@@ -2466,7 +2466,7 @@ namespace Gtk {
 		public bool wait_is_rich_text_available (Gtk.TextBuffer buffer);
 		public bool wait_is_target_available (Gdk.Atom target);
 		public bool wait_is_text_available ();
-		public signal void owner_change (Gdk.Event p0);
+		public virtual signal void owner_change (Gdk.Event p0);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ColorButton : Gtk.Button, Atk.Implementor, Gtk.Buildable {
@@ -2484,7 +2484,7 @@ namespace Gtk {
 		public Gdk.Color color { get; set; }
 		public string title { get; set; }
 		public bool use_alpha { get; set; }
-		public signal void color_set ();
+		public virtual signal void color_set ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ColorSelection : Gtk.VBox, Atk.Implementor, Gtk.Buildable {
@@ -2509,7 +2509,7 @@ namespace Gtk {
 		public Gdk.Color current_color { get; set; }
 		public bool has_opacity_control { get; set; }
 		public bool has_palette { get; set; }
-		public signal void color_changed ();
+		public virtual signal void color_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ColorSelectionDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
@@ -2563,12 +2563,12 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string tearoff_title { get; set; }
 		public int wrap_width { get; set; }
-		public signal void changed ();
-		public signal void move_active (Gtk.ScrollType p0);
+		public virtual signal void changed ();
+		public virtual signal void move_active (Gtk.ScrollType p0);
 		[HasEmitter]
-		public signal bool popdown ();
+		public virtual signal bool popdown ();
 		[HasEmitter]
-		public signal void popup ();
+		public virtual signal void popup ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ComboBoxEntry : Gtk.ComboBox, Atk.Implementor, Gtk.Buildable, Gtk.CellEditable, Gtk.CellLayout {
@@ -2625,13 +2625,13 @@ namespace Gtk {
 		public Gtk.Widget child { set; }
 		public Gtk.ResizeMode resize_mode { get; set; }
 		[HasEmitter]
-		public signal void add (Gtk.Widget widget);
+		public virtual signal void add (Gtk.Widget widget);
 		[HasEmitter]
-		public signal void check_resize ();
+		public virtual signal void check_resize ();
 		[HasEmitter]
-		public signal void remove (Gtk.Widget widget);
+		public virtual signal void remove (Gtk.Widget widget);
 		[HasEmitter]
-		public signal void set_focus_child (Gtk.Widget widget);
+		public virtual signal void set_focus_child (Gtk.Widget widget);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Curve : Gtk.DrawingArea, Atk.Implementor, Gtk.Buildable {
@@ -2662,7 +2662,7 @@ namespace Gtk {
 		public float min_x { get; set; }
 		[NoAccessorMethod]
 		public float min_y { get; set; }
-		public signal void curve_type_changed ();
+		public virtual signal void curve_type_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Dialog : Gtk.Window, Atk.Implementor, Gtk.Buildable {
@@ -2684,9 +2684,9 @@ namespace Gtk {
 		public void set_has_separator (bool setting);
 		public void set_response_sensitive (int response_id, bool setting);
 		public bool has_separator { get; set; }
-		public signal void close ();
+		public virtual signal void close ();
 		[HasEmitter]
-		public signal void response (int response_id);
+		public virtual signal void response (int response_id);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class DrawingArea : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
@@ -2776,16 +2776,16 @@ namespace Gtk {
 		public int width_chars { get; set; }
 		[NoAccessorMethod]
 		public float xalign { get; set; }
-		public signal void activate ();
-		public signal void backspace ();
-		public signal void copy_clipboard ();
-		public signal void cut_clipboard ();
-		public signal void delete_from_cursor (Gtk.DeleteType type, int count);
-		public signal void insert_at_cursor (string str);
-		public signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
-		public signal void paste_clipboard ();
-		public signal void populate_popup (Gtk.Menu menu);
-		public signal void toggle_overwrite ();
+		public virtual signal void activate ();
+		public virtual signal void backspace ();
+		public virtual signal void copy_clipboard ();
+		public virtual signal void cut_clipboard ();
+		public virtual signal void delete_from_cursor (Gtk.DeleteType type, int count);
+		public virtual signal void insert_at_cursor (string str);
+		public virtual signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
+		public virtual signal void paste_clipboard ();
+		public virtual signal void populate_popup (Gtk.Menu menu);
+		public virtual signal void toggle_overwrite ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class EntryCompletion : GLib.Object, Gtk.Buildable, Gtk.CellLayout {
@@ -2821,11 +2821,11 @@ namespace Gtk {
 		public bool popup_set_width { get; set; }
 		public bool popup_single_match { get; set; }
 		public int text_column { get; set; }
-		public signal void action_activated (int index_);
-		public signal bool cursor_on_match (Gtk.TreeModel model, Gtk.TreeIter iter);
+		public virtual signal void action_activated (int index_);
+		public virtual signal bool cursor_on_match (Gtk.TreeModel model, Gtk.TreeIter iter);
 		[HasEmitter]
-		public signal bool insert_prefix (string prefix);
-		public signal bool match_selected (Gtk.TreeModel model, Gtk.TreeIter iter);
+		public virtual signal bool insert_prefix (string prefix);
+		public virtual signal bool match_selected (Gtk.TreeModel model, Gtk.TreeIter iter);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class EventBox : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
@@ -2859,7 +2859,7 @@ namespace Gtk {
 		public int spacing { get; set; }
 		public bool use_markup { get; set construct; }
 		public bool use_underline { get; set construct; }
-		public signal void activate ();
+		public virtual signal void activate ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class FileChooserButton : Gtk.HBox, Atk.Implementor, Gtk.Buildable, Gtk.FileChooser {
@@ -2877,7 +2877,7 @@ namespace Gtk {
 		public bool focus_on_click { get; set; }
 		public string title { get; set; }
 		public int width_chars { get; set; }
-		public signal void file_set ();
+		public virtual signal void file_set ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class FileChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.FileChooser {
@@ -2932,7 +2932,7 @@ namespace Gtk {
 		public string title { get; set; }
 		public bool use_font { get; set; }
 		public bool use_size { get; set; }
-		public signal void font_set ();
+		public virtual signal void font_set ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class FontSelection : Gtk.VBox, Atk.Implementor, Gtk.Buildable {
@@ -3064,8 +3064,8 @@ namespace Gtk {
 		public Gtk.PositionType snap_edge { get; set; }
 		[NoAccessorMethod]
 		public bool snap_edge_set { get; set; }
-		public signal void child_attached (Gtk.Widget child);
-		public signal void child_detached (Gtk.Widget child);
+		public virtual signal void child_attached (Gtk.Widget child);
+		public virtual signal void child_detached (Gtk.Widget child);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class IMContext : GLib.Object {
@@ -3079,13 +3079,13 @@ namespace Gtk {
 		public virtual void set_cursor_location (Gdk.Rectangle area);
 		public virtual void set_surrounding (string text, int len, int cursor_index);
 		public virtual void set_use_preedit (bool use_preedit);
-		public signal void commit (string str);
+		public virtual signal void commit (string str);
 		[HasEmitter]
-		public signal bool delete_surrounding (int offset, int n_chars);
-		public signal void preedit_changed ();
-		public signal void preedit_end ();
-		public signal void preedit_start ();
-		public signal bool retrieve_surrounding ();
+		public virtual signal bool delete_surrounding (int offset, int n_chars);
+		public virtual signal void preedit_changed ();
+		public virtual signal void preedit_end ();
+		public virtual signal void preedit_start ();
+		public virtual signal bool retrieve_surrounding ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class IMContextSimple : Gtk.IMContext {
@@ -3138,7 +3138,7 @@ namespace Gtk {
 		public void set_custom_theme (string theme_name);
 		public void set_screen (Gdk.Screen screen);
 		public void set_search_path (string[] path, int n_elements);
-		public signal void changed ();
+		public virtual signal void changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class IconView : Gtk.Container, Atk.Implementor, Gtk.Buildable, Gtk.CellLayout {
@@ -3209,16 +3209,16 @@ namespace Gtk {
 		public int spacing { get; set; }
 		public int text_column { get; set; }
 		public int tooltip_column { get; set; }
-		public signal bool activate_cursor_item ();
+		public virtual signal bool activate_cursor_item ();
 		[HasEmitter]
-		public signal void item_activated (Gtk.TreePath path);
-		public signal bool move_cursor (Gtk.MovementStep step, int count);
-		public signal void select_all ();
-		public signal void select_cursor_item ();
-		public signal void selection_changed ();
-		public signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
-		public signal void toggle_cursor_item ();
-		public signal void unselect_all ();
+		public virtual signal void item_activated (Gtk.TreePath path);
+		public virtual signal bool move_cursor (Gtk.MovementStep step, int count);
+		public virtual signal void select_all ();
+		public virtual signal void select_cursor_item ();
+		public virtual signal void selection_changed ();
+		public virtual signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
+		public virtual signal void toggle_cursor_item ();
+		public virtual signal void unselect_all ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Image : Gtk.Misc, Atk.Implementor, Gtk.Buildable {
@@ -3296,8 +3296,8 @@ namespace Gtk {
 		public weak Gtk.Widget keys_list;
 		public weak Gtk.Widget keys_listbox;
 		public InputDialog ();
-		public signal void disable_device (Gdk.Device device);
-		public signal void enable_device (Gdk.Device device);
+		public virtual signal void disable_device (Gdk.Device device);
+		public virtual signal void enable_device (Gdk.Device device);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Invisible : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
@@ -3311,11 +3311,11 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Item : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		[HasEmitter]
-		public signal void deselect ();
+		public virtual signal void deselect ();
 		[HasEmitter]
-		public signal void select ();
+		public virtual signal void select ();
 		[HasEmitter]
-		public signal void toggle ();
+		public virtual signal void toggle ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Label : Gtk.Misc, Atk.Implementor, Gtk.Buildable {
@@ -3392,9 +3392,9 @@ namespace Gtk {
 		public bool wrap { get; set; }
 		[NoAccessorMethod]
 		public Pango.WrapMode wrap_mode { get; set; }
-		public signal void copy_clipboard ();
-		public signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
-		public signal void populate_popup (Gtk.Menu menu);
+		public virtual signal void copy_clipboard ();
+		public virtual signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
+		public virtual signal void populate_popup (Gtk.Menu menu);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Layout : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -3419,7 +3419,7 @@ namespace Gtk {
 		public Gtk.Adjustment vadjustment { get; set; }
 		[NoAccessorMethod]
 		public uint width { get; set; }
-		public signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
+		public virtual signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class LinkButton : Gtk.Button, Atk.Implementor, Gtk.Buildable {
@@ -3524,7 +3524,7 @@ namespace Gtk {
 		public bool tearoff_state { get; set; }
 		[NoAccessorMethod]
 		public string tearoff_title { get; set; }
-		public signal void move_scroll (Gtk.ScrollType p0);
+		public virtual signal void move_scroll (Gtk.ScrollType p0);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class MenuBar : Gtk.MenuShell, Atk.Implementor, Gtk.Buildable {
@@ -3561,12 +3561,12 @@ namespace Gtk {
 		public void set_submenu (Gtk.Widget submenu);
 		public Gtk.Menu submenu { get; set; }
 		[HasEmitter]
-		public signal void activate ();
-		public signal void activate_item ();
+		public virtual signal void activate ();
+		public virtual signal void activate_item ();
 		[HasEmitter]
-		public signal void toggle_size_allocate (int allocation);
+		public virtual signal void toggle_size_allocate (int allocation);
 		[HasEmitter]
-		public signal void toggle_size_request (void* requisition);
+		public virtual signal void toggle_size_request (void* requisition);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class MenuShell : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -3593,15 +3593,15 @@ namespace Gtk {
 		public virtual void insert (Gtk.Widget child, int position);
 		public virtual void select_item (Gtk.Widget menu_item);
 		public bool take_focus { get; set; }
-		public signal void activate_current (bool force_hide);
+		public virtual signal void activate_current (bool force_hide);
 		[HasEmitter]
-		public signal void cancel ();
-		public signal void cycle_focus (Gtk.DirectionType p0);
+		public virtual signal void cancel ();
+		public virtual signal void cycle_focus (Gtk.DirectionType p0);
 		[HasEmitter]
-		public signal void deactivate ();
-		public signal void move_current (Gtk.MenuDirectionType direction);
-		public signal bool move_selected (int distance);
-		public signal void selection_done ();
+		public virtual signal void deactivate ();
+		public virtual signal void move_current (Gtk.MenuDirectionType direction);
+		public virtual signal bool move_selected (int distance);
+		public virtual signal void selection_done ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class MenuToolButton : Gtk.ToolButton, Atk.Implementor, Gtk.Buildable {
@@ -3612,7 +3612,7 @@ namespace Gtk {
 		public void set_arrow_tooltip_text (string text);
 		public void set_menu (Gtk.Widget menu);
 		public Gtk.Menu menu { get; set; }
-		public signal void show_menu ();
+		public virtual signal void show_menu ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class MessageDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
@@ -3733,16 +3733,16 @@ namespace Gtk {
 		public Gtk.PositionType tab_pos { get; set; }
 		[NoAccessorMethod]
 		public uint tab_vborder { get; set; }
-		public signal bool change_current_page (int offset);
-		public signal weak Gtk.Notebook create_window (Gtk.Widget page, int x, int y);
-		public signal bool focus_tab (Gtk.NotebookTab type);
-		public signal void move_focus_out (Gtk.DirectionType direction);
-		public signal void page_added (Gtk.Widget p0, uint p1);
-		public signal void page_removed (Gtk.Widget p0, uint p1);
-		public signal void page_reordered (Gtk.Widget p0, uint p1);
-		public signal bool reorder_tab (Gtk.DirectionType direction, bool move_to_last);
-		public signal bool select_page (bool move_focus);
-		public signal void switch_page (void* page, uint page_num);
+		public virtual signal bool change_current_page (int offset);
+		public virtual signal weak Gtk.Notebook create_window (Gtk.Widget page, int x, int y);
+		public virtual signal bool focus_tab (Gtk.NotebookTab type);
+		public virtual signal void move_focus_out (Gtk.DirectionType direction);
+		public virtual signal void page_added (Gtk.Widget p0, uint p1);
+		public virtual signal void page_removed (Gtk.Widget p0, uint p1);
+		public virtual signal void page_reordered (Gtk.Widget p0, uint p1);
+		public virtual signal bool reorder_tab (Gtk.DirectionType direction, bool move_to_last);
+		public virtual signal bool select_page (bool move_focus);
+		public virtual signal void switch_page (void* page, uint page_num);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Object : GLib.InitiallyUnowned {
@@ -3754,7 +3754,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public void* user_data { get; set; }
 		[HasEmitter]
-		public signal void destroy ();
+		public virtual signal void destroy ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class PageSetup : GLib.Object {
@@ -3819,12 +3819,12 @@ namespace Gtk {
 		public int position { get; set; }
 		[NoAccessorMethod]
 		public bool position_set { get; set; }
-		public signal bool accept_position ();
-		public signal bool cancel_position ();
-		public signal bool cycle_child_focus (bool reverse);
-		public signal bool cycle_handle_focus (bool reverse);
-		public signal bool move_handle (Gtk.ScrollType scroll);
-		public signal bool toggle_handle_focus ();
+		public virtual signal bool accept_position ();
+		public virtual signal bool cancel_position ();
+		public virtual signal bool cycle_child_focus (bool reverse);
+		public virtual signal bool cycle_handle_focus (bool reverse);
+		public virtual signal bool move_handle (Gtk.ScrollType scroll);
+		public virtual signal bool toggle_handle_focus ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Plug : Gtk.Window, Atk.Implementor, Gtk.Buildable {
@@ -3901,16 +3901,16 @@ namespace Gtk {
 		public Gtk.Unit unit { get; set; }
 		[NoAccessorMethod]
 		public bool use_full_page { get; set; }
-		public signal void begin_print (Gtk.PrintContext context);
-		public signal weak GLib.Object create_custom_widget ();
-		public signal void custom_widget_apply (Gtk.Widget widget);
-		public signal void done (Gtk.PrintOperationResult result);
-		public signal void draw_page (Gtk.PrintContext context, int page_nr);
-		public signal void end_print (Gtk.PrintContext context);
-		public signal bool paginate (Gtk.PrintContext context);
-		public signal bool preview (Gtk.PrintOperationPreview preview, Gtk.PrintContext context, Gtk.Window parent);
-		public signal void request_page_setup (Gtk.PrintContext context, int page_nr, Gtk.PageSetup setup);
-		public signal void status_changed ();
+		public virtual signal void begin_print (Gtk.PrintContext context);
+		public virtual signal weak GLib.Object create_custom_widget ();
+		public virtual signal void custom_widget_apply (Gtk.Widget widget);
+		public virtual signal void done (Gtk.PrintOperationResult result);
+		public virtual signal void draw_page (Gtk.PrintContext context, int page_nr);
+		public virtual signal void end_print (Gtk.PrintContext context);
+		public virtual signal bool paginate (Gtk.PrintContext context);
+		public virtual signal bool preview (Gtk.PrintOperationPreview preview, Gtk.PrintContext context, Gtk.Window parent);
+		public virtual signal void request_page_setup (Gtk.PrintContext context, int page_nr, Gtk.PageSetup setup);
+		public virtual signal void status_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class PrintSettings : GLib.Object {
@@ -4027,7 +4027,7 @@ namespace Gtk {
 		public Gtk.RadioAction group { set; }
 		[NoAccessorMethod]
 		public int value { get; set; }
-		public signal void changed (Gtk.RadioAction current);
+		public virtual signal void changed (Gtk.RadioAction current);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class RadioButton : Gtk.CheckButton, Atk.Implementor, Gtk.Buildable {
@@ -4040,7 +4040,7 @@ namespace Gtk {
 		public RadioButton.with_mnemonic_from_widget (Gtk.RadioButton radio_group_member, string label);
 		public void set_group (GLib.SList group);
 		public Gtk.RadioButton group { set; }
-		public signal void group_changed ();
+		public virtual signal void group_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class RadioMenuItem : Gtk.CheckMenuItem, Atk.Implementor, Gtk.Buildable {
@@ -4053,7 +4053,7 @@ namespace Gtk {
 		public RadioMenuItem.with_mnemonic_from_widget (Gtk.RadioMenuItem group, string label);
 		public void set_group (GLib.SList group);
 		public Gtk.RadioMenuItem group { set; }
-		public signal void group_changed ();
+		public virtual signal void group_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class RadioToolButton : Gtk.ToggleToolButton, Atk.Implementor, Gtk.Buildable {
@@ -4118,10 +4118,10 @@ namespace Gtk {
 		public bool show_fill_level { get; set; }
 		public Gtk.UpdateType update_policy { get; set; }
 		public Gtk.SensitivityType upper_stepper_sensitivity { get; set; }
-		public signal void adjust_bounds (double new_value);
-		public signal bool change_value (Gtk.ScrollType scroll, double new_value);
-		public signal void move_slider (Gtk.ScrollType scroll);
-		public signal void value_changed ();
+		public virtual signal void adjust_bounds (double new_value);
+		public virtual signal bool change_value (Gtk.ScrollType scroll, double new_value);
+		public virtual signal void move_slider (Gtk.ScrollType scroll);
+		public virtual signal void value_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class RcStyle : GLib.Object {
@@ -4225,7 +4225,7 @@ namespace Gtk {
 		public int limit { get; set; }
 		[NoAccessorMethod]
 		public int size { get; }
-		public signal void changed ();
+		public virtual signal void changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Ruler : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
@@ -4263,7 +4263,7 @@ namespace Gtk {
 		public int digits { get; set; }
 		public bool draw_value { get; set; }
 		public Gtk.PositionType value_pos { get; set; }
-		public signal weak string format_value (double value);
+		public virtual signal weak string format_value (double value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ScaleButton : Gtk.Button, Atk.Implementor, Gtk.Buildable {
@@ -4281,9 +4281,9 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Gtk.IconSize size { get; set; }
 		public double value { get; set; }
-		public signal void popdown ();
-		public signal void popup ();
-		public signal void value_changed (double value);
+		public virtual signal void popdown ();
+		public virtual signal void popup ();
+		public virtual signal void value_changed (double value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Scrollbar : Gtk.Range, Atk.Implementor, Gtk.Buildable {
@@ -4321,8 +4321,8 @@ namespace Gtk {
 		public Gtk.CornerType window_placement { get; set; }
 		[NoAccessorMethod]
 		public bool window_placement_set { get; set; }
-		public signal void move_focus_out (Gtk.DirectionType direction);
-		public signal bool scroll_child (Gtk.ScrollType scroll, bool horizontal);
+		public virtual signal void move_focus_out (Gtk.DirectionType direction);
+		public virtual signal bool scroll_child (Gtk.ScrollType scroll, bool horizontal);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Separator : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
@@ -4479,8 +4479,8 @@ namespace Gtk {
 		public void add_id (Gdk.NativeWindow window_id);
 		public weak Gdk.NativeWindow get_id ();
 		public Socket ();
-		public signal void plug_added ();
-		public signal bool plug_removed ();
+		public virtual signal void plug_added ();
+		public virtual signal bool plug_removed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class SpinButton : Gtk.Entry, Atk.Implementor, Gtk.Buildable, Gtk.CellEditable, Gtk.Editable {
@@ -4525,11 +4525,11 @@ namespace Gtk {
 		public Gtk.SpinButtonUpdatePolicy update_policy { get; set; }
 		public double value { get; set; }
 		public bool wrap { get; set; }
-		public signal void change_value (Gtk.ScrollType scroll);
-		public signal int input (void* new_value);
-		public signal bool output ();
-		public signal void value_changed ();
-		public signal void wrapped ();
+		public virtual signal void change_value (Gtk.ScrollType scroll);
+		public virtual signal int input (void* new_value);
+		public virtual signal bool output ();
+		public virtual signal void value_changed ();
+		public virtual signal void wrapped ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class StatusIcon : GLib.Object {
@@ -4574,9 +4574,9 @@ namespace Gtk {
 		public string stock { get; set; }
 		public Gtk.ImageType storage_type { get; }
 		public bool visible { get; set; }
-		public signal void activate ();
-		public signal void popup_menu (uint button, uint activate_time);
-		public signal bool size_changed (int size);
+		public virtual signal void activate ();
+		public virtual signal void popup_menu (uint button, uint activate_time);
+		public virtual signal bool size_changed (int size);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Statusbar : Gtk.HBox, Atk.Implementor, Gtk.Buildable {
@@ -4595,52 +4595,52 @@ namespace Gtk {
 		public void remove (uint context_id, uint message_id);
 		public void set_has_resize_grip (bool setting);
 		public bool has_resize_grip { get; set; }
-		public signal void text_popped (uint context_id, string text);
-		public signal void text_pushed (uint context_id, string text);
+		public virtual signal void text_popped (uint context_id, string text);
+		public virtual signal void text_pushed (uint context_id, string text);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Style : GLib.Object {
 		[NoArrayLength]
-		public weak Gdk.Color[][] fg;
+		public Gdk.Color[] fg;
 		[NoArrayLength]
-		public weak Gdk.Color[][] bg;
+		public Gdk.Color[] bg;
 		[NoArrayLength]
-		public weak Gdk.Color[][] light;
+		public Gdk.Color[] light;
 		[NoArrayLength]
-		public weak Gdk.Color[][] dark;
+		public Gdk.Color[] dark;
 		[NoArrayLength]
-		public weak Gdk.Color[][] mid;
+		public Gdk.Color[] mid;
 		[NoArrayLength]
-		public weak Gdk.Color[][] text;
+		public Gdk.Color[] text;
 		[NoArrayLength]
-		public weak Gdk.Color[][] @base;
+		public Gdk.Color[] @base;
 		[NoArrayLength]
-		public weak Gdk.Color[][] text_aa;
+		public Gdk.Color[] text_aa;
 		public Gdk.Color black;
 		public Gdk.Color white;
 		public weak Pango.FontDescription font_desc;
 		public int xthickness;
 		public int ythickness;
 		[NoArrayLength]
-		public weak Gdk.GC[][] fg_gc;
+		public Gdk.GC[] fg_gc;
 		[NoArrayLength]
-		public weak Gdk.GC[][] bg_gc;
+		public Gdk.GC[] bg_gc;
 		[NoArrayLength]
-		public weak Gdk.GC[][] light_gc;
+		public Gdk.GC[] light_gc;
 		[NoArrayLength]
-		public weak Gdk.GC[][] dark_gc;
+		public Gdk.GC[] dark_gc;
 		[NoArrayLength]
-		public weak Gdk.GC[][] mid_gc;
+		public Gdk.GC[] mid_gc;
 		[NoArrayLength]
-		public weak Gdk.GC[][] text_gc;
+		public Gdk.GC[] text_gc;
 		[NoArrayLength]
-		public weak Gdk.GC[][] base_gc;
+		public Gdk.GC[] base_gc;
 		[NoArrayLength]
-		public weak Gdk.GC[][] text_aa_gc;
+		public Gdk.GC[] text_aa_gc;
 		public weak Gdk.GC black_gc;
 		public weak Gdk.GC white_gc;
 		[NoArrayLength]
-		public weak Gdk.Pixmap[][] bg_pixmap;
+		public Gdk.Pixmap[] bg_pixmap;
 		public int attach_count;
 		public int depth;
 		public weak Gdk.Colormap colormap;
@@ -4703,8 +4703,8 @@ namespace Gtk {
 		public virtual void init_from_rc (Gtk.RcStyle rc_style);
 		public virtual weak Gdk.Pixbuf render_icon (Gtk.IconSource source, Gtk.TextDirection direction, Gtk.StateType state, Gtk.IconSize size, Gtk.Widget widget, string detail);
 		public virtual void set_background (Gdk.Window window, Gtk.StateType state_type);
-		public signal void realize ();
-		public signal void unrealize ();
+		public virtual signal void realize ();
+		public virtual signal void unrealize ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Table : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -4825,23 +4825,23 @@ namespace Gtk {
 		public Gtk.TextTagTable tag_table { get; construct; }
 		public string text { get; set; }
 		[HasEmitter]
-		public signal void apply_tag (Gtk.TextTag tag, Gtk.TextIter start_char, Gtk.TextIter end_char);
+		public virtual signal void apply_tag (Gtk.TextTag tag, Gtk.TextIter start_char, Gtk.TextIter end_char);
 		[HasEmitter]
-		public signal void begin_user_action ();
-		public signal void changed ();
-		public signal void delete_range (Gtk.TextIter start, Gtk.TextIter end);
+		public virtual signal void begin_user_action ();
+		public virtual signal void changed ();
+		public virtual signal void delete_range (Gtk.TextIter start, Gtk.TextIter end);
 		[HasEmitter]
-		public signal void end_user_action ();
+		public virtual signal void end_user_action ();
 		[HasEmitter]
-		public signal void insert_child_anchor (Gtk.TextIter pos, Gtk.TextChildAnchor anchor);
+		public virtual signal void insert_child_anchor (Gtk.TextIter pos, Gtk.TextChildAnchor anchor);
 		[HasEmitter]
-		public signal void insert_pixbuf (Gtk.TextIter pos, Gdk.Pixbuf pixbuf);
-		public signal void insert_text (Gtk.TextIter pos, string text, int length);
-		public signal void mark_deleted (Gtk.TextMark mark);
-		public signal void mark_set (Gtk.TextIter location, Gtk.TextMark mark);
-		public signal void modified_changed ();
+		public virtual signal void insert_pixbuf (Gtk.TextIter pos, Gdk.Pixbuf pixbuf);
+		public virtual signal void insert_text (Gtk.TextIter pos, string text, int length);
+		public virtual signal void mark_deleted (Gtk.TextMark mark);
+		public virtual signal void mark_set (Gtk.TextIter location, Gtk.TextMark mark);
+		public virtual signal void modified_changed ();
 		[HasEmitter]
-		public signal void remove_tag (Gtk.TextTag tag, Gtk.TextIter start_char, Gtk.TextIter end_char);
+		public virtual signal void remove_tag (Gtk.TextTag tag, Gtk.TextIter start_char, Gtk.TextIter end_char);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TextChildAnchor : GLib.Object {
@@ -5011,7 +5011,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool wrap_mode_set { get; set; }
 		[HasEmitter]
-		public signal bool event (GLib.Object event_object, Gdk.Event event, Gtk.TextIter iter);
+		public virtual signal bool event (GLib.Object event_object, Gdk.Event event, Gtk.TextIter iter);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TextTagTable : GLib.Object {
@@ -5025,9 +5025,9 @@ namespace Gtk {
 		public weak Gtk.TextTag lookup (string name);
 		public TextTagTable ();
 		public void remove (Gtk.TextTag tag);
-		public signal void tag_added (Gtk.TextTag tag);
-		public signal void tag_changed (Gtk.TextTag tag, bool size_changed);
-		public signal void tag_removed (Gtk.TextTag tag);
+		public virtual signal void tag_added (Gtk.TextTag tag);
+		public virtual signal void tag_changed (Gtk.TextTag tag, bool size_changed);
+		public virtual signal void tag_removed (Gtk.TextTag tag);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TextView : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -5138,21 +5138,21 @@ namespace Gtk {
 		public int right_margin { get; set; }
 		public Pango.TabArray tabs { get; set; }
 		public Gtk.WrapMode wrap_mode { get; set; }
-		public signal void backspace ();
-		public signal void copy_clipboard ();
-		public signal void cut_clipboard ();
-		public signal void delete_from_cursor (Gtk.DeleteType type, int count);
-		public signal void insert_at_cursor (string str);
-		public signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
-		public signal void move_viewport (Gtk.ScrollStep p0, int p1);
-		public signal void page_horizontally (int count, bool extend_selection);
-		public signal void paste_clipboard ();
-		public signal void populate_popup (Gtk.Menu menu);
-		public signal void select_all (bool p0);
-		public signal void set_anchor ();
-		public signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
-		public signal void toggle_cursor_visible ();
-		public signal void toggle_overwrite ();
+		public virtual signal void backspace ();
+		public virtual signal void copy_clipboard ();
+		public virtual signal void cut_clipboard ();
+		public virtual signal void delete_from_cursor (Gtk.DeleteType type, int count);
+		public virtual signal void insert_at_cursor (string str);
+		public virtual signal void move_cursor (Gtk.MovementStep step, int count, bool extend_selection);
+		public virtual signal void move_viewport (Gtk.ScrollStep p0, int p1);
+		public virtual signal void page_horizontally (int count, bool extend_selection);
+		public virtual signal void paste_clipboard ();
+		public virtual signal void populate_popup (Gtk.Menu menu);
+		public virtual signal void select_all (bool p0);
+		public virtual signal void set_anchor ();
+		public virtual signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
+		public virtual signal void toggle_cursor_visible ();
+		public virtual signal void toggle_overwrite ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ToggleAction : Gtk.Action, Gtk.Buildable {
@@ -5164,7 +5164,7 @@ namespace Gtk {
 		public bool active { get; set; }
 		public bool draw_as_radio { get; set; }
 		[HasEmitter]
-		public signal void toggled ();
+		public virtual signal void toggled ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ToggleButton : Gtk.Button, Atk.Implementor, Gtk.Buildable {
@@ -5182,7 +5182,7 @@ namespace Gtk {
 		public bool draw_indicator { get; set; }
 		public bool inconsistent { get; set; }
 		[HasEmitter]
-		public signal void toggled ();
+		public virtual signal void toggled ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ToggleToolButton : Gtk.ToolButton, Atk.Implementor, Gtk.Buildable {
@@ -5191,7 +5191,7 @@ namespace Gtk {
 		public ToggleToolButton.from_stock (string stock_id);
 		public void set_active (bool is_active);
 		public bool active { get; set; }
-		public signal void toggled ();
+		public virtual signal void toggled ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ToolButton : Gtk.ToolItem, Atk.Implementor, Gtk.Buildable {
@@ -5215,7 +5215,7 @@ namespace Gtk {
 		public Gtk.Widget label_widget { get; set; }
 		public string stock_id { get; set; }
 		public bool use_underline { get; set; }
-		public signal void clicked ();
+		public virtual signal void clicked ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ToolItem : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
@@ -5245,8 +5245,8 @@ namespace Gtk {
 		public bool is_important { get; set; }
 		public bool visible_horizontal { get; set; }
 		public bool visible_vertical { get; set; }
-		public signal bool create_menu_proxy ();
-		public signal void toolbar_reconfigured ();
+		public virtual signal bool create_menu_proxy ();
+		public virtual signal void toolbar_reconfigured ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Toolbar : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -5284,10 +5284,10 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Gtk.ToolbarStyle toolbar_style { get; set; }
 		public bool tooltips { get; set; }
-		public signal bool focus_home_or_end (bool p0);
-		public signal void orientation_changed (Gtk.Orientation orientation);
-		public signal bool popup_context_menu (int x, int y, int button_number);
-		public signal void style_changed (Gtk.ToolbarStyle style);
+		public virtual signal bool focus_home_or_end (bool p0);
+		public virtual signal void orientation_changed (Gtk.Orientation orientation);
+		public virtual signal bool popup_context_menu (int x, int y, int button_number);
+		public virtual signal void style_changed (Gtk.ToolbarStyle style);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Tooltip : GLib.Object {
@@ -5373,7 +5373,7 @@ namespace Gtk {
 		public void unselect_iter (Gtk.TreeIter iter);
 		public void unselect_path (Gtk.TreePath path);
 		public void unselect_range (Gtk.TreePath start_path, Gtk.TreePath end_path);
-		public signal void changed ();
+		public virtual signal void changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TreeStore : GLib.Object, Gtk.Buildable, Gtk.TreeModel, Gtk.TreeSortable, Gtk.TreeDragSource, Gtk.TreeDragDest {
@@ -5534,24 +5534,24 @@ namespace Gtk {
 		public bool show_expanders { get; set; }
 		public int tooltip_column { get; set; }
 		public Gtk.Adjustment vadjustment { get; set; }
-		public signal void columns_changed ();
-		public signal void cursor_changed ();
-		public signal bool expand_collapse_cursor_row (bool logical, bool expand, bool open_all);
-		public signal bool move_cursor (Gtk.MovementStep step, int count);
+		public virtual signal void columns_changed ();
+		public virtual signal void cursor_changed ();
+		public virtual signal bool expand_collapse_cursor_row (bool logical, bool expand, bool open_all);
+		public virtual signal bool move_cursor (Gtk.MovementStep step, int count);
 		[HasEmitter]
-		public signal void row_activated (Gtk.TreePath path, Gtk.TreeViewColumn column);
-		public signal void row_collapsed (Gtk.TreeIter iter, Gtk.TreePath path);
+		public virtual signal void row_activated (Gtk.TreePath path, Gtk.TreeViewColumn column);
+		public virtual signal void row_collapsed (Gtk.TreeIter iter, Gtk.TreePath path);
 		[HasEmitter]
-		public signal void row_expanded (Gtk.TreeIter iter, Gtk.TreePath path);
-		public signal bool select_all ();
-		public signal bool select_cursor_parent ();
-		public signal bool select_cursor_row (bool start_editing);
-		public signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
-		public signal bool start_interactive_search ();
-		public signal bool test_collapse_row (Gtk.TreeIter iter, Gtk.TreePath path);
-		public signal bool test_expand_row (Gtk.TreeIter iter, Gtk.TreePath path);
-		public signal bool toggle_cursor_row ();
-		public signal bool unselect_all ();
+		public virtual signal void row_expanded (Gtk.TreeIter iter, Gtk.TreePath path);
+		public virtual signal bool select_all ();
+		public virtual signal bool select_cursor_parent ();
+		public virtual signal bool select_cursor_row (bool start_editing);
+		public virtual signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
+		public virtual signal bool start_interactive_search ();
+		public virtual signal bool test_collapse_row (Gtk.TreeIter iter, Gtk.TreePath path);
+		public virtual signal bool test_expand_row (Gtk.TreeIter iter, Gtk.TreePath path);
+		public virtual signal bool toggle_cursor_row ();
+		public virtual signal bool unselect_all ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TreeViewColumn : Gtk.Object, Gtk.Buildable, Gtk.CellLayout {
@@ -5638,7 +5638,7 @@ namespace Gtk {
 		public Gtk.Widget widget { get; set; }
 		public int width { get; }
 		[HasEmitter]
-		public signal void clicked ();
+		public virtual signal void clicked ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class UIManager : GLib.Object, Gtk.Buildable {
@@ -5661,12 +5661,12 @@ namespace Gtk {
 		public virtual weak Gtk.Widget get_widget (string path);
 		public bool add_tearoffs { get; set; }
 		public string ui { get; }
-		public signal void actions_changed ();
-		public signal void add_widget (Gtk.Widget widget);
-		public signal void connect_proxy (Gtk.Action action, Gtk.Widget proxy);
-		public signal void disconnect_proxy (Gtk.Action action, Gtk.Widget proxy);
-		public signal void post_activate (Gtk.Action action);
-		public signal void pre_activate (Gtk.Action action);
+		public virtual signal void actions_changed ();
+		public virtual signal void add_widget (Gtk.Widget widget);
+		public virtual signal void connect_proxy (Gtk.Action action, Gtk.Widget proxy);
+		public virtual signal void disconnect_proxy (Gtk.Action action, Gtk.Widget proxy);
+		public virtual signal void post_activate (Gtk.Action action);
+		public virtual signal void pre_activate (Gtk.Action action);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class VBox : Gtk.Box, Atk.Implementor, Gtk.Buildable {
@@ -5711,7 +5711,7 @@ namespace Gtk {
 		public Gtk.Adjustment hadjustment { get; set construct; }
 		public Gtk.ShadowType shadow_type { get; set; }
 		public Gtk.Adjustment vadjustment { get; set construct; }
-		public signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
+		public virtual signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class VolumeButton : Gtk.ScaleButton, Atk.Implementor, Gtk.Buildable {
@@ -5878,12 +5878,12 @@ namespace Gtk {
 		public bool urgency_hint { get; set; }
 		[NoAccessorMethod]
 		public Gtk.WindowPosition window_position { get; set; }
-		public signal void default_activated ();
-		public signal void focus_activated ();
-		public signal bool frame_event (Gdk.Event event);
-		public signal void keys_changed ();
+		public virtual signal void default_activated ();
+		public virtual signal void focus_activated ();
+		public virtual signal bool frame_event (Gdk.Event event);
+		public virtual signal void keys_changed ();
 		[HasEmitter]
-		public signal void set_focus (Gtk.Widget focus);
+		public virtual signal void set_focus (Gtk.Widget focus);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class WindowGroup : GLib.Object {
@@ -5911,9 +5911,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface CellEditable : Gtk.Widget {
 		[HasEmitter]
-		public signal void editing_done ();
+		public virtual signal void editing_done ();
 		[HasEmitter]
-		public signal void remove_widget ();
+		public virtual signal void remove_widget ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface CellLayout : GLib.Object {
@@ -5946,11 +5946,11 @@ namespace Gtk {
 		public abstract void set_position (int position);
 		[NoWrapper]
 		public abstract void set_selection_bounds (int start_pos, int end_pos);
-		public signal void changed ();
+		public virtual signal void changed ();
 		[HasEmitter]
-		public signal void delete_text (int start_pos, int end_pos);
+		public virtual signal void delete_text (int start_pos, int end_pos);
 		[HasEmitter]
-		public signal void insert_text (string text, int length, void* position);
+		public virtual signal void insert_text (string text, int length, void* position);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface FileChooser : Gtk.Widget {
@@ -6014,19 +6014,19 @@ namespace Gtk {
 		public bool select_multiple { get; set; }
 		public bool show_hidden { get; set; }
 		public bool use_preview_label { get; set; }
-		public signal Gtk.FileChooserConfirmation confirm_overwrite ();
-		public signal void current_folder_changed ();
-		public signal void file_activated ();
-		public signal void selection_changed ();
-		public signal void update_preview ();
+		public virtual signal Gtk.FileChooserConfirmation confirm_overwrite ();
+		public virtual signal void current_folder_changed ();
+		public virtual signal void file_activated ();
+		public virtual signal void selection_changed ();
+		public virtual signal void update_preview ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface PrintOperationPreview : GLib.Object {
 		public abstract void end_preview ();
 		public abstract bool is_selected (int page_nr);
 		public abstract void render_page (int page_nr);
-		public signal void got_page_size (Gtk.PrintContext context, Gtk.PageSetup page_setup);
-		public signal void ready (Gtk.PrintContext context);
+		public virtual signal void got_page_size (Gtk.PrintContext context, Gtk.PageSetup page_setup);
+		public virtual signal void ready (Gtk.PrintContext context);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface RecentChooser : GLib.Object {
@@ -6074,8 +6074,8 @@ namespace Gtk {
 		public bool show_private { get; set; }
 		public bool show_tips { get; set; }
 		public Gtk.RecentSortType sort_type { get; set; }
-		public signal void item_activated ();
-		public signal void selection_changed ();
+		public virtual signal void item_activated ();
+		public virtual signal void selection_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeDragDest {
@@ -6112,15 +6112,15 @@ namespace Gtk {
 		public abstract void ref_node (Gtk.TreeIter iter);
 		public abstract void unref_node (Gtk.TreeIter iter);
 		[HasEmitter]
-		public signal void row_changed (Gtk.TreePath path, Gtk.TreeIter iter);
+		public virtual signal void row_changed (Gtk.TreePath path, Gtk.TreeIter iter);
 		[HasEmitter]
-		public signal void row_deleted (Gtk.TreePath path);
+		public virtual signal void row_deleted (Gtk.TreePath path);
 		[HasEmitter]
-		public signal void row_has_child_toggled (Gtk.TreePath path, Gtk.TreeIter iter);
+		public virtual signal void row_has_child_toggled (Gtk.TreePath path, Gtk.TreeIter iter);
 		[HasEmitter]
-		public signal void row_inserted (Gtk.TreePath path, Gtk.TreeIter iter);
+		public virtual signal void row_inserted (Gtk.TreePath path, Gtk.TreeIter iter);
 		[HasEmitter]
-		public signal void rows_reordered (Gtk.TreePath path, Gtk.TreeIter iter, void* new_order);
+		public virtual signal void rows_reordered (Gtk.TreePath path, Gtk.TreeIter iter, void* new_order);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeSortable : Gtk.TreeModel, GLib.Object {
@@ -6130,7 +6130,7 @@ namespace Gtk {
 		public abstract void set_sort_column_id (int sort_column_id, Gtk.SortType order);
 		public abstract void set_sort_func (int sort_column_id, Gtk.TreeIterCompareFunc sort_func, Gtk.DestroyNotify destroy);
 		[HasEmitter]
-		public signal void sort_column_changed ();
+		public virtual signal void sort_column_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct Allocation {

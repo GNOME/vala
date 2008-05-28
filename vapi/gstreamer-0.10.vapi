@@ -1120,8 +1120,8 @@ namespace Gst {
 		public virtual bool remove_element (Gst.Element element);
 		[NoAccessorMethod]
 		public bool async_handling { get; set; }
-		public signal void element_added (Gst.Element child);
-		public signal void element_removed (Gst.Element child);
+		public virtual signal void element_added (Gst.Element child);
+		public virtual signal void element_removed (Gst.Element child);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Bus : Gst.Object {
@@ -1152,8 +1152,8 @@ namespace Gst {
 		public Gst.BusSyncReply sync_signal_handler (Gst.Message message, void* data);
 		public weak Gst.Message timed_pop (Gst.ClockTime timeout);
 		public weak Gst.Message timed_pop_filtered (Gst.ClockTime timeout, Gst.MessageType types);
-		public signal void message (Gst.Message message);
-		public signal void sync_message (Gst.Message message);
+		public virtual signal void message (Gst.Message message);
+		public virtual signal void sync_message (Gst.Message message);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Clock : Gst.Object {
@@ -1299,9 +1299,9 @@ namespace Gst {
 		public virtual void set_index (Gst.Index index);
 		public virtual Gst.StateChangeReturn set_state (Gst.State state);
 		[HasEmitter]
-		public signal void no_more_pads ();
-		public signal void pad_added (Gst.Pad pad);
-		public signal void pad_removed (Gst.Pad pad);
+		public virtual signal void no_more_pads ();
+		public virtual signal void pad_added (Gst.Pad pad);
+		public virtual signal void pad_removed (Gst.Pad pad);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class ElementFactory : Gst.PluginFeature {
@@ -1373,7 +1373,7 @@ namespace Gst {
 		public virtual bool get_writer_id (Gst.Object writer, int id);
 		[NoAccessorMethod]
 		public Gst.IndexResolver resolver { get; set; }
-		public signal void entry_added (Gst.IndexEntry entry);
+		public virtual signal void entry_added (Gst.IndexEntry entry);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class IndexFactory : Gst.PluginFeature {
@@ -1411,10 +1411,10 @@ namespace Gst {
 		public virtual void restore_thyself (void* self);
 		public virtual void* save_thyself (void* parent);
 		public string name { get; set construct; }
-		public signal void deep_notify (Gst.Object orig, GLib.ParamSpec pspec);
-		public signal void object_saved (void* parent);
-		public signal void parent_set (Gst.Object parent);
-		public signal void parent_unset (Gst.Object parent);
+		public virtual signal void deep_notify (Gst.Object orig, GLib.ParamSpec pspec);
+		public virtual signal void object_saved (void* parent);
+		public virtual signal void parent_set (Gst.Object parent);
+		public virtual signal void parent_unset (Gst.Object parent);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pad : Gst.Object {
@@ -1540,10 +1540,10 @@ namespace Gst {
 		public Gst.PadDirection direction { get; construct; }
 		[NoAccessorMethod]
 		public Gst.PadTemplate template { get; set; }
-		public signal bool have_data (Gst.MiniObject data);
-		public signal void linked (Gst.Pad peer);
-		public signal void request_link ();
-		public signal void unlinked (Gst.Pad peer);
+		public virtual signal bool have_data (Gst.MiniObject data);
+		public virtual signal void linked (Gst.Pad peer);
+		public virtual signal void request_link ();
+		public virtual signal void unlinked (Gst.Pad peer);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class PadTemplate : Gst.Object {
@@ -1554,7 +1554,7 @@ namespace Gst {
 		public weak Gst.Caps get_caps ();
 		public PadTemplate (string name_template, Gst.PadDirection direction, Gst.PadPresence presence, Gst.Caps caps);
 		[HasEmitter]
-		public signal void pad_created (Gst.Pad pad);
+		public virtual signal void pad_created (Gst.Pad pad);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pipeline : Gst.Bin, Gst.ChildProxy {
@@ -1647,8 +1647,8 @@ namespace Gst {
 		public bool scan_path (string path);
 		public bool xml_read_cache (string location);
 		public bool xml_write_cache (string location);
-		public signal void feature_added (void* feature);
-		public signal void plugin_added (void* plugin);
+		public virtual signal void feature_added (void* feature);
+		public virtual signal void plugin_added (void* plugin);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class SystemClock : Gst.Clock {
@@ -1705,7 +1705,7 @@ namespace Gst {
 		public static int write_file (Gst.Element element, GLib.FileStream @out);
 		[NoWrapper]
 		public virtual void object_saved (Gst.Object object, void* self);
-		public signal void object_loaded (Gst.Object object, void* self);
+		public virtual signal void object_loaded (Gst.Object object, void* self);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface ChildProxy : Gst.Object {
@@ -1720,9 +1720,9 @@ namespace Gst {
 		public abstract weak Gst.Object get_child_by_index (uint index);
 		public abstract uint get_children_count ();
 		[HasEmitter]
-		public signal void child_added (GLib.Object child);
+		public virtual signal void child_added (GLib.Object child);
 		[HasEmitter]
-		public signal void child_removed (GLib.Object child);
+		public virtual signal void child_removed (GLib.Object child);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface ImplementsInterface : Gst.Element {
@@ -1744,7 +1744,7 @@ namespace Gst {
 		public abstract weak string get_uri ();
 		public abstract bool set_uri (string uri);
 		[HasEmitter]
-		public signal void new_uri (string uri);
+		public virtual signal void new_uri (string uri);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	[SimpleType]

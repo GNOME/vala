@@ -159,10 +159,10 @@ namespace Gdk {
 		public PixbufLoader.with_type (string image_type) throws GLib.Error;
 		public void set_size (int width, int height);
 		public bool write (uchar[] buf) throws GLib.Error;
-		public signal void area_prepared ();
-		public signal void area_updated (int x, int y, int width, int height);
-		public signal void closed ();
-		public signal void size_prepared (int width, int height);
+		public virtual signal void area_prepared ();
+		public virtual signal void area_updated (int x, int y, int width, int height);
+		public virtual signal void closed ();
+		public virtual signal void size_prepared (int width, int height);
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufSimpleAnim : Gdk.PixbufAnimation {

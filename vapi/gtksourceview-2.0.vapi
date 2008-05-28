@@ -50,7 +50,7 @@ namespace Gtk {
 		public Gtk.SourceLanguage language { get; set; }
 		public int max_undo_levels { get; set; }
 		public Gtk.SourceStyleScheme style_scheme { get; set; }
-		public signal void source_mark_updated (Gtk.TextMark p0);
+		public virtual signal void source_mark_updated (Gtk.TextMark p0);
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceLanguage : GLib.Object {
@@ -242,8 +242,8 @@ namespace Gtk {
 		public bool show_right_margin { get; set; }
 		public Gtk.SourceSmartHomeEndType smart_home_end { get; set; }
 		public uint tab_width { get; set; }
-		public signal void redo ();
-		public signal void undo ();
+		public virtual signal void redo ();
+		public virtual signal void undo ();
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public static bool source_iter_backward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, Gtk.TextIter match_start, Gtk.TextIter match_end, Gtk.TextIter limit);

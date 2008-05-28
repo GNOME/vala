@@ -825,7 +825,7 @@ namespace Gdk {
 		public virtual weak string get_display_name ();
 		public virtual int get_n_screens ();
 		public virtual weak Gdk.Screen get_screen (int screen_num);
-		public signal void closed (bool is_error);
+		public virtual signal void closed (bool is_error);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class DisplayManager : GLib.Object {
@@ -834,7 +834,7 @@ namespace Gdk {
 		public weak GLib.SList list_displays ();
 		public void set_default_display (Gdk.Display display);
 		public Gdk.Display default_display { get; set; }
-		public signal void display_opened (Gdk.Display display);
+		public virtual signal void display_opened (Gdk.Display display);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class DragContext : GLib.Object {
@@ -963,8 +963,8 @@ namespace Gdk {
 		public bool have_bidi_layouts ();
 		public uint lookup_key (Gdk.KeymapKey key);
 		public bool translate_keyboard_state (uint hardware_keycode, Gdk.ModifierType state, int group, uint keyval, int effective_group, int level, Gdk.ModifierType consumed_modifiers);
-		public signal void direction_changed ();
-		public signal void keys_changed ();
+		public virtual signal void direction_changed ();
+		public virtual signal void keys_changed ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PangoRenderer : Pango.Renderer {
@@ -1036,8 +1036,8 @@ namespace Gdk {
 		public static int width_mm ();
 		public void* font_options { get; set; }
 		public double resolution { get; set; }
-		public signal void composited_changed ();
-		public signal void size_changed ();
+		public virtual signal void composited_changed ();
+		public virtual signal void size_changed ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Visual : GLib.Object {

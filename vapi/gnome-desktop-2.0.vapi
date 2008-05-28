@@ -102,9 +102,9 @@ namespace Gnome {
 		public void set_ditem (Gnome.DesktopItem ditem);
 		public void set_editable (bool editable);
 		public void set_entry_type (string type);
-		public signal void changed ();
-		public signal void icon_changed ();
-		public signal void name_changed ();
+		public virtual signal void changed ();
+		public virtual signal void icon_changed ();
+		public virtual signal void name_changed ();
 	}
 	[CCode (cheader_filename = "libgnomeui/gnome-hint.h")]
 	public class Hint : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {

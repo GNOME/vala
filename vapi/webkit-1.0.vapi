@@ -52,11 +52,11 @@ namespace WebKit {
 		public string name { get; }
 		public string title { get; }
 		public string uri { get; }
-		public signal void cleared ();
-		public signal void hovering_over_link (string p0, string p1);
-		public signal void load_committed ();
-		public signal void load_done (bool p0);
-		public signal void title_changed (string p0);
+		public virtual signal void cleared ();
+		public virtual signal void hovering_over_link (string p0, string p1);
+		public virtual signal void load_committed ();
+		public virtual signal void load_done (bool p0);
+		public virtual signal void title_changed (string p0);
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebHistoryItem : GLib.Object {
@@ -158,30 +158,30 @@ namespace WebKit {
 		public Gtk.TargetList paste_target_list { get; }
 		public WebKit.WebSettings settings { get; set; }
 		public bool transparent { get; set; }
-		public signal bool console_message (string message, int line_number, string source_id);
+		public virtual signal bool console_message (string message, int line_number, string source_id);
 		[HasEmitter]
-		public signal void copy_clipboard ();
+		public virtual signal void copy_clipboard ();
 		[HasEmitter]
-		public signal void cut_clipboard ();
-		public signal void hovering_over_link (string p0, string p1);
-		public signal void icon_loaded ();
-		public signal void load_committed (WebKit.WebFrame p0);
-		public signal void load_finished (WebKit.WebFrame p0);
-		public signal void load_progress_changed (int p0);
-		public signal void load_started (WebKit.WebFrame p0);
-		public signal int navigation_requested (GLib.Object frame, GLib.Object request);
+		public virtual signal void cut_clipboard ();
+		public virtual signal void hovering_over_link (string p0, string p1);
+		public virtual signal void icon_loaded ();
+		public virtual signal void load_committed (WebKit.WebFrame p0);
+		public virtual signal void load_finished (WebKit.WebFrame p0);
+		public virtual signal void load_progress_changed (int p0);
+		public virtual signal void load_started (WebKit.WebFrame p0);
+		public virtual signal int navigation_requested (GLib.Object frame, GLib.Object request);
 		[HasEmitter]
-		public signal void paste_clipboard ();
-		public signal void populate_popup (Gtk.Menu p0);
-		public signal bool script_alert (GLib.Object frame, string alert_message);
-		public signal bool script_confirm (GLib.Object frame, string confirm_message, bool did_confirm);
-		public signal bool script_prompt (GLib.Object frame, string message, string default_value, void* value);
+		public virtual signal void paste_clipboard ();
+		public virtual signal void populate_popup (Gtk.Menu p0);
+		public virtual signal bool script_alert (GLib.Object frame, string alert_message);
+		public virtual signal bool script_confirm (GLib.Object frame, string confirm_message, bool did_confirm);
+		public virtual signal bool script_prompt (GLib.Object frame, string message, string default_value, void* value);
 		[HasEmitter]
-		public signal void select_all ();
-		public signal void selection_changed ();
-		public signal void set_scroll_adjustments (Gtk.Adjustment p0, Gtk.Adjustment p1);
-		public signal void status_bar_text_changed (string p0);
-		public signal void title_changed (WebKit.WebFrame p0, string p1);
-		public signal void window_object_cleared (WebKit.WebFrame frame, void* context, void* window_object);
+		public virtual signal void select_all ();
+		public virtual signal void selection_changed ();
+		public virtual signal void set_scroll_adjustments (Gtk.Adjustment p0, Gtk.Adjustment p1);
+		public virtual signal void status_bar_text_changed (string p0);
+		public virtual signal void title_changed (WebKit.WebFrame p0, string p1);
+		public virtual signal void window_object_cleared (WebKit.WebFrame frame, void* context, void* window_object);
 	}
 }

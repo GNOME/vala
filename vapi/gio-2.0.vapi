@@ -287,7 +287,7 @@ namespace GLib {
 		public void push_current ();
 		public void reset ();
 		public bool set_error_if_cancelled () throws GLib.Error;
-		public signal void cancelled ();
+		public virtual signal void cancelled ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class DataInputStream : GLib.BufferedInputStream {
@@ -425,7 +425,7 @@ namespace GLib {
 		public bool cancelled { get; }
 		[NoAccessorMethod]
 		public int rate_limit { get; set; }
-		public signal void changed (GLib.File file, GLib.File? other_file, GLib.FileMonitorEvent event_type);
+		public virtual signal void changed (GLib.File file, GLib.File? other_file, GLib.FileMonitorEvent event_type);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileOutputStream : GLib.OutputStream, GLib.Seekable {
@@ -450,7 +450,7 @@ namespace GLib {
 		public weak string get_completions (string initial_text);
 		public FilenameCompleter ();
 		public void set_dirs_only (bool dirs_only);
-		public signal void got_completion_data ();
+		public virtual signal void got_completion_data ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FilterInputStream : GLib.InputStream {
@@ -524,10 +524,10 @@ namespace GLib {
 		public string password { get; set; }
 		public GLib.PasswordSave password_save { get; set; }
 		public string username { get; set; }
-		public signal void ask_password (string message, string default_user, string default_domain, GLib.AskPasswordFlags flags);
-		public signal void ask_question (string message, string[] choices);
+		public virtual signal void ask_password (string message, string default_user, string default_domain, GLib.AskPasswordFlags flags);
+		public virtual signal void ask_question (string message, string[] choices);
 		[HasEmitter]
-		public signal void reply (GLib.MountOperationResult result);
+		public virtual signal void reply (GLib.MountOperationResult result);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class NativeVolumeMonitor : GLib.VolumeMonitor {
@@ -614,16 +614,16 @@ namespace GLib {
 		public virtual weak GLib.List get_volumes ();
 		[NoWrapper]
 		public virtual bool is_supported ();
-		public signal void drive_changed (GLib.Drive drive);
-		public signal void drive_connected (GLib.Drive drive);
-		public signal void drive_disconnected (GLib.Drive drive);
-		public signal void mount_added (GLib.Mount mount);
-		public signal void mount_changed (GLib.Mount mount);
-		public signal void mount_pre_unmount (GLib.Mount mount);
-		public signal void mount_removed (GLib.Mount mount);
-		public signal void volume_added (GLib.Volume volume);
-		public signal void volume_changed (GLib.Volume volume);
-		public signal void volume_removed (GLib.Volume volume);
+		public virtual signal void drive_changed (GLib.Drive drive);
+		public virtual signal void drive_connected (GLib.Drive drive);
+		public virtual signal void drive_disconnected (GLib.Drive drive);
+		public virtual signal void mount_added (GLib.Mount mount);
+		public virtual signal void mount_changed (GLib.Mount mount);
+		public virtual signal void mount_pre_unmount (GLib.Mount mount);
+		public virtual signal void mount_removed (GLib.Mount mount);
+		public virtual signal void volume_added (GLib.Volume volume);
+		public virtual signal void volume_changed (GLib.Volume volume);
+		public virtual signal void volume_removed (GLib.Volume volume);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface AppInfo : GLib.Object {
@@ -673,9 +673,9 @@ namespace GLib {
 		public abstract bool is_media_removable ();
 		public abstract void poll_for_media (GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public abstract bool poll_for_media_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public signal void changed ();
-		public signal void disconnected ();
-		public signal void eject_button ();
+		public virtual signal void changed ();
+		public virtual signal void disconnected ();
+		public virtual signal void eject_button ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface File : GLib.Object {
@@ -803,8 +803,8 @@ namespace GLib {
 		public abstract bool remount_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract void unmount (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public abstract bool unmount_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public signal void changed ();
-		public signal void unmounted ();
+		public virtual signal void changed ();
+		public virtual signal void unmounted ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Seekable : GLib.Object {
@@ -834,8 +834,8 @@ namespace GLib {
 		[NoWrapper]
 		public abstract void mount_fn (GLib.MountMountFlags flags, GLib.MountOperation mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public abstract bool should_automount ();
-		public signal void changed ();
-		public signal void removed ();
+		public virtual signal void changed ();
+		public virtual signal void removed ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate void AsyncReadyCallback (GLib.Object source_object, GLib.AsyncResult res);

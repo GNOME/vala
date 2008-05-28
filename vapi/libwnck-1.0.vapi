@@ -168,8 +168,8 @@ namespace Wnck {
 		public virtual void pad3 ();
 		[NoWrapper]
 		public virtual void pad4 ();
-		public signal void icon_changed ();
-		public signal void name_changed ();
+		public virtual signal void icon_changed ();
+		public virtual signal void name_changed ();
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class ClassGroup : GLib.Object {
@@ -187,8 +187,8 @@ namespace Wnck {
 		public virtual void pad3 ();
 		[NoWrapper]
 		public virtual void pad4 ();
-		public signal void icon_changed ();
-		public signal void name_changed ();
+		public virtual signal void icon_changed ();
+		public virtual signal void name_changed ();
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Pager : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
@@ -248,21 +248,21 @@ namespace Wnck {
 		public virtual void pad5 ();
 		[NoWrapper]
 		public virtual void pad6 ();
-		public signal void active_window_changed (Wnck.Window previous_window);
-		public signal void active_workspace_changed (Wnck.Workspace previous_workspace);
-		public signal void application_closed (Wnck.Application app);
-		public signal void application_opened (Wnck.Application app);
-		public signal void background_changed ();
-		public signal void class_group_closed (Wnck.ClassGroup class_group);
-		public signal void class_group_opened (Wnck.ClassGroup class_group);
-		public signal void showing_desktop_changed ();
-		public signal void viewports_changed ();
-		public signal void window_closed (Wnck.Window window);
-		public signal void window_manager_changed ();
-		public signal void window_opened (Wnck.Window window);
-		public signal void window_stacking_changed ();
-		public signal void workspace_created (Wnck.Workspace space);
-		public signal void workspace_destroyed (Wnck.Workspace space);
+		public virtual signal void active_window_changed (Wnck.Window previous_window);
+		public virtual signal void active_workspace_changed (Wnck.Workspace previous_workspace);
+		public virtual signal void application_closed (Wnck.Application app);
+		public virtual signal void application_opened (Wnck.Application app);
+		public virtual signal void background_changed ();
+		public virtual signal void class_group_closed (Wnck.ClassGroup class_group);
+		public virtual signal void class_group_opened (Wnck.ClassGroup class_group);
+		public virtual signal void showing_desktop_changed ();
+		public virtual signal void viewports_changed ();
+		public virtual signal void window_closed (Wnck.Window window);
+		public virtual signal void window_manager_changed ();
+		public virtual signal void window_opened (Wnck.Window window);
+		public virtual signal void window_stacking_changed ();
+		public virtual signal void workspace_created (Wnck.Workspace space);
+		public virtual signal void workspace_destroyed (Wnck.Workspace space);
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Selector : Gtk.MenuBar, Atk.Implementor, Gtk.Buildable {
@@ -385,12 +385,12 @@ namespace Wnck {
 		public virtual void pad3 ();
 		[NoWrapper]
 		public virtual void pad4 ();
-		public signal void actions_changed (Wnck.WindowActions changed_mask, Wnck.WindowActions new_actions);
-		public signal void geometry_changed ();
-		public signal void icon_changed ();
-		public signal void name_changed ();
-		public signal void state_changed (Wnck.WindowState changed_mask, Wnck.WindowState new_state);
-		public signal void workspace_changed ();
+		public virtual signal void actions_changed (Wnck.WindowActions changed_mask, Wnck.WindowActions new_actions);
+		public virtual signal void geometry_changed ();
+		public virtual signal void icon_changed ();
+		public virtual signal void name_changed ();
+		public virtual signal void state_changed (Wnck.WindowState changed_mask, Wnck.WindowState new_state);
+		public virtual signal void workspace_changed ();
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Workspace : GLib.Object {
@@ -415,7 +415,7 @@ namespace Wnck {
 		public virtual void pad3 ();
 		[NoWrapper]
 		public virtual void pad4 ();
-		public signal void name_changed ();
+		public virtual signal void name_changed ();
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public delegate weak Gdk.Pixbuf LoadIconFunction (string icon_name, int size, uint flags);

@@ -798,6 +798,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		
 		write_indent ();
 		write_accessibility (sig);
+
+		if (sig.is_virtual) {
+			write_string ("virtual ");
+		}
+
 		write_string ("signal ");
 		
 		write_return_type (sig.return_type);

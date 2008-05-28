@@ -854,14 +854,14 @@ namespace GnomeVFS {
 		public void unmount (GnomeVFS.VolumeOpCallback callback);
 		public void unref ();
 		public static void volume_list_free (GLib.List volumes);
-		public signal void volume_mounted (GnomeVFS.Volume volume);
-		public signal void volume_pre_unmount (GnomeVFS.Volume volume);
-		public signal void volume_unmounted (GnomeVFS.Volume volume);
+		public virtual signal void volume_mounted (GnomeVFS.Volume volume);
+		public virtual signal void volume_pre_unmount (GnomeVFS.Volume volume);
+		public virtual signal void volume_unmounted (GnomeVFS.Volume volume);
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class MIMEMonitor : GLib.Object {
 		public static weak GnomeVFS.MIMEMonitor get ();
-		public signal void data_changed ();
+		public virtual signal void data_changed ();
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class Volume : GLib.Object {
@@ -894,11 +894,11 @@ namespace GnomeVFS {
 		public weak GnomeVFS.Volume get_volume_for_path (string path);
 		public weak GnomeVFS.VolumeMonitor @ref ();
 		public void unref ();
-		public signal void drive_connected (GnomeVFS.Drive drive);
-		public signal void drive_disconnected (GnomeVFS.Drive drive);
-		public signal void volume_mounted (GnomeVFS.Volume volume);
-		public signal void volume_pre_unmount (GnomeVFS.Volume volume);
-		public signal void volume_unmounted (GnomeVFS.Volume volume);
+		public virtual signal void drive_connected (GnomeVFS.Drive drive);
+		public virtual signal void drive_disconnected (GnomeVFS.Drive drive);
+		public virtual signal void volume_mounted (GnomeVFS.Volume volume);
+		public virtual signal void volume_pre_unmount (GnomeVFS.Volume volume);
+		public virtual signal void volume_unmounted (GnomeVFS.Volume volume);
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static delegate void AsyncCallback (GnomeVFS.AsyncHandle handle, GnomeVFS.Result result, void* callback_data);

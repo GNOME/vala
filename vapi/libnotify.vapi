@@ -40,7 +40,7 @@ namespace Notify {
 		public Gtk.StatusIcon status_icon { get; set construct; }
 		[NoAccessorMethod]
 		public string summary { get; set construct; }
-		public signal void closed ();
+		public virtual signal void closed ();
 	}
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static delegate void ActionCallback (Notify.Notification p1, string p2, void* p3);

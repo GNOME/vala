@@ -310,7 +310,7 @@ namespace Soup {
 		public void resolve_async (Soup.AddressCallback callback);
 		public void resolve_async_full (GLib.MainContext async_context, Soup.AddressCallback callback);
 		public uint resolve_sync ();
-		public signal void dns_result (int status);
+		public virtual signal void dns_result (int status);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Connection : GLib.Object {
@@ -336,11 +336,11 @@ namespace Soup {
 		[NoAccessorMethod]
 		public uint timeout { get; set; }
 		[HasEmitter]
-		public signal void authenticate (Soup.Message p0, string auth_type, string auth_realm, void* username, void* password);
-		public signal void connect_result (int p0);
-		public signal void disconnected ();
+		public virtual signal void authenticate (Soup.Message p0, string auth_type, string auth_realm, void* username, void* password);
+		public virtual signal void connect_result (int p0);
+		public virtual signal void disconnected ();
 		[HasEmitter]
-		public signal void reauthenticate (Soup.Message p0, string auth_type, string auth_realm, void* username, void* password);
+		public virtual signal void reauthenticate (Soup.Message p0, string auth_type, string auth_realm, void* username, void* password);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Message : GLib.Object {
@@ -386,25 +386,25 @@ namespace Soup {
 		public void set_status_full (uint status_code, string reason_phrase);
 		public void set_uri (Soup.Uri uri);
 		[HasEmitter]
-		public signal void finished ();
+		public virtual signal void finished ();
 		[HasEmitter]
-		public signal void got_body ();
+		public virtual signal void got_body ();
 		[HasEmitter]
-		public signal void got_chunk ();
+		public virtual signal void got_chunk ();
 		[HasEmitter]
-		public signal void got_headers ();
+		public virtual signal void got_headers ();
 		[HasEmitter]
-		public signal void got_informational ();
+		public virtual signal void got_informational ();
 		[HasEmitter]
-		public signal void restarted ();
+		public virtual signal void restarted ();
 		[HasEmitter]
-		public signal void wrote_body ();
+		public virtual signal void wrote_body ();
 		[HasEmitter]
-		public signal void wrote_chunk ();
+		public virtual signal void wrote_chunk ();
 		[HasEmitter]
-		public signal void wrote_headers ();
+		public virtual signal void wrote_headers ();
 		[HasEmitter]
-		public signal void wrote_informational ();
+		public virtual signal void wrote_informational ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Server : GLib.Object {
@@ -469,8 +469,8 @@ namespace Soup {
 		public uint timeout { get; set; }
 		[NoAccessorMethod]
 		public bool use_ntlm { get; set; }
-		public signal void authenticate (Soup.Message p0, string auth_type, string auth_realm, void* username, void* password);
-		public signal void reauthenticate (Soup.Message p0, string auth_type, string auth_realm, void* username, void* password);
+		public virtual signal void authenticate (Soup.Message p0, string auth_type, string auth_realm, void* username, void* password);
+		public virtual signal void reauthenticate (Soup.Message p0, string auth_type, string auth_realm, void* username, void* password);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class SessionAsync : Soup.Session, Soup.MessageFilter {
@@ -515,11 +515,11 @@ namespace Soup {
 		public void* ssl_creds { get; set; }
 		[NoAccessorMethod]
 		public uint timeout { get; set; }
-		public signal void connect_result (int p0);
-		public signal void disconnected ();
-		public signal void new_connection (Soup.Socket p0);
-		public signal void readable ();
-		public signal void writable ();
+		public virtual signal void connect_result (int p0);
+		public virtual signal void disconnected ();
+		public virtual signal void new_connection (Soup.Socket p0);
+		public virtual signal void readable ();
+		public virtual signal void writable ();
 	}
 	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]

@@ -281,8 +281,8 @@ namespace Gnome {
 		[NoAccessorMethod]
 		public Gnome.PreferencesType interactivity { get; set construct; }
 		[HasEmitter]
-		public signal void clear_prompt ();
-		public signal void user_response ();
+		public virtual signal void clear_prompt ();
+		public virtual signal void user_response ();
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class Client : Gtk.Object {
@@ -346,13 +346,13 @@ namespace Gnome {
 		public void set_shutdown_command (int argc, string[] argv);
 		public void set_user_id (string id);
 		[HasEmitter]
-		public signal void connect (bool restarted);
-		public signal void die ();
+		public virtual signal void connect (bool restarted);
+		public virtual signal void die ();
 		[HasEmitter]
-		public signal void disconnect ();
-		public signal void save_complete ();
-		public signal bool save_yourself (int phase, Gnome.SaveStyle save_style, bool shutdown, Gnome.InteractStyle interact_style, bool fast);
-		public signal void shutdown_cancelled ();
+		public virtual signal void disconnect ();
+		public virtual signal void save_complete ();
+		public virtual signal bool save_yourself (int phase, Gnome.SaveStyle save_style, bool shutdown, Gnome.InteractStyle interact_style, bool fast);
+		public virtual signal void shutdown_cancelled ();
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class DateEdit : Gtk.HBox, Atk.Implementor, Gtk.Buildable {
@@ -374,8 +374,8 @@ namespace Gnome {
 		public ulong time { get; set; }
 		[NoAccessorMethod]
 		public int upper_hour { get; set; }
-		public signal void date_changed ();
-		public signal void time_changed ();
+		public virtual signal void date_changed ();
+		public virtual signal void time_changed ();
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class IconEntry : Gtk.VBox, Atk.Implementor, Gtk.Buildable {
@@ -402,8 +402,8 @@ namespace Gnome {
 		public Gtk.Dialog pick_dialog { get; }
 		[NoAccessorMethod]
 		public string pixmap_subdir { get; set; }
-		public signal void browse ();
-		public signal void changed ();
+		public virtual signal void browse ();
+		public virtual signal void changed ();
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class IconSelection : Gtk.VBox, Atk.Implementor, Gtk.Buildable {

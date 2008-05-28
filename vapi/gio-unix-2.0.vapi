@@ -38,8 +38,8 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gunixmounts.h")]
 	public class UnixMountMonitor : GLib.Object {
 		public UnixMountMonitor ();
-		public signal void mountpoints_changed ();
-		public signal void mounts_changed ();
+		public virtual signal void mountpoints_changed ();
+		public virtual signal void mounts_changed ();
 	}
 	[CCode (cheader_filename = "gio/gunixoutputstream.h")]
 	public class UnixOutputStream : GLib.OutputStream {

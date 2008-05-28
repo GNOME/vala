@@ -19,8 +19,8 @@ namespace Sexy {
 		public IconEntry ();
 		public void set_icon (Sexy.IconEntryPosition position, Gtk.Image? icon);
 		public void set_icon_highlight (Sexy.IconEntryPosition position, bool highlight);
-		public signal void icon_pressed (int icon_pos, int button);
-		public signal void icon_released (int icon_pos, int button);
+		public virtual signal void icon_pressed (int icon_pos, int button);
+		public virtual signal void icon_released (int icon_pos, int button);
 	}
 	[CCode (cheader_filename = "libsexy/sexy.h")]
 	public class SpellEntry : Gtk.Entry, Atk.Implementor, Gtk.Buildable, Gtk.Editable, Gtk.CellEditable {
@@ -35,7 +35,7 @@ namespace Sexy {
 		public SpellEntry ();
 		public bool set_active_languages (GLib.SList langs) throws GLib.Error;
 		public void set_checked (bool checked);
-		public signal bool word_check (string word);
+		public virtual signal bool word_check (string word);
 	}
 	[CCode (cheader_filename = "libsexy/sexy.h")]
 	public class Tooltip : Gtk.Window, Atk.Implementor, Gtk.Buildable {
@@ -48,13 +48,13 @@ namespace Sexy {
 	public class TreeView : Gtk.TreeView, Atk.Implementor, Gtk.Buildable {
 		public TreeView ();
 		public void set_tooltip_label_column (uint column);
-		public signal weak Gtk.Widget get_tooltip (Gtk.TreePath path, Gtk.TreeViewColumn column);
+		public virtual signal weak Gtk.Widget get_tooltip (Gtk.TreePath path, Gtk.TreeViewColumn column);
 	}
 	[CCode (cheader_filename = "libsexy/sexy.h")]
 	public class UrlLabel : Gtk.Label, Atk.Implementor, Gtk.Buildable {
 		public UrlLabel ();
 		public void set_markup (string markup);
-		public signal void url_activated (string url);
+		public virtual signal void url_activated (string url);
 	}
 	[CCode (cheader_filename = "libsexy/sexy.h")]
 	public static GLib.Quark spell_error_quark ();

@@ -32,7 +32,7 @@ namespace Vte {
 		public weak int[] iopipe;
 		public static int add_child (GLib.Pid pid);
 		public static weak Vte.Reaper get ();
-		public signal void child_exited (int p0, int p1);
+		public virtual signal void child_exited (int p0, int p1);
 	}
 	[CCode (cheader_filename = "vte/vte.h")]
 	public class Terminal : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
@@ -131,37 +131,37 @@ namespace Vte {
 		public virtual void vte_reserved3 ();
 		[NoWrapper]
 		public virtual void vte_reserved4 ();
-		public signal void char_size_changed (uint char_width, uint char_height);
-		public signal void child_exited ();
-		public signal void commit (string text, uint size);
-		public signal void contents_changed ();
+		public virtual signal void char_size_changed (uint char_width, uint char_height);
+		public virtual signal void child_exited ();
+		public virtual signal void commit (string text, uint size);
+		public virtual signal void contents_changed ();
 		[HasEmitter]
-		public signal void copy_clipboard ();
-		public signal void cursor_moved ();
-		public signal void decrease_font_size ();
-		public signal void deiconify_window ();
-		public signal void emulation_changed ();
-		public signal void encoding_changed ();
-		public signal void eof ();
-		public signal void icon_title_changed ();
-		public signal void iconify_window ();
-		public signal void increase_font_size ();
-		public signal void lower_window ();
-		public signal void maximize_window ();
-		public signal void move_window (uint x, uint y);
+		public virtual signal void copy_clipboard ();
+		public virtual signal void cursor_moved ();
+		public virtual signal void decrease_font_size ();
+		public virtual signal void deiconify_window ();
+		public virtual signal void emulation_changed ();
+		public virtual signal void encoding_changed ();
+		public virtual signal void eof ();
+		public virtual signal void icon_title_changed ();
+		public virtual signal void iconify_window ();
+		public virtual signal void increase_font_size ();
+		public virtual signal void lower_window ();
+		public virtual signal void maximize_window ();
+		public virtual signal void move_window (uint x, uint y);
 		[HasEmitter]
-		public signal void paste_clipboard ();
-		public signal void raise_window ();
-		public signal void refresh_window ();
-		public signal void resize_window (uint width, uint height);
-		public signal void restore_window ();
-		public signal void selection_changed ();
-		public signal void status_line_changed ();
-		public signal void text_deleted ();
-		public signal void text_inserted ();
-		public signal void text_modified ();
-		public signal void text_scrolled (int delta);
-		public signal void window_title_changed ();
+		public virtual signal void paste_clipboard ();
+		public virtual signal void raise_window ();
+		public virtual signal void refresh_window ();
+		public virtual signal void resize_window (uint width, uint height);
+		public virtual signal void restore_window ();
+		public virtual signal void selection_changed ();
+		public virtual signal void status_line_changed ();
+		public virtual signal void text_deleted ();
+		public virtual signal void text_inserted ();
+		public virtual signal void text_modified ();
+		public virtual signal void text_scrolled (int delta);
+		public virtual signal void window_title_changed ();
 	}
 	[CCode (cheader_filename = "vte/vteaccess.h")]
 	public class TerminalAccessible : Gtk.Accessible, Atk.Component, Atk.Action, Atk.Text {
