@@ -1,6 +1,6 @@
 /* valaccodecastexpression.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,7 +46,8 @@ public class Vala.CCodeCastExpression : CCodeExpression {
 		writer.write_string (type_name);
 		writer.write_string (") ");
 
+		writer.write_string ("(");
 		inner.write (writer);
-		writer.write_string (")");
+		writer.write_string ("))");
 	}
 }
