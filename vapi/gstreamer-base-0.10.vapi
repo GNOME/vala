@@ -132,6 +132,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public bool qos { get; set; }
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]
 	public class CollectData {
 		public weak Gst.CollectPads collect;
@@ -140,6 +141,7 @@ namespace Gst {
 		public uint pos;
 		public weak Gst.Segment segment;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/base/gstdataqueue.h")]
 	public class DataQueueItem {
 		public weak Gst.MiniObject object;
@@ -148,6 +150,7 @@ namespace Gst {
 		public bool visible;
 		public weak GLib.DestroyNotify destroy;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/base/gstdataqueue.h")]
 	public class DataQueueSize {
 		public uint visible;

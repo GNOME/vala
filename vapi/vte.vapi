@@ -15,6 +15,7 @@ namespace Vte {
 		ASCII_DELETE,
 		DELETE_SEQUENCE
 	}
+	[Compact]
 	[CCode (cheader_filename = "vte/vte.h")]
 	public class CharAttributes {
 		public long row;
@@ -28,7 +29,7 @@ namespace Vte {
 	public class Reaper : GLib.Object {
 		public weak GLib.IOChannel channel;
 		[NoArrayLength]
-		public int[] iopipe;
+		public weak int[] iopipe;
 		public static int add_child (GLib.Pid pid);
 		public static weak Vte.Reaper get ();
 		public signal void child_exited (int p0, int p1);

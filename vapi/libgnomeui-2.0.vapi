@@ -165,23 +165,28 @@ namespace Gnome {
 		NONE,
 		THUMBNAIL
 	}
+	[Compact]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class AppBarMsg {
 	}
+	[Compact]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class GdkPixbufAsyncHandle {
 	}
+	[Compact]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class PasswordDialogDetails {
 	}
+	[Compact]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class UIBuilderData {
-		public Gnome.UISignalConnectFunc connect_func;
+		public weak Gnome.UISignalConnectFunc connect_func;
 		public void* data;
 		public bool is_interp;
-		public Gtk.CallbackMarshal relay_func;
-		public Gtk.DestroyNotify destroy_func;
+		public weak Gtk.CallbackMarshal relay_func;
+		public weak Gtk.DestroyNotify destroy_func;
 	}
+	[Compact]
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class UIInfo {
 		public Gnome.UIInfoType type;
@@ -241,7 +246,7 @@ namespace Gnome {
 		public void set_toolbar (Gtk.Toolbar toolbar);
 		public static void ui_configure_configurable (Gnome.UIInfo uiinfo);
 		[NoAccessorMethod]
-		public weak string app_id { get; set construct; }
+		public string app_id { get; set construct; }
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class AppBar : Gtk.HBox, Atk.Implementor, Gtk.Buildable {
@@ -270,11 +275,11 @@ namespace Gnome {
 		[CCode (cname = "gnome_appbar_set_status")]
 		public void set_status (string status);
 		[NoAccessorMethod]
-		public weak bool has_progress { get; set construct; }
+		public bool has_progress { get; set construct; }
 		[NoAccessorMethod]
-		public weak bool has_status { get; set construct; }
+		public bool has_status { get; set construct; }
 		[NoAccessorMethod]
-		public weak Gnome.PreferencesType interactivity { get; set construct; }
+		public Gnome.PreferencesType interactivity { get; set construct; }
 		[HasEmitter]
 		public signal void clear_prompt ();
 		public signal void user_response ();
@@ -361,14 +366,14 @@ namespace Gnome {
 		public void set_popup_range (int low_hour, int up_hour);
 		public void set_time (ulong the_time);
 		[NoAccessorMethod]
-		public weak Gnome.DateEditFlags dateedit_flags { get; set; }
+		public Gnome.DateEditFlags dateedit_flags { get; set; }
 		[NoAccessorMethod]
-		public weak ulong initial_time { get; set; }
+		public ulong initial_time { get; set; }
 		[NoAccessorMethod]
-		public weak int lower_hour { get; set; }
-		public weak ulong time { get; set; }
+		public int lower_hour { get; set; }
+		public ulong time { get; set; }
 		[NoAccessorMethod]
-		public weak int upper_hour { get; set; }
+		public int upper_hour { get; set; }
 		public signal void date_changed ();
 		public signal void time_changed ();
 	}
@@ -389,14 +394,14 @@ namespace Gnome {
 		public void set_max_saved (uint max_saved);
 		public void set_pixmap_subdir (string subdir);
 		[NoAccessorMethod]
-		public weak string browse_dialog_title { get; set; }
-		public weak string filename { get; set; }
+		public string browse_dialog_title { get; set; }
+		public string filename { get; set; }
 		[NoAccessorMethod]
-		public weak string history_id { get; set; }
+		public string history_id { get; set; }
 		[NoAccessorMethod]
-		public weak Gtk.Dialog pick_dialog { get; }
+		public Gtk.Dialog pick_dialog { get; }
 		[NoAccessorMethod]
-		public weak string pixmap_subdir { get; set; }
+		public string pixmap_subdir { get; set; }
 		public signal void browse ();
 		public signal void changed ();
 	}
@@ -440,35 +445,35 @@ namespace Gnome {
 		public void set_show_userpass_buttons (bool show_userpass_buttons);
 		public void set_username (string username);
 		[NoAccessorMethod]
-		public weak bool anonymous { get; set; }
-		public weak string domain { get; set; }
+		public bool anonymous { get; set; }
+		public string domain { get; set; }
 		[NoAccessorMethod]
-		public weak string message { get; set; }
+		public string message { get; set; }
 		[NoAccessorMethod]
-		public weak string message_markup { get; set; }
-		public weak string new_password { get; set; }
-		public weak string password { get; set; }
+		public string message_markup { get; set; }
+		public string new_password { get; set; }
+		public string password { get; set; }
 		[NoAccessorMethod]
-		public weak bool readonly_domain { get; set; }
+		public bool readonly_domain { get; set; }
 		[NoAccessorMethod]
-		public weak bool readonly_username { get; set; }
+		public bool readonly_username { get; set; }
 		[NoAccessorMethod]
-		public weak Gnome.PasswordDialogRemember remember_mode { get; set; }
+		public Gnome.PasswordDialogRemember remember_mode { get; set; }
 		[NoAccessorMethod]
-		public weak bool show_domain { get; set; }
+		public bool show_domain { get; set; }
 		[NoAccessorMethod]
-		public weak bool show_new_password { get; set; }
+		public bool show_new_password { get; set; }
 		[NoAccessorMethod]
-		public weak bool show_new_password_quality { get; set; }
+		public bool show_new_password_quality { get; set; }
 		[NoAccessorMethod]
-		public weak bool show_password { get; set; }
+		public bool show_password { get; set; }
 		[NoAccessorMethod]
-		public weak bool show_remember { get; set; }
+		public bool show_remember { get; set; }
 		[NoAccessorMethod]
-		public weak bool show_username { get; set; }
+		public bool show_username { get; set; }
 		[NoAccessorMethod]
-		public weak bool show_userpass_buttons { get; set; }
-		public weak string username { get; set; }
+		public bool show_userpass_buttons { get; set; }
+		public string username { get; set; }
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class ThumbnailFactory : GLib.Object {

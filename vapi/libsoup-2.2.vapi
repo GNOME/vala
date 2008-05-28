@@ -170,6 +170,7 @@ namespace Soup {
 		STRUCT,
 		ARRAY
 	}
+	[Compact]
 	[CCode (free_function = "soup_message_queue_destroy", cheader_filename = "libsoup/soup.h")]
 	public class MessageQueue {
 		public void append (Soup.Message msg);
@@ -180,29 +181,34 @@ namespace Soup {
 		public weak Soup.Message remove (Soup.MessageQueueIter iter);
 		public void remove_message (Soup.Message msg);
 	}
+	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class MessageQueueIter {
 		public weak GLib.List cur;
 		public weak GLib.List next;
 	}
+	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Protocol {
 	}
+	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class ServerAuthBasic {
 		public Soup.AuthType type;
 		public weak string user;
 		public weak string passwd;
 	}
+	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class ServerAuthContext {
 		public uint types;
-		public Soup.ServerAuthCallbackFn callback;
+		public weak Soup.ServerAuthCallbackFn callback;
 		public void* user_data;
 		public void* basic_info;
 		public void* digest_info;
 		public void challenge (Soup.Message msg, string header_name);
 	}
+	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class ServerAuthDigest {
 		public Soup.AuthType type;
@@ -217,6 +223,7 @@ namespace Soup {
 		public weak string digest_response;
 		public weak string request_method;
 	}
+	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class ServerContext {
 		public weak Soup.Message msg;
@@ -229,14 +236,16 @@ namespace Soup {
 		public weak Soup.Address get_client_address ();
 		public weak string get_client_host ();
 	}
+	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class ServerHandler {
 		public weak string path;
 		public weak Soup.ServerAuthContext auth_ctx;
-		public Soup.ServerCallbackFn callback;
-		public Soup.ServerUnregisterFn unregister;
+		public weak Soup.ServerCallbackFn callback;
+		public weak Soup.ServerUnregisterFn unregister;
 		public void* user_data;
 	}
+	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class SoapParameter {
 		public weak Soup.SoapParameter get_first_child ();
@@ -248,6 +257,7 @@ namespace Soup {
 		public weak string get_property (string prop_name);
 		public weak string get_string_value ();
 	}
+	[Compact]
 	[CCode (copy_function = "soup_uri_copy", cheader_filename = "libsoup/soup.h")]
 	public class Uri {
 		public weak Soup.Protocol protocol;
@@ -269,6 +279,7 @@ namespace Soup {
 		public weak string to_string (bool just_path);
 		public bool uses_default_port ();
 	}
+	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class XmlrpcValue {
 		public bool array_get_iterator (out weak Soup.XmlrpcValueArrayIterator iter);
@@ -281,6 +292,7 @@ namespace Soup {
 		public bool get_string (out weak string str);
 		public bool get_struct (GLib.HashTable table);
 	}
+	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class XmlrpcValueArrayIterator {
 		public bool get_value (out weak Soup.XmlrpcValue value);
@@ -312,17 +324,17 @@ namespace Soup {
 		public void reserve ();
 		public virtual void send_request (Soup.Message req);
 		[NoAccessorMethod]
-		public weak void* async_context { get; construct; }
+		public void* async_context { get; construct; }
 		[NoAccessorMethod]
-		public weak void* message_filter { get; set; }
+		public void* message_filter { get; set; }
 		[NoAccessorMethod]
-		public weak void* origin_uri { get; construct; }
+		public void* origin_uri { get; construct; }
 		[NoAccessorMethod]
-		public weak void* proxy_uri { get; construct; }
+		public void* proxy_uri { get; construct; }
 		[NoAccessorMethod]
-		public weak void* ssl_creds { get; construct; }
+		public void* ssl_creds { get; construct; }
 		[NoAccessorMethod]
-		public weak uint timeout { get; set; }
+		public uint timeout { get; set; }
 		[HasEmitter]
 		public signal void authenticate (Soup.Message p0, string auth_type, string auth_realm, void* username, void* password);
 		public signal void connect_result (int p0);
@@ -409,15 +421,15 @@ namespace Soup {
 		public void run ();
 		public void run_async ();
 		[NoAccessorMethod]
-		public weak void* async_context { get; construct; }
+		public void* async_context { get; construct; }
 		[NoAccessorMethod]
-		public weak Soup.Address @interface { get; construct; }
+		public Soup.Address @interface { get; construct; }
 		[NoAccessorMethod]
-		public weak uint port { get; construct; }
+		public uint port { get; construct; }
 		[NoAccessorMethod]
-		public weak string ssl_cert_file { get; construct; }
+		public string ssl_cert_file { get; construct; }
 		[NoAccessorMethod]
-		public weak string ssl_key_file { get; construct; }
+		public string ssl_key_file { get; construct; }
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class ServerMessage : Soup.Message {
@@ -444,19 +456,19 @@ namespace Soup {
 		public virtual void requeue_message (Soup.Message msg);
 		public virtual uint send_message (Soup.Message msg);
 		[NoAccessorMethod]
-		public weak void* async_context { get; construct; }
+		public void* async_context { get; construct; }
 		[NoAccessorMethod]
-		public weak int max_conns { get; set; }
+		public int max_conns { get; set; }
 		[NoAccessorMethod]
-		public weak int max_conns_per_host { get; set; }
+		public int max_conns_per_host { get; set; }
 		[NoAccessorMethod]
-		public weak void* proxy_uri { get; set; }
+		public void* proxy_uri { get; set; }
 		[NoAccessorMethod]
-		public weak string ssl_ca_file { get; set; }
+		public string ssl_ca_file { get; set; }
 		[NoAccessorMethod]
-		public weak uint timeout { get; set; }
+		public uint timeout { get; set; }
 		[NoAccessorMethod]
-		public weak bool use_ntlm { get; set; }
+		public bool use_ntlm { get; set; }
 		public signal void authenticate (Soup.Message p0, string auth_type, string auth_realm, void* username, void* password);
 		public signal void reauthenticate (Soup.Message p0, string auth_type, string auth_realm, void* username, void* password);
 	}
@@ -488,27 +500,28 @@ namespace Soup {
 		public bool start_ssl ();
 		public Soup.SocketIOStatus write (void* buffer, ulong len, ulong nwrote);
 		[NoAccessorMethod]
-		public weak void* async_context { get; construct; }
+		public void* async_context { get; construct; }
 		[NoAccessorMethod]
-		public weak bool cloexec { get; set; }
+		public bool cloexec { get; set; }
 		[NoAccessorMethod]
-		public weak bool is_server { get; }
+		public bool is_server { get; }
 		[NoAccessorMethod]
-		public weak bool nodelay { get; set; }
+		public bool nodelay { get; set; }
 		[NoAccessorMethod]
-		public weak bool non_blocking { get; set; }
+		public bool non_blocking { get; set; }
 		[NoAccessorMethod]
-		public weak bool reuseaddr { get; set; }
+		public bool reuseaddr { get; set; }
 		[NoAccessorMethod]
-		public weak void* ssl_creds { get; set; }
+		public void* ssl_creds { get; set; }
 		[NoAccessorMethod]
-		public weak uint timeout { get; set; }
+		public uint timeout { get; set; }
 		public signal void connect_result (int p0);
 		public signal void disconnected ();
 		public signal void new_connection (Soup.Socket p0);
 		public signal void readable ();
 		public signal void writable ();
 	}
+	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class ServerAuth {
 		public Soup.AuthType type;

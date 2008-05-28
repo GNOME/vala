@@ -23,6 +23,7 @@ namespace Json {
 		VAR,
 		LAST
 	}
+	[Compact]
 	[CCode (ref_function = "json_array_ref", unref_function = "json_array_unref", cheader_filename = "json-glib/json-glib.h")]
 	public class Array : GLib.Boxed {
 		public void add_element (Json.Node node);
@@ -33,6 +34,7 @@ namespace Json {
 		public void remove_element (uint index_);
 		public static weak Json.Array sized_new (uint n_elements);
 	}
+	[Compact]
 	[CCode (copy_function = "json_node_copy", cheader_filename = "json-glib/json-glib.h")]
 	public class Node : GLib.Boxed {
 		public Json.NodeType type;
@@ -63,6 +65,7 @@ namespace Json {
 		public void take_object (Json.Object object);
 		public weak string type_name ();
 	}
+	[Compact]
 	[CCode (ref_function = "json_object_ref", unref_function = "json_object_unref", cheader_filename = "json-glib/json-glib.h")]
 	public class Object : GLib.Boxed {
 		public void add_member (string member_name, Json.Node node);
@@ -81,11 +84,11 @@ namespace Json {
 		public string to_data (out ulong length);
 		public bool to_file (string filename) throws GLib.Error;
 		[NoAccessorMethod]
-		public weak uint indent { get; set; }
+		public uint indent { get; set; }
 		[NoAccessorMethod]
-		public weak bool pretty { get; set; }
+		public bool pretty { get; set; }
 		[NoAccessorMethod]
-		public weak Json.Node root { get; set; }
+		public Json.Node root { get; set; }
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public class Parser : GLib.Object {

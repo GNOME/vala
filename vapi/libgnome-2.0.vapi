@@ -40,31 +40,33 @@ namespace Gnome {
 		VFS,
 		CANCELLED
 	}
+	[Compact]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public class ModuleRequirement {
 		public weak string required_version;
 		public weak Gnome.ModuleInfo module_info;
 	}
+	[Compact]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public class Trigger {
 		public Gnome.TriggerType type;
 		public void* u;
 		public weak string level;
 	}
+	[Compact]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public class ModuleInfo : GLib.Boxed {
 		public weak string name;
 		public weak string version;
 		public weak string description;
 		public weak Gnome.ModuleRequirement requirements;
-		public Gnome.ModuleHook instance_init;
-		public Gnome.ModuleHook pre_args_parse;
-		public Gnome.ModuleHook post_args_parse;
-		public void* _options;
-		public Gnome.ModuleInitHook init_pass;
-		public Gnome.ModuleClassInitHook class_init;
+		public weak Gnome.ModuleHook instance_init;
+		public weak Gnome.ModuleHook pre_args_parse;
+		public weak Gnome.ModuleHook post_args_parse;
+		public weak Gnome.ModuleInitHook init_pass;
+		public weak Gnome.ModuleClassInitHook class_init;
 		public weak string opt_prefix;
-		public Gnome.ModuleGetGOptionGroupFunc get_goption_group_func;
+		public weak Gnome.ModuleGetGOptionGroupFunc get_goption_group_func;
 	}
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public class Program : GLib.Object {
@@ -75,47 +77,47 @@ namespace Gnome {
 		public static weak Gnome.Program init (string app_id, string app_version, Gnome.ModuleInfo module_info, [CCode (array_length_pos = 3.9)] string[] argv, ...);
 		public static weak Gnome.Program init_paramv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, [CCode (array_length_pos = 4.9)] string[] argv, uint nparams, GLib.Parameter params);
 		public static weak Gnome.Program initv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, [CCode (array_length_pos = 4.9)] string[] argv, string first_property_name, void* args);
-		public static uint install_property (void* pclass, GLib.ObjectGetPropertyFunc get_fn, GLib.ObjectSetPropertyFunc set_fn, GLib.ParamSpec pspec);
+		public class uint install_property (GLib.ObjectGetPropertyFunc get_fn, GLib.ObjectSetPropertyFunc set_fn, GLib.ParamSpec pspec);
 		public weak string locate_file (Gnome.FileDomain domain, string file_name, bool only_if_exists, GLib.SList ret_locations);
 		public static weak Gnome.ModuleInfo module_load (string mod_name);
 		public static void module_register (Gnome.ModuleInfo module_info);
 		public static bool module_registered (Gnome.ModuleInfo module_info);
 		[NoAccessorMethod]
-		public weak string app_datadir { get; set; }
-		public weak string app_id { get; }
+		public string app_datadir { get; set; }
+		public string app_id { get; }
 		[NoAccessorMethod]
-		public weak string app_libdir { get; set; }
+		public string app_libdir { get; set; }
 		[NoAccessorMethod]
-		public weak string app_prefix { get; set; }
+		public string app_prefix { get; set; }
 		[NoAccessorMethod]
-		public weak string app_sysconfdir { get; set; }
-		public weak string app_version { get; }
+		public string app_sysconfdir { get; set; }
+		public string app_version { get; }
 		[NoAccessorMethod]
-		public weak bool create_directories { get; construct; }
+		public bool create_directories { get; construct; }
 		[NoAccessorMethod]
-		public weak bool enable_sound { get; set; }
+		public bool enable_sound { get; set; }
 		[NoAccessorMethod]
-		public weak string espeaker { get; set; }
+		public string espeaker { get; set; }
 		[NoAccessorMethod]
-		public weak string gnome_datadir { get; construct; }
+		public string gnome_datadir { get; construct; }
 		[NoAccessorMethod]
-		public weak string gnome_libdir { get; construct; }
+		public string gnome_libdir { get; construct; }
 		[NoAccessorMethod]
-		public weak string gnome_path { get; construct; }
+		public string gnome_path { get; construct; }
 		[NoAccessorMethod]
-		public weak string gnome_prefix { get; construct; }
+		public string gnome_prefix { get; construct; }
 		[NoAccessorMethod]
-		public weak string gnome_sysconfdir { get; construct; }
+		public string gnome_sysconfdir { get; construct; }
 		[NoAccessorMethod]
-		public weak void* goption_context { get; construct; }
+		public void* goption_context { get; construct; }
 		[NoAccessorMethod]
-		public weak string human_readable_name { get; construct; }
+		public string human_readable_name { get; construct; }
 		[NoAccessorMethod]
-		public weak void* popt_context { get; }
+		public void* popt_context { get; }
 		[NoAccessorMethod]
-		public weak int popt_flags { construct; }
+		public int popt_flags { construct; }
 		[NoAccessorMethod]
-		public weak void* popt_table { construct; }
+		public void* popt_table { construct; }
 	}
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static delegate void ModuleClassInitHook (void* klass, Gnome.ModuleInfo mod_info);

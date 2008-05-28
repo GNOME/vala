@@ -97,6 +97,7 @@ namespace Gst {
 		PAUSED,
 		STARTED
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
 	public class RingBufferSpec {
 		public weak Gst.Caps caps;
@@ -114,20 +115,20 @@ namespace Gst {
 		public int segtotal;
 		public int bytes_per_sample;
 		[NoArrayLength]
-		public uchar[] silence_sample;
-		public void* _gst_reserved;
+		public weak uchar[] silence_sample;
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudioclock.h")]
 	public class AudioClock : Gst.SystemClock {
-		public Gst.AudioClockGetTimeFunc func;
+		public weak Gst.AudioClockGetTimeFunc func;
 		public void* user_data;
-		public weak Gst.ClockTime last_time;
+		public Gst.ClockTime last_time;
 		public AudioClock (string name, Gst.AudioClockGetTimeFunc func);
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
 	public class AudioFilter : Gst.BaseTransform {
 		public weak Gst.RingBufferSpec format;
-		public static void class_add_pad_templates (void* klass, Gst.Caps allowed_caps);
+		[CCode (cname = "gst_audio_filter_class_add_pad_templates")]
+		public class void add_pad_templates (Gst.Caps allowed_caps);
 		[NoWrapper]
 		public virtual bool setup (Gst.RingBufferSpec format);
 	}
@@ -178,11 +179,11 @@ namespace Gst {
 		public void set_slave_method (Gst.BaseAudioSinkSlaveMethod method);
 		public virtual weak Gst.RingBuffer create_ringbuffer ();
 		[NoAccessorMethod]
-		public weak int64 buffer_time { get; set; }
+		public int64 buffer_time { get; set; }
 		[NoAccessorMethod]
-		public weak int64 latency_time { get; set; }
-		public weak bool provide_clock { get; set; }
-		public weak Gst.BaseAudioSinkSlaveMethod slave_method { get; set; }
+		public int64 latency_time { get; set; }
+		public bool provide_clock { get; set; }
+		public Gst.BaseAudioSinkSlaveMethod slave_method { get; set; }
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudiosrc.h")]
 	public class BaseAudioSrc : Gst.PushSrc {
@@ -193,10 +194,10 @@ namespace Gst {
 		public void set_provide_clock (bool provide);
 		public virtual weak Gst.RingBuffer create_ringbuffer ();
 		[NoAccessorMethod]
-		public weak int64 buffer_time { get; set; }
+		public int64 buffer_time { get; set; }
 		[NoAccessorMethod]
-		public weak int64 latency_time { get; set; }
-		public weak bool provide_clock { get; set; }
+		public int64 latency_time { get; set; }
+		public bool provide_clock { get; set; }
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
 	public class RingBuffer : Gst.Object {
@@ -212,7 +213,7 @@ namespace Gst {
 		public int segdone;
 		public int segbase;
 		public int waiting;
-		public Gst.RingBufferCallback callback;
+		public weak Gst.RingBufferCallback callback;
 		public void* cb_data;
 		public void* abidata;
 		public void advance (uint advance);
@@ -244,7 +245,7 @@ namespace Gst {
 		public virtual bool stop ();
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudioclock.h")]
-	public delegate weak Gst.ClockTime AudioClockGetTimeFunc (Gst.Clock clock);
+	public delegate Gst.ClockTime AudioClockGetTimeFunc (Gst.Clock clock);
 	[CCode (cheader_filename = "gst/audio/mixerutils.h")]
 	public delegate bool AudioMixerFilterFunc (Gst.Mixer mixer);
 	[CCode (cheader_filename = "gst/audio/gstringbuffer.h")]
@@ -259,7 +260,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static weak GLib.List audio_default_registry_mixer_filter (Gst.AudioMixerFilterFunc filter_func, bool first);
 	[CCode (cheader_filename = "gst/audio/audio.h")]
-	public static weak Gst.ClockTime audio_duration_from_pad_buffer (Gst.Pad pad, Gst.Buffer buf);
+	public static Gst.ClockTime audio_duration_from_pad_buffer (Gst.Pad pad, Gst.Buffer buf);
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static Gst.AudioChannelPosition audio_fixate_channel_positions (Gst.Structure str);
 	[CCode (cheader_filename = "gst/audio/audio.h")]

@@ -113,6 +113,7 @@ namespace Gst {
 		Y41B,
 		Y42B
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/video/gstvideosink.h")]
 	public class VideoRectangle {
 		public int x;

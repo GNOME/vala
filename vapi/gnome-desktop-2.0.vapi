@@ -48,6 +48,7 @@ namespace Gnome {
 		SERVICE,
 		SERVICE_TYPE
 	}
+	[Compact]
 	[CCode (ref_function = "gnome_desktop_item_ref", unref_function = "gnome_desktop_item_unref", cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public class DesktopItem : GLib.Boxed {
 		public bool attr_exists (string attr);
@@ -94,7 +95,6 @@ namespace Gnome {
 		public void clear ();
 		public weak Gnome.DesktopItem get_ditem ();
 		public weak string get_icon ();
-		public weak string get_name ();
 		public void grab_focus ();
 		public bool load_uri (string uri) throws GLib.Error;
 		public DItemEdit ();

@@ -2,22 +2,26 @@
 
 [CCode (cprefix = "Glade", lower_case_cprefix = "glade_")]
 namespace Glade {
+	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
 	public class AccelInfo {
 		public uint key;
 		public Gdk.ModifierType modifiers;
 		public weak string @signal;
 	}
+	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
 	public class AtkActionInfo {
 		public weak string action_name;
 		public weak string description;
 	}
+	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
 	public class AtkRelationInfo {
 		public weak string target;
 		public weak string type;
 	}
+	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
 	public class ChildInfo {
 		public weak Glade.Property properties;
@@ -25,6 +29,7 @@ namespace Glade {
 		public weak Glade.WidgetInfo child;
 		public weak string internal_child;
 	}
+	[Compact]
 	[CCode (free_function = "glade_interface_destroy", cheader_filename = "glade/glade.h")]
 	public class Interface {
 		public weak string requires;
@@ -35,11 +40,13 @@ namespace Glade {
 		public weak GLib.HashTable strings;
 		public void dump (string filename);
 	}
+	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
 	public class Property {
 		public weak string name;
 		public weak string value;
 	}
+	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
 	public class SignalInfo {
 		public weak string name;
@@ -47,6 +54,7 @@ namespace Glade {
 		public weak string object;
 		public uint after;
 	}
+	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
 	public class WidgetInfo {
 		public weak Glade.WidgetInfo parent;

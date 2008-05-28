@@ -23,7 +23,7 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static double cairo_context_get_resolution (Pango.Context context);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
-	public static Pango.CairoShapeRendererFunc cairo_context_get_shape_renderer (Pango.Context context, void* data);
+	public static weak Pango.CairoShapeRendererFunc cairo_context_get_shape_renderer (Pango.Context context, void* data);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_context_set_font_options (Pango.Context context, Cairo.FontOptions options);
 	[CCode (cheader_filename = "pango/pangocairo.h")]

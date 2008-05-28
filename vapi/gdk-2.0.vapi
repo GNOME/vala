@@ -529,34 +529,41 @@ namespace Gdk {
 		ABOVE,
 		BELOW
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Bitmap {
 		public weak GLib.Object parent_instance;
 		public static weak Gdk.Bitmap create_from_data (Gdk.Drawable drawable, string data, int width, int height);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class DeviceAxis {
 		public Gdk.AxisUse use;
 		public double min;
 		public double max;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class DeviceClass {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class DeviceKey {
 		public uint keyval;
 		public Gdk.ModifierType modifiers;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class DisplayPointerHooks {
-		public GLib.Callback get_pointer;
-		public GLib.Callback window_get_pointer;
-		public GLib.Callback window_at_pointer;
+		public weak GLib.Callback get_pointer;
+		public weak GLib.Callback window_get_pointer;
+		public weak GLib.Callback window_at_pointer;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Font {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class GCValues {
 		public Gdk.Color foreground;
@@ -578,6 +585,7 @@ namespace Gdk {
 		public Gdk.CapStyle cap_style;
 		public Gdk.JoinStyle join_style;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Geometry {
 		public int min_width;
@@ -592,43 +600,51 @@ namespace Gdk {
 		public double max_aspect;
 		public Gdk.Gravity win_gravity;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class KeymapKey {
 		public uint keycode;
 		public int group;
 		public int level;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class NativeWindow {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PangoAttrEmbossColor {
 		public weak Pango.Attribute attr;
 		public Pango.Color color;
 		public PangoAttrEmbossColor (Gdk.Color color);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PangoAttrEmbossed {
 		public weak Pango.Attribute attr;
 		public bool embossed;
 		public PangoAttrEmbossed (bool embossed);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PangoAttrStipple {
 		public weak Pango.Attribute attr;
 		public weak Gdk.Bitmap stipple;
 		public PangoAttrStipple (Gdk.Bitmap stipple);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Point {
 		public int x;
 		public int y;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PointerHooks {
-		public GLib.Callback get_pointer;
-		public GLib.Callback window_at_pointer;
+		public weak GLib.Callback get_pointer;
+		public weak GLib.Callback window_at_pointer;
 	}
+	[Compact]
 	[CCode (copy_function = "gdk_region_copy", free_function = "gdk_region_destroy", cheader_filename = "gdk/gdk.h")]
 	public class Region {
 		public weak Gdk.Region copy ();
@@ -650,14 +666,16 @@ namespace Gdk {
 		public void union_with_rect (Gdk.Rectangle rect);
 		public void xor (Gdk.Region source2);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class RgbCmap {
 		[NoArrayLength]
-		public uint[] colors;
+		public weak uint[] colors;
 		public int n_colors;
 		public weak GLib.SList info_list;
 		public RgbCmap (uint[] colors);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Segment {
 		public int x1;
@@ -665,18 +683,21 @@ namespace Gdk {
 		public int x2;
 		public int y2;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Span {
 		public int x;
 		public int y;
 		public int width;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class TimeCoord {
 		public uint time;
 		[NoArrayLength]
-		public double[] axes;
+		public weak double[] axes;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Trapezoid {
 		public double y1;
@@ -686,15 +707,19 @@ namespace Gdk {
 		public double x12;
 		public double x22;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class VisualClass {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class WChar {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class XEvent {
 	}
+	[Compact]
 	[CCode (ref_function = "gdk_cursor_ref", unref_function = "gdk_cursor_unref", cheader_filename = "gdk/gdk.h")]
 	public class Cursor : GLib.Boxed {
 		public Gdk.CursorType type;
@@ -747,19 +772,19 @@ namespace Gdk {
 		public weak GLib.List queued_events;
 		public weak GLib.List queued_tail;
 		[NoArrayLength]
-		public uint[] button_click_time;
+		public weak uint[] button_click_time;
 		[NoArrayLength]
-		public Gdk.Window[] button_window;
+		public weak Gdk.Window[] button_window;
 		[NoArrayLength]
-		public int[] button_number;
+		public weak int[] button_number;
 		public uint double_click_time;
 		public weak Gdk.Device core_pointer;
 		public weak Gdk.DisplayPointerHooks pointer_hooks;
 		public uint double_click_distance;
 		[NoArrayLength]
-		public int[] button_x;
+		public weak int[] button_x;
 		[NoArrayLength]
-		public int[] button_y;
+		public weak int[] button_y;
 		public void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, void* data);
 		public void beep ();
 		public void close ();
@@ -808,7 +833,7 @@ namespace Gdk {
 		public weak Gdk.Display get_default_display ();
 		public weak GLib.SList list_displays ();
 		public void set_default_display (Gdk.Display display);
-		public weak Gdk.Display default_display { get; set; }
+		public Gdk.Display default_display { get; set; }
 		public signal void display_opened (Gdk.Display display);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -950,7 +975,7 @@ namespace Gdk {
 		public void set_override_color (Pango.RenderPart part, Gdk.Color color);
 		public void set_stipple (Pango.RenderPart part, Gdk.Bitmap stipple);
 		[NoAccessorMethod]
-		public weak Gdk.Screen screen { get; construct; }
+		public Gdk.Screen screen { get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Pixmap : Gdk.Drawable {
@@ -970,9 +995,9 @@ namespace Gdk {
 	public class Screen : GLib.Object {
 		public uint closed;
 		[NoArrayLength]
-		public Gdk.GC[] normal_gcs;
+		public weak Gdk.GC[] normal_gcs;
 		[NoArrayLength]
-		public Gdk.GC[] exposure_gcs;
+		public weak Gdk.GC[] exposure_gcs;
 		public void broadcast_client_message (Gdk.Event event);
 		public weak Gdk.Window get_active_window ();
 		public static weak Gdk.Screen get_default ();
@@ -1009,8 +1034,8 @@ namespace Gdk {
 		public void set_resolution (double dpi);
 		public static int width ();
 		public static int width_mm ();
-		public weak void* font_options { get; set; }
-		public weak double resolution { get; set; }
+		public void* font_options { get; set; }
+		public double resolution { get; set; }
 		public signal void composited_changed ();
 		public signal void size_changed ();
 	}
@@ -1583,9 +1608,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool get_show_events ();
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void init ([CCode (array_length_pos = 0.9)] ref string[] argv);
+	public static void init ([CCode (array_length_pos = 0.9)] ref weak string[] argv);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool init_check ([CCode (array_length_pos = 0.9)] ref string[] argv);
+	public static bool init_check ([CCode (array_length_pos = 0.9)] ref weak string[] argv);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void input_set_extension_events (Gdk.Window window, int mask, Gdk.ExtensionMode mode);
 	[CCode (cheader_filename = "gdk/gdk.h")]

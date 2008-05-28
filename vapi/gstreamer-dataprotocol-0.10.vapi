@@ -21,13 +21,13 @@ namespace Gst {
 		GDP Version 0.2,
 		GDP Version 1.0
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public class DPPacketizer {
 		public Gst.DPVersion version;
-		public Gst.DPHeaderFromBufferFunction header_from_buffer;
-		public Gst.DPPacketFromCapsFunction packet_from_caps;
-		public Gst.DPPacketFromEventFunction packet_from_event;
-		public void* _gst_reserved;
+		public weak Gst.DPHeaderFromBufferFunction header_from_buffer;
+		public weak Gst.DPPacketFromCapsFunction packet_from_caps;
+		public weak Gst.DPPacketFromEventFunction packet_from_event;
 		public DPPacketizer (Gst.DPVersion version);
 	}
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]

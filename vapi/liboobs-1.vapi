@@ -51,6 +51,7 @@ namespace Oobs {
 		PUBLIC,
 		WRITABLE
 	}
+	[Compact]
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Platform {
 		public weak string id;
@@ -58,16 +59,19 @@ namespace Oobs {
 		public weak string version;
 		public weak string codename;
 	}
+	[Compact]
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class ServicesRunlevel {
 		public weak string name;
 		public uint role;
 	}
+	[Compact]
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class ShareAclElement {
 		public weak string element;
 		public bool read_only;
 	}
+	[Compact]
 	[CCode (copy_function = "oobs_list_iter_copy", cheader_filename = "oobs/oobs.h")]
 	public class ListIter : GLib.Boxed {
 		public uint stamp;
@@ -88,20 +92,20 @@ namespace Oobs {
 		public void set_gid (long gid);
 		public void set_password (string password);
 		[NoAccessorMethod]
-		public weak string crypted_password { get; set; }
-		public weak int gid { get; set; }
+		public string crypted_password { get; set; }
+		public int gid { get; set; }
 		[NoAccessorMethod]
-		public weak string name { get; construct; }
-		public weak string password { set; }
+		public string name { get; construct; }
+		public string password { set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class GroupsConfig : Oobs.Object {
 		public static weak Oobs.Object get ();
 		public weak Oobs.List get_groups ();
 		[NoAccessorMethod]
-		public weak int maximum_gid { get; set; }
+		public int maximum_gid { get; set; }
 		[NoAccessorMethod]
-		public weak int minimum_gid { get; set; }
+		public int minimum_gid { get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class HostsConfig : Oobs.Object {
@@ -128,11 +132,11 @@ namespace Oobs {
 		public virtual bool has_gateway ();
 		[NoWrapper]
 		public virtual bool is_configured ();
-		public weak bool active { get; set; }
-		public weak bool auto { get; set; }
-		public weak bool configured { get; set; }
+		public bool active { get; set; }
+		public bool auto { get; set; }
+		public bool configured { get; set; }
 		[NoAccessorMethod]
-		public weak string device { get; construct; }
+		public string device { get; construct; }
 		public signal void state_changed ();
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
@@ -149,14 +153,14 @@ namespace Oobs {
 		public void set_ip_address (string address);
 		public void set_network_address (string address);
 		public void set_network_mask (string mask);
-		public weak string broadcast_address { get; set; }
+		public string broadcast_address { get; set; }
 		[NoAccessorMethod]
-		public weak string config_method { get; set; }
-		public weak string gateway_address { get; set; }
-		public weak string ip_address { get; set; }
+		public string config_method { get; set; }
+		public string gateway_address { get; set; }
+		public string ip_address { get; set; }
 		[NoAccessorMethod]
-		public weak string ip_mask { get; set; }
-		public weak string network_address { get; set; }
+		public string ip_mask { get; set; }
+		public string network_address { get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class IfaceIRLan : Oobs.IfaceEthernet {
@@ -190,23 +194,23 @@ namespace Oobs {
 		public void set_serial_port (string serial_port);
 		public void set_use_peer_dns (bool use_peer_dns);
 		public void set_volume (Oobs.ModemVolume volume);
-		public weak string apn { get; set; }
-		public weak string connection_type { get; set; }
-		public weak bool default_gateway { get; set; }
-		public weak Oobs.DialType dial_type { get; set; }
-		public weak Oobs.IfaceEthernet ethernet { get; set; }
+		public string apn { get; set; }
+		public string connection_type { get; set; }
+		public bool default_gateway { get; set; }
+		public Oobs.DialType dial_type { get; set; }
+		public Oobs.IfaceEthernet ethernet { get; set; }
 		[NoAccessorMethod]
-		public weak string iface_section { get; set; }
-		public weak string login { get; set; }
+		public string iface_section { get; set; }
+		public string login { get; set; }
 		[NoAccessorMethod]
-		public weak string password { get; set; }
-		public weak bool peer_noauth { get; set; }
-		public weak bool persistent { get; set; }
-		public weak string phone_number { get; set; }
-		public weak string phone_prefix { get; set; }
-		public weak string serial_port { get; set; }
-		public weak bool use_peer_dns { get; set; }
-		public weak Oobs.ModemVolume volume { get; set; }
+		public string password { get; set; }
+		public bool peer_noauth { get; set; }
+		public bool persistent { get; set; }
+		public string phone_number { get; set; }
+		public string phone_prefix { get; set; }
+		public string serial_port { get; set; }
+		public bool use_peer_dns { get; set; }
+		public Oobs.ModemVolume volume { get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class IfacePlip : Oobs.Iface {
@@ -214,8 +218,8 @@ namespace Oobs {
 		public weak string get_remote_address ();
 		public void set_address (string address);
 		public void set_remote_address (string address);
-		public weak string address { get; set; }
-		public weak string remote_address { get; set; }
+		public string address { get; set; }
+		public string remote_address { get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class IfaceWireless : Oobs.IfaceEthernet {
@@ -225,9 +229,9 @@ namespace Oobs {
 		public void set_essid (string essid);
 		public void set_key (string key);
 		public void set_key_type (string key_type);
-		public weak string essid { get; set; }
-		public weak string key { get; set; }
-		public weak string key_type { get; set; }
+		public string essid { get; set; }
+		public string key { get; set; }
+		public string key_type { get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class IfacesConfig : Oobs.Object {
@@ -250,7 +254,7 @@ namespace Oobs {
 		public bool remove (Oobs.ListIter iter);
 		public void set (Oobs.ListIter iter, void* data);
 		[NoAccessorMethod]
-		public weak void* contained_type { construct; }
+		public void* contained_type { construct; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class NFSConfig : Oobs.Object {
@@ -267,7 +271,7 @@ namespace Oobs {
 		public weak string get_hostname ();
 		public NTPServer (string hostname);
 		public void set_hostname (string hostname);
-		public weak string hostname { get; set; }
+		public string hostname { get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Object : GLib.Object {
@@ -280,7 +284,7 @@ namespace Oobs {
 		public virtual weak string get_authentication_action ();
 		public virtual void update ();
 		[NoAccessorMethod]
-		public weak string remote_object { construct; }
+		public string remote_object { construct; }
 		public signal void changed ();
 		public signal void committed ();
 		public signal void updated ();
@@ -300,10 +304,10 @@ namespace Oobs {
 		public void set_wins_server (string wins_server);
 		public void set_workgroup (string workgroup);
 		public bool user_has_password (Oobs.User user);
-		public weak string description { get; set; }
-		public weak bool is_wins_server { get; set; }
-		public weak string wins_server { get; set; }
-		public weak string workgroup { get; set; }
+		public string description { get; set; }
+		public bool is_wins_server { get; set; }
+		public string wins_server { get; set; }
+		public string workgroup { get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class SelfConfig : Oobs.Object {
@@ -316,7 +320,7 @@ namespace Oobs {
 		public void get_runlevel_configuration (Oobs.ServicesRunlevel runlevel, Oobs.ServiceStatus status, int priority);
 		public void set_runlevel_configuration (Oobs.ServicesRunlevel runlevel, Oobs.ServiceStatus status, int priority);
 		[NoAccessorMethod]
-		public weak string name { get; construct; }
+		public string name { get; construct; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class ServicesConfig : Oobs.Object {
@@ -335,13 +339,13 @@ namespace Oobs {
 		public Oobs.Result get_supported_platforms (GLib.List platforms);
 		public void process_requests ();
 		public Oobs.Result set_platform (string platform);
-		public weak string platform { get; set; }
+		public string platform { get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Share : GLib.Object {
 		public weak string get_path ();
 		public void set_path (string path);
-		public weak string path { get; set; }
+		public string path { get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class ShareNFS : Oobs.Share {
@@ -359,9 +363,9 @@ namespace Oobs {
 		public void set_comment (string comment);
 		public void set_flags (Oobs.ShareSMBFlags flags);
 		public void set_name (string name);
-		public weak string comment { get; set construct; }
-		public weak Oobs.ShareSMBFlags flags { get; set construct; }
-		public weak string name { get; set construct; }
+		public string comment { get; set construct; }
+		public Oobs.ShareSMBFlags flags { get; set construct; }
+		public string name { get; set construct; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class StaticHost : GLib.Object {
@@ -370,7 +374,7 @@ namespace Oobs {
 		public StaticHost (string ip_address, GLib.List aliases);
 		public void set_aliases (GLib.List aliases);
 		public void set_ip_address (string ip_address);
-		public weak string ip_address { get; set; }
+		public string ip_address { get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class TimeConfig : Oobs.Object {
@@ -383,8 +387,8 @@ namespace Oobs {
 		public void set_timezone (string timezone);
 		public void set_unix_time (long unix_time);
 		public void set_utc_time (int year, int month, int day, int hour, int minute, int second);
-		public weak string timezone { get; set; }
-		public weak long unix_time { get; set; }
+		public string timezone { get; set; }
+		public long unix_time { get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class User : GLib.Object {
@@ -411,22 +415,22 @@ namespace Oobs {
 		public void set_shell (string shell);
 		public void set_uid (long uid);
 		public void set_work_phone_number (string phone_number);
-		public weak bool active { get; }
+		public bool active { get; }
 		[NoAccessorMethod]
-		public weak string crypted_password { get; set; }
-		public weak string full_name { get; set; }
-		public weak string home_directory { get; set; }
+		public string crypted_password { get; set; }
+		public string full_name { get; set; }
+		public string home_directory { get; set; }
 		[NoAccessorMethod]
-		public weak string home_phone { get; set; }
+		public string home_phone { get; set; }
 		[NoAccessorMethod]
-		public weak string name { get; construct; }
-		public weak string other_data { get; set; }
-		public weak string password { set; }
-		public weak string room_number { get; set; }
-		public weak string shell { get; set; }
-		public weak int uid { get; set; }
+		public string name { get; construct; }
+		public string other_data { get; set; }
+		public string password { set; }
+		public string room_number { get; set; }
+		public string shell { get; set; }
+		public int uid { get; set; }
 		[NoAccessorMethod]
-		public weak string work_phone { get; set; }
+		public string work_phone { get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class UsersConfig : Oobs.Object {
@@ -442,16 +446,16 @@ namespace Oobs {
 		public void set_default_shell (string shell);
 		public void set_maximum_users_uid (long uid);
 		public void set_minimum_users_uid (long uid);
-		public weak Oobs.Group default_group { get; }
+		public Oobs.Group default_group { get; }
 		[NoAccessorMethod]
-		public weak string default_home { get; set; }
-		public weak string default_shell { get; set; }
+		public string default_home { get; set; }
+		public string default_shell { get; set; }
 		[NoAccessorMethod]
-		public weak int maximum_uid { get; set; }
+		public int maximum_uid { get; set; }
 		[NoAccessorMethod]
-		public weak int minimum_uid { get; set; }
+		public int minimum_uid { get; set; }
 		[NoAccessorMethod]
-		public weak bool use_md5 { get; }
+		public bool use_md5 { get; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public delegate void ObjectAsyncFunc (Oobs.Object object, Oobs.Result result);

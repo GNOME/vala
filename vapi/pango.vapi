@@ -212,6 +212,7 @@ namespace Pango {
 		SIZE,
 		GRAVITY
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Language : GLib.Boxed {
 		public weak string to_string ();
@@ -222,6 +223,7 @@ namespace Pango {
 		public bool includes_script (Pango.Script script);
 		public bool matches (string range_list);
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Analysis {
 		public weak Pango.EngineShape shape_engine;
@@ -234,34 +236,40 @@ namespace Pango {
 		public weak Pango.Language language;
 		public weak GLib.SList extra_attrs;
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrClass {
 		public Pango.AttrType type;
-		public GLib.Callback copy;
-		public GLib.Callback destroy;
-		public GLib.Callback equal;
+		public weak GLib.Callback copy;
+		public weak GLib.Callback destroy;
+		public weak GLib.Callback equal;
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrColor {
 		public weak Pango.Attribute attr;
 		public Pango.Color color;
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrFloat {
 		public weak Pango.Attribute attr;
 		public double value;
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrFontDesc {
 		public weak Pango.Attribute attr;
 		public weak Pango.FontDescription desc;
 		public AttrFontDesc (Pango.FontDescription desc);
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrInt {
 		public weak Pango.Attribute attr;
 		public int value;
 	}
+	[Compact]
 	[CCode (copy_function = "pango_attr_iterator_copy", free_function = "pango_attr_iterator_destroy", cheader_filename = "pango/pango.h")]
 	public class AttrIterator {
 		public weak Pango.AttrIterator copy ();
@@ -271,23 +279,26 @@ namespace Pango {
 		public bool next ();
 		public void range (int start, int end);
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrLanguage {
 		public weak Pango.Attribute attr;
 		public weak Pango.Language value;
 		public AttrLanguage (Pango.Language language);
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrShape {
 		public weak Pango.Attribute attr;
 		public Pango.Rectangle ink_rect;
 		public Pango.Rectangle logical_rect;
 		public void* data;
-		public Pango.AttrDataCopyFunc copy_func;
-		public GLib.DestroyNotify destroy_func;
+		public weak Pango.AttrDataCopyFunc copy_func;
+		public weak GLib.DestroyNotify destroy_func;
 		public AttrShape (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
 		public AttrShape.with_data (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect, void* data, Pango.AttrDataCopyFunc copy_func, GLib.DestroyNotify destroy_func);
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrSize {
 		public weak Pango.Attribute attr;
@@ -295,11 +306,13 @@ namespace Pango {
 		public uint absolute;
 		public AttrSize (int size);
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class AttrString {
 		public weak Pango.Attribute attr;
 		public weak string value;
 	}
+	[Compact]
 	[CCode (copy_function = "pango_attribute_copy", free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
 	public class Attribute {
 		public weak Pango.AttrClass klass;
@@ -309,59 +322,72 @@ namespace Pango {
 		public bool equal (Pango.Attribute attr2);
 		public void init (Pango.AttrClass klass);
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class ContextClass {
 	}
+	[Compact]
 	[CCode (ref_function = "pango_coverage_ref", unref_function = "pango_coverage_unref", cheader_filename = "pango/pango.h")]
 	public class Coverage {
 		public weak Pango.Coverage copy ();
-		public static weak Pango.Coverage from_bytes (uchar[] bytes);
+		public static weak Pango.Coverage from_bytes (uchar[][] bytes);
 		public Pango.CoverageLevel get (int index_);
 		public void max (Pango.Coverage other);
 		public Coverage ();
 		public void set (int index_, Pango.CoverageLevel level);
-		public void to_bytes (uchar[] bytes);
+		public void to_bytes (uchar[][] bytes);
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class EngineLang {
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class EngineShape {
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Glyph {
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class GlyphGeometry {
 		public weak Pango.GlyphUnit width;
 		public weak Pango.GlyphUnit x_offset;
 		public weak Pango.GlyphUnit y_offset;
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class GlyphInfo {
 		public weak Pango.Glyph glyph;
 		public weak Pango.GlyphGeometry geometry;
 		public weak Pango.GlyphVisAttr attr;
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class GlyphUnit {
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class GlyphVisAttr {
 		public uint is_cluster_start;
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class LayoutClass {
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class LayoutRun {
 	}
+	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class ScriptIter {
 		public void get_range (out weak string start, out weak string end, Pango.Script script);
 		public ScriptIter (string text, int length);
 		public bool next ();
 	}
+	[Compact]
 	[CCode (ref_function = "pango_attr_list_ref", unref_function = "pango_attr_list_unref", cheader_filename = "pango/pango.h")]
 	public class AttrList : GLib.Boxed {
 		public void change (Pango.Attribute attr);
@@ -373,6 +399,7 @@ namespace Pango {
 		public AttrList ();
 		public void splice (Pango.AttrList other, int pos, int len);
 	}
+	[Compact]
 	[CCode (copy_function = "pango_font_description_copy", cheader_filename = "pango/pango.h")]
 	public class FontDescription : GLib.Boxed {
 		public bool better_match (Pango.FontDescription old_match, Pango.FontDescription new_match);
@@ -406,6 +433,7 @@ namespace Pango {
 		public weak string to_string ();
 		public void unset_fields (Pango.FontMask to_unset);
 	}
+	[Compact]
 	[CCode (ref_function = "pango_font_metrics_ref", unref_function = "pango_font_metrics_unref", cheader_filename = "pango/pango.h")]
 	public class FontMetrics : GLib.Boxed {
 		public int get_approximate_char_width ();
@@ -417,6 +445,7 @@ namespace Pango {
 		public int get_underline_position ();
 		public int get_underline_thickness ();
 	}
+	[Compact]
 	[CCode (copy_function = "pango_glyph_item_copy", cheader_filename = "pango/pango.h")]
 	public class GlyphItem : GLib.Boxed {
 		public weak Pango.Item item;
@@ -426,6 +455,7 @@ namespace Pango {
 		public void letter_space (string text, Pango.LogAttr[] log_attrs, int letter_spacing);
 		public weak Pango.GlyphItem split (string text, int split_index);
 	}
+	[Compact]
 	[CCode (copy_function = "pango_glyph_string_copy", cheader_filename = "pango/pango.h")]
 	public class GlyphString : GLib.Boxed {
 		public int num_glyphs;
@@ -442,6 +472,7 @@ namespace Pango {
 		public void set_size (int new_len);
 		public void x_to_index (string text, int length, Pango.Analysis analysis, int x_pos, int index_, int trailing);
 	}
+	[Compact]
 	[CCode (copy_function = "pango_item_copy", cheader_filename = "pango/pango.h")]
 	public class Item : GLib.Boxed {
 		public int offset;
@@ -452,6 +483,7 @@ namespace Pango {
 		public Item ();
 		public weak Pango.Item split (int split_index, int split_offset);
 	}
+	[Compact]
 	[CCode (copy_function = "pango_layout_iter_copy", cheader_filename = "pango/pango.h")]
 	public class LayoutIter : GLib.Boxed {
 		public bool at_last_line ();
@@ -474,6 +506,7 @@ namespace Pango {
 		public bool next_line ();
 		public bool next_run ();
 	}
+	[Compact]
 	[CCode (ref_function = "pango_layout_line_ref", unref_function = "pango_layout_line_unref", cheader_filename = "pango/pango.h")]
 	public class LayoutLine : GLib.Boxed {
 		public weak Pango.Layout layout;
@@ -488,6 +521,7 @@ namespace Pango {
 		public void index_to_x (int index_, bool trailing, int x_pos);
 		public bool x_to_index (int x_pos, int index_, int trailing);
 	}
+	[Compact]
 	[CCode (copy_function = "pango_tab_array_copy", cheader_filename = "pango/pango.h")]
 	public class TabArray : GLib.Boxed {
 		public weak Pango.TabArray copy ();

@@ -53,6 +53,7 @@ namespace Gst {
 		MP2T,
 		H263
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
 	public class RTCPPacket {
 		public weak Gst.Buffer buffer;
@@ -95,6 +96,7 @@ namespace Gst {
 		public void sr_get_sender_info (uint ssrc, uint64 ntptime, uint rtptime, uint packet_count, uint octet_count);
 		public void sr_set_sender_info (uint ssrc, uint64 ntptime, uint rtptime, uint packet_count, uint octet_count);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/rtp/gstrtppayloads.h")]
 	public class RTPPayloadInfo {
 		public uchar payload_type;
@@ -108,7 +110,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/rtp/gstbasertpaudiopayload.h")]
 	public class BaseRTPAudioPayload : Gst.BaseRTPPayload {
-		public weak Gst.ClockTime base_ts;
+		public Gst.ClockTime base_ts;
 		public int frame_size;
 		public int frame_duration;
 		public int sample_size;
@@ -123,7 +125,7 @@ namespace Gst {
 	public class BaseRTPDepayload : Gst.Element {
 		public weak Gst.Pad sinkpad;
 		public weak Gst.Pad srcpad;
-		public void* queuelock;
+		public GLib.StaticRecMutex queuelock;
 		public bool thread_running;
 		public weak GLib.Thread thread;
 		public uint clock_rate;
@@ -141,7 +143,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual void set_gst_timestamp (uint timestamp, Gst.Buffer buf);
 		[NoAccessorMethod]
-		public weak uint queue_delay { get; set; }
+		public uint queue_delay { get; set; }
 	}
 	[CCode (cheader_filename = "gst/rtp/gstbasertpaudiopayload.h")]
 	public class BaseRTPPayload : Gst.Element {
@@ -176,23 +178,23 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool set_caps (Gst.Caps caps);
 		[NoAccessorMethod]
-		public weak int64 max_ptime { get; set; }
+		public int64 max_ptime { get; set; }
 		[NoAccessorMethod]
-		public weak int64 min_ptime { get; set; }
+		public int64 min_ptime { get; set; }
 		[NoAccessorMethod]
-		public weak uint mtu { get; set; }
+		public uint mtu { get; set; }
 		[NoAccessorMethod]
-		public weak uint pt { get; set; }
+		public uint pt { get; set; }
 		[NoAccessorMethod]
-		public weak uint seqnum { get; }
+		public uint seqnum { get; }
 		[NoAccessorMethod]
-		public weak int seqnum_offset { get; set; }
+		public int seqnum_offset { get; set; }
 		[NoAccessorMethod]
-		public weak uint ssrc { get; set; }
+		public uint ssrc { get; set; }
 		[NoAccessorMethod]
-		public weak uint timestamp { get; }
+		public uint timestamp { get; }
 		[NoAccessorMethod]
-		public weak uint timestamp_offset { get; set; }
+		public uint timestamp_offset { get; set; }
 	}
 	public const int RTCP_MAX_BYE_SSRC_COUNT;
 	public const int RTCP_MAX_RB_COUNT;

@@ -1,4 +1,5 @@
 Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/controller/gstcontroller.h"
 GstLFOControlSource cheader_filename="gst/controller/gstlfocontrolsource.h"
 GstLFOWaveform cheader_filename="gst/controller/gstlfocontrolsource.h"
+GST_PARAM_CONTROLLABLE hidden="1"
 

@@ -49,9 +49,9 @@ namespace WebKit {
 		public WebFrame (WebKit.WebView web_view);
 		public void reload ();
 		public void stop_loading ();
-		public weak string name { get; }
-		public weak string title { get; }
-		public weak string uri { get; }
+		public string name { get; }
+		public string title { get; }
+		public string uri { get; }
 		public signal void cleared ();
 		public signal void hovering_over_link (string p0, string p1);
 		public signal void load_committed ();
@@ -74,41 +74,41 @@ namespace WebKit {
 		public weak WebKit.WebSettings copy ();
 		public WebSettings ();
 		[NoAccessorMethod]
-		public weak bool auto_load_images { get; set construct; }
+		public bool auto_load_images { get; set construct; }
 		[NoAccessorMethod]
-		public weak bool auto_shrink_images { get; set construct; }
+		public bool auto_shrink_images { get; set construct; }
 		[NoAccessorMethod]
-		public weak string cursive_font_family { get; set construct; }
+		public string cursive_font_family { get; set construct; }
 		[NoAccessorMethod]
-		public weak string default_encoding { get; set construct; }
+		public string default_encoding { get; set construct; }
 		[NoAccessorMethod]
-		public weak string default_font_family { get; set construct; }
+		public string default_font_family { get; set construct; }
 		[NoAccessorMethod]
-		public weak int default_font_size { get; set construct; }
+		public int default_font_size { get; set construct; }
 		[NoAccessorMethod]
-		public weak int default_monospace_font_size { get; set construct; }
+		public int default_monospace_font_size { get; set construct; }
 		[NoAccessorMethod]
-		public weak bool enable_plugins { get; set construct; }
+		public bool enable_plugins { get; set construct; }
 		[NoAccessorMethod]
-		public weak bool enable_scripts { get; set construct; }
+		public bool enable_scripts { get; set construct; }
 		[NoAccessorMethod]
-		public weak string fantasy_font_family { get; set construct; }
+		public string fantasy_font_family { get; set construct; }
 		[NoAccessorMethod]
-		public weak int minimum_font_size { get; set construct; }
+		public int minimum_font_size { get; set construct; }
 		[NoAccessorMethod]
-		public weak int minimum_logical_font_size { get; set construct; }
+		public int minimum_logical_font_size { get; set construct; }
 		[NoAccessorMethod]
-		public weak string monospace_font_family { get; set construct; }
+		public string monospace_font_family { get; set construct; }
 		[NoAccessorMethod]
-		public weak bool print_backgrounds { get; set construct; }
+		public bool print_backgrounds { get; set construct; }
 		[NoAccessorMethod]
-		public weak bool resizable_text_areas { get; set construct; }
+		public bool resizable_text_areas { get; set construct; }
 		[NoAccessorMethod]
-		public weak string sans_serif_font_family { get; set construct; }
+		public string sans_serif_font_family { get; set construct; }
 		[NoAccessorMethod]
-		public weak string serif_font_family { get; set construct; }
+		public string serif_font_family { get; set construct; }
 		[NoAccessorMethod]
-		public weak string user_stylesheet_uri { get; set construct; }
+		public string user_stylesheet_uri { get; set construct; }
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebView : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -153,11 +153,11 @@ namespace WebKit {
 		public virtual weak string choose_file (WebKit.WebFrame frame, string old_file);
 		[NoWrapper]
 		public virtual weak WebKit.WebView create_web_view ();
-		public weak Gtk.TargetList copy_target_list { get; }
-		public weak bool editable { get; set; }
-		public weak Gtk.TargetList paste_target_list { get; }
-		public weak WebKit.WebSettings settings { get; set; }
-		public weak bool transparent { get; set; }
+		public Gtk.TargetList copy_target_list { get; }
+		public bool editable { get; set; }
+		public Gtk.TargetList paste_target_list { get; }
+		public WebKit.WebSettings settings { get; set; }
+		public bool transparent { get; set; }
 		public signal bool console_message (string message, int line_number, string source_id);
 		[HasEmitter]
 		public signal void copy_clipboard ();

@@ -2,10 +2,12 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
+	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_dmlh {
 		public uint totalframes;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_index_entry {
 		public uint id;
@@ -13,6 +15,7 @@ namespace Gst {
 		public uint offset;
 		public uint size;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_strf_auds {
 		public ushort format;
@@ -22,6 +25,7 @@ namespace Gst {
 		public ushort blockalign;
 		public ushort size;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_strf_iavs {
 		public uint DVAAuxSrc;
@@ -33,6 +37,7 @@ namespace Gst {
 		public uint DVReserved1;
 		public uint DVReserved2;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_strf_vids {
 		public uint size;
@@ -47,6 +52,7 @@ namespace Gst {
 		public uint num_colors;
 		public uint imp_colors;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_strh {
 		public uint type;

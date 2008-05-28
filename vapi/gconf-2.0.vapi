@@ -50,6 +50,7 @@ namespace GConf {
 	public enum UnsetFlags {
 		NAMES
 	}
+	[Compact]
 	[CCode (ref_function = "gconf_engine_ref", unref_function = "gconf_engine_unref", cheader_filename = "gconf/gconf.h")]
 	public class Engine {
 		public weak GLib.SList all_dirs (string dir) throws GLib.Error;
@@ -92,6 +93,7 @@ namespace GConf {
 		public void suggest_sync () throws GLib.Error;
 		public bool unset (string key) throws GLib.Error;
 	}
+	[Compact]
 	[CCode (ref_function = "gconf_entry_ref", unref_function = "gconf_entry_unref", cheader_filename = "gconf/gconf.h")]
 	public class Entry {
 		public weak string key;
@@ -112,11 +114,13 @@ namespace GConf {
 		public void set_value_nocopy (GConf.Value val);
 		public weak GConf.Value steal_value ();
 	}
+	[Compact]
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public class EnumStringPair {
 		public int enum_value;
 		public weak string str;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public class Listeners {
 		public uint add (string listen_point, void* listener_data, GLib.FreeFunc destroy_notify);
@@ -128,6 +132,7 @@ namespace GConf {
 		public void remove (uint cnxn_id);
 		public void remove_if (GConf.ListenersPredicate predicate);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public class MetaInfo {
 		public weak string schema;
@@ -142,6 +147,7 @@ namespace GConf {
 		public void set_mod_user (string mod_user);
 		public void set_schema (string schema_name);
 	}
+	[Compact]
 	[CCode (copy_function = "gconf_schema_copy", cheader_filename = "gconf/gconf.h")]
 	public class Schema {
 		public weak GConf.Schema copy ();
@@ -165,6 +171,7 @@ namespace GConf {
 		public void set_short_desc (string desc);
 		public void set_type (GConf.ValueType type);
 	}
+	[Compact]
 	[CCode (copy_function = "gconf_value_copy", cheader_filename = "gconf/gconf.h")]
 	public class Value {
 		public GConf.ValueType type;
@@ -196,6 +203,7 @@ namespace GConf {
 		public void set_string (string the_str);
 		public weak string to_string ();
 	}
+	[Compact]
 	[CCode (ref_function = "gconf_change_set_ref", unref_function = "gconf_change_set_unref", cheader_filename = "gconf/gconf.h")]
 	public class ChangeSet : GLib.Boxed {
 		public bool check_value (string key, out weak GConf.Value value_retloc);

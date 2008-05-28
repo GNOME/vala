@@ -46,7 +46,7 @@ namespace GnomeKeyring {
 		KEYRING_ALREADY_EXISTS,
 		NO_MATCH
 	}
-	[CCode (copy_function = "gnome_keyring_attribute_list_copy", cheader_filename = "gnome-keyring.h")]
+	[CCode (ref_function = "gnome_keyring_attribute_list_ref", unref_function = "gnome_keyring_attribute_list_unref", cheader_filename = "gnome-keyring.h")]
 	public class AttributeList {
 		[NoArrayLength]
 		public GnomeKeyring.Attribute[] data;
@@ -57,16 +57,19 @@ namespace GnomeKeyring {
 		public void append_uint32 (string name, uint value);
 		public weak GnomeKeyring.AttributeList copy ();
 	}
+	[Compact]
 	[CCode (copy_function = "gnome_keyring_access_control_copy", cheader_filename = "gnome-keyring.h")]
 	public class AccessControl {
 		public weak GnomeKeyring.AccessControl copy ();
 		public AccessControl (GnomeKeyring.ApplicationRef application, GnomeKeyring.AccessType types_allowed);
 	}
+	[Compact]
 	[CCode (copy_function = "gnome_keyring_application_ref_copy", cheader_filename = "gnome-keyring.h")]
 	public class ApplicationRef {
 		public weak GnomeKeyring.ApplicationRef copy ();
 		public ApplicationRef ();
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public class Found {
 		public weak string keyring;
@@ -75,6 +78,7 @@ namespace GnomeKeyring {
 		public weak string secret;
 		public static void list_free (GLib.List found_list);
 	}
+	[Compact]
 	[CCode (copy_function = "gnome_keyring_info_copy", cheader_filename = "gnome-keyring.h")]
 	public class Info {
 		public weak GnomeKeyring.Info copy ();
@@ -86,6 +90,7 @@ namespace GnomeKeyring {
 		public void set_lock_on_idle (bool value);
 		public void set_lock_timeout (uint value);
 	}
+	[Compact]
 	[CCode (copy_function = "gnome_keyring_item_info_copy", cheader_filename = "gnome-keyring.h")]
 	public class ItemInfo {
 		public weak GnomeKeyring.ItemInfo copy ();
@@ -98,6 +103,7 @@ namespace GnomeKeyring {
 		public void set_secret (string value);
 		public void set_type (GnomeKeyring.ItemType type);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public class NetworkPasswordData {
 		public weak string keyring;
@@ -111,6 +117,7 @@ namespace GnomeKeyring {
 		public weak string domain;
 		public weak string password;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public class PasswordSchema {
 		public GnomeKeyring.ItemType item_type;

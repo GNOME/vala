@@ -22,6 +22,7 @@
 
 [CCode (cheader_filename = "cairo.h")]
 namespace Cairo {
+	[Compact]
 	[CCode (ref_function = "cairo_reference", unref_function = "cairo_destroy", cname = "cairo_t", cprefix = "cairo_", cheader_filename = "cairo.h")]
 	public class Context {
 		[CCode (cname = "cairo_create")]
@@ -192,6 +193,7 @@ namespace Cairo {
 		SATURATE
 	}
 	
+	[Compact]
 	[CCode (free_function = "cairo_path_destroy", cname = "cairo_path_t")]
 	public class Path {
 		public Status status;
@@ -224,6 +226,7 @@ namespace Cairo {
 		CLOSE_PATH
 	}
 	
+	[Compact]
 	[CCode (ref_function = "cairo_pattern_reference", unref_function = "cairo_pattern_destroy", cname = "cairo_pattern_t")]
 	public class Pattern {
 		public void add_color_stop_rgb (double offset, double red, double green, double blue);
@@ -297,6 +300,7 @@ namespace Cairo {
 		BOLD
 	}
 	
+	[Compact]
 	[CCode (ref_function = "cairo_font_face_reference", unref_function = "cairo_font_face_destroy", cname = "cairo_font_face_t")]
 	public class FontFace {
 		public Status status ();
@@ -311,6 +315,7 @@ namespace Cairo {
 		ATSUI
 	}
 	
+	[Compact]
 	[CCode (ref_function = "cairo_scaled_font_reference", unref_function = "cairo_scaled_font_destroy", cname = "cairo_scaled_font_t")]
 	public class ScaledFont {
 		[CCode (cname = "cairo_scaled_font_create")]
@@ -345,6 +350,7 @@ namespace Cairo {
 		public double y_advance;
 	}
 	
+	[Compact]
 	[CCode (copy_function = "cairo_font_options_copy", free_function = "cairo_font_options_destroy", cname = "cairo_font_options_t")]
 	public class FontOptions {
 		[CCode (cname = "cairo_font_options_create")]
@@ -388,6 +394,7 @@ namespace Cairo {
 		ON
 	}
 	
+	[Compact]
 	[CCode (ref_function = "cairo_surface_reference", unref_function = "cairo_surface_destroy", cname = "cairo_surface_t", cheader_filename = "cairo.h")]
 	public class Surface {
 		[CCode (cname = "cairo_surface_create_similar")]
@@ -436,6 +443,7 @@ namespace Cairo {
 		RGB16_565
 	}
 	
+	[Compact]
 	[CCode (cname = "cairo_surface_t")]
 	public class ImageSurface : Surface {
 		[CCode (cname = "cairo_image_surface_create")]
@@ -455,6 +463,7 @@ namespace Cairo {
 		public ImageSurface.from_png_stream (ReadFunc read_func, void* closure);
 	}
 	
+	[Compact]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-pdf.h")]
 	public class PdfSurface : Surface {
 		[CCode (cname = "cairo_pdf_surface_create")]
@@ -467,6 +476,7 @@ namespace Cairo {
 	public static delegate Status ReadFunc (void* closure, uchar[] data);
 	public static delegate Status WriteFunc (void* closure, uchar[] data);
 	
+	[Compact]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-ps.h")]
 	public class PsSurface : Surface {
 		[CCode (cname = "cairo_ps_surface_create")]
@@ -479,6 +489,7 @@ namespace Cairo {
 		public void dsc_comment (string comment);
 	}
 	
+	[Compact]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-svg.h")]
 	public class SvgSurface : Surface {
 		[CCode (cname = "cairo_svg_surface_create")]
@@ -495,6 +506,7 @@ namespace Cairo {
 		VERSION_1_2
 	}
 	
+	[Compact]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-xlib.h")]
 	public class XlibSurface : Surface {
 		[CCode (cname = "cairo_xlib_surface_create")]

@@ -10,65 +10,69 @@ namespace Gst {
 		BARTLETT,
 		BLACKMAN
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstfftf32.h")]
 	public class FFTF32 {
 		public void* cfg;
 		public bool inverse;
 		public int len;
-		public void* _padding;
 		public void fft (float timedata, Gst.FFTF32Complex freqdata);
 		public void inverse_fft (Gst.FFTF32Complex freqdata, float timedata);
 		public FFTF32 (int len, bool inverse);
 		public void window (float timedata, Gst.FFTWindow window);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstfftf32.h")]
 	public class FFTF32Complex {
 		public float r;
 		public float i;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstfftf64.h")]
 	public class FFTF64 {
 		public void* cfg;
 		public bool inverse;
 		public int len;
-		public void* _padding;
 		public void fft (double timedata, Gst.FFTF64Complex freqdata);
 		public void inverse_fft (Gst.FFTF64Complex freqdata, double timedata);
 		public FFTF64 (int len, bool inverse);
 		public void window (double timedata, Gst.FFTWindow window);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstfftf64.h")]
 	public class FFTF64Complex {
 		public double r;
 		public double i;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts16.h")]
 	public class FFTS16 {
 		public void* cfg;
 		public bool inverse;
 		public int len;
-		public void* _padding;
 		public void fft (short timedata, Gst.FFTS16Complex freqdata);
 		public void inverse_fft (Gst.FFTS16Complex freqdata, short timedata);
 		public FFTS16 (int len, bool inverse);
 		public void window (short timedata, Gst.FFTWindow window);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts16.h")]
 	public class FFTS16Complex {
 		public short r;
 		public short i;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts32.h")]
 	public class FFTS32 {
 		public void* cfg;
 		public bool inverse;
 		public int len;
-		public void* _padding;
 		public void fft (int timedata, Gst.FFTS32Complex freqdata);
 		public void inverse_fft (Gst.FFTS32Complex freqdata, int timedata);
 		public FFTS32 (int len, bool inverse);
 		public void window (int timedata, Gst.FFTWindow window);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts32.h")]
 	public class FFTS32Complex {
 		public int r;

@@ -2,12 +2,15 @@
 
 [CCode (cprefix = "G", lower_case_cprefix = "g_")]
 namespace GLib {
+	[Compact]
 	[CCode (cheader_filename = "gio/gunixmounts.h")]
 	public class UnixMountEntry {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gio/gunixmounts.h")]
 	public class UnixMountMonitorClass {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gio/gunixmounts.h")]
 	public class UnixMountPoint {
 		public int compare (GLib.UnixMountPoint mount2);

@@ -67,6 +67,7 @@ namespace GNet {
 		INETADDR_ERROR,
 		TCP_ERROR
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class Conn {
 		public weak string hostname;
@@ -91,26 +92,30 @@ namespace GNet {
 		public uint watch_flags;
 		public uint watch;
 		public uint timer;
-		public GNet.ConnFunc func;
+		public weak GNet.ConnFunc func;
 		public void* user_data;
 		public weak GLib.MainContext context;
 		public int priority;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class ConnEvent {
 		public GNet.ConnEventType type;
 		public weak string buffer;
 		public int length;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class ConnHttp {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class ConnHttpEvent {
 		public GNet.ConnHttpEventType type;
 		public ulong stsize;
 		public void* padding;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class ConnHttpEventData {
 		public weak GNet.ConnHttpEvent parent;
@@ -120,6 +125,7 @@ namespace GNet {
 		public ulong buffer_length;
 		public void* padding;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class ConnHttpEventError {
 		public weak GNet.ConnHttpEvent parent;
@@ -127,6 +133,7 @@ namespace GNet {
 		public weak string message;
 		public void* padding;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class ConnHttpEventRedirect {
 		public weak GNet.ConnHttpEvent parent;
@@ -136,12 +143,14 @@ namespace GNet {
 		public bool auto_redirect;
 		public void* padding;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class ConnHttpEventResolved {
 		public weak GNet.ConnHttpEvent parent;
 		public weak GNet.InetAddr ia;
 		public void* padding;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class ConnHttpEventResponse {
 		public weak GNet.ConnHttpEvent parent;
@@ -150,45 +159,57 @@ namespace GNet {
 		public weak string header_values;
 		public void* padding;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class InetAddr {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class InetAddrGetNameAsyncID {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class InetAddrNewAsyncID {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class InetAddrNewListAsyncID {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class MD5 {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class McastSocket {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class SHA {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class Server {
 		public weak GNet.InetAddr iface;
 		public int port;
 		public weak GNet.TcpSocket socket;
 		public uint ref_count;
-		public GNet.ServerFunc func;
+		public weak GNet.ServerFunc func;
 		public void* user_data;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class TcpSocket {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class TcpSocketConnectAsyncID {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class TcpSocketNewAsyncID {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class URI {
 		public weak string scheme;
@@ -199,9 +220,11 @@ namespace GNet {
 		public weak string query;
 		public weak string fragment;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class UdpSocket {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnet.h")]
 	public class UnixSocket {
 	}

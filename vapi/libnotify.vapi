@@ -31,15 +31,15 @@ namespace Notify {
 		public bool show () throws GLib.Error;
 		public bool update (string summary, string body, string icon);
 		[NoAccessorMethod]
-		public weak Gtk.Widget attach_widget { get; set construct; }
+		public Gtk.Widget attach_widget { get; set construct; }
 		[NoAccessorMethod]
-		public weak string body { get; set construct; }
+		public string body { get; set construct; }
 		[NoAccessorMethod]
-		public weak string icon_name { get; set construct; }
+		public string icon_name { get; set construct; }
 		[NoAccessorMethod]
-		public weak Gtk.StatusIcon status_icon { get; set construct; }
+		public Gtk.StatusIcon status_icon { get; set construct; }
 		[NoAccessorMethod]
-		public weak string summary { get; set construct; }
+		public string summary { get; set construct; }
 		public signal void closed ();
 	}
 	[CCode (cheader_filename = "libnotify/notify.h")]

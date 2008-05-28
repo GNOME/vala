@@ -98,6 +98,7 @@ namespace Wnck {
 		ABOVE,
 		BELOW
 	}
+	[Compact]
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class ResourceUsage {
 		public ulong total_bytes_estimate;
@@ -122,6 +123,7 @@ namespace Wnck {
 		public uint pad8;
 		public uint pad9;
 	}
+	[Compact]
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class WorkspaceLayout {
 		public int rows;
@@ -143,7 +145,7 @@ namespace Wnck {
 		[NoWrapper]
 		public virtual void pad4 ();
 		[NoAccessorMethod]
-		public weak void* window { get; construct; }
+		public void* window { get; construct; }
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Application : GLib.Object {

@@ -27,6 +27,7 @@ namespace GMenu {
 		public void* get_user_data ();
 		public void set_user_data (void* user_data, GLib.DestroyNotify dnotify);
 	}
+	[Compact]
 	[CCode (ref_function = "gmenu_tree_ref", unref_function = "gmenu_tree_unref", cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class Tree {
 		public void add_monitor (GMenu.TreeChangedFunc callback);

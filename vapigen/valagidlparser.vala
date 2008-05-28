@@ -103,7 +103,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		current_source_file = source_file;
 
 		codenode_attributes_map = new HashMap<string,string> (str_hash, str_equal);
-		codenode_attributes_patterns = new HashMap<void*,string> (direct_hash, (EqualFunc) PatternSpec.equal);
+		codenode_attributes_patterns = new HashMap<PatternSpec*,string> (direct_hash, (EqualFunc) PatternSpec.equal);
 
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			try {
@@ -124,8 +124,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 
 					if (null != tokens[0].chr (-1, '*')) {
-						PatternSpec pattern = new PatternSpec (tokens[0]);
-						codenode_attributes_patterns[#pattern] = tokens[0];
+						PatternSpec* pattern = new PatternSpec (tokens[0]);
+						codenode_attributes_patterns[pattern] = tokens[0];
 					}
 					
 					codenode_attributes_map[tokens[0]] = tokens[1];
@@ -411,6 +411,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 				cl = new Class (name, current_source_reference);
 				cl.access = SymbolAccessibility.PUBLIC;
+				cl.is_compact = true;
 
 				var cl_attributes = get_attributes (node.name);
 				if (cl_attributes != null) {
@@ -540,6 +541,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			if (cl == null) {
 				cl = new Class (name, current_source_reference);
 				cl.access = SymbolAccessibility.PUBLIC;
+				cl.is_compact = true;
 
 				var cl_attributes = get_attributes (node.name);
 				if (cl_attributes != null) {
@@ -655,6 +657,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			if (cl == null) {
 				cl = new Class (name, current_source_reference);
 				cl.access = SymbolAccessibility.PUBLIC;
+				cl.is_compact = true;
 
 				var cl_attributes = get_attributes (node.name);
 				if (cl_attributes != null) {

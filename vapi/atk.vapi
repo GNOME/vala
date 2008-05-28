@@ -233,14 +233,17 @@ namespace Atk {
 	public enum HyperlinkStateFlags {
 		INLINE
 	}
+	[Compact]
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Attribute {
 		public weak string name;
 		public weak string value;
 	}
+	[Compact]
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class AttributeSet {
 	}
+	[Compact]
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class KeyEventStruct {
 		public int type;
@@ -252,18 +255,21 @@ namespace Atk {
 		public ushort keycode;
 		public uint timestamp;
 	}
+	[Compact]
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class PropertyValues {
 		public weak string property_name;
 		public GLib.Value old_value;
 		public GLib.Value new_value;
 	}
+	[Compact]
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class State {
 		public static Atk.StateType type_for_name (string name);
 		public static weak string type_get_name (Atk.StateType type);
 		public static Atk.StateType type_register (string name);
 	}
+	[Compact]
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class TextRange {
 		public weak Atk.TextRectangle bounds;
@@ -271,6 +277,7 @@ namespace Atk {
 		public int end_offset;
 		public weak string content;
 	}
+	[Compact]
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class TextRectangle {
 		public int x;
@@ -295,12 +302,12 @@ namespace Atk {
 		public virtual bool is_valid ();
 		[NoWrapper]
 		public virtual uint link_state ();
-		public weak int end_index { get; }
+		public int end_index { get; }
 		[NoAccessorMethod]
-		public weak int number_of_anchors { get; }
+		public int number_of_anchors { get; }
 		[NoAccessorMethod]
-		public weak bool selected_link { get; }
-		public weak int start_index { get; }
+		public bool selected_link { get; }
+		public int start_index { get; }
 		public signal void link_activated ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
@@ -351,35 +358,35 @@ namespace Atk {
 		public virtual void set_parent (Atk.Object parent);
 		public virtual void set_role (Atk.Role role);
 		[NoAccessorMethod]
-		public weak int accessible_component_layer { get; }
+		public int accessible_component_layer { get; }
 		[NoAccessorMethod]
-		public weak int accessible_component_mdi_zorder { get; }
+		public int accessible_component_mdi_zorder { get; }
 		[NoAccessorMethod]
-		public weak string accessible_description { get; set; }
+		public string accessible_description { get; set; }
 		[NoAccessorMethod]
-		public weak int accessible_hypertext_nlinks { get; }
+		public int accessible_hypertext_nlinks { get; }
 		[NoAccessorMethod]
-		public weak string accessible_name { get; set; }
+		public string accessible_name { get; set; }
 		[NoAccessorMethod]
-		public weak Atk.Object accessible_parent { get; set; }
+		public Atk.Object accessible_parent { get; set; }
 		[NoAccessorMethod]
-		public weak int accessible_role { get; set; }
+		public int accessible_role { get; set; }
 		[NoAccessorMethod]
-		public weak string accessible_table_caption { get; set; }
+		public string accessible_table_caption { get; set; }
 		[NoAccessorMethod]
-		public weak Atk.Object accessible_table_caption_object { get; set; }
+		public Atk.Object accessible_table_caption_object { get; set; }
 		[NoAccessorMethod]
-		public weak string accessible_table_column_description { get; set; }
+		public string accessible_table_column_description { get; set; }
 		[NoAccessorMethod]
-		public weak Atk.Object accessible_table_column_header { get; set; }
+		public Atk.Object accessible_table_column_header { get; set; }
 		[NoAccessorMethod]
-		public weak string accessible_table_row_description { get; set; }
+		public string accessible_table_row_description { get; set; }
 		[NoAccessorMethod]
-		public weak Atk.Object accessible_table_row_header { get; set; }
+		public Atk.Object accessible_table_row_header { get; set; }
 		[NoAccessorMethod]
-		public weak Atk.Object accessible_table_summary { get; set; }
+		public Atk.Object accessible_table_summary { get; set; }
 		[NoAccessorMethod]
-		public weak double accessible_value { get; set; }
+		public double accessible_value { get; set; }
 		public signal void active_descendant_changed (void* child);
 		public signal void children_changed (uint change_index, void* changed_child);
 		public signal void focus_event (bool focus_in);
@@ -412,9 +419,9 @@ namespace Atk {
 		public static weak string type_get_name (Atk.RelationType type);
 		public static Atk.RelationType type_register (string name);
 		[NoAccessorMethod]
-		public weak Atk.RelationType relation_type { get; set; }
+		public Atk.RelationType relation_type { get; set; }
 		[NoAccessorMethod]
-		public weak GLib.ValueArray target { get; set; }
+		public GLib.ValueArray target { get; set; }
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class RelationSet : GLib.Object {

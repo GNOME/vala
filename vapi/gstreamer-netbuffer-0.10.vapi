@@ -8,12 +8,12 @@ namespace Gst {
 		IP4,
 		IP6
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
 	public class NetAddress {
 		public Gst.NetType type;
 		public void* address;
 		public ushort port;
-		public void* _gst_reserved;
 		[CCode (cname = "gst_netaddress_get_ip4_address")]
 		public bool get_ip4_address (uint address, ushort port);
 		[CCode (cname = "gst_netaddress_get_ip6_address")]
@@ -25,18 +25,18 @@ namespace Gst {
 		[CCode (cname = "gst_netaddress_set_ip6_address")]
 		public void set_ip6_address (uchar[] address, ushort port);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
 	public class NetBuffer {
 		public weak Gst.Buffer buffer;
 		public weak Gst.NetAddress from;
 		public weak Gst.NetAddress to;
-		public void* _gst_reserved;
 		[CCode (cname = "gst_netbuffer_new")]
 		public NetBuffer ();
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
 	public class NetBufferClass {
 		public weak Gst.BufferClass buffer_class;
-		public void* _gst_reserved;
 	}
 }

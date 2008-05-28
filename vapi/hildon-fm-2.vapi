@@ -71,6 +71,7 @@ namespace Hildon {
 		GATEWAY,
 		LOCAL_DEVICE
 	}
+	[Compact]
 	[CCode (cheader_filename = "hildon/hildon-file-system-info.h")]
 	public class FileSystemInfo {
 		public static void async_cancel (Hildon.FileSystemInfoHandle handle);
@@ -80,6 +81,7 @@ namespace Hildon {
 		public weak Gdk.Pixbuf get_icon_at_size (Gtk.Widget ref_widget, int size);
 		public FileSystemInfo (string uri) throws GLib.Error;
 	}
+	[Compact]
 	[CCode (cheader_filename = "hildon/hildon-file-system-info.h")]
 	public class FileSystemInfoHandle {
 	}
@@ -99,25 +101,25 @@ namespace Hildon {
 		public void set_safe_folder_uri (string uri);
 		public void set_show_upnp (bool value);
 		[NoAccessorMethod]
-		public weak bool autonaming { get; set; }
+		public bool autonaming { get; set; }
 		[NoAccessorMethod]
-		public weak string empty_text { get; set; }
+		public string empty_text { get; set; }
 		[NoAccessorMethod]
-		public weak Hildon.FileSystemModel file_system_model { get; construct; }
+		public Hildon.FileSystemModel file_system_model { get; construct; }
 		[NoAccessorMethod]
-		public weak int max_full_path_length { get; set construct; }
+		public int max_full_path_length { get; set construct; }
 		[NoAccessorMethod]
-		public weak int max_name_length { get; set construct; }
+		public int max_name_length { get; set construct; }
 		[NoAccessorMethod]
-		public weak string open_button_text { get; set; }
+		public string open_button_text { get; set; }
 		[NoAccessorMethod]
-		public weak string save_multiple { get; set; }
+		public string save_multiple { get; set; }
 		[NoAccessorMethod]
-		public weak int selection_mode { get; set; }
+		public int selection_mode { get; set; }
 		[NoAccessorMethod]
-		public weak bool show_folder_button { get; set; }
+		public bool show_folder_button { get; set; }
 		[NoAccessorMethod]
-		public weak bool show_location { get; set; }
+		public bool show_location { get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon-file-details-dialog.h")]
 	public class FileDetailsDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
@@ -126,17 +128,17 @@ namespace Hildon {
 		public FileDetailsDialog.with_model (Gtk.Window parent, Hildon.FileSystemModel model);
 		public void set_file_iter (Gtk.TreeIter iter);
 		[NoAccessorMethod]
-		public weak Gtk.Widget additional_tab { get; set construct; }
+		public Gtk.Widget additional_tab { get; set construct; }
 		[NoAccessorMethod]
-		public weak string additional_tab_label { get; set; }
+		public string additional_tab_label { get; set; }
 		[NoAccessorMethod]
-		public weak bool enable_read_only_checkbox { get; set construct; }
+		public bool enable_read_only_checkbox { get; set construct; }
 		[NoAccessorMethod]
-		public weak Hildon.FileSystemModel model { get; set; }
+		public Hildon.FileSystemModel model { get; set; }
 		[NoAccessorMethod]
-		public weak bool show_tabs { get; set construct; }
+		public bool show_tabs { get; set construct; }
 		[NoAccessorMethod]
-		public weak bool show_type_icon { get; set construct; }
+		public bool show_type_icon { get; set construct; }
 	}
 	[CCode (cheader_filename = "hildon/hildon-file-selection.h")]
 	public class FileSelection : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -171,25 +173,25 @@ namespace Hildon {
 		public void unselect_all ();
 		public void unselect_uri (string uri);
 		[NoAccessorMethod]
-		public weak int active_pane { get; set; }
+		public int active_pane { get; set; }
 		[NoAccessorMethod]
-		public weak bool drag_enabled { get; construct; }
+		public bool drag_enabled { get; construct; }
 		[NoAccessorMethod]
-		public weak string empty_text { get; set; }
+		public string empty_text { get; set; }
 		[NoAccessorMethod]
-		public weak bool local_only { get; set; }
+		public bool local_only { get; set; }
 		[NoAccessorMethod]
-		public weak Hildon.FileSystemModel model { get; construct; }
+		public Hildon.FileSystemModel model { get; construct; }
 		[NoAccessorMethod]
-		public weak int pane_position { get; set construct; }
+		public int pane_position { get; set construct; }
 		[NoAccessorMethod]
-		public weak void* safe_folder { get; set; }
+		public void* safe_folder { get; set; }
 		[NoAccessorMethod]
-		public weak bool show_hidden { get; set; }
+		public bool show_hidden { get; set; }
 		[NoAccessorMethod]
-		public weak bool show_upnp { get; set construct; }
+		public bool show_upnp { get; set construct; }
 		[NoAccessorMethod]
-		public weak int visible_columns { get; construct; }
+		public int visible_columns { get; construct; }
 		public signal void content_pane_context_menu ();
 		public signal void current_folder_changed ();
 		public signal void file_activated ();
@@ -209,17 +211,17 @@ namespace Hildon {
 		public bool search_local_path (string path, Gtk.TreeIter iter, Gtk.TreeIter start_iter, bool recursive);
 		public bool search_uri (string uri, Gtk.TreeIter iter, Gtk.TreeIter start_iter, bool recursive);
 		[NoAccessorMethod]
-		public weak string backend { get; construct; }
+		public string backend { get; construct; }
 		[NoAccessorMethod]
-		public weak void* backend_object { get; construct; }
+		public void* backend_object { get; construct; }
 		[NoAccessorMethod]
-		public weak bool multi_root { get; construct; }
+		public bool multi_root { get; construct; }
 		[NoAccessorMethod]
-		public weak Gtk.Widget ref_widget { get; set; }
+		public Gtk.Widget ref_widget { get; set; }
 		[NoAccessorMethod]
-		public weak string root_dir { get; construct; }
+		public string root_dir { get; construct; }
 		[NoAccessorMethod]
-		public weak void* thumbnail_callback { get; set; }
+		public void* thumbnail_callback { get; set; }
 		public signal void device_disconnected (Gtk.TreeIter iter);
 		public signal void finished_loading (Gtk.TreeIter iter);
 	}

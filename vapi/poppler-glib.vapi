@@ -155,17 +155,20 @@ namespace Poppler {
 		DISPLAY_DOC_TITLE,
 		DIRECTION_RTL
 	}
+	[Compact]
 	[CCode (cheader_filename = "poppler.h")]
 	public class ActionAny {
 		public Poppler.ActionType type;
 		public weak string title;
 	}
+	[Compact]
 	[CCode (cheader_filename = "poppler.h")]
 	public class ActionGotoDest {
 		public Poppler.ActionType type;
 		public weak string title;
 		public weak Poppler.Dest dest;
 	}
+	[Compact]
 	[CCode (cheader_filename = "poppler.h")]
 	public class ActionGotoRemote {
 		public Poppler.ActionType type;
@@ -173,6 +176,7 @@ namespace Poppler {
 		public weak string file_name;
 		public weak Poppler.Dest dest;
 	}
+	[Compact]
 	[CCode (cheader_filename = "poppler.h")]
 	public class ActionLaunch {
 		public Poppler.ActionType type;
@@ -180,23 +184,27 @@ namespace Poppler {
 		public weak string file_name;
 		public weak string params;
 	}
+	[Compact]
 	[CCode (cheader_filename = "poppler.h")]
 	public class ActionMovie {
 		public Poppler.ActionType type;
 		public weak string title;
 	}
+	[Compact]
 	[CCode (cheader_filename = "poppler.h")]
 	public class ActionNamed {
 		public Poppler.ActionType type;
 		public weak string title;
 		public weak string named_dest;
 	}
+	[Compact]
 	[CCode (cheader_filename = "poppler.h")]
 	public class ActionUri {
 		public Poppler.ActionType type;
 		public weak string title;
 		public weak string uri;
 	}
+	[Compact]
 	[CCode (copy_function = "poppler_action_copy", cheader_filename = "poppler.h")]
 	public class Action : GLib.Boxed {
 		public Poppler.ActionType type;
@@ -209,6 +217,7 @@ namespace Poppler {
 		public weak Poppler.ActionMovie movie;
 		public weak Poppler.Action copy ();
 	}
+	[Compact]
 	[CCode (copy_function = "poppler_dest_copy", cheader_filename = "poppler.h")]
 	public class Dest : GLib.Boxed {
 		public Poppler.DestType type;
@@ -224,6 +233,7 @@ namespace Poppler {
 		public uint change_zoom;
 		public weak Poppler.Dest copy ();
 	}
+	[Compact]
 	[CCode (copy_function = "poppler_fonts_iter_copy", cheader_filename = "poppler.h")]
 	public class FontsIter : GLib.Boxed {
 		public weak Poppler.FontsIter copy ();
@@ -235,6 +245,7 @@ namespace Poppler {
 		public bool is_subset ();
 		public bool next ();
 	}
+	[Compact]
 	[CCode (copy_function = "poppler_form_field_mapping_copy", cheader_filename = "poppler.h")]
 	public class FormFieldMapping : GLib.Boxed {
 		public weak Poppler.Rectangle area;
@@ -242,6 +253,7 @@ namespace Poppler {
 		public weak Poppler.FormFieldMapping copy ();
 		public FormFieldMapping ();
 	}
+	[Compact]
 	[CCode (copy_function = "poppler_image_mapping_copy", cheader_filename = "poppler.h")]
 	public class ImageMapping : GLib.Boxed {
 		public weak Poppler.Rectangle area;
@@ -249,6 +261,7 @@ namespace Poppler {
 		public weak Poppler.ImageMapping copy ();
 		public ImageMapping ();
 	}
+	[Compact]
 	[CCode (copy_function = "poppler_index_iter_copy", cheader_filename = "poppler.h")]
 	public class IndexIter : GLib.Boxed {
 		public weak Poppler.IndexIter copy ();
@@ -258,6 +271,7 @@ namespace Poppler {
 		public IndexIter (Poppler.Document document);
 		public bool next ();
 	}
+	[Compact]
 	[CCode (copy_function = "poppler_link_mapping_copy", cheader_filename = "poppler.h")]
 	public class LinkMapping : GLib.Boxed {
 		public weak Poppler.Rectangle area;
@@ -265,6 +279,7 @@ namespace Poppler {
 		public weak Poppler.LinkMapping copy ();
 		public LinkMapping ();
 	}
+	[Compact]
 	[CCode (copy_function = "poppler_page_transition_copy", cheader_filename = "poppler.h")]
 	public class PageTransition : GLib.Boxed {
 		public Poppler.PageTransitionType type;
@@ -277,6 +292,7 @@ namespace Poppler {
 		public weak Poppler.PageTransition copy ();
 		public PageTransition ();
 	}
+	[Compact]
 	[CCode (copy_function = "poppler_rectangle_copy", cheader_filename = "poppler.h")]
 	public class Rectangle : GLib.Boxed {
 		public double x1;
@@ -310,35 +326,35 @@ namespace Poppler {
 		public Document.from_file (string uri, string password) throws GLib.Error;
 		public bool save (string uri) throws GLib.Error;
 		[NoAccessorMethod]
-		public weak string author { get; }
+		public string author { get; }
 		[NoAccessorMethod]
-		public weak int creation_date { get; }
+		public int creation_date { get; }
 		[NoAccessorMethod]
-		public weak string creator { get; }
+		public string creator { get; }
 		[NoAccessorMethod]
-		public weak string format { get; }
+		public string format { get; }
 		[NoAccessorMethod]
-		public weak string keywords { get; }
+		public string keywords { get; }
 		[NoAccessorMethod]
-		public weak string linearized { get; }
+		public string linearized { get; }
 		[NoAccessorMethod]
-		public weak string metadata { get; }
+		public string metadata { get; }
 		[NoAccessorMethod]
-		public weak int mod_date { get; }
+		public int mod_date { get; }
 		[NoAccessorMethod]
-		public weak Poppler.PageLayout page_layout { get; }
+		public Poppler.PageLayout page_layout { get; }
 		[NoAccessorMethod]
-		public weak Poppler.PageMode page_mode { get; }
+		public Poppler.PageMode page_mode { get; }
 		[NoAccessorMethod]
-		public weak Poppler.Permissions permissions { get; }
+		public Poppler.Permissions permissions { get; }
 		[NoAccessorMethod]
-		public weak string producer { get; }
+		public string producer { get; }
 		[NoAccessorMethod]
-		public weak string subject { get; }
+		public string subject { get; }
 		[NoAccessorMethod]
-		public weak string title { get; }
+		public string title { get; }
 		[NoAccessorMethod]
-		public weak Poppler.ViewerPreferences viewer_preferences { get; }
+		public Poppler.ViewerPreferences viewer_preferences { get; }
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class FontInfo : GLib.Object {
@@ -408,7 +424,7 @@ namespace Poppler {
 		public void render_to_pixbuf (int src_x, int src_y, int src_width, int src_height, double scale, int rotation, Gdk.Pixbuf pixbuf);
 		public void render_to_ps (Poppler.PSFile ps_file);
 		[NoAccessorMethod]
-		public weak string label { get; }
+		public string label { get; }
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public static delegate bool AttachmentSaveFunc (string buf, ulong count, void* data, GLib.Error error);

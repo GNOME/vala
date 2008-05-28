@@ -16,6 +16,7 @@ namespace Gst {
 		HELPER_MISSING,
 		INSTALL_IN_PROGRESS
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public class InstallPluginsContext : GLib.Boxed {
 		public InstallPluginsContext ();

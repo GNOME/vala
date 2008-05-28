@@ -1,5 +1,82 @@
 2008-05-28  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala:
+
+	Mark non-GObject classes as compact, fix metadata patterns,
+	fixes bug 535206
+
+	* vapi/cairo.vapi:
+
+	Use [Compact] attribute
+
+	* vapi/packages/gstreamer-audio-0.10/:
+	* vapi/packages/gstreamer-check-0.10/:
+	* vapi/packages/gstreamer-controller-0.10/:
+	* vapi/packages/gstreamer-dataprotocol-0.10/:
+	* vapi/packages/gstreamer-fft-0.10/:
+	* vapi/packages/gstreamer-interfaces-0.10/:
+	* vapi/packages/gstreamer-net-0.10/:
+	* vapi/packages/gstreamer-netbuffer-0.10/:
+	* vapi/packages/gstreamer-pbutils-0.10/:
+	* vapi/packages/gstreamer-riff-0.10/:
+	* vapi/packages/gstreamer-rtp-0.10/:
+	* vapi/packages/gstreamer-rtsp-0.10/:
+	* vapi/packages/gstreamer-sdp-0.10/:
+	* vapi/packages/gstreamer-tag-0.10/:
+
+	Add missing dependency on gmodule-2.0
+
+	* vapi/atk.vapi:
+	* vapi/gconf-2.0.vapi:
+	* vapi/gdk-2.0.vapi:
+	* vapi/gdk-pixbuf-2.0.vapi:
+	* vapi/gio-2.0.vapi:
+	* vapi/gio-unix-2.0.vapi:
+	* vapi/gnet-2.0.vapi:
+	* vapi/gnome-desktop-2.0.vapi:
+	* vapi/gnome-keyring-1.vapi:
+	* vapi/gnome-vfs-2.0.vapi:
+	* vapi/goocanvas.vapi:
+	* vapi/gstreamer-0.10.vapi:
+	* vapi/gstreamer-audio-0.10.vapi:
+	* vapi/gstreamer-base-0.10.vapi:
+	* vapi/gstreamer-check-0.10.vapi:
+	* vapi/gstreamer-controller-0.10.vapi:
+	* vapi/gstreamer-dataprotocol-0.10.vapi:
+	* vapi/gstreamer-fft-0.10.vapi:
+	* vapi/gstreamer-interfaces-0.10.vapi:
+	* vapi/gstreamer-net-0.10.vapi:
+	* vapi/gstreamer-netbuffer-0.10.vapi:
+	* vapi/gstreamer-pbutils-0.10.vapi:
+	* vapi/gstreamer-riff-0.10.vapi:
+	* vapi/gstreamer-rtp-0.10.vapi:
+	* vapi/gstreamer-rtsp-0.10.vapi:
+	* vapi/gstreamer-sdp-0.10.vapi:
+	* vapi/gstreamer-video-0.10.vapi:
+	* vapi/gtk+-2.0.vapi:
+	* vapi/gtksourceview-2.0.vapi:
+	* vapi/hildon-1.vapi:
+	* vapi/hildon-fm-2.vapi:
+	* vapi/json-glib-1.0.vapi:
+	* vapi/libglade-2.0.vapi:
+	* vapi/libgnome-2.0.vapi:
+	* vapi/libgnome-menu.vapi:
+	* vapi/libgnomeui-2.0.vapi:
+	* vapi/libnotify.vapi:
+	* vapi/liboobs-1.vapi:
+	* vapi/libsoup-2.2.vapi:
+	* vapi/libsoup-2.4.vapi:
+	* vapi/libwnck-1.0.vapi:
+	* vapi/pango.vapi:
+	* vapi/pangocairo.vapi:
+	* vapi/poppler-glib.vapi:
+	* vapi/vte.vapi:
+	* vapi/webkit-1.0.vapi:
+
+	Regenerated
+
+2008-05-28  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/libxml-2.0.vapi:
 
 	Fix SAX parser bindings, patch by Travis Watkins

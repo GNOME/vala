@@ -533,7 +533,8 @@ namespace Gst {
 		public void stamp (Gst.Buffer src);
 		public static weak Gst.Buffer try_new_and_alloc (uint size);
 	}
-	[CCode (ref_function = "gst_alloc_trace_ref", unref_function = "gst_alloc_trace_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class AllocTrace {
 		public weak string name;
 		public int flags;
@@ -553,7 +554,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class BufferClass : Gst.MiniObjectClass {
 	}
-	[CCode (ref_function = "gst_clock_entry_ref", unref_function = "gst_clock_entry_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class ClockEntry {
 		public int refcount;
 		public weak Gst.Clock clock;
@@ -564,6 +566,7 @@ namespace Gst {
 		public weak Gst.ClockCallback func;
 		public void* user_data;
 	}
+	[Compact]
 	[CCode (ref_function = "gst_clock_id_ref", unref_function = "gst_clock_id_unref", cheader_filename = "gst/gst.h")]
 	public class ClockID {
 		public static int compare_func (void* id1, void* id2);
@@ -572,7 +575,8 @@ namespace Gst {
 		public Gst.ClockReturn wait (Gst.ClockTimeDiff jitter);
 		public Gst.ClockReturn wait_async (Gst.ClockCallback func);
 	}
-	[CCode (ref_function = "gst_debug_category_ref", unref_function = "gst_debug_category_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class DebugCategory {
 		public int threshold;
 		public uint color;
@@ -585,7 +589,8 @@ namespace Gst {
 		public void reset_threshold ();
 		public void set_threshold (Gst.DebugLevel level);
 	}
-	[CCode (ref_function = "gst_debug_message_ref", unref_function = "gst_debug_message_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class DebugMessage {
 		public weak string get ();
 	}
@@ -620,19 +625,22 @@ namespace Gst {
 		public static weak string type_get_name (Gst.EventType type);
 		public static GLib.Quark type_to_quark (Gst.EventType type);
 	}
-	[CCode (ref_function = "gst_index_association_ref", unref_function = "gst_index_association_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class IndexAssociation {
 		public Gst.Format format;
 		public int64 value;
 	}
-	[CCode (ref_function = "gst_index_group_ref", unref_function = "gst_index_group_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class IndexGroup {
 		public int groupnum;
 		public weak GLib.List entries;
 		public Gst.IndexCertainty certainty;
 		public int peergroup;
 	}
-	[CCode (ref_function = "gst_iterator_ref", unref_function = "gst_iterator_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class Iterator {
 		public weak Gst.IteratorNextFunction next;
 		public weak Gst.IteratorItemFunction item;
@@ -730,7 +738,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class ParamSpecMiniObject : GLib.ParamSpec {
 	}
-	[CCode (ref_function = "gst_plugin_desc_ref", unref_function = "gst_plugin_desc_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class PluginDesc {
 		public int major_version;
 		public int minor_version;
@@ -743,7 +752,8 @@ namespace Gst {
 		public weak string package;
 		public weak string origin;
 	}
-	[CCode (ref_function = "gst_poll_ref", unref_function = "gst_poll_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class Poll {
 		public bool add_fd (Gst.PollFD fd);
 		public Poll (bool controllable);
@@ -753,7 +763,8 @@ namespace Gst {
 		public void set_flushing (bool flushing);
 		public int wait (Gst.ClockTime timeout);
 	}
-	[CCode (ref_function = "gst_poll_fd_ref", unref_function = "gst_poll_fd_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class PollFD {
 		public int fd;
 		public int idx;
@@ -814,7 +825,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class QueryClass : Gst.MiniObjectClass {
 	}
-	[CCode (ref_function = "gst_query_type_definition_ref", unref_function = "gst_query_type_definition_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class QueryTypeDefinition {
 		public Gst.QueryType value;
 		public weak string nick;
@@ -828,7 +840,8 @@ namespace Gst {
 		public weak string str;
 		public weak Gst.Caps get ();
 	}
-	[CCode (ref_function = "gst_static_pad_template_ref", unref_function = "gst_static_pad_template_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class StaticPadTemplate {
 		public weak string name_template;
 		public Gst.PadDirection direction;
@@ -883,7 +896,8 @@ namespace Gst {
 		public TagList ();
 		public void remove_tag (string tag);
 	}
-	[CCode (ref_function = "gst_trace_ref", unref_function = "gst_trace_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (free_function = "gst_trace_destroy", cheader_filename = "gst/gst.h")]
 	public class Trace {
 		public weak string filename;
 		public int fd;
@@ -896,7 +910,8 @@ namespace Gst {
 		public void set_default ();
 		public void text_flush ();
 	}
-	[CCode (ref_function = "gst_trace_entry_ref", unref_function = "gst_trace_entry_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class TraceEntry {
 		public int64 timestamp;
 		public uint sequence;
@@ -904,7 +919,8 @@ namespace Gst {
 		[NoArrayLength]
 		public weak char[] message;
 	}
-	[CCode (ref_function = "gst_typefind_ref", unref_function = "gst_typefind_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class TypeFind {
 		public void* data;
 		[CCode (cname = "gst_type_find_get_length")]
@@ -916,12 +932,14 @@ namespace Gst {
 		[CCode (cname = "gst_type_find_suggest")]
 		public void suggest (uint probability, Gst.Caps caps);
 	}
-	[CCode (ref_function = "gst_typename_data_ref", unref_function = "gst_typename_data_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class TypeNameData {
 		public weak string name;
 		public GLib.Type type;
 	}
-	[CCode (ref_function = "gst_value_table_ref", unref_function = "gst_value_table_unref", cheader_filename = "gst/gst.h")]
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class ValueTable {
 		public GLib.Type type;
 		public weak Gst.ValueCompareFunc compare;

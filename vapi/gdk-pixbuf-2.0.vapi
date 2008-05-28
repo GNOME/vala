@@ -56,6 +56,7 @@ namespace Gdk {
 		ENCODING_RLE,
 		ENCODING_MASK
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufFormat {
 		public weak string get_description ();
@@ -68,6 +69,7 @@ namespace Gdk {
 		public bool is_writable ();
 		public void set_disabled (bool disabled);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufSimpleAnimClass {
 	}
@@ -114,21 +116,21 @@ namespace Gdk {
 		public void scale (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type);
 		public weak Gdk.Pixbuf scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);
 		[NoAccessorMethod]
-		public weak int bits_per_sample { get; construct; }
+		public int bits_per_sample { get; construct; }
 		[NoAccessorMethod]
-		public weak Gdk.Colorspace colorspace { get; construct; }
+		public Gdk.Colorspace colorspace { get; construct; }
 		[NoAccessorMethod]
-		public weak bool has_alpha { get; construct; }
+		public bool has_alpha { get; construct; }
 		[NoAccessorMethod]
-		public weak int height { get; construct; }
+		public int height { get; construct; }
 		[NoAccessorMethod]
-		public weak int n_channels { get; construct; }
+		public int n_channels { get; construct; }
 		[NoAccessorMethod]
-		public weak void* pixels { get; construct; }
+		public void* pixels { get; construct; }
 		[NoAccessorMethod]
-		public weak int rowstride { get; construct; }
+		public int rowstride { get; construct; }
 		[NoAccessorMethod]
-		public weak int width { get; construct; }
+		public int width { get; construct; }
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufAnimation : GLib.Object {
@@ -179,7 +181,7 @@ namespace Gdk {
 		public uint width;
 		public uint height;
 		[NoArrayLength]
-		public uchar[] pixel_data;
+		public weak uchar[] pixel_data;
 		public bool deserialize ([CCode (array_length_pos = 0.9)] uchar[] stream) throws GLib.Error;
 		public void* from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
 		public weak uchar[] serialize ();

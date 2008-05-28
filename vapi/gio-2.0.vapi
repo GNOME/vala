@@ -173,12 +173,14 @@ namespace GLib {
 		WOULD_MERGE,
 		FAILED_HANDLED,
 	}
+	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileAttributeInfo {
 		public weak string name;
 		public GLib.FileAttributeType type;
 		public GLib.FileAttributeInfoFlags flags;
 	}
+	[Compact]
 	[CCode (ref_function = "g_file_attribute_info_list_ref", unref_function = "g_file_attribute_info_list_unref", cheader_filename = "gio/gio.h")]
 	public class FileAttributeInfoList {
 		public weak GLib.FileAttributeInfo infos;
@@ -188,6 +190,7 @@ namespace GLib {
 		public weak GLib.FileAttributeInfo lookup (string name);
 		public FileAttributeInfoList ();
 	}
+	[Compact]
 	[CCode (ref_function = "g_file_attribute_matcher_ref", unref_function = "g_file_attribute_matcher_unref", cheader_filename = "gio/gio.h")]
 	public class FileAttributeMatcher {
 		public bool enumerate_namespace (string ns);
@@ -196,18 +199,22 @@ namespace GLib {
 		public bool matches_only (string attribute);
 		public FileAttributeMatcher (string attributes);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileIconClass {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileInfoClass {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class IOExtension {
 		public weak string get_name ();
 		public int get_priority ();
 		public weak GLib.TypeClass ref_class ();
 	}
+	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class IOExtensionPoint {
 		public weak GLib.IOExtension get_extension_by_name (string name);
@@ -218,17 +225,21 @@ namespace GLib {
 		public static weak GLib.IOExtensionPoint register (string name);
 		public void set_required_type (GLib.Type type);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class IOModuleClass {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class IOSchedulerJob {
 		public bool send_to_mainloop (GLib.SourceFunc func, GLib.DestroyNotify notify);
 		public void send_to_mainloop_async (GLib.SourceFunc func, GLib.DestroyNotify notify);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SimpleAsyncResultClass {
 	}
+	[Compact]
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class ThemedIconClass {
 	}
@@ -252,7 +263,7 @@ namespace GLib {
 		public virtual long fill (long count, GLib.Cancellable? cancellable) throws GLib.Error;
 		public virtual void fill_async (long count, int io_priority, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public virtual long fill_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public weak uint buffer_size { get; set construct; }
+		public uint buffer_size { get; set construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class BufferedOutputStream : GLib.FilterOutputStream {
@@ -262,8 +273,8 @@ namespace GLib {
 		public BufferedOutputStream.sized (GLib.OutputStream base_stream, ulong size);
 		public void set_auto_grow (bool auto_grow);
 		public void set_buffer_size (ulong size);
-		public weak bool auto_grow { get; set; }
-		public weak uint buffer_size { get; set construct; }
+		public bool auto_grow { get; set; }
+		public uint buffer_size { get; set construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Cancellable : GLib.Object {
@@ -294,8 +305,8 @@ namespace GLib {
 		public weak string read_until (string stop_chars, out ulong length, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void set_byte_order (GLib.DataStreamByteOrder order);
 		public void set_newline_type (GLib.DataStreamNewlineType type);
-		public weak GLib.DataStreamByteOrder byte_order { get; set; }
-		public weak GLib.DataStreamNewlineType newline_type { get; set; }
+		public GLib.DataStreamByteOrder byte_order { get; set; }
+		public GLib.DataStreamNewlineType newline_type { get; set; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class DataOutputStream : GLib.FilterOutputStream {
@@ -310,7 +321,7 @@ namespace GLib {
 		public bool put_uint32 (uint data, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool put_uint64 (uint64 data, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void set_byte_order (GLib.DataStreamByteOrder order);
-		public weak GLib.DataStreamByteOrder byte_order { get; set; }
+		public GLib.DataStreamByteOrder byte_order { get; set; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileEnumerator : GLib.Object {
@@ -411,9 +422,9 @@ namespace GLib {
 		public void set_rate_limit (int limit_msecs);
 		public virtual bool cancel ();
 		[NoAccessorMethod]
-		public weak bool cancelled { get; }
+		public bool cancelled { get; }
 		[NoAccessorMethod]
-		public weak int rate_limit { get; set; }
+		public int rate_limit { get; set; }
 		public signal void changed (GLib.File file, GLib.File? other_file, GLib.FileMonitorEvent event_type);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -445,13 +456,13 @@ namespace GLib {
 	public class FilterInputStream : GLib.InputStream {
 		public weak GLib.InputStream get_base_stream ();
 		[NoAccessorMethod]
-		public weak GLib.InputStream base_stream { get; construct; }
+		public GLib.InputStream base_stream { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FilterOutputStream : GLib.OutputStream {
 		public weak GLib.OutputStream get_base_stream ();
 		[NoAccessorMethod]
-		public weak GLib.OutputStream base_stream { get; construct; }
+		public GLib.OutputStream base_stream { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class IOModule : GLib.TypeModule, GLib.TypePlugin {
@@ -507,12 +518,12 @@ namespace GLib {
 		public void set_password (string password);
 		public void set_password_save (GLib.PasswordSave save);
 		public void set_username (string username);
-		public weak bool anonymous { get; set; }
-		public weak int choice { get; set; }
-		public weak string domain { get; set; }
-		public weak string password { get; set; }
-		public weak GLib.PasswordSave password_save { get; set; }
-		public weak string username { get; set; }
+		public bool anonymous { get; set; }
+		public int choice { get; set; }
+		public string domain { get; set; }
+		public string password { get; set; }
+		public GLib.PasswordSave password_save { get; set; }
+		public string username { get; set; }
 		public signal void ask_password (string message, string default_user, string default_domain, GLib.AskPasswordFlags flags);
 		public signal void ask_question (string message, string[] choices);
 		[HasEmitter]
@@ -576,11 +587,11 @@ namespace GLib {
 		public ThemedIcon.from_names (string[] iconnames, int len);
 		public ThemedIcon.with_default_fallbacks (string iconname);
 		[NoAccessorMethod]
-		public weak string name { construct; }
+		public string name { construct; }
 		[NoAccessorMethod]
-		public weak string[] names { get; construct; }
+		public string[] names { get; construct; }
 		[NoAccessorMethod]
-		public weak bool use_default_fallbacks { construct; }
+		public bool use_default_fallbacks { construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Vfs : GLib.Object {
@@ -929,7 +940,7 @@ namespace GLib {
 	[CCode (cname = "g_content_types_get_registered", cheader_filename = "gio/gio.h")]
 	public static weak GLib.List g_content_types_get_registered ();
 	[CCode (cname = "g_io_error_from_errno", cheader_filename = "gio/gio.h")]
-	public static GLib.IOError g_io_error_from_errno (int err_no);
+	public static weak GLib.IOError g_io_error_from_errno (int err_no);
 	[CCode (cname = "g_io_error_quark", cheader_filename = "gio/gio.h")]
 	public static GLib.Quark g_io_error_quark ();
 	[CCode (cname = "g_io_modules_load_all_in_directory", cheader_filename = "gio/gio.h")]

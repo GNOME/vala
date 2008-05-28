@@ -59,17 +59,17 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public class MixerTrack : GLib.Object {
 		[NoAccessorMethod]
-		public weak uint flags { get; }
+		public uint flags { get; }
 		[NoAccessorMethod]
-		public weak string label { get; }
+		public string label { get; }
 		[NoAccessorMethod]
-		public weak int max_volume { get; }
+		public int max_volume { get; }
 		[NoAccessorMethod]
-		public weak int min_volume { get; }
+		public int min_volume { get; }
 		[NoAccessorMethod]
-		public weak int num_channels { get; }
+		public int num_channels { get; }
 		[NoAccessorMethod]
-		public weak string untranslated_label { get; construct; }
+		public string untranslated_label { get; construct; }
 	}
 	[CCode (cheader_filename = "gst/interfaces/tunerchannel.h")]
 	public class TunerChannel : GLib.Object {

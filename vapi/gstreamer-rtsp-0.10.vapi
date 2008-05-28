@@ -214,16 +214,17 @@ namespace Gst {
 		SET_PARAMETER,
 		TEARDOWN
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h")]
 	public class RTSPConnection {
 		public weak Gst.RTSPUrl url;
 		public int fd;
 		[NoArrayLength]
-		public int[] control_sock;
+		public weak int[] control_sock;
 		public weak string ip;
 		public int cseq;
 		[NoArrayLength]
-		public char[] session_id;
+		public weak char[] session_id;
 		public int timeout;
 		public weak GLib.Timer timer;
 		public Gst.RTSPAuthMethod auth_method;
@@ -242,6 +243,7 @@ namespace Gst {
 		public Gst.RTSPResult set_auth (Gst.RTSPAuthMethod method, string user, string pass);
 		public Gst.RTSPResult write (uchar data, uint size, GLib.TimeVal timeout);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h")]
 	public class RTSPMessage {
 		public Gst.RTSPMsgType type;
@@ -271,23 +273,27 @@ namespace Gst {
 		public Gst.RTSPResult take_body (uchar data, uint size);
 		public Gst.RTSPResult unset ();
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtsprange.h")]
 	public class RTSPRange {
 		public int min;
 		public int max;
 		public static Gst.RTSPResult parse (string rangestr, out weak Gst.RTSPTimeRange range);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtsprange.h")]
 	public class RTSPTime {
 		public Gst.RTSPTimeType type;
 		public double seconds;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtsprange.h")]
 	public class RTSPTimeRange {
 		public Gst.RTSPRangeUnit unit;
 		public weak Gst.RTSPTime min;
 		public weak Gst.RTSPTime max;
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtsptransport.h")]
 	public class RTSPTransport {
 		public Gst.RTSPTransMode trans;
@@ -312,6 +318,7 @@ namespace Gst {
 		public RTSPTransport (out weak Gst.RTSPTransport transport);
 		public static Gst.RTSPResult parse (string str, Gst.RTSPTransport transport);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gst/rtsp/gstrtspconnection.h")]
 	public class RTSPUrl {
 		public Gst.RTSPLowerTrans transports;
