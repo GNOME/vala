@@ -135,6 +135,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		cl.accept_children (this);
 
+		/* compact classes cannot implement interfaces */
+		if (cl.is_compact) {
+			foreach (DataType base_type in cl.get_base_types ()) {
+				if (base_type.data_type is Interface) {
+					cl.error = true;
+					Report.error (cl.source_reference, "compact classes `%s` may not implement interfaces".printf (cl.get_full_name ()));
+				}
+			}
+		}
+
 		/* gather all prerequisites */
 		Gee.List<TypeSymbol> prerequisites = new ArrayList<TypeSymbol> ();
 		foreach (DataType base_type in cl.get_base_types ()) {

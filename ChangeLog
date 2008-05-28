@@ -1,5 +1,12 @@
 2008-05-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+
+	Report error when declaring a compact class implementing an
+	interface, patch by Phil Housley
+
+2008-05-28  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix GTypeModule binding
 
 2008-05-28  Jürg Billeter  <j@bitron.ch>
