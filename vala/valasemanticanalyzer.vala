@@ -417,30 +417,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			current_return_type = up_method.return_type;
 		}
 
-		if (current_symbol is Class) {
-			/* VAPI classes don't specify overridden methods */
-			if (!current_symbol.external_package) {
-				if (!(m is CreationMethod)) {
-					find_base_interface_method (m, (Class) current_symbol);
-					if (m.is_virtual || m.overrides) {
-						find_base_class_method (m, (Class) current_symbol);
-						if (m.base_method == null) {
-							Report.error (m.source_reference, "%s: no suitable method found to override".printf (m.get_full_name ()));
-						}
-					}
-				}
-			} else if (m.is_virtual || m.is_abstract) {
-				m.base_method = m;
-			}
-		} else if (current_symbol is Interface) {
-			if (m.is_virtual || m.is_abstract) {
-				m.base_interface_method = m;
-			}
-		} else if (current_symbol is Struct) {
+		if (current_symbol is Struct) {
 			if (m.is_abstract || m.is_virtual || m.overrides) {
 				Report.error (m.source_reference, "A struct member `%s' cannot be marked as override, virtual, or abstract".printf (m.get_full_name ()));
 				return;
 			}
+		} else if (m.overrides && m.base_method == null) {
+			Report.error (m.source_reference, "%s: no suitable method found to override".printf (m.get_full_name ()));
 		}
 
 		// check whether return type is at least as accessible as the method
@@ -489,51 +472,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 				if (!can_propagate_error) {
 					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
-				}
-			}
-		}
-	}
-
-	private void find_base_class_method (Method m, Class cl) {
-		var sym = cl.scope.lookup (m.name);
-		if (sym is Method) {
-			var base_method = (Method) sym;
-			if (base_method.is_abstract || base_method.is_virtual) {
-				string invalid_match;
-				if (!m.compatible (base_method, out invalid_match)) {
-					m.error = true;
-					Report.error (m.source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (m.get_full_name (), base_method.get_full_name (), invalid_match));
-					return;
-				}
-
-				m.base_method = base_method;
-				return;
-			}
-		}
-
-		if (cl.base_class != null) {
-			find_base_class_method (m, cl.base_class);
-		}
-	}
-
-	private void find_base_interface_method (Method m, Class cl) {
-		// FIXME report error if multiple possible base methods are found
-		foreach (DataType type in cl.get_base_types ()) {
-			if (type.data_type is Interface) {
-				var sym = type.data_type.scope.lookup (m.name);
-				if (sym is Method) {
-					var base_method = (Method) sym;
-					if (base_method.is_abstract || base_method.is_virtual) {
-						string invalid_match;
-						if (!m.compatible (base_method, out invalid_match)) {
-							m.error = true;
-							Report.error (m.source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (m.get_full_name (), base_method.get_full_name (), invalid_match));
-							return;
-						}
-
-						m.base_interface_method = base_method;
-						return;
-					}
 				}
 			}
 		}
@@ -622,49 +560,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return true;
 	}
 
-	private void find_base_class_property (Property prop, Class cl) {
-		var sym = cl.scope.lookup (prop.name);
-		if (sym is Property) {
-			var base_property = (Property) sym;
-			if (base_property.is_abstract || base_property.is_virtual) {
-				if (!prop.equals (base_property)) {
-					prop.error = true;
-					Report.error (prop.source_reference, "Type and/or accessors of overriding property `%s' do not match overridden property `%s'.".printf (prop.get_full_name (), base_property.get_full_name ()));
-					return;
-				}
-
-				prop.base_property = base_property;
-				return;
-			}
-		}
-
-		if (cl.base_class != null) {
-			find_base_class_property (prop, cl.base_class);
-		}
-	}
-
-	private void find_base_interface_property (Property prop, Class cl) {
-		// FIXME report error if multiple possible base properties are found
-		foreach (DataType type in cl.get_base_types ()) {
-			if (type.data_type is Interface) {
-				var sym = type.data_type.scope.lookup (prop.name);
-				if (sym is Property) {
-					var base_property = (Property) sym;
-					if (base_property.is_abstract) {
-						if (!prop.equals (base_property)) {
-							prop.error = true;
-							Report.error (prop.source_reference, "Type and/or accessors of overriding property `%s' do not match overridden property `%s'.".printf (prop.get_full_name (), base_property.get_full_name ()));
-							return;
-						}
-
-						prop.base_interface_property = base_property;
-						return;
-					}
-				}
-			}
-		}
-	}
-
 	public override void visit_property (Property prop) {
 		current_symbol = prop;
 
@@ -706,20 +601,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 		current_source_file.add_type_dependency (prop.property_type, SourceFileDependencyType.SOURCE);
 
-		if (prop.parent_symbol is Class) {
-			var cl = (Class) prop.parent_symbol;
-
-			/* VAPI classes don't specify overridden properties */
-			if (!cl.external_package) {
-				find_base_interface_property (prop, cl);
-				if (prop.is_virtual || prop.overrides) {
-					find_base_class_property (prop, cl);
-					if (prop.base_property == null) {
-						prop.error = true;
-						Report.error (prop.source_reference, "%s: no suitable property found to override".printf (prop.get_full_name ()));
-					}
-				}
-			}
+		if (prop.overrides && prop.base_property == null) {
+			Report.error (prop.source_reference, "%s: no suitable property found to override".printf (prop.get_full_name ()));
 		}
 
 		/* construct properties must be public */

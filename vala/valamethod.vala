@@ -129,12 +129,22 @@ public class Vala.Method : Member {
 	 * Reference must be weak as virtual methods set base_method to
 	 * themselves.
 	 */
-	public weak Method base_method { get; set; }
+	public Method base_method {
+		get {
+			find_base_methods ();
+			return _base_method;
+		}
+	}
 	
 	/**
 	 * Specifies the abstract interface method this method implements.
 	 */
-	public Method base_interface_method { get; set; }
+	public Method base_interface_method {
+		get {
+			find_base_methods ();
+			return _base_interface_method;
+		}
+	}
 	
 	/**
 	 * Specifies the generated `this' parameter for instance methods.
@@ -193,6 +203,10 @@ public class Vala.Method : Member {
 	private Gee.List<Expression> postconditions = new ArrayList<Expression> ();
 	private DataType _return_type;
 	private Block _body;
+
+	private weak Method _base_method;
+	private Method _base_interface_method;
+	private bool base_methods_valid;
 
 	/**
 	 * Creates a new method.
@@ -490,5 +504,76 @@ public class Vala.Method : Member {
 
 	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
 		return codegen.create_method_binding (this);
+	}
+
+	private void find_base_methods () {
+		if (base_methods_valid) {
+			return;
+		}
+
+		if (parent_symbol is Class) {
+			/* VAPI classes don't specify overridden methods */
+			if (!parent_symbol.external_package) {
+				if (!(this is CreationMethod)) {
+					find_base_interface_method ((Class) parent_symbol);
+					if (is_virtual || overrides) {
+						find_base_class_method ((Class) parent_symbol);
+					}
+				}
+			} else if (is_virtual || is_abstract) {
+				_base_method = this;
+			}
+		} else if (parent_symbol is Interface) {
+			if (is_virtual || is_abstract) {
+				_base_interface_method = this;
+			}
+		}
+
+		base_methods_valid = true;
+	}
+
+	private void find_base_class_method (Class cl) {
+		var sym = cl.scope.lookup (name);
+		if (sym is Method) {
+			var base_method = (Method) sym;
+			if (base_method.is_abstract || base_method.is_virtual) {
+				string invalid_match;
+				if (!compatible (base_method, out invalid_match)) {
+					error = true;
+					Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method.get_full_name (), invalid_match));
+					return;
+				}
+
+				_base_method = base_method;
+				return;
+			}
+		}
+
+		if (cl.base_class != null) {
+			find_base_class_method (cl.base_class);
+		}
+	}
+
+	private void find_base_interface_method (Class cl) {
+		// FIXME report error if multiple possible base methods are found
+		foreach (DataType type in cl.get_base_types ()) {
+			if (type.data_type is Interface) {
+				var sym = type.data_type.scope.lookup (name);
+				if (sym is Method) {
+					var base_method = (Method) sym;
+					if (base_method.is_abstract || base_method.is_virtual) {
+						string invalid_match;
+						if (!compatible (base_method, out invalid_match)) {
+							error = true;
+							Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method.get_full_name (), invalid_match));
+							return;
+						}
+
+						_base_interface_method = base_method;
+						return;
+					}
+				}
+			}
+		}
 	}
 }

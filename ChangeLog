@@ -1,5 +1,16 @@
 2008-05-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala:
+	* vala/valamethod.vala:
+	* vala/valaproperty.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valagidlwriter.vala:
+
+	Compute Method.base_method and Property.base_property when needed
+	so that we can already use them in the semantic analyzer
+
+2008-05-28  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/valaccodecastexpression.vala:
 
 	Use parentheses to ensure that the full expression is cast

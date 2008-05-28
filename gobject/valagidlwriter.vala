@@ -426,7 +426,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 	}
 
 	public override void visit_property (Property prop) {
-		if (!check_accessibility (prop) || prop.overrides || prop.base_interface_property != null) {
+		if (!check_accessibility (prop) || prop.overrides || (prop.base_interface_property != null && !prop.is_abstract && !prop.is_virtual)) {
 			return;
 		}
 

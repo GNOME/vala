@@ -105,12 +105,22 @@ public class Vala.Property : Member, Lockable {
 	 * Reference must be weak as virtual properties set base_property to
 	 * themselves.
 	 */
-	public weak Property base_property { get; set; }
+	public Property base_property {
+		get {
+			find_base_properties ();
+			return _base_property;
+		}
+	}
 	
 	/**
 	 * Specifies the abstract interface property this property implements.
 	 */
-	public Property base_interface_property { get; set; }
+	public Property base_interface_property {
+		get {
+			find_base_properties ();
+			return _base_interface_property;
+		}
+	}
 
 	/**
 	 * Specifies the default value of this property.
@@ -149,6 +159,10 @@ public class Vala.Property : Member, Lockable {
 
 	private string? _nick;
 	private string? _blurb;
+
+	private weak Property _base_property;
+	private Property _base_interface_property;
+	private bool base_properties_valid;
 
 	/**
 	 * Creates a new property.
@@ -294,6 +308,73 @@ public class Vala.Property : Member, Lockable {
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (property_type == old_type) {
 			property_type = new_type;
+		}
+	}
+
+	private void find_base_properties () {
+		if (base_properties_valid) {
+			return;
+		}
+
+		if (parent_symbol is Class) {
+			/* VAPI classes don't specify overridden properties */
+			if (!parent_symbol.external_package) {
+				find_base_interface_property ((Class) parent_symbol);
+				if (is_virtual || overrides) {
+					find_base_class_property ((Class) parent_symbol);
+				}
+			} else if (is_virtual || is_abstract) {
+				_base_property = this;
+			}
+		} else if (parent_symbol is Interface) {
+			if (is_virtual || is_abstract) {
+				_base_interface_property = this;
+			}
+		}
+
+		base_properties_valid = true;
+	}
+
+	private void find_base_class_property (Class cl) {
+		var sym = cl.scope.lookup (name);
+		if (sym is Property) {
+			var base_property = (Property) sym;
+			if (base_property.is_abstract || base_property.is_virtual) {
+				if (!equals (base_property)) {
+					error = true;
+					Report.error (source_reference, "Type and/or accessors of overriding property `%s' do not match overridden property `%s'.".printf (get_full_name (), base_property.get_full_name ()));
+					return;
+				}
+
+				_base_property = base_property;
+				return;
+			}
+		}
+
+		if (cl.base_class != null) {
+			find_base_class_property (cl.base_class);
+		}
+	}
+
+	private void find_base_interface_property (Class cl) {
+		// FIXME report error if multiple possible base properties are found
+		foreach (DataType type in cl.get_base_types ()) {
+			if (type.data_type is Interface) {
+				var sym = type.data_type.scope.lookup (name);
+				if (sym is Property) {
+					var base_property = (Property) sym;
+					if (base_property.is_abstract) {
+						if (!equals (base_property)) {
+							error = true;
+							Report.error (source_reference, "Type and/or accessors of overriding property `%s' do not match overridden property `%s'.".printf (get_full_name (), base_property.get_full_name ()));
+							return;
+						}
+
+						_base_interface_property = base_property;
+						return;
+					}
+				}
+			}
 		}
 	}
 }
