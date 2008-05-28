@@ -547,6 +547,20 @@ public class Vala.Method : Member {
 				_base_method = base_method;
 				return;
 			}
+		} else if (sym is Signal) {
+			var sig = (Signal) sym;
+			if (sig.is_virtual) {
+				var base_method = sig.get_method_handler ();
+				string invalid_match;
+				if (!compatible (base_method, out invalid_match)) {
+					error = true;
+					Report.error (source_reference, "overriding method `%s' is incompatible with base method `%s': %s.".printf (get_full_name (), base_method.get_full_name (), invalid_match));
+					return;
+				}
+
+				_base_method = base_method;
+				return;
+			}
 		}
 
 		if (cl.base_class != null) {

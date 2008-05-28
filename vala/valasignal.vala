@@ -42,9 +42,15 @@ public class Vala.Signal : Member, Lockable {
 	 * Specifies whether this signal has an emitter wrapper function.
 	 */
 	public bool has_emitter { get; set; }
+	
+	/**
+	 * Specifies whether this signal has virtual method handler.
+	 */
+	public bool is_virtual { get; set; }
 
 	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private Delegate generated_delegate;
+	private Method generated_method;
 
 	private string cname;
 	
@@ -195,4 +201,23 @@ public class Vala.Signal : Member, Lockable {
 			return_type = new_type;
 		}
 	}
+
+	public Method get_method_handler () {
+		assert (is_virtual);
+
+		if (generated_method == null) {
+			generated_method = new Method (name, return_type, source_reference);
+			generated_method.is_virtual = true;
+			generated_method.vfunc_name = name;
+
+			foreach (FormalParameter param in parameters) {
+				generated_method.add_parameter (param);
+			}
+
+			parent_symbol.scope.add (null, generated_method);
+		}
+		
+		return generated_method;
+	}
 }
+

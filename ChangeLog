@@ -1,3 +1,12 @@
+2008-05-29  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valamethod.vala:
+	* vala/valaparser.vala:
+	* vala/valasignal.vala:
+
+	Add support for overriding default method handlers of signals
+	that have been declared with the `virtual' modifier
+
 2008-05-28  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala:
