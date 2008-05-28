@@ -41,8 +41,16 @@ public class Vala.Field : Member, Lockable {
 	/**
 	 * Specifies the expression to be used to initialize this field.
 	 */
-	public Expression initializer { get; set; }
-	
+	public Expression? initializer { 
+		get { return _initializer; }
+		set {
+			_initializer = value;
+			if (_initializer != null) {
+				_initializer.parent_node = this;
+			}
+		}
+	}
+
 	/**
 	 * Specifies whether this field may only be accessed with an instance of
 	 * the contained type.
@@ -64,6 +72,8 @@ public class Vala.Field : Member, Lockable {
 	private string cname;
 	
 	private bool lock_used = false;
+
+	private Expression _initializer;
 
 	private DataType _data_type;
 

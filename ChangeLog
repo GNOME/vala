@@ -1,5 +1,13 @@
 2008-05-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaconstant.vala:
+	* vala/valafield.vala:
+
+	Fix crash when using concatenated strings as constant or field
+	initializer, patch by Jared Moore, fixes bug 533723
+
+2008-05-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am:
 	* vala/valaaddressofexpression.vala:
 	* vala/valaarraycreationexpression.vala:

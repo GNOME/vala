@@ -40,13 +40,23 @@ public class Vala.Constant : Member, Lockable {
 	/**
 	 * The value of this constant.
 	 */
-	public Expression initializer { get; set; }
-	
+	public Expression? initializer { 
+		get { return _initializer; }
+		set {
+			_initializer = value;
+			if (_initializer != null) {
+				_initializer.parent_node = this;
+			}
+		}
+	}
+
 	private string cname;
 	
 	private bool lock_used = false;
 
 	private DataType _data_type;
+
+	private Expression _initializer;
 
 	/**
 	 * Creates a new constant.
