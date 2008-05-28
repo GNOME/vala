@@ -1,5 +1,12 @@
 2008-05-28  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeclassbinding.vala:
+
+	Ensure to not generate empty C structs,
+	patch by Jared Moore, fixes bug 533977
+
+2008-05-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaconstant.vala:
 	* vala/valafield.vala:
 

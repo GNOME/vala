@@ -111,6 +111,11 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			codegen.instance_struct.add_field ("volatile int", "ref_count");
 		}
 
+		if (cl.is_compact && cl.base_class == null && cl.get_fields ().size == 0) {
+			// add dummy member, C doesn't allow empty structs
+			codegen.instance_struct.add_field ("int", "dummy");
+		}
+
 		if (is_gtypeinstance) {
 			if (cl.source_reference.file.cycle == null) {
 				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (codegen.type_struct.name), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
