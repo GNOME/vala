@@ -293,6 +293,16 @@ public class Vala.Namespace : Symbol {
 	 * @param f a field
 	 */
 	public void add_field (Field f) {
+		if (f.binding == MemberBinding.INSTANCE) {
+			Report.error (f.source_reference, "instance members are not allowed outside of data types");
+			f.error = true;
+			return;
+		} else if (f.binding == MemberBinding.CLASS) {
+			Report.error (f.source_reference, "class members are not allowed outside of classes");
+			f.error = true;
+			return;
+		}
+
 		fields.add (f);
 		scope.add (f.name, f);
 	}
@@ -305,13 +315,15 @@ public class Vala.Namespace : Symbol {
 	public void add_method (Method m) {
 		if (m is CreationMethod) {
 			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
-		
 			m.error = true;
 			return;
 		}
 		if (m.binding == MemberBinding.INSTANCE) {
-			Report.error (m.source_reference, "instance methods not allowed outside of data types");
-
+			Report.error (m.source_reference, "instance members are not allowed outside of data types");
+			m.error = true;
+			return;
+		} else if (m.binding == MemberBinding.CLASS) {
+			Report.error (m.source_reference, "class members are not allowed outside of classes");
 			m.error = true;
 			return;
 		}

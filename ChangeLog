@@ -1,5 +1,13 @@
 2008-05-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valanamespace.vala:
+	* vala/valaparser.vala:
+
+	Report error when using invalid modifiers for methods and fields,
+	based on patch by Jared Moore, fixes bug 534018
+
+2008-05-28  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeclassbinding.vala:
 
 	Ensure to not generate empty C structs,

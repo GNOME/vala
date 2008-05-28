@@ -1867,11 +1867,17 @@ public class Vala.Parser : CodeVisitor {
 			ns.add_delegate ((Delegate) sym);
 		} else if (sym is Method) {
 			var method = (Method) sym;
-			method.binding = MemberBinding.STATIC;
+			if (method.binding == MemberBinding.INSTANCE) {
+				// default to static member binding
+				method.binding = MemberBinding.STATIC;
+			}
 			ns.add_method (method);
 		} else if (sym is Field) {
 			var field = (Field) sym;
-			field.binding = MemberBinding.STATIC;
+			if (field.binding == MemberBinding.INSTANCE) {
+				// default to static member binding
+				field.binding = MemberBinding.STATIC;
+			}
 			ns.add_field (field);
 		} else if (sym is Constant) {
 			ns.add_constant ((Constant) sym);
@@ -2027,6 +2033,11 @@ public class Vala.Parser : CodeVisitor {
 			f.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
 			f.binding = MemberBinding.CLASS;
+		}
+		if (ModifierFlags.ABSTRACT in flags
+		    || ModifierFlags.VIRTUAL in flags
+		    || ModifierFlags.OVERRIDE in flags) {
+			Report.error (f.source_reference, "abstract, virtual, and override modifiers are not applicable to fields");
 		}
 		if (accept (TokenType.ASSIGN)) {
 			f.initializer = parse_expression ();
