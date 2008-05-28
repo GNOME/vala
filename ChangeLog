@@ -1,5 +1,11 @@
 2008-05-28  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libxml-2.0.vapi:
+
+	Fix SAX parser bindings, patch by Travis Watkins
+
+2008-05-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 
 	Allow short-hand form to initialize arrays, fixes bug 515407

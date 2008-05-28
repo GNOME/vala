@@ -474,6 +474,79 @@ namespace Xml {
 	}
 
 	[Compact]
+	[CCode (cname = "xmlElementContent", free_function = "xmlFreeElementContent", cheader_filename = "libxml/tree.h")]
+	public class ElementContent {
+		[CCode (cname = "xmlNewElementContent")]
+		ElementContent (string name, ElementContentType type);
+
+		public ElementContentType type;
+		public ElementContentOccur ocur;
+		public const string name;
+		public ElementContent c1;
+		public ElementContent c2;
+		public ElementContent parent;
+		public const string prefix;
+	}
+
+	[CCode (cname = "xmlElementContentType", cprefix = "XML_ELEMENT_CONTENT_", cheader_filename = "libxml/tree.h")]
+	public enum ElementContentType {
+		PCDATA,
+		ELEMENT,
+		SEQ,
+		OR
+	}
+
+	[CCode (cname = "xmlElementContentOccur", cprefix = "XML_ELEMENT_CONTENT_", cheader_filename = "libxml/tree.h")]
+	public enum ElementContentOccur {
+		ONCE,
+		OPT,
+		MULT,
+		PLUS
+	}
+
+	[Compact]
+	[CCode (cname = "xmlEntity", cheader_filename = "libxml/tree.h")]
+	public struct Entity {
+		public void* private;
+		public ElementType type;
+		public const string name;
+		public Node* children;
+		public Node* last;
+		public Dtd* parent;
+		public Node* next;
+		public Node* prev;
+		public Doc* doc;
+		public string orig;
+		public string content;
+		public int length;
+		public EntityType etype;
+		public const string ExternalID;
+		public const string SystemID;
+		public Entity* nexte;
+		public const string URI;
+		public int owner;
+		public int checked;
+	}
+
+	[CCode (cname = "xmlEntityType", cprefix = "XML_", cheader_filename = "libxml/tree.h")]
+	public enum EntityType {
+		INTERNAL_GENERAL_ENTITY,
+		EXTERNAL_GENERAL_PARSED_ENTITY,
+		EXTERNAL_GENERAL_UNPARSED_ENTITY,
+		INTERNAL_PARAMETER_ENTITY,
+		EXTERNAL_PARAMETER_ENTITY,
+		INTERNAL_PREDEFINED_ENTITY
+	}
+
+	[Compact]
+	[CCode (cname = "xmlEnumeration", cheader_filename = "libxml/tree.h")]
+	public struct Enumeration {
+		public Enumeration* next;
+		public const string name;
+	}
+
+
+	[Compact]
 	[CCode (cname = "xmlNode", free_function = "xmlFreeNode", cheader_filename = "libxml/tree.h")]
 	public class Node {
 		public ElementType type;
@@ -1136,81 +1209,114 @@ namespace Xml {
 
 	/* SAX CALLBACKS */
 
-	// public static delegate void attributeDeclSAXFunc (void* ctx, string elem, string fullname, int type, int def, string defaultValue, Enumeration tree);
+	[CCode (cname = "attributeDeclSAXFunc")]
+	public static delegate void attributeDeclSAXFunc (void* ctx, string elem, string fullname, int type, int def, string defaultValue, Enumeration* tree);
 
+	[CCode (cname = "attributeSAXFunc")]
 	public static delegate void attributeSAXFunc (void* ctx, string name, string value);
 
+	[CCode (cname = "cdataBlockSAXFunc")]
 	public static delegate void cdataBlockSAXFunc (void* ctx, string value, int len);
 
+	[CCode (cname = "charactersSAXFunc")]
 	public static delegate void charactersSAXFunc (void* ctx, string ch, int len);
 
+	[CCode (cname = "commentsSAXFunc")]
 	public static delegate void commentSAXFunc (void* ctx, string value);
 
-	// public static delegate void elementDeclSAXFunc (void* ctx, string name, int type, ElementContent content);
+	[CCode (cname = "elementDeclSAXFunc")]
+	public static delegate void elementDeclSAXFunc (void* ctx, string name, int type, ElementContent content);
 
+	[CCode (cname = "endDocumentSAXFunc")]
 	public static delegate void endDocumentSAXFunc (void* ctx);
 
+	[CCode (cname = "endElementNsSAX2Func")]
 	public static delegate void endElementNsSAX2Func (void* ctx, string localname, string prefix, string URI);
 
+	[CCode (cname = "endElementSAXFunc")]
 	public static delegate void endElementSAXFunc (void* ctx, string name);
 
+	[CCode (cname = "entityDeclSAXFunc")]
 	public static delegate void entityDeclSAXFunc (void* ctx, string name, int type, string publicId, string systemId, string content);
 
+	[CCode (cname = "errorSAXFunc")]
 	public static delegate void errorSAXFunc (void* ctx, string msg, ...);
 
+	[CCode (cname = "externalSubsetSAXFunc")]
 	public static delegate void externalSubsetSAXFunc (void* ctx, string name, string ExternalID, string SystemID);
 
+	[CCode (cname = "fatalErrorSAXFunc")]
 	public static delegate void fatalErrorSAXFunc (void* ctx, string msg, ...);
 
-	// public static delegate xmlEntityPtr getEntitySAXFunc (void* ctx, string name);
+	[CCode (cname = "getEntitySAXFunc")]
+	public static delegate Entity* getEntitySAXFunc (void* ctx, string name);
 
-	// public static delegate xmlEntityPtr getParameterEntitySAXFunc (void* ctx, string name);
+	[CCode (cname = "getParameterEntitySAXFunc")]
+	public static delegate Entity* getParameterEntitySAXFunc (void* ctx, string name);
 
+	[CCode (cname = "hasExternalSubsetSAXFunc")]
 	public static delegate int hasExternalSubsetSAXFunc (void* ctx);
 
+	[CCode (cname = "hasInternalSubsetSAXFunc")]
 	public static delegate int hasInternalSubsetSAXFunc (void* ctx);
 
+	[CCode (cname = "ignorableWhitespaceSAXFunc")]
 	public static delegate void ignorableWhitespaceSAXFunc (void* ctx, string ch, int len);
 
+	[CCode (cname = "internalSubsetSAXFunc")]
 	public static delegate void internalSubsetSAXFunc (void* ctx, string name, string ExternalID, string SystemID);
 
+	[CCode (cname = "isStandaloneSAXFunc")]
 	public static delegate int isStandaloneSAXFunc (void* ctx);
 
+	[CCode (cname = "notationDeclSAXFunc")]
 	public static delegate void notationDeclSAXFunc (void* ctx, string name, string publicId, string systemId);
 
+	[CCode (cname = "processingInstructionSAXFunc")]
 	public static delegate void processingInstructionSAXFunc (void* ctx, string target, string data);
 
+	[CCode (cname = "referenceSAXFunc")]
 	public static delegate void referenceSAXFunc (void* ctx, string name);
 
+	// [CCode (cname = "resolveEntitySAXFunc")]
 	// public static delegate ParserInput resolveEntitySAXFunc (void* ctx, string publicId, string systemId);
 
+	// [CCode (cname = "setDocumentLocatorSAXFunc")]
 	// public static delegate void setDocumentLocatorSAXFunc (void* ctx, SAXLocator loc);
 
+	[CCode (cname = "startDocumentSAXFunc")]
 	public static delegate void startDocumentSAXFunc (void* ctx);
 
 	[NoArrayLength]
+	[CCode (cname = "startElementNsSAX2Func")]
 	public static delegate void startElementNsSAX2Func (void* ctx, string localname, string prefix, string URI, int nb_namespaces, string[] namespaces, int nb_attributes, int nb_defaulted, string[] attributes);
 
 	[NoArrayLength]
+	[CCode (cname = "startElementSAXFunc")]
 	public static delegate void startElementSAXFunc (void* ctx, string name, string[] atts);
 
+	[CCode (cname = "unparsedEntityDeclSAXFunc")]
 	public static delegate void unparsedEntityDeclSAXFunc (void* ctx, string name, string publicId, string systemId, string notationName);
 
+	[CCode (cname = "warningSAXFunc")]
 	public static delegate void warningSAXFunc (void* ctx, string msg, ...);
+
+	[CCode (cname ="xmlStructuredErrorFunc")]
+	public static delegate void xmlStructuredErrorFunc (void* ctx, Error* error);
 
 	[Compact]
 	[CCode (cname = "xmlSAXHandler")]
-	public class SAXHandler {
+	public struct SAXHandler {
 		public internalSubsetSAXFunc internalSubset;
 		public isStandaloneSAXFunc isStandalone;
 		public hasInternalSubsetSAXFunc hasInternalSubset;
 		public hasExternalSubsetSAXFunc hasExternalSubset;
 		// public resolveEntitySAXFunc resolveEntity;
-		// public getEntitySAXFunc getEntity;
+		public getEntitySAXFunc getEntity;
 		public entityDeclSAXFunc entityDecl;
 		public notationDeclSAXFunc notationDecl;
-		// public attributeDeclSAXFunc attributeDecl;
-		// public elementDeclSAXFunc elementDecl;
+		public attributeDeclSAXFunc attributeDecl;
+		public elementDeclSAXFunc elementDecl;
 		public unparsedEntityDeclSAXFunc unparsedEntityDecl;
 		// public setDocumentLocatorSAXFunc setDocumentLocator;
 		public startDocumentSAXFunc startDocument;
@@ -1225,13 +1331,48 @@ namespace Xml {
 		public warningSAXFunc warning;
 		public errorSAXFunc error;
 		public fatalErrorSAXFunc  fatalError;
-		// public getParameterEntitySAXFunc getParameterEntity;
+		public getParameterEntitySAXFunc getParameterEntity;
 		public cdataBlockSAXFunc cdataBlock;
 		public externalSubsetSAXFunc externalSubset;
 		public uint initialized;
 		public startElementNsSAX2Func startElementNs;
 		public endElementNsSAX2Func endElementNs;
-		// public xmlStructuredErrorFunc serror;
+		public xmlStructuredErrorFunc serror;
  	}
+
+	[CCode (lower_case_cprefix = "xmlSAX")]
+	namespace SAXParser {
+		public int UserParseMemory (SAXHandler* sax, void* user_data, string buffer, int size);
+		public int UserParseFile (SAXHandler* sax, void* user_data, string filename);
+	}
+
+
+	/* xmlerror - error handling */
+
+	[Compact]
+	[CCode (cname = "xmlError", cheader_filename = "libxml/xmlerror.h")]
+	public struct Error {
+		public int domain;
+		public int code;
+		public string message;
+		public ErrorLevel level;
+		public string file;
+		public int line;
+		public string str1;
+		public string str2;
+		public string str3;
+		public int int1;
+		public int int2;
+		public void* ctx;
+		public void* node;
+	}
+
+	[CCode (cname = "xmlErrorLevel", cprefix = "XML_ERR_", cheader_filename = "libxml/xmlerror.h")]
+	public enum ErrorLevel {
+		NONE = 0,
+		WARNING = 1,
+		ERROR = 2,
+		FATAL = 3
+	}
 
 }
