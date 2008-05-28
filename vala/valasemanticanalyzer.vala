@@ -3009,12 +3009,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
-			if (ma.symbol_reference is Signal) {
+			if (ma.symbol_reference is DynamicSignal) {
+				// target_type not available for dynamic signals
+			} else if (ma.symbol_reference is Signal) {
 				var sig = (Signal) ma.symbol_reference;
-				var deleg = sig.get_delegate ();
-				if (deleg != null) {
-					a.right.target_type = new DelegateType (deleg);
-				}
+				a.right.target_type = new DelegateType (sig.get_delegate ());
 			} else {
 				a.right.target_type = ma.value_type;
 			}
@@ -3087,6 +3086,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					a.error = true;
 					Report.error (a.right.source_reference, "unsupported expression for signal handler");
 					return;
+				}
+
+				var dynamic_sig = sig as DynamicSignal;
+				if (dynamic_sig != null) {
+					bool first = true;
+					foreach (FormalParameter param in dynamic_sig.handler.value_type.get_parameters ()) {
+						if (first) {
+							// skip sender parameter
+							first = false;
+						} else {
+							dynamic_sig.add_parameter (param);
+						}
+					}
+					a.right.target_type = new DelegateType (sig.get_delegate ());
 				}
 			} else if (ma.symbol_reference is Property) {
 				var prop = (Property) ma.symbol_reference;

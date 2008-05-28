@@ -1,5 +1,14 @@
 2008-05-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasignal.vala:
+	* gobject/valaccodeassignmentbinding.vala:
+	* gobject/valaccodedynamicsignalbinding.vala:
+
+	Improve handling of dynamic signal parameters
+
+2008-05-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodecontext.vala:
 	* vala/valascope.vala:
 	* vala/valasemanticanalyzer.vala:

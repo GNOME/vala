@@ -102,7 +102,7 @@ public class Vala.Signal : Member, Lockable {
 			} else {
 				sender_type = new ObjectType ((Interface) parent_symbol);
 			}
-			var sender_param = new FormalParameter ("sender", sender_type);
+			var sender_param = new FormalParameter ("_sender", sender_type);
 			generated_delegate.add_parameter (sender_param);
 			
 			foreach (FormalParameter param in parameters) {

@@ -236,22 +236,13 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		var cparam = new CCodeFormalParameter ("self", "gpointer");
 		cparam_map.set (codegen.get_param_pos (-1), cparam);
 
-		if (sig is DynamicSignal) {
-			foreach (FormalParameter param in m.get_parameters()) {
-				// ensure that C code node has been generated
-				param.accept (codegen);
+		cparam = new CCodeFormalParameter ("_sender", ((TypeSymbol) sig.parent_symbol).get_cname () + "*");
+		cparam_map.set (codegen.get_param_pos (0), cparam);
+		foreach (FormalParameter param in sig.get_parameters()) {
+			// ensure that C code node has been generated
+			param.accept (codegen);
 
-				cparam_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
-			}
-		} else {
-			cparam = new CCodeFormalParameter ("sender", ((TypeSymbol) sig.parent_symbol).get_cname () + "*");
-			cparam_map.set (codegen.get_param_pos (0), cparam);
-			foreach (FormalParameter param in sig.get_parameters()) {
-				// ensure that C code node has been generated
-				param.accept (codegen);
-
-				cparam_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
-			}
+			cparam_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
 		}
 
 		// append C parameters in the right order
@@ -280,26 +271,18 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			carg_map.set (codegen.get_param_pos (m.cinstance_parameter_position), new CCodeIdentifier ("self"));
 		}
 
-		if (sig is DynamicSignal) {
-			foreach (FormalParameter param in m.get_parameters ()) {
-				CCodeExpression arg;
-				arg = new CCodeIdentifier ((param.ccodenode as CCodeFormalParameter).name);
-				carg_map.set (codegen.get_param_pos (param.cparameter_position), arg);
+		int i = -1;
+		var sig_params = sig.get_parameters ();
+		foreach (FormalParameter param in m.get_parameters ()) {
+			CCodeExpression arg;
+			if (i < 0) {
+				arg = new CCodeIdentifier ("_sender");
+			} else {
+				arg = new CCodeIdentifier ((sig_params.get (i).ccodenode as CCodeFormalParameter).name);
 			}
-		} else {
-			int i = -1;
-			var sig_params = sig.get_parameters ();
-			foreach (FormalParameter param in m.get_parameters ()) {
-				CCodeExpression arg;
-				if (i < 0) {
-					arg = new CCodeIdentifier ("sender");
-				} else {
-					arg = new CCodeIdentifier ((sig_params.get (i).ccodenode as CCodeFormalParameter).name);
-				}
-				carg_map.set (codegen.get_param_pos (param.cparameter_position), arg);
-				i++;
-			}
-		} 
+			carg_map.set (codegen.get_param_pos (param.cparameter_position), arg);
+			i++;
+		}
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
 
 		// append C arguments in the right order

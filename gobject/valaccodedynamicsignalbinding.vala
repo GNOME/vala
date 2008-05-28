@@ -107,16 +107,6 @@ public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 
 		var m = (Method) dynamic_signal.handler.symbol_reference;
 
-		bool first = true;
-		foreach (FormalParameter param in m.get_parameters ()) {
-			if (first) {
-				// skip sender parameter
-				first = false;
-				continue;
-			}
-			node.add_parameter (param.copy ());
-		}
-
 		node.accept (codegen);
 
 		// FIXME should only be done once per marshaller
@@ -128,7 +118,7 @@ public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 		add_call.add_argument (new CCodeIdentifier ("obj"));
 		add_call.add_argument (new CCodeConstant ("\"%s\"".printf (node.name)));
 
-		first = true;
+		bool first = true;
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (first) {
 				// skip sender parameter
