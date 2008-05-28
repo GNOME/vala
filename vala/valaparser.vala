@@ -1373,6 +1373,15 @@ public class Vala.Parser : CodeVisitor {
 		Expression initializer = null;
 		if (accept (TokenType.ASSIGN)) {
 			initializer = parse_variable_initializer ();
+
+			// transform shorthand form
+			//     int[] array = { 42 };
+			// into
+			//     int[] array = new int[] { 42 };
+			var array_type = variable_type as ArrayType;
+			if (array_type != null && initializer is InitializerList) {
+				initializer = new ArrayCreationExpression (array_type.element_type.copy (), array_type.rank, (InitializerList) initializer, initializer.source_reference);
+			}
 		}
 		return new LocalVariable (variable_type, id, initializer, get_src_com (begin));
 	}
