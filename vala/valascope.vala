@@ -38,6 +38,7 @@ public class Vala.Scope : Object {
 	public weak Scope parent_scope { get; set; }
 
 	private Map<string,Symbol> symbol_table;
+	private Gee.List<Symbol> anonymous_members;
 
 	/**
 	 * Creates a new scope.
@@ -66,6 +67,12 @@ public class Vala.Scope : Object {
 			}
 
 			symbol_table[(string) name] = sym;
+		} else {
+			if (anonymous_members == null) {
+				anonymous_members = new ArrayList<Symbol> ();
+			}
+
+			anonymous_members.add (sym);
 		}
 		sym.owner = this;
 	}

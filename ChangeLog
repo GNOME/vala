@@ -1,5 +1,13 @@
 2008-05-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodecontext.vala:
+	* vala/valascope.vala:
+	* vala/valasemanticanalyzer.vala:
+
+	Add dynamic symbols to scope instead of code context
+
+2008-05-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 
 	Report error when declaring a compact class implementing an

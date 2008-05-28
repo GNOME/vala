@@ -1561,6 +1561,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			if (expr.symbol_reference == null && expr.inner.value_type != null && expr.inner.value_type.is_dynamic) {
 				// allow late bound members for dynamic types
+				var dynamic_object_type = (ObjectType) expr.inner.value_type;
 				if (expr.parent_node is InvocationExpression) {
 					var invoc = (InvocationExpression) expr.parent_node;
 					if (invoc.call == expr) {
@@ -1580,7 +1581,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						m.add_error_type (new ErrorType (null));
 						m.access = SymbolAccessibility.PUBLIC;
 						m.add_parameter (new FormalParameter.with_ellipsis ());
-						context.add_dynamic_member (m);
+						dynamic_object_type.type_symbol.scope.add (null, m);
 						expr.symbol_reference = m;
 					}
 				} else if (expr.parent_node is Assignment) {
@@ -1592,7 +1593,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						var s = new DynamicSignal (expr.inner.value_type, expr.member_name, new VoidType (), expr.source_reference);
 						s.handler = a.right;
 						s.access = SymbolAccessibility.PUBLIC;
-						context.add_dynamic_member (s);
+						dynamic_object_type.type_symbol.scope.add (null, s);
 						expr.symbol_reference = s;
 					} else if (a.left == expr) {
 						// dynamic property assignment
@@ -1601,7 +1602,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						prop.set_accessor = new PropertyAccessor (false, true, false, null, null);
 						prop.set_accessor.access = SymbolAccessibility.PUBLIC;
 						prop.owner = expr.inner.value_type.data_type.scope;
-						context.add_dynamic_member (prop);
+						dynamic_object_type.type_symbol.scope.add (null, prop);
 						expr.symbol_reference = prop;
 					}
 				}
@@ -1618,8 +1619,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					prop.get_accessor = new PropertyAccessor (true, false, false, null, null);
 					prop.get_accessor.access = SymbolAccessibility.PUBLIC;
 					prop.owner = expr.inner.value_type.data_type.scope;
-					// maybe better move add_dynamic_member to Symbol class
-					context.add_dynamic_member (prop);
+					dynamic_object_type.type_symbol.scope.add (null, prop);
 					expr.symbol_reference = prop;
 				}
 				if (expr.symbol_reference != null) {
