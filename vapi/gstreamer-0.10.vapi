@@ -1224,7 +1224,7 @@ namespace Gst {
 		public uint pads_cookie;
 		public void* abidata;
 		public void abort_state ();
-		public bool add_pad (Gst.Pad pad);
+		public bool add_pad (Gst.Pad# pad);
 		[CCode (cname = "gst_element_class_add_pad_template")]
 		public class void add_pad_template (Gst.PadTemplate templ);
 		[CCode (cname = "gst_element_class_get_pad_template")]
