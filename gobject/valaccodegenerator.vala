@@ -112,6 +112,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public TypeSymbol type_module_type;
 	public Interface iterable_type;
 	public Interface iterator_type;
+	public Interface collection_type;
 	public Interface list_type;
 	public Interface map_type;
 	public TypeSymbol dbus_object_type;
@@ -254,6 +255,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (gee_ns != null) {
 			iterable_type = (Interface) gee_ns.scope.lookup ("Iterable");
 			iterator_type = (Interface) gee_ns.scope.lookup ("Iterator");
+			collection_type = (Interface) gee_ns.scope.lookup ("Collection");
 			list_type = (Interface) gee_ns.scope.lookup ("List");
 			map_type = (Interface) gee_ns.scope.lookup ("Map");
 		}
@@ -1894,8 +1896,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			
 			var array_len = get_array_length_cexpression (stmt.collection);
 			
-			/* the array has no length parameter i.e. is NULL-terminated array */
 			if (array_len is CCodeConstant) {
+				// the array has no length parameter i.e. it is NULL-terminated array
+
 				// store array length for use by _vala_array_free
 				var clendecl = new CCodeDeclaration ("int");
 				clendecl.add_declarator (new CCodeVariableDeclarator.with_initializer (get_array_length_cname (collection_backup.name, 1), array_len));
@@ -1935,8 +1938,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		
 				cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (it_name), new CCodeConstant ("1"))));
 				cblock.add_statement (cfor);
-			/* the array has a length parameter */
 			} else {
+				// the array has a length parameter
+
 				var it_name = (stmt.variable_name + "_it");
 			
 				var citdecl = new CCodeDeclaration ("int");
@@ -1989,6 +1993,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				cblock.add_statement (cfor);
 			}
 		} else if (stmt.collection.value_type.compatible (new ObjectType (glist_type)) || stmt.collection.value_type.compatible (new ObjectType (gslist_type))) {
+			// iterating over a GList or GSList
+
 			var it_name = "%s_it".printf (stmt.variable_name);
 		
 			var citdecl = new CCodeDeclaration (collection_type.get_cname ());
@@ -2033,7 +2039,53 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeMemberAccess.pointer (new CCodeIdentifier (it_name), "next")));
 			cblock.add_statement (cfor);
+		} else if (list_type != null && stmt.collection.value_type.compatible (new ObjectType (list_type))) {
+			// iterating over a Gee.List, use integer to avoid the cost of an iterator object
+
+			var it_name = "%s_it".printf (stmt.variable_name);
+
+			var citdecl = new CCodeDeclaration ("int");
+			citdecl.add_declarator (new CCodeVariableDeclarator (it_name));
+			cblock.add_statement (citdecl);
+			
+			var cbody = new CCodeBlock ();
+
+			var get_method = (Method) list_type.scope.lookup ("get");
+			var get_ccall = new CCodeFunctionCall (new CCodeIdentifier (get_method.get_cname ()));
+			get_ccall.add_argument (new InstanceCast (new CCodeIdentifier (collection_backup.name), list_type));
+			get_ccall.add_argument (new CCodeIdentifier (it_name));
+			CCodeExpression element_expr = get_ccall;
+
+			var element_type = SemanticAnalyzer.get_actual_type (stmt.collection.value_type, get_method, get_method.return_type, stmt);
+
+			element_expr = transform_expression (element_expr, element_type, stmt.type_reference);
+
+			var cfrag = new CCodeFragment ();
+			append_temp_decl (cfrag, temp_vars);
+			cbody.add_statement (cfrag);
+			temp_vars.clear ();
+
+			var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
+			var cvardecl = new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr);
+			cvardecl.line = cblock.line;
+			cdecl.add_declarator (cvardecl);
+			cbody.add_statement (cdecl);
+
+			cbody.add_statement (stmt.body.ccodenode);
+
+			var list_len = new CCodeFunctionCall (new CCodeIdentifier ("gee_collection_get_size"));
+			list_len.add_argument (new InstanceCast (new CCodeIdentifier (collection_backup.name), this.collection_type));
+
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier (it_name), list_len);
+
+			var cfor = new CCodeForStatement (ccond, cbody);
+			cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeConstant ("0")));
+			cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (it_name), new CCodeConstant ("1"))));
+			cfor.line = cblock.line;
+			cblock.add_statement (cfor);
 		} else if (iterable_type != null && stmt.collection.value_type.compatible (new ObjectType (iterable_type))) {
+			// iterating over a Gee.Iterable, use iterator
+
 			var it_name = "%s_it".printf (stmt.variable_name);
 
 			var citdecl = new CCodeDeclaration (iterator_type.get_cname () + "*");

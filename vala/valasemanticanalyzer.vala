@@ -1031,13 +1031,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				element_data_type = (DataType) collection_type.get_type_arguments ().get (0);
 			}
 		} else if (iterable_type != null && collection_type.compatible (iterable_type)) {
-			var foreach_iterator_type = new ObjectType (iterator_type);
-			foreach_iterator_type.value_owned = true;
-			foreach_iterator_type.add_type_argument (stmt.type_reference);
-			stmt.iterator_variable = new LocalVariable (foreach_iterator_type, "%s_it".printf (stmt.variable_name));
+			if (list_type == null || !collection_type.compatible (new ObjectType (list_type))) {
+				// don't use iterator objects for lists for performance reasons
+				var foreach_iterator_type = new ObjectType (iterator_type);
+				foreach_iterator_type.value_owned = true;
+				foreach_iterator_type.add_type_argument (stmt.type_reference);
+				stmt.iterator_variable = new LocalVariable (foreach_iterator_type, "%s_it".printf (stmt.variable_name));
 
-			stmt.add_local_variable (stmt.iterator_variable);
-			stmt.iterator_variable.active = true;
+				stmt.add_local_variable (stmt.iterator_variable);
+				stmt.iterator_variable.active = true;
+			}
 
 			var it_method = (Method) iterable_type.data_type.scope.lookup ("iterator");
 			if (it_method.return_type.get_type_arguments ().size > 0) {

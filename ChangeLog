@@ -1,5 +1,12 @@
 2008-05-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Don't use iterator objects for lists to improve performance
+
+2008-05-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasourcefile.vala:
 	* vala/valasourcereference.vala:
 	* compiler/valacompiler.vala:
