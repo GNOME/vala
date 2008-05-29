@@ -1,5 +1,10 @@
 2008-05-29  Jaap A. Haitsma  <jaap@haitsma.org>
 
+	* tests/strings.vala:
+	Add some more tests. Fixes bug #535430
+
+2008-05-29  Jaap A. Haitsma  <jaap@haitsma.org>
+
 	* vapi/gstreamer-0.10.vapi:
 	* vapi/packages/gstreamer-0.10/gstreamer-0.10-custom.vala:
 	Fix Gst.init () binding. Fixes bug #535411
