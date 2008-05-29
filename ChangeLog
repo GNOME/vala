@@ -1,3 +1,8 @@
+2008-05-29  Jaap A. Haitsma  <jaap@haitsma.org>
+
+	* tests/testrunner.sh:
+	Print errors on stdout. Fixes #535417
+
 2008-05-29  Jürg Billeter  <j@bitron.ch>
 
 	* tests/arrays.vala:

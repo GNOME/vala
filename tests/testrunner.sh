@@ -45,11 +45,15 @@ do
 	testbuild=`basename "$testsrc"`
 	if ! $VALAC -C --vapidir "$vapidir" --pkg gee-1.0 --basedir $topsrcdir -d $topbuilddir $testsrc.vala > $testbuild.err 2>&1
 	then
+		echo "ERROR: Compiling" $testcasesource 
+		cat $testbuild.err
 		CODE=1
 		continue
 	fi
 	if ! $CC $CFLAGS $testbuild.c $(pkg-config --cflags --libs gobject-2.0) -o $testbuild $LDLIBS > $testbuild.err 2>&1
 	then
+		echo "ERROR: Compiling" $testbuild.c
+		cat $testbuild.err
 		CODE=1
 		continue
 	fi
@@ -57,6 +61,8 @@ do
 	then
 		rm $testbuild.c $testbuild.h $testbuild$exe $testbuild.err
 	else
+		echo "ERROR: test failed. This is the difference between" $testbuild.exp "and" $testbuild.err
+		diff -u $testbuild.exp $testbuild.err
 		CODE=1
 	fi
 done
