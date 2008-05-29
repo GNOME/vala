@@ -1,5 +1,12 @@
 2008-05-29  Ali Sabil  <ali.sabil@gmail.com>
 
+	* vapi/packages/gstreamer-0.10/: fix Gst.Pad.push
+	ownership transfer
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-05-29  Ali Sabil  <ali.sabil@gmail.com>
+
 	* vapi/packages/gstreamer-0.10/: fix Gst.Element.add_pad
 	ownership transfer
 
