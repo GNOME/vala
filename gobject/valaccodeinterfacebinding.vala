@@ -116,17 +116,19 @@ public class Vala.CCodeInterfaceBinding : CCodeObjectTypeSymbolBinding {
 		var cif = new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("initialized")), init_block);
 		base_init.block.add_statement (cif);
 		init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("initialized"), new CCodeConstant ("TRUE"))));
-		
-		/* create properties */
-		var props = iface.get_properties ();
-		foreach (Property prop in props) {
-			var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_interface_install_property"));
-			cinst.add_argument (new CCodeIdentifier ("iface"));
-			cinst.add_argument (get_param_spec (prop));
 
-			init_block.add_statement (new CCodeExpressionStatement (cinst));
+		if (iface.is_subtype_of (codegen.gobject_type)) {
+			/* create properties */
+			var props = iface.get_properties ();
+			foreach (Property prop in props) {
+				var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_interface_install_property"));
+				cinst.add_argument (new CCodeIdentifier ("iface"));
+				cinst.add_argument (get_param_spec (prop));
+
+				init_block.add_statement (new CCodeExpressionStatement (cinst));
+			}
 		}
-		
+
 		/* create signals */
 		foreach (Signal sig in iface.get_signals ()) {
 			init_block.add_statement (new CCodeExpressionStatement (get_signal_creation (sig, iface)));

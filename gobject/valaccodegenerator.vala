@@ -2771,7 +2771,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		if (type.type_parameter != null) {
-			if (!(current_type_symbol is Class) || !current_class.is_subtype_of (gobject_type)) {
+			if (!(current_type_symbol is Class) || current_class.is_compact) {
 				return false;
 			}
 		}
@@ -2785,7 +2785,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		if (type.type_parameter != null) {
-			if (!(current_type_symbol is Class) || !current_class.is_subtype_of (gobject_type)) {
+			if (!(current_type_symbol is Class) || current_class.is_compact) {
 				return false;
 			}
 		}
@@ -2910,7 +2910,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 			}
 
-			if (expr.type_reference.data_type is Class && expr.type_reference.data_type.is_subtype_of (gobject_type)) {
+			var cl = expr.type_reference.data_type as Class;
+			if (cl != null && !cl.is_compact) {
 				foreach (DataType type_arg in expr.type_reference.get_type_arguments ()) {
 					creation_call.add_argument (get_type_id_expression (type_arg));
 					if (requires_copy (type_arg)) {

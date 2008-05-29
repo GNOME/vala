@@ -179,7 +179,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			cparam_map.set (codegen.get_param_pos (m.cinstance_parameter_position), class_param);
 		}
 
-		if (in_gobject_creation_method) {
+		if (in_gtypeinstance_creation_method) {
 			// memory management for generic types
 			int type_param_index = 0;
 			foreach (TypeParameter type_param in codegen.current_class.get_type_parameters ()) {
@@ -320,6 +320,26 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 						ccall.add_argument (new CCodeIdentifier (cl.get_type_id ()));
 						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", new CCodeCastExpression (ccall, cl.get_cname () + "*")));
 						cinit.append (cdecl);
+
+						/* type, dup func, and destroy func fields for generic types */
+						foreach (TypeParameter type_param in codegen.current_class.get_type_parameters ()) {
+							CCodeIdentifier param_name;
+							CCodeAssignment assign;
+
+							var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
+
+							param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.down ()));
+							assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
+							cinit.append (new CCodeExpressionStatement (assign));
+
+							param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ()));
+							assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
+							cinit.append (new CCodeExpressionStatement (assign));
+
+							param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
+							assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
+							cinit.append (new CCodeExpressionStatement (assign));
+						}
 					} else if (codegen.current_type_symbol is Class) {
 						var cl = (Class) m.parent_symbol;
 						var cdecl = new CCodeDeclaration (cl.get_cname () + "*");

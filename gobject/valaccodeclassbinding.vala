@@ -457,6 +457,20 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			foreach (Signal sig in cl.get_signals ()) {
 				init_block.add_statement (new CCodeExpressionStatement (get_signal_creation (sig, cl)));
 			}
+		} else if (!cl.is_compact) {
+			/* create type, dup_func, and destroy_func fields for generic types */
+			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+				string func_name;
+
+				func_name = "%s_type".printf (type_param.name.down ());
+				codegen.instance_priv_struct.add_field ("GType", func_name);
+
+				func_name = "%s_dup_func".printf (type_param.name.down ());
+				codegen.instance_priv_struct.add_field ("GBoxedCopyFunc", func_name);
+
+				func_name = "%s_destroy_func".printf (type_param.name.down ());
+				codegen.instance_priv_struct.add_field ("GDestroyNotify", func_name);
+			}
 		}
 
 		init_block.add_statement (register_dbus_info (cl));

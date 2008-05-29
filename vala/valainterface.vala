@@ -177,6 +177,9 @@ public class Vala.Interface : ObjectTypeSymbol {
 	public void add_property (Property prop) {
 		properties.add (prop);
 		scope.add (prop.name, prop);
+
+		prop.this_parameter = new FormalParameter ("this", new ObjectType (this));
+		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 	}
 	
 	/**
