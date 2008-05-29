@@ -73,23 +73,33 @@ public abstract class Vala.CodeNode : Object {
 	 * Specifies that this node or a child node may throw an exception.
 	 */
 	public bool tree_can_fail { 
-		get { return _error_types.size > 0; }
+		get { return _error_types != null && _error_types.size > 0; }
 	}
 
 	/**
 	 * Specifies the exceptions that can be thrown by this node or a child node
 	 */
 	public Gee.List<DataType> get_error_types () { 
-		return _error_types;
+		if (_error_types != null) {
+			return _error_types;
+		}
+		if (_empty_type_list == null) {
+			_empty_type_list = new ReadOnlyList<DataType> (new ArrayList<DataType> ());
+		}
+		return _empty_type_list;
 	}
 
-	private Gee.List<DataType> _error_types = new ArrayList<DataType> ();
+	private Gee.List<DataType> _error_types;
+	private static Gee.List<DataType> _empty_type_list;
 
 	/**
 	 * Adds an error type to the exceptions that can be thrown by this node
 	 * or a child node 
 	 */
 	public void add_error_type (DataType error_type) {
+		if (_error_types == null) {
+			_error_types = new ArrayList<DataType> ();
+		}
 		_error_types.add (error_type);
 		error_type.parent_node = this;
 	}
@@ -100,8 +110,7 @@ public abstract class Vala.CodeNode : Object {
 	 */
 	public void add_error_types (Gee.List<DataType> error_types) {
 		foreach (DataType error_type in error_types) {
-			_error_types.add (error_type);
-			error_type.parent_node = this;
+			add_error_type (error_type);
 		}
 	}
 

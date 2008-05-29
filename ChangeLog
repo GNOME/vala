@@ -1,3 +1,10 @@
+2008-05-30  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodenode.vala:
+
+	Use lazy initialization for error_types list in CodeNode class
+	to improve performance
+
 2008-05-29  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valablock.vala:
