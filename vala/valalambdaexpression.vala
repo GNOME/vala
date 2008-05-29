@@ -85,8 +85,8 @@ public class Vala.LambdaExpression : Expression {
 	 *
 	 * @return parameter list
 	 */
-	public Collection<string> get_parameters () {
-		return new ReadOnlyCollection<string> (parameters);
+	public Gee.List<string> get_parameters () {
+		return new ReadOnlyList<string> (parameters);
 	}
 	
 	public override void accept (CodeVisitor visitor) {

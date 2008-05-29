@@ -90,8 +90,8 @@ public class Vala.ForStatement : CodeNode, Statement {
 	 *
 	 * @return initializer list
 	 */
-	public Collection<Expression> get_initializer () {
-		return new ReadOnlyCollection<Expression> (initializer);
+	public Gee.List<Expression> get_initializer () {
+		return new ReadOnlyList<Expression> (initializer);
 	}
 	
 	/**
@@ -109,8 +109,8 @@ public class Vala.ForStatement : CodeNode, Statement {
 	 *
 	 * @return iterator
 	 */
-	public Collection<Expression> get_iterator () {
-		return new ReadOnlyCollection<Expression> (iterator);
+	public Gee.List<Expression> get_iterator () {
+		return new ReadOnlyList<Expression> (iterator);
 	}
 	
 	public override void accept (CodeVisitor visitor) {

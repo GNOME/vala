@@ -371,7 +371,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return parameter list
 	 */
-	public virtual Collection<FormalParameter>? get_parameters () {
+	public virtual Gee.List<FormalParameter>? get_parameters () {
 		return null;
 	}
 
@@ -390,7 +390,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return symbol list
 	 */
-	public virtual Collection<Symbol> get_symbols () {
+	public virtual Gee.List<Symbol> get_symbols () {
 		var symbols = new ArrayList<Symbol> ();
 		if (data_type != null) {
 			symbols.add (data_type);

@@ -37,8 +37,8 @@ public class Vala.DynamicProperty : Property {
 		this.source_reference = source_reference;
 	}
 
-	public override Collection<string> get_cheader_filenames () {
-		return new ReadOnlyCollection<string> ();
+	public override Gee.List<string> get_cheader_filenames () {
+		return new ReadOnlyList<string> ();
 	}
 
 	public override CodeBinding? create_code_binding (CodeGenerator codegen) {

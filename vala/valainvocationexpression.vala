@@ -72,8 +72,8 @@ public class Vala.InvocationExpression : Expression {
 	 *
 	 * @return argument list
 	 */
-	public Collection<Expression> get_argument_list () {
-		return new ReadOnlyCollection<Expression> (argument_list);
+	public Gee.List<Expression> get_argument_list () {
+		return new ReadOnlyList<Expression> (argument_list);
 	}
 
 	/**

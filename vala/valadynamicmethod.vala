@@ -41,8 +41,8 @@ public class Vala.DynamicMethod : Method {
 		this.source_reference = source_reference;
 	}
 
-	public override Collection<string> get_cheader_filenames () {
-		return new ReadOnlyCollection<string> ();
+	public override Gee.List<string> get_cheader_filenames () {
+		return new ReadOnlyList<string> ();
 	}
 
 	public override string get_default_cname () {

@@ -29,7 +29,7 @@ using Gee;
  * Vala API file.
  */
 public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
-	public abstract Collection<Method> get_methods ();
-	public abstract Collection<Signal> get_signals ();
-	public abstract Collection<Property> get_properties ();
+	public abstract Gee.List<Method> get_methods ();
+	public abstract Gee.List<Signal> get_signals ();
+	public abstract Gee.List<Property> get_properties ();
 }

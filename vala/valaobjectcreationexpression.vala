@@ -85,8 +85,8 @@ public class Vala.ObjectCreationExpression : Expression {
 	 *
 	 * @return argument list
 	 */
-	public Collection<Expression> get_argument_list () {
-		return new ReadOnlyCollection<Expression> (argument_list);
+	public Gee.List<Expression> get_argument_list () {
+		return new ReadOnlyList<Expression> (argument_list);
 	}
 
 	/**
@@ -104,8 +104,8 @@ public class Vala.ObjectCreationExpression : Expression {
 	 *
 	 * @return member initializer list
 	 */
-	public Collection<MemberInitializer> get_object_initializer () {
-		return new ReadOnlyCollection<MemberInitializer> (object_initializer);
+	public Gee.List<MemberInitializer> get_object_initializer () {
+		return new ReadOnlyList<MemberInitializer> (object_initializer);
 	}
 
 	public override void accept (CodeVisitor visitor) {

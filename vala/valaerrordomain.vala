@@ -82,8 +82,8 @@ public class Vala.ErrorDomain : TypeSymbol {
 	 *
 	 * @return list of error codes
 	 */
-	public Collection<ErrorCode> get_codes () {
-		return new ReadOnlyCollection<ErrorCode> (codes);
+	public Gee.List<ErrorCode> get_codes () {
+		return new ReadOnlyList<ErrorCode> (codes);
 	}
 
 	/**
@@ -91,8 +91,8 @@ public class Vala.ErrorDomain : TypeSymbol {
 	 *
 	 * @return list of methods
 	 */
-	public Collection<Method> get_methods () {
-		return new ReadOnlyCollection<Method> (methods);
+	public Gee.List<Method> get_methods () {
+		return new ReadOnlyList<Method> (methods);
 	}
 
 	public override void accept (CodeVisitor visitor) {

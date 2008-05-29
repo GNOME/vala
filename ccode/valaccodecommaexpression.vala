@@ -38,8 +38,8 @@ public class Vala.CCodeCommaExpression : CCodeExpression {
 		inner.add (expr);
 	}
 
-	public Collection<CCodeExpression> get_inner () {
-		return new ReadOnlyCollection<CCodeExpression> (inner);
+	public Gee.List<CCodeExpression> get_inner () {
+		return new ReadOnlyList<CCodeExpression> (inner);
 	}
 
 	public override void write (CCodeWriter writer) {

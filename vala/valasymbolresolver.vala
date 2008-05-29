@@ -30,7 +30,7 @@ using Gee;
 public class Vala.SymbolResolver : CodeVisitor {
 	Symbol root_symbol;
 	Scope current_scope;
-	Collection<NamespaceReference> current_using_directives;
+	Gee.List<NamespaceReference> current_using_directives;
 	
 	/**
 	 * Resolve symbol names in the specified code context.

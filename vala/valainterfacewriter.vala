@@ -556,7 +556,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_newline ();
 	}
 	
-	private void write_error_domains (Collection<DataType> error_domains) {
+	private void write_error_domains (Gee.List<DataType> error_domains) {
 		if (error_domains.size > 0) {
 			write_string (" throws ");
 
@@ -578,7 +578,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		return ((int) (d1 * 1000)) == ((int) (d2 * 1000));
 	}
 
-	private void write_params (Collection<FormalParameter> params) {
+	private void write_params (Gee.List<FormalParameter> params) {
 		write_string ("(");
 
 		int i = 1;

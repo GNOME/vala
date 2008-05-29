@@ -41,7 +41,7 @@ public class Vala.MethodType : DataType {
 		return method_symbol.return_type;
 	}
 
-	public override Collection<FormalParameter>? get_parameters () {
+	public override Gee.List<FormalParameter>? get_parameters () {
 		return method_symbol.get_parameters ();
 	}
 

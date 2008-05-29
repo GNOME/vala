@@ -90,7 +90,7 @@ public class Vala.PointerType : DataType {
 		return SemanticAnalyzer.symbol_lookup_inherited (base_symbol, member_name);
 	}
 
-	public override Collection<Symbol> get_symbols () {
+	public override Gee.List<Symbol> get_symbols () {
 		return base_type.get_symbols ();
 	}
 

@@ -98,7 +98,7 @@ public abstract class Vala.CodeNode : Object {
 	 * Adds a collection of error types to the exceptions that can be thrown by this node
 	 * or a child node 
 	 */
-	public void add_error_types (Gee.Collection<DataType> error_types) {
+	public void add_error_types (Gee.List<DataType> error_types) {
 		foreach (DataType error_type in error_types) {
 			_error_types.add (error_type);
 			error_type.parent_node = this;

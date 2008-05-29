@@ -43,8 +43,8 @@ public class Vala.CCodeFragment : CCodeNode {
 	 *
 	 * @return children list
 	 */
-	public Collection<CCodeNode> get_children () {
-		return new ReadOnlyCollection<CCodeNode> (children);
+	public Gee.List<CCodeNode> get_children () {
+		return new ReadOnlyList<CCodeNode> (children);
 	}
 
 	public override void write (CCodeWriter writer) {

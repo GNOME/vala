@@ -1502,7 +1502,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		temp_ref_vars.clear ();
 	}
 	
-	private void append_temp_decl (CCodeFragment cfrag, Collection<LocalVariable> temp_vars) {
+	private void append_temp_decl (CCodeFragment cfrag, Gee.List<LocalVariable> temp_vars) {
 		foreach (LocalVariable local in temp_vars) {
 			var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
 		
@@ -1643,7 +1643,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		temp_ref_vars.clear ();
 	}
 	
-	private void create_temp_decl (Statement stmt, Collection<LocalVariable> temp_vars) {
+	private void create_temp_decl (Statement stmt, Gee.List<LocalVariable> temp_vars) {
 		/* declare temporary variables */
 		
 		if (temp_vars.size == 0) {
@@ -1727,7 +1727,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		cswitchblock.append (new CCodeExpressionStatement (cinit));
 		create_temp_decl (stmt, stmt.expression.temp_vars);
 
-		Collection<Statement> default_statements = null;
+		Gee.List<Statement> default_statements = null;
 		var label_count = 0;
 
 		// generate nested if statements		

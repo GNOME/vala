@@ -247,8 +247,8 @@ public class Vala.Method : Member {
 		}
 	}
 	
-	public Collection<FormalParameter> get_parameters () {
-		return new ReadOnlyCollection<FormalParameter> (parameters);
+	public Gee.List<FormalParameter> get_parameters () {
+		return new ReadOnlyList<FormalParameter> (parameters);
 	}
 
 	/**
@@ -465,8 +465,8 @@ public class Vala.Method : Member {
 	 *
 	 * @return list of preconditions
 	 */
-	public Collection<Expression> get_preconditions () {
-		return new ReadOnlyCollection<Expression> (preconditions);
+	public Gee.List<Expression> get_preconditions () {
+		return new ReadOnlyList<Expression> (preconditions);
 	}
 
 	/**
@@ -484,8 +484,8 @@ public class Vala.Method : Member {
 	 *
 	 * @return list of postconditions
 	 */
-	public Collection<Expression> get_postconditions () {
-		return new ReadOnlyCollection<Expression> (postconditions);
+	public Gee.List<Expression> get_postconditions () {
+		return new ReadOnlyList<Expression> (postconditions);
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {

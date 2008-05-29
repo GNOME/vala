@@ -72,7 +72,7 @@ public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
 				collection_iface = codegen.map_type;
 			}
 			var get_method = (Method) collection_iface.scope.lookup ("get");
-			Collection<FormalParameter> get_params = get_method.get_parameters ();
+			Gee.List<FormalParameter> get_params = get_method.get_parameters ();
 			Iterator<FormalParameter> get_params_it = get_params.iterator ();
 			get_params_it.next ();
 			var get_param = get_params_it.get ();

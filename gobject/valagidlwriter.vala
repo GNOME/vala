@@ -306,7 +306,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		return gidl_type;
 	}
 
-	private void write_params (Collection<FormalParameter> params, DataType? instance_type = null) {
+	private void write_params (Gee.List<FormalParameter> params, DataType? instance_type = null) {
 		write_indent ();
 		stream.printf ("<parameters>\n");
 		indent++;

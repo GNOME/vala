@@ -93,8 +93,8 @@ public class Vala.Enum : TypeSymbol {
 	 *
 	 * @return list of enum values
 	 */
-	public Collection<EnumValue> get_values () {
-		return new ReadOnlyCollection<EnumValue> (values);
+	public Gee.List<EnumValue> get_values () {
+		return new ReadOnlyList<EnumValue> (values);
 	}
 
 	/**
@@ -102,8 +102,8 @@ public class Vala.Enum : TypeSymbol {
 	 *
 	 * @return list of methods
 	 */
-	public Collection<Method> get_methods () {
-		return new ReadOnlyCollection<Method> (methods);
+	public Gee.List<Method> get_methods () {
+		return new ReadOnlyList<Method> (methods);
 	}
 
 	public override void accept (CodeVisitor visitor) {

@@ -50,7 +50,7 @@ public class Vala.CCodeGenerator {
 		}
 	}
 	
-	public string get_marshaller_function (Collection<FormalParameter> params, DataType return_type, string? prefix = null) {
+	public string get_marshaller_function (Gee.List<FormalParameter> params, DataType return_type, string? prefix = null) {
 		var signature = get_marshaller_signature (params, return_type);
 		string ret;
 
@@ -110,7 +110,7 @@ public class Vala.CCodeGenerator {
 		}
 	}
 	
-	private string get_marshaller_signature (Collection<FormalParameter> params, DataType return_type) {
+	private string get_marshaller_signature (Gee.List<FormalParameter> params, DataType return_type) {
 		string signature;
 		
 		signature = "%s:".printf (get_marshaller_type_name (return_type));
@@ -147,7 +147,7 @@ public class Vala.CCodeGenerator {
 		generate_marshaller (sig.get_parameters (), sig.return_type);
 	}
 
-	public void generate_marshaller (Collection<FormalParameter> params, DataType return_type) {
+	public void generate_marshaller (Gee.List<FormalParameter> params, DataType return_type) {
 		string signature;
 		int n_params, i;
 		

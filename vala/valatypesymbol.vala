@@ -191,7 +191,7 @@ public abstract class Vala.TypeSymbol : Symbol {
 		return null;
 	}
 
-	public override Collection<string> get_cheader_filenames () {
+	public override Gee.List<string> get_cheader_filenames () {
 		if (cheader_filenames.size == 0) {
 			/* default to header filenames of the namespace */
 			foreach (string filename in parent_symbol.get_cheader_filenames ()) {
@@ -203,7 +203,7 @@ public abstract class Vala.TypeSymbol : Symbol {
 				cheader_filenames.add (source_reference.file.get_cinclude_filename ());
 			}
 		}
-		return new ReadOnlyCollection<string> (cheader_filenames);
+		return new ReadOnlyList<string> (cheader_filenames);
 	}
 
 	/**

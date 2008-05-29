@@ -84,8 +84,8 @@ public class Vala.Struct : TypeSymbol {
 	 *
 	 * @return list of type parameters
 	 */
-	public Collection<TypeParameter> get_type_parameters () {
-		return new ReadOnlyCollection<TypeParameter> (type_parameters);
+	public Gee.List<TypeParameter> get_type_parameters () {
+		return new ReadOnlyList<TypeParameter> (type_parameters);
 	}
 
 	/**
@@ -113,8 +113,8 @@ public class Vala.Struct : TypeSymbol {
 	 *
 	 * @return list of fields
 	 */
-	public Collection<Field> get_fields () {
-		return new ReadOnlyCollection<Field> (fields);
+	public Gee.List<Field> get_fields () {
+		return new ReadOnlyList<Field> (fields);
 	}
 	
 	/**
@@ -159,8 +159,8 @@ public class Vala.Struct : TypeSymbol {
 	 *
 	 * @return list of methods
 	 */
-	public Collection<Method> get_methods () {
-		return new ReadOnlyCollection<Method> (methods);
+	public Gee.List<Method> get_methods () {
+		return new ReadOnlyList<Method> (methods);
 	}
 
 	public override void accept (CodeVisitor visitor) {
@@ -474,8 +474,8 @@ public class Vala.Struct : TypeSymbol {
 	 *
 	 * @return list of base types
 	 */
-	public Collection<DataType> get_base_types () {
-		return new ReadOnlyCollection<DataType> (base_types);
+	public Gee.List<DataType> get_base_types () {
+		return new ReadOnlyList<DataType> (base_types);
 	}
 	
 	public override int get_type_parameter_index (string name) {

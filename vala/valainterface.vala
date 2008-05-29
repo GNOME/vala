@@ -81,8 +81,8 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of type parameters
 	 */
-	public Collection<TypeParameter> get_type_parameters () {
-		return new ReadOnlyCollection<TypeParameter> (type_parameters);
+	public Gee.List<TypeParameter> get_type_parameters () {
+		return new ReadOnlyList<TypeParameter> (type_parameters);
 	}
 
 	/**
@@ -111,8 +111,8 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of base types
 	 */
-	public Collection<DataType> get_prerequisites () {
-		return new ReadOnlyCollection<DataType> (prerequisites);
+	public Gee.List<DataType> get_prerequisites () {
+		return new ReadOnlyList<DataType> (prerequisites);
 	}
 	
 	/**
@@ -145,8 +145,8 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of methods
 	 */
-	public override Collection<Method> get_methods () {
-		return new ReadOnlyCollection<Method> (methods);
+	public override Gee.List<Method> get_methods () {
+		return new ReadOnlyList<Method> (methods);
 	}
 	
 	/**
@@ -165,8 +165,8 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of fields
 	 */
-	public Collection<Field> get_fields () {
-		return new ReadOnlyCollection<Field> (fields);
+	public Gee.List<Field> get_fields () {
+		return new ReadOnlyList<Field> (fields);
 	}
 
 	/**
@@ -187,8 +187,8 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of properties
 	 */
-	public override Collection<Property> get_properties () {
-		return new ReadOnlyCollection<Property> (properties);
+	public override Gee.List<Property> get_properties () {
+		return new ReadOnlyList<Property> (properties);
 	}
 	
 	/**
@@ -206,8 +206,8 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of signals
 	 */
-	public override Collection<Signal> get_signals () {
-		return new ReadOnlyCollection<Signal> (signals);
+	public override Gee.List<Signal> get_signals () {
+		return new ReadOnlyList<Signal> (signals);
 	}
 
 	/**

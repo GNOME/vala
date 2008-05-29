@@ -37,7 +37,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	Class current_class;
 	Struct current_struct;
 
-	Collection<NamespaceReference> current_using_directives;
+	Gee.List<NamespaceReference> current_using_directives;
 
 	DataType bool_type;
 	DataType string_type;
@@ -232,7 +232,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_class = null;
 	}
 
-	private void get_all_prerequisites (Interface iface, Collection<TypeSymbol> list) {
+	private void get_all_prerequisites (Interface iface, Gee.List<TypeSymbol> list) {
 		foreach (DataType prereq in iface.get_prerequisites ()) {
 			TypeSymbol type = prereq.data_type;
 			/* skip on previous errors */
@@ -1053,7 +1053,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else {
 			stmt.error = true;
-			Report.error (stmt.source_reference, "Collection not iterable");
+			Report.error (stmt.source_reference, "Gee.List not iterable");
 			return;
 		}
 
@@ -1263,7 +1263,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	 * @param expr an array creation expression
 	 */
 	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
-		Collection<Expression> size = expr.get_sizes ();
+		Gee.List<Expression> size = expr.get_sizes ();
 		var initlist = expr.initializer_list;
 
 		if (expr.element_type != null) {
@@ -1869,7 +1869,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
-		Collection<FormalParameter> params;
+		Gee.List<FormalParameter> params;
 
 		if (mtype != null && mtype.is_invokable ()) {
 			params = mtype.get_parameters ();
@@ -1964,7 +1964,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		check_arguments (expr, mtype, params, expr.get_argument_list ());
 	}
 
-	private bool check_arguments (Expression expr, DataType mtype, Collection<FormalParameter> params, Collection<Expression> args) {
+	private bool check_arguments (Expression expr, DataType mtype, Gee.List<FormalParameter> params, Gee.List<Expression> args) {
 		Expression prev_arg = null;
 		Iterator<Expression> arg_it = args.iterator ();
 
@@ -2254,7 +2254,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			expr.value_type = unichar_type;
 		} else if (container_type != null && list_type != null && map_type != null &&
 		           (container_type.is_subtype_of (list_type) || container_type.is_subtype_of (map_type))) {
-			Collection<Expression> indices = expr.get_indices ();
+			Gee.List<Expression> indices = expr.get_indices ();
 			if (indices.size != 1) {
 				expr.error = true;
 				Report.error (expr.source_reference, "Element access with more than one dimension is not supported for the specified type");
@@ -2273,7 +2273,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				get_sym = map_type.scope.lookup ("get");
 			}
 			var get_method = (Method) get_sym;
-			Collection<FormalParameter> get_params = get_method.get_parameters ();
+			Gee.List<FormalParameter> get_params = get_method.get_parameters ();
 			Iterator<FormalParameter> get_params_it = get_params.iterator ();
 			get_params_it.next ();
 			var get_param = get_params_it.get ();

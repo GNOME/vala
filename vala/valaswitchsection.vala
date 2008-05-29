@@ -53,8 +53,8 @@ public class Vala.SwitchSection : Block {
 	 *
 	 * @return switch label list
 	 */
-	public Collection<SwitchLabel> get_labels () {
-		return new ReadOnlyCollection<SwitchLabel> (labels);
+	public Gee.List<SwitchLabel> get_labels () {
+		return new ReadOnlyList<SwitchLabel> (labels);
 	}
 	
 	public bool has_default_label () {

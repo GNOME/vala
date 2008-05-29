@@ -59,8 +59,8 @@ public class Vala.Block : Symbol, Statement {
 	 *
 	 * @return statement list
 	 */
-	public Collection<Statement> get_statements () {
-		return new ReadOnlyCollection<Statement> (statement_list);
+	public Gee.List<Statement> get_statements () {
+		return new ReadOnlyList<Statement> (statement_list);
 	}
 	
 	/**
@@ -77,8 +77,8 @@ public class Vala.Block : Symbol, Statement {
 	 *
 	 * @return variable declarator list
 	 */
-	public Collection<LocalVariable> get_local_variables () {
-		return new ReadOnlyCollection<LocalVariable> (local_variables);
+	public Gee.List<LocalVariable> get_local_variables () {
+		return new ReadOnlyList<LocalVariable> (local_variables);
 	}
 
 	public override void accept (CodeVisitor visitor) {

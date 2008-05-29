@@ -41,7 +41,7 @@ public class Vala.SignalType : DataType {
 		return signal_symbol.return_type;
 	}
 
-	public override Collection<FormalParameter>? get_parameters () {
+	public override Gee.List<FormalParameter>? get_parameters () {
 		return signal_symbol.get_parameters ();
 	}
 

@@ -45,8 +45,8 @@ public class Vala.InitializerList : Expression {
 	 *
 	 * @return expression list
 	 */
-	public Collection<Expression> get_initializers () {
-		return new ReadOnlyCollection<Expression> (initializers);
+	public Gee.List<Expression> get_initializers () {
+		return new ReadOnlyList<Expression> (initializers);
 	}
 
 	/**

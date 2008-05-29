@@ -116,8 +116,8 @@ public class Vala.SourceFile : Object {
 	 *
 	 * @return using directive list
 	 */
-	public Collection<NamespaceReference> get_using_directives () {
-		return new ReadOnlyCollection<NamespaceReference> (using_directives);
+	public Gee.List<NamespaceReference> get_using_directives () {
+		return new ReadOnlyList<NamespaceReference> (using_directives);
 	}
 	
 	/**
@@ -138,8 +138,8 @@ public class Vala.SourceFile : Object {
 	 *
 	 * @return code node list
 	 */
-	public Collection<CodeNode> get_nodes () {
-		return new ReadOnlyCollection<CodeNode> (nodes);
+	public Gee.List<CodeNode> get_nodes () {
+		return new ReadOnlyList<CodeNode> (nodes);
 	}
 
 	public void accept (CodeVisitor visitor) {
@@ -307,8 +307,8 @@ public class Vala.SourceFile : Object {
 	 *
 	 * @return external include list for C header file
 	 */
-	public Collection<string> get_header_external_includes () {
-		return new ReadOnlyCollection<string> (header_external_includes);
+	public Gee.List<string> get_header_external_includes () {
+		return new ReadOnlyList<string> (header_external_includes);
 	}
 	
 	/**
@@ -330,8 +330,8 @@ public class Vala.SourceFile : Object {
 	 *
 	 * @return internal include list for C header file
 	 */
-	public Collection<string> get_header_internal_includes () {
-		return new ReadOnlyCollection<string> (header_internal_includes);
+	public Gee.List<string> get_header_internal_includes () {
+		return new ReadOnlyList<string> (header_internal_includes);
 	}
 	
 	/**
@@ -340,8 +340,8 @@ public class Vala.SourceFile : Object {
 	 *
 	 * @return include list for C source file
 	 */
-	public Collection<string> get_source_external_includes () {
-		return new ReadOnlyCollection<string> (source_external_includes);
+	public Gee.List<string> get_source_external_includes () {
+		return new ReadOnlyList<string> (source_external_includes);
 	}
 	
 	/**
@@ -350,8 +350,8 @@ public class Vala.SourceFile : Object {
 	 *
 	 * @return include list for C source file
 	 */
-	public Collection<string> get_source_internal_includes () {
-		return new ReadOnlyCollection<string> (source_internal_includes);
+	public Gee.List<string> get_source_internal_includes () {
+		return new ReadOnlyList<string> (source_internal_includes);
 	}
 	
 	/**
@@ -360,8 +360,8 @@ public class Vala.SourceFile : Object {
 	 *
 	 * @return definite source file dependencies
 	 */
-	public Collection<weak SourceFile> get_header_internal_full_dependencies () {
-		return new ReadOnlyCollection<weak SourceFile> (header_internal_full_dependencies);
+	public Gee.List<weak SourceFile> get_header_internal_full_dependencies () {
+		return new ReadOnlyList<weak SourceFile> (header_internal_full_dependencies);
 	}
 	
 	/**
@@ -370,8 +370,8 @@ public class Vala.SourceFile : Object {
 	 *
 	 * @return loose source file dependencies
 	 */
-	public Collection<weak SourceFile> get_header_internal_dependencies () {
-		return new ReadOnlyCollection<weak SourceFile> (header_internal_dependencies);
+	public Gee.List<weak SourceFile> get_header_internal_dependencies () {
+		return new ReadOnlyList<weak SourceFile> (header_internal_dependencies);
 	}
 
 	/**

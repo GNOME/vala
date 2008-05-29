@@ -33,7 +33,7 @@ public class Vala.Member : Symbol {
 		visitor.visit_member (this);
 	}
 
-	public override Collection<string> get_cheader_filenames () {
+	public override Gee.List<string> get_cheader_filenames () {
 		if (cheader_filenames.size == 0 && parent_symbol != null) {
 			/* default to header filenames of the namespace */
 			foreach (string filename in parent_symbol.get_cheader_filenames ()) {
@@ -45,7 +45,7 @@ public class Vala.Member : Symbol {
 				cheader_filenames.add (source_reference.file.get_cinclude_filename ());
 			}
 		}
-		return new ReadOnlyCollection<string> (cheader_filenames);
+		return new ReadOnlyList<string> (cheader_filenames);
 	}
 
 	

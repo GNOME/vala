@@ -41,7 +41,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		var ccall = new CCodeFunctionCall ((CCodeExpression) expr.call.ccodenode);
 
 		Method m = null;
-		Collection<FormalParameter> params;
+		Gee.List<FormalParameter> params;
 		
 		if (!(expr.call is MemberAccess)) {
 			expr.error = true;

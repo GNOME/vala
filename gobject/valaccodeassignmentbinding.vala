@@ -213,7 +213,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 
 		var expr = (ElementAccess) assignment.left;
 		var container_type = expr.container.value_type.data_type;
-		Collection<Expression> indices = expr.get_indices ();
+		Gee.List<Expression> indices = expr.get_indices ();
 		Iterator<Expression> indices_it = indices.iterator ();
 		indices_it.next ();
 
@@ -230,7 +230,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 				collection_iface = codegen.map_type;
 			}
 			var set_method = (Method) collection_iface.scope.lookup ("set");
-			Collection<FormalParameter> set_params = set_method.get_parameters ();
+			Gee.List<FormalParameter> set_params = set_method.get_parameters ();
 			Iterator<FormalParameter> set_params_it = set_params.iterator ();
 			set_params_it.next ();
 			var set_param = set_params_it.get ();

@@ -41,7 +41,7 @@ public class Vala.DelegateType : DataType {
 		return delegate_symbol.return_type;
 	}
 
-	public override Collection<FormalParameter>? get_parameters () {
+	public override Gee.List<FormalParameter>? get_parameters () {
 		return delegate_symbol.get_parameters ();
 	}
 
@@ -61,7 +61,7 @@ public class Vala.DelegateType : DataType {
 		return delegate_symbol.get_cname ();
 	}
 
-	public override Collection<Symbol> get_symbols () {
+	public override Gee.List<Symbol> get_symbols () {
 		var symbols = new ArrayList<Symbol> ();
 		symbols.add (delegate_symbol);
 		return symbols;

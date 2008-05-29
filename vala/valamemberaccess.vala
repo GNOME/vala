@@ -112,8 +112,8 @@ public class Vala.MemberAccess : Expression {
 	 *
 	 * @return type argument list
 	 */
-	public Collection<DataType> get_type_arguments () {
-		return new ReadOnlyCollection<DataType> (type_argument_list);
+	public Gee.List<DataType> get_type_arguments () {
+		return new ReadOnlyList<DataType> (type_argument_list);
 	}
 	
 	public override void accept (CodeVisitor visitor) {

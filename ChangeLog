@@ -1,5 +1,52 @@
 2008-05-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valablock.vala:
+	* vala/valaclass.vala:
+	* vala/valacodecontext.vala:
+	* vala/valacodenode.vala:
+	* vala/valadatatype.vala:
+	* vala/valadelegatetype.vala:
+	* vala/valadynamicmethod.vala:
+	* vala/valadynamicproperty.vala:
+	* vala/valaenum.vala:
+	* vala/valaerrordomain.vala:
+	* vala/valaforstatement.vala:
+	* vala/valainitializerlist.vala:
+	* vala/valainterface.vala:
+	* vala/valainterfacewriter.vala:
+	* vala/valainvocationexpression.vala:
+	* vala/valalambdaexpression.vala:
+	* vala/valamember.vala:
+	* vala/valamemberaccess.vala:
+	* vala/valamethod.vala:
+	* vala/valamethodtype.vala:
+	* vala/valanamespace.vala:
+	* vala/valaobjectcreationexpression.vala:
+	* vala/valaobjecttypesymbol.vala:
+	* vala/valapointertype.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasignaltype.vala:
+	* vala/valasourcefile.vala:
+	* vala/valastruct.vala:
+	* vala/valaswitchsection.vala:
+	* vala/valaswitchstatement.vala:
+	* vala/valasymbol.vala:
+	* vala/valasymbolresolver.vala:
+	* vala/valatypesymbol.vala:
+	* ccode/valaccodecommaexpression.vala:
+	* ccode/valaccodefragment.vala:
+	* gobject/valaccodeassignmentbinding.vala:
+	* gobject/valaccodeelementaccessbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodegeneratorsignal.vala:
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+	* gobject/valagidlwriter.vala:
+
+	Use Gee.List instead of Gee.Collection to improve iteration
+	performance
+
+2008-05-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 	* gobject/valaccodegenerator.vala:
 

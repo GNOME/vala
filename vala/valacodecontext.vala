@@ -154,8 +154,8 @@ public class Vala.CodeContext : Object {
 	 *
 	 * @return list of source files
 	 */
-	public Collection<SourceFile> get_source_files () {
-		return new ReadOnlyCollection<SourceFile> (source_files);
+	public Gee.List<SourceFile> get_source_files () {
+		return new ReadOnlyList<SourceFile> (source_files);
 	}
 
 	/**
@@ -163,8 +163,8 @@ public class Vala.CodeContext : Object {
 	 *
 	 * @return list of C source files
 	 */
-	public Collection<string> get_c_source_files () {
-		return new ReadOnlyCollection<string> (c_source_files);
+	public Gee.List<string> get_c_source_files () {
+		return new ReadOnlyList<string> (c_source_files);
 	}
 	
 	/**
@@ -190,8 +190,8 @@ public class Vala.CodeContext : Object {
 	 *
 	 * @return list of used packages
 	 */
-	public Collection<string> get_packages () {
-		return new ReadOnlyCollection<string> (packages);
+	public Gee.List<string> get_packages () {
+		return new ReadOnlyList<string> (packages);
 	}
 
 	/**
@@ -294,7 +294,7 @@ public class Vala.CodeContext : Object {
 		return file;
 	}
 	
-	private void visit (SourceFile file, Collection<SourceFile> chain) {
+	private void visit (SourceFile file, Gee.List<SourceFile> chain) {
 		Gee.List<SourceFile> l = new ArrayList<SourceFile> ();
 		foreach (SourceFile chain_file in chain) {
 			l.add (chain_file);

@@ -110,8 +110,8 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return namespace list
 	 */
-	public Collection<Namespace> get_namespaces () {
-		return new ReadOnlyCollection<Namespace> (namespaces);
+	public Gee.List<Namespace> get_namespaces () {
+		return new ReadOnlyList<Namespace> (namespaces);
 	}
 	
 	/**
@@ -201,8 +201,8 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return struct list
 	 */
-	public Collection<Struct> get_structs () {
-		return new ReadOnlyCollection<Struct> (structs);
+	public Gee.List<Struct> get_structs () {
+		return new ReadOnlyList<Struct> (structs);
 	}
 
 	/**
@@ -210,8 +210,8 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return class list
 	 */
-	public Collection<Class> get_classes () {
-		return new ReadOnlyCollection<Class> (classes);
+	public Gee.List<Class> get_classes () {
+		return new ReadOnlyList<Class> (classes);
 	}
 	
 	/**
@@ -219,8 +219,8 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return interface list
 	 */
-	public Collection<Interface> get_interfaces () {
-		return new ReadOnlyCollection<Interface> (interfaces);
+	public Gee.List<Interface> get_interfaces () {
+		return new ReadOnlyList<Interface> (interfaces);
 	}
 	
 	/**
@@ -228,8 +228,8 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return enum list
 	 */
-	public Collection<Enum> get_enums () {
-		return new ReadOnlyCollection<Enum> (enums);
+	public Gee.List<Enum> get_enums () {
+		return new ReadOnlyList<Enum> (enums);
 	}
 	
 	/**
@@ -237,8 +237,8 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return error domain list
 	 */
-	public Collection<ErrorDomain> get_error_types () {
-		return new ReadOnlyCollection<ErrorDomain> (error_domains);
+	public Gee.List<ErrorDomain> get_error_types () {
+		return new ReadOnlyList<ErrorDomain> (error_domains);
 	}
 	
 	/**
@@ -246,8 +246,8 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return field list
 	 */
-	public Collection<Field> get_fields () {
-		return new ReadOnlyCollection<Field> (fields);
+	public Gee.List<Field> get_fields () {
+		return new ReadOnlyList<Field> (fields);
 	}
 	
 	/**
@@ -255,8 +255,8 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return constant list
 	 */
-	public Collection<Constant> get_constants () {
-		return new ReadOnlyCollection<Constant> (constants);
+	public Gee.List<Constant> get_constants () {
+		return new ReadOnlyList<Constant> (constants);
 	}
 	
 	/**
@@ -264,8 +264,8 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return delegate list
 	 */
-	public Collection<Delegate> get_delegates () {
-		return new ReadOnlyCollection<Delegate> (delegates);
+	public Gee.List<Delegate> get_delegates () {
+		return new ReadOnlyList<Delegate> (delegates);
 	}
 	
 	/**
@@ -273,8 +273,8 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return method list
 	 */
-	public Collection<Method> get_methods () {
-		return new ReadOnlyCollection<Method> (methods);
+	public Gee.List<Method> get_methods () {
+		return new ReadOnlyList<Method> (methods);
 	}
 	
 	/**
@@ -446,8 +446,8 @@ public class Vala.Namespace : Symbol {
 		this.lower_case_cprefix = cprefix;
 	}
 
-	public override Collection<string> get_cheader_filenames () {
-		return new ReadOnlyCollection<string> (cheader_filenames);
+	public override Gee.List<string> get_cheader_filenames () {
+		return new ReadOnlyList<string> (cheader_filenames);
 	}
 	
 	/**
