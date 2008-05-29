@@ -1,3 +1,9 @@
+2008-05-29  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaparser.vala:
+
+	Constant arrays don't own their elements, fixes bug 535415
+
 2008-05-29  Jamie McCracken  <jamiemcc@gnome.org>
 
 	* vala/valagenietokentype.vala:

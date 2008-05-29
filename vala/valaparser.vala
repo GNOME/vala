@@ -2023,6 +2023,13 @@ public class Vala.Parser : CodeVisitor {
 			initializer = parse_variable_initializer ();
 		}
 		expect (TokenType.SEMICOLON);
+
+		// constant arrays don't own their element
+		var array_type = type as ArrayType;
+		if (array_type != null) {
+			array_type.element_type.value_owned = false;
+		}
+
 		var c = new Constant (id, type, initializer, get_src_com (begin));
 		c.access = access;
 		set_attributes (c, attrs);
