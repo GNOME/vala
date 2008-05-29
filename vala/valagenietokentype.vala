@@ -26,6 +26,7 @@ using GLib;
 public enum Vala.Genie.TokenType {
 	NONE,
 	ABSTRACT,
+	ARRAY,
 	AS,
 	ASSERT,
 	ASSIGN,
@@ -82,6 +83,7 @@ public enum Vala.Genie.TokenType {
 	HASH,
 	IDENTIFIER,
 	IF,
+	IMPLEMENTS,
 	IN,
 	INDENT,
 	INIT,
@@ -158,6 +160,7 @@ public enum Vala.Genie.TokenType {
 	public weak string to_string () {
 		switch (this) {
 		case ABSTRACT: return "`abstract'";
+		case ARRAY: return "`array'";
 		case AS: return "`as'";
 		case ASSERT: return "`assert'";
 		case ASSIGN: return "`='";
@@ -214,6 +217,7 @@ public enum Vala.Genie.TokenType {
 		case HASH: return "`hash'";
 		case IDENTIFIER: return "identifier";
 		case IF: return "`if'";
+		case IMPLEMENTS: return "`implements'";
 		case IN: return "`in'";
 		case INDENT: return "`tab indent'";
 		case INIT: return "`init'";

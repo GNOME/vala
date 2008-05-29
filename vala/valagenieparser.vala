@@ -339,7 +339,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	public void parse_file (SourceFile source_file) {
 		scanner = new Scanner (source_file);
-
+		scanner.indent_spaces = 0;
 		index = -1;
 		size = 0;
 		
@@ -395,6 +395,11 @@ public class Vala.Genie.Parser : CodeVisitor {
 		accept (TokenType.DYNAMIC);
 
 		accept (TokenType.WEAK);
+		
+		if (accept (TokenType.ARRAY)) {
+			accept (TokenType.OF);
+		}
+		
 		skip_symbol_name ();
 		skip_type_argument_list ();
 		while (accept (TokenType.OPEN_BRACKET)) {	
@@ -427,6 +432,14 @@ public class Vala.Genie.Parser : CodeVisitor {
 			value_owned = !accept (TokenType.WEAK);
 		}
 
+		/* handle arrays */
+		bool is_array = false;
+		
+		if (accept (TokenType.ARRAY)) {
+			expect (TokenType.OF);
+			is_array = true;
+		}
+
 		var sym = parse_symbol_name ();
 		Gee.List<DataType> type_arg_list = parse_type_argument_list (false);
 
@@ -445,24 +458,36 @@ public class Vala.Genie.Parser : CodeVisitor {
 			type.nullable = accept (TokenType.INTERR);
 		}
 
-		while (accept (TokenType.OPEN_BRACKET)) {
-			int array_rank = 0;
-			do {
-				array_rank++;
-				// support for stack-allocated arrays
-				// also required for decision between expression and declaration statement
-				if (current () != TokenType.COMMA && current () != TokenType.CLOSE_BRACKET) {
-					parse_expression ();
+		if (is_array) {
+			
+			if (!accept (TokenType.OPEN_BRACKET)) {
+				type.value_owned = true;
+				type = new ArrayType (type, 1, get_src (begin));
+				type.nullable = accept (TokenType.INTERR);
+			
+			} else {
+				prev ();
+			
+				while (accept (TokenType.OPEN_BRACKET))	{		
+					int array_rank = 0;
+					do {
+						array_rank++;
+						// support for stack-allocated arrays
+						// also required for decision between expression and declaration statement
+						if (current () != TokenType.COMMA && current () != TokenType.CLOSE_BRACKET) {
+							parse_expression ();
+						}
+					}
+					while (accept (TokenType.COMMA));
+					expect (TokenType.CLOSE_BRACKET);
+
+					type.value_owned = true;
+					type = new ArrayType (type, array_rank, get_src (begin));
+					type.nullable = accept (TokenType.INTERR);
 				}
 			}
-			while (accept (TokenType.COMMA));
-			expect (TokenType.CLOSE_BRACKET);
-
-			type.value_owned = true;
-			type = new ArrayType (type, array_rank, get_src (begin));
-			type.nullable = accept (TokenType.INTERR);
 		}
-
+		
 		if (!owned_by_default) {
 			value_owned = accept (TokenType.HASH);
 		}
@@ -782,12 +807,17 @@ public class Vala.Genie.Parser : CodeVisitor {
 	Expression parse_object_or_array_creation_expression () throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.NEW);
+		
+		if (accept (TokenType.ARRAY)) {
+			expect (TokenType.OF);
+			var m = parse_member_name ();
+			var expr = parse_array_creation_expression (begin, m);
+			return expr;
+		}
+		
 		var member = parse_member_name ();
 		if (accept (TokenType.OPEN_PARENS)) {
 			var expr = parse_object_creation_expression (begin, member);
-			return expr;
-		} else if (accept (TokenType.OPEN_BRACKET)) {
-			var expr = parse_array_creation_expression (begin, member);
 			return expr;
 		} else {
 			throw new ParseError.SYNTAX (get_error ("expected ( or ["));
@@ -815,6 +845,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 		Gee.List<Expression> size_specifier_list;
 		bool first = true;
 		DataType element_type = UnresolvedType.new_from_expression (member);
+		
+		var has_bracket = accept (TokenType.OPEN_BRACKET);
+		
 		do {
 			if (!first) {
  				// array of arrays: new T[][42]
@@ -826,17 +859,21 @@ public class Vala.Genie.Parser : CodeVisitor {
 			size_specifier_list = new ArrayList<Expression> ();
 			do {
 				Expression size = null;
-				if (current () != TokenType.CLOSE_BRACKET && current () != TokenType.COMMA) {
+				if (has_bracket && current () != TokenType.CLOSE_BRACKET && current () != TokenType.COMMA) {
 					size = parse_expression ();
 					size_specified = true;
 				}
 				size_specifier_list.add (size);
 			} while (accept (TokenType.COMMA));
-			expect (TokenType.CLOSE_BRACKET);
+			
+			if (has_bracket) {
+				expect (TokenType.CLOSE_BRACKET);
+			}
 		} while (accept (TokenType.OPEN_BRACKET));
 
 		InitializerList initializer = null;
-		if (current () == TokenType.OPEN_BRACE) {
+		if (accept (TokenType.ASSIGN)) {
+
 			initializer = parse_initializer ();
 		}
 		var expr = new ArrayCreationExpression (element_type, size_specifier_list.size, initializer, get_src (begin));
@@ -1615,6 +1652,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		Expression initializer = null;
 		if (accept (TokenType.ASSIGN)) {
 			initializer = parse_variable_initializer ();
+			var array_type = variable_type as ArrayType;
+			if (array_type != null && initializer is InitializerList) {
+				initializer = new ArrayCreationExpression (array_type.element_type.copy (), array_type.rank, (InitializerList) initializer, initializer.source_reference);
+			}
 		}
 		return new LocalVariable (variable_type, id, initializer, get_src_com (begin));
 	}
@@ -2227,9 +2268,13 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var type_param_list = parse_type_parameter_list ();
 		var base_types = new ArrayList<DataType> ();
 		if (accept (TokenType.COLON)) {
-			do {
-				base_types.add (parse_type ());
-			} while (accept (TokenType.COMMA));
+			base_types.add (parse_type ());
+			
+			if (accept (TokenType.IMPLEMENTS)) {
+				do {
+					base_types.add (parse_type ());
+				} while (accept (TokenType.COMMA));
+			}
 		}
 
 		accept (TokenType.EOL);
@@ -2391,19 +2436,45 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	InitializerList parse_initializer () throws ParseError {
 		var begin = get_location ();
-		expect (TokenType.OPEN_BRACE);
+		if  (!accept (TokenType.OPEN_PARENS)) {
+			expect (TokenType.OPEN_BRACE);
+		}
 		var initializer = new InitializerList (get_src (begin));
 		if (current () != TokenType.DEDENT) {
 			do {
 				initializer.append (parse_variable_initializer ());
 			} while (accept (TokenType.COMMA));
 		}
-		expect (TokenType.CLOSE_BRACE);
+		if  (!accept (TokenType.CLOSE_PARENS)) {
+			expect (TokenType.CLOSE_BRACE);
+		}
 		return initializer;
 	}
+	
+	bool is_initializer () throws ParseError { 
+		if (current () == TokenType.OPEN_BRACE) {
+			return true;
+		}
+		
+		if (current () == TokenType.OPEN_PARENS) {
+			var begin = get_location ();
+			var is_array = false;
+						
+			next ();
+						
+			var expr = parse_expression ();
+			is_array = (accept (TokenType.COMMA));
+			
+			rollback (begin);
+			
+			return is_array;
+		}
+		return false;
+	}
+	
 
 	Expression parse_variable_initializer () throws ParseError {
-		if (current () == TokenType.OPEN_BRACE) {
+		if (is_initializer ()) {
 			var expr = parse_initializer ();
 			return expr;
 		} else {

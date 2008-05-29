@@ -1,3 +1,12 @@
+2008-05-29  Jamie McCracken  <jamiemcc@gnome.org>
+
+	* vala/valagenietokentype.vala:
+	* vala/valageniescanner.vala:
+	* vala/valagenieparser.vala:
+	
+	Revamped array syntax
+
+
 2008-05-29  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valainterfacewriter.vala:

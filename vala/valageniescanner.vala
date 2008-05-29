@@ -210,6 +210,9 @@ public class Vala.Genie.Scanner : Object {
 			break;
 		case 5:
 			switch (begin[0]) {
+			case 'a':
+				if (matches (begin, "array")) return TokenType.ARRAY;
+				break;
 			case 'b':
 				if (matches (begin, "break")) return TokenType.BREAK;
 				break;
@@ -401,7 +404,13 @@ public class Vala.Genie.Scanner : Object {
 				break;
 			}
 			break;
-
+		case 10:
+			switch (begin[0]) {
+			case 'i':
+				if (matches (begin, "implements")) return TokenType.IMPLEMENTS;
+				break;	
+			}
+			break;
 		}
 		return TokenType.IDENTIFIER;
 	}
