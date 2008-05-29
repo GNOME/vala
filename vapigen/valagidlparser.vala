@@ -608,11 +608,21 @@ public class Vala.GIdlParser : CodeVisitor {
 			current_data_type = null;
 		}
 	}
-	
+
 	private void parse_boxed (IdlNodeBoxed boxed_node, Namespace ns, IdlModule module) {
 		weak IdlNode node = (IdlNode) boxed_node;
-	
+
 		string name = fix_type_name (node.name, ns);
+
+		var node_attributes = get_attributes (node.name);
+		if (node_attributes != null) {
+			foreach (string attr in node_attributes) {
+				var nv = attr.split ("=", 2);
+				if (nv[0] == "hidden") {
+					return;
+				}
+			}
+		}
 
 		if (!is_reference_type (node.name)) {
 			var st = ns.scope.lookup (name) as Struct;
@@ -1566,6 +1576,13 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return null;
 					}
+				} else if (nv[0] == "type_arguments") {
+					var type_args = eval (nv[1]).split (",");
+					foreach (string type_arg in type_args) {
+						var arg_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, type_arg));
+						arg_type.value_owned = true;
+						prop.property_type.add_type_argument (arg_type);
+					}
 				}
 			}
 		}
@@ -1632,6 +1649,13 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "type_name") {
 					((UnresolvedType) type).unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
+				} else if (nv[0] == "type_arguments") {
+					var type_args = eval (nv[1]).split (",");
+					foreach (string type_arg in type_args) {
+						var arg_type = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, type_arg));
+						arg_type.value_owned = true;
+						type.add_type_argument (arg_type);
+					}
 				}
 			}
 		}

@@ -1,5 +1,12 @@
 2008-05-29  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala:
+
+	Support `hidden' attribute for boxed types and `type_arguments'
+	attribute for fields and properties, patch by Ali Sabil
+
+2008-05-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterface.vala:
 
 	Fix reference counting for non-GObject interfaces
