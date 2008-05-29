@@ -40,17 +40,29 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.TagDemuxResult parse_tag (Gst.Buffer buffer, bool start_tag, uint tag_size, out weak Gst.TagList tags);
 	}
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_CDDA_CDDB_DISCID;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_CDDA_CDDB_DISCID_FULL;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_CDDA_MUSICBRAINZ_DISCID;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_CDDA_MUSICBRAINZ_DISCID_FULL;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_CMML_CLIP;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_CMML_HEAD;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_CMML_STREAM;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_MUSICBRAINZ_ALBUMARTISTID;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_MUSICBRAINZ_ALBUMID;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_MUSICBRAINZ_ARTISTID;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_MUSICBRAINZ_TRACKID;
+	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_MUSICBRAINZ_TRMID;
 	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public static weak string tag_freeform_string_to_utf8 (string data, int size, string env_vars);

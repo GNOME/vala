@@ -453,9 +453,35 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (c.get_cname () != c.get_default_cname ()) {
+		bool custom_cname = (c.get_cname () != c.get_default_cname ());
+		bool custom_cheaders = (c.parent_symbol is Namespace);
+		if (custom_cname || custom_cheaders) {
 			write_indent ();
-			write_string ("[CCode (cname = \"%s\")]".printf (c.get_cname ()));
+			write_string ("[CCode (");
+
+			if (custom_cname) {
+				write_string ("cname = \"%s\"".printf (c.get_cname ()));
+			}
+
+			if (custom_cheaders) {
+				if (custom_cname) {
+					write_string (", ");
+				}
+
+				bool first = true;
+				string cheaders;
+				foreach (string cheader in c.get_cheader_filenames ()) {
+					if (first) {
+						cheaders = cheader;
+						first = false;
+					} else {
+						cheaders = "%s,%s".printf (cheaders, cheader);
+					}
+				}
+				write_string ("cheader_filename = \"%s\"".printf (cheaders));
+			}
+
+			write_string (")]");
 		}
 
 		write_indent ();
@@ -479,9 +505,35 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			return;
 		}
 
-		if (f.get_cname () != f.get_default_cname ()) {
+		bool custom_cname = (f.get_cname () != f.get_default_cname ());
+		bool custom_cheaders = (f.parent_symbol is Namespace);
+		if (custom_cname || custom_cheaders) {
 			write_indent ();
-			write_string ("[CCode (cname = \"%s\")]".printf (f.get_cname ()));
+			write_string ("[CCode (");
+
+			if (custom_cname) {
+				write_string ("cname = \"%s\"".printf (f.get_cname ()));
+			}
+
+			if (custom_cheaders) {
+				if (custom_cname) {
+					write_string (", ");
+				}
+
+				bool first = true;
+				string cheaders;
+				foreach (string cheader in f.get_cheader_filenames ()) {
+					if (first) {
+						cheaders = cheader;
+						first = false;
+					} else {
+						cheaders = "%s,%s".printf (cheaders, cheader);
+					}
+				}
+				write_string ("cheader_filename = \"%s\"".printf (cheaders));
+			}
+
+			write_string (")]");
 		}
 
 		if (f.no_array_length && f.field_type is ArrayType) {

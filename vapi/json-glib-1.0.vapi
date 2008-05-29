@@ -115,10 +115,15 @@ namespace Json {
 		public abstract bool deserialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node);
 		public abstract Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
 	}
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public const int MAJOR_VERSION;
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public const int MICRO_VERSION;
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public const int MINOR_VERSION;
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public const int VERSION_HEX;
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public const string VERSION_S;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public static GLib.Object construct_gobject (GLib.Type gtype, string data, ulong length) throws GLib.Error;

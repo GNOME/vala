@@ -191,11 +191,18 @@ namespace Gdk {
 	public delegate void PixbufDestroyNotify (uchar[] pixels);
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public delegate bool PixbufSaveFunc (string buf, ulong count, GLib.Error error);
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public const int PIXBUF_FEATURES_H;
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public const int PIXBUF_MAGIC_NUMBER;
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public const int PIXBUF_MAJOR;
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public const int PIXBUF_MICRO;
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public const int PIXBUF_MINOR;
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public const string PIXBUF_VERSION;
+	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public const int PIXDATA_HEADER_LENGTH;
 }

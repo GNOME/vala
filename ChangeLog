@@ -1,5 +1,44 @@
 2008-05-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala:
+
+	Output cheader filenames for namespace fields and constants
+
+	* vapi/gdk-2.0.vapi:
+	* vapi/gdk-pixbuf-2.0.vapi:
+	* vapi/gio-2.0.vapi:
+	* vapi/gio-unix-2.0.vapi:
+	* vapi/gnet-2.0.vapi:
+	* vapi/gnome-desktop-2.0.vapi:
+	* vapi/gnome-keyring-1.vapi:
+	* vapi/gnome-vfs-2.0.vapi:
+	* vapi/goocanvas.vapi:
+	* vapi/gstreamer-0.10.vapi:
+	* vapi/gstreamer-audio-0.10.vapi:
+	* vapi/gstreamer-dataprotocol-0.10.vapi:
+	* vapi/gstreamer-net-0.10.vapi:
+	* vapi/gstreamer-riff-0.10.vapi:
+	* vapi/gstreamer-rtp-0.10.vapi:
+	* vapi/gstreamer-rtsp-0.10.vapi:
+	* vapi/gstreamer-sdp-0.10.vapi:
+	* vapi/gstreamer-tag-0.10.vapi:
+	* vapi/gstreamer-video-0.10.vapi:
+	* vapi/gtk+-2.0.vapi:
+	* vapi/hildon-1.vapi:
+	* vapi/json-glib-1.0.vapi:
+	* vapi/libglade-2.0.vapi:
+	* vapi/libgnome-2.0.vapi:
+	* vapi/libgnomeui-2.0.vapi:
+	* vapi/libnotify.vapi:
+	* vapi/libsoup-2.2.vapi:
+	* vapi/libsoup-2.4.vapi:
+	* vapi/pango.vapi:
+	* vapi/poppler-glib.vapi:
+
+	Regenerated
+
+2008-05-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterface.vala:
 	* gobject/valaccodeclassbinding.vala:
 	* gobject/valaccodegenerator.vala:

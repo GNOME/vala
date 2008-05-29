@@ -849,77 +849,149 @@ namespace GLib {
 	public static delegate void* ReallocFunc (void* data, ulong size);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public static delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable cancellable);
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_ACCESS_CAN_DELETE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_ACCESS_CAN_EXECUTE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_ACCESS_CAN_READ;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_ACCESS_CAN_RENAME;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_ACCESS_CAN_TRASH;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_ACCESS_CAN_WRITE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_DOS_IS_ARCHIVE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_DOS_IS_SYSTEM;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_ETAG_VALUE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_FILESYSTEM_FREE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_FILESYSTEM_READONLY;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_FILESYSTEM_SIZE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_FILESYSTEM_TYPE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_FILESYSTEM_USE_PREVIEW;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_GVFS_BACKEND;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_ID_FILE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_ID_FILESYSTEM;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_MOUNTABLE_CAN_EJECT;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_MOUNTABLE_CAN_MOUNT;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_MOUNTABLE_CAN_UNMOUNT;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_MOUNTABLE_HAL_UDI;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_MOUNTABLE_UNIX_DEVICE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_OWNER_GROUP;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_OWNER_USER;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_OWNER_USER_REAL;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_SELINUX_CONTEXT;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_COPY_NAME;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_DESCRIPTION;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_EDIT_NAME;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_FAST_CONTENT_TYPE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_ICON;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_IS_BACKUP;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_IS_HIDDEN;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_IS_SYMLINK;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_IS_VIRTUAL;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_NAME;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_SIZE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_SORT_ORDER;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_SYMLINK_TARGET;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_TARGET_URI;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_STANDARD_TYPE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_THUMBNAILING_FAILED;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_THUMBNAIL_PATH;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_TIME_ACCESS;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_TIME_ACCESS_USEC;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_TIME_CHANGED;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_TIME_CHANGED_USEC;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_TIME_CREATED;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_TIME_CREATED_USEC;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_TIME_MODIFIED;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_TIME_MODIFIED_USEC;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_TRASH_ITEM_COUNT;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_UNIX_BLOCKS;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_UNIX_BLOCK_SIZE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_UNIX_DEVICE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_UNIX_GID;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_UNIX_INODE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_UNIX_IS_MOUNTPOINT;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_UNIX_MODE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_UNIX_NLINK;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_UNIX_RDEV;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_UNIX_UID;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string NATIVE_VOLUME_MONITOR_EXTENSION_POINT_NAME;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string VFS_EXTENSION_POINT_NAME;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string VOLUME_IDENTIFIER_KIND_HAL_UDI;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string VOLUME_IDENTIFIER_KIND_LABEL;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string VOLUME_IDENTIFIER_KIND_NFS_MOUNT;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string VOLUME_IDENTIFIER_KIND_UNIX_DEVICE;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string VOLUME_IDENTIFIER_KIND_UUID;
+	[CCode (cheader_filename = "gio/gio.h")]
 	public const string VOLUME_MONITOR_EXTENSION_POINT_NAME;
 	[CCode (cname = "g_content_type_can_be_executable", cheader_filename = "gio/gio.h")]
 	public static bool g_content_type_can_be_executable (string type);

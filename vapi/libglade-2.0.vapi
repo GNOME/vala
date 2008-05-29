@@ -113,6 +113,7 @@ namespace Glade {
 	public delegate void XMLConnectFunc (string handler_name, GLib.Object object, string signal_name, string signal_data, GLib.Object connect_object, bool after);
 	[CCode (cheader_filename = "glade/glade.h")]
 	public delegate weak Gtk.Widget XMLCustomWidgetHandler (Glade.XML xml, string func_name, string name, string string1, string string2, int int1, int int2);
+	[CCode (cheader_filename = "glade/glade.h")]
 	public const int MODULE_API_VERSION;
 	[CCode (cheader_filename = "glade/glade.h")]
 	public static int enum_from_string (GLib.Type type, string str);

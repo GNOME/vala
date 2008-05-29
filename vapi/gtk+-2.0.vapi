@@ -6430,154 +6430,303 @@ namespace Gtk {
 	public delegate void TreeViewSearchPositionFunc (Gtk.TreeView tree_view, Gtk.Widget search_dialog);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void WindowKeysForeachFunc (Gtk.Window window, uint keyval, Gdk.ModifierType modifiers, bool is_mnemonic);
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int ARG_READWRITE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int BINARY_AGE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int BUTTONBOX_DEFAULT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int INPUT_ERROR;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int INTERFACE_AGE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int MAJOR_VERSION;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int MAX_COMPOSE_LEN;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int MICRO_VERSION;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int MINOR_VERSION;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PAPER_NAME_A3;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PAPER_NAME_A4;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PAPER_NAME_A5;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PAPER_NAME_B5;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PAPER_NAME_EXECUTIVE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PAPER_NAME_LEGAL;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PAPER_NAME_LETTER;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int PARAM_READABLE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int PARAM_READWRITE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int PARAM_WRITABLE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int PATH_PRIO_MASK;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_COLLATE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_DEFAULT_SOURCE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_DITHER;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_DUPLEX;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_FINISHINGS;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_MEDIA_TYPE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_NUMBER_UP;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_N_COPIES;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_ORIENTATION;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_OUTPUT_BIN;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_OUTPUT_FILE_FORMAT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_OUTPUT_URI;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_PAGE_RANGES;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_PAGE_SET;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_PAPER_FORMAT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_PAPER_HEIGHT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_PAPER_WIDTH;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_PRINTER;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_PRINT_PAGES;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_QUALITY;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_RESOLUTION;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_REVERSE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_SCALE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_USE_COLOR;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_WIN32_DRIVER_EXTRA;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string PRINT_SETTINGS_WIN32_DRIVER_VERSION;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int PRIORITY_REDRAW;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int PRIORITY_RESIZE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ABOUT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ADD;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_APPLY;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_BOLD;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CANCEL;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CDROM;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CLEAR;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CLOSE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_COLOR_PICKER;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CONNECT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CONVERT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_COPY;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_CUT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DELETE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DIALOG_AUTHENTICATION;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DIALOG_ERROR;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DIALOG_INFO;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DIALOG_QUESTION;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DIALOG_WARNING;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DIRECTORY;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DISCARD;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DISCONNECT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DND;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_DND_MULTIPLE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_EDIT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_EXECUTE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_FILE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_FIND;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_FIND_AND_REPLACE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_FLOPPY;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_FULLSCREEN;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GOTO_BOTTOM;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GOTO_FIRST;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GOTO_LAST;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GOTO_TOP;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GO_BACK;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GO_DOWN;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GO_FORWARD;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_GO_UP;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_HARDDISK;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_HELP;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_HOME;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_INDENT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_INDEX;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_INFO;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ITALIC;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_JUMP_TO;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_JUSTIFY_CENTER;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_JUSTIFY_FILL;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_JUSTIFY_LEFT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_JUSTIFY_RIGHT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_LEAVE_FULLSCREEN;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_FORWARD;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_NEXT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_PAUSE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_PLAY;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_PREVIOUS;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_RECORD;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_REWIND;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MEDIA_STOP;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_MISSING_IMAGE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_NETWORK;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_NEW;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_NO;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_OK;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_OPEN;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ORIENTATION_LANDSCAPE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ORIENTATION_PORTRAIT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ORIENTATION_REVERSE_LANDSCAPE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ORIENTATION_REVERSE_PORTRAIT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PASTE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PREFERENCES;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PRINT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PRINT_PREVIEW;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_PROPERTIES;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_QUIT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_REDO;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_REFRESH;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_REMOVE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_REVERT_TO_SAVED;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SAVE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SAVE_AS;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SELECT_ALL;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SELECT_COLOR;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SELECT_FONT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SORT_ASCENDING;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SORT_DESCENDING;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_SPELL_CHECK;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_STOP;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_STRIKETHROUGH;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_UNDELETE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_UNDERLINE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_UNDO;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_UNINDENT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_YES;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ZOOM_100;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ZOOM_FIT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ZOOM_IN;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const string STOCK_ZOOM_OUT;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int TEXT_VIEW_PRIORITY_VALIDATE;
+	[CCode (cheader_filename = "gtk/gtk.h")]
 	public const int TYPE_FUNDAMENTAL_LAST;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool accel_groups_activate (GLib.Object object, uint accel_key, Gdk.ModifierType accel_mods);

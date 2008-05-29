@@ -129,26 +129,47 @@ namespace Gnome {
 	public static delegate void ModuleInitHook (Gnome.ModuleInfo mod_info);
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static delegate void TriggerActionFunction (string msg, string level, string[] supinfo);
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string DOT_GNOME;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string DOT_GNOME_PRIVATE;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_APP_DATADIR;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_APP_ID;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_APP_LIBDIR;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_APP_PREFIX;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_APP_SYSCONFDIR;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_APP_VERSION;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_CREATE_DIRECTORIES;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_ENABLE_SOUND;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_ESPEAKER;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_GNOME_DATADIR;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_GNOME_LIBDIR;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_GNOME_PATH;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_GNOME_PREFIX;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_GNOME_SYSCONFDIR;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_GOPTION_CONTEXT;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_HUMAN_READABLE_NAME;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_POPT_CONTEXT;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_POPT_FLAGS;
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string PARAM_POPT_TABLE;
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static weak Gnome.ModuleInfo bonobo_module_info_get ();

@@ -499,72 +499,137 @@ namespace Gnome {
 	public delegate void StringCallback (string str);
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static delegate void UISignalConnectFunc (Gnome.UIInfo uiinfo, string signal_name, Gnome.UIBuilderData uibdata);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string GNOMEUIINFO_KEY_UIBDATA;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string GNOMEUIINFO_KEY_UIDATA;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string APP_MENUBAR_NAME;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string APP_TOOLBAR_NAME;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int CANCEL;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string CLIENT_PARAM_SM_CONNECT;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int KEY_MOD_CLEAR;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int KEY_MOD_CLOSE_WINDOW;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int KEY_MOD_NEW_WINDOW;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int KEY_MOD_PAUSE_GAME;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int KEY_MOD_PRINT_SETUP;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int KEY_MOD_REDO;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int KEY_MOD_REDO_MOVE;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int KEY_MOD_SAVE_AS;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int KEY_NAME_CLEAR;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int KEY_NAME_CLOSE_WINDOW;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int KEY_NAME_NEW_WINDOW;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int KEY_NAME_PRINT_SETUP;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string MESSAGE_BOX_ERROR;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string MESSAGE_BOX_GENERIC;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string MESSAGE_BOX_INFO;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string MESSAGE_BOX_QUESTION;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string MESSAGE_BOX_WARNING;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int NO;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int OK;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int PAD;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int PAD_BIG;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int PAD_SMALL;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string PROPERTY_BOX_DIRTY;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_ABOUT;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_ATTACH;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_AUTHENTICATION;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_BLANK;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_BOOK_BLUE;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_BOOK_GREEN;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_BOOK_OPEN;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_BOOK_RED;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_BOOK_YELLOW;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_LINE_IN;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_MAIL;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_MAIL_FWD;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_MAIL_NEW;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_MAIL_RCV;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_MAIL_RPL;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_MAIL_SND;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_MIC;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_MIDI;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_MULTIPLE_FILE;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_NOT;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_SCORES;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_TABLE_BORDERS;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_TABLE_FILL;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_TEXT_BULLETED_LIST;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_TEXT_INDENT;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_TEXT_NUMBERED_LIST;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_TEXT_UNINDENT;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_TIMER;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_TIMER_STOP;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_TRASH;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_TRASH_FULL;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string STOCK_VOLUME;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const int YES;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string LIBGNOMEUI_PARAM_CRASH_DIALOG;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string LIBGNOMEUI_PARAM_DEFAULT_ICON;
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public const string LIBGNOMEUI_PARAM_DISPLAY;
-	[CCode (cname = "LIBGNOMEUI_MODULE")]
+	[CCode (cname = "LIBGNOMEUI_MODULE", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public Gnome.ModuleInfo libgnomeui_module;
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static void accelerators_sync ();

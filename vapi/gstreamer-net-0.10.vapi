@@ -42,5 +42,6 @@ namespace Gst {
 		[NoAccessorMethod]
 		public int port { get; set; }
 	}
+	[CCode (cheader_filename = "gst/net/gstnet.h")]
 	public const int NET_TIME_PACKET_SIZE;
 }

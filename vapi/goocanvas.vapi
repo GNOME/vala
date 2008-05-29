@@ -869,5 +869,6 @@ namespace Goo {
 		public virtual signal void child_notify (GLib.ParamSpec pspec);
 		public virtual signal void child_removed (int child_num);
 	}
+	[CCode (cheader_filename = "goocanvas.h")]
 	public const int NUM_ARROW_POINTS;
 }

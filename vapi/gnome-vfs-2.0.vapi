@@ -948,38 +948,71 @@ namespace GnomeVFS {
 	public delegate void VolumeOpCallback (bool succeeded, string error, string detailed_error);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public delegate int XferProgressCallback (GnomeVFS.XferProgressInfo info);
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string DESKTOP_ENTRY_GROUP;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_APPLICATION_REGISTRY_CAN_OPEN_MULTIPLE_FILES;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_APPLICATION_REGISTRY_COMMAND;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_APPLICATION_REGISTRY_NAME;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_APPLICATION_REGISTRY_REQUIRES_TERMINAL;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_APPLICATION_REGISTRY_STARTUP_NOTIFY;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_APPLICATION_REGISTRY_USES_GNOMEVFS;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const int GNOME_VFS_MAJOR_VERSION;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const int GNOME_VFS_MICRO_VERSION;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_MIME_TYPE_UNKNOWN;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const int GNOME_VFS_MINOR_VERSION;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_MODULE_CALLBACK_AUTHENTICATION;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_MODULE_CALLBACK_FILL_AUTHENTICATION;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_MODULE_CALLBACK_FULL_AUTHENTICATION;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_MODULE_CALLBACK_HTTP_PROXY_AUTHENTICATION;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_MODULE_CALLBACK_HTTP_RECEIVED_HEADERS;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_MODULE_CALLBACK_HTTP_SEND_ADDITIONAL_HEADERS;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_MODULE_CALLBACK_QUESTION;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_MODULE_CALLBACK_SAVE_AUTHENTICATION;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_MODULE_CALLBACK_STATUS_MESSAGE;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const int GNOME_VFS_PRIORITY_DEFAULT;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const int GNOME_VFS_PRIORITY_MAX;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const int GNOME_VFS_PRIORITY_MIN;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_URI_MAGIC_STR;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const string GNOME_VFS_URI_PATH_STR;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const int S_IRGRP;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const int S_IROTH;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const int S_ISGID;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const int S_ISUID;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const int S_IWGRP;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const int S_IWOTH;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const int S_IXGRP;
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public const int S_IXOTH;
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static bool application_is_user_owned_application (GnomeVFS.MimeApplication application);

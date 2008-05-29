@@ -347,6 +347,7 @@ namespace Gst {
 		[HasEmitter]
 		public virtual signal Gst.RTSPResult send (void* req, void* resp);
 	}
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int RTSP_DEFAULT_PORT;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtsp_base64_decode_ip (string data, ulong len);

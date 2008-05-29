@@ -250,10 +250,15 @@ namespace Gst {
 	public delegate bool AudioMixerFilterFunc (Gst.Mixer mixer);
 	[CCode (cheader_filename = "gst/audio/gstringbuffer.h")]
 	public delegate void RingBufferCallback (Gst.RingBuffer rbuf, uchar data, uint len);
+	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public const int AUDIO_DEF_RATE;
+	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public const string AUDIO_FLOAT_PAD_TEMPLATE_CAPS;
+	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public const string AUDIO_FLOAT_STANDARD_PAD_TEMPLATE_CAPS;
+	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public const string AUDIO_INT_PAD_TEMPLATE_CAPS;
+	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public const string AUDIO_INT_STANDARD_PAD_TEMPLATE_CAPS;
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static weak Gst.Buffer audio_buffer_clip (Gst.Buffer buffer, Gst.Segment segment, int rate, int frame_size);

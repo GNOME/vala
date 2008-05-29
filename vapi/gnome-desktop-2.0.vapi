@@ -110,36 +110,68 @@ namespace Gnome {
 	public class Hint : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		public Hint (string hintfile, string title, string background_image, string logo_image, string startupkey);
 	}
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_ACTIONS;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_CATEGORIES;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_COMMENT;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_DEFAULT_APP;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_DEV;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_DOC_PATH;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_ENCODING;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_EXEC;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_FILE_PATTERN;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_FS_TYPE;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_GENERIC_NAME;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_HIDDEN;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_ICON;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_MIME_TYPE;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_MINI_ICON;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_MOUNT_POINT;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_NAME;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_NO_DISPLAY;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_ONLY_SHOW_IN;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_PATH;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_PATTERNS;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_READ_ONLY;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_SORT_ORDER;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_SWALLOW_EXEC;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_SWALLOW_TITLE;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_TERMINAL;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_TERMINAL_OPTIONS;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_TRY_EXEC;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_TYPE;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_UNMOUNT_ICON;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_URL;
+	[CCode (cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public const string DESKTOP_ITEM_VERSION;
 }

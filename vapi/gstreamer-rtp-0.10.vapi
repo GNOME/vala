@@ -196,48 +196,91 @@ namespace Gst {
 		[NoAccessorMethod]
 		public uint timestamp_offset { get; set; }
 	}
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int RTCP_MAX_BYE_SSRC_COUNT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int RTCP_MAX_RB_COUNT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int RTCP_MAX_SDES;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int RTCP_MAX_SDES_ITEM_COUNT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int RTCP_VALID_MASK;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int RTCP_VALID_VALUE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int RTCP_VERSION;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_1016_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_CELLB_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_CN_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_DVI4_11025_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_DVI4_16000_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_DVI4_22050_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_DVI4_8000_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_DYNAMIC_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_G721_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_G722_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int RTP_PAYLOAD_G723_53;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_G723_53_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int RTP_PAYLOAD_G723_63;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_G723_63_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_G723_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_G728_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_G729_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_GSM_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_H261_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_H263_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_JPEG_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_L16_MONO_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_L16_STEREO_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_LPC_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_MP2T_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_MPA_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_MPV_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_NV_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_PCMA_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_PCMU_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_QCELP_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int RTP_PAYLOAD_TS41;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_TS41_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int RTP_PAYLOAD_TS48;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string RTP_PAYLOAD_TS48_STRING;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int RTP_VERSION;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static bool rtcp_buffer_add_packet (Gst.Buffer buffer, Gst.RTCPType type, Gst.RTCPPacket packet);

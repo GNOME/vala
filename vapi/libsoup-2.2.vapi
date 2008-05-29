@@ -557,68 +557,131 @@ namespace Soup {
 	public delegate void SocketCallback (Soup.Socket sock, uint status);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void SocketListenerCallback (Soup.Socket listener, Soup.Socket sock);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int ADDRESS_ANY_PORT;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string CONNECTION_ASYNC_CONTEXT;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int CONNECTION_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string CONNECTION_MESSAGE_FILTER;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string CONNECTION_ORIGIN_URI;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string CONNECTION_PROXY_URI;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string CONNECTION_SSL_CREDENTIALS;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string CONNECTION_TIMEOUT;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int DATE_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int HEADERS_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int MESSAGE_FILTER_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int MESSAGE_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int MESSAGE_QUEUE_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_CONNECT;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_COPY;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_DELETE;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_GET;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int METHOD_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_HEAD;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_LOCK;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_MKCOL;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_MOVE;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_OPTIONS;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_PATCH;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_POST;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_PROPFIND;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_PROPPATCH;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_PUT;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_TRACE;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string METHOD_UNLOCK;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int MISC_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SERVER_ASYNC_CONTEXT;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int SERVER_AUTH_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int SERVER_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SERVER_INTERFACE;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int SERVER_MESSAGE_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SERVER_PORT;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SERVER_SSL_CERT_FILE;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SERVER_SSL_KEY_FILE;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SESSION_ASYNC_CONTEXT;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int SESSION_ASYNC_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int SESSION_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SESSION_MAX_CONNS;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SESSION_MAX_CONNS_PER_HOST;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SESSION_PROXY_URI;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SESSION_SSL_CA_FILE;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int SESSION_SYNC_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SESSION_TIMEOUT;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SESSION_USE_NTLM;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int SOAP_MESSAGE_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SOCKET_ASYNC_CONTEXT;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SOCKET_FLAG_CLOEXEC;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SOCKET_FLAG_NODELAY;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SOCKET_FLAG_NONBLOCKING;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SOCKET_FLAG_REUSEADDR;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int SOCKET_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SOCKET_IS_SERVER;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SOCKET_SSL_CREDENTIALS;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SOCKET_TIMEOUT;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int STATUS_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int TYPES_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int URI_H;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.TimeoutSource add_idle (GLib.MainContext async_context, GLib.SourceFunc function, void* data);

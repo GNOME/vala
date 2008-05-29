@@ -249,10 +249,15 @@ namespace GNet {
 	public delegate void TcpSocketConnectAsyncFunc (GNet.TcpSocket socket, GNet.TcpSocketConnectAsyncStatus status);
 	[CCode (cheader_filename = "gnet.h")]
 	public delegate void TcpSocketNewAsyncFunc (GNet.TcpSocket socket);
+	[CCode (cheader_filename = "gnet.h")]
 	public const int INETADDR_MAX_LEN;
+	[CCode (cheader_filename = "gnet.h")]
 	public const int MD5_HASH_LENGTH;
+	[CCode (cheader_filename = "gnet.h")]
 	public const int SHA_HASH_LENGTH;
+	[CCode (cheader_filename = "gnet.h")]
 	public const int SOCKS_PORT;
+	[CCode (cheader_filename = "gnet.h")]
 	public const int SOCKS_VERSION;
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak string base64_decode (string src, int srclen, int dstlenp);

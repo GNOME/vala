@@ -1484,12 +1484,19 @@ namespace Gdk {
 	public static delegate void InputFunction (void* data, int source, Gdk.InputCondition condition);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public delegate void SpanFunc (Gdk.Span span);
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const Gdk.Atom SELECTION_PRIMARY;
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const Gdk.Atom SELECTION_SECONDARY;
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const Gdk.Atom SELECTION_CLIPBOARD;
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const int CURRENT_TIME;
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const int MAX_TIMECOORD_AXES;
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const int PARENT_RELATIVE;
+	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const int PRIORITY_REDRAW;
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, void* data);

@@ -68,153 +68,301 @@ namespace Gst {
 		public uint quality;
 		public uint samplesize;
 	}
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_IBM_FORMAT_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_IBM_FORMAT_ALAW;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_IBM_FORMAT_MULAW;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_IF_COMPUSE;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_IF_KEYFRAME;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_IF_LIST;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_IF_NO_TIME;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_STRH_DISABLED;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_STRH_VIDEOPALCHANGES;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_A52;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_AAC;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_ALAW;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_APTX;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_AUDIOFILE_AF10;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_AUDIOFILE_AF36;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_BTV_DIGITAL;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_CANOPUS_ATRAC;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_CIRRUS;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_CONTROL_RES_CR10;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_CONTROL_RES_VQLPC;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_CREATIVE_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_CREATIVE_FASTSPEECH10;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_CREATIVE_FASTSPEECH8;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_CS2;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_CS_IMAADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_CU_CODEC;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_DF_G726;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_DF_GSM610;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_DIALOGIC_OKI_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_DIGIADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_DIGIFIX;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_DIGIREAL;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_DIGISTD;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_DIGITAL_G723;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_DOLBY_AC2;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_DOLBY_AC3_SPDIF;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_DSAT_DISPLAY;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_DSP_TRUESPEECH;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_DTS;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_DVI_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_ECHOSC1;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_ECHOSC3;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_ESPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_EXTENSIBLE;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_FM_TOWNS_SND;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_G722_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_G723_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_G726ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_G726_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_G728_CELP;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_G729A;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_GSM610;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_GSM_AMR_CBR;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_GSM_AMR_VBR;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_IBM_CVSD;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_IEEE_FLOAT;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_ILINK_VC;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_IPI_HSX;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_IPI_RPELP;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_ISIAUDIO;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_ITU_G721_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_LH_CODEC;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_LRC;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_LUCENT_G723;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_MALDEN_PHONYTALK;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_MEDIASONIC_G723;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_MEDIASPACE_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_MEDIAVISION_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_MPEGL12;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_MPEGL3;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_MSG723;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_MSN;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_MSRT24;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_MULAW;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_MVI_MVI2;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_NMS_VBXADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_NORRIS;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_OKI_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_OLIADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_OLICELP;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_OLIGSM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_OLIOPR;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_OLISBC;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_ONLIVE;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_PAC;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_PACKED;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_PCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_PHILIPS_LPCBB;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_PROSODY_1612;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_PROSODY_8KBPS;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_QDESIGN_MUSIC;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_QUALCOMM_HALFRATE;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_QUALCOMM_PUREVOICE;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_QUARTERDECK;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_RAW_SPORT;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_RHETOREX_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_ROCKWELL_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_ROCKWELL_DIGITALK;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_RT24;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SANYO_LD_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SBC24;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SIERRA_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SIPROLAB_ACELP4800;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SIPROLAB_ACELP8V3;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SIPROLAB_ACEPLNET;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SIPROLAB_G729;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SIPROLAB_G729A;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SIPROLAB_KELVIN;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SOFTSOUND;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SONARC;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SONY_ATRAC3;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SOUNDSPACE_MUSICOMPRESS;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_TPC;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_TUBGSM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_UHER_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_UNKNOWN;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VIVO_G723;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VIVO_SIREN;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VME_VMPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VORBIS1;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VORBIS1PLUS;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VORBIS2;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VORBIS2PLUS;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VORBIS3;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VORBIS3PLUS;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VOXWARE;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VOXWARE_AC10;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VOXWARE_AC16;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VOXWARE_AC20;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VOXWARE_AC8;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VOXWARE_BYTE_ALIGNED;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VOXWARE_METASOUND;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VOXWARE_METAVOICE;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VOXWARE_RT29HW;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VOXWARE_TQ40;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VOXWARE_TQ60;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VOXWARE_VR12;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VOXWARE_VR18;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_VSELP;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_WMAV1;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_WMAV2;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_WMAV3;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_WMAV3_L;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_WMS;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_XEBEC;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_YAMAHA_ADPCM;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_ZYXEL_ADPCM;
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public static weak Gst.Caps riff_create_audio_caps (ushort codec_id, Gst.gst_riff_strh strh, Gst.gst_riff_strf_auds strf, Gst.Buffer strf_data, Gst.Buffer strd_data, out weak string codec_name);

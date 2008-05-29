@@ -36,8 +36,11 @@ namespace Gst {
 	public static delegate bool DPPacketFromCapsFunction (Gst.Caps caps, Gst.DPHeaderFlag flags, uint length, uchar header, uchar payload);
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static delegate bool DPPacketFromEventFunction (Gst.Event event, Gst.DPHeaderFlag flags, uint length, uchar header, uchar payload);
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public const int DP_HEADER_LENGTH;
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public const int DP_VERSION_MAJOR;
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public const int DP_VERSION_MINOR;
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static weak Gst.Buffer dp_buffer_from_header (uint header_length, uchar header);

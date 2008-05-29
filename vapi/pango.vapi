@@ -736,16 +736,27 @@ namespace Pango {
 	public delegate bool AttrFilterFunc (Pango.Attribute attribute);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public delegate bool FontsetForeachFunc (Pango.Fontset fontset, Pango.Font font);
+	[CCode (cheader_filename = "pango/pango.h")]
 	public const int ANALYSIS_FLAG_CENTERED_BASELINE;
+	[CCode (cheader_filename = "pango/pango.h")]
 	public const string ENGINE_TYPE_LANG;
+	[CCode (cheader_filename = "pango/pango.h")]
 	public const string ENGINE_TYPE_SHAPE;
+	[CCode (cheader_filename = "pango/pango.h")]
 	public const string RENDER_TYPE_NONE;
+	[CCode (cheader_filename = "pango/pango.h")]
 	public const int SCALE;
+	[CCode (cheader_filename = "pango/pango.h")]
 	public const int UNKNOWN_GLYPH_HEIGHT;
+	[CCode (cheader_filename = "pango/pango.h")]
 	public const int UNKNOWN_GLYPH_WIDTH;
+	[CCode (cheader_filename = "pango/pango.h")]
 	public const int VERSION_MAJOR;
+	[CCode (cheader_filename = "pango/pango.h")]
 	public const int VERSION_MICRO;
+	[CCode (cheader_filename = "pango/pango.h")]
 	public const int VERSION_MINOR;
+	[CCode (cheader_filename = "pango/pango.h")]
 	public const string VERSION_STRING;
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_background_new (ushort red, ushort green, ushort blue);

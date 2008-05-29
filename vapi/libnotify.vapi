@@ -44,7 +44,9 @@ namespace Notify {
 	}
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static delegate void ActionCallback (Notify.Notification p1, string p2, void* p3);
+	[CCode (cheader_filename = "libnotify/notify.h")]
 	public const int EXPIRES_DEFAULT;
+	[CCode (cheader_filename = "libnotify/notify.h")]
 	public const int EXPIRES_NEVER;
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static weak string get_app_name ();

@@ -601,13 +601,21 @@ namespace Hildon {
 		public abstract void get_natural_size (int width, int height);
 		public virtual signal void crumb_activated ();
 	}
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public const int MAJOR_VERSION;
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public const int MARGIN_DEFAULT;
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public const int MARGIN_DOUBLE;
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public const int MARGIN_HALF;
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public const int MARGIN_TRIPLE;
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public const int MICRO_VERSION;
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public const int MINOR_VERSION;
+	[CCode (cheader_filename = "hildon/hildon.h")]
 	public const int WINDOW_LONG_PRESS_TIME;
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public static int get_icon_pixel_size (Gtk.IconSize size);

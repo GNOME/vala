@@ -1926,81 +1926,157 @@ namespace Gst {
 	public static delegate bool ValueSubtractFunc (GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static delegate bool ValueUnionFunc (GLib.Value dest, GLib.Value value1, GLib.Value value2);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int BUFFER_COPY_ALL;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int BUFFER_OFFSET_NONE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string BUFFER_TRACE_NAME;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string CLOCK_ENTRY_TRACE_NAME;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int CLOCK_TIME_NONE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int DEBUG_BG_MASK;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int DEBUG_FG_MASK;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int DEBUG_FORMAT_MASK;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string EVENT_TRACE_NAME;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int EVENT_TYPE_BOTH;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int EVENT_TYPE_SHIFT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string FOURCC_FORMAT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int INDEX_ID_INVALID;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string LICENSE_UNKNOWN;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string MESSAGE_TRACE_NAME;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int MSECOND;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int NSECOND;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int PARAM_CONTROLLABLE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int PARAM_USER_SHIFT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int SECOND;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_ALBUM;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_ALBUM_GAIN;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_ALBUM_PEAK;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_ALBUM_SORTNAME;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_ALBUM_VOLUME_COUNT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_ALBUM_VOLUME_NUMBER;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_ARTIST;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_ARTIST_SORTNAME;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_AUDIO_CODEC;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_BEATS_PER_MINUTE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_BITRATE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_CODEC;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_COMMENT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_COMPOSER;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_CONTACT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_COPYRIGHT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_COPYRIGHT_URI;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_DATE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_DESCRIPTION;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_DURATION;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_ENCODER;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_ENCODER_VERSION;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_EXTENDED_COMMENT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_GENRE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_IMAGE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_ISRC;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_LANGUAGE_CODE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_LICENSE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_LICENSE_URI;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_LOCATION;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_MAXIMUM_BITRATE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_MINIMUM_BITRATE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_NOMINAL_BITRATE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_ORGANIZATION;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_PERFORMER;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_PREVIEW_IMAGE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_REFERENCE_LEVEL;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_SERIAL;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_TITLE;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_TITLE_SORTNAME;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_TRACK_COUNT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_TRACK_GAIN;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_TRACK_NUMBER;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_TRACK_PEAK;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_VERSION;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TAG_VIDEO_CODEC;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const string TIME_FORMAT;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int USECOND;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int VALUE_EQUAL;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int VALUE_GREATER_THAN;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int VALUE_LESS_THAN;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int VALUE_UNORDERED;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int VERSION_MAJOR;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int VERSION_MICRO;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int VERSION_MINOR;
+	[CCode (cheader_filename = "gst/gst.h")]
 	public const int VERSION_NANO;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void init ([CCode (array_length_pos = 0.9)] ref weak string[] args);

@@ -161,9 +161,14 @@ namespace Gst {
 		public weak string time;
 		public weak string typed_time;
 	}
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public const string SDP_BWTYPE_AS;
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public const string SDP_BWTYPE_CT;
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public const string SDP_BWTYPE_EXT_PREFIX;
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public const string SDP_BWTYPE_RR;
+	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public const string SDP_BWTYPE_RS;
 }
