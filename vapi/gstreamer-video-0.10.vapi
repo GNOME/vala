@@ -104,7 +104,7 @@ namespace Gst {
 		[CCode (cheader_filename = "gst/video/video.h,gst/video/video.h,gst/video/video.h,gst/video/video.h")]
 		public const string RGB_15;
 		[CCode (cname = "GST_VIDEO_CAPS_YUV", cheader_filename = "gst/video/video.h,gst/video/video.h,gst/video/video.h,gst/video/video.h")]
-		public static string YUV (string fourcc);
+		public static weak string YUV (string fourcc);
 	}
 	[CCode (cprefix = "GST_VIDEO_FORMAT_", has_type_id = "0", cheader_filename = "gst/video/video.h")]
 	public enum VideoFormat {

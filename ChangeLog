@@ -1,5 +1,12 @@
 2008-05-29  Ali Sabil  <ali.sabil@gmail.com>
 
+	* vapi/packages/gstreamer-video-0.10/: fixed VideoCaps.YUV
+	to return a weak string
+
+	* vapi/gstreamer-video-0.10.vapi: regenerated
+
+2008-05-29  Ali Sabil  <ali.sabil@gmail.com>
+
 	* vapi/packages/gstreamer-base-0.10/: hide private fields from
 	GstAdapter, and specify the type argument for GstCollectPads.data
 

@@ -122,6 +122,6 @@ namespace Gst {
 		public const string RGB_15;
 
 		[CCode (cname = "GST_VIDEO_CAPS_YUV")]
-		public string YUV (string fourcc);
+		public weak string YUV (string fourcc);
 	}
 }
