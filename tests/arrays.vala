@@ -307,3 +307,5 @@ class Maman.Bar : Object {
 	}
 }
 
+const string[] const_string_array = { "hello", "world" };
+

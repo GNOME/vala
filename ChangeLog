@@ -1,5 +1,11 @@
 2008-05-29  Jürg Billeter  <j@bitron.ch>
 
+	* tests/arrays.vala:
+
+	Test compilation of constant string arrays
+
+2008-05-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 
 	Constant arrays don't own their elements, fixes bug 535415
