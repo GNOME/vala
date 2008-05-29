@@ -369,11 +369,23 @@ public class Vala.Interface : ObjectTypeSymbol {
 	}
 	
 	public override string? get_ref_function () {
-		return "g_object_ref";
+		foreach (DataType prerequisite in prerequisites) {
+			string ref_func = prerequisite.data_type.get_ref_function ();
+			if (ref_func != null) {
+				return ref_func;
+			}
+		}
+		return null;
 	}
 	
 	public override string? get_unref_function () {
-		return "g_object_unref";
+		foreach (DataType prerequisite in prerequisites) {
+			string unref_func = prerequisite.data_type.get_unref_function ();
+			if (unref_func != null) {
+				return unref_func;
+			}
+		}
+		return null;
 	}
 
 	public override bool is_subtype_of (TypeSymbol t) {

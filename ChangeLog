@@ -1,5 +1,11 @@
 2008-05-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterface.vala:
+
+	Fix reference counting for non-GObject interfaces
+
+2008-05-29  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeclassbinding.vala:
 	* gobject/valaccodegenerator.vala:
 	* gobject/valaccodemethodbinding.vala:
