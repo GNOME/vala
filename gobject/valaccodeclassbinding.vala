@@ -511,7 +511,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 	}
 	
 	private void add_instance_init_function (Class cl) {
-		var instance_init = new CCodeFunction ("%s_init".printf (cl.get_lower_case_cname (null)), "void");
+		var instance_init = new CCodeFunction ("%s_instance_init".printf (cl.get_lower_case_cname (null)), "void");
 		instance_init.add_parameter (new CCodeFormalParameter ("self", "%s *".printf (cl.get_cname ())));
 		instance_init.modifiers = CCodeModifiers.STATIC;
 		
@@ -525,13 +525,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 		}
 		
 		init_block.add_statement (codegen.instance_init_fragment);
-		
-		var init_sym = cl.scope.lookup ("init");
-		if (init_sym != null) {
-			var init_fun = (Method) init_sym;
-			init_block.add_statement (init_fun.body.ccodenode);
-		}
-		
+
 		codegen.source_type_member_definition.append (instance_init);
 	}
 	

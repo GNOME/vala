@@ -66,7 +66,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	}
 	
 	public override string get_instance_init_func_name () {
-		return "%s_init".printf (class_reference.get_lower_case_cname (null));
+		return "%s_instance_init".printf (class_reference.get_lower_case_cname (null));
 	}
 	
 	public override string get_parent_type_name () {

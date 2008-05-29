@@ -179,10 +179,6 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			cparam_map.set (codegen.get_param_pos (m.cinstance_parameter_position), class_param);
 		}
 
-		if (in_fundamental_creation_method) {
-			cparam_map.set (codegen.get_param_pos (0.1), new CCodeFormalParameter ("type", "GType"));
-		}
-
 		if (in_gobject_creation_method) {
 			// memory management for generic types
 			int type_param_index = 0;
@@ -317,20 +313,12 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 							param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
 							cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new PointerType (new VoidType ()), param_name)));
 						}
-					} else if (in_fundamental_creation_method) {
-						var cl = (Class) m.parent_symbol;
-						var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
-						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
-						ccall.add_argument (new CCodeIdentifier ("type"));
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", new CCodeCastExpression (ccall, cl.get_cname () + "*")));
-						cinit.append (cdecl);
 					} else if (in_gtypeinstance_creation_method) {
 						var cl = (Class) m.parent_symbol;
 						var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
-						var fundamental_class = find_fundamental_class (cl);
-						var ccall = new CCodeFunctionCall (new CCodeIdentifier (fundamental_class.default_construction_method.get_cname ()));
+						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
 						ccall.add_argument (new CCodeIdentifier (cl.get_type_id ()));
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", new CCodeCastExpression (ccall, cl.get_cname () + "*")));
 						cinit.append (cdecl);
 					} else if (codegen.current_type_symbol is Class) {
 						var cl = (Class) m.parent_symbol;
