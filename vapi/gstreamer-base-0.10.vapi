@@ -159,13 +159,6 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/base/gstadapter.h")]
 	public class Adapter : GLib.Object {
-		public weak GLib.SList buflist;
-		public uint size;
-		public uint skip;
-		public uchar assembled_data;
-		public uint assembled_size;
-		public uint assembled_len;
-		public weak GLib.SList buflist_end;
 		public uint available ();
 		public uint available_fast ();
 		public void clear ();
@@ -255,7 +248,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]
 	public class CollectPads : Gst.Object {
-		public weak GLib.SList data;
+		public weak GLib.SList<Gst.CollectData> data;
 		public uint cookie;
 		public weak GLib.Cond cond;
 		public weak Gst.CollectPadsFunction func;
