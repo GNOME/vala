@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 namespace Gst {
-	public extern void init ([CCode (array_length_pos = 0.9)] ref string[] args);
+	public extern void init ([CCode (array_length_pos = 0.9)] ref weak string[] args);
 
 	public struct ClockTime : uint64 {
 	}

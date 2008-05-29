@@ -1,5 +1,11 @@
 2008-05-29  Jaap A. Haitsma  <jaap@haitsma.org>
 
+	* vapi/gstreamer-0.10.vapi:
+	* vapi/packages/gstreamer-0.10/gstreamer-0.10-custom.vala:
+	Fix Gst.init () binding. Fixes bug #535411
+
+2008-05-29  Jaap A. Haitsma  <jaap@haitsma.org>
+
 	* tests/testrunner.sh:
 	Print errors on stdout. Fixes #535417
 

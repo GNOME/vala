@@ -2003,7 +2003,7 @@ namespace Gst {
 	public const int VERSION_MINOR;
 	public const int VERSION_NANO;
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void init ([CCode (array_length_pos = 0.9)] ref string[] args);
+	public static void init ([CCode (array_length_pos = 0.9)] ref weak string[] args);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void atomic_int_set (int atomic_int, int value);
 	[CCode (cheader_filename = "gst/gst.h")]
