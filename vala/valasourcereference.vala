@@ -100,6 +100,6 @@ public class Vala.SourceReference : Object {
 	 * @return human-readable string
 	 */
 	public string to_string () {
-		return ("%s:%d.%d-%d.%d".printf (file.filename, first_line, first_column, last_line, last_column));
+		return ("%s:%d.%d-%d.%d".printf (file.get_relative_filename (), first_line, first_column, last_line, last_column));
 	}
 }

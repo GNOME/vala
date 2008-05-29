@@ -185,6 +185,10 @@ public class Vala.SourceFile : Object {
 		return Path.get_basename (filename.substring (0, dot));
 	}
 
+	public string get_relative_filename () {
+		return get_subdir () + Path.get_basename (filename);
+	}
+
 	/**
 	 * Returns the filename to use when generating C header files.
 	 *

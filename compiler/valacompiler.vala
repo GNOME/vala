@@ -44,7 +44,6 @@ class Vala.Compiler : Object {
 	static bool disable_checking;
 	static bool disable_non_null;
 	static bool non_null_experimental;
-	static bool verbose;
 	static string cc_command;
 	[NoArrayLength]
 	static string[] cc_options;
@@ -76,7 +75,6 @@ class Vala.Compiler : Object {
 		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, out cc_options, "Pass OPTION to the C compiler", "OPTION..." },
 		{ "save-temps", 0, 0, OptionArg.NONE, out save_temps, "Keep temporary files", null },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
-		{ "verbose", 'v', 0, OptionArg.NONE, ref verbose, "Include the source line text when reporting errors or warnings." },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, out sources, null, "FILE..." },
 		{ null }
 	};
@@ -153,7 +151,7 @@ class Vala.Compiler : Object {
 		context.checking = !disable_checking;
 		context.non_null = !disable_non_null || non_null_experimental;
 		context.non_null_experimental = non_null_experimental;
-		Report.set_verbose_errors (verbose);
+		Report.set_verbose_errors (!quiet_mode);
 
 		context.ccode_only = ccode_only;
 		context.compile_only = compile_only;
