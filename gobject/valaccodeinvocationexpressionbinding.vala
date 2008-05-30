@@ -80,7 +80,11 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 			if (instance_expression_type.data_type is Struct
 			    && !((Struct) instance_expression_type.data_type).is_simple_type ()
 			    && instance_expression_type.data_type != codegen.current_type_symbol) {
-				if (instance is CCodeIdentifier || instance is CCodeMemberAccess) {
+				var unary = instance as CCodeUnaryExpression;
+				if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
+					// *expr => expr
+					instance = unary.inner;
+				} else if (instance is CCodeIdentifier || instance is CCodeMemberAccess) {
 					instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
 				} else {
 					// if instance is e.g. a function call, we can't take the address of the expression
@@ -178,7 +182,11 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 					if (!(arg.value_type is NullType) && param.parameter_type.data_type is Struct && !((Struct) param.parameter_type.data_type).is_simple_type ()) {
 						// we already use a reference for arguments of ref, out, and nullable parameters
 						if (param.direction == ParameterDirection.IN && !param.parameter_type.nullable) {
-							if (cexpr is CCodeIdentifier) {
+							var unary = cexpr as CCodeUnaryExpression;
+							if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
+								// *expr => expr
+								cexpr = unary.inner;
+							} else if (cexpr is CCodeIdentifier || cexpr is CCodeMemberAccess) {
 								cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 							} else {
 								// if cexpr is e.g. a function call, we can't take the address of the expression

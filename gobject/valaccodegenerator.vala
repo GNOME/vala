@@ -3426,7 +3426,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (boxing) {
 			// value needs to be boxed
 
-			if (cexpr is CCodeIdentifier) {
+			var unary = cexpr as CCodeUnaryExpression;
+			if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
+				// *expr => expr
+				cexpr = unary.inner;
+			} else if (cexpr is CCodeIdentifier || cexpr is CCodeMemberAccess) {
 				cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 			} else {
 				var decl = get_temp_variable (expression_type, expression_type.value_owned, expression_type);
@@ -3462,7 +3466,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else if (unboxing) {
 			// unbox value
 
-			cexpr = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cexpr));
+			cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cexpr);
 		} else {
 			cexpr = get_implicit_cast_expression (cexpr, expression_type, target_type, expr);
 		}

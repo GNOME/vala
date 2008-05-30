@@ -1,5 +1,13 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/valaccodeunaryexpression.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+
+	Improvements to nullable struct support
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala:
 	* gobject/valaccodeinvocationexpressionbinding.vala:
 	* gobject/valaccodememberaccessbinding.vala:
