@@ -28,6 +28,10 @@ void test_in_parameter (SimpleStruct st) {
 	stdout.printf ("test_in_parameter: st.field = %d\n", st.field);
 }
 
+void test_in_nullable_parameter (SimpleStruct? st) {
+	assert (st.field == 1);
+}
+
 void test_ref_parameter (ref SimpleStruct st) {
 	stdout.printf ("test_ref_parameter: st.field = %d\n", st.field);
 	st.field++;
@@ -55,6 +59,7 @@ void main () {
 	stdout.printf ("simple_struct.field = %d\n", simple_struct.field);
 
 	test_in_parameter (simple_struct);
+	test_in_nullable_parameter (simple_struct);
 	test_ref_parameter (ref simple_struct);
 	stdout.printf ("after test_ref_parameter: st.field = %d\n", simple_struct.field);
 	test_out_parameter (out simple_struct);

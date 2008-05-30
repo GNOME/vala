@@ -176,8 +176,8 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 
 					// pass non-simple struct instances always by reference
 					if (!(arg.value_type is NullType) && param.parameter_type.data_type is Struct && !((Struct) param.parameter_type.data_type).is_simple_type ()) {
-						// we already use a reference for arguments of ref and out parameters
-						if (param.direction == ParameterDirection.IN) {
+						// we already use a reference for arguments of ref, out, and nullable parameters
+						if (param.direction == ParameterDirection.IN && !param.parameter_type.nullable) {
 							if (cexpr is CCodeIdentifier) {
 								cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 							} else {

@@ -3385,8 +3385,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			cexpr = csink;
 		}
 
+		bool boxing = (expression_type is ValueType && !expression_type.nullable
+		               && target_type is ValueType && target_type.nullable);
+		bool unboxing = (expression_type is ValueType && expression_type.nullable
+		                 && target_type is ValueType && !target_type.nullable);
+
 		if (expression_type.value_owned
-		    && (target_type == null || !target_type.value_owned)) {
+		    && (target_type == null || !target_type.value_owned || boxing)) {
 			// value leaked, destroy it
 			var pointer_type = target_type as PointerType;
 			if (pointer_type != null && !(pointer_type.base_type is VoidType)) {
@@ -3418,7 +3423,49 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			return cexpr;
 		}
 
-		cexpr = get_implicit_cast_expression (cexpr, expression_type, target_type, expr);
+		if (boxing) {
+			// value needs to be boxed
+
+			if (cexpr is CCodeIdentifier) {
+				cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
+			} else {
+				var decl = get_temp_variable (expression_type, expression_type.value_owned, expression_type);
+				temp_vars.insert (0, decl);
+
+				var ccomma = new CCodeCommaExpression ();
+				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (get_variable_cname (decl.name)), cexpr));
+				ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (get_variable_cname (decl.name))));
+				cexpr = ccomma;
+			}
+
+			if (!target_type.value_owned) {
+				// reference to stack value
+			} else {
+				// heap-allocated
+				string dup_func = expression_type.data_type.get_dup_function ();
+				if (dup_func == null) {
+					// default to g_memdup
+					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+					ccall.add_argument (cexpr);
+					var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+					csizeof.add_argument (new CCodeIdentifier (expression_type.data_type.get_cname ()));
+					ccall.add_argument (csizeof);
+
+					cexpr = ccall;
+				} else {
+					var ccall = new CCodeFunctionCall (new CCodeIdentifier (dup_func));
+					ccall.add_argument (cexpr);
+
+					cexpr = ccall;
+				}
+			}
+		} else if (unboxing) {
+			// unbox value
+
+			cexpr = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cexpr));
+		} else {
+			cexpr = get_implicit_cast_expression (cexpr, expression_type, target_type, expr);
+		}
 
 		if (expression_type.is_type_argument) {
 			cexpr = convert_from_generic_pointer (cexpr, target_type);

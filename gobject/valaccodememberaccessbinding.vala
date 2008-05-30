@@ -199,7 +199,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 			} else {
 				var type_as_struct = p.parameter_type.data_type as Struct;
 				if (p.direction != ParameterDirection.IN
-				    || (type_as_struct != null && !type_as_struct.is_simple_type ())) {
+				    || (type_as_struct != null && !type_as_struct.is_simple_type () && !p.parameter_type.nullable)) {
 					expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (p.name));
 				} else {
 					// Property setters of non simple structs shall replace all occurences
