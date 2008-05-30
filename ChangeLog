@@ -1,5 +1,14 @@
 2008-05-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadynamicmethod.vala:
+	* vala/valadynamicproperty.vala:
+	* vala/valasymbol.vala:
+	* gobject/valaccodedynamicpropertybinding.vala:
+
+	Add support for dynamic properties of GObjects
+
+2008-05-30  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodedynamicsignalbinding.vala:
 
 	Add support for dynamic signals of GObjects

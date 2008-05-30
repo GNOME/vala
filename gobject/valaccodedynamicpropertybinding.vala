@@ -53,7 +53,11 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		func.add_parameter (new CCodeFormalParameter ("obj", dynamic_property.dynamic_type.get_cname ()));
 
 		var block = new CCodeBlock ();
-		Report.error (node.source_reference, "dynamic properties are not supported for `%s'".printf (dynamic_property.dynamic_type.to_string ()));
+		if (dynamic_property.dynamic_type.data_type == codegen.gobject_type) {
+			generate_gobject_property_getter_wrapper (block);
+		} else {
+			Report.error (node.source_reference, "dynamic properties are not supported for `%s'".printf (dynamic_property.dynamic_type.to_string ()));
+		}
 
 		// append to C source file
 		codegen.source_type_member_declaration.append (func.copy ());
@@ -79,7 +83,11 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		func.add_parameter (new CCodeFormalParameter ("value", node.property_type.get_cname ()));
 
 		var block = new CCodeBlock ();
-		Report.error (node.source_reference, "dynamic properties are not supported for `%s'".printf (dynamic_property.dynamic_type.to_string ()));
+		if (dynamic_property.dynamic_type.data_type == codegen.gobject_type) {
+			generate_gobject_property_setter_wrapper (block);
+		} else {
+			Report.error (node.source_reference, "dynamic properties are not supported for `%s'".printf (dynamic_property.dynamic_type.to_string ()));
+		}
 
 		// append to C source file
 		codegen.source_type_member_declaration.append (func.copy ());
@@ -88,5 +96,31 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		codegen.source_type_member_definition.append (func);
 
 		return getter_cname;
+	}
+
+	void generate_gobject_property_getter_wrapper (CCodeBlock block) {
+		var cdecl = new CCodeDeclaration (node.property_type.get_cname ());
+		cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+		block.add_statement (cdecl);
+
+		var call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
+		call.add_argument (new CCodeIdentifier ("obj"));
+		call.add_argument (node.get_canonical_cconstant ());
+		call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
+		call.add_argument (new CCodeConstant ("NULL"));
+
+		block.add_statement (new CCodeExpressionStatement (call));
+
+		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+	}
+
+	void generate_gobject_property_setter_wrapper (CCodeBlock block) {
+		var call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_set"));
+		call.add_argument (new CCodeIdentifier ("obj"));
+		call.add_argument (node.get_canonical_cconstant ());
+		call.add_argument (new CCodeIdentifier ("value"));
+		call.add_argument (new CCodeConstant ("NULL"));
+
+		block.add_statement (new CCodeExpressionStatement (call));
 	}
 }

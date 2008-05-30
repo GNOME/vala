@@ -42,7 +42,7 @@ public class Vala.DynamicMethod : Method {
 	}
 
 	public override Gee.List<string> get_cheader_filenames () {
-		return new ReadOnlyList<string> ();
+		return new ArrayList<string> ();
 	}
 
 	public override string get_default_cname () {

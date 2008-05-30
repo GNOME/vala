@@ -38,7 +38,7 @@ public class Vala.DynamicProperty : Property {
 	}
 
 	public override Gee.List<string> get_cheader_filenames () {
-		return new ReadOnlyList<string> ();
+		return new ArrayList<string> ();
 	}
 
 	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
