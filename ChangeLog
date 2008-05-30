@@ -1,5 +1,12 @@
 2008-05-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadatatype.vala:
+
+	Use lazy initialization for type_argument_list in DataType class
+	to improve performance
+
+2008-05-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadynamicmethod.vala:
 	* vala/valadynamicproperty.vala:
 	* vala/valasymbol.vala:

@@ -64,7 +64,8 @@ public abstract class Vala.DataType : CodeNode {
 	 */
 	public bool is_dynamic { get; set; }
 
-	private Gee.List<DataType> type_argument_list = new ArrayList<DataType> ();
+	private Gee.List<DataType> type_argument_list;
+	private static Gee.List<DataType> _empty_type_list;
 
 	/**
 	 * Appends the specified type as generic type argument.
@@ -72,6 +73,9 @@ public abstract class Vala.DataType : CodeNode {
 	 * @param arg a type reference
 	 */
 	public void add_type_argument (DataType arg) {
+		if (type_argument_list == null) {
+			type_argument_list = new ArrayList<DataType> ();
+		}
 		type_argument_list.add (arg);
 		arg.parent_node = this;
 	}
@@ -82,18 +86,24 @@ public abstract class Vala.DataType : CodeNode {
 	 * @return type argument list
 	 */
 	public Gee.List<DataType> get_type_arguments () {
-		return new ReadOnlyList<DataType> (type_argument_list);
+		if (type_argument_list != null) {
+			return type_argument_list;
+		}
+		if (_empty_type_list == null) {
+			_empty_type_list = new ReadOnlyList<DataType> (new ArrayList<DataType> ());
+		}
+		return _empty_type_list;
 	}
 
 	/**
 	 * Removes all generic type arguments.
 	 */
 	public void remove_all_type_arguments () {
-		type_argument_list.clear ();
+		type_argument_list = null;
 	}
 
 	public override void accept (CodeVisitor visitor) {
-		if (type_argument_list.size > 0) {
+		if (type_argument_list != null && type_argument_list.size > 0) {
 			foreach (DataType type_arg in type_argument_list) {
 				type_arg.accept (visitor);
 			}
@@ -276,10 +286,12 @@ public abstract class Vala.DataType : CodeNode {
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
-		for (int i = 0; i < type_argument_list.size; i++) {
-			if (type_argument_list[i] == old_type) {
-				type_argument_list[i] = new_type;
-				return;
+		if (type_argument_list != null) {
+			for (int i = 0; i < type_argument_list.size; i++) {
+				if (type_argument_list[i] == old_type) {
+					type_argument_list[i] = new_type;
+					return;
+				}
 			}
 		}
 	}
