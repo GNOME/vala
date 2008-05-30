@@ -1269,7 +1269,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				// allow duplicates of immutable instances as for example strings
 				dup_function = type.data_type.get_dup_function ();
 			} else if (type is ValueType) {
-				dup_function = "";
+				if (type.nullable) {
+					dup_function = generate_struct_dup_wrapper ((ValueType) type);
+				} else {
+					dup_function = "";
+				}
 			} else {
 				// duplicating non-reference counted structs may cause side-effects (and performance issues)
 				Report.error (source_reference, "duplicating %s instance, use weak variable or explicitly invoke copy method".printf (type.data_type.name));
@@ -1289,6 +1293,45 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else {
 			return new CCodeConstant ("NULL");
 		}
+	}
+
+
+	private string generate_struct_dup_wrapper (ValueType value_type) {
+		string dup_func = "_%sdup".printf (value_type.type_symbol.get_lower_case_cprefix ());
+
+		if (!add_wrapper (dup_func)) {
+			// wrapper already defined
+			return dup_func;
+		}
+
+		// declaration
+
+		var function = new CCodeFunction (dup_func, value_type.get_cname ());
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("self", value_type.get_cname ()));
+
+		// definition
+
+		var block = new CCodeBlock ();
+
+		var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+		dup_call.add_argument (new CCodeIdentifier ("self"));
+
+		var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+		sizeof_call.add_argument (new CCodeIdentifier (value_type.type_symbol.get_cname ()));
+		dup_call.add_argument (sizeof_call);
+
+		block.add_statement (new CCodeReturnStatement (dup_call));
+
+		// append to file
+
+		source_type_member_declaration.append (function.copy ());
+
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return dup_func;
 	}
 
 	private CCodeExpression? get_destroy_func_expression (DataType type) {

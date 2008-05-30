@@ -1,5 +1,11 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala:
+
+	Fix copying nullable structs
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/valaccodeunaryexpression.vala:
 	* gobject/valaccodegenerator.vala:
 	* gobject/valaccodeinvocationexpressionbinding.vala:
