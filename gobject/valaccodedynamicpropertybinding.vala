@@ -53,7 +53,8 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		func.add_parameter (new CCodeFormalParameter ("obj", dynamic_property.dynamic_type.get_cname ()));
 
 		var block = new CCodeBlock ();
-		if (dynamic_property.dynamic_type.data_type == codegen.gobject_type) {
+		if (dynamic_property.dynamic_type.data_type != null
+		    && dynamic_property.dynamic_type.data_type.is_subtype_of (codegen.gobject_type)) {
 			generate_gobject_property_getter_wrapper (block);
 		} else {
 			Report.error (node.source_reference, "dynamic properties are not supported for `%s'".printf (dynamic_property.dynamic_type.to_string ()));
@@ -83,7 +84,8 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		func.add_parameter (new CCodeFormalParameter ("value", node.property_type.get_cname ()));
 
 		var block = new CCodeBlock ();
-		if (dynamic_property.dynamic_type.data_type == codegen.gobject_type) {
+		if (dynamic_property.dynamic_type.data_type != null
+		    && dynamic_property.dynamic_type.data_type.is_subtype_of (codegen.gobject_type)) {
 			generate_gobject_property_setter_wrapper (block);
 		} else {
 			Report.error (node.source_reference, "dynamic properties are not supported for `%s'".printf (dynamic_property.dynamic_type.to_string ()));
