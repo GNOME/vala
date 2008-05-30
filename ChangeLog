@@ -1,5 +1,13 @@
 2008-05-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaobjecttype.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasignal.vala:
+
+	Check return type and parameters of signal handlers
+
+2008-05-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadatatype.vala:
 
 	Use lazy initialization for type_argument_list in DataType class

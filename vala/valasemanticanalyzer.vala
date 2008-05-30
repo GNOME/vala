@@ -3096,6 +3096,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		l.symbol_reference = l.method;
 
 		l.accept_children (this);
+
+		l.value_type = new MethodType (l.method);
 	}
 
 	public override void visit_assignment (Assignment a) {
@@ -3133,7 +3135,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				// target_type not available for dynamic signals
 			} else if (ma.symbol_reference is Signal) {
 				var sig = (Signal) ma.symbol_reference;
-				a.right.target_type = new DelegateType (sig.get_delegate ());
+				a.right.target_type = new DelegateType (sig.get_delegate (ma.inner.value_type));
 			} else {
 				a.right.target_type = ma.value_type;
 			}
@@ -3205,7 +3207,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (ma.symbol_reference is Signal) {
 				var sig = (Signal) ma.symbol_reference;
 
-				if (a.right.symbol_reference == null) {
+				var m = a.right.symbol_reference as Method;
+
+				if (m == null) {
 					a.error = true;
 					Report.error (a.right.source_reference, "unsupported expression for signal handler");
 					return;
@@ -3222,7 +3226,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 							dynamic_sig.add_parameter (param);
 						}
 					}
-					a.right.target_type = new DelegateType (sig.get_delegate ());
+					a.right.target_type = new DelegateType (sig.get_delegate (new ObjectType ((ObjectTypeSymbol) sig.parent_symbol)));
+				} else if (!a.right.value_type.compatible (a.right.target_type)) {
+					a.error = true;
+					Report.error (a.right.source_reference, "method `%s' is incompatible with signal `%s'".printf (a.right.value_type.to_string (), a.right.target_type.to_string ()));
+					return;
 				}
 			} else if (ma.symbol_reference is Property) {
 				var prop = (Property) ma.symbol_reference;

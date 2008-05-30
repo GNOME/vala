@@ -54,4 +54,21 @@ public class Vala.ObjectType : ReferenceType {
 	public override string? get_cname () {
 		return "%s*".printf (type_symbol.get_cname (!value_owned));
 	}
+
+	public override bool stricter (DataType target_type) {
+		var obj_target_type = target_type as ObjectType;
+		if (obj_target_type == null) {
+			return false;
+		}
+
+		if (value_owned != target_type.value_owned) {
+			return false;
+		}
+		
+		if (nullable && !target_type.nullable) {
+			return false;
+		}
+
+		return type_symbol.is_subtype_of (obj_target_type.type_symbol);
+	}
 }

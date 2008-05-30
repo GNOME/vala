@@ -49,7 +49,6 @@ public class Vala.Signal : Member, Lockable {
 	public bool is_virtual { get; set; }
 
 	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
-	private Delegate generated_delegate;
 	private Method generated_method;
 
 	private string cname;
@@ -96,28 +95,19 @@ public class Vala.Signal : Member, Lockable {
 	 *
 	 * @return delegate
 	 */
-	public Delegate? get_delegate () {
-		// parent_symbol is null for D-Bus signals
-		if (generated_delegate == null && parent_symbol != null) {
-			generated_delegate = new Delegate (null, return_type);
-			generated_delegate.has_target = true;
-			
-			ReferenceType sender_type;
-			if (parent_symbol is Class) {
-				sender_type = new ObjectType ((Class) parent_symbol);
-			} else {
-				sender_type = new ObjectType ((Interface) parent_symbol);
-			}
-			var sender_param = new FormalParameter ("_sender", sender_type);
-			generated_delegate.add_parameter (sender_param);
-			
-			foreach (FormalParameter param in parameters) {
-				generated_delegate.add_parameter (param);
-			}
+	public Delegate get_delegate (DataType sender_type) {
+		var generated_delegate = new Delegate (null, return_type);
+		generated_delegate.has_target = true;
 
-			scope.add (null, generated_delegate);
+		var sender_param = new FormalParameter ("_sender", sender_type.copy ());
+		generated_delegate.add_parameter (sender_param);
+
+		foreach (FormalParameter param in parameters) {
+			generated_delegate.add_parameter (param);
 		}
-		
+
+		scope.add (null, generated_delegate);
+
 		return generated_delegate;
 	}
 
