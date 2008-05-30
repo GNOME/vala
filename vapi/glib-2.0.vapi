@@ -844,8 +844,8 @@ namespace GLib {
 		public weak string type_name ();
 
 		public Value (Type g_type);
-		public void copy (out Value dest_value);
-		public weak Value reset ();
+		public void copy (ref Value dest_value);
+		public weak Value? reset ();
 		public void init (Type g_type);
 		public void unset ();
 		public void set_instance (void* instance);
@@ -853,7 +853,7 @@ namespace GLib {
 		public void* peek_pointer ();
 		public static bool type_compatible (Type src_type, Type dest_type);
 		public static bool type_transformable (Type src_type, Type dest_type);
-		public bool transform (Value dest_value);
+		public bool transform (ref Value dest_value);
 		[CCode (cname = "g_strdup_value_contents")]
 		public string strdup_contents ();
 		public static void register_transform_func (Type src_type, Type dest_type, ValueTransform transform);
