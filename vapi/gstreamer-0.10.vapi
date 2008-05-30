@@ -1497,7 +1497,7 @@ namespace Gst {
 		public bool proxy_setcaps (Gst.Caps caps);
 		public Gst.FlowReturn pull_range (uint64 offset, uint size, out weak Gst.Buffer buffer);
 		public Gst.FlowReturn push (Gst.Buffer# buffer);
-		public bool push_event (Gst.Event event);
+		public bool push_event (Gst.Event# event);
 		public bool query (Gst.Query query);
 		public bool query_convert (Gst.Format src_format, int64 src_val, Gst.Format dest_format, int64 dest_val);
 		public bool query_default (Gst.Query query);
