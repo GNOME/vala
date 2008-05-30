@@ -59,7 +59,9 @@ public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 			func.add_parameter (new CCodeFormalParameter ("handler", "GCallback"));
 			func.add_parameter (new CCodeFormalParameter ("data", "gpointer"));
 			var block = new CCodeBlock ();
-			if (dynamic_signal.dynamic_type.data_type == codegen.dbus_object_type) {
+			if (dynamic_signal.dynamic_type.data_type == codegen.gobject_type) {
+				generate_gobject_connect_wrapper (block);
+			} else if (dynamic_signal.dynamic_type.data_type == codegen.dbus_object_type) {
 				generate_dbus_connect_wrapper (block);
 			} else {
 				Report.error (node.source_reference, "dynamic signals are not supported for `%s'".printf (dynamic_signal.dynamic_type.to_string ()));
@@ -100,6 +102,31 @@ public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 		}
 
 		return disconnect_wrapper_name;
+	}
+
+	void generate_gobject_connect_wrapper (CCodeBlock block) {
+		var dynamic_signal = (DynamicSignal) node;
+
+		var m = (Method) dynamic_signal.handler.symbol_reference;
+
+		node.accept (codegen);
+
+		string connect_func = "g_signal_connect_object";
+		if (m.binding != MemberBinding.INSTANCE) {
+			connect_func = "g_signal_connect";
+		}
+
+		var call = new CCodeFunctionCall (new CCodeIdentifier (connect_func));
+		call.add_argument (new CCodeIdentifier ("obj"));
+		call.add_argument (new CCodeIdentifier ("signal_name"));
+		call.add_argument (new CCodeIdentifier ("handler"));
+		call.add_argument (new CCodeIdentifier ("data"));
+
+		if (m.binding == MemberBinding.INSTANCE) {
+			call.add_argument (new CCodeConstant ("0"));
+		}
+
+		block.add_statement (new CCodeExpressionStatement (call));
 	}
 
 	void generate_dbus_connect_wrapper (CCodeBlock block) {
