@@ -1,5 +1,9 @@
 2008-05-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadatatype.vala: remove obsolete code
+
+2008-05-30  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi: fix g_value_copy and g_value_transform
 	bindings, fixes bug 523767
 

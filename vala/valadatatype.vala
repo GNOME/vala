@@ -301,18 +301,12 @@ public abstract class Vala.DataType : CodeNode {
 			return ((DelegateType) target_type).delegate_symbol == ((DelegateType) this).delegate_symbol;
 		}
 
-		/* only null is compatible to null */
-		if (!(target_type is PointerType) && target_type.data_type == null && target_type.type_parameter == null) {
-			return (data_type == null && type_parameter == null);
-		}
-
-		if (target_type is PointerType || (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {
+		if (target_type is PointerType) {
 			/* any reference or array type or pointer type can be cast to a generic pointer */
 			if (type_parameter != null ||
 				(data_type != null && (
 					data_type.is_reference_type () ||
-					this is DelegateType ||
-					data_type.get_attribute ("PointerType") != null))) {
+					this is DelegateType))) {
 				return true;
 			}
 
