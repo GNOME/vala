@@ -61,13 +61,15 @@ public class Vala.UnaryExpression : Expression {
 		inner = _inner;
 		source_reference = source;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
-		inner.accept (visitor);
-	
 		visitor.visit_unary_expression (this);
 
 		visitor.visit_expression (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
+		inner.accept (visitor);
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {

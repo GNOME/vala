@@ -2632,6 +2632,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_unary_expression (UnaryExpression expr) {
+		if (expr.operator == UnaryOperator.REF || expr.operator == UnaryOperator.OUT) {
+			expr.inner.lvalue = true;
+			expr.inner.target_type = expr.target_type;
+		}
+
+		expr.accept_children (this);
+
 		if (expr.inner.error) {
 			/* if there was an error in the inner expression, skip type check */
 			expr.error = true;

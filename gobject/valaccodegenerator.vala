@@ -3187,6 +3187,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_unary_expression (UnaryExpression expr) {
+		expr.accept_children (this);
+
 		CCodeUnaryOperator op;
 		if (expr.operator == UnaryOperator.PLUS) {
 			op = CCodeUnaryOperator.PLUS;

@@ -1,5 +1,16 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasymbolresolver.vala:
+	* vala/valaunaryexpression.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+	* compiler/valacompiler.vala:
+
+	Fix memory management for ref and out arguments
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadatatype.vala:
 
 	Don't complain about incompatible signal handlers when using

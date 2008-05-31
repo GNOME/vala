@@ -55,27 +55,27 @@ class Vala.Compiler : Object {
 	private CodeContext context;
 
 	const OptionEntry[] options = {
-		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, out vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
-		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, out packages, "Include binding for PACKAGE", "PACKAGE..." },
-		{ "library", 0, 0, OptionArg.STRING, out library, "Library name", "NAME" },
-		{ "basedir", 'b', 0, OptionArg.FILENAME, out basedir, "Base source directory", "DIRECTORY" },
-		{ "directory", 'd', 0, OptionArg.FILENAME, out directory, "Output directory", "DIRECTORY" },
+		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
+		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
+		{ "library", 0, 0, OptionArg.STRING, ref library, "Library name", "NAME" },
+		{ "basedir", 'b', 0, OptionArg.FILENAME, ref basedir, "Base source directory", "DIRECTORY" },
+		{ "directory", 'd', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 		{ "ccode", 'C', 0, OptionArg.NONE, ref ccode_only, "Output C code", null },
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
-		{ "output", 'o', 0, OptionArg.FILENAME, out output, "Place output in file FILE", "FILE" },
+		{ "output", 'o', 0, OptionArg.FILENAME, ref output, "Place output in file FILE", "FILE" },
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
 		{ "thread", 0, 0, OptionArg.NONE, ref thread, "Enable multithreading support", null },
-		{ "define", 'D', 0, OptionArg.STRING_ARRAY, out defines, "Define SYMBOL", "SYMBOL..." },
+		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
 		{ "disable-checking", 0, 0, OptionArg.NONE, ref disable_checking, "Disable run-time checks", null },
 		{ "disable-non-null", 0, 0, OptionArg.NONE, ref disable_non_null, "Disable non-null types", null },
 		{ "enable-non-null-experimental", 0, 0, OptionArg.NONE, ref non_null_experimental, "Enable experimental enhancements for non-null types", null },
-		{ "cc", 0, 0, OptionArg.STRING, out cc_command, "Use COMMAND as C compiler command", "COMMAND" },
-		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, out cc_options, "Pass OPTION to the C compiler", "OPTION..." },
-		{ "save-temps", 0, 0, OptionArg.NONE, out save_temps, "Keep temporary files", null },
+		{ "cc", 0, 0, OptionArg.STRING, ref cc_command, "Use COMMAND as C compiler command", "COMMAND" },
+		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, ref cc_options, "Pass OPTION to the C compiler", "OPTION..." },
+		{ "save-temps", 0, 0, OptionArg.NONE, ref save_temps, "Keep temporary files", null },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
-		{ "", 0, 0, OptionArg.FILENAME_ARRAY, out sources, null, "FILE..." },
+		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref sources, null, "FILE..." },
 		{ null }
 	};
 	
