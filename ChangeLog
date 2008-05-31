@@ -1,5 +1,11 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala:
+
+	Fix delegates with array parameters, fixes bug 519928
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Fix gst_structure_get_value binding, fixes bug 530817

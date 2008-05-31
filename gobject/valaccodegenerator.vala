@@ -438,6 +438,21 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var cfundecl = new CCodeFunctionDeclarator (d.get_cname ());
 		foreach (FormalParameter param in d.get_parameters ()) {
 			cfundecl.add_parameter ((CCodeFormalParameter) param.ccodenode);
+
+			// handle array parameters
+			if (!param.no_array_length && param.parameter_type is ArrayType) {
+				var array_type = (ArrayType) param.parameter_type;
+				
+				var length_ctype = "int";
+				if (param.direction != ParameterDirection.IN) {
+					length_ctype = "int*";
+				}
+				
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					var cparam = new CCodeFormalParameter (get_array_length_cname (param.name, dim), length_ctype);
+					cfundecl.add_parameter (cparam);
+				}
+			}
 		}
 		if (d.has_target) {
 			var cparam = new CCodeFormalParameter ("user_data", "void*");
