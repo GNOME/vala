@@ -1,5 +1,12 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadatatype.vala:
+
+	Don't complain about incompatible signal handlers when using
+	signals in generic types
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Fix gst_value_get_buffer and gst_value_get_structure bindings,

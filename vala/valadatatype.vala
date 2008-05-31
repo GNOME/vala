@@ -270,14 +270,17 @@ public abstract class Vala.DataType : CodeNode {
 			return false;
 		}
 
+		/* temporarily ignore type parameters */
+		if (type_parameter != null || type2.type_parameter != null) {
+			return true;
+		}
+
 		if (type2.data_type != data_type) {
 			// FIXME: allow this type reference to refer to a
 			//        subtype of the type type2 is referring to
 			return false;
 		}
-		if (type2.type_parameter != type_parameter) {
-			return false;
-		}
+
 		if (type2.floating_reference != floating_reference) {
 			return false;
 		}
