@@ -2,6 +2,12 @@
 
 	* gobject/valaccodegenerator.vala:
 
+	Fix memory leak when boxing unowned values
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala:
+
 	Free boxed value when unboxing
 
 2008-05-31  Jürg Billeter  <j@bitron.ch>

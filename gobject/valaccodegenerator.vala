@@ -3484,28 +3484,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (get_variable_cname (decl.name))));
 				cexpr = ccomma;
 			}
-
-			if (!target_type.value_owned) {
-				// reference to stack value
-			} else {
-				// heap-allocated
-				string dup_func = expression_type.data_type.get_dup_function ();
-				if (dup_func == null) {
-					// default to g_memdup
-					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
-					ccall.add_argument (cexpr);
-					var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-					csizeof.add_argument (new CCodeIdentifier (expression_type.data_type.get_cname ()));
-					ccall.add_argument (csizeof);
-
-					cexpr = ccall;
-				} else {
-					var ccall = new CCodeFunctionCall (new CCodeIdentifier (dup_func));
-					ccall.add_argument (cexpr);
-
-					cexpr = ccall;
-				}
-			}
 		} else if (unboxing) {
 			// unbox value
 
@@ -3520,7 +3498,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			cexpr = convert_to_generic_pointer (cexpr, expression_type);
 		}
 
-		if (target_type.value_owned && !expression_type.value_owned) {
+		if (target_type.value_owned && (!expression_type.value_owned || boxing || unboxing)) {
 			// need to copy value
 			if (requires_copy (target_type) && !(expression_type is NullType)) {
 				cexpr = get_ref_cexpression (target_type, cexpr, expr, expression_type);
