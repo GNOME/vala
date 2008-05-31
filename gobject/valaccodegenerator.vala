@@ -3434,7 +3434,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		                 && target_type is ValueType && !target_type.nullable);
 
 		if (expression_type.value_owned
-		    && (target_type == null || !target_type.value_owned || boxing)) {
+		    && (target_type == null || !target_type.value_owned || boxing || unboxing)) {
 			// value leaked, destroy it
 			var pointer_type = target_type as PointerType;
 			if (pointer_type != null && !(pointer_type.base_type is VoidType)) {
