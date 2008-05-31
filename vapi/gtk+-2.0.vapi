@@ -3549,13 +3549,11 @@ namespace Gtk {
 		public uint timer_from_keypress;
 		public uint from_menubar;
 		public uint timer;
-		public void deselect ();
 		public bool get_right_justified ();
 		public weak Gtk.Widget get_submenu ();
 		public MenuItem ();
 		public MenuItem.with_label (string label);
 		public MenuItem.with_mnemonic (string label);
-		public void select ();
 		public void set_accel_path (string accel_path);
 		public void set_right_justified (bool right_justified);
 		public void set_submenu (Gtk.Widget submenu);
