@@ -99,7 +99,12 @@ public class Vala.Signal : Member, Lockable {
 		var generated_delegate = new Delegate (null, return_type);
 		generated_delegate.has_target = true;
 
-		var sender_param = new FormalParameter ("_sender", sender_type.copy ());
+		// sender parameter is never null and doesn't own its value
+		var sender_param_type = sender_type.copy ();
+		sender_param_type.value_owned = false;
+		sender_param_type.nullable = false;
+
+		var sender_param = new FormalParameter ("_sender", sender_param_type);
 		generated_delegate.add_parameter (sender_param);
 
 		foreach (FormalParameter param in parameters) {

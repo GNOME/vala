@@ -1,5 +1,11 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasignal.vala:
+
+	Allow non-null sender parameter in signal handlers
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 
 	Fix ownership for constant arrays of structs, fixes bug 535560
