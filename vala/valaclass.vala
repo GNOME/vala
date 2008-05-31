@@ -388,7 +388,12 @@ public class Vala.Class : ObjectTypeSymbol {
 		foreach (TypeParameter p in type_parameters) {
 			p.accept (visitor);
 		}
-		
+
+		/* process enums first to avoid order problems in C code */
+		foreach (Enum en in enums) {
+			en.accept (visitor);
+		}
+
 		foreach (Field f in fields) {
 			f.accept (visitor);
 		}
@@ -431,10 +436,6 @@ public class Vala.Class : ObjectTypeSymbol {
 		
 		foreach (Struct st in structs) {
 			st.accept (visitor);
-		}
-
-		foreach (Enum en in enums) {
-			en.accept (visitor);
 		}
 
 		foreach (Delegate d in delegates) {

@@ -329,7 +329,12 @@ public class Vala.Interface : ObjectTypeSymbol {
 		foreach (TypeParameter p in type_parameters) {
 			p.accept (visitor);
 		}
-		
+
+		/* process enums first to avoid order problems in C code */
+		foreach (Enum en in enums) {
+			en.accept (visitor);
+		}
+
 		foreach (Method m in methods) {
 			m.accept (visitor);
 		}
@@ -352,10 +357,6 @@ public class Vala.Interface : ObjectTypeSymbol {
 		
 		foreach (Struct st in structs) {
 			st.accept (visitor);
-		}
-
-		foreach (Enum en in enums) {
-			en.accept (visitor);
 		}
 
 		foreach (Delegate d in delegates) {

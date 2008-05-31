@@ -1,5 +1,13 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* vala/valainterface.vala:
+
+	Emit nested enums before structs,
+	based on patch by Jaap A. Haitsma, fixes bug 530063
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasignal.vala:
 
 	Allow non-null sender parameter in signal handlers
