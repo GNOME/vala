@@ -81,9 +81,9 @@ namespace Gst {
 		public Caps get_caps ();
 
 		public void set_structure (Structure structure);
-		public Structure get_structure ();
+		public weak Structure get_structure ();
 
-		public Buffer get_buffer ();
+		public weak Buffer get_buffer ();
 		public void set_buffer (Buffer b);
 		public void take_buffer (Buffer b);
 

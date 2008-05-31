@@ -1,5 +1,14 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_value_get_buffer and gst_value_get_structure bindings,
+	patch by Ali Sabil
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valastruct.vala:
 	* gobject/valaccodedynamicmethodbinding.vala:
 	* gobject/valaccodegeneratorsignal.vala:

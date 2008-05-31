@@ -1789,8 +1789,8 @@ namespace Gst {
 		public void set_caps (Gst.Caps caps);
 		public Gst.Caps get_caps ();
 		public void set_structure (Gst.Structure structure);
-		public Gst.Structure get_structure ();
-		public Gst.Buffer get_buffer ();
+		public weak Gst.Structure get_structure ();
+		public weak Gst.Buffer get_buffer ();
 		public void set_buffer (Gst.Buffer b);
 		public void take_buffer (Gst.Buffer b);
 		public bool is_fixed ();
