@@ -9,7 +9,7 @@ namespace Gtk {
 		AFTER,
 		ALWAYS
 	}
-	[CCode (cprefix = "GTK_SOURCE_SEARCH_", has_type_id = "0", cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cprefix = "GTK_SOURCE_SEARCH_", has_type_id = "0", cheader_filename = "gtksourceview/gtksourceiter.h")]
 	[Flags]
 	public enum SourceSearchFlags {
 		VISIBLE_ONLY,
@@ -246,7 +246,7 @@ namespace Gtk {
 		public virtual signal void undo ();
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public static bool source_iter_backward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, Gtk.TextIter match_start, Gtk.TextIter match_end, Gtk.TextIter limit);
+	public static bool source_iter_backward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, Gtk.TextIter? match_start, Gtk.TextIter? match_end, Gtk.TextIter? limit);
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public static bool source_iter_forward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, Gtk.TextIter match_start, Gtk.TextIter match_end, Gtk.TextIter limit);
+	public static bool source_iter_forward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, Gtk.TextIter? match_start, Gtk.TextIter? match_end, Gtk.TextIter? limit);
 }

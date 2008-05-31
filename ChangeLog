@@ -1,5 +1,13 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtksourceview-2.0/:
+
+	Nullable fixes, patch by Nicolas Joseph, fixes bug 535616
+
+	* vapi/gtksourceview-2.0.vapi: regenerated
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala:
 	* vala/valainterface.vala:
 
