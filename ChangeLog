@@ -1,5 +1,11 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodedynamicsignalbinding.vala:
+
+	Fix dynamic signals for D-Bus objects
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodedynamicpropertybinding.vala:
 	* gobject/valaccodedynamicsignalbinding.vala:
 
