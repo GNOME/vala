@@ -388,8 +388,7 @@ namespace Xml {
 		[CCode (cname = "xmlNodeListGetString")]
 		public string node_list_get_string (Node* list, int _inline);
 
-		[InstanceLast]
-		[CCode (cname = "xmlSaveFile")]
+		[CCode (cname = "xmlSaveFile", instance_pos = -1)]
 		public int save_file (string filename);
 
 		[CCode (cname = "xmlSaveFileEnc")]
@@ -771,8 +770,7 @@ namespace Xml {
 		[CCode (cname = "xmlPathToURI")]
 		public static string path_to_uri (string path);
 
-		[CCode (cname = "xmlPrintURI")]
-		[InstanceLast]
+		[CCode (cname = "xmlPrintURI", instance_pos = -1)]
 		public void print (GLib.FileStream stream);
 
 		[CCode (cname = "xmlSaveUri")]
@@ -1139,12 +1137,10 @@ namespace Xml {
 		[CCode (cname = "xmlXPathContextSetCache")]
 		public int set_cache (int active, int value, int options);
 
-		[InstanceLast]
-		[CCode (cname = "xmlXPathEval")]
+		[CCode (cname = "xmlXPathEval", instance_pos = -1)]
 		public XPathObject* eval (string str);
 
-		[InstanceLast]
-		[CCode (cname = "xmlXPathEvalExpression")]
+		[CCode (cname = "xmlXPathEvalExpression", instance_pos = -1)]
 		public XPathObject* eval_expression (string str);
 
 		[CCode (cname = "xmlXPathNewContext")]
