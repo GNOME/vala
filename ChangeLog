@@ -1,5 +1,11 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+
+	Fix ownership for constant arrays of structs, fixes bug 535560
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala:
 
 	Fix delegates with array parameters, fixes bug 519928

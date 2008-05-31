@@ -850,6 +850,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 
 				e.target_type = field.field_type.copy ();
+				if (!list.target_type.value_owned) {
+					e.target_type.value_owned = false;
+				}
 			}
 		} else if (list.target_type == null) {
 			list.error = true;
