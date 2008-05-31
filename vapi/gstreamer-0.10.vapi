@@ -889,7 +889,7 @@ namespace Gst {
 		public bool get_uint_index (string tag, uint index, uint value);
 		public bool get_ulong (string tag, ulong value);
 		public bool get_ulong_index (string tag, uint index, ulong value);
-		public GLib.Value get_value_index (string tag, uint index);
+		public weak GLib.Value? get_value_index (string tag, uint index);
 		public void insert (Gst.TagList from, Gst.TagMergeMode mode);
 		public bool is_empty ();
 		public weak Gst.TagList merge (Gst.TagList list2, Gst.TagMergeMode mode);
@@ -1060,12 +1060,12 @@ namespace Gst {
 		public GLib.Quark get_name_id ();
 		public weak string get_string (string fieldname);
 		public bool get_uint (string fieldname, out uint value);
-		public GLib.Value get_value (string fieldname);
+		public weak GLib.Value? get_value (string fieldname);
 		public bool has_field (string fieldname);
 		public bool has_field_typed (string fieldname, GLib.Type type);
 		public bool has_name (string name);
 		public static weak Gst.Structure id_empty_new (GLib.Quark quark);
-		public GLib.Value id_get_value (GLib.Quark field);
+		public weak GLib.Value? id_get_value (GLib.Quark field);
 		public void id_set (GLib.Quark fieldname, ...);
 		public void id_set_valist (GLib.Quark fieldname, void* varargs);
 		public void id_set_value (GLib.Quark field, GLib.Value value);

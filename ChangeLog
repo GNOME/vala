@@ -1,5 +1,13 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_structure_get_value binding, fixes bug 530817
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala:
 	* vapigen/valagidlparser.vala:
 
