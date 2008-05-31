@@ -79,12 +79,12 @@ public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBi
 			dbus_methods.append ("{ (GCallback) ");
 			dbus_methods.append (generate_dbus_wrapper (m, bindable));
 			dbus_methods.append (", ");
-			dbus_methods.append (codegen.get_marshaller_function (parameters, codegen.bool_type));
+			dbus_methods.append (codegen.get_marshaller_function (parameters, codegen.bool_type, null, true));
 			dbus_methods.append (", ");
 			dbus_methods.append (blob_len.to_string ());
 			dbus_methods.append (" },\n");
 
-			codegen.generate_marshaller (parameters, codegen.bool_type);
+			codegen.generate_marshaller (parameters, codegen.bool_type, true);
 
 			long start = blob.len;
 
@@ -219,23 +219,66 @@ public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBi
 		function.add_parameter (new CCodeFormalParameter ("self", bindable.get_cname () + "*"));
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			function.add_parameter ((CCodeFormalParameter) param.ccodenode);
+			if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
+				if (param.direction == ParameterDirection.IN) {
+					function.add_parameter (new CCodeFormalParameter ("dbus_%s".printf (param.name), "GValueArray*"));
+				} else {
+					function.add_parameter (new CCodeFormalParameter ("dbus_%s".printf (param.name), "GValueArray**"));
+				}
+			} else {
+				function.add_parameter ((CCodeFormalParameter) param.ccodenode);
+			}
 		}
 
 		if (!(m.return_type is VoidType)) {
-			function.add_parameter (new CCodeFormalParameter ("result", m.return_type.get_cname () + "*"));
+			if (m.return_type.get_type_signature ().has_prefix ("(")) {
+				function.add_parameter (new CCodeFormalParameter ("result", "GValueArray**"));
+			} else {
+				function.add_parameter (new CCodeFormalParameter ("result", m.return_type.get_cname () + "*"));
+			}
 		}
 
 		function.add_parameter (new CCodeFormalParameter ("error", "GError**"));
 
 		// definition
 
+		var block = new CCodeBlock ();
+
+		foreach (FormalParameter param in m.get_parameters ()) {
+			if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
+				var st = (Struct) param.parameter_type.data_type;
+
+				var cdecl = new CCodeDeclaration (st.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
+				block.add_statement (cdecl);
+
+				if (param.direction == ParameterDirection.IN) {
+					// struct input parameter
+					int i = 0;
+					foreach (Field f in st.get_fields ()) {
+						if (f.binding == MemberBinding.INSTANCE) {
+							var cget_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_get_value_function ()));
+							cget_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeElementAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "values"), new CCodeConstant (i.to_string ()))));
+							var assign = new CCodeAssignment (new CCodeMemberAccess (new CCodeIdentifier (param.name), f.name), cget_call);
+							block.add_statement (new CCodeExpressionStatement (assign));
+							i++;
+						}
+					}
+				}
+			}
+		}
+
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
 
 		ccall.add_argument (new CCodeIdentifier ("self"));
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			ccall.add_argument (new CCodeIdentifier (param.name));
+			if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
+				// struct input or output parameters
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+			} else {
+				ccall.add_argument (new CCodeIdentifier (param.name));
+			}
 		}
 
 		if (m.get_error_types ().size > 0) {
@@ -249,8 +292,61 @@ public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBi
 			expr = new CCodeAssignment (new CCodeIdentifier ("*result"), ccall);
 		}
 
-		var block = new CCodeBlock ();
 		block.add_statement (new CCodeExpressionStatement (expr));
+
+		foreach (FormalParameter param in m.get_parameters ()) {
+			if (param.direction == ParameterDirection.OUT
+			    && param.parameter_type.get_type_signature ().has_prefix ("(")) {
+				// struct output parameter
+				var st = (Struct) param.parameter_type.data_type;
+
+				var array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_value_array_new"));
+				array_construct.add_argument (new CCodeConstant ("0"));
+
+				var dbus_param = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("dbus_%s".printf (param.name)));
+
+				block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (dbus_param, array_construct)));
+
+				var type_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_struct"));
+				type_call.add_argument (new CCodeConstant ("\"GValueArray\""));
+
+				foreach (Field f in st.get_fields ()) {
+					if (f.binding != MemberBinding.INSTANCE) {
+						continue;
+					}
+
+					string val_name = "val_%s_%s".printf (param.name, f.name);
+
+					// 0-initialize struct with struct initializer { 0 }
+					var cvalinit = new CCodeInitializerList ();
+					cvalinit.append (new CCodeConstant ("0"));
+
+					var cval_decl = new CCodeDeclaration ("GValue");
+					cval_decl.add_declarator (new CCodeVariableDeclarator.with_initializer (val_name, cvalinit));
+					block.add_statement (cval_decl);
+
+					var val_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (val_name));
+
+					var cinit_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
+					cinit_call.add_argument (val_ptr);
+					cinit_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
+					block.add_statement (new CCodeExpressionStatement (cinit_call));
+
+					var cset_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_set_value_function ()));
+					cset_call.add_argument (val_ptr);
+					cset_call.add_argument (new CCodeMemberAccess (new CCodeIdentifier (param.name), f.name));
+					block.add_statement (new CCodeExpressionStatement (cset_call));
+
+					var cappend_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_array_append"));
+					cappend_call.add_argument (dbus_param);
+					cappend_call.add_argument (val_ptr);
+					block.add_statement (new CCodeExpressionStatement (cappend_call));
+
+					type_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
+				}
+			}
+		}
+
 		var no_error = new CCodeBinaryExpression (CCodeBinaryOperator.OR, new CCodeIdentifier ("!error"), new CCodeIdentifier ("!*error"));
 		block.add_statement (new CCodeReturnStatement (no_error));
 

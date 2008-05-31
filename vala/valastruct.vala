@@ -243,6 +243,17 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	public override string? get_type_signature () {
+		if (type_signature == null) {
+			var str = new StringBuilder ();
+			str.append_c ('(');
+			foreach (Field f in fields) {
+				if (f.binding == MemberBinding.INSTANCE) {
+					str.append (f.field_type.get_type_signature ());
+				}
+			}
+			str.append_c (')');
+			return str.str;
+		}
 		return type_signature;
 	}
 

@@ -24,7 +24,7 @@
 using GLib;
 
 public class Vala.CCodeGenerator {
-	private string get_marshaller_type_name (DataType t) {
+	private string get_marshaller_type_name (DataType t, bool dbus = false) {
 		if (t is PointerType || t.type_parameter != null) {
 			return ("POINTER");
 		} else if (t is ErrorType) {
@@ -37,20 +37,22 @@ public class Vala.CCodeGenerator {
 			}
 		} else if (t is VoidType) {
 			return ("VOID");
+		} else if (dbus && t.get_type_signature ().has_prefix ("(")) {
+			return ("BOXED");
 		} else {
 			return t.data_type.get_marshaller_type_name ();
 		}
 	}
 	
-	private string get_marshaller_type_name_for_parameter (FormalParameter param) {
+	private string get_marshaller_type_name_for_parameter (FormalParameter param, bool dbus = false) {
 		if (param.direction != ParameterDirection.IN) {
 			return ("POINTER");
 		} else {
-			return get_marshaller_type_name (param.parameter_type);
+			return get_marshaller_type_name (param.parameter_type, dbus);
 		}
 	}
 	
-	public string get_marshaller_function (Gee.List<FormalParameter> params, DataType return_type, string? prefix = null) {
+	public string get_marshaller_function (Gee.List<FormalParameter> params, DataType return_type, string? prefix = null, bool dbus = false) {
 		var signature = get_marshaller_signature (params, return_type);
 		string ret;
 
@@ -62,13 +64,13 @@ public class Vala.CCodeGenerator {
 			}
 		}
 		
-		ret = "%s_%s_".printf (prefix, get_marshaller_type_name (return_type));
+		ret = "%s_%s_".printf (prefix, get_marshaller_type_name (return_type, dbus));
 		
 		if (params == null || params.size == 0) {
 			ret = ret + "_VOID";
 		} else {
 			foreach (FormalParameter p in params) {
-				ret = "%s_%s".printf (ret, get_marshaller_type_name_for_parameter (p));
+				ret = "%s_%s".printf (ret, get_marshaller_type_name_for_parameter (p, dbus));
 			}
 		}
 		
@@ -110,20 +112,20 @@ public class Vala.CCodeGenerator {
 		}
 	}
 	
-	private string get_marshaller_signature (Gee.List<FormalParameter> params, DataType return_type) {
+	private string get_marshaller_signature (Gee.List<FormalParameter> params, DataType return_type, bool dbus = false) {
 		string signature;
 		
-		signature = "%s:".printf (get_marshaller_type_name (return_type));
+		signature = "%s:".printf (get_marshaller_type_name (return_type, dbus));
 		if (params == null || params.size == 0) {
 			signature = signature + "VOID";
 		} else {
 			bool first = true;
 			foreach (FormalParameter p in params) {
 				if (first) {
-					signature = signature + get_marshaller_type_name_for_parameter (p);
+					signature = signature + get_marshaller_type_name_for_parameter (p, dbus);
 					first = false;
 				} else {
-					signature = "%s,%s".printf (signature, get_marshaller_type_name_for_parameter (p));
+					signature = "%s,%s".printf (signature, get_marshaller_type_name_for_parameter (p, dbus));
 				}
 			}
 		}
@@ -147,7 +149,7 @@ public class Vala.CCodeGenerator {
 		generate_marshaller (sig.get_parameters (), sig.return_type);
 	}
 
-	public void generate_marshaller (Gee.List<FormalParameter> params, DataType return_type) {
+	public void generate_marshaller (Gee.List<FormalParameter> params, DataType return_type, bool dbus = false) {
 		string signature;
 		int n_params, i;
 		
@@ -157,7 +159,7 @@ public class Vala.CCodeGenerator {
 			return;
 		}
 		
-		var signal_marshaller = new CCodeFunction (get_marshaller_function (params, return_type), "void");
+		var signal_marshaller = new CCodeFunction (get_marshaller_function (params, return_type, null, dbus), "void");
 		signal_marshaller.modifiers = CCodeModifiers.STATIC;
 		
 		signal_marshaller.add_parameter (new CCodeFormalParameter ("closure", "GClosure *"));
@@ -171,7 +173,7 @@ public class Vala.CCodeGenerator {
 		
 		var marshaller_body = new CCodeBlock ();
 		
-		var callback_decl = new CCodeFunctionDeclarator (get_marshaller_function (params, return_type, "GMarshalFunc"));
+		var callback_decl = new CCodeFunctionDeclarator (get_marshaller_function (params, return_type, "GMarshalFunc", dbus));
 		callback_decl.add_parameter (new CCodeFormalParameter ("data1", "gpointer"));
 		n_params = 1;
 		foreach (FormalParameter p in params) {
@@ -181,7 +183,7 @@ public class Vala.CCodeGenerator {
 		callback_decl.add_parameter (new CCodeFormalParameter ("data2", "gpointer"));
 		marshaller_body.add_statement (new CCodeTypeDefinition (get_value_type_name_from_type_reference (return_type), callback_decl));
 		
-		var var_decl = new CCodeDeclaration (get_marshaller_function (params, return_type, "GMarshalFunc"));
+		var var_decl = new CCodeDeclaration (get_marshaller_function (params, return_type, "GMarshalFunc", dbus));
 		var_decl.modifiers = CCodeModifiers.REGISTER;
 		var_decl.add_declarator (new CCodeVariableDeclarator ("callback"));
 		marshaller_body.add_statement (var_decl);
@@ -225,7 +227,7 @@ public class Vala.CCodeGenerator {
 		false_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data2"), data)));
 		marshaller_body.add_statement (new CCodeIfStatement (cond, true_block, false_block));
 		
-		var c_assign = new CCodeAssignment (new CCodeIdentifier ("callback"), new CCodeCastExpression (new CCodeConditionalExpression (new CCodeIdentifier ("marshal_data"), new CCodeIdentifier ("marshal_data"), new CCodeMemberAccess (new CCodeIdentifier ("cc"), "callback", true)), get_marshaller_function (params, return_type, "GMarshalFunc")));
+		var c_assign = new CCodeAssignment (new CCodeIdentifier ("callback"), new CCodeCastExpression (new CCodeConditionalExpression (new CCodeIdentifier ("marshal_data"), new CCodeIdentifier ("marshal_data"), new CCodeMemberAccess (new CCodeIdentifier ("cc"), "callback", true)), get_marshaller_function (params, return_type, "GMarshalFunc", dbus)));
 		marshaller_body.add_statement (new CCodeExpressionStatement (c_assign));
 		
 		fc = new CCodeFunctionCall (new CCodeIdentifier ("callback"));
@@ -237,6 +239,8 @@ public class Vala.CCodeGenerator {
 				get_value_function = "g_value_get_pointer";
 			} else if (p.parameter_type is ErrorType) {
 				get_value_function = "g_value_get_pointer";
+			} else if (dbus && p.parameter_type.get_type_signature ().has_prefix ("(")) {
+				get_value_function = "g_value_get_boxed";
 			} else {
 				get_value_function = p.parameter_type.data_type.get_get_value_function ();
 			}
@@ -265,6 +269,8 @@ public class Vala.CCodeGenerator {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_string"));
 			} else if (return_type.data_type is Class || return_type.data_type is Interface) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_object"));
+			} else if (dbus && return_type.get_type_signature ().has_prefix ("(")) {
+				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
 			} else {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier (return_type.data_type.get_set_value_function ()));
 			}

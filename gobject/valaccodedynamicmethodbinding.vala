@@ -184,11 +184,118 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 				break;
 			}
 
-			ccall.add_argument (new CCodeIdentifier (param.parameter_type.data_type.get_type_id ()));
-			ccall.add_argument (new CCodeIdentifier (param.name));
+			if (param.direction != ParameterDirection.IN) {
+				continue;
+			}
+
+			if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
+				// struct parameter
+				var st = (Struct) param.parameter_type.data_type;
+
+				var array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_value_array_new"));
+				array_construct.add_argument (new CCodeConstant ("0"));
+
+				var cdecl = new CCodeDeclaration ("GValueArray*");
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("dbus_%s".printf (param.name), array_construct));
+				block.add_statement (cdecl);
+
+				var type_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_struct"));
+				type_call.add_argument (new CCodeConstant ("\"GValueArray\""));
+
+				foreach (Field f in st.get_fields ()) {
+					if (f.binding != MemberBinding.INSTANCE) {
+						continue;
+					}
+
+					string val_name = "val_%s_%s".printf (param.name, f.name);
+
+					// 0-initialize struct with struct initializer { 0 }
+					var cvalinit = new CCodeInitializerList ();
+					cvalinit.append (new CCodeConstant ("0"));
+
+					var cval_decl = new CCodeDeclaration ("GValue");
+					cval_decl.add_declarator (new CCodeVariableDeclarator.with_initializer (val_name, cvalinit));
+					block.add_statement (cval_decl);
+
+					var val_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (val_name));
+
+					var cinit_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
+					cinit_call.add_argument (val_ptr);
+					cinit_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
+					block.add_statement (new CCodeExpressionStatement (cinit_call));
+
+					var cset_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_set_value_function ()));
+					cset_call.add_argument (val_ptr);
+					cset_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), f.name));
+					block.add_statement (new CCodeExpressionStatement (cset_call));
+
+					var cappend_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_array_append"));
+					cappend_call.add_argument (new CCodeIdentifier ("dbus_%s".printf (param.name)));
+					cappend_call.add_argument (val_ptr);
+					block.add_statement (new CCodeExpressionStatement (cappend_call));
+
+					type_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
+				}
+
+				type_call.add_argument (new CCodeConstant ("G_TYPE_INVALID"));
+
+				ccall.add_argument (type_call);
+				ccall.add_argument (new CCodeIdentifier ("dbus_%s".printf (param.name)));
+			} else {
+				ccall.add_argument (new CCodeIdentifier (param.parameter_type.data_type.get_type_id ()));
+				ccall.add_argument (new CCodeIdentifier (param.name));
+			}
 		}
 
 		ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
+
+		var out_marshalling_fragment = new CCodeFragment ();
+
+		foreach (FormalParameter param in method.get_parameters ()) {
+			if (param.parameter_type is MethodType) {
+				// callback parameter
+				break;
+			}
+
+			if (param.direction != ParameterDirection.OUT) {
+				continue;
+			}
+
+			if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
+				// struct output parameter
+				var st = (Struct) param.parameter_type.data_type;
+
+				var cdecl = new CCodeDeclaration ("GValueArray*");
+				cdecl.add_declarator (new CCodeVariableDeclarator ("dbus_%s".printf (param.name)));
+				block.add_statement (cdecl);
+
+				var type_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_struct"));
+				type_call.add_argument (new CCodeConstant ("\"GValueArray\""));
+
+				int i = 0;
+				foreach (Field f in st.get_fields ()) {
+					if (f.binding != MemberBinding.INSTANCE) {
+						continue;
+					}
+
+					var cget_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_get_value_function ()));
+					cget_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeElementAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "values"), new CCodeConstant (i.to_string ()))));
+					var assign = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), f.name), cget_call);
+					out_marshalling_fragment.append (new CCodeExpressionStatement (assign));
+
+					type_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
+					i++;
+				}
+
+				type_call.add_argument (new CCodeConstant ("G_TYPE_INVALID"));
+
+				ccall.add_argument (type_call);
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("dbus_%s".printf (param.name))));
+			} else {
+				ccall.add_argument (new CCodeIdentifier (param.parameter_type.data_type.get_type_id ()));
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+			}
+		}
 
 		if (!(method.return_type is VoidType)) {
 			// synchronous D-Bus method call with reply
@@ -206,6 +313,8 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 				ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
 
 				block.add_statement (new CCodeExpressionStatement (ccall));
+
+				block.add_statement (out_marshalling_fragment);
 
 				// *result_length1 = result->len;
 				var garray_length = new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), "len");
@@ -235,6 +344,8 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 
 				block.add_statement (new CCodeExpressionStatement (ccall));
 
+				block.add_statement (out_marshalling_fragment);
+
 				if (array_type != null) {
 					// special case string array
 
@@ -250,6 +361,8 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 			}
 		} else {
 			block.add_statement (new CCodeExpressionStatement (ccall));
+
+			block.add_statement (out_marshalling_fragment);
 		}
 	}
 
