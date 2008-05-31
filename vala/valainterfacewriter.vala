@@ -913,7 +913,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		} else if (type is ValueType) {
 			if (type.nullable) {
 				// nullable structs are heap allocated
-				return false;
+				return true;
 			}
 
 			// TODO return true for structs with destroy

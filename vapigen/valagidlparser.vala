@@ -1284,6 +1284,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return_type.value_owned = true;
 					}
+				} else if (nv[0] == "nullable") {
+					if (eval (nv[1]) == "1") {
+						return_type.nullable = true;
+					}
 				} else if (nv[0] == "sentinel") {
 					m.sentinel = eval (nv[1]);
 				} else if (nv[0] == "is_array") {
