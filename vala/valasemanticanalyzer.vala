@@ -2701,6 +2701,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (expr.operator == UnaryOperator.REF || expr.operator == UnaryOperator.OUT) {
 			if (expr.inner.symbol_reference is Field || expr.inner.symbol_reference is FormalParameter || expr.inner.symbol_reference is LocalVariable) {
 				// ref and out can only be used with fields, parameters, and local variables
+				expr.lvalue = true;
 				expr.value_type = expr.inner.value_type;
 			} else {
 				expr.error = true;

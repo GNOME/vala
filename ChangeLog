@@ -1,6 +1,13 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala:
+	* vapigen/valavapigen.vala:
+
+	Fix handling of ref array arguments
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala:
 	* vala/valasymbolresolver.vala:
 	* vala/valaunaryexpression.vala:
 	* gobject/valaccodegenerator.vala:

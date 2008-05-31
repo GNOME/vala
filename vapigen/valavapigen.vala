@@ -36,13 +36,13 @@ class Vala.VAPIGen : Object {
 	CodeContext context;
 
 	const OptionEntry[] options = {
-		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, out vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
-		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, out packages, "Include binding for PACKAGE", "PACKAGE..." },
-		{ "library", 0, 0, OptionArg.STRING, out library, "Library name", "NAME" },
-		{ "directory", 'd', 0, OptionArg.FILENAME, out directory, "Output directory", "DIRECTORY" },
+		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
+		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
+		{ "library", 0, 0, OptionArg.STRING, ref library, "Library name", "NAME" },
+		{ "directory", 'd', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
-		{ "", 0, 0, OptionArg.FILENAME_ARRAY, out sources, null, "FILE..." },
+		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref sources, null, "FILE..." },
 		{ null }
 	};
 	
