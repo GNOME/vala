@@ -1,5 +1,13 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_value_list_get_value binding
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/: hide gtk_menu_item_select and
 	gtk_menu_item_deselect, already available in base class
 

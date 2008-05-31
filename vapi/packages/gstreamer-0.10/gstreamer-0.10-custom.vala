@@ -61,7 +61,7 @@ namespace Gst {
 		public void  list_prepend_value (Gst.Value prepend_value);
 		public void list_concat (Gst.Value value1, Gst.Value value2);
 		public uint list_get_size ();
-		public Gst.Value list_get_value (uint index);
+		public weak Gst.Value? list_get_value (uint index);
 
 		public void set_fraction (int numerator, int denominator);
 		public int get_fraction_numerator ();
@@ -70,8 +70,8 @@ namespace Gst {
 		public static bool fraction_subtract (GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
 
 		public void set_fraction_range (Gst.Value start, Gst.Value end);
-		public Gst.Value get_fraction_range_min ();
-		public Gst.Value get_fraction_range_max ();
+		public weak Gst.Value? get_fraction_range_min ();
+		public weak Gst.Value? get_fraction_range_max ();
 		public void set_fraction_range_full (int numerator_start, int denominator_start, int numerator_end, int denominator_end);
 
 		public void set_date (Date date);
@@ -113,7 +113,7 @@ namespace Gst {
 
 		public void array_append_value (Gst.Value append_value);
 		public uint array_get_size ();
-		public Gst.Value array_get_value (uint index);
+		public weak Gst.Value? array_get_value (uint index);
 		public void array_prepend_value (Gst.Value prepend_value);
 	} 
 }
