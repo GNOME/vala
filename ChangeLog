@@ -1,5 +1,18 @@
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+	* vapi/packages/gtksourceview-2.0/:
+
+	Nullable and `out' fixes,
+	based on patch by Nicolas Joseph, fixes bug 535618
+
+	* vapi/gtk+-2.0.vapi:
+	* vapi/gtksourceview-2.0.vapi:
+
+	Regenerated
+
+2008-05-31  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/libxml-2.0.vapi:
 
 	Convert to instance_pos attribute syntax,

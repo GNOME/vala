@@ -6223,7 +6223,7 @@ namespace Gtk {
 		public bool backward_find_char (Gtk.TextCharPredicate pred, Gtk.TextIter limit);
 		public bool backward_line ();
 		public bool backward_lines (int count);
-		public bool backward_search (string str, Gtk.TextSearchFlags flags, Gtk.TextIter match_start, Gtk.TextIter match_end, Gtk.TextIter limit);
+		public bool backward_search (string str, Gtk.TextSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, Gtk.TextIter? limit);
 		public bool backward_sentence_start ();
 		public bool backward_sentence_starts (int count);
 		public bool backward_to_tag_toggle (Gtk.TextTag tag);
@@ -6252,7 +6252,7 @@ namespace Gtk {
 		public bool forward_find_char (Gtk.TextCharPredicate pred, Gtk.TextIter limit);
 		public bool forward_line ();
 		public bool forward_lines (int count);
-		public bool forward_search (string str, Gtk.TextSearchFlags flags, Gtk.TextIter match_start, Gtk.TextIter match_end, Gtk.TextIter limit);
+		public bool forward_search (string str, Gtk.TextSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, Gtk.TextIter? limit);
 		public bool forward_sentence_end ();
 		public bool forward_sentence_ends (int count);
 		public void forward_to_end ();

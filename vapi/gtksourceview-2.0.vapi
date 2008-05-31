@@ -246,7 +246,7 @@ namespace Gtk {
 		public virtual signal void undo ();
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public static bool source_iter_backward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, Gtk.TextIter? match_start, Gtk.TextIter? match_end, Gtk.TextIter? limit);
+	public static bool source_iter_backward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, Gtk.TextIter? limit);
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
-	public static bool source_iter_forward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, Gtk.TextIter? match_start, Gtk.TextIter? match_end, Gtk.TextIter? limit);
+	public static bool source_iter_forward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, Gtk.TextIter? limit);
 }
