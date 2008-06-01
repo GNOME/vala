@@ -335,7 +335,7 @@ namespace GLib {
 		public virtual bool close_fn (GLib.Cancellable? cancellable) throws GLib.Error;
 		public virtual weak GLib.FileInfo next_file (GLib.Cancellable? cancellable) throws GLib.Error;
 		public virtual void next_files_async (int num_files, int io_priority, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
-		public virtual weak GLib.List next_files_finish (GLib.AsyncResult _result) throws GLib.Error;
+		public virtual weak GLib.List<GLib.FileInfo> next_files_finish (GLib.AsyncResult _result) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileIcon : GLib.Object, GLib.Icon, GLib.LoadableIcon {
