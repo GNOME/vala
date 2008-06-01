@@ -1,5 +1,14 @@
 2008-06-01  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-2.0/:
+
+	Fix gdk_window_get_geometry binding,
+	patch by Thijs Vermeir, fixes bug 536062
+
+	* vapi/gdk-2.0.vapi: regenerated
+
+2008-06-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadelegate.vala:
 	* vala/valasemanticanalyzer.vala:
 

@@ -1093,7 +1093,7 @@ namespace Gdk {
 		public bool get_decorations (Gdk.WMDecoration decorations);
 		public Gdk.EventMask get_events ();
 		public void get_frame_extents (out Gdk.Rectangle rect);
-		public void get_geometry (int x, int y, int width, int height, int depth);
+		public void get_geometry (out int x, out int y, out int width, out int height, out int depth);
 		public weak Gdk.Window get_group ();
 		public void get_internal_paint_info (out weak Gdk.Drawable real_drawable, int x_offset, int y_offset);
 		public int get_origin (out int x, out int y);
