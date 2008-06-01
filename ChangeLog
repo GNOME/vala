@@ -1,5 +1,13 @@
 2008-06-01  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadelegate.vala:
+	* vala/valasemanticanalyzer.vala:
+
+	Improve error message for incompatible signal handlers,
+	fixes bug 535953
+
+2008-06-01  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix GtkTreeView bindings, patch by Daniel Svensson

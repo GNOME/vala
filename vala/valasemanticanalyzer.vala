@@ -3271,8 +3271,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					}
 					a.right.target_type = new DelegateType (sig.get_delegate (new ObjectType ((ObjectTypeSymbol) sig.parent_symbol)));
 				} else if (!a.right.value_type.compatible (a.right.target_type)) {
+					var delegate_type = (DelegateType) a.right.target_type;
+
 					a.error = true;
-					Report.error (a.right.source_reference, "method `%s' is incompatible with signal `%s'".printf (a.right.value_type.to_string (), a.right.target_type.to_string ()));
+					Report.error (a.right.source_reference, "method `%s' is incompatible with signal `%s', expected `%s'".printf (a.right.value_type.to_string (), a.right.target_type.to_string (), delegate_type.delegate_symbol.get_prototype_string (m.name)));
 					return;
 				}
 			} else if (ma.symbol_reference is Property) {

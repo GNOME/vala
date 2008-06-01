@@ -281,4 +281,52 @@ public class Vala.Delegate : TypeSymbol {
 			return_type = new_type;
 		}
 	}
+
+	public string get_prototype_string (string name) {
+		return "%s %s %s".printf (get_return_type_string (), name, get_parameters_string ());
+	}
+
+	string get_return_type_string () {
+		string str = "";
+		if (!return_type.value_owned && return_type is ReferenceType) {
+			str = "weak ";
+		}
+		str += return_type.to_string ();
+
+		return str;
+	}
+
+	string get_parameters_string () {
+		string str = "(";
+
+		int i = 1;
+		foreach (FormalParameter param in parameters) {
+			if (i > 1) {
+				str += ", ";
+			}
+
+			if (param.direction != ParameterDirection.IN) {
+				if (param.direction == ParameterDirection.REF) {
+					str += "ref ";
+				} else if (param.direction == ParameterDirection.OUT) {
+					str += "out ";
+				}
+				if (!param.parameter_type.value_owned && param.parameter_type is ReferenceType) {
+					str += "weak ";
+				}
+			}
+
+			str += param.parameter_type.to_string ();
+
+			if (param.direction == ParameterDirection.IN && param.parameter_type.value_owned) {
+				str += "#";
+			}
+
+			i++;
+		}
+
+		str += ")";
+
+		return str;
+	}
 }
