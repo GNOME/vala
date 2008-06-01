@@ -47,7 +47,7 @@ namespace GMenu {
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeDirectory : GMenu.TreeItem {
 		public weak string get_comment ();
-		public weak GLib.SList get_contents ();
+		public weak GLib.SList<GMenu.TreeItem> get_contents ();
 		public weak string get_desktop_file_path ();
 		public weak string get_icon ();
 		public bool get_is_nodisplay ();

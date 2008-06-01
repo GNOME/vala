@@ -5,3 +5,5 @@ GMenuTreeEntry base_class="GMenuTreeItem"
 GMenuTreeHeader base_class="GMenuTreeItem"
 GMenuTreeSeparator base_class="GMenuTreeItem"
 
+gmenu_tree_directory_get_contents type_arguments="TreeItem"
+
