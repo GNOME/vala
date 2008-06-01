@@ -1,3 +1,9 @@
+2008-06-01  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala:
+
+	Fix foreach when used with methods returning arrays
+
 2008-06-01  Jaap A. Haitsma  <jaap@haitsma.org>
 
 	* vala/valasemanticanalyzer.vala:

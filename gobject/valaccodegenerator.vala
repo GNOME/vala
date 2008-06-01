@@ -1953,15 +1953,14 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var array_type = (ArrayType) stmt.collection.value_type;
 			
 			var array_len = get_array_length_cexpression (stmt.collection);
-			
+
+			// store array length for use by _vala_array_free
+			var clendecl = new CCodeDeclaration ("int");
+			clendecl.add_declarator (new CCodeVariableDeclarator.with_initializer (get_array_length_cname (collection_backup.name, 1), array_len));
+			cblock.add_statement (clendecl);
+
 			if (array_len is CCodeConstant) {
 				// the array has no length parameter i.e. it is NULL-terminated array
-
-				// store array length for use by _vala_array_free
-				var clendecl = new CCodeDeclaration ("int");
-				clendecl.add_declarator (new CCodeVariableDeclarator.with_initializer (get_array_length_cname (collection_backup.name, 1), array_len));
-				cblock.add_statement (clendecl);
-
 
 				var it_name = "%s_it".printf (stmt.variable_name);
 			
