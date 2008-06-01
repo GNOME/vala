@@ -1025,7 +1025,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		stmt.collection.target_type = collection_type.copy ();
 		
 		DataType element_data_type = null;
-	
+		bool element_owned = false;
+
 		if (collection_type.is_array ()) {
 			var array_type = (ArrayType) collection_type;
 			element_data_type = array_type.element_type;
@@ -1034,6 +1035,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				element_data_type = (DataType) collection_type.get_type_arguments ().get (0);
 			}
 		} else if (iterable_type != null && collection_type.compatible (iterable_type)) {
+			element_owned = true;
+
 			if (list_type == null || !collection_type.compatible (new ObjectType (list_type))) {
 				// don't use iterator objects for lists for performance reasons
 				var foreach_iterator_type = new ObjectType (iterator_type);
@@ -1073,6 +1076,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (!element_data_type.compatible (stmt.type_reference)) {
 			stmt.error = true;
 			Report.error (stmt.source_reference, "Foreach: Cannot convert from `%s' to `%s'".printf (element_data_type.to_string (), stmt.type_reference.to_string ()));
+			return;
+		} else if (element_data_type.is_disposable () && element_owned && !stmt.type_reference.value_owned) {
+			stmt.error = true;
+			Report.error (stmt.source_reference, "Foreach: Invalid assignment from owned expression to unowned variable");
 			return;
 		}
 		
