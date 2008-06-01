@@ -2108,6 +2108,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					node_reference.error = true;
 					return null;
 				}
+				if (instance_type.get_type_arguments ().size <= param_index) {
+					Report.error (node_reference.source_reference, "internal error: missing type argument for type parameter `%s' in `%s'".printf (type_arg.type_parameter.get_full_name (), instance_type.to_string ()));
+					node_reference.error = true;
+					return null;
+				}
 				type_arg = instance_type.get_type_arguments ().get (param_index);
 			}
 			instance_base_type.add_type_argument (type_arg);

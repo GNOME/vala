@@ -1,3 +1,9 @@
+2008-06-01  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala:
+
+	Report internal error for missing type argument
+
 2008-05-31  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala:
