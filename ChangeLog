@@ -2,6 +2,13 @@
 
 	* vala/valasemanticanalyzer.vala:
 
+	Report error when trying to use unowned variables as argument
+	for owned reference and output parameters
+
+2008-06-01  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala:
+
 	Report internal error for missing type argument
 
 2008-05-31  Jürg Billeter  <j@bitron.ch>

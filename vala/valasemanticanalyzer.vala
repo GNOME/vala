@@ -2042,11 +2042,31 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 							Report.error (arg.source_reference, "Argument %d: Cannot pass ref argument to non-reference parameter".printf (i + 1));
 							return false;
 						}
+
+						// weak variables can only be used with weak ref parameters
+						if (param.parameter_type.is_disposable ()) {
+							if (!(arg.value_type is PointerType) && !arg.value_type.value_owned) {
+								/* variable doesn't own the value */
+								expr.error = true;
+								Report.error (arg.source_reference, "Invalid assignment from owned expression to unowned variable");
+								return false;
+							}
+						}
 					} else if (arg_type == 3) {
 						if (param.direction != ParameterDirection.OUT) {
 							expr.error = true;
 							Report.error (arg.source_reference, "Argument %d: Cannot pass out argument to non-output parameter".printf (i + 1));
 							return false;
+						}
+
+						// weak variables can only be used with weak out parameters
+						if (param.parameter_type.is_disposable ()) {
+							if (!(arg.value_type is PointerType) && !arg.value_type.value_owned) {
+								/* variable doesn't own the value */
+								expr.error = true;
+								Report.error (arg.source_reference, "Invalid assignment from owned expression to unowned variable");
+								return false;
+							}
 						}
 					}
 				}
