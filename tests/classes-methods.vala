@@ -60,6 +60,27 @@ class Maman.SubBar : Bar {
 
 		BaseAccess.test ();
 
+		string str, str2;
+		weak string weak_str;
+
+		test_out (out str);
+		assert (str == "hello");
+
+		test_out_weak (out weak_str);
+		assert (weak_str == "hello");
+
+		test_out_weak (out str2);
+		assert (str == "hello");
+
+		test_ref (ref str);
+		assert (str == "world");
+
+		test_ref_weak (ref weak_str);
+		assert (str == "world");
+
+		test_ref_weak (ref str2);
+		assert (str == "world");
+
 		return 0;
 	}
 }
@@ -142,5 +163,23 @@ namespace Maman.BaseAccess {
 		assert (bar.virtual_interface_method () == 35);
 		assert (foobar.interface_method () == 26);
 	}
+}
+
+void test_out (out string bar) {
+	bar = "hello";
+}
+
+void test_out_weak (out weak string bar) {
+	bar = "hello";
+}
+
+void test_ref (ref string bar) {
+	assert (bar == "hello");
+	bar = "world";
+}
+
+void test_ref_weak (ref weak string bar) {
+	assert (bar == "hello");
+	bar = "world";
 }
 

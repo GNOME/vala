@@ -222,18 +222,26 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 						ccall_expr = ccomma;
 					}
 
-					// unref old value for non-null non-weak out arguments
+					// unref old value for non-null non-weak ref/out arguments
 					// disabled for arrays for now as that requires special handling
-					if (param.direction == ParameterDirection.OUT && codegen.requires_destroy (param.parameter_type)
-					    && !(arg.value_type is NullType || param.parameter_type is ArrayType)) {
+					// (ret_tmp = call (&tmp), var1 = (assign_tmp = dup (tmp), free (var1), assign_tmp), ret_tmp)
+					if (param.direction != ParameterDirection.IN && codegen.requires_destroy (arg.value_type)
+					    && (param.direction == ParameterDirection.OUT || !param.parameter_type.value_owned)
+					    && !(param.parameter_type is ArrayType)) {
 						var unary = (UnaryExpression) arg;
 
-						// (ret_tmp = call (&tmp), free (var1), var1 = tmp, ret_tmp)
 						var ccomma = new CCodeCommaExpression ();
 
-						var temp_var = codegen.get_temp_variable (unary.inner.value_type);
+						var temp_var = codegen.get_temp_variable (param.parameter_type, param.parameter_type.value_owned);
 						codegen.temp_vars.insert (0, temp_var);
 						cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name));
+
+						if (param.direction == ParameterDirection.REF) {
+							var crefcomma = new CCodeCommaExpression ();
+							crefcomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), (CCodeExpression) unary.inner.ccodenode));
+							crefcomma.append_expression (cexpr);
+							cexpr = crefcomma;
+						}
 
 						// call function
 						LocalVariable ret_temp_var;
@@ -245,11 +253,20 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 							ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (ret_temp_var.name), ccall_expr));
 						}
 
+						var cassign_comma = new CCodeCommaExpression ();
+
+						var assign_temp_var = codegen.get_temp_variable (unary.inner.value_type, unary.inner.value_type.value_owned);
+						codegen.temp_vars.insert (0, assign_temp_var);
+
+						cassign_comma.append_expression (new CCodeAssignment (new CCodeIdentifier (assign_temp_var.name), codegen.transform_expression (new CCodeIdentifier (temp_var.name), param.parameter_type, unary.inner.value_type, arg)));
+
 						// unref old value
-						ccomma.append_expression (codegen.get_unref_expression ((CCodeExpression) unary.inner.ccodenode, arg.value_type, arg));
+						cassign_comma.append_expression (codegen.get_unref_expression ((CCodeExpression) unary.inner.ccodenode, arg.value_type, arg));
+
+						cassign_comma.append_expression (new CCodeIdentifier (assign_temp_var.name));
 
 						// assign new value
-						ccomma.append_expression (new CCodeAssignment ((CCodeExpression) unary.inner.ccodenode, new CCodeIdentifier (temp_var.name)));
+						ccomma.append_expression (new CCodeAssignment ((CCodeExpression) unary.inner.ccodenode, cassign_comma));
 
 						// return value
 						if (!(m.return_type is VoidType)) {
