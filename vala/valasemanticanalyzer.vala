@@ -822,14 +822,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	 * @param list an initializer list
 	 */
 	public override void visit_initializer_list (InitializerList list) {
-		if (list.target_type is ArrayType) {
+		if (list.target_type == null) {
+			list.error = true;
+			Report.error (list.source_reference, "initializer list used for unknown type");
+			return;
+		} else if (list.target_type is ArrayType) {
 			/* initializer is used as array initializer */
 			var array_type = (ArrayType) list.target_type;
 
 			foreach (Expression e in list.get_initializers ()) {
 				e.target_type = array_type.element_type.copy ();
 			}
-		} else if (list.target_type != null && list.target_type.data_type is Struct) {
+		} else if (list.target_type.data_type is Struct) {
 			/* initializer is used as struct initializer */
 			var st = (Struct) list.target_type.data_type;
 
@@ -854,10 +858,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					e.target_type.value_owned = false;
 				}
 			}
-		} else if (list.target_type == null) {
-			list.error = true;
-			Report.error (list.source_reference, "initializer list used for unknown type");
-			return;
 		} else {
 			list.error = true;
 			Report.error (list.source_reference, "initializer list used for `%s', which is neither array nor struct".printf (list.target_type.to_string ()));

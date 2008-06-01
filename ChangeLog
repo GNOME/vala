@@ -1,5 +1,10 @@
 2008-06-01  Jaap A. Haitsma  <jaap@haitsma.org>
 
+	* vala/valasemanticanalyzer.vala:
+	Small change to make code a bit clearer. Fixes bug #535942
+
+2008-06-01  Jaap A. Haitsma  <jaap@haitsma.org>
+
 	* vapi/gstreamer-0.10.vapi:
 	* vapi/packages/gstreamer-0.10/gstreamer-0.10.metadata:
 	Gst.structure.get_value should return Gst.value. Fixes bug #535965
