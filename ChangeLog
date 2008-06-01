@@ -1,5 +1,13 @@
 2008-06-01  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Fix GtkTreeView bindings, patch by Daniel Svensson
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-06-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 
 	Report error when trying to use unowned element variable in

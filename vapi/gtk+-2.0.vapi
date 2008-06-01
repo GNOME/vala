@@ -1021,7 +1021,7 @@ namespace Gtk {
 		public weak Gdk.Region region_intersect (Gdk.Region region);
 		public bool remove_accelerator (Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods);
 		public void remove_mnemonic_label (Gtk.Widget label);
-		public weak Gdk.Pixbuf render_icon (string stock_id, Gtk.IconSize size, string detail);
+		public weak Gdk.Pixbuf render_icon (string stock_id, Gtk.IconSize size, string? detail);
 		public void reparent (Gtk.Widget new_parent);
 		public void reset_rc_styles ();
 		public void reset_shapes ();
@@ -5439,8 +5439,8 @@ namespace Gtk {
 		public weak Gtk.TreeViewColumn get_column (int n);
 		public weak GLib.List get_columns ();
 		public void get_cursor (out weak Gtk.TreePath path, out weak Gtk.TreeViewColumn focus_column);
-		public bool get_dest_row_at_pos (int drag_x, int drag_y, out weak Gtk.TreePath path, out Gtk.TreeViewDropPosition pos);
-		public void get_drag_dest_row (out weak Gtk.TreePath path, out Gtk.TreeViewDropPosition pos);
+		public bool get_dest_row_at_pos (int drag_x, int drag_y, out Gtk.TreePath? path, out Gtk.TreeViewDropPosition pos);
+		public void get_drag_dest_row (out Gtk.TreePath? path, out Gtk.TreeViewDropPosition pos);
 		public bool get_enable_search ();
 		public bool get_enable_tree_lines ();
 		public weak Gtk.TreeViewColumn get_expander_column ();
@@ -5453,7 +5453,7 @@ namespace Gtk {
 		public bool get_hover_selection ();
 		public int get_level_indentation ();
 		public weak Gtk.TreeModel get_model ();
-		public bool get_path_at_pos (int x, int y, out weak Gtk.TreePath path, out weak Gtk.TreeViewColumn column, int cell_x, int cell_y);
+		public bool get_path_at_pos (int x, int y, out Gtk.TreePath? path, out weak Gtk.TreeViewColumn? column, out int cell_x, out int cell_y);
 		public bool get_reorderable ();
 		public weak Gtk.TreeViewRowSeparatorFunc get_row_separator_func ();
 		public bool get_rubber_banding ();
@@ -5496,7 +5496,7 @@ namespace Gtk {
 		public void set_hover_expand (bool expand);
 		public void set_hover_selection (bool hover);
 		public void set_level_indentation (int indentation);
-		public void set_model (Gtk.TreeModel model);
+		public void set_model (Gtk.TreeModel? model);
 		public void set_reorderable (bool reorderable);
 		public void set_row_separator_func (Gtk.TreeViewRowSeparatorFunc func, void* data, Gtk.DestroyNotify destroy);
 		public void set_rubber_banding (bool enable);
