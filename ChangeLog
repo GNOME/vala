@@ -1,5 +1,11 @@
 2008-06-01  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+
+	Fix derived generic classes, fixes bug 524426
+
+2008-06-01  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/libgnome-menu/:
 
 	Fix gmenu_tree_directory_get_contents binding, fixes bug 522745

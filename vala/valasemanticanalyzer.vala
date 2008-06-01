@@ -2147,7 +2147,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return instance_base_type;
 	}
 
-	public static DataType? get_actual_type (DataType derived_instance_type, Symbol generic_member, DataType generic_type, CodeNode node_reference) {
+	static DataType? get_instance_base_type_for_member (DataType derived_instance_type, Symbol member, CodeNode node_reference) {
 		DataType instance_type = derived_instance_type;
 
 		while (instance_type is PointerType) {
@@ -2155,87 +2155,81 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			instance_type = instance_pointer_type.base_type;
 		}
 
-		// trace type arguments back to the datatype where the method has been declared
-		while (instance_type.data_type != generic_member.parent_symbol) {
-			DataType instance_base_type = null;
+		if (instance_type.data_type == member.parent_symbol) {
+			return instance_type;
+		}
 
-			// use same algorithm as symbol_lookup_inherited
-			if (instance_type.data_type is Class) {
-				var cl = (Class) instance_type.data_type;
-				// first check interfaces without prerequisites
-				// (prerequisites can be assumed to be met already)
-				foreach (DataType base_type in cl.get_base_types ()) {
-					if (base_type.data_type is Interface) {
-						if (base_type.data_type.scope.lookup (generic_member.name) == generic_member) {
-							instance_base_type = get_instance_base_type (instance_type, base_type, node_reference);
-							break;
-						}
+		DataType instance_base_type = null;
+
+		// use same algorithm as symbol_lookup_inherited
+		if (instance_type.data_type is Class) {
+			var cl = (Class) instance_type.data_type;
+			// first check interfaces without prerequisites
+			// (prerequisites can be assumed to be met already)
+			foreach (DataType base_type in cl.get_base_types ()) {
+				if (base_type.data_type is Interface) {
+					instance_base_type = get_instance_base_type_for_member (get_instance_base_type (instance_type, base_type, node_reference), member, node_reference);
+					if (instance_base_type != null) {
+						return instance_base_type;
 					}
 				}
-				// then check base class recursively
-				if (instance_base_type == null) {
-					foreach (DataType base_type in cl.get_base_types ()) {
-						if (base_type.data_type is Class) {
-							if (symbol_lookup_inherited (cl.base_class, generic_member.name) == generic_member) {
-								instance_base_type = get_instance_base_type (instance_type, base_type, node_reference);
-								break;
-							}
-						}
-					}
-				}
-			} else if (instance_type.data_type is Struct) {
-				var st = (Struct) instance_type.data_type;
-				foreach (DataType base_type in st.get_base_types ()) {
-					if (base_type.data_type.scope.lookup (generic_member.name) == generic_member) {
-						instance_base_type = get_instance_base_type (instance_type, base_type, node_reference);
-						break;
-					}
-				}
-			} else if (instance_type.data_type is Interface) {
-				var iface = (Interface) instance_type.data_type;
-				// first check interface prerequisites recursively
-				foreach (DataType prerequisite in iface.get_prerequisites ()) {
-					if (prerequisite.data_type is Interface) {
-						if (symbol_lookup_inherited (prerequisite.data_type, generic_member.name) == generic_member) {
-							instance_base_type = get_instance_base_type (instance_type, prerequisite, node_reference);
-							break;
-						}
-					}
-				}
-				if (instance_base_type == null) {
-					// then check class prerequisite recursively
-					foreach (DataType prerequisite in iface.get_prerequisites ()) {
-						if (prerequisite.data_type is Class) {
-							if (symbol_lookup_inherited (prerequisite.data_type, generic_member.name) == generic_member) {
-								instance_base_type = get_instance_base_type (instance_type, prerequisite, node_reference);
-								break;
-							}
-						}
-					}
-				}
-			} else {
-				Report.error (node_reference.source_reference, "internal error: unsupported generic type");
-				node_reference.error = true;
-				return null;
 			}
-
+			// then check base class recursively
 			if (instance_base_type == null) {
-				Report.error (node_reference.source_reference, "internal error: unable to find generic member `%s'".printf (generic_member.name));
-				node_reference.error = true;
-				return null;
+				foreach (DataType base_type in cl.get_base_types ()) {
+					if (base_type.data_type is Class) {
+						instance_base_type = get_instance_base_type_for_member (get_instance_base_type (instance_type, base_type, node_reference), member, node_reference);
+						if (instance_base_type != null) {
+							return instance_base_type;
+						}
+					}
+				}
 			}
-			instance_type = instance_base_type;
-
-			while (instance_type is PointerType) {
-				var instance_pointer_type = (PointerType) instance_type;
-				instance_type = instance_pointer_type.base_type;
+		} else if (instance_type.data_type is Struct) {
+			var st = (Struct) instance_type.data_type;
+			foreach (DataType base_type in st.get_base_types ()) {
+				instance_base_type = get_instance_base_type_for_member (get_instance_base_type (instance_type, base_type, node_reference), member, node_reference);
+				if (instance_base_type != null) {
+					return instance_base_type;
+				}
+			}
+		} else if (instance_type.data_type is Interface) {
+			var iface = (Interface) instance_type.data_type;
+			// first check interface prerequisites recursively
+			foreach (DataType prerequisite in iface.get_prerequisites ()) {
+				if (prerequisite.data_type is Interface) {
+					instance_base_type = get_instance_base_type_for_member (get_instance_base_type (instance_type, prerequisite, node_reference), member, node_reference);
+					if (instance_base_type != null) {
+						return instance_base_type;
+					}
+				}
+			}
+			if (instance_base_type == null) {
+				// then check class prerequisite recursively
+				foreach (DataType prerequisite in iface.get_prerequisites ()) {
+					if (prerequisite.data_type is Class) {
+						instance_base_type = get_instance_base_type_for_member (get_instance_base_type (instance_type, prerequisite, node_reference), member, node_reference);
+						if (instance_base_type != null) {
+							return instance_base_type;
+						}
+					}
+				}
 			}
 		}
-		if (instance_type.data_type != generic_member.parent_symbol) {
-			Report.error (node_reference.source_reference, "internal error: generic type parameter tracing not supported yet");
+
+		return null;
+	}
+
+	public static DataType? get_actual_type (DataType derived_instance_type, Symbol generic_member, DataType generic_type, CodeNode node_reference) {
+		// trace type arguments back to the datatype where the method has been declared
+		var instance_type = get_instance_base_type_for_member (derived_instance_type, generic_member, node_reference);
+
+		if (instance_type == null) {
+			Report.error (node_reference.source_reference, "internal error: unable to find generic member `%s'".printf (generic_member.name));
 			node_reference.error = true;
 			return null;
 		}
+
 		int param_index = instance_type.data_type.get_type_parameter_index (generic_type.type_parameter.name);
 		if (param_index == -1) {
 			Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (generic_type.type_parameter.name));
