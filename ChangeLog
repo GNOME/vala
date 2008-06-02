@@ -1,5 +1,12 @@
 2008-06-02  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libepc-1.0.vapi:
+	* vapi/packages/libepc-1.0/:
+
+	Add libepc-1.0 bindings, patch by Ali Sabil, fixes bug 533113
+
+2008-06-02  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gio-2.0/:
 
 	Fix g_file_enumerator_next_files_finish binding, fixes bug 524904

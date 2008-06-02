@@ -1,0 +1,33 @@
+epc_service_monitor_new_for_types ellipsis="1"
+epc_service_monitor_new.application nullable="1"
+epc_service_monitor_new.domain nullable="1"
+epc_service_monitor_new_for_types.domain nullable="1"
+epc_service_monitor_new_for_types_strv.domain nullable="1"
+
+epc_publisher_new.name nullable="1"
+epc_publisher_new.aplication nullable="1"
+epc_publisher_new.domain nullable="1"
+
+epc_consumer_lookup.length is_out="1" nullable="1"
+
+epc_service_info_get_address hidden="1"
+epc_service_info_new hidden="1"
+epc_service_info_new_full hidden="1"
+
+EpcAddressFamily cheader_filename="libepc/enums.h"
+EpcCollisionHandling cheader_filename="libepc/enums.h"
+EpcProtocol cheader_filename="libepc/enums.h"
+EpcAuthFlags cheader_filename="libepc/enums.h"
+
+epc_address_family_to_string hidden="1"
+
+EpcConsumer cheader_filename="libepc/consumer.h"
+EpcContents cheader_filename="libepc/contents.h"
+EpcDispatcher cheader_filename="libepc/dispatcher.h"
+EpcAuthContext cheader_filename="libepc/publisher.h"
+EpcPublisher cheader_filename="libepc/publisher.h"
+EpcServiceInfo cheader_filename="libepc/service-info.h"
+EpcServiceMonitor cheader_filename="libepc/service-monitor.h"
+
+Epc cheader_filename="libepc/service-type.h"
+
