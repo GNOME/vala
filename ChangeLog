@@ -1,5 +1,13 @@
 2008-06-02  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_bus_add_watch_full binding
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-06-02  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala:
 	* gobject/valaccodeinvocationexpressionbinding.vala:
 	* gobject/valaccodemethodbinding.vala:
