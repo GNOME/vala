@@ -1447,12 +1447,12 @@ namespace Gdk {
 		public Gdk.Event copy ();
 		public void free ();
 		public static Gdk.Event get ();
-		public bool get_axis (Gdk.AxisUse axis_use, double value);
-		public bool get_coords (double x_win, double y_win);
+		public bool get_axis (Gdk.AxisUse axis_use, out double value);
+		public bool get_coords (out double x_win, out double y_win);
 		public static Gdk.Event get_graphics_expose (Gdk.Window window);
-		public bool get_root_coords (double x_root, double y_root);
+		public bool get_root_coords (out double x_root, out double y_root);
 		public weak Gdk.Screen get_screen ();
-		public bool get_state (Gdk.ModifierType state);
+		public bool get_state (out Gdk.ModifierType state);
 		public uint get_time ();
 		public static void handler_set (Gdk.EventFunc func, void* data, GLib.DestroyNotify notify);
 		[CCode (cname = "gdk_event_new")]

@@ -1,5 +1,13 @@
 2008-06-02  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-2.0/:
+
+	Fix gdk_event_get_* bindings, fixes bug 533933
+
+	* vapi/gdk-2.0.vapi: regenerated
+
+2008-06-02  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/libepc-1.0.vapi:
 	* vapi/packages/libepc-1.0/:
 
