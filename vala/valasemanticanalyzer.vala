@@ -207,6 +207,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 							}
 						}
 					}
+
+					/* check properties */
+					foreach (Property prop in iface.get_properties ()) {
+						if (prop.is_abstract) {
+							var sym = cl.scope.lookup (prop.name);
+							if (!(sym is Property)) {
+								cl.error = true;
+								Report.error (cl.source_reference, "`%s' does not implement interface property `%s'".printf (cl.get_full_name (), prop.get_full_name ()));
+							}
+						}
+					}
 				}
 			}
 
@@ -220,6 +231,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 							if (override_method == null || !override_method.overrides) {
 								cl.error = true;
 								Report.error (cl.source_reference, "`%s' does not implement abstract method `%s'".printf (cl.get_full_name (), base_method.get_full_name ()));
+							}
+						}
+					}
+					foreach (Property base_property in base_class.get_properties ()) {
+						if (base_property.is_abstract) {
+							var override_property = symbol_lookup_inherited (cl, base_property.name) as Property;
+							if (override_property == null || !override_property.overrides) {
+								cl.error = true;
+								Report.error (cl.source_reference, "`%s' does not implement abstract property `%s'".printf (cl.get_full_name (), base_property.get_full_name ()));
 							}
 						}
 					}

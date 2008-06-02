@@ -1,5 +1,12 @@
 2008-06-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+
+	Ensure that classes implement abstract properties of interfaces
+	and abstract base classes, fixes bug 535270
+
+2008-06-02  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gdk-2.0/:
 
 	Fix gdk_event_get_* bindings, fixes bug 533933
