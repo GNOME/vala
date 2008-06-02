@@ -1,5 +1,11 @@
 2008-06-02  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeclassbinding.vala:
+
+	Fix invalid C code when using deprecated static classes
+
+2008-06-02  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Fix gst_bus_add_watch_full binding

@@ -46,7 +46,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 		codegen.current_type_symbol = cl;
 		codegen.current_class = cl;
 		
-		bool is_gtypeinstance = !cl.is_compact;
+		bool is_gtypeinstance = !cl.is_compact && !cl.is_static;
 		bool is_gobject = cl.is_subtype_of (codegen.gobject_type);
 		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
 
