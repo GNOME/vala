@@ -170,7 +170,24 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 						var deleg_type = (DelegateType) param.parameter_type;
 						var d = deleg_type.delegate_symbol;
 						if (d.has_target) {
-							carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), codegen.get_delegate_target_cexpression (arg));
+							var delegate_target = codegen.get_delegate_target_cexpression (arg);
+							if (deleg_type.value_owned) {
+								CCodeExpression delegate_target_destroy_notify;
+								var delegate_method = arg.symbol_reference as Method;
+								var ma = arg as MemberAccess;
+								if (delegate_method != null && delegate_method.binding == MemberBinding.INSTANCE
+								    && ma.inner != null && ma.inner.value_type.data_type != null
+								    && ma.inner.value_type.data_type.is_reference_counting ()) {
+									var ref_call = new CCodeFunctionCall (codegen.get_dup_func_expression (ma.inner.value_type, arg.source_reference));
+									ref_call.add_argument (delegate_target);
+									delegate_target = ref_call;
+									delegate_target_destroy_notify = codegen.get_destroy_func_expression (ma.inner.value_type);
+								} else {
+									delegate_target_destroy_notify = new CCodeConstant ("NULL");
+								}
+								carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position + 0.01), delegate_target_destroy_notify);
+ 							}
+							carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), delegate_target);
 							multiple_cargs = true;
 						}
 					} else if (param.parameter_type is MethodType) {

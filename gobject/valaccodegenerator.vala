@@ -1274,7 +1274,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	private CCodeExpression? get_dup_func_expression (DataType type, SourceReference? source_reference) {
+	public CCodeExpression? get_dup_func_expression (DataType type, SourceReference? source_reference) {
 		var cl = type.data_type as Class;
 		if (type.data_type != null) {
 			string dup_function;
@@ -1349,7 +1349,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return dup_func;
 	}
 
-	private CCodeExpression? get_destroy_func_expression (DataType type) {
+	public CCodeExpression? get_destroy_func_expression (DataType type) {
 		if (type.data_type == glist_type || type.data_type == gslist_type) {
 			// create wrapper function to free list elements if necessary
 
@@ -2815,6 +2815,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		return new CCodeConstant ("NULL");
+	}
+
+	public string get_delegate_target_destroy_notify_cname (string delegate_cname) {
+		return "%s_target_destroy_notify".printf (delegate_cname);
 	}
 
 	public override void visit_element_access (ElementAccess expr) {

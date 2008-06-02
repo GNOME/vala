@@ -1,5 +1,13 @@
 2008-06-02  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+	* gobject/valaccodemethodbinding.vala:
+
+	Add basic support for owned delegates, fixes bug 533484
+
+2008-06-02  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/gmodule-2.0.vapi:
 	* vapi/sdl-gfx.vapi:
 	* vapi/sdl-mixer.vapi:

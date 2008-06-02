@@ -436,6 +436,11 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 						var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname (param.name), "void*");
 						cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), cparam);
 						carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
+						if (deleg_type.value_owned) {
+							cparam = new CCodeFormalParameter (codegen.get_delegate_target_destroy_notify_cname (param.name), "GDestroyNotify");
+							cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position + 0.01), cparam);
+							carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position + 0.01), new CCodeIdentifier (cparam.name));
+						}
 					}
 				}
 			}
@@ -618,6 +623,10 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 				if (d.has_target) {
 					var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname (param.name), "void*");
 					cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), cparam);
+					if (deleg_type.value_owned) {
+						cparam = new CCodeFormalParameter (codegen.get_delegate_target_destroy_notify_cname (param.name), "GDestroyNotify");
+						cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position + 0.01), cparam);
+					}
 				}
 			} else if (param.parameter_type is MethodType) {
 				var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname (param.name), "void*");
