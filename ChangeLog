@@ -1,5 +1,10 @@
 2008-06-02  Jürg Billeter  <j@bitron.ch>
 
+	* .bzrignore: add .bzrignore for bzr-svn,
+	patch by Jaap A. Haitsma, fixes bug 535451
+
+2008-06-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 
 	Ensure that classes implement abstract properties of interfaces
