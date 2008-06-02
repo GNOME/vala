@@ -1941,7 +1941,7 @@ namespace GLib {
 		public TokenValue cur_value ();
 		public uint set_scope (uint scope_id);
 		public void scope_add_symbol (uint scope_id, string symbol, void* value);
-		public void scope_foreach_symbol (uint scope_id, HFunc func, void* user_data);
+		public void scope_foreach_symbol (uint scope_id, HFunc func);
 		public void* scope_lookup_symbol (uint scope_id, string symbol);
 		public void scope_remove_symbol (uint scope_id, string symbol);
 		public void* lookup_symbol (string symbol);
@@ -2914,13 +2914,13 @@ namespace GLib {
 		public List<weak K> get_keys ();
 		public List<weak V> get_values ();
 		[CCode (cname = "g_hash_table_foreach")]
-		public void for_each (HFunc func, void* user_data);
+		public void for_each (HFunc func);
 		public uint size ();
 	}
 	
 	public static delegate uint HashFunc (void* key);
 	public static delegate bool EqualFunc (void* a, void* b);
-	public static delegate void HFunc (void* key, void* value, void* user_data);
+	public delegate void HFunc (void* key, void* value);
 
 	public static delegate void DestroyNotify (void* data);
 	

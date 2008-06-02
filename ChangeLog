@@ -1,5 +1,11 @@
 2008-06-02  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Fix g_hash_table_foreach binding
+
+2008-06-02  Jürg Billeter  <j@bitron.ch>
+
 	* .bzrignore: add .bzrignore for bzr-svn,
 	patch by Jaap A. Haitsma, fixes bug 535451
 
