@@ -24,6 +24,7 @@
 namespace GLib {
 	/* Dynamic Loading of Modules */
 	
+	[Compact]
 	[CCode (free_function = "g_module_close", cheader_filename = "gmodule.h")]
 	public class Module {
 		public static bool supported ();

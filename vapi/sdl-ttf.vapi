@@ -24,6 +24,7 @@ namespace SDLTTF {
 	}// FontStyle
 
 	[CCode (cname="TTF_Font", free_function="TTF_CloseFont")]
+	[Compact]
 	public class Font {
 		[CCode (cname="TTF_OpenFont")]
 		public Font(string file, int ptsize);

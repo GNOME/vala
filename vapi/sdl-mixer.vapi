@@ -41,6 +41,7 @@ namespace SDLMixer {
 	}// MusicType
 
 	[CCode (cname="Mix_Chunk", free_function="Mix_FreeChunk")]
+	[Compact]
 	public class Chunk {
 		[CCode (cname="Mix_LoadWAV_RW")]
 		public Chunk.WAV(RWops src, int freesrc=0);
@@ -57,6 +58,7 @@ namespace SDLMixer {
 	}// Chunk
 
 	[CCode (cname="Mix_Music", free_function="Mix_FreeMusic")]
+	[Compact]
 	public class Music {
 		[CCode (cname="Mix_GetMusicHookData")]
 		public static void* get_hook_data();
@@ -116,6 +118,7 @@ namespace SDLMixer {
 		public int fade_in(int loops, int ms, double position=0.0);
 	}// Music
 
+	[Compact]
 	public class Effect {
 		[CCode (cname="Mix_RegisterEffect")]
 		public static int register(int chan, EffectCallback f, 

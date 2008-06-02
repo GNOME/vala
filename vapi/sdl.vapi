@@ -67,6 +67,7 @@ namespace SDL {
 		OPAQUE, TRANSPARENT
 	}// Opacity
 
+	[Compact]
 	public class Video {
 		[CCode (cname="SDL_VideoDriverName")]
 		public static weak string? driver_name(string namebuf, int maxlen);
@@ -92,6 +93,7 @@ namespace SDL {
 	}// SurfaceFlag
 
 	[CCode (cname="SDL_Surface", free_function="SDL_FreeSurface", copy_function="SDL_DisplayFormat")]
+	[Compact]
 	public class Surface {
 		public uint32 flags;
 		public PixelFormat format;
@@ -160,7 +162,8 @@ namespace SDL {
 	}// Surface
 
 	[CCode (cname="SDL_Surface")]
-	public class Screen: Surface {
+	[Compact]
+	public class Screen : Surface {
 		[CCode (cname="SDL_GetVideoSurface")]
 		public static weak Screen instance();
 
@@ -172,6 +175,7 @@ namespace SDL {
 	}// Screen
 
 	[CCode (cname="SDL_PixelFormat")]
+	[Compact]
 	public class PixelFormat {
 		public Palette palette;
 		public uchar BitsPerPixel;
@@ -235,6 +239,7 @@ namespace SDL {
 	}// Palette
 
 	[CCode (cname="SDL_VideoInfo")]
+	[Compact]
 	public class VideoInfo {
 		public uint32 hw_available	;
 		public uint32 wm_available	;
@@ -265,6 +270,7 @@ namespace SDL {
 	}// OverlayFormat
 
 	[CCode (cname="SDL_Overlay", free_function="SDL_FreeYUVOverlay")]
+	[Compact]
 	public class Overlay {
 		public uint32 format;
 		public int w;
@@ -294,6 +300,7 @@ namespace SDL {
 	/// RWops
 	///
 	[CCode (cname="SDL_RWops", free_function="SDL_FreeRW")]
+	[Compact]
 	public class RWops {
 		[CCode (cname="SDL_RWFromFile")]
 		public RWops.from_file(string file, string mode);
@@ -316,6 +323,7 @@ namespace SDL {
 	}// GLattr
 
 	[CCode (cprefix="SDL_GL_", cheader_filename="SDL.h")]
+	[Compact]
 	public class GL {
 		[CCode (cname="SDL_GL_LoadLibrary")]
 		public static int load_library(string path);
@@ -343,6 +351,7 @@ namespace SDL {
 	}// GrabMode
 
 	[CCode (cprefix="SDL_WM_", cheader_filename="SDL.h")]
+	[Compact]
 	public class WindowManager {
 		[CCode (cname="SDL_WM_SetCaption")]
 		public static void set_caption(string title, string icon);
@@ -866,6 +875,7 @@ namespace SDL {
 	}// Buttons
 
 	[CCode (cname="SDL_Cursor", free_function="SDL_FreeCursor")]
+	[Compact]
 	public class Cursor {
 		public Rect area;
 		public int16 hot_x;
@@ -904,6 +914,7 @@ namespace SDL {
 	}// HatValue
 
 	[CCode (cname="SDL_Joystick", free_function="SDL_JoystickClose")]
+	[Compact]
 	public class Joystick {
 		[CCode (cname="SDL_JoystickName")]
 		public static weak string get_name(int device_index);
@@ -967,6 +978,7 @@ namespace SDL {
 	}// AudioStatus
 
 	[CCode (cname="SDL_AudioSpec")]
+	[Compact]
 	public class AudioSpec {
 		public int freq;
 		public AudioFormat format;
@@ -980,6 +992,7 @@ namespace SDL {
 	}// AudioSpec
 
 	[CCode (cname="SDL_AudioCVT")]
+	[Compact]
 	public class AudioConverter {
 		public int needed;
 		public AudioFormat src_format;
@@ -1002,6 +1015,7 @@ namespace SDL {
 		public int convert();
 	}// AudioConverter
 
+	[Compact]
 	public class Audio {
 		[CCode (cname="SDL_AudioDriverName")]
 		public static weak string driver_name(string namebuf, int maxlen);
@@ -1041,6 +1055,7 @@ namespace SDL {
 	public delegate int ThreadFunc(void* data);
 
 	[CCode (cname="SDL_Thread", free_function="SDL_WaitThread")]
+	[Compact]
 	public class Thread {
 		[CCode (cname="SDL_ThreadID")]
 		public static uint32 id();
@@ -1050,6 +1065,7 @@ namespace SDL {
 	}// Thread
 
 	[CCode (cname="SDL_mutex", free_function="SDL_DestroyMutex")]
+	[Compact]
 	public class Mutex {
 		[CCode (cname="SDL_CreateMutex")]
 		public Mutex();
@@ -1062,6 +1078,7 @@ namespace SDL {
 	}// Mutex
 
 	[CCode (cname="SDL_sem", free_function="SDL_DestroySemaphore")]
+	[Compact]
 	public class Semaphore {
 		[CCode (cname="SDL_CreateSemaphore")]
 		public Semaphore(uint32 initial_value);
@@ -1083,6 +1100,7 @@ namespace SDL {
 	}// Semaphore
 
 	[CCode (cname="SDL_cond", free_function="SDL_DestroyCond")]
+	[Compact]
 	public class Condition {
 		[CCode (cname="SDL_CreateCond")]
 		public Condition();
@@ -1107,6 +1125,7 @@ namespace SDL {
 	public delegate uint32 TimerCallback(uint32 interval, void* param);
 
 	[CCode (cname="struct _SDL_TimerID", free_function="SDL_RemoveTimer")]
+	[Compact]
 	public class Timer {
 		[CCode (cname="SDL_GetTicks")]
 		public static uint32 get_ticks();

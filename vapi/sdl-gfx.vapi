@@ -3,6 +3,7 @@ using SDL;
 
 namespace SDLGraphics {
 	[CCode (cheader_filename="SDL_gfxPrimitives.h")]
+	[Compact]
 	public class Pixel {
 		[CCode (cname="pixelColor")]
 		public static int color(Surface dst, int16 x, int16 y, uint32 color);
@@ -13,6 +14,7 @@ namespace SDLGraphics {
 	}// Pixel
 
 	[CCode (cheader_filename="SDL_gfxPrimitives.h")]
+	[Compact]
 	public class Line {
 		[CCode (cname="hlineColor")]
 		public static int color_h(Surface dst, int16 x1, int16 x2, 
@@ -48,6 +50,7 @@ namespace SDLGraphics {
 	}// Line
 
 	[CCode (cheader_filename="SDL_gfxPrimitives.h")]
+	[Compact]
 	public class Rectangle {
 		[CCode (cname="rectangleColor")]
 		public static int outline_color(Surface dst, int16 x1, int16 y1, 
@@ -67,6 +70,7 @@ namespace SDLGraphics {
 	}// Rectangle
 
 	[CCode (cheader_filename="SDL_gfxPrimitives.h")]
+	[Compact]
 	public class Circle {
 		[CCode (cname="circleColor")]
 		public static int outline_color(Surface dst, int16 x, int16 y, 
@@ -94,6 +98,7 @@ namespace SDLGraphics {
 	}// Circle
 
 	[CCode (cheader_filename="SDL_gfxPrimitives.h")]
+	[Compact]
 	public class Ellipse {
 		[CCode (cname="ellipseColor")]
 		public static int outline_color(Surface dst, int16 xc, int16 yc, 
@@ -121,6 +126,7 @@ namespace SDLGraphics {
 	}// Ellipse
 
 	[CCode (cheader_filename="SDL_gfxPrimitives.h")]
+	[Compact]
 	public class Arc {
 		[CCode (cname="pieColor")]
 		public static int outline_color(Surface dst, int16 x, int16 y, int16 radius, 
@@ -140,6 +146,7 @@ namespace SDLGraphics {
 	}// Arc
 
 	[CCode (cheader_filename="SDL_gfxPrimitives.h")]
+	[Compact]
 	public class Trigon {
 		[CCode (cname="trigonColor")]
 		public static int outline_color(Surface dst, int16 x1, int16 y1, 
@@ -170,6 +177,7 @@ namespace SDLGraphics {
 	}// Trigon
 
 	[CCode (cheader_filename="SDL_gfxPrimitives.h")]
+	[Compact]
 	public class Polygon {
 		[CCode (cname="polygonColor")]
 		[NoArrayLength]
@@ -203,6 +211,7 @@ namespace SDLGraphics {
 	}// Polygon
 
 	[CCode (cheader_filename="SDL_gfxPrimitives.h")]
+	[Compact]
 	public class BezierCurve {
 		[CCode (cname="bezierColor")]
 		[NoArrayLength]
@@ -216,6 +225,7 @@ namespace SDLGraphics {
 	}// BezierCurve
 
 	[CCode (cheader_filename="SDL_gfxPrimitives.h")]
+	[Compact]
 	public class Text {
 		[CCode (cname="stringColor")]
 		public static int color(Surface dst, int16 x, int16 y, string s, uint32 color);
@@ -229,6 +239,7 @@ namespace SDLGraphics {
 	}// Text
 
 	[CCode (cheader_filename="SDL_rotozoom.h")]
+	[Compact]
 	public class RotoZoom {
 		[CCode (cname="rotozoomSurface")]
 		public static Surface rotozoom(Surface src, double degrees, 
@@ -256,6 +267,7 @@ namespace SDLGraphics {
 	}// RotoZoom
 
 	[CCode (cheader_filename="SDL_framerate.h", cname="FPSmanager", free_function="g_free")]
+	[Compact]
 	public class FramerateManager {
 		[CCode (cname="SDL_initFramerate")]
 		public void init();
@@ -271,6 +283,7 @@ namespace SDLGraphics {
 	}// FramerateManager
 
 	[CCode (cheader_filename="SDL_imageFilter.h")]
+	[Compact]
 	public class Filter {
 		[CCode (cname="SDL_imageFilterMMXdetect")]
 		public static int have_mmx();
