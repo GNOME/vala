@@ -16,7 +16,7 @@ class ClassName : BaseClassName {
 }</blockcode>
 		<div role="note">
 			<h>GObject Note</h>
-			<p>It's recommended that you derive all your classes directly or indirectly from GLib.Object, unless you have a strong reason not to. Some class features are not supported for classes not deriving from GLib.Object. If your class does not derive from GLib.Object, it will map to a struct in C code.</p>
+			<p>It's recommended that you derive all your classes directly or indirectly from GLib.Object, unless you have a strong reason not to. Some class features are not supported for classes not deriving from GLib.Object.</p>
 		</div>
 		<p>Classes cannot have multiple base classes, however they may implement multiple interfaces:</p>
 		<blockcode>
@@ -54,7 +54,25 @@ class NamespaceName.ClassName {
 	</section>
 	<section id="properties">
 		<h>Properties</h>
-		<p>Documentation</p>
+		<blockquote>
+property-declaration:
+	[ access-modifier ] [ member-modifiers ] type identifier <l>{</l> accessor-declarations [ default-value ] <l>}</l> <l>;</l>
+
+accessor-declarations:
+	get-accessor [ set-accessor ]
+	set-accessor [ get-accessor ]
+
+get-accessor:
+	[ access-modifier ] <l>get</l> <l>;</l>
+	[ access-modifier ] <l>get</l> <l>{</l> statement-list <l>}</l>
+
+set-accessor:
+	[ access-modifier ] <l>set</l> [ <l>construct</l> ] <l>;</l>
+	[ access-modifier ] <l>set</l> [ <l>construct</l> ] <l>{</l> statement-list <l>}</l>
+
+default-value:
+	<l>default =</l> expression <l>;</l>
+		</blockquote>
 	</section>
 	<section id="signals">
 		<h>Signals</h>
