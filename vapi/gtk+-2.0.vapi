@@ -2982,7 +2982,7 @@ namespace Gtk {
 		public void get_label_align (float xalign, float yalign);
 		public weak Gtk.Widget get_label_widget ();
 		public Gtk.ShadowType get_shadow_type ();
-		public Frame (string label);
+		public Frame (string? label);
 		public void set_label (string label);
 		public void set_label_align (float xalign, float yalign);
 		public void set_label_widget (Gtk.Widget label_widget);
@@ -4030,11 +4030,11 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class RadioButton : Gtk.CheckButton, Atk.Implementor, Gtk.Buildable {
 		public weak GLib.SList get_group ();
-		public RadioButton (GLib.SList group);
+		public RadioButton (GLib.SList? group);
 		public RadioButton.from_widget (Gtk.RadioButton radio_group_member);
-		public RadioButton.with_label (GLib.SList group, string label);
+		public RadioButton.with_label (GLib.SList? group, string label);
 		public RadioButton.with_label_from_widget (Gtk.RadioButton radio_group_member, string label);
-		public RadioButton.with_mnemonic (GLib.SList group, string label);
+		public RadioButton.with_mnemonic (GLib.SList? group, string label);
 		public RadioButton.with_mnemonic_from_widget (Gtk.RadioButton radio_group_member, string label);
 		public void set_group (GLib.SList group);
 		public Gtk.RadioButton group { set; }

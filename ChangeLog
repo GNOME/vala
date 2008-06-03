@@ -1,5 +1,13 @@
 2008-06-03  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Nullable fixes, patch by Nicolas Joseph, fixes bug 536478
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-06-03  Jürg Billeter  <j@bitron.ch>
+
 	* doc/vala/delegates.xml:
 
 	Document delegate syntax, based on patch by Phil Housley
