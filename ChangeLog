@@ -1,5 +1,11 @@
 2008-06-03  Jürg Billeter  <j@bitron.ch>
 
+	* doc/vala/delegates.xml:
+
+	Document delegate syntax, based on patch by Phil Housley
+
+2008-06-03  Jürg Billeter  <j@bitron.ch>
+
 	* doc/vala/classes.xml:
 
 	Document signal syntax, based on patch by Phil Housley
