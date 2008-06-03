@@ -1,5 +1,11 @@
 2008-06-03  Jürg Billeter  <j@bitron.ch>
 
+	* doc/vala/methods.xml:
+
+	Document method syntax, based on patch by Phil Housley
+
+2008-06-03  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-base-0.10/:
 
 	Fix gst_adapter_take_buffer and gst_collect_pads_take_buffer
