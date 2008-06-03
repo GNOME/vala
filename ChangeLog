@@ -1,5 +1,9 @@
 2008-06-03  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/tiff.vapi: various fixes, patch by Christian Meyer
+
+2008-06-03  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am: distribute and install libepc-1.0.vapi
 
 2008-06-02  Jürg Billeter  <j@bitron.ch>
