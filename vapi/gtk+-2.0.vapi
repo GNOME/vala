@@ -954,9 +954,9 @@ namespace Gtk {
 		public class void install_style_property_parser (GLib.ParamSpec pspec, Gtk.RcPropertyParser parser);
 		[CCode (cname = "gtk_widget_class_list_style_properties")]
 		public class weak GLib.ParamSpec list_style_properties (uint n_properties);
-		public void class_path (uint path_length, string path, string path_reversed);
+		public void class_path (out uint path_length, out weak string path, out weak string path_reversed);
 		public weak Pango.Context create_pango_context ();
-		public weak Pango.Layout create_pango_layout (string text);
+		public weak Pango.Layout create_pango_layout (string? text);
 		public void destroyed (out weak Gtk.Widget widget_pointer);
 		public void ensure_style ();
 		public void error_bell ();
@@ -982,7 +982,7 @@ namespace Gtk {
 		public weak Pango.Context get_pango_context ();
 		public weak Gtk.Widget get_parent ();
 		public weak Gdk.Window get_parent_window ();
-		public void get_pointer (int x, int y);
+		public void get_pointer (out int x, out int y);
 		public weak Gdk.Window get_root_window ();
 		public weak Gdk.Screen get_screen ();
 		public weak Gtk.Settings get_settings ();
@@ -996,8 +996,8 @@ namespace Gtk {
 		public void grab_default ();
 		public bool has_screen ();
 		public bool hide_on_delete ();
-		public void input_shape_combine_mask (Gdk.Bitmap shape_mask, int offset_x, int offset_y);
-		public bool intersect (Gdk.Rectangle area, Gdk.Rectangle intersection);
+		public void input_shape_combine_mask (Gdk.Bitmap? shape_mask, int offset_x, int offset_y);
+		public bool intersect (Gdk.Rectangle area, Gdk.Rectangle? intersection);
 		public bool is_ancestor (Gtk.Widget ancestor);
 		public bool is_composited ();
 		public weak GLib.List list_accel_closures ();
@@ -1006,10 +1006,10 @@ namespace Gtk {
 		public void modify_bg (Gtk.StateType state, Gdk.Color? color);
 		public void modify_cursor (Gdk.Color? primary, Gdk.Color? secondary);
 		public void modify_fg (Gtk.StateType state, Gdk.Color? color);
-		public void modify_font (Pango.FontDescription font_desc);
+		public void modify_font (Pango.FontDescription? font_desc);
 		public void modify_style (Gtk.RcStyle style);
 		public void modify_text (Gtk.StateType state, Gdk.Color? color);
-		public void path (uint path_length, string path, string path_reversed);
+		public void path (out uint path_length, out weak string path, out weak string path_reversed);
 		public static void pop_colormap ();
 		public static void pop_composite_child ();
 		public static void push_colormap (Gdk.Colormap cmap);
@@ -1021,7 +1021,7 @@ namespace Gtk {
 		public weak Gdk.Region region_intersect (Gdk.Region region);
 		public bool remove_accelerator (Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods);
 		public void remove_mnemonic_label (Gtk.Widget label);
-		public weak Gdk.Pixbuf render_icon (string stock_id, Gtk.IconSize size, string? detail);
+		public Gdk.Pixbuf render_icon (string stock_id, Gtk.IconSize size, string? detail);
 		public void reparent (Gtk.Widget new_parent);
 		public void reset_rc_styles ();
 		public void reset_shapes ();
@@ -1042,21 +1042,21 @@ namespace Gtk {
 		public void set_parent (Gtk.Widget parent);
 		public void set_parent_window (Gdk.Window parent_window);
 		public void set_redraw_on_allocate (bool redraw_on_allocate);
-		public bool set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
+		public bool set_scroll_adjustments (Gtk.Adjustment? hadjustment, Gtk.Adjustment? vadjustment);
 		public void set_sensitive (bool sensitive);
 		public void set_size_request (int width, int height);
 		public void set_state (Gtk.StateType state);
-		public void set_style (Gtk.Style style);
+		public void set_style (Gtk.Style? style);
 		public void set_tooltip_markup (string markup);
 		public void set_tooltip_text (string text);
 		public void set_tooltip_window (Gtk.Window custom_window);
-		public void shape_combine_mask (Gdk.Bitmap shape_mask, int offset_x, int offset_y);
+		public void shape_combine_mask (Gdk.Bitmap? shape_mask, int offset_x, int offset_y);
 		public void show_now ();
 		public void style_get (...);
 		public void style_get_property (string property_name, GLib.Value value);
 		public void style_get_valist (string first_property_name, void* var_args);
 		public void thaw_child_notify ();
-		public bool translate_coordinates (Gtk.Widget dest_widget, int src_x, int src_y, int dest_x, int dest_y);
+		public bool translate_coordinates (Gtk.Widget dest_widget, int src_x, int src_y, out int dest_x, out int dest_y);
 		public void trigger_tooltip_query ();
 		public void unparent ();
 		[NoWrapper]
