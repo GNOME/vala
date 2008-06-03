@@ -80,6 +80,7 @@ dist_vapi_DATA = \
 	hildon-fm-2.vapi \
 	json-glib-1.0.vapi \
 	libbonoboui-2.0.vapi \
+	libepc-1.0.vapi \
 	libftdi.deps \
 	libftdi.vapi \
 	libglade-2.0.deps \
