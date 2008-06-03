@@ -181,6 +181,11 @@ public struct size_t {
 	[CCode (cname = "G_MAXSIZE")]
 	public static ulong MAX;
 
+	[CCode (cname = "G_GSIZE_FORMAT")]
+	public const string FORMAT;
+	[CCode (cname = "G_GSIZE_MODIFIER")]
+	public const string FORMAT_MODIFIER;
+
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%zu");
 
@@ -199,6 +204,11 @@ public struct ssize_t {
 	public static long MIN;
 	[CCode (cname = "G_MAXSSIZE")]
 	public static long MAX;
+
+	[CCode (cname = "G_GSSIZE_FORMAT")]
+	public const string FORMAT;
+	[CCode (cname = "G_GSIZE_MODIFIER")]
+	public const string FORMAT_MODIFIER;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%zi");
@@ -248,6 +258,11 @@ public struct int16 {
 	[CCode (cname = "G_MAXINT16")]
 	public static int16 MAX;
 
+	[CCode (cname = "G_GINT16_FORMAT")]
+	public const string FORMAT;
+	[CCode (cname = "G_GINT16_MODIFIER")]
+	public const string FORMAT_MODIFIER;
+
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hi");
 
@@ -263,6 +278,11 @@ public struct uint16 {
 	public static uint16 MIN;
 	[CCode (cname = "G_MAXUINT16")]
 	public static uint16 MAX;
+
+	[CCode (cname = "G_GUINT16_FORMAT")]
+	public const string FORMAT;
+	[CCode (cname = "G_GINT16_MODIFIER")]
+	public const string FORMAT_MODIFIER;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%hu");
@@ -280,6 +300,11 @@ public struct int32 {
 	[CCode (cname = "G_MAXINT32")]
 	public static int32 MAX;
 
+	[CCode (cname = "G_GINT32_FORMAT")]
+	public const string FORMAT;
+	[CCode (cname = "G_GINT32_MODIFIER")]
+	public const string FORMAT_MODIFIER;
+
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%i");
 
@@ -295,6 +320,11 @@ public struct uint32 {
 	public static uint32 MIN;
 	[CCode (cname = "G_MAXUINT32")]
 	public static uint32 MAX;
+
+	[CCode (cname = "G_GUINT32_FORMAT")]
+	public const string FORMAT;
+	[CCode (cname = "G_GINT32_MODIFIER")]
+	public const string FORMAT_MODIFIER;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%u");
@@ -312,6 +342,11 @@ public struct int64 {
 	[CCode (cname = "G_MAXINT64")]
 	public static int64 MAX;
 
+	[CCode (cname = "G_GINT64_FORMAT")]
+	public const string FORMAT;
+	[CCode (cname = "G_GINT64_MODIFIER")]
+	public const string FORMAT_MODIFIER;
+
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%lli");
 
@@ -327,6 +362,11 @@ public struct uint64 {
 	public static uint64 MIN;
 	[CCode (cname = "G_MAXUINT64")]
 	public static uint64 MAX;
+
+	[CCode (cname = "G_GUINT64_FORMAT")]
+	public const string FORMAT;
+	[CCode (cname = "G_GINT64_MODIFIER")]
+	public const string FORMAT_MODIFIER;
 
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
 	public string to_string (string format = "%llu");
@@ -1095,6 +1135,18 @@ namespace GLib {
 		public static float fmaf (float x, float y, float z);
 		public static double scalb (double x, double n);
 		public static float scalbf (float x, float n);
+	}
+
+	/* Byte order */
+	namespace ByteOrder {
+		[CCode (cname = "G_BYTE_ORDER")]
+		public const int HOST;
+		[CCode (cname = "G_LITTLE_ENDIAN")]
+		public const int LITTLE_ENDIAN;
+		[CCode (cname = "G_BIG_ENDIAN")]
+		public const int BIG_ENDIAN;
+		[CCode (cname = "G_PDP_ENDIAN")]
+		public const int PDP_ENDIAN;
 	}
 
 	/* Atomic Operations */
