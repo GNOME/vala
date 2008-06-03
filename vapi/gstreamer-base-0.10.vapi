@@ -168,7 +168,7 @@ namespace Gst {
 		public uchar peek (uint size);
 		public void push (Gst.Buffer buf);
 		public uchar take (uint nbytes);
-		public weak Gst.Buffer take_buffer (uint nbytes);
+		public Gst.Buffer take_buffer (uint nbytes);
 	}
 	[CCode (cheader_filename = "gst/base/gstbasesink.h")]
 	public class BaseSink : Gst.Element {
@@ -205,6 +205,7 @@ namespace Gst {
 		public void set_qos_enabled (bool enabled);
 		public void set_sync (bool sync);
 		public void set_ts_offset (Gst.ClockTimeDiff offset);
+		public Gst.ClockReturn wait_clock (Gst.ClockTime time, out Gst.ClockTimeDiff jitter);
 		public Gst.FlowReturn wait_eos (Gst.ClockTime time, out Gst.ClockTimeDiff jitter);
 		public Gst.FlowReturn wait_preroll ();
 		[NoWrapper]
@@ -274,7 +275,7 @@ namespace Gst {
 		public void set_function (Gst.CollectPadsFunction func);
 		public void start ();
 		public void stop ();
-		public weak Gst.Buffer take_buffer (Gst.CollectData data, uint size);
+		public Gst.Buffer take_buffer (Gst.CollectData data, uint size);
 	}
 	[CCode (cheader_filename = "gst/base/gstdataqueue.h")]
 	public class DataQueue : GLib.Object {

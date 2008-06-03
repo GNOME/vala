@@ -243,6 +243,14 @@
 					<parameter name="offset" type="GstClockTimeDiff"/>
 				</parameters>
 			</method>
+			<method name="wait_clock" symbol="gst_base_sink_wait_clock">
+				<return-type type="GstClockReturn"/>
+				<parameters>
+					<parameter name="basesink" type="GstBaseSink*"/>
+					<parameter name="time" type="GstClockTime"/>
+					<parameter name="jitter" type="GstClockTimeDiff*"/>
+				</parameters>
+			</method>
 			<method name="wait_eos" symbol="gst_base_sink_wait_eos">
 				<return-type type="GstFlowReturn"/>
 				<parameters>

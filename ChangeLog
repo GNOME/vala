@@ -1,5 +1,14 @@
 2008-06-03  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-base-0.10/:
+
+	Fix gst_adapter_take_buffer and gst_collect_pads_take_buffer
+	bindings, add gst_base_sink_wait_clock binding, patch by Ali Sabil
+
+	* vapi/gstreamer-base-0.10.vapi: regenerated
+
+2008-06-03  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Various fixes, patch by Phil Housley
