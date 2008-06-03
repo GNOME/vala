@@ -76,7 +76,11 @@ default-value:
 	</section>
 	<section id="signals">
 		<h>Signals</h>
-		<p>Documentation</p>
+		<p>The signal system allows objects to emit signals that can be handled by user-provided signal handlers.</p>
+		<blockquote>
+signal-declaration:
+	[ access-modifier ] <l>signal</l> return-type identifier <l>(</l> [ parameter-list ] <l>)</l> <l>;</l>
+		</blockquote>
 	</section>
 </section>
 

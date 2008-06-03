@@ -2,6 +2,12 @@
 
 	* doc/vala/classes.xml:
 
+	Document signal syntax, based on patch by Phil Housley
+
+2008-06-03  Jürg Billeter  <j@bitron.ch>
+
+	* doc/vala/classes.xml:
+
 	Document property syntax, based on patch by Phil Housley
 
 2008-06-03  Jürg Billeter  <j@bitron.ch>
