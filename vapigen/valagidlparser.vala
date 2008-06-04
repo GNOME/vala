@@ -1312,6 +1312,8 @@ public class Vala.GIdlParser : CodeVisitor {
 						arg_type.value_owned = true;
 						return_type.add_type_argument (arg_type);
 					}
+				} else if (nv[0] == "cheader_filename") {
+					m.add_cheader_filename (eval (nv[1]));
 				}
 			}
 		}
@@ -1633,6 +1635,8 @@ public class Vala.GIdlParser : CodeVisitor {
 			return null;
 		}
 
+		string cheader_filename = null;
+
 		var attributes = get_attributes ("%s.%s".printf (current_data_type.get_cname (), node.name));
 		if (attributes != null) {
 			foreach (string attr in attributes) {
@@ -1660,6 +1664,8 @@ public class Vala.GIdlParser : CodeVisitor {
 						arg_type.value_owned = true;
 						type.add_type_argument (arg_type);
 					}
+				} else if (nv[0] == "cheader_filename") {
+					cheader_filename = eval (nv[1]);
 				}
 			}
 		}
@@ -1683,6 +1689,10 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		if (field_name != node.name) {
 			field.set_cname (node.name);
+		}
+
+		if (cheader_filename != null) {
+			field.add_cheader_filename (cheader_filename);
 		}
 
 		field.no_array_length = true;
