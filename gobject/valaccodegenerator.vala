@@ -1075,6 +1075,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var cblock = new CCodeBlock ();
 		
 		foreach (CodeNode stmt in b.get_statements ()) {
+			if (stmt.error) {
+				continue;
+			}
+
 			var src = stmt.source_reference;
 			if (src != null && src.comment != null) {
 				cblock.add_statement (new CCodeComment (src.comment));
@@ -1663,6 +1667,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_expression_statement (ExpressionStatement stmt) {
+		if (stmt.expression.error) {
+			stmt.error = true;
+			return;
+		}
+
 		stmt.ccodenode = new CCodeExpressionStatement ((CCodeExpression) stmt.expression.ccodenode);
 
 		if (stmt.tree_can_fail && stmt.expression.tree_can_fail) {
@@ -3521,7 +3530,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (target_type.value_owned && (!expression_type.value_owned || boxing || unboxing)) {
 			// need to copy value
 			if (requires_copy (target_type) && !(expression_type is NullType)) {
-				cexpr = get_ref_cexpression (target_type, cexpr, expr, expression_type);
+				CodeNode node = expr;
+				if (node == null) {
+					node = expression_type;
+				}
+				cexpr = get_ref_cexpression (target_type, cexpr, expr, node);
 			}
 		}
 

@@ -1,5 +1,13 @@
 2008-06-04  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeassignmentbinding.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Fix error reporting when duplicating non-reference counted objects,
+	fixes bug 535849
+
+2008-06-04  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala:
 
 	Support 'cheader_filename' attribute for fields and methods,

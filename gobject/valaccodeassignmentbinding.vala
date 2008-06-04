@@ -342,6 +342,11 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 	public override void emit () {
 		assignment.accept_children (codegen);
 
+		if (assignment.left.error || assignment.right.error) {
+			assignment.error = true;
+			return;
+		}
+
 		if (assignment.left.symbol_reference is Property) {
 			emit_property_assignment ();
 		} else if (assignment.left.symbol_reference is Signal) {
