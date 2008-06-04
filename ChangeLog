@@ -1,5 +1,19 @@
 2008-06-04  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinterfacebinding.vala:
+	* gobject/valaccodetypesymbolbinding.vala:
+	* gobject/valaclassregisterfunction.vala:
+
+	Respect custom type_id
+
+	* vapi/glib-2.0.vapi:
+
+	Fix GTypeModule binding
+
+2008-06-04  Jürg Billeter  <j@bitron.ch>
+
 	* configure.ac: Post-release version bump
 
 2008-06-03  Jürg Billeter  <j@bitron.ch>

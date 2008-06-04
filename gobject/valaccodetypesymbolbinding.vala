@@ -31,7 +31,7 @@ public abstract class Vala.CCodeTypeSymbolBinding : CCodeBinding {
 		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.blurb)));
 		if ((prop.property_type.data_type is Class && ((Class) prop.property_type.data_type).is_subtype_of (codegen.gobject_type)) || prop.property_type.data_type is Interface) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_object");
-			cspec.add_argument (new CCodeIdentifier (prop.property_type.data_type.get_upper_case_cname ("TYPE_")));
+			cspec.add_argument (new CCodeIdentifier (prop.property_type.data_type.get_type_id ()));
 		} else if (prop.property_type.data_type == codegen.string_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_string");
 			cspec.add_argument (new CCodeConstant ("NULL"));
@@ -169,7 +169,7 @@ public abstract class Vala.CCodeTypeSymbolBinding : CCodeBinding {
 	public CCodeFunctionCall get_signal_creation (Signal sig, TypeSymbol type) {	
 		var csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
 		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
-		csignew.add_argument (new CCodeIdentifier (type.get_upper_case_cname ("TYPE_")));
+		csignew.add_argument (new CCodeIdentifier (type.get_type_id ()));
 		csignew.add_argument (new CCodeConstant ("G_SIGNAL_RUN_LAST"));
 		csignew.add_argument (new CCodeConstant ("0"));
 		csignew.add_argument (new CCodeConstant ("NULL"));

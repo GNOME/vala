@@ -757,10 +757,15 @@ namespace GLib {
 	public interface TypePlugin {
 	}
 
+	[CCode (lower_case_csuffix = "type_module")]
 	public class TypeModule : Object, TypePlugin {
 		public bool use ();
 		public void unuse ();
 		public void set_name (string name);
+		[NoWrapper]
+		public virtual bool load ();
+		[NoWrapper]
+		public virtual void unload ();
 	}
 
 	[CCode (ref_function = "g_param_spec_ref", unref_function = "g_param_spec_unref")]

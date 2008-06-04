@@ -70,7 +70,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	}
 	
 	public override string get_parent_type_name () {
-		return class_reference.base_class.get_upper_case_cname ("TYPE_");
+		return class_reference.base_class.get_type_id ();
 	}
 
 	public override string get_type_flags () {
@@ -120,7 +120,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 			
 			var reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_interface_static"));
 			reg_call.add_argument (new CCodeIdentifier ("%s_type_id".printf (class_reference.get_lower_case_cname (null))));
-			reg_call.add_argument (new CCodeIdentifier (iface.get_upper_case_cname ("TYPE_")));
+			reg_call.add_argument (new CCodeIdentifier (iface.get_type_id ()));
 			reg_call.add_argument (new CCodeIdentifier ("&%s".printf (iface_info_name)));
 			frag.append (new CCodeExpressionStatement (reg_call));
 		}

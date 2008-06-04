@@ -311,7 +311,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		decl_frag.append (new CCodeNewline ());
 
 		var macro = "(%s_get_type ())".printf (en.get_lower_case_cname (null));
-		decl_frag.append (new CCodeMacroReplacement (en.get_upper_case_cname ("TYPE_"), macro));
+		decl_frag.append (new CCodeMacroReplacement (en.get_type_id (), macro));
 
 		var clist = new CCodeInitializerList (); /* or during visit time? */
 		CCodeInitializerList clist_ev = null;
@@ -981,7 +981,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek"));
-			ccall.add_argument (new CCodeIdentifier (cl.get_upper_case_cname ("TYPE_")));
+			ccall.add_argument (new CCodeIdentifier (cl.get_type_id ()));
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (cl.get_upper_case_cname (null))));
 			ccast.add_argument (ccall);
 			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("klass"), ccast)));
