@@ -1,3 +1,20 @@
+Vala 0.3.3
+==========
+
+ * Support overriding default method handlers of signals.
+ * Support dynamic access to properties and signals of GObjects.
+ * Experimental support for nullable value types.
+ * Improve support for classes not deriving from GLib.Object.
+ * Support """verbatim strings""".
+ * Add parser for Genie (Jamie McCracken)
+ * Experimental support for arrays of arrays.
+ * Documentation improvements (Phil Housley)
+ * Improvements to D-Bus support (Ali Sabil, Philip Van Hoof, Yu Feng)
+ * Add libepc-1.0 bindings (Ali Sabil)
+ * Add libtiff bindings (Christian Meyer)
+ * Updates to the GStreamer bindings (Ali Sabil and Jaap A. Haitsma)
+ * Many bug fixes and performance improvements.
+
 Vala 0.3.2
 ==========
 

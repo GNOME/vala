@@ -1,5 +1,9 @@
 2008-06-03  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS: update for 0.3.3 release
+
+2008-06-03  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Add byte order and number format constants, patch by Ali Sabil
