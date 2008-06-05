@@ -694,14 +694,14 @@ namespace Gst {
 		public void parse_clock_lost (out weak Gst.Clock clock);
 		public void parse_clock_provide (out weak Gst.Clock clock, bool ready);
 		public void parse_duration (Gst.Format format, int64 duration);
-		public void parse_error (out weak GLib.Error gerror, out weak string debug);
-		public void parse_info (out weak GLib.Error gerror, out weak string debug);
+		public void parse_error (out GLib.Error gerror, out weak string debug);
+		public void parse_info (out GLib.Error gerror, out weak string debug);
 		public void parse_new_clock (out weak Gst.Clock clock);
 		public void parse_segment_done (Gst.Format format, int64 position);
 		public void parse_segment_start (Gst.Format format, int64 position);
 		public void parse_state_changed (out Gst.State oldstate, out Gst.State newstate, out Gst.State pending);
 		public void parse_tag (out weak Gst.TagList tag_list);
-		public void parse_warning (out weak GLib.Error gerror, out weak string debug);
+		public void parse_warning (out GLib.Error gerror, out weak string debug);
 		public void set_buffering_stats (Gst.BufferingMode mode, int avg_in, int avg_out, int64 buffering_left);
 		public static weak string type_get_name (Gst.MessageType type);
 		public static GLib.Quark type_to_quark (Gst.MessageType type);
