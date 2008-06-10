@@ -1,5 +1,11 @@
 2008-06-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala:
+
+	Output type_id for structs
+
+2008-06-10  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodedynamicmethodbinding.vala:
 
 	Fix crash when using unsupported D-Bus arrays

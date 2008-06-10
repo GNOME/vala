@@ -210,6 +210,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string ("cname = \"%s\", ".printf (st.get_cname ()));
 		}
 
+		if (!st.is_simple_type () && st.get_type_id () != "G_TYPE_POINTER") {
+			write_string ("type_id = \"%s\", ".printf (st.get_type_id ()));
+		}
+
 		var first = true;
 		string cheaders;
 		foreach (string cheader in st.get_cheader_filenames ()) {
