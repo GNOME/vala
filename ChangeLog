@@ -1,3 +1,9 @@
+2008-06-10  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodedynamicmethodbinding.vala:
+
+	Fix crash when using unsupported D-Bus arrays
+
 2008-06-05  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gstreamer-0.10/:

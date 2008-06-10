@@ -367,6 +367,9 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 	}
 
 	CCodeExpression get_dbus_array_type (ArrayType array_type) {
+		if (array_type.element_type.data_type == null) {
+			Report.error (array_type.source_reference, "internal error: unsupported array type for use with D-Bus");
+		}
 		var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
 		carray_type.add_argument (new CCodeConstant ("\"GArray\""));
 		carray_type.add_argument (new CCodeIdentifier (array_type.element_type.data_type.get_type_id ()));
