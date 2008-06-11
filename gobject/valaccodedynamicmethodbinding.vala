@@ -188,7 +188,37 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 				continue;
 			}
 
-			if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
+			var array_type = param.parameter_type as ArrayType;
+			if (array_type != null) {
+				// array parameter
+				if (array_type.element_type.data_type != codegen.string_type.data_type) {
+					// non-string arrays (use GArray)
+					ccall.add_argument (get_dbus_array_type (array_type));
+
+					var array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_array_new"));
+					array_construct.add_argument (new CCodeConstant ("TRUE"));
+					array_construct.add_argument (new CCodeConstant ("TRUE"));
+					var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+					sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+					array_construct.add_argument (sizeof_call);
+
+					var cdecl = new CCodeDeclaration ("GArray*");
+					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("dbus_%s".printf (param.name), array_construct));
+					block.add_statement (cdecl);
+
+					var cappend_call = new CCodeFunctionCall (new CCodeIdentifier ("g_array_append_vals"));
+					cappend_call.add_argument (new CCodeIdentifier ("dbus_%s".printf (param.name)));
+					cappend_call.add_argument (new CCodeIdentifier (param.name));
+					cappend_call.add_argument (new CCodeIdentifier (codegen.get_array_length_cname (param.name, 1)));
+					block.add_statement (new CCodeExpressionStatement (cappend_call));
+
+					ccall.add_argument (new CCodeIdentifier ("dbus_%s".printf (param.name)));
+				} else {
+					// string arrays
+					ccall.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
+					ccall.add_argument (new CCodeIdentifier (param.name));
+				}
+			} else if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
 				// struct parameter
 				var st = (Struct) param.parameter_type.data_type;
 
