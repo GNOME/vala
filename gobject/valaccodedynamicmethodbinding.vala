@@ -136,7 +136,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 					var cdecl = new CCodeDeclaration ("GArray*");
 					cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
 					cb_fun.block.add_statement (cdecl);
-					cend_call.add_argument (get_dbus_array_type (array_type));
+					cend_call.add_argument (get_dbus_g_type (array_type));
 					cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "data"));
 					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "len"));
@@ -193,7 +193,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 				// array parameter
 				if (array_type.element_type.data_type != codegen.string_type.data_type) {
 					// non-string arrays (use GArray)
-					ccall.add_argument (get_dbus_array_type (array_type));
+					ccall.add_argument (get_dbus_g_type (array_type));
 
 					var array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_array_new"));
 					array_construct.add_argument (new CCodeConstant ("TRUE"));
@@ -332,7 +332,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 			var array_type = method.return_type as ArrayType;
 			if (array_type != null && array_type.element_type.data_type != codegen.string_type.data_type) {
 				// non-string arrays (use GArray)
-				ccall.add_argument (get_dbus_array_type (array_type));
+				ccall.add_argument (get_dbus_g_type (array_type));
 
 				var garray_type_reference = codegen.get_data_type_for_symbol (codegen.garray_type);
 				var cdecl = new CCodeDeclaration (garray_type_reference.get_cname ());
@@ -396,13 +396,19 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 		}
 	}
 
-	CCodeExpression get_dbus_array_type (ArrayType array_type) {
-		if (array_type.element_type.data_type == null) {
-			Report.error (array_type.source_reference, "internal error: unsupported array type for use with D-Bus");
+	CCodeExpression get_dbus_g_type (DataType data_type) {
+		var array_type = data_type as ArrayType;
+		if (array_type != null) {
+			if (array_type.element_type.data_type == codegen.string_type.data_type) {
+				return new CCodeIdentifier ("G_TYPE_STRV");
+			}
+
+			var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
+			carray_type.add_argument (new CCodeConstant ("\"GArray\""));
+			carray_type.add_argument (get_dbus_g_type (array_type.element_type));
+			return carray_type;
+		} else {
+			return new CCodeIdentifier (data_type.data_type.get_type_id ());
 		}
-		var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
-		carray_type.add_argument (new CCodeConstant ("\"GArray\""));
-		carray_type.add_argument (new CCodeIdentifier (array_type.element_type.data_type.get_type_id ()));
-		return carray_type;
 	}
 }

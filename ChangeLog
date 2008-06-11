@@ -2,6 +2,12 @@
 
 	* gobject/valaccodedynamicmethodbinding.vala:
 
+	Support arrays of string arrays in D-Bus client methods
+
+2008-06-11  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodedynamicmethodbinding.vala:
+
 	Support array parameters in D-Bus client methods
 
 2008-06-10  Jürg Billeter  <j@bitron.ch>
