@@ -448,8 +448,12 @@ public class Vala.Class : ObjectTypeSymbol {
 	}
 
 	public override string get_cname (bool const_type = false) {
-		if (const_type && const_cname != null) {
-			return const_cname;
+		if (const_type) {
+			if (const_cname != null) {
+				return const_cname;
+			} else if (is_immutable) {
+				return "const " + get_cname (false);
+			}
 		}
 
 		if (cname == null) {

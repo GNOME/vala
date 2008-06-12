@@ -1,5 +1,11 @@
 2008-06-12  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+
+	Use `const' in C for immutable classes where appropriate
+
+2008-06-12  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala:
 	* vapigen/valagidlparser.vala:
 
