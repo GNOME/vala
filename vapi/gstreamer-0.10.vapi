@@ -852,7 +852,7 @@ namespace Gst {
 	}
 	[Compact]
 	[CCode (copy_function = "gst_tag_list_copy", cheader_filename = "gst/gst.h")]
-	public class TagList : GLib.Boxed {
+	public class TagList {
 		public void add (Gst.TagMergeMode mode, string tag);
 		public void add_valist (Gst.TagMergeMode mode, string tag, void* var_args);
 		public void add_valist_values (Gst.TagMergeMode mode, string tag, void* var_args);
@@ -948,7 +948,7 @@ namespace Gst {
 	}
 	[Compact]
 	[CCode (ref_function = "gst_caps_ref", unref_function = "gst_caps_unref", cheader_filename = "gst/gst.h")]
-	public class Caps : GLib.Boxed {
+	public class Caps {
 		public GLib.Type type;
 		public int refcount;
 		public Gst.CapsFlags flags;
@@ -991,15 +991,15 @@ namespace Gst {
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class Date : GLib.Boxed {
+	public class Date {
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class GError : GLib.Boxed {
+	public class GError {
 	}
 	[Compact]
 	[CCode (copy_function = "gst_index_entry_copy", cheader_filename = "gst/gst.h")]
-	public class IndexEntry : GLib.Boxed {
+	public class IndexEntry {
 		public Gst.IndexEntryType type;
 		public int id;
 		public void* data;
@@ -1008,7 +1008,7 @@ namespace Gst {
 	}
 	[Compact]
 	[CCode (copy_function = "gst_segment_copy", cheader_filename = "gst/gst.h")]
-	public class Segment : GLib.Boxed {
+	public class Segment {
 		public double rate;
 		public double abs_rate;
 		public Gst.Format format;
@@ -1033,8 +1033,9 @@ namespace Gst {
 		public int64 to_stream_time (Gst.Format format, int64 position);
 	}
 	[Compact]
+	[Immutable]
 	[CCode (copy_function = "gst_structure_copy", cheader_filename = "gst/gst.h")]
-	public class Structure : GLib.Boxed {
+	public class Structure {
 		public GLib.Type type;
 		public GLib.Quark name;
 		public int parent_refcount;
@@ -1754,7 +1755,7 @@ namespace Gst {
 	[SimpleType]
 	public struct ClockTimeDiff : int64 {
 	}
-	[CCode (cname = "GValue", cheader_filename = "gst/gst.h")]
+	[CCode (cname = "GValue", type_id = "G_TYPE_VALUE", cheader_filename = "gst/gst.h")]
 	public struct Value : GLib.Value {
 		public static GLib.Type array_get_type ();
 		public static GLib.Type list_get_type ();

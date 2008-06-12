@@ -1,5 +1,19 @@
 2008-06-12  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala:
+	* vapigen/valagidlparser.vala:
+
+	Support Immutable class attribute
+
+	* vapi/packages/gstreamer-0.10/:
+
+	Mark GstStructure as Immutable as reference-type semantics are not
+	desirable
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-06-12  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodedynamicmethodbinding.vala:
 
 	Use GPtrArray in D-Bus client methods for boxed types

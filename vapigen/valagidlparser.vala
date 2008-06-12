@@ -425,6 +425,10 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								return;
 							}
+						} else if (nv[0] == "is_immutable") {
+							if (eval (nv[1]) == "1") {
+								cl.is_immutable = true;
+							}
 						}
 					}
 				}
@@ -675,6 +679,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						var nv = attr.split ("=", 2);
 						if (nv[0] == "cheader_filename") {
 							cl.add_cheader_filename (eval (nv[1]));
+						} else if (nv[0] == "is_immutable") {
+							if (eval (nv[1]) == "1") {
+								cl.is_immutable = true;
+							}
 						}
 					}
 				}
@@ -683,9 +691,6 @@ public class Vala.GIdlParser : CodeVisitor {
 				cl.set_type_id (cl.get_upper_case_cname ("TYPE_"));
 				current_source_file.add_node (cl);
 			}
-
-			var gboxed_symbol = new UnresolvedSymbol (new UnresolvedSymbol (null, "GLib"), "Boxed");
-			cl.add_base_type (new UnresolvedType.from_symbol (gboxed_symbol));
 
 			current_data_type = cl;
 

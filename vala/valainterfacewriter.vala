@@ -107,6 +107,12 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_newline ();
 		}
 
+		if (cl.is_immutable) {
+			write_indent ();
+			write_string ("[Immutable]");
+			write_newline ();
+		}
+
 		write_indent ();
 		
 		write_string ("[CCode (");
