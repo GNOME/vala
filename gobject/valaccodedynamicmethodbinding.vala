@@ -344,6 +344,12 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 
 				block.add_statement (new CCodeExpressionStatement (ccall));
 
+				// don't access result when error occured
+				var creturnblock = new CCodeBlock ();
+				creturnblock.add_statement (new CCodeReturnStatement (codegen.default_value_for_type (method.return_type, false)));
+				var cerrorif = new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("error")), creturnblock);
+				block.add_statement (cerrorif);
+
 				block.add_statement (out_marshalling_fragment);
 
 				// *result_length1 = result->len;
@@ -374,6 +380,12 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 
 				block.add_statement (new CCodeExpressionStatement (ccall));
 
+				// don't access result when error occured
+				var creturnblock = new CCodeBlock ();
+				creturnblock.add_statement (new CCodeReturnStatement (codegen.default_value_for_type (method.return_type, false)));
+				var cerrorif = new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("error")), creturnblock);
+				block.add_statement (cerrorif);
+
 				block.add_statement (out_marshalling_fragment);
 
 				if (array_type != null) {
@@ -391,6 +403,12 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 			}
 		} else {
 			block.add_statement (new CCodeExpressionStatement (ccall));
+
+			// don't access result when error occured
+			var creturnblock = new CCodeBlock ();
+			creturnblock.add_statement (new CCodeReturnStatement ());
+			var cerrorif = new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("error")), creturnblock);
+			block.add_statement (cerrorif);
 
 			block.add_statement (out_marshalling_fragment);
 		}
