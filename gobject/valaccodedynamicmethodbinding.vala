@@ -133,12 +133,17 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 				}
 				if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type != codegen.string_type.data_type) {
 					var array_type = (ArrayType) param.parameter_type;
-					var cdecl = new CCodeDeclaration ("GArray*");
+					CCodeDeclaration cdecl;
+					if (dbus_use_ptr_array (array_type)) {
+						cdecl = new CCodeDeclaration ("GPtrArray*");
+					} else {
+						cdecl = new CCodeDeclaration ("GArray*");
+					}
 					cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
 					cb_fun.block.add_statement (cdecl);
 					cend_call.add_argument (get_dbus_g_type (array_type));
 					cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
-					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "data"));
+					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), dbus_use_ptr_array (array_type) ? "pdata" : "data"));
 					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "len"));
 				} else {
 					var cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
@@ -195,22 +200,44 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 					// non-string arrays (use GArray)
 					ccall.add_argument (get_dbus_g_type (array_type));
 
-					var array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_array_new"));
-					array_construct.add_argument (new CCodeConstant ("TRUE"));
-					array_construct.add_argument (new CCodeConstant ("TRUE"));
 					var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 					sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
-					array_construct.add_argument (sizeof_call);
 
-					var cdecl = new CCodeDeclaration ("GArray*");
+					CCodeDeclaration cdecl;
+					CCodeFunctionCall array_construct;
+					if (dbus_use_ptr_array (array_type)) {
+						cdecl = new CCodeDeclaration ("GPtrArray*");
+
+						array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_ptr_array_sized_new"));
+						array_construct.add_argument (new CCodeIdentifier (codegen.get_array_length_cname (param.name, 1)));
+					} else {
+						cdecl = new CCodeDeclaration ("GArray*");
+
+						array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_array_new"));
+						array_construct.add_argument (new CCodeConstant ("TRUE"));
+						array_construct.add_argument (new CCodeConstant ("TRUE"));
+						array_construct.add_argument (sizeof_call);
+					}
+
 					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("dbus_%s".printf (param.name), array_construct));
 					block.add_statement (cdecl);
 
-					var cappend_call = new CCodeFunctionCall (new CCodeIdentifier ("g_array_append_vals"));
-					cappend_call.add_argument (new CCodeIdentifier ("dbus_%s".printf (param.name)));
-					cappend_call.add_argument (new CCodeIdentifier (param.name));
-					cappend_call.add_argument (new CCodeIdentifier (codegen.get_array_length_cname (param.name, 1)));
-					block.add_statement (new CCodeExpressionStatement (cappend_call));
+					if (dbus_use_ptr_array (array_type)) {
+						var memcpy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
+						memcpy_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "pdata"));
+						memcpy_call.add_argument (new CCodeIdentifier (param.name));
+						memcpy_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeIdentifier (codegen.get_array_length_cname (param.name, 1)), sizeof_call));
+						block.add_statement (new CCodeExpressionStatement (memcpy_call));
+
+						var len_assignment = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "len"), new CCodeIdentifier (codegen.get_array_length_cname (param.name, 1)));
+						block.add_statement (new CCodeExpressionStatement (len_assignment));
+					} else {
+						var cappend_call = new CCodeFunctionCall (new CCodeIdentifier ("g_array_append_vals"));
+						cappend_call.add_argument (new CCodeIdentifier ("dbus_%s".printf (param.name)));
+						cappend_call.add_argument (new CCodeIdentifier (param.name));
+						cappend_call.add_argument (new CCodeIdentifier (codegen.get_array_length_cname (param.name, 1)));
+						block.add_statement (new CCodeExpressionStatement (cappend_call));
+					}
 
 					ccall.add_argument (new CCodeIdentifier ("dbus_%s".printf (param.name)));
 				} else {
@@ -334,8 +361,12 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 				// non-string arrays (use GArray)
 				ccall.add_argument (get_dbus_g_type (array_type));
 
-				var garray_type_reference = codegen.get_data_type_for_symbol (codegen.garray_type);
-				var cdecl = new CCodeDeclaration (garray_type_reference.get_cname ());
+				CCodeDeclaration cdecl;
+				if (dbus_use_ptr_array (array_type)) {
+					cdecl = new CCodeDeclaration ("GPtrArray*");
+				} else {
+					cdecl = new CCodeDeclaration ("GArray*");
+				}
 				cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
 				block.add_statement (cdecl);
 
@@ -359,7 +390,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 				block.add_statement (new CCodeExpressionStatement (assign));
 
 				// return result->data;
-				block.add_statement (new CCodeReturnStatement (new CCodeCastExpression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), "data"), method.return_type.get_cname ())));
+				block.add_statement (new CCodeReturnStatement (new CCodeCastExpression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), dbus_use_ptr_array (array_type) ? "pdata" : "data"), method.return_type.get_cname ())));
 			} else {
 				// string arrays or other datatypes
 
@@ -414,6 +445,26 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 		}
 	}
 
+	bool dbus_use_ptr_array (ArrayType array_type) {
+		if (array_type.element_type.data_type == codegen.string_type.data_type) {
+			// use char**
+			return false;
+		} else if (array_type.element_type.data_type == codegen.bool_type.data_type
+		           || array_type.element_type.data_type == codegen.int_type.data_type
+		           || array_type.element_type.data_type == codegen.uint_type.data_type
+		           || array_type.element_type.data_type == codegen.long_type.data_type
+		           || array_type.element_type.data_type == codegen.ulong_type.data_type
+		           || array_type.element_type.data_type == codegen.int64_type.data_type
+		           || array_type.element_type.data_type == codegen.uint64_type.data_type
+		           || array_type.element_type.data_type == codegen.double_type.data_type) {
+			// use GArray
+			return false;
+		} else {
+			// use GPtrArray
+			return true;
+		}
+	}
+
 	CCodeExpression get_dbus_g_type (DataType data_type) {
 		var array_type = data_type as ArrayType;
 		if (array_type != null) {
@@ -422,7 +473,11 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 			}
 
 			var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
-			carray_type.add_argument (new CCodeConstant ("\"GArray\""));
+			if (dbus_use_ptr_array (array_type)) {
+				carray_type.add_argument (new CCodeConstant ("\"GPtrArray\""));
+			} else {
+				carray_type.add_argument (new CCodeConstant ("\"GArray\""));
+			}
 			carray_type.add_argument (get_dbus_g_type (array_type.element_type));
 			return carray_type;
 		} else {

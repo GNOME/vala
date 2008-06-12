@@ -2,6 +2,12 @@
 
 	* gobject/valaccodedynamicmethodbinding.vala:
 
+	Use GPtrArray in D-Bus client methods for boxed types
+
+2008-06-12  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodedynamicmethodbinding.vala:
+
 	Fix application crash when a D-Bus client method raises an error
 
 2008-06-12  Jürg Billeter  <j@bitron.ch>
