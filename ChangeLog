@@ -1,3 +1,9 @@
+2008-06-12  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodedynamicmethodbinding.vala:
+
+	Fix gcc warning for D-Bus client methods returning arrays
+
 2008-06-11  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodedynamicmethodbinding.vala:

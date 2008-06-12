@@ -353,7 +353,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 				block.add_statement (new CCodeExpressionStatement (assign));
 
 				// return result->data;
-				block.add_statement (new CCodeReturnStatement (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), "data")));
+				block.add_statement (new CCodeReturnStatement (new CCodeCastExpression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), "data"), method.return_type.get_cname ())));
 			} else {
 				// string arrays or other datatypes
 
