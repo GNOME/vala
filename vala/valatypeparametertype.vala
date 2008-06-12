@@ -47,4 +47,8 @@ public class Vala.TypeParameterType : DataType {
 			return "gconstpointer";
 		}
 	}
+
+	public override string? get_type_id () {
+		return "G_TYPE_POINTER";
+	}
 }

@@ -1,5 +1,11 @@
 2008-06-12  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valatypeparametertype.vala:
+
+	Use G_TYPE_POINTER as type_id for type parameters
+
+2008-06-12  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala:
 
 	Use `const' in C for immutable classes where appropriate
