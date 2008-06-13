@@ -2991,7 +2991,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		CCodeExpression instance = null;
 		CCodeFunctionCall creation_call = null;
 
-		if (expr.type_reference.data_type is Struct || expr.get_object_initializer ().size > 0) {
+		var st = expr.type_reference.data_type as Struct;
+		if ((st != null && !st.is_simple_type ()) || expr.get_object_initializer ().size > 0) {
 			// value-type initialization or object creation expression with object initializer
 			var temp_decl = get_temp_variable (expr.type_reference, false, expr);
 			temp_vars.add (temp_decl);
@@ -3028,7 +3029,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			creation_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
 
-			if (expr.type_reference.data_type is Struct && !(m.cinstance_parameter_position < 0)) {
+			if ((st != null && !st.is_simple_type ()) && !(m.cinstance_parameter_position < 0)) {
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 			}
 
@@ -3120,7 +3121,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				i++;
 			}
 
-			if (expr.type_reference.data_type is Struct && m.cinstance_parameter_position < 0) {
+			if ((st != null && !st.is_simple_type ()) && m.cinstance_parameter_position < 0) {
 				// instance parameter is at the end in a struct creation method
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 			}
