@@ -41,11 +41,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	DataType bool_type;
 	DataType string_type;
+	DataType uchar_type;
+	DataType short_type;
+	DataType ushort_type;
 	DataType int_type;
 	DataType uint_type;
+	DataType long_type;
 	DataType ulong_type;
 	DataType size_t_type;
+	DataType ssize_t_type;
+	DataType int8_type;
 	DataType unichar_type;
+	DataType double_type;
 	DataType type_type;
 	Class object_type;
 	TypeSymbol initially_unowned_type;
@@ -79,11 +86,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		bool_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("bool"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
 
+		uchar_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uchar"));
+		short_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("short"));
+		ushort_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("ushort"));
 		int_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int"));
 		uint_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint"));
+		long_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("long"));
 		ulong_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("ulong"));
 		size_t_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("size_t"));
+		ssize_t_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("ssize_t"));
+		int8_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int8"));
 		unichar_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("unichar"));
+		double_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("double"));
 
 		// TODO: don't require GLib namespace in semantic analyzer
 		var glib_ns = root_symbol.scope.lookup ("GLib");
@@ -1909,6 +1923,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return;
 		}
 
+		Expression last_arg = null;
+
 		var args = expr.get_argument_list ();
 		Iterator<Expression> arg_it = args.iterator ();
 		foreach (FormalParameter param in params) {
@@ -1929,6 +1945,142 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						arg.target_type = get_actual_type (ma.inner.value_type, ma.symbol_reference, arg.target_type, arg);
 						assert (arg.target_type != null);
 					}
+				}
+
+				last_arg = arg;
+			}
+		}
+
+		// printf arguments
+		if (mtype is MethodType && ((MethodType) mtype).method_symbol.printf_format) {
+			StringLiteral format_literal = null;
+			if (last_arg != null) {
+				// use last argument as format string
+				format_literal = last_arg as StringLiteral;
+			} else {
+				// use instance as format string for string.printf (...)
+				var ma = expr.call as MemberAccess;
+				if (ma != null) {
+					format_literal = ma.inner as StringLiteral;
+				}
+			}
+			if (format_literal != null) {
+				string format = format_literal.eval ();
+
+				bool unsupported_format = false;
+
+				weak string format_it = format;
+				unichar c = format_it.get_char ();
+				while (c != '\0') {
+					if (c != '%') {
+						format_it = format_it.next_char ();
+						c = format_it.get_char ();
+						continue;
+					}
+
+					format_it = format_it.next_char ();
+					c = format_it.get_char ();
+					// flags
+					while (c == '#' || c == '0' || c == '-' || c == ' ' || c == '+') {
+						format_it = format_it.next_char ();
+						c = format_it.get_char ();
+					}
+					// field width
+					while (c >= '0' && c <= '9') {
+						format_it = format_it.next_char ();
+						c = format_it.get_char ();
+					}
+					// precision
+					if (c == '.') {
+						format_it = format_it.next_char ();
+						c = format_it.get_char ();
+						while (c >= '0' && c <= '9') {
+							format_it = format_it.next_char ();
+							c = format_it.get_char ();
+						}
+					}
+					// length modifier
+					int length = 0;
+					if (c == 'h') {
+						length = -1;
+						format_it = format_it.next_char ();
+						c = format_it.get_char ();
+						if (c == 'h') {
+							length = -2;
+							format_it = format_it.next_char ();
+							c = format_it.get_char ();
+						}
+					} else if (c == 'l') {
+						length = 1;
+						format_it = format_it.next_char ();
+						c = format_it.get_char ();
+					} else if (c == 'z') {
+						length = 2;
+						format_it = format_it.next_char ();
+						c = format_it.get_char ();
+					}
+					// conversion specifier
+					DataType param_type = null;
+					if (c == 'd' || c == 'i' || c == 'c') {
+						// integer
+						if (length == -2) {
+							param_type = int8_type;
+						} else if (length == -1) {
+							param_type = short_type;
+						} else if (length == 0) {
+							param_type = int_type;
+						} else if (length == 1) {
+							param_type = long_type;
+						} else if (length == 2) {
+							param_type = ssize_t_type;
+						}
+					} else if (c == 'o' || c == 'u' || c == 'x' || c == 'X') {
+						// unsigned integer
+						if (length == -2) {
+							param_type = uchar_type;
+						} else if (length == -1) {
+							param_type = ushort_type;
+						} else if (length == 0) {
+							param_type = uint_type;
+						} else if (length == 1) {
+							param_type = ulong_type;
+						} else if (length == 2) {
+							param_type = size_t_type;
+						}
+					} else if (c == 'e' || c == 'E' || c == 'f' || c == 'F'
+					           || c == 'g' || c == 'G' || c == 'a' || c == 'A') {
+						// double
+						param_type = double_type;
+					} else if (c == 's') {
+						// string
+						param_type = string_type;
+					} else if (c == 'p') {
+						// pointer
+						param_type = new PointerType (new VoidType ());
+					} else if (c == '%') {
+						// literal %
+					} else {
+						unsupported_format = true;
+						break;
+					}
+					if (c != '\0') {
+						format_it = format_it.next_char ();
+						c = format_it.get_char ();
+					}
+					if (param_type != null) {
+						if (arg_it.next ()) {
+							Expression arg = arg_it.get ();
+
+							arg.target_type = param_type;
+						} else {
+							Report.error (expr.source_reference, "Too few arguments for specified format");
+							return;
+						}
+					}
+				}
+				if (!unsupported_format && arg_it.next ()) {
+					Report.error (expr.source_reference, "Too many arguments for specified format");
+					return;
 				}
 			}
 		}
@@ -2118,6 +2270,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						Report.error (expr.source_reference, "Invalid type for argument %d".printf (i + 1));
 						return false;
 					}
+				} else if (arg.target_type != null && !arg.value_type.compatible (arg.target_type)) {
+					// target_type known for printf arguments
+					expr.error = true;
+					Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.value_type.to_string (), arg.target_type.to_string ()));
+					return false;
 				}
 
 				i++;

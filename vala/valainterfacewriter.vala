@@ -366,7 +366,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string ("[CCode (cprefix = \"%s\", ".printf (en.get_cprefix ()));
 
 		if (!en.has_type_id) {
-			write_string ("has_type_id = \"%d\", ".printf (en.has_type_id));
+			write_string ("has_type_id = \"%d\", ".printf (en.has_type_id ? 1 : 0));
 		}
 
 		write_string ("cheader_filename = \"%s\")]".printf (cheaders));
