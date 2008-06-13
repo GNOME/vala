@@ -476,7 +476,7 @@ public struct time_t {
 }
 
 [SimpleType]
-[CCode (cname = "gunichar", cprefix = "g_unichar_", cheader_filename = "glib.h", get_value_function = "g_value_get_int", set_value_function = "g_value_set_int", default_value = "0U")]
+[CCode (cname = "gunichar", cprefix = "g_unichar_", cheader_filename = "glib.h", type_id = "G_TYPE_UINT", marshaller_type_name = "UINT", get_value_function = "g_value_get_uint", set_value_function = "g_value_set_uint", default_value = "0U", type_signature = "u")]
 [IntegerType (rank = 7)]
 public struct unichar {
 	public bool validate ();

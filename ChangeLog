@@ -1,5 +1,11 @@
 2008-06-13  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Use G_TYPE_UINT as type_id for unichar
+
+2008-06-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valastruct.vala:
 
 	Implement is_subtype_of method so that structs are considered
