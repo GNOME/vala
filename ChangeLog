@@ -1,3 +1,10 @@
+2008-06-13  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valastruct.vala:
+
+	Implement is_subtype_of method so that structs are considered
+	compatible to the specified base type
+
 2008-06-12  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valatypeparametertype.vala:

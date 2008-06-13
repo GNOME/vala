@@ -532,4 +532,18 @@ public class Vala.Struct : TypeSymbol {
 			}
 		}
 	}
+
+	public override bool is_subtype_of (TypeSymbol t) {
+		if (this == t) {
+			return true;
+		}
+
+		foreach (DataType base_type in base_types) {
+			if (base_type.data_type != null && base_type.data_type.is_subtype_of (t)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }
