@@ -1,5 +1,13 @@
 2008-06-14  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-rtsp-0.10/:
+
+	Various fixes, patch by Ali Sabil
+
+	* vapi/gstreamer-rtsp-0.10.vapi: regenerated
+
+2008-06-14  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_label_new binding
