@@ -1506,7 +1506,7 @@ namespace Gtk {
 	}
 	[Compact]
 	[CCode (copy_function = "gtk_icon_info_copy", cheader_filename = "gtk/gtk.h")]
-	public class IconInfo : GLib.Boxed {
+	public class IconInfo {
 		public weak Gtk.IconInfo copy ();
 		public bool get_attach_points (Gdk.Point[] points);
 		public int get_base_size ();
@@ -1519,7 +1519,7 @@ namespace Gtk {
 	}
 	[Compact]
 	[CCode (ref_function = "gtk_icon_set_ref", unref_function = "gtk_icon_set_unref", cheader_filename = "gtk/gtk.h")]
-	public class IconSet : GLib.Boxed {
+	public class IconSet {
 		public void add_source (Gtk.IconSource source);
 		public weak Gtk.IconSet copy ();
 		public void get_sizes (Gtk.IconSize[] sizes);
@@ -1529,7 +1529,7 @@ namespace Gtk {
 	}
 	[Compact]
 	[CCode (copy_function = "gtk_icon_source_copy", cheader_filename = "gtk/gtk.h")]
-	public class IconSource : GLib.Boxed {
+	public class IconSource {
 		public weak Gtk.IconSource copy ();
 		public Gtk.TextDirection get_direction ();
 		public bool get_direction_wildcarded ();
@@ -1553,7 +1553,7 @@ namespace Gtk {
 	}
 	[Compact]
 	[CCode (copy_function = "gtk_paper_size_copy", cheader_filename = "gtk/gtk.h")]
-	public class PaperSize : GLib.Boxed {
+	public class PaperSize {
 		public weak Gtk.PaperSize copy ();
 		public static weak string get_default ();
 		public double get_default_bottom_margin (Gtk.Unit unit);
@@ -1577,7 +1577,7 @@ namespace Gtk {
 	}
 	[Compact]
 	[CCode (ref_function = "gtk_recent_info_ref", unref_function = "gtk_recent_info_unref", cheader_filename = "gtk/gtk.h")]
-	public class RecentInfo : GLib.Boxed {
+	public class RecentInfo {
 		public bool exists ();
 		public ulong get_added ();
 		public int get_age ();
@@ -1602,7 +1602,7 @@ namespace Gtk {
 	}
 	[Compact]
 	[CCode (copy_function = "gtk_selection_data_copy", cheader_filename = "gtk/gtk.h")]
-	public class SelectionData : GLib.Boxed {
+	public class SelectionData {
 		public Gdk.Atom selection;
 		public Gdk.Atom target;
 		public Gdk.Atom type;
@@ -1627,7 +1627,7 @@ namespace Gtk {
 	}
 	[Compact]
 	[CCode (ref_function = "gtk_target_list_ref", unref_function = "gtk_target_list_unref", cheader_filename = "gtk/gtk.h")]
-	public class TargetList : GLib.Boxed {
+	public class TargetList {
 		public weak GLib.List list;
 		public uint ref_count;
 		public void add (Gdk.Atom target, uint flags, uint info);
@@ -1642,7 +1642,7 @@ namespace Gtk {
 	}
 	[Compact]
 	[CCode (ref_function = "gtk_text_attributes_ref", unref_function = "gtk_text_attributes_unref", cheader_filename = "gtk/gtk.h")]
-	public class TextAttributes : GLib.Boxed {
+	public class TextAttributes {
 		public uint refcount;
 		public weak Gtk.TextAppearance appearance;
 		public Gtk.Justification justification;
@@ -1673,7 +1673,7 @@ namespace Gtk {
 	}
 	[Compact]
 	[CCode (copy_function = "gtk_tree_path_copy", cheader_filename = "gtk/gtk.h")]
-	public class TreePath : GLib.Boxed {
+	public class TreePath {
 		public void append_index (int index_);
 		public int compare (Gtk.TreePath b);
 		public Gtk.TreePath copy ();
@@ -1696,7 +1696,7 @@ namespace Gtk {
 	}
 	[Compact]
 	[CCode (copy_function = "gtk_tree_row_reference_copy", cheader_filename = "gtk/gtk.h")]
-	public class TreeRowReference : GLib.Boxed {
+	public class TreeRowReference {
 		public weak Gtk.TreeRowReference copy ();
 		public static void deleted (GLib.Object proxy, Gtk.TreePath path);
 		public weak Gtk.TreeModel get_model ();
@@ -3348,7 +3348,7 @@ namespace Gtk {
 		public bool get_use_markup ();
 		public bool get_use_underline ();
 		public int get_width_chars ();
-		public Label (string str);
+		public Label (string? str);
 		public Label.with_mnemonic (string str);
 		public void select_region (int start_offset, int end_offset);
 		public void set_angle (double angle);
@@ -6182,7 +6182,7 @@ namespace Gtk {
 		public weak Gtk.ActionCallback callback;
 		public bool is_active;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (type_id = "GTK_TYPE_BORDER", cheader_filename = "gtk/gtk.h")]
 	public struct Border {
 		public int left;
 		public int right;
@@ -6191,14 +6191,14 @@ namespace Gtk {
 		public Gtk.Border copy ();
 		public void free ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (type_id = "GTK_TYPE_REQUISITION", cheader_filename = "gtk/gtk.h")]
 	public struct Requisition {
 		public int width;
 		public int height;
 		public Gtk.Requisition copy ();
 		public void free ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (type_id = "GTK_TYPE_TEXT_ITER", cheader_filename = "gtk/gtk.h")]
 	public struct TextIter {
 		public void* dummy1;
 		public void* dummy2;
@@ -6305,7 +6305,7 @@ namespace Gtk {
 		public bool starts_word ();
 		public bool toggles_tag (Gtk.TextTag tag);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (type_id = "GTK_TYPE_TREE_ITER", cheader_filename = "gtk/gtk.h")]
 	public struct TreeIter {
 		public int stamp;
 		public void* user_data;

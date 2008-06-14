@@ -1,3 +1,11 @@
+2008-06-14  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_label_new binding
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
 2008-06-14  Jamie McCracken  <jamiemcc@gnome.org>
 
 	* vala/valagenieparser.vala:
