@@ -1,3 +1,9 @@
+2008-06-14  Jamie McCracken  <jamiemcc@gnome.org>
+
+	* vala/valagenieparser.vala:
+
+	fixed attribute parsing 
+
 2008-06-13  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala:

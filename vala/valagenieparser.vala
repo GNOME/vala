@@ -2013,6 +2013,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 			expect (TokenType.CLOSE_BRACKET);
 		}
+		expect (TokenType.EOL);
+		
 		return attrs;
 	}
 
