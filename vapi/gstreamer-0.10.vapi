@@ -1327,7 +1327,7 @@ namespace Gst {
 		public weak string get_uri_protocols ();
 		public int get_uri_type ();
 		public bool has_interface (string interfacename);
-		public static weak Gst.Element make (string factoryname, string name);
+		public static Gst.Element make (string factoryname, string? name);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class GhostPad : Gst.Pad {

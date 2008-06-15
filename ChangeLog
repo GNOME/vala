@@ -1,5 +1,14 @@
 2008-06-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_element_factory_make binding,
+	based on patch by Thijs Vermeir
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-06-15  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeinvocationexpressionbinding.vala:
 
 	Support emitting signals with return values,
