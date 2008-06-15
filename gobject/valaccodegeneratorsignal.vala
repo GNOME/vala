@@ -30,10 +30,18 @@ public class Vala.CCodeGenerator {
 		} else if (t is ErrorType) {
 			return ("POINTER");
 		} else if (t is ArrayType) {
-			if (((ArrayType) t).element_type.data_type == string_type.data_type) {
-				return ("BOXED");
+			if (dbus) {
+				if (((ArrayType) t).element_type.data_type == string_type.data_type) {
+					return ("BOXED");
+				} else {
+					return ("POINTER");
+				}
 			} else {
-				return ("POINTER");
+				if (((ArrayType) t).element_type.data_type == string_type.data_type) {
+					return ("BOXED_INT");
+				} else {
+					return ("POINTER_INT");
+				}
 			}
 		} else if (t is VoidType) {
 			return ("VOID");
@@ -179,6 +187,10 @@ public class Vala.CCodeGenerator {
 		foreach (FormalParameter p in params) {
 			callback_decl.add_parameter (new CCodeFormalParameter ("arg_%d".printf (n_params), get_value_type_name_from_parameter (p)));
 			n_params++;
+			if (p.parameter_type.is_array () && !dbus) {
+				callback_decl.add_parameter (new CCodeFormalParameter ("arg_%d".printf (n_params), "gint"));
+				n_params++;
+			}
 		}
 		callback_decl.add_parameter (new CCodeFormalParameter ("data2", "gpointer"));
 		marshaller_body.add_statement (new CCodeTypeDefinition (get_value_type_name_from_type_reference (return_type), callback_decl));
@@ -235,7 +247,14 @@ public class Vala.CCodeGenerator {
 		i = 1;
 		foreach (FormalParameter p in params) {
 			string get_value_function;
-			if (p.parameter_type is PointerType || p.parameter_type.type_parameter != null || p.direction != ParameterDirection.IN) {
+			bool is_array = p.parameter_type.is_array ();
+			if (is_array) {
+				if (((ArrayType) p.parameter_type).element_type.data_type == string_type.data_type) {
+					get_value_function = "g_value_get_boxed";
+				} else {
+					get_value_function = "g_value_get_pointer";
+				}
+			} else if (p.parameter_type is PointerType || p.parameter_type.type_parameter != null || p.direction != ParameterDirection.IN) {
 				get_value_function = "g_value_get_pointer";
 			} else if (p.parameter_type is ErrorType) {
 				get_value_function = "g_value_get_pointer";
@@ -248,6 +267,12 @@ public class Vala.CCodeGenerator {
 			inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
 			fc.add_argument (inner_fc);
 			i++;
+			if (is_array && !dbus) {
+				inner_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_int"));
+				inner_fc.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("param_values"), new CCodeIdentifier (i.to_string ())));
+				fc.add_argument (inner_fc);
+				i++;
+			}
 		}
 		fc.add_argument (new CCodeIdentifier ("data2"));
 		
@@ -256,7 +281,7 @@ public class Vala.CCodeGenerator {
 			
 			CCodeFunctionCall set_fc;
 			if (return_type.is_array ()) {
-				if (((ArrayType)return_type).element_type.data_type == string_type.data_type) {
+				if (((ArrayType) return_type).element_type.data_type == string_type.data_type) {
 					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
 				} else {
 					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));

@@ -1,5 +1,13 @@
 2008-06-15  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorsignal.vala:
+	* gobject/valaccodetypesymbolbinding.vala:
+
+	Fix crash when using signals with array parameters,
+	fixes bug 538212
+
+2008-06-15  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/vte/:
 
 	Fix vte_terminal_fork_command binding

@@ -181,7 +181,6 @@ public abstract class Vala.CCodeTypeSymbolBinding : CCodeBinding {
 		csignew.add_argument (marshal_arg);
 
 		var params = sig.get_parameters ();
-		var params_len = params.size;
 		if (sig.return_type is PointerType || sig.return_type.type_parameter != null) {
 			csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 		} else if (sig.return_type is ErrorType) {
@@ -191,9 +190,25 @@ public abstract class Vala.CCodeTypeSymbolBinding : CCodeBinding {
 		} else {
 			csignew.add_argument (new CCodeConstant (sig.return_type.data_type.get_type_id ()));
 		}
+
+		int params_len = 0;
+		foreach (FormalParameter param in params) {
+			params_len++;
+			if (param.parameter_type.is_array ()) {
+				params_len++;
+			}
+		}
+
 		csignew.add_argument (new CCodeConstant ("%d".printf (params_len)));
 		foreach (FormalParameter param in params) {
-			if (param.parameter_type is PointerType || param.parameter_type.type_parameter != null || param.direction != ParameterDirection.IN) {
+			if (param.parameter_type.is_array ()) {
+				if (((ArrayType) param.parameter_type).element_type.data_type == codegen.string_type.data_type) {
+					csignew.add_argument (new CCodeConstant ("G_TYPE_STRV"));
+				} else {
+					csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
+				}
+				csignew.add_argument (new CCodeConstant ("G_TYPE_INT"));
+			} else if (param.parameter_type is PointerType || param.parameter_type.type_parameter != null || param.direction != ParameterDirection.IN) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
 			} else if (param.parameter_type is ErrorType) {
 				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
