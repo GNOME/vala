@@ -1645,6 +1645,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var cerror_block = new CCodeBlock ();
 			cerror_block.add_statement (new CCodeExpressionStatement (cpropagate));
 
+			// free local variables
+			var free_frag = new CCodeFragment ();
+			append_local_free (current_symbol, free_frag, false);
+			cerror_block.add_statement (free_frag);
+
 			if (current_return_type is VoidType) {
 				cerror_block.add_statement (new CCodeReturnStatement ());
 			} else {

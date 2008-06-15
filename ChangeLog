@@ -1,5 +1,11 @@
 2008-06-16  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala:
+
+	Free local variables when throwing error, fixes bug 538520
+
+2008-06-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am:
 	* vapi/sdl-net.vapi:
 
