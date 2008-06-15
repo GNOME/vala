@@ -62,6 +62,13 @@ class Maman.Bar : Object {
 
 		stdout.printf (" 6\n");
 
+		stdout.printf ("Signal Return Test: 1");
+
+		var return_bar = new ReturnBar ();
+		return_bar.run ();
+
+		stdout.printf (" 8\n");
+
 		return 0;
 	}
 }
@@ -92,3 +99,31 @@ class Maman.UserBar : Object {
 	}
 }
 
+class Maman.ReturnFoo : Object {
+	public signal int int_activated (int arg);
+	public signal string string_activated (string arg);
+}
+
+class Maman.ReturnBar : Object {
+	public void run () {
+		stdout.printf (" 2");
+
+		var foo = new ReturnFoo ();
+
+		foo.int_activated += (foo, arg) => {
+			stdout.printf (" %d", arg);
+			return arg + 1;
+		};
+
+		foo.string_activated += (foo, arg) => {
+			stdout.printf (arg);
+			return " 6";
+		};
+
+		stdout.printf (" %d", foo.int_activated (3));
+
+		stdout.printf (foo.string_activated (" 5"));
+
+		stdout.printf (" 7");
+	}
+}

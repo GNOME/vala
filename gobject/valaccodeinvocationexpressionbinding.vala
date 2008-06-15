@@ -386,6 +386,26 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 			}
 		}
 
+		// pass address for the return value of non-void signals without emitter functions
+		if (itype is SignalType && !(itype.get_return_type () is VoidType)) {
+			var sig = ((SignalType) itype).signal_symbol;
+
+			if (!sig.has_emitter) {
+				var temp_var = codegen.get_temp_variable (itype.get_return_type ());
+				var temp_ref = new CCodeIdentifier (temp_var.name);
+
+				codegen.temp_vars.insert (0, temp_var);
+
+				carg_map.set (codegen.get_param_pos (-1, true), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+			
+				var ccomma = new CCodeCommaExpression ();
+				ccomma.append_expression ((CCodeExpression) ccall_expr);
+				ccomma.append_expression ((CCodeExpression) temp_ref);
+
+				ccall_expr = ccomma;
+			}
+		}
+
 		// append C arguments in the right order
 		int last_pos = -1;
 		int min_pos;

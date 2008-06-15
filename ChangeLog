@@ -1,5 +1,17 @@
 2008-06-15  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+
+	Support emitting signals with return values,
+	patch by Samuel Cormier-Iijima, fixes bug 537323
+
+	* tests/classes-signals.exp:
+	* tests/classes-signals.vala:
+
+	Test signals with return values
+
+2008-06-15  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valascanner.vala:
 
 	Fix line number calculation for verbatim strings, fixes bug 537123
