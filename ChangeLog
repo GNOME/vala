@@ -1,3 +1,11 @@
+2008-06-16  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_message_parse_* bindings
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
 2008-06-15  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gstreamer-0.10/:
