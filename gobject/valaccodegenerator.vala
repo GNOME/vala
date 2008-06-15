@@ -2477,6 +2477,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_catch_clause (CatchClause clause) {
+		if (clause.error_variable != null) {
+			clause.error_variable.active = true;
+		}
+
 		current_method_inner_error = true;
 
 		clause.accept_children (this);

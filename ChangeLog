@@ -1,5 +1,12 @@
 2008-06-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Free error variable in catch clauses, fixes bug 538331
+
+2008-06-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaerrortype.vala:
 	* vala/valasemanticanalyzer.vala:
 	* gobject/valaccodegenerator.vala:

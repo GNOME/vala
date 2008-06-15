@@ -1227,6 +1227,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			clause.error_variable = new LocalVariable (clause.error_type.copy (), clause.variable_name);
 
 			clause.body.scope.add (clause.variable_name, clause.error_variable);
+			clause.body.add_local_variable (clause.error_variable);
 		} else {
 			clause.error_type = new ErrorType (null, clause.source_reference);
 		}
