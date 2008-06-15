@@ -1103,15 +1103,15 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public int width_request { get; set; }
 		public virtual signal void accel_closures_changed ();
-		public virtual signal bool button_press_event (Gdk.Event event);
-		public virtual signal bool button_release_event (Gdk.Event event);
+		public virtual signal bool button_press_event (Gdk.EventButton event);
+		public virtual signal bool button_release_event (Gdk.EventButton event);
 		[HasEmitter]
 		public virtual signal bool can_activate_accel (uint signal_id);
 		[HasEmitter]
 		public virtual signal void child_notify (GLib.ParamSpec pspec);
-		public virtual signal bool client_event (Gdk.Event event);
+		public virtual signal bool client_event (Gdk.EventClient event);
 		public virtual signal void composited_changed ();
-		public virtual signal bool configure_event (Gdk.Event event);
+		public virtual signal bool configure_event (Gdk.EventConfigure event);
 		public virtual signal bool damage_event (Gdk.Event p0);
 		public virtual signal bool delete_event (Gdk.Event event);
 		public virtual signal bool destroy_event (Gdk.Event event);
@@ -1125,14 +1125,14 @@ namespace Gtk {
 		public virtual signal bool drag_failed (Gdk.DragContext p0, Gtk.DragResult p1);
 		public virtual signal void drag_leave (Gdk.DragContext context, uint time_);
 		public virtual signal bool drag_motion (Gdk.DragContext context, int x, int y, uint time_);
-		public virtual signal bool enter_notify_event (Gdk.Event event);
+		public virtual signal bool enter_notify_event (Gdk.EventCrossing event);
 		[HasEmitter]
 		public virtual signal bool event (Gdk.Event event);
 		public virtual signal void event_after (Gdk.Event p0);
-		public virtual signal bool expose_event (Gdk.Event event);
+		public virtual signal bool expose_event (Gdk.EventExpose event);
 		public virtual signal bool focus (Gtk.DirectionType direction);
-		public virtual signal bool focus_in_event (Gdk.Event event);
-		public virtual signal bool focus_out_event (Gdk.Event event);
+		public virtual signal bool focus_in_event (Gdk.EventFocus event);
+		public virtual signal bool focus_out_event (Gdk.EventFocus event);
 		public virtual signal bool grab_broken_event (Gdk.Event event);
 		[HasEmitter]
 		public virtual signal void grab_focus ();
@@ -1144,30 +1144,30 @@ namespace Gtk {
 		public virtual signal bool key_release_event (Gdk.EventKey event);
 		[HasEmitter]
 		public virtual signal bool keynav_failed (Gtk.DirectionType p0);
-		public virtual signal bool leave_notify_event (Gdk.Event event);
+		public virtual signal bool leave_notify_event (Gdk.EventCrossing event);
 		[HasEmitter]
 		public virtual signal void map ();
 		public virtual signal bool map_event (Gdk.Event event);
 		[HasEmitter]
 		public virtual signal bool mnemonic_activate (bool group_cycling);
-		public virtual signal bool motion_notify_event (Gdk.Event event);
+		public virtual signal bool motion_notify_event (Gdk.EventMotion event);
 		public virtual signal void move_focus (Gtk.DirectionType p0);
-		public virtual signal bool no_expose_event (Gdk.Event event);
+		public virtual signal bool no_expose_event (Gdk.EventNoExpose event);
 		public virtual signal void parent_set (Gtk.Widget previous_parent);
 		public virtual signal bool popup_menu ();
-		public virtual signal bool property_notify_event (Gdk.Event event);
-		public virtual signal bool proximity_in_event (Gdk.Event event);
-		public virtual signal bool proximity_out_event (Gdk.Event event);
+		public virtual signal bool property_notify_event (Gdk.EventProperty event);
+		public virtual signal bool proximity_in_event (Gdk.EventProximity event);
+		public virtual signal bool proximity_out_event (Gdk.EventProximity event);
 		public virtual signal bool query_tooltip (int x, int y, bool keyboard_tooltip, Gtk.Tooltip tooltip);
 		[HasEmitter]
 		public virtual signal void realize ();
 		public virtual signal void screen_changed (Gdk.Screen previous_screen);
-		public virtual signal bool scroll_event (Gdk.Event event);
-		public virtual signal bool selection_clear_event (Gdk.Event event);
+		public virtual signal bool scroll_event (Gdk.EventScroll event);
+		public virtual signal bool selection_clear_event (Gdk.EventSelection event);
 		public virtual signal void selection_get (Gtk.SelectionData selection_data, uint info, uint time_);
-		public virtual signal bool selection_notify_event (Gdk.Event event);
+		public virtual signal bool selection_notify_event (Gdk.EventSelection event);
 		public virtual signal void selection_received (Gtk.SelectionData selection_data, uint time_);
-		public virtual signal bool selection_request_event (Gdk.Event event);
+		public virtual signal bool selection_request_event (Gdk.EventSelection event);
 		[HasEmitter]
 		public virtual signal void show ();
 		public virtual signal bool show_help (Gtk.WidgetHelpType help_type);
@@ -1183,7 +1183,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void unrealize ();
 		public virtual signal bool visibility_notify_event (Gdk.Event event);
-		public virtual signal bool window_state_event (Gdk.Event event);
+		public virtual signal bool window_state_event (Gdk.EventWindowState event);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gtk/gtk.h")]

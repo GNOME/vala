@@ -1,5 +1,14 @@
 2008-06-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Fix GtkWidget event signal parameters,
+	patch by Andrea Del Signore, fixes bug 537092
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-06-15  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/taglib_c.vapi:
 
 	Use [Compact] attribute, patch by Levi Bard, fixes bug 536987
