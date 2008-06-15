@@ -1,5 +1,11 @@
 2008-06-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libxml-2.0.vapi:
+
+	Fix uri functions, patch by Michael Lawrence, fixes bug 538384
+
+2008-06-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 	* gobject/valaccodegenerator.vala:
 

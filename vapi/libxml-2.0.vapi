@@ -759,10 +759,10 @@ namespace Xml {
 		public static int normalize_uri_path (string path);
 
 		[CCode (cname = "xmlParseURI")]
-		public URI* parse (string str);
+		public static URI parse (string str);
 
 		[CCode (cname = "xmlParseURIRaw")]
-		public URI* parse_raw (string str, int raw);
+		public static URI parse_raw (string str, int raw);
 
 		[CCode (cname = "xmlParseURIReference")]
 		public int parse_reference (string str);
@@ -783,7 +783,7 @@ namespace Xml {
 		public static string escape_str (string str, string list);
 
 		[CCode (cname = "xmlURIUnescapeString")]
-		public static string unescape_string (string str, int len, string target);
+		public static string unescape_string (string str, int len, string? target);
 
 		public string scheme;
 		public string opaque;
