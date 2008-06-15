@@ -759,7 +759,7 @@
 				<parameter name="widget" type="GtkWidget*"/>
 				<parameter name="detail" type="gchar*"/>
 				<parameter name="points" type="GdkPoint*"/>
-				<parameter name="npoints" type="gint"/>
+				<parameter name="n_points" type="gint"/>
 				<parameter name="fill" type="gboolean"/>
 			</parameters>
 		</function>
@@ -1067,6 +1067,13 @@
 				<parameter name="ntargets" type="guint"/>
 			</parameters>
 		</function>
+		<function name="selection_clear" symbol="gtk_selection_clear">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="widget" type="GtkWidget*"/>
+				<parameter name="event" type="GdkEventSelection*"/>
+			</parameters>
+		</function>
 		<function name="selection_clear_targets" symbol="gtk_selection_clear_targets">
 			<return-type type="void"/>
 			<parameters>
@@ -1114,6 +1121,15 @@
 			<parameters>
 				<parameter name="parent" type="GtkWindow*"/>
 				<parameter name="first_property_name" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="show_uri" symbol="gtk_show_uri">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="screen" type="GdkScreen*"/>
+				<parameter name="uri" type="gchar*"/>
+				<parameter name="timestamp" type="guint32"/>
+				<parameter name="error" type="GError**"/>
 			</parameters>
 		</function>
 		<function name="stock_add" symbol="gtk_stock_add">
@@ -1193,6 +1209,115 @@
 				<parameter name="n_targets" type="gint"/>
 			</parameters>
 		</function>
+		<function name="test_create_simple_window" symbol="gtk_test_create_simple_window">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="window_title" type="gchar*"/>
+				<parameter name="dialog_text" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="test_create_widget" symbol="gtk_test_create_widget">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="widget_type" type="GType"/>
+				<parameter name="first_property_name" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="test_display_button_window" symbol="gtk_test_display_button_window">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="window_title" type="gchar*"/>
+				<parameter name="dialog_text" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="test_find_label" symbol="gtk_test_find_label">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="widget" type="GtkWidget*"/>
+				<parameter name="label_pattern" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="test_find_sibling" symbol="gtk_test_find_sibling">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="base_widget" type="GtkWidget*"/>
+				<parameter name="widget_type" type="GType"/>
+			</parameters>
+		</function>
+		<function name="test_find_widget" symbol="gtk_test_find_widget">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="widget" type="GtkWidget*"/>
+				<parameter name="label_pattern" type="gchar*"/>
+				<parameter name="widget_type" type="GType"/>
+			</parameters>
+		</function>
+		<function name="test_init" symbol="gtk_test_init">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="argcp" type="int*"/>
+				<parameter name="argvp" type="char***"/>
+			</parameters>
+		</function>
+		<function name="test_list_all_types" symbol="gtk_test_list_all_types">
+			<return-type type="GType*"/>
+			<parameters>
+				<parameter name="n_types" type="guint*"/>
+			</parameters>
+		</function>
+		<function name="test_register_all_types" symbol="gtk_test_register_all_types">
+			<return-type type="void"/>
+		</function>
+		<function name="test_slider_get_value" symbol="gtk_test_slider_get_value">
+			<return-type type="double"/>
+			<parameters>
+				<parameter name="widget" type="GtkWidget*"/>
+			</parameters>
+		</function>
+		<function name="test_slider_set_perc" symbol="gtk_test_slider_set_perc">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="widget" type="GtkWidget*"/>
+				<parameter name="percentage" type="double"/>
+			</parameters>
+		</function>
+		<function name="test_spin_button_click" symbol="gtk_test_spin_button_click">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="spinner" type="GtkSpinButton*"/>
+				<parameter name="button" type="guint"/>
+				<parameter name="upwards" type="gboolean"/>
+			</parameters>
+		</function>
+		<function name="test_text_get" symbol="gtk_test_text_get">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="widget" type="GtkWidget*"/>
+			</parameters>
+		</function>
+		<function name="test_text_set" symbol="gtk_test_text_set">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="widget" type="GtkWidget*"/>
+				<parameter name="string" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="test_widget_click" symbol="gtk_test_widget_click">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="widget" type="GtkWidget*"/>
+				<parameter name="button" type="guint"/>
+				<parameter name="modifiers" type="GdkModifierType"/>
+			</parameters>
+		</function>
+		<function name="test_widget_send_key" symbol="gtk_test_widget_send_key">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="widget" type="GtkWidget*"/>
+				<parameter name="keyval" type="guint"/>
+				<parameter name="modifiers" type="GdkModifierType"/>
+			</parameters>
+		</function>
 		<function name="tree_get_row_drag_data" symbol="gtk_tree_get_row_drag_data">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -1263,6 +1388,16 @@
 				<parameter name="handler_name" type="gchar*"/>
 				<parameter name="connect_object" type="GObject*"/>
 				<parameter name="flags" type="GConnectFlags"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
+		<callback name="GtkCalendarDetailFunc">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="calendar" type="GtkCalendar*"/>
+				<parameter name="year" type="guint"/>
+				<parameter name="month" type="guint"/>
+				<parameter name="day" type="guint"/>
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
@@ -1695,6 +1830,9 @@
 		<struct name="GtkAllocation">
 		</struct>
 		<struct name="GtkArg">
+			<field name="type" type="GtkType"/>
+			<field name="name" type="gchar*"/>
+			<field name="d" type="gpointer"/>
 		</struct>
 		<struct name="GtkBindingArg">
 			<field name="arg_type" type="GType"/>
@@ -1821,6 +1959,11 @@
 			<field name="iter" type="GdkPixbufAnimationIter*"/>
 			<field name="frame_timeout" type="guint"/>
 		</struct>
+		<struct name="GtkImageGIconData">
+			<field name="icon" type="GIcon*"/>
+			<field name="pixbuf" type="GdkPixbuf*"/>
+			<field name="theme_change_id" type="guint"/>
+		</struct>
 		<struct name="GtkImageIconNameData">
 			<field name="icon_name" type="gchar*"/>
 			<field name="pixbuf" type="GdkPixbuf*"/>
@@ -1843,6 +1986,8 @@
 		</struct>
 		<struct name="GtkLabelSelectionInfo">
 		</struct>
+		<struct name="GtkMountOperationClass">
+		</struct>
 		<struct name="GtkNotebookPage">
 			<method name="num" symbol="gtk_notebook_page_num">
 				<return-type type="gint"/>
@@ -1855,27 +2000,6 @@
 		<struct name="GtkPageRange">
 			<field name="start" type="gint"/>
 			<field name="end" type="gint"/>
-		</struct>
-		<struct name="GtkProgress">
-			<field name="widget" type="GtkWidget"/>
-			<field name="adjustment" type="GtkAdjustment*"/>
-			<field name="offscreen_pixmap" type="GdkPixmap*"/>
-			<field name="format" type="gchar*"/>
-			<field name="x_align" type="gfloat"/>
-			<field name="y_align" type="gfloat"/>
-			<field name="show_text" type="guint"/>
-			<field name="activity_mode" type="guint"/>
-			<field name="use_text_format" type="guint"/>
-		</struct>
-		<struct name="GtkProgressClass">
-			<field name="parent_class" type="GtkWidgetClass"/>
-			<field name="paint" type="GCallback"/>
-			<field name="update" type="GCallback"/>
-			<field name="act_mode_enter" type="GCallback"/>
-			<field name="_gtk_reserved1" type="GCallback"/>
-			<field name="_gtk_reserved2" type="GCallback"/>
-			<field name="_gtk_reserved3" type="GCallback"/>
-			<field name="_gtk_reserved4" type="GCallback"/>
 		</struct>
 		<struct name="GtkRadioActionEntry">
 			<field name="name" type="gchar*"/>
@@ -2065,6 +2189,12 @@
 					<parameter name="type" type="GtkType"/>
 				</parameters>
 			</method>
+			<method name="init" symbol="gtk_type_init">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="debug_flags" type="GTypeDebugFlags"/>
+				</parameters>
+			</method>
 		</struct>
 		<struct name="GtkWidgetAuxInfo">
 			<field name="x" type="gint"/>
@@ -2094,6 +2224,9 @@
 					<parameter name="border_" type="GtkBorder*"/>
 				</parameters>
 			</method>
+			<constructor name="new" symbol="gtk_border_new">
+				<return-type type="GtkBorder*"/>
+			</constructor>
 			<field name="left" type="gint"/>
 			<field name="right" type="gint"/>
 			<field name="top" type="gint"/>
@@ -2158,6 +2291,13 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<constructor name="new_for_pixbuf" symbol="gtk_icon_info_new_for_pixbuf">
+				<return-type type="GtkIconInfo*"/>
+				<parameters>
+					<parameter name="icon_theme" type="GtkIconTheme*"/>
+					<parameter name="pixbuf" type="GdkPixbuf*"/>
+				</parameters>
+			</constructor>
 			<method name="set_raw_coordinates" symbol="gtk_icon_info_set_raw_coordinates">
 				<return-type type="void"/>
 				<parameters>
@@ -3723,7 +3863,7 @@
 				</parameters>
 			</method>
 		</boxed>
-		<enum name="GtkAnchorType">
+		<enum name="GtkAnchorType" type-name="GtkAnchorType" get-type="gtk_anchor_type_get_type">
 			<member name="GTK_ANCHOR_CENTER" value="0"/>
 			<member name="GTK_ANCHOR_NORTH" value="1"/>
 			<member name="GTK_ANCHOR_NORTH_WEST" value="2"/>
@@ -3742,21 +3882,21 @@
 			<member name="GTK_ANCHOR_W" value="7"/>
 			<member name="GTK_ANCHOR_E" value="8"/>
 		</enum>
-		<enum name="GtkArrowType">
+		<enum name="GtkArrowType" type-name="GtkArrowType" get-type="gtk_arrow_type_get_type">
 			<member name="GTK_ARROW_UP" value="0"/>
 			<member name="GTK_ARROW_DOWN" value="1"/>
 			<member name="GTK_ARROW_LEFT" value="2"/>
 			<member name="GTK_ARROW_RIGHT" value="3"/>
 			<member name="GTK_ARROW_NONE" value="4"/>
 		</enum>
-		<enum name="GtkAssistantPageType">
+		<enum name="GtkAssistantPageType" type-name="GtkAssistantPageType" get-type="gtk_assistant_page_type_get_type">
 			<member name="GTK_ASSISTANT_PAGE_CONTENT" value="0"/>
 			<member name="GTK_ASSISTANT_PAGE_INTRO" value="1"/>
 			<member name="GTK_ASSISTANT_PAGE_CONFIRM" value="2"/>
 			<member name="GTK_ASSISTANT_PAGE_SUMMARY" value="3"/>
 			<member name="GTK_ASSISTANT_PAGE_PROGRESS" value="4"/>
 		</enum>
-		<enum name="GtkBuilderError">
+		<enum name="GtkBuilderError" type-name="GtkBuilderError" get-type="gtk_builder_error_get_type">
 			<member name="GTK_BUILDER_ERROR_INVALID_TYPE_FUNCTION" value="0"/>
 			<member name="GTK_BUILDER_ERROR_UNHANDLED_TAG" value="1"/>
 			<member name="GTK_BUILDER_ERROR_MISSING_ATTRIBUTE" value="2"/>
@@ -3764,8 +3904,9 @@
 			<member name="GTK_BUILDER_ERROR_INVALID_TAG" value="4"/>
 			<member name="GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE" value="5"/>
 			<member name="GTK_BUILDER_ERROR_INVALID_VALUE" value="6"/>
+			<member name="GTK_BUILDER_ERROR_VERSION_MISMATCH" value="7"/>
 		</enum>
-		<enum name="GtkButtonBoxStyle">
+		<enum name="GtkButtonBoxStyle" type-name="GtkButtonBoxStyle" get-type="gtk_button_box_style_get_type">
 			<member name="GTK_BUTTONBOX_DEFAULT_STYLE" value="0"/>
 			<member name="GTK_BUTTONBOX_SPREAD" value="1"/>
 			<member name="GTK_BUTTONBOX_EDGE" value="2"/>
@@ -3773,7 +3914,7 @@
 			<member name="GTK_BUTTONBOX_END" value="4"/>
 			<member name="GTK_BUTTONBOX_CENTER" value="5"/>
 		</enum>
-		<enum name="GtkButtonsType">
+		<enum name="GtkButtonsType" type-name="GtkButtonsType" get-type="gtk_buttons_type_get_type">
 			<member name="GTK_BUTTONS_NONE" value="0"/>
 			<member name="GTK_BUTTONS_OK" value="1"/>
 			<member name="GTK_BUTTONS_CLOSE" value="2"/>
@@ -3781,19 +3922,19 @@
 			<member name="GTK_BUTTONS_YES_NO" value="4"/>
 			<member name="GTK_BUTTONS_OK_CANCEL" value="5"/>
 		</enum>
-		<enum name="GtkCListDragPos">
+		<enum name="GtkCListDragPos" type-name="GtkCListDragPos" get-type="gtk_clist_drag_pos_get_type">
 			<member name="GTK_CLIST_DRAG_NONE" value="0"/>
 			<member name="GTK_CLIST_DRAG_BEFORE" value="1"/>
 			<member name="GTK_CLIST_DRAG_INTO" value="2"/>
 			<member name="GTK_CLIST_DRAG_AFTER" value="3"/>
 		</enum>
-		<enum name="GtkCTreeExpanderStyle">
+		<enum name="GtkCTreeExpanderStyle" type-name="GtkCTreeExpanderStyle" get-type="gtk_ctree_expander_style_get_type">
 			<member name="GTK_CTREE_EXPANDER_NONE" value="0"/>
 			<member name="GTK_CTREE_EXPANDER_SQUARE" value="1"/>
 			<member name="GTK_CTREE_EXPANDER_TRIANGLE" value="2"/>
 			<member name="GTK_CTREE_EXPANDER_CIRCULAR" value="3"/>
 		</enum>
-		<enum name="GtkCTreeExpansionType">
+		<enum name="GtkCTreeExpansionType" type-name="GtkCTreeExpansionType" get-type="gtk_ctree_expansion_type_get_type">
 			<member name="GTK_CTREE_EXPANSION_EXPAND" value="0"/>
 			<member name="GTK_CTREE_EXPANSION_EXPAND_RECURSIVE" value="1"/>
 			<member name="GTK_CTREE_EXPANSION_COLLAPSE" value="2"/>
@@ -3801,45 +3942,45 @@
 			<member name="GTK_CTREE_EXPANSION_TOGGLE" value="4"/>
 			<member name="GTK_CTREE_EXPANSION_TOGGLE_RECURSIVE" value="5"/>
 		</enum>
-		<enum name="GtkCTreeLineStyle">
+		<enum name="GtkCTreeLineStyle" type-name="GtkCTreeLineStyle" get-type="gtk_ctree_line_style_get_type">
 			<member name="GTK_CTREE_LINES_NONE" value="0"/>
 			<member name="GTK_CTREE_LINES_SOLID" value="1"/>
 			<member name="GTK_CTREE_LINES_DOTTED" value="2"/>
 			<member name="GTK_CTREE_LINES_TABBED" value="3"/>
 		</enum>
-		<enum name="GtkCTreePos">
+		<enum name="GtkCTreePos" type-name="GtkCTreePos" get-type="gtk_ctree_pos_get_type">
 			<member name="GTK_CTREE_POS_BEFORE" value="0"/>
 			<member name="GTK_CTREE_POS_AS_CHILD" value="1"/>
 			<member name="GTK_CTREE_POS_AFTER" value="2"/>
 		</enum>
-		<enum name="GtkCellRendererAccelMode">
+		<enum name="GtkCellRendererAccelMode" type-name="GtkCellRendererAccelMode" get-type="gtk_cell_renderer_accel_mode_get_type">
 			<member name="GTK_CELL_RENDERER_ACCEL_MODE_GTK" value="0"/>
 			<member name="GTK_CELL_RENDERER_ACCEL_MODE_OTHER" value="1"/>
 		</enum>
-		<enum name="GtkCellRendererMode">
+		<enum name="GtkCellRendererMode" type-name="GtkCellRendererMode" get-type="gtk_cell_renderer_mode_get_type">
 			<member name="GTK_CELL_RENDERER_MODE_INERT" value="0"/>
 			<member name="GTK_CELL_RENDERER_MODE_ACTIVATABLE" value="1"/>
 			<member name="GTK_CELL_RENDERER_MODE_EDITABLE" value="2"/>
 		</enum>
-		<enum name="GtkCellType">
+		<enum name="GtkCellType" type-name="GtkCellType" get-type="gtk_cell_type_get_type">
 			<member name="GTK_CELL_EMPTY" value="0"/>
 			<member name="GTK_CELL_TEXT" value="1"/>
 			<member name="GTK_CELL_PIXMAP" value="2"/>
 			<member name="GTK_CELL_PIXTEXT" value="3"/>
 			<member name="GTK_CELL_WIDGET" value="4"/>
 		</enum>
-		<enum name="GtkCornerType">
+		<enum name="GtkCornerType" type-name="GtkCornerType" get-type="gtk_corner_type_get_type">
 			<member name="GTK_CORNER_TOP_LEFT" value="0"/>
 			<member name="GTK_CORNER_BOTTOM_LEFT" value="1"/>
 			<member name="GTK_CORNER_TOP_RIGHT" value="2"/>
 			<member name="GTK_CORNER_BOTTOM_RIGHT" value="3"/>
 		</enum>
-		<enum name="GtkCurveType">
+		<enum name="GtkCurveType" type-name="GtkCurveType" get-type="gtk_curve_type_get_type">
 			<member name="GTK_CURVE_TYPE_LINEAR" value="0"/>
 			<member name="GTK_CURVE_TYPE_SPLINE" value="1"/>
 			<member name="GTK_CURVE_TYPE_FREE" value="2"/>
 		</enum>
-		<enum name="GtkDeleteType">
+		<enum name="GtkDeleteType" type-name="GtkDeleteType" get-type="gtk_delete_type_get_type">
 			<member name="GTK_DELETE_CHARS" value="0"/>
 			<member name="GTK_DELETE_WORD_ENDS" value="1"/>
 			<member name="GTK_DELETE_WORDS" value="2"/>
@@ -3849,7 +3990,7 @@
 			<member name="GTK_DELETE_PARAGRAPHS" value="6"/>
 			<member name="GTK_DELETE_WHITESPACE" value="7"/>
 		</enum>
-		<enum name="GtkDirectionType">
+		<enum name="GtkDirectionType" type-name="GtkDirectionType" get-type="gtk_direction_type_get_type">
 			<member name="GTK_DIR_TAB_FORWARD" value="0"/>
 			<member name="GTK_DIR_TAB_BACKWARD" value="1"/>
 			<member name="GTK_DIR_UP" value="2"/>
@@ -3857,7 +3998,7 @@
 			<member name="GTK_DIR_LEFT" value="4"/>
 			<member name="GTK_DIR_RIGHT" value="5"/>
 		</enum>
-		<enum name="GtkDragResult">
+		<enum name="GtkDragResult" type-name="GtkDragResult" get-type="gtk_drag_result_get_type">
 			<member name="GTK_DRAG_RESULT_SUCCESS" value="0"/>
 			<member name="GTK_DRAG_RESULT_NO_TARGET" value="1"/>
 			<member name="GTK_DRAG_RESULT_USER_CANCELLED" value="2"/>
@@ -3865,39 +4006,39 @@
 			<member name="GTK_DRAG_RESULT_GRAB_BROKEN" value="4"/>
 			<member name="GTK_DRAG_RESULT_ERROR" value="5"/>
 		</enum>
-		<enum name="GtkExpanderStyle">
+		<enum name="GtkExpanderStyle" type-name="GtkExpanderStyle" get-type="gtk_expander_style_get_type">
 			<member name="GTK_EXPANDER_COLLAPSED" value="0"/>
 			<member name="GTK_EXPANDER_SEMI_COLLAPSED" value="1"/>
 			<member name="GTK_EXPANDER_SEMI_EXPANDED" value="2"/>
 			<member name="GTK_EXPANDER_EXPANDED" value="3"/>
 		</enum>
-		<enum name="GtkFileChooserAction">
+		<enum name="GtkFileChooserAction" type-name="GtkFileChooserAction" get-type="gtk_file_chooser_action_get_type">
 			<member name="GTK_FILE_CHOOSER_ACTION_OPEN" value="0"/>
 			<member name="GTK_FILE_CHOOSER_ACTION_SAVE" value="1"/>
 			<member name="GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER" value="2"/>
 			<member name="GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER" value="3"/>
 		</enum>
-		<enum name="GtkFileChooserConfirmation">
+		<enum name="GtkFileChooserConfirmation" type-name="GtkFileChooserConfirmation" get-type="gtk_file_chooser_confirmation_get_type">
 			<member name="GTK_FILE_CHOOSER_CONFIRMATION_CONFIRM" value="0"/>
 			<member name="GTK_FILE_CHOOSER_CONFIRMATION_ACCEPT_FILENAME" value="1"/>
 			<member name="GTK_FILE_CHOOSER_CONFIRMATION_SELECT_AGAIN" value="2"/>
 		</enum>
-		<enum name="GtkFileChooserError">
+		<enum name="GtkFileChooserError" type-name="GtkFileChooserError" get-type="gtk_file_chooser_error_get_type">
 			<member name="GTK_FILE_CHOOSER_ERROR_NONEXISTENT" value="0"/>
 			<member name="GTK_FILE_CHOOSER_ERROR_BAD_FILENAME" value="1"/>
 			<member name="GTK_FILE_CHOOSER_ERROR_ALREADY_EXISTS" value="2"/>
 		</enum>
-		<enum name="GtkIMPreeditStyle">
+		<enum name="GtkIMPreeditStyle" type-name="GtkIMPreeditStyle" get-type="gtk_im_preedit_style_get_type">
 			<member name="GTK_IM_PREEDIT_NOTHING" value="0"/>
 			<member name="GTK_IM_PREEDIT_CALLBACK" value="1"/>
 			<member name="GTK_IM_PREEDIT_NONE" value="2"/>
 		</enum>
-		<enum name="GtkIMStatusStyle">
+		<enum name="GtkIMStatusStyle" type-name="GtkIMStatusStyle" get-type="gtk_im_status_style_get_type">
 			<member name="GTK_IM_STATUS_NOTHING" value="0"/>
 			<member name="GTK_IM_STATUS_CALLBACK" value="1"/>
 			<member name="GTK_IM_STATUS_NONE" value="2"/>
 		</enum>
-		<enum name="GtkIconSize">
+		<enum name="GtkIconSize" type-name="GtkIconSize" get-type="gtk_icon_size_get_type">
 			<member name="GTK_ICON_SIZE_INVALID" value="0"/>
 			<member name="GTK_ICON_SIZE_MENU" value="1"/>
 			<member name="GTK_ICON_SIZE_SMALL_TOOLBAR" value="2"/>
@@ -3906,11 +4047,11 @@
 			<member name="GTK_ICON_SIZE_DND" value="5"/>
 			<member name="GTK_ICON_SIZE_DIALOG" value="6"/>
 		</enum>
-		<enum name="GtkIconThemeError">
+		<enum name="GtkIconThemeError" type-name="GtkIconThemeError" get-type="gtk_icon_theme_error_get_type">
 			<member name="GTK_ICON_THEME_NOT_FOUND" value="0"/>
 			<member name="GTK_ICON_THEME_FAILED" value="1"/>
 		</enum>
-		<enum name="GtkIconViewDropPosition">
+		<enum name="GtkIconViewDropPosition" type-name="GtkIconViewDropPosition" get-type="gtk_icon_view_drop_position_get_type">
 			<member name="GTK_ICON_VIEW_NO_DROP" value="0"/>
 			<member name="GTK_ICON_VIEW_DROP_INTO" value="1"/>
 			<member name="GTK_ICON_VIEW_DROP_LEFT" value="2"/>
@@ -3918,7 +4059,7 @@
 			<member name="GTK_ICON_VIEW_DROP_ABOVE" value="4"/>
 			<member name="GTK_ICON_VIEW_DROP_BELOW" value="5"/>
 		</enum>
-		<enum name="GtkImageType">
+		<enum name="GtkImageType" type-name="GtkImageType" get-type="gtk_image_type_get_type">
 			<member name="GTK_IMAGE_EMPTY" value="0"/>
 			<member name="GTK_IMAGE_PIXMAP" value="1"/>
 			<member name="GTK_IMAGE_IMAGE" value="2"/>
@@ -3927,14 +4068,15 @@
 			<member name="GTK_IMAGE_ICON_SET" value="5"/>
 			<member name="GTK_IMAGE_ANIMATION" value="6"/>
 			<member name="GTK_IMAGE_ICON_NAME" value="7"/>
+			<member name="GTK_IMAGE_GICON" value="8"/>
 		</enum>
-		<enum name="GtkJustification">
+		<enum name="GtkJustification" type-name="GtkJustification" get-type="gtk_justification_get_type">
 			<member name="GTK_JUSTIFY_LEFT" value="0"/>
 			<member name="GTK_JUSTIFY_RIGHT" value="1"/>
 			<member name="GTK_JUSTIFY_CENTER" value="2"/>
 			<member name="GTK_JUSTIFY_FILL" value="3"/>
 		</enum>
-		<enum name="GtkMatchType">
+		<enum name="GtkMatchType" type-name="GtkMatchType" get-type="gtk_match_type_get_type">
 			<member name="GTK_MATCH_ALL" value="0"/>
 			<member name="GTK_MATCH_ALL_TAIL" value="1"/>
 			<member name="GTK_MATCH_HEAD" value="2"/>
@@ -3942,25 +4084,25 @@
 			<member name="GTK_MATCH_EXACT" value="4"/>
 			<member name="GTK_MATCH_LAST" value="5"/>
 		</enum>
-		<enum name="GtkMenuDirectionType">
+		<enum name="GtkMenuDirectionType" type-name="GtkMenuDirectionType" get-type="gtk_menu_direction_type_get_type">
 			<member name="GTK_MENU_DIR_PARENT" value="0"/>
 			<member name="GTK_MENU_DIR_CHILD" value="1"/>
 			<member name="GTK_MENU_DIR_NEXT" value="2"/>
 			<member name="GTK_MENU_DIR_PREV" value="3"/>
 		</enum>
-		<enum name="GtkMessageType">
+		<enum name="GtkMessageType" type-name="GtkMessageType" get-type="gtk_message_type_get_type">
 			<member name="GTK_MESSAGE_INFO" value="0"/>
 			<member name="GTK_MESSAGE_WARNING" value="1"/>
 			<member name="GTK_MESSAGE_QUESTION" value="2"/>
 			<member name="GTK_MESSAGE_ERROR" value="3"/>
 			<member name="GTK_MESSAGE_OTHER" value="4"/>
 		</enum>
-		<enum name="GtkMetricType">
+		<enum name="GtkMetricType" type-name="GtkMetricType" get-type="gtk_metric_type_get_type">
 			<member name="GTK_PIXELS" value="0"/>
 			<member name="GTK_INCHES" value="1"/>
 			<member name="GTK_CENTIMETERS" value="2"/>
 		</enum>
-		<enum name="GtkMovementStep">
+		<enum name="GtkMovementStep" type-name="GtkMovementStep" get-type="gtk_movement_step_get_type">
 			<member name="GTK_MOVEMENT_LOGICAL_POSITIONS" value="0"/>
 			<member name="GTK_MOVEMENT_VISUAL_POSITIONS" value="1"/>
 			<member name="GTK_MOVEMENT_WORDS" value="2"/>
@@ -3972,36 +4114,36 @@
 			<member name="GTK_MOVEMENT_BUFFER_ENDS" value="8"/>
 			<member name="GTK_MOVEMENT_HORIZONTAL_PAGES" value="9"/>
 		</enum>
-		<enum name="GtkNotebookTab">
+		<enum name="GtkNotebookTab" type-name="GtkNotebookTab" get-type="gtk_notebook_tab_get_type">
 			<member name="GTK_NOTEBOOK_TAB_FIRST" value="0"/>
 			<member name="GTK_NOTEBOOK_TAB_LAST" value="1"/>
 		</enum>
-		<enum name="GtkOrientation">
+		<enum name="GtkOrientation" type-name="GtkOrientation" get-type="gtk_orientation_get_type">
 			<member name="GTK_ORIENTATION_HORIZONTAL" value="0"/>
 			<member name="GTK_ORIENTATION_VERTICAL" value="1"/>
 		</enum>
-		<enum name="GtkPackDirection">
+		<enum name="GtkPackDirection" type-name="GtkPackDirection" get-type="gtk_pack_direction_get_type">
 			<member name="GTK_PACK_DIRECTION_LTR" value="0"/>
 			<member name="GTK_PACK_DIRECTION_RTL" value="1"/>
 			<member name="GTK_PACK_DIRECTION_TTB" value="2"/>
 			<member name="GTK_PACK_DIRECTION_BTT" value="3"/>
 		</enum>
-		<enum name="GtkPackType">
+		<enum name="GtkPackType" type-name="GtkPackType" get-type="gtk_pack_type_get_type">
 			<member name="GTK_PACK_START" value="0"/>
 			<member name="GTK_PACK_END" value="1"/>
 		</enum>
-		<enum name="GtkPageOrientation">
+		<enum name="GtkPageOrientation" type-name="GtkPageOrientation" get-type="gtk_page_orientation_get_type">
 			<member name="GTK_PAGE_ORIENTATION_PORTRAIT" value="0"/>
 			<member name="GTK_PAGE_ORIENTATION_LANDSCAPE" value="1"/>
 			<member name="GTK_PAGE_ORIENTATION_REVERSE_PORTRAIT" value="2"/>
 			<member name="GTK_PAGE_ORIENTATION_REVERSE_LANDSCAPE" value="3"/>
 		</enum>
-		<enum name="GtkPageSet">
+		<enum name="GtkPageSet" type-name="GtkPageSet" get-type="gtk_page_set_get_type">
 			<member name="GTK_PAGE_SET_ALL" value="0"/>
 			<member name="GTK_PAGE_SET_EVEN" value="1"/>
 			<member name="GTK_PAGE_SET_ODD" value="2"/>
 		</enum>
-		<enum name="GtkPathPriorityType">
+		<enum name="GtkPathPriorityType" type-name="GtkPathPriorityType" get-type="gtk_path_priority_type_get_type">
 			<member name="GTK_PATH_PRIO_LOWEST" value="0"/>
 			<member name="GTK_PATH_PRIO_GTK" value="4"/>
 			<member name="GTK_PATH_PRIO_APPLICATION" value="8"/>
@@ -4009,61 +4151,61 @@
 			<member name="GTK_PATH_PRIO_RC" value="12"/>
 			<member name="GTK_PATH_PRIO_HIGHEST" value="15"/>
 		</enum>
-		<enum name="GtkPathType">
+		<enum name="GtkPathType" type-name="GtkPathType" get-type="gtk_path_type_get_type">
 			<member name="GTK_PATH_WIDGET" value="0"/>
 			<member name="GTK_PATH_WIDGET_CLASS" value="1"/>
 			<member name="GTK_PATH_CLASS" value="2"/>
 		</enum>
-		<enum name="GtkPolicyType">
+		<enum name="GtkPolicyType" type-name="GtkPolicyType" get-type="gtk_policy_type_get_type">
 			<member name="GTK_POLICY_ALWAYS" value="0"/>
 			<member name="GTK_POLICY_AUTOMATIC" value="1"/>
 			<member name="GTK_POLICY_NEVER" value="2"/>
 		</enum>
-		<enum name="GtkPositionType">
+		<enum name="GtkPositionType" type-name="GtkPositionType" get-type="gtk_position_type_get_type">
 			<member name="GTK_POS_LEFT" value="0"/>
 			<member name="GTK_POS_RIGHT" value="1"/>
 			<member name="GTK_POS_TOP" value="2"/>
 			<member name="GTK_POS_BOTTOM" value="3"/>
 		</enum>
-		<enum name="GtkPreviewType">
+		<enum name="GtkPreviewType" type-name="GtkPreviewType" get-type="gtk_preview_type_get_type">
 			<member name="GTK_PREVIEW_COLOR" value="0"/>
 			<member name="GTK_PREVIEW_GRAYSCALE" value="1"/>
 		</enum>
-		<enum name="GtkPrintDuplex">
+		<enum name="GtkPrintDuplex" type-name="GtkPrintDuplex" get-type="gtk_print_duplex_get_type">
 			<member name="GTK_PRINT_DUPLEX_SIMPLEX" value="0"/>
 			<member name="GTK_PRINT_DUPLEX_HORIZONTAL" value="1"/>
 			<member name="GTK_PRINT_DUPLEX_VERTICAL" value="2"/>
 		</enum>
-		<enum name="GtkPrintError">
+		<enum name="GtkPrintError" type-name="GtkPrintError" get-type="gtk_print_error_get_type">
 			<member name="GTK_PRINT_ERROR_GENERAL" value="0"/>
 			<member name="GTK_PRINT_ERROR_INTERNAL_ERROR" value="1"/>
 			<member name="GTK_PRINT_ERROR_NOMEM" value="2"/>
 			<member name="GTK_PRINT_ERROR_INVALID_FILE" value="3"/>
 		</enum>
-		<enum name="GtkPrintOperationAction">
+		<enum name="GtkPrintOperationAction" type-name="GtkPrintOperationAction" get-type="gtk_print_operation_action_get_type">
 			<member name="GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG" value="0"/>
 			<member name="GTK_PRINT_OPERATION_ACTION_PRINT" value="1"/>
 			<member name="GTK_PRINT_OPERATION_ACTION_PREVIEW" value="2"/>
 			<member name="GTK_PRINT_OPERATION_ACTION_EXPORT" value="3"/>
 		</enum>
-		<enum name="GtkPrintOperationResult">
+		<enum name="GtkPrintOperationResult" type-name="GtkPrintOperationResult" get-type="gtk_print_operation_result_get_type">
 			<member name="GTK_PRINT_OPERATION_RESULT_ERROR" value="0"/>
 			<member name="GTK_PRINT_OPERATION_RESULT_APPLY" value="1"/>
 			<member name="GTK_PRINT_OPERATION_RESULT_CANCEL" value="2"/>
 			<member name="GTK_PRINT_OPERATION_RESULT_IN_PROGRESS" value="3"/>
 		</enum>
-		<enum name="GtkPrintPages">
+		<enum name="GtkPrintPages" type-name="GtkPrintPages" get-type="gtk_print_pages_get_type">
 			<member name="GTK_PRINT_PAGES_ALL" value="0"/>
 			<member name="GTK_PRINT_PAGES_CURRENT" value="1"/>
 			<member name="GTK_PRINT_PAGES_RANGES" value="2"/>
 		</enum>
-		<enum name="GtkPrintQuality">
+		<enum name="GtkPrintQuality" type-name="GtkPrintQuality" get-type="gtk_print_quality_get_type">
 			<member name="GTK_PRINT_QUALITY_LOW" value="0"/>
 			<member name="GTK_PRINT_QUALITY_NORMAL" value="1"/>
 			<member name="GTK_PRINT_QUALITY_HIGH" value="2"/>
 			<member name="GTK_PRINT_QUALITY_DRAFT" value="3"/>
 		</enum>
-		<enum name="GtkPrintStatus">
+		<enum name="GtkPrintStatus" type-name="GtkPrintStatus" get-type="gtk_print_status_get_type">
 			<member name="GTK_PRINT_STATUS_INITIAL" value="0"/>
 			<member name="GTK_PRINT_STATUS_PREPARING" value="1"/>
 			<member name="GTK_PRINT_STATUS_GENERATING_DATA" value="2"/>
@@ -4074,17 +4216,17 @@
 			<member name="GTK_PRINT_STATUS_FINISHED" value="7"/>
 			<member name="GTK_PRINT_STATUS_FINISHED_ABORTED" value="8"/>
 		</enum>
-		<enum name="GtkProgressBarOrientation">
+		<enum name="GtkProgressBarOrientation" type-name="GtkProgressBarOrientation" get-type="gtk_progress_bar_orientation_get_type">
 			<member name="GTK_PROGRESS_LEFT_TO_RIGHT" value="0"/>
 			<member name="GTK_PROGRESS_RIGHT_TO_LEFT" value="1"/>
 			<member name="GTK_PROGRESS_BOTTOM_TO_TOP" value="2"/>
 			<member name="GTK_PROGRESS_TOP_TO_BOTTOM" value="3"/>
 		</enum>
-		<enum name="GtkProgressBarStyle">
+		<enum name="GtkProgressBarStyle" type-name="GtkProgressBarStyle" get-type="gtk_progress_bar_style_get_type">
 			<member name="GTK_PROGRESS_CONTINUOUS" value="0"/>
 			<member name="GTK_PROGRESS_DISCRETE" value="1"/>
 		</enum>
-		<enum name="GtkRcTokenType">
+		<enum name="GtkRcTokenType" type-name="GtkRcTokenType" get-type="gtk_rc_token_type_get_type">
 			<member name="GTK_RC_TOKEN_INVALID" value="270"/>
 			<member name="GTK_RC_TOKEN_INCLUDE" value="271"/>
 			<member name="GTK_RC_TOKEN_NORMAL" value="272"/>
@@ -4126,11 +4268,11 @@
 			<member name="GTK_RC_TOKEN_UNBIND" value="308"/>
 			<member name="GTK_RC_TOKEN_LAST" value="309"/>
 		</enum>
-		<enum name="GtkRecentChooserError">
+		<enum name="GtkRecentChooserError" type-name="GtkRecentChooserError" get-type="gtk_recent_chooser_error_get_type">
 			<member name="GTK_RECENT_CHOOSER_ERROR_NOT_FOUND" value="0"/>
 			<member name="GTK_RECENT_CHOOSER_ERROR_INVALID_URI" value="1"/>
 		</enum>
-		<enum name="GtkRecentManagerError">
+		<enum name="GtkRecentManagerError" type-name="GtkRecentManagerError" get-type="gtk_recent_manager_error_get_type">
 			<member name="GTK_RECENT_MANAGER_ERROR_NOT_FOUND" value="0"/>
 			<member name="GTK_RECENT_MANAGER_ERROR_INVALID_URI" value="1"/>
 			<member name="GTK_RECENT_MANAGER_ERROR_INVALID_ENCODING" value="2"/>
@@ -4139,23 +4281,23 @@
 			<member name="GTK_RECENT_MANAGER_ERROR_WRITE" value="5"/>
 			<member name="GTK_RECENT_MANAGER_ERROR_UNKNOWN" value="6"/>
 		</enum>
-		<enum name="GtkRecentSortType">
+		<enum name="GtkRecentSortType" type-name="GtkRecentSortType" get-type="gtk_recent_sort_type_get_type">
 			<member name="GTK_RECENT_SORT_NONE" value="0"/>
 			<member name="GTK_RECENT_SORT_MRU" value="1"/>
 			<member name="GTK_RECENT_SORT_LRU" value="2"/>
 			<member name="GTK_RECENT_SORT_CUSTOM" value="3"/>
 		</enum>
-		<enum name="GtkReliefStyle">
+		<enum name="GtkReliefStyle" type-name="GtkReliefStyle" get-type="gtk_relief_style_get_type">
 			<member name="GTK_RELIEF_NORMAL" value="0"/>
 			<member name="GTK_RELIEF_HALF" value="1"/>
 			<member name="GTK_RELIEF_NONE" value="2"/>
 		</enum>
-		<enum name="GtkResizeMode">
+		<enum name="GtkResizeMode" type-name="GtkResizeMode" get-type="gtk_resize_mode_get_type">
 			<member name="GTK_RESIZE_PARENT" value="0"/>
 			<member name="GTK_RESIZE_QUEUE" value="1"/>
 			<member name="GTK_RESIZE_IMMEDIATE" value="2"/>
 		</enum>
-		<enum name="GtkResponseType">
+		<enum name="GtkResponseType" type-name="GtkResponseType" get-type="gtk_response_type_get_type">
 			<member name="GTK_RESPONSE_NONE" value="-1"/>
 			<member name="GTK_RESPONSE_REJECT" value="-2"/>
 			<member name="GTK_RESPONSE_ACCEPT" value="-3"/>
@@ -4168,7 +4310,7 @@
 			<member name="GTK_RESPONSE_APPLY" value="-10"/>
 			<member name="GTK_RESPONSE_HELP" value="-11"/>
 		</enum>
-		<enum name="GtkScrollStep">
+		<enum name="GtkScrollStep" type-name="GtkScrollStep" get-type="gtk_scroll_step_get_type">
 			<member name="GTK_SCROLL_STEPS" value="0"/>
 			<member name="GTK_SCROLL_PAGES" value="1"/>
 			<member name="GTK_SCROLL_ENDS" value="2"/>
@@ -4176,7 +4318,7 @@
 			<member name="GTK_SCROLL_HORIZONTAL_PAGES" value="4"/>
 			<member name="GTK_SCROLL_HORIZONTAL_ENDS" value="5"/>
 		</enum>
-		<enum name="GtkScrollType">
+		<enum name="GtkScrollType" type-name="GtkScrollType" get-type="gtk_scroll_type_get_type">
 			<member name="GTK_SCROLL_NONE" value="0"/>
 			<member name="GTK_SCROLL_JUMP" value="1"/>
 			<member name="GTK_SCROLL_STEP_BACKWARD" value="2"/>
@@ -4194,46 +4336,46 @@
 			<member name="GTK_SCROLL_START" value="14"/>
 			<member name="GTK_SCROLL_END" value="15"/>
 		</enum>
-		<enum name="GtkSelectionMode">
+		<enum name="GtkSelectionMode" type-name="GtkSelectionMode" get-type="gtk_selection_mode_get_type">
 			<member name="GTK_SELECTION_NONE" value="0"/>
 			<member name="GTK_SELECTION_SINGLE" value="1"/>
 			<member name="GTK_SELECTION_BROWSE" value="2"/>
 			<member name="GTK_SELECTION_MULTIPLE" value="3"/>
 			<member name="GTK_SELECTION_EXTENDED" value="3"/>
 		</enum>
-		<enum name="GtkSensitivityType">
+		<enum name="GtkSensitivityType" type-name="GtkSensitivityType" get-type="gtk_sensitivity_type_get_type">
 			<member name="GTK_SENSITIVITY_AUTO" value="0"/>
 			<member name="GTK_SENSITIVITY_ON" value="1"/>
 			<member name="GTK_SENSITIVITY_OFF" value="2"/>
 		</enum>
-		<enum name="GtkShadowType">
+		<enum name="GtkShadowType" type-name="GtkShadowType" get-type="gtk_shadow_type_get_type">
 			<member name="GTK_SHADOW_NONE" value="0"/>
 			<member name="GTK_SHADOW_IN" value="1"/>
 			<member name="GTK_SHADOW_OUT" value="2"/>
 			<member name="GTK_SHADOW_ETCHED_IN" value="3"/>
 			<member name="GTK_SHADOW_ETCHED_OUT" value="4"/>
 		</enum>
-		<enum name="GtkSideType">
+		<enum name="GtkSideType" type-name="GtkSideType" get-type="gtk_side_type_get_type">
 			<member name="GTK_SIDE_TOP" value="0"/>
 			<member name="GTK_SIDE_BOTTOM" value="1"/>
 			<member name="GTK_SIDE_LEFT" value="2"/>
 			<member name="GTK_SIDE_RIGHT" value="3"/>
 		</enum>
-		<enum name="GtkSizeGroupMode">
+		<enum name="GtkSizeGroupMode" type-name="GtkSizeGroupMode" get-type="gtk_size_group_mode_get_type">
 			<member name="GTK_SIZE_GROUP_NONE" value="0"/>
 			<member name="GTK_SIZE_GROUP_HORIZONTAL" value="1"/>
 			<member name="GTK_SIZE_GROUP_VERTICAL" value="2"/>
 			<member name="GTK_SIZE_GROUP_BOTH" value="3"/>
 		</enum>
-		<enum name="GtkSortType">
+		<enum name="GtkSortType" type-name="GtkSortType" get-type="gtk_sort_type_get_type">
 			<member name="GTK_SORT_ASCENDING" value="0"/>
 			<member name="GTK_SORT_DESCENDING" value="1"/>
 		</enum>
-		<enum name="GtkSpinButtonUpdatePolicy">
+		<enum name="GtkSpinButtonUpdatePolicy" type-name="GtkSpinButtonUpdatePolicy" get-type="gtk_spin_button_update_policy_get_type">
 			<member name="GTK_UPDATE_ALWAYS" value="0"/>
 			<member name="GTK_UPDATE_IF_VALID" value="1"/>
 		</enum>
-		<enum name="GtkSpinType">
+		<enum name="GtkSpinType" type-name="GtkSpinType" get-type="gtk_spin_type_get_type">
 			<member name="GTK_SPIN_STEP_FORWARD" value="0"/>
 			<member name="GTK_SPIN_STEP_BACKWARD" value="1"/>
 			<member name="GTK_SPIN_PAGE_FORWARD" value="2"/>
@@ -4242,32 +4384,32 @@
 			<member name="GTK_SPIN_END" value="5"/>
 			<member name="GTK_SPIN_USER_DEFINED" value="6"/>
 		</enum>
-		<enum name="GtkStateType">
+		<enum name="GtkStateType" type-name="GtkStateType" get-type="gtk_state_type_get_type">
 			<member name="GTK_STATE_NORMAL" value="0"/>
 			<member name="GTK_STATE_ACTIVE" value="1"/>
 			<member name="GTK_STATE_PRELIGHT" value="2"/>
 			<member name="GTK_STATE_SELECTED" value="3"/>
 			<member name="GTK_STATE_INSENSITIVE" value="4"/>
 		</enum>
-		<enum name="GtkSubmenuDirection">
+		<enum name="GtkSubmenuDirection" type-name="GtkSubmenuDirection" get-type="gtk_submenu_direction_get_type">
 			<member name="GTK_DIRECTION_LEFT" value="0"/>
 			<member name="GTK_DIRECTION_RIGHT" value="1"/>
 		</enum>
-		<enum name="GtkSubmenuPlacement">
+		<enum name="GtkSubmenuPlacement" type-name="GtkSubmenuPlacement" get-type="gtk_submenu_placement_get_type">
 			<member name="GTK_TOP_BOTTOM" value="0"/>
 			<member name="GTK_LEFT_RIGHT" value="1"/>
 		</enum>
-		<enum name="GtkTextBufferTargetInfo">
+		<enum name="GtkTextBufferTargetInfo" type-name="GtkTextBufferTargetInfo" get-type="gtk_text_buffer_target_info_get_type">
 			<member name="GTK_TEXT_BUFFER_TARGET_INFO_BUFFER_CONTENTS" value="-1"/>
 			<member name="GTK_TEXT_BUFFER_TARGET_INFO_RICH_TEXT" value="-2"/>
 			<member name="GTK_TEXT_BUFFER_TARGET_INFO_TEXT" value="-3"/>
 		</enum>
-		<enum name="GtkTextDirection">
+		<enum name="GtkTextDirection" type-name="GtkTextDirection" get-type="gtk_text_direction_get_type">
 			<member name="GTK_TEXT_DIR_NONE" value="0"/>
 			<member name="GTK_TEXT_DIR_LTR" value="1"/>
 			<member name="GTK_TEXT_DIR_RTL" value="2"/>
 		</enum>
-		<enum name="GtkTextWindowType">
+		<enum name="GtkTextWindowType" type-name="GtkTextWindowType" get-type="gtk_text_window_type_get_type">
 			<member name="GTK_TEXT_WINDOW_PRIVATE" value="0"/>
 			<member name="GTK_TEXT_WINDOW_WIDGET" value="1"/>
 			<member name="GTK_TEXT_WINDOW_TEXT" value="2"/>
@@ -4276,119 +4418,120 @@
 			<member name="GTK_TEXT_WINDOW_TOP" value="5"/>
 			<member name="GTK_TEXT_WINDOW_BOTTOM" value="6"/>
 		</enum>
-		<enum name="GtkToolbarChildType">
+		<enum name="GtkToolbarChildType" type-name="GtkToolbarChildType" get-type="gtk_toolbar_child_type_get_type">
 			<member name="GTK_TOOLBAR_CHILD_SPACE" value="0"/>
 			<member name="GTK_TOOLBAR_CHILD_BUTTON" value="1"/>
 			<member name="GTK_TOOLBAR_CHILD_TOGGLEBUTTON" value="2"/>
 			<member name="GTK_TOOLBAR_CHILD_RADIOBUTTON" value="3"/>
 			<member name="GTK_TOOLBAR_CHILD_WIDGET" value="4"/>
 		</enum>
-		<enum name="GtkToolbarSpaceStyle">
+		<enum name="GtkToolbarSpaceStyle" type-name="GtkToolbarSpaceStyle" get-type="gtk_toolbar_space_style_get_type">
 			<member name="GTK_TOOLBAR_SPACE_EMPTY" value="0"/>
 			<member name="GTK_TOOLBAR_SPACE_LINE" value="1"/>
 		</enum>
-		<enum name="GtkToolbarStyle">
+		<enum name="GtkToolbarStyle" type-name="GtkToolbarStyle" get-type="gtk_toolbar_style_get_type">
 			<member name="GTK_TOOLBAR_ICONS" value="0"/>
 			<member name="GTK_TOOLBAR_TEXT" value="1"/>
 			<member name="GTK_TOOLBAR_BOTH" value="2"/>
 			<member name="GTK_TOOLBAR_BOTH_HORIZ" value="3"/>
 		</enum>
-		<enum name="GtkTreeViewColumnSizing">
+		<enum name="GtkTreeViewColumnSizing" type-name="GtkTreeViewColumnSizing" get-type="gtk_tree_view_column_sizing_get_type">
 			<member name="GTK_TREE_VIEW_COLUMN_GROW_ONLY" value="0"/>
 			<member name="GTK_TREE_VIEW_COLUMN_AUTOSIZE" value="1"/>
 			<member name="GTK_TREE_VIEW_COLUMN_FIXED" value="2"/>
 		</enum>
-		<enum name="GtkTreeViewDropPosition">
+		<enum name="GtkTreeViewDropPosition" type-name="GtkTreeViewDropPosition" get-type="gtk_tree_view_drop_position_get_type">
 			<member name="GTK_TREE_VIEW_DROP_BEFORE" value="0"/>
 			<member name="GTK_TREE_VIEW_DROP_AFTER" value="1"/>
 			<member name="GTK_TREE_VIEW_DROP_INTO_OR_BEFORE" value="2"/>
 			<member name="GTK_TREE_VIEW_DROP_INTO_OR_AFTER" value="3"/>
 		</enum>
-		<enum name="GtkTreeViewGridLines">
+		<enum name="GtkTreeViewGridLines" type-name="GtkTreeViewGridLines" get-type="gtk_tree_view_grid_lines_get_type">
 			<member name="GTK_TREE_VIEW_GRID_LINES_NONE" value="0"/>
 			<member name="GTK_TREE_VIEW_GRID_LINES_HORIZONTAL" value="1"/>
 			<member name="GTK_TREE_VIEW_GRID_LINES_VERTICAL" value="2"/>
 			<member name="GTK_TREE_VIEW_GRID_LINES_BOTH" value="3"/>
 		</enum>
-		<enum name="GtkTreeViewMode">
+		<enum name="GtkTreeViewMode" type-name="GtkTreeViewMode" get-type="gtk_tree_view_mode_get_type">
 			<member name="GTK_TREE_VIEW_LINE" value="0"/>
 			<member name="GTK_TREE_VIEW_ITEM" value="1"/>
 		</enum>
-		<enum name="GtkUnit">
+		<enum name="GtkUnit" type-name="GtkUnit" get-type="gtk_unit_get_type">
 			<member name="GTK_UNIT_PIXEL" value="0"/>
 			<member name="GTK_UNIT_POINTS" value="1"/>
 			<member name="GTK_UNIT_INCH" value="2"/>
 			<member name="GTK_UNIT_MM" value="3"/>
 		</enum>
-		<enum name="GtkUpdateType">
+		<enum name="GtkUpdateType" type-name="GtkUpdateType" get-type="gtk_update_type_get_type">
 			<member name="GTK_UPDATE_CONTINUOUS" value="0"/>
 			<member name="GTK_UPDATE_DISCONTINUOUS" value="1"/>
 			<member name="GTK_UPDATE_DELAYED" value="2"/>
 		</enum>
-		<enum name="GtkVisibility">
+		<enum name="GtkVisibility" type-name="GtkVisibility" get-type="gtk_visibility_get_type">
 			<member name="GTK_VISIBILITY_NONE" value="0"/>
 			<member name="GTK_VISIBILITY_PARTIAL" value="1"/>
 			<member name="GTK_VISIBILITY_FULL" value="2"/>
 		</enum>
-		<enum name="GtkWidgetHelpType">
+		<enum name="GtkWidgetHelpType" type-name="GtkWidgetHelpType" get-type="gtk_widget_help_type_get_type">
 			<member name="GTK_WIDGET_HELP_TOOLTIP" value="0"/>
 			<member name="GTK_WIDGET_HELP_WHATS_THIS" value="1"/>
 		</enum>
-		<enum name="GtkWindowPosition">
+		<enum name="GtkWindowPosition" type-name="GtkWindowPosition" get-type="gtk_window_position_get_type">
 			<member name="GTK_WIN_POS_NONE" value="0"/>
 			<member name="GTK_WIN_POS_CENTER" value="1"/>
 			<member name="GTK_WIN_POS_MOUSE" value="2"/>
 			<member name="GTK_WIN_POS_CENTER_ALWAYS" value="3"/>
 			<member name="GTK_WIN_POS_CENTER_ON_PARENT" value="4"/>
 		</enum>
-		<enum name="GtkWindowType">
+		<enum name="GtkWindowType" type-name="GtkWindowType" get-type="gtk_window_type_get_type">
 			<member name="GTK_WINDOW_TOPLEVEL" value="0"/>
 			<member name="GTK_WINDOW_POPUP" value="1"/>
 		</enum>
-		<enum name="GtkWrapMode">
+		<enum name="GtkWrapMode" type-name="GtkWrapMode" get-type="gtk_wrap_mode_get_type">
 			<member name="GTK_WRAP_NONE" value="0"/>
 			<member name="GTK_WRAP_CHAR" value="1"/>
 			<member name="GTK_WRAP_WORD" value="2"/>
 			<member name="GTK_WRAP_WORD_CHAR" value="3"/>
 		</enum>
-		<flags name="GtkAccelFlags">
+		<flags name="GtkAccelFlags" type-name="GtkAccelFlags" get-type="gtk_accel_flags_get_type">
 			<member name="GTK_ACCEL_VISIBLE" value="1"/>
 			<member name="GTK_ACCEL_LOCKED" value="2"/>
 			<member name="GTK_ACCEL_MASK" value="7"/>
 		</flags>
-		<flags name="GtkArgFlags">
+		<flags name="GtkArgFlags" type-name="GtkArgFlags" get-type="gtk_arg_flags_get_type">
 			<member name="GTK_ARG_READABLE" value="1"/>
 			<member name="GTK_ARG_WRITABLE" value="2"/>
 			<member name="GTK_ARG_CONSTRUCT" value="4"/>
 			<member name="GTK_ARG_CONSTRUCT_ONLY" value="8"/>
 			<member name="GTK_ARG_CHILD_ARG" value="16"/>
 		</flags>
-		<flags name="GtkAttachOptions">
+		<flags name="GtkAttachOptions" type-name="GtkAttachOptions" get-type="gtk_attach_options_get_type">
 			<member name="GTK_EXPAND" value="1"/>
 			<member name="GTK_SHRINK" value="2"/>
 			<member name="GTK_FILL" value="4"/>
 		</flags>
-		<flags name="GtkButtonAction">
+		<flags name="GtkButtonAction" type-name="GtkButtonAction" get-type="gtk_button_action_get_type">
 			<member name="GTK_BUTTON_IGNORED" value="0"/>
 			<member name="GTK_BUTTON_SELECTS" value="1"/>
 			<member name="GTK_BUTTON_DRAGS" value="2"/>
 			<member name="GTK_BUTTON_EXPANDS" value="4"/>
 		</flags>
-		<flags name="GtkCalendarDisplayOptions">
+		<flags name="GtkCalendarDisplayOptions" type-name="GtkCalendarDisplayOptions" get-type="gtk_calendar_display_options_get_type">
 			<member name="GTK_CALENDAR_SHOW_HEADING" value="1"/>
 			<member name="GTK_CALENDAR_SHOW_DAY_NAMES" value="2"/>
 			<member name="GTK_CALENDAR_NO_MONTH_CHANGE" value="4"/>
 			<member name="GTK_CALENDAR_SHOW_WEEK_NUMBERS" value="8"/>
 			<member name="GTK_CALENDAR_WEEK_START_MONDAY" value="16"/>
+			<member name="GTK_CALENDAR_SHOW_DETAILS" value="32"/>
 		</flags>
-		<flags name="GtkCellRendererState">
+		<flags name="GtkCellRendererState" type-name="GtkCellRendererState" get-type="gtk_cell_renderer_state_get_type">
 			<member name="GTK_CELL_RENDERER_SELECTED" value="1"/>
 			<member name="GTK_CELL_RENDERER_PRELIT" value="2"/>
 			<member name="GTK_CELL_RENDERER_INSENSITIVE" value="4"/>
 			<member name="GTK_CELL_RENDERER_SORTED" value="8"/>
 			<member name="GTK_CELL_RENDERER_FOCUSED" value="16"/>
 		</flags>
-		<flags name="GtkDebugFlag">
+		<flags name="GtkDebugFlag" type-name="GtkDebugFlag" get-type="gtk_debug_flag_get_type">
 			<member name="GTK_DEBUG_MISC" value="1"/>
 			<member name="GTK_DEBUG_PLUGSOCKET" value="2"/>
 			<member name="GTK_DEBUG_TEXT" value="4"/>
@@ -4402,36 +4545,37 @@
 			<member name="GTK_DEBUG_PRINTING" value="1024"/>
 			<member name="GTK_DEBUG_BUILDER" value="2048"/>
 		</flags>
-		<flags name="GtkDestDefaults">
+		<flags name="GtkDestDefaults" type-name="GtkDestDefaults" get-type="gtk_dest_defaults_get_type">
 			<member name="GTK_DEST_DEFAULT_MOTION" value="1"/>
 			<member name="GTK_DEST_DEFAULT_HIGHLIGHT" value="2"/>
 			<member name="GTK_DEST_DEFAULT_DROP" value="4"/>
 			<member name="GTK_DEST_DEFAULT_ALL" value="7"/>
 		</flags>
-		<flags name="GtkDialogFlags">
+		<flags name="GtkDialogFlags" type-name="GtkDialogFlags" get-type="gtk_dialog_flags_get_type">
 			<member name="GTK_DIALOG_MODAL" value="1"/>
 			<member name="GTK_DIALOG_DESTROY_WITH_PARENT" value="2"/>
 			<member name="GTK_DIALOG_NO_SEPARATOR" value="4"/>
 		</flags>
-		<flags name="GtkFileFilterFlags">
+		<flags name="GtkFileFilterFlags" type-name="GtkFileFilterFlags" get-type="gtk_file_filter_flags_get_type">
 			<member name="GTK_FILE_FILTER_FILENAME" value="1"/>
 			<member name="GTK_FILE_FILTER_URI" value="2"/>
 			<member name="GTK_FILE_FILTER_DISPLAY_NAME" value="4"/>
 			<member name="GTK_FILE_FILTER_MIME_TYPE" value="8"/>
 		</flags>
-		<flags name="GtkIconLookupFlags">
+		<flags name="GtkIconLookupFlags" type-name="GtkIconLookupFlags" get-type="gtk_icon_lookup_flags_get_type">
 			<member name="GTK_ICON_LOOKUP_NO_SVG" value="1"/>
 			<member name="GTK_ICON_LOOKUP_FORCE_SVG" value="2"/>
 			<member name="GTK_ICON_LOOKUP_USE_BUILTIN" value="4"/>
 			<member name="GTK_ICON_LOOKUP_GENERIC_FALLBACK" value="8"/>
+			<member name="GTK_ICON_LOOKUP_FORCE_SIZE" value="16"/>
 		</flags>
-		<flags name="GtkObjectFlags">
+		<flags name="GtkObjectFlags" type-name="GtkObjectFlags" get-type="gtk_object_flags_get_type">
 			<member name="GTK_IN_DESTRUCTION" value="1"/>
 			<member name="GTK_FLOATING" value="2"/>
 			<member name="GTK_RESERVED_1" value="4"/>
 			<member name="GTK_RESERVED_2" value="8"/>
 		</flags>
-		<flags name="GtkPrivateFlags">
+		<flags name="GtkPrivateFlags" type-name="GtkPrivateFlags" get-type="gtk_private_flags_get_type">
 			<member name="PRIVATE_GTK_USER_STYLE" value="1"/>
 			<member name="PRIVATE_GTK_RESIZE_PENDING" value="4"/>
 			<member name="PRIVATE_GTK_LEAVE_PENDING" value="16"/>
@@ -4445,13 +4589,13 @@
 			<member name="PRIVATE_GTK_ALLOC_NEEDED" value="4096"/>
 			<member name="PRIVATE_GTK_REQUEST_NEEDED" value="8192"/>
 		</flags>
-		<flags name="GtkRcFlags">
+		<flags name="GtkRcFlags" type-name="GtkRcFlags" get-type="gtk_rc_flags_get_type">
 			<member name="GTK_RC_FG" value="1"/>
 			<member name="GTK_RC_BG" value="2"/>
 			<member name="GTK_RC_TEXT" value="4"/>
 			<member name="GTK_RC_BASE" value="8"/>
 		</flags>
-		<flags name="GtkRecentFilterFlags">
+		<flags name="GtkRecentFilterFlags" type-name="GtkRecentFilterFlags" get-type="gtk_recent_filter_flags_get_type">
 			<member name="GTK_RECENT_FILTER_URI" value="1"/>
 			<member name="GTK_RECENT_FILTER_DISPLAY_NAME" value="2"/>
 			<member name="GTK_RECENT_FILTER_MIME_TYPE" value="4"/>
@@ -4459,7 +4603,7 @@
 			<member name="GTK_RECENT_FILTER_GROUP" value="16"/>
 			<member name="GTK_RECENT_FILTER_AGE" value="32"/>
 		</flags>
-		<flags name="GtkSignalRunType">
+		<flags name="GtkSignalRunType" type-name="GtkSignalRunType" get-type="gtk_signal_run_type_get_type">
 			<member name="GTK_RUN_FIRST" value="1"/>
 			<member name="GTK_RUN_LAST" value="2"/>
 			<member name="GTK_RUN_BOTH" value="3"/>
@@ -4467,21 +4611,21 @@
 			<member name="GTK_RUN_ACTION" value="32"/>
 			<member name="GTK_RUN_NO_HOOKS" value="64"/>
 		</flags>
-		<flags name="GtkTargetFlags">
+		<flags name="GtkTargetFlags" type-name="GtkTargetFlags" get-type="gtk_target_flags_get_type">
 			<member name="GTK_TARGET_SAME_APP" value="1"/>
 			<member name="GTK_TARGET_SAME_WIDGET" value="2"/>
 			<member name="GTK_TARGET_OTHER_APP" value="4"/>
 			<member name="GTK_TARGET_OTHER_WIDGET" value="8"/>
 		</flags>
-		<flags name="GtkTextSearchFlags">
+		<flags name="GtkTextSearchFlags" type-name="GtkTextSearchFlags" get-type="gtk_text_search_flags_get_type">
 			<member name="GTK_TEXT_SEARCH_VISIBLE_ONLY" value="1"/>
 			<member name="GTK_TEXT_SEARCH_TEXT_ONLY" value="2"/>
 		</flags>
-		<flags name="GtkTreeModelFlags">
+		<flags name="GtkTreeModelFlags" type-name="GtkTreeModelFlags" get-type="gtk_tree_model_flags_get_type">
 			<member name="GTK_TREE_MODEL_ITERS_PERSIST" value="1"/>
 			<member name="GTK_TREE_MODEL_LIST_ONLY" value="2"/>
 		</flags>
-		<flags name="GtkUIManagerItemType">
+		<flags name="GtkUIManagerItemType" type-name="GtkUIManagerItemType" get-type="gtk_ui_manager_item_type_get_type">
 			<member name="GTK_UI_MANAGER_AUTO" value="0"/>
 			<member name="GTK_UI_MANAGER_MENUBAR" value="1"/>
 			<member name="GTK_UI_MANAGER_MENU" value="2"/>
@@ -4493,7 +4637,7 @@
 			<member name="GTK_UI_MANAGER_SEPARATOR" value="128"/>
 			<member name="GTK_UI_MANAGER_ACCELERATOR" value="256"/>
 		</flags>
-		<flags name="GtkWidgetFlags">
+		<flags name="GtkWidgetFlags" type-name="GtkWidgetFlags" get-type="gtk_widget_flags_get_type">
 			<member name="GTK_TOPLEVEL" value="16"/>
 			<member name="GTK_NO_WINDOW" value="32"/>
 			<member name="GTK_REALIZED" value="64"/>
@@ -4720,11 +4864,11 @@
 					<parameter name="wrap_license" type="gboolean"/>
 				</parameters>
 			</method>
-			<property name="artists" type="char*[]" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="authors" type="char*[]" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="artists" type="GStrv*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="authors" type="GStrv*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="comments" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="copyright" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="documenters" type="char*[]" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="documenters" type="GStrv*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="license" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="logo" type="GdkPixbuf*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="logo-icon-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -6298,6 +6442,18 @@
 					<parameter name="day" type="guint*"/>
 				</parameters>
 			</method>
+			<method name="get_detail_height_rows" symbol="gtk_calendar_get_detail_height_rows">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="calendar" type="GtkCalendar*"/>
+				</parameters>
+			</method>
+			<method name="get_detail_width_chars" symbol="gtk_calendar_get_detail_width_chars">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="calendar" type="GtkCalendar*"/>
+				</parameters>
+			</method>
 			<method name="get_display_options" symbol="gtk_calendar_get_display_options">
 				<return-type type="GtkCalendarDisplayOptions"/>
 				<parameters>
@@ -6329,6 +6485,29 @@
 					<parameter name="year" type="guint"/>
 				</parameters>
 			</method>
+			<method name="set_detail_func" symbol="gtk_calendar_set_detail_func">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="calendar" type="GtkCalendar*"/>
+					<parameter name="func" type="GtkCalendarDetailFunc"/>
+					<parameter name="data" type="gpointer"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="set_detail_height_rows" symbol="gtk_calendar_set_detail_height_rows">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="calendar" type="GtkCalendar*"/>
+					<parameter name="rows" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_detail_width_chars" symbol="gtk_calendar_set_detail_width_chars">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="calendar" type="GtkCalendar*"/>
+					<parameter name="chars" type="gint"/>
+				</parameters>
+			</method>
 			<method name="set_display_options" symbol="gtk_calendar_set_display_options">
 				<return-type type="void"/>
 				<parameters>
@@ -6344,9 +6523,12 @@
 				</parameters>
 			</method>
 			<property name="day" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="detail-height-rows" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="detail-width-chars" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="month" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="no-month-change" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-day-names" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-details" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-heading" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="show-week-numbers" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="year" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -6613,6 +6795,14 @@
 			<property name="has-entry" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="model" type="GtkTreeModel*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="text-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GtkCellRendererCombo*"/>
+					<parameter name="p0" type="char*"/>
+					<parameter name="p1" type="GtkTreeIter*"/>
+				</parameters>
+			</signal>
 			<field name="model" type="GtkTreeModel*"/>
 			<field name="text_column" type="gint"/>
 			<field name="has_entry" type="gboolean"/>
@@ -8454,6 +8644,16 @@
 					<parameter name="entry" type="GtkEntry*"/>
 				</parameters>
 			</signal>
+			<vfunc name="get_text_area_size">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="entry" type="GtkEntry*"/>
+					<parameter name="x" type="gint*"/>
+					<parameter name="y" type="gint*"/>
+					<parameter name="width" type="gint*"/>
+					<parameter name="height" type="gint*"/>
+				</parameters>
+			</vfunc>
 			<field name="text" type="gchar*"/>
 			<field name="editable" type="guint"/>
 			<field name="visible" type="guint"/>
@@ -9766,6 +9966,9 @@
 			<field name="context_id" type="gchar*"/>
 		</object>
 		<object name="GtkIconFactory" parent="GObject" type-name="GtkIconFactory" get-type="gtk_icon_factory_get_type">
+			<implements>
+				<interface name="GtkBuildable"/>
+			</implements>
 			<method name="add" symbol="gtk_icon_factory_add">
 				<return-type type="void"/>
 				<parameters>
@@ -9890,6 +10093,15 @@
 					<parameter name="size" type="gint"/>
 					<parameter name="flags" type="GtkIconLookupFlags"/>
 					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="lookup_by_gicon" symbol="gtk_icon_theme_lookup_by_gicon">
+				<return-type type="GtkIconInfo*"/>
+				<parameters>
+					<parameter name="icon_theme" type="GtkIconTheme*"/>
+					<parameter name="icon" type="GIcon*"/>
+					<parameter name="size" type="gint"/>
+					<parameter name="flags" type="GtkIconLookupFlags"/>
 				</parameters>
 			</method>
 			<method name="lookup_icon" symbol="gtk_icon_theme_lookup_icon">
@@ -10444,6 +10656,14 @@
 					<parameter name="image" type="GtkImage*"/>
 				</parameters>
 			</method>
+			<method name="get_gicon" symbol="gtk_image_get_gicon">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="image" type="GtkImage*"/>
+					<parameter name="gicon" type="GIcon**"/>
+					<parameter name="size" type="GtkIconSize*"/>
+				</parameters>
+			</method>
 			<method name="get_icon_name" symbol="gtk_image_get_icon_name">
 				<return-type type="void"/>
 				<parameters>
@@ -10517,6 +10737,13 @@
 					<parameter name="filename" type="gchar*"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_from_gicon" symbol="gtk_image_new_from_gicon">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="icon" type="GIcon*"/>
+					<parameter name="size" type="GtkIconSize"/>
+				</parameters>
+			</constructor>
 			<constructor name="new_from_icon_name" symbol="gtk_image_new_from_icon_name">
 				<return-type type="GtkWidget*"/>
 				<parameters>
@@ -10570,6 +10797,14 @@
 				<parameters>
 					<parameter name="image" type="GtkImage*"/>
 					<parameter name="filename" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_from_gicon" symbol="gtk_image_set_from_gicon">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="image" type="GtkImage*"/>
+					<parameter name="icon" type="GIcon*"/>
+					<parameter name="size" type="GtkIconSize"/>
 				</parameters>
 			</method>
 			<method name="set_from_icon_name" symbol="gtk_image_set_from_icon_name">
@@ -10627,6 +10862,7 @@
 				</parameters>
 			</method>
 			<property name="file" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gicon" type="GIcon*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="icon-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="icon-set" type="GtkIconSet*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="icon-size" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -12119,6 +12355,49 @@
 			<field name="xpad" type="guint16"/>
 			<field name="ypad" type="guint16"/>
 		</object>
+		<object name="GtkMountOperation" parent="GMountOperation" type-name="GtkMountOperation" get-type="gtk_mount_operation_get_type">
+			<method name="get_parent" symbol="gtk_mount_operation_get_parent">
+				<return-type type="GtkWindow*"/>
+				<parameters>
+					<parameter name="op" type="GtkMountOperation*"/>
+				</parameters>
+			</method>
+			<method name="get_screen" symbol="gtk_mount_operation_get_screen">
+				<return-type type="GdkScreen*"/>
+				<parameters>
+					<parameter name="op" type="GtkMountOperation*"/>
+				</parameters>
+			</method>
+			<method name="is_showing" symbol="gtk_mount_operation_is_showing">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="op" type="GtkMountOperation*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gtk_mount_operation_new">
+				<return-type type="GMountOperation*"/>
+				<parameters>
+					<parameter name="parent" type="GtkWindow*"/>
+				</parameters>
+			</constructor>
+			<method name="set_parent" symbol="gtk_mount_operation_set_parent">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="op" type="GtkMountOperation*"/>
+					<parameter name="parent" type="GtkWindow*"/>
+				</parameters>
+			</method>
+			<method name="set_screen" symbol="gtk_mount_operation_set_screen">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="op" type="GtkMountOperation*"/>
+					<parameter name="screen" type="GdkScreen*"/>
+				</parameters>
+			</method>
+			<property name="is-showing" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="parent" type="GtkWindow*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="screen" type="GtkWindow*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
 		<object name="GtkNotebook" parent="GtkContainer" type-name="GtkNotebook" get-type="gtk_notebook_get_type">
 			<implements>
 				<interface name="AtkImplementor"/>
@@ -12660,6 +12939,23 @@
 					<parameter name="unit" type="GtkUnit"/>
 				</parameters>
 			</method>
+			<method name="load_file" symbol="gtk_page_setup_load_file">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="setup" type="GtkPageSetup*"/>
+					<parameter name="file_name" type="char*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="load_key_file" symbol="gtk_page_setup_load_key_file">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="setup" type="GtkPageSetup*"/>
+					<parameter name="key_file" type="GKeyFile*"/>
+					<parameter name="group_name" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="gtk_page_setup_new">
 				<return-type type="GtkPageSetup*"/>
 			</constructor>
@@ -12765,6 +13061,15 @@
 				<parameters>
 					<parameter name="paned" type="GtkPaned*"/>
 					<parameter name="child" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="compute_position" symbol="gtk_paned_compute_position">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="paned" type="GtkPaned*"/>
+					<parameter name="allocation" type="gint"/>
+					<parameter name="child1_req" type="gint"/>
+					<parameter name="child2_req" type="gint"/>
 				</parameters>
 			</method>
 			<method name="get_child1" symbol="gtk_paned_get_child1">
@@ -13434,6 +13739,23 @@
 					<parameter name="key" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="load_file" symbol="gtk_print_settings_load_file">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="settings" type="GtkPrintSettings*"/>
+					<parameter name="file_name" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="load_key_file" symbol="gtk_print_settings_load_key_file">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="settings" type="GtkPrintSettings*"/>
+					<parameter name="key_file" type="GKeyFile*"/>
+					<parameter name="group_name" type="gchar*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="gtk_print_settings_new">
 				<return-type type="GtkPrintSettings*"/>
 			</constructor>
@@ -13673,6 +13995,133 @@
 					<parameter name="key" type="gchar*"/>
 				</parameters>
 			</method>
+		</object>
+		<object name="GtkProgress" parent="GtkWidget" type-name="GtkProgress" get-type="gtk_progress_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="configure" symbol="gtk_progress_configure">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+					<parameter name="value" type="gdouble"/>
+					<parameter name="hmin" type="gdouble"/>
+					<parameter name="max" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="get_current_percentage" symbol="gtk_progress_get_current_percentage">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+				</parameters>
+			</method>
+			<method name="get_current_text" symbol="gtk_progress_get_current_text">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+				</parameters>
+			</method>
+			<method name="get_percentage_from_value" symbol="gtk_progress_get_percentage_from_value">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+					<parameter name="value" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="get_text_from_value" symbol="gtk_progress_get_text_from_value">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+					<parameter name="value" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="get_value" symbol="gtk_progress_get_value">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+				</parameters>
+			</method>
+			<method name="set_activity_mode" symbol="gtk_progress_set_activity_mode">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+					<parameter name="activity_mode" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_adjustment" symbol="gtk_progress_set_adjustment">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+					<parameter name="adjustment" type="GtkAdjustment*"/>
+				</parameters>
+			</method>
+			<method name="set_format_string" symbol="gtk_progress_set_format_string">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+					<parameter name="format" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_percentage" symbol="gtk_progress_set_percentage">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+					<parameter name="percentage" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="set_show_text" symbol="gtk_progress_set_show_text">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+					<parameter name="show_text" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_text_alignment" symbol="gtk_progress_set_text_alignment">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+					<parameter name="x_align" type="gfloat"/>
+					<parameter name="y_align" type="gfloat"/>
+				</parameters>
+			</method>
+			<method name="set_value" symbol="gtk_progress_set_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+					<parameter name="value" type="gdouble"/>
+				</parameters>
+			</method>
+			<property name="activity-mode" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-text" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text-xalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="text-yalign" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<vfunc name="act_mode_enter">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="paint">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="update">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="progress" type="GtkProgress*"/>
+				</parameters>
+			</vfunc>
+			<field name="adjustment" type="GtkAdjustment*"/>
+			<field name="offscreen_pixmap" type="GdkPixmap*"/>
+			<field name="format" type="gchar*"/>
+			<field name="x_align" type="gfloat"/>
+			<field name="y_align" type="gfloat"/>
+			<field name="show_text" type="guint"/>
+			<field name="activity_mode" type="guint"/>
+			<field name="use_text_format" type="guint"/>
 		</object>
 		<object name="GtkProgressBar" parent="GtkProgress" type-name="GtkProgressBar" get-type="gtk_progress_bar_get_type">
 			<implements>
@@ -14773,7 +15222,7 @@
 				</parameters>
 			</method>
 			<property name="adjustment" type="GtkAdjustment*" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="icons" type="char*[]" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="icons" type="GStrv*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="size" type="GtkIconSize" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="value" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="popdown" when="LAST">
@@ -15056,8 +15505,10 @@
 			<property name="gtk-fallback-icon-theme" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-file-chooser-backend" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-font-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-fontconfig-timestamp" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-icon-sizes" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-icon-theme-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-im-module" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-key-theme-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-keynav-cursor-only" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-keynav-wrap-around" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -15066,6 +15517,7 @@
 			<property name="gtk-print-backends" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-print-preview-command" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-recent-files-limit" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="gtk-recent-files-max-age" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-show-input-method-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-show-unicode-menu" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="gtk-split-cursor" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -15486,6 +15938,12 @@
 			</method>
 			<method name="get_visible" symbol="gtk_status_icon_get_visible">
 				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="status_icon" type="GtkStatusIcon*"/>
+				</parameters>
+			</method>
+			<method name="get_x11_window_id" symbol="gtk_status_icon_get_x11_window_id">
+				<return-type type="guint32"/>
 				<parameters>
 					<parameter name="status_icon" type="GtkStatusIcon*"/>
 				</parameters>
@@ -18295,6 +18753,12 @@
 					<parameter name="visible_vertical" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="toolbar_reconfigured" symbol="gtk_tool_item_toolbar_reconfigured">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tool_item" type="GtkToolItem*"/>
+				</parameters>
+			</method>
 			<property name="is-important" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="visible-horizontal" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="visible-vertical" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -18324,6 +18788,7 @@
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkToolShell"/>
 			</implements>
 			<method name="get_drop_index" symbol="gtk_toolbar_get_drop_index">
 				<return-type type="gint"/>
@@ -18516,6 +18981,14 @@
 					<parameter name="pixbuf" type="GdkPixbuf*"/>
 				</parameters>
 			</method>
+			<method name="set_icon_from_icon_name" symbol="gtk_tooltip_set_icon_from_icon_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="tooltip" type="GtkTooltip*"/>
+					<parameter name="icon_name" type="gchar*"/>
+					<parameter name="size" type="GtkIconSize"/>
+				</parameters>
+			</method>
 			<method name="set_icon_from_stock" symbol="gtk_tooltip_set_icon_from_stock">
 				<return-type type="void"/>
 				<parameters>
@@ -18655,7 +19128,7 @@
 				</parameters>
 			</method>
 			<method name="convert_child_iter_to_iter" symbol="gtk_tree_model_sort_convert_child_iter_to_iter">
-				<return-type type="void"/>
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="tree_model_sort" type="GtkTreeModelSort*"/>
 					<parameter name="sort_iter" type="GtkTreeIter*"/>
@@ -20999,6 +21472,13 @@
 					<parameter name="height" type="gint*"/>
 				</parameters>
 			</method>
+			<method name="get_snapshot" symbol="gtk_widget_get_snapshot">
+				<return-type type="GdkPixmap*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="clip_rect" type="GdkRectangle*"/>
+				</parameters>
+			</method>
 			<method name="get_style" symbol="gtk_widget_get_style">
 				<return-type type="GtkStyle*"/>
 				<parameters>
@@ -21670,6 +22150,13 @@
 				<parameters>
 					<parameter name="widget" type="GtkWidget*"/>
 					<parameter name="event" type="GdkEvent*"/>
+				</parameters>
+			</signal>
+			<signal name="damage-event" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="object" type="GtkWidget*"/>
+					<parameter name="p0" type="GdkEvent*"/>
 				</parameters>
 			</signal>
 			<signal name="delete-event" when="LAST">
@@ -24191,6 +24678,71 @@
 				</parameters>
 			</vfunc>
 		</interface>
+		<interface name="GtkToolShell" type-name="GtkToolShell" get-type="gtk_tool_shell_get_type">
+			<requires>
+				<interface name="GtkWidget"/>
+			</requires>
+			<method name="get_icon_size" symbol="gtk_tool_shell_get_icon_size">
+				<return-type type="GtkIconSize"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</method>
+			<method name="get_orientation" symbol="gtk_tool_shell_get_orientation">
+				<return-type type="GtkOrientation"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</method>
+			<method name="get_relief_style" symbol="gtk_tool_shell_get_relief_style">
+				<return-type type="GtkReliefStyle"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</method>
+			<method name="get_style" symbol="gtk_tool_shell_get_style">
+				<return-type type="GtkToolbarStyle"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</method>
+			<method name="rebuild_menu" symbol="gtk_tool_shell_rebuild_menu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</method>
+			<vfunc name="get_icon_size">
+				<return-type type="GtkIconSize"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_orientation">
+				<return-type type="GtkOrientation"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_relief_style">
+				<return-type type="GtkReliefStyle"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_style">
+				<return-type type="GtkToolbarStyle"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="rebuild_menu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="shell" type="GtkToolShell*"/>
+				</parameters>
+			</vfunc>
+		</interface>
 		<interface name="GtkTreeDragDest" type-name="GtkTreeDragDest" get-type="gtk_tree_drag_dest_get_type">
 			<method name="drag_data_received" symbol="gtk_tree_drag_dest_drag_data_received">
 				<return-type type="gboolean"/>
@@ -24708,14 +25260,14 @@
 			</vfunc>
 		</interface>
 		<constant name="GTK_ARG_READWRITE" type="int" value="0"/>
-		<constant name="GTK_BINARY_AGE" type="int" value="1205"/>
+		<constant name="GTK_BINARY_AGE" type="int" value="1303"/>
 		<constant name="GTK_BUTTONBOX_DEFAULT" type="int" value="-1"/>
 		<constant name="GTK_INPUT_ERROR" type="int" value="-1"/>
-		<constant name="GTK_INTERFACE_AGE" type="int" value="5"/>
+		<constant name="GTK_INTERFACE_AGE" type="int" value="0"/>
 		<constant name="GTK_MAJOR_VERSION" type="int" value="2"/>
 		<constant name="GTK_MAX_COMPOSE_LEN" type="int" value="7"/>
-		<constant name="GTK_MICRO_VERSION" type="int" value="5"/>
-		<constant name="GTK_MINOR_VERSION" type="int" value="12"/>
+		<constant name="GTK_MICRO_VERSION" type="int" value="3"/>
+		<constant name="GTK_MINOR_VERSION" type="int" value="13"/>
 		<constant name="GTK_PAPER_NAME_A3" type="char*" value="iso_a3"/>
 		<constant name="GTK_PAPER_NAME_A4" type="char*" value="iso_a4"/>
 		<constant name="GTK_PAPER_NAME_A5" type="char*" value="iso_a5"/>
@@ -24825,10 +25377,14 @@
 		<constant name="GTK_STOCK_ORIENTATION_PORTRAIT" type="char*" value="gtk-orientation-portrait"/>
 		<constant name="GTK_STOCK_ORIENTATION_REVERSE_LANDSCAPE" type="char*" value="gtk-orientation-reverse-landscape"/>
 		<constant name="GTK_STOCK_ORIENTATION_REVERSE_PORTRAIT" type="char*" value="gtk-orientation-reverse-portrait"/>
+		<constant name="GTK_STOCK_PAGE_SETUP" type="char*" value="gtk-page-setup"/>
 		<constant name="GTK_STOCK_PASTE" type="char*" value="gtk-paste"/>
 		<constant name="GTK_STOCK_PREFERENCES" type="char*" value="gtk-preferences"/>
 		<constant name="GTK_STOCK_PRINT" type="char*" value="gtk-print"/>
+		<constant name="GTK_STOCK_PRINT_ERROR" type="char*" value="gtk-print-error"/>
 		<constant name="GTK_STOCK_PRINT_PREVIEW" type="char*" value="gtk-print-preview"/>
+		<constant name="GTK_STOCK_PRINT_REPORT" type="char*" value="gtk-print-report"/>
+		<constant name="GTK_STOCK_PRINT_WARNING" type="char*" value="gtk-print-warning"/>
 		<constant name="GTK_STOCK_PROPERTIES" type="char*" value="gtk-properties"/>
 		<constant name="GTK_STOCK_QUIT" type="char*" value="gtk-quit"/>
 		<constant name="GTK_STOCK_REDO" type="char*" value="gtk-redo"/>

@@ -117,20 +117,20 @@
 			<field name="height" type="guint32"/>
 			<field name="pixel_data" type="guint8*"/>
 		</struct>
-		<enum name="GdkColorspace">
+		<enum name="GdkColorspace" type-name="GdkColorspace" get-type="gdk_colorspace_get_type">
 			<member name="GDK_COLORSPACE_RGB" value="0"/>
 		</enum>
-		<enum name="GdkInterpType">
+		<enum name="GdkInterpType" type-name="GdkInterpType" get-type="gdk_interp_type_get_type">
 			<member name="GDK_INTERP_NEAREST" value="0"/>
 			<member name="GDK_INTERP_TILES" value="1"/>
 			<member name="GDK_INTERP_BILINEAR" value="2"/>
 			<member name="GDK_INTERP_HYPER" value="3"/>
 		</enum>
-		<enum name="GdkPixbufAlphaMode">
+		<enum name="GdkPixbufAlphaMode" type-name="GdkPixbufAlphaMode" get-type="gdk_pixbuf_alpha_mode_get_type">
 			<member name="GDK_PIXBUF_ALPHA_BILEVEL" value="0"/>
 			<member name="GDK_PIXBUF_ALPHA_FULL" value="1"/>
 		</enum>
-		<enum name="GdkPixbufError">
+		<enum name="GdkPixbufError" type-name="GdkPixbufError" get-type="gdk_pixbuf_error_get_type">
 			<member name="GDK_PIXBUF_ERROR_CORRUPT_IMAGE" value="0"/>
 			<member name="GDK_PIXBUF_ERROR_INSUFFICIENT_MEMORY" value="1"/>
 			<member name="GDK_PIXBUF_ERROR_BAD_OPTION" value="2"/>
@@ -138,7 +138,7 @@
 			<member name="GDK_PIXBUF_ERROR_UNSUPPORTED_OPERATION" value="4"/>
 			<member name="GDK_PIXBUF_ERROR_FAILED" value="5"/>
 		</enum>
-		<enum name="GdkPixbufRotation">
+		<enum name="GdkPixbufRotation" type-name="GdkPixbufRotation" get-type="gdk_pixbuf_rotation_get_type">
 			<member name="GDK_PIXBUF_ROTATE_NONE" value="0"/>
 			<member name="GDK_PIXBUF_ROTATE_COUNTERCLOCKWISE" value="90"/>
 			<member name="GDK_PIXBUF_ROTATE_UPSIDEDOWN" value="180"/>
@@ -402,6 +402,25 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_from_stream" symbol="gdk_pixbuf_new_from_stream">
+				<return-type type="GdkPixbuf*"/>
+				<parameters>
+					<parameter name="stream" type="GInputStream*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_from_stream_at_scale" symbol="gdk_pixbuf_new_from_stream_at_scale">
+				<return-type type="GdkPixbuf*"/>
+				<parameters>
+					<parameter name="stream" type="GInputStream*"/>
+					<parameter name="width" type="gint"/>
+					<parameter name="height" type="gint"/>
+					<parameter name="preserve_aspect_ratio" type="gboolean"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
 			<constructor name="new_from_xpm_data" symbol="gdk_pixbuf_new_from_xpm_data">
 				<return-type type="GdkPixbuf*"/>
 				<parameters>
@@ -484,6 +503,16 @@
 					<parameter name="type" type="char*"/>
 					<parameter name="option_keys" type="char**"/>
 					<parameter name="option_values" type="char**"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="save_to_stream" symbol="gdk_pixbuf_save_to_stream">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="pixbuf" type="GdkPixbuf*"/>
+					<parameter name="stream" type="GOutputStream*"/>
+					<parameter name="type" type="char*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -712,9 +741,9 @@
 		<constant name="GDK_PIXBUF_FEATURES_H" type="int" value="1"/>
 		<constant name="GDK_PIXBUF_MAGIC_NUMBER" type="int" value="1197763408"/>
 		<constant name="GDK_PIXBUF_MAJOR" type="int" value="2"/>
-		<constant name="GDK_PIXBUF_MICRO" type="int" value="5"/>
-		<constant name="GDK_PIXBUF_MINOR" type="int" value="12"/>
-		<constant name="GDK_PIXBUF_VERSION" type="char*" value="2.12.5"/>
+		<constant name="GDK_PIXBUF_MICRO" type="int" value="3"/>
+		<constant name="GDK_PIXBUF_MINOR" type="int" value="13"/>
+		<constant name="GDK_PIXBUF_VERSION" type="char*" value="2.13.3"/>
 		<constant name="GDK_PIXDATA_HEADER_LENGTH" type="int" value="24"/>
 	</namespace>
 </api>

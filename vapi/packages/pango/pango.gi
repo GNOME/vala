@@ -85,6 +85,12 @@
 				<parameter name="style" type="PangoStyle"/>
 			</parameters>
 		</function>
+		<function name="attr_type_get_name" symbol="pango_attr_type_get_name">
+			<return-type type="char*"/>
+			<parameters>
+				<parameter name="type" type="PangoAttrType"/>
+			</parameters>
+		</function>
 		<function name="attr_type_register" symbol="pango_attr_type_register">
 			<return-type type="PangoAttrType"/>
 			<parameters>
@@ -115,6 +121,12 @@
 			<return-type type="PangoAttribute*"/>
 			<parameters>
 				<parameter name="weight" type="PangoWeight"/>
+			</parameters>
+		</function>
+		<function name="bidi_type_for_unichar" symbol="pango_bidi_type_for_unichar">
+			<return-type type="PangoBidiType"/>
+			<parameters>
+				<parameter name="ch" type="gunichar"/>
 			</parameters>
 		</function>
 		<function name="break" symbol="pango_break">
@@ -681,6 +693,7 @@
 			<field name="is_sentence_end" type="guint"/>
 			<field name="backspace_deletes_character" type="guint"/>
 			<field name="is_expandable_space" type="guint"/>
+			<field name="is_word_boundary" type="guint"/>
 		</struct>
 		<struct name="PangoRectangle">
 			<field name="x" type="int"/>
@@ -1626,12 +1639,12 @@
 				</parameters>
 			</method>
 		</boxed>
-		<enum name="PangoAlignment">
+		<enum name="PangoAlignment" type-name="PangoAlignment" get-type="pango_alignment_get_type">
 			<member name="PANGO_ALIGN_LEFT" value="0"/>
 			<member name="PANGO_ALIGN_CENTER" value="1"/>
 			<member name="PANGO_ALIGN_RIGHT" value="2"/>
 		</enum>
-		<enum name="PangoAttrType">
+		<enum name="PangoAttrType" type-name="PangoAttrType" get-type="pango_attr_type_get_type">
 			<member name="PANGO_ATTR_INVALID" value="0"/>
 			<member name="PANGO_ATTR_LANGUAGE" value="1"/>
 			<member name="PANGO_ATTR_FAMILY" value="2"/>
@@ -1656,13 +1669,34 @@
 			<member name="PANGO_ATTR_GRAVITY" value="21"/>
 			<member name="PANGO_ATTR_GRAVITY_HINT" value="22"/>
 		</enum>
-		<enum name="PangoCoverageLevel">
+		<enum name="PangoBidiType" type-name="PangoBidiType" get-type="pango_bidi_type_get_type">
+			<member name="PANGO_BIDI_TYPE_L" value="0"/>
+			<member name="PANGO_BIDI_TYPE_LRE" value="1"/>
+			<member name="PANGO_BIDI_TYPE_LRO" value="2"/>
+			<member name="PANGO_BIDI_TYPE_R" value="3"/>
+			<member name="PANGO_BIDI_TYPE_AL" value="4"/>
+			<member name="PANGO_BIDI_TYPE_RLE" value="5"/>
+			<member name="PANGO_BIDI_TYPE_RLO" value="6"/>
+			<member name="PANGO_BIDI_TYPE_PDF" value="7"/>
+			<member name="PANGO_BIDI_TYPE_EN" value="8"/>
+			<member name="PANGO_BIDI_TYPE_ES" value="9"/>
+			<member name="PANGO_BIDI_TYPE_ET" value="10"/>
+			<member name="PANGO_BIDI_TYPE_AN" value="11"/>
+			<member name="PANGO_BIDI_TYPE_CS" value="12"/>
+			<member name="PANGO_BIDI_TYPE_NSM" value="13"/>
+			<member name="PANGO_BIDI_TYPE_BN" value="14"/>
+			<member name="PANGO_BIDI_TYPE_B" value="15"/>
+			<member name="PANGO_BIDI_TYPE_S" value="16"/>
+			<member name="PANGO_BIDI_TYPE_WS" value="17"/>
+			<member name="PANGO_BIDI_TYPE_ON" value="18"/>
+		</enum>
+		<enum name="PangoCoverageLevel" type-name="PangoCoverageLevel" get-type="pango_coverage_level_get_type">
 			<member name="PANGO_COVERAGE_NONE" value="0"/>
 			<member name="PANGO_COVERAGE_FALLBACK" value="1"/>
 			<member name="PANGO_COVERAGE_APPROXIMATE" value="2"/>
 			<member name="PANGO_COVERAGE_EXACT" value="3"/>
 		</enum>
-		<enum name="PangoDirection">
+		<enum name="PangoDirection" type-name="PangoDirection" get-type="pango_direction_get_type">
 			<member name="PANGO_DIRECTION_LTR" value="0"/>
 			<member name="PANGO_DIRECTION_RTL" value="1"/>
 			<member name="PANGO_DIRECTION_TTB_LTR" value="2"/>
@@ -1671,31 +1705,31 @@
 			<member name="PANGO_DIRECTION_WEAK_RTL" value="5"/>
 			<member name="PANGO_DIRECTION_NEUTRAL" value="6"/>
 		</enum>
-		<enum name="PangoEllipsizeMode">
+		<enum name="PangoEllipsizeMode" type-name="PangoEllipsizeMode" get-type="pango_ellipsize_mode_get_type">
 			<member name="PANGO_ELLIPSIZE_NONE" value="0"/>
 			<member name="PANGO_ELLIPSIZE_START" value="1"/>
 			<member name="PANGO_ELLIPSIZE_MIDDLE" value="2"/>
 			<member name="PANGO_ELLIPSIZE_END" value="3"/>
 		</enum>
-		<enum name="PangoGravity">
+		<enum name="PangoGravity" type-name="PangoGravity" get-type="pango_gravity_get_type">
 			<member name="PANGO_GRAVITY_SOUTH" value="0"/>
 			<member name="PANGO_GRAVITY_EAST" value="1"/>
 			<member name="PANGO_GRAVITY_NORTH" value="2"/>
 			<member name="PANGO_GRAVITY_WEST" value="3"/>
 			<member name="PANGO_GRAVITY_AUTO" value="4"/>
 		</enum>
-		<enum name="PangoGravityHint">
+		<enum name="PangoGravityHint" type-name="PangoGravityHint" get-type="pango_gravity_hint_get_type">
 			<member name="PANGO_GRAVITY_HINT_NATURAL" value="0"/>
 			<member name="PANGO_GRAVITY_HINT_STRONG" value="1"/>
 			<member name="PANGO_GRAVITY_HINT_LINE" value="2"/>
 		</enum>
-		<enum name="PangoRenderPart">
+		<enum name="PangoRenderPart" type-name="PangoRenderPart" get-type="pango_render_part_get_type">
 			<member name="PANGO_RENDER_PART_FOREGROUND" value="0"/>
 			<member name="PANGO_RENDER_PART_BACKGROUND" value="1"/>
 			<member name="PANGO_RENDER_PART_UNDERLINE" value="2"/>
 			<member name="PANGO_RENDER_PART_STRIKETHROUGH" value="3"/>
 		</enum>
-		<enum name="PangoScript">
+		<enum name="PangoScript" type-name="PangoScript" get-type="pango_script_get_type">
 			<member name="PANGO_SCRIPT_INVALID_CODE" value="-1"/>
 			<member name="PANGO_SCRIPT_COMMON" value="0"/>
 			<member name="PANGO_SCRIPT_INHERITED" value="1"/>
@@ -1764,8 +1798,19 @@
 			<member name="PANGO_SCRIPT_PHOENICIAN" value="64"/>
 			<member name="PANGO_SCRIPT_PHAGS_PA" value="65"/>
 			<member name="PANGO_SCRIPT_NKO" value="66"/>
+			<member name="PANGO_SCRIPT_KAYAH_LI" value="67"/>
+			<member name="PANGO_SCRIPT_LEPCHA" value="68"/>
+			<member name="PANGO_SCRIPT_REJANG" value="69"/>
+			<member name="PANGO_SCRIPT_SUNDANESE" value="70"/>
+			<member name="PANGO_SCRIPT_SAURASHTRA" value="71"/>
+			<member name="PANGO_SCRIPT_CHAM" value="72"/>
+			<member name="PANGO_SCRIPT_OL_CHIKI" value="73"/>
+			<member name="PANGO_SCRIPT_VAI" value="74"/>
+			<member name="PANGO_SCRIPT_CARIAN" value="75"/>
+			<member name="PANGO_SCRIPT_LYCIAN" value="76"/>
+			<member name="PANGO_SCRIPT_LYDIAN" value="77"/>
 		</enum>
-		<enum name="PangoStretch">
+		<enum name="PangoStretch" type-name="PangoStretch" get-type="pango_stretch_get_type">
 			<member name="PANGO_STRETCH_ULTRA_CONDENSED" value="0"/>
 			<member name="PANGO_STRETCH_EXTRA_CONDENSED" value="1"/>
 			<member name="PANGO_STRETCH_CONDENSED" value="2"/>
@@ -1776,26 +1821,26 @@
 			<member name="PANGO_STRETCH_EXTRA_EXPANDED" value="7"/>
 			<member name="PANGO_STRETCH_ULTRA_EXPANDED" value="8"/>
 		</enum>
-		<enum name="PangoStyle">
+		<enum name="PangoStyle" type-name="PangoStyle" get-type="pango_style_get_type">
 			<member name="PANGO_STYLE_NORMAL" value="0"/>
 			<member name="PANGO_STYLE_OBLIQUE" value="1"/>
 			<member name="PANGO_STYLE_ITALIC" value="2"/>
 		</enum>
-		<enum name="PangoTabAlign">
+		<enum name="PangoTabAlign" type-name="PangoTabAlign" get-type="pango_tab_align_get_type">
 			<member name="PANGO_TAB_LEFT" value="0"/>
 		</enum>
-		<enum name="PangoUnderline">
+		<enum name="PangoUnderline" type-name="PangoUnderline" get-type="pango_underline_get_type">
 			<member name="PANGO_UNDERLINE_NONE" value="0"/>
 			<member name="PANGO_UNDERLINE_SINGLE" value="1"/>
 			<member name="PANGO_UNDERLINE_DOUBLE" value="2"/>
 			<member name="PANGO_UNDERLINE_LOW" value="3"/>
 			<member name="PANGO_UNDERLINE_ERROR" value="4"/>
 		</enum>
-		<enum name="PangoVariant">
+		<enum name="PangoVariant" type-name="PangoVariant" get-type="pango_variant_get_type">
 			<member name="PANGO_VARIANT_NORMAL" value="0"/>
 			<member name="PANGO_VARIANT_SMALL_CAPS" value="1"/>
 		</enum>
-		<enum name="PangoWeight">
+		<enum name="PangoWeight" type-name="PangoWeight" get-type="pango_weight_get_type">
 			<member name="PANGO_WEIGHT_ULTRALIGHT" value="200"/>
 			<member name="PANGO_WEIGHT_LIGHT" value="300"/>
 			<member name="PANGO_WEIGHT_NORMAL" value="400"/>
@@ -1804,12 +1849,12 @@
 			<member name="PANGO_WEIGHT_ULTRABOLD" value="800"/>
 			<member name="PANGO_WEIGHT_HEAVY" value="900"/>
 		</enum>
-		<enum name="PangoWrapMode">
+		<enum name="PangoWrapMode" type-name="PangoWrapMode" get-type="pango_wrap_mode_get_type">
 			<member name="PANGO_WRAP_WORD" value="0"/>
 			<member name="PANGO_WRAP_CHAR" value="1"/>
 			<member name="PANGO_WRAP_WORD_CHAR" value="2"/>
 		</enum>
-		<flags name="PangoFontMask">
+		<flags name="PangoFontMask" type-name="PangoFontMask" get-type="pango_font_mask_get_type">
 			<member name="PANGO_FONT_MASK_FAMILY" value="1"/>
 			<member name="PANGO_FONT_MASK_STYLE" value="2"/>
 			<member name="PANGO_FONT_MASK_VARIANT" value="4"/>
@@ -2126,6 +2171,12 @@
 			</method>
 			<method name="get_auto_dir" symbol="pango_layout_get_auto_dir">
 				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="layout" type="PangoLayout*"/>
+				</parameters>
+			</method>
+			<method name="get_baseline" symbol="pango_layout_get_baseline">
+				<return-type type="int"/>
 				<parameters>
 					<parameter name="layout" type="PangoLayout*"/>
 				</parameters>
@@ -2705,8 +2756,8 @@
 		<constant name="PANGO_UNKNOWN_GLYPH_HEIGHT" type="int" value="14"/>
 		<constant name="PANGO_UNKNOWN_GLYPH_WIDTH" type="int" value="10"/>
 		<constant name="PANGO_VERSION_MAJOR" type="int" value="1"/>
-		<constant name="PANGO_VERSION_MICRO" type="int" value="3"/>
-		<constant name="PANGO_VERSION_MINOR" type="int" value="19"/>
-		<constant name="PANGO_VERSION_STRING" type="char*" value="1.19.3"/>
+		<constant name="PANGO_VERSION_MICRO" type="int" value="2"/>
+		<constant name="PANGO_VERSION_MINOR" type="int" value="21"/>
+		<constant name="PANGO_VERSION_STRING" type="char*" value="1.21.2"/>
 	</namespace>
 </api>

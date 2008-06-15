@@ -500,6 +500,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MemoryOutputStream : GLib.OutputStream, GLib.Seekable {
 		public void* get_data ();
+		public ulong get_data_size ();
 		public ulong get_size ();
 		public MemoryOutputStream (void* data, ulong len, GLib.ReallocFunc realloc_fn, GLib.DestroyNotify destroy);
 	}
@@ -586,6 +587,7 @@ namespace GLib {
 		public ThemedIcon (string iconname);
 		public ThemedIcon.from_names (string[] iconnames, int len);
 		public ThemedIcon.with_default_fallbacks (string iconname);
+		public void prepend_name (string iconname);
 		[NoAccessorMethod]
 		public string name { construct; }
 		[NoAccessorMethod]
@@ -688,12 +690,14 @@ namespace GLib {
 		public bool load_contents_finish (GLib.AsyncResult res, out weak string contents, out ulong length, out weak string etag_out) throws GLib.Error;
 		public void load_partial_contents_async (GLib.Cancellable? cancellable, GLib.FileReadMoreCallback read_more_callback, GLib.AsyncReadyCallback callback);
 		public bool load_partial_contents_finish (GLib.AsyncResult res, out weak string contents, ulong length, out weak string etag_out) throws GLib.Error;
+		public bool make_directory_with_parents (GLib.Cancellable? cancellable) throws GLib.Error;
 		public static GLib.File new_for_commandline_arg (string arg);
 		public static GLib.File new_for_path (string path);
 		public static GLib.File new_for_uri (string uri);
 		public static weak GLib.File parse_name (string parse_name);
 		public weak GLib.AppInfo query_default_handler (GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool query_exists (GLib.Cancellable? cancellable);
+		public GLib.FileType query_file_type (GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable);
 		public weak GLib.FileInputStream read (GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool replace_contents (string contents, ulong length, string etag, bool make_backup, GLib.FileCreateFlags flags, out weak string new_etag, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void replace_contents_async (string contents, ulong length, string etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
@@ -997,6 +1001,8 @@ namespace GLib {
 	public static bool g_content_type_can_be_executable (string type);
 	[CCode (cname = "g_content_type_equals", cheader_filename = "gio/gio.h")]
 	public static bool g_content_type_equals (string type1, string type2);
+	[CCode (cname = "g_content_type_from_mime_type", cheader_filename = "gio/gio.h")]
+	public static weak string g_content_type_from_mime_type (string mime_type);
 	[CCode (cname = "g_content_type_get_description", cheader_filename = "gio/gio.h")]
 	public static weak string g_content_type_get_description (string type);
 	[CCode (cname = "g_content_type_get_icon", cheader_filename = "gio/gio.h")]

@@ -63,6 +63,26 @@
 				<parameter name="pixmap_y" type="double"/>
 			</parameters>
 		</function>
+		<function name="colors_alloc" symbol="gdk_colors_alloc">
+			<return-type type="gint"/>
+			<parameters>
+				<parameter name="colormap" type="GdkColormap*"/>
+				<parameter name="contiguous" type="gboolean"/>
+				<parameter name="planes" type="gulong*"/>
+				<parameter name="nplanes" type="gint"/>
+				<parameter name="pixels" type="gulong*"/>
+				<parameter name="npixels" type="gint"/>
+			</parameters>
+		</function>
+		<function name="colors_free" symbol="gdk_colors_free">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="colormap" type="GdkColormap*"/>
+				<parameter name="pixels" type="gulong*"/>
+				<parameter name="npixels" type="gint"/>
+				<parameter name="planes" type="gulong"/>
+			</parameters>
+		</function>
 		<function name="devices_list" symbol="gdk_devices_list">
 			<return-type type="GList*"/>
 		</function>
@@ -313,7 +333,7 @@
 				<parameter name="drawable" type="GdkDrawable*"/>
 				<parameter name="gc" type="GdkGC*"/>
 				<parameter name="points" type="GdkPoint*"/>
-				<parameter name="npoints" type="gint"/>
+				<parameter name="n_points" type="gint"/>
 			</parameters>
 		</function>
 		<function name="draw_pixbuf" symbol="gdk_draw_pixbuf">
@@ -348,7 +368,7 @@
 				<parameter name="drawable" type="GdkDrawable*"/>
 				<parameter name="gc" type="GdkGC*"/>
 				<parameter name="points" type="GdkPoint*"/>
-				<parameter name="npoints" type="gint"/>
+				<parameter name="n_points" type="gint"/>
 			</parameters>
 		</function>
 		<function name="draw_polygon" symbol="gdk_draw_polygon">
@@ -358,7 +378,7 @@
 				<parameter name="gc" type="GdkGC*"/>
 				<parameter name="filled" type="gboolean"/>
 				<parameter name="points" type="GdkPoint*"/>
-				<parameter name="npoints" type="gint"/>
+				<parameter name="n_points" type="gint"/>
 			</parameters>
 		</function>
 		<function name="draw_rectangle" symbol="gdk_draw_rectangle">
@@ -439,7 +459,31 @@
 				<parameter name="drawable" type="GdkDrawable*"/>
 				<parameter name="gc" type="GdkGC*"/>
 				<parameter name="segs" type="GdkSegment*"/>
-				<parameter name="nsegs" type="gint"/>
+				<parameter name="n_segs" type="gint"/>
+			</parameters>
+		</function>
+		<function name="draw_text" symbol="gdk_draw_text">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="drawable" type="GdkDrawable*"/>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="gc" type="GdkGC*"/>
+				<parameter name="x" type="gint"/>
+				<parameter name="y" type="gint"/>
+				<parameter name="text" type="gchar*"/>
+				<parameter name="text_length" type="gint"/>
+			</parameters>
+		</function>
+		<function name="draw_text_wc" symbol="gdk_draw_text_wc">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="drawable" type="GdkDrawable*"/>
+				<parameter name="font" type="GdkFont*"/>
+				<parameter name="gc" type="GdkGC*"/>
+				<parameter name="x" type="gint"/>
+				<parameter name="y" type="gint"/>
+				<parameter name="text" type="GdkWChar*"/>
+				<parameter name="text_length" type="gint"/>
 			</parameters>
 		</function>
 		<function name="draw_trapezoids" symbol="gdk_draw_trapezoids">
@@ -478,6 +522,13 @@
 		</function>
 		<function name="flush" symbol="gdk_flush">
 			<return-type type="void"/>
+		</function>
+		<function name="fontset_load_for_display" symbol="gdk_fontset_load_for_display">
+			<return-type type="GdkFont*"/>
+			<parameters>
+				<parameter name="display" type="GdkDisplay*"/>
+				<parameter name="fontset_name" type="gchar*"/>
+			</parameters>
 		</function>
 		<function name="free_compound_text" symbol="gdk_free_compound_text">
 			<return-type type="void"/>
@@ -1007,6 +1058,34 @@
 				<parameter name="set_flags" type="GdkWindowState"/>
 			</parameters>
 		</function>
+		<function name="test_render_sync" symbol="gdk_test_render_sync">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="window" type="GdkWindow*"/>
+			</parameters>
+		</function>
+		<function name="test_simulate_button" symbol="gdk_test_simulate_button">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="window" type="GdkWindow*"/>
+				<parameter name="x" type="gint"/>
+				<parameter name="y" type="gint"/>
+				<parameter name="button" type="guint"/>
+				<parameter name="modifiers" type="GdkModifierType"/>
+				<parameter name="button_pressrelease" type="GdkEventType"/>
+			</parameters>
+		</function>
+		<function name="test_simulate_key" symbol="gdk_test_simulate_key">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="window" type="GdkWindow*"/>
+				<parameter name="x" type="gint"/>
+				<parameter name="y" type="gint"/>
+				<parameter name="keyval" type="guint"/>
+				<parameter name="modifiers" type="GdkModifierType"/>
+				<parameter name="key_pressrelease" type="GdkEventType"/>
+			</parameters>
+		</function>
 		<function name="text_property_to_text_list" symbol="gdk_text_property_to_text_list">
 			<return-type type="gint"/>
 			<parameters>
@@ -1168,6 +1247,8 @@
 				<parameter name="data" type="gpointer"/>
 			</parameters>
 		</callback>
+		<struct name="GdkAppLaunchContextClass">
+		</struct>
 		<struct name="GdkAtom">
 			<method name="intern" symbol="gdk_atom_intern">
 				<return-type type="GdkAtom"/>
@@ -1399,8 +1480,6 @@
 			<field name="changed_mask" type="GdkWindowState"/>
 			<field name="new_window_state" type="GdkWindowState"/>
 		</struct>
-		<struct name="GdkFont">
-		</struct>
 		<struct name="GdkGCValues">
 			<field name="foreground" type="GdkColor"/>
 			<field name="background" type="GdkColor"/>
@@ -1558,7 +1637,7 @@
 				<return-type type="GdkRegion*"/>
 				<parameters>
 					<parameter name="points" type="GdkPoint*"/>
-					<parameter name="npoints" type="gint"/>
+					<parameter name="n_points" type="gint"/>
 					<parameter name="fill_rule" type="GdkFillRule"/>
 				</parameters>
 			</method>
@@ -1714,9 +1793,25 @@
 			<field name="shaped" type="guint"/>
 			<field name="event_mask" type="GdkEventMask"/>
 			<field name="update_and_descendants_freeze_count" type="guint"/>
+			<field name="redirect" type="GdkWindowRedirect*"/>
 		</struct>
 		<struct name="GdkWindowObjectClass">
 			<field name="parent_class" type="GdkDrawableClass"/>
+		</struct>
+		<struct name="GdkWindowRedirect">
+			<method name="to_drawable" symbol="gdk_window_redirect_to_drawable">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+					<parameter name="drawable" type="GdkDrawable*"/>
+					<parameter name="src_x" type="gint"/>
+					<parameter name="src_y" type="gint"/>
+					<parameter name="dest_x" type="gint"/>
+					<parameter name="dest_y" type="gint"/>
+					<parameter name="width" type="gint"/>
+					<parameter name="height" type="gint"/>
+				</parameters>
+			</method>
 		</struct>
 		<struct name="GdkXEvent">
 		</struct>
@@ -1976,6 +2071,50 @@
 			<field name="setting" type="GdkEventSetting"/>
 			<field name="grab_broken" type="GdkEventGrabBroken"/>
 		</boxed>
+		<boxed name="GdkFont" type-name="GdkFont" get-type="gdk_font_get_type">
+			<method name="equal" symbol="gdk_font_equal">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="fonta" type="GdkFont*"/>
+					<parameter name="fontb" type="GdkFont*"/>
+				</parameters>
+			</method>
+			<method name="from_description_for_display" symbol="gdk_font_from_description_for_display">
+				<return-type type="GdkFont*"/>
+				<parameters>
+					<parameter name="display" type="GdkDisplay*"/>
+					<parameter name="font_desc" type="PangoFontDescription*"/>
+				</parameters>
+			</method>
+			<method name="id" symbol="gdk_font_id">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="font" type="GdkFont*"/>
+				</parameters>
+			</method>
+			<method name="load_for_display" symbol="gdk_font_load_for_display">
+				<return-type type="GdkFont*"/>
+				<parameters>
+					<parameter name="display" type="GdkDisplay*"/>
+					<parameter name="font_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="ref" symbol="gdk_font_ref">
+				<return-type type="GdkFont*"/>
+				<parameters>
+					<parameter name="font" type="GdkFont*"/>
+				</parameters>
+			</method>
+			<method name="unref" symbol="gdk_font_unref">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="font" type="GdkFont*"/>
+				</parameters>
+			</method>
+			<field name="type" type="GdkFontType"/>
+			<field name="ascent" type="gint"/>
+			<field name="descent" type="gint"/>
+		</boxed>
 		<boxed name="GdkRectangle" type-name="GdkRectangle" get-type="gdk_rectangle_get_type">
 			<method name="intersect" symbol="gdk_rectangle_intersect">
 				<return-type type="gboolean"/>
@@ -1998,7 +2137,7 @@
 			<field name="width" type="gint"/>
 			<field name="height" type="gint"/>
 		</boxed>
-		<enum name="GdkAxisUse">
+		<enum name="GdkAxisUse" type-name="GdkAxisUse" get-type="gdk_axis_use_get_type">
 			<member name="GDK_AXIS_IGNORE" value="0"/>
 			<member name="GDK_AXIS_X" value="1"/>
 			<member name="GDK_AXIS_Y" value="2"/>
@@ -2008,22 +2147,22 @@
 			<member name="GDK_AXIS_WHEEL" value="6"/>
 			<member name="GDK_AXIS_LAST" value="7"/>
 		</enum>
-		<enum name="GdkByteOrder">
+		<enum name="GdkByteOrder" type-name="GdkByteOrder" get-type="gdk_byte_order_get_type">
 			<member name="GDK_LSB_FIRST" value="0"/>
 			<member name="GDK_MSB_FIRST" value="1"/>
 		</enum>
-		<enum name="GdkCapStyle">
+		<enum name="GdkCapStyle" type-name="GdkCapStyle" get-type="gdk_cap_style_get_type">
 			<member name="GDK_CAP_NOT_LAST" value="0"/>
 			<member name="GDK_CAP_BUTT" value="1"/>
 			<member name="GDK_CAP_ROUND" value="2"/>
 			<member name="GDK_CAP_PROJECTING" value="3"/>
 		</enum>
-		<enum name="GdkCrossingMode">
+		<enum name="GdkCrossingMode" type-name="GdkCrossingMode" get-type="gdk_crossing_mode_get_type">
 			<member name="GDK_CROSSING_NORMAL" value="0"/>
 			<member name="GDK_CROSSING_GRAB" value="1"/>
 			<member name="GDK_CROSSING_UNGRAB" value="2"/>
 		</enum>
-		<enum name="GdkCursorType">
+		<enum name="GdkCursorType" type-name="GdkCursorType" get-type="gdk_cursor_type_get_type">
 			<member name="GDK_X_CURSOR" value="0"/>
 			<member name="GDK_ARROW" value="2"/>
 			<member name="GDK_BASED_ARROW_DOWN" value="4"/>
@@ -2104,7 +2243,7 @@
 			<member name="GDK_LAST_CURSOR" value="153"/>
 			<member name="GDK_CURSOR_IS_PIXMAP" value="-1"/>
 		</enum>
-		<enum name="GdkDragProtocol">
+		<enum name="GdkDragProtocol" type-name="GdkDragProtocol" get-type="gdk_drag_protocol_get_type">
 			<member name="GDK_DRAG_PROTO_MOTIF" value="0"/>
 			<member name="GDK_DRAG_PROTO_XDND" value="1"/>
 			<member name="GDK_DRAG_PROTO_ROOTWIN" value="2"/>
@@ -2113,7 +2252,7 @@
 			<member name="GDK_DRAG_PROTO_OLE2" value="5"/>
 			<member name="GDK_DRAG_PROTO_LOCAL" value="6"/>
 		</enum>
-		<enum name="GdkEventType">
+		<enum name="GdkEventType" type-name="GdkEventType" get-type="gdk_event_type_get_type">
 			<member name="GDK_NOTHING" value="-1"/>
 			<member name="GDK_DELETE" value="0"/>
 			<member name="GDK_DESTROY" value="1"/>
@@ -2151,32 +2290,33 @@
 			<member name="GDK_SETTING" value="33"/>
 			<member name="GDK_OWNER_CHANGE" value="34"/>
 			<member name="GDK_GRAB_BROKEN" value="35"/>
+			<member name="GDK_DAMAGE" value="36"/>
 		</enum>
-		<enum name="GdkExtensionMode">
+		<enum name="GdkExtensionMode" type-name="GdkExtensionMode" get-type="gdk_extension_mode_get_type">
 			<member name="GDK_EXTENSION_EVENTS_NONE" value="0"/>
 			<member name="GDK_EXTENSION_EVENTS_ALL" value="1"/>
 			<member name="GDK_EXTENSION_EVENTS_CURSOR" value="2"/>
 		</enum>
-		<enum name="GdkFill">
+		<enum name="GdkFill" type-name="GdkFill" get-type="gdk_fill_get_type">
 			<member name="GDK_SOLID" value="0"/>
 			<member name="GDK_TILED" value="1"/>
 			<member name="GDK_STIPPLED" value="2"/>
 			<member name="GDK_OPAQUE_STIPPLED" value="3"/>
 		</enum>
-		<enum name="GdkFillRule">
+		<enum name="GdkFillRule" type-name="GdkFillRule" get-type="gdk_fill_rule_get_type">
 			<member name="GDK_EVEN_ODD_RULE" value="0"/>
 			<member name="GDK_WINDING_RULE" value="1"/>
 		</enum>
-		<enum name="GdkFilterReturn">
+		<enum name="GdkFilterReturn" type-name="GdkFilterReturn" get-type="gdk_filter_return_get_type">
 			<member name="GDK_FILTER_CONTINUE" value="0"/>
 			<member name="GDK_FILTER_TRANSLATE" value="1"/>
 			<member name="GDK_FILTER_REMOVE" value="2"/>
 		</enum>
-		<enum name="GdkFontType">
+		<enum name="GdkFontType" type-name="GdkFontType" get-type="gdk_font_type_get_type">
 			<member name="GDK_FONT_FONT" value="0"/>
 			<member name="GDK_FONT_FONTSET" value="1"/>
 		</enum>
-		<enum name="GdkFunction">
+		<enum name="GdkFunction" type-name="GdkFunction" get-type="gdk_function_get_type">
 			<member name="GDK_COPY" value="0"/>
 			<member name="GDK_INVERT" value="1"/>
 			<member name="GDK_XOR" value="2"/>
@@ -2194,14 +2334,14 @@
 			<member name="GDK_NOR" value="14"/>
 			<member name="GDK_SET" value="15"/>
 		</enum>
-		<enum name="GdkGrabStatus">
+		<enum name="GdkGrabStatus" type-name="GdkGrabStatus" get-type="gdk_grab_status_get_type">
 			<member name="GDK_GRAB_SUCCESS" value="0"/>
 			<member name="GDK_GRAB_ALREADY_GRABBED" value="1"/>
 			<member name="GDK_GRAB_INVALID_TIME" value="2"/>
 			<member name="GDK_GRAB_NOT_VIEWABLE" value="3"/>
 			<member name="GDK_GRAB_FROZEN" value="4"/>
 		</enum>
-		<enum name="GdkGravity">
+		<enum name="GdkGravity" type-name="GdkGravity" get-type="gdk_gravity_get_type">
 			<member name="GDK_GRAVITY_NORTH_WEST" value="1"/>
 			<member name="GDK_GRAVITY_NORTH" value="2"/>
 			<member name="GDK_GRAVITY_NORTH_EAST" value="3"/>
@@ -2213,33 +2353,33 @@
 			<member name="GDK_GRAVITY_SOUTH_EAST" value="9"/>
 			<member name="GDK_GRAVITY_STATIC" value="10"/>
 		</enum>
-		<enum name="GdkImageType">
+		<enum name="GdkImageType" type-name="GdkImageType" get-type="gdk_image_type_get_type">
 			<member name="GDK_IMAGE_NORMAL" value="0"/>
 			<member name="GDK_IMAGE_SHARED" value="1"/>
 			<member name="GDK_IMAGE_FASTEST" value="2"/>
 		</enum>
-		<enum name="GdkInputMode">
+		<enum name="GdkInputMode" type-name="GdkInputMode" get-type="gdk_input_mode_get_type">
 			<member name="GDK_MODE_DISABLED" value="0"/>
 			<member name="GDK_MODE_SCREEN" value="1"/>
 			<member name="GDK_MODE_WINDOW" value="2"/>
 		</enum>
-		<enum name="GdkInputSource">
+		<enum name="GdkInputSource" type-name="GdkInputSource" get-type="gdk_input_source_get_type">
 			<member name="GDK_SOURCE_MOUSE" value="0"/>
 			<member name="GDK_SOURCE_PEN" value="1"/>
 			<member name="GDK_SOURCE_ERASER" value="2"/>
 			<member name="GDK_SOURCE_CURSOR" value="3"/>
 		</enum>
-		<enum name="GdkJoinStyle">
+		<enum name="GdkJoinStyle" type-name="GdkJoinStyle" get-type="gdk_join_style_get_type">
 			<member name="GDK_JOIN_MITER" value="0"/>
 			<member name="GDK_JOIN_ROUND" value="1"/>
 			<member name="GDK_JOIN_BEVEL" value="2"/>
 		</enum>
-		<enum name="GdkLineStyle">
+		<enum name="GdkLineStyle" type-name="GdkLineStyle" get-type="gdk_line_style_get_type">
 			<member name="GDK_LINE_SOLID" value="0"/>
 			<member name="GDK_LINE_ON_OFF_DASH" value="1"/>
 			<member name="GDK_LINE_DOUBLE_DASH" value="2"/>
 		</enum>
-		<enum name="GdkNotifyType">
+		<enum name="GdkNotifyType" type-name="GdkNotifyType" get-type="gdk_notify_type_get_type">
 			<member name="GDK_NOTIFY_ANCESTOR" value="0"/>
 			<member name="GDK_NOTIFY_VIRTUAL" value="1"/>
 			<member name="GDK_NOTIFY_INFERIOR" value="2"/>
@@ -2247,58 +2387,58 @@
 			<member name="GDK_NOTIFY_NONLINEAR_VIRTUAL" value="4"/>
 			<member name="GDK_NOTIFY_UNKNOWN" value="5"/>
 		</enum>
-		<enum name="GdkOverlapType">
+		<enum name="GdkOverlapType" type-name="GdkOverlapType" get-type="gdk_overlap_type_get_type">
 			<member name="GDK_OVERLAP_RECTANGLE_IN" value="0"/>
 			<member name="GDK_OVERLAP_RECTANGLE_OUT" value="1"/>
 			<member name="GDK_OVERLAP_RECTANGLE_PART" value="2"/>
 		</enum>
-		<enum name="GdkOwnerChange">
+		<enum name="GdkOwnerChange" type-name="GdkOwnerChange" get-type="gdk_owner_change_get_type">
 			<member name="GDK_OWNER_CHANGE_NEW_OWNER" value="0"/>
 			<member name="GDK_OWNER_CHANGE_DESTROY" value="1"/>
 			<member name="GDK_OWNER_CHANGE_CLOSE" value="2"/>
 		</enum>
-		<enum name="GdkPropMode">
+		<enum name="GdkPropMode" type-name="GdkPropMode" get-type="gdk_prop_mode_get_type">
 			<member name="GDK_PROP_MODE_REPLACE" value="0"/>
 			<member name="GDK_PROP_MODE_PREPEND" value="1"/>
 			<member name="GDK_PROP_MODE_APPEND" value="2"/>
 		</enum>
-		<enum name="GdkPropertyState">
+		<enum name="GdkPropertyState" type-name="GdkPropertyState" get-type="gdk_property_state_get_type">
 			<member name="GDK_PROPERTY_NEW_VALUE" value="0"/>
 			<member name="GDK_PROPERTY_DELETE" value="1"/>
 		</enum>
-		<enum name="GdkRgbDither">
+		<enum name="GdkRgbDither" type-name="GdkRgbDither" get-type="gdk_rgb_dither_get_type">
 			<member name="GDK_RGB_DITHER_NONE" value="0"/>
 			<member name="GDK_RGB_DITHER_NORMAL" value="1"/>
 			<member name="GDK_RGB_DITHER_MAX" value="2"/>
 		</enum>
-		<enum name="GdkScrollDirection">
+		<enum name="GdkScrollDirection" type-name="GdkScrollDirection" get-type="gdk_scroll_direction_get_type">
 			<member name="GDK_SCROLL_UP" value="0"/>
 			<member name="GDK_SCROLL_DOWN" value="1"/>
 			<member name="GDK_SCROLL_LEFT" value="2"/>
 			<member name="GDK_SCROLL_RIGHT" value="3"/>
 		</enum>
-		<enum name="GdkSettingAction">
+		<enum name="GdkSettingAction" type-name="GdkSettingAction" get-type="gdk_setting_action_get_type">
 			<member name="GDK_SETTING_ACTION_NEW" value="0"/>
 			<member name="GDK_SETTING_ACTION_CHANGED" value="1"/>
 			<member name="GDK_SETTING_ACTION_DELETED" value="2"/>
 		</enum>
-		<enum name="GdkStatus">
+		<enum name="GdkStatus" type-name="GdkStatus" get-type="gdk_status_get_type">
 			<member name="GDK_OK" value="0"/>
 			<member name="GDK_ERROR" value="-1"/>
 			<member name="GDK_ERROR_PARAM" value="-2"/>
 			<member name="GDK_ERROR_FILE" value="-3"/>
 			<member name="GDK_ERROR_MEM" value="-4"/>
 		</enum>
-		<enum name="GdkSubwindowMode">
+		<enum name="GdkSubwindowMode" type-name="GdkSubwindowMode" get-type="gdk_subwindow_mode_get_type">
 			<member name="GDK_CLIP_BY_CHILDREN" value="0"/>
 			<member name="GDK_INCLUDE_INFERIORS" value="1"/>
 		</enum>
-		<enum name="GdkVisibilityState">
+		<enum name="GdkVisibilityState" type-name="GdkVisibilityState" get-type="gdk_visibility_state_get_type">
 			<member name="GDK_VISIBILITY_UNOBSCURED" value="0"/>
 			<member name="GDK_VISIBILITY_PARTIAL" value="1"/>
 			<member name="GDK_VISIBILITY_FULLY_OBSCURED" value="2"/>
 		</enum>
-		<enum name="GdkVisualType">
+		<enum name="GdkVisualType" type-name="GdkVisualType" get-type="gdk_visual_type_get_type">
 			<member name="GDK_VISUAL_STATIC_GRAY" value="0"/>
 			<member name="GDK_VISUAL_GRAYSCALE" value="1"/>
 			<member name="GDK_VISUAL_STATIC_COLOR" value="2"/>
@@ -2306,11 +2446,11 @@
 			<member name="GDK_VISUAL_TRUE_COLOR" value="4"/>
 			<member name="GDK_VISUAL_DIRECT_COLOR" value="5"/>
 		</enum>
-		<enum name="GdkWindowClass">
+		<enum name="GdkWindowClass" type-name="GdkWindowClass" get-type="gdk_window_class_get_type">
 			<member name="GDK_INPUT_OUTPUT" value="0"/>
 			<member name="GDK_INPUT_ONLY" value="1"/>
 		</enum>
-		<enum name="GdkWindowEdge">
+		<enum name="GdkWindowEdge" type-name="GdkWindowEdge" get-type="gdk_window_edge_get_type">
 			<member name="GDK_WINDOW_EDGE_NORTH_WEST" value="0"/>
 			<member name="GDK_WINDOW_EDGE_NORTH" value="1"/>
 			<member name="GDK_WINDOW_EDGE_NORTH_EAST" value="2"/>
@@ -2320,7 +2460,7 @@
 			<member name="GDK_WINDOW_EDGE_SOUTH" value="6"/>
 			<member name="GDK_WINDOW_EDGE_SOUTH_EAST" value="7"/>
 		</enum>
-		<enum name="GdkWindowType">
+		<enum name="GdkWindowType" type-name="GdkWindowType" get-type="gdk_window_type_get_type">
 			<member name="GDK_WINDOW_ROOT" value="0"/>
 			<member name="GDK_WINDOW_TOPLEVEL" value="1"/>
 			<member name="GDK_WINDOW_CHILD" value="2"/>
@@ -2328,7 +2468,7 @@
 			<member name="GDK_WINDOW_TEMP" value="4"/>
 			<member name="GDK_WINDOW_FOREIGN" value="5"/>
 		</enum>
-		<enum name="GdkWindowTypeHint">
+		<enum name="GdkWindowTypeHint" type-name="GdkWindowTypeHint" get-type="gdk_window_type_hint_get_type">
 			<member name="GDK_WINDOW_TYPE_HINT_NORMAL" value="0"/>
 			<member name="GDK_WINDOW_TYPE_HINT_DIALOG" value="1"/>
 			<member name="GDK_WINDOW_TYPE_HINT_MENU" value="2"/>
@@ -2344,7 +2484,7 @@
 			<member name="GDK_WINDOW_TYPE_HINT_COMBO" value="12"/>
 			<member name="GDK_WINDOW_TYPE_HINT_DND" value="13"/>
 		</enum>
-		<flags name="GdkDragAction">
+		<flags name="GdkDragAction" type-name="GdkDragAction" get-type="gdk_drag_action_get_type">
 			<member name="GDK_ACTION_DEFAULT" value="1"/>
 			<member name="GDK_ACTION_COPY" value="2"/>
 			<member name="GDK_ACTION_MOVE" value="4"/>
@@ -2352,7 +2492,7 @@
 			<member name="GDK_ACTION_PRIVATE" value="16"/>
 			<member name="GDK_ACTION_ASK" value="32"/>
 		</flags>
-		<flags name="GdkEventMask">
+		<flags name="GdkEventMask" type-name="GdkEventMask" get-type="gdk_event_mask_get_type">
 			<member name="GDK_EXPOSURE_MASK" value="2"/>
 			<member name="GDK_POINTER_MOTION_MASK" value="4"/>
 			<member name="GDK_POINTER_MOTION_HINT_MASK" value="8"/>
@@ -2376,7 +2516,7 @@
 			<member name="GDK_SCROLL_MASK" value="2097152"/>
 			<member name="GDK_ALL_EVENTS_MASK" value="4194302"/>
 		</flags>
-		<flags name="GdkGCValuesMask">
+		<flags name="GdkGCValuesMask" type-name="GdkGCValuesMask" get-type="gdk_gc_values_mask_get_type">
 			<member name="GDK_GC_FOREGROUND" value="1"/>
 			<member name="GDK_GC_BACKGROUND" value="2"/>
 			<member name="GDK_GC_FONT" value="4"/>
@@ -2396,12 +2536,12 @@
 			<member name="GDK_GC_CAP_STYLE" value="65536"/>
 			<member name="GDK_GC_JOIN_STYLE" value="131072"/>
 		</flags>
-		<flags name="GdkInputCondition">
+		<flags name="GdkInputCondition" type-name="GdkInputCondition" get-type="gdk_input_condition_get_type">
 			<member name="GDK_INPUT_READ" value="1"/>
 			<member name="GDK_INPUT_WRITE" value="2"/>
 			<member name="GDK_INPUT_EXCEPTION" value="4"/>
 		</flags>
-		<flags name="GdkModifierType">
+		<flags name="GdkModifierType" type-name="GdkModifierType" get-type="gdk_modifier_type_get_type">
 			<member name="GDK_SHIFT_MASK" value="1"/>
 			<member name="GDK_LOCK_MASK" value="2"/>
 			<member name="GDK_CONTROL_MASK" value="4"/>
@@ -2421,7 +2561,7 @@
 			<member name="GDK_RELEASE_MASK" value="1073741824"/>
 			<member name="GDK_MODIFIER_MASK" value="1543512063"/>
 		</flags>
-		<flags name="GdkWMDecoration">
+		<flags name="GdkWMDecoration" type-name="GdkWMDecoration" get-type="gdk_wm_decoration_get_type">
 			<member name="GDK_DECOR_ALL" value="1"/>
 			<member name="GDK_DECOR_BORDER" value="2"/>
 			<member name="GDK_DECOR_RESIZEH" value="4"/>
@@ -2430,7 +2570,7 @@
 			<member name="GDK_DECOR_MINIMIZE" value="32"/>
 			<member name="GDK_DECOR_MAXIMIZE" value="64"/>
 		</flags>
-		<flags name="GdkWMFunction">
+		<flags name="GdkWMFunction" type-name="GdkWMFunction" get-type="gdk_wm_function_get_type">
 			<member name="GDK_FUNC_ALL" value="1"/>
 			<member name="GDK_FUNC_RESIZE" value="2"/>
 			<member name="GDK_FUNC_MOVE" value="4"/>
@@ -2438,7 +2578,7 @@
 			<member name="GDK_FUNC_MAXIMIZE" value="16"/>
 			<member name="GDK_FUNC_CLOSE" value="32"/>
 		</flags>
-		<flags name="GdkWindowAttributesType">
+		<flags name="GdkWindowAttributesType" type-name="GdkWindowAttributesType" get-type="gdk_window_attributes_type_get_type">
 			<member name="GDK_WA_TITLE" value="2"/>
 			<member name="GDK_WA_X" value="4"/>
 			<member name="GDK_WA_Y" value="8"/>
@@ -2449,7 +2589,7 @@
 			<member name="GDK_WA_NOREDIR" value="256"/>
 			<member name="GDK_WA_TYPE_HINT" value="512"/>
 		</flags>
-		<flags name="GdkWindowHints">
+		<flags name="GdkWindowHints" type-name="GdkWindowHints" get-type="gdk_window_hints_get_type">
 			<member name="GDK_HINT_POS" value="1"/>
 			<member name="GDK_HINT_MIN_SIZE" value="2"/>
 			<member name="GDK_HINT_MAX_SIZE" value="4"/>
@@ -2460,7 +2600,7 @@
 			<member name="GDK_HINT_USER_POS" value="128"/>
 			<member name="GDK_HINT_USER_SIZE" value="256"/>
 		</flags>
-		<flags name="GdkWindowState">
+		<flags name="GdkWindowState" type-name="GdkWindowState" get-type="gdk_window_state_get_type">
 			<member name="GDK_WINDOW_STATE_WITHDRAWN" value="1"/>
 			<member name="GDK_WINDOW_STATE_ICONIFIED" value="2"/>
 			<member name="GDK_WINDOW_STATE_MAXIMIZED" value="4"/>
@@ -2469,6 +2609,53 @@
 			<member name="GDK_WINDOW_STATE_ABOVE" value="32"/>
 			<member name="GDK_WINDOW_STATE_BELOW" value="64"/>
 		</flags>
+		<object name="GdkAppLaunchContext" parent="GAppLaunchContext" type-name="GdkAppLaunchContext" get-type="gdk_app_launch_context_get_type">
+			<constructor name="new" symbol="gdk_app_launch_context_new">
+				<return-type type="GdkAppLaunchContext*"/>
+			</constructor>
+			<method name="set_desktop" symbol="gdk_app_launch_context_set_desktop">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context" type="GdkAppLaunchContext*"/>
+					<parameter name="desktop" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_display" symbol="gdk_app_launch_context_set_display">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context" type="GdkAppLaunchContext*"/>
+					<parameter name="display" type="GdkDisplay*"/>
+				</parameters>
+			</method>
+			<method name="set_icon" symbol="gdk_app_launch_context_set_icon">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context" type="GdkAppLaunchContext*"/>
+					<parameter name="icon" type="GIcon*"/>
+				</parameters>
+			</method>
+			<method name="set_icon_name" symbol="gdk_app_launch_context_set_icon_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context" type="GdkAppLaunchContext*"/>
+					<parameter name="icon_name" type="char*"/>
+				</parameters>
+			</method>
+			<method name="set_screen" symbol="gdk_app_launch_context_set_screen">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context" type="GdkAppLaunchContext*"/>
+					<parameter name="screen" type="GdkScreen*"/>
+				</parameters>
+			</method>
+			<method name="set_timestamp" symbol="gdk_app_launch_context_set_timestamp">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context" type="GdkAppLaunchContext*"/>
+					<parameter name="timestamp" type="guint32"/>
+				</parameters>
+			</method>
+		</object>
 		<object name="GdkColormap" parent="GObject" type-name="GdkColormap" get-type="gdk_colormap_get_type">
 			<method name="alloc_color" symbol="gdk_colormap_alloc_color">
 				<return-type type="gboolean"/>
@@ -2484,10 +2671,17 @@
 				<parameters>
 					<parameter name="colormap" type="GdkColormap*"/>
 					<parameter name="colors" type="GdkColor*"/>
-					<parameter name="ncolors" type="gint"/>
+					<parameter name="n_colors" type="gint"/>
 					<parameter name="writeable" type="gboolean"/>
 					<parameter name="best_match" type="gboolean"/>
 					<parameter name="success" type="gboolean*"/>
+				</parameters>
+			</method>
+			<method name="change" symbol="gdk_colormap_change">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="colormap" type="GdkColormap*"/>
+					<parameter name="ncolors" type="gint"/>
 				</parameters>
 			</method>
 			<method name="free_colors" symbol="gdk_colormap_free_colors">
@@ -2495,7 +2689,7 @@
 				<parameters>
 					<parameter name="colormap" type="GdkColormap*"/>
 					<parameter name="colors" type="GdkColor*"/>
-					<parameter name="ncolors" type="gint"/>
+					<parameter name="n_colors" type="gint"/>
 				</parameters>
 			</method>
 			<method name="get_screen" symbol="gdk_colormap_get_screen">
@@ -3847,6 +4041,27 @@
 					<parameter name="dest" type="GdkRectangle*"/>
 				</parameters>
 			</method>
+			<method name="get_monitor_height_mm" symbol="gdk_screen_get_monitor_height_mm">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="screen" type="GdkScreen*"/>
+					<parameter name="monitor_num" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_monitor_plug_name" symbol="gdk_screen_get_monitor_plug_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="screen" type="GdkScreen*"/>
+					<parameter name="monitor_num" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_monitor_width_mm" symbol="gdk_screen_get_monitor_width_mm">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="screen" type="GdkScreen*"/>
+					<parameter name="monitor_num" type="gint"/>
+				</parameters>
+			</method>
 			<method name="get_n_monitors" symbol="gdk_screen_get_n_monitors">
 				<return-type type="gint"/>
 				<parameters>
@@ -3993,6 +4208,12 @@
 			<property name="font-options" type="gpointer" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="resolution" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="composited-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="screen" type="GdkScreen*"/>
+				</parameters>
+			</signal>
+			<signal name="monitors-changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="screen" type="GdkScreen*"/>
@@ -4535,6 +4756,12 @@
 					<parameter name="window" type="GdkWindow*"/>
 					<parameter name="function" type="GdkFilterFunc"/>
 					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="remove_redirection" symbol="gdk_window_remove_redirection">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
 				</parameters>
 			</method>
 			<method name="reparent" symbol="gdk_window_reparent">

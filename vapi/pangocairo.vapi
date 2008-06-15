@@ -14,6 +14,7 @@ namespace Pango {
 		public double get_resolution ();
 		public static weak Pango.FontMap @new ();
 		public static weak Pango.FontMap new_for_font_type (Cairo.FontType fonttype);
+		public void set_default ();
 		public void set_resolution (double dpi);
 	}
 	[CCode (cheader_filename = "pango/pangocairo.h")]
@@ -30,6 +31,8 @@ namespace Pango {
 	public static void cairo_context_set_resolution (Pango.Context context, double dpi);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_context_set_shape_renderer (Pango.Context context, Pango.CairoShapeRendererFunc func, void* data, GLib.DestroyNotify dnotify);
+	[CCode (cheader_filename = "pango/pangocairo.h")]
+	public static weak Pango.Context cairo_create_context (Cairo.Context cr);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static weak Pango.Layout cairo_create_layout (Cairo.Context cr);
 	[CCode (cheader_filename = "pango/pangocairo.h")]

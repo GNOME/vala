@@ -2,18 +2,18 @@
 
 [CCode (cprefix = "Atk", lower_case_cprefix = "atk_")]
 namespace Atk {
-	[CCode (cprefix = "ATK_XY_", has_type_id = "0", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_XY_", cheader_filename = "atk/atk.h")]
 	public enum CoordType {
 		SCREEN,
 		WINDOW
 	}
-	[CCode (cprefix = "ATK_KEY_EVENT_", has_type_id = "0", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_KEY_EVENT_", cheader_filename = "atk/atk.h")]
 	public enum KeyEventType {
 		PRESS,
 		RELEASE,
 		LAST_DEFINED
 	}
-	[CCode (cprefix = "ATK_LAYER_", has_type_id = "0", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_LAYER_", cheader_filename = "atk/atk.h")]
 	public enum Layer {
 		INVALID,
 		BACKGROUND,
@@ -24,7 +24,7 @@ namespace Atk {
 		OVERLAY,
 		WINDOW
 	}
-	[CCode (cprefix = "ATK_RELATION_", has_type_id = "0", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_RELATION_", cheader_filename = "atk/atk.h")]
 	public enum RelationType {
 		NULL,
 		CONTROLLED_BY,
@@ -44,7 +44,7 @@ namespace Atk {
 		DESCRIPTION_FOR,
 		LAST_DEFINED
 	}
-	[CCode (cprefix = "ATK_ROLE_", has_type_id = "0", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_ROLE_", cheader_filename = "atk/atk.h")]
 	public enum Role {
 		INVALID,
 		ACCEL_LABEL,
@@ -136,7 +136,7 @@ namespace Atk {
 		INPUT_METHOD_WINDOW,
 		LAST_DEFINED
 	}
-	[CCode (cprefix = "ATK_STATE_", has_type_id = "0", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_STATE_", cheader_filename = "atk/atk.h")]
 	public enum StateType {
 		INVALID,
 		ACTIVE,
@@ -179,7 +179,7 @@ namespace Atk {
 		VISITED,
 		LAST_DEFINED
 	}
-	[CCode (cprefix = "ATK_TEXT_ATTR_", has_type_id = "0", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_TEXT_ATTR_", cheader_filename = "atk/atk.h")]
 	public enum TextAttribute {
 		INVALID,
 		LEFT_MARGIN,
@@ -211,7 +211,7 @@ namespace Atk {
 		STYLE,
 		LAST_DEFINED
 	}
-	[CCode (cprefix = "ATK_TEXT_BOUNDARY_", has_type_id = "0", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_TEXT_BOUNDARY_", cheader_filename = "atk/atk.h")]
 	public enum TextBoundary {
 		CHAR,
 		WORD_START,
@@ -221,14 +221,14 @@ namespace Atk {
 		LINE_START,
 		LINE_END
 	}
-	[CCode (cprefix = "ATK_TEXT_CLIP_", has_type_id = "0", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_TEXT_CLIP_", cheader_filename = "atk/atk.h")]
 	public enum TextClipType {
 		NONE,
 		MIN,
 		MAX,
 		BOTH
 	}
-	[CCode (cprefix = "ATK_HYPERLINK_IS_", has_type_id = "0", cheader_filename = "atk/atk.h")]
+	[CCode (cprefix = "ATK_HYPERLINK_IS_", cheader_filename = "atk/atk.h")]
 	[Flags]
 	public enum HyperlinkStateFlags {
 		INLINE
@@ -317,7 +317,7 @@ namespace Atk {
 		public virtual void threads_leave ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
-	public class NoOpObject : Atk.Object, Atk.Table, Atk.Action, Atk.Text, Atk.EditableText, Atk.Selection, Atk.Component, Atk.Document, Atk.Hypertext, Atk.Image, Atk.Value {
+	public class NoOpObject : Atk.Object, Atk.Text, Atk.Action, Atk.Hypertext, Atk.Selection, Atk.Table, Atk.Image, Atk.Value, Atk.Component, Atk.EditableText, Atk.Document {
 		public NoOpObject (GLib.Object obj);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
@@ -643,7 +643,7 @@ namespace Atk {
 		public abstract void get_minimum_value (GLib.Value value);
 		public abstract bool set_current_value (GLib.Value value);
 	}
-	[CCode (cheader_filename = "atk/atk.h")]
+	[CCode (type_id = "ATK_TYPE_RECTANGLE", cheader_filename = "atk/atk.h")]
 	public struct Rectangle {
 		public int x;
 		public int y;

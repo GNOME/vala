@@ -14,6 +14,12 @@
 				<parameter name="type2" type="char*"/>
 			</parameters>
 		</function>
+		<function name="g_content_type_from_mime_type" symbol="g_content_type_from_mime_type">
+			<return-type type="char*"/>
+			<parameters>
+				<parameter name="mime_type" type="char*"/>
+			</parameters>
+		</function>
 		<function name="g_content_type_get_description" symbol="g_content_type_get_description">
 			<return-type type="char*"/>
 			<parameters>
@@ -2063,6 +2069,12 @@
 					<parameter name="ostream" type="GMemoryOutputStream*"/>
 				</parameters>
 			</method>
+			<method name="get_data_size" symbol="g_memory_output_stream_get_data_size">
+				<return-type type="gsize"/>
+				<parameters>
+					<parameter name="ostream" type="GMemoryOutputStream*"/>
+				</parameters>
+			</method>
 			<method name="get_size" symbol="g_memory_output_stream_get_size">
 				<return-type type="gsize"/>
 				<parameters>
@@ -2648,6 +2660,13 @@
 					<parameter name="iconname" type="char*"/>
 				</parameters>
 			</constructor>
+			<method name="prepend_name" symbol="g_themed_icon_prepend_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="icon" type="GThemedIcon*"/>
+					<parameter name="iconname" type="char*"/>
+				</parameters>
+			</method>
 			<property name="name" type="char*" readable="0" writable="1" construct="0" construct-only="1"/>
 			<property name="names" type="GStrv*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="use-default-fallbacks" type="gboolean" readable="0" writable="1" construct="0" construct-only="1"/>
@@ -3758,6 +3777,14 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="make_directory_with_parents" symbol="g_file_make_directory_with_parents">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="make_symbolic_link" symbol="g_file_make_symbolic_link">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -3853,6 +3880,14 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+				</parameters>
+			</method>
+			<method name="query_file_type" symbol="g_file_query_file_type">
+				<return-type type="GFileType"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GFileQueryInfoFlags"/>
 					<parameter name="cancellable" type="GCancellable*"/>
 				</parameters>
 			</method>

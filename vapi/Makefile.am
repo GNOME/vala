@@ -19,6 +19,7 @@ dist_vapi_DATA = \
 	glib-2.0.vapi \
 	gdk-2.0.deps \
 	gdk-2.0.vapi \
+	gdk-pixbuf-2.0.deps \
 	gdk-pixbuf-2.0.vapi \
 	gdk-x11-2.0.deps \
 	gdk-x11-2.0.vapi \

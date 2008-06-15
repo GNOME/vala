@@ -38,6 +38,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gunixmounts.h")]
 	public class UnixMountMonitor : GLib.Object {
 		public UnixMountMonitor ();
+		public void set_rate_limit (int limit_msec);
 		public virtual signal void mountpoints_changed ();
 		public virtual signal void mounts_changed ();
 	}

@@ -1,5 +1,31 @@
 2008-06-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am
+	* vapi/gdk-pixbuf-2.0.deps:
+	* vapi/packages/atk/:
+	* vapi/packages/gdk-2.0/:
+	* vapi/packages/gdk-pixbuf-2.0/:
+	* vapi/packages/gio-2.0/:
+	* vapi/packages/gio-unix-2.0/:
+	* vapi/packages/gtk+-2.0/:
+	* vapi/packages/pango/:
+	* vapi/packages/pangocairo/:
+
+	Update to GTK+ 2.13.3, fixes bug 536369
+
+	* vapi/atk.vapi:
+	* vapi/gdk-2.0.vapi:
+	* vapi/gdk-pixbuf-2.0.vapi:
+	* vapi/gio-2.0.vapi:
+	* vapi/gio-unix-2.0.vapi:
+	* vapi/gtk+-2.0.vapi:
+	* vapi/pango.vapi:
+	* vapi/pangocairo.vapi:
+
+	Regenerated
+
+2008-06-15  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodecreationmethodbinding.vala:
 
 	Report error when trying to assign private properties in creation

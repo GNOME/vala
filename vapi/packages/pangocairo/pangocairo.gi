@@ -43,6 +43,12 @@
 				<parameter name="dnotify" type="GDestroyNotify"/>
 			</parameters>
 		</function>
+		<function name="cairo_create_context" symbol="pango_cairo_create_context">
+			<return-type type="PangoContext*"/>
+			<parameters>
+				<parameter name="cr" type="cairo_t*"/>
+			</parameters>
+		</function>
 		<function name="cairo_create_layout" symbol="pango_cairo_create_layout">
 			<return-type type="PangoLayout*"/>
 			<parameters>
@@ -179,6 +185,12 @@
 				<return-type type="PangoFontMap*"/>
 				<parameters>
 					<parameter name="fonttype" type="cairo_font_type_t"/>
+				</parameters>
+			</method>
+			<method name="set_default" symbol="pango_cairo_font_map_set_default">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="fontmap" type="PangoCairoFontMap*"/>
 				</parameters>
 			</method>
 			<method name="set_resolution" symbol="pango_cairo_font_map_set_resolution">

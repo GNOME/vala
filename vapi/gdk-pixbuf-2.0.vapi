@@ -2,23 +2,23 @@
 
 [CCode (cprefix = "Gdk", lower_case_cprefix = "gdk_")]
 namespace Gdk {
-	[CCode (cprefix = "GDK_COLORSPACE_", has_type_id = "0", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cprefix = "GDK_COLORSPACE_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum Colorspace {
 		RGB
 	}
-	[CCode (cprefix = "GDK_INTERP_", has_type_id = "0", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cprefix = "GDK_INTERP_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum InterpType {
 		NEAREST,
 		TILES,
 		BILINEAR,
 		HYPER
 	}
-	[CCode (cprefix = "GDK_PIXBUF_ALPHA_", has_type_id = "0", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cprefix = "GDK_PIXBUF_ALPHA_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixbufAlphaMode {
 		BILEVEL,
 		FULL
 	}
-	[CCode (cprefix = "GDK_PIXBUF_ERROR_", has_type_id = "0", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cprefix = "GDK_PIXBUF_ERROR_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixbufError {
 		CORRUPT_IMAGE,
 		INSUFFICIENT_MEMORY,
@@ -27,7 +27,7 @@ namespace Gdk {
 		UNSUPPORTED_OPERATION,
 		FAILED
 	}
-	[CCode (cprefix = "GDK_PIXBUF_ROTATE_", has_type_id = "0", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
+	[CCode (cprefix = "GDK_PIXBUF_ROTATE_", cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public enum PixbufRotation {
 		NONE,
 		COUNTERCLOCKWISE,
@@ -103,6 +103,8 @@ namespace Gdk {
 		public Pixbuf.from_file_at_scale (string filename, int width, int height, bool preserve_aspect_ratio) throws GLib.Error;
 		public Pixbuf.from_file_at_size (string filename, int width, int height) throws GLib.Error;
 		public Pixbuf.from_inline (int data_length, uchar data, bool copy_pixels) throws GLib.Error;
+		public Pixbuf.from_stream (GLib.InputStream stream, GLib.Cancellable cancellable) throws GLib.Error;
+		public Pixbuf.from_stream_at_scale (GLib.InputStream stream, int width, int height, bool preserve_aspect_ratio, GLib.Cancellable cancellable) throws GLib.Error;
 		public Pixbuf.from_xpm_data (string[] data);
 		public Pixbuf.subpixbuf (Gdk.Pixbuf src_pixbuf, int src_x, int src_y, int width, int height);
 		public weak Gdk.Pixbuf rotate_simple (Gdk.PixbufRotation angle);
@@ -112,6 +114,7 @@ namespace Gdk {
 		public bool save_to_bufferv (string buffer, ulong buffer_size, string type, string[] option_keys, string[] option_values) throws GLib.Error;
 		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, string type) throws GLib.Error;
 		public bool save_to_callbackv (Gdk.PixbufSaveFunc save_func, string type, string[] option_keys, string[] option_values) throws GLib.Error;
+		public bool save_to_stream (GLib.OutputStream stream, string type, GLib.Cancellable cancellable) throws GLib.Error;
 		public bool savev (string filename, string type, out weak string option_keys, out weak string option_values) throws GLib.Error;
 		public void scale (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type);
 		public weak Gdk.Pixbuf scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);

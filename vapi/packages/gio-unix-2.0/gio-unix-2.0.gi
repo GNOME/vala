@@ -220,6 +220,13 @@
 			<constructor name="new" symbol="g_unix_mount_monitor_new">
 				<return-type type="GUnixMountMonitor*"/>
 			</constructor>
+			<method name="set_rate_limit" symbol="g_unix_mount_monitor_set_rate_limit">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mount_monitor" type="GUnixMountMonitor*"/>
+					<parameter name="limit_msec" type="int"/>
+				</parameters>
+			</method>
 			<signal name="mountpoints-changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>

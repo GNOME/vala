@@ -193,16 +193,16 @@
 			<field name="width" type="gint"/>
 			<field name="height" type="gint"/>
 		</boxed>
-		<enum name="AtkCoordType">
+		<enum name="AtkCoordType" type-name="AtkCoordType" get-type="atk_coord_type_get_type">
 			<member name="ATK_XY_SCREEN" value="0"/>
 			<member name="ATK_XY_WINDOW" value="1"/>
 		</enum>
-		<enum name="AtkKeyEventType">
+		<enum name="AtkKeyEventType" type-name="AtkKeyEventType" get-type="atk_key_event_type_get_type">
 			<member name="ATK_KEY_EVENT_PRESS" value="0"/>
 			<member name="ATK_KEY_EVENT_RELEASE" value="1"/>
 			<member name="ATK_KEY_EVENT_LAST_DEFINED" value="2"/>
 		</enum>
-		<enum name="AtkLayer">
+		<enum name="AtkLayer" type-name="AtkLayer" get-type="atk_layer_get_type">
 			<member name="ATK_LAYER_INVALID" value="0"/>
 			<member name="ATK_LAYER_BACKGROUND" value="1"/>
 			<member name="ATK_LAYER_CANVAS" value="2"/>
@@ -212,7 +212,7 @@
 			<member name="ATK_LAYER_OVERLAY" value="6"/>
 			<member name="ATK_LAYER_WINDOW" value="7"/>
 		</enum>
-		<enum name="AtkRelationType">
+		<enum name="AtkRelationType" type-name="AtkRelationType" get-type="atk_relation_type_get_type">
 			<member name="ATK_RELATION_NULL" value="0"/>
 			<member name="ATK_RELATION_CONTROLLED_BY" value="1"/>
 			<member name="ATK_RELATION_CONTROLLER_FOR" value="2"/>
@@ -231,7 +231,7 @@
 			<member name="ATK_RELATION_DESCRIPTION_FOR" value="15"/>
 			<member name="ATK_RELATION_LAST_DEFINED" value="16"/>
 		</enum>
-		<enum name="AtkRole">
+		<enum name="AtkRole" type-name="AtkRole" get-type="atk_role_get_type">
 			<member name="ATK_ROLE_INVALID" value="0"/>
 			<member name="ATK_ROLE_ACCEL_LABEL" value="1"/>
 			<member name="ATK_ROLE_ALERT" value="2"/>
@@ -322,7 +322,7 @@
 			<member name="ATK_ROLE_INPUT_METHOD_WINDOW" value="87"/>
 			<member name="ATK_ROLE_LAST_DEFINED" value="88"/>
 		</enum>
-		<enum name="AtkStateType">
+		<enum name="AtkStateType" type-name="AtkStateType" get-type="atk_state_type_get_type">
 			<member name="ATK_STATE_INVALID" value="0"/>
 			<member name="ATK_STATE_ACTIVE" value="1"/>
 			<member name="ATK_STATE_ARMED" value="2"/>
@@ -364,7 +364,7 @@
 			<member name="ATK_STATE_VISITED" value="38"/>
 			<member name="ATK_STATE_LAST_DEFINED" value="39"/>
 		</enum>
-		<enum name="AtkTextAttribute">
+		<enum name="AtkTextAttribute" type-name="AtkTextAttribute" get-type="atk_text_attribute_get_type">
 			<member name="ATK_TEXT_ATTR_INVALID" value="0"/>
 			<member name="ATK_TEXT_ATTR_LEFT_MARGIN" value="1"/>
 			<member name="ATK_TEXT_ATTR_RIGHT_MARGIN" value="2"/>
@@ -395,7 +395,7 @@
 			<member name="ATK_TEXT_ATTR_STYLE" value="27"/>
 			<member name="ATK_TEXT_ATTR_LAST_DEFINED" value="28"/>
 		</enum>
-		<enum name="AtkTextBoundary">
+		<enum name="AtkTextBoundary" type-name="AtkTextBoundary" get-type="atk_text_boundary_get_type">
 			<member name="ATK_TEXT_BOUNDARY_CHAR" value="0"/>
 			<member name="ATK_TEXT_BOUNDARY_WORD_START" value="1"/>
 			<member name="ATK_TEXT_BOUNDARY_WORD_END" value="2"/>
@@ -404,13 +404,13 @@
 			<member name="ATK_TEXT_BOUNDARY_LINE_START" value="5"/>
 			<member name="ATK_TEXT_BOUNDARY_LINE_END" value="6"/>
 		</enum>
-		<enum name="AtkTextClipType">
+		<enum name="AtkTextClipType" type-name="AtkTextClipType" get-type="atk_text_clip_type_get_type">
 			<member name="ATK_TEXT_CLIP_NONE" value="0"/>
 			<member name="ATK_TEXT_CLIP_MIN" value="1"/>
 			<member name="ATK_TEXT_CLIP_MAX" value="2"/>
 			<member name="ATK_TEXT_CLIP_BOTH" value="3"/>
 		</enum>
-		<flags name="AtkHyperlinkStateFlags">
+		<flags name="AtkHyperlinkStateFlags" type-name="AtkHyperlinkStateFlags" get-type="atk_hyperlink_state_flags_get_type">
 			<member name="ATK_HYPERLINK_IS_INLINE" value="1"/>
 		</flags>
 		<object name="AtkGObjectAccessible" parent="AtkObject" type-name="AtkGObjectAccessible" get-type="atk_gobject_accessible_get_type">
@@ -573,16 +573,16 @@
 		</object>
 		<object name="AtkNoOpObject" parent="AtkObject" type-name="AtkNoOpObject" get-type="atk_no_op_object_get_type">
 			<implements>
-				<interface name="AtkTable"/>
-				<interface name="AtkAction"/>
 				<interface name="AtkText"/>
-				<interface name="AtkEditableText"/>
-				<interface name="AtkSelection"/>
-				<interface name="AtkComponent"/>
-				<interface name="AtkDocument"/>
+				<interface name="AtkAction"/>
 				<interface name="AtkHypertext"/>
+				<interface name="AtkSelection"/>
+				<interface name="AtkTable"/>
 				<interface name="AtkImage"/>
 				<interface name="AtkValue"/>
+				<interface name="AtkComponent"/>
+				<interface name="AtkEditableText"/>
+				<interface name="AtkDocument"/>
 			</implements>
 			<constructor name="new" symbol="atk_no_op_object_new">
 				<return-type type="AtkObject*"/>
