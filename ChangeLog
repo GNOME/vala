@@ -1,5 +1,11 @@
 2008-06-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/taglib_c.vapi:
+
+	Use [Compact] attribute, patch by Levi Bard, fixes bug 536987
+
+2008-06-15  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am
 	* vapi/gdk-pixbuf-2.0.deps:
 	* vapi/packages/atk/:

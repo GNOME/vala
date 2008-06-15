@@ -24,6 +24,7 @@
 namespace TagLib
 {
 	[CCode (free_function = "taglib_file_free", lower_case_cprefix = "taglib_file_")]
+	[Compact]
 	public class File
 	{
 		[CCode (cname = "taglib_file_new")]
@@ -38,6 +39,7 @@ namespace TagLib
 	}
 
 	[CCode (free_function = "", lower_case_cprefix = "taglib_tag_")]
+	[Compact]
 	public class Tag
 	{
 		public weak string title();
@@ -58,6 +60,7 @@ namespace TagLib
 	}
 
 	[CCode (free_function = "", cname = "TagLib_AudioProperties", cprefix = "taglib_audioproperties_")]
+	[Compact]
 	public class AudioProperties
 	{
 		public int length ();
