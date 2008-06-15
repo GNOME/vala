@@ -1,3 +1,11 @@
+2008-06-15  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/vte/:
+
+	Fix vte_terminal_fork_command binding
+
+	* vapi/vte.vapi: regenerated
+
 2008-06-14  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gstreamer-rtsp-0.10/:
