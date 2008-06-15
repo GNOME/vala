@@ -114,6 +114,7 @@ dist_vapi_DATA = \
 	sdl-gfx.vapi \
 	sdl-image.vapi \
 	sdl-mixer.vapi \
+	sdl-net.vapi \
 	sdl-ttf.vapi \
 	sqlite3.vapi \
 	taglib_c.vapi \
