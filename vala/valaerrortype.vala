@@ -69,7 +69,12 @@ public class Vala.ErrorType : ReferenceType {
 	}
 
 	public override DataType copy () {
-		return new ErrorType (error_domain, source_reference);
+		var result = new ErrorType (error_domain, source_reference);
+		result.source_reference = source_reference;
+		result.value_owned = value_owned;
+		result.nullable = nullable;
+
+		return result;
 	}
 
 	public override string? get_cname () {
@@ -106,5 +111,9 @@ public class Vala.ErrorType : ReferenceType {
 
 	public override string? get_type_id () {
 		return "G_TYPE_POINTER";
+	}
+
+	public override bool is_reference_type_or_type_parameter () {
+		return true;
 	}
 }

@@ -1,5 +1,13 @@
 2008-06-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaerrortype.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Fix memory management of error types, fixes bug 537951
+
+2008-06-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Fix gst_message_parse_* bindings

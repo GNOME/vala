@@ -1372,6 +1372,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			} else {
 				return new CCodeIdentifier (type.data_type.get_free_function ());
 			}
+		} else if (type is ErrorType) {
+			return new CCodeIdentifier ("g_error_free");
 		} else if (type.data_type != null) {
 			string unref_function;
 			if (type is ReferenceType) {
