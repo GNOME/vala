@@ -1,5 +1,12 @@
 2008-06-15  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodecreationmethodbinding.vala:
+
+	Report error when trying to assign private properties in creation
+	methods, patch by Hans Vercammen, fixes bug 536353
+
+2008-06-15  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorsignal.vala:
 	* gobject/valaccodetypesymbolbinding.vala:
 

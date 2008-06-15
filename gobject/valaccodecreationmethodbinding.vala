@@ -46,7 +46,14 @@ public class Vala.CCodeCreationMethodBinding : CCodeMethodBinding {
 					Report.error (stmt.source_reference, "class creation methods only allow property assignment statements");
 					return;
 				}
-				if (((ExpressionStatement) stmt).assigned_property ().set_accessor.construction) {
+
+				Property prop = ((ExpressionStatement) stmt).assigned_property ();
+				if (prop.access == SymbolAccessibility.PRIVATE) {
+					m.error = true;
+					Report.error (stmt.source_reference, "class creation methods only allow assignments to public and protected properties");
+					return;
+				}
+				if (prop.set_accessor.construction) {
 					n_params++;
 				}
 			}
