@@ -621,13 +621,19 @@ public class Vala.Scanner : Object {
 					while (current < end - 4) {
 						if (current[0] == '"' && current[1] == '"' && current[2] == '"') {
 							break;
-						}
-						unichar u = ((string) current).get_char_validated ((long) (end - current));
-						if (u != (unichar) (-1)) {
-							current += u.to_utf8 (null);
-							token_length_in_chars++;
+						} else if (current[0] == '\n') {
+							current++;
+							line++;
+							column = 1;
+							token_length_in_chars = 3;
 						} else {
-							Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "invalid UTF-8 character");
+							unichar u = ((string) current).get_char_validated ((long) (end - current));
+							if (u != (unichar) (-1)) {
+								current += u.to_utf8 (null);
+								token_length_in_chars++;
+							} else {
+								Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "invalid UTF-8 character");
+							}
 						}
 					}
 					if (current[0] == '"' && current[1] == '"' && current[2] == '"') {

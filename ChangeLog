@@ -1,5 +1,11 @@
 2008-06-15  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valascanner.vala:
+
+	Fix line number calculation for verbatim strings, fixes bug 537123
+
+2008-06-15  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix GtkWidget event signal parameters,
