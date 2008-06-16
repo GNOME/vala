@@ -155,6 +155,9 @@ public class Vala.Genie.Scanner : Object {
 			case 'c':
 				if (matches (begin, "case")) return TokenType.CASE;
 				break;
+			case 'd':
+				if (matches (begin, "dict")) return TokenType.DICT;
+				break;
 			case 'e':
 				switch (begin[1]) {
 				case 'l':
@@ -169,8 +172,16 @@ public class Vala.Genie.Scanner : Object {
 				if (matches (begin, "init")) return TokenType.INIT;
 				break;
 			case 'l':
-				if (matches (begin, "lock")) return TokenType.LOCK;
+				switch (begin[1]) {
+				case 'i':
+					if (matches (begin, "list")) return TokenType.LIST;
+					break;
+				case 'o':
+					if (matches (begin, "lock")) return TokenType.LOCK;
+					break;
+				}
 				break;
+				
 			case 'n':
 				if (matches (begin, "null")) return TokenType.NULL;
 				break;

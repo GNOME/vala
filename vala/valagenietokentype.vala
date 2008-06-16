@@ -59,6 +59,7 @@ public enum Vala.Genie.TokenType {
 	DEFAULT,
 	DELEGATE,
 	DELETE,
+	DICT,
 	DIV,
 	DO,
 	DOT,
@@ -94,6 +95,7 @@ public enum Vala.Genie.TokenType {
 	IS,
 	ISA,
 	LAMBDA,
+	LIST,
 	LOCK,
 	MINUS,
 	NAMESPACE,
@@ -193,6 +195,7 @@ public enum Vala.Genie.TokenType {
 		case DEFAULT: return "`default'";
 		case DELEGATE: return "`delegate'";
 		case DELETE: return "`delete'";
+		case DICT: return "`dict'";
 		case DIV: return "`/'";
 		case DO: return "`do'";
 		case DOT: return "`.'";
@@ -228,6 +231,7 @@ public enum Vala.Genie.TokenType {
 		case IS: return "`is'";
 		case ISA: return "`isa'";
 		case LAMBDA: return "`=>'";
+		case LIST: return "`list'";
 		case LOCK: return "`lock'";
 		case MINUS: return "`-'";
 		case NAMESPACE: return "`namespace'";

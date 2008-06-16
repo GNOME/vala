@@ -43,6 +43,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 	string comment;
 	
 	string class_name;
+	
+	/* we need to know whether to automatically add these using directives */
+	bool has_uses_glib;
 
 	/* hack needed to know if any part of an expression is a lambda one */
 	bool current_expr_is_lambda;
@@ -69,6 +72,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	construct {
 		tokens = new TokenInfo[BUFFER_SIZE];
+		has_uses_glib = false;
 		class_name = null;
 		current_expr_is_lambda = false;
 	}
@@ -396,7 +400,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		accept (TokenType.WEAK);
 		
-		if (accept (TokenType.ARRAY)) {
+		if (accept (TokenType.ARRAY) || accept (TokenType.LIST) || accept (TokenType.DICT)) {
 			accept (TokenType.OF);
 		}
 		
@@ -426,6 +430,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 			return type;
 		}
 
+		Gee.List<DataType> type_arg_list = null;
+		UnresolvedSymbol sym = null;
+		
 		bool is_dynamic = accept (TokenType.DYNAMIC);
 		bool value_owned = owned_by_default;
 		if (owned_by_default) {
@@ -439,9 +446,36 @@ public class Vala.Genie.Parser : CodeVisitor {
 			expect (TokenType.OF);
 			is_array = true;
 		}
-
-		var sym = parse_symbol_name ();
-		Gee.List<DataType> type_arg_list = parse_type_argument_list (false);
+		
+		/* handle lists */
+		bool is_list = false;
+		
+		if (accept (TokenType.LIST)) {
+			expect (TokenType.OF);
+			prev ();
+			is_list = true;
+		}
+		
+		/* handle dicts */
+		bool is_dict = false;
+		
+		if (accept (TokenType.DICT)) {
+			expect (TokenType.OF);
+			prev ();
+			is_dict = true;
+		}
+		
+		if (is_list) {
+			var sym_parent = new UnresolvedSymbol (null, "Gee", get_src (begin));
+			sym = new UnresolvedSymbol (sym_parent, "ArrayList", get_src (begin));
+		} else if (is_dict) {
+			var sym_parent = new UnresolvedSymbol (null, "Gee", get_src (begin));
+			sym = new UnresolvedSymbol (sym_parent, "HashMap", get_src (begin));
+		} else {
+			sym = parse_symbol_name ();
+		}
+		
+		type_arg_list = parse_type_argument_list (false);
 
 		DataType type = new UnresolvedType.from_symbol (sym, get_src (begin));
 		if (type_arg_list != null) {
@@ -815,6 +849,23 @@ public class Vala.Genie.Parser : CodeVisitor {
 			return expr;
 		}
 		
+		if (accept (TokenType.LIST)) {
+			expect (TokenType.OF);
+			var m = parse_member_name ();
+			var expr = parse_list_creation_expression (begin, m);
+			return expr;
+		}
+		
+		if (accept (TokenType.DICT)) {
+			expect (TokenType.OF);
+			var m1 = parse_member_name ();
+			expect (TokenType.COMMA);
+			var m2 = parse_member_name ();
+			var expr = parse_dict_creation_expression (begin, m1, m2);
+			return expr;
+		}
+		
+		
 		var member = parse_member_name ();
 		if (accept (TokenType.OPEN_PARENS)) {
 			var expr = parse_object_creation_expression (begin, member);
@@ -884,6 +935,60 @@ public class Vala.Genie.Parser : CodeVisitor {
 		}
 		return expr;
 	}
+	
+	
+	Expression parse_list_creation_expression (SourceLocation begin, MemberAccess member) throws ParseError {
+		
+		DataType element_type = UnresolvedType.new_from_expression (member);
+		MemberAccess list_member = null, parent_member = null;
+		
+		parent_member = new MemberAccess (null, "Gee", get_src (begin));
+		list_member = new MemberAccess (parent_member, "ArrayList", get_src (begin));
+		list_member.add_type_argument (element_type);
+		
+		list_member.creation_member = true;
+		
+		var expr = new ObjectCreationExpression (list_member, get_src (begin));
+
+		return expr;
+	}
+	
+	Expression parse_dict_creation_expression (SourceLocation begin, MemberAccess member_key, MemberAccess member_value) throws ParseError {
+		
+		DataType key_type = UnresolvedType.new_from_expression (member_key);
+		DataType value_type = UnresolvedType.new_from_expression (member_value);
+		
+		MemberAccess dict_member = null, parent_member = null, dict_hash = null, dict_equal = null;
+		
+		parent_member = new MemberAccess (null, "Gee", get_src (begin));
+		dict_member = new MemberAccess (parent_member, "HashMap", get_src (begin));
+		dict_member.add_type_argument (key_type);
+		dict_member.add_type_argument (value_type);
+	
+		if (member_key.member_name == "string") {
+			parent_member = new MemberAccess (null, "GLib", get_src (begin));			
+			dict_hash = new MemberAccess (parent_member, "str_hash", get_src (begin));
+			dict_equal = new MemberAccess (parent_member, "str_equal", get_src (begin));
+			
+		} else if (member_key.member_name == "int") {
+			parent_member = new MemberAccess (null, "GLib", get_src (begin));
+			dict_hash = new MemberAccess (parent_member, "int_hash", get_src (begin));
+			dict_equal = new MemberAccess (parent_member, "int_equal", get_src (begin));
+		}
+
+		dict_member.creation_member = true;
+		
+		var expr = new ObjectCreationExpression (dict_member, get_src (begin));
+
+		if (dict_hash != null && dict_equal != null) {
+			expr.add_argument (dict_hash);
+			expr.add_argument (dict_equal);
+		}
+
+
+		return expr;
+	}
+	
 
 	Gee.List<MemberInitializer> parse_object_initializer () throws ParseError {
 		var list = new ArrayList<MemberInitializer> ();
@@ -2217,18 +2322,19 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 
 
-	bool add_uses_clause () throws ParseError {
+	void add_uses_clause () throws ParseError {
 		var begin = get_location ();
 		var sym = parse_symbol_name ();
 		var ns_ref = new NamespaceReference (sym.name, get_src (begin));
 
 		scanner.source_file.add_using_directive (ns_ref);
-		
-		return (sym.name == "GLib");
+				
+		if (sym.name == "GLib") {
+			has_uses_glib = true;
+		}
 	}
 
 	void parse_using_directives () throws ParseError {
-		var has_glib = false;
 		var begin = get_location ();
 		while (accept (TokenType.USES)) {
 			var begin = get_location ();
@@ -2237,9 +2343,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 				expect (TokenType.INDENT);
 
 				while (current () != TokenType.DEDENT && current () != TokenType.EOF) {
-					if (add_uses_clause ()) {
-						has_glib = true;
-					}
+					add_uses_clause ();
 					expect (TokenType.EOL);	
 				}
 
@@ -2253,7 +2357,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			}
 		}
 		
-		if (!has_glib) {
+		if (!has_uses_glib) {
 			var ns_ref = new NamespaceReference ("GLib", get_src (begin));
 			scanner.source_file.add_using_directive (ns_ref);
 		}
@@ -2458,6 +2562,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			return true;
 		}
 		
+		/*
 		if (current () == TokenType.OPEN_PARENS) {
 			var begin = get_location ();
 			var is_array = false;
@@ -2471,6 +2576,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 			
 			return is_array;
 		}
+		*/
+		
 		return false;
 	}
 	

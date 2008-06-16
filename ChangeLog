@@ -1,3 +1,11 @@
+2008-06-16  Jamie McCracken  <jamiemcc@gnome.org>
+
+	* vala/valagenieparser.vala:
+	* vala/valageniescanner.vala:
+	* vala/valagenietokentype.vala:
+		
+	added built in list and dict (HashMap) support with automatic type dependent hash and equal functions
+
 2008-06-16  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegenerator.vala:
