@@ -1,3 +1,10 @@
+2008-06-16  Jaap A. Haitsma  <jaap@haitsma.org>
+
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
+	gtk_show_uri.screen is nullable. fixes bug #538512
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
 2008-06-16  Jamie McCracken  <jamiemcc@gnome.org>
 
 	* vala/valagenieparser.vala:
