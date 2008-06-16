@@ -1284,6 +1284,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			string dup_function;
 			if (type.data_type.is_reference_counting ()) {
 				dup_function = type.data_type.get_ref_function ();
+				if (type.data_type is Interface && dup_function == null) {
+					Report.error (source_reference, "missing class prerequisite for interface `%s'".printf (type.data_type.get_full_name ()));
+					return null;
+				}
 			} else if (cl != null && cl.is_immutable) {
 				// allow duplicates of immutable instances as for example strings
 				dup_function = type.data_type.get_dup_function ();
@@ -1379,6 +1383,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			if (type is ReferenceType) {
 				if (type.data_type.is_reference_counting ()) {
 					unref_function = type.data_type.get_unref_function ();
+					if (type.data_type is Interface && unref_function == null) {
+						Report.error (type.source_reference, "missing class prerequisite for interface `%s'".printf (type.data_type.get_full_name ()));
+						return null;
+					}
 				} else {
 					unref_function = type.data_type.get_free_function ();
 				}
