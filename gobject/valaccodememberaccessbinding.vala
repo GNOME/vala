@@ -119,7 +119,9 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 
 			if (prop.get_accessor != null &&
 			    prop.get_accessor.automatic_body &&
-			    codegen.current_type_symbol == prop.parent_symbol) {
+			    codegen.current_type_symbol == prop.parent_symbol &&
+			    prop.base_property == null &&
+			    prop.base_interface_property == null) {
 				CCodeExpression inst;
 				inst = new CCodeMemberAccess.pointer (pub_inst, "priv");
 				expr.ccodenode = new CCodeMemberAccess.pointer (inst, prop.field.get_cname());

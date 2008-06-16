@@ -1,3 +1,9 @@
+2008-06-16  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodememberaccessbinding.vala:
+
+	Fix property access for virtual and interface properties
+
 2008-06-16  Jaap A. Haitsma  <jaap@haitsma.org>
 
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
@@ -11,7 +17,8 @@
 	* vala/valageniescanner.vala:
 	* vala/valagenietokentype.vala:
 		
-	added built in list and dict (HashMap) support with automatic type dependent hash and equal functions
+	added built in list and dict (HashMap) support with automatic type
+	dependent hash and equal functions
 
 2008-06-16  Jürg Billeter  <j@bitron.ch>
 
