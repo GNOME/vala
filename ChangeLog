@@ -1,5 +1,11 @@
 2008-06-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Add g_queue_clear binding
+
+2008-06-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala:
 
 	Report error when using reference counting for interfaces without

@@ -2883,7 +2883,8 @@ namespace GLib {
 		public uint length;
 	
 		public Queue ();
-		
+
+		public void clear ();
 		public bool is_empty ();
 		public uint get_length ();
 		public void reverse ();
