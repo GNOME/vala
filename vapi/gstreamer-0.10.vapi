@@ -1098,7 +1098,7 @@ namespace Gst {
 		public bool clock_dirty;
 		public weak Gst.Clock provided_clock;
 		public weak Gst.Element clock_provider;
-		public bool add (Gst.Element element);
+		public bool add (Gst.Element# element);
 		public void add_many (Gst.Element element_1, ...);
 		public weak Gst.Pad find_unconnected_pad (Gst.PadDirection direction);
 		public weak Gst.Element get_by_interface (GLib.Type iface);

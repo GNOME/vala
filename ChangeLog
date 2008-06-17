@@ -1,5 +1,13 @@
 2008-06-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_bin_add binding, fixes bug 538845
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-06-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala:
 
 	Allow transformation of implicit array parameters to out or ref
