@@ -2313,11 +2313,15 @@ public class Vala.Genie.Parser : CodeVisitor {
 			ns.add_delegate ((Delegate) sym);
 		} else if (sym is Method) {
 			var method = (Method) sym;
-			method.binding = MemberBinding.STATIC;
+			if (method.binding == MemberBinding.INSTANCE) {
+				method.binding = MemberBinding.STATIC;
+			}
 			ns.add_method (method);
 		} else if (sym is Field) {
 			var field = (Field) sym;
-			field.binding = MemberBinding.STATIC;
+			if (field.binding == MemberBinding.INSTANCE) {
+				field.binding = MemberBinding.STATIC;
+			}
 			ns.add_field (field);
 		} else if (sym is Constant) {
 			ns.add_constant ((Constant) sym);
@@ -2525,6 +2529,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		var f = new Field (id, type, null, get_src_com (begin));
 
+		if (ModifierFlags.ABSTRACT in flags || ModifierFlags.VIRTUAL in flags || ModifierFlags.OVERRIDE in flags) {
+			Report.error (f.source_reference, "abstract, virtual, and override modifiers are not applicable to fields");
+                }
+
 		if (ModifierFlags.PRIVATE in flags) {
 			f.access = SymbolAccessibility.PRIVATE;
 		} else {
@@ -2536,7 +2544,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		if (accept (TokenType.ASSIGN)) {
 			f.initializer = parse_expression ();
 		}
-
 
 		if (ModifierFlags.STATIC in flags) {
 			f.binding = MemberBinding.STATIC;

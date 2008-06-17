@@ -1,6 +1,13 @@
 2008-06-16  Jamie McCracken  <jamiemcc@gnome.org>
 
 	* vala/valagenieparser.vala:
+
+	Report error when using invalid modifiers for methods and fields,
+
+
+2008-06-16  Jamie McCracken  <jamiemcc@gnome.org>
+
+	* vala/valagenieparser.vala:
 		
 	set equal func for list automatically based on type
 	
