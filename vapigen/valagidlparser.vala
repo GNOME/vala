@@ -1381,6 +1381,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			double array_length_pos = 0;
 			bool set_delegate_target_pos = false;
 			double delegate_target_pos = 0;
+			bool array_requested = false;
 			var attributes = get_attributes ("%s.%s".printf (symbol, param_node.name));
 			if (attributes != null) {
 				foreach (string attr in attributes) {
@@ -1390,14 +1391,25 @@ public class Vala.GIdlParser : CodeVisitor {
 							param_type = new ArrayType (param_type, 1, param_type.source_reference);
 							p.parameter_type = param_type;
 							p.direction = ParameterDirection.IN;
+							array_requested = true;
 						}
 					} else if (nv[0] == "is_out") {
 						if (eval (nv[1]) == "1") {
 							p.direction = ParameterDirection.OUT;
+							if (!array_requested && param_type is ArrayType) {
+								var array_type = (ArrayType) param_type;
+								param_type = array_type.element_type;
+								p.parameter_type = param_type;
+							}
 						}
 					} else if (nv[0] == "is_ref") {
 						if (eval (nv[1]) == "1") {
 							p.direction = ParameterDirection.REF;
+							if (!array_requested && param_type is ArrayType) {
+								var array_type = (ArrayType) param_type;
+								param_type = array_type.element_type;
+								p.parameter_type = param_type;
+							}
 						}
 					} else if (nv[0] == "nullable") {
 						if (eval (nv[1]) == "1") {
