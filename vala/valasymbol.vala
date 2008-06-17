@@ -236,6 +236,35 @@ public abstract class Vala.Symbol : CodeNode {
 		return result.str;
 	}
 
+	/**
+	 * Converts a string from lower_case to CamelCase.
+	 *
+	 * @param lower_case a string in lower case
+	 * @return           the specified string converted to camel case
+	 */
+	public static string lower_case_to_camel_case (string lower_case) {
+		var result = new StringBuilder ("");
+
+		weak string i = lower_case;
+
+		bool last_underscore = true;
+		while (i.len () > 0) {
+			unichar c = i.get_char ();
+			if (c == '_') {
+				last_underscore = true;
+			} else if (last_underscore) {
+				result.append_unichar (c.toupper ());
+				last_underscore = false;
+			} else {
+				result.append_unichar (c);
+			}
+			
+			i = i.next_char ();
+		}
+
+		return result.str;
+	}
+
 	// get the top scope from where this symbol is still accessible
 	public Scope? get_top_accessible_scope () {
 		if (access != SymbolAccessibility.PUBLIC) {

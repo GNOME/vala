@@ -92,7 +92,7 @@ public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBi
 			blob.append ("\\0");
 			start++;
 
-			blob.append (m.name);
+			blob.append (Symbol.lower_case_to_camel_case (m.name));
 			blob.append ("\\0");
 			start++;
 
@@ -164,7 +164,7 @@ public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBi
 
 			dbus_signals.append (dbus_iface_name);
 			dbus_signals.append ("\\0");
-			dbus_signals.append (sig.name);
+			dbus_signals.append (Symbol.lower_case_to_camel_case (sig.name));
 			dbus_signals.append ("\\0");
 		}
 		dbus_signals.append_c('"');

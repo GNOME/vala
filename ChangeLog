@@ -1,3 +1,11 @@
+2008-06-17  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasymbol.vala:
+	* gobject/valaccodeobjecttypesymbolbinding.vala:
+
+	Use CamelCase for methods and signals exported to D-Bus,
+	fixes bug 538818
+
 2008-06-16  Jamie McCracken  <jamiemcc@gnome.org>
 
 	* vala/valagenieparser.vala:
@@ -11,7 +19,6 @@
 	Add support for overriding default method handlers of signals
 	that have been declared with the `virtual' modifier
 
-
 2008-06-16  Jamie McCracken  <jamiemcc@gnome.org>
 
 	* vala/valagenieparser.vala:
@@ -23,7 +30,6 @@
 	* vala/valagenieparser.vala:
 
 	Report error when using invalid modifiers for methods and fields,
-
 
 2008-06-16  Jamie McCracken  <jamiemcc@gnome.org>
 
