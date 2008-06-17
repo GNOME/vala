@@ -2,6 +2,12 @@
 
 	* vala/valagenieparser.vala:
 
+	Constant arrays don't own their elements
+
+2008-06-16  Jamie McCracken  <jamiemcc@gnome.org>
+
+	* vala/valagenieparser.vala:
+
 	Add support for overriding default method handlers of signals
 	that have been declared with the `virtual' modifier
 
