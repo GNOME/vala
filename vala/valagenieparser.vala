@@ -2904,6 +2904,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 			sig.access = get_access (id);
 		}
 
+		if (ModifierFlags.VIRTUAL in flags) {
+			sig.is_virtual = true;
+		}
+
 		set_attributes (sig, attrs);
 		
 		foreach (FormalParameter formal_param in params) {
