@@ -1280,7 +1280,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public CCodeExpression? get_dup_func_expression (DataType type, SourceReference? source_reference) {
 		var cl = type.data_type as Class;
-		if (type.data_type != null) {
+		if (type is ErrorType) {
+			return new CCodeIdentifier ("g_error_copy");
+		} else if (type.data_type != null) {
 			string dup_function;
 			if (type.data_type.is_reference_counting ()) {
 				dup_function = type.data_type.get_ref_function ();
