@@ -1,3 +1,9 @@
+2008-06-16  Jamie McCracken  <jamiemcc@gnome.org>
+
+	* vala/valagenieparser.vala:
+		
+	set equal func for list automatically based on type
+	
 2008-06-16  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/gdk-2.0.deps:

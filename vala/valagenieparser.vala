@@ -949,6 +949,15 @@ public class Vala.Genie.Parser : CodeVisitor {
 		list_member.creation_member = true;
 		
 		var expr = new ObjectCreationExpression (list_member, get_src (begin));
+		
+		if (member.member_name == "string") {
+			parent_member = new MemberAccess (null, "GLib", get_src (begin));			
+			expr.add_argument (new MemberAccess (parent_member, "str_equal", get_src (begin)));
+			
+		} else if (member.member_name == "int") {
+			parent_member = new MemberAccess (null, "GLib", get_src (begin));
+			expr.add_argument (new MemberAccess (parent_member, "int_equal", get_src (begin)));
+		}
 
 		return expr;
 	}
