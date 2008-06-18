@@ -1,3 +1,12 @@
+2008-06-18  Jaap A. Haitsma  <jaap@haitsma.org>
+
+	* vapi/packages/gstreamer-0.10/gstreamer-0.10-custom.vala:
+	* vapi/packages/gstreamer-0.10/gstreamer-0.10.metadata:
+	Fix Gst.object.ref, unref and sink bindings
+	Fixes bug #536307	
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
 2008-06-17  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gstreamer-0.10/:
