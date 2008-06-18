@@ -1,5 +1,11 @@
 2008-06-18  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Fix g_source_attach binding
+
+2008-06-18  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/poppler-glib/:
 
 	Fix poppler_document_new_from_file binding

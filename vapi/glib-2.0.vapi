@@ -1272,7 +1272,7 @@ namespace GLib {
 	public class Source {
 		public Source (SourceFuncs source_funcs, uint struct_size /* = sizeof (Source) */);
 		public void set_funcs (SourceFuncs funcs);
-		public uint attach (MainContext context);
+		public uint attach (MainContext? context);
 		public void destroy ();
 		public bool is_destroyed ();
 		public void set_priority (int priority);
