@@ -206,7 +206,7 @@ namespace Poppler {
 	}
 	[Compact]
 	[CCode (copy_function = "poppler_action_copy", cheader_filename = "poppler.h")]
-	public class Action : GLib.Boxed {
+	public class Action {
 		public Poppler.ActionType type;
 		public weak Poppler.ActionAny any;
 		public weak Poppler.ActionGotoDest goto_dest;
@@ -219,7 +219,7 @@ namespace Poppler {
 	}
 	[Compact]
 	[CCode (copy_function = "poppler_dest_copy", cheader_filename = "poppler.h")]
-	public class Dest : GLib.Boxed {
+	public class Dest {
 		public Poppler.DestType type;
 		public int page_num;
 		public double left;
@@ -235,7 +235,7 @@ namespace Poppler {
 	}
 	[Compact]
 	[CCode (copy_function = "poppler_fonts_iter_copy", cheader_filename = "poppler.h")]
-	public class FontsIter : GLib.Boxed {
+	public class FontsIter {
 		public weak Poppler.FontsIter copy ();
 		public weak string get_file_name ();
 		public Poppler.FontType get_font_type ();
@@ -247,7 +247,7 @@ namespace Poppler {
 	}
 	[Compact]
 	[CCode (copy_function = "poppler_form_field_mapping_copy", cheader_filename = "poppler.h")]
-	public class FormFieldMapping : GLib.Boxed {
+	public class FormFieldMapping {
 		public weak Poppler.Rectangle area;
 		public weak Poppler.FormField field;
 		public weak Poppler.FormFieldMapping copy ();
@@ -255,7 +255,7 @@ namespace Poppler {
 	}
 	[Compact]
 	[CCode (copy_function = "poppler_image_mapping_copy", cheader_filename = "poppler.h")]
-	public class ImageMapping : GLib.Boxed {
+	public class ImageMapping {
 		public weak Poppler.Rectangle area;
 		public weak Gdk.Pixbuf image;
 		public weak Poppler.ImageMapping copy ();
@@ -263,7 +263,7 @@ namespace Poppler {
 	}
 	[Compact]
 	[CCode (copy_function = "poppler_index_iter_copy", cheader_filename = "poppler.h")]
-	public class IndexIter : GLib.Boxed {
+	public class IndexIter {
 		public weak Poppler.IndexIter copy ();
 		public weak Poppler.Action get_action ();
 		public weak Poppler.IndexIter get_child ();
@@ -273,7 +273,7 @@ namespace Poppler {
 	}
 	[Compact]
 	[CCode (copy_function = "poppler_link_mapping_copy", cheader_filename = "poppler.h")]
-	public class LinkMapping : GLib.Boxed {
+	public class LinkMapping {
 		public weak Poppler.Rectangle area;
 		public weak Poppler.Action action;
 		public weak Poppler.LinkMapping copy ();
@@ -281,7 +281,7 @@ namespace Poppler {
 	}
 	[Compact]
 	[CCode (copy_function = "poppler_page_transition_copy", cheader_filename = "poppler.h")]
-	public class PageTransition : GLib.Boxed {
+	public class PageTransition {
 		public Poppler.PageTransitionType type;
 		public Poppler.PageTransitionAlignment alignment;
 		public Poppler.PageTransitionDirection direction;
@@ -294,7 +294,7 @@ namespace Poppler {
 	}
 	[Compact]
 	[CCode (copy_function = "poppler_rectangle_copy", cheader_filename = "poppler.h")]
-	public class Rectangle : GLib.Boxed {
+	public class Rectangle {
 		public double x1;
 		public double y1;
 		public double x2;
@@ -323,7 +323,7 @@ namespace Poppler {
 		public weak Poppler.Page get_page_by_label (string label);
 		public bool has_attachments ();
 		public Document.from_data (string data, int length, string password) throws GLib.Error;
-		public Document.from_file (string uri, string password) throws GLib.Error;
+		public Document.from_file (string uri, string? password) throws GLib.Error;
 		public bool save (string uri) throws GLib.Error;
 		[NoAccessorMethod]
 		public string author { get; }

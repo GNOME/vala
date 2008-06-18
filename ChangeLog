@@ -1,5 +1,13 @@
 2008-06-18  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/poppler-glib/:
+
+	Fix poppler_document_new_from_file binding
+
+	* vapi/poppler-glib.vapi: regenerated
+
+2008-06-18  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
 
 	Fix GtkMenuShell.children and gtk_menu_shell_append bindings
