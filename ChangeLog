@@ -1,3 +1,11 @@
+2008-06-20  Zeeshan Ali Khattak  <zeenix@gmail.com>
+
+	* vapi/packages/gstreamer-0.10/gstreamer-0.10.metadata:
+
+	Correct the bindings for gst_tag_list_get_*(), fixes bug 538926
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
 2008-06-20  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/Makefile.am:
