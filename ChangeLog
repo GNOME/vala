@@ -1,5 +1,13 @@
 2008-06-20  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am:
+	* vapi/loudmouth-1.0.vapi:
+	* vapi/packages/loudmouth-1.0/:
+
+	Add loudmouth-1.0 bindings, patch by Ali Sabil
+
+2008-06-20  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegeneratorsignal.vala:
 
 	Fix ref and out signal parameters

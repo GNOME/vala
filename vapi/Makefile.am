@@ -104,6 +104,7 @@ dist_vapi_DATA = \
 	libwnck-1.0.deps \
 	libwnck-1.0.vapi \
 	libxml-2.0.vapi \
+	loudmouth-1.0.vapi \
 	pango.deps \
 	pango.vapi \
 	pangocairo.deps \
