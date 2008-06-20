@@ -248,13 +248,15 @@ public class Vala.CCodeGenerator {
 		foreach (FormalParameter p in params) {
 			string get_value_function;
 			bool is_array = p.parameter_type.is_array ();
-			if (is_array) {
+			if (p.direction != ParameterDirection.IN) {
+				get_value_function = "g_value_get_pointer";
+			} else if (is_array) {
 				if (((ArrayType) p.parameter_type).element_type.data_type == string_type.data_type) {
 					get_value_function = "g_value_get_boxed";
 				} else {
 					get_value_function = "g_value_get_pointer";
 				}
-			} else if (p.parameter_type is PointerType || p.parameter_type.type_parameter != null || p.direction != ParameterDirection.IN) {
+			} else if (p.parameter_type is PointerType || p.parameter_type.type_parameter != null) {
 				get_value_function = "g_value_get_pointer";
 			} else if (p.parameter_type is ErrorType) {
 				get_value_function = "g_value_get_pointer";

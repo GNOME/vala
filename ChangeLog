@@ -1,3 +1,9 @@
+2008-06-20  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegeneratorsignal.vala:
+
+	Fix ref and out signal parameters
+
 2008-06-18  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi:
