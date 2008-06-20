@@ -770,6 +770,8 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		bool is_errordomain = false;
 
+		var cheader_filenames = new ArrayList<string> ();
+
 		var en_attributes = get_attributes (node.name);
 		if (en_attributes != null) {
 			foreach (string attr in en_attributes) {
@@ -777,6 +779,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (nv[0] == "common_prefix") {
 					common_prefix = eval (nv[1]);
 				} else if (nv[0] == "cheader_filename") {
+					cheader_filenames.add (eval (nv[1]));
 					en.add_cheader_filename (eval (nv[1]));
 				} else if (nv[0] == "hidden") {
 					if (eval (nv[1]) == "1") {
@@ -803,6 +806,10 @@ public class Vala.GIdlParser : CodeVisitor {
 			var ed = new ErrorDomain (en.name);
 			ed.access = SymbolAccessibility.PUBLIC;
 			ed.set_cprefix (common_prefix);
+
+			foreach (string filename in cheader_filenames) {
+				ed.add_cheader_filename (filename);
+			}
 
 			foreach (EnumValue ev in en.get_values ()) {
 				ed.add_code (new ErrorCode (ev.name));
@@ -1625,11 +1632,15 @@ public class Vala.GIdlParser : CodeVisitor {
 			return null;
 		}
 
+		var c = new Constant (node.name, type, null, current_source_reference);
+		
 		string[] attributes = get_attributes (node.name);
 		if (attributes != null) {
 			foreach (string attr in attributes) {
 				var nv = attr.split ("=", 2);
-				if (nv[0] == "hidden") {
+				if (nv[0] == "cheader_filename") {
+					c.add_cheader_filename (eval (nv[1]));
+				} else if (nv[0] == "hidden") {
 					if (eval (nv[1]) == "1") {
 						return null;
 					}
@@ -1637,7 +1648,6 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 
-		var c = new Constant (node.name, type, null, current_source_reference);
 		c.access = SymbolAccessibility.PUBLIC;
 		
 		return c;
