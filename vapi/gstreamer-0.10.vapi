@@ -866,23 +866,6 @@ namespace Gst {
 		public GLib.Quark quark;
 	}
 	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class StaticCaps : Gst.Caps {
-		[CCode (cname = "string")]
-		public weak string str;
-		public weak Gst.Caps get ();
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class StaticPadTemplate {
-		public weak string name_template;
-		public Gst.PadDirection direction;
-		public Gst.PadPresence presence;
-		public weak Gst.StaticCaps static_caps;
-		public weak Gst.PadTemplate get ();
-		public weak Gst.Caps get_caps ();
-	}
-	[Compact]
 	[CCode (copy_function = "gst_tag_list_copy", cheader_filename = "gst/gst.h")]
 	public class TagList {
 		public void add (Gst.TagMergeMode mode, string tag);
@@ -1829,6 +1812,21 @@ namespace Gst {
 		public weak string nick;
 		public weak string description;
 		public GLib.Quark quark;
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public struct StaticCaps {
+		[CCode (cname = "string")]
+		public weak string str;
+		public Gst.Caps get ();
+	}
+	[CCode (cheader_filename = "gst/gst.h")]
+	public struct StaticPadTemplate {
+		public weak string name_template;
+		public Gst.PadDirection direction;
+		public Gst.PadPresence presence;
+		public Gst.StaticCaps static_caps;
+		public Gst.PadTemplate get ();
+		public Gst.Caps get_caps ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool BusFunc (Gst.Bus bus, Gst.Message message);
