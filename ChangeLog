@@ -1,3 +1,9 @@
+2008-06-21  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valascanner.vala:
+
+	Remove unused field
+
 2008-06-20  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala:

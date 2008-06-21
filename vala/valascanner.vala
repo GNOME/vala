@@ -29,7 +29,6 @@ using Gee;
 public class Vala.Scanner : Object {
 	public SourceFile source_file { get; construct; }
 
-	char* begin;
 	char* current;
 	char* end;
 
@@ -43,7 +42,7 @@ public class Vala.Scanner : Object {
 	}
 	
 	construct {
-		begin = source_file.get_mapped_contents ();
+		char* begin = source_file.get_mapped_contents ();
 		end = begin + source_file.get_mapped_length ();
 
 		current = begin;
