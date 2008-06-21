@@ -424,6 +424,19 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 				codegen.instance_priv_struct.add_field ("GDestroyNotify", func_name);
 			}
 
+			/* initialize class fields */
+			var fields = cl.get_fields ();
+			foreach (Field field in fields) {
+				if (field.binding != MemberBinding.CLASS || field.initializer == null) {
+					continue;
+				}
+				CCodeExpression left = new CCodeMemberAccess (new CCodeIdentifier ("klass"),
+				                                              field.get_cname (), true);
+				CCodeExpression right = (CCodeExpression)field.initializer.ccodenode;
+				CCodeAssignment assign = new CCodeAssignment (left, right);
+				init_block.add_statement (new CCodeExpressionStatement (assign));
+			}
+
 			/* create properties */
 			var props = cl.get_properties ();
 			foreach (Property prop in props) {

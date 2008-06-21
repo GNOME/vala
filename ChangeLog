@@ -1,3 +1,19 @@
+2008-06-21  Jared Moore  <jaredm@svn.gnome.org>
+
+	* gobject/valaccodeclassbinding.vala:
+
+	Initialize class fields in class init function
+
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodememberaccessbinding.vala:
+
+	Fix class field access, fixes bug 530039
+
+	* tests/classes-fields.exp:
+	* tests/classes-fields.vala
+
+	Test class field access
+
 2008-06-21  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valascanner.vala:

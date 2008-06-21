@@ -102,7 +102,25 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 			} else if (f.binding == MemberBinding.CLASS) {
 				var cl = (Class) f.parent_symbol;
 				var cast = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null) + "_CLASS"));
-				cast.add_argument (new CCodeIdentifier ("klass"));
+
+				CCodeExpression klass;
+				if (expr.inner == null) {
+					if (codegen.in_static_or_class_ctor) {
+						// Accessing the field from a static or class constructor
+						klass = new CCodeIdentifier ("klass");
+					} else {
+						// Accessing the field from within an instance method
+						var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
+						k.add_argument (new CCodeIdentifier ("self"));
+						klass = k;
+					}
+				} else {
+					// Accessing the field of an instance
+					var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
+					k.add_argument ((CCodeExpression) expr.inner.ccodenode);
+					klass = k;
+				}
+				cast.add_argument (klass);
 				expr.ccodenode = new CCodeMemberAccess.pointer (cast, f.get_cname ());
 			} else {
 				expr.ccodenode = new CCodeIdentifier (f.get_cname ());

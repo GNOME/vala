@@ -82,6 +82,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	private int next_try_id = 0;
 	public bool in_creation_method = false;
 	private bool in_constructor = false;
+	public bool in_static_or_class_ctor = false;
 	public bool current_method_inner_error = false;
 
 	public DataType bool_type;
@@ -949,7 +950,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		current_method_inner_error = false;
 		in_constructor = true;
 
+		if (c.binding == MemberBinding.CLASS || c.binding == MemberBinding.STATIC) {
+			in_static_or_class_ctor = true;
+		}
 		c.accept_children (this);
+		in_static_or_class_ctor = false;
 
 		in_constructor = false;
 
