@@ -1,5 +1,11 @@
 2008-06-21  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala:
+
+	Fix using static methods as delegates, fixes bug 539277
+
+2008-06-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Fix gst_*_parse_* bindings, patch by Zeeshan Ali Khattak,

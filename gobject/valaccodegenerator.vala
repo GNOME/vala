@@ -2840,8 +2840,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					return target_expr;
 				}
 			} else if (delegate_expr.symbol_reference is Method) {
+				var m = (Method) delegate_expr.symbol_reference;
 				var ma = (MemberAccess) delegate_expr;
-				if (ma.inner == null) {
+				if (m.binding == MemberBinding.STATIC) {
 					return new CCodeConstant ("NULL");
 				} else {
 					return (CCodeExpression) ma.inner.ccodenode;
