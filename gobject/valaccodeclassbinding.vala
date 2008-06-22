@@ -533,7 +533,25 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			}
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.base_interface_method.vfunc_name), new CCodeIdentifier (cname))));
 		}
-		
+
+		// connect inherited implementations
+		foreach (Method m in iface.get_methods ()) {
+			if (m.is_abstract) {
+				Method cl_method = null;
+				var base_class = cl;
+				while (cl_method == null) {
+					cl_method = base_class.scope.lookup (m.name) as Method;
+					base_class = base_class.base_class;
+				}
+				if (cl_method.parent_symbol != cl) {
+					// method inherited from base class
+					
+					var ciface = new CCodeIdentifier ("iface");
+					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), new CCodeIdentifier (cl_method.get_cname ()))));
+				}
+			}
+		}
+
 		codegen.source_type_member_definition.append (iface_init);
 	}
 	

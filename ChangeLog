@@ -1,3 +1,10 @@
+2008-06-23  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodeclassbinding.vala:
+
+	Support inherited interface implementation, fixes bug 536863
+
 2008-06-22  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodedynamicmethodbinding.vala:

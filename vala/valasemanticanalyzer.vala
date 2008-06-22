@@ -214,7 +214,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					/* check methods */
 					foreach (Method m in iface.get_methods ()) {
 						if (m.is_abstract) {
-							var sym = cl.scope.lookup (m.name);
+							Symbol sym = null;
+							var base_class = cl;
+							while (base_class != null && !(sym is Method)) {
+								sym = base_class.scope.lookup (m.name);
+								base_class = base_class.base_class;
+							}
 							if (!(sym is Method)) {
 								cl.error = true;
 								Report.error (cl.source_reference, "`%s' does not implement interface method `%s'".printf (cl.get_full_name (), m.get_full_name ()));
@@ -225,7 +230,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					/* check properties */
 					foreach (Property prop in iface.get_properties ()) {
 						if (prop.is_abstract) {
-							var sym = cl.scope.lookup (prop.name);
+							Symbol sym = null;
+							var base_class = cl;
+							while (base_class != null && !(sym is Property)) {
+								sym = base_class.scope.lookup (prop.name);
+								base_class = base_class.base_class;
+							}
 							if (!(sym is Property)) {
 								cl.error = true;
 								Report.error (cl.source_reference, "`%s' does not implement interface property `%s'".printf (cl.get_full_name (), prop.get_full_name ()));
