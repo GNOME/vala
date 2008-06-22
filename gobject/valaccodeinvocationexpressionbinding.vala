@@ -75,11 +75,10 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		CCodeExpression instance;
 		if (m != null && m.binding == MemberBinding.INSTANCE) {
 			instance = (CCodeExpression) ma.inner.ccodenode;
-			var instance_expression_type = ma.inner.value_type;
 
-			if (instance_expression_type.data_type is Struct
-			    && !((Struct) instance_expression_type.data_type).is_simple_type ()
-			    && instance_expression_type.data_type != codegen.current_type_symbol) {
+			var st = m.parent_symbol as Struct;
+			if (st != null && !st.is_simple_type ()) {
+				// we need to pass struct instance by reference
 				var unary = instance as CCodeUnaryExpression;
 				if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
 					// *expr => expr
@@ -91,7 +90,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 					// (tmp = expr, &tmp)
 					var ccomma = new CCodeCommaExpression ();
 
-					var temp_var = codegen.get_temp_variable (instance_expression_type);
+					var temp_var = codegen.get_temp_variable (ma.inner.target_type);
 					codegen.temp_vars.insert (0, temp_var);
 					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), instance));
 					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name)));

@@ -1599,6 +1599,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
+			if (expr.pointer_member_access) {
+				var pointer_type = expr.inner.value_type as PointerType;
+				if (pointer_type != null && pointer_type.base_type is ValueType) {
+					// transform foo->bar to (*foo).bar
+					expr.inner = new PointerIndirection (expr.inner, expr.source_reference);
+					expr.inner.accept (this);
+					expr.pointer_member_access = false;
+				}
+			}
+
 			if (expr.inner is MemberAccess) {
 				var ma = (MemberAccess) expr.inner;
 				if (ma.prototype_access) {
