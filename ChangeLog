@@ -1,3 +1,9 @@
+2008-06-22  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
+	Use G_TYPE_INT as type_id for int32
+
 2008-06-21  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gstreamer-0.10/:
