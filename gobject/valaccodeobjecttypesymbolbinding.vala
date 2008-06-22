@@ -181,7 +181,7 @@ public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBi
 
 			dbus_props.append (dbus_iface_name);
 			dbus_props.append ("\\0");
-			dbus_props.append (prop.name);
+			dbus_props.append (Symbol.lower_case_to_camel_case (prop.name));
 			dbus_props.append ("\\0");
 		}
 		dbus_props.append_c ('"');

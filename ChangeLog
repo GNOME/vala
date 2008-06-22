@@ -1,5 +1,11 @@
 2008-06-22  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeobjecttypesymbolbinding.vala:
+
+	Use CamelCase for properties exported to D-Bus
+
+2008-06-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 	* gobject/valaccodeinvocationexpressionbinding.vala:
 
