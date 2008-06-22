@@ -31,11 +31,7 @@ public class Vala.CCodeGenerator {
 			return ("POINTER");
 		} else if (t is ArrayType) {
 			if (dbus) {
-				if (((ArrayType) t).element_type.data_type == string_type.data_type) {
-					return ("BOXED");
-				} else {
-					return ("POINTER");
-				}
+				return ("BOXED");
 			} else {
 				if (((ArrayType) t).element_type.data_type == string_type.data_type) {
 					return ("BOXED_INT");
@@ -61,7 +57,7 @@ public class Vala.CCodeGenerator {
 	}
 	
 	public string get_marshaller_function (Gee.List<FormalParameter> params, DataType return_type, string? prefix = null, bool dbus = false) {
-		var signature = get_marshaller_signature (params, return_type);
+		var signature = get_marshaller_signature (params, return_type, dbus);
 		string ret;
 
 		if (prefix == null) {
@@ -162,7 +158,7 @@ public class Vala.CCodeGenerator {
 		int n_params, i;
 		
 		/* check whether a signal with the same signature already exists for this source file (or predefined) */
-		signature = get_marshaller_signature (params, return_type);
+		signature = get_marshaller_signature (params, return_type, dbus);
 		if (predefined_marshal_set.contains (signature) || user_marshal_set.contains (signature)) {
 			return;
 		}
@@ -251,10 +247,14 @@ public class Vala.CCodeGenerator {
 			if (p.direction != ParameterDirection.IN) {
 				get_value_function = "g_value_get_pointer";
 			} else if (is_array) {
-				if (((ArrayType) p.parameter_type).element_type.data_type == string_type.data_type) {
+				if (dbus) {
 					get_value_function = "g_value_get_boxed";
 				} else {
-					get_value_function = "g_value_get_pointer";
+					if (((ArrayType) p.parameter_type).element_type.data_type == string_type.data_type) {
+						get_value_function = "g_value_get_boxed";
+					} else {
+						get_value_function = "g_value_get_pointer";
+					}
 				}
 			} else if (p.parameter_type is PointerType || p.parameter_type.type_parameter != null) {
 				get_value_function = "g_value_get_pointer";
@@ -283,10 +283,14 @@ public class Vala.CCodeGenerator {
 			
 			CCodeFunctionCall set_fc;
 			if (return_type.is_array ()) {
-				if (((ArrayType) return_type).element_type.data_type == string_type.data_type) {
+				if (dbus) {
 					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
 				} else {
-					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
+					if (((ArrayType) return_type).element_type.data_type == string_type.data_type) {
+						set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
+					} else {
+						set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
+					}
 				}
 			} else if (return_type.type_parameter != null) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));

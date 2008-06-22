@@ -139,7 +139,8 @@ public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 
 		// FIXME should only be done once per marshaller
 		var register_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_object_register_marshaller"));
-		register_call.add_argument (new CCodeIdentifier (codegen.get_marshaller_function (node.get_parameters (), node.return_type)));
+		codegen.generate_marshaller (node.get_parameters (), node.return_type, true);
+		register_call.add_argument (new CCodeIdentifier (codegen.get_marshaller_function (node.get_parameters (), node.return_type, null, true)));
 		register_call.add_argument (new CCodeIdentifier ("G_TYPE_NONE"));
 
 		var add_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_add_signal"));
@@ -153,18 +154,24 @@ public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 				first = false;
 				continue;
 			}
-			if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type != codegen.string_type.data_type) {
-				var array_type = (ArrayType) param.parameter_type;
-				if (array_type.element_type.data_type.get_type_id () == null) {
-					Report.error (param.source_reference, "unsupported parameter type for D-Bus signals");
-					return;
-				}
 
-				var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
-				carray_type.add_argument (new CCodeConstant ("\"GArray\""));
-				carray_type.add_argument (new CCodeIdentifier (array_type.element_type.data_type.get_type_id ()));
-				register_call.add_argument (carray_type);
-				add_call.add_argument (carray_type);
+			var array_type = param.parameter_type as ArrayType;
+			if (array_type != null) {
+				if (array_type.element_type.data_type == codegen.string_type.data_type) {
+					register_call.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
+					add_call.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
+				} else {
+					if (array_type.element_type.data_type.get_type_id () == null) {
+						Report.error (param.source_reference, "unsupported parameter type for D-Bus signals");
+						return;
+					}
+
+					var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
+					carray_type.add_argument (new CCodeConstant ("\"GArray\""));
+					carray_type.add_argument (new CCodeIdentifier (array_type.element_type.data_type.get_type_id ()));
+					register_call.add_argument (carray_type);
+					add_call.add_argument (carray_type);
+				}
 			} else {
 				if (param.parameter_type.get_type_id () == null) {
 					Report.error (param.source_reference, "unsupported parameter type for D-Bus signals");

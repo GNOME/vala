@@ -219,7 +219,14 @@ public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBi
 		function.add_parameter (new CCodeFormalParameter ("self", bindable.get_cname () + "*"));
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
+			var array_type = param.parameter_type as ArrayType;
+			if (array_type != null && array_type.element_type.data_type != codegen.string_type.data_type) {
+				if (codegen.dbus_use_ptr_array (array_type)) {
+					function.add_parameter (new CCodeFormalParameter (param.name, "GPtrArray*"));
+				} else {
+					function.add_parameter (new CCodeFormalParameter (param.name, "GArray*"));
+				}
+			} else if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
 				if (param.direction == ParameterDirection.IN) {
 					function.add_parameter (new CCodeFormalParameter ("dbus_%s".printf (param.name), "GValueArray*"));
 				} else {
@@ -231,8 +238,17 @@ public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBi
 		}
 
 		if (!(m.return_type is VoidType)) {
-			if (m.return_type.get_type_signature ().has_prefix ("(")) {
-				function.add_parameter (new CCodeFormalParameter ("result", "GValueArray**"));
+			var array_type = m.return_type as ArrayType;
+			if (array_type != null) {
+				if (array_type.element_type.data_type == codegen.string_type.data_type) {
+					function.add_parameter (new CCodeFormalParameter ("result", array_type.get_cname () + "*"));
+				} else if (codegen.dbus_use_ptr_array (array_type)) {
+					function.add_parameter (new CCodeFormalParameter ("dbus_result", "GPtrArray**"));
+				} else {
+					function.add_parameter (new CCodeFormalParameter ("dbus_result", "GArray**"));
+				}
+			} else if (m.return_type.get_type_signature ().has_prefix ("(")) {
+				function.add_parameter (new CCodeFormalParameter ("dbus_result", "GValueArray**"));
 			} else {
 				function.add_parameter (new CCodeFormalParameter ("result", m.return_type.get_cname () + "*"));
 			}
@@ -268,12 +284,41 @@ public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBi
 			}
 		}
 
+		if (!(m.return_type is VoidType)) {
+			var array_type = m.return_type as ArrayType;
+			if (array_type != null) {
+				if (array_type.element_type.data_type != codegen.string_type.data_type) {
+					var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
+					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+					block.add_statement (cdecl);
+				}
+
+				var len_cdecl = new CCodeDeclaration ("int");
+				len_cdecl.add_declarator (new CCodeVariableDeclarator ("result_length1"));
+				block.add_statement (len_cdecl);
+			}
+		}
+
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
 
 		ccall.add_argument (new CCodeIdentifier ("self"));
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
+			var array_type = param.parameter_type as ArrayType;
+			if (array_type != null) {
+				if (array_type.element_type.data_type == codegen.string_type.data_type) {
+					ccall.add_argument (new CCodeIdentifier (param.name));
+					var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+					cstrvlen.add_argument (new CCodeIdentifier (param.name));
+					ccall.add_argument (cstrvlen);
+				} else if (codegen.dbus_use_ptr_array (array_type)) {
+					ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "pdata"));
+					ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "len"));
+				} else {
+					ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "data"));
+					ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "len"));
+				}
+			} else if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
 				// struct input or output parameters
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 			} else {
@@ -281,15 +326,25 @@ public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBi
 			}
 		}
 
-		if (m.get_error_types ().size > 0) {
-			ccall.add_argument (new CCodeIdentifier ("error"));
-		}
-
 		CCodeExpression expr;
 		if (m.return_type is VoidType) {
 			expr = ccall;
 		} else {
-			expr = new CCodeAssignment (new CCodeIdentifier ("*result"), ccall);
+			var array_type = m.return_type as ArrayType;
+			if (array_type != null) {
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result_length1")));
+				if (array_type.element_type.data_type != codegen.string_type.data_type) {
+					expr = new CCodeAssignment (new CCodeIdentifier ("result"), ccall);
+				} else {
+					expr = new CCodeAssignment (new CCodeIdentifier ("*result"), ccall);
+				}
+			} else {
+				expr = new CCodeAssignment (new CCodeIdentifier ("*result"), ccall);
+			}
+		}
+
+		if (m.get_error_types ().size > 0) {
+			ccall.add_argument (new CCodeIdentifier ("error"));
 		}
 
 		block.add_statement (new CCodeExpressionStatement (expr));
@@ -343,6 +398,45 @@ public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBi
 					block.add_statement (new CCodeExpressionStatement (cappend_call));
 
 					type_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
+				}
+			}
+		}
+
+		if (!(m.return_type is VoidType)) {
+			var array_type = m.return_type as ArrayType;
+			if (array_type != null && array_type.element_type.data_type != codegen.string_type.data_type) {
+				var garray = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("dbus_result"));
+
+				var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+
+				if (codegen.dbus_use_ptr_array (array_type)) {
+					var array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_ptr_array_sized_new"));
+					array_construct.add_argument (new CCodeIdentifier ("result_length1"));
+
+					block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (garray, array_construct)));
+
+					var memcpy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
+					memcpy_call.add_argument (new CCodeMemberAccess.pointer (garray, "pdata"));
+					memcpy_call.add_argument (new CCodeIdentifier ("result"));
+					memcpy_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeIdentifier ("result_length1"), sizeof_call));
+					block.add_statement (new CCodeExpressionStatement (memcpy_call));
+
+					var len_assignment = new CCodeAssignment (new CCodeMemberAccess.pointer (garray, "len"), new CCodeIdentifier ("result_length1"));
+					block.add_statement (new CCodeExpressionStatement (len_assignment));
+				} else {
+					var array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_array_new"));
+					array_construct.add_argument (new CCodeConstant ("TRUE"));
+					array_construct.add_argument (new CCodeConstant ("TRUE"));
+					array_construct.add_argument (sizeof_call);
+
+					block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (garray, array_construct)));
+
+					var cappend_call = new CCodeFunctionCall (new CCodeIdentifier ("g_array_append_vals"));
+					cappend_call.add_argument (garray);
+					cappend_call.add_argument (new CCodeIdentifier ("result"));
+					cappend_call.add_argument (new CCodeIdentifier ("result_length1"));
+					block.add_statement (new CCodeExpressionStatement (cappend_call));
 				}
 			}
 		}

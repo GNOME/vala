@@ -1,5 +1,16 @@
 2008-06-22  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodedynamicmethodbinding.vala:
+	* gobject/valaccodedynamicsignalbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodegeneratorsignal.vala:
+	* gobject/valaccodeobjecttypesymbolbinding.vala:
+
+	Improve support for arrays as paramters and return values of
+	methods and signals exported over D-Bus, fixes part of bug 539357
+
+2008-06-22  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeobjecttypesymbolbinding.vala:
 
 	Use CamelCase for properties exported to D-Bus

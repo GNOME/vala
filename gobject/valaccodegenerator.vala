@@ -87,6 +87,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public DataType bool_type;
 	public DataType char_type;
+	public DataType uchar_type;
 	public DataType unichar_type;
 	public DataType short_type;
 	public DataType ushort_type;
@@ -96,6 +97,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public DataType ulong_type;
 	public DataType int8_type;
 	public DataType uint8_type;
+	public DataType int32_type;
+	public DataType uint32_type;
 	public DataType int64_type;
 	public DataType uint64_type;
 	public DataType string_type;
@@ -210,6 +213,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		bool_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("bool"));
 		char_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("char"));
+		uchar_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uchar"));
 		unichar_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("unichar"));
 		short_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("short"));
 		ushort_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("ushort"));
@@ -219,6 +223,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		ulong_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("ulong"));
 		int8_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int8"));
 		uint8_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint8"));
+		int32_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int32"));
+		uint32_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint32"));
 		int64_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int64"));
 		uint64_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint64"));
 		float_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("float"));
@@ -3953,6 +3959,32 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			} else {
 				return (int) ((200 + param_pos) * 1000);
 			}
+		}
+	}
+
+	public bool dbus_use_ptr_array (ArrayType array_type) {
+		if (array_type.element_type.data_type == string_type.data_type) {
+			// use char**
+			return false;
+		} else if (array_type.element_type.data_type == bool_type.data_type
+		           || array_type.element_type.data_type == char_type.data_type
+		           || array_type.element_type.data_type == uchar_type.data_type
+		           || array_type.element_type.data_type == int_type.data_type
+		           || array_type.element_type.data_type == uint_type.data_type
+		           || array_type.element_type.data_type == long_type.data_type
+		           || array_type.element_type.data_type == ulong_type.data_type
+		           || array_type.element_type.data_type == int8_type.data_type
+		           || array_type.element_type.data_type == uint8_type.data_type
+		           || array_type.element_type.data_type == int32_type.data_type
+		           || array_type.element_type.data_type == uint32_type.data_type
+		           || array_type.element_type.data_type == int64_type.data_type
+		           || array_type.element_type.data_type == uint64_type.data_type
+		           || array_type.element_type.data_type == double_type.data_type) {
+			// use GArray
+			return false;
+		} else {
+			// use GPtrArray
+			return true;
 		}
 	}
 

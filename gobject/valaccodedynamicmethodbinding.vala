@@ -134,7 +134,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 				if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type != codegen.string_type.data_type) {
 					var array_type = (ArrayType) param.parameter_type;
 					CCodeDeclaration cdecl;
-					if (dbus_use_ptr_array (array_type)) {
+					if (codegen.dbus_use_ptr_array (array_type)) {
 						cdecl = new CCodeDeclaration ("GPtrArray*");
 					} else {
 						cdecl = new CCodeDeclaration ("GArray*");
@@ -143,7 +143,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 					cb_fun.block.add_statement (cdecl);
 					cend_call.add_argument (get_dbus_g_type (array_type));
 					cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
-					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), dbus_use_ptr_array (array_type) ? "pdata" : "data"));
+					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), codegen.dbus_use_ptr_array (array_type) ? "pdata" : "data"));
 					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "len"));
 				} else {
 					var cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
@@ -205,7 +205,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 
 					CCodeDeclaration cdecl;
 					CCodeFunctionCall array_construct;
-					if (dbus_use_ptr_array (array_type)) {
+					if (codegen.dbus_use_ptr_array (array_type)) {
 						cdecl = new CCodeDeclaration ("GPtrArray*");
 
 						array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_ptr_array_sized_new"));
@@ -222,7 +222,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("dbus_%s".printf (param.name), array_construct));
 					block.add_statement (cdecl);
 
-					if (dbus_use_ptr_array (array_type)) {
+					if (codegen.dbus_use_ptr_array (array_type)) {
 						var memcpy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
 						memcpy_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "pdata"));
 						memcpy_call.add_argument (new CCodeIdentifier (param.name));
@@ -362,7 +362,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 				ccall.add_argument (get_dbus_g_type (array_type));
 
 				CCodeDeclaration cdecl;
-				if (dbus_use_ptr_array (array_type)) {
+				if (codegen.dbus_use_ptr_array (array_type)) {
 					cdecl = new CCodeDeclaration ("GPtrArray*");
 				} else {
 					cdecl = new CCodeDeclaration ("GArray*");
@@ -390,7 +390,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 				block.add_statement (new CCodeExpressionStatement (assign));
 
 				// return result->data;
-				block.add_statement (new CCodeReturnStatement (new CCodeCastExpression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), dbus_use_ptr_array (array_type) ? "pdata" : "data"), method.return_type.get_cname ())));
+				block.add_statement (new CCodeReturnStatement (new CCodeCastExpression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), codegen.dbus_use_ptr_array (array_type) ? "pdata" : "data"), method.return_type.get_cname ())));
 			} else {
 				// string arrays or other datatypes
 
@@ -445,26 +445,6 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 		}
 	}
 
-	bool dbus_use_ptr_array (ArrayType array_type) {
-		if (array_type.element_type.data_type == codegen.string_type.data_type) {
-			// use char**
-			return false;
-		} else if (array_type.element_type.data_type == codegen.bool_type.data_type
-		           || array_type.element_type.data_type == codegen.int_type.data_type
-		           || array_type.element_type.data_type == codegen.uint_type.data_type
-		           || array_type.element_type.data_type == codegen.long_type.data_type
-		           || array_type.element_type.data_type == codegen.ulong_type.data_type
-		           || array_type.element_type.data_type == codegen.int64_type.data_type
-		           || array_type.element_type.data_type == codegen.uint64_type.data_type
-		           || array_type.element_type.data_type == codegen.double_type.data_type) {
-			// use GArray
-			return false;
-		} else {
-			// use GPtrArray
-			return true;
-		}
-	}
-
 	CCodeExpression get_dbus_g_type (DataType data_type) {
 		var array_type = data_type as ArrayType;
 		if (array_type != null) {
@@ -473,7 +453,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 			}
 
 			var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
-			if (dbus_use_ptr_array (array_type)) {
+			if (codegen.dbus_use_ptr_array (array_type)) {
 				carray_type.add_argument (new CCodeConstant ("\"GPtrArray\""));
 			} else {
 				carray_type.add_argument (new CCodeConstant ("\"GArray\""));
