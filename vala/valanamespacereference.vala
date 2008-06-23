@@ -1,6 +1,6 @@
 /* valanamespacereference.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -43,9 +43,9 @@ public class Vala.NamespaceReference : CodeNode {
 	 * @param source_reference reference to source code
 	 * @return                 newly created namespace reference
 	 */
-	public NamespaceReference (string name, SourceReference source_reference) {
-		this.source_reference = source_reference;
+	public NamespaceReference (string name, SourceReference? source_reference = null) {
 		this.name = name;
+		this.source_reference = source_reference;
 	}
 	
 	public override void accept (CodeVisitor visitor) {

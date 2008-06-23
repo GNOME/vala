@@ -44,9 +44,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 	
 	string class_name;
 	
-	/* we need to know whether to automatically add these using directives */
-	bool has_uses_glib;
-
 	/* hack needed to know if any part of an expression is a lambda one */
 	bool current_expr_is_lambda;
 
@@ -72,7 +69,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	construct {
 		tokens = new TokenInfo[BUFFER_SIZE];
-		has_uses_glib = false;
 		class_name = null;
 		current_expr_is_lambda = false;
 	}
@@ -2344,10 +2340,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var ns_ref = new NamespaceReference (sym.name, get_src (begin));
 
 		scanner.source_file.add_using_directive (ns_ref);
-				
-		if (sym.name == "GLib") {
-			has_uses_glib = true;
-		}
 	}
 
 	void parse_using_directives () throws ParseError {
@@ -2371,11 +2363,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 				expect_terminator ();
 			}
-		}
-		
-		if (!has_uses_glib) {
-			var ns_ref = new NamespaceReference ("GLib", get_src (begin));
-			scanner.source_file.add_using_directive (ns_ref);
 		}
 		
 	}

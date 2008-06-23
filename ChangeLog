@@ -1,5 +1,14 @@
 2008-06-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valagenieparser.vala:
+	* vala/valanamespacereference.vala:
+	* vala/valasourcefile.vala:
+	* compiler/valacompiler.vala:
+
+	Import members of the GLib namespace by default, fixes bug 539596
+
+2008-06-23  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodedynamicpropertybinding.vala:
 
 	Support dynamic D-Bus properties

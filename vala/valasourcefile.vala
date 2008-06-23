@@ -108,6 +108,12 @@ public class Vala.SourceFile : Object {
 	 * @param ns reference to namespace
 	 */
 	public void add_using_directive (NamespaceReference ns) {
+		foreach (NamespaceReference using_directive in using_directives) {
+			if (using_directive.name == ns.name) {
+				// ignore duplicates
+				return;
+			}
+		}
 		using_directives.add (ns);
 	}
 	
