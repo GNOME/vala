@@ -1,3 +1,10 @@
+2008-06-23  Jaap A. Haitsma  <jaap@haitsma.org>
+
+	* vapi/packages/gdk-2.0/gdk-2.0.metadata:
+	Fix gdk_pixbuf_from_drawable and gdk_pixbuf_from_image bindings
+	Fixes bug #539632
+	* vapi/gdk-2.0.vapi: Regenerated
+
 2008-06-23  Jamie McCracken  <jamiemcc@gnome.org>
 
 	* vala/valageniescanner.vala:
