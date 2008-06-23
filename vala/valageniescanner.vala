@@ -453,9 +453,11 @@ public class Vala.Genie.Scanner : Object {
 			space ();
 		}
 		
-		/* handle line continuation */
+		/* handle line continuation (lines ending with \) */
 		while (current < end && current[0] == '\\' && current[1] == '\n') {
 			current += 2;
+			line++;
+			skip_space_tabs ();
 		}
 
 		/* handle non-consecutive new line once parsing is underway - EOL */
@@ -1016,10 +1018,30 @@ public class Vala.Genie.Scanner : Object {
 		return true;
 	}
 
+	bool skip_tabs () {
+		bool found = false;
+		while (current < end && current[0] == '\t' ) {
+			current++;
+			column++;
+			found = true;
+		}
+		
+		return found;
+	}
+
+	void skip_space_tabs () {
+		while (whitespace () || skip_tabs () || comment () ) {
+		}
+	
+	}
+
 	void space () {
 		while (whitespace () || comment ()) {
 		}
 	}
+
+
+
 
 	void push_comment (string comment_item, bool file_comment) {
 		if (_comment == null) {
