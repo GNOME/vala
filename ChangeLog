@@ -1,5 +1,21 @@
 2008-06-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacfgbuilder.vala:
+	* vala/valaelementaccess.vala:
+	* vala/valanullchecker.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasignal.vala:
+	* vala/valasymbolresolver.vala:
+	* gobject/valaccodeassignmentbinding.vala:
+	* gobject/valaccodeelementaccessbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+
+	Support connecting to and emitting detailed signals,
+	fixes bug 536794
+
+2008-06-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaattribute.vala:
 	* vala/valafield.vala:
 	* vala/valainterfacewriter.vala:

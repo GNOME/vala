@@ -2895,6 +2895,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_element_access (ElementAccess expr) {
+		expr.accept_children (this);
+
 		code_binding (expr).emit ();
 	}
 

@@ -205,6 +205,8 @@ public class Vala.NullChecker : CodeVisitor {
 	}
 
 	public override void visit_element_access (ElementAccess expr) {
+		expr.accept_children (this);
+
 		check_non_null (expr.container);
 	}
 

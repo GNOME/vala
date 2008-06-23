@@ -66,9 +66,9 @@ public class Vala.Signal : Member, Lockable {
 	 * @return            newly created signal
 	 */
 	public Signal (string name, DataType return_type, SourceReference? source_reference = null) {
+		this.name = name;
 		this.return_type = return_type;
 		this.source_reference = source_reference;
-		this.name = name;
 	}
 	
 	/**
@@ -137,7 +137,7 @@ public class Vala.Signal : Member, Lockable {
 	 *
 	 * @return string literal to be used in C code
 	 */
-	public CCodeConstant get_canonical_cconstant () {
+	public CCodeConstant get_canonical_cconstant (string? detail = null) {
 		var str = new StringBuilder ("\"");
 		
 		string i = name;
@@ -152,7 +152,12 @@ public class Vala.Signal : Member, Lockable {
 			
 			i = i.next_char ();
 		}
-		
+
+		if (detail != null) {
+			str.append ("::");
+			str.append (detail);
+		}
+
 		str.append_c ('"');
 		
 		return new CCodeConstant (str.str);

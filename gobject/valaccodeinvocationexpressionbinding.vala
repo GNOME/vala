@@ -43,18 +43,13 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		Method m = null;
 		Gee.List<FormalParameter> params;
 		
-		if (!(expr.call is MemberAccess)) {
-			expr.error = true;
-			Report.error (expr.source_reference, "unsupported method invocation");
-			return;
-		}
-		
-		var ma = (MemberAccess) expr.call;
+		var ma = expr.call as MemberAccess;
 		
 		var itype = expr.call.value_type;
 		params = itype.get_parameters ();
 		
 		if (itype is MethodType) {
+			assert (ma != null);
 			m = ((MethodType) itype).method_symbol;
 		} else if (itype is SignalType) {
 			ccall = (CCodeFunctionCall) expr.call.ccodenode;

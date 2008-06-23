@@ -209,7 +209,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		if (stmt.expression is InvocationExpression) {
 			var expr = (InvocationExpression) stmt.expression;
 			var ma = expr.call as MemberAccess;
-			if (ma.symbol_reference != null && ma.symbol_reference.get_attribute ("NoReturn") != null) {
+			if (ma != null && ma.symbol_reference != null && ma.symbol_reference.get_attribute ("NoReturn") != null) {
 				current_block = null;
 				unreachable_reported = false;
 				return;

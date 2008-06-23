@@ -2453,6 +2453,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_element_access (ElementAccess expr) {
+		expr.container.accept (this);
+
 		if (expr.container.value_type == null) {
 			/* don't proceed if a child expression failed */
 			expr.error = true;
@@ -2460,6 +2462,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		var container_type = expr.container.value_type.data_type;
+
+		if (expr.container is MemberAccess && expr.container.symbol_reference is Signal) {
+			// signal detail access
+			if (expr.get_indices ().size != 1) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Element access with more than one dimension is not supported for signals");
+				return;
+			}
+			expr.get_indices ().get (0).target_type = string_type.copy ();
+		}
+
+		foreach (Expression index in expr.get_indices ()) {
+			index.accept (this);
+		}
 
 		bool index_int_type_check = true;
 
@@ -2524,6 +2540,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				// get () returns owned value, set () accepts unowned value
 				expr.value_type.value_owned = false;
 			}
+		} else if (expr.container is MemberAccess && expr.container.symbol_reference is Signal) {
+			index_int_type_check = false;
+
+			expr.symbol_reference = expr.container.symbol_reference;
+			expr.value_type = expr.container.value_type;
 		} else {
 			expr.error = true;
 			Report.error (expr.source_reference, "The expression `%s' does not denote an Array".printf (expr.container.value_type.to_string ()));
@@ -3378,7 +3399,15 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				a.right.target_type = ma.value_type;
 			}
 		} else if (a.left is ElementAccess) {
-			a.right.target_type = a.left.value_type;
+			var ea = (ElementAccess) a.left;
+
+			if (ea.container is MemberAccess && ea.container.symbol_reference is Signal) {
+				var ma = (MemberAccess) ea.container;
+				var sig = (Signal) ea.container.symbol_reference;
+				a.right.target_type = new DelegateType (sig.get_delegate (ma.inner.value_type));
+			} else {
+				a.right.target_type = a.left.value_type;
+			}
 		} else if (a.left is PointerIndirection) {
 			a.right.target_type = a.left.value_type;
 		} else {
@@ -3439,40 +3468,40 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
-		if (a.left is MemberAccess) {
+		if (a.left.symbol_reference is Signal) {
+			var sig = (Signal) a.left.symbol_reference;
+
+			var m = a.right.symbol_reference as Method;
+
+			if (m == null) {
+				a.error = true;
+				Report.error (a.right.source_reference, "unsupported expression for signal handler");
+				return;
+			}
+
+			var dynamic_sig = sig as DynamicSignal;
+			if (dynamic_sig != null) {
+				bool first = true;
+				foreach (FormalParameter param in dynamic_sig.handler.value_type.get_parameters ()) {
+					if (first) {
+						// skip sender parameter
+						first = false;
+					} else {
+						dynamic_sig.add_parameter (param);
+					}
+				}
+				a.right.target_type = new DelegateType (sig.get_delegate (new ObjectType ((ObjectTypeSymbol) sig.parent_symbol)));
+			} else if (!a.right.value_type.compatible (a.right.target_type)) {
+				var delegate_type = (DelegateType) a.right.target_type;
+
+				a.error = true;
+				Report.error (a.right.source_reference, "method `%s' is incompatible with signal `%s', expected `%s'".printf (a.right.value_type.to_string (), a.right.target_type.to_string (), delegate_type.delegate_symbol.get_prototype_string (m.name)));
+				return;
+			}
+		} else if (a.left is MemberAccess) {
 			var ma = (MemberAccess) a.left;
 
-			if (ma.symbol_reference is Signal) {
-				var sig = (Signal) ma.symbol_reference;
-
-				var m = a.right.symbol_reference as Method;
-
-				if (m == null) {
-					a.error = true;
-					Report.error (a.right.source_reference, "unsupported expression for signal handler");
-					return;
-				}
-
-				var dynamic_sig = sig as DynamicSignal;
-				if (dynamic_sig != null) {
-					bool first = true;
-					foreach (FormalParameter param in dynamic_sig.handler.value_type.get_parameters ()) {
-						if (first) {
-							// skip sender parameter
-							first = false;
-						} else {
-							dynamic_sig.add_parameter (param);
-						}
-					}
-					a.right.target_type = new DelegateType (sig.get_delegate (new ObjectType ((ObjectTypeSymbol) sig.parent_symbol)));
-				} else if (!a.right.value_type.compatible (a.right.target_type)) {
-					var delegate_type = (DelegateType) a.right.target_type;
-
-					a.error = true;
-					Report.error (a.right.source_reference, "method `%s' is incompatible with signal `%s', expected `%s'".printf (a.right.value_type.to_string (), a.right.target_type.to_string (), delegate_type.delegate_symbol.get_prototype_string (m.name)));
-					return;
-				}
-			} else if (ma.symbol_reference is Property) {
+			if (ma.symbol_reference is Property) {
 				var prop = (Property) ma.symbol_reference;
 
 				var dynamic_prop = prop as DynamicProperty;

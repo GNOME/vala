@@ -53,14 +53,16 @@ public class Vala.ElementAccess : Expression {
 	}
 	
 	public override void accept (CodeVisitor visitor) {
+		visitor.visit_element_access (this);
+
+		visitor.visit_expression (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
 		container.accept (visitor);
 		foreach (Expression e in indices) {
 			e.accept (visitor);
 		}
-
-		visitor.visit_element_access (this);
-
-		visitor.visit_expression (this);
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {

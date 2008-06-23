@@ -93,8 +93,6 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 	}
 
 	private void emit_signal_assignment () {
-		var ma = assignment.left as MemberAccess;
-
 		var sig = (Signal) assignment.left.symbol_reference;
 		
 		var m = (Method) assignment.right.symbol_reference;
@@ -126,7 +124,23 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (connect_func));
 
+		string signal_detail = null;
+
 		// first argument: instance of sender
+		MemberAccess ma;
+		if (assignment.left is ElementAccess) {
+			var ea = (ElementAccess) assignment.left;
+			ma = (MemberAccess) ea.container;
+			var detail_expr = ea.get_indices ().get (0) as StringLiteral;
+			if (detail_expr == null) {
+				assignment.error = true;
+				Report.error (detail_expr.source_reference, "internal error: only literal string details supported");
+				return;
+			}
+			signal_detail = detail_expr.eval ();
+		} else {
+			ma = (MemberAccess) assignment.left;
+		}
 		if (ma.inner != null) {
 			ccall.add_argument ((CCodeExpression) ma.inner.ccodenode);
 		} else {
@@ -142,7 +156,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			// g_signal_connect_object or g_signal_connect
 
 			// second argument: signal name
-			ccall.add_argument (sig.get_canonical_cconstant ());
+			ccall.add_argument (sig.get_canonical_cconstant (signal_detail));
 		} else {
 			// g_signal_handlers_disconnect_matched
 
