@@ -1,5 +1,11 @@
 2008-06-23  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeassignmentbinding.vala:
+
+	Support disconnecting from detailed signals
+
+2008-06-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacfgbuilder.vala:
 	* vala/valaelementaccess.vala:
 	* vala/valanullchecker.vala:

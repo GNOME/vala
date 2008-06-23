@@ -161,18 +161,28 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			// g_signal_handlers_disconnect_matched
 
 			// second argument: mask
-			ccall.add_argument (new CCodeConstant ("G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA"));
+			if (signal_detail == null) {
+				ccall.add_argument (new CCodeConstant ("G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA"));
+			} else {
+				ccall.add_argument (new CCodeConstant ("G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_DETAIL | G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA"));
+			}
 
 			// get signal id
 			var ccomma = new CCodeCommaExpression ();
 			var temp_decl = codegen.get_temp_variable (codegen.uint_type);
 			codegen.temp_vars.insert (0, temp_decl);
 			var parse_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_parse_name"));
-			parse_call.add_argument (sig.get_canonical_cconstant ());
+			parse_call.add_argument (sig.get_canonical_cconstant (signal_detail));
 			var decl_type = (TypeSymbol) sig.parent_symbol;
 			parse_call.add_argument (new CCodeIdentifier (decl_type.get_type_id ()));
 			parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
-			parse_call.add_argument (new CCodeConstant ("NULL"));
+			if (signal_detail == null) {
+				parse_call.add_argument (new CCodeConstant ("NULL"));
+			} else {
+				var detail_temp_decl = codegen.get_temp_variable (codegen.gquark_type);
+				codegen.temp_vars.insert (0, detail_temp_decl);
+				parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (detail_temp_decl.name)));
+			}
 			parse_call.add_argument (new CCodeConstant ("FALSE"));
 			ccomma.append_expression (parse_call);
 			ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
