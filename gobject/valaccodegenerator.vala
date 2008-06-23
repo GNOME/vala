@@ -1070,7 +1070,21 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_destructor (Destructor d) {
+		current_method_inner_error = false;
+
 		d.accept_children (this);
+
+		CCodeFragment cfrag = new CCodeFragment ();
+
+		if (current_method_inner_error) {
+			var cdecl = new CCodeDeclaration ("GError *");
+			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+			cfrag.append (cdecl);
+		}
+
+		cfrag.append (d.body.ccodenode);
+
+		d.ccodenode = cfrag;
 	}
 
 	public override void visit_block (Block b) {

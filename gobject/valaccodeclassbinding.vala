@@ -270,7 +270,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			cblock.add_statement (codegen.instance_dispose_fragment);
 
 			if (cl.destructor != null) {
-				cblock.add_statement (cl.destructor.body.ccodenode);
+				cblock.add_statement (cl.destructor.ccodenode);
 			}
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
@@ -593,7 +593,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 		cblock.add_statement (cdecl);
 
 		if (cl.destructor != null) {
-			cblock.add_statement ((CCodeBlock) cl.destructor.body.ccodenode);
+			cblock.add_statement (cl.destructor.ccodenode);
 		}
 
 		cblock.add_statement (codegen.instance_dispose_fragment);
