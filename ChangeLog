@@ -1,3 +1,10 @@
+2008-06-23  Jamie McCracken  <jamiemcc@gnome.org>
+
+	* vala/valagenieparser.vala:
+
+	make parens optional when using new operator on objects
+
+
 2008-06-23  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala:

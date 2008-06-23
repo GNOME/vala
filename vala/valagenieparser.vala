@@ -867,18 +867,21 @@ public class Vala.Genie.Parser : CodeVisitor {
 		
 		
 		var member = parse_member_name ();
-		if (accept (TokenType.OPEN_PARENS)) {
-			var expr = parse_object_creation_expression (begin, member);
-			return expr;
-		} else {
-			throw new ParseError.SYNTAX (get_error ("expected ( or ["));
-		}
+		var expr = parse_object_creation_expression (begin, member);
+		return expr;
+		
 	}
 
 	Expression parse_object_creation_expression (SourceLocation begin, MemberAccess member) throws ParseError {
 		member.creation_member = true;
-		var arg_list = parse_argument_list ();
-		expect (TokenType.CLOSE_PARENS);
+		Gee.List<Expression> arg_list;
+		if (accept (TokenType.OPEN_PARENS)) {
+			arg_list = parse_argument_list ();
+			expect (TokenType.CLOSE_PARENS);
+		} else {
+			arg_list = new ArrayList<Expression> ();
+		}
+		
 		var init_list = parse_object_initializer ();
 
 		var expr = new ObjectCreationExpression (member, get_src (begin));
