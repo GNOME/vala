@@ -53,8 +53,10 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		func.add_parameter (new CCodeFormalParameter ("obj", dynamic_property.dynamic_type.get_cname ()));
 
 		var block = new CCodeBlock ();
-		if (dynamic_property.dynamic_type.data_type != null
-		    && dynamic_property.dynamic_type.data_type.is_subtype_of (codegen.gobject_type)) {
+		if (dynamic_property.dynamic_type.data_type == codegen.dbus_object_type) {
+			generate_dbus_property_getter_wrapper (block);
+		} else if (dynamic_property.dynamic_type.data_type != null
+		           && dynamic_property.dynamic_type.data_type.is_subtype_of (codegen.gobject_type)) {
 			generate_gobject_property_getter_wrapper (block);
 		} else {
 			Report.error (node.source_reference, "dynamic properties are not supported for `%s'".printf (dynamic_property.dynamic_type.to_string ()));
@@ -84,8 +86,10 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		func.add_parameter (new CCodeFormalParameter ("value", node.property_type.get_cname ()));
 
 		var block = new CCodeBlock ();
-		if (dynamic_property.dynamic_type.data_type != null
-		    && dynamic_property.dynamic_type.data_type.is_subtype_of (codegen.gobject_type)) {
+		if (dynamic_property.dynamic_type.data_type == codegen.dbus_object_type) {
+			generate_dbus_property_setter_wrapper (block);
+		} else if (dynamic_property.dynamic_type.data_type != null
+		           && dynamic_property.dynamic_type.data_type.is_subtype_of (codegen.gobject_type)) {
 			generate_gobject_property_setter_wrapper (block);
 		} else {
 			Report.error (node.source_reference, "dynamic properties are not supported for `%s'".printf (dynamic_property.dynamic_type.to_string ()));
@@ -124,5 +128,123 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		call.add_argument (new CCodeConstant ("NULL"));
 
 		block.add_statement (new CCodeExpressionStatement (call));
+	}
+
+	void create_dbus_property_proxy (CCodeBlock block) {
+		var prop_proxy_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_new_from_proxy"));
+		prop_proxy_call.add_argument (new CCodeIdentifier ("obj"));
+		prop_proxy_call.add_argument (new CCodeConstant ("DBUS_INTERFACE_PROPERTIES"));
+		prop_proxy_call.add_argument (new CCodeConstant ("NULL"));
+
+		var prop_proxy_decl = new CCodeDeclaration ("DBusGProxy*");
+		prop_proxy_decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("property_proxy", prop_proxy_call));
+		block.add_statement (prop_proxy_decl);
+	}
+
+	void generate_dbus_property_getter_wrapper (CCodeBlock block) {
+		create_dbus_property_proxy (block);
+
+		// initialize GValue
+		var cvalinit = new CCodeInitializerList ();
+		cvalinit.append (new CCodeConstant ("0"));
+
+		var cval_decl = new CCodeDeclaration ("GValue");
+		cval_decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("gvalue", cvalinit));
+		block.add_statement (cval_decl);
+
+		var val_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("gvalue"));
+
+		// call Get method on property proxy
+		var cdecl = new CCodeDeclaration (node.property_type.get_cname ());
+		cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+		block.add_statement (cdecl);
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_call"));
+		ccall.add_argument (new CCodeIdentifier ("property_proxy"));
+		ccall.add_argument (new CCodeConstant ("\"Get\""));
+		ccall.add_argument (new CCodeConstant ("NULL"));
+
+		ccall.add_argument (new CCodeIdentifier ("G_TYPE_STRING"));
+		var get_iface = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_get_interface"));
+		get_iface.add_argument (new CCodeIdentifier ("obj"));
+		ccall.add_argument (get_iface);
+
+		ccall.add_argument (new CCodeIdentifier ("G_TYPE_STRING"));
+		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (node.name))));
+
+		ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
+
+		ccall.add_argument (new CCodeIdentifier ("G_TYPE_VALUE"));
+		ccall.add_argument (val_ptr);
+
+		ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
+
+		block.add_statement (new CCodeExpressionStatement (ccall));
+
+		// unref property proxy
+		var prop_proxy_unref = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+		prop_proxy_unref.add_argument (new CCodeIdentifier ("property_proxy"));
+		block.add_statement (new CCodeExpressionStatement (prop_proxy_unref));
+
+		// assign value to result variable
+		var cget_call = new CCodeFunctionCall (new CCodeIdentifier (node.property_type.data_type.get_get_value_function ()));
+		cget_call.add_argument (val_ptr);
+		var assign = new CCodeAssignment (new CCodeIdentifier ("result"), cget_call);
+		block.add_statement (new CCodeExpressionStatement (assign));
+
+		// return result
+		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+	}
+
+	void generate_dbus_property_setter_wrapper (CCodeBlock block) {
+		create_dbus_property_proxy (block);
+
+		// initialize GValue
+		var cvalinit = new CCodeInitializerList ();
+		cvalinit.append (new CCodeConstant ("0"));
+
+		var cval_decl = new CCodeDeclaration ("GValue");
+		cval_decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("gvalue", cvalinit));
+		block.add_statement (cval_decl);
+
+		var val_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("gvalue"));
+
+		var cinit_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
+		cinit_call.add_argument (val_ptr);
+		cinit_call.add_argument (new CCodeIdentifier (node.property_type.data_type.get_type_id ()));
+		block.add_statement (new CCodeExpressionStatement (cinit_call));
+
+		var cset_call = new CCodeFunctionCall (new CCodeIdentifier (node.property_type.data_type.get_set_value_function ()));
+		cset_call.add_argument (val_ptr);
+		cset_call.add_argument (new CCodeIdentifier ("value"));
+		block.add_statement (new CCodeExpressionStatement (cset_call));
+
+		// call Set method on property proxy
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_call"));
+		ccall.add_argument (new CCodeIdentifier ("property_proxy"));
+		ccall.add_argument (new CCodeConstant ("\"Set\""));
+		ccall.add_argument (new CCodeConstant ("NULL"));
+
+		ccall.add_argument (new CCodeIdentifier ("G_TYPE_STRING"));
+		var get_iface = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_get_interface"));
+		get_iface.add_argument (new CCodeIdentifier ("obj"));
+		ccall.add_argument (get_iface);
+
+		ccall.add_argument (new CCodeIdentifier ("G_TYPE_STRING"));
+		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (node.name))));
+
+		ccall.add_argument (new CCodeIdentifier ("G_TYPE_VALUE"));
+		ccall.add_argument (val_ptr);
+
+		ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
+
+		ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
+
+		block.add_statement (new CCodeExpressionStatement (ccall));
+
+		// unref property proxy
+		var prop_proxy_unref = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+		prop_proxy_unref.add_argument (new CCodeIdentifier ("property_proxy"));
+		block.add_statement (new CCodeExpressionStatement (prop_proxy_unref));
 	}
 }

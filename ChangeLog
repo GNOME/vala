@@ -1,5 +1,11 @@
 2008-06-23  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodedynamicpropertybinding.vala:
+
+	Support dynamic D-Bus properties
+
+2008-06-23  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodedynamicmethodbinding.vala:
 	* gobject/valaccodedynamicsignalbinding.vala:
 
