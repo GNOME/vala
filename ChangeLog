@@ -1,3 +1,10 @@
+2008-06-23  Jared Moore  <jaredm@svn.gnome.org>
+
+	* vala/valasemanticanalyzer.vala:
+
+	Report error when trying to access 'class' member statically rather
+	than through an instance, fixes bug 539594.
+
 2008-06-23  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodeobjecttypesymbolbinding.vala:

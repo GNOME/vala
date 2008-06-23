@@ -1753,14 +1753,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		var member = expr.symbol_reference;
 		var access = SymbolAccessibility.PUBLIC;
 		bool instance = false;
+		bool klass = false;
 		if (member is Field) {
 			var f = (Field) member;
 			access = f.access;
 			instance = (f.binding == MemberBinding.INSTANCE);
+			klass = (f.binding == MemberBinding.CLASS);
 		} else if (member is Method) {
 			var m = (Method) member;
 			access = m.access;
 			instance = (m.binding == MemberBinding.INSTANCE);
+			klass = (m.binding == MemberBinding.CLASS);
 		} else if (member is Property) {
 			var prop = (Property) member;
 			access = prop.access;
@@ -1811,7 +1814,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 		}
-		if (instance && !may_access_instance_members) {
+		if ((instance || klass) && !may_access_instance_members) {
 			expr.prototype_access = true;
 
 			if (expr.symbol_reference is Method) {
