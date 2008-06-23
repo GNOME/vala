@@ -516,8 +516,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 
 		bool custom_cname = (f.get_cname () != f.get_default_cname ());
+		bool custom_ctype = (f.get_ctype () != null);
 		bool custom_cheaders = (f.parent_symbol is Namespace);
-		if (custom_cname || custom_cheaders) {
+		if (custom_cname || custom_ctype || custom_cheaders) {
 			write_indent ();
 			write_string ("[CCode (");
 
@@ -525,8 +526,16 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				write_string ("cname = \"%s\"".printf (f.get_cname ()));
 			}
 
-			if (custom_cheaders) {
+			if (custom_ctype) {
 				if (custom_cname) {
+					write_string (", ");
+				}
+
+				write_string ("type = \"%s\"".printf (f.get_ctype ()));
+			}
+
+			if (custom_cheaders) {
+				if (custom_cname || custom_ctype) {
 					write_string (", ");
 				}
 

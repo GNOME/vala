@@ -179,4 +179,21 @@ public class Vala.Field : Member, Lockable {
 			field_type = new_type;
 		}
 	}
+
+	public string? get_ctype () {
+		var attr = get_attribute ("CCode");
+		if (attr == null) {
+			return null;
+		}
+		return attr.get_string ("type");
+	}
+
+	public void set_ctype (string ctype) {
+		var attr = get_attribute ("CCode");
+		if (attr == null) {
+			attr = new Attribute ("CCode");
+			attributes.append (attr);
+		}
+		attr.add_argument (new NamedArgument ("type", new StringLiteral ("\"%s\"".printf (ctype))));
+	}
 }

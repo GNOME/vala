@@ -1663,6 +1663,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		string cheader_filename = null;
+		string ctype = null;
 
 		var attributes = get_attributes ("%s.%s".printf (current_data_type.get_cname (), node.name));
 		if (attributes != null) {
@@ -1693,6 +1694,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "cheader_filename") {
 					cheader_filename = eval (nv[1]);
+				} else if (nv[0] == "ctype") {
+					ctype = eval (nv[1]);
 				}
 			}
 		}
@@ -1716,6 +1719,10 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		if (field_name != node.name) {
 			field.set_cname (node.name);
+		}
+
+		if (ctype != null) {
+			field.set_ctype (ctype);
 		}
 
 		if (cheader_filename != null) {

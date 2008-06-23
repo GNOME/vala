@@ -1,6 +1,6 @@
 /* valanamedargument.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -45,10 +45,10 @@ public class Vala.NamedArgument : CodeNode {
 	 * @param source reference to source code
 	 * @return       newly created named argument
 	 */
-	public NamedArgument (string _name, Expression arg, SourceReference source) {
-		name = _name;
-		argument = arg;
-		source_reference = source;
+	public NamedArgument (string name, Expression argument, SourceReference? source_reference = null) {
+		this.name = name;
+		this.argument = argument;
+		this.source_reference = source_reference;
 	}
 	
 	public override void accept (CodeVisitor visitor) {

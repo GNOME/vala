@@ -1,5 +1,24 @@
 2008-06-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaattribute.vala:
+	* vala/valafield.vala:
+	* vala/valainterfacewriter.vala:
+	* vala/valanamedargument.vala:
+	* vala/valastringliteral.vala:
+	* gobject/valaccodegenerator.vala:
+	* vapigen/valagidlparser.vala:
+
+	Support [CCode (type = "Foo")] to insert appropriate casts in
+	generated C Code
+
+	* vapi/packages/gtk+-2.0/:
+
+	Fix GtkActionEntry binding, fixes bug 526874
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-06-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valagenieparser.vala:
 	* vala/valanamespacereference.vala:
 	* vala/valasourcefile.vala:

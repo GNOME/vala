@@ -1257,11 +1257,42 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public override void visit_initializer_list (InitializerList list) {
 		list.accept_children (this);
 
-		var clist = new CCodeInitializerList ();
-		foreach (Expression expr in list.get_initializers ()) {
-			clist.append ((CCodeExpression) expr.ccodenode);
+		if (list.target_type.data_type is Struct) {
+			/* initializer is used as struct initializer */
+			var st = (Struct) list.target_type.data_type;
+
+			var clist = new CCodeInitializerList ();
+
+			var field_it = st.get_fields ().iterator ();
+			foreach (Expression expr in list.get_initializers ()) {
+				Field field = null;
+				while (field == null) {
+					field_it.next ();
+					field = field_it.get ();
+					if (field.binding != MemberBinding.INSTANCE) {
+						// we only initialize instance fields
+						field = null;
+					}
+				}
+
+				var cexpr = (CCodeExpression) expr.ccodenode;
+
+				string ctype = field.get_ctype ();
+				if (ctype != null) {
+					cexpr = new CCodeCastExpression (cexpr, ctype);
+				}
+
+				clist.append (cexpr);
+			}
+
+			list.ccodenode = clist;
+		} else {
+			var clist = new CCodeInitializerList ();
+			foreach (Expression expr in list.get_initializers ()) {
+				clist.append ((CCodeExpression) expr.ccodenode);
+			}
+			list.ccodenode = clist;
 		}
-		list.ccodenode = clist;
 	}
 
 	public LocalVariable get_temp_variable (DataType type, bool value_owned = true, CodeNode? node_reference = null) {
