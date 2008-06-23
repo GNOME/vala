@@ -1,5 +1,14 @@
 2008-06-23  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am:
+	* vapi/libgsf-1.deps:
+	* vapi/libgsf-1.vapi:
+	* vapi/packages/libgsf-1/:
+
+	Add libgsf-1 bindings, patch by Michael Lawrence, fixes bug 455141
+
+2008-06-23  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeassignmentbinding.vala:
 
 	Support disconnecting from detailed signals

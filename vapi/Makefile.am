@@ -90,6 +90,8 @@ dist_vapi_DATA = \
 	libgnome-menu.vapi \
 	libgnomeui-2.0.deps \
 	libgnomeui-2.0.vapi \
+	libgsf-1.deps \
+	libgsf-1.vapi \
 	libnotify.deps \
 	libnotify.vapi \
 	liboobs-1.vapi \
