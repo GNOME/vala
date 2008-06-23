@@ -145,7 +145,7 @@ public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 
 		var add_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_add_signal"));
 		add_call.add_argument (new CCodeIdentifier ("obj"));
-		add_call.add_argument (new CCodeConstant ("\"%s\"".printf (node.name)));
+		add_call.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (node.name))));
 
 		bool first = true;
 		foreach (FormalParameter param in m.get_parameters ()) {

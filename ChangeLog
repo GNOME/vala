@@ -1,3 +1,10 @@
+2008-06-23  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodedynamicmethodbinding.vala:
+	* gobject/valaccodedynamicsignalbinding.vala:
+
+	Use CamelCase for dynamic D-Bus methods and signals
+
 2008-06-23  Jaap A. Haitsma  <jaap@haitsma.org>
 
 	* vapi/packages/gdk-2.0/gdk-2.0.metadata:
@@ -9,15 +16,14 @@
 
 	* vala/valageniescanner.vala:
 
-	Allow arbitrary whitespace/tabs at start of line when its a line continuation
-
+	Allow arbitrary whitespace/tabs at start of line when its a line
+	continuation
 
 2008-06-23  Jamie McCracken  <jamiemcc@gnome.org>
 
 	* vala/valagenieparser.vala:
 
 	make parens optional when using new operator on objects
-
 
 2008-06-23  Jürg Billeter  <j@bitron.ch>
 

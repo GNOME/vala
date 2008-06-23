@@ -104,7 +104,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 			arg_index++;
 		}
 
-		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (method.name)));
+		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (method.name))));
 
 		if (callback != null) {
 			var reply_method = (Method) callback.symbol_reference;
