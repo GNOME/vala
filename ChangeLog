@@ -1,5 +1,14 @@
 2008-06-25  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	More gst_tag_list_* binding fixes, patch by Zeeshan Ali Khattak,
+	fixes bug 539817
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-06-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 	* gobject/valaccodegenerator.vala:
 
