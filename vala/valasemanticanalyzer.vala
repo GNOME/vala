@@ -62,6 +62,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	DataType iterable_type;
 	Interface iterator_type;
 	Interface list_type;
+	Interface collection_type;
 	Interface map_type;
 
 	private int next_lambda_id = 0;
@@ -118,6 +119,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			iterable_type = new ObjectType ((Interface) gee_ns.scope.lookup ("Iterable"));
 			iterator_type = (Interface) gee_ns.scope.lookup ("Iterator");
 			list_type = (Interface) gee_ns.scope.lookup ("List");
+			collection_type = (Interface) gee_ns.scope.lookup ("Collection");
 			map_type = (Interface) gee_ns.scope.lookup ("Map");
 		}
 
@@ -3225,9 +3227,31 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			expr.value_type = bool_type;
 		} else if (expr.operator == BinaryOperator.IN) {
-			// integer type or flags type
+			// integer type or flags type or collection/map
 
+			/* handle collections and maps */
+			var container_type = expr.right.value_type.data_type;
+			
+			if ((collection_type != null && container_type.is_subtype_of (collection_type))
+			    || (map_type != null && container_type.is_subtype_of (map_type))) {
+				Symbol contains_sym = null;
+				if (container_type.is_subtype_of (collection_type)) {
+					contains_sym = collection_type.scope.lookup ("contains");
+				} else if (container_type.is_subtype_of (map_type)) {
+					contains_sym = map_type.scope.lookup ("contains");
+				}
+				var contains_method = (Method) contains_sym;
+				Gee.List<FormalParameter> contains_params = contains_method.get_parameters ();
+				Iterator<FormalParameter> contains_params_it = contains_params.iterator ();
+				contains_params_it.next ();
+				var contains_param = contains_params_it.get ();
+
+				var key_type = get_actual_type (expr.right.value_type, contains_method, contains_param.parameter_type, expr);
+				expr.left.target_type = key_type;
+			}
+			
 			expr.value_type = bool_type;
+			
 		} else {
 			assert_not_reached ();
 		}

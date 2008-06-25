@@ -3402,6 +3402,28 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else if (expr.operator == BinaryOperator.OR) {
 			op = CCodeBinaryOperator.OR;
 		} else if (expr.operator == BinaryOperator.IN) {
+			var container_type = expr.right.value_type.data_type;
+			if (container_type != null && collection_type != null && map_type != null &&
+		           (container_type.is_subtype_of (collection_type) || container_type.is_subtype_of (map_type))) {
+				Method contains_method;
+				if (container_type.is_subtype_of (collection_type)) {
+					contains_method = (Method) collection_type.scope.lookup ("contains");
+					assert (contains_method != null);
+					var contains_ccall = new CCodeFunctionCall (new CCodeIdentifier (contains_method.get_cname ()));
+					contains_ccall.add_argument (new InstanceCast (cright, collection_type));
+					contains_ccall.add_argument (cleft);
+					expr.ccodenode = contains_ccall;
+				} else {
+					contains_method = (Method) map_type.scope.lookup ("contains");
+					assert (contains_method != null);
+					var contains_ccall = new CCodeFunctionCall (new CCodeIdentifier (contains_method.get_cname ()));
+					contains_ccall.add_argument (new InstanceCast (cright, map_type));
+					contains_ccall.add_argument (cleft);
+					expr.ccodenode = contains_ccall;
+				}
+				return;
+			}
+		
 			expr.ccodenode = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.BITWISE_AND, new CCodeParenthesizedExpression (cright), new CCodeParenthesizedExpression (cleft))), new CCodeParenthesizedExpression (cleft));
 			return;
 		}

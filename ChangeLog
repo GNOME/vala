@@ -1,3 +1,11 @@
+2008-06-25  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Support `in' operator for Gee.Collection and Gee.Map,
+	patch by Jamie McCracken
+
 2008-06-23  Jared Moore  <jaredm@svn.gnome.org>
 
 	* vala/valasemanticanalyzer.vala:
