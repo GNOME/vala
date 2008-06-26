@@ -1,3 +1,15 @@
+Vala 0.3.4
+==========
+
+ * Various improvements to D-Bus client and service support.
+ * Basic support for detailed signals.
+ * Check types of printf arguments.
+ * Support `in' operator for Gee.Collection and Gee.Map (Jamie McCracken)
+ * Add libgsf-1 bindings (Michael Lawrence)
+ * Add loudmouth-1.0 bindings (Ali Sabil)
+ * Updates to the GLib, GTK+, and GStreamer bindings.
+ * Many bug fixes.
+
 Vala 0.3.3
 ==========
 
