@@ -1,5 +1,14 @@
 2008-06-26  Jared Moore  <jaredm@svn.gnome.org>
 
+	* vapi/packages/gdk-2.0/gdk-2.0.metadata:
+
+	Allow null for rect parameter in gdk_window_invalidate_rect, fixes bug
+	540311.
+
+	* vapi/gdk-2.0.vapi: Regenerated
+
+2008-06-26  Jared Moore  <jaredm@svn.gnome.org>
+
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
 
 	Changed gtk_paint_arrow_* family to have nullable area, widget, and 
