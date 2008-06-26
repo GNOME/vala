@@ -2393,7 +2393,7 @@ namespace GLib {
 		public bool get_help_enabled ();
 		public void set_ignore_unknown_options (bool ignore_unknown);
 		public bool get_ignore_unknown_options ();
-		public string get_help (bool main_help, OptionGroup group);
+		public string get_help (bool main_help, OptionGroup? group);
 		[NoArrayLength]
 		public void add_main_entries (OptionEntry[] entries, string? translation_domain);
 		public void add_group (OptionGroup# group);
