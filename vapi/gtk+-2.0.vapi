@@ -6968,45 +6968,45 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void main_quit ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_arrow (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, Gtk.ArrowType arrow_type, bool fill, int x, int y, int width, int height);
+	public static void paint_arrow (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, Gtk.ArrowType arrow_type, bool fill, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_box (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_box (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_box_gap (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side, int gap_x, int gap_width);
+	public static void paint_box_gap (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, int width, int height, Gtk.PositionType gap_side, int gap_x, int gap_width);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_check (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_check (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_diamond (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_diamond (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_expander (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, Gtk.ExpanderStyle expander_style);
+	public static void paint_expander (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, Gtk.ExpanderStyle expander_style);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_extension (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side);
+	public static void paint_extension (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, int width, int height, Gtk.PositionType gap_side);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_flat_box (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_flat_box (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_focus (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_focus (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_handle (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.Orientation orientation);
+	public static void paint_handle (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, int width, int height, Gtk.Orientation orientation);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_hline (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x1, int x2, int y);
+	public static void paint_hline (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x1, int x2, int y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_layout (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, bool use_text, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, Pango.Layout layout);
+	public static void paint_layout (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, bool use_text, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, Pango.Layout layout);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_option (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_option (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_polygon (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, Gdk.Point[] points, bool fill);
+	public static void paint_polygon (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, Gdk.Point[] points, bool fill);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_resize_grip (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, Gdk.WindowEdge edge, int x, int y, int width, int height);
+	public static void paint_resize_grip (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, Gdk.WindowEdge edge, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_shadow (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_shadow (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_shadow_gap (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.PositionType gap_side, int gap_x, int gap_width);
+	public static void paint_shadow_gap (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, int width, int height, Gtk.PositionType gap_side, int gap_x, int gap_width);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_slider (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height, Gtk.Orientation orientation);
+	public static void paint_slider (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, int width, int height, Gtk.Orientation orientation);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_tab (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
+	public static void paint_tab (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void paint_vline (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int y1_, int y2_, int x);
+	public static void paint_vline (Gtk.Style style, Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle? area, Gtk.Widget? widget, string? detail, int y1_, int y2_, int x);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool parse_args (int argc, string[] argv);
 	[CCode (cheader_filename = "gtk/gtk.h")]

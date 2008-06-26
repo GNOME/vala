@@ -1,5 +1,14 @@
 2008-06-26  Jared Moore  <jaredm@svn.gnome.org>
 
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
+
+	Changed gtk_paint_arrow_* family to have nullable area, widget, and 
+	detail parameters, fixes bug 540237.
+
+	* vapi/gtk+-2.0.vapi: Regenerated
+
+2008-06-26  Jared Moore  <jaredm@svn.gnome.org>
+
 	* vapi/glib-2.0.vapi:
 
 	Allow null for group parameter in GLib.OptionContext.get_help, fixes
