@@ -2068,7 +2068,8 @@ public class Vala.Parser : CodeVisitor {
 		var initializer = new InitializerList (get_src (begin));
 		if (current () != TokenType.CLOSE_BRACE) {
 			do {
-				initializer.append (parse_variable_initializer ());
+				var init = parse_variable_initializer ();
+				initializer.append (init);
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_BRACE);

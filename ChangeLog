@@ -1,3 +1,9 @@
+2008-06-26  Jared Moore  <jaredm@svn.gnome.org>
+
+	* vala/valaparser.vala:
+
+	Add workaround for exception codegen problem, fixes bug 539608.
+
 2008-06-25  Jared Moore  <jaredm@svn.gnome.org>
 
 	* vapi/glib-2.0.vapi:
