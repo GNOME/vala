@@ -1,3 +1,9 @@
+2008-06-25  Jared Moore  <jaredm@svn.gnome.org>
+
+	* vapi/glib-2.0.vapi:
+
+	Fix formal parameters of Sequence.get_iter_at_pos(), fixes bug 539976.
+
 2008-06-25  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gstreamer-0.10/:

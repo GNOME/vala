@@ -2922,7 +2922,7 @@ namespace GLib {
 		public void sort_iter (SequenceIterCompareFunc<G> func);
 		public weak SequenceIter<G> get_begin_iter ();
 		public weak SequenceIter<G> get_end_iter ();
-		public weak SequenceIter<G> get_iter_at_pos ();
+		public weak SequenceIter<G> get_iter_at_pos (int pos);
 		public weak SequenceIter<G> append (G# data);
 		public weak SequenceIter<G> prepend (G# data);
 		public static weak SequenceIter<G> insert_before (SequenceIter<G> iter, G# data);
