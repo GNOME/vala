@@ -1,3 +1,13 @@
+2008-06-27  Jared Moore  <jaredm@gmx.com>
+
+	* vapi/packages/gio-2.0/gio-2.0.metadata:
+
+	Set return types as nullable for g_file_get_basename,
+	g_file_get_parent, g_file_get_path, and g_file_get_relative_path,
+	fixes bug 540335.
+
+	* vapi/gio-2.0.vapi: Regenerated
+
 2008-06-26  Jürg Billeter  <j@bitron.ch>
 
 	* configure.ac: Post-release version bump
