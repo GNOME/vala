@@ -1,3 +1,9 @@
+2008-06-29  Jamie McCracken  <jamiemcc@gnome.org>
+
+	* vala/valagenieparser.vala:
+
+	Add workaround for exception codegen problem, fixes bug 539608.
+
 2008-06-29  Jared Moore  <jaredm@svn.gnome.org>
 
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:

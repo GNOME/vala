@@ -2560,7 +2560,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var initializer = new InitializerList (get_src (begin));
 		if (current () != TokenType.DEDENT) {
 			do {
-				initializer.append (parse_variable_initializer ());
+				var init = parse_variable_initializer ();
+				initializer.append (init);
 			} while (accept (TokenType.COMMA));
 		}
 		if  (!accept (TokenType.CLOSE_PARENS)) {
