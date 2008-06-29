@@ -1,3 +1,12 @@
+2008-06-29  Jared Moore  <jaredm@svn.gnome.org>
+
+	* vapi/packages/gio-2.0/gio-2.0.metadata:
+
+	Let 'destroy' arguments of g_memory_input_stream_add_data and 
+	g_memory_input_stream_new_from_data be nullable, fixes bug 540662.
+
+	* vapi/gio-2.0.vapi: Regenerated
+
 2008-06-29  Jamie McCracken  <jamiemcc@gnome.org>
 
 	* vala/valagenieparser.vala:

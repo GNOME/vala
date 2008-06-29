@@ -493,9 +493,9 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MemoryInputStream : GLib.InputStream, GLib.Seekable {
-		public void add_data (void* data, long len, GLib.DestroyNotify destroy);
+		public void add_data (void* data, long len, GLib.DestroyNotify? destroy);
 		public MemoryInputStream ();
-		public MemoryInputStream.from_data (void* data, long len, GLib.DestroyNotify destroy);
+		public MemoryInputStream.from_data (void* data, long len, GLib.DestroyNotify? destroy);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MemoryOutputStream : GLib.OutputStream, GLib.Seekable {
