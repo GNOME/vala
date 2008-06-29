@@ -1632,8 +1632,8 @@ namespace Gtk {
 		public weak uchar[] data;
 		public int length;
 		public weak Gdk.Display display;
-		public weak Gtk.SelectionData copy ();
-		public weak Gdk.Pixbuf get_pixbuf ();
+		public Gtk.SelectionData copy ();
+		public Gdk.Pixbuf? get_pixbuf ();
 		public bool get_targets (out Gdk.Atom targets, int n_atoms);
 		public weak uchar[] get_text ();
 		[NoArrayLength]

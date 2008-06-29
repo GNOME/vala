@@ -2,6 +2,15 @@
 
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
 
+	Fixed return type of gtk_selection_data_get_pixbuf and
+	gtk_selection_data_copy.
+
+	* vapi/gtk+-2.0.vapi: Regenerated
+
+2008-06-29  Jared Moore  <jaredm@svn.gnome.org>
+
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
+
 	Fixed return type of gtk_selection_data_get_uris, fixes bug 540664.
 
 	* vapi/gtk+-2.0.vapi: Regenerated
