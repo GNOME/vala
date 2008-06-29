@@ -1,3 +1,11 @@
+2008-06-29  Jared Moore  <jaredm@svn.gnome.org>
+
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
+
+	Fixed return type of gtk_selection_data_get_uris, fixes bug 540664.
+
+	* vapi/gtk+-2.0.vapi: Regenerated
+
 2008-06-27  Jared Moore  <jaredm@gmx.com>
 
 	* vapi/packages/gio-2.0/gio-2.0.metadata:
