@@ -115,7 +115,16 @@ public abstract class Vala.CCodeTypeSymbolBinding : CCodeBinding {
 				} else {
 					cspec.add_argument (new CCodeConstant ("0"));
 				}
-			} else if (st.get_type_id () == "G_TYPE_FLOAT") {
+			} else if (st.get_type_id () == "G_TYPE_UCHAR") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_uchar");
+				cspec.add_argument (new CCodeConstant ("0"));
+				cspec.add_argument (new CCodeConstant ("G_MAXUINT8"));
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("0"));
+				}
+			}else if (st.get_type_id () == "G_TYPE_FLOAT") {
 				cspec.call = new CCodeIdentifier ("g_param_spec_float");
 				cspec.add_argument (new CCodeConstant ("-G_MAXFLOAT"));
 				cspec.add_argument (new CCodeConstant ("G_MAXFLOAT"));

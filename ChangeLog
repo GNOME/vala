@@ -1,3 +1,9 @@
+2008-06-30  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodetypesymbolbinding.vala:
+
+	Add support for uchar GObject properties, patch by Ali Sabil
+
 2008-06-30  Jared Moore  <jaredm@svn.gnome.org>
 
 	* vapi/glib-2.0.vapi:
