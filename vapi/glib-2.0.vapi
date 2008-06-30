@@ -3169,11 +3169,13 @@ namespace GLib {
 	
 	namespace Intl {
 		[CCode (cname = "setlocale", cheader_filename = "locale.h")]
-		public static weak string setlocale (LocaleCategory category, string locale);
+		public static weak string? setlocale (LocaleCategory category, string? locale);
 		[CCode (cname = "bindtextdomain", cheader_filename = "glib/gi18n-lib.h")]
-		public static weak string bindtextdomain (string domainname, string dirname);
+		public static weak string? bindtextdomain (string domainname, string? dirname);
 		[CCode (cname = "textdomain", cheader_filename = "glib/gi18n-lib.h")]
-		public static weak string textdomain (string domainname);
+		public static weak string? textdomain (string? domainname);
+		[CCode (cname = "bind_textdomain_codeset", cheader_filename = "glib/gi18n-lib.h")]
+		public static weak string? bind_textdomain_codeset (string domainname, string? codeset);
 	}
 
 	namespace Signal {

@@ -1,5 +1,12 @@
 2008-06-30  Jared Moore  <jaredm@svn.gnome.org>
 
+	* vapi/glib-2.0.vapi:
+
+	Added Glib.Intl.bind_textdomain_codeset, set return types and
+	parameters of Glib.Intl.* to nullable as appropriate.
+
+2008-06-30  Jared Moore  <jaredm@svn.gnome.org>
+
 	* vapi/packages/gdk-2.0/gdk-2.0.metadata:
 
 	Changed many classes to structs, fixes bug 540349. Also fix fields
