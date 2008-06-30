@@ -1,5 +1,15 @@
 2008-06-30  Jared Moore  <jaredm@svn.gnome.org>
 
+	* vapi/packages/gdk-2.0/gdk-2.0.metadata:
+
+	Changed many classes to structs, fixes bug 540349. Also fix fields
+	that should be arrays of structs, and hide several "Gdk*Class"
+	structs.
+
+	* vapi/gdk-2.0.vapi: Regenerated
+
+2008-06-30  Jared Moore  <jaredm@svn.gnome.org>
+
 	* vala/valasemanticanalyzer.vala:
 
 	Report error when an abstract method has a body, an extern method has
