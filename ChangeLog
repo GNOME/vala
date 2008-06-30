@@ -1,3 +1,11 @@
+2008-06-30  Jared Moore  <jaredm@svn.gnome.org>
+
+	* vala/valasemanticanalyzer.vala:
+
+	Report error when an abstract method has a body, an extern method has
+	a body, or a non-abstract non-extern method has no body, fixes bug 
+	539692.
+
 2008-06-29  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gdk-pixbuf-2.0/:

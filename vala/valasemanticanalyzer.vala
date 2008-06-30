@@ -455,6 +455,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
+		if (m.is_abstract && m.body != null) {
+			Report.error (m.source_reference, "Abstract methods cannot have bodies");
+		} else if ((m.external || current_source_file.external_package) && m.body != null) {
+			Report.error (m.source_reference, "Extern methods cannot have bodies");
+		} else if (!m.is_abstract && !m.external && !current_source_file.external_package && m.body == null) {
+			Report.error (m.source_reference, "Non-abstract, non-extern methods must have bodies");
+		}
+
 		var old_symbol = current_symbol;
 		var old_return_type = current_return_type;
 		current_symbol = m;
