@@ -1,3 +1,10 @@
+2008-07-01  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaerrorcode.vala:
+	* vala/valaparser.vala:
+
+	Set source_reference for error codes
+
 2008-07-01  Jared Moore  <jaredm@svn.gnome.org>
 
 	* vapi/gtk+-2.0.vapi: Regenerated to make consistent with recent

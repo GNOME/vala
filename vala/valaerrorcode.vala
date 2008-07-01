@@ -39,8 +39,9 @@ public class Vala.ErrorCode : Symbol {
 	 * @param name enum value name
 	 * @return     newly created enum value
 	 */
-	public ErrorCode (string name) {
+	public ErrorCode (string name, SourceReference? source_reference = null) {
 		this.name = name;
+		this.source_reference = source_reference;
 	}
 
 	/**
@@ -50,9 +51,10 @@ public class Vala.ErrorCode : Symbol {
 	 * @param value numerical representation
 	 * @return      newly created enum value
 	 */
-	public ErrorCode.with_value (string name, Expression value) {
+	public ErrorCode.with_value (string name, Expression value, SourceReference? source_reference = null) {
 		this.name = name;
 		this.value = value;
+		this.source_reference = source_reference;
 	}
 	
 	public override void accept (CodeVisitor visitor) {
