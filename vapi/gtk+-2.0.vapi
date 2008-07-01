@@ -2673,7 +2673,7 @@ namespace Gtk {
 		public int grab_point;
 		public int last;
 		public int num_points;
-		public weak Gdk.Point point;
+		public Gdk.Point point;
 		public int num_ctlpoints;
 		[NoArrayLength]
 		public weak float[] ctlpoint;
@@ -3888,7 +3888,7 @@ namespace Gtk {
 		public uint same_app;
 		public void @construct (Gdk.NativeWindow socket_id);
 		public void construct_for_display (Gdk.Display display, Gdk.NativeWindow socket_id);
-		public weak Gdk.NativeWindow get_id ();
+		public Gdk.NativeWindow get_id ();
 		public Plug (Gdk.NativeWindow socket_id);
 		public Plug.for_display (Gdk.Display display, Gdk.NativeWindow socket_id);
 		[NoAccessorMethod]
@@ -4538,7 +4538,7 @@ namespace Gtk {
 		public weak Gtk.AccelGroup accel_group;
 		public weak Gtk.Widget toplevel;
 		public void add_id (Gdk.NativeWindow window_id);
-		public weak Gdk.NativeWindow get_id ();
+		public Gdk.NativeWindow get_id ();
 		public Socket ();
 		public virtual signal void plug_added ();
 		public virtual signal bool plug_removed ();

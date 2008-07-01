@@ -1,3 +1,8 @@
+2008-07-01  Jared Moore  <jaredm@svn.gnome.org>
+
+	* vapi/gtk+-2.0.vapi: Regenerated to make consistent with recent
+	changes to vapi/gdk-2.0.vapi
+
 2008-06-30  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi:
