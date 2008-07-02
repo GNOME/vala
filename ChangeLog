@@ -1,5 +1,12 @@
 2008-07-02  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegeneratorsourcefile.vala:
+
+	Don't perform pointer arithmetic on void pointers,
+	patch by Tai Chi Minh Ralph Eastwood
+
+2008-07-02  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gio-2.0/:
 
 	Nullable fixes, patch by Frederik
