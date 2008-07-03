@@ -1184,17 +1184,21 @@ g_igenerator_process_symbols (GIGenerator * igenerator)
 void
 g_igenerator_add_symbol (GIGenerator * igenerator, CSymbol * symbol)
 {
+  GList *l;
+
   /* only add symbols of main file */
   gboolean found_filename = FALSE;
 
-  GList *l;
-  for (l = igenerator->filenames; l != NULL; l = l->next)
+  if (igenerator->current_filename)
     {
-      if (strcmp (l->data, igenerator->current_filename) == 0)
-	{
-	  found_filename = TRUE;
-	  break;
-	}
+      for (l = igenerator->filenames; l != NULL; l = l->next)
+        {
+          if (strcmp (l->data, igenerator->current_filename) == 0)
+            {
+	      found_filename = TRUE;
+              break;
+            }
+        }
     }
 
   symbol->directives = g_slist_reverse (igenerator->directives);

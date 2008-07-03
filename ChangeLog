@@ -2,6 +2,12 @@
 
 	* gobject-introspection/scanner.c: (g_igenerator_add_symbol):
 
+	Fix crash when checking header filename
+
+2008-07-03  Jürg Billeter  <j@bitron.ch>
+
+	* gobject-introspection/scanner.c: (g_igenerator_add_symbol):
+
 	Only drop duplicates of the same namespace
 
 2008-07-02  Jürg Billeter  <j@bitron.ch>
