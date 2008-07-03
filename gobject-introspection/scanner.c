@@ -1203,7 +1203,9 @@ g_igenerator_add_symbol (GIGenerator * igenerator, CSymbol * symbol)
   /* that's not very optimized ! */
   for (l = igenerator->symbol_list; l != NULL; l = l->next)
     {
-      if (g_str_equal (((CSymbol*)l->data)->ident, symbol->ident))
+      CSymbol *other_symbol = (CSymbol *)l->data;
+      if (g_str_equal (other_symbol->ident, symbol->ident)
+          && other_symbol->type == symbol->type)
         {
           g_printerr ("Dropping %s duplicate\n", symbol->ident);
           return;
