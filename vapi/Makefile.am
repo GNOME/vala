@@ -122,6 +122,8 @@ dist_vapi_DATA = \
 	sqlite3.vapi \
 	taglib_c.vapi \
 	tiff.vapi \
+	unique-1.0.deps \
+	unique-1.0.vapi \
 	vala-1.0.vapi \
 	vte.deps \
 	vte.vapi \

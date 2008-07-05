@@ -1,3 +1,12 @@
+2008-07-05  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/Makefile.am:
+	* vapi/unique-1.0.deps:
+	* vapi/unique-1.0.vapi:
+	* vapi/packages/unique-1.0/:
+
+	Add unique-1.0 bindings, patch by Phil Housley, fixes bug 540821
+
 2008-07-03  Jürg Billeter  <j@bitron.ch>
 
 	* gobject-introspection/scanner.c: (g_igenerator_add_symbol):
