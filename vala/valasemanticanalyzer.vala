@@ -533,6 +533,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
+		if (m.tree_can_fail && m.name == "main") {
+			Report.error (m.source_reference, "\"main\" method cannot throw errors");
+		}
+
 		// check that all errors that can be thrown in the method body are declared
 		if (m.body != null) { 
 			foreach (DataType body_error_type in m.body.get_error_types ()) {
