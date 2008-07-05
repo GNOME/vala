@@ -1,3 +1,14 @@
+2008-07-05  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaattributeprocessor.vala:
+	* vala/valaparser.vala:
+	* vala/valapropertyaccessor.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodememberaccessbinding.vala:
+
+	Add support for [CCode (cname = "foo")] to property accessors,
+	based on patch by Jared Moore
+
 2008-07-05  Jared Moore  <jaredm@svn.gnome.org>
 
 	* vala/valasemanticanalyzer.vala:

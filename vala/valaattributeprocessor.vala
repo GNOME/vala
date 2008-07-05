@@ -98,6 +98,12 @@ public class Vala.AttributeProcessor : CodeVisitor {
 
 	public override void visit_property (Property prop) {
 		prop.process_attributes ();
+
+		prop.accept_children (this);
+	}
+
+	public override void visit_property_accessor (PropertyAccessor p) {
+		p.process_attributes ();
 	}
 
 	public override void visit_delegate (Delegate d) {

@@ -810,9 +810,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		if (prop.is_abstract || prop.is_virtual) {
 			if (acc.readable) {
-				function = new CCodeFunction ("%s_get_%s".printf (t.get_lower_case_cname (null), prop.name), prop.property_type.get_cname ());
+				function = new CCodeFunction (acc.get_cname (), prop.property_type.get_cname ());
 			} else {
-				function = new CCodeFunction ("%s_set_%s".printf (t.get_lower_case_cname (null), prop.name), "void");
+				function = new CCodeFunction (acc.get_cname (), "void");
 			}
 			function.add_parameter (cselfparam);
 			if (acc.writable || acc.construction) {
@@ -885,20 +885,28 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (!prop.is_abstract) {
 			bool is_virtual = prop.base_property != null || prop.base_interface_property != null;
 
-			string prefix = t.get_lower_case_cname (null);
+			string cname;
 			if (is_virtual) {
-				prefix += "_real";
+				if (acc.readable) {
+					cname = "%s_real_get_%s".printf (t.get_lower_case_cname (null), prop.name);
+				} else {
+					cname = "%s_real_set_%s".printf (t.get_lower_case_cname (null), prop.name);
+				}
+			} else {
+				cname = acc.get_cname ();
 			}
+
 			if (acc.readable) {
 				if (returns_real_struct) {
 					// return non simple structs as out parameter
-					function = new CCodeFunction ("%s_get_%s".printf (prefix, prop.name), "void");
+					function = new CCodeFunction (cname, "void");
 				} else {
-					function = new CCodeFunction ("%s_get_%s".printf (prefix, prop.name), prop.property_type.get_cname ());
+					function = new CCodeFunction (cname, prop.property_type.get_cname ());
 				}
 			} else {
-				function = new CCodeFunction ("%s_set_%s".printf (prefix, prop.name), "void");
+				function = new CCodeFunction (cname, "void");
 			}
+
 			if (is_virtual) {
 				function.modifiers |= CCodeModifiers.STATIC;
 			}

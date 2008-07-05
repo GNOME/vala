@@ -135,8 +135,11 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 		} else if (expr.symbol_reference is Property) {
 			var prop = (Property) expr.symbol_reference;
 
-			if (prop.get_accessor != null &&
-			    prop.get_accessor.automatic_body &&
+			if (prop.get_accessor == null) {
+				return;
+			}
+
+			if (prop.get_accessor.automatic_body &&
 			    codegen.current_type_symbol == prop.parent_symbol &&
 			    prop.base_property == null &&
 			    prop.base_interface_property == null) {
@@ -150,12 +153,11 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 				} else if (prop.base_interface_property != null) {
 					base_property = prop.base_interface_property;
 				}
-				var base_property_type = (TypeSymbol) base_property.parent_symbol;
 				string getter_cname;
 				if (prop is DynamicProperty) {
 					getter_cname = codegen.dynamic_property_binding ((DynamicProperty) prop).get_getter_cname ();
 				} else {
-					getter_cname = "%s_get_%s".printf (base_property_type.get_lower_case_cname (null), base_property.name);
+					getter_cname = base_property.get_accessor.get_cname ();
 				}
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (getter_cname));
 

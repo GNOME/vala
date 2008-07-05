@@ -70,6 +70,26 @@ public class Vala.PropertyAccessor : CodeNode {
 	 * Represents the generated value parameter in a set accessor.
 	 */
 	public FormalParameter value_parameter { get; set; }
+
+	/**
+	 * The publicly accessible name of the function that performs the
+	 * access in C code.
+	 */
+	public string get_cname () {
+		if (_cname != null) {
+			return _cname;
+		}
+
+		var t = (TypeSymbol) prop.parent_symbol;
+
+		if (readable) {
+			return "%s_get_%s".printf (t.get_lower_case_cname (null), prop.name);
+		} else {
+			return "%s_set_%s".printf (t.get_lower_case_cname (null), prop.name);
+		}
+	}
+
+	private string? _cname;
 	
 	/**
 	 * Creates a new property accessor.
@@ -96,6 +116,19 @@ public class Vala.PropertyAccessor : CodeNode {
 	public override void accept_children (CodeVisitor visitor) {
 		if (body != null) {
 			body.accept (visitor);
+		}
+	}
+
+	/**
+	 * Process all associated attributes.
+	 */
+	public void process_attributes () {
+		foreach (Attribute a in attributes) {
+			if (a.name == "CCode") {
+				if (a.has_argument ("cname")) {
+					_cname = a.get_string ("cname");
+				}
+			}
 		}
 	}
 }
