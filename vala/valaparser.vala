@@ -2359,7 +2359,8 @@ public class Vala.Parser : CodeVisitor {
 		var base_types = new ArrayList<DataType> ();
 		if (accept (TokenType.COLON)) {
 			do {
-				base_types.add (parse_type ());
+				var type = parse_type ();
+				base_types.add (type);
 			} while (accept (TokenType.COMMA));
 		}
 		var iface = new Interface (sym.name, get_src_com (begin));
