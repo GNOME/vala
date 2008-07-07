@@ -302,6 +302,9 @@ class Vala.Compiler : Object {
 
 		if (!ccode_only) {
 			var ccompiler = new CCodeCompiler ();
+			if (cc_command == null && Environment.get_variable ("CC") != null) {
+				cc_command = Environment.get_variable ("CC");
+			}
 			if (cc_options == null) {
 				ccompiler.compile (context, cc_command, new string[] { null });
 			} else {

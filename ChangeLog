@@ -1,3 +1,10 @@
+2008-07-07  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* compiler/valacompiler.vala:
+
+	Inspect CC environment variable to recognize a C compiler, based on
+	patch by Piotr Skamruk, fixes bug 501686
+
 2008-07-07  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaproperty.vala:
