@@ -26,6 +26,13 @@
 [SimpleType]
 [CCode (cname = "gboolean", cheader_filename = "glib.h", type_id = "G_TYPE_BOOLEAN", marshaller_type_name = "BOOLEAN", get_value_function = "g_value_get_boolean", set_value_function = "g_value_set_boolean", default_value = "FALSE", type_signature = "b")]
 public struct bool {
+	public string to_string () {
+		if (this) {
+			return "true";
+		} else {
+			return "false";
+		}
+	}
 }
 
 [SimpleType]
@@ -765,6 +772,10 @@ public class string {
 	public static char[] skip;
 
 	public string substring (long offset, long len);
+
+	public long length {
+		get { return this.len (); }
+	}
 }
 
 [Import ()]

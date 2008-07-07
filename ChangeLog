@@ -1,5 +1,12 @@
 2008-07-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Add string.length property and bool.to_string method,
+	fixes bug 527777
+
+2008-07-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 	* vala/valasourcefile.vala:
 	* vala/valasymbol.vala:
