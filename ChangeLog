@@ -1,5 +1,15 @@
 2008-07-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala:
+	* vala/valasourcefile.vala:
+	* vala/valasymbol.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodegeneratorsourcefile.vala:
+
+	Support methods and property accessors with body in VAPI files
+
+2008-07-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 
 	Allow non-external methods in VAPI files

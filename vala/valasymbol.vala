@@ -82,6 +82,11 @@ public abstract class Vala.Symbol : CodeNode {
 	 * and checking their accessibility.
 	 */
 	public bool is_internal_symbol () {
+		if (!external && external_package) {
+			// non-external symbols in VAPI files are internal symbols
+			return true;
+		}
+
 		for (Symbol sym = this; null != sym; sym = sym.parent_symbol) {
 			if (SymbolAccessibility.PRIVATE == sym.access) {
 				return true;
@@ -99,13 +104,7 @@ public abstract class Vala.Symbol : CodeNode {
 	 * Specifies whether the implementation is external, for example in
 	 * a separate C source file or in an external library.
 	 */
-	public bool external {
-		get {
-			return _external || (parent_symbol != null && parent_symbol.external)
-			       || external_package;
-		}
-		set { _external = value; }
-	}
+	public bool external { get; set; }
 
 	/**
 	 * Specifies whether the implementation is in an external library.
@@ -118,8 +117,6 @@ public abstract class Vala.Symbol : CodeNode {
 
 	private weak Scope _owner;
 	private Scope _scope;
-
-	private bool _external;
 
 	construct {
 		_scope = new Scope (this);

@@ -771,10 +771,16 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		next_temp_var_id = old_next_temp_var_id;
 
-		// FIXME: omit real struct types for now since they cannot be expressed as gobject property yet
-		// don't register private properties
-		if (prop.parent_symbol is Class && !prop.property_type.is_real_struct_type () && prop.access != SymbolAccessibility.PRIVATE) {
-			prop_enum.add_value (new CCodeEnumValue (prop.get_upper_case_cname ()));
+		var cl = prop.parent_symbol as Class;
+		if (cl != null && cl.is_subtype_of (gobject_type)) {
+			// GObject property
+			// FIXME: omit real struct types for now since they
+			// cannot be expressed as gobject property yet
+			// don't register private properties
+			if (!prop.property_type.is_real_struct_type ()
+			    && prop.access != SymbolAccessibility.PRIVATE) {
+				prop_enum.add_value (new CCodeEnumValue (prop.get_upper_case_cname ()));
+			}
 		}
 	}
 

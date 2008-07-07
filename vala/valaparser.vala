@@ -1936,6 +1936,9 @@ public class Vala.Parser : CodeVisitor {
 			cl.is_static = true;
 			Report.warning (get_last_src (), "static classes are deprecated, use namespaces");
 		}
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			cl.external = true;
+		}
 		set_attributes (cl, attrs);
 		foreach (TypeParameter type_param in type_param_list) {
 			cl.add_type_parameter (type_param);
@@ -2014,7 +2017,7 @@ public class Vala.Parser : CodeVisitor {
 	Constant parse_constant_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		parse_member_declaration_modifiers ();
+		var flags = parse_member_declaration_modifiers ();
 		expect (TokenType.CONST);
 		var type = parse_type (false);
 		string id = parse_identifier ();
@@ -2032,6 +2035,9 @@ public class Vala.Parser : CodeVisitor {
 
 		var c = new Constant (id, type, initializer, get_src_com (begin));
 		c.access = access;
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			c.external = true;
+		}
 		set_attributes (c, attrs);
 		return c;
 	}
@@ -2054,6 +2060,9 @@ public class Vala.Parser : CodeVisitor {
 		    || ModifierFlags.VIRTUAL in flags
 		    || ModifierFlags.OVERRIDE in flags) {
 			Report.error (f.source_reference, "abstract, virtual, and override modifiers are not applicable to fields");
+		}
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			f.external = true;
 		}
 		if (accept (TokenType.ASSIGN)) {
 			f.initializer = parse_expression ();
@@ -2141,6 +2150,8 @@ public class Vala.Parser : CodeVisitor {
 		}
 		if (!accept (TokenType.SEMICOLON)) {
 			method.body = parse_block ();
+		} else if (scanner.source_file.external_package) {
+			method.external = true;
 		}
 		return method;
 	}
@@ -2163,6 +2174,9 @@ public class Vala.Parser : CodeVisitor {
 		}
 		if (ModifierFlags.OVERRIDE in flags) {
 			prop.overrides = true;
+		}
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			prop.external = true;
 		}
 		expect (TokenType.OPEN_BRACE);
 		while (current () != TokenType.CLOSE_BRACE) {
@@ -2190,6 +2204,7 @@ public class Vala.Parser : CodeVisitor {
 					Block block = null;
 					if (!accept (TokenType.SEMICOLON)) {
 						block = parse_block ();
+						prop.external = false;
 					}
 					prop.get_accessor = new PropertyAccessor (true, false, false, block, get_src (accessor_begin));
 					set_attributes (prop.get_accessor, attrs);
@@ -2211,6 +2226,7 @@ public class Vala.Parser : CodeVisitor {
 					Block block = null;
 					if (!accept (TokenType.SEMICOLON)) {
 						block = parse_block ();
+						prop.external = false;
 					}
 					prop.set_accessor = new PropertyAccessor (false, writable, _construct, block, get_src (accessor_begin));
 					set_attributes (prop.set_accessor, attrs);
@@ -2298,7 +2314,7 @@ public class Vala.Parser : CodeVisitor {
 	Symbol parse_struct_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		parse_type_declaration_modifiers ();
+		var flags = parse_type_declaration_modifiers ();
 		expect (TokenType.STRUCT);
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
@@ -2310,6 +2326,9 @@ public class Vala.Parser : CodeVisitor {
 		}
 		var st = new Struct (sym.name, get_src_com (begin));
 		st.access = access;
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			st.external = true;
+		}
 		set_attributes (st, attrs);
 		foreach (TypeParameter type_param in type_param_list) {
 			st.add_type_parameter (type_param);
@@ -2354,7 +2373,7 @@ public class Vala.Parser : CodeVisitor {
 	Symbol parse_interface_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		parse_type_declaration_modifiers ();
+		var flags = parse_type_declaration_modifiers ();
 		expect (TokenType.INTERFACE);
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
@@ -2367,6 +2386,9 @@ public class Vala.Parser : CodeVisitor {
 		}
 		var iface = new Interface (sym.name, get_src_com (begin));
 		iface.access = access;
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			iface.external = true;
+		}
 		set_attributes (iface, attrs);
 		foreach (TypeParameter type_param in type_param_list) {
 			iface.add_type_parameter (type_param);
@@ -2421,11 +2443,14 @@ public class Vala.Parser : CodeVisitor {
 	Symbol parse_enum_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		parse_type_declaration_modifiers ();
+		var flags = parse_type_declaration_modifiers ();
 		expect (TokenType.ENUM);
 		var sym = parse_symbol_name ();
 		var en = new Enum (sym.name, get_src_com (begin));
 		en.access = access;
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			en.external = true;
+		}
 		set_attributes (en, attrs);
 
 		expect (TokenType.OPEN_BRACE);
@@ -2478,11 +2503,14 @@ public class Vala.Parser : CodeVisitor {
 	Symbol parse_errordomain_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		parse_type_declaration_modifiers ();
+		var flags = parse_type_declaration_modifiers ();
 		expect (TokenType.ERRORDOMAIN);
 		var sym = parse_symbol_name ();
 		var ed = new ErrorDomain (sym.name, get_src_com (begin));
 		ed.access = access;
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			ed.external = true;
+		}
 		set_attributes (ed, attrs);
 
 		expect (TokenType.OPEN_BRACE);
@@ -2651,13 +2679,16 @@ public class Vala.Parser : CodeVisitor {
 	CreationMethod parse_creation_method_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
-		parse_member_declaration_modifiers ();
+		var flags = parse_member_declaration_modifiers ();
 		var sym = parse_symbol_name ();
 		CreationMethod method;
 		if (sym.inner == null) {
 			method = new CreationMethod (sym.name, null, get_src_com (begin));
 		} else {
 			method = new CreationMethod (sym.inner.name, sym.name, get_src_com (begin));
+		}
+		if (ModifierFlags.EXTERN in flags) {
+			method.external = true;
 		}
 		expect (TokenType.OPEN_PARENS);
 		if (current () != TokenType.CLOSE_PARENS) {
@@ -2677,6 +2708,8 @@ public class Vala.Parser : CodeVisitor {
 		method.binding = MemberBinding.STATIC;
 		if (!accept (TokenType.SEMICOLON)) {
 			method.body = parse_block ();
+		} else if (scanner.source_file.external_package) {
+			method.external = true;
 		}
 		return method;
 	}
@@ -2694,6 +2727,9 @@ public class Vala.Parser : CodeVisitor {
 		set_attributes (d, attrs);
 		if (!(ModifierFlags.STATIC in flags)) {
 			d.has_target = true;
+		}
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			d.external = true;
 		}
 		foreach (TypeParameter type_param in type_param_list) {
 			d.add_type_parameter (type_param);

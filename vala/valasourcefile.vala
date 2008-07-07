@@ -85,6 +85,8 @@ public class Vala.SourceFile : Object {
 	private Gee.List<weak SourceFile> header_internal_full_dependencies = new ArrayList<weak SourceFile> ();
 	private Gee.List<weak SourceFile> header_internal_dependencies = new ArrayList<weak SourceFile> ();
 
+	private Gee.Set<Symbol> source_symbol_dependencies = new HashSet<Symbol> ();
+
 	private Gee.ArrayList<string> source_array = null;
 
 	private MappedFile mapped_file = null;
@@ -264,6 +266,7 @@ public class Vala.SourceFile : Object {
 		}
 		
 		if (dep_type == SourceFileDependencyType.SOURCE) {
+			source_symbol_dependencies.add (s);
 			if (s.external_package) {
 				foreach (string fn in s.get_cheader_filenames ()) {
 					source_external_includes.add (fn);
@@ -378,6 +381,10 @@ public class Vala.SourceFile : Object {
 	 */
 	public Gee.List<weak SourceFile> get_header_internal_dependencies () {
 		return new ReadOnlyList<weak SourceFile> (header_internal_dependencies);
+	}
+
+	public Gee.Set<Symbol> get_source_symbol_dependencies () {
+		return new ReadOnlySet<Symbol> (source_symbol_dependencies);
 	}
 
 	/**

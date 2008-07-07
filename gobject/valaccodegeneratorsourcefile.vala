@@ -238,6 +238,11 @@ public class Vala.CCodeGenerator {
 				used_includes.add (filename);
 			}
 		}
+		foreach (Symbol symbol in source_file.get_source_symbol_dependencies ()) {
+			if (!symbol.external && symbol.external_package) {
+				symbol.accept (this);
+			}
+		}
 		if (source_file.is_cycle_head) {
 			foreach (SourceFile cycle_file in source_file.cycle.files) {
 				foreach (CodeNode node in cycle_file.get_nodes ()) {
