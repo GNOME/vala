@@ -457,9 +457,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (m.is_abstract && m.body != null) {
 			Report.error (m.source_reference, "Abstract methods cannot have bodies");
-		} else if ((m.external || current_source_file.external_package) && m.body != null) {
+		} else if (m.external && m.body != null) {
 			Report.error (m.source_reference, "Extern methods cannot have bodies");
-		} else if (!m.is_abstract && !m.external && !current_source_file.external_package && m.body == null) {
+		} else if (!m.is_abstract && !m.external && m.body == null) {
 			Report.error (m.source_reference, "Non-abstract, non-extern methods must have bodies");
 		}
 

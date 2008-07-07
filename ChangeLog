@@ -1,3 +1,9 @@
+2008-07-07  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala:
+
+	Allow non-external methods in VAPI files
+
 2008-07-05  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaattributeprocessor.vala:
