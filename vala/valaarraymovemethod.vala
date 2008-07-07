@@ -1,6 +1,6 @@
 /* valaarraymovemethod.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,7 +32,8 @@ public class Vala.ArrayMoveMethod : Method {
 	 * @return newly created method
 	 */
 	public ArrayMoveMethod (SourceReference source_reference) {
-		this.source_reference = source_reference;
 		name = "move";
+		external = true;
+		this.source_reference = source_reference;
 	}
 }

@@ -1,3 +1,11 @@
+2008-07-07  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaarraylengthfield.vala:
+	* vala/valaarraymovemethod.vala:
+	* vala/valaarrayresizemethod.vala:
+
+	Mark array methods as external
+
 2008-07-07  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* compiler/valacompiler.vala:
