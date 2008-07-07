@@ -261,7 +261,12 @@ public class Vala.Parser : CodeVisitor {
 			return new RealLiteral (get_last_string (), get_src (begin));
 		case TokenType.CHARACTER_LITERAL:
 			next ();
-			return new CharacterLiteral (get_last_string (), get_src (begin));
+			// FIXME validate and unescape here and just pass unichar to CharacterLiteral
+			var lit = new CharacterLiteral (get_last_string (), get_src (begin));
+			if (lit.error) {
+				Report.error (lit.source_reference, "invalid character literal");
+			}
+			return lit;
 		case TokenType.STRING_LITERAL:
 			next ();
 			return new StringLiteral (get_last_string (), get_src (begin));

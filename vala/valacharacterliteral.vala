@@ -57,13 +57,7 @@ public class Vala.CharacterLiteral : Literal {
 		source_reference = source;
 
 	}
-	
-	construct {
-		if (error) {
-			Report.error (source_reference, "invalid character literal");
-		}
-	}
-	
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_character_literal (this);
 
