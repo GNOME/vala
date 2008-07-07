@@ -1,5 +1,11 @@
 2008-07-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaproperty.vala:
+
+	Mark source_reference parameter in creation method as nullable
+
+2008-07-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacharacterliteral.vala:
 	* vala/valaparser.vala:
 
