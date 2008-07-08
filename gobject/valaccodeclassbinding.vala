@@ -539,11 +539,11 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			if (m.is_abstract) {
 				Method cl_method = null;
 				var base_class = cl;
-				while (cl_method == null) {
+				while (base_class != null && cl_method == null) {
 					cl_method = base_class.scope.lookup (m.name) as Method;
 					base_class = base_class.base_class;
 				}
-				if (cl_method.parent_symbol != cl) {
+				if (base_class != null && cl_method.parent_symbol != cl) {
 					// method inherited from base class
 					
 					var ciface = new CCodeIdentifier ("iface");

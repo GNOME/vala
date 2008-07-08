@@ -1,3 +1,10 @@
+2008-07-08  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodeclassbinding.vala:
+
+	Fix partial interface reimplementation when the base class is in
+	an external library
+
 2008-07-08  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* vapi/glib-2.0.vapi:
