@@ -843,6 +843,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						if (eval (nv[1]) == "1") {
 							return;
 						}
+					} else if (nv[0] == "abstract") {
+						if (eval (nv[1]) == "1") {
+							cl.is_abstract = true;
+						}
 					}
 				}
 			}
@@ -1326,6 +1330,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "cheader_filename") {
 					m.add_cheader_filename (eval (nv[1]));
+				} else if (nv[0] == "abstract") {
+					if (eval (nv[1]) == "1") {
+						m.is_abstract = true;
+					}
 				}
 			}
 		}
@@ -1536,8 +1544,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		Method m = create_method (node.name, symbol, v.result, func != null ? func.parameters : v.parameters, false, is_interface);
 		if (m != null) {
 			m.binding = MemberBinding.INSTANCE;
-			m.is_virtual = !is_interface;
-			m.is_abstract = is_interface;
+			m.is_virtual = !(m.is_abstract || is_interface);
+			m.is_abstract = m.is_abstract || is_interface;
 
 			if (func == null) {
 				m.attributes.append (new Attribute ("NoWrapper", null));

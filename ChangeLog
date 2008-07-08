@@ -1,3 +1,14 @@
+2008-07-08  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
+	* vapigen/valagidlparser.vala:
+
+	Allow vapi metadata to declare abstract methods, fix GtkCellRenderer
+	methods _get_size and _render to be abstract, based on patch by
+	Jared Moore, fixes bug 522355
+
+	* vapi/gtk+-2.0.vapi: Regenerated
+
 2008-07-08  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodeclassbinding.vala:
