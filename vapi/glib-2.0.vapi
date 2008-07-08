@@ -2844,7 +2844,7 @@ namespace GLib {
 		public static bool thorough ();
 		public static bool perf ();
 		public static bool verbose ();
-		public static bool quite ();
+		public static bool quiet ();
 		public static int run ();
 		public static void add_func (string testpath, Callback test_funcvoid);
 		[PrintfFormat]

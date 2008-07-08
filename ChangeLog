@@ -1,3 +1,9 @@
+2008-07-08  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* vapi/glib-2.0.vapi:
+
+	Fix typo, patch by Christian Hergert, fixes bug 542002
+
 2008-07-07  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaarraylengthfield.vala:
