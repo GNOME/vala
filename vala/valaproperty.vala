@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
 using GLib;
@@ -56,7 +57,7 @@ public class Vala.Property : Member, Lockable {
 	 * Specifies whether a `notify' signal should be emitted on property
 	 * changes.
 	 */
-	public bool notify { get; set; }
+	public bool notify { get; set; default = true; }
 
 	/**
 	 * Specifies whether the implementation of this property does not
@@ -241,14 +242,20 @@ public class Vala.Property : Member, Lockable {
 		
 		return str.str;
 	}
-	
+
+	void process_ccode_attribute (Attribute a) {
+		if (a.has_argument ("notify")) {
+			notify = a.get_bool ("notify");
+		}
+	}
+
 	/**
 	 * Process all associated attributes.
 	 */
 	public void process_attributes () {
 		foreach (Attribute a in attributes) {
-			if (a.name == "Notify") {
-				notify = true;
+			if (a.name == "CCode") {
+				process_ccode_attribute (a);
 			} else if (a.name == "NoAccessorMethod") {
 				no_accessor_method = true;
 			} else if (a.name == "Description") {

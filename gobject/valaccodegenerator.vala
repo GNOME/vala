@@ -953,7 +953,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 
 			// notify on property changes
-			if (prop.notify && (acc.writable || acc.construction)) {
+			if (current_class.is_subtype_of (gobject_type) &&
+			    prop.notify &&
+			    prop.access != SymbolAccessibility.PRIVATE && // FIXME: use better means to detect gobject properties
+			    (acc.writable || acc.construction)) {
 				var notify_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_notify"));
 				notify_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GObject *"));
 				notify_call.add_argument (prop.get_canonical_cconstant ());

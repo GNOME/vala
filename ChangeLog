@@ -1,3 +1,14 @@
+2008-07-10  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* gobject/valaccodegenerator.vala:
+	* vala/valaproperty.vala:
+
+	Change GObject properties to always notify on value change, remove the
+	[Notify] attribute and add a boolean CCode attribute parameter named
+	`notify', based on patch by Jared Moore, fixes bug 540700
+
+	* tests/classes-properties.vala: update
+
 2008-07-98  Jared Moore  <jaredm@svn.gnome.org>
 
 	* gobject/valaccodecompiler.vala:

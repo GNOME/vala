@@ -4,7 +4,6 @@ public class Sample : Object {
 	private string automatic { get; set; }
 
 	private string _name;
-	[Notify]
 	public string name {
 		get { return _name; }
 		set { _name = value; }
