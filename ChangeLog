@@ -1,3 +1,9 @@
+2008-07-98  Jared Moore  <jaredm@svn.gnome.org>
+
+	* gobject/valaccodecompiler.vala:
+
+	Apply shell quoting to -X flag arguments, fixes bug 542183.
+
 2008-07-09  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* gobject/valaccodegenerator.vala:

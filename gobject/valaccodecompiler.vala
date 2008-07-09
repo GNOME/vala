@@ -95,7 +95,7 @@ public class Vala.CCodeCompiler : Object {
 		}
 		cmdline += " " + pkgflags;
 		foreach (string cc_option in cc_options) {
-			cmdline += " " + cc_option;
+			cmdline += " " + Shell.quote (cc_option);
 		}
 
 		/* make sure include files can be found if -d is used */
