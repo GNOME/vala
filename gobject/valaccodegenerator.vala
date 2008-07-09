@@ -3083,7 +3083,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		expr.accept_children (this);
 
 		CCodeExpression instance = null;
-		CCodeFunctionCall creation_call = null;
+		CCodeExpression creation_expr = null;
 
 		var st = expr.type_reference.data_type as Struct;
 		if ((st != null && !st.is_simple_type ()) || expr.get_object_initializer ().size > 0) {
@@ -3095,6 +3095,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		if (expr.symbol_reference == null) {
+			CCodeFunctionCall creation_call;
+
 			// no creation method
 			if (expr.type_reference.data_type == glist_type ||
 			    expr.type_reference.data_type == gslist_type) {
@@ -3116,10 +3118,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				creation_call.add_argument (new CCodeConstant ("0"));
 				creation_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (expr.type_reference.get_cname ())));
 			}
+
+			creation_expr = creation_call;
 		} else if (expr.symbol_reference is Method) {
 			// use creation method
 			var m = (Method) expr.symbol_reference;
 			var params = m.get_parameters ();
+			CCodeFunctionCall creation_call;
 
 			creation_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
 
@@ -3230,9 +3235,18 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				// ensure variable argument list ends with NULL
 				creation_call.add_argument (new CCodeConstant ("NULL"));
 			}
+
+			creation_expr = creation_call;
+
+			// cast the return value of the creation method back to the intended type if
+			// it requested a special C return type
+			if (method_binding (m).get_custom_creturn_type () != null) {
+				creation_expr = new CCodeCastExpression (creation_expr, expr.type_reference.get_cname ());
+			}
 		} else if (expr.symbol_reference is ErrorCode) {
 			var ecode = (ErrorCode) expr.symbol_reference;
 			var edomain = (ErrorDomain) ecode.parent_symbol;
+			CCodeFunctionCall creation_call;
 
 			creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_error_new"));
 			creation_call.add_argument (new CCodeIdentifier (edomain.get_upper_case_cname ()));
@@ -3241,6 +3255,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			foreach (Expression arg in expr.get_argument_list ()) {
 				creation_call.add_argument ((CCodeExpression) arg.ccodenode);
 			}
+
+			creation_expr = creation_call;
 		} else {
 			assert (false);
 		}
@@ -3249,9 +3265,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var ccomma = new CCodeCommaExpression ();
 
 			if (expr.type_reference.data_type is Struct) {
-				ccomma.append_expression (creation_call);
+				ccomma.append_expression (creation_expr);
 			} else {
-				ccomma.append_expression (new CCodeAssignment (instance, creation_call));
+				ccomma.append_expression (new CCodeAssignment (instance, creation_expr));
 			}
 
 			foreach (MemberInitializer init in expr.get_object_initializer ()) {
@@ -3278,8 +3294,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			ccomma.append_expression (instance);
 
 			expr.ccodenode = ccomma;
-		} else if (creation_call != null) {
-			expr.ccodenode = creation_call;
+		} else if (creation_expr != null) {
+			expr.ccodenode = creation_expr;
 		}
 	}
 

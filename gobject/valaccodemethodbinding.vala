@@ -18,6 +18,7 @@
  *
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
+ *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
 using GLib;
@@ -31,6 +32,25 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 
 	public bool has_wrapper {
 		get { return (method.get_attribute ("NoWrapper") == null); }
+	}
+
+	public string? get_custom_creturn_type () {
+		var attr = method.get_attribute ("CCode");
+		if (attr != null) {
+			string type = attr.get_string ("type");
+			if (type != null) {
+				return type;
+			}
+		}
+		return null;
+	}
+
+	string get_creturn_type (string default_value) {
+		string type = get_custom_creturn_type ();
+		if (type == null) {
+			return default_value;
+		}
+		return type;
 	}
 
 	public CCodeMethodBinding (CCodeGenerator codegen, Method method) {
@@ -127,7 +147,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			}
 		}
 
-		codegen.function = new CCodeFunction (m.get_real_cname (), creturn_type.get_cname ());
+		codegen.function = new CCodeFunction (m.get_real_cname (), get_creturn_type (creturn_type.get_cname ()));
 		m.ccodenode = codegen.function;
 
 		if (m.is_inline) {
@@ -166,7 +186,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			cparam_map.set (codegen.get_param_pos (m.cinstance_parameter_position), instance_param);
 
 			if (m.is_abstract || m.is_virtual) {
-				var vdecl = new CCodeDeclaration (creturn_type.get_cname ());
+				var vdecl = new CCodeDeclaration (get_creturn_type (creturn_type.get_cname ()));
 				vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
 				vdecl.add_declarator (vdeclarator);
 				codegen.type_struct.add_declaration (vdecl);
@@ -498,7 +518,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 				cstmt = new CCodeReturnStatement (vcall);
 			} else {
 				/* store method return value for postconditions */
-				var cdecl = new CCodeDeclaration (creturn_type.get_cname ());
+				var cdecl = new CCodeDeclaration (get_creturn_type (creturn_type.get_cname ()));
 				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("result", vcall));
 				cstmt = cdecl;
 			}
@@ -549,8 +569,13 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			}
 
 			if (codegen.current_type_symbol is Class) {
+				CCodeExpression cresult = new CCodeIdentifier ("self");
+				if (get_custom_creturn_type () != null) {
+					cresult = new CCodeCastExpression (cresult, get_custom_creturn_type ());
+				}
+
 				var creturn = new CCodeReturnStatement ();
-				creturn.return_expression = new CCodeIdentifier ("self");
+				creturn.return_expression = cresult;
 				codegen.function.block.add_statement (creturn);
 			}
 		}

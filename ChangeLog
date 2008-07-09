@@ -1,3 +1,21 @@
+2008-07-09  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodemethodbinding.vala:
+	* vala/valacreationmethod.vala:
+	* vala/valainterfacewriter.vala:
+	* vapigen/valagidlparser.vala:
+
+	Add support for creation methods with a different (mostly super) type
+	than the type of the object it creates. Add a `type' parameter to the
+	CCode attribute which will be used to get the casts right for such
+	creation methods.
+
+	* vapi/gio-2.0.vapi:
+	* vapi/gtk+-2.0.vapi:
+
+	Regenerated, fixes bug 540661
+
 2008-07-08  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:

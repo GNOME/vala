@@ -769,6 +769,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			ccode_params.append_printf ("%ssentinel = \"%s\"", separator, m.sentinel);
 			separator = ", ";
 		}
+		if (m is CreationMethod && ((CreationMethod)m).custom_return_type_cname != null) {
+			ccode_params.append_printf ("%stype = \"%s\"", separator, ((CreationMethod)m).custom_return_type_cname);
+		}
 
 		if (ccode_params.len > 0) {
 			write_indent ();

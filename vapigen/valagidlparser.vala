@@ -1257,6 +1257,15 @@ public class Vala.GIdlParser : CodeVisitor {
 			} else if (m.name.has_prefix ("new_")) {
 				m.name = m.name.offset ("new_".len ());
 			}
+			// For classes, check whether a creation method return type equals to the
+			// type of the class created. If the types do not match (e.g. in most
+			// gtk widgets) add an attribute to the creation method indicating the used
+			// return type.
+			if (current_data_type is Class && res != null) {
+				if ("%s*".printf (current_data_type.get_cname()) != res.type.unparsed) {
+					((CreationMethod)m).custom_return_type_cname = res.type.unparsed;
+				}
+			}
 		} else {
 			m = new Method (name, return_type, current_source_reference);
 		}

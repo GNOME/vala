@@ -38,6 +38,14 @@ public class Vala.CreationMethod : Method {
 	public int n_construction_params { get; set; }
 
 	/**
+	 * Specifies a custom C return type for that creation method.
+	 * Only the idl parser and the interface writer should use this.
+	 * FIXME: remove this as soon the compiler has a decent attribute
+	 * handling.
+	 */
+	public string? custom_return_type_cname { get; set; }
+
+	/**
 	 * Creates a new method.
 	 *
 	 * @param name             method name

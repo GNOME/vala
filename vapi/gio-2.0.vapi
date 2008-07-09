@@ -254,7 +254,9 @@ namespace GLib {
 	public class BufferedInputStream : GLib.FilterInputStream {
 		public ulong get_available ();
 		public ulong get_buffer_size ();
+		[CCode (type = "GInputStream*")]
 		public BufferedInputStream (GLib.InputStream base_stream);
+		[CCode (type = "GInputStream*")]
 		public BufferedInputStream.sized (GLib.InputStream base_stream, ulong size);
 		public ulong peek (void* buffer, ulong offset, ulong count);
 		public void* peek_buffer (ulong count);
@@ -269,7 +271,9 @@ namespace GLib {
 	public class BufferedOutputStream : GLib.FilterOutputStream {
 		public bool get_auto_grow ();
 		public ulong get_buffer_size ();
+		[CCode (type = "GOutputStream*")]
 		public BufferedOutputStream (GLib.OutputStream base_stream);
+		[CCode (type = "GOutputStream*")]
 		public BufferedOutputStream.sized (GLib.OutputStream base_stream, ulong size);
 		public void set_auto_grow (bool auto_grow);
 		public void set_buffer_size (ulong size);
@@ -340,6 +344,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileIcon : GLib.Object, GLib.Icon, GLib.LoadableIcon {
 		public weak GLib.File get_file ();
+		[CCode (type = "GIcon*")]
 		public FileIcon (GLib.File file);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -494,7 +499,9 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MemoryInputStream : GLib.InputStream, GLib.Seekable {
 		public void add_data (void* data, long len, GLib.DestroyNotify? destroy);
+		[CCode (type = "GInputStream*")]
 		public MemoryInputStream ();
+		[CCode (type = "GInputStream*")]
 		public MemoryInputStream.from_data (void* data, long len, GLib.DestroyNotify? destroy);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -502,6 +509,7 @@ namespace GLib {
 		public void* get_data ();
 		public ulong get_data_size ();
 		public ulong get_size ();
+		[CCode (type = "GOutputStream*")]
 		public MemoryOutputStream (void* data, ulong len, GLib.ReallocFunc realloc_fn, GLib.DestroyNotify? destroy);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -584,8 +592,11 @@ namespace GLib {
 	public class ThemedIcon : GLib.Object, GLib.Icon {
 		public void append_name (string iconname);
 		public weak string get_names ();
+		[CCode (type = "GIcon*")]
 		public ThemedIcon (string iconname);
+		[CCode (type = "GIcon*")]
 		public ThemedIcon.from_names (string[] iconnames, int len);
+		[CCode (type = "GIcon*")]
 		public ThemedIcon.with_default_fallbacks (string iconname);
 		public void prepend_name (string iconname);
 		[NoAccessorMethod]
