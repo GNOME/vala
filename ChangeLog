@@ -1,3 +1,12 @@
+2008-07-10  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* ccode/valaccodedeclaration.vala:
+	* ccode/valaccodemodifiers.vala:
+	* gobject/valatyperegisterfunction.vala:
+
+	Revert commit revision 1691 due bad regressions, reopens bug
+	540705
+
 2008-07-10  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi:
@@ -27,7 +36,7 @@
 
 	* tests/classes-properties.vala: update
 
-2008-07-09  Jared Moore  <jaredm@svn.gnome.org>
+2008-07-98  Jared Moore  <jaredm@svn.gnome.org>
 
 	* gobject/valaccodecompiler.vala:
 

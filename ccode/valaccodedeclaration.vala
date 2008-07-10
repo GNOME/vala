@@ -59,9 +59,6 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 			if ((modifiers & CCodeModifiers.STATIC) != 0) {
 				writer.write_string ("static ");
 			}
-			if ((modifiers & CCodeModifiers.VOLATILE) != 0) {
-				writer.write_string ("volatile ");
-			}
 			if ((modifiers & CCodeModifiers.EXTERN) != 0 && !has_initializer ()) {
 				writer.write_string ("extern ");
 			}
