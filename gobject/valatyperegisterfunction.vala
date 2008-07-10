@@ -45,7 +45,7 @@ public abstract class Vala.TypeRegisterFunction : Object {
 		var type_block = new CCodeBlock ();
 		var cdecl = new CCodeDeclaration ("GType");
 		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (type_id_name, new CCodeConstant ("0")));
-		cdecl.modifiers = CCodeModifiers.STATIC;
+		cdecl.modifiers = CCodeModifiers.STATIC | CCodeModifiers.VOLATILE;
 		if (!plugin) {
 			type_block.add_statement (cdecl);
 		} else {
@@ -110,14 +110,26 @@ public abstract class Vala.TypeRegisterFunction : Object {
 			reg_call.add_argument (new CCodeIdentifier ("&g_define_type_fundamental_info"));
 		}
 		reg_call.add_argument (new CCodeConstant (get_type_flags ()));
-		type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (type_id_name), reg_call)));
+
+		string temp_type_id_name = "%s_type_id_temp".printf (get_type_declaration ().get_lower_case_cname (null));
+		if (!plugin) {
+			var temp_decl = new CCodeDeclaration ("GType");
+			temp_decl.add_declarator (new CCodeVariableDeclarator.with_initializer (temp_type_id_name, reg_call));
+			type_init.add_statement (temp_decl);
+		} else {
+			type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (type_id_name), reg_call)));
+		}
 		
 		type_init.add_statement (get_type_interface_init_statements ());
 
 		if (!plugin) {
-			var cond = new CCodeFunctionCall (new CCodeIdentifier ("G_UNLIKELY"));
-			cond.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier (type_id_name), new CCodeConstant ("0")));
-			var cif = new CCodeIfStatement (cond, type_init);
+			var enter = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_enter"));
+			enter.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (type_id_name)));
+			var leave = new CCodeFunctionCall (new CCodeIdentifier ("g_once_init_leave"));
+			leave.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (type_id_name)));
+			leave.add_argument (new CCodeIdentifier (temp_type_id_name));
+			type_init.add_statement (new CCodeExpressionStatement (leave));
+			var cif = new CCodeIfStatement (enter, type_init);
 			type_block.add_statement (cif);
 		} else {
 			type_block = type_init;

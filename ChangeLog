@@ -1,3 +1,14 @@
+2008-07-10  Jared Moore  <jaredm@svn.gnome.org>
+
+	* ccode/valaccodedeclaration.vala:
+	* ccode/valaccodemodifiers.vala:
+
+	Added support for 'volatile' modifier in C code.
+
+	* gobject/valatyperegisterfunction.vala:
+
+	Make *_get_type functions thread safe, fixes bug 540705.
+
 2008-07-10  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* gobject/valaccodegenerator.vala:
@@ -9,7 +20,7 @@
 
 	* tests/classes-properties.vala: update
 
-2008-07-98  Jared Moore  <jaredm@svn.gnome.org>
+2008-07-09  Jared Moore  <jaredm@svn.gnome.org>
 
 	* gobject/valaccodecompiler.vala:
 
