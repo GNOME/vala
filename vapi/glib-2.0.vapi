@@ -1346,7 +1346,7 @@ namespace GLib {
 
 	namespace Timeout {
 		public static uint add (uint interval, SourceFunc function);
-		public static uint add_full (int priority, uint interval, SourceFunc function, DestroyNotify? notify);
+		public static uint add_full (int priority, uint interval, SourceFunc# function);
 		public static uint add_seconds (uint interval, SourceFunc function);
 		public static uint add_seconds_full (int priority, uint interval, SourceFunc function, DestroyNotify? notify);
 	}
@@ -1358,7 +1358,7 @@ namespace GLib {
 
 	namespace Idle {
 		public static uint add (SourceFunc function);
-		public static uint add_full (int priority, SourceFunc function, DestroyNotify? notify);
+		public static uint add_full (int priority, SourceFunc# function);
 		public static bool remove_by_data (void* data);
 	}
 
@@ -1375,7 +1375,7 @@ namespace GLib {
 	
 	namespace ChildWatch {
 		public static uint add (Pid pid, ChildWatchFunc function);
-		public static uint add_full (int priority, Pid pid, ChildWatchFunc function, DestroyNotify? notify);
+		public static uint add_full (int priority, Pid pid, ChildWatchFunc# function);
 	}
 	
 	public struct PollFD {

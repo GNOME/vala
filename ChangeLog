@@ -1,3 +1,10 @@
+2008-07-10  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
+	Fix g_timeout_add_full, g_idle_add_full, and g_child_watch_add_full
+	bindings
+
 2008-07-10  Jared Moore  <jaredm@svn.gnome.org>
 
 	* ccode/valaccodedeclaration.vala:
