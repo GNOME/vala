@@ -1722,7 +1722,7 @@ namespace Gtk {
 		public weak Gtk.TreeRowReference copy ();
 		public static void deleted (GLib.Object proxy, Gtk.TreePath path);
 		public weak Gtk.TreeModel get_model ();
-		public weak Gtk.TreePath get_path ();
+		public Gtk.TreePath get_path ();
 		public static void inserted (GLib.Object proxy, Gtk.TreePath path);
 		public TreeRowReference (Gtk.TreeModel model, Gtk.TreePath path);
 		public TreeRowReference.proxy (GLib.Object proxy, Gtk.TreeModel model, Gtk.TreePath path);
@@ -3255,7 +3255,7 @@ namespace Gtk {
 		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gtk.TargetEntry[] targets, Gdk.DragAction actions);
 		public int get_column_spacing ();
 		public int get_columns ();
-		public bool get_cursor (out weak Gtk.TreePath path, out weak Gtk.CellRenderer cell);
+		public bool get_cursor (out Gtk.TreePath path, out weak Gtk.CellRenderer cell);
 		public bool get_dest_item_at_pos (int drag_x, int drag_y, out weak Gtk.TreePath path, Gtk.IconViewDropPosition pos);
 		public void get_drag_dest_item (out weak Gtk.TreePath path, Gtk.IconViewDropPosition pos);
 		public bool get_item_at_pos (int x, int y, out weak Gtk.TreePath path, out weak Gtk.CellRenderer cell);
@@ -3282,10 +3282,10 @@ namespace Gtk {
 		public bool path_is_selected (Gtk.TreePath path);
 		public void scroll_to_path (Gtk.TreePath path, bool use_align, float row_align, float col_align);
 		public void select_path (Gtk.TreePath path);
-		public void selected_foreach (Gtk.IconViewForeachFunc func, void* data);
+		public void selected_foreach (Gtk.IconViewForeachFunc func);
 		public void set_column_spacing (int column_spacing);
 		public void set_columns (int columns);
-		public void set_cursor (Gtk.TreePath path, Gtk.CellRenderer cell, bool start_editing);
+		public void set_cursor (Gtk.TreePath path, Gtk.CellRenderer? cell, bool start_editing);
 		public void set_drag_dest_item (Gtk.TreePath path, Gtk.IconViewDropPosition pos);
 		public void set_item_width (int item_width);
 		public void set_margin (int margin);
@@ -5525,7 +5525,7 @@ namespace Gtk {
 		public void refilter ();
 		public void set_modify_func (int n_columns, GLib.Type[] types, Gtk.TreeModelFilterModifyFunc func, void* data, Gtk.DestroyNotify destroy);
 		public void set_visible_column (int column);
-		public void set_visible_func (Gtk.TreeModelFilterVisibleFunc func, void* data, Gtk.DestroyNotify destroy);
+		public void set_visible_func (Gtk.TreeModelFilterVisibleFunc# func);
 		[NoAccessorMethod]
 		public Gtk.TreeModel child_model { get; construct; }
 		[NoAccessorMethod]
@@ -5581,7 +5581,7 @@ namespace Gtk {
 		public void select_iter (Gtk.TreeIter iter);
 		public void select_path (Gtk.TreePath path);
 		public void select_range (Gtk.TreePath start_path, Gtk.TreePath end_path);
-		public void selected_foreach (Gtk.TreeSelectionForeachFunc func, void* data);
+		public void selected_foreach (Gtk.TreeSelectionForeachFunc func);
 		public void set_mode (Gtk.SelectionMode type);
 		public void set_select_function (Gtk.TreeSelectionFunc func, void* data, Gtk.DestroyNotify destroy);
 		public void unselect_all ();
@@ -5700,7 +5700,7 @@ namespace Gtk {
 		public void scroll_to_cell (Gtk.TreePath? path, Gtk.TreeViewColumn? column, bool use_align, float row_align, float col_align);
 		public void scroll_to_point (int tree_x, int tree_y);
 		public void set_column_drag_function (Gtk.TreeViewColumnDropFunc func, Gtk.DestroyNotify destroy);
-		public void set_cursor (Gtk.TreePath path, Gtk.TreeViewColumn focus_column, bool start_editing);
+		public void set_cursor (Gtk.TreePath path, Gtk.TreeViewColumn? focus_column, bool start_editing);
 		public void set_cursor_on_cell (Gtk.TreePath path, Gtk.TreeViewColumn focus_column, Gtk.CellRenderer focus_cell, bool start_editing);
 		public void set_destroy_count_func (Gtk.TreeDestroyCountFunc func, void* data, Gtk.DestroyNotify destroy);
 		public void set_drag_dest_row (Gtk.TreePath? path, Gtk.TreeViewDropPosition pos);
@@ -6154,7 +6154,7 @@ namespace Gtk {
 		public abstract void pack_end (Gtk.CellRenderer cell, bool expand);
 		public abstract void pack_start (Gtk.CellRenderer cell, bool expand);
 		public abstract void reorder (Gtk.CellRenderer cell, int position);
-		public abstract void set_cell_data_func (Gtk.CellRenderer cell, Gtk.CellLayoutDataFunc func, void* func_data, GLib.DestroyNotify destroy);
+		public abstract void set_cell_data_func (Gtk.CellRenderer cell, Gtk.CellLayoutDataFunc# func);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface Editable {
@@ -6363,9 +6363,9 @@ namespace Gtk {
 	public interface TreeSortable : Gtk.TreeModel, GLib.Object {
 		public abstract bool get_sort_column_id (out int sort_column_id, out Gtk.SortType order);
 		public abstract bool has_default_sort_func ();
-		public abstract void set_default_sort_func (Gtk.TreeIterCompareFunc sort_func, Gtk.DestroyNotify destroy);
+		public abstract void set_default_sort_func (Gtk.TreeIterCompareFunc# sort_func);
 		public abstract void set_sort_column_id (int sort_column_id, Gtk.SortType order);
-		public abstract void set_sort_func (int sort_column_id, Gtk.TreeIterCompareFunc sort_func, Gtk.DestroyNotify destroy);
+		public abstract void set_sort_func (int sort_column_id, Gtk.TreeIterCompareFunc# sort_func);
 		[HasEmitter]
 		public virtual signal void sort_column_changed ();
 	}
