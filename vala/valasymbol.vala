@@ -249,6 +249,9 @@ public abstract class Vala.Symbol : CodeNode {
 			unichar c = i.get_char ();
 			if (c == '_') {
 				last_underscore = true;
+			} else if (c.isupper ()) {
+				// original string is not lower_case, don't apply transformation
+				return lower_case;
 			} else if (last_underscore) {
 				result.append_unichar (c.toupper ());
 				last_underscore = false;

@@ -1,3 +1,9 @@
+2008-07-11  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasymbol.vala:
+
+	Don't transform non-lowercase names to CamelCase
+
 2008-07-11  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* gobject/valaccodemethodbinding.vala:
