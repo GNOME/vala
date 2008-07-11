@@ -126,8 +126,8 @@ public class Vala.Method : Member {
 
 	/**
 	 * Specifies the virtual or abstract method this method overrides.
-	 * Reference must be weak as virtual methods set base_method to
-	 * themselves.
+	 * Reference must be weak as virtual and abstract methods set 
+	 * base_method to themselves.
 	 */
 	public Method base_method {
 		get {
@@ -516,7 +516,7 @@ public class Vala.Method : Member {
 			if (!parent_symbol.external_package) {
 				if (!(this is CreationMethod)) {
 					find_base_interface_method ((Class) parent_symbol);
-					if (is_virtual || overrides) {
+					if (is_virtual || is_abstract || overrides) {
 						find_base_class_method ((Class) parent_symbol);
 					}
 				}

@@ -214,183 +214,203 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 
 		bool visible = !m.is_internal_symbol ();
 
-		/* real function declaration and definition not needed
-		 * for abstract methods */
-		if (!m.is_abstract) {
-			if (visible && m.base_method == null && m.base_interface_method == null) {
-				/* public methods need function declaration in
-				 * header file except virtual/overridden methods */
-				codegen.header_type_member_declaration.append (codegen.function.copy ());
-			} else {
-				/* declare all other functions in source file to
-				 * avoid dependency on order within source file */
-				codegen.function.modifiers |= CCodeModifiers.STATIC;
-				codegen.source_type_member_declaration.append (codegen.function.copy ());
-			}
-			
-			/* Methods imported from a plain C file don't
-			 * have a body, e.g. Vala.Parser.parse_file () */
-			if (m.body != null) {
-				codegen.function.block = (CCodeBlock) m.body.ccodenode;
-				codegen.function.block.line = codegen.function.line;
-
-				var cinit = new CCodeFragment ();
-				codegen.function.block.prepend_statement (cinit);
-
-				if (m.parent_symbol is Class) {
-					var cl = (Class) m.parent_symbol;
-					if (m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
-						Method base_method;
-						ReferenceType base_expression_type;
-						if (m.overrides) {
-							base_method = m.base_method;
-							base_expression_type = new ObjectType ((Class) base_method.parent_symbol);
-						} else {
-							base_method = m.base_interface_method;
-							base_expression_type = new ObjectType ((Interface) base_method.parent_symbol);
-						}
-						var self_target_type = new ObjectType (cl);
-						CCodeExpression cself = codegen.transform_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
-
-						var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", cself));
-						
-						cinit.append (cdecl);
-					} else if (m.binding == MemberBinding.INSTANCE) {
-						var ccheckstmt = create_method_type_check_statement (m, creturn_type, cl, true, "self");
-						ccheckstmt.line = codegen.function.line;
-						cinit.append (ccheckstmt);
-					}
-				}
-				foreach (FormalParameter param in m.get_parameters ()) {
-					if (param.ellipsis) {
-						break;
-					}
-
-					var t = param.parameter_type.data_type;
-					if (t != null && t.is_reference_type ()) {
-						if (param.direction != ParameterDirection.OUT) {
-							var type_check = create_method_type_check_statement (m, creturn_type, t, (codegen.context.non_null && !param.parameter_type.nullable), param.name);
-							if (type_check != null) {
-								type_check.line = codegen.function.line;
-								cinit.append (type_check);
-							}
-						} else {
-							// ensure that the passed reference for output parameter is cleared
-							var a = new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), new CCodeConstant ("NULL"));
-							cinit.append (new CCodeExpressionStatement (a));
-						}
-					}
-				}
-
-				if (inner_error) {
-					/* always separate error parameter and inner_error local variable
-					 * as error may be set to NULL but we're always interested in inner errors
-					 */
-					var cdecl = new CCodeDeclaration ("GError *");
-					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
-					cinit.append (cdecl);
-				}
-
-				if (m.source_reference != null && m.source_reference.comment != null) {
-					codegen.source_type_member_definition.append (new CCodeComment (m.source_reference.comment));
-				}
-				codegen.source_type_member_definition.append (codegen.function);
-				
-				if (m is CreationMethod) {
-					if (in_gobject_creation_method) {
-						int n_params = ((CreationMethod) m).n_construction_params;
-
-						if (n_params > 0 || codegen.current_class.get_type_parameters ().size > 0) {
-							// declare construction parameter array
-							var cparamsinit = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-							cparamsinit.add_argument (new CCodeIdentifier ("GParameter"));
-							cparamsinit.add_argument (new CCodeConstant ((n_params + 3 * codegen.current_class.get_type_parameters ().size).to_string ()));
-							
-							var cdecl = new CCodeDeclaration ("GParameter *");
-							cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params", cparamsinit));
-							cinit.append (cdecl);
-							
-							cdecl = new CCodeDeclaration ("GParameter *");
-							cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params_it", new CCodeIdentifier ("__params")));
-							cinit.append (cdecl);
-						}
-
-						/* type, dup func, and destroy func properties for generic types */
-						foreach (TypeParameter type_param in codegen.current_class.get_type_parameters ()) {
-							CCodeConstant prop_name;
-							CCodeIdentifier param_name;
-
-							prop_name = new CCodeConstant ("\"%s-type\"".printf (type_param.name.down ()));
-							param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.down ()));
-							cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new ValueType (codegen.gtype_type), param_name)));
-
-							prop_name = new CCodeConstant ("\"%s-dup-func\"".printf (type_param.name.down ()));
-							param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ()));
-							cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new PointerType (new VoidType ()), param_name)));
-
-							prop_name = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.down ()));
-							param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
-							cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new PointerType (new VoidType ()), param_name)));
-						}
-					} else if (in_gtypeinstance_creation_method) {
-						var cl = (Class) m.parent_symbol;
-						var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
-						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
-						ccall.add_argument (new CCodeIdentifier (cl.get_type_id ()));
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", new CCodeCastExpression (ccall, cl.get_cname () + "*")));
-						cinit.append (cdecl);
-
-						/* type, dup func, and destroy func fields for generic types */
-						foreach (TypeParameter type_param in codegen.current_class.get_type_parameters ()) {
-							CCodeIdentifier param_name;
-							CCodeAssignment assign;
-
-							var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
-
-							param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.down ()));
-							assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
-							cinit.append (new CCodeExpressionStatement (assign));
-
-							param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ()));
-							assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
-							cinit.append (new CCodeExpressionStatement (assign));
-
-							param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
-							assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
-							cinit.append (new CCodeExpressionStatement (assign));
-						}
-					} else if (codegen.current_type_symbol is Class) {
-						var cl = (Class) m.parent_symbol;
-						var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
-						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
-						ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
-						cinit.append (cdecl);
-					} else {
-						var st = (Struct) m.parent_symbol;
-
-						// memset needs string.h
-						codegen.string_h_needed = true;
-						var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
-						czero.add_argument (new CCodeIdentifier ("self"));
-						czero.add_argument (new CCodeConstant ("0"));
-						czero.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (st.get_cname ())));
-						cinit.append (new CCodeExpressionStatement (czero));
-					}
-				}
-
-				if (codegen.context.module_init_method == m && codegen.in_plugin) {
-					// GTypeModule-based plug-in, register types
-					cinit.append (codegen.module_init_fragment);
-				}
-
-				foreach (Expression precondition in m.get_preconditions ()) {
-					cinit.append (create_precondition_statement (m, creturn_type, precondition));
-				}
-			}
+		if (visible && m.base_method == null && m.base_interface_method == null) {
+			/* public methods need function declaration in
+			 * header file except virtual/overridden methods */
+			codegen.header_type_member_declaration.append (codegen.function.copy ());
+		} else {
+			/* declare all other functions in source file to
+			 * avoid dependency on order within source file */
+			codegen.function.modifiers |= CCodeModifiers.STATIC;
+			codegen.source_type_member_declaration.append (codegen.function.copy ());
 		}
 		
+		/* Methods imported from a plain C file don't
+		 * have a body, e.g. Vala.Parser.parse_file () */
+		if (m.body != null) {
+			codegen.function.block = (CCodeBlock) m.body.ccodenode;
+			codegen.function.block.line = codegen.function.line;
+
+			var cinit = new CCodeFragment ();
+			codegen.function.block.prepend_statement (cinit);
+
+			if (m.parent_symbol is Class) {
+				var cl = (Class) m.parent_symbol;
+				if (m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
+					Method base_method;
+					ReferenceType base_expression_type;
+					if (m.overrides) {
+						base_method = m.base_method;
+						base_expression_type = new ObjectType ((Class) base_method.parent_symbol);
+					} else {
+						base_method = m.base_interface_method;
+						base_expression_type = new ObjectType ((Interface) base_method.parent_symbol);
+					}
+					var self_target_type = new ObjectType (cl);
+					CCodeExpression cself = codegen.transform_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
+
+					var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
+					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", cself));
+					
+					cinit.append (cdecl);
+				} else if (m.binding == MemberBinding.INSTANCE) {
+					var ccheckstmt = create_method_type_check_statement (m, creturn_type, cl, true, "self");
+					ccheckstmt.line = codegen.function.line;
+					cinit.append (ccheckstmt);
+				}
+			}
+			foreach (FormalParameter param in m.get_parameters ()) {
+				if (param.ellipsis) {
+					break;
+				}
+
+				var t = param.parameter_type.data_type;
+				if (t != null && t.is_reference_type ()) {
+					if (param.direction != ParameterDirection.OUT) {
+						var type_check = create_method_type_check_statement (m, creturn_type, t, (codegen.context.non_null && !param.parameter_type.nullable), param.name);
+						if (type_check != null) {
+							type_check.line = codegen.function.line;
+							cinit.append (type_check);
+						}
+					} else {
+						// ensure that the passed reference for output parameter is cleared
+						var a = new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), new CCodeConstant ("NULL"));
+						cinit.append (new CCodeExpressionStatement (a));
+					}
+				}
+			}
+
+			if (inner_error) {
+				/* always separate error parameter and inner_error local variable
+				 * as error may be set to NULL but we're always interested in inner errors
+				 */
+				var cdecl = new CCodeDeclaration ("GError *");
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+				cinit.append (cdecl);
+			}
+
+			if (m.source_reference != null && m.source_reference.comment != null) {
+				codegen.source_type_member_definition.append (new CCodeComment (m.source_reference.comment));
+			}
+			codegen.source_type_member_definition.append (codegen.function);
+			
+			if (m is CreationMethod) {
+				if (in_gobject_creation_method) {
+					int n_params = ((CreationMethod) m).n_construction_params;
+
+					if (n_params > 0 || codegen.current_class.get_type_parameters ().size > 0) {
+						// declare construction parameter array
+						var cparamsinit = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+						cparamsinit.add_argument (new CCodeIdentifier ("GParameter"));
+						cparamsinit.add_argument (new CCodeConstant ((n_params + 3 * codegen.current_class.get_type_parameters ().size).to_string ()));
+						
+						var cdecl = new CCodeDeclaration ("GParameter *");
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params", cparamsinit));
+						cinit.append (cdecl);
+						
+						cdecl = new CCodeDeclaration ("GParameter *");
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params_it", new CCodeIdentifier ("__params")));
+						cinit.append (cdecl);
+					}
+
+					/* type, dup func, and destroy func properties for generic types */
+					foreach (TypeParameter type_param in codegen.current_class.get_type_parameters ()) {
+						CCodeConstant prop_name;
+						CCodeIdentifier param_name;
+
+						prop_name = new CCodeConstant ("\"%s-type\"".printf (type_param.name.down ()));
+						param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.down ()));
+						cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new ValueType (codegen.gtype_type), param_name)));
+
+						prop_name = new CCodeConstant ("\"%s-dup-func\"".printf (type_param.name.down ()));
+						param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ()));
+						cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new PointerType (new VoidType ()), param_name)));
+
+						prop_name = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.down ()));
+						param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
+						cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new PointerType (new VoidType ()), param_name)));
+					}
+				} else if (in_gtypeinstance_creation_method) {
+					var cl = (Class) m.parent_symbol;
+					var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
+					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
+					ccall.add_argument (new CCodeIdentifier (cl.get_type_id ()));
+					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", new CCodeCastExpression (ccall, cl.get_cname () + "*")));
+					cinit.append (cdecl);
+
+					/* type, dup func, and destroy func fields for generic types */
+					foreach (TypeParameter type_param in codegen.current_class.get_type_parameters ()) {
+						CCodeIdentifier param_name;
+						CCodeAssignment assign;
+
+						var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
+
+						param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.down ()));
+						assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
+						cinit.append (new CCodeExpressionStatement (assign));
+
+						param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ()));
+						assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
+						cinit.append (new CCodeExpressionStatement (assign));
+
+						param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
+						assign = new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name);
+						cinit.append (new CCodeExpressionStatement (assign));
+					}
+				} else if (codegen.current_type_symbol is Class) {
+					var cl = (Class) m.parent_symbol;
+					var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
+					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
+					ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
+					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+					cinit.append (cdecl);
+				} else {
+					var st = (Struct) m.parent_symbol;
+
+					// memset needs string.h
+					codegen.string_h_needed = true;
+					var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+					czero.add_argument (new CCodeIdentifier ("self"));
+					czero.add_argument (new CCodeConstant ("0"));
+					czero.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (st.get_cname ())));
+					cinit.append (new CCodeExpressionStatement (czero));
+				}
+			}
+
+			if (codegen.context.module_init_method == m && codegen.in_plugin) {
+				// GTypeModule-based plug-in, register types
+				cinit.append (codegen.module_init_fragment);
+			}
+
+			foreach (Expression precondition in m.get_preconditions ()) {
+				cinit.append (create_precondition_statement (m, creturn_type, precondition));
+			}
+		} else if (m.is_abstract) {
+			// Generate stub function that prints out a helpful error message in case this
+			// method is not overwritten, see bug 531195
+
+			var cblock = new CCodeBlock ();
+
+			cblock.add_statement (create_method_type_check_statement (m, creturn_type, codegen.current_type_symbol, true, "self"));
+
+			var type_from_instance_call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_INSTANCE"));
+			type_from_instance_call.add_argument (new CCodeIdentifier ("self"));
+			
+			var type_name_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_name"));
+			type_name_call.add_argument (type_from_instance_call);
+
+			var error_string = "\"Type `%%s' does not implement abstract method `%s'\"".printf (m.get_cname ());
+
+			var cerrorcall = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
+			cerrorcall.add_argument (new CCodeConstant (error_string));
+			cerrorcall.add_argument (type_name_call);
+
+			cblock.add_statement (new CCodeExpressionStatement (cerrorcall));
+
+			codegen.function.block = cblock;
+			codegen.source_type_member_definition.append (codegen.function);
+		}
+
 		if (m.is_abstract || m.is_virtual) {
 			var vfunc = new CCodeFunction (m.get_cname (), creturn_type.get_cname ());
 			vfunc.line = codegen.function.line;
