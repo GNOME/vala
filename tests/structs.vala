@@ -8,6 +8,15 @@ public struct PublicStruct {
 	public int field;
 }
 
+struct StructWithPrivateField {
+	private int field;
+
+	public void test () {
+		field = 1;
+		stdout.printf ("StructWithPrivateField: field = %d\n", field);
+	}
+}
+
 struct StructWithCreationMethod {
 	public StructWithCreationMethod () {
 		stdout.printf ("StructWithCreationMethod\n");
@@ -64,6 +73,9 @@ void main () {
 	stdout.printf ("after test_ref_parameter: st.field = %d\n", simple_struct.field);
 	test_out_parameter (out simple_struct);
 	stdout.printf ("after test_out_parameter: st.field = %d\n", simple_struct.field);
+
+	var struct_with_private_field = StructWithPrivateField ();
+	struct_with_private_field.test ();
 
 	stdout.printf (".\n");
 }

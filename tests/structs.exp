@@ -11,4 +11,5 @@ test_in_parameter: st.field = 1
 test_ref_parameter: st.field = 1
 after test_ref_parameter: st.field = 2
 after test_out_parameter: st.field = 3
+StructWithPrivateField: field = 1
 .

@@ -1,3 +1,14 @@
+2008-07-12  Jared Moore  <jaredm@svn.gnome.org.
+
+	* gobject/valaccodememberaccessbinding.vala:
+
+	Fix access to private struct fields, fixed bug 542032.
+
+	* tests/structs.vala:
+	* tests/structs.exp:
+
+	Added test cases for private struct fields.
+
 2008-07-12  Raffaele Sandrini  <raffaele@sandrini.ch>
 
 	* gobject/valaccodemethodbinding.vala:
