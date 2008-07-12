@@ -1,3 +1,10 @@
+2008-07-12  Raffaele Sandrini  <raffaele@sandrini.ch>
+
+	* gobject/valaccodemethodbinding.vala:
+
+	Remove recent introduced gcc warnings related to abstract interface
+	methods
+
 2008-07-11  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasymbol.vala:
