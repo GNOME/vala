@@ -1,5 +1,12 @@
 2008-07-17  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodetypesymbolbinding.vala:
+
+	Support int64 and uint64 properties in GObjects,
+	patch by Christian Hergert, fixes bug 543055
+
+2008-07-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala:
 
 	Fix support for static and class fields in interface writer,

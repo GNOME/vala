@@ -81,6 +81,24 @@ public abstract class Vala.CCodeTypeSymbolBinding : CCodeBinding {
 				} else {
 					cspec.add_argument (new CCodeConstant ("0U"));
 				}
+			} else if (st.get_type_id () == "G_TYPE_INT64") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_int64");
+				cspec.add_argument (new CCodeConstant ("G_MININT64"));
+				cspec.add_argument (new CCodeConstant ("G_MAXINT64"));
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("0"));
+				}
+			} else if (st.get_type_id () == "G_TYPE_UINT64") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_uint64");
+				cspec.add_argument (new CCodeConstant ("0"));
+				cspec.add_argument (new CCodeConstant ("G_MAXUINT64"));
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("0U"));
+				}
 			} else if (st.get_type_id () == "G_TYPE_LONG") {
 				cspec.call = new CCodeIdentifier ("g_param_spec_long");
 				cspec.add_argument (new CCodeConstant ("G_MINLONG"));
