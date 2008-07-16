@@ -563,6 +563,12 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_indent ();
 		write_accessibility (f);
 
+		if (f.binding == MemberBinding.STATIC) {
+			write_string ("static ");
+		} else if (f.binding == MemberBinding.CLASS) {
+			write_string ("class ");
+		}
+
 		if (is_weak (f.field_type)) {
 			write_string ("weak ");
 		}
