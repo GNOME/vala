@@ -1301,12 +1301,12 @@ namespace GLib {
 		public weak MainContext get_context ();
 	}
 	
-	public enum Priority {
-		HIGH,
-		DEFAULT,
-		HIGH_IDLE,
-		DEFAULT_IDLE,
-		LOW
+	namespace Priority {
+		public const int HIGH;
+		public const int DEFAULT;
+		public const int HIGH_IDLE;
+		public const int DEFAULT_IDLE;
+		public const int LOW;
 	}
 
 	[Compact]
