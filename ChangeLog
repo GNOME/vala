@@ -1,5 +1,16 @@
 2008-07-17  Jared Moore  <jaredm@svn.gnome.org>
 
+	* vapi/packages/gdk-2.0/gdk-2.0.metadata:
+
+	Made gc argument of gdk_drawable_draw_pixbuf nullable, fixes bug
+	543000. Patch by Thijs Vermeir .
+
+	* vapi/gdk-2.0.vapi:
+
+	Regenerated.
+
+2008-07-17  Jared Moore  <jaredm@svn.gnome.org>
+
 	* vapigen/valagidlparser.vala:
 
 	Added 'type_name' metadata to function to override its return type.
