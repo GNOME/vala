@@ -1337,7 +1337,6 @@ public class Vala.GIdlParser : CodeVisitor {
 						// other return type modifying metadata
 						m.return_type = return_type = new UnresolvedType.from_symbol (sym, return_type.source_reference);
 					}
-				}
 				} else if (nv[0] == "type_arguments") {
 					var type_args = eval (nv[1]).split (",");
 					foreach (string type_arg in type_args) {

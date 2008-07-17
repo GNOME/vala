@@ -1,3 +1,9 @@
+2008-07-17  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valagidlparser.vala:
+
+	Fix syntax error
+
 2008-07-17  Jared Moore  <jaredm@svn.gnome.org>
 
 	* vapi/glib-2.0.vapi:
