@@ -601,7 +601,7 @@ public struct unichar {
 	public unichar clamp (unichar low, unichar high);
 }
 
-[CCode (cprefix = "G_UNICODE_")]
+[CCode (cname = "GUnicodeType", cprefix = "G_UNICODE_", has_type_id = false)]
 public enum UnicodeType {
 	CONTROL,
 	FORMAT,
@@ -635,7 +635,7 @@ public enum UnicodeType {
 	SPACE_SEPARATOR
 }
 
-[CCode (cprefix = "G_UNICODE_BREAK_")]
+[CCode (cname = "GUnicodeBreakType", cprefix = "G_UNICODE_BREAK_", has_type_id = false)]
 public enum UnicodeBreakType {
 	MANDATORY,
 	CARRIAGE_RETURN,
@@ -841,7 +841,7 @@ namespace GLib {
 		public Type get_type ();
 	}
 
-	[CCode (cprefix = "G_TYPE_DEBUG_")]
+	[CCode (cprefix = "G_TYPE_DEBUG_", has_type_id = false)]
 	public enum TypeDebugFlags {
 		NONE,
 		OBJECTS,
@@ -891,7 +891,7 @@ namespace GLib {
 		public ParamSpecUInt (string name, string nick, string blurb, uint minimum, uint maximum, uint default_value, ParamFlags flags);
 	}
 
-	[CCode (cprefix = "G_PARAM_")]
+	[CCode (cprefix = "G_PARAM_", has_type_id = false)]
 	public enum ParamFlags {
 		READABLE,
 		WRITABLE,
@@ -1072,7 +1072,7 @@ namespace GLib {
 
 	public delegate bool SignalEmissionHook (SignalInvocationHint ihint, [CCode (array_length_pos = 1.9)] Value[] param_values);
 
-	[CCode (cprefix = "G_SIGNAL_")]
+	[CCode (cprefix = "G_SIGNAL_", has_type_id = false)]
 	public enum SignalFlags {
 		RUN_FIRST,
 		RUN_LAST,
@@ -1082,7 +1082,7 @@ namespace GLib {
 		NO_HOOKS
 	}
 
-	[CCode (cprefix = "G_CONNECT_")]
+	[CCode (cprefix = "G_CONNECT_", has_type_id = false)]
 	public enum ConnectFlags {
 		AFTER,
 		SWAPPED
@@ -1448,6 +1448,7 @@ namespace GLib {
 	public delegate void* ThreadFunc ();
 	public delegate void Func (void* data);
 	
+	[CCode (has_type_id = false)]
 	public enum ThreadPriority {
 		LOW,
 		NORMAL,
@@ -1620,13 +1621,14 @@ namespace GLib {
 		public void set_close_on_unref (bool do_close);
 	}
 
-	[CCode (cprefix = "G_SEEK_")]
+	[CCode (cprefix = "G_SEEK_", has_type_id = false)]
 	public enum SeekType {
 		CUR,
 		SET,
 		END
 	}
 	
+	[CCode (has_type_id = false)]
 	public enum IOStatus {
 		ERROR,
 		NORMAL,
@@ -1646,7 +1648,8 @@ namespace GLib {
 		FAILED
 	}
 
-	[CCode (cprefix = "G_IO_", type_id = "G_TYPE_IO_CONDITION")]
+	[Flags]
+	[CCode (cprefix = "G_IO_")]
 	public enum IOCondition {
 		IN,
 		OUT,
@@ -1658,7 +1661,7 @@ namespace GLib {
 
 	public delegate bool IOFunc (IOChannel source, IOCondition condition);
 
-	[CCode (cprefix = "G_IO_FLAG_")]
+	[CCode (cprefix = "G_IO_FLAG_", has_type_id = false)]
 	public enum IOFlags {
 		APPEND,
 		NONBLOCK,
@@ -1710,7 +1713,7 @@ namespace GLib {
 
 	/* Message Logging */
 	
-	[CCode (cprefix = "G_LOG_")]
+	[CCode (cprefix = "G_LOG_", has_type_id = false)]
 	public enum LogLevelFlags {
 		/* log flags */
 		FLAG_RECURSION,
@@ -1801,7 +1804,7 @@ namespace GLib {
 
 	/* Data Checksums */
 
-	[CCode (cprefix = "G_CHECKSUM_")]
+	[CCode (cprefix = "G_CHECKSUM_", has_type_id = false)]
 	public enum ChecksumType {
 		MD5,
 		SHA1,
@@ -1848,7 +1851,7 @@ namespace GLib {
 		public bool valid ();
 	}
 
-	[CCode (cprefix = "G_DATE_")]
+	[CCode (cprefix = "G_DATE_", has_type_id = false)]
 	public enum DateMonth {
 		BAD_MONTH,
 		JANUARY,
@@ -1884,7 +1887,7 @@ namespace GLib {
 		public bool valid ();
 	}
 
-	[CCode (cprefix = "G_DATE_")]
+	[CCode (cprefix = "G_DATE_", has_type_id = false)]
 	public enum DateWeekday {
 		BAD_WEEKDAY,
 		MONDAY,
@@ -2057,6 +2060,7 @@ namespace GLib {
 		public static void atexit (VoidFunc func);
 	}
 
+	[CCode (has_type_id = false)]
 	public enum UserDirectory {
 		DESKTOP,
 		DOCUMENTS,
@@ -2168,7 +2172,7 @@ namespace GLib {
 		public const string LATINS;
 	}
 
-	[CCode (cprefix = "G_TOKEN_")]
+	[CCode (cprefix = "G_TOKEN_", has_type_id = false)]
 	public enum TokenType
 	{
 		EOF,
@@ -2213,7 +2217,7 @@ namespace GLib {
 		public uint v_error;
 	}
 
-	[CCode (cprefix = "G_ERR_")]
+	[CCode (cprefix = "G_ERR_", has_type_id = false)]
 	public enum ErrorType
 	{
 		UNKNOWN,
@@ -2264,7 +2268,7 @@ namespace GLib {
 		FAILED
 	}
 
-	[CCode (cprefix = "G_SPAWN_")]
+	[CCode (cprefix = "G_SPAWN_", has_type_id = false)]
 	public enum SpawnFlags {
 		LEAVE_DESCRIPTORS_OPEN,
 		DO_NOT_REAP_CHILD,
@@ -2309,6 +2313,7 @@ namespace GLib {
 		public static bool if_continued (int status);
 	}
 	
+	[CCode (cname = "int", has_type_id = false)]
 	public enum ProcessSignal {
 		HUP,
 		INT,
@@ -2364,6 +2369,7 @@ namespace GLib {
 		FAILED
 	}
 
+	[CCode (has_type_id = false)]
 	public enum FileTest {
 		IS_REGULAR,
 		IS_SYMLINK,
@@ -2520,6 +2526,7 @@ namespace GLib {
 
 	public delegate weak string TranslateFunc (string str);
 
+	[CCode (has_type_id = false)]
 	public enum OptionArg {
 		NONE,
 		STRING,
@@ -2533,7 +2540,7 @@ namespace GLib {
 	}
 	
 	[Flags]
-	[CCode (cprefix = "G_OPTION_FLAG_")]
+	[CCode (cprefix = "G_OPTION_FLAG_", has_type_id = false)]
 	public enum OptionFlags {
 		HIDDEN,
 		IN_MAIN,
@@ -2580,7 +2587,7 @@ namespace GLib {
 		MATCH
 	}
 
-	[CCode (cprefix = "G_REGEX_")]
+	[CCode (cprefix = "G_REGEX_", has_type_id = false)]
 	public enum RegexCompileFlags {
 		CASELESS,
 		MULTILINE,
@@ -2598,7 +2605,7 @@ namespace GLib {
 		NEWLINE_CRLF
 	}
 
-	[CCode (cprefix = "G_REGEX_MATCH_")]
+	[CCode (cprefix = "G_REGEX_MATCH_", has_type_id = false)]
 	public enum RegexMatchFlags {
 		ANCHORED,
 		NOTBOL,
@@ -2668,7 +2675,7 @@ namespace GLib {
 		INVALID_CONTENT
 	}
 
-	[CCode (cprefix = "G_MARKUP_")]
+	[CCode (cprefix = "G_MARKUP_", has_type_id = false)]
 	public enum MarkupParseFlags {
 		TREAT_CDATA_AS_TEXT
 	}
@@ -2768,7 +2775,7 @@ namespace GLib {
 		public void remove_comment (string group_name, string key) throws KeyFileError;
 	}
 	
-	[CCode (cprefix = "G_KEY_FILE_")]
+	[CCode (cprefix = "G_KEY_FILE_", has_type_id = false)]
 	public enum KeyFileFlags {
 		NONE,
 		KEEP_COMMENTS,
@@ -2871,7 +2878,7 @@ namespace GLib {
 	}
 
 	[Flags]
-	[CCode (cprefix = "G_TEST_TRAP_")]
+	[CCode (cprefix = "G_TEST_TRAP_", has_type_id = false)]
 	public enum TestTrapFlags {
 		SILENCE_STDOUT,
 		SILENCE_STDERR,
@@ -3238,7 +3245,7 @@ namespace GLib {
 	
 	public static delegate int TraverseFunc (void* key, void* value, void* data);
 	
-	[CCode (c_prefix="C_")]
+	[CCode (c_prefix="C_", has_type_id = false)]
 	public enum TraverseType {
 		IN_ORDER,
 		PRE_ORDER,
@@ -3273,7 +3280,7 @@ namespace GLib {
 	[CCode (cname = "N_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
 	public static weak string N_ (string str);
 	
-	[CCode (cprefix = "LC_", cheader_filename = "locale.h")]
+	[CCode (cname = "int", cprefix = "LC_", cheader_filename = "locale.h", has_type_id = false)]
 	public enum LocaleCategory {
 		ALL,
 		COLLATE,
@@ -3352,7 +3359,7 @@ namespace GLib {
 		public weak Type[] param_types;
 	}
 
-	[CCode (cprefix = "G_SIGNAL_MATCH_")]
+	[CCode (cprefix = "G_SIGNAL_MATCH_", has_type_id = false)]
 	public enum SignalMatchType {
 		ID,
 		DETAIL,

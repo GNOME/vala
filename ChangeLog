@@ -1,5 +1,11 @@
 2008-07-17  Jared Moore  <jaredm@svn.gnome.org>
 
+	* vapi/glib-2.0.vapi:
+
+	Various fixes to enums, fixes bug 542362.
+
+2008-07-17  Jared Moore  <jaredm@svn.gnome.org>
+
 	* vapi/packages/gdk-2.0/gdk-2.0.metadata:
 
 	Made gc argument of gdk_drawable_draw_pixbuf nullable, fixes bug
