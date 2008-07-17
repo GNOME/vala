@@ -1,5 +1,20 @@
 2008-07-17  Jared Moore  <jaredm@svn.gnome.org>
 
+	* vapigen/valagidlparser.vala:
+
+	Added 'type_name' metadata to function to override its return type.
+
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata
+
+	Changed gtk_selection_data_get_text to return a string, fixes bug
+	540663.
+
+	* vapi/gtk+-2.0.vapi:
+
+	Regenerated.
+
+2008-07-17  Jared Moore  <jaredm@svn.gnome.org>
+
 	* vala/valasignal.vala:
 
 	Fixed error in handling formal parameters of signals, fixes bug
