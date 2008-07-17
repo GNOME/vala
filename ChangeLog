@@ -1,5 +1,14 @@
 2008-07-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix various binding issues, based on patches by Thijs Vermeir and
+	Jared Moore, fixes bug 543348, bug 543417, and bug 543344
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-07-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaformalparameter.vala:
 	* vala/valainterfacewriter.vala:
 	* gobject/valaccodeinvocationexpressionbinding.vala:

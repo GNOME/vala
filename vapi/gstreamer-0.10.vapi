@@ -1062,7 +1062,7 @@ namespace Gst {
 		public bool fixate_field_nearest_fraction (string field_name, int target_numerator, int target_denominator);
 		public bool fixate_field_nearest_int (string field_name, int target);
 		public bool @foreach (Gst.StructureForeachFunc func);
-		public static weak Gst.Structure from_string (string str, string end);
+		public static Gst.Structure? from_string (string str, out weak string end);
 		public bool get_boolean (string fieldname, out bool value);
 		public bool get_clock_time (string fieldname, Gst.ClockTime value);
 		public bool get_date (string fieldname, out GLib.Date value);
@@ -1125,6 +1125,7 @@ namespace Gst {
 		public weak Gst.Iterator iterate_sinks ();
 		public weak Gst.Iterator iterate_sorted ();
 		public weak Gst.Iterator iterate_sources ();
+		[CCode (type = "GstElement*")]
 		public Bin (string name);
 		public bool remove (Gst.Element element);
 		public void remove_many (Gst.Element element_1, ...);
@@ -1192,7 +1193,9 @@ namespace Gst {
 		public void get_calibration (Gst.ClockTime internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
 		public weak Gst.Clock get_master ();
 		public Gst.ClockTime get_time ();
+		[CCode (type = "GstClockID")]
 		public Clock.periodic_id (Gst.Clock clock, Gst.ClockTime start_time, Gst.ClockTime interval);
+		[CCode (type = "GstClockID")]
 		public Clock.single_shot_id (Gst.Clock clock, Gst.ClockTime time);
 		public void set_calibration (Gst.ClockTime internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
 		public bool set_master (Gst.Clock master);
@@ -1309,7 +1312,7 @@ namespace Gst {
 		public virtual void release_pad (Gst.Pad pad);
 		[NoWrapper]
 		public virtual weak Gst.Pad request_new_pad (Gst.PadTemplate templ, string name);
-		public virtual bool send_event (Gst.Event event);
+		public virtual bool send_event (Gst.Event# event);
 		public virtual void set_bus (Gst.Bus bus);
 		public virtual bool set_clock (Gst.Clock clock);
 		public virtual void set_index (Gst.Index index);
@@ -1347,9 +1350,13 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class GhostPad : Gst.Pad {
 		public weak Gst.Pad get_target ();
+		[CCode (type = "GstPad*")]
 		public GhostPad (string name, Gst.Pad target);
+		[CCode (type = "GstPad*")]
 		public GhostPad.from_template (string name, Gst.Pad target, Gst.PadTemplate templ);
+		[CCode (type = "GstPad*")]
 		public GhostPad.no_target (string name, Gst.PadDirection dir);
+		[CCode (type = "GstPad*")]
 		public GhostPad.no_target_from_template (string name, Gst.PadTemplate templ);
 		public bool set_target (Gst.Pad newtarget);
 	}
@@ -1375,6 +1382,7 @@ namespace Gst {
 		public Gst.IndexCertainty get_certainty ();
 		public int get_group ();
 		public Index ();
+		[CCode (type = "gint")]
 		public Index.group (Gst.Index index);
 		public void set_certainty (Gst.IndexCertainty certainty);
 		public void set_filter (Gst.IndexFilter filter);
@@ -1494,7 +1502,7 @@ namespace Gst {
 		public void remove_buffer_probe (uint handler_id);
 		public void remove_data_probe (uint handler_id);
 		public void remove_event_probe (uint handler_id);
-		public bool send_event (Gst.Event event);
+		public bool send_event (Gst.Event# event);
 		public void set_acceptcaps_function (Gst.PadAcceptCapsFunction acceptcaps);
 		public void set_activate_function (Gst.PadActivateFunction activate);
 		public void set_activatepull_function (Gst.PadActivateModeFunction activatepull);
@@ -1551,6 +1559,7 @@ namespace Gst {
 		public weak Gst.Clock get_clock ();
 		public Gst.ClockTime get_delay ();
 		public Gst.ClockTime get_last_stream_time ();
+		[CCode (type = "GstElement*")]
 		public Pipeline (string name);
 		public void set_auto_flush_bus (bool auto_flush);
 		public bool set_clock (Gst.Clock clock);
@@ -1614,7 +1623,7 @@ namespace Gst {
 		public bool add_feature (Gst.PluginFeature feature);
 		public void add_path (string path);
 		public bool add_plugin (Gst.Plugin plugin);
-		public weak GLib.List feature_filter (Gst.PluginFeatureFilter filter, bool first);
+		public weak GLib.List feature_filter ([CCode (array_length_pos = 2.1)] Gst.PluginFeatureFilter filter, bool first);
 		public weak Gst.PluginFeature find_feature (string name, GLib.Type type);
 		public weak Gst.Plugin find_plugin (string name);
 		public static bool fork_is_enabled ();
