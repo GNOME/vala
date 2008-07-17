@@ -286,6 +286,10 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 
 						ccall_expr = ccomma;
 					}
+
+					if (param.ctype != null) {
+						cexpr = new CCodeCastExpression (cexpr, param.ctype);
+					}
 				}
 				arg_pos = codegen.get_param_pos (param.cparameter_position, ellipsis);
 			} else {

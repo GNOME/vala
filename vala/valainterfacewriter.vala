@@ -621,6 +621,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			var ccode_params = new StringBuilder ();
 			var separator = "";
 
+			if (param.ctype != null) {
+				ccode_params.append_printf ("%stype = \"%s\"", separator, param.ctype);
+				separator = ", ";
+			}
 			if (!float_equal (param.carray_length_parameter_position, i + 0.1)) {
 				ccode_params.append_printf ("%sarray_length_pos = %g", separator, param.carray_length_parameter_position);
 				separator = ", ";

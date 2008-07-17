@@ -1,5 +1,24 @@
 2008-07-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaformalparameter.vala:
+	* vala/valainterfacewriter.vala:
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+
+	Support [CCode (type = "Foo")] for parameters,
+	based on patch by Daniel Svensson, fixes bug 543073
+
+	* vapigen/valagidlparser.vala:
+
+	Add support for ctype metadata attribute for parameters
+
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_menu_shell_append binding
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-07-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraytype.vala:
 
 	Fix symbol dependency calculation for arrays, fixes bug 537255

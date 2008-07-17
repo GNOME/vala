@@ -82,6 +82,11 @@ public class Vala.FormalParameter : Symbol {
 	 */
 	public double cdelegate_target_parameter_position { get; set; }
 
+	/**
+	 * Specifies the type of the parameter in the C function.
+	 */
+	public string? ctype { get; set; }
+
 	private DataType _data_type;
 
 	/**
@@ -132,6 +137,9 @@ public class Vala.FormalParameter : Symbol {
 	}
 
 	private void process_ccode_attribute (Attribute a) {
+		if (a.has_argument ("type")) {
+			ctype = a.get_string ("type");
+		}
 		if (a.has_argument ("array_length_pos")) {
 			carray_length_parameter_position = a.get_double ("array_length_pos");
 		}

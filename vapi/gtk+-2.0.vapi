@@ -3721,7 +3721,7 @@ namespace Gtk {
 		public uint menu_flag;
 		public uint ignore_enter;
 		public void activate_item (Gtk.Widget menu_item, bool force_deactivate);
-		public void append (Gtk.MenuItem child);
+		public void append ([CCode (type = "GtkWidget*")] Gtk.MenuItem child);
 		public void deselect ();
 		public bool get_take_focus ();
 		public void prepend (Gtk.Widget child);

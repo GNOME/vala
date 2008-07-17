@@ -1474,6 +1474,8 @@ public class Vala.GIdlParser : CodeVisitor {
 						delegate_target_pos = eval (nv[1]).to_double ();
 					} else if (nv[0] == "type_name") {
 						((UnresolvedType) param_type).unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
+					} else if (nv[0] == "ctype") {
+						p.ctype = eval (nv[1]);
 					} else if (nv[0] == "type_arguments") {
 						var type_args = eval (nv[1]).split (",");
 						foreach (string type_arg in type_args) {
