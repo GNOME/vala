@@ -279,6 +279,9 @@ public class Vala.Scanner : Object {
 			case 'd':
 				if (matches (begin, "delegate")) return TokenType.DELEGATE;
 				break;
+			case 'i':
+				if (matches (begin, "internal")) return TokenType.INTERNAL;
+				break;
 			case 'o':
 				if (matches (begin, "override")) return TokenType.OVERRIDE;
 				break;

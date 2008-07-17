@@ -199,6 +199,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.IN:
 		case TokenType.INLINE:
 		case TokenType.INTERFACE:
+		case TokenType.INTERNAL:
 		case TokenType.IS:
 		case TokenType.LOCK:
 		case TokenType.NAMESPACE:
@@ -1811,6 +1812,7 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.EXTERN:
 			case TokenType.INLINE:
 			case TokenType.INTERFACE:
+			case TokenType.INTERNAL:
 			case TokenType.NAMESPACE:
 			case TokenType.OVERRIDE:
 			case TokenType.PRIVATE:
@@ -2573,6 +2575,9 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.PROTECTED:
 			next ();
 			return SymbolAccessibility.PROTECTED;
+		case TokenType.INTERNAL:
+			next ();
+			return SymbolAccessibility.INTERNAL;
 		case TokenType.PUBLIC:
 			next ();
 			return SymbolAccessibility.PUBLIC;
@@ -2867,6 +2872,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.EXTERN:
 		case TokenType.INLINE:
 		case TokenType.INTERFACE:
+		case TokenType.INTERNAL:
 		case TokenType.NAMESPACE:
 		case TokenType.OVERRIDE:
 		case TokenType.PRIVATE:

@@ -80,6 +80,7 @@ public enum Vala.TokenType {
 	INLINE,
 	INTEGER_LITERAL,
 	INTERFACE,
+	INTERNAL,
 	INTERR,
 	IS,
 	LAMBDA,
@@ -195,6 +196,7 @@ public enum Vala.TokenType {
 		case INLINE: return "`inline'";
 		case INTEGER_LITERAL: return "integer literal";
 		case INTERFACE: return "`interface'";
+		case INTERNAL: return "`internal'";
 		case INTERR: return "`?'";
 		case IS: return "`is'";
 		case LAMBDA: return "`=>'";
