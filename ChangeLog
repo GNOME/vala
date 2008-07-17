@@ -1,3 +1,10 @@
+2008-07-17  Jared Moore  <jaredm@svn.gnome.org>
+
+	* vala/valasignal.vala:
+
+	Fixed error in handling formal parameters of signals, fixes bug
+	542293.
+
 2008-07-17  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodetypesymbolbinding.vala:
