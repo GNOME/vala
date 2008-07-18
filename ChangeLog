@@ -1,3 +1,11 @@
+2008-07-18  Jared Moore  <jaredm@svn.gnome.org>
+
+	* vapi/packages/gstreamer-0.10/:
+
+	Fixed gst_registry_feature_filter binding, fixes bug 543344.
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
 2008-07-17  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gstreamer-0.10/:
