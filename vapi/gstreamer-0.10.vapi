@@ -635,12 +635,12 @@ namespace Gst {
 		public weak Gst.Structure get_structure ();
 		public bool has_name (string name);
 		public Event.buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool async);
-		public Event.custom (Gst.EventType type, Gst.Structure structure);
+		public Event.custom (Gst.EventType type, Gst.Structure# structure);
 		public Event.eos ();
 		public Event.flush_start ();
 		public Event.flush_stop ();
 		public Event.latency (Gst.ClockTime latency);
-		public Event.navigation (Gst.Structure structure);
+		public Event.navigation (Gst.Structure# structure);
 		public Event.new_segment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 position);
 		public Event.new_segment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 position);
 		public Event.qos (double proportion, Gst.ClockTimeDiff diff, Gst.ClockTime timestamp);
