@@ -1,3 +1,12 @@
+2008-07-19  Jared Moore  <jaredm@svn.gnome.org>
+
+	* vapi/packages/gstreamer-0.10/:
+
+	Fixes to gst_element_factory_create and gst_element_factory_make,
+	based on patch by Thijs Vermeir, fixes bug 543668.
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
 2008-07-18  Jared Moore  <jaredm@svn.gnome.org>
 
 	* vapi/packages/gstreamer-0.10/:

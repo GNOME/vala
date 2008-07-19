@@ -1333,7 +1333,7 @@ namespace Gst {
 		public weak GLib.List interfaces;
 		public bool can_sink_caps (Gst.Caps caps);
 		public bool can_src_caps (Gst.Caps caps);
-		public weak Gst.Element create (string name);
+		public Gst.Element? create (string? name);
 		public static weak Gst.ElementFactory find (string name);
 		public weak string get_author ();
 		public weak string get_description ();
@@ -1345,7 +1345,7 @@ namespace Gst {
 		public weak string get_uri_protocols ();
 		public int get_uri_type ();
 		public bool has_interface (string interfacename);
-		public static Gst.Element make (string factoryname, string? name);
+		public static Gst.Element? make (string factoryname, string? name);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class GhostPad : Gst.Pad {
