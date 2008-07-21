@@ -1,3 +1,12 @@
+2008-07-21  Jared Moore  <jaredm@svn.gnome.org>
+
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
+
+	Made tag parameters of gtk_text_iter_backward_to_tag_toggle and
+	gtk_text_iter_forward_to_tag_toggle nullable.
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
 2008-07-19  Jared Moore  <jaredm@svn.gnome.org>
 
 	* vapi/packages/gstreamer-0.10/:

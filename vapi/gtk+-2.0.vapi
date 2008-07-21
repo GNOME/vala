@@ -6466,7 +6466,7 @@ namespace Gtk {
 		public bool backward_search (string str, Gtk.TextSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, Gtk.TextIter? limit);
 		public bool backward_sentence_start ();
 		public bool backward_sentence_starts (int count);
-		public bool backward_to_tag_toggle (Gtk.TextTag tag);
+		public bool backward_to_tag_toggle (Gtk.TextTag? tag);
 		public bool backward_visible_cursor_position ();
 		public bool backward_visible_cursor_positions (int count);
 		public bool backward_visible_line ();
@@ -6497,7 +6497,7 @@ namespace Gtk {
 		public bool forward_sentence_ends (int count);
 		public void forward_to_end ();
 		public bool forward_to_line_end ();
-		public bool forward_to_tag_toggle (Gtk.TextTag tag);
+		public bool forward_to_tag_toggle (Gtk.TextTag? tag);
 		public bool forward_visible_cursor_position ();
 		public bool forward_visible_cursor_positions (int count);
 		public bool forward_visible_line ();
