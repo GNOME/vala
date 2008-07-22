@@ -1165,7 +1165,7 @@ namespace Gst {
 		public bool post (Gst.Message message);
 		public void remove_signal_watch ();
 		public void set_flushing (bool flushing);
-		public void set_sync_handler (Gst.BusSyncHandler func, void* data);
+		public void set_sync_handler (Gst.BusSyncHandler func);
 		public Gst.BusSyncReply sync_signal_handler (Gst.Message message, void* data);
 		public weak Gst.Message timed_pop (Gst.ClockTime timeout);
 		public weak Gst.Message timed_pop_filtered (Gst.ClockTime timeout, Gst.MessageType types);
