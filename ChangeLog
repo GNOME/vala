@@ -1,3 +1,9 @@
+2008-07-22  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaparser.vala:
+
+	Fix regression introduced by last commit
+
 2008-07-22  Jared Moore  <jaredm@svn.gnome.org>
 
 	* vala/valaparser.vala:
