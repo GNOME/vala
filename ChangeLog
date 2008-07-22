@@ -1,5 +1,14 @@
 2008-07-22  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_ghost_pad_set_target binding,
+	patch by Thijs Vermeir, fixes bug 544060
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-07-22  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodearraycreationexpressionbinding.vala:
 
 	Fix crash when using multi-dimensional arrays,
