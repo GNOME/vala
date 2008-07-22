@@ -41,6 +41,11 @@ namespace Gst {
 		public void unref ();
 	}
 
+	[CCode (cname="GST_DEBUG_BIN_TO_DOT_FILE")]
+	public static void debug_bin_to_dot_file (Bin bin, DebugGraphDetails details, string prefix);
+	[CCode (cname="GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS")]
+	public static void debug_bin_to_dot_file_with_ts (Bin bin, DebugGraphDetails details, string prefix);
+
 	[CCode (cname = "GValue")]
 	public struct Value : GLib.Value {
 

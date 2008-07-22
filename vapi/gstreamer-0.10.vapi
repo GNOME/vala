@@ -2089,6 +2089,10 @@ namespace Gst {
 	public const int VERSION_NANO;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void init ([CCode (array_length_pos = 0.9)] ref weak string[] args);
+	[CCode (cname = "GST_DEBUG_BIN_TO_DOT_FILE", cheader_filename = "gst/gst.h")]
+	public static void debug_bin_to_dot_file (Gst.Bin bin, Gst.DebugGraphDetails details, string prefix);
+	[CCode (cname = "GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS", cheader_filename = "gst/gst.h")]
+	public static void debug_bin_to_dot_file_with_ts (Gst.Bin bin, Gst.DebugGraphDetails details, string prefix);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void atomic_int_set (int atomic_int, int value);
 	[CCode (cheader_filename = "gst/gst.h")]
