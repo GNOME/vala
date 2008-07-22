@@ -2669,7 +2669,7 @@ namespace Gtk {
 		public static weak GLib.ParamSpec class_list_child_properties (GLib.ObjectClass cclass, uint n_properties);
 		public void @foreach (Gtk.Callback callback);
 		public uint get_border_width ();
-		public weak GLib.List get_children ();
+		public weak GLib.List<Gtk.Widget> get_children ();
 		public bool get_focus_chain (GLib.List focusable_widgets);
 		public weak Gtk.Adjustment get_focus_hadjustment ();
 		public weak Gtk.Adjustment get_focus_vadjustment ();
@@ -5931,7 +5931,7 @@ namespace Gtk {
 		public Gtk.ShadowType get_shadow_type ();
 		public weak Gtk.Adjustment get_vadjustment ();
 		[CCode (type = "GtkWidget*")]
-		public Viewport (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
+		public Viewport (Gtk.Adjustment? hadjustment, Gtk.Adjustment? vadjustment);
 		public void set_hadjustment (Gtk.Adjustment adjustment);
 		public void set_shadow_type (Gtk.ShadowType type);
 		public void set_vadjustment (Gtk.Adjustment adjustment);

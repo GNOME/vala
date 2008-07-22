@@ -934,6 +934,7 @@ namespace GLib {
 		public void get (...);
 		public void set (...);
 		public void get_property (string property_name, Value value);
+		public void set_property (string property_name, Value value);
 		public void* get_data (string key);
 		public void set_data (string key, void* data);
 		public void set_data_full (string key, void* data, DestroyNotify? destroy);

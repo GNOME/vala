@@ -1,5 +1,21 @@
 2008-07-22  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Add binding for g_object_set_property
+
+	* vapi/packages/gdk-2.0/:
+	* vapi/packages/gtk+-2.0/:
+
+	Various out and nullable fixes, patch by Frederik, fixes bug 544189
+
+	* vapi/gdk-2.0.vapi:
+	* vapi/gtk+-2.0.vapi:
+
+	Regenerated
+
+2008-07-22  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Fix gst_bus_set_sync_handler binding, fixes bug 542388
