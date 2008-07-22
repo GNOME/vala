@@ -2847,8 +2847,9 @@ public class Vala.Parser : CodeVisitor {
 
 	MemberAccess parse_member_name () throws ParseError {
 		var begin = get_location ();
-		MemberAccess expr = null;
-		do {
+		// The first member access can be global:: qualified
+		MemberAccess expr = (MemberAccess) parse_simple_name ();
+		while (accept (TokenType.DOT)) {
 			string id = parse_identifier ();
 			Gee.List<DataType> type_arg_list = parse_type_argument_list (false);
 			expr = new MemberAccess (expr, id, get_src (begin));
@@ -2857,7 +2858,7 @@ public class Vala.Parser : CodeVisitor {
 					expr.add_type_argument (type_arg);
 				}
 			}
-		} while (accept (TokenType.DOT));
+		}
 		return expr;
 	}
 

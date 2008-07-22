@@ -1,5 +1,13 @@
 2008-07-22  Jared Moore  <jaredm@svn.gnome.org>
 
+	* vala/valaparser.vala:
+
+	Support "global::" for object creation expressions.
+
+	* tests/namespaces.vala: add test case
+
+2008-07-22  Jared Moore  <jaredm@svn.gnome.org>
+
 	* vapi/glib-2.0.vapi:
 
 	Fixed bindings for GLib.MainContext.check and GLib.MainContext.query,
