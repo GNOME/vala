@@ -1,5 +1,12 @@
 2008-07-22  Jared Moore  <jaredm@svn.gnome.org>
 
+	* vapi/glib-2.0.vapi:
+
+	Fixed bindings for GLib.MainContext.check and GLib.MainContext.query,
+	fixes bug 543405.
+
+2008-07-22  Jared Moore  <jaredm@svn.gnome.org>
+
 	* ccode/valaccodedeclaration.vala:
 	* ccode/valaccodemodifiers.vala:
 
