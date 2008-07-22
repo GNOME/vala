@@ -44,6 +44,8 @@ public class Vala.CCodeArrayCreationExpressionBinding : CCodeExpressionBinding {
 		gnew.add_argument (new CCodeIdentifier (expr.element_type.get_cname ()));
 		bool first = true;
 		CCodeExpression cexpr = null;
+
+		// iterate over each dimension
 		foreach (Expression size in expr.get_sizes ()) {
 			CCodeExpression csize = (CCodeExpression) size.ccodenode;
 
@@ -57,11 +59,6 @@ public class Vala.CCodeArrayCreationExpressionBinding : CCodeExpressionBinding {
 				csize = new CCodeParenthesizedExpression (new CCodeAssignment (name_cnode, csize));
 			}
 
-			if (expr.element_type.data_type != null && expr.element_type.data_type.is_reference_type ()) {
-				// add extra item to have array NULL-terminated for all reference types
-				csize = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, csize, new CCodeConstant ("1"));
-			}
-
 			if (first) {
 				cexpr = csize;
 				first = false;
@@ -69,6 +66,12 @@ public class Vala.CCodeArrayCreationExpressionBinding : CCodeExpressionBinding {
 				cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cexpr, csize);
 			}
 		}
+		
+		// add extra item to have array NULL-terminated for all reference types
+		if (expr.element_type.data_type != null && expr.element_type.data_type.is_reference_type ()) {
+			cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cexpr, new CCodeConstant ("1"));
+		}
+		
 		gnew.add_argument (cexpr);
 
 		if (expr.initializer_list != null) {

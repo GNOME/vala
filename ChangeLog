@@ -1,5 +1,12 @@
 2008-07-22  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodearraycreationexpressionbinding.vala:
+
+	Fix crash when using multi-dimensional arrays,
+	patch by Amos Brocco, fixes bug 544145
+
+2008-07-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 
 	Fix regression introduced by last commit
