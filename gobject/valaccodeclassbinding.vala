@@ -252,6 +252,8 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 				codegen.source_type_member_definition.append (unref_fun);
 			}
 		} else if (!cl.is_static) {
+			add_instance_init_function (cl);
+
 			var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
 			if (cl.access == SymbolAccessibility.PRIVATE) {
 				function.modifiers = CCodeModifiers.STATIC;
@@ -560,10 +562,16 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 		instance_init.add_parameter (new CCodeFormalParameter ("self", "%s *".printf (cl.get_cname ())));
 		instance_init.modifiers = CCodeModifiers.STATIC;
 		
+		if (cl.is_compact) {
+			// Add declaration, since the instance_init function is explicitly called
+			// by the creation methods
+			codegen.source_type_member_declaration.append (instance_init.copy ());
+		}
+
 		var init_block = new CCodeBlock ();
 		instance_init.block = init_block;
 		
-		if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
+		if (!cl.is_compact && (cl.has_private_fields || cl.get_type_parameters ().size > 0)) {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_PRIVATE".printf (cl.get_upper_case_cname (null))));
 			ccall.add_argument (new CCodeIdentifier ("self"));
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), ccall)));

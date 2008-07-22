@@ -1,3 +1,13 @@
+2008-07-22  Jared Moore  <jaredm@svn.gnome.org>
+
+	* gobject/valaccodeclassbinding.vala:
+	* goblect/valaccodemethodbinding.vala:
+
+	Generate *_instance_init function for compact classes to initialize
+	fields, fixes bug 529679.
+
+	* tests/classes-fields.vala: add test case
+
 2008-07-21  Jared Moore  <jaredm@svn.gnome.org>
 
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:

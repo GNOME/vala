@@ -1,5 +1,10 @@
 using GLib;
 
+[Compact]
+class CompactTest {
+	public int initialized_field = 24;
+}
+
 class Maman.Foo : Object {
 	public int public_base_field = 2;
 	public class int public_class_field = 23;
@@ -55,8 +60,12 @@ class Maman.Bar : Foo {
 
 		var foo = new Foo ();
 		stdout.printf (" %d", foo.public_class_field);
-		stdout.printf (" 24\n");
 		
+		var compact = new CompactTest ();
+		stdout.printf (" %d", compact.initialized_field);
+
+		stdout.printf (" 25\n");
+
 		return 0;
 	}
 }

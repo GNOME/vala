@@ -367,6 +367,10 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 						ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
 						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
 						cinit.append (cdecl);
+
+						var cinitcall = new CCodeFunctionCall (new CCodeIdentifier ("%s_instance_init".printf (cl.get_lower_case_cname (null))));
+						cinitcall.add_argument (new CCodeIdentifier ("self"));
+						cinit.append (new CCodeExpressionStatement (cinitcall));
 					} else {
 						var st = (Struct) m.parent_symbol;
 
