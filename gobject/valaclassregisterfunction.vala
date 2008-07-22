@@ -119,7 +119,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 			var iface_info_name = "%s_info".printf (iface.get_lower_case_cname (null));
 			
 			var reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_interface_static"));
-			reg_call.add_argument (new CCodeIdentifier ("%s_type_id".printf (class_reference.get_lower_case_cname (null))));
+			reg_call.add_argument (new CCodeIdentifier ("%s_type_id_temp".printf (class_reference.get_lower_case_cname (null))));
 			reg_call.add_argument (new CCodeIdentifier (iface.get_type_id ()));
 			reg_call.add_argument (new CCodeIdentifier ("&%s".printf (iface_info_name)));
 			frag.append (new CCodeExpressionStatement (reg_call));
