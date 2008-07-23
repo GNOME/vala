@@ -734,7 +734,7 @@ namespace GnomeVFS {
 	}
 	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class Address : GLib.Boxed {
+	public class Address {
 		public weak GnomeVFS.Address dup ();
 		public bool equal (GnomeVFS.Address b);
 		public int get_family_type ();
@@ -747,7 +747,7 @@ namespace GnomeVFS {
 	}
 	[Compact]
 	[CCode (ref_function = "gnome_vfs_file_info_ref", unref_function = "gnome_vfs_file_info_unref", cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class FileInfo : GLib.Boxed {
+	public class FileInfo {
 		public weak string name;
 		public GnomeVFS.FileInfoFields valid_fields;
 		public GnomeVFS.FileType type;
@@ -784,11 +784,11 @@ namespace GnomeVFS {
 	}
 	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsFindDirectoryResult : GLib.Boxed {
+	public class GnomeVfsFindDirectoryResult {
 	}
 	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class GnomeVfsGetFileInfoResult : GLib.Boxed {
+	public class GnomeVfsGetFileInfoResult {
 	}
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class ACE : GLib.Object {
@@ -832,7 +832,7 @@ namespace GnomeVFS {
 		public void set (GnomeVFS.ACE ace);
 		public void unset (GnomeVFS.ACE ace);
 	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (type_check_function = "GNOME_IS_VFS_DRIVE", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class Drive : GLib.Object {
 		public int compare (GnomeVFS.Drive b);
 		public void eject (GnomeVFS.VolumeOpCallback callback);
@@ -863,7 +863,7 @@ namespace GnomeVFS {
 		public static weak GnomeVFS.MIMEMonitor get ();
 		public virtual signal void data_changed ();
 	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (type_check_function = "GNOME_IS_VFS_VOLUME", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class Volume : GLib.Object {
 		public int compare (GnomeVFS.Volume b);
 		public void eject (GnomeVFS.VolumeOpCallback callback);
@@ -885,7 +885,7 @@ namespace GnomeVFS {
 		public void unmount (GnomeVFS.VolumeOpCallback callback);
 		public void unref ();
 	}
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (type_check_function = "GNOME_IS_VFS_VOLUME_MONITOR", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class VolumeMonitor : GLib.Object {
 		public weak GLib.List get_connected_drives ();
 		public weak GnomeVFS.Drive get_drive_by_id (ulong id);

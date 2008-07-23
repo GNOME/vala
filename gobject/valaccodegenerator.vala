@@ -3506,8 +3506,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		expr.ccodenode = new CCodeBinaryExpression (op, cleft, cright);
 	}
 
-	static CCodeFunctionCall create_type_check (CCodeNode ccodenode, TypeSymbol type) {
-		var ccheck = new CCodeFunctionCall (new CCodeIdentifier (type.get_upper_case_cname ("IS_")));
+	public string get_type_check_function (TypeSymbol type) {
+		var cl = type as Class;
+		if (cl != null && cl.type_check_function != null) {
+			return cl.type_check_function;
+		} else {
+			return type.get_upper_case_cname ("IS_");
+		}
+	}
+
+	CCodeFunctionCall create_type_check (CCodeNode ccodenode, TypeSymbol type) {
+		var ccheck = new CCodeFunctionCall (new CCodeIdentifier (get_type_check_function (type)));
 		ccheck.add_argument ((CCodeExpression) ccodenode);
 		return ccheck;
 	}
@@ -4014,7 +4023,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var ccheck = new CCodeFunctionCall ();
 		
 		if ((t is Class && ((Class) t).is_subtype_of (gobject_type)) || t is Interface) {
-			var ctype_check = new CCodeFunctionCall (new CCodeIdentifier (t.get_upper_case_cname ("IS_")));
+			var ctype_check = new CCodeFunctionCall (new CCodeIdentifier (get_type_check_function (t)));
 			ctype_check.add_argument (new CCodeIdentifier (var_name));
 			
 			CCodeExpression cexpr = ctype_check;

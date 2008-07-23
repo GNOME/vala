@@ -1,3 +1,24 @@
+2008-07-23  Jared Moore  <jaredm@svn.gnome.org>
+
+	* vala/valainterfacewriter.vala:
+	* vala/valaclass.vala:
+	* gobject/valaccodeinterfacebinding.vala:
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodegenerator.vala: 
+
+	Add [CCode (type_check_function = "BLAH_IS_FOO")] for classes.
+
+	* vapigen/valagidlparser.vala:
+
+	Add type_check_function metadata.
+
+	* vapi/packages/gnome-vfs-2.0/gnome-vfs-2.0.metadata:
+
+	Set type_check_function for GnomeVFSDrive, GnomeVFSVolume,
+	GnomeVFSVolumeMonitor, fixes bug 543693.
+
+	* vapi/gnome-vfs-2.0.vapi: regenerated
+
 2008-07-22  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi:

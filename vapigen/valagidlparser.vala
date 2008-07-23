@@ -843,6 +843,8 @@ public class Vala.GIdlParser : CodeVisitor {
 						if (eval (nv[1]) == "1") {
 							return;
 						}
+					} else if (nv[0] == "type_check_function") {
+						cl.type_check_function = eval (nv[1]);
 					} else if (nv[0] == "abstract") {
 						if (eval (nv[1]) == "1") {
 							cl.is_abstract = true;

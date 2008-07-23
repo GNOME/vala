@@ -77,6 +77,13 @@ public class Vala.Class : ObjectTypeSymbol {
 	}
 
 	/**
+	 * The name of the function to use to check whether a value is an instance of
+	 * this class. If this is null then the default type check function should be 
+	 * used instead.
+	 */
+	public string? type_check_function { get; set; }
+
+	/**
 	 * Specifies whether this class has private fields.
 	 */
 	public bool has_private_fields { get; private set; }
@@ -569,6 +576,9 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 		if (a.has_argument ("type_signature")) {
 			type_signature = a.get_string ("type_signature");
+		}
+		if (a.has_argument ("type_check_function")) {
+			type_check_function = a.get_string ("type_check_function");
 		}
 	}
 	

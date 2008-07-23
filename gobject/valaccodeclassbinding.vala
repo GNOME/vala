@@ -89,10 +89,10 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			decl_frag.append (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (cl.get_upper_case_cname (null)), macro));
 
 			macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (cl.get_type_id ());
-			decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (cl.get_upper_case_cname ("IS_")), macro));
+			decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (codegen.get_type_check_function (cl)), macro));
 
 			macro = "(G_TYPE_CHECK_CLASS_TYPE ((klass), %s))".printf (cl.get_type_id ());
-			decl_frag.append (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (cl.get_upper_case_cname ("IS_")), macro));
+			decl_frag.append (new CCodeMacroReplacement ("%s_CLASS(klass)".printf (codegen.get_type_check_function (cl)), macro));
 
 			macro = "(G_TYPE_INSTANCE_GET_CLASS ((obj), %s, %sClass))".printf (cl.get_type_id (), cl.get_cname ());
 			decl_frag.append (new CCodeMacroReplacement ("%s_GET_CLASS(obj)".printf (cl.get_upper_case_cname (null)), macro));
