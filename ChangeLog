@@ -1,3 +1,9 @@
+2008-07-30  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
+	Add GObject.ref_count binding, fixes bug 532584
+
 2008-07-23  Jared Moore  <jaredm@svn.gnome.org>
 
 	* vala/valainterfacewriter.vala:

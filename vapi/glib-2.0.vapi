@@ -920,6 +920,8 @@ namespace GLib {
 
 	[CCode (ref_function = "g_object_ref", unref_function = "g_object_unref", marshaller_type_name = "OBJECT", get_value_function = "g_value_get_object", set_value_function = "g_value_set_object", cheader_filename = "glib-object.h")]
 	public class Object : TypeInstance {
+		public uint ref_count;
+
 		public static Object @new (Type type, ...);
 
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
