@@ -93,10 +93,6 @@ public class Vala.CCodeCompiler : Object {
 			}
 			cmdline += " -o " + Shell.quote (output);
 		}
-		cmdline += " " + pkgflags;
-		foreach (string cc_option in cc_options) {
-			cmdline += " " + Shell.quote (cc_option);
-		}
 
 		/* make sure include files can be found if -d is used */
 		if (context.directory != null && context.directory != "") {
@@ -113,6 +109,13 @@ public class Vala.CCodeCompiler : Object {
 		var c_source_files = context.get_c_source_files ();
 		foreach (string file in c_source_files) {
 			cmdline += " " + Shell.quote (file);
+		}
+
+		// add libraries after source files to fix linking
+		// with --as-needed and on Windows
+		cmdline += " " + pkgflags;
+		foreach (string cc_option in cc_options) {
+			cmdline += " " + Shell.quote (cc_option);
 		}
 
 		try {
