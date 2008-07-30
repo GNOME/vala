@@ -36,8 +36,10 @@ namespace Sqlite {
 		public int total_changes ();
 
 		public int complete (string sql);
-		public int get_table (string sql, out string[] resultp, ref int nrow, ref int ncolumn, out string errmsg);
-		public static void free_table(string[] result);
+		[NoArrayLength]
+		public int get_table (string sql, out weak string[] resultp, out int nrow, out int ncolumn, out string errmsg);
+		[NoArrayLength]
+		public static void free_table (string[] result);
 		public static int open (string filename, out Database db);
 		public static int open_v2 (string filename, out Database db, int flags = OPEN_READWRITE | OPEN_CREATE, string? zVfs = null);
 		public int errcode ();
