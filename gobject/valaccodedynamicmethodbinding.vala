@@ -184,7 +184,8 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 		}
 
 		foreach (FormalParameter param in method.get_parameters ()) {
-			if (param.parameter_type is MethodType) {
+			if (param.parameter_type is MethodType
+			    || param.parameter_type is DelegateType) {
 				// callback parameter
 				break;
 			}

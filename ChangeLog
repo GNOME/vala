@@ -1,3 +1,9 @@
+2008-08-01  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodedynamicmethodbinding.vala:
+
+	Fix crash when passing delegate as D-Bus callback, fixes bug 545688
+
 2008-07-30  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/sqlite3.vapi:
