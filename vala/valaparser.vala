@@ -1301,7 +1301,7 @@ public class Vala.Parser : CodeVisitor {
 
 		comment = scanner.pop_comment ();
 
-		var block = new Block ();
+		var block = new Block (get_src_com (get_location ()));
 		var stmt = parse_embedded_statement_without_block ();
 		if (stmt == null) {
 			// workaround for current limitation of exception handling
@@ -1344,6 +1344,9 @@ public class Vala.Parser : CodeVisitor {
 				Report.error (get_current_src (), "expected `}'");
 			}
 		}
+
+		block.source_reference.last_line = get_current_src ().last_line;
+		block.source_reference.last_column = get_current_src ().last_column;
 
 		return block;
 	}

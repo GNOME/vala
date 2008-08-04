@@ -1,5 +1,15 @@
 2008-08-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valablock.vala:
+	* vala/valagenieparser.vala:
+	* vala/valaparser.vala:
+	* vala/valasemanticanalyzer.vala:
+
+	Set source_reference of blocks, patch by Abderrahim Kitouni,
+	fixes bug 546249
+
+2008-08-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valatypesymbol.vala:
 
 	Fix crash on incremental parsing, patch by Abderrahim Kitouni

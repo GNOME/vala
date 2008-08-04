@@ -710,7 +710,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					return;
 				}
 				acc.automatic_body = true;
-				acc.body = new Block ();
+				acc.body = new Block (acc.source_reference);
 				var ma = new MemberAccess.simple ("_%s".printf (acc.prop.name), acc.source_reference);
 				if (acc.readable) {
 					acc.body.add_statement (new ReturnStatement (ma, acc.source_reference));
@@ -3375,7 +3375,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (l.expression_body != null) {
-			var block = new Block ();
+			var block = new Block (l.source_reference);
 			block.scope.parent_scope = l.method.scope;
 
 			if (l.method.return_type.data_type != null) {
