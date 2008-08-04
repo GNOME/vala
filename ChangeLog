@@ -1,3 +1,9 @@
+2008-08-04  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
+	Fix g_object_get and g_object_set bindings
+
 2008-08-01  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodedynamicmethodbinding.vala:
