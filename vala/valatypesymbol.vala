@@ -192,7 +192,8 @@ public abstract class Vala.TypeSymbol : Symbol {
 	}
 
 	public override Gee.List<string> get_cheader_filenames () {
-		if (cheader_filenames.size == 0) {
+		// parent_symbol can be null on incremental parsing
+		if (cheader_filenames.size == 0 && parent_symbol != null) {
 			/* default to header filenames of the namespace */
 			foreach (string filename in parent_symbol.get_cheader_filenames ()) {
 				add_cheader_filename (filename);

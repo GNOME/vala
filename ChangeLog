@@ -1,5 +1,11 @@
 2008-08-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valatypesymbol.vala:
+
+	Fix crash on incremental parsing, patch by Abderrahim Kitouni
+
+2008-08-04  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Fix g_object_get and g_object_set bindings
