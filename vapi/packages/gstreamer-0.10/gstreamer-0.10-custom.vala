@@ -41,6 +41,32 @@ namespace Gst {
 		public void unref ();
 	}
 
+	[Compact]
+	public class DebugCategory {
+		[CCode (cname="GST_DEBUG_CATEGORY_INIT")]
+		public void init (string name, uint color, string description);
+		[CCode (cname="GST_CAT_LOG")]
+		public void log (string format, ...);
+		[CCode (cname="GST_CAT_DEBUG")]
+		public void debug (string format, ...);
+		[CCode (cname="GST_CAT_INFO")]
+		public void info (string format, ...);
+		[CCode (cname="GST_CAT_WARNING")]
+		public void warning (string format, ...);
+		[CCode (cname="GST_CAT_ERROR")]
+		public void error (string format, ...);
+		[CCode (cname="GST_CAT_LOG_OBJECT")]
+		public void log_object (GLib.Object obj, string format, ...);
+		[CCode (cname="GST_CAT_DEBUG_OBJECT")]
+		public void debug_object (GLib.Object obj, string format, ...);
+		[CCode (cname="GST_CAT_INFO_OBJECT")]
+		public void info_object (GLib.Object obj, string format, ...);
+		[CCode (cname="GST_CAT_WARNING_OBJECT")]
+		public void warning_object (GLib.Object obj, string format, ...);
+		[CCode (cname="GST_CAT_ERROR_OBJECT")]
+		public void error_object (GLib.Object obj, string format, ...);
+	}
+
 	[CCode (cname="GST_DEBUG_BIN_TO_DOT_FILE")]
 	public static void debug_bin_to_dot_file (Bin bin, DebugGraphDetails details, string prefix);
 	[CCode (cname="GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS")]

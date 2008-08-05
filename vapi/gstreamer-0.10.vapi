@@ -567,6 +567,43 @@ namespace Gst {
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
+	public class DebugCategory {
+		public int threshold;
+		public uint color;
+		public weak string name;
+		public weak string description;
+		[CCode (cname = "GST_DEBUG_CATEGORY_INIT")]
+		public void init (string name, uint color, string description);
+		[CCode (cname = "GST_CAT_LOG")]
+		public void log (string format, ...);
+		[CCode (cname = "GST_CAT_DEBUG")]
+		public void debug (string format, ...);
+		[CCode (cname = "GST_CAT_INFO")]
+		public void info (string format, ...);
+		[CCode (cname = "GST_CAT_WARNING")]
+		public void warning (string format, ...);
+		[CCode (cname = "GST_CAT_ERROR")]
+		public void error (string format, ...);
+		[CCode (cname = "GST_CAT_LOG_OBJECT")]
+		public void log_object (GLib.Object obj, string format, ...);
+		[CCode (cname = "GST_CAT_DEBUG_OBJECT")]
+		public void debug_object (GLib.Object obj, string format, ...);
+		[CCode (cname = "GST_CAT_INFO_OBJECT")]
+		public void info_object (GLib.Object obj, string format, ...);
+		[CCode (cname = "GST_CAT_WARNING_OBJECT")]
+		public void warning_object (GLib.Object obj, string format, ...);
+		[CCode (cname = "GST_CAT_ERROR_OBJECT")]
+		public void error_object (GLib.Object obj, string format, ...);
+		public DebugCategory ();
+		public uint get_color ();
+		public weak string get_description ();
+		public weak string get_name ();
+		public Gst.DebugLevel get_threshold ();
+		public void reset_threshold ();
+		public void set_threshold (Gst.DebugLevel level);
+	}
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class AllocTrace {
 		public weak string name;
 		public int flags;
@@ -606,20 +643,6 @@ namespace Gst {
 		public void unschedule ();
 		public Gst.ClockReturn wait (Gst.ClockTimeDiff jitter);
 		public Gst.ClockReturn wait_async (Gst.ClockCallback func);
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class DebugCategory {
-		public int threshold;
-		public uint color;
-		public weak string name;
-		public weak string description;
-		public uint get_color ();
-		public weak string get_description ();
-		public weak string get_name ();
-		public Gst.DebugLevel get_threshold ();
-		public void reset_threshold ();
-		public void set_threshold (Gst.DebugLevel level);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
