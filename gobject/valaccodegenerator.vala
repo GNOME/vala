@@ -953,7 +953,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 
 			// notify on property changes
-			if (current_class.is_subtype_of (gobject_type) &&
+			var typesymbol = (TypeSymbol) prop.parent_symbol;
+			if (typesymbol.is_subtype_of (gobject_type) &&
 			    prop.notify &&
 			    prop.access != SymbolAccessibility.PRIVATE && // FIXME: use better means to detect gobject properties
 			    (acc.writable || acc.construction)) {
