@@ -2129,7 +2129,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				
 				/* only check for null if the containers elements are of reference-type */
 				CCodeBinaryExpression ccond;
-				if (array_type.element_type.data_type.is_reference_type ()) {
+				if (array_type.element_type.is_reference_type_or_type_parameter ()) {
 					var ccond_term1 = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, array_len, new CCodeConstant ("-1"));
 					var ccond_term2 = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeElementAccess (new CCodeIdentifier (collection_backup.name), new CCodeIdentifier (it_name)), new CCodeConstant ("NULL"));
 					var ccond_term = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccond_term1, ccond_term2);

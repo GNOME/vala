@@ -2,6 +2,12 @@
 
 	* gobject/valaccodegenerator.vala:
 
+	Fix crash when using foreach with stacked arrays, fixes bug 546450
+
+2008-08-06  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala:
+
 	Fix crash when using VAPI properties outside of a class
 
 2008-08-05  Thijs Vermeir  <thijsvermeir@gmail.com>
