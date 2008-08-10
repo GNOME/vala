@@ -1,5 +1,14 @@
 2008-08-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Use accessor vfuncs to implement virtual and abstract properties,
+	fixes bug 508472 and bug 505966
+
+2008-08-10  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/vte/:
 
 	Fix vte_terminal_set_colors binding, fixes bug 547136

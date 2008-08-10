@@ -364,6 +364,26 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.base_method.vfunc_name), new CCodeIdentifier (m.get_real_cname ()))));
 		}
 
+		/* connect overridden properties */
+		foreach (Property prop in cl.get_properties ()) {
+			if (prop.base_property == null) {
+				continue;
+			}
+			var base_type = prop.base_property.parent_symbol;
+			
+			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (((Class) base_type).get_upper_case_cname (null))));
+			ccast.add_argument (new CCodeIdentifier ("klass"));
+
+			if (prop.get_accessor != null) {
+				string cname = "%s_real_get_%s".printf (cl.get_lower_case_cname (null), prop.name);
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "get_%s".printf (prop.name)), new CCodeIdentifier (cname))));
+			}
+			if (prop.set_accessor != null) {
+				string cname = "%s_real_set_%s".printf (cl.get_lower_case_cname (null), prop.name);
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "set_%s".printf (prop.name)), new CCodeIdentifier (cname))));
+			}
+		}
+
 		if (cl.is_subtype_of (codegen.gobject_type)) {
 			/* create type, dup_func, and destroy_func properties for generic types */
 			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
@@ -528,7 +548,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			}
 			
 			var ciface = new CCodeIdentifier ("iface");
-			var cname = m.get_real_cname ();
+			string cname = m.get_real_cname ();
 			if (m.is_abstract || m.is_virtual) {
 				// FIXME results in C compiler warning
 				cname = m.get_cname ();
@@ -550,6 +570,61 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 					
 					var ciface = new CCodeIdentifier ("iface");
 					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), new CCodeIdentifier (cl_method.get_cname ()))));
+				}
+			}
+		}
+
+		foreach (Property prop in cl.get_properties ()) {
+			if (prop.base_interface_property == null) {
+				continue;
+			}
+
+			var base_type = prop.base_interface_property.parent_symbol;
+			if (base_type != iface) {
+				continue;
+			}
+			
+			var ciface = new CCodeIdentifier ("iface");
+
+			if (prop.get_accessor != null) {
+				string cname = "%s_real_get_%s".printf (cl.get_lower_case_cname (null), prop.name);
+				if (prop.is_abstract || prop.is_virtual) {
+					cname = "%s_get_%s".printf (cl.get_lower_case_cname (null), prop.name);
+				}
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), new CCodeIdentifier (cname))));
+			}
+			if (prop.set_accessor != null) {
+				string cname = "%s_real_set_%s".printf (cl.get_lower_case_cname (null), prop.name);
+				if (prop.is_abstract || prop.is_virtual) {
+					cname = "%s_set_%s".printf (cl.get_lower_case_cname (null), prop.name);
+				}
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), new CCodeIdentifier (cname))));
+			}
+		}
+
+		foreach (Property prop in iface.get_properties ()) {
+			if (!prop.is_abstract) {
+				continue;
+			}
+
+			Property cl_prop = null;
+			var base_class = cl;
+			while (base_class != null && cl_prop == null) {
+				cl_prop = base_class.scope.lookup (prop.name) as Property;
+				base_class = base_class.base_class;
+			}
+			if (base_class != null && cl_prop.parent_symbol != cl) {
+				// property inherited from base class
+				
+				var ciface = new CCodeIdentifier ("iface");
+
+				if (prop.get_accessor != null) {
+					string cname = "%s_real_get_%s".printf (cl.get_lower_case_cname (null), prop.name);
+					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), new CCodeIdentifier (cname))));
+				}
+				if (prop.set_accessor != null) {
+					string cname = "%s_real_set_%s".printf (cl.get_lower_case_cname (null), prop.name);
+					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), new CCodeIdentifier (cname))));
 				}
 			}
 		}
@@ -664,16 +739,21 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 				continue;
 			}
 
-			bool is_virtual = prop.base_property != null || prop.base_interface_property != null;
-
 			string prefix = cl.get_lower_case_cname (null);
-			if (is_virtual) {
-				prefix += "_real";
+			CCodeExpression cself = new CCodeIdentifier ("self");
+			if (prop.base_property != null) {
+				var base_type = (Class) prop.base_property.parent_symbol;
+				prefix = base_type.get_lower_case_cname (null);
+				cself = codegen.transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
+			} else if (prop.base_interface_property != null) {
+				var base_type = (Interface) prop.base_interface_property.parent_symbol;
+				prefix = base_type.get_lower_case_cname (null);
+				cself = codegen.transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
 			}
 
 			var ccase = new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ()));
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
-			ccall.add_argument (new CCodeIdentifier ("self"));
+			ccall.add_argument (cself);
 			var csetcall = new CCodeFunctionCall ();
 			csetcall.call = get_value_setter_function (prop.property_type);
 			csetcall.add_argument (new CCodeIdentifier ("value"));
@@ -719,16 +799,21 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 				continue;
 			}
 
-			bool is_virtual = prop.base_property != null || prop.base_interface_property != null;
-
 			string prefix = cl.get_lower_case_cname (null);
-			if (is_virtual) {
-				prefix += "_real";
+			CCodeExpression cself = new CCodeIdentifier ("self");
+			if (prop.base_property != null) {
+				var base_type = (Class) prop.base_property.parent_symbol;
+				prefix = base_type.get_lower_case_cname (null);
+				cself = codegen.transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
+			} else if (prop.base_interface_property != null) {
+				var base_type = (Interface) prop.base_interface_property.parent_symbol;
+				prefix = base_type.get_lower_case_cname (null);
+				cself = codegen.transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
 			}
 
 			var ccase = new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ()));
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_set_%s".printf (prefix, prop.name)));
-			ccall.add_argument (new CCodeIdentifier ("self"));
+			ccall.add_argument (cself);
 			var cgetcall = new CCodeFunctionCall ();
 			if (prop.property_type.data_type != null) {
 				cgetcall.call = new CCodeIdentifier (prop.property_type.data_type.get_get_value_function ());

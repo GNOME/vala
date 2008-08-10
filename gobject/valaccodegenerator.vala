@@ -815,14 +815,28 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var cvalueparam = new CCodeFormalParameter ("value", value_type.get_cname ());
 
 		if (prop.is_abstract || prop.is_virtual) {
+			CCodeFunctionDeclarator vdeclarator;
+
 			if (acc.readable) {
 				function = new CCodeFunction (acc.get_cname (), prop.property_type.get_cname ());
+
+				var vdecl = new CCodeDeclaration (prop.property_type.get_cname ());
+				vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (prop.name));
+				vdecl.add_declarator (vdeclarator);
+				type_struct.add_declaration (vdecl);
 			} else {
 				function = new CCodeFunction (acc.get_cname (), "void");
+
+				var vdecl = new CCodeDeclaration ("void");
+				vdeclarator = new CCodeFunctionDeclarator ("set_%s".printf (prop.name));
+				vdecl.add_declarator (vdeclarator);
+				type_struct.add_declaration (vdecl);
 			}
 			function.add_parameter (cselfparam);
+			vdeclarator.add_parameter (cselfparam);
 			if (acc.writable || acc.construction) {
 				function.add_parameter (cvalueparam);
+				vdeclarator.add_parameter (cvalueparam);
 			}
 			
 			if (!prop.is_internal_symbol () && (acc.readable || acc.writable) && acc.access != SymbolAccessibility.PRIVATE) {
@@ -836,53 +850,26 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var block = new CCodeBlock ();
 			function.block = block;
 
-			if (acc.readable) {
-				// declare temporary variable to save the property value
-				var decl = new CCodeDeclaration (prop.property_type.get_cname ());
-				decl.add_declarator (new CCodeVariableDeclarator ("value"));
-				block.add_statement (decl);
-			
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
-			
-				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
-				ccast.add_argument (new CCodeIdentifier ("self"));
-				ccall.add_argument (ccast);
-				
-				// property name is second argument of g_object_get
-				ccall.add_argument (prop.get_canonical_cconstant ());
+			CCodeFunctionCall vcast = null;
+			if (prop.parent_symbol is Interface) {
+				var iface = (Interface) prop.parent_symbol;
 
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("value")));
-
-				ccall.add_argument (new CCodeConstant ("NULL"));
-				
-				block.add_statement (new CCodeExpressionStatement (ccall));
-
-				// HACK: decrement the refcount before returning the value to simulate a weak reference getter function
-				if (prop.property_type.data_type != null && prop.property_type.data_type.is_reference_counting ()) {
-					var unref_cond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("value"), new CCodeConstant ("NULL"));
-					var unref_function = new CCodeFunctionCall (get_destroy_func_expression (prop.property_type));
-					unref_function.add_argument (new CCodeIdentifier ("value"));
-					var unref_block = new CCodeBlock ();
-					unref_block.add_statement (new CCodeExpressionStatement (unref_function));
-					block.add_statement (new CCodeIfStatement (unref_cond, unref_block));
-				}
-
-				block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("value")));
+				vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (iface.get_upper_case_cname (null))));
 			} else {
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_set"));
-			
-				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
-				ccast.add_argument (new CCodeIdentifier ("self"));
-				ccall.add_argument (ccast);
-				
-				// property name is second argument of g_object_set
-				ccall.add_argument (prop.get_canonical_cconstant ());
+				var cl = (Class) prop.parent_symbol;
 
-				ccall.add_argument (new CCodeIdentifier ("value"));
+				vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (cl.get_upper_case_cname (null))));
+			}
+			vcast.add_argument (new CCodeIdentifier ("self"));
 
-				ccall.add_argument (new CCodeConstant ("NULL"));
-				
-				block.add_statement (new CCodeExpressionStatement (ccall));
+			if (acc.readable) {
+				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
+				vcall.add_argument (new CCodeIdentifier ("self"));
+				block.add_statement (new CCodeReturnStatement (vcall));
+			} else {
+				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
+				vcall.add_argument (new CCodeIdentifier ("self"));
+				vcall.add_argument (new CCodeIdentifier ("value"));
 			}
 
 			source_type_member_definition.append (function);
@@ -913,10 +900,18 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				function = new CCodeFunction (cname, "void");
 			}
 
+			ObjectType base_type = null;
 			if (is_virtual) {
+				if (prop.base_property != null) {
+					base_type = new ObjectType ((ObjectTypeSymbol) prop.base_property.parent_symbol);
+				} else if (prop.base_interface_property != null) {
+					base_type = new ObjectType ((ObjectTypeSymbol) prop.base_interface_property.parent_symbol);
+				}
 				function.modifiers |= CCodeModifiers.STATIC;
+				function.add_parameter (new CCodeFormalParameter ("base", base_type.get_cname ()));
+			} else {
+				function.add_parameter (cselfparam);
 			}
-			function.add_parameter (cselfparam);
 			if (returns_real_struct) {
 				// return non simple structs as out parameter
 				var coutparamname = "%s*".printf (prop.property_type.get_cname ());
@@ -940,16 +935,24 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			function.block = (CCodeBlock) acc.body.ccodenode;
 
+			if (is_virtual) {
+				var cdecl = new CCodeDeclaration (this_type.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", transform_expression (new CCodeIdentifier ("base"), base_type, this_type)));
+				function.block.prepend_statement (cdecl);
+			}
+
 			if (current_method_inner_error) {
 				var cdecl = new CCodeDeclaration ("GError *");
 				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
 				function.block.prepend_statement (cdecl);
 			}
 
-			if (returns_real_struct) {
-				function.block.prepend_statement (create_property_type_check_statement (prop, false, t, true, "self"));
-			} else {
-				function.block.prepend_statement (create_property_type_check_statement (prop, acc.readable, t, true, "self"));
+			if (!is_virtual) {
+				if (returns_real_struct) {
+					function.block.prepend_statement (create_property_type_check_statement (prop, false, t, true, "self"));
+				} else {
+					function.block.prepend_statement (create_property_type_check_statement (prop, acc.readable, t, true, "self"));
+				}
 			}
 
 			// notify on property changes
