@@ -243,6 +243,18 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_newline ();
 		}
 
+		if (st.is_integer_type ()) {
+			write_indent ();
+			write_string ("[IntegerType (rank = %d)]".printf (st.get_rank ()));
+			write_newline ();
+		}
+
+		if (st.is_floating_type ()) {
+			write_indent ();
+			write_string ("[FloatingType (rank = %d)]".printf (st.get_rank ()));
+			write_newline ();
+		}
+
 		write_indent ();
 		write_accessibility (st);
 		write_string ("struct ");
