@@ -1,5 +1,12 @@
 2008-08-10  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Add GCompletion binding, patch by Abderrahim Kitouni,
+	fixes bug 546252
+
+2008-08-10  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/vte/:
 
 	Fix vte_terminal_get_cursor_position binding,

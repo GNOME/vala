@@ -2233,6 +2233,27 @@ namespace GLib {
 		FLOAT_MALFORMED
 	}
 
+	/* Automatic String Completion */
+
+	[Compact]
+	[CCode (free_function = "g_completion_free")]
+	public class Completion {
+		public Completion (CompletionFunc? func = null);
+		public List<void*> items;
+		public CompletionFunc func;
+		public string prefix;
+		public List<void*> cache;
+		public CompletionStrncmpFunc strncmp_func;
+		public void add_items (List<void*> items);
+		public void remove_items (List<void*> items);
+		public void clear_items ();
+		public weak List<void*> complete (string prefix, out string? new_prefix = null);
+		public weak List<void*> complete_utf8 (string prefix, out string? new_prefix = null);
+	}
+
+	public static delegate string CompletionFunc (void* item);
+	public static delegate int CompletionStrncmpFunc (string s1, string s2, size_t n);
+
 	/* Timers */
 
 	[Compact]
