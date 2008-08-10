@@ -87,7 +87,7 @@ public class Vala.CCodeInterfaceBinding : CCodeObjectTypeSymbolBinding {
 		if (!iface.is_static) {
 			add_interface_base_init_function (iface);
 
-			var type_fun = new InterfaceRegisterFunction (iface);
+			var type_fun = new InterfaceRegisterFunction (iface, codegen);
 			type_fun.init_from_type ();
 			if (iface.access != SymbolAccessibility.PRIVATE) {
 				codegen.header_type_member_declaration.append (type_fun.get_declaration ());

@@ -34,6 +34,7 @@ class Vala.Compiler : Object {
 	static string library;
 	[NoArrayLength ()]
 	static string[] packages;
+	static string target_glib;
 
 	static bool ccode_only;
 	static bool compile_only;
@@ -75,6 +76,7 @@ class Vala.Compiler : Object {
 		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, ref cc_options, "Pass OPTION to the C compiler", "OPTION..." },
 		{ "save-temps", 0, 0, OptionArg.NONE, ref save_temps, "Keep temporary files", null },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
+		{ "target-glib", 0, 0, OptionArg.STRING, ref target_glib, "Target version of glib for code generation", "MAJOR.MINOR" },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref sources, null, "FILE..." },
 		{ null }
 	};
@@ -167,6 +169,18 @@ class Vala.Compiler : Object {
 		context.debug = debug;
 		context.thread = thread;
 		context.save_temps = save_temps;
+
+		int glib_major = 2;
+		int glib_minor = 12;
+		if (target_glib != null && target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2) {
+			Report.error (null, "Invalid format for --target-glib");
+		}
+
+		context.target_glib_major = glib_major;
+		context.target_glib_minor = glib_minor;
+		if (context.target_glib_major != 2) {
+			Report.error (null, "This version of valac only supports GLib 2");
+		}
 
 		if (defines != null) {
 			foreach (string define in defines) {

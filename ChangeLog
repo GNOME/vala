@@ -1,5 +1,18 @@
 2008-08-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodecontext.vala:
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodeinterfacebinding.vala:
+	* gobject/valaclassregisterfunction.vala:
+	* gobject/valainterfaceregisterfunction.vala:
+	* gobject/valatyperegisterfunction.vala:
+	* compiler/valacompiler.vala:
+
+	Add --target-glib command-line option, default to 2.12,
+	based on patch by Jared Moore, fixes bug 544990
+
+2008-08-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala:
 
 	Support IntegerType and FloatingType attributes,

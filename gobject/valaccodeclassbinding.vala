@@ -179,7 +179,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 				}
 			}
 
-			var type_fun = new ClassRegisterFunction (cl);
+			var type_fun = new ClassRegisterFunction (cl, codegen);
 			type_fun.init_from_type (codegen.in_plugin);
 			if (cl.access != SymbolAccessibility.PRIVATE) {
 				codegen.header_type_member_declaration.append (type_fun.get_declaration ());

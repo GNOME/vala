@@ -110,6 +110,24 @@ public class Vala.CodeContext : Object {
 	 */
 	public bool save_temps { get; set; }
 
+	/**
+	 * Target major version number of glib for code generation.
+	 */
+	public int target_glib_major { get; set; }
+
+	/**
+	 * Target minor version number of glib for code generation.
+	 */
+	public int target_glib_minor { get; set; }
+
+	/**
+	 * Returns true if the target version of glib is greater than or 
+	 * equal to the specified version.
+	 */
+	public bool require_glib_version (int major, int minor) {
+		return (target_glib_major > major) || (target_glib_major == major && target_glib_minor >= minor);
+	}
+
 	public bool save_csources {
 		get { return save_temps; }
 	}
