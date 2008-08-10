@@ -113,7 +113,7 @@ public class Vala.CCodeCompiler : Object {
 
 		// add libraries after source files to fix linking
 		// with --as-needed and on Windows
-		cmdline += " " + pkgflags;
+		cmdline += " " + pkgflags.strip ();
 		foreach (string cc_option in cc_options) {
 			cmdline += " " + Shell.quote (cc_option);
 		}

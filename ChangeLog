@@ -1,3 +1,15 @@
+2008-08-10  Jared Moore  <jaredm@svn.gnome.org>
+
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+
+	Generate correct code for calling class methods outside of static or
+	class constructors, fixes bug 539592.
+
+	* tests/classes-methods.vala:
+	* tests/classes-methods.exp:
+
+	Added test cases for calling class methods.
+
 2008-08-06  Thijs Vermeir  <thijsvermeir@gmail.com>
 
 	* vapi/packages/gstreamer-0.10/gstreamer-0.10.metadata:

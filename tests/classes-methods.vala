@@ -81,6 +81,8 @@ class Maman.SubBar : Bar {
 		test_ref_weak (ref str2);
 		assert (str == "world");
 
+		ClassTest.run_test ();
+
 		return 0;
 	}
 }
@@ -181,5 +183,35 @@ void test_ref (ref string bar) {
 void test_ref_weak (ref weak string bar) {
 	assert (bar == "hello");
 	bar = "world";
+}
+
+class Maman.ClassTest {
+	public class void class_method () {
+		stdout.printf(" OK\n");
+	}
+
+	public void instance_method () {
+		stdout.printf ("Access class method in instance method:");
+		class_method ();
+	}
+
+	class construct {
+		stdout.printf ("Access class method in class constructor:");
+		class_method ();
+	}
+
+	static construct {
+		stdout.printf ("Access class method in static constructor:");
+		class_method ();
+	}
+
+	public static void run_test () {
+		var c = new ClassTest ();
+
+		stdout.printf ("Access class method by member access:");
+		c.class_method ();
+
+		c.instance_method ();
+	}
 }
 

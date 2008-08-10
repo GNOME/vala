@@ -2,3 +2,7 @@ Inheritance Test: 1 2 3
 Static Inheritance Test: 1 2 3
 Virtual Method Test: 1 2 3
 Interface Inheritance Test: 1 2 3
+Access class method in class constructor: OK
+Access class method in static constructor: OK
+Access class method by member access: OK
+Access class method in instance method: OK

@@ -98,8 +98,27 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		} else if (m != null && m.binding == MemberBinding.CLASS) {
 			var cl = (Class) m.parent_symbol;
 			var cast = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null) + "_CLASS"));
-			cast.add_argument (new CCodeIdentifier ("klass"));
+			
+			CCodeExpression klass;
+			var ma = expr.call as MemberAccess;
+			if (ma.inner == null) {
+				if (codegen.in_static_or_class_ctor) {
+					// Accessing the method from a static or class constructor
+					klass = new CCodeIdentifier ("klass");
+				} else {
+					// Accessing the method from within an instance method
+					var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
+					k.add_argument (new CCodeIdentifier ("self"));
+					klass = k;
+				}
+			} else {
+				// Accessing the method of an instance
+				var k = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_GET_CLASS"));
+				k.add_argument ((CCodeExpression) ma.inner.ccodenode);
+				klass = k;
+			}
 
+			cast.add_argument (klass);
 			carg_map.set (codegen.get_param_pos (m.cinstance_parameter_position), cast);
 		}
 
