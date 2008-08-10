@@ -7,7 +7,7 @@ namespace Gst {
 		STARTED,
 		FLAG_LAST
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstbasesink.h")]
 	public class BaseSrc : Gst.Element {
 		public Gst.Pad srcpad;
 		public GLib.Mutex live_lock;
@@ -77,7 +77,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public bool typefind { get; set; }
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstbasetransform.h")]
 	public class BaseTransform : Gst.Element {
 		public Gst.Pad sinkpad;
 		public Gst.Pad srcpad;
