@@ -1,3 +1,11 @@
+2008-08-10  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/vte/:
+
+	Fix vte_terminal_set_colors binding, fixes bug 547136
+
+	* vapi/vte.vapi: regenerated
+
 2008-08-10  Jared Moore  <jaredm@svn.gnome.org>
 
 	* gobject/valaccodeinvocationexpressionbinding.vala:

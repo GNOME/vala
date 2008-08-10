@@ -85,6 +85,7 @@ namespace Vte {
 		public void match_remove (int tag);
 		public void match_set_cursor (int tag, Gdk.Cursor cursor);
 		public void match_set_cursor_type (int tag, Gdk.CursorType cursor_type);
+		[CCode (type = "GtkWidget*")]
 		public Terminal ();
 		public void paste_primary ();
 		public void reset (bool full, bool clear_history);
@@ -104,7 +105,7 @@ namespace Vte {
 		public void set_color_dim (Gdk.Color dim);
 		public void set_color_foreground (Gdk.Color foreground);
 		public void set_color_highlight (Gdk.Color highlight_background);
-		public void set_colors (Gdk.Color foreground, Gdk.Color background, Gdk.Color[] palette, long palette_size);
+		public void set_colors (Gdk.Color foreground, Gdk.Color background, Gdk.Color[] palette);
 		public void set_cursor_blinks (bool blink);
 		public void set_default_colors ();
 		public void set_delete_binding (Vte.TerminalEraseBinding binding);
@@ -166,10 +167,12 @@ namespace Vte {
 	}
 	[CCode (cheader_filename = "vte/vteaccess.h")]
 	public class TerminalAccessible : Gtk.Accessible, Atk.Component, Atk.Action, Atk.Text {
+		[CCode (type = "AtkObject*")]
 		public TerminalAccessible (Vte.Terminal terminal);
 	}
 	[CCode (cheader_filename = "vte/vte.h")]
 	public class TerminalAccessibleFactory : Atk.ObjectFactory {
+		[CCode (type = "AtkObjectFactory*")]
 		public TerminalAccessibleFactory ();
 	}
 }

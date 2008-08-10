@@ -9,4 +9,5 @@ vte_terminal_forkpty.envv is_array="1"
 VteTerminal::paste_clipboard has_emitter="1"
 VteTerminal.pvt hidden="1"
 vte_terminal_set_colors.palette is_array="1"
+vte_terminal_set_colors.palette_size hidden="1"
 
