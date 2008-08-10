@@ -565,6 +565,51 @@ namespace Gst {
 		public void stamp (Gst.Buffer src);
 		public static weak Gst.Buffer try_new_and_alloc (uint size);
 	}
+	[CCode (ref_function = "gst_caps_ref", unref_function = "gst_caps_unref", cheader_filename = "gst/gst.h")]
+	public class Caps {
+		public GLib.Type type;
+		public int refcount;
+		public Gst.CapsFlags flags;
+		public weak GLib.PtrArray structs;
+		public weak Gst.Caps @ref ();
+		public void unref ();
+		public Caps ();
+		public void append (Gst.Caps caps2);
+		public void append_structure (Gst.Structure structure);
+		public weak Gst.Caps copy ();
+		public weak Gst.Caps copy_nth (uint nth);
+		public bool do_simplify ();
+		public static weak Gst.Caps from_string (string str);
+		public uint get_size ();
+		public weak Gst.Structure get_structure (uint index);
+		public weak Gst.Caps intersect (Gst.Caps caps2);
+		public bool is_always_compatible (Gst.Caps caps2);
+		public bool is_any ();
+		public bool is_empty ();
+		public bool is_equal (Gst.Caps caps2);
+		public bool is_equal_fixed (Gst.Caps caps2);
+		public bool is_fixed ();
+		public bool is_subset (Gst.Caps superset);
+		public static weak Gst.Caps load_thyself (void* parent);
+		public weak Gst.Caps make_writable ();
+		public void merge (Gst.Caps caps2);
+		public void merge_structure (Gst.Structure structure);
+		public Caps.any ();
+		public Caps.empty ();
+		public Caps.full (Gst.Structure struct1, ...);
+		public Caps.full_valist (Gst.Structure structure, void* var_args);
+		public Caps.simple (string media_type, string fieldname, ...);
+		public weak Gst.Caps normalize ();
+		public void remove_structure (uint idx);
+		public void replace (Gst.Caps newcaps);
+		public void* save_thyself (void* parent);
+		public void set_simple (string field, ...);
+		public void set_simple_valist (string field, void* varargs);
+		public weak Gst.Caps subtract (Gst.Caps subtrahend);
+		public weak string to_string ();
+		public void truncate ();
+		public Gst.Caps union (Gst.Caps caps2);
+	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class DebugCategory {
@@ -983,49 +1028,6 @@ namespace Gst {
 		public weak Gst.ValueCompareFunc compare;
 		public weak Gst.ValueSerializeFunc serialize;
 		public weak Gst.ValueDeserializeFunc deserialize;
-	}
-	[Compact]
-	[CCode (ref_function = "gst_caps_ref", unref_function = "gst_caps_unref", cheader_filename = "gst/gst.h")]
-	public class Caps {
-		public GLib.Type type;
-		public int refcount;
-		public Gst.CapsFlags flags;
-		public weak GLib.PtrArray structs;
-		public void append (Gst.Caps caps2);
-		public void append_structure (Gst.Structure structure);
-		public weak Gst.Caps copy ();
-		public weak Gst.Caps copy_nth (uint nth);
-		public bool do_simplify ();
-		public static weak Gst.Caps from_string (string str);
-		public uint get_size ();
-		public weak Gst.Structure get_structure (uint index);
-		public weak Gst.Caps intersect (Gst.Caps caps2);
-		public bool is_always_compatible (Gst.Caps caps2);
-		public bool is_any ();
-		public bool is_empty ();
-		public bool is_equal (Gst.Caps caps2);
-		public bool is_equal_fixed (Gst.Caps caps2);
-		public bool is_fixed ();
-		public bool is_subset (Gst.Caps superset);
-		public static weak Gst.Caps load_thyself (void* parent);
-		public weak Gst.Caps make_writable ();
-		public void merge (Gst.Caps caps2);
-		public void merge_structure (Gst.Structure structure);
-		public Caps.any ();
-		public Caps.empty ();
-		public Caps.full (Gst.Structure struct1, ...);
-		public Caps.full_valist (Gst.Structure structure, void* var_args);
-		public Caps.simple (string media_type, string fieldname, ...);
-		public weak Gst.Caps normalize ();
-		public void remove_structure (uint idx);
-		public void replace (Gst.Caps newcaps);
-		public void* save_thyself (void* parent);
-		public void set_simple (string field, ...);
-		public void set_simple_valist (string field, void* varargs);
-		public weak Gst.Caps subtract (Gst.Caps subtrahend);
-		public weak string to_string ();
-		public void truncate ();
-		public Gst.Caps union (Gst.Caps caps2);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]

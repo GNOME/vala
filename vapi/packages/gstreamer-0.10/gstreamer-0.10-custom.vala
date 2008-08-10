@@ -41,6 +41,11 @@ namespace Gst {
 		public void unref ();
 	}
 
+	public class Caps {
+		public weak Caps @ref ();
+		public void unref ();
+	}
+
 	[Compact]
 	public class DebugCategory {
 		[CCode (cname="GST_DEBUG_CATEGORY_INIT")]
