@@ -138,6 +138,27 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 			if (prop.get_accessor == null) {
 				return;
 			}
+			
+			if (expr.inner is BaseAccess) {
+				if (prop.base_property != null) {
+					var base_class = (Class) prop.base_property.parent_symbol;
+					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
+					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (codegen.current_class.get_lower_case_cname (null))));
+					
+					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
+					ccall.add_argument ((CCodeExpression) expr.inner.ccodenode);
+					expr.ccodenode = ccall;
+					return;
+				} else if (prop.base_interface_property != null) {
+					var base_iface = (Interface) prop.base_interface_property.parent_symbol;
+					string parent_iface_var = "%s_%s_parent_iface".printf (codegen.current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
+
+					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), "get_%s".printf (prop.name)));
+					ccall.add_argument ((CCodeExpression) expr.inner.ccodenode);
+					expr.ccodenode = ccall;
+					return;
+				}
+			}
 
 			if (prop.get_accessor.automatic_body &&
 			    codegen.current_type_symbol == prop.parent_symbol &&

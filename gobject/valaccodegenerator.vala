@@ -3895,6 +3895,27 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public CCodeFunctionCall get_property_set_call (Property prop, MemberAccess ma, CCodeExpression cexpr) {
+		if (ma.inner is BaseAccess) {
+			if (prop.base_property != null) {
+				var base_class = (Class) prop.base_property.parent_symbol;
+				var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
+				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
+				
+				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
+				ccall.add_argument ((CCodeExpression) ma.inner.ccodenode);
+				ccall.add_argument (cexpr);
+				return ccall;
+			} else if (prop.base_interface_property != null) {
+				var base_iface = (Interface) prop.base_interface_property.parent_symbol;
+				string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
+
+				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), "set_%s".printf (prop.name)));
+				ccall.add_argument ((CCodeExpression) ma.inner.ccodenode);
+				ccall.add_argument (cexpr);
+				return ccall;
+			}
+		}
+
 		var set_func = "g_object_set";
 		
 		var base_property = prop;
