@@ -60,7 +60,7 @@ namespace Vte {
 		public long get_char_height ();
 		public long get_char_width ();
 		public long get_column_count ();
-		public void get_cursor_position (long column, long row);
+		public void get_cursor_position (out long column, out long row);
 		public weak string get_default_emulation ();
 		public weak string get_emulation ();
 		public weak string get_encoding ();
