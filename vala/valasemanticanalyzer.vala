@@ -3266,6 +3266,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_conditional_expression (ConditionalExpression expr) {
+		if (expr.condition.error || expr.false_expression.error || expr.true_expression.error) {
+			return;
+		}
+
 		if (!expr.condition.value_type.compatible (bool_type)) {
 			expr.error = true;
 			Report.error (expr.condition.source_reference, "Condition must be boolean");

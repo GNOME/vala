@@ -1,3 +1,9 @@
+2008-08-11  Jared Moore  <jaredm@svn.gnome.org>
+
+	* vala/valasemanticanalyzer.vala:
+
+	Fixed segfault in ternary expressions, bug 547165.
+
 2008-08-10  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodecontext.vala:
