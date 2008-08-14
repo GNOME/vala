@@ -3514,7 +3514,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						// skip sender parameter
 						first = false;
 					} else {
-						dynamic_sig.add_parameter (param);
+						dynamic_sig.add_parameter (param.copy ());
 					}
 				}
 				a.right.target_type = new DelegateType (sig.get_delegate (new ObjectType ((ObjectTypeSymbol) sig.parent_symbol)));

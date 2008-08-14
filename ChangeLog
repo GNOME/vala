@@ -1,3 +1,9 @@
+2008-08-14  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasemanticanalyzer.vala:
+
+	Fix dynamic signal parameters, patch by Ali Sabil
+
 2008-08-14  Levi Bard  <taktaktaktaktaktaktaktaktaktak@gmail.com>
 
 	* gobject/valaccodecompiler.vala:
