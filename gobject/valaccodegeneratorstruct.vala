@@ -27,10 +27,10 @@ public class Vala.CCodeGenerator {
 	public override void visit_struct (Struct st) {
 		var old_type_symbol = current_type_symbol;
 		var old_instance_struct = instance_struct;
-		var old_instance_dispose_fragment = instance_dispose_fragment;
+		var old_instance_finalize_fragment = instance_finalize_fragment;
 		current_type_symbol = st;
 		instance_struct = new CCodeStruct ("_%s".printf (st.get_cname ()));
-		instance_dispose_fragment = new CCodeFragment ();
+		instance_finalize_fragment = new CCodeFragment ();
 
 		CCodeFragment decl_frag;
 		CCodeFragment def_frag;
@@ -55,6 +55,6 @@ public class Vala.CCodeGenerator {
 
 		current_type_symbol = old_type_symbol;
 		instance_struct = old_instance_struct;
-		instance_dispose_fragment = old_instance_dispose_fragment;
+		instance_finalize_fragment = old_instance_finalize_fragment;
 	}
 }

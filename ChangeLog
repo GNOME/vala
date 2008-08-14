@@ -1,5 +1,16 @@
 2008-08-14  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodegeneratorstruct.vala:
+
+	Use finalize instead of dispose to free instance data as dispose
+	should only be used where it is necessary to break reference
+	cycles, and this is possible by manually overriding the dispose
+	method
+
+2008-08-14  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala:
 
 	Add missing casts and checks for non-GObject classes

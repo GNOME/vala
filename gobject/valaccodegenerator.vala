@@ -54,7 +54,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public CCodeFragment source_type_member_definition;
 	public CCodeFragment class_init_fragment;
 	public CCodeFragment instance_init_fragment;
-	public CCodeFragment instance_dispose_fragment;
+	public CCodeFragment instance_finalize_fragment;
 	public CCodeFragment source_signal_marshaller_definition;
 	public CCodeFragment module_init_fragment;
 	
@@ -497,8 +497,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			fc.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, l));
 
-			if (instance_dispose_fragment != null) {
-				instance_dispose_fragment.append (new CCodeExpressionStatement (fc));
+			if (instance_finalize_fragment != null) {
+				instance_finalize_fragment.append (new CCodeExpressionStatement (fc));
 			}
 		}
 	}
@@ -640,13 +640,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				}
 			}
 			
-			if (requires_destroy (f.field_type) && instance_dispose_fragment != null) {
+			if (requires_destroy (f.field_type) && instance_finalize_fragment != null) {
 				var this_access = new MemberAccess.simple ("this");
 				this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 				this_access.ccodenode = new CCodeIdentifier ("self");
 				var ma = new MemberAccess (this_access, f.name);
 				ma.symbol_reference = f;
-				instance_dispose_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.field_type, ma)));
+				instance_finalize_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.field_type, ma)));
 			}
 		} else if (f.binding == MemberBinding.CLASS)  {
 			st.add_field (field_ctype, f.get_cname ());

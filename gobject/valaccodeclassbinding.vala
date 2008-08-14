@@ -41,7 +41,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 		var old_prop_enum = codegen.prop_enum;
 		var old_class_init_fragment = codegen.class_init_fragment;
 		var old_instance_init_fragment = codegen.instance_init_fragment;
-		var old_instance_dispose_fragment = codegen.instance_dispose_fragment;
+		var old_instance_finalize_fragment = codegen.instance_finalize_fragment;
 		codegen.current_symbol = cl;
 		codegen.current_type_symbol = cl;
 		codegen.current_class = cl;
@@ -64,7 +64,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			codegen.prop_enum.add_value (new CCodeEnumValue ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null))));
 			codegen.class_init_fragment = new CCodeFragment ();
 			codegen.instance_init_fragment = new CCodeFragment ();
-			codegen.instance_dispose_fragment = new CCodeFragment ();
+			codegen.instance_finalize_fragment = new CCodeFragment ();
 		}
 
 		CCodeFragment decl_frag;
@@ -175,7 +175,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 
 			if (is_gobject) {
 				if (cl.get_fields ().size > 0 || cl.destructor != null) {
-					add_dispose_function (cl);
+					add_finalize_function (cl);
 				}
 			}
 
@@ -233,10 +233,6 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 				var destroy_block = new CCodeBlock ();
 				var get_class = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (cl.get_upper_case_cname (null))));
 				get_class.add_argument (new CCodeIdentifier ("self"));
-				var finalize = new CCodeMemberAccess.pointer (get_class, "finalize");
-				var finalize_call = new CCodeFunctionCall (finalize);
-				finalize_call.add_argument (new CCodeIdentifier ("self"));
-				//destroy_block.add_statement (new CCodeExpressionStatement (finalize_call));
 				var free = new CCodeFunctionCall (new CCodeIdentifier ("g_type_free_instance"));
 				free.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GTypeInstance *"));
 				destroy_block.add_statement (new CCodeExpressionStatement (free));
@@ -269,7 +265,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 
 			var cblock = new CCodeBlock ();
 
-			cblock.add_statement (codegen.instance_dispose_fragment);
+			cblock.add_statement (codegen.instance_finalize_fragment);
 
 			if (cl.destructor != null) {
 				cblock.add_statement (cl.destructor.ccodenode);
@@ -293,7 +289,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 		codegen.prop_enum = old_prop_enum;
 		codegen.class_init_fragment = old_class_init_fragment;
 		codegen.instance_init_fragment = old_instance_init_fragment;
-		codegen.instance_dispose_fragment = old_instance_dispose_fragment;
+		codegen.instance_finalize_fragment = old_instance_finalize_fragment;
 	}
 	
 	private void add_class_init_function (Class cl) {
@@ -344,11 +340,11 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "constructor"), new CCodeIdentifier ("%s_constructor".printf (cl.get_lower_case_cname (null))))));
 			}
 
-			/* set dispose function */
+			/* set finalize function */
 			if (cl.get_fields ().size > 0 || cl.destructor != null) {
 				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 				ccast.add_argument (new CCodeIdentifier ("klass"));
-				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "dispose"), new CCodeIdentifier ("%s_dispose".printf (cl.get_lower_case_cname (null))))));
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, "finalize"), new CCodeIdentifier ("%s_finalize".printf (cl.get_lower_case_cname (null))))));
 			}
 		}
 
@@ -657,8 +653,8 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 		codegen.source_type_member_definition.append (instance_init);
 	}
 	
-	private void add_dispose_function (Class cl) {
-		var function = new CCodeFunction ("%s_dispose".printf (cl.get_lower_case_cname (null)), "void");
+	private void add_finalize_function (Class cl) {
+		var function = new CCodeFunction ("%s_finalize".printf (cl.get_lower_case_cname (null)), "void");
 		function.modifiers = CCodeModifiers.STATIC;
 		
 		function.add_parameter (new CCodeFormalParameter ("obj", "GObject *"));
@@ -679,12 +675,12 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			cblock.add_statement (cl.destructor.ccodenode);
 		}
 
-		cblock.add_statement (codegen.instance_dispose_fragment);
+		cblock.add_statement (codegen.instance_finalize_fragment);
 
-		// chain up to dispose function of the base class
+		// chain up to finalize function of the base class
 		var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 		ccast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (cl.get_lower_case_cname (null))));
-		ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (ccast, "dispose"));
+		ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (ccast, "finalize"));
 		ccall.add_argument (new CCodeIdentifier ("obj"));
 		cblock.add_statement (new CCodeExpressionStatement (ccall));
 
