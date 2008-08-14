@@ -870,6 +870,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
 				vcall.add_argument (new CCodeIdentifier ("self"));
 				vcall.add_argument (new CCodeIdentifier ("value"));
+				block.add_statement (new CCodeExpressionStatement (vcall));
 			}
 
 			source_type_member_definition.append (function);

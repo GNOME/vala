@@ -53,8 +53,7 @@ public class Sample : Object {
 	}
 }
 
-
-class Maman.Foo : Object {
+abstract class Maman.Foo : Object {
 	private int _public_base_property = 2;
 	public int public_base_property {
 		get {
@@ -64,10 +63,12 @@ class Maman.Foo : Object {
 			_public_base_property = value;
 		}
 	}
+	public abstract int abstract_base_property { get; set; }
 }
 
 class Maman.Bar : Foo {
 	public int public_property { get; set; default = 3; }
+	public override int abstract_base_property { get; set; }
 
 	void do_action () {
 		stdout.printf (" %d %d", public_base_property, public_property);
@@ -82,7 +83,11 @@ class Maman.Bar : Foo {
 		var bar = new Bar ();
 		bar.do_action ();
 		
-		stdout.printf (" 6\n");
+		Foo foo = bar;
+		foo.abstract_base_property = 6;
+		stdout.printf (" %d", foo.abstract_base_property);
+
+		stdout.printf (" 7\n");
 	}
 }
 

@@ -1,3 +1,14 @@
+2008-08-14  Jared Moore  <jaredm@svn.gnome.org>
+
+	* gobject/valaccodegenerator.vala:
+
+	Fixed codegen of abstract property accessors, bug 547226.
+
+	* tests/classes-properties.vala:
+	* tests/classes-properties.exp:
+
+	Added test case for abstract property accessors.
+
 2008-08-10  Thijs Vermeir  <thijsvermeir@gmail.com>
 
 	* vapi/packages/gstreamer-0.10/gstreamer-0.10-custom.vala:
