@@ -1,3 +1,11 @@
+2008-08-14  Levi Bard  <taktaktaktaktaktaktaktaktaktak@gmail.com>
+
+	* gobject/valaccodecompiler.vala:
+	* compiler/valacompiler.vala
+
+	Prevent output filename concatenation when -d is passed with an
+	absolute path to -o, fixes bug 547344
+
 2008-08-14  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodeclassbinding.vala:

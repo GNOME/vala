@@ -293,8 +293,8 @@ class Vala.Compiler : Object {
 			string vapi_filename = "%s.vapi".printf (library);
 
 			// put .vapi file in current directory unless -d has been explicitly specified
-			if (directory != null) {
-				vapi_filename = "%s/%s".printf (context.directory, vapi_filename);
+			if (directory != null && !Path.is_absolute (vapi_filename)) {
+				vapi_filename = "%s%c%s".printf (context.directory, Path.DIR_SEPARATOR, vapi_filename);
 			}
 
 			interface_writer.write_file (context, vapi_filename);
@@ -304,8 +304,8 @@ class Vala.Compiler : Object {
 			string gidl_filename = "%s.gidl".printf (library);
 
 			// put .gidl file in current directory unless -d has been explicitly specified
-			if (directory != null) {
-				gidl_filename = "%s/%s".printf (context.directory, gidl_filename);
+			if (directory != null && !Path.is_absolute( gidl_filename)) {
+				gidl_filename = "%s%c%s".printf (context.directory, Path.DIR_SEPARATOR, gidl_filename);
 			}
 
 			gidl_writer.write_file (context, gidl_filename);

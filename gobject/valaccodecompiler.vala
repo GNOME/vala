@@ -88,8 +88,8 @@ public class Vala.CCodeCompiler : Object {
 			cmdline += " -c";
 		} else if (context.output != null) {
 			string output = context.output;
-			if (context.directory != null && context.directory != "") {
-				output = "%s/%s".printf (context.directory, context.output);
+			if (context.directory != null && context.directory != "" && !Path.is_absolute (context.output)) {
+				output = "%s%c%s".printf (context.directory, Path.DIR_SEPARATOR, context.output);
 			}
 			cmdline += " -o " + Shell.quote (output);
 		}
