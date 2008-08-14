@@ -3471,8 +3471,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var left_type_as_struct = expr.left.value_type.data_type as Struct;
 			var right_type_as_struct = expr.right.value_type.data_type as Struct;
 
-			if (expr.left.value_type.data_type is Class && ((Class) expr.left.value_type.data_type).is_subtype_of (gobject_type) &&
-			    expr.right.value_type.data_type is Class && ((Class) expr.right.value_type.data_type).is_subtype_of (gobject_type)) {
+			if (expr.left.value_type.data_type is Class && !((Class) expr.left.value_type.data_type).is_compact &&
+			    expr.right.value_type.data_type is Class && !((Class) expr.right.value_type.data_type).is_compact) {
 				var left_cl = (Class) expr.left.value_type.data_type;
 				var right_cl = (Class) expr.right.value_type.data_type;
 				
@@ -4048,7 +4048,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public CCodeStatement? create_type_check_statement (CodeNode method_node, DataType ret_type, TypeSymbol t, bool non_null, string var_name) {
 		var ccheck = new CCodeFunctionCall ();
 		
-		if ((t is Class && ((Class) t).is_subtype_of (gobject_type)) || t is Interface) {
+		if ((t is Class && !((Class) t).is_compact) || t is Interface) {
 			var ctype_check = new CCodeFunctionCall (new CCodeIdentifier (get_type_check_function (t)));
 			ctype_check.add_argument (new CCodeIdentifier (var_name));
 			

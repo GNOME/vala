@@ -1,3 +1,9 @@
+2008-08-14  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala:
+
+	Add missing casts and checks for non-GObject classes
+
 2008-08-14  Jared Moore  <jaredm@svn.gnome.org>
 
 	* gobject/valaccodegenerator.vala:
