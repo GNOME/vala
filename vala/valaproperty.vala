@@ -176,6 +176,7 @@ public class Vala.Property : Member, Lockable {
 	 * @return             newly created property
 	 */
 	public Property (string name, DataType property_type, PropertyAccessor? get_accessor, PropertyAccessor? set_accessor, SourceReference? source_reference = null) {
+		base.init ();
 		this.name = name;
 		this.property_type = property_type;
 		this.get_accessor = get_accessor;

@@ -95,12 +95,11 @@ public class Vala.Delegate : TypeSymbol {
 	 * @return            newly created delegate
 	 */
 	public Delegate (string? name, DataType return_type, SourceReference? source_reference = null) {
+		base.init ();
 		this.name = name;
 		this.return_type = return_type;
 		this.source_reference = source_reference;
-	}
 
-	construct {
 		cinstance_parameter_position = -1;
 		carray_length_parameter_position = -3;
 		cdelegate_target_parameter_position = -3;

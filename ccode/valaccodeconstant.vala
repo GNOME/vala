@@ -29,7 +29,7 @@ public class Vala.CCodeConstant : CCodeExpression {
 	/**
 	 * The name of this constant.
 	 */
-	public string name { get; set construct; }
+	public string name { get; set; }
 	
 	public CCodeConstant (string _name) {
 		name = _name;

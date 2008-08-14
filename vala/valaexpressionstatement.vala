@@ -34,7 +34,7 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 		get {
 			return _expression;
 		}
-		set construct {
+		set {
 			_expression = value;
 			_expression.parent_node = this;
 		}

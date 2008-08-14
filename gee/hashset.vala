@@ -27,7 +27,7 @@ using GLib;
 /**
  * Hashtable implementation of the Set interface.
  */
-public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
+public class Gee.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set<G> {
 	public int size {
 		get { return _nnodes; }
 	}
@@ -56,9 +56,6 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 	public HashSet (HashFunc hash_func = GLib.direct_hash, EqualFunc equal_func = GLib.direct_equal) {
 		this.hash_func = hash_func;
 		this.equal_func = equal_func;
-	}
-
-	construct {
 		_array_size = MIN_SIZE;
 		_nodes = new Node<G>[_array_size];
 	}
@@ -164,7 +161,7 @@ public class Gee.HashSet<G> : Object, Iterable<G>, Collection<G>, Set<G> {
 		}
 	}
 
-	private class Iterator<G> : Object, Gee.Iterator<G> {
+	private class Iterator<G> : CollectionObject, Gee.Iterator<G> {
 		public HashSet<G> set {
 			set {
 				_set = value;

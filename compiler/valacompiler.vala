@@ -23,7 +23,7 @@
 
 using GLib;
 
-class Vala.Compiler : Object {
+class Vala.Compiler {
 	static string basedir;
 	static string directory;
 	static bool version;

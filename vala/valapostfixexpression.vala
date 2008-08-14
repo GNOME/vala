@@ -29,7 +29,7 @@ public class Vala.PostfixExpression : Expression {
 	/**
 	 * The operand, must be a variable or a property.
 	 */
-	public Expression inner { get; set construct; }
+	public Expression inner { get; set; }
 	
 	/**
 	 * Specifies whether value should be incremented or decremented.

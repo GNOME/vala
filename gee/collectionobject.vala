@@ -1,6 +1,6 @@
-/* valaccodecastexpression.vala
+/* collectionobject.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,31 +23,8 @@
 using GLib;
 
 /**
- * Represents a type cast in the generated C code.
+ * Base class for all collections.
  */
-public class Vala.CCodeCastExpression : CCodeExpression {
-	/**
-	 * The expression to be cast.
-	 */
-	public CCodeExpression inner { get; set; }
-	
-	/**
-	 * The target type.
-	 */
-	public string type_name { get; set; }
-	
-	public CCodeCastExpression (CCodeExpression expr, string type) {
-		inner = expr;
-		type_name = type;
-	}
-	
-	public override void write (CCodeWriter writer) {
-		writer.write_string ("((");
-		writer.write_string (type_name);
-		writer.write_string (") ");
-
-		writer.write_string ("(");
-		inner.write (writer);
-		writer.write_string ("))");
-	}
+public class Gee.CollectionObject {
 }
+

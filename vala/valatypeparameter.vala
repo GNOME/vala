@@ -43,6 +43,7 @@ public class Vala.TypeParameter : Symbol {
 	 * @return       newly created generic type parameter
 	 */	
 	public TypeParameter (string _name, SourceReference source) {
+		base.init ();
 		name = _name;
 		source_reference = source;
 	}

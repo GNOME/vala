@@ -29,7 +29,7 @@ using Gee;
  * Code nodes get created by the parser and are used throughout the whole
  * compilation process.
  */
-public abstract class Vala.CodeNode : Object {
+public abstract class Vala.CodeNode {
 	/**
 	 * Parent of this code node.
 	 */
@@ -164,7 +164,7 @@ public abstract class Vala.CodeNode : Object {
 	public virtual string to_string () {
 		var str = new StringBuilder ();
 
-		str.append ("/* ").append (get_type ().name ());
+		str.append ("/* ");
 
 		if (source_reference != null) {
 			str.append ("@").append (source_reference.to_string ());

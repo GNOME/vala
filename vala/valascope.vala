@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a part of the symbol tree.
  */
-public class Vala.Scope : Object {
+public class Vala.Scope {
 	/**
 	 * The symbol that owns this scope.
 	 */

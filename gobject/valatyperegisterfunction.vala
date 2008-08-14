@@ -25,7 +25,7 @@ using GLib;
 /**
  * C function to register a type at runtime.
  */
-public abstract class Vala.TypeRegisterFunction : Object {
+public abstract class Vala.TypeRegisterFunction {
 	private CCodeFragment declaration_fragment = new CCodeFragment ();
 
 	private CCodeFragment definition_fragment = new CCodeFragment ();

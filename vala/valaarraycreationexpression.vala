@@ -42,7 +42,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	/**
 	 * The rank of the array.
 	 */
-	public int rank { get; set construct; }
+	public int rank { get; set; }
 	
 	/**
 	 * The size for each dimension ascending from left to right.
@@ -52,7 +52,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	/**
 	 * The root array initializer list.
 	 */
-	public InitializerList? initializer_list { get; set construct; }
+	public InitializerList? initializer_list { get; set; }
 
 	private DataType _element_type;
 

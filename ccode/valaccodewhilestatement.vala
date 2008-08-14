@@ -29,7 +29,7 @@ public class Vala.CCodeWhileStatement : CCodeStatement {
 	/**
 	 * The loop condition.
 	 */
-	public CCodeExpression condition { get; set construct; }
+	public CCodeExpression condition { get; set; }
 	
 	/**
 	 * The loop body.

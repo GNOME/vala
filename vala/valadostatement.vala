@@ -46,7 +46,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 		get {
 			return _condition;
 		}
-		set construct {
+		set {
 			_condition = value;
 			_condition.parent_node = this;
 		}

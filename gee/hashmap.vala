@@ -27,7 +27,7 @@ using GLib;
 /**
  * Hashtable implementation of the Map interface.
  */
-public class Gee.HashMap<K,V> : Object, Map<K,V> {
+public class Gee.HashMap<K,V> : CollectionObject, Map<K,V> {
 	public int size {
 		get { return _nnodes; }
 	}
@@ -62,9 +62,6 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		this.key_hash_func = key_hash_func;
 		this.key_equal_func = key_equal_func;
 		this.value_equal_func = value_equal_func;
-	}
-
-	construct {
 		_array_size = MIN_SIZE;
 		_nodes = new Node<K,V>[_array_size];
 	}
@@ -182,7 +179,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		}
 	}
 
-	private class KeySet<K,V> : Object, Iterable<K>, Collection<K>, Set<K> {
+	private class KeySet<K,V> : CollectionObject, Iterable<K>, Collection<K>, Set<K> {
 		public HashMap<K,V> map {
 			set { _map = value; }
 		}
@@ -222,7 +219,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		}
 	}
 
-	private class KeyIterator<K,V> : Object, Iterator<K> {
+	private class KeyIterator<K,V> : CollectionObject, Iterator<K> {
 		public HashMap<K,V> map {
 			set {
 				_map = value;
@@ -259,7 +256,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		}
 	}
 
-	private class ValueCollection<K,V> : Object, Iterable<V>, Collection<V> {
+	private class ValueCollection<K,V> : CollectionObject, Iterable<V>, Collection<V> {
 		public HashMap<K,V> map {
 			set { _map = value; }
 		}
@@ -305,7 +302,7 @@ public class Gee.HashMap<K,V> : Object, Map<K,V> {
 		}
 	}
 
-	private class ValueIterator<K,V> : Object, Iterator<V> {
+	private class ValueIterator<K,V> : CollectionObject, Iterator<V> {
 		public HashMap<K,V> map {
 			set {
 				_map = value;

@@ -29,7 +29,7 @@ public class Vala.CCodeExpressionStatement : CCodeStatement {
 	/**
 	 * The expression to evaluate.
 	 */
-	public CCodeExpression expression { get; set construct; }
+	public CCodeExpression expression { get; set; }
 	
 	public CCodeExpressionStatement (CCodeExpression expr) {
 		expression = expr;

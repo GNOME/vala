@@ -40,7 +40,7 @@ public class Vala.BinaryExpression : Expression {
 		get {
 			return _left;
 		}
-		set construct {
+		set {
 			_left = value;
 			_left.parent_node = this;
 		}
@@ -53,7 +53,7 @@ public class Vala.BinaryExpression : Expression {
 		get {
 			return _right;
 		}
-		set construct {
+		set {
 			_right = value;
 			_right.parent_node = this;
 		}

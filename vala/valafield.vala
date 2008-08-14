@@ -87,6 +87,7 @@ public class Vala.Field : Member, Lockable {
 	 * @return       newly created field
 	 */
 	public Field (string name, DataType field_type, Expression? initializer, SourceReference? source_reference = null) {
+		base.init ();
 		this.name = name;
 		this.field_type = field_type;
 		this.initializer = initializer;

@@ -34,12 +34,12 @@ public class Vala.CCodeBinaryExpression : CCodeExpression {
 	/**
 	 * The left operand.
 	 */
-	public CCodeExpression left { get; set construct; }
+	public CCodeExpression left { get; set; }
 
 	/**
 	 * The right operand.
 	 */
-	public CCodeExpression right { get; set construct; }
+	public CCodeExpression right { get; set; }
 	
 	public CCodeBinaryExpression (CCodeBinaryOperator op, CCodeExpression l, CCodeExpression r) {
 		operator = op;

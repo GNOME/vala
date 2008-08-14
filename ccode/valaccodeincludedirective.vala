@@ -29,7 +29,7 @@ public class Vala.CCodeIncludeDirective : CCodeNode {
 	/**
 	 * The file to be included.
 	 */
-	public string filename { get; set construct; }
+	public string filename { get; set; }
 	
 	/**
 	 * Specifies whether the specified file should be searched in the local

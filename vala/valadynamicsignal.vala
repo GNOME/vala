@@ -31,6 +31,7 @@ public class Vala.DynamicSignal : Signal {
 	public Expression handler { get; set; }
 
 	public DynamicSignal (DataType dynamic_type, string name, DataType return_type, SourceReference? source_reference = null) {
+		base.init ();
 		this.dynamic_type = dynamic_type;
 		this.name = name;
 		this.return_type = return_type;

@@ -27,7 +27,7 @@ using Gee;
  * Code visitor building the control flow graph.
  */
 public class Vala.CFGBuilder : CodeVisitor {
-	private class JumpTarget : Object {
+	private class JumpTarget {
 		public bool break_target { get; set; }
 		public bool continue_target { get; set; }
 		public bool return_target { get; set; }

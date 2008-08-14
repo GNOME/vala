@@ -25,18 +25,11 @@ using GLib;
 /**
  * Represents a writer to write C source files.
  */
-public class Vala.CCodeWriter : Object {
+public class Vala.CCodeWriter {
 	/**
 	 * Specifies the file to be written.
 	 */
-	public string filename {
-		get {
-			return _filename;
-		}
-		construct {
-			_filename = value;
-		}
-	}
+	public string filename { get; set; }
 
 	/**
 	 * Specifies whether to emit line directives.
@@ -50,7 +43,6 @@ public class Vala.CCodeWriter : Object {
 		get { return _bol; }
 	}
 
-	private string _filename;
 	private string temp_filename;
 	private bool file_exists;
 
@@ -61,8 +53,8 @@ public class Vala.CCodeWriter : Object {
 	/* at begin of line */
 	private bool _bol = true;
 	
-	public CCodeWriter (string _filename) {
-		filename = _filename;
+	public CCodeWriter (string filename) {
+		this.filename = filename;
 	}
 
 	/**
@@ -72,12 +64,12 @@ public class Vala.CCodeWriter : Object {
 	 *         false otherwise
 	 */
 	public bool open () {
-		file_exists = FileUtils.test (_filename, FileTest.EXISTS);
+		file_exists = FileUtils.test (filename, FileTest.EXISTS);
 		if (file_exists) {
-			temp_filename = "%s.valatmp".printf (_filename);
+			temp_filename = "%s.valatmp".printf (filename);
 			stream = FileStream.open (temp_filename, "w");
 		} else {
-			stream = FileStream.open (_filename, "w");
+			stream = FileStream.open (filename, "w");
 		}
 
 		return (stream != null);
@@ -93,7 +85,7 @@ public class Vala.CCodeWriter : Object {
 			var changed = true;
 
 			try {
-				var old_file = new MappedFile (_filename, false);
+				var old_file = new MappedFile (filename, false);
 				var new_file = new MappedFile (temp_filename, false);
 				var len = old_file.get_length ();
 				if (len == new_file.get_length ()) {
@@ -108,7 +100,7 @@ public class Vala.CCodeWriter : Object {
 			}
 			
 			if (changed) {
-				FileUtils.rename (temp_filename, _filename);
+				FileUtils.rename (temp_filename, filename);
 			} else {
 				FileUtils.unlink (temp_filename);
 			}

@@ -40,7 +40,7 @@ public class Vala.UnaryExpression : Expression {
 		get {
 			return _inner;
 		}
-		set construct {
+		set {
 			_inner = value;
 			_inner.parent_node = this;
 		}

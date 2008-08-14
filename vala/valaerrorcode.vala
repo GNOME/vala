@@ -40,6 +40,7 @@ public class Vala.ErrorCode : Symbol {
 	 * @return     newly created enum value
 	 */
 	public ErrorCode (string name, SourceReference? source_reference = null) {
+		base.init ();
 		this.name = name;
 		this.source_reference = source_reference;
 	}
@@ -52,6 +53,7 @@ public class Vala.ErrorCode : Symbol {
 	 * @return      newly created enum value
 	 */
 	public ErrorCode.with_value (string name, Expression value, SourceReference? source_reference = null) {
+		base.init ();
 		this.name = name;
 		this.value = value;
 		this.source_reference = source_reference;

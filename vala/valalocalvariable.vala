@@ -66,6 +66,7 @@ public class Vala.LocalVariable : Symbol {
 	 * @return       newly created variable declarator
 	 */
 	public LocalVariable (DataType? variable_type, string name, Expression? initializer = null, SourceReference? source_reference = null) {
+		base.init ();
 		this.variable_type = variable_type;
 		this.name = name;
 		this.initializer = initializer;

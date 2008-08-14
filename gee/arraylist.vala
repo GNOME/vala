@@ -27,7 +27,7 @@ using GLib;
 /**
  * Arrays of arbitrary elements which grow automatically as elements are added.
  */
-public class Gee.ArrayList<G> : Object, Iterable<G>, Collection<G>, List<G> {
+public class Gee.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, List<G> {
 	public int size {
 		get { return _size; }
 	}
@@ -152,7 +152,7 @@ public class Gee.ArrayList<G> : Object, Iterable<G>, Collection<G>, List<G> {
 		_items.resize (value);
 	}
 
-	private class Iterator<G> : Object, Gee.Iterator<G> {
+	private class Iterator<G> : CollectionObject, Gee.Iterator<G> {
 		public ArrayList<G> list {
 			set {
 				_list = value;

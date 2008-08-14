@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a reference to a location in a source file.
  */
-public class Vala.SourceReference : Object {
+public class Vala.SourceReference {
 	/**
 	 * The source file to be referenced.
 	 */

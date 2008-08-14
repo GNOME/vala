@@ -33,7 +33,7 @@ public class Vala.CastExpression : Expression {
 		get {
 			return _inner;
 		}
-		set construct {
+		set {
 			_inner = value;
 			_inner.parent_node = this;
 		}
@@ -53,7 +53,7 @@ public class Vala.CastExpression : Expression {
 	/**
 	 * Checked casts return NULL instead of raising an error.
 	 */
-	public bool is_silent_cast { get; set construct; }
+	public bool is_silent_cast { get; set; }
 
 	private Expression _inner;
 

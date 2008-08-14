@@ -26,7 +26,7 @@ using GLib;
 /**
  * Abstract code node visitor for traversing source code tree.
  */
-public abstract class Vala.CodeVisitor : Object {
+public abstract class Vala.CodeVisitor {
 	/**
 	 * Visit operation called for source files.
 	 *

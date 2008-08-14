@@ -30,12 +30,12 @@ public class Vala.NamedArgument : CodeNode {
 	/**
 	 * The name of a property.
 	 */
-	public string name { get; set construct; }
+	public string name { get; set; }
 	
 	/**
 	 * The expression the property should assign.
 	 */
-	public Expression argument { get; set construct; }
+	public Expression argument { get; set; }
 	
 	/**
 	 * Creates a new named argument.

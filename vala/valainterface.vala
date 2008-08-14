@@ -61,6 +61,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @return       newly created interface
 	 */
 	public Interface (string name, SourceReference? source_reference = null) {
+		base.init ();
 		this.source_reference = source_reference;
 		this.name = name;
 	}

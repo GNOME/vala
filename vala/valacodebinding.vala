@@ -25,5 +25,5 @@ using GLib;
 /**
  * The link between a source code node and generated code.
  */
-public abstract class Vala.CodeBinding : Object {
+public abstract class Vala.CodeBinding {
 }

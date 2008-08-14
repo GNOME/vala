@@ -29,7 +29,7 @@ public class Vala.CCodeMacroReplacement : CCodeNode {
 	/**
 	 * The name of this macro.
 	 */
-	public string name { get; set construct; }
+	public string name { get; set; }
 
 	/**
 	 * The replacement of this macro.

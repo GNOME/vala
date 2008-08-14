@@ -33,7 +33,7 @@ public class Vala.WhileStatement : CodeNode, Statement {
 		get {
 			return _condition;
 		}
-		set construct {
+		set {
 			_condition = value;
 			_condition.parent_node = this;
 		}

@@ -34,7 +34,7 @@ public class Vala.CCodeUnaryExpression : CCodeExpression {
 	/**
 	 * The operand.
 	 */
-	public CCodeExpression inner { get; set construct; }
+	public CCodeExpression inner { get; set; }
 	
 	public CCodeUnaryExpression (CCodeUnaryOperator op, CCodeExpression expr) {
 		operator = op;

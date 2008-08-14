@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a general class member.
  */
-public class Vala.Member : Symbol {
+public abstract class Vala.Member : Symbol {
 	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
 	
 	public override void accept (CodeVisitor visitor) {

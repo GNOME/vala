@@ -29,12 +29,12 @@ public class Vala.InstanceCast : CCodeFunctionCall {
 	/**
 	 * The target type.
 	 */
-	public weak TypeSymbol type_reference { get; set construct; }
+	public weak TypeSymbol type_reference { get; set; }
 	
 	/**
 	 * The expression to be cast.
 	 */
-	public CCodeExpression inner { get; set construct; }
+	public CCodeExpression inner { get; set; }
 	
 	/**
 	 * Creates a new instance cast expression.
@@ -46,9 +46,7 @@ public class Vala.InstanceCast : CCodeFunctionCall {
 	public InstanceCast (CCodeExpression expr, TypeSymbol type) {
 		inner = expr;
 		type_reference = type;
-	}
-	
-	construct {
+
 		call = new CCodeIdentifier (type_reference.get_upper_case_cname (null));
 		add_argument ((CCodeExpression) inner);
 	}

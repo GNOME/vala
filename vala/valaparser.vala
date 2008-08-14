@@ -59,7 +59,7 @@ public class Vala.Parser : CodeVisitor {
 		VIRTUAL = 1 << 6
 	}
 
-	construct {
+	public Parser () {
 		tokens = new TokenInfo[BUFFER_SIZE];
 	}
 

@@ -27,7 +27,7 @@ using Gee;
  * Represents a basic block, i.e. a straight-line piece of code without any
  * jumps or jump targets.
  */
-public class Vala.BasicBlock : Object {
+public class Vala.BasicBlock {
 	private Gee.List<CodeNode> nodes = new ArrayList<CodeNode> ();
 
 	private Gee.List<weak BasicBlock> predecessors = new ArrayList<weak BasicBlock> ();

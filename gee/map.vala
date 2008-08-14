@@ -23,7 +23,7 @@
 /**
  * A map is a generic collection of key/value pairs.
  */
-public interface Gee.Map<K,V> : GLib.Object {
+public interface Gee.Map<K,V> : CollectionObject {
 	/**
 	 * The number of items in this map.
 	 */

@@ -32,12 +32,10 @@ public class Vala.ArrayResizeMethod : Method {
 	 * @return newly created method
 	 */
 	public ArrayResizeMethod (SourceReference source_reference) {
+		base.init ();
 		name = "resize";
 		external = true;
 		this.source_reference = source_reference;
-	}
-
-	construct {
 		cinstance_parameter_position = 0.1;
 	}
 }

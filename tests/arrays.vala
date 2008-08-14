@@ -4,7 +4,7 @@ class Maman.Foo : Object {
 	public Foo (construct string bar) {
 	}
 
-	public string bar { get; set construct; }
+	public string bar { get; set; }
 
 	static void test_integer_array () {
 		stdout.printf ("One dimensional array creation and assignment: 1");

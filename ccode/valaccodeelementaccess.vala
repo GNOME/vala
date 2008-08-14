@@ -31,13 +31,13 @@ public class Vala.CCodeElementAccess : CCodeExpression {
 	/**
 	 * Expression representing the container on which we want to access.
 	 */
-	public CCodeExpression container { get; set construct; }
+	public CCodeExpression container { get; set; }
 	
 	/**
 	 * Expression representing the index we want to access inside the
 	 * container.
 	 */
-	public CCodeExpression index { get; set construct; }
+	public CCodeExpression index { get; set; }
 	
 	public CCodeElementAccess (CCodeExpression cont, CCodeExpression i) {
 		container = cont;

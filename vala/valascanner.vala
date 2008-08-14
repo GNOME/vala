@@ -26,8 +26,8 @@ using Gee;
 /**
  * Lexical scanner for Vala source files.
  */
-public class Vala.Scanner : Object {
-	public SourceFile source_file { get; construct; }
+public class Vala.Scanner {
+	public SourceFile source_file { get; private set; }
 
 	char* current;
 	char* end;
@@ -39,9 +39,7 @@ public class Vala.Scanner : Object {
 
 	public Scanner (SourceFile source_file) {
 		this.source_file = source_file;
-	}
-	
-	construct {
+
 		char* begin = source_file.get_mapped_contents ();
 		end = begin + source_file.get_mapped_length ();
 

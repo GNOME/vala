@@ -68,6 +68,7 @@ public class Vala.Constant : Member, Lockable {
 	 * @return                 newly created constant
 	 */
 	public Constant (string name, DataType type_reference, Expression? initializer, SourceReference? source_reference) {
+		base.init ();
 		this.name = name;
 		this.type_reference = type_reference;
 		this.initializer = initializer;

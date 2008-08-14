@@ -29,7 +29,7 @@ public class Vala.CCodeLineDirective : CCodeNode {
 	/**
 	 * The name of the source file to be presumed.
 	 */
-	public string filename { get; set construct; }
+	public string filename { get; set; }
 	
 	/**
 	 * The line number in the source file to be presumed.

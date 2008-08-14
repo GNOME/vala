@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a read-only collection of items.
  */
-public class Gee.ReadOnlyCollection<G> : Object, Iterable<G>, Collection<G> {
+public class Gee.ReadOnlyCollection<G> : CollectionObject, Iterable<G>, Collection<G> {
 	public int size {
 		get { return _collection.size; }
 	}
@@ -72,7 +72,7 @@ public class Gee.ReadOnlyCollection<G> : Object, Iterable<G>, Collection<G> {
 		assert_not_reached ();
 	}
 
-	private class Iterator<G> : Object, Gee.Iterator<G> {
+	private class Iterator<G> : CollectionObject, Gee.Iterator<G> {
 		public bool next () {
 			return false;
 		}

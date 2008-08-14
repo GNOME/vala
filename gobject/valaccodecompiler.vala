@@ -25,7 +25,7 @@ using GLib;
 /**
  * Interface to the C compiler.
  */
-public class Vala.CCodeCompiler : Object {
+public class Vala.CCodeCompiler {
 	public CCodeCompiler () {
 	}
 

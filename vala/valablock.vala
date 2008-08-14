@@ -42,6 +42,7 @@ public class Vala.Block : Symbol, Statement {
 	 * @param source reference to source code
 	 */
 	public Block (SourceReference source_reference) {
+		base.init ();
 		this.source_reference = source_reference;
 	}
 	

@@ -26,7 +26,7 @@ using Gee;
 /**
  * The root of the code tree.
  */
-public class Vala.CodeContext : Object {
+public class Vala.CodeContext {
 	/**
 	 * Specifies the name of the library to be built.
 	 *
@@ -158,13 +158,9 @@ public class Vala.CodeContext : Object {
 	/**
 	 * The selected code generator.
 	 */
-	public CodeGenerator codegen { get; set; }
+	public CodeGenerator codegen { get; set; default = new CodeGenerator (); }
 
 	public CodeContext () {
-	}
-
-	construct {
-		codegen = new CodeGenerator ();
 	}
 
 	/**

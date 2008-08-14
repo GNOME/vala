@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents a Vala source or VAPI package file.
  */
-public class Vala.SourceFile : Object {
+public class Vala.SourceFile {
 	/**
 	 * The name of this source file.
 	 */

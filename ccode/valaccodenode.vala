@@ -1,6 +1,6 @@
 /* valaccodenode.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a node in the C code tree.
  */
-public abstract class Vala.CCodeNode : Object {
+public abstract class Vala.CCodeNode {
 	/**
 	 * The source file name and line number to be presumed for this code
 	 * node.

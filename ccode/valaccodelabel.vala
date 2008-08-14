@@ -29,7 +29,7 @@ public class Vala.CCodeLabel : CCodeStatement {
 	/**
 	 * The name of this label.
 	 */
-	public string name { get; set construct; }
+	public string name { get; set; }
 
 	public CCodeLabel (string name) {
 		this.name = name;

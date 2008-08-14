@@ -43,7 +43,7 @@ public class Vala.ForeachStatement : Block {
 	/**
 	 * Specifies the element variable name.
 	 */
-	public string variable_name { get; set construct; }
+	public string variable_name { get; set; }
 	
 	/**
 	 * Specifies the container.
@@ -52,7 +52,7 @@ public class Vala.ForeachStatement : Block {
 		get {
 			return _collection;
 		}
-		set construct {
+		set {
 			_collection = value;
 			_collection.parent_node = this;
 		}
@@ -101,6 +101,7 @@ public class Vala.ForeachStatement : Block {
 	 * @return       newly created foreach statement
 	 */
 	public ForeachStatement (DataType? type_reference, string variable_name, Expression collection, Block body, SourceReference source_reference) {
+		base.init ();
 		this.variable_name = variable_name;
 		this.collection = collection;
 		this.body = body;

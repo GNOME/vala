@@ -26,7 +26,7 @@ using GLib;
 /**
  * Represents a lockable object.
  */
-public interface Vala.Lockable : Object {
+public interface Vala.Lockable {
 	/**
 	 * Indicates a specific lockable object beeing actually locked somewhere.
 	 */

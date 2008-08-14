@@ -32,6 +32,7 @@ public class Vala.DynamicProperty : Property {
 	private string cname;
 
 	public DynamicProperty (DataType dynamic_type, string name, SourceReference? source_reference = null) {
+		base.init ();
 		this.dynamic_type = dynamic_type;
 		this.name = name;
 		this.source_reference = source_reference;

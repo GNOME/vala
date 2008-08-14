@@ -66,7 +66,7 @@ public abstract class Vala.Symbol : CodeNode {
 	 * of the block to determine which variables need to be freed before
 	 * jump statements.
 	 */
-	public bool active { get; set; }
+	public bool active { get; set; default = true; }
 
 	/**
 	 * Specifies the accessibility of this symbol. Public accessibility
@@ -118,9 +118,8 @@ public abstract class Vala.Symbol : CodeNode {
 	private weak Scope _owner;
 	private Scope _scope;
 
-	construct {
+	public void init () {
 		_scope = new Scope (this);
-		active = true;
 	}
 	
 	/**

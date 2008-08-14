@@ -33,7 +33,7 @@ public class Vala.IfStatement : CodeNode, Statement {
 		get {
 			return _condition;
 		}
-		set construct {
+		set {
 			_condition = value;
 			_condition.parent_node = this;
 		}
@@ -42,12 +42,12 @@ public class Vala.IfStatement : CodeNode, Statement {
 	/**
 	 * The statement to be evaluated if the condition holds.
 	 */
-	public Block true_statement { get; set construct; }
+	public Block true_statement { get; set; }
 	
 	/**
 	 * The optional statement to be evaluated if the condition doesn't hold.
 	 */
-	public Block? false_statement { get; set construct; }
+	public Block? false_statement { get; set; }
 
 	private Expression _condition;
 

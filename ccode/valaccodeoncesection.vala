@@ -29,7 +29,7 @@ public class Vala.CCodeOnceSection : CCodeFragment {
 	/**
 	 * The name of the guarding define.
 	 */
-	public string define { get; set construct; }
+	public string define { get; set; }
 	
 	public CCodeOnceSection (string def) {
 		define = def;

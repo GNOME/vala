@@ -29,12 +29,12 @@ public class Vala.CCodeMemberAccess : CCodeExpression {
 	/**
 	 * The parent of the member.
 	 */
-	public CCodeExpression inner { get; set construct; }
+	public CCodeExpression inner { get; set; }
 	
 	/**
 	 * The name of the member.
 	 */
-	public string member_name { get; set construct; }
+	public string member_name { get; set; }
 	
 	/**
 	 * Specifies whether the member access happens by pointer dereferencing.

@@ -67,7 +67,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		PRIVATE = 1 << 7
 	}
 
-	construct {
+	public Parser () {
 		tokens = new TokenInfo[BUFFER_SIZE];
 		class_name = null;
 		current_expr_is_lambda = false;

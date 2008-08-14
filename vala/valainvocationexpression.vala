@@ -32,7 +32,7 @@ public class Vala.InvocationExpression : Expression {
 	 */
 	public Expression call {
 		get { return _call; }
-		set construct {
+		set {
 			_call = value;
 			_call.parent_node = this;
 		}

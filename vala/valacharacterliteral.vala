@@ -34,7 +34,7 @@ public class Vala.CharacterLiteral : Literal {
 		get {
 			return _value;
 		}
-		set construct {
+		set {
 			_value = value;
 			
 			if (!value.validate () || (value.len () != 3 && value.next_char ().get_char () != '\\')) {

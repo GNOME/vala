@@ -53,6 +53,7 @@ public class Vala.CreationMethod : Method {
 	 * @return                 newly created method
 	 */
 	public CreationMethod (string? type_name, string? name, SourceReference? source_reference = null) {
+		base.init ();
 		this.name = name;
 		this.source_reference = source_reference;
 		this.type_name = type_name;

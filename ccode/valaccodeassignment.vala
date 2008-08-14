@@ -29,7 +29,7 @@ public class Vala.CCodeAssignment : CCodeExpression {
 	/**
 	 * Left hand side of the assignment.
 	 */
-	public CCodeExpression left { get; construct; }
+	public CCodeExpression left { get; set; }
 	
 	/**
 	 * Assignment operator.
@@ -39,7 +39,7 @@ public class Vala.CCodeAssignment : CCodeExpression {
 	/**
 	 * Right hand side of the assignment.
 	 */
-	public CCodeExpression right { get; construct; }
+	public CCodeExpression right { get; set; }
 	
 	public CCodeAssignment (CCodeExpression l, CCodeExpression r, CCodeAssignmentOperator op = CCodeAssignmentOperator.SIMPLE) {
 		left = l;

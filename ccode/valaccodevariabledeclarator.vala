@@ -29,7 +29,7 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 	/**
 	 * The variable name.
 	 */
-	public string name { get; set construct; }
+	public string name { get; set; }
 	
 	/**
 	 * The optional initializer expression.

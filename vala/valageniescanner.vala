@@ -27,10 +27,10 @@ using Gee;
 /**
  * Lexical scanner for Genie source files.
  */
-public class Vala.Genie.Scanner : Object {
-	public SourceFile source_file { get; construct; }
+public class Vala.Genie.Scanner {
+	public SourceFile source_file { get; private set; }
 
-	public int indent_spaces { get;set;}
+	public int indent_spaces { get; set;}
 
 	char* begin;
 	char* current;
@@ -48,13 +48,9 @@ public class Vala.Genie.Scanner : Object {
 
 	string _comment;
 	
-	
-
 	public Scanner (SourceFile source_file) {
 		this.source_file = source_file;
-	}
 
-	construct {
 		begin = source_file.get_mapped_contents ();
 		end = begin + source_file.get_mapped_length ();
 

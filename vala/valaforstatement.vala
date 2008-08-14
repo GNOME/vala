@@ -34,7 +34,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 		get {
 			return _condition;
 		}
-		set construct {
+		set {
 			_condition = value;
 			if (_condition != null) {
 				_condition.parent_node = this;

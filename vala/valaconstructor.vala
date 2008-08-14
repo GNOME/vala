@@ -48,6 +48,7 @@ public class Vala.Constructor : Symbol {
 	 * @return       newly created constructor
 	 */
 	public Constructor (SourceReference source) {
+		base.init ();
 		source_reference = source;
 	}
 

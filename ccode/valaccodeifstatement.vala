@@ -29,17 +29,17 @@ public class Vala.CCodeIfStatement : CCodeStatement {
 	/**
 	 * The boolean condition to evaluate.
 	 */
-	public CCodeExpression condition { get; set construct; }
+	public CCodeExpression condition { get; set; }
 	
 	/**
 	 * The statement to be evaluated if the condition holds.
 	 */
-	public CCodeStatement true_statement { get; set construct; }
+	public CCodeStatement true_statement { get; set; }
 	
 	/**
 	 * The optional statement to be evaluated if the condition doesn't hold.
 	 */
-	public CCodeStatement? false_statement { get; set construct; }
+	public CCodeStatement? false_statement { get; set; }
 	
 	public CCodeIfStatement (CCodeExpression cond, CCodeStatement true_stmt, CCodeStatement? false_stmt = null) {
 		condition = cond;

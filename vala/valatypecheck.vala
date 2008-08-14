@@ -29,7 +29,7 @@ public class Vala.TypeCheck : Expression {
 	/**
 	 * The expression to be checked.
 	 */
-	public Expression expression { get; set construct; }
+	public Expression expression { get; set; }
 	
 	/**
 	 * The type to be matched against.

@@ -29,7 +29,7 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 	/**
 	 * The local variable or constant declaration.
 	 */
-	public Symbol declaration { get; set construct; }
+	public Symbol declaration { get; set; }
 
 	/**
 	 * Creates a new declaration statement.
