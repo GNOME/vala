@@ -1,3 +1,9 @@
+2008-08-16  Zeeshan Ali Khattak  <zeenix@gmail.com>
+
+	* vapi/glib-2.0.vapi:
+
+	Add g_get_real_name binding
+
 2008-08-14  Jürg Billeter  <j@bitron.ch>
 
 	Don't derive from GObject in libvala where not necessary to improve

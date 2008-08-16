@@ -2037,6 +2037,8 @@ namespace GLib {
 		public static string[] list_variables ();
 		[CCode (cname = "g_get_user_name")]
 		public static weak string get_user_name ();
+		[CCode (cname = "g_get_real_name")]
+		public static weak string get_real_name ();
 		[CCode (cname = "g_get_user_cache_dir")]
 		public static weak string get_user_cache_dir ();
 		[CCode (cname = "g_get_user_data_dir")]
