@@ -49,6 +49,7 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		var dynamic_property = (DynamicProperty) node;
 
 		var func = new CCodeFunction (getter_cname, node.property_type.get_cname ());
+		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
 
 		func.add_parameter (new CCodeFormalParameter ("obj", dynamic_property.dynamic_type.get_cname ()));
 
@@ -81,6 +82,7 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		var dynamic_property = (DynamicProperty) node;
 
 		var func = new CCodeFunction (getter_cname, "void");
+		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
 
 		func.add_parameter (new CCodeFormalParameter ("obj", dynamic_property.dynamic_type.get_cname ()));
 		func.add_parameter (new CCodeFormalParameter ("value", node.property_type.get_cname ()));
