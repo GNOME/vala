@@ -24,4 +24,8 @@ namespace Gdk {
 	public const Atom SELECTION_PRIMARY;
 	public const Atom SELECTION_SECONDARY;
 	public const Atom SELECTION_CLIPBOARD;
+
+  [CCode (ref_function = "g_object_ref", unref_function = "g_object_unref")]
+  public class Bitmap {
+  }
 }

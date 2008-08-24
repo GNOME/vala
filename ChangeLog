@@ -1,5 +1,16 @@
 2008-08-24  Thijs Vermeir  <thijsvermeir@gmail.com>
 
+	* vapi/packages/gdk-2.0/gdk-2.0-custom.vala:
+
+	Add Bitmap class to prevent it from being a compact class
+
+	* vapi/packages/gdk-2.0/gdk-2.0.metadata:
+	transfer ownership on gdk_bitmap_create_from_data
+
+	* vapi/gdk-2.0.vapi: Regenerated
+
+2008-08-24  Thijs Vermeir  <thijsvermeir@gmail.com>
+
 	* vapi/packages/gdk-2.0/gdk-2.0.metadata:
 
 	Set gdk_window_set_cursor.cursor nullable
