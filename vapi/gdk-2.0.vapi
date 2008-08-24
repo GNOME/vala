@@ -1024,7 +1024,7 @@ namespace Gdk {
 		public void set_child_input_shapes ();
 		public void set_child_shapes ();
 		public void set_composited (bool composited);
-		public void set_cursor (Gdk.Cursor cursor);
+		public void set_cursor (Gdk.Cursor? cursor);
 		public static void set_debug_updates (bool setting);
 		public void set_decorations (Gdk.WMDecoration decorations);
 		public void set_events (Gdk.EventMask event_mask);
