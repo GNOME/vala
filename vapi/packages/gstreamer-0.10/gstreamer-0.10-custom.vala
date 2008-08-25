@@ -28,6 +28,10 @@ namespace Gst {
 	public struct ClockTimeDiff : int64 {
 	}
 
+	[CCode (ref_function = "gst_event_ref", unref_function = "gst_event_unref")]
+	public class Event {
+	}
+
 	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref")]
 	public class Object {
 		public weak Object @ref ();
