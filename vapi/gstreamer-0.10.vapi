@@ -598,6 +598,10 @@ namespace Gst {
 		public Buffer ();
 		public weak Gst.Buffer @ref ();
 		public void unref ();
+		[CCode (cname = "GST_BUFFER_FLAG_SET")]
+		public void flag_set (Gst.BufferFlag flag);
+		[CCode (cname = "GST_BUFFER_FLAG_UNSET")]
+		public void flag_unset (Gst.BufferFlag flag);
 		public void copy_metadata (Gst.Buffer src, Gst.BufferCopyFlags flags);
 		public weak Gst.Buffer create_sub (uint offset, uint size);
 		public weak Gst.Caps get_caps ();
@@ -611,7 +615,7 @@ namespace Gst {
 		public void set_caps (Gst.Caps caps);
 		public weak Gst.Buffer span (uint offset, Gst.Buffer buf2, uint len);
 		public void stamp (Gst.Buffer src);
-		public static weak Gst.Buffer try_new_and_alloc (uint size);
+		public static Gst.Buffer try_new_and_alloc (uint size);
 	}
 	[CCode (ref_function = "gst_caps_ref", unref_function = "gst_caps_unref", cheader_filename = "gst/gst.h")]
 	public class Caps {

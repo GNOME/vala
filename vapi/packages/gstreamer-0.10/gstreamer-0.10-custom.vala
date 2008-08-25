@@ -43,6 +43,10 @@ namespace Gst {
 		public Buffer ();
 		public weak Buffer @ref ();
 		public void unref ();
+		[CCode (cname = "GST_BUFFER_FLAG_SET")]
+		public void flag_set (BufferFlag flag);
+		[CCode (cname = "GST_BUFFER_FLAG_UNSET")]
+		public void flag_unset (BufferFlag flag);
 	}
 
 	public class Caps {
