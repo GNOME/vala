@@ -1577,6 +1577,8 @@ namespace GLib {
 		public static int cmp (void* s1, void* s2, size_t n);
 		[CCode (cname = "memcpy")]
 		public static void* copy (void* dest, void* src, size_t n);
+		[CCode (cname = "memset")]
+		public static void* set (void* dest, int src, size_t n);
 		[CCode (cname = "g_memmove")]
 		public static void* move (void* dest, void* src, size_t n);
 		[CCode (cname = "g_memdup")]

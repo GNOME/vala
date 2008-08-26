@@ -1,3 +1,9 @@
+2008-08-26  Thijs Vermeir  <thijsvermeir@gmail.com>
+
+	* vapi/glib-2.0.vapi:
+
+	Add memset binding
+
 2008-08-25  Thijs Vermeir  <thijsvermeir@gmail.com>
 
 	* vapi/packages/gstreamer-0.10/gstreamer-0.10-custom.vala:
