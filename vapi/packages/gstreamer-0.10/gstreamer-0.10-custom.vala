@@ -49,6 +49,26 @@ namespace Gst {
 		public void flag_unset (BufferFlag flag);
 	}
 
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class Pad {
+		[CCode (array_length_pos = 0, delegate_target_pos = 0)]
+		public Pad (string name, Gst.PadDirection direction);
+
+		public uint add_buffer_probe (BufferProbeCallback handler);
+		public uint add_buffer_probe_full (BufferProbeCallback handler, GLib.DestroyNotify notify);
+		public uint add_data_probe (DataProbeCallback handler);
+		public uint add_data_probe_full (DataProbeCallback handler, GLib.DestroyNotify notify);
+		public uint add_event_probe (EventProbeCallback handler);
+		public uint add_event_probe_full (EventProbeCallback handler, GLib.DestroyNotify notify);
+	}
+
+	[CCode (cname="GCallback")]
+	public delegate bool BufferProbeCallback (Gst.Pad pad, Gst.Buffer buffer);
+	[CCode (cname="GCallback")]
+	public delegate bool EventProbeCallback (Gst.Pad pad, Gst.Event event);
+	[CCode (cname="GCallback")]
+	public delegate bool DataProbeCallback (Gst.Pad pad, Gst.MiniObject data);
+
 	public class Caps {
 		public weak Caps @ref ();
 		public void unref ();
