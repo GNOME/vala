@@ -1,5 +1,5 @@
 /*
- * WARNING: this vapi file is provided only to support devlopment of gnome-panel applets
+ * WARNING: this vapi file is provided only to support development of gnome-panel applets
  * since libbonoboui is deprecated (http://library.gnome.org/devel/references.html.en_GB)
  */
 
@@ -11,7 +11,8 @@ namespace BonoboUI {
 		public void* user_data;
 	}
 
-	public class Component
+	[CCode (type_check_function = "BONOBO_IS_UI_COMPONENT")]
+	public class Component : GLib.Object
 	{
 	}
 
