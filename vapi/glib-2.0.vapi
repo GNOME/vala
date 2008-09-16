@@ -2726,8 +2726,10 @@ namespace GLib {
 	public class MarkupParseContext {
 		public MarkupParseContext (MarkupParser parser, MarkupParseFlags _flags, void* user_data, DestroyNotify? user_data_dnotify);
 		public bool parse (string text, long text_len) throws MarkupError;
+		public bool end_parse () throws MarkupError;
 		public weak string get_element ();
 		public weak SList<string> get_element_stack ();
+		public void get_position (out int line_number, out int char_number);
 	}
 	
 	[NoArrayLength]

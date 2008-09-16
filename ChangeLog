@@ -2,6 +2,14 @@
 
 	* vapi/glib-2.0.vapi:
 
+	Add g_markup_parse_context_end_parse and
+	g_markup_parse_context_get_position bindings,
+	patch by Hans Vercammen, fixes bug 547533
+
+2008-09-16  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
 	Add bindings for fseek, ftell, and rewind, patch by Mart Roosmaa,
 	fixes bug 547196
 
