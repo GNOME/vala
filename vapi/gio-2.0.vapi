@@ -591,7 +591,8 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class ThemedIcon : GLib.Object, GLib.Icon {
 		public void append_name (string iconname);
-		public weak string get_names ();
+		[NoArrayLength]
+		public weak string[] get_names ();
 		[CCode (type = "GIcon*")]
 		public ThemedIcon (string iconname);
 		[CCode (type = "GIcon*")]
