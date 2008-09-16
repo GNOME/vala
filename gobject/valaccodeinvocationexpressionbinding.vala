@@ -392,7 +392,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		if (ellipsis) {
 			/* ensure variable argument list ends with NULL
 			 * except when using printf-style arguments */
-			if ((m == null || !m.printf_format)) {
+			if (!m.printf_format && m.sentinel != "") {
 				carg_map.set (codegen.get_param_pos (-1, true), new CCodeConstant (m.sentinel));
 			}
 		} else if (itype is DelegateType) {
