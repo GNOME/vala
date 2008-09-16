@@ -429,6 +429,10 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								cl.is_immutable = true;
 							}
+						} else if (nv[0] == "abstract" && base_class != null) {
+							if (eval (nv[1]) == "1") {
+								cl.is_abstract = true;
+							}
 						}
 					}
 				}
@@ -1352,7 +1356,12 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						m.is_abstract = true;
 					}
+				} else if (nv[0] == "virtual") {
+					if (eval (nv[1]) == "1") {
+						m.is_virtual = true;
+					}
 				}
+
 			}
 		}
 		

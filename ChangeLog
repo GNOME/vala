@@ -1,3 +1,10 @@
+2008-09-16  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valagidlparser.vala:
+
+	Add support for virtual and abstract metadata attributes,
+	patch by Andrea Del Signore, fixes bug 551205
+
 2008-09-13  Andrea Del Signore  <sejerpz@tin.it>
 
 	* vapi/libbonoboui-2.0.vapi: 
