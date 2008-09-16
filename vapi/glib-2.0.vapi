@@ -760,11 +760,11 @@ public class string {
 	[CCode (cname = "atol")]
 	public long to_long ();
 	[CCode (cname = "strtod")]
-	public double to_double (out string endptr = null);
+	public double to_double (out weak string endptr = null);
 	[CCode (cname = "strtoul")]
-	public ulong to_ulong (out string endptr = null, int _base = 0);
+	public ulong to_ulong (out weak string endptr = null, int _base = 0);
 	[CCode (cname = "g_ascii_strtoll")]
-	public int64 to_int64 (out string endptr = null, int _base = 0);
+	public int64 to_int64 (out weak string endptr = null, int _base = 0);
 	[CCode (cname = "strlen")]
 	public long size ();
 
