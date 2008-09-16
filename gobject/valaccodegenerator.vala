@@ -1066,7 +1066,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			source_type_member_declaration.append (base_init.copy ());
 
-			base_init.block = (CCodeBlock) c.body.ccodenode;
+			var block = (CCodeBlock) c.body.ccodenode;
+			if (current_method_inner_error) {
+				/* always separate error parameter and inner_error local variable
+				 * as error may be set to NULL but we're always interested in inner errors
+				 */
+				var cdecl = new CCodeDeclaration ("GError *");
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+				block.prepend_statement (cdecl);
+			}
+
+			base_init.block = block;
 		
 			source_type_member_definition.append (base_init);
 		} else if (c.binding == MemberBinding.STATIC) {

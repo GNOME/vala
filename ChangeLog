@@ -1,5 +1,13 @@
 2008-09-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Fix error handling in constructors, patch by Jared Moore,
+	fixes bug 543156
+
+2008-09-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeinvocationexpressionbinding.vala:
 
 	Support disabling sentinels, patch by Sam Liddicott,

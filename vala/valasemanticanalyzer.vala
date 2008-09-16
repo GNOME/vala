@@ -729,6 +729,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		c.accept_children (this);
 
+		foreach (DataType body_error_type in c.body.get_error_types ()) {
+			Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+		}
+
 		current_symbol = current_symbol.parent_symbol;
 	}
 
@@ -1222,6 +1226,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		stmt.error_expression.target_type.value_owned = true;
 
 		stmt.accept_children (this);
+
+		var error_type = stmt.error_expression.value_type.copy ();
+		error_type.source_reference = stmt.source_reference;
+
+		stmt.add_error_type (error_type);
 	}
 
 	public override void visit_try_statement (TryStatement stmt) {
