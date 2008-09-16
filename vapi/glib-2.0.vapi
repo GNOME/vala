@@ -2116,7 +2116,8 @@ namespace GLib {
 	[Compact]
 	[CCode (free_function = "g_scanner_destroy")]
 	public class Scanner {
-		public Scanner (ScannerConfig config_templ);
+		public weak string input_name;
+		public Scanner (ScannerConfig? config_templ);
 		public void input_file (int input_fd);
 		public void sync_file_offset ();
 		public void input_text (string text, uint text_len);
@@ -2137,7 +2138,7 @@ namespace GLib {
 		public void warn (string format, ...);
 		[PrintfFormat]
 		public void error (string format, ...);
-		public void unexp_token (TokenType expected_token, string identifier_spec, string symbol_spec, string symbol_name, string message, int is_error);
+		public void unexp_token (TokenType expected_token, string? identifier_spec, string? symbol_spec, string? symbol_name, string? message, bool is_error);
 	}
 
 	public struct ScannerConfig {
@@ -2145,40 +2146,36 @@ namespace GLib {
 		public string cset_identifier_first;
 		public string cset_identifier_nth;
 		public string cpair_comment_single;
-		public uint case_sensitive;
-		public uint skip_comment_multi;
-		public uint skip_comment_single;
-		public uint scan_comment_multi;
-		public uint scan_identifier;
-		public uint scan_identifier_1char;
-		public uint scan_identifier_NULL;
-		public uint scan_symbols;
-		public uint scan_binary;
-		public uint scan_octal;
-		public uint scan_float;
-		public uint scan_hex;
-		public uint scan_hex_dollar;
-		public uint scan_string_sq;
-		public uint scan_string_dq;
-		public uint numbers_2_int;
-		public uint int_2_float;
-		public uint identifier_2_string;
-		public uint char_2_token;
-		public uint symbol_2_token;
-		public uint scope_0_fallback;
-		public uint store_int64;
+		public bool case_sensitive;
+		public bool skip_comment_multi;
+		public bool skip_comment_single;
+		public bool scan_comment_multi;
+		public bool scan_identifier;
+		public bool scan_identifier_1char;
+		public bool scan_identifier_NULL;
+		public bool scan_symbols;
+		public bool scan_binary;
+		public bool scan_octal;
+		public bool scan_float;
+		public bool scan_hex;
+		public bool scan_hex_dollar;
+		public bool scan_string_sq;
+		public bool scan_string_dq;
+		public bool numbers_2_int;
+		public bool int_2_float;
+		public bool identifier_2_string;
+		public bool char_2_token;
+		public bool symbol_2_token;
+		public bool scope_0_fallback;
+		public bool store_int64;
 	}
 
+	[CCode (lower_case_cprefix="G_CSET_")]
 	namespace CharacterSet {
-		[CCode (cname = "G_CSET_A_2_Z")]
 		public const string A_2_Z;
-		[CCode (cname = "G_CSET_a_2_z")]
 		public const string a_2_z;
-		[CCode (cname = "G_CSET_DIGITS")]
 		public const string DIGITS;
-		[CCode (cname = "G_CSET_LATINC")]
 		public const string LATINC;
-		[CCode (cname = "G_CSET_LATINS")]
 		public const string LATINS;
 	}
 

@@ -1,5 +1,12 @@
 2008-09-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	GScanner binding fixes, patch by Matías De la Puente,
+	fixes bug 548093
+
+2008-09-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gio-2.0/:
 
 	Fix g_themed_icon_get_names binding, patch by Gregor Burger,
