@@ -2406,6 +2406,13 @@ namespace GLib {
 		EXISTS
 	}
 
+	[CCode (cprefix = "SEEK_", has_type_id = false)]
+	public enum FileSeek {
+		SET,
+		CUR,
+		END
+	}
+
 	[Compact]
 	[CCode (cname = "FILE", free_function = "fclose", cheader_filename = "stdio.h")]
 	public class FileStream {
@@ -2430,6 +2437,12 @@ namespace GLib {
 		public int scanf (string format, ...);
 		[CCode (cname = "fflush")]
 		public int flush ();
+		[CCode (cname = "fseek")]
+		public int seek (long offset, FileSeek whence);
+		[CCode (cname = "ftell")]
+		public long tell ();
+		[CCode (cname = "rewind")]
+		public void rewind ();
 	}
 
 	[CCode (lower_case_cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]

@@ -1,5 +1,12 @@
 2008-09-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Add bindings for fseek, ftell, and rewind, patch by Mart Roosmaa,
+	fixes bug 547196
+
+2008-09-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 
 	Check for structs without fields, patch by Jared Moore,
