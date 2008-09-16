@@ -869,6 +869,9 @@ namespace GLib {
 		public ParamFlags flags;
 		public Type value_type;
 		public Type owner_type;
+		public weak string get_blurb ();
+		public weak string get_name ();
+		public weak string get_nick ();
 	}
 
 	public class ParamSpecEnum : ParamSpec {

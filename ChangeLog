@@ -1,3 +1,10 @@
+2008-09-16  Gabriel Falcão  <gabriel@nacaolivre.org>
+
+	* vapi/glib-2.0.vapi:
+
+	Add support to get ParamSpec metadata by the methods:
+	get_nick(), get_name(), get_blurb(), fixes bug 552320
+
 2008-09-16  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala:
