@@ -1,5 +1,12 @@
 2008-09-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+
+	Check for structs without fields, patch by Jared Moore,
+	fixes bug 543562
+
+2008-09-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/enchant.vapi:
 
 	Various fixes, patch by Jan Rosczak, fixes bug 549131

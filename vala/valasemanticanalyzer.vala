@@ -318,6 +318,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		st.accept_children (this);
 
+		if (!st.external && st.get_base_types ().size == 0 && st.get_fields ().size == 0) {
+			Report.error (st.source_reference, "structs cannot be empty");
+		}
+
 		current_symbol = current_symbol.parent_symbol;
 		current_struct = null;
 	}
