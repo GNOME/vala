@@ -1,5 +1,11 @@
 2008-09-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/enchant.vapi:
+
+	Various fixes, patch by Jan Rosczak, fixes bug 549131
+
+2008-09-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Fix strtod, strtoul, and g_ascii_strtoll bindings,
