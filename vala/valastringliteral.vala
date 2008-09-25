@@ -54,7 +54,7 @@ public class Vala.StringLiteral : Literal {
 		}
 		
 		/* remove quotes */
-		var noquotes = value.offset (1).ndup ((uint) (value.len () - 2));
+		var noquotes = value.substring (1, (uint) (value.len () - 2));
 		/* unescape string */
 		return noquotes.compress ();
 	}

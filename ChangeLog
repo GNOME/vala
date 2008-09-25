@@ -1,5 +1,12 @@
 2008-09-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valastringliteral.vala:
+
+	Fix processing of non-ASCII string literals,
+	patch by Alexey Lubimov, fixes bug 547236
+
+2008-09-25  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/libsoup-2.2:
 	* vapi/packages/libsoup-2.4:
 
