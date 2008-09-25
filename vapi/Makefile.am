@@ -33,6 +33,7 @@ dist_vapi_DATA = \
 	gnome-vfs-2.0.vapi \
 	goocanvas.deps \
 	goocanvas.vapi \
+	gsl.vapi \
 	gstreamer-0.10.deps \
 	gstreamer-0.10.vapi \
 	gstreamer-audio-0.10.deps \
