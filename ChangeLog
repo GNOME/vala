@@ -1,5 +1,17 @@
 2008-09-25  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/libsoup-2.2:
+	* vapi/packages/libsoup-2.4:
+
+	Fix soup_uri_decode and soup_uri_encode bindings
+
+	* vapi/libsoup-2.2.vapi:
+	* vapi/libsoup-2.4.vapi:
+
+	Regenerated
+
+2008-09-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacreationmethod.vala:
 
 	Fix parameter position defaults

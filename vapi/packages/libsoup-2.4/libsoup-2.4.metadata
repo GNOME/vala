@@ -16,6 +16,8 @@ SoupMessage::wrote_headers has_emitter="1"
 SoupMessage::wrote_informational has_emitter="1"
 soup_server_new ellipsis="1"
 soup_session_queue_message.msg transfer_ownership="1"
+soup_uri_decode transfer_ownership="1"
+soup_uri_encode transfer_ownership="1"
 
 # unsupported
 GData name="pointer"

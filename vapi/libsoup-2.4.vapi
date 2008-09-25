@@ -167,7 +167,7 @@ namespace Soup {
 	}
 	[Compact]
 	[CCode (copy_function = "soup_buffer_copy", cheader_filename = "libsoup/soup.h")]
-	public class Buffer : GLib.Boxed {
+	public class Buffer {
 		public weak string data;
 		public ulong length;
 		public weak Soup.Buffer copy ();
@@ -178,11 +178,11 @@ namespace Soup {
 	}
 	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class ByteArray : GLib.Boxed {
+	public class ByteArray {
 	}
 	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class ClientContext : GLib.Boxed {
+	public class ClientContext {
 		public weak Soup.Address get_address ();
 		public weak Soup.AuthDomain get_auth_domain ();
 		public weak string get_auth_user ();
@@ -191,7 +191,7 @@ namespace Soup {
 	}
 	[Compact]
 	[CCode (copy_function = "soup_date_copy", cheader_filename = "libsoup/soup.h")]
-	public class Date : GLib.Boxed {
+	public class Date {
 		public int year;
 		public int month;
 		public int day;
@@ -210,7 +210,7 @@ namespace Soup {
 	}
 	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class MessageBody : GLib.Boxed {
+	public class MessageBody {
 		public weak string data;
 		public int64 length;
 		public void append (Soup.MemoryUse use, void* data, ulong length);
@@ -223,7 +223,7 @@ namespace Soup {
 	}
 	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class MessageHeaders : GLib.Boxed {
+	public class MessageHeaders {
 		public void append (string name, string value);
 		public void clear ();
 		public void @foreach (Soup.MessageHeadersForeachFunc func);
@@ -240,7 +240,7 @@ namespace Soup {
 	}
 	[Compact]
 	[CCode (copy_function = "soup_uri_copy", cheader_filename = "libsoup/soup.h")]
-	public class URI : GLib.Boxed {
+	public class URI {
 		public weak string scheme;
 		public weak string user;
 		public weak string password;
@@ -250,8 +250,8 @@ namespace Soup {
 		public weak string query;
 		public weak string fragment;
 		public weak Soup.URI copy ();
-		public static weak string decode (string part);
-		public static weak string encode (string part, string escape_extra);
+		public static string decode (string part);
+		public static string encode (string part, string escape_extra);
 		public bool equal (Soup.URI uri2);
 		public URI (string uri_string);
 		public URI.with_base (Soup.URI @base, string uri_string);
@@ -339,6 +339,7 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class AuthDomainBasic : Soup.AuthDomain {
+		[CCode (type = "SoupAuthDomain*")]
 		public AuthDomainBasic (string optname1);
 		public static void set_auth_callback (Soup.AuthDomain domain, Soup.AuthDomainBasicAuthCallback callback, GLib.DestroyNotify dnotify);
 		[NoAccessorMethod]
@@ -349,6 +350,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class AuthDomainDigest : Soup.AuthDomain {
 		public static weak string encode_password (string username, string realm, string password);
+		[CCode (type = "SoupAuthDomain*")]
 		public AuthDomainDigest (string optname1);
 		public static void set_auth_callback (Soup.AuthDomain domain, Soup.AuthDomainDigestAuthCallback callback, GLib.DestroyNotify dnotify);
 		[NoAccessorMethod]
@@ -483,12 +485,16 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class SessionAsync : Soup.Session {
+		[CCode (type = "SoupSession*")]
 		public SessionAsync ();
+		[CCode (type = "SoupSession*")]
 		public SessionAsync.with_options (string optname1);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class SessionSync : Soup.Session {
+		[CCode (type = "SoupSession*")]
 		public SessionSync ();
+		[CCode (type = "SoupSession*")]
 		public SessionSync.with_options (string optname1);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]

@@ -272,7 +272,7 @@ namespace Soup {
 		public weak Soup.Uri copy ();
 		public weak Soup.Uri copy_root ();
 		public static void decode (string part);
-		public static weak string encode (string part, string escape_extra);
+		public static string encode (string part, string escape_extra);
 		public bool equal (Soup.Uri uri2);
 		public Uri (string uri_string);
 		public Uri.with_base (Soup.Uri @base, string uri_string);
@@ -474,12 +474,16 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class SessionAsync : Soup.Session, Soup.MessageFilter {
+		[CCode (type = "SoupSession*")]
 		public SessionAsync ();
+		[CCode (type = "SoupSession*")]
 		public SessionAsync.with_options (string optname1);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class SessionSync : Soup.Session, Soup.MessageFilter {
+		[CCode (type = "SoupSession*")]
 		public SessionSync ();
+		[CCode (type = "SoupSession*")]
 		public SessionSync.with_options (string optname1);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
