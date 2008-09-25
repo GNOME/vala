@@ -58,6 +58,9 @@ public class Vala.CreationMethod : Method {
 		this.source_reference = source_reference;
 		this.type_name = type_name;
 		return_type = new VoidType ();
+
+		carray_length_parameter_position = -3;
+		cdelegate_target_parameter_position = -3;
 	}
 
 	public override void accept (CodeVisitor visitor) {
