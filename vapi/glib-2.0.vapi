@@ -1512,7 +1512,7 @@ namespace GLib {
 	[Compact]
 	[CCode (free_function = "g_thread_pool_free")]
 	public class ThreadPool {
-		public ThreadPool (Func func, void* user_data, int max_threads, bool exclusive) throws ThreadError;
+		public ThreadPool (Func func, int max_threads, bool exclusive) throws ThreadError;
 		public void push (void* data) throws ThreadError;
 		public void set_max_threads (int max_threads) throws ThreadError;
 		public int get_max_threads ();
@@ -1522,7 +1522,7 @@ namespace GLib {
 		public static int get_max_unused_threads ();
 		public static uint get_num_unused_threads ();
 		public static void stop_unused_threads ();
-		public void set_sort_function (CompareDataFunc func, void* user_data);
+		public void set_sort_function (CompareDataFunc func);
 		public static void set_max_idle_time (uint interval);
 		public static uint get_max_idle_time ();
 	}
@@ -1534,23 +1534,23 @@ namespace GLib {
 	public class AsyncQueue {
 		public AsyncQueue ();
 		public void push (void* data);
-		public void push_sorted (void* data, CompareDataFunc func, void* user_data);
+		public void push_sorted (void* data, CompareDataFunc func);
 		public void* pop ();
 		public void* try_pop ();
 		public void* timed_pop (ref TimeVal end_time);
 		public int length ();
-		public void sort (CompareDataFunc func, void* user_data);
+		public void sort (CompareDataFunc func);
 		public void @lock ();
 		public void unlock ();
 		public void ref_unlocked ();
 		public void unref_and_unlock ();
 		public void push_unlocked (void* data);
-		public void push_sorted_unlocked (void* data, CompareDataFunc func, void* user_data);
+		public void push_sorted_unlocked (void* data, CompareDataFunc func);
 		public void* pop_unlocked ();
 		public void* try_pop_unlocked ();
 		public void* timed_pop_unlocked (ref TimeVal end_time);
 		public int length_unlocked ();
-		public void sort_unlocked (CompareDataFunc func, void* user_data);
+		public void sort_unlocked (CompareDataFunc func);
 	}
 
 	/* Memory Allocation */
