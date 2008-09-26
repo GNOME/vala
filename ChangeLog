@@ -1,5 +1,13 @@
 2008-09-26  Jürg Billeter  <j@bitron.ch>
 
+	* gobject-introspection/scanner.c:
+	* gobject-introspection/scannerlexer.l:
+
+	Add missing stdlib.h include,
+	patch by Alexander Bokovoy, fixes bug 547569
+
+2008-09-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraytype.vala:
 	* vala/valadatatype.vala:
 
