@@ -65,4 +65,8 @@ public class Vala.RealLiteral : Literal {
 	public override bool is_pure () {
 		return true;
 	}
+
+	public override string to_string () {
+		return value;
+	}
 }
