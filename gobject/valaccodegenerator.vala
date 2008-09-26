@@ -3167,9 +3167,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				}
 			}
 
+			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+
 			bool ellipsis = false;
 
 			int i = 1;
+			int arg_pos;
 			Iterator<FormalParameter> params_it = params.iterator ();
 			foreach (Expression arg in expr.get_argument_list ()) {
 				CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
@@ -3177,20 +3180,31 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				if (params_it.next ()) {
 					param = params_it.get ();
 					ellipsis = param.ellipsis;
-					if (!param.ellipsis) {
+					if (!ellipsis) {
+						if (!param.no_array_length && param.parameter_type is ArrayType) {
+							var array_type = (ArrayType) param.parameter_type;
+							for (int dim = 1; dim <= array_type.rank; dim++) {
+								carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), get_array_length_cexpression (arg, dim));
+							}
+						} else if (param.parameter_type is DelegateType) {
+							var deleg_type = (DelegateType) param.parameter_type;
+							var d = deleg_type.delegate_symbol;
+							if (d.has_target) {
+								var delegate_target = get_delegate_target_cexpression (arg);
+								carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), delegate_target);
+							}
+						}
+
 						cexpr = handle_struct_argument (param, arg, cexpr);
 					}
+
+					arg_pos = get_param_pos (param.cparameter_position, ellipsis);
+				} else {
+					// default argument position
+					arg_pos = get_param_pos (i, ellipsis);
 				}
 			
-				creation_call.add_argument (cexpr);
-
-				if (param != null && param.parameter_type is DelegateType) {
-					var deleg_type = (DelegateType) param.parameter_type;
-					var d = deleg_type.delegate_symbol;
-					if (d.has_target) {
-						creation_call.add_argument (get_delegate_target_cexpression (arg));
-					}
-				}
+				carg_map.set (arg_pos, cexpr);
 
 				i++;
 			}
@@ -3212,8 +3226,25 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				 * parameter yet */
 				param.default_expression.accept (this);
 			
-				creation_call.add_argument ((CCodeExpression) param.default_expression.ccodenode);
+				carg_map.set (get_param_pos (param.cparameter_position), (CCodeExpression) param.default_expression.ccodenode);
 				i++;
+			}
+
+			// append C arguments in the right order
+			int last_pos = -1;
+			int min_pos;
+			while (true) {
+				min_pos = -1;
+				foreach (int pos in carg_map.get_keys ()) {
+					if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
+						min_pos = pos;
+					}
+				}
+				if (min_pos == -1) {
+					break;
+				}
+				creation_call.add_argument (carg_map.get (min_pos));
+				last_pos = min_pos;
 			}
 
 			if ((st != null && !st.is_simple_type ()) && m.cinstance_parameter_position < 0) {
