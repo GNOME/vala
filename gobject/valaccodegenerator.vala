@@ -3178,26 +3178,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					param = params_it.get ();
 					ellipsis = param.ellipsis;
 					if (!param.ellipsis) {
-						// pass non-simple struct instances always by reference
-						if (param.parameter_type.data_type is Struct && !((Struct) param.parameter_type.data_type).is_simple_type ()) {
-							// we already use a reference for arguments of ref and out parameters
-							if (param.direction == ParameterDirection.IN) {
-								if (cexpr is CCodeIdentifier) {
-									cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
-								} else {
-									// if cexpr is e.g. a function call, we can't take the address of the expression
-									// (tmp = expr, &tmp)
-									var ccomma = new CCodeCommaExpression ();
-
-									var temp_var = get_temp_variable (arg.value_type);
-									temp_vars.insert (0, temp_var);
-									ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), cexpr));
-									ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name)));
-
-									cexpr = ccomma;
-								}
-							}
-						}
+						cexpr = handle_struct_argument (param, arg, cexpr);
 					}
 				}
 			
@@ -3312,6 +3293,35 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else if (creation_expr != null) {
 			expr.ccodenode = creation_expr;
 		}
+	}
+
+	public CCodeExpression? handle_struct_argument (FormalParameter param, Expression arg, CCodeExpression? cexpr) {
+		// pass non-simple struct instances always by reference
+		if (!(arg.value_type is NullType) && param.parameter_type.data_type is Struct && !((Struct) param.parameter_type.data_type).is_simple_type ()) {
+			// we already use a reference for arguments of ref, out, and nullable parameters
+			if (param.direction == ParameterDirection.IN && !param.parameter_type.nullable) {
+				var unary = cexpr as CCodeUnaryExpression;
+				if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
+					// *expr => expr
+					return unary.inner;
+				} else if (cexpr is CCodeIdentifier || cexpr is CCodeMemberAccess) {
+					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
+				} else {
+					// if cexpr is e.g. a function call, we can't take the address of the expression
+					// (tmp = expr, &tmp)
+					var ccomma = new CCodeCommaExpression ();
+
+					var temp_var = get_temp_variable (arg.value_type);
+					temp_vars.insert (0, temp_var);
+					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), cexpr));
+					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name)));
+
+					return ccomma;
+				}
+			}
+		}
+
+		return cexpr;
 	}
 
 	public override void visit_sizeof_expression (SizeofExpression expr) {

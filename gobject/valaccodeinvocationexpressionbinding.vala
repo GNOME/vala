@@ -208,30 +208,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 						multiple_cargs = true;
 					}
 
-					// pass non-simple struct instances always by reference
-					if (!(arg.value_type is NullType) && param.parameter_type.data_type is Struct && !((Struct) param.parameter_type.data_type).is_simple_type ()) {
-						// we already use a reference for arguments of ref, out, and nullable parameters
-						if (param.direction == ParameterDirection.IN && !param.parameter_type.nullable) {
-							var unary = cexpr as CCodeUnaryExpression;
-							if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
-								// *expr => expr
-								cexpr = unary.inner;
-							} else if (cexpr is CCodeIdentifier || cexpr is CCodeMemberAccess) {
-								cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
-							} else {
-								// if cexpr is e.g. a function call, we can't take the address of the expression
-								// (tmp = expr, &tmp)
-								var ccomma = new CCodeCommaExpression ();
-
-								var temp_var = codegen.get_temp_variable (arg.value_type);
-								codegen.temp_vars.insert (0, temp_var);
-								ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), cexpr));
-								ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name)));
-
-								cexpr = ccomma;
-							}
-						}
-					}
+					cexpr = codegen.handle_struct_argument (param, arg, cexpr);
 
 					if (multiple_cargs && arg is InvocationExpression) {
 						// if vala argument is invocation expression
