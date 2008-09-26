@@ -563,9 +563,16 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 				}
 				if (base_class != null && cl_method.parent_symbol != cl) {
 					// method inherited from base class
-					
+
+					var base_method = cl_method;
+					if (cl_method.base_method != null) {
+						base_method = cl_method.base_method;
+					} else if (cl_method.base_interface_method != null) {
+						base_method = cl_method.base_interface_method;
+					}
+
 					var ciface = new CCodeIdentifier ("iface");
-					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), new CCodeIdentifier (cl_method.get_cname ()))));
+					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), new CCodeIdentifier (base_method.get_cname ()))));
 				}
 			}
 		}
@@ -611,15 +618,22 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			}
 			if (base_class != null && cl_prop.parent_symbol != cl) {
 				// property inherited from base class
-				
+
+				var base_property = cl_prop;
+				if (cl_prop.base_property != null) {
+					base_property = cl_prop.base_property;
+				} else if (cl_prop.base_interface_property != null) {
+					base_property = cl_prop.base_interface_property;
+				}
+
 				var ciface = new CCodeIdentifier ("iface");
 
-				if (prop.get_accessor != null) {
-					string cname = "%s_real_get_%s".printf (cl.get_lower_case_cname (null), prop.name);
+				if (base_property.get_accessor != null) {
+					string cname = base_property.get_accessor.get_cname ();
 					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), new CCodeIdentifier (cname))));
 				}
-				if (prop.set_accessor != null) {
-					string cname = "%s_real_set_%s".printf (cl.get_lower_case_cname (null), prop.name);
+				if (base_property.set_accessor != null) {
+					string cname = base_property.set_accessor.get_cname ();
 					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), new CCodeIdentifier (cname))));
 				}
 			}

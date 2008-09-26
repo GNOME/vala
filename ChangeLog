@@ -1,5 +1,13 @@
 2008-09-26  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeclassbinding.vala:
+
+	Use correct accessor cname for interface implementations of
+	properties inherited from a base class,
+	based on patch by Florian Brosch, fixes bug 548895
+
+2008-09-26  Jürg Billeter  <j@bitron.ch>
+
 	* gobject-introspection/scanner.c:
 	* gobject-introspection/scannerlexer.l:
 
