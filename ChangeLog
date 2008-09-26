@@ -1,5 +1,25 @@
 2008-09-26  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am:
+	* vala/valacodevisitor.vala:
+	* vala/valagenieparser.vala:
+	* vala/valaparser.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasourcefile.vala:
+	* vala/valasymbolresolver.vala:
+	* vala/valaunresolvedsymbol.vala:
+	* vala/valausingdirective.vala:
+	* compiler/valacompiler.vala:
+
+	Replace NamespaceReference by UsingDirective and UnresolvedSymbol,
+	fixes bug 537510
+
+	* tests/namespaces.vala:
+
+	Test using directive with nested namespaces
+
+2008-09-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valarealliteral.vala:
 
 	Implement RealLiteral.to_string, patch by Ali Sabil

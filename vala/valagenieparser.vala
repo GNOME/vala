@@ -2337,7 +2337,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 	void add_uses_clause () throws ParseError {
 		var begin = get_location ();
 		var sym = parse_symbol_name ();
-		var ns_ref = new NamespaceReference (sym.name, get_src (begin));
+		var ns_ref = new UsingDirective (sym, get_src (begin));
 
 		scanner.source_file.add_using_directive (ns_ref);
 	}

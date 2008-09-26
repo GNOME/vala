@@ -20,21 +20,14 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
-
 /**
  * An unresolved reference to a symbol.
  */
-public class Vala.UnresolvedSymbol : CodeNode {
+public class Vala.UnresolvedSymbol : Symbol {
 	/**
 	 * The parent of the symbol or null.
 	 */
 	public UnresolvedSymbol? inner { get; set; }
-
-	/**
-	 * The symbol name.
-	 */
-	public string name { get; set; }
 
 	/**
 	 * Qualified access to global symbol.

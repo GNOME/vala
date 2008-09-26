@@ -30,7 +30,7 @@ using Gee;
 public class Vala.SymbolResolver : CodeVisitor {
 	Symbol root_symbol;
 	Scope current_scope;
-	Gee.List<NamespaceReference> current_using_directives;
+	Gee.List<UsingDirective> current_using_directives;
 	
 	/**
 	 * Resolve symbol names in the specified code context.
@@ -179,12 +179,15 @@ public class Vala.SymbolResolver : CodeVisitor {
 		b.accept_children (this);
 	}
 
-	public override void visit_namespace_reference (NamespaceReference ns) {
-		ns.namespace_symbol = current_scope.lookup (ns.name);
-		if (ns.namespace_symbol == null) {
-			ns.error = true;
-			Report.error (ns.source_reference, "The namespace name `%s' could not be found".printf (ns.name));
-			return;
+	public override void visit_using_directive (UsingDirective ns) {
+		var unresolved_symbol = ns.namespace_symbol as UnresolvedSymbol;
+		if (unresolved_symbol != null) {
+			ns.namespace_symbol = resolve_symbol (unresolved_symbol);
+			if (ns.namespace_symbol == null) {
+				ns.error = true;
+				Report.error (ns.source_reference, "The namespace name `%s' could not be found".printf (unresolved_symbol.to_string ()));
+				return;
+			}
 		}
 	}
 
@@ -200,7 +203,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 				scope = scope.parent_scope;
 			}
 			if (sym == null) {
-				foreach (NamespaceReference ns in current_using_directives) {
+				foreach (UsingDirective ns in current_using_directives) {
 					if (ns.error) {
 						continue;
 					}

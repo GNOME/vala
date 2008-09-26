@@ -69,7 +69,7 @@ public class Vala.SourceFile {
 	 */
 	public weak CodeContext context { get; set; }
 
-	private Gee.List<NamespaceReference> using_directives = new ArrayList<NamespaceReference> ();
+	private Gee.List<UsingDirective> using_directives = new ArrayList<UsingDirective> ();
 
 	private Gee.List<CodeNode> nodes = new ArrayList<CodeNode> ();
 	
@@ -109,23 +109,39 @@ public class Vala.SourceFile {
 	 *
 	 * @param ns reference to namespace
 	 */
-	public void add_using_directive (NamespaceReference ns) {
-		foreach (NamespaceReference using_directive in using_directives) {
-			if (using_directive.name == ns.name) {
+	public void add_using_directive (UsingDirective ns) {
+		foreach (UsingDirective using_directive in using_directives) {
+			if (same_symbol (using_directive.namespace_symbol, ns.namespace_symbol)) {
 				// ignore duplicates
 				return;
 			}
 		}
 		using_directives.add (ns);
 	}
-	
+
+	bool same_symbol (Symbol? sym1, Symbol? sym2) {
+		if (sym1 == sym2) {
+			return true;
+		}
+
+		var unresolved_symbol1 = sym1 as UnresolvedSymbol;
+		var unresolved_symbol2 = sym2 as UnresolvedSymbol;
+		if (unresolved_symbol1 != null && unresolved_symbol2 != null) {
+			if (same_symbol (unresolved_symbol1.inner, unresolved_symbol2.inner)) {
+				return (unresolved_symbol1.name == unresolved_symbol2.name);
+			}
+		}
+
+		return false;
+	}
+
 	/**
 	 * Returns a copy of the list of using directives.
 	 *
 	 * @return using directive list
 	 */
-	public Gee.List<NamespaceReference> get_using_directives () {
-		return new ReadOnlyList<NamespaceReference> (using_directives);
+	public Gee.List<UsingDirective> get_using_directives () {
+		return new ReadOnlyList<UsingDirective> (using_directives);
 	}
 	
 	/**
@@ -155,7 +171,7 @@ public class Vala.SourceFile {
 	}
 
 	public void accept_children (CodeVisitor visitor) {
-		foreach (NamespaceReference ns_ref in using_directives) {
+		foreach (UsingDirective ns_ref in using_directives) {
 			ns_ref.accept (visitor);
 		}
 		

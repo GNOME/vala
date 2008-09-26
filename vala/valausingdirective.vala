@@ -1,4 +1,4 @@
-/* valanamespacereference.vala
+/* valausingdirective.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter
  *
@@ -25,30 +25,24 @@ using GLib;
 /**
  * A reference to a namespace symbol.
  */
-public class Vala.NamespaceReference : CodeNode {
+public class Vala.UsingDirective : CodeNode {
 	/**
-	 * The name of the namespace this reference is referring to.
+	 * The symbol of the namespace this using directive is referring to.
 	 */
-	public string name { get; set; }
-	
-	/**
-	 * The resolved symbol of the namespace this reference is referring to.
-	 */
-	public weak Symbol namespace_symbol { get; set; }
+	public Symbol namespace_symbol { get; set; }
 
 	/**
-	 * Creates a new namespace reference.
+	 * Creates a new using directive.
 	 *
-	 * @param name             namespace name
-	 * @param source_reference reference to source code
-	 * @return                 newly created namespace reference
+	 * @param namespace_symbol namespace symbol
+	 * @return                 newly created using directive
 	 */
-	public NamespaceReference (string name, SourceReference? source_reference = null) {
-		this.name = name;
+	public UsingDirective (Symbol namespace_symbol, SourceReference? source_reference = null) {
+		this.namespace_symbol = namespace_symbol;
 		this.source_reference = source_reference;
 	}
 	
 	public override void accept (CodeVisitor visitor) {
-		visitor.visit_namespace_reference (this);
+		visitor.visit_using_directive (this);
 	}
 }

@@ -212,11 +212,11 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
-	 * Visit operation called for namespace references.
+	 * Visit operation called for using directives.
 	 *
-	 * @param ns a namespace reference
+	 * @param ns a using directive
 	 */
-	public virtual void visit_namespace_reference (NamespaceReference ns) {
+	public virtual void visit_using_directive (UsingDirective ns) {
 	}
 
 	/**

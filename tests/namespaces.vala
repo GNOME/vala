@@ -1,4 +1,4 @@
-using GLib;
+using Foo.Sub;
 
 public class GlobalTestClass {
 	public GlobalTestClass() {
@@ -19,6 +19,8 @@ namespace Maman {
 
 		new global::GlobalTestClass();
 
+		var obj = new ClassInNestedNamespace ();
+
 		return 0;
 	}
 
@@ -27,5 +29,8 @@ namespace Maman {
 			stdout.printf ("Class in Namespace Test\n");
 		}
 	}
+}
+
+public class Foo.Sub.ClassInNestedNamespace {
 }
 

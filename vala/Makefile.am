@@ -94,7 +94,6 @@ libvalacore_la_VALASOURCES = \
 	valamethodtype.vala \
 	valanamedargument.vala \
 	valanamespace.vala \
-	valanamespacereference.vala \
 	valanullchecker.vala \
 	valanullliteral.vala \
 	valanulltype.vala \
@@ -143,6 +142,7 @@ libvalacore_la_VALASOURCES = \
 	valaunaryexpression.vala \
 	valaunresolvedsymbol.vala \
 	valaunresolvedtype.vala \
+	valausingdirective.vala \
 	valavaluetype.vala \
 	valavoidtype.vala \
 	valawhilestatement.vala \

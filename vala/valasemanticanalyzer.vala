@@ -37,7 +37,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	Class current_class;
 	Struct current_struct;
 
-	Gee.List<NamespaceReference> current_using_directives;
+	Gee.List<UsingDirective> current_using_directives;
 
 	DataType bool_type;
 	DataType string_type;
@@ -1601,7 +1601,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			if (expr.symbol_reference == null) {
-				foreach (NamespaceReference ns in current_using_directives) {
+				foreach (UsingDirective ns in current_using_directives) {
 					var local_sym = ns.namespace_symbol.scope.lookup (expr.member_name);
 					if (local_sym != null) {
 						if (expr.symbol_reference != null) {
