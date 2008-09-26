@@ -141,7 +141,7 @@ public class Vala.ArrayType : ReferenceType {
 	}
 
 	public override string to_qualified_string (Scope? scope) {
-		return "%s[%s]".printf (element_type.to_qualified_string (scope), string.nfill (rank - 1, ','));
+		return "%s[%s]%s".printf (element_type.to_qualified_string (scope), string.nfill (rank - 1, ','), nullable ? "?" : "");
 	}
 
 	public override bool compatible (DataType target_type) {

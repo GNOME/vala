@@ -191,7 +191,7 @@ public abstract class Vala.DataType : CodeNode {
 		}
 
 		var type_args = get_type_arguments ();
-		if (!(this is ArrayType) && type_args.size > 0) {
+		if (type_args.size > 0) {
 			s += "<";
 			bool first = true;
 			foreach (DataType type_arg in type_args) {
