@@ -3087,38 +3087,38 @@ namespace GLib {
 		public static void foreach_range (SequenceIter<G> begin, SequenceIter<G> end, Func func);
 		public void sort (CompareDataFunc cmp_func);
 		public void sort_iter (SequenceIterCompareFunc<G> func);
-		public weak SequenceIter<G> get_begin_iter ();
-		public weak SequenceIter<G> get_end_iter ();
-		public weak SequenceIter<G> get_iter_at_pos (int pos);
-		public weak SequenceIter<G> append (G# data);
-		public weak SequenceIter<G> prepend (G# data);
-		public static weak SequenceIter<G> insert_before (SequenceIter<G> iter, G# data);
+		public SequenceIter<G> get_begin_iter ();
+		public SequenceIter<G> get_end_iter ();
+		public SequenceIter<G> get_iter_at_pos (int pos);
+		public SequenceIter<G> append (G# data);
+		public SequenceIter<G> prepend (G# data);
+		public static SequenceIter<G> insert_before (SequenceIter<G> iter, G# data);
 		public static void move (SequenceIter<G> src, SequenceIter<G> dest);
 		public static void swap (SequenceIter<G> src, SequenceIter<G> dest);
-		public weak SequenceIter<G> insert_sorted (G# data, CompareDataFunc cmp_func);
-		public weak SequenceIter<G> insert_sorted_iter (G# data, SequenceIterCompareFunc<G> iter_cmp);
+		public SequenceIter<G> insert_sorted (G# data, CompareDataFunc cmp_func);
+		public SequenceIter<G> insert_sorted_iter (G# data, SequenceIterCompareFunc<G> iter_cmp);
 		public static void sort_changed (SequenceIter<G> iter, CompareDataFunc cmp_func);
 		public static void sort_changed_iter (SequenceIter<G> iter, SequenceIterCompareFunc<G> iter_cmp);
 		public static void remove (SequenceIter<G> iter);
 		public static void remove_range (SequenceIter<G> begin, SequenceIter<G> end);
 		public static void move_range (SequenceIter<G> dest, SequenceIter<G> begin, SequenceIter<G> end);
-		public weak SequenceIter<G> search (G data, CompareDataFunc cmp_func);
-		public weak SequenceIter<G> search_iter (G data, SequenceIterCompareFunc<G> iter_cmp);
+		public SequenceIter<G> search (G data, CompareDataFunc cmp_func);
+		public SequenceIter<G> search_iter (G data, SequenceIterCompareFunc<G> iter_cmp);
 		public static weak G get (SequenceIter<G> iter);
 		public static void set (SequenceIter<G> iter, G# data);
-		public static weak SequenceIter<G> range_get_midpoint (SequenceIter<G> begin, SequenceIter<G> end);
+		public static SequenceIter<G> range_get_midpoint (SequenceIter<G> begin, SequenceIter<G> end);
 	}
 
-	[Compact]
-	[CCode (ref_function = "", unref_function = "")]
-	public class SequenceIter<G> {
+	[SimpleType]
+	[CCode (cname = "GSequenceIter*", type_id = "G_TYPE_POINTER")]
+	public struct SequenceIter<G> {
 		public bool is_begin ();
 		public bool is_end ();
-		public weak SequenceIter<G> next ();
-		public weak SequenceIter<G> prev ();
+		public SequenceIter<G> next ();
+		public SequenceIter<G> prev ();
 		public int get_position ();
-		public weak SequenceIter<G> move (int delta);
-		public weak Sequence<G> get_sequence ();
+		public SequenceIter<G> move (int delta);
+		public Sequence<G> get_sequence ();
 		public int compare (SequenceIter<G> other);
 	}
 

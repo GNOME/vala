@@ -1,5 +1,12 @@
 2008-09-26  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Fix GSequenceIter binding, it should be treated as a value-type,
+	fixes bug 539969
+
+2008-09-26  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am:
 	* vala/valacodevisitor.vala:
 	* vala/valagenieparser.vala:
