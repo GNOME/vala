@@ -1,5 +1,14 @@
 2008-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-2.0/:
+
+	Fix gdk_display_get_maximal_cursor_size binding,
+	patch by Michael Terry, fixes bug 551120
+
+	* vapi/gdk-2.0.vapi: regenerated
+
+2008-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am:
 
 	Distribute and install gnet-2.0.vapi,
