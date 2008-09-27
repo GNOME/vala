@@ -1,5 +1,12 @@
 2008-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeinterfacebinding.vala:
+
+	Fix runtime error when using non-abstract properties in interfaces,
+	fixes bug 539719
+
+2008-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/goocanvas/:
 
 	Various fixes to the GooCanvas bindings,

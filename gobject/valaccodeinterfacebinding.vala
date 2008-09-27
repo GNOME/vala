@@ -121,11 +121,13 @@ public class Vala.CCodeInterfaceBinding : CCodeObjectTypeSymbolBinding {
 			/* create properties */
 			var props = iface.get_properties ();
 			foreach (Property prop in props) {
-				var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_interface_install_property"));
-				cinst.add_argument (new CCodeIdentifier ("iface"));
-				cinst.add_argument (get_param_spec (prop));
+				if (prop.is_abstract) {
+					var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_interface_install_property"));
+					cinst.add_argument (new CCodeIdentifier ("iface"));
+					cinst.add_argument (get_param_spec (prop));
 
-				init_block.add_statement (new CCodeExpressionStatement (cinst));
+					init_block.add_statement (new CCodeExpressionStatement (cinst));
+				}
 			}
 		}
 
