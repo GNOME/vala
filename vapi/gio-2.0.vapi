@@ -768,9 +768,9 @@ namespace GLib {
 		public abstract weak GLib.FileInfo query_filesystem_info (string attributes, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract void query_filesystem_info_async (string attributes, int io_priority, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public abstract weak GLib.FileInfo query_filesystem_info_finish (GLib.AsyncResult res) throws GLib.Error;
-		public abstract weak GLib.FileInfo query_info (string attributes, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
+		public abstract GLib.FileInfo query_info (string attributes, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract void query_info_async (string attributes, GLib.FileQueryInfoFlags flags, int io_priority, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
-		public abstract weak GLib.FileInfo query_info_finish (GLib.AsyncResult res) throws GLib.Error;
+		public abstract GLib.FileInfo query_info_finish (GLib.AsyncResult res) throws GLib.Error;
 		public abstract weak GLib.FileAttributeInfoList query_settable_attributes (GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract weak GLib.FileAttributeInfoList query_writable_namespaces (GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract void read_async (int io_priority, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
