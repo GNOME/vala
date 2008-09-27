@@ -1,5 +1,14 @@
 2008-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/libsoup-2.4/:
+
+	Fix soup_uri_copy, soup_uri_normalize, and soup_uri_to_string
+	bindings, patch by Víctor Manuel Jáquez Leal, fixes bug 553568
+
+	* vapi/libsoup-2.4.vapi: regenerated
+
+2008-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala:
 
 	Fix crash when using sizeof expression for pointers,

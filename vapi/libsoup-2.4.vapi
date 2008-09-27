@@ -249,13 +249,13 @@ namespace Soup {
 		public weak string path;
 		public weak string query;
 		public weak string fragment;
-		public weak Soup.URI copy ();
+		public Soup.URI copy ();
 		public static string decode (string part);
 		public static string encode (string part, string escape_extra);
 		public bool equal (Soup.URI uri2);
 		public URI (string uri_string);
 		public URI.with_base (Soup.URI @base, string uri_string);
-		public static weak string normalize (string part, string unescape_extra);
+		public static string normalize (string part, string unescape_extra);
 		public void set_fragment (string fragment);
 		public void set_host (string host);
 		public void set_password (string password);
@@ -266,7 +266,7 @@ namespace Soup {
 		public void set_query_from_form (GLib.HashTable form);
 		public void set_scheme (string scheme);
 		public void set_user (string user);
-		public weak string to_string (bool just_path_and_query);
+		public string to_string (bool just_path_and_query);
 		public bool uses_default_port ();
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]

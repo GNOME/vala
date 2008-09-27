@@ -18,6 +18,9 @@ soup_server_new ellipsis="1"
 soup_session_queue_message.msg transfer_ownership="1"
 soup_uri_decode transfer_ownership="1"
 soup_uri_encode transfer_ownership="1"
+soup_uri_copy transfer_ownership="1"
+soup_uri_to_string transfer_ownership="1"
+soup_uri_normalize transfer_ownership="1"
 
 # unsupported
 GData name="pointer"
