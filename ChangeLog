@@ -1,5 +1,12 @@
 2008-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am:
+
+	Distribute and install gnet-2.0.vapi,
+	patch by Maciej Piechotka, fixes bug 552701
+
+2008-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 	* vala/valasemanticanalyzer.vala:
 	* gobject/valaccodegenerator.vala:

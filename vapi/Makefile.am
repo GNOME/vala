@@ -27,6 +27,7 @@ dist_vapi_DATA = \
 	gio-unix-2.0.deps \
 	gio-unix-2.0.vapi \
 	gmodule-2.0.vapi \
+	gnet-2.0.vapi \
 	gnome-desktop-2.0.deps \
 	gnome-desktop-2.0.vapi \
 	gnome-keyring-1.vapi \
