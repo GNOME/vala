@@ -1,5 +1,14 @@
 2008-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_element_get_bus and gst_pipeline_get_bus bindings,
+	fixes bug 548219
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/libsoup-2.4/:
 
 	Fix soup_uri_copy, soup_uri_normalize, and soup_uri_to_string
