@@ -2733,15 +2733,15 @@ namespace GLib {
 	}
 	
 	[NoArrayLength]
-	public static delegate void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, string[] attribute_names, string[] attribute_values, void* user_data) throws MarkupError;
+	public delegate void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, string[] attribute_names, string[] attribute_values) throws MarkupError;
 	
-	public static delegate void MarkupParserEndElementFunc (MarkupParseContext context, string element_name, void* user_data) throws MarkupError;
+	public delegate void MarkupParserEndElementFunc (MarkupParseContext context, string element_name) throws MarkupError;
 	
-	public static delegate void MarkupParserTextFunc (MarkupParseContext context, string text, ulong text_len, void* user_data) throws MarkupError;
+	public delegate void MarkupParserTextFunc (MarkupParseContext context, string text, ulong text_len) throws MarkupError;
 	
-	public static delegate void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, ulong text_len, void* user_data) throws MarkupError;
+	public delegate void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, ulong text_len) throws MarkupError;
 	
-	public static delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error, void* user_data);
+	public delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error);
 	
 	public struct MarkupParser {
 		public MarkupParserStartElementFunc start_element;

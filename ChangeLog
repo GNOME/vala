@@ -1,5 +1,12 @@
 2008-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Fix GMarkupParser binding, patch by Matías De la Puente,
+	fixes bug 553282
+
+2008-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gdk-2.0/:
 
 	Fix gdk_display_get_maximal_cursor_size binding,
