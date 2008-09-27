@@ -1,3 +1,10 @@
+2008-08-27  Jared Moore  <jaredm@gmx.com>
+
+	* vala/valasemanticanalyser.vala:
+
+	Check type of 'default' initializers in semantic analyzer, fixes bug
+	544556.
+
 2008-09-26  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi:

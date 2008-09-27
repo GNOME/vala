@@ -676,6 +676,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Report.error (prop.source_reference, "%s: construct properties must be public".printf (prop.get_full_name ()));
 			}
 		}
+
+		if (prop.default_expression != null && !(prop.default_expression.value_type.compatible (prop.property_type))) {
+			prop.error = true;
+			Report.error (prop.default_expression.source_reference, "Expected initializer of type `%s' but got `%s'".printf (prop.property_type.to_string (), prop.default_expression.value_type.to_string ()));
+		}
 	}
 
 	public override void visit_property_accessor (PropertyAccessor acc) {
