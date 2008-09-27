@@ -1,5 +1,14 @@
 2008-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/goocanvas/:
+
+	Various fixes to the GooCanvas bindings,
+	patch by Matías De la Puente, fixes bug 551876
+
+	* vapi/goocanvas.vapi: regenerated
+
+2008-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala:
 	* vala/valainterface.vala:
 	* vala/valastruct.vala:

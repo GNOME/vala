@@ -93,38 +93,300 @@ namespace Goo {
 		STROKE,
 		ALL
 	}
-	[Compact]
 	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasEllipseData {
-		public double center_x;
-		public double center_y;
-		public double radius_x;
-		public double radius_y;
+	public class CanvasEllipse : Goo.CanvasItemSimple, Goo.CanvasItem {
+		public Goo.CanvasEllipseData ellipse_data;
+		[CCode (cname = "goo_canvas_ellipse_new")]
+		public static weak Goo.CanvasEllipse create (Goo.CanvasItem? parent, double center_x, double center_y, double radius_x, double radius_y, ...);
+		public CanvasEllipse ();
+		[NoAccessorMethod]
+		public double center_x { get; set; }
+		[NoAccessorMethod]
+		public double center_y { get; set; }
+		[NoAccessorMethod]
+		public double radius_x { get; set; }
+		[NoAccessorMethod]
+		public double radius_y { get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasImageData {
-		public weak Cairo.Pattern pattern;
-		public double x;
-		public double y;
-		public double width;
-		public double height;
+	public class CanvasEllipseModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		public Goo.CanvasEllipseData ellipse_data;
+		[CCode (cname = "goo_canvas_ellipse_model_new")]
+		public static weak Goo.CanvasEllipseModel create (Goo.CanvasItemModel? parent, double center_x, double center_y, double radius_x, double radius_y, ...);
+		public CanvasEllipseModel ();
+		[NoAccessorMethod]
+		public double center_x { get; set; }
+		[NoAccessorMethod]
+		public double center_y { get; set; }
+		[NoAccessorMethod]
+		public double radius_x { get; set; }
+		[NoAccessorMethod]
+		public double radius_y { get; set; }
 	}
-	[Compact]
 	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasItemSimpleData {
-		public weak Goo.CanvasStyle style;
-		public Cairo.Matrix transform;
-		public weak GLib.Array clip_path_commands;
-		public weak string tooltip;
-		public double visibility_threshold;
-		public uint visibility;
-		public uint pointer_events;
-		public uint can_focus;
-		public uint own_style;
-		public uint clip_fill_rule;
-		public uint cache_setting;
-		public uint has_tooltip;
+	public class CanvasGroup : Goo.CanvasItemSimple, Goo.CanvasItem {
+		public weak GLib.PtrArray items;
+		[CCode (cname = "goo_canvas_group_new")]
+		public static weak Goo.CanvasGroup create (Goo.CanvasItem? parent, ...);
+		public CanvasGroup ();
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public class CanvasGroupModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		public weak GLib.PtrArray children;
+		[CCode (cname = "goo_canvas_group_model_new")]
+		public static weak Goo.CanvasGroupModel create (Goo.CanvasItemModel? parent, ...);
+		public CanvasGroupModel ();
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public class CanvasImage : Goo.CanvasItemSimple, Goo.CanvasItem {
+		public Goo.CanvasImageData image_data;
+		[CCode (cname = "goo_image_group_new")]
+		public static weak Goo.CanvasImage create (Goo.CanvasItem? parent, Gdk.Pixbuf pixbuf, double x, double y, ...);
+		public CanvasImage ();
+		[NoAccessorMethod]
+		public double height { get; set; }
+		[NoAccessorMethod]
+		public Goo.CairoPattern pattern { get; set; }
+		[NoAccessorMethod]
+		public Gdk.Pixbuf pixbuf { set; }
+		[NoAccessorMethod]
+		public double width { get; set; }
+		[NoAccessorMethod]
+		public double x { get; set; }
+		[NoAccessorMethod]
+		public double y { get; set; }
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public class CanvasImageModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		public Goo.CanvasImageData image_data;
+		[CCode (cname = "goo_canvas_image_model_new")]
+		public static weak Goo.CanvasImageModel create (Goo.CanvasItemModel? parent, Gdk.Pixbuf pixbuf, double x, double y, ...);
+		public CanvasImageModel ();
+		[NoAccessorMethod]
+		public double height { get; set; }
+		[NoAccessorMethod]
+		public Goo.CairoPattern pattern { get; set; }
+		[NoAccessorMethod]
+		public Gdk.Pixbuf pixbuf { set; }
+		[NoAccessorMethod]
+		public double width { get; set; }
+		[NoAccessorMethod]
+		public double x { get; set; }
+		[NoAccessorMethod]
+		public double y { get; set; }
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public class CanvasPath : Goo.CanvasItemSimple, Goo.CanvasItem {
+		public Goo.CanvasPathData path_data;
+		[CCode (cname = "goo_canvas_path_new")]
+		public static weak Goo.CanvasPath create (Goo.CanvasItem? parent, string path_data, ...);
+		public CanvasPath ();
+		[NoAccessorMethod]
+		public string data { set; }
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public class CanvasPathModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		public Goo.CanvasPathData path_data;
+		[CCode (cname = "goo_canvas_path_model_new")]
+		public static weak Goo.CanvasPathModel create (Goo.CanvasItemModel? parent, string path_data, ...);
+		public CanvasPathModel ();
+		[NoAccessorMethod]
+		public string data { set; }
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public class CanvasPolyline : Goo.CanvasItemSimple, Goo.CanvasItem {
+		public Goo.CanvasPolylineData polyline_data;
+		[CCode (cname = "goo_canvas_polyline_new")]
+		public static weak Goo.CanvasPolyline create (Goo.CanvasItem? parent, bool close_path, int num_points, ...);
+		[CCode (cname = "goo_canvas_polyline_new_line")]
+		public static weak Goo.CanvasPolyline create_line (Goo.CanvasItem? parent, double x1, double y1, double x2, double y2, ...);
+		public CanvasPolyline ();
+		[CCode (type = "GooCanvasItem*")]
+		public CanvasPolyline.line (Goo.CanvasItem parent, double x1, double y1, double x2, double y2);
+		[NoAccessorMethod]
+		public double arrow_length { get; set; }
+		[NoAccessorMethod]
+		public double arrow_tip_length { get; set; }
+		[NoAccessorMethod]
+		public double arrow_width { get; set; }
+		[NoAccessorMethod]
+		public bool close_path { get; set; }
+		[NoAccessorMethod]
+		public bool end_arrow { get; set; }
+		[NoAccessorMethod]
+		public Goo.CanvasPoints points { get; set; }
+		[NoAccessorMethod]
+		public bool start_arrow { get; set; }
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public class CanvasPolylineModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		public Goo.CanvasPolylineData polyline_data;
+		[CCode (cname = "goo_canvas_polyline_model_new")]
+		public static weak Goo.CanvasPolylineModel create (Goo.CanvasItemModel? parent, bool close_path, int num_points, ...);
+		[CCode (cname = "goo_canvas_polyline_model_new_line")]
+		public static weak Goo.CanvasPolylineModel create_line (Goo.CanvasItemModel? parent, double x1, double y1, double x2, double y2, ...);
+		public CanvasPolylineModel ();
+		[CCode (type = "GooCanvasItemModel*")]
+		public CanvasPolylineModel.line (Goo.CanvasItemModel parent, double x1, double y1, double x2, double y2);
+		[NoAccessorMethod]
+		public double arrow_length { get; set; }
+		[NoAccessorMethod]
+		public double arrow_tip_length { get; set; }
+		[NoAccessorMethod]
+		public double arrow_width { get; set; }
+		[NoAccessorMethod]
+		public bool close_path { get; set; }
+		[NoAccessorMethod]
+		public bool end_arrow { get; set; }
+		[NoAccessorMethod]
+		public Goo.CanvasPoints points { get; set; }
+		[NoAccessorMethod]
+		public bool start_arrow { get; set; }
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public class CanvasRect : Goo.CanvasItemSimple, Goo.CanvasItem {
+		public Goo.CanvasRectData rect_data;
+		[CCode (cname = "goo_canvas_rect_new")]
+		public static weak Goo.CanvasRect create (Goo.CanvasItem? parent, double x, double y, double width, double height, ...);
+		public CanvasRect ();
+		[NoAccessorMethod]
+		public double height { get; set; }
+		[NoAccessorMethod]
+		public double radius_x { get; set; }
+		[NoAccessorMethod]
+		public double radius_y { get; set; }
+		[NoAccessorMethod]
+		public double width { get; set; }
+		[NoAccessorMethod]
+		public double x { get; set; }
+		[NoAccessorMethod]
+		public double y { get; set; }
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public class CanvasRectModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		public Goo.CanvasRectData rect_data;
+		[CCode (cname = "goo_canvas_rect_model_new")]
+		public static weak Goo.CanvasRectModel create (Goo.CanvasItemModel? parent, double x, double y, double width, double height, ...);
+		public CanvasRectModel ();
+		[NoAccessorMethod]
+		public double height { get; set; }
+		[NoAccessorMethod]
+		public double radius_x { get; set; }
+		[NoAccessorMethod]
+		public double radius_y { get; set; }
+		[NoAccessorMethod]
+		public double width { get; set; }
+		[NoAccessorMethod]
+		public double x { get; set; }
+		[NoAccessorMethod]
+		public double y { get; set; }
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public class CanvasTable : Goo.CanvasGroup, Goo.CanvasItem {
+		public Goo.CanvasTableData table_data;
+		[CCode (cname = "goo_canvas_table_new")]
+		public static weak Goo.CanvasTable create (Goo.CanvasItem? parent, ...);
+		public CanvasTable ();
+		[NoAccessorMethod]
+		public double column_spacing { get; set; }
+		[NoAccessorMethod]
+		public double height { get; set; }
+		[NoAccessorMethod]
+		public bool homogeneous_columns { get; set; }
+		[NoAccessorMethod]
+		public bool homogeneous_rows { get; set; }
+		[NoAccessorMethod]
+		public double row_spacing { get; set; }
+		[NoAccessorMethod]
+		public double width { get; set; }
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public class CanvasTableModel : Goo.CanvasGroupModel, Goo.CanvasItemModel {
+		public Goo.CanvasTableData table_data;
+		[CCode (cname = "goo_canvas_table_model_new")]
+		public static weak Goo.CanvasTableModel create (Goo.CanvasItemModel? parent, ...);
+		public CanvasTableModel ();
+		[NoAccessorMethod]
+		public double column_spacing { get; set; }
+		[NoAccessorMethod]
+		public double height { get; set; }
+		[NoAccessorMethod]
+		public bool homogeneous_columns { get; set; }
+		[NoAccessorMethod]
+		public bool homogeneous_rows { get; set; }
+		[NoAccessorMethod]
+		public double row_spacing { get; set; }
+		[NoAccessorMethod]
+		public double width { get; set; }
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public class CanvasText : Goo.CanvasItemSimple, Goo.CanvasItem {
+		public Goo.CanvasTextData text_data;
+		public double layout_width;
+		[CCode (cname = "goo_canvas_text_new")]
+		public static weak Goo.CanvasText create (Goo.CanvasItem? parent, string str, double x, double y, double width, Gtk.AnchorType anchor, ...);
+		public CanvasText ();
+		[NoAccessorMethod]
+		public Pango.Alignment alignment { get; set; }
+		[NoAccessorMethod]
+		public Gtk.AnchorType anchor { get; set; }
+		[NoAccessorMethod]
+		public Pango.EllipsizeMode ellipsize { get; set; }
+		[NoAccessorMethod]
+		public string text { get; set; }
+		[NoAccessorMethod]
+		public bool use_markup { get; set; }
+		[NoAccessorMethod]
+		public double width { get; set; }
+		[NoAccessorMethod]
+		public Pango.WrapMode wrap { get; set; }
+		[NoAccessorMethod]
+		public double x { get; set; }
+		[NoAccessorMethod]
+		public double y { get; set; }
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public class CanvasTextModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
+		public Goo.CanvasTextData text_data;
+		[CCode (cname = "goo_canvas_text_model_new")]
+		public static weak Goo.CanvasTextModel create (Goo.CanvasItemModel? parent, string str, double x, double y, double width, Gtk.AnchorType anchor, ...);
+		public CanvasTextModel ();
+		[NoAccessorMethod]
+		public Pango.Alignment alignment { get; set; }
+		[NoAccessorMethod]
+		public Gtk.AnchorType anchor { get; set; }
+		[NoAccessorMethod]
+		public Pango.EllipsizeMode ellipsize { get; set; }
+		[NoAccessorMethod]
+		public string text { get; set; }
+		[NoAccessorMethod]
+		public bool use_markup { get; set; }
+		[NoAccessorMethod]
+		public double width { get; set; }
+		[NoAccessorMethod]
+		public Pango.WrapMode wrap { get; set; }
+		[NoAccessorMethod]
+		public double x { get; set; }
+		[NoAccessorMethod]
+		public double y { get; set; }
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public class CanvasWidget : Goo.CanvasItemSimple, Goo.CanvasItem {
+		[CCode (cname = "goo_canvas_widget_new")]
+		public static weak Goo.CanvasWidget create (Goo.CanvasItem? parent, Gtk.Widget widget, double x, double y, double width, double height, ...);
+		public CanvasWidget ();
+		[NoAccessorMethod]
+		public Gtk.AnchorType anchor { get; set; }
+		[NoAccessorMethod]
+		public double height { get; set; }
+		[NoAccessorMethod]
+		public Gtk.Widget widget { get; set; }
+		[NoAccessorMethod]
+		public double width { get; set; }
+		[NoAccessorMethod]
+		public double x { get; set; }
+		[NoAccessorMethod]
+		public double y { get; set; }
 	}
 	[Compact]
 	[CCode (ref_function = "goo_canvas_line_dash_ref", unref_function = "goo_canvas_line_dash_unref", cheader_filename = "goocanvas.h")]
@@ -138,112 +400,13 @@ namespace Goo {
 		public CanvasLineDash.newv (int num_dashes, double dashes);
 	}
 	[Compact]
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasPathData {
-		public weak GLib.Array path_commands;
-	}
-	[Compact]
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasPolylineArrowData {
-		public double arrow_width;
-		public double arrow_length;
-		public double arrow_tip_length;
-		[NoArrayLength]
-		public weak double[] line_start;
-		[NoArrayLength]
-		public weak double[] line_end;
-		[NoArrayLength]
-		public weak double[] start_arrow_coords;
-		[NoArrayLength]
-		public weak double[] end_arrow_coords;
-	}
-	[Compact]
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasPolylineData {
-		public double coords;
-		public weak Goo.CanvasPolylineArrowData arrow_data;
-		public uint num_points;
-		public uint close_path;
-		public uint start_arrow;
-		public uint end_arrow;
-		public uint reconfigure_arrows;
-	}
-	[Compact]
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasRectData {
-		public double x;
-		public double y;
-		public double width;
-		public double height;
-		public double radius_x;
-		public double radius_y;
-	}
-	[Compact]
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasStyleProperty {
-		public GLib.Quark id;
-		public GLib.Value value;
-	}
-	[Compact]
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasTableData {
-		public double width;
-		public double height;
-		[NoArrayLength]
-		public weak Goo.CanvasTableDimension[] dimensions;
-		public double border_width;
-		public weak GLib.Array children;
-		public weak Goo.CanvasTableLayoutData layout_data;
-	}
-	[Compact]
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasTableDimension {
-		public int size;
-		public double default_spacing;
-		public double spacings;
-		public uint homogeneous;
-	}
-	[Compact]
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasTableLayoutData {
-	}
-	[Compact]
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasTextData {
-		public weak string text;
-		public double x;
-		public double y;
-		public double width;
-		public uint use_markup;
-		public uint anchor;
-		public uint alignment;
-		public uint ellipsize;
-		public uint wrap;
-	}
-	[Compact]
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CairoLineDash : GLib.Boxed {
-	}
-	[Compact]
 	[CCode (copy_function = "goo_cairo_matrix_copy", cheader_filename = "goocanvas.h")]
-	public class CairoMatrix : GLib.Boxed {
+	public class CairoMatrix {
 		public static Cairo.Matrix copy (Cairo.Matrix matrix);
 	}
 	[Compact]
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CairoPattern : GLib.Boxed {
-	}
-	[Compact]
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasBounds : GLib.Boxed {
-		public double x1;
-		public double y1;
-		public double x2;
-		public double y2;
-	}
-	[Compact]
 	[CCode (ref_function = "goo_canvas_points_ref", unref_function = "goo_canvas_points_unref", cheader_filename = "goocanvas.h")]
-	public class CanvasPoints : GLib.Boxed {
+	public class CanvasPoints {
 		public double coords;
 		public int num_points;
 		public int ref_count;
@@ -253,7 +416,7 @@ namespace Goo {
 	public class Canvas : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		public weak Goo.CanvasItemModel root_item_model;
 		public weak Goo.CanvasItem root_item;
-		public weak Goo.CanvasBounds bounds;
+		public Goo.CanvasBounds bounds;
 		public uint idle_id;
 		public uint need_update;
 		public uint need_entire_subtree_update;
@@ -297,6 +460,7 @@ namespace Goo {
 		public static void marshal_BOOLEAN__OBJECT_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 		public static void marshal_VOID__INT_INT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 		public static void marshal_VOID__OBJECT_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
+		[CCode (type = "GtkWidget*")]
 		public Canvas ();
 		public static weak GLib.Array parse_path_data (string path_data);
 		public Gdk.GrabStatus pointer_grab (Goo.CanvasItem item, Gdk.EventMask event_mask, Gdk.Cursor cursor, uint time);
@@ -351,79 +515,9 @@ namespace Goo {
 		public virtual signal void set_scroll_adjustments (Gtk.Adjustment hadjustment, Gtk.Adjustment vadjustment);
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasEllipse : Goo.CanvasItemSimple, Goo.CanvasItem {
-		public weak Goo.CanvasEllipseData ellipse_data;
-		public CanvasEllipse (Goo.CanvasItem parent, double center_x, double center_y, double radius_x, double radius_y);
-		[NoAccessorMethod]
-		public double center_x { get; set; }
-		[NoAccessorMethod]
-		public double center_y { get; set; }
-		[NoAccessorMethod]
-		public double radius_x { get; set; }
-		[NoAccessorMethod]
-		public double radius_y { get; set; }
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasEllipseModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
-		public weak Goo.CanvasEllipseData ellipse_data;
-		public CanvasEllipseModel (Goo.CanvasItemModel parent, double center_x, double center_y, double radius_x, double radius_y);
-		[NoAccessorMethod]
-		public double center_x { get; set; }
-		[NoAccessorMethod]
-		public double center_y { get; set; }
-		[NoAccessorMethod]
-		public double radius_x { get; set; }
-		[NoAccessorMethod]
-		public double radius_y { get; set; }
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasGroup : Goo.CanvasItemSimple, Goo.CanvasItem {
-		public weak GLib.PtrArray items;
-		public CanvasGroup (Goo.CanvasItem parent);
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasGroupModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
-		public weak GLib.PtrArray children;
-		public CanvasGroupModel (Goo.CanvasItemModel parent);
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasImage : Goo.CanvasItemSimple, Goo.CanvasItem {
-		public weak Goo.CanvasImageData image_data;
-		public CanvasImage (Goo.CanvasItem parent, Gdk.Pixbuf pixbuf, double x, double y);
-		[NoAccessorMethod]
-		public double height { get; set; }
-		[NoAccessorMethod]
-		public Goo.CairoPattern pattern { get; set; }
-		[NoAccessorMethod]
-		public Gdk.Pixbuf pixbuf { set; }
-		[NoAccessorMethod]
-		public double width { get; set; }
-		[NoAccessorMethod]
-		public double x { get; set; }
-		[NoAccessorMethod]
-		public double y { get; set; }
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasImageModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
-		public weak Goo.CanvasImageData image_data;
-		public CanvasImageModel (Goo.CanvasItemModel parent, Gdk.Pixbuf pixbuf, double x, double y);
-		[NoAccessorMethod]
-		public double height { get; set; }
-		[NoAccessorMethod]
-		public Goo.CairoPattern pattern { get; set; }
-		[NoAccessorMethod]
-		public Gdk.Pixbuf pixbuf { set; }
-		[NoAccessorMethod]
-		public double width { get; set; }
-		[NoAccessorMethod]
-		public double x { get; set; }
-		[NoAccessorMethod]
-		public double y { get; set; }
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasItemModelSimple : GLib.Object, Goo.CanvasItemModel {
 		public weak Goo.CanvasItemModel parent;
-		public weak Goo.CanvasItemSimpleData simple_data;
+		public Goo.CanvasItemSimpleData simple_data;
 		public weak string title;
 		public weak string description;
 		[NoAccessorMethod]
@@ -474,8 +568,8 @@ namespace Goo {
 		public weak Goo.Canvas canvas;
 		public weak Goo.CanvasItem parent;
 		public weak Goo.CanvasItemModelSimple model;
-		public weak Goo.CanvasItemSimpleData simple_data;
-		public weak Goo.CanvasBounds bounds;
+		public Goo.CanvasItemSimpleData simple_data;
+		public Goo.CanvasBounds bounds;
 		public uint need_update;
 		public uint need_entire_subtree_update;
 		public void changed (bool recompute_bounds);
@@ -538,94 +632,6 @@ namespace Goo {
 		public Gdk.Pixbuf stroke_pixbuf { set; }
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasPath : Goo.CanvasItemSimple, Goo.CanvasItem {
-		public weak Goo.CanvasPathData path_data;
-		public CanvasPath (Goo.CanvasItem parent, string path_data);
-		[NoAccessorMethod]
-		public string data { set; }
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasPathModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
-		public weak Goo.CanvasPathData path_data;
-		public CanvasPathModel (Goo.CanvasItemModel parent, string path_data);
-		[NoAccessorMethod]
-		public string data { set; }
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasPolyline : Goo.CanvasItemSimple, Goo.CanvasItem {
-		public weak Goo.CanvasPolylineData polyline_data;
-		public CanvasPolyline (Goo.CanvasItem parent, bool close_path, int num_points);
-		public CanvasPolyline.line (Goo.CanvasItem parent, double x1, double y1, double x2, double y2);
-		[NoAccessorMethod]
-		public double arrow_length { get; set; }
-		[NoAccessorMethod]
-		public double arrow_tip_length { get; set; }
-		[NoAccessorMethod]
-		public double arrow_width { get; set; }
-		[NoAccessorMethod]
-		public bool close_path { get; set; }
-		[NoAccessorMethod]
-		public bool end_arrow { get; set; }
-		[NoAccessorMethod]
-		public Goo.CanvasPoints points { get; set; }
-		[NoAccessorMethod]
-		public bool start_arrow { get; set; }
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasPolylineModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
-		public weak Goo.CanvasPolylineData polyline_data;
-		public CanvasPolylineModel (Goo.CanvasItemModel parent, bool close_path, int num_points);
-		public CanvasPolylineModel.line (Goo.CanvasItemModel parent, double x1, double y1, double x2, double y2);
-		[NoAccessorMethod]
-		public double arrow_length { get; set; }
-		[NoAccessorMethod]
-		public double arrow_tip_length { get; set; }
-		[NoAccessorMethod]
-		public double arrow_width { get; set; }
-		[NoAccessorMethod]
-		public bool close_path { get; set; }
-		[NoAccessorMethod]
-		public bool end_arrow { get; set; }
-		[NoAccessorMethod]
-		public Goo.CanvasPoints points { get; set; }
-		[NoAccessorMethod]
-		public bool start_arrow { get; set; }
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasRect : Goo.CanvasItemSimple, Goo.CanvasItem {
-		public weak Goo.CanvasRectData rect_data;
-		public CanvasRect (Goo.CanvasItem parent, double x, double y, double width, double height);
-		[NoAccessorMethod]
-		public double height { get; set; }
-		[NoAccessorMethod]
-		public double radius_x { get; set; }
-		[NoAccessorMethod]
-		public double radius_y { get; set; }
-		[NoAccessorMethod]
-		public double width { get; set; }
-		[NoAccessorMethod]
-		public double x { get; set; }
-		[NoAccessorMethod]
-		public double y { get; set; }
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasRectModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
-		public weak Goo.CanvasRectData rect_data;
-		public CanvasRectModel (Goo.CanvasItemModel parent, double x, double y, double width, double height);
-		[NoAccessorMethod]
-		public double height { get; set; }
-		[NoAccessorMethod]
-		public double radius_x { get; set; }
-		[NoAccessorMethod]
-		public double radius_y { get; set; }
-		[NoAccessorMethod]
-		public double width { get; set; }
-		[NoAccessorMethod]
-		public double x { get; set; }
-		[NoAccessorMethod]
-		public double y { get; set; }
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
 	public class CanvasStyle : GLib.Object {
 		public weak Goo.CanvasStyle parent;
 		public weak GLib.Array properties;
@@ -639,111 +645,8 @@ namespace Goo {
 		public bool set_stroke_options (Cairo.Context cr);
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasTable : Goo.CanvasGroup, Goo.CanvasItem {
-		public weak Goo.CanvasTableData table_data;
-		public CanvasTable (Goo.CanvasItem parent);
-		[NoAccessorMethod]
-		public double column_spacing { get; set; }
-		[NoAccessorMethod]
-		public double height { get; set; }
-		[NoAccessorMethod]
-		public bool homogeneous_columns { get; set; }
-		[NoAccessorMethod]
-		public bool homogeneous_rows { get; set; }
-		[NoAccessorMethod]
-		public double row_spacing { get; set; }
-		[NoAccessorMethod]
-		public double width { get; set; }
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasTableModel : Goo.CanvasGroupModel, Goo.CanvasItemModel {
-		public weak Goo.CanvasTableData table_data;
-		public CanvasTableModel (Goo.CanvasItemModel parent);
-		[NoAccessorMethod]
-		public double column_spacing { get; set; }
-		[NoAccessorMethod]
-		public double height { get; set; }
-		[NoAccessorMethod]
-		public bool homogeneous_columns { get; set; }
-		[NoAccessorMethod]
-		public bool homogeneous_rows { get; set; }
-		[NoAccessorMethod]
-		public double row_spacing { get; set; }
-		[NoAccessorMethod]
-		public double width { get; set; }
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasText : Goo.CanvasItemSimple, Goo.CanvasItem {
-		public weak Goo.CanvasTextData text_data;
-		public double layout_width;
-		public CanvasText (Goo.CanvasItem parent, string str, double x, double y, double width, Gtk.AnchorType anchor);
-		[NoAccessorMethod]
-		public Pango.Alignment alignment { get; set; }
-		[NoAccessorMethod]
-		public Gtk.AnchorType anchor { get; set; }
-		[NoAccessorMethod]
-		public Pango.EllipsizeMode ellipsize { get; set; }
-		[NoAccessorMethod]
-		public string text { get; set; }
-		[NoAccessorMethod]
-		public bool use_markup { get; set; }
-		[NoAccessorMethod]
-		public double width { get; set; }
-		[NoAccessorMethod]
-		public Pango.WrapMode wrap { get; set; }
-		[NoAccessorMethod]
-		public double x { get; set; }
-		[NoAccessorMethod]
-		public double y { get; set; }
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasTextModel : Goo.CanvasItemModelSimple, Goo.CanvasItemModel {
-		public weak Goo.CanvasTextData text_data;
-		public CanvasTextModel (Goo.CanvasItemModel parent, string str, double x, double y, double width, Gtk.AnchorType anchor);
-		[NoAccessorMethod]
-		public Pango.Alignment alignment { get; set; }
-		[NoAccessorMethod]
-		public Gtk.AnchorType anchor { get; set; }
-		[NoAccessorMethod]
-		public Pango.EllipsizeMode ellipsize { get; set; }
-		[NoAccessorMethod]
-		public string text { get; set; }
-		[NoAccessorMethod]
-		public bool use_markup { get; set; }
-		[NoAccessorMethod]
-		public double width { get; set; }
-		[NoAccessorMethod]
-		public Pango.WrapMode wrap { get; set; }
-		[NoAccessorMethod]
-		public double x { get; set; }
-		[NoAccessorMethod]
-		public double y { get; set; }
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasWidget : Goo.CanvasItemSimple, Goo.CanvasItem {
-		public CanvasWidget (Goo.CanvasItem parent, Gtk.Widget widget, double x, double y, double width, double height);
-		[NoAccessorMethod]
-		public Gtk.AnchorType anchor { get; set; }
-		[NoAccessorMethod]
-		public double height { get; set; }
-		[NoAccessorMethod]
-		public Gtk.Widget widget { get; set; }
-		[NoAccessorMethod]
-		public double width { get; set; }
-		[NoAccessorMethod]
-		public double x { get; set; }
-		[NoAccessorMethod]
-		public double y { get; set; }
-	}
-	[Compact]
-	[CCode (cheader_filename = "goocanvas.h")]
-	public class CanvasPathCommand {
-		public void* simple;
-		public void* curve;
-		public void* arc;
-	}
-	[CCode (cheader_filename = "goocanvas.h")]
 	public interface CanvasItem : GLib.Object {
+		public void get_simple_transform (out double x, out double y, out double scale, out double rotation);
 		public void animate (double x, double y, double scale, double degrees, bool absolute, int duration, int step_time, Goo.CanvasAnimateType type);
 		public static weak GLib.ParamSpec class_find_child_property (GLib.ObjectClass iclass, string property_name);
 		public static void class_install_child_property (GLib.ObjectClass iclass, uint property_id, GLib.ParamSpec pspec);
@@ -804,20 +707,21 @@ namespace Goo {
 		public Goo.CairoMatrix transform { get; set; }
 		public Goo.CanvasItemVisibility visibility { get; set; }
 		public double visibility_threshold { get; set; }
-		public virtual signal bool button_press_event (Goo.CanvasItem target, Gdk.Event event);
-		public virtual signal bool button_release_event (Goo.CanvasItem target, Gdk.Event event);
+		public virtual signal bool button_press_event (Goo.CanvasItem target, Gdk.EventButton event);
+		public virtual signal bool button_release_event (Goo.CanvasItem target, Gdk.EventButton event);
 		public virtual signal void child_notify (GLib.ParamSpec pspec);
-		public virtual signal bool enter_notify_event (Goo.CanvasItem target, Gdk.Event event);
-		public virtual signal bool focus_in_event (Goo.CanvasItem target, Gdk.Event event);
-		public virtual signal bool focus_out_event (Goo.CanvasItem target, Gdk.Event event);
-		public virtual signal bool grab_broken_event (Goo.CanvasItem target, Gdk.Event event);
-		public virtual signal bool key_press_event (Goo.CanvasItem target, Gdk.Event event);
-		public virtual signal bool key_release_event (Goo.CanvasItem target, Gdk.Event event);
-		public virtual signal bool leave_notify_event (Goo.CanvasItem target, Gdk.Event event);
-		public virtual signal bool motion_notify_event (Goo.CanvasItem target, Gdk.Event event);
+		public virtual signal bool enter_notify_event (Goo.CanvasItem target, Gdk.EventCrossing event);
+		public virtual signal bool focus_in_event (Goo.CanvasItem target, Gdk.EventFocus event);
+		public virtual signal bool focus_out_event (Goo.CanvasItem target, Gdk.EventFocus event);
+		public virtual signal bool grab_broken_event (Goo.CanvasItem target, Gdk.EventGrabBroken event);
+		public virtual signal bool key_press_event (Goo.CanvasItem target, Gdk.EventKey event);
+		public virtual signal bool key_release_event (Goo.CanvasItem target, Gdk.EventKey event);
+		public virtual signal bool leave_notify_event (Goo.CanvasItem target, Gdk.EventCrossing event);
+		public virtual signal bool motion_notify_event (Goo.CanvasItem target, Gdk.EventMotion event);
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public interface CanvasItemModel : GLib.Object {
+		public void get_simple_transform (out double x, out double y, out double scale, out double rotation);
 		public void animate (double x, double y, double scale, double degrees, bool absolute, int duration, int step_time, Goo.CanvasAnimateType type);
 		public static weak GLib.ParamSpec class_find_child_property (GLib.ObjectClass mclass, string property_name);
 		public static void class_install_child_property (GLib.ObjectClass mclass, uint property_id, GLib.ParamSpec pspec);
@@ -868,6 +772,129 @@ namespace Goo {
 		public virtual signal void child_moved (int old_child_num, int new_child_num);
 		public virtual signal void child_notify (GLib.ParamSpec pspec);
 		public virtual signal void child_removed (int child_num);
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public struct CanvasEllipseData {
+		public double center_x;
+		public double center_y;
+		public double radius_x;
+		public double radius_y;
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public struct CanvasImageData {
+		public weak Cairo.Pattern pattern;
+		public double x;
+		public double y;
+		public double width;
+		public double height;
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public struct CanvasItemSimpleData {
+		public weak Goo.CanvasStyle style;
+		public Cairo.Matrix transform;
+		public weak GLib.Array clip_path_commands;
+		public weak string tooltip;
+		public double visibility_threshold;
+		public uint visibility;
+		public uint pointer_events;
+		public uint can_focus;
+		public uint own_style;
+		public uint clip_fill_rule;
+		public uint cache_setting;
+		public uint has_tooltip;
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public struct CanvasPathData {
+		public weak GLib.Array path_commands;
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public struct CanvasPolylineArrowData {
+		public double arrow_width;
+		public double arrow_length;
+		public double arrow_tip_length;
+		[NoArrayLength]
+		public weak double[] line_start;
+		[NoArrayLength]
+		public weak double[] line_end;
+		[NoArrayLength]
+		public weak double[] start_arrow_coords;
+		[NoArrayLength]
+		public weak double[] end_arrow_coords;
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public struct CanvasPolylineData {
+		public double coords;
+		public Goo.CanvasPolylineArrowData arrow_data;
+		public uint num_points;
+		public uint close_path;
+		public uint start_arrow;
+		public uint end_arrow;
+		public uint reconfigure_arrows;
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public struct CanvasRectData {
+		public double x;
+		public double y;
+		public double width;
+		public double height;
+		public double radius_x;
+		public double radius_y;
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public struct CanvasStyleProperty {
+		public GLib.Quark id;
+		public GLib.Value value;
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public struct CanvasTableData {
+		public double width;
+		public double height;
+		[NoArrayLength]
+		public weak Goo.CanvasTableDimension[] dimensions;
+		public double border_width;
+		public weak GLib.Array children;
+		public Goo.CanvasTableLayoutData layout_data;
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public struct CanvasTableDimension {
+		public int size;
+		public double default_spacing;
+		public double spacings;
+		public uint homogeneous;
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public struct CanvasTableLayoutData {
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public struct CanvasTextData {
+		public weak string text;
+		public double x;
+		public double y;
+		public double width;
+		public uint use_markup;
+		public uint anchor;
+		public uint alignment;
+		public uint ellipsize;
+		public uint wrap;
+	}
+	[CCode (type_id = "GOO_TYPE_CAIRO_LINE_DASH", cheader_filename = "goocanvas.h")]
+	public struct CairoLineDash {
+	}
+	[CCode (type_id = "GOO_TYPE_CAIRO_PATTERN", cheader_filename = "goocanvas.h")]
+	public struct CairoPattern {
+	}
+	[CCode (type_id = "GOO_TYPE_CANVAS_BOUNDS", cheader_filename = "goocanvas.h")]
+	public struct CanvasBounds {
+		public double x1;
+		public double y1;
+		public double x2;
+		public double y2;
+	}
+	[CCode (cheader_filename = "goocanvas.h")]
+	public struct CanvasPathCommand {
+		public void* simple;
+		public void* curve;
+		public void* arc;
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public const int NUM_ARROW_POINTS;
