@@ -1,4 +1,11 @@
-2008-08-27  Jared Moore  <jaredm@gmx.com>
+2008-09-27  Jared Moore  <jaredm@gmx.com>
+
+	* vala/valaenum.vala:
+
+	Swap g_value_set_uint and g_value_set_int in get_set_value_function(),
+	fixes bug 543922.
+
+2008-09-27  Jared Moore  <jaredm@gmx.com>
 
 	* vala/valasemanticanalyser.vala:
 

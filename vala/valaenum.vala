@@ -264,8 +264,8 @@ public class Vala.Enum : TypeSymbol {
 			if (is_flags) {
 				return "g_value_get_uint";
 			} else {
-		return "g_value_get_int";
-	}
+				return "g_value_get_int";
+			}
 		}
 	}
 	
@@ -278,9 +278,9 @@ public class Vala.Enum : TypeSymbol {
 			}
 		} else {
 			if (is_flags) {
-		return "g_value_set_int";
-			} else {
 				return "g_value_set_uint";
+			} else {
+				return "g_value_set_int";
 			}
 		}
 	}
