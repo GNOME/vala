@@ -361,7 +361,7 @@ public class Vala.Scanner {
 						current++;
 					}
 				}
-			} else if (current < end && current[0] == '.') {
+			} else if (current < end - 1 && current[0] == '.' && current[1].isdigit ()) {
 				current++;
 				while (current < end && current[0].isdigit ()) {
 					current++;
