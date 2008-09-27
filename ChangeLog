@@ -1,5 +1,14 @@
 2008-09-27  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* vala/valainterface.vala:
+	* vala/valastruct.vala:
+
+	Add accessors for nested types, patch by Florian Brosch,
+	fixes bug 552958
+
+2008-09-27  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Fix GMarkupParser binding, patch by Matías De la Puente,

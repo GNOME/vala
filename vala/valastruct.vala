@@ -117,7 +117,16 @@ public class Vala.Struct : TypeSymbol {
 	public Gee.List<Field> get_fields () {
 		return new ReadOnlyList<Field> (fields);
 	}
-	
+
+	/**
+	 * Returns a copy of the list of constants.
+	 *
+	 * @return list of constants
+	 */
+	public Gee.List<Constant> get_constants () {
+		return new ReadOnlyList<Constant> (constants);
+	}
+
 	/**
 	 * Adds the specified method as a member to this struct.
 	 *

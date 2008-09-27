@@ -121,6 +121,42 @@ public class Vala.Class : ObjectTypeSymbol {
 	private Gee.List<Delegate> delegates = new ArrayList<Delegate> ();
 
 	/**
+	 * Returns a copy of the list of classes.
+	 *
+	 * @return list of classes
+	 */
+	public Gee.List<Class> get_classes () {
+		return new ReadOnlyList<Class> (classes);
+	}
+
+	/**
+	 * Returns a copy of the list of structs.
+	 *
+	 * @return list of structs
+	 */
+	public Gee.List<Struct> get_structs () {
+		return new ReadOnlyList<Struct> (structs);
+	}
+
+	/**
+	 * Returns a copy of the list of enums.
+	 *
+	 * @return list of enums
+	 */
+	public Gee.List<Enum> get_enums () {
+		return new ReadOnlyList<Enum> (enums);
+	}
+
+	/**
+	 * Returns a copy of the list of delegates.
+	 *
+	 * @return list of delegates
+	 */
+	public Gee.List<Delegate> get_delegates () {
+		return new ReadOnlyList<Delegate> (delegates);
+	}
+
+	/**
 	 * Specifies the default construction method.
 	 */
 	public Method default_construction_method { get; set; }
@@ -248,7 +284,16 @@ public class Vala.Class : ObjectTypeSymbol {
 	public Gee.List<Field> get_fields () {
 		return new ReadOnlyList<Field> (fields);
 	}
-	
+
+	/**
+	 * Returns a copy of the list of constants.
+	 *
+	 * @return list of constants
+	 */
+	public Gee.List<Constant> get_constants () {
+		return new ReadOnlyList<Constant> (constants);
+	}
+
 	/**
 	 * Adds the specified method as a member to this class.
 	 *

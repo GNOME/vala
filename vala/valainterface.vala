@@ -52,7 +52,43 @@ public class Vala.Interface : ObjectTypeSymbol {
 	private string lower_case_csuffix;
 	private string type_cname;
 	private string type_id;
-	
+
+	/**
+	 * Returns a copy of the list of classes.
+	 *
+	 * @return list of classes
+	 */
+	public Gee.List<Class> get_classes () {
+		return new ReadOnlyList<Class> (classes);
+	}
+
+	/**
+	 * Returns a copy of the list of structs.
+	 *
+	 * @return list of structs
+	 */
+	public Gee.List<Struct> get_structs () {
+		return new ReadOnlyList<Struct> (structs);
+	}
+
+	/**
+	 * Returns a copy of the list of enums.
+	 *
+	 * @return list of enums
+	 */
+	public Gee.List<Enum> get_enums () {
+		return new ReadOnlyList<Enum> (enums);
+	}
+
+	/**
+	 * Returns a copy of the list of delegates.
+	 *
+	 * @return list of delegates
+	 */
+	public Gee.List<Delegate> get_delegates () {
+		return new ReadOnlyList<Delegate> (delegates);
+	}
+
 	/**
 	 * Creates a new interface.
 	 *
