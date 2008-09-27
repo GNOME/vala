@@ -643,12 +643,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_property (Property prop) {
 		current_symbol = prop;
 
-		if (prop.binding != MemberBinding.INSTANCE) {
-			Report.error (prop.source_reference, "static properties are not yet supported");
-			prop.error = true;
-			return;
-		}
-
 		prop.accept_children (this);
 
 		// check whether property type is at least as accessible as the property

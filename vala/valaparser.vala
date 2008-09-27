@@ -2176,6 +2176,11 @@ public class Vala.Parser : CodeVisitor {
 		var prop = new Property (id, type, null, null, get_src_com (begin));
 		prop.access = access;
 		set_attributes (prop, attrs);
+		if (ModifierFlags.STATIC in flags) {
+			prop.binding = MemberBinding.STATIC;
+		} else if (ModifierFlags.CLASS in flags) {
+			prop.binding = MemberBinding.CLASS;
+		}
 		if (ModifierFlags.ABSTRACT in flags) {
 			prop.is_abstract = true;
 		}

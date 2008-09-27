@@ -769,7 +769,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		next_temp_var_id = old_next_temp_var_id;
 
 		var cl = prop.parent_symbol as Class;
-		if (cl != null && cl.is_subtype_of (gobject_type)) {
+		if (cl != null && cl.is_subtype_of (gobject_type)
+		    && prop.binding == MemberBinding.INSTANCE) {
 			// GObject property
 			// FIXME: omit real struct types for now since they
 			// cannot be expressed as gobject property yet
@@ -899,16 +900,18 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 
 			ObjectType base_type = null;
-			if (is_virtual) {
-				if (prop.base_property != null) {
-					base_type = new ObjectType ((ObjectTypeSymbol) prop.base_property.parent_symbol);
-				} else if (prop.base_interface_property != null) {
-					base_type = new ObjectType ((ObjectTypeSymbol) prop.base_interface_property.parent_symbol);
+			if (prop.binding == MemberBinding.INSTANCE) {
+				if (is_virtual) {
+					if (prop.base_property != null) {
+						base_type = new ObjectType ((ObjectTypeSymbol) prop.base_property.parent_symbol);
+					} else if (prop.base_interface_property != null) {
+						base_type = new ObjectType ((ObjectTypeSymbol) prop.base_interface_property.parent_symbol);
+					}
+					function.modifiers |= CCodeModifiers.STATIC;
+					function.add_parameter (new CCodeFormalParameter ("base", base_type.get_cname ()));
+				} else {
+					function.add_parameter (cselfparam);
 				}
-				function.modifiers |= CCodeModifiers.STATIC;
-				function.add_parameter (new CCodeFormalParameter ("base", base_type.get_cname ()));
-			} else {
-				function.add_parameter (cselfparam);
 			}
 			if (returns_real_struct) {
 				// return non simple structs as out parameter
@@ -945,7 +948,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				function.block.prepend_statement (cdecl);
 			}
 
-			if (!is_virtual) {
+			if (prop.binding == MemberBinding.INSTANCE && !is_virtual) {
 				if (returns_real_struct) {
 					function.block.prepend_statement (create_property_type_check_statement (prop, false, t, true, "self"));
 				} else {
@@ -3983,8 +3986,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (set_func));
 
-		/* target instance is first argument */
-		ccall.add_argument ((CCodeExpression) ma.inner.ccodenode);
+		if (prop.binding == MemberBinding.INSTANCE) {
+			/* target instance is first argument */
+			ccall.add_argument ((CCodeExpression) ma.inner.ccodenode);
+		}
 
 		if (prop.no_accessor_method) {
 			/* property name is second argument of g_object_set */

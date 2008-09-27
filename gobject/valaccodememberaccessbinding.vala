@@ -182,7 +182,9 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 				}
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (getter_cname));
 
-				ccall.add_argument (pub_inst);
+				if (prop.binding == MemberBinding.INSTANCE) {
+					ccall.add_argument (pub_inst);
+				}
 
 				// Property acesses to real struct types are handeled different to other properties.
 				// They are returned as out parameter.
