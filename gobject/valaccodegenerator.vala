@@ -3360,7 +3360,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public override void visit_sizeof_expression (SizeofExpression expr) {
 		var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-		csizeof.add_argument (new CCodeIdentifier (expr.type_reference.data_type.get_cname ()));
+		csizeof.add_argument (new CCodeIdentifier (expr.type_reference.get_cname ()));
 		expr.ccodenode = csizeof;
 	}
 
