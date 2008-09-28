@@ -2069,6 +2069,8 @@ namespace GLib {
 		public static string find_program_in_path (string program);
 		[CCode (cname = "g_atexit")]
 		public static void atexit (VoidFunc func);
+		[CCode (cname = "g_chdir")]
+		public static int set_current_dir (string path);
 	}
 
 	[CCode (has_type_id = false)]
