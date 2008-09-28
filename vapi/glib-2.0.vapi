@@ -1832,8 +1832,10 @@ namespace GLib {
 		[NoArrayLength]
 		public void get_digest (uint8[] buffer, ref size_t digest_len);
 		[NoArrayLength]
-		public static string compute_for_data (ChecksumType checksum_type, uchar[] data, size_t length);
-		public static string compute_for_string (ChecksumType checksum_type, string str, size_t length);
+		[CCode (cname = "g_compute_checksum_for_data")]
+		public static string compute_for_data (ChecksumType checksum_type, uchar[] data);
+		[CCode (cname = "g_compute_checksum_for_string")]
+		public static string compute_for_string (ChecksumType checksum_type, string str, size_t length = -1);
 	}
 
 	/* Date and Time Functions */

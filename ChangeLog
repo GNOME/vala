@@ -1,5 +1,12 @@
 2008-09-28  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Fix g_compute_checksum_for_{data,string} bindings,
+	patch by Marc-André Lureau
+
+2008-09-28  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Fix gst_tag_list_copy binding, patch by Marc-André Lureau
