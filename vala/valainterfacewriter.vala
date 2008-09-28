@@ -855,7 +855,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_indent ();
 		write_accessibility (prop);
 
-		if (prop.is_abstract) {
+		if (prop.binding == MemberBinding.STATIC) {
+			write_string ("static ");
+		} else  if (prop.is_abstract) {
 			write_string ("abstract ");
 		} else if (prop.is_virtual) {
 			write_string ("virtual ");
