@@ -1075,7 +1075,7 @@ namespace Gst {
 		public void add_valist (Gst.TagMergeMode mode, string tag, void* var_args);
 		public void add_valist_values (Gst.TagMergeMode mode, string tag, void* var_args);
 		public void add_values (Gst.TagMergeMode mode, string tag, ...);
-		public weak Gst.TagList copy ();
+		public Gst.TagList copy ();
 		public static bool copy_value (out GLib.Value dest, Gst.TagList list, string tag);
 		public void @foreach (Gst.TagForeachFunc func);
 		public bool get_boolean (string tag, out bool value);

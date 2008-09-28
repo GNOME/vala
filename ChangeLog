@@ -1,5 +1,13 @@
 2008-09-28  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_tag_list_copy binding, patch by Marc-André Lureau
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-09-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasourcefile.vala:
 
 	Support parsing from a string, patch by Andrea Del Signore,
