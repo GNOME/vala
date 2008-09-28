@@ -3146,6 +3146,8 @@ namespace GLib {
 		[CCode (cname = "g_hash_table_foreach")]
 		public void for_each (HFunc func);
 		public uint size ();
+		public bool steal (K key);
+		public void steal_all ();
 	}
 	
 	public static delegate uint HashFunc (void* key);
