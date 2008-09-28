@@ -1831,7 +1831,6 @@ namespace GLib {
 		public weak string get_string ();
 		[NoArrayLength]
 		public void get_digest (uint8[] buffer, ref size_t digest_len);
-		[NoArrayLength]
 		[CCode (cname = "g_compute_checksum_for_data")]
 		public static string compute_for_data (ChecksumType checksum_type, uchar[] data);
 		[CCode (cname = "g_compute_checksum_for_string")]
@@ -2776,6 +2775,8 @@ namespace GLib {
 		public KeyFile ();
 		public void set_list_separator (char separator);
 		public bool load_from_file (string file, KeyFileFlags @flags) throws KeyFileError;
+		[NoArrayLength]
+		public bool load_from_dirs (string file, string[] search_dirs, out string full_path, KeyFileFlags @flags) throws KeyFileError;
 		public bool load_from_data (string data, ulong length, KeyFileFlags @flags) throws KeyFileError;
 		public bool load_from_data_dirs (string file, out string full_path, KeyFileFlags @flags) throws KeyFileError;
 		public string to_data (out size_t length) throws KeyFileError;

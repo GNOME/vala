@@ -2,6 +2,12 @@
 
 	* vapi/glib-2.0.vapi:
 
+	Add g_key_file_load_from_dirs binding, patch by Marc-André Lureau
+
+2008-09-28  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
 	Fix g_compute_checksum_for_{data,string} bindings,
 	patch by Marc-André Lureau
 
