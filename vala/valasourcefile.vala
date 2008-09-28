@@ -69,6 +69,14 @@ public class Vala.SourceFile {
 	 */
 	public weak CodeContext context { get; set; }
 
+	public string? content {
+		get { return this._content; }
+		set {
+			this._content = value;
+			this.source_array = null;
+		}
+	}
+
 	private Gee.List<UsingDirective> using_directives = new ArrayList<UsingDirective> ();
 
 	private Gee.List<CodeNode> nodes = new ArrayList<CodeNode> ();
@@ -91,6 +99,8 @@ public class Vala.SourceFile {
 
 	private MappedFile mapped_file = null;
 
+	private string? _content = null;
+
 	/**
 	 * Creates a new source file.
 	 *
@@ -98,10 +108,11 @@ public class Vala.SourceFile {
 	 * @param pkg      true if this is a VAPI package file
 	 * @return         newly created source file
 	 */
-	public SourceFile (CodeContext context, string filename, bool pkg = false) {
+	public SourceFile (CodeContext context, string filename, bool pkg = false, string? content = null) {
 		this.filename = filename;
 		this.external_package = pkg;
 		this.context = context;
+		this.content = content;
 	}
 	
 	/**
@@ -411,7 +422,11 @@ public class Vala.SourceFile {
 	 */
 	public string? get_source_line (int lineno) {
 		if (source_array == null) {
-			read_source_file ();
+			if (content != null) {
+				read_source_lines (content);
+			} else {
+				read_source_file ();
+			}
 		}
 		if (lineno < 1 || lineno > source_array.size) {
 			return null;
@@ -424,12 +439,17 @@ public class Vala.SourceFile {
 	 */
 	private void read_source_file () {
 		string cont;
-		source_array = new Gee.ArrayList<string> ();
 		try {
 			FileUtils.get_contents (filename, out cont);
 		} catch (FileError fe) {
 			return;
 		}
+		read_source_lines (cont);
+	}
+
+	private void read_source_lines (string cont)
+	{
+		source_array = new Gee.ArrayList<string> ();
 		string[] lines = cont.split ("\n", 0);
 		uint idx;
 		for (idx = 0; lines[idx] != null; ++idx) {
@@ -438,6 +458,10 @@ public class Vala.SourceFile {
 	}
 
 	public char* get_mapped_contents () {
+		if (content != null) {
+			return content;
+		}
+
 		if (mapped_file == null) {
 			try {
 				mapped_file = new MappedFile (filename, false);
@@ -451,6 +475,10 @@ public class Vala.SourceFile {
 	}
 	
 	public size_t get_mapped_length () {
+		if (content != null) {
+			return content.length;
+		}
+
 		return mapped_file.get_length ();
 	}
 }

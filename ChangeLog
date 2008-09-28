@@ -1,5 +1,12 @@
 2008-09-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasourcefile.vala:
+
+	Support parsing from a string, patch by Andrea Del Signore,
+	fixes bug 553926
+
+2008-09-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala:
 
 	Support static properties, patch by Ali Sabil
