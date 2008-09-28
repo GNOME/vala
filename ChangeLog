@@ -2,6 +2,12 @@
 
 	* vapi/glib-2.0.vapi:
 
+	Fix fopen and fdopen bindings, patch by Marc-André Lureau
+
+2008-09-28  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
 	Add g_chdir binding, patch by Marc-André Lureau
 
 2008-09-28  Jürg Billeter  <j@bitron.ch>

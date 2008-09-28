@@ -2420,9 +2420,9 @@ namespace GLib {
 	[CCode (cname = "FILE", free_function = "fclose", cheader_filename = "stdio.h")]
 	public class FileStream {
 		[CCode (cname = "fopen")]
-		public static FileStream open (string path, string mode);
+		public static FileStream? open (string path, string mode);
 		[CCode (cname = "fdopen")]
-		public static FileStream fdopen (int fildes, string mode);
+		public static FileStream? fdopen (int fildes, string mode);
 		[CCode (cname = "fprintf")]
 		[PrintfFormat ()]
 		public void printf (string format, ...);
