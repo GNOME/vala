@@ -32,9 +32,6 @@ public class Vala.TypeParameter : Symbol {
 	 */
 	public weak TypeSymbol type;
 
-	/* holds the array types of this type; each rank is a separate one */
-	private Map<int,Array> array_types;
-
 	/**
 	 * Creates a new generic type parameter.
 	 *

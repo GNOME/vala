@@ -31,9 +31,6 @@ using Gee;
 public abstract class Vala.TypeSymbol : Symbol {
 	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
 
-	/* holds the array types of this type; each rank is a separate one */
-	private Map<int,Array> array_types;
-
 	/**
 	 * Returns the name of this data type as it is used in C code.
 	 *
