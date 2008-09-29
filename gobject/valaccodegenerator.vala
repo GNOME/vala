@@ -961,6 +961,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			if (typesymbol.is_subtype_of (gobject_type) &&
 			    prop.notify &&
 			    prop.access != SymbolAccessibility.PRIVATE && // FIXME: use better means to detect gobject properties
+			    prop.binding == MemberBinding.INSTANCE &&
+			    !prop.property_type.is_real_struct_type () &&
 			    (acc.writable || acc.construction)) {
 				var notify_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_notify"));
 				notify_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GObject *"));
