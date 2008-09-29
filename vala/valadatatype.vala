@@ -461,9 +461,6 @@ public abstract class Vala.DataType : CodeNode {
 
 		if (is_reference_type_or_type_parameter ()) {
 			return true;
-		} else if (this is ValueType) {
-			// nullable structs are heap allocated
-			return nullable;
 		}
 		return false;
 	}

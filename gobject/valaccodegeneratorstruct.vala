@@ -53,8 +53,59 @@ public class Vala.CCodeGenerator {
 
 		st.accept_children (this);
 
+		if (st.is_disposable ()) {
+			add_struct_copy_function (st);
+			add_struct_destroy_function (st);
+		}
+
 		current_type_symbol = old_type_symbol;
 		instance_struct = old_instance_struct;
 		instance_finalize_fragment = old_instance_finalize_fragment;
 	}
+
+	void add_struct_copy_function (Struct st) {
+		var function = new CCodeFunction (st.get_copy_function (), "void");
+		if (st.access == SymbolAccessibility.PRIVATE) {
+			function.modifiers = CCodeModifiers.STATIC;
+		}
+
+		function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
+		function.add_parameter (new CCodeFormalParameter ("dest", st.get_cname () + "*"));
+
+		if (st.access != SymbolAccessibility.PRIVATE) {
+			header_type_member_declaration.append (function.copy ());
+		} else {
+			source_type_member_declaration.append (function.copy ());
+		}
+
+		var cblock = new CCodeBlock ();
+
+		function.block = cblock;
+
+		source_type_member_definition.append (function);
+	}
+
+	void add_struct_destroy_function (Struct st) {
+		var function = new CCodeFunction (st.get_destroy_function (), "void");
+		if (st.access == SymbolAccessibility.PRIVATE) {
+			function.modifiers = CCodeModifiers.STATIC;
+		}
+
+		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
+
+		if (st.access != SymbolAccessibility.PRIVATE) {
+			header_type_member_declaration.append (function.copy ());
+		} else {
+			source_type_member_declaration.append (function.copy ());
+		}
+
+		var cblock = new CCodeBlock ();
+
+		cblock.add_statement (instance_finalize_fragment);
+
+		function.block = cblock;
+
+		source_type_member_definition.append (function);
+	}
 }
+

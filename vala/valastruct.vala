@@ -50,6 +50,8 @@ public class Vala.Struct : TypeSymbol {
 	private string default_value = null;
 	private bool simple_type;
 	private string? type_signature;
+	private string copy_function;
+	private string destroy_function;
 
 	/**
 	 * Specifies the default construction method.
@@ -340,6 +342,12 @@ public class Vala.Struct : TypeSymbol {
 		if (a.has_argument ("type_signature")) {
 			type_signature = a.get_string ("type_signature");
 		}
+		if (a.has_argument ("copy_function")) {
+			set_copy_function (a.get_string ("copy_function"));
+		}
+		if (a.has_argument ("destroy_function")) {
+			set_destroy_function (a.get_string ("destroy_function"));
+		}
 	}
 
 	private void process_integer_type_attribute (Attribute a) {
@@ -554,6 +562,51 @@ public class Vala.Struct : TypeSymbol {
 			}
 		}
 		
+		return false;
+	}
+
+	public string get_default_copy_function () {
+		return get_lower_case_cprefix () + "copy";
+	}
+
+	public override string? get_copy_function () {
+		if (copy_function == null) {
+			copy_function = get_default_copy_function ();
+		}
+		return copy_function;
+	}
+
+	public void set_copy_function (string name) {
+		this.copy_function = name;
+	}
+
+	public string get_default_destroy_function () {
+		return get_lower_case_cprefix () + "destroy";
+	}
+
+	public override string? get_destroy_function () {
+		if (destroy_function == null) {
+			destroy_function = get_default_destroy_function ();
+		}
+		return destroy_function;
+	}
+
+	public void set_destroy_function (string name) {
+		this.destroy_function = name;
+	}
+
+	public bool is_disposable () {
+		if (destroy_function != null) {
+			return true;
+		}
+
+		foreach (Field f in fields) {
+			if (f.binding == MemberBinding.INSTANCE
+			    && f.field_type.is_disposable ()) {
+				return true;
+			}
+		}
+
 		return false;
 	}
 }

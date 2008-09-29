@@ -59,4 +59,22 @@ public class Vala.ValueType : DataType {
 		}
 		return type_symbol.get_cname () + ptr;
 	}
+
+	public override bool is_disposable () {
+		if (!value_owned) {
+			return false;
+		}
+
+		// nullable structs are heap allocated
+		if (nullable) {
+			return true;
+		}
+
+		var st = type_symbol as Struct;
+		if (st != null) {
+			return st.is_disposable ();
+		}
+
+		return false;
+	}
 }

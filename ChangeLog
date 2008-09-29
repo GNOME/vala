@@ -1,3 +1,14 @@
+2008-09-29  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valadatatype.vala:
+	* vala/valastruct.vala:
+	* vala/valavaluetype.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodegeneratorstruct.vala:
+
+	Add experimental memory management support for structs that use
+	reference types in fields, fixes bug 526552
+
 2008-09-28  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi:

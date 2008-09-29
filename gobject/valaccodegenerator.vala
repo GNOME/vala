@@ -1486,6 +1486,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					if (unref_function == null) {
 						unref_function = "g_free";
 					}
+				} else {
+					var st = (Struct) type.data_type;
+					unref_function = st.get_destroy_function ();
 				}
 			}
 			if (unref_function == null) {
@@ -1551,6 +1554,14 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression expr) {
+		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
+
+		if (type is ValueType && !type.nullable) {
+			// normal value type, no null check
+			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cvar));
+			return ccall;
+		}
+
 		/* (foo == NULL ? NULL : foo = (unref (foo), NULL)) */
 		
 		/* can be simplified to
@@ -1569,9 +1580,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cisnull, cunrefisnull);
 		}
 
-		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
 		ccall.add_argument (cvar);
-		
+
 		/* set freed references to NULL to prevent further use */
 		var ccomma = new CCodeCommaExpression ();
 
@@ -3027,11 +3037,29 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return true;
 	}
 
-	private CCodeExpression? get_ref_expression (Expression expr) {
-		return get_ref_cexpression (expr.value_type, (CCodeExpression) expr.ccodenode, expr, expr);
-	}
-
 	private CCodeExpression? get_ref_cexpression (DataType expression_type, CCodeExpression cexpr, Expression? expr, CodeNode node) {
+		if (expression_type is ValueType && !expression_type.nullable) {
+			// normal value type, no null check
+			// (copy (&expr, &temp), temp)
+
+			var decl = get_temp_variable (expression_type, false, node);
+			temp_vars.insert (0, decl);
+
+			var ctemp = new CCodeIdentifier (decl.name);
+			
+			var vt = (ValueType) expression_type;
+			var st = (Struct) vt.type_symbol;
+			var copy_call = new CCodeFunctionCall (new CCodeIdentifier (st.get_copy_function ()));
+			copy_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr));
+			copy_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
+
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.append_expression (copy_call);
+			ccomma.append_expression (ctemp);
+
+			return ccomma;
+		}
+
 		/* (temp = expr, temp == NULL ? NULL : ref (temp))
 		 *
 		 * can be simplified to
