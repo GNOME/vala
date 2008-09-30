@@ -675,6 +675,19 @@ public enum UnicodeBreakType {
 	HANGUL_LVT_SYLLABLE
 }
 
+[CCode (cname = "GNormalizeMode", cprefix = "G_NORMALIZE_", has_type_id = false)]
+public enum NormalizeMode {
+	DEFAULT,
+	NFD,
+	DEFAULT_COMPOSE,
+	NFC,
+	ALL,
+	NFKD,
+	ALL_COMPOSE,
+	NFKC
+}
+
+
 [Compact]
 [Immutable]
 [CCode (cname = "char", const_cname = "const char", copy_function = "g_strdup", free_function = "g_free", cheader_filename = "stdlib.h,string.h,glib.h", type_id = "G_TYPE_STRING", marshaller_type_name = "STRING", get_value_function = "g_value_get_string", set_value_function = "g_value_set_string", type_signature = "s")]
@@ -732,6 +745,8 @@ public class string {
 	public string reverse (int len = -1);
 	[CCode (cname = "g_utf8_validate")]
 	public bool validate (long max_len = -1, out string end = null);
+	[CCode (cname = "g_utf8_normalize")]
+	public string normalize (long len = -1, NormalizeMode mode = NormalizeMode.DEFAULT);
 	
 	[CCode (cname = "g_utf8_strup")]
 	public string up (long len = -1);
