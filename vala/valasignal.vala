@@ -124,7 +124,7 @@ public class Vala.Signal : Member, Lockable {
 	 */
 	public string get_cname () {
 		if (cname == null) {
-			cname = name;
+			cname = camel_case_to_lower_case (name);
 		}
 		return cname;
 	}

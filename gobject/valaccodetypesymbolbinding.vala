@@ -203,7 +203,7 @@ public abstract class Vala.CCodeTypeSymbolBinding : CCodeBinding {
 
 	public CCodeFunctionCall get_signal_creation (Signal sig, TypeSymbol type) {	
 		var csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
-		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
+		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (sig.get_cname ())));
 		csignew.add_argument (new CCodeIdentifier (type.get_type_id ()));
 		csignew.add_argument (new CCodeConstant ("G_SIGNAL_RUN_LAST"));
 		csignew.add_argument (new CCodeConstant ("0"));

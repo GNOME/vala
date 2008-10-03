@@ -1,5 +1,13 @@
 2008-10-03  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasignal.vala:
+	* gobject/valaccodetypesymbolbinding.vala:
+
+	Always use lowercase signal names in generated C code,
+	patch by Marc-André Lureau, fixes bug 549507
+
+2008-10-03  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala:
 	* vala/valainterfacewriter.vala:
 	* vala/valatypesymbol.vala:
