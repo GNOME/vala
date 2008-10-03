@@ -1776,7 +1776,8 @@ namespace GLib {
 	public delegate void LogFunc (string? log_domain, LogLevelFlags log_levels, string message);
 
 	namespace Log {
-		public uint set_handler (string? log_domain, LogLevelFlags log_levels, LogFunc log_func);
+		public static uint set_handler (string? log_domain, LogLevelFlags log_levels, LogFunc log_func);
+		public static void set_default_handler (LogFunc log_func);
 	}
 
 	/* String Utility Functions */

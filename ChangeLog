@@ -1,3 +1,10 @@
+2008-10-03  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
+	Add g_log_set_default_handler binding, patch by Marc-André Lureau,
+	fixes bug 549766
+
 2008-09-30  Ali Sabil  <ali.sabil@gmail.com>
 
 	* vapi/glib-2.0.vapi:
