@@ -695,7 +695,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	public override string? get_get_value_function () {
 		if (get_value_function == null) {
 			if (is_fundamental()) {
-				get_value_function = "%svalue_get_%s".printf(parent_symbol.get_lower_case_cprefix (), name.down());
+				get_value_function = get_lower_case_cname ("value_get_");
 			} else if (base_class != null) {
 				get_value_function = base_class.get_get_value_function ();
 			} else {
@@ -709,7 +709,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	public override string? get_set_value_function () {
 		if (set_value_function == null) {
 			if (is_fundamental()) {
-				set_value_function = "%svalue_set_%s".printf(parent_symbol.get_lower_case_cprefix (), name.down());
+				set_value_function = get_lower_case_cname ("value_set_");
 			} else if (base_class != null) {
 				set_value_function = base_class.get_set_value_function ();
 			} else {

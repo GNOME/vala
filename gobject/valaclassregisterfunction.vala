@@ -89,7 +89,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	public override string? get_gtype_value_table_init_function_name () {
 		bool is_fundamental = !class_reference.is_compact && !class_reference.is_static && class_reference.base_class == null;
 		if ( is_fundamental )
-			return "%svalue_%s_init".printf(class_reference.parent_symbol.get_lower_case_cprefix (), class_reference.name.down() );
+			return "%s_init".printf (class_reference.get_lower_case_cname ("value_"));
 
 		return null;
 	}
@@ -97,7 +97,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	public override string? get_gtype_value_table_free_function_name () {
 		bool is_fundamental = !class_reference.is_compact && !class_reference.is_static && class_reference.base_class == null;
 		if ( is_fundamental )
-			return "%svalue_%s_free_value".printf(class_reference.parent_symbol.get_lower_case_cprefix (), class_reference.name.down() );
+			return "%s_free_value".printf (class_reference.get_lower_case_cname ("value_"));
 
 		return null;
 	}
@@ -105,7 +105,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	public override string? get_gtype_value_table_copy_function_name () {
 		bool is_fundamental = !class_reference.is_compact && !class_reference.is_static && class_reference.base_class == null;
 		if ( is_fundamental )
-			return "%svalue_%s_copy_value".printf(class_reference.parent_symbol.get_lower_case_cprefix (), class_reference.name.down() );
+			return "%s_copy_value".printf (class_reference.get_lower_case_cname ("value_"));
 
 		return null;
 	}
@@ -113,7 +113,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	public override string? get_gtype_value_table_peek_pointer_function_name () {
 		bool is_fundamental = !class_reference.is_compact && !class_reference.is_static && class_reference.base_class == null;
 		if ( is_fundamental )
-			return "%svalue_%s_peek_pointer".printf(class_reference.parent_symbol.get_lower_case_cprefix (), class_reference.name.down() );
+			return "%s_peek_pointer".printf (class_reference.get_lower_case_cname ("value_"));
 
 		return null;
 	}
@@ -121,7 +121,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	public override string? get_gtype_value_table_collect_value_function_name () {
 		bool is_fundamental = !class_reference.is_compact && !class_reference.is_static && class_reference.base_class == null;
 		if ( is_fundamental )
-			return "%svalue_%s_collect_value".printf(class_reference.parent_symbol.get_lower_case_cprefix (), class_reference.name.down() );
+			return "%s_collect_value".printf (class_reference.get_lower_case_cname ("value_"));
 
 		return null;
 	}
@@ -129,7 +129,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	public override string? get_gtype_value_table_lcopy_value_function_name () {
 		bool is_fundamental = !class_reference.is_compact && !class_reference.is_static && class_reference.base_class == null;
 		if ( is_fundamental )
-			return "%svalue_%s_lcopy_value".printf(class_reference.parent_symbol.get_lower_case_cprefix (), class_reference.name.down() );
+			return "%s_lcopy_value".printf (class_reference.get_lower_case_cname ("value_"));
 
 		return null;
 	}

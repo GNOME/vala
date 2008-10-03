@@ -316,7 +316,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 	}
 
 	private void add_type_value_table_init_function (Class cl) {
-		var function = new CCodeFunction ("%svalue_%s_init".printf (cl.parent_symbol.get_lower_case_cprefix (), cl.name.down() ), "void");
+		var function = new CCodeFunction ("%s_init".printf (cl.get_lower_case_cname ("value_")), "void");
 		function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
 		function.modifiers = CCodeModifiers.STATIC;
 
@@ -328,7 +328,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 	}
 
 	private void add_type_value_table_free_function (Class cl) {
-		var function = new CCodeFunction ("%svalue_%s_free_value".printf (cl.parent_symbol.get_lower_case_cprefix (), cl.name.down()), "void");
+		var function = new CCodeFunction ("%s_free_value".printf (cl.get_lower_case_cname ("value_")), "void");
 		function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
 		function.modifiers = CCodeModifiers.STATIC;
 
@@ -347,7 +347,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 	}
 
 	private void add_type_value_table_copy_function (Class cl) {
-		var function = new CCodeFunction ("%svalue_%s_copy_value".printf (cl.parent_symbol.get_lower_case_cprefix (), cl.name.down()), "void");
+		var function = new CCodeFunction ("%s_copy_value".printf (cl.get_lower_case_cname ("value_")), "void");
 		function.add_parameter (new CCodeFormalParameter ("src_value", "const GValue*"));
 		function.add_parameter (new CCodeFormalParameter ("dest_value", "GValue*"));
 		function.modifiers = CCodeModifiers.STATIC;
@@ -374,7 +374,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 	}
 
 	private void add_type_value_table_peek_pointer_function (Class cl) {
-		var function = new CCodeFunction ("%svalue_%s_peek_pointer".printf (cl.parent_symbol.get_lower_case_cprefix (), cl.name.down()), "gpointer");
+		var function = new CCodeFunction ("%s_peek_pointer".printf (cl.get_lower_case_cname ("value_")), "gpointer");
 		function.add_parameter (new CCodeFormalParameter ("value", "const GValue*"));
 		function.modifiers = CCodeModifiers.STATIC;
 
@@ -389,7 +389,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 	}
 
 	private void add_type_value_table_lcopy_value_function ( Class cl ) {
-		var function = new CCodeFunction ("%svalue_%s_lcopy_value".printf (cl.parent_symbol.get_lower_case_cprefix (), cl.name.down()), "gchar*");
+		var function = new CCodeFunction ("%s_lcopy_value".printf (cl.get_lower_case_cname ("value_")), "gchar*");
 		function.add_parameter (new CCodeFormalParameter ("value", "const GValue*"));
 		function.add_parameter (new CCodeFormalParameter ("n_collect_values", "guint"));
 		function.add_parameter (new CCodeFormalParameter ("collect_values", "GTypeCValue*"));
@@ -434,7 +434,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 	}
 
 	private void add_type_value_table_collect_value_function (Class cl) {
-		var function = new CCodeFunction ("%svalue_%s_collect_value".printf (cl.parent_symbol.get_lower_case_cprefix (), cl.name.down()), "gchar*");
+		var function = new CCodeFunction ("%s_collect_value".printf (cl.get_lower_case_cname ("value_")), "gchar*");
 		function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
 		function.add_parameter (new CCodeFormalParameter ("n_collect_values", "guint"));
 		function.add_parameter (new CCodeFormalParameter ("collect_values", "GTypeCValue*"));
@@ -504,7 +504,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 	}
 
 	private void add_g_param_spec_type_function (Class cl) {
-		var function_name = "%sparam_spec_%s".printf (cl.parent_symbol.get_lower_case_cprefix (), cl.name.down());
+		var function_name = cl.get_lower_case_cname ("param_spec_");
 
 		var function = new CCodeFunction (function_name, "GParamSpec*");
 		function.add_parameter (new CCodeFormalParameter ("name", "const gchar*"));

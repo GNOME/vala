@@ -1,5 +1,13 @@
 2008-10-03  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaclassregisterfunction.vala:
+
+	Fix cname of GValue helper functions for fundamental classes
+
+2008-10-03  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasignal.vala:
 	* gobject/valaccodetypesymbolbinding.vala:
 
