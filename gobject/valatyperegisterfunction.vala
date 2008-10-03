@@ -89,10 +89,25 @@ public abstract class Vala.TypeRegisterFunction {
 			definition_fragment.append (get_fun);
 		}
 
+		string type_value_table_decl_name = null;
 		var type_init = new CCodeBlock ();
+
+		if ( fundamental ) {
+			var cgtypetabledecl = new CCodeDeclaration ("const GTypeValueTable");
+			cgtypetabledecl.modifiers = CCodeModifiers.STATIC;
+
+			cgtypetabledecl.add_declarator ( new CCodeVariableDeclarator.with_initializer ( "g_define_type_value_table", new CCodeConstant ("{ %s, %s, %s, %s, \"p\", %s, \"p\", %s }".printf ( get_gtype_value_table_init_function_name (), get_gtype_value_table_free_function_name (), get_gtype_value_table_copy_function_name (), get_gtype_value_table_peek_pointer_function_name (), get_gtype_value_table_collect_value_function_name (), get_gtype_value_table_lcopy_value_function_name () ))));
+			type_value_table_decl_name = "&g_define_type_value_table";
+			type_init.add_statement ( cgtypetabledecl );
+		}
+		else {
+			type_value_table_decl_name = "NULL";
+		}
+
+
 		var ctypedecl = new CCodeDeclaration ("const GTypeInfo");
 		ctypedecl.modifiers = CCodeModifiers.STATIC;
-		ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) %s, (GBaseFinalizeFunc) NULL, (GClassInitFunc) %s, (GClassFinalizeFunc) NULL, NULL, %s, 0, (GInstanceInitFunc) %s }".printf (get_type_struct_name (), get_base_init_func_name (), get_class_init_func_name (), get_instance_struct_size (), get_instance_init_func_name ()))));
+		ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) %s, (GBaseFinalizeFunc) NULL, (GClassInitFunc) %s, (GClassFinalizeFunc) NULL, NULL, %s, 0, (GInstanceInitFunc) %s, %s }".printf (get_type_struct_name (), get_base_init_func_name (), get_class_init_func_name (), get_instance_struct_size (), get_instance_init_func_name (), type_value_table_decl_name))));
 		type_init.add_statement (ctypedecl);
 		if (fundamental) {
 			var ctypefundamentaldecl = new CCodeDeclaration ("const GTypeFundamentalInfo");
@@ -215,9 +230,65 @@ public abstract class Vala.TypeRegisterFunction {
 	/**
 	 * Returns the name of the parent type in C code.
 	 *
-	 * @return C parent type name
+	 * @return C function name
 	 */
 	public abstract string get_parent_type_name ();
+
+
+
+	/**
+	 * Returns the C-name of the new generated GTypeValueTable init function or null when not available.
+	 *
+	 * @return C function name
+	 */
+	public virtual string? get_gtype_value_table_init_function_name () {
+		return null;
+	}
+
+	/**
+	 * Returns the C-name of the new generated GTypeValueTable peek pointer function or null when not available.
+	 *
+	 * @return C function name
+	 */
+	public virtual string? get_gtype_value_table_peek_pointer_function_name () {
+		return null;
+	}
+
+	/**
+	 * Returns the C-name of the new generated GTypeValueTable free function or null when not available.
+	 *
+	 * @return C function name
+	 */
+	public virtual string? get_gtype_value_table_free_function_name () {
+		return null;
+	}
+
+	/**
+	 * Returns the C-name of the new generated GTypeValueTable copy function or null when not available.
+	 *
+	 * @return C function name
+	 */
+	public virtual string? get_gtype_value_table_copy_function_name () {
+		return null;
+	}
+
+	/**
+	 * Returns the C-name of the new generated GTypeValueTable lcopy function or null when not available.
+	 *
+	 * @return C function name
+	 */
+	public virtual string? get_gtype_value_table_lcopy_value_function_name () {
+		return null;
+	}
+
+	/**
+	 * Returns the C-name of the new generated GTypeValueTable collect value function or null when not available.
+	 *
+	 * @return C function name
+	 */
+	public virtual string? get_gtype_value_table_collect_value_function_name () {
+		return null;
+	}
 
 	/**
 	 * Returns the set of type flags to be applied when registering.

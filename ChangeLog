@@ -1,5 +1,21 @@
 2008-10-03  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* vala/valainterfacewriter.vala:
+	* vala/valatypesymbol.vala:
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodegeneratorsourcefile.vala:
+	* gobject/valaccodetypesymbolbinding.vala:
+	* gobject/valaclassregisterfunction.vala:
+	* gobject/valatyperegisterfunction.vala:
+	* vapi/glib-2.0.vapi:
+
+	Generate code to support GValue and GParamSpec for fundamental
+	classes, patch by Florian Brosch, fixes bug 549480
+
+2008-10-03  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Add g_log_set_default_handler binding, patch by Marc-André Lureau,

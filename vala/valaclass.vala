@@ -95,6 +95,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	private string type_id;
 	private string ref_function;
 	private string unref_function;
+	private string param_spec_function;
 	private string copy_function;
 	private string free_function;
 	private string marshaller_type_name;
@@ -626,8 +627,12 @@ public class Vala.Class : ObjectTypeSymbol {
 		if (a.has_argument ("type_check_function")) {
 			type_check_function = a.get_string ("type_check_function");
 		}
+
+		if (a.has_argument ("param_spec_function")) {
+			param_spec_function = a.get_string ("param_spec_function");
+		}
 	}
-	
+
 	/**
 	 * Process all associated attributes.
 	 */
@@ -673,9 +678,25 @@ public class Vala.Class : ObjectTypeSymbol {
 		return marshaller_type_name;
 	}
 
+	public override string? get_param_spec_function () {
+		if (param_spec_function == null ) {
+			if (!(is_compact || base_class == null)) {
+				param_spec_function = base_class.get_param_spec_function ();
+			}
+		}
+
+		return param_spec_function;
+	}
+
+	public void set_param_spec_function ( string name ) {
+		param_spec_function = name;
+	}
+
 	public override string? get_get_value_function () {
 		if (get_value_function == null) {
-			if (base_class != null) {
+			if (is_fundamental()) {
+				get_value_function = "%svalue_get_%s".printf(parent_symbol.get_lower_case_cprefix (), name.down());
+			} else if (base_class != null) {
 				get_value_function = base_class.get_get_value_function ();
 			} else {
 				get_value_function = "g_value_get_pointer";
@@ -687,7 +708,9 @@ public class Vala.Class : ObjectTypeSymbol {
 	
 	public override string? get_set_value_function () {
 		if (set_value_function == null) {
-			if (base_class != null) {
+			if (is_fundamental()) {
+				set_value_function = "%svalue_set_%s".printf(parent_symbol.get_lower_case_cprefix (), name.down());
+			} else if (base_class != null) {
 				set_value_function = base_class.get_set_value_function ();
 			} else {
 				set_value_function = "g_value_set_pointer";
@@ -701,7 +724,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		return get_ref_function () != null;
 	}
 
-	bool is_fundamental () {
+	public bool is_fundamental () {
 		if (!is_compact && base_class == null) {
 			return true;
 		}

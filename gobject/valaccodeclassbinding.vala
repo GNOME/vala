@@ -36,6 +36,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 		var old_type_symbol = codegen.current_type_symbol;
 		var old_class = codegen.current_class;
 		var old_instance_struct = codegen.instance_struct;
+		var old_param_spec_struct = codegen.param_spec_struct;
 		var old_type_struct = codegen.type_struct;
 		var old_instance_priv_struct = codegen.instance_priv_struct;
 		var old_prop_enum = codegen.prop_enum;
@@ -56,6 +57,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			return;
 		}
 
+
 		if (!cl.is_static) {
 			codegen.instance_struct = new CCodeStruct ("_%s".printf (cl.get_cname ()));
 			codegen.type_struct = new CCodeStruct ("_%sClass".printf (cl.get_cname ()));
@@ -66,6 +68,8 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			codegen.instance_init_fragment = new CCodeFragment ();
 			codegen.instance_finalize_fragment = new CCodeFragment ();
 		}
+
+
 
 		CCodeFragment decl_frag;
 		CCodeFragment def_frag;
@@ -153,6 +157,25 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 
 		if (is_gtypeinstance) {
 			if (is_fundamental) {
+				codegen.param_spec_struct = new CCodeStruct ( "_%sParamSpec%s".printf(cl.parent_symbol.get_cprefix (), cl.name));
+				codegen.param_spec_struct.add_field ("GParamSpec", "parent_instance");
+				def_frag.append (codegen.param_spec_struct);
+
+				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (codegen.param_spec_struct.name), new CCodeVariableDeclarator ( "%sParamSpec%s".printf(cl.parent_symbol.get_cprefix (), cl.name))));
+
+
+				codegen.gvaluecollector_h_needed = true;
+
+				add_type_value_table_init_function (cl);
+				add_type_value_table_free_function (cl);
+				add_type_value_table_copy_function (cl);
+				add_type_value_table_peek_pointer_function (cl);
+				add_type_value_table_collect_value_function (cl);
+				add_type_value_table_lcopy_value_function (cl);
+				add_g_param_spec_type_function (cl);
+				add_g_value_get_function (cl);
+				add_g_value_set_function (cl);
+
 				var ref_count = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "ref_count"), new CCodeConstant ("1"));
 				codegen.instance_init_fragment.append (new CCodeExpressionStatement (ref_count));
 			} else if (is_gobject) {
@@ -291,12 +314,358 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 		codegen.instance_init_fragment = old_instance_init_fragment;
 		codegen.instance_finalize_fragment = old_instance_finalize_fragment;
 	}
-	
+
+	private void add_type_value_table_init_function (Class cl) {
+		var function = new CCodeFunction ("%svalue_%s_init".printf (cl.parent_symbol.get_lower_case_cprefix (), cl.name.down() ), "void");
+		function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
+		function.modifiers = CCodeModifiers.STATIC;
+
+		var init_block = new CCodeBlock ();
+		function.block = init_block;
+
+		init_block.add_statement(new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer"),new CCodeConstant ("NULL"), CCodeAssignmentOperator.SIMPLE)));
+		codegen.source_type_member_definition.append (function);
+	}
+
+	private void add_type_value_table_free_function (Class cl) {
+		var function = new CCodeFunction ("%svalue_%s_free_value".printf (cl.parent_symbol.get_lower_case_cprefix (), cl.name.down()), "void");
+		function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
+		function.modifiers = CCodeModifiers.STATIC;
+
+		var init_block = new CCodeBlock ();
+		function.block = init_block;
+		
+		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_lower_case_cprefix () + "unref"));
+		ccall.add_argument ( vpointer );
+
+		var ifbody = new CCodeBlock ();
+		ifbody.add_statement ( new CCodeExpressionStatement(ccall) );
+
+		init_block.add_statement(new CCodeIfStatement (vpointer, ifbody));
+		codegen.source_type_member_definition.append (function);
+	}
+
+	private void add_type_value_table_copy_function (Class cl) {
+		var function = new CCodeFunction ("%svalue_%s_copy_value".printf (cl.parent_symbol.get_lower_case_cprefix (), cl.name.down()), "void");
+		function.add_parameter (new CCodeFormalParameter ("src_value", "const GValue*"));
+		function.add_parameter (new CCodeFormalParameter ("dest_value", "GValue*"));
+		function.modifiers = CCodeModifiers.STATIC;
+
+		var init_block = new CCodeBlock ();
+		function.block = init_block;
+
+		var dest_vpointer = new CCodeMemberAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest_value"), "data[0]"),"v_pointer");
+		var src_vpointer = new CCodeMemberAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("src_value"), "data[0]"),"v_pointer");
+
+		var ref_ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_lower_case_cprefix () + "ref"));
+		ref_ccall.add_argument ( src_vpointer );
+
+		var true_stmt = new CCodeBlock ();
+		true_stmt.add_statement(new CCodeExpressionStatement(new CCodeAssignment (dest_vpointer, ref_ccall, CCodeAssignmentOperator.SIMPLE)));
+
+		var false_stmt = new CCodeBlock ();
+		false_stmt.add_statement (new CCodeExpressionStatement( new CCodeAssignment (dest_vpointer, new CCodeConstant ("NULL"), CCodeAssignmentOperator.SIMPLE)));
+
+		var if_statement = new CCodeIfStatement (src_vpointer, true_stmt, false_stmt);
+		init_block.add_statement (if_statement);
+
+		codegen.source_type_member_definition.append (function);
+	}
+
+	private void add_type_value_table_peek_pointer_function (Class cl) {
+		var function = new CCodeFunction ("%svalue_%s_peek_pointer".printf (cl.parent_symbol.get_lower_case_cprefix (), cl.name.down()), "gpointer");
+		function.add_parameter (new CCodeFormalParameter ("value", "const GValue*"));
+		function.modifiers = CCodeModifiers.STATIC;
+
+		var init_block = new CCodeBlock ();
+		function.block = init_block;
+
+		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
+		var ret = new CCodeReturnStatement ( vpointer );
+		init_block.add_statement (ret);
+
+		codegen.source_type_member_definition.append (function);
+	}
+
+	private void add_type_value_table_lcopy_value_function ( Class cl ) {
+		var function = new CCodeFunction ("%svalue_%s_lcopy_value".printf (cl.parent_symbol.get_lower_case_cprefix (), cl.name.down()), "gchar*");
+		function.add_parameter (new CCodeFormalParameter ("value", "const GValue*"));
+		function.add_parameter (new CCodeFormalParameter ("n_collect_values", "guint"));
+		function.add_parameter (new CCodeFormalParameter ("collect_values", "GTypeCValue*"));
+		function.add_parameter (new CCodeFormalParameter ("collect_flags", "guint"));
+		function.modifiers = CCodeModifiers.STATIC;
+
+		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
+		var object_p_ptr = new CCodeIdentifier ("*object_p");
+		var null_ = new CCodeConstant("NULL");
+
+		var init_block = new CCodeBlock ();
+
+		var ctypedecl = new CCodeDeclaration (cl.get_cname()+"**");
+		ctypedecl.add_declarator ( new CCodeVariableDeclarator.with_initializer("object_p", new CCodeMemberAccess(new CCodeIdentifier ("collect_values[0]"),"v_pointer")));
+		init_block.add_statement (ctypedecl);
+
+		var assert_condition = new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("object_p"));
+		function.block = init_block;
+		var assert_true = new CCodeBlock ();
+		var if_assert = new CCodeIfStatement (assert_condition, assert_true);
+		init_block.add_statement (if_assert);
+
+		var main_else_true = new CCodeBlock ();
+		var main_else_if_true = new CCodeBlock ();
+		var main_else_if_condition = new CCodeBinaryExpression ( CCodeBinaryOperator.AND, new CCodeIdentifier ("collect_flags"), new CCodeIdentifier ("G_VALUE_NOCOPY_CONTENTS"));
+		var main_else_if = new CCodeIfStatement (main_else_if_condition, main_else_if_true, main_else_true);
+
+		var main_true = new CCodeBlock ();
+		var main_condition = new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, vpointer);
+		var if_main = new CCodeIfStatement (main_condition, main_true, main_else_if);
+		init_block.add_statement (if_main);
+
+		var ref_fct = new CCodeFunctionCall (new CCodeIdentifier (cl.get_ref_function()));
+		ref_fct.add_argument (vpointer);
+
+		main_true.add_statement (new CCodeExpressionStatement( new CCodeAssignment (object_p_ptr, null_, CCodeAssignmentOperator.SIMPLE)));
+		main_else_if_true.add_statement (new CCodeExpressionStatement( new CCodeAssignment (object_p_ptr, vpointer, CCodeAssignmentOperator.SIMPLE)));
+		main_else_true.add_statement (new CCodeExpressionStatement( new CCodeAssignment (object_p_ptr, ref_fct, CCodeAssignmentOperator.SIMPLE)));
+
+		init_block.add_statement ( new CCodeReturnStatement ( null_ ));
+		codegen.source_type_member_definition.append (function);
+	}
+
+	private void add_type_value_table_collect_value_function (Class cl) {
+		var function = new CCodeFunction ("%svalue_%s_collect_value".printf (cl.parent_symbol.get_lower_case_cprefix (), cl.name.down()), "gchar*");
+		function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
+		function.add_parameter (new CCodeFormalParameter ("n_collect_values", "guint"));
+		function.add_parameter (new CCodeFormalParameter ("collect_values", "GTypeCValue*"));
+		function.add_parameter (new CCodeFormalParameter ("collect_flags", "guint"));
+		function.modifiers = CCodeModifiers.STATIC;
+
+		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
+
+		var init_block = new CCodeBlock ();
+		function.block = init_block;
+
+		var condition = new CCodeMemberAccess (new CCodeIdentifier ("collect_values[0]"), "v_pointer");
+		var true_stmt = new CCodeBlock ();
+		var false_stmt = new CCodeBlock ();
+		var if_statement = new CCodeIfStatement (condition, true_stmt, false_stmt);
+		init_block.add_statement (if_statement);
+
+		var obj_identifier = new CCodeIdentifier ("object");
+
+		var ctypedecl = new CCodeDeclaration (cl.get_cname()+"*");
+		ctypedecl.add_declarator ( new CCodeVariableDeclarator.with_initializer("object", vpointer ) );
+		true_stmt.add_statement ( ctypedecl );
+
+		var l_expression = new CCodeMemberAccess(new CCodeMemberAccess.pointer (obj_identifier, "parent_instance"),"g_class");
+		var sub_condition = new CCodeBinaryExpression ( CCodeBinaryOperator.EQUALITY, l_expression, new CCodeConstant("NULL"));
+		var sub_true_stmt = new CCodeBlock ();
+		var sub_false_stmt = new CCodeBlock ();
+
+		var reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_type_compatible"));
+		var type_check = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_TYPE"));
+		type_check.add_argument ( new CCodeIdentifier ("object") );
+		reg_call.add_argument ( type_check );
+
+		var stored_type = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_TYPE"));
+		stored_type.add_argument ( new CCodeIdentifier ("value") );
+		reg_call.add_argument ( stored_type );
+
+		var type_name_fct = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_TYPE_NAME"));
+		type_name_fct.add_argument (new CCodeConstant("value"));
+
+		var true_return = new CCodeFunctionCall (new CCodeIdentifier ("g_strconcat"));
+		true_return.add_argument (new CCodeConstant("\"invalid unclassed object pointer for value type `\""));
+		true_return.add_argument ( type_name_fct );
+		true_return.add_argument (new CCodeConstant("\"'\""));
+		true_return.add_argument (new CCodeConstant("NULL"));
+		sub_true_stmt.add_statement (new CCodeReturnStatement ( true_return ));
+
+		var false_return = new CCodeFunctionCall (new CCodeIdentifier ("g_strconcat"));
+		false_return.add_argument (new CCodeConstant("\"invalid object type `\""));
+		false_return.add_argument ( type_check );
+		false_return.add_argument (new CCodeConstant("\"' for value type `\""));
+		false_return.add_argument ( type_name_fct );
+		false_return.add_argument (new CCodeConstant("\"'\""));
+		false_return.add_argument (new CCodeConstant("NULL"));
+		sub_false_stmt.add_statement (new CCodeReturnStatement ( false_return ));
+
+		var sub_else_if_statement = new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, reg_call), sub_false_stmt );
+		sub_else_if_statement.else_if = true;
+		var sub_if_statement = new CCodeIfStatement (sub_condition, sub_true_stmt, sub_else_if_statement );
+		true_stmt.add_statement ( sub_if_statement );
+
+		var else_assigment = new CCodeExpressionStatement( new CCodeAssignment (vpointer, new CCodeConstant ("NULL"), CCodeAssignmentOperator.SIMPLE));
+		false_stmt.add_statement ( else_assigment );
+
+		init_block.add_statement ( new CCodeReturnStatement ( new CCodeConstant("NULL") ));
+		codegen.source_type_member_definition.append (function);
+	}
+
+	private void add_g_param_spec_type_function (Class cl) {
+		var function_name = "%sparam_spec_%s".printf (cl.parent_symbol.get_lower_case_cprefix (), cl.name.down());
+
+		var function = new CCodeFunction (function_name, "GParamSpec*");
+		function.add_parameter (new CCodeFormalParameter ("name", "const gchar*"));
+		function.add_parameter (new CCodeFormalParameter ("nick", "const gchar*"));
+		function.add_parameter (new CCodeFormalParameter ("blurb", "const gchar*"));
+		function.add_parameter (new CCodeFormalParameter ("object_type", "GType"));
+		function.add_parameter (new CCodeFormalParameter ("flags", "GParamFlags"));
+
+		cl.set_param_spec_function ( function_name );
+
+		if (cl.access == SymbolAccessibility.PRIVATE) {
+			function.modifiers = CCodeModifiers.STATIC;
+			codegen.source_type_member_declaration.append (function.copy ());
+		} else {
+			codegen.header_type_member_declaration.append (function.copy ());		
+		}
+
+		var init_block = new CCodeBlock ();
+		function.block = init_block;
+
+		var ctypedecl = new CCodeDeclaration ("%sParamSpec%s*".printf (cl.parent_symbol.get_cprefix (), cl.name));
+		ctypedecl.add_declarator ( new CCodeVariableDeclarator ("spec"));
+		init_block.add_statement (ctypedecl);
+
+		var subccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_is_a"));
+		subccall.add_argument (new CCodeIdentifier ("object_type"));
+		subccall.add_argument (new CCodeIdentifier ( cl.get_type_id() ));
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_return_val_if_fail"));
+		ccall.add_argument (subccall);
+		ccall.add_argument (new CCodeIdentifier ("NULL"));
+		init_block.add_statement (new CCodeExpressionStatement (ccall));
+
+		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_param_spec_internal"));
+		ccall.add_argument (new CCodeIdentifier ( "G_TYPE_PARAM_OBJECT" ));
+		ccall.add_argument (new CCodeIdentifier ("name"));
+		ccall.add_argument (new CCodeIdentifier ("nick"));
+		ccall.add_argument (new CCodeIdentifier ("blurb"));
+		ccall.add_argument (new CCodeIdentifier ("flags"));
+
+		init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("spec"), ccall, CCodeAssignmentOperator.SIMPLE )));
+
+		ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_PARAM_SPEC"));
+		ccall.add_argument (new CCodeIdentifier ("spec"));
+
+		init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "value_type"), new CCodeIdentifier ("object_type"), CCodeAssignmentOperator.SIMPLE )));
+		init_block.add_statement (new CCodeReturnStatement (ccall));
+		codegen.source_type_member_definition.append (function);
+	}
+
+	private void add_g_value_set_function (Class cl) {
+		var function = new CCodeFunction (cl.get_set_value_function (), "void");
+		function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
+		function.add_parameter (new CCodeFormalParameter ("v_object", "gpointer"));
+
+		if (cl.access == SymbolAccessibility.PRIVATE) {
+			function.modifiers = CCodeModifiers.STATIC;
+			codegen.source_type_member_declaration.append (function.copy ());
+		} else {
+			codegen.header_type_member_declaration.append (function.copy ());		
+		}
+
+		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
+
+		var init_block = new CCodeBlock ();
+		function.block = init_block;
+
+		var ctypedecl = new CCodeDeclaration (cl.get_cname()+"*");
+		ctypedecl.add_declarator ( new CCodeVariableDeclarator ("old"));
+		init_block.add_statement (ctypedecl);		
+
+		var ccall_typecheck = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_CHECK_VALUE_TYPE"));
+		ccall_typecheck.add_argument (new CCodeIdentifier ( "value" ));
+		ccall_typecheck.add_argument (new CCodeIdentifier ( cl.get_type_id() ));
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_return_if_fail"));
+		ccall.add_argument (ccall_typecheck);
+		init_block.add_statement (new CCodeExpressionStatement (ccall));
+
+		init_block.add_statement(new CCodeExpressionStatement (new CCodeAssignment (new CCodeConstant ("old"), vpointer, CCodeAssignmentOperator.SIMPLE)));
+
+		var true_stmt = new CCodeBlock ();
+		var false_stmt = new CCodeBlock ();
+		var if_statement = new CCodeIfStatement (new CCodeIdentifier ("v_object"), true_stmt, false_stmt);
+		init_block.add_statement (if_statement);
+
+
+		ccall_typecheck = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_CHECK_INSTANCE_TYPE"));
+		ccall_typecheck.add_argument (new CCodeIdentifier ( "v_object" ));
+		ccall_typecheck.add_argument (new CCodeIdentifier ( cl.get_type_id() ));
+
+		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_return_if_fail"));
+		ccall.add_argument (ccall_typecheck);
+		true_stmt.add_statement (new CCodeExpressionStatement (ccall));
+
+		var ccall_typefrominstance = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_INSTANCE"));
+		ccall_typefrominstance.add_argument (new CCodeIdentifier ( "v_object" ));
+
+		var ccall_gvaluetype = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_TYPE"));
+		ccall_gvaluetype.add_argument (new CCodeIdentifier ( "value" ));
+
+		var ccall_typecompatible = new CCodeFunctionCall (new CCodeIdentifier ("g_value_type_compatible"));
+		ccall_typecompatible.add_argument (ccall_typefrominstance);
+		ccall_typecompatible.add_argument (ccall_gvaluetype);
+
+		ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_return_if_fail"));
+		ccall.add_argument (ccall_typecompatible);
+		true_stmt.add_statement (new CCodeExpressionStatement (ccall));
+
+		true_stmt.add_statement(new CCodeExpressionStatement (new CCodeAssignment (vpointer, new CCodeConstant ("v_object"), CCodeAssignmentOperator.SIMPLE)));
+
+		ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_ref_function ()));
+		ccall.add_argument (vpointer);
+		true_stmt.add_statement (new CCodeExpressionStatement (ccall));
+
+		false_stmt.add_statement(new CCodeExpressionStatement (new CCodeAssignment (vpointer, new CCodeConstant ("NULL"), CCodeAssignmentOperator.SIMPLE)));
+
+		true_stmt = new CCodeBlock ();
+		if_statement = new CCodeIfStatement (new CCodeIdentifier ("old"), true_stmt);
+		init_block.add_statement (if_statement);
+		
+		ccall = new CCodeFunctionCall (new CCodeIdentifier (cl.get_unref_function ()));
+		ccall.add_argument (new CCodeIdentifier ("old"));
+		true_stmt.add_statement (new CCodeExpressionStatement (ccall));
+		codegen.source_type_member_definition.append (function);
+	}
+
+	private void add_g_value_get_function (Class cl) {
+		var function = new CCodeFunction (cl.get_get_value_function (), "gpointer");
+		function.add_parameter (new CCodeFormalParameter ("value", "const GValue*"));
+
+		if (cl.access == SymbolAccessibility.PRIVATE) {
+			function.modifiers = CCodeModifiers.STATIC;
+			codegen.source_type_member_declaration.append (function.copy ());
+		} else {
+			codegen.header_type_member_declaration.append (function.copy ());		
+		}
+
+		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
+
+		var init_block = new CCodeBlock ();
+		function.block = init_block;
+
+		var ccall_typecheck = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_CHECK_VALUE_TYPE"));
+		ccall_typecheck.add_argument (new CCodeIdentifier ( "value" ));
+		ccall_typecheck.add_argument (new CCodeIdentifier ( cl.get_type_id() ));
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_return_val_if_fail"));
+		ccall.add_argument (ccall_typecheck);
+		ccall.add_argument (new CCodeIdentifier ( "NULL" ));
+		init_block.add_statement (new CCodeExpressionStatement (ccall));
+
+		init_block.add_statement (new CCodeReturnStatement ( vpointer ));
+		codegen.source_type_member_definition.append (function);
+	}
+
 	private void add_class_init_function (Class cl) {
 		var class_init = new CCodeFunction ("%s_class_init".printf (cl.get_lower_case_cname (null)), "void");
 		class_init.add_parameter (new CCodeFormalParameter ("klass", "%sClass *".printf (cl.get_cname ())));
 		class_init.modifiers = CCodeModifiers.STATIC;
-		
+
 		var init_block = new CCodeBlock ();
 		class_init.block = init_block;
 		

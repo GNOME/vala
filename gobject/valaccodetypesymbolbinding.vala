@@ -29,9 +29,17 @@ public abstract class Vala.CCodeTypeSymbolBinding : CCodeBinding {
 		cspec.add_argument (prop.get_canonical_cconstant ());
 		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.nick)));
 		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.blurb)));
-		if ((prop.property_type.data_type is Class && ((Class) prop.property_type.data_type).is_subtype_of (codegen.gobject_type)) || prop.property_type.data_type is Interface) {
-			cspec.call = new CCodeIdentifier ("g_param_spec_object");
-			cspec.add_argument (new CCodeIdentifier (prop.property_type.data_type.get_type_id ()));
+
+
+		if ((prop.property_type.data_type is Class && !(((Class) prop.property_type.data_type).is_compact)) || prop.property_type.data_type is Interface) {
+		//if ((prop.property_type.data_type is Class && ((Class) prop.property_type.data_type).is_subtype_of (codegen.gobject_type)) || prop.property_type.data_type is Interface) {
+			string param_spec_name = prop.property_type.data_type.get_param_spec_function ();
+			if ( param_spec_name == null ) {
+				cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
+			} else {
+				cspec.call = new CCodeIdentifier ( param_spec_name );
+				cspec.add_argument (new CCodeIdentifier (prop.property_type.data_type.get_type_id ()));
+			}
 		} else if (prop.property_type.data_type == codegen.string_type.data_type) {
 			cspec.call = new CCodeIdentifier ("g_param_spec_string");
 			cspec.add_argument (new CCodeConstant ("NULL"));

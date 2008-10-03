@@ -141,6 +141,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string ("type_check_function = \"%s\", ".printf (cl.type_check_function ));
 		}
 
+		if (cl.get_param_spec_function () != null) {
+			write_string ("param_spec_function = \"%s\", ".printf ( cl.get_param_spec_function () ));
+		}
+
 		bool first = true;
 		string cheaders;
 		foreach (string cheader in cl.get_cheader_filenames ()) {

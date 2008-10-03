@@ -150,16 +150,23 @@ public abstract class Vala.TypeSymbol : Symbol {
 	public virtual string? get_marshaller_type_name () {
 		return null;
 	}
-	
+
 	/**
-	 * Returns the cname of the GValue getter function,
+	 * Returns the cname of the GValue parameter spec function.
+	 */
+	public virtual string? get_param_spec_function () {
+		return null;
+	}
+
+	/**
+	 * Returns the cname of the GValue getter function.
 	 */
 	public virtual string? get_get_value_function () {
 		return null;
 	}
 	
 	/**
-	 * Returns the cname of the GValue setter function,
+	 * Returns the cname of the GValue setter function.
 	 */
 	public virtual string? get_set_value_function () {
 		return null;

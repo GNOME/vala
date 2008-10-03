@@ -58,6 +58,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public CCodeFragment source_signal_marshaller_definition;
 	public CCodeFragment module_init_fragment;
 	
+	public CCodeStruct param_spec_struct;
 	public CCodeStruct instance_struct;
 	public CCodeStruct type_struct;
 	public CCodeStruct instance_priv_struct;
@@ -127,6 +128,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public string module_init_param_name;
 	
 	public bool string_h_needed;
+	public bool gvaluecollector_h_needed;
 	private bool requires_free_checked;
 	private bool requires_array_free;
 	public bool requires_array_move;

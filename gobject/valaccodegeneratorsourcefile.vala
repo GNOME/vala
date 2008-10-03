@@ -193,6 +193,7 @@ public class Vala.CCodeGenerator {
 		next_temp_var_id = 0;
 		
 		string_h_needed = false;
+		gvaluecollector_h_needed = false;
 		dbus_glib_h_needed = false;
 		requires_free_checked = false;
 		requires_array_free = false;
@@ -290,6 +291,10 @@ public class Vala.CCodeGenerator {
 		
 		if (string_h_needed) {
 			source_include_directives.append (new CCodeIncludeDirective ("string.h"));
+		}
+
+		if (gvaluecollector_h_needed) {
+			source_include_directives.append (new CCodeIncludeDirective ("gobject/gvaluecollector.h"));
 		}
 
 		if (dbus_glib_h_needed) {
