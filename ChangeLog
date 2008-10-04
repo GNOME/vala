@@ -1,3 +1,11 @@
+2008-10-04  Thijs Vermeir  <thijsvermeir@gmail.com>
+
+	* vapi/packages/vte/vte.metadata:
+
+	vte_terminal_fork_command arguments are nullable
+
+	* vapi/vte.vapi: regenerated
+
 2008-10-04  Ali Sabil  <ali.sabil@gmail.com>
 
 	* vapi/glib-2.0.vapi:
