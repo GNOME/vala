@@ -1,3 +1,10 @@
+2008-10-04  Ali Sabil  <ali.sabil@gmail.com>
+
+	* vapi/glib-2.0.vapi:
+
+	Add missing properties to the GScanner binding,
+	patch by Johann Prieur
+
 2008-10-03  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaclass.vala:

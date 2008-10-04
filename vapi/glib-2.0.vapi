@@ -2136,6 +2136,14 @@ namespace GLib {
 	[CCode (free_function = "g_scanner_destroy")]
 	public class Scanner {
 		public weak string input_name;
+		public TokenType token;
+		public TokenValue value;
+		public uint line;
+		public uint position;
+		public TokenType next_token;
+		public TokenValue next_value;
+		public uint next_line;
+		public uint next_position;
 		public Scanner (ScannerConfig? config_templ);
 		public void input_file (int input_fd);
 		public void sync_file_offset ();
