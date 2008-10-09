@@ -1486,7 +1486,7 @@ namespace Gdk {
 		public void union (Gdk.Rectangle src2, out Gdk.Rectangle dest);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public delegate void DestroyNotify ();
+	public static delegate void DestroyNotify (void* data);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public delegate void EventFunc (Gdk.Event event);
 	[CCode (cheader_filename = "gdk/gdk.h")]

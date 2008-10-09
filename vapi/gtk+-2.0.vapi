@@ -6599,7 +6599,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate void ColorSelectionChangePaletteWithScreenFunc (Gdk.Screen screen, Gdk.Color colors, int n_colors);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate void DestroyNotify ();
+	public static delegate void DestroyNotify (void* data);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool EntryCompletionMatchFunc (Gtk.EntryCompletion completion, string key, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]

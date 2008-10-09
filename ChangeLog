@@ -1,3 +1,18 @@
+2008-10-09  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterfacewriter.vala:
+	* vapigen/valagidlparser.vala:
+	* vapi/packages/gdk-2.0/:
+	* vapi/packages/gtk+-2.0/:
+
+	Fix GdkDestroyNotify and GtkDestroyNotify bindings,
+	fixes bug 525687
+
+	* vapi/gdk-2.0.vapi:
+	* vapi/gtk+-2.0.vapi:
+
+	Regenerated
+
 2008-10-06  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi:

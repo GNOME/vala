@@ -294,6 +294,8 @@ public class Vala.GIdlParser : CodeVisitor {
 		var cb = new Delegate (node.name, parse_param (f_node.result), current_source_reference);
 		cb.access = SymbolAccessibility.PUBLIC;
 
+		bool check_has_target = true;
+
 		var attributes = get_attributes (node.name);
 		if (attributes != null) {
 			foreach (string attr in attributes) {
@@ -304,6 +306,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "cheader_filename") {
 					cb.add_cheader_filename (eval (nv[1]));
+				} else if (nv[0] == "has_target") {
+					if (eval (nv[1]) == "0") {
+						check_has_target = false;
+					}
 				}
 			}
 		}
@@ -312,7 +318,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		foreach (weak IdlNodeParam param in f_node.parameters) {
 			weak IdlNode param_node = (IdlNode) param;
 
-			if (remaining_params == 1 && (param_node.name == "user_data" || param_node.name == "data")) {
+			if (check_has_target && remaining_params == 1 && (param_node.name == "user_data" || param_node.name == "data")) {
 				// hide user_data parameter for instance delegates
 				cb.has_target = true;
 			} else {

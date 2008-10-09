@@ -141,8 +141,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string ("type_check_function = \"%s\", ".printf (cl.type_check_function ));
 		}
 
-		if (cl.get_param_spec_function () != null) {
-			write_string ("param_spec_function = \"%s\", ".printf ( cl.get_param_spec_function () ));
+		if (cl.get_param_spec_function () != null
+		    && (cl.base_class == null || cl.get_param_spec_function () != cl.base_class.get_param_spec_function ())) {
+			write_string ("param_spec_function = \"%s\", ".printf (cl.get_param_spec_function ()));
 		}
 
 		bool first = true;
