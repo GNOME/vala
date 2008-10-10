@@ -1,5 +1,11 @@
 2008-10-10  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodemethodbinding.vala:
+
+	Remove duplicated code
+
+2008-10-10  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodecreationmethodbinding.vala:
 	* gobject/valaccodemethodbinding.vala:
 

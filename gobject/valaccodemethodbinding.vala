@@ -473,87 +473,8 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 		
 			var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, m.vfunc_name));
 			carg_map.set (codegen.get_param_pos (m.cinstance_parameter_position), new CCodeIdentifier ("self"));
-		
-			var params = m.get_parameters ();
-			foreach (FormalParameter param in params) {
-				if (!param.no_array_length && param.parameter_type is ArrayType) {
-					var array_type = (ArrayType) param.parameter_type;
-					
-					var length_ctype = "int";
-					if (param.direction != ParameterDirection.IN) {
-						length_ctype = "int*";
-					}
-					
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var cparam = new CCodeFormalParameter (codegen.get_array_length_cname (param.name, dim), length_ctype);
-						cparam_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
-						carg_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), new CCodeIdentifier (cparam.name));
-					}
-				}
 
-				cparam_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
-				carg_map.set (codegen.get_param_pos (param.cparameter_position), new CCodeIdentifier (param.name));
-
-				if (param.parameter_type is DelegateType) {
-					var deleg_type = (DelegateType) param.parameter_type;
-					var d = deleg_type.delegate_symbol;
-					if (d.has_target) {
-						var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname (param.name), "void*");
-						cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), cparam);
-						carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
-						if (deleg_type.value_owned) {
-							cparam = new CCodeFormalParameter (codegen.get_delegate_target_destroy_notify_cname (param.name), "GDestroyNotify");
-							cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position + 0.01), cparam);
-							carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position + 0.01), new CCodeIdentifier (cparam.name));
-						}
-					}
-				}
-			}
-
-			// return array length if appropriate
-			if (!m.no_array_length && creturn_type is ArrayType) {
-				var array_type = (ArrayType) creturn_type;
-
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var cparam = new CCodeFormalParameter (codegen.get_array_length_cname ("result", dim), "int*");
-					cparam_map.set (codegen.get_param_pos (m.carray_length_parameter_position), cparam);
-					carg_map.set (codegen.get_param_pos (m.carray_length_parameter_position), new CCodeIdentifier (cparam.name));
-				}
-			} else if (creturn_type is DelegateType) {
-				// return delegate target if appropriate
-				var deleg_type = (DelegateType) creturn_type;
-				var d = deleg_type.delegate_symbol;
-				if (d.has_target) {
-					var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname ("result"), "void*");
-					cparam_map.set (codegen.get_param_pos (m.cdelegate_target_parameter_position), cparam);
-					carg_map.set (codegen.get_param_pos (m.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
-				}
-			}
-
-			if (m.get_error_types ().size > 0) {
-				var cparam = new CCodeFormalParameter ("error", "GError**");
-				cparam_map.set (codegen.get_param_pos (-1), cparam);
-				carg_map.set (codegen.get_param_pos (-1), new CCodeIdentifier (cparam.name));
-			}
-
-
-			// append C parameters and arguments in the right order
-			int last_pos = -1;
-			int min_pos;
-			while (true) {
-				min_pos = -1;
-				foreach (int pos in cparam_map.get_keys ()) {
-					if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
-						min_pos = pos;
-					}
-				}
-				if (min_pos == -1) {
-					break;
-				}
-				vfunc.add_parameter (cparam_map.get (min_pos));
-				vcall.add_argument (carg_map.get (min_pos));
-				last_pos = min_pos;
-			}
+			generate_cparameters (m, creturn_type, cparam_map, vfunc, null, carg_map, vcall);
 
 			CCodeStatement cstmt;
 			if (creturn_type is VoidType) {
@@ -669,7 +590,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 		}
 	}
 
-	public void generate_cparameters (Method m, DataType creturn_type, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null) {
+	public void generate_cparameters (Method m, DataType creturn_type, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null) {
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (!param.no_array_length && param.parameter_type is ArrayType) {
 				var array_type = (ArrayType) param.parameter_type;
@@ -682,10 +603,16 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var cparam = new CCodeFormalParameter (codegen.get_array_length_cname (param.name, dim), length_ctype);
 					cparam_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
+					if (carg_map != null) {
+						carg_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), new CCodeIdentifier (cparam.name));
+					}
 				}
 			}
 
 			cparam_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+			if (carg_map != null) {
+				carg_map.set (codegen.get_param_pos (param.cparameter_position), new CCodeIdentifier (param.name));
+			}
 
 			if (param.parameter_type is DelegateType) {
 				var deleg_type = (DelegateType) param.parameter_type;
@@ -693,14 +620,23 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 				if (d.has_target) {
 					var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname (param.name), "void*");
 					cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), cparam);
+					if (carg_map != null) {
+						carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
+					}
 					if (deleg_type.value_owned) {
 						cparam = new CCodeFormalParameter (codegen.get_delegate_target_destroy_notify_cname (param.name), "GDestroyNotify");
 						cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position + 0.01), cparam);
+						if (carg_map != null) {
+							carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position + 0.01), new CCodeIdentifier (cparam.name));
+						}
 					}
 				}
 			} else if (param.parameter_type is MethodType) {
 				var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname (param.name), "void*");
 				cparam_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), cparam);
+				if (carg_map != null) {
+					carg_map.set (codegen.get_param_pos (param.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
+				}
 			}
 		}
 
@@ -711,6 +647,9 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				var cparam = new CCodeFormalParameter (codegen.get_array_length_cname ("result", dim), "int*");
 				cparam_map.set (codegen.get_param_pos (m.carray_length_parameter_position + 0.01 * dim), cparam);
+				if (carg_map != null) {
+					carg_map.set (codegen.get_param_pos (m.carray_length_parameter_position), new CCodeIdentifier (cparam.name));
+				}
 			}
 		} else if (creturn_type is DelegateType) {
 			// return delegate target if appropriate
@@ -719,12 +658,18 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			if (d.has_target) {
 				var cparam = new CCodeFormalParameter (codegen.get_delegate_target_cname ("result"), "void*");
 				cparam_map.set (codegen.get_param_pos (m.cdelegate_target_parameter_position), cparam);
+				if (carg_map != null) {
+					carg_map.set (codegen.get_param_pos (m.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
+				}
 			}
 		}
 
 		if (m.get_error_types ().size > 0) {
 			var cparam = new CCodeFormalParameter ("error", "GError**");
 			cparam_map.set (codegen.get_param_pos (-1), cparam);
+			if (carg_map != null) {
+				carg_map.set (codegen.get_param_pos (-1), new CCodeIdentifier (cparam.name));
+			}
 		}
 
 		// append C parameters in the right order
@@ -743,6 +688,9 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			func.add_parameter (cparam_map.get (min_pos));
 			if (vdeclarator != null) {
 				vdeclarator.add_parameter (cparam_map.get (min_pos));
+			}
+			if (vcall != null) {
+				vcall.add_argument (carg_map.get (min_pos));
 			}
 			last_pos = min_pos;
 		}
