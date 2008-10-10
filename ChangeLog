@@ -1,3 +1,11 @@
+2008-10-10  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodecreationmethodbinding.vala:
+	* gobject/valaccodemethodbinding.vala:
+
+	Lift restriction on statements in creation methods of GObjects
+	in preparation to support more flexible construction scheme
+
 2008-10-09  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valainterfacewriter.vala:

@@ -41,20 +41,12 @@ public class Vala.CCodeCreationMethodBinding : CCodeMethodBinding {
 		if (m.body != null && codegen.current_type_symbol is Class && codegen.current_class.is_subtype_of (codegen.gobject_type)) {
 			int n_params = 0;
 			foreach (Statement stmt in m.body.get_statements ()) {
-				if (!(stmt is ExpressionStatement) || ((ExpressionStatement) stmt).assigned_property () == null) {
-					m.error = true;
-					Report.error (stmt.source_reference, "class creation methods only allow property assignment statements");
-					return;
-				}
-
-				Property prop = ((ExpressionStatement) stmt).assigned_property ();
-				if (prop.access == SymbolAccessibility.PRIVATE) {
-					m.error = true;
-					Report.error (stmt.source_reference, "class creation methods only allow assignments to public and protected properties");
-					return;
-				}
-				if (prop.set_accessor.construction) {
-					n_params++;
+				var expr_stmt = stmt as ExpressionStatement;
+				if (expr_stmt != null) {
+					Property prop = expr_stmt.assigned_property ();
+					if (prop != null && prop.set_accessor.construction) {
+						n_params++;
+					}
 				}
 			}
 			m.n_construction_params = n_params;

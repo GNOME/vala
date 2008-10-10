@@ -99,30 +99,41 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 		if (m is CreationMethod) {
 			if (in_gobject_creation_method && m.body != null) {
 				var cblock = new CCodeBlock ();
-				
+
+				// set construct properties
 				foreach (CodeNode stmt in m.body.get_statements ()) {
-					if (((ExpressionStatement) stmt).assigned_property ().set_accessor.construction) {
-						if (stmt.ccodenode is CCodeFragment) {
-							foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
-								cblock.add_statement (cstmt);
+					var expr_stmt = stmt as ExpressionStatement;
+					if (expr_stmt != null) {
+						var prop = expr_stmt.assigned_property ();
+						if (prop != null && prop.set_accessor.construction) {
+							if (stmt.ccodenode is CCodeFragment) {
+								foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
+									cblock.add_statement (cstmt);
+								}
+							} else {
+								cblock.add_statement (stmt.ccodenode);
 							}
-						} else {
-							cblock.add_statement (stmt.ccodenode);
 						}
 					}
 				}
 
 				add_object_creation (cblock, ((CreationMethod) m).n_construction_params > 0 || codegen.current_class.get_type_parameters ().size > 0);
-				
+
+				// other initialization code
 				foreach (CodeNode stmt in m.body.get_statements ()) {
-					if (!((ExpressionStatement) stmt).assigned_property ().set_accessor.construction) {
-						if (stmt.ccodenode is CCodeFragment) {
-							foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
-								cblock.add_statement (cstmt);
-							}
-						} else {
-							cblock.add_statement (stmt.ccodenode);
+					var expr_stmt = stmt as ExpressionStatement;
+					if (expr_stmt != null) {
+						var prop = expr_stmt.assigned_property ();
+						if (prop != null && prop.set_accessor.construction) {
+							continue;
 						}
+					}
+					if (stmt.ccodenode is CCodeFragment) {
+						foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
+							cblock.add_statement (cstmt);
+						}
+					} else {
+						cblock.add_statement (stmt.ccodenode);
 					}
 				}
 				
