@@ -42,7 +42,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 		var instance_param = new CCodeFormalParameter ("obj", dynamic_method.dynamic_type.get_cname ());
 		cparam_map.set (codegen.get_param_pos (method.cinstance_parameter_position), instance_param);
 
-		generate_cparameters (method, method.return_type, cparam_map, func);
+		generate_cparameters (method, method.return_type, false, cparam_map, func);
 
 		var block = new CCodeBlock ();
 		if (dynamic_method.dynamic_type.data_type == codegen.dbus_object_type) {

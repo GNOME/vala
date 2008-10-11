@@ -99,4 +99,20 @@ public class Vala.CreationMethod : Method {
 	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
 		return codegen.create_creation_method_binding (this);
 	}
+
+	public override string get_real_cname () {
+		var parent = parent_symbol as Class;
+
+		if (parent == null || parent.is_compact) {
+			return get_cname ();
+		}
+
+		string infix = "construct";
+
+		if (name.len () == ".new".len ()) {
+			return "%s%s".printf (parent.get_lower_case_cprefix (), infix);
+		} else {
+			return "%s%s_%s".printf (parent.get_lower_case_cprefix (), infix, name.offset (".new.".len ()));
+		}
+	}
 }

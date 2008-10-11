@@ -1,3 +1,13 @@
+2008-10-11  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacreationmethod.vala:
+	* vala/valamethod.vala:
+	* gobject/valaccodedynamicmethodbinding.vala:
+	* gobject/valaccodemethodbinding.vala:
+
+	Generate code for construct functions in preparation to support
+	base constructor calls
+
 2008-10-10  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodemethodbinding.vala:
