@@ -1,5 +1,11 @@
 2008-10-11  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala:
+
+	Add support for copying arrays, fixes bug 477107
+
+2008-10-11  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/atk.vapi:
 	* vapi/gdk-2.0.vapi:
 	* vapi/gdk-pixbuf-2.0.vapi:
