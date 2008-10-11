@@ -71,4 +71,31 @@ public class Vala.ObjectType : ReferenceType {
 
 		return type_symbol.is_subtype_of (obj_target_type.type_symbol);
 	}
+
+	public override bool is_invokable () {
+		var cl = type_symbol as Class;
+		if (cl != null && cl.default_construction_method != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public override DataType? get_return_type () {
+		var cl = type_symbol as Class;
+		if (cl != null && cl.default_construction_method != null) {
+			return cl.default_construction_method.return_type;
+		} else {
+			return null;
+		}
+	}
+
+	public override Gee.List<FormalParameter>? get_parameters () {
+		var cl = type_symbol as Class;
+		if (cl != null && cl.default_construction_method != null) {
+			return cl.default_construction_method.get_parameters ();
+		} else {
+			return null;
+		}
+	}
 }

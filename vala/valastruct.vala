@@ -148,9 +148,7 @@ public class Vala.Struct : TypeSymbol {
 		if (m is CreationMethod) {
 			if (m.name == null) {
 				default_construction_method = m;
-				m.name = ".new";
-			} else {
-				m.name = ".new." + m.name;
+				m.name = "new";
 			}
 
 			var cm = (CreationMethod) m;

@@ -815,7 +815,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		if (m is CreationMethod) {
 			var datatype = (TypeSymbol) m.parent_symbol;
 			write_identifier (datatype.name);
-			write_identifier (m.name.offset (".new".len ()));
+			if (m.name != "new") {
+				write_string (".");
+				write_identifier (m.name);
+			}
 			write_string (" ");
 		} else if (m.binding == MemberBinding.STATIC) {
 			write_string ("static ");

@@ -53,6 +53,12 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 			m = ((MethodType) itype).method_symbol;
 		} else if (itype is SignalType) {
 			ccall = (CCodeFunctionCall) expr.call.ccodenode;
+		} else if (itype is ObjectType) {
+			// constructor
+			var cl = (Class) ((ObjectType) itype).type_symbol;
+			m = cl.default_construction_method;
+			ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
+			ccall.add_argument (new CCodeIdentifier ("object_type"));
 		}
 
 		// the complete call expression, might include casts, comma expressions, and/or assignments
@@ -152,6 +158,8 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 				param.accept (codegen);
 			}
 			codegen.dynamic_method_binding ((DynamicMethod) m).generate_wrapper ();
+		} else if (m is CreationMethod) {
+			ccall_expr = new CCodeAssignment (new CCodeIdentifier ("self"), new CCodeCastExpression (ccall, codegen.current_class.get_cname () + "*"));
 		}
 
 		bool ellipsis = false;

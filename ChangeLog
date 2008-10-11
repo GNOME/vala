@@ -1,5 +1,19 @@
 2008-10-11  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* vala/valacreationmethod.vala:
+	* vala/valainterfacewriter.vala:
+	* vala/valaobjecttype.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valastruct.vala:
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+	* gobject/valaccodemethodbinding.vala:
+	* gobject/valagidlwriter.vala:
+
+	Support chaining constructors using `base' and `this'
+
+2008-10-11  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacfgbuilder.vala:
 	* vapi/cairo.vapi:
 

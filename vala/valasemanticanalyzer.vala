@@ -1641,11 +1641,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			if (expr.inner is MemberAccess || expr.inner is BaseAccess) {
 				base_symbol = expr.inner.symbol_reference;
 
-				if (expr.creation_member && base_symbol is TypeSymbol) {
-					// check for named creation method
-					expr.symbol_reference = base_symbol.scope.lookup (".new." + expr.member_name);
-				}
-
 				if (expr.symbol_reference == null && (base_symbol is Namespace || base_symbol is TypeSymbol)) {
 					expr.symbol_reference = base_symbol.scope.lookup (expr.member_name);
 					if (expr.inner is BaseAccess) {
@@ -1670,11 +1665,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					// access to instance members of the corresponding type possible
 					may_access_instance_members = true;
 				}
-			}
-
-			if (expr.symbol_reference == null && expr.inner is MemberAccess && base_symbol is Struct) {
-				// check for named struct creation method
-				expr.symbol_reference = base_symbol.scope.lookup (".new." + expr.member_name);
 			}
 
 			if (expr.symbol_reference == null && expr.inner.value_type != null && expr.inner.value_type.is_dynamic) {
@@ -1934,9 +1924,22 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		var mtype = expr.call.value_type;
 
+		if (mtype is ObjectType) {
+			// constructor chain-up
+			var cm = find_current_method () as CreationMethod;
+			assert (cm != null);
+			if (cm.chain_up) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Multiple constructor calls in the same constructor are not permitted");
+				return;
+			}
+			cm.chain_up = true;
+		}
+
 		// check for struct construction
 		if (expr.call is MemberAccess &&
-		    (expr.call.symbol_reference is CreationMethod
+		    ((expr.call.symbol_reference is CreationMethod
+		      && expr.call.symbol_reference.parent_symbol is Struct)
 		     || expr.call.symbol_reference is Struct)) {
 			var struct_creation_expression = new ObjectCreationExpression ((MemberAccess) expr.call, expr.source_reference);
 			struct_creation_expression.struct_creation = true;
@@ -1948,6 +1951,17 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			expr.parent_node.replace_expression (expr, struct_creation_expression);
 			struct_creation_expression.accept (this);
 			return;
+		} else if (expr.call is MemberAccess
+		           && expr.call.symbol_reference is CreationMethod) {
+			// constructor chain-up
+			var cm = find_current_method () as CreationMethod;
+			assert (cm != null);
+			if (cm.chain_up) {
+				expr.error = true;
+				Report.error (expr.source_reference, "Multiple constructor calls in the same constructor are not permitted");
+				return;
+			}
+			cm.chain_up = true;
 		}
 
 		Gee.List<FormalParameter> params;
@@ -2673,7 +2687,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 				expr.symbol_reference = constructor;
 
-				type_args = ((MemberAccess) expr.member_name.inner).get_type_arguments ();
+				// inner expression can also be base access when chaining constructors
+				var ma = expr.member_name.inner as MemberAccess;
+				if (ma != null) {
+					type_args = ma.get_type_arguments ();
+				}
 			} else if (constructor_sym is ErrorCode) {
 				type_sym = constructor_sym.parent_symbol;
 

@@ -46,6 +46,12 @@ public class Vala.CreationMethod : Method {
 	public string? custom_return_type_cname { get; set; }
 
 	/**
+	 * Specifies whether this constructor chains up to a base
+	 * constructor or a different constructor of the same class.
+	 */
+	public bool chain_up { get; set; }
+
+	/**
 	 * Creates a new method.
 	 *
 	 * @param name             method name
@@ -89,10 +95,10 @@ public class Vala.CreationMethod : Method {
 			infix = "init";
 		}
 
-		if (name.len () == ".new".len ()) {
+		if (name == "new") {
 			return "%s%s".printf (parent.get_lower_case_cprefix (), infix);
 		} else {
-			return "%s%s_%s".printf (parent.get_lower_case_cprefix (), infix, name.offset (".new.".len ()));
+			return "%s%s_%s".printf (parent.get_lower_case_cprefix (), infix, name);
 		}
 	}
 
@@ -109,10 +115,10 @@ public class Vala.CreationMethod : Method {
 
 		string infix = "construct";
 
-		if (name.len () == ".new".len ()) {
+		if (name == "new") {
 			return "%s%s".printf (parent.get_lower_case_cprefix (), infix);
 		} else {
-			return "%s%s_%s".printf (parent.get_lower_case_cprefix (), infix, name.offset (".new.".len ()));
+			return "%s%s_%s".printf (parent.get_lower_case_cprefix (), infix, name);
 		}
 	}
 }

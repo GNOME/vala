@@ -100,24 +100,31 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			if (in_gobject_creation_method && m.body != null) {
 				var cblock = new CCodeBlock ();
 
-				// set construct properties
-				foreach (CodeNode stmt in m.body.get_statements ()) {
-					var expr_stmt = stmt as ExpressionStatement;
-					if (expr_stmt != null) {
-						var prop = expr_stmt.assigned_property ();
-						if (prop != null && prop.set_accessor.construction) {
-							if (stmt.ccodenode is CCodeFragment) {
-								foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
-									cblock.add_statement (cstmt);
+				if (!((CreationMethod) m).chain_up) {
+					// set construct properties
+					foreach (CodeNode stmt in m.body.get_statements ()) {
+						var expr_stmt = stmt as ExpressionStatement;
+						if (expr_stmt != null) {
+							var prop = expr_stmt.assigned_property ();
+							if (prop != null && prop.set_accessor.construction) {
+								if (stmt.ccodenode is CCodeFragment) {
+									foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
+										cblock.add_statement (cstmt);
+									}
+								} else {
+									cblock.add_statement (stmt.ccodenode);
 								}
-							} else {
-								cblock.add_statement (stmt.ccodenode);
 							}
 						}
 					}
-				}
 
-				add_object_creation (cblock, ((CreationMethod) m).n_construction_params > 0 || codegen.current_class.get_type_parameters ().size > 0);
+					add_object_creation (cblock, ((CreationMethod) m).n_construction_params > 0 || codegen.current_class.get_type_parameters ().size > 0);
+				} else {
+					var cdeclaration = new CCodeDeclaration ("%s *".printf (((Class) codegen.current_type_symbol).get_cname ()));
+					cdeclaration.add_declarator (new CCodeVariableDeclarator ("self"));
+		
+					cblock.add_statement (cdeclaration);
+				}
 
 				// other initialization code
 				foreach (CodeNode stmt in m.body.get_statements ()) {

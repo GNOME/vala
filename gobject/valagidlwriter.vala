@@ -406,13 +406,8 @@ public class Vala.GIdlWriter : CodeVisitor {
 			return;
 		}
 
-		string name = "new";
-		if (m.name.has_prefix (".new.")) {
-			name = m.name.substring (5, m.name.len () - 5);
-		}
-
 		write_indent ();
-		stream.printf ("<constructor name=\"%s\" symbol=\"%s\"", name, m.get_cname ());
+		stream.printf ("<constructor name=\"%s\" symbol=\"%s\"", m.name, m.get_cname ());
 		stream.printf (">\n");
 		indent++;
 
