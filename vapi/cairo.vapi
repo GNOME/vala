@@ -530,12 +530,6 @@ namespace Cairo {
 		public Matrix (double xx, double yx, double xy, double yy, double x0, double y0);
 		[CCode (cname = "cairo_matrix_init_identity")]
 		public Matrix.identity ();
-		[CCode (cname = "cairo_matrix_init_translate")]
-		public Matrix.translate (double tx, double ty);
-		[CCode (cname = "cairo_matrix_init_scale")]
-		public Matrix.scale (double sx, double sy);
-		[CCode (cname = "cairo_matrix_init_rotate")]
-		public Matrix.rotate (double radians);
 
 		public void translate (double tx, double ty);
 		public void scale (double sx, double sy);

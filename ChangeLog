@@ -1,5 +1,12 @@
 2008-10-11  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacfgbuilder.vala:
+	* vapi/cairo.vapi:
+
+	Avoid conflicts between named constructors and other members
+
+2008-10-11  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacreationmethod.vala:
 	* vala/valamethod.vala:
 	* gobject/valaccodedynamicmethodbinding.vala:

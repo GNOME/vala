@@ -28,30 +28,30 @@ using Gee;
  */
 public class Vala.CFGBuilder : CodeVisitor {
 	private class JumpTarget {
-		public bool break_target { get; set; }
-		public bool continue_target { get; set; }
-		public bool return_target { get; set; }
-		public bool error_target { get; set; }
+		public bool is_break_target { get; set; }
+		public bool is_continue_target { get; set; }
+		public bool is_return_target { get; set; }
+		public bool is_error_target { get; set; }
 		public ErrorDomain? error_domain { get; set; }
 		public ErrorCode? error_code { get; set; }
-		public bool finally_clause { get; set; }
+		public bool is_finally_clause { get; set; }
 		public BasicBlock basic_block { get; set; }
 		public BasicBlock? last_block { get; set; }
 		public CatchClause? catch_clause { get; set; }
 
 		public JumpTarget.break_target (BasicBlock basic_block) {
 			this.basic_block = basic_block;
-			break_target = true;
+			is_break_target = true;
 		}
 
 		public JumpTarget.continue_target (BasicBlock basic_block) {
 			this.basic_block = basic_block;
-			continue_target = true;
+			is_continue_target = true;
 		}
 
 		public JumpTarget.return_target (BasicBlock basic_block) {
 			this.basic_block = basic_block;
-			return_target = true;
+			is_return_target = true;
 		}
 
 		public JumpTarget.error_target (BasicBlock basic_block, CatchClause catch_clause, ErrorDomain? error_domain, ErrorCode? error_code) {
@@ -59,13 +59,13 @@ public class Vala.CFGBuilder : CodeVisitor {
 			this.catch_clause = catch_clause;
 			this.error_domain = error_domain;
 			this.error_code = error_code;
-			error_target = true;
+			is_error_target = true;
 		}
 
 		public JumpTarget.finally_clause (BasicBlock basic_block, BasicBlock last_block) {
 			this.basic_block = basic_block;
 			this.last_block = last_block;
-			finally_clause = true;
+			is_finally_clause = true;
 		}
 	}
 
@@ -483,12 +483,12 @@ public class Vala.CFGBuilder : CodeVisitor {
 
 		for (int i = jump_stack.size - 1; i >= 0; i--) {
 			var jump_target = jump_stack[i];
-			if (jump_target.break_target) {
+			if (jump_target.is_break_target) {
 				current_block.connect (jump_target.basic_block);
 				current_block = null;
 				unreachable_reported = false;
 				return;
-			} else if (jump_target.finally_clause) {
+			} else if (jump_target.is_finally_clause) {
 				current_block.connect (jump_target.basic_block);
 				current_block = jump_target.last_block;
 			}
@@ -507,12 +507,12 @@ public class Vala.CFGBuilder : CodeVisitor {
 
 		for (int i = jump_stack.size - 1; i >= 0; i--) {
 			var jump_target = jump_stack[i];
-			if (jump_target.continue_target) {
+			if (jump_target.is_continue_target) {
 				current_block.connect (jump_target.basic_block);
 				current_block = null;
 				unreachable_reported = false;
 				return;
-			} else if (jump_target.finally_clause) {
+			} else if (jump_target.is_finally_clause) {
 				current_block.connect (jump_target.basic_block);
 				current_block = jump_target.last_block;
 			}
@@ -531,12 +531,12 @@ public class Vala.CFGBuilder : CodeVisitor {
 
 		for (int i = jump_stack.size - 1; i >= 0; i--) {
 			var jump_target = jump_stack[i];
-			if (jump_target.return_target) {
+			if (jump_target.is_return_target) {
 				current_block.connect (jump_target.basic_block);
 				current_block = null;
 				unreachable_reported = false;
 				return;
-			} else if (jump_target.finally_clause) {
+			} else if (jump_target.is_finally_clause) {
 				current_block.connect (jump_target.basic_block);
 				current_block = jump_target.last_block;
 			}
@@ -553,12 +553,12 @@ public class Vala.CFGBuilder : CodeVisitor {
 			// exceptional control flow
 			for (int i = jump_stack.size - 1; i >= 0; i--) {
 				var jump_target = jump_stack[i];
-				if (jump_target.return_target) {
+				if (jump_target.is_return_target) {
 					current_block.connect (jump_target.basic_block);
 					current_block = null;
 					unreachable_reported = false;
 					break;
-				} else if (jump_target.error_target) {
+				} else if (jump_target.is_error_target) {
 					// TODO check whether jump target catches node.error_type
 					current_block.connect (jump_target.basic_block);
 					if (jump_target.error_domain == null) {
@@ -567,7 +567,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 						unreachable_reported = false;
 						break;
 					}
-				} else if (jump_target.finally_clause) {
+				} else if (jump_target.is_finally_clause) {
 					current_block.connect (jump_target.basic_block);
 					current_block = jump_target.last_block;
 				}
@@ -588,12 +588,12 @@ public class Vala.CFGBuilder : CodeVisitor {
 
 		for (int i = jump_stack.size - 1; i >= 0; i--) {
 			var jump_target = jump_stack[i];
-			if (jump_target.return_target) {
+			if (jump_target.is_return_target) {
 				current_block.connect (jump_target.basic_block);
 				current_block = null;
 				unreachable_reported = false;
 				return;
-			} else if (jump_target.error_target) {
+			} else if (jump_target.is_error_target) {
 				// TODO check whether jump target catches stmt.error_type
 				current_block.connect (jump_target.basic_block);
 				if (jump_target.error_domain == null) {
@@ -601,7 +601,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 					unreachable_reported = false;
 					return;
 				}
-			} else if (jump_target.finally_clause) {
+			} else if (jump_target.is_finally_clause) {
 				current_block.connect (jump_target.basic_block);
 				current_block = jump_target.last_block;
 			}
