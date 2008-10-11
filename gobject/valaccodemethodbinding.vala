@@ -846,19 +846,41 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 
 	private void add_object_creation (CCodeBlock b, bool has_params) {
 		var cl = (Class) codegen.current_type_symbol;
-	
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_newv"));
-		ccall.add_argument (new CCodeIdentifier ("object_type"));
-		if (has_params) {
-			ccall.add_argument (new CCodeConstant ("__params_it - __params"));
-			ccall.add_argument (new CCodeConstant ("__params"));
-		} else {
-			ccall.add_argument (new CCodeConstant ("0"));
-			ccall.add_argument (new CCodeConstant ("NULL"));
+
+		bool chain_up = false;
+		CreationMethod cm = null;
+		if (cl.base_class != null) {
+			cm = cl.base_class.default_construction_method as CreationMethod;
+			if (cm != null && cm.get_parameters ().size == 0
+			    && cm.has_construct_function) {
+				 if (!has_params) {
+					chain_up = true;
+				 }
+			}
 		}
-		
+
+		if (!has_params && !chain_up
+		    && cl.base_class != codegen.gobject_type) {
+			// possibly report warning or error about missing base call
+		}
+
 		var cdecl = new CCodeVariableDeclarator ("self");
-		cdecl.initializer = ccall;
+		if (chain_up) {
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier (cm.get_real_cname ()));
+			ccall.add_argument (new CCodeIdentifier ("object_type"));
+			cdecl.initializer = new CCodeCastExpression (ccall, "%s*".printf (cl.get_cname ()));
+		} else {
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_newv"));
+			ccall.add_argument (new CCodeIdentifier ("object_type"));
+			if (has_params) {
+				ccall.add_argument (new CCodeConstant ("__params_it - __params"));
+				ccall.add_argument (new CCodeConstant ("__params"));
+			} else {
+				ccall.add_argument (new CCodeConstant ("0"));
+				ccall.add_argument (new CCodeConstant ("NULL"));
+			}
+			cdecl.initializer = ccall;
+		}
 		
 		var cdeclaration = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 		cdeclaration.add_declarator (cdecl);

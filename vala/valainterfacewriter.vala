@@ -802,6 +802,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		if (m is CreationMethod && ((CreationMethod)m).custom_return_type_cname != null) {
 			ccode_params.append_printf ("%stype = \"%s\"", separator, ((CreationMethod)m).custom_return_type_cname);
+			separator = ", ";
+		}
+		if (m is CreationMethod && !m.has_construct_function) {
+			ccode_params.append_printf ("%shas_construct_function = false", separator);
+			separator = ", ";
 		}
 
 		if (ccode_params.len > 0) {

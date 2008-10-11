@@ -1,5 +1,15 @@
 2008-10-11  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterfacewriter.vala:
+	* vala/valamethod.vala:
+	* gobject/valaccodemethodbinding.vala:
+	* vapigen/valagidlparser.vala:
+
+	Always chain up to base constructor when possible,
+	add has_construct_function attribute
+
+2008-10-11  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala:
 	* vala/valacreationmethod.vala:
 	* vala/valainterfacewriter.vala:

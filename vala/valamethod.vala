@@ -194,6 +194,12 @@ public class Vala.Method : Member {
 	 */
 	public bool printf_format { get; set; }
 
+	/**
+	 * Specifies whether a construct function with a GType parameter is
+	 * available. This is only applicable to creation methods.
+	 */
+	public bool has_construct_function { get; set; default = true; }
+
 	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private string cname;
 	private string _vfunc_name;
@@ -372,6 +378,9 @@ public class Vala.Method : Member {
 		}
 		if (a.has_argument ("delegate_target_pos")) {
 			cdelegate_target_parameter_position = a.get_double ("delegate_target_pos");
+		}
+		if (a.has_argument ("has_construct_function")) {
+			has_construct_function = a.get_bool ("has_construct_function");
 		}
 	}
 	
