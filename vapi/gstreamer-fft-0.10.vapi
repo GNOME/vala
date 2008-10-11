@@ -18,6 +18,7 @@ namespace Gst {
 		public int len;
 		public void fft (float timedata, Gst.FFTF32Complex freqdata);
 		public void inverse_fft (Gst.FFTF32Complex freqdata, float timedata);
+		[CCode (has_construct_function = false)]
 		public FFTF32 (int len, bool inverse);
 		public void window (float timedata, Gst.FFTWindow window);
 	}
@@ -35,6 +36,7 @@ namespace Gst {
 		public int len;
 		public void fft (double timedata, Gst.FFTF64Complex freqdata);
 		public void inverse_fft (Gst.FFTF64Complex freqdata, double timedata);
+		[CCode (has_construct_function = false)]
 		public FFTF64 (int len, bool inverse);
 		public void window (double timedata, Gst.FFTWindow window);
 	}
@@ -52,6 +54,7 @@ namespace Gst {
 		public int len;
 		public void fft (short timedata, Gst.FFTS16Complex freqdata);
 		public void inverse_fft (Gst.FFTS16Complex freqdata, short timedata);
+		[CCode (has_construct_function = false)]
 		public FFTS16 (int len, bool inverse);
 		public void window (short timedata, Gst.FFTWindow window);
 	}
@@ -69,6 +72,7 @@ namespace Gst {
 		public int len;
 		public void fft (int timedata, Gst.FFTS32Complex freqdata);
 		public void inverse_fft (Gst.FFTS32Complex freqdata, int timedata);
+		[CCode (has_construct_function = false)]
 		public FFTS32 (int len, bool inverse);
 		public void window (int timedata, Gst.FFTWindow window);
 	}

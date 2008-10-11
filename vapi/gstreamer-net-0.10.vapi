@@ -7,6 +7,7 @@ namespace Gst {
 	public class NetTimePacket {
 		public Gst.ClockTime local_time;
 		public Gst.ClockTime remote_time;
+		[CCode (has_construct_function = false)]
 		public NetTimePacket (uchar buffer);
 		public static weak Gst.NetTimePacket receive (int fd, void* addr, uint32 len);
 		public int send (int fd, void* addr, uint32 len);
@@ -20,6 +21,7 @@ namespace Gst {
 		public Gst.ClockTime current_timeout;
 		public void* servaddr;
 		public weak GLib.Thread thread;
+		[CCode (type = "GstClock*", has_construct_function = false)]
 		public NetClientClock (string name, string remote_address, int remote_port, Gst.ClockTime base_time);
 		[NoAccessorMethod]
 		public string address { get; set; }
@@ -32,6 +34,7 @@ namespace Gst {
 		[NoArrayLength]
 		public weak int[] control_sock;
 		public weak GLib.Thread thread;
+		[CCode (has_construct_function = false)]
 		public NetTimeProvider (Gst.Clock clock, string address, int port);
 		[NoAccessorMethod]
 		public bool active { get; set; }

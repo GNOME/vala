@@ -122,6 +122,7 @@ namespace Gst {
 		public weak Gst.AudioClockGetTimeFunc func;
 		public void* user_data;
 		public Gst.ClockTime last_time;
+		[CCode (type = "GstClock*", has_construct_function = false)]
 		public AudioClock (string name, Gst.AudioClockGetTimeFunc func);
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
@@ -262,11 +263,11 @@ namespace Gst {
 	public const string AUDIO_INT_STANDARD_PAD_TEMPLATE_CAPS;
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static weak Gst.Buffer audio_buffer_clip (Gst.Buffer buffer, Gst.Segment segment, int rate, int frame_size);
-	[CCode (cheader_filename = "gst/audio/audio.h")]
+	[CCode (cheader_filename = "gst/audio/mixerutils.h")]
 	public static weak GLib.List audio_default_registry_mixer_filter (Gst.AudioMixerFilterFunc filter_func, bool first);
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static Gst.ClockTime audio_duration_from_pad_buffer (Gst.Pad pad, Gst.Buffer buf);
-	[CCode (cheader_filename = "gst/audio/audio.h")]
+	[CCode (cheader_filename = "gst/audio/multichannel.h")]
 	public static Gst.AudioChannelPosition audio_fixate_channel_positions (Gst.Structure str);
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static int audio_frame_byte_size (Gst.Pad pad);
@@ -276,11 +277,11 @@ namespace Gst {
 	public static Gst.AudioChannelPosition audio_get_channel_positions (Gst.Structure str);
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static bool audio_is_buffer_framed (Gst.Pad pad, Gst.Buffer buf);
-	[CCode (cheader_filename = "gst/audio/audio.h")]
+	[CCode (cheader_filename = "gst/audio/multichannel.h")]
 	public static void audio_set_caps_channel_positions_list (Gst.Caps caps, Gst.AudioChannelPosition pos, int num_positions);
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static void audio_set_channel_positions (Gst.Structure str, Gst.AudioChannelPosition pos);
-	[CCode (cheader_filename = "gst/audio/audio.h")]
+	[CCode (cheader_filename = "gst/audio/multichannel.h")]
 	public static void audio_set_structure_channel_positions_list (Gst.Structure str, Gst.AudioChannelPosition pos, int num_positions);
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static void audio_structure_set_int (Gst.Structure structure, Gst.AudioFieldFlag flag);

@@ -293,6 +293,7 @@ namespace Pango {
 	public class AttrFontDesc {
 		public weak Pango.Attribute attr;
 		public weak Pango.FontDescription desc;
+		[CCode (type = "PangoAttribute*", has_construct_function = false)]
 		public AttrFontDesc (Pango.FontDescription desc);
 	}
 	[Compact]
@@ -316,6 +317,7 @@ namespace Pango {
 	public class AttrLanguage {
 		public weak Pango.Attribute attr;
 		public weak Pango.Language value;
+		[CCode (type = "PangoAttribute*", has_construct_function = false)]
 		public AttrLanguage (Pango.Language language);
 	}
 	[Compact]
@@ -327,7 +329,9 @@ namespace Pango {
 		public void* data;
 		public weak Pango.AttrDataCopyFunc copy_func;
 		public weak GLib.DestroyNotify destroy_func;
+		[CCode (type = "PangoAttribute*", has_construct_function = false)]
 		public AttrShape (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect);
+		[CCode (type = "PangoAttribute*", has_construct_function = false)]
 		public AttrShape.with_data (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect, void* data, Pango.AttrDataCopyFunc copy_func, GLib.DestroyNotify destroy_func);
 	}
 	[Compact]
@@ -336,6 +340,7 @@ namespace Pango {
 		public weak Pango.Attribute attr;
 		public int size;
 		public uint absolute;
+		[CCode (type = "PangoAttribute*", has_construct_function = false)]
 		public AttrSize (int size);
 	}
 	[Compact]
@@ -365,6 +370,7 @@ namespace Pango {
 		public static weak Pango.Coverage from_bytes (uchar[][] bytes);
 		public Pango.CoverageLevel get (int index_);
 		public void max (Pango.Coverage other);
+		[CCode (has_construct_function = false)]
 		public Coverage ();
 		public void set (int index_, Pango.CoverageLevel level);
 		public void to_bytes (uchar[][] bytes);
@@ -416,6 +422,7 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class ScriptIter {
 		public void get_range (out weak string start, out weak string end, Pango.Script script);
+		[CCode (has_construct_function = false)]
 		public ScriptIter (string text, int length);
 		public bool next ();
 	}
@@ -428,6 +435,7 @@ namespace Pango {
 		public weak Pango.AttrIterator get_iterator ();
 		public void insert (Pango.Attribute attr);
 		public void insert_before (Pango.Attribute attr);
+		[CCode (has_construct_function = false)]
 		public AttrList ();
 		public void splice (Pango.AttrList other, int pos, int len);
 	}
@@ -451,6 +459,7 @@ namespace Pango {
 		public uint hash ();
 		public void merge (Pango.FontDescription desc_to_merge, bool replace_existing);
 		public void merge_static (Pango.FontDescription desc_to_merge, bool replace_existing);
+		[CCode (has_construct_function = false)]
 		public FontDescription ();
 		public void set_absolute_size (double size);
 		public void set_family (string family);
@@ -500,6 +509,7 @@ namespace Pango {
 		public void get_logical_widths (string text, int length, int embedding_level, int logical_widths);
 		public int get_width ();
 		public void index_to_x (string text, int length, Pango.Analysis analysis, int index_, bool trailing, int x_pos);
+		[CCode (has_construct_function = false)]
 		public GlyphString ();
 		public void set_size (int new_len);
 		public void x_to_index (string text, int length, Pango.Analysis analysis, int x_pos, int index_, int trailing);
@@ -512,6 +522,7 @@ namespace Pango {
 		public int num_chars;
 		public weak Pango.Analysis analysis;
 		public weak Pango.Item copy ();
+		[CCode (has_construct_function = false)]
 		public Item ();
 		public weak Pango.Item split (int split_index, int split_offset);
 	}
@@ -561,7 +572,9 @@ namespace Pango {
 		public int get_size ();
 		public void get_tab (int tab_index, Pango.TabAlign alignment, int location);
 		public void get_tabs (out Pango.TabAlign alignments, int locations);
+		[CCode (has_construct_function = false)]
 		public TabArray (int initial_size, bool positions_in_pixels);
+		[CCode (has_construct_function = false)]
 		public TabArray.with_positions (int size, bool positions_in_pixels, Pango.TabAlign first_alignment, ...);
 		public void resize (int new_size);
 		public void set_tab (int tab_index, Pango.TabAlign alignment, int location);
@@ -661,6 +674,7 @@ namespace Pango {
 		public bool is_ellipsized ();
 		public bool is_wrapped ();
 		public void move_cursor_visually (bool strong, int old_index, int old_trailing, int direction, int new_index, int new_trailing);
+		[CCode (has_construct_function = false)]
 		public Layout (Pango.Context context);
 		public void set_alignment (Pango.Alignment alignment);
 		public void set_attributes (Pango.AttrList attrs);

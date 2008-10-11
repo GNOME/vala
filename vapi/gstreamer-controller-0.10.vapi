@@ -51,8 +51,11 @@ namespace Gst {
 		public bool get_value_array (Gst.ClockTime timestamp, Gst.ValueArray value_array);
 		public bool get_value_arrays (Gst.ClockTime timestamp, GLib.SList value_arrays);
 		public static bool init (int argc, out weak string argv);
+		[CCode (has_construct_function = false)]
 		public Controller (GLib.Object object);
+		[CCode (has_construct_function = false)]
 		public Controller.list (GLib.Object object, GLib.List list);
+		[CCode (has_construct_function = false)]
 		public Controller.valist (GLib.Object object, void* var_args);
 		public bool remove_properties ();
 		public bool remove_properties_list (GLib.List list);
@@ -75,6 +78,7 @@ namespace Gst {
 		public weak GLib.Mutex @lock;
 		public weak GLib.List get_all ();
 		public int get_count ();
+		[CCode (has_construct_function = false)]
 		public InterpolationControlSource ();
 		public bool set (Gst.ClockTime timestamp, GLib.Value value);
 		public bool set_from_list (GLib.SList timedvalues);
@@ -85,6 +89,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/controller/gstlfocontrolsource.h")]
 	public class LFOControlSource : Gst.ControlSource {
 		public weak GLib.Mutex @lock;
+		[CCode (has_construct_function = false)]
 		public LFOControlSource ();
 		[NoAccessorMethod]
 		public GLib.Value amplitude { get; set; }

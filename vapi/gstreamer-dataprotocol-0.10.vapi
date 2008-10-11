@@ -28,6 +28,7 @@ namespace Gst {
 		public weak Gst.DPHeaderFromBufferFunction header_from_buffer;
 		public weak Gst.DPPacketFromCapsFunction packet_from_caps;
 		public weak Gst.DPPacketFromEventFunction packet_from_event;
+		[CCode (has_construct_function = false)]
 		public DPPacketizer (Gst.DPVersion version);
 	}
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]

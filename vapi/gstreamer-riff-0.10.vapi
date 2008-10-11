@@ -364,34 +364,34 @@ namespace Gst {
 	public const int RIFF_WAVE_FORMAT_YAMAHA_ADPCM;
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_ZYXEL_ADPCM;
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-media.h")]
 	public static weak Gst.Caps riff_create_audio_caps (ushort codec_id, Gst.gst_riff_strh strh, Gst.gst_riff_strf_auds strf, Gst.Buffer strf_data, Gst.Buffer strd_data, out weak string codec_name);
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-media.h")]
 	public static weak Gst.Caps riff_create_audio_template_caps ();
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-media.h")]
 	public static weak Gst.Caps riff_create_iavs_caps (uint codec_fcc, Gst.gst_riff_strh strh, Gst.gst_riff_strf_iavs strf, Gst.Buffer strf_data, Gst.Buffer strd_data, out weak string codec_name);
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-media.h")]
 	public static weak Gst.Caps riff_create_iavs_template_caps ();
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-media.h")]
 	public static weak Gst.Caps riff_create_video_caps (uint codec_fcc, Gst.gst_riff_strh strh, Gst.gst_riff_strf_vids strf, Gst.Buffer strf_data, Gst.Buffer strd_data, out weak string codec_name);
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-media.h")]
 	public static weak Gst.Caps riff_create_video_template_caps ();
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-read.h")]
 	public static void riff_init ();
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-read.h")]
 	public static bool riff_parse_chunk (Gst.Element element, Gst.Buffer buf, uint offset, uint fourcc, out weak Gst.Buffer chunk_data);
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-read.h")]
 	public static bool riff_parse_file_header (Gst.Element element, Gst.Buffer buf, uint doctype);
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-read.h")]
 	public static void riff_parse_info (Gst.Element element, Gst.Buffer buf, out weak Gst.TagList taglist);
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-read.h")]
 	public static bool riff_parse_strf_auds (Gst.Element element, Gst.Buffer buf, out weak Gst.gst_riff_strf_auds strf, out weak Gst.Buffer data);
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-read.h")]
 	public static bool riff_parse_strf_iavs (Gst.Element element, Gst.Buffer buf, out weak Gst.gst_riff_strf_iavs strf, out weak Gst.Buffer data);
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-read.h")]
 	public static bool riff_parse_strf_vids (Gst.Element element, Gst.Buffer buf, out weak Gst.gst_riff_strf_vids strf, out weak Gst.Buffer data);
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-read.h")]
 	public static bool riff_parse_strh (Gst.Element element, Gst.Buffer buf, out weak Gst.gst_riff_strh strh);
-	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	[CCode (cheader_filename = "gst/riff/riff-read.h")]
 	public static Gst.FlowReturn riff_read_chunk (Gst.Element element, Gst.Pad pad, uint64 offset, uint tag, out weak Gst.Buffer chunk_data);
 }

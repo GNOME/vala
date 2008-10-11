@@ -514,17 +514,29 @@ namespace Gst {
 		public Event ();
 		public weak Gst.Structure get_structure ();
 		public bool has_name (string name);
+		[CCode (has_construct_function = false)]
 		public Event.buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool async);
+		[CCode (has_construct_function = false)]
 		public Event.custom (Gst.EventType type, Gst.Structure# structure);
+		[CCode (has_construct_function = false)]
 		public Event.eos ();
+		[CCode (has_construct_function = false)]
 		public Event.flush_start ();
+		[CCode (has_construct_function = false)]
 		public Event.flush_stop ();
+		[CCode (has_construct_function = false)]
 		public Event.latency (Gst.ClockTime latency);
+		[CCode (has_construct_function = false)]
 		public Event.navigation (Gst.Structure# structure);
+		[CCode (has_construct_function = false)]
 		public Event.new_segment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 position);
+		[CCode (has_construct_function = false)]
 		public Event.new_segment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 position);
+		[CCode (has_construct_function = false)]
 		public Event.qos (double proportion, Gst.ClockTimeDiff diff, Gst.ClockTime timestamp);
+		[CCode (has_construct_function = false)]
 		public Event.seek (double rate, Gst.Format format, Gst.SeekFlags flags, Gst.SeekType start_type, int64 start, Gst.SeekType stop_type, int64 stop);
+		[CCode (has_construct_function = false)]
 		public Event.tag (Gst.TagList taglist);
 		public void parse_buffer_size (out Gst.Format format, out int64 minsize, out int64 maxsize, out bool async);
 		public void parse_latency (out Gst.ClockTime latency);
@@ -595,6 +607,7 @@ namespace Gst {
 		public weak Gst.Buffer join (Gst.Buffer buf2);
 		public weak Gst.Buffer make_metadata_writable ();
 		public weak Gst.Buffer merge (Gst.Buffer buf2);
+		[CCode (has_construct_function = false)]
 		public Buffer.and_alloc (uint size);
 		public void set_caps (Gst.Caps caps);
 		public weak Gst.Buffer span (uint offset, Gst.Buffer buf2, uint len);
@@ -673,7 +686,9 @@ namespace Gst {
 		public bool is_linked ();
 		public Gst.PadLinkReturn link (Gst.Pad sinkpad);
 		public void load_and_link (Gst.Object parent);
+		[CCode (has_construct_function = false)]
 		public Pad.from_static_template (Gst.StaticPadTemplate templ, string name);
+		[CCode (has_construct_function = false)]
 		public Pad.from_template (Gst.PadTemplate templ, string name);
 		public bool pause_task ();
 		public bool peer_accept_caps (Gst.Caps caps);
@@ -760,10 +775,15 @@ namespace Gst {
 		public weak Gst.Caps make_writable ();
 		public void merge (Gst.Caps caps2);
 		public void merge_structure (Gst.Structure structure);
+		[CCode (has_construct_function = false)]
 		public Caps.any ();
+		[CCode (has_construct_function = false)]
 		public Caps.empty ();
+		[CCode (has_construct_function = false)]
 		public Caps.full (Gst.Structure struct1, ...);
+		[CCode (has_construct_function = false)]
 		public Caps.full_valist (Gst.Structure structure, void* var_args);
+		[CCode (has_construct_function = false)]
 		public Caps.simple (string media_type, string fieldname, ...);
 		public weak Gst.Caps normalize ();
 		public void remove_structure (uint idx);
@@ -890,7 +910,9 @@ namespace Gst {
 		public void* find_custom (GLib.CompareFunc func);
 		public Gst.IteratorResult fold (Gst.IteratorFoldFunction func, GLib.Value ret);
 		public Gst.IteratorResult @foreach (GLib.Func func);
+		[CCode (has_construct_function = false)]
 		public Iterator (uint size, GLib.Type type, GLib.Mutex @lock, uint master_cookie, Gst.IteratorNextFunction next, Gst.IteratorItemFunction item, Gst.IteratorResyncFunction resync, Gst.IteratorFreeFunction free);
+		[CCode (has_construct_function = false)]
 		public Iterator.list (GLib.Type type, GLib.Mutex @lock, uint master_cookie, GLib.List list, void* owner, Gst.IteratorItemFunction item, Gst.IteratorDisposeFunction free);
 		public void push (Gst.Iterator other);
 	}
@@ -903,25 +925,45 @@ namespace Gst {
 		public weak Gst.Object src;
 		public weak Gst.Structure structure;
 		public weak Gst.Structure get_structure ();
+		[CCode (has_construct_function = false)]
 		public Message.application (Gst.Object src, Gst.Structure structure);
+		[CCode (has_construct_function = false)]
 		public Message.async_done (Gst.Object src);
+		[CCode (has_construct_function = false)]
 		public Message.async_start (Gst.Object src, bool new_base_time);
+		[CCode (has_construct_function = false)]
 		public Message.buffering (Gst.Object src, int percent);
+		[CCode (has_construct_function = false)]
 		public Message.clock_lost (Gst.Object src, Gst.Clock clock);
+		[CCode (has_construct_function = false)]
 		public Message.clock_provide (Gst.Object src, Gst.Clock clock, bool ready);
+		[CCode (has_construct_function = false)]
 		public Message.custom (Gst.MessageType type, Gst.Object src, Gst.Structure structure);
+		[CCode (has_construct_function = false)]
 		public Message.duration (Gst.Object src, Gst.Format format, int64 duration);
+		[CCode (has_construct_function = false)]
 		public Message.element (Gst.Object src, Gst.Structure structure);
+		[CCode (has_construct_function = false)]
 		public Message.eos (Gst.Object src);
+		[CCode (has_construct_function = false)]
 		public Message.error (Gst.Object src, GLib.Error error, string debug);
+		[CCode (has_construct_function = false)]
 		public Message.info (Gst.Object src, GLib.Error error, string debug);
+		[CCode (has_construct_function = false)]
 		public Message.latency (Gst.Object src);
+		[CCode (has_construct_function = false)]
 		public Message.new_clock (Gst.Object src, Gst.Clock clock);
+		[CCode (has_construct_function = false)]
 		public Message.segment_done (Gst.Object src, Gst.Format format, int64 position);
+		[CCode (has_construct_function = false)]
 		public Message.segment_start (Gst.Object src, Gst.Format format, int64 position);
+		[CCode (has_construct_function = false)]
 		public Message.state_changed (Gst.Object src, Gst.State oldstate, Gst.State newstate, Gst.State pending);
+		[CCode (has_construct_function = false)]
 		public Message.state_dirty (Gst.Object src);
+		[CCode (has_construct_function = false)]
 		public Message.tag (Gst.Object src, Gst.TagList tag_list);
+		[CCode (has_construct_function = false)]
 		public Message.warning (Gst.Object src, GLib.Error error, string debug);
 		public void parse_async_start (out bool new_base_time);
 		public void parse_buffering (out int percent);
@@ -952,6 +994,7 @@ namespace Gst {
 		public weak Gst.MiniObject copy ();
 		public bool is_writable ();
 		public weak Gst.MiniObject make_writable ();
+		[CCode (has_construct_function = false)]
 		public MiniObject (GLib.Type type);
 		public void replace (Gst.MiniObject newdata);
 	}
@@ -991,6 +1034,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Poll {
 		public bool add_fd (Gst.PollFD fd);
+		[CCode (has_construct_function = false)]
 		public Poll (bool controllable);
 		public bool remove_fd (Gst.PollFD fd);
 		public void restart ();
@@ -1017,14 +1061,23 @@ namespace Gst {
 		public Gst.QueryType type;
 		public weak Gst.Structure structure;
 		public weak Gst.Structure get_structure ();
+		[CCode (has_construct_function = false)]
 		public Query.application (Gst.QueryType type, Gst.Structure structure);
+		[CCode (has_construct_function = false)]
 		public Query.buffering (Gst.Format format);
+		[CCode (has_construct_function = false)]
 		public Query.convert (Gst.Format src_format, int64 value, Gst.Format dest_format);
+		[CCode (has_construct_function = false)]
 		public Query.duration (Gst.Format format);
+		[CCode (has_construct_function = false)]
 		public Query.formats ();
+		[CCode (has_construct_function = false)]
 		public Query.latency ();
+		[CCode (has_construct_function = false)]
 		public Query.position (Gst.Format format);
+		[CCode (has_construct_function = false)]
 		public Query.seeking (Gst.Format format);
+		[CCode (has_construct_function = false)]
 		public Query.segment (Gst.Format format);
 		public void parse_buffering_percent (bool busy, int percent);
 		public void parse_buffering_range (Gst.Format format, int64 start, int64 stop, int64 estimated_total);
@@ -1111,6 +1164,7 @@ namespace Gst {
 		public void insert (Gst.TagList from, Gst.TagMergeMode mode);
 		public bool is_empty ();
 		public weak Gst.TagList merge (Gst.TagList list2, Gst.TagMergeMode mode);
+		[CCode (has_construct_function = false)]
 		public TagList ();
 		public void remove_tag (string tag);
 	}
@@ -1123,6 +1177,7 @@ namespace Gst {
 		public int bufsize;
 		public int bufoffset;
 		public void flush ();
+		[CCode (has_construct_function = false)]
 		public Trace (string filename, int size);
 		public static void read_tsc (int64 dst);
 		public void set_default ();
@@ -1198,6 +1253,7 @@ namespace Gst {
 		public bool clip (Gst.Format format, int64 start, int64 stop, int64 clip_start, int64 clip_stop);
 		public weak Gst.Segment copy ();
 		public void init (Gst.Format format);
+		[CCode (has_construct_function = false)]
 		public Segment ();
 		public void set_duration (Gst.Format format, int64 duration);
 		public void set_last_stop (Gst.Format format, int64 position);
@@ -1247,7 +1303,9 @@ namespace Gst {
 		public void id_set_value (GLib.Quark field, GLib.Value value);
 		public bool map_in_place (Gst.StructureMapFunc func);
 		public int n_fields ();
+		[CCode (has_construct_function = false)]
 		public Structure (string name, string firstfield, ...);
+		[CCode (has_construct_function = false)]
 		public Structure.valist (string name, string firstfield, void* varargs);
 		public weak string nth_field_name (uint index);
 		public void remove_all_fields ();
@@ -1285,7 +1343,7 @@ namespace Gst {
 		public weak Gst.Iterator iterate_sinks ();
 		public weak Gst.Iterator iterate_sorted ();
 		public weak Gst.Iterator iterate_sources ();
-		[CCode (type = "GstElement*")]
+		[CCode (type = "GstElement*", has_construct_function = false)]
 		public Bin (string name);
 		public bool remove (Gst.Element element);
 		public void remove_many (Gst.Element element_1, ...);
@@ -1317,6 +1375,7 @@ namespace Gst {
 		public void disable_sync_message_emission ();
 		public void enable_sync_message_emission ();
 		public bool have_pending ();
+		[CCode (has_construct_function = false)]
 		public Bus ();
 		public weak Gst.Message peek ();
 		public weak Gst.Message poll (Gst.MessageType events, Gst.ClockTimeDiff timeout);
@@ -1353,9 +1412,9 @@ namespace Gst {
 		public void get_calibration (Gst.ClockTime internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
 		public weak Gst.Clock get_master ();
 		public Gst.ClockTime get_time ();
-		[CCode (type = "GstClockID")]
+		[CCode (type = "GstClockID", has_construct_function = false)]
 		public Clock.periodic_id (Gst.Clock clock, Gst.ClockTime start_time, Gst.ClockTime interval);
-		[CCode (type = "GstClockID")]
+		[CCode (type = "GstClockID", has_construct_function = false)]
 		public Clock.single_shot_id (Gst.Clock clock, Gst.ClockTime time);
 		public void set_calibration (Gst.ClockTime internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
 		public bool set_master (Gst.Clock master);
@@ -1510,13 +1569,13 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class GhostPad : Gst.Pad {
 		public weak Gst.Pad get_target ();
-		[CCode (type = "GstPad*")]
+		[CCode (type = "GstPad*", has_construct_function = false)]
 		public GhostPad (string name, Gst.Pad target);
-		[CCode (type = "GstPad*")]
+		[CCode (type = "GstPad*", has_construct_function = false)]
 		public GhostPad.from_template (string name, Gst.Pad target, Gst.PadTemplate templ);
-		[CCode (type = "GstPad*")]
+		[CCode (type = "GstPad*", has_construct_function = false)]
 		public GhostPad.no_target (string name, Gst.PadDirection dir);
-		[CCode (type = "GstPad*")]
+		[CCode (type = "GstPad*", has_construct_function = false)]
 		public GhostPad.no_target_from_template (string name, Gst.PadTemplate templ);
 		public bool set_target (Gst.Pad? newtarget);
 	}
@@ -1541,8 +1600,9 @@ namespace Gst {
 		public weak Gst.IndexEntry get_assoc_entry_full (int id, Gst.IndexLookupMethod method, Gst.AssocFlags flags, Gst.Format format, int64 value, GLib.CompareDataFunc func);
 		public Gst.IndexCertainty get_certainty ();
 		public int get_group ();
+		[CCode (has_construct_function = false)]
 		public Index ();
-		[CCode (type = "gint")]
+		[CCode (type = "gint", has_construct_function = false)]
 		public Index.group (Gst.Index index);
 		public void set_certainty (Gst.IndexCertainty certainty);
 		public void set_filter (Gst.IndexFilter filter);
@@ -1567,6 +1627,7 @@ namespace Gst {
 		public void destroy ();
 		public static weak Gst.IndexFactory find (string name);
 		public static weak Gst.Index make (string name);
+		[CCode (has_construct_function = false)]
 		public IndexFactory (string name, string longdesc, GLib.Type type);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1576,6 +1637,7 @@ namespace Gst {
 		public Gst.PadPresence presence;
 		public weak Gst.Caps caps;
 		public weak Gst.Caps get_caps ();
+		[CCode (has_construct_function = false)]
 		public PadTemplate (string name_template, Gst.PadDirection direction, Gst.PadPresence presence, Gst.Caps caps);
 		[HasEmitter]
 		public virtual signal void pad_created (Gst.Pad pad);
@@ -1590,7 +1652,7 @@ namespace Gst {
 		public weak Gst.Clock get_clock ();
 		public Gst.ClockTime get_delay ();
 		public Gst.ClockTime get_last_stream_time ();
-		[CCode (type = "GstElement*")]
+		[CCode (type = "GstElement*", has_construct_function = false)]
 		public Pipeline (string name);
 		public void set_auto_flush_bus (bool auto_flush);
 		public bool set_clock (Gst.Clock clock);
@@ -1722,6 +1784,7 @@ namespace Gst {
 		public weak Gst.Element get_element (uchar[] name);
 		public weak GLib.List get_topelements ();
 		public static weak Gst.Element make_element (void* cur, Gst.Object parent);
+		[CCode (has_construct_function = false)]
 		public XML ();
 		public bool parse_doc (void* doc, uchar[] root);
 		public bool parse_file (uchar[] fname, uchar[] root);

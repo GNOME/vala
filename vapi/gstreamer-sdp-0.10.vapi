@@ -69,6 +69,7 @@ namespace Gst {
 		public uint get_port ();
 		public weak string get_proto ();
 		public Gst.SDPResult init ();
+		[CCode (type = "GstSDPResult", has_construct_function = false)]
 		public SDPMedia (out weak Gst.SDPMedia media);
 		public Gst.SDPResult set_information (string information);
 		public Gst.SDPResult set_key (string type, string data);
@@ -124,6 +125,7 @@ namespace Gst {
 		public weak Gst.SDPZone get_zone (uint idx);
 		public Gst.SDPResult init ();
 		public uint medias_len ();
+		[CCode (type = "GstSDPResult", has_construct_function = false)]
 		public SDPMessage (out weak Gst.SDPMessage msg);
 		public static Gst.SDPResult parse_buffer (uchar data, uint size, Gst.SDPMessage msg);
 		public uint phones_len ();

@@ -31,7 +31,7 @@ namespace Gst {
 		public weak Gst.Buffer buffer;
 		public weak Gst.NetAddress from;
 		public weak Gst.NetAddress to;
-		[CCode (cname = "gst_netbuffer_new")]
+		[CCode (cname = "gst_netbuffer_new", has_construct_function = false)]
 		public NetBuffer ();
 	}
 	[Compact]

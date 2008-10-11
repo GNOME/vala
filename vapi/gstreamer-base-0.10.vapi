@@ -7,7 +7,7 @@ namespace Gst {
 		STARTED,
 		FLAG_LAST
 	}
-	[CCode (cheader_filename = "gst/base/gstbasesink.h")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class BaseSrc : Gst.Element {
 		public Gst.Pad srcpad;
 		public GLib.Mutex live_lock;
@@ -77,7 +77,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public bool typefind { get; set; }
 	}
-	[CCode (cheader_filename = "gst/base/gstbasetransform.h")]
+	[CCode (cheader_filename = "gst/gst.h")]
 	public class BaseTransform : Gst.Element {
 		public Gst.Pad sinkpad;
 		public Gst.Pad srcpad;
@@ -164,6 +164,7 @@ namespace Gst {
 		public void clear ();
 		public void copy (uchar dest, uint offset, uint size);
 		public void flush (uint flush);
+		[CCode (has_construct_function = false)]
 		public Adapter ();
 		public uchar peek (uint size);
 		public void push (Gst.Buffer buf);
@@ -265,6 +266,7 @@ namespace Gst {
 		public Gst.FlowReturn collect_range (uint64 offset, uint length);
 		public uint flush (Gst.CollectData data, uint size);
 		public bool is_active (Gst.Pad pad);
+		[CCode (has_construct_function = false)]
 		public CollectPads ();
 		public weak Gst.Buffer peek (Gst.CollectData data);
 		public weak Gst.Buffer pop (Gst.CollectData data);
@@ -293,6 +295,7 @@ namespace Gst {
 		public bool is_empty ();
 		public bool is_full ();
 		public void limits_changed ();
+		[CCode (has_construct_function = false)]
 		public DataQueue (Gst.DataQueueCheckFullFunction checkfull, void* checkdata);
 		public bool pop (out weak Gst.DataQueueItem item);
 		public bool push (Gst.DataQueueItem item);

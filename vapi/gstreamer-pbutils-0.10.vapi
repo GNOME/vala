@@ -18,7 +18,8 @@ namespace Gst {
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
-	public class InstallPluginsContext : GLib.Boxed {
+	public class InstallPluginsContext {
+		[CCode (has_construct_function = false)]
 		public InstallPluginsContext ();
 		public void set_xid (uint xid);
 	}

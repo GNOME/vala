@@ -27,16 +27,20 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gdesktopappinfo.h")]
 	public class DesktopAppInfo : GLib.Object, GLib.AppInfo {
 		public bool get_is_hidden ();
+		[CCode (has_construct_function = false)]
 		public DesktopAppInfo (string desktop_id);
+		[CCode (has_construct_function = false)]
 		public DesktopAppInfo.from_filename (string filename);
 		public static void set_desktop_env (string desktop_env);
 	}
 	[CCode (cheader_filename = "gio/gunixinputstream.h")]
 	public class UnixInputStream : GLib.InputStream {
+		[CCode (type = "GInputStream*", has_construct_function = false)]
 		public UnixInputStream (int fd, bool close_fd_at_close);
 	}
 	[CCode (cheader_filename = "gio/gunixmounts.h")]
 	public class UnixMountMonitor : GLib.Object {
+		[CCode (has_construct_function = false)]
 		public UnixMountMonitor ();
 		public void set_rate_limit (int limit_msec);
 		public virtual signal void mountpoints_changed ();
@@ -44,6 +48,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gunixoutputstream.h")]
 	public class UnixOutputStream : GLib.OutputStream {
+		[CCode (type = "GOutputStream*", has_construct_function = false)]
 		public UnixOutputStream (int fd, bool close_fd_at_close);
 	}
 	[CCode (cheader_filename = "gio/gunixmounts.h")]

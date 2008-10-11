@@ -318,10 +318,12 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class NoOpObject : Atk.Object, Atk.Text, Atk.Action, Atk.Hypertext, Atk.Selection, Atk.Table, Atk.Image, Atk.Value, Atk.Component, Atk.EditableText, Atk.Document {
+		[CCode (type = "AtkObject*", has_construct_function = false)]
 		public NoOpObject (GLib.Object obj);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class NoOpObjectFactory : Atk.ObjectFactory {
+		[CCode (type = "AtkObjectFactory*", has_construct_function = false)]
 		public NoOpObjectFactory ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
@@ -414,6 +416,7 @@ namespace Atk {
 		public void add_target (Atk.Object target);
 		public Atk.RelationType get_relation_type ();
 		public weak GLib.PtrArray get_target ();
+		[CCode (has_construct_function = false)]
 		public Relation (Atk.Object[] targets, Atk.RelationType relationship);
 		public static Atk.RelationType type_for_name (string name);
 		public static weak string type_get_name (Atk.RelationType type);
@@ -432,6 +435,7 @@ namespace Atk {
 		public int get_n_relations ();
 		public weak Atk.Relation get_relation (int i);
 		public weak Atk.Relation get_relation_by_type (Atk.RelationType relationship);
+		[CCode (has_construct_function = false)]
 		public RelationSet ();
 		public void remove (Atk.Relation relation);
 	}
@@ -444,6 +448,7 @@ namespace Atk {
 		public bool contains_state (Atk.StateType type);
 		public bool contains_states (Atk.StateType[] types);
 		public bool is_empty ();
+		[CCode (has_construct_function = false)]
 		public StateSet ();
 		public weak Atk.StateSet or_sets (Atk.StateSet compare_set);
 		public bool remove_state (Atk.StateType type);

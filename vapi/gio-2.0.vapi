@@ -188,6 +188,7 @@ namespace GLib {
 		public void add (string name, GLib.FileAttributeType type, GLib.FileAttributeInfoFlags flags);
 		public weak GLib.FileAttributeInfoList dup ();
 		public weak GLib.FileAttributeInfo lookup (string name);
+		[CCode (has_construct_function = false)]
 		public FileAttributeInfoList ();
 	}
 	[Compact]
@@ -197,6 +198,7 @@ namespace GLib {
 		public weak string enumerate_next ();
 		public bool matches (string attribute);
 		public bool matches_only (string attribute);
+		[CCode (has_construct_function = false)]
 		public FileAttributeMatcher (string attributes);
 	}
 	[Compact]
@@ -245,6 +247,7 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class AppLaunchContext : GLib.Object {
+		[CCode (has_construct_function = false)]
 		public AppLaunchContext ();
 		public virtual weak string get_display (GLib.AppInfo info, GLib.List files);
 		public virtual weak string get_startup_notify_id (GLib.AppInfo info, GLib.List files);
@@ -254,9 +257,9 @@ namespace GLib {
 	public class BufferedInputStream : GLib.FilterInputStream {
 		public ulong get_available ();
 		public ulong get_buffer_size ();
-		[CCode (type = "GInputStream*")]
+		[CCode (type = "GInputStream*", has_construct_function = false)]
 		public BufferedInputStream (GLib.InputStream base_stream);
-		[CCode (type = "GInputStream*")]
+		[CCode (type = "GInputStream*", has_construct_function = false)]
 		public BufferedInputStream.sized (GLib.InputStream base_stream, ulong size);
 		public ulong peek (void* buffer, ulong offset, ulong count);
 		public void* peek_buffer (ulong count);
@@ -271,9 +274,9 @@ namespace GLib {
 	public class BufferedOutputStream : GLib.FilterOutputStream {
 		public bool get_auto_grow ();
 		public ulong get_buffer_size ();
-		[CCode (type = "GOutputStream*")]
+		[CCode (type = "GOutputStream*", has_construct_function = false)]
 		public BufferedOutputStream (GLib.OutputStream base_stream);
-		[CCode (type = "GOutputStream*")]
+		[CCode (type = "GOutputStream*", has_construct_function = false)]
 		public BufferedOutputStream.sized (GLib.OutputStream base_stream, ulong size);
 		public void set_auto_grow (bool auto_grow);
 		public void set_buffer_size (ulong size);
@@ -286,6 +289,7 @@ namespace GLib {
 		public static weak GLib.Cancellable get_current ();
 		public int get_fd ();
 		public bool is_cancelled ();
+		[CCode (has_construct_function = false)]
 		public Cancellable ();
 		public void pop_current ();
 		public void push_current ();
@@ -297,6 +301,7 @@ namespace GLib {
 	public class DataInputStream : GLib.BufferedInputStream {
 		public GLib.DataStreamByteOrder get_byte_order ();
 		public GLib.DataStreamNewlineType get_newline_type ();
+		[CCode (has_construct_function = false)]
 		public DataInputStream (GLib.InputStream base_stream);
 		public uchar read_byte (GLib.Cancellable? cancellable) throws GLib.Error;
 		public short read_int16 (GLib.Cancellable? cancellable) throws GLib.Error;
@@ -315,6 +320,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class DataOutputStream : GLib.FilterOutputStream {
 		public GLib.DataStreamByteOrder get_byte_order ();
+		[CCode (has_construct_function = false)]
 		public DataOutputStream (GLib.OutputStream base_stream);
 		public bool put_byte (uchar data, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool put_int16 (short data, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -344,7 +350,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileIcon : GLib.Object, GLib.Icon, GLib.LoadableIcon {
 		public weak GLib.File get_file ();
-		[CCode (type = "GIcon*")]
+		[CCode (type = "GIcon*", has_construct_function = false)]
 		public FileIcon (GLib.File file);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -380,6 +386,7 @@ namespace GLib {
 		public weak string get_symlink_target ();
 		public bool has_attribute (string attribute);
 		public weak string list_attributes (string name_space);
+		[CCode (has_construct_function = false)]
 		public FileInfo ();
 		public void remove_attribute (string attribute);
 		public void set_attribute (string attribute, GLib.FileAttributeType type, void* value_p);
@@ -453,6 +460,7 @@ namespace GLib {
 	public class FilenameCompleter : GLib.Object {
 		public weak string get_completion_suffix (string initial_text);
 		public weak string get_completions (string initial_text);
+		[CCode (has_construct_function = false)]
 		public FilenameCompleter ();
 		public void set_dirs_only (bool dirs_only);
 		public virtual signal void got_completion_data ();
@@ -472,6 +480,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class IOModule : GLib.TypeModule, GLib.TypePlugin {
 		public void load ();
+		[CCode (has_construct_function = false)]
 		public IOModule (string filename);
 		public void unload ();
 	}
@@ -499,9 +508,9 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MemoryInputStream : GLib.InputStream, GLib.Seekable {
 		public void add_data (void* data, long len, GLib.DestroyNotify? destroy);
-		[CCode (type = "GInputStream*")]
+		[CCode (type = "GInputStream*", has_construct_function = false)]
 		public MemoryInputStream ();
-		[CCode (type = "GInputStream*")]
+		[CCode (type = "GInputStream*", has_construct_function = false)]
 		public MemoryInputStream.from_data (void* data, long len, GLib.DestroyNotify? destroy);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -509,7 +518,7 @@ namespace GLib {
 		public void* get_data ();
 		public ulong get_data_size ();
 		public ulong get_size ();
-		[CCode (type = "GOutputStream*")]
+		[CCode (type = "GOutputStream*", has_construct_function = false)]
 		public MemoryOutputStream (void* data, ulong len, GLib.ReallocFunc realloc_fn, GLib.DestroyNotify? destroy);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -520,6 +529,7 @@ namespace GLib {
 		public weak string get_password ();
 		public GLib.PasswordSave get_password_save ();
 		public weak string get_username ();
+		[CCode (has_construct_function = false)]
 		public MountOperation ();
 		public void set_anonymous (bool anonymous);
 		public void set_choice (int choice);
@@ -575,8 +585,11 @@ namespace GLib {
 		public void* get_op_res_gpointer ();
 		public long get_op_res_gssize ();
 		public void* get_source_tag ();
+		[CCode (has_construct_function = false)]
 		public SimpleAsyncResult (GLib.Object source_object, GLib.AsyncReadyCallback callback, void* source_tag);
+		[CCode (has_construct_function = false)]
 		public SimpleAsyncResult.error (GLib.Object source_object, GLib.AsyncReadyCallback callback, GLib.Quark domain, int code, string format);
+		[CCode (has_construct_function = false)]
 		public SimpleAsyncResult.from_error (GLib.Object source_object, GLib.AsyncReadyCallback callback, GLib.Error error);
 		public bool propagate_error () throws GLib.Error;
 		public void run_in_thread (GLib.SimpleAsyncThreadFunc func, int io_priority, GLib.Cancellable? cancellable);
@@ -593,11 +606,11 @@ namespace GLib {
 		public void append_name (string iconname);
 		[NoArrayLength]
 		public weak string[] get_names ();
-		[CCode (type = "GIcon*")]
+		[CCode (type = "GIcon*", has_construct_function = false)]
 		public ThemedIcon (string iconname);
-		[CCode (type = "GIcon*")]
+		[CCode (type = "GIcon*", has_construct_function = false)]
 		public ThemedIcon.from_names (string[] iconnames, int len);
-		[CCode (type = "GIcon*")]
+		[CCode (type = "GIcon*", has_construct_function = false)]
 		public ThemedIcon.with_default_fallbacks (string iconname);
 		public void prepend_name (string iconname);
 		[NoAccessorMethod]
