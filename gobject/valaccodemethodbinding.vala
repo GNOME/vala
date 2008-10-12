@@ -696,7 +696,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 				var cparam = new CCodeFormalParameter (codegen.get_array_length_cname ("result", dim), "int*");
 				cparam_map.set (codegen.get_param_pos (m.carray_length_parameter_position + 0.01 * dim), cparam);
 				if (carg_map != null) {
-					carg_map.set (codegen.get_param_pos (m.carray_length_parameter_position), new CCodeIdentifier (cparam.name));
+					carg_map.set (codegen.get_param_pos (m.carray_length_parameter_position + 0.01 * dim), new CCodeIdentifier (cparam.name));
 				}
 			}
 		} else if (creturn_type is DelegateType) {

@@ -1,3 +1,9 @@
+2008-10-12  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodemethodbinding.vala:
+
+	Fix code generation for virtual methods returning arrays
+
 2008-10-11  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegenerator.vala:
