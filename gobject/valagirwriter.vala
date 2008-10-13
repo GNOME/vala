@@ -346,6 +346,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			write_type (param.parameter_type);
 
 			indent--;
+			write_indent ();
 			stream.printf ("</parameter>\n");
 		}
 

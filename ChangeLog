@@ -1,5 +1,11 @@
 2008-10-13  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valagirwriter.vala:
+
+	Fix indentation of parameters
+
+2008-10-13  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/Makefile.am:
 	* gobject/valagirwriter.vala:
 	* compiler/valacompiler.vala:
