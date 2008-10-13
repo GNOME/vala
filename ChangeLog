@@ -1,3 +1,11 @@
+2008-10-13  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/Makefile.am:
+	* gobject/valagirwriter.vala:
+	* compiler/valacompiler.vala:
+
+	Add partial support for writing .gir files, replaces .gidl writer
+
 2008-10-12  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodemethodbinding.vala:

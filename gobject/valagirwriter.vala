@@ -1,4 +1,4 @@
-/* valagidlwriter.vala
+/* valagirwriter.vala
  *
  * Copyright (C) 2008  Jürg Billeter
  *
@@ -24,9 +24,9 @@ using GLib;
 using Gee;
 
 /**
- * Code visitor generating .gidl file for the public interface.
+ * Code visitor generating .gir file for the public interface.
  */
-public class Vala.GIdlWriter : CodeVisitor {
+public class Vala.GIRWriter : CodeVisitor {
 	private CodeContext context;
 	
 	FileStream stream;
@@ -53,11 +53,11 @@ public class Vala.GIdlWriter : CodeVisitor {
 
 		stream.printf ("<?xml version=\"1.0\"?>\n");
 
-		stream.printf ("<api version=\"1.0\">\n");
+		stream.printf ("<repository version=\"1.0\">\n");
 
 		context.accept (this);
 
-		stream.printf ("</api>\n");
+		stream.printf ("</repository>\n");
 
 		stream = null;
 	}
@@ -73,8 +73,14 @@ public class Vala.GIdlWriter : CodeVisitor {
 			return;
 		}
 
+		if (ns.parent_symbol.name != null) {
+			// nested namespace
+			// not supported in GIR at the moment
+			return;
+		}
+
 		write_indent ();
-		stream.printf ("<namespace name=\"%s\">\n", ns.name);
+		stream.printf ("<namespace name=\"%s\" version=\"1.0\">\n", ns.name);
 		indent++;
 
 		ns.accept_children (this);
@@ -95,10 +101,10 @@ public class Vala.GIdlWriter : CodeVisitor {
 
 		if (cl.is_subtype_of (gobject_type)) {
 			write_indent ();
-			stream.printf ("<object name=\"%s\"", cl.name);
+			stream.printf ("<class name=\"%s\"", cl.name);
 			stream.printf (" parent=\"%s\"", cl.base_class.get_full_name ());
-			stream.printf (" type-name=\"%s\"", cl.get_cname ());
-			stream.printf (" get-type=\"%sget_type\"", cl.get_lower_case_cprefix ());
+			stream.printf (" glib:type-name=\"%s\"", cl.get_cname ());
+			stream.printf (" glib:get-type=\"%sget_type\"", cl.get_lower_case_cprefix ());
 			stream.printf (">\n");
 			indent++;
 
@@ -127,10 +133,10 @@ public class Vala.GIdlWriter : CodeVisitor {
 
 			indent--;
 			write_indent ();
-			stream.printf ("</object>\n");
+			stream.printf ("</class>\n");
 		} else {
 			write_indent ();
-			stream.printf ("<struct name=\"%s\"", cl.name);
+			stream.printf ("<record name=\"%s\"", cl.name);
 			stream.printf (">\n");
 			indent++;
 
@@ -138,7 +144,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 
 			indent--;
 			write_indent ();
-			stream.printf ("</struct>\n");
+			stream.printf ("</record>\n");
 		}
 	}
 
@@ -152,7 +158,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		stream.printf ("<struct name=\"%s\"", st.get_cname ());
+		stream.printf ("<record name=\"%s\"", st.name);
 		stream.printf (">\n");
 		indent++;
 
@@ -160,7 +166,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 
 		indent--;
 		write_indent ();
-		stream.printf ("</struct>\n");
+		stream.printf ("</record>\n");
 	}
 
 	public override void visit_interface (Interface iface) {
@@ -173,8 +179,8 @@ public class Vala.GIdlWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		stream.printf ("<interface name=\"%s\"", iface.get_cname ());
-		stream.printf (" get-type=\"%sget_type\"", iface.get_lower_case_cprefix ());
+		stream.printf ("<interface name=\"%s\"", iface.name);
+		stream.printf (" glib:get-type=\"%sget_type\"", iface.get_lower_case_cprefix ());
 		stream.printf (">\n");
 		indent++;
 
@@ -219,8 +225,9 @@ public class Vala.GIdlWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		stream.printf ("<enum name=\"%s\"", en.get_cname ());
-		stream.printf (" get-type=\"%sget_type\"", en.get_lower_case_cprefix ());
+		stream.printf ("<enumeration name=\"%s\"", en.name);
+		stream.printf (" c:type=\"%s\"", en.get_cname ());
+		stream.printf (" glib:get-type=\"%sget_type\"", en.get_lower_case_cprefix ());
 		stream.printf (">\n");
 		indent++;
 
@@ -228,12 +235,12 @@ public class Vala.GIdlWriter : CodeVisitor {
 
 		indent--;
 		write_indent ();
-		stream.printf ("</enum>\n");
+		stream.printf ("</enumeration>\n");
 	}
 
 	public override void visit_enum_value (EnumValue ev) {
 		write_indent ();
-		stream.printf ("<member name=\"%s\"/>\n", ev.get_cname ());
+		stream.printf ("<member name=\"%s\"/>\n", string.joinv ("-", ev.name.down ().split ("_")));
 	}
 
 	public override void visit_error_domain (ErrorDomain edomain) {
@@ -285,25 +292,14 @@ public class Vala.GIdlWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		stream.printf ("<field name=\"%s\"/>\n", f.get_cname ());
-	}
+		stream.printf ("<field name=\"%s\">\n", f.get_cname ());
+		indent++;
 
-	private string get_gidl_type_name (DataType type) {
-		// workaround to get GIDL-specific type name
-		string gidl_type = type.get_cname ();
-		if (type.data_type != null) {
-			string cname = type.data_type.get_cname ();
-			if (gidl_type.has_prefix (cname)) {
-				gidl_type = type.data_type.get_full_name () + gidl_type.substring (cname.len (), gidl_type.len () - cname.len ());
-			}
-		} else if (type is DelegateType) {
-			var dt = (DelegateType) type;
-			string cname = dt.get_cname ();
-			if (gidl_type.has_prefix (cname)) {
-				gidl_type = dt.delegate_symbol.get_full_name () + gidl_type.substring (cname.len (), gidl_type.len () - cname.len ());
-			}
-		}
-		return gidl_type;
+		write_type (f.field_type);
+
+		indent--;
+		write_indent ();
+		stream.printf ("</field>\n");
 	}
 
 	private void write_params (Gee.List<FormalParameter> params, DataType? instance_type = null) {
@@ -313,31 +309,44 @@ public class Vala.GIdlWriter : CodeVisitor {
 
 		if (instance_type != null) {
 			write_indent ();
-			stream.printf ("<parameter name=\"self\" type=\"%s\"/>\n", get_gidl_type_name (instance_type));
+			stream.printf ("<parameter name=\"self\">\n");
+			indent++;
+
+			write_type (instance_type);
+
+			indent--;
+			write_indent ();
+			stream.printf ("</parameter>\n");
 		}
 
 		foreach (FormalParameter param in params) {
 			write_indent ();
-			stream.printf ("<parameter name=\"%s\" type=\"%s\"", param.name, get_gidl_type_name (param.parameter_type));
+			stream.printf ("<parameter name=\"%s\"", param.name);
 			if (param.direction == ParameterDirection.REF) {
 				stream.printf (" direction=\"inout\"");
 				// in/out paramter
 				if (param.parameter_type.value_owned) {
-					stream.printf (" transfer=\"full\"");
+					stream.printf (" transfer-ownership=\"full\"");
 				}
 			} else if (param.direction == ParameterDirection.OUT) {
 				// out paramter
 				stream.printf (" direction=\"out\"");
 				if (param.parameter_type.value_owned) {
-					stream.printf (" transfer=\"full\"");
+					stream.printf (" transfer-ownership=\"full\"");
 				}
 			} else {
 				// normal in paramter
 				if (param.parameter_type.value_owned) {
-					stream.printf (" transfer=\"full\"");
+					stream.printf (" transfer-ownership=\"full\"");
 				}
 			}
-			stream.printf ("/>\n");
+			stream.printf (">\n");
+			indent++;
+
+			write_type (param.parameter_type);
+
+			indent--;
+			stream.printf ("</parameter>\n");
 		}
 
 		indent--;
@@ -379,7 +388,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		stream.printf ("<method name=\"%s\" symbol=\"%s\"", m.name, m.get_cname ());
+		stream.printf ("<method name=\"%s\" c:identifier=\"%s\"", m.name, m.get_cname ());
 		stream.printf (">\n");
 		indent++;
 
@@ -407,7 +416,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		stream.printf ("<constructor name=\"%s\" symbol=\"%s\"", m.name, m.get_cname ());
+		stream.printf ("<constructor name=\"%s\" c:identifier=\"%s\"", m.name, m.get_cname ());
 		stream.printf (">\n");
 		indent++;
 
@@ -426,14 +435,21 @@ public class Vala.GIdlWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		stream.printf ("<property name=\"%s\" type=\"%s\"", prop.name, get_gidl_type_name (prop.property_type));
+		stream.printf ("<property name=\"%s\"", prop.name);
 		if (prop.get_accessor != null) {
 			stream.printf (" readable=\"1\"");
 		}
 		if (prop.set_accessor != null) {
 			stream.printf (" writable=\"1\"");
 		}
-		stream.printf ("/>\n");
+		stream.printf (">\n");
+		indent++;
+
+		write_type (prop.property_type);
+
+		indent--;
+		write_indent ();
+		stream.printf ("</property>\n");
 	}
 
 	public override void visit_signal (Signal sig) {
@@ -442,7 +458,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 		}
 		
 		write_indent ();
-		stream.printf ("<signal name=\"%s\"", sig.get_cname ());
+		stream.printf ("<glib:signal name=\"%s\"", sig.get_cname ());
 		stream.printf (">\n");
 		indent++;
 
@@ -452,7 +468,7 @@ public class Vala.GIdlWriter : CodeVisitor {
 
 		indent--;
 		write_indent ();
-		stream.printf ("</signal>\n");
+		stream.printf ("</glib:signal>\n");
 	}
 
 	private void write_indent () {
@@ -465,11 +481,40 @@ public class Vala.GIdlWriter : CodeVisitor {
 
 	private void write_return_type (DataType type) {
 		write_indent ();
-		stream.printf ("<return-type type=\"%s\"", get_gidl_type_name (type));
+		stream.printf ("<return-value");
 		if (type.value_owned) {
-			stream.printf (" transfer=\"full\"");
+			stream.printf (" transfer-ownership=\"full\"");
 		}
-		stream.printf ("/>\n");
+		stream.printf (">\n");
+		indent++;
+
+		write_type (type);
+
+		indent--;
+		write_indent ();
+		stream.printf ("</return-value>\n");
+	}
+
+	private void write_type (DataType type) {
+		if (type is ArrayType) {
+			var array_type = (ArrayType) type;
+
+			write_indent ();
+			stream.printf ("<array>\n");
+			indent++;
+
+			write_type (array_type.element_type);
+
+			indent--;
+			write_indent ();
+			stream.printf ("</array>\n");
+		} else if (type is VoidType) {
+			write_indent ();
+			stream.printf ("<type name=\"none\"/>\n");
+		} else {
+			write_indent ();
+			stream.printf ("<type name=\"%s\"/>\n", type.to_string ());
+		}
 	}
 
 	private bool check_accessibility (Symbol sym) {

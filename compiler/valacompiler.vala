@@ -300,15 +300,15 @@ class Vala.Compiler {
 			interface_writer.write_file (context, vapi_filename);
 
 
-			var gidl_writer = new GIdlWriter ();
-			string gidl_filename = "%s.gidl".printf (library);
+			var gir_writer = new GIRWriter ();
+			string gir_filename = "%s.gir".printf (library);
 
-			// put .gidl file in current directory unless -d has been explicitly specified
-			if (directory != null && !Path.is_absolute( gidl_filename)) {
-				gidl_filename = "%s%c%s".printf (context.directory, Path.DIR_SEPARATOR, gidl_filename);
+			// put .gir file in current directory unless -d has been explicitly specified
+			if (directory != null && !Path.is_absolute (gir_filename)) {
+				gir_filename = "%s%c%s".printf (context.directory, Path.DIR_SEPARATOR, gir_filename);
 			}
 
-			gidl_writer.write_file (context, gidl_filename);
+			gir_writer.write_file (context, gir_filename);
 
 
 			library = null;

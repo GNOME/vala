@@ -34,7 +34,7 @@ libvala_la_VALASOURCES = \
 	valaccodeobjecttypesymbolbinding.vala \
 	valaccodetypesymbolbinding.vala \
 	valaclassregisterfunction.vala \
-	valagidlwriter.vala \
+	valagirwriter.vala \
 	valainterfaceregisterfunction.vala \
 	valatyperegisterfunction.vala \
 	$(NULL)
