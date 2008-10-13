@@ -1,5 +1,9 @@
 2008-10-14  Thijs Vermeir  <thijsvermeir@gmail.com>
 
+	* vapi/vte.vapi: regenerated (for has_construct_function attribute)
+
+2008-10-14  Thijs Vermeir  <thijsvermeir@gmail.com>
+
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
 
 	fix ctype of ToggleActionEntry

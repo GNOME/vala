@@ -25,7 +25,7 @@ namespace Vte {
 		public uint underline;
 		public uint strikethrough;
 	}
-	[CCode (param_spec_function = "g_param_spec_object", cheader_filename = "vte/reaper.h")]
+	[CCode (cheader_filename = "vte/reaper.h")]
 	public class Reaper : GLib.Object {
 		public weak GLib.IOChannel channel;
 		[NoArrayLength]
@@ -34,7 +34,7 @@ namespace Vte {
 		public static weak Vte.Reaper get ();
 		public virtual signal void child_exited (int p0, int p1);
 	}
-	[CCode (param_spec_function = "g_param_spec_object", cheader_filename = "vte/vte.h")]
+	[CCode (cheader_filename = "vte/vte.h")]
 	public class Terminal : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
 		public weak Gtk.Adjustment adjustment;
 		public long char_width;
@@ -85,7 +85,7 @@ namespace Vte {
 		public void match_remove (int tag);
 		public void match_set_cursor (int tag, Gdk.Cursor cursor);
 		public void match_set_cursor_type (int tag, Gdk.CursorType cursor_type);
-		[CCode (type = "GtkWidget*")]
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Terminal ();
 		public void paste_primary ();
 		public void reset (bool full, bool clear_history);
@@ -165,14 +165,14 @@ namespace Vte {
 		public virtual signal void text_scrolled (int delta);
 		public virtual signal void window_title_changed ();
 	}
-	[CCode (param_spec_function = "g_param_spec_object", cheader_filename = "vte/vteaccess.h")]
+	[CCode (cheader_filename = "vte/vteaccess.h")]
 	public class TerminalAccessible : Gtk.Accessible, Atk.Component, Atk.Action, Atk.Text {
-		[CCode (type = "AtkObject*")]
+		[CCode (type = "AtkObject*", has_construct_function = false)]
 		public TerminalAccessible (Vte.Terminal terminal);
 	}
-	[CCode (param_spec_function = "g_param_spec_object", cheader_filename = "vte/vte.h")]
+	[CCode (cheader_filename = "vte/vte.h")]
 	public class TerminalAccessibleFactory : Atk.ObjectFactory {
-		[CCode (type = "AtkObjectFactory*")]
+		[CCode (type = "AtkObjectFactory*", has_construct_function = false)]
 		public TerminalAccessibleFactory ();
 	}
 }
