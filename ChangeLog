@@ -1,3 +1,9 @@
+2008-10-15  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodememberaccessbinding.vala:
+
+	Fix memory leak when using GObject properties without accessors
+
 2008-10-14  Thijs Vermeir  <thijsvermeir@gmail.com>
 
 	* vapi/vte.vapi: regenerated (for has_construct_function attribute)
