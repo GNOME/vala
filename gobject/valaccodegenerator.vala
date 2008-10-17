@@ -506,9 +506,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public override void visit_constant (Constant c) {
 		c.accept_children (this);
 
-		if (!c.is_internal_symbol () && !(c.type_reference is ArrayType)) {
+		if (!(c.type_reference is ArrayType)) {
 			var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), (CCodeExpression) c.initializer.ccodenode);
-			header_type_member_declaration.append (cdefine);
+			if (!c.is_internal_symbol ()) {
+				header_type_member_declaration.append (cdefine);
+			} else {
+				source_type_member_declaration.append (cdefine);
+			}
 		} else {
 			var cdecl = new CCodeDeclaration (c.type_reference.get_const_cname ());
 			var arr = "";
