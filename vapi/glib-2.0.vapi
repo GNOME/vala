@@ -2368,21 +2368,21 @@ namespace GLib {
 		public static void close_pid (Pid pid);
 		
 		/* these macros are required to examine the exit status of a process */
-		[CCode (cname = "WIFEXITED")]
+		[CCode (cname = "WIFEXITED", cheader_filename = "sys/wait.h")]
 		public static bool if_exited (int status);
-		[CCode (cname = "WEXITSTATUS")]
+		[CCode (cname = "WEXITSTATUS", cheader_filename = "sys/wait.h")]
 		public static int exit_status (int status);
-		[CCode (cname = "WIFSIGNALED")]
+		[CCode (cname = "WIFSIGNALED", cheader_filename = "sys/wait.h")]
 		public static bool if_signaled (int status);
-		[CCode (cname = "WTERMSIG")]
+		[CCode (cname = "WTERMSIG", cheader_filename = "sys/wait.h")]
 		public static ProcessSignal term_sig (int status);
-		[CCode (cname = "WCOREDUMP")]
+		[CCode (cname = "WCOREDUMP", cheader_filename = "sys/wait.h")]
 		public static bool core_dump (int status);
-		[CCode (cname = "WIFSTOPPED")]
+		[CCode (cname = "WIFSTOPPED", cheader_filename = "sys/wait.h")]
 		public static bool if_stopped (int status);
-		[CCode (cname = "WSTOPSIG")]
+		[CCode (cname = "WSTOPSIG", cheader_filename = "sys/wait.h")]
 		public static ProcessSignal stop_sig (int status);
-		[CCode (cname = "WIFCONTINUED")]
+		[CCode (cname = "WIFCONTINUED", cheader_filename = "sys/wait.h")]
 		public static bool if_continued (int status);
 	}
 	

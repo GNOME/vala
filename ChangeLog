@@ -1,5 +1,12 @@
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Add missing sys/wait.h includes, patch by Michael Terry,
+	fixes bug 556637
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gnome-keyring-1/:
 
 	Fix gnome_keyring_find_password_sync binding,
