@@ -1,5 +1,11 @@
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Add g_test_add_data_func binding
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala:
 
 	Use defines also for internal constants to fix string constant
