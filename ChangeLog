@@ -1,5 +1,17 @@
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala:
+
+	Add is_fundamental metadata attribute
+
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix GstMiniObject binding
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/Makefile.am:
 	* vapigen/valagirparser.vala:
 	* vapigen/valamarkupreader.vala:

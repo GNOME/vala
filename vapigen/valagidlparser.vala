@@ -435,6 +435,10 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								cl.is_immutable = true;
 							}
+						} else if (nv[0] == "is_fundamental") {
+							if (eval (nv[1]) == "1") {
+								cl.is_compact = false;
+							}
 						} else if (nv[0] == "abstract" && base_class != null) {
 							if (eval (nv[1]) == "1") {
 								cl.is_abstract = true;

@@ -988,7 +988,7 @@ namespace Gst {
 	public class MessageClass : Gst.MiniObjectClass {
 	}
 	[CCode (ref_function = "gst_mini_object_ref", unref_function = "gst_mini_object_unref", cheader_filename = "gst/gst.h")]
-	public class MiniObject : GLib.TypeInstance {
+	public class MiniObject {
 		public int refcount;
 		public uint flags;
 		public weak Gst.MiniObject copy ();
