@@ -196,10 +196,8 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			
 			add_instance_init_function (cl);
 
-			if (is_gobject) {
-				if (cl.get_fields ().size > 0 || cl.destructor != null) {
-					add_finalize_function (cl);
-				}
+			if (!cl.is_compact && (cl.get_fields ().size > 0 || cl.destructor != null || cl.is_fundamental ())) {
+				add_finalize_function (cl);
 			}
 
 			var type_fun = new ClassRegisterFunction (cl, codegen);
@@ -256,6 +254,15 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 				var destroy_block = new CCodeBlock ();
 				var get_class = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (cl.get_upper_case_cname (null))));
 				get_class.add_argument (new CCodeIdentifier ("self"));
+
+				// finalize class
+				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (cl.get_upper_case_cname (null))));
+				ccast.add_argument (new CCodeIdentifier ("self"));
+				ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (ccast, "finalize"));
+				ccall.add_argument (new CCodeIdentifier ("self"));
+				destroy_block.add_statement (new CCodeExpressionStatement (ccall));
+
+				// free type instance
 				var free = new CCodeFunctionCall (new CCodeIdentifier ("g_type_free_instance"));
 				free.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GTypeInstance *"));
 				destroy_block.add_statement (new CCodeExpressionStatement (free));
@@ -683,6 +690,20 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 		var parent_assignment = new CCodeAssignment (new CCodeIdentifier ("%s_parent_class".printf (cl.get_lower_case_cname (null))), ccall);
 		init_block.add_statement (new CCodeExpressionStatement (parent_assignment));
 		
+
+		if (!cl.is_compact && !cl.is_static && !cl.is_subtype_of (codegen.gobject_type) && (cl.get_fields ().size > 0 || cl.destructor != null || cl.is_fundamental ())) {
+			// set finalize function
+			var fundamental_class = cl;
+			while (fundamental_class.base_class != null) {
+				fundamental_class = fundamental_class.base_class;
+			}
+
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (fundamental_class.get_upper_case_cname (null))));
+			ccall.add_argument (new CCodeIdentifier ("klass"));
+			var finalize_assignment = new CCodeAssignment (new CCodeMemberAccess.pointer (ccall, "finalize"), new CCodeIdentifier (cl.get_lower_case_cprefix () + "finalize"));
+			init_block.add_statement (new CCodeExpressionStatement (finalize_assignment));
+		}
+
 		/* add struct for private fields */
 		if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_add_private"));
@@ -1039,9 +1060,14 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 	private void add_finalize_function (Class cl) {
 		var function = new CCodeFunction ("%s_finalize".printf (cl.get_lower_case_cname (null)), "void");
 		function.modifiers = CCodeModifiers.STATIC;
-		
-		function.add_parameter (new CCodeFormalParameter ("obj", "GObject *"));
-		
+
+		var fundamental_class = cl;
+		while (fundamental_class.base_class != null) {
+			fundamental_class = fundamental_class.base_class;
+		}
+
+		function.add_parameter (new CCodeFormalParameter ("obj", fundamental_class.get_cname () + "*"));
+
 		codegen.source_type_member_declaration.append (function.copy ());
 
 
@@ -1061,11 +1087,13 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 		cblock.add_statement (codegen.instance_finalize_fragment);
 
 		// chain up to finalize function of the base class
-		var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
-		ccast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (cl.get_lower_case_cname (null))));
-		ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (ccast, "finalize"));
-		ccall.add_argument (new CCodeIdentifier ("obj"));
-		cblock.add_statement (new CCodeExpressionStatement (ccall));
+		if (cl.base_class != null) {
+			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (fundamental_class.get_upper_case_cname ())));
+			ccast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (cl.get_lower_case_cname (null))));
+			ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (ccast, "finalize"));
+			ccall.add_argument (new CCodeIdentifier ("obj"));
+			cblock.add_statement (new CCodeExpressionStatement (ccall));
+		}
 
 
 		function.block = cblock;

@@ -850,11 +850,6 @@ namespace GLib {
 		public uint instance_size;
 	}
 
-	// deprecated
-	[CCode (has_type_id = true)]
-	public class TypeInstance {
-	}
-
 	[Compact]
 	[CCode (ref_function = "g_type_class_ref", unref_function = "g_type_class_unref")]
 	public class TypeClass {
@@ -949,7 +944,7 @@ namespace GLib {
 	public static delegate void WeakNotify (void *data, Object object);
 
 	[CCode (ref_function = "g_object_ref", unref_function = "g_object_unref", marshaller_type_name = "OBJECT", get_value_function = "g_value_get_object", set_value_function = "g_value_set_object", param_spec_function = "g_param_spec_object", cheader_filename = "glib-object.h")]
-	public class Object : TypeInstance {
+	public class Object {
 		public uint ref_count;
 
 		public static Object @new (Type type, ...);

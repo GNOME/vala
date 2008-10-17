@@ -1646,7 +1646,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cvar, new CCodeConstant ("NULL"));
 		if (type.type_parameter != null) {
-			if (!(current_type_symbol is Class) || !current_class.is_subtype_of (gobject_type)) {
+			if (!(current_type_symbol is Class) || current_class.is_compact) {
 				return new CCodeConstant ("NULL");
 			}
 

@@ -1,5 +1,14 @@
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* vapi/glib-2.0.vapi:
+
+	Fix leaks in non-GObject classes,
+	based on patch by Andrea Del Signore, fixes bug 554844
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valabinaryexpression.vala:
 	* vala/valaexpression.vala:
 	* vala/valamemberaccess.vala:
