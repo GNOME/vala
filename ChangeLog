@@ -1,5 +1,13 @@
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Move C-specific string concatenation from semantic analyzer to
+	code generator, patch by Andrea Del Signore
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_link_button_set_uri_hook binding, patch by Michael Terry,

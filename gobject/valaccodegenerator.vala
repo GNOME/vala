@@ -3663,19 +3663,28 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (!(expr.left.value_type is NullType)
 		    && expr.left.value_type.compatible (string_type)
 		    && !(expr.right.value_type is NullType)
-		    && expr.right.value_type.compatible (string_type)
-		    && (expr.operator == BinaryOperator.EQUALITY
-		        || expr.operator == BinaryOperator.INEQUALITY
-		        || expr.operator == BinaryOperator.LESS_THAN
-		        || expr.operator == BinaryOperator.GREATER_THAN
-		        || expr.operator == BinaryOperator.LESS_THAN_OR_EQUAL
-		        || expr.operator == BinaryOperator.GREATER_THAN_OR_EQUAL)) {
-			requires_strcmp0 = true;
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_strcmp0"));
-			ccall.add_argument (cleft);
-			ccall.add_argument (cright);
-			cleft = ccall;
-			cright = new CCodeConstant ("0");
+		    && expr.right.value_type.compatible (string_type)) {
+			if (expr.operator == BinaryOperator.PLUS) {
+				/* string concatenation: convert to g_strconcat (a, b, NULL) */
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strconcat"));
+				ccall.add_argument (cleft);
+				ccall.add_argument (cright);
+				ccall.add_argument (new CCodeConstant("NULL"));
+				expr.ccodenode = ccall;
+				return;
+			} else if (expr.operator == BinaryOperator.EQUALITY
+			           || expr.operator == BinaryOperator.INEQUALITY
+			           || expr.operator == BinaryOperator.LESS_THAN
+			           || expr.operator == BinaryOperator.GREATER_THAN
+			           || expr.operator == BinaryOperator.LESS_THAN_OR_EQUAL
+			           || expr.operator == BinaryOperator.GREATER_THAN_OR_EQUAL) {
+				requires_strcmp0 = true;
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_strcmp0"));
+				ccall.add_argument (cleft);
+				ccall.add_argument (cright);
+				cleft = ccall;
+				cright = new CCodeConstant ("0");
+			}
 		}
 
 		expr.ccodenode = new CCodeBinaryExpression (op, cleft, cright);

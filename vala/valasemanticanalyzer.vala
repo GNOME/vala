@@ -3147,22 +3147,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (expr.left.value_type.data_type == string_type.data_type
 		    && expr.operator == BinaryOperator.PLUS) {
+			// string concatenation
+
 			if (expr.right.value_type == null || expr.right.value_type.data_type != string_type.data_type) {
 				expr.error = true;
 				Report.error (expr.source_reference, "Operands must be strings");
 				return;
 			}
 
-			/* string concatenation: convert to a.concat (b) */
-
-			var concat_call = new InvocationExpression (new MemberAccess (expr.left, "concat"));
-			concat_call.add_argument (expr.right);
-			concat_call.target_type = expr.target_type;
-
-			replaced_nodes.add (expr);
-			expr.parent_node.replace_expression (expr, concat_call);
-
-			concat_call.accept (this);
+			expr.value_type = string_type.copy ();
+			expr.value_type.value_owned = true;
 		} else if (expr.operator == BinaryOperator.PLUS
 			   || expr.operator == BinaryOperator.MINUS
 			   || expr.operator == BinaryOperator.MUL
