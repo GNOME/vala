@@ -787,6 +787,11 @@ public class string {
 	[CCode (cname = "g_utf8_skip")]
 	public static char[] skip;
 
+	/* modifies string in place */
+	[CCode (cname = "g_strcanon")]
+	public void canon (string valid_chars, char substitutor);
+
+	/* internal method */
 	public string substring (long offset, long len);
 
 	public long length {
@@ -910,6 +915,11 @@ namespace GLib {
 		public ParamSpecUInt (string name, string nick, string blurb, uint minimum, uint maximum, uint default_value, ParamFlags flags);
 	}
 
+	public class ParamSpecBoolean : ParamSpec {
+		[CCode (cname = "g_param_spec_boolean")]
+		public ParamSpecBoolean (string name, string nick, string blurb, bool defaultvalue, ParamFlags flags);
+	}
+
 	[CCode (cprefix = "G_PARAM_", has_type_id = false)]
 	public enum ParamFlags {
 		READABLE,
@@ -928,6 +938,7 @@ namespace GLib {
 	public class ObjectClass : TypeClass {
 		public weak ParamSpec find_property (string property_name);
 		public weak ParamSpec[] list_properties ();
+		public void install_property (uint property_id, ParamSpec pspec);
 	}
 	
 	public struct ObjectConstructParam {
@@ -973,7 +984,13 @@ namespace GLib {
 		public signal void notify (ParamSpec pspec);
 
 		public weak Object connect (string signal_spec, ...);
+
+		public void add_toggle_ref (ToggleNotify notify);
+		public void remove_toggle_ref (ToggleNotify notify);
 	}
+
+	[CCode (instance_pos = 0)]
+	public delegate void ToggleNotify (GLib.Object object, bool is_last_ref);
 
 	public struct Parameter {
 		public string name;
@@ -3228,6 +3245,18 @@ namespace GLib {
 		public string str;
 		public long len;
 		public long allocated_len;
+	}
+
+	/* String Chunks */
+
+	[Compact]
+	[CCode (free_function = "g_string_chunk_free")]
+	public class StringChunk {
+		public StringChunk (size_t size);
+		public weak string insert (string str);
+		public weak string insert_const (string str);
+		public weak string insert_len (string str, ssize_t len);
+		public void clear ();
 	}
 
 	/* Pointer Arrays */

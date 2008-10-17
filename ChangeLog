@@ -1,3 +1,11 @@
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
+	Add g_strcanon, g_object_class_install_property, GToggleNotify,
+	and GStringChunk bindings, patch by Yu Feng,
+	fixes part of bug 555566
+
 2008-10-17  Roberto Majadas  <telemaco@openshine.com>
 
 	* vapi/tracker-indexer-module-1.0.vapi: Add tracker indexer bindings
