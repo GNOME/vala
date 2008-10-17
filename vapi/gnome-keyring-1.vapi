@@ -61,12 +61,14 @@ namespace GnomeKeyring {
 	[CCode (copy_function = "gnome_keyring_access_control_copy", cheader_filename = "gnome-keyring.h")]
 	public class AccessControl {
 		public weak GnomeKeyring.AccessControl copy ();
+		[CCode (has_construct_function = false)]
 		public AccessControl (GnomeKeyring.ApplicationRef application, GnomeKeyring.AccessType types_allowed);
 	}
 	[Compact]
 	[CCode (copy_function = "gnome_keyring_application_ref_copy", cheader_filename = "gnome-keyring.h")]
 	public class ApplicationRef {
 		public weak GnomeKeyring.ApplicationRef copy ();
+		[CCode (has_construct_function = false)]
 		public ApplicationRef ();
 	}
 	[Compact]
@@ -98,6 +100,7 @@ namespace GnomeKeyring {
 		public weak string get_display_name ();
 		public ulong get_mtime ();
 		public weak string get_secret ();
+		[CCode (has_construct_function = false)]
 		public ItemInfo ();
 		public void set_display_name (string value);
 		public void set_secret (string value);
@@ -199,7 +202,7 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* find_password (GnomeKeyring.PasswordSchema schema, GnomeKeyring.OperationGetStringCallback callback, GLib.DestroyNotify destroy_data, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static GnomeKeyring.Result find_password_sync (GnomeKeyring.PasswordSchema schema, string password, ...);
+	public static GnomeKeyring.Result find_password_sync (GnomeKeyring.PasswordSchema schema, out weak string password, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void free_password (string password);
 	[CCode (cheader_filename = "gnome-keyring.h")]
@@ -247,7 +250,7 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result item_get_info_full_sync (string? keyring, uint id, uint flags, out weak GnomeKeyring.ItemInfo info);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static GnomeKeyring.Result item_get_info_sync (string keyring, uint id, out weak GnomeKeyring.ItemInfo info);
+	public static weak GnomeKeyring.Result? item_get_info_sync (string keyring, uint id, out weak GnomeKeyring.ItemInfo info);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* item_grant_access_rights (string? keyring, string display_name, string full_path, uint id, GnomeKeyring.AccessType rights, GnomeKeyring.OperationDoneCallback callback, GLib.DestroyNotify? destroy_data);
 	[CCode (cheader_filename = "gnome-keyring.h")]

@@ -1,5 +1,14 @@
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gnome-keyring-1/:
+
+	Fix gnome_keyring_find_password_sync binding,
+	patch by Michael Terry, fixes bug 556636
+
+	* vapi/gnome-keyring-1.vapi: regenerated
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_message_dialog_format_secondary_text binding,
