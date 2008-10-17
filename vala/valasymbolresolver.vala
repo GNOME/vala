@@ -200,6 +200,12 @@ public class Vala.SymbolResolver : CodeVisitor {
 			Scope scope = current_scope;
 			while (sym == null && scope != null) {
 				sym = scope.lookup (unresolved_symbol.name);
+
+				// only look for types and type containers
+				if (!(sym is Namespace || sym is TypeSymbol || sym is TypeParameter)) {
+					sym = null;
+				}
+
 				scope = scope.parent_scope;
 			}
 			if (sym == null) {
@@ -209,6 +215,12 @@ public class Vala.SymbolResolver : CodeVisitor {
 					}
 
 					var local_sym = ns.namespace_symbol.scope.lookup (unresolved_symbol.name);
+
+					// only look for types and type containers
+					if (!(local_sym is Namespace || local_sym is TypeSymbol || sym is TypeParameter)) {
+						local_sym = null;
+					}
+
 					if (local_sym != null) {
 						if (sym != null) {
 							unresolved_symbol.error = true;

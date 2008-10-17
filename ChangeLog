@@ -1,5 +1,11 @@
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasymbolresolver.vala:
+
+	Ignore non-type symbols when resolving types
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaenumvalue.vala:
 	* vala/valainterfacewriter.vala:
 
