@@ -2,6 +2,15 @@
 
 	* vapi/packages/gtk+-2.0/:
 
+	Fix gtk_message_dialog_format_secondary_text binding,
+	patch by Michael Terry, fixes bug 556625
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gtk+-2.0/:
+
 	Fix gtk_tree_view_get_cursor binding, patch by Hans Vercammen,
 	fixes bug 555972
 
