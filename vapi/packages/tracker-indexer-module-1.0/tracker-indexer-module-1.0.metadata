@@ -1,0 +1,8 @@
+Tracker cheader_filename="tracker-1.0/libtracker-common/tracker-common.h"
+
+TrackerMetadata cheader_filename="tracker-1.0/libtracker-indexer/tracker-metadata.h"
+
+tracker_ontology_* hidden="1"
+tracker_module_config_* hidden="1"
+TrackerModule* hidden="1"
+tracker_module_* hidden="1"

@@ -1,3 +1,7 @@
+2008-10-17  Roberto Majadas  <telemaco@openshine.com>
+
+	* vapi/tracker-indexer-module-1.0.vapi: Add tracker indexer bindings
+
 2008-10-15  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodememberaccessbinding.vala:

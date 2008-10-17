@@ -1,0 +1,6 @@
+include/tracker-1.0/
+lib/tracker/libtracker-indexer.so
+lib/tracker/libstemmer.so
+lib/tracker/libtracker-common.so
+lib/tracker/libtracker-db.so
+
