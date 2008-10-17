@@ -1,5 +1,14 @@
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_link_button_set_uri_hook binding, patch by Michael Terry,
+	fixes bug 556638
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Add missing sys/wait.h includes, patch by Michael Terry,

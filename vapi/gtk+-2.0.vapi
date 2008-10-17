@@ -3587,7 +3587,7 @@ namespace Gtk {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public LinkButton.with_label (string uri, string label);
 		public void set_uri (string uri);
-		public static weak Gtk.LinkButtonUriFunc set_uri_hook (Gtk.LinkButtonUriFunc func, void* data, GLib.DestroyNotify destroy);
+		public static void set_uri_hook (Gtk.LinkButtonUriFunc# func);
 		public string uri { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
