@@ -32,9 +32,8 @@ public abstract class Vala.CCodeTypeSymbolBinding : CCodeBinding {
 
 
 		if ((prop.property_type.data_type is Class && !(((Class) prop.property_type.data_type).is_compact)) || prop.property_type.data_type is Interface) {
-		//if ((prop.property_type.data_type is Class && ((Class) prop.property_type.data_type).is_subtype_of (codegen.gobject_type)) || prop.property_type.data_type is Interface) {
 			string param_spec_name = prop.property_type.data_type.get_param_spec_function ();
-			if ( param_spec_name == null ) {
+			if (param_spec_name == null) {
 				cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
 			} else {
 				cspec.call = new CCodeIdentifier ( param_spec_name );

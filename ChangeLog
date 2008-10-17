@@ -1,5 +1,12 @@
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valainterface.vala:
+	* gobject/valaccodetypesymbolbinding.vala:
+
+	Fix interface properties in GObject classes
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeclassbinding.vala:
 	* gobject/valaccodegenerator.vala:
 	* vapi/glib-2.0.vapi:
