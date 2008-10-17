@@ -186,6 +186,7 @@ namespace USB {
 		public Device * root_dev;
 	}
 
+	[Compact]
 	[CCode (cname = "usb_dev_handle", cprefix = "usb_", cheader_filename = "usb.h", free_function = "usb_close")]
 	public class DeviceHandle {
 		[CCode (cname = "usb_open")]

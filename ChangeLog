@@ -1,5 +1,12 @@
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libusb.vapi:
+
+	Add missing [Compact], patch by Matías De la Puente,
+	fixes bug 555018
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Add g_strcanon, g_object_class_install_property, GToggleNotify,
