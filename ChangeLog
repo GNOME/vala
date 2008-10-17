@@ -1,5 +1,14 @@
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/Makefile.am:
+	* vapigen/valagirparser.vala:
+	* vapigen/valamarkupreader.vala:
+	* vapigen/valavapigen.vala:
+
+	Add experimental .gir support to vapigen
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasymbolresolver.vala:
 
 	Ignore non-type symbols when resolving types
