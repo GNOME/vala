@@ -1,5 +1,14 @@
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_tree_view_get_cursor binding, patch by Hans Vercammen,
+	fixes bug 555972
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/libusb.vapi:
 
 	Add missing [Compact], patch by Matías De la Puente,
