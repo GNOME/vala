@@ -1,3 +1,10 @@
+2008-10-17  Marc-André Lureau  <marcandre.lureau@gmail.com>
+
+	* gobject/valaccodeobjecttypesymbolbinding.vala:
+
+	New DBus attribute "result" to rename result for introspection,
+	fixes bug 549509
+
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/glib-2.0.vapi:

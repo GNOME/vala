@@ -35,6 +35,18 @@ public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBi
 		return true;
 	}
 
+	string dbus_result_name (CodeNode node) {
+		var dbus_attribute = node.get_attribute ("DBus");
+		if (dbus_attribute != null
+		    && dbus_attribute.has_argument ("result")) {
+			var result_name = dbus_attribute.get_string ("result");
+			if (result_name != null && result_name != "")
+				return result_name;
+		}
+
+		return "result";
+	}
+
 	public CCodeFragment register_dbus_info (ObjectTypeSymbol bindable) {
 
 		CCodeFragment fragment = new CCodeFragment ();
@@ -125,7 +137,8 @@ public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBi
 			}
 
 			if (!(m.return_type is VoidType)) {
-				blob.append ("result\\0");
+				blob.append (dbus_result_name (m));
+				blob.append ("\\0");
 				start++;
 
 				blob.append ("O\\0");
