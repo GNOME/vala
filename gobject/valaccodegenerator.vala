@@ -3151,7 +3151,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		var ccall = new CCodeFunctionCall (dupexpr);
 
-		if (expr is StringLiteral) {
+		if (expr != null && expr.is_non_null ()) {
 			// expression is non-null
 			ccall.add_argument ((CCodeExpression) expr.ccodenode);
 			

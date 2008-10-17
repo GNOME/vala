@@ -133,6 +133,10 @@ public class Vala.BinaryExpression : Expression {
 	public override bool is_pure () {
 		return left.is_pure () && right.is_pure ();
 	}
+
+	public override bool is_non_null () {
+		return left.is_non_null () && right.is_non_null ();
+	}
 }
 
 public enum Vala.BinaryOperator {

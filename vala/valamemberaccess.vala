@@ -169,4 +169,13 @@ public class Vala.MemberAccess : Expression {
 			return false;
 		}
 	}
+
+	public override bool is_non_null () {
+		var c = symbol_reference as Constant;
+		if (c != null) {
+			return !c.type_reference.nullable;
+		} else {
+			return false;
+		}
+	}
 }

@@ -69,6 +69,10 @@ public class Vala.StringLiteral : Literal {
 		return true;
 	}
 
+	public override bool is_non_null () {
+		return true;
+	}
+
 	public override string to_string () {
 		return value;
 	}

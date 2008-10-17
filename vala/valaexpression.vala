@@ -73,4 +73,11 @@ public abstract class Vala.Expression : CodeNode {
 	 * is free of side-effects.
 	 */
 	public abstract bool is_pure ();
+
+	/**
+	 * Returns whether this expression is guaranteed to be non-null.
+	 */
+	public virtual bool is_non_null () {
+		return false;
+	}
 }
