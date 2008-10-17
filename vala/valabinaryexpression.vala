@@ -126,6 +126,10 @@ public class Vala.BinaryExpression : Expression {
 		return _left.to_string () + get_operator_string () + _right.to_string ();
 	}
 
+	public override bool is_constant () {
+		return left.is_constant () && right.is_constant ();
+	}
+
 	public override bool is_pure () {
 		return left.is_pure () && right.is_pure ();
 	}

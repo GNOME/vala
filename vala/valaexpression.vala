@@ -61,6 +61,14 @@ public abstract class Vala.Expression : CodeNode {
 	public ArrayList<LocalVariable> temp_vars = new ArrayList<LocalVariable> ();
 
 	/**
+	 * Returns whether this expression is constant, i.e. whether this
+	 * expression only consists of literals and other constants.
+	 */
+	public virtual bool is_constant () {
+		return false;
+	}
+
+	/**
 	 * Returns whether this expression is pure, i.e. whether this expression
 	 * is free of side-effects.
 	 */

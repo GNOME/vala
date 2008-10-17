@@ -3665,13 +3665,32 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		    && !(expr.right.value_type is NullType)
 		    && expr.right.value_type.compatible (string_type)) {
 			if (expr.operator == BinaryOperator.PLUS) {
-				/* string concatenation: convert to g_strconcat (a, b, NULL) */
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strconcat"));
-				ccall.add_argument (cleft);
-				ccall.add_argument (cright);
-				ccall.add_argument (new CCodeConstant("NULL"));
-				expr.ccodenode = ccall;
-				return;
+				// string concatenation
+				if (expr.left.is_constant () && expr.right.is_constant ()) {
+					string left, right;
+
+					if (cleft is CCodeIdentifier) {
+						left = ((CCodeIdentifier) cleft).name;
+					} else if (cleft is CCodeConstant) {
+						left = ((CCodeConstant) cleft).name;
+					}
+					if (cright is CCodeIdentifier) {
+						right = ((CCodeIdentifier) cright).name;
+					} else if (cright is CCodeConstant) {
+						right = ((CCodeConstant) cright).name;
+					}
+
+					expr.ccodenode = new CCodeConstant ("%s %s".printf (left, right));
+					return;
+				} else {
+					// convert to g_strconcat (a, b, NULL)
+					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strconcat"));
+					ccall.add_argument (cleft);
+					ccall.add_argument (cright);
+					ccall.add_argument (new CCodeConstant("NULL"));
+					expr.ccodenode = ccall;
+					return;
+				}
 			} else if (expr.operator == BinaryOperator.EQUALITY
 			           || expr.operator == BinaryOperator.INEQUALITY
 			           || expr.operator == BinaryOperator.LESS_THAN

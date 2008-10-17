@@ -3156,7 +3156,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 
 			expr.value_type = string_type.copy ();
-			expr.value_type.value_owned = true;
+			if (expr.left.is_constant () && expr.right.is_constant ()) {
+				expr.value_type.value_owned = false;
+			} else {
+				expr.value_type.value_owned = true;
+			}
 		} else if (expr.operator == BinaryOperator.PLUS
 			   || expr.operator == BinaryOperator.MINUS
 			   || expr.operator == BinaryOperator.MUL

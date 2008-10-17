@@ -26,6 +26,10 @@ using GLib;
  * Base class for all literals in the source code.
  */
 public abstract class Vala.Literal : Expression {
+	public override bool is_constant () {
+		return true;
+	}
+
 	public override bool is_pure () {
 		return true;
 	}

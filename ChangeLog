@@ -1,5 +1,17 @@
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valabinaryexpression.vala:
+	* vala/valaexpression.vala:
+	* vala/valaliteral.vala:
+	* vala/valamemberaccess.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Treat the result of two concatenated string constants as constant,
+	fixes bug 516287
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 	* gobject/valaccodegenerator.vala:
 
