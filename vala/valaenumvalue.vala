@@ -107,7 +107,6 @@ public class Vala.EnumValue : Symbol {
 		}
 	}
 
-
 	/**
 	 * Returns the name of this enum value as it is used in C code.
 	 *
@@ -115,9 +114,22 @@ public class Vala.EnumValue : Symbol {
 	 */
 	public string get_cname () {
 		if (cname == null) {
-			var en = (Enum) parent_symbol;
-			cname = "%s%s".printf (en.get_cprefix (), name);
+			cname = get_default_cname ();
 		}
 		return cname;
+	}
+
+	public string get_default_cname () {
+		var en = (Enum) parent_symbol;
+		return "%s%s".printf (en.get_cprefix (), name);
+	}
+
+	/**
+	 * Sets the name of this enum value to be used in C code.
+	 *
+	 * @param cname the name to be used in C code
+	 */
+	public void set_cname (string cname) {
+		this.cname = cname;
 	}
 }

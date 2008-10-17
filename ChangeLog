@@ -1,5 +1,12 @@
 2008-10-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaenumvalue.vala:
+	* vala/valainterfacewriter.vala:
+
+	Improve custom cname support for enum values
+
+2008-10-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterface.vala:
 	* gobject/valaccodetypesymbolbinding.vala:
 
