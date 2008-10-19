@@ -541,6 +541,13 @@ public class Vala.Interface : ObjectTypeSymbol {
 			if (cl != null) {
 				return cl.get_param_spec_function ();
 			}
+			var interf = prereq.type_symbol as Interface;
+			if (interf != null) {
+				var param_spec_function = interf.get_param_spec_function ();
+				if (param_spec_function != null) {
+					return param_spec_function;
+				}
+			}
 		}
 
 		return null;
