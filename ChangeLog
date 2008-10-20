@@ -1,5 +1,9 @@
 2008-10-20  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS, configure.ac: update for 0.4.0 release
+
+2008-10-20  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_text_view_window_to_buffer_coords and

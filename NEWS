@@ -1,3 +1,16 @@
+Vala 0.4.0
+==========
+
+ * Support more flexible constructors.
+ * Partial support for reading and writing .gir files.
+ * Improve compiler performance.
+ * Copy arrays where necessary.
+ * Basic support for static properties.
+ * Partial support for struct holding object references.
+ * Add tracker indexer bindings (Roberto Majadas)
+ * Updates to the GLib, GTK+, and GStreamer bindings.
+ * Many bug fixes.
+
 Vala 0.3.5
 ==========
 
