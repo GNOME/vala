@@ -1,3 +1,13 @@
+2008-10-20  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_text_view_window_to_buffer_coords and
+	gtk_text_view_buffer_to_window_coords bindings,
+	patch by Andrea Del Signore
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
 2008-10-19  Ali Sabil  <ali.sabil@gmail.com>
 
 	* vala/valainterface.vala:

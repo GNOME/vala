@@ -5323,7 +5323,7 @@ namespace Gtk {
 		public void add_child_in_window (Gtk.Widget child, Gtk.TextWindowType which_window, int xpos, int ypos);
 		public bool backward_display_line (Gtk.TextIter iter);
 		public bool backward_display_line_start (Gtk.TextIter iter);
-		public void buffer_to_window_coords (Gtk.TextWindowType win, int buffer_x, int buffer_y, int window_x, int window_y);
+		public void buffer_to_window_coords (Gtk.TextWindowType win, int buffer_x, int buffer_y, out int window_x, out int window_y);
 		public bool forward_display_line (Gtk.TextIter iter);
 		public bool forward_display_line_end (Gtk.TextIter iter);
 		public bool get_accepts_tab ();
@@ -5377,7 +5377,7 @@ namespace Gtk {
 		public void set_tabs (Pango.TabArray tabs);
 		public void set_wrap_mode (Gtk.WrapMode wrap_mode);
 		public bool starts_display_line (Gtk.TextIter iter);
-		public void window_to_buffer_coords (Gtk.TextWindowType win, int window_x, int window_y, int buffer_x, int buffer_y);
+		public void window_to_buffer_coords (Gtk.TextWindowType win, int window_x, int window_y, out int buffer_x, out int buffer_y);
 		[NoWrapper]
 		public virtual void move_focus (Gtk.DirectionType direction);
 		public bool accepts_tab { get; set; }
