@@ -2834,7 +2834,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (array_expr is ArrayCreationExpression) {
 			Gee.List<Expression> size = ((ArrayCreationExpression) array_expr).get_sizes ();
 			var length_expr = size[dim - 1];
-			return (CCodeExpression) length_expr.ccodenode;
+			return (CCodeExpression) get_ccodenode (length_expr);
 		} else if (array_expr is InvocationExpression) {
 			var invocation_expr = (InvocationExpression) array_expr;
 			Gee.List<CCodeExpression> size = invocation_expr.get_array_sizes ();
@@ -2879,7 +2879,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 						var length_cname = get_array_length_cname (field.name, dim);
 						var instance_expression_type = get_data_type_for_symbol (base_type);
 						var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
-						CCodeExpression typed_inst = (CCodeExpression) ma.inner.ccodenode;
+						CCodeExpression typed_inst = (CCodeExpression) get_ccodenode (ma.inner);
 
 						CCodeExpression inst;
 						if (field.access == SymbolAccessibility.PRIVATE) {
@@ -2980,7 +2980,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				TypeSymbol base_type = null;
 				CCodeExpression target_expr = null;
 
-				var pub_inst = (CCodeExpression) ma.inner.ccodenode;
+				var pub_inst = (CCodeExpression) get_ccodenode (ma.inner);
 
 				if (ma.inner.value_type != null) {
 					base_type = ma.inner.value_type.data_type;
@@ -3017,7 +3017,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				if (m.binding == MemberBinding.STATIC) {
 					return new CCodeConstant ("NULL");
 				} else {
-					return (CCodeExpression) ma.inner.ccodenode;
+					return (CCodeExpression) get_ccodenode (ma.inner);
 				}
 			}
 		}
@@ -4105,7 +4105,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
 				
 				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
-				ccall.add_argument ((CCodeExpression) ma.inner.ccodenode);
+				ccall.add_argument ((CCodeExpression) get_ccodenode (ma.inner));
 				ccall.add_argument (cexpr);
 				return ccall;
 			} else if (prop.base_interface_property != null) {
@@ -4113,7 +4113,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
 
 				var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), "set_%s".printf (prop.name)));
-				ccall.add_argument ((CCodeExpression) ma.inner.ccodenode);
+				ccall.add_argument ((CCodeExpression) get_ccodenode (ma.inner));
 				ccall.add_argument (cexpr);
 				return ccall;
 			}
@@ -4139,7 +4139,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		if (prop.binding == MemberBinding.INSTANCE) {
 			/* target instance is first argument */
-			ccall.add_argument ((CCodeExpression) ma.inner.ccodenode);
+			ccall.add_argument ((CCodeExpression) get_ccodenode (ma.inner));
 		}
 
 		if (prop.no_accessor_method) {
@@ -4327,6 +4327,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			// use GPtrArray
 			return true;
 		}
+	}
+
+	public CCodeNode? get_ccodenode (CodeNode node) {
+		if (node.ccodenode == null) {
+			node.accept (this);
+		}
+		return node.ccodenode;
 	}
 
 	public override CodeBinding? create_namespace_binding (Namespace node) {

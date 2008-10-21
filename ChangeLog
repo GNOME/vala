@@ -1,5 +1,14 @@
 2008-10-21  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeassignmentbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodememberaccessbinding.vala:
+
+	Generate C code nodes only when needed for assignments to avoid
+	unnecessary temporary variables
+
+2008-10-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_scale_button_new and gtk_scale_button_set_icons bindings,

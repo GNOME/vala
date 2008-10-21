@@ -135,10 +135,6 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 		} else if (expr.symbol_reference is Property) {
 			var prop = (Property) expr.symbol_reference;
 
-			if (prop.get_accessor == null) {
-				return;
-			}
-			
 			if (expr.inner is BaseAccess) {
 				if (prop.base_property != null) {
 					var base_class = (Class) prop.base_property.parent_symbol;

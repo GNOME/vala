@@ -74,7 +74,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 				} else if (assignment.operator == AssignmentOperator.SHIFT_RIGHT) {
 					cop = CCodeBinaryOperator.SHIFT_RIGHT;
 				}
-				cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) assignment.left.ccodenode, new CCodeParenthesizedExpression (cexpr));
+				cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) codegen.get_ccodenode (assignment.left), new CCodeParenthesizedExpression (cexpr));
 			}
 			
 			var ccall = codegen.get_property_set_call (prop, ma, cexpr);
@@ -83,7 +83,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			if (!(assignment.parent_node is ExpressionStatement)) {
 				var ccomma = new CCodeCommaExpression ();
 				ccomma.append_expression (ccall); // update property
-				ccomma.append_expression ((CCodeExpression) ma.ccodenode); // current property value
+				ccomma.append_expression ((CCodeExpression) codegen.get_ccodenode (ma)); // current property value
 				
 				codenode = ccomma;
 			} else {
@@ -142,7 +142,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			ma = (MemberAccess) assignment.left;
 		}
 		if (ma.inner != null) {
-			ccall.add_argument ((CCodeExpression) ma.inner.ccodenode);
+			ccall.add_argument ((CCodeExpression) codegen.get_ccodenode (ma.inner));
 		} else {
 			ccall.add_argument (new CCodeIdentifier ("self"));
 		}
@@ -241,8 +241,8 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		Iterator<Expression> indices_it = indices.iterator ();
 		indices_it.next ();
 
-		var ccontainer = (CCodeExpression) expr.container.ccodenode;
-		var cindex = (CCodeExpression) indices_it.get ().ccodenode;
+		var ccontainer = (CCodeExpression) codegen.get_ccodenode (expr.container);
+		var cindex = (CCodeExpression) codegen.get_ccodenode (indices_it.get ());
 
 		if (container_type != null && codegen.list_type != null && codegen.map_type != null &&
 		    (container_type.is_subtype_of (codegen.list_type) || container_type.is_subtype_of (codegen.map_type))) {
@@ -297,7 +297,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), rhs));
 			if (unref_old) {
 				/* unref old value */
-				ccomma.append_expression (codegen.get_unref_expression ((CCodeExpression) assignment.left.ccodenode, assignment.left.value_type, assignment.left));
+				ccomma.append_expression (codegen.get_unref_expression ((CCodeExpression) codegen.get_ccodenode (assignment.left), assignment.left.value_type, assignment.left));
 			}
 			
 			if (array) {
@@ -342,12 +342,12 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			cop = CCodeAssignmentOperator.SHIFT_RIGHT;
 		}
 	
-		codenode = new CCodeAssignment ((CCodeExpression) assignment.left.ccodenode, rhs, cop);
+		codenode = new CCodeAssignment ((CCodeExpression) codegen.get_ccodenode (assignment.left), rhs, cop);
 
-		if (unref_old && assignment.left.ccodenode is CCodeElementAccess) {
+		if (unref_old && codegen.get_ccodenode (assignment.left) is CCodeElementAccess) {
 			// ensure that index expression in element access doesn't get evaluated more than once
 			// except when it's a simple expression
-			var cea = (CCodeElementAccess) assignment.left.ccodenode;
+			var cea = (CCodeElementAccess) codegen.get_ccodenode (assignment.left);
 			if (!(cea.index is CCodeConstant || cea.index is CCodeIdentifier)) {
 				var index_temp_decl = codegen.get_temp_variable (codegen.int_type);
 				codegen.temp_vars.insert (0, index_temp_decl);
@@ -364,7 +364,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 	}
 
 	public override void emit () {
-		assignment.accept_children (codegen);
+		assignment.right.accept (codegen);
 
 		if (assignment.left.error || assignment.right.error) {
 			assignment.error = true;
