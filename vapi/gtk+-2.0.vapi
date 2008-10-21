@@ -4496,9 +4496,11 @@ namespace Gtk {
 		public weak Gtk.Widget minus_button;
 		public weak Gtk.Adjustment get_adjustment ();
 		public double get_value ();
+		[NoArrayLength]
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public ScaleButton (Gtk.IconSize size, double min, double max, double step, string[] icons);
 		public void set_adjustment (Gtk.Adjustment adjustment);
+		[NoArrayLength]
 		public void set_icons (string[] icons);
 		public void set_value (double value);
 		public Gtk.Adjustment adjustment { get; set; }
