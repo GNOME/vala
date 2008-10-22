@@ -1,3 +1,7 @@
+2008-10-22  Jürg Billeter  <j@bitron.ch>
+
+	* README: Improve wording
+
 2008-10-21  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodeassignmentbinding.vala:

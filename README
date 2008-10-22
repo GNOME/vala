@@ -6,8 +6,7 @@ applications and libraries written in C.
 valac, the Vala compiler, is a self-hosting compiler that translates
 Vala source code into C source and header files. It uses the GObject
 type system to create classes and interfaces declared in the Vala source
-code. It's also planned to generate GIDL files when gobject-
-introspection is ready.
+code.
 
 The syntax of Vala is similar to C#, modified to better fit the GObject
 type system. Vala supports modern language features as the following:
@@ -24,9 +23,9 @@ type system. Vala supports modern language features as the following:
 	* Exception handling
 
 Vala is designed to allow access to existing C libraries, especially
-GObject-based libraries, without the need for runtime bindings. Each to
-be used library requires a Vala API file at compile-time, containing the
-class and method declarations in Vala syntax. Vala currently comes with
+GObject-based libraries, without the need for runtime bindings. All that
+is needed to use a library with Vala is an API file, containing the class
+and method declarations in Vala syntax. Vala currently comes with
 bindings for GLib and GTK+. It's planned to provide generated bindings for
 the full GNOME Platform at a later stage.
 
