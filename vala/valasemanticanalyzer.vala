@@ -1408,9 +1408,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_integer_literal (IntegerLiteral expr) {
-		var int_type = new IntegerType ((TypeSymbol) root_symbol.scope.lookup (expr.get_type_name ()));
-		int_type.literal = expr;
-		expr.value_type = int_type;
+		expr.value_type = new IntegerType ((TypeSymbol) root_symbol.scope.lookup (expr.get_type_name ()), expr.value, expr.get_type_name ());
 	}
 
 	public override void visit_real_literal (RealLiteral expr) {

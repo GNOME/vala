@@ -1,5 +1,12 @@
 2008-10-22  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaintegertype.vala:
+	* vala/valasemanticanalyzer.vala:
+
+	Fix leaked reference cycle
+
+2008-10-22  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasignal.vala:
 
 	Always mangle signal name from camel case to lower case
