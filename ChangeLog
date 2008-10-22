@@ -1,5 +1,11 @@
 2008-10-22  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasignal.vala:
+
+	Always mangle signal name from camel case to lower case
+
+2008-10-22  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 	* vapi/gobject-2.0.vapi:
 	* vapi/Makefile.am:

@@ -141,7 +141,7 @@ public class Vala.Signal : Member, Lockable {
 	public CCodeConstant get_canonical_cconstant (string? detail = null) {
 		var str = new StringBuilder ("\"");
 		
-		string i = name;
+		string i = get_cname ();
 		
 		while (i.len () > 0) {
 			unichar c = i.get_char ();
