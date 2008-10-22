@@ -44,6 +44,7 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = vala-1.0.pc
 
 EXTRA_DIST = \
+	ChangeLog.pre-0-4 \
 	MAINTAINERS \
 	vala-1.0.pc.in \
 	$(NULL)
