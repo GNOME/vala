@@ -5052,7 +5052,7 @@ namespace Gtk {
 		public void move_mark (Gtk.TextMark mark, Gtk.TextIter where);
 		public void move_mark_by_name (string name, Gtk.TextIter where);
 		[CCode (has_construct_function = false)]
-		public TextBuffer (Gtk.TextTagTable table);
+		public TextBuffer (Gtk.TextTagTable? table);
 		public void paste_clipboard (Gtk.Clipboard clipboard, Gtk.TextIter? override_location, bool default_editable);
 		public void place_cursor (Gtk.TextIter where);
 		public Gdk.Atom register_deserialize_format (string mime_type, Gtk.TextBufferDeserializeFunc function, GLib.DestroyNotify user_data_destroy);
