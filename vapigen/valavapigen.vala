@@ -99,7 +99,10 @@ class Vala.VAPIGen : Object {
 		if (!add_package ("glib-2.0")) {
 			Report.error (null, "glib-2.0 not found in specified Vala API directories");
 		}
-		
+		if (!add_package ("gobject-2.0")) {
+			Report.error (null, "gobject-2.0 not found in specified Vala API directories");
+		}
+
 		/* load packages from .deps file */
 		foreach (string source in sources) {
 			if (!source.has_suffix (".gi")) {

@@ -190,11 +190,14 @@ class Vala.Compiler {
 
 		context.codegen = new CCodeGenerator ();
 
-		/* default package */
+		/* default packages */
 		if (!add_package (context, "glib-2.0")) {
 			Report.error (null, "glib-2.0 not found in specified Vala API directories");
 		}
-		
+		if (!add_package (context, "gobject-2.0")) {
+			Report.error (null, "gobject-2.0 not found in specified Vala API directories");
+		}
+
 		if (packages != null) {
 			foreach (string package in packages) {
 				if (!add_package (context, package)) {

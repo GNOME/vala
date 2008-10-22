@@ -1,5 +1,26 @@
 2008-10-22  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+	* vapi/gobject-2.0.vapi:
+	* vapi/Makefile.am:
+
+	Move gobject-2.0 bindings to separate VAPI file
+
+	* compiler/valacompiler.vala:
+	* vapigen/valavapigen.vala:
+
+	Include gobject-2.0 by default
+
+	* gee/Makefile.am:
+	* ccode/Makefile.am:
+	* vala/Makefile.am:
+	* gobject/Makefile.am:
+	* compiler/Makefile.am:
+
+	Support building libvala and valac with older Vala versions
+
+2008-10-22  Jürg Billeter  <j@bitron.ch>
+
 	* ChangeLog.pre-0-4:
 	* Makefile.am:
 
