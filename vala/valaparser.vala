@@ -1964,7 +1964,6 @@ public class Vala.Parser : CodeVisitor {
 		    && !cl.is_static && !cl.is_abstract
 		    && cl.default_construction_method == null) {
 			var m = new CreationMethod (cl.name, null, cl.source_reference);
-			m.binding = MemberBinding.STATIC;
 			m.access = SymbolAccessibility.PUBLIC;
 			m.body = new Block (cl.source_reference);
 			cl.add_method (m);
@@ -2723,7 +2722,6 @@ public class Vala.Parser : CodeVisitor {
 		}
 		method.access = access;
 		set_attributes (method, attrs);
-		method.binding = MemberBinding.STATIC;
 		if (!accept (TokenType.SEMICOLON)) {
 			method.body = parse_block ();
 		} else if (scanner.source_file.external_package) {

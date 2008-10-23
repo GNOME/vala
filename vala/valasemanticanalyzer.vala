@@ -1760,7 +1760,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (member is Method) {
 			var m = (Method) member;
 			access = m.access;
-			instance = (m.binding == MemberBinding.INSTANCE);
+			if (!(m is CreationMethod)) {
+				instance = (m.binding == MemberBinding.INSTANCE);
+			}
 			klass = (m.binding == MemberBinding.CLASS);
 		} else if (member is Property) {
 			var prop = (Property) member;

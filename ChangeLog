@@ -1,5 +1,14 @@
 2008-10-23  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodemethodbinding.vala:
+
+	Mark creation methods as instance methods to fix lambda
+	expressions in creation methods
+
+2008-10-23  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala:
 
 	Fix virtual struct properties

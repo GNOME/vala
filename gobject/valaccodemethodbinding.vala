@@ -268,7 +268,8 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", cself));
 					
 						cinit.append (cdecl);
-					} else if (m.binding == MemberBinding.INSTANCE) {
+					} else if (m.binding == MemberBinding.INSTANCE
+					           && !(m is CreationMethod)) {
 						var ccheckstmt = create_method_type_check_statement (m, creturn_type, cl, true, "self");
 						ccheckstmt.line = codegen.function.line;
 						cinit.append (ccheckstmt);
