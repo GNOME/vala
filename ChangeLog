@@ -1,5 +1,11 @@
 2008-10-23  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/gobject-2.0.vapi:
+
+	Support passing GValues as variants over D-Bus
+
+2008-10-23  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala:
 
 	Fix foreach over stacked arrays

@@ -253,7 +253,7 @@ namespace GLib {
 
 	public static delegate void ValueTransform (Value src_value, out Value dest_value);
 
-	[CCode (type_id = "G_TYPE_VALUE")]
+	[CCode (type_id = "G_TYPE_VALUE", type_signature = "v")]
 	public struct Value {
 		[CCode (cname = "G_VALUE_HOLDS")]
 		public bool holds (Type type);
