@@ -1,3 +1,9 @@
+2008-10-23  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala:
+
+	Fix foreach over stacked arrays
+
 2008-10-22  Andrea Del Signore  <sejerpz@tin.it>
 
 	* vapi/packages/gtk+-2.0/:

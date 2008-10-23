@@ -2187,7 +2187,17 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
 				cbody.add_statement (cdecl);
-				
+
+				// add array length variable for stacked arrays
+				if (stmt.type_reference is ArrayType) {
+					var inner_array_type = (ArrayType) stmt.type_reference;
+					for (int dim = 1; dim <= inner_array_type.rank; dim++) {
+						cdecl = new CCodeDeclaration ("int");
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_length%d".printf (stmt.variable_name, dim), new CCodeConstant ("-1")));
+						cbody.add_statement (cdecl);
+					}
+				}
+
 				cbody.add_statement (stmt.body.ccodenode);
 				
 				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("*%s".printf (it_name)), new CCodeConstant ("NULL"));
@@ -2223,6 +2233,16 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
 				cbody.add_statement (cdecl);
+
+				// add array length variable for stacked arrays
+				if (stmt.type_reference is ArrayType) {
+					var inner_array_type = (ArrayType) stmt.type_reference;
+					for (int dim = 1; dim <= inner_array_type.rank; dim++) {
+						cdecl = new CCodeDeclaration ("int");
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_length%d".printf (stmt.variable_name, dim), new CCodeConstant ("-1")));
+						cbody.add_statement (cdecl);
+					}
+				}
 
 				cbody.add_statement (stmt.body.ccodenode);
 				
