@@ -499,7 +499,7 @@ namespace SDL {
 	[CCode (cname="SDL_SysWMEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
 	public struct SysWMEvent {
 		public uchar type;
-		public SysWMmsg msg;
+		public weak SysWMmsg msg;
 	}// WMEvent
 
 	[CCode (cname="SDL_SysWMmsg", cheader="SDL_syswm.h")]

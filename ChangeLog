@@ -1,3 +1,7 @@
+2008-10-23  Levi Bard  <taktaktaktaktaktaktaktaktaktak@gmail.com>
+
+	* vapi/sdl.vapi: Fix SysWMEvent link issue.
+
 2008-10-23  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/gobject-2.0.vapi:
