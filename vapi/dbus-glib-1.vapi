@@ -38,6 +38,8 @@ namespace DBus {
 	public class RawConnection {
 		[CCode (cname = "dbus_connection_setup_with_g_main")]
 		public void setup_with_main (GLib.MainContext? context = null);
+		[CCode (cname = "dbus_connection_get_g_connection")]
+		public Connection get_g_connection ();
 	}
 
 	[CCode (cname = "DBusError", cprefix = "dbus_error_")]
@@ -102,6 +104,8 @@ namespace DBus {
 		public void register_object (string at_path, GLib.Object object);
 		[CCode (cname = "dbus_g_connection_lookup_g_object")]
 		public weak GLib.Object lookup_object (string at_path);
+		[CCode (cname = "dbus_g_connection_get_connection")]
+		public RawConnection get_connection ();
 	}
 
 	[CCode (cname = "DBusGProxy", lower_case_csuffix = "g_proxy")]

@@ -1,5 +1,12 @@
 2008-10-23  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/dbus-glib-1.vapi:
+
+	Add dbus_g_connection_get_connection and
+	dbus_connection_get_g_connection bindings, patch by Jan Luebbe
+
+2008-10-23  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 	* vala/valasemanticanalyzer.vala:
 	* gobject/valaccodemethodbinding.vala:
