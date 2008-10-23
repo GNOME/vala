@@ -805,8 +805,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		acc.accept_children (this);
 
-		current_return_type = null;
-
 		var t = (TypeSymbol) prop.parent_symbol;
 
 		ReferenceType this_type;
@@ -817,15 +815,20 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 		var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
 		var value_type = prop.property_type.copy ();
-		var cvalueparam = new CCodeFormalParameter ("value", value_type.get_cname ());
+		CCodeFormalParameter cvalueparam;
+		if (returns_real_struct) {
+			cvalueparam = new CCodeFormalParameter ("value", value_type.get_cname () + "*");
+		} else {
+			cvalueparam = new CCodeFormalParameter ("value", value_type.get_cname ());
+		}
 
 		if (prop.is_abstract || prop.is_virtual) {
 			CCodeFunctionDeclarator vdeclarator;
 
 			if (acc.readable) {
-				function = new CCodeFunction (acc.get_cname (), prop.property_type.get_cname ());
+				function = new CCodeFunction (acc.get_cname (), current_return_type.get_cname ());
 
-				var vdecl = new CCodeDeclaration (prop.property_type.get_cname ());
+				var vdecl = new CCodeDeclaration (current_return_type.get_cname ());
 				vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (prop.name));
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
@@ -839,7 +842,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 			function.add_parameter (cselfparam);
 			vdeclarator.add_parameter (cselfparam);
-			if (acc.writable || acc.construction) {
+			if (acc.writable || acc.construction || returns_real_struct) {
 				function.add_parameter (cvalueparam);
 				vdeclarator.add_parameter (cvalueparam);
 			}
@@ -870,7 +873,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			if (acc.readable) {
 				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
 				vcall.add_argument (new CCodeIdentifier ("self"));
-				block.add_statement (new CCodeReturnStatement (vcall));
+				if (returns_real_struct) {
+					vcall.add_argument (new CCodeIdentifier ("value"));
+					block.add_statement (new CCodeExpressionStatement (vcall));
+				} else {
+					block.add_statement (new CCodeReturnStatement (vcall));
+				}
 			} else {
 				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
 				vcall.add_argument (new CCodeIdentifier ("self"));
@@ -895,15 +903,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				cname = acc.get_cname ();
 			}
 
-			if (acc.readable) {
-				if (returns_real_struct) {
-					// return non simple structs as out parameter
-					function = new CCodeFunction (cname, "void");
-				} else {
-					function = new CCodeFunction (cname, prop.property_type.get_cname ());
-				}
-			} else {
+			if (acc.writable || acc.construction || returns_real_struct) {
 				function = new CCodeFunction (cname, "void");
+			} else {
+				function = new CCodeFunction (cname, prop.property_type.get_cname ());
 			}
 
 			ObjectType base_type = null;
@@ -920,15 +923,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					function.add_parameter (cselfparam);
 				}
 			}
-			if (returns_real_struct) {
-				// return non simple structs as out parameter
-				var coutparamname = "%s*".printf (prop.property_type.get_cname ());
-				var coutparam = new CCodeFormalParameter ("value", coutparamname);
-				function.add_parameter (coutparam);
-			} else {
-				if (acc.writable || acc.construction) {
-					function.add_parameter (cvalueparam);
-				}
+			if (acc.writable || acc.construction || returns_real_struct) {
+				function.add_parameter (cvalueparam);
 			}
 
 			if (!is_virtual) {
@@ -981,6 +977,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 
 		current_property_accessor = null;
+		current_return_type = null;
 	}
 
 	public override void visit_constructor (Constructor c) {
