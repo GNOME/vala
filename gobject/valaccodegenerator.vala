@@ -153,6 +153,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head = new GObjectModule (this, head);
 		head = new GObjectClassModule (this, head);
 		head = new GObjectInterfaceModule (this, head);
+		head = new GObjectSignalModule (this, head);
 		head = new DBusModule (this, head);
 
 		predefined_marshal_set = new HashSet<string> (str_hash, str_equal);
@@ -996,6 +997,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		current_property_accessor = null;
 		current_return_type = null;
+	}
+
+	public override void visit_signal (Signal sig) {
+		head.visit_signal (sig);
 	}
 
 	public override void visit_constructor (Constructor c) {

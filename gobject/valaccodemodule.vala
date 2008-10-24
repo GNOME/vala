@@ -64,6 +64,10 @@ public abstract class Vala.CCodeModule {
 		next.visit_method (m);
 	}
 
+	public virtual void visit_signal (Signal sig) {
+		next.visit_signal (sig);
+	}
+
 	public virtual void visit_creation_method (CreationMethod m) {
 		next.visit_creation_method (m);
 	}
@@ -142,5 +146,13 @@ public abstract class Vala.CCodeModule {
 
 	public virtual string get_dynamic_signal_disconnect_wrapper_name (DynamicSignal node) {
 		return next.get_dynamic_signal_disconnect_wrapper_name (node);
+	}
+
+	public virtual void generate_marshaller (Gee.List<FormalParameter> params, DataType return_type, bool dbus = false) {
+		next.generate_marshaller (params, return_type, dbus);
+	}
+	
+	public virtual string get_marshaller_function (Gee.List<FormalParameter> params, DataType return_type, string? prefix = null, bool dbus = false) {
+		return next.get_marshaller_function (params, return_type, prefix, dbus);
 	}
 }

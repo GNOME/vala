@@ -1,5 +1,17 @@
 2008-10-24  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/Makefile.am:
+	* gobject/valaccodedynamicsignalmodule.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodemodule.vala:
+	* gobject/valadbusmodule.vala:
+	* gobject/valagobjectmodule.vala:
+	* gobject/valagobjectsignalmodule.vala:
+
+	Add GObjectSignalModule
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala:
 
 	Enable CCodeDynamicSignalModule

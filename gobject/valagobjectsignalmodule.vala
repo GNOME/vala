@@ -1,4 +1,4 @@
-/* valaccodegeneratorsignal.vala
+/* valagobjectsignalmodule.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -23,7 +23,11 @@
 
 using GLib;
 
-public class Vala.CCodeGenerator {
+public class Vala.GObjectSignalModule : CCodeModule {
+	public GObjectSignalModule (CCodeGenerator codegen, CCodeModule? next) {
+		base (codegen, next);
+	}
+
 	private string get_marshaller_type_name (DataType t, bool dbus = false) {
 		if (t is PointerType || t.type_parameter != null) {
 			return ("POINTER");
@@ -33,7 +37,7 @@ public class Vala.CCodeGenerator {
 			if (dbus) {
 				return ("BOXED");
 			} else {
-				if (((ArrayType) t).element_type.data_type == string_type.data_type) {
+				if (((ArrayType) t).element_type.data_type == codegen.string_type.data_type) {
 					return ("BOXED_INT");
 				} else {
 					return ("POINTER_INT");
@@ -56,12 +60,12 @@ public class Vala.CCodeGenerator {
 		}
 	}
 	
-	public string get_marshaller_function (Gee.List<FormalParameter> params, DataType return_type, string? prefix = null, bool dbus = false) {
+	public override string get_marshaller_function (Gee.List<FormalParameter> params, DataType return_type, string? prefix = null, bool dbus = false) {
 		var signature = get_marshaller_signature (params, return_type, dbus);
 		string ret;
 
 		if (prefix == null) {
-			if (predefined_marshal_set.contains (signature)) {
+			if (codegen.predefined_marshal_set.contains (signature)) {
 				prefix = "g_cclosure_marshal";
 			} else {
 				prefix = "g_cclosure_user_marshal";
@@ -86,7 +90,7 @@ public class Vala.CCodeGenerator {
 			return "gpointer";
 		} else if (t is VoidType) {
 			return "void";
-		} else if (t.data_type == string_type.data_type) {
+		} else if (t.data_type == codegen.string_type.data_type) {
 			return "const char*";
 		} else if (t.data_type is Class || t.data_type is Interface) {
 			return "gpointer";
@@ -141,25 +145,25 @@ public class Vala.CCodeGenerator {
 		// parent_symbol may be null for late bound signals
 		if (sig.parent_symbol != null) {
 			var dt = sig.parent_symbol as TypeSymbol;
-			if (!dt.is_subtype_of (gobject_type)) {
+			if (!dt.is_subtype_of (codegen.gobject_type)) {
 				sig.error = true;
 				Report.error (sig.source_reference, "Only classes and interfaces deriving from GLib.Object support signals. `%s' does not derive from GLib.Object.".printf (dt.get_full_name ()));
 				return;
 			}
 		}
 
-		sig.accept_children (this);
+		sig.accept_children (codegen);
 
 		generate_marshaller (sig.get_parameters (), sig.return_type);
 	}
 
-	public void generate_marshaller (Gee.List<FormalParameter> params, DataType return_type, bool dbus = false) {
+	public override void generate_marshaller (Gee.List<FormalParameter> params, DataType return_type, bool dbus = false) {
 		string signature;
 		int n_params, i;
 		
 		/* check whether a signal with the same signature already exists for this source file (or predefined) */
 		signature = get_marshaller_signature (params, return_type, dbus);
-		if (predefined_marshal_set.contains (signature) || user_marshal_set.contains (signature)) {
+		if (codegen.predefined_marshal_set.contains (signature) || codegen.user_marshal_set.contains (signature)) {
 			return;
 		}
 		
@@ -173,7 +177,7 @@ public class Vala.CCodeGenerator {
 		signal_marshaller.add_parameter (new CCodeFormalParameter ("invocation_hint", "gpointer"));
 		signal_marshaller.add_parameter (new CCodeFormalParameter ("marshal_data", "gpointer"));
 		
-		source_signal_marshaller_declaration.append (signal_marshaller.copy ());
+		codegen.source_signal_marshaller_declaration.append (signal_marshaller.copy ());
 		
 		var marshaller_body = new CCodeBlock ();
 		
@@ -250,7 +254,7 @@ public class Vala.CCodeGenerator {
 				if (dbus) {
 					get_value_function = "g_value_get_boxed";
 				} else {
-					if (((ArrayType) p.parameter_type).element_type.data_type == string_type.data_type) {
+					if (((ArrayType) p.parameter_type).element_type.data_type == codegen.string_type.data_type) {
 						get_value_function = "g_value_get_boxed";
 					} else {
 						get_value_function = "g_value_get_pointer";
@@ -286,7 +290,7 @@ public class Vala.CCodeGenerator {
 				if (dbus) {
 					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
 				} else {
-					if (((ArrayType) return_type).element_type.data_type == string_type.data_type) {
+					if (((ArrayType) return_type).element_type.data_type == codegen.string_type.data_type) {
 						set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
 					} else {
 						set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
@@ -296,7 +300,7 @@ public class Vala.CCodeGenerator {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
 			} else if (return_type is ErrorType) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_pointer"));
-			} else if (return_type.data_type == string_type.data_type) {
+			} else if (return_type.data_type == codegen.string_type.data_type) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_string"));
 			} else if (return_type.data_type is Class || return_type.data_type is Interface) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_object"));
@@ -315,8 +319,8 @@ public class Vala.CCodeGenerator {
 		
 		signal_marshaller.block = marshaller_body;
 		
-		source_signal_marshaller_definition.append (signal_marshaller);
-		user_marshal_set.add (signature);
+		codegen.source_signal_marshaller_definition.append (signal_marshaller);
+		codegen.user_marshal_set.add (signature);
 	}
 }
 

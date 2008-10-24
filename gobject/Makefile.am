@@ -20,7 +20,6 @@ libvala_la_VALASOURCES = \
 	valaccodedynamicsignalmodule.vala \
 	valaccodeelementaccessmodule.vala \
 	valaccodegenerator.vala \
-	valaccodegeneratorsignal.vala \
 	valaccodegeneratorsourcefile.vala \
 	valaccodegeneratorstruct.vala \
 	valaccodeinvocationexpressionmodule.vala \
@@ -33,6 +32,7 @@ libvala_la_VALASOURCES = \
 	valagobjectclassmodule.vala \
 	valagobjectinterfacemodule.vala \
 	valagobjectmodule.vala \
+	valagobjectsignalmodule.vala \
 	valainterfaceregisterfunction.vala \
 	valatyperegisterfunction.vala \
 	$(NULL)

@@ -534,12 +534,12 @@ public class Vala.DBusModule : CCodeModule {
 			dbus_methods.append ("{ (GCallback) ");
 			dbus_methods.append (generate_dbus_wrapper (m, bindable));
 			dbus_methods.append (", ");
-			dbus_methods.append (codegen.get_marshaller_function (parameters, codegen.bool_type, null, true));
+			dbus_methods.append (head.get_marshaller_function (parameters, codegen.bool_type, null, true));
 			dbus_methods.append (", ");
 			dbus_methods.append (blob_len.to_string ());
 			dbus_methods.append (" },\n");
 
-			codegen.generate_marshaller (parameters, codegen.bool_type, true);
+			head.generate_marshaller (parameters, codegen.bool_type, true);
 
 			long start = blob.len;
 
