@@ -132,13 +132,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	
 	public bool string_h_needed;
 	public bool gvaluecollector_h_needed;
-	private bool requires_free_checked;
-	private bool requires_array_free;
+	public bool requires_free_checked;
+	public bool requires_array_free;
 	public bool requires_array_move;
-	private bool requires_strcmp0;
+	public bool requires_strcmp0;
 	public bool dbus_glib_h_needed;
 
-	private Set<string> wrappers;
+	public Set<string> wrappers;
 
 	public CCodeGenerator () {
 		head = new CCodeBaseModule (this, head);
@@ -299,6 +299,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				file.accept (this);
 			}
 		}
+	}
+
+	public override void visit_source_file (SourceFile source_file) {
+		head.visit_source_file (source_file);
 	}
 
 	public override void visit_class (Class cl) {

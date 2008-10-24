@@ -52,6 +52,10 @@ public abstract class Vala.CCodeModule {
 		next.emit (context);
 	}
 
+	public virtual void visit_source_file (SourceFile source_file) {
+		next.visit_source_file (source_file);
+	}
+
 	public virtual void visit_class (Class cl) {
 		next.visit_class (cl);
 	}
