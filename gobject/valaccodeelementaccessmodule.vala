@@ -1,4 +1,4 @@
-/* valaccodeelementaccessbinding.vala
+/* valaccodeelementaccessmodule.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -27,16 +27,13 @@ using Gee;
 /**
  * The link between an element access and generated code.
  */
-public class Vala.CCodeElementAccessBinding : CCodeBinding {
-	public ElementAccess element_access { get; set; }
-
-	public CCodeElementAccessBinding (CCodeGenerator codegen, ElementAccess element_access) {
-		this.element_access = element_access;
-		this.codegen = codegen;
+public class Vala.CCodeElementAccessModule : CCodeModule {
+	public CCodeElementAccessModule (CCodeGenerator codegen, CCodeModule? next) {
+		base (codegen, next);
 	}
 
-	public override void emit () {
-		var expr = element_access;
+	public override void visit_element_access (ElementAccess expr) {
+		expr.accept_children (codegen);
 
 		Gee.List<Expression> indices = expr.get_indices ();
 		int rank = indices.size;

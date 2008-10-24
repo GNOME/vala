@@ -19,7 +19,7 @@ libvala_la_VALASOURCES = \
 	valaccodecompiler.vala \
 	valaccodedynamicpropertybinding.vala \
 	valaccodedynamicsignalbinding.vala \
-	valaccodeelementaccessbinding.vala \
+	valaccodeelementaccessmodule.vala \
 	valaccodegenerator.vala \
 	valaccodegeneratorsignal.vala \
 	valaccodegeneratorsourcefile.vala \

@@ -42,10 +42,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 		return null;
 	}
 
-	public virtual CodeBinding? create_element_access_binding (ElementAccess node) {
-		return null;
-	}
-
 	public virtual CodeBinding? create_assignment_binding (Assignment node) {
 		return null;
 	}

@@ -85,8 +85,4 @@ public class Vala.ElementAccess : Expression {
 		}
 		return container.is_pure ();
 	}
-
-	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
-		return codegen.create_element_access_binding (this);
-	}
 }

@@ -1,6 +1,18 @@
 2008-10-24  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodegenerator.vala:
+	* vala/valaelementaccess.vala:
+	* gobject/Makefile.am:
+	* gobject/valaccodebinding.vala:
+	* gobject/valaccodeelementaccessmodule.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodemodule.vala:
+
+	Add CCodeElementAccessModule
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodegenerator.vala:
 	* vala/valainvocationexpression.vala:
 	* gobject/Makefile.am:
 	* gobject/valaccodegenerator.vala:
