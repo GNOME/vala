@@ -2,6 +2,12 @@
 
 	* vapigen/valagirparser.vala:
 
+	Support methods throwing errors
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valagirparser.vala:
+
 	Support shared namespaces
 
 2008-10-24  Jürg Billeter  <j@bitron.ch>

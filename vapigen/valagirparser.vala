@@ -30,6 +30,7 @@ public class Vala.GirParser : CodeVisitor {
 	MarkupReader reader;
 
 	CodeContext context;
+	Namespace glib_ns;
 
 	SourceFile current_source_file;
 	SourceLocation begin;
@@ -46,6 +47,7 @@ public class Vala.GirParser : CodeVisitor {
 	 */
 	public void parse (CodeContext context) {
 		this.context = context;
+		glib_ns = context.root.scope.lookup ("GLib") as Namespace;
 		context.accept (this);
 	}
 
@@ -670,6 +672,7 @@ public class Vala.GirParser : CodeVisitor {
 	Method parse_method () {
 		start_element ("method");
 		string name = reader.get_attribute ("name");
+		string throws_string = reader.get_attribute ("throws");
 		next ();
 		DataType return_type;
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
@@ -686,6 +689,9 @@ public class Vala.GirParser : CodeVisitor {
 				m.add_parameter (parse_parameter ());
 			}
 			end_element ("parameters");
+		}
+		if (throws_string == "1") {
+			m.add_error_type (new ErrorType (null));
 		}
 		end_element ("method");
 		return m;
