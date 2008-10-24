@@ -1,4 +1,4 @@
-/* valaccodearraycreationexpressionbinding.vala
+/* valaccodearraymodule.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -27,17 +27,12 @@ using Gee;
 /**
  * The link between an assignment and generated code.
  */
-public class Vala.CCodeArrayCreationExpressionBinding : CCodeBinding {
-	public ArrayCreationExpression array_creation_expression { get; set; }
-
-	public CCodeArrayCreationExpressionBinding (CCodeGenerator codegen, ArrayCreationExpression array_creation_expression) {
-		this.array_creation_expression = array_creation_expression;
-		this.codegen = codegen;
+public class Vala.CCodeArrayModule : CCodeModule {
+	public CCodeArrayModule (CCodeGenerator codegen, CCodeModule? next) {
+		base (codegen, next);
 	}
 
-	public override void emit () {
-		var expr = array_creation_expression;
-
+	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
 		expr.accept_children (codegen);
 
 		var gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));

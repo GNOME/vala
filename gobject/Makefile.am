@@ -12,7 +12,7 @@ lib_LTLIBRARIES = \
 	$(NULL)
 
 libvala_la_VALASOURCES = \
-	valaccodearraycreationexpressionbinding.vala \
+	valaccodearraymodule.vala \
 	valaccodeassignmentbinding.vala \
 	valaccodebasemodule.vala \
 	valaccodebinding.vala \

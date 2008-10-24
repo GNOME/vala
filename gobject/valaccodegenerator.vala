@@ -143,6 +143,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public CCodeGenerator () {
 		head = new CCodeBaseModule (this, head);
 		head = new CCodeMethodModule (this, head);
+		head = new CCodeArrayModule (this, head);
 		head = new GObjectModule (this, head);
 		head = new GObjectClassModule (this, head);
 		head = new GObjectInterfaceModule (this, head);
@@ -2782,7 +2783,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
-		code_binding (expr).emit ();
+		head.visit_array_creation_expression (expr);
 	}
 
 	public override void visit_boolean_literal (BooleanLiteral expr) {
@@ -4372,10 +4373,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return new CCodeDynamicSignalBinding (this, node);
 	}
 
-	public override CodeBinding? create_array_creation_expression_binding (ArrayCreationExpression node) {
-		return new CCodeArrayCreationExpressionBinding (this, node);
-	}
-
 	public override CodeBinding? create_member_access_binding (MemberAccess node) {
 		return new CCodeMemberAccessBinding (this, node);
 	}
@@ -4402,10 +4399,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public CCodeDynamicSignalBinding dynamic_signal_binding (DynamicSignal node) {
 		return (CCodeDynamicSignalBinding) node.get_code_binding (this);
-	}
-
-	public CCodeArrayCreationExpressionBinding array_creation_expression_binding (ArrayCreationExpression node) {
-		return (CCodeArrayCreationExpressionBinding) node.get_code_binding (this);
 	}
 
 	public CCodeElementAccessBinding element_access_binding (ElementAccess node) {
