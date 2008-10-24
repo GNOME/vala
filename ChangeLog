@@ -1,5 +1,12 @@
 2008-10-24  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valanamespace.vala:
+	* vapigen/valagirparser.vala:
+
+	Remove Class and Iface structs
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/Makefile.am:
 	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodegenerator.vala:

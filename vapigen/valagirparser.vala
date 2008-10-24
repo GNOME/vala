@@ -66,6 +66,28 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		parse_repository ();
 
+		foreach (CodeNode node in source_file.get_nodes ()) {
+			if (node is Class) {
+				var cl = (Class) node;
+				var ns = cl.parent_symbol as Namespace;
+				// remove Class records
+				var class_struct = ns.scope.lookup (cl.name + "Class") as Struct;
+				if (class_struct != null) {
+					ns.remove_struct ((Struct) class_struct);
+					source_file.remove_node (class_struct);
+				}
+			} else if (node is Interface) {
+				var iface = (Interface) node;
+				var ns = iface.parent_symbol as Namespace;
+				// remove Iface records
+				var iface_struct = ns.scope.lookup (iface.name + "Iface") as Struct;
+				if (iface_struct != null) {
+					ns.remove_struct ((Struct) iface_struct);
+					source_file.remove_node (iface_struct);
+				}
+			}
+		}
+
 		reader = null;
 		this.current_source_file = null;
 	}
