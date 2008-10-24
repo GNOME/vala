@@ -1,6 +1,17 @@
 2008-10-24  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodegenerator.vala:
+	* vala/valainvocationexpression.vala:
+	* gobject/Makefile.am:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinvocationexpressionmodule.vala:
+	* gobject/valaccodemodule.vala:
+
+	Add CCodeInvocationExpressionModule
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodegenerator.vala:
 	* vala/valamemberaccess.vala:
 	* gobject/Makefile.am:
 	* gobject/valaccodegenerator.vala:

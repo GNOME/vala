@@ -120,8 +120,4 @@ public class Vala.InvocationExpression : Expression {
 	public override bool is_pure () {
 		return false;
 	}
-
-	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
-		return codegen.create_invocation_expression_binding (this);
-	}
 }

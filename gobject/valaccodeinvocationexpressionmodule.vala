@@ -1,4 +1,4 @@
-/* valaccodeinvocationexpressionbinding.vala
+/* valaccodeinvocationexpressionmodule.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -24,17 +24,12 @@
 using GLib;
 using Gee;
 
-public class Vala.CCodeInvocationExpressionBinding : CCodeBinding {
-	public InvocationExpression invocation_expression { get; set; }
-
-	public CCodeInvocationExpressionBinding (CCodeGenerator codegen, InvocationExpression invocation_expression) {
-		this.invocation_expression = invocation_expression;
-		this.codegen = codegen;
+public class Vala.CCodeInvocationExpressionModule : CCodeModule {
+	public CCodeInvocationExpressionModule (CCodeGenerator codegen, CCodeModule? next) {
+		base (codegen, next);
 	}
 
-	public override void emit () {
-		var expr = invocation_expression;
-
+	public override void visit_invocation_expression (InvocationExpression expr) {
 		expr.accept_children (codegen);
 
 		// the bare function call

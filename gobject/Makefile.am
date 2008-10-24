@@ -24,7 +24,7 @@ libvala_la_VALASOURCES = \
 	valaccodegeneratorsignal.vala \
 	valaccodegeneratorsourcefile.vala \
 	valaccodegeneratorstruct.vala \
-	valaccodeinvocationexpressionbinding.vala \
+	valaccodeinvocationexpressionmodule.vala \
 	valaccodememberaccessmodule.vala \
 	valaccodemethodmodule.vala \
 	valaccodemodule.vala \

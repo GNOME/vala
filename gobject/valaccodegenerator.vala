@@ -144,6 +144,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head = new CCodeBaseModule (this, head);
 		head = new CCodeMethodModule (this, head);
 		head = new CCodeMemberAccessModule (this, head);
+		head = new CCodeInvocationExpressionModule (this, head);
 		head = new CCodeArrayModule (this, head);
 		head = new GObjectModule (this, head);
 		head = new GObjectClassModule (this, head);
@@ -2826,7 +2827,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_invocation_expression (InvocationExpression expr) {
-		code_binding (expr).emit ();
+		head.visit_invocation_expression (expr);
 	}
 
 	public string get_array_length_cname (string array_cname, int dim) {
@@ -4372,10 +4373,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public override CodeBinding? create_dynamic_signal_binding (DynamicSignal node) {
 		return new CCodeDynamicSignalBinding (this, node);
-	}
-
-	public override CodeBinding? create_invocation_expression_binding (InvocationExpression node) {
-		return new CCodeInvocationExpressionBinding (this, node);
 	}
 
 	public override CodeBinding? create_element_access_binding (ElementAccess node) {
