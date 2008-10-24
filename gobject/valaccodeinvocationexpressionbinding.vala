@@ -74,7 +74,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 		}
 
 		CCodeExpression instance;
-		if (m != null && m.binding == MemberBinding.INSTANCE) {
+		if (m != null && m.binding == MemberBinding.INSTANCE && !(m is CreationMethod)) {
 			instance = (CCodeExpression) ma.inner.ccodenode;
 
 			var st = m.parent_symbol as Struct;
