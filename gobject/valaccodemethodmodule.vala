@@ -27,15 +27,17 @@ using Gee;
 /**
  * The link between a method and generated code.
  */
-public class Vala.CCodeMethodBinding : CCodeBinding {
-	public Method method { get; set; }
-
-	public bool has_wrapper {
-		get { return (method.get_attribute ("NoWrapper") == null); }
+public class Vala.CCodeMethodModule : CCodeModule {
+	public CCodeMethodModule (CCodeGenerator codegen, CCodeModule? next) {
+		base (codegen, next);
 	}
 
-	public string? get_custom_creturn_type () {
-		var attr = method.get_attribute ("CCode");
+	public override bool method_has_wrapper (Method method) {
+		return (method.get_attribute ("NoWrapper") == null);
+	}
+
+	public override string? get_custom_creturn_type (Method m) {
+		var attr = m.get_attribute ("CCode");
 		if (attr != null) {
 			string type = attr.get_string ("type");
 			if (type != null) {
@@ -45,22 +47,15 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 		return null;
 	}
 
-	string get_creturn_type (string default_value) {
-		string type = get_custom_creturn_type ();
+	string get_creturn_type (Method m, string default_value) {
+		string type = get_custom_creturn_type (m);
 		if (type == null) {
 			return default_value;
 		}
 		return type;
 	}
 
-	public CCodeMethodBinding (CCodeGenerator codegen, Method method) {
-		this.method = method;
-		this.codegen = codegen;
-	}
-
-	public override void emit () {
-		var m = method;
-
+	public override void visit_method (Method m) {
 		Method old_method = codegen.current_method;
 		DataType old_return_type = codegen.current_return_type;
 		bool old_method_inner_error = codegen.current_method_inner_error;
@@ -165,7 +160,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			}
 		}
 
-		codegen.function = new CCodeFunction (m.get_real_cname (), get_creturn_type (creturn_type.get_cname ()));
+		codegen.function = new CCodeFunction (m.get_real_cname (), get_creturn_type (m, creturn_type.get_cname ()));
 		m.ccodenode = codegen.function;
 
 		if (m.is_inline) {
@@ -209,7 +204,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			cparam_map.set (codegen.get_param_pos (m.cinstance_parameter_position), instance_param);
 
 			if (m.is_abstract || m.is_virtual) {
-				var vdecl = new CCodeDeclaration (get_creturn_type (creturn_type.get_cname ()));
+				var vdecl = new CCodeDeclaration (get_creturn_type (m, creturn_type.get_cname ()));
 				vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
 				vdecl.add_declarator (vdeclarator);
 				codegen.type_struct.add_declaration (vdecl);
@@ -486,7 +481,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 				cstmt = new CCodeReturnStatement (vcall);
 			} else {
 				/* store method return value for postconditions */
-				var cdecl = new CCodeDeclaration (get_creturn_type (creturn_type.get_cname ()));
+				var cdecl = new CCodeDeclaration (get_creturn_type (m, creturn_type.get_cname ()));
 				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("result", vcall));
 				cstmt = cdecl;
 			}
@@ -569,8 +564,8 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 
 			if (codegen.current_type_symbol is Class) {
 				CCodeExpression cresult = new CCodeIdentifier ("self");
-				if (get_custom_creturn_type () != null) {
-					cresult = new CCodeCastExpression (cresult, get_custom_creturn_type ());
+				if (get_custom_creturn_type (m) != null) {
+					cresult = new CCodeCastExpression (cresult, get_custom_creturn_type (m));
 				}
 
 				var creturn = new CCodeReturnStatement ();
@@ -623,7 +618,7 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 		}
 	}
 
-	public void generate_cparameters (Method m, DataType creturn_type, bool in_gtypeinstance_creation_method, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null) {
+	public override void generate_cparameters (Method m, DataType creturn_type, bool in_gtypeinstance_creation_method, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null) {
 		if (in_gtypeinstance_creation_method) {
 			// memory management for generic types
 			int type_param_index = 0;
@@ -895,5 +890,23 @@ public class Vala.CCodeMethodBinding : CCodeBinding {
 			fundamental_class = fundamental_class.base_class;
 		}
 		return fundamental_class;
+	}
+
+	public override void visit_creation_method (CreationMethod m) {
+		if (m.body != null && codegen.current_type_symbol is Class && codegen.current_class.is_subtype_of (codegen.gobject_type)) {
+			int n_params = 0;
+			foreach (Statement stmt in m.body.get_statements ()) {
+				var expr_stmt = stmt as ExpressionStatement;
+				if (expr_stmt != null) {
+					Property prop = expr_stmt.assigned_property ();
+					if (prop != null && prop.set_accessor.construction) {
+						n_params++;
+					}
+				}
+			}
+			m.n_construction_params = n_params;
+		}
+
+		head.visit_method (m);
 	}
 }

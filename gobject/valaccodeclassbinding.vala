@@ -1162,7 +1162,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
 			ccall.add_argument (cself);
 			var csetcall = new CCodeFunctionCall ();
-			csetcall.call = get_value_setter_function (prop.property_type);
+			csetcall.call = head.get_value_setter_function (prop.property_type);
 			csetcall.add_argument (new CCodeIdentifier ("value"));
 			csetcall.add_argument (ccall);
 			ccase.add_statement (new CCodeExpressionStatement (csetcall));

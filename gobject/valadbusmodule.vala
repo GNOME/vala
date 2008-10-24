@@ -1,4 +1,4 @@
-/* valaccodedynamicmethodbinding.vala
+/* valadbusmodule.vala
  *
  * Copyright (C) 2007-2008  Jürg Billeter
  *
@@ -26,13 +26,12 @@ using Gee;
 /**
  * The link between a dynamic method and generated code.
  */
-public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
-	public CCodeDynamicMethodBinding (CCodeGenerator codegen, DynamicMethod method) {
-		this.method = method;
-		this.codegen = codegen;
+public class Vala.DBusModule : CCodeModule {
+	public DBusModule (CCodeGenerator codegen, CCodeModule? next) {
+		base (codegen, next);
 	}
 
-	public void generate_wrapper () {
+	public override void generate_dynamic_method_wrapper (DynamicMethod method) {
 		var dynamic_method = (DynamicMethod) method;
 
 		var func = new CCodeFunction (method.get_cname (), method.return_type.get_cname ());
@@ -46,7 +45,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 
 		var block = new CCodeBlock ();
 		if (dynamic_method.dynamic_type.data_type == codegen.dbus_object_type) {
-			generate_dbus_method_wrapper (block);
+			generate_dbus_method_wrapper (method, block);
 		} else {
 			Report.error (method.source_reference, "dynamic methods are not supported for `%s'".printf (dynamic_method.dynamic_type.to_string ()));
 		}
@@ -58,7 +57,7 @@ public class Vala.CCodeDynamicMethodBinding : CCodeMethodBinding {
 		codegen.source_type_member_definition.append (func);
 	}
 
-	void generate_dbus_method_wrapper (CCodeBlock block) {
+	void generate_dbus_method_wrapper (Method method, CCodeBlock block) {
 		var dynamic_method = (DynamicMethod) method;
 
 		var expr = dynamic_method.invocation;

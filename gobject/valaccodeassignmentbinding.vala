@@ -41,7 +41,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		var prop = (Property) assignment.left.symbol_reference;
 
 		if (prop.set_accessor.construction && codegen.current_type_symbol is Class && codegen.current_class.is_subtype_of (codegen.gobject_type) && codegen.in_creation_method) {
-			codenode = get_construct_property_assignment (prop.get_canonical_cconstant (), prop.property_type, (CCodeExpression) assignment.right.ccodenode);
+			codenode = head.get_construct_property_assignment (prop.get_canonical_cconstant (), prop.property_type, (CCodeExpression) assignment.right.ccodenode);
 		} else {
 			CCodeExpression cexpr = (CCodeExpression) assignment.right.ccodenode;
 

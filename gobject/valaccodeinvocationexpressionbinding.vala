@@ -157,7 +157,7 @@ public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
 			foreach (FormalParameter param in m.get_parameters ()) {
 				param.accept (codegen);
 			}
-			codegen.dynamic_method_binding ((DynamicMethod) m).generate_wrapper ();
+			head.generate_dynamic_method_wrapper ((DynamicMethod) m);
 		} else if (m is CreationMethod) {
 			ccall_expr = new CCodeAssignment (new CCodeIdentifier ("self"), new CCodeCastExpression (ccall, codegen.current_class.get_cname () + "*"));
 		}

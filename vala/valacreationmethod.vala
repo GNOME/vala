@@ -102,10 +102,6 @@ public class Vala.CreationMethod : Method {
 		}
 	}
 
-	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
-		return codegen.create_creation_method_binding (this);
-	}
-
 	public override string get_real_cname () {
 		var parent = parent_symbol as Class;
 

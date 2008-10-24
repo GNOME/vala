@@ -18,8 +18,6 @@ libvala_la_VALASOURCES = \
 	valaccodebinding.vala \
 	valaccodeclassbinding.vala \
 	valaccodecompiler.vala \
-	valaccodecreationmethodbinding.vala \
-	valaccodedynamicmethodbinding.vala \
 	valaccodedynamicpropertybinding.vala \
 	valaccodedynamicsignalbinding.vala \
 	valaccodeelementaccessbinding.vala \
@@ -31,11 +29,12 @@ libvala_la_VALASOURCES = \
 	valaccodeinterfacebinding.vala \
 	valaccodeinvocationexpressionbinding.vala \
 	valaccodememberaccessbinding.vala \
-	valaccodemethodbinding.vala \
+	valaccodemethodmodule.vala \
 	valaccodemodule.vala \
 	valaccodeobjecttypesymbolbinding.vala \
 	valaccodetypesymbolbinding.vala \
 	valaclassregisterfunction.vala \
+	valadbusmodule.vala \
 	valagirwriter.vala \
 	valainterfaceregisterfunction.vala \
 	valatyperegisterfunction.vala \

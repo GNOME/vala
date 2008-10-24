@@ -53,8 +53,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
 			}
 
 			if (m.base_method != null) {
-				var binding = method_binding (m.base_method);
-				if (!binding.has_wrapper) {
+				if (!head.method_has_wrapper (m.base_method)) {
 					var inst = pub_inst;
 					if (expr.inner != null && !expr.inner.is_pure ()) {
 						// instance expression has side-effects

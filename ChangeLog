@@ -1,5 +1,25 @@
 2008-10-24  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodegenerator.vala:
+	* vala/valacreationmethod.vala:
+	* vala/valadynamicmethod.vala:
+	* vala/valamethod.vala:
+	* gobject/Makefile.am:
+	* gobject/valaccodeassignmentbinding.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodebinding.vala:
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+	* gobject/valaccodememberaccessbinding.vala:
+	* gobject/valaccodemethodmodule.vala:
+	* gobject/valaccodemodule.vala:
+	* gobject/valadbusmodule.vala:
+
+	Add CCodeMethodModule and DBusModule
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodegenerator.vala:
 	* gobject/valaccodemodule.vala:

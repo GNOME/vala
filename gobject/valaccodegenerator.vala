@@ -28,7 +28,7 @@ using Gee;
  * Code visitor generating C Code.
  */
 public class Vala.CCodeGenerator : CodeGenerator {
-	CCodeModule head;
+	public CCodeModule head;
 
 	public CodeContext context;
 	
@@ -141,7 +141,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	private Set<string> wrappers;
 
 	public CCodeGenerator () {
-		this.head = new CCodeBaseModule (this, null);
+		head = new CCodeBaseModule (this, head);
+		head = new CCodeMethodModule (this, head);
+		head = new DBusModule (this, head);
 
 		predefined_marshal_set = new HashSet<string> (str_hash, str_equal);
 		predefined_marshal_set.add ("VOID:VOID");
@@ -741,11 +743,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_method (Method m) {
-		code_binding (m).emit ();
+		head.visit_method (m);
 	}
 
 	public override void visit_creation_method (CreationMethod m) {
-		code_binding (m).emit ();
+		head.visit_creation_method (m);
 	}
 
 	public override void visit_formal_parameter (FormalParameter p) {
@@ -3416,7 +3418,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			// cast the return value of the creation method back to the intended type if
 			// it requested a special C return type
-			if (method_binding (m).get_custom_creturn_type () != null) {
+			if (head.get_custom_creturn_type (m) != null) {
 				creation_expr = new CCodeCastExpression (creation_expr, expr.type_reference.get_cname ());
 			}
 		} else if (expr.symbol_reference is ErrorCode) {
@@ -4367,19 +4369,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return new CCodeInterfaceBinding (this, node);
 	}
 
-
-	public override CodeBinding? create_method_binding (Method node) {
-		return new CCodeMethodBinding (this, node);
-	}
-
-	public override CodeBinding? create_dynamic_method_binding (DynamicMethod node) {
-		return new CCodeDynamicMethodBinding (this, node);
-	}
-
-	public override CodeBinding? create_creation_method_binding (CreationMethod node) {
-		return new CCodeCreationMethodBinding (this, node);
-	}
-
 	public override CodeBinding? create_dynamic_property_binding (DynamicProperty node) {
 		return new CCodeDynamicPropertyBinding (this, node);
 	}
@@ -4410,14 +4399,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public CCodeBinding? code_binding (CodeNode node) {
 		return (CCodeBinding) node.get_code_binding (this);
-	}
-
-	public CCodeMethodBinding method_binding (Method node) {
-		return (CCodeMethodBinding) node.get_code_binding (this);
-	}
-
-	public CCodeDynamicMethodBinding dynamic_method_binding (DynamicMethod node) {
-		return (CCodeDynamicMethodBinding) node.get_code_binding (this);
 	}
 
 	public CCodeDynamicPropertyBinding dynamic_property_binding (DynamicProperty node) {

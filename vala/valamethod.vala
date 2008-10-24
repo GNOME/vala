@@ -510,10 +510,6 @@ public class Vala.Method : Member {
 		}
 	}
 
-	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
-		return codegen.create_method_binding (this);
-	}
-
 	private void find_base_methods () {
 		if (base_methods_valid) {
 			return;

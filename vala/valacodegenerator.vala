@@ -42,18 +42,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 		return null;
 	}
 
-	public virtual CodeBinding? create_method_binding (Method node) {
-		return null;
-	}
-
-	public virtual CodeBinding? create_dynamic_method_binding (DynamicMethod node) {
-		return null;
-	}
-
-	public virtual CodeBinding? create_creation_method_binding (CreationMethod node) {
-		return null;
-	}
-
 	public virtual CodeBinding? create_dynamic_property_binding (DynamicProperty node) {
 		return null;
 	}

@@ -53,8 +53,4 @@ public class Vala.DynamicMethod : Method {
 		}
 		return cname;
 	}
-
-	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
-		return codegen.create_dynamic_method_binding (this);
-	}
 }
