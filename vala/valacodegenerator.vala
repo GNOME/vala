@@ -34,10 +34,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 	public virtual void emit (CodeContext context) {
 	}
 
-	public virtual CodeBinding? create_dynamic_property_binding (DynamicProperty node) {
-		return null;
-	}
-
 	public virtual CodeBinding? create_dynamic_signal_binding (DynamicSignal node) {
 		return null;
 	}

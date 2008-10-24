@@ -148,6 +148,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head = new CCodeAssignmentModule (this, head);
 		head = new CCodeInvocationExpressionModule (this, head);
 		head = new CCodeArrayModule (this, head);
+		head = new CCodeDynamicPropertyModule (this, head);
 		head = new GObjectModule (this, head);
 		head = new GObjectClassModule (this, head);
 		head = new GObjectInterfaceModule (this, head);
@@ -4162,7 +4163,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var base_property_type = (TypeSymbol) base_property.parent_symbol;
 			set_func = "%s_set_%s".printf (base_property_type.get_lower_case_cname (null), base_property.name);
 			if (prop is DynamicProperty) {
-				set_func = dynamic_property_binding ((DynamicProperty) prop).get_setter_cname ();
+				set_func = head.get_dynamic_property_setter_cname ((DynamicProperty) prop);
 			}
 		}
 		
@@ -4367,20 +4368,12 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		return node.ccodenode;
 	}
 
-	public override CodeBinding? create_dynamic_property_binding (DynamicProperty node) {
-		return new CCodeDynamicPropertyBinding (this, node);
-	}
-
 	public override CodeBinding? create_dynamic_signal_binding (DynamicSignal node) {
 		return new CCodeDynamicSignalBinding (this, node);
 	}
 
 	public CCodeBinding? code_binding (CodeNode node) {
 		return (CCodeBinding) node.get_code_binding (this);
-	}
-
-	public CCodeDynamicPropertyBinding dynamic_property_binding (DynamicProperty node) {
-		return (CCodeDynamicPropertyBinding) node.get_code_binding (this);
 	}
 
 	public CCodeDynamicSignalBinding dynamic_signal_binding (DynamicSignal node) {

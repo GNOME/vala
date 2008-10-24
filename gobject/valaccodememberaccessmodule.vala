@@ -168,7 +168,7 @@ public class Vala.CCodeMemberAccessModule : CCodeModule {
 				}
 				string getter_cname;
 				if (prop is DynamicProperty) {
-					getter_cname = codegen.dynamic_property_binding ((DynamicProperty) prop).get_getter_cname ();
+					getter_cname = head.get_dynamic_property_getter_cname ((DynamicProperty) prop);
 				} else {
 					getter_cname = base_property.get_accessor.get_cname ();
 				}

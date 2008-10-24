@@ -123,4 +123,12 @@ public abstract class Vala.CCodeModule {
 	public virtual CCodeFragment register_dbus_info (ObjectTypeSymbol bindable) {
 		return next.register_dbus_info (bindable);
 	}
+
+	public virtual string get_dynamic_property_getter_cname (DynamicProperty node) {
+		return next.get_dynamic_property_getter_cname (node);
+	}
+
+	public virtual string get_dynamic_property_setter_cname (DynamicProperty node) {
+		return next.get_dynamic_property_setter_cname (node);
+	}
 }

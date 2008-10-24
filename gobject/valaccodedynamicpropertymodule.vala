@@ -1,4 +1,4 @@
-/* valaccodedynamicpropertybinding.vala
+/* valaccodedynamicpropertymodule.vala
  *
  * Copyright (C) 2008  Jürg Billeter
  *
@@ -26,25 +26,15 @@ using Gee;
 /**
  * The link between a dynamic property and generated code.
  */
-public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
-	public Property node { get; set; }
+public class Vala.CCodeDynamicPropertyModule : CCodeModule {
+	int dynamic_property_id;
 
-	string? getter_cname;
-	string? setter_cname;
-
-	static int dynamic_property_id;
-
-	public CCodeDynamicPropertyBinding (CCodeGenerator codegen, DynamicProperty property) {
-		this.node = property;
-		this.codegen = codegen;
+	public CCodeDynamicPropertyModule (CCodeGenerator codegen, CCodeModule? next) {
+		base (codegen, next);
 	}
 
-	public string get_getter_cname () {
-		if (getter_cname != null) {
-			return getter_cname;
-		}
-
-		getter_cname = "_dynamic_get_%s%d".printf (node.name, dynamic_property_id++);
+	public override string get_dynamic_property_getter_cname (DynamicProperty node) {
+		string getter_cname = "_dynamic_get_%s%d".printf (node.name, dynamic_property_id++);
 
 		var dynamic_property = (DynamicProperty) node;
 
@@ -55,10 +45,10 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 
 		var block = new CCodeBlock ();
 		if (dynamic_property.dynamic_type.data_type == codegen.dbus_object_type) {
-			generate_dbus_property_getter_wrapper (block);
+			generate_dbus_property_getter_wrapper (node, block);
 		} else if (dynamic_property.dynamic_type.data_type != null
 		           && dynamic_property.dynamic_type.data_type.is_subtype_of (codegen.gobject_type)) {
-			generate_gobject_property_getter_wrapper (block);
+			generate_gobject_property_getter_wrapper (node, block);
 		} else {
 			Report.error (node.source_reference, "dynamic properties are not supported for `%s'".printf (dynamic_property.dynamic_type.to_string ()));
 		}
@@ -72,16 +62,12 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		return getter_cname;
 	}
 
-	public string get_setter_cname () {
-		if (setter_cname != null) {
-			return setter_cname;
-		}
-
-		getter_cname = "_dynamic_set_%s%d".printf (node.name, dynamic_property_id++);
+	public override string get_dynamic_property_setter_cname (DynamicProperty node) {
+		string setter_cname = "_dynamic_set_%s%d".printf (node.name, dynamic_property_id++);
 
 		var dynamic_property = (DynamicProperty) node;
 
-		var func = new CCodeFunction (getter_cname, "void");
+		var func = new CCodeFunction (setter_cname, "void");
 		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
 
 		func.add_parameter (new CCodeFormalParameter ("obj", dynamic_property.dynamic_type.get_cname ()));
@@ -89,10 +75,10 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 
 		var block = new CCodeBlock ();
 		if (dynamic_property.dynamic_type.data_type == codegen.dbus_object_type) {
-			generate_dbus_property_setter_wrapper (block);
+			generate_dbus_property_setter_wrapper (node, block);
 		} else if (dynamic_property.dynamic_type.data_type != null
 		           && dynamic_property.dynamic_type.data_type.is_subtype_of (codegen.gobject_type)) {
-			generate_gobject_property_setter_wrapper (block);
+			generate_gobject_property_setter_wrapper (node, block);
 		} else {
 			Report.error (node.source_reference, "dynamic properties are not supported for `%s'".printf (dynamic_property.dynamic_type.to_string ()));
 		}
@@ -103,10 +89,10 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		func.block = block;
 		codegen.source_type_member_definition.append (func);
 
-		return getter_cname;
+		return setter_cname;
 	}
 
-	void generate_gobject_property_getter_wrapper (CCodeBlock block) {
+	void generate_gobject_property_getter_wrapper (DynamicProperty node, CCodeBlock block) {
 		var cdecl = new CCodeDeclaration (node.property_type.get_cname ());
 		cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
 		block.add_statement (cdecl);
@@ -122,7 +108,7 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
 	}
 
-	void generate_gobject_property_setter_wrapper (CCodeBlock block) {
+	void generate_gobject_property_setter_wrapper (DynamicProperty node, CCodeBlock block) {
 		var call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_set"));
 		call.add_argument (new CCodeIdentifier ("obj"));
 		call.add_argument (node.get_canonical_cconstant ());
@@ -132,7 +118,7 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		block.add_statement (new CCodeExpressionStatement (call));
 	}
 
-	void create_dbus_property_proxy (CCodeBlock block) {
+	void create_dbus_property_proxy (DynamicProperty node, CCodeBlock block) {
 		var prop_proxy_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_new_from_proxy"));
 		prop_proxy_call.add_argument (new CCodeIdentifier ("obj"));
 		prop_proxy_call.add_argument (new CCodeConstant ("DBUS_INTERFACE_PROPERTIES"));
@@ -143,8 +129,8 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		block.add_statement (prop_proxy_decl);
 	}
 
-	void generate_dbus_property_getter_wrapper (CCodeBlock block) {
-		create_dbus_property_proxy (block);
+	void generate_dbus_property_getter_wrapper (DynamicProperty node, CCodeBlock block) {
+		create_dbus_property_proxy (node, block);
 
 		// initialize GValue
 		var cvalinit = new CCodeInitializerList ();
@@ -198,8 +184,8 @@ public class Vala.CCodeDynamicPropertyBinding : CCodeBinding {
 		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
 	}
 
-	void generate_dbus_property_setter_wrapper (CCodeBlock block) {
-		create_dbus_property_proxy (block);
+	void generate_dbus_property_setter_wrapper (DynamicProperty node, CCodeBlock block) {
+		create_dbus_property_proxy (node, block);
 
 		// initialize GValue
 		var cvalinit = new CCodeInitializerList ();

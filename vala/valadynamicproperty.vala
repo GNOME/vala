@@ -42,7 +42,4 @@ public class Vala.DynamicProperty : Property {
 		return new ArrayList<string> ();
 	}
 
-	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
-		return codegen.create_dynamic_property_binding (this);
-	}
 }
