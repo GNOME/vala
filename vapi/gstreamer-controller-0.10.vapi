@@ -2,37 +2,6 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_INTERPOLATE_", has_type_id = "0", cheader_filename = "gst/controller/gstcontroller.h")]
-	public enum InterpolateMode {
-		NONE,
-		TRIGGER,
-		LINEAR,
-		QUADRATIC,
-		CUBIC,
-		USER
-	}
-	[CCode (cprefix = "", has_type_id = "0", cheader_filename = "gst/controller/gstlfocontrolsource.h")]
-	public enum LFOWaveform {
-		Sine waveform (default),
-		Square waveform,
-		Saw waveform,
-		Reverse saw waveform,
-		Triangle waveform
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
-	public class TimedValue {
-		public Gst.ClockTime timestamp;
-		public GLib.Value value;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
-	public class ValueArray {
-		public weak string property_name;
-		public int nbsamples;
-		public Gst.ClockTime sample_interval;
-		public void* values;
-	}
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class ControlSource : GLib.Object {
 		public bool bound;
@@ -42,9 +11,9 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class Controller : GLib.Object {
-		public weak GLib.List properties;
 		public weak GLib.Mutex @lock;
 		public weak GLib.Object object;
+		public weak GLib.List properties;
 		public GLib.Value get (string property_name, Gst.ClockTime timestamp);
 		public weak GLib.List get_all (string property_name);
 		public weak Gst.ControlSource get_control_source (string property_name);
@@ -52,11 +21,9 @@ namespace Gst {
 		public bool get_value_arrays (Gst.ClockTime timestamp, GLib.SList value_arrays);
 		public static bool init (int argc, out weak string argv);
 		[CCode (has_construct_function = false)]
-		public Controller (GLib.Object object);
-		[CCode (has_construct_function = false)]
 		public Controller.list (GLib.Object object, GLib.List list);
 		[CCode (has_construct_function = false)]
-		public Controller.valist (GLib.Object object, void* var_args);
+		public Controller (GLib.Object object);
 		public bool remove_properties ();
 		public bool remove_properties_list (GLib.List list);
 		public bool remove_properties_valist (void* var_args);
@@ -70,6 +37,8 @@ namespace Gst {
 		public bool sync_values (Gst.ClockTime timestamp);
 		public bool unset (string property_name, Gst.ClockTime timestamp);
 		public bool unset_all (string property_name);
+		[CCode (has_construct_function = false)]
+		public Controller.valist (GLib.Object object, void* var_args);
 		[NoAccessorMethod]
 		public uint64 control_rate { get; set; }
 	}
@@ -101,6 +70,37 @@ namespace Gst {
 		public uint64 timeshift { get; set; }
 		[NoAccessorMethod]
 		public Gst.LFOWaveform waveform { get; set; }
+	}
+	[Compact]
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
+	public class TimedValue {
+		public Gst.ClockTime timestamp;
+		public GLib.Value value;
+	}
+	[Compact]
+	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
+	public class ValueArray {
+		public int nbsamples;
+		public weak string property_name;
+		public Gst.ClockTime sample_interval;
+		public void* values;
+	}
+	[CCode (cprefix = "GST_INTERPOLATE_", has_type_id = "0", cheader_filename = "gst/controller/gstcontroller.h")]
+	public enum InterpolateMode {
+		NONE,
+		TRIGGER,
+		LINEAR,
+		QUADRATIC,
+		CUBIC,
+		USER
+	}
+	[CCode (cprefix = "", has_type_id = "0", cheader_filename = "gst/controller/gstlfocontrolsource.h")]
+	public enum LFOWaveform {
+		Sine waveform (default),
+		Square waveform,
+		Saw waveform,
+		Reverse saw waveform,
+		Triangle waveform
 	}
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static delegate bool ControlSourceBind (Gst.ControlSource _self, GLib.ParamSpec pspec);

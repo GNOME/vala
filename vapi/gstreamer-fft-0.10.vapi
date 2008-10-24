@@ -2,14 +2,6 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_FFT_WINDOW_", has_type_id = "0", cheader_filename = "gst/fft/gstfft.h")]
-	public enum FFTWindow {
-		RECTANGULAR,
-		HAMMING,
-		HANN,
-		BARTLETT,
-		BLACKMAN
-	}
 	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstfftf32.h")]
 	public class FFTF32 {
@@ -25,8 +17,8 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstfftf32.h")]
 	public class FFTF32Complex {
-		public float r;
 		public float i;
+		public float r;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstfftf64.h")]
@@ -43,8 +35,8 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstfftf64.h")]
 	public class FFTF64Complex {
-		public double r;
 		public double i;
+		public double r;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts16.h")]
@@ -61,8 +53,8 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts16.h")]
 	public class FFTS16Complex {
-		public short r;
 		public short i;
+		public short r;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts32.h")]
@@ -79,8 +71,16 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts32.h")]
 	public class FFTS32Complex {
-		public int r;
 		public int i;
+		public int r;
+	}
+	[CCode (cprefix = "GST_FFT_WINDOW_", has_type_id = "0", cheader_filename = "gst/fft/gstfft.h")]
+	public enum FFTWindow {
+		RECTANGULAR,
+		HAMMING,
+		HANN,
+		BARTLETT,
+		BLACKMAN
 	}
 	[CCode (cheader_filename = "gst/fft/gstfft.h")]
 	public static int fft_next_fast_length (int n);

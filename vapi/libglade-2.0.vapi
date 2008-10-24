@@ -24,20 +24,20 @@ namespace Glade {
 	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
 	public class ChildInfo {
-		public weak Glade.Property properties;
-		public uint n_properties;
 		public weak Glade.WidgetInfo child;
 		public weak string internal_child;
+		public uint n_properties;
+		public weak Glade.Property properties;
 	}
 	[Compact]
 	[CCode (free_function = "glade_interface_destroy", cheader_filename = "glade/glade.h")]
 	public class Interface {
-		public weak string requires;
 		public uint n_requires;
-		public weak Glade.WidgetInfo toplevels;
 		public uint n_toplevels;
 		public weak GLib.HashTable names;
+		public weak string requires;
 		public weak GLib.HashTable strings;
+		public weak Glade.WidgetInfo toplevels;
 		public void dump (string filename);
 	}
 	[Compact]
@@ -49,31 +49,31 @@ namespace Glade {
 	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
 	public class SignalInfo {
-		public weak string name;
-		public weak string handler;
-		public weak string object;
 		public uint after;
+		public weak string handler;
+		public weak string name;
+		public weak string object;
 	}
 	[Compact]
 	[CCode (cheader_filename = "glade/glade.h")]
 	public class WidgetInfo {
-		public weak Glade.WidgetInfo parent;
-		public weak string classname;
-		public weak string name;
-		public weak Glade.Property properties;
-		public uint n_properties;
-		public weak Glade.Property atk_props;
-		public uint n_atk_props;
-		public weak Glade.SignalInfo signals;
-		public uint n_signals;
-		public weak Glade.AtkActionInfo atk_actions;
-		public uint n_atk_actions;
-		public weak Glade.AtkRelationInfo relations;
-		public uint n_relations;
 		public weak Glade.AccelInfo accels;
-		public uint n_accels;
+		public weak Glade.AtkActionInfo atk_actions;
+		public weak Glade.Property atk_props;
 		public weak Glade.ChildInfo children;
+		public weak string classname;
+		public uint n_accels;
+		public uint n_atk_actions;
+		public uint n_atk_props;
 		public uint n_children;
+		public uint n_properties;
+		public uint n_relations;
+		public uint n_signals;
+		public weak string name;
+		public weak Glade.WidgetInfo parent;
+		public weak Glade.Property properties;
+		public weak Glade.AtkRelationInfo relations;
+		public weak Glade.SignalInfo signals;
 	}
 	[CCode (cheader_filename = "glade/glade.h")]
 	public class XML : GLib.Object {
@@ -82,12 +82,16 @@ namespace Glade {
 		public bool @construct (string fname, string? root, string? domain);
 		public bool construct_from_buffer (string buffer, int size, string root, string domain);
 		public weak Gtk.AccelGroup ensure_accel ();
+		[CCode (has_construct_function = false)]
+		public XML.from_buffer (string buffer, int size, string? root, string? domain);
 		public weak Gtk.Widget get_widget (string name);
 		public weak GLib.List get_widget_prefix (string name);
 		public void handle_internal_child (Gtk.Widget parent, Glade.ChildInfo child_info);
 		public void handle_widget_prop (Gtk.Widget widget, string prop_name, string value_name);
+		[NoWrapper]
+		public virtual GLib.Type lookup_type (string gtypename);
+		[CCode (has_construct_function = false)]
 		public XML (string fname, string? root, string? domain);
-		public XML.from_buffer (string buffer, int size, string? root, string? domain);
 		public weak string relative_file (string filename);
 		public void set_common_params (Gtk.Widget widget, Glade.WidgetInfo info);
 		public void set_packing_property (Gtk.Widget parent, Gtk.Widget child, string name, string value);
@@ -98,8 +102,6 @@ namespace Glade {
 		public void signal_connect (string handlername, GLib.Callback func);
 		public void signal_connect_data (string handlername, GLib.Callback func);
 		public void signal_connect_full (string handler_name, Glade.XMLConnectFunc func);
-		[NoWrapper]
-		public virtual GLib.Type lookup_type (string gtypename);
 	}
 	[CCode (cheader_filename = "glade/glade.h")]
 	public static delegate void ApplyCustomPropFunc (Glade.XML xml, Gtk.Widget widget, string propname, string value);

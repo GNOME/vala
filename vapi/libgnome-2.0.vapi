@@ -2,71 +2,26 @@
 
 [CCode (cprefix = "Gnome", lower_case_cprefix = "gnome_")]
 namespace Gnome {
-	[CCode (cprefix = "GNOME_FILE_DOMAIN_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
-	public enum FileDomain {
-		UNKNOWN,
-		LIBDIR,
-		DATADIR,
-		SOUND,
-		PIXMAP,
-		CONFIG,
-		HELP,
-		APP_LIBDIR,
-		APP_DATADIR,
-		APP_SOUND,
-		APP_PIXMAP,
-		APP_CONFIG,
-		APP_HELP
-	}
-	[CCode (cprefix = "GNOME_HELP_ERROR_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
-	public enum HelpError {
-		INTERNAL,
-		NOT_FOUND
-	}
-	[CCode (cprefix = "GTRIG_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
-	public enum TriggerType {
-		NONE,
-		FUNCTION,
-		COMMAND,
-		MEDIAPLAY
-	}
-	[CCode (cprefix = "GNOME_URL_ERROR_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
-	public enum URLError {
-		PARSE,
-		LAUNCH,
-		URL,
-		NO_DEFAULT,
-		NOT_SUPPORTED,
-		VFS,
-		CANCELLED
+	[Compact]
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
+	public class ModuleInfo {
+		public weak Gnome.ModuleClassInitHook class_init;
+		public weak string description;
+		public weak Gnome.ModuleGetGOptionGroupFunc get_goption_group_func;
+		public weak Gnome.ModuleInitHook init_pass;
+		public weak Gnome.ModuleHook instance_init;
+		public weak string name;
+		public weak string opt_prefix;
+		public weak Gnome.ModuleHook post_args_parse;
+		public weak Gnome.ModuleHook pre_args_parse;
+		public weak Gnome.ModuleRequirement requirements;
+		public weak string version;
 	}
 	[Compact]
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public class ModuleRequirement {
-		public weak string required_version;
 		public weak Gnome.ModuleInfo module_info;
-	}
-	[Compact]
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class Trigger {
-		public Gnome.TriggerType type;
-		public void* u;
-		public weak string level;
-	}
-	[Compact]
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public class ModuleInfo : GLib.Boxed {
-		public weak string name;
-		public weak string version;
-		public weak string description;
-		public weak Gnome.ModuleRequirement requirements;
-		public weak Gnome.ModuleHook instance_init;
-		public weak Gnome.ModuleHook pre_args_parse;
-		public weak Gnome.ModuleHook post_args_parse;
-		public weak Gnome.ModuleInitHook init_pass;
-		public weak Gnome.ModuleClassInitHook class_init;
-		public weak string opt_prefix;
-		public weak Gnome.ModuleGetGOptionGroupFunc get_goption_group_func;
+		public weak string required_version;
 	}
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public class Program : GLib.Object {
@@ -118,6 +73,51 @@ namespace Gnome {
 		public int popt_flags { construct; }
 		[NoAccessorMethod]
 		public void* popt_table { construct; }
+	}
+	[Compact]
+	[CCode (cheader_filename = "libgnome/libgnome.h")]
+	public class Trigger {
+		public weak string level;
+		public Gnome.TriggerType type;
+		public void* u;
+	}
+	[CCode (cprefix = "GNOME_FILE_DOMAIN_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
+	public enum FileDomain {
+		UNKNOWN,
+		LIBDIR,
+		DATADIR,
+		SOUND,
+		PIXMAP,
+		CONFIG,
+		HELP,
+		APP_LIBDIR,
+		APP_DATADIR,
+		APP_SOUND,
+		APP_PIXMAP,
+		APP_CONFIG,
+		APP_HELP
+	}
+	[CCode (cprefix = "GNOME_HELP_ERROR_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
+	public enum HelpError {
+		INTERNAL,
+		NOT_FOUND
+	}
+	[CCode (cprefix = "GTRIG_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
+	public enum TriggerType {
+		NONE,
+		FUNCTION,
+		COMMAND,
+		MEDIAPLAY
+	}
+	[CCode (cprefix = "GNOME_URL_ERROR_", has_type_id = "0", cheader_filename = "libgnome/libgnome.h")]
+	public enum URLError {
+		PARSE,
+		LAUNCH,
+		URL,
+		NO_DEFAULT,
+		NOT_SUPPORTED,
+		VFS,
+		CANCELLED
 	}
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static delegate void ModuleClassInitHook (void* klass, Gnome.ModuleInfo mod_info);

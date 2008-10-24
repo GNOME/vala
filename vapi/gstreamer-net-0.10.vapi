@@ -2,6 +2,21 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
+	[CCode (cheader_filename = "gst/net/gstnet.h")]
+	public class NetClientClock : Gst.SystemClock {
+		[NoArrayLength]
+		public weak int[] control_sock;
+		public Gst.ClockTime current_timeout;
+		public void* servaddr;
+		public int sock;
+		public weak GLib.Thread thread;
+		[CCode (type = "GstClock*", has_construct_function = false)]
+		public NetClientClock (string name, string remote_address, int remote_port, Gst.ClockTime base_time);
+		[NoAccessorMethod]
+		public string address { get; set; }
+		[NoAccessorMethod]
+		public int port { get; set; }
+	}
 	[Compact]
 	[CCode (cheader_filename = "gst/net/gstnet.h")]
 	public class NetTimePacket {
@@ -14,25 +29,10 @@ namespace Gst {
 		public uchar serialize ();
 	}
 	[CCode (cheader_filename = "gst/net/gstnet.h")]
-	public class NetClientClock : Gst.SystemClock {
-		public int sock;
-		[NoArrayLength]
-		public weak int[] control_sock;
-		public Gst.ClockTime current_timeout;
-		public void* servaddr;
-		public weak GLib.Thread thread;
-		[CCode (type = "GstClock*", has_construct_function = false)]
-		public NetClientClock (string name, string remote_address, int remote_port, Gst.ClockTime base_time);
-		[NoAccessorMethod]
-		public string address { get; set; }
-		[NoAccessorMethod]
-		public int port { get; set; }
-	}
-	[CCode (cheader_filename = "gst/net/gstnet.h")]
 	public class NetTimeProvider : Gst.Object {
-		public int sock;
 		[NoArrayLength]
 		public weak int[] control_sock;
+		public int sock;
 		public weak GLib.Thread thread;
 		[CCode (has_construct_function = false)]
 		public NetTimeProvider (Gst.Clock clock, string address, int port);

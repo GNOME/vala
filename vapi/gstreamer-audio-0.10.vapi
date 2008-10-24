@@ -2,6 +2,154 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
+	[CCode (cheader_filename = "gst/audio/gstaudioclock.h")]
+	public class AudioClock : Gst.SystemClock {
+		public weak Gst.AudioClockGetTimeFunc func;
+		public Gst.ClockTime last_time;
+		public void* user_data;
+		[CCode (type = "GstClock*", has_construct_function = false)]
+		public AudioClock (string name, Gst.AudioClockGetTimeFunc func);
+	}
+	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
+	public class AudioFilter : Gst.BaseTransform {
+		public weak Gst.RingBufferSpec format;
+		[CCode (cname = "gst_audio_filter_class_add_pad_templates")]
+		public class void add_pad_templates (Gst.Caps allowed_caps);
+		[NoWrapper]
+		public virtual bool setup (Gst.RingBufferSpec format);
+	}
+	[CCode (cheader_filename = "gst/audio/gstaudiosink.h")]
+	public class AudioSink : Gst.BaseAudioSink {
+		public weak GLib.Thread thread;
+		[NoWrapper]
+		public virtual bool close ();
+		[NoWrapper]
+		public virtual uint delay ();
+		[NoWrapper]
+		public virtual bool open ();
+		[NoWrapper]
+		public virtual bool prepare (Gst.RingBufferSpec spec);
+		[NoWrapper]
+		public virtual void reset ();
+		[NoWrapper]
+		public virtual bool unprepare ();
+		[NoWrapper]
+		public virtual uint write (void* data, uint length);
+	}
+	[CCode (cheader_filename = "gst/audio/gstaudiosrc.h")]
+	public class AudioSrc : Gst.BaseAudioSrc {
+		public weak GLib.Thread thread;
+		[NoWrapper]
+		public virtual bool close ();
+		[NoWrapper]
+		public virtual uint delay ();
+		[NoWrapper]
+		public virtual bool open ();
+		[NoWrapper]
+		public virtual bool prepare (Gst.RingBufferSpec spec);
+		[NoWrapper]
+		public virtual uint read (void* data, uint length);
+		[NoWrapper]
+		public virtual void reset ();
+		[NoWrapper]
+		public virtual bool unprepare ();
+	}
+	[CCode (cheader_filename = "gst/audio/gstaudiosink.h")]
+	public class BaseAudioSink : Gst.BaseSink {
+		public uint64 next_sample;
+		public weak Gst.Clock provided_clock;
+		public weak Gst.RingBuffer ringbuffer;
+		public virtual weak Gst.RingBuffer create_ringbuffer ();
+		public bool get_provide_clock ();
+		public Gst.BaseAudioSinkSlaveMethod get_slave_method ();
+		public void set_provide_clock (bool provide);
+		public void set_slave_method (Gst.BaseAudioSinkSlaveMethod method);
+		[NoAccessorMethod]
+		public int64 buffer_time { get; set; }
+		[NoAccessorMethod]
+		public int64 latency_time { get; set; }
+		public bool provide_clock { get; set; }
+		public Gst.BaseAudioSinkSlaveMethod slave_method { get; set; }
+	}
+	[CCode (cheader_filename = "gst/audio/gstaudiosrc.h")]
+	public class BaseAudioSrc : Gst.PushSrc {
+		public weak Gst.Clock clock;
+		public uint64 next_sample;
+		public weak Gst.RingBuffer ringbuffer;
+		public virtual weak Gst.RingBuffer create_ringbuffer ();
+		public bool get_provide_clock ();
+		public void set_provide_clock (bool provide);
+		[NoAccessorMethod]
+		public int64 buffer_time { get; set; }
+		[NoAccessorMethod]
+		public int64 latency_time { get; set; }
+		public bool provide_clock { get; set; }
+	}
+	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
+	public class RingBuffer : Gst.Object {
+		public void* abidata;
+		public bool acquired;
+		public weak Gst.RingBufferCallback callback;
+		public void* cb_data;
+		public weak GLib.Cond cond;
+		public weak Gst.Buffer data;
+		public uchar empty_seg;
+		public bool open;
+		public int samples_per_seg;
+		public int segbase;
+		public int segdone;
+		public Gst.RingBufferSegState segstate;
+		public weak Gst.RingBufferSpec spec;
+		public int state;
+		public int waiting;
+		public virtual bool acquire (Gst.RingBufferSpec spec);
+		public void advance (uint advance);
+		public void clear (int segment);
+		public void clear_all ();
+		public virtual bool close_device ();
+		public uint commit (uint64 sample, uchar[] data, uint len);
+		public uint commit_full (uint64 sample, uchar[] data, int in_samples, int out_samples, int accum);
+		public static void debug_spec_buff (Gst.RingBufferSpec spec);
+		public static void debug_spec_caps (Gst.RingBufferSpec spec);
+		public virtual uint delay ();
+		public bool device_is_open ();
+		public bool is_acquired ();
+		public void may_start (bool allowed);
+		public virtual bool open_device ();
+		public static bool parse_caps (Gst.RingBufferSpec spec, Gst.Caps caps);
+		public virtual bool pause ();
+		public bool prepare_read (int segment, uchar readptr, int len);
+		public uint read (uint64 sample, uchar[] data, uint len);
+		public virtual bool release ();
+		[NoWrapper]
+		public virtual bool resume ();
+		public uint64 samples_done ();
+		public void set_callback (Gst.RingBufferCallback cb);
+		public void set_flushing (bool flushing);
+		public void set_sample (uint64 sample);
+		public virtual bool start ();
+		public virtual bool stop ();
+	}
+	[Compact]
+	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
+	public class RingBufferSpec {
+		public bool bigend;
+		public uint64 buffer_time;
+		public int bytes_per_sample;
+		public weak Gst.Caps caps;
+		public int channels;
+		public int depth;
+		public Gst.BufferFormat format;
+		public uint64 latency_time;
+		public int rate;
+		public int segsize;
+		public int segtotal;
+		public bool sign;
+		[NoArrayLength]
+		public weak uchar[] silence_sample;
+		public Gst.BufferFormatType type;
+		public int width;
+	}
 	[CCode (cprefix = "GST_AUDIO_CHANNEL_POSITION_", has_type_id = "0", cheader_filename = "gst/audio/multichannel.h")]
 	public enum AudioChannelPosition {
 		INVALID,
@@ -96,154 +244,6 @@ namespace Gst {
 		STOPPED,
 		PAUSED,
 		STARTED
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
-	public class RingBufferSpec {
-		public weak Gst.Caps caps;
-		public Gst.BufferFormatType type;
-		public Gst.BufferFormat format;
-		public bool sign;
-		public bool bigend;
-		public int width;
-		public int depth;
-		public int rate;
-		public int channels;
-		public uint64 latency_time;
-		public uint64 buffer_time;
-		public int segsize;
-		public int segtotal;
-		public int bytes_per_sample;
-		[NoArrayLength]
-		public weak uchar[] silence_sample;
-	}
-	[CCode (cheader_filename = "gst/audio/gstaudioclock.h")]
-	public class AudioClock : Gst.SystemClock {
-		public weak Gst.AudioClockGetTimeFunc func;
-		public void* user_data;
-		public Gst.ClockTime last_time;
-		[CCode (type = "GstClock*", has_construct_function = false)]
-		public AudioClock (string name, Gst.AudioClockGetTimeFunc func);
-	}
-	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
-	public class AudioFilter : Gst.BaseTransform {
-		public weak Gst.RingBufferSpec format;
-		[CCode (cname = "gst_audio_filter_class_add_pad_templates")]
-		public class void add_pad_templates (Gst.Caps allowed_caps);
-		[NoWrapper]
-		public virtual bool setup (Gst.RingBufferSpec format);
-	}
-	[CCode (cheader_filename = "gst/audio/gstaudiosink.h")]
-	public class AudioSink : Gst.BaseAudioSink {
-		public weak GLib.Thread thread;
-		[NoWrapper]
-		public virtual bool close ();
-		[NoWrapper]
-		public virtual uint delay ();
-		[NoWrapper]
-		public virtual bool open ();
-		[NoWrapper]
-		public virtual bool prepare (Gst.RingBufferSpec spec);
-		[NoWrapper]
-		public virtual void reset ();
-		[NoWrapper]
-		public virtual bool unprepare ();
-		[NoWrapper]
-		public virtual uint write (void* data, uint length);
-	}
-	[CCode (cheader_filename = "gst/audio/gstaudiosrc.h")]
-	public class AudioSrc : Gst.BaseAudioSrc {
-		public weak GLib.Thread thread;
-		[NoWrapper]
-		public virtual bool close ();
-		[NoWrapper]
-		public virtual uint delay ();
-		[NoWrapper]
-		public virtual bool open ();
-		[NoWrapper]
-		public virtual bool prepare (Gst.RingBufferSpec spec);
-		[NoWrapper]
-		public virtual uint read (void* data, uint length);
-		[NoWrapper]
-		public virtual void reset ();
-		[NoWrapper]
-		public virtual bool unprepare ();
-	}
-	[CCode (cheader_filename = "gst/audio/gstaudiosink.h")]
-	public class BaseAudioSink : Gst.BaseSink {
-		public weak Gst.RingBuffer ringbuffer;
-		public uint64 next_sample;
-		public weak Gst.Clock provided_clock;
-		public bool get_provide_clock ();
-		public Gst.BaseAudioSinkSlaveMethod get_slave_method ();
-		public void set_provide_clock (bool provide);
-		public void set_slave_method (Gst.BaseAudioSinkSlaveMethod method);
-		public virtual weak Gst.RingBuffer create_ringbuffer ();
-		[NoAccessorMethod]
-		public int64 buffer_time { get; set; }
-		[NoAccessorMethod]
-		public int64 latency_time { get; set; }
-		public bool provide_clock { get; set; }
-		public Gst.BaseAudioSinkSlaveMethod slave_method { get; set; }
-	}
-	[CCode (cheader_filename = "gst/audio/gstaudiosrc.h")]
-	public class BaseAudioSrc : Gst.PushSrc {
-		public weak Gst.RingBuffer ringbuffer;
-		public uint64 next_sample;
-		public weak Gst.Clock clock;
-		public bool get_provide_clock ();
-		public void set_provide_clock (bool provide);
-		public virtual weak Gst.RingBuffer create_ringbuffer ();
-		[NoAccessorMethod]
-		public int64 buffer_time { get; set; }
-		[NoAccessorMethod]
-		public int64 latency_time { get; set; }
-		public bool provide_clock { get; set; }
-	}
-	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
-	public class RingBuffer : Gst.Object {
-		public weak GLib.Cond cond;
-		public bool open;
-		public bool acquired;
-		public weak Gst.Buffer data;
-		public weak Gst.RingBufferSpec spec;
-		public Gst.RingBufferSegState segstate;
-		public int samples_per_seg;
-		public uchar empty_seg;
-		public int state;
-		public int segdone;
-		public int segbase;
-		public int waiting;
-		public weak Gst.RingBufferCallback callback;
-		public void* cb_data;
-		public void* abidata;
-		public void advance (uint advance);
-		public void clear (int segment);
-		public void clear_all ();
-		public uint commit (uint64 sample, uchar[] data, uint len);
-		public uint commit_full (uint64 sample, uchar[] data, int in_samples, int out_samples, int accum);
-		public static void debug_spec_buff (Gst.RingBufferSpec spec);
-		public static void debug_spec_caps (Gst.RingBufferSpec spec);
-		public bool device_is_open ();
-		public bool is_acquired ();
-		public void may_start (bool allowed);
-		public static bool parse_caps (Gst.RingBufferSpec spec, Gst.Caps caps);
-		public bool prepare_read (int segment, uchar readptr, int len);
-		public uint read (uint64 sample, uchar[] data, uint len);
-		public uint64 samples_done ();
-		public void set_callback (Gst.RingBufferCallback cb);
-		public void set_flushing (bool flushing);
-		public void set_sample (uint64 sample);
-		public virtual bool acquire (Gst.RingBufferSpec spec);
-		public virtual bool close_device ();
-		public virtual uint delay ();
-		public virtual bool open_device ();
-		public virtual bool pause ();
-		public virtual bool release ();
-		[NoWrapper]
-		public virtual bool resume ();
-		public virtual bool start ();
-		public virtual bool stop ();
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudioclock.h")]
 	public delegate Gst.ClockTime AudioClockGetTimeFunc (Gst.Clock clock);

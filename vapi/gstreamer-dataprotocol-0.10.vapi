@@ -2,6 +2,16 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
+	[Compact]
+	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
+	public class DPPacketizer {
+		public weak Gst.DPHeaderFromBufferFunction header_from_buffer;
+		public weak Gst.DPPacketFromCapsFunction packet_from_caps;
+		public weak Gst.DPPacketFromEventFunction packet_from_event;
+		public Gst.DPVersion version;
+		[CCode (has_construct_function = false)]
+		public DPPacketizer (Gst.DPVersion version);
+	}
 	[CCode (cprefix = "GST_DP_HEADER_FLAG_", has_type_id = "0", cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public enum DPHeaderFlag {
 		NONE,
@@ -20,16 +30,6 @@ namespace Gst {
 	public enum DPVersion {
 		GDP Version 0.2,
 		GDP Version 1.0
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
-	public class DPPacketizer {
-		public Gst.DPVersion version;
-		public weak Gst.DPHeaderFromBufferFunction header_from_buffer;
-		public weak Gst.DPPacketFromCapsFunction packet_from_caps;
-		public weak Gst.DPPacketFromEventFunction packet_from_event;
-		[CCode (has_construct_function = false)]
-		public DPPacketizer (Gst.DPVersion version);
 	}
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static delegate bool DPHeaderFromBufferFunction (Gst.Buffer buffer, Gst.DPHeaderFlag flags, uint length, uchar header);

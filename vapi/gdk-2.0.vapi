@@ -2,605 +2,6 @@
 
 [CCode (cprefix = "Gdk", lower_case_cprefix = "gdk_")]
 namespace Gdk {
-	[CCode (cprefix = "GDK_AXIS_", cheader_filename = "gdk/gdk.h")]
-	public enum AxisUse {
-		IGNORE,
-		X,
-		Y,
-		PRESSURE,
-		XTILT,
-		YTILT,
-		WHEEL,
-		LAST
-	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
-	public enum ByteOrder {
-		LSB_FIRST,
-		MSB_FIRST
-	}
-	[CCode (cprefix = "GDK_CAP_", cheader_filename = "gdk/gdk.h")]
-	public enum CapStyle {
-		NOT_LAST,
-		BUTT,
-		ROUND,
-		PROJECTING
-	}
-	[CCode (cprefix = "GDK_CROSSING_", cheader_filename = "gdk/gdk.h")]
-	public enum CrossingMode {
-		NORMAL,
-		GRAB,
-		UNGRAB
-	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
-	public enum CursorType {
-		X_CURSOR,
-		ARROW,
-		BASED_ARROW_DOWN,
-		BASED_ARROW_UP,
-		BOAT,
-		BOGOSITY,
-		BOTTOM_LEFT_CORNER,
-		BOTTOM_RIGHT_CORNER,
-		BOTTOM_SIDE,
-		BOTTOM_TEE,
-		BOX_SPIRAL,
-		CENTER_PTR,
-		CIRCLE,
-		CLOCK,
-		COFFEE_MUG,
-		CROSS,
-		CROSS_REVERSE,
-		CROSSHAIR,
-		DIAMOND_CROSS,
-		DOT,
-		DOTBOX,
-		DOUBLE_ARROW,
-		DRAFT_LARGE,
-		DRAFT_SMALL,
-		DRAPED_BOX,
-		EXCHANGE,
-		FLEUR,
-		GOBBLER,
-		GUMBY,
-		HAND1,
-		HAND2,
-		HEART,
-		ICON,
-		IRON_CROSS,
-		LEFT_PTR,
-		LEFT_SIDE,
-		LEFT_TEE,
-		LEFTBUTTON,
-		LL_ANGLE,
-		LR_ANGLE,
-		MAN,
-		MIDDLEBUTTON,
-		MOUSE,
-		PENCIL,
-		PIRATE,
-		PLUS,
-		QUESTION_ARROW,
-		RIGHT_PTR,
-		RIGHT_SIDE,
-		RIGHT_TEE,
-		RIGHTBUTTON,
-		RTL_LOGO,
-		SAILBOAT,
-		SB_DOWN_ARROW,
-		SB_H_DOUBLE_ARROW,
-		SB_LEFT_ARROW,
-		SB_RIGHT_ARROW,
-		SB_UP_ARROW,
-		SB_V_DOUBLE_ARROW,
-		SHUTTLE,
-		SIZING,
-		SPIDER,
-		SPRAYCAN,
-		STAR,
-		TARGET,
-		TCROSS,
-		TOP_LEFT_ARROW,
-		TOP_LEFT_CORNER,
-		TOP_RIGHT_CORNER,
-		TOP_SIDE,
-		TOP_TEE,
-		TREK,
-		UL_ANGLE,
-		UMBRELLA,
-		UR_ANGLE,
-		WATCH,
-		XTERM,
-		LAST_CURSOR,
-		CURSOR_IS_PIXMAP
-	}
-	[CCode (cprefix = "GDK_DRAG_PROTO_", cheader_filename = "gdk/gdk.h")]
-	public enum DragProtocol {
-		MOTIF,
-		XDND,
-		ROOTWIN,
-		NONE,
-		WIN32_DROPFILES,
-		OLE2,
-		LOCAL
-	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
-	public enum EventType {
-		NOTHING,
-		DELETE,
-		DESTROY,
-		EXPOSE,
-		MOTION_NOTIFY,
-		BUTTON_PRESS,
-		2BUTTON_PRESS,
-		3BUTTON_PRESS,
-		BUTTON_RELEASE,
-		KEY_PRESS,
-		KEY_RELEASE,
-		ENTER_NOTIFY,
-		LEAVE_NOTIFY,
-		FOCUS_CHANGE,
-		CONFIGURE,
-		MAP,
-		UNMAP,
-		PROPERTY_NOTIFY,
-		SELECTION_CLEAR,
-		SELECTION_REQUEST,
-		SELECTION_NOTIFY,
-		PROXIMITY_IN,
-		PROXIMITY_OUT,
-		DRAG_ENTER,
-		DRAG_LEAVE,
-		DRAG_MOTION,
-		DRAG_STATUS,
-		DROP_START,
-		DROP_FINISHED,
-		CLIENT_EVENT,
-		VISIBILITY_NOTIFY,
-		NO_EXPOSE,
-		SCROLL,
-		WINDOW_STATE,
-		SETTING,
-		OWNER_CHANGE,
-		GRAB_BROKEN,
-		DAMAGE
-	}
-	[CCode (cprefix = "GDK_EXTENSION_EVENTS_", cheader_filename = "gdk/gdk.h")]
-	public enum ExtensionMode {
-		NONE,
-		ALL,
-		CURSOR
-	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
-	public enum Fill {
-		SOLID,
-		TILED,
-		STIPPLED,
-		OPAQUE_STIPPLED
-	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
-	public enum FillRule {
-		EVEN_ODD_RULE,
-		WINDING_RULE
-	}
-	[CCode (cprefix = "GDK_FILTER_", cheader_filename = "gdk/gdk.h")]
-	public enum FilterReturn {
-		CONTINUE,
-		TRANSLATE,
-		REMOVE
-	}
-	[CCode (cprefix = "GDK_FONT_", cheader_filename = "gdk/gdk.h")]
-	public enum FontType {
-		FONT,
-		FONTSET
-	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
-	public enum Function {
-		COPY,
-		INVERT,
-		XOR,
-		CLEAR,
-		AND,
-		AND_REVERSE,
-		AND_INVERT,
-		NOOP,
-		OR,
-		EQUIV,
-		OR_REVERSE,
-		COPY_INVERT,
-		OR_INVERT,
-		NAND,
-		NOR,
-		SET
-	}
-	[CCode (cprefix = "GDK_GRAB_", cheader_filename = "gdk/gdk.h")]
-	public enum GrabStatus {
-		SUCCESS,
-		ALREADY_GRABBED,
-		INVALID_TIME,
-		NOT_VIEWABLE,
-		FROZEN
-	}
-	[CCode (cprefix = "GDK_GRAVITY_", cheader_filename = "gdk/gdk.h")]
-	public enum Gravity {
-		NORTH_WEST,
-		NORTH,
-		NORTH_EAST,
-		WEST,
-		CENTER,
-		EAST,
-		SOUTH_WEST,
-		SOUTH,
-		SOUTH_EAST,
-		STATIC
-	}
-	[CCode (cprefix = "GDK_IMAGE_", cheader_filename = "gdk/gdk.h")]
-	public enum ImageType {
-		NORMAL,
-		SHARED,
-		FASTEST
-	}
-	[CCode (cprefix = "GDK_MODE_", cheader_filename = "gdk/gdk.h")]
-	public enum InputMode {
-		DISABLED,
-		SCREEN,
-		WINDOW
-	}
-	[CCode (cprefix = "GDK_SOURCE_", cheader_filename = "gdk/gdk.h")]
-	public enum InputSource {
-		MOUSE,
-		PEN,
-		ERASER,
-		CURSOR
-	}
-	[CCode (cprefix = "GDK_JOIN_", cheader_filename = "gdk/gdk.h")]
-	public enum JoinStyle {
-		MITER,
-		ROUND,
-		BEVEL
-	}
-	[CCode (cprefix = "GDK_LINE_", cheader_filename = "gdk/gdk.h")]
-	public enum LineStyle {
-		SOLID,
-		ON_OFF_DASH,
-		DOUBLE_DASH
-	}
-	[CCode (cprefix = "GDK_NOTIFY_", cheader_filename = "gdk/gdk.h")]
-	public enum NotifyType {
-		ANCESTOR,
-		VIRTUAL,
-		INFERIOR,
-		NONLINEAR,
-		NONLINEAR_VIRTUAL,
-		UNKNOWN
-	}
-	[CCode (cprefix = "GDK_OVERLAP_RECTANGLE_", cheader_filename = "gdk/gdk.h")]
-	public enum OverlapType {
-		IN,
-		OUT,
-		PART
-	}
-	[CCode (cprefix = "GDK_OWNER_CHANGE_", cheader_filename = "gdk/gdk.h")]
-	public enum OwnerChange {
-		NEW_OWNER,
-		DESTROY,
-		CLOSE
-	}
-	[CCode (cprefix = "GDK_PROP_MODE_", cheader_filename = "gdk/gdk.h")]
-	public enum PropMode {
-		REPLACE,
-		PREPEND,
-		APPEND
-	}
-	[CCode (cprefix = "GDK_PROPERTY_", cheader_filename = "gdk/gdk.h")]
-	public enum PropertyState {
-		NEW_VALUE,
-		DELETE
-	}
-	[CCode (cprefix = "GDK_RGB_DITHER_", cheader_filename = "gdk/gdk.h")]
-	public enum RgbDither {
-		NONE,
-		NORMAL,
-		MAX
-	}
-	[CCode (cprefix = "GDK_SCROLL_", cheader_filename = "gdk/gdk.h")]
-	public enum ScrollDirection {
-		UP,
-		DOWN,
-		LEFT,
-		RIGHT
-	}
-	[CCode (cprefix = "GDK_SETTING_ACTION_", cheader_filename = "gdk/gdk.h")]
-	public enum SettingAction {
-		NEW,
-		CHANGED,
-		DELETED
-	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
-	public enum Status {
-		OK,
-		ERROR,
-		ERROR_PARAM,
-		ERROR_FILE,
-		ERROR_MEM
-	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
-	public enum SubwindowMode {
-		CLIP_BY_CHILDREN,
-		INCLUDE_INFERIORS
-	}
-	[CCode (cprefix = "GDK_VISIBILITY_", cheader_filename = "gdk/gdk.h")]
-	public enum VisibilityState {
-		UNOBSCURED,
-		PARTIAL,
-		FULLY_OBSCURED
-	}
-	[CCode (cprefix = "GDK_VISUAL_", cheader_filename = "gdk/gdk.h")]
-	public enum VisualType {
-		STATIC_GRAY,
-		GRAYSCALE,
-		STATIC_COLOR,
-		PSEUDO_COLOR,
-		TRUE_COLOR,
-		DIRECT_COLOR
-	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
-	public enum WindowClass {
-		INPUT_OUTPUT,
-		INPUT_ONLY
-	}
-	[CCode (cprefix = "GDK_WINDOW_EDGE_", cheader_filename = "gdk/gdk.h")]
-	public enum WindowEdge {
-		NORTH_WEST,
-		NORTH,
-		NORTH_EAST,
-		WEST,
-		EAST,
-		SOUTH_WEST,
-		SOUTH,
-		SOUTH_EAST
-	}
-	[CCode (cprefix = "GDK_WINDOW_", cheader_filename = "gdk/gdk.h")]
-	public enum WindowType {
-		ROOT,
-		TOPLEVEL,
-		CHILD,
-		DIALOG,
-		TEMP,
-		FOREIGN
-	}
-	[CCode (cprefix = "GDK_WINDOW_TYPE_HINT_", cheader_filename = "gdk/gdk.h")]
-	public enum WindowTypeHint {
-		NORMAL,
-		DIALOG,
-		MENU,
-		TOOLBAR,
-		SPLASHSCREEN,
-		UTILITY,
-		DOCK,
-		DESKTOP,
-		DROPDOWN_MENU,
-		POPUP_MENU,
-		TOOLTIP,
-		NOTIFICATION,
-		COMBO,
-		DND
-	}
-	[CCode (cprefix = "GDK_ACTION_", cheader_filename = "gdk/gdk.h")]
-	[Flags]
-	public enum DragAction {
-		DEFAULT,
-		COPY,
-		MOVE,
-		LINK,
-		PRIVATE,
-		ASK
-	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
-	[Flags]
-	public enum EventMask {
-		EXPOSURE_MASK,
-		POINTER_MOTION_MASK,
-		POINTER_MOTION_HINT_MASK,
-		BUTTON_MOTION_MASK,
-		BUTTON1_MOTION_MASK,
-		BUTTON2_MOTION_MASK,
-		BUTTON3_MOTION_MASK,
-		BUTTON_PRESS_MASK,
-		BUTTON_RELEASE_MASK,
-		KEY_PRESS_MASK,
-		KEY_RELEASE_MASK,
-		ENTER_NOTIFY_MASK,
-		LEAVE_NOTIFY_MASK,
-		FOCUS_CHANGE_MASK,
-		STRUCTURE_MASK,
-		PROPERTY_CHANGE_MASK,
-		VISIBILITY_NOTIFY_MASK,
-		PROXIMITY_IN_MASK,
-		PROXIMITY_OUT_MASK,
-		SUBSTRUCTURE_MASK,
-		SCROLL_MASK,
-		ALL_EVENTS_MASK
-	}
-	[CCode (cprefix = "GDK_GC_", cheader_filename = "gdk/gdk.h")]
-	[Flags]
-	public enum GCValuesMask {
-		FOREGROUND,
-		BACKGROUND,
-		FONT,
-		FUNCTION,
-		FILL,
-		TILE,
-		STIPPLE,
-		CLIP_MASK,
-		SUBWINDOW,
-		TS_X_ORIGIN,
-		TS_Y_ORIGIN,
-		CLIP_X_ORIGIN,
-		CLIP_Y_ORIGIN,
-		EXPOSURES,
-		LINE_WIDTH,
-		LINE_STYLE,
-		CAP_STYLE,
-		JOIN_STYLE
-	}
-	[CCode (cprefix = "GDK_INPUT_", cheader_filename = "gdk/gdk.h")]
-	[Flags]
-	public enum InputCondition {
-		READ,
-		WRITE,
-		EXCEPTION
-	}
-	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
-	[Flags]
-	public enum ModifierType {
-		SHIFT_MASK,
-		LOCK_MASK,
-		CONTROL_MASK,
-		MOD1_MASK,
-		MOD2_MASK,
-		MOD3_MASK,
-		MOD4_MASK,
-		MOD5_MASK,
-		BUTTON1_MASK,
-		BUTTON2_MASK,
-		BUTTON3_MASK,
-		BUTTON4_MASK,
-		BUTTON5_MASK,
-		SUPER_MASK,
-		HYPER_MASK,
-		META_MASK,
-		RELEASE_MASK,
-		MODIFIER_MASK
-	}
-	[CCode (cprefix = "GDK_DECOR_", cheader_filename = "gdk/gdk.h")]
-	[Flags]
-	public enum WMDecoration {
-		ALL,
-		BORDER,
-		RESIZEH,
-		TITLE,
-		MENU,
-		MINIMIZE,
-		MAXIMIZE
-	}
-	[CCode (cprefix = "GDK_FUNC_", cheader_filename = "gdk/gdk.h")]
-	[Flags]
-	public enum WMFunction {
-		ALL,
-		RESIZE,
-		MOVE,
-		MINIMIZE,
-		MAXIMIZE,
-		CLOSE
-	}
-	[CCode (cprefix = "GDK_WA_", cheader_filename = "gdk/gdk.h")]
-	[Flags]
-	public enum WindowAttributesType {
-		TITLE,
-		X,
-		Y,
-		CURSOR,
-		COLORMAP,
-		VISUAL,
-		WMCLASS,
-		NOREDIR,
-		TYPE_HINT
-	}
-	[CCode (cprefix = "GDK_HINT_", cheader_filename = "gdk/gdk.h")]
-	[Flags]
-	public enum WindowHints {
-		POS,
-		MIN_SIZE,
-		MAX_SIZE,
-		BASE_SIZE,
-		ASPECT,
-		RESIZE_INC,
-		WIN_GRAVITY,
-		USER_POS,
-		USER_SIZE
-	}
-	[CCode (cprefix = "GDK_WINDOW_STATE_", cheader_filename = "gdk/gdk.h")]
-	[Flags]
-	public enum WindowState {
-		WITHDRAWN,
-		ICONIFIED,
-		MAXIMIZED,
-		STICKY,
-		FULLSCREEN,
-		ABOVE,
-		BELOW
-	}
-	[CCode (ref_function = "g_object_ref", unref_function = "g_object_unref", cheader_filename = "gdk/gdk.h")]
-	public class Bitmap {
-		public weak GLib.Object parent_instance;
-		public Bitmap ();
-		public static Gdk.Bitmap create_from_data (Gdk.Drawable drawable, string data, int width, int height);
-	}
-	[Compact]
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class DisplayPointerHooks {
-		public weak GLib.Callback get_pointer;
-		public weak GLib.Callback window_get_pointer;
-		public weak GLib.Callback window_at_pointer;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class PointerHooks {
-		public weak GLib.Callback get_pointer;
-		public weak GLib.Callback window_at_pointer;
-	}
-	[Compact]
-	[CCode (copy_function = "gdk_region_copy", free_function = "gdk_region_destroy", cheader_filename = "gdk/gdk.h")]
-	public class Region {
-		public weak Gdk.Region copy ();
-		public bool empty ();
-		public bool equal (Gdk.Region region2);
-		public void get_clipbox (out Gdk.Rectangle rectangle);
-		public void get_rectangles (Gdk.Rectangle[] rectangles);
-		public void intersect (Gdk.Region source2);
-		[CCode (has_construct_function = false)]
-		public Region ();
-		public void offset (int dx, int dy);
-		public bool point_in (int x, int y);
-		public static weak Gdk.Region polygon (Gdk.Point[] points, Gdk.FillRule fill_rule);
-		public Gdk.OverlapType rect_in (Gdk.Rectangle rectangle);
-		public static weak Gdk.Region rectangle (Gdk.Rectangle rectangle);
-		public void shrink (int dx, int dy);
-		public void spans_intersect_foreach (Gdk.Span[] spans, bool sorted, Gdk.SpanFunc function, void* data);
-		public void subtract (Gdk.Region source2);
-		public void union (Gdk.Region source2);
-		public void union_with_rect (Gdk.Rectangle rect);
-		public void xor (Gdk.Region source2);
-	}
-	[Compact]
-	[CCode (ref_function = "gdk_cursor_ref", unref_function = "gdk_cursor_unref", cheader_filename = "gdk/gdk.h")]
-	public class Cursor {
-		public Gdk.CursorType type;
-		public uint ref_count;
-		public weak Gdk.Display get_display ();
-		public weak Gdk.Pixbuf get_image ();
-		[CCode (has_construct_function = false)]
-		public Cursor (Gdk.CursorType cursor_type);
-		[CCode (has_construct_function = false)]
-		public Cursor.for_display (Gdk.Display display, Gdk.CursorType cursor_type);
-		[CCode (has_construct_function = false)]
-		public Cursor.from_name (Gdk.Display display, string name);
-		[CCode (has_construct_function = false)]
-		public Cursor.from_pixbuf (Gdk.Display display, Gdk.Pixbuf pixbuf, int x, int y);
-		[CCode (has_construct_function = false)]
-		public Cursor.from_pixmap (Gdk.Pixmap source, Gdk.Pixmap mask, Gdk.Color fg, Gdk.Color bg, int x, int y);
-	}
-	[Compact]
-	[CCode (ref_function = "gdk_font_ref", unref_function = "gdk_font_unref", cheader_filename = "gdk/gdk.h")]
-	public class Font {
-		public Gdk.FontType type;
-		public int ascent;
-		public int descent;
-		public bool equal (Gdk.Font fontb);
-		public static weak Gdk.Font from_description_for_display (Gdk.Display display, Pango.FontDescription font_desc);
-		public int id ();
-		public static weak Gdk.Font load_for_display (Gdk.Display display, string font_name);
-	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class AppLaunchContext : GLib.AppLaunchContext {
 		[CCode (has_construct_function = false)]
@@ -612,10 +13,16 @@ namespace Gdk {
 		public void set_screen (Gdk.Screen screen);
 		public void set_timestamp (uint timestamp);
 	}
+	[CCode (ref_function = "g_object_ref", unref_function = "g_object_unref", cheader_filename = "gdk/gdk.h")]
+	public class Bitmap {
+		public weak GLib.Object parent_instance;
+		public static Gdk.Bitmap create_from_data (Gdk.Drawable drawable, string data, int width, int height);
+		public Bitmap ();
+	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Colormap : GLib.Object {
-		public int size;
 		public Gdk.Color colors;
+		public int size;
 		public weak Gdk.Visual visual;
 		public void* windowing_data;
 		public bool alloc_color (Gdk.Color color, bool writeable, bool best_match);
@@ -629,18 +36,36 @@ namespace Gdk {
 		public Colormap (Gdk.Visual visual, bool allocate);
 		public void query_color (ulong pixel, out Gdk.Color _result);
 	}
+	[Compact]
+	[CCode (ref_function = "gdk_cursor_ref", unref_function = "gdk_cursor_unref", cheader_filename = "gdk/gdk.h")]
+	public class Cursor {
+		public uint ref_count;
+		public Gdk.CursorType type;
+		[CCode (has_construct_function = false)]
+		public Cursor.for_display (Gdk.Display display, Gdk.CursorType cursor_type);
+		[CCode (has_construct_function = false)]
+		public Cursor.from_name (Gdk.Display display, string name);
+		[CCode (has_construct_function = false)]
+		public Cursor.from_pixbuf (Gdk.Display display, Gdk.Pixbuf pixbuf, int x, int y);
+		[CCode (has_construct_function = false)]
+		public Cursor.from_pixmap (Gdk.Pixmap source, Gdk.Pixmap mask, Gdk.Color fg, Gdk.Color bg, int x, int y);
+		public weak Gdk.Display get_display ();
+		public weak Gdk.Pixbuf get_image ();
+		[CCode (has_construct_function = false)]
+		public Cursor (Gdk.CursorType cursor_type);
+	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Device : GLib.Object {
-		public weak string name;
-		public Gdk.InputSource source;
-		public Gdk.InputMode mode;
-		public bool has_cursor;
-		public int num_axes;
 		[NoArrayLength]
 		public weak Gdk.DeviceAxis[] axes;
-		public int num_keys;
+		public bool has_cursor;
 		[NoArrayLength]
 		public weak Gdk.DeviceKey[] keys;
+		public Gdk.InputMode mode;
+		public weak string name;
+		public int num_axes;
+		public int num_keys;
+		public Gdk.InputSource source;
 		public static void free_history (Gdk.TimeCoord[] events);
 		public bool get_axis (double axes, Gdk.AxisUse use, double value);
 		public static weak Gdk.Device get_core_pointer ();
@@ -653,22 +78,22 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Display : GLib.Object {
-		public weak GLib.List queued_events;
-		public weak GLib.List queued_tail;
 		[NoArrayLength]
 		public weak uint[] button_click_time;
 		[NoArrayLength]
-		public weak Gdk.Window[] button_window;
-		[NoArrayLength]
 		public weak int[] button_number;
-		public uint double_click_time;
-		public weak Gdk.Device core_pointer;
-		public weak Gdk.DisplayPointerHooks pointer_hooks;
-		public uint double_click_distance;
+		[NoArrayLength]
+		public weak Gdk.Window[] button_window;
 		[NoArrayLength]
 		public weak int[] button_x;
 		[NoArrayLength]
 		public weak int[] button_y;
+		public weak Gdk.Device core_pointer;
+		public uint double_click_distance;
+		public uint double_click_time;
+		public weak Gdk.DisplayPointerHooks pointer_hooks;
+		public weak GLib.List queued_events;
+		public weak GLib.List queued_tail;
 		public void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, void* data);
 		public void beep ();
 		public void close ();
@@ -677,10 +102,15 @@ namespace Gdk {
 		public static weak Gdk.Display get_default ();
 		public uint get_default_cursor_size ();
 		public weak Gdk.Window get_default_group ();
+		public virtual weak Gdk.Screen get_default_screen ();
+		[NoWrapper]
+		public virtual weak string get_display_name ();
 		public Gdk.Event get_event ();
 		public void get_maximal_cursor_size (out uint width, out uint height);
+		public virtual int get_n_screens ();
 		public weak string get_name ();
 		public void get_pointer (out weak Gdk.Screen screen, int x, int y, Gdk.ModifierType mask);
+		public virtual weak Gdk.Screen get_screen (int screen_num);
 		public weak Gdk.Window get_window_at_pointer (int win_x, int win_y);
 		public void keyboard_ungrab (uint time_);
 		public weak GLib.List list_devices ();
@@ -704,11 +134,6 @@ namespace Gdk {
 		public bool supports_shapes ();
 		public void sync ();
 		public void warp_pointer (Gdk.Screen screen, int x, int y);
-		public virtual weak Gdk.Screen get_default_screen ();
-		[NoWrapper]
-		public virtual weak string get_display_name ();
-		public virtual int get_n_screens ();
-		public virtual weak Gdk.Screen get_screen (int screen_num);
 		public virtual signal void closed (bool is_error);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -720,17 +145,24 @@ namespace Gdk {
 		public Gdk.Display default_display { get; set; }
 		public virtual signal void display_opened (Gdk.Display display);
 	}
+	[Compact]
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public class DisplayPointerHooks {
+		public weak GLib.Callback get_pointer;
+		public weak GLib.Callback window_at_pointer;
+		public weak GLib.Callback window_get_pointer;
+	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class DragContext : GLib.Object {
-		public Gdk.DragProtocol protocol;
-		public bool is_source;
-		public weak Gdk.Window source_window;
-		public weak Gdk.Window dest_window;
-		public weak GLib.List targets;
-		public Gdk.DragAction actions;
-		public Gdk.DragAction suggested_action;
 		public Gdk.DragAction action;
+		public Gdk.DragAction actions;
+		public weak Gdk.Window dest_window;
+		public bool is_source;
+		public Gdk.DragProtocol protocol;
+		public weak Gdk.Window source_window;
 		public uint start_time;
+		public Gdk.DragAction suggested_action;
+		public weak GLib.List targets;
 		public void* windowing_data;
 		[CCode (has_construct_function = false)]
 		public DragContext ();
@@ -738,7 +170,6 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Drawable : GLib.Object {
 		public weak Gdk.Image copy_to_image (Gdk.Image image, int src_x, int src_y, int dest_x, int dest_y, int width, int height);
-		public weak Gdk.Display get_display ();
 		[NoWrapper]
 		public virtual weak Gdk.GC create_gc (Gdk.GCValues values, Gdk.GCValuesMask mask);
 		[NoWrapper]
@@ -774,6 +205,7 @@ namespace Gdk {
 		[NoWrapper]
 		public virtual weak Gdk.Drawable get_composite_drawable (int x, int y, int width, int height, int composite_x_offset, int composite_y_offset);
 		public virtual int get_depth ();
+		public weak Gdk.Display get_display ();
 		public virtual weak Gdk.Image get_image (int x, int y, int width, int height);
 		public virtual weak Gdk.Screen get_screen ();
 		public virtual void get_size (out int width, out int height);
@@ -783,20 +215,30 @@ namespace Gdk {
 		public virtual weak Cairo.Surface ref_cairo_surface ();
 		public virtual void set_colormap (Gdk.Colormap colormap);
 	}
+	[Compact]
+	[CCode (ref_function = "gdk_font_ref", unref_function = "gdk_font_unref", cheader_filename = "gdk/gdk.h")]
+	public class Font {
+		public int ascent;
+		public int descent;
+		public Gdk.FontType type;
+		public bool equal (Gdk.Font fontb);
+		public static weak Gdk.Font from_description_for_display (Gdk.Display display, Pango.FontDescription font_desc);
+		public int id ();
+		public static weak Gdk.Font load_for_display (Gdk.Display display, string font_name);
+	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class GC : GLib.Object {
 		public int clip_x_origin;
 		public int clip_y_origin;
+		public weak Gdk.Colormap colormap;
 		public int ts_x_origin;
 		public int ts_y_origin;
-		public weak Gdk.Colormap colormap;
 		public void copy (Gdk.GC src_gc);
 		public weak Gdk.Colormap get_colormap ();
 		public weak Gdk.Screen get_screen ();
+		public virtual void get_values (Gdk.GCValues values);
 		[CCode (has_construct_function = false)]
 		public GC (Gdk.Drawable drawable);
-		[CCode (has_construct_function = false)]
-		public GC.with_values (Gdk.Drawable drawable, Gdk.GCValues values, Gdk.GCValuesMask values_mask);
 		public void offset (int x_offset, int y_offset);
 		public void set_background (Gdk.Color color);
 		public void set_clip_mask (Gdk.Bitmap mask);
@@ -804,6 +246,7 @@ namespace Gdk {
 		public void set_clip_rectangle (Gdk.Rectangle rectangle);
 		public void set_clip_region (Gdk.Region region);
 		public void set_colormap (Gdk.Colormap colormap);
+		public virtual void set_dashes (int dash_offset, char[] dash_list, int n);
 		public void set_exposures (bool exposures);
 		public void set_fill (Gdk.Fill fill);
 		public void set_foreground (Gdk.Color color);
@@ -815,23 +258,23 @@ namespace Gdk {
 		public void set_subwindow (Gdk.SubwindowMode mode);
 		public void set_tile (Gdk.Pixmap tile);
 		public void set_ts_origin (int x, int y);
-		public virtual void get_values (Gdk.GCValues values);
-		public virtual void set_dashes (int dash_offset, char[] dash_list, int n);
 		public virtual void set_values (Gdk.GCValues values, Gdk.GCValuesMask values_mask);
+		[CCode (has_construct_function = false)]
+		public GC.with_values (Gdk.Drawable drawable, Gdk.GCValues values, Gdk.GCValuesMask values_mask);
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Image : GLib.Object {
+		public ushort bits_per_pixel;
+		public ushort bpl;
+		public ushort bpp;
+		public Gdk.ByteOrder byte_order;
+		public weak Gdk.Colormap colormap;
+		public ushort depth;
+		public int height;
+		public void* mem;
 		public Gdk.ImageType type;
 		public weak Gdk.Visual visual;
-		public Gdk.ByteOrder byte_order;
 		public int width;
-		public int height;
-		public ushort depth;
-		public ushort bpp;
-		public ushort bpl;
-		public ushort bits_per_pixel;
-		public void* mem;
-		public weak Gdk.Colormap colormap;
 		public void* windowing_data;
 		public weak Gdk.Colormap get_colormap ();
 		public uint get_pixel (int x, int y);
@@ -881,13 +324,42 @@ namespace Gdk {
 		[CCode (has_construct_function = false)]
 		public Pixmap (Gdk.Drawable drawable, int width, int height, int depth);
 	}
+	[Compact]
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public class PointerHooks {
+		public weak GLib.Callback get_pointer;
+		public weak GLib.Callback window_at_pointer;
+	}
+	[Compact]
+	[CCode (copy_function = "gdk_region_copy", free_function = "gdk_region_destroy", cheader_filename = "gdk/gdk.h")]
+	public class Region {
+		public weak Gdk.Region copy ();
+		public bool empty ();
+		public bool equal (Gdk.Region region2);
+		public void get_clipbox (out Gdk.Rectangle rectangle);
+		public void get_rectangles (Gdk.Rectangle[] rectangles);
+		public void intersect (Gdk.Region source2);
+		[CCode (has_construct_function = false)]
+		public Region ();
+		public void offset (int dx, int dy);
+		public bool point_in (int x, int y);
+		public static weak Gdk.Region polygon (Gdk.Point[] points, Gdk.FillRule fill_rule);
+		public Gdk.OverlapType rect_in (Gdk.Rectangle rectangle);
+		public static weak Gdk.Region rectangle (Gdk.Rectangle rectangle);
+		public void shrink (int dx, int dy);
+		public void spans_intersect_foreach (Gdk.Span[] spans, bool sorted, Gdk.SpanFunc function, void* data);
+		public void subtract (Gdk.Region source2);
+		public void union (Gdk.Region source2);
+		public void union_with_rect (Gdk.Rectangle rect);
+		public void xor (Gdk.Region source2);
+	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Screen : GLib.Object {
 		public uint closed;
 		[NoArrayLength]
-		public weak Gdk.GC[] normal_gcs;
-		[NoArrayLength]
 		public weak Gdk.GC[] exposure_gcs;
+		[NoArrayLength]
+		public weak Gdk.GC[] normal_gcs;
 		public void broadcast_client_message (Gdk.Event event);
 		public weak Gdk.Window get_active_window ();
 		public static weak Gdk.Screen get_default ();
@@ -935,20 +407,20 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Visual : GLib.Object {
-		public Gdk.VisualType type;
-		public int depth;
+		public int bits_per_rgb;
+		public uint blue_mask;
+		public int blue_prec;
+		public int blue_shift;
 		public Gdk.ByteOrder byte_order;
 		public int colormap_size;
-		public int bits_per_rgb;
-		public uint red_mask;
-		public int red_shift;
-		public int red_prec;
+		public int depth;
 		public uint green_mask;
-		public int green_shift;
 		public int green_prec;
-		public uint blue_mask;
-		public int blue_shift;
-		public int blue_prec;
+		public int green_shift;
+		public uint red_mask;
+		public int red_prec;
+		public int red_shift;
+		public Gdk.VisualType type;
 		public static weak Gdk.Visual get_best ();
 		public static int get_best_depth ();
 		public static Gdk.VisualType get_best_type ();
@@ -1083,259 +555,316 @@ namespace Gdk {
 		public static Gdk.Atom intern_static_string (string atom_name);
 		public weak string name ();
 	}
+	[CCode (type_id = "GDK_TYPE_COLOR", cheader_filename = "gdk/gdk.h")]
+	public struct Color {
+		public ushort blue;
+		public ushort green;
+		public uint pixel;
+		public ushort red;
+		public Gdk.Color copy ();
+		public bool equal (Gdk.Color colorb);
+		public void free ();
+		public uint hash ();
+		public static bool parse (string spec, out Gdk.Color color);
+		public weak string to_string ();
+	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct DeviceAxis {
-		public Gdk.AxisUse use;
-		public double min;
 		public double max;
+		public double min;
+		public Gdk.AxisUse use;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct DeviceKey {
 		public uint keyval;
 		public Gdk.ModifierType modifiers;
 	}
+	[CCode (type_id = "GDK_TYPE_EVENT", cheader_filename = "gdk/gdk.h")]
+	public struct Event {
+		public Gdk.EventAny any;
+		public Gdk.EventButton button;
+		public Gdk.EventClient client;
+		public Gdk.EventConfigure configure;
+		public Gdk.EventCrossing crossing;
+		public Gdk.EventDND dnd;
+		public Gdk.EventExpose expose;
+		public Gdk.EventFocus focus_change;
+		public Gdk.EventGrabBroken grab_broken;
+		public Gdk.EventKey key;
+		public Gdk.EventMotion motion;
+		public Gdk.EventNoExpose no_expose;
+		public Gdk.EventOwnerChange owner_change;
+		public Gdk.EventProperty property;
+		public Gdk.EventProximity proximity;
+		public Gdk.EventScroll scroll;
+		public Gdk.EventSelection selection;
+		public Gdk.EventSetting setting;
+		public Gdk.EventType type;
+		public Gdk.EventVisibility visibility;
+		public Gdk.EventWindowState window_state;
+		public Gdk.Event copy ();
+		public void free ();
+		public static Gdk.Event get ();
+		public bool get_axis (Gdk.AxisUse axis_use, out double value);
+		public bool get_coords (out double x_win, out double y_win);
+		public static Gdk.Event get_graphics_expose (Gdk.Window window);
+		public bool get_root_coords (out double x_root, out double y_root);
+		public weak Gdk.Screen get_screen ();
+		public bool get_state (out Gdk.ModifierType state);
+		public uint get_time ();
+		public static void handler_set (Gdk.EventFunc func, void* data, GLib.DestroyNotify notify);
+		[CCode (cname = "gdk_event_new", has_construct_function = false)]
+		public Event (Gdk.EventType type);
+		public static Gdk.Event peek ();
+		public void put ();
+		public static void request_motions (Gdk.EventMotion event);
+		public bool send_client_message (Gdk.NativeWindow winid);
+		public static bool send_client_message_for_display (Gdk.Display display, Gdk.Event event, Gdk.NativeWindow winid);
+		public void send_clientmessage_toall ();
+		public void set_screen (Gdk.Screen screen);
+	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventAny {
+		public char send_event;
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public char send_event;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventButton {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public uint time;
-		public double x;
-		public double y;
 		public double axes;
-		public uint state;
 		public uint button;
 		public weak Gdk.Device device;
+		public char send_event;
+		public uint state;
+		public uint time;
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public double x;
 		public double x_root;
+		public double y;
 		public double y_root;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventClient {
+		public void* data;
+		public ushort data_format;
+		public Gdk.Atom message_type;
+		public char send_event;
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public char send_event;
-		public Gdk.Atom message_type;
-		public ushort data_format;
-		public void* data;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventConfigure {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
+		public int height;
 		public char send_event;
+		public Gdk.EventType type;
+		public int width;
+		public weak Gdk.Window window;
 		public int x;
 		public int y;
-		public int width;
-		public int height;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventCrossing {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public weak Gdk.Window subwindow;
-		public uint time;
-		public double x;
-		public double y;
-		public double x_root;
-		public double y_root;
-		public Gdk.CrossingMode mode;
 		public Gdk.NotifyType detail;
 		public bool focus;
+		public Gdk.CrossingMode mode;
+		public char send_event;
 		public uint state;
+		public weak Gdk.Window subwindow;
+		public uint time;
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
+		public double x;
+		public double x_root;
+		public double y;
+		public double y_root;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventDND {
+		public weak Gdk.DragContext context;
+		public char send_event;
+		public uint time;
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public char send_event;
-		public weak Gdk.DragContext context;
-		public uint time;
 		public short x_root;
 		public short y_root;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventExpose {
+		public Gdk.Rectangle area;
+		public int count;
+		public weak Gdk.Region region;
+		public char send_event;
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public char send_event;
-		public Gdk.Rectangle area;
-		public weak Gdk.Region region;
-		public int count;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventFocus {
+		public short @in;
+		public char send_event;
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public char send_event;
-		public short @in;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventGrabBroken {
+		public weak Gdk.Window grab_window;
+		public bool implicit;
+		public bool keyboard;
+		public char send_event;
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public char send_event;
-		public bool keyboard;
-		public bool implicit;
-		public weak Gdk.Window grab_window;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventKey {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
-		public uint time;
-		public uint state;
+		public uchar group;
+		public ushort hardware_keycode;
+		public uint is_modifier;
 		public uint keyval;
 		public int length;
+		public char send_event;
+		public uint state;
 		[CCode (cname = "string")]
 		public weak string str;
-		public ushort hardware_keycode;
-		public uchar group;
-		public uint is_modifier;
+		public uint time;
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventMotion {
+		public double axes;
+		public weak Gdk.Device device;
+		public bool is_hint;
+		public char send_event;
+		public Gdk.ModifierType state;
+		public uint time;
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public char send_event;
-		public uint time;
 		public double x;
-		public double y;
-		public double axes;
-		public Gdk.ModifierType state;
-		public bool is_hint;
-		public weak Gdk.Device device;
 		public double x_root;
+		public double y;
 		public double y_root;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventNoExpose {
+		public char send_event;
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public char send_event;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventOwnerChange {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
 		public Gdk.NativeWindow owner;
 		public Gdk.OwnerChange reason;
 		public Gdk.Atom selection;
-		public uint time;
 		public uint selection_time;
+		public char send_event;
+		public uint time;
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventProperty {
+		public Gdk.Atom atom;
+		public char send_event;
+		public uint state;
+		public uint time;
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public char send_event;
-		public Gdk.Atom atom;
-		public uint time;
-		public uint state;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventProximity {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
+		public weak Gdk.Device device;
 		public char send_event;
 		public uint time;
-		public weak Gdk.Device device;
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventScroll {
+		public weak Gdk.Device device;
+		public Gdk.ScrollDirection direction;
+		public char send_event;
+		public uint state;
+		public uint time;
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public char send_event;
-		public uint time;
 		public double x;
-		public double y;
-		public uint state;
-		public Gdk.ScrollDirection direction;
-		public weak Gdk.Device device;
 		public double x_root;
+		public double y;
 		public double y_root;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventSelection {
+		public Gdk.Atom property;
+		public Gdk.NativeWindow requestor;
+		public Gdk.Atom selection;
+		public char send_event;
+		public Gdk.Atom target;
+		public uint time;
 		public Gdk.EventType type;
 		public weak Gdk.Window window;
-		public char send_event;
-		public Gdk.Atom selection;
-		public Gdk.Atom target;
-		public Gdk.Atom property;
-		public uint time;
-		public Gdk.NativeWindow requestor;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventSetting {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
 		public Gdk.SettingAction action;
 		public weak string name;
+		public char send_event;
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventVisibility {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
 		public char send_event;
 		public Gdk.VisibilityState state;
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct EventWindowState {
-		public Gdk.EventType type;
-		public weak Gdk.Window window;
-		public char send_event;
 		public Gdk.WindowState changed_mask;
 		public Gdk.WindowState new_window_state;
+		public char send_event;
+		public Gdk.EventType type;
+		public weak Gdk.Window window;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct GCValues {
-		public Gdk.Color foreground;
 		public Gdk.Color background;
-		public weak Gdk.Font font;
-		public Gdk.Function function;
-		public Gdk.Fill fill;
-		public weak Gdk.Pixmap tile;
-		public weak Gdk.Pixmap stipple;
+		public Gdk.CapStyle cap_style;
 		public weak Gdk.Pixmap clip_mask;
-		public Gdk.SubwindowMode subwindow_mode;
-		public int ts_x_origin;
-		public int ts_y_origin;
 		public int clip_x_origin;
 		public int clip_y_origin;
+		public Gdk.Fill fill;
+		public weak Gdk.Font font;
+		public Gdk.Color foreground;
+		public Gdk.Function function;
 		public int graphics_exposures;
-		public int line_width;
-		public Gdk.LineStyle line_style;
-		public Gdk.CapStyle cap_style;
 		public Gdk.JoinStyle join_style;
+		public Gdk.LineStyle line_style;
+		public int line_width;
+		public weak Gdk.Pixmap stipple;
+		public Gdk.SubwindowMode subwindow_mode;
+		public weak Gdk.Pixmap tile;
+		public int ts_x_origin;
+		public int ts_y_origin;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Geometry {
-		public int min_width;
-		public int min_height;
-		public int max_width;
-		public int max_height;
-		public int base_width;
 		public int base_height;
-		public int width_inc;
+		public int base_width;
 		public int height_inc;
-		public double min_aspect;
 		public double max_aspect;
+		public int max_height;
+		public int max_width;
+		public double min_aspect;
+		public int min_height;
+		public int min_width;
+		public int width_inc;
 		public Gdk.Gravity win_gravity;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct KeymapKey {
-		public uint keycode;
 		public int group;
+		public uint keycode;
 		public int level;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1367,12 +896,21 @@ namespace Gdk {
 		public int x;
 		public int y;
 	}
+	[CCode (type_id = "GDK_TYPE_RECTANGLE", cheader_filename = "gdk/gdk.h")]
+	public struct Rectangle {
+		public int height;
+		public int width;
+		public int x;
+		public int y;
+		public bool intersect (Gdk.Rectangle src2, Gdk.Rectangle dest);
+		public void union (Gdk.Rectangle src2, out Gdk.Rectangle dest);
+	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct RgbCmap {
 		[NoArrayLength]
 		public weak uint[] colors;
-		public int n_colors;
 		public weak GLib.SList info_list;
+		public int n_colors;
 		public void free ();
 		[CCode (cname = "gdk_rgb_cmap_new", has_construct_function = false)]
 		public RgbCmap (uint[] colors);
@@ -1380,51 +918,51 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Segment {
 		public int x1;
-		public int y1;
 		public int x2;
+		public int y1;
 		public int y2;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Span {
+		public int width;
 		public int x;
 		public int y;
-		public int width;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct TimeCoord {
-		public uint time;
 		[NoArrayLength]
 		public weak double[] axes;
+		public uint time;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct Trapezoid {
-		public double y1;
 		public double x11;
-		public double x21;
-		public double y2;
 		public double x12;
+		public double x21;
 		public double x22;
+		public double y1;
+		public double y2;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct WChar {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct WindowAttr {
-		public weak string title;
+		public weak Gdk.Colormap colormap;
+		public weak Gdk.Cursor cursor;
 		public int event_mask;
+		public int height;
+		public bool override_redirect;
+		public weak string title;
+		public Gdk.WindowTypeHint type_hint;
+		public weak Gdk.Visual visual;
+		public Gdk.WindowClass wclass;
+		public int width;
+		public Gdk.WindowType window_type;
+		public weak string wmclass_class;
+		public weak string wmclass_name;
 		public int x;
 		public int y;
-		public int width;
-		public int height;
-		public Gdk.WindowClass wclass;
-		public weak Gdk.Visual visual;
-		public weak Gdk.Colormap colormap;
-		public Gdk.WindowType window_type;
-		public weak Gdk.Cursor cursor;
-		public weak string wmclass_name;
-		public weak string wmclass_class;
-		public bool override_redirect;
-		public Gdk.WindowTypeHint type_hint;
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct WindowRedirect {
@@ -1433,71 +971,533 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public struct XEvent {
 	}
-	[CCode (type_id = "GDK_TYPE_COLOR", cheader_filename = "gdk/gdk.h")]
-	public struct Color {
-		public uint pixel;
-		public ushort red;
-		public ushort green;
-		public ushort blue;
-		public Gdk.Color copy ();
-		public bool equal (Gdk.Color colorb);
-		public void free ();
-		public uint hash ();
-		public static bool parse (string spec, out Gdk.Color color);
-		public weak string to_string ();
+	[CCode (cprefix = "GDK_AXIS_", cheader_filename = "gdk/gdk.h")]
+	public enum AxisUse {
+		IGNORE,
+		X,
+		Y,
+		PRESSURE,
+		XTILT,
+		YTILT,
+		WHEEL,
+		LAST
 	}
-	[CCode (type_id = "GDK_TYPE_EVENT", cheader_filename = "gdk/gdk.h")]
-	public struct Event {
-		public Gdk.EventType type;
-		public Gdk.EventAny any;
-		public Gdk.EventExpose expose;
-		public Gdk.EventNoExpose no_expose;
-		public Gdk.EventVisibility visibility;
-		public Gdk.EventMotion motion;
-		public Gdk.EventButton button;
-		public Gdk.EventScroll scroll;
-		public Gdk.EventKey key;
-		public Gdk.EventCrossing crossing;
-		public Gdk.EventFocus focus_change;
-		public Gdk.EventConfigure configure;
-		public Gdk.EventProperty property;
-		public Gdk.EventSelection selection;
-		public Gdk.EventOwnerChange owner_change;
-		public Gdk.EventProximity proximity;
-		public Gdk.EventClient client;
-		public Gdk.EventDND dnd;
-		public Gdk.EventWindowState window_state;
-		public Gdk.EventSetting setting;
-		public Gdk.EventGrabBroken grab_broken;
-		public Gdk.Event copy ();
-		public void free ();
-		public static Gdk.Event get ();
-		public bool get_axis (Gdk.AxisUse axis_use, out double value);
-		public bool get_coords (out double x_win, out double y_win);
-		public static Gdk.Event get_graphics_expose (Gdk.Window window);
-		public bool get_root_coords (out double x_root, out double y_root);
-		public weak Gdk.Screen get_screen ();
-		public bool get_state (out Gdk.ModifierType state);
-		public uint get_time ();
-		public static void handler_set (Gdk.EventFunc func, void* data, GLib.DestroyNotify notify);
-		[CCode (cname = "gdk_event_new", has_construct_function = false)]
-		public Event (Gdk.EventType type);
-		public static Gdk.Event peek ();
-		public void put ();
-		public static void request_motions (Gdk.EventMotion event);
-		public bool send_client_message (Gdk.NativeWindow winid);
-		public static bool send_client_message_for_display (Gdk.Display display, Gdk.Event event, Gdk.NativeWindow winid);
-		public void send_clientmessage_toall ();
-		public void set_screen (Gdk.Screen screen);
+	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	public enum ByteOrder {
+		LSB_FIRST,
+		MSB_FIRST
 	}
-	[CCode (type_id = "GDK_TYPE_RECTANGLE", cheader_filename = "gdk/gdk.h")]
-	public struct Rectangle {
-		public int x;
-		public int y;
-		public int width;
-		public int height;
-		public bool intersect (Gdk.Rectangle src2, Gdk.Rectangle dest);
-		public void union (Gdk.Rectangle src2, out Gdk.Rectangle dest);
+	[CCode (cprefix = "GDK_CAP_", cheader_filename = "gdk/gdk.h")]
+	public enum CapStyle {
+		NOT_LAST,
+		BUTT,
+		ROUND,
+		PROJECTING
+	}
+	[CCode (cprefix = "GDK_CROSSING_", cheader_filename = "gdk/gdk.h")]
+	public enum CrossingMode {
+		NORMAL,
+		GRAB,
+		UNGRAB
+	}
+	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	public enum CursorType {
+		X_CURSOR,
+		ARROW,
+		BASED_ARROW_DOWN,
+		BASED_ARROW_UP,
+		BOAT,
+		BOGOSITY,
+		BOTTOM_LEFT_CORNER,
+		BOTTOM_RIGHT_CORNER,
+		BOTTOM_SIDE,
+		BOTTOM_TEE,
+		BOX_SPIRAL,
+		CENTER_PTR,
+		CIRCLE,
+		CLOCK,
+		COFFEE_MUG,
+		CROSS,
+		CROSS_REVERSE,
+		CROSSHAIR,
+		DIAMOND_CROSS,
+		DOT,
+		DOTBOX,
+		DOUBLE_ARROW,
+		DRAFT_LARGE,
+		DRAFT_SMALL,
+		DRAPED_BOX,
+		EXCHANGE,
+		FLEUR,
+		GOBBLER,
+		GUMBY,
+		HAND1,
+		HAND2,
+		HEART,
+		ICON,
+		IRON_CROSS,
+		LEFT_PTR,
+		LEFT_SIDE,
+		LEFT_TEE,
+		LEFTBUTTON,
+		LL_ANGLE,
+		LR_ANGLE,
+		MAN,
+		MIDDLEBUTTON,
+		MOUSE,
+		PENCIL,
+		PIRATE,
+		PLUS,
+		QUESTION_ARROW,
+		RIGHT_PTR,
+		RIGHT_SIDE,
+		RIGHT_TEE,
+		RIGHTBUTTON,
+		RTL_LOGO,
+		SAILBOAT,
+		SB_DOWN_ARROW,
+		SB_H_DOUBLE_ARROW,
+		SB_LEFT_ARROW,
+		SB_RIGHT_ARROW,
+		SB_UP_ARROW,
+		SB_V_DOUBLE_ARROW,
+		SHUTTLE,
+		SIZING,
+		SPIDER,
+		SPRAYCAN,
+		STAR,
+		TARGET,
+		TCROSS,
+		TOP_LEFT_ARROW,
+		TOP_LEFT_CORNER,
+		TOP_RIGHT_CORNER,
+		TOP_SIDE,
+		TOP_TEE,
+		TREK,
+		UL_ANGLE,
+		UMBRELLA,
+		UR_ANGLE,
+		WATCH,
+		XTERM,
+		LAST_CURSOR,
+		CURSOR_IS_PIXMAP
+	}
+	[CCode (cprefix = "GDK_ACTION_", cheader_filename = "gdk/gdk.h")]
+	[Flags]
+	public enum DragAction {
+		DEFAULT,
+		COPY,
+		MOVE,
+		LINK,
+		PRIVATE,
+		ASK
+	}
+	[CCode (cprefix = "GDK_DRAG_PROTO_", cheader_filename = "gdk/gdk.h")]
+	public enum DragProtocol {
+		MOTIF,
+		XDND,
+		ROOTWIN,
+		NONE,
+		WIN32_DROPFILES,
+		OLE2,
+		LOCAL
+	}
+	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	[Flags]
+	public enum EventMask {
+		EXPOSURE_MASK,
+		POINTER_MOTION_MASK,
+		POINTER_MOTION_HINT_MASK,
+		BUTTON_MOTION_MASK,
+		BUTTON1_MOTION_MASK,
+		BUTTON2_MOTION_MASK,
+		BUTTON3_MOTION_MASK,
+		BUTTON_PRESS_MASK,
+		BUTTON_RELEASE_MASK,
+		KEY_PRESS_MASK,
+		KEY_RELEASE_MASK,
+		ENTER_NOTIFY_MASK,
+		LEAVE_NOTIFY_MASK,
+		FOCUS_CHANGE_MASK,
+		STRUCTURE_MASK,
+		PROPERTY_CHANGE_MASK,
+		VISIBILITY_NOTIFY_MASK,
+		PROXIMITY_IN_MASK,
+		PROXIMITY_OUT_MASK,
+		SUBSTRUCTURE_MASK,
+		SCROLL_MASK,
+		ALL_EVENTS_MASK
+	}
+	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	public enum EventType {
+		NOTHING,
+		DELETE,
+		DESTROY,
+		EXPOSE,
+		MOTION_NOTIFY,
+		BUTTON_PRESS,
+		2BUTTON_PRESS,
+		3BUTTON_PRESS,
+		BUTTON_RELEASE,
+		KEY_PRESS,
+		KEY_RELEASE,
+		ENTER_NOTIFY,
+		LEAVE_NOTIFY,
+		FOCUS_CHANGE,
+		CONFIGURE,
+		MAP,
+		UNMAP,
+		PROPERTY_NOTIFY,
+		SELECTION_CLEAR,
+		SELECTION_REQUEST,
+		SELECTION_NOTIFY,
+		PROXIMITY_IN,
+		PROXIMITY_OUT,
+		DRAG_ENTER,
+		DRAG_LEAVE,
+		DRAG_MOTION,
+		DRAG_STATUS,
+		DROP_START,
+		DROP_FINISHED,
+		CLIENT_EVENT,
+		VISIBILITY_NOTIFY,
+		NO_EXPOSE,
+		SCROLL,
+		WINDOW_STATE,
+		SETTING,
+		OWNER_CHANGE,
+		GRAB_BROKEN,
+		DAMAGE
+	}
+	[CCode (cprefix = "GDK_EXTENSION_EVENTS_", cheader_filename = "gdk/gdk.h")]
+	public enum ExtensionMode {
+		NONE,
+		ALL,
+		CURSOR
+	}
+	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	public enum Fill {
+		SOLID,
+		TILED,
+		STIPPLED,
+		OPAQUE_STIPPLED
+	}
+	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	public enum FillRule {
+		EVEN_ODD_RULE,
+		WINDING_RULE
+	}
+	[CCode (cprefix = "GDK_FILTER_", cheader_filename = "gdk/gdk.h")]
+	public enum FilterReturn {
+		CONTINUE,
+		TRANSLATE,
+		REMOVE
+	}
+	[CCode (cprefix = "GDK_FONT_", cheader_filename = "gdk/gdk.h")]
+	public enum FontType {
+		FONT,
+		FONTSET
+	}
+	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	public enum Function {
+		COPY,
+		INVERT,
+		XOR,
+		CLEAR,
+		AND,
+		AND_REVERSE,
+		AND_INVERT,
+		NOOP,
+		OR,
+		EQUIV,
+		OR_REVERSE,
+		COPY_INVERT,
+		OR_INVERT,
+		NAND,
+		NOR,
+		SET
+	}
+	[CCode (cprefix = "GDK_GC_", cheader_filename = "gdk/gdk.h")]
+	[Flags]
+	public enum GCValuesMask {
+		FOREGROUND,
+		BACKGROUND,
+		FONT,
+		FUNCTION,
+		FILL,
+		TILE,
+		STIPPLE,
+		CLIP_MASK,
+		SUBWINDOW,
+		TS_X_ORIGIN,
+		TS_Y_ORIGIN,
+		CLIP_X_ORIGIN,
+		CLIP_Y_ORIGIN,
+		EXPOSURES,
+		LINE_WIDTH,
+		LINE_STYLE,
+		CAP_STYLE,
+		JOIN_STYLE
+	}
+	[CCode (cprefix = "GDK_GRAB_", cheader_filename = "gdk/gdk.h")]
+	public enum GrabStatus {
+		SUCCESS,
+		ALREADY_GRABBED,
+		INVALID_TIME,
+		NOT_VIEWABLE,
+		FROZEN
+	}
+	[CCode (cprefix = "GDK_GRAVITY_", cheader_filename = "gdk/gdk.h")]
+	public enum Gravity {
+		NORTH_WEST,
+		NORTH,
+		NORTH_EAST,
+		WEST,
+		CENTER,
+		EAST,
+		SOUTH_WEST,
+		SOUTH,
+		SOUTH_EAST,
+		STATIC
+	}
+	[CCode (cprefix = "GDK_IMAGE_", cheader_filename = "gdk/gdk.h")]
+	public enum ImageType {
+		NORMAL,
+		SHARED,
+		FASTEST
+	}
+	[CCode (cprefix = "GDK_INPUT_", cheader_filename = "gdk/gdk.h")]
+	[Flags]
+	public enum InputCondition {
+		READ,
+		WRITE,
+		EXCEPTION
+	}
+	[CCode (cprefix = "GDK_MODE_", cheader_filename = "gdk/gdk.h")]
+	public enum InputMode {
+		DISABLED,
+		SCREEN,
+		WINDOW
+	}
+	[CCode (cprefix = "GDK_SOURCE_", cheader_filename = "gdk/gdk.h")]
+	public enum InputSource {
+		MOUSE,
+		PEN,
+		ERASER,
+		CURSOR
+	}
+	[CCode (cprefix = "GDK_JOIN_", cheader_filename = "gdk/gdk.h")]
+	public enum JoinStyle {
+		MITER,
+		ROUND,
+		BEVEL
+	}
+	[CCode (cprefix = "GDK_LINE_", cheader_filename = "gdk/gdk.h")]
+	public enum LineStyle {
+		SOLID,
+		ON_OFF_DASH,
+		DOUBLE_DASH
+	}
+	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	[Flags]
+	public enum ModifierType {
+		SHIFT_MASK,
+		LOCK_MASK,
+		CONTROL_MASK,
+		MOD1_MASK,
+		MOD2_MASK,
+		MOD3_MASK,
+		MOD4_MASK,
+		MOD5_MASK,
+		BUTTON1_MASK,
+		BUTTON2_MASK,
+		BUTTON3_MASK,
+		BUTTON4_MASK,
+		BUTTON5_MASK,
+		SUPER_MASK,
+		HYPER_MASK,
+		META_MASK,
+		RELEASE_MASK,
+		MODIFIER_MASK
+	}
+	[CCode (cprefix = "GDK_NOTIFY_", cheader_filename = "gdk/gdk.h")]
+	public enum NotifyType {
+		ANCESTOR,
+		VIRTUAL,
+		INFERIOR,
+		NONLINEAR,
+		NONLINEAR_VIRTUAL,
+		UNKNOWN
+	}
+	[CCode (cprefix = "GDK_OVERLAP_RECTANGLE_", cheader_filename = "gdk/gdk.h")]
+	public enum OverlapType {
+		IN,
+		OUT,
+		PART
+	}
+	[CCode (cprefix = "GDK_OWNER_CHANGE_", cheader_filename = "gdk/gdk.h")]
+	public enum OwnerChange {
+		NEW_OWNER,
+		DESTROY,
+		CLOSE
+	}
+	[CCode (cprefix = "GDK_PROP_MODE_", cheader_filename = "gdk/gdk.h")]
+	public enum PropMode {
+		REPLACE,
+		PREPEND,
+		APPEND
+	}
+	[CCode (cprefix = "GDK_PROPERTY_", cheader_filename = "gdk/gdk.h")]
+	public enum PropertyState {
+		NEW_VALUE,
+		DELETE
+	}
+	[CCode (cprefix = "GDK_RGB_DITHER_", cheader_filename = "gdk/gdk.h")]
+	public enum RgbDither {
+		NONE,
+		NORMAL,
+		MAX
+	}
+	[CCode (cprefix = "GDK_SCROLL_", cheader_filename = "gdk/gdk.h")]
+	public enum ScrollDirection {
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT
+	}
+	[CCode (cprefix = "GDK_SETTING_ACTION_", cheader_filename = "gdk/gdk.h")]
+	public enum SettingAction {
+		NEW,
+		CHANGED,
+		DELETED
+	}
+	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	public enum Status {
+		OK,
+		ERROR,
+		ERROR_PARAM,
+		ERROR_FILE,
+		ERROR_MEM
+	}
+	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	public enum SubwindowMode {
+		CLIP_BY_CHILDREN,
+		INCLUDE_INFERIORS
+	}
+	[CCode (cprefix = "GDK_VISIBILITY_", cheader_filename = "gdk/gdk.h")]
+	public enum VisibilityState {
+		UNOBSCURED,
+		PARTIAL,
+		FULLY_OBSCURED
+	}
+	[CCode (cprefix = "GDK_VISUAL_", cheader_filename = "gdk/gdk.h")]
+	public enum VisualType {
+		STATIC_GRAY,
+		GRAYSCALE,
+		STATIC_COLOR,
+		PSEUDO_COLOR,
+		TRUE_COLOR,
+		DIRECT_COLOR
+	}
+	[CCode (cprefix = "GDK_DECOR_", cheader_filename = "gdk/gdk.h")]
+	[Flags]
+	public enum WMDecoration {
+		ALL,
+		BORDER,
+		RESIZEH,
+		TITLE,
+		MENU,
+		MINIMIZE,
+		MAXIMIZE
+	}
+	[CCode (cprefix = "GDK_FUNC_", cheader_filename = "gdk/gdk.h")]
+	[Flags]
+	public enum WMFunction {
+		ALL,
+		RESIZE,
+		MOVE,
+		MINIMIZE,
+		MAXIMIZE,
+		CLOSE
+	}
+	[CCode (cprefix = "GDK_WA_", cheader_filename = "gdk/gdk.h")]
+	[Flags]
+	public enum WindowAttributesType {
+		TITLE,
+		X,
+		Y,
+		CURSOR,
+		COLORMAP,
+		VISUAL,
+		WMCLASS,
+		NOREDIR,
+		TYPE_HINT
+	}
+	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
+	public enum WindowClass {
+		INPUT_OUTPUT,
+		INPUT_ONLY
+	}
+	[CCode (cprefix = "GDK_WINDOW_EDGE_", cheader_filename = "gdk/gdk.h")]
+	public enum WindowEdge {
+		NORTH_WEST,
+		NORTH,
+		NORTH_EAST,
+		WEST,
+		EAST,
+		SOUTH_WEST,
+		SOUTH,
+		SOUTH_EAST
+	}
+	[CCode (cprefix = "GDK_HINT_", cheader_filename = "gdk/gdk.h")]
+	[Flags]
+	public enum WindowHints {
+		POS,
+		MIN_SIZE,
+		MAX_SIZE,
+		BASE_SIZE,
+		ASPECT,
+		RESIZE_INC,
+		WIN_GRAVITY,
+		USER_POS,
+		USER_SIZE
+	}
+	[CCode (cprefix = "GDK_WINDOW_STATE_", cheader_filename = "gdk/gdk.h")]
+	[Flags]
+	public enum WindowState {
+		WITHDRAWN,
+		ICONIFIED,
+		MAXIMIZED,
+		STICKY,
+		FULLSCREEN,
+		ABOVE,
+		BELOW
+	}
+	[CCode (cprefix = "GDK_WINDOW_", cheader_filename = "gdk/gdk.h")]
+	public enum WindowType {
+		ROOT,
+		TOPLEVEL,
+		CHILD,
+		DIALOG,
+		TEMP,
+		FOREIGN
+	}
+	[CCode (cprefix = "GDK_WINDOW_TYPE_HINT_", cheader_filename = "gdk/gdk.h")]
+	public enum WindowTypeHint {
+		NORMAL,
+		DIALOG,
+		MENU,
+		TOOLBAR,
+		SPLASHSCREEN,
+		UTILITY,
+		DOCK,
+		DESKTOP,
+		DROPDOWN_MENU,
+		POPUP_MENU,
+		TOOLTIP,
+		NOTIFICATION,
+		COMBO,
+		DND
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static delegate void DestroyNotify (void* data);
@@ -1510,12 +1510,6 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public delegate void SpanFunc (Gdk.Span span);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public const Gdk.Atom SELECTION_PRIMARY;
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public const Gdk.Atom SELECTION_SECONDARY;
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public const Gdk.Atom SELECTION_CLIPBOARD;
-	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const int CURRENT_TIME;
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const int MAX_TIMECOORD_AXES;
@@ -1523,6 +1517,12 @@ namespace Gdk {
 	public const int PARENT_RELATIVE;
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const int PRIORITY_REDRAW;
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public const Gdk.Atom SELECTION_CLIPBOARD;
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public const Gdk.Atom SELECTION_PRIMARY;
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public const Gdk.Atom SELECTION_SECONDARY;
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, void* data);
 	[CCode (cheader_filename = "gdk/gdk.h")]

@@ -2,11 +2,6 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cprefix = "GST_SDP_", has_type_id = "0", cheader_filename = "gst/sdp/gstsdp.h")]
-	public enum SDPResult {
-		OK,
-		EINVAL
-	}
 	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPAttribute {
@@ -16,37 +11,37 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPBandwidth {
-		public weak string bwtype;
 		public uint bandwidth;
+		public weak string bwtype;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPConnection {
-		public weak string nettype;
-		public weak string addrtype;
-		public weak string address;
-		public uint ttl;
 		public uint addr_number;
+		public weak string address;
+		public weak string addrtype;
+		public weak string nettype;
+		public uint ttl;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPKey {
-		public weak string type;
 		public weak string data;
+		public weak string type;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPMedia {
-		public weak string media;
-		public uint port;
-		public uint num_ports;
-		public weak string proto;
+		public weak GLib.Array attributes;
+		public weak GLib.Array bandwidths;
+		public weak GLib.Array connections;
 		public weak GLib.Array fmts;
 		public weak string information;
-		public weak GLib.Array connections;
-		public weak GLib.Array bandwidths;
 		public weak Gst.SDPKey key;
-		public weak GLib.Array attributes;
+		public weak string media;
+		public uint num_ports;
+		public uint port;
+		public weak string proto;
 		public Gst.SDPResult add_attribute (string key, string value);
 		public Gst.SDPResult add_bandwidth (string bwtype, uint bandwidth);
 		public Gst.SDPResult add_connection (string nettype, string addrtype, string address, uint ttl, uint addr_number);
@@ -81,20 +76,20 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPMessage {
-		public weak string version;
-		public weak Gst.SDPOrigin origin;
-		public weak string session_name;
-		public weak string information;
-		public weak string uri;
-		public weak GLib.Array emails;
-		public weak GLib.Array phones;
-		public weak Gst.SDPConnection connection;
-		public weak GLib.Array bandwidths;
-		public weak GLib.Array times;
-		public weak GLib.Array zones;
-		public weak Gst.SDPKey key;
 		public weak GLib.Array attributes;
+		public weak GLib.Array bandwidths;
+		public weak Gst.SDPConnection connection;
+		public weak GLib.Array emails;
+		public weak string information;
+		public weak Gst.SDPKey key;
 		public weak GLib.Array medias;
+		public weak Gst.SDPOrigin origin;
+		public weak GLib.Array phones;
+		public weak string session_name;
+		public weak GLib.Array times;
+		public weak string uri;
+		public weak string version;
+		public weak GLib.Array zones;
 		public Gst.SDPResult add_attribute (string key, string value);
 		public Gst.SDPResult add_bandwidth (string bwtype, uint bandwidth);
 		public Gst.SDPResult add_email (string email);
@@ -143,25 +138,30 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPOrigin {
-		public weak string username;
+		public weak string addr;
+		public weak string addrtype;
+		public weak string nettype;
 		public weak string sess_id;
 		public weak string sess_version;
-		public weak string nettype;
-		public weak string addrtype;
-		public weak string addr;
+		public weak string username;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPTime {
+		public weak GLib.Array repeat;
 		public weak string start;
 		public weak string stop;
-		public weak GLib.Array repeat;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public class SDPZone {
 		public weak string time;
 		public weak string typed_time;
+	}
+	[CCode (cprefix = "GST_SDP_", has_type_id = "0", cheader_filename = "gst/sdp/gstsdp.h")]
+	public enum SDPResult {
+		OK,
+		EINVAL
 	}
 	[CCode (cheader_filename = "gst/sdp/gstsdpmessage.h")]
 	public const string SDP_BWTYPE_AS;

@@ -2,12 +2,6 @@
 
 [CCode (cprefix = "Notify", lower_case_cprefix = "notify_")]
 namespace Notify {
-	[CCode (cprefix = "NOTIFY_URGENCY_", has_type_id = "0", cheader_filename = "libnotify/notify.h")]
-	public enum Urgency {
-		LOW,
-		NORMAL,
-		CRITICAL
-	}
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public class Notification : GLib.Object {
 		public void add_action (string action, string label, Notify.ActionCallback callback, GLib.FreeFunc free_func);
@@ -16,8 +10,8 @@ namespace Notify {
 		public void clear_actions ();
 		public void clear_hints ();
 		public bool close () throws GLib.Error;
+		[CCode (has_construct_function = false)]
 		public Notification (string summary, string body, string icon, Gtk.Widget attach);
-		public Notification.with_status_icon (string summary, string body, string icon, Gtk.StatusIcon status_icon);
 		public void set_category (string category);
 		public void set_geometry_hints (Gdk.Screen screen, int x, int y);
 		public void set_hint_byte (string key, uchar value);
@@ -30,6 +24,8 @@ namespace Notify {
 		public void set_urgency (Notify.Urgency urgency);
 		public bool show () throws GLib.Error;
 		public bool update (string summary, string body, string icon);
+		[CCode (has_construct_function = false)]
+		public Notification.with_status_icon (string summary, string body, string icon, Gtk.StatusIcon status_icon);
 		[NoAccessorMethod]
 		public Gtk.Widget attach_widget { get; set construct; }
 		[NoAccessorMethod]
@@ -41,6 +37,12 @@ namespace Notify {
 		[NoAccessorMethod]
 		public string summary { get; set construct; }
 		public virtual signal void closed ();
+	}
+	[CCode (cprefix = "NOTIFY_URGENCY_", has_type_id = "0", cheader_filename = "libnotify/notify.h")]
+	public enum Urgency {
+		LOW,
+		NORMAL,
+		CRITICAL
 	}
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public static delegate void ActionCallback (Notify.Notification p1, string p2, void* p3);

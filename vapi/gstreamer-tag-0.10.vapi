@@ -2,6 +2,16 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
+	[CCode (cheader_filename = "gst/tag/gsttagdemux.h")]
+	public class TagDemux : Gst.Element {
+		public void* reserved;
+		[NoWrapper]
+		public virtual bool identify_tag (Gst.Buffer buffer, bool start_tag, uint tag_size);
+		[NoWrapper]
+		public virtual weak Gst.TagList merge_tags (Gst.TagList start_tags, Gst.TagList end_tags);
+		[NoWrapper]
+		public virtual Gst.TagDemuxResult parse_tag (Gst.Buffer buffer, bool start_tag, uint tag_size, out weak Gst.TagList tags);
+	}
 	[CCode (cprefix = "GST_TAG_DEMUX_RESULT_", has_type_id = "0", cheader_filename = "gst/tag/gsttagdemux.h")]
 	public enum TagDemuxResult {
 		BROKEN_TAG,
@@ -29,16 +39,6 @@ namespace Gst {
 		ILLUSTRATION,
 		BAND_ARTIST_LOGO,
 		PUBLISHER_STUDIO_LOGO
-	}
-	[CCode (cheader_filename = "gst/tag/gsttagdemux.h")]
-	public class TagDemux : Gst.Element {
-		public void* reserved;
-		[NoWrapper]
-		public virtual bool identify_tag (Gst.Buffer buffer, bool start_tag, uint tag_size);
-		[NoWrapper]
-		public virtual weak Gst.TagList merge_tags (Gst.TagList start_tags, Gst.TagList end_tags);
-		[NoWrapper]
-		public virtual Gst.TagDemuxResult parse_tag (Gst.Buffer buffer, bool start_tag, uint tag_size, out weak Gst.TagList tags);
 	}
 	[CCode (cheader_filename = "gst/tag/tag.h")]
 	public const string TAG_CDDA_CDDB_DISCID;

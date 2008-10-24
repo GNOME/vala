@@ -2,20 +2,6 @@
 
 [CCode (cprefix = "Gtk", lower_case_cprefix = "gtk_")]
 namespace Gtk {
-	[CCode (cprefix = "GTK_SOURCE_SMART_HOME_END_", has_type_id = "0", cheader_filename = "gtksourceview/gtksourceview.h")]
-	public enum SourceSmartHomeEndType {
-		DISABLED,
-		BEFORE,
-		AFTER,
-		ALWAYS
-	}
-	[CCode (cprefix = "GTK_SOURCE_SEARCH_", has_type_id = "0", cheader_filename = "gtksourceview/gtksourceiter.h")]
-	[Flags]
-	public enum SourceSearchFlags {
-		VISIBLE_ONLY,
-		TEXT_ONLY,
-		CASE_INSENSITIVE
-	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceBuffer : Gtk.TextBuffer {
 		public bool backward_iter_to_source_mark (Gtk.TextIter iter, string category);
@@ -31,8 +17,8 @@ namespace Gtk {
 		public weak GLib.SList get_source_marks_at_iter (Gtk.TextIter iter, string category);
 		public weak GLib.SList get_source_marks_at_line (int line, string category);
 		public weak Gtk.SourceStyleScheme get_style_scheme ();
+		[CCode (has_construct_function = false)]
 		public SourceBuffer (Gtk.TextTagTable table);
-		public SourceBuffer.with_language (Gtk.SourceLanguage language);
 		public void redo ();
 		public void remove_source_marks (Gtk.TextIter start, Gtk.TextIter end, string category);
 		public void set_highlight_matching_brackets (bool highlight);
@@ -41,6 +27,8 @@ namespace Gtk {
 		public void set_max_undo_levels (int max_undo_levels);
 		public void set_style_scheme (Gtk.SourceStyleScheme scheme);
 		public void undo ();
+		[CCode (has_construct_function = false)]
+		public SourceBuffer.with_language (Gtk.SourceLanguage language);
 		[NoAccessorMethod]
 		public bool can_redo { get; }
 		[NoAccessorMethod]
@@ -74,6 +62,7 @@ namespace Gtk {
 		public weak Gtk.SourceLanguage get_language (string id);
 		public weak string get_language_ids ();
 		public weak string get_search_path ();
+		[CCode (has_construct_function = false)]
 		public SourceLanguageManager ();
 		public void set_search_path (string dirs);
 		public string[] language_ids { get; }
@@ -82,6 +71,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceMark : Gtk.TextMark {
 		public weak string get_category ();
+		[CCode (has_construct_function = false)]
 		public SourceMark (string name, string category);
 		public weak Gtk.SourceMark next (string category);
 		public weak Gtk.SourceMark prev (string category);
@@ -91,6 +81,8 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourcePrintCompositor : GLib.Object {
 		public void draw_page (Gtk.PrintContext context, int page_nr);
+		[CCode (has_construct_function = false)]
+		public SourcePrintCompositor.from_view (Gtk.SourceView view);
 		public weak string get_body_font_name ();
 		public double get_bottom_margin (Gtk.Unit unit);
 		public weak Gtk.SourceBuffer get_buffer ();
@@ -108,8 +100,8 @@ namespace Gtk {
 		public uint get_tab_width ();
 		public double get_top_margin (Gtk.Unit unit);
 		public Gtk.WrapMode get_wrap_mode ();
+		[CCode (has_construct_function = false)]
 		public SourcePrintCompositor (Gtk.SourceBuffer buffer);
-		public SourcePrintCompositor.from_view (Gtk.SourceView view);
 		public bool paginate (Gtk.PrintContext context);
 		public void set_body_font_name (string font_name);
 		public void set_bottom_margin (double margin, Gtk.Unit unit);
@@ -195,6 +187,7 @@ namespace Gtk {
 		public weak Gtk.SourceStyleScheme get_scheme (string scheme_id);
 		public weak string get_scheme_ids ();
 		public weak string get_search_path ();
+		[CCode (has_construct_function = false)]
 		public SourceStyleSchemeManager ();
 		public void prepend_search_path (string path);
 		public void set_search_path (string path);
@@ -216,8 +209,8 @@ namespace Gtk {
 		public bool get_show_right_margin ();
 		public Gtk.SourceSmartHomeEndType get_smart_home_end ();
 		public uint get_tab_width ();
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public SourceView ();
-		public SourceView.with_buffer (Gtk.SourceBuffer buffer);
 		public void set_auto_indent (bool enable);
 		public void set_highlight_current_line (bool show);
 		public void set_indent_on_tab (bool enable);
@@ -231,6 +224,8 @@ namespace Gtk {
 		public void set_show_right_margin (bool show);
 		public void set_smart_home_end (Gtk.SourceSmartHomeEndType smart_he);
 		public void set_tab_width (uint width);
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public SourceView.with_buffer (Gtk.SourceBuffer buffer);
 		public bool auto_indent { get; set; }
 		public bool highlight_current_line { get; set; }
 		public bool indent_on_tab { get; set; }
@@ -244,6 +239,20 @@ namespace Gtk {
 		public uint tab_width { get; set; }
 		public virtual signal void redo ();
 		public virtual signal void undo ();
+	}
+	[CCode (cprefix = "GTK_SOURCE_SEARCH_", has_type_id = "0", cheader_filename = "gtksourceview/gtksourceiter.h")]
+	[Flags]
+	public enum SourceSearchFlags {
+		VISIBLE_ONLY,
+		TEXT_ONLY,
+		CASE_INSENSITIVE
+	}
+	[CCode (cprefix = "GTK_SOURCE_SMART_HOME_END_", has_type_id = "0", cheader_filename = "gtksourceview/gtksourceview.h")]
+	public enum SourceSmartHomeEndType {
+		DISABLED,
+		BEFORE,
+		AFTER,
+		ALWAYS
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public static bool source_iter_backward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, Gtk.TextIter? limit);

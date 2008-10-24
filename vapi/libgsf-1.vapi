@@ -2,6 +2,442 @@
 
 [CCode (cprefix = "Gsf", lower_case_cprefix = "gsf_")]
 namespace Gsf {
+	[CCode (cheader_filename = "gsf/gsf-blob.h")]
+	public class Blob : GLib.Object {
+		public ulong get_size ();
+		[CCode (has_construct_function = false)]
+		public Blob (ulong size, void* data_to_copy) throws GLib.Error;
+		public void* peek_data ();
+	}
+	[CCode (cheader_filename = "gsf/gsf-clip-data.h")]
+	public class ClipData : GLib.Object {
+		public weak Gsf.Blob get_data_blob ();
+		public Gsf.ClipFormat get_format ();
+		public Gsf.ClipFormatWindows get_windows_clipboard_format () throws GLib.Error;
+		[CCode (has_construct_function = false)]
+		public ClipData (Gsf.ClipFormat format, Gsf.Blob data_blob);
+		public void* peek_real_data (ulong ret_size) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gsf/gsf-doc-meta-data.h")]
+	public class DocMetaData : GLib.Object {
+		public void @foreach (GLib.HFunc func);
+		public void insert (string name, GLib.Value value);
+		public weak Gsf.DocProp? lookup (string name);
+		[CCode (has_construct_function = false)]
+		public DocMetaData ();
+		public void remove (string name);
+		public ulong size ();
+		public weak Gsf.DocProp? steal (string name);
+		public void store (Gsf.DocProp prop);
+	}
+	[Compact]
+	[CCode (cheader_filename = "gsf/gsf-doc-meta-data.h")]
+	public class DocProp {
+		public void dump ();
+		public weak string? get_link ();
+		public weak string get_name ();
+		public weak GLib.Value? get_val ();
+		[CCode (has_construct_function = false)]
+		public DocProp (string# name);
+		public void set_link (string# link);
+		public void set_val (GLib.Value# val);
+		public GLib.Value swap_val (GLib.Value val);
+	}
+	[CCode (cheader_filename = "gsf/gsf-docprop-vector.h")]
+	public class DocPropVector : GLib.Object {
+		[CCode (cname = "gsf_docprop_vector_append")]
+		public void append (GLib.Value value);
+		[CCode (cname = "gsf_docprop_vector_as_string")]
+		public string as_string ();
+		[CCode (cname = "gsf_docprop_vector_new", has_construct_function = false)]
+		public DocPropVector ();
+	}
+	[CCode (cheader_filename = "gsf/gsf-infile-impl.h")]
+	public class Infile : Gsf.Input {
+		public virtual weak Gsf.Input? child_by_index (int i);
+		public virtual weak Gsf.Input? child_by_name (string name);
+		public weak Gsf.Input? child_by_vname (string name);
+		public virtual weak string? name_by_index (int i);
+		public virtual int num_children ();
+	}
+	[CCode (cheader_filename = "gsf/gsf-infile-msole.h")]
+	public class InfileMSOle : Gsf.Infile {
+		[CCode (cname = "gsf_infile_msole_get_class_id")]
+		public bool get_class_id (uchar res);
+		[CCode (cname = "gsf_infile_msole_new", type = "GsfInfile*", has_construct_function = false)]
+		public InfileMSOle (Gsf.Input source) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gsf/gsf-infile-msvba.h")]
+	public class InfileMSVBA : Gsf.Infile {
+		[CCode (type = "GsfInfile*", has_construct_function = false)]
+		public InfileMSVBA (Gsf.Infile source) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gsf/gsf-infile-stdio.h")]
+	public class InfileStdio : Gsf.Infile {
+		[CCode (type = "GsfInfile*", has_construct_function = false)]
+		public InfileStdio (string root) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gsf/gsf-infile-zip.h")]
+	public class InfileZip : Gsf.Infile {
+		[CCode (type = "GsfInfile*", has_construct_function = false)]
+		public InfileZip (Gsf.Input source) throws GLib.Error;
+		[NoAccessorMethod]
+		public int compression_level { get; }
+		[NoAccessorMethod]
+		public Gsf.InfileZip internal_parent { construct; }
+		[NoAccessorMethod]
+		public Gsf.Input source { get; construct; }
+	}
+	[CCode (cheader_filename = "gsf/gsf-input-impl.h")]
+	public class Input : GLib.Object {
+		public Gsf.off_t cur_offset;
+		[NoWrapper]
+		public virtual Gsf.Input Dup () throws GLib.Error;
+		[NoWrapper]
+		public virtual Gsf.Input OpenSibling (string path) throws GLib.Error;
+		[NoWrapper]
+		[NoArrayLength]
+		public virtual weak uchar[]? Read (ulong num_bytes, uchar[]? optional_buffer);
+		[NoWrapper]
+		public virtual bool Seek (Gsf.off_t offset, GLib.SeekType whence);
+		public weak Gsf.Infile? container ();
+		public bool copy (Gsf.Output output);
+		public void dump (bool dump_as_hex);
+		public Gsf.Input dup () throws GLib.Error;
+		public bool eof ();
+		public static GLib.Quark error ();
+		public static GLib.Quark error_id ();
+		public static Gsf.Input mmap_new (string filename) throws GLib.Error;
+		public weak string? name ();
+		public Input ();
+		[NoArrayLength]
+		public weak uchar[]? read (ulong num_bytes, uchar[]? optional_buffer);
+		public Gsf.off_t remaining ();
+		public bool seek (Gsf.off_t offset, GLib.SeekType whence);
+		public bool seek_emulate (Gsf.off_t pos);
+		public bool set_container (Gsf.Infile? container);
+		public bool set_name (string? name);
+		public bool set_name_from_filename (string filename);
+		public bool set_size (Gsf.off_t size);
+		public weak Gsf.Input? sibling (string name) throws GLib.Error;
+		public Gsf.off_t size ();
+		public Gsf.off_t tell ();
+		public static Gsf.Input uncompress (Gsf.Input# src);
+		[NoAccessorMethod]
+		public int64 position { get; }
+	}
+	[CCode (cheader_filename = "gsf/gsf-input-gzip.h")]
+	public class InputGZip : Gsf.Input {
+		[CCode (type = "GsfInput*", has_construct_function = false)]
+		public InputGZip (Gsf.Input source) throws GLib.Error;
+		[NoAccessorMethod]
+		public bool raw { get; construct; }
+		[NoAccessorMethod]
+		public Gsf.Input source { get; construct; }
+		[NoAccessorMethod]
+		public int64 uncompressed_size { get; construct; }
+	}
+	[CCode (cheader_filename = "gsf/gsf-input-http.h")]
+	public class InputHTTP : Gsf.Input {
+		public weak string get_content_type ();
+		public weak string get_url ();
+		[CCode (type = "GsfInput*", has_construct_function = false)]
+		public InputHTTP (string url) throws GLib.Error;
+		[NoAccessorMethod]
+		public string content_type { get; construct; }
+		[NoAccessorMethod]
+		public string url { get; construct; }
+	}
+	[CCode (cheader_filename = "gsf/gsf-input-memory.h")]
+	public class InputMemory : Gsf.Input {
+		[CCode (type = "GsfInput*", has_construct_function = false)]
+		public InputMemory.clone (uchar buf, Gsf.off_t length);
+		[CCode (type = "GsfInput*", has_construct_function = false)]
+		public InputMemory.from_bzip (Gsf.Input source) throws GLib.Error;
+		[CCode (type = "GsfInput*", has_construct_function = false)]
+		public InputMemory.from_iochannel (GLib.IOChannel channel) throws GLib.Error;
+		[CCode (type = "GsfInput*", has_construct_function = false)]
+		public InputMemory (uchar buf, Gsf.off_t length, bool needs_free);
+	}
+	[CCode (cheader_filename = "gsf/gsf-input-proxy.h")]
+	public class InputProxy : Gsf.Input {
+		[CCode (type = "GsfInput*", has_construct_function = false)]
+		public InputProxy (Gsf.Input source);
+		[CCode (type = "GsfInput*", has_construct_function = false)]
+		public InputProxy.section (Gsf.Input source, Gsf.off_t offset, Gsf.off_t size);
+	}
+	[CCode (cheader_filename = "gsf/gsf-input-stdio.h")]
+	public class InputStdio : Gsf.Input {
+		[CCode (type = "GsfInput*", has_construct_function = false)]
+		public InputStdio (string filename) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gsf/gsf-input-textline.h")]
+	public class InputTextline : Gsf.Input {
+		[NoArrayLength]
+		public weak uint[]? ascii_gets ();
+		[CCode (type = "GsfInput*", has_construct_function = false)]
+		public InputTextline (Gsf.Input source);
+		[NoArrayLength]
+		public weak uchar[]? utf8_gets ();
+	}
+	[Compact]
+	[CCode (cheader_filename = "gsf/gsf-open-pkg-utils.h")]
+	public class OpenPkgRel {
+		public weak string get_target ();
+		public bool is_extern ();
+	}
+	[Compact]
+	[CCode (cheader_filename = "gsf/gsf-open-pkg-utils.h")]
+	public class OpenPkgRels {
+	}
+	[CCode (cheader_filename = "gsf/gsf-outfile-impl.h")]
+	public class Outfile : Gsf.Output {
+		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		public Outfile.child (Gsf.Outfile outfile, string name, bool is_dir);
+		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		public Outfile.child_full (Gsf.Outfile outfile, string name, bool is_dir, ...);
+	}
+	[CCode (cheader_filename = "gsf/gsf-outfile-msole.h")]
+	public class OutfileMSOle : Gsf.Outfile {
+		[CCode (cname = "gsf_outfile_msole_new_full", type = "GsfOutfile*", has_construct_function = false)]
+		public OutfileMSOle.full (Gsf.Output sink, uint bb_size, uint sb_size);
+		[CCode (cname = "gsf_outfile_msole_new", type = "GsfOutfile*", has_construct_function = false)]
+		public OutfileMSOle (Gsf.Output sink);
+		[CCode (cname = "gsf_outfile_msole_set_class_id")]
+		public bool set_class_id (uchar clsid);
+	}
+	[CCode (cheader_filename = "gsf/gsf-open-pkg-utils.h")]
+	public class OutfileOpenPkg : Gsf.Outfile {
+		public weak string add_extern_rel (string target, string content_type);
+		public static Gsf.Output add_rel (Gsf.Outfile dir, string name, string content_type, Gsf.Outfile parent, string type);
+		[CCode (type = "GsfOutfile*", has_construct_function = false)]
+		public OutfileOpenPkg (Gsf.Outfile sink);
+		public weak string relate (Gsf.OutfileOpenPkg parent, string type);
+		public void set_content_type (string content_type);
+		public void set_sink (Gsf.Output sink);
+		[NoAccessorMethod]
+		public string content_type { get; construct; }
+		[NoAccessorMethod]
+		public bool is_dir { get; construct; }
+		[NoAccessorMethod]
+		public Gsf.Outfile sink { get; construct; }
+	}
+	[CCode (cheader_filename = "gsf/gsf-outfile-stdio.h")]
+	public class OutfileStdio : Gsf.Outfile {
+		[CCode (type = "GsfOutfile*", has_construct_function = false)]
+		public OutfileStdio.full (string root, ...) throws GLib.Error;
+		[CCode (type = "GsfOutfile*", has_construct_function = false)]
+		public OutfileStdio (string root) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gsf/gsf-outfile-zip.h")]
+	public class OutfileZip : Gsf.Outfile {
+		[CCode (type = "GsfOutfile*", has_construct_function = false)]
+		public OutfileZip (Gsf.Output sink) throws GLib.Error;
+		public bool set_compression_method (Gsf.ZipCompressionMethod method);
+		[NoAccessorMethod]
+		public int compression_level { get; construct; }
+		[NoAccessorMethod]
+		public string entry_name { get; construct; }
+		[NoAccessorMethod]
+		public Gsf.Output sink { get; construct; }
+	}
+	[CCode (cheader_filename = "gsf/gsf-output-impl.h")]
+	public class Output : GLib.Object {
+		public Gsf.off_t cur_offset;
+		public Gsf.off_t cur_size;
+		public weak GLib.Error err;
+		public weak string printf_buf;
+		public int printf_buf_size;
+		public weak GLib.Object wrapped_by;
+		[NoWrapper]
+		public virtual bool Close ();
+		[NoWrapper]
+		public virtual bool Seek (Gsf.off_t offset, GLib.SeekType whence);
+		[NoWrapper]
+		public virtual bool Write (ulong num_bytes, uchar[] data);
+		public bool close ();
+		public weak Gsf.Outfile? container ();
+		public weak GLib.Error error ();
+		public static GLib.Quark error_id ();
+		public bool is_closed ();
+		public weak string? name ();
+		public bool printf (string format, ...);
+		public bool puts (string line);
+		public bool seek (Gsf.off_t offset, GLib.SeekType whence);
+		public bool set_container (Gsf.Outfile? container);
+		public bool set_error (int code, string format);
+		public bool set_name (string? name);
+		public bool set_name_from_filename (string filename);
+		public Gsf.off_t size ();
+		public Gsf.off_t tell ();
+		public static bool unwrap (GLib.Object wrapper, Gsf.Output wrapee);
+		public static bool wrap (GLib.Object wrapper, Gsf.Output wrapee);
+		public bool write (ulong num_bytes, uchar[] data);
+		[NoAccessorMethod]
+		public int64 position { get; }
+	}
+	[CCode (cheader_filename = "gsf/gsf-output-bzip.h")]
+	public class OutputBzip : Gsf.Output {
+		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		public OutputBzip (Gsf.Output sink) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gsf/gsf-output-csv.h")]
+	public class OutputCsv : Gsf.Output {
+		public weak GLib.StringBuilder buf;
+		public ulong eol_len;
+		public bool fields_on_line;
+		public ulong quote_len;
+		public ulong separator_len;
+		public bool write_eol ();
+		public bool write_field (string field, ulong len);
+		[NoAccessorMethod]
+		public string eol { get; set construct; }
+		[NoAccessorMethod]
+		public string quote { get; set construct; }
+		[NoAccessorMethod]
+		public Gsf.OutputCsvQuotingMode quoting_mode { get; set construct; }
+		[NoAccessorMethod]
+		public bool quoting_on_whitespace { get; set; }
+		[NoAccessorMethod]
+		public string quoting_triggers { get; set; }
+		[NoAccessorMethod]
+		public string separator { get; set construct; }
+		[NoAccessorMethod]
+		public Gsf.Output sink { get; set; }
+	}
+	[CCode (cheader_filename = "gsf/gsf-output-gzip.h")]
+	public class OutputGZip : Gsf.Output {
+		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		public OutputGZip (Gsf.Output sink) throws GLib.Error;
+		[NoAccessorMethod]
+		public bool raw { get; construct; }
+		[NoAccessorMethod]
+		public Gsf.Output sink { get; construct; }
+	}
+	[CCode (cheader_filename = "gsf/gsf-output-iochannel.h")]
+	public class OutputIOChannel : Gsf.Output {
+		[CCode (cname = "gsf_output_iochannel_new", type = "GsfOutput*", has_construct_function = false)]
+		public OutputIOChannel (GLib.IOChannel channel);
+	}
+	[CCode (cheader_filename = "gsf/gsf-output-iconv.h")]
+	public class OutputIconv : Gsf.Output {
+		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		public OutputIconv (Gsf.Output sink, string dst, string src);
+		[NoAccessorMethod]
+		public string fallback { get; set; }
+		[NoAccessorMethod]
+		public string input_charset { get; construct; }
+		[NoAccessorMethod]
+		public string output_charset { get; construct; }
+		[NoAccessorMethod]
+		public Gsf.Output sink { get; construct; }
+	}
+	[CCode (cheader_filename = "gsf/gsf-output-memory.h")]
+	public class OutputMemory : Gsf.Output {
+		[NoArrayLength]
+		public weak uchar[] get_bytes ();
+		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		public OutputMemory ();
+	}
+	[CCode (cheader_filename = "gsf/gsf-output-stdio.h")]
+	public class OutputStdio : Gsf.Output {
+		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		public OutputStdio.full (string filename, ...) throws GLib.Error;
+		[CCode (type = "GsfOutput*", has_construct_function = false)]
+		public OutputStdio (string filename) throws GLib.Error;
+	}
+	[CCode (cheader_filename = "gsf/gsf-structured-blob.h")]
+	public class StructuredBlob : Gsf.Infile {
+		public static Gsf.StructuredBlob read (Gsf.Input input);
+		public bool write (Gsf.Outfile container);
+	}
+	[Compact]
+	[CCode (copy_function = "gsf_timestamp_copy", cheader_filename = "gsf/gsf-timestamp.h")]
+	public class Timestamp {
+		public GLib.Date date;
+		public long seconds;
+		public weak GLib.StringBuilder time_zone;
+		public uint timet;
+		public string as_string ();
+		public Gsf.Timestamp copy ();
+		public bool equal (Gsf.Timestamp b);
+		public uint hash ();
+		public static int parse (string spec, Gsf.Timestamp stamp);
+	}
+	[Compact]
+	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
+	public class XMLBlob {
+	}
+	[Compact]
+	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
+	public class XMLIn {
+		public weak GLib.StringBuilder content;
+		public weak Gsf.XMLInDoc doc;
+		public weak Gsf.XMLInNode node;
+		public weak GLib.SList node_stack;
+		public void* user_state;
+		public weak string check_ns (string str, uint ns_id);
+		public weak Gsf.Input get_input ();
+		public bool namecmp (string str, uint ns_id, string name);
+		public void push_state (Gsf.XMLInDoc doc, void* new_state, Gsf.XMLInExtDtor dtor, string[] attrs);
+	}
+	[Compact]
+	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
+	public class XMLInDoc {
+		[CCode (has_construct_function = false)]
+		public XMLInDoc (Gsf.XMLInNode[] nodes, Gsf.XMLInNS ns);
+		public bool parse (Gsf.Input input, void* user_state);
+		public void set_unknown_handler (Gsf.XMLInUnknownFunc handler);
+	}
+	[Compact]
+	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
+	public class XMLInNS {
+		public uint ns_id;
+		public weak string uri;
+	}
+	[Compact]
+	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
+	public class XMLInNode {
+		public uint check_children_for_ns;
+		public weak GLib.Callback end;
+		public Gsf.XMLContent has_content;
+		public weak string id;
+		public weak string name;
+		public int ns_id;
+		public weak string parent_id;
+		public uint share_children_with_parent;
+		public weak GLib.Callback start;
+		public void* user_data;
+	}
+	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
+	public class XMLOut : GLib.Object {
+		public void add_base64 (string id, uchar data, uint len);
+		public void add_bool (string id, bool val);
+		public void add_color (string id, uint r, uint g, uint b);
+		public void add_cstr (string id, string val_utf8);
+		public void add_cstr_unchecked (string id, string val_utf8);
+		public void add_enum (string id, GLib.Type etype, int val);
+		public void add_float (string id, double val, int precision);
+		public void add_gvalue (string id, GLib.Value val);
+		public void add_int (string id, int val);
+		public void add_uint (string id, uint val);
+		public weak string end_element ();
+		public weak Gsf.Output get_output ();
+		[CCode (has_construct_function = false)]
+		public XMLOut (Gsf.Output output);
+		public void set_doc_type (string type);
+		public void simple_element (string id, string content);
+		public void simple_float_element (string id, double val, int precision);
+		public void simple_int_element (string id, int val);
+		public void start_element (string id);
+		[NoAccessorMethod]
+		public bool pretty_print { get; set; }
+	}
+	[CCode (cheader_filename = "gsf/gsf.h")]
+	[SimpleType]
+	[IntegerType (rank = 0)]
+	public struct off_t : int64 {
+	}
 	[CCode (cprefix = "GSF_CLIP_FORMAT_", has_type_id = "0", cheader_filename = "gsf/gsf-clip-data.h")]
 	public enum ClipFormat {
 		WINDOWS_CLIPBOARD,
@@ -49,410 +485,6 @@ namespace Gsf {
 	public errordomain Error {
 		OUT_OF_MEMORY,
 		INVALID_DATA,
-	}
-	[CCode (cheader_filename = "gsf/gsf-input-impl.h")]
-	public class Input : GLib.Object {
-		public Gsf.off_t cur_offset;
-		public static Gsf.Input uncompress (Gsf.Input# src);
-		public Input ();
-		public weak Gsf.Infile? container ();
-		public bool copy (Gsf.Output output);
-		public void dump (bool dump_as_hex);
-		public Gsf.Input dup () throws GLib.Error;
-		public bool eof ();
-		public static GLib.Quark error ();
-		public static GLib.Quark error_id ();
-		public static Gsf.Input mmap_new (string filename) throws GLib.Error;
-		public weak string? name ();
-		[NoArrayLength]
-		public weak uchar[] read (ulong num_bytes, uchar[] optional_buffer);
-		public Gsf.off_t remaining ();
-		public bool seek (Gsf.off_t offset, GLib.SeekType whence);
-		public bool seek_emulate (Gsf.off_t pos);
-		public bool set_container (Gsf.Infile? container);
-		public bool set_name (string? name);
-		public bool set_name_from_filename (string filename);
-		public bool set_size (Gsf.off_t size);
-		public weak Gsf.Input? sibling (string name) throws GLib.Error;
-		public Gsf.off_t size ();
-		public Gsf.off_t tell ();
-		[NoWrapper]
-		public virtual Gsf.Input Dup () throws GLib.Error;
-		[NoWrapper]
-		public virtual Gsf.Input OpenSibling (string path) throws GLib.Error;
-		[NoWrapper]
-		[NoArrayLength]
-		public virtual weak uchar[] Read (ulong num_bytes, uchar[] optional_buffer);
-		[NoWrapper]
-		public virtual bool Seek (Gsf.off_t offset, GLib.SeekType whence);
-		[NoAccessorMethod]
-		public int64 position { get; }
-	}
-	[Compact]
-	[CCode (cheader_filename = "gsf/gsf-doc-meta-data.h")]
-	public class DocProp {
-		public void dump ();
-		public weak string? get_link ();
-		public weak string get_name ();
-		public weak GLib.Value? get_val ();
-		public DocProp (string# name);
-		public void set_link (string# link);
-		public void set_val (GLib.Value# val);
-		public GLib.Value swap_val (GLib.Value val);
-	}
-	[Compact]
-	[CCode (cheader_filename = "gsf/gsf-open-pkg-utils.h")]
-	public class OpenPkgRel {
-		public weak string get_target ();
-		public bool is_extern ();
-	}
-	[Compact]
-	[CCode (cheader_filename = "gsf/gsf-open-pkg-utils.h")]
-	public class OpenPkgRels {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
-	public class XMLBlob {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
-	public class XMLIn {
-		public void* user_state;
-		public weak GLib.StringBuilder content;
-		public weak Gsf.XMLInDoc doc;
-		public weak Gsf.XMLInNode node;
-		public weak GLib.SList node_stack;
-		public weak string check_ns (string str, uint ns_id);
-		public weak Gsf.Input get_input ();
-		public bool namecmp (string str, uint ns_id, string name);
-		public void push_state (Gsf.XMLInDoc doc, void* new_state, Gsf.XMLInExtDtor dtor, string[] attrs);
-	}
-	[Compact]
-	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
-	public class XMLInDoc {
-		public XMLInDoc (Gsf.XMLInNode[] nodes, Gsf.XMLInNS ns);
-		public bool parse (Gsf.Input input, void* user_state);
-		public void set_unknown_handler (Gsf.XMLInUnknownFunc handler);
-	}
-	[Compact]
-	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
-	public class XMLInNS {
-		public weak string uri;
-		public uint ns_id;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
-	public class XMLInNode {
-		public weak string id;
-		public int ns_id;
-		public weak string name;
-		public weak string parent_id;
-		public weak GLib.Callback start;
-		public weak GLib.Callback end;
-		public void* user_data;
-		public Gsf.XMLContent has_content;
-		public uint check_children_for_ns;
-		public uint share_children_with_parent;
-	}
-	[Compact]
-	[CCode (copy_function = "gsf_timestamp_copy", cheader_filename = "gsf/gsf-timestamp.h")]
-	public class Timestamp {
-		public GLib.Date date;
-		public long seconds;
-		public weak GLib.StringBuilder time_zone;
-		public uint timet;
-		public string as_string ();
-		public Gsf.Timestamp copy ();
-		public bool equal (Gsf.Timestamp b);
-		public uint hash ();
-		public static int parse (string spec, Gsf.Timestamp stamp);
-	}
-	[CCode (cheader_filename = "gsf/gsf-blob.h")]
-	public class Blob : GLib.Object {
-		public ulong get_size ();
-		public Blob (ulong size, void* data_to_copy) throws GLib.Error;
-		public void* peek_data ();
-	}
-	[CCode (cheader_filename = "gsf/gsf-clip-data.h")]
-	public class ClipData : GLib.Object {
-		public weak Gsf.Blob get_data_blob ();
-		public Gsf.ClipFormat get_format ();
-		public Gsf.ClipFormatWindows get_windows_clipboard_format () throws GLib.Error;
-		public ClipData (Gsf.ClipFormat format, Gsf.Blob data_blob);
-		public void* peek_real_data (ulong ret_size) throws GLib.Error;
-	}
-	[CCode (cheader_filename = "gsf/gsf-doc-meta-data.h")]
-	public class DocMetaData : GLib.Object {
-		public void @foreach (GLib.HFunc func);
-		public void insert (string name, GLib.Value value);
-		public weak Gsf.DocProp? lookup (string name);
-		public DocMetaData ();
-		public void remove (string name);
-		public ulong size ();
-		public weak Gsf.DocProp? steal (string name);
-		public void store (Gsf.DocProp prop);
-	}
-	[CCode (cheader_filename = "gsf/gsf-docprop-vector.h")]
-	public class DocPropVector : GLib.Object {
-		[CCode (cname = "gsf_docprop_vector_append")]
-		public void append (GLib.Value value);
-		[CCode (cname = "gsf_docprop_vector_as_string")]
-		public string as_string ();
-		[CCode (cname = "gsf_docprop_vector_new")]
-		public DocPropVector ();
-	}
-	[CCode (cheader_filename = "gsf/gsf-infile-impl.h")]
-	public class Infile : Gsf.Input {
-		public weak Gsf.Input? child_by_vname (string name);
-		public virtual weak Gsf.Input? child_by_index (int i);
-		public virtual weak Gsf.Input? child_by_name (string name);
-		public virtual weak string? name_by_index (int i);
-		public virtual int num_children ();
-	}
-	[CCode (cheader_filename = "gsf/gsf-infile-msole.h")]
-	public class InfileMSOle : Gsf.Infile {
-		[CCode (cname = "gsf_infile_msole_get_class_id")]
-		public bool get_class_id (uchar res);
-		[CCode (cname = "gsf_infile_msole_new")]
-		public InfileMSOle (Gsf.Input source) throws GLib.Error;
-	}
-	[CCode (cheader_filename = "gsf/gsf-infile-msvba.h")]
-	public class InfileMSVBA : Gsf.Infile {
-		public InfileMSVBA (Gsf.Infile source) throws GLib.Error;
-	}
-	[CCode (cheader_filename = "gsf/gsf-infile-stdio.h")]
-	public class InfileStdio : Gsf.Infile {
-		public InfileStdio (string root) throws GLib.Error;
-	}
-	[CCode (cheader_filename = "gsf/gsf-infile-zip.h")]
-	public class InfileZip : Gsf.Infile {
-		public InfileZip (Gsf.Input source) throws GLib.Error;
-		[NoAccessorMethod]
-		public int compression_level { get; }
-		[NoAccessorMethod]
-		public Gsf.InfileZip internal_parent { construct; }
-		[NoAccessorMethod]
-		public Gsf.Input source { get; construct; }
-	}
-	[CCode (cheader_filename = "gsf/gsf-input-gzip.h")]
-	public class InputGZip : Gsf.Input {
-		public InputGZip (Gsf.Input source) throws GLib.Error;
-		[NoAccessorMethod]
-		public bool raw { get; construct; }
-		[NoAccessorMethod]
-		public Gsf.Input source { get; construct; }
-		[NoAccessorMethod]
-		public int64 uncompressed_size { get; construct; }
-	}
-	[CCode (cheader_filename = "gsf/gsf-input-http.h")]
-	public class InputHTTP : Gsf.Input {
-		public weak string get_content_type ();
-		public weak string get_url ();
-		public InputHTTP (string url) throws GLib.Error;
-		[NoAccessorMethod]
-		public string content_type { get; construct; }
-		[NoAccessorMethod]
-		public string url { get; construct; }
-	}
-	[CCode (cheader_filename = "gsf/gsf-input-memory.h")]
-	public class InputMemory : Gsf.Input {
-		public InputMemory (uchar buf, Gsf.off_t length, bool needs_free);
-		public InputMemory.clone (uchar buf, Gsf.off_t length);
-		public InputMemory.from_bzip (Gsf.Input source) throws GLib.Error;
-		public InputMemory.from_iochannel (GLib.IOChannel channel) throws GLib.Error;
-	}
-	[CCode (cheader_filename = "gsf/gsf-input-proxy.h")]
-	public class InputProxy : Gsf.Input {
-		public InputProxy (Gsf.Input source);
-		public InputProxy.section (Gsf.Input source, Gsf.off_t offset, Gsf.off_t size);
-	}
-	[CCode (cheader_filename = "gsf/gsf-input-stdio.h")]
-	public class InputStdio : Gsf.Input {
-		public InputStdio (string filename) throws GLib.Error;
-	}
-	[CCode (cheader_filename = "gsf/gsf-input-textline.h")]
-	public class InputTextline : Gsf.Input {
-		[NoArrayLength]
-		public weak uint[] ascii_gets ();
-		public InputTextline (Gsf.Input source);
-		[NoArrayLength]
-		public weak uchar[] utf8_gets ();
-	}
-	[CCode (cheader_filename = "gsf/gsf-outfile-impl.h")]
-	public class Outfile : Gsf.Output {
-		public Outfile.child_full (Gsf.Outfile outfile, string name, bool is_dir, ...);
-		public Outfile.child (Gsf.Outfile outfile, string name, bool is_dir);
-	}
-	[CCode (cheader_filename = "gsf/gsf-outfile-msole.h")]
-	public class OutfileMSOle : Gsf.Outfile {
-		[CCode (cname = "gsf_outfile_msole_new")]
-		public OutfileMSOle (Gsf.Output sink);
-		[CCode (cname = "gsf_outfile_msole_new_full")]
-		public OutfileMSOle.full (Gsf.Output sink, uint bb_size, uint sb_size);
-		[CCode (cname = "gsf_outfile_msole_set_class_id")]
-		public bool set_class_id (uchar clsid);
-	}
-	[CCode (cheader_filename = "gsf/gsf-open-pkg-utils.h")]
-	public class OutfileOpenPkg : Gsf.Outfile {
-		public weak string add_extern_rel (string target, string content_type);
-		public static Gsf.Output add_rel (Gsf.Outfile dir, string name, string content_type, Gsf.Outfile parent, string type);
-		public OutfileOpenPkg (Gsf.Outfile sink);
-		public weak string relate (Gsf.OutfileOpenPkg parent, string type);
-		public void set_content_type (string content_type);
-		public void set_sink (Gsf.Output sink);
-		[NoAccessorMethod]
-		public string content_type { get; construct; }
-		[NoAccessorMethod]
-		public bool is_dir { get; construct; }
-		[NoAccessorMethod]
-		public Gsf.Outfile sink { get; construct; }
-	}
-	[CCode (cheader_filename = "gsf/gsf-outfile-stdio.h")]
-	public class OutfileStdio : Gsf.Outfile {
-		public OutfileStdio (string root) throws GLib.Error;
-		public OutfileStdio.full (string root, ...) throws GLib.Error;
-	}
-	[CCode (cheader_filename = "gsf/gsf-outfile-zip.h")]
-	public class OutfileZip : Gsf.Outfile {
-		public OutfileZip (Gsf.Output sink) throws GLib.Error;
-		public bool set_compression_method (Gsf.ZipCompressionMethod method);
-		[NoAccessorMethod]
-		public int compression_level { get; construct; }
-		[NoAccessorMethod]
-		public string entry_name { get; construct; }
-		[NoAccessorMethod]
-		public Gsf.Output sink { get; construct; }
-	}
-	[CCode (cheader_filename = "gsf/gsf-output-impl.h")]
-	public class Output : GLib.Object {
-		public Gsf.off_t cur_size;
-		public Gsf.off_t cur_offset;
-		public weak GLib.Object wrapped_by;
-		public weak GLib.Error err;
-		public weak string printf_buf;
-		public int printf_buf_size;
-		public bool close ();
-		public weak Gsf.Outfile? container ();
-		public weak GLib.Error error ();
-		public static GLib.Quark error_id ();
-		public bool is_closed ();
-		public weak string? name ();
-		public bool printf (string format, ...);
-		public bool puts (string line);
-		public bool seek (Gsf.off_t offset, GLib.SeekType whence);
-		public bool set_container (Gsf.Outfile? container);
-		public bool set_error (int code, string format);
-		public bool set_name (string? name);
-		public bool set_name_from_filename (string filename);
-		public Gsf.off_t size ();
-		public Gsf.off_t tell ();
-		public static bool unwrap (GLib.Object wrapper, Gsf.Output wrapee);
-		public static bool wrap (GLib.Object wrapper, Gsf.Output wrapee);
-		public bool write (ulong num_bytes, uchar[] data);
-		[NoWrapper]
-		public virtual bool Close ();
-		[NoWrapper]
-		public virtual bool Seek (Gsf.off_t offset, GLib.SeekType whence);
-		[NoWrapper]
-		public virtual bool Write (ulong num_bytes, uchar[] data);
-		[NoAccessorMethod]
-		public int64 position { get; }
-	}
-	[CCode (cheader_filename = "gsf/gsf-output-bzip.h")]
-	public class OutputBzip : Gsf.Output {
-		public OutputBzip (Gsf.Output sink) throws GLib.Error;
-	}
-	[CCode (cheader_filename = "gsf/gsf-output-csv.h")]
-	public class OutputCsv : Gsf.Output {
-		public ulong quote_len;
-		public ulong eol_len;
-		public ulong separator_len;
-		public bool fields_on_line;
-		public weak GLib.StringBuilder buf;
-		public bool write_eol ();
-		public bool write_field (string field, ulong len);
-		[NoAccessorMethod]
-		public string eol { get; set construct; }
-		[NoAccessorMethod]
-		public string quote { get; set construct; }
-		[NoAccessorMethod]
-		public Gsf.OutputCsvQuotingMode quoting_mode { get; set construct; }
-		[NoAccessorMethod]
-		public bool quoting_on_whitespace { get; set; }
-		[NoAccessorMethod]
-		public string quoting_triggers { get; set; }
-		[NoAccessorMethod]
-		public string separator { get; set construct; }
-		[NoAccessorMethod]
-		public Gsf.Output sink { get; set; }
-	}
-	[CCode (cheader_filename = "gsf/gsf-output-gzip.h")]
-	public class OutputGZip : Gsf.Output {
-		public OutputGZip (Gsf.Output sink) throws GLib.Error;
-		[NoAccessorMethod]
-		public bool raw { get; construct; }
-		[NoAccessorMethod]
-		public Gsf.Output sink { get; construct; }
-	}
-	[CCode (cheader_filename = "gsf/gsf-output-iochannel.h")]
-	public class OutputIOChannel : Gsf.Output {
-		[CCode (cname = "gsf_output_iochannel_new")]
-		public OutputIOChannel (GLib.IOChannel channel);
-	}
-	[CCode (cheader_filename = "gsf/gsf-output-iconv.h")]
-	public class OutputIconv : Gsf.Output {
-		public OutputIconv (Gsf.Output sink, string dst, string src);
-		[NoAccessorMethod]
-		public string fallback { get; set; }
-		[NoAccessorMethod]
-		public string input_charset { get; construct; }
-		[NoAccessorMethod]
-		public string output_charset { get; construct; }
-		[NoAccessorMethod]
-		public Gsf.Output sink { get; construct; }
-	}
-	[CCode (cheader_filename = "gsf/gsf-output-memory.h")]
-	public class OutputMemory : Gsf.Output {
-		[NoArrayLength]
-		public weak uchar[] get_bytes ();
-		public OutputMemory ();
-	}
-	[CCode (cheader_filename = "gsf/gsf-output-stdio.h")]
-	public class OutputStdio : Gsf.Output {
-		public OutputStdio (string filename) throws GLib.Error;
-		public OutputStdio.full (string filename, ...) throws GLib.Error;
-	}
-	[CCode (cheader_filename = "gsf/gsf-structured-blob.h")]
-	public class StructuredBlob : Gsf.Infile {
-		public static Gsf.StructuredBlob read (Gsf.Input input);
-		public bool write (Gsf.Outfile container);
-	}
-	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
-	public class XMLOut : GLib.Object {
-		public void add_base64 (string id, uchar data, uint len);
-		public void add_bool (string id, bool val);
-		public void add_color (string id, uint r, uint g, uint b);
-		public void add_cstr (string id, string val_utf8);
-		public void add_cstr_unchecked (string id, string val_utf8);
-		public void add_enum (string id, GLib.Type etype, int val);
-		public void add_float (string id, double val, int precision);
-		public void add_gvalue (string id, GLib.Value val);
-		public void add_int (string id, int val);
-		public void add_uint (string id, uint val);
-		public weak string end_element ();
-		public weak Gsf.Output get_output ();
-		public XMLOut (Gsf.Output output);
-		public void set_doc_type (string type);
-		public void simple_element (string id, string content);
-		public void simple_float_element (string id, double val, int precision);
-		public void simple_int_element (string id, int val);
-		public void start_element (string id);
-		[NoAccessorMethod]
-		public bool pretty_print { get; set; }
-	}
-	[CCode (cheader_filename = "gsf/gsf.h")]
-	[SimpleType]
-	public struct off_t : int64 {
 	}
 	[CCode (cheader_filename = "gsf/gsf-libxml.h")]
 	public static delegate void XMLInExtDtor (Gsf.XMLIn xin, void* old_state);

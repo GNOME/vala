@@ -2,53 +2,88 @@
 
 [CCode (cprefix = "GConf", lower_case_cprefix = "gconf_")]
 namespace GConf {
-	[CCode (cprefix = "GCONF_CLIENT_HANDLE_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
-	public enum ClientErrorHandlingMode {
-		NONE,
-		UNRETURNED,
-		ALL
+	[Compact]
+	[CCode (ref_function = "gconf_change_set_ref", unref_function = "gconf_change_set_unref", cheader_filename = "gconf/gconf.h")]
+	public class ChangeSet {
+		public bool check_value (string key, out weak GConf.Value value_retloc);
+		public void clear ();
+		public void @foreach (GConf.ChangeSetForeachFunc func);
+		public void* get_user_data ();
+		[CCode (has_construct_function = false)]
+		public ChangeSet ();
+		public void remove (string key);
+		public void set (string key, GConf.Value value);
+		public void set_bool (string key, bool val);
+		public void set_float (string key, double val);
+		public void set_int (string key, int val);
+		public void set_list (string key, GConf.ValueType list_type, GLib.SList list);
+		public void set_nocopy (string key, GConf.Value value);
+		public void set_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, void* address_of_car, void* address_of_cdr);
+		public void set_schema (string key, GConf.Schema val);
+		public void set_string (string key, string val);
+		public void set_user_data (void* data, GLib.DestroyNotify dnotify);
+		public uint size ();
+		public void unset (string key);
 	}
-	[CCode (cprefix = "GCONF_CLIENT_PRELOAD_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
-	public enum ClientPreloadType {
-		NONE,
-		ONELEVEL,
-		RECURSIVE
-	}
-	[CCode (cprefix = "GCONF_ERROR_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
-	public enum Error {
-		SUCCESS,
-		FAILED,
-		NO_SERVER,
-		NO_PERMISSION,
-		BAD_ADDRESS,
-		BAD_KEY,
-		PARSE_ERROR,
-		CORRUPT,
-		TYPE_MISMATCH,
-		IS_DIR,
-		IS_KEY,
-		OVERRIDDEN,
-		OAF_ERROR,
-		LOCAL_ENGINE,
-		LOCK_FAILED,
-		NO_WRITABLE_DATABASE,
-		IN_SHUTDOWN
-	}
-	[CCode (cprefix = "GCONF_VALUE_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
-	public enum ValueType {
-		INVALID,
-		STRING,
-		INT,
-		FLOAT,
-		BOOL,
-		SCHEMA,
-		LIST,
-		PAIR
-	}
-	[CCode (cprefix = "GCONF_UNSET_INCLUDING_SCHEMA_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
-	[Flags]
-	public enum UnsetFlags {
-		NAMES
+	[CCode (cheader_filename = "gconf/gconf-client.h")]
+	public class Client : GLib.Object {
+		public weak GLib.HashTable cache_hash;
+		public weak GLib.HashTable dir_hash;
+		public weak GConf.Engine engine;
+		public GConf.ClientErrorHandlingMode error_mode;
+		public weak GConf.Listeners listeners;
+		public uint notify_handler;
+		public weak GLib.SList notify_list;
+		public void* pad1;
+		public int pad2;
+		public int pending_notify_count;
+		public void add_dir (string dir, GConf.ClientPreloadType preload) throws GLib.Error;
+		public weak GLib.SList all_dirs (string dir) throws GLib.Error;
+		public weak GLib.SList all_entries (string dir) throws GLib.Error;
+		public weak GConf.ChangeSet change_set_from_current (...) throws GLib.Error;
+		public weak GConf.ChangeSet change_set_from_currentv (string keys) throws GLib.Error;
+		public void clear_cache ();
+		public bool commit_change_set (GConf.ChangeSet cs, bool remove_committed) throws GLib.Error;
+		public bool dir_exists (string dir) throws GLib.Error;
+		public weak GConf.Value get (string key) throws GLib.Error;
+		public bool get_bool (string key) throws GLib.Error;
+		public static weak GConf.Client get_default ();
+		public weak GConf.Value get_default_from_schema (string key) throws GLib.Error;
+		public weak GConf.Entry get_entry (string key, string locale, bool use_schema_default) throws GLib.Error;
+		public double get_float (string key) throws GLib.Error;
+		public static weak GConf.Client get_for_engine (GConf.Engine engine);
+		public int get_int (string key) throws GLib.Error;
+		public weak GLib.SList get_list (string key, GConf.ValueType list_type) throws GLib.Error;
+		public bool get_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, void* car_retloc, void* cdr_retloc) throws GLib.Error;
+		public weak GConf.Schema get_schema (string key) throws GLib.Error;
+		public weak string get_string (string key) throws GLib.Error;
+		public weak GConf.Value get_without_default (string key) throws GLib.Error;
+		public bool key_is_writable (string key) throws GLib.Error;
+		public void notify (string key);
+		public uint notify_add (string namespace_section, GConf.ClientNotifyFunc func, GLib.FreeFunc destroy_notify) throws GLib.Error;
+		public void notify_remove (uint cnxn);
+		public void preload (string dirname, GConf.ClientPreloadType type) throws GLib.Error;
+		public bool recursive_unset (string key, GConf.UnsetFlags flags) throws GLib.Error;
+		public void remove_dir (string dir) throws GLib.Error;
+		public weak GConf.ChangeSet reverse_change_set (GConf.ChangeSet cs) throws GLib.Error;
+		public void set (string key, GConf.Value val) throws GLib.Error;
+		public bool set_bool (string key, bool val) throws GLib.Error;
+		public void set_error_handling (GConf.ClientErrorHandlingMode mode);
+		public bool set_float (string key, double val) throws GLib.Error;
+		public static void set_global_default_error_handler (GConf.ClientErrorHandlerFunc func);
+		public bool set_int (string key, int val) throws GLib.Error;
+		public bool set_list (string key, GConf.ValueType list_type, GLib.SList list) throws GLib.Error;
+		public bool set_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, void* address_of_car, void* address_of_cdr) throws GLib.Error;
+		public bool set_schema (string key, GConf.Schema val) throws GLib.Error;
+		public bool set_string (string key, string val) throws GLib.Error;
+		public void suggest_sync () throws GLib.Error;
+		public bool unset (string key) throws GLib.Error;
+		[HasEmitter]
+		public virtual signal void error (void* error);
+		[HasEmitter]
+		public virtual signal void unreturned_error (void* error);
+		[HasEmitter]
+		public virtual signal void value_changed (string key, void* value);
 	}
 	[Compact]
 	[CCode (ref_function = "gconf_engine_ref", unref_function = "gconf_engine_unref", cheader_filename = "gconf/gconf.h")]
@@ -105,7 +140,9 @@ namespace GConf {
 		public weak string get_key ();
 		public weak string get_schema_name ();
 		public weak GConf.Value get_value ();
+		[CCode (has_construct_function = false)]
 		public Entry (string key, GConf.Value val);
+		[CCode (has_construct_function = false)]
 		public Entry.nocopy (string key, GConf.Value val);
 		public void set_is_default (bool is_default);
 		public void set_is_writable (bool is_writable);
@@ -127,6 +164,7 @@ namespace GConf {
 		public uint count ();
 		public void @foreach (GConf.ListenersForeach callback);
 		public bool get_data (uint cnxn_id, void* listener_data_p, string location_p);
+		[CCode (has_construct_function = false)]
 		public Listeners ();
 		public void notify (string all_above, GConf.ListenersCallback callback);
 		public void remove (uint cnxn_id);
@@ -135,13 +173,14 @@ namespace GConf {
 	[Compact]
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public class MetaInfo {
-		public weak string schema;
-		public weak string mod_user;
 		public GLib.Time mod_time;
-		public weak string get_mod_user ();
-		public weak string get_schema ();
+		public weak string mod_user;
+		public weak string schema;
 		[CCode (cname = "gconf_meta_info_mod_time")]
 		public GLib.Time get_mod_time ();
+		public weak string get_mod_user ();
+		public weak string get_schema ();
+		[CCode (has_construct_function = false)]
 		public MetaInfo ();
 		public void set_mod_time (GLib.Time mod_time);
 		public void set_mod_user (string mod_user);
@@ -159,6 +198,7 @@ namespace GConf {
 		public weak string get_long_desc ();
 		public weak string get_owner ();
 		public weak string get_short_desc ();
+		[CCode (has_construct_function = false)]
 		public Schema ();
 		public void set_car_type (GConf.ValueType type);
 		public void set_cdr_type (GConf.ValueType type);
@@ -177,6 +217,8 @@ namespace GConf {
 		public GConf.ValueType type;
 		public int compare (GConf.Value value_b);
 		public weak GConf.Value copy ();
+		[CCode (has_construct_function = false)]
+		public Value.from_string (GConf.ValueType type, string str) throws GLib.Error;
 		public bool get_bool ();
 		public weak GConf.Value get_car ();
 		public weak GConf.Value get_cdr ();
@@ -186,8 +228,8 @@ namespace GConf {
 		public GConf.ValueType get_list_type ();
 		public weak GConf.Schema get_schema ();
 		public weak string get_string ();
+		[CCode (has_construct_function = false)]
 		public Value (GConf.ValueType type);
-		public Value.from_string (GConf.ValueType type, string str) throws GLib.Error;
 		public void set_bool (bool the_bool);
 		public void set_car (GConf.Value car);
 		public void set_car_nocopy (GConf.Value car);
@@ -203,87 +245,53 @@ namespace GConf {
 		public void set_string (string the_str);
 		public weak string to_string ();
 	}
-	[Compact]
-	[CCode (ref_function = "gconf_change_set_ref", unref_function = "gconf_change_set_unref", cheader_filename = "gconf/gconf.h")]
-	public class ChangeSet : GLib.Boxed {
-		public bool check_value (string key, out weak GConf.Value value_retloc);
-		public void clear ();
-		public void @foreach (GConf.ChangeSetForeachFunc func);
-		public void* get_user_data ();
-		public ChangeSet ();
-		public void remove (string key);
-		public void set (string key, GConf.Value value);
-		public void set_bool (string key, bool val);
-		public void set_float (string key, double val);
-		public void set_int (string key, int val);
-		public void set_list (string key, GConf.ValueType list_type, GLib.SList list);
-		public void set_nocopy (string key, GConf.Value value);
-		public void set_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, void* address_of_car, void* address_of_cdr);
-		public void set_schema (string key, GConf.Schema val);
-		public void set_string (string key, string val);
-		public void set_user_data (void* data, GLib.DestroyNotify dnotify);
-		public uint size ();
-		public void unset (string key);
+	[CCode (cprefix = "GCONF_CLIENT_HANDLE_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
+	public enum ClientErrorHandlingMode {
+		NONE,
+		UNRETURNED,
+		ALL
 	}
-	[CCode (cheader_filename = "gconf/gconf-client.h")]
-	public class Client : GLib.Object {
-		public weak GConf.Engine engine;
-		public GConf.ClientErrorHandlingMode error_mode;
-		public weak GLib.HashTable dir_hash;
-		public weak GLib.HashTable cache_hash;
-		public weak GConf.Listeners listeners;
-		public weak GLib.SList notify_list;
-		public uint notify_handler;
-		public int pending_notify_count;
-		public void* pad1;
-		public int pad2;
-		public void add_dir (string dir, GConf.ClientPreloadType preload) throws GLib.Error;
-		public weak GLib.SList all_dirs (string dir) throws GLib.Error;
-		public weak GLib.SList all_entries (string dir) throws GLib.Error;
-		public weak GConf.ChangeSet change_set_from_current (...) throws GLib.Error;
-		public weak GConf.ChangeSet change_set_from_currentv (string keys) throws GLib.Error;
-		public void clear_cache ();
-		public bool commit_change_set (GConf.ChangeSet cs, bool remove_committed) throws GLib.Error;
-		public bool dir_exists (string dir) throws GLib.Error;
-		public weak GConf.Value get (string key) throws GLib.Error;
-		public bool get_bool (string key) throws GLib.Error;
-		public static weak GConf.Client get_default ();
-		public weak GConf.Value get_default_from_schema (string key) throws GLib.Error;
-		public weak GConf.Entry get_entry (string key, string locale, bool use_schema_default) throws GLib.Error;
-		public double get_float (string key) throws GLib.Error;
-		public static weak GConf.Client get_for_engine (GConf.Engine engine);
-		public int get_int (string key) throws GLib.Error;
-		public weak GLib.SList get_list (string key, GConf.ValueType list_type) throws GLib.Error;
-		public bool get_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, void* car_retloc, void* cdr_retloc) throws GLib.Error;
-		public weak GConf.Schema get_schema (string key) throws GLib.Error;
-		public weak string get_string (string key) throws GLib.Error;
-		public weak GConf.Value get_without_default (string key) throws GLib.Error;
-		public bool key_is_writable (string key) throws GLib.Error;
-		public void notify (string key);
-		public uint notify_add (string namespace_section, GConf.ClientNotifyFunc func, GLib.FreeFunc destroy_notify) throws GLib.Error;
-		public void notify_remove (uint cnxn);
-		public void preload (string dirname, GConf.ClientPreloadType type) throws GLib.Error;
-		public bool recursive_unset (string key, GConf.UnsetFlags flags) throws GLib.Error;
-		public void remove_dir (string dir) throws GLib.Error;
-		public weak GConf.ChangeSet reverse_change_set (GConf.ChangeSet cs) throws GLib.Error;
-		public void set (string key, GConf.Value val) throws GLib.Error;
-		public bool set_bool (string key, bool val) throws GLib.Error;
-		public void set_error_handling (GConf.ClientErrorHandlingMode mode);
-		public bool set_float (string key, double val) throws GLib.Error;
-		public static void set_global_default_error_handler (GConf.ClientErrorHandlerFunc func);
-		public bool set_int (string key, int val) throws GLib.Error;
-		public bool set_list (string key, GConf.ValueType list_type, GLib.SList list) throws GLib.Error;
-		public bool set_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, void* address_of_car, void* address_of_cdr) throws GLib.Error;
-		public bool set_schema (string key, GConf.Schema val) throws GLib.Error;
-		public bool set_string (string key, string val) throws GLib.Error;
-		public void suggest_sync () throws GLib.Error;
-		public bool unset (string key) throws GLib.Error;
-		[HasEmitter]
-		public virtual signal void error (void* error);
-		[HasEmitter]
-		public virtual signal void unreturned_error (void* error);
-		[HasEmitter]
-		public virtual signal void value_changed (string key, void* value);
+	[CCode (cprefix = "GCONF_CLIENT_PRELOAD_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
+	public enum ClientPreloadType {
+		NONE,
+		ONELEVEL,
+		RECURSIVE
+	}
+	[CCode (cprefix = "GCONF_ERROR_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
+	public enum Error {
+		SUCCESS,
+		FAILED,
+		NO_SERVER,
+		NO_PERMISSION,
+		BAD_ADDRESS,
+		BAD_KEY,
+		PARSE_ERROR,
+		CORRUPT,
+		TYPE_MISMATCH,
+		IS_DIR,
+		IS_KEY,
+		OVERRIDDEN,
+		OAF_ERROR,
+		LOCAL_ENGINE,
+		LOCK_FAILED,
+		NO_WRITABLE_DATABASE,
+		IN_SHUTDOWN
+	}
+	[CCode (cprefix = "GCONF_UNSET_INCLUDING_SCHEMA_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
+	[Flags]
+	public enum UnsetFlags {
+		NAMES
+	}
+	[CCode (cprefix = "GCONF_VALUE_", has_type_id = "0", cheader_filename = "gconf/gconf.h")]
+	public enum ValueType {
+		INVALID,
+		STRING,
+		INT,
+		FLOAT,
+		BOOL,
+		SCHEMA,
+		LIST,
+		PAIR
 	}
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public delegate void ChangeSetForeachFunc (GConf.ChangeSet cs, string key, GConf.Value value);

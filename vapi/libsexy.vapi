@@ -2,20 +2,12 @@
 
 [CCode (cprefix = "Sexy", lower_case_cprefix = "sexy_")]
 namespace Sexy {
-	[CCode (cprefix = "SEXY_ICON_ENTRY_", cheader_filename = "libsexy/sexy.h")]
-	public enum IconEntryPosition {
-		PRIMARY,
-		SECONDARY
-	}
-	[CCode (cprefix = "SEXY_SPELL_ERROR_", cheader_filename = "libsexy/sexy.h")]
-	public enum SpellError {
-		BACKEND
-	}
 	[CCode (cheader_filename = "libsexy/sexy.h")]
 	public class IconEntry : Gtk.Entry, Atk.Implementor, Gtk.Buildable, Gtk.Editable, Gtk.CellEditable {
 		public void add_clear_button ();
 		public weak Gtk.Image get_icon (Sexy.IconEntryPosition position);
 		public bool get_icon_highlight (Sexy.IconEntryPosition position);
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public IconEntry ();
 		public void set_icon (Sexy.IconEntryPosition position, Gtk.Image? icon);
 		public void set_icon_highlight (Sexy.IconEntryPosition position, bool highlight);
@@ -32,6 +24,7 @@ namespace Sexy {
 		public weak GLib.SList get_languages ();
 		public bool is_checked ();
 		public bool language_is_active (string lang);
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public SpellEntry ();
 		public bool set_active_languages (GLib.SList langs) throws GLib.Error;
 		public void set_checked (bool checked);
@@ -39,22 +32,35 @@ namespace Sexy {
 	}
 	[CCode (cheader_filename = "libsexy/sexy.h")]
 	public class Tooltip : Gtk.Window, Atk.Implementor, Gtk.Buildable {
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Tooltip ();
-		public Tooltip.with_label (string text);
 		public void position_to_rect (Gdk.Rectangle rect, Gdk.Screen screen);
 		public void position_to_widget (Gtk.Widget widget);
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public Tooltip.with_label (string text);
 	}
 	[CCode (cheader_filename = "libsexy/sexy.h")]
 	public class TreeView : Gtk.TreeView, Atk.Implementor, Gtk.Buildable {
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public TreeView ();
 		public void set_tooltip_label_column (uint column);
 		public virtual signal weak Gtk.Widget get_tooltip (Gtk.TreePath path, Gtk.TreeViewColumn column);
 	}
 	[CCode (cheader_filename = "libsexy/sexy.h")]
 	public class UrlLabel : Gtk.Label, Atk.Implementor, Gtk.Buildable {
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public UrlLabel ();
 		public void set_markup (string markup);
 		public virtual signal void url_activated (string url);
+	}
+	[CCode (cprefix = "SEXY_ICON_ENTRY_", cheader_filename = "libsexy/sexy.h")]
+	public enum IconEntryPosition {
+		PRIMARY,
+		SECONDARY
+	}
+	[CCode (cprefix = "SEXY_SPELL_ERROR_", cheader_filename = "libsexy/sexy.h")]
+	public enum SpellError {
+		BACKEND
 	}
 	[CCode (cheader_filename = "libsexy/sexy.h")]
 	public static GLib.Quark spell_error_quark ();

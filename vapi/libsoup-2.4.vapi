@@ -2,6 +2,400 @@
 
 [CCode (cprefix = "Soup", lower_case_cprefix = "soup_")]
 namespace Soup {
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class Address : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Address.any (Soup.AddressFamily family, uint port);
+		[CCode (has_construct_function = false)]
+		public Address.from_sockaddr (void* sa, int len);
+		public weak string get_name ();
+		public weak string get_physical ();
+		public uint get_port ();
+		public void* get_sockaddr (int len);
+		[CCode (has_construct_function = false)]
+		public Address (string name, uint port);
+		public void resolve_async (GLib.MainContext async_context, GLib.Cancellable cancellable, Soup.AddressCallback callback);
+		public uint resolve_sync (GLib.Cancellable cancellable);
+		[NoAccessorMethod]
+		public Soup.AddressFamily family { get; construct; }
+		[NoAccessorMethod]
+		public string name { get; construct; }
+		public string physical { get; }
+		[NoAccessorMethod]
+		public int port { get; construct; }
+		[NoAccessorMethod]
+		public void* sockaddr { get; construct; }
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class Auth : GLib.Object {
+		public virtual void authenticate (string username, string password);
+		public void free_protection_space (GLib.SList space);
+		public virtual weak string get_authorization (Soup.Message msg);
+		public weak string get_host ();
+		public weak string get_info ();
+		public virtual weak GLib.SList get_protection_space (Soup.URI source_uri);
+		public weak string get_realm ();
+		public weak string get_scheme_name ();
+		[CCode (has_construct_function = false)]
+		public Auth (GLib.Type type, Soup.Message msg, string auth_header);
+		public virtual bool update (Soup.Message msg, string auth_header);
+		[NoAccessorMethod]
+		public string host { get; construct; }
+		[NoAccessorMethod]
+		public bool is_authenticated { get; }
+		[NoAccessorMethod]
+		public bool is_for_proxy { get; construct; }
+		[NoAccessorMethod]
+		public string realm { get; construct; }
+		public string scheme_name { get; }
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class AuthDomain : GLib.Object {
+		public virtual weak string accepts (Soup.Message msg);
+		public void add_path (string path);
+		public virtual weak string challenge (Soup.Message msg);
+		public virtual bool check_password (Soup.Message msg, string username, string password);
+		public bool covers (Soup.Message msg);
+		public weak string get_realm ();
+		public void remove_path (string path);
+		public void set_filter (Soup.AuthDomainFilter filter, void* filter_data, GLib.DestroyNotify dnotify);
+		public void set_generic_auth_callback (Soup.AuthDomainGenericAuthCallback auth_callback, void* auth_data, GLib.DestroyNotify dnotify);
+		public bool try_generic_auth_callback (Soup.Message msg, string username);
+		[NoAccessorMethod]
+		public void* filter { get; set; }
+		[NoAccessorMethod]
+		public void* filter_data { get; set; }
+		[NoAccessorMethod]
+		public void* generic_auth_callback { get; set; }
+		[NoAccessorMethod]
+		public void* generic_auth_data { get; set; }
+		[NoAccessorMethod]
+		public bool proxy { get; construct; }
+		[NoAccessorMethod]
+		public string realm { get; construct; }
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class AuthDomainBasic : Soup.AuthDomain {
+		[CCode (type = "SoupAuthDomain*", has_construct_function = false)]
+		public AuthDomainBasic (string optname1);
+		public static void set_auth_callback (Soup.AuthDomain domain, Soup.AuthDomainBasicAuthCallback callback, GLib.DestroyNotify dnotify);
+		[NoAccessorMethod]
+		public void* auth_callback { get; set; }
+		[NoAccessorMethod]
+		public void* auth_data { get; set; }
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class AuthDomainDigest : Soup.AuthDomain {
+		public static weak string encode_password (string username, string realm, string password);
+		[CCode (type = "SoupAuthDomain*", has_construct_function = false)]
+		public AuthDomainDigest (string optname1);
+		public static void set_auth_callback (Soup.AuthDomain domain, Soup.AuthDomainDigestAuthCallback callback, GLib.DestroyNotify dnotify);
+		[NoAccessorMethod]
+		public void* auth_callback { get; set; }
+		[NoAccessorMethod]
+		public void* auth_data { get; set; }
+	}
+	[Compact]
+	[CCode (copy_function = "soup_buffer_copy", cheader_filename = "libsoup/soup.h")]
+	public class Buffer {
+		public weak string data;
+		public ulong length;
+		public weak Soup.Buffer copy ();
+		public void* get_owner ();
+		[CCode (has_construct_function = false)]
+		public Buffer (Soup.MemoryUse use, void* data, ulong length);
+		[CCode (has_construct_function = false)]
+		public Buffer.subbuffer (Soup.Buffer parent, ulong offset, ulong length);
+		[CCode (has_construct_function = false)]
+		public Buffer.with_owner (void* data, ulong length, void* owner, GLib.DestroyNotify owner_dnotify);
+	}
+	[Compact]
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class ByteArray {
+	}
+	[Compact]
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class ClientContext {
+		public weak Soup.Address get_address ();
+		public weak Soup.AuthDomain get_auth_domain ();
+		public weak string get_auth_user ();
+		public weak string get_host ();
+		public weak Soup.Socket get_socket ();
+	}
+	[Compact]
+	[CCode (copy_function = "soup_date_copy", cheader_filename = "libsoup/soup.h")]
+	public class Date {
+		public int day;
+		public int hour;
+		public int minute;
+		public int month;
+		public int offset;
+		public int second;
+		public bool utc;
+		public int year;
+		public weak Soup.Date copy ();
+		[CCode (has_construct_function = false)]
+		public Date.from_now (int offset_seconds);
+		[CCode (has_construct_function = false)]
+		public Date.from_string (string date_string);
+		[CCode (has_construct_function = false)]
+		public Date.from_time_t (ulong when);
+		[CCode (has_construct_function = false)]
+		public Date (int year, int month, int day, int hour, int minute, int second);
+		public weak string to_string (Soup.DateFormat format);
+		public ulong to_time_t ();
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class Logger : GLib.Object {
+		public void attach (Soup.Session session);
+		public void detach (Soup.Session session);
+		[CCode (has_construct_function = false)]
+		public Logger (Soup.LoggerLogLevel level, int max_body_size);
+		public void set_printer (Soup.LoggerPrinter printer, void* printer_data, GLib.DestroyNotify destroy);
+		public void set_request_filter (Soup.LoggerFilter request_filter, void* filter_data, GLib.DestroyNotify destroy);
+		public void set_response_filter (Soup.LoggerFilter response_filter, void* filter_data, GLib.DestroyNotify destroy);
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class Message : GLib.Object {
+		public weak Soup.MessageBody request_body;
+		public weak Soup.MessageHeaders request_headers;
+		public weak Soup.MessageBody response_body;
+		public weak Soup.MessageHeaders response_headers;
+		public uint add_header_handler (string @signal, string header, GLib.Callback callback);
+		public uint add_status_code_handler (string @signal, uint status_code, GLib.Callback callback);
+		[CCode (has_construct_function = false)]
+		public Message.from_uri (string method, Soup.URI uri);
+		public Soup.MessageFlags get_flags ();
+		public Soup.HTTPVersion get_http_version ();
+		public weak Soup.URI get_uri ();
+		public bool is_keepalive ();
+		[CCode (has_construct_function = false)]
+		public Message (string method, string uri_string);
+		public void set_chunk_allocator (Soup.ChunkAllocator allocator, GLib.DestroyNotify destroy_notify);
+		public void set_flags (Soup.MessageFlags flags);
+		public void set_http_version (Soup.HTTPVersion version);
+		public void set_request (string content_type, Soup.MemoryUse req_use, string req_body, ulong req_length);
+		public void set_response (string content_type, Soup.MemoryUse resp_use, string resp_body, ulong resp_length);
+		public void set_status (uint status_code);
+		public void set_status_full (uint status_code, string reason_phrase);
+		public void set_uri (Soup.URI uri);
+		public Soup.MessageFlags flags { get; set; }
+		public Soup.HTTPVersion http_version { get; set; }
+		[NoAccessorMethod]
+		public string method { get; set; }
+		[NoAccessorMethod]
+		public string reason_phrase { get; set; }
+		[NoAccessorMethod]
+		public uint status_code { get; set; }
+		public Soup.URI uri { get; set; }
+		[HasEmitter]
+		public virtual signal void finished ();
+		[HasEmitter]
+		public virtual signal void got_body ();
+		[HasEmitter]
+		public virtual signal void got_chunk (Soup.Buffer chunk);
+		[HasEmitter]
+		public virtual signal void got_headers ();
+		[HasEmitter]
+		public virtual signal void got_informational ();
+		[HasEmitter]
+		public virtual signal void restarted ();
+		[HasEmitter]
+		public virtual signal void wrote_body ();
+		[HasEmitter]
+		public virtual signal void wrote_chunk ();
+		[HasEmitter]
+		public virtual signal void wrote_headers ();
+		[HasEmitter]
+		public virtual signal void wrote_informational ();
+	}
+	[Compact]
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class MessageBody {
+		public weak string data;
+		public int64 length;
+		public void append (Soup.MemoryUse use, void* data, ulong length);
+		public void append_buffer (Soup.Buffer buffer);
+		public void complete ();
+		public weak Soup.Buffer flatten ();
+		public weak Soup.Buffer get_chunk (int64 offset);
+		[CCode (has_construct_function = false)]
+		public MessageBody ();
+		public void truncate ();
+	}
+	[Compact]
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class MessageHeaders {
+		public void append (string name, string value);
+		public void clear ();
+		public void @foreach (Soup.MessageHeadersForeachFunc func);
+		public weak string get (string name);
+		public int64 get_content_length ();
+		public Soup.Encoding get_encoding ();
+		public Soup.Expectation get_expectations ();
+		[CCode (has_construct_function = false)]
+		public MessageHeaders (Soup.MessageHeadersType type);
+		public void remove (string name);
+		public void replace (string name, string value);
+		public void set_content_length (int64 content_length);
+		public void set_encoding (Soup.Encoding encoding);
+		public void set_expectations (Soup.Expectation expectations);
+	}
+	[Compact]
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class MessageHeadersIter {
+		public void* dummy;
+		public void init (Soup.MessageHeaders hdrs);
+		public bool next (out weak string name, out weak string value);
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class Server : GLib.Object {
+		public void add_auth_domain (Soup.AuthDomain auth_domain);
+		public void add_handler (string path, Soup.ServerCallback callback, GLib.DestroyNotify destroy);
+		public weak GLib.MainContext get_async_context ();
+		public weak Soup.Socket get_listener ();
+		public uint get_port ();
+		public bool is_https ();
+		[CCode (has_construct_function = false)]
+		public Server (string optname1, ...);
+		public void pause_message (Soup.Message msg);
+		public void quit ();
+		public void remove_auth_domain (Soup.AuthDomain auth_domain);
+		public void remove_handler (string path);
+		public void run ();
+		public void run_async ();
+		public void unpause_message (Soup.Message msg);
+		[NoAccessorMethod]
+		public void* async_context { get; construct; }
+		[NoAccessorMethod]
+		public Soup.Address @interface { get; construct; }
+		[NoAccessorMethod]
+		public uint port { get; construct; }
+		[NoAccessorMethod]
+		public bool raw_paths { get; construct; }
+		[NoAccessorMethod]
+		public string server_header { get; set construct; }
+		[NoAccessorMethod]
+		public string ssl_cert_file { get; construct; }
+		[NoAccessorMethod]
+		public string ssl_key_file { get; construct; }
+		public virtual signal void request_aborted (Soup.Message msg, Soup.ClientContext client);
+		public virtual signal void request_finished (Soup.Message msg, Soup.ClientContext client);
+		public virtual signal void request_read (Soup.Message msg, Soup.ClientContext client);
+		public virtual signal void request_started (Soup.Message msg, Soup.ClientContext client);
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class Session : GLib.Object {
+		public void abort ();
+		public virtual void cancel_message (Soup.Message msg, uint status_code);
+		public weak GLib.MainContext get_async_context ();
+		public void pause_message (Soup.Message msg);
+		public virtual void queue_message (Soup.Message# msg, Soup.SessionCallback callback);
+		public virtual void requeue_message (Soup.Message msg);
+		public virtual uint send_message (Soup.Message msg);
+		public void unpause_message (Soup.Message msg);
+		[NoAccessorMethod]
+		public void* async_context { get; construct; }
+		[NoAccessorMethod]
+		public int max_conns { get; set; }
+		[NoAccessorMethod]
+		public int max_conns_per_host { get; set; }
+		[NoAccessorMethod]
+		public Soup.URI proxy_uri { get; set; }
+		[NoAccessorMethod]
+		public string ssl_ca_file { get; set; }
+		[NoAccessorMethod]
+		public uint timeout { get; set; }
+		[NoAccessorMethod]
+		public bool use_ntlm { get; set; }
+		[NoAccessorMethod]
+		public string user_agent { get; set; }
+		public virtual signal void authenticate (Soup.Message msg, Soup.Auth auth, bool retrying);
+		public virtual signal void request_started (Soup.Message msg, Soup.Socket socket);
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class SessionAsync : Soup.Session {
+		[CCode (type = "SoupSession*", has_construct_function = false)]
+		public SessionAsync ();
+		[CCode (type = "SoupSession*", has_construct_function = false)]
+		public SessionAsync.with_options (string optname1);
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class SessionSync : Soup.Session {
+		[CCode (type = "SoupSession*", has_construct_function = false)]
+		public SessionSync ();
+		[CCode (type = "SoupSession*", has_construct_function = false)]
+		public SessionSync.with_options (string optname1);
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class Socket : GLib.Object {
+		public void connect_async (GLib.Cancellable cancellable, Soup.SocketCallback callback);
+		public uint connect_sync (GLib.Cancellable cancellable);
+		public void disconnect ();
+		public weak Soup.Address get_local_address ();
+		public weak Soup.Address get_remote_address ();
+		public bool is_connected ();
+		public bool is_ssl ();
+		public bool listen ();
+		[CCode (has_construct_function = false)]
+		public Socket (string optname1);
+		public Soup.SocketIOStatus read (void* buffer, ulong len, ulong nread, GLib.Cancellable cancellable) throws GLib.Error;
+		public Soup.SocketIOStatus read_until (void* buffer, ulong len, void* boundary, ulong boundary_len, ulong nread, bool got_boundary, GLib.Cancellable cancellable) throws GLib.Error;
+		public bool start_proxy_ssl (string ssl_host, GLib.Cancellable cancellable);
+		public bool start_ssl (GLib.Cancellable cancellable);
+		public Soup.SocketIOStatus write (void* buffer, ulong len, ulong nwrote, GLib.Cancellable cancellable) throws GLib.Error;
+		[NoAccessorMethod]
+		public void* async_context { get; construct; }
+		[NoAccessorMethod]
+		public bool is_server { get; }
+		[NoAccessorMethod]
+		public Soup.Address local_address { get; construct; }
+		[NoAccessorMethod]
+		public bool non_blocking { get; set; }
+		[NoAccessorMethod]
+		public Soup.Address remote_address { get; construct; }
+		[NoAccessorMethod]
+		public void* ssl_creds { get; set; }
+		[NoAccessorMethod]
+		public uint timeout { get; set; }
+		public virtual signal void disconnected ();
+		public virtual signal void new_connection (Soup.Socket p0);
+		public virtual signal void readable ();
+		public virtual signal void writable ();
+	}
+	[Compact]
+	[CCode (copy_function = "soup_uri_copy", cheader_filename = "libsoup/soup.h")]
+	public class URI {
+		public weak string fragment;
+		public weak string host;
+		public weak string password;
+		public weak string path;
+		public uint port;
+		public weak string query;
+		public weak string scheme;
+		public weak string user;
+		public Soup.URI copy ();
+		public static string decode (string part);
+		public static string encode (string part, string escape_extra);
+		public bool equal (Soup.URI uri2);
+		[CCode (has_construct_function = false)]
+		public URI (string uri_string);
+		public static string normalize (string part, string unescape_extra);
+		public void set_fragment (string fragment);
+		public void set_host (string host);
+		public void set_password (string password);
+		public void set_path (string path);
+		public void set_port (uint port);
+		public void set_query (string query);
+		public void set_query_from_fields (...);
+		public void set_query_from_form (GLib.HashTable form);
+		public void set_scheme (string scheme);
+		public void set_user (string user);
+		public string to_string (bool just_path_and_query);
+		public bool uses_default_port ();
+		[CCode (has_construct_function = false)]
+		public URI.with_base (Soup.URI @base, string uri_string);
+	}
 	[CCode (cprefix = "SOUP_ADDRESS_FAMILY_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
 	public enum AddressFamily {
 		INVALID,
@@ -26,6 +420,12 @@ namespace Soup {
 		EOF,
 		CHUNKED,
 		BYTERANGES
+	}
+	[CCode (cprefix = "SOUP_EXPECTATION_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[Flags]
+	public enum Expectation {
+		UNRECOGNIZED,
+		CONTINUE
 	}
 	[CCode (cprefix = "SOUP_HTTP_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
 	public enum HTTPVersion {
@@ -110,6 +510,12 @@ namespace Soup {
 		COPY,
 		TEMPORARY
 	}
+	[CCode (cprefix = "SOUP_MESSAGE_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[Flags]
+	public enum MessageFlags {
+		NO_REDIRECT,
+		OVERWRITE_CHUNKS
+	}
 	[CCode (cprefix = "SOUP_MESSAGE_HEADERS_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
 	public enum MessageHeadersType {
 		REQUEST,
@@ -146,392 +552,6 @@ namespace Soup {
 		SYSTEM_ERROR,
 		TRANSPORT_ERROR
 	}
-	[CCode (cprefix = "SOUP_EXPECTATION_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
-	[Flags]
-	public enum Expectation {
-		UNRECOGNIZED,
-		CONTINUE
-	}
-	[CCode (cprefix = "SOUP_MESSAGE_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
-	[Flags]
-	public enum MessageFlags {
-		NO_REDIRECT,
-		OVERWRITE_CHUNKS
-	}
-	[Compact]
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class MessageHeadersIter {
-		public void* dummy;
-		public void init (Soup.MessageHeaders hdrs);
-		public bool next (out weak string name, out weak string value);
-	}
-	[Compact]
-	[CCode (copy_function = "soup_buffer_copy", cheader_filename = "libsoup/soup.h")]
-	public class Buffer {
-		public weak string data;
-		public ulong length;
-		public weak Soup.Buffer copy ();
-		public void* get_owner ();
-		public Buffer (Soup.MemoryUse use, void* data, ulong length);
-		public Buffer.subbuffer (Soup.Buffer parent, ulong offset, ulong length);
-		public Buffer.with_owner (void* data, ulong length, void* owner, GLib.DestroyNotify owner_dnotify);
-	}
-	[Compact]
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class ByteArray {
-	}
-	[Compact]
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class ClientContext {
-		public weak Soup.Address get_address ();
-		public weak Soup.AuthDomain get_auth_domain ();
-		public weak string get_auth_user ();
-		public weak string get_host ();
-		public weak Soup.Socket get_socket ();
-	}
-	[Compact]
-	[CCode (copy_function = "soup_date_copy", cheader_filename = "libsoup/soup.h")]
-	public class Date {
-		public int year;
-		public int month;
-		public int day;
-		public int hour;
-		public int minute;
-		public int second;
-		public bool utc;
-		public int offset;
-		public weak Soup.Date copy ();
-		public Date (int year, int month, int day, int hour, int minute, int second);
-		public Date.from_now (int offset_seconds);
-		public Date.from_string (string date_string);
-		public Date.from_time_t (ulong when);
-		public weak string to_string (Soup.DateFormat format);
-		public ulong to_time_t ();
-	}
-	[Compact]
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class MessageBody {
-		public weak string data;
-		public int64 length;
-		public void append (Soup.MemoryUse use, void* data, ulong length);
-		public void append_buffer (Soup.Buffer buffer);
-		public void complete ();
-		public weak Soup.Buffer flatten ();
-		public weak Soup.Buffer get_chunk (int64 offset);
-		public MessageBody ();
-		public void truncate ();
-	}
-	[Compact]
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class MessageHeaders {
-		public void append (string name, string value);
-		public void clear ();
-		public void @foreach (Soup.MessageHeadersForeachFunc func);
-		public weak string get (string name);
-		public int64 get_content_length ();
-		public Soup.Encoding get_encoding ();
-		public Soup.Expectation get_expectations ();
-		public MessageHeaders (Soup.MessageHeadersType type);
-		public void remove (string name);
-		public void replace (string name, string value);
-		public void set_content_length (int64 content_length);
-		public void set_encoding (Soup.Encoding encoding);
-		public void set_expectations (Soup.Expectation expectations);
-	}
-	[Compact]
-	[CCode (copy_function = "soup_uri_copy", cheader_filename = "libsoup/soup.h")]
-	public class URI {
-		public weak string scheme;
-		public weak string user;
-		public weak string password;
-		public weak string host;
-		public uint port;
-		public weak string path;
-		public weak string query;
-		public weak string fragment;
-		public Soup.URI copy ();
-		public static string decode (string part);
-		public static string encode (string part, string escape_extra);
-		public bool equal (Soup.URI uri2);
-		public URI (string uri_string);
-		public URI.with_base (Soup.URI @base, string uri_string);
-		public static string normalize (string part, string unescape_extra);
-		public void set_fragment (string fragment);
-		public void set_host (string host);
-		public void set_password (string password);
-		public void set_path (string path);
-		public void set_port (uint port);
-		public void set_query (string query);
-		public void set_query_from_fields (...);
-		public void set_query_from_form (GLib.HashTable form);
-		public void set_scheme (string scheme);
-		public void set_user (string user);
-		public string to_string (bool just_path_and_query);
-		public bool uses_default_port ();
-	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class Address : GLib.Object {
-		public weak string get_name ();
-		public weak string get_physical ();
-		public uint get_port ();
-		public void* get_sockaddr (int len);
-		public Address (string name, uint port);
-		public Address.any (Soup.AddressFamily family, uint port);
-		public Address.from_sockaddr (void* sa, int len);
-		public void resolve_async (GLib.MainContext async_context, GLib.Cancellable cancellable, Soup.AddressCallback callback);
-		public uint resolve_sync (GLib.Cancellable cancellable);
-		[NoAccessorMethod]
-		public Soup.AddressFamily family { get; construct; }
-		[NoAccessorMethod]
-		public string name { get; construct; }
-		public string physical { get; }
-		[NoAccessorMethod]
-		public int port { get; construct; }
-		[NoAccessorMethod]
-		public void* sockaddr { get; construct; }
-	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class Auth : GLib.Object {
-		public void free_protection_space (GLib.SList space);
-		public weak string get_host ();
-		public weak string get_info ();
-		public weak string get_realm ();
-		public weak string get_scheme_name ();
-		public Auth (GLib.Type type, Soup.Message msg, string auth_header);
-		public virtual void authenticate (string username, string password);
-		public virtual weak string get_authorization (Soup.Message msg);
-		public virtual weak GLib.SList get_protection_space (Soup.URI source_uri);
-		public virtual bool update (Soup.Message msg, string auth_header);
-		[NoAccessorMethod]
-		public string host { get; construct; }
-		[NoAccessorMethod]
-		public bool is_authenticated { get; }
-		[NoAccessorMethod]
-		public bool is_for_proxy { get; construct; }
-		[NoAccessorMethod]
-		public string realm { get; construct; }
-		public string scheme_name { get; }
-	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class AuthDomain : GLib.Object {
-		public void add_path (string path);
-		public bool covers (Soup.Message msg);
-		public weak string get_realm ();
-		public void remove_path (string path);
-		public void set_filter (Soup.AuthDomainFilter filter, void* filter_data, GLib.DestroyNotify dnotify);
-		public void set_generic_auth_callback (Soup.AuthDomainGenericAuthCallback auth_callback, void* auth_data, GLib.DestroyNotify dnotify);
-		public bool try_generic_auth_callback (Soup.Message msg, string username);
-		public virtual weak string accepts (Soup.Message msg);
-		public virtual weak string challenge (Soup.Message msg);
-		public virtual bool check_password (Soup.Message msg, string username, string password);
-		[NoAccessorMethod]
-		public void* filter { get; set; }
-		[NoAccessorMethod]
-		public void* filter_data { get; set; }
-		[NoAccessorMethod]
-		public void* generic_auth_callback { get; set; }
-		[NoAccessorMethod]
-		public void* generic_auth_data { get; set; }
-		[NoAccessorMethod]
-		public bool proxy { get; construct; }
-		[NoAccessorMethod]
-		public string realm { get; construct; }
-	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class AuthDomainBasic : Soup.AuthDomain {
-		[CCode (type = "SoupAuthDomain*")]
-		public AuthDomainBasic (string optname1);
-		public static void set_auth_callback (Soup.AuthDomain domain, Soup.AuthDomainBasicAuthCallback callback, GLib.DestroyNotify dnotify);
-		[NoAccessorMethod]
-		public void* auth_callback { get; set; }
-		[NoAccessorMethod]
-		public void* auth_data { get; set; }
-	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class AuthDomainDigest : Soup.AuthDomain {
-		public static weak string encode_password (string username, string realm, string password);
-		[CCode (type = "SoupAuthDomain*")]
-		public AuthDomainDigest (string optname1);
-		public static void set_auth_callback (Soup.AuthDomain domain, Soup.AuthDomainDigestAuthCallback callback, GLib.DestroyNotify dnotify);
-		[NoAccessorMethod]
-		public void* auth_callback { get; set; }
-		[NoAccessorMethod]
-		public void* auth_data { get; set; }
-	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class Logger : GLib.Object {
-		public void attach (Soup.Session session);
-		public void detach (Soup.Session session);
-		public Logger (Soup.LoggerLogLevel level, int max_body_size);
-		public void set_printer (Soup.LoggerPrinter printer, void* printer_data, GLib.DestroyNotify destroy);
-		public void set_request_filter (Soup.LoggerFilter request_filter, void* filter_data, GLib.DestroyNotify destroy);
-		public void set_response_filter (Soup.LoggerFilter response_filter, void* filter_data, GLib.DestroyNotify destroy);
-	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class Message : GLib.Object {
-		public weak Soup.MessageBody request_body;
-		public weak Soup.MessageHeaders request_headers;
-		public weak Soup.MessageBody response_body;
-		public weak Soup.MessageHeaders response_headers;
-		public uint add_header_handler (string @signal, string header, GLib.Callback callback);
-		public uint add_status_code_handler (string @signal, uint status_code, GLib.Callback callback);
-		public Soup.MessageFlags get_flags ();
-		public Soup.HTTPVersion get_http_version ();
-		public weak Soup.URI get_uri ();
-		public bool is_keepalive ();
-		public Message (string method, string uri_string);
-		public Message.from_uri (string method, Soup.URI uri);
-		public void set_chunk_allocator (Soup.ChunkAllocator allocator, GLib.DestroyNotify destroy_notify);
-		public void set_flags (Soup.MessageFlags flags);
-		public void set_http_version (Soup.HTTPVersion version);
-		public void set_request (string content_type, Soup.MemoryUse req_use, string req_body, ulong req_length);
-		public void set_response (string content_type, Soup.MemoryUse resp_use, string resp_body, ulong resp_length);
-		public void set_status (uint status_code);
-		public void set_status_full (uint status_code, string reason_phrase);
-		public void set_uri (Soup.URI uri);
-		public Soup.MessageFlags flags { get; set; }
-		public Soup.HTTPVersion http_version { get; set; }
-		[NoAccessorMethod]
-		public string method { get; set; }
-		[NoAccessorMethod]
-		public string reason_phrase { get; set; }
-		[NoAccessorMethod]
-		public uint status_code { get; set; }
-		public Soup.URI uri { get; set; }
-		[HasEmitter]
-		public virtual signal void finished ();
-		[HasEmitter]
-		public virtual signal void got_body ();
-		[HasEmitter]
-		public virtual signal void got_chunk (Soup.Buffer chunk);
-		[HasEmitter]
-		public virtual signal void got_headers ();
-		[HasEmitter]
-		public virtual signal void got_informational ();
-		[HasEmitter]
-		public virtual signal void restarted ();
-		[HasEmitter]
-		public virtual signal void wrote_body ();
-		[HasEmitter]
-		public virtual signal void wrote_chunk ();
-		[HasEmitter]
-		public virtual signal void wrote_headers ();
-		[HasEmitter]
-		public virtual signal void wrote_informational ();
-	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class Server : GLib.Object {
-		public void add_auth_domain (Soup.AuthDomain auth_domain);
-		public void add_handler (string path, Soup.ServerCallback callback, GLib.DestroyNotify destroy);
-		public weak GLib.MainContext get_async_context ();
-		public weak Soup.Socket get_listener ();
-		public uint get_port ();
-		public bool is_https ();
-		public Server (string optname1, ...);
-		public void pause_message (Soup.Message msg);
-		public void quit ();
-		public void remove_auth_domain (Soup.AuthDomain auth_domain);
-		public void remove_handler (string path);
-		public void run ();
-		public void run_async ();
-		public void unpause_message (Soup.Message msg);
-		[NoAccessorMethod]
-		public void* async_context { get; construct; }
-		[NoAccessorMethod]
-		public Soup.Address @interface { get; construct; }
-		[NoAccessorMethod]
-		public uint port { get; construct; }
-		[NoAccessorMethod]
-		public bool raw_paths { get; construct; }
-		[NoAccessorMethod]
-		public string server_header { get; set construct; }
-		[NoAccessorMethod]
-		public string ssl_cert_file { get; construct; }
-		[NoAccessorMethod]
-		public string ssl_key_file { get; construct; }
-		public virtual signal void request_aborted (Soup.Message msg, Soup.ClientContext client);
-		public virtual signal void request_finished (Soup.Message msg, Soup.ClientContext client);
-		public virtual signal void request_read (Soup.Message msg, Soup.ClientContext client);
-		public virtual signal void request_started (Soup.Message msg, Soup.ClientContext client);
-	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class Session : GLib.Object {
-		public void abort ();
-		public weak GLib.MainContext get_async_context ();
-		public void pause_message (Soup.Message msg);
-		public void unpause_message (Soup.Message msg);
-		public virtual void cancel_message (Soup.Message msg, uint status_code);
-		public virtual void queue_message (Soup.Message# msg, Soup.SessionCallback callback);
-		public virtual void requeue_message (Soup.Message msg);
-		public virtual uint send_message (Soup.Message msg);
-		[NoAccessorMethod]
-		public void* async_context { get; construct; }
-		[NoAccessorMethod]
-		public int max_conns { get; set; }
-		[NoAccessorMethod]
-		public int max_conns_per_host { get; set; }
-		[NoAccessorMethod]
-		public Soup.URI proxy_uri { get; set; }
-		[NoAccessorMethod]
-		public string ssl_ca_file { get; set; }
-		[NoAccessorMethod]
-		public uint timeout { get; set; }
-		[NoAccessorMethod]
-		public bool use_ntlm { get; set; }
-		[NoAccessorMethod]
-		public string user_agent { get; set; }
-		public virtual signal void authenticate (Soup.Message msg, Soup.Auth auth, bool retrying);
-		public virtual signal void request_started (Soup.Message msg, Soup.Socket socket);
-	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class SessionAsync : Soup.Session {
-		[CCode (type = "SoupSession*")]
-		public SessionAsync ();
-		[CCode (type = "SoupSession*")]
-		public SessionAsync.with_options (string optname1);
-	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class SessionSync : Soup.Session {
-		[CCode (type = "SoupSession*")]
-		public SessionSync ();
-		[CCode (type = "SoupSession*")]
-		public SessionSync.with_options (string optname1);
-	}
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class Socket : GLib.Object {
-		public void connect_async (GLib.Cancellable cancellable, Soup.SocketCallback callback);
-		public uint connect_sync (GLib.Cancellable cancellable);
-		public void disconnect ();
-		public weak Soup.Address get_local_address ();
-		public weak Soup.Address get_remote_address ();
-		public bool is_connected ();
-		public bool is_ssl ();
-		public bool listen ();
-		public Socket (string optname1);
-		public Soup.SocketIOStatus read (void* buffer, ulong len, ulong nread, GLib.Cancellable cancellable) throws GLib.Error;
-		public Soup.SocketIOStatus read_until (void* buffer, ulong len, void* boundary, ulong boundary_len, ulong nread, bool got_boundary, GLib.Cancellable cancellable) throws GLib.Error;
-		public bool start_proxy_ssl (string ssl_host, GLib.Cancellable cancellable);
-		public bool start_ssl (GLib.Cancellable cancellable);
-		public Soup.SocketIOStatus write (void* buffer, ulong len, ulong nwrote, GLib.Cancellable cancellable) throws GLib.Error;
-		[NoAccessorMethod]
-		public void* async_context { get; construct; }
-		[NoAccessorMethod]
-		public bool is_server { get; }
-		[NoAccessorMethod]
-		public Soup.Address local_address { get; construct; }
-		[NoAccessorMethod]
-		public bool non_blocking { get; set; }
-		[NoAccessorMethod]
-		public Soup.Address remote_address { get; construct; }
-		[NoAccessorMethod]
-		public void* ssl_creds { get; set; }
-		[NoAccessorMethod]
-		public uint timeout { get; set; }
-		public virtual signal void disconnected ();
-		public virtual signal void new_connection (Soup.Socket p0);
-		public virtual signal void readable ();
-		public virtual signal void writable ();
-	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void AddressCallback (Soup.Address addr, uint status);
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -557,8 +577,6 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void SocketCallback (Soup.Socket sock, uint status);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public const int AF_INET6;
-	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int ADDRESS_ANY_PORT;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string ADDRESS_FAMILY;
@@ -570,6 +588,8 @@ namespace Soup {
 	public const string ADDRESS_PORT;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string ADDRESS_SOCKADDR;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int AF_INET6;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string AUTH_DOMAIN_ADD_PATH;
 	[CCode (cheader_filename = "libsoup/soup.h")]

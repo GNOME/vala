@@ -2,6 +2,13 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
+	[Compact]
+	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
+	public class InstallPluginsContext {
+		[CCode (has_construct_function = false)]
+		public InstallPluginsContext ();
+		public void set_xid (uint xid);
+	}
 	[CCode (cprefix = "GST_INSTALL_PLUGINS_", has_type_id = "0", cheader_filename = "gst/pbutils/pbutils.h")]
 	public enum InstallPluginsReturn {
 		SUCCESS,
@@ -15,13 +22,6 @@ namespace Gst {
 		INTERNAL_FAILURE,
 		HELPER_MISSING,
 		INSTALL_IN_PROGRESS
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
-	public class InstallPluginsContext {
-		[CCode (has_construct_function = false)]
-		public InstallPluginsContext ();
-		public void set_xid (uint xid);
 	}
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public delegate void InstallPluginsResultFunc (Gst.InstallPluginsReturn result);

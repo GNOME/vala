@@ -2,12 +2,169 @@
 
 [CCode (cprefix = "G", lower_case_cprefix = "gnet_")]
 namespace GNet {
-	[CCode (cprefix = "GNET_IO_ERROR_", cheader_filename = "gnet.h")]
-	public enum IOError {
-		NONE,
-		AGAIN,
-		INVAL,
-		UNKNOWN
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class Conn {
+		public weak string buffer;
+		public uint bytes_read;
+		public uint bytes_written;
+		public weak GNet.TcpSocketConnectAsyncID connect_id;
+		public weak GLib.MainContext context;
+		public weak GNet.ConnFunc func;
+		public weak string hostname;
+		public weak GNet.InetAddr inetaddr;
+		public weak GLib.IOChannel iochannel;
+		public uint length;
+		public weak GNet.TcpSocketNewAsyncID new_id;
+		public int port;
+		public int priority;
+		public uint process_buffer_timeout;
+		public bool read_eof;
+		public weak GLib.List read_queue;
+		public uint ref_count;
+		public uint ref_count_internal;
+		public weak GNet.TcpSocket socket;
+		public uint timer;
+		public void* user_data;
+		public uint watch;
+		public uint watch_flags;
+		public bool watch_readable;
+		public bool watch_writable;
+		public weak GLib.List write_queue;
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class ConnEvent {
+		public weak string buffer;
+		public int length;
+		public GNet.ConnEventType type;
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class ConnHttp {
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class ConnHttpEvent {
+		public void* padding;
+		public ulong stsize;
+		public GNet.ConnHttpEventType type;
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class ConnHttpEventData {
+		public weak string buffer;
+		public ulong buffer_length;
+		public uint64 content_length;
+		public uint64 data_received;
+		public void* padding;
+		public weak GNet.ConnHttpEvent parent;
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class ConnHttpEventError {
+		public GNet.ConnHttpError code;
+		public weak string message;
+		public void* padding;
+		public weak GNet.ConnHttpEvent parent;
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class ConnHttpEventRedirect {
+		public bool auto_redirect;
+		public uint max_redirects;
+		public weak string new_location;
+		public uint num_redirects;
+		public void* padding;
+		public weak GNet.ConnHttpEvent parent;
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class ConnHttpEventResolved {
+		public weak GNet.InetAddr ia;
+		public void* padding;
+		public weak GNet.ConnHttpEvent parent;
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class ConnHttpEventResponse {
+		public weak string header_fields;
+		public weak string header_values;
+		public void* padding;
+		public weak GNet.ConnHttpEvent parent;
+		public uint response_code;
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class InetAddr {
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class InetAddrGetNameAsyncID {
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class InetAddrNewAsyncID {
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class InetAddrNewListAsyncID {
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class MD5 {
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class McastSocket {
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class SHA {
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class Server {
+		public weak GNet.ServerFunc func;
+		public weak GNet.InetAddr iface;
+		public int port;
+		public uint ref_count;
+		public weak GNet.TcpSocket socket;
+		public void* user_data;
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class TcpSocket {
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class TcpSocketConnectAsyncID {
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class TcpSocketNewAsyncID {
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class URI {
+		public weak string fragment;
+		public weak string hostname;
+		public weak string path;
+		public int port;
+		public weak string query;
+		public weak string scheme;
+		public weak string userinfo;
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class UdpSocket {
+	}
+	[Compact]
+	[CCode (cheader_filename = "gnet.h")]
+	public class UnixSocket {
+	}
+	[CCode (cheader_filename = "gnet.h")]
+	public struct NetTOS {
 	}
 	[CCode (cprefix = "GNET_CONN_", has_type_id = "0", cheader_filename = "gnet.h")]
 	public enum ConnEventType {
@@ -46,6 +203,13 @@ namespace GNet {
 		GET,
 		POST
 	}
+	[CCode (cprefix = "GNET_IO_ERROR_", cheader_filename = "gnet.h")]
+	public enum IOError {
+		NONE,
+		AGAIN,
+		INVAL,
+		UNKNOWN
+	}
 	[CCode (cprefix = "GIPV6_POLICY_", has_type_id = "0", cheader_filename = "gnet.h")]
 	public enum IPv6Policy {
 		IPV4_THEN_IPV6,
@@ -66,170 +230,6 @@ namespace GNet {
 		OK,
 		INETADDR_ERROR,
 		TCP_ERROR
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class Conn {
-		public weak string hostname;
-		public int port;
-		public weak GLib.IOChannel iochannel;
-		public weak GNet.TcpSocket socket;
-		public weak GNet.InetAddr inetaddr;
-		public uint ref_count;
-		public uint ref_count_internal;
-		public weak GNet.TcpSocketConnectAsyncID connect_id;
-		public weak GNet.TcpSocketNewAsyncID new_id;
-		public weak GLib.List write_queue;
-		public uint bytes_written;
-		public weak string buffer;
-		public uint length;
-		public uint bytes_read;
-		public bool read_eof;
-		public weak GLib.List read_queue;
-		public uint process_buffer_timeout;
-		public bool watch_readable;
-		public bool watch_writable;
-		public uint watch_flags;
-		public uint watch;
-		public uint timer;
-		public weak GNet.ConnFunc func;
-		public void* user_data;
-		public weak GLib.MainContext context;
-		public int priority;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class ConnEvent {
-		public GNet.ConnEventType type;
-		public weak string buffer;
-		public int length;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class ConnHttp {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class ConnHttpEvent {
-		public GNet.ConnHttpEventType type;
-		public ulong stsize;
-		public void* padding;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class ConnHttpEventData {
-		public weak GNet.ConnHttpEvent parent;
-		public uint64 content_length;
-		public uint64 data_received;
-		public weak string buffer;
-		public ulong buffer_length;
-		public void* padding;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class ConnHttpEventError {
-		public weak GNet.ConnHttpEvent parent;
-		public GNet.ConnHttpError code;
-		public weak string message;
-		public void* padding;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class ConnHttpEventRedirect {
-		public weak GNet.ConnHttpEvent parent;
-		public uint num_redirects;
-		public uint max_redirects;
-		public weak string new_location;
-		public bool auto_redirect;
-		public void* padding;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class ConnHttpEventResolved {
-		public weak GNet.ConnHttpEvent parent;
-		public weak GNet.InetAddr ia;
-		public void* padding;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class ConnHttpEventResponse {
-		public weak GNet.ConnHttpEvent parent;
-		public uint response_code;
-		public weak string header_fields;
-		public weak string header_values;
-		public void* padding;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class InetAddr {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class InetAddrGetNameAsyncID {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class InetAddrNewAsyncID {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class InetAddrNewListAsyncID {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class MD5 {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class McastSocket {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class SHA {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class Server {
-		public weak GNet.InetAddr iface;
-		public int port;
-		public weak GNet.TcpSocket socket;
-		public uint ref_count;
-		public weak GNet.ServerFunc func;
-		public void* user_data;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class TcpSocket {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class TcpSocketConnectAsyncID {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class TcpSocketNewAsyncID {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class URI {
-		public weak string scheme;
-		public weak string userinfo;
-		public weak string hostname;
-		public int port;
-		public weak string path;
-		public weak string query;
-		public weak string fragment;
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class UdpSocket {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gnet.h")]
-	public class UnixSocket {
-	}
-	[CCode (cheader_filename = "gnet.h")]
-	public struct NetTOS {
 	}
 	[CCode (cheader_filename = "gnet.h")]
 	public delegate void ConnFunc (GNet.Conn conn, GNet.ConnEvent event);
@@ -303,10 +303,6 @@ namespace GNet {
 	public static bool conn_is_connected (GNet.Conn conn);
 	[CCode (cheader_filename = "gnet.h")]
 	public static weak GNet.Conn conn_new (string hostname, int port, GNet.ConnFunc func);
-	[CCode (cname = "gnet_conn_new_inetaddr", cheader_filename = "gnet.h")]
-	public static weak GNet.Conn from_inetaddr (GNet.InetAddr inetaddr, GNet.ConnFunc func);
-	[CCode (cname = "gnet_conn_new_socket", cheader_filename = "gnet.h")]
-	public static weak GNet.Conn from_socket (GNet.TcpSocket socket, GNet.ConnFunc func);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void conn_read (GNet.Conn conn);
 	[CCode (cheader_filename = "gnet.h")]
@@ -333,6 +329,10 @@ namespace GNet {
 	public static void conn_write (GNet.Conn conn, string buffer, int length);
 	[CCode (cheader_filename = "gnet.h")]
 	public static void conn_write_direct (GNet.Conn conn, string buffer, int length, GLib.DestroyNotify buffer_destroy_cb);
+	[CCode (cname = "gnet_conn_new_inetaddr", cheader_filename = "gnet.h")]
+	public static weak GNet.Conn from_inetaddr (GNet.InetAddr inetaddr, GNet.ConnFunc func);
+	[CCode (cname = "gnet_conn_new_socket", cheader_filename = "gnet.h")]
+	public static weak GNet.Conn from_socket (GNet.TcpSocket socket, GNet.ConnFunc func);
 	[CCode (cheader_filename = "gnet.h")]
 	public static bool http_get (string url, string buffer, ulong length, uint response);
 	[CCode (cheader_filename = "gnet.h")]

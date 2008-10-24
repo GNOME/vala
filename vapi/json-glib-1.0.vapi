@@ -2,6 +2,103 @@
 
 [CCode (cprefix = "Json", lower_case_cprefix = "json_")]
 namespace Json {
+	[Compact]
+	[CCode (ref_function = "json_array_ref", unref_function = "json_array_unref", cheader_filename = "json-glib/json-glib.h")]
+	public class Array {
+		public void add_element (Json.Node node);
+		public weak Json.Node get_element (uint index_);
+		public weak GLib.List get_elements ();
+		public uint get_length ();
+		[CCode (has_construct_function = false)]
+		public Array ();
+		public void remove_element (uint index_);
+		public static weak Json.Array sized_new (uint n_elements);
+	}
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	public class Generator : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Generator ();
+		public void set_root (Json.Node node);
+		public string to_data (out ulong length);
+		public bool to_file (string filename) throws GLib.Error;
+		[NoAccessorMethod]
+		public uint indent { get; set; }
+		[NoAccessorMethod]
+		public bool pretty { get; set; }
+		[NoAccessorMethod]
+		public Json.Node root { get; set; }
+	}
+	[Compact]
+	[CCode (copy_function = "json_node_copy", cheader_filename = "json-glib/json-glib.h")]
+	public class Node {
+		public void* data;
+		public weak Json.Node parent;
+		public Json.NodeType type;
+		public weak Json.Node copy ();
+		public weak Json.Array dup_array ();
+		public weak Json.Object dup_object ();
+		public weak string dup_string ();
+		public weak Json.Array get_array ();
+		public bool get_boolean ();
+		public double get_double ();
+		public int get_int ();
+		public weak Json.Object get_object ();
+		public weak Json.Node get_parent ();
+		public weak string get_string ();
+		public void get_value (GLib.Value value);
+		public GLib.Type get_value_type ();
+		[CCode (has_construct_function = false)]
+		public Node (Json.NodeType type);
+		public void set_array (Json.Array array);
+		public void set_boolean (bool value);
+		public void set_double (double value);
+		public void set_int (int value);
+		public void set_object (Json.Object object);
+		public void set_string (string value);
+		public void set_value (GLib.Value value);
+		public void take_array (Json.Array array);
+		public void take_object (Json.Object object);
+		public weak string type_name ();
+	}
+	[Compact]
+	[CCode (ref_function = "json_object_ref", unref_function = "json_object_unref", cheader_filename = "json-glib/json-glib.h")]
+	public class Object {
+		public void add_member (string member_name, Json.Node node);
+		public weak Json.Node get_member (string member_name);
+		public weak GLib.List get_members ();
+		public uint get_size ();
+		public weak GLib.List get_values ();
+		public bool has_member (string member_name);
+		[CCode (has_construct_function = false)]
+		public Object ();
+		public void remove_member (string member_name);
+	}
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	public class Parser : GLib.Object {
+		public static GLib.Quark error_quark ();
+		public uint get_current_line ();
+		public uint get_current_pos ();
+		public weak Json.Node get_root ();
+		public bool has_assignment (out weak string variable_name);
+		public bool load_from_data (string data, ulong length) throws GLib.Error;
+		public bool load_from_file (string filename) throws GLib.Error;
+		[CCode (has_construct_function = false)]
+		public Parser ();
+		public virtual signal void array_element (Json.Array array, int index_);
+		public virtual signal void array_end (Json.Array array);
+		public virtual signal void array_start ();
+		public virtual signal void error (void* error);
+		public virtual signal void object_end (Json.Object object);
+		public virtual signal void object_member (Json.Object object, string member_name);
+		public virtual signal void object_start ();
+		public virtual signal void parse_end ();
+		public virtual signal void parse_start ();
+	}
+	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	public interface Serializable {
+		public abstract bool deserialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node);
+		public abstract Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
+	}
 	[CCode (cprefix = "JSON_NODE_", has_type_id = "0", cheader_filename = "json-glib/json-glib.h")]
 	public enum NodeType {
 		OBJECT,
@@ -22,98 +119,6 @@ namespace Json {
 		NULL,
 		VAR,
 		LAST
-	}
-	[Compact]
-	[CCode (ref_function = "json_array_ref", unref_function = "json_array_unref", cheader_filename = "json-glib/json-glib.h")]
-	public class Array : GLib.Boxed {
-		public void add_element (Json.Node node);
-		public weak Json.Node get_element (uint index_);
-		public weak GLib.List get_elements ();
-		public uint get_length ();
-		public Array ();
-		public void remove_element (uint index_);
-		public static weak Json.Array sized_new (uint n_elements);
-	}
-	[Compact]
-	[CCode (copy_function = "json_node_copy", cheader_filename = "json-glib/json-glib.h")]
-	public class Node : GLib.Boxed {
-		public Json.NodeType type;
-		public void* data;
-		public weak Json.Node parent;
-		public weak Json.Node copy ();
-		public weak Json.Array dup_array ();
-		public weak Json.Object dup_object ();
-		public weak string dup_string ();
-		public weak Json.Array get_array ();
-		public bool get_boolean ();
-		public double get_double ();
-		public int get_int ();
-		public weak Json.Object get_object ();
-		public weak Json.Node get_parent ();
-		public weak string get_string ();
-		public void get_value (GLib.Value value);
-		public GLib.Type get_value_type ();
-		public Node (Json.NodeType type);
-		public void set_array (Json.Array array);
-		public void set_boolean (bool value);
-		public void set_double (double value);
-		public void set_int (int value);
-		public void set_object (Json.Object object);
-		public void set_string (string value);
-		public void set_value (GLib.Value value);
-		public void take_array (Json.Array array);
-		public void take_object (Json.Object object);
-		public weak string type_name ();
-	}
-	[Compact]
-	[CCode (ref_function = "json_object_ref", unref_function = "json_object_unref", cheader_filename = "json-glib/json-glib.h")]
-	public class Object : GLib.Boxed {
-		public void add_member (string member_name, Json.Node node);
-		public weak Json.Node get_member (string member_name);
-		public weak GLib.List get_members ();
-		public uint get_size ();
-		public weak GLib.List get_values ();
-		public bool has_member (string member_name);
-		public Object ();
-		public void remove_member (string member_name);
-	}
-	[CCode (cheader_filename = "json-glib/json-glib.h")]
-	public class Generator : GLib.Object {
-		public Generator ();
-		public void set_root (Json.Node node);
-		public string to_data (out ulong length);
-		public bool to_file (string filename) throws GLib.Error;
-		[NoAccessorMethod]
-		public uint indent { get; set; }
-		[NoAccessorMethod]
-		public bool pretty { get; set; }
-		[NoAccessorMethod]
-		public Json.Node root { get; set; }
-	}
-	[CCode (cheader_filename = "json-glib/json-glib.h")]
-	public class Parser : GLib.Object {
-		public static GLib.Quark error_quark ();
-		public uint get_current_line ();
-		public uint get_current_pos ();
-		public weak Json.Node get_root ();
-		public bool has_assignment (out weak string variable_name);
-		public bool load_from_data (string data, ulong length) throws GLib.Error;
-		public bool load_from_file (string filename) throws GLib.Error;
-		public Parser ();
-		public virtual signal void array_element (Json.Array array, int index_);
-		public virtual signal void array_end (Json.Array array);
-		public virtual signal void array_start ();
-		public virtual signal void error (void* error);
-		public virtual signal void object_end (Json.Object object);
-		public virtual signal void object_member (Json.Object object, string member_name);
-		public virtual signal void object_start ();
-		public virtual signal void parse_end ();
-		public virtual signal void parse_start ();
-	}
-	[CCode (cheader_filename = "json-glib/json-glib.h")]
-	public interface Serializable {
-		public abstract bool deserialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node);
-		public abstract Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public const int MAJOR_VERSION;

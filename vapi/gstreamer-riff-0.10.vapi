@@ -10,63 +10,63 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_index_entry {
-		public uint id;
 		public uint flags;
+		public uint id;
 		public uint offset;
 		public uint size;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_strf_auds {
-		public ushort format;
-		public ushort channels;
-		public uint rate;
 		public uint av_bps;
 		public ushort blockalign;
+		public ushort channels;
+		public ushort format;
+		public uint rate;
 		public ushort size;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_strf_iavs {
-		public uint DVAAuxSrc;
 		public uint DVAAuxCtl;
-		public uint DVAAuxSrc1;
 		public uint DVAAuxCtl1;
-		public uint DVVAuxSrc;
-		public uint DVVAuxCtl;
+		public uint DVAAuxSrc;
+		public uint DVAAuxSrc1;
 		public uint DVReserved1;
 		public uint DVReserved2;
+		public uint DVVAuxCtl;
+		public uint DVVAuxSrc;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_strf_vids {
-		public uint size;
-		public uint width;
-		public uint height;
-		public ushort planes;
 		public ushort bit_cnt;
 		public uint compression;
+		public uint height;
 		public uint image_size;
+		public uint imp_colors;
+		public uint num_colors;
+		public ushort planes;
+		public uint size;
+		public uint width;
 		public uint xpels_meter;
 		public uint ypels_meter;
-		public uint num_colors;
-		public uint imp_colors;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_strh {
-		public uint type;
+		public uint bufsize;
 		public uint fcc_handler;
 		public uint flags;
-		public uint priority;
 		public uint init_frames;
-		public uint scale;
-		public uint rate;
-		public uint start;
 		public uint length;
-		public uint bufsize;
+		public uint priority;
 		public uint quality;
+		public uint rate;
 		public uint samplesize;
+		public uint scale;
+		public uint start;
+		public uint type;
 	}
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_IBM_FORMAT_ADPCM;

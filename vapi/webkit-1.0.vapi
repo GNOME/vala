@@ -2,20 +2,10 @@
 
 [CCode (cprefix = "WebKit", lower_case_cprefix = "webkit_")]
 namespace WebKit {
-	[CCode (cprefix = "WEBKIT_NAVIGATION_RESPONSE_", has_type_id = "0", cheader_filename = "webkit/webkit.h")]
-	public enum NavigationResponse {
-		ACCEPT,
-		IGNORE,
-		DOWNLOAD
-	}
-	[CCode (cprefix = "WEBKIT_WEB_VIEW_TARGET_INFO_", has_type_id = "0", cheader_filename = "webkit/webkit.h")]
-	public enum WebViewTargetInfo {
-		HTML,
-		TEXT
-	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class NetworkRequest : GLib.Object {
 		public weak string get_uri ();
+		[CCode (has_construct_function = false)]
 		public NetworkRequest (string uri);
 		public void set_uri (string uri);
 	}
@@ -34,8 +24,9 @@ namespace WebKit {
 		public void go_back ();
 		public void go_forward ();
 		public void go_to_item (WebKit.WebHistoryItem history_item);
-		public WebBackForwardList.with_web_view (WebKit.WebView web_view);
 		public void set_limit (int limit);
+		[CCode (has_construct_function = false)]
+		public WebBackForwardList.with_web_view (WebKit.WebView web_view);
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebFrame : GLib.Object {
@@ -46,6 +37,7 @@ namespace WebKit {
 		public weak string get_uri ();
 		public weak WebKit.WebView get_web_view ();
 		public void load_request (WebKit.NetworkRequest request);
+		[CCode (has_construct_function = false)]
 		public WebFrame (WebKit.WebView web_view);
 		public void reload ();
 		public void stop_loading ();
@@ -65,13 +57,16 @@ namespace WebKit {
 		public weak string get_original_uri ();
 		public weak string get_title ();
 		public weak string get_uri ();
+		[CCode (has_construct_function = false)]
 		public WebHistoryItem ();
-		public WebHistoryItem.with_data (string uri, string title);
 		public void set_alternate_title (string title);
+		[CCode (has_construct_function = false)]
+		public WebHistoryItem.with_data (string uri, string title);
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebSettings : GLib.Object {
 		public weak WebKit.WebSettings copy ();
+		[CCode (has_construct_function = false)]
 		public WebSettings ();
 		[NoAccessorMethod]
 		public bool auto_load_images { get; set construct; }
@@ -119,6 +114,10 @@ namespace WebKit {
 		public bool can_go_backward ();
 		public bool can_go_forward ();
 		public bool can_paste_clipboard ();
+		[NoWrapper]
+		public virtual weak string choose_file (WebKit.WebFrame frame, string old_file);
+		[NoWrapper]
+		public virtual weak WebKit.WebView create_web_view ();
 		public void delete_selection ();
 		public void execute_script (string script);
 		public weak WebKit.WebBackForwardList get_back_forward_list ();
@@ -138,6 +137,7 @@ namespace WebKit {
 		public void load_html_string (string content, string base_uri);
 		public void load_string (string content, string content_mime_type, string content_encoding, string base_uri);
 		public uint mark_text_matches (string str, bool case_sensitive, uint limit);
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public WebView ();
 		public void open (string uri);
 		public void reload ();
@@ -149,10 +149,6 @@ namespace WebKit {
 		public void set_transparent (bool flag);
 		public void stop_loading ();
 		public void unmark_text_matches ();
-		[NoWrapper]
-		public virtual weak string choose_file (WebKit.WebFrame frame, string old_file);
-		[NoWrapper]
-		public virtual weak WebKit.WebView create_web_view ();
 		public Gtk.TargetList copy_target_list { get; }
 		public bool editable { get; set; }
 		public Gtk.TargetList paste_target_list { get; }
@@ -183,5 +179,16 @@ namespace WebKit {
 		public virtual signal void status_bar_text_changed (string p0);
 		public virtual signal void title_changed (WebKit.WebFrame p0, string p1);
 		public virtual signal void window_object_cleared (WebKit.WebFrame frame, void* context, void* window_object);
+	}
+	[CCode (cprefix = "WEBKIT_NAVIGATION_RESPONSE_", has_type_id = "0", cheader_filename = "webkit/webkit.h")]
+	public enum NavigationResponse {
+		ACCEPT,
+		IGNORE,
+		DOWNLOAD
+	}
+	[CCode (cprefix = "WEBKIT_WEB_VIEW_TARGET_INFO_", has_type_id = "0", cheader_filename = "webkit/webkit.h")]
+	public enum WebViewTargetInfo {
+		HTML,
+		TEXT
 	}
 }

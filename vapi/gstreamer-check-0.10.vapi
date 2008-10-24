@@ -5,9 +5,9 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class CheckABIStruct {
+		public int abi_size;
 		public weak string name;
 		public int size;
-		public int abi_size;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.Buffer buffer_straw_get_buffer (Gst.Element bin, Gst.Pad pad);

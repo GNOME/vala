@@ -2,83 +2,6 @@
 
 [CCode (cprefix = "Oobs", lower_case_cprefix = "oobs_")]
 namespace Oobs {
-	[CCode (cprefix = "OOBS_DIAL_TYPE_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
-	public enum DialType {
-		TONES,
-		PULSES
-	}
-	[CCode (cprefix = "OOBS_IFACE_TYPE_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
-	public enum IfaceType {
-		ETHERNET,
-		WIRELESS,
-		IRLAN,
-		PLIP,
-		PPP
-	}
-	[CCode (cprefix = "OOBS_MODEM_VOLUME_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
-	public enum ModemVolume {
-		SILENT,
-		LOW,
-		MEDIUM,
-		LOUD
-	}
-	[CCode (cprefix = "OOBS_RESULT_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
-	public enum Result {
-		OK,
-		ACCESS_DENIED,
-		NO_PLATFORM,
-		MALFORMED_DATA,
-		ERROR
-	}
-	[CCode (cprefix = "OOBS_RUNLEVEL_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
-	public enum RunlevelRole {
-		HALT,
-		REBOOT,
-		MONOUSER,
-		MULTIUSER
-	}
-	[CCode (cprefix = "OOBS_SERVICE_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
-	public enum ServiceStatus {
-		START,
-		STOP,
-		IGNORE
-	}
-	[CCode (cprefix = "OOBS_SHARE_SMB_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
-	[Flags]
-	public enum ShareSMBFlags {
-		ENABLED,
-		BROWSABLE,
-		PUBLIC,
-		WRITABLE
-	}
-	[Compact]
-	[CCode (cheader_filename = "oobs/oobs.h")]
-	public class Platform {
-		public weak string id;
-		public weak string name;
-		public weak string version;
-		public weak string codename;
-	}
-	[Compact]
-	[CCode (cheader_filename = "oobs/oobs.h")]
-	public class ServicesRunlevel {
-		public weak string name;
-		public uint role;
-	}
-	[Compact]
-	[CCode (cheader_filename = "oobs/oobs.h")]
-	public class ShareAclElement {
-		public weak string element;
-		public bool read_only;
-	}
-	[Compact]
-	[CCode (copy_function = "oobs_list_iter_copy", cheader_filename = "oobs/oobs.h")]
-	public class ListIter : GLib.Boxed {
-		public uint stamp;
-		public void* data;
-		public weak Oobs.ListIter copy ();
-		public static bool next (Oobs.List list, Oobs.ListIter iter);
-	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Group : GLib.Object {
 		public void add_user (Oobs.User user);
@@ -86,6 +9,7 @@ namespace Oobs {
 		public long get_gid ();
 		public weak string get_name ();
 		public weak GLib.List get_users ();
+		[CCode (has_construct_function = false)]
 		public Group (string name);
 		public void remove_user (Oobs.User user);
 		public void set_crypted_password (string crypted_password);
@@ -126,12 +50,12 @@ namespace Oobs {
 		public bool get_auto ();
 		public bool get_configured ();
 		public weak string get_device_name ();
-		public void set_active (bool is_active);
-		public void set_auto (bool is_auto);
-		public void set_configured (bool is_configured);
 		public virtual bool has_gateway ();
 		[NoWrapper]
 		public virtual bool is_configured ();
+		public void set_active (bool is_active);
+		public void set_auto (bool is_auto);
+		public void set_configured (bool is_configured);
 		public bool active { get; set; }
 		public bool auto { get; set; }
 		public bool configured { get; set; }
@@ -256,6 +180,14 @@ namespace Oobs {
 		[NoAccessorMethod]
 		public void* contained_type { construct; }
 	}
+	[Compact]
+	[CCode (copy_function = "oobs_list_iter_copy", cheader_filename = "oobs/oobs.h")]
+	public class ListIter {
+		public void* data;
+		public uint stamp;
+		public weak Oobs.ListIter copy ();
+		public static bool next (Oobs.List list, Oobs.ListIter iter);
+	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class NFSConfig : Oobs.Object {
 		public static weak Oobs.Object get ();
@@ -269,25 +201,34 @@ namespace Oobs {
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class NTPServer : GLib.Object {
 		public weak string get_hostname ();
+		[CCode (has_construct_function = false)]
 		public NTPServer (string hostname);
 		public void set_hostname (string hostname);
 		public string hostname { get; set; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Object : GLib.Object {
+		public virtual void commit ();
 		public Oobs.Result commit_async (Oobs.ObjectAsyncFunc func, void* data);
 		public void ensure_update ();
+		public virtual weak string get_authentication_action ();
 		public bool has_updated ();
 		public void process_requests ();
-		public Oobs.Result update_async (Oobs.ObjectAsyncFunc func, void* data);
-		public virtual void commit ();
-		public virtual weak string get_authentication_action ();
 		public virtual void update ();
+		public Oobs.Result update_async (Oobs.ObjectAsyncFunc func, void* data);
 		[NoAccessorMethod]
 		public string remote_object { construct; }
 		public virtual signal void changed ();
 		public virtual signal void committed ();
 		public virtual signal void updated ();
+	}
+	[Compact]
+	[CCode (cheader_filename = "oobs/oobs.h")]
+	public class Platform {
+		public weak string codename;
+		public weak string id;
+		public weak string name;
+		public weak string version;
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class SMBConfig : Oobs.Object {
@@ -329,6 +270,12 @@ namespace Oobs {
 		public weak GLib.List get_runlevels ();
 		public weak Oobs.List get_services ();
 	}
+	[Compact]
+	[CCode (cheader_filename = "oobs/oobs.h")]
+	public class ServicesRunlevel {
+		public weak string name;
+		public uint role;
+	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class Session : GLib.Object {
 		public Oobs.Result commit ();
@@ -347,10 +294,17 @@ namespace Oobs {
 		public void set_path (string path);
 		public string path { get; set; }
 	}
+	[Compact]
+	[CCode (cheader_filename = "oobs/oobs.h")]
+	public class ShareAclElement {
+		public weak string element;
+		public bool read_only;
+	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public class ShareNFS : Oobs.Share {
 		public void add_acl_element (string element, bool read_only);
 		public weak GLib.SList get_acl ();
+		[CCode (type = "OobsShare*", has_construct_function = false)]
 		public ShareNFS (string path);
 		public void set_acl (GLib.SList acl);
 	}
@@ -359,6 +313,7 @@ namespace Oobs {
 		public weak string get_comment ();
 		public Oobs.ShareSMBFlags get_flags ();
 		public weak string get_name ();
+		[CCode (type = "OobsShare*", has_construct_function = false)]
 		public ShareSMB (string path, string name, string comment, Oobs.ShareSMBFlags flags);
 		public void set_comment (string comment);
 		public void set_flags (Oobs.ShareSMBFlags flags);
@@ -371,6 +326,7 @@ namespace Oobs {
 	public class StaticHost : GLib.Object {
 		public weak GLib.List get_aliases ();
 		public weak string get_ip_address ();
+		[CCode (has_construct_function = false)]
 		public StaticHost (string ip_address, GLib.List aliases);
 		public void set_aliases (GLib.List aliases);
 		public void set_ip_address (string ip_address);
@@ -403,6 +359,7 @@ namespace Oobs {
 		public weak string get_shell ();
 		public long get_uid ();
 		public weak string get_work_phone_number ();
+		[CCode (has_construct_function = false)]
 		public User (string name);
 		public void set_crypted_password (string crypted_password);
 		public void set_full_name (string full_name);
@@ -456,6 +413,55 @@ namespace Oobs {
 		public int minimum_uid { get; set; }
 		[NoAccessorMethod]
 		public bool use_md5 { get; }
+	}
+	[CCode (cprefix = "OOBS_DIAL_TYPE_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
+	public enum DialType {
+		TONES,
+		PULSES
+	}
+	[CCode (cprefix = "OOBS_IFACE_TYPE_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
+	public enum IfaceType {
+		ETHERNET,
+		WIRELESS,
+		IRLAN,
+		PLIP,
+		PPP
+	}
+	[CCode (cprefix = "OOBS_MODEM_VOLUME_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
+	public enum ModemVolume {
+		SILENT,
+		LOW,
+		MEDIUM,
+		LOUD
+	}
+	[CCode (cprefix = "OOBS_RESULT_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
+	public enum Result {
+		OK,
+		ACCESS_DENIED,
+		NO_PLATFORM,
+		MALFORMED_DATA,
+		ERROR
+	}
+	[CCode (cprefix = "OOBS_RUNLEVEL_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
+	public enum RunlevelRole {
+		HALT,
+		REBOOT,
+		MONOUSER,
+		MULTIUSER
+	}
+	[CCode (cprefix = "OOBS_SERVICE_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
+	public enum ServiceStatus {
+		START,
+		STOP,
+		IGNORE
+	}
+	[CCode (cprefix = "OOBS_SHARE_SMB_", has_type_id = "0", cheader_filename = "oobs/oobs.h")]
+	[Flags]
+	public enum ShareSMBFlags {
+		ENABLED,
+		BROWSABLE,
+		PUBLIC,
+		WRITABLE
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]
 	public delegate void ObjectAsyncFunc (Oobs.Object object, Oobs.Result result);

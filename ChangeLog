@@ -1,5 +1,11 @@
 2008-10-24  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/*.vapi:
+
+	Regenerate bindings
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainterfacewriter.vala:
 
 	Sort output to allow comparison of generated vapi files
