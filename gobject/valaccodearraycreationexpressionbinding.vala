@@ -27,7 +27,7 @@ using Gee;
 /**
  * The link between an assignment and generated code.
  */
-public class Vala.CCodeArrayCreationExpressionBinding : CCodeExpressionBinding {
+public class Vala.CCodeArrayCreationExpressionBinding : CCodeBinding {
 	public ArrayCreationExpression array_creation_expression { get; set; }
 
 	public CCodeArrayCreationExpressionBinding (CCodeGenerator codegen, ArrayCreationExpression array_creation_expression) {
@@ -97,11 +97,9 @@ public class Vala.CCodeArrayCreationExpressionBinding : CCodeExpressionBinding {
 			
 			ce.append_expression (name_cnode);
 			
-			codenode = ce;
+			expr.ccodenode = ce;
 		} else {
-			codenode = gnew;
+			expr.ccodenode = gnew;
 		}
-
-		expr.ccodenode = codenode;
 	}
 }

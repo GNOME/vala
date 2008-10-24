@@ -23,7 +23,7 @@
 
 using GLib;
 
-public class Vala.CCodeMemberAccessBinding : CCodeExpressionBinding {
+public class Vala.CCodeMemberAccessBinding : CCodeBinding {
 	public MemberAccess member_access { get; set; }
 
 	public CCodeMemberAccessBinding (CCodeGenerator codegen, MemberAccess member_access) {

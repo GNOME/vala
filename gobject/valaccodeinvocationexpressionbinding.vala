@@ -24,7 +24,7 @@
 using GLib;
 using Gee;
 
-public class Vala.CCodeInvocationExpressionBinding : CCodeExpressionBinding {
+public class Vala.CCodeInvocationExpressionBinding : CCodeBinding {
 	public InvocationExpression invocation_expression { get; set; }
 
 	public CCodeInvocationExpressionBinding (CCodeGenerator codegen, InvocationExpression invocation_expression) {

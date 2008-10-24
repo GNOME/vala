@@ -27,7 +27,7 @@ using Gee;
 /**
  * The link between an assignment and generated code.
  */
-public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
+public class Vala.CCodeAssignmentBinding : CCodeBinding {
 	public Assignment assignment { get; set; }
 
 	public CCodeAssignmentBinding (CCodeGenerator codegen, Assignment assignment) {
@@ -35,13 +35,13 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		this.codegen = codegen;
 	}
 
-	private void emit_property_assignment () {
+	CCodeExpression emit_property_assignment () {
 		var ma = assignment.left as MemberAccess;
 
 		var prop = (Property) assignment.left.symbol_reference;
 
 		if (prop.set_accessor.construction && codegen.current_type_symbol is Class && codegen.current_class.is_subtype_of (codegen.gobject_type) && codegen.in_creation_method) {
-			codenode = head.get_construct_property_assignment (prop.get_canonical_cconstant (), prop.property_type, (CCodeExpression) assignment.right.ccodenode);
+			return head.get_construct_property_assignment (prop.get_canonical_cconstant (), prop.property_type, (CCodeExpression) assignment.right.ccodenode);
 		} else {
 			CCodeExpression cexpr = (CCodeExpression) assignment.right.ccodenode;
 
@@ -85,14 +85,14 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 				ccomma.append_expression (ccall); // update property
 				ccomma.append_expression ((CCodeExpression) codegen.get_ccodenode (ma)); // current property value
 				
-				codenode = ccomma;
+				return ccomma;
 			} else {
-				codenode = ccall;
+				return ccall;
 			}
 		}
 	}
 
-	private void emit_signal_assignment () {
+	CCodeExpression? emit_signal_assignment () {
 		var sig = (Signal) assignment.left.symbol_reference;
 		
 		var m = (Method) assignment.right.symbol_reference;
@@ -119,7 +119,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		} else {
 			assignment.error = true;
 			Report.error (assignment.source_reference, "Specified compound assignment type for signals not supported.");
-			return;
+			return null;
 		}
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (connect_func));
@@ -135,7 +135,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			if (detail_expr == null) {
 				assignment.error = true;
 				Report.error (detail_expr.source_reference, "internal error: only literal string details supported");
-				return;
+				return null;
 			}
 			signal_detail = detail_expr.eval ();
 		} else {
@@ -228,10 +228,10 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			ccall.add_argument (new CCodeConstant ("NULL"));
 		}
 		
-		codenode = ccall;
+		return ccall;
 	}
 
-	private void emit_non_array_element_access () {
+	private CCodeExpression? emit_non_array_element_access () {
 		// custom element access
 		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
 
@@ -269,14 +269,15 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			set_ccall.add_argument (cindex);
 			set_ccall.add_argument (codegen.convert_to_generic_pointer (rhs, expr.value_type));
 
-			codenode = set_ccall;
+			return set_ccall;
 		} else {
 			Report.error (assignment.source_reference, "internal error: unsupported element access");
 			assignment.error = true;
+			return null;
 		}
 	}
 
-	private void emit_simple_assignment () {
+	CCodeExpression emit_simple_assignment () {
 		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
 
 		bool unref_old = codegen.requires_destroy (assignment.left.value_type);
@@ -342,7 +343,7 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 			cop = CCodeAssignmentOperator.SHIFT_RIGHT;
 		}
 	
-		codenode = new CCodeAssignment ((CCodeExpression) codegen.get_ccodenode (assignment.left), rhs, cop);
+		CCodeExpression codenode = new CCodeAssignment ((CCodeExpression) codegen.get_ccodenode (assignment.left), rhs, cop);
 
 		if (unref_old && codegen.get_ccodenode (assignment.left) is CCodeElementAccess) {
 			// ensure that index expression in element access doesn't get evaluated more than once
@@ -361,6 +362,8 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 				codenode = ccomma;
 			}
 		}
+
+		return codenode;
 	}
 
 	public override void emit () {
@@ -372,17 +375,15 @@ public class Vala.CCodeAssignmentBinding : CCodeExpressionBinding {
 		}
 
 		if (assignment.left.symbol_reference is Property) {
-			emit_property_assignment ();
+			assignment.ccodenode = emit_property_assignment ();
 		} else if (assignment.left.symbol_reference is Signal) {
-			emit_signal_assignment ();
+			assignment.ccodenode = emit_signal_assignment ();
 		} else if (assignment.left is ElementAccess
 		           && !(((ElementAccess) assignment.left).container.value_type is ArrayType)
 		           && !(((ElementAccess) assignment.left).container.value_type is PointerType)) {
-			emit_non_array_element_access ();
+			assignment.ccodenode = emit_non_array_element_access ();
 		} else {
-			emit_simple_assignment ();
+			assignment.ccodenode = emit_simple_assignment ();
 		}
-
-		assignment.ccodenode = codenode;
 	}
 }

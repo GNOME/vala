@@ -1,5 +1,17 @@
 2008-10-24  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/Makefile.am:
+	* gobject/valaccodearraycreationexpressionbinding.vala:
+	* gobject/valaccodeassignmentbinding.vala:
+	* gobject/valaccodeelementaccessbinding.vala:
+	* gobject/valaccodeexpressionbinding.vala:
+	* gobject/valaccodeinvocationexpressionbinding.vala:
+	* gobject/valaccodememberaccessbinding.vala:
+
+	Remove CCodeExpressionBinding
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala:
 	* vala/valacodegenerator.vala:
 	* vala/valainterface.vala:

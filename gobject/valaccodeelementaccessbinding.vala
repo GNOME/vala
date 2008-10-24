@@ -27,7 +27,7 @@ using Gee;
 /**
  * The link between an element access and generated code.
  */
-public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
+public class Vala.CCodeElementAccessBinding : CCodeBinding {
 	public ElementAccess element_access { get; set; }
 
 	public CCodeElementAccessBinding (CCodeGenerator codegen, ElementAccess element_access) {
@@ -51,7 +51,7 @@ public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
 			var memberaccess = expr.container as MemberAccess;
 			if (lit != null && memberaccess != null) {
 				int dim = lit.value.to_int ();
-				codenode = codegen.get_array_length_cexpression (memberaccess.inner, dim + 1);
+				expr.ccodenode = codegen.get_array_length_cexpression (memberaccess.inner, dim + 1);
 			}
 		} else if (container_type == codegen.string_type.data_type) {
 			// access to unichar in a string
@@ -62,7 +62,7 @@ public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_get_char"));
 			ccall.add_argument (coffsetcall);
 
-			codenode = ccall;
+			expr.ccodenode = ccall;
 		} else if (container_type != null && codegen.list_type != null && codegen.map_type != null &&
 		           (container_type.is_subtype_of (codegen.list_type) || container_type.is_subtype_of (codegen.map_type))) {
 			TypeSymbol collection_iface = null;
@@ -86,7 +86,7 @@ public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
 			get_ccall.add_argument (new CCodeCastExpression (ccontainer, collection_iface.get_cname () + "*"));
 			get_ccall.add_argument (cindex);
 
-			codenode = codegen.convert_from_generic_pointer (get_ccall, expr.value_type);
+			expr.ccodenode = codegen.convert_from_generic_pointer (get_ccall, expr.value_type);
 		} else if (expr.container is MemberAccess && expr.container.symbol_reference is Signal) {
 			// detailed signal emission
 			var sig = (Signal) expr.symbol_reference;
@@ -104,16 +104,14 @@ public class Vala.CCodeElementAccessBinding : CCodeExpressionBinding {
 
 			ccall.add_argument (sig.get_canonical_cconstant (signal_detail));
 			
-			codenode = ccall;
+			expr.ccodenode = ccall;
 		} else {
 			// access to element in an array
 			for (int i = 1; i < rank; i++) {
 				var cmul = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (cindex), codegen.get_array_length_cexpression (expr.container, i + 1));
 				cindex = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cmul, new CCodeParenthesizedExpression ((CCodeExpression) indices[i].ccodenode));
 			}
-			codenode = new CCodeElementAccess (ccontainer, cindex);
+			expr.ccodenode = new CCodeElementAccess (ccontainer, cindex);
 		}
-
-		expr.ccodenode = codenode;
 	}
 }
