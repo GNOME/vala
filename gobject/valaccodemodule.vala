@@ -83,4 +83,12 @@ public abstract class Vala.CCodeModule {
 	public virtual CCodeExpression get_construct_property_assignment (CCodeConstant canonical_cconstant, DataType property_type, CCodeExpression value) {
 		return next.get_construct_property_assignment (canonical_cconstant, property_type, value);
 	}
+
+	public virtual CCodeFunctionCall get_param_spec (Property prop) {
+		return next.get_param_spec (prop);
+	}
+
+	public virtual CCodeFunctionCall get_signal_creation (Signal sig, TypeSymbol type) {
+		return next.get_signal_creation (sig, type);
+	}
 }

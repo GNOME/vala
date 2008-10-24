@@ -143,6 +143,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public CCodeGenerator () {
 		head = new CCodeBaseModule (this, head);
 		head = new CCodeMethodModule (this, head);
+		head = new GObjectModule (this, head);
 		head = new DBusModule (this, head);
 
 		predefined_marshal_set = new HashSet<string> (str_hash, str_equal);

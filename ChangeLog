@@ -1,5 +1,17 @@
 2008-10-24  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/Makefile.am:
+	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinterfacebinding.vala:
+	* gobject/valaccodemodule.vala:
+	* gobject/valaccodeobjecttypesymbolbinding.vala:
+	* gobject/valagobjectmodule.vala:
+
+	Add GObjectModule
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala:
 	* vala/valacreationmethod.vala:
 	* vala/valadynamicmethod.vala:

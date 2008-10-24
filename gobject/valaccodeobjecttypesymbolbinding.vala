@@ -22,7 +22,7 @@
 
 using GLib;
 
-public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeTypeSymbolBinding {
+public abstract class Vala.CCodeObjectTypeSymbolBinding : Vala.CCodeBinding {
 
 	bool is_dbus_visible (CodeNode node) {
 		var dbus_attribute = node.get_attribute ("DBus");

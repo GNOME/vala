@@ -124,7 +124,7 @@ public class Vala.CCodeInterfaceBinding : CCodeObjectTypeSymbolBinding {
 				if (prop.is_abstract) {
 					var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_interface_install_property"));
 					cinst.add_argument (new CCodeIdentifier ("iface"));
-					cinst.add_argument (get_param_spec (prop));
+					cinst.add_argument (head.get_param_spec (prop));
 
 					init_block.add_statement (new CCodeExpressionStatement (cinst));
 				}
@@ -133,7 +133,7 @@ public class Vala.CCodeInterfaceBinding : CCodeObjectTypeSymbolBinding {
 
 		/* create signals */
 		foreach (Signal sig in iface.get_signals ()) {
-			init_block.add_statement (new CCodeExpressionStatement (get_signal_creation (sig, iface)));
+			init_block.add_statement (new CCodeExpressionStatement (head.get_signal_creation (sig, iface)));
 		}
 
 		// connect default implementations

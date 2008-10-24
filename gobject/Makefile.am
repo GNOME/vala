@@ -32,10 +32,10 @@ libvala_la_VALASOURCES = \
 	valaccodemethodmodule.vala \
 	valaccodemodule.vala \
 	valaccodeobjecttypesymbolbinding.vala \
-	valaccodetypesymbolbinding.vala \
 	valaclassregisterfunction.vala \
 	valadbusmodule.vala \
 	valagirwriter.vala \
+	valagobjectmodule.vala \
 	valainterfaceregisterfunction.vala \
 	valatyperegisterfunction.vala \
 	$(NULL)

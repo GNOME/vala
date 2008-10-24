@@ -1,4 +1,4 @@
-/* valaccodetypesymbolbinding.vala
+/* valagobjectmodule.vala
  *
  * Copyright (C) 2008  Jürg Billeter
  *
@@ -23,8 +23,12 @@
 
 using GLib;
 
-public abstract class Vala.CCodeTypeSymbolBinding : CCodeBinding {
-	public CCodeFunctionCall get_param_spec (Property prop) {
+public class Vala.GObjectModule : CCodeModule {
+	public GObjectModule (CCodeGenerator codegen, CCodeModule? next) {
+		base (codegen, next);
+	}
+
+	public override CCodeFunctionCall get_param_spec (Property prop) {
 		var cspec = new CCodeFunctionCall ();
 		cspec.add_argument (prop.get_canonical_cconstant ());
 		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.nick)));
@@ -200,7 +204,7 @@ public abstract class Vala.CCodeTypeSymbolBinding : CCodeBinding {
 		return cspec;
 	}
 
-	public CCodeFunctionCall get_signal_creation (Signal sig, TypeSymbol type) {	
+	public override CCodeFunctionCall get_signal_creation (Signal sig, TypeSymbol type) {	
 		var csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
 		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (sig.get_cname ())));
 		csignew.add_argument (new CCodeIdentifier (type.get_type_id ()));

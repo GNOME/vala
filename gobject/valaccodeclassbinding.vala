@@ -868,7 +868,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 					var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_install_property"));
 					cinst.add_argument (ccall);
 					cinst.add_argument (new CCodeConstant (prop.get_upper_case_cname ()));
-					cinst.add_argument (get_param_spec (prop));
+					cinst.add_argument (head.get_param_spec (prop));
 				
 					init_block.add_statement (new CCodeExpressionStatement (cinst));
 				}
@@ -876,7 +876,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 		
 			/* create signals */
 			foreach (Signal sig in cl.get_signals ()) {
-				init_block.add_statement (new CCodeExpressionStatement (get_signal_creation (sig, cl)));
+				init_block.add_statement (new CCodeExpressionStatement (head.get_signal_creation (sig, cl)));
 			}
 		} else if (!cl.is_compact) {
 			/* create type, dup_func, and destroy_func fields for generic types */
