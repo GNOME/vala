@@ -144,6 +144,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head = new CCodeBaseModule (this, head);
 		head = new CCodeMethodModule (this, head);
 		head = new GObjectModule (this, head);
+		head = new GObjectClassModule (this, head);
+		head = new GObjectInterfaceModule (this, head);
 		head = new DBusModule (this, head);
 
 		predefined_marshal_set = new HashSet<string> (str_hash, str_equal);
@@ -291,11 +293,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void visit_class (Class cl) {
-		code_binding (cl).emit ();
+		head.visit_class (cl);
 	}
 
 	public override void visit_interface (Interface iface) {
-		code_binding (iface).emit ();
+		head.visit_interface (iface);
 	}
 
 	public override void visit_enum (Enum en) {
@@ -4360,14 +4362,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			node.accept (this);
 		}
 		return node.ccodenode;
-	}
-
-	public override CodeBinding? create_class_binding (Class node) {
-		return new CCodeClassBinding (this, node);
-	}
-
-	public override CodeBinding? create_interface_binding (Interface node) {
-		return new CCodeInterfaceBinding (this, node);
 	}
 
 	public override CodeBinding? create_dynamic_property_binding (DynamicProperty node) {

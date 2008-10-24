@@ -1,4 +1,4 @@
-/* valaccodeinterfacebinding.vala
+/* valagobjectinterfacemodule.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -23,15 +23,12 @@
 
 using GLib;
 
-public class Vala.CCodeInterfaceBinding : CCodeBinding {
-	public Interface iface { get; set; }
-
-	public CCodeInterfaceBinding (CCodeGenerator codegen, Interface iface) {
-		this.iface = iface;
-		this.codegen = codegen;
+public class Vala.GObjectInterfaceModule : CCodeModule {
+	public GObjectInterfaceModule (CCodeGenerator codegen, CCodeModule? next) {
+		base (codegen, next);
 	}
 
-	public override void emit () {
+	public override void visit_interface (Interface iface) {
 		codegen.current_symbol = iface;
 		codegen.current_type_symbol = iface;
 

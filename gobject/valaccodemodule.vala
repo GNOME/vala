@@ -52,6 +52,14 @@ public abstract class Vala.CCodeModule {
 		next.emit (context);
 	}
 
+	public virtual void visit_class (Class cl) {
+		next.visit_class (cl);
+	}
+
+	public virtual void visit_interface (Interface iface) {
+		next.visit_interface (iface);
+	}
+
 	public virtual void visit_method (Method m) {
 		next.visit_method (m);
 	}

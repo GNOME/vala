@@ -530,10 +530,6 @@ public class Vala.Interface : ObjectTypeSymbol {
 		}
 	}
 
-	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
-		return codegen.create_interface_binding (this);
-	}
-
 	public override string? get_param_spec_function () {
 		foreach (DataType prerequisite in prerequisites) {
 			var prereq = prerequisite as ObjectType;

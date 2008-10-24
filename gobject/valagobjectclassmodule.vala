@@ -1,4 +1,4 @@
-/* valaccodeclassbinding.vala
+/* valagobjectclassmodule.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -23,15 +23,12 @@
 
 using GLib;
 
-public class Vala.CCodeClassBinding : CCodeBinding {
-	public Class cl { get; set; }
-
-	public CCodeClassBinding (CCodeGenerator codegen, Class cl) {
-		this.cl = cl;
-		this.codegen = codegen;
+public class Vala.GObjectClassModule : CCodeModule {
+	public GObjectClassModule (CCodeGenerator codegen, CCodeModule? next) {
+		base (codegen, next);
 	}
 
-	public override void emit () {
+	public override void visit_class (Class cl) {
 		var old_symbol = codegen.current_symbol;
 		var old_type_symbol = codegen.current_type_symbol;
 		var old_class = codegen.current_class;
