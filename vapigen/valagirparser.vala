@@ -397,6 +397,8 @@ public class Vala.GirParser : CodeVisitor {
 				type_name = "string";
 			} else if (type_name == "boolean") {
 				type_name = "bool";
+			} else if (type_name == "GLib.offset") {
+				type_name = "int64";
 			} else if (type_name == "GType") {
 				type_name = "GLib.Type";
 			} else if (type_name == "GObject.String") {

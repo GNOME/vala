@@ -1,5 +1,11 @@
 2008-10-24  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagirparser.vala:
+
+	Recognize goffset
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valanamespace.vala:
 	* vapigen/valagirparser.vala:
 
