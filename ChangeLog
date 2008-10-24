@@ -1,5 +1,15 @@
 2008-10-24  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/Makefile.am:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodemodule.vala:
+
+	Add CCodeModule and CCodeBaseModule classes as preparation to
+	make the backend more modular
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeinvocationexpressionbinding.vala:
 
 	Fix constructor chain-up

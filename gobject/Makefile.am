@@ -14,6 +14,7 @@ lib_LTLIBRARIES = \
 libvala_la_VALASOURCES = \
 	valaccodearraycreationexpressionbinding.vala \
 	valaccodeassignmentbinding.vala \
+	valaccodebasemodule.vala \
 	valaccodebinding.vala \
 	valaccodeclassbinding.vala \
 	valaccodecompiler.vala \
@@ -31,6 +32,7 @@ libvala_la_VALASOURCES = \
 	valaccodeinvocationexpressionbinding.vala \
 	valaccodememberaccessbinding.vala \
 	valaccodemethodbinding.vala \
+	valaccodemodule.vala \
 	valaccodeobjecttypesymbolbinding.vala \
 	valaccodetypesymbolbinding.vala \
 	valaclassregisterfunction.vala \

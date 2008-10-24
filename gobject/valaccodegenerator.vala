@@ -28,6 +28,8 @@ using Gee;
  * Code visitor generating C Code.
  */
 public class Vala.CCodeGenerator : CodeGenerator {
+	CCodeModule head;
+
 	public CodeContext context;
 	
 	public Symbol root_symbol;
@@ -139,6 +141,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	private Set<string> wrappers;
 
 	public CCodeGenerator () {
+		this.head = new CCodeBaseModule (null);
+
 		predefined_marshal_set = new HashSet<string> (str_hash, str_equal);
 		predefined_marshal_set.add ("VOID:VOID");
 		predefined_marshal_set.add ("VOID:BOOLEAN");
@@ -205,6 +209,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	}
 
 	public override void emit (CodeContext context) {
+		this.head.emit (context);
+
 		this.context = context;
 	
 		context.find_header_cycles ();
