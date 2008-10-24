@@ -85,7 +85,18 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_begin_block ();
 
 		current_scope = ns.scope;
-		ns.accept_children (this);
+
+		visit_sorted (ns.get_namespaces ());
+		visit_sorted (ns.get_classes ());
+		visit_sorted (ns.get_interfaces ());
+		visit_sorted (ns.get_structs ());
+		visit_sorted (ns.get_enums ());
+		visit_sorted (ns.get_error_types ());
+		visit_sorted (ns.get_delegates ());
+		visit_sorted (ns.get_fields ());
+		visit_sorted (ns.get_constants ());
+		visit_sorted (ns.get_methods ());
+
 		current_scope = current_scope.parent_scope;
 
 		write_end_block ();
@@ -201,11 +212,47 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_begin_block ();
 
 		current_scope = cl.scope;
-		cl.accept_children (this);
+
+		visit_sorted (cl.get_classes ());
+		visit_sorted (cl.get_structs ());
+		visit_sorted (cl.get_enums ());
+		visit_sorted (cl.get_delegates ());
+		visit_sorted (cl.get_fields ());
+		visit_sorted (cl.get_constants ());
+		visit_sorted (cl.get_methods ());
+		visit_sorted (cl.get_properties ());
+		visit_sorted (cl.get_signals ());
+
 		current_scope = current_scope.parent_scope;
 
 		write_end_block ();
 		write_newline ();
+	}
+
+	void visit_sorted (Gee.List<Symbol> symbols) {
+		var sorted_symbols = new Gee.ArrayList<Symbol> ();
+		foreach (Symbol sym in symbols) {
+			int left = 0;
+			int right = sorted_symbols.size - 1;
+			if (left > right || sym.name < sorted_symbols[left].name) {
+				sorted_symbols.insert (0, sym);
+			} else if (sym.name > sorted_symbols[right].name) {
+				sorted_symbols.add (sym);
+			} else {
+				while (right - left > 1) {
+					int i = (right + left) / 2;
+					if (sym.name > sorted_symbols[i].name) {
+						left = i;
+					} else {
+						right = i;
+					}
+				}
+				sorted_symbols.insert (left + 1, sym);
+			}
+		}
+		foreach (Symbol sym in sorted_symbols) {
+			sym.accept (this);
+		}
 	}
 
 	public override void visit_struct (Struct st) {
@@ -283,7 +330,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_begin_block ();
 
 		current_scope = st.scope;
-		st.accept_children (this);
+
+		visit_sorted (st.get_fields ());
+		visit_sorted (st.get_constants ());
+		visit_sorted (st.get_methods ());
+
 		current_scope = current_scope.parent_scope;
 
 		write_end_block ();
@@ -355,7 +406,16 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_begin_block ();
 
 		current_scope = iface.scope;
-		iface.accept_children (this);
+
+		visit_sorted (iface.get_classes ());
+		visit_sorted (iface.get_structs ());
+		visit_sorted (iface.get_enums ());
+		visit_sorted (iface.get_delegates ());
+		visit_sorted (iface.get_fields ());
+		visit_sorted (iface.get_methods ());
+		visit_sorted (iface.get_properties ());
+		visit_sorted (iface.get_signals ());
+
 		current_scope = current_scope.parent_scope;
 
 		write_end_block ();
