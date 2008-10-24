@@ -1,5 +1,11 @@
 2008-10-24  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala:
+
+	Enable CCodeDynamicSignalModule
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am:
 	* vala/valacodebinding.vala:
 	* vala/valacodegenerator.vala:
