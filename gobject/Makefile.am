@@ -13,7 +13,7 @@ lib_LTLIBRARIES = \
 
 libvala_la_VALASOURCES = \
 	valaccodearraymodule.vala \
-	valaccodeassignmentbinding.vala \
+	valaccodeassignmentmodule.vala \
 	valaccodebasemodule.vala \
 	valaccodebinding.vala \
 	valaccodecompiler.vala \

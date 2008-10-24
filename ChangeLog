@@ -1,5 +1,17 @@
 2008-10-24  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/Makefile.am:
+	* gobject/valaccodeassignmentmodule.vala:
+	* gobject/valaccodebinding.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodemodule.vala:
+	* vala/valaassignment.vala:
+	* vala/valacodegenerator.vala:
+
+	Add CCodeAssignmentModule
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala:
 	* vala/valaelementaccess.vala:
 	* gobject/Makefile.am:

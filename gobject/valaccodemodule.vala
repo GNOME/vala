@@ -76,6 +76,10 @@ public abstract class Vala.CCodeModule {
 		next.visit_element_access (expr);
 	}
 
+	public virtual void visit_assignment (Assignment assignment) {
+		next.visit_assignment (assignment);
+	}
+
 	public virtual void visit_invocation_expression (InvocationExpression expr) {
 		next.visit_invocation_expression (expr);
 	}

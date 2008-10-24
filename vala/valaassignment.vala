@@ -97,10 +97,6 @@ public class Vala.Assignment : Expression {
 	public override bool is_pure () {
 		return false;
 	}
-
-	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
-		return codegen.create_assignment_binding (this);
-	}
 }
 	
 public enum Vala.AssignmentOperator {

@@ -1,4 +1,4 @@
-/* valaccodeassignmentbinding.vala
+/* valaccodeassignmentmodule.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -27,15 +27,12 @@ using Gee;
 /**
  * The link between an assignment and generated code.
  */
-public class Vala.CCodeAssignmentBinding : CCodeBinding {
-	public Assignment assignment { get; set; }
-
-	public CCodeAssignmentBinding (CCodeGenerator codegen, Assignment assignment) {
-		this.assignment = assignment;
-		this.codegen = codegen;
+public class Vala.CCodeAssignmentModule : CCodeModule {
+	public CCodeAssignmentModule (CCodeGenerator codegen, CCodeModule? next) {
+		base (codegen, next);
 	}
 
-	CCodeExpression emit_property_assignment () {
+	CCodeExpression emit_property_assignment (Assignment assignment) {
 		var ma = assignment.left as MemberAccess;
 
 		var prop = (Property) assignment.left.symbol_reference;
@@ -92,7 +89,7 @@ public class Vala.CCodeAssignmentBinding : CCodeBinding {
 		}
 	}
 
-	CCodeExpression? emit_signal_assignment () {
+	CCodeExpression? emit_signal_assignment (Assignment assignment) {
 		var sig = (Signal) assignment.left.symbol_reference;
 		
 		var m = (Method) assignment.right.symbol_reference;
@@ -231,7 +228,7 @@ public class Vala.CCodeAssignmentBinding : CCodeBinding {
 		return ccall;
 	}
 
-	private CCodeExpression? emit_non_array_element_access () {
+	private CCodeExpression? emit_non_array_element_access (Assignment assignment) {
 		// custom element access
 		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
 
@@ -277,7 +274,7 @@ public class Vala.CCodeAssignmentBinding : CCodeBinding {
 		}
 	}
 
-	CCodeExpression emit_simple_assignment () {
+	CCodeExpression emit_simple_assignment (Assignment assignment) {
 		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
 
 		bool unref_old = codegen.requires_destroy (assignment.left.value_type);
@@ -366,7 +363,7 @@ public class Vala.CCodeAssignmentBinding : CCodeBinding {
 		return codenode;
 	}
 
-	public override void emit () {
+	public override void visit_assignment (Assignment assignment) {
 		assignment.right.accept (codegen);
 
 		if (assignment.left.error || assignment.right.error) {
@@ -375,15 +372,15 @@ public class Vala.CCodeAssignmentBinding : CCodeBinding {
 		}
 
 		if (assignment.left.symbol_reference is Property) {
-			assignment.ccodenode = emit_property_assignment ();
+			assignment.ccodenode = emit_property_assignment (assignment);
 		} else if (assignment.left.symbol_reference is Signal) {
-			assignment.ccodenode = emit_signal_assignment ();
+			assignment.ccodenode = emit_signal_assignment (assignment);
 		} else if (assignment.left is ElementAccess
 		           && !(((ElementAccess) assignment.left).container.value_type is ArrayType)
 		           && !(((ElementAccess) assignment.left).container.value_type is PointerType)) {
-			assignment.ccodenode = emit_non_array_element_access ();
+			assignment.ccodenode = emit_non_array_element_access (assignment);
 		} else {
-			assignment.ccodenode = emit_simple_assignment ();
+			assignment.ccodenode = emit_simple_assignment (assignment);
 		}
 	}
 }

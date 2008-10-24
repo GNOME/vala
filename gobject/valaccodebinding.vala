@@ -44,8 +44,4 @@ public abstract class Vala.CCodeBinding : CodeBinding {
 	public CCodeBinding? code_binding (CodeNode node) {
 		return (CCodeBinding) node.get_code_binding (codegen);
 	}
-
-	public CCodeAssignmentBinding assignment_binding (Assignment node) {
-		return (CCodeAssignmentBinding) node.get_code_binding (codegen);
-	}
 }
