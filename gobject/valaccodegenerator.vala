@@ -142,6 +142,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public CCodeGenerator () {
 		head = new CCodeBaseModule (this, head);
+		head = new CCodeStructModule (this, head);
 		head = new CCodeMethodModule (this, head);
 		head = new CCodeMemberAccessModule (this, head);
 		head = new CCodeElementAccessModule (this, head);
@@ -306,6 +307,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public override void visit_interface (Interface iface) {
 		head.visit_interface (iface);
+	}
+
+	public override void visit_struct (Struct st) {
+		head.visit_struct (st);
 	}
 
 	public override void visit_enum (Enum en) {

@@ -21,11 +21,11 @@ libvala_la_VALASOURCES = \
 	valaccodeelementaccessmodule.vala \
 	valaccodegenerator.vala \
 	valaccodegeneratorsourcefile.vala \
-	valaccodegeneratorstruct.vala \
 	valaccodeinvocationexpressionmodule.vala \
 	valaccodememberaccessmodule.vala \
 	valaccodemethodmodule.vala \
 	valaccodemodule.vala \
+	valaccodestructmodule.vala \
 	valaclassregisterfunction.vala \
 	valadbusmodule.vala \
 	valagirwriter.vala \

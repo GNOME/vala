@@ -60,6 +60,10 @@ public abstract class Vala.CCodeModule {
 		next.visit_interface (iface);
 	}
 
+	public virtual void visit_struct (Struct st) {
+		next.visit_struct (st);
+	}
+
 	public virtual void visit_method (Method m) {
 		next.visit_method (m);
 	}
