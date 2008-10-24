@@ -31,7 +31,6 @@ libvala_la_VALASOURCES = \
 	valaccodememberaccessbinding.vala \
 	valaccodemethodmodule.vala \
 	valaccodemodule.vala \
-	valaccodeobjecttypesymbolbinding.vala \
 	valaclassregisterfunction.vala \
 	valadbusmodule.vala \
 	valagirwriter.vala \

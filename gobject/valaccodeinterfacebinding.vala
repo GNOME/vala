@@ -23,7 +23,7 @@
 
 using GLib;
 
-public class Vala.CCodeInterfaceBinding : CCodeObjectTypeSymbolBinding {
+public class Vala.CCodeInterfaceBinding : CCodeBinding {
 	public Interface iface { get; set; }
 
 	public CCodeInterfaceBinding (CCodeGenerator codegen, Interface iface) {
@@ -145,7 +145,7 @@ public class Vala.CCodeInterfaceBinding : CCodeObjectTypeSymbolBinding {
 			}
 		}
 
-		init_block.add_statement (register_dbus_info (iface));
+		init_block.add_statement (head.register_dbus_info (iface));
 
 		codegen.source_type_member_definition.append (base_init);
 	}

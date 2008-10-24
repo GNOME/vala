@@ -2,6 +2,17 @@
 
 	* gobject/Makefile.am:
 	* gobject/valaccodeclassbinding.vala:
+	* gobject/valaccodeinterfacebinding.vala:
+	* gobject/valaccodemodule.vala:
+	* gobject/valadbusmodule.vala:
+
+	Move register_dbus_info from CCodeObjectTypeSymbolBinding
+	to DBusModule
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/Makefile.am:
+	* gobject/valaccodeclassbinding.vala:
 	* gobject/valaccodegenerator.vala:
 	* gobject/valaccodeinterfacebinding.vala:
 	* gobject/valaccodemodule.vala:

@@ -91,4 +91,8 @@ public abstract class Vala.CCodeModule {
 	public virtual CCodeFunctionCall get_signal_creation (Signal sig, TypeSymbol type) {
 		return next.get_signal_creation (sig, type);
 	}
+
+	public virtual CCodeFragment register_dbus_info (ObjectTypeSymbol bindable) {
+		return next.register_dbus_info (bindable);
+	}
 }

@@ -23,7 +23,7 @@
 
 using GLib;
 
-public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
+public class Vala.CCodeClassBinding : CCodeBinding {
 	public Class cl { get; set; }
 
 	public CCodeClassBinding (CCodeGenerator codegen, Class cl) {
@@ -894,7 +894,7 @@ public class Vala.CCodeClassBinding : CCodeObjectTypeSymbolBinding {
 			}
 		}
 
-		init_block.add_statement (register_dbus_info (cl));
+		init_block.add_statement (head.register_dbus_info (cl));
 		init_block.add_statement (codegen.class_init_fragment);
 
 		codegen.source_type_member_definition.append (class_init);
