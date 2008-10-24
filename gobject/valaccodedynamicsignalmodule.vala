@@ -1,4 +1,4 @@
-/* valaccodedynamicsignalbinding.vala
+/* valaccodedynamicsignalmodule.vala
  *
  * Copyright (C) 2007-2008  Jürg Billeter
  *
@@ -26,86 +26,71 @@ using Gee;
 /**
  * The link between a dynamic signal and generated code.
  */
-public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
-	public Signal node { get; set; }
-
-	public CCodeDynamicSignalBinding (CCodeGenerator codegen, DynamicSignal node) {
-		this.node = node;
-		this.codegen = codegen;
+public class Vala.CCodeDynamicSignalModule : CCodeModule {
+	public CCodeDynamicSignalModule (CCodeGenerator codegen, CCodeModule? next) {
+		base (codegen, next);
 	}
 
-	string? connect_wrapper_name;
-	string? disconnect_wrapper_name;
+	int signal_wrapper_id;
 
-	string? dynamic_cname;
-
-	private static int signal_wrapper_id;
-
-	public string get_dynamic_cname () {
-		if (dynamic_cname == null) {
-			dynamic_cname = "dynamic_%s%d_".printf (node.name, signal_wrapper_id++);
-		}
-		return dynamic_cname;
+	public override string get_dynamic_signal_cname (DynamicSignal node) {
+		return "dynamic_%s%d_".printf (node.name, signal_wrapper_id++);
 	}
 
-	public string get_connect_wrapper_name () {
+	public override string get_dynamic_signal_connect_wrapper_name (DynamicSignal node) {
 		var dynamic_signal = (DynamicSignal) node;
 
-		if (connect_wrapper_name == null) {
-			connect_wrapper_name = "_%sconnect".printf (get_dynamic_cname ());
-			var func = new CCodeFunction (connect_wrapper_name, "void");
-			func.add_parameter (new CCodeFormalParameter ("obj", "gpointer"));
-			func.add_parameter (new CCodeFormalParameter ("signal_name", "const char *"));
-			func.add_parameter (new CCodeFormalParameter ("handler", "GCallback"));
-			func.add_parameter (new CCodeFormalParameter ("data", "gpointer"));
-			var block = new CCodeBlock ();
-			if (dynamic_signal.dynamic_type.data_type == codegen.dbus_object_type) {
-				generate_dbus_connect_wrapper (block);
-			} else if (dynamic_signal.dynamic_type.data_type != null
-			           && dynamic_signal.dynamic_type.data_type.is_subtype_of (codegen.gobject_type)) {
-				generate_gobject_connect_wrapper (block);
-			} else {
-				Report.error (node.source_reference, "dynamic signals are not supported for `%s'".printf (dynamic_signal.dynamic_type.to_string ()));
-			}
-
-			// append to C source file
-			codegen.source_type_member_declaration.append (func.copy ());
-
-			func.block = block;
-			codegen.source_type_member_definition.append (func);
+		string connect_wrapper_name = "_%sconnect".printf (get_dynamic_signal_cname (node));
+		var func = new CCodeFunction (connect_wrapper_name, "void");
+		func.add_parameter (new CCodeFormalParameter ("obj", "gpointer"));
+		func.add_parameter (new CCodeFormalParameter ("signal_name", "const char *"));
+		func.add_parameter (new CCodeFormalParameter ("handler", "GCallback"));
+		func.add_parameter (new CCodeFormalParameter ("data", "gpointer"));
+		var block = new CCodeBlock ();
+		if (dynamic_signal.dynamic_type.data_type == codegen.dbus_object_type) {
+			generate_dbus_connect_wrapper (node, block);
+		} else if (dynamic_signal.dynamic_type.data_type != null
+		           && dynamic_signal.dynamic_type.data_type.is_subtype_of (codegen.gobject_type)) {
+			generate_gobject_connect_wrapper (node, block);
+		} else {
+			Report.error (node.source_reference, "dynamic signals are not supported for `%s'".printf (dynamic_signal.dynamic_type.to_string ()));
 		}
+
+		// append to C source file
+		codegen.source_type_member_declaration.append (func.copy ());
+
+		func.block = block;
+		codegen.source_type_member_definition.append (func);
 
 		return connect_wrapper_name;
 	}
 
-	public string get_disconnect_wrapper_name () {
+	public override string get_dynamic_signal_disconnect_wrapper_name (DynamicSignal node) {
 		var dynamic_signal = (DynamicSignal) node;
 
-		if (disconnect_wrapper_name == null) {
-			disconnect_wrapper_name = "_%sdisconnect".printf (get_dynamic_cname ());
-			var func = new CCodeFunction (disconnect_wrapper_name, "void");
-			func.add_parameter (new CCodeFormalParameter ("obj", "gpointer"));
-			func.add_parameter (new CCodeFormalParameter ("signal_name", "const char *"));
-			func.add_parameter (new CCodeFormalParameter ("handler", "GCallback"));
-			func.add_parameter (new CCodeFormalParameter ("data", "gpointer"));
-			var block = new CCodeBlock ();
-			if (dynamic_signal.dynamic_type.data_type == codegen.dbus_object_type) {
-				generate_dbus_disconnect_wrapper (block);
-			} else {
-				Report.error (node.source_reference, "dynamic signals are not supported for `%s'".printf (dynamic_signal.dynamic_type.to_string ()));
-			}
-
-			// append to C source file
-			codegen.source_type_member_declaration.append (func.copy ());
-
-			func.block = block;
-			codegen.source_type_member_definition.append (func);
+		string disconnect_wrapper_name = "_%sdisconnect".printf (get_dynamic_signal_cname (node));
+		var func = new CCodeFunction (disconnect_wrapper_name, "void");
+		func.add_parameter (new CCodeFormalParameter ("obj", "gpointer"));
+		func.add_parameter (new CCodeFormalParameter ("signal_name", "const char *"));
+		func.add_parameter (new CCodeFormalParameter ("handler", "GCallback"));
+		func.add_parameter (new CCodeFormalParameter ("data", "gpointer"));
+		var block = new CCodeBlock ();
+		if (dynamic_signal.dynamic_type.data_type == codegen.dbus_object_type) {
+			generate_dbus_disconnect_wrapper (node, block);
+		} else {
+			Report.error (node.source_reference, "dynamic signals are not supported for `%s'".printf (dynamic_signal.dynamic_type.to_string ()));
 		}
+
+		// append to C source file
+		codegen.source_type_member_declaration.append (func.copy ());
+
+		func.block = block;
+		codegen.source_type_member_definition.append (func);
 
 		return disconnect_wrapper_name;
 	}
 
-	void generate_gobject_connect_wrapper (CCodeBlock block) {
+	void generate_gobject_connect_wrapper (DynamicSignal node, CCodeBlock block) {
 		var dynamic_signal = (DynamicSignal) node;
 
 		var m = (Method) dynamic_signal.handler.symbol_reference;
@@ -130,7 +115,7 @@ public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 		block.add_statement (new CCodeExpressionStatement (call));
 	}
 
-	void generate_dbus_connect_wrapper (CCodeBlock block) {
+	void generate_dbus_connect_wrapper (DynamicSignal node, CCodeBlock block) {
 		var dynamic_signal = (DynamicSignal) node;
 
 		var m = (Method) dynamic_signal.handler.symbol_reference;
@@ -197,7 +182,7 @@ public class Vala.CCodeDynamicSignalBinding : CCodeBinding {
 		block.add_statement (new CCodeExpressionStatement (call));
 	}
 
-	void generate_dbus_disconnect_wrapper (CCodeBlock block) {
+	void generate_dbus_disconnect_wrapper (DynamicSignal node, CCodeBlock block) {
 		var dynamic_signal = (DynamicSignal) node;
 
 		var call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_disconnect_signal"));

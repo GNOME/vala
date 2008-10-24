@@ -99,7 +99,7 @@ public class Vala.CCodeAssignmentModule : CCodeModule {
 
 		if (assignment.operator == AssignmentOperator.ADD) {
 			if (sig is DynamicSignal) {
-				connect_func = codegen.dynamic_signal_binding ((DynamicSignal) sig).get_connect_wrapper_name ();
+				connect_func = head.get_dynamic_signal_connect_wrapper_name ((DynamicSignal) sig);
 			} else {
 				connect_func = "g_signal_connect_object";
 				if (m.binding != MemberBinding.INSTANCE) {
@@ -108,7 +108,7 @@ public class Vala.CCodeAssignmentModule : CCodeModule {
 			}
 		} else if (assignment.operator == AssignmentOperator.SUB) {
 			if (sig is DynamicSignal) {
-				connect_func = codegen.dynamic_signal_binding ((DynamicSignal) sig).get_disconnect_wrapper_name ();
+				connect_func = head.get_dynamic_signal_disconnect_wrapper_name ((DynamicSignal) sig);
 			} else {
 				connect_func = "g_signal_handlers_disconnect_matched";
 			}

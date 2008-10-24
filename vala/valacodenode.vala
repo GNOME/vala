@@ -153,7 +153,6 @@ public abstract class Vala.CodeNode {
 		return null;
 	}
 
-	private CodeBinding? code_binding;
 	private CCodeNode? _ccodenode;
 
 	/**
@@ -171,24 +170,5 @@ public abstract class Vala.CodeNode {
 		}
 
 		return str.append (" */").str;
-	}
-
-	/**
-	 * Returns the binding to the generated code.
-	 *
-	 * @return code binding
-	 */
-	public CodeBinding? get_code_binding (CodeGenerator codegen) {
-		if (code_binding == null) {
-			code_binding = create_code_binding (codegen);
-		}
-		return code_binding;
-	}
-
-	/**
-	 * Creates the binding to the generated code.
-	 */
-	public virtual CodeBinding? create_code_binding (CodeGenerator codegen) {
-		return null;
 	}
 }

@@ -37,8 +37,4 @@ public class Vala.DynamicSignal : Signal {
 		this.return_type = return_type;
 		this.source_reference = source_reference;
 	}
-
-	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
-		return codegen.create_dynamic_signal_binding (this);
-	}
 }

@@ -3973,7 +3973,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var sig = d.parent_symbol as Signal;
 		var dynamic_sig = sig as DynamicSignal;
 		if (dynamic_sig != null) {
-			delegate_name = dynamic_signal_binding (dynamic_sig).get_dynamic_cname ();
+			delegate_name = head.get_dynamic_signal_cname (dynamic_sig);
 		} else if (sig != null) {
 			delegate_name = sig.parent_symbol.get_lower_case_cprefix () + sig.get_cname ();
 		} else {
@@ -4366,17 +4366,5 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			node.accept (this);
 		}
 		return node.ccodenode;
-	}
-
-	public override CodeBinding? create_dynamic_signal_binding (DynamicSignal node) {
-		return new CCodeDynamicSignalBinding (this, node);
-	}
-
-	public CCodeBinding? code_binding (CodeNode node) {
-		return (CCodeBinding) node.get_code_binding (this);
-	}
-
-	public CCodeDynamicSignalBinding dynamic_signal_binding (DynamicSignal node) {
-		return (CCodeDynamicSignalBinding) node.get_code_binding (this);
 	}
 }

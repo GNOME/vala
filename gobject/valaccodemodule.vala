@@ -131,4 +131,16 @@ public abstract class Vala.CCodeModule {
 	public virtual string get_dynamic_property_setter_cname (DynamicProperty node) {
 		return next.get_dynamic_property_setter_cname (node);
 	}
+
+	public virtual string get_dynamic_signal_cname (DynamicSignal node) {
+		return next.get_dynamic_signal_cname (node);
+	}
+
+	public virtual string get_dynamic_signal_connect_wrapper_name (DynamicSignal node) {
+		return next.get_dynamic_signal_connect_wrapper_name (node);
+	}
+
+	public virtual string get_dynamic_signal_disconnect_wrapper_name (DynamicSignal node) {
+		return next.get_dynamic_signal_disconnect_wrapper_name (node);
+	}
 }

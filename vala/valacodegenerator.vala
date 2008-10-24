@@ -33,8 +33,4 @@ public class Vala.CodeGenerator : CodeVisitor {
 	 */
 	public virtual void emit (CodeContext context) {
 	}
-
-	public virtual CodeBinding? create_dynamic_signal_binding (DynamicSignal node) {
-		return null;
-	}
 }
