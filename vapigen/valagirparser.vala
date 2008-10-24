@@ -120,7 +120,10 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.name == "namespace") {
-				context.root.add_namespace (parse_namespace ());
+				var ns = parse_namespace ();
+				if (ns != null) {
+					context.root.add_namespace (ns);
+				}
 			} else if (reader.name == "include") {
 				parse_include ();
 			} else {
@@ -138,9 +141,19 @@ public class Vala.GirParser : CodeVisitor {
 		end_element ("include");
 	}
 
-	Namespace parse_namespace () {
+	Namespace? parse_namespace () {
 		start_element ("namespace");
-		var ns = new Namespace (reader.get_attribute ("name"));
+
+		bool new_namespace = false;
+		string namespace_name = transform_namespace_name (reader.get_attribute ("name"));
+		var ns = context.root.scope.lookup (namespace_name) as Namespace;
+		if (ns == null) {
+			ns = new Namespace (namespace_name);
+			new_namespace = true;
+		} else {
+			ns.source_reference = new SourceReference (current_source_file);
+		}
+
 		string cheader = get_attribute (ns.name, "c:header-filename");
 		if (cheader != null) {
 			ns.set_cheader_filename (cheader);
@@ -196,6 +209,11 @@ public class Vala.GirParser : CodeVisitor {
 			current_source_file.add_node (sym);
 		}
 		end_element ("namespace");
+
+		if (!new_namespace) {
+			ns = null;
+		}
+
 		return ns;
 	}
 
@@ -413,13 +431,8 @@ public class Vala.GirParser : CodeVisitor {
 			string[] type_components = type_name.split (".");
 			if (type_components[1] != null) {
 				// namespaced name
-				string namespace_name = type_components[0];
+				string namespace_name = transform_namespace_name (type_components[0]);
 				string transformed_type_name = type_components[1];
-				if (namespace_name == "GObject") {
-					namespace_name = "GLib";
-				} else if (namespace_name == "Gio") {
-					namespace_name = "GLib";
-				}
 				type = new UnresolvedType.from_symbol (new UnresolvedSymbol (new UnresolvedSymbol (null, namespace_name), transformed_type_name));
 			} else {
 				type = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, type_name));
@@ -427,6 +440,15 @@ public class Vala.GirParser : CodeVisitor {
 		}
 
 		return type;
+	}
+
+	string transform_namespace_name (string gir_module_name) {
+		if (gir_module_name == "GObject") {
+			return "GLib";
+		} else if (gir_module_name == "Gio") {
+			return "GLib";
+		}
+		return gir_module_name;
 	}
 
 	Struct parse_record () {
