@@ -155,7 +155,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head = new GObjectClassModule (this, head);
 		head = new GObjectInterfaceModule (this, head);
 		head = new GObjectSignalModule (this, head);
-		head = new DBusModule (this, head);
+		head = new DBusClientModule (this, head);
+		head = new DBusServerModule (this, head);
 
 		predefined_marshal_set = new HashSet<string> (str_hash, str_equal);
 		predefined_marshal_set.add ("VOID:VOID");
@@ -2222,7 +2223,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					var inner_array_type = (ArrayType) stmt.type_reference;
 					for (int dim = 1; dim <= inner_array_type.rank; dim++) {
 						cdecl = new CCodeDeclaration ("int");
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_length%d".printf (stmt.variable_name, dim), new CCodeConstant ("-1")));
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
 						cbody.add_statement (cdecl);
 					}
 				}
@@ -2268,7 +2269,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					var inner_array_type = (ArrayType) stmt.type_reference;
 					for (int dim = 1; dim <= inner_array_type.rank; dim++) {
 						cdecl = new CCodeDeclaration ("int");
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_length%d".printf (stmt.variable_name, dim), new CCodeConstant ("-1")));
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
 						cbody.add_statement (cdecl);
 					}
 				}
