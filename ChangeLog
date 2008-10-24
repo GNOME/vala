@@ -1,5 +1,13 @@
 2008-10-24  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodemodule.vala:
+
+	Allow access to head and codegen from CCode modules
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodegenerator.vala:
 	* gobject/valaccodegenerator.vala:
 

@@ -24,7 +24,7 @@
  * Code visitor generating C Code.
  */
 public class Vala.CCodeBaseModule : CCodeModule {
-	public CCodeBaseModule (CCodeModule? next) {
-		base (next);
+	public CCodeBaseModule (CCodeGenerator codegen, CCodeModule? next) {
+		base (codegen, next);
 	}
 }

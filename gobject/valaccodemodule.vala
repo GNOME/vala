@@ -26,12 +26,26 @@ using Gee;
  * Code visitor generating C Code.
  */
 public abstract class Vala.CCodeModule {
-	public weak CCodeModule head { get; private set; }
+	public weak CCodeGenerator codegen { get; private set; }
 
-	public CCodeModule? next { get; private set; }
+	public CCodeModule head {
+		get { return _head; }
+		private set {
+			_head = value;
+			// propagate head property to all modules
+			if (next != null) {
+				next.head = value;
+			}
+		}
+	}
 
-	public CCodeModule (CCodeModule? next) {
+	weak CCodeModule _head;
+	CCodeModule? next;
+
+	public CCodeModule (CCodeGenerator codegen, CCodeModule? next) {
+		this.codegen = codegen;
 		this.next = next;
+		this.head = this;
 	}
 
 	public virtual void emit (CodeContext context) {

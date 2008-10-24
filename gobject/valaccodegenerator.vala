@@ -141,7 +141,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	private Set<string> wrappers;
 
 	public CCodeGenerator () {
-		this.head = new CCodeBaseModule (null);
+		this.head = new CCodeBaseModule (this, null);
 
 		predefined_marshal_set = new HashSet<string> (str_hash, str_equal);
 		predefined_marshal_set.add ("VOID:VOID");
