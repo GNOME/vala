@@ -490,6 +490,7 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		var signals = new ArrayList<Signal> ();
 		var methods = new ArrayList<Method> ();
+		var vmethods = new ArrayList<Method> ();
 		var fields = new ArrayList<Field> ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.name == "implements") {
@@ -506,7 +507,7 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "method") {
 				methods.add (parse_method ());
 			} else if (reader.name == "callback") {
-				parse_callback ();
+				vmethods.add (parse_vmethod ());
 			} else if (reader.name == "glib:signal") {
 				signals.add (parse_signal ());
 			} else {
@@ -528,6 +529,21 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
+		// virtual method merging
+		foreach (Method m in vmethods) {
+			var symbol = cl.scope.lookup (m.name);
+			if (symbol == null) {
+				cl.add_method (m);
+			} else if (symbol is Signal) {
+				var sig = (Signal) symbol;
+				sig.is_virtual = true;
+			} else if (symbol is Property || symbol is Field) {
+				// assume method is getter for property/field ignore method
+			} else {
+				Report.error (get_current_src (), "duplicate member `%s' in `%s'".printf (m.name, cl.name));
+			}
+		}
+
 		// method merging
 		foreach (Method m in methods) {
 			var symbol = cl.scope.lookup (m.name);
@@ -538,6 +554,8 @@ public class Vala.GirParser : CodeVisitor {
 				sig.has_emitter = true;
 			} else if (symbol is Property || symbol is Field) {
 				// assume method is getter for property/field ignore method
+			} else if (symbol is Method) {
+				// assume method is wrapper for virtual method
 			} else {
 				Report.error (get_current_src (), "duplicate member `%s' in `%s'".printf (m.name, cl.name));
 			}
@@ -697,6 +715,42 @@ public class Vala.GirParser : CodeVisitor {
 		return m;
 	}
 
+	Method parse_vmethod () {
+		start_element ("callback");
+		string name = reader.get_attribute ("name");
+		string throws_string = reader.get_attribute ("throws");
+		next ();
+		DataType return_type;
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
+			return_type = parse_return_value ();
+		} else {
+			return_type = new VoidType ();
+		}
+		var m = new Method (name, return_type);
+		m.access = SymbolAccessibility.PUBLIC;
+		m.is_virtual = true;
+		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
+			start_element ("parameters");
+			next ();
+			bool first = true;
+			while (current_token == MarkupTokenType.START_ELEMENT) {
+				var param = parse_parameter ();
+				// first parameter is instance pointer, ignore
+				if (!first) {
+					m.add_parameter (param);
+				} else {
+					first = false;
+				}
+			}
+			end_element ("parameters");
+		}
+		if (throws_string == "1") {
+			m.add_error_type (new ErrorType (null));
+		}
+		end_element ("callback");
+		return m;
+	}
+
 	Signal parse_signal () {
 		start_element ("glib:signal");
 		string name = string.joinv ("_", reader.get_attribute ("name").split ("-"));
@@ -709,7 +763,6 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		var sig = new Signal (name, return_type);
 		sig.access = SymbolAccessibility.PUBLIC;
-		sig.is_virtual = true;
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
 			start_element ("parameters");
 			next ();
