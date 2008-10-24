@@ -74,7 +74,7 @@ public class Vala.CCodeMemberAccessModule : CCodeModule {
 				expr.ccodenode = new CCodeIdentifier (m.get_cname ());
 			}
 		} else if (expr.symbol_reference is ArrayLengthField) {
-			expr.ccodenode = codegen.get_array_length_cexpression (expr.inner, 1);
+			expr.ccodenode = head.get_array_length_cexpression (expr.inner, 1);
 		} else if (expr.symbol_reference is Field) {
 			var f = (Field) expr.symbol_reference;
 			if (f.binding == MemberBinding.INSTANCE) {

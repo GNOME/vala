@@ -179,7 +179,7 @@ public class Vala.CCodeInvocationExpressionModule : CCodeModule {
 					if (!param.no_array_length && param.parameter_type is ArrayType) {
 						var array_type = (ArrayType) param.parameter_type;
 						for (int dim = 1; dim <= array_type.rank; dim++) {
-							carg_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), codegen.get_array_length_cexpression (arg, dim));
+							carg_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), head.get_array_length_cexpression (arg, dim));
 						}
 						multiple_cargs = true;
 					} else if (param.parameter_type is DelegateType) {
@@ -322,7 +322,7 @@ public class Vala.CCodeInvocationExpressionModule : CCodeModule {
 			    param.parameter_type is ArrayType) {
 				var array_type = (ArrayType) param.parameter_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					carg_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), codegen.get_array_length_cexpression (param.default_expression, dim));
+					carg_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), head.get_array_length_cexpression (param.default_expression, dim));
 				}
 			}
 
@@ -445,7 +445,7 @@ public class Vala.CCodeInvocationExpressionModule : CCodeModule {
 			/* memset needs string.h */
 			codegen.string_h_needed = true;
 
-			var clen = codegen.get_array_length_cexpression (ma.inner, 1);
+			var clen = head.get_array_length_cexpression (ma.inner, 1);
 			var celems = (CCodeExpression) ma.inner.ccodenode;
 			var array_type = (ArrayType) ma.inner.value_type;
 			var csizeof = new CCodeIdentifier ("sizeof (%s)".printf (array_type.element_type.get_cname ()));
@@ -461,7 +461,7 @@ public class Vala.CCodeInvocationExpressionModule : CCodeModule {
 			ccomma.append_expression (new CCodeAssignment (temp_ref, new_size));
 			ccomma.append_expression ((CCodeExpression) expr.ccodenode);
 			ccomma.append_expression (new CCodeConditionalExpression (ccheck, czero, new CCodeConstant ("NULL")));
-			ccomma.append_expression (new CCodeAssignment (codegen.get_array_length_cexpression (ma.inner, 1), temp_ref));
+			ccomma.append_expression (new CCodeAssignment (head.get_array_length_cexpression (ma.inner, 1), temp_ref));
 
 			expr.ccodenode = ccomma;
 		} else if (m == codegen.substring_method) {

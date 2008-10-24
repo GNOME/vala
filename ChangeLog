@@ -1,5 +1,20 @@
 2008-10-24  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodearraymodule.vala:
+	* gobject/valaccodeassignmentmodule.vala:
+	* gobject/valaccodeelementaccessmodule.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinvocationexpressionmodule.vala:
+	* gobject/valaccodememberaccessmodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+	* gobject/valaccodemodule.vala:
+	* gobject/valadbusmodule.vala:
+
+	Move get_array_length_cname and get_array_length_cexpression to
+	CCodeArrayModule
+
+2008-10-24  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagirparser.vala:
 
 	Support virtual methods

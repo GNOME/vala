@@ -281,7 +281,7 @@ public class Vala.CCodeAssignmentModule : CCodeModule {
 		bool array = false;
 		bool instance_delegate = false;
 		if (assignment.left.value_type is ArrayType) {
-			array = !(codegen.get_array_length_cexpression (assignment.left, 1) is CCodeConstant);
+			array = !(head.get_array_length_cexpression (assignment.left, 1) is CCodeConstant);
 		} else if (assignment.left.value_type is DelegateType) {
 			var delegate_type = (DelegateType) assignment.left.value_type;
 			instance_delegate = delegate_type.delegate_symbol.has_target;
@@ -301,8 +301,8 @@ public class Vala.CCodeAssignmentModule : CCodeModule {
 			if (array) {
 				var array_type = (ArrayType) assignment.left.value_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var lhs_array_len = codegen.get_array_length_cexpression (assignment.left, dim);
-					var rhs_array_len = codegen.get_array_length_cexpression (assignment.right, dim);
+					var lhs_array_len = head.get_array_length_cexpression (assignment.left, dim);
+					var rhs_array_len = head.get_array_length_cexpression (assignment.right, dim);
 					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
 				}
 			} else if (instance_delegate) {

@@ -48,7 +48,7 @@ public class Vala.CCodeElementAccessModule : CCodeModule {
 			var memberaccess = expr.container as MemberAccess;
 			if (lit != null && memberaccess != null) {
 				int dim = lit.value.to_int ();
-				expr.ccodenode = codegen.get_array_length_cexpression (memberaccess.inner, dim + 1);
+				expr.ccodenode = head.get_array_length_cexpression (memberaccess.inner, dim + 1);
 			}
 		} else if (container_type == codegen.string_type.data_type) {
 			// access to unichar in a string
@@ -105,7 +105,7 @@ public class Vala.CCodeElementAccessModule : CCodeModule {
 		} else {
 			// access to element in an array
 			for (int i = 1; i < rank; i++) {
-				var cmul = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (cindex), codegen.get_array_length_cexpression (expr.container, i + 1));
+				var cmul = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (cindex), head.get_array_length_cexpression (expr.container, i + 1));
 				cindex = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cmul, new CCodeParenthesizedExpression ((CCodeExpression) indices[i].ccodenode));
 			}
 			expr.ccodenode = new CCodeElementAccess (ccontainer, cindex);

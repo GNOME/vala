@@ -484,7 +484,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				}
 				
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var cparam = new CCodeFormalParameter (get_array_length_cname (param.name, dim), length_ctype);
+					var cparam = new CCodeFormalParameter (head.get_array_length_cname (param.name, dim), length_ctype);
 					cfundecl.add_parameter (cparam);
 				}
 			}
@@ -639,7 +639,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var len_type = int_type.copy ();
 
-					st.add_field (len_type.get_cname (), get_array_length_cname (f.name, dim));
+					st.add_field (len_type.get_cname (), head.get_array_length_cname (f.name, dim));
 				}
 			} else if (f.field_type is DelegateType) {
 				var delegate_type = (DelegateType) f.field_type;
@@ -665,7 +665,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					
 					Gee.List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var array_len_lhs = get_array_length_cexpression (ma, dim);
+						var array_len_lhs = head.get_array_length_cexpression (ma, dim);
 						var size = sizes[dim - 1];
 						instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (array_len_lhs, (CCodeExpression) size.ccodenode)));
 					}
@@ -691,7 +691,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					var len_type = int_type.copy ();
 
 					var cdecl = new CCodeDeclaration (len_type.get_cname ());
-					cdecl.add_declarator (new CCodeVariableDeclarator (get_array_length_cname (f.get_cname (), dim)));
+					cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (f.get_cname (), dim)));
 					if (f.access != SymbolAccessibility.PRIVATE) {
 						cdecl.modifiers = CCodeModifiers.EXTERN;
 						header_type_member_declaration.append (cdecl);
@@ -1244,7 +1244,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			var array_type = (ArrayType) local.variable_type;
 			
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var len_var = new LocalVariable (int_type.copy (), get_array_length_cname (local.name, dim));
+				var len_var = new LocalVariable (int_type.copy (), head.get_array_length_cname (local.name, dim));
 				temp_vars.insert (0, len_var);
 			}
 		} else if (local.variable_type is DelegateType) {
@@ -1271,8 +1271,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), rhs));
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var lhs_array_len = new CCodeIdentifier (get_array_length_cname (local.name, dim));
-					var rhs_array_len = get_array_length_cexpression (local.initializer, dim);
+					var lhs_array_len = new CCodeIdentifier (head.get_array_length_cname (local.name, dim));
+					var rhs_array_len = head.get_array_length_cexpression (local.initializer, dim);
 					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
 				}
 				
@@ -1308,7 +1308,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				var ccomma = new CCodeCommaExpression ();
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (get_array_length_cname (local.name, dim)), new CCodeConstant ("0")));
+					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (head.get_array_length_cname (local.name, dim)), new CCodeConstant ("0")));
 				}
 
 				ccomma.append_expression (rhs);
@@ -1704,10 +1704,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				CCodeExpression csizeexpr = null;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					if (first) {
-						csizeexpr = get_array_length_cexpression (expr, dim);
+						csizeexpr = head.get_array_length_cexpression (expr, dim);
 						first = false;
 					} else {
-						csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, get_array_length_cexpression (expr, dim));
+						csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, head.get_array_length_cexpression (expr, dim));
 					}
 				}
 
@@ -2184,11 +2184,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		if (stmt.collection.value_type is ArrayType) {
 			var array_type = (ArrayType) stmt.collection.value_type;
 			
-			var array_len = get_array_length_cexpression (stmt.collection);
+			var array_len = head.get_array_length_cexpression (stmt.collection);
 
 			// store array length for use by _vala_array_free
 			var clendecl = new CCodeDeclaration ("int");
-			clendecl.add_declarator (new CCodeVariableDeclarator.with_initializer (get_array_length_cname (collection_backup.name, 1), array_len));
+			clendecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (collection_backup.name, 1), array_len));
 			cblock.add_statement (clendecl);
 
 			if (array_len is CCodeConstant) {
@@ -2616,8 +2616,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				var array_type = (ArrayType) current_return_type;
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var len_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_array_length_cname ("result", dim)));
-					var len_r = get_array_length_cexpression (stmt.return_expression, dim);
+					var len_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (head.get_array_length_cname ("result", dim)));
+					var len_r = head.get_array_length_cexpression (stmt.return_expression, dim);
 					ccomma.append_expression (new CCodeAssignment (len_l, len_r));
 				}
 
@@ -2846,132 +2846,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public override void visit_invocation_expression (InvocationExpression expr) {
 		head.visit_invocation_expression (expr);
-	}
-
-	public string get_array_length_cname (string array_cname, int dim) {
-		return "%s_length%d".printf (array_cname, dim);
-	}
-
-	public CCodeExpression get_array_length_cexpression (Expression array_expr, int dim = -1) {
-		// dim == -1 => total size over all dimensions
-		if (dim == -1) {
-			var array_type = array_expr.value_type as ArrayType;
-			if (array_type != null && array_type.rank > 1) {
-				CCodeExpression cexpr = get_array_length_cexpression (array_expr, 1);
-				for (dim = 2; dim <= array_type.rank; dim++) {
-					cexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cexpr, get_array_length_cexpression (array_expr, dim));
-				}
-				return cexpr;
-			} else {
-				dim = 1;
-			}
-		}
-
-		bool is_out = false;
-
-		if (array_expr is UnaryExpression) {
-			var unary_expr = (UnaryExpression) array_expr;
-			if (unary_expr.operator == UnaryOperator.OUT || unary_expr.operator == UnaryOperator.REF) {
-				array_expr = unary_expr.inner;
-				is_out = true;
-			}
-		} else if (array_expr is ReferenceTransferExpression) {
-			var reftransfer_expr = (ReferenceTransferExpression) array_expr;
-			array_expr = reftransfer_expr.inner;
-		}
-		
-		if (array_expr is ArrayCreationExpression) {
-			Gee.List<Expression> size = ((ArrayCreationExpression) array_expr).get_sizes ();
-			var length_expr = size[dim - 1];
-			return (CCodeExpression) get_ccodenode (length_expr);
-		} else if (array_expr is InvocationExpression) {
-			var invocation_expr = (InvocationExpression) array_expr;
-			Gee.List<CCodeExpression> size = invocation_expr.get_array_sizes ();
-			return size[dim - 1];
-		} else if (array_expr.symbol_reference != null) {
-			if (array_expr.symbol_reference is FormalParameter) {
-				var param = (FormalParameter) array_expr.symbol_reference;
-				if (!param.no_array_length) {
-					CCodeExpression length_expr = new CCodeIdentifier (get_array_length_cname (param.name, dim));
-					if (param.direction != ParameterDirection.IN) {
-						// accessing argument of out/ref param
-						length_expr = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, length_expr));
-					}
-					if (is_out) {
-						// passing array as out/ref
-						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
-					} else {
-						return length_expr;
-					}
-				}
-			} else if (array_expr.symbol_reference is LocalVariable) {
-				var local = (LocalVariable) array_expr.symbol_reference;
-				var length_expr = new CCodeIdentifier (get_array_length_cname (local.name, dim));
-				if (is_out) {
-					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
-				} else {
-					return length_expr;
-				}
-			} else if (array_expr.symbol_reference is Field) {
-				var field = (Field) array_expr.symbol_reference;
-				if (!field.no_array_length) {
-					var ma = (MemberAccess) array_expr;
-
-					CCodeExpression length_expr = null;
-
-					if (field.binding == MemberBinding.INSTANCE) {
-						TypeSymbol base_type = null;
-						if (ma.inner.value_type != null) {
-							base_type = ma.inner.value_type.data_type;
-						}
-
-						var length_cname = get_array_length_cname (field.name, dim);
-						var instance_expression_type = get_data_type_for_symbol (base_type);
-						var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
-						CCodeExpression typed_inst = (CCodeExpression) get_ccodenode (ma.inner);
-
-						CCodeExpression inst;
-						if (field.access == SymbolAccessibility.PRIVATE) {
-							inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
-						} else {
-							inst = typed_inst;
-						}
-						if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
-							length_expr = new CCodeMemberAccess.pointer (inst, length_cname);
-						} else {
-							length_expr = new CCodeMemberAccess (inst, length_cname);
-						}
-					} else {
-						length_expr = new CCodeIdentifier (get_array_length_cname (field.get_cname (), dim));
-					}
-
-					if (is_out) {
-						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
-					} else {
-						return length_expr;
-					}
-				}
-			} else if (array_expr.symbol_reference is Constant) {
-				var constant = (Constant) array_expr.symbol_reference;
-				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_N_ELEMENTS"));
-				ccall.add_argument (new CCodeIdentifier (constant.get_cname ()));
-				return ccall;
-			}
-		} else if (array_expr is NullLiteral) {
-			return new CCodeConstant ("0");
-		}
-
-		if (!is_out) {
-			/* allow arrays with unknown length even for value types
-			 * as else it may be impossible to bind some libraries
-			 * users of affected libraries should explicitly set
-			 * the array length as early as possible
-			 * by setting the virtual length field of the array
-			 */
-			return new CCodeConstant ("-1");
-		} else {
-			return new CCodeConstant ("NULL");
-		}
 	}
 	
 	public string get_delegate_target_cname (string delegate_cname) {
@@ -3237,10 +3111,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				CCodeExpression csizeexpr = null;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					if (first) {
-						csizeexpr = get_array_length_cexpression (expr, dim);
+						csizeexpr = head.get_array_length_cexpression (expr, dim);
 						first = false;
 					} else {
-						csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, get_array_length_cexpression (expr, dim));
+						csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, head.get_array_length_cexpression (expr, dim));
 					}
 				}
 
@@ -3357,7 +3231,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 						if (!param.no_array_length && param.parameter_type is ArrayType) {
 							var array_type = (ArrayType) param.parameter_type;
 							for (int dim = 1; dim <= array_type.rank; dim++) {
-								carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), get_array_length_cexpression (arg, dim));
+								carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), head.get_array_length_cexpression (arg, dim));
 							}
 						} else if (param.parameter_type is DelegateType) {
 							var deleg_type = (DelegateType) param.parameter_type;
@@ -3879,9 +3753,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					var ccomma = new CCodeCommaExpression ();
 					ccomma.append_expression (cexpr);
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var len_decl = new LocalVariable (int_type.copy (), get_array_length_cname (decl.name, dim));
+						var len_decl = new LocalVariable (int_type.copy (), head.get_array_length_cname (decl.name, dim));
 						temp_vars.insert (0, len_decl);
-						ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (get_variable_cname (len_decl.name)), get_array_length_cexpression (expr, dim)));
+						ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (get_variable_cname (len_decl.name)), head.get_array_length_cexpression (expr, dim)));
 					}
 					ccomma.append_expression (new CCodeIdentifier (get_variable_cname (decl.name)));
 					cexpr = ccomma;
@@ -4032,7 +3906,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				}
 				
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var cparam = new CCodeFormalParameter (get_array_length_cname (param.name, dim), length_ctype);
+					var cparam = new CCodeFormalParameter (head.get_array_length_cname (param.name, dim), length_ctype);
 					cparam_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
 				}
 			}
@@ -4092,7 +3966,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 					if (d_params.get (i).no_array_length) {
 						clength = new CCodeConstant ("-1");
 					} else {
-						clength = new CCodeIdentifier (get_array_length_cname (d_params.get (i).name, dim));
+						clength = new CCodeIdentifier (head.get_array_length_cname (d_params.get (i).name, dim));
 					}
 					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), clength);
 				}

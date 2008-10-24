@@ -645,7 +645,7 @@ public class Vala.CCodeMethodModule : CCodeModule {
 				}
 				
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var cparam = new CCodeFormalParameter (codegen.get_array_length_cname (param.name, dim), length_ctype);
+					var cparam = new CCodeFormalParameter (head.get_array_length_cname (param.name, dim), length_ctype);
 					cparam_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
 					if (carg_map != null) {
 						carg_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), new CCodeIdentifier (cparam.name));
@@ -689,7 +689,7 @@ public class Vala.CCodeMethodModule : CCodeModule {
 			var array_type = (ArrayType) creturn_type;
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var cparam = new CCodeFormalParameter (codegen.get_array_length_cname ("result", dim), "int*");
+				var cparam = new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*");
 				cparam_map.set (codegen.get_param_pos (m.carray_length_parameter_position + 0.01 * dim), cparam);
 				if (carg_map != null) {
 					carg_map.set (codegen.get_param_pos (m.carray_length_parameter_position + 0.01 * dim), new CCodeIdentifier (cparam.name));

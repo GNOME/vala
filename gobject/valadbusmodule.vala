@@ -211,7 +211,7 @@ public class Vala.DBusModule : CCodeModule {
 						cdecl = new CCodeDeclaration ("GPtrArray*");
 
 						array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_ptr_array_sized_new"));
-						array_construct.add_argument (new CCodeIdentifier (codegen.get_array_length_cname (param.name, 1)));
+						array_construct.add_argument (new CCodeIdentifier (head.get_array_length_cname (param.name, 1)));
 					} else {
 						cdecl = new CCodeDeclaration ("GArray*");
 
@@ -228,16 +228,16 @@ public class Vala.DBusModule : CCodeModule {
 						var memcpy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
 						memcpy_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "pdata"));
 						memcpy_call.add_argument (new CCodeIdentifier (param.name));
-						memcpy_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeIdentifier (codegen.get_array_length_cname (param.name, 1)), sizeof_call));
+						memcpy_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeIdentifier (head.get_array_length_cname (param.name, 1)), sizeof_call));
 						block.add_statement (new CCodeExpressionStatement (memcpy_call));
 
-						var len_assignment = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "len"), new CCodeIdentifier (codegen.get_array_length_cname (param.name, 1)));
+						var len_assignment = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "len"), new CCodeIdentifier (head.get_array_length_cname (param.name, 1)));
 						block.add_statement (new CCodeExpressionStatement (len_assignment));
 					} else {
 						var cappend_call = new CCodeFunctionCall (new CCodeIdentifier ("g_array_append_vals"));
 						cappend_call.add_argument (new CCodeIdentifier ("dbus_%s".printf (param.name)));
 						cappend_call.add_argument (new CCodeIdentifier (param.name));
-						cappend_call.add_argument (new CCodeIdentifier (codegen.get_array_length_cname (param.name, 1)));
+						cappend_call.add_argument (new CCodeIdentifier (head.get_array_length_cname (param.name, 1)));
 						block.add_statement (new CCodeExpressionStatement (cappend_call));
 					}
 

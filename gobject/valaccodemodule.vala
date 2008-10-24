@@ -163,4 +163,12 @@ public abstract class Vala.CCodeModule {
 	public virtual string get_marshaller_function (Gee.List<FormalParameter> params, DataType return_type, string? prefix = null, bool dbus = false) {
 		return next.get_marshaller_function (params, return_type, prefix, dbus);
 	}
+
+	public virtual string get_array_length_cname (string array_cname, int dim) {
+		return next.get_array_length_cname (array_cname, dim);
+	}
+
+	public virtual CCodeExpression get_array_length_cexpression (Expression array_expr, int dim = -1) {
+		return next.get_array_length_cexpression (array_expr, dim);
+	}
 }
