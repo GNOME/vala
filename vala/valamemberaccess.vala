@@ -158,10 +158,6 @@ public class Vala.MemberAccess : Expression {
 		}
 	}
 
-	public override CodeBinding? create_code_binding (CodeGenerator codegen) {
-		return codegen.create_member_access_binding (this);
-	}
-
 	public override bool is_constant () {
 		if (symbol_reference is Constant) {
 			return true;

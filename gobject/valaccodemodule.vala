@@ -68,6 +68,10 @@ public abstract class Vala.CCodeModule {
 		next.visit_creation_method (m);
 	}
 
+	public virtual void visit_member_access (MemberAccess expr) {
+		next.visit_member_access (expr);
+	}
+
 	public virtual void visit_array_creation_expression (ArrayCreationExpression expr) {
 		next.visit_array_creation_expression (expr);
 	}

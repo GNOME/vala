@@ -1,4 +1,4 @@
-/* valaccodememberaccessbinding.vala
+/* valaccodememberaccessmodule.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -23,12 +23,9 @@
 
 using GLib;
 
-public class Vala.CCodeMemberAccessBinding : CCodeBinding {
-	public MemberAccess member_access { get; set; }
-
-	public CCodeMemberAccessBinding (CCodeGenerator codegen, MemberAccess member_access) {
-		this.member_access = member_access;
-		this.codegen = codegen;
+public class Vala.CCodeMemberAccessModule : CCodeModule {
+	public CCodeMemberAccessModule (CCodeGenerator codegen, CCodeModule? next) {
+		base (codegen, next);
 	}
 
 	private void process_cmember (MemberAccess expr, CCodeExpression? pub_inst, DataType? base_type) {
@@ -286,9 +283,7 @@ public class Vala.CCodeMemberAccessBinding : CCodeBinding {
 		}
 	}
 
-	public override void emit () {
-		var expr = member_access;
-
+	public override void visit_member_access (MemberAccess expr) {
 		CCodeExpression pub_inst = null;
 		DataType base_type = null;
 	

@@ -42,10 +42,6 @@ public class Vala.CodeGenerator : CodeVisitor {
 		return null;
 	}
 
-	public virtual CodeBinding? create_member_access_binding (MemberAccess node) {
-		return null;
-	}
-
 	public virtual CodeBinding? create_invocation_expression_binding (InvocationExpression node) {
 		return null;
 	}
