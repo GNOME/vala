@@ -1,5 +1,12 @@
 2008-10-25  Jürg Billeter  <j@bitron.ch>
 
+	* gobject-introspection/scanner.c:
+
+	Fix compile error on FreeBSD, patch by Jille Timmermans,
+	fixes bug 555720
+
+2008-10-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 
 	Fix support for arrays of nullable types, fixes bug 555050

@@ -29,6 +29,7 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <glib-object.h>
+#include <signal.h>
 #include <sys/wait.h> /* waitpid */
 #include <gmodule.h>
 #include "scanner.h"
