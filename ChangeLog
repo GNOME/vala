@@ -1,5 +1,11 @@
 2008-10-25  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libgnome-menu.vapi:
+
+	Fix GMenuTreeItem binding
+
+2008-10-25  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/libbonoboui-2.0.vapi:
 	* vapi/libpanelapplet-2.0.vapi:
 

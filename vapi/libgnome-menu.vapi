@@ -47,6 +47,7 @@ namespace GMenu {
 	public class TreeHeader : GMenu.TreeItem {
 		public weak GMenu.TreeDirectory get_directory ();
 	}
+	[Compact]
 	[CCode (ref_function = "gmenu_tree_item_ref", unref_function = "gmenu_tree_item_unref", cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeItem {
 		public weak GMenu.TreeDirectory get_parent ();
