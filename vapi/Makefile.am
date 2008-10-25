@@ -5,9 +5,6 @@ vapidir = $(pkgdatadir)/vapi
 vala-1.0.vapi: ../gee/gee.vapi ../ccode/ccode.vapi ../vala/vala.vapi ../gobject/gobject.vapi
 	cat $^ > $@
 
-gee-1.0.vapi: ../gee/gee.vapi
-	cat $^ > $@
-
 dist_vapi_DATA = \
 	atk.vapi \
 	bzlib.vapi \
@@ -138,5 +135,4 @@ dist_vapi_DATA = \
 
 dist_noinst_DATA = \
 	config.vapi \
-	gee-1.0.vapi \
 	$(NULL)

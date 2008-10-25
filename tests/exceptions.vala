@@ -1,10 +1,8 @@
 using GLib;
-using Gee;
 
 errordomain Maman.BarError {
 	FOO,
-	BAR,
-	LIST
+	BAR
 }
 
 class Maman.Bar : Object {
@@ -28,17 +26,6 @@ class Maman.Bar : Object {
 
 	public void good () throws BarError {
 		stdout.printf (" 4");
-	}
-
-	public Gee.List<string> list () throws BarError {
-		Gee.List<string> result = new ArrayList<string> ();
-
-		result.add (" FOO");
-		result.add (" BAR");
-
-		throw new BarError.LIST (" 12");
-
-		return result;
 	}
 
 	public void error_cast_check (GLib.Error e) {}
@@ -65,27 +52,6 @@ class Maman.Bar : Object {
 		}
 
 		stdout.printf (" 10");
-
-		try {
-			foreach (string s in list ()) {
-				stdout.printf (" BAD");
-
-				stdout.printf (" %s", s);
-
-				stdout.printf (" BAD");
-			}
-		} catch (BarError e) {
-			stdout.printf (" 11");
-
-			stdout.printf ("%s", e.message);
-
-			stdout.printf (" 13");
-		}
-
-		// test implicit cast to GLib.Error
-		error_cast_check (new BarError.FOO ("FOO"));
-
-		stdout.printf (" 14");
 	}
 
 	static void test_generic_catch () {
@@ -111,7 +77,7 @@ class Maman.Bar : Object {
 		var bar = new Bar ();
 		bar.run ();
 
-		stdout.printf (" 15\n");
+		stdout.printf (" 11\n");
 
 		test_generic_catch ();
 

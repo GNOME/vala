@@ -35,7 +35,6 @@ gobject/gobject.gidl
 gobject/gobject.vapi
 vala/vala.gidl
 vala/vala.vapi
-vapi/gee-1.0.vapi
 vapi/vala-1.0.vapi
 vapigen/vala-gen-introspect/vala-gen-introspect
 ccode/ccode.gidl

@@ -35,7 +35,7 @@ export G_DEBUG=fatal_warnings
 VALAC=$topbuilddir/compiler/valac
 CC="gcc -std=c99"
 CFLAGS="-O0 -g3 -I$topsrcdir -I$topbuilddir"
-LDLIBS="-lm ../gee/.libs/libgee.a"
+LDLIBS="-lm"
 
 CODE=0
 
@@ -43,7 +43,7 @@ for testcasesource in "$@"
 do
 	testsrc=${testcasesource/.vala/}
 	testbuild=`basename "$testsrc"`
-	if ! $VALAC -C --vapidir "$vapidir" --pkg gee-1.0 --basedir $topsrcdir -d $topbuilddir $testsrc.vala > $testbuild.err 2>&1
+	if ! $VALAC -C --vapidir "$vapidir" --basedir $topsrcdir -d $topbuilddir $testsrc.vala > $testbuild.err 2>&1
 	then
 		echo "ERROR: Compiling" $testcasesource 
 		cat $testbuild.err
