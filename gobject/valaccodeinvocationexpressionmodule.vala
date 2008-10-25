@@ -366,7 +366,7 @@ public class Vala.CCodeInvocationExpressionModule : CCodeModule {
 			// method can fail
 			codegen.current_method_inner_error = true;
 			// add &inner_error before the ellipsis arguments
-			carg_map.set (codegen.get_param_pos (-2), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
+			carg_map.set (codegen.get_param_pos (-1), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
 		}
 
 		if (ellipsis) {

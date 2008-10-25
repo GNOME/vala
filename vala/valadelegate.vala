@@ -100,7 +100,8 @@ public class Vala.Delegate : TypeSymbol {
 		this.return_type = return_type;
 		this.source_reference = source_reference;
 
-		cinstance_parameter_position = -1;
+		// error is -1 (right of user_data)
+		cinstance_parameter_position = -2;
 		carray_length_parameter_position = -3;
 		cdelegate_target_parameter_position = -3;
 	}
