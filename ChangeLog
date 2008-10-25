@@ -1,5 +1,11 @@
 2008-10-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+
+	Fix crash with invalid return values, fixes bug 549996
+
+2008-10-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaerrorcode.vala:
 	* vala/valaerrordomain.vala:
 	* vala/valaerrortype.vala:
