@@ -1,5 +1,13 @@
 2008-10-25  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gconf-2.0/:
+
+	Fix gconf_client_notify_add binding
+
+	* vapi/gconf-2.0.vapi: regenerated
+
+2008-10-25  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/libgnome-menu.vapi:
 
 	Fix GMenuTreeItem binding

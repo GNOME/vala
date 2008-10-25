@@ -60,7 +60,7 @@ namespace GConf {
 		public weak GConf.Value get_without_default (string key) throws GLib.Error;
 		public bool key_is_writable (string key) throws GLib.Error;
 		public void notify (string key);
-		public uint notify_add (string namespace_section, GConf.ClientNotifyFunc func, GLib.FreeFunc destroy_notify) throws GLib.Error;
+		public uint notify_add (string namespace_section, GConf.ClientNotifyFunc# func) throws GLib.Error;
 		public void notify_remove (uint cnxn);
 		public void preload (string dirname, GConf.ClientPreloadType type) throws GLib.Error;
 		public bool recursive_unset (string key, GConf.UnsetFlags flags) throws GLib.Error;
