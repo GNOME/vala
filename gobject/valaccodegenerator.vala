@@ -2901,17 +2901,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 				var ma = (MemberAccess) delegate_expr;
 
-				TypeSymbol base_type = null;
+				var base_type = ma.inner.value_type;
 				CCodeExpression target_expr = null;
 
 				var pub_inst = (CCodeExpression) get_ccodenode (ma.inner);
 
-				if (ma.inner.value_type != null) {
-					base_type = ma.inner.value_type.data_type;
-				}
-
 				if (field.binding == MemberBinding.INSTANCE) {
-					var instance_expression_type = get_data_type_for_symbol (base_type);
+					var instance_expression_type = base_type;
 					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
 					CCodeExpression typed_inst = transform_expression (pub_inst, instance_expression_type, instance_target_type);
 
