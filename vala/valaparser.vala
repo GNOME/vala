@@ -2119,20 +2119,30 @@ public class Vala.Parser : CodeVisitor {
 		} else if (ModifierFlags.CLASS in flags) {
 			method.binding = MemberBinding.CLASS;
 		}
-		if (ModifierFlags.ABSTRACT in flags) {
-			method.is_abstract = true;
+
+		if (method.binding == MemberBinding.INSTANCE) {
+			if (ModifierFlags.ABSTRACT in flags) {
+				method.is_abstract = true;
+			}
+			if (ModifierFlags.VIRTUAL in flags) {
+				method.is_virtual = true;
+			}
+			if (ModifierFlags.OVERRIDE in flags) {
+				method.overrides = true;
+			}
+			if ((method.is_abstract && method.is_virtual)
+			    || (method.is_abstract && method.overrides)
+			    || (method.is_virtual && method.overrides)) {
+				throw new ParseError.SYNTAX (get_error ("only one of `abstract', `virtual', or `override' may be specified"));
+			}
+		} else {
+			if (ModifierFlags.ABSTRACT in flags
+			    || ModifierFlags.VIRTUAL in flags
+			    || ModifierFlags.OVERRIDE in flags) {
+				throw new ParseError.SYNTAX (get_error ("the modifiers `abstract', `virtual', and `override' are not valid for static methods"));
+			}
 		}
-		if (ModifierFlags.VIRTUAL in flags) {
-			method.is_virtual = true;
-		}
-		if (ModifierFlags.OVERRIDE in flags) {
-			method.overrides = true;
-		}
-		if ((method.is_abstract && method.is_virtual)
-		    || (method.is_abstract && method.overrides)
-		    || (method.is_virtual && method.overrides)) {
-			throw new ParseError.SYNTAX (get_error ("only one of `abstract', `virtual', or `override' may be specified"));
-		}
+
 		if (ModifierFlags.INLINE in flags) {
 			method.is_inline = true;
 		}

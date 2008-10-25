@@ -2,6 +2,13 @@
 
 	* vala/valaparser.vala:
 
+	Report error when using virtual method modifiers for static
+	methods, fixes bug 556881
+
+2008-10-25  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaparser.vala:
+
 	Report error when using conflicting method modifiers,
 	fixes bug 535853
 
