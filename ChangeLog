@@ -1,5 +1,12 @@
 2008-10-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala:
+
+	Report error when using conflicting method modifiers,
+	fixes bug 535853
+
+2008-10-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodecontext.vala:
 	* compiler/valacompiler.vala:
 
