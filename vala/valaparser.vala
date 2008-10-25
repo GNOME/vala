@@ -338,6 +338,7 @@ public class Vala.Parser : CodeVisitor {
 		skip_type_argument_list ();
 		while (accept (TokenType.STAR)) {
 		}
+		accept (TokenType.INTERR);
 		while (accept (TokenType.OPEN_BRACKET)) {
 			do {
 				if (current () != TokenType.COMMA && current () != TokenType.CLOSE_BRACKET) {
@@ -345,9 +346,9 @@ public class Vala.Parser : CodeVisitor {
 				}
 			} while (accept (TokenType.COMMA));
 			expect (TokenType.CLOSE_BRACKET);
+			accept (TokenType.INTERR);
 		}
 		accept (TokenType.OP_NEG);
-		accept (TokenType.INTERR);
 		accept (TokenType.HASH);
 	}
 

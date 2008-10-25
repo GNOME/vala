@@ -1,5 +1,11 @@
 2008-10-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala:
+
+	Fix support for arrays of nullable types, fixes bug 555050
+
+2008-10-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 
 	Fix crash with invalid return values, fixes bug 549996
