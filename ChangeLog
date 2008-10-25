@@ -1,5 +1,12 @@
 2008-10-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodecontext.vala:
+	* compiler/valacompiler.vala:
+
+	Remove non-working support for conditional compilation
+
+2008-10-25  Jürg Billeter  <j@bitron.ch>
+
 	* tests/exceptions.exp:
 	* tests/exceptions.vala:
 	* tests/testrunner.sh:

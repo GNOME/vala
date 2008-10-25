@@ -49,8 +49,6 @@ class Vala.Compiler {
 	[NoArrayLength]
 	static string[] cc_options;
 	static bool save_temps;
-	[NoArrayLength]
-	static string[] defines;
 	static bool quiet_mode;
 
 	private CodeContext context;
@@ -67,7 +65,6 @@ class Vala.Compiler {
 		{ "output", 'o', 0, OptionArg.FILENAME, ref output, "Place output in file FILE", "FILE" },
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
 		{ "thread", 0, 0, OptionArg.NONE, ref thread, "Enable multithreading support", null },
-		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
 		{ "disable-checking", 0, 0, OptionArg.NONE, ref disable_checking, "Disable run-time checks", null },
 		{ "disable-non-null", 0, 0, OptionArg.NONE, ref disable_non_null, "Disable non-null types", null },
@@ -180,12 +177,6 @@ class Vala.Compiler {
 		context.target_glib_minor = glib_minor;
 		if (context.target_glib_major != 2) {
 			Report.error (null, "This version of valac only supports GLib 2");
-		}
-
-		if (defines != null) {
-			foreach (string define in defines) {
-				context.add_define (define);
-			}
 		}
 
 		context.codegen = new CCodeGenerator ();

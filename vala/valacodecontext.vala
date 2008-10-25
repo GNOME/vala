@@ -144,8 +144,6 @@ public class Vala.CodeContext {
 
 	private Gee.List<string> packages = new ArrayList<string> (str_equal);
 
-	private Gee.List<string> defines = new ArrayList<string> (str_equal);
-
 	/**
 	 * The root namespace of the symbol tree.
 	 *
@@ -375,24 +373,6 @@ public class Vala.CodeContext {
 		
 		/* mark file as successfully visited */
 		file.mark = 2;
-	}
-
-	public void add_define (string define) {
-		defines.add (define);
-	}
-
-	public bool ignore_node (CodeNode node) {
-		var attr = node.get_attribute ("Conditional");
-		if (attr == null) {
-			return false;
-		} else {
-			var condition = attr.get_string ("condition");
-			if (condition == null) {
-				return false;
-			} else {
-				return !defines.contains (condition);
-			}
-		}
 	}
 
 	public string? get_package_path (string pkg, [CCode (array_length_pos = 1.9)] string[] vapi_directories) {
