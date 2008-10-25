@@ -1,5 +1,12 @@
 2008-10-25  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libbonoboui-2.0.vapi:
+	* vapi/libpanelapplet-2.0.vapi:
+
+	Fix PanelApplet and BonoboUIVerb bindings
+
+2008-10-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 
 	Report error when using virtual method modifiers for static

@@ -23,6 +23,7 @@
 [CCode (cheader_filename = "panel-applet.h")]
 namespace Panel {
 	public class Applet : Gtk.EventBox {
+		[CCode (has_construct_function = false)]
 		public Applet ();
 		public string get_preferences_key ();
 		public void set_flags (AppletFlags flags);

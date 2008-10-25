@@ -6,8 +6,8 @@
 [CCode (cheader_filename = "libbonoboui.h")]
 namespace BonoboUI {
 	public struct Verb {
-		public string cname;
-		public VerbFn cb;
+		public weak string cname;
+		public weak VerbFn cb;
 		public void* user_data;
 	}
 
