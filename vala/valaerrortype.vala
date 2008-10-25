@@ -32,9 +32,15 @@ public class Vala.ErrorType : ReferenceType {
 	 */
 	public weak ErrorDomain? error_domain { get; set; }
 
-	public ErrorType (ErrorDomain? error_domain, SourceReference? source_reference = null) {
+	/**
+	 * The error code or null for generic error.
+	 */
+	public weak ErrorCode? error_code { get; set; }
+
+	public ErrorType (ErrorDomain? error_domain, ErrorCode? error_code, SourceReference? source_reference = null) {
 		this.error_domain = error_domain;
 		this.data_type = error_domain;
+		this.error_code = error_code;
 		this.source_reference = source_reference;
 	}
 
@@ -57,7 +63,15 @@ public class Vala.ErrorType : ReferenceType {
 		}
 
 		/* otherwhise the error_domain has to be equal */
-		return et.error_domain == error_domain;
+		if (et.error_domain != error_domain) {
+			return false;
+		}
+
+		if (et.error_code == null) {
+			return true;
+		}
+
+		return et.error_code == error_code;
 	}
 
 	public override string to_qualified_string (Scope? scope) {
@@ -69,8 +83,7 @@ public class Vala.ErrorType : ReferenceType {
 	}
 
 	public override DataType copy () {
-		var result = new ErrorType (error_domain, source_reference);
-		result.source_reference = source_reference;
+		var result = new ErrorType (error_domain, error_code, source_reference);
 		result.value_owned = value_owned;
 		result.nullable = nullable;
 

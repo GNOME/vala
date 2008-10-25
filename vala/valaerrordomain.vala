@@ -139,7 +139,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 	}
 
 	public override string? get_upper_case_cname (string? infix) {
-		return get_lower_case_cname (null).up ();
+		return get_lower_case_cname (infix).up ();
 	}
 
 	public override bool is_reference_type () {

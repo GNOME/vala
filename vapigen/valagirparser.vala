@@ -709,7 +709,7 @@ public class Vala.GirParser : CodeVisitor {
 			end_element ("parameters");
 		}
 		if (throws_string == "1") {
-			m.add_error_type (new ErrorType (null));
+			m.add_error_type (new ErrorType (null, null));
 		}
 		end_element ("method");
 		return m;
@@ -745,7 +745,7 @@ public class Vala.GirParser : CodeVisitor {
 			end_element ("parameters");
 		}
 		if (throws_string == "1") {
-			m.add_error_type (new ErrorType (null));
+			m.add_error_type (new ErrorType (null, null));
 		}
 		end_element ("callback");
 		return m;

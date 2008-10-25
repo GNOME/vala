@@ -1,5 +1,17 @@
 2008-10-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaerrorcode.vala:
+	* vala/valaerrordomain.vala:
+	* vala/valaerrortype.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasymbolresolver.vala:
+	* gobject/valaccodegenerator.vala:
+	* vapigen/valagirparser.vala:
+
+	Support type checks for error domains and error codes
+
+2008-10-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 	* vala/valasourcefile.vala:
 

@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents an enum member in the source code.
  */
-public class Vala.ErrorCode : Symbol {
+public class Vala.ErrorCode : TypeSymbol {
 	/**
 	 * Specifies the numerical representation of this enum value.
 	 */
@@ -69,12 +69,7 @@ public class Vala.ErrorCode : Symbol {
 		}
 	}
 
-	/**
-	 * Returns the name of this error code as it is used in C code.
-	 *
-	 * @return the name to be used in C code
-	 */
-	public string get_cname () {
+	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
 			var edomain = (ErrorDomain) parent_symbol;
 			cname = "%s%s".printf (edomain.get_cprefix (), name);

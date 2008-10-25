@@ -3450,7 +3450,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 				var ctemp = new CCodeIdentifier (temp_decl.name);
 				var cinit = new CCodeAssignment (ctemp, (CCodeExpression) expr.inner.ccodenode);
-				var ccheck = create_type_check (ctemp, expr.type_reference.data_type);
+				var ccheck = create_type_check (ctemp, expr.type_reference);
 				var ccast = new CCodeCastExpression (ctemp, expr.type_reference.get_cname ());
 				var cnull = new CCodeConstant ("NULL");
 
@@ -3644,14 +3644,27 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		}
 	}
 
-	CCodeFunctionCall create_type_check (CCodeNode ccodenode, TypeSymbol type) {
-		var ccheck = new CCodeFunctionCall (new CCodeIdentifier (get_type_check_function (type)));
-		ccheck.add_argument ((CCodeExpression) ccodenode);
-		return ccheck;
+	CCodeExpression create_type_check (CCodeNode ccodenode, DataType type) {
+		var et = type as ErrorType;
+		if (et != null && et.error_code != null) {
+			var matches_call = new CCodeFunctionCall (new CCodeIdentifier ("g_error_matches"));
+			matches_call.add_argument ((CCodeExpression) ccodenode);
+			matches_call.add_argument (new CCodeIdentifier (et.error_domain.get_upper_case_cname ()));
+			matches_call.add_argument (new CCodeIdentifier (et.error_code.get_cname ()));
+			return matches_call;
+		} else if (et != null && et.error_domain != null) {
+			var instance_domain = new CCodeMemberAccess.pointer ((CCodeExpression) ccodenode, "domain");
+			var type_domain = new CCodeIdentifier (et.error_domain.get_upper_case_cname ());
+			return new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, instance_domain, type_domain);
+		} else {
+			var ccheck = new CCodeFunctionCall (new CCodeIdentifier (get_type_check_function (type.data_type)));
+			ccheck.add_argument ((CCodeExpression) ccodenode);
+			return ccheck;
+		}
 	}
 
 	public override void visit_type_check (TypeCheck expr) {
-		expr.ccodenode = create_type_check (expr.expression.ccodenode, expr.type_reference.data_type);
+		expr.ccodenode = create_type_check (expr.expression.ccodenode, expr.type_reference);
 	}
 
 	public override void visit_conditional_expression (ConditionalExpression expr) {
@@ -4135,7 +4148,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else if (sym is Enum) {
 			type = new ValueType ((Enum) sym);
 		} else if (sym is ErrorDomain) {
-			type = new ErrorType ((ErrorDomain) sym);
+			type = new ErrorType ((ErrorDomain) sym, null);
+		} else if (sym is ErrorCode) {
+			type = new ErrorType ((ErrorDomain) sym.parent_symbol, (ErrorCode) sym);
 		} else {
 			Report.error (null, "internal error: `%s' is not a supported type".printf (sym.get_full_name ()));
 			return new InvalidType ();

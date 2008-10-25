@@ -1241,7 +1241,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_throw_statement (ThrowStatement stmt) {
-		stmt.error_expression.target_type = new ErrorType (null, stmt.source_reference);
+		stmt.error_expression.target_type = new ErrorType (null, null, stmt.source_reference);
 		stmt.error_expression.target_type.value_owned = true;
 
 		stmt.accept_children (this);
@@ -1265,7 +1265,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			clause.body.scope.add (clause.variable_name, clause.error_variable);
 			clause.body.add_local_variable (clause.error_variable);
 		} else {
-			clause.error_type = new ErrorType (null, clause.source_reference);
+			clause.error_type = new ErrorType (null, null, clause.source_reference);
 		}
 
 		clause.accept_children (this);
@@ -1700,7 +1700,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						}
 						var m = new DynamicMethod (expr.inner.value_type, expr.member_name, ret_type, expr.source_reference);
 						m.invocation = invoc;
-						m.add_error_type (new ErrorType (null));
+						m.add_error_type (new ErrorType (null, null));
 						m.access = SymbolAccessibility.PUBLIC;
 						m.add_parameter (new FormalParameter.with_ellipsis ());
 						dynamic_object_type.type_symbol.scope.add (null, m);
@@ -1911,7 +1911,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (sym is Enum) {
 			type = new ValueType ((Enum) sym);
 		} else if (sym is ErrorDomain) {
-			type = new ErrorType ((ErrorDomain) sym);
+			type = new ErrorType ((ErrorDomain) sym, null);
+		} else if (sym is ErrorCode) {
+			type = new ErrorType ((ErrorDomain) sym.parent_symbol, (ErrorCode) sym);
 		} else {
 			Report.error (null, "internal error: `%s' is not a supported type".printf (sym.get_full_name ()));
 			return new InvalidType ();
@@ -2708,10 +2710,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (ma != null) {
 					type_args = ma.get_type_arguments ();
 				}
-			} else if (constructor_sym is ErrorCode) {
-				type_sym = constructor_sym.parent_symbol;
-
-				expr.symbol_reference = constructor_sym;
 			}
 
 			if (type_sym is Class) {
@@ -2720,11 +2718,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			} else if (type_sym is Struct) {
 				type = (TypeSymbol) type_sym;
 				expr.type_reference = new ValueType (type);
-			} else if (type_sym is ErrorDomain) {
-				expr.type_reference = new ErrorType ((ErrorDomain) type_sym, expr.source_reference);
+			} else if (type_sym is ErrorCode) {
+				expr.type_reference = new ErrorType ((ErrorDomain) type_sym.parent_symbol, (ErrorCode) type_sym, expr.source_reference);
+				expr.symbol_reference = type_sym;
 			} else {
 				expr.error = true;
-				Report.error (expr.source_reference, "`%s' is not a class, struct, or error domain".printf (type_sym.get_full_name ()));
+				Report.error (expr.source_reference, "`%s' is not a class, struct, or error code".printf (type_sym.get_full_name ()));
 				return;
 			}
 
