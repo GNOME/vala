@@ -253,7 +253,7 @@ namespace GLib {
 
 	public static delegate void ValueTransform (Value src_value, out Value dest_value);
 
-	[CCode (type_id = "G_TYPE_VALUE", marshaller_type_name = "BOXED", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed", type_signature = "v")]
+	[CCode (copy_function = "g_value_copy", destroy_function = "g_value_unset", type_id = "G_TYPE_VALUE", marshaller_type_name = "BOXED", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed", type_signature = "v")]
 	public struct Value {
 		[CCode (cname = "G_VALUE_HOLDS")]
 		public bool holds (Type type);
@@ -353,8 +353,19 @@ namespace GLib {
 
 	public static delegate void ClosureNotify (void* data, Closure closure);
 
+	[Compact]
 	[CCode (type_id = "G_TYPE_VALUE_ARRAY")]
-	public struct ValueArray {
+	public class ValueArray : Boxed {
+		public uint n_values;
+		public Value[] values;
+		public ValueArray (uint n_prealloced);
+		public weak Value? get_nth (uint index_);
+		public void append (Value value);
+		public void prepend (Value value);
+		public void insert (uint index_, Value value);
+		public void remove (uint index_);
+		public void sort (CompareFunc compare_func);
+		public void sort_with_data (CompareDataFunc compare_func);
 	}
 
 	namespace Signal {

@@ -1,5 +1,11 @@
 2008-10-25  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/gobject-2.0.vapi:
+
+	Add GValueArray binding, patch by Mark Lee, fixes bug 557843
+
+2008-10-25  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gconf-2.0/:
 
 	Fix gconf_client_notify_add binding
