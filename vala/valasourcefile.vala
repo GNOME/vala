@@ -314,7 +314,7 @@ public class Vala.SourceFile {
 			return;
 		}
 		
-		if (dep_type == SourceFileDependencyType.HEADER_FULL || (s is TypeSymbol && !((TypeSymbol)s).is_reference_type ())) {
+		if (dep_type == SourceFileDependencyType.HEADER_FULL) {
 			foreach (string fn in s.get_cheader_filenames ()) {
 				header_internal_includes.add (fn);
 			}

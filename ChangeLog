@@ -1,5 +1,12 @@
 2008-10-25  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasourcefile.vala:
+
+	Fix crash on certain header dependencies, fixes bug 546183
+
+2008-10-25  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/gobject-2.0.vapi:
 
 	Add GValueArray binding, patch by Mark Lee, fixes bug 557843

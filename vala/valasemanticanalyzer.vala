@@ -411,7 +411,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (!f.is_internal_symbol ()) {
-			current_source_file.add_type_dependency (f.field_type, SourceFileDependencyType.HEADER_SHALLOW);
+			if (f.field_type is ValueType) {
+				current_source_file.add_type_dependency (f.field_type, SourceFileDependencyType.HEADER_FULL);
+			} else {
+				current_source_file.add_type_dependency (f.field_type, SourceFileDependencyType.HEADER_SHALLOW);
+			}
 		} else {
 			if (f.parent_symbol is Namespace) {
 				f.error = true;
@@ -478,7 +482,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (!m.is_internal_symbol ()) {
-			current_source_file.add_type_dependency (m.return_type, SourceFileDependencyType.HEADER_SHALLOW);
+			if (m.return_type is ValueType) {
+				current_source_file.add_type_dependency (m.return_type, SourceFileDependencyType.HEADER_FULL);
+			} else {
+				current_source_file.add_type_dependency (m.return_type, SourceFileDependencyType.HEADER_SHALLOW);
+			}
 		}
 		current_source_file.add_type_dependency (m.return_type, SourceFileDependencyType.SOURCE);
 
@@ -598,7 +606,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		if (!p.ellipsis) {
 			if (!p.is_internal_symbol ()) {
-				current_source_file.add_type_dependency (p.parameter_type, SourceFileDependencyType.HEADER_SHALLOW);
+				if (p.parameter_type is ValueType && !p.parameter_type.is_real_struct_type ()) {
+					current_source_file.add_type_dependency (p.parameter_type, SourceFileDependencyType.HEADER_FULL);
+				} else {
+					current_source_file.add_type_dependency (p.parameter_type, SourceFileDependencyType.HEADER_SHALLOW);
+				}
 			}
 			current_source_file.add_type_dependency (p.parameter_type, SourceFileDependencyType.SOURCE);
 
@@ -655,7 +667,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_symbol = current_symbol.parent_symbol;
 
 		if (!prop.is_internal_symbol ()) {
-			current_source_file.add_type_dependency (prop.property_type, SourceFileDependencyType.HEADER_SHALLOW);
+			if (prop.property_type is ValueType && !prop.property_type.is_real_struct_type ()) {
+				current_source_file.add_type_dependency (prop.property_type, SourceFileDependencyType.HEADER_FULL);
+			} else {
+				current_source_file.add_type_dependency (prop.property_type, SourceFileDependencyType.HEADER_SHALLOW);
+			}
 		}
 		current_source_file.add_type_dependency (prop.property_type, SourceFileDependencyType.SOURCE);
 
