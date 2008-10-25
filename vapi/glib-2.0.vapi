@@ -1846,10 +1846,10 @@ namespace GLib {
 	}
 
 	public struct ScannerConfig {
-		public string cset_skip_characters;
-		public string cset_identifier_first;
-		public string cset_identifier_nth;
-		public string cpair_comment_single;
+		public string* cset_skip_characters;
+		public string* cset_identifier_first;
+		public string* cset_identifier_nth;
+		public string* cpair_comment_single;
 		public bool case_sensitive;
 		public bool skip_comment_multi;
 		public bool skip_comment_single;
