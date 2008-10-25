@@ -1,5 +1,11 @@
 2008-10-25  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala:
+
+	Support custom sentinels for constructors
+
+2008-10-25  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadelegate.vala:
 	* gobject/valaccodegenerator.vala:
 	* gobject/valaccodeinvocationexpressionmodule.vala:

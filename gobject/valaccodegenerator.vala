@@ -3303,8 +3303,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			}
 
 			if (ellipsis) {
-				// ensure variable argument list ends with NULL
-				creation_call.add_argument (new CCodeConstant ("NULL"));
+				/* ensure variable argument list ends with NULL
+				 * except when using printf-style arguments */
+				if (!m.printf_format && m.sentinel != "") {
+					creation_call.add_argument (new CCodeConstant (m.sentinel));
+				}
 			}
 
 			creation_expr = creation_call;
