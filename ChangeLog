@@ -2,6 +2,12 @@
 
 	* vapi/glib-2.0.vapi:
 
+	Removed the "v_" prefix from the TokenValue fields name
+
+2008-10-25  Ali Sabil  <ali.sabil@gmail.com>
+
+	* vapi/glib-2.0.vapi:
+
 	Changed the ScannerConfig string fields to string* to avoid valac
 	looking for a g_scanner_config_destroy function
 

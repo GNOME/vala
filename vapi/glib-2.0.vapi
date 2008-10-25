@@ -1914,18 +1914,30 @@ namespace GLib {
 
 	[SimpleType]
 	public struct TokenValue {
-		public void* v_symbol;
-		public string v_identifier;
-		public ulong v_binary;
-		public ulong v_octal;
-		public ulong v_int;
-		public ulong v_int64;
-		public double v_float;
-		public ulong v_hex;
-		public string v_string;
-		public string v_comment;
-		public uchar v_char;
-		public uint v_error;
+		[CCode (cname="v_symbol")]
+		public void* symbol;
+		[CCode (cname="v_identifier")]
+		public string identifier;
+		[CCode (cname="v_binary")]
+		public ulong binary;
+		[CCode (cname="v_octal")]
+		public ulong octal;
+		[CCode (cname="v_int")]
+		public ulong int;
+		[CCode (cname="v_int64")]
+		public ulong int64;
+		[CCode (cname="v_float")]
+		public double float;
+		[CCode (cname="v_hex")]
+		public ulong hex;
+		[CCode (cname="v_string")]
+		public string string;
+		[CCode (cname="v_comment")]
+		public string comment;
+		[CCode (cname="v_char")]
+		public uchar char;
+		[CCode (cname="v_error")]
+		public uint error;
 	}
 
 	[CCode (cprefix = "G_ERR_", has_type_id = false)]
