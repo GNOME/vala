@@ -3925,7 +3925,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		if (m.get_error_types ().size > 0) {
 			var cparam = new CCodeFormalParameter ("error", "GError**");
-			cparam_map.set (get_param_pos (-1), cparam);
+			cparam_map.set (get_param_pos (-2), cparam);
 		}
 
 		// append C parameters in the right order

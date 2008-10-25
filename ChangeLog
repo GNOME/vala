@@ -2,6 +2,12 @@
 
 	* gobject/valaccodegenerator.vala:
 
+	Fix parameter position for errors in delegate wrappers
+
+2008-10-25  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala:
+
 	Fix crash when using delegates in combination with pointer types,
 	fixes bug 557728
 
