@@ -1832,10 +1832,6 @@ namespace GLib {
 		public TokenType peek_next_token ();
 		public TokenType get_next_token ();
 		public bool eof ();
-		public uint cur_line ();
-		public uint cur_position ();
-		public TokenType cur_token ();
-		public TokenValue cur_value ();
 		public uint set_scope (uint scope_id);
 		public void scope_add_symbol (uint scope_id, string symbol, void* value);
 		public void scope_foreach_symbol (uint scope_id, HFunc func);
