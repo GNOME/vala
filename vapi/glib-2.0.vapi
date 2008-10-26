@@ -2841,6 +2841,9 @@ namespace GLib {
 		public SequenceIter<G> move (int delta);
 		public Sequence<G> get_sequence ();
 		public int compare (SequenceIter<G> other);
+
+		[CCode (cname = "g_sequence_get")]
+		public weak G get ();
 	}
 
 	public delegate int SequenceIterCompareFunc<G> (SequenceIter<G> a, SequenceIter<G> b);

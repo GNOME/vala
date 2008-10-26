@@ -1,3 +1,9 @@
+2008-10-26  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
+	Fix binding for g_sequence_get
+
 2008-10-25  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodegenerator.vala:
