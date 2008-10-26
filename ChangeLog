@@ -1,5 +1,13 @@
 2008-10-26  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeinvocationexpressionmodule.vala:
+	* gobject/valaccodememberaccessmodule.vala:
+
+	Support calling base method of virtual signal handler,
+	fixes bug 538901
+
+2008-10-26  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix binding for GtkWidget::size_request

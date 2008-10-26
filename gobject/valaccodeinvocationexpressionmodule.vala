@@ -47,7 +47,12 @@ public class Vala.CCodeInvocationExpressionModule : CCodeModule {
 			assert (ma != null);
 			m = ((MethodType) itype).method_symbol;
 		} else if (itype is SignalType) {
-			ccall = (CCodeFunctionCall) expr.call.ccodenode;
+			var sig_type = (SignalType) itype;
+			if (ma != null && ma.inner is BaseAccess && sig_type.signal_symbol.is_virtual) {
+				m = sig_type.signal_symbol.get_method_handler ();
+			} else {
+				ccall = (CCodeFunctionCall) expr.call.ccodenode;
+			}
 		} else if (itype is ObjectType) {
 			// constructor
 			var cl = (Class) ((ObjectType) itype).type_symbol;

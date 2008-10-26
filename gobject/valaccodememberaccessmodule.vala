@@ -263,6 +263,16 @@ public class Vala.CCodeMemberAccessModule : CCodeModule {
 			var sig = (Signal) expr.symbol_reference;
 			var cl = (TypeSymbol) sig.parent_symbol;
 			
+			if (expr.inner is BaseAccess && sig.is_virtual) {
+				var m = sig.get_method_handler ();
+				var base_class = (Class) m.parent_symbol;
+				var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
+				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (codegen.current_class.get_lower_case_cname (null))));
+				
+				expr.ccodenode = new CCodeMemberAccess.pointer (vcast, m.name);
+				return;
+			}
+
 			if (sig.has_emitter) {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_%s".printf (cl.get_lower_case_cname (null), sig.name)));
 
