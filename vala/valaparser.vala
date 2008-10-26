@@ -1665,11 +1665,10 @@ public class Vala.Parser : CodeVisitor {
 				if (accept (TokenType.OPEN_PARENS)) {
 					if (current () != TokenType.CLOSE_PARENS) {
 						do {
-							begin = get_location ();
 							string id = parse_identifier ();
 							expect (TokenType.ASSIGN);
 							var expr = parse_expression ();
-							attr.add_argument (new NamedArgument (id, expr, get_src (begin)));
+							attr.add_argument (id, expr);
 						} while (accept (TokenType.COMMA));
 					}
 					expect (TokenType.CLOSE_PARENS);

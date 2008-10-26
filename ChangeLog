@@ -1,5 +1,18 @@
 2008-10-26  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am:
+	* vala/valaattribute.vala:
+	* vala/valacodevisitor.vala:
+	* vala/valafield.vala:
+	* vala/valagenieparser.vala:
+	* vala/valanamedargument.vala:
+	* vala/valaparser.vala:
+	* vala/valasemanticanalyzer.vala:
+
+	Remove NamedArgument, improve attribute lookup performance
+
+2008-10-26  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodeinvocationexpressionmodule.vala:
 	* gobject/valaccodememberaccessmodule.vala:
 

@@ -764,9 +764,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		current_symbol = current_symbol.parent_symbol;
 	}
 
-	public override void visit_named_argument (NamedArgument n) {
-	}
-
 	public override void visit_block (Block b) {
 		b.owner = current_symbol.scope;
 		current_symbol = b;

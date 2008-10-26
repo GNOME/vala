@@ -195,6 +195,6 @@ public class Vala.Field : Member, Lockable {
 			attr = new Attribute ("CCode");
 			attributes.append (attr);
 		}
-		attr.add_argument (new NamedArgument ("type", new StringLiteral ("\"%s\"".printf (ctype))));
+		attr.add_argument ("type", new StringLiteral ("\"%s\"".printf (ctype)));
 	}
 }

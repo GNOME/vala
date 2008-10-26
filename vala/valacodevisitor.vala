@@ -196,14 +196,6 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
-	 * Visit operation called for named arguments.
-	 *
-	 * @param n a named argument
-	 */
-	public virtual void visit_named_argument (NamedArgument n) {
-	}
-
-	/**
 	 * Visit operation called for type parameters.
 	 *
 	 * @param p a type parameter

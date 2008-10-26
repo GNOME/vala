@@ -35,7 +35,7 @@ public class Vala.Attribute : CodeNode {
 	/**
 	 * Contains all specified attribute arguments.
 	 */
-	public Gee.List<NamedArgument> args = new ArrayList<NamedArgument> ();
+	public Gee.Map<string,Expression> args = new Gee.HashMap<string,Expression> (str_hash, str_equal);
 
 	/**
 	 * Creates a new attribute.
@@ -54,8 +54,8 @@ public class Vala.Attribute : CodeNode {
 	 *
 	 * @param arg named argument
 	 */
-	public void add_argument (NamedArgument arg) {
-		args.add (arg);
+	public void add_argument (string key, Expression value) {
+		args.set (key, value);
 	}
 	
 	/**
@@ -65,14 +65,7 @@ public class Vala.Attribute : CodeNode {
 	 * @return     true if the argument has been found, false otherwise
 	 */
 	public bool has_argument (string name) {
-		// FIXME: use hash table
-		foreach (NamedArgument arg in args) {
-			if (arg.name == name) {
-				return true;
-			}
-		}
-		
-		return false;
+		return args.contains (name);
 	}
 	
 	/**
@@ -82,14 +75,9 @@ public class Vala.Attribute : CodeNode {
 	 * @return     string value
 	 */
 	public string? get_string (string name) {
-		// FIXME: use hash table
-		foreach (NamedArgument arg in args) {
-			if (arg.name == name) {
-				var lit = arg.argument as StringLiteral;
-				if (lit != null) {
-					return lit.eval ();
-				}
-			}
+		var lit = args.get (name) as StringLiteral;
+		if (lit != null) {
+			return lit.eval ();
 		}
 		
 		return null;
@@ -102,14 +90,9 @@ public class Vala.Attribute : CodeNode {
 	 * @return     integer value
 	 */
 	public int get_integer (string name) {
-		// FIXME: use hash table
-		foreach (NamedArgument arg in args) {
-			if (arg.name == name) {
-				var lit = arg.argument as IntegerLiteral;
-				if (lit != null) {
-					return lit.value.to_int ();
-				}
-			}
+		var lit = args.get (name) as IntegerLiteral;
+		if (lit != null) {
+			return lit.value.to_int ();
 		}
 		
 		return 0;
@@ -122,26 +105,22 @@ public class Vala.Attribute : CodeNode {
 	 * @return     double value
 	 */
 	public double get_double (string name) {
-		// FIXME: use hash table
-		foreach (NamedArgument arg in args) {
-			if (arg.name == name) {
-				if (arg.argument is RealLiteral) {
-					var lit = (RealLiteral) arg.argument;
-					return lit.value.to_double ();
-				} else if (arg.argument is IntegerLiteral) {
-					var lit = (IntegerLiteral) arg.argument;
-					return lit.value.to_int ();
-				} else if (arg.argument is UnaryExpression) {
-					var unary = (UnaryExpression) arg.argument;
-					if (unary.operator == UnaryOperator.MINUS) {
-						if (unary.inner is RealLiteral) {
-							var lit = (RealLiteral) unary.inner;
-							return -lit.value.to_double ();
-						} else if (unary.inner is IntegerLiteral) {
-							var lit = (IntegerLiteral) unary.inner;
-							return -lit.value.to_int ();
-						}
-					}
+		var arg = args.get (name);
+		if (arg is RealLiteral) {
+			var lit = (RealLiteral) arg;
+			return lit.value.to_double ();
+		} else if (arg is IntegerLiteral) {
+			var lit = (IntegerLiteral) arg;
+			return lit.value.to_int ();
+		} else if (arg is UnaryExpression) {
+			var unary = (UnaryExpression) arg;
+			if (unary.operator == UnaryOperator.MINUS) {
+				if (unary.inner is RealLiteral) {
+					var lit = (RealLiteral) unary.inner;
+					return -lit.value.to_double ();
+				} else if (unary.inner is IntegerLiteral) {
+					var lit = (IntegerLiteral) unary.inner;
+					return -lit.value.to_int ();
 				}
 			}
 		}
@@ -156,14 +135,9 @@ public class Vala.Attribute : CodeNode {
 	 * @return     boolean value
 	 */
 	public bool get_bool (string name) {
-		// FIXME: use hash table
-		foreach (NamedArgument arg in args) {
-			if (arg.name == name) {
-				var lit = arg.argument as BooleanLiteral;
-				if (lit != null) {
-					return lit.value;
-				}
-			}
+		var lit = args.get (name) as BooleanLiteral;
+		if (lit != null) {
+			return lit.value;
 		}
 		
 		return false;
