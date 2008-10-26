@@ -5040,7 +5040,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void size_allocate (Gdk.Rectangle allocation);
 		[HasEmitter]
-		public virtual signal void size_request (Gtk.Requisition requisition);
+		public virtual signal void size_request (out Gtk.Requisition requisition);
 		public virtual signal void state_changed (Gtk.StateType previous_state);
 		public virtual signal void style_set (Gtk.Style previous_style);
 		[HasEmitter]
