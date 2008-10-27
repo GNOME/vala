@@ -31,6 +31,10 @@ using Gee;
 public abstract class Vala.TypeSymbol : Symbol {
 	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
 
+	public TypeSymbol (string? name, SourceReference? source_reference = null) {
+		base (name, source_reference);
+	}
+
 	/**
 	 * Returns the name of this data type as it is used in C code.
 	 *

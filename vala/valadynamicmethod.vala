@@ -35,11 +35,8 @@ public class Vala.DynamicMethod : Method {
 	static int dynamic_method_id;
 
 	public DynamicMethod (DataType dynamic_type, string name, DataType return_type, SourceReference? source_reference = null) {
-		base.init ();
+		base (name, return_type, source_reference);
 		this.dynamic_type = dynamic_type;
-		this.name = name;
-		this.return_type = return_type;
-		this.source_reference = source_reference;
 	}
 
 	public override Gee.List<string> get_cheader_filenames () {

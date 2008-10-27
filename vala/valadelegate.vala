@@ -95,10 +95,8 @@ public class Vala.Delegate : TypeSymbol {
 	 * @return            newly created delegate
 	 */
 	public Delegate (string? name, DataType return_type, SourceReference? source_reference = null) {
-		base.init ();
-		this.name = name;
+		base (name, source_reference);
 		this.return_type = return_type;
-		this.source_reference = source_reference;
 
 		// error is -1 (right of user_data)
 		cinstance_parameter_position = -2;

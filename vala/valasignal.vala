@@ -66,10 +66,8 @@ public class Vala.Signal : Member, Lockable {
 	 * @return            newly created signal
 	 */
 	public Signal (string name, DataType return_type, SourceReference? source_reference = null) {
-		base.init ();
-		this.name = name;
+		base (name, source_reference);
 		this.return_type = return_type;
-		this.source_reference = source_reference;
 	}
 	
 	/**

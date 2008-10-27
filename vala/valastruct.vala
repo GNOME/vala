@@ -66,9 +66,7 @@ public class Vala.Struct : TypeSymbol {
 	 * @return                 newly created struct
 	 */
 	public Struct (string name, SourceReference? source_reference = null) {
-		base.init ();
-		this.source_reference = source_reference;
-		this.name = name;
+		base (name, source_reference);
 	}
 
 	/**

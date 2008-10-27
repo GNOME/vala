@@ -42,9 +42,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 	 * @return                 newly created error domain
 	 */
 	public ErrorDomain (string name, SourceReference? source_reference = null) {
-		base.init ();
-		this.source_reference = source_reference;
-		this.name = name;
+		base (name, source_reference);
 	}
 	
 	/**

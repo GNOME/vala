@@ -28,7 +28,11 @@ using Gee;
  */
 public abstract class Vala.Member : Symbol {
 	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
-	
+
+	public Member (string? name, SourceReference? source_reference) {
+		base (name, source_reference);
+	}
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_member (this);
 	}

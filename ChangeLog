@@ -1,3 +1,41 @@
+2008-10-27  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaarraylengthfield.vala:
+	* vala/valaarraymovemethod.vala:
+	* vala/valaarrayresizemethod.vala:
+	* vala/valablock.vala:
+	* vala/valaclass.vala:
+	* vala/valaconstant.vala:
+	* vala/valaconstructor.vala:
+	* vala/valacreationmethod.vala:
+	* vala/valadelegate.vala:
+	* vala/valadestructor.vala:
+	* vala/valadynamicmethod.vala:
+	* vala/valadynamicproperty.vala:
+	* vala/valadynamicsignal.vala:
+	* vala/valaenum.vala:
+	* vala/valaenumvalue.vala:
+	* vala/valaerrorcode.vala:
+	* vala/valaerrordomain.vala:
+	* vala/valafield.vala:
+	* vala/valaforeachstatement.vala:
+	* vala/valaformalparameter.vala:
+	* vala/valainterface.vala:
+	* vala/valalocalvariable.vala:
+	* vala/valamember.vala:
+	* vala/valamethod.vala:
+	* vala/valanamespace.vala:
+	* vala/valaobjecttypesymbol.vala:
+	* vala/valaproperty.vala:
+	* vala/valasignal.vala:
+	* vala/valastruct.vala:
+	* vala/valaswitchsection.vala:
+	* vala/valasymbol.vala:
+	* vala/valatypeparameter.vala:
+	* vala/valatypesymbol.vala:
+
+	Use constructor chaining instead of helper method
+
 2008-10-26  Jürg Billeter  <j@bitron.ch>
 
 	* vala/Makefile.am:

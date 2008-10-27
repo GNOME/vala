@@ -40,9 +40,7 @@ public class Vala.ErrorCode : TypeSymbol {
 	 * @return     newly created enum value
 	 */
 	public ErrorCode (string name, SourceReference? source_reference = null) {
-		base.init ();
-		this.name = name;
-		this.source_reference = source_reference;
+		base (name, source_reference);
 	}
 
 	/**
@@ -53,10 +51,8 @@ public class Vala.ErrorCode : TypeSymbol {
 	 * @return      newly created enum value
 	 */
 	public ErrorCode.with_value (string name, Expression value, SourceReference? source_reference = null) {
-		base.init ();
-		this.name = name;
+		this (name, source_reference);
 		this.value = value;
-		this.source_reference = source_reference;
 	}
 	
 	public override void accept (CodeVisitor visitor) {

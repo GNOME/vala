@@ -68,11 +68,9 @@ public class Vala.Constant : Member, Lockable {
 	 * @return                 newly created constant
 	 */
 	public Constant (string name, DataType type_reference, Expression? initializer, SourceReference? source_reference) {
-		base.init ();
-		this.name = name;
+		base (name, source_reference);
 		this.type_reference = type_reference;
 		this.initializer = initializer;
-		this.source_reference = source_reference;
 	}
 
 	public override void accept (CodeVisitor visitor) {

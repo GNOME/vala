@@ -39,10 +39,8 @@ public class Vala.TypeParameter : Symbol {
 	 * @param source reference to source code
 	 * @return       newly created generic type parameter
 	 */	
-	public TypeParameter (string _name, SourceReference source) {
-		base.init ();
-		name = _name;
-		source_reference = source;
+	public TypeParameter (string name, SourceReference source_reference) {
+		base (name, source_reference);
 	}
 
 	public override void accept (CodeVisitor visitor) {

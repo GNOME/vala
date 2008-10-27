@@ -98,10 +98,8 @@ public class Vala.FormalParameter : Symbol {
 	 * @return       newly created formal parameter
 	 */
 	public FormalParameter (string name, DataType parameter_type, SourceReference? source_reference = null) {
-		base.init ();
-		this.name = name;
+		base (name, source_reference);
 		this.parameter_type = parameter_type;
-		this.source_reference = source_reference;
 
 		access = SymbolAccessibility.PUBLIC;
 	}
@@ -110,10 +108,9 @@ public class Vala.FormalParameter : Symbol {
 	 * Creates a new ellipsis parameter representing an indefinite number of
 	 * parameters.
 	 */
-	public FormalParameter.with_ellipsis (SourceReference? source = null) {
-		base.init ();
+	public FormalParameter.with_ellipsis (SourceReference? source_reference = null) {
+		base (null, source_reference);
 		ellipsis = true;
-		source_reference = source;
 
 		access = SymbolAccessibility.PUBLIC;
 	}

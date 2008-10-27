@@ -32,9 +32,7 @@ public class Vala.ArrayMoveMethod : Method {
 	 * @return newly created method
 	 */
 	public ArrayMoveMethod (SourceReference source_reference) {
-		base.init ();
-		name = "move";
+		base ("move", new VoidType (), source_reference);
 		external = true;
-		this.source_reference = source_reference;
 	}
 }

@@ -30,7 +30,7 @@ public class Vala.Property : Member, Lockable {
 	/**
 	 * The property type.
 	 */
-	public DataType property_type {
+	public DataType? property_type {
 		get { return _data_type; }
 		set {
 			_data_type = value;
@@ -175,13 +175,11 @@ public class Vala.Property : Member, Lockable {
 	 * @param source       reference to source code
 	 * @return             newly created property
 	 */
-	public Property (string name, DataType property_type, PropertyAccessor? get_accessor, PropertyAccessor? set_accessor, SourceReference? source_reference = null) {
-		base.init ();
-		this.name = name;
+	public Property (string name, DataType? property_type, PropertyAccessor? get_accessor, PropertyAccessor? set_accessor, SourceReference? source_reference = null) {
+		base (name, source_reference);
 		this.property_type = property_type;
 		this.get_accessor = get_accessor;
 		this.set_accessor = set_accessor;
-		this.source_reference = source_reference;
 	}
 
 	public override void accept (CodeVisitor visitor) {

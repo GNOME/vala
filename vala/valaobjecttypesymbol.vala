@@ -32,4 +32,8 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	public abstract Gee.List<Method> get_methods ();
 	public abstract Gee.List<Signal> get_signals ();
 	public abstract Gee.List<Property> get_properties ();
+
+	public ObjectTypeSymbol (string name, SourceReference? source_reference = null) {
+		base (name, source_reference);
+	}
 }

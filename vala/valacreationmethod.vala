@@ -59,11 +59,8 @@ public class Vala.CreationMethod : Method {
 	 * @return                 newly created method
 	 */
 	public CreationMethod (string? type_name, string? name, SourceReference? source_reference = null) {
-		base.init ();
-		this.name = name;
-		this.source_reference = source_reference;
+		base (name, new VoidType (), source_reference);
 		this.type_name = type_name;
-		return_type = new VoidType ();
 
 		carray_length_parameter_position = -3;
 		cdelegate_target_parameter_position = -3;

@@ -53,9 +53,7 @@ public class Vala.Enum : TypeSymbol {
 	 * @return                 newly created enum
 	 */
 	public Enum (string name, SourceReference? source_reference = null) {
-		base.init ();
-		this.source_reference = source_reference;
-		this.name = name;
+		base (name, source_reference);
 	}
 	
 	/**

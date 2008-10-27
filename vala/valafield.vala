@@ -87,11 +87,9 @@ public class Vala.Field : Member, Lockable {
 	 * @return       newly created field
 	 */
 	public Field (string name, DataType field_type, Expression? initializer, SourceReference? source_reference = null) {
-		base.init ();
-		this.name = name;
+		base (name, source_reference);
 		this.field_type = field_type;
 		this.initializer = initializer;
-		this.source_reference = source_reference;
 	}
 
 	public override void accept (CodeVisitor visitor) {

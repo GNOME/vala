@@ -101,11 +101,10 @@ public class Vala.ForeachStatement : Block {
 	 * @return       newly created foreach statement
 	 */
 	public ForeachStatement (DataType? type_reference, string variable_name, Expression collection, Block body, SourceReference source_reference) {
-		base.init ();
+		base (source_reference);
 		this.variable_name = variable_name;
 		this.collection = collection;
 		this.body = body;
-		this.source_reference = source_reference;
 		this.type_reference = type_reference;
 	}
 	

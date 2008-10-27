@@ -222,11 +222,9 @@ public class Vala.Method : Member {
 	 * @param source      reference to source code
 	 * @return            newly created method
 	 */
-	public Method (string name, DataType return_type, SourceReference? source_reference = null) {
-		base.init ();
+	public Method (string? name, DataType return_type, SourceReference? source_reference = null) {
+		base (name, source_reference);
 		this.return_type = return_type;
-		this.source_reference = source_reference;
-		this.name = name;
 
 		carray_length_parameter_position = -3;
 		cdelegate_target_parameter_position = -3;

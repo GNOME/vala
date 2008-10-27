@@ -209,9 +209,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 * @return       newly created class
 	 */
 	public Class (string name, SourceReference? source_reference = null) {
-		base.init ();
-		this.source_reference = source_reference;
-		this.name = name;
+		base (name, source_reference);
 	}
 
 	/**

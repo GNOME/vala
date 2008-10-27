@@ -56,7 +56,7 @@ public abstract class Vala.Symbol : CodeNode {
 	/**
 	 * The symbol name.
 	 */
-	public string name { get; set; }
+	public string? name { get; set; }
 
 	/**
 	 * Specifies whether this symbol is active.
@@ -118,7 +118,9 @@ public abstract class Vala.Symbol : CodeNode {
 	private weak Scope _owner;
 	private Scope _scope;
 
-	public void init () {
+	public Symbol (string? name, SourceReference? source_reference) {
+		this.name = name;
+		this.source_reference = source_reference;
 		_scope = new Scope (this);
 	}
 	

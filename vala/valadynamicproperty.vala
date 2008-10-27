@@ -32,10 +32,8 @@ public class Vala.DynamicProperty : Property {
 	private string cname;
 
 	public DynamicProperty (DataType dynamic_type, string name, SourceReference? source_reference = null) {
-		base.init ();
+		base (name, null, null, null, source_reference);
 		this.dynamic_type = dynamic_type;
-		this.name = name;
-		this.source_reference = source_reference;
 	}
 
 	public override Gee.List<string> get_cheader_filenames () {
