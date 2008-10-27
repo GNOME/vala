@@ -42,7 +42,7 @@ class Vala.Compiler {
 	static bool debug;
 	static bool thread;
 	static bool disable_assert;
-	static bool disable_checking;
+	static bool enable_checking;
 	static bool disable_non_null;
 	static bool non_null_experimental;
 	static string cc_command;
@@ -66,7 +66,7 @@ class Vala.Compiler {
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
 		{ "thread", 0, 0, OptionArg.NONE, ref thread, "Enable multithreading support", null },
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
-		{ "disable-checking", 0, 0, OptionArg.NONE, ref disable_checking, "Disable run-time checks", null },
+		{ "enable-checking", 0, 0, OptionArg.NONE, ref enable_checking, "Enable additional run-time checks", null },
 		{ "disable-non-null", 0, 0, OptionArg.NONE, ref disable_non_null, "Disable non-null types", null },
 		{ "enable-non-null-experimental", 0, 0, OptionArg.NONE, ref non_null_experimental, "Enable experimental enhancements for non-null types", null },
 		{ "cc", 0, 0, OptionArg.STRING, ref cc_command, "Use COMMAND as C compiler command", "COMMAND" },
@@ -147,7 +147,7 @@ class Vala.Compiler {
 
 		context.library = library;
 		context.assert = !disable_assert;
-		context.checking = !disable_checking;
+		context.checking = enable_checking;
 		context.non_null = !disable_non_null || non_null_experimental;
 		context.non_null_experimental = non_null_experimental;
 		Report.set_verbose_errors (!quiet_mode);

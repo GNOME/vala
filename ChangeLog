@@ -1,5 +1,14 @@
 2008-10-27  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodecontext.vala:
+	* gobject/valaccodegenerator.vala:
+	* compiler/valacompiler.vala:
+
+	Disable additional run-time checks by default to improve
+	performance
+
+2008-10-27  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodemethodmodule.vala:
 
 	Remove unused method

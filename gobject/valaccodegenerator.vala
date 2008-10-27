@@ -4188,7 +4188,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public CCodeStatement? create_type_check_statement (CodeNode method_node, DataType ret_type, TypeSymbol t, bool non_null, string var_name) {
 		var ccheck = new CCodeFunctionCall ();
 		
-		if ((t is Class && !((Class) t).is_compact) || t is Interface) {
+		if (context.checking && ((t is Class && !((Class) t).is_compact) || t is Interface)) {
 			var ctype_check = new CCodeFunctionCall (new CCodeIdentifier (get_type_check_function (t)));
 			ctype_check.add_argument (new CCodeIdentifier (var_name));
 			

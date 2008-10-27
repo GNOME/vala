@@ -46,7 +46,7 @@ public class Vala.CodeContext {
 	public bool assert { get; set; }
 
 	/**
-	 * Enable additional run-time checks.
+	 * Enable additional run-time checks such as type checks.
 	 */
 	public bool checking { get; set; }
 
