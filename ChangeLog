@@ -1,5 +1,11 @@
 2008-10-27  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodemethodmodule.vala:
+
+	Remove unused method
+
+2008-10-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraylengthfield.vala:
 	* vala/valaarraymovemethod.vala:
 	* vala/valaarrayresizemethod.vala:

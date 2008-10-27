@@ -884,14 +884,6 @@ public class Vala.CCodeMethodModule : CCodeModule {
 		b.add_statement (cdeclaration);
 	}
 
-	private Class find_fundamental_class (Class cl) {
-		var fundamental_class = cl;
-		while (fundamental_class != null && fundamental_class.base_class != null) {
-			fundamental_class = fundamental_class.base_class;
-		}
-		return fundamental_class;
-	}
-
 	public override void visit_creation_method (CreationMethod m) {
 		if (m.body != null && codegen.current_type_symbol is Class && codegen.current_class.is_subtype_of (codegen.gobject_type)) {
 			int n_params = 0;
