@@ -14,11 +14,13 @@ namespace GMenu {
 		public void remove_monitor (GMenu.TreeChangedFunc callback);
 		public void set_user_data (void* user_data, GLib.DestroyNotify dnotify);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeAlias : GMenu.TreeItem {
 		public weak GMenu.TreeDirectory get_directory ();
 		public weak GMenu.TreeItem get_item ();
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeDirectory : GMenu.TreeItem {
 		public weak string get_comment ();
@@ -31,6 +33,7 @@ namespace GMenu {
 		public weak GMenu.Tree get_tree ();
 		public weak string make_path (GMenu.TreeEntry entry);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeEntry : GMenu.TreeItem {
 		public weak string get_comment ();
@@ -43,6 +46,7 @@ namespace GMenu {
 		public bool get_launch_in_terminal ();
 		public weak string get_name ();
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeHeader : GMenu.TreeItem {
 		public weak GMenu.TreeDirectory get_directory ();
@@ -56,6 +60,7 @@ namespace GMenu {
 		public TreeItem ();
 		public void set_user_data (void* user_data, GLib.DestroyNotify dnotify);
 	}
+	[Compact]
 	[CCode (cheader_filename = "gnome-menus/gmenu-tree.h")]
 	public class TreeSeparator : GMenu.TreeItem {
 	}

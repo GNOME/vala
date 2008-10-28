@@ -419,10 +419,10 @@ namespace Atk {
 	}
 	[CCode (type_id = "ATK_TYPE_RECTANGLE", cheader_filename = "atk/atk.h")]
 	public struct Rectangle {
-		public int height;
-		public int width;
 		public int x;
 		public int y;
+		public int width;
+		public int height;
 	}
 	[CCode (cprefix = "ATK_XY_", cheader_filename = "atk/atk.h")]
 	public enum CoordType {

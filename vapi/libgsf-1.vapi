@@ -698,7 +698,7 @@ namespace Gsf {
 	[CCode (cheader_filename = "gsf/gsf-utils.h")]
 	public static void shutdown_dynamic (GLib.TypeModule module);
 	[CCode (cheader_filename = "gsf/gsf-docprop-vector.h")]
-	public static GLib.ValueArray value_get_docprop_varray (GLib.Value value);
+	public static weak GLib.ValueArray value_get_docprop_varray (GLib.Value value);
 	[CCode (cheader_filename = "gsf/gsf-docprop-vector.h")]
 	public static weak Gsf.DocPropVector value_get_docprop_vector (GLib.Value value);
 	[CCode (cheader_filename = "gsf/gsf-timestamp.h")]

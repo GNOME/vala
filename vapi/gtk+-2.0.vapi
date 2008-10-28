@@ -5499,27 +5499,27 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct ActionEntry {
-		public weak string accelerator;
-		[CCode (type = "GCallback")]
-		public weak Gtk.ActionCallback callback;
-		public weak string label;
 		public weak string name;
 		public weak string stock_id;
+		public weak string label;
+		public weak string accelerator;
 		public weak string tooltip;
+		[CCode (type = "GCallback")]
+		public weak Gtk.ActionCallback callback;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct Allocation {
-		public int height;
-		public int width;
 		public int x;
 		public int y;
+		public int width;
+		public int height;
 	}
 	[CCode (type_id = "GTK_TYPE_BORDER", cheader_filename = "gtk/gtk.h")]
 	public struct Border {
-		public int bottom;
 		public int left;
 		public int right;
 		public int top;
+		public int bottom;
 		public Gtk.Border copy ();
 		public void free ();
 		[CCode (cname = "gtk_border_new", has_construct_function = false)]
@@ -5527,45 +5527,40 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct RadioActionEntry {
-		public weak string accelerator;
-		public weak string label;
 		public weak string name;
 		public weak string stock_id;
+		public weak string label;
+		public weak string accelerator;
 		public weak string tooltip;
 		public int value;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct RecentData {
-		public string app_exec;
-		public string app_name;
-		public string description;
 		public string display_name;
+		public string description;
+		public string mime_type;
+		public string app_name;
+		public string app_exec;
 		[NoArrayLength]
 		public string[] groups;
 		public bool is_private;
-		public string mime_type;
 	}
 	[CCode (type_id = "GTK_TYPE_REQUISITION", cheader_filename = "gtk/gtk.h")]
 	public struct Requisition {
-		public int height;
 		public int width;
+		public int height;
 		public Gtk.Requisition copy ();
 		public void free ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct TargetEntry {
+		public weak string target;
 		public uint flags;
 		public uint info;
-		public weak string target;
 	}
 	[CCode (type_id = "GTK_TYPE_TEXT_ITER", cheader_filename = "gtk/gtk.h")]
 	public struct TextIter {
 		public void* dummy1;
-		public void* dummy10;
-		public int dummy11;
-		public int dummy12;
-		public int dummy13;
-		public void* dummy14;
 		public void* dummy2;
 		public int dummy3;
 		public int dummy4;
@@ -5574,6 +5569,11 @@ namespace Gtk {
 		public int dummy7;
 		public int dummy8;
 		public void* dummy9;
+		public void* dummy10;
+		public int dummy11;
+		public int dummy12;
+		public int dummy13;
+		public void* dummy14;
 		public bool backward_char ();
 		public bool backward_chars (int count);
 		public bool backward_cursor_position ();
@@ -5667,14 +5667,14 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public struct ToggleActionEntry {
+		public weak string name;
+		public weak string stock_id;
+		public weak string label;
 		public weak string accelerator;
+		public weak string tooltip;
 		[CCode (type = "GCallback")]
 		public weak Gtk.ActionCallback callback;
 		public bool is_active;
-		public weak string label;
-		public weak string name;
-		public weak string stock_id;
-		public weak string tooltip;
 	}
 	[CCode (type_id = "GTK_TYPE_TREE_ITER", cheader_filename = "gtk/gtk.h")]
 	public struct TreeIter {

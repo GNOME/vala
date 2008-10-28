@@ -781,15 +781,15 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void value_array_append_vals (GLib.ValueArray array, ...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static GLib.ValueArray value_array_from_args (void* args);
+	public static weak GLib.ValueArray value_array_from_args (void* args);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool value_array_get_nth (GLib.ValueArray array, uint index_, GLib.Type type);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void value_array_insert (GLib.ValueArray array, uint index_, GLib.Type type);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static GLib.ValueArray value_array_new ();
+	public static weak GLib.ValueArray value_array_new ();
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static GLib.ValueArray value_array_new_with_vals (...);
+	public static weak GLib.ValueArray value_array_new_with_vals (...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool value_array_to_args (GLib.ValueArray array, void* args);
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -821,7 +821,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static GLib.Quark xmlrpc_fault_quark ();
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static bool xmlrpc_parse_method_call (string method_call, int length, out weak string method_name, out GLib.ValueArray params);
+	public static bool xmlrpc_parse_method_call (string method_call, int length, out weak string method_name, out weak GLib.ValueArray params);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool xmlrpc_parse_method_response (string method_response, int length, GLib.Value value) throws GLib.Error;
 	[CCode (cheader_filename = "libsoup/soup.h")]

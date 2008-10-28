@@ -1343,17 +1343,17 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public struct ElementDetails {
-		public weak string author;
-		public weak string description;
-		public weak string klass;
 		public weak string longname;
+		public weak string klass;
+		public weak string description;
+		public weak string author;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public struct FormatDefinition {
-		public weak string description;
-		public weak string nick;
-		public GLib.Quark quark;
 		public Gst.Format value;
+		public weak string nick;
+		public weak string description;
+		public GLib.Quark quark;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public struct StaticCaps {
@@ -1363,8 +1363,8 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public struct StaticPadTemplate {
-		public Gst.PadDirection direction;
 		public weak string name_template;
+		public Gst.PadDirection direction;
 		public Gst.PadPresence presence;
 		public Gst.StaticCaps static_caps;
 		public Gst.PadTemplate get ();

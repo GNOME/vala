@@ -21,6 +21,7 @@
  */
 
 namespace GMenu {
+	[Compact]
 	public class TreeItem {
 		public extern TreeItemType get_type ();
 	}

@@ -90,12 +90,12 @@ namespace Gst {
 	public interface PropertyProbe {
 		public abstract weak GLib.List get_properties ();
 		public weak GLib.ParamSpec get_property (string name);
-		public abstract GLib.ValueArray get_values (GLib.ParamSpec pspec);
-		public GLib.ValueArray get_values_name (string name);
+		public abstract weak GLib.ValueArray get_values (GLib.ParamSpec pspec);
+		public weak GLib.ValueArray get_values_name (string name);
 		public abstract bool needs_probe (GLib.ParamSpec pspec);
 		public bool needs_probe_name (string name);
-		public GLib.ValueArray probe_and_get_values (GLib.ParamSpec pspec);
-		public GLib.ValueArray probe_and_get_values_name (string name);
+		public weak GLib.ValueArray probe_and_get_values (GLib.ParamSpec pspec);
+		public weak GLib.ValueArray probe_and_get_values_name (string name);
 		public abstract void probe_property (GLib.ParamSpec pspec);
 		public void probe_property_name (string name);
 		public virtual signal void probe_needed (void* pspec);

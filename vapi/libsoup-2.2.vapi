@@ -385,9 +385,9 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public struct DataBuffer {
+		public Soup.Ownership owner;
 		public string body;
 		public uint length;
-		public Soup.Ownership owner;
 	}
 	[CCode (cprefix = "SOUP_ADDRESS_FAMILY_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
 	public enum AddressFamily {

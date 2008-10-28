@@ -694,8 +694,8 @@ namespace Goo {
 	[CCode (type_id = "GOO_TYPE_CANVAS_BOUNDS", cheader_filename = "goocanvas.h")]
 	public struct CanvasBounds {
 		public double x1;
-		public double x2;
 		public double y1;
+		public double x2;
 		public double y2;
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
@@ -707,32 +707,32 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasImageData {
-		public double height;
 		public weak Cairo.Pattern pattern;
-		public double width;
 		public double x;
 		public double y;
+		public double width;
+		public double height;
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasItemSimpleData {
-		public uint cache_setting;
-		public uint can_focus;
-		public uint clip_fill_rule;
-		public weak GLib.Array clip_path_commands;
-		public uint has_tooltip;
-		public uint own_style;
-		public uint pointer_events;
 		public weak Goo.CanvasStyle style;
-		public weak string tooltip;
 		public Cairo.Matrix transform;
-		public uint visibility;
+		public weak GLib.Array clip_path_commands;
+		public weak string tooltip;
 		public double visibility_threshold;
+		public uint visibility;
+		public uint pointer_events;
+		public uint can_focus;
+		public uint own_style;
+		public uint clip_fill_rule;
+		public uint cache_setting;
+		public uint has_tooltip;
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasPathCommand {
-		public void* arc;
-		public void* curve;
 		public void* simple;
+		public void* curve;
+		public void* arc;
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasPathData {
@@ -740,36 +740,36 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasPolylineArrowData {
+		public double arrow_width;
 		public double arrow_length;
 		public double arrow_tip_length;
-		public double arrow_width;
-		[NoArrayLength]
-		public weak double[] end_arrow_coords;
-		[NoArrayLength]
-		public weak double[] line_end;
 		[NoArrayLength]
 		public weak double[] line_start;
 		[NoArrayLength]
+		public weak double[] line_end;
+		[NoArrayLength]
 		public weak double[] start_arrow_coords;
+		[NoArrayLength]
+		public weak double[] end_arrow_coords;
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasPolylineData {
-		public Goo.CanvasPolylineArrowData arrow_data;
-		public uint close_path;
 		public double coords;
-		public uint end_arrow;
+		public Goo.CanvasPolylineArrowData arrow_data;
 		public uint num_points;
-		public uint reconfigure_arrows;
+		public uint close_path;
 		public uint start_arrow;
+		public uint end_arrow;
+		public uint reconfigure_arrows;
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasRectData {
+		public double x;
+		public double y;
+		public double width;
 		public double height;
 		public double radius_x;
 		public double radius_y;
-		public double width;
-		public double x;
-		public double y;
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasStyleProperty {
@@ -778,35 +778,35 @@ namespace Goo {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasTableData {
-		public double border_width;
-		public weak GLib.Array children;
+		public double width;
+		public double height;
 		[NoArrayLength]
 		public weak Goo.CanvasTableDimension[] dimensions;
-		public double height;
+		public double border_width;
+		public weak GLib.Array children;
 		public Goo.CanvasTableLayoutData layout_data;
-		public double width;
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasTableDimension {
-		public double default_spacing;
-		public uint homogeneous;
 		public int size;
+		public double default_spacing;
 		public double spacings;
+		public uint homogeneous;
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasTableLayoutData {
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public struct CanvasTextData {
-		public uint alignment;
-		public uint anchor;
-		public uint ellipsize;
 		public weak string text;
-		public uint use_markup;
-		public double width;
-		public uint wrap;
 		public double x;
 		public double y;
+		public double width;
+		public uint use_markup;
+		public uint anchor;
+		public uint alignment;
+		public uint ellipsize;
+		public uint wrap;
 	}
 	[CCode (cprefix = "CAIRO_ANTIALIAS_", has_type_id = "0", cheader_filename = "goocanvas.h")]
 	public enum CairoAntialias {

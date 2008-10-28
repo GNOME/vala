@@ -484,9 +484,9 @@ namespace Pango {
 	}
 	[CCode (type_id = "PANGO_TYPE_COLOR", cheader_filename = "pango/pango.h")]
 	public struct Color {
-		public ushort blue;
-		public ushort green;
 		public ushort red;
+		public ushort green;
+		public ushort blue;
 		public Pango.Color copy ();
 		public void free ();
 		public bool parse (string spec);
@@ -494,28 +494,28 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public struct LogAttr {
-		public uint backspace_deletes_character;
-		public uint is_char_break;
-		public uint is_cursor_position;
-		public uint is_expandable_space;
 		public uint is_line_break;
 		public uint is_mandatory_break;
-		public uint is_sentence_boundary;
-		public uint is_sentence_end;
-		public uint is_sentence_start;
+		public uint is_char_break;
 		public uint is_white;
-		public uint is_word_boundary;
-		public uint is_word_end;
+		public uint is_cursor_position;
 		public uint is_word_start;
+		public uint is_word_end;
+		public uint is_sentence_boundary;
+		public uint is_sentence_start;
+		public uint is_sentence_end;
+		public uint backspace_deletes_character;
+		public uint is_expandable_space;
+		public uint is_word_boundary;
 	}
 	[CCode (type_id = "PANGO_TYPE_MATRIX", cheader_filename = "pango/pango.h")]
 	public struct Matrix {
-		public double x0;
 		public double xx;
 		public double xy;
-		public double y0;
 		public double yx;
 		public double yy;
+		public double x0;
+		public double y0;
 		public void concat (Pango.Matrix new_matrix);
 		public Pango.Matrix copy ();
 		public void free ();
@@ -530,10 +530,10 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public struct Rectangle {
-		public int height;
-		public int width;
 		public int x;
 		public int y;
+		public int width;
+		public int height;
 	}
 	[CCode (cprefix = "PANGO_ALIGN_", cheader_filename = "pango/pango.h")]
 	public enum Alignment {

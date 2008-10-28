@@ -141,14 +141,14 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public struct Pixdata {
-		public uint height;
-		public int length;
 		public uint magic;
+		public int length;
 		public uint pixdata_type;
-		[NoArrayLength]
-		public weak uchar[] pixel_data;
 		public uint rowstride;
 		public uint width;
+		public uint height;
+		[NoArrayLength]
+		public weak uchar[] pixel_data;
 		public bool deserialize ([CCode (array_length_pos = 0.9)] uchar[] stream) throws GLib.Error;
 		public void* from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);
 		public weak uchar[] serialize ();
