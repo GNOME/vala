@@ -1,3 +1,10 @@
+2008-10-28  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valainterfacewriter.vala:
+
+	Don't sort struct fields in vapi files to fix struct
+	initialization, patch by Hans Vercammen
+
 2008-10-27  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodecontext.vala:

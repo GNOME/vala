@@ -331,7 +331,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 
 		current_scope = st.scope;
 
-		visit_sorted (st.get_fields ());
+		foreach (Field field in st.get_fields ()) {
+			field.accept (this);
+		}
 		visit_sorted (st.get_constants ());
 		visit_sorted (st.get_methods ());
 
