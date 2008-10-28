@@ -1,0 +1,2 @@
+# Makefile.am
+SUBDIRS = src 

@@ -1,0 +1,83 @@
+dnl configure.in
+AC_PREREQ(2.59)
+AC_INIT(Valadoc, 0.2, flo.brosch@gmail.com)
+AM_INIT_AUTOMAKE
+AC_CONFIG_SRCDIR([src/valadoc/valadoc.vala])
+AC_CONFIG_HEADER([config.h])
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_LIBTOOL
+
+AC_PATH_PROG(VALAC, valac, valac)
+AC_SUBST(VALAC)
+
+# Checks for libraries.
+LIBVALA_REQUIRED=0.3.4
+LIBGVC_REQUIRED=2.16
+GLIB_REQUIRED=2.12.0
+GTK_REQUIRED=2.10.0
+LIBXML2_REQUIRED=2.0
+
+PKG_CHECK_MODULES(LIBXML2, libxml-2.0 >= $LIBXML2_REQUIRED )
+AC_SUBST(LIBXML2_CFLAGS)
+AC_SUBST(LIBXML2_LIBS)
+
+PKG_CHECK_MODULES(LIBGVC, libgvc >= $LIBGVC_REQUIRED )
+AC_SUBST(LIBGVC_CFLAGS)
+AC_SUBST(LIBGVC_LIBS)
+
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)
+AC_SUBST(GLIB_CFLAGS)
+AC_SUBST(GLIB_LIBS)
+
+PKG_CHECK_MODULES(GMODULE, gmodule-2.0 >= $GLIB_REQUIRED)
+AC_SUBST(GMODULE_CFLAGS)
+AC_SUBST(GMODULE_LIBS)
+
+PKG_CHECK_MODULES(LIBVALA, vala-1.0 >= $LIBVALA_REQUIRED)
+AC_SUBST(LIBVALA_CFLAGS)
+AC_SUBST(LIBVALA_LIBS)
+
+
+
+# Checks for header files.
+
+# Checks for typedefs, structures, and compiler characteristics.
+
+# Checks for library functions.
+
+
+AC_CONFIG_FILES([Makefile
+                 src/libvaladoc/valadoc-1.0.pc
+                 src/Makefile
+                 src/libvaladoc/Makefile
+                 src/vapi/Makefile
+                 src/doclets/Makefile
+                 src/doclets/html/Makefile
+                 src/doclets/html/linkhelper/Makefile
+                 src/doclets/html/doclet/Makefile
+                 src/doclets/html/deps/Makefile
+                 src/doclets/html/taglets/Makefile
+                 src/doclets/html/taglets/parameter/Makefile
+                 src/doclets/html/taglets/version/Makefile
+                 src/doclets/html/taglets/throws/Makefile
+                 src/doclets/html/taglets/return/Makefile
+                 src/doclets/html/taglets/string/Makefile
+                 src/doclets/html/taglets/link/Makefile
+                 src/doclets/html/taglets/see/Makefile
+                 src/doclets/valadoc.org/Makefile
+                 src/doclets/valadoc.org/linkhelper/Makefile
+                 src/doclets/valadoc.org/doclet/Makefile
+                 src/doclets/valadoc.org/taglets/Makefile
+                 src/doclets/valadoc.org/taglets/parameter/Makefile
+                 src/doclets/valadoc.org/taglets/version/Makefile
+                 src/doclets/valadoc.org/taglets/throws/Makefile
+                 src/doclets/valadoc.org/taglets/return/Makefile
+                 src/doclets/valadoc.org/taglets/string/Makefile
+                 src/doclets/valadoc.org/taglets/link/Makefile
+                 src/doclets/valadoc.org/taglets/see/Makefile
+                 src/valadoc/Makefile])
+
+
+AC_OUTPUT
