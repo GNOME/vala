@@ -77,6 +77,17 @@ AC_CONFIG_FILES([Makefile
                  src/doclets/valadoc.org/taglets/string/Makefile
                  src/doclets/valadoc.org/taglets/link/Makefile
                  src/doclets/valadoc.org/taglets/see/Makefile
+                 src/doclets/devhelp/Makefile
+                 src/doclets/devhelp/linkhelper/Makefile
+                 src/doclets/devhelp/doclet/Makefile
+                 src/doclets/devhelp/taglets/Makefile
+                 src/doclets/devhelp/taglets/parameter/Makefile
+                 src/doclets/devhelp/taglets/version/Makefile
+                 src/doclets/devhelp/taglets/throws/Makefile
+                 src/doclets/devhelp/taglets/return/Makefile
+                 src/doclets/devhelp/taglets/string/Makefile
+                 src/doclets/devhelp/taglets/link/Makefile
+                 src/doclets/devhelp/taglets/see/Makefile
                  src/valadoc/Makefile])
 
 
