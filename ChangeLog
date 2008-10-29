@@ -1,3 +1,18 @@
+2008-10-29  Thijs Vermeir  <thijsvermeir@gmail.com>
+
+	* vapi/packages/gdk-2.0/gdk-2.0.metadata:
+
+	Hide gdk_window_add_filter.data
+
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
+
+	use ctype GCallback for gtk_action_group_add_radio_actions
+
+	* vapi/gdk-2.0.vapi:
+	* vapi/gtk+-2.0.vapi:
+
+	Regenerate bindings
+
 2008-10-28  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/libgnome-menu/:
