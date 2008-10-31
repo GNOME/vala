@@ -25,17 +25,6 @@ using Gee;
 
 
 
-public enum WriterState {
-	KEY,
-	STANDARD,
-	NULL
-}
-
-
-
-
-
-
 
 
 public class Valadoc.LangletIndex : Valadoc.Langlet, Valadoc.LinkHelper {
@@ -296,7 +285,6 @@ public class Valadoc.LangletIndex : Valadoc.Langlet, Valadoc.LinkHelper {
 			return ;
 
 		file.puts ( "&lt;" ); // <
-
 
 		foreach ( TypeParameter param in lst ) {
 			param.write ( this, file );

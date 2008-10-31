@@ -22,30 +22,6 @@ using GLib;
 using Gee;
 
 
-public enum WriterState {
-	KEY,
-	STANDARD,
-	NULL
-}
-
-
-
-
-private string get_full_name ( Basic element ) {
-	if ( element.name == null )
-		return "";
-
-	GLib.StringBuilder str = new GLib.StringBuilder ( "" );
-
-	for ( var pos = element; pos != null ; pos = pos.parent ) {
-		str.prepend ( pos.name );
-		if ( pos.parent is File || pos.parent.name == null )
-			return str.str;
-		else
-			str.prepend_unichar ( '.' );
-	}
-	return str.str;
-}
 
 
 
@@ -82,7 +58,7 @@ public class Valadoc.LangletIndex : Valadoc.Langlet, Valadoc.LinkHelper {
 			return ;
 		}
 
-		string typename = get_full_name ( datatype );
+		string typename = datatype.full_name ();
 		if ( datatype.parent.name == null && (datatype is Class || datatype is Struct) ) {
 			if ( this.is_basic_type ( typename ) ) {
 				string link = this.get_link( datatype );
@@ -1478,7 +1454,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public void write_interface_content ( GLib.FileStream file, Interface iface ) {
-		string full_name = get_full_name ( iface );
+		string full_name = iface.full_name ();
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 
@@ -1529,7 +1505,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public void write_class_content ( GLib.FileStream file, Class cl ) {
-		string full_name = get_full_name ( cl );
+		string full_name = cl.full_name ( );
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 
@@ -1588,7 +1564,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public void write_struct_content ( GLib.FileStream file, Struct stru ) {
-		string full_name = get_full_name ( stru );
+		string full_name = stru.full_name ();
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 
@@ -1635,7 +1611,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public void write_error_domain_content ( GLib.FileStream file, ErrorDomain errdom ) {
-		string full_name = get_full_name ( errdom );
+		string full_name = errdom.full_name ();
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1670,7 +1646,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public void write_enum_content ( GLib.FileStream file, Enum en ) {
-		string full_name = get_full_name ( en );
+		string full_name = en.full_name ();
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1706,7 +1682,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public void write_property_content ( GLib.FileStream file, Property prop ) {
-		string full_name = get_full_name ( prop );
+		string full_name = prop.full_name ();
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1760,7 +1736,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public void write_constant_content ( GLib.FileStream file, Constant constant, ConstantHandler parent ) {
-		string full_name = get_full_name ( constant );
+		string full_name = constant.full_name ();
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1790,7 +1766,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public void write_field_content ( GLib.FileStream file, Field field, FieldHandler parent ) {
-		string full_name = get_full_name ( field );
+		string full_name = field.full_name ();
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1841,7 +1817,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public void write_delegate_content ( GLib.FileStream file, Delegate del ) {
-		string full_name = get_full_name ( del );
+		string full_name = del.full_name ();
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1875,7 +1851,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public void write_signal_content ( GLib.FileStream file, Signal sig ) {
-		string full_name = get_full_name ( sig );
+		string full_name = sig.full_name ();
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1908,7 +1884,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public void write_method_content ( GLib.FileStream file, Method m , Valadoc.MethodHandler parent ) {
-		string full_name = get_full_name ( m );
+		string full_name = m.full_name ();
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1924,7 +1900,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 
 	public override void visit_method ( Method m, Valadoc.MethodHandler parent ) {
 		string path = this.current_path + m.name + "/";
-		string full_name = get_full_name ( m );
+		string full_name = m.full_name ();
 		var rt = DirUtils.create ( path, 0777 );
 
 		if ( this.is_vapi || m.parent is Namespace == false ) {

@@ -22,12 +22,26 @@ using GLib;
 
 public class Valadoc.Settings : Object {
 	public Gee.ArrayList<string> files;
+	private string rpath;
 	public string path = "documentation/";
 	public string package_name = null;
 	public bool _private = false;
 	public bool _protected = false;
 	public bool with_deps = false;
 	public bool add_inherited = false;
+
+	public string get_real_path () {
+		if ( rpath == null ) {
+			string path = realpath ( this.path );
+
+			if ( path.has_suffix ( "/" ) )
+				this.rpath = path;
+			else
+				this.rpath = path + "/";	
+		}
+
+		return this.rpath;
+	}
 
 	public bool application {
 		get {

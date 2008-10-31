@@ -26,26 +26,6 @@ using Gee;
 
 
 
-
-private string get_full_name ( Basic element ) {
-	if ( element.name == null )
-		return "";
-
-	GLib.StringBuilder str = new GLib.StringBuilder ( "" );
-
-	for ( var pos = element; pos != null ; pos = pos.parent ) {
-		str.prepend ( pos.name );
-		if ( pos.parent is File || pos.parent.name == null )
-			return str.str;
-		else
-			str.prepend_unichar ( '.' );
-	}
-	return str.str;
-}
-
-
-
-
 public class Valadoc.LangletIndex : Valadoc.Langlet, Valadoc.LinkHelper {
 	public Valadoc.Settings settings {
 		construct set;
@@ -78,7 +58,7 @@ public class Valadoc.LangletIndex : Valadoc.Langlet, Valadoc.LinkHelper {
 			return ;
 		}
 
-		string typename = get_full_name ( datatype );
+		string typename = datatype.full_name (  );
 		if ( datatype.parent.name == null && (datatype is Class || datatype is Struct) ) {
 			if ( this.is_basic_type ( typename ) ) {
 				string link = this.get_link( datatype );
@@ -167,30 +147,6 @@ public class Valadoc.LangletIndex : Valadoc.Langlet, Valadoc.LinkHelper {
 
 		this.write_nested_type_referene ( type_reference, file );
 		file.putc ( ' ' );
-
-		/*
-		if ( type_reference.is_weak ) {
-			file.printf ( "<font class=\"%s\">weak</font> ", css_keyword );
-		}
-
-		this.write_type_name ( type_reference.data_type, file );
-
-		if ( type_reference.is_array ) {
-			string str = string.nfill ( type_reference.array_rank-1, ',');
-			file.printf ( "[%s]", str );
-		}
-
-		if ( type_reference.pass_ownership ) {
-			file.putc ( '#' );
-		}
-
-		if ( type_reference.is_nullable ) {
-			file.putc ( '?' );
-		}
-
-		string str = string.nfill ( type_reference.pointer_rank, '*' );
-		file.puts ( str );
-		*/
 	}
 
 	private void write_formal_parameter ( FormalParameter param, GLib.FileStream file ) {
@@ -516,52 +472,54 @@ public class Valadoc.LangletIndex : Valadoc.Langlet, Valadoc.LinkHelper {
 
 
 
+public enum KeywordType {
+	NAMESPACE = 0,
+	CLASS = 1,
+	DELEGATE = 2,
+	INTERFACE = 3,
+	ERRORDOMAIN = 4,
 
+	CONSTANT = 5,
+	ENUM = 6,
+	FUNCTION = 7,
+	MACRO = 8,
+	PROPERTY = 9,
+	SIGNAL = 10,
+	STRUCT = 11,
+	TYPEDEF = 12,
+	UNION = 13,
+	VARIABLE = 14,
+	UNSET = 15
+}
 
-
-
-public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
-	private Valadoc.LangletIndex langlet;
-
-	private string current_path = null;
-	private bool is_vapi = false;
-
-
-
-	// xml:
-	private Xml.Doc devhelp = null;
+public class DevhelpFormat : Object {
+	private Xml.Doc* devhelp = null;
 	private Xml.Node* functions = null;
 	private Xml.Node* chapters = null;
 	private Xml.Node* current = null;
 
-	private void devhelp_add_chapter_start () {
+	~DevhelpFormat ( ) {
+		delete this.devhelp;
 	}
 
-	private void devhelp_add_chapter () {
+	public void save_file ( string path ) {
+		Xml.Doc.save_format_file ( path, this.devhelp, 1 );
 	}
 
-	private void devhelp_add_chapter_end () {
-	}
+	construct {
+		this.devhelp = new Xml.Doc ( "1.0" );
+		Xml.Node* root = new Xml.Node ( null, "book" ); // may cause an crash! string#
+		this.devhelp->set_root_element( root );
+		root->new_prop ( "xmlns", "http://www.devhelp.net/book" );
+		root->new_prop ( "title", "GLib Reference Manual" ); // >>> Change the title!
+		root->new_prop ( "link", "index.html" );
+		root->new_prop ( "author", "" );
+		root->new_prop ( "name", "glib" ); // >>> name
+		root->new_prop ( "version", "2" ); // >>> version
 
-
-	private enum KeywordType {
-		NAMESPACE = 0,
-		CLASS = 1,
-		DELEGATE = 2,
-		INTERFACE = 3,
-		ERRORDOMAIN = 4,
-
-		CONSTANT = 5,
-		ENUM = 6,
-		FUNCTION = 7,
-		MACRO = 8,
-		PROPERTY = 9,
-		SIGNAL = 10,
-		STRUCT = 11,
-		TYPEDEF = 12,
-		UNION = 13,
-		VARIABLE = 14,
-		UNSET = 15
+		this.current = root->new_child ( null, "chapters" );
+		this.functions = root->new_child ( null, "functions" );
+		this.chapters = this.current;
 	}
 
 	private const string[] keyword_type_strings = {
@@ -583,38 +541,111 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		""
 	};
 
-	private void devhelp_add_keyword ( KeywordType type, string name, string link ) {
+	private Xml.Node* find_child_node ( Xml.Node* element, string name ) {
+		for ( Xml.Node* pos = element->children; pos != null ; pos = pos->next ) {
+			if ( name == pos->get_prop ( name ) ) {
+				return pos;
+			}
+		}
+
+		return null;
+	}
+
+	private Xml.Node* get_node ( string full_name ) {
+		Xml.Node* cur = this.functions;
+		string[] path = full_name.split ( "." );
+
+		for ( int i = 0; path[i] != null ; i++ ) {
+			cur = this.find_child_node ( cur, path[i] );
+			if ( cur == null ) {
+				return null;
+			}
+		}
+
+		return null;
+	}
+
+	public void devhelp_add_chapter_start ( string name, string link ) {
+		this.current = this.current->new_child ( null, "sub" );
+		this.current->new_prop ( "name", name );
+		this.current->new_prop ( "link", link );
+	}
+
+	public void devhelp_add_chapter_end () {
+		this.current = this.current->parent;
+	}
+
+	public void devhelp_add_chapter ( string name, string link ) {
+		this.devhelp_add_chapter_start ( name, link );
+		this.devhelp_add_chapter_end ();
+	}
+
+	public void devhelp_add_keyword ( KeywordType type, string name, string link ) {
 		Xml.Node* keyword = this.functions->new_child ( null, "keyword" );
 		keyword->new_prop ( "type", keyword_type_strings[(int)type] );
 		keyword->new_prop ( "name", name );
 		keyword->new_prop ( "link", link );
 	}
+}
 
 
-	private string get_full_path ( Basic element ) {
-		if ( element.name == null )
-			return "";
+public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
+	private Valadoc.LangletIndex langlet;
 
-		GLib.StringBuilder str = new GLib.StringBuilder ( "" );
+	private DevhelpFormat devhelp;
 
-		for ( var pos = element; pos != null ; pos = pos.parent ) {
-			if ( pos is File )
-				break;
+	private const string css_style_body = "site_body";
+	private const string css_site_header = "site_header";
+	private string package_dir_name = "";
 
-			str.prepend_unichar ( '/' );
+	private void write_file_header_template ( GLib.FileStream file, string title ) {
+		file.puts ( "<html>\n" );
+		file.puts ( "\t<head>\n" );
+		file.puts ( "\t\t<title>Vala Binding Reference</title>\n" );
+		file.printf ( "\t\t<link href=\"../style.css\" rel=\"stylesheet\" type=\"text/css\" />\n" );
+		file.puts ( "\t</head>\n" );
+		file.puts ( "\t<body>\n\n" );
 
-			if ( pos.name == null )
-				str.prepend ( "0" );
-			else
-				str.prepend ( pos.name );
-		}
+		file.printf ( "\t<div class=\"%s\">\n", this.css_site_header );
+		file.printf ( "\t\t%s Reference Manual\n", title );
+		file.puts ( "\t</div>\n\n" );
 
-		string file_path = get_file_name ( element );
-		string package_name = get_package_name ( file_path )  + "/";
+		file.printf ( "\t\t<div class=\"%s\">\n", this.css_style_body );
+	}
 
-		str.prepend ( package_name );
-		str.append_unichar ( '/' );
-		return str.str;
+	private void write_file_footer ( GLib.FileStream file ) {
+		file.puts ( "\t</div>\n" );
+
+		file.puts ( "\t<div style= \"clear: left\">\n" );
+		file.puts ( "\t\t<br />\n" );
+		file.puts ( "\t\t<div class=\"site_foother\">\n" );
+		file.puts ( "\t\t\tcreated by <a href=\"http://www.valadoc.org\">valadoc</a>\n" );
+		file.puts ( "\t\t</div>\n" );
+		file.puts ( "\t</div>\n" );
+		file.puts ( "\t</body>\n" );
+		file.puts ( "</html>" );
+	}
+
+	private string get_path ( Valadoc.Basic element ) {
+		return element.full_name () + ".html";
+	}
+
+	private string get_real_path ( Valadoc.Basic element ) {
+		return this.settings.get_real_path ( ) + "/" + this.package_dir_name + "/" + element.full_name () + ".html";
+	}
+
+	private string get_img_path ( Valadoc.Basic element ) {
+		return "img/" + element.full_name () + ".png";
+	}
+
+	private string get_img_real_path ( Valadoc.Basic element ) {
+		return this.settings.get_real_path ( ) + "/" + this.package_dir_name + "/" + "img/" + element.full_name () + ".png";
+	}
+
+	~HtmlDoclet ( ) {
+		this.devhelp.save_file ( this.settings.get_real_path () + "/" + vala_file_package_name + "/" + vala_file_package_name + ".devhelp2" );
+
+//		this.devhelp.save_file ( this.settings.get_real_path () + "/devhelp2.xml" );
 	}
 
 	public Valadoc.Settings settings {
@@ -626,60 +657,60 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		this.settings = settings;
 
 		var rt = DirUtils.create ( this.settings.path, 0777 );
+		rt = DirUtils.create ( this.settings.path + settings.package_name, 0777 );
+
 		this.langlet = new Valadoc.LangletIndex ( settings );
-
-		this.devhelp = new Xml.Doc ( "1.0" );
-		this.devhelp.encoding = "utf-8";
-		this.devhelp.standalone = 0;
-
-
-		Xml.Node* root = new Xml.Node ( null, "book" ); // may cause an crash; string#
-		this.devhelp.set_root_element( root );
-		root->new_prop ( "xmlns", "http://www.devhelp.net/book" );
-		root->new_prop ( "title", "GLib Reference Manual" ); // >>> Change the title!
-		root->new_prop ( "link", "index.html" );
-		root->new_prop ( "author", "" );
-		root->new_prop ( "name", "glib" ); // >>> name
-		root->new_prop ( "version", "2" ); // >>> version
-
-		this.current = root->new_child ( null, "chapters" );
-		this.functions = root->new_child ( null, "functions" );
-		this.chapters = this.current;
+		this.devhelp = new DevhelpFormat ();
 	}
 
 	private void write_image_block ( GLib.FileStream file, DataType element ) {
-		string realimgpath = this.current_path + "tree.png";
-		string imgpath = "docs/" + get_full_path ( element ) + "tree.png";
+		string rpath = this.get_img_real_path ( element );
+		string path = this.get_img_path ( element );
 
 		if ( element is Class ) {
-			Diagrams.write_class_diagram ( (Class)element, realimgpath );
+			Diagrams.write_class_diagram ( (Class)element, rpath );
 		}
 		else if ( element is Interface ) {
-			Diagrams.write_interface_diagram ( (Interface)element, realimgpath );
+			Diagrams.write_interface_diagram ( (Interface)element, rpath );
 		}
 		else if ( element is Struct ) {
-			Diagrams.write_struct_diagram ( (Struct)element, realimgpath );
+			Diagrams.write_struct_diagram ( (Struct)element, rpath );
 		}
 
 		file.printf ( "<h2 cass=\"%s\">Object Hierarchy:</h2>\n", css_title );
-		file.printf ( "<img cass=\"%s\" src=\"%s\"/>\n", css_diagram, imgpath );
+		file.printf ( "<img cass=\"%s\" src=\"%s\"/>\n", css_diagram, path );
 	}
 
+	private string vala_file_package_name;
+	private bool visited_non_package = false;
+
 	public override void visit_file ( File file ) {
-		string package_name = this.get_package_name ( file.name );
-		this.is_vapi = file.name.has_suffix (".vapi");
+		string pkg_name = get_package_name ( file.name );
+		string path = this.settings.get_real_path () + pkg_name + "/";
+		this.package_dir_name = pkg_name;
 
-		string new_path = this.settings.path + package_name + "/";
-		bool dir_exists = FileUtils.test ( new_path, FileTest.EXISTS);
+		if ( file.is_package == true ) {
+			var rt = DirUtils.create ( path, 0777 );
+			rt = DirUtils.create ( path + "img/", 0777 );
+			DevhelpFormat tmp = this.devhelp;
 
-		if ( !dir_exists ) {
-			var rt = DirUtils.create ( new_path, 0777 );
+			this.devhelp = new DevhelpFormat ();
+
+			file.visit_namespaces ( this );
+
+			this.devhelp.save_file ( path + pkg_name + ".devhelp2" );
+			this.devhelp = tmp;
 		}
+		else {
+			if ( !visited_non_package ) {
+				this.vala_file_package_name = pkg_name;
+				var rt = DirUtils.create ( path, 0777 );
+				rt = DirUtils.create ( path + "img/", 0777 );
+			}
 
-
-		this.current_path = new_path;
-		file.visit_namespaces ( this );
-		this.current_path = null;
+			file.visit_namespaces ( this );
+			this.visited_non_package = true;
+		}
 	}
 
 	public void write_namespace_content ( GLib.FileStream file, Namespace ns ) {
@@ -690,26 +721,19 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public override void visit_namespace ( Namespace ns ) {
-		string old_path = this.current_path;
+		string rpath = this.get_real_path ( ns );
+		string path = this.get_path ( ns );
 
-		if ( ns.name == null ) {
-			string tmp = this.current_path + "0/";
-			this.current_path = tmp;
-		}
-		else {
-			string tmp = this.current_path + ns.name + "/";
-			this.current_path = tmp;
-		}
+		bool file_exists = FileUtils.test ( rpath, FileTest.EXISTS);
+		if ( !file_exists ) {
+			this.devhelp.devhelp_add_keyword ( KeywordType.NAMESPACE, ns.name, path );
 
-		bool dir_exists = FileUtils.test ( this.current_path, FileTest.EXISTS);
-		if ( !dir_exists ) {
-			var rt = DirUtils.create ( this.current_path, 0777 );
-
-			GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w" );
+			GLib.FileStream file = GLib.FileStream.open ( rpath, "w" );
+			this.write_file_header_template ( file, ns.full_name() );
 			this.write_namespace_content ( file, ns );
+			this.write_file_footer ( file );
 			file = null;
 		}
-
 
 		// file:
 		ns.visit_namespaces ( this );
@@ -722,8 +746,6 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		ns.visit_constants ( this );
 		ns.visit_fields ( this );
 		ns.visit_methods ( this );
-
-		this.current_path = old_path;
 	}
 
 	private void write_child_classes ( GLib.FileStream file, ClassHandler clh ) {
@@ -885,7 +907,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public void write_interface_content ( GLib.FileStream file, Interface iface ) {
-		string full_name = get_full_name ( iface );
+		string full_name = iface.full_name ( );
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 
@@ -907,9 +929,11 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public override void visit_interface ( Interface iface ) {
-		string old_path = this.current_path;
-		this.current_path += iface.name + "/";
-		var rt = DirUtils.create ( this.current_path, 0777 );
+		string rpath = this.get_real_path ( iface );
+		string path = this.get_path ( iface );
+
+
+		this.devhelp.devhelp_add_chapter_start ( iface.name, path );
 
 		iface.visit_properties ( this );
 		iface.visit_delegates ( this );
@@ -920,15 +944,19 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		iface.visit_structs ( this );
 		iface.visit_classes ( this );
 
-		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
-		this.write_interface_content ( file, iface );
-		file = null;
+		this.devhelp.devhelp_add_chapter_end ( );
 
-		this.current_path = old_path;
+		this.devhelp.devhelp_add_keyword ( KeywordType.INTERFACE, iface.name, path );
+
+		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
+		this.write_file_header_template ( file, iface.full_name() );
+		this.write_interface_content ( file, iface );
+		this.write_file_footer ( file );
+		file = null;
 	}
 
 	public void write_class_content ( GLib.FileStream file, Class cl ) {
-		string full_name = get_full_name ( cl );
+		string full_name = cl.full_name ( );
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 
@@ -956,9 +984,12 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public override void visit_class ( Class cl ) {
-		string old_path = this.current_path;
-		this.current_path += cl.name + "/";
-		var rt = DirUtils.create ( this.current_path, 0777 );
+		string rpath = this.get_real_path ( cl );
+		string path = this.get_path ( cl );
+
+
+		this.devhelp.devhelp_add_keyword ( KeywordType.CLASS, cl.name, path );
+		this.devhelp.devhelp_add_chapter_start ( cl.name, path );
 
 		cl.visit_enums ( this );
 		cl.visit_classes ( this );
@@ -971,15 +1002,18 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		cl.visit_properties ( this );
 		cl.visit_signals ( this );
 
-		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
-		this.write_class_content ( file, cl );
-		file = null;
+		this.devhelp.devhelp_add_chapter_end ( );
 
-		this.current_path = old_path;
+
+		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
+		this.write_file_header_template ( file, cl.full_name() );
+		this.write_class_content ( file, cl );
+		this.write_file_footer ( file );
+		file = null;
 	}
 
 	public void write_struct_content ( GLib.FileStream file, Struct stru ) {
-		string full_name = get_full_name ( stru );
+		string full_name = stru.full_name ( );
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 
@@ -1001,24 +1035,30 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public override void visit_struct ( Struct stru ) {
-		string old_path = this.current_path;
-		this.current_path += stru.name + "/";
-		var rt = DirUtils.create ( this.current_path, 0777 );
-	
+		string rpath = this.get_real_path ( stru );
+		string path = this.get_path ( stru );
+
+
+		this.devhelp.devhelp_add_keyword ( KeywordType.STRUCT, stru.name, path );
+		this.devhelp.devhelp_add_chapter_start ( stru.name, path );
+
 		stru.visit_constants ( this );
 		stru.visit_fields ( this );
 		stru.visit_construction_methods ( this );
 		stru.visit_methods ( this );
 
-		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
-		this.write_struct_content ( file, stru );
-		file = null;
+		this.devhelp.devhelp_add_chapter_end ( );
 
-		this.current_path = old_path;
+
+		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
+		this.write_file_header_template ( file, stru.full_name() );
+		this.write_struct_content ( file, stru );
+		this.write_file_footer ( file );
+		file = null;
 	}
 
 	public void write_error_domain_content ( GLib.FileStream file, ErrorDomain errdom ) {
-		string full_name = get_full_name ( errdom );
+		string full_name = errdom.full_name ( );
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1031,21 +1071,23 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public override void visit_error_domain ( ErrorDomain errdom ) {
-		string old_path = this.current_path;
-		this.current_path += errdom.name + "/";
-		var rt = DirUtils.create ( this.current_path, 0777 );
+		string rpath = this.get_real_path ( errdom );
+		string path = this.get_path ( errdom );
 
 		errdom.visit_methods ( this );
 
-		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
-		this.write_error_domain_content ( file, errdom );
-		file = null;
+		this.devhelp.devhelp_add_keyword ( KeywordType.ERRORDOMAIN, errdom.name, path );
+		this.devhelp.devhelp_add_chapter ( errdom.name, path );
 
-		this.current_path = old_path;
+		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
+		this.write_file_header_template ( file, errdom.full_name() );
+		this.write_error_domain_content ( file, errdom );
+		this.write_file_footer ( file );
+		file = null;
 	}
 
 	public void write_enum_content ( GLib.FileStream file, Enum en ) {
-		string full_name = get_full_name ( en );
+		string full_name = en.full_name ( );
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1058,22 +1100,23 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public override void visit_enum ( Enum en ) {
-		string old_path = this.current_path;
-		this.current_path += en.name + "/";
-		var rt = DirUtils.create ( this.current_path, 0777 );
+		string rpath = this.get_real_path ( en );
+		string path = this.get_path ( en );
 
 		en.visit_enum_values ( this );
 		en.visit_methods ( this );
 
-		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
-		this.write_enum_content ( file, en );
-		file = null;
+		this.devhelp.devhelp_add_keyword ( KeywordType.ENUM, en.name, path );
+		this.devhelp.devhelp_add_chapter ( en.name, path );
 
-		this.current_path = old_path;
+		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
+		this.write_enum_content ( file, en );
+		this.write_file_footer ( file );
+		file = null;
 	}
 
 	public void write_property_content ( GLib.FileStream file, Property prop ) {
-		string full_name = get_full_name ( prop );
+		string full_name = prop.full_name ( );
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1105,16 +1148,21 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public override void visit_property ( Property prop ) {
-		string path = this.current_path + prop.name + "/";
-		var rt = DirUtils.create ( path, 0777 );
+		string rpath = this.get_real_path ( prop );
+		string path = this.get_path ( prop );
 
-		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
+		this.devhelp.devhelp_add_keyword ( KeywordType.PROPERTY, prop.name, path );
+		this.devhelp.devhelp_add_chapter ( prop.name, path );
+
+		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
+		this.write_file_header_template ( file, prop.full_name() );
 		this.write_property_content ( file, prop );
+		this.write_file_footer ( file );
 		file = null;
 	}
 
 	public void write_constant_content ( GLib.FileStream file, Constant constant, ConstantHandler parent ) {
-		string full_name = get_full_name ( constant );
+		string full_name = constant.full_name ( );
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1129,16 +1177,21 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public override void visit_constant ( Constant constant, ConstantHandler parent ) {
-		string path = this.current_path + constant.name + "/";
-		var rt = DirUtils.create ( path, 0777 );
+		string rpath = this.get_real_path ( constant );
+		string path = this.get_path ( constant );
 
-		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
+		this.devhelp.devhelp_add_keyword ( KeywordType.VARIABLE, constant.name, path );
+		this.devhelp.devhelp_add_chapter ( constant.name, path );
+
+		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
+		this.write_file_header_template ( file, constant.full_name() );
 		this.write_constant_content ( file, constant, parent );
+		this.write_file_footer ( file );
 		file = null;
 	}
 
 	public void write_field_content ( GLib.FileStream file, Field field, FieldHandler parent ) {
-		string full_name = get_full_name ( field );
+		string full_name = field.full_name ( );
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1153,11 +1206,16 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public override void visit_field ( Field field, FieldHandler parent ) {
-		string path = this.current_path + field.name + "/";
-		var rt = DirUtils.create ( path, 0777 );
+		string rpath = this.get_real_path ( field );
+		string path = this.get_path ( field );
 
-		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
+		this.devhelp.devhelp_add_keyword ( KeywordType.VARIABLE, field.name, path );
+		this.devhelp.devhelp_add_chapter ( field.name, path );
+
+		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
+		this.write_file_header_template ( file, field.full_name() );
 		this.write_field_content ( file, field, parent );
+		this.write_file_footer ( file );
 		file = null;
 	}
 
@@ -1168,7 +1226,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public void write_delegate_content ( GLib.FileStream file, Delegate del ) {
-		string full_name = get_full_name ( del );
+		string full_name = del.full_name ( );
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1183,16 +1241,21 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public override void visit_delegate ( Delegate del ) {
-		string path = this.current_path + del.name + "/";
-		var rt = DirUtils.create ( path, 0777 );
+		string rpath = this.get_real_path ( del );
+		string path = this.get_path ( del );
 
-		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
+		this.devhelp.devhelp_add_keyword ( KeywordType.DELEGATE, del.name, path );
+		this.devhelp.devhelp_add_chapter ( del.name, path );
+
+		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
+		this.write_file_header_template ( file, del.full_name() );
 		this.write_delegate_content ( file, del );
+		this.write_file_footer ( file );
 		file = null;
 	}
 
 	public void write_signal_content ( GLib.FileStream file, Signal sig ) {
-		string full_name = get_full_name ( sig );
+		string full_name = sig.full_name ( );
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1203,16 +1266,21 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public override void visit_signal ( Signal sig ) {
-		string path = this.current_path + sig.name + "/";
-		var rt = DirUtils.create ( path, 0777 );
+		string rpath = this.get_real_path ( sig );
+		string path = this.get_path ( sig );
 
-		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
+		this.devhelp.devhelp_add_keyword ( KeywordType.SIGNAL, sig.name, path );
+		this.devhelp.devhelp_add_chapter ( sig.name, path );
+
+		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
+		this.write_file_header_template ( file, sig.full_name() );
 		write_signal_content ( file, sig );
+		this.write_file_footer ( file );
 		file = null;
 	}
 
 	public void write_method_content ( GLib.FileStream file, Method m , Valadoc.MethodHandler parent ) {
-		string full_name = get_full_name ( m );
+		string full_name = m.full_name ( );
 		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
@@ -1227,12 +1295,16 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	}
 
 	public override void visit_method ( Method m, Valadoc.MethodHandler parent ) {
-		string path = this.current_path + m.name + "/";
-		string full_name = get_full_name ( m );
-		var rt = DirUtils.create ( path, 0777 );
+		string rpath = this.get_real_path ( m );
+		string path = this.get_path ( m );
 
-		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
+		this.devhelp.devhelp_add_keyword ( KeywordType.FUNCTION, m.name, path );
+		this.devhelp.devhelp_add_chapter ( m.name, path );
+
+		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
+		this.write_file_header_template ( file, m.full_name() );
 		this.write_method_content ( file, m, parent );
+		this.write_file_footer ( file );
 		file = null;
 	}
 }

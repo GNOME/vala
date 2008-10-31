@@ -131,38 +131,7 @@ public interface Valadoc.LinkHelper : Object {
 	}
 
 	protected string? get_link ( Valadoc.Basic tag ) {
-//		if ( !this.settings.to_doc( tag.file_name ) )
-//			return null;
-
-		GLib.StringBuilder str = new GLib.StringBuilder ( "" );
-		Valadoc.Basic pos = tag;
-
-		if ( tag is Valadoc.File == false ) {
-			if ( tag is Valadoc.EnumValue || tag is Valadoc.ErrorCode ) {
-				str.append_unichar ( '#' );
-				str.append ( tag.name );
-				pos = pos.parent;
-			}
-
-			while ( pos != null ) {
-				if ( pos.name == null )
-					str.prepend ( "0" );
-				else
-					str.prepend ( pos.name );
-
-				str.prepend ( "::" );
-
-				if ( pos.parent is Valadoc.File )
-					break;
-
-				pos = pos.parent;
-			}
-		}
-		string filename = this.get_file_name ( tag );
-		string package_name = this.get_package_name ( filename );
-		str.prepend ( package_name );
-		str.prepend ( "?path=" );
-		return str.str;
+		return "../" + this.get_package_name ( tag.file.name ) + "/" + tag.full_name () + ".html";
 	}
 }
 

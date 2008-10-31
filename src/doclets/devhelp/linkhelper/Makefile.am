@@ -16,7 +16,7 @@ libhtmlhelper.vala.stamp: $(libhtmlhelper_VALASOURCES)
 
 
 
-htmlhelperdir = $(libdir)/valadoc/plugins/valadoc.org/
+htmlhelperdir = $(libdir)/valadoc/plugins/devhelp/
 htmlhelper_LTLIBRARIES = libhtmlhelper.la
 
 

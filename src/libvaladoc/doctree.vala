@@ -23,6 +23,69 @@ using GLib;
 using Gee;
 
 
+//ported from glibc
+
+namespace Valadoc {
+	public string realpath (string name) {
+		string rpath;
+
+		if (name.get_char () != '/') {
+			// relative path
+			rpath = Environment.get_current_dir ();
+		}
+		else {
+			rpath = "/";
+		}
+
+		weak string start;
+		weak string end;
+
+		for (start = end = name; start.get_char () != 0; start = end) {
+			// skip sequence of multiple path-separators
+			while (start.get_char () == '/') {
+				start = start.next_char ();
+			}
+
+			// find end of path component
+			long len = 0;
+			for (end = start; end.get_char () != 0 && end.get_char () != '/'; end = end.next_char ()) {
+				len++;
+			}
+
+			if (len == 0) {
+				break;
+			}
+			else if (len == 1 && start.get_char () == '.') {
+				// do nothing
+			}
+			else if (len == 2 && start.has_prefix ("..")) {
+				// back up to previous component, ignore if at root already
+				if (rpath.len () > 1) {
+					do {
+						rpath = rpath.substring (0, rpath.len () - 1);
+					}
+					while (!rpath.has_suffix ("/"));
+				}
+			}
+			else {
+				if (!rpath.has_suffix ("/")) {
+					rpath += "/";
+				}
+
+				rpath += start.substring (0, len);
+			}
+		}
+
+		if (rpath.len () > 1 && rpath.has_suffix ("/")) {
+			rpath = rpath.substring (0, rpath.len () - 1);
+		}
+
+		return rpath;
+	}
+}
+
+
+
 // private
 public Valadoc.Class glib_error = null;
 
@@ -4107,6 +4170,12 @@ public class Valadoc.File : Basic, NamespaceHandler {
 		default = new Gee.ArrayList<Namespace>();
 		private set;
 		private get;
+	}
+
+	public bool is_package {
+		get {
+			return this.vfile.external_package;
+		}
 	}
 
 	public File ( Valadoc.Settings settings, Vala.SourceFile vfile, Tree head ) {
