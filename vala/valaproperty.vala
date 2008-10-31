@@ -401,4 +401,70 @@ public class Vala.Property : Member, Lockable {
 			}
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		var old_source_file = analyzer.current_source_file;
+		var old_symbol = analyzer.current_symbol;
+
+		if (source_reference != null) {
+			analyzer.current_source_file = source_reference.file;
+		}
+		analyzer.current_symbol = this;
+
+		property_type.accept (analyzer);
+		
+		if (get_accessor != null) {
+			get_accessor.accept (analyzer);
+		}
+		if (set_accessor != null) {
+			set_accessor.accept (analyzer);
+		}
+
+		if (default_expression != null) {
+			default_expression.accept (analyzer);
+		}
+
+		// check whether property type is at least as accessible as the property
+		if (!analyzer.is_type_accessible (this, property_type)) {
+			error = true;
+			Report.error (source_reference, "property type `%s` is less accessible than property `%s`".printf (property_type.to_string (), get_full_name ()));
+		}
+
+		if (!is_internal_symbol ()) {
+			if (property_type is ValueType && !property_type.is_real_struct_type ()) {
+				analyzer.current_source_file.add_type_dependency (property_type, SourceFileDependencyType.HEADER_FULL);
+			} else {
+				analyzer.current_source_file.add_type_dependency (property_type, SourceFileDependencyType.HEADER_SHALLOW);
+			}
+		}
+		analyzer.current_source_file.add_type_dependency (property_type, SourceFileDependencyType.SOURCE);
+
+		if (overrides && base_property == null) {
+			Report.error (source_reference, "%s: no suitable property found to override".printf (get_full_name ()));
+		}
+
+		/* construct properties must be public */
+		if (set_accessor != null && set_accessor.construction) {
+			if (access != SymbolAccessibility.PUBLIC) {
+				error = true;
+				Report.error (source_reference, "%s: construct properties must be public".printf (get_full_name ()));
+			}
+		}
+
+		if (default_expression != null && !(default_expression.value_type.compatible (property_type))) {
+			error = true;
+			Report.error (default_expression.source_reference, "Expected initializer of type `%s' but got `%s'".printf (property_type.to_string (), default_expression.value_type.to_string ()));
+		}
+
+		analyzer.current_source_file = old_source_file;
+		analyzer.current_symbol = old_symbol;
+
+		return !error;
+	}
 }

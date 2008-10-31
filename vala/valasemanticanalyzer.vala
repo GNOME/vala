@@ -612,58 +612,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_property (Property prop) {
-		current_symbol = prop;
-
-		prop.property_type.accept (this);
-		
-		if (prop.get_accessor != null) {
-			prop.get_accessor.accept (this);
-		}
-		if (prop.set_accessor != null) {
-			prop.set_accessor.accept (this);
-		}
-
-		if (prop.default_expression != null) {
-			prop.default_expression.accept (this);
-		}
-
-		// check whether property type is at least as accessible as the property
-		if (!is_type_accessible (prop, prop.property_type)) {
-			prop.error = true;
-			Report.error (prop.source_reference, "property type `%s` is less accessible than property `%s`".printf (prop.property_type.to_string (), prop.get_full_name ()));
-			return;
-		}
-
-		current_symbol = current_symbol.parent_symbol;
-
-		if (!prop.is_internal_symbol ()) {
-			if (prop.property_type is ValueType && !prop.property_type.is_real_struct_type ()) {
-				current_source_file.add_type_dependency (prop.property_type, SourceFileDependencyType.HEADER_FULL);
-			} else {
-				current_source_file.add_type_dependency (prop.property_type, SourceFileDependencyType.HEADER_SHALLOW);
-			}
-		}
-		current_source_file.add_type_dependency (prop.property_type, SourceFileDependencyType.SOURCE);
-
-		if (prop.overrides && prop.base_property == null) {
-			Report.error (prop.source_reference, "%s: no suitable property found to override".printf (prop.get_full_name ()));
-		}
-
-		/* construct properties must be public */
-		if (prop.set_accessor != null && prop.set_accessor.construction) {
-			if (prop.access != SymbolAccessibility.PUBLIC) {
-				prop.error = true;
-				Report.error (prop.source_reference, "%s: construct properties must be public".printf (prop.get_full_name ()));
-			}
-		}
-
-		if (prop.default_expression != null && !(prop.default_expression.value_type.compatible (prop.property_type))) {
-			prop.error = true;
-			Report.error (prop.default_expression.source_reference, "Expected initializer of type `%s' but got `%s'".printf (prop.property_type.to_string (), prop.default_expression.value_type.to_string ()));
-		}
+		prop.check (this);
 	}
 
 	public override void visit_property_accessor (PropertyAccessor acc) {
+		var old_return_type = current_return_type;
 		if (acc.readable) {
 			current_return_type = acc.prop.property_type;
 		} else {
@@ -700,7 +653,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		acc.accept_children (this);
 
-		current_return_type = null;
+		current_return_type = old_return_type;
 	}
 
 	public override void visit_signal (Signal sig) {
@@ -1753,6 +1706,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			klass = (m.binding == MemberBinding.CLASS);
 		} else if (member is Property) {
 			var prop = (Property) member;
+			if (!prop.check (this)) {
+				expr.error = true;
+				return;
+			}
 			access = prop.access;
 			if (expr.lvalue) {
 				if (prop.set_accessor == null) {
