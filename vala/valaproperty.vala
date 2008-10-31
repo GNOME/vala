@@ -41,12 +41,28 @@ public class Vala.Property : Member, Lockable {
 	/**
 	 * The get accessor of this property if available.
 	 */
-	public PropertyAccessor? get_accessor { get; set; }
+	public PropertyAccessor? get_accessor {
+		get { return _get_accessor; }
+		set {
+			_get_accessor = value;
+			if (value != null) {
+				value.prop = this;
+			}
+		}
+	}
 	
 	/**
 	 * The set/construct accessor of this property if available.
 	 */
-	public PropertyAccessor? set_accessor { get; set; }
+	public PropertyAccessor? set_accessor {
+		get { return _set_accessor; }
+		set {
+			_set_accessor = value;
+			if (value != null) {
+				value.prop = this;
+			}
+		}
+	}
 	
 	/**
 	 * Represents the generated ´this' parameter in this property.
@@ -164,6 +180,8 @@ public class Vala.Property : Member, Lockable {
 	private weak Property _base_property;
 	private Property _base_interface_property;
 	private bool base_properties_valid;
+	PropertyAccessor? _get_accessor;
+	PropertyAccessor? _set_accessor;
 
 	/**
 	 * Creates a new property.

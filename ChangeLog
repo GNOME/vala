@@ -1,5 +1,13 @@
 2008-10-31  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaproperty.vala:
+	* vala/valasemanticanalyzer.vala:
+
+	Set PropertyAccessor.prop property earlier, don't require the
+	semantic analyzer to set it
+
+2008-10-31  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodenode.vala:
 	* vala/valaformalparameter.vala:
 	* vala/valasemanticanalyzer.vala:

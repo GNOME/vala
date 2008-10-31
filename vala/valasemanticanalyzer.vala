@@ -614,7 +614,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_property (Property prop) {
 		current_symbol = prop;
 
-		prop.accept_children (this);
+		prop.property_type.accept (this);
+		
+		if (prop.get_accessor != null) {
+			prop.get_accessor.accept (this);
+		}
+		if (prop.set_accessor != null) {
+			prop.set_accessor.accept (this);
+		}
+
+		if (prop.default_expression != null) {
+			prop.default_expression.accept (this);
+		}
 
 		// check whether property type is at least as accessible as the property
 		if (!is_type_accessible (prop, prop.property_type)) {
@@ -653,8 +664,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_property_accessor (PropertyAccessor acc) {
-		acc.prop = (Property) current_symbol;
-
 		if (acc.readable) {
 			current_return_type = acc.prop.property_type;
 		} else {
