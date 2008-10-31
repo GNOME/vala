@@ -76,6 +76,12 @@ public abstract class Vala.CodeNode {
 		get { return _error_types != null && _error_types.size > 0; }
 	}
 
+	bool checked;
+	private Gee.List<DataType> _error_types;
+	private static Gee.List<DataType> _empty_type_list;
+
+	private CCodeNode? _ccodenode;
+
 	/**
 	 * Specifies the exceptions that can be thrown by this node or a child node
 	 */
@@ -88,9 +94,6 @@ public abstract class Vala.CodeNode {
 		}
 		return _empty_type_list;
 	}
-
-	private Gee.List<DataType> _error_types;
-	private static Gee.List<DataType> _empty_type_list;
 
 	/**
 	 * Adds an error type to the exceptions that can be thrown by this node
@@ -130,6 +133,10 @@ public abstract class Vala.CodeNode {
 	public virtual void accept_children (CodeVisitor visitor) {
 	}
 
+	public virtual bool check (SemanticAnalyzer analyzer) {
+		return false;
+	}
+
 	public virtual void replace_type (DataType old_type, DataType new_type) {
 	}
 
@@ -152,8 +159,6 @@ public abstract class Vala.CodeNode {
 		
 		return null;
 	}
-
-	private CCodeNode? _ccodenode;
 
 	/**
 	 * Returns a string that represents this code node.
