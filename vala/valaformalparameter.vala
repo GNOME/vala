@@ -166,6 +166,53 @@ public class Vala.FormalParameter : Symbol {
 			return new FormalParameter.with_ellipsis ();
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		accept_children (analyzer);
+
+		if (analyzer.context.non_null && default_expression != null) {
+			if (default_expression is NullLiteral
+			    && !parameter_type.nullable
+			    && direction != ParameterDirection.OUT) {
+				Report.warning (source_reference, "`null' incompatible with parameter type `%s`".printf (parameter_type.to_string ()));
+			}
+		}
+
+		if (!ellipsis) {
+			if (!is_internal_symbol ()) {
+				if (parameter_type is ValueType && !parameter_type.is_real_struct_type ()) {
+					analyzer.current_source_file.add_type_dependency (parameter_type, SourceFileDependencyType.HEADER_FULL);
+				} else {
+					analyzer.current_source_file.add_type_dependency (parameter_type, SourceFileDependencyType.HEADER_SHALLOW);
+				}
+			}
+			analyzer.current_source_file.add_type_dependency (parameter_type, SourceFileDependencyType.SOURCE);
+
+			// check whether parameter type is at least as accessible as the method
+			if (!analyzer.is_type_accessible (this, parameter_type)) {
+				error = true;
+				Report.error (source_reference, "parameter type `%s` is less accessible than method `%s`".printf (parameter_type.to_string (), parent_symbol.get_full_name ()));
+				return false;
+			}
+		}
+
+		/* special treatment for construct formal parameters used in creation methods */
+		if (construct_parameter) {
+			if (!(parent_symbol is CreationMethod)) {
+				error = true;
+				Report.error (source_reference, "construct parameters are only allowed in type creation methods");
+				return false;
+			}
+
+			var method_body = ((CreationMethod) parent_symbol).body;
+			var left = new MemberAccess (new MemberAccess.simple ("this"), name);
+			var right = new MemberAccess.simple (name);
+
+			method_body.add_statement (new ExpressionStatement (new Assignment (left, right), source_reference));
+		}
+
+		return true;
+	}
 }
 
 public enum Vala.ParameterDirection {

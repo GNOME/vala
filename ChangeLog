@@ -1,5 +1,12 @@
 2008-10-31  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaformalparameter.vala:
+	* vala/valasemanticanalyzer.vala:
+
+	Move parameter checking to FormalParameter.check
+
+2008-10-31  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasemanticanalyzer.vala:
 	* gobject/valaccodeinvocationexpressionmodule.vala:
 

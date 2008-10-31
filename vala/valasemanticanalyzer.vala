@@ -28,11 +28,11 @@ using Gee;
  * Code visitor analyzing and checking code.
  */
 public class Vala.SemanticAnalyzer : CodeVisitor {
-	private CodeContext context;
+	public CodeContext context { get; set; }
 
 	Symbol root_symbol;
 	Symbol current_symbol;
-	SourceFile current_source_file;
+	public SourceFile current_source_file { get; set; }
 	DataType current_return_type;
 	Class current_class;
 	Struct current_struct;
@@ -594,52 +594,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_formal_parameter (FormalParameter p) {
-		p.accept_children (this);
-
-		if (context.non_null && p.default_expression != null) {
-			if (p.default_expression is NullLiteral
-			    && !p.parameter_type.nullable
-			    && p.direction != ParameterDirection.OUT) {
-				Report.warning (p.source_reference, "`null' incompatible with parameter type `%s`".printf (p.parameter_type.to_string ()));
-			}
-		}
-
-		if (!p.ellipsis) {
-			if (!p.is_internal_symbol ()) {
-				if (p.parameter_type is ValueType && !p.parameter_type.is_real_struct_type ()) {
-					current_source_file.add_type_dependency (p.parameter_type, SourceFileDependencyType.HEADER_FULL);
-				} else {
-					current_source_file.add_type_dependency (p.parameter_type, SourceFileDependencyType.HEADER_SHALLOW);
-				}
-			}
-			current_source_file.add_type_dependency (p.parameter_type, SourceFileDependencyType.SOURCE);
-
-			// check whether parameter type is at least as accessible as the method
-			if (!is_type_accessible (p, p.parameter_type)) {
-				p.error = true;
-				Report.error (p.source_reference, "parameter type `%s` is less accessible than method `%s`".printf (p.parameter_type.to_string (), p.parent_symbol.get_full_name ()));
-				return;
-			}
-		}
-
-		/* special treatment for construct formal parameters used in creation methods */
-		if (p.construct_parameter) {
-			if (!(p.parent_symbol is CreationMethod)) {
-				p.error = true;
-				Report.error (p.source_reference, "construct parameters are only allowed in type creation methods");
-				return;
-			}
-
-			var method_body = ((CreationMethod) p.parent_symbol).body;
-			var left = new MemberAccess (new MemberAccess.simple ("this"), p.name);
-			var right = new MemberAccess.simple (p.name);
-
-			method_body.add_statement (new ExpressionStatement (new Assignment (left, right), p.source_reference));
-		}
+		p.check (this);
 	}
 
 	// check whether type is at least as accessible as the specified symbol
-	private bool is_type_accessible (Symbol sym, DataType type) {
+	public bool is_type_accessible (Symbol sym, DataType type) {
 		foreach (Symbol type_symbol in type.get_symbols ()) {
 			Scope method_scope = sym.get_top_accessible_scope ();
 			Scope type_scope = type_symbol.get_top_accessible_scope ();
