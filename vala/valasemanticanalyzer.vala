@@ -2235,11 +2235,22 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			/* header file necessary if we need to cast argument */
 			current_source_file.add_type_dependency (param.parameter_type, SourceFileDependencyType.SOURCE);
 
-			if (!arg_it.next ()) {
+			if (arg_it == null || !arg_it.next ()) {
 				if (param.default_expression == null) {
 					expr.error = true;
 					Report.error (expr.source_reference, "Too few arguments, method `%s' does not take %d arguments".printf (mtype.to_string (), args.size));
 					return false;
+				} else {
+					var invocation_expr = expr as InvocationExpression;
+					var object_creation_expr = expr as ObjectCreationExpression;
+					if (invocation_expr != null) {
+						invocation_expr.add_argument (param.default_expression);
+					} else if (object_creation_expr != null) {
+						object_creation_expr.add_argument (param.default_expression);
+					} else {
+						assert_not_reached ();
+					}
+					arg_it = null;
 				}
 			} else {
 				var arg = arg_it.get ();
@@ -2329,7 +2340,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		if (ellipsis) {
-			while (arg_it.next ()) {
+			while (arg_it != null && arg_it.next ()) {
 				var arg = arg_it.get ();
 				if (arg.error) {
 					// ignore inner error
@@ -2351,7 +2362,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 				i++;
 			}
-		} else if (!ellipsis && arg_it.next ()) {
+		} else if (!ellipsis && arg_it != null && arg_it.next ()) {
 			expr.error = true;
 			Report.error (expr.source_reference, "Too many arguments, method `%s' does not take %d arguments".printf (mtype.to_string (), args.size));
 			return false;

@@ -1,5 +1,13 @@
 2008-10-31  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodeinvocationexpressionmodule.vala:
+
+	Move default argument processing from code generator to	semantic
+	analyzer
+
+2008-10-31  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodenode.vala:
 
 	Add check method to CodeNode class to prepare support for more

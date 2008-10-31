@@ -305,34 +305,15 @@ public class Vala.CCodeInvocationExpressionModule : CCodeModule {
 
 			i++;
 		}
-		while (params_it.next ()) {
+		if (params_it.next ()) {
 			var param = params_it.get ();
-			
-			if (param.ellipsis) {
-				ellipsis = true;
-				break;
-			}
-			
-			if (param.default_expression == null) {
-				Report.error (expr.source_reference, "no default expression for argument %d".printf (i));
-				return;
-			}
-			
-			/* evaluate default expression here as the code
-			 * generator might not have visited the formal
-			 * parameter yet */
-			param.default_expression.accept (codegen);
-		
-			if (!param.no_array_length && param.parameter_type != null &&
-			    param.parameter_type is ArrayType) {
-				var array_type = (ArrayType) param.parameter_type;
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					carg_map.set (codegen.get_param_pos (param.carray_length_parameter_position + 0.01 * dim), head.get_array_length_cexpression (param.default_expression, dim));
-				}
-			}
 
-			carg_map.set (codegen.get_param_pos (param.cparameter_position), (CCodeExpression) param.default_expression.ccodenode);
-			i++;
+			/* if there are more parameters than arguments,
+			 * the additional parameter is an ellipsis parameter
+			 * otherwise there is a bug in the semantic analyzer
+			 */
+			assert (param.ellipsis);
+			ellipsis = true;
 		}
 
 		/* add length argument for methods returning arrays */
