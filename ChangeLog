@@ -1,5 +1,14 @@
 2008-10-31  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodenode.vala:
+	* vala/valaformalparameter.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasourcefile.vala:
+
+	Check parameters when checking arguments
+
+2008-10-31  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaformalparameter.vala:
 	* vala/valasemanticanalyzer.vala:
 

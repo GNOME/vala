@@ -168,6 +168,20 @@ public class Vala.FormalParameter : Symbol {
 	}
 
 	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		var old_source_file = analyzer.current_source_file;
+		var old_symbol = analyzer.current_symbol;
+
+		if (source_reference != null) {
+			analyzer.current_source_file = source_reference.file;
+		}
+		analyzer.current_symbol = parent_symbol;
+
 		accept_children (analyzer);
 
 		if (analyzer.context.non_null && default_expression != null) {
@@ -192,7 +206,6 @@ public class Vala.FormalParameter : Symbol {
 			if (!analyzer.is_type_accessible (this, parameter_type)) {
 				error = true;
 				Report.error (source_reference, "parameter type `%s` is less accessible than method `%s`".printf (parameter_type.to_string (), parent_symbol.get_full_name ()));
-				return false;
 			}
 		}
 
@@ -201,7 +214,6 @@ public class Vala.FormalParameter : Symbol {
 			if (!(parent_symbol is CreationMethod)) {
 				error = true;
 				Report.error (source_reference, "construct parameters are only allowed in type creation methods");
-				return false;
 			}
 
 			var method_body = ((CreationMethod) parent_symbol).body;
@@ -211,7 +223,10 @@ public class Vala.FormalParameter : Symbol {
 			method_body.add_statement (new ExpressionStatement (new Assignment (left, right), source_reference));
 		}
 
-		return true;
+		analyzer.current_source_file = old_source_file;
+		analyzer.current_symbol = old_symbol;
+
+		return !error;
 	}
 }
 

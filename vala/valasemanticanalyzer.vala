@@ -31,7 +31,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public CodeContext context { get; set; }
 
 	Symbol root_symbol;
-	Symbol current_symbol;
+	public Symbol current_symbol { get; set; }
 	public SourceFile current_source_file { get; set; }
 	DataType current_return_type;
 	Class current_class;
@@ -2186,6 +2186,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		bool ellipsis = false;
 		int i = 0;
 		foreach (FormalParameter param in params) {
+			if (!param.check (this)) {
+				return false;
+			}
+
 			if (param.ellipsis) {
 				ellipsis = true;
 				break;

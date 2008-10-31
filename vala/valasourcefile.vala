@@ -265,6 +265,9 @@ public class Vala.SourceFile {
 	 * Adds the specified symbol to the list of symbols code in this source
 	 * file depends on.
 	 *
+	 * TODO Move source and header file dependency analysis to
+	 * code generator.
+	 *
 	 * @param sym      a symbol
 	 * @param dep_type type of dependency
 	 */
@@ -327,6 +330,9 @@ public class Vala.SourceFile {
 	/**
 	 * Adds the symbols that define the specified type to the list of
 	 * symbols code in this source file depends on.
+	 *
+	 * TODO Move source and header file dependency analysis to
+	 * code generator.
 	 *
 	 * @param type     a data type
 	 * @param dep_type type of dependency

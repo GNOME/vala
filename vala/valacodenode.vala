@@ -64,6 +64,8 @@ public abstract class Vala.CodeNode {
 		}
 	}
 
+	public bool checked { get; set; }
+
 	/**
 	 * Specifies whether a fatal error has been detected in this code node.
 	 */
@@ -76,7 +78,6 @@ public abstract class Vala.CodeNode {
 		get { return _error_types != null && _error_types.size > 0; }
 	}
 
-	bool checked;
 	private Gee.List<DataType> _error_types;
 	private static Gee.List<DataType> _empty_type_list;
 
