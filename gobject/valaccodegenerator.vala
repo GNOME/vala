@@ -1963,7 +1963,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		create_temp_decl (stmt, stmt.condition.temp_vars);
 	}
 
-	public override void visit_switch_statement (SwitchStatement stmt) {
+	void visit_string_switch_statement (SwitchStatement stmt) {
 		// we need a temporary variable to save the property value
 		var temp_var = get_temp_variable (stmt.expression.value_type, true, stmt);
 		stmt.expression.temp_vars.insert (0, temp_var);
@@ -1975,51 +1975,47 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		var cswitchblock = new CCodeFragment ();
 		stmt.ccodenode = cswitchblock;
 
-		var is_string_cmp = temp_var.variable_type.data_type.is_subtype_of (string_type.data_type);
+		var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeConstant ("NULL"), ctemp);
+		var cquark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_string"));
+		cquark.add_argument (ctemp);
 
-		if (is_string_cmp) {
-			var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeConstant ("NULL"), ctemp);
-			var cquark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_string"));
-			cquark.add_argument (ctemp);
+		var ccond = new CCodeConditionalExpression (cisnull, new CCodeConstant ("0"), cquark);
 
-			var ccond = new CCodeConditionalExpression (cisnull, new CCodeConstant ("0"), cquark);
+		temp_var = get_temp_variable (gquark_type);
+		stmt.expression.temp_vars.insert (0, temp_var);
 
-			temp_var = get_temp_variable (gquark_type);
-			stmt.expression.temp_vars.insert (0, temp_var);
+		int label_count = 0;
 
-			var label_count = 0;
-
-			foreach (SwitchSection section in stmt.get_sections ()) {
-				if (section.has_default_label ()) {
-					continue;
-				}
-
-				foreach (SwitchLabel label in section.get_labels ()) {
-					var cexpr = (CCodeExpression) label.expression.ccodenode;
-
-					if (is_constant_ccode_expression (cexpr)) {
-						var cname = "%s_label%d".printf (temp_var.name, label_count++);
-						var cdecl = new CCodeDeclaration (gquark_type.get_cname ());
-
-						cdecl.modifiers = CCodeModifiers.STATIC;
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (cname, czero));
-
-						cswitchblock.append (cdecl);
-					}
-				}
+		foreach (SwitchSection section in stmt.get_sections ()) {
+			if (section.has_default_label ()) {
+				continue;
 			}
 
-			cswitchblock.append (new CCodeExpressionStatement (cinit));
+			foreach (SwitchLabel label in section.get_labels ()) {
+				var cexpr = (CCodeExpression) label.expression.ccodenode;
 
-			ctemp = new CCodeIdentifier (temp_var.name);
-			cinit = new CCodeAssignment (ctemp, ccond);
+				if (is_constant_ccode_expression (cexpr)) {
+					var cname = "%s_label%d".printf (temp_var.name, label_count++);
+					var cdecl = new CCodeDeclaration (gquark_type.get_cname ());
+
+					cdecl.modifiers = CCodeModifiers.STATIC;
+					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (cname, czero));
+
+					cswitchblock.append (cdecl);
+				}
+			}
 		}
+
+		cswitchblock.append (new CCodeExpressionStatement (cinit));
+
+		ctemp = new CCodeIdentifier (temp_var.name);
+		cinit = new CCodeAssignment (ctemp, ccond);
 
 		cswitchblock.append (new CCodeExpressionStatement (cinit));
 		create_temp_decl (stmt, stmt.expression.temp_vars);
 
 		Gee.List<Statement> default_statements = null;
-		var label_count = 0;
+		label_count = 0;
 
 		// generate nested if statements		
 		CCodeStatement ctopstmt = null;
@@ -2035,21 +2031,19 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			foreach (SwitchLabel label in section.get_labels ()) {
 				var cexpr = (CCodeExpression) label.expression.ccodenode;
 
-				if (is_string_cmp) {
-					if (is_constant_ccode_expression (cexpr)) {
-						var cname = new CCodeIdentifier ("%s_label%d".printf (temp_var.name, label_count++));
-						var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, czero, cname);
-						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
-						var cinit = new CCodeParenthesizedExpression (new CCodeAssignment (cname, ccall));
+				if (is_constant_ccode_expression (cexpr)) {
+					var cname = new CCodeIdentifier ("%s_label%d".printf (temp_var.name, label_count++));
+					var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, czero, cname);
+					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+					var cinit = new CCodeParenthesizedExpression (new CCodeAssignment (cname, ccall));
 
-						ccall.add_argument (cexpr);
+					ccall.add_argument (cexpr);
 
-						cexpr = new CCodeConditionalExpression (ccond, cname, cinit);
-					} else {
-						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_string"));
-						ccall.add_argument (cexpr);
-						cexpr = ccall;
-					}
+					cexpr = new CCodeConditionalExpression (ccond, cname, cinit);
+				} else {
+					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_string"));
+					ccall.add_argument (cexpr);
+					cexpr = ccall;
 				}
 
 				var ccmp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ctemp, cexpr);
@@ -2083,13 +2077,13 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 			coldif = cif;
 		}
-		
+	
 		if (default_statements != null) {
 			var cblock = new CCodeBlock ();
 			foreach (CodeNode body_stmt in default_statements) {
 				cblock.add_statement (body_stmt.ccodenode);
 			}
-			
+		
 			var cdo = new CCodeDoStatement (cblock, new CCodeConstant ("0"));
 
 			if (coldif == null) {
@@ -2100,8 +2094,42 @@ public class Vala.CCodeGenerator : CodeGenerator {
 				coldif.false_statement = cdo;
 			}
 		}
-		
+	
 		cswitchblock.append (ctopstmt);
+	}
+
+	public override void visit_switch_statement (SwitchStatement stmt) {
+		if (stmt.expression.value_type.compatible (string_type)) {
+			visit_string_switch_statement (stmt);
+			return;
+		}
+
+		var cswitch = new CCodeSwitchStatement ((CCodeExpression) stmt.expression.ccodenode);
+		stmt.ccodenode = cswitch;
+
+		foreach (SwitchSection section in stmt.get_sections ()) {
+			if (section.has_default_label ()) {
+				var cdefaultblock = new CCodeBlock ();
+				cswitch.add_default_statement (cdefaultblock);
+				foreach (CodeNode default_stmt in section.get_statements ()) {
+					cdefaultblock.add_statement (default_stmt.ccodenode);
+				}
+				continue;
+			}
+
+			CCodeCaseStatement ccase = null;
+
+			foreach (SwitchLabel label in section.get_labels ()) {
+				ccase = new CCodeCaseStatement ((CCodeExpression) label.expression.ccodenode);
+				cswitch.add_case (ccase);
+			}
+
+			var cblock = new CCodeBlock ();
+			ccase.add_statement (cblock);
+			foreach (CodeNode body_stmt in section.get_statements ()) {
+				cblock.add_statement (body_stmt.ccodenode);
+			}
+		}
 	}
 
 	public override void visit_switch_section (SwitchSection section) {

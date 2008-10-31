@@ -1,3 +1,10 @@
+2008-10-31  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodegenerator.vala:
+
+	Generate C switch statements for Vala switch statements where
+	possible
+
 2008-10-29  Thijs Vermeir  <thijsvermeir@gmail.com>
 
 	* vapi/packages/gdk-2.0/gdk-2.0.metadata:
