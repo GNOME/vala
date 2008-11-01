@@ -200,6 +200,8 @@ public class Vala.Method : Member {
 	 */
 	public bool has_construct_function { get; set; default = true; }
 
+	public bool coroutine { get; set; }
+
 	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private string cname;
 	private string _vfunc_name;

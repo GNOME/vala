@@ -579,6 +579,14 @@ public class Vala.CFGBuilder : CodeVisitor {
 		}
 	}
 
+	public override void visit_yield_statement (YieldStatement stmt) {
+		if (unreachable (stmt)) {
+			return;
+		}
+
+		stmt.accept_children (this);
+	}
+
 	public override void visit_throw_statement (ThrowStatement stmt) {
 		if (unreachable (stmt)) {
 			return;

@@ -139,7 +139,9 @@ public enum Vala.TokenType {
 	VOID,
 	VOLATILE,
 	WEAK,
-	WHILE;
+	WHILE,
+	YIELD,
+	YIELDS;
 
 	public weak string to_string () {
 		switch (this) {
@@ -255,6 +257,8 @@ public enum Vala.TokenType {
 		case VOLATILE: return "`volatile'";
 		case WEAK: return "`weak'";
 		case WHILE: return "`while'";
+		case YIELD: return "`yield'";
+		case YIELDS: return "`yields'";
 		default: return "unknown token";
 		}
 	}

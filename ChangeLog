@@ -1,3 +1,20 @@
+2008-11-01  Jürg Billeter  <j@bitron.ch>
+
+	* vala/Makefile.am:
+	* vala/valacfgbuilder.vala:
+	* vala/valacodevisitor.vala:
+	* vala/valamethod.vala:
+	* vala/valanullchecker.vala:
+	* vala/valaparser.vala:
+	* vala/valascanner.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasymbolresolver.vala:
+	* vala/valatokentype.vala:
+	* vala/valayieldstatement.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Parse yield statements
+
 2008-10-31  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaproperty.vala:

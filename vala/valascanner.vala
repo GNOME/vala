@@ -175,6 +175,9 @@ public class Vala.Scanner {
 			case 'w':
 				if (matches (begin, "while")) return TokenType.WHILE;
 				break;
+			case 'y':
+				if (matches (begin, "yield")) return TokenType.YIELD;
+				break;
 			}
 			break;
 		case 6:
@@ -230,6 +233,9 @@ public class Vala.Scanner {
 					if (matches (begin, "typeof")) return TokenType.TYPEOF;
 					break;
 				}
+				break;
+			case 'y':
+				if (matches (begin, "yields")) return TokenType.YIELDS;
 				break;
 			}
 			break;

@@ -232,6 +232,8 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.VOLATILE:
 		case TokenType.WEAK:
 		case TokenType.WHILE:
+		case TokenType.YIELD:
+		case TokenType.YIELDS:
 			next ();
 			return;
 		}
@@ -1205,6 +1207,9 @@ public class Vala.Parser : CodeVisitor {
 				case TokenType.RETURN:
 					stmt = parse_return_statement ();
 					break;
+				case TokenType.YIELD:
+					stmt = parse_yield_statement ();
+					break;
 				case TokenType.THROW:
 					stmt = parse_throw_statement ();
 					break;
@@ -1325,6 +1330,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.BREAK:     return parse_break_statement ();
 		case TokenType.CONTINUE:  return parse_continue_statement ();
 		case TokenType.RETURN:    return parse_return_statement ();
+		case TokenType.YIELD:     return parse_yield_statement ();
 		case TokenType.THROW:     return parse_throw_statement ();
 		case TokenType.TRY:       return parse_try_statement ();
 		case TokenType.LOCK:      return parse_lock_statement ();
@@ -1584,6 +1590,17 @@ public class Vala.Parser : CodeVisitor {
 		return new ReturnStatement (expr, get_src_com (begin));
 	}
 
+	Statement parse_yield_statement () throws ParseError {
+		var begin = get_location ();
+		expect (TokenType.YIELD);
+		Expression expr = null;
+		if (current () != TokenType.SEMICOLON) {
+			expr = parse_expression ();
+		}
+		expect (TokenType.SEMICOLON);
+		return new YieldStatement (expr, get_src (begin));
+	}
+
 	Statement parse_throw_statement () throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.THROW);
@@ -1841,6 +1858,7 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.TRY:
 			case TokenType.VAR:
 			case TokenType.WHILE:
+			case TokenType.YIELD:
 				return RecoveryState.STATEMENT_BEGIN;
 			default:
 				next ();
@@ -2157,6 +2175,9 @@ public class Vala.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
+		if (accept (TokenType.YIELDS)) {
+			method.coroutine = true;
+		}
 		if (accept (TokenType.THROWS)) {
 			do {
 				method.add_error_type (parse_type ());
@@ -2730,6 +2751,9 @@ public class Vala.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
+		if (accept (TokenType.YIELDS)) {
+			method.coroutine = true;
+		}
 		if (accept (TokenType.THROWS)) {
 			do {
 				method.add_error_type (parse_type ());

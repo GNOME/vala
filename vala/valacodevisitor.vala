@@ -356,6 +356,14 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
+	 * Visit operation called for yield statement.
+	 *
+	 * @param y a yield statement
+	 */
+	public virtual void visit_yield_statement (YieldStatement y) {
+	}
+
+	/**
 	 * Visit operation called for throw statements.
 	 *
 	 * @param stmt a throw statement

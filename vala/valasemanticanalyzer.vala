@@ -1164,6 +1164,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		stmt.add_error_types (stmt.return_expression.get_error_types ());
 	}
 
+	public override void visit_yield_statement (YieldStatement stmt) {
+		stmt.check (this);
+	}
+
 	public override void visit_throw_statement (ThrowStatement stmt) {
 		stmt.error_expression.target_type = new ErrorType (null, null, stmt.source_reference);
 		stmt.error_expression.target_type.value_owned = true;
@@ -2094,7 +2098,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (ret_type is VoidType) {
 			// void return type
 			if (!(expr.parent_node is ExpressionStatement)
-			    && !(expr.parent_node is ForStatement)) {
+			    && !(expr.parent_node is ForStatement)
+			    && !(expr.parent_node is YieldStatement)) {
 				// A void method invocation can be in the initializer or
 				// iterator of a for statement
 				expr.error = true;

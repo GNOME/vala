@@ -176,6 +176,10 @@ public class Vala.NullChecker : CodeVisitor {
 		}
 	}
 
+	public override void visit_yield_statement (YieldStatement stmt) {
+		stmt.accept_children (this);
+	}
+
 	public override void visit_throw_statement (ThrowStatement stmt) {
 		stmt.accept_children (this);
 

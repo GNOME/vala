@@ -144,6 +144,7 @@ libvalacore_la_VALASOURCES = \
 	valavaluetype.vala \
 	valavoidtype.vala \
 	valawhilestatement.vala \
+	valayieldstatement.vala \
 	$(NULL)
 
 libvalacore_la_SOURCES = \
