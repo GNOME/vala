@@ -59,7 +59,7 @@ public class Vala.CCodeBlock : CCodeStatement {
 			statement.write_declaration (writer);
 
 			// determine last reachable statement
-			if (statement is CCodeLabel) {
+			if (statement is CCodeLabel || statement is CCodeCaseStatement) {
 				last_statement = null;
 			} else if (statement is CCodeReturnStatement || statement is CCodeGotoStatement
 			|| statement is CCodeContinueStatement || statement is CCodeBreakStatement) {

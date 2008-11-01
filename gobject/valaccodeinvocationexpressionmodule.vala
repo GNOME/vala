@@ -348,6 +348,11 @@ public class Vala.CCodeInvocationExpressionModule : CCodeModule {
 			}
 		}
 
+		if (m != null && m.coroutine) {
+			carg_map.set (codegen.get_param_pos (-1), new CCodeConstant ("NULL"));
+			carg_map.set (codegen.get_param_pos (-0.9), new CCodeConstant ("NULL"));
+		}
+
 		if (expr.tree_can_fail) {
 			// method can fail
 			codegen.current_method_inner_error = true;

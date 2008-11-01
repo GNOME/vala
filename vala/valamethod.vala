@@ -338,8 +338,8 @@ public class Vala.Method : Member {
 	 * @return the name to be used in C code
 	 */
 	public virtual string get_real_cname () {
-		if (base_method != null || base_interface_method != null) {
-			return "%s_real_%s".printf (parent_symbol.get_lower_case_cname (null), name);
+		if (base_method != null || base_interface_method != null || coroutine) {
+			return "%sreal_%s".printf (parent_symbol.get_lower_case_cprefix (), name);
 		} else {
 			return get_cname ();
 		}

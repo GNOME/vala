@@ -88,6 +88,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	private bool in_constructor = false;
 	public bool in_static_or_class_ctor = false;
 	public bool current_method_inner_error = false;
+	int next_coroutine_state = 1;
 
 	public DataType bool_type;
 	public DataType char_type;
@@ -132,6 +133,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	
 	public bool string_h_needed;
 	public bool gvaluecollector_h_needed;
+	public bool gio_h_needed;
 	public bool requires_free_checked;
 	public bool requires_array_free;
 	public bool requires_array_move;
@@ -2680,7 +2682,22 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public override void visit_yield_statement (YieldStatement stmt) {
 		if (stmt.yield_expression == null) {
-			stmt.ccodenode = new CCodeFragment ();
+			var cfrag = new CCodeFragment ();
+			stmt.ccodenode = cfrag;
+
+			if (current_method.coroutine) {
+				var idle_call = new CCodeFunctionCall (new CCodeIdentifier ("g_idle_add"));
+				idle_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (current_method.get_real_cname ()), "GSourceFunc"));
+				idle_call.add_argument (new CCodeIdentifier ("data"));
+
+				int state = next_coroutine_state++;
+
+				cfrag.append (new CCodeExpressionStatement (idle_call));
+				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state"), new CCodeConstant (state.to_string ()))));
+				cfrag.append (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+				cfrag.append (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
+			}
+
 			return;
 		}
 

@@ -241,6 +241,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		
 		codegen.string_h_needed = false;
 		codegen.gvaluecollector_h_needed = false;
+		codegen.gio_h_needed = false;
 		codegen.dbus_glib_h_needed = false;
 		codegen.requires_free_checked = false;
 		codegen.requires_array_free = false;
@@ -342,6 +343,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		if (codegen.gvaluecollector_h_needed) {
 			codegen.source_include_directives.append (new CCodeIncludeDirective ("gobject/gvaluecollector.h"));
+		}
+
+		if (codegen.gio_h_needed) {
+			codegen.header_begin.append (new CCodeIncludeDirective ("gio/gio.h"));
 		}
 
 		if (codegen.dbus_glib_h_needed) {

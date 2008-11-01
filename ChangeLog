@@ -1,5 +1,17 @@
 2008-11-01  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamethod.vala:
+	* ccode/valaccodeblock.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinvocationexpressionmodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+	* gobject/valaccodemodule.vala:
+
+	Add experimental support for yield statements and coroutines
+
+2008-11-01  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/valaccodecasestatement.vala:
 	* ccode/valaccodeswitchstatement.vala:
 	* gobject/valaccodegenerator.vala:
