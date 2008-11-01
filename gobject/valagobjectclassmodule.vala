@@ -1155,19 +1155,19 @@ public class Vala.GObjectClassModule : CCodeModule {
 				cself = codegen.transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
 			}
 
-			var ccase = new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ()));
+			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
 			ccall.add_argument (cself);
 			var csetcall = new CCodeFunctionCall ();
 			csetcall.call = head.get_value_setter_function (prop.property_type);
 			csetcall.add_argument (new CCodeIdentifier ("value"));
 			csetcall.add_argument (ccall);
-			ccase.add_statement (new CCodeExpressionStatement (csetcall));
-			ccase.add_statement (new CCodeBreakStatement ());
-			cswitch.add_case (ccase);
+			cswitch.add_statement (new CCodeExpressionStatement (csetcall));
+			cswitch.add_statement (new CCodeBreakStatement ());
 		}
-		cswitch.add_default_statement (get_invalid_property_id_warn_statement ());
-		cswitch.add_default_statement (new CCodeBreakStatement ());
+		cswitch.add_statement (new CCodeLabel ("default"));
+		cswitch.add_statement (get_invalid_property_id_warn_statement ());
+		cswitch.add_statement (new CCodeBreakStatement ());
 
 		block.add_statement (cswitch);
 
@@ -1215,7 +1215,7 @@ public class Vala.GObjectClassModule : CCodeModule {
 				cself = codegen.transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
 			}
 
-			var ccase = new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ()));
+			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_set_%s".printf (prefix, prop.name)));
 			ccall.add_argument (cself);
 			var cgetcall = new CCodeFunctionCall ();
@@ -1226,51 +1226,47 @@ public class Vala.GObjectClassModule : CCodeModule {
 			}
 			cgetcall.add_argument (new CCodeIdentifier ("value"));
 			ccall.add_argument (cgetcall);
-			ccase.add_statement (new CCodeExpressionStatement (ccall));
-			ccase.add_statement (new CCodeBreakStatement ());
-			cswitch.add_case (ccase);
+			cswitch.add_statement (new CCodeExpressionStatement (ccall));
+			cswitch.add_statement (new CCodeBreakStatement ());
 		}
-		cswitch.add_default_statement (get_invalid_property_id_warn_statement ());
-		cswitch.add_default_statement (new CCodeBreakStatement ());
+		cswitch.add_statement (new CCodeLabel ("default"));
+		cswitch.add_statement (get_invalid_property_id_warn_statement ());
+		cswitch.add_statement (new CCodeBreakStatement ());
 
 		block.add_statement (cswitch);
 
 		/* type, dup func, and destroy func properties for generic types */
 		foreach (TypeParameter type_param in cl.get_type_parameters ()) {
 			string func_name, enum_value;
-			CCodeCaseStatement ccase;
 			CCodeMemberAccess cfield;
 			CCodeFunctionCall cgetcall;
 
 			func_name = "%s_type".printf (type_param.name.down ());
 			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
-			ccase = new CCodeCaseStatement (new CCodeIdentifier (enum_value));
+			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (enum_value)));
 			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
 			cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_gtype"));
 			cgetcall.add_argument (new CCodeIdentifier ("value"));
-			ccase.add_statement (new CCodeExpressionStatement (new CCodeAssignment (cfield, cgetcall)));
-			ccase.add_statement (new CCodeBreakStatement ());
-			cswitch.add_case (ccase);
+			cswitch.add_statement (new CCodeExpressionStatement (new CCodeAssignment (cfield, cgetcall)));
+			cswitch.add_statement (new CCodeBreakStatement ());
 
 			func_name = "%s_dup_func".printf (type_param.name.down ());
 			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
-			ccase = new CCodeCaseStatement (new CCodeIdentifier (enum_value));
+			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (enum_value)));
 			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
 			cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_pointer"));
 			cgetcall.add_argument (new CCodeIdentifier ("value"));
-			ccase.add_statement (new CCodeExpressionStatement (new CCodeAssignment (cfield, cgetcall)));
-			ccase.add_statement (new CCodeBreakStatement ());
-			cswitch.add_case (ccase);
+			cswitch.add_statement (new CCodeExpressionStatement (new CCodeAssignment (cfield, cgetcall)));
+			cswitch.add_statement (new CCodeBreakStatement ());
 
 			func_name = "%s_destroy_func".printf (type_param.name.down ());
 			enum_value = "%s_%s".printf (cl.get_lower_case_cname (null), func_name).up ();
-			ccase = new CCodeCaseStatement (new CCodeIdentifier (enum_value));
+			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (enum_value)));
 			cfield = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
 			cgetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_get_pointer"));
 			cgetcall.add_argument (new CCodeIdentifier ("value"));
-			ccase.add_statement (new CCodeExpressionStatement (new CCodeAssignment (cfield, cgetcall)));
-			ccase.add_statement (new CCodeBreakStatement ());
-			cswitch.add_case (ccase);
+			cswitch.add_statement (new CCodeExpressionStatement (new CCodeAssignment (cfield, cgetcall)));
+			cswitch.add_statement (new CCodeBreakStatement ());
 		}
 
 		set_prop.block = block;

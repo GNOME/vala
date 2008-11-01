@@ -1,5 +1,14 @@
 2008-11-01  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/valaccodecasestatement.vala:
+	* ccode/valaccodeswitchstatement.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valagobjectclassmodule.vala:
+
+	Support more flexible C switch statements
+
+2008-11-01  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am:
 	* vala/valacfgbuilder.vala:
 	* vala/valacodevisitor.vala:

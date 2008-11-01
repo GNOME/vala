@@ -2109,23 +2109,21 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		foreach (SwitchSection section in stmt.get_sections ()) {
 			if (section.has_default_label ()) {
+				cswitch.add_statement (new CCodeLabel ("default"));
 				var cdefaultblock = new CCodeBlock ();
-				cswitch.add_default_statement (cdefaultblock);
+				cswitch.add_statement (cdefaultblock);
 				foreach (CodeNode default_stmt in section.get_statements ()) {
 					cdefaultblock.add_statement (default_stmt.ccodenode);
 				}
 				continue;
 			}
 
-			CCodeCaseStatement ccase = null;
-
 			foreach (SwitchLabel label in section.get_labels ()) {
-				ccase = new CCodeCaseStatement ((CCodeExpression) label.expression.ccodenode);
-				cswitch.add_case (ccase);
+				cswitch.add_statement (new CCodeCaseStatement ((CCodeExpression) label.expression.ccodenode));
 			}
 
 			var cblock = new CCodeBlock ();
-			ccase.add_statement (cblock);
+			cswitch.add_statement (cblock);
 			foreach (CodeNode body_stmt in section.get_statements ()) {
 				cblock.add_statement (body_stmt.ccodenode);
 			}

@@ -32,19 +32,8 @@ public class Vala.CCodeCaseStatement : CCodeStatement {
 	 */
 	public CCodeExpression expression { get; set; }
 	
-	private Gee.List<CCodeStatement> statements = new ArrayList<CCodeStatement> ();
-	
 	public CCodeCaseStatement (CCodeExpression expression) {
 		this.expression = expression;
-	}
-	
-	/**
-	 * Append the specified statement to this switch section.
-	 *
-	 * @param stmt a statement
-	 */
-	public void add_statement (CCodeStatement stmt) {
-		statements.add (stmt);
 	}
 	
 	public override void write (CCodeWriter writer) {
@@ -53,9 +42,5 @@ public class Vala.CCodeCaseStatement : CCodeStatement {
 		expression.write (writer);
 		writer.write_string (":");
 		writer.write_newline ();
-
-		foreach (CCodeStatement stmt in statements) {
-			stmt.write (writer);
-		}
 	}
 }
