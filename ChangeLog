@@ -1,5 +1,12 @@
 2008-11-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamethodtype.vala:
+	* gobject/valaccodegenerator.vala:
+
+	Add member `begin' to coroutines
+
+2008-11-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am:
 	* vala/valaattributeprocessor.vala:
 	* vala/valaclass.vala:
