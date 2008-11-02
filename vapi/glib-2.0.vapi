@@ -2851,7 +2851,7 @@ namespace GLib {
 	/* Hash Tables */
 
 	[Compact]
-	[CCode (ref_function = "g_hash_table_ref", unref_function = "g_hash_table_unref")]
+	[CCode (ref_function = "g_hash_table_ref", unref_function = "g_hash_table_unref", type_signature = "a{%s}")]
 	public class HashTable<K,V> : Boxed {
 		public HashTable (HashFunc hash_func, EqualFunc key_equal_func);
 		public HashTable.full (HashFunc hash_func, EqualFunc key_equal_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);

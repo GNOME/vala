@@ -443,7 +443,24 @@ public abstract class Vala.DataType : CodeNode {
 	 */
 	public virtual string? get_type_signature () {
 		if (data_type != null) {
-			return data_type.get_type_signature ();
+			string sig = data_type.get_type_signature ();
+
+			var type_args = get_type_arguments ();
+			if (type_args.size > 0) {
+				assert (sig.str ("%s") != null);
+
+				string element_sig = "";
+				foreach (DataType type_arg in type_args) {
+					var s = type_arg.get_type_signature ();
+					if (s != null) {
+						element_sig += s;
+					}
+				}
+
+				sig = sig.printf (element_sig);
+			}
+
+			return sig;
 		} else {
 			return null;
 		}

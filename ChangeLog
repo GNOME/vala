@@ -1,5 +1,13 @@
 2008-11-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadatatype.vala:
+	* vapi/glib-2.0.vapi:
+
+	Return the right D-Bus type signature for GHashTable,
+	patch by Marc-André Lureau
+
+2008-11-02  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodegenerator.vala:
 	* gobject/valaccodeinvocationexpressionmodule.vala:
 	* gobject/valaccodemethodmodule.vala:
