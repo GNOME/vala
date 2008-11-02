@@ -1,5 +1,11 @@
 2008-11-02  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valadbusclientmodule.vala:
+
+	Support GHashTable in D-Bus clients, patch by Marc-André Lureau
+
+2008-11-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadatatype.vala:
 	* vapi/glib-2.0.vapi:
 

@@ -129,7 +129,11 @@ public class Vala.DBusClientModule : CCodeModule {
 			int i = 0;
 			foreach (FormalParameter param in reply_method.get_parameters ()) {
 				if ((++i) == param_count) {
-					// error parameter
+					if (!(param.parameter_type is ErrorType)) {
+						Report.error (null, "DBus reply callbacks must end with GLib.Error argument");
+						return;
+					}
+
 					break;
 				}
 				if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type != codegen.string_type.data_type) {
@@ -154,7 +158,7 @@ public class Vala.DBusClientModule : CCodeModule {
 						// special case string array
 						cend_call.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
 					} else {
-						cend_call.add_argument (new CCodeIdentifier (param.parameter_type.data_type.get_type_id ()));
+						cend_call.add_argument (get_dbus_g_type (param.parameter_type));
 					}
 					cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 					creply_call.add_argument (new CCodeIdentifier (param.name));
@@ -301,7 +305,7 @@ public class Vala.DBusClientModule : CCodeModule {
 				ccall.add_argument (type_call);
 				ccall.add_argument (new CCodeIdentifier ("dbus_%s".printf (param.name)));
 			} else {
-				ccall.add_argument (new CCodeIdentifier (param.parameter_type.data_type.get_type_id ()));
+				ccall.add_argument (get_dbus_g_type (param.parameter_type));
 				ccall.add_argument (new CCodeIdentifier (param.name));
 			}
 		}
@@ -396,13 +400,7 @@ public class Vala.DBusClientModule : CCodeModule {
 			} else {
 				// string arrays or other datatypes
 
-				if (method.return_type is ArrayType) {
-					// string arrays
-					ccall.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
-				} else {
-					// other types
-					ccall.add_argument (new CCodeIdentifier (method.return_type.data_type.get_type_id ()));
-				}
+				ccall.add_argument (get_dbus_g_type (method.return_type));
 
 				var cdecl = new CCodeDeclaration (method.return_type.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
@@ -448,8 +446,8 @@ public class Vala.DBusClientModule : CCodeModule {
 	}
 
 	CCodeExpression get_dbus_g_type (DataType data_type) {
-		var array_type = data_type as ArrayType;
-		if (array_type != null) {
+		if (data_type is ArrayType) {
+			var array_type = data_type as ArrayType;
 			if (array_type.element_type.data_type == codegen.string_type.data_type) {
 				return new CCodeIdentifier ("G_TYPE_STRV");
 			}
@@ -462,6 +460,18 @@ public class Vala.DBusClientModule : CCodeModule {
 			}
 			carray_type.add_argument (get_dbus_g_type (array_type.element_type));
 			return carray_type;
+		} else if (data_type.data_type == null) {
+			critical ("Internal error during DBus type generation with: %s", data_type.to_string ());
+			return new CCodeIdentifier ("G_TYPE_NONE");
+		} else if (data_type.data_type.get_full_name () == "GLib.HashTable") {
+			var cmap_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_map"));
+			var type_args = data_type.get_type_arguments ();
+
+			cmap_type.add_argument (new CCodeConstant ("\"GHashTable\""));
+			foreach (DataType type_arg in type_args)
+				cmap_type.add_argument (get_dbus_g_type (type_arg));
+
+			return cmap_type;
 		} else {
 			return new CCodeIdentifier (data_type.data_type.get_type_id ());
 		}
