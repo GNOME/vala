@@ -257,8 +257,29 @@ public class Vala.CCodeMethodModule : CCodeModule {
 
 				if (m.coroutine) {
 					var cswitch = new CCodeSwitchStatement (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state"));
+
+					// initial coroutine state
 					cswitch.add_statement (new CCodeCaseStatement (new CCodeConstant ("0")));
+
+					// coroutine body
 					cswitch.add_statement (codegen.function.block);
+
+					// complete async call by invoking callback
+					var object_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_object_newv"));
+					object_creation.add_argument (new CCodeConstant ("G_TYPE_OBJECT"));
+					object_creation.add_argument (new CCodeConstant ("0"));
+					object_creation.add_argument (new CCodeConstant ("NULL"));
+
+					var async_result_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
+					async_result_creation.add_argument (object_creation);
+					async_result_creation.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "callback"));
+					async_result_creation.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "user_data"));
+					async_result_creation.add_argument (new CCodeIdentifier ("data"));
+
+					var completecall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete"));
+					completecall.add_argument (async_result_creation);
+					cswitch.add_statement (new CCodeExpressionStatement (completecall));
+
 					cswitch.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
 
 					codegen.function.block = new CCodeBlock ();
@@ -546,6 +567,7 @@ public class Vala.CCodeMethodModule : CCodeModule {
 			datastruct.add_field ("int", "state");
 			datastruct.add_field ("GAsyncReadyCallback", "callback");
 			datastruct.add_field ("gpointer", "user_data");
+			datastruct.add_field ("GAsyncResult*", "res");
 
 			foreach (FormalParameter param in m.get_parameters ()) {
 				datastruct.add_field (param.parameter_type.get_cname (), param.name);
@@ -623,6 +645,33 @@ public class Vala.CCodeMethodModule : CCodeModule {
 			finishfunc.block = finishblock;
 
 			codegen.source_type_member_definition.append (finishfunc);
+
+			// generate ready callback handler
+			var readyfunc = new CCodeFunction (m.get_cname () + "_ready", "void");
+			readyfunc.line = codegen.function.line;
+
+			readyfunc.add_parameter (new CCodeFormalParameter ("source_object", "GObject*"));
+			readyfunc.add_parameter (new CCodeFormalParameter ("res", "GAsyncResult*"));
+			readyfunc.add_parameter (new CCodeFormalParameter ("user_data", "gpointer"));
+
+			var readyblock = new CCodeBlock ();
+
+			datadecl = new CCodeDeclaration (dataname + "*");
+			datadecl.add_declarator (new CCodeVariableDeclarator ("data"));
+			readyblock.add_statement (datadecl);
+			readyblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), new CCodeIdentifier ("user_data"))));
+			readyblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "res"), new CCodeIdentifier ("res"))));
+
+			ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
+			ccall.add_argument (new CCodeIdentifier ("data"));
+			readyblock.add_statement (new CCodeExpressionStatement (ccall));
+
+			readyfunc.modifiers |= CCodeModifiers.STATIC;
+			codegen.source_type_member_declaration.append (readyfunc.copy ());
+
+			readyfunc.block = readyblock;
+
+			codegen.source_type_member_definition.append (readyfunc);
 		}
 
 		if (m is CreationMethod) {

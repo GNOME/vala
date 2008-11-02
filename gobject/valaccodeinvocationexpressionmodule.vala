@@ -349,8 +349,14 @@ public class Vala.CCodeInvocationExpressionModule : CCodeModule {
 		}
 
 		if (m != null && m.coroutine) {
-			carg_map.set (codegen.get_param_pos (-1), new CCodeConstant ("NULL"));
-			carg_map.set (codegen.get_param_pos (-0.9), new CCodeConstant ("NULL"));
+			if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
+				// asynchronous begin call
+				carg_map.set (codegen.get_param_pos (-1), new CCodeConstant ("NULL"));
+				carg_map.set (codegen.get_param_pos (-0.9), new CCodeConstant ("NULL"));
+			} else {
+				carg_map.set (codegen.get_param_pos (-1), new CCodeIdentifier (codegen.current_method.get_cname () + "_ready"));
+				carg_map.set (codegen.get_param_pos (-0.9), new CCodeIdentifier ("data"));
+			}
 		}
 
 		if (expr.tree_can_fail) {

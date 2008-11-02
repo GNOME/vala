@@ -1,5 +1,13 @@
 2008-11-02  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinvocationexpressionmodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+
+	Add partial support for calling coroutines from other coroutines
+
+2008-11-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamethodtype.vala:
 	* gobject/valaccodegenerator.vala:
 

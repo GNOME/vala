@@ -1900,6 +1900,25 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 		stmt.ccodenode = new CCodeExpressionStatement ((CCodeExpression) stmt.expression.ccodenode);
 
+		var invoc = stmt.expression as InvocationExpression;
+		if (invoc != null) {
+			var m = invoc.call.symbol_reference as Method;
+			var ma = invoc.call as MemberAccess;
+			if (m != null && m.coroutine && (ma == null || ma.member_name != "begin"
+				                         || ma.inner.symbol_reference != ma.symbol_reference)) {
+				var cfrag = new CCodeFragment ();
+
+				int state = next_coroutine_state++;
+
+				cfrag.append (stmt.ccodenode);
+				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state"), new CCodeConstant (state.to_string ()))));
+				cfrag.append (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+				cfrag.append (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
+
+				stmt.ccodenode = cfrag;
+			}
+		}
+
 		if (stmt.tree_can_fail && stmt.expression.tree_can_fail) {
 			// simple case, no node breakdown necessary
 
