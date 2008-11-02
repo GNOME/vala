@@ -1,5 +1,11 @@
 2008-11-02  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Add errno and g_strerror bindings
+
+2008-11-02  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusclientmodule.vala:
 
 	Support GHashTable in D-Bus clients, patch by Marc-André Lureau
