@@ -48,7 +48,6 @@ public class Vala.Struct : TypeSymbol {
 	private string get_value_function;
 	private string set_value_function;
 	private string default_value = null;
-	private bool simple_type;
 	private string? type_signature;
 	private string copy_function;
 	private string destroy_function;
@@ -203,7 +202,13 @@ public class Vala.Struct : TypeSymbol {
 		}
 		
 		if (cname == null) {
-			cname = get_default_cname ();
+			var attr = get_attribute ("CCode");
+			if (attr != null) {
+				cname = attr.get_string ("cname");
+			}
+			if (cname == null) {
+				cname = get_default_cname ();
+			}
 		}
 		return cname;
 	}
@@ -305,9 +310,6 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	private void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("cname")) {
-			set_cname (a.get_string ("cname"));
-		}
 		if (a.has_argument ("const_cname")) {
 			set_const_cname (a.get_string ("const_cname"));
 		}
@@ -367,8 +369,6 @@ public class Vala.Struct : TypeSymbol {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
-			} else if (a.name == "SimpleType") {
-				simple_type = true;
 			} else if (a.name == "IntegerType") {
 				process_integer_type_attribute (a);
 			} else if (a.name == "FloatingType") {
@@ -385,7 +385,7 @@ public class Vala.Struct : TypeSymbol {
 					return st.get_type_id ();;
 				}
 			}
-			if (simple_type) {
+			if (is_simple_type ()) {
 				Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (get_full_name ()));
 			} else {
 				return "G_TYPE_POINTER";
@@ -406,7 +406,7 @@ public class Vala.Struct : TypeSymbol {
 					return st.get_marshaller_type_name ();
 				}
 			}
-			if (simple_type) {
+			if (is_simple_type ()) {
 				Report.error (source_reference, "The type `%s` doesn't declare a marshaller type name".printf (get_full_name ()));
 			} else {
 				return "POINTER";
@@ -427,7 +427,7 @@ public class Vala.Struct : TypeSymbol {
 					return st.get_get_value_function ();
 				}
 			}
-			if (simple_type) {
+			if (is_simple_type ()) {
 				Report.error (source_reference, "The value type `%s` doesn't declare a GValue get function".printf (get_full_name ()));
 				return null;
 			} else {
@@ -446,7 +446,7 @@ public class Vala.Struct : TypeSymbol {
 					return st.get_set_value_function ();
 				}
 			}
-			if (simple_type) {
+			if (is_simple_type ()) {
 				Report.error (source_reference, "The value type `%s` doesn't declare a GValue set function".printf (get_full_name ()));
 				return null;
 			} else {
@@ -527,7 +527,7 @@ public class Vala.Struct : TypeSymbol {
 				return true;
 			}
 		}
-		return simple_type;
+		return get_attribute ("SimpleType") != null;
 	}
 
 	/**
@@ -535,7 +535,7 @@ public class Vala.Struct : TypeSymbol {
 	 * value.
 	 */
 	public void set_simple_type (bool simple_type) {
-		this.simple_type = simple_type;
+		attributes.append (new Attribute ("SimpleType"));
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {

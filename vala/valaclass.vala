@@ -197,7 +197,11 @@ public class Vala.Class : ObjectTypeSymbol {
 	/**
 	 * Specifies whether this class denotes an error base.
 	 */
-	public bool is_error_base { get; set ; }
+	public bool is_error_base {
+		get {
+			return get_attribute ("ErrorBase") != null;
+		}
+	}
 
 	Destructor? _destructor;
 
@@ -507,7 +511,13 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 
 		if (cname == null) {
-			cname = get_default_cname ();
+			var attr = get_attribute ("CCode");
+			if (attr != null) {
+				cname = attr.get_string ("cname");
+			}
+			if (cname == null) {
+				cname = get_default_cname ();
+			}
 		}
 		return cname;
 	}
@@ -599,9 +609,6 @@ public class Vala.Class : ObjectTypeSymbol {
 			set_value_function = a.get_string ("set_value_function");
 		}
 
-		if (a.has_argument ("cname")) {
-			set_cname (a.get_string ("cname"));
-		}
 		if (a.has_argument ("const_cname")) {
 			const_cname = a.get_string ("const_cname");
 		}
@@ -636,8 +643,6 @@ public class Vala.Class : ObjectTypeSymbol {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
-			} else if (a.name == "ErrorBase") {
-				is_error_base = true;
 			} else if (a.name == "Compact") {
 				is_compact = true;
 			} else if (a.name == "Immutable") {

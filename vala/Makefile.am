@@ -22,7 +22,6 @@ libvalacore_la_VALASOURCES = \
 	valaarraytype.vala \
 	valaassignment.vala \
 	valaattribute.vala \
-	valaattributeprocessor.vala \
 	valabaseaccess.vala \
 	valabasicblock.vala \
 	valabinaryexpression.vala \

@@ -239,13 +239,6 @@ class Vala.Compiler {
 			return quit ();
 		}
 		
-		var attributeprocessor = new AttributeProcessor ();
-		attributeprocessor.process (context);
-		
-		if (Report.get_errors () > 0) {
-			return quit ();
-		}
-		
 		var resolver = new SymbolResolver ();
 		resolver.resolve (context);
 		

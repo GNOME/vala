@@ -1,3 +1,17 @@
+2008-11-02  Jürg Billeter  <j@bitron.ch>
+
+	* vala/Makefile.am:
+	* vala/valaattributeprocessor.vala:
+	* vala/valaclass.vala:
+	* vala/valaenum.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valastruct.vala:
+	* compiler/valacompiler.vala:
+	* vapigen/valagidlparser.vala:
+	* vapigen/valavapigen.vala:
+
+	Move attribute processing to semantic analyzer
+
 2008-11-01  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valamethod.vala:

@@ -121,7 +121,13 @@ public class Vala.Enum : TypeSymbol {
 
 	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
-			cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
+			var attr = get_attribute ("CCode");
+			if (attr != null) {
+				cname = attr.get_string ("cname");
+			}
+			if (cname == null) {
+				cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
+			}
 		}
 		return cname;
 	}
@@ -183,9 +189,6 @@ public class Vala.Enum : TypeSymbol {
 	}
 	
 	private void process_ccode_attribute (Attribute a) {
-		if (a.has_argument ("cname")) {
-			set_cname (a.get_string ("cname"));
-		}
 		if (a.has_argument ("cprefix")) {
 			set_cprefix (a.get_string ("cprefix"));
 		}

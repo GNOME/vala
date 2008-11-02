@@ -198,6 +198,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (sym is Namespace) {
 			ns = (Namespace) sym;
 			if (ns.external_package) {
+				ns.attributes = null;
 				ns.source_reference = current_source_reference;
 			}
 		} else {
@@ -817,7 +818,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		if (is_errordomain) {
-			var ed = new ErrorDomain (en.name);
+			var ed = new ErrorDomain (en.name, current_source_reference);
 			ed.access = SymbolAccessibility.PUBLIC;
 			ed.set_cprefix (common_prefix);
 

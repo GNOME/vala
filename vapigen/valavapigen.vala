@@ -137,7 +137,7 @@ class Vala.VAPIGen : Object {
 		
 		foreach (string source in sources) {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
-				context.add_source_file (new SourceFile (context, source));
+				context.add_source_file (new SourceFile (context, source, true));
 			} else {
 				Report.error (null, "%s not found".printf (source));
 			}
@@ -150,13 +150,6 @@ class Vala.VAPIGen : Object {
 		
 		var parser = new Parser ();
 		parser.parse (context);
-		
-		if (Report.get_errors () > 0) {
-			return quit ();
-		}
-		
-		var attributeprocessor = new AttributeProcessor ();
-		attributeprocessor.process (context);
 		
 		if (Report.get_errors () > 0) {
 			return quit ();
@@ -185,8 +178,22 @@ class Vala.VAPIGen : Object {
 		if (Report.get_errors () > 0) {
 			return quit ();
 		}
+
+		var analyzer = new SemanticAnalyzer ();
+		analyzer.analyze (context);
+
+		if (Report.get_errors () > 0) {
+			return quit ();
+		}
 		
 		if (library != null) {
+			// interface writer ignores external packages
+			foreach (SourceFile file in context.get_source_files ()) {
+				if (!file.filename.has_suffix (".vapi")) {
+					file.external_package = false;
+				}
+	 		}
+
 			var interface_writer = new InterfaceWriter ();
 			interface_writer.write_file (context, "%s.vapi".printf (library));
 			
