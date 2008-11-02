@@ -1,5 +1,21 @@
 2008-11-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* vala/valagenieparser.vala:
+	* vala/valainterface.vala:
+	* vala/valainterfacewriter.vala:
+	* vala/valaparser.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+	* gobject/valaclassregisterfunction.vala:
+	* gobject/valagobjectclassmodule.vala:
+	* gobject/valagobjectinterfacemodule.vala:
+
+	Drop deprecated support for static classes and interfaces
+
+2008-11-02  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Add errno and g_strerror bindings

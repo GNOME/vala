@@ -27,12 +27,6 @@ using Gee;
  * Represents a class declaration in the source code.
  */
 public class Vala.Interface : ObjectTypeSymbol {
-	/**
-	 * Specifies whether this interface is static. Static interfaces are not
-	 * available at run-time. They can be implemented by structs.
-	 */
-	public bool is_static { get; set; }
-
 	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 	
 	private Gee.List<DataType> prerequisites = new ArrayList<DataType> ();

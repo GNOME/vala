@@ -157,13 +157,6 @@ public class Vala.CCodeMethodModule : CCodeModule {
 		codegen.current_method_inner_error = old_method_inner_error;
 		codegen.next_temp_var_id = old_next_temp_var_id;
 
-		if (codegen.current_type_symbol is Interface) {
-			var iface = (Interface) codegen.current_type_symbol;
-			if (iface.is_static) {
-				return;
-			}
-		}
-
 		codegen.function = new CCodeFunction (m.get_real_cname (), get_creturn_type (m, creturn_type.get_cname ()));
 		m.ccodenode = codegen.function;
 

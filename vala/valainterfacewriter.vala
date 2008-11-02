@@ -172,9 +172,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		
 		write_indent ();
 		write_accessibility (cl);
-		if (cl.is_static) {
-			write_string ("static ");
-		} else if (cl.is_abstract) {
+		if (cl.is_abstract) {
 			write_string ("abstract ");
 		}
 		write_string ("class ");

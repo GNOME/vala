@@ -39,12 +39,6 @@ public class Vala.Class : ObjectTypeSymbol {
 	public bool is_abstract { get; set; }
 
 	/**
-	 * Specifies whether this class is static. Static classes may not be
-	 * instantiated and may only contain static members.
-	 */
-	public bool is_static { get; set; }
-
-	/**
 	 * Instances of compact classes are fast to create and have a
 	 * compact memory layout. Compact classes don't support runtime
 	 * type information or virtual methods.

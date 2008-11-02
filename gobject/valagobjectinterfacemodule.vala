@@ -48,51 +48,47 @@ public class Vala.GObjectInterfaceModule : CCodeModule {
 			def_frag = codegen.source_type_definition;
 		}
 
-		if (!iface.is_static) {
-			codegen.type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
-			
-			decl_frag.append (new CCodeNewline ());
-			var macro = "(%s_get_type ())".printf (iface.get_lower_case_cname (null));
-			decl_frag.append (new CCodeMacroReplacement (iface.get_type_id (), macro));
+		codegen.type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
+		
+		decl_frag.append (new CCodeNewline ());
+		var macro = "(%s_get_type ())".printf (iface.get_lower_case_cname (null));
+		decl_frag.append (new CCodeMacroReplacement (iface.get_type_id (), macro));
 
-			macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (iface.get_type_id (), iface.get_cname ());
-			decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname (null)), macro));
+		macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (iface.get_type_id (), iface.get_cname ());
+		decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname (null)), macro));
 
-			macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (iface.get_type_id ());
-			decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (codegen.get_type_check_function (iface)), macro));
+		macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (iface.get_type_id ());
+		decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (codegen.get_type_check_function (iface)), macro));
 
-			macro = "(G_TYPE_INSTANCE_GET_INTERFACE ((obj), %s, %s))".printf (iface.get_type_id (), iface.get_type_cname ());
-			decl_frag.append (new CCodeMacroReplacement ("%s_GET_INTERFACE(obj)".printf (iface.get_upper_case_cname (null)), macro));
-			decl_frag.append (new CCodeNewline ());
+		macro = "(G_TYPE_INSTANCE_GET_INTERFACE ((obj), %s, %s))".printf (iface.get_type_id (), iface.get_type_cname ());
+		decl_frag.append (new CCodeMacroReplacement ("%s_GET_INTERFACE(obj)".printf (iface.get_upper_case_cname (null)), macro));
+		decl_frag.append (new CCodeNewline ());
 
 
-			if (iface.source_reference.file.cycle == null) {
-				decl_frag.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
-				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (codegen.type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
-			}
-			
-			codegen.type_struct.add_field ("GTypeInterface", "parent_iface");
-
-			if (iface.source_reference.comment != null) {
-				def_frag.append (new CCodeComment (iface.source_reference.comment));
-			}
-			def_frag.append (codegen.type_struct);
+		if (iface.source_reference.file.cycle == null) {
+			decl_frag.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
+			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (codegen.type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
 		}
+		
+		codegen.type_struct.add_field ("GTypeInterface", "parent_iface");
+
+		if (iface.source_reference.comment != null) {
+			def_frag.append (new CCodeComment (iface.source_reference.comment));
+		}
+		def_frag.append (codegen.type_struct);
 
 		iface.accept_children (codegen);
 
-		if (!iface.is_static) {
-			add_interface_base_init_function (iface);
+		add_interface_base_init_function (iface);
 
-			var type_fun = new InterfaceRegisterFunction (iface, codegen);
-			type_fun.init_from_type ();
-			if (iface.access != SymbolAccessibility.PRIVATE) {
-				codegen.header_type_member_declaration.append (type_fun.get_declaration ());
-			} else {
-				codegen.source_type_member_declaration.append (type_fun.get_declaration ());
-			}
-			codegen.source_type_member_definition.append (type_fun.get_definition ());
+		var type_fun = new InterfaceRegisterFunction (iface, codegen);
+		type_fun.init_from_type ();
+		if (iface.access != SymbolAccessibility.PRIVATE) {
+			codegen.header_type_member_declaration.append (type_fun.get_declaration ());
+		} else {
+			codegen.source_type_member_declaration.append (type_fun.get_declaration ());
 		}
+		codegen.source_type_member_definition.append (type_fun.get_definition ());
 
 		codegen.current_type_symbol = null;
 	}

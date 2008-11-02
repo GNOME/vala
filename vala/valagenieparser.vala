@@ -2403,10 +2403,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		if (ModifierFlags.ABSTRACT in flags) {
 			cl.is_abstract = true;
 		}
-		if (ModifierFlags.STATIC in flags) {
-			cl.is_static = true;
-			Report.warning (get_last_src (), "static classes are deprecated, use namespaces");
-		}
 		set_attributes (cl, attrs);
 		foreach (TypeParameter type_param in type_param_list) {
 			cl.add_type_parameter (type_param);
@@ -2421,7 +2417,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		// ensure there is always a default construction method
 		if (!scanner.source_file.external_package
-		    && !cl.is_static && !cl.is_abstract
+		    && !cl.is_abstract
 		    && cl.default_construction_method == null) {
 			var m = new CreationMethod (cl.name, null, cl.source_reference);
 			m.binding = MemberBinding.STATIC;

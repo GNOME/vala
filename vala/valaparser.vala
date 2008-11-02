@@ -1960,10 +1960,6 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.ABSTRACT in flags) {
 			cl.is_abstract = true;
 		}
-		if (ModifierFlags.STATIC in flags) {
-			cl.is_static = true;
-			Report.warning (get_last_src (), "static classes are deprecated, use namespaces");
-		}
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
 			cl.external = true;
 		}
@@ -1979,7 +1975,7 @@ public class Vala.Parser : CodeVisitor {
 
 		// ensure there is always a default construction method
 		if (!scanner.source_file.external_package
-		    && !cl.is_static && !cl.is_abstract
+		    && !cl.is_abstract
 		    && cl.default_construction_method == null) {
 			var m = new CreationMethod (cl.name, null, cl.source_reference);
 			m.access = SymbolAccessibility.PUBLIC;

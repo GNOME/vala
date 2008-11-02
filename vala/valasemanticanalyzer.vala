@@ -2744,13 +2744,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 
-			if (cl.is_static) {
-				expr.value_type = null;
-				expr.error = true;
-				Report.error (expr.source_reference, "Can't create instance of static class `%s'".printf (cl.get_full_name ()));
-				return;
-			}
-
 			if (expr.symbol_reference == null) {
 				expr.symbol_reference = cl.default_construction_method;
 			}
