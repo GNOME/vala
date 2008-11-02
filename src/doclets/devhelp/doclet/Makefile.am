@@ -12,7 +12,7 @@ BUILT_SOURCES = libdoclet.vala.stamp
 
 
 libdoclet.vala.stamp: $(libdoclet_VALASOURCES)
-	$(VALAC) -C --vapidir ../../../vapi --pkg valadoc-1.0 --vapidir ../linkhelper --pkg libxml-2.0 --pkg libhtmlhelper-1.0 --basedir . --disable-non-null --save-temps $^
+	$(VALAC) -C --vapidir ../../../vapi --pkg valadoc-1.0 --vapidir ../linkhelper --pkg libxml-2.0 --pkg libhtmlhelper-1.0 --vapidir . --pkg docletconfig --basedir . --disable-non-null --save-temps $^
 	touch $@
 
 
@@ -32,6 +32,7 @@ libdoclet_la_SOURCES =                \
 
 
 AM_CFLAGS =  -g               \
+	-DPACKAGE_PLUGINDIR=\"$(libdir)/valadoc/plugins/devhelp/\" \
 	-I ../../../libvaladoc/   \
 	-I ../linkhelper/         \
 	-I ../                    \

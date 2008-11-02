@@ -89,6 +89,8 @@ public const string css_list_del = "main_list_del";
 public const string css_list_sig = "main_list_sig";
 public const string css_list_m = "main_list_m";
 
+
+
 public interface Valadoc.LinkHelper : Object {
 	private static string package_name = null;
 
@@ -110,12 +112,7 @@ public interface Valadoc.LinkHelper : Object {
 			return file_name.ndup ( file_name.size() - ".vapi".size() );
 		}
 
-		if ( this.package_name == null ) {
-			string file_name = this.get_dirname( settings.path );
-			this.package_name = file_name; //file_name.ndup ( file_name.size() - ".vala".size() );			
-		}
-
-		return this.package_name;
+		return this.settings.pkg_name;
 	}
 
 	public string get_file_name ( Valadoc.Basic tag ) {

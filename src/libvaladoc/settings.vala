@@ -24,7 +24,8 @@ public class Valadoc.Settings : Object {
 	public Gee.ArrayList<string> files;
 	private string rpath;
 	public string path = "documentation/";
-	public string package_name = null;
+	public string pkg_name = null;
+	public string pkg_version;
 	public bool _private = false;
 	public bool _protected = false;
 	public bool with_deps = false;
@@ -43,6 +44,7 @@ public class Valadoc.Settings : Object {
 		return this.rpath;
 	}
 
+	// wtf?
 	public bool application {
 		get {
 			foreach ( string path in this.files ) {
@@ -53,6 +55,7 @@ public class Valadoc.Settings : Object {
 		}
 	}
 
+	// remove!
 	public bool to_doc ( string name ) {
 		if ( with_deps == true )
 			return true;

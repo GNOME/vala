@@ -110,6 +110,7 @@ namespace Valadoc.Diagrams {
 		if ( node == null ) {
 			node = g.node ( name );
 			node.set_safe ( "shape", "box", "" );
+			node.set_safe ( "fontname", "Times", "" );
 		}
 
 		if ( parent != null ) {
@@ -126,6 +127,7 @@ namespace Valadoc.Diagrams {
 		if ( node == null ) {
 			node = g.node ( name );
 			node.set_safe ( "shape", "box", "" );
+			node.set_safe ( "fontname", "Times", "" );
 		}
 
 		if ( parent != null ) {
@@ -141,8 +143,13 @@ namespace Valadoc.Diagrams {
 		weak Graphviz.Node? node = g.find_node ( name );
 		if ( node == null ) {
 			node = g.node ( name );
-			node.set_safe ( "shape", "box", "" );
 			node.set_safe ( "style", "bold", "" );
+			node.set_safe ( "shape", "box", "" );
+
+			if ( cl.is_abstract )
+				node.set_safe ( "fontname", "Times-Italic", "" );
+			else
+				node.set_safe ( "fontname", "Times", "" );
 		}
 
 		if ( parent != null ) {

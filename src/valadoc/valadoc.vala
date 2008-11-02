@@ -30,10 +30,11 @@ using Gee;
 
 
 public class ValaDoc : Object {
-	private static string basedir;
-	private static string directory;
-	private static string xmlsource;
-	private static string package_name;
+	private static string basedir = null;
+	private static string directory = null;
+	private static string xmlsource = null;
+	private static string pkg_name = null;
+	private static string pkg_version = null;
 
 	private static bool add_documentation = false;
 	private static bool add_inherited = false;
@@ -47,6 +48,7 @@ public class ValaDoc : Object {
 	private static bool non_null_experimental = false;
 	private static bool disable_non_null = false;
 	private static bool disable_checking;
+
 
 	[NoArrayLength ()]
 	private static string[] vapi_directories;
@@ -73,7 +75,7 @@ public class ValaDoc : Object {
 		//{ "library", 0, 0, OptionArg.STRING, out library, "Library name", "NAME" },
 		//{ "basedir", 'b', 0, OptionArg.FILENAME, out basedir, "Base source directory", "DIRECTORY" },
 		{ "directory", 'o', 0, OptionArg.FILENAME, out directory, "Output directory", "DIRECTORY" },
-		{ "package-name", 0, 0, OptionArg.FILENAME, out package_name, "Package name", "DIRECTORY" },
+//		{ "package-name", 0, 0, OptionArg.FILENAME, out package_name, "Package name", "DIRECTORY" },
 		{ "protected", 0, 0, OptionArg.NONE, ref _protected, "Adds protected elements to documentation", null },
 		{ "private", 0, 0, OptionArg.NONE, ref _private, "Adds private elements to documentation", null },
 		{ "inherit", 0, 0, OptionArg.NONE, ref add_inherited, "Adds inherited elements to a class", null },
@@ -84,7 +86,9 @@ public class ValaDoc : Object {
 				"Enable experimentalenhancements for non-null types", null },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, out tsources, null, "FILE..." },
 		{ "doclet", 0, 0, OptionArg.FILENAME, ref pluginpath, "plugin", "DIRECTORY" },
-		{ "xml", 0, 0, OptionArg.FILENAME, ref xmlsource, "xml", "DIRECTORY" },
+		{ "package-name", 0, 0, OptionArg.STRING, ref pkg_name, "package name", "DIRECTORY" },
+		{ "package-version", 0, 0, OptionArg.STRING, ref pkg_version, "package version", "DIRECTORY" },
+//		{ "xml", 0, 0, OptionArg.FILENAME, ref xmlsource, "xml", "DIRECTORY" },
 		{ null }
 	};
 
@@ -110,7 +114,7 @@ public class ValaDoc : Object {
 		if (package_path == null) {
 			return false;
 		}
-		
+	
 		context.add_package (pkg);
 		
 		context.add_source_file (new SourceFile (context, package_path, true));
@@ -194,8 +198,8 @@ public class ValaDoc : Object {
 
 		if ( tsources != null ) {
 			foreach ( string str in this.tsources ) {
-				string rpath = this.realpath ( str );
-				if ( str.has_suffix ( ".vala" ) )
+				string rpath = realpath ( str );
+				if ( str.has_suffix ( ".vala" ) || str.has_suffix ( ".gs" ) )
 					this.sources.add ( str );
 				else
 					this.packages.add ( str );
@@ -374,30 +378,47 @@ public class ValaDoc : Object {
 		return (Doclet)GLib.Object.new (doclettype);
 	}
 
-	private bool check_package_name () {
-		if ( package_name == null )
+	private bool check_pkg_name () {
+		if ( pkg_name == null )
 			return true;
 
-		if ( package_name == "glib-2.0" )
+		if ( pkg_name == "glib-2.0" )
 			return false;
 
 		foreach (string package in this.packages ) {
-			if ( package_name == package )
+			if ( pkg_name == package )
 				return false;
 		}
 		return true;
 	}
 
+
+	private string get_pkg_name ( ) {
+		if ( this.pkg_name == null ) {
+			if ( this.directory.has_suffix ( "/" ) )
+				pkg_name = GLib.Path.get_dirname ( this.directory );
+			else
+				pkg_name = GLib.Path.get_basename ( this.directory );
+		}
+
+		return this.pkg_name;
+	}
+
 	private int run (  ) {
+		if ( !check_pkg_name () ) {
+			Report.error (null, "Invalid package name." );
+		}
+
 		var settings = new Valadoc.Settings ( );
-		settings.package_name = this.package_name;
+		settings.pkg_name = this.get_pkg_name ( );
+		settings.pkg_version = this.pkg_version;
+
 		settings.add_inherited = this.add_inherited;
 		settings.files = this.sort_sources ( );
 		settings._protected = this._protected;
 		settings.with_deps = this.with_deps;
 		settings._private = this._private;
 		settings.path = this.directory;
-
 
 		var context = new Vala.CodeContext();
 		context.library = this.library;
@@ -428,10 +449,6 @@ public class ValaDoc : Object {
 		context.debug = false;
 		context.thread = false;
 		context.save_temps = false;
-
-		if ( !check_package_name () ) {
-			Report.error (null, "Invalid package name." );
-		}
 
 		if (!add_package (context, "glib-2.0")) {
 			Report.error (null, "glib-2.0 not found in specified Vala API directories");
@@ -530,8 +547,8 @@ public class ValaDoc : Object {
 		if ( reporter.errors > 0 )
 			return quit ();
 
-		//////////////////////////// XML //////////////////////////
 
+/* //////////////////////////// XML //////////////////////////
 		if ( xmlsource != null ) {
 			var xml = new MergeExternalDocumentation ( doctree );
 			bool tmp = xml.parse ( xmlsource );
@@ -540,12 +557,12 @@ public class ValaDoc : Object {
 				return 1;
 			}
 		}
-
+*/
 		doctree.parse_comments ( docparser );
 		if ( reporter.errors > 0 )
 			return 1;
 
-		///////////////////////////////////////////////////////////
+
 
 
 		doclet.initialisation ( settings );
@@ -604,8 +621,6 @@ public class ValaDoc : Object {
 		else {
 			if ( !pluginpath.has_suffix ( "/" ) )
 				pluginpath = pluginpath + "/";
-
-			stdout.printf ( ">%s<\n", pluginpath );
 		}
 
 		var valadoc = new ValaDoc( );

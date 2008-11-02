@@ -621,7 +621,13 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	private void write_navi_entry ( GLib.FileStream file, Basic element, Basic pos, string style, bool link, bool full_name = false ) {
 		string name;
 
-		if ( element is File ) {
+		if ( element is Class ) {
+			if ( ((Class)element).is_abstract )
+				name = "<i>" + element.name +"</i>";
+			else
+				name = element.name;
+		}
+		else if ( element is File ) {
 			string path = this.get_file_name ( element );
 			name = this.get_package_name ( path );
 		}
@@ -741,15 +747,15 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	private void write_navi_child_namespaces_inline ( GLib.FileStream file, Namespace ns, Basic mself ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
 		this.write_navi_child_namespaces_without_childs ( file, ns, mself );
-		this.write_navi_child_error_domains_without_childs ( file, ns, mself );
-		this.write_navi_child_enums_without_childs ( file, ns, mself );
 		this.write_navi_child_classes_without_childs ( file, ns, mself );
 		this.write_navi_child_interfaces_without_childs ( file, ns, mself );
 		this.write_navi_child_structs_without_childs ( file, ns, mself );
+		this.write_navi_child_enums_without_childs ( file, ns, mself );
+		this.write_navi_child_error_domains_without_childs ( file, ns, mself );
 		this.write_navi_child_delegates ( file, ns, mself );
-		this.write_navi_child_constants ( file, ns, mself );
-		this.write_navi_child_fields ( file, ns, mself );
 		this.write_navi_child_methods ( file, ns, mself );
+		this.write_navi_child_fields ( file, ns, mself );
+		this.write_navi_child_constants ( file, ns, mself );
 		file.puts ( "</ul>\n" );
 	}
 
@@ -760,10 +766,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 
 	private void write_navi_struct_inline ( GLib.FileStream file, Struct stru, Basic mself ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
-		this.write_navi_child_constants ( file, stru, mself );
 		this.write_navi_child_construction_methods ( file, stru, mself );
-		this.write_navi_child_fields ( file, stru, mself );
 		this.write_navi_child_methods ( file, stru, mself );
+		this.write_navi_child_fields ( file, stru, mself );
+		this.write_navi_child_constants ( file, stru, mself );
 		file.puts ( "</ul>\n" );
 	}
 
@@ -777,10 +783,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	private void write_navi_interface_inline ( GLib.FileStream file, Interface iface, Basic mself ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
 		this.write_navi_child_delegates ( file, iface, mself );
-		this.write_navi_child_fields ( file, iface, mself );
-		this.write_navi_child_properties ( file, iface, mself );
 		this.write_navi_child_methods ( file, iface, mself );
 		this.write_navi_child_signals ( file, iface, mself );
+		this.write_navi_child_properties ( file, iface, mself );
+		this.write_navi_child_fields ( file, iface, mself );
 		file.puts ( "</ul>\n" );
 	}
 
@@ -831,16 +837,16 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 
 	private void write_navi_class_inline ( GLib.FileStream file, Class cl, Basic mself ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
-		this.write_navi_child_enums_without_childs ( file, cl, mself );
+		this.write_navi_child_construction_methods ( file, cl, mself );
 		this.write_navi_child_classes_without_childs ( file, cl, mself );
 		this.write_navi_child_structs_without_childs ( file, cl, mself );
+		this.write_navi_child_enums_without_childs ( file, cl, mself );
 		this.write_navi_child_delegates ( file, cl, mself );
-		this.write_navi_child_constants ( file, cl, mself );
-		this.write_navi_child_construction_methods ( file, cl, mself );
-		this.write_navi_child_fields ( file, cl, mself );
-		this.write_navi_child_properties ( file, cl, mself );
 		this.write_navi_child_methods ( file, cl, mself );
 		this.write_navi_child_signals ( file, cl, mself );
+		this.write_navi_child_properties ( file, cl, mself );
+		this.write_navi_child_fields ( file, cl, mself );
+		this.write_navi_child_constants ( file, cl, mself );
 		file.puts ( "</ul>\n" );
 	}
 
@@ -1282,15 +1288,17 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		foreach ( NamespaceBundle nsb in nsbundle.subnamespaces ) {
 			this.write_navi_entry_html_template_with_link ( navi, css_navi_namespace, nsb.name + "/index.html", (nsb.name == null)? "Global Namespace" : nsb.name );
 		}
+
 		this.write_navi_child_classes_without_childs_collection ( navi, nsbundle.classes, mself );
+		this.write_navi_child_interfaces_without_childs_collection ( navi, nsbundle.interfaces, mself );
+		this.write_navi_child_structs_without_childs_collection ( navi, nsbundle.structs, mself );
+		this.write_navi_child_enums_without_childs_collection ( navi, nsbundle.enums, mself );
+		this.write_navi_child_error_domains_without_childs_collection ( navi, nsbundle.errordomains, mself );
+		this.write_navi_child_delegates_collection ( navi, nsbundle.delegates, mself );
 		this.write_navi_child_methods_collection ( navi, nsbundle.methods, mself );
 		this.write_navi_child_fields_collection ( navi, nsbundle.fields, mself );
 		this.write_navi_child_constants_collection ( navi, nsbundle.constants, mself );
-		this.write_navi_child_structs_without_childs_collection ( navi, nsbundle.structs, mself );
-		this.write_navi_child_delegates_collection ( navi, nsbundle.delegates, mself );
-		this.write_navi_child_interfaces_without_childs_collection ( navi, nsbundle.interfaces, mself );
-		this.write_navi_child_enums_without_childs_collection ( navi, nsbundle.enums, mself );
-		this.write_navi_child_error_domains_without_childs_collection ( navi, nsbundle.errordomains, mself );
+
 		navi.puts ( "</ul>\n" );
 		navi.puts ( "\t\t\t</div>\n" );
 
@@ -1304,15 +1312,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 			this.write_navi_namespace_bundle ( subnsbundle, mself );
 		}
 
-
 		this.directory_level++;
-		foreach ( Constant c in nsbundle.constants ) {
-			GLib.FileStream file = GLib.FileStream.open ( nsbundle.path + c.name + "/index.html", "w" );
-			this.write_file_header ( file );
-			this.write_navi_namespace_bundle_path_navigation ( nsbundle, file, c );
-			this.write_constant_content ( file, c, (ConstantHandler)c.parent );
-			this.write_file_footer ( file );
-		}
 		foreach ( Delegate del in nsbundle.delegates ) {
 			GLib.FileStream file = GLib.FileStream.open ( nsbundle.path + del.name + "/index.html", "w" );
 			this.write_file_header ( file );
@@ -1334,6 +1334,13 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 			this.write_field_content ( file, f, (FieldHandler)f.parent );
 			this.write_file_footer ( file );
 		}
+		foreach ( Constant c in nsbundle.constants ) {
+			GLib.FileStream file = GLib.FileStream.open ( nsbundle.path + c.name + "/index.html", "w" );
+			this.write_file_header ( file );
+			this.write_navi_namespace_bundle_path_navigation ( nsbundle, file, c );
+			this.write_constant_content ( file, c, (ConstantHandler)c.parent );
+			this.write_file_footer ( file );
+		}
 		this.directory_level--;
 
 		GLib.FileStream file = GLib.FileStream.open ( nsbundle.path + "index.html", "w" );
@@ -1349,28 +1356,6 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		this.directory_level--;
 	}
 
-	private bool copy_file ( string src, string dest ) {
-		GLib.FileStream fsrc = GLib.FileStream.open ( src, "rb" );
-		GLib.FileStream fdest = GLib.FileStream.open ( dest, "wb" );
-		if ( fsrc == null || fdest == null )
-			return false;
-
-		for ( int c = fsrc.getc() ; !fsrc.eof() ; c = fsrc.getc() ) {
-			fdest.putc ( (char)c );
-		}
-
-		return true;
-	}
-
-	private void copy_deps ( ) {
-		string path = Config.doclet_path + "deps/";
-
-		GLib.Dir dir = GLib.Dir.open ( path );
-		for ( weak string name = dir.read_name (); name != null ; name = dir.read_name () ) {
-			this.copy_file ( path+name, this.settings.path+name );
-		}
-	}
-
 	private bool is_depency ( string dep ) {
 		foreach ( string file in this.settings.files ) {
 			if ( dep == file )
@@ -1381,14 +1366,15 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 
 	~HtmlDoclet () {
 		this.directory_level = 1;
-		copy_deps ( );
+
+		copy_directory ( Config.doclet_path + "deps/", this.settings.path );
 
 		foreach ( NamespaceBundle nsbundle in this.namespaces ) {
 			this.write_navi_namespace_bundle ( nsbundle, null );
 		}
 
 		GLib.FileStream sfile = GLib.FileStream.open ( this.settings.path + "index.html", "w" );
-		string title = ( this.settings.package_name == null )? "" : this.settings.package_name;
+		string title = ( this.settings.pkg_name == null )? "" : this.settings.pkg_name;
 		this.write_file_header_template ( sfile, title, 0 );
 
 		sfile.printf ( "<h2 class=\"%s\">Namespaces:</h2>\n", css_title );
@@ -1434,7 +1420,15 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 			file.printf ( "<h3 class=\"%s\">Classes:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Class subcl in classes ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_class, css_navi_link, this.get_link(subcl, clh), subcl.name );
+				string name;
+				if ( subcl.is_abstract ) {
+					name = "<i>" + subcl.name + "</i>";
+				}
+				else {
+					name = subcl.name;
+				}
+
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_class, css_navi_link, this.get_link(subcl, clh), name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1593,6 +1587,9 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
 		this.write_image_block ( file, iface );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
+		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
+		this.langlet.write_interface ( iface, file );
+		file.printf ( "\n\t\t\t\t</div>\n" );
 		iface.write_comment ( file );
 		this.write_namespace_note ( file, iface );
 		this.write_package_note ( file, iface );
@@ -1600,10 +1597,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		this.write_child_classes ( file, iface );
 		this.write_child_structs ( file, iface );
 		this.write_child_delegates ( file, iface );
-		this.write_child_fields ( file, iface );
-		this.write_child_properties ( file, iface );
-		this.write_child_signals ( file, iface );
 		this.write_child_methods ( file, iface );
+		this.write_child_signals ( file, iface );
+		this.write_child_properties ( file, iface );
+		this.write_child_fields ( file, iface );
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
@@ -1622,15 +1619,15 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		this.write_package_note ( file, cl );
 		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
 		this.write_child_construction_methods ( file, cl );
-		this.write_child_enums ( file, cl );
 		this.write_child_classes ( file, cl );
 		this.write_child_structs ( file, cl );
+		this.write_child_enums ( file, cl );
 		this.write_child_delegates ( file, cl );
-		this.write_child_constants ( file, cl );
-		this.write_child_fields ( file, cl );
-		this.write_child_properties ( file, cl );
-		this.write_child_signals ( file, cl );
 		this.write_child_methods ( file, cl );
+		this.write_child_signals ( file, cl );
+		this.write_child_properties ( file, cl );
+		this.write_child_fields ( file, cl );
+		this.write_child_constants ( file, cl );
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
@@ -1649,9 +1646,9 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		this.langlet.write_struct ( stru, file );
 		file.printf ( "\n\t\t\t\t</div>\n" );
 		this.write_child_construction_methods ( file, stru );
-		this.write_child_constants ( file, stru );
-		this.write_child_fields ( file, stru );
 		this.write_child_methods ( file, stru );
+		this.write_child_fields ( file, stru );
+		this.write_child_constants ( file, stru );
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
@@ -1984,15 +1981,15 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 
 		// file:
 		ns.visit_namespaces ( this );
+		ns.visit_classes ( this );
+		ns.visit_interfaces ( this );
+		ns.visit_structs ( this );
 		ns.visit_enums ( this );
 		ns.visit_error_domains ( this );
-		ns.visit_structs ( this );
-		ns.visit_interfaces ( this );
-		ns.visit_classes ( this );
 		ns.visit_delegates ( this );
-		ns.visit_constants ( this );
-		ns.visit_fields ( this );
 		ns.visit_methods ( this );
+		ns.visit_fields ( this );
+		ns.visit_constants ( this );
 
 		this.current_path = old_path;
 		this.directory_level--;
@@ -2045,11 +2042,11 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 
 		this.current_path += stru.name + "/";
 		var rt = DirUtils.create ( this.current_path, 0777 );
-	
-		stru.visit_constants ( this );
-		stru.visit_fields ( this );
+
 		stru.visit_construction_methods ( this );
 		stru.visit_methods ( this );
+		stru.visit_fields ( this );	
+		stru.visit_constants ( this );
 
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
 		this.write_file_header ( file );
@@ -2069,16 +2066,16 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		this.current_path += cl.name + "/";
 		var rt = DirUtils.create ( this.current_path, 0777 );
 
-		cl.visit_enums ( this );
+		cl.visit_construction_methods ( this );
 		cl.visit_classes ( this );
 		cl.visit_structs ( this );
+		cl.visit_enums ( this );
 		cl.visit_delegates ( this );
-		cl.visit_constants ( this );
-		cl.visit_construction_methods ( this );
 		cl.visit_methods ( this );
-		cl.visit_fields ( this );
-		cl.visit_properties ( this );
 		cl.visit_signals ( this );
+		cl.visit_properties ( this );
+		cl.visit_fields ( this );
+		cl.visit_constants ( this );
 
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
 		this.write_file_header ( file );
@@ -2098,14 +2095,13 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		this.current_path += iface.name + "/";
 		var rt = DirUtils.create ( this.current_path, 0777 );
 
-		iface.visit_properties ( this );
-		iface.visit_delegates ( this );
-		iface.visit_signals ( this );
-		iface.visit_methods ( this );
-		iface.visit_structs ( this );
-		iface.visit_fields ( this );
-		iface.visit_structs ( this );
 		iface.visit_classes ( this );
+		iface.visit_structs ( this );
+		iface.visit_delegates ( this );
+		iface.visit_methods ( this );
+		iface.visit_signals ( this );
+		iface.visit_properties ( this );
+		iface.visit_fields ( this );
 
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w" );
 		this.write_file_header ( file );

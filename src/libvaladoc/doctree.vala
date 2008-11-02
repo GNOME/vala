@@ -23,9 +23,30 @@ using GLib;
 using Gee;
 
 
-//ported from glibc
-
 namespace Valadoc {
+	public bool copy_file ( string src, string dest ) {
+		GLib.FileStream fsrc = GLib.FileStream.open ( src, "rb" );
+		GLib.FileStream fdest = GLib.FileStream.open ( dest, "wb" );
+		if ( fsrc == null || fdest == null )
+			return false;
+
+		for ( int c = fsrc.getc() ; !fsrc.eof() ; c = fsrc.getc() ) {
+			fdest.putc ( (char)c );
+		}
+
+		return true;
+	}
+
+	public void copy_directory ( string src, string dest ) {
+		string _src = (  src.has_suffix ( "/" ) )? src : src + "/";
+		string _dest = ( dest.has_suffix ( "/" ) )? dest : dest + "/";
+
+		GLib.Dir dir = GLib.Dir.open ( _src );
+		for ( weak string name = dir.read_name (); name != null ; name = dir.read_name () ) {
+			copy_file ( _src+name, _dest+name );
+		}
+	}
+
 	public string realpath (string name) {
 		string rpath;
 
@@ -144,7 +165,7 @@ public class Valadoc.Basic : Object {
 				return file_name.ndup ( file_name.size() - ".vapi".size() );
 			}
 
-			return this.settings.package_name;
+			return this.settings.pkg_name;
 		}
 	}
 
