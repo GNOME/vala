@@ -323,10 +323,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public override void visit_enum (Enum en) {
 		cenum = new CCodeEnum (en.get_cname ());
 
-		if (en.source_reference.comment != null) {
-			header_type_definition.append (new CCodeComment (en.source_reference.comment));
-		}
-
 		CCodeFragment decl_frag;
 		CCodeFragment def_frag;
 		if (en.access != SymbolAccessibility.PRIVATE) {
@@ -335,6 +331,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		} else {
 			decl_frag = source_type_declaration;
 			def_frag = source_type_definition;
+		}
+		
+		if (en.source_reference.comment != null) {
+			def_frag.append (new CCodeComment (en.source_reference.comment));
 		}
 
 		def_frag.append (cenum);
