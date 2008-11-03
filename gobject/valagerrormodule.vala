@@ -31,6 +31,44 @@ public class Vala.GErrorModule : CCodeDynamicSignalModule {
 		base (codegen, next);
 	}
 
+	public override void visit_error_domain (ErrorDomain edomain) {
+		cenum = new CCodeEnum (edomain.get_cname ());
+
+		if (edomain.source_reference.comment != null) {
+			header_type_definition.append (new CCodeComment (edomain.source_reference.comment));
+		}
+		header_type_definition.append (cenum);
+
+		edomain.accept_children (codegen);
+
+		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
+
+		var error_domain_define = new CCodeMacroReplacement (edomain.get_upper_case_cname (), quark_fun_name + " ()");
+		header_type_definition.append (error_domain_define);
+
+		var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
+		var cquark_block = new CCodeBlock ();
+
+		var cquark_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+		cquark_call.add_argument (new CCodeConstant ("\"" + edomain.get_lower_case_cname () + "-quark\""));
+
+		cquark_block.add_statement (new CCodeReturnStatement (cquark_call));
+
+		header_type_member_declaration.append (cquark_fun.copy ());
+
+		cquark_fun.block = cquark_block;
+		source_type_member_definition.append (cquark_fun);
+	}
+
+	public override void visit_error_code (ErrorCode ecode) {
+		if (ecode.value == null) {
+			cenum.add_value (new CCodeEnumValue (ecode.get_cname ()));
+		} else {
+			ecode.value.accept (codegen);
+			cenum.add_value (new CCodeEnumValue (ecode.get_cname (), (CCodeExpression) ecode.value.ccodenode));
+		}
+	}
+
 	public override void visit_throw_statement (ThrowStatement stmt) {
 		stmt.accept_children (codegen);
 

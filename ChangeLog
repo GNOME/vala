@@ -1,5 +1,16 @@
 2008-11-03  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/Makefile.am:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodedelegatemodule.vala:
+	* gobject/valaccodedynamicpropertymodule.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valagerrormodule.vala:
+
+	Add CCodeDelegateModule, move more code to GErrorModule
+
+2008-11-03  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 	* gobject/valagasyncmodule.vala:
 	* gobject/valagerrormodule.vala:

@@ -39,6 +39,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head = new CCodeAssignmentModule (this, head);
 		head = new CCodeInvocationExpressionModule (this, head);
 		head = new CCodeArrayModule (this, head);
+		head = new CCodeDelegateModule (this, head);
 		head = new CCodeDynamicPropertyModule (this, head);
 		head = new CCodeDynamicSignalModule (this, head);
 		head = new GErrorModule (this, head);

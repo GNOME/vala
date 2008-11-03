@@ -80,7 +80,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public int next_temp_var_id = 0;
 	private int next_array_dup_id = 0;
 	public bool in_creation_method = false;
-	private bool in_constructor = false;
+	public bool in_constructor = false;
 	public bool in_static_or_class_ctor = false;
 	public bool current_method_inner_error = false;
 	public int next_coroutine_state = 1;
@@ -708,80 +708,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		} else {
 			ev.value.accept (codegen);
 			cenum.add_value (new CCodeEnumValue (ev.get_cname (), (CCodeExpression) ev.value.ccodenode));
-		}
-	}
-
-	public override void visit_error_domain (ErrorDomain edomain) {
-		cenum = new CCodeEnum (edomain.get_cname ());
-
-		if (edomain.source_reference.comment != null) {
-			header_type_definition.append (new CCodeComment (edomain.source_reference.comment));
-		}
-		header_type_definition.append (cenum);
-
-		edomain.accept_children (codegen);
-
-		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
-
-		var error_domain_define = new CCodeMacroReplacement (edomain.get_upper_case_cname (), quark_fun_name + " ()");
-		header_type_definition.append (error_domain_define);
-
-		var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
-		var cquark_block = new CCodeBlock ();
-
-		var cquark_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
-		cquark_call.add_argument (new CCodeConstant ("\"" + edomain.get_lower_case_cname () + "-quark\""));
-
-		cquark_block.add_statement (new CCodeReturnStatement (cquark_call));
-
-		header_type_member_declaration.append (cquark_fun.copy ());
-
-		cquark_fun.block = cquark_block;
-		source_type_member_definition.append (cquark_fun);
-	}
-
-	public override void visit_error_code (ErrorCode ecode) {
-		if (ecode.value == null) {
-			cenum.add_value (new CCodeEnumValue (ecode.get_cname ()));
-		} else {
-			ecode.value.accept (codegen);
-			cenum.add_value (new CCodeEnumValue (ecode.get_cname (), (CCodeExpression) ecode.value.ccodenode));
-		}
-	}
-
-	public override void visit_delegate (Delegate d) {
-		d.accept_children (codegen);
-
-		var cfundecl = new CCodeFunctionDeclarator (d.get_cname ());
-		foreach (FormalParameter param in d.get_parameters ()) {
-			cfundecl.add_parameter ((CCodeFormalParameter) param.ccodenode);
-
-			// handle array parameters
-			if (!param.no_array_length && param.parameter_type is ArrayType) {
-				var array_type = (ArrayType) param.parameter_type;
-				
-				var length_ctype = "int";
-				if (param.direction != ParameterDirection.IN) {
-					length_ctype = "int*";
-				}
-				
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var cparam = new CCodeFormalParameter (head.get_array_length_cname (param.name, dim), length_ctype);
-					cfundecl.add_parameter (cparam);
-				}
-			}
-		}
-		if (d.has_target) {
-			var cparam = new CCodeFormalParameter ("user_data", "void*");
-			cfundecl.add_parameter (cparam);
-		}
-
-		var ctypedef = new CCodeTypeDefinition (d.return_type.get_cname (), cfundecl);
-
-		if (!d.is_internal_symbol ()) {
-			header_type_declaration.append (ctypedef);
-		} else {
-			source_type_declaration.append (ctypedef);
 		}
 	}
 	
@@ -2973,104 +2899,16 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		expr.ccodenode = new CCodeParenthesizedExpression ((CCodeExpression) expr.inner.ccodenode);
 	}
 
-	public string get_delegate_target_cname (string delegate_cname) {
-		return "%s_target".printf (delegate_cname);
+	public virtual string get_delegate_target_cname (string delegate_cname) {
+		assert_not_reached ();
 	}
 
-	public CCodeExpression get_delegate_target_cexpression (Expression delegate_expr) {
-		bool is_out = false;
-	
-		if (delegate_expr is UnaryExpression) {
-			var unary_expr = (UnaryExpression) delegate_expr;
-			if (unary_expr.operator == UnaryOperator.OUT || unary_expr.operator == UnaryOperator.REF) {
-				delegate_expr = unary_expr.inner;
-				is_out = true;
-			}
-		}
-		
-		if (delegate_expr is InvocationExpression) {
-			var invocation_expr = (InvocationExpression) delegate_expr;
-			return invocation_expr.delegate_target;
-		} else if (delegate_expr is LambdaExpression) {
-			if ((current_method != null && current_method.binding == MemberBinding.INSTANCE) || in_constructor) {
-				return new CCodeIdentifier ("self");
-			} else {
-				return new CCodeConstant ("NULL");
-			}
-		} else if (delegate_expr.symbol_reference != null) {
-			if (delegate_expr.symbol_reference is FormalParameter) {
-				var param = (FormalParameter) delegate_expr.symbol_reference;
-				CCodeExpression target_expr = new CCodeIdentifier (get_delegate_target_cname (param.name));
-				if (param.direction != ParameterDirection.IN) {
-					// accessing argument of out/ref param
-					target_expr = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_expr));
-				}
-				if (is_out) {
-					// passing array as out/ref
-					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
-				} else {
-					return target_expr;
-				}
-			} else if (delegate_expr.symbol_reference is LocalVariable) {
-				var local = (LocalVariable) delegate_expr.symbol_reference;
-				var target_expr = new CCodeIdentifier (get_delegate_target_cname (local.name));
-				if (is_out) {
-					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
-				} else {
-					return target_expr;
-				}
-			} else if (delegate_expr.symbol_reference is Field) {
-				var field = (Field) delegate_expr.symbol_reference;
-				var target_cname = get_delegate_target_cname (field.name);
-
-				var ma = (MemberAccess) delegate_expr;
-
-				var base_type = ma.inner.value_type;
-				CCodeExpression target_expr = null;
-
-				var pub_inst = (CCodeExpression) get_ccodenode (ma.inner);
-
-				if (field.binding == MemberBinding.INSTANCE) {
-					var instance_expression_type = base_type;
-					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
-					CCodeExpression typed_inst = transform_expression (pub_inst, instance_expression_type, instance_target_type);
-
-					CCodeExpression inst;
-					if (field.access == SymbolAccessibility.PRIVATE) {
-						inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
-					} else {
-						inst = typed_inst;
-					}
-					if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
-						target_expr = new CCodeMemberAccess.pointer (inst, target_cname);
-					} else {
-						target_expr = new CCodeMemberAccess (inst, target_cname);
-					}
-				} else {
-					target_expr = new CCodeIdentifier (target_cname);
-				}
-
-				if (is_out) {
-					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
-				} else {
-					return target_expr;
-				}
-			} else if (delegate_expr.symbol_reference is Method) {
-				var m = (Method) delegate_expr.symbol_reference;
-				var ma = (MemberAccess) delegate_expr;
-				if (m.binding == MemberBinding.STATIC) {
-					return new CCodeConstant ("NULL");
-				} else {
-					return (CCodeExpression) get_ccodenode (ma.inner);
-				}
-			}
-		}
-
-		return new CCodeConstant ("NULL");
+	public virtual CCodeExpression get_delegate_target_cexpression (Expression delegate_expr) {
+		assert_not_reached ();
 	}
 
-	public string get_delegate_target_destroy_notify_cname (string delegate_cname) {
-		return "%s_target_destroy_notify".printf (delegate_cname);
+	public virtual string get_delegate_target_destroy_notify_cname (string delegate_cname) {
+		assert_not_reached ();
 	}
 
 	public override void visit_base_access (BaseAccess expr) {
