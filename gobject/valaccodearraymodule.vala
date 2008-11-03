@@ -309,4 +309,111 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 			expr.ccodenode = new CCodeElementAccess (ccontainer, cindex);
 		}
 	}
+
+	private CCodeForStatement get_vala_array_free_loop (bool have_length) {
+		var cbody = new CCodeBlock ();
+		var cptrarray = new CCodeCastExpression (new CCodeIdentifier ("array"), "gpointer*");
+		var cea = new CCodeElementAccess (cptrarray, new CCodeIdentifier ("i"));
+
+		var cfreecall = new CCodeFunctionCall (new CCodeIdentifier ("destroy_func"));
+		cfreecall.add_argument (cea);
+
+		CCodeExpression cforcond;
+
+		if (have_length) {
+			var cfreecond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, cea, new CCodeConstant ("NULL"));
+			cforcond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("array_length"));
+			cbody.add_statement (new CCodeIfStatement (cfreecond, new CCodeExpressionStatement (cfreecall)));
+		} else {
+			cforcond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, cea, new CCodeConstant ("NULL"));
+			cbody.add_statement (new CCodeExpressionStatement (cfreecall));
+		}
+
+		var cfor = new CCodeForStatement (cforcond, cbody);
+		cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")));
+		cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("i"), new CCodeConstant ("1"))));
+
+		return cfor;
+	}
+
+	public override void append_vala_array_free () {
+		var fun = new CCodeFunction ("_vala_array_free", "void");
+		fun.modifiers = CCodeModifiers.STATIC;
+		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
+		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
+		fun.add_parameter (new CCodeFormalParameter ("destroy_func", "GDestroyNotify"));
+		codegen.source_type_member_declaration.append (fun.copy ());
+
+		var cdofree = new CCodeBlock ();
+
+		var citdecl = new CCodeDeclaration ("int");
+		citdecl.add_declarator (new CCodeVariableDeclarator ("i"));
+		cdofree.add_statement (citdecl);
+
+		var clencheck = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN_OR_EQUAL, new CCodeIdentifier ("array_length"), new CCodeConstant ("0"));
+		var ciflen = new CCodeIfStatement (clencheck, get_vala_array_free_loop (true), get_vala_array_free_loop (false));
+		cdofree.add_statement (ciflen);
+
+		var ccondarr = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("array"), new CCodeConstant ("NULL"));
+		var ccondfunc = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("destroy_func"), new CCodeConstant ("NULL"));
+		var cif = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccondarr, ccondfunc), cdofree);
+		fun.block = new CCodeBlock ();
+		fun.block.add_statement (cif);
+
+		var carrfree = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		carrfree.add_argument (new CCodeIdentifier ("array"));
+		fun.block.add_statement (new CCodeExpressionStatement (carrfree));
+
+		codegen.source_type_member_definition.append (fun);
+	}
+
+	public override void append_vala_array_move () {
+		codegen.string_h_needed = true;
+
+		// assumes that overwritten array elements are null before invocation
+		// FIXME will leak memory if that's not the case
+		var fun = new CCodeFunction ("_vala_array_move", "void");
+		fun.modifiers = CCodeModifiers.STATIC;
+		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
+		fun.add_parameter (new CCodeFormalParameter ("element_size", "gsize"));
+		fun.add_parameter (new CCodeFormalParameter ("src", "gint"));
+		fun.add_parameter (new CCodeFormalParameter ("dest", "gint"));
+		fun.add_parameter (new CCodeFormalParameter ("length", "gint"));
+		codegen.source_type_member_declaration.append (fun.copy ());
+
+		var array = new CCodeCastExpression (new CCodeIdentifier ("array"), "char*");
+		var element_size = new CCodeIdentifier ("element_size");
+		var length = new CCodeIdentifier ("length");
+		var src = new CCodeIdentifier ("src");
+		var dest = new CCodeIdentifier ("dest");
+		var src_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, src, element_size));
+		var dest_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, dest, element_size));
+		var dest_end_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, dest, length)), element_size));
+
+		fun.block = new CCodeBlock ();
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_memmove"));
+		ccall.add_argument (dest_address);
+		ccall.add_argument (src_address);
+		ccall.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, length, element_size));
+		fun.block.add_statement (new CCodeExpressionStatement (ccall));
+
+		var czero1 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+		czero1.add_argument (src_address);
+		czero1.add_argument (new CCodeConstant ("0"));
+		czero1.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, dest, src)), element_size));
+		var czeroblock1 = new CCodeBlock ();
+		czeroblock1.add_statement (new CCodeExpressionStatement (czero1));
+
+		var czero2 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+		czero2.add_argument (dest_end_address);
+		czero2.add_argument (new CCodeConstant ("0"));
+		czero2.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, src, dest)), element_size));
+		var czeroblock2 = new CCodeBlock ();
+		czeroblock2.add_statement (new CCodeExpressionStatement (czero2));
+
+		fun.block.add_statement (new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest), czeroblock1, czeroblock2));
+
+		codegen.source_type_member_definition.append (fun);
+	}
 }
