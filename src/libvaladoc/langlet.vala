@@ -87,7 +87,7 @@ public class Valadoc.Langlet : Object {
 	public virtual void write_namespace ( Valadoc.Namespace ns, void* ptr ) {
 	}
 
-	public virtual void write_file ( Valadoc.File file, void* ptr ) {
+	public virtual void write_file ( Valadoc.Package file, void* ptr ) {
 	}
 }
 

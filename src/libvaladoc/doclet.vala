@@ -29,7 +29,7 @@ public static delegate Type Valadoc.DocletRegisterFunction ( );
 public abstract class Valadoc.Doclet : GLib.Object {
 	public abstract void initialisation ( Settings settings );
 
-	public abstract void visit_file ( File file );
+	public abstract void visit_package ( Package pkg );
 
 	public abstract void visit_namespace ( Namespace ns );
 

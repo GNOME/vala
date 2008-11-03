@@ -493,106 +493,7 @@ public class Valadoc.LangletIndex : Valadoc.Langlet, Valadoc.LinkHelper {
 	public override void write_namespace ( Valadoc.Namespace ns, void* ptr ) {
 	}
 
-	public override void write_file ( Valadoc.File file, void* ptr ) {
-	}
-}
-
-
-
-
-private class NamespaceBundle : Object {
-	public Namespace creation_namespace { construct set; get; }
-	public NamespaceBundle? parent { construct set; get; }
-	public string? name { construct set; get; }
-	public string path { construct set; get; }
-
-	public Gee.ArrayList<NamespaceBundle> subnamespaces = new Gee.ArrayList<NamespaceBundle> ();
-
-	public string full_name () {
-		return this.creation_namespace.full_name ();
-	}
-
-	public NamespaceBundle ( string path, string? name, Namespace creation_namespace, NamespaceBundle? parent = null ) {
-		this.creation_namespace = creation_namespace;
-		this.parent = parent;
-		this.name = name;
-		this.path = path;
-	}
-
-	private NamespaceBundle get_namespace_bundle ( Namespace ns ) {
-		foreach ( NamespaceBundle bundle in this.subnamespaces ) {
-			if ( this.name == ns.name ) {
-				return bundle;
-			}
-		}
-
-		NamespaceBundle nsbundle = new NamespaceBundle ( this.path + ns.name + "/", ns.name, ns, this );
-		this.subnamespaces.add ( nsbundle );
-		return nsbundle;
-	}
-
-	public Gee.ArrayList<ErrorDomain> errordomains = new Gee.ArrayList<ErrorDomain> ();
-	public Gee.ArrayList<Interface> interfaces = new Gee.ArrayList<Interface> ();
-	public Gee.ArrayList<Struct> structs = new Gee.ArrayList<Struct> ();
-	public Gee.ArrayList<Class> classes = new Gee.ArrayList<Class> ();
-	public Gee.ArrayList<Enum> enums = new Gee.ArrayList<Enum> ();
-
-	public Gee.ArrayList<Constant> constants = new Gee.ArrayList<Constant> ();
-	public Gee.ArrayList<Delegate> delegates = new Gee.ArrayList<Delegate> ();
-	public Gee.ArrayList<Method> methods = new Gee.ArrayList<Method> ();
-	public Gee.ArrayList<Field> fields = new Gee.ArrayList<Field> ();
-
-	public void merge_namespace ( Namespace ns ) {
-		Gee.Collection<Namespace> subnamespaces = ns.get_namespace_list ();
-		foreach ( Namespace subns in subnamespaces ) {
-			NamespaceBundle nsbundle = this.get_namespace_bundle ( subns );
-			nsbundle.merge_namespace ( subns );
-		}
-
-		Gee.Collection<ErrorDomain> errordomains = ns.get_error_domain_list ();
-		foreach ( ErrorDomain errdom in errordomains ) {
-			this.errordomains.add ( errdom );
-		}
-
-		Gee.Collection<Interface> interfaces = ns.get_interface_list ();
-		foreach ( Interface iface in interfaces ) {
-			this.interfaces.add ( iface );
-		}
-
-		Gee.Collection<Struct> structs = ns.get_struct_list ();
-		foreach ( Struct stru in structs ) {
-			this.structs.add ( stru );
-		}
-
-		Gee.Collection<Class> classes = ns.get_class_list ();
-		foreach ( Class cl in classes ) {
-			this.classes.add ( cl );
-		}
-
-		Gee.Collection<Enum> enums = ns.get_enum_list ();
-		foreach ( Enum en in enums ) {
-			this.enums.add ( en );
-		}
-
-		Gee.Collection<Constant> constants = ns.get_constant_list ();
-		foreach ( Constant c in constants ) {
-			this.constants.add ( c );
-		}
-
-		Gee.Collection<Delegate> delegates = ns.get_delegate_list ();
-		foreach ( Delegate d in delegates ) {
-			this.delegates.add ( d );
-		}
-
-		Gee.Collection<Method> methods = ns.get_method_list ();
-		foreach ( Method m in methods ) {
-			this.methods.add ( m );
-		}
-
-		Gee.Collection<Field> fields = ns.get_field_list ();
-		foreach ( Field f in fields ) {
-			this.fields.add ( f );
-		}
+	public override void write_file ( Valadoc.Package file, void* ptr ) {
 	}
 }
 
@@ -627,7 +528,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 			else
 				name = element.name;
 		}
-		else if ( element is File ) {
+		else if ( element is Package ) {
 			string path = this.get_file_name ( element );
 			name = this.get_package_name ( path );
 		}
@@ -662,7 +563,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 			style = css_navi_class;
 		else if ( element is Interface )
 			style = css_navi_iface;
-		else if ( element is File ) {
+		else if ( element is Package ) {
 			name = this.get_package_name ( element.name );
 			style = css_navi_package;
 		}
@@ -721,7 +622,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		}
 	}
 
-	private void write_navi_file ( GLib.FileStream file, File efile ) {
+	private void write_navi_file ( GLib.FileStream file, Package efile ) {
 		Gee.ArrayList<Namespace> ns_list = new Gee.ArrayList<Namespace> ();
 		this.fetch_subnamespace_names (efile, ns_list );
 
@@ -1132,7 +1033,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		GLib.StringBuilder str = new GLib.StringBuilder ( "" );
 
 		for ( var pos = element; pos != null ; pos = pos.parent ) {
-			if ( pos is File )
+			if ( pos is Package )
 				break;
 
 			str.prepend_unichar ( '/' );
@@ -1181,7 +1082,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		file.printf ( "<img cass=\"%s\" src=\"%s\"/>\n", css_diagram, imgpath );
 	}
 
-	private void write_file_content ( GLib.FileStream file, File f ) {
+	private void write_file_content ( GLib.FileStream file, Package f ) {
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, this.package_name );
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
@@ -1189,172 +1090,29 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	private Gee.ArrayList<File> files = new Gee.ArrayList<File> ();
-
-	public override void visit_file ( File file ) {
+	public override void visit_package ( Package file ) {
 		this.package_name = this.get_package_name ( file.name );
-		this.is_vapi = file.name.has_suffix (".vapi");
-		this.files.add ( file );
+
+		this.is_vapi = file.is_external_package;
+		if ( this.is_vapi )
+			this.files.add ( file );
 
 		string new_path = this.settings.path + this.package_name + "/";
 		bool dir_exists = FileUtils.test ( new_path, FileTest.EXISTS);
 
-		if ( !dir_exists ) {
-			var rt = DirUtils.create ( new_path, 0777 );
-
-			GLib.FileStream sfile = GLib.FileStream.open ( new_path + "index.html", "w" );
-			this.write_file_header ( sfile );
-			this.write_navi_file ( sfile, file );
-			this.write_file_content ( sfile, file );
-			this.write_file_footer ( sfile );
-			sfile = null;
-		}
+		var rt = DirUtils.create ( new_path, 0777 );
+		GLib.FileStream sfile = GLib.FileStream.open ( new_path + "index.html", "w" );
+		this.write_file_header ( sfile );
+		this.write_navi_file ( sfile, file );
+		this.write_file_content ( sfile, file );
+		this.write_file_footer ( sfile );
+		sfile = null;
 
 		this.current_path = new_path;
 		file.visit_namespaces ( this );
 		this.current_path = null;
 	}
 
-
-//	private Gee.ArrayList<Namespace> namespaces = new Gee.ArrayList<Namespace> ();
-//  globale Funktionen
-//  globale Konstante
-//  globale Delegates
-//  globale Felder
-
-	private Gee.ArrayList<NamespaceBundle> namespaces = new Gee.ArrayList<NamespaceBundle> ();
-
-	private void add_namespace_bundle ( Namespace ns ) {
-		if ( ns.parent is Namespace )
-			return ;
-
-		foreach ( NamespaceBundle bundle in this.namespaces ) {
-			if ( bundle.name == ns.name ) {
-				bundle.merge_namespace ( ns );
-				return ;
-			}
-		}
-
-		NamespaceBundle bundle = new NamespaceBundle ( this.current_path, ns.name, ns );
-		this.namespaces.add ( bundle );
-		bundle.merge_namespace ( ns );
-	}
-
-	private void write_navi_namespace_bundle_path_navigation ( NamespaceBundle nsbundle, GLib.FileStream navi, Basic mself ) {
-		this.directory_level++;
-
-		string top_link = this.get_top_link ( (mself == null)? nsbundle.creation_namespace : mself );
-
-		Gee.ArrayList<NamespaceBundle> parents = new Gee.ArrayList<NamespaceBundle> ();
-		for ( NamespaceBundle nsb = nsbundle.parent; nsb != null ; nsb = nsb.parent ) {
-			parents.insert ( 0, nsb );
-		}
-
-		navi.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-		this.write_top_element ( navi, mself );
-
-		navi.printf ( "<ul class=\"%s\">\n", css_navi );
-		this.write_navi_entry_html_template_with_link ( navi, css_navi_package, top_link + this.package_name + "/index.html", this.package_name );
-		navi.puts ( "</ul>\n" );
-		navi.printf ( "<hr class=\"%s\">\n", css_navi_hr );
-
-		int indent = parents.size;
-
-		foreach ( NamespaceBundle nsb in parents ) {
-			string ns_link = "";
-
-			for ( int i = 0; indent > i ; i++ )
-				ns_link += "../";
-
-			ns_link += "index.html";
-
-			navi.printf ( "<ul class=\"%s\">\n", css_navi );
-			this.write_navi_entry_html_template_with_link ( navi, css_navi_namespace, ns_link, (nsb.name == null)? "Global Namespace" : nsb.name );
-			navi.puts ( "</ul>\n" );
-			navi.printf ( "\n<hr class=\"%s\">\n", css_navi_hr );
-		}
-
-		navi.printf ( "<ul class=\"%s\">\n", css_navi );
-		if ( mself.name == nsbundle.name ) {
-			this.write_navi_entry_html_template ( navi, css_navi_namespace, (nsbundle.name == null)? "Global Namespace" : nsbundle.name );
-		}
-		else {
-			this.write_navi_entry_html_template_with_link ( navi, css_navi_namespace, "../index.html", (nsbundle.name == null)? "Global Namespace" : nsbundle.name );
-		}
-		navi.puts ( "</ul>\n" );
-		navi.printf ( "\n<hr class=\"%s\">\n", css_navi_hr );
-
-		navi.printf ( "<ul class=\"%s\">\n", css_navi );
-		foreach ( NamespaceBundle nsb in nsbundle.subnamespaces ) {
-			this.write_navi_entry_html_template_with_link ( navi, css_navi_namespace, nsb.name + "/index.html", (nsb.name == null)? "Global Namespace" : nsb.name );
-		}
-
-		this.write_navi_child_classes_without_childs_collection ( navi, nsbundle.classes, mself );
-		this.write_navi_child_interfaces_without_childs_collection ( navi, nsbundle.interfaces, mself );
-		this.write_navi_child_structs_without_childs_collection ( navi, nsbundle.structs, mself );
-		this.write_navi_child_enums_without_childs_collection ( navi, nsbundle.enums, mself );
-		this.write_navi_child_error_domains_without_childs_collection ( navi, nsbundle.errordomains, mself );
-		this.write_navi_child_delegates_collection ( navi, nsbundle.delegates, mself );
-		this.write_navi_child_methods_collection ( navi, nsbundle.methods, mself );
-		this.write_navi_child_fields_collection ( navi, nsbundle.fields, mself );
-		this.write_navi_child_constants_collection ( navi, nsbundle.constants, mself );
-
-		navi.puts ( "</ul>\n" );
-		navi.puts ( "\t\t\t</div>\n" );
-
-		this.directory_level--;
-	}
-
-	private void write_navi_namespace_bundle ( NamespaceBundle nsbundle, Basic mself ) {
-		this.directory_level++;
-
-		foreach ( NamespaceBundle subnsbundle in nsbundle.subnamespaces ) {
-			this.write_navi_namespace_bundle ( subnsbundle, mself );
-		}
-
-		this.directory_level++;
-		foreach ( Delegate del in nsbundle.delegates ) {
-			GLib.FileStream file = GLib.FileStream.open ( nsbundle.path + del.name + "/index.html", "w" );
-			this.write_file_header ( file );
-			this.write_navi_namespace_bundle_path_navigation ( nsbundle, file, del );
-			this.write_delegate_content ( file, del );
-			this.write_file_footer ( file );
-		}
-		foreach ( Method m in nsbundle.methods ) {
-			GLib.FileStream file = GLib.FileStream.open ( nsbundle.path + m.name + "/index.html", "w" );
-			this.write_file_header ( file );
-			this.write_navi_namespace_bundle_path_navigation ( nsbundle, file, m );
-			this.write_method_content ( file, m, (MethodHandler)m.parent );
-			this.write_file_footer ( file );
-		}
-		foreach ( Field f in nsbundle.fields ) {
-			GLib.FileStream file = GLib.FileStream.open ( nsbundle.path + f.name + "/index.html", "w" );
-			this.write_file_header ( file );
-			this.write_navi_namespace_bundle_path_navigation ( nsbundle, file, f );
-			this.write_field_content ( file, f, (FieldHandler)f.parent );
-			this.write_file_footer ( file );
-		}
-		foreach ( Constant c in nsbundle.constants ) {
-			GLib.FileStream file = GLib.FileStream.open ( nsbundle.path + c.name + "/index.html", "w" );
-			this.write_file_header ( file );
-			this.write_navi_namespace_bundle_path_navigation ( nsbundle, file, c );
-			this.write_constant_content ( file, c, (ConstantHandler)c.parent );
-			this.write_file_footer ( file );
-		}
-		this.directory_level--;
-
-		GLib.FileStream file = GLib.FileStream.open ( nsbundle.path + "index.html", "w" );
-		this.write_file_header ( file );
-		this.write_navi_namespace_bundle_path_navigation ( nsbundle, file, (mself == null)? nsbundle.creation_namespace : mself );
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "<h1 class=\"%s\">%s:</h1>\n", css_title, (nsbundle.name == null)? "Global Namespace" : nsbundle.full_name () );
-		file.printf ( "<hr class=\"%s\" />\n", css_hr );
-		file.printf ( "<h2 class=\"%s\">Description:</h2>\n", css_title );
-		file.puts ( "\t\t\t</div>\n" );
-		this.write_file_footer ( file );
-
-		this.directory_level--;
-	}
 
 	private bool is_depency ( string dep ) {
 		foreach ( string file in this.settings.files ) {
@@ -1364,32 +1122,32 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		return true;
 	}
 
+	private Gee.ArrayList<Namespace> source_namespaces = new Gee.ArrayList<Namespace> ();
+	private Gee.ArrayList<Package> files = new Gee.ArrayList<Package> ();
+
+
 	~HtmlDoclet () {
 		this.directory_level = 1;
-
 		copy_directory ( Config.doclet_path + "deps/", this.settings.path );
-
-		foreach ( NamespaceBundle nsbundle in this.namespaces ) {
-			this.write_navi_namespace_bundle ( nsbundle, null );
-		}
 
 		GLib.FileStream sfile = GLib.FileStream.open ( this.settings.path + "index.html", "w" );
 		string title = ( this.settings.pkg_name == null )? "" : this.settings.pkg_name;
 		this.write_file_header_template ( sfile, title, 0 );
 
-		sfile.printf ( "<h2 class=\"%s\">Namespaces:</h2>\n", css_title );
-		sfile.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-		foreach ( NamespaceBundle nsb in this.namespaces ) {
-			string dir = (nsb.name == null)? "0" : nsb.name;
-			this.write_navi_entry_html_template_with_link ( sfile, css_inline_navigation_namespace,  this.package_name + "/" + dir + "/index.html", (nsb.name == null)? "Global Namespace" : nsb.name );
+		if ( this.source_namespaces.size > 0 ) {
+			sfile.printf ( "<h2 class=\"%s\">Namespaces:</h2>\n", css_title );
+			sfile.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
+			foreach ( Namespace ns in this.source_namespaces ) {
+				string dir = (ns.name == null)? "0" : ns.name;
+				this.write_navi_entry_html_template_with_link ( sfile, css_inline_navigation_namespace, this.get_link(ns, null), (ns.name == null)? "Global Namespace" : ns.full_name () );
+			}		
+			sfile.puts ( "</ul>\n\n" );
 		}
-		sfile.puts ( "</ul>\n\n" );
-
 
 		sfile.printf ( "<h2 class=\"%s\">Depencies:</h2>\n", css_title );
 		sfile.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 
-		foreach ( File file in this.files ) {
+		foreach ( Package file in this.files ) {
 			if ( !this.is_depency ( file.name ) )
 				continue;
 
@@ -1400,9 +1158,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		}
 
 		sfile.puts ( "</ul>\n" );
-
 		this.write_file_footer ( sfile );
-		sfile = null;
 	}
 
 	public void write_namespace_content ( GLib.FileStream file, Namespace ns ) {
@@ -1870,49 +1626,41 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		string path = this.current_path + constant.name + "/";
 
 		var rt = DirUtils.create ( path, 0777 );
-
-		if ( this.is_vapi || constant.parent is Namespace == false ) {
-			this.directory_level++;
-			GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
-			this.write_file_header ( file );
-			this.write_navi_constant ( file, constant );
-			this.write_constant_content ( file, constant, parent );
-			this.write_file_footer ( file );
-			this.directory_level--;
-			file = null;
-		}
+		this.directory_level++;
+		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
+		this.write_file_header ( file );
+		this.write_navi_constant ( file, constant );
+		this.write_constant_content ( file, constant, parent );
+		this.write_file_footer ( file );
+		this.directory_level--;
+		file = null;
 	}
 
 	public override void visit_field ( Field field, FieldHandler parent ) {
 		string path = this.current_path + field.name + "/";
 		var rt = DirUtils.create ( path, 0777 );
-
-		if ( this.is_vapi || field.parent is Namespace == false ) {
-			this.directory_level++;
-			GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
-			this.write_file_header ( file );
-			this.write_navi_field ( file, field );
-			this.write_field_content ( file, field, parent );
-			this.write_file_footer ( file );
-			this.directory_level--;
-			file = null;
-		}
+		this.directory_level++;
+		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
+		this.write_file_header ( file );
+		this.write_navi_field ( file, field );
+		this.write_field_content ( file, field, parent );
+		this.write_file_footer ( file );
+		this.directory_level--;
+		file = null;
 	}
 
 	public override void visit_delegate ( Delegate del ) {
 		string path = this.current_path + del.name + "/";
 		var rt = DirUtils.create ( path, 0777 );
 
-		if ( this.is_vapi || del.parent is Namespace == false ) {
-			this.directory_level++;
-			GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
-			this.write_file_header ( file );
-			this.write_navi_delegate ( file, del );
-			this.write_delegate_content ( file, del );
-			this.write_file_footer ( file );
-			this.directory_level--;
-			file = null;
-		}
+		this.directory_level++;
+		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
+		this.write_file_header ( file );
+		this.write_navi_delegate ( file, del );
+		this.write_delegate_content ( file, del );
+		this.write_file_footer ( file );
+		this.directory_level--;
+		file = null;
 	}
 
 	public override void visit_signal ( Signal sig ) {
@@ -1935,23 +1683,24 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		string path = this.current_path + m.name + "/";
 		var rt = DirUtils.create ( path, 0777 );
 
-		if ( this.is_vapi || m.parent is Namespace == false ) {
-			this.directory_level++;
+		this.directory_level++;
+		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
+		this.write_file_header ( file );
+		this.write_navi_method ( file, m );
+		this.write_method_content ( file, m, parent );
+		this.write_file_footer ( file );
 
-			GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
-			this.write_file_header ( file );
-			this.write_navi_method ( file, m );
-			this.write_method_content ( file, m, parent );
-			this.write_file_footer ( file );
-
-			this.directory_level--;
-			file = null;
-		}
+		this.directory_level--;
+		file = null;
 	}
 
 	public override void visit_namespace ( Namespace ns ) {
 		string old_path = this.current_path;
 		this.directory_level++;
+
+		if ( !this.is_vapi )
+			this.source_namespaces.add ( ns );
+
 
 		if ( ns.name == null ) {
 			string tmp = this.current_path + "0/";
@@ -1962,22 +1711,13 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 			this.current_path = tmp;
 		}
 
-		if ( !this.is_vapi ) {
-			this.add_namespace_bundle ( ns );
-		}
-
-		bool dir_exists = FileUtils.test ( this.current_path, FileTest.EXISTS);
-		if ( !dir_exists ) {
-			var rt = DirUtils.create ( this.current_path, 0777 );
-			if ( this.is_vapi ) {
-				GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w" );
-				this.write_file_header ( file );
-				this.write_navi_namespace ( file, ns );
-				this.write_namespace_content ( file, ns );
-				this.write_file_footer ( file );
-				file = null;
-			}
-		}
+		var rt = DirUtils.create ( this.current_path, 0777 );
+		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w" );
+		this.write_file_header ( file );
+		this.write_navi_namespace ( file, ns );
+		this.write_namespace_content ( file, ns );
+		this.write_file_footer ( file );
+		file = null;
 
 		// file:
 		ns.visit_namespaces ( this );

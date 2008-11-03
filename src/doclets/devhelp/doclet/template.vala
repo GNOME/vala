@@ -462,7 +462,7 @@ public class Valadoc.LangletIndex : Valadoc.Langlet, Valadoc.LinkHelper {
 	public override void write_namespace ( Valadoc.Namespace ns, void* ptr ) {
 	}
 
-	public override void write_file ( Valadoc.File file, void* ptr ) {
+	public override void write_file ( Valadoc.Package file, void* ptr ) {
 	}
 }
 
@@ -542,42 +542,6 @@ public class DevhelpFormat : Object {
 		""
 	};
 
-	private Xml.Node* find_child_node ( Xml.Node* element, string name ) {
-		for ( Xml.Node* pos = element->children; pos != null ; pos = pos->next ) {
-			if ( name == pos->get_prop ( "name" ) ) {
-				return pos;
-			}
-		}
-		return null;
-	}
-
-	private Xml.Node* get_node ( string full_name ) {
-		Xml.Node* cur = this.chapters;
-		string[] path = full_name.split ( "." );
-
-		for ( int i = 0; path[i] != null ; i++ ) {
-			cur = this.find_child_node ( cur, path[i] );
-			if ( cur == null ) {
-				return null;
-			}
-		}
-
-		return null;
-	}
-
-	public void reset ( ) {
-		this.current = this.chapters;
-	}
-
-	public bool jump_to_chapter ( string full_name ) {
-		Xml.Node* node = this.get_node ( full_name );
-		if ( node != null ) {
-			this.current = node;
-			return true;
-		}
-		return false;
-	}
-
 	public void add_chapter_start ( string name, string link ) {
 		this.current = this.current->new_child ( null, "sub" );
 		this.current->new_prop ( "name", name );
@@ -655,10 +619,6 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		return this.settings.get_real_path ( ) + "/" + this.package_dir_name + "/" + "img/" + element.full_name () + ".png";
 	}
 
-	~HtmlDoclet ( ) {
-		this.devhelp.save_file ( this.settings.get_real_path () + "/" + vala_file_package_name + "/" + vala_file_package_name + ".devhelp2" );
-	}
-
 	public Valadoc.Settings settings {
 		construct set;
 		protected get;
@@ -696,48 +656,25 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 	private bool visited_non_package = false;
 
 
-	public override void visit_file ( File file ) {
+	public override void visit_package ( Package file ) {
 		string pkg_name = get_package_name ( file.name );
 		string path = this.settings.get_real_path () + pkg_name + "/";
 		this.package_dir_name = pkg_name;
 
-		if ( file.is_package == true ) {
-			var rt = DirUtils.create ( path, 0777 );
-			rt = DirUtils.create ( path + "img/", 0777 );
-			copy_directory ( Config.doclet_path + "deps/", path );
+		var rt = DirUtils.create ( path, 0777 );
+		rt = DirUtils.create ( path + "img/", 0777 );
+		copy_directory ( Config.doclet_path + "deps/", path );
 
-			DevhelpFormat tmp = this.devhelp;
+		this.devhelp = new DevhelpFormat ( pkg_name, "" );
 
-			this.devhelp = new DevhelpFormat ( pkg_name, "" );
+		GLib.FileStream ifile = GLib.FileStream.open ( path + "index.htm", "w" );
+		this.write_file_header_template ( ifile, pkg_name );
+		this.write_file_footer ( ifile );
+		ifile = null;
 
-			GLib.FileStream ifile = GLib.FileStream.open ( path + "index.htm", "w" );
-			this.write_file_header_template ( ifile, pkg_name );
-			this.write_file_footer ( ifile );
-			ifile = null;
+		file.visit_namespaces ( this );
 
-			file.visit_namespaces ( this );
-
-			this.devhelp.save_file ( path + pkg_name + ".devhelp2" );
-			this.devhelp = tmp;
-		}
-		else {
-			if ( !visited_non_package ) {
-				this.vala_file_package_name = pkg_name;
-				var rt = DirUtils.create ( path, 0777 );
-				rt = DirUtils.create ( path + "img/", 0777 );
-				copy_directory ( Config.doclet_path + "deps/", path );
-				this.devhelp.reset ( );
-			}
-
-			GLib.FileStream ifile = GLib.FileStream.open ( path + "index.htm", "w" );
-			this.write_file_header_template ( ifile, pkg_name );
-			this.write_file_footer ( ifile );
-			ifile = null;
-
-			file.visit_namespaces ( this );
-
-			this.visited_non_package = true;
-		}
+		this.devhelp.save_file ( path + pkg_name + ".devhelp2" );
 	}
 
 	public void write_namespace_content ( GLib.FileStream file, Namespace ns ) {
@@ -751,25 +688,15 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet, Valadoc.LinkHelper {
 		string rpath = this.get_real_path ( ns );
 		string path = this.get_path ( ns );
 
-		bool file_exists = FileUtils.test ( rpath, FileTest.EXISTS);
-		if ( !file_exists ) {
-			GLib.FileStream file = GLib.FileStream.open ( rpath, "w" );
-			this.write_file_header_template ( file, ns.full_name() );
-			this.write_namespace_content ( file, ns );
-			this.write_file_footer ( file );
-			file = null;
+		GLib.FileStream file = GLib.FileStream.open ( rpath, "w" );
+		this.write_file_header_template ( file, ns.full_name() );
+		this.write_namespace_content ( file, ns );
+		this.write_file_footer ( file );
+		file = null;
 
-			if ( ns.name != null ) {
-				this.devhelp.add_keyword ( KeywordType.NAMESPACE, ns.name, path );
-				this.devhelp.add_chapter_start ( ns.name, path );
-			}
-		}
-		else {
-			bool available = this.devhelp.jump_to_chapter ( ns.full_name () );
-			if ( available == false ) {
-				this.devhelp.add_keyword ( KeywordType.NAMESPACE, ns.name, path );
-				this.devhelp.add_chapter_start ( ns.name, path );
-			}
+		if ( ns.name != null ) {
+			this.devhelp.add_keyword ( KeywordType.NAMESPACE, ns.name, path );
+			this.devhelp.add_chapter_start ( ns.name, path );
 		}
 
 		// file:

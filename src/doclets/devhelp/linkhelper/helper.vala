@@ -119,7 +119,7 @@ public interface Valadoc.LinkHelper : Object {
 		Valadoc.Basic pos = tag;
 
 		while ( pos != null ) {
-			if ( pos is Valadoc.File )
+			if ( pos is Valadoc.Package )
 				return pos.name;
 
 			pos = pos.parent;

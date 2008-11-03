@@ -117,7 +117,7 @@ public interface Valadoc.LinkHelper : Object {
 		Valadoc.Basic pos = tag;
 
 		while ( pos != null ) {
-			if ( pos is Valadoc.File )
+			if ( pos is Valadoc.Package )
 				return pos.name;
 
 			pos = pos.parent;
@@ -132,7 +132,7 @@ public interface Valadoc.LinkHelper : Object {
 		GLib.StringBuilder str = new GLib.StringBuilder ( "" );
 		Valadoc.Basic pos = tag;
 
-		if ( tag is Valadoc.File == false ) {
+		if ( tag is Valadoc.Package == false ) {
 			if ( tag is Valadoc.EnumValue || tag is Valadoc.ErrorCode ) {
 				str.append_unichar ( '#' );
 				str.append ( tag.name );
@@ -147,7 +147,7 @@ public interface Valadoc.LinkHelper : Object {
 
 				str.prepend ( "::" );
 
-				if ( pos.parent is Valadoc.File )
+				if ( pos.parent is Valadoc.Package )
 					break;
 
 				pos = pos.parent;

@@ -139,7 +139,7 @@ public class Valadoc.Basic : Object {
 			this._full_name = this.name;
 			Basic pos = this.parent;
 
-			while ( pos is File == false ) {
+			while ( pos is Package == false ) {
 				if ( pos.name != null )
 					this._full_name = pos.name + "." + this._full_name;
 
@@ -248,7 +248,7 @@ public class Valadoc.Basic : Object {
 		get {
 			Basic element = this;
 			while ( element != null ) {
-				if ( element is File )
+				if ( element is Package )
 					return element.name;
 
 				element = element.parent;
@@ -258,15 +258,15 @@ public class Valadoc.Basic : Object {
 	}
 
 	// construct set -> creation method
-	public File? file {
+	public Package? file {
 		get {
 			Valadoc.Basic ast = this;
-			while ( ast is Valadoc.File == false ) {
+			while ( ast is Valadoc.Package == false ) {
 				ast = ast.parent;
 				if ( ast == null )
 					return null;
 			}
-			return (Valadoc.File)ast;
+			return (Valadoc.Package)ast;
 		}
 	}
 
@@ -4186,35 +4186,41 @@ public class Valadoc.Namespace : Basic, MethodHandler, FieldHandler, NamespaceHa
 	}
 }
 
-public class Valadoc.File : Basic, NamespaceHandler {
+// rename to Package
+public class Valadoc.Package : Basic, NamespaceHandler {
 	public Gee.ArrayList<Namespace> namespaces {
 		default = new Gee.ArrayList<Namespace>();
 		private set;
 		private get;
 	}
 
-	public bool is_package {
-		get {
-			return this.vfile.external_package;
-		}
+	public bool is_external_package {
+		 private set;
+		 get;
 	}
 
-	public File ( Valadoc.Settings settings, Vala.SourceFile vfile, Tree head ) {
+	public Package ( Valadoc.Settings settings, Vala.SourceFile vfile, Tree head ) {
 		this.settings = settings;
-		this.vfile = vfile;
 		this.head = head;
+
+		this.package_name = vfile.filename;
+		this.is_external_package = !( this.package_name.has_suffix ( ".vala" ) || this.package_name.has_suffix ( ".gs" ) );
 	}
+
+	private string package_name;
 
 	public override string?# name {
 		get {
-			return this.vfile.filename;
+			return package_name;
 		}
 	}
 
+/*
 	public Vala.SourceFile vfile {
 		construct set;
 		private get;
 	}
+*/
 
 	// internal
 	public override weak Basic? search_element ( string[] params, int pos ) {
@@ -4237,15 +4243,23 @@ public class Valadoc.File : Basic, NamespaceHandler {
 	}
 
 	// internal
-	public bool is_file ( Vala.SourceFile vfile ) {
-		return ( vfile == this.vfile );
+	public bool is_package ( Vala.SourceFile vfile ) {
+		bool vheader = !( vfile.filename.has_suffix ( ".vala" ) || vfile.filename.has_suffix ( ".gs" ) );
+		if ( vheader == false && this.is_external_package == false ) {
+			return true;
+		}
+		else if ( vheader == true && this.is_external_package == true ) {
+			if ( vfile.filename == this.package_name )
+				return true;
+		}
+		return false;
 	}
 
 	public void visit ( Doclet doclet ) {
 		if ( !settings.to_doc ( this.name ) )
 			return ;
 
-		doclet.visit_file ( this );
+		doclet.visit_package ( this );
 	}
 
 	// internal
@@ -4271,7 +4285,7 @@ public class Valadoc.File : Basic, NamespaceHandler {
 
 
 public class Valadoc.Tree : Vala.CodeVisitor {
-	private Gee.ArrayList<File> files = new Gee.ArrayList<File>();
+	private Gee.ArrayList<Package> files = new Gee.ArrayList<Package>();
 
 	public Valadoc.Settings settings {
 		construct set;
@@ -4289,7 +4303,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	}
 
 	public void visit ( Doclet doclet ) {
-		foreach ( File file in this.files ) {
+		foreach ( Package file in this.files ) {
 			file.visit ( doclet );
 		}
 	}
@@ -4338,7 +4352,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			global_params[i+1] = params[i];
 		}
 
-		foreach ( File f in this.files ) {
+		foreach ( Package f in this.files ) {
 			Basic element = f.search_element ( global_params, 0 );
 			if ( element != null )
 				return element;
@@ -4347,7 +4361,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	}
 
 	private weak Basic? search_symbol_in_namespaces ( Basic element, string[] params ) {
-		foreach ( File f in this.files ) {
+		foreach ( Package f in this.files ) {
 			Basic element = f.search_element ( params, 0 );
 			if ( element != null )
 				return element;
@@ -4395,7 +4409,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = vcl.source_reference.file;
-		File file = this.get_file ( vfile );
+		Package file = this.get_file ( vfile );
 		Namespace ns = file.get_namespace ( vcl );
 		ns.add_class ( vcl );
 	}
@@ -4405,7 +4419,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = viface.source_reference.file;
-		File file = this.get_file ( vfile );
+		Package file = this.get_file ( vfile );
 		Namespace ns = file.get_namespace ( viface );
 		ns.add_interface ( viface );
 	}
@@ -4415,7 +4429,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = vstru.source_reference.file;
-		File file = this.get_file ( vfile );
+		Package file = this.get_file ( vfile );
 		Namespace ns = file.get_namespace ( vstru );
 		ns.add_struct ( vstru );
 	}
@@ -4425,7 +4439,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = vf.source_reference.file;
-		File file = this.get_file ( vfile );
+		Package file = this.get_file ( vfile );
 		Namespace ns = file.get_namespace ( vf );
 		ns.add_field ( vf );
 	}
@@ -4435,7 +4449,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = vm.source_reference.file;
-		File file = this.get_file ( vfile );
+		Package file = this.get_file ( vfile );
 		Namespace ns = file.get_namespace ( vm );
 		ns.add_method ( vm );
 	}
@@ -4445,7 +4459,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = vd.source_reference.file;
-		File file = this.get_file ( vfile );
+		Package file = this.get_file ( vfile );
 		Namespace ns = file.get_namespace ( vd );
 		ns.add_delegate ( vd );
 	}
@@ -4455,7 +4469,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = venum.source_reference.file;
-		File file = this.get_file ( vfile );
+		Package file = this.get_file ( vfile );
 		Namespace ns = file.get_namespace ( venum );
 		ns.add_enum ( venum );
 	}
@@ -4465,7 +4479,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = vc.source_reference.file;
-		File file = this.get_file ( vfile );
+		Package file = this.get_file ( vfile );
 		Namespace ns = file.get_namespace ( vc );
 		ns.add_constant ( vc );
 	}
@@ -4475,7 +4489,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = verrdom.source_reference.file;
-		File file = this.get_file ( vfile );
+		Package file = this.get_file ( vfile );
 		Namespace ns = file.get_namespace ( verrdom );
 		ns.add_error_domain ( verrdom );
 	}
@@ -4487,28 +4501,28 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	}
 
 	// internal
-	public File? find_file ( Vala.SourceFile vfile ) {
-		foreach ( File f in this.files ) {
-			if ( f.is_file( vfile ) )
+	public Package? find_file ( Vala.SourceFile vfile ) {
+		foreach ( Package f in this.files ) {
+			if ( f.is_package( vfile ) )
 				return f;
 		}
 		return null;
 	}
 
 	private void set_type_references ( ) {
-		foreach ( File f in this.files ) {
+		foreach ( Package f in this.files ) {
 			f.set_type_references( );
 		}
 	}
 
 	private void inheritance ( ) {
-		foreach ( File f in this.files ) {
+		foreach ( Package f in this.files ) {
 			f.inheritance( );
 		}
 	}
 
 	public void parse_comments ( Valadoc.Parser docparser ) {
-		foreach ( File f in this.files ) {
+		foreach ( Package f in this.files ) {
 			f.parse_comments( docparser );
 		}
 	}
@@ -4536,18 +4550,18 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		}
 
 		Vala.SourceFile vfile = vnode.source_reference.file;
-		File file = this.get_file ( vfile );
+		Package file = this.get_file ( vfile );
 
 		return file.search_element_vala ( params, 0 );
 	}
 
 	// internal
-	public File get_file ( Vala.SourceFile vfile ) {
-		File file = this.find_file( vfile );
+	public Package get_file ( Vala.SourceFile vfile ) {
+		Package file = this.find_file( vfile );
 		if ( file != null )
 			return file;
 
-		var tmp = new File ( this.settings,vfile, this ); 
+		var tmp = new Package ( this.settings,vfile, this ); 
 		this.files.add ( tmp );
 		return tmp;
 	}
