@@ -26,7 +26,7 @@ using Gee;
 /**
  * The link between a dynamic property and generated code.
  */
-public class Vala.CCodeDynamicPropertyModule : CCodeModule {
+public class Vala.CCodeDynamicPropertyModule : CCodeArrayModule {
 	int dynamic_property_id;
 
 	public CCodeDynamicPropertyModule (CCodeGenerator codegen, CCodeModule? next) {

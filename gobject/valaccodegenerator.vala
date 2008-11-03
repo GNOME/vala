@@ -143,6 +143,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public Set<string> wrappers;
 
 	public CCodeGenerator () {
+		/* included by inheritance
 		head = new CCodeBaseModule (this, head);
 		head = new CCodeStructModule (this, head);
 		head = new CCodeMethodModule (this, head);
@@ -157,6 +158,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head = new GSignalModule (this, head);
 		head = new GAsyncModule (this, head);
 		head = new DBusClientModule (this, head);
+		*/
 		head = new DBusServerModule (this, head);
 
 		predefined_marshal_set = new HashSet<string> (str_hash, str_equal);

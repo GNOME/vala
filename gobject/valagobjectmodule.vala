@@ -23,7 +23,7 @@
 
 using GLib;
 
-public class Vala.GObjectModule : CCodeModule {
+public class Vala.GObjectModule : GTypeModule {
 	public GObjectModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}

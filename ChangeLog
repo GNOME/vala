@@ -1,5 +1,25 @@
 2008-11-03  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodearraymodule.vala:
+	* gobject/valaccodeassignmentmodule.vala:
+	* gobject/valaccodedynamicpropertymodule.vala:
+	* gobject/valaccodedynamicsignalmodule.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinvocationexpressionmodule.vala:
+	* gobject/valaccodememberaccessmodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+	* gobject/valaccodestructmodule.vala:
+	* gobject/valadbusclientmodule.vala:
+	* gobject/valadbusservermodule.vala:
+	* gobject/valagasyncmodule.vala:
+	* gobject/valagobjectmodule.vala:
+	* gobject/valagsignalmodule.vala:
+	* gobject/valagtypemodule.vala:
+
+	Combine internal modules by inheritance to improve performance
+
+2008-11-03  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/Makefile.am:
 	* gobject/valaccodegenerator.vala:
 	* gobject/valaccodemethodmodule.vala:

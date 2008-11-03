@@ -24,7 +24,7 @@
 using GLib;
 using Gee;
 
-public class Vala.CCodeInvocationExpressionModule : CCodeModule {
+public class Vala.CCodeInvocationExpressionModule : CCodeAssignmentModule {
 	public CCodeInvocationExpressionModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}
