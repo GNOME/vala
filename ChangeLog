@@ -1,6 +1,17 @@
 2008-11-03  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/Makefile.am:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valagobjectclassmodule.vala:
+	* gobject/valagobjectmodule.vala:
+	* gobject/valagobjectsignalmodule.vala:
+
+	Move parameter handling to GObjectClassModule and signal handling
+	to GObjectSignalModule
+
+2008-11-03  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/Makefile.am:
 	* gobject/valaccodearraymodule.vala:
 	* gobject/valaccodeelementaccessmodule.vala:
 	* gobject/valaccodegenerator.vala:

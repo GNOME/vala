@@ -322,5 +322,61 @@ public class Vala.GObjectSignalModule : CCodeModule {
 		codegen.source_signal_marshaller_definition.append (signal_marshaller);
 		codegen.user_marshal_set.add (signature);
 	}
+
+	public override CCodeFunctionCall get_signal_creation (Signal sig, TypeSymbol type) {	
+		var csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
+		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (sig.get_cname ())));
+		csignew.add_argument (new CCodeIdentifier (type.get_type_id ()));
+		csignew.add_argument (new CCodeConstant ("G_SIGNAL_RUN_LAST"));
+		csignew.add_argument (new CCodeConstant ("0"));
+		csignew.add_argument (new CCodeConstant ("NULL"));
+		csignew.add_argument (new CCodeConstant ("NULL"));
+
+		string marshaller = head.get_marshaller_function (sig.get_parameters (), sig.return_type);
+
+		var marshal_arg = new CCodeIdentifier (marshaller);
+		csignew.add_argument (marshal_arg);
+
+		var params = sig.get_parameters ();
+		if (sig.return_type is PointerType || sig.return_type.type_parameter != null) {
+			csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
+		} else if (sig.return_type is ErrorType) {
+			csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
+		} else if (sig.return_type.data_type == null) {
+			csignew.add_argument (new CCodeConstant ("G_TYPE_NONE"));
+		} else {
+			csignew.add_argument (new CCodeConstant (sig.return_type.data_type.get_type_id ()));
+		}
+
+		int params_len = 0;
+		foreach (FormalParameter param in params) {
+			params_len++;
+			if (param.parameter_type.is_array ()) {
+				params_len++;
+			}
+		}
+
+		csignew.add_argument (new CCodeConstant ("%d".printf (params_len)));
+		foreach (FormalParameter param in params) {
+			if (param.parameter_type.is_array ()) {
+				if (((ArrayType) param.parameter_type).element_type.data_type == codegen.string_type.data_type) {
+					csignew.add_argument (new CCodeConstant ("G_TYPE_STRV"));
+				} else {
+					csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
+				}
+				csignew.add_argument (new CCodeConstant ("G_TYPE_INT"));
+			} else if (param.parameter_type is PointerType || param.parameter_type.type_parameter != null || param.direction != ParameterDirection.IN) {
+				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
+			} else if (param.parameter_type is ErrorType) {
+				csignew.add_argument (new CCodeConstant ("G_TYPE_POINTER"));
+			} else {
+				csignew.add_argument (new CCodeConstant (param.parameter_type.data_type.get_type_id ()));
+			}
+		}
+
+		marshal_arg.name = marshaller;
+
+		return csignew;
+	}
 }
 

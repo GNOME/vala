@@ -1278,6 +1278,180 @@ public class Vala.GObjectClassModule : CCodeModule {
 		return new CCodeExpressionStatement (cwarn);
 	}
 
+	public override CCodeFunctionCall get_param_spec (Property prop) {
+		var cspec = new CCodeFunctionCall ();
+		cspec.add_argument (prop.get_canonical_cconstant ());
+		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.nick)));
+		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.blurb)));
 
+
+		if ((prop.property_type.data_type is Class && !(((Class) prop.property_type.data_type).is_compact)) || prop.property_type.data_type is Interface) {
+			string param_spec_name = prop.property_type.data_type.get_param_spec_function ();
+			if (param_spec_name == null) {
+				cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
+			} else {
+				cspec.call = new CCodeIdentifier ( param_spec_name );
+				cspec.add_argument (new CCodeIdentifier (prop.property_type.data_type.get_type_id ()));
+			}
+		} else if (prop.property_type.data_type == codegen.string_type.data_type) {
+			cspec.call = new CCodeIdentifier ("g_param_spec_string");
+			cspec.add_argument (new CCodeConstant ("NULL"));
+		} else if (prop.property_type.data_type is Enum) {
+			var e = prop.property_type.data_type as Enum;
+			if (e.has_type_id) {
+				if (e.is_flags) {
+					cspec.call = new CCodeIdentifier ("g_param_spec_flags");
+				} else {
+					cspec.call = new CCodeIdentifier ("g_param_spec_enum");
+				}
+				cspec.add_argument (new CCodeIdentifier (e.get_type_id ()));
+			} else {
+				if (e.is_flags) {
+					cspec.call = new CCodeIdentifier ("g_param_spec_uint");
+					cspec.add_argument (new CCodeConstant ("0"));
+					cspec.add_argument (new CCodeConstant ("G_MAXUINT"));
+				} else {
+					cspec.call = new CCodeIdentifier ("g_param_spec_int");
+					cspec.add_argument (new CCodeConstant ("G_MININT"));
+					cspec.add_argument (new CCodeConstant ("G_MAXINT"));
+				}
+			}
+
+			if (prop.default_expression != null) {
+				cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+			} else {
+				cspec.add_argument (new CCodeConstant (prop.property_type.data_type.get_default_value ()));
+			}
+		} else if (prop.property_type.data_type is Struct) {
+			var st = (Struct) prop.property_type.data_type;
+			if (st.get_type_id () == "G_TYPE_INT") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_int");
+				cspec.add_argument (new CCodeConstant ("G_MININT"));
+				cspec.add_argument (new CCodeConstant ("G_MAXINT"));
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("0"));
+				}
+			} else if (st.get_type_id () == "G_TYPE_UINT") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_uint");
+				cspec.add_argument (new CCodeConstant ("0"));
+				cspec.add_argument (new CCodeConstant ("G_MAXUINT"));
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("0U"));
+				}
+			} else if (st.get_type_id () == "G_TYPE_INT64") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_int64");
+				cspec.add_argument (new CCodeConstant ("G_MININT64"));
+				cspec.add_argument (new CCodeConstant ("G_MAXINT64"));
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("0"));
+				}
+			} else if (st.get_type_id () == "G_TYPE_UINT64") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_uint64");
+				cspec.add_argument (new CCodeConstant ("0"));
+				cspec.add_argument (new CCodeConstant ("G_MAXUINT64"));
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("0U"));
+				}
+			} else if (st.get_type_id () == "G_TYPE_LONG") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_long");
+				cspec.add_argument (new CCodeConstant ("G_MINLONG"));
+				cspec.add_argument (new CCodeConstant ("G_MAXLONG"));
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("0L"));
+				}
+			} else if (st.get_type_id () == "G_TYPE_ULONG") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_ulong");
+				cspec.add_argument (new CCodeConstant ("0"));
+				cspec.add_argument (new CCodeConstant ("G_MAXULONG"));
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("0UL"));
+				}
+			} else if (st.get_type_id () == "G_TYPE_BOOLEAN") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_boolean");
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("FALSE"));
+				}
+			} else if (st.get_type_id () == "G_TYPE_CHAR") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_char");
+				cspec.add_argument (new CCodeConstant ("G_MININT8"));
+				cspec.add_argument (new CCodeConstant ("G_MAXINT8"));
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("0"));
+				}
+			} else if (st.get_type_id () == "G_TYPE_UCHAR") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_uchar");
+				cspec.add_argument (new CCodeConstant ("0"));
+				cspec.add_argument (new CCodeConstant ("G_MAXUINT8"));
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("0"));
+				}
+			}else if (st.get_type_id () == "G_TYPE_FLOAT") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_float");
+				cspec.add_argument (new CCodeConstant ("-G_MAXFLOAT"));
+				cspec.add_argument (new CCodeConstant ("G_MAXFLOAT"));
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("0.0F"));
+				}
+			} else if (st.get_type_id () == "G_TYPE_DOUBLE") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_double");
+				cspec.add_argument (new CCodeConstant ("-G_MAXDOUBLE"));
+				cspec.add_argument (new CCodeConstant ("G_MAXDOUBLE"));
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("0.0"));
+				}
+			} else if (st.get_type_id () == "G_TYPE_GTYPE") {
+				cspec.call = new CCodeIdentifier ("g_param_spec_gtype");
+				if (prop.default_expression != null) {
+					cspec.add_argument ((CCodeExpression) prop.default_expression.ccodenode);
+				} else {
+					cspec.add_argument (new CCodeConstant ("G_TYPE_NONE"));
+				}
+			} else {
+				cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
+			}
+		} else {
+			cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
+		}
+		
+		var pflags = "G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB";
+		if (prop.get_accessor != null) {
+			pflags = "%s%s".printf (pflags, " | G_PARAM_READABLE");
+		}
+		if (prop.set_accessor != null) {
+			pflags = "%s%s".printf (pflags, " | G_PARAM_WRITABLE");
+			if (prop.set_accessor.construction) {
+				if (prop.set_accessor.writable) {
+					pflags = "%s%s".printf (pflags, " | G_PARAM_CONSTRUCT");
+				} else {
+					pflags = "%s%s".printf (pflags, " | G_PARAM_CONSTRUCT_ONLY");
+				}
+			}
+		}
+		cspec.add_argument (new CCodeConstant (pflags));
+
+		return cspec;
+	}
 }
 

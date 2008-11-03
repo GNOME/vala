@@ -30,7 +30,6 @@ libvala_la_VALASOURCES = \
 	valagirwriter.vala \
 	valagobjectclassmodule.vala \
 	valagobjectinterfacemodule.vala \
-	valagobjectmodule.vala \
 	valagobjectsignalmodule.vala \
 	valainterfaceregisterfunction.vala \
 	valatyperegisterfunction.vala \
