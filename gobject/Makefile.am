@@ -18,7 +18,6 @@ libvala_la_VALASOURCES = \
 	valaccodecompiler.vala \
 	valaccodedynamicpropertymodule.vala \
 	valaccodedynamicsignalmodule.vala \
-	valaccodeelementaccessmodule.vala \
 	valaccodegenerator.vala \
 	valaccodeinvocationexpressionmodule.vala \
 	valaccodememberaccessmodule.vala \

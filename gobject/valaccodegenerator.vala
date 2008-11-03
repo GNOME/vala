@@ -147,7 +147,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head = new CCodeStructModule (this, head);
 		head = new CCodeMethodModule (this, head);
 		head = new CCodeMemberAccessModule (this, head);
-		head = new CCodeElementAccessModule (this, head);
 		head = new CCodeAssignmentModule (this, head);
 		head = new CCodeInvocationExpressionModule (this, head);
 		head = new CCodeArrayModule (this, head);
