@@ -2150,7 +2150,7 @@ namespace GLib {
 		[CCode (cname = "fgetc")]
 		public int getc ();
 		[CCode (cname = "fgets", instance_pos = -1)]
-		public weak string gets (string s, int size);
+		public weak string gets (char[] s);
 		[CCode (cname = "feof")]
 		public bool eof ();
 		[CCode (cname = "fscanf")]

@@ -1,3 +1,9 @@
+2008-11-03  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
+	Fix fgets binding
+
 2008-11-03  Ali Sabil  <ali.sabil@gmail.com>
 
 	* vapi/packages/loudmouth-1.0/loudmouth-1.0.metadata:
