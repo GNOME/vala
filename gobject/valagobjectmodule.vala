@@ -1,4 +1,4 @@
-/* valagobjectclassmodule.vala
+/* valagobjectmodule.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -23,8 +23,8 @@
 
 using GLib;
 
-public class Vala.GObjectClassModule : CCodeModule {
-	public GObjectClassModule (CCodeGenerator codegen, CCodeModule? next) {
+public class Vala.GObjectModule : CCodeModule {
+	public GObjectModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}
 

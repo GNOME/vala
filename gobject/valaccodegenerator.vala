@@ -152,9 +152,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head = new CCodeArrayModule (this, head);
 		head = new CCodeDynamicPropertyModule (this, head);
 		head = new CCodeDynamicSignalModule (this, head);
-		head = new GObjectClassModule (this, head);
-		head = new GObjectInterfaceModule (this, head);
-		head = new GObjectSignalModule (this, head);
+		head = new GTypeModule (this, head);
+		head = new GObjectModule (this, head);
+		head = new GSignalModule (this, head);
 		head = new DBusClientModule (this, head);
 		head = new DBusServerModule (this, head);
 

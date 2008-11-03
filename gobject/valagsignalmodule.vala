@@ -1,4 +1,4 @@
-/* valagobjectsignalmodule.vala
+/* valagsignalmodule.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -23,8 +23,8 @@
 
 using GLib;
 
-public class Vala.GObjectSignalModule : CCodeModule {
-	public GObjectSignalModule (CCodeGenerator codegen, CCodeModule? next) {
+public class Vala.GSignalModule : CCodeModule {
+	public GSignalModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}
 
