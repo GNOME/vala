@@ -29,21 +29,21 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 	}
 
 	public override void visit_struct (Struct st) {
-		var old_type_symbol = codegen.current_type_symbol;
-		var old_instance_struct = codegen.instance_struct;
-		var old_instance_finalize_fragment = codegen.instance_finalize_fragment;
-		codegen.current_type_symbol = st;
-		codegen.instance_struct = new CCodeStruct ("_%s".printf (st.get_cname ()));
-		codegen.instance_finalize_fragment = new CCodeFragment ();
+		var old_type_symbol = current_type_symbol;
+		var old_instance_struct = instance_struct;
+		var old_instance_finalize_fragment = instance_finalize_fragment;
+		current_type_symbol = st;
+		instance_struct = new CCodeStruct ("_%s".printf (st.get_cname ()));
+		instance_finalize_fragment = new CCodeFragment ();
 
 		CCodeFragment decl_frag;
 		CCodeFragment def_frag;
 		if (st.access != SymbolAccessibility.PRIVATE) {
-			decl_frag = codegen.header_type_declaration;
-			def_frag = codegen.header_type_definition;
+			decl_frag = header_type_declaration;
+			def_frag = header_type_definition;
 		} else {
-			decl_frag = codegen.source_type_declaration;
-			def_frag = codegen.source_type_definition;
+			decl_frag = source_type_declaration;
+			def_frag = source_type_definition;
 		}
 
 		if (st.source_reference.file.cycle == null) {
@@ -53,7 +53,7 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 		if (st.source_reference.comment != null) {
 			def_frag.append (new CCodeComment (st.source_reference.comment));
 		}
-		def_frag.append (codegen.instance_struct);
+		def_frag.append (instance_struct);
 
 		st.accept_children (codegen);
 
@@ -62,9 +62,9 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 			add_struct_destroy_function (st);
 		}
 
-		codegen.current_type_symbol = old_type_symbol;
-		codegen.instance_struct = old_instance_struct;
-		codegen.instance_finalize_fragment = old_instance_finalize_fragment;
+		current_type_symbol = old_type_symbol;
+		instance_struct = old_instance_struct;
+		instance_finalize_fragment = old_instance_finalize_fragment;
 	}
 
 	void add_struct_copy_function (Struct st) {
@@ -77,16 +77,16 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 		function.add_parameter (new CCodeFormalParameter ("dest", st.get_cname () + "*"));
 
 		if (st.access != SymbolAccessibility.PRIVATE) {
-			codegen.header_type_member_declaration.append (function.copy ());
+			header_type_member_declaration.append (function.copy ());
 		} else {
-			codegen.source_type_member_declaration.append (function.copy ());
+			source_type_member_declaration.append (function.copy ());
 		}
 
 		var cblock = new CCodeBlock ();
 
 		function.block = cblock;
 
-		codegen.source_type_member_definition.append (function);
+		source_type_member_definition.append (function);
 	}
 
 	void add_struct_destroy_function (Struct st) {
@@ -98,18 +98,18 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
 
 		if (st.access != SymbolAccessibility.PRIVATE) {
-			codegen.header_type_member_declaration.append (function.copy ());
+			header_type_member_declaration.append (function.copy ());
 		} else {
-			codegen.source_type_member_declaration.append (function.copy ());
+			source_type_member_declaration.append (function.copy ());
 		}
 
 		var cblock = new CCodeBlock ();
 
-		cblock.add_statement (codegen.instance_finalize_fragment);
+		cblock.add_statement (instance_finalize_fragment);
 
 		function.block = cblock;
 
-		codegen.source_type_member_definition.append (function);
+		source_type_member_definition.append (function);
 	}
 }
 

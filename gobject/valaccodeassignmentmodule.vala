@@ -37,14 +37,14 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 		var prop = (Property) assignment.left.symbol_reference;
 
-		if (prop.set_accessor.construction && codegen.current_type_symbol is Class && codegen.current_class.is_subtype_of (codegen.gobject_type) && codegen.in_creation_method) {
+		if (prop.set_accessor.construction && current_type_symbol is Class && current_class.is_subtype_of (gobject_type) && in_creation_method) {
 			return head.get_construct_property_assignment (prop.get_canonical_cconstant (), prop.property_type, (CCodeExpression) assignment.right.ccodenode);
 		} else {
 			CCodeExpression cexpr = (CCodeExpression) assignment.right.ccodenode;
 
 			if (!prop.no_accessor_method) {
 				if (prop.property_type.is_real_struct_type ()) {
-					cexpr = codegen.get_address_of_expression (assignment.right, cexpr);
+					cexpr = get_address_of_expression (assignment.right, cexpr);
 				}
 			}
 
@@ -71,16 +71,16 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				} else if (assignment.operator == AssignmentOperator.SHIFT_RIGHT) {
 					cop = CCodeBinaryOperator.SHIFT_RIGHT;
 				}
-				cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) codegen.get_ccodenode (assignment.left), new CCodeParenthesizedExpression (cexpr));
+				cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) get_ccodenode (assignment.left), new CCodeParenthesizedExpression (cexpr));
 			}
 			
-			var ccall = codegen.get_property_set_call (prop, ma, cexpr);
+			var ccall = get_property_set_call (prop, ma, cexpr);
 			
 			// assignments are expressions, so return the current property value, except if we're sure that it can't be used
 			if (!(assignment.parent_node is ExpressionStatement)) {
 				var ccomma = new CCodeCommaExpression ();
 				ccomma.append_expression (ccall); // update property
-				ccomma.append_expression ((CCodeExpression) codegen.get_ccodenode (ma)); // current property value
+				ccomma.append_expression ((CCodeExpression) get_ccodenode (ma)); // current property value
 				
 				return ccomma;
 			} else {
@@ -139,7 +139,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			ma = (MemberAccess) assignment.left;
 		}
 		if (ma.inner != null) {
-			ccall.add_argument ((CCodeExpression) codegen.get_ccodenode (ma.inner));
+			ccall.add_argument ((CCodeExpression) get_ccodenode (ma.inner));
 		} else {
 			ccall.add_argument (new CCodeIdentifier ("self"));
 		}
@@ -166,8 +166,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 			// get signal id
 			var ccomma = new CCodeCommaExpression ();
-			var temp_decl = codegen.get_temp_variable (codegen.uint_type);
-			codegen.temp_vars.insert (0, temp_decl);
+			var temp_decl = get_temp_variable (uint_type);
+			temp_vars.insert (0, temp_decl);
 			var parse_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_parse_name"));
 			parse_call.add_argument (sig.get_canonical_cconstant (signal_detail));
 			var decl_type = (TypeSymbol) sig.parent_symbol;
@@ -176,8 +176,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			if (signal_detail == null) {
 				parse_call.add_argument (new CCodeConstant ("NULL"));
 			} else {
-				var detail_temp_decl = codegen.get_temp_variable (codegen.gquark_type);
-				codegen.temp_vars.insert (0, detail_temp_decl);
+				var detail_temp_decl = get_temp_variable (gquark_type);
+				temp_vars.insert (0, detail_temp_decl);
 				parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (detail_temp_decl.name)));
 			}
 			parse_call.add_argument (new CCodeConstant ("FALSE"));
@@ -238,17 +238,17 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		Iterator<Expression> indices_it = indices.iterator ();
 		indices_it.next ();
 
-		var ccontainer = (CCodeExpression) codegen.get_ccodenode (expr.container);
-		var cindex = (CCodeExpression) codegen.get_ccodenode (indices_it.get ());
+		var ccontainer = (CCodeExpression) get_ccodenode (expr.container);
+		var cindex = (CCodeExpression) get_ccodenode (indices_it.get ());
 
-		if (container_type != null && codegen.list_type != null && codegen.map_type != null &&
-		    (container_type.is_subtype_of (codegen.list_type) || container_type.is_subtype_of (codegen.map_type))) {
+		if (container_type != null && list_type != null && map_type != null &&
+		    (container_type.is_subtype_of (list_type) || container_type.is_subtype_of (map_type))) {
 			// lookup symbol in interface instead of class as implemented interface methods are not in VAPI files
 			TypeSymbol collection_iface = null;
-			if (container_type.is_subtype_of (codegen.list_type)) {
-				collection_iface = codegen.list_type;
-			} else if (container_type.is_subtype_of (codegen.map_type)) {
-				collection_iface = codegen.map_type;
+			if (container_type.is_subtype_of (list_type)) {
+				collection_iface = list_type;
+			} else if (container_type.is_subtype_of (map_type)) {
+				collection_iface = map_type;
 			}
 			var set_method = (Method) collection_iface.scope.lookup ("set");
 			Gee.List<FormalParameter> set_params = set_method.get_parameters ();
@@ -258,13 +258,13 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 			if (set_param.parameter_type.type_parameter != null) {
 				var index_type = SemanticAnalyzer.get_actual_type (expr.container.value_type, set_method, set_param.parameter_type, assignment);
-				cindex = codegen.convert_to_generic_pointer (cindex, index_type);
+				cindex = convert_to_generic_pointer (cindex, index_type);
 			}
 
 			var set_ccall = new CCodeFunctionCall (new CCodeIdentifier (set_method.get_cname ()));
 			set_ccall.add_argument (new CCodeCastExpression (ccontainer, collection_iface.get_cname () + "*"));
 			set_ccall.add_argument (cindex);
-			set_ccall.add_argument (codegen.convert_to_generic_pointer (rhs, expr.value_type));
+			set_ccall.add_argument (convert_to_generic_pointer (rhs, expr.value_type));
 
 			return set_ccall;
 		} else {
@@ -277,7 +277,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 	CCodeExpression emit_simple_assignment (Assignment assignment) {
 		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
 
-		bool unref_old = codegen.requires_destroy (assignment.left.value_type);
+		bool unref_old = requires_destroy (assignment.left.value_type);
 		bool array = false;
 		bool instance_delegate = false;
 		if (assignment.left.value_type is ArrayType) {
@@ -290,12 +290,12 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		if (unref_old || array || instance_delegate) {
 			var ccomma = new CCodeCommaExpression ();
 			
-			var temp_decl = codegen.get_temp_variable (assignment.left.value_type);
-			codegen.temp_vars.insert (0, temp_decl);
+			var temp_decl = get_temp_variable (assignment.left.value_type);
+			temp_vars.insert (0, temp_decl);
 			ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), rhs));
 			if (unref_old) {
 				/* unref old value */
-				ccomma.append_expression (codegen.get_unref_expression ((CCodeExpression) codegen.get_ccodenode (assignment.left), assignment.left.value_type, assignment.left));
+				ccomma.append_expression (get_unref_expression ((CCodeExpression) get_ccodenode (assignment.left), assignment.left.value_type, assignment.left));
 			}
 			
 			if (array) {
@@ -307,8 +307,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				}
 			} else if (instance_delegate) {
 				var delegate_type = (DelegateType) assignment.left.value_type;
-				var lhs_delegate_target = codegen.get_delegate_target_cexpression (assignment.left);
-				var rhs_delegate_target = codegen.get_delegate_target_cexpression (assignment.right);
+				var lhs_delegate_target = get_delegate_target_cexpression (assignment.left);
+				var rhs_delegate_target = get_delegate_target_cexpression (assignment.right);
 				ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
 			}
 			
@@ -340,15 +340,15 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			cop = CCodeAssignmentOperator.SHIFT_RIGHT;
 		}
 	
-		CCodeExpression codenode = new CCodeAssignment ((CCodeExpression) codegen.get_ccodenode (assignment.left), rhs, cop);
+		CCodeExpression codenode = new CCodeAssignment ((CCodeExpression) get_ccodenode (assignment.left), rhs, cop);
 
-		if (unref_old && codegen.get_ccodenode (assignment.left) is CCodeElementAccess) {
+		if (unref_old && get_ccodenode (assignment.left) is CCodeElementAccess) {
 			// ensure that index expression in element access doesn't get evaluated more than once
 			// except when it's a simple expression
-			var cea = (CCodeElementAccess) codegen.get_ccodenode (assignment.left);
+			var cea = (CCodeElementAccess) get_ccodenode (assignment.left);
 			if (!(cea.index is CCodeConstant || cea.index is CCodeIdentifier)) {
-				var index_temp_decl = codegen.get_temp_variable (codegen.int_type);
-				codegen.temp_vars.insert (0, index_temp_decl);
+				var index_temp_decl = get_temp_variable (int_type);
+				temp_vars.insert (0, index_temp_decl);
 				
 				var ccomma = new CCodeCommaExpression ();
 				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (index_temp_decl.name), cea.index));

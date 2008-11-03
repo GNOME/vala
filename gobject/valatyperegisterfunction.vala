@@ -30,13 +30,13 @@ public abstract class Vala.TypeRegisterFunction {
 
 	private CCodeFragment definition_fragment = new CCodeFragment ();
 
-	public CCodeGenerator codegen { get; set; }
+	public CodeContext context { get; set; }
 
 	/**
 	 * Constructs the C function from the specified type.
 	 */
 	public void init_from_type (bool plugin = false) {
-		bool use_thread_safe = codegen.context.require_glib_version (2, 14);
+		bool use_thread_safe = context.require_glib_version (2, 14);
 
 		bool fundamental = false;
 		Class cl = get_type_declaration () as Class;

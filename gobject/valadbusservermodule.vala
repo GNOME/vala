@@ -69,7 +69,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 			return fragment;
 		}
 
-		codegen.dbus_glib_h_needed = true;
+		dbus_glib_h_needed = true;
 
 		var dbus_methods = new StringBuilder ();
 		dbus_methods.append ("{\n");
@@ -95,17 +95,17 @@ public class Vala.DBusServerModule : DBusClientModule {
 			if (!(m.return_type is VoidType)) {
 				parameters.add (new FormalParameter ("result", new PointerType (new VoidType ())));
 			}
-			parameters.add (new FormalParameter ("error", codegen.gerror_type));
+			parameters.add (new FormalParameter ("error", gerror_type));
 
 			dbus_methods.append ("{ (GCallback) ");
 			dbus_methods.append (generate_dbus_wrapper (m, bindable));
 			dbus_methods.append (", ");
-			dbus_methods.append (head.get_marshaller_function (parameters, codegen.bool_type, null, true));
+			dbus_methods.append (head.get_marshaller_function (parameters, bool_type, null, true));
 			dbus_methods.append (", ");
 			dbus_methods.append (blob_len.to_string ());
 			dbus_methods.append (" },\n");
 
-			head.generate_marshaller (parameters, codegen.bool_type, true);
+			head.generate_marshaller (parameters, bool_type, true);
 
 			long start = blob.len;
 
@@ -243,8 +243,8 @@ public class Vala.DBusServerModule : DBusClientModule {
 		foreach (FormalParameter param in m.get_parameters ()) {
 			string ptr = (param.direction == ParameterDirection.OUT ? "*" : "");
 			var array_type = param.parameter_type as ArrayType;
-			if (array_type != null && array_type.element_type.data_type != codegen.string_type.data_type) {
-				if (codegen.dbus_use_ptr_array (array_type)) {
+			if (array_type != null && array_type.element_type.data_type != string_type.data_type) {
+				if (dbus_use_ptr_array (array_type)) {
 					function.add_parameter (new CCodeFormalParameter ("dbus_%s".printf (param.name), "GPtrArray*" + ptr));
 				} else {
 					function.add_parameter (new CCodeFormalParameter ("dbus_%s".printf (param.name), "GArray*" + ptr));
@@ -259,9 +259,9 @@ public class Vala.DBusServerModule : DBusClientModule {
 		if (!(m.return_type is VoidType)) {
 			var array_type = m.return_type as ArrayType;
 			if (array_type != null) {
-				if (array_type.element_type.data_type == codegen.string_type.data_type) {
+				if (array_type.element_type.data_type == string_type.data_type) {
 					function.add_parameter (new CCodeFormalParameter ("result", array_type.get_cname () + "*"));
-				} else if (codegen.dbus_use_ptr_array (array_type)) {
+				} else if (dbus_use_ptr_array (array_type)) {
 					function.add_parameter (new CCodeFormalParameter ("dbus_result", "GPtrArray**"));
 				} else {
 					function.add_parameter (new CCodeFormalParameter ("dbus_result", "GArray**"));
@@ -306,7 +306,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		if (!(m.return_type is VoidType)) {
 			var array_type = m.return_type as ArrayType;
 			if (array_type != null) {
-				if (array_type.element_type.data_type != codegen.string_type.data_type) {
+				if (array_type.element_type.data_type != string_type.data_type) {
 					var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
 					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
 					block.add_statement (cdecl);
@@ -326,14 +326,14 @@ public class Vala.DBusServerModule : DBusClientModule {
 			var array_type = param.parameter_type as ArrayType;
 			if (array_type != null) {
 				if (param.direction == ParameterDirection.IN) {
-					if (array_type.element_type.data_type == codegen.string_type.data_type) {
+					if (array_type.element_type.data_type == string_type.data_type) {
 						ccall.add_argument (new CCodeIdentifier (param.name));
 						if (!m.no_array_length) {
 							var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
 							cstrvlen.add_argument (new CCodeIdentifier (param.name));
 							ccall.add_argument (cstrvlen);
 						}
-					} else if (codegen.dbus_use_ptr_array (array_type)) {
+					} else if (dbus_use_ptr_array (array_type)) {
 						ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "pdata"));
 						if (!m.no_array_length) {
 							ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "len"));
@@ -345,7 +345,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 						}
 					}
 				} else {
-					if (array_type.element_type.data_type != codegen.string_type.data_type) {
+					if (array_type.element_type.data_type != string_type.data_type) {
 						var cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
 						cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
 						block.add_statement (cdecl);
@@ -378,7 +378,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 			var array_type = m.return_type as ArrayType;
 			if (array_type != null) {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result_length1")));
-				if (array_type.element_type.data_type != codegen.string_type.data_type) {
+				if (array_type.element_type.data_type != string_type.data_type) {
 					expr = new CCodeAssignment (new CCodeIdentifier ("result"), ccall);
 				} else {
 					expr = new CCodeAssignment (new CCodeIdentifier ("*result"), ccall);
@@ -449,13 +449,13 @@ public class Vala.DBusServerModule : DBusClientModule {
 
 		if (!(m.return_type is VoidType)) {
 			var array_type = m.return_type as ArrayType;
-			if (array_type != null && array_type.element_type.data_type != codegen.string_type.data_type) {
+			if (array_type != null && array_type.element_type.data_type != string_type.data_type) {
 				var garray = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("dbus_result"));
 
 				var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 				sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
 
-				if (codegen.dbus_use_ptr_array (array_type)) {
+				if (dbus_use_ptr_array (array_type)) {
 					var array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_ptr_array_sized_new"));
 					array_construct.add_argument (new CCodeIdentifier ("result_length1"));
 
@@ -491,10 +491,10 @@ public class Vala.DBusServerModule : DBusClientModule {
 
 		// append to file
 
-		codegen.source_type_member_declaration.append (function.copy ());
+		source_type_member_declaration.append (function.copy ());
 
 		function.block = block;
-		codegen.source_type_member_definition.append (function);
+		source_type_member_definition.append (function);
 
 		return wrapper_name;
 	}

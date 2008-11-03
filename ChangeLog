@@ -1,6 +1,33 @@
 2008-11-03  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodearraymodule.vala:
+	* gobject/valaccodeassignmentmodule.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodedynamicpropertymodule.vala:
+	* gobject/valaccodedynamicsignalmodule.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodeinvocationexpressionmodule.vala:
+	* gobject/valaccodememberaccessmodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+	* gobject/valaccodemodule.vala:
+	* gobject/valaccodestructmodule.vala:
+	* gobject/valaclassregisterfunction.vala:
+	* gobject/valadbusclientmodule.vala:
+	* gobject/valadbusservermodule.vala:
+	* gobject/valagasyncmodule.vala:
+	* gobject/valagerrormodule.vala:
+	* gobject/valagirwriter.vala:
+	* gobject/valagobjectmodule.vala:
+	* gobject/valagsignalmodule.vala:
+	* gobject/valagtypemodule.vala:
+	* gobject/valainterfaceregisterfunction.vala:
+	* gobject/valatyperegisterfunction.vala:
+
+	Move code generation to module
+
+2008-11-03  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodearraymodule.vala:
 	* gobject/valaccodebasemodule.vala:
 
 	Move array helper functions to CCodeArrayModule

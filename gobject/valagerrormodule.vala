@@ -34,7 +34,7 @@ public class Vala.GErrorModule : CCodeDynamicSignalModule {
 		var cfrag = new CCodeFragment ();
 
 		// method will fail
-		codegen.current_method_inner_error = true;
+		current_method_inner_error = true;
 		var cassign = new CCodeAssignment (new CCodeIdentifier ("inner_error"), (CCodeExpression) stmt.error_expression.ccodenode);
 		cfrag.append (new CCodeExpressionStatement (cassign));
 
@@ -42,11 +42,11 @@ public class Vala.GErrorModule : CCodeDynamicSignalModule {
 
 		stmt.ccodenode = cfrag;
 
-		codegen.create_temp_decl (stmt, stmt.error_expression.temp_vars);
+		create_temp_decl (stmt, stmt.error_expression.temp_vars);
 	}
 
 	public override void add_simple_check (CodeNode node, CCodeFragment cfrag) {
-		codegen.current_method_inner_error = true;
+		current_method_inner_error = true;
 
 		var cprint_frag = new CCodeFragment ();
 		var ccritical = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
@@ -59,16 +59,16 @@ public class Vala.GErrorModule : CCodeDynamicSignalModule {
 		cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
 		cprint_frag.append (new CCodeExpressionStatement (cclear));
 
-		if (codegen.current_try != null) {
+		if (current_try != null) {
 			// surrounding try found
 			// TODO might be the wrong one when using nested try statements
 
 			var cerror_block = new CCodeBlock ();
-			foreach (CatchClause clause in codegen.current_try.get_catch_clauses ()) {
+			foreach (CatchClause clause in current_try.get_catch_clauses ()) {
 				// go to catch clause if error domain matches
 				var cgoto_stmt = new CCodeGotoStatement (clause.clabel_name);
 
-				if (clause.error_type.equals (codegen.gerror_type)) {
+				if (clause.error_type.equals (gerror_type)) {
 					// general catch clause
 					cerror_block.add_statement (cgoto_stmt);
 				} else {
@@ -87,7 +87,7 @@ public class Vala.GErrorModule : CCodeDynamicSignalModule {
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"));
 
 			cfrag.append (new CCodeIfStatement (ccond, cerror_block));
-		} else if (codegen.current_method != null && codegen.current_method.get_error_types ().size > 0) {
+		} else if (current_method != null && current_method.get_error_types ().size > 0) {
 			// current method can fail, propagate error
 			// TODO ensure one of the error domains matches
 
@@ -100,13 +100,13 @@ public class Vala.GErrorModule : CCodeDynamicSignalModule {
 
 			// free local variables
 			var free_frag = new CCodeFragment ();
-			codegen.append_local_free (codegen.current_symbol, free_frag, false);
+			append_local_free (current_symbol, free_frag, false);
 			cerror_block.add_statement (free_frag);
 
-			if (codegen.current_return_type is VoidType) {
+			if (current_return_type is VoidType) {
 				cerror_block.add_statement (new CCodeReturnStatement ());
 			} else {
-				cerror_block.add_statement (new CCodeReturnStatement (codegen.default_value_for_type (codegen.current_return_type, false)));
+				cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type, false)));
 			}
 
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"));

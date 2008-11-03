@@ -38,7 +38,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		var creturn_type = m.return_type;
 		bool visible = !m.is_internal_symbol ();
 
-		codegen.gio_h_needed = true;
+		gio_h_needed = true;
 
 		// generate struct to hold parameters, local variables, and the return value
 		string dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
@@ -57,12 +57,12 @@ public class Vala.GAsyncModule : GSignalModule {
 			datastruct.add_field (m.return_type.get_cname (), "result");
 		}
 
-		codegen.source_type_definition.append (datastruct);
-		codegen.source_type_declaration.append (new CCodeTypeDefinition ("struct _" + dataname, new CCodeVariableDeclarator (dataname)));
+		source_type_definition.append (datastruct);
+		source_type_declaration.append (new CCodeTypeDefinition ("struct _" + dataname, new CCodeVariableDeclarator (dataname)));
 
 		// generate async function
 		var asyncfunc = new CCodeFunction (m.get_cname (), "void");
-		asyncfunc.line = codegen.function.line;
+		asyncfunc.line = function.line;
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
@@ -87,48 +87,48 @@ public class Vala.GAsyncModule : GSignalModule {
 		ccall.add_argument (new CCodeIdentifier ("data"));
 		asyncblock.add_statement (new CCodeExpressionStatement (ccall));
 
-		cparam_map.set (codegen.get_param_pos (-1), new CCodeFormalParameter ("callback", "GAsyncReadyCallback"));
-		cparam_map.set (codegen.get_param_pos (-0.9), new CCodeFormalParameter ("user_data", "gpointer"));
+		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("callback", "GAsyncReadyCallback"));
+		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("user_data", "gpointer"));
 
 		generate_cparameters (m, creturn_type, false, cparam_map, asyncfunc, null, null, null, 1);
 
 		if (visible) {
-			codegen.header_type_member_declaration.append (asyncfunc.copy ());
+			header_type_member_declaration.append (asyncfunc.copy ());
 		} else {
 			asyncfunc.modifiers |= CCodeModifiers.STATIC;
-			codegen.source_type_member_declaration.append (asyncfunc.copy ());
+			source_type_member_declaration.append (asyncfunc.copy ());
 		}
 		
 		asyncfunc.block = asyncblock;
 
-		codegen.source_type_member_definition.append (asyncfunc);
+		source_type_member_definition.append (asyncfunc);
 
 		// generate finish function
 		var finishfunc = new CCodeFunction (m.get_cname () + "_finish", creturn_type.get_cname ());
-		finishfunc.line = codegen.function.line;
+		finishfunc.line = function.line;
 
 		cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
 		var finishblock = new CCodeBlock ();
 
-		cparam_map.set (codegen.get_param_pos (0.1), new CCodeFormalParameter ("res", "GAsyncResult*"));
+		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("res", "GAsyncResult*"));
 
 		generate_cparameters (m, creturn_type, false, cparam_map, finishfunc, null, null, null, 2);
 
 		if (visible) {
-			codegen.header_type_member_declaration.append (finishfunc.copy ());
+			header_type_member_declaration.append (finishfunc.copy ());
 		} else {
 			finishfunc.modifiers |= CCodeModifiers.STATIC;
-			codegen.source_type_member_declaration.append (finishfunc.copy ());
+			source_type_member_declaration.append (finishfunc.copy ());
 		}
 		
 		finishfunc.block = finishblock;
 
-		codegen.source_type_member_definition.append (finishfunc);
+		source_type_member_definition.append (finishfunc);
 
 		// generate ready callback handler
 		var readyfunc = new CCodeFunction (m.get_cname () + "_ready", "void");
-		readyfunc.line = codegen.function.line;
+		readyfunc.line = function.line;
 
 		readyfunc.add_parameter (new CCodeFormalParameter ("source_object", "GObject*"));
 		readyfunc.add_parameter (new CCodeFormalParameter ("res", "GAsyncResult*"));
@@ -147,10 +147,10 @@ public class Vala.GAsyncModule : GSignalModule {
 		readyblock.add_statement (new CCodeExpressionStatement (ccall));
 
 		readyfunc.modifiers |= CCodeModifiers.STATIC;
-		codegen.source_type_member_declaration.append (readyfunc.copy ());
+		source_type_member_declaration.append (readyfunc.copy ());
 
 		readyfunc.block = readyblock;
 
-		codegen.source_type_member_definition.append (readyfunc);
+		source_type_member_definition.append (readyfunc);
 	}
 }

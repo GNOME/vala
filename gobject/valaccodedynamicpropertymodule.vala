@@ -44,20 +44,20 @@ public class Vala.CCodeDynamicPropertyModule : CCodeArrayModule {
 		func.add_parameter (new CCodeFormalParameter ("obj", dynamic_property.dynamic_type.get_cname ()));
 
 		var block = new CCodeBlock ();
-		if (dynamic_property.dynamic_type.data_type == codegen.dbus_object_type) {
+		if (dynamic_property.dynamic_type.data_type == dbus_object_type) {
 			generate_dbus_property_getter_wrapper (node, block);
 		} else if (dynamic_property.dynamic_type.data_type != null
-		           && dynamic_property.dynamic_type.data_type.is_subtype_of (codegen.gobject_type)) {
+		           && dynamic_property.dynamic_type.data_type.is_subtype_of (gobject_type)) {
 			generate_gobject_property_getter_wrapper (node, block);
 		} else {
 			Report.error (node.source_reference, "dynamic properties are not supported for `%s'".printf (dynamic_property.dynamic_type.to_string ()));
 		}
 
 		// append to C source file
-		codegen.source_type_member_declaration.append (func.copy ());
+		source_type_member_declaration.append (func.copy ());
 
 		func.block = block;
-		codegen.source_type_member_definition.append (func);
+		source_type_member_definition.append (func);
 
 		return getter_cname;
 	}
@@ -74,20 +74,20 @@ public class Vala.CCodeDynamicPropertyModule : CCodeArrayModule {
 		func.add_parameter (new CCodeFormalParameter ("value", node.property_type.get_cname ()));
 
 		var block = new CCodeBlock ();
-		if (dynamic_property.dynamic_type.data_type == codegen.dbus_object_type) {
+		if (dynamic_property.dynamic_type.data_type == dbus_object_type) {
 			generate_dbus_property_setter_wrapper (node, block);
 		} else if (dynamic_property.dynamic_type.data_type != null
-		           && dynamic_property.dynamic_type.data_type.is_subtype_of (codegen.gobject_type)) {
+		           && dynamic_property.dynamic_type.data_type.is_subtype_of (gobject_type)) {
 			generate_gobject_property_setter_wrapper (node, block);
 		} else {
 			Report.error (node.source_reference, "dynamic properties are not supported for `%s'".printf (dynamic_property.dynamic_type.to_string ()));
 		}
 
 		// append to C source file
-		codegen.source_type_member_declaration.append (func.copy ());
+		source_type_member_declaration.append (func.copy ());
 
 		func.block = block;
-		codegen.source_type_member_definition.append (func);
+		source_type_member_definition.append (func);
 
 		return setter_cname;
 	}

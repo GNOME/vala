@@ -37,9 +37,9 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	 * @param cl a class
 	 * @return   newly created class register function
 	 */
-	public ClassRegisterFunction (Class cl, CCodeGenerator codegen) {
+	public ClassRegisterFunction (Class cl, CodeContext context) {
 		class_reference = cl;
-		this.codegen = codegen;
+		this.context = context;
 	}
 	
 	public override TypeSymbol get_type_declaration () {

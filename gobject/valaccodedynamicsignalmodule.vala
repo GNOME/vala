@@ -47,20 +47,20 @@ public class Vala.CCodeDynamicSignalModule : CCodeDynamicPropertyModule {
 		func.add_parameter (new CCodeFormalParameter ("handler", "GCallback"));
 		func.add_parameter (new CCodeFormalParameter ("data", "gpointer"));
 		var block = new CCodeBlock ();
-		if (dynamic_signal.dynamic_type.data_type == codegen.dbus_object_type) {
+		if (dynamic_signal.dynamic_type.data_type == dbus_object_type) {
 			generate_dbus_connect_wrapper (node, block);
 		} else if (dynamic_signal.dynamic_type.data_type != null
-		           && dynamic_signal.dynamic_type.data_type.is_subtype_of (codegen.gobject_type)) {
+		           && dynamic_signal.dynamic_type.data_type.is_subtype_of (gobject_type)) {
 			generate_gobject_connect_wrapper (node, block);
 		} else {
 			Report.error (node.source_reference, "dynamic signals are not supported for `%s'".printf (dynamic_signal.dynamic_type.to_string ()));
 		}
 
 		// append to C source file
-		codegen.source_type_member_declaration.append (func.copy ());
+		source_type_member_declaration.append (func.copy ());
 
 		func.block = block;
-		codegen.source_type_member_definition.append (func);
+		source_type_member_definition.append (func);
 
 		return connect_wrapper_name;
 	}
@@ -75,17 +75,17 @@ public class Vala.CCodeDynamicSignalModule : CCodeDynamicPropertyModule {
 		func.add_parameter (new CCodeFormalParameter ("handler", "GCallback"));
 		func.add_parameter (new CCodeFormalParameter ("data", "gpointer"));
 		var block = new CCodeBlock ();
-		if (dynamic_signal.dynamic_type.data_type == codegen.dbus_object_type) {
+		if (dynamic_signal.dynamic_type.data_type == dbus_object_type) {
 			generate_dbus_disconnect_wrapper (node, block);
 		} else {
 			Report.error (node.source_reference, "dynamic signals are not supported for `%s'".printf (dynamic_signal.dynamic_type.to_string ()));
 		}
 
 		// append to C source file
-		codegen.source_type_member_declaration.append (func.copy ());
+		source_type_member_declaration.append (func.copy ());
 
 		func.block = block;
-		codegen.source_type_member_definition.append (func);
+		source_type_member_definition.append (func);
 
 		return disconnect_wrapper_name;
 	}
@@ -142,7 +142,7 @@ public class Vala.CCodeDynamicSignalModule : CCodeDynamicPropertyModule {
 
 			var array_type = param.parameter_type as ArrayType;
 			if (array_type != null) {
-				if (array_type.element_type.data_type == codegen.string_type.data_type) {
+				if (array_type.element_type.data_type == string_type.data_type) {
 					register_call.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
 					add_call.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
 				} else {

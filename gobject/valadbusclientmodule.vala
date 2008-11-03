@@ -41,22 +41,22 @@ public class Vala.DBusClientModule : GAsyncModule {
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
 		var instance_param = new CCodeFormalParameter ("obj", dynamic_method.dynamic_type.get_cname ());
-		cparam_map.set (codegen.get_param_pos (method.cinstance_parameter_position), instance_param);
+		cparam_map.set (get_param_pos (method.cinstance_parameter_position), instance_param);
 
 		generate_cparameters (method, method.return_type, false, cparam_map, func);
 
 		var block = new CCodeBlock ();
-		if (dynamic_method.dynamic_type.data_type == codegen.dbus_object_type) {
+		if (dynamic_method.dynamic_type.data_type == dbus_object_type) {
 			generate_dbus_method_wrapper (method, block);
 		} else {
 			Report.error (method.source_reference, "dynamic methods are not supported for `%s'".printf (dynamic_method.dynamic_type.to_string ()));
 		}
 
 		// append to C source file
-		codegen.source_type_member_declaration.append (func.copy ());
+		source_type_member_declaration.append (func.copy ());
 
 		func.block = block;
-		codegen.source_type_member_definition.append (func);
+		source_type_member_definition.append (func);
 	}
 
 	void generate_dbus_method_wrapper (Method method, CCodeBlock block) {
@@ -136,10 +136,10 @@ public class Vala.DBusClientModule : GAsyncModule {
 
 					break;
 				}
-				if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type != codegen.string_type.data_type) {
+				if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type != string_type.data_type) {
 					var array_type = (ArrayType) param.parameter_type;
 					CCodeDeclaration cdecl;
-					if (codegen.dbus_use_ptr_array (array_type)) {
+					if (dbus_use_ptr_array (array_type)) {
 						cdecl = new CCodeDeclaration ("GPtrArray*");
 					} else {
 						cdecl = new CCodeDeclaration ("GArray*");
@@ -148,13 +148,13 @@ public class Vala.DBusClientModule : GAsyncModule {
 					cb_fun.block.add_statement (cdecl);
 					cend_call.add_argument (get_dbus_g_type (array_type));
 					cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
-					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), codegen.dbus_use_ptr_array (array_type) ? "pdata" : "data"));
+					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), dbus_use_ptr_array (array_type) ? "pdata" : "data"));
 					creply_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), "len"));
 				} else {
 					var cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
 					cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
 					cb_fun.block.add_statement (cdecl);
-					if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type == codegen.string_type.data_type) {
+					if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type == string_type.data_type) {
 						// special case string array
 						cend_call.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
 					} else {
@@ -163,7 +163,7 @@ public class Vala.DBusClientModule : GAsyncModule {
 					cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 					creply_call.add_argument (new CCodeIdentifier (param.name));
 
-					if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type == codegen.string_type.data_type) {
+					if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type == string_type.data_type) {
 						var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
 						cstrvlen.add_argument (new CCodeIdentifier (param.name));
 						creply_call.add_argument (cstrvlen);
@@ -175,7 +175,7 @@ public class Vala.DBusClientModule : GAsyncModule {
 			cb_fun.block.add_statement (new CCodeExpressionStatement (cend_call));
 			creply_call.add_argument (new CCodeIdentifier ("error"));
 			cb_fun.block.add_statement (new CCodeExpressionStatement (creply_call));
-			codegen.source_type_member_definition.append (cb_fun);
+			source_type_member_definition.append (cb_fun);
 
 			ccall.add_argument (new CCodeIdentifier (cb_fun.name));
 			ccall.add_argument (new CCodeConstant ("param%d_target".printf (callback_index)));
@@ -202,7 +202,7 @@ public class Vala.DBusClientModule : GAsyncModule {
 			var array_type = param.parameter_type as ArrayType;
 			if (array_type != null) {
 				// array parameter
-				if (array_type.element_type.data_type != codegen.string_type.data_type) {
+				if (array_type.element_type.data_type != string_type.data_type) {
 					// non-string arrays (use GArray)
 					ccall.add_argument (get_dbus_g_type (array_type));
 
@@ -211,7 +211,7 @@ public class Vala.DBusClientModule : GAsyncModule {
 
 					CCodeDeclaration cdecl;
 					CCodeFunctionCall array_construct;
-					if (codegen.dbus_use_ptr_array (array_type)) {
+					if (dbus_use_ptr_array (array_type)) {
 						cdecl = new CCodeDeclaration ("GPtrArray*");
 
 						array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_ptr_array_sized_new"));
@@ -228,7 +228,7 @@ public class Vala.DBusClientModule : GAsyncModule {
 					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("dbus_%s".printf (param.name), array_construct));
 					block.add_statement (cdecl);
 
-					if (codegen.dbus_use_ptr_array (array_type)) {
+					if (dbus_use_ptr_array (array_type)) {
 						var memcpy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
 						memcpy_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "pdata"));
 						memcpy_call.add_argument (new CCodeIdentifier (param.name));
@@ -363,12 +363,12 @@ public class Vala.DBusClientModule : GAsyncModule {
 		if (!(method.return_type is VoidType)) {
 			// synchronous D-Bus method call with reply
 			var array_type = method.return_type as ArrayType;
-			if (array_type != null && array_type.element_type.data_type != codegen.string_type.data_type) {
+			if (array_type != null && array_type.element_type.data_type != string_type.data_type) {
 				// non-string arrays (use GArray)
 				ccall.add_argument (get_dbus_g_type (array_type));
 
 				CCodeDeclaration cdecl;
-				if (codegen.dbus_use_ptr_array (array_type)) {
+				if (dbus_use_ptr_array (array_type)) {
 					cdecl = new CCodeDeclaration ("GPtrArray*");
 				} else {
 					cdecl = new CCodeDeclaration ("GArray*");
@@ -383,7 +383,7 @@ public class Vala.DBusClientModule : GAsyncModule {
 
 				// don't access result when error occured
 				var creturnblock = new CCodeBlock ();
-				creturnblock.add_statement (new CCodeReturnStatement (codegen.default_value_for_type (method.return_type, false)));
+				creturnblock.add_statement (new CCodeReturnStatement (default_value_for_type (method.return_type, false)));
 				var cerrorif = new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("error")), creturnblock);
 				block.add_statement (cerrorif);
 
@@ -396,7 +396,7 @@ public class Vala.DBusClientModule : GAsyncModule {
 				block.add_statement (new CCodeExpressionStatement (assign));
 
 				// return result->data;
-				block.add_statement (new CCodeReturnStatement (new CCodeCastExpression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), codegen.dbus_use_ptr_array (array_type) ? "pdata" : "data"), method.return_type.get_cname ())));
+				block.add_statement (new CCodeReturnStatement (new CCodeCastExpression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), dbus_use_ptr_array (array_type) ? "pdata" : "data"), method.return_type.get_cname ())));
 			} else {
 				// string arrays or other datatypes
 
@@ -413,7 +413,7 @@ public class Vala.DBusClientModule : GAsyncModule {
 
 				// don't access result when error occured
 				var creturnblock = new CCodeBlock ();
-				creturnblock.add_statement (new CCodeReturnStatement (codegen.default_value_for_type (method.return_type, false)));
+				creturnblock.add_statement (new CCodeReturnStatement (default_value_for_type (method.return_type, false)));
 				var cerrorif = new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("error")), creturnblock);
 				block.add_statement (cerrorif);
 
@@ -448,12 +448,12 @@ public class Vala.DBusClientModule : GAsyncModule {
 	CCodeExpression get_dbus_g_type (DataType data_type) {
 		if (data_type is ArrayType) {
 			var array_type = data_type as ArrayType;
-			if (array_type.element_type.data_type == codegen.string_type.data_type) {
+			if (array_type.element_type.data_type == string_type.data_type) {
 				return new CCodeIdentifier ("G_TYPE_STRV");
 			}
 
 			var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
-			if (codegen.dbus_use_ptr_array (array_type)) {
+			if (dbus_use_ptr_array (array_type)) {
 				carray_type.add_argument (new CCodeConstant ("\"GPtrArray\""));
 			} else {
 				carray_type.add_argument (new CCodeConstant ("\"GArray\""));

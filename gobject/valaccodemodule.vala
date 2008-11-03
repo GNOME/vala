@@ -27,7 +27,7 @@ using Gee;
  */
 public abstract class Vala.CCodeModule {
 	public weak CCodeGenerator codegen { get; private set; }
-
+	
 	public CCodeModule head {
 		get { return _head; }
 		private set {
@@ -68,36 +68,268 @@ public abstract class Vala.CCodeModule {
 		next.visit_struct (st);
 	}
 
-	public virtual void visit_method (Method m) {
-		next.visit_method (m);
+	public virtual void visit_enum (Enum en) {
+		next.visit_enum (en);
 	}
 
-	public virtual void visit_signal (Signal sig) {
-		next.visit_signal (sig);
+	public virtual void visit_enum_value (EnumValue ev) {
+		next.visit_enum_value (ev);
+	}
+
+	public virtual void visit_error_domain (ErrorDomain edomain) {
+		next.visit_error_domain (edomain);
+	}
+
+	public virtual void visit_error_code (ErrorCode ecode) {
+		next.visit_error_code (ecode);
+	}
+
+	public virtual void visit_delegate (Delegate d) {
+		next.visit_delegate (d);
+	}
+	
+	public virtual void visit_member (Member m) {
+		next.visit_member (m);
+	}
+
+	public virtual void visit_constant (Constant c) {
+		next.visit_constant (c);
+	}
+
+	public virtual void visit_field (Field f) {
+		next.visit_field (f);
+	}
+
+	public virtual void visit_method (Method m) {
+		next.visit_method (m);
 	}
 
 	public virtual void visit_creation_method (CreationMethod m) {
 		next.visit_creation_method (m);
 	}
 
+	public virtual void visit_formal_parameter (FormalParameter p) {
+		next.visit_formal_parameter (p);
+	}
+
+	public virtual void visit_property (Property prop) {
+		next.visit_property (prop);
+	}
+
+	public virtual void visit_property_accessor (PropertyAccessor acc) {
+		next.visit_property_accessor (acc);
+	}
+
+	public virtual void visit_signal (Signal sig) {
+		next.visit_signal (sig);
+	}
+
+	public virtual void visit_constructor (Constructor c) {
+		next.visit_constructor (c);
+	}
+
+	public virtual void visit_destructor (Destructor d) {
+		next.visit_destructor (d);
+	}
+
+	public virtual void visit_block (Block b) {
+		next.visit_block (b);
+	}
+
+	public virtual void visit_empty_statement (EmptyStatement stmt) {
+		next.visit_empty_statement (stmt);
+	}
+
+	public virtual void visit_declaration_statement (DeclarationStatement stmt) {
+		next.visit_declaration_statement (stmt);
+	}
+
+	public virtual void visit_local_variable (LocalVariable local) {
+		next.visit_local_variable (local);
+	}
+
+	public virtual void visit_initializer_list (InitializerList list) {
+		next.visit_initializer_list (list);
+	}
+
+	public virtual void visit_end_full_expression (Expression expr) {
+		next.visit_end_full_expression (expr);
+	}
+	
+	public virtual void visit_expression_statement (ExpressionStatement stmt) {
+		next.visit_expression_statement (stmt);
+	}
+
+	public virtual void visit_if_statement (IfStatement stmt) {
+		next.visit_if_statement (stmt);
+	}
+
+	public virtual void visit_switch_statement (SwitchStatement stmt) {
+		next.visit_switch_statement (stmt);
+	}
+
+	public virtual void visit_switch_section (SwitchSection section) {
+		next.visit_switch_section (section);
+	}
+
+	public virtual void visit_while_statement (WhileStatement stmt) {
+		next.visit_while_statement (stmt);
+	}
+
+	public virtual void visit_do_statement (DoStatement stmt) {
+		next.visit_do_statement (stmt);
+	}
+
+	public virtual void visit_for_statement (ForStatement stmt) {
+		next.visit_for_statement (stmt);
+	}
+
+	public virtual void visit_foreach_statement (ForeachStatement stmt) {
+		next.visit_foreach_statement (stmt);
+	}
+
+	public virtual void visit_break_statement (BreakStatement stmt) {
+		next.visit_break_statement (stmt);
+	}
+
+	public virtual void visit_continue_statement (ContinueStatement stmt) {
+		next.visit_continue_statement (stmt);
+	}
+
+	public virtual void visit_return_statement (ReturnStatement stmt) {
+		next.visit_return_statement (stmt);
+	}
+
+	public virtual void visit_yield_statement (YieldStatement stmt) {
+		next.visit_yield_statement (stmt);
+	}
+
+	public virtual void visit_throw_statement (ThrowStatement stmt) {
+		next.visit_throw_statement (stmt);
+	}
+
+	public virtual void visit_try_statement (TryStatement stmt) {
+		next.visit_try_statement (stmt);
+	}
+
+	public virtual void visit_catch_clause (CatchClause clause) {
+		next.visit_catch_clause (clause);
+	}
+
+	public virtual void visit_lock_statement (LockStatement stmt) {
+		next.visit_lock_statement (stmt);
+	}
+
+	public virtual void visit_delete_statement (DeleteStatement stmt) {
+		next.visit_delete_statement (stmt);
+	}
+
+	public virtual void visit_expression (Expression expr) {
+		next.visit_expression (expr);
+	}
+
+	public virtual void visit_array_creation_expression (ArrayCreationExpression expr) {
+		next.visit_array_creation_expression (expr);
+	}
+
+	public virtual void visit_boolean_literal (BooleanLiteral expr) {
+		next.visit_boolean_literal (expr);
+	}
+
+	public virtual void visit_character_literal (CharacterLiteral expr) {
+		next.visit_character_literal (expr);
+	}
+
+	public virtual void visit_integer_literal (IntegerLiteral expr) {
+		next.visit_integer_literal (expr);
+	}
+
+	public virtual void visit_real_literal (RealLiteral expr) {
+		next.visit_real_literal (expr);
+	}
+
+	public virtual void visit_string_literal (StringLiteral expr) {
+		next.visit_string_literal (expr);
+	}
+
+	public virtual void visit_null_literal (NullLiteral expr) {
+		next.visit_null_literal (expr);
+	}
+
+	public virtual void visit_parenthesized_expression (ParenthesizedExpression expr) {
+		next.visit_parenthesized_expression (expr);
+	}
+
 	public virtual void visit_member_access (MemberAccess expr) {
 		next.visit_member_access (expr);
-	}
-
-	public virtual void visit_element_access (ElementAccess expr) {
-		next.visit_element_access (expr);
-	}
-
-	public virtual void visit_assignment (Assignment assignment) {
-		next.visit_assignment (assignment);
 	}
 
 	public virtual void visit_invocation_expression (InvocationExpression expr) {
 		next.visit_invocation_expression (expr);
 	}
+	
+	public virtual void visit_element_access (ElementAccess expr) {
+		next.visit_element_access (expr);
+	}
 
-	public virtual void visit_array_creation_expression (ArrayCreationExpression expr) {
-		next.visit_array_creation_expression (expr);
+	public virtual void visit_base_access (BaseAccess expr) {
+		next.visit_base_access (expr);
+	}
+
+	public virtual void visit_postfix_expression (PostfixExpression expr) {
+		next.visit_postfix_expression (expr);
+	}
+
+	public virtual void visit_object_creation_expression (ObjectCreationExpression expr) {
+		next.visit_object_creation_expression (expr);
+	}
+
+	public virtual void visit_sizeof_expression (SizeofExpression expr) {
+		next.visit_sizeof_expression (expr);
+	}
+
+	public virtual void visit_typeof_expression (TypeofExpression expr) {
+		next.visit_typeof_expression (expr);
+	}
+
+	public virtual void visit_unary_expression (UnaryExpression expr) {
+		next.visit_unary_expression (expr);
+	}
+
+	public virtual void visit_cast_expression (CastExpression expr) {
+		next.visit_cast_expression (expr);
+	}
+	
+	public virtual void visit_pointer_indirection (PointerIndirection expr) {
+		next.visit_pointer_indirection (expr);
+	}
+
+	public virtual void visit_addressof_expression (AddressofExpression expr) {
+		next.visit_addressof_expression (expr);
+	}
+
+	public virtual void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
+		next.visit_reference_transfer_expression (expr);
+	}
+
+	public virtual void visit_binary_expression (BinaryExpression expr) {
+		next.visit_binary_expression (expr);
+	}
+
+	public virtual void visit_type_check (TypeCheck expr) {
+		next.visit_type_check (expr);
+	}
+
+	public virtual void visit_conditional_expression (ConditionalExpression expr) {
+		next.visit_conditional_expression (expr);
+	}
+
+	public virtual void visit_lambda_expression (LambdaExpression l) {
+		next.visit_lambda_expression (l);
+	}
+
+	public virtual void visit_assignment (Assignment a) {
+		next.visit_assignment (a);
 	}
 
 	public virtual void generate_cparameters (Method m, DataType creturn_type, bool in_gtypeinstance_creation_method, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
@@ -170,10 +402,6 @@ public abstract class Vala.CCodeModule {
 
 	public virtual CCodeExpression get_array_length_cexpression (Expression array_expr, int dim = -1) {
 		return next.get_array_length_cexpression (array_expr, dim);
-	}
-
-	public virtual void visit_throw_statement (ThrowStatement stmt) {
-		next.visit_throw_statement (stmt);
 	}
 
 	public virtual void add_simple_check (CodeNode node, CCodeFragment cfrag) {

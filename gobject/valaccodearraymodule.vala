@@ -44,12 +44,12 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 		foreach (Expression size in expr.get_sizes ()) {
 			CCodeExpression csize = (CCodeExpression) size.ccodenode;
 
-			if (!codegen.is_pure_ccode_expression (csize)) {
-				var temp_var = codegen.get_temp_variable (codegen.int_type, false, expr);
+			if (!is_pure_ccode_expression (csize)) {
+				var temp_var = get_temp_variable (int_type, false, expr);
 				var name_cnode = new CCodeIdentifier (temp_var.name);
 				size.ccodenode = name_cnode;
 
-				codegen.temp_vars.insert (0, temp_var);
+				temp_vars.insert (0, temp_var);
 
 				csize = new CCodeParenthesizedExpression (new CCodeAssignment (name_cnode, csize));
 			}
@@ -77,11 +77,11 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 			}
 
 			var ce = new CCodeCommaExpression ();
-			var temp_var = codegen.get_temp_variable (expr.value_type, true, expr);
+			var temp_var = get_temp_variable (expr.value_type, true, expr);
 			var name_cnode = new CCodeIdentifier (temp_var.name);
 			int i = 0;
 			
-			codegen.temp_vars.insert (0, temp_var);
+			temp_vars.insert (0, temp_var);
 			
 			ce.append_expression (new CCodeAssignment (name_cnode, gnew));
 			
@@ -133,7 +133,7 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 		if (array_expr is ArrayCreationExpression) {
 			Gee.List<Expression> size = ((ArrayCreationExpression) array_expr).get_sizes ();
 			var length_expr = size[dim - 1];
-			return (CCodeExpression) codegen.get_ccodenode (length_expr);
+			return (CCodeExpression) get_ccodenode (length_expr);
 		} else if (array_expr is InvocationExpression) {
 			var invocation_expr = (InvocationExpression) array_expr;
 			Gee.List<CCodeExpression> size = invocation_expr.get_array_sizes ();
@@ -176,9 +176,9 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 						}
 
 						var length_cname = get_array_length_cname (field.name, dim);
-						var instance_expression_type = codegen.get_data_type_for_symbol (base_type);
-						var instance_target_type = codegen.get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
-						CCodeExpression typed_inst = (CCodeExpression) codegen.get_ccodenode (ma.inner);
+						var instance_expression_type = get_data_type_for_symbol (base_type);
+						var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
+						CCodeExpression typed_inst = (CCodeExpression) get_ccodenode (ma.inner);
 
 						CCodeExpression inst;
 						if (field.access == SymbolAccessibility.PRIVATE) {
@@ -242,7 +242,7 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 				int dim = lit.value.to_int ();
 				expr.ccodenode = head.get_array_length_cexpression (memberaccess.inner, dim + 1);
 			}
-		} else if (container_type == codegen.string_type.data_type) {
+		} else if (container_type == string_type.data_type) {
 			// should be moved to a different module
 
 			// access to unichar in a string
@@ -254,15 +254,15 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 			ccall.add_argument (coffsetcall);
 
 			expr.ccodenode = ccall;
-		} else if (container_type != null && codegen.list_type != null && codegen.map_type != null &&
-		           (container_type.is_subtype_of (codegen.list_type) || container_type.is_subtype_of (codegen.map_type))) {
+		} else if (container_type != null && list_type != null && map_type != null &&
+		           (container_type.is_subtype_of (list_type) || container_type.is_subtype_of (map_type))) {
 			// should be moved to a different module
 
 			TypeSymbol collection_iface = null;
-			if (container_type.is_subtype_of (codegen.list_type)) {
-				collection_iface = codegen.list_type;
-			} else if (container_type.is_subtype_of (codegen.map_type)) {
-				collection_iface = codegen.map_type;
+			if (container_type.is_subtype_of (list_type)) {
+				collection_iface = list_type;
+			} else if (container_type.is_subtype_of (map_type)) {
+				collection_iface = map_type;
 			}
 			var get_method = (Method) collection_iface.scope.lookup ("get");
 			Gee.List<FormalParameter> get_params = get_method.get_parameters ();
@@ -272,14 +272,14 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 
 			if (get_param.parameter_type.type_parameter != null) {
 				var index_type = SemanticAnalyzer.get_actual_type (expr.container.value_type, get_method, get_param.parameter_type, expr);
-				cindex = codegen.convert_to_generic_pointer (cindex, index_type);
+				cindex = convert_to_generic_pointer (cindex, index_type);
 			}
 
 			var get_ccall = new CCodeFunctionCall (new CCodeIdentifier (get_method.get_cname ()));
 			get_ccall.add_argument (new CCodeCastExpression (ccontainer, collection_iface.get_cname () + "*"));
 			get_ccall.add_argument (cindex);
 
-			expr.ccodenode = codegen.convert_from_generic_pointer (get_ccall, expr.value_type);
+			expr.ccodenode = convert_from_generic_pointer (get_ccall, expr.value_type);
 		} else if (expr.container is MemberAccess && expr.container.symbol_reference is Signal) {
 			// should be moved to the GSignal module
 
@@ -342,7 +342,7 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
 		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("destroy_func", "GDestroyNotify"));
-		codegen.source_type_member_declaration.append (fun.copy ());
+		source_type_member_declaration.append (fun.copy ());
 
 		var cdofree = new CCodeBlock ();
 
@@ -364,11 +364,11 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 		carrfree.add_argument (new CCodeIdentifier ("array"));
 		fun.block.add_statement (new CCodeExpressionStatement (carrfree));
 
-		codegen.source_type_member_definition.append (fun);
+		source_type_member_definition.append (fun);
 	}
 
 	public override void append_vala_array_move () {
-		codegen.string_h_needed = true;
+		string_h_needed = true;
 
 		// assumes that overwritten array elements are null before invocation
 		// FIXME will leak memory if that's not the case
@@ -379,7 +379,7 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 		fun.add_parameter (new CCodeFormalParameter ("src", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("dest", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("length", "gint"));
-		codegen.source_type_member_declaration.append (fun.copy ());
+		source_type_member_declaration.append (fun.copy ());
 
 		var array = new CCodeCastExpression (new CCodeIdentifier ("array"), "char*");
 		var element_size = new CCodeIdentifier ("element_size");
@@ -414,6 +414,6 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 
 		fun.block.add_statement (new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest), czeroblock1, czeroblock2));
 
-		codegen.source_type_member_definition.append (fun);
+		source_type_member_definition.append (fun);
 	}
 }

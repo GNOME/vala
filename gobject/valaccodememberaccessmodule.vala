@@ -36,13 +36,13 @@ public class Vala.CCodeMemberAccessModule : CCodeMethodModule {
 				if (m.base_method != null) {
 					var base_class = (Class) m.base_method.parent_symbol;
 					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
-					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (codegen.current_class.get_lower_case_cname (null))));
+					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
 					
 					expr.ccodenode = new CCodeMemberAccess.pointer (vcast, m.name);
 					return;
 				} else if (m.base_interface_method != null) {
 					var base_iface = (Interface) m.base_interface_method.parent_symbol;
-					string parent_iface_var = "%s_%s_parent_iface".printf (codegen.current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
+					string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
 
 					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), m.name);
 					return;
@@ -55,8 +55,8 @@ public class Vala.CCodeMemberAccessModule : CCodeMethodModule {
 					if (expr.inner != null && !expr.inner.is_pure ()) {
 						// instance expression has side-effects
 						// store in temp. variable
-						var temp_var = codegen.get_temp_variable (expr.inner.value_type);
-						codegen.temp_vars.insert (0, temp_var);
+						var temp_var = get_temp_variable (expr.inner.value_type);
+						temp_vars.insert (0, temp_var);
 						var ctemp = new CCodeIdentifier (temp_var.name);
 						inst = new CCodeAssignment (ctemp, pub_inst);
 						expr.inner.ccodenode = ctemp;
@@ -79,7 +79,7 @@ public class Vala.CCodeMemberAccessModule : CCodeMethodModule {
 			var f = (Field) expr.symbol_reference;
 			if (f.binding == MemberBinding.INSTANCE) {
 				var instance_expression_type = base_type;
-				var instance_target_type = codegen.get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
+				var instance_target_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 
 				var cl = instance_target_type.data_type as Class;
 				bool is_gtypeinstance = ((instance_target_type.data_type == cl) && (cl == null || !cl.is_compact));
@@ -101,7 +101,7 @@ public class Vala.CCodeMemberAccessModule : CCodeMethodModule {
 
 				CCodeExpression klass;
 				if (expr.inner == null) {
-					if (codegen.in_static_or_class_ctor) {
+					if (in_static_or_class_ctor) {
 						// Accessing the field from a static or class constructor
 						klass = new CCodeIdentifier ("klass");
 					} else {
@@ -123,7 +123,7 @@ public class Vala.CCodeMemberAccessModule : CCodeMethodModule {
 			}
 
 			if (f.field_type.type_parameter != null && expr.value_type.type_parameter == null) {
-				expr.ccodenode = codegen.convert_from_generic_pointer ((CCodeExpression) expr.ccodenode, expr.value_type);
+				expr.ccodenode = convert_from_generic_pointer ((CCodeExpression) expr.ccodenode, expr.value_type);
 			}
 		} else if (expr.symbol_reference is Constant) {
 			var c = (Constant) expr.symbol_reference;
@@ -135,7 +135,7 @@ public class Vala.CCodeMemberAccessModule : CCodeMethodModule {
 				if (prop.base_property != null) {
 					var base_class = (Class) prop.base_property.parent_symbol;
 					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
-					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (codegen.current_class.get_lower_case_cname (null))));
+					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
 					
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
 					ccall.add_argument ((CCodeExpression) expr.inner.ccodenode);
@@ -143,7 +143,7 @@ public class Vala.CCodeMemberAccessModule : CCodeMethodModule {
 					return;
 				} else if (prop.base_interface_property != null) {
 					var base_iface = (Interface) prop.base_interface_property.parent_symbol;
-					string parent_iface_var = "%s_%s_parent_iface".printf (codegen.current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
+					string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
 
 					var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), "get_%s".printf (prop.name)));
 					ccall.add_argument ((CCodeExpression) expr.inner.ccodenode);
@@ -153,7 +153,7 @@ public class Vala.CCodeMemberAccessModule : CCodeMethodModule {
 			}
 
 			if (prop.get_accessor.automatic_body &&
-			    codegen.current_type_symbol == prop.parent_symbol &&
+			    current_type_symbol == prop.parent_symbol &&
 			    prop.base_property == null &&
 			    prop.base_interface_property == null) {
 				CCodeExpression inst;
@@ -182,9 +182,9 @@ public class Vala.CCodeMemberAccessModule : CCodeMethodModule {
 				// They are returned as out parameter.
 				if (base_property.property_type.is_real_struct_type ()) {
 					var ccomma = new CCodeCommaExpression ();
-					var temp_var = codegen.get_temp_variable (base_property.property_type);
+					var temp_var = get_temp_variable (base_property.property_type);
 					var ctemp = new CCodeIdentifier (temp_var.name);
-					codegen.temp_vars.add (temp_var);
+					temp_vars.add (temp_var);
 					ccall.add_argument (new CCodeUnaryExpression(CCodeUnaryOperator.ADDRESS_OF, ctemp));
 					ccomma.append_expression (ccall);
 					ccomma.append_expression (ctemp);
@@ -207,11 +207,11 @@ public class Vala.CCodeMemberAccessModule : CCodeMethodModule {
 				temp_type.value_owned = true;
 
 				// we need a temporary variable to save the property value
-				var temp_var = codegen.get_temp_variable (expr.value_type);
-				codegen.temp_vars.insert (0, temp_var);
+				var temp_var = get_temp_variable (expr.value_type);
+				temp_vars.insert (0, temp_var);
 
-				if (codegen.requires_destroy (temp_type)) {
-					codegen.temp_ref_vars.insert (0, temp_var);
+				if (requires_destroy (temp_type)) {
+					temp_ref_vars.insert (0, temp_var);
 				}
 
 				var ctemp = new CCodeIdentifier (temp_var.name);
@@ -230,11 +230,11 @@ public class Vala.CCodeMemberAccessModule : CCodeMethodModule {
 			expr.ccodenode = new CCodeConstant (ev.get_cname ());
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
-			expr.ccodenode = new CCodeIdentifier (codegen.get_variable_cname (local.name));
+			expr.ccodenode = new CCodeIdentifier (get_variable_cname (local.name));
 		} else if (expr.symbol_reference is FormalParameter) {
 			var p = (FormalParameter) expr.symbol_reference;
 			if (p.name == "this") {
-				var st = codegen.current_type_symbol as Struct;
+				var st = current_type_symbol as Struct;
 				if (st != null && !st.is_simple_type ()) {
 					expr.ccodenode = new CCodeIdentifier ("(*self)");
 				} else {
@@ -249,10 +249,10 @@ public class Vala.CCodeMemberAccessModule : CCodeMethodModule {
 					// Property setters of non simple structs shall replace all occurences
 					// of the "value" formal parameter with a dereferencing version of that
 					// parameter.
-					if (codegen.current_property_accessor != null &&
-					    codegen.current_property_accessor.writable &&
-					    codegen.current_property_accessor.value_parameter == p &&
-					    codegen.current_property_accessor.prop.property_type.is_real_struct_type ()) {
+					if (current_property_accessor != null &&
+					    current_property_accessor.writable &&
+					    current_property_accessor.value_parameter == p &&
+					    current_property_accessor.prop.property_type.is_real_struct_type ()) {
 						expr.ccodenode = new CCodeIdentifier ("(*value)");
 					} else {
 						expr.ccodenode = new CCodeIdentifier (p.name);
@@ -267,7 +267,7 @@ public class Vala.CCodeMemberAccessModule : CCodeMethodModule {
 				var m = sig.get_method_handler ();
 				var base_class = (Class) m.parent_symbol;
 				var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
-				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (codegen.current_class.get_lower_case_cname (null))));
+				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
 				
 				expr.ccodenode = new CCodeMemberAccess.pointer (vcast, m.name);
 				return;

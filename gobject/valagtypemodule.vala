@@ -29,8 +29,8 @@ public class Vala.GTypeModule : GErrorModule {
 	}
 
 	public override void visit_interface (Interface iface) {
-		codegen.current_symbol = iface;
-		codegen.current_type_symbol = iface;
+		current_symbol = iface;
+		current_type_symbol = iface;
 
 		if (iface.get_cname().len () < 3) {
 			iface.error = true;
@@ -41,14 +41,14 @@ public class Vala.GTypeModule : GErrorModule {
 		CCodeFragment decl_frag;
 		CCodeFragment def_frag;
 		if (iface.access != SymbolAccessibility.PRIVATE) {
-			decl_frag = codegen.header_type_declaration;
-			def_frag = codegen.header_type_definition;
+			decl_frag = header_type_declaration;
+			def_frag = header_type_definition;
 		} else {
-			decl_frag = codegen.source_type_declaration;
-			def_frag = codegen.source_type_definition;
+			decl_frag = source_type_declaration;
+			def_frag = source_type_definition;
 		}
 
-		codegen.type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
+		type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
 		
 		decl_frag.append (new CCodeNewline ());
 		var macro = "(%s_get_type ())".printf (iface.get_lower_case_cname (null));
@@ -58,7 +58,7 @@ public class Vala.GTypeModule : GErrorModule {
 		decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname (null)), macro));
 
 		macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (iface.get_type_id ());
-		decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (codegen.get_type_check_function (iface)), macro));
+		decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (get_type_check_function (iface)), macro));
 
 		macro = "(G_TYPE_INSTANCE_GET_INTERFACE ((obj), %s, %s))".printf (iface.get_type_id (), iface.get_type_cname ());
 		decl_frag.append (new CCodeMacroReplacement ("%s_GET_INTERFACE(obj)".printf (iface.get_upper_case_cname (null)), macro));
@@ -67,30 +67,30 @@ public class Vala.GTypeModule : GErrorModule {
 
 		if (iface.source_reference.file.cycle == null) {
 			decl_frag.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
-			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (codegen.type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
+			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
 		}
 		
-		codegen.type_struct.add_field ("GTypeInterface", "parent_iface");
+		type_struct.add_field ("GTypeInterface", "parent_iface");
 
 		if (iface.source_reference.comment != null) {
 			def_frag.append (new CCodeComment (iface.source_reference.comment));
 		}
-		def_frag.append (codegen.type_struct);
+		def_frag.append (type_struct);
 
 		iface.accept_children (codegen);
 
 		add_interface_base_init_function (iface);
 
-		var type_fun = new InterfaceRegisterFunction (iface, codegen);
+		var type_fun = new InterfaceRegisterFunction (iface, context);
 		type_fun.init_from_type ();
 		if (iface.access != SymbolAccessibility.PRIVATE) {
-			codegen.header_type_member_declaration.append (type_fun.get_declaration ());
+			header_type_member_declaration.append (type_fun.get_declaration ());
 		} else {
-			codegen.source_type_member_declaration.append (type_fun.get_declaration ());
+			source_type_member_declaration.append (type_fun.get_declaration ());
 		}
-		codegen.source_type_member_definition.append (type_fun.get_definition ());
+		source_type_member_definition.append (type_fun.get_definition ());
 
-		codegen.current_type_symbol = null;
+		current_type_symbol = null;
 	}
 
 	private void add_interface_base_init_function (Interface iface) {
@@ -102,7 +102,7 @@ public class Vala.GTypeModule : GErrorModule {
 		
 		/* make sure not to run the initialization code twice */
 		base_init.block = new CCodeBlock ();
-		var decl = new CCodeDeclaration (codegen.bool_type.get_cname ());
+		var decl = new CCodeDeclaration (bool_type.get_cname ());
 		decl.modifiers |= CCodeModifiers.STATIC;
 		decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("initialized", new CCodeConstant ("FALSE")));
 		base_init.block.add_statement (decl);
@@ -110,7 +110,7 @@ public class Vala.GTypeModule : GErrorModule {
 		base_init.block.add_statement (cif);
 		init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("initialized"), new CCodeConstant ("TRUE"))));
 
-		if (iface.is_subtype_of (codegen.gobject_type)) {
+		if (iface.is_subtype_of (gobject_type)) {
 			/* create properties */
 			var props = iface.get_properties ();
 			foreach (Property prop in props) {
@@ -140,6 +140,6 @@ public class Vala.GTypeModule : GErrorModule {
 
 		init_block.add_statement (head.register_dbus_info (iface));
 
-		codegen.source_type_member_definition.append (base_init);
+		source_type_member_definition.append (base_init);
 	}
 }

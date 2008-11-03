@@ -395,7 +395,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		DataType instance_type = null;
 		if (m.binding == MemberBinding.INSTANCE) {
-			instance_type = CCodeGenerator.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
+			instance_type = CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
 		}
 
 		write_params (m.get_parameters (), instance_type);
@@ -423,7 +423,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_params (m.get_parameters ());
 
-		write_return_type (CCodeGenerator.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol));
+		write_return_type (CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol));
 
 		indent--;
 		write_indent ();
