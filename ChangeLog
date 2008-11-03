@@ -1,5 +1,15 @@
 2008-11-03  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/Makefile.am:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodemodule.vala:
+	* gobject/valagerrormodule.vala:
+	* gobject/valagtypemodule.vala:
+
+	Add GErrorModule
+
+2008-11-03  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodearraymodule.vala:
 	* gobject/valaccodeassignmentmodule.vala:
 	* gobject/valaccodedynamicpropertymodule.vala:

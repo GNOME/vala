@@ -171,4 +171,12 @@ public abstract class Vala.CCodeModule {
 	public virtual CCodeExpression get_array_length_cexpression (Expression array_expr, int dim = -1) {
 		return next.get_array_length_cexpression (array_expr, dim);
 	}
+
+	public virtual void visit_throw_statement (ThrowStatement stmt) {
+		next.visit_throw_statement (stmt);
+	}
+
+	public virtual void add_simple_check (CodeNode node, CCodeFragment cfrag) {
+		next.add_simple_check (node, cfrag);
+	}
 }

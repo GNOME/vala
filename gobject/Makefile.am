@@ -27,6 +27,7 @@ libvala_la_VALASOURCES = \
 	valaclassregisterfunction.vala \
 	valadbusclientmodule.vala \
 	valadbusservermodule.vala \
+	valagerrormodule.vala \
 	valagirwriter.vala \
 	valagobjectmodule.vala \
 	valagsignalmodule.vala \
