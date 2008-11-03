@@ -92,6 +92,12 @@
 					<parameter name="connection" type="LmConnection*"/>
 				</parameters>
 			</method>
+			<method name="get_keep_alive_rate" symbol="lm_connection_get_keep_alive_rate">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="connection" type="LmConnection*"/>
+				</parameters>
+			</method>
 			<method name="get_local_host" symbol="lm_connection_get_local_host">
 				<return-type type="gchar*"/>
 				<parameters>

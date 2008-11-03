@@ -2,6 +2,116 @@
 
 [CCode (cprefix = "Lm", lower_case_cprefix = "lm_")]
 namespace Lm {
+	[Compact]
+	[CCode (ref_function = "lm_connection_ref", unref_function = "lm_connection_unref", cheader_filename = "loudmouth/loudmouth.h")]
+	public class Connection {
+		public const int DEFAULT_PORT;
+		public const int DEFAULT_PORT_SSL;
+		public bool authenticate (string username, string password, string resource, Lm.ResultFunction function, GLib.DestroyNotify? notify) throws GLib.Error;
+		public bool authenticate_and_block (string username, string password, string resource) throws GLib.Error;
+		public void cancel_open ();
+		public bool close () throws GLib.Error;
+		public weak string get_full_jid ();
+		public weak string get_jid ();
+		public uint get_keep_alive_rate ();
+		public string get_local_host ();
+		public uint get_port ();
+		public weak Lm.Proxy get_proxy ();
+		public weak string get_server ();
+		public weak Lm.SSL get_ssl ();
+		public Lm.ConnectionState get_state ();
+		public bool is_authenticated ();
+		public bool is_open ();
+		[CCode (has_construct_function = false)]
+		public Connection (string server);
+		public bool open (Lm.ResultFunction function, GLib.DestroyNotify? notify) throws GLib.Error;
+		public bool open_and_block () throws GLib.Error;
+		public void register_message_handler (Lm.MessageHandler handler, Lm.MessageType type, Lm.HandlerPriority priority);
+		public bool send (Lm.Message message) throws GLib.Error;
+		public bool send_raw (string str) throws GLib.Error;
+		public bool send_with_reply (Lm.Message message, Lm.MessageHandler handler) throws GLib.Error;
+		public Lm.Message send_with_reply_and_block (Lm.Message message) throws GLib.Error;
+		public void set_disconnect_function (Lm.DisconnectFunction function, GLib.DestroyNotify? notify);
+		public void set_jid (string jid);
+		public void set_keep_alive_rate (uint rate);
+		public void set_port (uint port);
+		public void set_proxy (Lm.Proxy proxy);
+		public void set_server (string server);
+		public void set_ssl (Lm.SSL ssl);
+		public void unregister_message_handler (Lm.MessageHandler handler, Lm.MessageType type);
+		[CCode (has_construct_function = false)]
+		public Connection.with_context (string server, GLib.MainContext context);
+	}
+	[Compact]
+	[CCode (ref_function = "lm_message_ref", unref_function = "lm_message_unref", cheader_filename = "loudmouth/loudmouth.h")]
+	public class Message {
+		public Lm.MessageNode node;
+		public weak Lm.MessageNode get_node ();
+		public Lm.MessageSubType get_sub_type ();
+		public Lm.MessageType get_type ();
+		[CCode (has_construct_function = false)]
+		public Message (string? to, Lm.MessageType type);
+		[CCode (has_construct_function = false)]
+		public Message.with_sub_type (string? to, Lm.MessageType type, Lm.MessageSubType sub_type);
+	}
+	[Compact]
+	[CCode (ref_function = "lm_message_handler_ref", unref_function = "lm_message_handler_unref", cheader_filename = "loudmouth/loudmouth.h")]
+	public class MessageHandler {
+		public void invalidate ();
+		public bool is_valid ();
+		[CCode (has_construct_function = false)]
+		public MessageHandler (Lm.HandleMessageFunction function, GLib.DestroyNotify? notify);
+	}
+	[Compact]
+	[CCode (ref_function = "lm_message_node_ref", unref_function = "lm_message_node_unref", cheader_filename = "loudmouth/loudmouth.h")]
+	public class MessageNode {
+		public Lm.MessageNode children;
+		public string name;
+		public weak Lm.MessageNode next;
+		public weak Lm.MessageNode parent;
+		public weak Lm.MessageNode prev;
+		public bool raw_mode;
+		public string value;
+		public weak Lm.MessageNode add_child (string name, string? value);
+		public weak Lm.MessageNode? find_child (string child_name);
+		public weak string get_attribute (string name);
+		public weak Lm.MessageNode? get_child (string child_name);
+		public bool get_raw_mode ();
+		public weak string get_value ();
+		public void set_attribute (string name, string value);
+		public void set_attributes (string name, ...);
+		public void set_raw_mode (bool raw_mode);
+		public void set_value (string value);
+		public string to_string ();
+	}
+	[Compact]
+	[CCode (ref_function = "lm_proxy_ref", unref_function = "lm_proxy_unref", cheader_filename = "loudmouth/loudmouth.h")]
+	public class Proxy {
+		public weak string get_password ();
+		public uint get_port ();
+		public weak string get_server ();
+		public weak string get_username ();
+		[CCode (has_construct_function = false)]
+		public Proxy (Lm.ProxyType type);
+		public void set_password (string password);
+		public void set_port (uint port);
+		public void set_server (string server);
+		public void set_type (Lm.ProxyType type);
+		public void set_username (string username);
+		[CCode (has_construct_function = false)]
+		public Proxy.with_server (Lm.ProxyType type, string server, uint port);
+	}
+	[Compact]
+	[CCode (ref_function = "lm_ssl_ref", unref_function = "lm_ssl_unref", cheader_filename = "loudmouth/loudmouth.h")]
+	public class SSL {
+		public weak string get_fingerprint ();
+		public bool get_require_starttls ();
+		public bool get_use_starttls ();
+		public static bool is_supported ();
+		[CCode (has_construct_function = false)]
+		public SSL (string expected_fingerprint, Lm.SSLFunction ssl_function, GLib.DestroyNotify? notify);
+		public void use_starttls (bool use_starttls, bool require);
+	}
 	[CCode (cprefix = "LM_CERT_", has_type_id = "0", cheader_filename = "loudmouth/loudmouth.h")]
 	public enum CertificateStatus {
 		INVALID,
@@ -99,106 +209,6 @@ namespace Lm {
 		CERT_HOSTNAME_MISMATCH,
 		CERT_FINGERPRINT_MISMATCH,
 		GENERIC_ERROR
-	}
-	[Compact]
-	[CCode (ref_function = "lm_connection_ref", unref_function = "lm_connection_unref", cheader_filename = "loudmouth/loudmouth.h")]
-	public class Connection {
-		public const int DEFAULT_PORT;
-		public const int DEFAULT_PORT_SSL;
-		public Connection (string server);
-		public bool authenticate (string username, string password, string resource, Lm.ResultFunction function, GLib.DestroyNotify? notify) throws GLib.Error;
-		public bool authenticate_and_block (string username, string password, string resource) throws GLib.Error;
-		public void cancel_open ();
-		public bool close () throws GLib.Error;
-		public weak string get_full_jid ();
-		public weak string get_jid ();
-		public string get_local_host ();
-		public uint get_port ();
-		public weak Lm.Proxy get_proxy ();
-		public weak string get_server ();
-		public weak Lm.SSL get_ssl ();
-		public Lm.ConnectionState get_state ();
-		public bool is_authenticated ();
-		public bool is_open ();
-		public Connection.with_context (string server, GLib.MainContext context);
-		public bool open (Lm.ResultFunction function, GLib.DestroyNotify? notify) throws GLib.Error;
-		public bool open_and_block () throws GLib.Error;
-		public void register_message_handler (Lm.MessageHandler handler, Lm.MessageType type, Lm.HandlerPriority priority);
-		public bool send (Lm.Message message) throws GLib.Error;
-		public bool send_raw (string str) throws GLib.Error;
-		public bool send_with_reply (Lm.Message message, Lm.MessageHandler handler) throws GLib.Error;
-		public Lm.Message send_with_reply_and_block (Lm.Message message) throws GLib.Error;
-		public void set_disconnect_function (Lm.DisconnectFunction function, GLib.DestroyNotify? notify);
-		public void set_jid (string jid);
-		public void set_keep_alive_rate (uint rate);
-		public void set_port (uint port);
-		public void set_proxy (Lm.Proxy proxy);
-		public void set_server (string server);
-		public void set_ssl (Lm.SSL ssl);
-		public void unregister_message_handler (Lm.MessageHandler handler, Lm.MessageType type);
-	}
-	[Compact]
-	[CCode (ref_function = "lm_message_ref", unref_function = "lm_message_unref", cheader_filename = "loudmouth/loudmouth.h")]
-	public class Message {
-		public Lm.MessageNode node;
-		public weak Lm.MessageNode get_node ();
-		public Lm.MessageSubType get_sub_type ();
-		public Message (string to, Lm.MessageType type);
-		public Message.with_sub_type (string? to, Lm.MessageType type, Lm.MessageSubType sub_type);
-	}
-	[Compact]
-	[CCode (ref_function = "lm_message_handler_ref", unref_function = "lm_message_handler_unref", cheader_filename = "loudmouth/loudmouth.h")]
-	public class MessageHandler {
-		public void invalidate ();
-		public bool is_valid ();
-		public MessageHandler (Lm.HandleMessageFunction function, GLib.DestroyNotify? notify);
-	}
-	[Compact]
-	[CCode (ref_function = "lm_message_node_ref", unref_function = "lm_message_node_unref", cheader_filename = "loudmouth/loudmouth.h")]
-	public class MessageNode {
-		public string name;
-		public string value;
-		public bool raw_mode;
-		public weak Lm.MessageNode next;
-		public weak Lm.MessageNode prev;
-		public weak Lm.MessageNode parent;
-		public Lm.MessageNode children;
-		public weak Lm.MessageNode add_child (string name, string? value);
-		public weak Lm.MessageNode? find_child (string child_name);
-		public weak string get_attribute (string name);
-		public weak Lm.MessageNode? get_child (string child_name);
-		public bool get_raw_mode ();
-		public weak string get_value ();
-		public void set_attribute (string name, string value);
-		public void set_attributes (string name, ...);
-		public void set_raw_mode (bool raw_mode);
-		public void set_value (string value);
-		public string to_string ();
-	}
-	[Compact]
-	[CCode (ref_function = "lm_proxy_ref", unref_function = "lm_proxy_unref", cheader_filename = "loudmouth/loudmouth.h")]
-	public class Proxy {
-		public weak string get_password ();
-		public uint get_port ();
-		public weak string get_server ();
-		public weak string get_username ();
-		public Proxy (Lm.ProxyType type);
-		public Proxy.with_server (Lm.ProxyType type, string server, uint port);
-		public void set_password (string password);
-		public void set_port (uint port);
-		public void set_server (string server);
-		public void set_type (Lm.ProxyType type);
-		public void set_username (string username);
-	}
-	[Compact]
-	[CCode (ref_function = "lm_ssl_ref", unref_function = "lm_ssl_unref", cheader_filename = "loudmouth/loudmouth.h")]
-	public class SSL {
-		public weak string get_fingerprint ();
-		public bool get_require_starttls ();
-		public bool get_use_starttls ();
-		public static bool is_supported ();
-		public SSL (string expected_fingerprint, Lm.SSLFunction ssl_function, GLib.DestroyNotify? notify);
-		public void use_starttls (bool use_starttls, bool require);
 	}
 	[CCode (cheader_filename = "loudmouth/loudmouth.h")]
 	public delegate void DisconnectFunction (Lm.Connection connection, Lm.DisconnectReason reason);

@@ -4,7 +4,10 @@ namespace Lm {
 	public class Connection {
 		public const int DEFAULT_PORT;
 		public const int DEFAULT_PORT_SSL;
-		public Connection (string server);
 	}
-
+	[Compact]
+	[CCode (ref_function = "lm_message_ref", unref_function = "lm_message_unref", cheader_filename = "loudmouth/loudmouth.h")]
+	public class Message {
+		public Lm.MessageType get_type ();
+	}
 }
