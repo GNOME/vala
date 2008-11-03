@@ -1,5 +1,12 @@
 2008-11-03  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valadbusclientmodule.vala:
+
+	Move dbus_use_ptr_array to DBusClientModule
+
+2008-11-03  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/Makefile.am:
 	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodedelegatemodule.vala:

@@ -4193,32 +4193,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	public bool dbus_use_ptr_array (ArrayType array_type) {
-		if (array_type.element_type.data_type == string_type.data_type) {
-			// use char**
-			return false;
-		} else if (array_type.element_type.data_type == bool_type.data_type
-		           || array_type.element_type.data_type == char_type.data_type
-		           || array_type.element_type.data_type == uchar_type.data_type
-		           || array_type.element_type.data_type == int_type.data_type
-		           || array_type.element_type.data_type == uint_type.data_type
-		           || array_type.element_type.data_type == long_type.data_type
-		           || array_type.element_type.data_type == ulong_type.data_type
-		           || array_type.element_type.data_type == int8_type.data_type
-		           || array_type.element_type.data_type == uint8_type.data_type
-		           || array_type.element_type.data_type == int32_type.data_type
-		           || array_type.element_type.data_type == uint32_type.data_type
-		           || array_type.element_type.data_type == int64_type.data_type
-		           || array_type.element_type.data_type == uint64_type.data_type
-		           || array_type.element_type.data_type == double_type.data_type) {
-			// use GArray
-			return false;
-		} else {
-			// use GPtrArray
-			return true;
-		}
-	}
-
 	public CCodeNode? get_ccodenode (CodeNode node) {
 		if (node.ccodenode == null) {
 			node.accept (codegen);
