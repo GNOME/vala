@@ -153,4 +153,68 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		source_type_member_definition.append (readyfunc);
 	}
+
+	public override void visit_yield_statement (YieldStatement stmt) {
+		if (stmt.yield_expression == null) {
+			var cfrag = new CCodeFragment ();
+			stmt.ccodenode = cfrag;
+
+			var idle_call = new CCodeFunctionCall (new CCodeIdentifier ("g_idle_add"));
+			idle_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (current_method.get_real_cname ()), "GSourceFunc"));
+			idle_call.add_argument (new CCodeIdentifier ("data"));
+
+			int state = next_coroutine_state++;
+
+			cfrag.append (new CCodeExpressionStatement (idle_call));
+			cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state"), new CCodeConstant (state.to_string ()))));
+			cfrag.append (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+			cfrag.append (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
+
+			return;
+		}
+
+		stmt.accept_children (codegen);
+
+		if (stmt.yield_expression.error) {
+			stmt.error = true;
+			return;
+		}
+
+		stmt.ccodenode = new CCodeExpressionStatement ((CCodeExpression) stmt.yield_expression.ccodenode);
+
+		if (stmt.tree_can_fail && stmt.yield_expression.tree_can_fail) {
+			// simple case, no node breakdown necessary
+
+			var cfrag = new CCodeFragment ();
+
+			cfrag.append (stmt.ccodenode);
+
+			head.add_simple_check (stmt.yield_expression, cfrag);
+
+			stmt.ccodenode = cfrag;
+		}
+
+		/* free temporary objects */
+
+		if (((Gee.List<LocalVariable>) temp_vars).size == 0) {
+			/* nothing to do without temporary variables */
+			return;
+		}
+		
+		var cfrag = new CCodeFragment ();
+		append_temp_decl (cfrag, temp_vars);
+		
+		cfrag.append (stmt.ccodenode);
+		
+		foreach (LocalVariable local in temp_ref_vars) {
+			var ma = new MemberAccess.simple (local.name);
+			ma.symbol_reference = local;
+			cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (local.name), local.variable_type, ma)));
+		}
+		
+		stmt.ccodenode = cfrag;
+		
+		temp_vars.clear ();
+		temp_ref_vars.clear ();
+	}
 }

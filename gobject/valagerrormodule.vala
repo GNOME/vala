@@ -24,6 +24,9 @@ using GLib;
 using Gee;
 
 public class Vala.GErrorModule : CCodeDynamicSignalModule {
+	private int current_try_id = 0;
+	private int next_try_id = 0;
+
 	public GErrorModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}
@@ -124,5 +127,85 @@ public class Vala.GErrorModule : CCodeDynamicSignalModule {
 
 			cfrag.append (new CCodeIfStatement (ccond, cerror_block));
 		}
+	}
+
+	public override void visit_try_statement (TryStatement stmt) {
+		int this_try_id = next_try_id++;
+
+		var old_try = current_try;
+		var old_try_id = current_try_id;
+		current_try = stmt;
+		current_try_id = this_try_id;
+
+		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
+			clause.clabel_name = "__catch%d_%s".printf (this_try_id, clause.error_type.get_lower_case_cname ());
+		}
+
+		if (stmt.finally_body != null) {
+			stmt.finally_body.accept (codegen);
+		}
+
+		stmt.body.accept (codegen);
+
+		current_try = old_try;
+		current_try_id = old_try_id;
+
+		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
+			clause.accept (codegen);
+		}
+
+		if (stmt.finally_body != null) {
+			stmt.finally_body.accept (codegen);
+		}
+
+		var cfrag = new CCodeFragment ();
+		cfrag.append (stmt.body.ccodenode);
+
+		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
+			cfrag.append (new CCodeGotoStatement ("__finally%d".printf (this_try_id)));
+
+			cfrag.append (clause.ccodenode);
+		}
+
+		cfrag.append (new CCodeLabel ("__finally%d".printf (this_try_id)));
+		if (stmt.finally_body != null) {
+			cfrag.append (stmt.finally_body.ccodenode);
+		} else {
+			// avoid gcc error: label at end of compound statement
+			cfrag.append (new CCodeEmptyStatement ());
+		}
+
+		stmt.ccodenode = cfrag;
+	}
+
+	public override void visit_catch_clause (CatchClause clause) {
+		if (clause.error_variable != null) {
+			clause.error_variable.active = true;
+		}
+
+		current_method_inner_error = true;
+
+		clause.accept_children (codegen);
+
+		var cfrag = new CCodeFragment ();
+		cfrag.append (new CCodeLabel (clause.clabel_name));
+
+		var cblock = new CCodeBlock ();
+
+		string variable_name = clause.variable_name;
+		if (variable_name == null) {
+			variable_name = "__err";
+		}
+
+		var cdecl = new CCodeDeclaration ("GError *");
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (variable_name, new CCodeIdentifier ("inner_error")));
+		cblock.add_statement (cdecl);
+		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"))));
+
+		cblock.add_statement (clause.body.ccodenode);
+
+		cfrag.append (cblock);
+
+		clause.ccodenode = cfrag;
 	}
 }

@@ -78,14 +78,12 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public Gee.Set<string> c_keywords;
 	
 	public int next_temp_var_id = 0;
-	private int current_try_id = 0;
-	private int next_try_id = 0;
 	private int next_array_dup_id = 0;
 	public bool in_creation_method = false;
 	private bool in_constructor = false;
 	public bool in_static_or_class_ctor = false;
 	public bool current_method_inner_error = false;
-	int next_coroutine_state = 1;
+	public int next_coroutine_state = 1;
 
 	public DataType bool_type;
 	public DataType char_type;
@@ -2054,7 +2052,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		temp_ref_vars.clear ();
 	}
 	
-	private void append_temp_decl (CCodeFragment cfrag, Gee.List<LocalVariable> temp_vars) {
+	public void append_temp_decl (CCodeFragment cfrag, Gee.List<LocalVariable> temp_vars) {
 		foreach (LocalVariable local in temp_vars) {
 			var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
 		
@@ -2885,150 +2883,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				return_expression_symbol.active = true;
 			}
 		}
-	}
-
-	public override void visit_yield_statement (YieldStatement stmt) {
-		if (stmt.yield_expression == null) {
-			var cfrag = new CCodeFragment ();
-			stmt.ccodenode = cfrag;
-
-			var idle_call = new CCodeFunctionCall (new CCodeIdentifier ("g_idle_add"));
-			idle_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (current_method.get_real_cname ()), "GSourceFunc"));
-			idle_call.add_argument (new CCodeIdentifier ("data"));
-
-			int state = next_coroutine_state++;
-
-			cfrag.append (new CCodeExpressionStatement (idle_call));
-			cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state"), new CCodeConstant (state.to_string ()))));
-			cfrag.append (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
-			cfrag.append (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
-
-			return;
-		}
-
-		stmt.accept_children (codegen);
-
-		if (stmt.yield_expression.error) {
-			stmt.error = true;
-			return;
-		}
-
-		stmt.ccodenode = new CCodeExpressionStatement ((CCodeExpression) stmt.yield_expression.ccodenode);
-
-		if (stmt.tree_can_fail && stmt.yield_expression.tree_can_fail) {
-			// simple case, no node breakdown necessary
-
-			var cfrag = new CCodeFragment ();
-
-			cfrag.append (stmt.ccodenode);
-
-			head.add_simple_check (stmt.yield_expression, cfrag);
-
-			stmt.ccodenode = cfrag;
-		}
-
-		/* free temporary objects */
-
-		if (((Gee.List<LocalVariable>) temp_vars).size == 0) {
-			/* nothing to do without temporary variables */
-			return;
-		}
-		
-		var cfrag = new CCodeFragment ();
-		append_temp_decl (cfrag, temp_vars);
-		
-		cfrag.append (stmt.ccodenode);
-		
-		foreach (LocalVariable local in temp_ref_vars) {
-			var ma = new MemberAccess.simple (local.name);
-			ma.symbol_reference = local;
-			cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (local.name), local.variable_type, ma)));
-		}
-		
-		stmt.ccodenode = cfrag;
-		
-		temp_vars.clear ();
-		temp_ref_vars.clear ();
-	}
-
-	public override void visit_try_statement (TryStatement stmt) {
-		int this_try_id = next_try_id++;
-
-		var old_try = current_try;
-		var old_try_id = current_try_id;
-		current_try = stmt;
-		current_try_id = this_try_id;
-
-		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
-			clause.clabel_name = "__catch%d_%s".printf (this_try_id, clause.error_type.get_lower_case_cname ());
-		}
-
-		if (stmt.finally_body != null) {
-			stmt.finally_body.accept (codegen);
-		}
-
-		stmt.body.accept (codegen);
-
-		current_try = old_try;
-		current_try_id = old_try_id;
-
-		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
-			clause.accept (codegen);
-		}
-
-		if (stmt.finally_body != null) {
-			stmt.finally_body.accept (codegen);
-		}
-
-		var cfrag = new CCodeFragment ();
-		cfrag.append (stmt.body.ccodenode);
-
-		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
-			cfrag.append (new CCodeGotoStatement ("__finally%d".printf (this_try_id)));
-
-			cfrag.append (clause.ccodenode);
-		}
-
-		cfrag.append (new CCodeLabel ("__finally%d".printf (this_try_id)));
-		if (stmt.finally_body != null) {
-			cfrag.append (stmt.finally_body.ccodenode);
-		} else {
-			// avoid gcc error: label at end of compound statement
-			cfrag.append (new CCodeEmptyStatement ());
-		}
-
-		stmt.ccodenode = cfrag;
-	}
-
-	public override void visit_catch_clause (CatchClause clause) {
-		if (clause.error_variable != null) {
-			clause.error_variable.active = true;
-		}
-
-		current_method_inner_error = true;
-
-		clause.accept_children (codegen);
-
-		var cfrag = new CCodeFragment ();
-		cfrag.append (new CCodeLabel (clause.clabel_name));
-
-		var cblock = new CCodeBlock ();
-
-		string variable_name = clause.variable_name;
-		if (variable_name == null) {
-			variable_name = "__err";
-		}
-
-		var cdecl = new CCodeDeclaration ("GError *");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (variable_name, new CCodeIdentifier ("inner_error")));
-		cblock.add_statement (cdecl);
-		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"))));
-
-		cblock.add_statement (clause.body.ccodenode);
-
-		cfrag.append (cblock);
-
-		clause.ccodenode = cfrag;
 	}
 
 	private string get_symbol_lock_name (Symbol sym) {

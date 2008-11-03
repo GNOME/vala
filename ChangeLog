@@ -1,5 +1,14 @@
 2008-11-03  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valagasyncmodule.vala:
+	* gobject/valagerrormodule.vala:
+
+	Move code generation for try and yield statements to GErrorModule
+	and GAsyncModule, resp.
+
+2008-11-03  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodearraymodule.vala:
 	* gobject/valaccodeassignmentmodule.vala:
 	* gobject/valaccodebasemodule.vala:
