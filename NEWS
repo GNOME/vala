@@ -1,3 +1,14 @@
+Vala 0.5.1
+==========
+
+ * Support type checks for error domains and error codes.
+ * Experimental support for yield statements and coroutines.
+ * Support GValue and GHashTable in D-Bus clients.
+ * Various improvements to the .gir reader.
+ * Drop deprecated support for static classes.
+ * Modularize code generator.
+ * Many bug fixes.
+
 Vala 0.4.0
 ==========
 
