@@ -31,6 +31,7 @@ libvala_la_VALASOURCES = \
 	valagobjectmodule.vala \
 	valagsignalmodule.vala \
 	valagtypemodule.vala \
+	valagasyncmodule.vala \
 	valainterfaceregisterfunction.vala \
 	valatyperegisterfunction.vala \
 	$(NULL)

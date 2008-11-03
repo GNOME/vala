@@ -155,6 +155,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head = new GTypeModule (this, head);
 		head = new GObjectModule (this, head);
 		head = new GSignalModule (this, head);
+		head = new GAsyncModule (this, head);
 		head = new DBusClientModule (this, head);
 		head = new DBusServerModule (this, head);
 
