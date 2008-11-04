@@ -28,6 +28,8 @@ using Gee;
  * The link between an assignment and generated code.
  */
 public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
+	private int next_array_dup_id = 0;
+
 	public CCodeArrayModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}
@@ -395,5 +397,85 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 		fun.block.add_statement (new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest), czeroblock1, czeroblock2));
 
 		source_type_member_definition.append (fun);
+	}
+
+	public override CCodeExpression? get_dup_func_expression (DataType type, SourceReference? source_reference) {
+		if (type is ArrayType) {
+			return new CCodeIdentifier (generate_array_dup_wrapper ((ArrayType) type));
+		} else {
+			return base.get_dup_func_expression (type, source_reference);
+		}
+	}
+
+	string generate_array_dup_wrapper (ArrayType array_type) {
+		string dup_func = "_vala_array_dup%d".printf (++next_array_dup_id);
+
+		if (!add_wrapper (dup_func)) {
+			// wrapper already defined
+			return dup_func;
+		}
+
+		// declaration
+
+		var function = new CCodeFunction (dup_func, array_type.get_cname ());
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("self", array_type.get_cname ()));
+		// total length over all dimensions
+		function.add_parameter (new CCodeFormalParameter ("length", "int"));
+
+		// definition
+
+		var block = new CCodeBlock ();
+
+		if (requires_copy (array_type.element_type)) {
+			var old_temp_vars = temp_vars;
+
+			var cdecl = new CCodeDeclaration (array_type.get_cname ());
+			var cvardecl = new CCodeVariableDeclarator ("result");
+			cdecl.add_declarator (cvardecl);
+			var gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+			gnew.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+			gnew.add_argument (new CCodeIdentifier ("length"));
+			cvardecl.initializer = gnew;
+			block.add_statement (cdecl);
+
+			var idx_decl = new CCodeDeclaration ("int");
+			idx_decl.add_declarator (new CCodeVariableDeclarator ("i"));
+			block.add_statement (idx_decl);
+
+			var loop_body = new CCodeBlock ();
+			loop_body.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (new CCodeIdentifier ("result"), new CCodeIdentifier ("i")), get_ref_cexpression (array_type.element_type, new CCodeElementAccess (new CCodeIdentifier ("self"), new CCodeIdentifier ("i")), null, array_type))));
+
+			var cfor = new CCodeForStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("length")), loop_body);
+			cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")));
+			cfor.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
+			block.add_statement (cfor);
+
+			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+
+			var cfrag = new CCodeFragment ();
+			append_temp_decl (cfrag, temp_vars);
+			block.add_statement (cfrag);
+			temp_vars = old_temp_vars;
+		} else {
+			var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+			dup_call.add_argument (new CCodeIdentifier ("self"));
+
+			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+			sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+			dup_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeIdentifier ("length"), sizeof_call));
+
+			block.add_statement (new CCodeReturnStatement (dup_call));
+		}
+
+		// append to file
+
+		source_type_member_declaration.append (function.copy ());
+
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return dup_func;
 	}
 }
