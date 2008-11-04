@@ -1,5 +1,12 @@
 2008-11-04  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodeassignmentmodule.vala:
+	* gobject/valagsignalmodule.vala:
+
+	Move signal connection and disconnection to GSignalModule
+
+2008-11-04  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodearraymodule.vala:
 	* gobject/valagsignalmodule.vala:
 
