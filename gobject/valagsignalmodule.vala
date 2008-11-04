@@ -558,5 +558,48 @@ public class Vala.GSignalModule : GObjectModule {
 			base.visit_assignment (assignment);
 		}
 	}
+
+	public override void visit_member_access (MemberAccess expr) {
+		CCodeExpression pub_inst = null;
+	
+		if (expr.inner != null) {
+			pub_inst = (CCodeExpression) expr.inner.ccodenode;
+		}
+
+		if (expr.symbol_reference is Signal) {
+			var sig = (Signal) expr.symbol_reference;
+			var cl = (TypeSymbol) sig.parent_symbol;
+			
+			if (expr.inner is BaseAccess && sig.is_virtual) {
+				var m = sig.get_method_handler ();
+				var base_class = (Class) m.parent_symbol;
+				var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
+				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
+				
+				expr.ccodenode = new CCodeMemberAccess.pointer (vcast, m.name);
+				return;
+			}
+
+			if (sig.has_emitter) {
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_%s".printf (cl.get_lower_case_cname (null), sig.name)));
+
+				ccall.add_argument (pub_inst);
+				expr.ccodenode = ccall;
+			} else {
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
+
+				// FIXME: use C cast if debugging disabled
+				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
+				ccast.add_argument (pub_inst);
+				ccall.add_argument (ccast);
+
+				ccall.add_argument (sig.get_canonical_cconstant ());
+				
+				expr.ccodenode = ccall;
+			}
+		} else {
+			base.visit_member_access (expr);
+		}
+	}
 }
 
