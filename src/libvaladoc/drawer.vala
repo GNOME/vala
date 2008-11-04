@@ -41,6 +41,9 @@ namespace Valadoc.Diagrams {
 		Gee.Collection<DataType> parentlst = stru.get_parent_types ( );
 
 		foreach ( DataType type in parentlst ) {
+			if ( type is Struct == false )
+				break;
+
 			weak Graphviz.Node stru = draw_struct ( g, (Struct)type, me );
 			draw_struct_parents ( (Struct)type, g, stru );
 		}

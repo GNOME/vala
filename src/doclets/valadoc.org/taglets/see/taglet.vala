@@ -76,8 +76,8 @@ public class SeeHtmlTaglet : MainTaglet, LinkHelper {
 		}
 
 		this.settings = settings;
-		this.path = this.get_link ( element );
-		this.name = str;
+		this.path = this.get_html_link ( settings, element );
+		this.name = element.full_name ();
 		return true;
 	}
 

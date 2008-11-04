@@ -4199,12 +4199,26 @@ public class Valadoc.Package : Basic, NamespaceHandler {
 		 get;
 	}
 
+	private string extract_package_name ( Vala.SourceFile vfile ) {
+		if ( vfile.filename.has_suffix (".vapi") ) {
+			string file_name = GLib.Path.get_basename (vfile.filename);
+			return file_name.ndup ( file_name.size() - ".vapi".size() );
+		}
+		else if ( vfile.filename.has_suffix (".gidl") ) {
+			string file_name = GLib.Path.get_basename (vfile.filename);
+			return file_name.ndup ( file_name.size() - ".gidl".size() );
+		}
+		else {
+			return settings.pkg_name;
+		}
+	}
+
 	public Package ( Valadoc.Settings settings, Vala.SourceFile vfile, Tree head ) {
 		this.settings = settings;
 		this.head = head;
 
-		this.package_name = vfile.filename;
-		this.is_external_package = !( this.package_name.has_suffix ( ".vala" ) || this.package_name.has_suffix ( ".gs" ) );
+		this.is_external_package = !( vfile.filename.has_suffix ( ".vala" ) || vfile.filename.has_suffix ( ".gs" ) );
+		this.package_name = this.extract_package_name ( vfile );
 	}
 
 	private string package_name;
@@ -4244,15 +4258,7 @@ public class Valadoc.Package : Basic, NamespaceHandler {
 
 	// internal
 	public bool is_package ( Vala.SourceFile vfile ) {
-		bool vheader = !( vfile.filename.has_suffix ( ".vala" ) || vfile.filename.has_suffix ( ".gs" ) );
-		if ( vheader == false && this.is_external_package == false ) {
-			return true;
-		}
-		else if ( vheader == true && this.is_external_package == true ) {
-			if ( vfile.filename == this.package_name )
-				return true;
-		}
-		return false;
+		return ( this.extract_package_name ( vfile ) == this.package_name );
 	}
 
 	public void visit ( Doclet doclet ) {

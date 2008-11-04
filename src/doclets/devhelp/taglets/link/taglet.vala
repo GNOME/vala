@@ -24,7 +24,7 @@ using Gee;
 
 
 
-public class LinkHtmlTaglet : InlineTaglet, LinkHelper {
+public class LinkHtmlTaglet : InlineTaglet, HtmlHelper {
 	private string content;
 	private string path;
 
@@ -45,7 +45,8 @@ public class LinkHtmlTaglet : InlineTaglet, LinkHelper {
 		}
 
 		this.settings = settings;
-		this.path = this.get_link ( element );
+		this.path = this.get_html_link ( this.settings, element, me );
+
 		this.content = str;
 		return true;
 	}

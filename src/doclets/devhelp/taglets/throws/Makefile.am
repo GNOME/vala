@@ -11,7 +11,7 @@ BUILT_SOURCES = libexceptionparameter.vala.stamp
 
 
 libexceptionparameter.vala.stamp: $(libexceptionparameter_VALASOURCES)
-	$(VALAC) -C --vapidir ../../../../vapi --pkg valadoc-1.0 --vapidir ../../linkhelper --pkg libhtmlhelper-1.0 --basedir . --disable-non-null --save-temps $^
+	$(VALAC) -C --vapidir ../../../htmlhelpers --pkg libhtmlhelpers-1.0 --vapidir ../../../../vapi --pkg valadoc-1.0 --vapidir ../../linkhelper --pkg libhtmlhelper-1.0 --basedir . --disable-non-null --save-temps $^
 	touch $@
 
 
@@ -32,6 +32,7 @@ libexceptionparameter_la_SOURCES =                \
 
 AM_CFLAGS =  -g               \
 	-I ../../../../libvaladoc/   \
+	-I ../../../htmlhelpers/     \
 	-I ../../linkhelper/         \
 	-I ../../                    \
 	$(GLIB_CFLAGS)            \
@@ -44,6 +45,7 @@ libexceptionparameter_la_LDFLAGS = -module -avoid-version
 
 libexceptionparameter_la_LIBADD =                 \
 	../../../../libvaladoc/libvaladoc.la \
+	../../../htmlhelpers/libhtmlhelpers.la \
 	../../linkhelper/libhtmlhelper.la    \
 	$(GLIB_LIBS)                      \
 	$(LIBVALA_LIBS)                   \

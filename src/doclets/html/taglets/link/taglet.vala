@@ -46,8 +46,8 @@ public class LinkHtmlTaglet : InlineTaglet, LinkHelper {
 		}
 
 		this.settings = settings;
-		this.path = this.get_link ( element, me );
-		this.content = str;
+		this.path = this.get_html_link ( settings, element, me );
+		this.content = element.full_name ();
 		return true;
 	}
 

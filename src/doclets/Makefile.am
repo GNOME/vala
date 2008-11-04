@@ -4,6 +4,7 @@ NULL =
 
 
 SUBDIRS = \
+          htmlhelpers \
           html    \
           devhelp    \
           valadoc.org    \

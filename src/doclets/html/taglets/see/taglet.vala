@@ -23,7 +23,7 @@ using Vala;
 using Gee;
 
 
-public class SeeHtmlTaglet : MainTaglet, LinkHelper {
+public class SeeHtmlTaglet : MainTaglet, Valadoc.LinkHelper {
 	private string name;
 	private string path;
 
@@ -76,8 +76,8 @@ public class SeeHtmlTaglet : MainTaglet, LinkHelper {
 		}
 
 		this.settings = settings;
-		this.path = this.get_link ( element, me );
-		this.name = str;
+		this.path = this.get_html_link ( settings, element, me );
+		this.name = element.full_name ();
 		return true;
 	}
 

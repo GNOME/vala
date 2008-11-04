@@ -11,7 +11,7 @@ BUILT_SOURCES = libhtmlhelper.vala.stamp
 
 
 libhtmlhelper.vala.stamp: $(libhtmlhelper_VALASOURCES)
-	$(VALAC) -C --library libhtmlhelper-1.0 --basedir . --vapidir ../../../vapi --pkg valadoc-1.0 --disable-non-null $^
+	$(VALAC) -C --library libhtmlhelper-1.0 --basedir . --vapidir ../../htmlhelpers --pkg libhtmlhelpers-1.0 --vapidir ../../../vapi --pkg valadoc-1.0 --disable-non-null $^
 	touch $@
 
 
@@ -29,6 +29,7 @@ libhtmlhelper_la_SOURCES =                \
 
 AM_CFLAGS =             \
 	-I ../../../libvaladoc/   \
+	-I ../../htmlhelpers/  \
 	$(LIBVALA_CFLAGS)   \
 	$(GLIB_CFLAGS)      \
 	$(NULL)
@@ -36,6 +37,7 @@ AM_CFLAGS =             \
 
 libhtmlhelper_la_LIBADD = \
 	../../../libvaladoc/libvaladoc.la \
+	../../htmlhelpers/libhtmlhelpers.la \
 	$(LIBVALA_LIBS)                \
 	$(GLIB_LIBS)                   \
 	$(NULL)
