@@ -378,5 +378,31 @@ public class Vala.GSignalModule : GObjectModule {
 
 		return csignew;
 	}
+
+	public override void visit_element_access (ElementAccess expr) {
+		if (expr.container is MemberAccess && expr.container.symbol_reference is Signal) {
+			// detailed signal emission
+			var sig = (Signal) expr.symbol_reference;
+			var ma = (MemberAccess) expr.container;
+
+			expr.accept_children (codegen);
+
+			var detail_expr = expr.get_indices ().get (0) as StringLiteral;
+			string signal_detail = detail_expr.eval ();
+			
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
+
+			// FIXME: use C cast if debugging disabled
+			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
+			ccast.add_argument ((CCodeExpression) ma.inner.ccodenode);
+			ccall.add_argument (ccast);
+
+			ccall.add_argument (sig.get_canonical_cconstant (signal_detail));
+			
+			expr.ccodenode = ccall;
+		} else {
+			base.visit_element_access (expr);
+		}
+	}
 }
 

@@ -280,26 +280,6 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 			get_ccall.add_argument (cindex);
 
 			expr.ccodenode = convert_from_generic_pointer (get_ccall, expr.value_type);
-		} else if (expr.container is MemberAccess && expr.container.symbol_reference is Signal) {
-			// should be moved to the GSignal module
-
-			// detailed signal emission
-			var sig = (Signal) expr.symbol_reference;
-			var ma = (MemberAccess) expr.container;
-
-			var detail_expr = expr.get_indices ().get (0) as StringLiteral;
-			string signal_detail = detail_expr.eval ();
-			
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
-
-			// FIXME: use C cast if debugging disabled
-			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
-			ccast.add_argument ((CCodeExpression) ma.inner.ccodenode);
-			ccall.add_argument (ccast);
-
-			ccall.add_argument (sig.get_canonical_cconstant (signal_detail));
-			
-			expr.ccodenode = ccall;
 		} else {
 			// access to element in an array
 			for (int i = 1; i < rank; i++) {
