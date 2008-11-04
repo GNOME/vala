@@ -1,5 +1,12 @@
 2008-11-04  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodedelegatemodule.vala:
+
+	Move delegate wrapper generation to CCodeDelegateModule
+
+2008-11-04  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodearraymodule.vala:
 	* gobject/valaccodebasemodule.vala:
 

@@ -21,7 +21,7 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-using GLib;
+using Gee;
 
 /**
  * The link between an assignment and generated code.
@@ -165,5 +165,180 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 	public override string get_delegate_target_destroy_notify_cname (string delegate_cname) {
 		return "%s_target_destroy_notify".printf (delegate_cname);
+	}
+
+	public override CCodeExpression get_implicit_cast_expression (CCodeExpression source_cexpr, DataType? expression_type, DataType? target_type, Expression? expr = null) {
+		if (target_type is DelegateType && expression_type is MethodType) {
+			var dt = (DelegateType) target_type;
+			var mt = (MethodType) expression_type;
+
+			var method = mt.method_symbol;
+			if (method.base_method != null) {
+				method = method.base_method;
+			} else if (method.base_interface_method != null) {
+				method = method.base_interface_method;
+			}
+
+			return new CCodeIdentifier (generate_delegate_wrapper (method, dt.delegate_symbol));
+		} else {
+			return base.get_implicit_cast_expression (source_cexpr, expression_type, target_type, expr);
+		}
+	}
+
+	private string generate_delegate_wrapper (Method m, Delegate d) {
+		string delegate_name;
+		var sig = d.parent_symbol as Signal;
+		var dynamic_sig = sig as DynamicSignal;
+		if (dynamic_sig != null) {
+			delegate_name = head.get_dynamic_signal_cname (dynamic_sig);
+		} else if (sig != null) {
+			delegate_name = sig.parent_symbol.get_lower_case_cprefix () + sig.get_cname ();
+		} else {
+			delegate_name = Symbol.camel_case_to_lower_case (d.get_cname ());
+		}
+
+		string wrapper_name = "_%s_%s".printf (m.get_cname (), delegate_name);
+
+		if (!add_wrapper (wrapper_name)) {
+			// wrapper already defined
+			return wrapper_name;
+		}
+
+		// declaration
+
+		var function = new CCodeFunction (wrapper_name, m.return_type.get_cname ());
+		function.modifiers = CCodeModifiers.STATIC;
+		m.ccodenode = function;
+
+		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+
+		if (d.has_target) {
+			var cparam = new CCodeFormalParameter ("self", "gpointer");
+			cparam_map.set (get_param_pos (d.cinstance_parameter_position), cparam);
+		}
+
+		var d_params = d.get_parameters ();
+		foreach (FormalParameter param in d_params) {
+			// ensure that C code node has been generated
+			param.accept (codegen);
+
+			cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+
+			// handle array parameters
+			if (!param.no_array_length && param.parameter_type is ArrayType) {
+				var array_type = (ArrayType) param.parameter_type;
+				
+				var length_ctype = "int";
+				if (param.direction != ParameterDirection.IN) {
+					length_ctype = "int*";
+				}
+				
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					var cparam = new CCodeFormalParameter (head.get_array_length_cname (param.name, dim), length_ctype);
+					cparam_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
+				}
+			}
+
+		}
+
+		if (m.get_error_types ().size > 0) {
+			var cparam = new CCodeFormalParameter ("error", "GError**");
+			cparam_map.set (get_param_pos (-1), cparam);
+		}
+
+		// append C parameters in the right order
+		int last_pos = -1;
+		int min_pos;
+		while (true) {
+			min_pos = -1;
+			foreach (int pos in cparam_map.get_keys ()) {
+				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
+					min_pos = pos;
+				}
+			}
+			if (min_pos == -1) {
+				break;
+			}
+			function.add_parameter (cparam_map.get (min_pos));
+			last_pos = min_pos;
+		}
+
+
+		// definition
+
+		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+
+		int i = 0;
+		if (m.binding == MemberBinding.INSTANCE) {
+			CCodeExpression arg;
+			if (d.has_target) {
+				arg = new CCodeIdentifier ("self");
+			} else {
+				// use first delegate parameter as instance
+				arg = new CCodeIdentifier ((d_params.get (0).ccodenode as CCodeFormalParameter).name);
+				i = 1;
+			}
+			carg_map.set (get_param_pos (m.cinstance_parameter_position), arg);
+		}
+
+		foreach (FormalParameter param in m.get_parameters ()) {
+			CCodeExpression arg;
+			arg = new CCodeIdentifier ((d_params.get (i).ccodenode as CCodeFormalParameter).name);
+			carg_map.set (get_param_pos (param.cparameter_position), arg);
+
+			// handle array arguments
+			if (!param.no_array_length && param.parameter_type is ArrayType) {
+				var array_type = (ArrayType) param.parameter_type;
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					CCodeExpression clength;
+					if (d_params.get (i).no_array_length) {
+						clength = new CCodeConstant ("-1");
+					} else {
+						clength = new CCodeIdentifier (head.get_array_length_cname (d_params.get (i).name, dim));
+					}
+					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), clength);
+				}
+			}
+
+			i++;
+		}
+
+		if (m.get_error_types ().size > 0) {
+			carg_map.set (get_param_pos (-1), new CCodeIdentifier ("error"));
+		}
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
+
+		// append C arguments in the right order
+		last_pos = -1;
+		while (true) {
+			min_pos = -1;
+			foreach (int pos in carg_map.get_keys ()) {
+				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
+					min_pos = pos;
+				}
+			}
+			if (min_pos == -1) {
+				break;
+			}
+			ccall.add_argument (carg_map.get (min_pos));
+			last_pos = min_pos;
+		}
+
+		var block = new CCodeBlock ();
+		if (m.return_type is VoidType) {
+			block.add_statement (new CCodeExpressionStatement (ccall));
+		} else {
+			block.add_statement (new CCodeReturnStatement (ccall));
+		}
+
+		// append to file
+
+		source_type_member_declaration.append (function.copy ());
+
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return wrapper_name;
 	}
 }
