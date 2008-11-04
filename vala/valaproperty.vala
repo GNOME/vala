@@ -34,7 +34,9 @@ public class Vala.Property : Member, Lockable {
 		get { return _data_type; }
 		set {
 			_data_type = value;
-			_data_type.parent_node = this;
+			if (value != null) {
+				_data_type.parent_node = this;
+			}
 		}
 	}
 	

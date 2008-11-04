@@ -1683,7 +1683,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						// dynamic property assignment
 						var prop = new DynamicProperty (expr.inner.value_type, expr.member_name, expr.source_reference);
 						prop.access = SymbolAccessibility.PUBLIC;
-						prop.set_accessor = new PropertyAccessor (false, true, false, null, null);
+						prop.set_accessor = new PropertyAccessor (false, true, false, null, prop.source_reference);
 						prop.set_accessor.access = SymbolAccessibility.PUBLIC;
 						prop.owner = expr.inner.value_type.data_type.scope;
 						dynamic_object_type.type_symbol.scope.add (null, prop);
@@ -1700,7 +1700,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 						prop.property_type = expr.inner.value_type.copy ();
 					}
 					prop.access = SymbolAccessibility.PUBLIC;
-					prop.get_accessor = new PropertyAccessor (true, false, false, null, null);
+					prop.get_accessor = new PropertyAccessor (true, false, false, null, prop.source_reference);
 					prop.get_accessor.access = SymbolAccessibility.PUBLIC;
 					prop.owner = expr.inner.value_type.data_type.scope;
 					dynamic_object_type.type_symbol.scope.add (null, prop);
