@@ -149,4 +149,201 @@ public class Vala.ObjectCreationExpression : Expression {
 			type_reference = new_type;
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		if (member_name != null) {
+			member_name.accept (analyzer);
+		}
+
+		TypeSymbol type = null;
+
+		if (type_reference == null) {
+			if (member_name == null) {
+				error = true;
+				Report.error (source_reference, "Incomplete object creation expression");
+				return false;
+			}
+
+			if (member_name.symbol_reference == null) {
+				error = true;
+				return false;
+			}
+
+			var constructor_sym = member_name.symbol_reference;
+			var type_sym = member_name.symbol_reference;
+
+			var type_args = member_name.get_type_arguments ();
+
+			if (constructor_sym is Method) {
+				type_sym = constructor_sym.parent_symbol;
+
+				var constructor = (Method) constructor_sym;
+				if (!(constructor_sym is CreationMethod)) {
+					error = true;
+					Report.error (source_reference, "`%s' is not a creation method".printf (constructor.get_full_name ()));
+					return false;
+				}
+
+				symbol_reference = constructor;
+
+				// inner expression can also be base access when chaining constructors
+				var ma = member_name.inner as MemberAccess;
+				if (ma != null) {
+					type_args = ma.get_type_arguments ();
+				}
+			}
+
+			if (type_sym is Class) {
+				type = (TypeSymbol) type_sym;
+				type_reference = new ObjectType ((Class) type);
+			} else if (type_sym is Struct) {
+				type = (TypeSymbol) type_sym;
+				type_reference = new ValueType (type);
+			} else if (type_sym is ErrorCode) {
+				type_reference = new ErrorType ((ErrorDomain) type_sym.parent_symbol, (ErrorCode) type_sym, source_reference);
+				symbol_reference = type_sym;
+			} else {
+				error = true;
+				Report.error (source_reference, "`%s' is not a class, struct, or error code".printf (type_sym.get_full_name ()));
+				return false;
+			}
+
+			foreach (DataType type_arg in type_args) {
+				type_reference.add_type_argument (type_arg);
+
+				analyzer.current_source_file.add_type_dependency (type_arg, SourceFileDependencyType.SOURCE);
+			}
+		} else {
+			type = type_reference.data_type;
+		}
+
+		analyzer.current_source_file.add_symbol_dependency (type, SourceFileDependencyType.SOURCE);
+
+		value_type = type_reference.copy ();
+		value_type.value_owned = true;
+
+		int given_num_type_args = type_reference.get_type_arguments ().size;
+		int expected_num_type_args = 0;
+
+		if (type is Class) {
+			var cl = (Class) type;
+
+			expected_num_type_args = cl.get_type_parameters ().size;
+
+			if (struct_creation) {
+				error = true;
+				Report.error (source_reference, "syntax error, use `new' to create new objects");
+				return false;
+			}
+
+			if (cl.is_abstract) {
+				value_type = null;
+				error = true;
+				Report.error (source_reference, "Can't create instance of abstract class `%s'".printf (cl.get_full_name ()));
+				return false;
+			}
+
+			if (symbol_reference == null) {
+				symbol_reference = cl.default_construction_method;
+			}
+
+			while (cl != null) {
+				if (cl == analyzer.initially_unowned_type) {
+					value_type.floating_reference = true;
+					break;
+				}
+
+				cl = cl.base_class;
+			}
+		} else if (type is Struct) {
+			var st = (Struct) type;
+
+			expected_num_type_args = st.get_type_parameters ().size;
+
+			if (!struct_creation) {
+				Report.warning (source_reference, "deprecated syntax, don't use `new' to initialize structs");
+			}
+
+			if (symbol_reference == null) {
+				symbol_reference = st.default_construction_method;
+			}
+		}
+
+		if (expected_num_type_args > given_num_type_args) {
+			error = true;
+			Report.error (source_reference, "too few type arguments");
+			return false;
+		} else if (expected_num_type_args < given_num_type_args) {
+			error = true;
+			Report.error (source_reference, "too many type arguments");
+			return false;
+		}
+
+		if (symbol_reference == null && get_argument_list ().size != 0) {
+			value_type = null;
+			error = true;
+			Report.error (source_reference, "No arguments allowed when constructing type `%s'".printf (type.get_full_name ()));
+			return false;
+		}
+
+		if (symbol_reference is Method) {
+			var m = (Method) symbol_reference;
+
+			var args = get_argument_list ();
+			Iterator<Expression> arg_it = args.iterator ();
+			foreach (FormalParameter param in m.get_parameters ()) {
+				if (param.ellipsis) {
+					break;
+				}
+
+				if (arg_it.next ()) {
+					Expression arg = arg_it.get ();
+
+					/* store expected type for callback parameters */
+					arg.target_type = param.parameter_type;
+				}
+			}
+
+			foreach (Expression arg in args) {
+				arg.accept (analyzer);
+			}
+
+			analyzer.check_arguments (this, new MethodType (m), m.get_parameters (), args);
+
+			foreach (DataType error_type in m.get_error_types ()) {
+				// ensure we can trace back which expression may throw errors of this type
+				var call_error_type = error_type.copy ();
+				call_error_type.source_reference = source_reference;
+
+				add_error_type (call_error_type);
+			}
+		} else if (type_reference is ErrorType) {
+			accept_children (analyzer);
+
+			if (get_argument_list ().size == 0) {
+				error = true;
+				Report.error (source_reference, "Too few arguments, errors need at least 1 argument");
+			} else {
+				Iterator<Expression> arg_it = get_argument_list ().iterator ();
+				arg_it.next ();
+				var ex = arg_it.get ();
+				if (ex.value_type == null || !ex.value_type.compatible (analyzer.string_type)) {
+					error = true;
+					Report.error (source_reference, "Invalid type for argument 1");
+				}
+			}
+		}
+
+		foreach (MemberInitializer init in get_object_initializer ()) {
+			analyzer.visit_member_initializer (init, type_reference);
+		}
+
+		return !error;
+	}
 }

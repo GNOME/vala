@@ -1,6 +1,15 @@
 2008-11-05  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valabinaryexpression.vala:
+	* vala/valaobjectcreationexpression.vala:
+	* vala/valasemanticanalyzer.vala:
+
+	Move object creation expression checking to
+	ObjectCreationExpression.check
+
+2008-11-05  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valabinaryexpression.vala:
 	* vala/valasemanticanalyzer.vala:
 
 	Move binary expression checking to BinaryExpression.check

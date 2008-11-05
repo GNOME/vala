@@ -139,6 +139,12 @@ public class Vala.BinaryExpression : Expression {
 	}
 
 	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
 		if (left.error || right.error) {
 			/* if there were any errors in inner expressions, skip type check */
 			error = true;
