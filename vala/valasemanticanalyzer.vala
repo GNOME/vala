@@ -41,20 +41,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public DataType bool_type;
 	public DataType string_type;
-	DataType uchar_type;
-	DataType short_type;
-	DataType ushort_type;
-	DataType int_type;
-	DataType uint_type;
-	DataType long_type;
-	DataType ulong_type;
+	public DataType uchar_type;
+	public DataType short_type;
+	public DataType ushort_type;
+	public DataType int_type;
+	public DataType uint_type;
+	public DataType long_type;
+	public DataType ulong_type;
 	public DataType size_t_type;
-	DataType ssize_t_type;
-	DataType int8_type;
-	DataType unichar_type;
-	DataType double_type;
-	DataType type_type;
-	Class object_type;
+	public DataType ssize_t_type;
+	public DataType int8_type;
+	public DataType unichar_type;
+	public DataType double_type;
+	public DataType type_type;
+	public Class object_type;
 	public TypeSymbol initially_unowned_type;
 	DataType glist_type;
 	DataType gslist_type;
@@ -69,7 +69,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	// keep replaced alive to make sure they remain valid
 	// for the whole execution of CodeNode.accept
-	Gee.List<CodeNode> replaced_nodes = new ArrayList<CodeNode> ();
+	public Gee.List<CodeNode> replaced_nodes = new ArrayList<CodeNode> ();
 
 	public SemanticAnalyzer () {
 	}
@@ -1550,297 +1550,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_invocation_expression (InvocationExpression expr) {
-		expr.call.accept (this);
-
-		if (expr.call.error) {
-			/* if method resolving didn't succeed, skip this check */
-			expr.error = true;
-			return;
-		}
-
-		if (expr.call is MemberAccess) {
-			var ma = (MemberAccess) expr.call;
-			if (ma.prototype_access) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Access to instance member `%s' denied".printf (expr.call.symbol_reference.get_full_name ()));
-				return;
-			}
-		}
-
-		var mtype = expr.call.value_type;
-
-		if (mtype is ObjectType) {
-			// constructor chain-up
-			var cm = find_current_method () as CreationMethod;
-			assert (cm != null);
-			if (cm.chain_up) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Multiple constructor calls in the same constructor are not permitted");
-				return;
-			}
-			cm.chain_up = true;
-		}
-
-		// check for struct construction
-		if (expr.call is MemberAccess &&
-		    ((expr.call.symbol_reference is CreationMethod
-		      && expr.call.symbol_reference.parent_symbol is Struct)
-		     || expr.call.symbol_reference is Struct)) {
-			var struct_creation_expression = new ObjectCreationExpression ((MemberAccess) expr.call, expr.source_reference);
-			struct_creation_expression.struct_creation = true;
-			foreach (Expression arg in expr.get_argument_list ()) {
-				struct_creation_expression.add_argument (arg);
-			}
-			struct_creation_expression.target_type = expr.target_type;
-			replaced_nodes.add (expr);
-			expr.parent_node.replace_expression (expr, struct_creation_expression);
-			struct_creation_expression.accept (this);
-			return;
-		} else if (expr.call is MemberAccess
-		           && expr.call.symbol_reference is CreationMethod) {
-			// constructor chain-up
-			var cm = find_current_method () as CreationMethod;
-			assert (cm != null);
-			if (cm.chain_up) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Multiple constructor calls in the same constructor are not permitted");
-				return;
-			}
-			cm.chain_up = true;
-		}
-
-		Gee.List<FormalParameter> params;
-
-		if (mtype != null && mtype.is_invokable ()) {
-			params = mtype.get_parameters ();
-		} else {
-			expr.error = true;
-			Report.error (expr.source_reference, "invocation not supported in this context");
-			return;
-		}
-
-		Expression last_arg = null;
-
-		var args = expr.get_argument_list ();
-		Iterator<Expression> arg_it = args.iterator ();
-		foreach (FormalParameter param in params) {
-			if (param.ellipsis) {
-				break;
-			}
-
-			if (arg_it.next ()) {
-				Expression arg = arg_it.get ();
-
-				/* store expected type for callback parameters */
-				arg.target_type = param.parameter_type;
-
-				// resolve generic type parameters
-				var ma = expr.call as MemberAccess;
-				if (arg.target_type.type_parameter != null) {
-					if (ma != null && ma.inner != null) {
-						arg.target_type = get_actual_type (ma.inner.value_type, ma.symbol_reference, arg.target_type, arg);
-						assert (arg.target_type != null);
-					}
-				}
-
-				last_arg = arg;
-			}
-		}
-
-		// printf arguments
-		if (mtype is MethodType && ((MethodType) mtype).method_symbol.printf_format) {
-			StringLiteral format_literal = null;
-			if (last_arg != null) {
-				// use last argument as format string
-				format_literal = last_arg as StringLiteral;
-			} else {
-				// use instance as format string for string.printf (...)
-				var ma = expr.call as MemberAccess;
-				if (ma != null) {
-					format_literal = ma.inner as StringLiteral;
-				}
-			}
-			if (format_literal != null) {
-				string format = format_literal.eval ();
-
-				bool unsupported_format = false;
-
-				weak string format_it = format;
-				unichar c = format_it.get_char ();
-				while (c != '\0') {
-					if (c != '%') {
-						format_it = format_it.next_char ();
-						c = format_it.get_char ();
-						continue;
-					}
-
-					format_it = format_it.next_char ();
-					c = format_it.get_char ();
-					// flags
-					while (c == '#' || c == '0' || c == '-' || c == ' ' || c == '+') {
-						format_it = format_it.next_char ();
-						c = format_it.get_char ();
-					}
-					// field width
-					while (c >= '0' && c <= '9') {
-						format_it = format_it.next_char ();
-						c = format_it.get_char ();
-					}
-					// precision
-					if (c == '.') {
-						format_it = format_it.next_char ();
-						c = format_it.get_char ();
-						while (c >= '0' && c <= '9') {
-							format_it = format_it.next_char ();
-							c = format_it.get_char ();
-						}
-					}
-					// length modifier
-					int length = 0;
-					if (c == 'h') {
-						length = -1;
-						format_it = format_it.next_char ();
-						c = format_it.get_char ();
-						if (c == 'h') {
-							length = -2;
-							format_it = format_it.next_char ();
-							c = format_it.get_char ();
-						}
-					} else if (c == 'l') {
-						length = 1;
-						format_it = format_it.next_char ();
-						c = format_it.get_char ();
-					} else if (c == 'z') {
-						length = 2;
-						format_it = format_it.next_char ();
-						c = format_it.get_char ();
-					}
-					// conversion specifier
-					DataType param_type = null;
-					if (c == 'd' || c == 'i' || c == 'c') {
-						// integer
-						if (length == -2) {
-							param_type = int8_type;
-						} else if (length == -1) {
-							param_type = short_type;
-						} else if (length == 0) {
-							param_type = int_type;
-						} else if (length == 1) {
-							param_type = long_type;
-						} else if (length == 2) {
-							param_type = ssize_t_type;
-						}
-					} else if (c == 'o' || c == 'u' || c == 'x' || c == 'X') {
-						// unsigned integer
-						if (length == -2) {
-							param_type = uchar_type;
-						} else if (length == -1) {
-							param_type = ushort_type;
-						} else if (length == 0) {
-							param_type = uint_type;
-						} else if (length == 1) {
-							param_type = ulong_type;
-						} else if (length == 2) {
-							param_type = size_t_type;
-						}
-					} else if (c == 'e' || c == 'E' || c == 'f' || c == 'F'
-					           || c == 'g' || c == 'G' || c == 'a' || c == 'A') {
-						// double
-						param_type = double_type;
-					} else if (c == 's') {
-						// string
-						param_type = string_type;
-					} else if (c == 'p') {
-						// pointer
-						param_type = new PointerType (new VoidType ());
-					} else if (c == '%') {
-						// literal %
-					} else {
-						unsupported_format = true;
-						break;
-					}
-					if (c != '\0') {
-						format_it = format_it.next_char ();
-						c = format_it.get_char ();
-					}
-					if (param_type != null) {
-						if (arg_it.next ()) {
-							Expression arg = arg_it.get ();
-
-							arg.target_type = param_type;
-						} else {
-							Report.error (expr.source_reference, "Too few arguments for specified format");
-							return;
-						}
-					}
-				}
-				if (!unsupported_format && arg_it.next ()) {
-					Report.error (expr.source_reference, "Too many arguments for specified format");
-					return;
-				}
-			}
-		}
-
-		foreach (Expression arg in expr.get_argument_list ()) {
-			arg.accept (this);
-		}
-
-		DataType ret_type;
-
-		ret_type = mtype.get_return_type ();
-		params = mtype.get_parameters ();
-
-		if (ret_type is VoidType) {
-			// void return type
-			if (!(expr.parent_node is ExpressionStatement)
-			    && !(expr.parent_node is ForStatement)
-			    && !(expr.parent_node is YieldStatement)) {
-				// A void method invocation can be in the initializer or
-				// iterator of a for statement
-				expr.error = true;
-				Report.error (expr.source_reference, "invocation of void method not allowed as expression");
-				return;
-			}
-		}
-
-		// resolve generic return values
-		var ma = expr.call as MemberAccess;
-		if (ret_type.type_parameter != null) {
-			if (ma != null && ma.inner != null) {
-				ret_type = get_actual_type (ma.inner.value_type, ma.symbol_reference, ret_type, expr);
-				if (ret_type == null) {
-					return;
-				}
-			}
-		}
-		Gee.List<DataType> resolved_type_args = new ArrayList<DataType> ();
-		foreach (DataType type_arg in ret_type.get_type_arguments ()) {
-			if (type_arg.type_parameter != null && ma != null && ma.inner != null) {
-				resolved_type_args.add (get_actual_type (ma.inner.value_type, ma.symbol_reference, type_arg, expr));
-			} else {
-				resolved_type_args.add (type_arg);
-			}
-		}
-		ret_type = ret_type.copy ();
-		ret_type.remove_all_type_arguments ();
-		foreach (DataType resolved_type_arg in resolved_type_args) {
-			ret_type.add_type_argument (resolved_type_arg);
-		}
-
-		if (mtype is MethodType) {
-			var m = ((MethodType) mtype).method_symbol;
-			foreach (DataType error_type in m.get_error_types ()) {
-				// ensure we can trace back which expression may throw errors of this type
-				var call_error_type = error_type.copy ();
-				call_error_type.source_reference = expr.source_reference;
-
-				expr.add_error_type (call_error_type);
-			}
-		}
-
-		expr.value_type = ret_type;
-
-		check_arguments (expr, mtype, params, expr.get_argument_list ());
+		expr.check (this);
 	}
 
 	public bool check_arguments (Expression expr, DataType mtype, Gee.List<FormalParameter> params, Gee.List<Expression> args) {
