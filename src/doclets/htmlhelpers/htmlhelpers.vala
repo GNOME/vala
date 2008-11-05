@@ -648,7 +648,8 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "<ul class=\"%s\">\n\t\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">Packages</a></li>\n</ul>\n<hr class=\"%s\">\n", css_navi, css_navi_package_index, css_navi_link, link, css_navi_hr );
 	}
 
-	protected abstract void write_top_element ( GLib.FileStream file, Basic pos );
+	protected virtual void write_top_element ( GLib.FileStream file, Basic pos ) {
+	}
 
 	protected void write_top_elements ( GLib.FileStream file, Basic element, Basic? mself ) {
 		Gee.ArrayList<Basic> lst = new Gee.ArrayList<Basic> ();
@@ -668,7 +669,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 
 		for ( int i = lst.size-1; i >= 0  ; i-- ) {
 			Basic el = lst.get ( i );
-			this.write_navi_top_entry ( file, el, mself );
+			if ( el.name != null ) {
+				this.write_navi_top_entry ( file, el, mself );
+			}
 		}
 	}
 
@@ -681,24 +684,40 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_file ( GLib.FileStream file, Package efile ) {
+	protected void write_navi_file ( GLib.FileStream file, Package efile, Basic? pos = null ) {
 		Gee.ArrayList<Namespace> ns_list = new Gee.ArrayList<Namespace> ();
 		this.fetch_subnamespace_names (efile, ns_list );
 
+
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-		this.write_top_element_template ( file, "../index.html" );
+
+
+		if ( pos == null )
+			this.write_top_elements ( file, efile, efile );
+		else
+			this.write_top_elements ( file, pos.parent.parent, pos );
+
 		file.printf ( "\t\t\t\t<ul class=\"%s\">\n", css_navi );
 
+
+		Namespace globals;
+
 		foreach ( Namespace ns in ns_list ) {
-			this.write_navi_entry ( file, ns, efile, css_navi_namespace, true, true );
+			if ( ns.name == null )
+				globals = ns;
+			else
+				this.write_navi_entry ( file, ns, (pos == null)? efile : pos, css_navi_namespace, true, true );
+		}
+
+		if ( globals != null ) {
+			this.write_navi_child_namespaces_inline_withouth_block ( file, globals, (pos == null)? efile : pos );
 		}
 
 		file.puts ( "\t\t\t\t</ul>\n" );
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	protected void write_navi_child_namespaces_inline ( GLib.FileStream file, Namespace ns, Basic mself ) {
-		file.printf ( "<ul class=\"%s\">\n", css_navi );
+	protected void write_navi_child_namespaces_inline_withouth_block ( GLib.FileStream file, Namespace ns, Basic mself ) {
 		this.write_navi_child_namespaces_without_childs ( file, ns, mself );
 		this.write_navi_child_classes_without_childs ( file, ns, mself );
 		this.write_navi_child_interfaces_without_childs ( file, ns, mself );
@@ -709,6 +728,11 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		this.write_navi_child_methods ( file, ns, mself );
 		this.write_navi_child_fields ( file, ns, mself );
 		this.write_navi_child_constants ( file, ns, mself );
+	}
+
+	protected void write_navi_child_namespaces_inline ( GLib.FileStream file, Namespace ns, Basic mself ) {
+		file.printf ( "<ul class=\"%s\">\n", css_navi );
+		this.write_navi_child_namespaces_inline_withouth_block ( file, ns, mself );
 		file.puts ( "</ul>\n" );
 	}
 
@@ -820,24 +844,29 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	protected void write_navi_method ( GLib.FileStream file, Method m ) {
 		Basic parent = m.parent;
 
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
+		if ( parent.name == null ) {
+			this.write_navi_file ( file, (Package)parent.parent, m );
+		}
+		else {
+			file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
 
-		this.write_top_elements ( file, parent, m );
+			this.write_top_elements ( file, parent, m );
 
-		if ( parent is Class )
-			this.write_navi_class_inline ( file, (Class)parent, m );
-		else if ( m.parent is Interface )
-			this.write_navi_interface_inline ( file, (Interface)parent, m );
-		else if ( m.parent is Struct )
-			this.write_navi_struct_inline ( file, (Struct)parent, m );
-		else if ( m.parent is Enum )
-			this.write_navi_enum_inline ( file, (Enum)parent, m );
-		else if ( m.parent is ErrorDomain )
-			this.write_navi_error_domain_inline ( file, (ErrorDomain)parent, m );
-		else if ( m.parent is Namespace )
-			this.write_navi_child_namespaces_inline ( file, (Namespace)parent, m );
+			if ( parent is Class )
+				this.write_navi_class_inline ( file, (Class)parent, m );
+			else if ( m.parent is Interface )
+				this.write_navi_interface_inline ( file, (Interface)parent, m );
+			else if ( m.parent is Struct )
+				this.write_navi_struct_inline ( file, (Struct)parent, m );
+			else if ( m.parent is Enum )
+				this.write_navi_enum_inline ( file, (Enum)parent, m );
+			else if ( m.parent is ErrorDomain )
+				this.write_navi_error_domain_inline ( file, (ErrorDomain)parent, m );
+			else if ( m.parent is Namespace )
+				this.write_navi_child_namespaces_inline ( file, (Namespace)parent, m );
 
-		file.puts ( "\t\t\t</div>\n" );
+			file.puts ( "\t\t\t</div>\n" );
+		}
 	}
 
 	protected void write_navi_property ( GLib.FileStream file, Property prop ) {
@@ -872,53 +901,68 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	protected void write_navi_constant ( GLib.FileStream file, Constant c ) {
 		Basic parent = c.parent;
 
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-		this.write_top_elements ( file, parent, c );
+		if ( parent.name == null ) {
+			this.write_navi_file ( file, (Package)parent.parent, c );
+		}
+		else {
+			file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
+			this.write_top_elements ( file, parent, c );
 
-		if ( parent is Class )
-			this.write_navi_class_inline ( file, (Class)parent, c );
-		else  if ( parent is Struct )
-			this.write_navi_struct_inline ( file, (Struct)parent, c );
-		else  if ( parent is Namespace )
-			this.write_navi_child_namespaces_inline ( file, (Namespace)parent, c );
-		//else if ( parent is Interface )
-		//	this.write_navi_interface_inline ( file, (Interface)parent, c );
+			if ( parent is Class )
+				this.write_navi_class_inline ( file, (Class)parent, c );
+			else  if ( parent is Struct )
+				this.write_navi_struct_inline ( file, (Struct)parent, c );
+			else  if ( parent is Namespace )
+				this.write_navi_child_namespaces_inline ( file, (Namespace)parent, c );
+			//else if ( parent is Interface )
+			//	this.write_navi_interface_inline ( file, (Interface)parent, c );
 
-		file.puts ( "\t\t\t</div>\n" );
+			file.puts ( "\t\t\t</div>\n" );
+		}
 	}
 
 	protected void write_navi_field ( GLib.FileStream file, Field f ) {
 		Basic parent = f.parent;
 
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-		this.write_top_elements ( file, parent, f );
+		if ( parent.name == null ) {
+			this.write_navi_file ( file, (Package)parent.parent, f );
+		}
+		else {
+			file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
+			this.write_top_elements ( file, parent, f );
 
-		if ( parent is Class )
-			this.write_navi_class_inline ( file, (Class)parent, f );
-		else if ( parent is Struct )
-			this.write_navi_struct_inline ( file, (Struct)parent, f );
-		else if ( parent is Namespace )
-			this.write_navi_child_namespaces_inline ( file, (Namespace)parent, f );
-		else if ( parent is Interface )
-			this.write_navi_interface_inline ( file, (Interface)parent, f );
+			if ( parent is Class )
+				this.write_navi_class_inline ( file, (Class)parent, f );
+			else if ( parent is Struct )
+				this.write_navi_struct_inline ( file, (Struct)parent, f );
+			else if ( parent is Namespace )
+				this.write_navi_child_namespaces_inline ( file, (Namespace)parent, f );
+			else if ( parent is Interface )
+				this.write_navi_interface_inline ( file, (Interface)parent, f );
 
-		file.puts ( "\t\t\t</div>\n" );
+			file.puts ( "\t\t\t</div>\n" );
+		}
 	}
 
 	protected void write_navi_delegate ( GLib.FileStream file, Delegate del ) {
 		Basic parent = del.parent;
 
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-		this.write_top_elements ( file, parent, del );
+		if ( parent.name == null ) {
+			this.write_navi_file ( file, (Package)parent.parent, del );
+		}
+		else {
+			file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
+			this.write_top_elements ( file, parent, del );
 
-		if ( parent is Namespace )
-			this.write_navi_child_namespaces_inline ( file, (Namespace)parent, del );
-		else if ( parent is Class )
-			this.write_navi_class_inline ( file, (Class)parent, del );
-		else if ( parent is Interface )
-			this.write_navi_interface_inline ( file, (Interface)parent, del );
+			if ( parent is Namespace )
+				this.write_navi_child_namespaces_inline ( file, (Namespace)parent, del );
+			else if ( parent is Class )
+				this.write_navi_class_inline ( file, (Class)parent, del );
+			else if ( parent is Interface )
+				this.write_navi_interface_inline ( file, (Interface)parent, del );
 
-		file.puts ( "\t\t\t</div>\n" );
+			file.puts ( "\t\t\t</div>\n" );
+		}
 	}
 
 	protected void write_navi_child_methods_collection ( GLib.FileStream file, Gee.Collection<Method> methods, Basic mself ) {
@@ -1248,6 +1292,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 
 		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
 		this.write_child_enum_values ( file, en );
+		this.write_child_static_methods ( file, en );
 		this.write_child_methods ( file, en );
 		file.puts ( "\t\t\t</div>\n" );
 	}
@@ -1273,10 +1318,36 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 
 	protected void write_child_methods ( GLib.FileStream file, MethodHandler mh ) {
 		Gee.ReadOnlyCollection<Method> methods = mh.get_method_list ();
-		if ( methods.size > 0 ) {
+
+		Gee.ArrayList<Method> imethods = new Gee.ArrayList<Method> ( );
+		foreach ( Method m in methods ) {
+			if ( !m.is_static )
+				imethods.add ( m );
+		}
+
+		if ( imethods.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Methods:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Method m in methods ) {
+			foreach ( Method m in imethods ) {
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_method, css_navi_link, this.get_link(m, mh), m.name );
+			}
+			file.puts ( "</ul>\n" );
+		}
+	}
+
+	protected void write_child_static_methods ( GLib.FileStream file, MethodHandler mh ) {
+		Gee.ReadOnlyCollection<Method> methods = mh.get_method_list ();
+
+		Gee.ArrayList<Method> static_methods = new Gee.ArrayList<Method> ( );
+		foreach ( Method m in methods ) {
+			if ( m.is_static )
+				static_methods.add ( m );
+		}
+
+		if ( static_methods.size > 0 ) {
+			file.printf ( "<h3 class=\"%s\">Static Methods:</h3>\n", css_title );
+			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
+			foreach ( Method m in static_methods ) {
 				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_method, css_navi_link, this.get_link(m, mh), m.name );
 			}
 			file.puts ( "</ul>\n" );
@@ -1300,6 +1371,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
 		this.write_child_construction_methods ( file, cl );
+		this.write_child_static_methods ( file, cl );
 		this.write_child_classes ( file, cl );
 		this.write_child_structs ( file, cl );
 		this.write_child_enums ( file, cl );
@@ -1328,6 +1400,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			this.write_package_note ( file, iface );
 		}
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
+		this.write_child_static_methods ( file, iface );
 		this.write_child_classes ( file, iface );
 		this.write_child_structs ( file, iface );
 		this.write_child_delegates ( file, iface );
@@ -1351,6 +1424,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
 		this.write_child_error_values ( file, errdom );
+		this.write_child_static_methods ( file, errdom );
 		this.write_child_methods ( file, errdom );
 		file.puts ( "\t\t\t</div>\n" );
 	}
@@ -1372,6 +1446,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		this.langlet.write_struct ( stru, file );
 		file.printf ( "\n\t\t\t\t</div>\n" );
 		this.write_child_construction_methods ( file, stru );
+		this.write_child_static_methods ( file, stru );
 		this.write_child_methods ( file, stru );
 		this.write_child_fields ( file, stru );
 		this.write_child_constants ( file, stru );
@@ -1536,7 +1611,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	}
 
 
-	protected void write_file_header ( GLib.FileStream file, string css, string title ) {
+	protected void write_file_header ( GLib.FileStream file, string css, string? title ) {
 		file.puts ( "<html>\n" );
 		file.puts ( "\t<head>\n" );
 		file.puts ( "\t\t<title>Vala Binding Reference</title>\n" );
@@ -1545,7 +1620,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "\t<body>\n\n" );
 
 		file.printf ( "\t<div class=\"%s\">\n", css_site_header );
-		file.printf ( "\t\t%s Reference Manual\n", title );
+		file.printf ( "\t\t%s Reference Manual\n", (title == null)? "" : title );
 		file.puts ( "\t</div>\n\n" );
 
 		file.printf ( "\t\t<div class=\"%s\">\n", css_style_body );
