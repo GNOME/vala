@@ -16,6 +16,7 @@ libvala_la_VALASOURCES = \
 	valaccodeassignmentmodule.vala \
 	valaccodebasemodule.vala \
 	valaccodecompiler.vala \
+	valaccodecontrolflowmodule.vala \
 	valaccodedelegatemodule.vala \
 	valaccodedynamicpropertymodule.vala \
 	valaccodedynamicsignalmodule.vala \

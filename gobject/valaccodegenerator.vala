@@ -35,6 +35,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head = new CCodeBaseModule (this, head);
 		head = new CCodeStructModule (this, head);
 		head = new CCodeMethodModule (this, head);
+		head = new CCodeControlFlowModule (this, head);
 		head = new CCodeMemberAccessModule (this, head);
 		head = new CCodeAssignmentModule (this, head);
 		head = new CCodeInvocationExpressionModule (this, head);
