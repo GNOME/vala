@@ -550,7 +550,7 @@ public interface Valadoc.InterfaceHandler : Basic {
 
 
 
-public interface Valadoc.ErrorDomoainHandler : Basic {
+public interface Valadoc.ErrorDomainHandler : Basic {
 	protected abstract Gee.ArrayList<ErrorDomain> errdoms {
 		private set;
 		get;
@@ -3172,7 +3172,7 @@ public class Valadoc.Class : ContainerDataType, Visitable, ClassHandler, StructH
 
 
 public class Valadoc.ErrorDomain : DataType, MethodHandler, Visitable {
-	public ErrorDomain ( Valadoc.Settings settings, Vala.ErrorDomain verrdom, ErrorDomoainHandler parent, Tree head ) {
+	public ErrorDomain ( Valadoc.Settings settings, Vala.ErrorDomain verrdom, ErrorDomainHandler parent, Tree head ) {
 		this.settings = settings;
 		this.verrdom = verrdom;
 		this.parent = parent;
@@ -3901,7 +3901,7 @@ public class Valadoc.Interface : ContainerDataType, Visitable, SignalHandler, Pr
 	}
 }
 
-public class Valadoc.Namespace : Basic, MethodHandler, FieldHandler, NamespaceHandler, ErrorDomoainHandler,
+public class Valadoc.Namespace : Basic, MethodHandler, FieldHandler, NamespaceHandler, ErrorDomainHandler,
                                  EnumHandler, ClassHandler, StructHandler, Writeable, InterfaceHandler,
                                  DelegateHandler, ConstantHandler
 {

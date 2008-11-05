@@ -26,7 +26,8 @@ public const string css_inline_navigation_delegate = "main_inline_navigation_del
 public const string css_inline_navigation_constant = "main_inline_navigation_constant";
 public const string css_inline_navigation_namespace = "main_inline_navigation_namespace";
 public const string css_inline_navigation_package = "main_inline_navigation_package";
-
+public const string css_inline_navigation_interface = "main_navigation_interface";
+public const string css_inline_navigation_errordomain = "main_inline_navigation_errordomain";
 
 public const string css_site_header = "site_header";
 
@@ -1383,7 +1384,21 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_methods ( GLib.FileStream file, MethodHandler mh ) {
+	protected void write_child_namespaces ( GLib.FileStream file, NamespaceHandler nh ) {
+		Gee.ReadOnlyCollection<Namespace> nsl = nh.get_namespace_list ();
+		if ( nsl.size > 0 ) {
+			file.printf ( "<h3 class=\"%s\">Namespaces:</h3>\n", css_title );
+			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
+			foreach ( Namespace ns in nsl ) {
+				if ( ns.name != null ) {
+					file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_namespace, css_navi_link, this.get_link(ns, nh), ns.name );
+				}
+			}
+			file.puts ( "</ul>\n" );
+		}
+	}
+
+	protected void write_child_methods ( GLib.FileStream file, MethodHandler mh, Basic? mself = null ) {
 		Gee.ReadOnlyCollection<Method> methods = mh.get_method_list ();
 
 		Gee.ArrayList<Method> imethods = new Gee.ArrayList<Method> ( );
@@ -1406,7 +1421,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 				else
 					css = css_inline_navigation_method;
 
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css, css_navi_link, this.get_link(m, mh), m.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css, css_navi_link, this.get_link(m, (mself == null)? mh : mself), m.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1513,15 +1528,17 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
 		this.write_image_block ( file, stru );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
+
+		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
+		this.langlet.write_struct ( stru, file );
+		file.printf ( "\n\t\t\t\t</div>\n" );
+
 		stru.write_comment ( file );
 		if ( stru.parent is Namespace ) {
 			this.write_namespace_note ( file, stru );
 			this.write_package_note ( file, stru );
 		}
 		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
-		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
-		this.langlet.write_struct ( stru, file );
-		file.printf ( "\n\t\t\t\t</div>\n" );
 		this.write_child_construction_methods ( file, stru );
 		this.write_child_static_methods ( file, stru );
 		this.write_child_methods ( file, stru );
@@ -1536,25 +1553,37 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	protected abstract string get_img_path ( Basic element );
 
 
-	protected void write_child_constants ( GLib.FileStream file, ConstantHandler ch ) {
+	protected void write_child_constants ( GLib.FileStream file, ConstantHandler ch, Basic? mself = null ) {
 		Gee.ReadOnlyCollection<Constant> constants = ch.get_constant_list ();
 		if ( constants.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Constants:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Constant c in constants ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_constant, css_navi_link, this.get_link(c, ch), c.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_constant, css_navi_link, this.get_link(c, (mself == null)? ch : mself), c.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
 	}
 
-	protected void write_child_enums ( GLib.FileStream file, EnumHandler eh ) {
+	protected void write_child_enums ( GLib.FileStream file, EnumHandler eh, Basic? mself = null ) {
 		Gee.Collection<Enum> enums = eh.get_enum_list ();
 		if ( enums.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Enums:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Enum en in enums ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_enum, css_navi_link, this.get_link(en, eh), en.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_enum, css_navi_link, this.get_link(en, (mself == null)? eh : mself), en.name );
+			}
+			file.puts ( "</ul>\n" );
+		}
+	}
+
+	protected void write_child_errordomains ( GLib.FileStream file, ErrorDomainHandler eh, Basic? mself = null ) {
+		Gee.Collection<ErrorDomain> errdoms = eh.get_error_domain_list ();
+		if ( errdoms.size > 0 ) {
+			file.printf ( "<h3 class=\"%s\">Errordomains:</h3>\n", css_title );
+			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
+			foreach ( ErrorDomain err in errdoms ) {
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_errordomain, css_navi_link,  this.get_link(err, (mself == null)? eh : mself), err.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1590,13 +1619,13 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "<img cass=\"%s\" src=\"%s\"/>\n", css_diagram, imgpath );
 	}
 
-	protected void write_child_fields ( GLib.FileStream file, FieldHandler fh ) {
+	protected void write_child_fields ( GLib.FileStream file, FieldHandler fh, Basic? mself = null ) {
 		Gee.ReadOnlyCollection<Field> fields = fh.get_field_list ();
 		if ( fields.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Fields:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Field f in fields ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_fields, css_navi_link, this.get_link(f, fh), f.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_fields, css_navi_link, this.get_link(f, (mself == null)? fh : mself), f.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1634,7 +1663,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_classes ( GLib.FileStream file, ClassHandler clh ) {
+	protected void write_child_classes ( GLib.FileStream file, ClassHandler clh, Basic? mself = null ) {
 		Gee.ReadOnlyCollection<Class> classes = clh.get_class_list ();
 		if ( classes.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Classes:</h3>\n", css_title );
@@ -1648,31 +1677,43 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 					name = subcl.name;
 				}
 
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", (subcl.is_abstract)? css_inline_navigation_abstract_class : css_inline_navigation_class, css_navi_link, this.get_link(subcl, clh), name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", (subcl.is_abstract)? css_inline_navigation_abstract_class : css_inline_navigation_class, css_navi_link, this.get_link(subcl, (mself == null)? clh : mself), name );
 			}
 			file.puts ( "</ul>\n" );
 		}
 	}
 
-	protected void write_child_delegates ( GLib.FileStream file, DelegateHandler dh ) {
+	protected void write_child_interfaces ( GLib.FileStream file, InterfaceHandler ih, Basic? mself = null ) {
+		Gee.Collection<Interface> ifaces = ih.get_interface_list ( );
+		if ( ifaces.size > 0 ) {
+			file.printf ( "<h3 class=\"%s\">Interfaces:</h3>\n", css_title );
+			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
+			foreach ( Interface iface in ifaces ) {
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_interface, css_navi_link, this.get_link(iface, (mself == null)? ih : mself), iface.name );
+			}
+			file.puts ( "</ul>\n" );
+		}
+	}
+
+	protected void write_child_delegates ( GLib.FileStream file, DelegateHandler dh, Basic? mself = null ) {
 		Gee.Collection<Delegate> delegates = dh.get_delegate_list ();
 		if ( delegates.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Delegates:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Delegate d in delegates ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_delegate, css_navi_link, this.get_link(d, dh), d.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_delegate, css_navi_link, this.get_link(d, (mself == null)? dh : mself), d.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
 	}
 
-	protected void write_child_structs ( GLib.FileStream file, StructHandler struh ) {
+	protected void write_child_structs ( GLib.FileStream file, StructHandler struh, Basic? mself = null ) {
 		Gee.Collection<Struct> structs = struh.get_struct_list ();
 		if ( structs.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Structs:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Struct stru in structs ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_struct, css_navi_link, this.get_link(stru, struh), stru.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_struct, css_navi_link, this.get_link(stru, (mself == null)? struh : mself), stru.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1684,6 +1725,18 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_hr );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
 		ns.write_comment ( file );
+
+		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
+		this.write_child_namespaces ( file, ns );
+		this.write_child_classes ( file, ns );
+		this.write_child_interfaces ( file, ns );
+		this.write_child_structs ( file, ns );
+		this.write_child_enums ( file, ns );
+		this.write_child_errordomains ( file, ns );
+		this.write_child_delegates ( file, ns );
+		this.write_child_methods ( file, ns );
+		this.write_child_fields ( file, ns );
+		this.write_child_constants ( file, ns );
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
@@ -1692,6 +1745,24 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, f.name );
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
+
+		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
+
+		this.write_child_namespaces ( file, f );
+
+		foreach ( Namespace ns in f.get_namespace_list() ) {
+			if ( ns.name == null ) {
+				this.write_child_classes ( file, ns, f );
+				this.write_child_interfaces ( file, ns, f );
+				this.write_child_structs ( file, ns, f );
+				this.write_child_enums ( file, ns, f );
+				this.write_child_errordomains ( file, ns, f );
+				this.write_child_delegates ( file, ns, f );
+				this.write_child_methods ( file, ns, f );
+				this.write_child_fields ( file, ns, f );
+				this.write_child_constants ( file, ns, f );
+			}
+		}
 		file.puts ( "\t\t\t</div>\n" );
 	}
 

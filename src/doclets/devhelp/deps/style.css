@@ -205,7 +205,7 @@ h3.main_title {
 .main_navi_errdomcode {
 	list-style-image: url(errorcode.png)
 }
-.navi_error_domain, .main_list_errdom {
+.navi_error_domain, .main_list_errdom, .main_inline_navigation_errordomain {
 	list-style-image: url(errordomain.png)
 }
 .navi_namespace, .main_list_ns, .main_inline_navigation_namespace {
@@ -217,7 +217,7 @@ h3.main_title {
 .navi_struct, .main_list_stru {
 	list-style-image: url(struct.png)
 }
-.navi_iface, .main_list_iface {
+.navi_iface, .main_navigation_interface, .main_list_iface {
 	list-style-image: url(interface.png)
 }
 .navi_field, .main_inline_navigation_fields, .main_list_field {
@@ -226,7 +226,7 @@ h3.main_title {
 .navi_class, .main_inline_navigation_class, .main_list_cl {
 	list-style-image: url(class.png)
 }
-.navi_enum, .main_list_en {
+.navi_enum, .main_list_en, .main_inline_navigation_enum {
 	list-style-image: url(enum.png)
 }
 .navi_prop, .main_inline_navigation_property, .main_list_prop {
