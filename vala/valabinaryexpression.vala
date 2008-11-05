@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
+using Gee;
 
 /**
  * Represents an expression with two operands in the source code.
@@ -136,6 +136,163 @@ public class Vala.BinaryExpression : Expression {
 
 	public override bool is_non_null () {
 		return left.is_non_null () && right.is_non_null ();
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (left.error || right.error) {
+			/* if there were any errors in inner expressions, skip type check */
+			error = true;
+			return false;
+		}
+
+		if (left.value_type == null) {
+			Report.error (left.source_reference, "invalid left operand");
+			error = true;
+			return false;
+		}
+
+		if (operator != BinaryOperator.IN && right.value_type == null) {
+			Report.error (right.source_reference, "invalid right operand");
+			error = true;
+			return false;
+		}
+
+		if (left.value_type.data_type == analyzer.string_type.data_type
+		    && operator == BinaryOperator.PLUS) {
+			// string concatenation
+
+			if (right.value_type == null || right.value_type.data_type != analyzer.string_type.data_type) {
+				error = true;
+				Report.error (source_reference, "Operands must be strings");
+				return false;
+			}
+
+			value_type = analyzer.string_type.copy ();
+			if (left.is_constant () && right.is_constant ()) {
+				value_type.value_owned = false;
+			} else {
+				value_type.value_owned = true;
+			}
+		} else if (operator == BinaryOperator.PLUS
+			   || operator == BinaryOperator.MINUS
+			   || operator == BinaryOperator.MUL
+			   || operator == BinaryOperator.DIV) {
+			// check for pointer arithmetic
+			if (left.value_type is PointerType) {
+				var offset_type = right.value_type.data_type as Struct;
+				if (offset_type != null && offset_type.is_integer_type ()) {
+					if (operator == BinaryOperator.PLUS
+					    || operator == BinaryOperator.MINUS) {
+						// pointer arithmetic: pointer +/- offset
+						value_type = left.value_type.copy ();
+					}
+				} else if (right.value_type is PointerType) {
+					// pointer arithmetic: pointer - pointer
+					value_type = analyzer.size_t_type;
+				}
+			}
+
+			if (value_type == null) {
+				value_type = analyzer.get_arithmetic_result_type (left.value_type, right.value_type);
+			}
+
+			if (value_type == null) {
+				error = true;
+				Report.error (source_reference, "Arithmetic operation not supported for types `%s' and `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
+				return false;
+			}
+		} else if (operator == BinaryOperator.MOD
+			   || operator == BinaryOperator.SHIFT_LEFT
+			   || operator == BinaryOperator.SHIFT_RIGHT
+			   || operator == BinaryOperator.BITWISE_XOR) {
+			value_type = analyzer.get_arithmetic_result_type (left.value_type, right.value_type);
+
+			if (value_type == null) {
+				error = true;
+				Report.error (source_reference, "Arithmetic operation not supported for types `%s' and `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
+				return false;
+			}
+		} else if (operator == BinaryOperator.LESS_THAN
+			   || operator == BinaryOperator.GREATER_THAN
+			   || operator == BinaryOperator.LESS_THAN_OR_EQUAL
+			   || operator == BinaryOperator.GREATER_THAN_OR_EQUAL) {
+			if (left.value_type.compatible (analyzer.string_type)
+			    && right.value_type.compatible (analyzer.string_type)) {
+				// string comparison
+				} else if (left.value_type is PointerType && right.value_type is PointerType) {
+					// pointer arithmetic
+			} else {
+				var resulting_type = analyzer.get_arithmetic_result_type (left.value_type, right.value_type);
+
+				if (resulting_type == null) {
+					error = true;
+					Report.error (source_reference, "Relational operation not supported for types `%s' and `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
+					return false;
+				}
+			}
+
+			value_type = analyzer.bool_type;
+		} else if (operator == BinaryOperator.EQUALITY
+			   || operator == BinaryOperator.INEQUALITY) {
+			/* relational operation */
+
+			if (!right.value_type.compatible (left.value_type)
+			    && !left.value_type.compatible (right.value_type)) {
+				Report.error (source_reference, "Equality operation: `%s' and `%s' are incompatible".printf (right.value_type.to_string (), left.value_type.to_string ()));
+				error = true;
+				return false;
+			}
+
+			if (left.value_type.compatible (analyzer.string_type)
+			    && right.value_type.compatible (analyzer.string_type)) {
+				// string comparison
+			}
+
+			value_type = analyzer.bool_type;
+		} else if (operator == BinaryOperator.BITWISE_AND
+			   || operator == BinaryOperator.BITWISE_OR) {
+			// integer type or flags type
+
+			value_type = left.value_type;
+		} else if (operator == BinaryOperator.AND
+			   || operator == BinaryOperator.OR) {
+			if (!left.value_type.compatible (analyzer.bool_type) || !right.value_type.compatible (analyzer.bool_type)) {
+				error = true;
+				Report.error (source_reference, "Operands must be boolean");
+			}
+
+			value_type = analyzer.bool_type;
+		} else if (operator == BinaryOperator.IN) {
+			// integer type or flags type or collection/map
+
+			/* handle collections and maps */
+			var container_type = right.value_type.data_type;
+			
+			if ((analyzer.collection_type != null && container_type.is_subtype_of (analyzer.collection_type))
+			    || (analyzer.map_type != null && container_type.is_subtype_of (analyzer.map_type))) {
+				Symbol contains_sym = null;
+				if (container_type.is_subtype_of (analyzer.collection_type)) {
+					contains_sym = analyzer.collection_type.scope.lookup ("contains");
+				} else if (container_type.is_subtype_of (analyzer.map_type)) {
+					contains_sym = analyzer.map_type.scope.lookup ("contains");
+				}
+				var contains_method = (Method) contains_sym;
+				Gee.List<FormalParameter> contains_params = contains_method.get_parameters ();
+				Iterator<FormalParameter> contains_params_it = contains_params.iterator ();
+				contains_params_it.next ();
+				var contains_param = contains_params_it.get ();
+
+				var key_type = analyzer.get_actual_type (right.value_type, contains_method, contains_param.parameter_type, this);
+				left.target_type = key_type;
+			}
+			
+			value_type = analyzer.bool_type;
+			
+		} else {
+			assert_not_reached ();
+		}
+
+		return !error;
 	}
 }
 

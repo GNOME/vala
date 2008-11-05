@@ -39,8 +39,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	Gee.List<UsingDirective> current_using_directives;
 
-	DataType bool_type;
-	DataType string_type;
+	public DataType bool_type;
+	public DataType string_type;
 	DataType uchar_type;
 	DataType short_type;
 	DataType ushort_type;
@@ -48,7 +48,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	DataType uint_type;
 	DataType long_type;
 	DataType ulong_type;
-	DataType size_t_type;
+	public DataType size_t_type;
 	DataType ssize_t_type;
 	DataType int8_type;
 	DataType unichar_type;
@@ -62,8 +62,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	DataType iterable_type;
 	Interface iterator_type;
 	Interface list_type;
-	Interface collection_type;
-	Interface map_type;
+	public Interface collection_type;
+	public Interface map_type;
 
 	private int next_lambda_id = 0;
 
@@ -3084,7 +3084,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		expr.value_type.value_owned = true;
 	}
 
-	private DataType? get_arithmetic_result_type (DataType left_type, DataType right_type) {
+	public DataType? get_arithmetic_result_type (DataType left_type, DataType right_type) {
 		 if (!(left_type.data_type is Struct) || !(right_type.data_type is Struct)) {
 			// at least one operand not struct
 		 	return null;
@@ -3117,158 +3117,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_binary_expression (BinaryExpression expr) {
-		if (expr.left.error || expr.right.error) {
-			/* if there were any errors in inner expressions, skip type check */
-			expr.error = true;
-			return;
-		}
-
-		if (expr.left.value_type == null) {
-			Report.error (expr.left.source_reference, "invalid left operand");
-			expr.error = true;
-			return;
-		}
-
-		if (expr.operator != BinaryOperator.IN && expr.right.value_type == null) {
-			Report.error (expr.right.source_reference, "invalid right operand");
-			expr.error = true;
-			return;
-		}
-
-		if (expr.left.value_type.data_type == string_type.data_type
-		    && expr.operator == BinaryOperator.PLUS) {
-			// string concatenation
-
-			if (expr.right.value_type == null || expr.right.value_type.data_type != string_type.data_type) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Operands must be strings");
-				return;
-			}
-
-			expr.value_type = string_type.copy ();
-			if (expr.left.is_constant () && expr.right.is_constant ()) {
-				expr.value_type.value_owned = false;
-			} else {
-				expr.value_type.value_owned = true;
-			}
-		} else if (expr.operator == BinaryOperator.PLUS
-			   || expr.operator == BinaryOperator.MINUS
-			   || expr.operator == BinaryOperator.MUL
-			   || expr.operator == BinaryOperator.DIV) {
-			// check for pointer arithmetic
-			if (expr.left.value_type is PointerType) {
-				var offset_type = expr.right.value_type.data_type as Struct;
-				if (offset_type != null && offset_type.is_integer_type ()) {
-					if (expr.operator == BinaryOperator.PLUS
-					    || expr.operator == BinaryOperator.MINUS) {
-						// pointer arithmetic: pointer +/- offset
-						expr.value_type = expr.left.value_type.copy ();
-					}
-				} else if (expr.right.value_type is PointerType) {
-					// pointer arithmetic: pointer - pointer
-					expr.value_type = size_t_type;
-				}
-			}
-
-			if (expr.value_type == null) {
-				expr.value_type = get_arithmetic_result_type (expr.left.value_type, expr.right.value_type);
-			}
-
-			if (expr.value_type == null) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Arithmetic operation not supported for types `%s' and `%s'".printf (expr.left.value_type.to_string (), expr.right.value_type.to_string ()));
-				return;
-			}
-		} else if (expr.operator == BinaryOperator.MOD
-			   || expr.operator == BinaryOperator.SHIFT_LEFT
-			   || expr.operator == BinaryOperator.SHIFT_RIGHT
-			   || expr.operator == BinaryOperator.BITWISE_XOR) {
-			expr.value_type = get_arithmetic_result_type (expr.left.value_type, expr.right.value_type);
-
-			if (expr.value_type == null) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Arithmetic operation not supported for types `%s' and `%s'".printf (expr.left.value_type.to_string (), expr.right.value_type.to_string ()));
-				return;
-			}
-		} else if (expr.operator == BinaryOperator.LESS_THAN
-			   || expr.operator == BinaryOperator.GREATER_THAN
-			   || expr.operator == BinaryOperator.LESS_THAN_OR_EQUAL
-			   || expr.operator == BinaryOperator.GREATER_THAN_OR_EQUAL) {
-			if (expr.left.value_type.compatible (string_type)
-			    && expr.right.value_type.compatible (string_type)) {
-				// string comparison
-				} else if (expr.left.value_type is PointerType && expr.right.value_type is PointerType) {
-					// pointer arithmetic
-			} else {
-				var resulting_type = get_arithmetic_result_type (expr.left.value_type, expr.right.value_type);
-
-				if (resulting_type == null) {
-					expr.error = true;
-					Report.error (expr.source_reference, "Relational operation not supported for types `%s' and `%s'".printf (expr.left.value_type.to_string (), expr.right.value_type.to_string ()));
-					return;
-				}
-			}
-
-			expr.value_type = bool_type;
-		} else if (expr.operator == BinaryOperator.EQUALITY
-			   || expr.operator == BinaryOperator.INEQUALITY) {
-			/* relational operation */
-
-			if (!expr.right.value_type.compatible (expr.left.value_type)
-			    && !expr.left.value_type.compatible (expr.right.value_type)) {
-				Report.error (expr.source_reference, "Equality operation: `%s' and `%s' are incompatible".printf (expr.right.value_type.to_string (), expr.left.value_type.to_string ()));
-				expr.error = true;
-				return;
-			}
-
-			if (expr.left.value_type.compatible (string_type)
-			    && expr.right.value_type.compatible (string_type)) {
-				// string comparison
-			}
-
-			expr.value_type = bool_type;
-		} else if (expr.operator == BinaryOperator.BITWISE_AND
-			   || expr.operator == BinaryOperator.BITWISE_OR) {
-			// integer type or flags type
-
-			expr.value_type = expr.left.value_type;
-		} else if (expr.operator == BinaryOperator.AND
-			   || expr.operator == BinaryOperator.OR) {
-			if (!expr.left.value_type.compatible (bool_type) || !expr.right.value_type.compatible (bool_type)) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Operands must be boolean");
-			}
-
-			expr.value_type = bool_type;
-		} else if (expr.operator == BinaryOperator.IN) {
-			// integer type or flags type or collection/map
-
-			/* handle collections and maps */
-			var container_type = expr.right.value_type.data_type;
-			
-			if ((collection_type != null && container_type.is_subtype_of (collection_type))
-			    || (map_type != null && container_type.is_subtype_of (map_type))) {
-				Symbol contains_sym = null;
-				if (container_type.is_subtype_of (collection_type)) {
-					contains_sym = collection_type.scope.lookup ("contains");
-				} else if (container_type.is_subtype_of (map_type)) {
-					contains_sym = map_type.scope.lookup ("contains");
-				}
-				var contains_method = (Method) contains_sym;
-				Gee.List<FormalParameter> contains_params = contains_method.get_parameters ();
-				Iterator<FormalParameter> contains_params_it = contains_params.iterator ();
-				contains_params_it.next ();
-				var contains_param = contains_params_it.get ();
-
-				var key_type = get_actual_type (expr.right.value_type, contains_method, contains_param.parameter_type, expr);
-				expr.left.target_type = key_type;
-			}
-			
-			expr.value_type = bool_type;
-			
-		} else {
-			assert_not_reached ();
-		}
+		expr.check (this);
 	}
 
 	public override void visit_type_check (TypeCheck expr) {
