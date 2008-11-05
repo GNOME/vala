@@ -289,4 +289,12 @@ public class Vala.Enum : TypeSymbol {
 	public override string? get_default_value () {
 		return "0";
 	}
+
+	public override string? get_type_signature () {
+		if (is_flags) {
+			return "u";
+		} else {
+			return "i";
+		}
+	}
 }

@@ -47,6 +47,17 @@ public class Vala.GSignalModule : GObjectModule {
 			return ("VOID");
 		} else if (dbus && t.get_type_signature ().has_prefix ("(")) {
 			return ("BOXED");
+		} else if (t.data_type is Enum) {
+			var en = (Enum) t.data_type;
+			if (dbus) {
+				if (en.is_flags) {
+					return ("UINT");
+				} else {
+					return ("INT");
+				}
+			} else {
+				return en.get_marshaller_type_name ();
+			}
 		} else {
 			return t.data_type.get_marshaller_type_name ();
 		}
@@ -266,6 +277,13 @@ public class Vala.GSignalModule : GObjectModule {
 				get_value_function = "g_value_get_pointer";
 			} else if (dbus && p.parameter_type.get_type_signature ().has_prefix ("(")) {
 				get_value_function = "g_value_get_boxed";
+			} else if (dbus && p.parameter_type.data_type is Enum) {
+				var en = (Enum) p.parameter_type.data_type;
+				if (en.is_flags) {
+					get_value_function = "g_value_get_uint";
+				} else {
+					get_value_function = "g_value_get_int";
+				}
 			} else {
 				get_value_function = p.parameter_type.data_type.get_get_value_function ();
 			}
@@ -306,6 +324,13 @@ public class Vala.GSignalModule : GObjectModule {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_object"));
 			} else if (dbus && return_type.get_type_signature ().has_prefix ("(")) {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
+			} else if (dbus && return_type.data_type is Enum) {
+				var en = (Enum) return_type.data_type;
+				if (en.is_flags) {
+					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_uint"));
+				} else {
+					set_fc = new CCodeFunctionCall (new CCodeIdentifier ("g_value_set_int"));
+				}
 			} else {
 				set_fc = new CCodeFunctionCall (new CCodeIdentifier (return_type.data_type.get_set_value_function ()));
 			}

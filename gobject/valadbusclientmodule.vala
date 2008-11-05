@@ -460,6 +460,13 @@ public class Vala.DBusClientModule : GAsyncModule {
 			}
 			carray_type.add_argument (get_dbus_g_type (array_type.element_type));
 			return carray_type;
+		} else if (data_type.data_type is Enum) {
+			var en = (Enum) data_type.data_type;
+			if (en.is_flags) {
+				return new CCodeIdentifier ("G_TYPE_UINT");
+			} else {
+				return new CCodeIdentifier ("G_TYPE_INT");
+			}
 		} else if (data_type.data_type == null) {
 			critical ("Internal error during DBus type generation with: %s", data_type.to_string ());
 			return new CCodeIdentifier ("G_TYPE_NONE");

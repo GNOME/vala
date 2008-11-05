@@ -1,5 +1,13 @@
 2008-11-05  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaenum.vala:
+	* gobject/valadbusclientmodule.vala:
+	* gobject/valagsignalmodule.vala:
+
+	Support enums in D-Bus clients and servers, fixes bug 534105
+
+2008-11-05  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/Makefile.am:
 	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodecontrolflowmodule.vala:
