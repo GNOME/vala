@@ -5,6 +5,9 @@ vapidir = $(libdir)/valadoc/plugins/devhelp/deps/
 
 
 dist_vapi_DATA =    \
+    abstractclass.png \
+    abstractmethod.png \
+    staticmethod.png \
 	style.css       \
 	class.png       \
 	interface.png   \

@@ -1809,6 +1809,9 @@ public class Valadoc.TypeReference : Basic {
 			if ( node == null )
 				return false;
 
+			if ( node is Vala.Constant )
+				return false;
+
 			if ( node is Vala.FormalParameter ) {
 				var direction = ((Vala.FormalParameter)node).direction;
 
@@ -3020,13 +3023,6 @@ public class Valadoc.Class : ContainerDataType, Visitable, ClassHandler, StructH
 		}
 	}
 
-	// remove
-	public bool is_static {
-		get {
-			return this.vclass.is_static;
-		}
-	}
-
 	public override void visit ( Doclet doclet ) {
 		if ( !this.is_visitor_accessible ( ) )
 			return ;
@@ -3851,12 +3847,6 @@ public class Valadoc.Interface : ContainerDataType, Visitable, SignalHandler, Pr
 		Gee.Collection<Vala.Enum> enums = this.vinterface.get_enums();
 		this.enums = new Gee.ArrayList<Enum>();
 		this.add_enums ( enums );
-	}
-
-	public bool is_static {
-		get {
-			return this.vinterface.is_static;
-		}
 	}
 
 	public string?# comment_str {

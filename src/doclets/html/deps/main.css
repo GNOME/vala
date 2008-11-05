@@ -167,60 +167,86 @@ h3.main_title {
 
 
 
+.main_inline_navigation_virtual_property {
+	list-style-image: url(property.png);
+}
+.main_inline_navigation_abstract_property {
+	list-style-image: url(property.png);
+}
+.navi_abstract_prop {
+	list-style-image: url(property.png);
+}
+.navi_virtual_prop {
+	list-style-image: url(property.png);
+}
 
 
+.navi_abstract_class, .main_inline_navigation_abstract_class {
+	list-style-image: url(abstractclass.png);
+}
+.main_inline_navigation_abstract_method, .navi_abstract_method {
+	list-style-image: url( abstractmethod.png );
+}
+.navi_construction_method, .main_list_m, .main_inline_navigation_construction_method {
+	list-style-image: url(method.png);
+}
+.navi_static_method, .main_inline_navigation_static_method {
+	list-style-image: url(staticmethod.png);
+}
+
+
+.navi_virtual_method, .main_inline_navigation_virtual_method {
+	list-style-image: url(method.png);
+}
 
 .navi_package_index, .main_inline_navigation_package {
-	list-style-image: url(packages.png)
+	list-style-image: url(packages.png);
 }
 .main_navi_enval {
-	list-style-image: url(enumvalue.png)
+	list-style-image: url(enumvalue.png);
 }
 .main_navi_errdomcode {
-	list-style-image: url(errorcode.png)
-}
-.navi_construction_method, .main_list_m {
-	list-style-image: url(method.png)
+	list-style-image: url(errorcode.png);
 }
 .navi_error_domain, .main_list_errdom {
-	list-style-image: url(errordomain.png)
+	list-style-image: url(errordomain.png);
 }
 .navi_namespace, .main_list_ns, .main_inline_navigation_namespace {
-	list-style-image: url(namespace.png)
+	list-style-image: url(namespace.png);
 }
 .navi_method, .main_inline_navigation_method {
-	list-style-image: url(method.png)
+	list-style-image: url(method.png);
 }
 .navi_struct, .main_list_stru, .main_inline_navigation_struct {
-	list-style-image: url(struct.png)
+	list-style-image: url(struct.png);
 }
 .navi_iface, .main_list_iface {
-	list-style-image: url(interface.png)
+	list-style-image: url(interface.png);
 }
 .navi_field, .main_inline_navigation_fields, .main_list_field {
-	list-style-image: url(field.png)
+	list-style-image: url(field.png);
 }
 .navi_class, .main_inline_navigation_class, .main_list_cl {
-	list-style-image: url(class.png)
+	list-style-image: url(class.png);
 }
 .navi_enum, .main_list_en {
-	list-style-image: url(enum.png)
+	list-style-image: url(enum.png);
 }
 .navi_prop, .main_inline_navigation_property, .main_list_prop {
-	list-style-image: url(property.png)
+	list-style-image: url(property.png);
 }
 .navi_del, .main_list_del, .main_inline_navigation_delegate {
-	list-style-image: url(delegate.png)
+	list-style-image: url(delegate.png);
 }
 .navi_sig, .main_inline_navigation_signal, .main_list_sig {
-	list-style-image: url(signal.png)
+	list-style-image: url(signal.png);
 }
 .navi_package, .main_inline_navigation_package {
-	list-style-image: url(package.png)
+	list-style-image: url(package.png);
 }
 
 .main_inline_navigation_constant, .navi_constant {
-	list-style-image: url(constant.png)
+	list-style-image: url(constant.png);
 }
 
 

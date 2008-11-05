@@ -382,7 +382,7 @@ public class ValaDoc : Object {
 		if ( pkg_name == null )
 			return true;
 
-		if ( pkg_name == "glib-2.0" )
+		if ( pkg_name == "glib-2.0" || pkg_name == "gobject-2.0" )
 			return false;
 
 		foreach (string package in this.packages ) {
@@ -454,6 +454,10 @@ public class ValaDoc : Object {
 			Report.error (null, "glib-2.0 not found in specified Vala API directories");
 		}
 
+		if (!add_package (context, "gobject-2.0")) {
+			Report.error (null, "gobject-2.0 not found in specified Vala API directories");
+		}
+
 		if ( this.packages != null ) {
 			foreach (string package in this.packages ) {
 				if (!add_package (context, package)) {
@@ -478,12 +482,6 @@ public class ValaDoc : Object {
 
 		var parser  = new Vala.Parser ();
 		parser.parse ( context );
-		if (Report.get_errors () > 0) {
-			return quit ();
-		}
-
-		var attributeprocessor = new AttributeProcessor ();
-		attributeprocessor.process( context );
 		if (Report.get_errors () > 0) {
 			return quit ();
 		}

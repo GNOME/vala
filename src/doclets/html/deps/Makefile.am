@@ -5,6 +5,9 @@ vapidir = $(libdir)/valadoc/plugins/template/deps/
 
 
 dist_vapi_DATA =     \
+    abstractclass.png \
+    abstractmethod.png \
+    staticmethod.png \
 	main.css        \
 	class.png       \
 	enumvalue.png   \

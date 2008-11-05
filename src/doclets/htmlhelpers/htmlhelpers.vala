@@ -5,10 +5,20 @@ using GLib;
 
 
 public const string css_inline_navigation = "main_inline_navigation";
+
 public const string css_inline_navigation_property = "main_inline_navigation_property";
+public const string css_inline_navigation_virtual_property = "main_inline_navigation_virtual_property";
+public const string css_inline_navigation_abstract_property = "main_inline_navigation_abstract_property";
+
 public const string css_inline_navigation_method = "main_inline_navigation_method";
+public const string css_inline_navigation_static_method = "main_inline_navigation_static_method";
+public const string css_inline_navigation_virtual_method = "main_inline_navigation_virtual_method";
+public const string css_inline_navigation_abstract_method = "main_inline_navigation_abstract_method";
+public const string css_inline_navigation_construction_method = "main_inline_navigation_construction_method";
+
 public const string css_inline_navigation_signal = "main_inline_navigation_signal";
 public const string css_inline_navigation_fields = "main_inline_navigation_fields";
+public const string css_inline_navigation_abstract_class = "main_inline_navigation_abstract_class";
 public const string css_inline_navigation_class = "main_inline_navigation_class";
 public const string css_inline_navigation_enum = "main_inline_navigation_enum";
 public const string css_inline_navigation_struct = "main_inline_navigation_struct";
@@ -22,18 +32,27 @@ public const string css_site_header = "site_header";
 
 public const string css_navi_package_index = "navi_package_index";
 public const string css_navi_package = "navi_package";
-public const string css_navi_construction_method = "navi_construction_method";
+
+public const string css_navi_creation_method = "navi_creation_method";
+
 public const string css_navi_error_domain = "navi_error_domain";
 public const string css_navi_namespace = "navi_namespace";
+public const string css_navi_abstract_method = "navi_abstract_method";
+public const string css_navi_virtual_method = "navi_virtual_method";
+public const string css_navi_static_method = "navi_static_method";
+public const string css_navi_construction_method = "navi_construction_method";
 public const string css_navi_method = "navi_method";
 public const string css_navi_struct = "navi_struct";
 public const string css_navi_iface = "navi_iface";
 public const string css_navi_field = "navi_field";
 public const string css_navi_class = "navi_class";
+public const string css_navi_abstract_class = "navi_abstract_class";
 public const string css_navi_enum = "navi_enum";
 public const string css_navi_link = "navi_link";
 public const string css_navi_constant = "navi_constant";
 public const string css_navi_prop = "navi_prop";
+public const string css_navi_abstract_prop = "navi_abstract_prop";
+public const string css_navi_virtual_prop = "navi_virtual_prop";
 public const string css_navi_del = "navi_del";
 public const string css_navi_sig = "navi_sig";
 public const string css_navi = "navi_main";
@@ -425,8 +444,9 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 			modifiers.append ( " override " );
 
 
+		file.printf ( " <span class=\"%s\">%s</span> ", css_keyword, modifiers.str );
 		this.write_type_reference ( prop.return_type, file );
-		file.printf ( " <span class=\"%s\">%s</span>%s { ", css_keyword, modifiers.str, prop.name );
+		file.printf ( " %s { ", prop.name );
 
 		if ( prop.setter != null )
 			this.write_property_accessor ( prop.setter, file );
@@ -528,8 +548,6 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 
 		if ( cl.is_abstract )
 			modifiers.append ( "abstract " );
-		else if ( cl.is_static )
-			modifiers.append ( "static " );
 
 		file.printf ( "<span class=\"%s\">%s class</span> %s", css_keyword, modifiers.str, cl.name );
 
@@ -543,10 +561,7 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 
 		this.write_accessor ( iface, file );
 
-		if ( iface.is_static  )
-			file.printf ( "<span class=\"%s\">static interface</span> %s", css_keyword, iface.name );
-		else
-			file.printf ( "<span class=\"%s\">interface</span> %s", css_keyword, iface.name );
+		file.printf ( "<span class=\"%s\">interface</span> %s", css_keyword, iface.name );
 
 		this.write_template_parameters ( iface, ptr );
 		this.write_inheritance_list ( iface, file );
@@ -625,7 +640,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		else if ( element is Struct )
 			style = css_navi_struct;
 		else if ( element is Class )
-			style = css_navi_class;
+			style = ( ((Class)element).is_abstract )? css_navi_abstract_class : css_navi_class;
 		else if ( element is Interface )
 			style = css_navi_iface;
 		else if ( element is Package ) {
@@ -657,6 +672,8 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 
 		if ( mself == null )
 			mself = element;
+		else if ( mself.name == null )
+			mself = mself.parent;
 
 		string package_name = element.file.name;
 
@@ -725,7 +742,8 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		this.write_navi_child_enums_without_childs ( file, ns, mself );
 		this.write_navi_child_error_domains_without_childs ( file, ns, mself );
 		this.write_navi_child_delegates ( file, ns, mself );
-		this.write_navi_child_methods ( file, ns, mself );
+		this.write_navi_child_static_methods ( file, ns, mself );
+		this.write_navi_child_methods ( file, ns, mself ); // remove
 		this.write_navi_child_fields ( file, ns, mself );
 		this.write_navi_child_constants ( file, ns, mself );
 	}
@@ -744,6 +762,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	protected void write_navi_struct_inline ( GLib.FileStream file, Struct stru, Basic mself ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
 		this.write_navi_child_construction_methods ( file, stru, mself );
+		this.write_navi_child_static_methods ( file, stru, mself );
 		this.write_navi_child_methods ( file, stru, mself );
 		this.write_navi_child_fields ( file, stru, mself );
 		this.write_navi_child_constants ( file, stru, mself );
@@ -759,6 +778,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 
 	protected void write_navi_interface_inline ( GLib.FileStream file, Interface iface, Basic mself ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
+		this.write_navi_child_static_methods ( file, iface, mself );
 		this.write_navi_child_delegates ( file, iface, mself );
 		this.write_navi_child_methods ( file, iface, mself );
 		this.write_navi_child_signals ( file, iface, mself );
@@ -782,7 +802,8 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			this.write_navi_entry ( file, env, en, css_navi_enval, true ); // en => mself
 		}
 
-		this.write_navi_child_methods ( file, en, mself );
+		this.write_navi_child_static_methods ( file, en, mself );
+		this.write_navi_child_methods ( file, en, mself ); // remove
 		file.puts ( "</ul>\n" );
 	}
 
@@ -801,7 +822,8 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			this.write_navi_entry ( file, ec, errdom, css_navi_errdomcode, true ); // errdom => mself
 		}
 
-		this.write_navi_child_methods ( file, errdom, mself );
+		this.write_navi_child_static_methods ( file, errdom, mself );
+		this.write_navi_child_methods ( file, errdom, mself ); // remove
 		file.puts ( "</ul>\n" );
 	}
 
@@ -822,6 +844,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	protected void write_navi_class_inline ( GLib.FileStream file, Class cl, Basic mself ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
 		this.write_navi_child_construction_methods ( file, cl, mself );
+		this.write_navi_child_static_methods ( file, cl, mself );
 		this.write_navi_child_classes_without_childs ( file, cl, mself );
 		this.write_navi_child_structs_without_childs ( file, cl, mself );
 		this.write_navi_child_enums_without_childs ( file, cl, mself );
@@ -967,10 +990,41 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 
 	protected void write_navi_child_methods_collection ( GLib.FileStream file, Gee.Collection<Method> methods, Basic mself ) {
 		foreach ( Method m in methods ) {
+			if ( !m.is_static ) {
+				string css;
+				if ( m.is_virtual || m.is_override )
+					css = css_navi_virtual_method;
+				else if ( m.is_abstract )
+					css = css_navi_abstract_method;
+				else
+					css = css_navi_method;
+
+
+				if ( m == mself )
+					this.write_navi_entry ( file, m, mself, css, false );
+				else
+					this.write_navi_entry ( file, m, mself, css, true );
+			}
+		}
+	}
+
+	protected void write_navi_child_construction_methods_collection ( GLib.FileStream file, Gee.Collection<Method> methods, Basic mself ) {
+		foreach ( Method m in methods ) {
 			if ( m == mself )
 				this.write_navi_entry ( file, m, mself, css_navi_construction_method, false );
 			else
 				this.write_navi_entry ( file, m, mself, css_navi_construction_method, true );
+		}
+	}
+
+	protected void write_navi_child_static_methods_collection ( GLib.FileStream file, Gee.Collection<Method> methods, Basic mself ) {
+		foreach ( Method m in methods ) {
+			if ( m.is_static ) {
+				if ( m == mself )
+					this.write_navi_entry ( file, m, mself, css_navi_static_method, false );
+				else
+					this.write_navi_entry ( file, m, mself, css_navi_static_method, true );
+			}
 		}
 	}
 
@@ -979,12 +1033,17 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		this.write_navi_child_methods_collection ( file, methods, mself );
 	}
 
+	protected void write_navi_child_static_methods ( GLib.FileStream file, MethodHandler mh, Basic mself ) {
+		Gee.ReadOnlyCollection<Method> methods = mh.get_method_list ( );
+		this.write_navi_child_static_methods_collection ( file, methods, mself );
+	}
+
 	protected void write_navi_child_classes_without_childs_collection ( GLib.FileStream file, Gee.Collection<Class> classes, Basic mself ) {
 		foreach ( Class cl in classes ) {
 			if ( cl == mself )
-				this.write_navi_entry ( file, cl, mself, css_navi_class, false );
+				this.write_navi_entry ( file, cl, mself, (cl.is_abstract)? css_navi_abstract_class : css_navi_class, false );
 			else
-				this.write_navi_entry ( file, cl, mself, css_navi_class, true );
+				this.write_navi_entry ( file, cl, mself, (cl.is_abstract)? css_navi_abstract_class : css_navi_class, true );
 		}
 	}
 
@@ -995,7 +1054,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 
 	protected void write_navi_child_construction_methods ( GLib.FileStream file, ConstructionMethodHandler cmh, Basic mself ) {
 		Gee.ReadOnlyCollection<Method> methods = cmh.get_construction_method_list ( );
-		this.write_navi_child_methods_collection ( file, methods, mself );
+		this.write_navi_child_construction_methods_collection ( file, methods, mself );
 	}
 
 	protected void write_navi_child_signals ( GLib.FileStream file, SignalHandler sh, Basic mself ) {
@@ -1013,10 +1072,18 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		Gee.ReadOnlyCollection<Property> properties = ph.get_property_list ( );
 
 		foreach ( Property p in properties ) {
-			if ( p == mself )
-				this.write_navi_entry ( file, p, mself, css_navi_prop, false );
+			string css;
+			if ( p.is_virtual )
+				css = css_navi_virtual_prop;
+			else if ( p.is_abstract )
+				css = css_navi_abstract_prop;
 			else
-				this.write_navi_entry ( file, p, mself, css_navi_prop, true );
+				css = css_navi_prop;
+
+			if ( p == mself )
+				this.write_navi_entry ( file, p, mself, css, false );
+			else
+				this.write_navi_entry ( file, p, mself, css, true );
 		}
 	}
 
@@ -1329,7 +1396,17 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Methods:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Method m in imethods ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_method, css_navi_link, this.get_link(m, mh), m.name );
+				string css;
+				if ( m.is_static )
+					css = css_inline_navigation_static_method;
+				else if ( m.is_abstract )
+					css = css_inline_navigation_abstract_method;
+				else if ( m.is_virtual || m.is_override )
+					css = css_inline_navigation_virtual_method;
+				else
+					css = css_inline_navigation_method;
+
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css, css_navi_link, this.get_link(m, mh), m.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1348,7 +1425,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Static Methods:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Method m in static_methods ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_method, css_navi_link, this.get_link(m, mh), m.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_static_method, css_navi_link, this.get_link(m, mh), m.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1489,7 +1566,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Construction Methods:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Method m in methods ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_method, css_navi_link, this.get_link(m, cmh), m.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_construction_method, css_navi_link, this.get_link(m, cmh), m.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1531,7 +1608,15 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Properties:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Property prop in properties ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_property, css_navi_link, this.get_link(prop, ph), prop.name );
+				string css;
+				if ( prop.is_virtual )
+					css = css_inline_navigation_virtual_property;
+				else if ( prop.is_abstract )
+					css = css_inline_navigation_abstract_property;
+				else
+					css = css_inline_navigation_property;
+
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css, css_navi_link, this.get_link(prop, ph), prop.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1563,7 +1648,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 					name = subcl.name;
 				}
 
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_class, css_navi_link, this.get_link(subcl, clh), name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", (subcl.is_abstract)? css_inline_navigation_abstract_class : css_inline_navigation_class, css_navi_link, this.get_link(subcl, clh), name );
 			}
 			file.puts ( "</ul>\n" );
 		}
