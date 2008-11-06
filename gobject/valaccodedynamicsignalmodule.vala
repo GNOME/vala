@@ -26,7 +26,7 @@ using Gee;
 /**
  * The link between a dynamic signal and generated code.
  */
-public class Vala.CCodeDynamicSignalModule : CCodeDynamicPropertyModule {
+public class Vala.CCodeDynamicSignalModule : CCodeDelegateModule {
 	public CCodeDynamicSignalModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}

@@ -24,6 +24,8 @@
 using GLib;
 
 public class Vala.GObjectModule : GTypeModule {
+	int dynamic_property_id;
+
 	public GObjectModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}
@@ -1609,6 +1611,83 @@ public class Vala.GObjectModule : GTypeModule {
 		} else {
 			Report.error (c.source_reference, "internal error: constructors must have instance, class, or static binding");
 		}
+	}
+
+	public override string get_dynamic_property_getter_cname (DynamicProperty prop) {
+		if (prop.dynamic_type.data_type == null
+		    || !prop.dynamic_type.data_type.is_subtype_of (gobject_type)) {
+			return base.get_dynamic_property_getter_cname (prop);
+		}
+
+		string getter_cname = "_dynamic_get_%s%d".printf (prop.name, dynamic_property_id++);
+
+		var func = new CCodeFunction (getter_cname, prop.property_type.get_cname ());
+		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
+
+		func.add_parameter (new CCodeFormalParameter ("obj", prop.dynamic_type.get_cname ()));
+
+		var block = new CCodeBlock ();
+		generate_gobject_property_getter_wrapper (prop, block);
+
+		// append to C source file
+		source_type_member_declaration.append (func.copy ());
+
+		func.block = block;
+		source_type_member_definition.append (func);
+
+		return getter_cname;
+	}
+
+	public override string get_dynamic_property_setter_cname (DynamicProperty prop) {
+		if (prop.dynamic_type.data_type == null
+		    || !prop.dynamic_type.data_type.is_subtype_of (gobject_type)) {
+			return base.get_dynamic_property_setter_cname (prop);
+		}
+
+		string setter_cname = "_dynamic_set_%s%d".printf (prop.name, dynamic_property_id++);
+
+		var func = new CCodeFunction (setter_cname, "void");
+		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
+
+		func.add_parameter (new CCodeFormalParameter ("obj", prop.dynamic_type.get_cname ()));
+		func.add_parameter (new CCodeFormalParameter ("value", prop.property_type.get_cname ()));
+
+		var block = new CCodeBlock ();
+		generate_gobject_property_setter_wrapper (prop, block);
+
+		// append to C source file
+		source_type_member_declaration.append (func.copy ());
+
+		func.block = block;
+		source_type_member_definition.append (func);
+
+		return setter_cname;
+	}
+
+	void generate_gobject_property_getter_wrapper (DynamicProperty node, CCodeBlock block) {
+		var cdecl = new CCodeDeclaration (node.property_type.get_cname ());
+		cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+		block.add_statement (cdecl);
+
+		var call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
+		call.add_argument (new CCodeIdentifier ("obj"));
+		call.add_argument (node.get_canonical_cconstant ());
+		call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
+		call.add_argument (new CCodeConstant ("NULL"));
+
+		block.add_statement (new CCodeExpressionStatement (call));
+
+		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+	}
+
+	void generate_gobject_property_setter_wrapper (DynamicProperty node, CCodeBlock block) {
+		var call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_set"));
+		call.add_argument (new CCodeIdentifier ("obj"));
+		call.add_argument (node.get_canonical_cconstant ());
+		call.add_argument (new CCodeIdentifier ("value"));
+		call.add_argument (new CCodeConstant ("NULL"));
+
+		block.add_statement (new CCodeExpressionStatement (call));
 	}
 }
 
