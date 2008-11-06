@@ -25,6 +25,7 @@ using GLib;
 
 public class Vala.GObjectModule : GTypeModule {
 	int dynamic_property_id;
+	int signal_wrapper_id;
 
 	public GObjectModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
@@ -1686,6 +1687,57 @@ public class Vala.GObjectModule : GTypeModule {
 		call.add_argument (node.get_canonical_cconstant ());
 		call.add_argument (new CCodeIdentifier ("value"));
 		call.add_argument (new CCodeConstant ("NULL"));
+
+		block.add_statement (new CCodeExpressionStatement (call));
+	}
+
+	public override string get_dynamic_signal_cname (DynamicSignal node) {
+		return "dynamic_%s%d_".printf (node.name, signal_wrapper_id++);
+	}
+
+	public override string get_dynamic_signal_connect_wrapper_name (DynamicSignal sig) {
+		if (sig.dynamic_type.data_type == null
+		    || !sig.dynamic_type.data_type.is_subtype_of (gobject_type)) {
+			return base.get_dynamic_signal_connect_wrapper_name (sig);
+		}
+
+		string connect_wrapper_name = "_%sconnect".printf (get_dynamic_signal_cname (sig));
+		var func = new CCodeFunction (connect_wrapper_name, "void");
+		func.add_parameter (new CCodeFormalParameter ("obj", "gpointer"));
+		func.add_parameter (new CCodeFormalParameter ("signal_name", "const char *"));
+		func.add_parameter (new CCodeFormalParameter ("handler", "GCallback"));
+		func.add_parameter (new CCodeFormalParameter ("data", "gpointer"));
+		var block = new CCodeBlock ();
+		generate_gobject_connect_wrapper (sig, block);
+
+		// append to C source file
+		source_type_member_declaration.append (func.copy ());
+
+		func.block = block;
+		source_type_member_definition.append (func);
+
+		return connect_wrapper_name;
+	}
+
+	void generate_gobject_connect_wrapper (DynamicSignal sig, CCodeBlock block) {
+		var m = (Method) sig.handler.symbol_reference;
+
+		sig.accept (codegen);
+
+		string connect_func = "g_signal_connect_object";
+		if (m.binding != MemberBinding.INSTANCE) {
+			connect_func = "g_signal_connect";
+		}
+
+		var call = new CCodeFunctionCall (new CCodeIdentifier (connect_func));
+		call.add_argument (new CCodeIdentifier ("obj"));
+		call.add_argument (new CCodeIdentifier ("signal_name"));
+		call.add_argument (new CCodeIdentifier ("handler"));
+		call.add_argument (new CCodeIdentifier ("data"));
+
+		if (m.binding == MemberBinding.INSTANCE) {
+			call.add_argument (new CCodeConstant ("0"));
+		}
 
 		block.add_statement (new CCodeExpressionStatement (call));
 	}

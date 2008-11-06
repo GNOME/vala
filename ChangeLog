@@ -1,6 +1,18 @@
 2008-11-06  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/Makefile.am:
+	* gobject/valaccodedynamicsignalmodule.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valadbusclientmodule.vala:
+	* gobject/valagerrormodule.vala:
+	* gobject/valagobjectmodule.vala:
+
+	Move dynamic signal generation to GObjectModule and
+	DBusClientModule
+
+2008-11-06  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/Makefile.am:
 	* gobject/valaccodedynamicpropertymodule.vala:
 	* gobject/valaccodedynamicsignalmodule.vala:
 	* gobject/valaccodegenerator.vala:
