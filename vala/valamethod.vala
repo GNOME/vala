@@ -594,4 +594,152 @@ public class Vala.Method : Member {
 			}
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		process_attributes ();
+
+		if (is_abstract) {
+			if (parent_symbol is Class) {
+				var cl = (Class) parent_symbol;
+				if (!cl.is_abstract) {
+					error = true;
+					Report.error (source_reference, "Abstract methods may not be declared in non-abstract classes");
+					return false;
+				}
+			} else if (!(parent_symbol is Interface)) {
+				error = true;
+				Report.error (source_reference, "Abstract methods may not be declared outside of classes and interfaces");
+				return false;
+			}
+		} else if (is_virtual) {
+			if (!(parent_symbol is Class) && !(parent_symbol is Interface)) {
+				error = true;
+				Report.error (source_reference, "Virtual methods may not be declared outside of classes and interfaces");
+				return false;
+			}
+
+			if (parent_symbol is Class) {
+				var cl = (Class) parent_symbol;
+				if (cl.is_compact) {
+					Report.error (source_reference, "Virtual methods may not be declared in compact classes");
+					return false;
+				}
+			}
+		} else if (overrides) {
+			if (!(parent_symbol is Class)) {
+				error = true;
+				Report.error (source_reference, "Methods may not be overridden outside of classes");
+				return false;
+			}
+		}
+
+		if (is_abstract && body != null) {
+			Report.error (source_reference, "Abstract methods cannot have bodies");
+		} else if (external && body != null) {
+			Report.error (source_reference, "Extern methods cannot have bodies");
+		} else if (!is_abstract && !external && !external_package && body == null) {
+			Report.error (source_reference, "Non-abstract, non-extern methods must have bodies");
+		}
+
+		var old_symbol = analyzer.current_symbol;
+		var old_return_type = analyzer.current_return_type;
+		analyzer.current_symbol = this;
+		analyzer.current_return_type = return_type;
+
+		var init_attr = get_attribute ("ModuleInit");
+		if (init_attr != null) {
+			source_reference.file.context.module_init_method = this;
+		}
+
+		if (!is_internal_symbol ()) {
+			if (return_type is ValueType) {
+				analyzer.current_source_file.add_type_dependency (return_type, SourceFileDependencyType.HEADER_FULL);
+			} else {
+				analyzer.current_source_file.add_type_dependency (return_type, SourceFileDependencyType.HEADER_SHALLOW);
+			}
+		}
+		analyzer.current_source_file.add_type_dependency (return_type, SourceFileDependencyType.SOURCE);
+
+		accept_children (analyzer);
+
+		analyzer.current_symbol = old_symbol;
+		analyzer.current_return_type = old_return_type;
+
+		if (analyzer.current_symbol.parent_symbol is Method) {
+			/* lambda expressions produce nested methods */
+			var up_method = (Method) analyzer.current_symbol.parent_symbol;
+			analyzer.current_return_type = up_method.return_type;
+		}
+
+		if (analyzer.current_symbol is Struct) {
+			if (is_abstract || is_virtual || overrides) {
+				Report.error (source_reference, "A struct member `%s' cannot be marked as override, virtual, or abstract".printf (get_full_name ()));
+				return false;
+			}
+		} else if (overrides && base_method == null) {
+			Report.error (source_reference, "%s: no suitable method found to override".printf (get_full_name ()));
+		}
+
+		// check whether return type is at least as accessible as the method
+		if (!analyzer.is_type_accessible (this, return_type)) {
+			error = true;
+			Report.error (source_reference, "return type `%s` is less accessible than method `%s`".printf (return_type.to_string (), get_full_name ()));
+			return false;
+		}
+
+		foreach (Expression precondition in get_preconditions ()) {
+			if (precondition.error) {
+				// if there was an error in the precondition, skip this check
+				error = true;
+				return false;
+			}
+
+			if (!precondition.value_type.compatible (analyzer.bool_type)) {
+				error = true;
+				Report.error (precondition.source_reference, "Precondition must be boolean");
+				return false;
+			}
+		}
+
+		foreach (Expression postcondition in get_postconditions ()) {
+			if (postcondition.error) {
+				// if there was an error in the postcondition, skip this check
+				error = true;
+				return false;
+			}
+
+			if (!postcondition.value_type.compatible (analyzer.bool_type)) {
+				error = true;
+				Report.error (postcondition.source_reference, "Postcondition must be boolean");
+				return false;
+			}
+		}
+
+		if (tree_can_fail && name == "main") {
+			Report.error (source_reference, "\"main\" method cannot throw errors");
+		}
+
+		// check that all errors that can be thrown in the method body are declared
+		if (body != null) { 
+			foreach (DataType body_error_type in body.get_error_types ()) {
+				bool can_propagate_error = false;
+				foreach (DataType method_error_type in get_error_types ()) {
+					if (body_error_type.compatible (method_error_type)) {
+						can_propagate_error = true;
+					}
+				}
+				if (!can_propagate_error) {
+					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+				}
+			}
+		}
+
+		return !error;
+	}
 }
