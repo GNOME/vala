@@ -1,3 +1,10 @@
+2008-11-06  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valagobjectmodule.vala:
+
+	Move constructor code generation to GObjectModule
+
 2008-11-05  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valainvocationexpression.vala:

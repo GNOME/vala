@@ -1483,5 +1483,132 @@ public class Vala.GObjectModule : GTypeModule {
 
 		return ccomma;
 	}
+
+	public override void visit_constructor (Constructor c) {
+		current_method_inner_error = false;
+		in_constructor = true;
+
+		if (c.binding == MemberBinding.CLASS || c.binding == MemberBinding.STATIC) {
+			in_static_or_class_ctor = true;
+		}
+		c.accept_children (codegen);
+		in_static_or_class_ctor = false;
+
+		in_constructor = false;
+
+		var cl = (Class) c.parent_symbol;
+
+		if (c.binding == MemberBinding.INSTANCE) {
+			function = new CCodeFunction ("%s_constructor".printf (cl.get_lower_case_cname (null)), "GObject *");
+			function.modifiers = CCodeModifiers.STATIC;
+		
+			function.add_parameter (new CCodeFormalParameter ("type", "GType"));
+			function.add_parameter (new CCodeFormalParameter ("n_construct_properties", "guint"));
+			function.add_parameter (new CCodeFormalParameter ("construct_properties", "GObjectConstructParam *"));
+		
+			source_type_member_declaration.append (function.copy ());
+
+
+			var cblock = new CCodeBlock ();
+			var cdecl = new CCodeDeclaration ("GObject *");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("obj"));
+			cblock.add_statement (cdecl);
+
+			cdecl = new CCodeDeclaration ("%sClass *".printf (cl.get_cname ()));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("klass"));
+			cblock.add_statement (cdecl);
+
+			cdecl = new CCodeDeclaration ("GObjectClass *");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("parent_class"));
+			cblock.add_statement (cdecl);
+
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek"));
+			ccall.add_argument (new CCodeIdentifier (cl.get_type_id ()));
+			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (cl.get_upper_case_cname (null))));
+			ccast.add_argument (ccall);
+			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("klass"), ccast)));
+
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek_parent"));
+			ccall.add_argument (new CCodeIdentifier ("klass"));
+			ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+			ccast.add_argument (ccall);
+			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("parent_class"), ccast)));
+
+		
+			ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier ("parent_class"), "constructor"));
+			ccall.add_argument (new CCodeIdentifier ("type"));
+			ccall.add_argument (new CCodeIdentifier ("n_construct_properties"));
+			ccall.add_argument (new CCodeIdentifier ("construct_properties"));
+			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("obj"), ccall)));
+
+
+			ccall = new InstanceCast (new CCodeIdentifier ("obj"), cl);
+
+			cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
+			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+		
+			cblock.add_statement (cdecl);
+
+			if (current_method_inner_error) {
+				/* always separate error parameter and inner_error local variable
+				 * as error may be set to NULL but we're always interested in inner errors
+				 */
+				var cdecl = new CCodeDeclaration ("GError *");
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+				cblock.add_statement (cdecl);
+			}
+
+
+			cblock.add_statement (c.body.ccodenode);
+		
+			cblock.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("obj")));
+		
+			function.block = cblock;
+
+			if (c.source_reference.comment != null) {
+				source_type_member_definition.append (new CCodeComment (c.source_reference.comment));
+			}
+			source_type_member_definition.append (function);
+		} else if (c.binding == MemberBinding.CLASS) {
+			// class constructor
+
+			var base_init = new CCodeFunction ("%s_base_init".printf (cl.get_lower_case_cname (null)), "void");
+			base_init.add_parameter (new CCodeFormalParameter ("klass", "%sClass *".printf (cl.get_cname ())));
+			base_init.modifiers = CCodeModifiers.STATIC;
+
+			source_type_member_declaration.append (base_init.copy ());
+
+			var block = (CCodeBlock) c.body.ccodenode;
+			if (current_method_inner_error) {
+				/* always separate error parameter and inner_error local variable
+				 * as error may be set to NULL but we're always interested in inner errors
+				 */
+				var cdecl = new CCodeDeclaration ("GError *");
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+				block.prepend_statement (cdecl);
+			}
+
+			base_init.block = block;
+		
+			source_type_member_definition.append (base_init);
+		} else if (c.binding == MemberBinding.STATIC) {
+			// static class constructor
+			// add to class_init
+
+			if (current_method_inner_error) {
+				/* always separate error parameter and inner_error local variable
+				 * as error may be set to NULL but we're always interested in inner errors
+				 */
+				var cdecl = new CCodeDeclaration ("GError *");
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+				class_init_fragment.append (cdecl);
+			}
+
+			class_init_fragment.append (c.body.ccodenode);
+		} else {
+			Report.error (c.source_reference, "internal error: constructors must have instance, class, or static binding");
+		}
+	}
 }
 
