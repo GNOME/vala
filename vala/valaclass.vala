@@ -814,5 +814,189 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 		}
 	}
+
+	private void get_all_prerequisites (Interface iface, Gee.List<TypeSymbol> list) {
+		foreach (DataType prereq in iface.get_prerequisites ()) {
+			TypeSymbol type = prereq.data_type;
+			/* skip on previous errors */
+			if (type == null) {
+				continue;
+			}
+
+			list.add (type);
+			if (type is Interface) {
+				get_all_prerequisites ((Interface) type, list);
+
+			}
+		}
+	}
+
+	private bool class_is_a (Class cl, TypeSymbol t) {
+		if (cl == t) {
+			return true;
+		}
+
+		foreach (DataType base_type in cl.get_base_types ()) {
+			if (base_type.data_type is Class) {
+				if (class_is_a ((Class) base_type.data_type, t)) {
+					return true;
+				}
+			} else if (base_type.data_type == t) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		process_attributes ();
+
+		analyzer.current_symbol = this;
+		analyzer.current_class = this;
+
+		foreach (DataType base_type_reference in get_base_types ()) {
+			// check whether base type is at least as accessible as the class
+			if (!analyzer.is_type_accessible (this, base_type_reference)) {
+				error = true;
+				Report.error (source_reference, "base type `%s` is less accessible than class `%s`".printf (base_type_reference.to_string (), get_full_name ()));
+				return false;
+			}
+
+			analyzer.current_source_file.add_type_dependency (base_type_reference, SourceFileDependencyType.HEADER_FULL);
+		}
+
+		accept_children (analyzer);
+
+		/* compact classes cannot implement interfaces */
+		if (is_compact) {
+			foreach (DataType base_type in get_base_types ()) {
+				if (base_type.data_type is Interface) {
+					error = true;
+					Report.error (source_reference, "compact classes `%s` may not implement interfaces".printf (get_full_name ()));
+				}
+			}
+		}
+
+		/* gather all prerequisites */
+		Gee.List<TypeSymbol> prerequisites = new ArrayList<TypeSymbol> ();
+		foreach (DataType base_type in get_base_types ()) {
+			if (base_type.data_type is Interface) {
+				get_all_prerequisites ((Interface) base_type.data_type, prerequisites);
+			}
+		}
+		/* check whether all prerequisites are met */
+		Gee.List<string> missing_prereqs = new ArrayList<string> ();
+		foreach (TypeSymbol prereq in prerequisites) {
+			if (!class_is_a (this, prereq)) {
+				missing_prereqs.insert (0, prereq.get_full_name ());
+			}
+		}
+		/* report any missing prerequisites */
+		if (missing_prereqs.size > 0) {
+			error = true;
+
+			string error_string = "%s: some prerequisites (".printf (get_full_name ());
+			bool first = true;
+			foreach (string s in missing_prereqs) {
+				if (first) {
+					error_string = "%s`%s'".printf (error_string, s);
+					first = false;
+				} else {
+					error_string = "%s, `%s'".printf (error_string, s);
+				}
+			}
+			error_string += ") are not met";
+			Report.error (source_reference, error_string);
+		}
+
+		/* VAPI classes don't have to specify overridden methods */
+		if (!external_package) {
+			/* all abstract symbols defined in base types have to be at least defined (or implemented) also in this type */
+			foreach (DataType base_type in get_base_types ()) {
+				if (base_type.data_type is Interface) {
+					Interface iface = (Interface) base_type.data_type;
+
+					if (base_class != null && base_class.is_subtype_of (iface)) {
+						// reimplementation of interface, class is not required to reimplement all methods
+						break;
+					}
+
+					/* We do not need to do expensive equality checking here since this is done
+					 * already. We only need to guarantee the symbols are present.
+					 */
+
+					/* check methods */
+					foreach (Method m in iface.get_methods ()) {
+						if (m.is_abstract) {
+							Symbol sym = null;
+							var base_class = this;
+							while (base_class != null && !(sym is Method)) {
+								sym = base_class.scope.lookup (m.name);
+								base_class = base_class.base_class;
+							}
+							if (!(sym is Method)) {
+								error = true;
+								Report.error (source_reference, "`%s' does not implement interface method `%s'".printf (get_full_name (), m.get_full_name ()));
+							}
+						}
+					}
+
+					/* check properties */
+					foreach (Property prop in iface.get_properties ()) {
+						if (prop.is_abstract) {
+							Symbol sym = null;
+							var base_class = this;
+							while (base_class != null && !(sym is Property)) {
+								sym = base_class.scope.lookup (prop.name);
+								base_class = base_class.base_class;
+							}
+							if (!(sym is Property)) {
+								error = true;
+								Report.error (source_reference, "`%s' does not implement interface property `%s'".printf (get_full_name (), prop.get_full_name ()));
+							}
+						}
+					}
+				}
+			}
+
+			/* all abstract symbols defined in base classes have to be implemented in non-abstract classes */
+			if (!is_abstract) {
+				var base_class = base_class;
+				while (base_class != null && base_class.is_abstract) {
+					foreach (Method base_method in base_class.get_methods ()) {
+						if (base_method.is_abstract) {
+							var override_method = analyzer.symbol_lookup_inherited (this, base_method.name) as Method;
+							if (override_method == null || !override_method.overrides) {
+								error = true;
+								Report.error (source_reference, "`%s' does not implement abstract method `%s'".printf (get_full_name (), base_method.get_full_name ()));
+							}
+						}
+					}
+					foreach (Property base_property in base_class.get_properties ()) {
+						if (base_property.is_abstract) {
+							var override_property = analyzer.symbol_lookup_inherited (this, base_property.name) as Property;
+							if (override_property == null || !override_property.overrides) {
+								error = true;
+								Report.error (source_reference, "`%s' does not implement abstract property `%s'".printf (get_full_name (), base_property.get_full_name ()));
+							}
+						}
+					}
+					base_class = base_class.base_class;
+				}
+			}
+		}
+
+		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
+		analyzer.current_class = null;
+
+		return !error;
+	}
 }
 
