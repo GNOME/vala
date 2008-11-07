@@ -1,5 +1,11 @@
 2008-11-07  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valadbusclientmodule.vala:
+
+	Fix D-Bus methods with out parameters but no return value
+
+2008-11-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaconstant.vala:
 	* vala/valaconstructor.vala:
 	* vala/valacreationmethod.vala:

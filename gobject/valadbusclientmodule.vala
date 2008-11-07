@@ -435,6 +435,10 @@ public class Vala.DBusClientModule : GAsyncModule {
 				block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
 			}
 		} else {
+			if (found_out) {
+				ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
+			}
+
 			block.add_statement (new CCodeExpressionStatement (ccall));
 
 			// don't access result when error occured
