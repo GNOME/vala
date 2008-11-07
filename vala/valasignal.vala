@@ -218,5 +218,19 @@ public class Vala.Signal : Member, Lockable {
 		
 		return generated_method;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		process_attributes ();
+
+		accept_children (analyzer);
+
+		return !error;
+	}
 }
 

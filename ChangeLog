@@ -1,5 +1,20 @@
 2008-11-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaconstant.vala:
+	* vala/valaconstructor.vala:
+	* vala/valacreationmethod.vala:
+	* vala/valadestructor.vala:
+	* vala/valafield.vala:
+	* vala/valaformalparameter.vala:
+	* vala/valaproperty.vala:
+	* vala/valapropertyaccessor.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasignal.vala:
+
+	Move member checking to code nodes
+
+2008-11-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadelegate.vala:
 	* vala/valaenum.vala:
 	* vala/valaenumvalue.vala:

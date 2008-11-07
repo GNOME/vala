@@ -60,4 +60,28 @@ public class Vala.Constructor : Symbol {
 			body.accept (visitor);
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		this_parameter = new FormalParameter ("this", new ObjectType (analyzer.current_class));
+		scope.add (this_parameter.name, this_parameter);
+
+		owner = analyzer.current_symbol.scope;
+		analyzer.current_symbol = this;
+
+		accept_children (analyzer);
+
+		foreach (DataType body_error_type in body.get_error_types ()) {
+			Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+		}
+
+		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
+
+		return !error;
+	}
 }

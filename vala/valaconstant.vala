@@ -150,4 +150,29 @@ public class Vala.Constant : Member, Lockable {
 			}
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		process_attributes ();
+
+		type_reference.accept (analyzer);
+
+		if (!external_package) {
+			if (initializer == null) {
+				error = true;
+				Report.error (source_reference, "A const field requires a initializer to be provided");
+			} else {
+				initializer.target_type = type_reference;
+
+				initializer.accept (analyzer);
+			}
+		}
+
+		return !error;
+	}
 }

@@ -195,4 +195,44 @@ public class Vala.Field : Member, Lockable {
 		}
 		attr.add_argument ("type", new StringLiteral ("\"%s\"".printf (ctype)));
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		process_attributes ();
+
+		if (initializer != null) {
+			initializer.target_type = field_type;
+		}
+
+		accept_children (analyzer);
+
+		if (binding == MemberBinding.INSTANCE && parent_symbol is Interface) {
+			error = true;
+			Report.error (source_reference, "Interfaces may not have instance fields");
+			return false;
+		}
+
+		if (!is_internal_symbol ()) {
+			if (field_type is ValueType) {
+				analyzer.current_source_file.add_type_dependency (field_type, SourceFileDependencyType.HEADER_FULL);
+			} else {
+				analyzer.current_source_file.add_type_dependency (field_type, SourceFileDependencyType.HEADER_SHALLOW);
+			}
+		} else {
+			if (parent_symbol is Namespace) {
+				error = true;
+				Report.error (source_reference, "Namespaces may not have private members");
+				return false;
+			}
+
+			analyzer.current_source_file.add_type_dependency (field_type, SourceFileDependencyType.SOURCE);
+		}
+
+		return !error;
+	}
 }

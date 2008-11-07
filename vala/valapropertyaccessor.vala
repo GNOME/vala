@@ -131,4 +131,55 @@ public class Vala.PropertyAccessor : CodeNode {
 			}
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		process_attributes ();
+
+		var old_return_type = analyzer.current_return_type;
+		if (readable) {
+			analyzer.current_return_type = prop.property_type;
+		} else {
+			// void
+			analyzer.current_return_type = new VoidType ();
+		}
+
+		if (!prop.external_package) {
+			if (body == null && !prop.interface_only && !prop.is_abstract) {
+				/* no accessor body specified, insert default body */
+
+				if (prop.parent_symbol is Interface) {
+					error = true;
+					Report.error (source_reference, "Automatic properties can't be used in interfaces");
+					return false;
+				}
+				automatic_body = true;
+				body = new Block (source_reference);
+				var ma = new MemberAccess.simple ("_%s".printf (prop.name), source_reference);
+				if (readable) {
+					body.add_statement (new ReturnStatement (ma, source_reference));
+				} else {
+					var assignment = new Assignment (ma, new MemberAccess.simple ("value", source_reference), AssignmentOperator.SIMPLE, source_reference);
+					body.add_statement (new ExpressionStatement (assignment));
+				}
+			}
+
+			if (body != null && (writable || construction)) {
+				var value_type = prop.property_type.copy ();
+				value_parameter = new FormalParameter ("value", value_type, source_reference);
+				body.scope.add (value_parameter.name, value_parameter);
+			}
+		}
+
+		accept_children (analyzer);
+
+		analyzer.current_return_type = old_return_type;
+
+		return !error;
+	}
 }

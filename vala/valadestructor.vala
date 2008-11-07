@@ -60,4 +60,21 @@ public class Vala.Destructor : Symbol {
 			body.accept (visitor);
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		owner = analyzer.current_symbol.scope;
+		analyzer.current_symbol = this;
+
+		accept_children (analyzer);
+
+		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
+
+		return !error;
+	}
 }

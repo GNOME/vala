@@ -411,6 +411,8 @@ public class Vala.Property : Member, Lockable {
 
 		checked = true;
 
+		process_attributes ();
+
 		var old_source_file = analyzer.current_source_file;
 		var old_symbol = analyzer.current_symbol;
 
