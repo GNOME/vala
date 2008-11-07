@@ -56,12 +56,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType type_type;
 	public Class object_type;
 	public TypeSymbol initially_unowned_type;
-	DataType glist_type;
-	DataType gslist_type;
-	Class gerror_type;
-	DataType iterable_type;
-	Interface iterator_type;
-	Interface list_type;
+	public DataType glist_type;
+	public DataType gslist_type;
+	public Class gerror_type;
+	public DataType iterable_type;
+	public Interface iterator_type;
+	public Interface list_type;
 	public Interface collection_type;
 	public Interface map_type;
 
@@ -1543,118 +1543,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_element_access (ElementAccess expr) {
-		expr.container.accept (this);
-
-		if (expr.container.value_type == null) {
-			/* don't proceed if a child expression failed */
-			expr.error = true;
-			return;
-		}
-
-		var container_type = expr.container.value_type.data_type;
-
-		if (expr.container is MemberAccess && expr.container.symbol_reference is Signal) {
-			// signal detail access
-			if (expr.get_indices ().size != 1) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Element access with more than one dimension is not supported for signals");
-				return;
-			}
-			expr.get_indices ().get (0).target_type = string_type.copy ();
-		}
-
-		foreach (Expression index in expr.get_indices ()) {
-			index.accept (this);
-		}
-
-		bool index_int_type_check = true;
-
-		var pointer_type = expr.container.value_type as PointerType;
-
-		/* assign a value_type when possible */
-		if (expr.container.value_type is ArrayType) {
-			var array_type = (ArrayType) expr.container.value_type;
-			expr.value_type = array_type.element_type.copy ();
-			if (!expr.lvalue) {
-				expr.value_type.value_owned = false;
-			}
-		} else if (pointer_type != null && !pointer_type.base_type.is_reference_type_or_type_parameter ()) {
-			expr.value_type = pointer_type.base_type.copy ();
-		} else if (container_type == string_type.data_type) {
-			if (expr.get_indices ().size != 1) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Element access with more than one dimension is not supported for strings");
-				return;
-			}
-
-			expr.value_type = unichar_type;
-		} else if (container_type != null && list_type != null && map_type != null &&
-		           (container_type.is_subtype_of (list_type) || container_type.is_subtype_of (map_type))) {
-			Gee.List<Expression> indices = expr.get_indices ();
-			if (indices.size != 1) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Element access with more than one dimension is not supported for the specified type");
-				return;
-			}
-			Iterator<Expression> indices_it = indices.iterator ();
-			indices_it.next ();
-			var index = indices_it.get ();
-			index_int_type_check = false;
-
-			// lookup symbol in interface instead of class as implemented interface methods are not in VAPI files
-			Symbol get_sym = null;
-			if (container_type.is_subtype_of (list_type)) {
-				get_sym = list_type.scope.lookup ("get");
-			} else if (container_type.is_subtype_of (map_type)) {
-				get_sym = map_type.scope.lookup ("get");
-			}
-			var get_method = (Method) get_sym;
-			Gee.List<FormalParameter> get_params = get_method.get_parameters ();
-			Iterator<FormalParameter> get_params_it = get_params.iterator ();
-			get_params_it.next ();
-			var get_param = get_params_it.get ();
-
-			var index_type = get_param.parameter_type;
-			if (index_type.type_parameter != null) {
-				index_type = get_actual_type (expr.container.value_type, get_method, get_param.parameter_type, expr);
-			}
-
-			if (!index.value_type.compatible (index_type)) {
-				expr.error = true;
-				Report.error (expr.source_reference, "index expression: Cannot convert from `%s' to `%s'".printf (index.value_type.to_string (), index_type.to_string ()));
-				return;
-			}
-
-			expr.value_type = get_actual_type (expr.container.value_type, get_method, get_method.return_type, expr).copy ();
-			if (expr.lvalue) {
-				// get () returns owned value, set () accepts unowned value
-				expr.value_type.value_owned = false;
-			}
-		} else if (expr.container is MemberAccess && expr.container.symbol_reference is Signal) {
-			index_int_type_check = false;
-
-			expr.symbol_reference = expr.container.symbol_reference;
-			expr.value_type = expr.container.value_type;
-		} else {
-			expr.error = true;
-			Report.error (expr.source_reference, "The expression `%s' does not denote an Array".printf (expr.container.value_type.to_string ()));
-		}
-
-		if (index_int_type_check) {
-			/* check if the index is of type integer */
-			foreach (Expression e in expr.get_indices ()) {
-				/* don't proceed if a child expression failed */
-				if (e.value_type == null) {
-					return;
-				}
-
-				/* check if the index is of type integer */
-				if (!(e.value_type.data_type is Struct) || !((Struct) e.value_type.data_type).is_integer_type ()) {
-					expr.error = true;
-					Report.error (e.source_reference, "Expression of integer type expected");
-				}
-			}
-		}
+		expr.check (this);
 	}
 
 	public bool is_in_instance_method () {
