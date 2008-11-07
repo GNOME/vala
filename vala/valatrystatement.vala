@@ -86,4 +86,16 @@ public class Vala.TryStatement : CodeNode, Statement {
 			finally_body.accept (visitor);
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		accept_children (analyzer);
+
+		return !error;
+	}
 }

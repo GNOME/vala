@@ -1,5 +1,25 @@
 2008-11-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valablock.vala:
+	* vala/valacatchclause.vala:
+	* vala/valadeclarationstatement.vala:
+	* vala/valadeletestatement.vala:
+	* vala/valadostatement.vala:
+	* vala/valaexpressionstatement.vala:
+	* vala/valaforstatement.vala:
+	* vala/valaifstatement.vala:
+	* vala/valainitializerlist.vala:
+	* vala/valalocalvariable.vala:
+	* vala/valalockstatement.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valaswitchsection.vala:
+	* vala/valatrystatement.vala:
+	* vala/valawhilestatement.vala:
+
+	Move statement checking to code nodes
+
+2008-11-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Add g_rmdir binding

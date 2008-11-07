@@ -90,4 +90,29 @@ public class Vala.Block : Symbol, Statement {
 			stmt.accept (visitor);
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		owner = analyzer.current_symbol.scope;
+		analyzer.current_symbol = this;
+
+		accept_children (analyzer);
+
+		foreach (LocalVariable local in get_local_variables ()) {
+			local.active = false;
+		}
+
+		foreach (Statement stmt in get_statements()) {
+			add_error_types (stmt.get_error_types ());
+		}
+
+		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
+
+		return !error;
+	}
 }

@@ -229,308 +229,43 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_block (Block b) {
-		b.owner = current_symbol.scope;
-		current_symbol = b;
-
-		b.accept_children (this);
-
-		foreach (LocalVariable local in b.get_local_variables ()) {
-			local.active = false;
-		}
-
-		foreach (Statement stmt in b.get_statements()) {
-			b.add_error_types (stmt.get_error_types ());
-		}
-
-		current_symbol = current_symbol.parent_symbol;
+		b.check (this);
 	}
 
 	public override void visit_declaration_statement (DeclarationStatement stmt) {
-		var local = stmt.declaration as LocalVariable;
-		if (local != null && local.initializer != null) {
-			foreach (DataType error_type in local.initializer.get_error_types ()) {
-				// ensure we can trace back which expression may throw errors of this type
-				var initializer_error_type = error_type.copy ();
-				initializer_error_type.source_reference = local.initializer.source_reference;
-
-				stmt.add_error_type (initializer_error_type);
-			}
-		}
+		stmt.check (this);
 	}
 
 	public override void visit_local_variable (LocalVariable local) {
-		if (local.initializer != null) {
-			local.initializer.target_type = local.variable_type;
-		}
-
-		local.accept_children (this);
-
-		if (local.variable_type == null) {
-			/* var type */
-
-			if (local.initializer == null) {
-				local.error = true;
-				Report.error (local.source_reference, "var declaration not allowed without initializer");
-				return;
-			}
-			if (local.initializer.value_type == null) {
-				local.error = true;
-				Report.error (local.source_reference, "var declaration not allowed with non-typed initializer");
-				return;
-			}
-
-			local.variable_type = local.initializer.value_type.copy ();
-			local.variable_type.value_owned = true;
-			local.variable_type.floating_reference = false;
-
-			local.initializer.target_type = local.variable_type;
-		}
-
-		if (local.initializer != null) {
-			if (local.initializer.value_type == null) {
-				if (!(local.initializer is MemberAccess) && !(local.initializer is LambdaExpression)) {
-					local.error = true;
-					Report.error (local.source_reference, "expression type not allowed as initializer");
-					return;
-				}
-
-				if (local.initializer.symbol_reference is Method &&
-				    local.variable_type is DelegateType) {
-					var m = (Method) local.initializer.symbol_reference;
-					var dt = (DelegateType) local.variable_type;
-					var cb = dt.delegate_symbol;
-
-					/* check whether method matches callback type */
-					if (!cb.matches_method (m)) {
-						local.error = true;
-						Report.error (local.source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.get_full_name (), cb.get_full_name ()));
-						return;
-					}
-
-					local.initializer.value_type = local.variable_type;
-				} else {
-					local.error = true;
-					Report.error (local.source_reference, "expression type not allowed as initializer");
-					return;
-				}
-			}
-
-			if (!local.initializer.value_type.compatible (local.variable_type)) {
-				local.error = true;
-				Report.error (local.source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (local.initializer.value_type.to_string (), local.variable_type.to_string ()));
-				return;
-			}
-
-			if (local.initializer.value_type.is_disposable ()) {
-				/* rhs transfers ownership of the expression */
-				if (!(local.variable_type is PointerType) && !local.variable_type.value_owned) {
-					/* lhs doesn't own the value */
-					local.error = true;
-					Report.error (local.source_reference, "Invalid assignment from owned expression to unowned variable");
-					return;
-				}
-			}
-		}
-
-		current_source_file.add_type_dependency (local.variable_type, SourceFileDependencyType.SOURCE);
-
-		current_symbol.scope.add (local.name, local);
-
-		var block = (Block) current_symbol;
-		block.add_local_variable (local);
-
-		local.active = true;
+		local.check (this);
 	}
 
-	/**
-	 * Visit operation called for initializer lists
-	 *
-	 * @param list an initializer list
-	 */
 	public override void visit_initializer_list (InitializerList list) {
-		if (list.target_type == null) {
-			list.error = true;
-			Report.error (list.source_reference, "initializer list used for unknown type");
-			return;
-		} else if (list.target_type is ArrayType) {
-			/* initializer is used as array initializer */
-			var array_type = (ArrayType) list.target_type;
-
-			foreach (Expression e in list.get_initializers ()) {
-				e.target_type = array_type.element_type.copy ();
-			}
-		} else if (list.target_type.data_type is Struct) {
-			/* initializer is used as struct initializer */
-			var st = (Struct) list.target_type.data_type;
-
-			var field_it = st.get_fields ().iterator ();
-			foreach (Expression e in list.get_initializers ()) {
-				Field field = null;
-				while (field == null) {
-					if (!field_it.next ()) {
-						list.error = true;
-						Report.error (e.source_reference, "too many expressions in initializer list for `%s'".printf (list.target_type.to_string ()));
-						return;
-					}
-					field = field_it.get ();
-					if (field.binding != MemberBinding.INSTANCE) {
-						// we only initialize instance fields
-						field = null;
-					}
-				}
-
-				e.target_type = field.field_type.copy ();
-				if (!list.target_type.value_owned) {
-					e.target_type.value_owned = false;
-				}
-			}
-		} else {
-			list.error = true;
-			Report.error (list.source_reference, "initializer list used for `%s', which is neither array nor struct".printf (list.target_type.to_string ()));
-			return;
-		}
-
-		list.accept_children (this);
-
-		bool error = false;
-		foreach (Expression e in list.get_initializers ()) {
-			if (e.value_type == null) {
-				error = true;
-				continue;
-			}
-
-			var unary = e as UnaryExpression;
-			if (unary != null && (unary.operator == UnaryOperator.REF || unary.operator == UnaryOperator.OUT)) {
-				// TODO check type for ref and out expressions
-			} else if (!e.value_type.compatible (e.target_type)) {
-				error = true;
-				e.error = true;
-				Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (e.target_type.to_string (), e.value_type.to_string ()));
-			}
-		}
-
-		if (!error) {
-			/* everything seems to be correct */
-			list.value_type = list.target_type;
-		}
+		list.check (this);
 	}
 
 	public override void visit_expression_statement (ExpressionStatement stmt) {
-		if (stmt.expression.error) {
-			// ignore inner error
-			stmt.error = true;
-			return;
-		}
-
-		stmt.add_error_types (stmt.expression.get_error_types ());
+		stmt.check (this);
 	}
 
 	public override void visit_if_statement (IfStatement stmt) {
-		stmt.accept_children (this);
-
-		if (stmt.condition.error) {
-			/* if there was an error in the condition, skip this check */
-			stmt.error = true;
-			return;
-		}
-
-		if (!stmt.condition.value_type.compatible (bool_type)) {
-			stmt.error = true;
-			Report.error (stmt.condition.source_reference, "Condition must be boolean");
-			return;
-		}
-
-		stmt.add_error_types (stmt.condition.get_error_types ());
-		stmt.add_error_types (stmt.true_statement.get_error_types ());
-
-		if (stmt.false_statement != null) {
-			stmt.add_error_types (stmt.false_statement.get_error_types ());
-		}
+		stmt.check (this);
 	}
 
 	public override void visit_switch_section (SwitchSection section) {
-		foreach (SwitchLabel label in section.get_labels ()) {
-			label.accept (this);
-		}
-
-		section.owner = current_symbol.scope;
-		current_symbol = section;
-
-		foreach (Statement st in section.get_statements ()) {
-			st.accept (this);
-		}
-
-		foreach (LocalVariable local in section.get_local_variables ()) {
-			local.active = false;
-		}
-
-		current_symbol = current_symbol.parent_symbol;
+		section.check (this);
 	}
 
 	public override void visit_while_statement (WhileStatement stmt) {
-		stmt.accept_children (this);
-
-		if (stmt.condition.error) {
-			/* if there was an error in the condition, skip this check */
-			stmt.error = true;
-			return;
-		}
-
-		if (!stmt.condition.value_type.compatible (bool_type)) {
-			stmt.error = true;
-			Report.error (stmt.condition.source_reference, "Condition must be boolean");
-			return;
-		}
-
-		stmt.add_error_types (stmt.condition.get_error_types ());
-		stmt.add_error_types (stmt.body.get_error_types ());
+		stmt.check (this);
 	}
 
 	public override void visit_do_statement (DoStatement stmt) {
-		stmt.accept_children (this);
-
-		if (stmt.condition.error) {
-			/* if there was an error in the condition, skip this check */
-			stmt.error = true;
-			return;
-		}
-
-		if (!stmt.condition.value_type.compatible (bool_type)) {
-			stmt.error = true;
-			Report.error (stmt.condition.source_reference, "Condition must be boolean");
-			return;
-		}
-
-		stmt.add_error_types (stmt.condition.get_error_types ());
-		stmt.add_error_types (stmt.body.get_error_types ());
+		stmt.check (this);
 	}
 
 	public override void visit_for_statement (ForStatement stmt) {
-		stmt.accept_children (this);
-
-		if (stmt.condition != null && stmt.condition.error) {
-			/* if there was an error in the condition, skip this check */
-			stmt.error = true;
-			return;
-		}
-
-		if (stmt.condition != null && !stmt.condition.value_type.compatible (bool_type)) {
-			stmt.error = true;
-			Report.error (stmt.condition.source_reference, "Condition must be boolean");
-			return;
-		}
-
-		if (stmt.condition != null) {
-			stmt.add_error_types (stmt.condition.get_error_types ());
-		}
-
-		stmt.add_error_types (stmt.body.get_error_types ());
-		foreach (Expression exp in stmt.get_initializer ()) {
-			stmt.add_error_types (exp.get_error_types ());
-		}
-		foreach (Expression exp in stmt.get_iterator ()) {
-			stmt.add_error_types (exp.get_error_types ());
-		}
+		stmt.check (this);
 	}
 
 	public override void visit_foreach_statement (ForeachStatement stmt) {
@@ -550,62 +285,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_try_statement (TryStatement stmt) {
-		stmt.accept_children (this);
+		stmt.check (this);
 	}
 
 	public override void visit_catch_clause (CatchClause clause) {
-		if (clause.error_type != null) {
-			current_source_file.add_type_dependency (clause.error_type, SourceFileDependencyType.SOURCE);
-
-			clause.error_variable = new LocalVariable (clause.error_type.copy (), clause.variable_name);
-
-			clause.body.scope.add (clause.variable_name, clause.error_variable);
-			clause.body.add_local_variable (clause.error_variable);
-		} else {
-			clause.error_type = new ErrorType (null, null, clause.source_reference);
-		}
-
-		clause.accept_children (this);
+		clause.check (this);
 	}
 
 	public override void visit_lock_statement (LockStatement stmt) {
-		/* resource must be a member access and denote a Lockable */
-		if (!(stmt.resource is MemberAccess && stmt.resource.symbol_reference is Lockable)) {
-		    	stmt.error = true;
-			stmt.resource.error = true;
-			Report.error (stmt.resource.source_reference, "Expression is either not a member access or does not denote a lockable member");
-			return;
-		}
-
-		/* parent symbol must be the current class */
-		if (stmt.resource.symbol_reference.parent_symbol != current_class) {
-		    	stmt.error = true;
-			stmt.resource.error = true;
-			Report.error (stmt.resource.source_reference, "Only members of the current class are lockable");
-		}
-
-		((Lockable) stmt.resource.symbol_reference).set_lock_used (true);
+		stmt.check (this);
 	}
 
 	public override void visit_delete_statement (DeleteStatement stmt) {
-		stmt.accept_children (this);
-
-		if (stmt.expression.error) {
-			// if there was an error in the inner expression, skip this check
-			return;
-		}
-
-		if (!(stmt.expression.value_type is PointerType)) {
-			stmt.error = true;
-			Report.error (stmt.source_reference, "delete operator not supported for `%s'".printf (stmt.expression.value_type.to_string ()));
-		}
+		stmt.check (this);
 	}
 
-	/**
-	 * Visit operations called for array creation expresions.
-	 *
-	 * @param expr an array creation expression
-	 */
 	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
 		expr.check (this);
 	}

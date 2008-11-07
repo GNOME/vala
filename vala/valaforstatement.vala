@@ -156,4 +156,40 @@ public class Vala.ForStatement : CodeNode, Statement {
 			}
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		accept_children (analyzer);
+
+		if (condition != null && condition.error) {
+			/* if there was an error in the condition, skip this check */
+			error = true;
+			return false;
+		}
+
+		if (condition != null && !condition.value_type.compatible (analyzer.bool_type)) {
+			error = true;
+			Report.error (condition.source_reference, "Condition must be boolean");
+			return false;
+		}
+
+		if (condition != null) {
+			add_error_types (condition.get_error_types ());
+		}
+
+		add_error_types (body.get_error_types ());
+		foreach (Expression exp in get_initializer ()) {
+			add_error_types (exp.get_error_types ());
+		}
+		foreach (Expression exp in get_iterator ()) {
+			add_error_types (exp.get_error_types ());
+		}
+
+		return !error;
+	}
 }

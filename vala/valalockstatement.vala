@@ -47,4 +47,31 @@ public class Vala.LockStatement : CodeNode, Statement {
 		body.accept (visitor);
 		visitor.visit_lock_statement (this);
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		/* resource must be a member access and denote a Lockable */
+		if (!(resource is MemberAccess && resource.symbol_reference is Lockable)) {
+		    	error = true;
+			resource.error = true;
+			Report.error (resource.source_reference, "Expression is either not a member access or does not denote a lockable member");
+			return false;
+		}
+
+		/* parent symbol must be the current class */
+		if (resource.symbol_reference.parent_symbol != analyzer.current_class) {
+		    	error = true;
+			resource.error = true;
+			Report.error (resource.source_reference, "Only members of the current class are lockable");
+		}
+
+		((Lockable) resource.symbol_reference).set_lock_used (true);
+
+		return !error;
+	}
 }

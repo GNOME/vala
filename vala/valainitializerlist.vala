@@ -1,4 +1,4 @@
-/* valainitializerlist.vala
+/* valainitializervala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -31,7 +31,7 @@ public class Vala.InitializerList : Expression {
 	private Gee.List<Expression> initializers = new ArrayList<Expression> ();
 	
 	/**
-	 * Appends the specified expression to this initializer list.
+	 * Appends the specified expression to this initializer 
 	 *
 	 * @param expr an expression
 	 */
@@ -41,7 +41,7 @@ public class Vala.InitializerList : Expression {
 	}
 	
 	/**
-	 * Returns a copy of the expression list.
+	 * Returns a copy of the expression 
 	 *
 	 * @return expression list
 	 */
@@ -50,14 +50,14 @@ public class Vala.InitializerList : Expression {
 	}
 
 	/**
-	 * Returns the initializer count in this initializer list.
+	 * Returns the initializer count in this initializer 
 	 */
 	public int size {
 		get { return initializers.size; }
 	}
 
 	/**
-	 * Creates a new initializer list.
+	 * Creates a new initializer 
 	 *
 	 * @param source_reference reference to source code
 	 * @return                 newly created initializer list
@@ -91,5 +91,81 @@ public class Vala.InitializerList : Expression {
 				initializers[i] = new_node;
 			}
 		}
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		if (target_type == null) {
+			error = true;
+			Report.error (source_reference, "initializer list used for unknown type");
+			return false;
+		} else if (target_type is ArrayType) {
+			/* initializer is used as array initializer */
+			var array_type = (ArrayType) target_type;
+
+			foreach (Expression e in get_initializers ()) {
+				e.target_type = array_type.element_type.copy ();
+			}
+		} else if (target_type.data_type is Struct) {
+			/* initializer is used as struct initializer */
+			var st = (Struct) target_type.data_type;
+
+			var field_it = st.get_fields ().iterator ();
+			foreach (Expression e in get_initializers ()) {
+				Field field = null;
+				while (field == null) {
+					if (!field_it.next ()) {
+						error = true;
+						Report.error (e.source_reference, "too many expressions in initializer list for `%s'".printf (target_type.to_string ()));
+						return false;
+					}
+					field = field_it.get ();
+					if (field.binding != MemberBinding.INSTANCE) {
+						// we only initialize instance fields
+						field = null;
+					}
+				}
+
+				e.target_type = field.field_type.copy ();
+				if (!target_type.value_owned) {
+					e.target_type.value_owned = false;
+				}
+			}
+		} else {
+			error = true;
+			Report.error (source_reference, "initializer list used for `%s', which is neither array nor struct".printf (target_type.to_string ()));
+			return false;
+		}
+
+		accept_children (analyzer);
+
+		bool error = false;
+		foreach (Expression e in get_initializers ()) {
+			if (e.value_type == null) {
+				error = true;
+				continue;
+			}
+
+			var unary = e as UnaryExpression;
+			if (unary != null && (unary.operator == UnaryOperator.REF || unary.operator == UnaryOperator.OUT)) {
+				// TODO check type for ref and out expressions
+			} else if (!e.value_type.compatible (e.target_type)) {
+				error = true;
+				e.error = true;
+				Report.error (e.source_reference, "Expected initializer of type `%s' but got `%s'".printf (e.target_type.to_string (), e.value_type.to_string ()));
+			}
+		}
+
+		if (!error) {
+			/* everything seems to be correct */
+			value_type = target_type;
+		}
+
+		return !error;
 	}
 }

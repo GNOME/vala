@@ -98,4 +98,96 @@ public class Vala.LocalVariable : Symbol {
 			variable_type = new_type;
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		if (initializer != null) {
+			initializer.target_type = variable_type;
+		}
+
+		accept_children (analyzer);
+
+		if (variable_type == null) {
+			/* var type */
+
+			if (initializer == null) {
+				error = true;
+				Report.error (source_reference, "var declaration not allowed without initializer");
+				return false;
+			}
+			if (initializer.value_type == null) {
+				error = true;
+				Report.error (source_reference, "var declaration not allowed with non-typed initializer");
+				return false;
+			}
+
+			variable_type = initializer.value_type.copy ();
+			variable_type.value_owned = true;
+			variable_type.floating_reference = false;
+
+			initializer.target_type = variable_type;
+		}
+
+		if (initializer != null) {
+			if (initializer.value_type == null) {
+				if (!(initializer is MemberAccess) && !(initializer is LambdaExpression)) {
+					error = true;
+					Report.error (source_reference, "expression type not allowed as initializer");
+					return false;
+				}
+
+				if (initializer.symbol_reference is Method &&
+				    variable_type is DelegateType) {
+					var m = (Method) initializer.symbol_reference;
+					var dt = (DelegateType) variable_type;
+					var cb = dt.delegate_symbol;
+
+					/* check whether method matches callback type */
+					if (!cb.matches_method (m)) {
+						error = true;
+						Report.error (source_reference, "declaration of method `%s' doesn't match declaration of callback `%s'".printf (m.get_full_name (), cb.get_full_name ()));
+						return false;
+					}
+
+					initializer.value_type = variable_type;
+				} else {
+					error = true;
+					Report.error (source_reference, "expression type not allowed as initializer");
+					return false;
+				}
+			}
+
+			if (!initializer.value_type.compatible (variable_type)) {
+				error = true;
+				Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), variable_type.to_string ()));
+				return false;
+			}
+
+			if (initializer.value_type.is_disposable ()) {
+				/* rhs transfers ownership of the expression */
+				if (!(variable_type is PointerType) && !variable_type.value_owned) {
+					/* lhs doesn't own the value */
+					error = true;
+					Report.error (source_reference, "Invalid assignment from owned expression to unowned variable");
+					return false;
+				}
+			}
+		}
+
+		analyzer.current_source_file.add_type_dependency (variable_type, SourceFileDependencyType.SOURCE);
+
+		analyzer.current_symbol.scope.add (name, this);
+
+		var block = (Block) analyzer.current_symbol;
+		block.add_local_variable (this);
+
+		active = true;
+
+		return !error;
+	}
 }

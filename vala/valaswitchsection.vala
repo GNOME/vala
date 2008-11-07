@@ -80,4 +80,31 @@ public class Vala.SwitchSection : Block {
 			st.accept (visitor);
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		foreach (SwitchLabel label in get_labels ()) {
+			label.accept (analyzer);
+		}
+
+		owner = analyzer.current_symbol.scope;
+		analyzer.current_symbol = this;
+
+		foreach (Statement st in get_statements ()) {
+			st.accept (analyzer);
+		}
+
+		foreach (LocalVariable local in get_local_variables ()) {
+			local.active = false;
+		}
+
+		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
+
+		return !error;
+	}
 }

@@ -43,4 +43,26 @@ public class Vala.DeleteStatement : CodeNode, Statement {
 	public override void accept_children (CodeVisitor visitor) {
 		expression.accept (visitor);
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		accept_children (analyzer);
+
+		if (expression.error) {
+			// if there was an error in the inner expression, skip this check
+			return false;
+		}
+
+		if (!(expression.value_type is PointerType)) {
+			error = true;
+			Report.error (source_reference, "delete operator not supported for `%s'".printf (expression.value_type.to_string ()));
+		}
+
+		return !error;
+	}
 }

@@ -1,4 +1,4 @@
-/* valacatchclause.vala
+/* valacatchvala
  *
  * Copyright (C) 2007-2008  Jürg Billeter
  *
@@ -62,7 +62,7 @@ public class Vala.CatchClause : CodeNode {
 	private DataType _data_type;
 
 	/**
-	 * Creates a new catch clause.
+	 * Creates a new catch 
 	 *
 	 * @param type_reference   error type
 	 * @param variable_name    error variable name
@@ -93,5 +93,28 @@ public class Vala.CatchClause : CodeNode {
 		if (error_type == old_type) {
 			error_type = new_type;
 		}
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		if (error_type != null) {
+			analyzer.current_source_file.add_type_dependency (error_type, SourceFileDependencyType.SOURCE);
+
+			error_variable = new LocalVariable (error_type.copy (), variable_name);
+
+			body.scope.add (variable_name, error_variable);
+			body.add_local_variable (error_variable);
+		} else {
+			error_type = new ErrorType (null, null, source_reference);
+		}
+
+		accept_children (analyzer);
+
+		return !error;
 	}
 }

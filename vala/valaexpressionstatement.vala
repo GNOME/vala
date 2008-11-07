@@ -1,6 +1,6 @@
 /* valaexpressionstatement.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -84,5 +84,23 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 		}
 
 		return null;
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		if (expression.error) {
+			// ignore inner error
+			error = true;
+			return false;
+		}
+
+		add_error_types (expression.get_error_types ());
+
+		return !error;
 	}
 }
