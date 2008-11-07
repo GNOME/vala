@@ -729,15 +729,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_throw_statement (ThrowStatement stmt) {
-		stmt.error_expression.target_type = new ErrorType (null, null, stmt.source_reference);
-		stmt.error_expression.target_type.value_owned = true;
-
-		stmt.accept_children (this);
-
-		var error_type = stmt.error_expression.value_type.copy ();
-		error_type.source_reference = stmt.source_reference;
-
-		stmt.add_error_type (error_type);
+		stmt.check (this);
 	}
 
 	public override void visit_try_statement (TryStatement stmt) {

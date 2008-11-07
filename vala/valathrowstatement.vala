@@ -72,4 +72,24 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 			error_expression = new_node;
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		error_expression.target_type = new ErrorType (null, null, source_reference);
+		error_expression.target_type.value_owned = true;
+
+		accept_children (analyzer);
+
+		var error_type = error_expression.value_type.copy ();
+		error_type.source_reference = source_reference;
+
+		add_error_type (error_type);
+
+		return !error;
+	}
 }
