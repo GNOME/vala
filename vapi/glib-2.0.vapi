@@ -2205,6 +2205,8 @@ namespace GLib {
 		public static int create_with_parents (string pathname, int mode);
 		[CCode (cname = "mkdtemp")]
 		public static weak string mkdtemp (string template);
+		[CCode (cname = "g_rmdir")]
+		public static int remove (string filename);
 	}
 
 	[Compact]
