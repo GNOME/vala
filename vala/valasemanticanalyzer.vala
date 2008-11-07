@@ -721,70 +721,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_return_statement (ReturnStatement stmt) {
-		if (stmt.return_expression != null) {
-			stmt.return_expression.target_type = current_return_type;
-		}
-
-		stmt.accept_children (this);
-
-		if (stmt.return_expression != null && stmt.return_expression.error) {
-			// ignore inner error
-			stmt.error = true;
-			return;
-		}
-
-		if (current_return_type == null) {
-			stmt.error = true;
-			Report.error (stmt.source_reference, "Return not allowed in this context");
-			return;
-		}
-
-		if (stmt.return_expression == null) {
-			if (current_return_type is VoidType) {
-				return;
-			} else {
-				stmt.error = true;
-				Report.error (stmt.source_reference, "Return without value in non-void function");
-				return;
-			}
-		}
-
-		if (current_return_type is VoidType) {
-			Report.error (stmt.source_reference, "Return with value in void function");
-			return;
-		}
-
-		if (stmt.return_expression.value_type == null) {
-			stmt.error = true;
-			Report.error (stmt.source_reference, "Invalid expression in return value");
-			return;
-		}
-
-		if (!stmt.return_expression.value_type.compatible (current_return_type)) {
-			stmt.error = true;
-			Report.error (stmt.source_reference, "Return: Cannot convert from `%s' to `%s'".printf (stmt.return_expression.value_type.to_string (), current_return_type.to_string ()));
-			return;
-		}
-
-		if (stmt.return_expression.value_type.is_disposable () &&
-		    !current_return_type.value_owned) {
-			stmt.error = true;
-			Report.error (stmt.source_reference, "Return value transfers ownership but method return type hasn't been declared to transfer ownership");
-			return;
-		}
-
-		if (stmt.return_expression.symbol_reference is LocalVariable &&
-		    stmt.return_expression.value_type.is_disposable () &&
-		    !current_return_type.value_owned) {
-			Report.warning (stmt.source_reference, "Local variable with strong reference used as return value and method return type hasn't been declared to transfer ownership");
-		}
-
-		if (context.non_null && stmt.return_expression is NullLiteral
-		    && !current_return_type.nullable) {
-			Report.warning (stmt.source_reference, "`null' incompatible with return type `%s`".printf (current_return_type.to_string ()));
-		}
-
-		stmt.add_error_types (stmt.return_expression.get_error_types ());
+		stmt.check (this);
 	}
 
 	public override void visit_yield_statement (YieldStatement stmt) {

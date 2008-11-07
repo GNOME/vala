@@ -70,4 +70,77 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 			return_expression = new_node;
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		if (return_expression != null) {
+			return_expression.target_type = analyzer.current_return_type;
+		}
+
+		accept_children (analyzer);
+
+		if (return_expression != null && return_expression.error) {
+			// ignore inner error
+			error = true;
+			return false;
+		}
+
+		if (analyzer.current_return_type == null) {
+			error = true;
+			Report.error (source_reference, "Return not allowed in this context");
+			return false;
+		}
+
+		if (return_expression == null) {
+			if (!(analyzer.current_return_type is VoidType)) {
+				error = true;
+				Report.error (source_reference, "Return without value in non-void function");
+			}
+			return !error;
+		}
+
+		if (analyzer.current_return_type is VoidType) {
+			Report.error (source_reference, "Return with value in void function");
+			return false;
+		}
+
+		if (return_expression.value_type == null) {
+			error = true;
+			Report.error (source_reference, "Invalid expression in return value");
+			return false;
+		}
+
+		if (!return_expression.value_type.compatible (analyzer.current_return_type)) {
+			error = true;
+			Report.error (source_reference, "Return: Cannot convert from `%s' to `%s'".printf (return_expression.value_type.to_string (), analyzer.current_return_type.to_string ()));
+			return false;
+		}
+
+		if (return_expression.value_type.is_disposable () &&
+		    !analyzer.current_return_type.value_owned) {
+			error = true;
+			Report.error (source_reference, "Return value transfers ownership but method return type hasn't been declared to transfer ownership");
+			return false;
+		}
+
+		if (return_expression.symbol_reference is LocalVariable &&
+		    return_expression.value_type.is_disposable () &&
+		    !analyzer.current_return_type.value_owned) {
+			Report.warning (source_reference, "Local variable with strong reference used as return value and method return type hasn't been declared to transfer ownership");
+		}
+
+		if (analyzer.context.non_null && return_expression is NullLiteral
+		    && !analyzer.current_return_type.nullable) {
+			Report.warning (source_reference, "`null' incompatible with return type `%s`".printf (analyzer.current_return_type.to_string ()));
+		}
+
+		add_error_types (return_expression.get_error_types ());
+
+		return !error;
+	}
 }
