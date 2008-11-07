@@ -515,4 +515,16 @@ public class Vala.Namespace : Symbol {
 			}
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		process_attributes ();
+
+		return !error;
+	}
 }

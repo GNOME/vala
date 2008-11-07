@@ -72,4 +72,16 @@ public class Vala.ErrorCode : TypeSymbol {
 		}
 		return cname;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		accept_children (analyzer);
+
+		return !error;
+	}
 }

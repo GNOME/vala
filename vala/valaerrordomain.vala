@@ -215,4 +215,18 @@ public class Vala.ErrorDomain : TypeSymbol {
 	public override string? get_set_value_function () {
 		return "g_value_set_pointer";
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		process_attributes ();
+
+		accept_children (analyzer);
+
+		return !error;
+	}
 }

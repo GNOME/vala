@@ -139,7 +139,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_namespace (Namespace ns) {
-		ns.process_attributes ();
+		ns.check (this);
 	}
 
 	public override void visit_class (Class cl) {
@@ -147,85 +147,31 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_struct (Struct st) {
-		st.process_attributes ();
-
-		current_symbol = st;
-		current_struct = st;
-
-		st.accept_children (this);
-
-		if (!st.external && !st.external_package && st.get_base_types ().size == 0 && st.get_fields ().size == 0) {
-			Report.error (st.source_reference, "structs cannot be empty");
-		}
-
-		current_symbol = current_symbol.parent_symbol;
-		current_struct = null;
+		st.check (this);
 	}
 
 	public override void visit_interface (Interface iface) {
-		iface.process_attributes ();
-
-		current_symbol = iface;
-
-		foreach (DataType prerequisite_reference in iface.get_prerequisites ()) {
-			// check whether prerequisite is at least as accessible as the interface
-			if (!is_type_accessible (iface, prerequisite_reference)) {
-				iface.error = true;
-				Report.error (iface.source_reference, "prerequisite `%s` is less accessible than interface `%s`".printf (prerequisite_reference.to_string (), iface.get_full_name ()));
-				return;
-			}
-
-			current_source_file.add_type_dependency (prerequisite_reference, SourceFileDependencyType.HEADER_FULL);
-		}
-
-		/* check prerequisites */
-		Class prereq_class;
-		foreach (DataType prereq in iface.get_prerequisites ()) {
-			TypeSymbol class_or_interface = prereq.data_type;
-			/* skip on previous errors */
-			if (class_or_interface == null) {
-				iface.error = true;
-				continue;
-			}
-			/* interfaces are not allowed to have multiple instantiable prerequisites */
-			if (class_or_interface is Class) {
-				if (prereq_class != null) {
-					iface.error = true;
-					Report.error (iface.source_reference, "%s: Interfaces cannot have multiple instantiable prerequisites (`%s' and `%s')".printf (iface.get_full_name (), class_or_interface.get_full_name (), prereq_class.get_full_name ()));
-					return;
-				}
-
-				prereq_class = (Class) class_or_interface;
-			}
-		}
-
-		iface.accept_children (this);
-
-		current_symbol = current_symbol.parent_symbol;
+		iface.check (this);
 	}
 
 	public override void visit_enum (Enum en) {
-		en.process_attributes ();
-
-		en.accept_children (this);
+		en.check (this);
 	}
 
 	public override void visit_enum_value (EnumValue ev) {
-		ev.process_attributes ();
-
-		ev.accept_children (this);
+		ev.check (this);
 	}
 
 	public override void visit_error_domain (ErrorDomain ed) {
-		ed.process_attributes ();
+		ed.check (this);
+	}
 
-		ed.accept_children (this);
+	public override void visit_error_code (ErrorCode ec) {
+		ec.check (this);
 	}
 
 	public override void visit_delegate (Delegate d) {
-		d.process_attributes ();
-
-		d.accept_children (this);
+		d.check (this);
 	}
 
 	public override void visit_constant (Constant c) {

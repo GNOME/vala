@@ -540,4 +540,54 @@ public class Vala.Interface : ObjectTypeSymbol {
 
 		return null;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		process_attributes ();
+
+		analyzer.current_symbol = this;
+
+		foreach (DataType prerequisite_reference in get_prerequisites ()) {
+			// check whether prerequisite is at least as accessible as the interface
+			if (!analyzer.is_type_accessible (this, prerequisite_reference)) {
+				error = true;
+				Report.error (source_reference, "prerequisite `%s` is less accessible than interface `%s`".printf (prerequisite_reference.to_string (), get_full_name ()));
+				return false;
+			}
+
+			analyzer.current_source_file.add_type_dependency (prerequisite_reference, SourceFileDependencyType.HEADER_FULL);
+		}
+
+		/* check prerequisites */
+		Class prereq_class;
+		foreach (DataType prereq in get_prerequisites ()) {
+			TypeSymbol class_or_interface = prereq.data_type;
+			/* skip on previous errors */
+			if (class_or_interface == null) {
+				error = true;
+				continue;
+			}
+			/* interfaces are not allowed to have multiple instantiable prerequisites */
+			if (class_or_interface is Class) {
+				if (prereq_class != null) {
+					error = true;
+					Report.error (source_reference, "%s: Interfaces cannot have multiple instantiable prerequisites (`%s' and `%s')".printf (get_full_name (), class_or_interface.get_full_name (), prereq_class.get_full_name ()));
+					return false;
+				}
+
+				prereq_class = (Class) class_or_interface;
+			}
+		}
+
+		accept_children (analyzer);
+
+		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
+
+		return !error;
+	}
 }

@@ -605,4 +605,28 @@ public class Vala.Struct : TypeSymbol {
 
 		return false;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		process_attributes ();
+
+		analyzer.current_symbol = this;
+		analyzer.current_struct = this;
+
+		accept_children (analyzer);
+
+		if (!external && !external_package && get_base_types ().size == 0 && get_fields ().size == 0) {
+			Report.error (source_reference, "structs cannot be empty");
+		}
+
+		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
+		analyzer.current_struct = null;
+
+		return !error;
+	}
 }

@@ -1,5 +1,19 @@
 2008-11-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadelegate.vala:
+	* vala/valaenum.vala:
+	* vala/valaenumvalue.vala:
+	* vala/valaerrorcode.vala:
+	* vala/valaerrordomain.vala:
+	* vala/valainterface.vala:
+	* vala/valanamespace.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valastruct.vala:
+
+	Move type symbol checking to code nodes
+
+2008-11-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraycreationexpression.vala:
 	* vala/valasemanticanalyzer.vala:
 

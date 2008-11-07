@@ -297,4 +297,18 @@ public class Vala.Enum : TypeSymbol {
 			return "i";
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		process_attributes ();
+
+		accept_children (analyzer);
+
+		return !error;
+	}
 }

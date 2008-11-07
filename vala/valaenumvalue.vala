@@ -128,4 +128,18 @@ public class Vala.EnumValue : Symbol {
 	public void set_cname (string cname) {
 		this.cname = cname;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		process_attributes ();
+
+		accept_children (analyzer);
+
+		return !error;
+	}
 }
