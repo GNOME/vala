@@ -134,4 +134,119 @@ public class Vala.ForeachStatement : Block {
 			type_reference = new_type;
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		// analyze collection expression first, used for type inference
+		collection.accept (analyzer);
+
+		if (collection.error) {
+			// ignore inner error
+			error = true;
+			return false;
+		} else if (collection.value_type == null) {
+			Report.error (collection.source_reference, "invalid collection expression");
+			error = true;
+			return false;
+		}
+
+		var collection_type = collection.value_type.copy ();
+		collection.target_type = collection_type.copy ();
+		
+		DataType element_data_type = null;
+		bool element_owned = false;
+
+		if (collection_type.is_array ()) {
+			var array_type = (ArrayType) collection_type;
+			element_data_type = array_type.element_type;
+		} else if (collection_type.compatible (analyzer.glist_type) || collection_type.compatible (analyzer.gslist_type)) {
+			if (collection_type.get_type_arguments ().size > 0) {
+				element_data_type = (DataType) collection_type.get_type_arguments ().get (0);
+			}
+		} else if (analyzer.iterable_type != null && collection_type.compatible (analyzer.iterable_type)) {
+			element_owned = true;
+
+			if (analyzer.list_type == null || !collection_type.compatible (new ObjectType (analyzer.list_type))) {
+				// don't use iterator objects for lists for performance reasons
+				var foreach_iterator_type = new ObjectType (analyzer.iterator_type);
+				foreach_iterator_type.value_owned = true;
+				foreach_iterator_type.add_type_argument (type_reference);
+				iterator_variable = new LocalVariable (foreach_iterator_type, "%s_it".printf (variable_name));
+
+				add_local_variable (iterator_variable);
+				iterator_variable.active = true;
+			}
+
+			var it_method = (Method) analyzer.iterable_type.data_type.scope.lookup ("iterator");
+			if (it_method.return_type.get_type_arguments ().size > 0) {
+				var type_arg = it_method.return_type.get_type_arguments ().get (0);
+				if (type_arg.type_parameter != null) {
+					element_data_type = SemanticAnalyzer.get_actual_type (collection_type, it_method, type_arg, this);
+				} else {
+					element_data_type = type_arg;
+				}
+			}
+		} else {
+			error = true;
+			Report.error (source_reference, "Gee.List not iterable");
+			return false;
+		}
+
+		if (element_data_type == null) {
+			error = true;
+			Report.error (collection.source_reference, "missing type argument for collection");
+			return false;
+		}
+
+		// analyze element type
+		if (type_reference == null) {
+			// var type
+			type_reference = element_data_type.copy ();
+		} else if (!element_data_type.compatible (type_reference)) {
+			error = true;
+			Report.error (source_reference, "Foreach: Cannot convert from `%s' to `%s'".printf (element_data_type.to_string (), type_reference.to_string ()));
+			return false;
+		} else if (element_data_type.is_disposable () && element_owned && !type_reference.value_owned) {
+			error = true;
+			Report.error (source_reference, "Foreach: Invalid assignment from owned expression to unowned variable");
+			return false;
+		}
+		
+		analyzer.current_source_file.add_type_dependency (type_reference, SourceFileDependencyType.SOURCE);
+
+		element_variable = new LocalVariable (type_reference, variable_name);
+
+		body.scope.add (variable_name, element_variable);
+
+		body.add_local_variable (element_variable);
+		element_variable.active = true;
+
+		// analyze body
+		owner = analyzer.current_symbol.scope;
+		analyzer.current_symbol = this;
+
+		body.accept (analyzer);
+
+		foreach (LocalVariable local in get_local_variables ()) {
+			local.active = false;
+		}
+
+		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
+
+		collection_variable = new LocalVariable (collection_type, "%s_collection".printf (variable_name));
+
+		add_local_variable (collection_variable);
+		collection_variable.active = true;
+
+
+		add_error_types (collection.get_error_types ());
+		add_error_types (body.get_error_types ());
+
+		return !error;
+	}
 }
