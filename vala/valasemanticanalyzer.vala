@@ -784,115 +784,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
-	private int create_sizes_from_initializer_list (InitializerList il, int rank, Gee.List<Literal> sl) {
-		var init = new IntegerLiteral (il.size.to_string (), il.source_reference);
-		init.accept (this);
-		sl.add (init);
-
-		int subsize = -1;
-		foreach (Expression e in il.get_initializers ()) {
-			if (e is InitializerList) {
-				if (rank == 1) {
-					il.error = true;
-					e.error = true;
-					Report.error (e.source_reference, "Expected array element, got array initializer list");
-					return -1;
-				}
-				int size = create_sizes_from_initializer_list ((InitializerList)e, rank - 1, sl);
-				if (size == -1) {
-					return -1;
-				}
-				if (subsize >= 0 && subsize != size) {
-					il.error = true;
-					Report.error (il.source_reference, "Expected initializer list of size %d, got size %d".printf (subsize, size));
-					return -1;
-				} else {
-					subsize = size;
-				}
-			} else {
-				if (rank != 1) {
-					il.error = true;
-					e.error = true;
-					Report.error (e.source_reference, "Expected array initializer list, got array element");
-					return -1;
-				}
-			}
-		}
-		return il.size;
-	}
-
 	/**
 	 * Visit operations called for array creation expresions.
 	 *
 	 * @param expr an array creation expression
 	 */
 	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
-		Gee.List<Expression> size = expr.get_sizes ();
-		var initlist = expr.initializer_list;
-
-		if (expr.element_type != null) {
-			expr.element_type.accept (this);
-		}
-
-		foreach (Expression e in size) {
-			e.accept (this);
-		}
-
-		var calc_sizes = new ArrayList<Literal> ();
-		if (initlist != null) {
-			initlist.target_type = new ArrayType (expr.element_type, expr.rank, expr.source_reference);
-
-			initlist.accept (this);
-
-			var ret = create_sizes_from_initializer_list (initlist, expr.rank, calc_sizes);
-			if (ret == -1) {
-				expr.error = true;
-			}
-		}
-
-		if (size.size > 0) {
-			/* check for errors in the size list */
-			foreach (Expression e in size) {
-				if (e.value_type == null) {
-					/* return on previous error */
-					return;
-				} else if (!(e.value_type.data_type is Struct) || !((Struct) e.value_type.data_type).is_integer_type ()) {
-					expr.error = true;
-					Report.error (e.source_reference, "Expression of integer type expected");
-				}
-			}
-		} else {
-			if (initlist == null) {
-				expr.error = true;
-				/* this is an internal error because it is already handeld by the parser */
-				Report.error (expr.source_reference, "internal error: initializer list expected");
-			} else {
-				foreach (Expression size in calc_sizes) {
-					expr.append_size (size);
-				}
-			}
-		}
-
-		if (expr.error) {
-			return;
-		}
-
-		/* check for wrong elements inside the initializer */
-		if (expr.initializer_list != null && expr.initializer_list.value_type == null) {
-			return;
-		}
-
-		/* try to construct the type of the array */
-		if (expr.element_type == null) {
-			expr.error = true;
-			Report.error (expr.source_reference, "Cannot determine the element type of the created array");
-			return;
-		}
-
-		expr.element_type.value_owned = true;
-
-		expr.value_type = new ArrayType (expr.element_type, expr.rank, expr.source_reference);
-		expr.value_type.value_owned = true;
+		expr.check (this);
 	}
 
 	public override void visit_boolean_literal (BooleanLiteral expr) {

@@ -106,4 +106,118 @@ public class Vala.ArrayCreationExpression : Expression {
 			element_type = new_type;
 		}
 	}
+
+	private int create_sizes_from_initializer_list (SemanticAnalyzer analyzer, InitializerList il, int rank, Gee.List<Literal> sl) {
+		var init = new IntegerLiteral (il.size.to_string (), il.source_reference);
+		init.accept (analyzer);
+		sl.add (init);
+
+		int subsize = -1;
+		foreach (Expression e in il.get_initializers ()) {
+			if (e is InitializerList) {
+				if (rank == 1) {
+					il.error = true;
+					e.error = true;
+					Report.error (e.source_reference, "Expected array element, got array initializer list");
+					return -1;
+				}
+				int size = create_sizes_from_initializer_list (analyzer, (InitializerList) e, rank - 1, sl);
+				if (size == -1) {
+					return -1;
+				}
+				if (subsize >= 0 && subsize != size) {
+					il.error = true;
+					Report.error (il.source_reference, "Expected initializer list of size %d, got size %d".printf (subsize, size));
+					return -1;
+				} else {
+					subsize = size;
+				}
+			} else {
+				if (rank != 1) {
+					il.error = true;
+					e.error = true;
+					Report.error (e.source_reference, "Expected array initializer list, got array element");
+					return -1;
+				}
+			}
+		}
+		return il.size;
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		Gee.List<Expression> size = get_sizes ();
+		var initlist = initializer_list;
+
+		if (element_type != null) {
+			element_type.accept (analyzer);
+		}
+
+		foreach (Expression e in size) {
+			e.accept (analyzer);
+		}
+
+		var calc_sizes = new ArrayList<Literal> ();
+		if (initlist != null) {
+			initlist.target_type = new ArrayType (element_type, rank, source_reference);
+
+			initlist.accept (analyzer);
+
+			var ret = create_sizes_from_initializer_list (analyzer, initlist, rank, calc_sizes);
+			if (ret == -1) {
+				error = true;
+			}
+		}
+
+		if (size.size > 0) {
+			/* check for errors in the size list */
+			foreach (Expression e in size) {
+				if (e.value_type == null) {
+					/* return on previous error */
+					return false;
+				} else if (!(e.value_type.data_type is Struct) || !((Struct) e.value_type.data_type).is_integer_type ()) {
+					error = true;
+					Report.error (e.source_reference, "Expression of integer type expected");
+				}
+			}
+		} else {
+			if (initlist == null) {
+				error = true;
+				/* this is an internal error because it is already handeld by the parser */
+				Report.error (source_reference, "internal error: initializer list expected");
+			} else {
+				foreach (Expression size in calc_sizes) {
+					append_size (size);
+				}
+			}
+		}
+
+		if (error) {
+			return false;
+		}
+
+		/* check for wrong elements inside the initializer */
+		if (initializer_list != null && initializer_list.value_type == null) {
+			return false;
+		}
+
+		/* try to construct the type of the array */
+		if (element_type == null) {
+			error = true;
+			Report.error (source_reference, "Cannot determine the element type of the created array");
+			return false;
+		}
+
+		element_type.value_owned = true;
+
+		value_type = new ArrayType (element_type, rank, source_reference);
+		value_type.value_owned = true;
+
+		return !error;
+	}
 }
