@@ -28,6 +28,7 @@ using Gee;
 public class LinkHtmlTaglet : InlineTaglet, LinkHelper {
 	private string content;
 	private string path;
+	private string css;
 
 	public Settings settings {
 		construct set;
@@ -47,15 +48,16 @@ public class LinkHtmlTaglet : InlineTaglet, LinkHelper {
 
 		this.settings = settings;
 		this.path = this.get_html_link ( settings, element, me );
+		this.css = get_html_content_link_css_class ( element );
 		this.content = element.full_name ();
 		return true;
 	}
 
 	public override bool write ( void* res, int max, int index ) {
 		if ( this.path == null )
-			((GLib.FileStream)res).printf ( "<i>%s</i>", this.content );
+			((GLib.FileStream)res).printf ( "<span class=\"%s\">%s</span>", this.css, this.content );
 		else
-			((GLib.FileStream)res).printf ( "<a href=\"%s\">%s</a>", this.path, this.content );
+			((GLib.FileStream)res).printf ( "<a href=\"%s\" class=\"%s\">%s</a>", this.path, this.css, this.content );
 
 		return true;
 	}

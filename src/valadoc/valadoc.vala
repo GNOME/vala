@@ -36,7 +36,6 @@ public class ValaDoc : Object {
 	private static string pkg_name = null;
 	private static string pkg_version = null;
 
-	private static bool add_documentation = false;
 	private static bool add_inherited = false;
 	private static bool _protected = false;
 	private static bool with_deps = false;
@@ -48,6 +47,7 @@ public class ValaDoc : Object {
 	private static bool non_null_experimental = false;
 	private static bool disable_non_null = false;
 	private static bool disable_checking;
+	private static bool force = false;
 
 
 	[NoArrayLength ()]
@@ -89,6 +89,7 @@ public class ValaDoc : Object {
 		{ "package-name", 0, 0, OptionArg.STRING, ref pkg_name, "package name", "DIRECTORY" },
 		{ "package-version", 0, 0, OptionArg.STRING, ref pkg_version, "package version", "DIRECTORY" },
 //		{ "xml", 0, 0, OptionArg.FILENAME, ref xmlsource, "xml", "DIRECTORY" },
+		{ "force", 0, 0, OptionArg.NONE, ref force, "force", null },
 		{ null }
 	};
 
@@ -507,17 +508,6 @@ public class ValaDoc : Object {
 			}
 		}
 
-
-		// add some random checks here
-		// Gee.HashMap<string, Valadoc.TagletCreator> taglets = this.get_taglets ( );
-
-		//Gee.HashMap<string, Valadoc.TagletCreator> taglets
-		//	= new Gee.HashMap<string, Valadoc.TagletCreator>(GLib.str_hash, GLib.str_equal);
-
-
-		////////////////// parse + errorreporter >>>>>>>>>>>>>>>>>
-
-
 		Reporter reporter = new Reporter();
 		GLib.Type strtag;
 
@@ -545,17 +535,6 @@ public class ValaDoc : Object {
 		if ( reporter.errors > 0 )
 			return quit ();
 
-
-/* //////////////////////////// XML //////////////////////////
-		if ( xmlsource != null ) {
-			var xml = new MergeExternalDocumentation ( doctree );
-			bool tmp = xml.parse ( xmlsource );
-			if ( tmp == false ) {
-				stderr.printf ( "Can't load XML-File.\n" );
-				return 1;
-			}
-		}
-*/
 		doctree.parse_comments ( docparser );
 		if ( reporter.errors > 0 )
 			return 1;
@@ -571,6 +550,37 @@ public class ValaDoc : Object {
 		doclet = null;
 		doctree = null;
 		return quit ();
+	}
+
+	private static bool remove_directory ( string rpath ) {
+		try {
+			GLib.Dir dir = GLib.Dir.open ( rpath ); //throws GLib.FileError
+			if ( dir == null )
+				return false;
+
+			for ( weak string entry = dir.read_name(); entry != null ; entry = dir.read_name() ) {
+				string path = rpath + entry;
+
+				bool is_dir = GLib.FileUtils.test ( path, GLib.FileTest.IS_DIR );
+				if ( is_dir == true ) {
+					bool tmp = remove_directory ( path );
+					if ( tmp == false ) {
+						stderr.printf ( "Error: Can't remove directory %s.\n", path );
+						return false;
+					}
+				}
+				else {
+					int tmp = GLib.FileUtils.unlink ( path );
+					if ( tmp > 0 ) {
+						stderr.printf ( "Error: Can't remove file %s.\n", path );
+						return false;
+					}
+				}
+			}
+		}
+		finally {}
+
+		return true;
 	}
 
 	static int main ( string[] args ) {
@@ -605,8 +615,11 @@ public class ValaDoc : Object {
 			directory += "/";
 		}
 
-		if ( !add_documentation ) {
-			if ( FileUtils.test ( directory, FileTest.EXISTS ) ) {
+		if ( FileUtils.test ( directory, FileTest.EXISTS ) ) {
+			if ( force == true ) {
+				remove_directory ( directory );
+			}
+			else {
 				stderr.printf ("File already exists.\n");
 				return -1;
 			}

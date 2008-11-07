@@ -20,6 +20,8 @@
 using GLib;
 
 
+
+
 public interface Valadoc.LinkHelper {
 	protected string get_html_top_link ( Valadoc.Basic? postag ) {
 		if ( postag == null )

@@ -4,7 +4,12 @@
 using GLib;
 
 
+namespace Valadoc {
+
 public const string css_inline_navigation = "main_inline_navigation";
+
+public const string css_inline_navigation_errorcode = "main_inline_navigation_errorcode";
+public const string css_inline_navigation_enumvalue = "main_inline_navigation_enumvalue";
 
 public const string css_inline_navigation_property = "main_inline_navigation_property";
 public const string css_inline_navigation_virtual_property = "main_inline_navigation_virtual_property";
@@ -104,7 +109,161 @@ public const string css_style_body = "site_body";
 
 
 
+public const string css_content_link_constant = "css_content_link_constant";
+public const string css_content_link_namespace = "css_content_link_namespace";
+public const string css_content_link_struct = "css_content_link_struct";
+public const string css_content_link_interface = "css_content_link_interface";
+public const string css_content_link_enum = "css_content_link_enum";
+public const string css_content_link_errordomain = "css_content_link_errordomain";
+public const string css_content_link_delegate = "css_content_link_delegate";
+public const string css_content_link_signal = "css_content_link_signal";
+public const string css_content_link_field = "css_content_link_field";
+public const string css_content_link_enumvalue = "css_content_link_enumvalue";
+public const string css_content_link_errorcode = "css_content_link_errorcode";
 
+public const string css_content_link_class = "css_content_link_class";
+public const string css_content_link_abstract_class = "css_content_link_abstract_class";
+
+public const string css_content_link_property = "css_content_link_property";
+public const string css_content_link_virtual_property = "css_content_link_virtual_property";
+public const string css_content_link_abstract_property = "css_content_link_abstract_property";
+
+public const string css_content_link_method = "css_content_link_method";
+public const string css_content_link_static_method = "css_content_link_static_method";
+public const string css_content_link_virtual_method = "css_content_link_virtual_method";
+public const string css_content_link_abstract_method = "css_content_link_abstract_method";
+public const string css_content_link_construction_method = "css_content_link_construction_method";
+
+
+public string get_html_content_link_css_class ( Valadoc.Basic element ) {
+	if ( element is Namespace ) {
+		return css_content_link_namespace;
+	}
+	else if ( element is Struct ) {
+		return css_content_link_struct;
+	}
+	else if ( element is Interface ) {
+		return css_content_link_interface;
+	}
+	else if ( element is Class ) {
+		if ( ((Class)element).is_abstract )
+			return css_content_link_abstract_class;
+		else
+			return css_content_link_class;
+	}
+	else if ( element is Enum ) {
+		return css_content_link_enum;
+	}
+	else if ( element is ErrorDomain ) {
+		return css_content_link_errordomain;
+	}
+	else if ( element is Delegate ) {
+		return css_content_link_delegate;
+	}
+	else if ( element is Method ) {
+		if ( ((Method)element).is_constructor )
+			return css_content_link_construction_method;
+		else if ( ((Method)element).is_abstract )
+			return css_content_link_abstract_method;
+		else if ( ((Method)element).is_override || ((Method)element).is_override )
+			return css_content_link_virtual_method;
+		else if ( ((Method)element).is_static )
+			return css_content_link_static_method;
+		else
+			return css_content_link_method;
+	}
+	else if ( element is Signal ) {
+		return css_content_link_signal;
+	}
+	else if ( element is Property ) {
+		if ( ((Property)element).is_virtual || ((Property)element).is_override )
+			return css_content_link_virtual_property;
+		else if ( ((Property)element).is_abstract )
+			return css_content_link_abstract_property;
+		else
+			return css_content_link_property;
+	}
+	else if ( element is Field ) {
+		return css_content_link_field;
+	}
+	else if ( element is Constant ) {
+		return css_content_link_constant;
+	}
+	else if ( element is EnumValue ) {
+		return css_content_link_enumvalue;
+	}
+	else if ( element is ErrorCode ) {
+		return css_content_link_errorcode;
+	}
+	return "";
+}
+
+
+
+
+public string get_html_inline_navigation_link_css_class ( Valadoc.Basic element ) {
+	if ( element is Namespace ) {
+	}
+	else if ( element is Struct ) {
+		return css_inline_navigation_struct;
+	}
+	else if ( element is Interface ) {
+		return css_inline_navigation_interface;
+	}
+	else if ( element is Class ) {
+		return (((Class)element).is_abstract)? css_inline_navigation_abstract_class : css_inline_navigation_class;
+	}
+	else if ( element is Enum ) {
+		return css_inline_navigation_enum;
+	}
+	else if ( element is ErrorDomain ) {
+		return css_inline_navigation_errordomain;
+	}
+	else if ( element is Delegate ) {
+		return css_inline_navigation_delegate;
+	}
+	else if ( element is Method ) {
+		if ( ((Method)element).is_static )
+			return css_inline_navigation_static_method;
+		else if ( ((Method)element).is_static )
+			return css_inline_navigation_static_method;
+		else if ( ((Method)element).is_constructor )
+			return css_inline_navigation_construction_method;
+		else if ( ((Method)element).is_abstract )
+			return css_inline_navigation_abstract_method;
+		else if ( ((Method)element).is_virtual || ((Method)element).is_override )
+			return css_inline_navigation_virtual_method;
+		else
+			return css_inline_navigation_method;
+	}
+	else if ( element is Signal ) {
+		return css_inline_navigation_signal;
+	}
+	else if ( element is Property ) {
+		if ( ((Property)element).is_virtual || ((Property)element).is_override )
+			return css_inline_navigation_virtual_property;
+		else if ( ((Property)element).is_abstract )
+			return css_inline_navigation_abstract_property;
+		else
+			return css_inline_navigation_property;
+	}
+	else if ( element is Field ) {
+		return css_inline_navigation_fields;
+	}
+	else if ( element is Constant ) {
+		return css_inline_navigation_constant;
+	}
+	else if ( element is EnumValue ) {
+		return css_inline_navigation_enumvalue;
+	}
+	else if ( element is ErrorCode ) {
+		return css_inline_navigation_errorcode;
+	}
+	return "";
+}
+
+
+}
 
 
 public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
@@ -1411,17 +1570,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Methods:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Method m in imethods ) {
-				string css;
-				if ( m.is_static )
-					css = css_inline_navigation_static_method;
-				else if ( m.is_abstract )
-					css = css_inline_navigation_abstract_method;
-				else if ( m.is_virtual || m.is_override )
-					css = css_inline_navigation_virtual_method;
-				else
-					css = css_inline_navigation_method;
-
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css, css_navi_link, this.get_link(m, (mself == null)? mh : mself), m.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (m), css_navi_link, this.get_link(m, (mself == null)? mh : mself), m.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1440,7 +1589,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Static Methods:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Method m in static_methods ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_static_method, css_navi_link, this.get_link(m, mh), m.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (m), css_navi_link, this.get_link(m, mh), m.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1559,7 +1708,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Constants:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Constant c in constants ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_constant, css_navi_link, this.get_link(c, (mself == null)? ch : mself), c.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (c), css_navi_link, this.get_link(c, (mself == null)? ch : mself), c.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1571,7 +1720,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Enums:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Enum en in enums ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_enum, css_navi_link, this.get_link(en, (mself == null)? eh : mself), en.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (en), css_navi_link, this.get_link(en, (mself == null)? eh : mself), en.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1583,7 +1732,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Errordomains:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( ErrorDomain err in errdoms ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_errordomain, css_navi_link,  this.get_link(err, (mself == null)? eh : mself), err.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (err), css_navi_link,  this.get_link(err, (mself == null)? eh : mself), err.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1595,7 +1744,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Construction Methods:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Method m in methods ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_construction_method, css_navi_link, this.get_link(m, cmh), m.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (m), css_navi_link, this.get_link(m, cmh), m.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1625,7 +1774,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Fields:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Field f in fields ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_fields, css_navi_link, this.get_link(f, (mself == null)? fh : mself), f.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class(f), css_navi_link, this.get_link(f, (mself == null)? fh : mself), f.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1637,15 +1786,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Properties:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Property prop in properties ) {
-				string css;
-				if ( prop.is_virtual )
-					css = css_inline_navigation_virtual_property;
-				else if ( prop.is_abstract )
-					css = css_inline_navigation_abstract_property;
-				else
-					css = css_inline_navigation_property;
-
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css, css_navi_link, this.get_link(prop, ph), prop.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (prop), css_navi_link, this.get_link(prop, ph), prop.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1657,7 +1798,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Signals:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Signal sig in signals ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_signal, css_navi_link, this.get_link(sig, sh), sig.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (sig), css_navi_link, this.get_link(sig, sh), sig.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1677,7 +1818,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 					name = subcl.name;
 				}
 
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", (subcl.is_abstract)? css_inline_navigation_abstract_class : css_inline_navigation_class, css_navi_link, this.get_link(subcl, (mself == null)? clh : mself), name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (subcl), css_navi_link, this.get_link(subcl, (mself == null)? clh : mself), name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1689,7 +1830,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Interfaces:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Interface iface in ifaces ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_interface, css_navi_link, this.get_link(iface, (mself == null)? ih : mself), iface.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (iface), css_navi_link, this.get_link(iface, (mself == null)? ih : mself), iface.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1701,7 +1842,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Delegates:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Delegate d in delegates ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_delegate, css_navi_link, this.get_link(d, (mself == null)? dh : mself), d.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (d), css_navi_link, this.get_link(d, (mself == null)? dh : mself), d.name );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1713,7 +1854,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Structs:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Struct stru in structs ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_struct, css_navi_link, this.get_link(stru, (mself == null)? struh : mself), stru.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class ( stru ), css_navi_link, this.get_link(stru, (mself == null)? struh : mself), stru.name );
 			}
 			file.puts ( "</ul>\n" );
 		}

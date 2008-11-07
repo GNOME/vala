@@ -26,6 +26,7 @@ using Gee;
 public class SeeHtmlTaglet : MainTaglet, HtmlHelper {
 	private string name;
 	private string path;
+	private string css;
 
 	public override int order {
 		get { return 500; }
@@ -77,7 +78,7 @@ public class SeeHtmlTaglet : MainTaglet, HtmlHelper {
 
 		this.settings = settings;
 
-
+		this.css = get_html_inline_navigation_link_css_class ( element );
 		this.path = this.get_html_link ( this.settings, element, me );
 		this.name = element.full_name();
 		return true;
@@ -86,7 +87,7 @@ public class SeeHtmlTaglet : MainTaglet, HtmlHelper {
 	public override bool write ( void* ptr, int max, int index ) {
 		weak GLib.FileStream file = (GLib.FileStream)ptr;
 
-		file.printf ( "\t<li class=\"%s\"><a href=\"%s\">%s</a></li>\n", css_see_list, this.path, this.name );
+		file.printf ( "\t<li class=\"%s\"><a href=\"%s\">%s</a></li>\n", this.css, this.path, this.name );
 		return true;
 	}
 }

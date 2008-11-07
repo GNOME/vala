@@ -112,6 +112,7 @@ public Valadoc.Class glib_error = null;
 
 
 public enum CommentContext {
+	NAMESPACE,
 	ERRORDOMAIN,
 	ENUMVALUE,
 	ERRORCODE,
@@ -4154,6 +4155,8 @@ public class Valadoc.Namespace : Basic, MethodHandler, FieldHandler, NamespaceHa
 
 	// internal
 	public void parse_comments ( Valadoc.Parser docparser ) {
+		//this.parse_comment_helper ( docparser, CommentContext.NAMESPACE );
+
 		this.parse_enum_comments ( docparser );
 		this.parse_field_comments ( docparser );
 		this.parse_class_comments ( docparser );

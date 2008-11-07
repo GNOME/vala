@@ -26,6 +26,7 @@ using Gee;
 public class SeeHtmlTaglet : MainTaglet, Valadoc.LinkHelper {
 	private string name;
 	private string path;
+	private string css;
 
 	public override int order {
 		get { return 500; }
@@ -76,6 +77,7 @@ public class SeeHtmlTaglet : MainTaglet, Valadoc.LinkHelper {
 		}
 
 		this.settings = settings;
+		this.css = get_html_inline_navigation_link_css_class ( element );
 		this.path = this.get_html_link ( settings, element, me );
 		this.name = element.full_name ();
 		return true;
@@ -85,9 +87,9 @@ public class SeeHtmlTaglet : MainTaglet, Valadoc.LinkHelper {
 		weak GLib.FileStream file = (GLib.FileStream)ptr;
 
 		if ( this.path == null )
-			file.printf ( "\t<li class=\"%s\"><i>%s</i></li>\n", css_see_list, this.name );
+			file.printf ( "\t<li class=\"%s\">%s</li>\n", this.css, this.name );
 		else
-			file.printf ( "\t<li class=\"%s\"><a href=\"%s\">%s</a></li>\n", css_see_list, this.path, this.name );
+			file.printf ( "\t<li class=\"%s\"><a href=\"%s\">%s</a></li>\n", this.css, this.path, this.name );
 
 		return true;
 	}
