@@ -153,7 +153,10 @@ public class Vala.GirParser : CodeVisitor {
 			ns = new Namespace (namespace_name);
 			new_namespace = true;
 		} else {
-			ns.source_reference = new SourceReference (current_source_file);
+			if (ns.external_package) {
+				ns.attributes = null;
+				ns.source_reference = get_current_src ();
+			}
 		}
 
 		string cheader = get_attribute (ns.name, "c:header-filename");
@@ -221,7 +224,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	Struct parse_alias () {
 		start_element ("alias");
-		var st = new Struct (reader.get_attribute ("name"));
+		var st = new Struct (reader.get_attribute ("name"), get_current_src ());
 		st.access = SymbolAccessibility.PUBLIC;
 		st.add_base_type (parse_type_from_name (reader.get_attribute ("target")));
 		next ();
@@ -231,7 +234,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	Enum parse_enumeration () {
 		start_element ("enumeration");
-		var en = new Enum (reader.get_attribute ("name"));
+		var en = new Enum (reader.get_attribute ("name"), get_current_src ());
 		en.access = SymbolAccessibility.PUBLIC;
 		next ();
 
@@ -274,7 +277,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	Enum parse_bitfield () {
 		start_element ("bitfield");
-		var en = new Enum (reader.get_attribute ("name"));
+		var en = new Enum (reader.get_attribute ("name"), get_current_src ());
 		en.access = SymbolAccessibility.PUBLIC;
 		next ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
@@ -308,7 +311,7 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			return_type = new VoidType ();
 		}
-		var m = new Method (name, return_type);
+		var m = new Method (name, return_type, get_current_src ());
 		m.access = SymbolAccessibility.PUBLIC;
 		m.binding = MemberBinding.STATIC;
 		var parameters = new ArrayList<FormalParameter> ();
@@ -360,14 +363,14 @@ public class Vala.GirParser : CodeVisitor {
 		if (reader.name == "varargs") {
 			start_element ("varargs");
 			next ();
-			param = new FormalParameter.with_ellipsis ();
+			param = new FormalParameter.with_ellipsis (get_current_src ());
 			end_element ("varargs");
 		} else {
 			var type = parse_type (out array_length_idx);
 			if (transfer == "full") {
 				type.value_owned = true;
 			}
-			param = new FormalParameter (name, type);
+			param = new FormalParameter (name, type, get_current_src ());
 			if (direction == "out") {
 				param.direction = ParameterDirection.OUT;
 			} else if (direction == "inout") {
@@ -455,7 +458,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	Struct parse_record () {
 		start_element ("record");
-		var st = new Struct (reader.get_attribute ("name"));
+		var st = new Struct (reader.get_attribute ("name"), get_current_src ());
 		st.access = SymbolAccessibility.PUBLIC;
 		next ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
@@ -479,7 +482,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	Class parse_class () {
 		start_element ("class");
-		var cl = new Class (reader.get_attribute ("name"));
+		var cl = new Class (reader.get_attribute ("name"), get_current_src ());
 		cl.access = SymbolAccessibility.PUBLIC;
 
 		string parent = reader.get_attribute ("parent");
@@ -575,7 +578,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	Interface parse_interface () {
 		start_element ("interface");
-		var iface = new Interface (reader.get_attribute ("name"));
+		var iface = new Interface (reader.get_attribute ("name"), get_current_src ());
 		iface.access = SymbolAccessibility.PUBLIC;
 		next ();
 		var methods = new ArrayList<Method> ();
@@ -619,7 +622,7 @@ public class Vala.GirParser : CodeVisitor {
 		string name = reader.get_attribute ("name");
 		next ();
 		var type = parse_type ();
-		var field = new Field (name, type, null);
+		var field = new Field (name, type, null, get_current_src ());
 		field.access = SymbolAccessibility.PUBLIC;
 		end_element ("field");
 		return field;
@@ -630,7 +633,7 @@ public class Vala.GirParser : CodeVisitor {
 		string name = string.joinv ("_", reader.get_attribute ("name").split ("-"));
 		next ();
 		var type = parse_type ();
-		var prop = new Property (name, type, null, null);
+		var prop = new Property (name, type, null, null, get_current_src ());
 		prop.access = SymbolAccessibility.PUBLIC;
 		prop.get_accessor = new PropertyAccessor (true, false, false, null, null);
 		prop.set_accessor = new PropertyAccessor (false, true, false, null, null);
@@ -648,7 +651,7 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			return_type = new VoidType ();
 		}
-		var d = new Delegate (name, return_type);
+		var d = new Delegate (name, return_type, get_current_src ());
 		d.access = SymbolAccessibility.PUBLIC;
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
 			start_element ("parameters");
@@ -669,7 +672,7 @@ public class Vala.GirParser : CodeVisitor {
 
 		var return_type = parse_return_value ();
 
-		var m = new CreationMethod (null, name);
+		var m = new CreationMethod (null, name, get_current_src ());
 		m.access = SymbolAccessibility.PUBLIC;
 		m.has_construct_function = false;
 		if (m.name.has_prefix ("new_")) {
@@ -698,7 +701,7 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			return_type = new VoidType ();
 		}
-		var m = new Method (name, return_type);
+		var m = new Method (name, return_type, get_current_src ());
 		m.access = SymbolAccessibility.PUBLIC;
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
 			start_element ("parameters");
@@ -726,7 +729,7 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			return_type = new VoidType ();
 		}
-		var m = new Method (name, return_type);
+		var m = new Method (name, return_type, get_current_src ());
 		m.access = SymbolAccessibility.PUBLIC;
 		m.is_virtual = true;
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
@@ -828,7 +831,7 @@ public class Vala.GirParser : CodeVisitor {
 		string name = reader.get_attribute ("name");
 		next ();
 		var type = parse_type ();
-		var c = new Constant (name, type, null, null);
+		var c = new Constant (name, type, null, get_current_src ());
 		c.access = SymbolAccessibility.PUBLIC;
 		end_element ("constant");
 		return c;

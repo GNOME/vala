@@ -1,3 +1,9 @@
+2008-11-07  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valagirparser.vala:
+
+	Set source_reference in parsed nodes
+
 2008-11-06  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valamethod.vala:
