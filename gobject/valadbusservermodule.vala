@@ -255,12 +255,27 @@ public class Vala.DBusServerModule : DBusClientModule {
 
 			var val_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (val_name));
 
+			string type_id = f.field_type.data_type.get_type_id ();
+			string set_value_function = f.field_type.data_type.get_set_value_function ();
+
+			if (f.field_type.data_type is Enum) {
+				// dbus-glib does not support enums
+				var en = (Enum) f.field_type.data_type;
+				if (!en.is_flags) {
+					type_id = "G_TYPE_INT";
+					set_value_function = "g_value_set_int";
+				} else {
+					type_id = "G_TYPE_UINT";
+					set_value_function = "g_value_set_uint";
+				}
+			}
+
 			var cinit_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
 			cinit_call.add_argument (val_ptr);
-			cinit_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
+			cinit_call.add_argument (new CCodeIdentifier (type_id));
 			block.add_statement (new CCodeExpressionStatement (cinit_call));
 
-			var cset_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_set_value_function ()));
+			var cset_call = new CCodeFunctionCall (new CCodeIdentifier (set_value_function));
 			cset_call.add_argument (val_ptr);
 			if (f.field_type.data_type is Struct) {
 				cset_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess (st_expr, f.name)));

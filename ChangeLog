@@ -2,6 +2,12 @@
 
 	* gobject/valadbusservermodule.vala:
 
+	Work around missing enum support in dbus-glib
+
+2008-11-10  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valadbusservermodule.vala:
+
 	Really insert GValueArray into hash table
 
 2008-11-09  Jürg Billeter  <j@bitron.ch>
