@@ -1,5 +1,11 @@
 2008-11-09  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valadbusservermodule.vala:
+
+	Support hash tables with struct values
+
+2008-11-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala:
 	* vala/valainterface.vala:
 	* vala/valamemberaccess.vala:

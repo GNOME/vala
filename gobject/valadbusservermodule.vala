@@ -229,6 +229,102 @@ public class Vala.DBusServerModule : DBusClientModule {
 		return fragment;
 	}
 
+	void transform_struct_to_value_array (CCodeBlock block, Struct st, CCodeExpression target, CCodeExpression st_expr, string name) {
+		var array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_value_array_new"));
+		array_construct.add_argument (new CCodeConstant ("0"));
+
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (target, array_construct)));
+
+		var type_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_struct"));
+		type_call.add_argument (new CCodeConstant ("\"GValueArray\""));
+
+		foreach (Field f in st.get_fields ()) {
+			if (f.binding != MemberBinding.INSTANCE) {
+				continue;
+			}
+
+			string val_name = "val_%s_%s".printf (name, f.name);
+
+			// 0-initialize struct with struct initializer { 0 }
+			var cvalinit = new CCodeInitializerList ();
+			cvalinit.append (new CCodeConstant ("0"));
+
+			var cval_decl = new CCodeDeclaration ("GValue");
+			cval_decl.add_declarator (new CCodeVariableDeclarator.with_initializer (val_name, cvalinit));
+			block.add_statement (cval_decl);
+
+			var val_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (val_name));
+
+			var cinit_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
+			cinit_call.add_argument (val_ptr);
+			cinit_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
+			block.add_statement (new CCodeExpressionStatement (cinit_call));
+
+			var cset_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_set_value_function ()));
+			cset_call.add_argument (val_ptr);
+			if (f.field_type.data_type is Struct) {
+				cset_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess (st_expr, f.name)));
+			} else {
+				cset_call.add_argument (new CCodeMemberAccess (st_expr, f.name));
+			}
+			block.add_statement (new CCodeExpressionStatement (cset_call));
+
+			var cappend_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_array_append"));
+			cappend_call.add_argument (target);
+			cappend_call.add_argument (val_ptr);
+			block.add_statement (new CCodeExpressionStatement (cappend_call));
+
+			type_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
+		}
+	}
+
+	void transform_struct_hash_table_to_value_array_hash_table (CCodeBlock block, Struct st, CCodeExpression target, CCodeExpression table_expr, string name) {
+		// FIXME take care of memory management
+		var table_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_new"));
+		table_construct.add_argument (new CCodeIdentifier ("g_direct_hash"));
+		table_construct.add_argument (new CCodeIdentifier ("g_direct_equal"));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (target, table_construct)));
+
+		var cdecl = new CCodeDeclaration ("GList");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*%s_keys".printf (name)));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*%s_keys_it".printf (name)));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*%s_values".printf (name)));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*%s_values_it".printf (name)));
+		block.add_statement (cdecl);
+
+		var get_keys = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_get_keys"));
+		get_keys.add_argument (table_expr);
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("%s_keys".printf (name)), get_keys)));
+
+		var get_values = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_get_values"));
+		get_values.add_argument (table_expr);
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("%s_values".printf (name)), get_values)));
+
+		var loop_body = new CCodeBlock ();
+		var for_stmt = new CCodeForStatement (new CCodeIdentifier ("%s_keys_it".printf (name)), loop_body);
+		block.add_statement (for_stmt);
+		for_stmt.add_initializer (new CCodeAssignment (new CCodeIdentifier ("%s_keys_it".printf (name)), new CCodeIdentifier ("%s_keys".printf (name))));
+		for_stmt.add_initializer (new CCodeAssignment (new CCodeIdentifier ("%s_values_it".printf (name)), new CCodeIdentifier ("%s_values".printf (name))));
+		for_stmt.add_iterator (new CCodeAssignment (new CCodeIdentifier ("%s_keys_it".printf (name)), new CCodeMemberAccess.pointer (new CCodeIdentifier ("%s_keys_it".printf (name)), "next")));
+		for_stmt.add_iterator (new CCodeAssignment (new CCodeIdentifier ("%s_values_it".printf (name)), new CCodeMemberAccess.pointer (new CCodeIdentifier ("%s_values_it".printf (name)), "next")));
+
+		cdecl = new CCodeDeclaration (st.get_cname () + "*");
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_value".printf (name), new CCodeMemberAccess.pointer (new CCodeIdentifier ("%s_values_it".printf (name)), "data")));
+		loop_body.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("GValueArray*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("%s_value_array".printf (name)));
+		loop_body.add_statement (cdecl);
+
+		transform_struct_to_value_array (loop_body, st, new CCodeIdentifier ("%s_value_array".printf (name)), new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("%s_value".printf (name))), name);
+
+		var insert_call = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_insert"));
+		insert_call.add_argument (target);
+		insert_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("%s_keys_it".printf (name)), "data"));
+		insert_call.add_argument (new CCodeIdentifier ("%s_value".printf (name)));
+		loop_body.add_statement (new CCodeExpressionStatement (insert_call));
+	}
+
 	string generate_dbus_wrapper (Method m, ObjectTypeSymbol bindable) {
 		string wrapper_name = "_dbus_%s".printf (m.get_cname ());
 
@@ -251,6 +347,17 @@ public class Vala.DBusServerModule : DBusClientModule {
 				}
 			} else if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
 				function.add_parameter (new CCodeFormalParameter ("dbus_%s".printf (param.name), "GValueArray*" + ptr));
+			} else if (param.parameter_type.get_type_signature ().has_prefix ("a{")) {
+				// hash table output parameter
+				var type_args = param.parameter_type.get_type_arguments ();
+				var key_type = type_args.get (0);
+				var value_type = type_args.get (1);
+				if (value_type.get_type_signature ().has_prefix ("(")) {
+					// values are structs
+					function.add_parameter (new CCodeFormalParameter ("dbus_%s".printf (param.name), "GHashTable*" + ptr));
+				} else {
+					function.add_parameter ((CCodeFormalParameter) param.ccodenode);
+				}
 			} else {
 				function.add_parameter ((CCodeFormalParameter) param.ccodenode);
 			}
@@ -268,6 +375,17 @@ public class Vala.DBusServerModule : DBusClientModule {
 				}
 			} else if (m.return_type.get_type_signature ().has_prefix ("(")) {
 				function.add_parameter (new CCodeFormalParameter ("dbus_result", "GValueArray**"));
+			} else if (m.return_type.get_type_signature ().has_prefix ("a{")) {
+				// hash table output parameter
+				var type_args = m.return_type.get_type_arguments ();
+				var key_type = type_args.get (0);
+				var value_type = type_args.get (1);
+				if (value_type.get_type_signature ().has_prefix ("(")) {
+					// values are structs
+					function.add_parameter (new CCodeFormalParameter ("dbus_result", "GHashTable**"));
+				} else {
+					function.add_parameter (new CCodeFormalParameter ("result", m.return_type.get_cname () + "*"));
+				}
 			} else {
 				function.add_parameter (new CCodeFormalParameter ("result", m.return_type.get_cname () + "*"));
 			}
@@ -300,6 +418,17 @@ public class Vala.DBusServerModule : DBusClientModule {
 						}
 					}
 				}
+			} else if (param.parameter_type.get_type_signature ().has_prefix ("a{")) {
+				// hash table output parameter
+				var type_args = param.parameter_type.get_type_arguments ();
+				var key_type = type_args.get (0);
+				var value_type = type_args.get (1);
+				if (value_type.get_type_signature ().has_prefix ("(")) {
+					// values are structs
+					var cdecl = new CCodeDeclaration ("GHashTable*");
+					cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
+					block.add_statement (cdecl);
+				}
 			}
 		}
 
@@ -315,6 +444,17 @@ public class Vala.DBusServerModule : DBusClientModule {
 				var len_cdecl = new CCodeDeclaration ("int");
 				len_cdecl.add_declarator (new CCodeVariableDeclarator ("result_length1"));
 				block.add_statement (len_cdecl);
+			} else if (m.return_type.get_type_signature ().has_prefix ("a{")) {
+				// hash table return value
+				var type_args = m.return_type.get_type_arguments ();
+				var key_type = type_args.get (0);
+				var value_type = type_args.get (1);
+				if (value_type.get_type_signature ().has_prefix ("(")) {
+					// values are structs
+					var cdecl = new CCodeDeclaration ("GHashTable*");
+					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+					block.add_statement (cdecl);
+				}
 			}
 		}
 
@@ -366,6 +506,17 @@ public class Vala.DBusServerModule : DBusClientModule {
 			} else if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
 				// struct input or output parameters
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+			} else if (param.parameter_type.get_type_signature ().has_prefix ("a{")) {
+				// hash table output parameter
+				var type_args = param.parameter_type.get_type_arguments ();
+				var key_type = type_args.get (0);
+				var value_type = type_args.get (1);
+				if (value_type.get_type_signature ().has_prefix ("(")) {
+					// values are structs
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+				} else {
+					ccall.add_argument (new CCodeIdentifier (param.name));
+				}
 			} else {
 				ccall.add_argument (new CCodeIdentifier (param.name));
 			}
@@ -383,6 +534,17 @@ public class Vala.DBusServerModule : DBusClientModule {
 				} else {
 					expr = new CCodeAssignment (new CCodeIdentifier ("*result"), ccall);
 				}
+			} else if (m.return_type.get_type_signature ().has_prefix ("a{")) {
+				// hash table output parameter
+				var type_args = m.return_type.get_type_arguments ();
+				var key_type = type_args.get (0);
+				var value_type = type_args.get (1);
+				if (value_type.get_type_signature ().has_prefix ("(")) {
+					// values are structs
+					expr = new CCodeAssignment (new CCodeIdentifier ("result"), ccall);
+				} else {
+					expr = new CCodeAssignment (new CCodeIdentifier ("*result"), ccall);
+				}
 			} else {
 				expr = new CCodeAssignment (new CCodeIdentifier ("*result"), ccall);
 			}
@@ -395,54 +557,26 @@ public class Vala.DBusServerModule : DBusClientModule {
 		block.add_statement (new CCodeExpressionStatement (expr));
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			if (param.direction == ParameterDirection.OUT
-			    && param.parameter_type.get_type_signature ().has_prefix ("(")) {
-				// struct output parameter
-				var st = (Struct) param.parameter_type.data_type;
+			if (param.direction == ParameterDirection.OUT) {
+				if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
+					// struct output parameter
+					var st = (Struct) param.parameter_type.data_type;
+					var dbus_param = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("dbus_%s".printf (param.name)));
+					var st_expr = new CCodeIdentifier (param.name);
 
-				var array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_value_array_new"));
-				array_construct.add_argument (new CCodeConstant ("0"));
-
-				var dbus_param = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("dbus_%s".printf (param.name)));
-
-				block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (dbus_param, array_construct)));
-
-				var type_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_struct"));
-				type_call.add_argument (new CCodeConstant ("\"GValueArray\""));
-
-				foreach (Field f in st.get_fields ()) {
-					if (f.binding != MemberBinding.INSTANCE) {
-						continue;
+					transform_struct_to_value_array (block, st, dbus_param, st_expr, param.name);
+				} else if (param.parameter_type.get_type_signature ().has_prefix ("a{")) {
+					// hash table output parameter
+					var type_args = param.parameter_type.get_type_arguments ();
+					var key_type = type_args.get (0);
+					var value_type = type_args.get (1);
+					if (value_type.get_type_signature ().has_prefix ("(")) {
+						// values are structs
+						var st = (Struct) value_type.data_type;
+						var dbus_param = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("dbus_%s".printf (param.name)));
+						var table_expr = new CCodeIdentifier (param.name);
+						transform_struct_hash_table_to_value_array_hash_table (block, st, dbus_param, table_expr, param.name);
 					}
-
-					string val_name = "val_%s_%s".printf (param.name, f.name);
-
-					// 0-initialize struct with struct initializer { 0 }
-					var cvalinit = new CCodeInitializerList ();
-					cvalinit.append (new CCodeConstant ("0"));
-
-					var cval_decl = new CCodeDeclaration ("GValue");
-					cval_decl.add_declarator (new CCodeVariableDeclarator.with_initializer (val_name, cvalinit));
-					block.add_statement (cval_decl);
-
-					var val_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (val_name));
-
-					var cinit_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
-					cinit_call.add_argument (val_ptr);
-					cinit_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
-					block.add_statement (new CCodeExpressionStatement (cinit_call));
-
-					var cset_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_set_value_function ()));
-					cset_call.add_argument (val_ptr);
-					cset_call.add_argument (new CCodeMemberAccess (new CCodeIdentifier (param.name), f.name));
-					block.add_statement (new CCodeExpressionStatement (cset_call));
-
-					var cappend_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_array_append"));
-					cappend_call.add_argument (dbus_param);
-					cappend_call.add_argument (val_ptr);
-					block.add_statement (new CCodeExpressionStatement (cappend_call));
-
-					type_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
 				}
 			}
 		}
@@ -482,6 +616,18 @@ public class Vala.DBusServerModule : DBusClientModule {
 					cappend_call.add_argument (new CCodeIdentifier ("result"));
 					cappend_call.add_argument (new CCodeIdentifier ("result_length1"));
 					block.add_statement (new CCodeExpressionStatement (cappend_call));
+				}
+			} else if (m.return_type.get_type_signature ().has_prefix ("a{")) {
+				// hash table output parameter
+				var type_args = m.return_type.get_type_arguments ();
+				var key_type = type_args.get (0);
+				var value_type = type_args.get (1);
+				if (value_type.get_type_signature ().has_prefix ("(")) {
+					// values are structs
+					var st = (Struct) value_type.data_type;
+					var dbus_param = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("dbus_result"));
+					var table_expr = new CCodeIdentifier ("result");
+					transform_struct_hash_table_to_value_array_hash_table (block, st, dbus_param, table_expr, "result");
 				}
 			}
 		}
