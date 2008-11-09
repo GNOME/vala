@@ -540,14 +540,14 @@ public class ValaDoc : Object {
 			return 1;
 
 
-
-
 		doclet.initialisation ( settings );
 
-
-
 		doctree.visit ( doclet );
+
+		doclet.cleanups ( );
+
 		doclet = null;
+		settings = null;
 		doctree = null;
 		return quit ();
 	}

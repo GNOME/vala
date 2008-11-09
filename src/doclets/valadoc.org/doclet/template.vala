@@ -410,6 +410,9 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		this.write_method_content ( file, m, parent );
 		file = null;
 	}
+
+	public override void cleanups () {
+	}
 }
 
 

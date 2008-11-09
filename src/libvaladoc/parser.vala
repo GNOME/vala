@@ -490,7 +490,7 @@ public class Parser : Object {
 				pos = 0;
 
 				this.skip_deadh_zone ( ref str, ref chr, linenr, ref pos );
-				this.set_prev_chr ( out prevchr, out prevprevchr, 'p' );
+//				this.set_prev_chr ( out prevchr, out prevprevchr, 'p' );
 				return buf.str;
 			}
 
@@ -559,7 +559,6 @@ public class Parser : Object {
 		return true;
 	}
 
-	// add a line counter!!
 	private inline void skip_spaces ( ref string str, ref int pos ) {
 		for ( unichar chr = str.get_char(); chr != '\0' ; str = str.next_char(), chr = str.get_char() ) {
 			pos++;
@@ -575,6 +574,8 @@ public class Parser : Object {
 
 		str = str.next_char();
 		pos++;
+
+		string tagline = linestart;
 
 		string? currtagname = "";
 		unichar prevprevchr = '\0';
@@ -597,6 +598,9 @@ public class Parser : Object {
 		if ( tagname == null )
 			return null;
 
+		str = str.next_char();
+//		pos++;
+
 		if ( !this.taglets.contains( tagname ) ) {
 			string line = this.extract_line ( linestart );
 			string reportmsg = "Taglet '%s' is not registered.\n".printf( tagname );
@@ -613,6 +617,7 @@ public class Parser : Object {
 			return null;
 		}
 
+
 		for ( unichar chr = str.get_char(); chr != '\0' ; str = str.next_char(), chr = str.get_char() ) {
 			pos++;
 
@@ -620,6 +625,15 @@ public class Parser : Object {
 			if ( tmp == true ) {
 				buf.append_unichar ( chr );
 				continue ;
+			}
+
+			tmp = this.newline_handler ( buf, ref linestart, ref str, ref linenr, ref pos, ref linestartnr, ref chr, ref prevchr, ref prevprevchr );
+			if ( chr == '\0' ) {
+				stdout.printf ( ">>WTF<<\n" );
+				break;
+			}
+			else if ( tmp == true ) {
+				continue;
 			}
 
 			tmp = this.skip_double_spaces ( ref str, buf, chr, ref prevchr, ref prevprevchr );
@@ -633,8 +647,8 @@ public class Parser : Object {
 
 				InlineTaglet rtag = ((InlineTaglet)tag);
 				rtag.init ( );
-				//rtag.parse ( this.settings, tree, this.reporter, linestart.offset(1), linenr, pos, me, buf.str );
-				rtag.parse ( this.settings, tree, this.reporter, linestart.offset(1), taglinenr, tagpos, me, buf.str );
+
+				rtag.parse ( this.settings, tree, this.reporter, tagline.offset(1), taglinenr, tagpos, me, buf.str );
 				return rtag;
 			}
 
@@ -697,6 +711,27 @@ public class Parser : Object {
 		return false;
 	}
 
+	private bool newline_handler ( GLib.StringBuilder buf, ref string linestart, ref string str, ref int linenr, ref int pos, ref int linestartnr, ref unichar chr, ref unichar prevchr, ref unichar prevprevchr ) {
+		if ( chr == '\n' ) {
+			linestartnr = linenr;
+			linestart = str;
+			linenr++;
+			pos = 0;
+
+			this.skip_deadh_zone ( ref str, ref chr, linenr, ref pos );
+			if ( chr == '\0' )
+				return false;
+
+			if ( prevchr == '\n' ) {
+				buf.append_unichar ( '\n' );
+			}
+
+			this.set_prev_chr ( out prevchr, out prevprevchr, '\n' );
+			return true;
+		}
+		return false;
+	}
+
 	public DocumentationTree? parse ( Valadoc.Tree tree, Valadoc.Basic me, string str2 ) {
 		string str = str2;
 
@@ -735,28 +770,14 @@ public class Parser : Object {
 				continue ;
 			}
 
-			if ( chr == '\n' ) {
-				linestartnr = linenr;
-				linestart = str;
-				linenr++;
-				pos = 0;
-
-				this.skip_deadh_zone ( ref str, ref chr, linenr, ref pos );
-				if ( chr == '\0' )
-					break;
-
-				if ( prevchr == '\n' ) {
-					buf.append_unichar ( '\n' );
-				}
-
-				this.set_prev_chr ( out prevchr, out prevprevchr, '\n' );
-				continue ;
+			tmp = this.newline_handler ( buf, ref linestart, ref str, ref linenr, ref pos, ref linestartnr, ref chr, ref prevchr, ref prevprevchr );
+			if ( chr == '\0' ) {
+				break;
 			}
-/*
-			if ( prevchr == '\n' && prevprevchr == '\n' ) {
-					buf.append_unichar ( '\n' );
+			else if ( tmp == true ) {
+				continue;
 			}
-*/
+
 			tmp = this.skip_double_spaces ( ref str, buf, chr, ref prevchr, ref prevprevchr );
 			if ( tmp == true )
 				continue ;

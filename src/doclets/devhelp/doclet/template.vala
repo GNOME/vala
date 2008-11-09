@@ -444,6 +444,9 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		this.write_file_footer ( file );
 		file = null;
 	}
+
+	public override void cleanups () {
+	}
 }
 
 

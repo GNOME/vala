@@ -1803,6 +1803,12 @@ public class Valadoc.TypeReference : Basic {
 		}
 		return true;
 	}
+	
+	public bool is_dynamic {
+		get {
+			return this.vtyperef.is_dynamic;
+		}
+	}
 
 	public bool is_weak {
 		get {
@@ -2417,6 +2423,12 @@ public class Valadoc.Method : Basic, ParameterListHandler, ExceptionHandler, Tem
 	public Vala.Method vmethod {
 		construct set;
 		private get;
+	}
+
+	public bool is_yields {
+		get {
+			return this.vmethod.coroutine;
+		}
 	}
 
 	public bool is_abstract {

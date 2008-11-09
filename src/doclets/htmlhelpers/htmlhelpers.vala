@@ -357,8 +357,18 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 		if ( type_reference.type_name == null )
 			return ;
 
+
+		GLib.StringBuilder modifiers = new GLib.StringBuilder ();
+
+		if ( type_reference.is_dynamic )
+			modifiers.append ( "dynamic " );
+
 		if ( type_reference.is_weak )
-			file.printf ( "<font class=\"%s\">weak</font> ", css_keyword );
+			modifiers.append ( "weak " );
+
+		if ( modifiers.len > 0 )
+			file.printf ( "<font class=\"%s\">%s</font> ", css_keyword, modifiers.str );
+
 
 		this.write_type_reference_name ( type_reference, file );
 		this.write_type_reference_template_arguments ( type_reference, file );
@@ -495,9 +505,9 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 
 		if ( m.is_abstract )
 			modifiers.append ( " abstract" );
-		if ( m.is_virtual )
+		else if ( m.is_virtual )
 			modifiers.append ( " virtual" );
-		if ( m.is_override )
+		else if ( m.is_override )
 			modifiers.append ( " override" );
 		if ( m.is_static )
 			modifiers.append ( " static" );
@@ -509,6 +519,10 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 		file.puts ( m.name );
 		file.puts ( " " );
 		this.write_parameter_list ( m, file );
+
+		if ( m.is_yields )
+			file.printf ( " <span class=\"%s\">yields</span> ", css_keyword );
+
 		this.write_exception_list ( m, file );
 	}
 
@@ -598,13 +612,14 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 
 		if ( prop.is_virtual )
 			modifiers.append ( " virtual " );
-		if ( prop.is_abstract )
+		else if ( prop.is_abstract )
 			modifiers.append ( " abstract " );
-		if ( prop.is_override )
+		else if ( prop.is_override )
 			modifiers.append ( " override " );
 
+		if ( modifiers.len > 0 )
+			file.printf ( " <span class=\"%s\">%s</span> ", css_keyword, modifiers.str );
 
-		file.printf ( " <span class=\"%s\">%s</span> ", css_keyword, modifiers.str );
 		this.write_type_reference ( prop.return_type, file );
 		file.printf ( " %s { ", prop.name );
 
@@ -627,6 +642,7 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 		this.write_accessor ( sig, file );
 
 		file.printf ( " <span class=\"%s\">signal</span> ", css_keyword );
+
 		this.write_type_reference ( sig.return_type, file );
 		file.printf ( " %s ", sig.name );
 		this.write_parameter_list ( sig, file );
@@ -832,8 +848,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 
 		if ( mself == null )
 			mself = element;
-		else if ( mself.name == null )
-			mself = mself.parent;
+
+//		else if ( mself.name == null )
+//			mself = mself.parent;
 
 		string package_name = element.file.name;
 
@@ -846,9 +863,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 
 		for ( int i = lst.size-1; i >= 0  ; i-- ) {
 			Basic el = lst.get ( i );
-			if ( el.name != null ) {
-				this.write_navi_top_entry ( file, el, mself );
-			}
+			this.write_navi_top_entry ( file, el, mself );
 		}
 	}
 
@@ -910,6 +925,11 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 
 	protected void write_navi_child_namespaces_inline ( GLib.FileStream file, Namespace ns, Basic mself ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
+
+		if ( ns.name == null ) {
+			this.write_navi_child_namespaces_without_childs ( file, (Package)ns.parent, ns );
+		}
+
 		this.write_navi_child_namespaces_inline_withouth_block ( file, ns, mself );
 		file.puts ( "</ul>\n" );
 	}
@@ -1348,6 +1368,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	protected void write_navi_child_namespaces_without_childs ( GLib.FileStream file, NamespaceHandler nsh, Basic mself ) {
 		Gee.ReadOnlyCollection<Namespace> namespaces = nsh.get_namespace_list ( );
 		foreach ( Namespace ns in namespaces ) {
+			if ( ns.name == null )
+				continue ;
+
 			if ( ns == mself )
 				this.write_navi_entry ( file, ns, mself, css_navi_namespace, false );
 			else
@@ -1543,14 +1566,14 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_namespaces ( GLib.FileStream file, NamespaceHandler nh ) {
+	protected void write_child_namespaces ( GLib.FileStream file, NamespaceHandler nh, Basic? mself = null ) {
 		Gee.ReadOnlyCollection<Namespace> nsl = nh.get_namespace_list ();
 		if ( nsl.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Namespaces:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Namespace ns in nsl ) {
 				if ( ns.name != null ) {
-					file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_namespace, css_navi_link, this.get_link(ns, nh), ns.name );
+					file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_namespace, css_navi_link, this.get_link(ns, (mself == null)? nh : mself), ns.name );
 				}
 			}
 			file.puts ( "</ul>\n" );
@@ -1868,7 +1891,11 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		ns.write_comment ( file );
 
 		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
-		this.write_child_namespaces ( file, ns );
+		if ( ns.name == null )
+			this.write_child_namespaces ( file, (Package)ns.parent, ns );
+		else
+			this.write_child_namespaces ( file, ns );
+
 		this.write_child_classes ( file, ns );
 		this.write_child_interfaces ( file, ns );
 		this.write_child_structs ( file, ns );

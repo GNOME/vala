@@ -147,8 +147,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 	private Gee.ArrayList<Namespace> source_namespaces = new Gee.ArrayList<Namespace> ();
 	private Gee.ArrayList<Package> files = new Gee.ArrayList<Package> ();
 
-
-	~HtmlDoclet () {
+	public override void cleanups () {
 		this.directory_level = 0;
 		copy_directory ( Config.doclet_path + "deps/", this.settings.path );
 
