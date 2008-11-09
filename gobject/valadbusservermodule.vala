@@ -321,7 +321,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		var insert_call = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_insert"));
 		insert_call.add_argument (target);
 		insert_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("%s_keys_it".printf (name)), "data"));
-		insert_call.add_argument (new CCodeIdentifier ("%s_value".printf (name)));
+		insert_call.add_argument (new CCodeIdentifier ("%s_value_array".printf (name)));
 		loop_body.add_statement (new CCodeExpressionStatement (insert_call));
 	}
 
