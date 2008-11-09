@@ -37,8 +37,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public Class current_class;
 	public Struct current_struct;
 
-	public Gee.List<UsingDirective> current_using_directives;
-
 	public DataType bool_type;
 	public DataType string_type;
 	public DataType uchar_type;
@@ -129,13 +127,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	public override void visit_source_file (SourceFile file) {
 		current_source_file = file;
-		current_using_directives = file.get_using_directives ();
 
 		next_lambda_id = 0;
 
 		file.accept_children (this);
-
-		current_using_directives = null;
 	}
 
 	public override void visit_namespace (Namespace ns) {

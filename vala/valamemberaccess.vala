@@ -233,7 +233,7 @@ public class Vala.MemberAccess : Expression {
 			}
 
 			if (symbol_reference == null) {
-				foreach (UsingDirective ns in analyzer.current_using_directives) {
+				foreach (UsingDirective ns in analyzer.current_source_file.get_using_directives ()) {
 					var local_sym = ns.namespace_symbol.scope.lookup (member_name);
 					if (local_sym != null) {
 						if (symbol_reference != null) {

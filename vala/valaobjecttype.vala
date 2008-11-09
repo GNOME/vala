@@ -98,4 +98,8 @@ public class Vala.ObjectType : ReferenceType {
 			return null;
 		}
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		return type_symbol.check (analyzer);
+	}
 }

@@ -858,10 +858,22 @@ public class Vala.Class : ObjectTypeSymbol {
 
 		process_attributes ();
 
+		var old_source_file = analyzer.current_source_file;
+		var old_symbol = analyzer.current_symbol;
+		var old_class = analyzer.current_class;
+
+		if (source_reference != null) {
+			analyzer.current_source_file = source_reference.file;
+		}
 		analyzer.current_symbol = this;
 		analyzer.current_class = this;
 
 		foreach (DataType base_type_reference in get_base_types ()) {
+			if (!base_type_reference.check (analyzer)) {
+				error = true;
+				return false;
+			}
+
 			// check whether base type is at least as accessible as the class
 			if (!analyzer.is_type_accessible (this, base_type_reference)) {
 				error = true;
@@ -993,8 +1005,9 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 		}
 
-		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
-		analyzer.current_class = null;
+		analyzer.current_source_file = old_source_file;
+		analyzer.current_symbol = old_symbol;
+		analyzer.current_class = old_class;
 
 		return !error;
 	}

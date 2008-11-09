@@ -550,6 +550,12 @@ public class Vala.Interface : ObjectTypeSymbol {
 
 		process_attributes ();
 
+		var old_source_file = analyzer.current_source_file;
+		var old_symbol = analyzer.current_symbol;
+
+		if (source_reference != null) {
+			analyzer.current_source_file = source_reference.file;
+		}
 		analyzer.current_symbol = this;
 
 		foreach (DataType prerequisite_reference in get_prerequisites ()) {
@@ -586,7 +592,8 @@ public class Vala.Interface : ObjectTypeSymbol {
 
 		accept_children (analyzer);
 
-		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
+		analyzer.current_source_file = old_source_file;
+		analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

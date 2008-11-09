@@ -1,3 +1,14 @@
+2008-11-09  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaclass.vala:
+	* vala/valainterface.vala:
+	* vala/valamemberaccess.vala:
+	* vala/valaobjecttype.vala:
+	* vala/valasemanticanalyzer.vala:
+
+	Ensure attributes of base types are processed before querying
+	C header filenames
+
 2008-11-07  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valablock.vala:
