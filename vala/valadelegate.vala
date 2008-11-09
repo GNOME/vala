@@ -337,7 +337,15 @@ public class Vala.Delegate : TypeSymbol {
 
 		process_attributes ();
 
+		var old_source_file = analyzer.current_source_file;
+
+		if (source_reference != null) {
+			analyzer.current_source_file = source_reference.file;
+		}
+
 		accept_children (analyzer);
+
+		analyzer.current_source_file = old_source_file;
 
 		return !error;
 	}

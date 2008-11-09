@@ -70,4 +70,8 @@ public class Vala.DelegateType : DataType {
 	public override string? get_type_id () {
 		return "G_TYPE_POINTER";
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		return delegate_symbol.check (analyzer);
+	}
 }

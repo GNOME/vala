@@ -652,6 +652,8 @@ public class Vala.Method : Member {
 		analyzer.current_symbol = this;
 		analyzer.current_return_type = return_type;
 
+		return_type.check (analyzer);
+
 		var init_attr = get_attribute ("ModuleInit");
 		if (init_attr != null) {
 			source_reference.file.context.module_init_method = this;

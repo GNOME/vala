@@ -131,13 +131,16 @@ public class Vala.CreationMethod : Method {
 			return false;
 		}
 
+		var old_symbol = analyzer.current_symbol;
+		var old_return_type = analyzer.current_return_type;
+
 		analyzer.current_symbol = this;
 		analyzer.current_return_type = return_type;
 
 		accept_children (analyzer);
 
-		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
-		analyzer.current_return_type = null;
+		analyzer.current_symbol = old_symbol;
+		analyzer.current_return_type = old_return_type;
 
 		if (analyzer.current_symbol.parent_symbol is Method) {
 			/* lambda expressions produce nested methods */

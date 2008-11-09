@@ -184,6 +184,10 @@ public class Vala.FormalParameter : Symbol {
 		}
 		analyzer.current_symbol = parent_symbol;
 
+		if (parameter_type != null) {
+			parameter_type.check (analyzer);
+		}
+
 		accept_children (analyzer);
 
 		if (analyzer.context.non_null && default_expression != null) {

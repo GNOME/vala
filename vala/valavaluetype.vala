@@ -77,4 +77,8 @@ public class Vala.ValueType : DataType {
 
 		return false;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		return type_symbol.check (analyzer);
+	}
 }

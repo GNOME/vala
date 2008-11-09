@@ -615,6 +615,13 @@ public class Vala.Struct : TypeSymbol {
 
 		process_attributes ();
 
+		var old_source_file = analyzer.current_source_file;
+		var old_symbol = analyzer.current_symbol;
+		var old_struct = analyzer.current_struct;
+
+		if (source_reference != null) {
+			analyzer.current_source_file = source_reference.file;
+		}
 		analyzer.current_symbol = this;
 		analyzer.current_struct = this;
 
@@ -624,8 +631,9 @@ public class Vala.Struct : TypeSymbol {
 			Report.error (source_reference, "structs cannot be empty");
 		}
 
-		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
-		analyzer.current_struct = null;
+		analyzer.current_source_file = old_source_file;
+		analyzer.current_symbol = old_symbol;
+		analyzer.current_struct = old_struct;
 
 		return !error;
 	}

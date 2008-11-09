@@ -421,8 +421,8 @@ public class Vala.Property : Member, Lockable {
 		}
 		analyzer.current_symbol = this;
 
-		property_type.accept (analyzer);
-		
+		property_type.check (analyzer);
+
 		if (get_accessor != null) {
 			get_accessor.accept (analyzer);
 		}

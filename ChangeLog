@@ -1,5 +1,21 @@
 2008-11-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacreationmethod.vala:
+	* vala/valadelegate.vala:
+	* vala/valadelegatetype.vala:
+	* vala/valaenum.vala:
+	* vala/valafield.vala:
+	* vala/valaformalparameter.vala:
+	* vala/valamethod.vala:
+	* vala/valaproperty.vala:
+	* vala/valastruct.vala:
+	* vala/valavaluetype.vala:
+
+	Ensure attributes of field, property, parameter, and return types
+	are processed before querying C header filenames
+
+2008-11-09  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusservermodule.vala:
 
 	Support hash tables with struct values

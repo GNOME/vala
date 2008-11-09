@@ -203,6 +203,8 @@ public class Vala.Field : Member, Lockable {
 
 		checked = true;
 
+		field_type.check (analyzer);
+
 		process_attributes ();
 
 		if (initializer != null) {
