@@ -104,6 +104,129 @@ public class Vala.UnaryExpression : Expression {
 
 		return inner.is_pure ();
 	}
+
+	bool is_numeric_type (DataType type) {
+		if (!(type.data_type is Struct)) {
+			return false;
+		}
+
+		var st = (Struct) type.data_type;
+		return st.is_integer_type () || st.is_floating_type ();
+	}
+
+	bool is_integer_type (DataType type) {
+		if (!(type.data_type is Struct)) {
+			return false;
+		}
+
+		var st = (Struct) type.data_type;
+		return st.is_integer_type ();
+	}
+
+	MemberAccess? find_member_access (Expression expr) {
+		if (expr is ParenthesizedExpression) {
+			var pe = (ParenthesizedExpression) expr;
+			return find_member_access (pe.inner);
+		}
+
+		if (expr is MemberAccess) {
+			return (MemberAccess) expr;
+		}
+
+		return null;
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		if (operator == UnaryOperator.REF || operator == UnaryOperator.OUT) {
+			inner.lvalue = true;
+			inner.target_type = target_type;
+		}
+
+		accept_children (analyzer);
+
+		if (inner.error) {
+			/* if there was an error in the inner expression, skip type check */
+			error = true;
+			return false;
+		}
+
+		if (operator == UnaryOperator.PLUS || operator == UnaryOperator.MINUS) {
+			// integer or floating point type
+			if (!is_numeric_type (inner.value_type)) {
+				error = true;
+				Report.error (source_reference, "Operator not supported for `%s'".printf (inner.value_type.to_string ()));
+				return false;
+			}
+
+			value_type = inner.value_type;
+		} else if (operator == UnaryOperator.LOGICAL_NEGATION) {
+			// boolean type
+			if (!inner.value_type.compatible (analyzer.bool_type)) {
+				error = true;
+				Report.error (source_reference, "Operator not supported for `%s'".printf (inner.value_type.to_string ()));
+				return false;
+			}
+
+			value_type = inner.value_type;
+		} else if (operator == UnaryOperator.BITWISE_COMPLEMENT) {
+			// integer type
+			if (!is_integer_type (inner.value_type)) {
+				error = true;
+				Report.error (source_reference, "Operator not supported for `%s'".printf (inner.value_type.to_string ()));
+				return false;
+			}
+
+			value_type = inner.value_type;
+		} else if (operator == UnaryOperator.INCREMENT ||
+		           operator == UnaryOperator.DECREMENT) {
+			// integer type
+			if (!is_integer_type (inner.value_type)) {
+				error = true;
+				Report.error (source_reference, "Operator not supported for `%s'".printf (inner.value_type.to_string ()));
+				return false;
+			}
+
+			var ma = find_member_access (inner);
+			if (ma == null) {
+				error = true;
+				Report.error (source_reference, "Prefix operators not supported for this expression");
+				return false;
+			}
+
+			var old_value = new MemberAccess (ma.inner, ma.member_name, inner.source_reference);
+			var bin = new BinaryExpression (operator == UnaryOperator.INCREMENT ? BinaryOperator.PLUS : BinaryOperator.MINUS, old_value, new IntegerLiteral ("1"), source_reference);
+
+			var assignment = new Assignment (ma, bin, AssignmentOperator.SIMPLE, source_reference);
+			var parenthexp = new ParenthesizedExpression (assignment, source_reference);
+			parenthexp.target_type = target_type;
+			analyzer.replaced_nodes.add (this);
+			parent_node.replace_expression (this, parenthexp);
+			parenthexp.accept (analyzer);
+			return true;
+		} else if (operator == UnaryOperator.REF || operator == UnaryOperator.OUT) {
+			if (inner.symbol_reference is Field || inner.symbol_reference is FormalParameter || inner.symbol_reference is LocalVariable) {
+				// ref and out can only be used with fields, parameters, and local variables
+				lvalue = true;
+				value_type = inner.value_type;
+			} else {
+				error = true;
+				Report.error (source_reference, "ref and out method arguments can only be used with fields, parameters, and local variables");
+				return false;
+			}
+		} else {
+			error = true;
+			Report.error (source_reference, "internal error: unsupported unary operator");
+			return false;
+		}
+
+		return !error;
+	}
 }
 
 public enum Vala.UnaryOperator {

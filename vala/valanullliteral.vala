@@ -49,4 +49,16 @@ public class Vala.NullLiteral : Literal {
 	public override bool is_pure () {
 		return true;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		value_type = new NullType (source_reference);
+
+		return !error;
+	}
 }

@@ -1,5 +1,31 @@
 2008-11-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaaddressofexpression.vala:
+	* vala/valabaseaccess.vala:
+	* vala/valabooleanliteral.vala:
+	* vala/valacastexpression.vala:
+	* vala/valacharacterliteral.vala:
+	* vala/valaconditionalexpression.vala:
+	* vala/valaintegerliteral.vala:
+	* vala/valalambdaexpression.vala:
+	* vala/valanullliteral.vala:
+	* vala/valaobjectcreationexpression.vala:
+	* vala/valaparenthesizedexpression.vala:
+	* vala/valapointerindirection.vala:
+	* vala/valapostfixexpression.vala:
+	* vala/valarealliteral.vala:
+	* vala/valareferencetransferexpression.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasizeofexpression.vala:
+	* vala/valastringliteral.vala:
+	* vala/valatypecheck.vala:
+	* vala/valatypeofexpression.vala:
+	* vala/valaunaryexpression.vala:
+
+	Move expression checking to code nodes
+
+2008-11-10  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusservermodule.vala:
 
 	Work around missing enum support in dbus-glib

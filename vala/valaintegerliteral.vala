@@ -106,4 +106,16 @@ public class Vala.IntegerLiteral : Literal {
 	public override bool is_pure () {
 		return true;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		value_type = new IntegerType ((TypeSymbol) analyzer.root_symbol.scope.lookup (get_type_name ()), value, get_type_name ());
+
+		return !error;
+	}
 }

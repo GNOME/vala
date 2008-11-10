@@ -1,6 +1,6 @@
 /* valapostfixexpression.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -60,5 +60,17 @@ public class Vala.PostfixExpression : Expression {
 
 	public override bool is_pure () {
 		return false;
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		value_type = inner.value_type;
+
+		return !error;
 	}
 }

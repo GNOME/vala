@@ -1,6 +1,6 @@
 /* valalambdaexpression.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -110,5 +110,89 @@ public class Vala.LambdaExpression : Expression {
 
 	public override bool is_pure () {
 		return false;
+	}
+
+	string get_lambda_name (SemanticAnalyzer analyzer) {
+		var result = "__lambda%d".printf (analyzer.next_lambda_id);
+
+		analyzer.next_lambda_id++;
+
+		return result;
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		if (!(target_type is DelegateType)) {
+			error = true;
+			Report.error (source_reference, "lambda expression not allowed in this context");
+			return false;
+		}
+
+		bool in_instance_method = false;
+		var current_method = analyzer.find_current_method ();
+		if (current_method != null) {
+			in_instance_method = (current_method.binding == MemberBinding.INSTANCE);
+		} else {
+			in_instance_method = analyzer.is_in_constructor ();
+		}
+
+		var cb = (Delegate) ((DelegateType) target_type).delegate_symbol;
+		method = new Method (get_lambda_name (analyzer), cb.return_type);
+		if (!cb.has_target || !in_instance_method) {
+			method.binding = MemberBinding.STATIC;
+		}
+		method.owner = analyzer.current_symbol.scope;
+
+		var lambda_params = get_parameters ();
+		Iterator<string> lambda_param_it = lambda_params.iterator ();
+		foreach (FormalParameter cb_param in cb.get_parameters ()) {
+			if (!lambda_param_it.next ()) {
+				/* lambda expressions are allowed to have less parameters */
+				break;
+			}
+
+			string lambda_param = lambda_param_it.get ();
+
+			var param = new FormalParameter (lambda_param, cb_param.parameter_type);
+
+			method.add_parameter (param);
+		}
+
+		if (lambda_param_it.next ()) {
+			/* lambda expressions may not expect more parameters */
+			error = true;
+			Report.error (source_reference, "lambda expression: too many parameters");
+			return false;
+		}
+
+		if (expression_body != null) {
+			var block = new Block (source_reference);
+			block.scope.parent_scope = method.scope;
+
+			if (method.return_type.data_type != null) {
+				block.add_statement (new ReturnStatement (expression_body, source_reference));
+			} else {
+				block.add_statement (new ExpressionStatement (expression_body, source_reference));
+			}
+
+			method.body = block;
+		} else {
+			method.body = statement_body;
+		}
+		method.body.owner = method.scope;
+
+		/* lambda expressions should be usable like MemberAccess of a method */
+		symbol_reference = method;
+
+		accept_children (analyzer);
+
+		value_type = new MethodType (method);
+
+		return !error;
 	}
 }

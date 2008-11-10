@@ -77,4 +77,16 @@ public class Vala.CharacterLiteral : Literal {
 	public override bool is_pure () {
 		return true;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		value_type = new ValueType ((TypeSymbol) analyzer.root_symbol.scope.lookup ("char"));
+
+		return !error;
+	}
 }

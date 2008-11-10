@@ -1,6 +1,6 @@
 /* valasizeofexpression.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -67,5 +67,17 @@ public class Vala.SizeofExpression : Expression {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		value_type = analyzer.ulong_type;
+
+		return !error;
 	}
 }

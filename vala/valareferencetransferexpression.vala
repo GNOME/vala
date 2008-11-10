@@ -71,4 +71,40 @@ public class Vala.ReferenceTransferExpression : Expression {
 	public override bool is_pure () {
 		return false;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		inner.lvalue = true;
+
+		accept_children (analyzer);
+
+		if (inner.error) {
+			/* if there was an error in the inner expression, skip type check */
+			error = true;
+			return false;
+		}
+
+		if (!(inner is MemberAccess || inner is ElementAccess)) {
+			error = true;
+			Report.error (source_reference, "Reference transfer not supported for this expression");
+			return false;
+		}
+
+		if (!inner.value_type.is_disposable ()
+		    && !(inner.value_type is PointerType)) {
+			error = true;
+			Report.error (source_reference, "No reference to be transferred");
+			return false;
+		}
+
+		value_type = inner.value_type.copy ();
+		value_type.value_owned = true;
+
+		return !error;
+	}
 }

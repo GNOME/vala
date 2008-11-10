@@ -72,4 +72,38 @@ public class Vala.ParenthesizedExpression : Expression {
 	public override bool is_pure () {
 		return inner.is_pure ();
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		inner.target_type = target_type;
+
+		accept_children (analyzer);
+
+		if (inner.error) {
+			// ignore inner error
+			error = true;
+			return false;
+		}
+
+		if (inner.value_type == null) {
+			// static type may be null for method references
+			error = true;
+			Report.error (inner.source_reference, "Invalid expression type");
+			return false;
+		}
+
+		value_type = inner.value_type.copy ();
+		// don't call g_object_ref_sink on inner and outer expression
+		value_type.floating_reference = false;
+
+		// don't transform expression twice
+		inner.target_type = inner.value_type.copy ();
+
+		return !error;
+	}
 }

@@ -1,6 +1,6 @@
 /* valatypecheck.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -76,5 +76,25 @@ public class Vala.TypeCheck : Expression {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		if (type_reference.data_type == null) {
+			/* if type resolving didn't succeed, skip this check */
+			error = true;
+			return false;
+		}
+
+		analyzer.current_source_file.add_type_dependency (type_reference, SourceFileDependencyType.SOURCE);
+
+		value_type = analyzer.bool_type;
+
+		return !error;
 	}
 }

@@ -76,4 +76,16 @@ public class Vala.StringLiteral : Literal {
 	public override string to_string () {
 		return value;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		value_type = analyzer.string_type.copy ();
+
+		return !error;
+	}
 }

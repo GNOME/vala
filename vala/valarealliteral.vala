@@ -69,4 +69,16 @@ public class Vala.RealLiteral : Literal {
 	public override string to_string () {
 		return value;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		value_type = new ValueType ((TypeSymbol) analyzer.root_symbol.scope.lookup (get_type_name ()));
+
+		return !error;
+	}
 }

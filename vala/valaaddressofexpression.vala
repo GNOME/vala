@@ -1,6 +1,6 @@
 /* valaaddressofexpression.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -68,5 +68,32 @@ public class Vala.AddressofExpression : Expression {
 
 	public override bool is_pure () {
 		return inner.is_pure ();
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		if (inner.error) {
+			return false;
+		}
+		if (!(inner.value_type is ValueType
+		      || inner.value_type is ObjectType
+		      || inner.value_type is PointerType)) {
+			error = true;
+			Report.error (source_reference, "Address-of operator not supported for this expression");
+			return false;
+		}
+
+		if (inner.value_type.is_reference_type_or_type_parameter ()) {
+			value_type = new PointerType (new PointerType (inner.value_type));
+		} else {
+			value_type = new PointerType (inner.value_type);
+		}
+
+		return !error;
 	}
 }

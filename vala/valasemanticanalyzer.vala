@@ -63,7 +63,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public Interface collection_type;
 	public Interface map_type;
 
-	private int next_lambda_id = 0;
+	public int next_lambda_id = 0;
 
 	// keep replaced alive to make sure they remain valid
 	// for the whole execution of CodeNode.accept
@@ -300,27 +300,27 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_boolean_literal (BooleanLiteral expr) {
-		expr.value_type = bool_type;
+		expr.check (this);
 	}
 
 	public override void visit_character_literal (CharacterLiteral expr) {
-		expr.value_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("char"));
+		expr.check (this);
 	}
 
 	public override void visit_integer_literal (IntegerLiteral expr) {
-		expr.value_type = new IntegerType ((TypeSymbol) root_symbol.scope.lookup (expr.get_type_name ()), expr.value, expr.get_type_name ());
+		expr.check (this);
 	}
 
 	public override void visit_real_literal (RealLiteral expr) {
-		expr.value_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup (expr.get_type_name ()));
+		expr.check (this);
 	}
 
 	public override void visit_string_literal (StringLiteral expr) {
-		expr.value_type = string_type.copy ();
+		expr.check (this);
 	}
 
 	public override void visit_null_literal (NullLiteral expr) {
-		expr.value_type = new NullType (expr.source_reference);
+		expr.check (this);
 	}
 
 	public DataType? get_value_type_for_symbol (Symbol sym, bool lvalue) {
@@ -421,29 +421,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_parenthesized_expression (ParenthesizedExpression expr) {
-		expr.inner.target_type = expr.target_type;
-
-		expr.accept_children (this);
-
-		if (expr.inner.error) {
-			// ignore inner error
-			expr.error = true;
-			return;
-		}
-
-		if (expr.inner.value_type == null) {
-			// static type may be null for method references
-			expr.error = true;
-			Report.error (expr.inner.source_reference, "Invalid expression type");
-			return;
-		}
-
-		expr.value_type = expr.inner.value_type.copy ();
-		// don't call g_object_ref_sink on inner and outer expression
-		expr.value_type.floating_reference = false;
-
-		// don't transform expression twice
-		expr.inner.target_type = expr.inner.value_type.copy ();
+		expr.check (this);
 	}
 	
 	public override void visit_member_access (MemberAccess expr) {
@@ -799,38 +777,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_base_access (BaseAccess expr) {
-		if (!is_in_instance_method ()) {
-			expr.error = true;
-			Report.error (expr.source_reference, "Base access invalid outside of instance methods");
-			return;
-		}
-
-		if (current_class == null) {
-			if (current_struct == null) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Base access invalid outside of class and struct");
-				return;
-			} else if (current_struct.get_base_types ().size != 1) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Base access invalid without base type %d".printf (current_struct.get_base_types ().size));
-				return;
-			}
-			Iterator<DataType> base_type_it = current_struct.get_base_types ().iterator ();
-			base_type_it.next ();
-			expr.value_type = base_type_it.get ();
-		} else if (current_class.base_class == null) {
-			expr.error = true;
-			Report.error (expr.source_reference, "Base access invalid without base class");
-			return;
-		} else {
-			expr.value_type = new ObjectType (current_class.base_class);
-		}
-
-		expr.symbol_reference = expr.value_type.data_type;
+		expr.check (this);
 	}
 
 	public override void visit_postfix_expression (PostfixExpression expr) {
-		expr.value_type = expr.inner.value_type;
+		expr.check (this);
 	}
 
 	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
@@ -872,213 +823,31 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_sizeof_expression (SizeofExpression expr) {
-		expr.value_type = ulong_type;
+		expr.check (this);
 	}
 
 	public override void visit_typeof_expression (TypeofExpression expr) {
-		expr.value_type = type_type;
-	}
-
-	private bool is_numeric_type (DataType type) {
-		if (!(type.data_type is Struct)) {
-			return false;
-		}
-
-		var st = (Struct) type.data_type;
-		return st.is_integer_type () || st.is_floating_type ();
-	}
-
-	private bool is_integer_type (DataType type) {
-		if (!(type.data_type is Struct)) {
-			return false;
-		}
-
-		var st = (Struct) type.data_type;
-		return st.is_integer_type ();
+		expr.check (this);
 	}
 
 	public override void visit_unary_expression (UnaryExpression expr) {
-		if (expr.operator == UnaryOperator.REF || expr.operator == UnaryOperator.OUT) {
-			expr.inner.lvalue = true;
-			expr.inner.target_type = expr.target_type;
-		}
-
-		expr.accept_children (this);
-
-		if (expr.inner.error) {
-			/* if there was an error in the inner expression, skip type check */
-			expr.error = true;
-			return;
-		}
-
-		if (expr.operator == UnaryOperator.PLUS || expr.operator == UnaryOperator.MINUS) {
-			// integer or floating point type
-			if (!is_numeric_type (expr.inner.value_type)) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Operator not supported for `%s'".printf (expr.inner.value_type.to_string ()));
-				return;
-			}
-
-			expr.value_type = expr.inner.value_type;
-		} else if (expr.operator == UnaryOperator.LOGICAL_NEGATION) {
-			// boolean type
-			if (!expr.inner.value_type.compatible (bool_type)) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Operator not supported for `%s'".printf (expr.inner.value_type.to_string ()));
-				return;
-			}
-
-			expr.value_type = expr.inner.value_type;
-		} else if (expr.operator == UnaryOperator.BITWISE_COMPLEMENT) {
-			// integer type
-			if (!is_integer_type (expr.inner.value_type)) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Operator not supported for `%s'".printf (expr.inner.value_type.to_string ()));
-				return;
-			}
-
-			expr.value_type = expr.inner.value_type;
-		} else if (expr.operator == UnaryOperator.INCREMENT ||
-		           expr.operator == UnaryOperator.DECREMENT) {
-			// integer type
-			if (!is_integer_type (expr.inner.value_type)) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Operator not supported for `%s'".printf (expr.inner.value_type.to_string ()));
-				return;
-			}
-
-			var ma = find_member_access (expr.inner);
-			if (ma == null) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Prefix operators not supported for this expression");
-				return;
-			}
-
-			var old_value = new MemberAccess (ma.inner, ma.member_name, expr.inner.source_reference);
-			var bin = new BinaryExpression (expr.operator == UnaryOperator.INCREMENT ? BinaryOperator.PLUS : BinaryOperator.MINUS, old_value, new IntegerLiteral ("1"), expr.source_reference);
-
-			var assignment = new Assignment (ma, bin, AssignmentOperator.SIMPLE, expr.source_reference);
-			var parenthexp = new ParenthesizedExpression (assignment, expr.source_reference);
-			parenthexp.target_type = expr.target_type;
-			replaced_nodes.add (expr);
-			expr.parent_node.replace_expression (expr, parenthexp);
-			parenthexp.accept (this);
-			return;
-		} else if (expr.operator == UnaryOperator.REF || expr.operator == UnaryOperator.OUT) {
-			if (expr.inner.symbol_reference is Field || expr.inner.symbol_reference is FormalParameter || expr.inner.symbol_reference is LocalVariable) {
-				// ref and out can only be used with fields, parameters, and local variables
-				expr.lvalue = true;
-				expr.value_type = expr.inner.value_type;
-			} else {
-				expr.error = true;
-				Report.error (expr.source_reference, "ref and out method arguments can only be used with fields, parameters, and local variables");
-				return;
-			}
-		} else {
-			expr.error = true;
-			Report.error (expr.source_reference, "internal error: unsupported unary operator");
-			return;
-		}
-	}
-
-	private MemberAccess? find_member_access (Expression expr) {
-		if (expr is ParenthesizedExpression) {
-			var pe = (ParenthesizedExpression) expr;
-			return find_member_access (pe.inner);
-		}
-
-		if (expr is MemberAccess) {
-			return (MemberAccess) expr;
-		}
-
-		return null;
+		expr.check (this);
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {
-		if (expr.inner.error) {
-			expr.error = true;
-			return;
-		}
-
-		// FIXME: check whether cast is allowed
-
-		current_source_file.add_type_dependency (expr.type_reference, SourceFileDependencyType.SOURCE);
-
-		expr.value_type = expr.type_reference;
-		expr.value_type.value_owned = expr.inner.value_type.value_owned;
-
-		expr.inner.target_type = expr.inner.value_type.copy ();
+		expr.check (this);
 	}
 
 	public override void visit_pointer_indirection (PointerIndirection expr) {
-		if (expr.inner.error) {
-			return;
-		}
-		if (expr.inner.value_type == null) {
-			expr.error = true;
-			Report.error (expr.source_reference, "internal error: unknown type of inner expression");
-			return;
-		}
-		if (expr.inner.value_type is PointerType) {
-			var pointer_type = (PointerType) expr.inner.value_type;
-			if (pointer_type.base_type is ReferenceType) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Pointer indirection not supported for this expression");
-				return;
-			}
-			expr.value_type = pointer_type.base_type;
-		} else {
-			expr.error = true;
-			Report.error (expr.source_reference, "Pointer indirection not supported for this expression");
-			return;
-		}
+		expr.check (this);
 	}
 
 	public override void visit_addressof_expression (AddressofExpression expr) {
-		if (expr.inner.error) {
-			return;
-		}
-		if (!(expr.inner.value_type is ValueType
-		      || expr.inner.value_type is ObjectType
-		      || expr.inner.value_type is PointerType)) {
-			expr.error = true;
-			Report.error (expr.source_reference, "Address-of operator not supported for this expression");
-			return;
-		}
-
-		if (expr.inner.value_type.is_reference_type_or_type_parameter ()) {
-			expr.value_type = new PointerType (new PointerType (expr.inner.value_type));
-		} else {
-			expr.value_type = new PointerType (expr.inner.value_type);
-		}
+		expr.check (this);
 	}
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
-		expr.inner.lvalue = true;
-
-		expr.accept_children (this);
-
-		if (expr.inner.error) {
-			/* if there was an error in the inner expression, skip type check */
-			expr.error = true;
-			return;
-		}
-
-		if (!(expr.inner is MemberAccess || expr.inner is ElementAccess)) {
-			expr.error = true;
-			Report.error (expr.source_reference, "Reference transfer not supported for this expression");
-			return;
-		}
-
-		if (!expr.inner.value_type.is_disposable ()
-		    && !(expr.inner.value_type is PointerType)) {
-			expr.error = true;
-			Report.error (expr.source_reference, "No reference to be transferred");
-			return;
-		}
-
-		expr.value_type = expr.inner.value_type.copy ();
-		expr.value_type.value_owned = true;
+		expr.check (this);
 	}
 
 	public DataType? get_arithmetic_result_type (DataType left_type, DataType right_type) {
@@ -1118,46 +887,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_type_check (TypeCheck expr) {
-		if (expr.type_reference.data_type == null) {
-			/* if type resolving didn't succeed, skip this check */
-			expr.error = true;
-			return;
-		}
-
-		current_source_file.add_type_dependency (expr.type_reference, SourceFileDependencyType.SOURCE);
-
-		expr.value_type = bool_type;
+		expr.check (this);
 	}
 
 	public override void visit_conditional_expression (ConditionalExpression expr) {
-		if (expr.condition.error || expr.false_expression.error || expr.true_expression.error) {
-			return;
-		}
-
-		if (!expr.condition.value_type.compatible (bool_type)) {
-			expr.error = true;
-			Report.error (expr.condition.source_reference, "Condition must be boolean");
-			return;
-		}
-
-		/* FIXME: support memory management */
-		if (expr.false_expression.value_type.compatible (expr.true_expression.value_type)) {
-			expr.value_type = expr.true_expression.value_type.copy ();
-		} else if (expr.true_expression.value_type.compatible (expr.false_expression.value_type)) {
-			expr.value_type = expr.false_expression.value_type.copy ();
-		} else {
-			expr.error = true;
-			Report.error (expr.condition.source_reference, "Incompatible expressions");
-			return;
-		}
-	}
-
-	private string get_lambda_name () {
-		var result = "__lambda%d".printf (next_lambda_id);
-
-		next_lambda_id++;
-
-		return result;
+		expr.check (this);
 	}
 
 	public Method? find_current_method () {
@@ -1183,71 +917,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_lambda_expression (LambdaExpression l) {
-		if (!(l.target_type is DelegateType)) {
-			l.error = true;
-			Report.error (l.source_reference, "lambda expression not allowed in this context");
-			return;
-		}
-
-		bool in_instance_method = false;
-		var current_method = find_current_method ();
-		if (current_method != null) {
-			in_instance_method = (current_method.binding == MemberBinding.INSTANCE);
-		} else {
-			in_instance_method = is_in_constructor ();
-		}
-
-		var cb = (Delegate) ((DelegateType) l.target_type).delegate_symbol;
-		l.method = new Method (get_lambda_name (), cb.return_type);
-		if (!cb.has_target || !in_instance_method) {
-			l.method.binding = MemberBinding.STATIC;
-		}
-		l.method.owner = current_symbol.scope;
-
-		var lambda_params = l.get_parameters ();
-		Iterator<string> lambda_param_it = lambda_params.iterator ();
-		foreach (FormalParameter cb_param in cb.get_parameters ()) {
-			if (!lambda_param_it.next ()) {
-				/* lambda expressions are allowed to have less parameters */
-				break;
-			}
-
-			string lambda_param = lambda_param_it.get ();
-
-			var param = new FormalParameter (lambda_param, cb_param.parameter_type);
-
-			l.method.add_parameter (param);
-		}
-
-		if (lambda_param_it.next ()) {
-			/* lambda expressions may not expect more parameters */
-			l.error = true;
-			Report.error (l.source_reference, "lambda expression: too many parameters");
-			return;
-		}
-
-		if (l.expression_body != null) {
-			var block = new Block (l.source_reference);
-			block.scope.parent_scope = l.method.scope;
-
-			if (l.method.return_type.data_type != null) {
-				block.add_statement (new ReturnStatement (l.expression_body, l.source_reference));
-			} else {
-				block.add_statement (new ExpressionStatement (l.expression_body, l.source_reference));
-			}
-
-			l.method.body = block;
-		} else {
-			l.method.body = l.statement_body;
-		}
-		l.method.body.owner = l.method.scope;
-
-		/* lambda expressions should be usable like MemberAccess of a method */
-		l.symbol_reference = l.method;
-
-		l.accept_children (this);
-
-		l.value_type = new MethodType (l.method);
+		l.check (this);
 	}
 
 	public override void visit_assignment (Assignment a) {

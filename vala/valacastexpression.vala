@@ -1,6 +1,6 @@
 /* valacastexpression.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -96,5 +96,29 @@ public class Vala.CastExpression : Expression {
 		if (type_reference == old_type) {
 			type_reference = new_type;
 		}
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		if (inner.error) {
+			error = true;
+			return false;
+		}
+
+		// FIXME: check whether cast is allowed
+
+		analyzer.current_source_file.add_type_dependency (type_reference, SourceFileDependencyType.SOURCE);
+
+		value_type = type_reference;
+		value_type.value_owned = inner.value_type.value_owned;
+
+		inner.target_type = inner.value_type.copy ();
+
+		return !error;
 	}
 }

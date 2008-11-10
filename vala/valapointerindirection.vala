@@ -1,6 +1,6 @@
 /* valapointerindirection.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -68,5 +68,37 @@ public class Vala.PointerIndirection : Expression {
 
 	public override bool is_pure () {
 		return inner.is_pure ();
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		if (inner.error) {
+			return false;
+		}
+		if (inner.value_type == null) {
+			error = true;
+			Report.error (source_reference, "internal error: unknown type of inner expression");
+			return false;
+		}
+		if (inner.value_type is PointerType) {
+			var pointer_type = (PointerType) inner.value_type;
+			if (pointer_type.base_type is ReferenceType) {
+				error = true;
+				Report.error (source_reference, "Pointer indirection not supported for this expression");
+				return false;
+			}
+			value_type = pointer_type.base_type;
+		} else {
+			error = true;
+			Report.error (source_reference, "Pointer indirection not supported for this expression");
+			return false;
+		}
+
+		return !error;
 	}
 }
