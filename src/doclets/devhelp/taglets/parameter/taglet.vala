@@ -57,6 +57,12 @@ public class ParameterHtmlTaglet : MainTaglet {
 	}
 
 	public override bool parse ( Valadoc.Settings settings, Valadoc.Tree tree, Valadoc.Reporter reporter, string line_start, int line, int pos, Valadoc.Basic me, Gee.ArrayList<Taglet> content ) {
+		if ( !(me is Valadoc.Method || me is Valadoc.Signal || me is Valadoc.Delegate) ) {
+			string error_start = this.extract_lines ( line_start, 0, 0 );
+			reporter.add_error ( 0, pos, 0, pos+6, "@param is not allowed in this contex.\n", error_start );
+			return false;
+		}
+
 		if ( content.size == 0 ) {
 			string error_start = this.extract_lines ( line_start, 0, 0 );
 			reporter.add_error ( 0, pos, 0, pos+6, "Parameter name was expected.\n", error_start );
