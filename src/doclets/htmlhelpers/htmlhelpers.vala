@@ -1418,6 +1418,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		m.write_comment ( file );
 
 		if ( m.parent is Namespace ) {
+			file.puts ( "\t\t\t\t<br />\n" );
 			this.write_namespace_note ( file, m );
 			this.write_package_note ( file, m );
 		}
@@ -1469,6 +1470,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		del.write_comment ( file );
 
 		if ( del.parent is Namespace ) {
+			file.puts ( "\t\t\t\t<br />\n" );
 			this.write_namespace_note ( file, del );
 			this.write_package_note ( file, del );
 		}
@@ -1488,6 +1490,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		field.write_comment ( file );
 
 		if ( field.parent is Namespace ) {
+			file.puts ( "\t\t\t\t<br />\n" );
 			this.write_namespace_note ( file, field );
 			this.write_package_note ( file, field );
 		}
@@ -1507,6 +1510,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		constant.write_comment ( file );
 
 		if ( constant.parent is Namespace ) {
+			file.puts ( "\t\t\t\t<br />\n" );
 			this.write_namespace_note ( file, constant );
 			this.write_package_note ( file, constant );
 		}
@@ -1536,6 +1540,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		en.write_comment ( file );
 
 		if ( en.parent is Namespace ) {
+			file.puts ( "\t\t\t\t<br />\n" );
 			this.write_namespace_note ( file, en );
 			this.write_package_note ( file, en );
 		}
@@ -1630,6 +1635,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\n\t\t\t\t</div>\n" );
 		cl.write_comment ( file );
 		if ( cl.parent is Namespace ) {
+			file.puts ( "\t\t\t\t<br />\n" );
 			this.write_namespace_note ( file, cl );
 			this.write_package_note ( file, cl );
 		}
@@ -1660,6 +1666,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\n\t\t\t\t</div>\n" );
 		iface.write_comment ( file );
 		if ( iface.parent is Namespace ) {
+			file.puts ( "\t\t\t\t<br />\n" );
 			this.write_namespace_note ( file, iface );
 			this.write_package_note ( file, iface );
 		}
@@ -1683,6 +1690,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
 		errdom.write_comment ( file );
 		if ( errdom.parent is Namespace ) {
+			file.puts ( "\t\t\t\t<br />\n" );
 			this.write_namespace_note ( file, errdom );
 			this.write_package_note ( file, errdom );
 		}
@@ -1707,6 +1715,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 
 		stru.write_comment ( file );
 		if ( stru.parent is Namespace ) {
+			file.puts ( "\t\t\t\t<br />\n" );
 			this.write_namespace_note ( file, stru );
 			this.write_package_note ( file, stru );
 		}

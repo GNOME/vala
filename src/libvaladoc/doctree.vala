@@ -2221,13 +2221,37 @@ public class Valadoc.Property : Basic, SymbolAccessibility, ReturnTypeHandler, V
 		}
 	}
 
-	// internal
-	public void set_type_references ( ) {
-		this.set_return_type_references ( );
+	public Property base_property {
+		private set;
+		get;
 	}
 
 	// internal
+	public void set_type_references ( ) {
+		if ( this.is_override ) {
+			Vala.Property vp = ( this.vproperty.base_property == null )? this.vproperty.base_interface_property : this.vproperty.base_property;
+			this.base_property = this.head.search_vala_symbol ( vp );
+		}
+		this.set_return_type_references ( );
+	}
+
 	public void parse_comment ( Valadoc.Parser docparser ) {
+		if ( this.documentation != null )
+			return ;
+
+		if ( this.comment_string == null )
+			return ;
+
+		bool tmp = Parser.is_documentation ( this.comment_string );
+		if ( tmp == false )
+			return ;
+
+		if ( this.is_override && Parser.is_inherit_doc ( this.comment_string ) ) {
+			this.base_property.parse_comment ( docparser );
+			this.documentation = this.base_property.documentation;
+			return ;
+		}
+
 		this.parse_comment_helper ( docparser, CommentContext.PROPERTY );
 	}
 
@@ -2349,8 +2373,8 @@ public class Valadoc.Method : Basic, ParameterListHandler, ExceptionHandler, Tem
 	}
 
 	public Method base_method {
+		private set;
 		get;
-		set;
 	}
 
 	public TypeReference return_type {
@@ -2373,6 +2397,7 @@ public class Valadoc.Method : Basic, ParameterListHandler, ExceptionHandler, Tem
 		get;
 	}
 
+	// FIXME
 	public string?# comment_str {
 		get {
 			return this.vmethod.source_reference.comment;
@@ -2498,6 +2523,11 @@ public class Valadoc.Method : Basic, ParameterListHandler, ExceptionHandler, Tem
 
 	// internal
 	public void set_type_references ( ) {
+		if ( this.is_override ) {
+			Vala.Method vm = ( this.vmethod.base_method == null )? this.vmethod.base_interface_method : this.vmethod.base_method;
+			this.base_method = this.head.search_vala_symbol ( vm );
+		}
+
 		this.set_return_type_references ( );
 
 		this.set_exception_type_references ( );
@@ -2720,7 +2750,8 @@ public abstract class Valadoc.ContainerDataType : DataType, MethodHandler, Visit
 		this.methods = new Gee.ArrayList<Method> ();
 	}
 
-	protected Class? parent_class {
+	// Rename to parent_element
+	protected ContainerDataType? parent_class {
 		private set;
 		get;
 	}
@@ -2768,6 +2799,9 @@ public abstract class Valadoc.ContainerDataType : DataType, MethodHandler, Visit
 			this.parent_types.add ( element );
 			if ( element is Class ) {
 				this.parent_class = (Class)element;
+			}
+			else if ( element is Struct ) {
+				this.parent_class = (Struct)element;
 			}
 		}
 	}
@@ -3045,7 +3079,21 @@ public class Valadoc.Class : ContainerDataType, Visitable, ClassHandler, StructH
 
 	// internal
 	public override void parse_comments ( Valadoc.Parser docparser ) {
-		this.parse_comment_helper ( docparser, CommentContext.CLASS );
+		if ( this.documentation != null )
+			return ;
+
+		if ( this.comment_string != null ) {
+			bool tmp = Parser.is_documentation ( this.comment_string );
+			if ( tmp == true ) {
+				if ( Parser.is_inherit_doc ( this.comment_string ) && this.parent_class != null ) {
+					this.parent_class.parse_comments ( docparser );
+					this.documentation = this.parent_class.documentation;
+				}
+				else {
+					this.parse_comment_helper ( docparser, CommentContext.CLASS );
+				}
+			}
+		}
 
 		this.parse_construction_method_comments ( docparser );
 		this.parse_delegate_comments ( docparser );
@@ -3084,12 +3132,12 @@ public class Valadoc.Class : ContainerDataType, Visitable, ClassHandler, StructH
 		foreach ( Field f in flst ) {
 			this.fields.add ( f );
 		}
-
+/*
 		var plst = dtype.get_property_list ( );
 		foreach ( Property prop in plst ) {
 			this.properties.add ( prop );
 		}
-
+*/
 		var proplst = dtype.get_property_list ( );
 		foreach ( Property p in proplst ) {
 			if ( p.is_private )
@@ -3108,31 +3156,13 @@ public class Valadoc.Class : ContainerDataType, Visitable, ClassHandler, StructH
 			if ( m.is_private )
 				continue ;
 
-			if ( m.is_virtual || m.is_override || m.is_abstract ) {
-				Method m2 = get_new_method ( m );
-				if ( m2 != null )
-					m2.base_method = m;
-					continue ;
-			}
-
 			this.methods.add ( m );
 		}
 	}
 
-	// rename - base_method?
-	private Method? get_new_method ( Method overwritten_method ) {
-		foreach ( Method m in this.methods ) {
-			if ( !m.is_override )
-				continue ;
-
-			if ( m.name == overwritten_method.name  )
-				return m;			
-		}
-		return null;
-	}
-
 	private void inheritance_interface ( Interface dtype ) {
 		var plst = dtype.get_property_list ( );
+
 		foreach ( Property p in plst ) {
 			if ( p.is_private )
 				continue ;
@@ -3621,6 +3651,7 @@ public class Valadoc.Struct : ContainerDataType, Visitable, ConstructionMethodHa
 		this.add_methods_and_construction_methods ( vmethods );
 	}
 
+	// TODO remove
 	public string?# comment_str {
 		get {
 			return this.vstruct.source_reference.comment;
@@ -3650,7 +3681,27 @@ public class Valadoc.Struct : ContainerDataType, Visitable, ConstructionMethodHa
 
 	// internal
 	public override void parse_comments ( Valadoc.Parser docparser ) {
-		this.parse_comment_helper ( docparser, CommentContext.STRUCT );
+		if ( this.documentation != null )
+			return ;
+
+		if ( this.parent_class != null ) {
+			stdout.printf ( "{>>>>>[%s]<<<<<}\n", this.parent_class.comment_string );
+		}
+
+
+		if ( this.comment_string != null ) {
+			bool tmp = Parser.is_documentation ( this.comment_string );
+			if ( tmp == true ) {
+				if ( Parser.is_inherit_doc ( this.comment_string ) && this.parent_class != null ) {
+					this.parent_class.parse_comments ( docparser );
+					this.documentation = this.parent_class.documentation;
+				}
+				else {
+					this.parse_comment_helper ( docparser, CommentContext.STRUCT );
+				}
+			}
+		}
+
 		this.parse_construction_method_comments ( docparser );
 		this.parse_constant_comments ( docparser );
 		this.parse_field_comments ( docparser );
