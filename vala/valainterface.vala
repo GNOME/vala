@@ -590,7 +590,45 @@ public class Vala.Interface : ObjectTypeSymbol {
 			}
 		}
 
-		accept_children (analyzer);
+		foreach (DataType type in prerequisites) {
+			type.check (analyzer);
+		}
+
+		foreach (TypeParameter p in type_parameters) {
+			p.check (analyzer);
+		}
+
+		foreach (Enum en in enums) {
+			en.check (analyzer);
+		}
+
+		foreach (Method m in methods) {
+			m.check (analyzer);
+		}
+		
+		foreach (Field f in fields) {
+			f.check (analyzer);
+		}
+		
+		foreach (Property prop in properties) {
+			prop.check (analyzer);
+		}
+		
+		foreach (Signal sig in signals) {
+			sig.check (analyzer);
+		}
+		
+		foreach (Class cl in classes) {
+			cl.check (analyzer);
+		}
+		
+		foreach (Struct st in structs) {
+			st.check (analyzer);
+		}
+
+		foreach (Delegate d in delegates) {
+			d.check (analyzer);
+		}
 
 		analyzer.current_source_file = old_source_file;
 		analyzer.current_symbol = old_symbol;

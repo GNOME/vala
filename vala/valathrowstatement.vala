@@ -83,7 +83,9 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 		error_expression.target_type = new ErrorType (null, null, source_reference);
 		error_expression.target_type.value_owned = true;
 
-		accept_children (analyzer);
+		if (error_expression != null) {
+			error_expression.check (analyzer);
+		}
 
 		var error_type = error_expression.value_type.copy ();
 		error_type.source_reference = source_reference;

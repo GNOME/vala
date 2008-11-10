@@ -59,5 +59,9 @@ public class Vala.MemberInitializer : CodeNode {
 	public override void accept (CodeVisitor visitor) {
 		initializer.accept (visitor);
 	}
+	
+	public override bool check (SemanticAnalyzer analyzer) {
+		return initializer.check (analyzer);
+	}
 }
 

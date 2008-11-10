@@ -77,7 +77,8 @@ public class Vala.AddressofExpression : Expression {
 
 		checked = true;
 
-		if (inner.error) {
+		if (!inner.check (analyzer)) {
+			error = true;
 			return false;
 		}
 		if (!(inner.value_type is ValueType

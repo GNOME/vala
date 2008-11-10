@@ -81,7 +81,7 @@ public class Vala.ReferenceTransferExpression : Expression {
 
 		inner.lvalue = true;
 
-		accept_children (analyzer);
+		inner.check (analyzer);
 
 		if (inner.error) {
 			/* if there was an error in the inner expression, skip type check */

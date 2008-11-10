@@ -625,7 +625,25 @@ public class Vala.Struct : TypeSymbol {
 		analyzer.current_symbol = this;
 		analyzer.current_struct = this;
 
-		accept_children (analyzer);
+		foreach (DataType type in base_types) {
+			type.check (analyzer);
+		}
+
+		foreach (TypeParameter p in type_parameters) {
+			p.check (analyzer);
+		}
+		
+		foreach (Field f in fields) {
+			f.check (analyzer);
+		}
+		
+		foreach (Constant c in constants) {
+			c.check (analyzer);
+		}
+		
+		foreach (Method m in methods) {
+			m.check (analyzer);
+		}
 
 		if (!external && !external_package && get_base_types ().size == 0 && get_fields ().size == 0) {
 			Report.error (source_reference, "structs cannot be empty");

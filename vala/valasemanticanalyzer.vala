@@ -122,6 +122,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		current_symbol = root_symbol;
+		context.root.check (this);
 		context.accept (this);
 	}
 
@@ -130,63 +131,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		next_lambda_id = 0;
 
-		file.accept_children (this);
-	}
-
-	public override void visit_namespace (Namespace ns) {
-		ns.check (this);
-	}
-
-	public override void visit_class (Class cl) {
-		cl.check (this);
-	}
-
-	public override void visit_struct (Struct st) {
-		st.check (this);
-	}
-
-	public override void visit_interface (Interface iface) {
-		iface.check (this);
-	}
-
-	public override void visit_enum (Enum en) {
-		en.check (this);
-	}
-
-	public override void visit_enum_value (EnumValue ev) {
-		ev.check (this);
-	}
-
-	public override void visit_error_domain (ErrorDomain ed) {
-		ed.check (this);
-	}
-
-	public override void visit_error_code (ErrorCode ec) {
-		ec.check (this);
-	}
-
-	public override void visit_delegate (Delegate d) {
-		d.check (this);
-	}
-
-	public override void visit_constant (Constant c) {
-		c.check (this);
-	}
-
-	public override void visit_field (Field f) {
-		f.check (this);
-	}
-
-	public override void visit_method (Method m) {
-		m.check (this);
-	}
-
-	public override void visit_creation_method (CreationMethod m) {
-		m.check (this);
-	}
-
-	public override void visit_formal_parameter (FormalParameter p) {
-		p.check (this);
+		file.check (this);
 	}
 
 	// check whether type is at least as accessible as the specified symbol
@@ -201,126 +146,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		return true;
-	}
-
-	public override void visit_property (Property prop) {
-		prop.check (this);
-	}
-
-	public override void visit_property_accessor (PropertyAccessor acc) {
-		acc.check (this);
-	}
-
-	public override void visit_signal (Signal sig) {
-		sig.check (this);
-	}
-
-	public override void visit_constructor (Constructor c) {
-		c.check (this);
-	}
-
-	public override void visit_destructor (Destructor d) {
-		d.check (this);
-	}
-
-	public override void visit_block (Block b) {
-		b.check (this);
-	}
-
-	public override void visit_declaration_statement (DeclarationStatement stmt) {
-		stmt.check (this);
-	}
-
-	public override void visit_local_variable (LocalVariable local) {
-		local.check (this);
-	}
-
-	public override void visit_initializer_list (InitializerList list) {
-		list.check (this);
-	}
-
-	public override void visit_expression_statement (ExpressionStatement stmt) {
-		stmt.check (this);
-	}
-
-	public override void visit_if_statement (IfStatement stmt) {
-		stmt.check (this);
-	}
-
-	public override void visit_switch_section (SwitchSection section) {
-		section.check (this);
-	}
-
-	public override void visit_while_statement (WhileStatement stmt) {
-		stmt.check (this);
-	}
-
-	public override void visit_do_statement (DoStatement stmt) {
-		stmt.check (this);
-	}
-
-	public override void visit_for_statement (ForStatement stmt) {
-		stmt.check (this);
-	}
-
-	public override void visit_foreach_statement (ForeachStatement stmt) {
-		stmt.check (this);
-	}
-
-	public override void visit_return_statement (ReturnStatement stmt) {
-		stmt.check (this);
-	}
-
-	public override void visit_yield_statement (YieldStatement stmt) {
-		stmt.check (this);
-	}
-
-	public override void visit_throw_statement (ThrowStatement stmt) {
-		stmt.check (this);
-	}
-
-	public override void visit_try_statement (TryStatement stmt) {
-		stmt.check (this);
-	}
-
-	public override void visit_catch_clause (CatchClause clause) {
-		clause.check (this);
-	}
-
-	public override void visit_lock_statement (LockStatement stmt) {
-		stmt.check (this);
-	}
-
-	public override void visit_delete_statement (DeleteStatement stmt) {
-		stmt.check (this);
-	}
-
-	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
-		expr.check (this);
-	}
-
-	public override void visit_boolean_literal (BooleanLiteral expr) {
-		expr.check (this);
-	}
-
-	public override void visit_character_literal (CharacterLiteral expr) {
-		expr.check (this);
-	}
-
-	public override void visit_integer_literal (IntegerLiteral expr) {
-		expr.check (this);
-	}
-
-	public override void visit_real_literal (RealLiteral expr) {
-		expr.check (this);
-	}
-
-	public override void visit_string_literal (StringLiteral expr) {
-		expr.check (this);
-	}
-
-	public override void visit_null_literal (NullLiteral expr) {
-		expr.check (this);
 	}
 
 	public DataType? get_value_type_for_symbol (Symbol sym, bool lvalue) {
@@ -420,14 +245,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return null;
 	}
 
-	public override void visit_parenthesized_expression (ParenthesizedExpression expr) {
-		expr.check (this);
-	}
-	
-	public override void visit_member_access (MemberAccess expr) {
-		expr.check (this);
-	}
-
 	public static DataType get_data_type_for_symbol (TypeSymbol sym) {
 		DataType type = null;
 
@@ -447,10 +264,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 
 		return type;
-	}
-
-	public override void visit_invocation_expression (InvocationExpression expr) {
-		expr.check (this);
 	}
 
 	public bool check_arguments (Expression expr, DataType mtype, Gee.List<FormalParameter> params, Gee.List<Expression> args) {
@@ -750,10 +563,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return actual_type;
 	}
 
-	public override void visit_element_access (ElementAccess expr) {
-		expr.check (this);
-	}
-
 	public bool is_in_instance_method () {
 		var sym = current_symbol;
 		while (sym != null) {
@@ -776,20 +585,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return false;
 	}
 
-	public override void visit_base_access (BaseAccess expr) {
-		expr.check (this);
-	}
-
-	public override void visit_postfix_expression (PostfixExpression expr) {
-		expr.check (this);
-	}
-
-	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
-		expr.check (this);
-	}
-
 	public void visit_member_initializer (MemberInitializer init, DataType type) {
-		init.accept (this);
+		init.check (this);
 
 		init.symbol_reference = symbol_lookup_inherited (type.data_type, init.name);
 		if (!(init.symbol_reference is Field || init.symbol_reference is Property)) {
@@ -820,34 +617,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (init.source_reference, "Invalid type for member `%s'".printf (init.name));
 			return;
 		}
-	}
-
-	public override void visit_sizeof_expression (SizeofExpression expr) {
-		expr.check (this);
-	}
-
-	public override void visit_typeof_expression (TypeofExpression expr) {
-		expr.check (this);
-	}
-
-	public override void visit_unary_expression (UnaryExpression expr) {
-		expr.check (this);
-	}
-
-	public override void visit_cast_expression (CastExpression expr) {
-		expr.check (this);
-	}
-
-	public override void visit_pointer_indirection (PointerIndirection expr) {
-		expr.check (this);
-	}
-
-	public override void visit_addressof_expression (AddressofExpression expr) {
-		expr.check (this);
-	}
-
-	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
-		expr.check (this);
 	}
 
 	public DataType? get_arithmetic_result_type (DataType left_type, DataType right_type) {
@@ -882,18 +651,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		 }
 	}
 
-	public override void visit_binary_expression (BinaryExpression expr) {
-		expr.check (this);
-	}
-
-	public override void visit_type_check (TypeCheck expr) {
-		expr.check (this);
-	}
-
-	public override void visit_conditional_expression (ConditionalExpression expr) {
-		expr.check (this);
-	}
-
 	public Method? find_current_method () {
 		var sym = current_symbol;
 		while (sym != null) {
@@ -914,13 +671,5 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			sym = sym.parent_symbol;
 		}
 		return false;
-	}
-
-	public override void visit_lambda_expression (LambdaExpression l) {
-		l.check (this);
-	}
-
-	public override void visit_assignment (Assignment a) {
-		a.check (this);
 	}
 }

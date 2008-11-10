@@ -884,7 +884,66 @@ public class Vala.Class : ObjectTypeSymbol {
 			analyzer.current_source_file.add_type_dependency (base_type_reference, SourceFileDependencyType.HEADER_FULL);
 		}
 
-		accept_children (analyzer);
+		foreach (DataType type in base_types) {
+			type.check (analyzer);
+		}
+
+		foreach (TypeParameter p in type_parameters) {
+			p.check (analyzer);
+		}
+
+		/* process enums first to avoid order problems in C code */
+		foreach (Enum en in enums) {
+			en.check (analyzer);
+		}
+
+		foreach (Field f in fields) {
+			f.check (analyzer);
+		}
+		
+		foreach (Constant c in constants) {
+			c.check (analyzer);
+		}
+		
+		foreach (Method m in methods) {
+			m.check (analyzer);
+		}
+		
+		foreach (Property prop in properties) {
+			prop.check (analyzer);
+		}
+		
+		foreach (Signal sig in signals) {
+			sig.check (analyzer);
+		}
+		
+		if (constructor != null) {
+			constructor.check (analyzer);
+		}
+
+		if (class_constructor != null) {
+			class_constructor.check (analyzer);
+		}
+
+		if (static_constructor != null) {
+			static_constructor.check (analyzer);
+		}
+
+		if (destructor != null) {
+			destructor.check (analyzer);
+		}
+		
+		foreach (Class cl in classes) {
+			cl.check (analyzer);
+		}
+		
+		foreach (Struct st in structs) {
+			st.check (analyzer);
+		}
+
+		foreach (Delegate d in delegates) {
+			d.check (analyzer);
+		}
 
 		/* compact classes cannot implement interfaces */
 		if (is_compact) {

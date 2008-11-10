@@ -176,7 +176,9 @@ public class Vala.PropertyAccessor : CodeNode {
 			}
 		}
 
-		accept_children (analyzer);
+		if (body != null) {
+			body.check (analyzer);
+		}
 
 		analyzer.current_return_type = old_return_type;
 

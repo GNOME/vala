@@ -94,7 +94,12 @@ public class Vala.IfStatement : CodeNode, Statement {
 
 		checked = true;
 
-		accept_children (analyzer);
+		condition.check (analyzer);
+
+		true_statement.check (analyzer);
+		if (false_statement != null) {
+			false_statement.check (analyzer);
+		}
 
 		if (condition.error) {
 			/* if there was an error in the condition, skip this check */

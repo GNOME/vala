@@ -142,7 +142,9 @@ public class Vala.InitializerList : Expression {
 			return false;
 		}
 
-		accept_children (analyzer);
+		foreach (Expression expr in initializers) {
+			expr.check (analyzer);
+		}
 
 		bool error = false;
 		foreach (Expression e in get_initializers ()) {

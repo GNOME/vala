@@ -1,6 +1,72 @@
 2008-11-10  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaaddressofexpression.vala:
+	* vala/valaarraycreationexpression.vala:
+	* vala/valaassignment.vala:
+	* vala/valabinaryexpression.vala:
+	* vala/valablock.vala:
+	* vala/valacastexpression.vala:
+	* vala/valacatchclause.vala:
+	* vala/valaclass.vala:
+	* vala/valaconditionalexpression.vala:
+	* vala/valaconstant.vala:
+	* vala/valaconstructor.vala:
+	* vala/valacreationmethod.vala:
+	* vala/valadeclarationstatement.vala:
+	* vala/valadelegate.vala:
+	* vala/valadeletestatement.vala:
+	* vala/valadestructor.vala:
+	* vala/valadostatement.vala:
+	* vala/valaelementaccess.vala:
+	* vala/valaenum.vala:
+	* vala/valaenumvalue.vala:
+	* vala/valaerrorcode.vala:
+	* vala/valaerrordomain.vala:
+	* vala/valaexpressionstatement.vala:
+	* vala/valafield.vala:
+	* vala/valaforeachstatement.vala:
+	* vala/valaformalparameter.vala:
+	* vala/valaforstatement.vala:
+	* vala/valaifstatement.vala:
+	* vala/valainitializerlist.vala:
+	* vala/valainterface.vala:
+	* vala/valainvocationexpression.vala:
+	* vala/valalambdaexpression.vala:
+	* vala/valalocalvariable.vala:
+	* vala/valalockstatement.vala:
+	* vala/valamemberaccess.vala:
+	* vala/valamemberinitializer.vala:
+	* vala/valamethod.vala:
+	* vala/valanamespace.vala:
+	* vala/valaobjectcreationexpression.vala:
+	* vala/valaparenthesizedexpression.vala:
+	* vala/valapointerindirection.vala:
+	* vala/valapostfixexpression.vala:
+	* vala/valaproperty.vala:
+	* vala/valapropertyaccessor.vala:
+	* vala/valareferencetransferexpression.vala:
+	* vala/valareturnstatement.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasignal.vala:
+	* vala/valasizeofexpression.vala:
+	* vala/valasourcefile.vala:
+	* vala/valastruct.vala:
+	* vala/valaswitchlabel.vala:
+	* vala/valaswitchsection.vala:
+	* vala/valaswitchstatement.vala:
+	* vala/valathrowstatement.vala:
+	* vala/valatrystatement.vala:
+	* vala/valatypecheck.vala:
+	* vala/valatypeofexpression.vala:
+	* vala/valaunaryexpression.vala:
+	* vala/valawhilestatement.vala:
+	* vala/valayieldstatement.vala:
+
+	Remove unnecessary accept calls in semantic analyzer
+
+2008-11-10  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaaddressofexpression.vala:
 	* vala/valabaseaccess.vala:
 	* vala/valabooleanliteral.vala:
 	* vala/valacastexpression.vala:

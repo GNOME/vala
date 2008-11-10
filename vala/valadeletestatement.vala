@@ -51,9 +51,7 @@ public class Vala.DeleteStatement : CodeNode, Statement {
 
 		checked = true;
 
-		accept_children (analyzer);
-
-		if (expression.error) {
+		if (!expression.check (analyzer)) {
 			// if there was an error in the inner expression, skip this check
 			return false;
 		}

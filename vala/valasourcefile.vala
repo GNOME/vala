@@ -487,6 +487,13 @@ public class Vala.SourceFile {
 
 		return mapped_file.get_length ();
 	}
+
+	public bool check (SemanticAnalyzer analyzer) {
+		foreach (CodeNode node in nodes) {
+			node.check (analyzer);
+		}
+		return true;
+	}
 }
 
 public enum Vala.SourceFileDependencyType {

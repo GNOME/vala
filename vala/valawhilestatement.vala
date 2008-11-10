@@ -94,7 +94,9 @@ public class Vala.WhileStatement : CodeNode, Statement {
 
 		checked = true;
 
-		accept_children (analyzer);
+		condition.check (analyzer);
+		
+		body.check (analyzer);
 
 		if (condition.error) {
 			/* if there was an error in the condition, skip this check */

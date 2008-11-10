@@ -77,7 +77,7 @@ public class Vala.ConditionalExpression : Expression {
 
 		checked = true;
 
-		if (condition.error || false_expression.error || true_expression.error) {
+		if (!condition.check (analyzer) || !false_expression.check (analyzer) || !true_expression.check (analyzer)) {
 			return false;
 		}
 

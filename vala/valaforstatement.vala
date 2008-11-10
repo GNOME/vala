@@ -164,7 +164,19 @@ public class Vala.ForStatement : CodeNode, Statement {
 
 		checked = true;
 
-		accept_children (analyzer);
+		foreach (Expression init_expr in initializer) {
+			init_expr.check (analyzer);
+		}
+
+		if (condition != null) {
+			condition.check (analyzer);
+		}
+
+		foreach (Expression it_expr in iterator) {
+			it_expr.check (analyzer);
+		}
+		
+		body.check (analyzer);
 
 		if (condition != null && condition.error) {
 			/* if there was an error in the condition, skip this check */

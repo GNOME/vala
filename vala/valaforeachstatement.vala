@@ -143,9 +143,7 @@ public class Vala.ForeachStatement : Block {
 		checked = true;
 
 		// analyze collection expression first, used for type inference
-		collection.accept (analyzer);
-
-		if (collection.error) {
+		if (!collection.check (analyzer)) {
 			// ignore inner error
 			error = true;
 			return false;
@@ -230,7 +228,7 @@ public class Vala.ForeachStatement : Block {
 		owner = analyzer.current_symbol.scope;
 		analyzer.current_symbol = this;
 
-		body.accept (analyzer);
+		body.check (analyzer);
 
 		foreach (LocalVariable local in get_local_variables ()) {
 			local.active = false;

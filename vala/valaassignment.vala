@@ -107,9 +107,7 @@ public class Vala.Assignment : Expression {
 
 		left.lvalue = true;
 
-		left.accept (analyzer);
-
-		if (left.error) {
+		if (!left.check (analyzer)) {
 			// skip on error in inner expression
 			error = true;
 			return false;
@@ -161,9 +159,7 @@ public class Vala.Assignment : Expression {
 			return false;
 		}
 
-		right.accept (analyzer);
-
-		if (right.error) {
+		if (!right.check (analyzer)) {
 			// skip on error in inner expression
 			error = true;
 			return false;
@@ -207,7 +203,7 @@ public class Vala.Assignment : Expression {
 				}
 
 				right = bin;
-				right.accept (analyzer);
+				right.check (analyzer);
 
 				operator = AssignmentOperator.SIMPLE;
 			}
@@ -365,7 +361,7 @@ public class Vala.Assignment : Expression {
 				 * increment calls */
 			}
 		} else {
-			return false;
+			return true;
 		}
 
 		if (left.value_type != null) {

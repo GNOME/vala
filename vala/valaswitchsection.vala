@@ -89,14 +89,14 @@ public class Vala.SwitchSection : Block {
 		checked = true;
 
 		foreach (SwitchLabel label in get_labels ()) {
-			label.accept (analyzer);
+			label.check (analyzer);
 		}
 
 		owner = analyzer.current_symbol.scope;
 		analyzer.current_symbol = this;
 
 		foreach (Statement st in get_statements ()) {
-			st.accept (analyzer);
+			st.check (analyzer);
 		}
 
 		foreach (LocalVariable local in get_local_variables ()) {

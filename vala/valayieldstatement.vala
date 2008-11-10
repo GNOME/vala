@@ -71,7 +71,7 @@ public class Vala.YieldStatement : CodeNode, Statement {
 
 	public override bool check (SemanticAnalyzer analyzer) {
 		if (yield_expression != null) {
-			yield_expression.accept (analyzer);
+			yield_expression.check (analyzer);
 			error = yield_expression.error;
 		}
 

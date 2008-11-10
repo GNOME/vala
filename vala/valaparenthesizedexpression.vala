@@ -82,9 +82,7 @@ public class Vala.ParenthesizedExpression : Expression {
 
 		inner.target_type = target_type;
 
-		accept_children (analyzer);
-
-		if (inner.error) {
+		if (!inner.check (analyzer)) {
 			// ignore inner error
 			error = true;
 			return false;

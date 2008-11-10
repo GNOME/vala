@@ -113,7 +113,9 @@ public class Vala.CatchClause : CodeNode {
 			error_type = new ErrorType (null, null, source_reference);
 		}
 
-		accept_children (analyzer);
+		error_type.check (analyzer);
+
+		body.check (analyzer);
 
 		return !error;
 	}

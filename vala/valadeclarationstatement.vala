@@ -56,6 +56,8 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 
 		checked = true;
 
+		declaration.check (analyzer);
+
 		var local = declaration as LocalVariable;
 		if (local != null && local.initializer != null) {
 			foreach (DataType error_type in local.initializer.get_error_types ()) {

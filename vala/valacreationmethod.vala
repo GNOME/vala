@@ -137,7 +137,17 @@ public class Vala.CreationMethod : Method {
 		analyzer.current_symbol = this;
 		analyzer.current_return_type = return_type;
 
-		accept_children (analyzer);
+		foreach (FormalParameter param in get_parameters()) {
+			param.check (analyzer);
+		}
+
+		foreach (DataType error_type in get_error_types ()) {
+			error_type.check (analyzer);
+		}
+
+		if (body != null) {
+			body.check (analyzer);
+		}
 
 		analyzer.current_symbol = old_symbol;
 		analyzer.current_return_type = old_return_type;

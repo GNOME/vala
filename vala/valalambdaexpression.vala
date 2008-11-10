@@ -189,7 +189,15 @@ public class Vala.LambdaExpression : Expression {
 		/* lambda expressions should be usable like MemberAccess of a method */
 		symbol_reference = method;
 
-		accept_children (analyzer);
+		if (method == null) {
+			if (expression_body != null) {
+				expression_body.check (analyzer);
+			} else if (statement_body != null) {
+				statement_body.check (analyzer);
+			}
+		} else {
+			method.check (analyzer);
+		}
 
 		value_type = new MethodType (method);
 

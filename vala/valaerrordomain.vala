@@ -225,7 +225,13 @@ public class Vala.ErrorDomain : TypeSymbol {
 
 		process_attributes ();
 
-		accept_children (analyzer);
+		foreach (ErrorCode ecode in codes) {
+			ecode.check (analyzer);
+		}
+
+		foreach (Method m in methods) {
+			m.check (analyzer);
+		}
 
 		return !error;
 	}

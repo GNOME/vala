@@ -74,7 +74,9 @@ public class Vala.Constructor : Symbol {
 		owner = analyzer.current_symbol.scope;
 		analyzer.current_symbol = this;
 
-		accept_children (analyzer);
+		if (body != null) {
+			body.check (analyzer);
+		}
 
 		foreach (DataType body_error_type in body.get_error_types ()) {
 			Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));

@@ -110,7 +110,13 @@ public class Vala.LocalVariable : Symbol {
 			initializer.target_type = variable_type;
 		}
 
-		accept_children (analyzer);
+		if (initializer != null) {
+			initializer.check (analyzer);
+		}
+		
+		if (variable_type != null) {
+			variable_type.check (analyzer);
+		}
 
 		if (variable_type == null) {
 			/* var type */

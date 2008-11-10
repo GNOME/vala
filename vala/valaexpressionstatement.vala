@@ -93,7 +93,7 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 
 		checked = true;
 
-		if (expression.error) {
+		if (!expression.check (analyzer)) {
 			// ignore inner error
 			error = true;
 			return false;

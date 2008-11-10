@@ -188,7 +188,13 @@ public class Vala.FormalParameter : Symbol {
 			parameter_type.check (analyzer);
 		}
 
-		accept_children (analyzer);
+		if (!ellipsis) {
+			parameter_type.check (analyzer);
+			
+			if (default_expression != null) {
+				default_expression.check (analyzer);
+			}
+		}
 
 		if (analyzer.context.non_null && default_expression != null) {
 			if (default_expression is NullLiteral

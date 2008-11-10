@@ -93,7 +93,7 @@ public class Vala.ElementAccess : Expression {
 
 		checked = true;
 
-		container.accept (analyzer);
+		container.check (analyzer);
 
 		if (container.value_type == null) {
 			/* don't proceed if a child expression failed */
@@ -114,7 +114,7 @@ public class Vala.ElementAccess : Expression {
 		}
 
 		foreach (Expression index in get_indices ()) {
-			index.accept (analyzer);
+			index.check (analyzer);
 		}
 
 		bool index_int_type_check = true;

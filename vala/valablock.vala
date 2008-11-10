@@ -101,13 +101,15 @@ public class Vala.Block : Symbol, Statement {
 		owner = analyzer.current_symbol.scope;
 		analyzer.current_symbol = this;
 
-		accept_children (analyzer);
+		foreach (Statement stmt in statement_list) {
+			stmt.check (analyzer);
+		}
 
 		foreach (LocalVariable local in get_local_variables ()) {
 			local.active = false;
 		}
 
-		foreach (Statement stmt in get_statements()) {
+		foreach (Statement stmt in get_statements ()) {
 			add_error_types (stmt.get_error_types ());
 		}
 

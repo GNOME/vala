@@ -62,4 +62,12 @@ public class Vala.SwitchLabel : CodeNode {
 
 		visitor.visit_switch_label (this);
 	}
+	
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (expression != null) {
+			expression.check (analyzer);
+		}
+
+		return true;
+	}
 }

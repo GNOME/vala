@@ -343,7 +343,15 @@ public class Vala.Delegate : TypeSymbol {
 			analyzer.current_source_file = source_reference.file;
 		}
 
-		accept_children (analyzer);
+		foreach (TypeParameter p in type_parameters) {
+			p.check (analyzer);
+		}
+		
+		return_type.check (analyzer);
+		
+		foreach (FormalParameter param in parameters) {
+			param.check (analyzer);
+		}
 
 		analyzer.current_source_file = old_source_file;
 

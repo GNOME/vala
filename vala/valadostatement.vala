@@ -94,9 +94,9 @@ public class Vala.DoStatement : CodeNode, Statement {
 
 		checked = true;
 
-		accept_children (analyzer);
+		body.check (analyzer);
 
-		if (condition.error) {
+		if (!condition.check (analyzer)) {
 			/* if there was an error in the condition, skip this check */
 			error = true;
 			return false;

@@ -82,9 +82,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 			return_expression.target_type = analyzer.current_return_type;
 		}
 
-		accept_children (analyzer);
-
-		if (return_expression != null && return_expression.error) {
+		if (return_expression != null && !return_expression.check (analyzer)) {
 			// ignore inner error
 			error = true;
 			return false;

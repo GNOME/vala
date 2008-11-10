@@ -76,6 +76,8 @@ public class Vala.TypeofExpression : Expression {
 
 		checked = true;
 
+		type_reference.check (analyzer);
+
 		value_type = analyzer.type_type;
 
 		return !error;

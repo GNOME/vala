@@ -160,7 +160,7 @@ public class Vala.Constant : Member, Lockable {
 
 		process_attributes ();
 
-		type_reference.accept (analyzer);
+		type_reference.check (analyzer);
 
 		if (!external_package) {
 			if (initializer == null) {
@@ -169,7 +169,7 @@ public class Vala.Constant : Member, Lockable {
 			} else {
 				initializer.target_type = type_reference;
 
-				initializer.accept (analyzer);
+				initializer.check (analyzer);
 			}
 		}
 

@@ -69,6 +69,8 @@ public class Vala.PostfixExpression : Expression {
 
 		checked = true;
 
+		inner.check (analyzer);
+
 		value_type = inner.value_type;
 
 		return !error;

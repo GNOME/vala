@@ -158,7 +158,7 @@ public class Vala.ObjectCreationExpression : Expression {
 		checked = true;
 
 		if (member_name != null) {
-			member_name.accept (analyzer);
+			member_name.check (analyzer);
 		}
 
 		TypeSymbol type = null;
@@ -311,7 +311,7 @@ public class Vala.ObjectCreationExpression : Expression {
 			}
 
 			foreach (Expression arg in args) {
-				arg.accept (analyzer);
+				arg.check (analyzer);
 			}
 
 			analyzer.check_arguments (this, new MethodType (m), m.get_parameters (), args);
@@ -324,7 +324,21 @@ public class Vala.ObjectCreationExpression : Expression {
 				add_error_type (call_error_type);
 			}
 		} else if (type_reference is ErrorType) {
-			accept_children (analyzer);
+			if (type_reference != null) {
+				type_reference.check (analyzer);
+			}
+
+			if (member_name != null) {
+				member_name.check (analyzer);
+			}
+		
+			foreach (Expression arg in argument_list) {
+				arg.check (analyzer);
+			}
+
+			foreach (MemberInitializer init in object_initializer) {
+				init.check (analyzer);
+			}
 
 			if (get_argument_list ().size == 0) {
 				error = true;

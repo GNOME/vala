@@ -91,4 +91,20 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 			expression = new_node;
 		}
 	}
+	
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (checked) {
+			return !error;
+		}
+
+		checked = true;
+
+		expression.check (analyzer);
+
+		foreach (SwitchSection section in sections) {
+			section.check (analyzer);
+		}
+
+		return !error;
+	}
 }

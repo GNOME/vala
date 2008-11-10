@@ -182,6 +182,14 @@ public class Vala.MemberAccess : Expression {
 
 		checked = true;
 
+		if (inner != null) {
+			inner.check (analyzer);
+		}
+		
+		foreach (DataType type_arg in type_argument_list) {
+			type_arg.check (analyzer);
+		}
+
 		Symbol base_symbol = null;
 		FormalParameter this_parameter = null;
 		bool may_access_instance_members = false;
@@ -257,7 +265,7 @@ public class Vala.MemberAccess : Expression {
 				if (pointer_type != null && pointer_type.base_type is ValueType) {
 					// transform foo->bar to (*foo).bar
 					inner = new PointerIndirection (inner, source_reference);
-					inner.accept (analyzer);
+					inner.check (analyzer);
 					pointer_member_access = false;
 				}
 			}

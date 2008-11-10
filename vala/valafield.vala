@@ -211,7 +211,11 @@ public class Vala.Field : Member, Lockable {
 			initializer.target_type = field_type;
 		}
 
-		accept_children (analyzer);
+		field_type.check (analyzer);
+		
+		if (initializer != null) {
+			initializer.check (analyzer);
+		}
 
 		if (binding == MemberBinding.INSTANCE && parent_symbol is Interface) {
 			error = true;

@@ -313,7 +313,13 @@ public class Vala.Enum : TypeSymbol {
 			analyzer.current_source_file = source_reference.file;
 		}
 
-		accept_children (analyzer);
+		foreach (EnumValue value in values) {
+			value.check (analyzer);
+		}
+
+		foreach (Method m in methods) {
+			m.check (analyzer);
+		}
 
 		analyzer.current_source_file = old_source_file;
 

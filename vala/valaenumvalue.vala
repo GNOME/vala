@@ -138,7 +138,9 @@ public class Vala.EnumValue : Symbol {
 
 		process_attributes ();
 
-		accept_children (analyzer);
+		if (value != null) {
+			value.check (analyzer);
+		}
 
 		return !error;
 	}

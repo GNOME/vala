@@ -228,7 +228,11 @@ public class Vala.Signal : Member, Lockable {
 
 		process_attributes ();
 
-		accept_children (analyzer);
+		return_type.check (analyzer);
+		
+		foreach (FormalParameter param in parameters) {
+			param.check (analyzer);
+		}
 
 		return !error;
 	}

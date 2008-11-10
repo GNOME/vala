@@ -80,7 +80,9 @@ public class Vala.ErrorCode : TypeSymbol {
 
 		checked = true;
 
-		accept_children (analyzer);
+		if (value != null) {
+			value.check (analyzer);
+		}
 
 		return !error;
 	}

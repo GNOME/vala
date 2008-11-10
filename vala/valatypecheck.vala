@@ -85,6 +85,10 @@ public class Vala.TypeCheck : Expression {
 
 		checked = true;
 
+		expression.check (analyzer);
+		
+		type_reference.check (analyzer);
+
 		if (type_reference.data_type == null) {
 			/* if type resolving didn't succeed, skip this check */
 			error = true;

@@ -55,6 +55,9 @@ public class Vala.LockStatement : CodeNode, Statement {
 
 		checked = true;
 
+		resource.check (analyzer);
+		body.check (analyzer);
+
 		/* resource must be a member access and denote a Lockable */
 		if (!(resource is MemberAccess && resource.symbol_reference is Lockable)) {
 		    	error = true;

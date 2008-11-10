@@ -109,7 +109,7 @@ public class Vala.ArrayCreationExpression : Expression {
 
 	private int create_sizes_from_initializer_list (SemanticAnalyzer analyzer, InitializerList il, int rank, Gee.List<Literal> sl) {
 		var init = new IntegerLiteral (il.size.to_string (), il.source_reference);
-		init.accept (analyzer);
+		init.check (analyzer);
 		sl.add (init);
 
 		int subsize = -1;
@@ -155,18 +155,18 @@ public class Vala.ArrayCreationExpression : Expression {
 		var initlist = initializer_list;
 
 		if (element_type != null) {
-			element_type.accept (analyzer);
+			element_type.check (analyzer);
 		}
 
 		foreach (Expression e in size) {
-			e.accept (analyzer);
+			e.check (analyzer);
 		}
 
 		var calc_sizes = new ArrayList<Literal> ();
 		if (initlist != null) {
 			initlist.target_type = new ArrayType (element_type, rank, source_reference);
 
-			initlist.accept (analyzer);
+			initlist.check (analyzer);
 
 			var ret = create_sizes_from_initializer_list (analyzer, initlist, rank, calc_sizes);
 			if (ret == -1) {

@@ -71,7 +71,9 @@ public class Vala.Destructor : Symbol {
 		owner = analyzer.current_symbol.scope;
 		analyzer.current_symbol = this;
 
-		accept_children (analyzer);
+		if (body != null) {
+			body.check (analyzer);
+		}
 
 		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
 

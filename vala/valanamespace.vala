@@ -525,6 +525,10 @@ public class Vala.Namespace : Symbol {
 
 		process_attributes ();
 
+		foreach (Namespace ns in namespaces) {
+			ns.check (analyzer);
+		}
+
 		return !error;
 	}
 }

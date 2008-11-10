@@ -94,7 +94,15 @@ public class Vala.TryStatement : CodeNode, Statement {
 
 		checked = true;
 
-		accept_children (analyzer);
+		body.check (analyzer);
+
+		foreach (CatchClause clause in catch_clauses) {
+			clause.check (analyzer);
+		}
+
+		if (finally_body != null) {
+			finally_body.check (analyzer);
+		}
 
 		return !error;
 	}

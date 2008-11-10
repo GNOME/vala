@@ -145,7 +145,7 @@ public class Vala.BinaryExpression : Expression {
 
 		checked = true;
 
-		if (left.error || right.error) {
+		if (!left.check (analyzer) || !right.check (analyzer)) {
 			/* if there were any errors in inner expressions, skip type check */
 			error = true;
 			return false;

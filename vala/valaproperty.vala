@@ -424,14 +424,14 @@ public class Vala.Property : Member, Lockable {
 		property_type.check (analyzer);
 
 		if (get_accessor != null) {
-			get_accessor.accept (analyzer);
+			get_accessor.check (analyzer);
 		}
 		if (set_accessor != null) {
-			set_accessor.accept (analyzer);
+			set_accessor.check (analyzer);
 		}
 
 		if (default_expression != null) {
-			default_expression.accept (analyzer);
+			default_expression.check (analyzer);
 		}
 
 		// check whether property type is at least as accessible as the property

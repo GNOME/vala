@@ -148,9 +148,7 @@ public class Vala.UnaryExpression : Expression {
 			inner.target_type = target_type;
 		}
 
-		accept_children (analyzer);
-
-		if (inner.error) {
+		if (!inner.check (analyzer)) {
 			/* if there was an error in the inner expression, skip type check */
 			error = true;
 			return false;
@@ -207,7 +205,7 @@ public class Vala.UnaryExpression : Expression {
 			parenthexp.target_type = target_type;
 			analyzer.replaced_nodes.add (this);
 			parent_node.replace_expression (this, parenthexp);
-			parenthexp.accept (analyzer);
+			parenthexp.check (analyzer);
 			return true;
 		} else if (operator == UnaryOperator.REF || operator == UnaryOperator.OUT) {
 			if (inner.symbol_reference is Field || inner.symbol_reference is FormalParameter || inner.symbol_reference is LocalVariable) {

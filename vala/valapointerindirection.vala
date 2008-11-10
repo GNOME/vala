@@ -77,7 +77,7 @@ public class Vala.PointerIndirection : Expression {
 
 		checked = true;
 
-		if (inner.error) {
+		if (!inner.check (analyzer)) {
 			return false;
 		}
 		if (inner.value_type == null) {

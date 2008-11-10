@@ -128,9 +128,7 @@ public class Vala.InvocationExpression : Expression {
 
 		checked = true;
 
-		call.accept (analyzer);
-
-		if (call.error) {
+		if (!call.check (analyzer)) {
 			/* if method resolving didn't succeed, skip this check */
 			error = true;
 			return false;
@@ -172,7 +170,7 @@ public class Vala.InvocationExpression : Expression {
 			struct_creation_expression.target_type = target_type;
 			analyzer.replaced_nodes.add (this);
 			parent_node.replace_expression (this, struct_creation_expression);
-			struct_creation_expression.accept (analyzer);
+			struct_creation_expression.check (analyzer);
 			return false;
 		} else if (call is MemberAccess
 		           && call.symbol_reference is CreationMethod) {
@@ -360,7 +358,7 @@ public class Vala.InvocationExpression : Expression {
 		}
 
 		foreach (Expression arg in get_argument_list ()) {
-			arg.accept (analyzer);
+			arg.check (analyzer);
 		}
 
 		DataType ret_type;

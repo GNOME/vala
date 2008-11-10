@@ -105,10 +105,12 @@ public class Vala.CastExpression : Expression {
 
 		checked = true;
 
-		if (inner.error) {
+		if (!inner.check (analyzer)) {
 			error = true;
 			return false;
 		}
+
+		type_reference.check (analyzer);
 
 		// FIXME: check whether cast is allowed
 

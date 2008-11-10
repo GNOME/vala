@@ -668,7 +668,33 @@ public class Vala.Method : Member {
 		}
 		analyzer.current_source_file.add_type_dependency (return_type, SourceFileDependencyType.SOURCE);
 
-		accept_children (analyzer);
+		if (return_type != null) {
+			return_type.check (analyzer);
+		}
+
+		foreach (FormalParameter param in parameters) {
+			param.check (analyzer);
+		}
+
+		foreach (DataType error_type in get_error_types ()) {
+			error_type.check (analyzer);
+		}
+
+		if (result_var != null) {
+			result_var.variable_type.check (analyzer);
+		}
+
+		foreach (Expression precondition in preconditions) {
+			precondition.check (analyzer);
+		}
+
+		foreach (Expression postcondition in postconditions) {
+			postcondition.check (analyzer);
+		}
+
+		if (body != null) {
+			body.check (analyzer);
+		}
 
 		analyzer.current_symbol = old_symbol;
 		analyzer.current_return_type = old_return_type;

@@ -76,6 +76,8 @@ public class Vala.SizeofExpression : Expression {
 
 		checked = true;
 
+		type_reference.check (analyzer);
+
 		value_type = analyzer.ulong_type;
 
 		return !error;
