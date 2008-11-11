@@ -629,7 +629,6 @@ public class Parser : Object {
 
 			tmp = this.newline_handler ( buf, ref linestart, ref str, ref linenr, ref pos, ref linestartnr, ref chr, ref prevchr, ref prevprevchr );
 			if ( chr == '\0' ) {
-				stdout.printf ( ">>WTF<<\n" );
 				break;
 			}
 			else if ( tmp == true ) {
@@ -733,54 +732,6 @@ public class Parser : Object {
 	}
 
 	public DocumentationTree? parse ( Valadoc.Tree tree, Valadoc.Basic me, string str2 ) {
-		if ( me is Valadoc.Property ) {
-			stdout.printf ( "PROPERTY\n" );
-		}
-		else if ( me is Valadoc.Signal ) {
-			stdout.printf ( "SIGNAL\n" );
-		}
-		else if ( me is Valadoc.Class ) {
-			stdout.printf ( "CLASS\n" );
-		}
-		else if ( me is Valadoc.Interface ) {
-			stdout.printf ( "INTERFACE\n" );
-		}
-		else if ( me is Valadoc.Delegate ) {
-			stdout.printf ( "DELEGATE\n" );
-		}
-		else if ( me is Valadoc.Namespace ) {
-			stdout.printf ( "NAMESPACE\n" );
-		}
-		else if ( me is Valadoc.Method ) {
-			stdout.printf ( "METHOD\n" );
-		}
-		else if ( me is Valadoc.Field ) {
-			stdout.printf ( "FIELD\n" );
-		}
-		else if ( me is Valadoc.Constant ) {
-			stdout.printf ( "CONSTANT\n" );
-		}
-		else if ( me is Valadoc.Struct ) {
-			stdout.printf ( "STRUCT\n" );
-		}
-		else if ( me is Valadoc.Enum ) {
-			stdout.printf ( "ENUM\n" );
-		}
-		else if ( me is Valadoc.EnumValue ) {
-			stdout.printf ( "ENUMVALUE\n" );
-		}
-		else if ( me is Valadoc.ErrorCode ) {
-			stdout.printf ( "ERRORCODE\n" );
-		}
-		else if ( me is Valadoc.ErrorDomain ) {
-			stdout.printf ( "ERRORDOMAIN\n" );
-		}
-		else {
-			stdout.printf ( "Gut ^_^\n" );
-		}
-
-		stdout.printf ( "============= %s =============\n", me.full_name() );
-
 		string str = str2;
 
 		GLib.StringBuilder buf = new GLib.StringBuilder ();
@@ -792,7 +743,6 @@ public class Parser : Object {
 
 		bool tmp = this.skip_documentation_header ( ref str, ref linenr, ref pos );
 		if ( tmp == false ) {
-		stdout.printf ( "-----------------------\n" );
 			return null;
 		}
 
@@ -844,7 +794,6 @@ public class Parser : Object {
 
 				InlineTaglet itag = this.parse_bracket ( tree, me, ref str, ref linestart, ref linestartnr, ref linenr, ref pos );
 				if ( itag == null ) {
-		stdout.printf ( "-----------------------\n" );
 					return null;
 				}
 				content.add ( itag );
@@ -853,7 +802,6 @@ public class Parser : Object {
 			else if ( chr == '}' ) {
 				string line = this.extract_line ( linestart );
 				this.reporter.add_error (linenr, pos, linenr, pos, "syntax error.\n", line );
-		stdout.printf ( "-----------------------\n" );
 				return null;
 			}
 			else if ( chr == '@' && prevchr.isspace() ) {
@@ -884,12 +832,11 @@ public class Parser : Object {
 			content.add ( strtag );
 		}
 
-		stdout.printf ( "-----------------------\n" );
-
 		this.append_new_tag ( tree, me, doctree, currtagname, content, currtagline, currtagstartlinenr, currtagstartpos );
 		tmp = this.check_foother ( ref linestart, linenr );
 		if ( tmp == false )
 			return null;
+
 		return doctree;
 	}
 

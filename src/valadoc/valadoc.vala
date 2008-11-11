@@ -278,34 +278,30 @@ public class ValaDoc : Object {
 		return taglets;
 	}
 */
-	private inline bool check_doclet_structure ( string realpath ) {
+	private bool check_doclet_structure ( string realpath ) {
 		bool tmp = FileUtils.test ( realpath, FileTest.IS_DIR );
 		if ( tmp == false ) {
-			stdout.printf ( "realpath %s is not a directory.\n", realpath );
 			return false;
 		}
 
 		tmp = FileUtils.test ( realpath + "/libdoclet.so", FileTest.IS_EXECUTABLE );
 		if ( tmp == false ) {
-			stdout.printf ( "%s is not executable.\n", realpath + "libdoclet.so" );
 			return false;
 		}
 
 
 		tmp = FileUtils.test ( realpath + "/taglets/", FileTest.IS_DIR );
 		if ( tmp == false ) {
-			stdout.printf ( "Error: %s is not a directory.\n", realpath + "/taglets/" );
 			return false;
 		}
 
 		return true;
 	}
 
-	private Gee.HashMap<string, Type>? load_taglets ( out Type strtag ) {
+	private bool load_taglets ( string fulldirpath, out Gee.HashMap<string, Type>? taglets, out Type strtag ) {
 		void* function;
 		GLib.Dir dir;
 
-		string fulldirpath = (pluginpath == null)? Config.plugin_dir : pluginpath;
 		string pluginpath = fulldirpath + "taglets/";
 
 		Gee.ArrayList<Module*> modules = new Gee.ArrayList<weak Module*> ( );
@@ -317,7 +313,8 @@ public class ValaDoc : Object {
 		}
 		catch ( FileError err ) {
 			stdout.printf ( "Can't load plugin. %s\n", pluginpath );
-			return null;
+			taglets = null;
+			return false;
 		}
 
 		for ( weak string entry = dir.read_name(); entry != null ; entry = dir.read_name() ) {
@@ -329,7 +326,8 @@ public class ValaDoc : Object {
 			Module* module = Module.open ( tagletpath, ModuleFlags.BIND_LAZY);
 			if (module == null) {
 				stdout.printf ( "Can't load plugin.\n" );
-				return taglets;
+				taglets = null;
+				return false;
 			}
 
 			module->symbol( "register_plugin", out function );
@@ -341,36 +339,23 @@ public class ValaDoc : Object {
 
 			if ( entry == "libtagletstring.so" || entry == "libtagletstring.dll" )
 				strtag = type;
-			//else
-			//	taglets.set ( name, type );
 
 			modules.add ( module );
 		}
 
-		return taglets;
+		return true;
 	}
 
-	private Doclet? load_doclet ( ) {
+	private Doclet? load_doclet ( string path ) {
 		void* function;
 
-/*
-		string ppath = (pluginpath == null)? Config.plugin_dir : pluginpath;
-		string pluginpath = realpath ( ppath ) + "/template";
-
-		string pluginpath;
-		string ppath;
-*/
-
-
-		docletmodule = Module.open ( pluginpath + "/libdoclet.so", ModuleFlags.BIND_LAZY);
+		docletmodule = Module.open ( path + "/libdoclet.so", ModuleFlags.BIND_LAZY);
 		if (docletmodule == null) {
-			stdout.printf ( "Can't load doclet %s.\n", pluginpath + "/libdoclet.so" );
 			return null;
 		}
 
 		docletmodule.symbol( "register_plugin", out function );
 		if ( function == null ) {
-			stdout.printf ( "Can't register the doclet.\n" );
 			return null;
 		}
 
@@ -509,20 +494,35 @@ public class ValaDoc : Object {
 		}
 
 		Reporter reporter = new Reporter();
-		GLib.Type strtag;
 
-		bool tmp = check_doclet_structure ( pluginpath );
+
+
+		string fulldirpath = (pluginpath == null)? Config.plugin_dir : pluginpath;
+
+
+		bool tmp = this.check_doclet_structure ( pluginpath );
+
+
+
 		if ( tmp == false ) {
-			stdout.printf ( "Not a doclet %s.\n", pluginpath );
+			stdout.printf ( "Error: failed to load plugin.\n" );
 			return 1;
 		}
 
-		Gee.HashMap<string, Type> taglets = load_taglets ( out strtag );
-		if ( taglets == null )
-			return 1;
 
-		Valadoc.Doclet doclet = this.load_doclet ( );
+		Gee.HashMap<string, Type> taglets;
+		GLib.Type strtag;
+
+
+		tmp = this.load_taglets ( fulldirpath, out taglets, out strtag );
+		if ( tmp == false ) {
+			stdout.printf ( "Error: failed to load plugin.\n" );
+			return 1;
+		}
+
+		Valadoc.Doclet doclet = this.load_doclet ( fulldirpath );
 		if ( doclet == null ) {
+			stdout.printf ( "Error: failed to load plugin.\n" );
 			return 1;
 		}
 

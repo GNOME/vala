@@ -3684,10 +3684,6 @@ public class Valadoc.Struct : ContainerDataType, Visitable, ConstructionMethodHa
 		if ( this.documentation != null )
 			return ;
 
-		if ( this.parent_class != null ) {
-			stdout.printf ( "{>>>>>[%s]<<<<<}\n", this.parent_class.comment_string );
-		}
-
 
 		if ( this.comment_string != null ) {
 			bool tmp = Parser.is_documentation ( this.comment_string );
