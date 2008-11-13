@@ -345,7 +345,16 @@ public class Vala.DBusClientModule : GAsyncModule {
 
 					var cget_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_get_value_function ()));
 					cget_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeElementAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "values"), new CCodeConstant (i.to_string ()))));
-					var assign = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), f.name), cget_call);
+
+					var converted_value = cget_call;
+
+					if (requires_copy (f.field_type)) {
+						var dupexpr = get_dup_func_expression (f.field_type, expr.source_reference);
+						converted_value = new CCodeFunctionCall (dupexpr);
+						converted_value.add_argument (cget_call);
+					}
+
+					var assign = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), f.name), converted_value);
 					out_marshalling_fragment.append (new CCodeExpressionStatement (assign));
 
 					type_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
