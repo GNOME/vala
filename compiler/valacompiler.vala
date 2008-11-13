@@ -45,6 +45,7 @@ class Vala.Compiler {
 	static bool enable_checking;
 	static bool disable_non_null;
 	static bool non_null_experimental;
+	static bool disable_dbus_transformation;
 	static string cc_command;
 	[NoArrayLength]
 	static string[] cc_options;
@@ -69,6 +70,7 @@ class Vala.Compiler {
 		{ "enable-checking", 0, 0, OptionArg.NONE, ref enable_checking, "Enable additional run-time checks", null },
 		{ "disable-non-null", 0, 0, OptionArg.NONE, ref disable_non_null, "Disable non-null types", null },
 		{ "enable-non-null-experimental", 0, 0, OptionArg.NONE, ref non_null_experimental, "Enable experimental enhancements for non-null types", null },
+		{ "disable-dbus-transformation", 0, 0, OptionArg.NONE, ref disable_dbus_transformation, "Disable transformation of D-Bus member names", null },
 		{ "cc", 0, 0, OptionArg.STRING, ref cc_command, "Use COMMAND as C compiler command", "COMMAND" },
 		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, ref cc_options, "Pass OPTION to the C compiler", "OPTION..." },
 		{ "save-temps", 0, 0, OptionArg.NONE, ref save_temps, "Keep temporary files", null },
@@ -150,6 +152,7 @@ class Vala.Compiler {
 		context.checking = enable_checking;
 		context.non_null = !disable_non_null || non_null_experimental;
 		context.non_null_experimental = non_null_experimental;
+		context.dbus_transformation = !disable_dbus_transformation;
 		Report.set_verbose_errors (!quiet_mode);
 
 		context.ccode_only = ccode_only;

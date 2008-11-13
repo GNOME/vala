@@ -35,6 +35,16 @@ public class Vala.DBusClientModule : GAsyncModule {
 		base (codegen, next);
 	}
 
+	string get_dynamic_dbus_name (string vala_name) {
+		// TODO switch default to no transformation as soon as we have static D-Bus client support
+		// keep transformation by default for static D-Bus client and server support
+		if (context.dbus_transformation) {
+			return Symbol.lower_case_to_camel_case (vala_name);
+		} else {
+			return vala_name;
+		}
+	}
+
 	public override void generate_dynamic_method_wrapper (DynamicMethod method) {
 		var dynamic_method = (DynamicMethod) method;
 
@@ -107,7 +117,7 @@ public class Vala.DBusClientModule : GAsyncModule {
 			arg_index++;
 		}
 
-		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (method.name))));
+		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (get_dynamic_dbus_name (method.name))));
 
 		if (callback != null) {
 			var reply_method = (Method) callback.symbol_reference;
@@ -614,7 +624,7 @@ public class Vala.DBusClientModule : GAsyncModule {
 		ccall.add_argument (get_iface);
 
 		ccall.add_argument (new CCodeIdentifier ("G_TYPE_STRING"));
-		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (node.name))));
+		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (get_dynamic_dbus_name (node.name))));
 
 		ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
 
@@ -675,7 +685,7 @@ public class Vala.DBusClientModule : GAsyncModule {
 		ccall.add_argument (get_iface);
 
 		ccall.add_argument (new CCodeIdentifier ("G_TYPE_STRING"));
-		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (node.name))));
+		ccall.add_argument (new CCodeConstant ("\"%s\"".printf (get_dynamic_dbus_name (node.name))));
 
 		ccall.add_argument (new CCodeIdentifier ("G_TYPE_VALUE"));
 		ccall.add_argument (val_ptr);
@@ -751,7 +761,7 @@ public class Vala.DBusClientModule : GAsyncModule {
 
 		var add_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_add_signal"));
 		add_call.add_argument (new CCodeIdentifier ("obj"));
-		add_call.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (sig.name))));
+		add_call.add_argument (new CCodeConstant ("\"%s\"".printf (get_dynamic_dbus_name (sig.name))));
 
 		bool first = true;
 		foreach (FormalParameter param in m.get_parameters ()) {

@@ -1,5 +1,16 @@
 2008-11-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodecontext.vala:
+	* gobject/valadbusclientmodule.vala:
+	* compiler/valacompiler.vala:
+
+	Add --disable-dbus-transformation command-line option to disable
+	case transformation of D-Bus member names in dynamic D-Bus client
+	support, this option will be removed again when Vala gains static
+	D-Bus client support
+
+2008-11-13  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusclientmodule.vala:
 
 	Fix retrieving D-Bus structs with owned strings
