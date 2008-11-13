@@ -2259,7 +2259,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		var ccall = new CCodeFunctionCall (dupexpr);
 
-		if (expr != null && expr.is_non_null ()) {
+		if (!(expression_type is ArrayType) && expr != null && expr.is_non_null ()) {
 			// expression is non-null
 			ccall.add_argument ((CCodeExpression) expr.ccodenode);
 			
