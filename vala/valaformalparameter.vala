@@ -48,6 +48,12 @@ public class Vala.FormalParameter : Symbol {
 	public bool ellipsis { get; set; }
 	
 	/**
+	 * Specifies whether the methods accepts an indefinite number of
+	 * parameters.
+	 */
+	public bool params_array { get; set; }
+	
+	/**
 	 * Specifies the expression used when the caller doesn't supply an
 	 * argument for this parameter.
 	 */
@@ -161,6 +167,7 @@ public class Vala.FormalParameter : Symbol {
 	public FormalParameter copy () {
 		if (!ellipsis) {
 			var result = new FormalParameter (name, parameter_type, source_reference);
+			result.params_array = params_array;
 			return result;
 		} else {
 			return new FormalParameter.with_ellipsis ();
@@ -191,6 +198,12 @@ public class Vala.FormalParameter : Symbol {
 		if (!ellipsis) {
 			parameter_type.check (analyzer);
 			
+			if (params_array && !(parameter_type is ArrayType)) {
+				error = true;
+				Report.error (source_reference, "parameter array expected");
+				return false;
+			}
+
 			if (default_expression != null) {
 				default_expression.check (analyzer);
 			}

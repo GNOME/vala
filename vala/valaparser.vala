@@ -207,6 +207,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.NULL:
 		case TokenType.OUT:
 		case TokenType.OVERRIDE:
+		case TokenType.PARAMS:
 		case TokenType.PRIVATE:
 		case TokenType.PROTECTED:
 		case TokenType.PUBLIC:
@@ -2699,6 +2700,7 @@ public class Vala.Parser : CodeVisitor {
 			// varargs
 			return new FormalParameter.with_ellipsis (get_src (begin));
 		}
+		bool params_array = accept (TokenType.PARAMS);
 		bool construct_param = false;
 		if (accept (TokenType.CONSTRUCT)) {
 			Report.warning (get_last_src (), "deprecated syntax, use assignments in the method body");
@@ -2723,6 +2725,7 @@ public class Vala.Parser : CodeVisitor {
 		var param = new FormalParameter (id, type, get_src (begin));
 		set_attributes (param, attrs);
 		param.direction = direction;
+		param.params_array = params_array;
 		param.construct_parameter = construct_param;
 		if (accept (TokenType.ASSIGN)) {
 			param.default_expression = parse_expression ();

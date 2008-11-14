@@ -171,7 +171,7 @@ public class Vala.CCodeInvocationExpressionModule : CCodeAssignmentModule {
 			CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
 			if (params_it.next ()) {
 				var param = params_it.get ();
-				ellipsis = param.ellipsis;
+				ellipsis = param.params_array || param.ellipsis;
 				if (!ellipsis) {
 					// if the vala argument expands to multiple C arguments,
 					// we have to make sure that the C arguments don't depend
@@ -311,7 +311,7 @@ public class Vala.CCodeInvocationExpressionModule : CCodeAssignmentModule {
 			 * the additional parameter is an ellipsis parameter
 			 * otherwise there is a bug in the semantic analyzer
 			 */
-			assert (param.ellipsis);
+			assert (param.params_array || param.ellipsis);
 			ellipsis = true;
 		}
 

@@ -721,6 +721,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				write_string ("[CCode (%s)] ".printf (ccode_params.str));
 			}
 
+			if (param.params_array) {
+				write_string ("params ");
+			}
+
 			if (param.direction != ParameterDirection.IN) {
 				if (param.direction == ParameterDirection.REF) {
 					write_string ("ref ");

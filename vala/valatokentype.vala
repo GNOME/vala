@@ -107,6 +107,7 @@ public enum Vala.TokenType {
 	OPEN_BRACKET,
 	OPEN_PARENS,
 	OVERRIDE,
+	PARAMS,
 	PERCENT,
 	PLUS,
 	PRIVATE,
@@ -225,6 +226,7 @@ public enum Vala.TokenType {
 		case OPEN_BRACKET: return "`['";
 		case OPEN_PARENS: return "`('";
 		case OVERRIDE: return "`override'";
+		case PARAMS: return "`params'";
 		case PERCENT: return "`%'";
 		case PLUS: return "`+'";
 		case PRIVATE: return "`private'";

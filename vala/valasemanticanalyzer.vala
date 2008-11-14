@@ -287,6 +287,20 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			/* header file necessary if we need to cast argument */
 			current_source_file.add_type_dependency (param.parameter_type, SourceFileDependencyType.SOURCE);
 
+			if (param.params_array) {
+				while (arg_it.next ()) {
+					var arg = arg_it.get ();
+					if (!check_argument (arg, i, param.direction)) {
+						expr.error = true;
+						return false;
+					}
+
+					i++;
+				}
+
+				break;
+			}
+
 			if (arg_it == null || !arg_it.next ()) {
 				if (param.default_expression == null) {
 					expr.error = true;
@@ -306,83 +320,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				}
 			} else {
 				var arg = arg_it.get ();
-				if (arg.error) {
-					// ignore inner error
+				if (!check_argument (arg, i, param.direction)) {
 					expr.error = true;
 					return false;
-				} else if (arg.value_type == null) {
-					// disallow untyped arguments except for type inference of callbacks
-					if (!(param.parameter_type is DelegateType) || !(arg.symbol_reference is Method)) {
-						expr.error = true;
-						Report.error (arg.source_reference, "Invalid type for argument %d".printf (i + 1));
-						return false;
-					}
-				} else if (arg.target_type != null && !arg.value_type.compatible (arg.target_type)
-				           && !(arg is NullLiteral && param.direction == ParameterDirection.OUT)) {
-					expr.error = true;
-					Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.value_type.to_string (), arg.target_type.to_string ()));
-					return false;
-				} else {
-					// 0 => null, 1 => in, 2 => ref, 3 => out
-					int arg_type = 1;
-					if (arg.value_type is NullType) {
-						arg_type = 0;
-					} else if (arg is UnaryExpression) {
-						var unary = (UnaryExpression) arg;
-						if (unary.operator == UnaryOperator.REF) {
-							arg_type = 2;
-						} else if (unary.operator == UnaryOperator.OUT) {
-							arg_type = 3;
-						}
-					}
-
-					if (arg_type == 0) {
-						if (param.direction == ParameterDirection.REF) {
-							expr.error = true;
-							Report.error (arg.source_reference, "Argument %d: Cannot pass null to reference parameter".printf (i + 1));
-							return false;
-						} else if (context.non_null && param.direction != ParameterDirection.OUT && !param.parameter_type.nullable) {
-							Report.warning (arg.source_reference, "Argument %d: Cannot pass null to non-null parameter type".printf (i + 1));
-						}
-					} else if (arg_type == 1) {
-						if (param.direction != ParameterDirection.IN) {
-							expr.error = true;
-							Report.error (arg.source_reference, "Argument %d: Cannot pass value to reference or output parameter".printf (i + 1));
-							return false;
-						}
-					} else if (arg_type == 2) {
-						if (param.direction != ParameterDirection.REF) {
-							expr.error = true;
-							Report.error (arg.source_reference, "Argument %d: Cannot pass ref argument to non-reference parameter".printf (i + 1));
-							return false;
-						}
-
-						// weak variables can only be used with weak ref parameters
-						if (param.parameter_type.is_disposable ()) {
-							if (!(arg.value_type is PointerType) && !arg.value_type.value_owned) {
-								/* variable doesn't own the value */
-								expr.error = true;
-								Report.error (arg.source_reference, "Invalid assignment from owned expression to unowned variable");
-								return false;
-							}
-						}
-					} else if (arg_type == 3) {
-						if (param.direction != ParameterDirection.OUT) {
-							expr.error = true;
-							Report.error (arg.source_reference, "Argument %d: Cannot pass out argument to non-output parameter".printf (i + 1));
-							return false;
-						}
-
-						// weak variables can only be used with weak out parameters
-						if (param.parameter_type.is_disposable ()) {
-							if (!(arg.value_type is PointerType) && !arg.value_type.value_owned) {
-								/* variable doesn't own the value */
-								expr.error = true;
-								Report.error (arg.source_reference, "Invalid assignment from owned expression to unowned variable");
-								return false;
-							}
-						}
-					}
 				}
 
 				prev_arg = arg;
@@ -427,6 +367,79 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		}
 
+		return true;
+	}
+
+	bool check_argument (Expression arg, int i, ParameterDirection direction) {
+		if (arg.error) {
+			// ignore inner error
+			return false;
+		} else if (arg.value_type == null) {
+			// disallow untyped arguments except for type inference of callbacks
+			if (!(arg.target_type is DelegateType) || !(arg.symbol_reference is Method)) {
+				Report.error (arg.source_reference, "Invalid type for argument %d".printf (i + 1));
+				return false;
+			}
+		} else if (arg.target_type != null && !arg.value_type.compatible (arg.target_type)
+		           && !(arg is NullLiteral && direction == ParameterDirection.OUT)) {
+			Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.value_type.to_string (), arg.target_type.to_string ()));
+			return false;
+		} else {
+			// 0 => null, 1 => in, 2 => ref, 3 => out
+			int arg_type = 1;
+			if (arg.value_type is NullType) {
+				arg_type = 0;
+			} else if (arg is UnaryExpression) {
+				var unary = (UnaryExpression) arg;
+				if (unary.operator == UnaryOperator.REF) {
+					arg_type = 2;
+				} else if (unary.operator == UnaryOperator.OUT) {
+					arg_type = 3;
+				}
+			}
+
+			if (arg_type == 0) {
+				if (direction == ParameterDirection.REF) {
+					Report.error (arg.source_reference, "Argument %d: Cannot pass null to reference parameter".printf (i + 1));
+					return false;
+				} else if (context.non_null && direction != ParameterDirection.OUT && !arg.target_type.nullable) {
+					Report.warning (arg.source_reference, "Argument %d: Cannot pass null to non-null parameter type".printf (i + 1));
+				}
+			} else if (arg_type == 1) {
+				if (direction != ParameterDirection.IN) {
+					Report.error (arg.source_reference, "Argument %d: Cannot pass value to reference or output parameter".printf (i + 1));
+					return false;
+				}
+			} else if (arg_type == 2) {
+				if (direction != ParameterDirection.REF) {
+					Report.error (arg.source_reference, "Argument %d: Cannot pass ref argument to non-reference parameter".printf (i + 1));
+					return false;
+				}
+
+				// weak variables can only be used with weak ref parameters
+				if (arg.target_type.is_disposable ()) {
+					if (!(arg.value_type is PointerType) && !arg.value_type.value_owned) {
+						/* variable doesn't own the value */
+						Report.error (arg.source_reference, "Invalid assignment from owned expression to unowned variable");
+						return false;
+					}
+				}
+			} else if (arg_type == 3) {
+				if (direction != ParameterDirection.OUT) {
+					Report.error (arg.source_reference, "Argument %d: Cannot pass out argument to non-output parameter".printf (i + 1));
+					return false;
+				}
+
+				// weak variables can only be used with weak out parameters
+				if (arg.target_type.is_disposable ()) {
+					if (!(arg.value_type is PointerType) && !arg.value_type.value_owned) {
+						/* variable doesn't own the value */
+						Report.error (arg.source_reference, "Invalid assignment from owned expression to unowned variable");
+						return false;
+					}
+				}
+			}
+		}
 		return true;
 	}
 

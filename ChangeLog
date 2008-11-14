@@ -1,5 +1,18 @@
 2008-11-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaformalparameter.vala:
+	* vala/valainterfacewriter.vala:
+	* vala/valainvocationexpression.vala:
+	* vala/valaparser.vala:
+	* vala/valascanner.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valatokentype.vala:
+	* gobject/valaccodeinvocationexpressionmodule.vala:
+
+	Support parameter arrays, fixes bug 538897
+
+2008-11-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valagenieparser.vala:
 	* vala/valaparser.vala:
 

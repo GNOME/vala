@@ -204,6 +204,18 @@ public class Vala.InvocationExpression : Expression {
 				break;
 			}
 
+			if (param.params_array) {
+				var array_type = (ArrayType) param.parameter_type;
+				while (arg_it.next ()) {
+					Expression arg = arg_it.get ();
+
+					/* store expected type for callback parameters */
+					arg.target_type = array_type.element_type;
+					arg.target_type.value_owned = array_type.value_owned;
+				}
+				break;
+			}
+
 			if (arg_it.next ()) {
 				Expression arg = arg_it.get ();
 
