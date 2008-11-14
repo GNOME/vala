@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
+using Gee;
 
 /**
  * Represents a pointer indirection in the source code, e.g. `*pointer'.
@@ -100,5 +100,13 @@ public class Vala.PointerIndirection : Expression {
 		}
 
 		return !error;
+	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		inner.get_defined_variables (collection);
+	}
+
+	public override void get_used_variables (Collection<LocalVariable> collection) {
+		inner.get_used_variables (collection);
 	}
 }

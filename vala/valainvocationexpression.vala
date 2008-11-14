@@ -420,4 +420,20 @@ public class Vala.InvocationExpression : Expression {
 
 		return !error;
 	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		call.get_defined_variables (collection);
+
+		foreach (Expression arg in argument_list) {
+			arg.get_defined_variables (collection);
+		}
+	}
+
+	public override void get_used_variables (Collection<LocalVariable> collection) {
+		call.get_used_variables (collection);
+
+		foreach (Expression arg in argument_list) {
+			arg.get_used_variables (collection);
+		}
+	}
 }

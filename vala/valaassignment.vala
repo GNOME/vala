@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
+using Gee;
 
 /**
  * Represents an assignment expression in the source code.
@@ -375,6 +375,26 @@ public class Vala.Assignment : Expression {
 		add_error_types (right.get_error_types ());
 
 		return !error;
+	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		right.get_defined_variables (collection);
+		left.get_defined_variables (collection);
+		var local = left.symbol_reference as LocalVariable;
+		if (local != null) {
+			collection.add (local);
+		}
+	}
+
+	public override void get_used_variables (Collection<LocalVariable> collection) {
+		var ma = left as MemberAccess;
+		var ea = left as ElementAccess;
+		if (ma != null && ma.inner != null) {
+			ma.inner.get_used_variables (collection);
+		} else if (ea != null) {
+			ea.get_used_variables (collection);
+		}
+		right.get_used_variables (collection);
 	}
 }
 	

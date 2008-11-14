@@ -1,5 +1,34 @@
 2008-11-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am:
+	* vala/valaassignment.vala:
+	* vala/valabasicblock.vala:
+	* vala/valabinaryexpression.vala:
+	* vala/valacastexpression.vala:
+	* vala/valacatchclause.vala:
+	* vala/valacodenode.vala:
+	* vala/valadeclarationstatement.vala:
+	* vala/valaelementaccess.vala:
+	* vala/valaexpressionstatement.vala:
+	* vala/valaflowanalyzer.vala:
+	* vala/valaforeachstatement.vala:
+	* vala/valainvocationexpression.vala:
+	* vala/valamemberaccess.vala:
+	* vala/valaobjectcreationexpression.vala:
+	* vala/valaparenthesizedexpression.vala:
+	* vala/valaphifunction.vala:
+	* vala/valapointerindirection.vala:
+	* vala/valareferencetransferexpression.vala:
+	* vala/valareturnstatement.vala:
+	* vala/valathrowstatement.vala:
+	* vala/valaunaryexpression.vala:
+	* compiler/valacompiler.vala:
+
+	Report use of possibly uninitialized variables, fixes bug 508477
+	and bug 556861
+
+2008-11-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valagenieparser.vala:
 	* vala/valainterface.vala:
 	* vala/valainterfacewriter.vala:

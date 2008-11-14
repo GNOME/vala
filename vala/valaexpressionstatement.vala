@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
+using Gee;
 
 /**
  * A code statement that evaluates a given expression. The value computed by the
@@ -102,5 +102,13 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 		add_error_types (expression.get_error_types ());
 
 		return !error;
+	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		expression.get_defined_variables (collection);
+	}
+
+	public override void get_used_variables (Collection<LocalVariable> collection) {
+		expression.get_used_variables (collection);
 	}
 }

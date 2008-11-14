@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
+using Gee;
 
 /**
  * Represents a catch clause in a try statement in the source code.
@@ -118,5 +118,9 @@ public class Vala.CatchClause : CodeNode {
 		body.check (analyzer);
 
 		return !error;
+	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		collection.add (error_variable);
 	}
 }

@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
+using Gee;
 
 /**
  * Represents a reference transfer expression in the source code, e.g. `#foo'.
@@ -106,5 +106,13 @@ public class Vala.ReferenceTransferExpression : Expression {
 		value_type.value_owned = true;
 
 		return !error;
+	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		inner.get_defined_variables (collection);
+	}
+
+	public override void get_used_variables (Collection<LocalVariable> collection) {
+		inner.get_used_variables (collection);
 	}
 }

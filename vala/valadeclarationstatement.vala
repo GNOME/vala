@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
+using Gee;
 
 /**
  * Represents a local variable or constant declaration statement in the source code.
@@ -70,5 +70,20 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 		}
 
 		return !error;
+	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		var local = declaration as LocalVariable;
+		if (local != null && local.initializer != null) {
+			local.initializer.get_defined_variables (collection);
+			collection.add (local);
+		}
+	}
+
+	public override void get_used_variables (Collection<LocalVariable> collection) {
+		var local = declaration as LocalVariable;
+		if (local != null && local.initializer != null) {
+			local.initializer.get_used_variables (collection);
+		}
 	}
 }

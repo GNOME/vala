@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
+using Gee;
 
 /**
  * Represents a throw statement in the source code.
@@ -93,5 +93,13 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 		add_error_type (error_type);
 
 		return !error;
+	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		error_expression.get_defined_variables (collection);
+	}
+
+	public override void get_used_variables (Collection<LocalVariable> collection) {
+		error_expression.get_used_variables (collection);
 	}
 }

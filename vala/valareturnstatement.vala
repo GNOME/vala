@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
+using Gee;
 
 /**
  * Represents a return statement in the source code.
@@ -140,5 +140,17 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 		add_error_types (return_expression.get_error_types ());
 
 		return !error;
+	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		if (return_expression != null) {
+			return_expression.get_defined_variables (collection);
+		}
+	}
+
+	public override void get_used_variables (Collection<LocalVariable> collection) {
+		if (return_expression != null) {
+			return_expression.get_used_variables (collection);
+		}
 	}
 }

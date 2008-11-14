@@ -256,8 +256,8 @@ class Vala.Compiler {
 			return quit ();
 		}
 
-		var cfg_builder = new CFGBuilder ();
-		cfg_builder.build_cfg (context);
+		var flow_analyzer = new FlowAnalyzer ();
+		flow_analyzer.analyze (context);
 
 		if (Report.get_errors () > 0) {
 			return quit ();

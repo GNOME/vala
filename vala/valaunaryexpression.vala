@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
+using Gee;
 
 /**
  * Represents an expression with one operand in the source code.
@@ -224,6 +224,22 @@ public class Vala.UnaryExpression : Expression {
 		}
 
 		return !error;
+	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		inner.get_defined_variables (collection);
+		if (operator == UnaryOperator.OUT || operator == UnaryOperator.REF) {
+			var local = inner.symbol_reference as LocalVariable;
+			if (local != null) {
+				collection.add (local);
+			}
+		}
+	}
+
+	public override void get_used_variables (Collection<LocalVariable> collection) {
+		if (operator != UnaryOperator.OUT) {
+			inner.get_used_variables (collection);
+		}
 	}
 }
 

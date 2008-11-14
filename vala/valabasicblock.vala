@@ -30,8 +30,16 @@ using Gee;
 public class Vala.BasicBlock {
 	private Gee.List<CodeNode> nodes = new ArrayList<CodeNode> ();
 
+	// control flow graph
 	private Gee.List<weak BasicBlock> predecessors = new ArrayList<weak BasicBlock> ();
 	private Gee.List<BasicBlock> successors = new ArrayList<BasicBlock> ();
+
+	// dominator tree
+	public BasicBlock parent { get; private set; }
+	Gee.List<BasicBlock> children = new ArrayList<BasicBlock> ();
+	Set<BasicBlock> df = new HashSet<BasicBlock> ();
+
+	Set<PhiFunction> phi_functions = new HashSet<PhiFunction> ();
 
 	public BasicBlock () {
 	}
@@ -44,6 +52,10 @@ public class Vala.BasicBlock {
 
 	public void add_node (CodeNode node) {
 		nodes.add (node);
+	}
+
+	public Gee.List<CodeNode> get_nodes () {
+		return nodes;
 	}
 
 	public void connect (BasicBlock target) {
@@ -61,5 +73,30 @@ public class Vala.BasicBlock {
 
 	public Gee.List<weak BasicBlock> get_successors () {
 		return new ReadOnlyList<weak BasicBlock> (successors);
+	}
+
+	public void add_child (BasicBlock block) {
+		children.add (block);
+		block.parent = this;
+	}
+
+	public Gee.List<BasicBlock> get_children () {
+		return children;
+	}
+
+	public void add_dominator_frontier (BasicBlock block) {
+		df.add (block);
+	}
+
+	public Gee.Set<BasicBlock> get_dominator_frontier () {
+		return df;
+	}
+
+	public void add_phi_function (PhiFunction phi) {
+		phi_functions.add (phi);
+	}
+
+	public Gee.Set<PhiFunction> get_phi_functions () {
+		return phi_functions;
 	}
 }

@@ -30,7 +30,6 @@ libvalacore_la_VALASOURCES = \
 	valabreakstatement.vala \
 	valacastexpression.vala \
 	valacatchclause.vala \
-	valacfgbuilder.vala \
 	valacharacterliteral.vala \
 	valaclass.vala \
 	valaclasstype.vala \
@@ -64,6 +63,7 @@ libvalacore_la_VALASOURCES = \
 	valaexpressionstatement.vala \
 	valafield.vala \
 	valafieldprototype.vala \
+	valaflowanalyzer.vala \
 	valaforeachstatement.vala \
 	valaformalparameter.vala \
 	valaforstatement.vala \
@@ -99,6 +99,7 @@ libvalacore_la_VALASOURCES = \
 	valaobjecttypesymbol.vala \
 	valaparenthesizedexpression.vala \
 	valaparser.vala \
+	valaphifunction.vala \
 	valapointerindirection.vala \
 	valapointertype.vala \
 	valapostfixexpression.vala \

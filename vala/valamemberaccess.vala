@@ -535,4 +535,20 @@ public class Vala.MemberAccess : Expression {
 
 		return !error;
 	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		if (inner != null) {
+			inner.get_defined_variables (collection);
+		}
+	}
+
+	public override void get_used_variables (Collection<LocalVariable> collection) {
+		if (inner != null) {
+			inner.get_used_variables (collection);
+		}
+		var local = symbol_reference as LocalVariable;
+		if (local != null) {
+			collection.add (local);
+		}
+	}
 }

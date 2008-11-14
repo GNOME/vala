@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
+using Gee;
 
 /**
  * Represents a type cast in the source code.
@@ -122,5 +122,13 @@ public class Vala.CastExpression : Expression {
 		inner.target_type = inner.value_type.copy ();
 
 		return !error;
+	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		inner.get_defined_variables (collection);
+	}
+
+	public override void get_used_variables (Collection<LocalVariable> collection) {
+		inner.get_used_variables (collection);
 	}
 }

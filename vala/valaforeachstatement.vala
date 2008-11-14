@@ -1,6 +1,6 @@
 /* valaforeachstatement.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
+using Gee;
 
 /**
  * Represents a foreach statement in the source code. Foreach statements iterate
@@ -246,5 +246,9 @@ public class Vala.ForeachStatement : Block {
 		add_error_types (body.get_error_types ());
 
 		return !error;
+	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		collection.add (element_variable);
 	}
 }

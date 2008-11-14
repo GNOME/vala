@@ -1,4 +1,4 @@
-/* valacfgbuilder.vala
+/* valaflowanalyzer.vala
  *
  * Copyright (C) 2008  Jürg Billeter
  *
@@ -26,7 +26,7 @@ using Gee;
 /**
  * Code visitor building the control flow graph.
  */
-public class Vala.CFGBuilder : CodeVisitor {
+public class Vala.FlowAnalyzer : CodeVisitor {
 	private class JumpTarget {
 		public bool is_break_target { get; set; }
 		public bool is_continue_target { get; set; }
@@ -74,7 +74,11 @@ public class Vala.CFGBuilder : CodeVisitor {
 	private bool unreachable_reported;
 	private Gee.List<JumpTarget> jump_stack = new ArrayList<JumpTarget> ();
 
-	public CFGBuilder () {
+	Map<Symbol, Gee.List<LocalVariable>> var_map;
+	Set<LocalVariable> used_vars;
+	Map<LocalVariable, PhiFunction> phi_functions;
+
+	public FlowAnalyzer () {
 	}
 
 	/**
@@ -82,7 +86,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 	 *
 	 * @param context a code context
 	 */
-	public void build_cfg (CodeContext context) {
+	public void analyze (CodeContext context) {
 		this.context = context;
 
 		/* we're only interested in non-pkg source files */
@@ -159,6 +163,308 @@ public class Vala.CFGBuilder : CodeVisitor {
 
 			current_block.connect (m.exit_block);
 		}
+
+		build_dominator_tree (m);
+		build_dominator_frontier (m);
+		insert_phi_functions (m);
+		check_variables (m);
+	}
+
+	Gee.List<BasicBlock> get_depth_first_list (Method m) {
+		var list = new ArrayList<BasicBlock> ();
+		depth_first_traverse (m.entry_block, list);
+		return list;
+	}
+
+	void depth_first_traverse (BasicBlock current, Gee.List<BasicBlock> list) {
+		if (current in list) {
+			return;
+		}
+		list.add (current);
+		foreach (BasicBlock succ in current.get_successors ()) {
+			depth_first_traverse (succ, list);
+		}
+	}
+
+	void build_dominator_tree (Method m) {
+		// set dom(n) = {E,1,2...,N,X} forall n
+		var dom = new HashMap<BasicBlock, Set<BasicBlock>> ();
+		var block_list = get_depth_first_list (m);
+		foreach (BasicBlock block in block_list) {
+			var block_set = new HashSet<BasicBlock> ();
+			foreach (BasicBlock b in block_list) {
+				block_set.add (b);
+			}
+			dom.set (block, block_set);
+		}
+
+		// set dom(E) = {E}
+		var entry_dom_set = new HashSet<BasicBlock> ();
+		entry_dom_set.add (m.entry_block);
+		dom.set (m.entry_block, entry_dom_set);
+
+		bool changes = true;
+		while (changes) {
+			changes = false;
+			foreach (BasicBlock block in block_list) {
+				// intersect dom(pred) forall pred: pred = predecessor(s)
+				var dom_set = new HashSet<BasicBlock> ();
+				bool first = true;
+				foreach (BasicBlock pred in block.get_predecessors ()) {
+					var pred_dom_set = dom.get (pred);
+					if (first) {
+						foreach (BasicBlock dom_block in pred_dom_set) {
+							dom_set.add (dom_block);
+						}
+						first = false;
+					} else {
+						var remove_queue = new ArrayList<BasicBlock> ();
+						foreach (BasicBlock dom_block in dom_set) {
+							if (!(dom_block in pred_dom_set)) {
+								remove_queue.add (dom_block);
+							}
+						}
+						foreach (BasicBlock dom_block in remove_queue) {
+							dom_set.remove (dom_block);
+						}
+					}
+				}
+				// unite with s
+				dom_set.add (block);
+
+				// check for changes
+				if (dom.get (block).size != dom_set.size) {
+					changes = true;
+				} else {
+					foreach (BasicBlock dom_block in dom.get (block)) {
+						if (!(dom_block in dom_set)) {
+							changes = true;
+						}
+					}
+				}
+				// update set in map
+				dom.set (block, dom_set);
+			}
+		}
+
+		// build tree
+		foreach (BasicBlock block in block_list) {
+			if (block == m.entry_block) {
+				continue;
+			}
+
+			BasicBlock immediate_dominator = null;
+			foreach (BasicBlock dominator in dom.get (block)) {
+				if (dominator == block) {
+					continue;
+				}
+
+				if (immediate_dominator == null) {
+					immediate_dominator = dominator;
+				} else {
+					// if immediate_dominator dominates dominator,
+					// update immediate_dominator
+					if (immediate_dominator in dom.get (dominator)) {
+						immediate_dominator = dominator;
+					}
+				}
+			}
+
+			immediate_dominator.add_child (block);
+		}
+	}
+
+	void build_dominator_frontier (Method m) {
+		var block_list = get_depth_first_list (m);
+		for (int i = block_list.size - 1; i >= 0; i--) {
+			var block = block_list[i];
+
+			foreach (BasicBlock succ in block.get_successors ()) {
+				// if idom(succ) != block
+				if (succ.parent != block) {
+					block.add_dominator_frontier (succ);
+				}
+			}
+
+			foreach (BasicBlock child in block.get_children ()) {
+				foreach (BasicBlock child_frontier in child.get_dominator_frontier ()) {
+					// if idom(child_frontier) != block
+					if (child_frontier.parent != block) {
+						block.add_dominator_frontier (child_frontier);
+					}
+				}
+			}
+		}
+	}
+
+	Map<LocalVariable, Set<BasicBlock>> get_assignment_map (Method m) {
+		var map = new HashMap<LocalVariable, Set<BasicBlock>> ();
+		foreach (BasicBlock block in get_depth_first_list (m)) {
+			var defined_variables = new ArrayList<LocalVariable> ();
+			foreach (CodeNode node in block.get_nodes ()) {
+				node.get_defined_variables (defined_variables);
+			}
+
+			foreach (LocalVariable local in defined_variables) {
+				var block_set = map.get (local);
+				if (block_set == null) {
+					block_set = new HashSet<BasicBlock> ();
+					map.set (local, block_set);
+				}
+				block_set.add (block);
+			}
+		}
+		return map;
+	}
+
+	void insert_phi_functions (Method m) {
+		var assign = get_assignment_map (m);
+
+		int counter = 0;
+		var work_list = new ArrayList<BasicBlock> ();
+
+		var added = new HashMap<BasicBlock, int> ();
+		var phi = new HashMap<BasicBlock, int> ();
+		foreach (BasicBlock block in get_depth_first_list (m)) {
+			added.set (block, 0);
+			phi.set (block, 0);
+		}
+
+		foreach (LocalVariable local in assign.get_keys ()) {
+			counter++;
+			foreach (BasicBlock block in assign.get (local)) {
+				work_list.add (block);
+				added.set (block, counter);
+			}
+			while (work_list.size > 0) {
+				BasicBlock block = work_list.get (0);
+				work_list.remove_at (0);
+				foreach (BasicBlock frontier in block.get_dominator_frontier ()) {
+					int blockPhi = phi.get (frontier);
+					if (blockPhi < counter) {
+						frontier.add_phi_function (new PhiFunction (local, frontier.get_predecessors ().size));
+						phi.set (frontier, counter);
+						int block_added = added.get (frontier);
+						if (block_added < counter) {
+							added.set (frontier, counter);
+							work_list.add (frontier);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	void check_variables (Method m) {
+		var_map = new HashMap<Symbol, Gee.List<LocalVariable>>();
+		used_vars = new HashSet<LocalVariable> ();
+		phi_functions = new HashMap<LocalVariable, PhiFunction> ();
+
+		check_block_variables (m, m.entry_block);
+
+		// check for variables used before initialization
+		var used_vars_queue = new ArrayList<LocalVariable> ();
+		foreach (LocalVariable local in used_vars) {
+			used_vars_queue.add (local);
+		}
+		while (used_vars_queue.size > 0) {
+			LocalVariable used_var = used_vars_queue[0];
+			used_vars_queue.remove_at (0);
+
+			PhiFunction phi = phi_functions.get (used_var);
+			if (phi != null) {
+				foreach (LocalVariable local in phi.operands) {
+					if (local == null) {
+						Report.error (used_var.source_reference, "use of possibly unassigned local variable `%s'".printf (used_var.name));
+						continue;
+					}
+					if (!(local in used_vars)) {
+						local.source_reference = used_var.source_reference;
+						used_vars.add (local);
+						used_vars_queue.add (local);
+					}
+				}
+			}
+		}
+	}
+
+	void check_block_variables (Method m, BasicBlock block) {
+		foreach (PhiFunction phi in block.get_phi_functions ()) {
+			LocalVariable versioned_var = process_assignment (m, var_map, phi.original_variable);
+
+			phi_functions.set (versioned_var, phi);
+		}
+
+		foreach (CodeNode node in block.get_nodes ()) {
+			var used_variables = new ArrayList<LocalVariable> ();
+			node.get_used_variables (used_variables);
+			
+			foreach (LocalVariable var_symbol in used_variables) {
+				var variable_stack = var_map.get (var_symbol);
+				if (variable_stack == null || variable_stack.size == 0) {
+					Report.error (node.source_reference, "use of possibly unassigned local variable `%s'".printf (var_symbol.name));
+					continue;
+				}
+				var versioned_local = variable_stack.get (variable_stack.size - 1);
+				if (!(versioned_local in used_vars)) {
+					versioned_local.source_reference = node.source_reference;
+				}
+				used_vars.add (versioned_local);
+			}
+
+			var defined_variables = new ArrayList<LocalVariable> ();
+			node.get_defined_variables (defined_variables);
+
+			foreach (LocalVariable local in defined_variables) {
+				process_assignment (m, var_map, local);
+			}
+		}
+
+		foreach (BasicBlock succ in block.get_successors ()) {
+			int j = 0;
+			foreach (BasicBlock pred in succ.get_predecessors ()) {
+				if (pred == block) {
+					break;
+				}
+				j++;
+			}
+
+			foreach (PhiFunction phi in succ.get_phi_functions ()) {
+				var variable_stack = var_map.get (phi.original_variable);
+				if (variable_stack != null && variable_stack.size > 0) {
+					phi.operands.set (j, variable_stack.get (variable_stack.size - 1));
+				}
+			}
+		}
+
+		foreach (BasicBlock child in block.get_children ()) {
+			check_block_variables (m, child);
+		}
+
+		foreach (PhiFunction phi in block.get_phi_functions ()) {
+			var variable_stack = var_map.get (phi.original_variable);
+			variable_stack.remove_at (variable_stack.size - 1);
+		}
+		foreach (CodeNode node in block.get_nodes ()) {
+			var defined_variables = new ArrayList<LocalVariable> ();
+			node.get_defined_variables (defined_variables);
+
+			foreach (LocalVariable local in defined_variables) {
+				var variable_stack = var_map.get (local);
+				variable_stack.remove_at (variable_stack.size - 1);
+			}
+		}
+	}
+
+	LocalVariable process_assignment (Method m, Map<Symbol, Gee.List<LocalVariable>> var_map, LocalVariable var_symbol) {
+		var variable_stack = var_map.get (var_symbol);
+		if (variable_stack == null) {
+			variable_stack = new ArrayList<LocalVariable> ();
+			var_map.set (var_symbol, variable_stack);
+		}
+		LocalVariable versioned_var = new LocalVariable (var_symbol.variable_type, var_symbol.name, null, var_symbol.source_reference);
+		variable_stack.add (versioned_var);
+		return versioned_var;
 	}
 
 	public override void visit_property (Property prop) {
@@ -311,9 +617,13 @@ public class Vala.CFGBuilder : CodeVisitor {
 			}
 		}
 
+		if (!has_default_label) {
+			condition_block.connect (after_switch_block);
+		}
+
 		// after switch
 		// reachable?
-		if (!has_default_label || after_switch_block.get_predecessors ().size > 0) {
+		if (after_switch_block.get_predecessors ().size > 0) {
 			current_block = after_switch_block;
 		} else {
 			current_block = null;
@@ -476,6 +786,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 		var last_block = current_block;
 		last_block.connect (loop_block);
 		current_block = loop_block;
+		current_block.add_node (stmt);
 		stmt.body.accept (this);
 		if (current_block != null) {
 			current_block.connect (loop_block);
@@ -695,6 +1006,7 @@ public class Vala.CFGBuilder : CodeVisitor {
 				Report.warning (jump_target.catch_clause.source_reference, "unreachable catch clause detected");
 			} else {
 				current_block = jump_target.basic_block;
+				current_block.add_node (jump_target.catch_clause);
 				jump_target.catch_clause.body.accept (this);
 				if (current_block != null) {
 					if (finally_block != null) {

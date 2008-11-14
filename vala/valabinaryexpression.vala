@@ -300,6 +300,16 @@ public class Vala.BinaryExpression : Expression {
 
 		return !error;
 	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		left.get_defined_variables (collection);
+		right.get_defined_variables (collection);
+	}
+
+	public override void get_used_variables (Collection<LocalVariable> collection) {
+		left.get_used_variables (collection);
+		right.get_used_variables (collection);
+	}
 }
 
 public enum Vala.BinaryOperator {
