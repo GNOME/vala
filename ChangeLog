@@ -1,5 +1,13 @@
 2008-11-14  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_bin_add_many binding
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-11-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaformalparameter.vala:
 	* vala/valainterfacewriter.vala:
 	* vala/valainvocationexpression.vala:

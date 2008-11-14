@@ -38,6 +38,11 @@ namespace Gst {
 		public void unref ();
 		public void sink ();
 	}
+
+	public class Bin {
+		public void add_many (params Gst.Element[]# elements);
+	}
+
 	[CCode (ref_function = "gst_buffer_ref", unref_function = "gst_buffer_unref")]
 	public class Buffer : Gst.MiniObject {
 		public Buffer ();
