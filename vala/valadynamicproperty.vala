@@ -29,8 +29,6 @@ using Gee;
 public class Vala.DynamicProperty : Property {
 	public DataType dynamic_type { get; set; }
 
-	private string cname;
-
 	public DynamicProperty (DataType dynamic_type, string name, SourceReference? source_reference = null) {
 		base (name, null, null, null, source_reference);
 		this.dynamic_type = dynamic_type;

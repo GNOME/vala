@@ -145,7 +145,9 @@ public class Vala.Method : Member {
 			return _base_interface_method;
 		}
 	}
-	
+
+	public bool entry_point { get; private set; }
+
 	/**
 	 * Specifies the generated `this' parameter for instance methods.
 	 */
@@ -768,6 +770,62 @@ public class Vala.Method : Member {
 			}
 		}
 
+		if (is_possible_entry_point (analyzer)) {
+			entry_point = true;
+		}
+
 		return !error;
+	}
+
+	bool is_possible_entry_point (SemanticAnalyzer analyzer) {
+		if (name == null || name != "main") {
+			// method must be called "main"
+			return false;
+		}
+		
+		if (binding == MemberBinding.INSTANCE) {
+			// method must be static
+			return false;
+		}
+		
+		if (return_type is VoidType) {
+		} else if (return_type.data_type == analyzer.int_type.data_type) {
+		} else {
+			// return type must be void or int
+			return false;
+		}
+		
+		var params = get_parameters ();
+		if (params.size == 0) {
+			// method may have no parameters
+			return true;
+		}
+
+		if (params.size > 1) {
+			// method must not have more than one parameter
+			return false;
+		}
+		
+		Iterator<FormalParameter> params_it = params.iterator ();
+		params_it.next ();
+		var param = params_it.get ();
+
+		if (param.direction == ParameterDirection.OUT) {
+			// parameter must not be an out parameter
+			return false;
+		}
+		
+		if (!(param.parameter_type is ArrayType)) {
+			// parameter must be an array
+			return false;
+		}
+		
+		var array_type = (ArrayType) param.parameter_type;
+		if (array_type.element_type.data_type != analyzer.string_type.data_type) {
+			// parameter must be an array of strings
+			return false;
+		}
+		
+		return true;
 	}
 }

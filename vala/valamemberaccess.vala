@@ -444,6 +444,8 @@ public class Vala.MemberAccess : Expression {
 			instance = true;
 		}
 
+		member.used = true;
+
 		if (access == SymbolAccessibility.PRIVATE) {
 			var target_type = member.parent_symbol;
 

@@ -178,8 +178,6 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 						}
 
 						var length_cname = get_array_length_cname (field.name, dim);
-						var instance_expression_type = get_data_type_for_symbol (base_type);
-						var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
 						CCodeExpression typed_inst = (CCodeExpression) get_ccodenode (ma.inner);
 
 						CCodeExpression inst;

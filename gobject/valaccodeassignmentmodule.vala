@@ -167,7 +167,6 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
 				}
 			} else if (instance_delegate) {
-				var delegate_type = (DelegateType) assignment.left.value_type;
 				var lhs_delegate_target = get_delegate_target_cexpression (assignment.left);
 				var rhs_delegate_target = get_delegate_target_cexpression (assignment.right);
 				ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));

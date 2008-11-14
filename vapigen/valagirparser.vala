@@ -670,7 +670,7 @@ public class Vala.GirParser : CodeVisitor {
 		string name = reader.get_attribute ("name");
 		next ();
 
-		var return_type = parse_return_value ();
+		parse_return_value ();
 
 		var m = new CreationMethod (null, name, get_current_src ());
 		m.access = SymbolAccessibility.PUBLIC;

@@ -36,8 +36,6 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	/* at begin of line */
 	bool bol = true;
 
-	string current_cheader_filename;
-
 	Scope current_scope;
 
 	/**

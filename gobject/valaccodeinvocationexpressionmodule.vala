@@ -169,7 +169,6 @@ public class Vala.CCodeInvocationExpressionModule : CCodeAssignmentModule {
 		Iterator<FormalParameter> params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
 			CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
-			Gee.List<CCodeExpression> extra_args = new ArrayList<CCodeExpression> ();
 			if (params_it.next ()) {
 				var param = params_it.get ();
 				ellipsis = param.ellipsis;

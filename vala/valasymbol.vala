@@ -69,6 +69,11 @@ public abstract class Vala.Symbol : CodeNode {
 	public bool active { get; set; default = true; }
 
 	/**
+	 * Specifies whether this symbol has been accessed.
+	 */
+	public bool used { get; set; }
+
+	/**
 	 * Specifies the accessibility of this symbol. Public accessibility
 	 * doesn't limit access. Default accessibility limits access to this
 	 * program or library. Private accessibility limits access to instances

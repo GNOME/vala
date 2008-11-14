@@ -345,7 +345,7 @@ public class Vala.CodeContext {
 						continue;
 					}
 					
-					if (cycle_file.cycle != null) {
+					if (ref_cycle_file_cycle != null) {
 						/* file already in a cycle */
 						
 						if (cycle_file.cycle == cycle) {

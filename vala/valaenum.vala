@@ -160,11 +160,7 @@ public class Vala.Enum : TypeSymbol {
 	public override bool is_reference_type () {
 		return false;
 	}
-	
-	private void set_cname (string cname) {
-		this.cname = cname;
-	}
-	
+
 	/**
 	 * Returns the string to be prepended to the name of members of this
 	 * enum when used in C code.

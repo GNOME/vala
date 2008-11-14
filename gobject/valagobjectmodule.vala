@@ -306,9 +306,11 @@ public class Vala.GObjectModule : GTypeModule {
 			source_type_member_definition.append (function);
 		}
 
+		current_symbol = old_symbol;
 		current_type_symbol = old_type_symbol;
 		current_class = old_class;
 		instance_struct = old_instance_struct;
+		param_spec_struct = old_param_spec_struct;
 		type_struct = old_type_struct;
 		instance_priv_struct = old_instance_priv_struct;
 		prop_enum = old_prop_enum;

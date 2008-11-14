@@ -1341,7 +1341,6 @@ public class Vala.Parser : CodeVisitor {
 
 	Block parse_block () throws ParseError {
 		var begin = get_location ();
-		Gee.List<Statement> list = new ArrayList<Statement> ();
 		expect (TokenType.OPEN_BRACE);
 		var block = new Block (get_src_com (begin));
 		parse_statements (block);
@@ -1365,7 +1364,6 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	void parse_local_variable_declarations (Block block) throws ParseError {
-		var begin = get_location ();
 		DataType variable_type;
 		if (accept (TokenType.VAR)) {
 			variable_type = null;
@@ -1929,8 +1927,6 @@ public class Vala.Parser : CodeVisitor {
 
 	void parse_using_directives () throws ParseError {
 		while (accept (TokenType.USING)) {
-			var begin = get_location ();
-
 			do {
 				var begin = get_location ();
 				var sym = parse_symbol_name ();

@@ -36,8 +36,6 @@ public class Vala.Struct : TypeSymbol {
 	
 	private string cname;
 	private string const_cname;
-	private string dup_function;
-	private string free_function;
 	private string type_id;
 	private string lower_case_cprefix;
 	private string lower_case_csuffix;
@@ -222,10 +220,6 @@ public class Vala.Struct : TypeSymbol {
 		return "%s%s".printf (parent_symbol.get_cprefix (), name);
 	}
 
-	private void set_cname (string cname) {
-		this.cname = cname;
-	}
-	
 	private void set_const_cname (string cname) {
 		this.const_cname = cname;
 	}

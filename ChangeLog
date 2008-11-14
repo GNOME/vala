@@ -1,5 +1,35 @@
 2008-11-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacfgbuilder.vala:
+	* vala/valamemberaccess.vala:
+	* vala/valamethod.vala:
+	* vala/valasymbol.vala:
+	* gobject/valaccodemethodmodule.vala:
+
+	Report unused fields, methods, and local variables
+
+	* vala/valacodecontext.vala:
+	* vala/valadynamicproperty.vala:
+	* vala/valaenum.vala:
+	* vala/valagenieparser.vala:
+	* vala/valainterfacewriter.vala:
+	* vala/valaparser.vala:
+	* vala/valastruct.vala:
+	* vala/valaunresolvedtype.vala:
+	* gobject/valaccodearraymodule.vala:
+	* gobject/valaccodeassignmentmodule.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodeinvocationexpressionmodule.vala:
+	* gobject/valaccodememberaccessmodule.vala:
+	* gobject/valadbusservermodule.vala:
+	* gobject/valagobjectmodule.vala:
+	* vapigen/valagirparser.vala:
+	* vapigen/valamarkupreader.vala:
+
+	Remove unused symbols
+
+2008-11-14  Jürg Billeter  <j@bitron.ch>
+
 	* tests/Makefile.am:
 	* tests/basic-types/:
 

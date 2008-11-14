@@ -201,12 +201,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		return new SourceReference (scanner.source_file, tokens[index].begin.line, tokens[index].begin.column, tokens[index].end.line, tokens[index].end.column);
 	}
 
-	SourceReference get_last_src () {
-		int last_index = (index + BUFFER_SIZE - 1) % BUFFER_SIZE;
-
-		return new SourceReference (scanner.source_file, tokens[last_index].begin.line, tokens[last_index].begin.column, tokens[last_index].end.line, tokens[last_index].end.column);
-	}
-
 	void rollback (SourceLocation location) {
 		while (tokens[index].begin.pos != location.pos) {
 			prev ();
@@ -1684,7 +1678,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	Block parse_block () throws ParseError {
 		var begin = get_location ();
-		Gee.List<Statement> list = new ArrayList<Statement> ();
 		expect (TokenType.INDENT);
 		var block = new Block (get_src_com (begin));
 		parse_statements (block);
@@ -1715,8 +1708,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 
 	void parse_local_variable_declarations (Block block) throws ParseError {
-		var begin = get_location ();
-
 		if (accept (TokenType.VAR)) {
 			/* support block vars */
 			if (accept (TokenType.EOL) && accept (TokenType.INDENT)) {
@@ -2342,10 +2333,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 
 	void parse_using_directives () throws ParseError {
-		var begin = get_location ();
 		while (accept (TokenType.USES)) {
-			var begin = get_location ();
-
 			if (accept_block ()) {
 				expect (TokenType.INDENT);
 
@@ -2793,7 +2781,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 			while (current () != TokenType.DEDENT) {
 				var accessor_begin = get_location ();
 				parse_attributes ();
-				var accessor_access = SymbolAccessibility.PUBLIC;
 				if (accept (TokenType.GET)) {
 					if (prop.get_accessor != null) {
 						throw new ParseError.SYNTAX (get_error ("property get accessor already defined"));
@@ -3296,7 +3283,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		expect (TokenType.CONSTRUCT);
 
-		var flags = parse_member_declaration_modifiers ();
+		parse_member_declaration_modifiers ();
 
 
 		if (accept (TokenType.OPEN_PARENS)) {
@@ -3479,28 +3466,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 			}
 		} while (accept (TokenType.DOT));
 		return expr;
-	}
-
-	bool is_declaration_keyword (TokenType type) {
-		switch (type) {
-		case TokenType.CLASS:
-		case TokenType.CONST:
-		case TokenType.DEF:
-		case TokenType.DELEGATE:
-		case TokenType.ENUM:
-		case TokenType.ERRORDOMAIN:
-		case TokenType.EVENT:
-		case TokenType.FINAL:
-		case TokenType.INIT:
-		case TokenType.INTERFACE:
-		case TokenType.NAMESPACE:
-		case TokenType.OVERRIDE:
-		case TokenType.PROP:
-		case TokenType.STRUCT:
-			return true;
-		default:
-			return false;
-		}
 	}
 }
 

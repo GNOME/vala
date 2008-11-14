@@ -555,8 +555,6 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 				var vfunc = new CCodeFunction (m.get_cname (), creturn_type.get_cname ());
 				vfunc.line = function.line;
 
-				ReferenceType this_type = new ObjectType ((Class) m.parent_symbol);
-
 				cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 				var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
@@ -609,9 +607,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 		
-		bool return_value = true;
-		bool args_parameter = true;
-		if (is_possible_entry_point (m, ref return_value, ref args_parameter)) {
+		if (m.entry_point) {
 			// m is possible entry point, add appropriate startup code
 			var cmain = new CCodeFunction ("main", "int");
 			cmain.line = function.line;
@@ -631,15 +627,11 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			main_block.add_statement (type_init_call);
 
 			var main_call = new CCodeFunctionCall (new CCodeIdentifier (function.name));
-			if (args_parameter) {
+			if (m.get_parameters ().size == 1) {
 				main_call.add_argument (new CCodeIdentifier ("argv"));
 				main_call.add_argument (new CCodeIdentifier ("argc"));
 			}
-			if (return_value) {
-				var main_stmt = new CCodeReturnStatement (main_call);
-				main_stmt.line = cmain.line;
-				main_block.add_statement (main_stmt);
-			} else {
+			if (m.return_type is VoidType) {
 				// method returns void, always use 0 as exit code
 				var main_stmt = new CCodeExpressionStatement (main_call);
 				main_stmt.line = cmain.line;
@@ -647,6 +639,10 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 				var ret_stmt = new CCodeReturnStatement (new CCodeConstant ("0"));
 				ret_stmt.line = cmain.line;
 				main_block.add_statement (ret_stmt);
+			} else {
+				var main_stmt = new CCodeReturnStatement (main_call);
+				main_stmt.line = cmain.line;
+				main_block.add_statement (main_stmt);
 			}
 			cmain.block = main_block;
 			source_type_member_definition.append (cmain);
@@ -831,62 +827,6 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			sym = sym.parent_symbol;
 		}
 		return null;
-	}
-
-	private bool is_possible_entry_point (Method m, ref bool return_value, ref bool args_parameter) {
-		if (m.name == null || m.name != "main") {
-			// method must be called "main"
-			return false;
-		}
-		
-		if (m.binding == MemberBinding.INSTANCE) {
-			// method must be static
-			return false;
-		}
-		
-		if (m.return_type.data_type == null) {
-			return_value = false;
-		} else if (m.return_type.data_type == int_type.data_type) {
-			return_value = true;
-		} else {
-			// return type must be void or int
-			return false;
-		}
-		
-		var params = m.get_parameters ();
-		if (params.size == 0) {
-			// method may have no parameters
-			args_parameter = false;
-			return true;
-		}
-
-		if (params.size > 1) {
-			// method must not have more than one parameter
-			return false;
-		}
-		
-		Iterator<FormalParameter> params_it = params.iterator ();
-		params_it.next ();
-		var param = params_it.get ();
-
-		if (param.direction == ParameterDirection.OUT) {
-			// parameter must not be an out parameter
-			return false;
-		}
-		
-		if (!(param.parameter_type is ArrayType)) {
-			// parameter must be an array
-			return false;
-		}
-		
-		var array_type = (ArrayType) param.parameter_type;
-		if (array_type.element_type.data_type != string_type.data_type) {
-			// parameter must be an array of strings
-			return false;
-		}
-		
-		args_parameter = true;
-		return true;
 	}
 
 	private void add_object_creation (CCodeBlock b, bool has_params) {

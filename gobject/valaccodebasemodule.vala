@@ -1592,8 +1592,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		var function = new CCodeFunction (destroy_func, "void");
 		function.modifiers = CCodeModifiers.STATIC;
 
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
-
 		function.add_parameter (new CCodeFormalParameter ("self", list_type.get_cname ()));
 
 		// definition

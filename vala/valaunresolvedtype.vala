@@ -56,8 +56,6 @@ public class Vala.UnresolvedType : DataType {
 	 * @return       newly created type reference
 	 */
 	public static UnresolvedType? new_from_expression (Expression expr) {
-		string ns = null;
-		string type_name = null;
 		if (expr is MemberAccess) {
 			UnresolvedType type_ref = null;
 		

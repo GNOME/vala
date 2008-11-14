@@ -189,7 +189,7 @@ public class Vala.MarkupReader : Object {
 				return read_token (out token_begin, out token_end);
 			}
 			type = MarkupTokenType.TEXT;
-			string text = ((string) text_begin).ndup (current - text_begin);
+			// string text = ((string) text_begin).ndup (current - text_begin);
 		}
 
 		column += (int) (current - begin);

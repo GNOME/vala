@@ -89,7 +89,6 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		} else if (expr.symbol_reference is Field) {
 			var f = (Field) expr.symbol_reference;
 			if (f.binding == MemberBinding.INSTANCE) {
-				var instance_expression_type = base_type;
 				var instance_target_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 
 				var cl = instance_target_type.data_type as Class;

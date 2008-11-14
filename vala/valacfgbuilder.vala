@@ -118,7 +118,21 @@ public class Vala.CFGBuilder : CodeVisitor {
 		ed.accept_children (this);
 	}
 
+	public override void visit_field (Field f) {
+		if (f.access != SymbolAccessibility.PUBLIC
+		    && f.access != SymbolAccessibility.PROTECTED
+		    && !f.used) {
+			Report.warning (f.source_reference, "field `%s' never used".printf (f.get_full_name ()));
+		}
+	}
+
 	public override void visit_method (Method m) {
+		if (m.access != SymbolAccessibility.PUBLIC
+		    && m.access != SymbolAccessibility.PROTECTED
+		    && !m.used && !m.entry_point) {
+			Report.warning (m.source_reference, "method `%s' never used".printf (m.get_full_name ()));
+		}
+
 		if (m.body == null) {
 			return;
 		}
@@ -187,6 +201,10 @@ public class Vala.CFGBuilder : CodeVisitor {
 	public override void visit_declaration_statement (DeclarationStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
+		}
+
+		if (!stmt.declaration.used) {
+			Report.warning (stmt.declaration.source_reference, "local variable `%s' declared but never used".printf (stmt.declaration.name));
 		}
 
 		current_block.add_node (stmt);

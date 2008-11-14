@@ -365,7 +365,6 @@ public class Vala.DBusServerModule : DBusClientModule {
 			} else if (param.parameter_type.get_type_signature ().has_prefix ("a{")) {
 				// hash table output parameter
 				var type_args = param.parameter_type.get_type_arguments ();
-				var key_type = type_args.get (0);
 				var value_type = type_args.get (1);
 				if (value_type.get_type_signature ().has_prefix ("(")) {
 					// values are structs
@@ -393,7 +392,6 @@ public class Vala.DBusServerModule : DBusClientModule {
 			} else if (m.return_type.get_type_signature ().has_prefix ("a{")) {
 				// hash table output parameter
 				var type_args = m.return_type.get_type_arguments ();
-				var key_type = type_args.get (0);
 				var value_type = type_args.get (1);
 				if (value_type.get_type_signature ().has_prefix ("(")) {
 					// values are structs
@@ -436,7 +434,6 @@ public class Vala.DBusServerModule : DBusClientModule {
 			} else if (param.parameter_type.get_type_signature ().has_prefix ("a{")) {
 				// hash table output parameter
 				var type_args = param.parameter_type.get_type_arguments ();
-				var key_type = type_args.get (0);
 				var value_type = type_args.get (1);
 				if (value_type.get_type_signature ().has_prefix ("(")) {
 					// values are structs
@@ -462,7 +459,6 @@ public class Vala.DBusServerModule : DBusClientModule {
 			} else if (m.return_type.get_type_signature ().has_prefix ("a{")) {
 				// hash table return value
 				var type_args = m.return_type.get_type_arguments ();
-				var key_type = type_args.get (0);
 				var value_type = type_args.get (1);
 				if (value_type.get_type_signature ().has_prefix ("(")) {
 					// values are structs
@@ -524,7 +520,6 @@ public class Vala.DBusServerModule : DBusClientModule {
 			} else if (param.parameter_type.get_type_signature ().has_prefix ("a{")) {
 				// hash table output parameter
 				var type_args = param.parameter_type.get_type_arguments ();
-				var key_type = type_args.get (0);
 				var value_type = type_args.get (1);
 				if (value_type.get_type_signature ().has_prefix ("(")) {
 					// values are structs
@@ -552,7 +547,6 @@ public class Vala.DBusServerModule : DBusClientModule {
 			} else if (m.return_type.get_type_signature ().has_prefix ("a{")) {
 				// hash table output parameter
 				var type_args = m.return_type.get_type_arguments ();
-				var key_type = type_args.get (0);
 				var value_type = type_args.get (1);
 				if (value_type.get_type_signature ().has_prefix ("(")) {
 					// values are structs
@@ -583,7 +577,6 @@ public class Vala.DBusServerModule : DBusClientModule {
 				} else if (param.parameter_type.get_type_signature ().has_prefix ("a{")) {
 					// hash table output parameter
 					var type_args = param.parameter_type.get_type_arguments ();
-					var key_type = type_args.get (0);
 					var value_type = type_args.get (1);
 					if (value_type.get_type_signature ().has_prefix ("(")) {
 						// values are structs
@@ -635,7 +628,6 @@ public class Vala.DBusServerModule : DBusClientModule {
 			} else if (m.return_type.get_type_signature ().has_prefix ("a{")) {
 				// hash table output parameter
 				var type_args = m.return_type.get_type_arguments ();
-				var key_type = type_args.get (0);
 				var value_type = type_args.get (1);
 				if (value_type.get_type_signature ().has_prefix ("(")) {
 					// values are structs
