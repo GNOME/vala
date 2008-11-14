@@ -49,6 +49,13 @@ public class Sample : Object {
 
 		Maman.Bar.run ();
 
+		stdout.printf ("Interface Properties Test: 1");
+
+		Maman.Ibaz ibaz = new Maman.Baz ();
+		ibaz.simple_method ();
+	
+		stdout.printf (" 3\n");
+
 		return 0;
 	}
 }
@@ -91,3 +98,17 @@ class Maman.Bar : Foo {
 	}
 }
 
+interface Maman.Ibaz : Object {
+	public abstract int number { get; }
+
+	public void simple_method () {
+		int n = number;
+		stdout.printf (" %d", n);
+	}
+}
+
+class Maman.Baz : Object, Ibaz {
+	public int number {
+		get { return 2; }
+	}
+}

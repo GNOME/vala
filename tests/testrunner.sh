@@ -42,27 +42,26 @@ CODE=0
 for testcasesource in "$@"
 do
 	testsrc=${testcasesource/.vala/}
-	testbuild=`basename "$testsrc"`
-	if ! $VALAC -C --vapidir "$vapidir" --basedir $topsrcdir -d $topbuilddir $testsrc.vala > $testbuild.err 2>&1
+	if ! $VALAC -C --vapidir "$vapidir" --basedir $topsrcdir -d $topbuilddir $testsrc.vala > $testsrc.err 2>&1
 	then
 		echo "ERROR: Compiling" $testcasesource 
-		cat $testbuild.err
+		cat $testsrc.err
 		CODE=1
 		continue
 	fi
-	if ! $CC $CFLAGS $testbuild.c $(pkg-config --cflags --libs gobject-2.0) -o $testbuild $LDLIBS > $testbuild.err 2>&1
+	if ! $CC $CFLAGS $testsrc.c $(pkg-config --cflags --libs gobject-2.0) -o $testsrc $LDLIBS > $testsrc.err 2>&1
 	then
-		echo "ERROR: Compiling" $testbuild.c
-		cat $testbuild.err
+		echo "ERROR: Compiling" $testsrc.c
+		cat $testsrc.err
 		CODE=1
 		continue
 	fi
-	if ./$testbuild 2>&1 | tee $testbuild.err | cmp -s $testsrc.exp
+	if ./$testsrc 2>&1 | tee $testsrc.err | cmp -s $testsrc.exp
 	then
-		rm $testbuild.c $testbuild.h $testbuild$exe $testbuild.err
+		rm $testsrc.c $testsrc.h $testsrc$exe $testsrc.err
 	else
-		echo "ERROR: test failed. This is the difference between" $testbuild.exp "and" $testbuild.err
-		diff -u $testbuild.exp $testbuild.err
+		echo "ERROR: test failed. This is the difference between" $testsrc.exp "and" $testsrc.err
+		diff -u $testsrc.exp $testsrc.err
 		CODE=1
 	fi
 done

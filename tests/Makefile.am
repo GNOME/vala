@@ -16,37 +16,35 @@ TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) $(srcdir)/testrunner.sh
 
 TESTS = \
 	hello.vala \
-	strings.vala \
-	expressions-relational.vala \
-	expressions-conditional.vala \
-	expressions-assignments.vala \
-	expressions-lambda.vala \
-	statements-selection.vala \
-	statements-iteration.vala \
-	statements-jump.vala \
+	basic-types/expressions-assignments.vala \
+	basic-types/expressions-relational.vala \
+	basic-types/strings.vala \
+	basic-types/test-027.vala \
+	basic-types/test-030.vala \
+	basic-types/test-031.vala \
 	namespaces.vala \
-	classes.vala \
-	classes-fields.vala \
-	classes-methods.vala \
-	classes-properties.vala \
-	classes-signals.vala \
-	structs.vala \
-	interfaces.vala \
-	interfaces-properties.vala \
-	enums.vala \
+	methods/lambda.vala \
+	control-flow/break.vala \
+	control-flow/expressions-conditional.vala \
+	control-flow/for.vala \
+	control-flow/switch.vala \
 	arrays.vala \
-	pointers.vala \
+	enums.vala \
+	structs.vala \
 	delegates.vala \
+	objects/classes.vala \
+	objects/fields.vala \
+	objects/interfaces.vala \
+	objects/methods.vala \
+	objects/properties.vala \
+	objects/signals.vala \
+	objects/test-025.vala \
+	objects/test-026.vala \
+	objects/test-029.vala \
+	objects/test-034.vala \
 	exceptions.vala \
-	\
+	pointers.vala \
 	test-023.vala \
-	test-025.vala \
-	test-026.vala \
-	test-027.vala \
-	test-029.vala \
-	test-030.vala \
-	test-031.vala \
-	test-034.vala \
 	$(NULL)
 
 EXTRA_DIST = \
@@ -54,36 +52,34 @@ EXTRA_DIST = \
 	$(TESTS) \
 	\
 	hello.exp \
-	strings.exp \
-	expressions-relational.exp \
-	expressions-conditional.exp \
-	expressions-assignments.exp \
-	expressions-lambda.exp \
-	statements-selection.exp \
-	statements-iteration.exp \
-	statements-jump.exp \
+	basic-types/expressions-assignments.exp \
+	basic-types/expressions-relational.exp \
+	basic-types/strings.exp \
+	basic-types/test-027.exp \
+	basic-types/test-030.exp \
+	basic-types/test-031.exp \
 	namespaces.exp \
-	classes.exp \
-	classes-fields.exp \
-	classes-methods.exp \
-	classes-properties.exp \
-	classes-signals.exp \
-	structs.exp \
-	interfaces.exp \
-	interfaces-properties.exp \
-	enums.exp \
+	methods/lambda.exp \
+	control-flow/break.exp \
+	control-flow/expressions-conditional.exp \
+	control-flow/for.exp \
+	control-flow/switch.exp \
 	arrays.exp \
-	pointers.exp \
+	enums.exp \
+	structs.exp \
 	delegates.exp \
+	objects/classes.exp \
+	objects/fields.exp \
+	objects/interfaces.exp \
+	objects/methods.exp \
+	objects/properties.exp \
+	objects/signals.exp \
+	objects/test-025.exp \
+	objects/test-026.exp \
+	objects/test-029.exp \
+	objects/test-034.exp \
 	exceptions.exp \
-	\
+	pointers.exp \
 	test-023.exp \
-	test-025.exp \
-	test-026.exp \
-	test-027.exp \
-	test-029.exp \
-	test-030.exp \
-	test-031.exp \
-	test-034.exp \
 	$(NULL)
 

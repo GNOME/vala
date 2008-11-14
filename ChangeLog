@@ -1,3 +1,9 @@
+2008-11-14  Jürg Billeter  <j@bitron.ch>
+
+	* tests/:
+
+	Rearrange test cases
+
 2008-11-13  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodecontext.vala:
