@@ -1,5 +1,11 @@
 2008-11-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+
+	Set target_type for member initializers
+
+2008-11-14  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Fix gst_bin_add_many binding

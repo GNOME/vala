@@ -599,8 +599,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	}
 
 	public void visit_member_initializer (MemberInitializer init, DataType type) {
-		init.check (this);
-
 		init.symbol_reference = symbol_lookup_inherited (type.data_type, init.name);
 		if (!(init.symbol_reference is Field || init.symbol_reference is Property)) {
 			init.error = true;
@@ -625,7 +623,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				return;
 			}
 		}
-		if (init.initializer.value_type == null || !init.initializer.value_type.compatible (member_type)) {
+
+		init.initializer.target_type = member_type;
+
+		init.check (this);
+
+		if (init.initializer.value_type == null || !init.initializer.value_type.compatible (init.initializer.target_type)) {
 			init.error = true;
 			Report.error (init.source_reference, "Invalid type for member `%s'".printf (init.name));
 			return;
