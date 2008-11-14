@@ -16,12 +16,10 @@ TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) $(srcdir)/testrunner.sh
 
 TESTS = \
 	hello.vala \
-	basic-types/expressions-assignments.vala \
-	basic-types/expressions-relational.vala \
+	basic-types/floats.vala \
+	basic-types/integers.vala \
 	basic-types/strings.vala \
 	basic-types/test-027.vala \
-	basic-types/test-030.vala \
-	basic-types/test-031.vala \
 	namespaces.vala \
 	methods/lambda.vala \
 	control-flow/break.vala \
@@ -52,12 +50,10 @@ EXTRA_DIST = \
 	$(TESTS) \
 	\
 	hello.exp \
-	basic-types/expressions-assignments.exp \
-	basic-types/expressions-relational.exp \
+	basic-types/floats.exp \
+	basic-types/integers.exp \
 	basic-types/strings.exp \
 	basic-types/test-027.exp \
-	basic-types/test-030.exp \
-	basic-types/test-031.exp \
 	namespaces.exp \
 	methods/lambda.exp \
 	control-flow/break.exp \
