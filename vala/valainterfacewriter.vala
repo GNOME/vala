@@ -156,7 +156,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 
 		bool first = true;
-		string cheaders;
+		string cheaders = "";
 		foreach (string cheader in cl.get_cheader_filenames ()) {
 			if (first) {
 				cheaders = cheader;
@@ -273,7 +273,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 
 		var first = true;
-		string cheaders;
+		string cheaders = "";
 		foreach (string cheader in st.get_cheader_filenames ()) {
 			if (first) {
 				cheaders = cheader;
@@ -351,7 +351,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_indent ();
 
 		var first = true;
-		string cheaders;
+		string cheaders = "";
 		foreach (string cheader in iface.get_cheader_filenames ()) {
 			if (first) {
 				cheaders = cheader;
@@ -432,7 +432,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_indent ();
 
 		bool first = true;
-		string cheaders;
+		string cheaders = "";
 		foreach (string cheader in en.get_cheader_filenames ()) {
 			if (first) {
 				cheaders = cheader;
@@ -507,7 +507,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_indent ();
 
 		var first = true;
-		string cheaders;
+		string cheaders = "";
 		foreach (string cheader in edomain.get_cheader_filenames ()) {
 			if (first) {
 				cheaders = cheader;
@@ -562,7 +562,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				}
 
 				bool first = true;
-				string cheaders;
+				string cheaders = "";
 				foreach (string cheader in c.get_cheader_filenames ()) {
 					if (first) {
 						cheaders = cheader;
@@ -623,7 +623,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 				}
 
 				bool first = true;
-				string cheaders;
+				string cheaders = "";
 				foreach (string cheader in f.get_cheader_filenames ()) {
 					if (first) {
 						cheaders = cheader;
@@ -764,7 +764,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_indent ();
 
 		var first = true;
-		string cheaders;
+		string cheaders = "";
 		foreach (string cheader in cb.get_cheader_filenames ()) {
 			if (first) {
 				cheaders = cheader;
@@ -834,7 +834,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		}
 		if (m.parent_symbol is Namespace) {
 			bool first = true;
-			string cheaders;
+			string cheaders = "";
 			foreach (string cheader in m.get_cheader_filenames ()) {
 				if (first) {
 					cheaders = cheader;

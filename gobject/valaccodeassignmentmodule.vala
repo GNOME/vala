@@ -70,6 +70,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 					cop = CCodeBinaryOperator.SHIFT_LEFT;
 				} else if (assignment.operator == AssignmentOperator.SHIFT_RIGHT) {
 					cop = CCodeBinaryOperator.SHIFT_RIGHT;
+				} else {
+					assert_not_reached ();
 				}
 				cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) get_ccodenode (assignment.left), new CCodeParenthesizedExpression (cexpr));
 			}

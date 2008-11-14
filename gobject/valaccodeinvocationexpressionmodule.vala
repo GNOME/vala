@@ -73,7 +73,7 @@ public class Vala.CCodeInvocationExpressionModule : CCodeAssignmentModule {
 			requires_array_move = true;
 		}
 
-		CCodeExpression instance;
+		CCodeExpression instance = null;
 		if (m != null && m.binding == MemberBinding.INSTANCE && !(m is CreationMethod)) {
 			instance = (CCodeExpression) ma.inner.ccodenode;
 
@@ -258,7 +258,7 @@ public class Vala.CCodeInvocationExpressionModule : CCodeAssignmentModule {
 						}
 
 						// call function
-						LocalVariable ret_temp_var;
+						LocalVariable ret_temp_var = null;
 						if (m.return_type is VoidType) {
 							ccomma.append_expression (ccall_expr);
 						} else {

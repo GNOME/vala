@@ -2338,7 +2338,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		if (expr.symbol_reference == null) {
-			CCodeFunctionCall creation_call;
+			CCodeFunctionCall creation_call = null;
 
 			// no creation method
 			if (expr.type_reference.data_type == glist_type ||
@@ -2616,6 +2616,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			op = CCodeUnaryOperator.ADDRESS_OF;
 		} else if (expr.operator == UnaryOperator.OUT) {
 			op = CCodeUnaryOperator.ADDRESS_OF;
+		} else {
+			assert_not_reached ();
 		}
 		expr.ccodenode = new CCodeUnaryExpression (op, (CCodeExpression) expr.inner.ccodenode);
 	}
@@ -2743,6 +2745,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		
 			expr.ccodenode = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.BITWISE_AND, new CCodeParenthesizedExpression (cright), new CCodeParenthesizedExpression (cleft))), new CCodeParenthesizedExpression (cleft));
 			return;
+		} else {
+			assert_not_reached ();
 		}
 		
 		if (expr.operator == BinaryOperator.EQUALITY ||
@@ -2782,11 +2786,15 @@ public class Vala.CCodeBaseModule : CCodeModule {
 						left = ((CCodeIdentifier) cleft).name;
 					} else if (cleft is CCodeConstant) {
 						left = ((CCodeConstant) cleft).name;
+					} else {
+						assert_not_reached ();
 					}
 					if (cright is CCodeIdentifier) {
 						right = ((CCodeIdentifier) cright).name;
 					} else if (cright is CCodeConstant) {
 						right = ((CCodeConstant) cright).name;
+					} else {
+						assert_not_reached ();
 					}
 
 					expr.ccodenode = new CCodeConstant ("%s %s".printf (left, right));

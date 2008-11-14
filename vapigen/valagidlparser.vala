@@ -108,8 +108,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			try {
 				string metadata;
-				ulong metadata_len;
-				FileUtils.get_contents (metadata_filename, out metadata, out metadata_len);
+				FileUtils.get_contents (metadata_filename, out metadata, null);
 				
 				foreach (string line in metadata.split ("\n")) {
 					if (line.has_prefix ("#")) {

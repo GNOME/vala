@@ -129,7 +129,7 @@ class Vala.VAPICheck : Object {
 	private int check_metadata () {
 		try {
 			var metafile = new IOChannel.file (metadata.filename, "r");
-			string line = null;
+			string line;
 			int lineno = 1;
 
 			while (IOStatus.NORMAL == metafile.read_line (out line, null, null)) {

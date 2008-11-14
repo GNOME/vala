@@ -599,7 +599,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			Report.error (init.source_reference, "Access to private member `%s' denied".printf (init.symbol_reference.get_full_name ()));
 			return;
 		}
-		DataType member_type;
+		DataType member_type = null;
 		if (init.symbol_reference is Field) {
 			var f = (Field) init.symbol_reference;
 			member_type = f.field_type;

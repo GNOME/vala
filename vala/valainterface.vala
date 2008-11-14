@@ -570,7 +570,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 		}
 
 		/* check prerequisites */
-		Class prereq_class;
+		Class prereq_class = null;
 		foreach (DataType prereq in get_prerequisites ()) {
 			TypeSymbol class_or_interface = prereq.data_type;
 			/* skip on previous errors */

@@ -1545,6 +1545,8 @@ namespace GLib {
 		public long tv_usec;
 
 		[CCode (cname = "g_get_current_time")]
+		public TimeVal ();
+		[CCode (cname = "g_get_current_time")]
 		public void get_current_time ();
 		public void add (long microseconds);
 		[CCode (instance_pos = -1)]

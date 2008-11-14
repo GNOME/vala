@@ -886,7 +886,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	Expression parse_array_creation_expression (SourceLocation begin, MemberAccess member) throws ParseError {
 		bool size_specified = false;
-		Gee.List<Expression> size_specifier_list;
+		Gee.List<Expression> size_specifier_list = null;
 		bool first = true;
 		DataType element_type = UnresolvedType.new_from_expression (member);
 		
@@ -1482,7 +1482,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		       && current () != TokenType.WHEN
 		       && current () != TokenType.DEFAULT) {
 			try {
-				Statement stmt;
+				Statement stmt = null;
 				bool is_decl = false;
 				comment = scanner.pop_comment ();
 				switch (current ()) {
@@ -2203,14 +2203,14 @@ public class Vala.Genie.Parser : CodeVisitor {
 				}
 			} catch (ParseError e) {
 				int r;
-				while (true) {
+				do {
 					r = recover ();
 					if (r == RecoveryState.STATEMENT_BEGIN) {
 						next ();
 					} else {
 						break;
 					}
-				}
+				} while (true);
 				if (r == RecoveryState.EOF) {
 					return;
 				}
@@ -2792,7 +2792,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 					prop.get_accessor = new PropertyAccessor (true, false, false, block, get_src (accessor_begin));
 					prop.get_accessor.access = SymbolAccessibility.PUBLIC;
 				} else {
-					bool _construct;
+					bool _construct = false;
 					if (accept (TokenType.SET)) {
 						if (readonly) {
 							throw new ParseError.SYNTAX (get_error ("set block not allowed for a read only property"));

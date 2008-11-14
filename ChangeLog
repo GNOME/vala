@@ -1,5 +1,24 @@
 2008-11-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valagenieparser.vala:
+	* vala/valainterface.vala:
+	* vala/valainterfacewriter.vala:
+	* vala/valaparser.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodeassignmentmodule.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodeinvocationexpressionmodule.vala:
+	* vapi/glib-2.0.vapi:
+	* vapigen/valagidlparser.vala:
+	* vapigen/valagirparser.vala:
+	* vapigen/valamarkupreader.vala:
+	* vapigen/valavapicheck.vala:
+	* gen-project/valaprojectgenerator.vala:
+
+	Do not use possibly uninitialized variables
+
+2008-11-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacfgbuilder.vala:
 	* vala/valamemberaccess.vala:
 	* vala/valamethod.vala:

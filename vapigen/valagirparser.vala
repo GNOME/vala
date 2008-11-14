@@ -320,7 +320,7 @@ public class Vala.GirParser : CodeVisitor {
 			start_element ("parameters");
 			next ();
 			while (current_token == MarkupTokenType.START_ELEMENT) {
-				int array_length_idx = -1;
+				int array_length_idx;
 				var param = parse_parameter (out array_length_idx);
 				if (array_length_idx != -1) {
 					array_length_parameters.add (array_length_idx);
@@ -353,7 +353,11 @@ public class Vala.GirParser : CodeVisitor {
 	}
 
 	FormalParameter parse_parameter (out int array_length_idx = null) {
-		FormalParameter param = null;
+		FormalParameter param;
+
+		if (&array_length_idx != null) {
+			array_length_idx = -1;
+		}
 
 		start_element ("parameter");
 		string name = reader.get_attribute ("name");
@@ -841,8 +845,7 @@ public class Vala.GirParser : CodeVisitor {
 		if (FileUtils.test (metadata_filename, FileTest.EXISTS)) {
 			try {
 				string metadata;
-				ulong metadata_len;
-				FileUtils.get_contents (metadata_filename, out metadata, out metadata_len);
+				FileUtils.get_contents (metadata_filename, out metadata, null);
 				
 				foreach (string line in metadata.split ("\n")) {
 					if (line.has_prefix ("#")) {

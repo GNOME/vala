@@ -374,8 +374,7 @@ class Vala.ProjectGenerator : Dialog {
 	private string generate_source_file_header (string filename) {
 		var s = new StringBuilder ();
 
-		TimeVal tv;
-		tv.get_current_time ();
+		TimeVal tv = TimeVal ();
 		Date d = Date ();
 		d.set_time_val (tv);
 

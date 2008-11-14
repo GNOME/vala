@@ -685,7 +685,7 @@ public class Vala.Parser : CodeVisitor {
 
 	Expression parse_array_creation_expression (SourceLocation begin, MemberAccess member) throws ParseError {
 		bool size_specified = false;
-		Gee.List<Expression> size_specifier_list;
+		Gee.List<Expression> size_specifier_list = null;
 		bool first = true;
 		DataType element_type = UnresolvedType.new_from_expression (member);
 		do {
@@ -1170,7 +1170,7 @@ public class Vala.Parser : CodeVisitor {
 		       && current () != TokenType.CASE
 		       && current () != TokenType.DEFAULT) {
 			try {
-				Statement stmt;
+				Statement stmt = null;
 				bool is_decl = false;
 				comment = scanner.pop_comment ();
 				switch (current ()) {
@@ -1788,14 +1788,14 @@ public class Vala.Parser : CodeVisitor {
 				}
 			} catch (ParseError e) {
 				int r;
-				while (true) {
+				do {
 					r = recover ();
 					if (r == RecoveryState.STATEMENT_BEGIN) {
 						next ();
 					} else {
 						break;
 					}
-				}
+				} while (true);
 				if (r == RecoveryState.EOF) {
 					return;
 				}

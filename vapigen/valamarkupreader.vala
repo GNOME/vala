@@ -96,7 +96,7 @@ public class Vala.MarkupReader : Object {
 
 		space ();
 
-		MarkupTokenType type;
+		MarkupTokenType type = MarkupTokenType.NONE;
 		char* begin = current;
 		token_begin.pos = begin;
 		token_begin.line = line;
