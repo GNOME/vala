@@ -377,7 +377,7 @@ public class Vala.DBusClientModule : GAsyncModule {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("dbus_%s".printf (param.name))));
 			} else {
 				ccall.add_argument (new CCodeIdentifier (param.parameter_type.data_type.get_type_id ()));
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+				ccall.add_argument (new CCodeIdentifier (param.name));
 			}
 		}
 

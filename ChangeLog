@@ -1,5 +1,11 @@
 2008-11-14  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valadbusclientmodule.vala:
+
+	Fix non-struct output arguments in dynamic D-Bus method calls
+
+2008-11-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am:
 	* vala/valaassignment.vala:
 	* vala/valabasicblock.vala:
