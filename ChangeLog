@@ -1,5 +1,12 @@
 2008-11-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valagenieparser.vala:
+	* vala/valaparser.vala:
+
+	Avoid C compiler warnings with switch statements
+
+2008-11-14  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusclientmodule.vala:
 
 	Fix non-struct output arguments in dynamic D-Bus method calls

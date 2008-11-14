@@ -236,9 +236,9 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.YIELDS:
 			next ();
 			return;
+		default:
+			throw new ParseError.SYNTAX (get_error ("expected identifier"));
 		}
-
-		throw new ParseError.SYNTAX (get_error ("expected identifier"));
 	}
 
 	string parse_identifier () throws ParseError {
@@ -281,9 +281,9 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.NULL:
 			next ();
 			return new NullLiteral (get_src (begin));
+		default:
+			throw new ParseError.SYNTAX (get_error ("expected literal"));
 		}
-
-		throw new ParseError.SYNTAX (get_error ("expected literal"));
 	}
 
 	public void parse_file (SourceFile source_file) {
@@ -821,8 +821,12 @@ public class Vala.Parser : CodeVisitor {
 						}
 						var inner = parse_unary_expression ();
 						return new CastExpression (inner, type, get_src (begin), false);
+					default:
+						break;
 					}
 				}
+				break;
+			default:
 				break;
 			}
 			// no cast expression
@@ -836,6 +840,8 @@ public class Vala.Parser : CodeVisitor {
 			next ();
 			var op = parse_unary_expression ();
 			return new AddressofExpression (op, get_src (begin));
+		default:
+			break;
 		}
 
 		var expr = parse_primary_expression ();
@@ -1293,10 +1299,10 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.OP_PTR:
 			rollback (begin);
 			return true;
+		default:
+			rollback (begin);
+			return false;
 		}
-
-		rollback (begin);
-		return false;
 	}
 
 	Block parse_embedded_statement () throws ParseError {
@@ -1737,6 +1743,7 @@ public class Vala.Parser : CodeVisitor {
 				case TokenType.INTERFACE:   return parse_interface_declaration (attrs);
 				case TokenType.NAMESPACE:   return parse_namespace_declaration (attrs);
 				case TokenType.STRUCT:      return parse_struct_declaration (attrs);
+				default:                    break;
 				}
 				break;
 			case TokenType.OPEN_PARENS:
@@ -1762,6 +1769,8 @@ public class Vala.Parser : CodeVisitor {
 				case TokenType.OPEN_BRACE:
 					rollback (begin);
 					return parse_property_declaration (attrs);
+				default:
+					break;
 				}
 				break;
 			}
