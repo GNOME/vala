@@ -1816,7 +1816,7 @@ public class Valadoc.TypeReference : Basic {
 			if ( node == null )
 				return false;
 
-			if ( node is Vala.Constant )
+			if ( node is Vala.Constant || node is Vala.Property )
 				return false;
 
 			if ( node is Vala.FormalParameter ) {
@@ -4238,7 +4238,7 @@ public class Valadoc.Namespace : Basic, MethodHandler, FieldHandler, NamespaceHa
 	}
 }
 
-// rename to Package
+
 public class Valadoc.Package : Basic, NamespaceHandler {
 	public Gee.ArrayList<Namespace> namespaces {
 		default = new Gee.ArrayList<Namespace>();
@@ -4249,6 +4249,60 @@ public class Valadoc.Package : Basic, NamespaceHandler {
 	public bool is_external_package {
 		 private set;
 		 get;
+	}
+
+	// internal
+	public void set_dependency_list ( Gee.ArrayList<Package> list ) {
+		this._dependencies = list;
+	}
+
+	private Gee.ArrayList<Package> _dependencies;
+
+	// internal remove
+	public bool is_dependency ( Package dep ) {
+		if ( dep == this )
+			return false;
+
+		foreach ( Package pkg in this._dependencies ) {
+			if ( pkg == dep ) {
+				return true;
+			}
+
+			bool tmp = pkg.is_dependency ( dep );
+			if ( tmp == true ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public Gee.ReadOnlyCollection<Package> get_full_dependency_list () {
+		Gee.ArrayList<Package> list = new Gee.ArrayList<Package> ();
+
+		if ( this._dependencies == null )
+			return new Gee.ReadOnlyCollection<Package> ( list );
+
+		foreach ( Package pkg in this._dependencies ) {
+			if ( list.contains ( pkg ) == false ) {
+				list.add ( pkg );
+			}
+
+			var pkg_list = pkg.get_full_dependency_list ();
+			foreach ( Package pkg2 in pkg_list ) {
+				if ( list.contains ( pkg2 ) == false ) {
+					list.add ( pkg2 );
+				}
+			}
+		}
+		return new Gee.ReadOnlyCollection<Package> ( list );
+	}
+
+	public Gee.ReadOnlyCollection<Package> get_dependency_list () {
+		if ( this._dependencies == null ) {
+			return new Gee.ReadOnlyCollection<Package> ( new Gee.ArrayList<Package> () );
+		}
+
+		return new Gee.ReadOnlyCollection<Package> ( this._dependencies );
 	}
 
 	private string extract_package_name ( Vala.SourceFile vfile ) {
@@ -4365,6 +4419,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			file.visit ( doclet );
 		}
 	}
+
 
 	private weak Basic?  search_symbol_in_namespace ( Basic element, string[] params ) {
 		return this.search_symbol_in_symbol ( element.nspace, params );
@@ -4556,6 +4611,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		this.context.accept( this );
 		this.set_type_references ( );
 		this.inheritance ( ); // remove
+		this.add_dependencies ();
 	}
 
 	// internal
@@ -4613,13 +4669,74 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		return file.search_element_vala ( params, 0 );
 	}
 
+	private Gee.ArrayList<Package>? load_dependency_list ( string vapi_path ) {
+		if ( vapi_path.has_suffix ( ".vapi" ) ) {
+			string deps_filename = vapi_path.ndup ( vapi_path.size() - ".vapi".size() ) + ".deps";
+			Gee.ArrayList<Package> list = new Gee.ArrayList<Package> ();
+
+			if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
+				try {
+					string deps_content;
+					ulong deps_len;
+
+					FileUtils.get_contents (deps_filename, out deps_content, out deps_len);
+					foreach (string dep in deps_content.split ("\n")) {
+						if (dep != "") {
+							foreach ( Package pkg in this.files ) {
+								if ( pkg.name == dep ) {
+									list.add ( pkg );
+									continue ;
+								}
+							}
+						}
+					}
+				} catch (FileError e) {
+					Report.error (null, "Unable to read dependency file: %s".printf (e.message));
+				}
+			}
+			return list;
+		}
+		return null;
+	}
+
+	private Gee.ArrayList<weak Vala.SourceFile> vfiles = new Gee.ArrayList<weak Vala.SourceFile> ();
+	private Package source_package;
+
+	private void add_dependencies () {
+		foreach ( weak Vala.SourceFile vfile in this.vfiles ) {
+			Gee.ArrayList<Package>? deps = this.load_dependency_list ( vfile.filename );
+			if ( deps != null ) {
+				Package pkg = this.get_file ( vfile );
+				pkg.set_dependency_list ( deps );
+			}
+		}
+
+		if ( this.source_package != null ) {
+			Gee.ArrayList<Package> list = new Gee.ArrayList<Package> ();
+			foreach ( Package pkg in this.files ) {
+				if ( pkg != this.source_package ) {
+					list.add ( pkg );
+				}
+			}
+			this.source_package.set_dependency_list ( list );
+		}
+
+		this.source_package = null;
+		this.vfiles = null;
+	}
+
 	// internal
 	public Package get_file ( Vala.SourceFile vfile ) {
 		Package file = this.find_file( vfile );
 		if ( file != null )
 			return file;
 
-		var tmp = new Package ( this.settings,vfile, this ); 
+		Package tmp = new Package ( this.settings, vfile, this ); 
+		if ( tmp.is_external_package )
+			this.vfiles.add ( vfile );
+		else
+			this.source_package = tmp;
+
 		this.files.add ( tmp );
 		return tmp;
 	}

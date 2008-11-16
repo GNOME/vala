@@ -7,12 +7,66 @@ using Gee;
 
 
 namespace Valadoc.Diagrams {
+	// replace with .full_name
 	private static inline string get_diagram_node_name ( DataType type ) {
 		string name = "";
 		if ( type.nspace.full_name() != null ) {
 			name = type.nspace.full_name() + ".";
 		}
 		return name + type.name;
+	}
+
+	private static void draw_package_parents ( Package package, Graphviz.Graph g, Graphviz.Node me ) {
+		weak Graphviz.Node? node = g.find_node ( package.name );
+
+
+		Gee.Collection<Package> packlst = package.get_dependency_list ( );
+
+		foreach ( Package pkg in packlst ) {
+			weak Graphviz.Node gpkg = draw_package ( g, pkg, me );
+			draw_package_parents ( pkg, g, gpkg );
+		}
+	}
+
+	private static weak Graphviz.Node draw_package ( Graph g, Package package, Graphviz.Node? parent ) {
+		string name = package.name;
+		weak Graphviz.Node? node = g.find_node ( name );
+		if ( node == null ) {
+			node = g.node ( name );
+			node.set_safe ( "shape", "box", "" );
+			node.set_safe ( "fontname", "Times", "" );
+		}
+
+		if ( parent != null ) {
+			if ( g.find_edge( parent, node ) == null ) {
+				weak Edge edge = g.edge ( node, parent );
+				edge.set_safe ( "dir", "back", "" );
+			}
+		}
+
+		return node;
+	}
+
+	public static void write_dependency_diagram ( Package package, string path ) {
+		string[] params2 = new string[5];
+		params2[0] = "";
+		params2[1] = "-T";
+		params2[2] = "png";
+		params2[3] = "-o";
+		params2[4] = path;
+
+		Graphviz.Context cntxt = Context.context( );
+		cntxt.parse_args ( params2 );
+
+		Graphviz.Graph g = Graph.open ( "g", GraphType.AGRAPH );
+		g.set_safe ( "rank", "", "" );
+
+		weak Graphviz.Node me = draw_package ( g, package, null );
+		draw_package_parents ( package, g, me );
+
+		cntxt.layout_jobs ( g );
+		cntxt.render_jobs ( g );
+		cntxt.free_layout ( g );
 	}
 
 	public static void write_struct_diagram ( Struct stru, string path ) {

@@ -298,22 +298,24 @@ public class ValaDoc : Object {
 		return true;
 	}
 
-	private bool load_taglets ( string fulldirpath, out Gee.HashMap<string, Type>? taglets, out Type strtag ) {
+	private bool load_taglets ( string fulldirpath, out Gee.HashMap<string, Type>? taglets2, out Type strtag ) {
 		void* function;
 		GLib.Dir dir;
 
 		string pluginpath = fulldirpath + "taglets/";
 
 		Gee.ArrayList<Module*> modules = new Gee.ArrayList<weak Module*> ( );
-		Gee.HashMap<string, Type> taglets =
-			new Gee.HashMap<string, Type> ( GLib.str_hash, GLib.str_equal );
+
+
+//		Gee.HashMap<string, Type> taglets =
+			taglets2 = new Gee.HashMap<string, Type> ( GLib.str_hash, GLib.str_equal );
 
 		try {
 			dir = GLib.Dir.open ( pluginpath );
 		}
 		catch ( FileError err ) {
 			stdout.printf ( "Can't load plugin. %s\n", pluginpath );
-			taglets = null;
+			taglets2 = null;
 			return false;
 		}
 
@@ -326,7 +328,7 @@ public class ValaDoc : Object {
 			Module* module = Module.open ( tagletpath, ModuleFlags.BIND_LAZY);
 			if (module == null) {
 				stdout.printf ( "Can't load plugin.\n" );
-				taglets = null;
+				taglets2 = null;
 				return false;
 			}
 
@@ -335,7 +337,7 @@ public class ValaDoc : Object {
 
 			string? name;
 
-			GLib.Type type = tagletregisterfkt ( taglets );
+			GLib.Type type = tagletregisterfkt ( taglets2 );
 
 			if ( entry == "libtagletstring.so" || entry == "libtagletstring.dll" )
 				strtag = type;
@@ -378,13 +380,12 @@ public class ValaDoc : Object {
 		return true;
 	}
 
-
 	private string get_pkg_name ( ) {
 		if ( this.pkg_name == null ) {
 			if ( this.directory.has_suffix ( "/" ) )
-				pkg_name = GLib.Path.get_dirname ( this.directory );
+				this.pkg_name = GLib.Path.get_dirname ( this.directory );
 			else
-				pkg_name = GLib.Path.get_basename ( this.directory );
+				this.pkg_name = GLib.Path.get_basename ( this.directory );
 		}
 
 		return this.pkg_name;

@@ -388,7 +388,7 @@ h3.main_title {
 .navi_method, .main_inline_navigation_method {
 	list-style-image: url(method.png)
 }
-.navi_struct, .main_list_stru {
+.navi_struct, .main_list_stru, .main_inline_navigation_struct {
 	list-style-image: url(struct.png)
 }
 .navi_iface, .main_navigation_interface, .main_list_iface {

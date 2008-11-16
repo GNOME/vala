@@ -23,10 +23,7 @@ using GLib;
 
 
 public interface Valadoc.LinkHelper {
-	protected string get_html_top_link ( Valadoc.Basic? postag ) {
-		if ( postag == null )
-			return "";
-
+	protected string get_html_top_link ( Valadoc.Basic postag ) {
 		GLib.StringBuilder str = new GLib.StringBuilder ( "" );
 		Valadoc.Basic pos = postag;
 

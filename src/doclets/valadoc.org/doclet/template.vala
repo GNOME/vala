@@ -46,11 +46,11 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 	private string current_path = null;
 	private bool is_vapi = false;
 
-	protected override string get_link ( Valadoc.Basic p1, Valadoc.Basic p2 ) {
+	protected override string get_link ( Valadoc.Basic p1, Valadoc.Basic? p2 ) {
 		return this.get_html_link ( this.settings, p1 );
 	}
 
-	private override void write_top_element ( GLib.FileStream file, Basic pos ) {
+	private override void write_top_element ( GLib.FileStream file, Basic? pos ) {
 		this.write_top_element_template ( file, "?" );
 	}
 
@@ -112,7 +112,13 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		var rt = DirUtils.create ( new_path, 0777 );
 
 		GLib.FileStream nav = GLib.FileStream.open ( new_path + "navi.html", "w" );
-		this.write_navi_file ( nav, file );
+		this.write_navi_file ( nav, file, file );
+		nav = null;
+
+		GLib.FileStream sfile = GLib.FileStream.open ( new_path + "index.html", "w" );
+		this.write_file_content ( sfile, file, file );
+		sfile = null;
+
 
 		this.current_path = new_path;
 		file.visit_namespaces ( this );
@@ -138,7 +144,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		navi = null;
 
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w" );
-		this.write_namespace_content ( file, ns );
+		this.write_namespace_content ( file, ns, ns );
 		file = null;
 
 		// file:
@@ -178,7 +184,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		navi = null;
 
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
-		this.write_interface_content ( file, iface );
+		this.write_interface_content ( file, iface, iface );
 		file = null;
 
 		this.current_path = old_path;
@@ -209,7 +215,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		cname = null;
 
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
-		this.write_class_content ( file, cl );
+		this.write_class_content ( file, cl, cl );
 		file = null;
 
 		this.current_path = old_path;
@@ -229,12 +235,15 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		this.write_navi_struct ( navi, stru, stru );
 		navi = null;
 
+		// FIXME: libbonoboui-2.0
 		GLib.FileStream cname = GLib.FileStream.open ( this.current_path + "cname", "w" );
-		cname.puts ( stru.get_cname() );
-		cname = null;
+		if ( cname != null ) {
+			cname.puts ( stru.get_cname() );
+			cname = null;
+		}
 
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
-		this.write_struct_content ( file, stru );
+		this.write_struct_content ( file, stru, stru );
 		file = null;
 
 		this.current_path = old_path;
@@ -256,7 +265,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		navi = null;
 
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
-		this.write_error_domain_content ( file, errdom );
+		this.write_error_domain_content ( file, errdom, errdom );
 		file = null;
 
 		this.current_path = old_path;
@@ -279,7 +288,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		navi = null;
 
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
-		this.write_enum_content ( file, en );
+		this.write_enum_content ( file, en, en );
 		file = null;
 
 		this.current_path = old_path;

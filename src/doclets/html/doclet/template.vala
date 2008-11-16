@@ -56,13 +56,17 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		return css_path.str;
 	}
 
-	protected override string get_link ( Valadoc.Basic element, Valadoc.Basic pos ) {
+	protected override string get_link ( Valadoc.Basic element, Valadoc.Basic? pos ) {
 		return this.get_html_link ( this.settings, element, pos );
 	}
 
-	protected override void write_top_element ( GLib.FileStream file, Basic pos ) {
-		string top = get_html_top_link ( pos );
-		this.write_top_element_template ( file, top+"index.html" );
+	protected override void write_top_element ( GLib.FileStream file, Basic? pos ) {
+		string top = "";
+
+		if ( pos != null )
+			top = get_html_top_link ( pos ) ;
+
+		this.write_top_element_template ( file, top+"packages.html" );
 	}
 
 
@@ -105,10 +109,18 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 	}
 
 	protected override string get_img_real_path ( Basic element ) {
+		if ( element is Package ) {
+			return this.current_path + element.name + ".png";
+		}
+
 		return this.current_path + "tree.png";
 	}
 
 	protected override string get_img_path ( Basic element ) {
+		if ( element is Package ) {
+			return element.name + ".png";
+		}
+
 		return "tree.png";
 	}
 
@@ -118,19 +130,20 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		this.is_vapi = file.is_external_package;
 		if ( this.is_vapi )
 			this.files.add ( file );
+		else
+			source_package = file;
 
-		string new_path = this.settings.path + this.package_name + "/";
-		bool dir_exists = FileUtils.test ( new_path, FileTest.EXISTS);
+		this.current_path = this.settings.path + this.package_name + "/";
 
-		var rt = DirUtils.create ( new_path, 0777 );
-		GLib.FileStream sfile = GLib.FileStream.open ( new_path + "index.html", "w" );
+		var rt = DirUtils.create ( this.current_path, 0777 );
+		GLib.FileStream sfile = GLib.FileStream.open ( this.current_path + "index.html", "w" );
 		this.write_file_header ( sfile, this.get_css_link ( ), file.name );
-		this.write_navi_file ( sfile, file );
-		this.write_file_content ( sfile, file );
+		this.write_navi_file ( sfile, file, file );
+		this.write_file_content ( sfile, file, file );
 		this.write_file_footer ( sfile );
 		sfile = null;
 
-		this.current_path = new_path;
+
 		file.visit_namespaces ( this );
 		this.current_path = null;
 	}
@@ -144,34 +157,31 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		return true;
 	}
 
-	private Gee.ArrayList<Namespace> source_namespaces = new Gee.ArrayList<Namespace> ();
 	private Gee.ArrayList<Package> files = new Gee.ArrayList<Package> ();
+	private Package source_package;
 
 	public override void cleanups () {
 		this.directory_level = 0;
 		copy_directory ( Config.doclet_path + "deps/", this.settings.path );
 
-		GLib.FileStream sfile = GLib.FileStream.open ( this.settings.path + "index.html", "w" );
+
+		if ( this.source_package != null ) {
+			GLib.FileStream sfile = GLib.FileStream.open ( this.settings.path + "index.html", "w" );
+			this.write_file_header ( sfile, this.get_css_link ( ), source_package.name );
+			this.write_navi_file ( sfile, source_package, null );
+			this.write_file_content ( sfile, source_package, null );
+			this.write_file_footer ( sfile );
+			sfile = null;
+		}
+
+		GLib.FileStream sfile = GLib.FileStream.open ( this.settings.path + "packages.html", "w" );
 		string title = ( this.settings.pkg_name == null )? "" : this.settings.pkg_name;
 		this.write_file_header ( sfile, this.get_css_link ( ), title );
 
-		if ( this.source_namespaces.size > 0 ) {
-			sfile.printf ( "<h2 class=\"%s\">Namespaces:</h2>\n", css_title );
-			sfile.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Namespace ns in this.source_namespaces ) {
-				string dir = (ns.name == null)? "0" : ns.name;
-				this.write_navi_entry_html_template_with_link ( sfile, css_inline_navigation_namespace, this.get_link(ns, null), (ns.name == null)? "Global Namespace" : ns.full_name () );
-			}		
-			sfile.puts ( "</ul>\n\n" );
-		}
-
-		sfile.printf ( "<h2 class=\"%s\">Depencies:</h2>\n", css_title );
+		sfile.printf ( "<h2 class=\"%s\">Packages:</h2>\n", css_title );
 		sfile.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 
 		foreach ( Package file in this.files ) {
-			if ( !this.is_depency ( file.name ) )
-				continue;
-
 			if ( this.settings.with_deps )
 				sfile.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s/index.html\">%s</a></li>\n", css_inline_navigation_package, css_navi_link, file.name, file.name );
 			else
@@ -273,10 +283,6 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		string old_path = this.current_path;
 		this.directory_level++;
 
-		if ( !this.is_vapi )
-			this.source_namespaces.add ( ns );
-
-
 		if ( ns.name == null ) {
 			string tmp = this.current_path + "0/";
 			this.current_path = tmp;
@@ -290,7 +296,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w" );
 		this.write_file_header ( file, this.get_css_link ( ), ns.name );
 		this.write_navi_namespace ( file, ns );
-		this.write_namespace_content ( file, ns );
+		this.write_namespace_content ( file, ns, ns );
 		this.write_file_footer ( file );
 		file = null;
 
@@ -323,7 +329,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
 		this.write_file_header ( file, this.get_css_link ( ), en.name );
 		this.write_navi_enum ( file, en, en );
-		this.write_enum_content ( file, en );
+		this.write_enum_content ( file, en, en );
 		this.write_file_footer ( file );
 		file = null;
 
@@ -343,7 +349,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
 		this.write_file_header ( file, this.get_css_link ( ), errdom.name );
 		this.write_navi_error_domain ( file, errdom, errdom );
-		this.write_error_domain_content ( file, errdom );
+		this.write_error_domain_content ( file, errdom, errdom );
 		this.write_file_footer ( file );
 		file = null;
 
@@ -366,7 +372,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
 		this.write_file_header ( file, this.get_css_link ( ), stru.name );
 		this.write_navi_struct ( file, stru, stru );
-		this.write_struct_content ( file, stru );
+		this.write_struct_content ( file, stru, stru );
 		this.write_file_footer ( file );
 		file = null;
 
@@ -395,7 +401,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w");
 		this.write_file_header ( file, this.get_css_link ( ), cl.name );
 		this.write_navi_class ( file, cl, cl );
-		this.write_class_content ( file, cl );
+		this.write_class_content ( file, cl, cl );
 		this.write_file_footer ( file );
 		file = null;
 
@@ -421,7 +427,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w" );
 		this.write_file_header ( file, this.get_css_link ( ), iface.name );
 		this.write_navi_interface ( file, iface, iface );
-		this.write_interface_content ( file, iface );
+		this.write_interface_content ( file, iface, iface );
 		this.write_file_footer ( file );
 		file = null;
 
