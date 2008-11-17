@@ -1,3 +1,9 @@
+2008-11-17  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
+	Fix g_queue_*_nth bindings, patch by John Carr
+
 2008-11-14  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala:

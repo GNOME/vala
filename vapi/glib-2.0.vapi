@@ -2790,13 +2790,13 @@ namespace GLib {
 		public void sort (CompareDataFunc compare_func, void* user_data);
 		public void push_head (G# data);
 		public void push_tail (G# data);
-		public void push_nth (G# data);
+		public void push_nth (G# data, int n);
 		public G pop_head ();
 		public G pop_tail ();
-		public G pop_nth ();
+		public G pop_nth (uint n);
 		public weak G peek_head ();
 		public weak G peek_tail ();
-		public weak G peek_nth ();
+		public weak G peek_nth (uint n);
 		public int index (G data);
 		public void remove (G data);
 		public void remove_all (G data);
