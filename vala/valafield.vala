@@ -203,6 +203,12 @@ public class Vala.Field : Member, Lockable {
 
 		checked = true;
 
+		var old_source_file = analyzer.current_source_file;
+
+		if (source_reference != null) {
+			analyzer.current_source_file = source_reference.file;
+		}
+
 		field_type.check (analyzer);
 
 		process_attributes ();
@@ -238,6 +244,8 @@ public class Vala.Field : Member, Lockable {
 
 			analyzer.current_source_file.add_type_dependency (field_type, SourceFileDependencyType.SOURCE);
 		}
+
+		analyzer.current_source_file = old_source_file;
 
 		return !error;
 	}

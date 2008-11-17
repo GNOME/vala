@@ -223,6 +223,7 @@ public class Vala.ForeachStatement : Block {
 
 		body.add_local_variable (element_variable);
 		element_variable.active = true;
+		element_variable.checked = true;
 
 		// analyze body
 		owner = analyzer.current_symbol.scope;

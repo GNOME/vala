@@ -395,6 +395,11 @@ public class Vala.MemberAccess : Expression {
 		var access = SymbolAccessibility.PUBLIC;
 		bool instance = false;
 		bool klass = false;
+
+		if (!member.check (analyzer)) {
+			return false;
+		}
+
 		if (member is Field) {
 			var f = (Field) member;
 			access = f.access;

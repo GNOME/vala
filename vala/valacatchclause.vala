@@ -109,6 +109,8 @@ public class Vala.CatchClause : CodeNode {
 
 			body.scope.add (variable_name, error_variable);
 			body.add_local_variable (error_variable);
+
+			error_variable.checked = true;
 		} else {
 			error_type = new ErrorType (null, null, source_reference);
 		}
