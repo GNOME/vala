@@ -50,4 +50,8 @@ public class Vala.DynamicMethod : Method {
 		}
 		return cname;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		return true;
+	}
 }

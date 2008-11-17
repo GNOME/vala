@@ -34,4 +34,8 @@ public class Vala.DynamicSignal : Signal {
 		base (name, return_type, source_reference);
 		this.dynamic_type = dynamic_type;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		return true;
+	}
 }
