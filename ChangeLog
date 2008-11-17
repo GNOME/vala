@@ -1,5 +1,19 @@
 2008-11-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaflowanalyzer.vala:
+
+	Fix control flow graph for try statements with finally clause,
+	fixes bug 561115
+
+2008-11-17  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valadynamicmethod.vala:
+	* vala/valadynamicsignal.vala:
+
+	Fix checking of dynamic methods and signals
+
+2008-11-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valafield.vala:
 
 	Correct source file dependencies for private fields of compact

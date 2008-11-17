@@ -952,6 +952,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			return;
 		}
 
+		var before_try_block = current_block;
 		var after_try_block = new BasicBlock ();
 
 		BasicBlock finally_block = null;
@@ -981,6 +982,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, null, null));
 			}
 		}
+
+		current_block = before_try_block;
 
 		stmt.body.accept (this);
 
