@@ -229,7 +229,16 @@ public class Vala.Field : Member, Lockable {
 			return false;
 		}
 
-		if (!is_internal_symbol ()) {
+		bool field_in_header = !is_internal_symbol ();
+		if (parent_symbol is Class) {
+			var cl = (Class) parent_symbol;
+			if (cl.is_compact && !cl.is_internal_symbol ()) {
+				// compact classes don't have priv structs
+				field_in_header = true;
+			}
+		}
+
+		if (field_in_header) {
 			if (field_type is ValueType) {
 				analyzer.current_source_file.add_type_dependency (field_type, SourceFileDependencyType.HEADER_FULL);
 			} else {
