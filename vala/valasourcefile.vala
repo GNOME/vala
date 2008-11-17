@@ -457,7 +457,7 @@ public class Vala.SourceFile {
 	{
 		source_array = new Gee.ArrayList<string> ();
 		string[] lines = cont.split ("\n", 0);
-		uint idx;
+		int idx;
 		for (idx = 0; lines[idx] != null; ++idx) {
 			source_array.add (lines[idx]);
 		}

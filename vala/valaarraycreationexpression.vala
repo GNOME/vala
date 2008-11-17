@@ -180,7 +180,7 @@ public class Vala.ArrayCreationExpression : Expression {
 				if (e.value_type == null) {
 					/* return on previous error */
 					return false;
-				} else if (!(e.value_type.data_type is Struct) || !((Struct) e.value_type.data_type).is_integer_type ()) {
+				} else if (!e.value_type.compatible (analyzer.long_type)) {
 					error = true;
 					Report.error (e.source_reference, "Expression of integer type expected");
 				}
