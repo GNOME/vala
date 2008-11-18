@@ -1,5 +1,13 @@
 2008-11-18  Thijs Vermeir  <thijsvermeir@gmail.com>
 
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
+
+	Transfer ownership on gtk_container_get_children
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-11-18  Thijs Vermeir  <thijsvermeir@gmail.com>
+
 	* vapi/packages/gstreamer-0.10/gstreamer-0.10.metadata:
 
 	Transfer ownership on gst_tag_list_merge
