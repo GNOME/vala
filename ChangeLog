@@ -1,5 +1,12 @@
 2008-11-20  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/libxml-2.0.vapi:
+
+	Mark encoding parameters as nullable,
+	patch by Víctor Manuel Jáquez Leal, fixes bug 560062
+
+2008-11-20  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacatchclause.vala:
 	* vala/valaerrortype.vala:
 

@@ -864,13 +864,13 @@ namespace Xml {
 		public TextReader.filename (string uri);
 
 		[CCode (cname = "xmlReaderForDoc")]
-		public TextReader.for_doc (string cur, string url, string encoding, int options);
+		public TextReader.for_doc (string cur, string url, string? encoding, int options);
 
 		[CCode (cname = "xmlReaderForFd")]
-		public TextReader.for_fd (int fd, string url, string encoding, int options);
+		public TextReader.for_fd (int fd, string url, string? encoding, int options);
 
 		[CCode (cname = "xmlReaderForFile")]
-		public TextReader.for_file (string filename, string encoding, int options);
+		public TextReader.for_file (string filename, string? encoding, int options);
 
 		[CCode (cname = "xmlReaderForIO")]
 		public TextReader.for_io (InputReadCallback ioread, InputCloseCallback ioclose, void* ioctx, string url, string encoding, int options);
@@ -880,20 +880,20 @@ namespace Xml {
 		public TextReader.for_memory (char[] buffer, int size, string url, string encoding, int options);
 
 		[CCode (cname = "xmlReaderNewDoc")]
-		public int new_doc (string cur, string url, string encoding, int options);
+		public int new_doc (string cur, string url, string? encoding, int options);
 
 		[CCode (cname = "xmlReaderNewFd")]
-		public int new_fd (int fd, string url, string encoding, int options);
+		public int new_fd (int fd, string url, string? encoding, int options);
 
 		[CCode (cname = "xmlReaderNewFile")]
-		public int new_file (string filename, string encoding, int options);
+		public int new_file (string filename, string? encoding, int options);
 
 		[CCode (cname = "xmlReaderNewIO")]
 		public int new_io (InputReadCallback ioread, InputCloseCallback ioclose, void* ioctx, string url, string encoding, int options);
 
 		[CCode (cname = "xmlReaderNewMemory")]
 		[NoArrayLength]
-		public int new_memory (char[] buffer, int size, string url, string encoding, int options);
+		public int new_memory (char[] buffer, int size, string url, string? encoding, int options);
 
 		[CCode (cname = "xmlReaderNewWalker")]
 		public int new_walker (Doc* doc);
