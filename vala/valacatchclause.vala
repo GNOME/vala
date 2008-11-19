@@ -103,8 +103,6 @@ public class Vala.CatchClause : CodeNode {
 		checked = true;
 
 		if (error_type != null) {
-			analyzer.current_source_file.add_type_dependency (error_type, SourceFileDependencyType.SOURCE);
-
 			error_variable = new LocalVariable (error_type.copy (), variable_name);
 
 			body.scope.add (variable_name, error_variable);
@@ -116,6 +114,8 @@ public class Vala.CatchClause : CodeNode {
 		}
 
 		error_type.check (analyzer);
+
+		analyzer.current_source_file.add_type_dependency (error_type, SourceFileDependencyType.SOURCE);
 
 		body.check (analyzer);
 

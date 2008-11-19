@@ -1,9 +1,17 @@
+2008-11-20  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacatchclause.vala:
+	* vala/valaerrortype.vala:
+
+	Correct source file dependencies for catch clauses,
+	fixes bug 561437
+
 2008-11-19  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valatypeofexpression.vala:
 
 	Include C header files for types used in typeof expressions,
-	fixes bug 559454
+	fixes bug 559494
 
 2008-11-19  Jürg Billeter  <j@bitron.ch>
 

@@ -129,4 +129,11 @@ public class Vala.ErrorType : ReferenceType {
 	public override bool is_reference_type_or_type_parameter () {
 		return true;
 	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (error_domain != null) {
+			return error_domain.check (analyzer);
+		}
+		return true;
+	}
 }
