@@ -1,3 +1,9 @@
+2008-11-19  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodemethodmodule.vala:
+
+	Remove extra g_type_create_instance in constructors
+
 2008-11-19  Sebastian Dröge  <sebastian.droege@collabora.co.uk>
 
 	* gobject/valagobjectmodule.vala:

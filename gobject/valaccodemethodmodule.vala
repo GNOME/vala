@@ -378,11 +378,17 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						}
 					} else if (in_gtypeinstance_creation_method) {
 						var cl = (Class) m.parent_symbol;
-						var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
-						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
-						ccall.add_argument (new CCodeIdentifier ("object_type"));
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", new CCodeCastExpression (ccall, cl.get_cname () + "*")));
-						cinit.append (cdecl);
+						var cdeclaration = new CCodeDeclaration (cl.get_cname () + "*");
+						var cdecl = new CCodeVariableDeclarator ("self");
+						cdeclaration.add_declarator (cdecl);
+						cinit.append (cdeclaration);
+
+						if (!((CreationMethod) m).chain_up) {
+							// TODO implicitly chain up to base class as in add_object_creation
+							var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_create_instance"));
+							ccall.add_argument (new CCodeIdentifier ("object_type"));
+							cdecl.initializer = new CCodeCastExpression (ccall, cl.get_cname () + "*");
+						}
 
 						/* type, dup func, and destroy func fields for generic types */
 						foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
