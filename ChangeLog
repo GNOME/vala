@@ -1,3 +1,10 @@
+2008-11-19  Sebastian Dröge  <sebastian.droege@collabora.co.uk>
+
+	* gobject/valagobjectmodule.vala:
+
+	Add support for class field initializers for classes that are not
+	derived from GObject.
+
 2008-11-18  Thijs Vermeir  <thijsvermeir@gmail.com>
 
 	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:

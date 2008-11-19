@@ -767,6 +767,19 @@ public class Vala.GObjectModule : GTypeModule {
 			}
 		}
 
+		/* initialize class fields */
+		var fields = cl.get_fields ();
+		foreach (Field field in fields) {
+			if (field.binding != MemberBinding.CLASS || field.initializer == null) {
+				continue;
+			}
+			CCodeExpression left = new CCodeMemberAccess (new CCodeIdentifier ("klass"),
+			                                              field.get_cname (), true);
+			CCodeExpression right = (CCodeExpression)field.initializer.ccodenode;
+			CCodeAssignment assign = new CCodeAssignment (left, right);
+			init_block.add_statement (new CCodeExpressionStatement (assign));
+		}
+
 		if (cl.is_subtype_of (gobject_type)) {
 			/* create type, dup_func, and destroy_func properties for generic types */
 			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
@@ -827,19 +840,6 @@ public class Vala.GObjectModule : GTypeModule {
 				prop_enum.add_value (new CCodeEnumValue (enum_value));
 
 				instance_priv_struct.add_field ("GDestroyNotify", func_name);
-			}
-
-			/* initialize class fields */
-			var fields = cl.get_fields ();
-			foreach (Field field in fields) {
-				if (field.binding != MemberBinding.CLASS || field.initializer == null) {
-					continue;
-				}
-				CCodeExpression left = new CCodeMemberAccess (new CCodeIdentifier ("klass"),
-				                                              field.get_cname (), true);
-				CCodeExpression right = (CCodeExpression)field.initializer.ccodenode;
-				CCodeAssignment assign = new CCodeAssignment (left, right);
-				init_block.add_statement (new CCodeExpressionStatement (assign));
 			}
 
 			/* create properties */
