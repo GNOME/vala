@@ -1,5 +1,14 @@
 2008-11-20  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-interfaces-0.10/:
+
+	Fix GstColorBalance binding, patch by Víctor Manuel Jáquez Leal,
+	fixes bug 560840
+
+	* vapi/gstreamer-interfaces-0.10.vapi: regenerated
+
+2008-11-20  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/libxml-2.0.vapi:
 
 	Mark encoding parameters as nullable,

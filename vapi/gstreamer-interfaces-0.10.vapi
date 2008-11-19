@@ -44,11 +44,11 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/interfaces/tuner.h")]
 	public class TunerNorm : GLib.Object {
-		public GLib.Value framerate;
+		public Gst.Value framerate;
 		public weak string label;
 		public static void changed (Gst.Tuner tuner, Gst.TunerNorm norm);
 	}
-	[CCode (cheader_filename = "gst/interfaces/colorbalancechannel.h")]
+	[CCode (cheader_filename = "gst/interfaces/colorbalance.h")]
 	public interface ColorBalance : Gst.ImplementsInterface, Gst.Element {
 		public abstract int get_value (Gst.ColorBalanceChannel channel);
 		public abstract weak GLib.List list_channels ();
