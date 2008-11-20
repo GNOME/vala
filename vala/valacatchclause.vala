@@ -123,6 +123,8 @@ public class Vala.CatchClause : CodeNode {
 	}
 
 	public override void get_defined_variables (Collection<LocalVariable> collection) {
-		collection.add (error_variable);
+		if (error_variable != null) {
+			collection.add (error_variable);
+		}
 	}
 }

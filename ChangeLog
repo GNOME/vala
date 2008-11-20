@@ -1,5 +1,11 @@
 2008-11-20  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacatchclause.vala:
+
+	Fix generic catch clauses
+
+2008-11-20  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodemethodcallmodule.vala:
 
 	Fix base access to virtual signal handlers with return values,
