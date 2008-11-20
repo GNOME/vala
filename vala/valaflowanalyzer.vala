@@ -530,8 +530,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		handle_errors (stmt);
 
-		if (stmt.expression is InvocationExpression) {
-			var expr = (InvocationExpression) stmt.expression;
+		if (stmt.expression is MethodCall) {
+			var expr = (MethodCall) stmt.expression;
 			var ma = expr.call as MemberAccess;
 			if (ma != null && ma.symbol_reference != null && ma.symbol_reference.get_attribute ("NoReturn") != null) {
 				current_block = null;

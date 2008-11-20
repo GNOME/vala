@@ -198,7 +198,7 @@ public class Vala.NullChecker : CodeVisitor {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_invocation_expression (InvocationExpression expr) {
+	public override void visit_method_call (MethodCall expr) {
 		expr.accept_children (this);
 
 		var mtype = expr.call.value_type as MethodType;

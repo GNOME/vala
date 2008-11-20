@@ -1,4 +1,4 @@
-/* valainvocationexpression.vala
+/* valamethodcall.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter
  *
@@ -26,7 +26,7 @@ using Gee;
 /**
  * Represents an invocation expression in the source code.
  */
-public class Vala.InvocationExpression : Expression {
+public class Vala.MethodCall : Expression {
 	/**
 	 * The method to call.
 	 */
@@ -52,7 +52,7 @@ public class Vala.InvocationExpression : Expression {
 	 * @param source_reference reference to source code
 	 * @return                 newly created invocation expression
 	 */
-	public InvocationExpression (Expression call, SourceReference? source_reference = null) {
+	public MethodCall (Expression call, SourceReference? source_reference = null) {
 		this.source_reference = source_reference;
 		this.call = call;
 	}
@@ -92,7 +92,7 @@ public class Vala.InvocationExpression : Expression {
 	}
 
 	public override void accept (CodeVisitor visitor) {
-		visitor.visit_invocation_expression (this);
+		visitor.visit_method_call (this);
 
 		visitor.visit_expression (this);
 	}

@@ -492,7 +492,7 @@ public class Vala.Parser : CodeVisitor {
 				expr = parse_pointer_member_access (begin, expr);
 				break;
 			case TokenType.OPEN_PARENS:
-				expr = parse_invocation_expression (begin, expr);
+				expr = parse_method_call (begin, expr);
 				break;
 			case TokenType.OPEN_BRACKET:
 				expr = parse_element_access (begin, expr);
@@ -582,7 +582,7 @@ public class Vala.Parser : CodeVisitor {
 		return expr;
 	}
 
-	Expression parse_invocation_expression (SourceLocation begin, Expression inner) throws ParseError {
+	Expression parse_method_call (SourceLocation begin, Expression inner) throws ParseError {
 		expect (TokenType.OPEN_PARENS);
 		var arg_list = parse_argument_list ();
 		expect (TokenType.CLOSE_PARENS);
@@ -603,7 +603,7 @@ public class Vala.Parser : CodeVisitor {
 			}
 			return expr;
 		} else {
-			var expr = new InvocationExpression (inner, get_src (begin));
+			var expr = new MethodCall (inner, get_src (begin));
 			foreach (Expression arg in arg_list) {
 				expr.add_argument (arg);
 			}

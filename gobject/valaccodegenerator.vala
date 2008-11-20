@@ -38,7 +38,7 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head = new CCodeControlFlowModule (this, head);
 		head = new CCodeMemberAccessModule (this, head);
 		head = new CCodeAssignmentModule (this, head);
-		head = new CCodeInvocationExpressionModule (this, head);
+		head = new CCodeMethodCallModule (this, head);
 		head = new CCodeArrayModule (this, head);
 		head = new CCodeDelegateModule (this, head);
 		head = new GErrorModule (this, head);
@@ -267,8 +267,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head.visit_member_access (expr);
 	}
 
-	public override void visit_invocation_expression (InvocationExpression expr) {
-		head.visit_invocation_expression (expr);
+	public override void visit_method_call (MethodCall expr) {
+		head.visit_method_call (expr);
 	}
 	
 	public override void visit_element_access (ElementAccess expr) {

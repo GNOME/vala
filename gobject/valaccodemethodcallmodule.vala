@@ -1,4 +1,4 @@
-/* valaccodeinvocationexpressionmodule.vala
+/* valaccodemethodcallmodule.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -24,12 +24,12 @@
 using GLib;
 using Gee;
 
-public class Vala.CCodeInvocationExpressionModule : CCodeAssignmentModule {
-	public CCodeInvocationExpressionModule (CCodeGenerator codegen, CCodeModule? next) {
+public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
+	public CCodeMethodCallModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}
 
-	public override void visit_invocation_expression (InvocationExpression expr) {
+	public override void visit_method_call (MethodCall expr) {
 		expr.accept_children (codegen);
 
 		// the bare function call
@@ -217,7 +217,7 @@ public class Vala.CCodeInvocationExpressionModule : CCodeAssignmentModule {
 
 					cexpr = handle_struct_argument (param, arg, cexpr);
 
-					if (multiple_cargs && arg is InvocationExpression) {
+					if (multiple_cargs && arg is MethodCall) {
 						// if vala argument is invocation expression
 						// the auxiliary C argument(s) will depend on the main C argument
 

@@ -1,5 +1,28 @@
 2008-11-20  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am:
+	* vala/valacodevisitor.vala:
+	* vala/valadynamicmethod.vala:
+	* vala/valaflowanalyzer.vala:
+	* vala/valagenieparser.vala:
+	* vala/valamemberaccess.vala:
+	* vala/valamethodcall.vala:
+	* vala/valanullchecker.vala:
+	* vala/valaparser.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasymbolresolver.vala:
+	* gobject/Makefile.am:
+	* gobject/valaccodearraymodule.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodedelegatemodule.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodemethodcallmodule.vala:
+	* gobject/valaccodemodule.vala:
+
+	Rename InvocationExpression to MethodCall
+
+2008-11-20  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valainvocationexpression.vala:
 
 	Fix struct initialization

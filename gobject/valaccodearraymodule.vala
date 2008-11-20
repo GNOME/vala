@@ -27,7 +27,7 @@ using Gee;
 /**
  * The link between an assignment and generated code.
  */
-public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
+public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	private int next_array_dup_id = 0;
 
 	public CCodeArrayModule (CCodeGenerator codegen, CCodeModule? next) {
@@ -136,8 +136,8 @@ public class Vala.CCodeArrayModule : CCodeInvocationExpressionModule {
 			Gee.List<Expression> size = ((ArrayCreationExpression) array_expr).get_sizes ();
 			var length_expr = size[dim - 1];
 			return (CCodeExpression) get_ccodenode (length_expr);
-		} else if (array_expr is InvocationExpression) {
-			var invocation_expr = (InvocationExpression) array_expr;
+		} else if (array_expr is MethodCall) {
+			var invocation_expr = (MethodCall) array_expr;
 			Gee.List<CCodeExpression> size = invocation_expr.get_array_sizes ();
 			return size[dim - 1];
 		} else if (array_expr.symbol_reference != null) {

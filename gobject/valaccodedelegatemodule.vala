@@ -82,8 +82,8 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			}
 		}
 		
-		if (delegate_expr is InvocationExpression) {
-			var invocation_expr = (InvocationExpression) delegate_expr;
+		if (delegate_expr is MethodCall) {
+			var invocation_expr = (MethodCall) delegate_expr;
 			return invocation_expr.delegate_target;
 		} else if (delegate_expr is LambdaExpression) {
 			if ((current_method != null && current_method.binding == MemberBinding.INSTANCE) || in_constructor) {

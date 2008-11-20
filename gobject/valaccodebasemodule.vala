@@ -1778,7 +1778,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		stmt.ccodenode = new CCodeExpressionStatement ((CCodeExpression) stmt.expression.ccodenode);
 
-		var invoc = stmt.expression as InvocationExpression;
+		var invoc = stmt.expression as MethodCall;
 		if (invoc != null) {
 			var m = invoc.call.symbol_reference as Method;
 			var ma = invoc.call as MemberAccess;

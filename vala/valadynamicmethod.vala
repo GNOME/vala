@@ -29,7 +29,7 @@ using Gee;
 public class Vala.DynamicMethod : Method {
 	public DataType dynamic_type { get; set; }
 
-	public InvocationExpression invocation { get; set; }
+	public MethodCall invocation { get; set; }
 
 	private string cname;
 	static int dynamic_method_id;

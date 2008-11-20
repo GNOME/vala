@@ -307,7 +307,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					Report.error (expr.source_reference, "Too few arguments, method `%s' does not take %d arguments".printf (mtype.to_string (), args.size));
 					return false;
 				} else {
-					var invocation_expr = expr as InvocationExpression;
+					var invocation_expr = expr as MethodCall;
 					var object_creation_expr = expr as ObjectCreationExpression;
 					if (invocation_expr != null) {
 						invocation_expr.add_argument (param.default_expression);

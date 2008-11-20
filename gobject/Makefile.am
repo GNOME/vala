@@ -19,8 +19,8 @@ libvala_la_VALASOURCES = \
 	valaccodecontrolflowmodule.vala \
 	valaccodedelegatemodule.vala \
 	valaccodegenerator.vala \
-	valaccodeinvocationexpressionmodule.vala \
 	valaccodememberaccessmodule.vala \
+	valaccodemethodcallmodule.vala \
 	valaccodemethodmodule.vala \
 	valaccodemodule.vala \
 	valaccodestructmodule.vala \

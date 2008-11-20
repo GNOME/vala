@@ -79,7 +79,6 @@ libvalacore_la_VALASOURCES = \
 	valainterfacetype.vala \
 	valainterfacewriter.vala \
 	valainvalidtype.vala \
-	valainvocationexpression.vala \
 	valalambdaexpression.vala \
 	valaliteral.vala \
 	valalocalvariable.vala \
@@ -89,6 +88,7 @@ libvalacore_la_VALASOURCES = \
 	valamemberaccess.vala \
 	valamemberinitializer.vala \
 	valamethod.vala \
+	valamethodcall.vala \
 	valamethodtype.vala \
 	valanamespace.vala \
 	valanullchecker.vala \

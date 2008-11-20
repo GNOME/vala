@@ -488,7 +488,7 @@ public abstract class Vala.CodeVisitor {
 	 *
 	 * @param expr an invocation expression
 	 */
-	public virtual void visit_invocation_expression (InvocationExpression expr) {
+	public virtual void visit_method_call (MethodCall expr) {
 	}
 	
 	/**

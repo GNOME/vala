@@ -311,8 +311,8 @@ public class Vala.MemberAccess : Expression {
 			if (symbol_reference == null && inner.value_type != null && inner.value_type.is_dynamic) {
 				// allow late bound members for dynamic types
 				var dynamic_object_type = (ObjectType) inner.value_type;
-				if (parent_node is InvocationExpression) {
-					var invoc = (InvocationExpression) parent_node;
+				if (parent_node is MethodCall) {
+					var invoc = (MethodCall) parent_node;
 					if (invoc.call == this) {
 						// dynamic method
 						DataType ret_type;

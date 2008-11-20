@@ -378,7 +378,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		expr.accept_children (this);
 	}
 
-	public override void visit_invocation_expression (InvocationExpression expr) {
+	public override void visit_method_call (MethodCall expr) {
 		expr.accept_children (this);
 	}
 
