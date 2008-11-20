@@ -383,7 +383,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (itype is SignalType && !(itype.get_return_type () is VoidType)) {
 			var sig = ((SignalType) itype).signal_symbol;
 
-			if (!sig.has_emitter) {
+			if (ma != null && ma.inner is BaseAccess && sig.is_virtual) {
+				// normal return value for base access
+			} else if (!sig.has_emitter) {
 				var temp_var = get_temp_variable (itype.get_return_type ());
 				var temp_ref = new CCodeIdentifier (temp_var.name);
 
