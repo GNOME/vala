@@ -1,5 +1,11 @@
 2008-11-20  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaassignment.vala:
+
+	Check types in property assignments, fixes bug 550088
+
+2008-11-20  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacatchclause.vala:
 
 	Fix generic catch clauses

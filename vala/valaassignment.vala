@@ -301,7 +301,9 @@ public class Vala.Assignment : Expression {
 					Report.error (source_reference, "Assignment: Invalid callback assignment attempt");
 					return false;
 				}
-			} else if (left.value_type != null && right.value_type != null) {
+			}
+
+			if (left.value_type != null && right.value_type != null) {
 				/* if there was an error on either side,
 				 * i.e. {left|right}.value_type == null, skip type check */
 
@@ -311,18 +313,20 @@ public class Vala.Assignment : Expression {
 					return false;
 				}
 
-				if (right.value_type.is_disposable ()) {
-					/* rhs transfers ownership of the expression */
-					if (!(left.value_type is PointerType) && !left.value_type.value_owned) {
-						/* lhs doesn't own the value */
-						error = true;
-						Report.error (source_reference, "Invalid assignment from owned expression to unowned variable");
+				if (!(ma.symbol_reference is Property)) {
+					if (right.value_type.is_disposable ()) {
+						/* rhs transfers ownership of the expression */
+						if (!(left.value_type is PointerType) && !left.value_type.value_owned) {
+							/* lhs doesn't own the value */
+							error = true;
+							Report.error (source_reference, "Invalid assignment from owned expression to unowned variable");
+						}
+					} else if (left.value_type.value_owned) {
+						/* lhs wants to own the value
+						 * rhs doesn't transfer the ownership
+						 * code generator needs to add reference
+						 * increment calls */
 					}
-				} else if (left.value_type.value_owned) {
-					/* lhs wants to own the value
-					 * rhs doesn't transfer the ownership
-					 * code generator needs to add reference
-					 * increment calls */
 				}
 			}
 		} else if (left is ElementAccess) {
