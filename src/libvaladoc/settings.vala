@@ -44,7 +44,7 @@ public class Valadoc.Settings : Object {
 		return this.rpath;
 	}
 
-	// wtf?
+	/*/
 	public bool application {
 		get {
 			foreach ( string path in this.files ) {
@@ -54,7 +54,7 @@ public class Valadoc.Settings : Object {
 			return false;
 		}
 	}
-
+*/
 	// remove!
 	public bool to_doc ( string name ) {
 		if ( with_deps == true )

@@ -655,7 +655,6 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 	}
 
 	public override void write_delegate ( Valadoc.Delegate del, void* ptr ) {
-		GLib.StringBuilder modifiers = new GLib.StringBuilder ( "" );
 		weak GLib.FileStream file = (GLib.FileStream)ptr;
 		this.position = del;
 
@@ -850,7 +849,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 //		if ( mself == null )
 //			mself = element;
 
-		string package_name = element.file.name;
+//		string package_name = element.file.name;
 
 		this.write_top_element ( file, mself );
 
@@ -895,7 +894,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<ul class=\"%s\">\n", css_navi );
 
 
-		Namespace globals;
+		Namespace globals = null;
 
 		foreach ( Namespace ns in ns_list ) {
 			if ( ns.name == null )
@@ -1648,7 +1647,11 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 
 		file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 		foreach ( Package p in deps ) {
-			file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_package, css_navi_link, this.get_link(p, mself), p.name );
+			string link = this.get_link(p, mself);
+			if ( link == null )
+				file.printf ( "\t<li class=\"%s\">%s</li>\n", css_inline_navigation_package, p.name );
+			else
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_package, css_navi_link, link, p.name );
 		}
 		file.puts ( "</ul>\n" );
 	}

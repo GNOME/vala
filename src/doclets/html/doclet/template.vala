@@ -127,7 +127,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 	public override void visit_package ( Package file ) {
 		this.package_name = file.name;
 
-		this.is_vapi = file.is_external_package;
+		this.is_vapi = file.is_package;
 		if ( this.is_vapi )
 			this.files.add ( file );
 		else

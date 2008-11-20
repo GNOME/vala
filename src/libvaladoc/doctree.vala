@@ -37,14 +37,22 @@ namespace Valadoc {
 		return true;
 	}
 
-	public void copy_directory ( string src, string dest ) {
+	public bool copy_directory ( string src, string dest ) {
 		string _src = (  src.has_suffix ( "/" ) )? src : src + "/";
 		string _dest = ( dest.has_suffix ( "/" ) )? dest : dest + "/";
 
-		GLib.Dir dir = GLib.Dir.open ( _src );
-		for ( weak string name = dir.read_name (); name != null ; name = dir.read_name () ) {
-			copy_file ( _src+name, _dest+name );
+		try {
+			GLib.Dir dir = GLib.Dir.open ( _src );
+			for ( weak string name = dir.read_name (); name != null ; name = dir.read_name () ) {
+				if ( !copy_file ( _src+name, _dest+name ) ) {
+					return false;
+				}
+			}
 		}
+		catch ( GLib.FileError err ) {
+			return false;
+		}
+		return true;
 	}
 
 	public string realpath (string name) {
@@ -1023,14 +1031,22 @@ public interface Valadoc.ConstructionMethodHandler : DataType, MethodHandler {
 		}
 	}
 
+	protected void add_construction_method ( Vala.CreationMethod vm ) {
+		var tmp = new Method ( this.settings, vm, this, this.head );
+		this.construction_methods.add ( tmp );
+		tmp.initialisation ( );
+	}
+
 	protected void add_methods_and_construction_methods ( Gee.Collection<Vala.Method> vmethods ) {
 		foreach ( Vala.Method vm in vmethods ) {
-			var tmp = new Method ( this.settings, vm, this, this.head );
-			tmp.initialisation ( );
-			if ( tmp.is_constructor )
-				this.construction_methods.add ( tmp );
-			else 
-				this.methods.add ( tmp );
+			if ( vm is Vala.CreationMethod ) {
+				if ( ((Vala.CreationMethod)vm).generated == false ) {
+					this.add_construction_method ( (Vala.CreationMethod)vm );
+				}
+			}
+			else {
+				this.add_method ( vm );
+			}
 		}
 	}
 }
@@ -1203,7 +1219,7 @@ public interface Valadoc.Visitable : Basic, SymbolAccessibility {
 		return true;
 	}
 
-	protected bool is_visitor_accessible ( ) {
+	public bool is_visitor_accessible ( ) {
 		if ( !this.settings._private && this.is_private )
 			return false;
 
@@ -1416,6 +1432,9 @@ public interface Valadoc.FieldHandler : Basic {
 
 	// internal
 	public void add_field ( Vala.Field vf ) {
+		if ( vf.generated == true )
+			return ;
+
 		var tmp = new Field ( this.settings, vf, this, this.head );
 		this.fields.add ( tmp );
 		tmp.initialisation ( );
@@ -1753,6 +1772,7 @@ public class Valadoc.TypeReference : Basic {
 		return new Gee.ReadOnlyCollection<TypeReference> ( this.type_arguments );
 	}
 
+
 	private void set_template_argument_list ( Gee.Collection<Vala.DataType> varguments ) {
 		foreach ( Vala.DataType vdtype in varguments ) {
 			var dtype = new TypeReference ( this.settings, vdtype, this, this.head );
@@ -1907,10 +1927,13 @@ public class Valadoc.TypeReference : Basic {
 	// internal
 	public void set_type_references ( ) {
 		Vala.DataType vtype = this.vtyperef;
+
 		while ( vtype is Vala.PointerType || vtype is Vala.ArrayType ) {
 			for ( ; vtype is Vala.PointerType ; vtype = ((Vala.PointerType)vtype).base_type );
 			for ( ; vtype is Vala.ArrayType ; vtype = ((Vala.ArrayType)vtype).element_type );
 		}
+
+		this.set_template_argument_list ( vtype.get_type_arguments ()  );
 
 		if ( vtype is Vala.ErrorType ) {
 			Vala.ErrorDomain verrdom = ((Vala.ErrorType)vtype).error_domain;		
@@ -4240,13 +4263,25 @@ public class Valadoc.Namespace : Basic, MethodHandler, FieldHandler, NamespaceHa
 
 
 public class Valadoc.Package : Basic, NamespaceHandler {
+	private Gee.ArrayList<Vala.SourceFile> vfiles = new Gee.ArrayList<Vala.SourceFile> ();
+
+	// internal
+	public void add_file ( Vala.SourceFile vfile ) {
+		this.vfiles.add ( vfile );
+	}
+
 	public Gee.ArrayList<Namespace> namespaces {
 		default = new Gee.ArrayList<Namespace>();
 		private set;
 		private get;
 	}
-
+/*
 	public bool is_external_package {
+		 /+ internal +/ set;
+		 get;
+	}
+*/
+	public bool is_package {
 		 private set;
 		 get;
 	}
@@ -4305,7 +4340,7 @@ public class Valadoc.Package : Basic, NamespaceHandler {
 		return new Gee.ReadOnlyCollection<Package> ( this._dependencies );
 	}
 
-	private string extract_package_name ( Vala.SourceFile vfile ) {
+	private static string extract_package_name ( Settings settings, Vala.SourceFile vfile ) {
 		if ( vfile.filename.has_suffix (".vapi") ) {
 			string file_name = GLib.Path.get_basename (vfile.filename);
 			return file_name.ndup ( file_name.size() - ".vapi".size() );
@@ -4319,12 +4354,18 @@ public class Valadoc.Package : Basic, NamespaceHandler {
 		}
 	}
 
-	public Package ( Valadoc.Settings settings, Vala.SourceFile vfile, Tree head ) {
+	public Package.with_name ( Valadoc.Settings settings, Vala.SourceFile vfile, string name, Tree head, bool is_package = false ) {
 		this.settings = settings;
 		this.head = head;
 
-		this.is_external_package = !( vfile.filename.has_suffix ( ".vala" ) || vfile.filename.has_suffix ( ".gs" ) );
-		this.package_name = this.extract_package_name ( vfile );
+		this.is_package = is_package;
+		this.package_name = name;
+
+		this.vfiles.add ( vfile );
+	}
+
+	public Package ( Valadoc.Settings settings, Vala.SourceFile vfile, Tree head, bool is_package = false ) {
+		this.with_name ( settings, vfile, this.extract_package_name ( settings, vfile ), head, is_package );
 	}
 
 	private string package_name;
@@ -4363,14 +4404,28 @@ public class Valadoc.Package : Basic, NamespaceHandler {
 	}
 
 	// internal
-	public bool is_package ( Vala.SourceFile vfile ) {
-		return ( this.extract_package_name ( vfile ) == this.package_name );
+	public bool is_vpackage ( Vala.SourceFile vfile ) {
+		return this.vfiles.contains ( vfile );
+	}
+
+/*
+is_package || with_deps || ergebnis
+0          ||         0 || 1
+0          ||         1 || 1
+1          ||         0 || 0
+1          ||         1 || 1
+
+!(is_package == true && with_deps == false)
+*/
+
+	public bool is_visitor_accessible () {
+		return !( this.is_package && this.settings.with_deps == false );
 	}
 
 	public void visit ( Doclet doclet ) {
-		if ( !settings.to_doc ( this.name ) )
+		if ( !this.is_visitor_accessible () ) {
 			return ;
-
+		}
 		doclet.visit_package ( this );
 	}
 
@@ -4404,9 +4459,144 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		private get;
 	}
 
-	public Tree (Valadoc.Settings settings, Vala.CodeContext context ) {
+	public Tree (	Valadoc.Settings settings,
+					bool non_null_experimental,
+					bool disable_non_null,
+					bool disable_checking,
+					string basedir,
+					string directory )
+	{
+		this.context = new Vala.CodeContext ( );
 		this.settings = settings;
-		this.context = context;
+
+		if ( basedir != null ) {
+			this.context.basedir = realpath ( basedir );
+		}
+
+		if ( directory != null ) {
+			this.context.directory = realpath ( directory );
+		}
+		else {
+			this.context.directory = context.basedir;
+		}
+
+		this.context.non_null = !disable_non_null || non_null_experimental;
+		this.context.non_null_experimental = non_null_experimental;
+		this.context.checking = !disable_checking;
+
+		this.context.memory_management = false;
+		this.context.compile_only = false;
+		this.context.save_temps = false;
+		this.context.save_temps = false;
+		this.context.checking = false;
+		this.context.assert = false;
+		this.context.thread = false;
+		this.context.library = null;
+		this.context.debug = false;
+		this.context.output = null;
+		this.context.optlevel = 0;
+	}
+
+	private Package source_package = null;
+
+	private void add_dependencies_to_source_package () {
+		if ( this.source_package != null ) {
+			Gee.ArrayList<Package> deplst = new Gee.ArrayList<Package> ();
+			foreach ( Package pkg in this.files ) {
+				if ( pkg != this.source_package ) {
+					deplst.add ( pkg );
+				}
+			}		
+			this.source_package.set_dependency_list ( deplst );
+		}
+	}
+
+	public bool add_file ( string path ) {
+		string source = realpath ( path );
+
+		if ( FileUtils.test ( source, FileTest.EXISTS ) == false )
+			return false;
+
+		if ( path.has_suffix ( ".c" ) ) {
+			this.context.add_c_source_file ( source );
+			return true;
+		}
+
+		Vala.SourceFile vfile = null;
+
+		if ( path.has_suffix ( ".vala" ) || path.has_suffix ( ".gs" ) ) {
+			vfile = new Vala.SourceFile (this.context, source, false);
+			vfile.add_using_directive (new Vala.UsingDirective (new Vala.UnresolvedSymbol (null, "GLib", null)));
+			this.context.add_source_file ( vfile );
+
+		}
+		else if ( path.has_suffix ( ".vapi" ) ) {
+			vfile = new Vala.SourceFile ( this.context, source, true );
+			this.context.add_source_file ( vfile );
+		}
+		else {
+			return false;
+		}
+
+		if ( this.source_package == null ) {
+			this.source_package = new Package.with_name ( this.settings, vfile, this.settings.pkg_name, this );
+			this.files.add ( this.source_package );
+		}
+
+		this.source_package.add_file ( vfile );
+		return true;
+	}
+
+	public bool add_external_package ( string[] vapi_directories, string pkg ) {
+		if ( this.context.has_package ( pkg ) ) {
+			return true;
+		}
+
+		var package_path = this.context.get_package_path ( pkg, vapi_directories );
+		if ( package_path == null ) {
+			return false;
+		}
+	
+		this.context.add_package ( pkg );
+
+
+		Vala.SourceFile vfile = new Vala.SourceFile ( this.context, package_path, true );
+		this.context.add_source_file ( vfile );
+
+
+		Package vdpkg = new Package ( this.settings, vfile, this, true ); 
+		this.files.add ( vdpkg );
+
+
+		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
+		if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
+			try {
+				Gee.ArrayList<Package> deppkglst = new Gee.ArrayList<Package> ();
+				string deps_content;
+				ulong deps_len;
+
+				FileUtils.get_contents ( deps_filename, out deps_content, out deps_len );
+				foreach (string dep in deps_content.split ( "\n" )) {
+					if (dep != "") {
+						if ( add_external_package ( vapi_directories, dep ) ) {
+							Package? deppkg = get_external_package_by_name ( dep );
+							if ( deppkg != null ) {
+								deppkglst.add ( deppkg );
+							}
+						}
+						else {
+							Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg));
+						}
+					}
+				}
+				vdpkg.set_dependency_list ( deppkglst );
+			}
+			catch (FileError e) {
+				Report.error (null, "Unable to read dependency file: %s".printf (e.message));
+			}
+		}
+		
+		return true;
 	}
 
 	public CodeContext context {
@@ -4420,11 +4610,11 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		}
 	}
 
-
+/*
 	private weak Basic?  search_symbol_in_namespace ( Basic element, string[] params ) {
 		return this.search_symbol_in_symbol ( element.nspace, params );
 	}
-
+*/
 	private weak Basic? search_symbol_in_type ( Basic element, string[] params, int params_offset = 0 ) {
 		if ( !( element.parent is ContainerDataType || element.parent is Enum || element.parent is ErrorDomain ) )
 			return null;
@@ -4522,7 +4712,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = vcl.source_reference.file;
-		Package file = this.get_file ( vfile );
+		Package file = this.find_file( vfile );
 		Namespace ns = file.get_namespace ( vcl );
 		ns.add_class ( vcl );
 	}
@@ -4532,7 +4722,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = viface.source_reference.file;
-		Package file = this.get_file ( vfile );
+		Package file = this.find_file( vfile );
 		Namespace ns = file.get_namespace ( viface );
 		ns.add_interface ( viface );
 	}
@@ -4542,7 +4732,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = vstru.source_reference.file;
-		Package file = this.get_file ( vfile );
+		Package file = this.find_file( vfile );
 		Namespace ns = file.get_namespace ( vstru );
 		ns.add_struct ( vstru );
 	}
@@ -4552,7 +4742,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = vf.source_reference.file;
-		Package file = this.get_file ( vfile );
+		Package file = this.find_file( vfile );
 		Namespace ns = file.get_namespace ( vf );
 		ns.add_field ( vf );
 	}
@@ -4562,7 +4752,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = vm.source_reference.file;
-		Package file = this.get_file ( vfile );
+		Package file = this.find_file( vfile );
 		Namespace ns = file.get_namespace ( vm );
 		ns.add_method ( vm );
 	}
@@ -4572,7 +4762,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = vd.source_reference.file;
-		Package file = this.get_file ( vfile );
+		Package file = this.find_file( vfile );
 		Namespace ns = file.get_namespace ( vd );
 		ns.add_delegate ( vd );
 	}
@@ -4582,7 +4772,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = venum.source_reference.file;
-		Package file = this.get_file ( vfile );
+		Package file = this.find_file( vfile );
 		Namespace ns = file.get_namespace ( venum );
 		ns.add_enum ( venum );
 	}
@@ -4592,7 +4782,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = vc.source_reference.file;
-		Package file = this.get_file ( vfile );
+		Package file = this.find_file( vfile );
 		Namespace ns = file.get_namespace ( vc );
 		ns.add_constant ( vc );
 	}
@@ -4602,22 +4792,50 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = verrdom.source_reference.file;
-		Package file = this.get_file ( vfile );
+		Package file = this.find_file( vfile );
 		Namespace ns = file.get_namespace ( verrdom );
 		ns.add_error_domain ( verrdom );
 	}
 
-	public void create_tree ( ) {
+	public bool create_tree ( ) {
+		Vala.Parser parser  = new Vala.Parser ();
+		parser.parse ( this.context );
+		if (Report.get_errors () > 0) {
+			return false;
+		}
+
+		Vala.SymbolResolver resolver = new SymbolResolver ();
+		resolver.resolve( this.context );
+		if (Report.get_errors () > 0) {
+			return false;
+		}
+
+		Vala.SemanticAnalyzer analyzer = new SemanticAnalyzer ( );
+		analyzer.analyze( this.context );
+		if (Report.get_errors () > 0) {
+			return false;
+		}
+
+		if ( context.non_null_experimental ) {
+			Vala.NullChecker null_checker = new NullChecker ();
+			null_checker.check ( this.context );
+
+			if (Report.get_errors () > 0) {
+				return false;
+			}
+		}
+
 		this.context.accept( this );
 		this.set_type_references ( );
-		this.inheritance ( ); // remove
-		this.add_dependencies ();
+		this.inheritance ( ); // create a switch!
+		this.add_dependencies_to_source_package ();
+		return true;
 	}
 
 	// internal
 	public Package? find_file ( Vala.SourceFile vfile ) {
 		foreach ( Package f in this.files ) {
-			if ( f.is_package( vfile ) )
+			if ( f.is_vpackage( vfile ) )
 				return f;
 		}
 		return null;
@@ -4664,11 +4882,12 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		}
 
 		Vala.SourceFile vfile = vnode.source_reference.file;
-		Package file = this.get_file ( vfile );
+		Package file = this.find_file( vfile );
 
 		return file.search_element_vala ( params, 0 );
 	}
 
+	/*/ => add_external_package
 	private Gee.ArrayList<Package>? load_dependency_list ( string vapi_path ) {
 		if ( vapi_path.has_suffix ( ".vapi" ) ) {
 			string deps_filename = vapi_path.ndup ( vapi_path.size() - ".vapi".size() ) + ".deps";
@@ -4690,7 +4909,8 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 							}
 						}
 					}
-				} catch (FileError e) {
+				}
+				catch (FileError e) {
 					Report.error (null, "Unable to read dependency file: %s".printf (e.message));
 				}
 			}
@@ -4698,10 +4918,10 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		}
 		return null;
 	}
+*/
+//	private Gee.ArrayList<weak Vala.SourceFile> vfiles = new Gee.ArrayList<weak Vala.SourceFile> ();
 
-	private Gee.ArrayList<weak Vala.SourceFile> vfiles = new Gee.ArrayList<weak Vala.SourceFile> ();
-	private Package source_package;
-
+/*
 	private void add_dependencies () {
 		foreach ( weak Vala.SourceFile vfile in this.vfiles ) {
 			Gee.ArrayList<Package>? deps = this.load_dependency_list ( vfile.filename );
@@ -4724,21 +4944,25 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		this.source_package = null;
 		this.vfiles = null;
 	}
+*/
+	private Package? get_external_package_by_name ( string name ) {
+		foreach ( Package pkg in this.files ) {
+			if ( name == pkg.name ) {
+				return pkg;
+			}
+		}
+		return null;
+	}
 
-	// internal
-	public Package get_file ( Vala.SourceFile vfile ) {
+	/*/ internal, deprecated
+	public Package? get_file ( Vala.SourceFile vfile ) {
 		Package file = this.find_file( vfile );
 		if ( file != null )
 			return file;
 
 		Package tmp = new Package ( this.settings, vfile, this ); 
-		if ( tmp.is_external_package )
-			this.vfiles.add ( vfile );
-		else
-			this.source_package = tmp;
-
 		this.files.add ( tmp );
 		return tmp;
-	}
+	} */
 }
 

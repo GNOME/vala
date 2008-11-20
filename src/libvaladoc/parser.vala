@@ -340,7 +340,7 @@ public class DocumentationTree : Object {
 		bool tmp;
 
 		int max = this.description.size;
-		int i;
+		int i = 0;
 
 		foreach ( InlineTaglet tag in this.description ) {
 			tmp = tag.write ( res, max, i );
@@ -577,7 +577,6 @@ public class Parser : Object {
 
 		string tagline = linestart;
 
-		string? currtagname = "";
 		unichar prevprevchr = '\0';
 		unichar prevchr = '\0';
 

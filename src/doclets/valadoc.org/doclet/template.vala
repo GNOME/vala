@@ -105,7 +105,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 
 	public override void visit_package ( Package file ) {
 		string package_name = file.name;
-		this.is_vapi = file.is_external_package;
+		this.is_vapi = file.is_package;
 
 		string new_path = this.settings.path + package_name + "/";
 
@@ -140,7 +140,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		var rt = DirUtils.create ( this.current_path, 0777 );
 
 		GLib.FileStream navi = GLib.FileStream.open ( this.current_path + "navi.html", "w" );
-		this.write_navi_child_namespaces ( navi, ns, ns );
+		this.write_navi_namespace ( navi, ns );
 		navi = null;
 
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w" );

@@ -35,6 +35,10 @@ public interface Valadoc.LinkHelper {
 	}
 
 	protected string? get_html_link ( Valadoc.Settings settings, Valadoc.Basic element, Valadoc.Basic pos2 ) {
+		Package pkg = ( element is Package )? (Package)element : element.file;
+		if ( pkg.is_visitor_accessible () == false )
+			return null;
+
 		GLib.StringBuilder str = new GLib.StringBuilder ( "" );
 		Valadoc.Basic pos = element;
 		string? link_id = null;
@@ -43,6 +47,10 @@ public interface Valadoc.LinkHelper {
 			if ( element is Valadoc.EnumValue || element is Valadoc.ErrorCode ) {
 				link_id = "#" + element.name;
 				pos = pos.parent;
+			}
+			else if ( element is Visitable ) {
+				if ( !((Visitable)element).is_visitor_accessible() )
+					return null;
 			}
 
 			while ( pos != null ) {

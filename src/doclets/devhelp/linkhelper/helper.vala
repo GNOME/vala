@@ -24,12 +24,12 @@ using GLib;
 
 public interface Valadoc.HtmlHelper {
 	protected string? get_html_link ( Settings settings, Basic element, Basic pos ) {
-		string tmp = "";
-		string prefix = "";
-
 		if ( element is Package ) {
 			return "../" + element.name + "/index.html";
 		}
+
+		string tmp = "";
+		string prefix = "";
 	
 		if ( element != pos ) {
 			prefix =  "../" + element.file.name;

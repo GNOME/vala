@@ -32,7 +32,6 @@ using Gee;
 public class ValaDoc : Object {
 	private static string basedir = null;
 	private static string directory = null;
-	private static string xmlsource = null;
 	private static string pkg_name = null;
 	private static string pkg_version = null;
 
@@ -55,8 +54,6 @@ public class ValaDoc : Object {
 	[NoArrayLength ()]
 	private static weak string[] tsources;
 	[NoArrayLength ()]
-	private static string library;
-	[NoArrayLength ()]
 	private static weak string[] tpackages;
 
 
@@ -64,8 +61,8 @@ public class ValaDoc : Object {
 	private Type doclettype;
 
 
-	private Gee.ArrayList<string> packages = new Gee.ArrayList<string>();
-	private Gee.ArrayList<string> sources  = new Gee.ArrayList<string>();
+	private Gee.ArrayList<string> packages = new Gee.ArrayList<string>(); // remove
+	private Gee.ArrayList<string> sources  = new Gee.ArrayList<string>(); // remove
 
 
 	private const GLib.OptionEntry[] options = {
@@ -93,7 +90,7 @@ public class ValaDoc : Object {
 		{ null }
 	};
 
-	private int quit () {
+	private static int quit () {
 		if (Report.get_errors () == 0) {
 			stdout.printf ("Succeeded - %d warning(s)\n", Report.get_warnings ());
 			return 0;
@@ -103,7 +100,7 @@ public class ValaDoc : Object {
 			return 1;
 		}
 	}
-
+/*
 	private bool add_package (CodeContext context, string pkg) {
 		if (context.has_package (pkg)) {
 			// ignore multiple occurences of the same package
@@ -140,7 +137,7 @@ public class ValaDoc : Object {
 		
 		return true;
 	}
-
+*/
 /*
 	private string? get_package_path (string pkg) {
 		if (FileUtils.test ( pkg, FileTest.EXISTS))
@@ -194,6 +191,7 @@ public class ValaDoc : Object {
 		}
 	}
 
+	// remove
 	private Gee.ArrayList<string> sort_sources ( ) {
 		var to_doc = new Gee.ArrayList<string>();
 
@@ -215,11 +213,8 @@ public class ValaDoc : Object {
 			}
 		}
 
-		this.tpackages = null;
-		this.tsources = null;
 		return to_doc;
 	}
-
 
 /*
 	private static Gee.HashMap<string, Valadoc.TagletCreator> get_taglets ( ) {
@@ -335,7 +330,6 @@ public class ValaDoc : Object {
 			module->symbol( "register_plugin", out function );
 			Valadoc.TagletRegisterFunction tagletregisterfkt = (Valadoc.TagletRegisterFunction) function;
 
-			string? name;
 
 			GLib.Type type = tagletregisterfkt ( taglets2 );
 
@@ -366,14 +360,14 @@ public class ValaDoc : Object {
 		return (Doclet)GLib.Object.new (doclettype);
 	}
 
-	private bool check_pkg_name () {
+	private static bool check_pkg_name () {
 		if ( pkg_name == null )
 			return true;
 
 		if ( pkg_name == "glib-2.0" || pkg_name == "gobject-2.0" )
 			return false;
 
-		foreach (string package in this.packages ) {
+		foreach (string package in tsources ) {
 			if ( pkg_name == package )
 				return false;
 		}
@@ -392,73 +386,83 @@ public class ValaDoc : Object {
 	}
 
 	private int run (  ) {
-		if ( !check_pkg_name () ) {
-			Report.error (null, "Invalid package name." );
-		}
-
 		var settings = new Valadoc.Settings ( );
 		settings.pkg_name = this.get_pkg_name ( );
 		settings.pkg_version = this.pkg_version;
 
 		settings.add_inherited = this.add_inherited;
-		settings.files = this.sort_sources ( );
+
+		settings.files = this.sort_sources ( ); /// <--- remove!
+
 		settings._protected = this._protected;
 		settings.with_deps = this.with_deps;
 		settings._private = this._private;
 		settings.path = this.directory;
 
-		var context = new Vala.CodeContext();
-		context.library = this.library;
-		context.memory_management = false;
-		context.assert = false;
-		context.checking = false;
-		context.ccode_only = false;
-		context.compile_only = false;
-		context.output = null;
 
-		context.checking = !disable_checking;
-		context.non_null = !disable_non_null || non_null_experimental;
-		context.non_null_experimental = non_null_experimental;
+		Reporter reporter = new Reporter();
 
+		string fulldirpath = (pluginpath == null)? Config.plugin_dir : pluginpath;
+		bool tmp = this.check_doclet_structure ( pluginpath );
 
-		if ( this.basedir != null ) {
-			context.basedir = realpath ( this.basedir );
-		}
-
-		if ( this.directory != null ) {
-			context.directory = realpath ( this.directory );
-		}
-		else {
-			context.directory = context.basedir;
-		}
-
-		context.optlevel = 0;
-		context.debug = false;
-		context.thread = false;
-		context.save_temps = false;
-
-		if (!add_package (context, "glib-2.0")) {
-			Report.error (null, "glib-2.0 not found in specified Vala API directories");
-		}
-
-		if (!add_package (context, "gobject-2.0")) {
-			Report.error (null, "gobject-2.0 not found in specified Vala API directories");
-		}
-
-		if ( this.packages != null ) {
-			foreach (string package in this.packages ) {
-				if (!add_package (context, package)) {
-					Report.error (null, "%s not found in specified Vala API directories".printf (package));
-				}
-			}
-			this.packages = null;
-		}
-
-		if (Report.get_errors () > 0) {
+		if ( tmp == false ) {
+			Report.error (null, "failed to load plugin" );
 			return quit ();
 		}
 
 
+		Gee.HashMap<string, Type> taglets;
+		GLib.Type strtag;
+
+		tmp = this.load_taglets ( fulldirpath, out taglets, out strtag );
+		if ( tmp == false ) {
+			Report.error (null, "failed to load plugin" );
+			return quit ();
+		}
+
+		Valadoc.Doclet doclet = this.load_doclet ( fulldirpath );
+		if ( doclet == null ) {
+			Report.error (null, "failed to load plugin" );
+			return quit ();
+		}
+
+		Valadoc.Parser docparser = new Valadoc.Parser ();
+		docparser.init ( settings, reporter, strtag, taglets );
+
+		Valadoc.Tree doctree = new Valadoc.Tree ( settings, non_null_experimental, disable_non_null, disable_checking, basedir, directory );
+
+		if (!doctree.add_external_package ( vapi_directories, "glib-2.0" )) {
+			Report.error (null, "glib-2.0 not found in specified Vala API directories" );
+			return quit ();
+		}
+
+		if (!doctree.add_external_package ( vapi_directories, "gobject-2.0" )) {
+			Report.error (null, "gobject-2.0 not found in specified Vala API directories");
+			return quit ();
+		}
+
+		if ( this.tpackages != null ) {
+			foreach (string package in this.tpackages ) {
+				if (!doctree.add_external_package ( vapi_directories, package )) {
+					Report.error (null, "%s not found in specified Vala API directories".printf (package));
+					return quit ();
+				}
+			}
+			this.tpackages = null;
+		}
+
+		if ( this.tsources != null ) {
+			foreach ( string src in this.tsources ) {
+				stdout.printf ( ">__>%s\n", src );
+				if ( !doctree.add_file ( src ) ) {
+					Report.error (null, "%s not found".printf (src));
+					return quit ();
+				}
+			}
+			this.tsources = null;
+		}
+
+/*
 		if ( this.sources != null ) {
 			this.add_files( context );
 			this.sources = null;
@@ -466,74 +470,9 @@ public class ValaDoc : Object {
 				return quit ();
 			}
 		}
+*/
 
-		var parser  = new Vala.Parser ();
-		parser.parse ( context );
-		if (Report.get_errors () > 0) {
-			return quit ();
-		}
-
-		var resolver = new SymbolResolver ();
-		resolver.resolve( context );
-		if (Report.get_errors () > 0) {
-			return quit ();
-		}
-
-		var analyzer = new SemanticAnalyzer ( );
-		analyzer.analyze( context );
-		if (Report.get_errors () > 0) {
-			return quit ();
-		}
-
-		if (context.non_null_experimental) {
-			var null_checker = new NullChecker ();
-			null_checker.check (context);
-
-			if (Report.get_errors () > 0) {
-				return quit ();
-			}
-		}
-
-		Reporter reporter = new Reporter();
-
-
-
-		string fulldirpath = (pluginpath == null)? Config.plugin_dir : pluginpath;
-
-
-		bool tmp = this.check_doclet_structure ( pluginpath );
-
-
-
-		if ( tmp == false ) {
-			stdout.printf ( "Error: failed to load plugin.\n" );
-			return 1;
-		}
-
-
-		Gee.HashMap<string, Type> taglets;
-		GLib.Type strtag;
-
-
-		tmp = this.load_taglets ( fulldirpath, out taglets, out strtag );
-		if ( tmp == false ) {
-			stdout.printf ( "Error: failed to load plugin.\n" );
-			return 1;
-		}
-
-		Valadoc.Doclet doclet = this.load_doclet ( fulldirpath );
-		if ( doclet == null ) {
-			stdout.printf ( "Error: failed to load plugin.\n" );
-			return 1;
-		}
-
-		Valadoc.Parser docparser = new Valadoc.Parser ();
-		docparser.init ( settings, reporter, strtag, taglets );
-
-
-		Valadoc.Tree doctree = new Valadoc.Tree ( settings, context );
-		doctree.create_tree( );
-		if ( reporter.errors > 0 )
+		if ( !doctree.create_tree( ) )
 			return quit ();
 
 		doctree.parse_comments ( docparser );
@@ -594,7 +533,7 @@ public class ValaDoc : Object {
 		catch (OptionError e) {
 			stdout.printf ("%s\n", e.message);
 			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
-			return 1;
+			return quit ();
 		}
 
 		if ( version ) {
@@ -602,14 +541,9 @@ public class ValaDoc : Object {
 			return 0;
 		}
 
-		if ( tsources == null ) {
-			stderr.printf ("No source file specified.\n");
-			return -1;
-		}
-
 		if ( directory == null ) {
-			stderr.printf ("No output directory specified.\n");
-			return -1;
+			Report.error (null, "No output directory specified." );
+			return quit ();
 		}
 
 		if ( directory[ directory.len() - 1 ] != '/' ) {
@@ -621,8 +555,8 @@ public class ValaDoc : Object {
 				remove_directory ( directory );
 			}
 			else {
-				stderr.printf ("File already exists.\n");
-				return -1;
+				Report.error (null, "File already exists." );
+				return quit ();
 			}
 		}
 
@@ -633,6 +567,11 @@ public class ValaDoc : Object {
 		else {
 			if ( !pluginpath.has_suffix ( "/" ) )
 				pluginpath = pluginpath + "/";
+		}
+
+		if ( !check_pkg_name () ) {
+			Report.error (null, "Invalid package name." );
+			return quit ();
 		}
 
 		var valadoc = new ValaDoc( );
