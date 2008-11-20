@@ -171,7 +171,7 @@ public class Vala.InvocationExpression : Expression {
 			analyzer.replaced_nodes.add (this);
 			parent_node.replace_expression (this, struct_creation_expression);
 			struct_creation_expression.check (analyzer);
-			return false;
+			return true;
 		} else if (call is MemberAccess
 		           && call.symbol_reference is CreationMethod) {
 			// constructor chain-up
