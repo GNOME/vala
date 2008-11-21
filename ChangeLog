@@ -2,6 +2,13 @@
 
 	* gobject/valadbusmodule.vala:
 
+	Support serialization and deserialization of GHashTable objects
+	in static D-Bus clients
+
+2008-11-21  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valadbusmodule.vala:
+
 	Support serialization and deserialization of GValue values in
 	static D-Bus clients
 

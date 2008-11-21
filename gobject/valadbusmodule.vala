@@ -240,6 +240,95 @@ public class Vala.DBusModule : GAsyncModule {
 		return new CCodeIdentifier (temp_name);
 	}
 
+	CCodeExpression read_hash_table (CCodeFragment fragment, ObjectType type, CCodeExpression iter_expr) {
+		string temp_name = "_tmp%d".printf (next_temp_var_id++);
+		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
+		string entryiter_name = "_tmp%d".printf (next_temp_var_id++);
+
+		var type_args = type.get_type_arguments ();
+		assert (type_args.size == 2);
+		var key_type = type_args.get (0);
+		var value_type = type_args.get (1);
+
+		var cdecl = new CCodeDeclaration ("GHashTable*");
+		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name));
+		fragment.append (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator (subiter_name));
+		fragment.append (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator (entryiter_name));
+		fragment.append (cdecl);
+
+		var hash_table_new = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_new_full"));
+		if (key_type.data_type == string_type.data_type) {
+			hash_table_new.add_argument (new CCodeIdentifier ("g_str_hash"));
+			hash_table_new.add_argument (new CCodeIdentifier ("g_str_equal"));
+		} else {
+			hash_table_new.add_argument (new CCodeIdentifier ("g_direct_hash"));
+			hash_table_new.add_argument (new CCodeIdentifier ("g_direct_equal"));
+		}
+		if (key_type.data_type == string_type.data_type) {
+			hash_table_new.add_argument (new CCodeIdentifier ("g_free"));
+		} else {
+			hash_table_new.add_argument (new CCodeIdentifier ("NULL"));
+		}
+		if (value_type.data_type == string_type.data_type) {
+			hash_table_new.add_argument (new CCodeIdentifier ("g_free"));
+		} else {
+			hash_table_new.add_argument (new CCodeIdentifier ("NULL"));
+		}
+		fragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (temp_name), hash_table_new)));
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_recurse"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		fragment.append (new CCodeExpressionStatement (iter_call));
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_get_arg_type"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+
+		var cwhileblock = new CCodeBlock ();
+		var cwhilefragment = new CCodeFragment ();
+		cwhileblock.add_statement (cwhilefragment);
+		var cwhile = new CCodeWhileStatement (iter_call, cwhileblock);
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_recurse"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (entryiter_name)));
+		cwhilefragment.append (new CCodeExpressionStatement (iter_call));
+
+		cdecl = new CCodeDeclaration (key_type.get_cname ());
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_key"));
+		cwhilefragment.append (cdecl);
+
+		cdecl = new CCodeDeclaration (value_type.get_cname ());
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_value"));
+		cwhilefragment.append (cdecl);
+
+		var key_expr = read_expression (cwhilefragment, key_type, new CCodeIdentifier (entryiter_name), null);
+		cwhilefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_key"), key_expr)));
+		
+		var value_expr = read_expression (cwhilefragment, value_type, new CCodeIdentifier (entryiter_name), null);
+		cwhilefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_value"), value_expr)));
+
+		var hash_table_insert = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_insert"));
+		hash_table_insert.add_argument (new CCodeIdentifier (temp_name));
+		hash_table_insert.add_argument (convert_to_generic_pointer (new CCodeIdentifier ("_key"), key_type));
+		hash_table_insert.add_argument (convert_to_generic_pointer (new CCodeIdentifier ("_value"), value_type));
+		cwhilefragment.append (new CCodeExpressionStatement (hash_table_insert));
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_next"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		cwhilefragment.append (new CCodeExpressionStatement (iter_call));
+
+		fragment.append (cwhile);
+
+		return new CCodeIdentifier (temp_name);
+	}
+
 	public CCodeExpression? read_expression (CCodeFragment fragment, DataType type, CCodeExpression iter_expr, CCodeExpression? expr) {
 		BasicTypeInfo basic_type;
 		CCodeExpression result = null;
@@ -252,6 +341,10 @@ public class Vala.DBusModule : GAsyncModule {
 				result = read_value (fragment, iter_expr);
 			} else {
 				result = read_struct (fragment, (Struct) type.data_type, iter_expr);
+			}
+		} else if (type is ObjectType) {
+			if (type.data_type.get_full_name () == "GLib.HashTable") {
+				result = read_hash_table (fragment, (ObjectType) type, iter_expr);
 			}
 		} else {
 			Report.error (type.source_reference, "D-Bus deserialization of type `%s' is not supported".printf (type.to_string ()));
@@ -395,6 +488,88 @@ public class Vala.DBusModule : GAsyncModule {
 		}
 	}
 
+	void write_hash_table (CCodeFragment fragment, ObjectType type, CCodeExpression iter_expr, CCodeExpression hash_table_expr) {
+		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
+		string entryiter_name = "_tmp%d".printf (next_temp_var_id++);
+		string tableiter_name = "_tmp%d".printf (next_temp_var_id++);
+		string key_name = "_tmp%d".printf (next_temp_var_id++);
+		string value_name = "_tmp%d".printf (next_temp_var_id++);
+
+		var type_args = type.get_type_arguments ();
+		assert (type_args.size == 2);
+		var key_type = type_args.get (0);
+		var value_type = type_args.get (1);
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
+		iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_ARRAY"));
+		iter_call.add_argument (new CCodeConstant ("\"{%s%s}\"".printf (key_type.get_type_signature (), value_type.get_type_signature ())));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		fragment.append (new CCodeExpressionStatement (iter_call));
+
+		var cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator (subiter_name));
+		cdecl.add_declarator (new CCodeVariableDeclarator (entryiter_name));
+		fragment.append (cdecl);
+
+		cdecl = new CCodeDeclaration ("GHashTableIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator (tableiter_name));
+		fragment.append (cdecl);
+
+		cdecl = new CCodeDeclaration ("gpointer");
+		cdecl.add_declarator (new CCodeVariableDeclarator (key_name));
+		cdecl.add_declarator (new CCodeVariableDeclarator (value_name));
+		fragment.append (cdecl);
+
+		var iter_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_iter_init"));
+		iter_init_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (tableiter_name)));
+		iter_init_call.add_argument (hash_table_expr);
+		fragment.append (new CCodeExpressionStatement (iter_init_call));
+
+		var iter_next_call = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_iter_next"));
+		iter_next_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (tableiter_name)));
+		iter_next_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (key_name)));
+		iter_next_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (value_name)));
+
+		var cwhileblock = new CCodeBlock ();
+		var cwhilefragment = new CCodeFragment ();
+		cwhileblock.add_statement (cwhilefragment);
+		var cwhile = new CCodeWhileStatement (iter_next_call, cwhileblock);
+
+		cdecl = new CCodeDeclaration (key_type.get_cname ());
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_key"));
+		cwhilefragment.append (cdecl);
+
+		cdecl = new CCodeDeclaration (value_type.get_cname ());
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_value"));
+		cwhilefragment.append (cdecl);
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_DICT_ENTRY"));
+		iter_call.add_argument (new CCodeConstant ("NULL"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (entryiter_name)));
+		cwhilefragment.append (new CCodeExpressionStatement (iter_call));
+
+		cwhilefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_key"), convert_from_generic_pointer (new CCodeIdentifier (key_name), key_type))));
+		cwhilefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_value"), convert_from_generic_pointer (new CCodeIdentifier (value_name), value_type))));
+
+		write_expression (cwhilefragment, key_type, new CCodeIdentifier (entryiter_name), new CCodeIdentifier ("_key"));
+		write_expression (cwhilefragment, value_type, new CCodeIdentifier (entryiter_name), new CCodeIdentifier ("_value"));
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (entryiter_name)));
+		cwhilefragment.append (new CCodeExpressionStatement (iter_call));
+
+		fragment.append (cwhile);
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		fragment.append (new CCodeExpressionStatement (iter_call));
+	}
+
 	public void write_expression (CCodeFragment fragment, DataType type, CCodeExpression iter_expr, CCodeExpression expr) {
 		BasicTypeInfo basic_type;
 		if (get_basic_type_info (type.get_type_signature (), out basic_type)) {
@@ -406,6 +581,10 @@ public class Vala.DBusModule : GAsyncModule {
 				write_value (fragment, iter_expr, expr);
 			} else {
 				write_struct (fragment, (Struct) type.data_type, iter_expr, expr);
+			}
+		} else if (type is ObjectType) {
+			if (type.data_type.get_full_name () == "GLib.HashTable") {
+				write_hash_table (fragment, (ObjectType) type, iter_expr, expr);
 			}
 		} else {
 			Report.error (type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (type.to_string ()));
