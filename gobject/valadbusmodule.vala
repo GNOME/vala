@@ -155,6 +155,35 @@ public class Vala.DBusModule : GAsyncModule {
 		return new CCodeIdentifier (temp_name);
 	}
 
+	CCodeExpression read_struct (CCodeFragment fragment, Struct st, CCodeExpression iter_expr) {
+		string temp_name = "_tmp%d".printf (next_temp_var_id++);
+		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
+
+		var cdecl = new CCodeDeclaration (st.get_cname ());
+		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name));
+		fragment.append (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator (subiter_name));
+		fragment.append (cdecl);
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_recurse"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		fragment.append (new CCodeExpressionStatement (iter_call));
+
+		foreach (Field f in st.get_fields ()) {
+			if (f.binding != MemberBinding.INSTANCE) {
+				continue;
+			}
+
+			var field_expr = read_expression (fragment, f.field_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (new CCodeIdentifier (temp_name), f.get_cname ()));
+			fragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess (new CCodeIdentifier (temp_name), f.get_cname ()), field_expr)));
+		}
+
+		return new CCodeIdentifier (temp_name);
+	}
+
 	public CCodeExpression? read_expression (CCodeFragment fragment, DataType type, CCodeExpression iter_expr, CCodeExpression? expr) {
 		BasicTypeInfo basic_type;
 		CCodeExpression result = null;
@@ -162,6 +191,8 @@ public class Vala.DBusModule : GAsyncModule {
 			result = read_basic (fragment, basic_type, iter_expr);
 		} else if (type is ArrayType) {
 			result = read_array (fragment, (ArrayType) type, iter_expr, expr);
+		} else if (type.data_type is Struct) {
+			result = read_struct (fragment, (Struct) type.data_type, iter_expr);
 		} else {
 			Report.error (type.source_reference, "D-Bus deserialization of type `%s' is not supported".printf (type.to_string ()));
 			return null;
@@ -225,12 +256,42 @@ public class Vala.DBusModule : GAsyncModule {
 		fragment.append (new CCodeExpressionStatement (iter_call));
 	}
 
+	void write_struct (CCodeFragment fragment, Struct st, CCodeExpression iter_expr, CCodeExpression struct_expr) {
+		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
+
+		var cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator (subiter_name));
+		fragment.append (cdecl);
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
+		iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_STRUCT"));
+		iter_call.add_argument (new CCodeConstant ("NULL"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		fragment.append (new CCodeExpressionStatement (iter_call));
+
+		foreach (Field f in st.get_fields ()) {
+			if (f.binding != MemberBinding.INSTANCE) {
+				continue;
+			}
+
+			write_expression (fragment, f.field_type, new CCodeIdentifier (subiter_name), new CCodeMemberAccess (struct_expr, f.get_cname ()));
+		}
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		fragment.append (new CCodeExpressionStatement (iter_call));
+	}
+
 	public void write_expression (CCodeFragment fragment, DataType type, CCodeExpression iter_expr, CCodeExpression expr) {
 		BasicTypeInfo basic_type;
 		if (get_basic_type_info (type.get_type_signature (), out basic_type)) {
 			write_basic (fragment, basic_type, iter_expr, expr);
 		} else if (type is ArrayType) {
 			write_array (fragment, (ArrayType) type, iter_expr, expr);
+		} else if (type.data_type is Struct) {
+			write_struct (fragment, (Struct) type.data_type, iter_expr, expr);
 		} else {
 			Report.error (type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (type.to_string ()));
 		}

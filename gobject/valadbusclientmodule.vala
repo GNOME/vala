@@ -1014,7 +1014,11 @@ public class Vala.DBusClientModule : DBusModule {
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction == ParameterDirection.IN) {
-				write_expression (prefragment, param.parameter_type, new CCodeIdentifier ("_iter"), new CCodeIdentifier (param.name));
+				CCodeExpression expr = new CCodeIdentifier (param.name);
+				if (param.parameter_type.is_real_struct_type ()) {
+					expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
+				}
+				write_expression (prefragment, param.parameter_type, new CCodeIdentifier ("_iter"), expr);
 			} else {
 				cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator ("_" + param.name));
