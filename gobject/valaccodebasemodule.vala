@@ -133,6 +133,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public bool requires_array_move;
 	public bool requires_strcmp0;
 	public bool dbus_glib_h_needed;
+	public bool dbus_glib_h_needed_in_header;
 
 	public Set<string> wrappers;
 
@@ -282,6 +283,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		gvaluecollector_h_needed = false;
 		gio_h_needed = false;
 		dbus_glib_h_needed = false;
+		dbus_glib_h_needed_in_header = false;
 		requires_free_checked = false;
 		requires_array_free = false;
 		requires_array_move = false;
@@ -384,7 +386,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			header_begin.append (new CCodeIncludeDirective ("gio/gio.h"));
 		}
 
-		if (dbus_glib_h_needed) {
+		if (dbus_glib_h_needed_in_header) {
+			header_begin.append (new CCodeIncludeDirective ("dbus/dbus-glib.h"));
+		} else if (dbus_glib_h_needed) {
 			source_include_directives.append (new CCodeIncludeDirective ("dbus/dbus-glib.h"));
 		}
 

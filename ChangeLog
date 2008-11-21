@@ -1,5 +1,16 @@
 2008-11-21  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/Makefile.am:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valadbusclientmodule.vala:
+	* gobject/valadbusmodule.vala:
+	* vapi/dbus-glib-1.vapi:
+
+	Add partial static D-Bus client support without dbus-glib
+	marshalling
+
+2008-11-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Add g_quark_try_string binding, patch by Rob Taylor
