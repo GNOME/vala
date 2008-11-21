@@ -27,6 +27,7 @@ namespace GLib {
 	[Compact]
 	[CCode (free_function = "g_module_close", cheader_filename = "gmodule.h")]
 	public class Module {
+		public const string SUFFIX;
 		public static bool supported ();
 		public static string build_path (string? directory, string module_name);
 		public static Module? open (string? file_name, ModuleFlags flags);

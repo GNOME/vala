@@ -1,5 +1,11 @@
 2008-11-21  Étienne Bersac  <bersace03@laposte.net>
 
+	* vapi/gmodule-2.0.vapi:
+
+	Add binding for G_MODULE_SUFFIX, fixes bug 561120
+
+2008-11-21  Étienne Bersac  <bersace03@laposte.net>
+
 	* vapi/glib-2.0.vapi:
 
 	Add G_SEARCHPATH_SEPARATOR binding, fixes bug 561117
