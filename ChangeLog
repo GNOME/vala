@@ -1,5 +1,11 @@
 2008-11-21  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valagasyncmodule.vala:
+
+	Fix return type of finish vfunc
+
+2008-11-21  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamethod.vala:
 	* gobject/valaccodemethodcallmodule.vala:
 	* gobject/valaccodemethodmodule.vala:

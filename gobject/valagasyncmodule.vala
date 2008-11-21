@@ -126,7 +126,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("res", "GAsyncResult*"));
 
 		if (m.is_abstract || m.is_virtual) {
-			var vdecl = new CCodeDeclaration ("void");
+			var vdecl = new CCodeDeclaration (creturn_type.get_cname ());
 			vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name + "_finish");
 			vdecl.add_declarator (vdeclarator);
 			type_struct.add_declaration (vdecl);
