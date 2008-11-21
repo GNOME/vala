@@ -720,6 +720,8 @@ public class string {
 	[CCode (cname = "g_strjoinv")]
 	[NoArrayLength]
 	public static string joinv (string separator, string[] str_array);
+	[CCode (cname = "g_strjoin")]
+	public static string join (string separator, ...);
 	[CCode (cname = "g_strnfill")]
 	public static string nfill (ulong length, char fill_char);
 

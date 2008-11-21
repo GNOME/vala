@@ -1,3 +1,9 @@
+2008-11-21  Étienne Bersac  <bersace03@laposte.net>
+
+	* vapi/glib-2.0.vapi:
+
+	Add g_strjoin binding, fixes bug 561124
+
 2008-11-20  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaassignment.vala:
