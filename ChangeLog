@@ -1,5 +1,14 @@
 2008-11-21  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-2.0/:
+
+	Fix gdk_region_polygon and gdk_region_rectangle bindings,
+	patch by Víctor Manuel Jáquez Leal, fixes bug 561655
+
+	* vapi/gdk-2.0.vapi: regenerated
+
+2008-11-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/dbus-glib-1.vapi:
 
 	Fix DBusError binding, patch by Sebastian Pölsterl,
