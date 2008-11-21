@@ -1,5 +1,12 @@
 2008-11-21  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/dbus-glib-1.vapi:
+
+	Fix DBusError binding, patch by Sebastian Pölsterl,
+	fixes bug 556340
+
+2008-11-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix g_hscale_new and g_vscale_new bindings,

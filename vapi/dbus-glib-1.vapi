@@ -42,7 +42,7 @@ namespace DBus {
 		public Connection get_g_connection ();
 	}
 
-	[CCode (cname = "DBusError", cprefix = "dbus_error_")]
+	[CCode (cname = "DBusError", cprefix = "dbus_error_", destroy_function = "dbus_error_free")]
 	public struct RawError {
 		public string name;
 		public string message;
