@@ -37,10 +37,6 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public override string? get_custom_creturn_type (Method m) {
-		if (m.coroutine) {
-			return "gboolean";
-		}
-
 		var attr = m.get_attribute ("CCode");
 		if (attr != null) {
 			string type = attr.get_string ("type");
@@ -167,61 +163,14 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
 		CCodeFunctionDeclarator vdeclarator = null;
-
-		if (m.parent_symbol is Class && m is CreationMethod) {
-			var cl = (Class) m.parent_symbol;
-			if (!cl.is_compact) {
-				cparam_map.set (get_param_pos (m.cinstance_parameter_position), new CCodeFormalParameter ("object_type", "GType"));
-			}
-		} else if (m.binding == MemberBinding.INSTANCE || (m.parent_symbol is Struct && m is CreationMethod)) {
-			TypeSymbol parent_type = find_parent_type (m);
-			DataType this_type;
-			if (parent_type is Class) {
-				this_type = new ObjectType ((Class) parent_type);
-			} else if (parent_type is Interface) {
-				this_type = new ObjectType ((Interface) parent_type);
-			} else {
-				this_type = new ValueType (parent_type);
-			}
-
-			CCodeFormalParameter instance_param = null;
-			if (m.base_interface_method != null && !m.is_abstract && !m.is_virtual) {
-				var base_type = new ObjectType ((Interface) m.base_interface_method.parent_symbol);
-				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
-			} else if (m.overrides) {
-				var base_type = new ObjectType ((Class) m.base_method.parent_symbol);
-				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
-			} else {
-				if (m.parent_symbol is Struct && !((Struct) m.parent_symbol).is_simple_type ()) {
-					instance_param = new CCodeFormalParameter ("*self", this_type.get_cname ());
-				} else {
-					instance_param = new CCodeFormalParameter ("self", this_type.get_cname ());
-				}
-			}
-			cparam_map.set (get_param_pos (m.cinstance_parameter_position), instance_param);
-
-			if (m.is_abstract || m.is_virtual) {
-				var vdecl = new CCodeDeclaration (get_creturn_type (m, creturn_type.get_cname ()));
-				vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
-				vdecl.add_declarator (vdeclarator);
-				type_struct.add_declaration (vdecl);
-			}
-		} else if (m.binding == MemberBinding.CLASS) {
-			TypeSymbol parent_type = find_parent_type (m);
-			DataType this_type;
-			this_type = new ClassType ((Class) parent_type);
-			var class_param = new CCodeFormalParameter ("klass", this_type.get_cname ());
-			cparam_map.set (get_param_pos (m.cinstance_parameter_position), class_param);
+		if (m.is_abstract || m.is_virtual) {
+			var vdecl = new CCodeDeclaration (get_creturn_type (m, creturn_type.get_cname ()));
+			vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
+			vdecl.add_declarator (vdeclarator);
+			type_struct.add_declaration (vdecl);
 		}
 
-		if (!m.coroutine) {
-			generate_cparameters (m, creturn_type, in_gtypeinstance_creation_method, cparam_map, function, vdeclarator);
-		} else {
-			// data struct to hold parameters, local variables, and the return value
-			cparam_map.set (get_param_pos (0), new CCodeFormalParameter ("data", Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data*"));
-
-			generate_cparameters (m, creturn_type, in_gtypeinstance_creation_method, cparam_map, function, vdeclarator, null, null, 0);
-		}
+		generate_cparameters (m, creturn_type, in_gtypeinstance_creation_method, cparam_map, function, vdeclarator);
 
 		bool visible = !m.is_internal_symbol ();
 
@@ -249,6 +198,14 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 				function.block.prepend_statement (cinit);
 
 				if (m.coroutine) {
+					var co_function = new CCodeFunction (m.get_real_cname () + "_co", "gboolean");
+
+					// data struct to hold parameters, local variables, and the return value
+					co_function.add_parameter (new CCodeFormalParameter ("data", Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data*"));
+
+					co_function.modifiers |= CCodeModifiers.STATIC;
+					source_type_member_declaration.append (co_function.copy ());
+
 					var cswitch = new CCodeSwitchStatement (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state"));
 
 					// initial coroutine state
@@ -275,8 +232,10 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 					cswitch.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
 
-					function.block = new CCodeBlock ();
-					function.block.add_statement (cswitch);
+					co_function.block = new CCodeBlock ();
+					co_function.block.add_statement (cswitch);
+
+					source_type_member_definition.append (co_function);
 				}
 
 				if (m.parent_symbol is Class) {
@@ -478,19 +437,9 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			var vfunc = new CCodeFunction (m.get_cname (), creturn_type.get_cname ());
 			vfunc.line = function.line;
 
-			ReferenceType this_type;
-			if (m.parent_symbol is Class) {
-				this_type = new ObjectType ((Class) m.parent_symbol);
-			} else {
-				this_type = new ObjectType ((Interface) m.parent_symbol);
-			}
-
 			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
-			var cparam = new CCodeFormalParameter ("self", this_type.get_cname ());
-			cparam_map.set (get_param_pos (m.cinstance_parameter_position), cparam);
-			
 			var vblock = new CCodeBlock ();
 
 			foreach (Expression precondition in m.get_preconditions ()) {
@@ -599,6 +548,45 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public override void generate_cparameters (Method m, DataType creturn_type, bool in_gtypeinstance_creation_method, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
+		if (m.parent_symbol is Class && m is CreationMethod) {
+			var cl = (Class) m.parent_symbol;
+			if (!cl.is_compact && vcall == null) {
+				cparam_map.set (get_param_pos (m.cinstance_parameter_position), new CCodeFormalParameter ("object_type", "GType"));
+			}
+		} else if (m.binding == MemberBinding.INSTANCE || (m.parent_symbol is Struct && m is CreationMethod)) {
+			TypeSymbol parent_type = find_parent_type (m);
+			DataType this_type;
+			if (parent_type is Class) {
+				this_type = new ObjectType ((Class) parent_type);
+			} else if (parent_type is Interface) {
+				this_type = new ObjectType ((Interface) parent_type);
+			} else {
+				this_type = new ValueType (parent_type);
+			}
+
+			CCodeFormalParameter instance_param = null;
+			if (m.base_interface_method != null && !m.is_abstract && !m.is_virtual) {
+				var base_type = new ObjectType ((Interface) m.base_interface_method.parent_symbol);
+				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
+			} else if (m.overrides) {
+				var base_type = new ObjectType ((Class) m.base_method.parent_symbol);
+				instance_param = new CCodeFormalParameter ("base", base_type.get_cname ());
+			} else {
+				if (m.parent_symbol is Struct && !((Struct) m.parent_symbol).is_simple_type ()) {
+					instance_param = new CCodeFormalParameter ("*self", this_type.get_cname ());
+				} else {
+					instance_param = new CCodeFormalParameter ("self", this_type.get_cname ());
+				}
+			}
+			cparam_map.set (get_param_pos (m.cinstance_parameter_position), instance_param);
+		} else if (m.binding == MemberBinding.CLASS) {
+			TypeSymbol parent_type = find_parent_type (m);
+			DataType this_type;
+			this_type = new ClassType ((Class) parent_type);
+			var class_param = new CCodeFormalParameter ("klass", this_type.get_cname ());
+			cparam_map.set (get_param_pos (m.cinstance_parameter_position), class_param);
+		}
+
 		if (in_gtypeinstance_creation_method) {
 			// memory management for generic types
 			int type_param_index = 0;

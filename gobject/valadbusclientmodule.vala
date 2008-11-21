@@ -52,9 +52,6 @@ public class Vala.DBusClientModule : DBusModule {
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		var instance_param = new CCodeFormalParameter ("obj", dynamic_method.dynamic_type.get_cname ());
-		cparam_map.set (get_param_pos (method.cinstance_parameter_position), instance_param);
-
 		generate_cparameters (method, method.return_type, false, cparam_map, func);
 
 		var block = new CCodeBlock ();
@@ -78,7 +75,7 @@ public class Vala.DBusClientModule : DBusModule {
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_begin_call"));
 
-		ccall.add_argument (new CCodeIdentifier ("obj"));
+		ccall.add_argument (new CCodeIdentifier ("self"));
 
 		bool found_out = false;
 		Expression callback = null;

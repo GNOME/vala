@@ -348,13 +348,18 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		if (m != null && m.coroutine) {
-			if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
-				// asynchronous begin call
-				carg_map.set (get_param_pos (-1), new CCodeConstant ("NULL"));
-				carg_map.set (get_param_pos (-0.9), new CCodeConstant ("NULL"));
-			} else {
-				carg_map.set (get_param_pos (-1), new CCodeIdentifier (current_method.get_cname () + "_ready"));
-				carg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("data"));
+			if ((current_method != null && current_method.coroutine)
+			    || (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference)) {
+				// asynchronous call
+				var cid = (CCodeIdentifier) ccall.call;
+				cid.name += "_async";
+				if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
+					carg_map.set (get_param_pos (-1), new CCodeConstant ("NULL"));
+					carg_map.set (get_param_pos (-0.9), new CCodeConstant ("NULL"));
+				} else {
+					carg_map.set (get_param_pos (-1), new CCodeIdentifier (current_method.get_cname () + "_ready"));
+					carg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("data"));
+				}
 			}
 		}
 
