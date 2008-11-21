@@ -2980,6 +2980,7 @@ namespace GLib {
 	
 	public struct Quark : uint32 {
 		public static Quark from_string (string str);
+		public static Quark try_string (string str);
 		public weak string to_string ();
 	}
 
