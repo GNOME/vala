@@ -1,3 +1,9 @@
+2008-11-21  Étienne Bersac  <bersace03@laposte.net>
+
+	* vapi/glib-2.0.vapi:
+
+	Add G_SEARCHPATH_SEPARATOR binding, fixes bug 561117
+
 2008-11-21  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gdk-2.0/:

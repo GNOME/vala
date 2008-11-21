@@ -1804,6 +1804,10 @@ namespace GLib {
 		public const string DIR_SEPARATOR_S;
 		[CCode (cname = "G_IS_DIR_SEPARATOR")]
 		public static bool is_dir_separator (unichar c);
+		[CCode (cname = "G_SEARCHPATH_SEPARATOR")]
+		public const char SEARCHPATH_SEPARATOR;
+		[CCode (cname = "G_SEARCHPATH_SEPARATOR_S")]
+		public const string SEARCHPATH_SEPARATOR_S;
 	}
 
 	namespace Bit {
