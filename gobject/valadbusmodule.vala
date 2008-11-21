@@ -59,6 +59,17 @@ public class Vala.DBusModule : GAsyncModule {
 		return false;
 	}
 
+	CCodeExpression? get_array_length (CCodeExpression expr) {
+		var id = expr as CCodeIdentifier;
+		var ma = expr as CCodeMemberAccess;
+		if (id != null) {
+			return new CCodeIdentifier (id.name + "_length1");
+		} else if (ma != null) {
+			return new CCodeMemberAccess.pointer (ma.inner, ma.member_name + "_length1");
+		}
+		return null;
+	}
+
 	CCodeExpression read_basic (CCodeFragment fragment, BasicTypeInfo basic_type, CCodeExpression iter_expr) {
 		string temp_name = "_tmp%d".printf (next_temp_var_id++);
 
@@ -84,11 +95,73 @@ public class Vala.DBusModule : GAsyncModule {
 		}
 	}
 
+	CCodeExpression read_array (CCodeFragment fragment, ArrayType array_type, CCodeExpression iter_expr, CCodeExpression? expr) {
+		string temp_name = "_tmp%d".printf (next_temp_var_id++);
+		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
+
+		var cdecl = new CCodeDeclaration (array_type.get_cname ());
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (temp_name, new CCodeConstant ("NULL")));
+		fragment.append (cdecl);
+
+		cdecl = new CCodeDeclaration ("int");
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (temp_name + "_length1", new CCodeConstant ("0")));
+		fragment.append (cdecl);
+
+		cdecl = new CCodeDeclaration ("int");
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (temp_name + "_size", new CCodeConstant ("0")));
+		fragment.append (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator (subiter_name));
+		fragment.append (cdecl);
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_recurse"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		fragment.append (new CCodeExpressionStatement (iter_call));
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_get_arg_type"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+
+		var cforblock = new CCodeBlock ();
+		var cforfragment = new CCodeFragment ();
+		cforblock.add_statement (cforfragment);
+		var cfor = new CCodeForStatement (iter_call, cforblock);
+		cfor.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier (temp_name + "_length1")));
+
+		var size_check = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier (temp_name + "_size"), new CCodeIdentifier (temp_name + "_length1"));
+		var init_check = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier (temp_name + "_size"), new CCodeConstant ("0"));
+		var new_size = new CCodeConditionalExpression (init_check, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("2"), new CCodeIdentifier (temp_name + "_size")), new CCodeConstant ("4"));
+		var renew_call = new CCodeFunctionCall (new CCodeIdentifier ("g_renew"));
+		renew_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+		renew_call.add_argument (new CCodeIdentifier (temp_name));
+		renew_call.add_argument (new_size);
+		var renew_stmt = new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (temp_name), renew_call));
+		var renew_block = new CCodeBlock ();
+		renew_block.add_statement (renew_stmt);
+
+		var cif = new CCodeIfStatement (size_check, renew_block);
+		cforfragment.append (cif);
+
+		var element_expr = read_expression (cforfragment, array_type.element_type, new CCodeIdentifier (subiter_name), null);
+		cforfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (new CCodeIdentifier (temp_name), new CCodeIdentifier (temp_name + "_length1")), element_expr)));
+
+		fragment.append (cfor);
+
+		if (expr != null) {
+			fragment.append (new CCodeExpressionStatement (new CCodeAssignment (get_array_length (expr), new CCodeIdentifier (temp_name + "_length1"))));
+		}
+
+		return new CCodeIdentifier (temp_name);
+	}
+
 	public CCodeExpression? read_expression (CCodeFragment fragment, DataType type, CCodeExpression iter_expr, CCodeExpression? expr) {
 		BasicTypeInfo basic_type;
 		CCodeExpression result = null;
 		if (get_basic_type_info (type.get_type_signature (), out basic_type)) {
 			result = read_basic (fragment, basic_type, iter_expr);
+		} else if (type is ArrayType) {
+			result = read_array (fragment, (ArrayType) type, iter_expr, expr);
 		} else {
 			Report.error (type.source_reference, "D-Bus deserialization of type `%s' is not supported".printf (type.to_string ()));
 			return null;
@@ -117,10 +190,47 @@ public class Vala.DBusModule : GAsyncModule {
 		fragment.append (new CCodeExpressionStatement (iter_call));
 	}
 
+	void write_array (CCodeFragment fragment, ArrayType array_type, CCodeExpression iter_expr, CCodeExpression array_expr) {
+		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
+		string index_name = "_tmp%d".printf (next_temp_var_id++);
+
+		var cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator (subiter_name));
+		fragment.append (cdecl);
+
+		cdecl = new CCodeDeclaration ("int");
+		cdecl.add_declarator (new CCodeVariableDeclarator (index_name));
+		fragment.append (cdecl);
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
+		iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_ARRAY"));
+		iter_call.add_argument (new CCodeConstant ("\"%s\"".printf (array_type.element_type.get_type_signature ())));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		fragment.append (new CCodeExpressionStatement (iter_call));
+
+		var cforblock = new CCodeBlock ();
+		var cforfragment = new CCodeFragment ();
+		cforblock.add_statement (cforfragment);
+		var cfor = new CCodeForStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier (index_name), get_array_length (array_expr)), cforblock);
+		cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (index_name), new CCodeConstant ("0")));
+		cfor.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier (index_name)));
+
+		write_expression (cforfragment, array_type.element_type, new CCodeIdentifier (subiter_name), new CCodeElementAccess (array_expr, new CCodeIdentifier (index_name)));
+		fragment.append (cfor);
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+		fragment.append (new CCodeExpressionStatement (iter_call));
+	}
+
 	public void write_expression (CCodeFragment fragment, DataType type, CCodeExpression iter_expr, CCodeExpression expr) {
 		BasicTypeInfo basic_type;
 		if (get_basic_type_info (type.get_type_signature (), out basic_type)) {
 			write_basic (fragment, basic_type, iter_expr, expr);
+		} else if (type is ArrayType) {
+			write_array (fragment, (ArrayType) type, iter_expr, expr);
 		} else {
 			Report.error (type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (type.to_string ()));
 		}

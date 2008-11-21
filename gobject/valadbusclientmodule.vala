@@ -1016,7 +1016,7 @@ public class Vala.DBusClientModule : DBusModule {
 			if (param.direction == ParameterDirection.IN) {
 				write_expression (prefragment, param.parameter_type, new CCodeIdentifier ("_iter"), new CCodeIdentifier (param.name));
 			} else {
-				cdecl = new CCodeDeclaration (m.return_type.get_cname ());
+				cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator ("_" + param.name));
 				block.add_statement (cdecl);
 
@@ -1027,6 +1027,16 @@ public class Vala.DBusClientModule : DBusModule {
 				// TODO check that parameter is not NULL (out parameters are optional)
 				// free value if parameter is NULL
 				postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), target)));
+
+
+				if (param.parameter_type is ArrayType) {
+					cdecl = new CCodeDeclaration ("int");
+					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_%s_length1".printf (param.name), new CCodeConstant ("0")));
+					block.add_statement (cdecl);
+
+					// TODO check that parameter is not NULL (out parameters are optional)
+					postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("%s_length1".printf (param.name))), new CCodeIdentifier ("_%s_length1".printf (param.name)))));
+				}
 			}
 		}
 
@@ -1038,6 +1048,15 @@ public class Vala.DBusClientModule : DBusModule {
 			var target = new CCodeIdentifier ("_result");
 			var expr = read_expression (postfragment, m.return_type, new CCodeIdentifier ("_iter"), target);
 			postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+
+			if (m.return_type is ArrayType) {
+				cdecl = new CCodeDeclaration ("int");
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_result_length1", new CCodeConstant ("0")));
+				block.add_statement (cdecl);
+
+				// TODO check that parameter is not NULL (out parameters are optional)
+				postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length1")), new CCodeIdentifier ("_result_length1"))));
+			}
 		}
 
 		var gconnection = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
