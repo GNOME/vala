@@ -556,63 +556,6 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			source_type_member_definition.append (vfunc);
 		}
 
-		if (m is CreationMethod) {
-			if (current_class != null && !current_class.is_compact) {
-				var vfunc = new CCodeFunction (m.get_cname (), creturn_type.get_cname ());
-				vfunc.line = function.line;
-
-				cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
-				var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
-
-				var vblock = new CCodeBlock ();
-
-				var vcall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
-				vcall.add_argument (new CCodeIdentifier (current_class.get_type_id ()));
-
-				generate_cparameters (m, creturn_type, in_gtypeinstance_creation_method, cparam_map, vfunc, null, carg_map, vcall);
-				CCodeStatement cstmt = new CCodeReturnStatement (vcall);
-				cstmt.line = vfunc.line;
-				vblock.add_statement (cstmt);
-
-				if (visible) {
-					header_type_member_declaration.append (vfunc.copy ());
-				} else {
-					vfunc.modifiers |= CCodeModifiers.STATIC;
-					source_type_member_declaration.append (vfunc.copy ());
-				}
-			
-				vfunc.block = vblock;
-
-				source_type_member_definition.append (vfunc);
-			}
-
-			if (current_class != null && current_class.is_subtype_of (gobject_type)
-			    && (((CreationMethod) m).n_construction_params > 0 || current_class.get_type_parameters ().size > 0)) {
-				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("__params_it"), new CCodeIdentifier ("__params"));
-				var cdofreeparam = new CCodeBlock ();
-				cdofreeparam.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeIdentifier ("__params_it"))));
-				var cunsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_unset"));
-				cunsetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (new CCodeIdentifier ("__params_it"), "value")));
-				cdofreeparam.add_statement (new CCodeExpressionStatement (cunsetcall));
-				function.block.add_statement (new CCodeWhileStatement (ccond, cdofreeparam));
-
-				var cfreeparams = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
-				cfreeparams.add_argument (new CCodeIdentifier ("__params"));
-				function.block.add_statement (new CCodeExpressionStatement (cfreeparams));
-			}
-
-			if (current_type_symbol is Class) {
-				CCodeExpression cresult = new CCodeIdentifier ("self");
-				if (get_custom_creturn_type (m) != null) {
-					cresult = new CCodeCastExpression (cresult, get_custom_creturn_type (m));
-				}
-
-				var creturn = new CCodeReturnStatement ();
-				creturn.return_expression = cresult;
-				function.block.add_statement (creturn);
-			}
-		}
-		
 		if (m.entry_point) {
 			// m is possible entry point, add appropriate startup code
 			var cmain = new CCodeFunction ("main", "int");
@@ -880,6 +823,8 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public override void visit_creation_method (CreationMethod m) {
+		bool visible = !m.is_internal_symbol ();
+
 		if (m.body != null && current_type_symbol is Class && current_class.is_subtype_of (gobject_type)) {
 			int n_params = 0;
 			foreach (Statement stmt in m.body.get_statements ()) {
@@ -895,5 +840,67 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		head.visit_method (m);
+
+		DataType creturn_type;
+		if (current_class != null) {
+			creturn_type = new ObjectType (current_class);
+		} else {
+			creturn_type = new VoidType ();
+		}
+
+		if (current_class != null && !current_class.is_compact) {
+			var vfunc = new CCodeFunction (m.get_cname (), creturn_type.get_cname ());
+			vfunc.line = function.line;
+
+			var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+
+			var vblock = new CCodeBlock ();
+
+			var vcall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
+			vcall.add_argument (new CCodeIdentifier (current_class.get_type_id ()));
+
+			generate_cparameters (m, creturn_type, true, cparam_map, vfunc, null, carg_map, vcall);
+			CCodeStatement cstmt = new CCodeReturnStatement (vcall);
+			cstmt.line = vfunc.line;
+			vblock.add_statement (cstmt);
+
+			if (visible) {
+				header_type_member_declaration.append (vfunc.copy ());
+			} else {
+				vfunc.modifiers |= CCodeModifiers.STATIC;
+				source_type_member_declaration.append (vfunc.copy ());
+			}
+		
+			vfunc.block = vblock;
+
+			source_type_member_definition.append (vfunc);
+		}
+
+		if (current_class != null && current_class.is_subtype_of (gobject_type)
+		    && (((CreationMethod) m).n_construction_params > 0 || current_class.get_type_parameters ().size > 0)) {
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("__params_it"), new CCodeIdentifier ("__params"));
+			var cdofreeparam = new CCodeBlock ();
+			cdofreeparam.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeIdentifier ("__params_it"))));
+			var cunsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_unset"));
+			cunsetcall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (new CCodeIdentifier ("__params_it"), "value")));
+			cdofreeparam.add_statement (new CCodeExpressionStatement (cunsetcall));
+			function.block.add_statement (new CCodeWhileStatement (ccond, cdofreeparam));
+
+			var cfreeparams = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+			cfreeparams.add_argument (new CCodeIdentifier ("__params"));
+			function.block.add_statement (new CCodeExpressionStatement (cfreeparams));
+		}
+
+		if (current_type_symbol is Class) {
+			CCodeExpression cresult = new CCodeIdentifier ("self");
+			if (get_custom_creturn_type (m) != null) {
+				cresult = new CCodeCastExpression (cresult, get_custom_creturn_type (m));
+			}
+
+			var creturn = new CCodeReturnStatement ();
+			creturn.return_expression = cresult;
+			function.block.add_statement (creturn);
+		}
 	}
 }

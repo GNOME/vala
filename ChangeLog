@@ -1,5 +1,11 @@
 2008-11-21  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodemethodmodule.vala:
+
+	Small refactoring
+
+2008-11-21  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusmodule.vala:
 
 	Support serialization and deserialization of GHashTable objects
