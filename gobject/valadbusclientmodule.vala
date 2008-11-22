@@ -943,6 +943,12 @@ public class Vala.DBusClientModule : DBusModule {
 		foreach (Method m in iface.get_methods ()) {
 			var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), m.vfunc_name);
 			iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_method (iface, m)))));
+			if (m.coroutine) {
+				vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), m.vfunc_name + "_async");
+				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_async_dbus_proxy_method (iface, m)))));
+				vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), m.vfunc_name + "_finish");
+				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_finish_dbus_proxy_method (iface, m)))));
+			}
 		}
 
 		proxy_iface_init.modifiers = CCodeModifiers.STATIC;
@@ -951,41 +957,8 @@ public class Vala.DBusClientModule : DBusModule {
 		source_type_member_definition.append (proxy_iface_init);
 	}
 
-	string generate_dbus_proxy_method (Interface iface, Method m) {
-		string proxy_name = "%sdbus_proxy_%s".printf (iface.get_lower_case_cprefix (), m.name);
-
-		string dbus_iface_name = iface.get_attribute ("DBus").get_string ("name");
-
+	void generate_marshalling (Method m, string dbus_iface_name, CCodeFragment prefragment, CCodeFragment postfragment) {
 		CCodeDeclaration cdecl;
-
-		var function = new CCodeFunction (proxy_name, m.return_type.get_cname ());
-		function.modifiers = CCodeModifiers.STATIC;
-
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
-
-		var instance_param = new CCodeFormalParameter ("self", iface.get_cname () + "*");
-		cparam_map.set (get_param_pos (m.cinstance_parameter_position), instance_param);
-
-		generate_cparameters (m, m.return_type, false, cparam_map, function);
-
-		var block = new CCodeBlock ();
-		var prefragment = new CCodeFragment ();
-		var postfragment = new CCodeFragment ();
-
-		cdecl = new CCodeDeclaration ("DBusGConnection");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("*_connection"));
-		block.add_statement (cdecl);
-
-		cdecl = new CCodeDeclaration ("DBusMessage");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("*_message"));
-		cdecl.add_declarator (new CCodeVariableDeclarator ("*_reply"));
-		block.add_statement (cdecl);
-
-		cdecl = new CCodeDeclaration ("DBusMessageIter");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_iter"));
-		block.add_statement (cdecl);
-
-		block.add_statement (prefragment);
 
 		var destination = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_get_bus_name"));
 		destination.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "DBusGProxy*"));
@@ -1019,7 +992,7 @@ public class Vala.DBusClientModule : DBusModule {
 			} else {
 				cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator ("_" + param.name));
-				block.add_statement (cdecl);
+				postfragment.append (cdecl);
 
 				var target = new CCodeIdentifier ("_" + param.name);
 				var expr = read_expression (postfragment, param.parameter_type, new CCodeIdentifier ("_iter"), target);
@@ -1033,7 +1006,7 @@ public class Vala.DBusClientModule : DBusModule {
 				if (param.parameter_type is ArrayType) {
 					cdecl = new CCodeDeclaration ("int");
 					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_%s_length1".printf (param.name), new CCodeConstant ("0")));
-					block.add_statement (cdecl);
+					postfragment.append (cdecl);
 
 					// TODO check that parameter is not NULL (out parameters are optional)
 					postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("%s_length1".printf (param.name))), new CCodeIdentifier ("_%s_length1".printf (param.name)))));
@@ -1044,7 +1017,7 @@ public class Vala.DBusClientModule : DBusModule {
 		if (!(m.return_type is VoidType)) {
 			cdecl = new CCodeDeclaration (m.return_type.get_cname ());
 			cdecl.add_declarator (new CCodeVariableDeclarator ("_result"));
-			block.add_statement (cdecl);
+			postfragment.append (cdecl);
 
 			var target = new CCodeIdentifier ("_result");
 			var expr = read_expression (postfragment, m.return_type, new CCodeIdentifier ("_iter"), target);
@@ -1053,12 +1026,48 @@ public class Vala.DBusClientModule : DBusModule {
 			if (m.return_type is ArrayType) {
 				cdecl = new CCodeDeclaration ("int");
 				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_result_length1", new CCodeConstant ("0")));
-				block.add_statement (cdecl);
+				postfragment.append (cdecl);
 
 				// TODO check that parameter is not NULL (out parameters are optional)
 				postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length1")), new CCodeIdentifier ("_result_length1"))));
 			}
 		}
+	}
+
+	string generate_dbus_proxy_method (Interface iface, Method m) {
+		string proxy_name = "%sdbus_proxy_%s".printf (iface.get_lower_case_cprefix (), m.name);
+
+		string dbus_iface_name = iface.get_attribute ("DBus").get_string ("name");
+
+		CCodeDeclaration cdecl;
+
+		var function = new CCodeFunction (proxy_name, m.return_type.get_cname ());
+		function.modifiers = CCodeModifiers.STATIC;
+
+		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+
+		generate_cparameters (m, m.return_type, false, cparam_map, function);
+
+		var block = new CCodeBlock ();
+		var prefragment = new CCodeFragment ();
+		var postfragment = new CCodeFragment ();
+
+		cdecl = new CCodeDeclaration ("DBusGConnection");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_connection"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessage");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_message"));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_reply"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_iter"));
+		block.add_statement (cdecl);
+
+		block.add_statement (prefragment);
+
+		generate_marshalling (m, dbus_iface_name, prefragment, postfragment);
 
 		var gconnection = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
 		gconnection.add_argument (new CCodeIdentifier ("self"));
@@ -1084,6 +1093,211 @@ public class Vala.DBusClientModule : DBusModule {
 		var message_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
 		message_unref.add_argument (new CCodeIdentifier ("_message"));
 		block.add_statement (new CCodeExpressionStatement (message_unref));
+
+		block.add_statement (postfragment);
+
+		var reply_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		reply_unref.add_argument (new CCodeIdentifier ("_reply"));
+		block.add_statement (new CCodeExpressionStatement (reply_unref));
+
+		if (!(m.return_type is VoidType)) {
+			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
+		}
+
+		source_type_member_declaration.append (function.copy ());
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return proxy_name;
+	}
+
+	string generate_async_dbus_proxy_method (Interface iface, Method m) {
+		string proxy_name = "%sdbus_proxy_%s_async".printf (iface.get_lower_case_cprefix (), m.name);
+
+		string dbus_iface_name = iface.get_attribute ("DBus").get_string ("name");
+
+		CCodeDeclaration cdecl;
+
+
+		// generate data struct
+
+		string dataname = "%sDBusProxy%sData".printf (iface.get_cname (), Symbol.lower_case_to_camel_case (m.name));
+		var datastruct = new CCodeStruct ("_" + dataname);
+
+		datastruct.add_field ("GAsyncReadyCallback", "callback");
+		datastruct.add_field ("gpointer", "user_data");
+		datastruct.add_field ("DBusPendingCall*", "pending");
+
+		source_type_definition.append (datastruct);
+		source_type_declaration.append (new CCodeTypeDefinition ("struct _" + dataname, new CCodeVariableDeclarator (dataname)));
+
+
+		// generate async function
+
+		var function = new CCodeFunction (proxy_name, "void");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+
+		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("callback", "GAsyncReadyCallback"));
+		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("user_data", "gpointer"));
+
+		generate_cparameters (m, m.return_type, false, cparam_map, function, null, null, null, 1);
+
+		var block = new CCodeBlock ();
+		var prefragment = new CCodeFragment ();
+		var postfragment = new CCodeFragment ();
+
+		cdecl = new CCodeDeclaration ("DBusGConnection");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_connection"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessage");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_message"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusPendingCall");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_pending"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_iter"));
+		block.add_statement (cdecl);
+
+		block.add_statement (prefragment);
+
+		generate_marshalling (m, dbus_iface_name, prefragment, postfragment);
+
+		var gconnection = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
+		gconnection.add_argument (new CCodeIdentifier ("self"));
+		gconnection.add_argument (new CCodeConstant ("\"connection\""));
+		gconnection.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_connection")));
+		gconnection.add_argument (new CCodeConstant ("NULL"));
+		block.add_statement (new CCodeExpressionStatement (gconnection));
+
+		var connection = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_get_connection"));
+		connection.add_argument (new CCodeIdentifier ("_connection"));
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_send_with_reply"));
+		ccall.add_argument (connection);
+		ccall.add_argument (new CCodeIdentifier ("_message"));
+		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_pending")));
+		ccall.add_argument (new CCodeConstant ("-1"));
+		block.add_statement (new CCodeExpressionStatement (ccall));
+
+		var conn_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_unref"));
+		conn_unref.add_argument (new CCodeIdentifier ("_connection"));
+		block.add_statement (new CCodeExpressionStatement (conn_unref));
+
+		var message_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		message_unref.add_argument (new CCodeIdentifier ("_message"));
+		block.add_statement (new CCodeExpressionStatement (message_unref));
+
+		var dataalloc = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
+		dataalloc.add_argument (new CCodeIdentifier (dataname));
+
+		var datadecl = new CCodeDeclaration (dataname + "*");
+		datadecl.add_declarator (new CCodeVariableDeclarator ("data"));
+		block.add_statement (datadecl);
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), dataalloc)));
+
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "callback"), new CCodeIdentifier ("callback"))));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "user_data"), new CCodeIdentifier ("user_data"))));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "pending"), new CCodeIdentifier ("_pending"))));
+
+		var pending = new CCodeFunctionCall (new CCodeIdentifier ("dbus_pending_call_set_notify"));
+		pending.add_argument (new CCodeIdentifier ("_pending"));
+		pending.add_argument (new CCodeIdentifier ("%sdbus_proxy_%s_ready".printf (iface.get_lower_case_cprefix (), m.name)));
+		pending.add_argument (new CCodeIdentifier ("data"));
+		pending.add_argument (new CCodeConstant ("NULL"));
+		block.add_statement (new CCodeExpressionStatement (pending));
+
+		source_type_member_declaration.append (function.copy ());
+		function.block = block;
+		source_type_member_definition.append (function);
+
+
+		// generate ready function
+
+		function = new CCodeFunction ("%sdbus_proxy_%s_ready".printf (iface.get_lower_case_cprefix (), m.name), "void");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("pending", "DBusPendingCall*"));
+		function.add_parameter (new CCodeFormalParameter ("user_data", "void*"));
+
+		block = new CCodeBlock ();
+
+		datadecl = new CCodeDeclaration (dataname + "*");
+		datadecl.add_declarator (new CCodeVariableDeclarator ("data"));
+		block.add_statement (datadecl);
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), new CCodeIdentifier ("user_data"))));
+
+		// complete async call by invoking callback
+		var object_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_object_newv"));
+		object_creation.add_argument (new CCodeConstant ("G_TYPE_OBJECT"));
+		object_creation.add_argument (new CCodeConstant ("0"));
+		object_creation.add_argument (new CCodeConstant ("NULL"));
+
+		var async_result_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
+		async_result_creation.add_argument (object_creation);
+		async_result_creation.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "callback"));
+		async_result_creation.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "user_data"));
+		async_result_creation.add_argument (new CCodeIdentifier ("data"));
+
+		var completecall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete"));
+		completecall.add_argument (async_result_creation);
+		block.add_statement (new CCodeExpressionStatement (completecall));
+
+		source_type_member_declaration.append (function.copy ());
+		function.block = block;
+		source_type_member_definition.append (function);
+
+
+		return proxy_name;
+	}
+
+	string generate_finish_dbus_proxy_method (Interface iface, Method m) {
+		string proxy_name = "%sdbus_proxy_%s_finish".printf (iface.get_lower_case_cprefix (), m.name);
+
+		string dbus_iface_name = iface.get_attribute ("DBus").get_string ("name");
+
+		CCodeDeclaration cdecl;
+
+		var function = new CCodeFunction (proxy_name, m.return_type.get_cname ());
+		function.modifiers = CCodeModifiers.STATIC;
+
+		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+
+		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("res", "GAsyncResult*"));
+
+		generate_cparameters (m, m.return_type, false, cparam_map, function, null, null, null, 2);
+
+		var block = new CCodeBlock ();
+		var prefragment = new CCodeFragment ();
+		var postfragment = new CCodeFragment ();
+
+		string dataname = "%sDBusProxy%sData".printf (iface.get_cname (), Symbol.lower_case_to_camel_case (m.name));
+		cdecl = new CCodeDeclaration (dataname + "*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("data"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessage");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_reply"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_iter"));
+		block.add_statement (cdecl);
+
+		var get_user_data = new CCodeFunctionCall (new CCodeIdentifier ("g_async_result_get_user_data"));
+		get_user_data.add_argument (new CCodeIdentifier ("res"));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), get_user_data)));
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_pending_call_steal_reply"));
+		ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "pending"));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall)));
+
+		generate_marshalling (m, dbus_iface_name, prefragment, postfragment);
 
 		block.add_statement (postfragment);
 

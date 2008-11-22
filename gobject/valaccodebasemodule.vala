@@ -1786,8 +1786,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		if (invoc != null) {
 			var m = invoc.call.symbol_reference as Method;
 			var ma = invoc.call as MemberAccess;
-			if (m != null && m.coroutine && (ma == null || ma.member_name != "begin"
-				                         || ma.inner.symbol_reference != ma.symbol_reference)) {
+			if (m != null && m.coroutine && current_method != null && current_method.coroutine &&
+			    (ma == null || ma.member_name != "begin" || ma.inner.symbol_reference != ma.symbol_reference)) {
 				var cfrag = new CCodeFragment ();
 
 				int state = next_coroutine_state++;

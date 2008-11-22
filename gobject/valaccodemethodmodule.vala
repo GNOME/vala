@@ -294,10 +294,12 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 					cinit.append (cdecl);
 				}
 
-				if (m.source_reference != null && m.source_reference.comment != null) {
-					source_type_member_definition.append (new CCodeComment (m.source_reference.comment));
+				if (!m.coroutine) {
+					if (m.source_reference != null && m.source_reference.comment != null) {
+						source_type_member_definition.append (new CCodeComment (m.source_reference.comment));
+					}
+					source_type_member_definition.append (function);
 				}
-				source_type_member_definition.append (function);
 			
 				if (m is CreationMethod) {
 					if (in_gobject_creation_method) {
@@ -434,75 +436,10 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if (m.is_abstract || m.is_virtual) {
-			var vfunc = new CCodeFunction (m.get_cname (), creturn_type.get_cname ());
-			vfunc.line = function.line;
-
 			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
-			var vblock = new CCodeBlock ();
-
-			foreach (Expression precondition in m.get_preconditions ()) {
-				vblock.add_statement (create_precondition_statement (m, creturn_type, precondition));
-			}
-
-			CCodeFunctionCall vcast = null;
-			if (m.parent_symbol is Interface) {
-				var iface = (Interface) m.parent_symbol;
-
-				vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (iface.get_upper_case_cname (null))));
-			} else {
-				var cl = (Class) m.parent_symbol;
-
-				vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (cl.get_upper_case_cname (null))));
-			}
-			vcast.add_argument (new CCodeIdentifier ("self"));
-		
-			var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, m.vfunc_name));
-			carg_map.set (get_param_pos (m.cinstance_parameter_position), new CCodeIdentifier ("self"));
-
-			generate_cparameters (m, creturn_type, in_gtypeinstance_creation_method, cparam_map, vfunc, null, carg_map, vcall);
-
-			CCodeStatement cstmt;
-			if (creturn_type is VoidType) {
-				cstmt = new CCodeExpressionStatement (vcall);
-			} else if (m.get_postconditions ().size == 0) {
-				/* pass method return value */
-				cstmt = new CCodeReturnStatement (vcall);
-			} else {
-				/* store method return value for postconditions */
-				var cdecl = new CCodeDeclaration (get_creturn_type (m, creturn_type.get_cname ()));
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("result", vcall));
-				cstmt = cdecl;
-			}
-			cstmt.line = vfunc.line;
-			vblock.add_statement (cstmt);
-
-			if (m.get_postconditions ().size > 0) {
-				foreach (Expression postcondition in m.get_postconditions ()) {
-					vblock.add_statement (create_postcondition_statement (postcondition));
-				}
-
-				if (!(creturn_type is VoidType)) {
-					var cret_stmt = new CCodeReturnStatement (new CCodeIdentifier ("result"));
-					cret_stmt.line = vfunc.line;
-					vblock.add_statement (cret_stmt);
-				}
-			}
-
-			if (visible) {
-				header_type_member_declaration.append (vfunc.copy ());
-			} else {
-				vfunc.modifiers |= CCodeModifiers.STATIC;
-				source_type_member_declaration.append (vfunc.copy ());
-			}
-			
-			vfunc.block = vblock;
-
-			if (m.is_abstract && m.source_reference != null && m.source_reference.comment != null) {
-				source_type_member_definition.append (new CCodeComment (m.source_reference.comment));
-			}
-			source_type_member_definition.append (vfunc);
+			generate_vfunc (m, creturn_type, cparam_map, carg_map);
 		}
 
 		if (m.entry_point) {
@@ -720,6 +657,77 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 			last_pos = min_pos;
 		}
+	}
+
+	public void generate_vfunc (Method m, DataType return_type, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression> carg_map, string suffix = "", int direction = 3) {
+		bool visible = !m.is_internal_symbol ();
+
+		var vfunc = new CCodeFunction (m.get_cname () + suffix, return_type.get_cname ());
+		vfunc.line = function.line;
+
+		var vblock = new CCodeBlock ();
+
+		foreach (Expression precondition in m.get_preconditions ()) {
+			vblock.add_statement (create_precondition_statement (m, return_type, precondition));
+		}
+
+		CCodeFunctionCall vcast = null;
+		if (m.parent_symbol is Interface) {
+			var iface = (Interface) m.parent_symbol;
+
+			vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_INTERFACE".printf (iface.get_upper_case_cname (null))));
+		} else {
+			var cl = (Class) m.parent_symbol;
+
+			vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS".printf (cl.get_upper_case_cname (null))));
+		}
+		vcast.add_argument (new CCodeIdentifier ("self"));
+	
+		var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, m.vfunc_name + suffix));
+		carg_map.set (get_param_pos (m.cinstance_parameter_position), new CCodeIdentifier ("self"));
+
+		generate_cparameters (m, return_type, false, cparam_map, vfunc, null, carg_map, vcall, direction);
+
+		CCodeStatement cstmt;
+		if (return_type is VoidType) {
+			cstmt = new CCodeExpressionStatement (vcall);
+		} else if (m.get_postconditions ().size == 0) {
+			/* pass method return value */
+			cstmt = new CCodeReturnStatement (vcall);
+		} else {
+			/* store method return value for postconditions */
+			var cdecl = new CCodeDeclaration (get_creturn_type (m, return_type.get_cname ()));
+			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("result", vcall));
+			cstmt = cdecl;
+		}
+		cstmt.line = vfunc.line;
+		vblock.add_statement (cstmt);
+
+		if (m.get_postconditions ().size > 0) {
+			foreach (Expression postcondition in m.get_postconditions ()) {
+				vblock.add_statement (create_postcondition_statement (postcondition));
+			}
+
+			if (!(return_type is VoidType)) {
+				var cret_stmt = new CCodeReturnStatement (new CCodeIdentifier ("result"));
+				cret_stmt.line = vfunc.line;
+				vblock.add_statement (cret_stmt);
+			}
+		}
+
+		if (visible) {
+			header_type_member_declaration.append (vfunc.copy ());
+		} else {
+			vfunc.modifiers |= CCodeModifiers.STATIC;
+			source_type_member_declaration.append (vfunc.copy ());
+		}
+		
+		vfunc.block = vblock;
+
+		if (m.is_abstract && m.source_reference != null && m.source_reference.comment != null) {
+			source_type_member_definition.append (new CCodeComment (m.source_reference.comment));
+		}
+		source_type_member_definition.append (vfunc);
 	}
 
 	private CCodeStatement create_method_type_check_statement (Method m, DataType return_type, TypeSymbol t, bool non_null, string var_name) {

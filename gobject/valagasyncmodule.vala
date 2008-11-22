@@ -175,6 +175,27 @@ public class Vala.GAsyncModule : GSignalModule {
 
 			source_type_member_definition.append (readyfunc);
 		}
+
+		if (m.is_abstract || m.is_virtual) {
+			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+
+			cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("callback", "GAsyncReadyCallback"));
+			cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("user_data", "gpointer"));
+			carg_map.set (get_param_pos (-1), new CCodeIdentifier ("callback"));
+			carg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("user_data"));
+
+			generate_vfunc (m, new VoidType (), cparam_map, carg_map, "_async", 1);
+
+
+			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+			carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+
+			cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("res", "GAsyncResult*"));
+			carg_map.set (get_param_pos (0.1), new CCodeIdentifier ("res"));
+
+			generate_vfunc (m, m.return_type, cparam_map, carg_map, "_finish", 2);
+		}
 	}
 
 	public override void visit_yield_statement (YieldStatement stmt) {
