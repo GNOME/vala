@@ -1,5 +1,11 @@
 2008-11-22  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodemethodmodule.vala:
+
+	Whitespace fixes
+
+2008-11-22  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodemethodmodule.vala:
 	* gobject/valadbusclientmodule.vala:
