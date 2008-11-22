@@ -15,67 +15,37 @@ noinst_PROGRAMS = \
 TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) $(srcdir)/testrunner.sh
 
 TESTS = \
-	hello.vala \
-	basic-types/floats.vala \
-	basic-types/integers.vala \
-	basic-types/strings.vala \
-	basic-types/test-027.vala \
-	namespaces.vala \
-	methods/lambda.vala \
-	control-flow/break.vala \
-	control-flow/expressions-conditional.vala \
-	control-flow/for.vala \
-	control-flow/switch.vala \
-	arrays.vala \
-	enums.vala \
-	structs.vala \
-	delegates.vala \
-	objects/classes.vala \
-	objects/fields.vala \
-	objects/interfaces.vala \
-	objects/methods.vala \
-	objects/properties.vala \
-	objects/signals.vala \
-	objects/test-025.vala \
-	objects/test-026.vala \
-	objects/test-029.vala \
-	objects/test-034.vala \
-	exceptions.vala \
-	pointers.vala \
-	test-023.vala \
+	basic-types/floats.test \
+	basic-types/integers.test \
+	basic-types/strings.test \
+	basic-types/test-027.test \
+	namespaces.test \
+	methods/lambda.test \
+	control-flow/break.test \
+	control-flow/expressions-conditional.test \
+	control-flow/for.test \
+	control-flow/switch.test \
+	arrays.test \
+	enums.test \
+	structs.test \
+	delegates.test \
+	objects/classes.test \
+	objects/fields.test \
+	objects/interfaces.test \
+	objects/methods.test \
+	objects/properties.test \
+	objects/signals.test \
+	objects/test-025.test \
+	objects/test-026.test \
+	objects/test-029.test \
+	objects/test-034.test \
+	exceptions.test \
+	pointers.test \
+	test-023.test \
 	$(NULL)
 
 EXTRA_DIST = \
 	testrunner.sh \
 	$(TESTS) \
-	\
-	hello.exp \
-	basic-types/floats.exp \
-	basic-types/integers.exp \
-	basic-types/strings.exp \
-	basic-types/test-027.exp \
-	namespaces.exp \
-	methods/lambda.exp \
-	control-flow/break.exp \
-	control-flow/expressions-conditional.exp \
-	control-flow/for.exp \
-	control-flow/switch.exp \
-	arrays.exp \
-	enums.exp \
-	structs.exp \
-	delegates.exp \
-	objects/classes.exp \
-	objects/fields.exp \
-	objects/interfaces.exp \
-	objects/methods.exp \
-	objects/properties.exp \
-	objects/signals.exp \
-	objects/test-025.exp \
-	objects/test-026.exp \
-	objects/test-029.exp \
-	objects/test-034.exp \
-	exceptions.exp \
-	pointers.exp \
-	test-023.exp \
 	$(NULL)
 

@@ -25,10 +25,6 @@ topbuilddir=$builddir/..
 srcdir=`dirname $0`
 topsrcdir=$srcdir/..
 vapidir=$topsrcdir/vapi
-exe=$EXEEXT
-
-# make sure we detect failed test cases
-set -o pipefail
 
 export G_DEBUG=fatal_warnings
 
@@ -39,31 +35,94 @@ LDLIBS="-lm"
 
 CODE=0
 
-for testcasesource in "$@"
-do
-	testsrc=${testcasesource/.vala/}
-	if ! $VALAC -C --vapidir "$vapidir" --basedir $topsrcdir -d $topbuilddir $testsrc.vala > $testsrc.err 2>&1
-	then
-		echo "ERROR: Compiling" $testcasesource 
-		cat $testsrc.err
-		CODE=1
-		continue
+function testheader() {
+	if [ "$1" = "Packages:" ]; then
+		shift
+		PACKAGES="$@"
+		for pkg in $PACKAGES; do
+			if [ "$pkg" = "dbus-glib-1" ]; then
+				echo 'eval `dbus-launch --sh-syntax`' >> prepare
+				echo 'trap "kill $DBUS_SESSION_BUS_PID" INT TERM EXIT' >> prepare
+			fi
+		done
 	fi
-	if ! $CC $CFLAGS $testsrc.c $(pkg-config --cflags --libs gobject-2.0) -o $testsrc $LDLIBS > $testsrc.err 2>&1
-	then
-		echo "ERROR: Compiling" $testsrc.c
-		cat $testsrc.err
-		CODE=1
-		continue
+}
+
+function sourceheader() {
+	if [ "$1" = "Program:" ]; then
+		PROGRAM=$2
+		SOURCEFILE=$PROGRAM.vala
 	fi
-	if ./$testsrc 2>&1 | tee $testsrc.err | cmp -s $testsrc.exp
-	then
-		rm $testsrc.c $testsrc.h $testsrc$exe $testsrc.err
-	else
-		echo "ERROR: test failed. This is the difference between" $testsrc.exp "and" $testsrc.err
-		diff -u $testsrc.exp $testsrc.err
+}
+
+function sourceend() {
+	if [ -n "$PROGRAM" ]; then
+		echo "$VALAC $(echo $PACKAGES | xargs -n 1 -r echo --pkg) -C $SOURCEFILE" >> build
+		echo "$CC $CFLAGS $LDLIBS \$(pkg-config --cflags --libs glib-2.0 gobject-2.0 $PACKAGES) -o $PROGRAM$EXEEXT $PROGRAM.c" >> build
+		echo "./$PROGRAM$EXEEXT" > check
+	fi
+}
+
+for testfile in "$@"; do
+	testname=$(basename $testfile)
+	testdir=${testname/.test/.d}
+	rm -rf $testdir
+	mkdir $testdir
+	cd $testdir
+
+	touch prepare build check cleanup
+
+	echo 'set -e' >> prepare
+
+	PART=0
+	INHEADER=1
+	PACKAGES=
+	PROGRAM=
+	cat "$builddir/$testfile" | while true; do
+		if IFS="" read -r line; then
+			if [ $PART -eq 0 ]; then
+				if [ -n "$line" ]; then
+					testheader $line
+				else
+					PART=1
+				fi
+			else
+				if [ $INHEADER -eq 1 ]; then
+					if [ -n "$line" ]; then
+						sourceheader $line
+					else
+						INHEADER=0
+					fi
+				else
+					if echo "$line" | grep -q "^[A-Za-z]\+:"; then
+						sourceend
+						PART=$(($PART + 1))
+						INHEADER=1
+						PROGRAM=
+						sourceheader $line
+					else
+						echo "$line" >> $SOURCEFILE
+					fi
+				fi
+			fi
+		else
+			sourceend
+			break
+		fi
+	done
+
+	cat prepare build check cleanup > script
+	if ! bash script >log 2>&1; then
+		cat log
 		CODE=1
+	fi
+
+	cd $builddir
+
+	if [ $CODE -eq 0 ]; then
+		rm -rf $testdir
 	fi
 done
 
 exit $CODE
+

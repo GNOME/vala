@@ -1,7 +1,0 @@
-property `name' has changed!
-automatic: TheNewAutomatic
-name: TheNewName
-read_only: InitialReadOnly
-automatic: TheNewAutomatic
-Property Test: 1 2 3 4 5 6 7
-Interface Properties Test: 1 2 3

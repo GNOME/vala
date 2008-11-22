@@ -1,5 +1,11 @@
 2008-11-22  Jürg Billeter  <j@bitron.ch>
 
+	* tests/:
+
+	Prepare support for more complex test cases
+
+2008-11-22  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodemethodmodule.vala:
 
 	Whitespace fixes
