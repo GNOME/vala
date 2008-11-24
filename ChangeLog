@@ -1,5 +1,11 @@
 2008-11-24  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Add string.replace method, patch by Ali Sabil
+
+2008-11-24  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/valaccodefunctioncall.vala:
 	* gobject/valaccodearraymodule.vala:
 	* gobject/valaccodebasemodule.vala:

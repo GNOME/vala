@@ -796,6 +796,15 @@ public class string {
 	/* internal method */
 	public string substring (long offset, long len);
 
+	public string replace (string old, string replacement) {
+		try {
+			var regex = new GLib.Regex (GLib.Regex.escape_string (old));
+			return regex.replace_literal (this, -1, 0, replacement);
+		} catch (GLib.RegexError e) {
+			GLib.assert_not_reached ();
+		}
+	}
+
 	public long length {
 		get { return this.len (); }
 	}
