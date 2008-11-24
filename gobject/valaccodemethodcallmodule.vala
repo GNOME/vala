@@ -426,12 +426,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (m != null && m.binding == MemberBinding.INSTANCE && m.returns_modified_pointer) {
 			expr.ccodenode = new CCodeAssignment (instance, ccall_expr);
 		} else {
-			/* cast pointer to actual type if this is a generic method return value */
-			if (m != null && m.return_type.type_parameter != null && expr.value_type.data_type != null) {
-				expr.ccodenode = convert_from_generic_pointer (ccall_expr, expr.value_type);
-			} else {
-				expr.ccodenode = ccall_expr;
-			}
+			expr.ccodenode = ccall_expr;
 		}
 		
 		if (m is ArrayResizeMethod) {

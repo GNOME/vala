@@ -1659,7 +1659,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		/* set freed references to NULL to prevent further use */
 		var ccomma = new CCodeCommaExpression ();
 
-		if (type.data_type == gstringbuilder_type) {
+		if (type.data_type == gstringbuilder_type || type.data_type == garray_type) {
 			ccall.add_argument (new CCodeConstant ("TRUE"));
 		} else if (type is ArrayType) {
 			var array_type = (ArrayType) type;

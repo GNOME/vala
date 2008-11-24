@@ -47,6 +47,10 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 		arguments.add (expr);
 	}
 
+	public void insert_argument (int index, CCodeExpression expr) {
+		arguments.insert (index, expr);
+	}
+
 	/**
 	 * Returns a copy of the list of arguments.
 	 *

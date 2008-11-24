@@ -56,6 +56,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public TypeSymbol initially_unowned_type;
 	public DataType glist_type;
 	public DataType gslist_type;
+	public DataType garray_type;
 	public Class gerror_type;
 	public DataType iterable_type;
 	public Interface iterator_type;
@@ -108,6 +109,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			glist_type = new ObjectType ((Class) glib_ns.scope.lookup ("List"));
 			gslist_type = new ObjectType ((Class) glib_ns.scope.lookup ("SList"));
+			garray_type = new ObjectType ((Class) glib_ns.scope.lookup ("Array"));
 
 			gerror_type = (Class) glib_ns.scope.lookup ("Error");
 		}
@@ -571,7 +573,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return generic_type;
 		}
 		actual_type = actual_type.copy ();
-		actual_type.is_type_argument = true;
+		if (!(derived_instance_type.data_type != null && derived_instance_type.data_type.get_full_name () == "GLib.Array")) {
+			// GArray doesn't use pointer-based generics
+			actual_type.is_type_argument = true;
+		}
 		actual_type.value_owned = actual_type.value_owned && generic_type.value_owned;
 		return actual_type;
 	}

@@ -3009,32 +3009,25 @@ namespace GLib {
 
 	[Compact]
 	public class Array<G> {
+		[CCode (cname = "len")]
+		public uint length;
+
 		public Array (bool zero_terminated, bool clear, uint element_size);
 		[CCode (cname = "g_array_sized_new")]
 		public Array.sized (bool zero_terminated, bool clear, uint element_size, uint reserved_size);
-		[ReturnsModifiedPointer ()]
 		public void append_val (G value);
-		[ReturnsModifiedPointer ()]
 		public void append_vals (constpointer data, uint len);
-		[ReturnsModifiedPointer ()]
 		public void prepend_val (G value);
-		[ReturnsModifiedPointer ()]
 		public void prepend_vals (constpointer data, uint len);
-		[ReturnsModifiedPointer ()]
 		public void insert_val (uint index, G value);
-		[ReturnsModifiedPointer ()]
 		public void insert_vals (uint index, constpointer data, uint len);
-		[ReturnsModifiedPointer ()]
 		public void remove_index (uint index);
-		[ReturnsModifiedPointer ()]
 		public void remove_index_fast (uint index);
-		[ReturnsModifiedPointer ()]
 		public void remove_range (uint index, uint length);
 		public void sort (CompareFunc compare_func);
 		public void sort_with_data (CompareDataFunc compare_func, void* user_data);
-		[ReturnsModifiedPointer ()]
+		public G index (uint index);
 		public void set_size (uint length);
-		public string free (bool free_segment);
 	}
 	
 	/* GTree */

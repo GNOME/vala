@@ -476,4 +476,25 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		return dup_func;
 	}
+
+	public override void visit_method_call (MethodCall expr) {
+		base.visit_method_call (expr);
+
+		var ccall = expr.ccodenode as CCodeFunctionCall;
+		if (ccall == null) {
+			return;
+		}
+
+		var cid = ccall.call as CCodeIdentifier;
+		if (cid == null || cid.name != "g_array_index") {
+			return;
+		}
+
+		// insert type argument in calls to g_array_index macro
+
+		var ma = (MemberAccess) expr.call;
+		var element_type = ma.inner.value_type.get_type_arguments ().get (0);
+
+		ccall.insert_argument (1, new CCodeIdentifier (element_type.get_cname ()));
+	}
 }
