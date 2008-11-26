@@ -387,8 +387,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		if (dbus_glib_h_needed_in_header) {
+			header_begin.append (new CCodeIncludeDirective ("dbus/dbus.h"));
 			header_begin.append (new CCodeIncludeDirective ("dbus/dbus-glib.h"));
 		} else if (dbus_glib_h_needed) {
+			source_include_directives.append (new CCodeIncludeDirective ("dbus/dbus.h"));
 			source_include_directives.append (new CCodeIncludeDirective ("dbus/dbus-glib.h"));
 		}
 
