@@ -320,8 +320,8 @@ namespace Gst {
 		public virtual Gst.StateChangeReturn change_state (Gst.StateChange transition);
 		public Gst.StateChangeReturn continue_state (Gst.StateChangeReturn ret);
 		public void create_all_pads ();
-		public void found_tags (Gst.TagList list);
-		public void found_tags_for_pad (Gst.Pad pad, Gst.TagList list);
+		public void found_tags (Gst.TagList# list);
+		public void found_tags_for_pad (Gst.Pad pad, Gst.TagList# list);
 		public Gst.ClockTime get_base_time ();
 		public Gst.Bus get_bus ();
 		public weak Gst.Clock get_clock ();
