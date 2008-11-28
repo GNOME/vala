@@ -321,7 +321,6 @@ namespace Pango {
 		public weak string get_sample_string ();
 		public bool includes_script (Pango.Script script);
 		public bool matches (string range_list);
-		public Language ();
 		public weak string to_string ();
 	}
 	[CCode (cheader_filename = "pango/pango.h")]

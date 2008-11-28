@@ -1,5 +1,18 @@
 2008-11-28  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala:
+
+	Support ssize_t and size_t
+
+	* vapi/gdk-pixbuf-2.0.vapi:
+	* vapi/gio-2.0.vapi:
+	* vapi/gtk+-2.0.vapi:
+	* vapi/pango.vapi:
+
+	Regenerated
+
+2008-11-28  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagirparser.vala:
 
 	Support construct properties

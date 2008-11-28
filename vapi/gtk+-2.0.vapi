@@ -412,7 +412,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Builder : GLib.Object {
 		public uint add_from_file (string filename) throws GLib.Error;
-		public uint add_from_string (string buffer, ulong length) throws GLib.Error;
+		public uint add_from_string (string buffer, size_t length) throws GLib.Error;
 		public void connect_signals (void* user_data);
 		public void connect_signals_full (Gtk.BuilderConnectFunc func);
 		public static GLib.Quark error_quark ();
@@ -878,7 +878,7 @@ namespace Gtk {
 		public void store ();
 		public weak Gtk.SelectionData wait_for_contents (Gdk.Atom target);
 		public weak Gdk.Pixbuf wait_for_image ();
-		public uchar wait_for_rich_text (Gtk.TextBuffer buffer, out Gdk.Atom format, ulong length);
+		public uchar wait_for_rich_text (Gtk.TextBuffer buffer, out Gdk.Atom format, size_t length);
 		public bool wait_for_targets (Gdk.Atom[] targets);
 		public weak string wait_for_text ();
 		public bool wait_is_image_available ();
@@ -2980,10 +2980,10 @@ namespace Gtk {
 		public ulong get_added ();
 		public int get_age ();
 		public bool get_application_info (string app_name, string app_exec, uint count, ulong time_);
-		public weak string get_applications (ulong length);
+		public weak string get_applications (size_t length);
 		public weak string get_description ();
 		public weak string get_display_name ();
-		public weak string get_groups (ulong length);
+		public weak string get_groups (size_t length);
 		public weak Gdk.Pixbuf get_icon (int size);
 		public weak string get_mime_type ();
 		public ulong get_modified ();
@@ -3747,7 +3747,7 @@ namespace Gtk {
 		public void delete_mark (Gtk.TextMark mark);
 		public void delete_mark_by_name (string name);
 		public bool delete_selection (bool interactive, bool default_editable);
-		public bool deserialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter iter, uchar data, ulong length) throws GLib.Error;
+		public bool deserialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter iter, uchar data, size_t length) throws GLib.Error;
 		public bool deserialize_get_can_create_tags (Gdk.Atom format);
 		public void deserialize_set_can_create_tags (Gdk.Atom format, bool can_create_tags);
 		public void get_bounds (out Gtk.TextIter start, out Gtk.TextIter end);
@@ -3796,7 +3796,7 @@ namespace Gtk {
 		public void remove_selection_clipboard (Gtk.Clipboard clipboard);
 		public void remove_tag_by_name (string name, Gtk.TextIter start, Gtk.TextIter end);
 		public void select_range (Gtk.TextIter ins, Gtk.TextIter bound);
-		public uchar serialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter start, Gtk.TextIter end, ulong length);
+		public uchar serialize (Gtk.TextBuffer content_buffer, Gdk.Atom format, Gtk.TextIter start, Gtk.TextIter end, size_t length);
 		public void set_modified (bool setting);
 		public void set_text (string text, int len);
 		public void unregister_deserialize_format (Gdk.Atom format);
@@ -4712,7 +4712,7 @@ namespace Gtk {
 	public class UIManager : GLib.Object, Gtk.Buildable {
 		public void add_ui (uint merge_id, string path, string name, string action, Gtk.UIManagerItemType type, bool top);
 		public uint add_ui_from_file (string filename) throws GLib.Error;
-		public uint add_ui_from_string (string buffer, long length) throws GLib.Error;
+		public uint add_ui_from_string (string buffer, ssize_t length) throws GLib.Error;
 		public void ensure_update ();
 		public weak Gtk.AccelGroup get_accel_group ();
 		public virtual weak Gtk.Action get_action (string path);
@@ -5403,7 +5403,7 @@ namespace Gtk {
 		public bool get_show_private ();
 		public bool get_show_tips ();
 		public Gtk.RecentSortType get_sort_type ();
-		public weak string get_uris (ulong length);
+		public weak string get_uris (size_t length);
 		public abstract weak GLib.SList list_filters ();
 		public abstract void remove_filter (Gtk.RecentFilter filter);
 		public abstract void select_all ();
@@ -6645,7 +6645,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void ClipboardReceivedFunc (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate void ClipboardRichTextReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom format, uchar text, ulong length);
+	public delegate void ClipboardRichTextReceivedFunc (Gtk.Clipboard clipboard, Gdk.Atom format, uchar text, size_t length);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void ClipboardTargetsReceivedFunc (Gtk.Clipboard clipboard, out Gdk.Atom atoms, int n_atoms);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6693,9 +6693,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate void SignalFunc ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, uchar data, ulong length, bool create_tags, void* user_data, GLib.Error error);
+	public static delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, uchar data, size_t length, bool create_tags, void* user_data, GLib.Error error);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate uchar TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter start, Gtk.TextIter end, ulong length);
+	public delegate uchar TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter start, Gtk.TextIter end, size_t length);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool TextCharPredicate (unichar ch);
 	[CCode (cheader_filename = "gtk/gtk.h")]

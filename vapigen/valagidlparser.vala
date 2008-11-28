@@ -1068,9 +1068,9 @@ public class Vala.GIdlParser : CodeVisitor {
 		} else if (type_node.tag == TypeTag.ULONG) {
 			type.unresolved_symbol = new UnresolvedSymbol (null, "ulong");
 		} else if (type_node.tag == TypeTag.SSIZE) {
-			type.unresolved_symbol = new UnresolvedSymbol (null, "long");
+			type.unresolved_symbol = new UnresolvedSymbol (null, "ssize_t");
 		} else if (type_node.tag == TypeTag.SIZE) {
-			type.unresolved_symbol = new UnresolvedSymbol (null, "ulong");
+			type.unresolved_symbol = new UnresolvedSymbol (null, "size_t");
 		} else if (type_node.tag == TypeTag.FLOAT) {
 			type.unresolved_symbol = new UnresolvedSymbol (null, "float");
 		} else if (type_node.tag == TypeTag.DOUBLE) {

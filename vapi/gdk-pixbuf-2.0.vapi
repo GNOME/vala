@@ -50,8 +50,8 @@ namespace Gdk {
 		public weak Gdk.Pixbuf rotate_simple (Gdk.PixbufRotation angle);
 		public void saturate_and_pixelate (Gdk.Pixbuf dest, float saturation, bool pixelate);
 		public bool save (string filename, string type, ...) throws GLib.Error;
-		public bool save_to_buffer (string buffer, ulong buffer_size, string type, ...) throws GLib.Error;
-		public bool save_to_bufferv (string buffer, ulong buffer_size, string type, string[] option_keys, string[] option_values) throws GLib.Error;
+		public bool save_to_buffer (string buffer, size_t buffer_size, string type, ...) throws GLib.Error;
+		public bool save_to_bufferv (string buffer, size_t buffer_size, string type, string[] option_keys, string[] option_values) throws GLib.Error;
 		public bool save_to_callback (Gdk.PixbufSaveFunc save_func, string type) throws GLib.Error;
 		public bool save_to_callbackv (Gdk.PixbufSaveFunc save_func, string type, string[] option_keys, string[] option_values) throws GLib.Error;
 		public bool save_to_stream (GLib.OutputStream stream, string type, GLib.Cancellable cancellable) throws GLib.Error;
@@ -211,7 +211,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public delegate void PixbufDestroyNotify (uchar[] pixels);
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
-	public delegate bool PixbufSaveFunc (string buf, ulong count, GLib.Error error);
+	public delegate bool PixbufSaveFunc (string buf, size_t count, GLib.Error error);
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public const int PIXBUF_FEATURES_H;
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
