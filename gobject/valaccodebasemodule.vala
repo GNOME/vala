@@ -854,7 +854,14 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			if (requires_destroy (f.field_type) && instance_finalize_fragment != null) {
 				var this_access = new MemberAccess.simple ("this");
 				this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
-				this_access.ccodenode = new CCodeIdentifier ("self");
+
+				var st = f.parent_symbol as Struct;
+				if (st != null && !st.is_simple_type ()) {
+					this_access.ccodenode = new CCodeIdentifier ("(*self)");
+				} else {
+					this_access.ccodenode = new CCodeIdentifier ("self");
+				}
+
 				var ma = new MemberAccess (this_access, f.name);
 				ma.symbol_reference = f;
 				instance_finalize_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.field_type, ma)));

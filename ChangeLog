@@ -1,5 +1,11 @@
 2008-11-28  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+
+	Fix generated code in struct destroy function for array fields
+
+2008-11-28  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala:
 
 	Support ssize_t and size_t
