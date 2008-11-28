@@ -1,5 +1,19 @@
 2008-11-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadatatype.vala:
+	* vala/valaexpression.vala:
+	* vala/valaintegertype.vala:
+	* vala/valamemberaccess.vala:
+	* vala/valamethodcall.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valavaluetype.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodecontrolflowmodule.vala:
+
+	Improve handling of generic values, fixes bug 562460
+
+2008-11-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valabinaryexpression.vala:
 	* vala/valaelementaccess.vala:
 	* vala/valaforeachstatement.vala:

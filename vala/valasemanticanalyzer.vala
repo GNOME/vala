@@ -569,10 +569,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return generic_type;
 		}
 		actual_type = actual_type.copy ();
-		if (!(derived_instance_type.data_type != null && derived_instance_type.data_type.get_full_name () == "GLib.Array")) {
-			// GArray doesn't use pointer-based generics
-			actual_type.is_type_argument = true;
-		}
 		actual_type.value_owned = actual_type.value_owned && generic_type.value_owned;
 		return actual_type;
 	}

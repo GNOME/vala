@@ -40,11 +40,6 @@ public abstract class Vala.DataType : CodeNode {
 	public bool nullable { get; set; }
 
 	/**
-	 * Specifies that this type is a generic type argument.
-	 */
-	public bool is_type_argument { get; set; }
-
-	/**
 	 * The referred data type.
 	 */
 	public weak TypeSymbol data_type { get; set; }
@@ -480,5 +475,27 @@ public abstract class Vala.DataType : CodeNode {
 			return true;
 		}
 		return false;
+	}
+
+	public DataType get_actual_type (DataType? derived_instance_type, CodeNode node_reference) {
+		if (derived_instance_type == null) {
+			return this;
+		}
+
+		DataType result = this;
+
+		if (result is GenericType) {
+			result = SemanticAnalyzer.get_actual_type (derived_instance_type, (GenericType) result, node_reference);
+		}
+
+		if (result.type_argument_list != null) {
+			// recursely get actual types for type arguments
+			result = result.copy ();
+			for (int i = 0; i < result.type_argument_list.size; i++) {
+				result.type_argument_list[i] = result.type_argument_list[i].get_actual_type (derived_instance_type, node_reference);
+			}
+		}
+
+		return result;
 	}
 }

@@ -429,7 +429,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			var element_data_type = collection_type.get_type_arguments ().get (0).copy ();
 			element_data_type.value_owned = false;
-			element_data_type.is_type_argument = true;
+			element_expr = convert_from_generic_pointer (element_expr, element_data_type);
 			element_expr = transform_expression (element_expr, element_data_type, stmt.type_reference);
 
 			var cfrag = new CCodeFragment ();
@@ -472,6 +472,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			var element_type = SemanticAnalyzer.get_actual_type (stmt.collection.value_type, (GenericType) get_method.return_type, stmt);
 
+			element_expr = convert_from_generic_pointer (element_expr, element_type);
 			element_expr = transform_expression (element_expr, element_type, stmt.type_reference);
 
 			var cfrag = new CCodeFragment ();

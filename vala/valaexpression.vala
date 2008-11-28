@@ -33,14 +33,18 @@ public abstract class Vala.Expression : CodeNode {
 	 * The semantic analyzer computes this value.
 	 */
 	public DataType value_type { get; set; }
-	
+
+	public DataType? formal_value_type { get; set; }
+
 	/*
 	 * The static type this expression is expected to have.
 	 *
 	 * The semantic analyzer computes this value, lambda expressions use it.
 	 */
 	public DataType target_type { get; set; }
-	
+
+	public DataType? formal_target_type { get; set; }
+
 	/**
 	 * The symbol this expression refers to.
 	 */

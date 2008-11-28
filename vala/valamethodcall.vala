@@ -134,12 +134,19 @@ public class Vala.MethodCall : Expression {
 			return false;
 		}
 
+		// type of target object
+		DataType target_object_type = null;
+
 		if (call is MemberAccess) {
 			var ma = (MemberAccess) call;
 			if (ma.prototype_access) {
 				error = true;
 				Report.error (source_reference, "Access to instance member `%s' denied".printf (call.symbol_reference.get_full_name ()));
 				return false;
+			}
+
+			if (ma.inner != null) {
+				target_object_type = ma.inner.value_type;
 			}
 		}
 
@@ -220,16 +227,8 @@ public class Vala.MethodCall : Expression {
 				Expression arg = arg_it.get ();
 
 				/* store expected type for callback parameters */
-				arg.target_type = param.parameter_type;
-
-				// resolve generic type parameters
-				var ma = call as MemberAccess;
-				if (arg.target_type is GenericType) {
-					if (ma != null && ma.inner != null) {
-						arg.target_type = analyzer.get_actual_type (ma.inner.value_type, (GenericType) arg.target_type, arg);
-						assert (arg.target_type != null);
-					}
-				}
+				arg.formal_target_type = param.parameter_type;
+				arg.target_type = arg.formal_target_type.get_actual_type (target_object_type, this);
 
 				last_arg = arg;
 			}
@@ -373,9 +372,7 @@ public class Vala.MethodCall : Expression {
 			arg.check (analyzer);
 		}
 
-		DataType ret_type;
-
-		ret_type = mtype.get_return_type ();
+		DataType ret_type = mtype.get_return_type ();
 		params = mtype.get_parameters ();
 
 		if (ret_type is VoidType) {
@@ -391,29 +388,8 @@ public class Vala.MethodCall : Expression {
 			}
 		}
 
-		// resolve generic return values
-		var ma = call as MemberAccess;
-		if (ret_type is GenericType) {
-			if (ma != null && ma.inner != null) {
-				ret_type = analyzer.get_actual_type (ma.inner.value_type, (GenericType) ret_type, this);
-				if (ret_type == null) {
-					return false;
-				}
-			}
-		}
-		Gee.List<DataType> resolved_type_args = new ArrayList<DataType> ();
-		foreach (DataType type_arg in ret_type.get_type_arguments ()) {
-			if (type_arg is GenericType && ma != null && ma.inner != null) {
-				resolved_type_args.add (analyzer.get_actual_type (ma.inner.value_type, (GenericType) type_arg, this));
-			} else {
-				resolved_type_args.add (type_arg);
-			}
-		}
-		ret_type = ret_type.copy ();
-		ret_type.remove_all_type_arguments ();
-		foreach (DataType resolved_type_arg in resolved_type_args) {
-			ret_type.add_type_argument (resolved_type_arg);
-		}
+		formal_value_type = ret_type;
+		value_type = formal_value_type.get_actual_type (target_object_type, this);
 
 		if (mtype is MethodType) {
 			var m = ((MethodType) mtype).method_symbol;
@@ -425,8 +401,6 @@ public class Vala.MethodCall : Expression {
 				add_error_type (call_error_type);
 			}
 		}
-
-		value_type = ret_type;
 
 		analyzer.check_arguments (this, mtype, params, get_argument_list ());
 

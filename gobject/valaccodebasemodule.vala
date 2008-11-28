@@ -2092,8 +2092,22 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 	public override void visit_expression (Expression expr) {
 		if (expr.ccodenode != null && !expr.lvalue) {
+			if (expr.formal_value_type is GenericType && !(expr.value_type is GenericType)) {
+				if (expr.formal_value_type.type_parameter.parent_symbol != garray_type) {
+					// GArray doesn't use pointer-based generics
+					expr.ccodenode = convert_from_generic_pointer ((CCodeExpression) expr.ccodenode, expr.value_type);
+				}
+			}
+
 			// memory management, implicit casts, and boxing/unboxing
 			expr.ccodenode = transform_expression ((CCodeExpression) expr.ccodenode, expr.value_type, expr.target_type, expr);
+
+			if (expr.formal_target_type is GenericType && !(expr.target_type is GenericType)) {
+				if (expr.formal_target_type.type_parameter.parent_symbol != garray_type) {
+					// GArray doesn't use pointer-based generics
+					expr.ccodenode = convert_to_generic_pointer ((CCodeExpression) expr.ccodenode, expr.target_type);
+				}
+			}
 		}
 	}
 
@@ -3003,12 +3017,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cexpr);
 		} else {
 			cexpr = get_implicit_cast_expression (cexpr, expression_type, target_type, expr);
-		}
-
-		if (expression_type.is_type_argument) {
-			cexpr = convert_from_generic_pointer (cexpr, target_type);
-		} else if (target_type.is_type_argument) {
-			cexpr = convert_to_generic_pointer (cexpr, expression_type);
 		}
 
 		if (target_type.value_owned && (!expression_type.value_owned || boxing || unboxing)) {

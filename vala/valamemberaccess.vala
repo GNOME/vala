@@ -487,16 +487,11 @@ public class Vala.MemberAccess : Expression {
 				inner.symbol_reference = this_parameter;
 			}
 
-			value_type = analyzer.get_value_type_for_symbol (symbol_reference, lvalue);
-
-			// resolve generic return values
-			if (value_type is GenericType) {
-				if (inner != null) {
-					value_type = analyzer.get_actual_type (inner.value_type, (GenericType) value_type, this);
-					if (value_type == null) {
-						return false;
-					}
-				}
+			formal_value_type = analyzer.get_value_type_for_symbol (symbol_reference, lvalue);
+			if (inner != null && formal_value_type != null) {
+				value_type = formal_value_type.get_actual_type (inner.value_type, this);
+			} else {
+				value_type = formal_value_type;
 			}
 
 			if (symbol_reference is Method) {
