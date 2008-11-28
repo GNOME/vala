@@ -796,6 +796,10 @@ public class string {
 	/* internal method */
 	public string substring (long offset, long len);
 
+	public bool contains (string needle) {
+		return this.str (needle) != null;
+	}
+
 	public string replace (string old, string replacement) {
 		try {
 			var regex = new GLib.Regex (GLib.Regex.escape_string (old));
