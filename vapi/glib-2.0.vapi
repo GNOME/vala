@@ -1756,6 +1756,8 @@ namespace GLib {
 		public static weak string? get_variable (string variable);
 		[CCode (cname = "g_setenv")]
 		public static bool set_variable (string variable, string value, bool overwrite);
+		[CCode (cname = "g_unsetenv")]
+		public static void unset_variable (string variable);
 		[CCode (cname = "g_listenv")]
 		[NoArrayLength]
 		public static string[] list_variables ();
