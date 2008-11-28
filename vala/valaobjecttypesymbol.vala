@@ -1,5 +1,6 @@
 /* valaobjecttypesymbol.vala
  *
+ * Copyright (C) 2008  Jürg Billeter
  * Copyright (C) 2008  Philip Van Hoof
  *
  * This library is free software; you can redistribute it and/or
@@ -17,10 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Author:
+ * 	Jürg Billeter <j@bitron.ch>
  * 	Philip Van Hoof <pvanhoof@gnome.org>
  */
 
-using GLib;
 using Gee;
 
 /**
@@ -29,11 +30,44 @@ using Gee;
  * Vala API file.
  */
 public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
+	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
+
+	public ObjectTypeSymbol (string name, SourceReference? source_reference = null) {
+		base (name, source_reference);
+	}
+
 	public abstract Gee.List<Method> get_methods ();
 	public abstract Gee.List<Signal> get_signals ();
 	public abstract Gee.List<Property> get_properties ();
 
-	public ObjectTypeSymbol (string name, SourceReference? source_reference = null) {
-		base (name, source_reference);
+	/**
+	 * Appends the specified parameter to the list of type parameters.
+	 *
+	 * @param p a type parameter
+	 */
+	public void add_type_parameter (TypeParameter p) {
+		type_parameters.add (p);
+		p.type = this;
+		scope.add (p.name, p);
+	}
+
+	/**
+	 * Returns a copy of the type parameter list.
+	 *
+	 * @return list of type parameters
+	 */
+	public Gee.List<TypeParameter> get_type_parameters () {
+		return new ReadOnlyList<TypeParameter> (type_parameters);
+	}
+
+	public override int get_type_parameter_index (string name) {
+		int i = 0;
+		foreach (TypeParameter parameter in type_parameters) {
+			if (parameter.name == name) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
 	}
 }

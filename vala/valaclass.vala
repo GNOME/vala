@@ -99,8 +99,6 @@ public class Vala.Class : ObjectTypeSymbol {
 	private bool _is_compact;
 	private bool _is_immutable;
 
-	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
-
 	private Gee.List<DataType> base_types = new ArrayList<DataType> ();
 
 	private Gee.List<Constant> constants = new ArrayList<Constant> ();
@@ -228,26 +226,6 @@ public class Vala.Class : ObjectTypeSymbol {
 	 */
 	public Gee.List<DataType> get_base_types () {
 		return new ReadOnlyList<DataType> (base_types);
-	}
-
-	/**
-	 * Appends the specified parameter to the list of type parameters.
-	 *
-	 * @param p a type parameter
-	 */
-	public void add_type_parameter (TypeParameter p) {
-		type_parameters.add (p);
-		p.type = this;
-		scope.add (p.name, p);
-	}
-
-	/**
-	 * Returns a copy of the type parameter list.
-	 *
-	 * @return list of type parameters
-	 */
-	public Gee.List<TypeParameter> get_type_parameters () {
-		return new ReadOnlyList<TypeParameter> (type_parameters);
 	}
 
 	/**
@@ -433,7 +411,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			type.accept (visitor);
 		}
 
-		foreach (TypeParameter p in type_parameters) {
+		foreach (TypeParameter p in get_type_parameters ()) {
 			p.accept (visitor);
 		}
 
@@ -795,17 +773,6 @@ public class Vala.Class : ObjectTypeSymbol {
 		return false;
 	}
 
-	public override int get_type_parameter_index (string name) {
-		int i = 0;
-		foreach (TypeParameter parameter in type_parameters) {
-			if (parameter.name == name) {
-				return i;
-			}
-			i++;
-		}
-		return -1;
-	}
-
 	public override void replace_type (DataType old_type, DataType new_type) {
 		for (int i = 0; i < base_types.size; i++) {
 			if (base_types[i] == old_type) {
@@ -888,7 +855,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			type.check (analyzer);
 		}
 
-		foreach (TypeParameter p in type_parameters) {
+		foreach (TypeParameter p in get_type_parameters ()) {
 			p.check (analyzer);
 		}
 

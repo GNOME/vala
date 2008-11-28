@@ -179,8 +179,6 @@ public abstract class Vala.DataType : CodeNode {
 			} else {
 				s = data_type.get_full_name ();
 			}
-		} else if (type_parameter != null) {
-			s = type_parameter.name;
 		} else {
 			s = "null";
 		}

@@ -1,5 +1,17 @@
 2008-11-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* vala/valadatatype.vala:
+	* vala/valagenerictype.vala:
+	* vala/valainterface.vala:
+	* vala/valamethod.vala:
+	* vala/valaobjecttypesymbol.vala:
+	* vala/valasymbolresolver.vala:
+
+	Fix method checking with generic base types, fixes bug 511286
+
+2008-11-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadatatype.vala:
 	* vala/valaexpression.vala:
 	* vala/valaintegertype.vala:

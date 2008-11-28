@@ -414,7 +414,18 @@ public class Vala.Method : Member {
 	 * @return true if the specified method is compatible to this method
 	 */
 	public bool compatible (Method base_method, out string? invalid_match) {
-		if (!return_type.equals (base_method.return_type)) {
+		ObjectType object_type = null;
+		if (parent_symbol is ObjectTypeSymbol) {
+			object_type = new ObjectType ((ObjectTypeSymbol) parent_symbol);
+			foreach (TypeParameter type_parameter in object_type.type_symbol.get_type_parameters ()) {
+				var type_arg = new GenericType (type_parameter);
+				type_arg.value_owned = true;
+				object_type.add_type_argument (type_arg);
+			}
+		}
+
+		var actual_base_type = base_method.return_type.get_actual_type (object_type, this);
+		if (!return_type.equals (actual_base_type)) {
 			invalid_match = "incompatible return type";
 			return false;
 		}
@@ -428,7 +439,8 @@ public class Vala.Method : Member {
 				return false;
 			}
 			
-			if (!base_param.parameter_type.equals (method_params_it.get ().parameter_type)) {
+			actual_base_type = base_param.parameter_type.get_actual_type (object_type, this);
+			if (!actual_base_type.equals (method_params_it.get ().parameter_type)) {
 				invalid_match = "incompatible type of parameter %d".printf (param_index);
 				return false;
 			}

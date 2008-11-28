@@ -28,6 +28,8 @@ using GLib;
 public class Vala.GenericType : DataType {
 	public GenericType (TypeParameter type_parameter) {
 		this.type_parameter = type_parameter;
+		// type parameters are always considered nullable
+		this.nullable = true;
 	}
 
 	public override DataType copy () {
@@ -50,5 +52,9 @@ public class Vala.GenericType : DataType {
 
 	public override string? get_type_id () {
 		return "G_TYPE_POINTER";
+	}
+
+	public override string to_qualified_string (Scope? scope = null) {
+		return type_parameter.name;
 	}
 }
