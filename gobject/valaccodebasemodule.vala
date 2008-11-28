@@ -113,8 +113,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public DataType gquark_type;
 	public Struct mutex_type;
 	public TypeSymbol type_module_type;
-	public Interface iterable_type;
-	public Interface iterator_type;
 	public Interface collection_type;
 	public Interface list_type;
 	public Interface map_type;
@@ -553,8 +551,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		var gee_ns = root_symbol.scope.lookup ("Gee");
 		if (gee_ns != null) {
-			iterable_type = (Interface) gee_ns.scope.lookup ("Iterable");
-			iterator_type = (Interface) gee_ns.scope.lookup ("Iterator");
 			collection_type = (Interface) gee_ns.scope.lookup ("Collection");
 			list_type = (Interface) gee_ns.scope.lookup ("List");
 			map_type = (Interface) gee_ns.scope.lookup ("Map");

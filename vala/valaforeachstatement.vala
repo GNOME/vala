@@ -71,6 +71,8 @@ public class Vala.ForeachStatement : Block {
 		}
 	}
 
+	public bool use_iterator { get; private set; }
+
 	/**
 	 * Specifies the declarator for the generated element variable.
 	 */
@@ -109,10 +111,20 @@ public class Vala.ForeachStatement : Block {
 	}
 	
 	public override void accept (CodeVisitor visitor) {
+		if (use_iterator) {
+			base.accept (visitor);
+			return;
+		}
+
 		visitor.visit_foreach_statement (this);
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
+		if (use_iterator) {
+			base.accept_children (visitor);
+			return;
+		}
+
 		collection.accept (visitor);
 		visitor.visit_end_full_expression (collection);
 
@@ -156,65 +168,116 @@ public class Vala.ForeachStatement : Block {
 		var collection_type = collection.value_type.copy ();
 		collection.target_type = collection_type.copy ();
 		
-		DataType element_data_type = null;
-		bool element_owned = false;
-
 		if (collection_type.is_array ()) {
 			var array_type = (ArrayType) collection_type;
-			element_data_type = array_type.element_type;
+
+			return check_without_iterator (analyzer, collection_type, array_type.element_type);
 		} else if (collection_type.compatible (analyzer.glist_type) || collection_type.compatible (analyzer.gslist_type)) {
-			if (collection_type.get_type_arguments ().size > 0) {
-				element_data_type = (DataType) collection_type.get_type_arguments ().get (0);
-			}
-		} else if (analyzer.iterable_type != null && collection_type.compatible (analyzer.iterable_type)) {
-			element_owned = true;
-
-			if (analyzer.list_type == null || !collection_type.compatible (new ObjectType (analyzer.list_type))) {
-				// don't use iterator objects for lists for performance reasons
-				var foreach_iterator_type = new ObjectType (analyzer.iterator_type);
-				foreach_iterator_type.value_owned = true;
-				foreach_iterator_type.add_type_argument (type_reference);
-				iterator_variable = new LocalVariable (foreach_iterator_type, "%s_it".printf (variable_name));
-
-				add_local_variable (iterator_variable);
-				iterator_variable.active = true;
+			if (collection_type.get_type_arguments ().size != 1) {
+				error = true;
+				Report.error (collection.source_reference, "missing type argument for collection");
+				return false;
 			}
 
-			var it_method = (Method) analyzer.iterable_type.data_type.scope.lookup ("iterator");
-			if (it_method.return_type.get_type_arguments ().size > 0) {
-				var type_arg = it_method.return_type.get_type_arguments ().get (0);
-				if (type_arg is GenericType) {
-					element_data_type = SemanticAnalyzer.get_actual_type (collection_type, (GenericType) type_arg, this);
-				} else {
-					element_data_type = type_arg;
-				}
-			}
+			return check_without_iterator (analyzer, collection_type, collection_type.get_type_arguments ().get (0));
 		} else {
+			return check_with_iterator (analyzer, collection_type);
+		}
+	}
+
+	bool check_with_iterator (SemanticAnalyzer analyzer, DataType collection_type) {
+		use_iterator = true;
+
+		var iterator_method = collection_type.get_member ("iterator") as Method;
+		if (iterator_method == null) {
+			Report.error (collection.source_reference, "`%s' does not have an `iterator' method".printf (collection_type.to_string ()));
 			error = true;
-			Report.error (source_reference, "Gee.List not iterable");
 			return false;
 		}
-
-		if (element_data_type == null) {
+		if (iterator_method.get_parameters ().size != 0) {
+			Report.error (collection.source_reference, "`%s' must not have any parameters".printf (iterator_method.get_full_name ()));
 			error = true;
-			Report.error (collection.source_reference, "missing type argument for collection");
+			return false;
+		}
+		var iterator_type = iterator_method.return_type.get_actual_type (collection_type, this);
+		if (iterator_type is VoidType) {
+			Report.error (collection.source_reference, "`%s' must return an iterator".printf (iterator_method.get_full_name ()));
+			error = true;
+			return false;
+		}
+		var next_method = iterator_type.get_member ("next") as Method;
+		if (next_method == null) {
+			Report.error (collection.source_reference, "`%s' does not have a `next' method".printf (iterator_type.to_string ()));
+			error = true;
+			return false;
+		}
+		if (next_method.get_parameters ().size != 0) {
+			Report.error (collection.source_reference, "`%s' must not have any parameters".printf (next_method.get_full_name ()));
+			error = true;
+			return false;
+		}
+		if (!next_method.return_type.compatible (analyzer.bool_type)) {
+			Report.error (collection.source_reference, "`%s' must return a boolean value".printf (next_method.get_full_name ()));
+			error = true;
+			return false;
+		}
+		var get_method = iterator_type.get_member ("get") as Method;
+		if (get_method == null) {
+			Report.error (collection.source_reference, "`%s' does not have a `get' method".printf (iterator_type.to_string ()));
+			error = true;
+			return false;
+		}
+		if (get_method.get_parameters ().size != 0) {
+			Report.error (collection.source_reference, "`%s' must not have any parameters".printf (get_method.get_full_name ()));
+			error = true;
+			return false;
+		}
+		var element_type = get_method.return_type.get_actual_type (iterator_type, this);
+		if (element_type is VoidType) {
+			Report.error (collection.source_reference, "`%s' must return an element".printf (get_method.get_full_name ()));
+			error = true;
 			return false;
 		}
 
 		// analyze element type
 		if (type_reference == null) {
 			// var type
-			type_reference = element_data_type.copy ();
-		} else if (!element_data_type.compatible (type_reference)) {
+			type_reference = element_type.copy ();
+		} else if (!element_type.compatible (type_reference)) {
 			error = true;
-			Report.error (source_reference, "Foreach: Cannot convert from `%s' to `%s'".printf (element_data_type.to_string (), type_reference.to_string ()));
+			Report.error (source_reference, "Foreach: Cannot convert from `%s' to `%s'".printf (element_type.to_string (), type_reference.to_string ()));
 			return false;
-		} else if (element_data_type.is_disposable () && element_owned && !type_reference.value_owned) {
+		} else if (element_type.is_disposable () && element_type.value_owned && !type_reference.value_owned) {
 			error = true;
 			Report.error (source_reference, "Foreach: Invalid assignment from owned expression to unowned variable");
 			return false;
 		}
-		
+
+		var iterator_call = new MethodCall (new MemberAccess (collection, "iterator"));
+		add_statement (new DeclarationStatement (new LocalVariable (iterator_type, "%s_it".printf (variable_name), iterator_call, source_reference), source_reference));
+
+		var next_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("%s_it".printf (variable_name)), "next"));
+		var loop = new WhileStatement (next_call, body);
+		add_statement (loop);
+
+		var get_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("%s_it".printf (variable_name)), "get"));
+		body.insert_statement (0, new DeclarationStatement (new LocalVariable (type_reference, variable_name, get_call, source_reference), source_reference));
+
+		checked = false;
+		return base.check (analyzer);
+	}
+
+	bool check_without_iterator (SemanticAnalyzer analyzer, DataType collection_type, DataType element_type) {
+		// analyze element type
+		if (type_reference == null) {
+			// var type
+			type_reference = element_type.copy ();
+		} else if (!element_type.compatible (type_reference)) {
+			error = true;
+			Report.error (source_reference, "Foreach: Cannot convert from `%s' to `%s'".printf (element_type.to_string (), type_reference.to_string ()));
+			return false;
+		}
+
 		analyzer.current_source_file.add_type_dependency (type_reference, SourceFileDependencyType.SOURCE);
 
 		element_variable = new LocalVariable (type_reference, variable_name);
@@ -241,7 +304,6 @@ public class Vala.ForeachStatement : Block {
 
 		add_local_variable (collection_variable);
 		collection_variable.active = true;
-
 
 		add_error_types (collection.get_error_types ());
 		add_error_types (body.get_error_types ());

@@ -53,7 +53,11 @@ public class Vala.Block : Symbol, Statement {
 	public void add_statement (Statement stmt) {
 		statement_list.add (stmt);
 	}
-	
+
+	public void insert_statement (int index, Statement stmt) {
+		statement_list.insert (index, stmt);
+	}
+
 	/**
 	 * Returns a copy of the list of statements.
 	 *
