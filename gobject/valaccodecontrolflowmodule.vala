@@ -470,7 +470,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			get_ccall.add_argument (new CCodeIdentifier (it_name));
 			CCodeExpression element_expr = get_ccall;
 
-			var element_type = SemanticAnalyzer.get_actual_type (stmt.collection.value_type, get_method, get_method.return_type, stmt);
+			var element_type = SemanticAnalyzer.get_actual_type (stmt.collection.value_type, (GenericType) get_method.return_type, stmt);
 
 			element_expr = transform_expression (element_expr, element_type, stmt.type_reference);
 
@@ -520,7 +520,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			Iterator<DataType> type_arg_it = it_method.return_type.get_type_arguments ().iterator ();
 			type_arg_it.next ();
-			var it_type = SemanticAnalyzer.get_actual_type (stmt.collection.value_type, it_method, type_arg_it.get (), stmt);
+			var it_type = SemanticAnalyzer.get_actual_type (stmt.collection.value_type, (GenericType) type_arg_it.get (), stmt);
 
 			element_expr = transform_expression (element_expr, it_type, stmt.type_reference);
 

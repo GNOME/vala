@@ -119,8 +119,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			set_params_it.next ();
 			var set_param = set_params_it.get ();
 
-			if (set_param.parameter_type.type_parameter != null) {
-				var index_type = SemanticAnalyzer.get_actual_type (expr.container.value_type, set_method, set_param.parameter_type, assignment);
+			if (set_param.parameter_type is GenericType) {
+				var index_type = SemanticAnalyzer.get_actual_type (expr.container.value_type, (GenericType) set_param.parameter_type, assignment);
 				cindex = convert_to_generic_pointer (cindex, index_type);
 			}
 

@@ -288,7 +288,7 @@ public class Vala.BinaryExpression : Expression {
 				contains_params_it.next ();
 				var contains_param = contains_params_it.get ();
 
-				var key_type = analyzer.get_actual_type (right.value_type, contains_method, contains_param.parameter_type, this);
+				var key_type = analyzer.get_actual_type (right.value_type, (GenericType) contains_param.parameter_type, this);
 				left.target_type = key_type;
 			}
 			

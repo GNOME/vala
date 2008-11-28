@@ -183,8 +183,8 @@ public class Vala.ForeachStatement : Block {
 			var it_method = (Method) analyzer.iterable_type.data_type.scope.lookup ("iterator");
 			if (it_method.return_type.get_type_arguments ().size > 0) {
 				var type_arg = it_method.return_type.get_type_arguments ().get (0);
-				if (type_arg.type_parameter != null) {
-					element_data_type = SemanticAnalyzer.get_actual_type (collection_type, it_method, type_arg, this);
+				if (type_arg is GenericType) {
+					element_data_type = SemanticAnalyzer.get_actual_type (collection_type, (GenericType) type_arg, this);
 				} else {
 					element_data_type = type_arg;
 				}

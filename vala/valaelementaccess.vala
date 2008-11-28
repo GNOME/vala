@@ -165,8 +165,8 @@ public class Vala.ElementAccess : Expression {
 			var get_param = get_params_it.get ();
 
 			var index_type = get_param.parameter_type;
-			if (index_type.type_parameter != null) {
-				index_type = analyzer.get_actual_type (container.value_type, get_method, get_param.parameter_type, this);
+			if (index_type is GenericType) {
+				index_type = analyzer.get_actual_type (container.value_type, (GenericType) index_type, this);
 			}
 
 			if (!index.value_type.compatible (index_type)) {
@@ -175,7 +175,7 @@ public class Vala.ElementAccess : Expression {
 				return false;
 			}
 
-			value_type = analyzer.get_actual_type (container.value_type, get_method, get_method.return_type, this).copy ();
+			value_type = analyzer.get_actual_type (container.value_type, (GenericType) get_method.return_type, this).copy ();
 			if (lvalue) {
 				// get () returns owned value, set () accepts unowned value
 				value_type.value_owned = false;

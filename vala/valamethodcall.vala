@@ -224,9 +224,9 @@ public class Vala.MethodCall : Expression {
 
 				// resolve generic type parameters
 				var ma = call as MemberAccess;
-				if (arg.target_type.type_parameter != null) {
+				if (arg.target_type is GenericType) {
 					if (ma != null && ma.inner != null) {
-						arg.target_type = analyzer.get_actual_type (ma.inner.value_type, ma.symbol_reference, arg.target_type, arg);
+						arg.target_type = analyzer.get_actual_type (ma.inner.value_type, (GenericType) arg.target_type, arg);
 						assert (arg.target_type != null);
 					}
 				}
@@ -393,9 +393,9 @@ public class Vala.MethodCall : Expression {
 
 		// resolve generic return values
 		var ma = call as MemberAccess;
-		if (ret_type.type_parameter != null) {
+		if (ret_type is GenericType) {
 			if (ma != null && ma.inner != null) {
-				ret_type = analyzer.get_actual_type (ma.inner.value_type, ma.symbol_reference, ret_type, this);
+				ret_type = analyzer.get_actual_type (ma.inner.value_type, (GenericType) ret_type, this);
 				if (ret_type == null) {
 					return false;
 				}
@@ -403,8 +403,8 @@ public class Vala.MethodCall : Expression {
 		}
 		Gee.List<DataType> resolved_type_args = new ArrayList<DataType> ();
 		foreach (DataType type_arg in ret_type.get_type_arguments ()) {
-			if (type_arg.type_parameter != null && ma != null && ma.inner != null) {
-				resolved_type_args.add (analyzer.get_actual_type (ma.inner.value_type, ma.symbol_reference, type_arg, this));
+			if (type_arg is GenericType && ma != null && ma.inner != null) {
+				resolved_type_args.add (analyzer.get_actual_type (ma.inner.value_type, (GenericType) type_arg, this));
 			} else {
 				resolved_type_args.add (type_arg);
 			}

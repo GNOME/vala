@@ -270,8 +270,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			get_params_it.next ();
 			var get_param = get_params_it.get ();
 
-			if (get_param.parameter_type.type_parameter != null) {
-				var index_type = SemanticAnalyzer.get_actual_type (expr.container.value_type, get_method, get_param.parameter_type, expr);
+			if (get_param.parameter_type is GenericType) {
+				var index_type = SemanticAnalyzer.get_actual_type (expr.container.value_type, (GenericType) get_param.parameter_type, expr);
 				cindex = convert_to_generic_pointer (cindex, index_type);
 			}
 
