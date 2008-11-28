@@ -67,6 +67,7 @@ libvalacore_la_VALASOURCES = \
 	valaforeachstatement.vala \
 	valaformalparameter.vala \
 	valaforstatement.vala \
+	valagenerictype.vala \
 	valagenieparser.vala \
 	valageniescanner.vala \
 	valagenietokentype.vala \
@@ -135,7 +136,6 @@ libvalacore_la_VALASOURCES = \
 	valatypecheck.vala \
 	valatypeofexpression.vala \
 	valatypeparameter.vala \
-	valatypeparametertype.vala \
 	valatypesymbol.vala \
 	valaunaryexpression.vala \
 	valaunresolvedsymbol.vala \

@@ -1,4 +1,4 @@
-/* valatypeparametertype.vala
+/* valagenerictype.vala
  *
  * Copyright (C) 2008  Jürg Billeter
  *
@@ -25,13 +25,13 @@ using GLib;
 /**
  * The type of a generic type parameter.
  */
-public class Vala.TypeParameterType : DataType {
-	public TypeParameterType (TypeParameter type_parameter) {
+public class Vala.GenericType : DataType {
+	public GenericType (TypeParameter type_parameter) {
 		this.type_parameter = type_parameter;
 	}
 
 	public override DataType copy () {
-		var result = new TypeParameterType (type_parameter);
+		var result = new GenericType (type_parameter);
 		result.source_reference = source_reference;
 		result.value_owned = value_owned;
 		result.nullable = nullable;
