@@ -369,6 +369,7 @@ public class Vala.GirParser : CodeVisitor {
 		string name = reader.get_attribute ("name");
 		string direction = reader.get_attribute ("direction");
 		string transfer = reader.get_attribute ("transfer-ownership");
+		string allow_none = reader.get_attribute ("allow-none");
 		next ();
 		if (reader.name == "varargs") {
 			start_element ("varargs");
@@ -379,6 +380,9 @@ public class Vala.GirParser : CodeVisitor {
 			var type = parse_type (out array_length_idx);
 			if (transfer == "full") {
 				type.value_owned = true;
+			}
+			if (allow_none == "1") {
+				type.nullable = true;
 			}
 			param = new FormalParameter (name, type, get_current_src ());
 			if (direction == "out") {
