@@ -1,5 +1,12 @@
 2008-11-28  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodebasemodule.vala:
+
+	Remove unused fields
+
+2008-11-28  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valabinaryexpression.vala:
 	* gobject/valaccodebasemodule.vala:
 

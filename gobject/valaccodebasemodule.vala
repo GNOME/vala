@@ -113,7 +113,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public DataType gquark_type;
 	public Struct mutex_type;
 	public TypeSymbol type_module_type;
-	public Interface collection_type;
 	public Interface list_type;
 	public Interface map_type;
 	public TypeSymbol dbus_object_type;
@@ -551,7 +550,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		var gee_ns = root_symbol.scope.lookup ("Gee");
 		if (gee_ns != null) {
-			collection_type = (Interface) gee_ns.scope.lookup ("Collection");
 			list_type = (Interface) gee_ns.scope.lookup ("List");
 			map_type = (Interface) gee_ns.scope.lookup ("Map");
 		}

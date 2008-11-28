@@ -59,7 +59,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType garray_type;
 	public Class gerror_type;
 	public Interface list_type;
-	public Interface collection_type;
 	public Interface map_type;
 
 	public int next_lambda_id = 0;
@@ -115,7 +114,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		var gee_ns = root_symbol.scope.lookup ("Gee");
 		if (gee_ns != null) {
 			list_type = (Interface) gee_ns.scope.lookup ("List");
-			collection_type = (Interface) gee_ns.scope.lookup ("Collection");
 			map_type = (Interface) gee_ns.scope.lookup ("Map");
 		}
 
