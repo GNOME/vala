@@ -111,6 +111,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public TypeSymbol gstringbuilder_type;
 	public TypeSymbol garray_type;
 	public DataType gquark_type;
+	public Struct gvalue_type;
 	public Struct mutex_type;
 	public TypeSymbol type_module_type;
 	public Interface list_type;
@@ -533,6 +534,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		garray_type = (TypeSymbol) glib_ns.scope.lookup ("Array");
 
 		gquark_type = new ValueType ((TypeSymbol) glib_ns.scope.lookup ("Quark"));
+		gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
 		mutex_type = (Struct) glib_ns.scope.lookup ("StaticRecMutex");
 		
 		type_module_type = (TypeSymbol) glib_ns.scope.lookup ("TypeModule");
@@ -1629,7 +1631,20 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		if (type is ValueType && !type.nullable) {
 			// normal value type, no null check
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cvar));
-			return ccall;
+
+			if (type.data_type == gvalue_type) {
+				// g_value_unset must not be called for already unset values
+				var cisvalid = new CCodeFunctionCall (new CCodeIdentifier ("G_IS_VALUE"));
+				cisvalid.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cvar));
+
+				var ccomma = new CCodeCommaExpression ();
+				ccomma.append_expression (ccall);
+				ccomma.append_expression (new CCodeConstant ("NULL"));
+
+				return new CCodeConditionalExpression (cisvalid, ccomma, new CCodeConstant ("NULL"));
+			} else {
+				return ccall;
+			}
 		}
 
 		/* (foo == NULL ? NULL : foo = (unref (foo), NULL)) */
@@ -2249,6 +2264,20 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			copy_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 
 			var ccomma = new CCodeCommaExpression ();
+
+			if (st.get_copy_function () == "g_value_copy") {
+				// GValue requires g_value_init in addition to g_value_copy
+
+				var value_type_call = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_TYPE"));
+				value_type_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr));
+
+				var init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
+				init_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
+				init_call.add_argument (value_type_call);
+
+				ccomma.append_expression (init_call);
+			}
+
 			ccomma.append_expression (copy_call);
 			ccomma.append_expression (ctemp);
 

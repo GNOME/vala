@@ -1,5 +1,11 @@
 2008-11-28  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+
+	Fix copying and destroying GValue values
+
+2008-11-28  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Add g_unsetenv binding, patch by Jorn Baayen, fixes bug 562590
