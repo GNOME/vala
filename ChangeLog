@@ -1,5 +1,11 @@
 2008-11-28  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagirparser.vala:
+
+	Support functions in classes
+
+2008-11-28  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 
 	Fix copying and destroying GValue values

@@ -511,6 +511,8 @@ public class Vala.GirParser : CodeVisitor {
 				cl.add_property (parse_property ());
 			} else if (reader.name == "constructor") {
 				cl.add_method (parse_constructor ());
+			} else if (reader.name == "function") {
+				methods.add (parse_function ());
 			} else if (reader.name == "method") {
 				methods.add (parse_method ());
 			} else if (reader.name == "callback") {
