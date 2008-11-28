@@ -269,27 +269,32 @@ public class Vala.BinaryExpression : Expression {
 
 			value_type = analyzer.bool_type;
 		} else if (operator == BinaryOperator.IN) {
-			// integer type or flags type or collection/map
-
-			/* handle collections and maps */
-			var container_type = right.value_type.data_type;
-			
-			if ((analyzer.collection_type != null && container_type.is_subtype_of (analyzer.collection_type))
-			    || (analyzer.map_type != null && container_type.is_subtype_of (analyzer.map_type))) {
-				Symbol contains_sym = null;
-				if (container_type.is_subtype_of (analyzer.collection_type)) {
-					contains_sym = analyzer.collection_type.scope.lookup ("contains");
-				} else if (container_type.is_subtype_of (analyzer.map_type)) {
-					contains_sym = analyzer.map_type.scope.lookup ("contains");
+			if (left.value_type.compatible (analyzer.int_type)
+			    && right.value_type.compatible (analyzer.int_type)) {
+				// integers or enums
+			} else {
+				// otherwise require a bool contains () method
+				var contains_method = right.value_type.get_member ("contains") as Method;
+				if (contains_method == null) {
+					Report.error (source_reference, "`%s' does not have a `contains' method".printf (right.value_type.to_string ()));
+					error = true;
+					return false;
 				}
-				var contains_method = (Method) contains_sym;
-				Gee.List<FormalParameter> contains_params = contains_method.get_parameters ();
-				Iterator<FormalParameter> contains_params_it = contains_params.iterator ();
-				contains_params_it.next ();
-				var contains_param = contains_params_it.get ();
+				if (contains_method.get_parameters ().size != 1) {
+					Report.error (source_reference, "`%s' must have one parameter".printf (contains_method.get_full_name ()));
+					error = true;
+					return false;
+				}
+				if (!contains_method.return_type.compatible (analyzer.bool_type)) {
+					Report.error (source_reference, "`%s' must return a boolean value".printf (contains_method.get_full_name ()));
+					error = true;
+					return false;
+				}
 
-				var key_type = analyzer.get_actual_type (right.value_type, (GenericType) contains_param.parameter_type, this);
-				left.target_type = key_type;
+				var contains_call = new MethodCall (new MemberAccess (right, "contains"));
+				contains_call.add_argument (left);
+				parent_node.replace_expression (this, contains_call);
+				return contains_call.check (analyzer);
 			}
 			
 			value_type = analyzer.bool_type;
