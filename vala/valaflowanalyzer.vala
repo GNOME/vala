@@ -858,6 +858,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		current_block.add_node (stmt);
 
+		if (stmt.return_expression != null) {
+			handle_errors (stmt.return_expression);
+		}
+
 		for (int i = jump_stack.size - 1; i >= 0; i--) {
 			var jump_target = jump_stack[i];
 			if (jump_target.is_return_target) {
