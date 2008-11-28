@@ -68,6 +68,8 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		parse_repository ();
 
+		var remove_queue = new ArrayList<CodeNode> ();
+
 		foreach (CodeNode node in source_file.get_nodes ()) {
 			if (node is Class) {
 				var cl = (Class) node;
@@ -76,7 +78,7 @@ public class Vala.GirParser : CodeVisitor {
 				var class_struct = ns.scope.lookup (cl.name + "Class") as Struct;
 				if (class_struct != null) {
 					ns.remove_struct ((Struct) class_struct);
-					source_file.remove_node (class_struct);
+					remove_queue.add (class_struct);
 				}
 			} else if (node is Interface) {
 				var iface = (Interface) node;
@@ -85,9 +87,13 @@ public class Vala.GirParser : CodeVisitor {
 				var iface_struct = ns.scope.lookup (iface.name + "Iface") as Struct;
 				if (iface_struct != null) {
 					ns.remove_struct ((Struct) iface_struct);
-					source_file.remove_node (iface_struct);
+					remove_queue.add (iface_struct);
 				}
 			}
+		}
+
+		foreach (CodeNode node in remove_queue) {
+			source_file.remove_node (node);
 		}
 
 		reader = null;
@@ -589,7 +595,12 @@ public class Vala.GirParser : CodeVisitor {
 		next ();
 		var methods = new ArrayList<Method> ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
-			if (reader.name == "field") {
+			if (reader.name == "prerequisite") {
+				start_element ("prerequisite");
+				iface.add_prerequisite (parse_type_from_name (reader.get_attribute ("name")));
+				next ();
+				end_element ("prerequisite");
+			} else if (reader.name == "field") {
 				parse_field ();
 			} else if (reader.name == "property") {
 				iface.add_property (parse_property ());

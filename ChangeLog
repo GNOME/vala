@@ -2,6 +2,12 @@
 
 	* vapigen/valagirparser.vala:
 
+	Support interface prerequisites
+
+2008-11-28  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valagirparser.vala:
+
 	Support functions in classes
 
 2008-11-28  Jürg Billeter  <j@bitron.ch>
