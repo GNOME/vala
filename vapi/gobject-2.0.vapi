@@ -234,7 +234,7 @@ namespace GLib {
 
 	[CCode (lower_case_csuffix = "flags")]
 	public class FlagsClass : TypeClass {
-		public weak FlagsValue? get_first_value ();
+		public weak FlagsValue? get_first_value (uint value);
 		public weak FlagsValue? get_value_by_name (string name);
 		public weak FlagsValue? get_value_by_nick (string name);
 	}

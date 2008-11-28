@@ -1,3 +1,9 @@
+2008-11-28  Étienne BERSAC  <bersace03@laposte.net>
+
+	* vapi/gobject-2.0.vapi:
+
+	Fix g_flags_get_first_value binding
+
 2008-11-28  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodebasemodule.vala:
