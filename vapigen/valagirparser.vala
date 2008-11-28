@@ -652,12 +652,19 @@ public class Vala.GirParser : CodeVisitor {
 	Property parse_property () {
 		start_element ("property");
 		string name = string.joinv ("_", reader.get_attribute ("name").split ("-"));
+		string readable = reader.get_attribute ("readable");
+		string writable = reader.get_attribute ("writable");
+		string construct_ = reader.get_attribute ("construct");
 		next ();
 		var type = parse_type ();
 		var prop = new Property (name, type, null, null, get_current_src ());
 		prop.access = SymbolAccessibility.PUBLIC;
-		prop.get_accessor = new PropertyAccessor (true, false, false, null, null);
-		prop.set_accessor = new PropertyAccessor (false, true, false, null, null);
+		if (readable != "0") {
+			prop.get_accessor = new PropertyAccessor (true, false, false, null, null);
+		}
+		if (writable == "1" || construct_ == "1") {
+			prop.set_accessor = new PropertyAccessor (false, (writable == "1"), (construct_ == "1"), null, null);
+		}
 		end_element ("property");
 		return prop;
 	}
