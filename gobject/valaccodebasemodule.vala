@@ -1450,13 +1450,15 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	private CCodeExpression get_type_id_expression (DataType type) {
-		if (type.data_type != null) {
-			return new CCodeIdentifier (type.data_type.get_type_id ());
-		} else if (type.type_parameter != null) {
+		if (type is GenericType) {
 			string var_name = "%s_type".printf (type.type_parameter.name.down ());
 			return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), var_name);
 		} else {
-			return new CCodeIdentifier ("G_TYPE_NONE");
+			string type_id = type.get_type_id ();
+			if (type_id == null) {
+				type_id = "G_TYPE_INVALID";
+			}
+			return new CCodeIdentifier (type_id);
 		}
 	}
 

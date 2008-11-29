@@ -1,5 +1,13 @@
 2008-11-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valavoidtype.vala:
+	* gobject/valaccodebasemodule.vala:
+
+	Use G_TYPE_POINTER for pointers and G_TYPE_INVALID for
+	unsupported types in typeof expressions
+
+2008-11-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamethodcall.vala:
 
 	Fix error handling in inner expressions, fixes bug 475922
