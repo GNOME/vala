@@ -158,7 +158,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				}
 			} else if (array_expr.symbol_reference is LocalVariable) {
 				var local = (LocalVariable) array_expr.symbol_reference;
-				var length_expr = new CCodeIdentifier (get_array_length_cname (local.name, dim));
+				var length_expr = new CCodeIdentifier (get_array_length_cname (get_variable_cname (local.name), dim));
 				if (is_out) {
 					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
 				} else {
