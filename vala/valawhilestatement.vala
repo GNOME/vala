@@ -94,6 +94,19 @@ public class Vala.WhileStatement : CodeNode, Statement {
 
 		checked = true;
 
+		if (!condition.in_single_basic_block ()) {
+			// move condition into the loop body to allow split
+			// in multiple statements
+
+			var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, condition, condition.source_reference);
+			var true_block = new Block (condition.source_reference);
+			true_block.add_statement (new BreakStatement (condition.source_reference));
+			var if_stmt = new IfStatement (if_condition, true_block, null, condition.source_reference);
+			body.insert_statement (0, if_stmt);
+
+			condition = new BooleanLiteral (true, source_reference);
+		}
+
 		condition.check (analyzer);
 		
 		body.check (analyzer);

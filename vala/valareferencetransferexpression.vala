@@ -115,4 +115,8 @@ public class Vala.ReferenceTransferExpression : Expression {
 	public override void get_used_variables (Collection<LocalVariable> collection) {
 		inner.get_used_variables (collection);
 	}
+
+	public override bool in_single_basic_block () {
+		return inner.in_single_basic_block ();
+	}
 }

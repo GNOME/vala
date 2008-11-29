@@ -105,4 +105,10 @@ public abstract class Vala.Expression : CodeNode {
 	public void insert_statement (Block block, Statement stmt) {
 		block.insert_before (parent_statement, stmt);
 	}
+
+	/**
+	 * Returns whether this expression is guaranteed to be part of a
+	 * single basic block in the control flow graph.
+	 */
+	public abstract bool in_single_basic_block ();
 }

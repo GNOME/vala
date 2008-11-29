@@ -113,6 +113,9 @@ public class Vala.ConditionalExpression : Expression {
 		true_expression.target_type = target_type;
 		false_expression.target_type = target_type;
 
+		var local = new LocalVariable (null, temp_name, null, source_reference);
+		var decl = new DeclarationStatement (local, source_reference);
+
 		var true_local = new LocalVariable (null, temp_name, true_expression, true_expression.source_reference);
 		var true_block = new Block (true_expression.source_reference);
 		var true_decl = new DeclarationStatement (true_local, true_expression.source_reference);
@@ -124,6 +127,10 @@ public class Vala.ConditionalExpression : Expression {
 		false_block.add_statement (false_decl);
 
 		var if_stmt = new IfStatement (condition, true_block, false_block, source_reference);
+
+		insert_statement ((Block) analyzer.current_symbol, decl);
+		insert_statement ((Block) analyzer.current_symbol, if_stmt);
+
 		if (!if_stmt.check (analyzer)) {
 			return false;
 		}
@@ -146,8 +153,7 @@ public class Vala.ConditionalExpression : Expression {
 
 		value_type.value_owned = (true_expression.value_type.value_owned || false_expression.value_type.value_owned);
 
-		var local = new LocalVariable (value_type, temp_name, null, source_reference);
-		var decl = new DeclarationStatement (local, source_reference);
+		local.variable_type = value_type;
 		decl.check (analyzer);
 
 		true_expression.target_type = value_type;
@@ -162,9 +168,6 @@ public class Vala.ConditionalExpression : Expression {
 		true_block.replace_statement (true_decl, true_stmt);
 		false_block.replace_statement (false_decl, false_stmt);
 
-		insert_statement ((Block) analyzer.current_symbol, decl);
-		insert_statement ((Block) analyzer.current_symbol, if_stmt);
-
 		var ma = new MemberAccess.simple (local.name, source_reference);
 		ma.target_type = target_type;
 		ma.check (analyzer);
@@ -172,5 +175,9 @@ public class Vala.ConditionalExpression : Expression {
 		parent_node.replace_expression (this, ma);
 
 		return true;
+	}
+
+	public override bool in_single_basic_block () {
+		return false;
 	}
 }

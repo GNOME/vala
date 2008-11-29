@@ -1,5 +1,37 @@
 2008-11-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaaddressofexpression.vala:
+	* vala/valaarraycreationexpression.vala:
+	* vala/valaassignment.vala:
+	* vala/valabaseaccess.vala:
+	* vala/valabinaryexpression.vala:
+	* vala/valacastexpression.vala:
+	* vala/valaconditionalexpression.vala:
+	* vala/valadostatement.vala:
+	* vala/valaelementaccess.vala:
+	* vala/valaexpression.vala:
+	* vala/valaforstatement.vala:
+	* vala/valainitializerlist.vala:
+	* vala/valalambdaexpression.vala:
+	* vala/valaliteral.vala:
+	* vala/valamemberaccess.vala:
+	* vala/valamethodcall.vala:
+	* vala/valaobjectcreationexpression.vala:
+	* vala/valaparenthesizedexpression.vala:
+	* vala/valapointerindirection.vala:
+	* vala/valapostfixexpression.vala:
+	* vala/valareferencetransferexpression.vala:
+	* vala/valasizeofexpression.vala:
+	* vala/valatuple.vala:
+	* vala/valatypecheck.vala:
+	* vala/valatypeofexpression.vala:
+	* vala/valaunaryexpression.vala:
+	* vala/valawhilestatement.vala:
+
+	Convert binary conditional expressions into if statements
+
+2008-11-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaflowanalyzer.vala:
 
 	Detect unreachable code in if and while statements

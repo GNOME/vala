@@ -94,6 +94,43 @@ public class Vala.DoStatement : CodeNode, Statement {
 
 		checked = true;
 
+		if (!condition.in_single_basic_block ()) {
+			/* move condition into the loop body to allow split
+			 * in multiple statements
+			 *
+			 * first = false;
+			 * do {
+			 *     if (first) {
+			 *         if (!condition) {
+			 *             break;
+			 *         }
+			 *     }
+			 *     first = true;
+			 *     ...
+			 * } while (true);
+			 */
+
+			var first_local = new LocalVariable (new ValueType (analyzer.bool_type.data_type), get_temp_name (), new BooleanLiteral (false, source_reference), source_reference);
+			var first_decl = new DeclarationStatement (first_local, source_reference);
+			first_decl.check (analyzer);
+			var block = (Block) analyzer.current_symbol;
+			block.insert_before (this, first_decl);
+
+			var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, condition, condition.source_reference);
+			var true_block = new Block (condition.source_reference);
+			true_block.add_statement (new BreakStatement (condition.source_reference));
+			var if_stmt = new IfStatement (if_condition, true_block, null, condition.source_reference);
+
+			var condition_block = new Block (condition.source_reference);
+			condition_block.add_statement (if_stmt);
+
+			var first_if = new IfStatement (new MemberAccess.simple (first_local.name, source_reference), condition_block, null, source_reference);
+			body.insert_statement (0, first_if);
+			body.insert_statement (1, new ExpressionStatement (new Assignment (new MemberAccess.simple (first_local.name, source_reference), new BooleanLiteral (true, source_reference), AssignmentOperator.SIMPLE, source_reference), source_reference));
+
+			condition = new BooleanLiteral (true, source_reference);
+		}
+
 		body.check (analyzer);
 
 		if (!condition.check (analyzer)) {

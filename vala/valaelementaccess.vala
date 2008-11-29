@@ -222,4 +222,13 @@ public class Vala.ElementAccess : Expression {
 			index.get_used_variables (collection);
 		}
 	}
+
+	public override bool in_single_basic_block () {
+		foreach (Expression index in indices) {
+			if (!index.in_single_basic_block ()) {
+				return false;
+			}
+		}
+		return container.in_single_basic_block ();
+	}
 }

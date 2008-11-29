@@ -145,6 +145,47 @@ public class Vala.BinaryExpression : Expression {
 
 		checked = true;
 
+		if (operator == BinaryOperator.AND || operator == BinaryOperator.OR) {
+			// convert conditional expression into if statement
+			// required for flow analysis and exception handling
+
+			var local = new LocalVariable (new ValueType (analyzer.bool_type.data_type), get_temp_name (), null, source_reference);
+			var decl = new DeclarationStatement (local, source_reference);
+			decl.check (analyzer);
+
+			var right_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, right.source_reference), right, AssignmentOperator.SIMPLE, right.source_reference), right.source_reference);
+
+			var stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, left.source_reference), new BooleanLiteral ((operator == BinaryOperator.OR), left.source_reference), AssignmentOperator.SIMPLE, left.source_reference), left.source_reference);
+
+			var true_block = new Block (source_reference);
+			var false_block = new Block (source_reference);
+
+			if (operator == BinaryOperator.AND) {
+				true_block.add_statement (right_stmt);
+				false_block.add_statement (stmt);
+			} else {
+				true_block.add_statement (stmt);
+				false_block.add_statement (right_stmt);
+			}
+
+			var if_stmt = new IfStatement (left, true_block, false_block, source_reference);
+
+			insert_statement ((Block) analyzer.current_symbol, decl);
+			insert_statement ((Block) analyzer.current_symbol, if_stmt);
+
+			if (!if_stmt.check (analyzer)) {
+				return false;
+			}
+
+			var ma = new MemberAccess.simple (local.name, source_reference);
+			ma.target_type = target_type;
+			ma.check (analyzer);
+
+			parent_node.replace_expression (this, ma);
+
+			return true;
+		}
+
 		if (!left.check (analyzer) || !right.check (analyzer)) {
 			/* if there were any errors in inner expressions, skip type check */
 			error = true;
@@ -260,14 +301,6 @@ public class Vala.BinaryExpression : Expression {
 			// integer type or flags type
 
 			value_type = left.value_type;
-		} else if (operator == BinaryOperator.AND
-			   || operator == BinaryOperator.OR) {
-			if (!left.value_type.compatible (analyzer.bool_type) || !right.value_type.compatible (analyzer.bool_type)) {
-				error = true;
-				Report.error (source_reference, "Operands must be boolean");
-			}
-
-			value_type = analyzer.bool_type;
 		} else if (operator == BinaryOperator.IN) {
 			if (left.value_type.compatible (analyzer.int_type)
 			    && right.value_type.compatible (analyzer.int_type)) {
@@ -314,6 +347,14 @@ public class Vala.BinaryExpression : Expression {
 	public override void get_used_variables (Collection<LocalVariable> collection) {
 		left.get_used_variables (collection);
 		right.get_used_variables (collection);
+	}
+
+	public override bool in_single_basic_block () {
+		if (operator == BinaryOperator.AND
+		    || operator == BinaryOperator.OR) {
+			return false;
+		}
+		return left.in_single_basic_block () && right.in_single_basic_block ();
 	}
 }
 

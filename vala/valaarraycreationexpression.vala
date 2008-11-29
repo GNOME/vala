@@ -220,4 +220,13 @@ public class Vala.ArrayCreationExpression : Expression {
 
 		return !error;
 	}
+
+	public override bool in_single_basic_block () {
+		foreach (Expression size in sizes) {
+			if (!size.in_single_basic_block ()) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

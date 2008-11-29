@@ -422,4 +422,13 @@ public class Vala.MethodCall : Expression {
 			arg.get_used_variables (collection);
 		}
 	}
+
+	public override bool in_single_basic_block () {
+		foreach (Expression arg in argument_list) {
+			if (!arg.in_single_basic_block ()) {
+				return false;
+			}
+		}
+		return call.in_single_basic_block ();
+	}
 }

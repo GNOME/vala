@@ -33,4 +33,8 @@ public abstract class Vala.Literal : Expression {
 	public override bool is_pure () {
 		return true;
 	}
+
+	public override bool in_single_basic_block () {
+		return true;
+	}
 }

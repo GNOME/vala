@@ -551,4 +551,8 @@ public class Vala.MemberAccess : Expression {
 			collection.add (local);
 		}
 	}
+
+	public override bool in_single_basic_block () {
+		return inner == null || inner.in_single_basic_block ();
+	}
 }

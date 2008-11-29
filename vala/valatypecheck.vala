@@ -101,4 +101,8 @@ public class Vala.TypeCheck : Expression {
 
 		return !error;
 	}
+
+	public override bool in_single_basic_block () {
+		return expression.in_single_basic_block ();
+	}
 }
