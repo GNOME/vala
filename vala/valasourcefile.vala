@@ -278,7 +278,9 @@ public class Vala.SourceFile {
 
 		Symbol s;
 		
-		if (sym is TypeSymbol ||
+		if (sym is ErrorCode) {
+			s = sym.parent_symbol;
+		} else if (sym is TypeSymbol ||
 		    sym is Method ||
 		    sym is Field ||
 		    sym is Property ||
