@@ -1,3 +1,20 @@
+2008-11-29  Jürg Billeter  <j@bitron.ch>
+
+	* vala/Makefile.am:
+	* vala/valablock.vala:
+	* vala/valacodenode.vala:
+	* vala/valaconditionalexpression.vala:
+	* vala/valadeclarationstatement.vala:
+	* vala/valaexpression.vala:
+	* vala/valanullchecker.vala:
+	* vala/valastatementlist.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodemodule.vala:
+
+	Convert ternary conditionals into if statements,
+	fixes bug 543870 and bug 554594
+
 2008-11-28  Étienne BERSAC  <bersace03@laposte.net>
 
 	* vapi/gobject-2.0.vapi:

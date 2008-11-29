@@ -320,10 +320,6 @@ public abstract class Vala.CCodeModule {
 		next.visit_type_check (expr);
 	}
 
-	public virtual void visit_conditional_expression (ConditionalExpression expr) {
-		next.visit_conditional_expression (expr);
-	}
-
 	public virtual void visit_lambda_expression (LambdaExpression l) {
 		next.visit_lambda_expression (l);
 	}

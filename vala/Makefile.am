@@ -122,6 +122,7 @@ libvalacore_la_VALASOURCES = \
 	valasourcelocation.vala \
 	valasourcereference.vala \
 	valastatement.vala \
+	valastatementlist.vala \
 	valastringliteral.vala \
 	valastruct.vala \
 	valaswitchlabel.vala \

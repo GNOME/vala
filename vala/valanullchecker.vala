@@ -235,10 +235,6 @@ public class Vala.NullChecker : CodeVisitor {
 		expr.accept_children (this);
 	}
 
-	public override void visit_conditional_expression (ConditionalExpression expr) {
-		check_non_null (expr.condition);
-	}
-
 	public override void visit_lambda_expression (LambdaExpression l) {
 		l.accept_children (this);
 	}

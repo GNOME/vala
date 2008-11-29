@@ -83,6 +83,8 @@ public abstract class Vala.CodeNode {
 
 	private CCodeNode? _ccodenode;
 
+	static int last_temp_nr = 0;
+
 	/**
 	 * Specifies the exceptions that can be thrown by this node or a child node
 	 */
@@ -182,5 +184,9 @@ public abstract class Vala.CodeNode {
 	}
 
 	public virtual void get_used_variables (Collection<LocalVariable> collection) {
+	}
+
+	public string get_temp_name () {
+		return "." + (++last_temp_nr).to_string ();
 	}
 }

@@ -135,6 +135,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 	public Set<string> wrappers;
 
+	Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
+
 	public CCodeBaseModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 
@@ -1276,7 +1278,14 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public string get_variable_cname (string name) {
-		if (c_keywords.contains (name)) {
+		if (name[0] == '.') {
+			// compiler-internal variable
+			if (!variable_name_map.contains (name)) {
+				variable_name_map.set (name, "_tmp%d".printf (next_temp_var_id));
+				next_temp_var_id++;
+			}
+			return variable_name_map.get (name);
+		} else if (c_keywords.contains (name)) {
 			return name + "_";
 		} else {
 			return name;
@@ -2884,10 +2893,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 	public override void visit_type_check (TypeCheck expr) {
 		expr.ccodenode = create_type_check (expr.expression.ccodenode, expr.type_reference);
-	}
-
-	public override void visit_conditional_expression (ConditionalExpression expr) {
-		expr.ccodenode = new CCodeConditionalExpression ((CCodeExpression) expr.condition.ccodenode, (CCodeExpression) expr.true_expression.ccodenode, (CCodeExpression) expr.false_expression.ccodenode);
 	}
 
 	public override void visit_lambda_expression (LambdaExpression l) {

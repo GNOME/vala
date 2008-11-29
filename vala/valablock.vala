@@ -64,7 +64,18 @@ public class Vala.Block : Symbol, Statement {
 	 * @return statement list
 	 */
 	public Gee.List<Statement> get_statements () {
-		return new ReadOnlyList<Statement> (statement_list);
+		var list = new ArrayList<Statement> ();
+		foreach (Statement stmt in statement_list) {
+			var stmt_list = stmt as StatementList;
+			if (stmt_list != null) {
+				for (int i = 0; i < stmt_list.length; i++) {
+					list.add (stmt_list.get (i));
+				}
+			} else {
+				list.add (stmt);
+			}
+		}
+		return list;
 	}
 	
 	/**
@@ -75,7 +86,11 @@ public class Vala.Block : Symbol, Statement {
 	public void add_local_variable (LocalVariable local) {
 		local_variables.add (local);
 	}
-	
+
+	public void remove_local_variable (LocalVariable local) {
+		local_variables.remove (local);
+	}
+
 	/**
 	 * Returns a copy of the list of local variables.
 	 *
@@ -103,22 +118,60 @@ public class Vala.Block : Symbol, Statement {
 		checked = true;
 
 		owner = analyzer.current_symbol.scope;
+
+		var old_symbol = analyzer.current_symbol;
 		analyzer.current_symbol = this;
 
-		foreach (Statement stmt in statement_list) {
-			stmt.check (analyzer);
+		for (int i = 0; i < statement_list.size; i++) {
+			statement_list[i].check (analyzer);
 		}
 
 		foreach (LocalVariable local in get_local_variables ()) {
 			local.active = false;
 		}
 
-		foreach (Statement stmt in get_statements ()) {
+		foreach (Statement stmt in statement_list) {
 			add_error_types (stmt.get_error_types ());
 		}
 
-		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
+		analyzer.current_symbol = old_symbol;
 
 		return !error;
+	}
+
+	public void insert_before (Statement stmt, Statement new_stmt) {
+		for (int i = 0; i < statement_list.size; i++) {
+			var stmt_list = statement_list[i] as StatementList;
+			if (stmt_list != null) {
+				for (int j = 0; j < stmt_list.length; j++) {
+					if (stmt_list.get (j) == stmt) {
+						stmt_list.insert (j, new_stmt);
+						break;
+					}
+				}
+			} else if (statement_list[i] == stmt) {
+				stmt_list = new StatementList (source_reference);
+				stmt_list.add (new_stmt);
+				stmt_list.add (stmt);
+				statement_list[i] = stmt_list;
+			}
+		}
+	}
+
+	public void replace_statement (Statement old_stmt, Statement new_stmt) {
+		for (int i = 0; i < statement_list.size; i++) {
+			var stmt_list = statement_list[i] as StatementList;
+			if (stmt_list != null) {
+				for (int j = 0; j < stmt_list.length; j++) {
+					if (stmt_list.get (j) == old_stmt) {
+						stmt_list.set (j, new_stmt);
+						break;
+					}
+				}
+			} else if (statement_list[i] == old_stmt) {
+				statement_list[i] = new_stmt;
+				break;
+			}
+		}
 	}
 }

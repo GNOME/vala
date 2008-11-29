@@ -323,10 +323,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head.visit_type_check (expr);
 	}
 
-	public override void visit_conditional_expression (ConditionalExpression expr) {
-		head.visit_conditional_expression (expr);
-	}
-
 	public override void visit_lambda_expression (LambdaExpression l) {
 		head.visit_lambda_expression (l);
 	}

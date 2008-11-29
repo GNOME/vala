@@ -84,4 +84,25 @@ public abstract class Vala.Expression : CodeNode {
 	public virtual bool is_non_null () {
 		return false;
 	}
+
+	public Statement? parent_statement {
+		get {
+			var expr = parent_node as Expression;
+			var stmt = parent_node as Statement;
+			var local = parent_node as LocalVariable;
+			if (stmt != null) {
+				return stmt;
+			} else if (expr != null) {
+				return expr.parent_statement;
+			} else if (local != null) {
+				return (Statement) local.parent_node;
+			} else {
+				return null;
+			}
+		}
+	}
+
+	public void insert_statement (Block block, Statement stmt) {
+		block.insert_before (parent_statement, stmt);
+	}
 }
