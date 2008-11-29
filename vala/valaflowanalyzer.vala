@@ -541,6 +541,16 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
+	bool always_true (Expression condition) {
+		var literal = condition as BooleanLiteral;
+		return (literal != null && literal.value);
+	}
+
+	bool always_false (Expression condition) {
+		var literal = condition as BooleanLiteral;
+		return (literal != null && !literal.value);
+	}
+
 	public override void visit_if_statement (IfStatement stmt) {
 		if (unreachable (stmt)) {
 			return;
@@ -553,14 +563,24 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		// true block
 		var last_block = current_block;
-		current_block = new BasicBlock ();
-		last_block.connect (current_block);
+		if (always_false (stmt.condition)) {
+			current_block = null;
+			unreachable_reported = false;
+		} else {
+			current_block = new BasicBlock ();
+			last_block.connect (current_block);
+		}
 		stmt.true_statement.accept (this);
 
 		// false block
 		var last_true_block = current_block;
-		current_block = new BasicBlock ();
-		last_block.connect (current_block);
+		if (always_true (stmt.condition)) {
+			current_block = null;
+			unreachable_reported = false;
+		} else {
+			current_block = new BasicBlock ();
+			last_block.connect (current_block);
+		}
 		if (stmt.false_statement != null) {
 			stmt.false_statement.accept (this);
 		}
@@ -652,8 +672,13 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		handle_errors (stmt.condition);
 
 		// loop block
-		current_block = new BasicBlock ();
-		condition_block.connect (current_block);
+		if (always_false (stmt.condition)) {
+			current_block = null;
+			unreachable_reported = false;
+		} else {
+			current_block = new BasicBlock ();
+			condition_block.connect (current_block);
+		}
 		stmt.body.accept (this);
 		// end of loop block reachable?
 		if (current_block != null) {
@@ -661,8 +686,14 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		// after loop
-		condition_block.connect (after_loop_block);
-		current_block = after_loop_block;
+		// reachable?
+		if (always_true (stmt.condition) && after_loop_block.get_predecessors ().size == 0) {
+			current_block = null;
+			unreachable_reported = false;
+		} else {
+			condition_block.connect (after_loop_block);
+			current_block = after_loop_block;
+		}
 
 		jump_stack.remove_at (jump_stack.size - 1);
 		jump_stack.remove_at (jump_stack.size - 1);

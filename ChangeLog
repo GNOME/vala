@@ -1,5 +1,11 @@
 2008-11-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaflowanalyzer.vala:
+
+	Detect unreachable code in if and while statements
+
+2008-11-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am:
 	* vala/valablock.vala:
 	* vala/valacodenode.vala:
