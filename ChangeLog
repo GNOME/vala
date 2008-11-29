@@ -1,5 +1,11 @@
 2008-11-29  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamethodcall.vala:
+
+	Fix error handling in inner expressions, fixes bug 475922
+
+2008-11-29  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaaddressofexpression.vala:
 	* vala/valaarraycreationexpression.vala:
 	* vala/valaassignment.vala:
