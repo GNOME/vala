@@ -1,5 +1,11 @@
 2008-11-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valathrowstatement.vala:
+
+	Check type of error expression in throw statements
+
+2008-11-30  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodearraymodule.vala:
 
 	Fix array length variable name for internal variables,

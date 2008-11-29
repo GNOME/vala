@@ -85,6 +85,12 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 
 		if (error_expression != null) {
 			error_expression.check (analyzer);
+
+			if (!(error_expression.value_type is ErrorType)) {
+				Report.error (error_expression.source_reference, "`%s' is not an error type".printf (error_expression.value_type.to_string ()));
+				error = true;
+				return false;
+			}
 		}
 
 		var error_type = error_expression.value_type.copy ();
