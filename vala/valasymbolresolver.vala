@@ -323,6 +323,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 		unresolved_type.parent_node.replace_type (unresolved_type, resolve_type (unresolved_type));
 	}
 
+	public override void visit_declaration_statement (DeclarationStatement stmt) {
+		stmt.accept_children (this);
+	}
+
 	public override void visit_local_variable (LocalVariable local) {
 		local.accept_children (this);
 		if (local.variable_type is ReferenceType) {

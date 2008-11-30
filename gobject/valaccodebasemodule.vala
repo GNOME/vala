@@ -1266,6 +1266,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_declaration_statement (DeclarationStatement stmt) {
+		stmt.declaration.accept (codegen);
+
 		stmt.ccodenode = stmt.declaration.ccodenode;
 
 		var local = stmt.declaration as LocalVariable;

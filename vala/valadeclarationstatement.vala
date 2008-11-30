@@ -54,11 +54,13 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 		this.declaration = declaration;
 		this.source_reference = source_reference;
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
-		declaration.accept (visitor);
-	
 		visitor.visit_declaration_statement (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
+		declaration.accept (visitor);
 	}
 
 	public override bool check (SemanticAnalyzer analyzer) {
