@@ -1,6 +1,6 @@
 /* valaccodememberaccess.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -54,7 +54,7 @@ public class Vala.CCodeMemberAccess : CCodeExpression {
 	}
 	
 	public override void write (CCodeWriter writer) {
-		inner.write (writer);
+		inner.write_inner (writer);
 		if (is_pointer) {
 			writer.write_string ("->");
 		} else {

@@ -51,7 +51,7 @@ public class Vala.CCodeUnaryExpression : CCodeExpression {
 		} else if (operator == CCodeUnaryOperator.BITWISE_COMPLEMENT) {
 			writer.write_string ("~");
 		} else if (operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
-			writer.write_string ("(*");
+			writer.write_string ("*");
 		} else if (operator == CCodeUnaryOperator.ADDRESS_OF) {
 			writer.write_string ("&");
 		} else if (operator == CCodeUnaryOperator.PREFIX_INCREMENT) {
@@ -60,15 +60,19 @@ public class Vala.CCodeUnaryExpression : CCodeExpression {
 			writer.write_string ("--");
 		}
 
-		inner.write (writer);
+		inner.write_inner (writer);
 
 		if (operator == CCodeUnaryOperator.POSTFIX_INCREMENT) {
 			writer.write_string ("++");
 		} else if (operator == CCodeUnaryOperator.POSTFIX_DECREMENT) {
 			writer.write_string ("--");
-		} else if (operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
-			writer.write_string (")");
 		}
+	}
+
+	public override void write_inner (CCodeWriter writer) {
+		writer.write_string ("(");
+		this.write (writer);
+		writer.write_string (")");
 	}
 }
 

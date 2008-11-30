@@ -1,6 +1,6 @@
 /* valaccodeexpression.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,4 +26,7 @@ using GLib;
  * Represents an expression node in the C code tree.
  */
 public abstract class Vala.CCodeExpression : CCodeNode {
+	public virtual void write_inner (CCodeWriter writer) {
+		this.write (writer);
+	}
 }

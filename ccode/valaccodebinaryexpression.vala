@@ -48,7 +48,7 @@ public class Vala.CCodeBinaryExpression : CCodeExpression {
 	}
 	
 	public override void write (CCodeWriter writer) {
-		left.write (writer);
+		left.write_inner (writer);
 
 		writer.write_string (" ");
 		if (operator == CCodeBinaryOperator.PLUS) {
@@ -91,7 +91,13 @@ public class Vala.CCodeBinaryExpression : CCodeExpression {
 
 		writer.write_string (" ");
 
-		right.write (writer);
+		right.write_inner (writer);
+	}
+
+	public override void write_inner (CCodeWriter writer) {
+		writer.write_string ("(");
+		this.write (writer);
+		writer.write_string (")");
 	}
 }
 

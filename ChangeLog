@@ -1,5 +1,17 @@
 2008-11-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaforeachstatement.vala:
+	* ccode/valaccodebinaryexpression.vala:
+	* ccode/valaccodecastexpression.vala:
+	* ccode/valaccodeelementaccess.vala:
+	* ccode/valaccodeexpression.vala:
+	* ccode/valaccodememberaccess.vala:
+	* ccode/valaccodeunaryexpression.vala:
+
+	Fix generated parentheses
+
+2008-11-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valathrowstatement.vala:
 
 	Check type of error expression in throw statements

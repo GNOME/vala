@@ -1,7 +1,7 @@
 /* valaccodememberaccess.vala
  *
  * Copyright (C) 2006  Raffaele Sandrini
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -45,7 +45,7 @@ public class Vala.CCodeElementAccess : CCodeExpression {
 	}
 	
 	public override void write (CCodeWriter writer) {
-		container.write (writer);
+		container.write_inner (writer);
 		writer.write_string ("[");
 		index.write (writer);
 		writer.write_string ("]");
