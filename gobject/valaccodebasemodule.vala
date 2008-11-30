@@ -231,7 +231,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		source_type_member_declaration.append (fun.copy ());
 
 		// (str1 != str2)
-		var cineq = new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("str1"), new CCodeIdentifier ("str2")));
+		var cineq = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("str1"), new CCodeIdentifier ("str2"));
 
 		fun.block = new CCodeBlock ();
 
@@ -1721,10 +1721,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		bool uses_gfree = (type.data_type != null && !type.data_type.is_reference_counting () && type.data_type.get_free_function () == "g_free");
 		uses_gfree = uses_gfree || type is ArrayType;
 		if (uses_gfree) {
-			return new CCodeParenthesizedExpression (cassign);
+			return cassign;
 		}
 
-		return new CCodeConditionalExpression (cisnull, new CCodeConstant ("NULL"), new CCodeParenthesizedExpression (cassign));
+		return new CCodeConditionalExpression (cisnull, new CCodeConstant ("NULL"), cassign);
 	}
 	
 	public override void visit_end_full_expression (Expression expr) {
@@ -2782,7 +2782,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		} else if (expr.operator == BinaryOperator.OR) {
 			op = CCodeBinaryOperator.OR;
 		} else if (expr.operator == BinaryOperator.IN) {
-			expr.ccodenode = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.BITWISE_AND, new CCodeParenthesizedExpression (cright), new CCodeParenthesizedExpression (cleft))), new CCodeParenthesizedExpression (cleft));
+			expr.ccodenode = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeBinaryExpression (CCodeBinaryOperator.BITWISE_AND, cright, cleft), cleft);
 			return;
 		} else {
 			assert_not_reached ();
@@ -2986,7 +2986,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				var decl = get_temp_variable (expression_type, true, expression_type);
 				temp_vars.insert (0, decl);
 				temp_ref_vars.insert (0, decl);
-				cexpr = new CCodeParenthesizedExpression (new CCodeAssignment (new CCodeIdentifier (get_variable_cname (decl.name)), cexpr));
+				cexpr = new CCodeAssignment (new CCodeIdentifier (get_variable_cname (decl.name)), cexpr);
 
 				if (expression_type is ArrayType && expr != null) {
 					var array_type = (ArrayType) expression_type;

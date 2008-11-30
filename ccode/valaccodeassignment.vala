@@ -78,6 +78,12 @@ public class Vala.CCodeAssignment : CCodeExpression {
 
 		right.write (writer);
 	}
+
+	public override void write_inner (CCodeWriter writer) {
+		writer.write_string ("(");
+		this.write (writer);
+		writer.write_string (")");
+	}
 }
 	
 public enum Vala.CCodeAssignmentOperator {

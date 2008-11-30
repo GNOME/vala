@@ -97,7 +97,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				CCodeExpression target_expr = new CCodeIdentifier (get_delegate_target_cname (param.name));
 				if (param.direction != ParameterDirection.IN) {
 					// accessing argument of out/ref param
-					target_expr = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_expr));
+					target_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_expr);
 				}
 				if (is_out) {
 					// passing array as out/ref

@@ -53,7 +53,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 				temp_vars.insert (0, temp_var);
 
-				csize = new CCodeParenthesizedExpression (new CCodeAssignment (name_cnode, csize));
+				csize = new CCodeAssignment (name_cnode, csize);
 			}
 
 			if (first) {
@@ -147,7 +147,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 					CCodeExpression length_expr = new CCodeIdentifier (get_array_length_cname (param.name, dim));
 					if (param.direction != ParameterDirection.IN) {
 						// accessing argument of out/ref param
-						length_expr = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, length_expr));
+						length_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, length_expr);
 					}
 					if (is_out) {
 						// passing array as out/ref
@@ -283,8 +283,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		} else {
 			// access to element in an array
 			for (int i = 1; i < rank; i++) {
-				var cmul = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (cindex), head.get_array_length_cexpression (expr.container, i + 1));
-				cindex = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cmul, new CCodeParenthesizedExpression ((CCodeExpression) indices[i].ccodenode));
+				var cmul = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, cindex, head.get_array_length_cexpression (expr.container, i + 1));
+				cindex = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, cmul, (CCodeExpression) indices[i].ccodenode);
 			}
 			expr.ccodenode = new CCodeElementAccess (ccontainer, cindex);
 		}
@@ -368,7 +368,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var dest = new CCodeIdentifier ("dest");
 		var src_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, src, element_size));
 		var dest_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, dest, element_size));
-		var dest_end_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, dest, length)), element_size));
+		var dest_end_address = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, array, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, dest, length), element_size));
 
 		fun.block = new CCodeBlock ();
 
@@ -381,14 +381,14 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var czero1 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 		czero1.add_argument (src_address);
 		czero1.add_argument (new CCodeConstant ("0"));
-		czero1.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, dest, src)), element_size));
+		czero1.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, dest, src), element_size));
 		var czeroblock1 = new CCodeBlock ();
 		czeroblock1.add_statement (new CCodeExpressionStatement (czero1));
 
 		var czero2 = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 		czero2.add_argument (dest_end_address);
 		czero2.add_argument (new CCodeConstant ("0"));
-		czero2.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, src, dest)), element_size));
+		czero2.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, src, dest), element_size));
 		var czeroblock2 = new CCodeBlock ();
 		czeroblock2.add_statement (new CCodeExpressionStatement (czero2));
 

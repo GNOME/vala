@@ -447,7 +447,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			var celems = (CCodeExpression) ma.inner.ccodenode;
 			var array_type = (ArrayType) ma.inner.value_type;
 			var csizeof = new CCodeIdentifier ("sizeof (%s)".printf (array_type.element_type.get_cname ()));
-			var cdelta = new CCodeParenthesizedExpression (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, temp_ref, clen));
+			var cdelta = new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, temp_ref, clen);
 			var ccheck = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, temp_ref, clen);
 
 			var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));

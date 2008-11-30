@@ -1,6 +1,6 @@
 /* valaccodeconditionalexpression.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2008  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -48,12 +48,16 @@ public class Vala.CCodeConditionalExpression : CCodeExpression {
 	}
 	
 	public override void write (CCodeWriter writer) {
-		writer.write_string ("(");
-		condition.write (writer);
+		condition.write_inner (writer);
 		writer.write_string (" ? ");
-		true_expression.write (writer);
+		true_expression.write_inner (writer);
 		writer.write_string (" : ");
-		false_expression.write (writer);
+		false_expression.write_inner (writer);
+	}
+
+	public override void write_inner (CCodeWriter writer) {
+		writer.write_string ("(");
+		this.write (writer);
 		writer.write_string (")");
 	}
 }

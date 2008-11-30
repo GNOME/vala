@@ -113,7 +113,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 					var cname = new CCodeIdentifier ("%s_label%d".printf (temp_var.name, label_count++));
 					var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, czero, cname);
 					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
-					var cinit = new CCodeParenthesizedExpression (new CCodeAssignment (cname, ccall));
+					var cinit = new CCodeAssignment (cname, ccall);
 
 					ccall.add_argument (cexpr);
 
@@ -391,7 +391,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 					var ccond_term2 = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeElementAccess (new CCodeIdentifier (collection_backup.name), new CCodeIdentifier (it_name)), new CCodeConstant ("NULL"));
 					var ccond_term = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccond_term1, ccond_term2);
 
-					ccond = new CCodeBinaryExpression (CCodeBinaryOperator.OR, new CCodeParenthesizedExpression (ccond_ind), new CCodeParenthesizedExpression (ccond_term));
+					ccond = new CCodeBinaryExpression (CCodeBinaryOperator.OR, ccond_ind, ccond_term);
 				} else {
 					/* assert when trying to iterate over value-type arrays of unknown length */
 					var cassert = new CCodeFunctionCall (new CCodeIdentifier ("g_assert"));

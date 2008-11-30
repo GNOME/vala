@@ -73,7 +73,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				} else {
 					assert_not_reached ();
 				}
-				cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) get_ccodenode (assignment.left), new CCodeParenthesizedExpression (cexpr));
+				cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) get_ccodenode (assignment.left), cexpr);
 			}
 			
 			var ccall = get_property_set_call (prop, ma, cexpr);

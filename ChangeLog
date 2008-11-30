@@ -1,5 +1,18 @@
 2008-11-30  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/valaccodeassignment.vala:
+	* ccode/valaccodeconditionalexpression.vala:
+	* gobject/valaccodearraymodule.vala:
+	* gobject/valaccodeassignmentmodule.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodecontrolflowmodule.vala:
+	* gobject/valaccodedelegatemodule.vala:
+	* gobject/valaccodemethodcallmodule.vala:
+
+	More parenthesis improvements
+
+2008-11-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaforeachstatement.vala:
 	* ccode/valaccodebinaryexpression.vala:
 	* ccode/valaccodecastexpression.vala:
