@@ -175,6 +175,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head.visit_switch_section (section);
 	}
 
+	public override void visit_switch_label (SwitchLabel label) {
+		head.visit_switch_label (label);
+	}
+
 	public override void visit_while_statement (WhileStatement stmt) {
 		head.visit_while_statement (stmt);
 	}

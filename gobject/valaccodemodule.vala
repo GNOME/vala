@@ -172,6 +172,10 @@ public abstract class Vala.CCodeModule {
 		next.visit_switch_section (section);
 	}
 
+	public virtual void visit_switch_label (SwitchLabel label) {
+		next.visit_switch_label (label);
+	}
+
 	public virtual void visit_while_statement (WhileStatement stmt) {
 		next.visit_while_statement (stmt);
 	}

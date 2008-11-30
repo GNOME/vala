@@ -73,8 +73,12 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 	public Gee.List<SwitchSection> get_sections () {
 		return new ReadOnlyList<SwitchSection> (sections);
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
+		visitor.visit_switch_statement (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
 		expression.accept (visitor);
 
 		visitor.visit_end_full_expression (expression);
@@ -82,8 +86,6 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 		foreach (SwitchSection section in sections) {
 			section.accept (visitor);
 		}
-
-		visitor.visit_switch_statement (this);
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {

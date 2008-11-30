@@ -346,6 +346,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 		stmt.accept_children (this);
 	}
 
+	public override void visit_switch_statement (SwitchStatement stmt) {
+		stmt.accept_children (this);
+	}
+
 	public override void visit_switch_section (SwitchSection section) {
 		section.accept_children (this);
 	}

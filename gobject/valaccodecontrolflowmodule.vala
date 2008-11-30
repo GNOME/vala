@@ -177,6 +177,8 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 	}
 
 	public override void visit_switch_statement (SwitchStatement stmt) {
+		stmt.accept_children (codegen);
+
 		if (stmt.expression.value_type.compatible (string_type)) {
 			visit_string_switch_statement (stmt);
 			return;
@@ -210,6 +212,10 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 	public override void visit_switch_section (SwitchSection section) {
 		visit_block (section);
+	}
+
+	public override void visit_switch_label (SwitchLabel label) {
+		label.accept_children (codegen);
 	}
 
 	public override void visit_while_statement (WhileStatement stmt) {

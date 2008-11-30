@@ -54,13 +54,15 @@ public class Vala.SwitchLabel : CodeNode {
 	}
 	
 	public override void accept (CodeVisitor visitor) {
+		visitor.visit_switch_label (this);
+	}
+	
+	public override void accept_children (CodeVisitor visitor) {
 		if (expression != null) {
 			expression.accept (visitor);
 			
 			visitor.visit_end_full_expression (expression);
 		}
-
-		visitor.visit_switch_label (this);
 	}
 	
 	public override bool check (SemanticAnalyzer analyzer) {

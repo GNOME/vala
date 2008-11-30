@@ -1,5 +1,17 @@
 2008-11-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valanullchecker.vala:
+	* vala/valaswitchlabel.vala:
+	* vala/valaswitchstatement.vala:
+	* vala/valasymbolresolver.vala:
+	* gobject/valaccodecontrolflowmodule.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodemodule.vala:
+
+	Separate visiting switch sections from visiting switch statements
+
+2008-11-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamemberaccess.vala:
 	* vala/valasymbolresolver.vala:
 	* gobject/valaccodememberaccessmodule.vala:

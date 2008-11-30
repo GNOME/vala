@@ -144,6 +144,10 @@ public class Vala.NullChecker : CodeVisitor {
 		check_non_null (stmt.condition);
 	}
 
+	public override void visit_switch_statement (SwitchStatement stmt) {
+		stmt.accept_children (this);
+	}
+
 	public override void visit_switch_section (SwitchSection section) {
 		section.accept_children (this);
 	}
