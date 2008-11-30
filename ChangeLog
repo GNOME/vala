@@ -1,5 +1,11 @@
 2008-11-30  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/gstreamer-rtsp-0.10.vapi:
+
+	Regenerated
+
+2008-11-30  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 
 	Fix array length variable name for internal variables
