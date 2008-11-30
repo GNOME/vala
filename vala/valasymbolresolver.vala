@@ -410,6 +410,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 		expr.accept_children (this);
 	}
 
+	public override void visit_binary_expression (BinaryExpression expr) {
+		expr.accept_children (this);
+	}
+
 	public override void visit_lambda_expression (LambdaExpression l) {
 		l.accept_children (this);
 	}

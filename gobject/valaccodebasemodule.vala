@@ -2743,6 +2743,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_binary_expression (BinaryExpression expr) {
+		expr.accept_children (codegen);
+
 		var cleft = (CCodeExpression) expr.left.ccodenode;
 		var cright = (CCodeExpression) expr.right.ccodenode;
 		

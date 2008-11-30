@@ -1,5 +1,13 @@
 2008-11-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valabinaryexpression.vala:
+	* vala/valasymbolresolver.vala:
+	* gobject/valaccodebasemodule.vala:
+
+	Separate visiting operands from visiting binary expression
+
+2008-11-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadeclarationstatement.vala:
 	* vala/valasymbolresolver.vala:
 	* gobject/valaccodebasemodule.vala:

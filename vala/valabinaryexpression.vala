@@ -77,14 +77,16 @@ public class Vala.BinaryExpression : Expression {
 		right = _right;
 		source_reference = source;
 	}
-	
-	public override void accept (CodeVisitor visitor) {
-		left.accept (visitor);
-		right.accept (visitor);			
 
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_binary_expression (this);
 
 		visitor.visit_expression (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
+		left.accept (visitor);
+		right.accept (visitor);			
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {
