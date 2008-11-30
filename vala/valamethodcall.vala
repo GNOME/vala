@@ -431,6 +431,13 @@ public class Vala.MethodCall : Expression {
 				decl.check (analyzer);
 				temp_access.check (analyzer);
 
+				// move temp variable to insert block to ensure the
+				// variable is in the same block as the declaration
+				// otherwise there will be scoping issues in the generated code
+				var block = (Block) analyzer.current_symbol;
+				block.remove_local_variable (local);
+				analyzer.insert_block.add_local_variable (local);
+
 				analyzer.insert_block = old_insert_block;
 
 				old_parent_node.replace_expression (this, temp_access);
