@@ -1,5 +1,14 @@
 2008-11-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am:
+	* vala/valacodewriter.vala:
+	* compiler/valacompiler.vala:
+	* vapigen/valavapigen.vala:
+
+	Add --dump-tree command-line option to write code tree to file
+
+2008-11-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valanullchecker.vala:
 	* vala/valaswitchlabel.vala:
 	* vala/valaswitchstatement.vala:

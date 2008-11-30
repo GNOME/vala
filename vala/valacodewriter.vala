@@ -1,4 +1,4 @@
-/* valainterfacewriter.vala
+/* valacodewriter.vala
  *
  * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
  *
@@ -21,13 +21,12 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-using GLib;
 using Gee;
 
 /**
  * Code visitor generating Vala API file for the public interface.
  */
-public class Vala.InterfaceWriter : CodeVisitor {
+public class Vala.CodeWriter : CodeVisitor {
 	private CodeContext context;
 	
 	FileStream stream;
@@ -37,6 +36,12 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	bool bol = true;
 
 	Scope current_scope;
+
+	bool dump_tree;
+
+	public CodeWriter (bool dump_tree = false) {
+		this.dump_tree = dump_tree;
+	}
 
 	/**
 	 * Writes the public interface of the specified code context into the
@@ -808,7 +813,9 @@ public class Vala.InterfaceWriter : CodeVisitor {
 
 		// don't write interface implementation unless it's an abstract or virtual method
 		if (!check_accessibility (m) || m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
-			return;
+			if (!dump_tree) {
+				return;
+			}
 		}
 
 		if (m.get_attribute ("NoWrapper") != null) {
@@ -912,11 +919,11 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_params (m.get_parameters ());
 		write_error_domains (m.get_error_types ());
 
-		write_string (";");
+		write_code_block (m.body);
 
 		write_newline ();
 	}
-	
+
 	public override void visit_creation_method (CreationMethod m) {
 		visit_method (m);
 	}
@@ -952,7 +959,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_identifier (prop.name);
 		write_string (" {");
 		if (prop.get_accessor != null) {
-			write_string (" get;");
+			write_string (" get");
+			write_code_block (prop.get_accessor.body);
 		}
 		if (prop.set_accessor != null) {
 			if (prop.set_accessor.writable) {
@@ -961,7 +969,7 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			if (prop.set_accessor.construction) {
 				write_string (" construct");
 			}
-			write_string (";");
+			write_code_block (prop.set_accessor.body);
 		}
 		write_string (" }");
 		write_newline ();
@@ -998,6 +1006,482 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		write_string (";");
 
 		write_newline ();
+	}
+
+	public override void visit_block (Block b) {
+		write_begin_block ();
+
+		foreach (Statement stmt in b.get_statements ()) {
+			stmt.accept (this);
+		}
+
+		write_end_block ();
+	}
+
+	public override void visit_empty_statement (EmptyStatement stmt) {
+	}
+
+	public override void visit_declaration_statement (DeclarationStatement stmt) {
+		write_indent ();
+		stmt.declaration.accept (this);
+		write_string (";");
+		write_newline ();
+	}
+
+	public override void visit_local_variable (LocalVariable local) {
+		write_type (local.variable_type);
+		write_string (" ");
+		write_identifier (local.name);
+		if (local.initializer != null) {
+			write_string (" = ");
+			local.initializer.accept (this);
+		}
+	}
+
+	public override void visit_initializer_list (InitializerList list) {
+	}
+
+	public override void visit_expression_statement (ExpressionStatement stmt) {
+		write_indent ();
+		stmt.expression.accept (this);
+		write_string (";");
+		write_newline ();
+	}
+
+	public override void visit_if_statement (IfStatement stmt) {
+		write_indent ();
+		write_string ("if (");
+		stmt.condition.accept (this);
+		write_string (")");
+		stmt.true_statement.accept (this);
+		if (stmt.false_statement != null) {
+			write_string (" else");
+			stmt.false_statement.accept (this);
+		}
+		write_newline ();
+	}
+
+	public override void visit_switch_statement (SwitchStatement stmt) {
+		write_indent ();
+		write_string ("switch (");
+		stmt.expression.accept (this);
+		write_string (") {");
+		write_newline ();
+
+		foreach (SwitchSection section in stmt.get_sections ()) {
+			section.accept (this);
+		}
+
+		write_indent ();
+		write_string ("}");
+		write_newline ();
+	}
+
+	public override void visit_switch_section (SwitchSection section) {
+		foreach (SwitchLabel label in section.get_labels ()) {
+			label.accept (this);
+		}
+
+		visit_block (section);
+	}
+
+	public override void visit_switch_label (SwitchLabel label) {
+		if (label.expression != null) {
+			write_indent ();
+			write_string ("case ");
+			label.expression.accept (this);
+			write_string (":");
+			write_newline ();
+		} else {
+			write_indent ();
+			write_string ("default:");
+			write_newline ();
+		}
+	}
+
+	public override void visit_while_statement (WhileStatement stmt) {
+		write_indent ();
+		write_string ("while (");
+		stmt.condition.accept (this);
+		write_string (")");
+		stmt.body.accept (this);
+		write_newline ();
+	}
+
+	public override void visit_do_statement (DoStatement stmt) {
+		write_indent ();
+		write_string ("do");
+		stmt.body.accept (this);
+		write_string ("while (");
+		stmt.condition.accept (this);
+		write_string (");");
+		write_newline ();
+	}
+
+	public override void visit_for_statement (ForStatement stmt) {
+		write_indent ();
+		write_string ("for (");
+
+		bool first = true;
+		foreach (Expression initializer in stmt.get_initializer ()) {
+			if (!first) {
+				write_string (", ");
+			}
+			first = false;
+			initializer.accept (this);
+		}
+		write_string ("; ");
+
+		stmt.condition.accept (this);
+		write_string ("; ");
+
+		first = true;
+		foreach (Expression iterator in stmt.get_iterator ()) {
+			if (!first) {
+				write_string (", ");
+			}
+			first = false;
+			iterator.accept (this);
+		}
+
+		write_string (")");
+		stmt.body.accept (this);
+		write_newline ();
+	}
+
+	public override void visit_foreach_statement (ForeachStatement stmt) {
+	}
+
+	public override void visit_break_statement (BreakStatement stmt) {
+		write_indent ();
+		write_string ("break;");
+		write_newline ();
+	}
+
+	public override void visit_continue_statement (ContinueStatement stmt) {
+		write_indent ();
+		write_string ("continue;");
+		write_newline ();
+	}
+
+	public override void visit_return_statement (ReturnStatement stmt) {
+		write_indent ();
+		write_string ("return");
+		if (stmt.return_expression != null) {
+			write_string (" ");
+			stmt.return_expression.accept (this);
+		}
+		write_string (";");
+		write_newline ();
+	}
+
+	public override void visit_yield_statement (YieldStatement y) {
+		write_indent ();
+		write_string ("yield");
+		if (y.yield_expression != null) {
+			write_string (" ");
+			y.yield_expression.accept (this);
+		}
+		write_string (";");
+		write_newline ();
+	}
+
+	public override void visit_throw_statement (ThrowStatement stmt) {
+		write_indent ();
+		write_string ("throw");
+		if (stmt.error_expression != null) {
+			write_string (" ");
+			stmt.error_expression.accept (this);
+		}
+		write_string (";");
+		write_newline ();
+	}
+
+	public override void visit_try_statement (TryStatement stmt) {
+		write_indent ();
+		write_string ("try");
+		stmt.body.accept (this);
+		write_newline ();
+	}
+
+	public override void visit_catch_clause (CatchClause clause) {
+	}
+
+	public override void visit_lock_statement (LockStatement stmt) {
+	}
+
+	public override void visit_delete_statement (DeleteStatement stmt) {
+	}
+
+	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
+	}
+
+	public override void visit_boolean_literal (BooleanLiteral lit) {
+		write_string (lit.value.to_string ());
+	}
+
+	public override void visit_character_literal (CharacterLiteral lit) {
+		write_string (lit.value);
+	}
+
+	public override void visit_integer_literal (IntegerLiteral lit) {
+		write_string (lit.value);
+	}
+
+	public override void visit_real_literal (RealLiteral lit) {
+		write_string (lit.value);
+	}
+
+	public override void visit_string_literal (StringLiteral lit) {
+		write_string (lit.value);
+	}
+
+	public override void visit_null_literal (NullLiteral lit) {
+		write_string ("null");
+	}
+
+	public override void visit_parenthesized_expression (ParenthesizedExpression expr) {
+		write_string ("(");
+		expr.inner.accept (this);
+		write_string (")");
+	}
+
+	public override void visit_member_access (MemberAccess expr) {
+		if (expr.inner != null) {
+			expr.inner.accept (this);
+			write_string (".");
+		}
+		write_identifier (expr.member_name);
+	}
+
+	public override void visit_method_call (MethodCall expr) {
+		expr.call.accept (this);
+		write_string (" (");
+
+		bool first = true;
+		foreach (Expression arg in expr.get_argument_list ()) {
+			if (!first) {
+				write_string (", ");
+			}
+			first = false;
+
+			arg.accept (this);
+		}
+
+		write_string (")");
+	}
+	
+	public override void visit_element_access (ElementAccess expr) {
+		expr.container.accept (this);
+		write_string ("[");
+
+		bool first = true;
+		foreach (Expression index in expr.get_indices ()) {
+			if (!first) {
+				write_string (", ");
+			}
+			first = false;
+
+			index.accept (this);
+		}
+
+		write_string ("]");
+	}
+
+	public override void visit_base_access (BaseAccess expr) {
+		write_string ("base");
+	}
+
+	public override void visit_postfix_expression (PostfixExpression expr) {
+		expr.inner.accept (this);
+		if (expr.increment) {
+			write_string ("++");
+		} else {
+			write_string ("--");
+		}
+	}
+
+	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
+		write_string ("new ");
+		write_type (expr.type_reference);
+		write_string (" (");
+
+		bool first = true;
+		foreach (Expression arg in expr.get_argument_list ()) {
+			if (!first) {
+				write_string (", ");
+			}
+			first = false;
+
+			arg.accept (this);
+		}
+
+		write_string (")");
+	}
+
+	public override void visit_sizeof_expression (SizeofExpression expr) {
+		write_string ("sizeof (");
+		write_type (expr.type_reference);
+		write_string (")");
+	}
+
+	public override void visit_typeof_expression (TypeofExpression expr) {
+		write_string ("typeof (");
+		write_type (expr.type_reference);
+		write_string (")");
+	}
+
+	public override void visit_unary_expression (UnaryExpression expr) {
+		switch (expr.operator) {
+		case UnaryOperator.PLUS:
+			write_string ("+");
+			break;
+		case UnaryOperator.MINUS:
+			write_string ("-");
+			break;
+		case UnaryOperator.LOGICAL_NEGATION:
+			write_string ("!");
+			break;
+		case UnaryOperator.BITWISE_COMPLEMENT:
+			write_string ("~");
+			break;
+		case UnaryOperator.INCREMENT:
+			write_string ("++");
+			break;
+		case UnaryOperator.DECREMENT:
+			write_string ("--");
+			break;
+		case UnaryOperator.REF:
+			write_string ("ref ");
+			break;
+		case UnaryOperator.OUT:
+			write_string ("out ");
+			break;
+		default:
+			assert_not_reached ();
+		}
+		expr.inner.accept (this);
+	}
+
+	public override void visit_cast_expression (CastExpression expr) {
+		if (!expr.is_silent_cast) {
+			write_string ("(");
+			write_type (expr.type_reference);
+			write_string (") ");
+		}
+
+		expr.inner.accept (this);
+
+		if (expr.is_silent_cast) {
+			write_string (" as ");
+			write_type (expr.type_reference);
+		}
+	}
+
+	public override void visit_pointer_indirection (PointerIndirection expr) {
+		write_string ("*");
+		expr.inner.accept (this);
+	}
+
+	public override void visit_addressof_expression (AddressofExpression expr) {
+		write_string ("&");
+		expr.inner.accept (this);
+	}
+
+	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
+		write_string ("#");
+		expr.inner.accept (this);
+	}
+
+	public override void visit_binary_expression (BinaryExpression expr) {
+		expr.left.accept (this);
+
+		switch (expr.operator) {
+		case BinaryOperator.PLUS:
+			write_string (" + ");
+			break;
+		case BinaryOperator.MINUS:
+			write_string (" - ");
+			break;
+		case BinaryOperator.MUL:
+			write_string (" * ");
+			break;
+		case BinaryOperator.DIV:
+			write_string (" / ");
+			break;
+		case BinaryOperator.MOD:
+			write_string (" % ");
+			break;
+		case BinaryOperator.SHIFT_LEFT:
+			write_string (" << ");
+			break;
+		case BinaryOperator.SHIFT_RIGHT:
+			write_string (" >> ");
+			break;
+		case BinaryOperator.LESS_THAN:
+			write_string (" < ");
+			break;
+		case BinaryOperator.GREATER_THAN:
+			write_string (" > ");
+			break;
+		case BinaryOperator.LESS_THAN_OR_EQUAL:
+			write_string (" <= ");
+			break;
+		case BinaryOperator.GREATER_THAN_OR_EQUAL:
+			write_string (" >= ");
+			break;
+		case BinaryOperator.EQUALITY:
+			write_string (" == ");
+			break;
+		case BinaryOperator.INEQUALITY:
+			write_string (" != ");
+			break;
+		case BinaryOperator.BITWISE_AND:
+			write_string (" & ");
+			break;
+		case BinaryOperator.BITWISE_OR:
+			write_string (" | ");
+			break;
+		case BinaryOperator.BITWISE_XOR:
+			write_string (" ^ ");
+			break;
+		case BinaryOperator.AND:
+			write_string (" && ");
+			break;
+		case BinaryOperator.OR:
+			write_string (" || ");
+			break;
+		case BinaryOperator.IN:
+			write_string (" in ");
+			break;
+		default:
+			assert_not_reached ();
+		}
+
+		expr.right.accept (this);
+	}
+
+	public override void visit_type_check (TypeCheck expr) {
+		expr.expression.accept (this);
+		write_string (" is ");
+		write_type (expr.type_reference);
+	}
+
+	public override void visit_conditional_expression (ConditionalExpression expr) {
+		expr.condition.accept (this);
+		write_string ("?");
+		expr.true_expression.accept (this);
+		write_string (":");
+		expr.false_expression.accept (this);
+	}
+
+	public override void visit_lambda_expression (LambdaExpression expr) {
+	}
+
+	public override void visit_assignment (Assignment a) {
+		a.left.accept (this);
+		write_string (" = ");
+		a.right.accept (this);
 	}
 
 	private void write_indent () {
@@ -1066,6 +1550,15 @@ public class Vala.InterfaceWriter : CodeVisitor {
 		bol = true;
 	}
 	
+	void write_code_block (Block? block) {
+		if (block == null || !dump_tree) {
+			write_string (";");
+			return;
+		}
+
+		block.accept (this);
+	}
+
 	private void write_begin_block () {
 		if (!bol) {
 			stream.putc (' ');
@@ -1084,7 +1577,8 @@ public class Vala.InterfaceWriter : CodeVisitor {
 	}
 
 	private bool check_accessibility (Symbol sym) {
-		if (sym.access == SymbolAccessibility.PUBLIC ||
+		if (dump_tree ||
+		    sym.access == SymbolAccessibility.PUBLIC ||
 		    sym.access == SymbolAccessibility.PROTECTED) {
 			return true;
 		}
@@ -1097,8 +1591,10 @@ public class Vala.InterfaceWriter : CodeVisitor {
 			write_string ("public ");
 		} else if (sym.access == SymbolAccessibility.PROTECTED) {
 			write_string ("protected ");
-		} else {
-			assert_not_reached ();
+		} else if (sym.access == SymbolAccessibility.INTERNAL) {
+			write_string ("internal ");
+		} else if (sym.access == SymbolAccessibility.PRIVATE) {
+			write_string ("private ");
 		}
 	}
 }

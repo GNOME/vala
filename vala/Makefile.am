@@ -37,6 +37,7 @@ libvalacore_la_VALASOURCES = \
 	valacodegenerator.vala \
 	valacodenode.vala \
 	valacodevisitor.vala \
+	valacodewriter.vala \
 	valaconditionalexpression.vala \
 	valaconstant.vala \
 	valaconstructor.vala \
@@ -78,7 +79,6 @@ libvalacore_la_VALASOURCES = \
 	valaintegertype.vala \
 	valainterface.vala \
 	valainterfacetype.vala \
-	valainterfacewriter.vala \
 	valainvalidtype.vala \
 	valalambdaexpression.vala \
 	valaliteral.vala \

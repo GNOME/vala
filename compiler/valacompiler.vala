@@ -49,6 +49,7 @@ class Vala.Compiler {
 	static string cc_command;
 	[NoArrayLength]
 	static string[] cc_options;
+	static string dump_tree;
 	static bool save_temps;
 	static bool quiet_mode;
 
@@ -73,6 +74,7 @@ class Vala.Compiler {
 		{ "disable-dbus-transformation", 0, 0, OptionArg.NONE, ref disable_dbus_transformation, "Disable transformation of D-Bus member names", null },
 		{ "cc", 0, 0, OptionArg.STRING, ref cc_command, "Use COMMAND as C compiler command", "COMMAND" },
 		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, ref cc_options, "Pass OPTION to the C compiler", "OPTION..." },
+		{ "dump-tree", 0, 0, OptionArg.FILENAME, ref dump_tree, "Write code tree to FILE", "FILE" },
 		{ "save-temps", 0, 0, OptionArg.NONE, ref save_temps, "Keep temporary files", null },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
 		{ "target-glib", 0, 0, OptionArg.STRING, ref target_glib, "Target version of glib for code generation", "MAJOR.MINOR" },
@@ -251,7 +253,12 @@ class Vala.Compiler {
 
 		var analyzer = new SemanticAnalyzer ();
 		analyzer.analyze (context);
-		
+
+		if (dump_tree != null) {
+			var code_writer = new CodeWriter (true);
+			code_writer.write_file (context, dump_tree);
+		}
+
 		if (Report.get_errors () > 0) {
 			return quit ();
 		}
@@ -279,7 +286,7 @@ class Vala.Compiler {
 		}
 		
 		if (library != null) {
-			var interface_writer = new InterfaceWriter ();
+			var interface_writer = new CodeWriter ();
 			string vapi_filename = "%s.vapi".printf (library);
 
 			// put .vapi file in current directory unless -d has been explicitly specified
