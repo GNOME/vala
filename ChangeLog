@@ -1,5 +1,13 @@
 2008-11-30  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_tree_model_get_value binding
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-11-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasymbolresolver.vala:
 
 	Resolve types in switch labels

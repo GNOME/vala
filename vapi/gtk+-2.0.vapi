@@ -5467,7 +5467,7 @@ namespace Gtk {
 		public abstract Gtk.TreePath get_path (Gtk.TreeIter iter);
 		public string get_string_from_iter (Gtk.TreeIter iter);
 		public void get_valist (Gtk.TreeIter iter, void* var_args);
-		public abstract void get_value (Gtk.TreeIter iter, int column, ref GLib.Value value);
+		public abstract void get_value (Gtk.TreeIter iter, int column, out GLib.Value value);
 		public abstract bool iter_children (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
 		public abstract bool iter_has_child (Gtk.TreeIter iter);
 		public abstract int iter_n_children (Gtk.TreeIter? iter);
