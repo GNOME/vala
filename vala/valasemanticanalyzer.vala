@@ -37,6 +37,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public Class current_class;
 	public Struct current_struct;
 
+	public Block insert_block;
+
 	public DataType bool_type;
 	public DataType string_type;
 	public DataType uchar_type;

@@ -43,14 +43,5 @@ public class Vala.Tuple : Expression {
 	public override bool is_pure () {
 		return false;
 	}
-
-	public override bool in_single_basic_block () {
-		foreach (Expression expr in expression_list) {
-			if (!expr.in_single_basic_block ()) {
-				return false;
-			}
-		}
-		return true;
-	}
 }
 

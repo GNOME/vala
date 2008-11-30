@@ -75,8 +75,4 @@ public class Vala.PostfixExpression : Expression {
 
 		return !error;
 	}
-
-	public override bool in_single_basic_block () {
-		return true;
-	}
 }

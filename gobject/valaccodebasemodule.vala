@@ -1207,6 +1207,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_block (Block b) {
+		var old_symbol = current_symbol;
 		current_symbol = b;
 
 		b.accept_children (codegen);
@@ -1258,7 +1259,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		b.ccodenode = cblock;
 
-		current_symbol = current_symbol.parent_symbol;
+		current_symbol = old_symbol;
 	}
 
 	public override void visit_empty_statement (EmptyStatement stmt) {

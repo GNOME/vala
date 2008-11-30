@@ -412,13 +412,16 @@ public class Vala.MethodCall : Expression {
 			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
 				// simple statements, no side effects after method call
 			} else {
+				var old_insert_block = analyzer.insert_block;
+				analyzer.insert_block = prepare_condition_split (analyzer);
+
 				// store parent_node as we need to replace the expression in the old parent node later on
 				var old_parent_node = parent_node;
 
 				var local = new LocalVariable (value_type, get_temp_name (), null, source_reference);
 				var decl = new DeclarationStatement (local, source_reference);
 
-				insert_statement ((Block) analyzer.current_symbol, decl);
+				insert_statement (analyzer.insert_block, decl);
 
 				var temp_access = new MemberAccess.simple (local.name, source_reference);
 				temp_access.target_type = target_type;
@@ -427,6 +430,8 @@ public class Vala.MethodCall : Expression {
 				local.initializer = this;
 				decl.check (analyzer);
 				temp_access.check (analyzer);
+
+				analyzer.insert_block = old_insert_block;
 
 				old_parent_node.replace_expression (this, temp_access);
 			}
@@ -449,14 +454,5 @@ public class Vala.MethodCall : Expression {
 		foreach (Expression arg in argument_list) {
 			arg.get_used_variables (collection);
 		}
-	}
-
-	public override bool in_single_basic_block () {
-		foreach (Expression arg in argument_list) {
-			if (!arg.in_single_basic_block ()) {
-				return false;
-			}
-		}
-		return call.in_single_basic_block ();
 	}
 }

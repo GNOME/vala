@@ -241,10 +241,6 @@ public class Vala.UnaryExpression : Expression {
 			inner.get_used_variables (collection);
 		}
 	}
-
-	public override bool in_single_basic_block () {
-		return inner.in_single_basic_block ();
-	}
 }
 
 public enum Vala.UnaryOperator {

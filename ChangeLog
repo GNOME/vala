@@ -1,5 +1,41 @@
 2008-11-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaaddressofexpression.vala:
+	* vala/valaarraycreationexpression.vala:
+	* vala/valaassignment.vala:
+	* vala/valabaseaccess.vala:
+	* vala/valabinaryexpression.vala:
+	* vala/valablock.vala:
+	* vala/valacastexpression.vala:
+	* vala/valaconditionalexpression.vala:
+	* vala/valadostatement.vala:
+	* vala/valaelementaccess.vala:
+	* vala/valaexpression.vala:
+	* vala/valaforstatement.vala:
+	* vala/valainitializerlist.vala:
+	* vala/valalambdaexpression.vala:
+	* vala/valaliteral.vala:
+	* vala/valamemberaccess.vala:
+	* vala/valamethodcall.vala:
+	* vala/valaobjectcreationexpression.vala:
+	* vala/valaparenthesizedexpression.vala:
+	* vala/valapointerindirection.vala:
+	* vala/valapostfixexpression.vala:
+	* vala/valareferencetransferexpression.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valasizeofexpression.vala:
+	* vala/valaswitchsection.vala:
+	* vala/valatuple.vala:
+	* vala/valatypecheck.vala:
+	* vala/valatypeofexpression.vala:
+	* vala/valaunaryexpression.vala:
+	* vala/valawhilestatement.vala:
+	* gobject/valaccodebasemodule.vala:
+
+	Fix error handling in condition of while, do, and for statements
+
+2008-11-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaexpressionstatement.vala:
 	* vala/valanullchecker.vala:
 	* vala/valasymbolresolver.vala:

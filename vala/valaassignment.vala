@@ -400,10 +400,6 @@ public class Vala.Assignment : Expression {
 		}
 		right.get_used_variables (collection);
 	}
-
-	public override bool in_single_basic_block () {
-		return left.in_single_basic_block () && right.in_single_basic_block ();
-	}
 }
 	
 public enum Vala.AssignmentOperator {

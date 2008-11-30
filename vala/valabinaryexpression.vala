@@ -148,6 +148,9 @@ public class Vala.BinaryExpression : Expression {
 		checked = true;
 
 		if (operator == BinaryOperator.AND || operator == BinaryOperator.OR) {
+			var old_insert_block = analyzer.insert_block;
+			analyzer.insert_block = prepare_condition_split (analyzer);
+
 			// convert conditional expression into if statement
 			// required for flow analysis and exception handling
 
@@ -172,12 +175,13 @@ public class Vala.BinaryExpression : Expression {
 
 			var if_stmt = new IfStatement (left, true_block, false_block, source_reference);
 
-			insert_statement ((Block) analyzer.current_symbol, decl);
-			insert_statement ((Block) analyzer.current_symbol, if_stmt);
+			insert_statement (analyzer.insert_block, decl);
+			insert_statement (analyzer.insert_block, if_stmt);
 
 			if (!if_stmt.check (analyzer)) {
 				return false;
 			}
+			analyzer.insert_block = old_insert_block;
 
 			var ma = new MemberAccess.simple (local.name, source_reference);
 			ma.target_type = target_type;
@@ -349,14 +353,6 @@ public class Vala.BinaryExpression : Expression {
 	public override void get_used_variables (Collection<LocalVariable> collection) {
 		left.get_used_variables (collection);
 		right.get_used_variables (collection);
-	}
-
-	public override bool in_single_basic_block () {
-		if (operator == BinaryOperator.AND
-		    || operator == BinaryOperator.OR) {
-			return false;
-		}
-		return left.in_single_basic_block () && right.in_single_basic_block ();
 	}
 }
 

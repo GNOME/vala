@@ -105,6 +105,9 @@ public class Vala.ConditionalExpression : Expression {
 
 		checked = true;
 
+		var old_insert_block = analyzer.insert_block;
+		analyzer.insert_block = prepare_condition_split (analyzer);
+
 		// convert ternary expression into if statement
 		// required for flow analysis and exception handling
 
@@ -128,12 +131,13 @@ public class Vala.ConditionalExpression : Expression {
 
 		var if_stmt = new IfStatement (condition, true_block, false_block, source_reference);
 
-		insert_statement ((Block) analyzer.current_symbol, decl);
-		insert_statement ((Block) analyzer.current_symbol, if_stmt);
+		insert_statement (analyzer.insert_block, decl);
+		insert_statement (analyzer.insert_block, if_stmt);
 
 		if (!if_stmt.check (analyzer)) {
 			return false;
 		}
+		analyzer.insert_block = old_insert_block;
 
 		true_expression = true_local.initializer;
 		false_expression = false_local.initializer;
@@ -175,9 +179,5 @@ public class Vala.ConditionalExpression : Expression {
 		parent_node.replace_expression (this, ma);
 
 		return true;
-	}
-
-	public override bool in_single_basic_block () {
-		return false;
 	}
 }

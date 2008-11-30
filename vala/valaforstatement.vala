@@ -164,20 +164,6 @@ public class Vala.ForStatement : CodeNode, Statement {
 
 		checked = true;
 
-
-		if (condition != null && !condition.in_single_basic_block ()) {
-			// move condition into the loop body to allow split
-			// in multiple statements
-
-			var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, condition, condition.source_reference);
-			var true_block = new Block (condition.source_reference);
-			true_block.add_statement (new BreakStatement (condition.source_reference));
-			var if_stmt = new IfStatement (if_condition, true_block, null, condition.source_reference);
-			body.insert_statement (0, if_stmt);
-
-			condition = new BooleanLiteral (true, source_reference);
-		}
-
 		foreach (Expression init_expr in initializer) {
 			init_expr.check (analyzer);
 		}
@@ -217,5 +203,21 @@ public class Vala.ForStatement : CodeNode, Statement {
 		}
 
 		return !error;
+	}
+
+	public Block prepare_condition_split (SemanticAnalyzer analyzer) {
+		// move condition into the loop body to allow split
+		// in multiple statements
+
+		var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, condition, condition.source_reference);
+		var true_block = new Block (condition.source_reference);
+		true_block.add_statement (new BreakStatement (condition.source_reference));
+		var if_stmt = new IfStatement (if_condition, true_block, null, condition.source_reference);
+		body.insert_statement (0, if_stmt);
+
+		condition = new BooleanLiteral (true, source_reference);
+		condition.check (analyzer);
+
+		return body;
 	}
 }

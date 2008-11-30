@@ -102,13 +102,23 @@ public abstract class Vala.Expression : CodeNode {
 		}
 	}
 
+	public Block prepare_condition_split (SemanticAnalyzer analyzer) {
+		var while_stmt = parent_statement as WhileStatement;
+		var do_stmt = parent_statement as DoStatement;
+		var for_stmt = parent_statement as ForStatement;
+
+		if (while_stmt != null) {
+			return while_stmt.prepare_condition_split (analyzer);
+		} else if (do_stmt != null) {
+			return do_stmt.prepare_condition_split (analyzer);
+		} else if (for_stmt != null) {
+			return for_stmt.prepare_condition_split (analyzer);
+		}
+
+		return analyzer.insert_block;
+	}
+
 	public void insert_statement (Block block, Statement stmt) {
 		block.insert_before (parent_statement, stmt);
 	}
-
-	/**
-	 * Returns whether this expression is guaranteed to be part of a
-	 * single basic block in the control flow graph.
-	 */
-	public abstract bool in_single_basic_block ();
 }

@@ -93,7 +93,11 @@ public class Vala.SwitchSection : Block {
 		}
 
 		owner = analyzer.current_symbol.scope;
+
+		var old_symbol = analyzer.current_symbol;
+		var old_insert_block = analyzer.insert_block;
 		analyzer.current_symbol = this;
+		analyzer.insert_block = this;
 
 		foreach (Statement st in get_statements ()) {
 			st.check (analyzer);
@@ -103,7 +107,8 @@ public class Vala.SwitchSection : Block {
 			local.active = false;
 		}
 
-		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
+		analyzer.current_symbol = old_symbol;
+		analyzer.insert_block = old_insert_block;
 
 		return !error;
 	}
