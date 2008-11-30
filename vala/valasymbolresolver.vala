@@ -354,6 +354,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 		section.accept_children (this);
 	}
 
+	public override void visit_switch_label (SwitchLabel label) {
+		label.accept_children (this);
+	}
+
 	public override void visit_while_statement (WhileStatement stmt) {
 		stmt.accept_children (this);
 	}
