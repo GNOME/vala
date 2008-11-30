@@ -31,12 +31,22 @@ public class Vala.ElementAccess : Expression {
 	/**
 	 * Expression representing the container on wich we want to access.
 	 */
-	public Expression container { get; set; }
-	
+	public Expression container {
+		get {
+			return _container;
+		}
+		set {
+			_container = value;
+			_container.parent_node = this;
+		}
+	}
+
 	/**
 	 * Expressions representing the indices we want to access inside the container.
 	 */
 	private Gee.List<Expression> indices = new ArrayList<Expression> ();
+
+	Expression _container;
 
 	public void append_index (Expression index) {
 		indices.add (index);
