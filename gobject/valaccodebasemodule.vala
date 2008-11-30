@@ -1303,7 +1303,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			var array_type = (ArrayType) local.variable_type;
 			
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var len_var = new LocalVariable (int_type.copy (), head.get_array_length_cname (local.name, dim));
+				var len_var = new LocalVariable (int_type.copy (), head.get_array_length_cname (get_variable_cname (local.name), dim));
 				temp_vars.insert (0, len_var);
 			}
 		} else if (local.variable_type is DelegateType) {
@@ -1311,7 +1311,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			var d = deleg_type.delegate_symbol;
 			if (d.has_target) {
 				// create variable to store delegate target
-				var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (local.name));
+				var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (get_variable_cname (local.name)));
 				temp_vars.insert (0, target_var);
 			}
 		}
@@ -1330,7 +1330,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), rhs));
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var lhs_array_len = new CCodeIdentifier (head.get_array_length_cname (local.name, dim));
+					var lhs_array_len = new CCodeIdentifier (head.get_array_length_cname (get_variable_cname (local.name), dim));
 					var rhs_array_len = head.get_array_length_cexpression (local.initializer, dim);
 					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
 				}
@@ -1348,7 +1348,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					temp_vars.insert (0, temp_var);
 					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), rhs));
 
-					var lhs_delegate_target = new CCodeIdentifier (get_delegate_target_cname (local.name));
+					var lhs_delegate_target = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (local.name)));
 					var rhs_delegate_target = get_delegate_target_cexpression (local.initializer);
 					ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
 				
@@ -1367,7 +1367,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				var ccomma = new CCodeCommaExpression ();
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (head.get_array_length_cname (local.name, dim)), new CCodeConstant ("0")));
+					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (head.get_array_length_cname (get_variable_cname (local.name), dim)), new CCodeConstant ("0")));
 				}
 
 				ccomma.append_expression (rhs);
