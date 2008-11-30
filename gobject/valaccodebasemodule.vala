@@ -1239,7 +1239,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		foreach (LocalVariable local in local_vars) {
-			if (requires_destroy (local.variable_type)) {
+			if (!local.floating && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (local.name)), local.variable_type, ma)));
@@ -1893,7 +1893,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		var local_vars = b.get_local_variables ();
 		foreach (LocalVariable local in local_vars) {
-			if (local.active && requires_destroy (local.variable_type)) {
+			if (local.active && !local.floating && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (local.name)), local.variable_type, ma)));
@@ -1941,7 +1941,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		var local_vars = b.get_local_variables ();
 		foreach (LocalVariable local in local_vars) {
-			if (local.active && requires_destroy (local.variable_type)) {
+			if (local.active && !local.floating && requires_destroy (local.variable_type)) {
 				found = true;
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;

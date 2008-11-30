@@ -419,11 +419,13 @@ public class Vala.MethodCall : Expression {
 				var old_parent_node = parent_node;
 
 				var local = new LocalVariable (value_type, get_temp_name (), null, source_reference);
+				// use floating variable to avoid unnecessary (and sometimes impossible) copies
+				local.floating = true;
 				var decl = new DeclarationStatement (local, source_reference);
 
 				insert_statement (analyzer.insert_block, decl);
 
-				var temp_access = new MemberAccess.simple (local.name, source_reference);
+				Expression temp_access = new MemberAccess.simple (local.name, source_reference);
 				temp_access.target_type = target_type;
 
 				// don't set initializer earlier as this changes parent_node and parent_statement

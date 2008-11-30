@@ -174,7 +174,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (sym is LocalVariable) {
 			var local = (LocalVariable) sym;
 			var type = local.variable_type.copy ();
-			if (!lvalue) {
+			if (!lvalue && !local.floating) {
 				type.value_owned = false;
 			}
 			return type;

@@ -1,5 +1,14 @@
 2008-11-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valalocalvariable.vala:
+	* vala/valamethodcall.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodebasemodule.vala:
+
+	Avoid object duplication due to error handling
+
+2008-11-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamethodcall.vala:
 
 	Move compiler internal variable to right block
