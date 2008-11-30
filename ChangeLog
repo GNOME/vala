@@ -1,5 +1,13 @@
 2008-11-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarraycreationexpression.vala:
+	* vala/valaelementaccess.vala:
+	* vala/valasemanticanalyzer.vala:
+
+	Accept any integer type as array index
+
+2008-11-30  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/gstreamer-rtsp-0.10.vapi:
 
 	Regenerated

@@ -180,7 +180,7 @@ public class Vala.ArrayCreationExpression : Expression {
 				if (e.value_type == null) {
 					/* return on previous error */
 					return false;
-				} else if (!e.value_type.compatible (analyzer.long_type)) {
+				} else if (!e.value_type.compatible (analyzer.uint64_type)) {
 					error = true;
 					Report.error (e.source_reference, "Expression of integer type expected");
 				}
