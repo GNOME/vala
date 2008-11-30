@@ -53,11 +53,13 @@ public class Vala.ExpressionStatement : CodeNode, Statement {
 		this.source_reference = source_reference;
 		this.expression = expression;
 	}
-	
-	public override void accept (CodeVisitor visitor) {
-		expression.accept (visitor);
 
+	public override void accept (CodeVisitor visitor) {
 		visitor.visit_expression_statement (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
+		expression.accept (visitor);
 	}
 
 	public override void replace_expression (Expression old_node, Expression new_node) {

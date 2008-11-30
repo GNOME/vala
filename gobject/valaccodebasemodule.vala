@@ -1806,6 +1806,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_expression_statement (ExpressionStatement stmt) {
+		stmt.accept_children (codegen);
+
 		if (stmt.expression.error) {
 			stmt.error = true;
 			return;

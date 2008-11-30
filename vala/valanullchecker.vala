@@ -134,6 +134,10 @@ public class Vala.NullChecker : CodeVisitor {
 		}
 	}
 
+	public override void visit_expression_statement (ExpressionStatement stmt) {
+		stmt.accept_children (this);
+	}
+
 	public override void visit_if_statement (IfStatement stmt) {
 		stmt.accept_children (this);
 

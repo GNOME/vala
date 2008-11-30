@@ -1,5 +1,14 @@
 2008-11-30  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaexpressionstatement.vala:
+	* vala/valanullchecker.vala:
+	* vala/valasymbolresolver.vala:
+	* gobject/valaccodebasemodule.vala:
+
+	Separate visiting expressions from visiting expression statements
+
+2008-11-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valabinaryexpression.vala:
 	* vala/valasymbolresolver.vala:
 	* gobject/valaccodebasemodule.vala:
