@@ -585,13 +585,15 @@ public class Vala.GSignalModule : GObjectModule {
 	}
 
 	public override void visit_member_access (MemberAccess expr) {
-		CCodeExpression pub_inst = null;
-	
-		if (expr.inner != null) {
-			pub_inst = (CCodeExpression) expr.inner.ccodenode;
-		}
-
 		if (expr.symbol_reference is Signal) {
+			expr.accept_children (codegen);
+
+			CCodeExpression pub_inst = null;
+	
+			if (expr.inner != null) {
+				pub_inst = (CCodeExpression) expr.inner.ccodenode;
+			}
+
 			var sig = (Signal) expr.symbol_reference;
 			var cl = (TypeSymbol) sig.parent_symbol;
 			

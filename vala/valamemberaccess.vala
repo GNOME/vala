@@ -115,8 +115,14 @@ public class Vala.MemberAccess : Expression {
 	public Gee.List<DataType> get_type_arguments () {
 		return new ReadOnlyList<DataType> (type_argument_list);
 	}
-	
+
 	public override void accept (CodeVisitor visitor) {
+		visitor.visit_member_access (this);
+
+		visitor.visit_expression (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
 		if (inner != null) {
 			inner.accept (visitor);
 		}
@@ -124,10 +130,6 @@ public class Vala.MemberAccess : Expression {
 		foreach (DataType type_arg in type_argument_list) {
 			type_arg.accept (visitor);
 		}
-
-		visitor.visit_member_access (this);
-
-		visitor.visit_expression (this);
 	}
 
 	public override string to_string () {

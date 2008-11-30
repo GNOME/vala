@@ -29,6 +29,8 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	}
 
 	public override void visit_member_access (MemberAccess expr) {
+		expr.accept_children (codegen);
+
 		CCodeExpression pub_inst = null;
 		DataType base_type = null;
 	
