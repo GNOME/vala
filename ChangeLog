@@ -1,5 +1,12 @@
 2008-12-01  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valabinaryexpression.vala:
+	* vala/valaconditionalexpression.vala:
+
+	Fix critical when using conditional expressions in method contracts
+
+2008-12-01  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valagobjectmodule.vala:
 	* gobject/valagsignalmodule.vala:
 

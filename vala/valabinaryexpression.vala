@@ -147,7 +147,10 @@ public class Vala.BinaryExpression : Expression {
 
 		checked = true;
 
-		if (operator == BinaryOperator.AND || operator == BinaryOperator.OR) {
+		// some expressions are not in a block,
+		// for example, expressions in method contracts
+		if (analyzer.current_symbol is Block
+		    && (operator == BinaryOperator.AND || operator == BinaryOperator.OR)) {
 			var old_insert_block = analyzer.insert_block;
 			analyzer.insert_block = prepare_condition_split (analyzer);
 
@@ -307,6 +310,14 @@ public class Vala.BinaryExpression : Expression {
 			// integer type or flags type
 
 			value_type = left.value_type;
+		} else if (operator == BinaryOperator.AND
+			   || operator == BinaryOperator.OR) {
+			if (!left.value_type.compatible (analyzer.bool_type) || !right.value_type.compatible (analyzer.bool_type)) {
+				error = true;
+				Report.error (source_reference, "Operands must be boolean");
+			}
+
+			value_type = analyzer.bool_type;
 		} else if (operator == BinaryOperator.IN) {
 			if (left.value_type.compatible (analyzer.int_type)
 			    && right.value_type.compatible (analyzer.int_type)) {

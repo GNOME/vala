@@ -105,6 +105,12 @@ public class Vala.ConditionalExpression : Expression {
 
 		checked = true;
 
+		if (!(analyzer.current_symbol is Block)) {
+			Report.error (source_reference, "Conditional expressions may only be used in blocks");
+			error = true;
+			return false;
+		}
+
 		var old_insert_block = analyzer.insert_block;
 		analyzer.insert_block = prepare_condition_split (analyzer);
 
