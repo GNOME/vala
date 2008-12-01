@@ -153,14 +153,13 @@ public class Vala.GSignalModule : GObjectModule {
 	}
 	
 	public override void visit_signal (Signal sig) {
-		// parent_symbol may be null for late bound signals
-		if (sig.parent_symbol != null) {
-			var dt = sig.parent_symbol as TypeSymbol;
-			if (!dt.is_subtype_of (gobject_type)) {
-				sig.error = true;
-				Report.error (sig.source_reference, "Only classes and interfaces deriving from GLib.Object support signals. `%s' does not derive from GLib.Object.".printf (dt.get_full_name ()));
-				return;
-			}
+		// parent_symbol may be null for dynamic signals
+
+		var cl = sig.parent_symbol as Class;
+		if (cl != null && cl.is_compact) {
+			sig.error = true;
+			Report.error (sig.source_reference, "Signals are not supported in compact classes");
+			return;
 		}
 
 		sig.accept_children (codegen);
@@ -409,19 +408,13 @@ public class Vala.GSignalModule : GObjectModule {
 			// detailed signal emission
 			var sig = (Signal) expr.symbol_reference;
 			var ma = (MemberAccess) expr.container;
-
 			expr.accept_children (codegen);
 
 			var detail_expr = expr.get_indices ().get (0) as StringLiteral;
 			string signal_detail = detail_expr.eval ();
 			
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
-
-			// FIXME: use C cast if debugging disabled
-			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
-			ccast.add_argument ((CCodeExpression) ma.inner.ccodenode);
-			ccall.add_argument (ccast);
-
+			ccall.add_argument ((CCodeExpression) ma.inner.ccodenode);
 			ccall.add_argument (sig.get_canonical_cconstant (signal_detail));
 			
 			expr.ccodenode = ccall;
@@ -614,11 +607,7 @@ public class Vala.GSignalModule : GObjectModule {
 				expr.ccodenode = ccall;
 			} else {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_emit_by_name"));
-
-				// FIXME: use C cast if debugging disabled
-				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
-				ccast.add_argument (pub_inst);
-				ccall.add_argument (ccast);
+				ccall.add_argument (pub_inst);
 
 				ccall.add_argument (sig.get_canonical_cconstant ());
 				

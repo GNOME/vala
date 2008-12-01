@@ -400,25 +400,32 @@ public class Vala.GObjectModule : GTypeModule {
 		function.add_parameter (new CCodeFormalParameter ("collect_flags", "guint"));
 		function.modifiers = CCodeModifiers.STATIC;
 
-		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
+		var vpointer = new CCodeMemberAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"), "v_pointer");
 		var object_p_ptr = new CCodeIdentifier ("*object_p");
-		var null_ = new CCodeConstant("NULL");
+		var null_ = new CCodeConstant ("NULL");
 
 		var init_block = new CCodeBlock ();
 
-		var ctypedecl = new CCodeDeclaration (cl.get_cname()+"**");
-		ctypedecl.add_declarator ( new CCodeVariableDeclarator.with_initializer("object_p", new CCodeMemberAccess(new CCodeIdentifier ("collect_values[0]"),"v_pointer")));
+		var ctypedecl = new CCodeDeclaration (cl.get_cname () + "**");
+		ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("object_p", new CCodeMemberAccess (new CCodeIdentifier ("collect_values[0]"),"v_pointer")));
 		init_block.add_statement (ctypedecl);
+
+		var value_type_name_fct = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_TYPE_NAME"));
+		value_type_name_fct.add_argument (new CCodeConstant ("value"));
 
 		var assert_condition = new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("object_p"));
 		function.block = init_block;
 		var assert_true = new CCodeBlock ();
+		var assert_printf = new CCodeFunctionCall (new CCodeIdentifier ("g_strdup_printf"));
+		assert_printf.add_argument (new CCodeConstant ("\"value location for `%s' passed as NULL\""));
+		assert_printf.add_argument (value_type_name_fct);
+		assert_true.add_statement (new CCodeReturnStatement (assert_printf));
 		var if_assert = new CCodeIfStatement (assert_condition, assert_true);
 		init_block.add_statement (if_assert);
 
 		var main_else_true = new CCodeBlock ();
 		var main_else_if_true = new CCodeBlock ();
-		var main_else_if_condition = new CCodeBinaryExpression ( CCodeBinaryOperator.AND, new CCodeIdentifier ("collect_flags"), new CCodeIdentifier ("G_VALUE_NOCOPY_CONTENTS"));
+		var main_else_if_condition = new CCodeBinaryExpression (CCodeBinaryOperator.AND, new CCodeIdentifier ("collect_flags"), new CCodeIdentifier ("G_VALUE_NOCOPY_CONTENTS"));
 		var main_else_if = new CCodeIfStatement (main_else_if_condition, main_else_if_true, main_else_true);
 
 		var main_true = new CCodeBlock ();
@@ -429,11 +436,11 @@ public class Vala.GObjectModule : GTypeModule {
 		var ref_fct = new CCodeFunctionCall (new CCodeIdentifier (cl.get_ref_function()));
 		ref_fct.add_argument (vpointer);
 
-		main_true.add_statement (new CCodeExpressionStatement( new CCodeAssignment (object_p_ptr, null_, CCodeAssignmentOperator.SIMPLE)));
-		main_else_if_true.add_statement (new CCodeExpressionStatement( new CCodeAssignment (object_p_ptr, vpointer, CCodeAssignmentOperator.SIMPLE)));
-		main_else_true.add_statement (new CCodeExpressionStatement( new CCodeAssignment (object_p_ptr, ref_fct, CCodeAssignmentOperator.SIMPLE)));
+		main_true.add_statement (new CCodeExpressionStatement (new CCodeAssignment (object_p_ptr, null_, CCodeAssignmentOperator.SIMPLE)));
+		main_else_if_true.add_statement (new CCodeExpressionStatement (new CCodeAssignment (object_p_ptr, vpointer, CCodeAssignmentOperator.SIMPLE)));
+		main_else_true.add_statement (new CCodeExpressionStatement (new CCodeAssignment (object_p_ptr, ref_fct, CCodeAssignmentOperator.SIMPLE)));
 
-		init_block.add_statement ( new CCodeReturnStatement ( null_ ));
+		init_block.add_statement (new CCodeReturnStatement (null_));
 		source_type_member_definition.append (function);
 	}
 
@@ -450,60 +457,70 @@ public class Vala.GObjectModule : GTypeModule {
 		var init_block = new CCodeBlock ();
 		function.block = init_block;
 
-		var condition = new CCodeMemberAccess (new CCodeIdentifier ("collect_values[0]"), "v_pointer");
+		var collect_vpointer = new CCodeMemberAccess (new CCodeIdentifier ("collect_values[0]"), "v_pointer");
+
 		var true_stmt = new CCodeBlock ();
 		var false_stmt = new CCodeBlock ();
-		var if_statement = new CCodeIfStatement (condition, true_stmt, false_stmt);
+		var if_statement = new CCodeIfStatement (collect_vpointer, true_stmt, false_stmt);
 		init_block.add_statement (if_statement);
 
 		var obj_identifier = new CCodeIdentifier ("object");
 
-		var ctypedecl = new CCodeDeclaration (cl.get_cname()+"*");
-		ctypedecl.add_declarator ( new CCodeVariableDeclarator.with_initializer("object", vpointer ) );
-		true_stmt.add_statement ( ctypedecl );
+		var ctypedecl = new CCodeDeclaration (cl.get_cname () + "*");
+		ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("object", collect_vpointer));
+		true_stmt.add_statement (ctypedecl);
 
-		var l_expression = new CCodeMemberAccess(new CCodeMemberAccess.pointer (obj_identifier, "parent_instance"),"g_class");
-		var sub_condition = new CCodeBinaryExpression ( CCodeBinaryOperator.EQUALITY, l_expression, new CCodeConstant("NULL"));
+		var l_expression = new CCodeMemberAccess (new CCodeMemberAccess.pointer (obj_identifier, "parent_instance"), "g_class");
+		var sub_condition = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, l_expression, new CCodeConstant ("NULL"));
 		var sub_true_stmt = new CCodeBlock ();
 		var sub_false_stmt = new CCodeBlock ();
 
 		var reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_type_compatible"));
-		var type_check = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_TYPE"));
-		type_check.add_argument ( new CCodeIdentifier ("object") );
-		reg_call.add_argument ( type_check );
+		var type_check = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_INSTANCE"));
+		type_check.add_argument (new CCodeIdentifier ("object"));
+		reg_call.add_argument (type_check);
+
+		var type_name_fct = new CCodeFunctionCall (new CCodeIdentifier ("g_type_name"));
+		type_name_fct.add_argument (type_check);
 
 		var stored_type = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_TYPE"));
-		stored_type.add_argument ( new CCodeIdentifier ("value") );
-		reg_call.add_argument ( stored_type );
+		stored_type.add_argument (new CCodeIdentifier ("value"));
+		reg_call.add_argument (stored_type);
 
-		var type_name_fct = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_TYPE_NAME"));
-		type_name_fct.add_argument (new CCodeConstant("value"));
+		var value_type_name_fct = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_TYPE_NAME"));
+		value_type_name_fct.add_argument (new CCodeConstant ("value"));
 
 		var true_return = new CCodeFunctionCall (new CCodeIdentifier ("g_strconcat"));
-		true_return.add_argument (new CCodeConstant("\"invalid unclassed object pointer for value type `\""));
-		true_return.add_argument ( type_name_fct );
-		true_return.add_argument (new CCodeConstant("\"'\""));
-		true_return.add_argument (new CCodeConstant("NULL"));
-		sub_true_stmt.add_statement (new CCodeReturnStatement ( true_return ));
+		true_return.add_argument (new CCodeConstant ("\"invalid unclassed object pointer for value type `\""));
+		true_return.add_argument (value_type_name_fct);
+		true_return.add_argument (new CCodeConstant ("\"'\""));
+		true_return.add_argument (new CCodeConstant ("NULL"));
+		sub_true_stmt.add_statement (new CCodeReturnStatement (true_return));
 
 		var false_return = new CCodeFunctionCall (new CCodeIdentifier ("g_strconcat"));
-		false_return.add_argument (new CCodeConstant("\"invalid object type `\""));
-		false_return.add_argument ( type_check );
-		false_return.add_argument (new CCodeConstant("\"' for value type `\""));
-		false_return.add_argument ( type_name_fct );
-		false_return.add_argument (new CCodeConstant("\"'\""));
-		false_return.add_argument (new CCodeConstant("NULL"));
-		sub_false_stmt.add_statement (new CCodeReturnStatement ( false_return ));
+		false_return.add_argument (new CCodeConstant ("\"invalid object type `\""));
+		false_return.add_argument (type_name_fct);
+		false_return.add_argument (new CCodeConstant ("\"' for value type `\""));
+		false_return.add_argument (value_type_name_fct);
+		false_return.add_argument (new CCodeConstant ("\"'\""));
+		false_return.add_argument (new CCodeConstant ("NULL"));
+		sub_false_stmt.add_statement (new CCodeReturnStatement (false_return));
 
 		var sub_else_if_statement = new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, reg_call), sub_false_stmt );
 		sub_else_if_statement.else_if = true;
-		var sub_if_statement = new CCodeIfStatement (sub_condition, sub_true_stmt, sub_else_if_statement );
-		true_stmt.add_statement ( sub_if_statement );
+		var sub_if_statement = new CCodeIfStatement (sub_condition, sub_true_stmt, sub_else_if_statement);
+		true_stmt.add_statement (sub_if_statement);
 
-		var else_assigment = new CCodeExpressionStatement( new CCodeAssignment (vpointer, new CCodeConstant ("NULL"), CCodeAssignmentOperator.SIMPLE));
-		false_stmt.add_statement ( else_assigment );
+		var ref_call = new CCodeFunctionCall (new CCodeIdentifier (cl.get_ref_function ()));
+		ref_call.add_argument (new CCodeIdentifier ("object"));
 
-		init_block.add_statement ( new CCodeReturnStatement ( new CCodeConstant("NULL") ));
+		var true_assignment = new CCodeExpressionStatement (new CCodeAssignment (vpointer, ref_call, CCodeAssignmentOperator.SIMPLE));
+		true_stmt.add_statement (true_assignment);
+
+		var else_assigment = new CCodeExpressionStatement (new CCodeAssignment (vpointer, new CCodeConstant ("NULL"), CCodeAssignmentOperator.SIMPLE));
+		false_stmt.add_statement (else_assigment);
+
+		init_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
 		source_type_member_definition.append (function);
 	}
 
@@ -870,11 +887,6 @@ public class Vala.GObjectModule : GTypeModule {
 					init_block.add_statement (new CCodeExpressionStatement (cinst));
 				}
 			}
-		
-			/* create signals */
-			foreach (Signal sig in cl.get_signals ()) {
-				init_block.add_statement (new CCodeExpressionStatement (head.get_signal_creation (sig, cl)));
-			}
 		} else if (!cl.is_compact) {
 			/* create type, dup_func, and destroy_func fields for generic types */
 			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
@@ -888,6 +900,13 @@ public class Vala.GObjectModule : GTypeModule {
 
 				func_name = "%s_destroy_func".printf (type_param.name.down ());
 				instance_priv_struct.add_field ("GDestroyNotify", func_name);
+			}
+		}
+
+		if (!cl.is_compact) {
+			/* create signals */
+			foreach (Signal sig in cl.get_signals ()) {
+				init_block.add_statement (new CCodeExpressionStatement (head.get_signal_creation (sig, cl)));
 			}
 		}
 

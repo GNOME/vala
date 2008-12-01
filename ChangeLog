@@ -1,3 +1,11 @@
+2008-12-01  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valagobjectmodule.vala:
+	* gobject/valagsignalmodule.vala:
+
+	Support signals in non-GObject classes, patch by Yu Feng,
+	fixes bug 561989
+
 2008-11-30  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gtk+-2.0/:
