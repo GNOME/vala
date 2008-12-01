@@ -1,5 +1,9 @@
 2008-12-01  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS: update for 0.5.2 release
+
+2008-12-01  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_text_view_get_line_at_y binding

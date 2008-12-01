@@ -1,3 +1,18 @@
+Vala 0.5.2
+==========
+
+ * Report uninitialized local variables.
+ * Report unused fields, methods, and local variables.
+ * Fix error handling in complex statements.
+ * Improve support for generic types.
+ * Support parameter arrays in bindings.
+ * Do not require libgee for foreach statements.
+ * Support enums in D-Bus clients and servers.
+ * Support structs in hash tables in D-Bus servers.
+ * Experimental static D-Bus client support.
+ * Add --dump-tree commandline option to write code tree to file.
+ * Many bug fixes.
+
 Vala 0.5.1
 ==========
 
