@@ -484,9 +484,9 @@ public abstract class Vala.DataType : CodeNode {
 
 		if (result is GenericType) {
 			result = SemanticAnalyzer.get_actual_type (derived_instance_type, (GenericType) result, node_reference);
-		}
-
-		if (result.type_argument_list != null) {
+			// don't try to resolve type arguments of returned actual type
+			// they can never be resolved and are not related to the instance type
+		} else if (result.type_argument_list != null) {
 			// recursely get actual types for type arguments
 			result = result.copy ();
 			for (int i = 0; i < result.type_argument_list.size; i++) {
