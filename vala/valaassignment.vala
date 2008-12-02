@@ -137,7 +137,7 @@ public class Vala.Assignment : Expression {
 				// target_type not available for dynamic signals
 			} else if (ma.symbol_reference is Signal) {
 				var sig = (Signal) ma.symbol_reference;
-				right.target_type = new DelegateType (sig.get_delegate (ma.inner.value_type));
+				right.target_type = new DelegateType (sig.get_delegate (ma.inner.value_type, this));
 			} else {
 				right.target_type = ma.value_type;
 			}
@@ -147,7 +147,7 @@ public class Vala.Assignment : Expression {
 			if (ea.container is MemberAccess && ea.container.symbol_reference is Signal) {
 				var ma = (MemberAccess) ea.container;
 				var sig = (Signal) ea.container.symbol_reference;
-				right.target_type = new DelegateType (sig.get_delegate (ma.inner.value_type));
+				right.target_type = new DelegateType (sig.get_delegate (ma.inner.value_type, this));
 			} else {
 				right.target_type = left.value_type;
 			}
@@ -231,7 +231,7 @@ public class Vala.Assignment : Expression {
 						dynamic_sig.add_parameter (param.copy ());
 					}
 				}
-				right.target_type = new DelegateType (sig.get_delegate (new ObjectType ((ObjectTypeSymbol) sig.parent_symbol)));
+				right.target_type = new DelegateType (sig.get_delegate (new ObjectType ((ObjectTypeSymbol) sig.parent_symbol), this));
 			} else if (!right.value_type.compatible (right.target_type)) {
 				var delegate_type = (DelegateType) right.target_type;
 

@@ -1,5 +1,12 @@
 2008-12-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaassignment.vala:
+	* vala/valasignal.vala:
+
+	Resolve generic types when connecting signals
+
+2008-12-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadatatype.vala:
 
 	Fix type resolving with nested generic types, fixes bug 562956

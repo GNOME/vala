@@ -94,8 +94,10 @@ public class Vala.Signal : Member, Lockable {
 	 *
 	 * @return delegate
 	 */
-	public Delegate get_delegate (DataType sender_type) {
-		var generated_delegate = new Delegate (null, return_type);
+	public Delegate get_delegate (DataType sender_type, CodeNode node_reference) {
+		var actual_return_type = return_type.get_actual_type (sender_type, node_reference);
+
+		var generated_delegate = new Delegate (null, actual_return_type);
 		generated_delegate.has_target = true;
 
 		// sender parameter is never null and doesn't own its value
@@ -107,7 +109,9 @@ public class Vala.Signal : Member, Lockable {
 		generated_delegate.add_parameter (sender_param);
 
 		foreach (FormalParameter param in parameters) {
-			generated_delegate.add_parameter (param.copy ());
+			var actual_param = param.copy ();
+			actual_param.parameter_type = actual_param.parameter_type.get_actual_type (sender_type, node_reference);
+			generated_delegate.add_parameter (actual_param);
 		}
 
 		scope.add (null, generated_delegate);
