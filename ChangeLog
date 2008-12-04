@@ -1,5 +1,14 @@
 2008-12-04  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/libsoup-2.4/:
+
+	Fix soup_server_add_handler binding,
+	patch by Zeeshan Ali Khattak, fixes bug 562978
+
+	* vapi/libsoup-2.4.vapi: regenerated
+
+2008-12-04  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Use generics in GAsyncQueue binding,

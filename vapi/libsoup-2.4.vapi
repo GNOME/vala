@@ -99,15 +99,15 @@ namespace Soup {
 	[CCode (copy_function = "soup_buffer_copy", cheader_filename = "libsoup/soup.h")]
 	public class Buffer {
 		public weak string data;
-		public ulong length;
+		public size_t length;
 		public weak Soup.Buffer copy ();
 		public void* get_owner ();
 		[CCode (has_construct_function = false)]
-		public Buffer (Soup.MemoryUse use, void* data, ulong length);
+		public Buffer (Soup.MemoryUse use, void* data, size_t length);
 		[CCode (has_construct_function = false)]
-		public Buffer.subbuffer (Soup.Buffer parent, ulong offset, ulong length);
+		public Buffer.subbuffer (Soup.Buffer parent, size_t offset, size_t length);
 		[CCode (has_construct_function = false)]
-		public Buffer.with_owner (void* data, ulong length, void* owner, GLib.DestroyNotify owner_dnotify);
+		public Buffer.with_owner (void* data, size_t length, void* owner, GLib.DestroyNotify owner_dnotify);
 	}
 	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -174,8 +174,8 @@ namespace Soup {
 		public void set_chunk_allocator (Soup.ChunkAllocator allocator, GLib.DestroyNotify destroy_notify);
 		public void set_flags (Soup.MessageFlags flags);
 		public void set_http_version (Soup.HTTPVersion version);
-		public void set_request (string content_type, Soup.MemoryUse req_use, string req_body, ulong req_length);
-		public void set_response (string content_type, Soup.MemoryUse resp_use, string resp_body, ulong resp_length);
+		public void set_request (string content_type, Soup.MemoryUse req_use, string req_body, size_t req_length);
+		public void set_response (string content_type, Soup.MemoryUse resp_use, string resp_body, size_t resp_length);
 		public void set_status (uint status_code);
 		public void set_status_full (uint status_code, string reason_phrase);
 		public void set_uri (Soup.URI uri);
@@ -214,7 +214,7 @@ namespace Soup {
 	public class MessageBody {
 		public weak string data;
 		public int64 length;
-		public void append (Soup.MemoryUse use, void* data, ulong length);
+		public void append (Soup.MemoryUse use, void* data, size_t length);
 		public void append_buffer (Soup.Buffer buffer);
 		public void complete ();
 		public weak Soup.Buffer flatten ();
@@ -251,7 +251,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Server : GLib.Object {
 		public void add_auth_domain (Soup.AuthDomain auth_domain);
-		public void add_handler (string path, Soup.ServerCallback callback, GLib.DestroyNotify destroy);
+		public void add_handler (string path, Soup.ServerCallback# callback);
 		public weak GLib.MainContext get_async_context ();
 		public weak Soup.Socket get_listener ();
 		public uint get_port ();
@@ -339,11 +339,11 @@ namespace Soup {
 		public bool listen ();
 		[CCode (has_construct_function = false)]
 		public Socket (string optname1);
-		public Soup.SocketIOStatus read (void* buffer, ulong len, ulong nread, GLib.Cancellable cancellable) throws GLib.Error;
-		public Soup.SocketIOStatus read_until (void* buffer, ulong len, void* boundary, ulong boundary_len, ulong nread, bool got_boundary, GLib.Cancellable cancellable) throws GLib.Error;
+		public Soup.SocketIOStatus read (void* buffer, size_t len, size_t nread, GLib.Cancellable cancellable) throws GLib.Error;
+		public Soup.SocketIOStatus read_until (void* buffer, size_t len, void* boundary, size_t boundary_len, size_t nread, bool got_boundary, GLib.Cancellable cancellable) throws GLib.Error;
 		public bool start_proxy_ssl (string ssl_host, GLib.Cancellable cancellable);
 		public bool start_ssl (GLib.Cancellable cancellable);
-		public Soup.SocketIOStatus write (void* buffer, ulong len, ulong nwrote, GLib.Cancellable cancellable) throws GLib.Error;
+		public Soup.SocketIOStatus write (void* buffer, size_t len, size_t nwrote, GLib.Cancellable cancellable) throws GLib.Error;
 		[NoAccessorMethod]
 		public void* async_context { get; construct; }
 		[NoAccessorMethod]
@@ -563,7 +563,7 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate bool AuthDomainGenericAuthCallback (Soup.AuthDomain domain, Soup.Message msg, string username);
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public delegate weak Soup.Buffer ChunkAllocator (Soup.Message msg, ulong max_len);
+	public delegate weak Soup.Buffer ChunkAllocator (Soup.Message msg, size_t max_len);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate Soup.LoggerLogLevel LoggerFilter (Soup.Logger logger, Soup.Message msg);
 	[CCode (cheader_filename = "libsoup/soup.h")]
