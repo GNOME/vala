@@ -1,3 +1,10 @@
+2008-12-04  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
+	Use generics in GAsyncQueue binding,
+	patch by Zeeshan Ali Khattak, fixes bug 563225
+
 2008-12-02  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaassignment.vala:

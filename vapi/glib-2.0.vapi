@@ -1242,24 +1242,24 @@ namespace GLib {
 
 	[Compact]
 	[CCode (ref_function = "g_async_queue_ref", unref_function = "g_async_queue_unref")]
-	public class AsyncQueue {
+	public class AsyncQueue<G> {
 		public AsyncQueue ();
-		public void push (void* data);
-		public void push_sorted (void* data, CompareDataFunc func);
-		public void* pop ();
-		public void* try_pop ();
-		public void* timed_pop (ref TimeVal end_time);
+		public void push (G# data);
+		public void push_sorted (G# data, CompareDataFunc func);
+		public G pop ();
+		public G try_pop ();
+		public G timed_pop (ref TimeVal end_time);
 		public int length ();
 		public void sort (CompareDataFunc func);
 		public void @lock ();
 		public void unlock ();
 		public void ref_unlocked ();
 		public void unref_and_unlock ();
-		public void push_unlocked (void* data);
-		public void push_sorted_unlocked (void* data, CompareDataFunc func);
-		public void* pop_unlocked ();
-		public void* try_pop_unlocked ();
-		public void* timed_pop_unlocked (ref TimeVal end_time);
+		public void push_unlocked (G# data);
+		public void push_sorted_unlocked (G# data, CompareDataFunc func);
+		public G pop_unlocked ();
+		public G try_pop_unlocked ();
+		public G timed_pop_unlocked (ref TimeVal end_time);
 		public int length_unlocked ();
 		public void sort_unlocked (CompareDataFunc func);
 	}
