@@ -1040,9 +1040,9 @@ public interface Valadoc.ConstructionMethodHandler : DataType, MethodHandler {
 	protected void add_methods_and_construction_methods ( Gee.Collection<Vala.Method> vmethods ) {
 		foreach ( Vala.Method vm in vmethods ) {
 			if ( vm is Vala.CreationMethod ) {
-				if ( ((Vala.CreationMethod)vm).generated == false ) {
+				//if ( ((Vala.CreationMethod)vm).generated == false ) {
 					this.add_construction_method ( (Vala.CreationMethod)vm );
-				}
+				//}
 			}
 			else {
 				this.add_method ( vm );
@@ -1432,8 +1432,8 @@ public interface Valadoc.FieldHandler : Basic {
 
 	// internal
 	public void add_field ( Vala.Field vf ) {
-		if ( vf.generated == true )
-			return ;
+		//if ( vf.generated == true )
+		//	return ;
 
 		var tmp = new Field ( this.settings, vf, this, this.head );
 		this.fields.add ( tmp );
@@ -1938,15 +1938,15 @@ public class Valadoc.TypeReference : Basic {
 		if ( vtype is Vala.ErrorType ) {
 			Vala.ErrorDomain verrdom = ((Vala.ErrorType)vtype).error_domain;		
 			if ( verrdom != null )
-				this.data_type = this.head.search_vala_symbol ( verrdom );
+				this.data_type = (DataType?)this.head.search_vala_symbol ( verrdom );
 			else
 				this.data_type = glib_error;
 		}
 		else if (vtype is Vala.DelegateType ) {
-			this.data_type = this.head.search_vala_symbol ( ((Vala.DelegateType)vtype).delegate_symbol );
+			this.data_type = (DataType?)this.head.search_vala_symbol ( ((Vala.DelegateType)vtype).delegate_symbol );
 		}
 		else {
-			this.data_type = this.head.search_vala_symbol ( vtype.data_type );
+			this.data_type = (DataType?)this.head.search_vala_symbol ( vtype.data_type );
 		}
 	}
 	public void write ( Langlet langlet, void* ptr ) {
@@ -2030,6 +2030,7 @@ public class Valadoc.FormalParameter : Basic, TypeHandler {
 		this.set_ret_type ( vformparam );
 
 		var def = this.vformalparam.default_expression;
+		/*
 		if ( def != null ) {
 			if ( def is Vala.StringLiteral )
 				this.default_value = def.to_string;
@@ -2046,6 +2047,7 @@ public class Valadoc.FormalParameter : Basic, TypeHandler {
 			else
 				this.default_value = def.to_string;
 		}
+		*/
 	}
 
 	public TypeReference type_reference {
@@ -2253,7 +2255,7 @@ public class Valadoc.Property : Basic, SymbolAccessibility, ReturnTypeHandler, V
 	public void set_type_references ( ) {
 		if ( this.is_override ) {
 			Vala.Property vp = ( this.vproperty.base_property == null )? this.vproperty.base_interface_property : this.vproperty.base_property;
-			this.base_property = this.head.search_vala_symbol ( vp );
+			this.base_property = (Property?)this.head.search_vala_symbol ( vp );
 		}
 		this.set_return_type_references ( );
 	}
@@ -2548,7 +2550,7 @@ public class Valadoc.Method : Basic, ParameterListHandler, ExceptionHandler, Tem
 	public void set_type_references ( ) {
 		if ( this.is_override ) {
 			Vala.Method vm = ( this.vmethod.base_method == null )? this.vmethod.base_interface_method : this.vmethod.base_method;
-			this.base_method = this.head.search_vala_symbol ( vm );
+			this.base_method = (Method?)this.head.search_vala_symbol ( vm );
 		}
 
 		this.set_return_type_references ( );

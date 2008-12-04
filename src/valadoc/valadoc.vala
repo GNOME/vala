@@ -165,7 +165,8 @@ public class ValaDoc : Object {
 		}
 		return null;
 	}
-*/
+
+
 	private void add_files ( Vala.CodeContext context ) {
 		foreach ( string source in this.sources ) {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
@@ -190,7 +191,7 @@ public class ValaDoc : Object {
 			}
 		}
 	}
-
+*/
 	// remove
 	private Gee.ArrayList<string> sort_sources ( ) {
 		var to_doc = new Gee.ArrayList<string>();
@@ -294,52 +295,44 @@ public class ValaDoc : Object {
 	}
 
 	private bool load_taglets ( string fulldirpath, out Gee.HashMap<string, Type>? taglets2, out Type strtag ) {
-		void* function;
-		GLib.Dir dir;
-
-		string pluginpath = fulldirpath + "taglets/";
-
-		Gee.ArrayList<Module*> modules = new Gee.ArrayList<weak Module*> ( );
-
-
-//		Gee.HashMap<string, Type> taglets =
-			taglets2 = new Gee.HashMap<string, Type> ( GLib.str_hash, GLib.str_equal );
-
 		try {
-			dir = GLib.Dir.open ( pluginpath );
+			taglets2 = new Gee.HashMap<string, Type> ( GLib.str_hash, GLib.str_equal );
+			Gee.ArrayList<Module*> modules = new Gee.ArrayList<weak Module*> ( );
+			string pluginpath = fulldirpath + "taglets/";
+			GLib.Dir dir = GLib.Dir.open ( pluginpath );
+			void* function;
+
+			for ( weak string entry = dir.read_name(); entry != null ; entry = dir.read_name() ) {
+				if ( !( entry.has_suffix(".so") || entry.has_suffix(".dll") ) )
+					continue ;
+
+				string tagletpath = pluginpath + "/" + entry;
+
+				Module* module = Module.open ( tagletpath, ModuleFlags.BIND_LAZY);
+				if (module == null) {
+					stdout.printf ( "Can't load plugin.\n" );
+					taglets2 = null;
+					return false;
+				}
+
+				module->symbol( "register_plugin", out function );
+				Valadoc.TagletRegisterFunction tagletregisterfkt = (Valadoc.TagletRegisterFunction) function;
+
+
+				GLib.Type type = tagletregisterfkt ( taglets2 );
+
+				if ( entry == "libtagletstring.so" || entry == "libtagletstring.dll" )
+					strtag = type;
+
+				modules.add ( module );
+			}
+			return true;
 		}
 		catch ( FileError err ) {
 			stdout.printf ( "Can't load plugin. %s\n", pluginpath );
 			taglets2 = null;
 			return false;
 		}
-
-		for ( weak string entry = dir.read_name(); entry != null ; entry = dir.read_name() ) {
-			if ( !( entry.has_suffix(".so") || entry.has_suffix(".dll") ) )
-				continue ;
-
-			string tagletpath = pluginpath + "/" + entry;
-
-			Module* module = Module.open ( tagletpath, ModuleFlags.BIND_LAZY);
-			if (module == null) {
-				stdout.printf ( "Can't load plugin.\n" );
-				taglets2 = null;
-				return false;
-			}
-
-			module->symbol( "register_plugin", out function );
-			Valadoc.TagletRegisterFunction tagletregisterfkt = (Valadoc.TagletRegisterFunction) function;
-
-
-			GLib.Type type = tagletregisterfkt ( taglets2 );
-
-			if ( entry == "libtagletstring.so" || entry == "libtagletstring.dll" )
-				strtag = type;
-
-			modules.add ( module );
-		}
-
-		return true;
 	}
 
 	private Doclet? load_doclet ( string path ) {
