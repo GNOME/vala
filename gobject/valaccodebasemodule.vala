@@ -715,14 +715,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public override void visit_constant (Constant c) {
 		c.accept_children (codegen);
 
-		if (!(c.type_reference is ArrayType)) {
-			var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), (CCodeExpression) c.initializer.ccodenode);
-			if (!c.is_internal_symbol ()) {
-				header_type_member_declaration.append (cdefine);
-			} else {
-				source_type_member_declaration.append (cdefine);
-			}
-		} else {
+		if (c.initializer is InitializerList) {
 			var cdecl = new CCodeDeclaration (c.type_reference.get_const_cname ());
 			var arr = "";
 			if (c.type_reference is ArrayType) {
@@ -735,6 +728,13 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				header_constant_declaration.append (cdecl);
 			} else {
 				source_constant_declaration.append (cdecl);
+			}
+		} else {
+			var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), (CCodeExpression) c.initializer.ccodenode);
+			if (!c.is_internal_symbol ()) {
+				header_type_member_declaration.append (cdefine);
+			} else {
+				source_type_member_declaration.append (cdefine);
 			}
 		}
 	}

@@ -1,5 +1,11 @@
 2008-12-05  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+
+	Fix struct constants
+
+2008-12-05  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_target_list_new binding
