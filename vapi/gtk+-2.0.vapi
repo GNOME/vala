@@ -3654,7 +3654,7 @@ namespace Gtk {
 		public void add_uri_targets (uint info);
 		public bool find (Gdk.Atom target, uint info);
 		[CCode (has_construct_function = false)]
-		public TargetList (Gtk.TargetEntry[] targets, uint ntargets);
+		public TargetList (Gtk.TargetEntry[] targets);
 		public void remove (Gdk.Atom target);
 	}
 	[Compact]
