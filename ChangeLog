@@ -1,5 +1,11 @@
 2008-12-06  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valamethodcall.vala:
+
+	Report error when trying to call constructor without `new' operator
+
+2008-12-06  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasourcefile.vala:
 
 	Add SourceFile.clear_using_directives method, required by

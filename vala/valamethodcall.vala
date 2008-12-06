@@ -155,8 +155,11 @@ public class Vala.MethodCall : Expression {
 		if (mtype is ObjectType) {
 			// constructor chain-up
 			var cm = analyzer.find_current_method () as CreationMethod;
-			assert (cm != null);
-			if (cm.chain_up) {
+			if (cm == null) {
+				error = true;
+				Report.error (source_reference, "use `new' operator to create new objects");
+				return false;
+			} else if (cm.chain_up) {
 				error = true;
 				Report.error (source_reference, "Multiple constructor calls in the same constructor are not permitted");
 				return false;
@@ -183,8 +186,11 @@ public class Vala.MethodCall : Expression {
 		           && call.symbol_reference is CreationMethod) {
 			// constructor chain-up
 			var cm = analyzer.find_current_method () as CreationMethod;
-			assert (cm != null);
-			if (cm.chain_up) {
+			if (cm == null) {
+				error = true;
+				Report.error (source_reference, "use `new' operator to create new objects");
+				return false;
+			} else if (cm.chain_up) {
 				error = true;
 				Report.error (source_reference, "Multiple constructor calls in the same constructor are not permitted");
 				return false;
@@ -196,6 +202,10 @@ public class Vala.MethodCall : Expression {
 
 		if (mtype != null && mtype.is_invokable ()) {
 			params = mtype.get_parameters ();
+		} else if (call.symbol_reference is Class) {
+			error = true;
+			Report.error (source_reference, "use `new' operator to create new objects");
+			return false;
 		} else {
 			error = true;
 			Report.error (source_reference, "invocation not supported in this context");
