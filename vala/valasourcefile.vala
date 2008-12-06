@@ -130,6 +130,10 @@ public class Vala.SourceFile {
 		using_directives.add (ns);
 	}
 
+	public void clear_using_directives () {
+		using_directives.clear ();
+	}
+
 	bool same_symbol (Symbol? sym1, Symbol? sym2) {
 		if (sym1 == sym2) {
 			return true;

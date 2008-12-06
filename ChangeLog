@@ -1,3 +1,10 @@
+2008-12-06  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valasourcefile.vala:
+
+	Add SourceFile.clear_using_directives method, required by
+	anjuta-vala-plugin
+
 2008-12-05  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodebasemodule.vala:
