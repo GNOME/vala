@@ -1063,7 +1063,7 @@ namespace Gst {
 		public int64 start;
 		public int64 stop;
 		public int64 time;
-		public bool clip (Gst.Format format, int64 start, int64 stop, int64 clip_start, int64 clip_stop);
+		public bool clip (Gst.Format format, int64 start, int64 stop, out int64 clip_start, out int64 clip_stop);
 		public weak Gst.Segment copy ();
 		public void init (Gst.Format format);
 		[CCode (has_construct_function = false)]
