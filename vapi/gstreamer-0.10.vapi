@@ -72,7 +72,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Buffer.and_alloc (uint size);
 		public void copy_metadata (Gst.Buffer src, Gst.BufferCopyFlags flags);
-		public weak Gst.Buffer create_sub (uint offset, uint size);
+		public Gst.Buffer create_sub (uint offset, uint size);
 		[CCode (cname = "GST_BUFFER_FLAG_SET")]
 		public void flag_set (Gst.BufferFlag flag);
 		[CCode (cname = "GST_BUFFER_FLAG_UNSET")]
@@ -81,7 +81,7 @@ namespace Gst {
 		public bool is_metadata_writable ();
 		public bool is_span_fast (Gst.Buffer buf2);
 		public weak Gst.Buffer join (Gst.Buffer buf2);
-		public weak Gst.Buffer make_metadata_writable ();
+		public Gst.Buffer make_metadata_writable ();
 		public weak Gst.Buffer merge (Gst.Buffer buf2);
 		public Buffer ();
 		public weak Gst.Buffer @ref ();
