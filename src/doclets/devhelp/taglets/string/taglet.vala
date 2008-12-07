@@ -25,25 +25,6 @@ using Gee;
 
 
 
-public class StringHtmlTaglet : StringTaglet {
-	public override bool parse ( Valadoc.Settings settings, Valadoc.Tree tree, string content ) {
-		this.content = content;
-		return true;
-	}
-
-	public override bool write ( void* res, int max , int index ) {
-		try {
-			string str = new Regex ( Regex.escape_string ("\n")).replace_literal ( this.content, -1, 0, "\n<br>" );
-			((GLib.FileStream)res).puts ( str );
-		}
-		catch ( RegexError err ) {
-			return false;
-		}
-		return true;
-	}
-}
-
-
 
 [ModuleInit]
 public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
@@ -51,4 +32,6 @@ public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
 		taglets.set ( "", type );
 		return type;
 }
+
+
 

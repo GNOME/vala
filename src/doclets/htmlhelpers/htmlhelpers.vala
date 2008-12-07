@@ -21,6 +21,10 @@ public const string css_inline_navigation_virtual_method = "main_inline_navigati
 public const string css_inline_navigation_abstract_method = "main_inline_navigation_abstract_method";
 public const string css_inline_navigation_construction_method = "main_inline_navigation_construction_method";
 
+
+
+public const string css_inline_navigation_brief_description = "main_inline_navigation_brief_description";
+
 public const string css_inline_navigation_signal = "main_inline_navigation_signal";
 public const string css_inline_navigation_fields = "main_inline_navigation_fields";
 public const string css_inline_navigation_abstract_class = "main_inline_navigation_abstract_class";
@@ -261,9 +265,464 @@ public string get_html_inline_navigation_link_css_class ( Valadoc.Basic element 
 	}
 	return "";
 }
+}
+
+
+
+
+/* ---- **/
+public abstract class Valadoc.SeeHtmlHelperTaglet : MainTaglet {
+	public override int order { get { return 400; } }
+	private string name;
+	private string link;
+	private string css;
+
+	protected abstract string? get_link ( Settings settings, Tree tree, Basic element, Basic? pos );
+
+	// override-bug
+	protected bool write_block_start_imp ( void* res ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		file.printf ( "<h2 class=\"%s\">See:</h2>\n", css_title );
+		return true;
+	}
+
+	// override-bug
+	protected bool write_block_end_imp ( void* res ) {
+		return true;
+	}
+
+	// override-bug
+	protected bool write_imp ( void* res, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		file.printf ( "<a class=\"%s\" href=\"%s\">%s</a>", this.css, this.link, this.name );
+		if ( max != index+1 )
+			file.printf ( ", " );
+
+		return true;
+	}
+
+	// override-bug
+	protected bool parse_imp ( Settings settings, Tree tree, Basic me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+		if ( content.size != 1 ) {
+			errmsg = new string[1];
+			errmsg[0] = "Type name was expected.";
+			return false;
+		}
+
+		Gee.Iterator<DocElement> it = content.iterator ();
+		it.next ();
+
+		DocElement element = it.get ();
+		if ( element is StringTaglet == false ) {
+			errmsg = new string[1];
+			errmsg[0] = "Type name was expected.";
+			return false;
+		}
+
+		Valadoc.Basic? node = tree.search_symbol_str ( me, ((StringTaglet)element).content.strip ( ) );
+		if ( node == null ) {
+			errmsg = new string[1];
+			errmsg[0] = "Linked type is not available.";
+			return false;
+		}
+
+		this.name = node.full_name ( );
+		this.css = get_html_content_link_css_class ( node );
+		this.link = this.get_link ( settings, tree, node, me );
+		return true;
+	}
+}
+
+public class Valadoc.SinceHtmlTaglet : MainTaglet {
+	public override int order { get { return 400; } }
+	private StringTaglet content;
+
+	public override bool write_block_start ( void* ptr ) {
+		weak GLib.FileStream file = (GLib.FileStream)ptr;
+		file.printf ( "<h2 class=\"%s\">Since:</h2>\n", css_title );
+		return true;
+	}
+
+	public override bool write_block_end ( void* res ) {
+		return true;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		((GLib.FileStream)res).printf ( "%s", this.content.content );
+		if ( max != index+1 )
+			((GLib.FileStream)res).puts ( ", " );
+
+		return true;
+	}
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+		if ( content.size != 1 ) {
+			errmsg = new string[1];
+			errmsg[0] = "Version name was expected.";
+			return false;
+		}
+
+		Gee.Iterator<DocElement> it = content.iterator ();
+		it.next ();
+
+		DocElement element = it.get ();
+		if ( element is StringTaglet == false ) {
+			errmsg = new string[1];
+			errmsg[0] = "Version name was expected.";
+			return false;
+		}
+
+		this.content = (StringTaglet)element;
+		return true;
+	}
+}
+
+
+
+public abstract class Valadoc.LinkHtmlHelperTaglet : InlineTaglet {
+	private string? link = null;
+	private string? name = null;
+	private string? css = null;
+
+	protected abstract string? get_link ( Settings settings, Tree tree, Basic element, Basic? pos );
+
+	protected string to_string_imp ( ) {
+		return this.name;
+	}
+
+	protected bool write_imp ( void* res, int max, int index ) {
+		if ( this.link == null )
+			((GLib.FileStream)res).printf ( "<span class=\"%s\">%s</span>", this.css, this.name );
+		else
+			((GLib.FileStream)res).printf ( "<a class=\"%s\" href=\"%s\">%s</a>", this.css, this.link, this.name );
+
+		return true;
+	}
+
+	protected bool parse_imp ( Settings settings, Tree tree, Basic me, string content, out string[] errmsg ) {
+		Valadoc.Basic? element = tree.search_symbol_str ( me, content.strip() );
+		if ( element == null ) {
+			errmsg = new string[1];
+			errmsg[0] = "Linked type is not available.";
+			return false;
+		}
+
+		this.name = element.full_name ();
+		this.css = get_html_content_link_css_class ( element );
+		this.link = this.get_link ( settings, tree, element, me );
+		return true;
+	}
+}
+
+
+public class Valadoc.ExceptionHtmlTaglet : MainTaglet {
+	public override int order { get { return 200; } }
+	private Gee.ArrayList<DocElement> content;
+	private string paramname;
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+		if ( me is Valadoc.ExceptionHandler == false ) {
+			errmsg = new string[1];
+			errmsg[0] = "Tag @throws cannot be used in %s documentation.  It can only be used in the following types of documentation: method, signal, delegate.".printf ( this.get_data_type ( me ) );
+			return false;
+		}
+
+		if ( content.size == 0 ) {
+			errmsg = new string[1];
+			errmsg[0] = "Errordomain was expected.";
+			return false;
+		}
+
+
+		Gee.ArrayList<DocElement> contentlst = new Gee.ArrayList<DocElement> ();
+		foreach ( DocElement element in content ) {
+			contentlst.add ( element );
+		}
+
+		DocElement tag = contentlst.get( 0 );
+		if ( tag is StringTaglet == false ) {
+			errmsg = new string[1];
+			errmsg[0] = "Exception name was expected.";
+			return false;
+		}
+
+		string str = ((StringTaglet)tag).content;
+		weak string lposa =  str.chr (-1, '\n');
+		weak string lposb =  str.chr (-1, ' ');
+		weak string lpos;
+
+		long lposaoffset = (lposa == null)? long.MAX : str.pointer_to_offset ( lposa );
+		long lposboffset = (lposb == null)? long.MAX : str.pointer_to_offset ( lposb );
+
+		if ( lposaoffset < lposboffset )
+			lpos = lposa;
+		else
+			lpos = lposb;
+
+		if ( lpos == null ) {
+			this.paramname = str.strip ();
+			((StringTaglet)tag).content = "";
+		}
+		else {
+			int namepos = (int)str.pointer_to_offset ( lpos );
+			this.paramname = str.ndup ( namepos ).strip ();
+			((StringTaglet)tag).content = lpos.ndup ( lpos.size () ).chomp ();
+		}
+
+		bool tmp = this.check_exception_parameter_name ( (Valadoc.ExceptionHandler)me, this.paramname );
+		if ( tmp == false ) {
+			errmsg = new string[1];
+			errmsg[0] = "Unknown parameter.";
+			return false;
+		}
+
+		this.content = contentlst;
+		return true;
+	}
+
+	private bool check_exception_parameter_name ( Valadoc.ExceptionHandler me, string paramname ) {
+		if ( paramname[0] == '.' || paramname == "" )
+			return false;
+
+		foreach ( Valadoc.TypeReference param in me.get_error_domains() ) {
+			if ( param.type_name.has_suffix ( paramname ) )
+				return true;
+		}
+		return false;
+	}
+
+	public override bool write ( void* ptr, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)ptr;
+
+		file.printf ( "\t<tr>\n" );
+		file.printf ( "\t\t<td class=\"%s\">%s:</td>\n", css_parameter_table_name, this.paramname );
+		file.printf ( "\t\t<td class=\"%s\">\n", css_parameter_table_text );
+		file.puts ( "\t\t\t" );
+
+		int _max = this.content.size;
+		int _index = 0;
+
+		foreach ( DocElement element in this.content ) {
+			element.write ( ptr, _max, _index );
+			_index++;
+		}
+
+		file.puts ( "\n" );
+		file.printf ( "\t\t</td>\n" );
+		file.printf ( "\t</tr>\n" );
+		return true;
+	}
+
+	public override bool write_block_start ( void* ptr ) {
+		weak GLib.FileStream file = (GLib.FileStream)ptr;
+		file.printf ( "<h2 class=\"%s\">Exceptions:</h2>\n", css_title );
+		file.printf ( "<table class=\"%s\">\n", css_exception_table );
+		return true;
+	}
+
+	public override bool write_block_end ( void* ptr ) {
+		weak GLib.FileStream file = (GLib.FileStream)ptr;
+		file.printf ( "</table>\n" );
+		return true;
+	}
 
 
 }
+
+public class Valadoc.ParameterHtmlTaglet : MainTaglet {
+	public override int order { get { return 100; } }
+	private Gee.Collection<DocElement> content;
+	private string paramname;
+
+	private static bool check_parameter_name ( Valadoc.ParameterListHandler me, string name ) {
+		if ( name == "" )
+			return false;
+
+		foreach ( Valadoc.FormalParameter param in me.get_parameter_list ( ) ) {
+			if ( param.name == name )
+				return true;
+		}
+		return false;
+	}
+
+	public override bool write ( void* ptr, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)ptr;
+
+		file.printf ( "\t<tr>\n" );
+		file.printf ( "\t\t<td class=\"%s\">%s:</td>\n", css_parameter_table_name, this.paramname );
+		file.printf ( "\t\t<td class=\"%s\">\n", css_parameter_table_text );
+		file.puts ( "\t\t\t" );
+
+		int _max = this.content.size;
+		int _index = 0;
+
+		foreach ( DocElement tag in this.content ) {
+			tag.write ( ptr, _max, _index );
+			_index++;
+		}
+
+		file.puts ( "\n" );
+		file.printf ( "\t\t</td>\n" );
+		file.printf ( "\t</tr>\n" );
+		return true;
+	}
+
+	public override bool write_block_start ( void* ptr ) {
+		weak GLib.FileStream file = (GLib.FileStream)ptr;
+		file.printf ( "<h2 class=\"%s\">Parameters:</h2>\n", css_title );
+		file.printf ( "<table class=\"%s\">\n", css_parameter_table );
+		return true;
+	}
+
+	public override bool write_block_end ( void* ptr ) {
+		weak GLib.FileStream file = (GLib.FileStream)ptr;
+		file.printf ( "</table>\n" );
+		return true;
+	}
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+		if ( me is Valadoc.ParameterListHandler == false ) {
+			errmsg = new string[1];
+			errmsg[0] = "Tag @param cannot be used in %s documentation.  It can only be used in the following types of documentation: method, signal, delegate.".printf ( this.get_data_type ( me ) );
+			return false;
+		}
+
+		if ( content.size == 0 ) {
+			errmsg = new string[1];
+			errmsg[0] = "Parameter name was expected.";
+			return false;
+		}
+
+		Gee.ArrayList<DocElement> contentlst = new Gee.ArrayList<DocElement> ();
+		foreach ( DocElement element in content ) {
+			contentlst.add ( element );
+		}
+
+		DocElement tag = contentlst.get( 0 );
+		if ( tag is StringTaglet == false ) {
+			errmsg = new string[1];
+			errmsg[0] = "Parameter name was expected.";
+			return false;
+		}
+
+		string str = ((StringTaglet)tag).content;
+		weak string lposa =  str.chr (-1, '\n');
+		weak string lposb =  str.chr (-1, ' ');
+		weak string lpos;
+
+		long lposaoffset = (lposa == null)? long.MAX : str.pointer_to_offset ( lposa );
+		long lposboffset = (lposb == null)? long.MAX : str.pointer_to_offset ( lposb );
+
+		if ( lposaoffset < lposboffset )
+			lpos = lposa;
+		else
+			lpos = lposb;
+
+		if ( lpos == null ) {
+			this.paramname = str.strip ();
+			((StringTaglet)tag).content = "";
+		}
+		else {
+			int namepos = (int)str.pointer_to_offset ( lpos );
+			this.paramname = str.ndup ( namepos ).strip ();
+			((StringTaglet)tag).content = lpos.ndup ( lpos.size () ).chomp ();
+		}
+
+		bool tmp = this.check_parameter_name ( (Valadoc.ParameterListHandler)me, this.paramname );
+		if ( tmp == false ) {
+			errmsg = new string[1];
+			errmsg[0] = "Unknown parameter.";
+			return false;
+		}
+
+		this.content = contentlst;
+		return true;
+	}
+}
+
+public class Valadoc.ReturnHtmlTaglet : MainTaglet {
+	public override int order { get { return 300; } }
+	private Gee.Collection<DocElement> content;
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+		if ( !(me is Valadoc.Method || me is Valadoc.Signal || me is Valadoc.Delegate) ) {
+			errmsg = new string[1];
+			errmsg[0] = "Tag @return cannot be used in %s documentation.  It can only be used in the following types of documentation: method, signal, delegate.".printf ( this.get_data_type ( me ) );
+			return false;
+		}
+		this.content = content;
+		return true;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		int _max = this.content.size;
+		int _index = 0;
+
+		foreach ( DocElement element in this.content ) {
+			element.write ( res, _max, _index );
+			_index++;
+		}
+		return true;
+	}
+
+	public override bool write_block_start ( void* res ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		file.printf ( "<h2 class=\"%s\">Returns:</h2>\n", css_title );
+		return true;
+	}
+
+	public override bool write_block_end ( void* res ) {
+		return true;
+	}
+}
+
+
+
+public class Valadoc.StringHtmlTaglet : StringTaglet {
+	public override bool parse ( Settings settings, Tree tree, Basic me, string content ) {
+		this.content = content;
+		return true;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		unichar chr = content[0];
+		long lpos = 0;
+		int i = 0;
+
+		for ( i = 0; chr != '\0' ; i++, chr = content[i] ) {
+			switch ( chr ) {
+			case '\n':
+				file.puts ( content.substring (lpos, i-lpos) ); 
+				file.puts ( "<br />" );
+				lpos = i+1;
+				break;
+			case '<':
+				file.puts ( content.substring (lpos, i-lpos) ); 
+				file.puts ( "&lt;" );
+				lpos = i+1;
+				break;
+			case '>':
+				file.puts ( content.substring (lpos, i-lpos) ); 
+				file.puts ( "&gt;" );
+				lpos = i+1;
+				break;
+			case '&':
+				file.puts ( content.substring (lpos, i-lpos) ); 
+				file.puts ( "&amp;" );
+				lpos = i+1;
+				break;
+			}
+		}
+		file.puts ( content.substring (lpos, i-lpos) ); 
+		return true;
+	}
+}
+
+
+/* ---- **/
+
+
 
 
 public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
@@ -1406,6 +1865,41 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\n\n<br />\n<b>Namespace:</b> %s\n\n", element.full_name() );
 	}
 
+	private void write_brief_description ( GLib.FileStream file, Valadoc.Basic element , Valadoc.Basic? pos ) {
+		DocumentationTree? doctree = element.documentation;
+		if ( doctree == null )
+			return ;
+
+		Gee.ReadOnlyCollection<DocElement> brief = doctree.get_brief ( );
+		if ( brief.size > 0 ) {
+			file.printf ( " <span class=\"%s\">- ", css_inline_navigation_brief_description );
+			int _max = brief.size;
+			int _index = 0;
+
+			foreach ( DocElement element in brief ) {
+				if ( element is InlineTaglet )
+					file.puts ( ((InlineTaglet)element).to_string() );
+				else
+					element.write ( file, _max, _index );
+
+				_index++;
+			}
+
+			file.printf ( " </span>\n" );
+		}
+	}
+
+	private void write_documentation ( GLib.FileStream file, Valadoc.Basic element , Valadoc.Basic? pos ) {
+		DocumentationTree? doctree = element.documentation;
+		if ( doctree == null )
+			return ;
+
+		Gee.ReadOnlyCollection<DocElement> brief = doctree.get_brief ( );
+		if ( brief.size > 0 ) {
+			doctree.write_brief ( file );
+		}
+		doctree.write_content ( file );
+	}
 
 	public void write_method_content ( GLib.FileStream file, Method m , Valadoc.MethodHandler parent ) {
 		string full_name = m.full_name ( );
@@ -1418,7 +1912,8 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		this.langlet.write_method ( file, m, parent );
 
 		file.printf ( "\n\t\t\t\t</div>\n" );
-		m.write_comment ( file );
+
+		this.write_documentation ( file, m, m );
 
 		if ( m.parent is Namespace ) {
 			file.puts ( "\t\t\t\t<br />\n" );
@@ -1439,7 +1934,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 				file.printf ( "\t<td class=\"%s\" id=\"%s\">%s</td>\n", css_errordomain_table_name, errcode.name, errcode.name );
 				file.printf ( "\t<td class=\"%s\">\n", css_errordomain_table_text );
 
-				errcode.write_comment ( file );
+				this.write_documentation ( file, errcode, errcode );
 
 				file.puts ( "\t</td>\n" );
 				file.puts ( "</tr>\n" );
@@ -1457,7 +1952,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
 		this.langlet.write_signal ( sig, file );
 		file.printf ( "\n\t\t\t\t</div>\n" );
-		sig.write_comment ( file );
+		this.write_documentation ( file, sig, sig );
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
@@ -1470,7 +1965,8 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
 		this.langlet.write_delegate ( del, file );
 		file.printf ( "\n\t\t\t\t</div>\n" );
-		del.write_comment ( file );
+
+		this.write_documentation ( file, del, del );
 
 		if ( del.parent is Namespace ) {
 			file.puts ( "\t\t\t\t<br />\n" );
@@ -1490,7 +1986,8 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
 		this.langlet.write_field ( field, parent, file );
 		file.printf ( "\n\t\t\t\t</div>\n" );
-		field.write_comment ( file );
+
+		this.write_documentation ( file, field, field );
 
 		if ( field.parent is Namespace ) {
 			file.puts ( "\t\t\t\t<br />\n" );
@@ -1510,7 +2007,8 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
 		this.langlet.write_constant ( constant, parent, file );
 		file.printf ( "\n\t\t\t\t</div>\n" );
-		constant.write_comment ( file );
+
+		this.write_documentation ( file, constant, constant );
 
 		if ( constant.parent is Namespace ) {
 			file.puts ( "\t\t\t\t<br />\n" );
@@ -1530,7 +2028,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
 		this.langlet.write_property ( prop, file );
 		file.printf ( "\n\t\t\t\t</div>\n" );
-		prop.write_comment ( file );
+		this.write_documentation ( file, prop, prop );
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
@@ -1540,7 +2038,8 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
-		en.write_comment ( file );
+
+		this.write_documentation ( file, en, en );
 
 		if ( en.parent is Namespace ) {
 			file.puts ( "\t\t\t\t<br />\n" );
@@ -1565,7 +2064,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 				file.printf ( "\t<td class=\"%s\" id=\"%s\">%s</td>\n", css_enum_table_name, enval.name, enval.name );
 				file.printf ( "\t<td class=\"%s\">\n", css_enum_table_text );
 
-				enval.write_comment ( file );
+				this.write_documentation ( file, enval, en );
 
 				file.puts ( "\t</td>\n" );
 				file.puts ( "</tr>\n" );
@@ -1611,7 +2110,6 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 
 	protected void write_child_methods ( GLib.FileStream file, MethodHandler mh, Basic? mself ) {
 		Gee.ReadOnlyCollection<Method> methods = mh.get_method_list ();
-
 		Gee.ArrayList<Method> imethods = new Gee.ArrayList<Method> ( );
 		foreach ( Method m in methods ) {
 			if ( !m.is_static )
@@ -1622,7 +2120,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Methods:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Method m in imethods ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (m), css_navi_link, this.get_link(m, mself), m.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (m), css_navi_link, this.get_link(m, mself), m.name );
+				this.write_brief_description ( file, m , mself );
+				file.printf ( "</li>\n" );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1669,7 +2169,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Static Methods:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Method m in static_methods ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (m), css_navi_link, this.get_link(m, mself), m.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (m), css_navi_link, this.get_link(m, mself), m.name );
+				this.write_brief_description ( file, m , mself );
+				file.printf ( "</li>\n" );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1685,7 +2187,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
 		this.langlet.write_class ( cl, file );
 		file.printf ( "\n\t\t\t\t</div>\n" );
-		cl.write_comment ( file );
+
+		this.write_documentation ( file, cl, cl );
+
 		if ( cl.parent is Namespace ) {
 			file.puts ( "\t\t\t\t<br />\n" );
 			this.write_namespace_note ( file, cl );
@@ -1716,7 +2220,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
 		this.langlet.write_interface ( iface, file );
 		file.printf ( "\n\t\t\t\t</div>\n" );
-		iface.write_comment ( file );
+
+		this.write_documentation ( file, iface, iface );
+
 		if ( iface.parent is Namespace ) {
 			file.puts ( "\t\t\t\t<br />\n" );
 			this.write_namespace_note ( file, iface );
@@ -1740,7 +2246,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
-		errdom.write_comment ( file );
+
+		this.write_documentation ( file, errdom, errdom );
+
 		if ( errdom.parent is Namespace ) {
 			file.puts ( "\t\t\t\t<br />\n" );
 			this.write_namespace_note ( file, errdom );
@@ -1765,7 +2273,8 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		this.langlet.write_struct ( stru, file );
 		file.printf ( "\n\t\t\t\t</div>\n" );
 
-		stru.write_comment ( file );
+		this.write_documentation ( file, stru, stru );
+
 		if ( stru.parent is Namespace ) {
 			file.puts ( "\t\t\t\t<br />\n" );
 			this.write_namespace_note ( file, stru );
@@ -1792,7 +2301,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Constants:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Constant c in constants ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (c), css_navi_link, this.get_link(c, mself), c.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (c), css_navi_link, this.get_link(c, mself), c.name );
+				this.write_brief_description ( file, c, mself );
+				file.printf ( "</li>\n" );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1805,6 +2316,8 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Enum en in enums ) {
 				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (en), css_navi_link, this.get_link(en, mself), en.name );
+				this.write_brief_description ( file, en, mself );
+				file.printf ( "</li>\n" );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1816,7 +2329,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Errordomains:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( ErrorDomain err in errdoms ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (err), css_navi_link,  this.get_link(err, mself), err.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (err), css_navi_link,  this.get_link(err, mself), err.name );
+				this.write_brief_description ( file, err, mself );
+				file.printf ( "</li>\n" );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1828,7 +2343,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Construction Methods:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Method m in methods ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (m), css_navi_link, this.get_link(m, mself), m.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (m), css_navi_link, this.get_link(m, mself), m.name );
+				this.write_brief_description ( file, m, mself );
+				file.printf ( "</li>\n" );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1858,7 +2375,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Fields:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Field f in fields ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class(f), css_navi_link, this.get_link(f, mself), f.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class(f), css_navi_link, this.get_link(f, mself), f.name );
+				this.write_brief_description ( file, f, mself );
+				file.printf ( "</li>\n" );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1870,7 +2389,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Properties:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Property prop in properties ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (prop), css_navi_link, this.get_link(prop, mself), prop.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (prop), css_navi_link, this.get_link(prop, mself), prop.name );
+				this.write_brief_description ( file, prop, mself );
+				file.printf ( "</li>\n" );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1882,7 +2403,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Signals:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Signal sig in signals ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (sig), css_navi_link, this.get_link(sig, mself), sig.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (sig), css_navi_link, this.get_link(sig, mself), sig.name );
+				this.write_brief_description ( file, sig, mself );
+				file.printf ( "</li>\n" );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1902,7 +2425,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 					name = subcl.name;
 				}
 
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (subcl), css_navi_link, this.get_link(subcl, mself ), name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (subcl), css_navi_link, this.get_link(subcl, mself ), name );
+				this.write_brief_description ( file, subcl, mself );
+				file.printf ( "</li>\n" );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1914,7 +2439,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Interfaces:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Interface iface in ifaces ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (iface), css_navi_link, this.get_link(iface, mself), iface.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (iface), css_navi_link, this.get_link(iface, mself), iface.name );
+				this.write_brief_description ( file, iface, mself );
+				file.printf ( "</li>\n" );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1926,7 +2453,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Delegates:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Delegate d in delegates ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (d), css_navi_link, this.get_link(d, mself), d.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (d), css_navi_link, this.get_link(d, mself), d.name );
+				this.write_brief_description ( file, d, mself );
+				file.printf ( "</li>\n" );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1938,7 +2467,9 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			file.printf ( "<h3 class=\"%s\">Structs:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
 			foreach ( Struct stru in structs ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class ( stru ), css_navi_link, this.get_link(stru, mself), stru.name );
+				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class ( stru ), css_navi_link, this.get_link(stru, mself), stru.name );
+				this.write_brief_description ( file, stru, mself );
+				file.printf ( "</li>\n" );
 			}
 			file.puts ( "</ul>\n" );
 		}
@@ -1949,7 +2480,8 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, (ns.name == null)? "Global Namespace" : ns.full_name () );
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_hr );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
-		ns.write_comment ( file );
+
+		this.write_documentation ( file, ns, ns );
 
 		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
 		if ( ns.name == null )

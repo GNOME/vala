@@ -23,55 +23,11 @@ using Vala;
 using Gee;
 
 
-
-
-public class ReturnHtmlTaglet : MainTaglet {
-	private Gee.ArrayList<InlineTaglet> content = new Gee.ArrayList<InlineTaglet> ();
-
-	public override int order {
-		get { return 300; }
-	}
-
-	public override bool write_block_start ( void* ptr ) {
-		weak GLib.FileStream file = (GLib.FileStream)ptr;
-
-		file.printf ( "<h2 class=\"%s\">Returns:</h2>\n", css_title );
-		return true;
-	}
-
-	public override bool write_block_end ( void* res ) {
-		return true;
-	}
-
-	public override bool parse ( Valadoc.Settings settings, Valadoc.Tree tree, Valadoc.Reporter reporter, string line_start, int line, int pos, Valadoc.Basic me, Gee.ArrayList<Taglet> content ) {
-		if ( !(me is Valadoc.Method || me is Valadoc.Signal || me is Valadoc.Delegate) ) {
-			string error_start = this.extract_lines ( line_start, 0, 0 );
-			reporter.add_error ( 0, pos, 0, pos+7, "@return is not allowed in this contex.\n", error_start );
-			return false;
-		}
-
-		this.content = content;
-		return true;
-	}
-
-	public override bool write ( void* ptr, int max, int index ) {
-		int _max = this.content.size;
-		int _index = 0;
-
-		foreach ( Taglet tag in this.content ) {
-			tag.write ( ptr, _max, _index );
-			_index++;
-		}
-		return true;
-	}
-}
-
-
-
 [ModuleInit]
 public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
         GLib.Type type = typeof ( ReturnHtmlTaglet );
 		taglets.set ( "return", type );
 		return type;
 }
+
 

@@ -224,7 +224,6 @@ public class Valadoc.Basic : Object {
 		if ( tmp == false )
 			return ;
 
-
 		this.documentation = docparser.parse ( this.head, this, docu );
 	}
 
@@ -635,20 +634,21 @@ public interface Valadoc.ErrorDomainHandler : Basic {
 	}
 }
 
+// remove
 public interface Valadoc.Writeable : Basic {
 	public abstract DocumentationTree? documentation {
 		protected set;
 		get;
 	}
 
-	// rename to write_documentation
+	/* rename to write_documentation
 	public bool write_comment ( void* ptr ) {
 		if ( this.documentation == null )
 			return false;
 
 		this.documentation.write ( ptr );
 		return true;
-	}
+	}*/
 }
 
 public interface Valadoc.NamespaceHandler : Basic {
@@ -2029,8 +2029,8 @@ public class Valadoc.FormalParameter : Basic, TypeHandler {
 		var vformparam = this.vformalparam.parameter_type;
 		this.set_ret_type ( vformparam );
 
-		var def = this.vformalparam.default_expression;
 		/*
+		var def = this.vformalparam.default_expression;
 		if ( def != null ) {
 			if ( def is Vala.StringLiteral )
 				this.default_value = def.to_string;
@@ -4409,16 +4409,6 @@ public class Valadoc.Package : Basic, NamespaceHandler {
 	public bool is_vpackage ( Vala.SourceFile vfile ) {
 		return this.vfiles.contains ( vfile );
 	}
-
-/*
-is_package || with_deps || ergebnis
-0          ||         0 || 1
-0          ||         1 || 1
-1          ||         0 || 0
-1          ||         1 || 1
-
-!(is_package == true && with_deps == false)
-*/
 
 	public bool is_visitor_accessible () {
 		return !( this.is_package && this.settings.with_deps == false );

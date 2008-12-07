@@ -393,7 +393,7 @@ public class ValaDoc : Object {
 		settings.path = this.directory;
 
 
-		Reporter reporter = new Reporter();
+		ErrorReporter reporter = new ErrorReporter();
 
 		string fulldirpath = (pluginpath == null)? Config.plugin_dir : pluginpath;
 		bool tmp = this.check_doclet_structure ( pluginpath );
@@ -419,8 +419,7 @@ public class ValaDoc : Object {
 			return quit ();
 		}
 
-		Valadoc.Parser docparser = new Valadoc.Parser ();
-		docparser.init ( settings, reporter, strtag, taglets );
+		Valadoc.Parser docparser = new Valadoc.Parser ( settings, reporter, strtag, taglets );
 
 		Valadoc.Tree doctree = new Valadoc.Tree ( settings, non_null_experimental, disable_non_null, disable_checking, basedir, directory );
 

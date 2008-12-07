@@ -23,79 +23,37 @@ using Vala;
 using Gee;
 
 
-public class SeeHtmlTaglet : MainTaglet, LinkHelper {
-	private string name;
-	private string path;
-	private string css;
 
-	public override int order {
-		get { return 500; }
-	}
 
-	public Settings settings {
-		construct set;
-		get;
+public class Valadoc.SeeValadocOrgTaglet : SeeHtmlHelperTaglet, LinkHelper {
+//	protected abstract string? get_link ( Settings settings, Tree tree, Basic element, Basic? pos );
+	protected override string? get_link ( Settings settings, Tree tree, Basic element, Basic? pos ) {
+		return this.get_html_link ( settings, element );
 	}
 
 	public override bool write_block_start ( void* ptr ) {
-		weak GLib.FileStream file = (GLib.FileStream)ptr;
-
-		file.printf ( "<h2 class=\"%s\">See:</h2>\n", css_title );
-		file.printf ( "<ul class=\"%s\">", css_see_list );
-		return true;
+		return this.write_block_start_imp ( ptr );
 	}
 
-	public override bool write_block_end ( void* ptr ) {
-		weak GLib.FileStream file = (GLib.FileStream)ptr;
-
-		file.puts ( "</ul>" );
-		return true;
+	public override bool write_block_end ( void* res ) {
+		return this.write_block_end_imp ( res );
 	}
 
-	public override bool parse ( Valadoc.Settings settings, Valadoc.Tree tree, Valadoc.Reporter reporter, string line_start, int line, int pos, Valadoc.Basic me, Gee.ArrayList<Taglet> content ) {
-		if ( content.size == 0 ) {
-			string error_start = this.extract_lines ( line_start, 0, 0 );
-			reporter.add_error ( 0, pos, 0, pos+4, "Expected a symbol name.\n", error_start );
-			return false;
-		}
-
-		Taglet tag = content.get ( 0 );
-		if ( tag is StringTaglet == false ) {
-			string error_start = this.extract_lines ( line_start, 0, 0 );
-			reporter.add_error ( 0, pos, 0, pos+4, "Expected a symbol name.\n", error_start );
-			return false;
-		}
-
-		string[] arr = ((StringTaglet)tag).content.split ( "\n" );
-		string str = string.joinv ("", arr ).strip();
-
-		Valadoc.Basic? element = tree.search_symbol_str ( me, str );
-		if ( element == null ) {
-			string error_start = this.extract_lines ( line_start, 0, 0 );
-			reporter.add_error ( 0, pos, 0, pos+4, "Linked type is not available.\n", error_start );
-			return false;
-		}
-
-		this.settings = settings;
-		this.css = get_html_inline_navigation_link_css_class ( element );
-		this.path = this.get_html_link ( settings, element );
-		this.name = element.full_name ();
-		return true;
+	public override bool write ( void* res, int max, int index ) {
+		return this.write_imp ( res, max, index );
 	}
 
-	public override bool write ( void* ptr, int max, int index ) {
-		weak GLib.FileStream file = (GLib.FileStream)ptr;
-
-		file.printf ( "\t<li class=\"%s\"><a href=\"%s\">%s</a></li>\n", this.css, this.path, this.name );
-		return true;
+	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+		return this.parse_imp ( settings, tree, me, content, out errmsg );
 	}
 }
 
 
 
+
 [ModuleInit]
 public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
-        GLib.Type type = typeof ( SeeHtmlTaglet );
+        GLib.Type type = typeof ( SeeValadocOrgTaglet );
 		taglets.set ( "see", type );
 		return type;
 }

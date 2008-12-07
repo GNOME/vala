@@ -24,109 +24,12 @@ using Gee;
 
 
 
-
-public class ParameterHtmlTaglet : MainTaglet {
-	private Gee.ArrayList<InlineTaglet> content = new Gee.ArrayList<InlineTaglet> ();
-	private string paramname = "";
-
-	public override int order {
-		get { return 100; }
-	}
-
-	public override bool write_block_start ( void* ptr ) {
-		weak GLib.FileStream file = (GLib.FileStream)ptr;
-
-		file.printf ( "<h2 class=\"%s\">Parameters:</h2>\n", css_title );
-		file.printf ( "<table class=\"%s\">\n", css_parameter_table );
-		return true;
-	}
-
-	public override bool write_block_end ( void* ptr ) {
-		weak GLib.FileStream file = (GLib.FileStream)ptr;
-
-		file.printf ( "</table>\n" );
-		return true;
-	}
-
-	private bool check_parameter_name ( Valadoc.ParameterListHandler me, string name ) {
-		foreach ( Valadoc.FormalParameter param in me.get_parameter_list ( ) ) {
-			if ( param.name == name )
-				return true;
-		}
-		return false;
-	}
-
-	public override bool parse ( Valadoc.Settings settings, Valadoc.Tree tree, Valadoc.Reporter reporter, string line_start, int line, int pos, Valadoc.Basic me, Gee.ArrayList<Taglet> content ) {
-		if ( !(me is Valadoc.Method || me is Valadoc.Signal || me is Valadoc.Delegate) ) {
-			string error_start = this.extract_lines ( line_start, 0, 0 );
-			reporter.add_error ( 0, pos, 0, pos+6, "@param is not allowed in this contex.\n", error_start );
-			return false;		
-		}
-
-		if ( content.size == 0 ) {
-			string error_start = this.extract_lines ( line_start, 0, 0 );
-			reporter.add_error ( 0, pos, 0, pos+6, "Parameter name was expected.\n", error_start );
-			return false;
-		}
-
-		Taglet tag = content.get( 0 );
-		if ( tag is StringTaglet == false ) {
-			string error_start = this.extract_lines ( line_start, 0, 0 );
-			reporter.add_error ( 0, pos, 0, pos+6, "Parameter name was expected.\n", error_start );
-			return false;
-		}
-
-
-		string strpos = ((StringTaglet)tag).content;
-		string paramname;
-
-		strpos = this.get_next_word ( strpos, out paramname );
-		((StringTaglet)tag).content = strpos;
-		this.paramname = paramname;
-
-		if ( this.paramname == "" ) {
-			string error_start = this.extract_lines ( line_start, 0, 0 );
-			reporter.add_error ( 0, pos, 0, pos+6, "Parameter name was expected.\n", error_start );
-			return false;
-		}
-
-		if ( !check_parameter_name ( ((Valadoc.ParameterListHandler)me), this.paramname ) ) {
-			string error_start = this.extract_lines ( line_start, 0, 0 );
-			reporter.add_error ( 0, pos, 0, pos+6, "Unknown parameter.\n", error_start );
-			return false;
-		}
-
-		this.content = content;
-		return true;
-	}
-
-	public override bool write ( void* ptr, int max, int index ) {
-		weak GLib.FileStream file = (GLib.FileStream)ptr;
-
-		file.printf ( "\t<tr>\n" );
-		file.printf ( "\t\t<td class=\"%s\">ptr:</td>\n", css_parameter_table_name );
-		file.printf ( "\t\t<td class=\"%s\">\n", css_parameter_table_text );
-		file.puts ( "\t\t\t" );
-
-		int _max = this.content.size;
-		int _index = 0;
-
-		foreach ( Taglet tag in this.content ) {
-			tag.write ( ptr, _max, _index );
-			_index++;
-		}
-
-		file.puts ( "\n" );
-		file.printf ( "\t\t</td>\n" );
-		file.printf ( "\t</tr>\n" );
-		return true;
-	}
-}
-
 [ModuleInit]
 public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
         GLib.Type type = typeof ( ParameterHtmlTaglet );
 		taglets.set ( "param", type );
 		return type;
 }
+
+
 

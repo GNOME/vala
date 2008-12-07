@@ -23,46 +23,23 @@ using Vala;
 using Gee;
 
 
-
-
-public class LinkHtmlTaglet : InlineTaglet, LinkHelper {
-	private string content;
-	private string path;
-	private string css;
-
-	public Settings settings {
-		construct set;
-		get;
+public class Valadoc.LinkHtmlTaglet : Valadoc.LinkHtmlHelperTaglet, LinkHelper {
+	protected override string? get_link ( Settings settings, Tree tree, Basic element, Basic? pos ) {
+		return this.get_html_link ( settings, element, pos );
 	}
 
-	public override bool parse ( Valadoc.Settings settings, Valadoc.Tree tree, Valadoc.Reporter reporter, string line_start, int line, int pos, Valadoc.Basic me, string content ) {
-		string[] arr = content.split ( "\n" );
-		string str = string.joinv ("", arr ).strip();
-
-		Valadoc.Basic? element = tree.search_symbol_str ( me, str );
-		if ( element == null ) {
-			string error_start = this.extract_lines ( line_start, 0, 0 );
-			reporter.add_error ( 0, pos, 0, pos+5, "Linked Type is not available.\n", error_start );
-			return false;
-		}
-
-		this.settings = settings;
-		this.path = this.get_html_link ( settings, element, me );
-		this.css = get_html_content_link_css_class ( element );
-		this.content = element.full_name ();
-		return true;
+	public override string to_string () {
+		return to_string_imp ( );
 	}
 
 	public override bool write ( void* res, int max, int index ) {
-		if ( this.path == null )
-			((GLib.FileStream)res).printf ( "<span class=\"%s\">%s</span>", this.css, this.content );
-		else
-			((GLib.FileStream)res).printf ( "<a href=\"%s\" class=\"%s\">%s</a>", this.path, this.css, this.content );
+		return write_imp ( res, max, index );
+	}
 
-		return true;
+	public override bool parse ( Settings settings, Tree tree, Basic me, string content, out string[] errmsg ) {
+		return this.parse_imp ( settings, tree, me, content, out errmsg );
 	}
 }
-
 
 
 [ModuleInit]
@@ -71,4 +48,6 @@ public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
 		taglets.set ( "link", type );
 		return type;
 }
+
+
 

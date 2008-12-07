@@ -24,59 +24,10 @@ using Gee;
 
 
 
-
-public class VersionHtmlTaglet : MainTaglet {
-	private string version;
-
-	public override int order {
-		get { return 400; }
-	}
-
-	public override bool write_block_start ( void* ptr ) {
-		weak GLib.FileStream file = (GLib.FileStream)ptr;
-
-		file.printf ( "<h2 class=\"%s\">Version:</h2>\n", css_title );
-		return true;
-	}
-
-	public override bool write_block_end ( void* res ) {
-		return true;
-	}
-
-	public override bool parse ( Valadoc.Settings settings, Valadoc.Tree tree, Valadoc.Reporter reporter, string line_start, int line, int pos, Valadoc.Basic me, Gee.ArrayList<Taglet> content ) {
-		if ( content.size != 1 ) {
-			string error_start = this.extract_lines ( line_start, 0, 0 );
-			reporter.add_error ( 0, pos, 0, pos+7, "Inline taglets are not allowed here.\n", error_start );
-			return false;
-		}
-
-		Taglet tag = content.get ( 0 );
-		if ( tag is StringTaglet == false ) {
-			string error_start = this.extract_lines ( line_start, 0, 0 );
-			reporter.add_error ( 0, pos, 0, pos+7, "Inline taglets are not allowed here.\n", error_start );
-			return false;
-		}
-
-		string str = ((StringTaglet)tag).content;
-		this.version = str.strip ( );
-		return true;
-	}
-
-	public override bool write ( void* res, int max, int index ) {
-		((GLib.FileStream)res).printf ( "%s", this.version );
-		if ( max != index+1 )
-			((GLib.FileStream)res).puts ( ", " );
-
-		return true;
-	}
-}
-
-
-
 [ModuleInit]
 public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
-        GLib.Type type = typeof ( VersionHtmlTaglet );
-		taglets.set ( "version", type );
+        GLib.Type type = typeof ( SinceHtmlTaglet );
+		taglets.set ( "since", type );
 		return type;
 }
 
