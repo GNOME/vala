@@ -178,6 +178,21 @@ public class Valadoc.Basic : Object {
 		}
 	}
 
+	public string?# filename {
+		get {
+			SourceReference? sref = this.vsymbol.source_reference;
+			if ( sref == null )
+				return null;
+
+			Vala.SourceFile? file = sref.file;
+			if ( file == null )
+				return null;
+
+			string path = sref.file.filename;
+			return GLib.Path.get_basename ( path );
+		}
+	}
+
 	protected string? comment_string  {
 		get {
 			SourceReference sref = this.vsymbol.source_reference;

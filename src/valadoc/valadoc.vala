@@ -445,7 +445,6 @@ public class ValaDoc : Object {
 
 		if ( this.tsources != null ) {
 			foreach ( string src in this.tsources ) {
-				stdout.printf ( ">__>%s\n", src );
 				if ( !doctree.add_file ( src ) ) {
 					Report.error (null, "%s not found".printf (src));
 					return quit ();

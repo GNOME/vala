@@ -29,11 +29,6 @@ namespace Valadoc {
 
 public static delegate GLib.Type TagletRegisterFunction ( Gee.HashMap<string, Type> taglets );
 
-
-
-
-
-
 public abstract class DocElement : Object {
 	public abstract bool write ( void* res, int max, int index );
 }
@@ -228,53 +223,6 @@ public class DocumentationTree : Object {
 
 
 
-/** Start Testtaglets **
-
-public class ReturnHtmlTaglet : MainTaglet {
-	public override int order { get { return 90000; } }
-	private Gee.Collection<DocElement> content;
-
-	public override bool parse ( Tree tree, Basic me, Gee.Collection<DocElement> content, out string[] errmsg ) {
-		this.content = content;
-		return true;
-	}
-
-	public override bool write_block_start ( void* ptr ) {
-		weak GLib.FileStream file = (GLib.FileStream)ptr;
-		file.printf ( "<h2 class=\"%s\">Returns:</h2>\n", css_title );
-		return true;
-	}
-
-	public override bool write_block_end ( void* res ) {
-		return true;
-	}
-
-	public override bool write ( void* res, int max, int index ) {
-		int _max = this.content.size;
-		int _index = 0;
-
-		foreach ( DocElement tag in this.content ) {
-			tag.write ( res, _max, _index );
-			_index++;
-		}
-		return true;
-	}
-}
-
-public class LinkHtmlInlineTaglet : InlineTaglet {
-	string content;
-
-	public override bool parse ( Tree tree, Basic me, string content, out string[] errmsg ) {
-		this.content = content;
-		return true;
-	}
-
-	public override bool write ( void* res, int max, int index ) {
-		stdout.printf ( "(%s)", content );
-		return true;
-	}
-}
-/** Ende Testtaglets **/
 
 
 
@@ -586,6 +534,8 @@ public class Parser {
 		int starttag_pos = 0;
 		int paragraph = 0;
 
+		this.filename = me.filename;
+
 		this.linestartpos = 0;
 		this.startpos = 0;
 		this.line = 0;
@@ -595,7 +545,6 @@ public class Parser {
 		this.str = str;
 		this.line = 0;
 
-		this.filename = "fooo";
 
 		bool tmp = this.skip_documentation_header ();
 		if ( tmp == false ) {
