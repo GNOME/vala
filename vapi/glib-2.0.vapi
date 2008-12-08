@@ -1697,13 +1697,20 @@ namespace GLib {
 		[CCode (cname = "localtime_r", instance_pos = -1)]
 		public Time.local (time_t time);
 
-		[CCode (cname = "asctime_r")]
-		public string to_string (char* buffer = new char[26]);
+		public string to_string () {
+			return "%04d-%02d-%02d %02d:%02d:%02d".printf (year + 1900, month + 1, day, hour, minute, second);
+		}
+
+		public string format (string format) {
+			var buffer = new char[64];
+			this.strftime (buffer, format);
+			return (string) buffer;
+		}
 
 		[CCode (cname = "mktime")]
 		public time_t mktime ();
 
-		[CCode (instance_pos = -1)]
+		[CCode (cname = "strftime", instance_pos = -1)]
 		public size_t strftime (char[] s, string format);
 		[CCode (instance_pos = -1)]
 		public weak string? strptime (string buf, string format);

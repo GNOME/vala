@@ -1,5 +1,11 @@
 2008-12-09  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Improve Time.to_string method and add Time.format method
+
+2008-12-09  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodemethodmodule.vala:
 
 	Fix inline struct methods in VAPI files
