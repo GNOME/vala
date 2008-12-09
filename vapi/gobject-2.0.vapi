@@ -309,8 +309,7 @@ namespace GLib {
 		public string dup_string ();
 		public void set_pointer (void* v_pointer);
 		public void* get_pointer ();
-		public void set_boxed (Boxed v_boxed);
-		public void take_boxed (Boxed# v_boxed);
+		public void set_boxed (void* v_boxed);
 		public weak Boxed get_boxed ();
 		public Boxed dup_boxed ();
 		public void set_object (Object v_object);

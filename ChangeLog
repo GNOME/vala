@@ -1,5 +1,12 @@
 2008-12-09  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/gobject-2.0.vapi:
+
+	Fix g_value_set_boxed binding, remove broken g_value_take_boxed
+	binding
+
+2008-12-09  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusclientmodule.vala:
 
 	Fix dbus-glib type for structs
