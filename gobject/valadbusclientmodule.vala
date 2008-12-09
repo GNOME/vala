@@ -467,7 +467,7 @@ public class Vala.DBusClientModule : DBusModule {
 		}
 	}
 
-	CCodeExpression get_dbus_g_type (DataType data_type) {
+	public override CCodeExpression get_dbus_g_type (DataType data_type) {
 		if (data_type is ArrayType) {
 			var array_type = data_type as ArrayType;
 			if (array_type.element_type.data_type == string_type.data_type) {
