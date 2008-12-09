@@ -81,7 +81,10 @@ namespace Gst {
 		public bool is_metadata_writable ();
 		public bool is_span_fast (Gst.Buffer buf2);
 		public weak Gst.Buffer join (Gst.Buffer buf2);
-		public Gst.Buffer make_metadata_writable ();
+		[ReturnsModifiedPointer]
+		public void make_metadata_writable ();
+		[ReturnsModifiedPointer]
+		public void make_writable ();
 		public weak Gst.Buffer merge (Gst.Buffer buf2);
 		public Buffer ();
 		public weak Gst.Buffer @ref ();
@@ -159,7 +162,8 @@ namespace Gst {
 		public bool is_fixed ();
 		public bool is_subset (Gst.Caps superset);
 		public static weak Gst.Caps load_thyself (void* parent);
-		public weak Gst.Caps make_writable ();
+		[ReturnsModifiedPointer]
+		public void make_writable ();
 		public void merge (Gst.Caps caps2);
 		public void merge_structure (Gst.Structure structure);
 		public weak Gst.Caps normalize ();
@@ -574,8 +578,8 @@ namespace Gst {
 		public Iterator (uint size, GLib.Type type, GLib.Mutex @lock, uint master_cookie, Gst.IteratorNextFunction next, Gst.IteratorItemFunction item, Gst.IteratorResyncFunction resync, Gst.IteratorFreeFunction free);
 		public void push (Gst.Iterator other);
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Message : Gst.MiniObject {
+	[CCode (ref_function = "gst_message_ref", unref_function = "gst_message_unref", cheader_filename = "gst/gst.h")]
+	public class Message {
 		public weak GLib.Cond cond;
 		public weak GLib.Mutex @lock;
 		public weak Gst.Object src;
@@ -609,6 +613,8 @@ namespace Gst {
 		public Message.info (Gst.Object src, GLib.Error error, string debug);
 		[CCode (has_construct_function = false)]
 		public Message.latency (Gst.Object src);
+		[ReturnsModifiedPointer]
+		public void make_writable ();
 		[CCode (has_construct_function = false)]
 		public Message.new_clock (Gst.Object src, Gst.Clock clock);
 		public void parse_async_start (out bool new_base_time);
@@ -651,7 +657,8 @@ namespace Gst {
 		public int refcount;
 		public weak Gst.MiniObject copy ();
 		public bool is_writable ();
-		public weak Gst.MiniObject make_writable ();
+		[ReturnsModifiedPointer]
+		public void make_writable ();
 		[CCode (has_construct_function = false)]
 		public MiniObject (GLib.Type type);
 		public void replace (Gst.MiniObject newdata);
@@ -953,8 +960,8 @@ namespace Gst {
 		public static void ignored (Gst.Poll set, Gst.PollFD fd);
 		public void init ();
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class Query : Gst.MiniObject {
+	[CCode (ref_function = "gst_query_ref", unref_function = "gst_query_unref", cheader_filename = "gst/gst.h")]
+	public class Query {
 		public weak Gst.Structure structure;
 		public Gst.QueryType type;
 		[CCode (has_construct_function = false)]
@@ -970,6 +977,8 @@ namespace Gst {
 		public weak Gst.Structure get_structure ();
 		[CCode (has_construct_function = false)]
 		public Query.latency ();
+		[ReturnsModifiedPointer]
+		public void make_writable ();
 		public void parse_buffering_percent (bool busy, int percent);
 		public void parse_buffering_range (Gst.Format format, int64 start, int64 stop, int64 estimated_total);
 		public void parse_buffering_stats (Gst.BufferingMode mode, int avg_in, int avg_out, int64 buffering_left);

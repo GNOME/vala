@@ -52,6 +52,10 @@ namespace Gst {
 		public void flag_set (BufferFlag flag);
 		[CCode (cname = "GST_BUFFER_FLAG_UNSET")]
 		public void flag_unset (BufferFlag flag);
+		[ReturnsModifiedPointer]
+		public void make_metadata_writable ();
+		[ReturnsModifiedPointer]
+		public void make_writable ();
 	}
 
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -77,6 +81,23 @@ namespace Gst {
 	public class Caps {
 		public weak Caps @ref ();
 		public void unref ();
+		[ReturnsModifiedPointer]
+		public void make_writable ();
+	}
+
+	public class MiniObject {
+		[ReturnsModifiedPointer]
+		public void make_writable ();
+	}
+
+	public class Message {
+		[ReturnsModifiedPointer]
+		public void make_writable ();
+	}
+
+	public class Query {
+		[ReturnsModifiedPointer]
+		public void make_writable ();
 	}
 
 	[Compact]

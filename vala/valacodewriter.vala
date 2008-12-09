@@ -822,6 +822,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[NoWrapper]");
 		}
+		if (m.returns_modified_pointer) {
+			write_indent ();
+			write_string ("[ReturnsModifiedPointer]");
+		}
 		if (m.no_array_length) {
 			bool array_found = (m.return_type is ArrayType);
 			foreach (FormalParameter param in m.get_parameters ()) {
