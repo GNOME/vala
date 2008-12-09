@@ -1,3 +1,11 @@
+2008-12-09  Thijs Vermeir  <thijsvermeir@gmail.com>
+
+	* vapi/packages/gdk-pixbuf-2.0/gdk-pixbuf-2.0.metadata:
+
+	Fix gdk_pixbuf_new_from_inline binding
+
+	* vapi/gdk-pixbuf-2.0.vapi: regenerated
+
 2008-12-09  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/Makefile.am:
