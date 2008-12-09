@@ -435,6 +435,7 @@ public class Vala.GSignalModule : GObjectModule {
 		var sig = (Signal) assignment.left.symbol_reference;
 		
 		var m = (Method) assignment.right.symbol_reference;
+		var target_type_symbol = m.parent_symbol as TypeSymbol;
 
 		string connect_func;
 		bool disconnect = false;
@@ -443,8 +444,13 @@ public class Vala.GSignalModule : GObjectModule {
 			if (sig is DynamicSignal) {
 				connect_func = head.get_dynamic_signal_connect_wrapper_name ((DynamicSignal) sig);
 			} else {
-				connect_func = "g_signal_connect_object";
-				if (m.binding != MemberBinding.INSTANCE) {
+				if (m.binding == MemberBinding.INSTANCE) {
+					if (target_type_symbol != null && target_type_symbol.is_subtype_of (gobject_type)) {
+						connect_func = "g_signal_connect_object";
+					} else {
+						connect_func = "g_signal_connect";
+					}
+				} else {
 					connect_func = "g_signal_connect";
 				}
 			}
@@ -553,7 +559,8 @@ public class Vala.GSignalModule : GObjectModule {
 			} else if (assignment.right is LambdaExpression) {
 				ccall.add_argument (new CCodeIdentifier ("self"));
 			}
-			if (!disconnect && !(sig is DynamicSignal)) {
+			if (!disconnect && !(sig is DynamicSignal)
+			    && target_type_symbol != null && target_type_symbol.is_subtype_of (gobject_type)) {
 				// g_signal_connect_object
 
 				// fifth argument: connect_flags
