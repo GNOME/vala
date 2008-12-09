@@ -497,10 +497,29 @@ public class Vala.DBusClientModule : DBusModule {
 			var type_args = data_type.get_type_arguments ();
 
 			cmap_type.add_argument (new CCodeConstant ("\"GHashTable\""));
-			foreach (DataType type_arg in type_args)
+			foreach (DataType type_arg in type_args) {
 				cmap_type.add_argument (get_dbus_g_type (type_arg));
+			}
 
 			return cmap_type;
+		} else if (data_type.data_type.get_type_signature ().has_prefix ("(")) {
+			// struct parameter
+			var st = (Struct) data_type.data_type;
+
+			var type_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_struct"));
+			type_call.add_argument (new CCodeConstant ("\"GValueArray\""));
+
+			foreach (Field f in st.get_fields ()) {
+				if (f.binding != MemberBinding.INSTANCE) {
+					continue;
+				}
+
+				type_call.add_argument (get_dbus_g_type (f.field_type));
+			}
+
+			type_call.add_argument (new CCodeConstant ("G_TYPE_INVALID"));
+
+			return type_call;
 		} else {
 			return new CCodeIdentifier (data_type.data_type.get_type_id ());
 		}

@@ -1,6 +1,12 @@
 2008-12-09  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valadbusclientmodule.vala:
+
+	Fix dbus-glib type for structs
+
+2008-12-09  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valadbusclientmodule.vala:
 	* gobject/valagsignalmodule.vala:
 
 	Use specialized dbus-glib types for signals in D-Bus servers
