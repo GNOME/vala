@@ -47,7 +47,11 @@ namespace Rasqal {
 		OR,
 		LITERAL,
 		ORDER_COND_ASC,
-		ORDER_COND_DESC
+		ORDER_COND_DESC,
+		GROUP_COND_ASC,
+		GROUP_COND_DESC,
+		COUNT,
+		VARSTAR
 	}
 
 	[Compact]
@@ -91,6 +95,9 @@ namespace Rasqal {
 		[CCode (cname = "rasqal_new_query")]
 		public Query (string? name, string? uri);
 		public bool get_distinct ();
+		public int get_limit ();
+		public int get_offset ();
+		public weak Expression? get_group_condition (int idx);
 		public weak Expression? get_order_condition (int idx);
 		public weak GraphPattern get_query_graph_pattern ();
 		public weak Variable? get_variable (int idx);
@@ -112,6 +119,7 @@ namespace Rasqal {
 	[CCode (cname = "rasqal_variable", free_function = "rasqal_free_variable")]
 	public class Variable {
 		public weak string? name;
+		public Expression? expression;
 	}
 }
 

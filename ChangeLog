@@ -1,3 +1,9 @@
+2008-12-10  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/rasqal.vapi:
+
+	Add bindings to support LAQRS extensions
+
 2008-12-09  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valagsignalmodule.vala:
