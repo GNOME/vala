@@ -6,12 +6,17 @@ namespace Soup {
 	public class Address : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Address.any (Soup.AddressFamily family, uint port);
+		public static bool equal_by_ip (void* addr1, void* addr2);
+		public static bool equal_by_name (void* addr1, void* addr2);
 		[CCode (has_construct_function = false)]
 		public Address.from_sockaddr (void* sa, int len);
 		public weak string get_name ();
 		public weak string get_physical ();
 		public uint get_port ();
 		public void* get_sockaddr (int len);
+		public static uint hash_by_ip (void* addr);
+		public static uint hash_by_name (void* addr);
+		public bool is_resolved ();
 		[CCode (has_construct_function = false)]
 		public Address (string name, uint port);
 		public void resolve_async (GLib.MainContext async_context, GLib.Cancellable cancellable, Soup.AddressCallback callback);
@@ -123,6 +128,54 @@ namespace Soup {
 		public weak Soup.Socket get_socket ();
 	}
 	[Compact]
+	[CCode (copy_function = "soup_cookie_copy", cheader_filename = "libsoup/soup.h")]
+	public class Cookie {
+		public weak string domain;
+		public weak Soup.Date expires;
+		public bool http_only;
+		public weak string name;
+		public weak string path;
+		public bool secure;
+		public weak string value;
+		public bool applies_to_uri (Soup.URI uri);
+		public weak Soup.Cookie copy ();
+		public bool equal (Soup.Cookie cookie2);
+		[CCode (has_construct_function = false)]
+		public Cookie (string name, string value, string domain, string path, int max_age);
+		public static weak Soup.Cookie parse (string header, Soup.URI origin);
+		public void set_domain (string domain);
+		public void set_expires (Soup.Date expires);
+		public void set_http_only (bool http_only);
+		public void set_max_age (int max_age);
+		public void set_name (string name);
+		public void set_path (string path);
+		public void set_secure (bool secure);
+		public void set_value (string value);
+		public weak string to_cookie_header ();
+		public weak string to_set_cookie_header ();
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class CookieJar : GLib.Object, Soup.SessionFeature {
+		public void add_cookie (Soup.Cookie cookie);
+		public weak GLib.SList all_cookies ();
+		public void delete_cookie (Soup.Cookie cookie);
+		public weak string get_cookies (Soup.URI uri, bool for_http);
+		[CCode (has_construct_function = false)]
+		public CookieJar ();
+		public virtual void save ();
+		public void set_cookie (Soup.URI uri, string cookie);
+		[NoAccessorMethod]
+		public bool read_only { get; construct; }
+		public virtual signal void changed (Soup.Cookie old_cookie, Soup.Cookie new_cookie);
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class CookieJarText : Soup.CookieJar, Soup.SessionFeature {
+		[CCode (type = "SoupCookieJar*", has_construct_function = false)]
+		public CookieJarText (string filename, bool read_only);
+		[NoAccessorMethod]
+		public string filename { get; construct; }
+	}
+	[Compact]
 	[CCode (copy_function = "soup_date_copy", cheader_filename = "libsoup/soup.h")]
 	public class Date {
 		public int day;
@@ -140,15 +193,15 @@ namespace Soup {
 		public Date.from_string (string date_string);
 		[CCode (has_construct_function = false)]
 		public Date.from_time_t (ulong when);
+		public bool is_past ();
 		[CCode (has_construct_function = false)]
 		public Date (int year, int month, int day, int hour, int minute, int second);
 		public weak string to_string (Soup.DateFormat format);
 		public ulong to_time_t ();
+		public void to_timeval (GLib.TimeVal time);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
-	public class Logger : GLib.Object {
-		public void attach (Soup.Session session);
-		public void detach (Soup.Session session);
+	public class Logger : GLib.Object, Soup.SessionFeature {
 		[CCode (has_construct_function = false)]
 		public Logger (Soup.LoggerLogLevel level, int max_body_size);
 		public void set_printer (Soup.LoggerPrinter printer, void* printer_data, GLib.DestroyNotify destroy);
@@ -165,6 +218,7 @@ namespace Soup {
 		public uint add_status_code_handler (string @signal, uint status_code, GLib.Callback callback);
 		[CCode (has_construct_function = false)]
 		public Message.from_uri (string method, Soup.URI uri);
+		public weak Soup.Address get_address ();
 		public Soup.MessageFlags get_flags ();
 		public Soup.HTTPVersion get_http_version ();
 		public weak Soup.URI get_uri ();
@@ -186,6 +240,8 @@ namespace Soup {
 		[NoAccessorMethod]
 		public string reason_phrase { get; set; }
 		[NoAccessorMethod]
+		public bool server_side { get; construct; }
+		[NoAccessorMethod]
 		public uint status_code { get; set; }
 		public Soup.URI uri { get; set; }
 		[HasEmitter]
@@ -203,6 +259,8 @@ namespace Soup {
 		[HasEmitter]
 		public virtual signal void wrote_body ();
 		[HasEmitter]
+		public virtual signal void wrote_body_data (Soup.Buffer p0);
+		[HasEmitter]
 		public virtual signal void wrote_chunk ();
 		[HasEmitter]
 		public virtual signal void wrote_headers ();
@@ -218,10 +276,14 @@ namespace Soup {
 		public void append_buffer (Soup.Buffer buffer);
 		public void complete ();
 		public weak Soup.Buffer flatten ();
+		public bool get_accumulate ();
 		public weak Soup.Buffer get_chunk (int64 offset);
+		public void got_chunk (Soup.Buffer chunk);
 		[CCode (has_construct_function = false)]
 		public MessageBody ();
+		public void set_accumulate (bool accumulate);
 		public void truncate ();
+		public void wrote_chunk (Soup.Buffer chunk);
 	}
 	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -229,17 +291,27 @@ namespace Soup {
 		public void append (string name, string value);
 		public void clear ();
 		public void @foreach (Soup.MessageHeadersForeachFunc func);
+		public void free_ranges (Soup.Range ranges);
 		public weak string get (string name);
+		public bool get_content_disposition (out weak string disposition, GLib.HashTable params);
 		public int64 get_content_length ();
+		public bool get_content_range (int64 start, int64 end, int64 total_length);
+		public weak string get_content_type (GLib.HashTable params);
 		public Soup.Encoding get_encoding ();
 		public Soup.Expectation get_expectations ();
+		public bool get_ranges (int64 total_length, out weak Soup.Range ranges, int length);
 		[CCode (has_construct_function = false)]
 		public MessageHeaders (Soup.MessageHeadersType type);
 		public void remove (string name);
 		public void replace (string name, string value);
+		public void set_content_disposition (string disposition, GLib.HashTable params);
 		public void set_content_length (int64 content_length);
+		public void set_content_range (int64 start, int64 end, int64 total_length);
+		public void set_content_type (string content_type, GLib.HashTable params);
 		public void set_encoding (Soup.Encoding encoding);
 		public void set_expectations (Soup.Expectation expectations);
+		public void set_range (int64 start, int64 end);
+		public void set_ranges (Soup.Range ranges, int length);
 	}
 	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -247,6 +319,26 @@ namespace Soup {
 		public void* dummy;
 		public void init (Soup.MessageHeaders hdrs);
 		public bool next (out weak string name, out weak string value);
+	}
+	[Compact]
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class Multipart {
+		public void append_form_file (string control_name, string filename, string content_type, Soup.Buffer body);
+		public void append_form_string (string control_name, string data);
+		public void append_part (Soup.MessageHeaders headers, Soup.Buffer body);
+		[CCode (has_construct_function = false)]
+		public Multipart.from_message (Soup.MessageHeaders headers, Soup.MessageBody body);
+		public int get_length ();
+		public bool get_part (int part, out weak Soup.MessageHeaders headers, out weak Soup.Buffer body);
+		[CCode (has_construct_function = false)]
+		public Multipart (string mime_type);
+		public void to_message (Soup.MessageHeaders dest_headers, Soup.MessageBody dest_body);
+	}
+	[Compact]
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public class Range {
+		public int64 end;
+		public int64 start;
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Server : GLib.Object {
@@ -291,17 +383,26 @@ namespace Soup {
 		public weak GLib.MainContext get_async_context ();
 		public void pause_message (Soup.Message msg);
 		public virtual void queue_message (Soup.Message# msg, Soup.SessionCallback callback);
+		public void remove_feature (Soup.SessionFeature feature);
 		public virtual void requeue_message (Soup.Message msg);
 		public virtual uint send_message (Soup.Message msg);
 		public void unpause_message (Soup.Message msg);
 		[NoAccessorMethod]
+		public Soup.SessionFeature add_feature { get; set; }
+		[NoAccessorMethod]
+		public GLib.Type add_feature_by_type { get; set; }
+		[NoAccessorMethod]
 		public void* async_context { get; construct; }
+		[NoAccessorMethod]
+		public uint idle_timeout { get; set; }
 		[NoAccessorMethod]
 		public int max_conns { get; set; }
 		[NoAccessorMethod]
 		public int max_conns_per_host { get; set; }
 		[NoAccessorMethod]
 		public Soup.URI proxy_uri { get; set; }
+		[NoAccessorMethod]
+		public GLib.Type remove_feature_by_type { get; set; }
 		[NoAccessorMethod]
 		public string ssl_ca_file { get; set; }
 		[NoAccessorMethod]
@@ -311,7 +412,9 @@ namespace Soup {
 		[NoAccessorMethod]
 		public string user_agent { get; set; }
 		public virtual signal void authenticate (Soup.Message msg, Soup.Auth auth, bool retrying);
+		public virtual signal void request_queued (Soup.Message p0);
 		public virtual signal void request_started (Soup.Message msg, Soup.Socket socket);
+		public virtual signal void request_unqueued (Soup.Message p0);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class SessionAsync : Soup.Session {
@@ -396,13 +499,29 @@ namespace Soup {
 		[CCode (has_construct_function = false)]
 		public URI.with_base (Soup.URI @base, string uri_string);
 	}
-	[CCode (cprefix = "SOUP_ADDRESS_FAMILY_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public interface ProxyResolver : Soup.SessionFeature, GLib.Object {
+		public abstract void get_proxy_async (Soup.Message msg, GLib.MainContext async_context, GLib.Cancellable cancellable, Soup.ProxyResolverCallback callback);
+		public abstract uint get_proxy_sync (Soup.Message msg, GLib.Cancellable cancellable, out weak Soup.Address addr);
+	}
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public interface SessionFeature : GLib.Object {
+		public abstract void attach (Soup.Session session);
+		public abstract void detach (Soup.Session session);
+		[NoWrapper]
+		public abstract void request_queued (Soup.Session session, Soup.Message msg);
+		[NoWrapper]
+		public abstract void request_started (Soup.Session session, Soup.Message msg, Soup.Socket socket);
+		[NoWrapper]
+		public abstract void request_unqueued (Soup.Session session, Soup.Message msg);
+	}
+	[CCode (cprefix = "SOUP_ADDRESS_FAMILY_", cheader_filename = "libsoup/soup.h")]
 	public enum AddressFamily {
 		INVALID,
 		IPV4,
 		IPV6
 	}
-	[CCode (cprefix = "SOUP_DATE_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_DATE_", cheader_filename = "libsoup/soup.h")]
 	public enum DateFormat {
 		HTTP,
 		COOKIE,
@@ -412,7 +531,7 @@ namespace Soup {
 		ISO8601,
 		ISO8601_XMLRPC
 	}
-	[CCode (cprefix = "SOUP_ENCODING_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_ENCODING_", cheader_filename = "libsoup/soup.h")]
 	public enum Encoding {
 		UNRECOGNIZED,
 		NONE,
@@ -421,18 +540,18 @@ namespace Soup {
 		CHUNKED,
 		BYTERANGES
 	}
-	[CCode (cprefix = "SOUP_EXPECTATION_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_EXPECTATION_", cheader_filename = "libsoup/soup.h")]
 	[Flags]
 	public enum Expectation {
 		UNRECOGNIZED,
 		CONTINUE
 	}
-	[CCode (cprefix = "SOUP_HTTP_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_HTTP_", cheader_filename = "libsoup/soup.h")]
 	public enum HTTPVersion {
 		1_0,
 		1_1
 	}
-	[CCode (cprefix = "SOUP_STATUS_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_STATUS_", cheader_filename = "libsoup/soup.h")]
 	public enum KnownStatusCode {
 		NONE,
 		CANCELLED,
@@ -496,50 +615,51 @@ namespace Soup {
 		INSUFFICIENT_STORAGE,
 		NOT_EXTENDED
 	}
-	[CCode (cprefix = "SOUP_LOGGER_LOG_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_LOGGER_LOG_", cheader_filename = "libsoup/soup.h")]
 	public enum LoggerLogLevel {
 		NONE,
 		MINIMAL,
 		HEADERS,
 		BODY
 	}
-	[CCode (cprefix = "SOUP_MEMORY_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_MEMORY_", cheader_filename = "libsoup/soup.h")]
 	public enum MemoryUse {
 		STATIC,
 		TAKE,
 		COPY,
 		TEMPORARY
 	}
-	[CCode (cprefix = "SOUP_MESSAGE_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_MESSAGE_", cheader_filename = "libsoup/soup.h")]
 	[Flags]
 	public enum MessageFlags {
-		NO_REDIRECT,
-		OVERWRITE_CHUNKS
+		OVERWRITE_CHUNKS,
+		NO_REDIRECT
 	}
-	[CCode (cprefix = "SOUP_MESSAGE_HEADERS_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_MESSAGE_HEADERS_", cheader_filename = "libsoup/soup.h")]
 	public enum MessageHeadersType {
 		REQUEST,
-		RESPONSE
+		RESPONSE,
+		MULTIPART
 	}
-	[CCode (cprefix = "SOUP_SSL_ERROR_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_SSL_ERROR_", cheader_filename = "libsoup/soup.h")]
 	public enum SSLError {
 		HANDSHAKE_NEEDS_READ,
 		HANDSHAKE_NEEDS_WRITE,
 		CERTIFICATE
 	}
-	[CCode (cprefix = "SOUP_SOCKET_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_SOCKET_", cheader_filename = "libsoup/soup.h")]
 	public enum SocketIOStatus {
 		OK,
 		WOULD_BLOCK,
 		EOF,
 		ERROR
 	}
-	[CCode (cprefix = "SOUP_XMLRPC_ERROR_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_XMLRPC_ERROR_", cheader_filename = "libsoup/soup.h")]
 	public enum XMLRPCError {
 		ARGUMENTS,
 		RETVAL
 	}
-	[CCode (cprefix = "SOUP_XMLRPC_FAULT_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
+	[CCode (cprefix = "SOUP_XMLRPC_FAULT_", cheader_filename = "libsoup/soup.h")]
 	public enum XMLRPCFault {
 		PARSE_ERROR_NOT_WELL_FORMED,
 		PARSE_ERROR_UNSUPPORTED_ENCODING,
@@ -570,6 +690,8 @@ namespace Soup {
 	public delegate void LoggerPrinter (Soup.Logger logger, Soup.LoggerLogLevel level, string direction, string data);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void MessageHeadersForeachFunc (string name, string value);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static delegate void ProxyResolverCallback (Soup.ProxyResolver p1, Soup.Message p2, uint p3, Soup.Address p4, void* p5);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void ServerCallback (Soup.Server server, Soup.Message msg, string path, GLib.HashTable query, Soup.ClientContext client);
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -633,9 +755,31 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string AUTH_SCHEME_NAME;
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int COOKIE_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int COOKIE_JAR_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const string COOKIE_JAR_READ_ONLY;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const string COOKIE_JAR_TEXT_FILENAME;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int COOKIE_JAR_TEXT_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int COOKIE_MAX_AGE_ONE_DAY;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int COOKIE_MAX_AGE_ONE_HOUR;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int COOKIE_MAX_AGE_ONE_WEEK;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int COOKIE_MAX_AGE_ONE_YEAR;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int DATE_H;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int FORM_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const string FORM_MIME_TYPE_MULTIPART;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const string FORM_MIME_TYPE_URLENCODED;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int H;
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -657,6 +801,8 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string MESSAGE_REASON_PHRASE;
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const string MESSAGE_SERVER_SIDE;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string MESSAGE_STATUS_CODE;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string MESSAGE_URI;
@@ -664,6 +810,10 @@ namespace Soup {
 	public const int METHOD_H;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int MISC_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int MULTIPART_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int PROXY_RESOLVER_H;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SERVER_ASYNC_CONTEXT;
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -681,17 +831,27 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SERVER_SSL_KEY_FILE;
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const string SESSION_ADD_FEATURE;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const string SESSION_ADD_FEATURE_BY_TYPE;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SESSION_ASYNC_CONTEXT;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int SESSION_ASYNC_H;
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const int SESSION_FEATURE_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int SESSION_H;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const string SESSION_IDLE_TIMEOUT;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SESSION_MAX_CONNS;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SESSION_MAX_CONNS_PER_HOST;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SESSION_PROXY_URI;
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public const string SESSION_REMOVE_FEATURE_BY_TYPE;
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const string SESSION_SSL_CA_FILE;
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -729,11 +889,27 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public const int XMLRPC_H;
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static weak GLib.TimeoutSource add_completion (GLib.MainContext async_context, GLib.SourceFunc function, void* data);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.TimeoutSource add_idle (GLib.MainContext async_context, GLib.SourceFunc function, void* data);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.TimeoutSource add_timeout (GLib.MainContext async_context, uint interval, GLib.SourceFunc function, void* data);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static void cookies_free (GLib.SList cookies);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static weak GLib.SList cookies_from_request (Soup.Message msg);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static weak GLib.SList cookies_from_response (Soup.Message msg);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static weak string cookies_to_cookie_header (GLib.SList cookies);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static void cookies_to_request (GLib.SList cookies, Soup.Message msg);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static void cookies_to_response (GLib.SList cookies, Soup.Message msg);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.HashTable form_decode (string encoded_form);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static weak GLib.HashTable form_decode_multipart (Soup.Message msg, string file_control_name, out weak string filename, out weak string content_type, out weak Soup.Buffer file);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak string form_encode (...);
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -749,17 +925,25 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak Soup.Message form_request_new_from_hash (string method, string uri, GLib.HashTable form_data_set);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static weak Soup.Message form_request_new_from_multipart (string uri, Soup.Multipart multipart);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool header_contains (string header, string token);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void header_free_list (GLib.SList list);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static void header_free_param_list (GLib.HashTable param_list);
 	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static void header_g_string_append_param (GLib.StringBuilder str, string name, string value);
+	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.SList header_parse_list (string header);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.HashTable header_parse_param_list (string header);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak GLib.SList header_parse_quality_list (string header, GLib.SList unacceptable);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static weak GLib.HashTable header_parse_semi_param_list (string header);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static bool headers_parse (string str, int len, Soup.MessageHeaders dest);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static uint headers_parse_request (string str, int len, Soup.MessageHeaders req_headers, out weak string req_method, out weak string req_path, Soup.HTTPVersion ver);
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -772,6 +956,8 @@ namespace Soup {
 	public static GLib.Quark ssl_error_quark ();
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static weak string status_get_phrase (uint status_code);
+	[CCode (cheader_filename = "libsoup/soup.h")]
+	public static uint status_proxify (uint status_code);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public static bool str_case_equal (void* v1, void* v2);
 	[CCode (cheader_filename = "libsoup/soup.h")]

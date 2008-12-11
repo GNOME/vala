@@ -1,6 +1,14 @@
 <?xml version="1.0"?>
 <api version="1.0">
 	<namespace name="Soup">
+		<function name="add_completion" symbol="soup_add_completion">
+			<return-type type="GSource*"/>
+			<parameters>
+				<parameter name="async_context" type="GMainContext*"/>
+				<parameter name="function" type="GSourceFunc"/>
+				<parameter name="data" type="gpointer"/>
+			</parameters>
+		</function>
 		<function name="add_idle" symbol="soup_add_idle">
 			<return-type type="GSource*"/>
 			<parameters>
@@ -28,10 +36,58 @@
 				<parameter name="data" type="gpointer"/>
 			</parameters>
 		</function>
+		<function name="cookies_free" symbol="soup_cookies_free">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="cookies" type="GSList*"/>
+			</parameters>
+		</function>
+		<function name="cookies_from_request" symbol="soup_cookies_from_request">
+			<return-type type="GSList*"/>
+			<parameters>
+				<parameter name="msg" type="SoupMessage*"/>
+			</parameters>
+		</function>
+		<function name="cookies_from_response" symbol="soup_cookies_from_response">
+			<return-type type="GSList*"/>
+			<parameters>
+				<parameter name="msg" type="SoupMessage*"/>
+			</parameters>
+		</function>
+		<function name="cookies_to_cookie_header" symbol="soup_cookies_to_cookie_header">
+			<return-type type="char*"/>
+			<parameters>
+				<parameter name="cookies" type="GSList*"/>
+			</parameters>
+		</function>
+		<function name="cookies_to_request" symbol="soup_cookies_to_request">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="cookies" type="GSList*"/>
+				<parameter name="msg" type="SoupMessage*"/>
+			</parameters>
+		</function>
+		<function name="cookies_to_response" symbol="soup_cookies_to_response">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="cookies" type="GSList*"/>
+				<parameter name="msg" type="SoupMessage*"/>
+			</parameters>
+		</function>
 		<function name="form_decode" symbol="soup_form_decode">
 			<return-type type="GHashTable*"/>
 			<parameters>
 				<parameter name="encoded_form" type="char*"/>
+			</parameters>
+		</function>
+		<function name="form_decode_multipart" symbol="soup_form_decode_multipart">
+			<return-type type="GHashTable*"/>
+			<parameters>
+				<parameter name="msg" type="SoupMessage*"/>
+				<parameter name="file_control_name" type="char*"/>
+				<parameter name="filename" type="char**"/>
+				<parameter name="content_type" type="char**"/>
+				<parameter name="file" type="SoupBuffer**"/>
 			</parameters>
 		</function>
 		<function name="form_encode" symbol="soup_form_encode">
@@ -83,6 +139,13 @@
 				<parameter name="form_data_set" type="GHashTable*"/>
 			</parameters>
 		</function>
+		<function name="form_request_new_from_multipart" symbol="soup_form_request_new_from_multipart">
+			<return-type type="SoupMessage*"/>
+			<parameters>
+				<parameter name="uri" type="char*"/>
+				<parameter name="multipart" type="SoupMultipart*"/>
+			</parameters>
+		</function>
 		<function name="header_contains" symbol="soup_header_contains">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -102,6 +165,14 @@
 				<parameter name="param_list" type="GHashTable*"/>
 			</parameters>
 		</function>
+		<function name="header_g_string_append_param" symbol="soup_header_g_string_append_param">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="string" type="GString*"/>
+				<parameter name="name" type="char*"/>
+				<parameter name="value" type="char*"/>
+			</parameters>
+		</function>
 		<function name="header_parse_list" symbol="soup_header_parse_list">
 			<return-type type="GSList*"/>
 			<parameters>
@@ -119,6 +190,20 @@
 			<parameters>
 				<parameter name="header" type="char*"/>
 				<parameter name="unacceptable" type="GSList**"/>
+			</parameters>
+		</function>
+		<function name="header_parse_semi_param_list" symbol="soup_header_parse_semi_param_list">
+			<return-type type="GHashTable*"/>
+			<parameters>
+				<parameter name="header" type="char*"/>
+			</parameters>
+		</function>
+		<function name="headers_parse" symbol="soup_headers_parse">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="str" type="char*"/>
+				<parameter name="len" type="int"/>
+				<parameter name="dest" type="SoupMessageHeaders*"/>
 			</parameters>
 		</function>
 		<function name="headers_parse_request" symbol="soup_headers_parse_request">
@@ -160,6 +245,12 @@
 		</function>
 		<function name="status_get_phrase" symbol="soup_status_get_phrase">
 			<return-type type="char*"/>
+			<parameters>
+				<parameter name="status_code" type="guint"/>
+			</parameters>
+		</function>
+		<function name="status_proxify" symbol="soup_status_proxify">
+			<return-type type="guint"/>
 			<parameters>
 				<parameter name="status_code" type="guint"/>
 			</parameters>
@@ -438,6 +529,16 @@
 				<parameter name="user_data" type="gpointer"/>
 			</parameters>
 		</callback>
+		<callback name="SoupProxyResolverCallback">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="p1" type="SoupProxyResolver*"/>
+				<parameter name="p2" type="SoupMessage*"/>
+				<parameter name="p3" type="guint"/>
+				<parameter name="p4" type="SoupAddress*"/>
+				<parameter name="p5" type="gpointer"/>
+			</parameters>
+		</callback>
 		<callback name="SoupServerCallback">
 			<return-type type="void"/>
 			<parameters>
@@ -482,6 +583,10 @@
 				</parameters>
 			</method>
 			<field name="dummy" type="gpointer[]"/>
+		</struct>
+		<struct name="SoupRange">
+			<field name="start" type="goffset"/>
+			<field name="end" type="goffset"/>
 		</struct>
 		<boxed name="SoupBuffer" type-name="SoupBuffer" get-type="soup_buffer_get_type">
 			<method name="copy" symbol="soup_buffer_copy">
@@ -564,6 +669,126 @@
 				</parameters>
 			</method>
 		</boxed>
+		<boxed name="SoupCookie" type-name="SoupCookie" get-type="soup_cookie_get_type">
+			<method name="applies_to_uri" symbol="soup_cookie_applies_to_uri">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="cookie" type="SoupCookie*"/>
+					<parameter name="uri" type="SoupURI*"/>
+				</parameters>
+			</method>
+			<method name="copy" symbol="soup_cookie_copy">
+				<return-type type="SoupCookie*"/>
+				<parameters>
+					<parameter name="cookie" type="SoupCookie*"/>
+				</parameters>
+			</method>
+			<method name="equal" symbol="soup_cookie_equal">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="cookie1" type="SoupCookie*"/>
+					<parameter name="cookie2" type="SoupCookie*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="soup_cookie_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cookie" type="SoupCookie*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="soup_cookie_new">
+				<return-type type="SoupCookie*"/>
+				<parameters>
+					<parameter name="name" type="char*"/>
+					<parameter name="value" type="char*"/>
+					<parameter name="domain" type="char*"/>
+					<parameter name="path" type="char*"/>
+					<parameter name="max_age" type="int"/>
+				</parameters>
+			</constructor>
+			<method name="parse" symbol="soup_cookie_parse">
+				<return-type type="SoupCookie*"/>
+				<parameters>
+					<parameter name="header" type="char*"/>
+					<parameter name="origin" type="SoupURI*"/>
+				</parameters>
+			</method>
+			<method name="set_domain" symbol="soup_cookie_set_domain">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cookie" type="SoupCookie*"/>
+					<parameter name="domain" type="char*"/>
+				</parameters>
+			</method>
+			<method name="set_expires" symbol="soup_cookie_set_expires">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cookie" type="SoupCookie*"/>
+					<parameter name="expires" type="SoupDate*"/>
+				</parameters>
+			</method>
+			<method name="set_http_only" symbol="soup_cookie_set_http_only">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cookie" type="SoupCookie*"/>
+					<parameter name="http_only" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_max_age" symbol="soup_cookie_set_max_age">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cookie" type="SoupCookie*"/>
+					<parameter name="max_age" type="int"/>
+				</parameters>
+			</method>
+			<method name="set_name" symbol="soup_cookie_set_name">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cookie" type="SoupCookie*"/>
+					<parameter name="name" type="char*"/>
+				</parameters>
+			</method>
+			<method name="set_path" symbol="soup_cookie_set_path">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cookie" type="SoupCookie*"/>
+					<parameter name="path" type="char*"/>
+				</parameters>
+			</method>
+			<method name="set_secure" symbol="soup_cookie_set_secure">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cookie" type="SoupCookie*"/>
+					<parameter name="secure" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_value" symbol="soup_cookie_set_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cookie" type="SoupCookie*"/>
+					<parameter name="value" type="char*"/>
+				</parameters>
+			</method>
+			<method name="to_cookie_header" symbol="soup_cookie_to_cookie_header">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="cookie" type="SoupCookie*"/>
+				</parameters>
+			</method>
+			<method name="to_set_cookie_header" symbol="soup_cookie_to_set_cookie_header">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="cookie" type="SoupCookie*"/>
+				</parameters>
+			</method>
+			<field name="name" type="char*"/>
+			<field name="value" type="char*"/>
+			<field name="domain" type="char*"/>
+			<field name="path" type="char*"/>
+			<field name="expires" type="SoupDate*"/>
+			<field name="secure" type="gboolean"/>
+			<field name="http_only" type="gboolean"/>
+		</boxed>
 		<boxed name="SoupDate" type-name="SoupDate" get-type="soup_date_get_type">
 			<method name="copy" symbol="soup_date_copy">
 				<return-type type="SoupDate*"/>
@@ -573,6 +798,12 @@
 			</method>
 			<method name="free" symbol="soup_date_free">
 				<return-type type="void"/>
+				<parameters>
+					<parameter name="date" type="SoupDate*"/>
+				</parameters>
+			</method>
+			<method name="is_past" symbol="soup_date_is_past">
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="date" type="SoupDate*"/>
 				</parameters>
@@ -619,6 +850,13 @@
 					<parameter name="date" type="SoupDate*"/>
 				</parameters>
 			</method>
+			<method name="to_timeval" symbol="soup_date_to_timeval">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="date" type="SoupDate*"/>
+					<parameter name="time" type="GTimeVal*"/>
+				</parameters>
+			</method>
 			<field name="year" type="int"/>
 			<field name="month" type="int"/>
 			<field name="day" type="int"/>
@@ -663,6 +901,12 @@
 					<parameter name="body" type="SoupMessageBody*"/>
 				</parameters>
 			</method>
+			<method name="get_accumulate" symbol="soup_message_body_get_accumulate">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="body" type="SoupMessageBody*"/>
+				</parameters>
+			</method>
 			<method name="get_chunk" symbol="soup_message_body_get_chunk">
 				<return-type type="SoupBuffer*"/>
 				<parameters>
@@ -670,13 +914,34 @@
 					<parameter name="offset" type="goffset"/>
 				</parameters>
 			</method>
+			<method name="got_chunk" symbol="soup_message_body_got_chunk">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="body" type="SoupMessageBody*"/>
+					<parameter name="chunk" type="SoupBuffer*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="soup_message_body_new">
 				<return-type type="SoupMessageBody*"/>
 			</constructor>
+			<method name="set_accumulate" symbol="soup_message_body_set_accumulate">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="body" type="SoupMessageBody*"/>
+					<parameter name="accumulate" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="truncate" symbol="soup_message_body_truncate">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="body" type="SoupMessageBody*"/>
+				</parameters>
+			</method>
+			<method name="wrote_chunk" symbol="soup_message_body_wrote_chunk">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="body" type="SoupMessageBody*"/>
+					<parameter name="chunk" type="SoupBuffer*"/>
 				</parameters>
 			</method>
 			<field name="data" type="char*"/>
@@ -711,6 +976,13 @@
 					<parameter name="hdrs" type="SoupMessageHeaders*"/>
 				</parameters>
 			</method>
+			<method name="free_ranges" symbol="soup_message_headers_free_ranges">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="hdrs" type="SoupMessageHeaders*"/>
+					<parameter name="ranges" type="SoupRange*"/>
+				</parameters>
+			</method>
 			<method name="get" symbol="soup_message_headers_get">
 				<return-type type="char*"/>
 				<parameters>
@@ -718,10 +990,34 @@
 					<parameter name="name" type="char*"/>
 				</parameters>
 			</method>
+			<method name="get_content_disposition" symbol="soup_message_headers_get_content_disposition">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="hdrs" type="SoupMessageHeaders*"/>
+					<parameter name="disposition" type="char**"/>
+					<parameter name="params" type="GHashTable**"/>
+				</parameters>
+			</method>
 			<method name="get_content_length" symbol="soup_message_headers_get_content_length">
 				<return-type type="goffset"/>
 				<parameters>
 					<parameter name="hdrs" type="SoupMessageHeaders*"/>
+				</parameters>
+			</method>
+			<method name="get_content_range" symbol="soup_message_headers_get_content_range">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="hdrs" type="SoupMessageHeaders*"/>
+					<parameter name="start" type="goffset*"/>
+					<parameter name="end" type="goffset*"/>
+					<parameter name="total_length" type="goffset*"/>
+				</parameters>
+			</method>
+			<method name="get_content_type" symbol="soup_message_headers_get_content_type">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="hdrs" type="SoupMessageHeaders*"/>
+					<parameter name="params" type="GHashTable**"/>
 				</parameters>
 			</method>
 			<method name="get_encoding" symbol="soup_message_headers_get_encoding">
@@ -734,6 +1030,15 @@
 				<return-type type="SoupExpectation"/>
 				<parameters>
 					<parameter name="hdrs" type="SoupMessageHeaders*"/>
+				</parameters>
+			</method>
+			<method name="get_ranges" symbol="soup_message_headers_get_ranges">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="hdrs" type="SoupMessageHeaders*"/>
+					<parameter name="total_length" type="goffset"/>
+					<parameter name="ranges" type="SoupRange**"/>
+					<parameter name="length" type="int*"/>
 				</parameters>
 			</method>
 			<constructor name="new" symbol="soup_message_headers_new">
@@ -757,11 +1062,36 @@
 					<parameter name="value" type="char*"/>
 				</parameters>
 			</method>
+			<method name="set_content_disposition" symbol="soup_message_headers_set_content_disposition">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="hdrs" type="SoupMessageHeaders*"/>
+					<parameter name="disposition" type="char*"/>
+					<parameter name="params" type="GHashTable*"/>
+				</parameters>
+			</method>
 			<method name="set_content_length" symbol="soup_message_headers_set_content_length">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="hdrs" type="SoupMessageHeaders*"/>
 					<parameter name="content_length" type="goffset"/>
+				</parameters>
+			</method>
+			<method name="set_content_range" symbol="soup_message_headers_set_content_range">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="hdrs" type="SoupMessageHeaders*"/>
+					<parameter name="start" type="goffset"/>
+					<parameter name="end" type="goffset"/>
+					<parameter name="total_length" type="goffset"/>
+				</parameters>
+			</method>
+			<method name="set_content_type" symbol="soup_message_headers_set_content_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="hdrs" type="SoupMessageHeaders*"/>
+					<parameter name="content_type" type="char*"/>
+					<parameter name="params" type="GHashTable*"/>
 				</parameters>
 			</method>
 			<method name="set_encoding" symbol="soup_message_headers_set_encoding">
@@ -776,6 +1106,92 @@
 				<parameters>
 					<parameter name="hdrs" type="SoupMessageHeaders*"/>
 					<parameter name="expectations" type="SoupExpectation"/>
+				</parameters>
+			</method>
+			<method name="set_range" symbol="soup_message_headers_set_range">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="hdrs" type="SoupMessageHeaders*"/>
+					<parameter name="start" type="goffset"/>
+					<parameter name="end" type="goffset"/>
+				</parameters>
+			</method>
+			<method name="set_ranges" symbol="soup_message_headers_set_ranges">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="hdrs" type="SoupMessageHeaders*"/>
+					<parameter name="ranges" type="SoupRange*"/>
+					<parameter name="length" type="int"/>
+				</parameters>
+			</method>
+		</boxed>
+		<boxed name="SoupMultipart" type-name="SoupMultipart" get-type="soup_multipart_get_type">
+			<method name="append_form_file" symbol="soup_multipart_append_form_file">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="multipart" type="SoupMultipart*"/>
+					<parameter name="control_name" type="char*"/>
+					<parameter name="filename" type="char*"/>
+					<parameter name="content_type" type="char*"/>
+					<parameter name="body" type="SoupBuffer*"/>
+				</parameters>
+			</method>
+			<method name="append_form_string" symbol="soup_multipart_append_form_string">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="multipart" type="SoupMultipart*"/>
+					<parameter name="control_name" type="char*"/>
+					<parameter name="data" type="char*"/>
+				</parameters>
+			</method>
+			<method name="append_part" symbol="soup_multipart_append_part">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="multipart" type="SoupMultipart*"/>
+					<parameter name="headers" type="SoupMessageHeaders*"/>
+					<parameter name="body" type="SoupBuffer*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="soup_multipart_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="multipart" type="SoupMultipart*"/>
+				</parameters>
+			</method>
+			<method name="get_length" symbol="soup_multipart_get_length">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="multipart" type="SoupMultipart*"/>
+				</parameters>
+			</method>
+			<method name="get_part" symbol="soup_multipart_get_part">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="multipart" type="SoupMultipart*"/>
+					<parameter name="part" type="int"/>
+					<parameter name="headers" type="SoupMessageHeaders**"/>
+					<parameter name="body" type="SoupBuffer**"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="soup_multipart_new">
+				<return-type type="SoupMultipart*"/>
+				<parameters>
+					<parameter name="mime_type" type="char*"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_from_message" symbol="soup_multipart_new_from_message">
+				<return-type type="SoupMultipart*"/>
+				<parameters>
+					<parameter name="headers" type="SoupMessageHeaders*"/>
+					<parameter name="body" type="SoupMessageBody*"/>
+				</parameters>
+			</constructor>
+			<method name="to_message" symbol="soup_multipart_to_message">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="multipart" type="SoupMultipart*"/>
+					<parameter name="dest_headers" type="SoupMessageHeaders*"/>
+					<parameter name="dest_body" type="SoupMessageBody*"/>
 				</parameters>
 			</method>
 		</boxed>
@@ -924,12 +1340,12 @@
 			<field name="query" type="char*"/>
 			<field name="fragment" type="char*"/>
 		</boxed>
-		<enum name="SoupAddressFamily">
+		<enum name="SoupAddressFamily" type-name="SoupAddressFamily" get-type="soup_address_family_get_type">
 			<member name="SOUP_ADDRESS_FAMILY_INVALID" value="-1"/>
 			<member name="SOUP_ADDRESS_FAMILY_IPV4" value="2"/>
 			<member name="SOUP_ADDRESS_FAMILY_IPV6" value="10"/>
 		</enum>
-		<enum name="SoupDateFormat">
+		<enum name="SoupDateFormat" type-name="SoupDateFormat" get-type="soup_date_format_get_type">
 			<member name="SOUP_DATE_HTTP" value="1"/>
 			<member name="SOUP_DATE_COOKIE" value="2"/>
 			<member name="SOUP_DATE_RFC2822" value="3"/>
@@ -938,7 +1354,7 @@
 			<member name="SOUP_DATE_ISO8601" value="5"/>
 			<member name="SOUP_DATE_ISO8601_XMLRPC" value="6"/>
 		</enum>
-		<enum name="SoupEncoding">
+		<enum name="SoupEncoding" type-name="SoupEncoding" get-type="soup_encoding_get_type">
 			<member name="SOUP_ENCODING_UNRECOGNIZED" value="0"/>
 			<member name="SOUP_ENCODING_NONE" value="1"/>
 			<member name="SOUP_ENCODING_CONTENT_LENGTH" value="2"/>
@@ -946,11 +1362,11 @@
 			<member name="SOUP_ENCODING_CHUNKED" value="4"/>
 			<member name="SOUP_ENCODING_BYTERANGES" value="5"/>
 		</enum>
-		<enum name="SoupHTTPVersion">
+		<enum name="SoupHTTPVersion" type-name="SoupHTTPVersion" get-type="soup_http_version_get_type">
 			<member name="SOUP_HTTP_1_0" value="0"/>
 			<member name="SOUP_HTTP_1_1" value="1"/>
 		</enum>
-		<enum name="SoupKnownStatusCode">
+		<enum name="SoupKnownStatusCode" type-name="SoupKnownStatusCode" get-type="soup_known_status_code_get_type">
 			<member name="SOUP_STATUS_NONE" value="0"/>
 			<member name="SOUP_STATUS_CANCELLED" value="1"/>
 			<member name="SOUP_STATUS_CANT_RESOLVE" value="2"/>
@@ -1013,38 +1429,39 @@
 			<member name="SOUP_STATUS_INSUFFICIENT_STORAGE" value="507"/>
 			<member name="SOUP_STATUS_NOT_EXTENDED" value="510"/>
 		</enum>
-		<enum name="SoupLoggerLogLevel">
+		<enum name="SoupLoggerLogLevel" type-name="SoupLoggerLogLevel" get-type="soup_logger_log_level_get_type">
 			<member name="SOUP_LOGGER_LOG_NONE" value="0"/>
 			<member name="SOUP_LOGGER_LOG_MINIMAL" value="1"/>
 			<member name="SOUP_LOGGER_LOG_HEADERS" value="2"/>
 			<member name="SOUP_LOGGER_LOG_BODY" value="3"/>
 		</enum>
-		<enum name="SoupMemoryUse">
+		<enum name="SoupMemoryUse" type-name="SoupMemoryUse" get-type="soup_memory_use_get_type">
 			<member name="SOUP_MEMORY_STATIC" value="0"/>
 			<member name="SOUP_MEMORY_TAKE" value="1"/>
 			<member name="SOUP_MEMORY_COPY" value="2"/>
 			<member name="SOUP_MEMORY_TEMPORARY" value="3"/>
 		</enum>
-		<enum name="SoupMessageHeadersType">
+		<enum name="SoupMessageHeadersType" type-name="SoupMessageHeadersType" get-type="soup_message_headers_type_get_type">
 			<member name="SOUP_MESSAGE_HEADERS_REQUEST" value="0"/>
 			<member name="SOUP_MESSAGE_HEADERS_RESPONSE" value="1"/>
+			<member name="SOUP_MESSAGE_HEADERS_MULTIPART" value="2"/>
 		</enum>
-		<enum name="SoupSSLError">
+		<enum name="SoupSSLError" type-name="SoupSSLError" get-type="soup_ssl_error_get_type">
 			<member name="SOUP_SSL_ERROR_HANDSHAKE_NEEDS_READ" value="0"/>
 			<member name="SOUP_SSL_ERROR_HANDSHAKE_NEEDS_WRITE" value="1"/>
 			<member name="SOUP_SSL_ERROR_CERTIFICATE" value="2"/>
 		</enum>
-		<enum name="SoupSocketIOStatus">
+		<enum name="SoupSocketIOStatus" type-name="SoupSocketIOStatus" get-type="soup_socket_io_status_get_type">
 			<member name="SOUP_SOCKET_OK" value="0"/>
 			<member name="SOUP_SOCKET_WOULD_BLOCK" value="1"/>
 			<member name="SOUP_SOCKET_EOF" value="2"/>
 			<member name="SOUP_SOCKET_ERROR" value="3"/>
 		</enum>
-		<enum name="SoupXMLRPCError">
+		<enum name="SoupXMLRPCError" type-name="SoupXMLRPCError" get-type="soup_xmlrpc_error_get_type">
 			<member name="SOUP_XMLRPC_ERROR_ARGUMENTS" value="0"/>
 			<member name="SOUP_XMLRPC_ERROR_RETVAL" value="1"/>
 		</enum>
-		<enum name="SoupXMLRPCFault">
+		<enum name="SoupXMLRPCFault" type-name="SoupXMLRPCFault" get-type="soup_xmlrpc_fault_get_type">
 			<member name="SOUP_XMLRPC_FAULT_PARSE_ERROR_NOT_WELL_FORMED" value="-32700"/>
 			<member name="SOUP_XMLRPC_FAULT_PARSE_ERROR_UNSUPPORTED_ENCODING" value="-32701"/>
 			<member name="SOUP_XMLRPC_FAULT_PARSE_ERROR_INVALID_CHARACTER_FOR_ENCODING" value="-32702"/>
@@ -1056,15 +1473,29 @@
 			<member name="SOUP_XMLRPC_FAULT_SYSTEM_ERROR" value="-32400"/>
 			<member name="SOUP_XMLRPC_FAULT_TRANSPORT_ERROR" value="-32300"/>
 		</enum>
-		<flags name="SoupExpectation">
+		<flags name="SoupExpectation" type-name="SoupExpectation" get-type="soup_expectation_get_type">
 			<member name="SOUP_EXPECTATION_UNRECOGNIZED" value="1"/>
 			<member name="SOUP_EXPECTATION_CONTINUE" value="2"/>
 		</flags>
-		<flags name="SoupMessageFlags">
-			<member name="SOUP_MESSAGE_NO_REDIRECT" value="2"/>
+		<flags name="SoupMessageFlags" type-name="SoupMessageFlags" get-type="soup_message_flags_get_type">
 			<member name="SOUP_MESSAGE_OVERWRITE_CHUNKS" value="8"/>
+			<member name="SOUP_MESSAGE_NO_REDIRECT" value="2"/>
 		</flags>
 		<object name="SoupAddress" parent="GObject" type-name="SoupAddress" get-type="soup_address_get_type">
+			<method name="equal_by_ip" symbol="soup_address_equal_by_ip">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="addr1" type="gconstpointer"/>
+					<parameter name="addr2" type="gconstpointer"/>
+				</parameters>
+			</method>
+			<method name="equal_by_name" symbol="soup_address_equal_by_name">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="addr1" type="gconstpointer"/>
+					<parameter name="addr2" type="gconstpointer"/>
+				</parameters>
+			</method>
 			<method name="get_name" symbol="soup_address_get_name">
 				<return-type type="char*"/>
 				<parameters>
@@ -1088,6 +1519,24 @@
 				<parameters>
 					<parameter name="addr" type="SoupAddress*"/>
 					<parameter name="len" type="int*"/>
+				</parameters>
+			</method>
+			<method name="hash_by_ip" symbol="soup_address_hash_by_ip">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="addr" type="gconstpointer"/>
+				</parameters>
+			</method>
+			<method name="hash_by_name" symbol="soup_address_hash_by_name">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="addr" type="gconstpointer"/>
+				</parameters>
+			</method>
+			<method name="is_resolved" symbol="soup_address_is_resolved">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="addr" type="SoupAddress*"/>
 				</parameters>
 			</method>
 			<constructor name="new" symbol="soup_address_new">
@@ -1415,7 +1864,88 @@
 			<property name="auth-callback" type="gpointer" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="auth-data" type="gpointer" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
+		<object name="SoupCookieJar" parent="GObject" type-name="SoupCookieJar" get-type="soup_cookie_jar_get_type">
+			<implements>
+				<interface name="SoupSessionFeature"/>
+			</implements>
+			<method name="add_cookie" symbol="soup_cookie_jar_add_cookie">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="jar" type="SoupCookieJar*"/>
+					<parameter name="cookie" type="SoupCookie*"/>
+				</parameters>
+			</method>
+			<method name="all_cookies" symbol="soup_cookie_jar_all_cookies">
+				<return-type type="GSList*"/>
+				<parameters>
+					<parameter name="jar" type="SoupCookieJar*"/>
+				</parameters>
+			</method>
+			<method name="delete_cookie" symbol="soup_cookie_jar_delete_cookie">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="jar" type="SoupCookieJar*"/>
+					<parameter name="cookie" type="SoupCookie*"/>
+				</parameters>
+			</method>
+			<method name="get_cookies" symbol="soup_cookie_jar_get_cookies">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="jar" type="SoupCookieJar*"/>
+					<parameter name="uri" type="SoupURI*"/>
+					<parameter name="for_http" type="gboolean"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="soup_cookie_jar_new">
+				<return-type type="SoupCookieJar*"/>
+			</constructor>
+			<method name="save" symbol="soup_cookie_jar_save">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="jar" type="SoupCookieJar*"/>
+				</parameters>
+			</method>
+			<method name="set_cookie" symbol="soup_cookie_jar_set_cookie">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="jar" type="SoupCookieJar*"/>
+					<parameter name="uri" type="SoupURI*"/>
+					<parameter name="cookie" type="char*"/>
+				</parameters>
+			</method>
+			<property name="read-only" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
+			<signal name="changed" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="jar" type="SoupCookieJar*"/>
+					<parameter name="old_cookie" type="SoupCookie*"/>
+					<parameter name="new_cookie" type="SoupCookie*"/>
+				</parameters>
+			</signal>
+			<vfunc name="save">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="jar" type="SoupCookieJar*"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="SoupCookieJarText" parent="SoupCookieJar" type-name="SoupCookieJarText" get-type="soup_cookie_jar_text_get_type">
+			<implements>
+				<interface name="SoupSessionFeature"/>
+			</implements>
+			<constructor name="new" symbol="soup_cookie_jar_text_new">
+				<return-type type="SoupCookieJar*"/>
+				<parameters>
+					<parameter name="filename" type="char*"/>
+					<parameter name="read_only" type="gboolean"/>
+				</parameters>
+			</constructor>
+			<property name="filename" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
 		<object name="SoupLogger" parent="GObject" type-name="SoupLogger" get-type="soup_logger_get_type">
+			<implements>
+				<interface name="SoupSessionFeature"/>
+			</implements>
 			<method name="attach" symbol="soup_logger_attach">
 				<return-type type="void"/>
 				<parameters>
@@ -1488,6 +2018,12 @@
 			</method>
 			<method name="finished" symbol="soup_message_finished">
 				<return-type type="void"/>
+				<parameters>
+					<parameter name="msg" type="SoupMessage*"/>
+				</parameters>
+			</method>
+			<method name="get_address" symbol="soup_message_get_address">
+				<return-type type="SoupAddress*"/>
 				<parameters>
 					<parameter name="msg" type="SoupMessage*"/>
 				</parameters>
@@ -1632,6 +2168,13 @@
 					<parameter name="msg" type="SoupMessage*"/>
 				</parameters>
 			</method>
+			<method name="wrote_body_data" symbol="soup_message_wrote_body_data">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="msg" type="SoupMessage*"/>
+					<parameter name="chunk" type="SoupBuffer*"/>
+				</parameters>
+			</method>
 			<method name="wrote_chunk" symbol="soup_message_wrote_chunk">
 				<return-type type="void"/>
 				<parameters>
@@ -1654,6 +2197,7 @@
 			<property name="http-version" type="SoupHTTPVersion" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="method" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="reason-phrase" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="server-side" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="status-code" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="uri" type="SoupURI*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="finished" when="FIRST">
@@ -1697,6 +2241,13 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="msg" type="SoupMessage*"/>
+				</parameters>
+			</signal>
+			<signal name="wrote-body-data" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="SoupMessage*"/>
+					<parameter name="p0" type="SoupBuffer*"/>
 				</parameters>
 			</signal>
 			<signal name="wrote-chunk" when="FIRST">
@@ -1866,6 +2417,20 @@
 					<parameter name="session" type="SoupSession*"/>
 				</parameters>
 			</method>
+			<method name="add_feature" symbol="soup_session_add_feature">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="session" type="SoupSession*"/>
+					<parameter name="feature" type="SoupSessionFeature*"/>
+				</parameters>
+			</method>
+			<method name="add_feature_by_type" symbol="soup_session_add_feature_by_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="session" type="SoupSession*"/>
+					<parameter name="feature_type" type="GType"/>
+				</parameters>
+			</method>
 			<method name="cancel_message" symbol="soup_session_cancel_message">
 				<return-type type="void"/>
 				<parameters>
@@ -1896,6 +2461,20 @@
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
 			</method>
+			<method name="remove_feature" symbol="soup_session_remove_feature">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="session" type="SoupSession*"/>
+					<parameter name="feature" type="SoupSessionFeature*"/>
+				</parameters>
+			</method>
+			<method name="remove_feature_by_type" symbol="soup_session_remove_feature_by_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="session" type="SoupSession*"/>
+					<parameter name="feature_type" type="GType"/>
+				</parameters>
+			</method>
 			<method name="requeue_message" symbol="soup_session_requeue_message">
 				<return-type type="void"/>
 				<parameters>
@@ -1917,10 +2496,14 @@
 					<parameter name="msg" type="SoupMessage*"/>
 				</parameters>
 			</method>
+			<property name="add-feature" type="SoupSessionFeature*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="add-feature-by-type" type="GType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="async-context" type="gpointer" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="idle-timeout" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="max-conns" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="max-conns-per-host" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="proxy-uri" type="SoupURI*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="remove-feature-by-type" type="GType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="ssl-ca-file" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="timeout" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="use-ntlm" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -1934,12 +2517,26 @@
 					<parameter name="retrying" type="gboolean"/>
 				</parameters>
 			</signal>
+			<signal name="request-queued" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="SoupSession*"/>
+					<parameter name="p0" type="SoupMessage*"/>
+				</parameters>
+			</signal>
 			<signal name="request-started" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="session" type="SoupSession*"/>
 					<parameter name="msg" type="SoupMessage*"/>
 					<parameter name="socket" type="SoupSocket*"/>
+				</parameters>
+			</signal>
+			<signal name="request-unqueued" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="SoupSession*"/>
+					<parameter name="p0" type="SoupMessage*"/>
 				</parameters>
 			</signal>
 			<vfunc name="cancel_message">
@@ -2139,6 +2736,110 @@
 				</parameters>
 			</signal>
 		</object>
+		<interface name="SoupProxyResolver" type-name="SoupProxyResolver" get-type="soup_proxy_resolver_get_type">
+			<requires>
+				<interface name="SoupSessionFeature"/>
+				<interface name="GObject"/>
+			</requires>
+			<method name="get_proxy_async" symbol="soup_proxy_resolver_get_proxy_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="proxy_resolver" type="SoupProxyResolver*"/>
+					<parameter name="msg" type="SoupMessage*"/>
+					<parameter name="async_context" type="GMainContext*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="SoupProxyResolverCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="get_proxy_sync" symbol="soup_proxy_resolver_get_proxy_sync">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="proxy_resolver" type="SoupProxyResolver*"/>
+					<parameter name="msg" type="SoupMessage*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="addr" type="SoupAddress**"/>
+				</parameters>
+			</method>
+			<vfunc name="get_proxy_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="p1" type="SoupProxyResolver*"/>
+					<parameter name="p2" type="SoupMessage*"/>
+					<parameter name="p3" type="GMainContext*"/>
+					<parameter name="p4" type="GCancellable*"/>
+					<parameter name="p5" type="SoupProxyResolverCallback"/>
+					<parameter name="p6" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_proxy_sync">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="p1" type="SoupProxyResolver*"/>
+					<parameter name="p2" type="SoupMessage*"/>
+					<parameter name="p3" type="GCancellable*"/>
+					<parameter name="p4" type="SoupAddress**"/>
+				</parameters>
+			</vfunc>
+		</interface>
+		<interface name="SoupSessionFeature" type-name="SoupSessionFeature" get-type="soup_session_feature_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="attach" symbol="soup_session_feature_attach">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="feature" type="SoupSessionFeature*"/>
+					<parameter name="session" type="SoupSession*"/>
+				</parameters>
+			</method>
+			<method name="detach" symbol="soup_session_feature_detach">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="feature" type="SoupSessionFeature*"/>
+					<parameter name="session" type="SoupSession*"/>
+				</parameters>
+			</method>
+			<vfunc name="attach">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="feature" type="SoupSessionFeature*"/>
+					<parameter name="session" type="SoupSession*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="detach">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="feature" type="SoupSessionFeature*"/>
+					<parameter name="session" type="SoupSession*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="request_queued">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="feature" type="SoupSessionFeature*"/>
+					<parameter name="session" type="SoupSession*"/>
+					<parameter name="msg" type="SoupMessage*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="request_started">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="feature" type="SoupSessionFeature*"/>
+					<parameter name="session" type="SoupSession*"/>
+					<parameter name="msg" type="SoupMessage*"/>
+					<parameter name="socket" type="SoupSocket*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="request_unqueued">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="feature" type="SoupSessionFeature*"/>
+					<parameter name="session" type="SoupSession*"/>
+					<parameter name="msg" type="SoupMessage*"/>
+				</parameters>
+			</vfunc>
+		</interface>
 		<constant name="AF_INET6" type="int" value="-1"/>
 		<constant name="SOUP_ADDRESS_ANY_PORT" type="int" value="0"/>
 		<constant name="SOUP_ADDRESS_FAMILY" type="char*" value="family"/>
@@ -2167,8 +2868,19 @@
 		<constant name="SOUP_AUTH_IS_FOR_PROXY" type="char*" value="is-for-proxy"/>
 		<constant name="SOUP_AUTH_REALM" type="char*" value="realm"/>
 		<constant name="SOUP_AUTH_SCHEME_NAME" type="char*" value="scheme-name"/>
+		<constant name="SOUP_COOKIE_H" type="int" value="1"/>
+		<constant name="SOUP_COOKIE_JAR_H" type="int" value="1"/>
+		<constant name="SOUP_COOKIE_JAR_READ_ONLY" type="char*" value="read-only"/>
+		<constant name="SOUP_COOKIE_JAR_TEXT_FILENAME" type="char*" value="filename"/>
+		<constant name="SOUP_COOKIE_JAR_TEXT_H" type="int" value="1"/>
+		<constant name="SOUP_COOKIE_MAX_AGE_ONE_DAY" type="int" value="0"/>
+		<constant name="SOUP_COOKIE_MAX_AGE_ONE_HOUR" type="int" value="3600"/>
+		<constant name="SOUP_COOKIE_MAX_AGE_ONE_WEEK" type="int" value="0"/>
+		<constant name="SOUP_COOKIE_MAX_AGE_ONE_YEAR" type="int" value="0"/>
 		<constant name="SOUP_DATE_H" type="int" value="1"/>
 		<constant name="SOUP_FORM_H" type="int" value="1"/>
+		<constant name="SOUP_FORM_MIME_TYPE_MULTIPART" type="char*" value="multipart/form-data"/>
+		<constant name="SOUP_FORM_MIME_TYPE_URLENCODED" type="char*" value="application/x-www-form-urlencoded"/>
 		<constant name="SOUP_H" type="int" value="1"/>
 		<constant name="SOUP_HEADERS_H" type="int" value="1"/>
 		<constant name="SOUP_LOGGER_H" type="int" value="1"/>
@@ -2179,10 +2891,13 @@
 		<constant name="SOUP_MESSAGE_HTTP_VERSION" type="char*" value="http-version"/>
 		<constant name="SOUP_MESSAGE_METHOD" type="char*" value="method"/>
 		<constant name="SOUP_MESSAGE_REASON_PHRASE" type="char*" value="reason-phrase"/>
+		<constant name="SOUP_MESSAGE_SERVER_SIDE" type="char*" value="server-side"/>
 		<constant name="SOUP_MESSAGE_STATUS_CODE" type="char*" value="status-code"/>
 		<constant name="SOUP_MESSAGE_URI" type="char*" value="uri"/>
 		<constant name="SOUP_METHOD_H" type="int" value="1"/>
 		<constant name="SOUP_MISC_H" type="int" value="1"/>
+		<constant name="SOUP_MULTIPART_H" type="int" value="1"/>
+		<constant name="SOUP_PROXY_RESOLVER_H" type="int" value="1"/>
 		<constant name="SOUP_SERVER_ASYNC_CONTEXT" type="char*" value="async-context"/>
 		<constant name="SOUP_SERVER_H" type="int" value="1"/>
 		<constant name="SOUP_SERVER_INTERFACE" type="char*" value="interface"/>
@@ -2191,12 +2906,17 @@
 		<constant name="SOUP_SERVER_SERVER_HEADER" type="char*" value="server-header"/>
 		<constant name="SOUP_SERVER_SSL_CERT_FILE" type="char*" value="ssl-cert-file"/>
 		<constant name="SOUP_SERVER_SSL_KEY_FILE" type="char*" value="ssl-key-file"/>
+		<constant name="SOUP_SESSION_ADD_FEATURE" type="char*" value="add-feature"/>
+		<constant name="SOUP_SESSION_ADD_FEATURE_BY_TYPE" type="char*" value="add-feature-by-type"/>
 		<constant name="SOUP_SESSION_ASYNC_CONTEXT" type="char*" value="async-context"/>
 		<constant name="SOUP_SESSION_ASYNC_H" type="int" value="1"/>
+		<constant name="SOUP_SESSION_FEATURE_H" type="int" value="1"/>
 		<constant name="SOUP_SESSION_H" type="int" value="1"/>
+		<constant name="SOUP_SESSION_IDLE_TIMEOUT" type="char*" value="idle-timeout"/>
 		<constant name="SOUP_SESSION_MAX_CONNS" type="char*" value="max-conns"/>
 		<constant name="SOUP_SESSION_MAX_CONNS_PER_HOST" type="char*" value="max-conns-per-host"/>
 		<constant name="SOUP_SESSION_PROXY_URI" type="char*" value="proxy-uri"/>
+		<constant name="SOUP_SESSION_REMOVE_FEATURE_BY_TYPE" type="char*" value="remove-feature-by-type"/>
 		<constant name="SOUP_SESSION_SSL_CA_FILE" type="char*" value="ssl-ca-file"/>
 		<constant name="SOUP_SESSION_SYNC_H" type="int" value="1"/>
 		<constant name="SOUP_SESSION_TIMEOUT" type="char*" value="timeout"/>

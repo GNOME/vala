@@ -1,3 +1,11 @@
+2008-12-11  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/libsoup-2.4/:
+
+	Updated to libsoup 2.25.2
+
+	* vapi/libsoup-2.4.vapi: regenerated
+
 2008-12-10  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/rasqal.vapi:
