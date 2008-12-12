@@ -1,3 +1,9 @@
+2008-12-12  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/curses.vapi:
+
+	Add missing [Compact]
+
 2008-12-11  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/libsoup-2.4/:

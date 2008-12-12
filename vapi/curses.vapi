@@ -55,6 +55,7 @@ namespace Curses {
 
 	public const int ESCDELAY;
 
+	[Compact]
 	[CCode (copy_function = "dupwin", free_function = "delwin", cname = "WINDOW", cprefix = "")]
 	public class Window {
 		public int box(ulong verch, ulong horch);
@@ -255,6 +256,7 @@ namespace Curses {
 		public int vline(ulong ch, int n);
 	}
 
+	[Compact]
 	[CCode (copy_function = "dupwin", free_function = "delwin", cname = "WINDOW", cprefix = "")]
 	public class Pad : Window {
 		[CCode (cname = "newpad")]
@@ -267,6 +269,7 @@ namespace Curses {
 		public int refresh(int pminrow, int pmincol, int sminrow, int smincol, int smaxrow, int smaxcol);
 	}
 
+	[Compact]
 	[CCode (free_function = "delscreen", cname = "SCREEN", cprefix = "")]
 	public class Screen {
 		[CCode (cname = "newterm")]
