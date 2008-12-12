@@ -59,13 +59,13 @@ public class Vala.DBusModule : GAsyncModule {
 		return false;
 	}
 
-	CCodeExpression? get_array_length (CCodeExpression expr) {
+	CCodeExpression? get_array_length (CCodeExpression expr, int dim) {
 		var id = expr as CCodeIdentifier;
 		var ma = expr as CCodeMemberAccess;
 		if (id != null) {
-			return new CCodeIdentifier (id.name + "_length1");
+			return new CCodeIdentifier ("%s_length%d".printf (id.name, dim));
 		} else if (ma != null) {
-			return new CCodeMemberAccess.pointer (ma.inner, ma.member_name + "_length1");
+			return new CCodeMemberAccess.pointer (ma.inner, "%s_length%d".printf (ma.member_name, dim));
 		}
 		return null;
 	}
@@ -97,18 +97,29 @@ public class Vala.DBusModule : GAsyncModule {
 
 	CCodeExpression read_array (CCodeFragment fragment, ArrayType array_type, CCodeExpression iter_expr, CCodeExpression? expr) {
 		string temp_name = "_tmp%d".printf (next_temp_var_id++);
-		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
 
 		var cdecl = new CCodeDeclaration (array_type.get_cname ());
 		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (temp_name, new CCodeConstant ("NULL")));
 		fragment.append (cdecl);
 
 		cdecl = new CCodeDeclaration ("int");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (temp_name + "_length1", new CCodeConstant ("0")));
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (temp_name + "_length", new CCodeConstant ("0")));
 		fragment.append (cdecl);
 
 		cdecl = new CCodeDeclaration ("int");
 		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (temp_name + "_size", new CCodeConstant ("0")));
+		fragment.append (cdecl);
+
+		read_array_dim (fragment, array_type, 1, temp_name, iter_expr, expr);
+
+		return new CCodeIdentifier (temp_name);
+	}
+
+	void read_array_dim (CCodeFragment fragment, ArrayType array_type, int dim, string temp_name, CCodeExpression iter_expr, CCodeExpression? expr) {
+		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
+
+		var cdecl = new CCodeDeclaration ("int");
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_length%d".printf (temp_name, dim), new CCodeConstant ("0")));
 		fragment.append (cdecl);
 
 		cdecl = new CCodeDeclaration ("DBusMessageIter");
@@ -127,36 +138,43 @@ public class Vala.DBusModule : GAsyncModule {
 		var cforfragment = new CCodeFragment ();
 		cforblock.add_statement (cforfragment);
 		var cfor = new CCodeForStatement (iter_call, cforblock);
-		cfor.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier (temp_name + "_length1")));
+		cfor.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("%s_length%d".printf (temp_name, dim))));
 
-		var size_check = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier (temp_name + "_size"), new CCodeIdentifier (temp_name + "_length1"));
-		var renew_block = new CCodeBlock ();
+		if (dim < array_type.rank) {
+			read_array_dim (cforfragment, array_type, dim + 1, temp_name, new CCodeIdentifier (subiter_name), expr);
 
-		// tmp_size = (tmp_size > 0) ? (2 * tmp_size) : 4;
-		var init_check = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier (temp_name + "_size"), new CCodeConstant ("0"));
-		var new_size = new CCodeConditionalExpression (init_check, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("2"), new CCodeIdentifier (temp_name + "_size")), new CCodeConstant ("4"));
-		renew_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (temp_name + "_size"), new_size)));
+			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_next"));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
+			cforfragment.append (new CCodeExpressionStatement (iter_call));
+		} else {
+			var size_check = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier (temp_name + "_size"), new CCodeIdentifier (temp_name + "_length"));
+			var renew_block = new CCodeBlock ();
 
-		var renew_call = new CCodeFunctionCall (new CCodeIdentifier ("g_renew"));
-		renew_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
-		renew_call.add_argument (new CCodeIdentifier (temp_name));
-		renew_call.add_argument (new CCodeIdentifier (temp_name + "_size"));
-		var renew_stmt = new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (temp_name), renew_call));
-		renew_block.add_statement (renew_stmt);
+			// tmp_size = (tmp_size > 0) ? (2 * tmp_size) : 4;
+			var init_check = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier (temp_name + "_size"), new CCodeConstant ("0"));
+			var new_size = new CCodeConditionalExpression (init_check, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("2"), new CCodeIdentifier (temp_name + "_size")), new CCodeConstant ("4"));
+			renew_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (temp_name + "_size"), new_size)));
 
-		var cif = new CCodeIfStatement (size_check, renew_block);
-		cforfragment.append (cif);
+			var renew_call = new CCodeFunctionCall (new CCodeIdentifier ("g_renew"));
+			renew_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+			renew_call.add_argument (new CCodeIdentifier (temp_name));
+			renew_call.add_argument (new CCodeIdentifier (temp_name + "_size"));
+			var renew_stmt = new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (temp_name), renew_call));
+			renew_block.add_statement (renew_stmt);
 
-		var element_expr = read_expression (cforfragment, array_type.element_type, new CCodeIdentifier (subiter_name), null);
-		cforfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (new CCodeIdentifier (temp_name), new CCodeIdentifier (temp_name + "_length1")), element_expr)));
+			var cif = new CCodeIfStatement (size_check, renew_block);
+			cforfragment.append (cif);
+
+			var element_access = new CCodeElementAccess (new CCodeIdentifier (temp_name), new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier (temp_name + "_length")));
+			var element_expr = read_expression (cforfragment, array_type.element_type, new CCodeIdentifier (subiter_name), null);
+			cforfragment.append (new CCodeExpressionStatement (new CCodeAssignment (element_access, element_expr)));
+		}
 
 		fragment.append (cfor);
 
 		if (expr != null) {
-			fragment.append (new CCodeExpressionStatement (new CCodeAssignment (get_array_length (expr), new CCodeIdentifier (temp_name + "_length1"))));
+			fragment.append (new CCodeExpressionStatement (new CCodeAssignment (get_array_length (expr, dim), new CCodeIdentifier ("%s_length%d".printf (temp_name, dim)))));
 		}
-
-		return new CCodeIdentifier (temp_name);
 	}
 
 	CCodeExpression read_struct (CCodeFragment fragment, Struct st, CCodeExpression iter_expr) {
@@ -400,7 +418,7 @@ public class Vala.DBusModule : GAsyncModule {
 		var cforblock = new CCodeBlock ();
 		var cforfragment = new CCodeFragment ();
 		cforblock.add_statement (cforfragment);
-		var cfor = new CCodeForStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier (index_name), get_array_length (array_expr)), cforblock);
+		var cfor = new CCodeForStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier (index_name), get_array_length (array_expr, 1)), cforblock);
 		cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (index_name), new CCodeConstant ("0")));
 		cfor.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier (index_name)));
 

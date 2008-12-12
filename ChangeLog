@@ -3,6 +3,13 @@
 	* gobject/valadbusclientmodule.vala:
 	* gobject/valadbusmodule.vala:
 
+	Support reading multi-dimensional arrays in static D-Bus clients
+
+2008-12-12  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valadbusclientmodule.vala:
+	* gobject/valadbusmodule.vala:
+
 	Fix array length and size handling in static D-Bus clients
 
 2008-12-12  Jürg Billeter  <j@bitron.ch>
