@@ -1038,15 +1038,17 @@ public class Vala.DBusClientModule : DBusModule {
 			cdecl.add_declarator (new CCodeVariableDeclarator ("_result"));
 			postfragment.append (cdecl);
 
+			if (m.return_type is ArrayType) {
+				cdecl = new CCodeDeclaration ("int");
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_result_length1", new CCodeConstant ("0")));
+				postfragment.append (cdecl);
+			}
+
 			var target = new CCodeIdentifier ("_result");
 			var expr = read_expression (postfragment, m.return_type, new CCodeIdentifier ("_iter"), target);
 			postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
 
 			if (m.return_type is ArrayType) {
-				cdecl = new CCodeDeclaration ("int");
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_result_length1", new CCodeConstant ("0")));
-				postfragment.append (cdecl);
-
 				// TODO check that parameter is not NULL (out parameters are optional)
 				postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length1")), new CCodeIdentifier ("_result_length1"))));
 			}

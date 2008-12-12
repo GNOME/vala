@@ -130,14 +130,18 @@ public class Vala.DBusModule : GAsyncModule {
 		cfor.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier (temp_name + "_length1")));
 
 		var size_check = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier (temp_name + "_size"), new CCodeIdentifier (temp_name + "_length1"));
+		var renew_block = new CCodeBlock ();
+
+		// tmp_size = (tmp_size > 0) ? (2 * tmp_size) : 4;
 		var init_check = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier (temp_name + "_size"), new CCodeConstant ("0"));
 		var new_size = new CCodeConditionalExpression (init_check, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("2"), new CCodeIdentifier (temp_name + "_size")), new CCodeConstant ("4"));
+		renew_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (temp_name + "_size"), new_size)));
+
 		var renew_call = new CCodeFunctionCall (new CCodeIdentifier ("g_renew"));
 		renew_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
 		renew_call.add_argument (new CCodeIdentifier (temp_name));
-		renew_call.add_argument (new_size);
+		renew_call.add_argument (new CCodeIdentifier (temp_name + "_size"));
 		var renew_stmt = new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (temp_name), renew_call));
-		var renew_block = new CCodeBlock ();
 		renew_block.add_statement (renew_stmt);
 
 		var cif = new CCodeIfStatement (size_check, renew_block);
