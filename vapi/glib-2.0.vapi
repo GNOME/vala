@@ -1158,10 +1158,7 @@ namespace GLib {
 	}
 
 	/* Thread support */
-	[Compact]
-	public class ThreadFunctions {
-	}
-	
+
 	public delegate void* ThreadFunc ();
 	public delegate void Func (void* data);
 	
@@ -1175,7 +1172,6 @@ namespace GLib {
 	
 	[Compact]
 	public class Thread {
-		public static void init (ThreadFunctions? vtable = null);
 		public static bool supported ();
 		public static weak Thread create (ThreadFunc func, bool joinable) throws ThreadError;
 		public static weak Thread create_full (ThreadFunc func, ulong stack_size, bool joinable, bool bound, ThreadPriority priority) throws ThreadError;

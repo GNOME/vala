@@ -1,5 +1,11 @@
 2008-12-13  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Remove g_thread_init binding, should never be called manually
+
+2008-12-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valagenieparser.vala:
 	* vala/valaparser.vala:
 
