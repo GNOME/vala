@@ -111,13 +111,13 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 				if (is_constant_ccode_expression (cexpr)) {
 					var cname = new CCodeIdentifier ("%s_label%d".printf (temp_var.name, label_count++));
-					var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, czero, cname);
+					var ccondition = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, czero, cname);
 					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
-					var cinit = new CCodeAssignment (cname, ccall);
+					cinit = new CCodeAssignment (cname, ccall);
 
 					ccall.add_argument (cexpr);
 
-					cexpr = new CCodeConditionalExpression (ccond, cname, cinit);
+					cexpr = new CCodeConditionalExpression (ccondition, cname, cinit);
 				} else {
 					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_string"));
 					ccall.add_argument (cexpr);
@@ -287,7 +287,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		
 		if (stmt.tree_can_fail && stmt.collection.tree_can_fail) {
 			// exception handling
-			var cfrag = new CCodeFragment ();
+			cfrag = new CCodeFragment ();
 			head.add_simple_check (stmt.collection, cfrag);
 			cblock.add_statement (cfrag);
 		}
@@ -319,7 +319,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				element_type.value_owned = false;
 				element_expr = transform_expression (element_expr, element_type, stmt.type_reference);
 
-				var cfrag = new CCodeFragment ();
+				cfrag = new CCodeFragment ();
 				append_temp_decl (cfrag, temp_vars);
 				cbody.add_statement (cfrag);
 				temp_vars.clear ();
@@ -365,7 +365,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				element_type.value_owned = false;
 				element_expr = transform_expression (element_expr, element_type, stmt.type_reference);
 
-				var cfrag = new CCodeFragment ();
+				cfrag = new CCodeFragment ();
 				append_temp_decl (cfrag, temp_vars);
 				cbody.add_statement (cfrag);
 				temp_vars.clear ();
@@ -438,7 +438,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			element_expr = convert_from_generic_pointer (element_expr, element_data_type);
 			element_expr = transform_expression (element_expr, element_data_type, stmt.type_reference);
 
-			var cfrag = new CCodeFragment ();
+			cfrag = new CCodeFragment ();
 			append_temp_decl (cfrag, temp_vars);
 			cbody.add_statement (cfrag);
 			temp_vars.clear ();

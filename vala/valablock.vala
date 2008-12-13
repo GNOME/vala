@@ -84,6 +84,14 @@ public class Vala.Block : Symbol, Statement {
 	 * @param decl a variable declarator
 	 */
 	public void add_local_variable (LocalVariable local) {
+		var parent_block = parent_symbol as Block;
+		while (parent_block != null) {
+			if (parent_block.scope.lookup (local.name) != null) {
+				Report.error (local.source_reference, "Local variable `%s' conflicts with another local variable declared in a parent scope".printf (local.name));
+				break;
+			}
+			parent_block = parent_block.parent_symbol as Block;
+		}
 		local_variables.add (local);
 	}
 

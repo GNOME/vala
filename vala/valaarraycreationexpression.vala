@@ -151,14 +151,14 @@ public class Vala.ArrayCreationExpression : Expression {
 
 		checked = true;
 
-		Gee.List<Expression> size = get_sizes ();
+		Gee.List<Expression> sizes = get_sizes ();
 		var initlist = initializer_list;
 
 		if (element_type != null) {
 			element_type.check (analyzer);
 		}
 
-		foreach (Expression e in size) {
+		foreach (Expression e in sizes) {
 			e.check (analyzer);
 		}
 
@@ -174,9 +174,9 @@ public class Vala.ArrayCreationExpression : Expression {
 			}
 		}
 
-		if (size.size > 0) {
+		if (sizes.size > 0) {
 			/* check for errors in the size list */
-			foreach (Expression e in size) {
+			foreach (Expression e in sizes) {
 				if (e.value_type == null) {
 					/* return on previous error */
 					return false;

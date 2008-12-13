@@ -1435,7 +1435,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			bool set_delegate_target_pos = false;
 			double delegate_target_pos = 0;
 			bool array_requested = false;
-			var attributes = get_attributes ("%s.%s".printf (symbol, param_node.name));
+			attributes = get_attributes ("%s.%s".printf (symbol, param_node.name));
 			if (attributes != null) {
 				foreach (string attr in attributes) {
 					var nv = attr.split ("=", 2);
@@ -1862,7 +1862,7 @@ public class Vala.GIdlParser : CodeVisitor {
 			p.direction = direction;
 			sig.add_parameter (p);
 
-			var attributes = get_attributes ("%s::%s.%s".printf (current_data_type.get_cname (), sig.name, param_node.name));
+			attributes = get_attributes ("%s::%s.%s".printf (current_data_type.get_cname (), sig.name, param_node.name));
 			if (attributes != null) {
 				string ns_name = null;
 				foreach (string attr in attributes) {

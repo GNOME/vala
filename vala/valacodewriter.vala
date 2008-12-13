@@ -184,7 +184,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		var type_params = cl.get_type_parameters ();
 		if (type_params.size > 0) {
 			write_string ("<");
-			bool first = true;
+			first = true;
 			foreach (TypeParameter type_param in type_params) {
 				if (first) {
 					first = false;
@@ -200,7 +200,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (base_types.size > 0) {
 			write_string (" : ");
 		
-			bool first = true;
+			first = true;
 			foreach (DataType base_type in base_types) {
 				if (!first) {
 					write_string (", ");
@@ -277,7 +277,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("type_id = \"%s\", ".printf (st.get_type_id ()));
 		}
 
-		var first = true;
+		bool first = true;
 		string cheaders = "";
 		foreach (string cheader in st.get_cheader_filenames ()) {
 			if (first) {
@@ -317,7 +317,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (base_types.size > 0) {
 			write_string (" : ");
 		
-			bool first = true;
+			first = true;
 			foreach (DataType base_type in base_types) {
 				if (!first) {
 					write_string (", ");
@@ -355,7 +355,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		write_indent ();
 
-		var first = true;
+		bool first = true;
 		string cheaders = "";
 		foreach (string cheader in iface.get_cheader_filenames ()) {
 			if (first) {
@@ -380,7 +380,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		var type_params = iface.get_type_parameters ();
 		if (type_params.size > 0) {
 			write_string ("<");
-			bool first = true;
+			first = true;
 			foreach (TypeParameter type_param in type_params) {
 				if (first) {
 					first = false;
@@ -396,7 +396,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (prerequisites.size > 0) {
 			write_string (" : ");
 		
-			bool first = true;
+			first = true;
 			foreach (DataType prerequisite in prerequisites) {
 				if (!first) {
 					write_string (", ");

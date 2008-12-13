@@ -1687,7 +1687,7 @@ public class Vala.Parser : CodeVisitor {
 				if (accept (TokenType.OPEN_PARENS)) {
 					if (current () != TokenType.CLOSE_PARENS) {
 						do {
-							string id = parse_identifier ();
+							id = parse_identifier ();
 							expect (TokenType.ASSIGN);
 							var expr = parse_expression ();
 							attr.add_argument (id, expr);
@@ -2524,14 +2524,14 @@ public class Vala.Parser : CodeVisitor {
 		if (accept (TokenType.SEMICOLON)) {
 			// enum methods
 			while (current () != TokenType.CLOSE_BRACE) {
-				var sym = parse_declaration ();
-				if (sym is Method) {
-					en.add_method ((Method) sym);
-				} else if (sym == null) {
+				var member_sym = parse_declaration ();
+				if (member_sym is Method) {
+					en.add_method ((Method) member_sym);
+				} else if (member_sym == null) {
 					// workaround for current limitation of exception handling
 					throw new ParseError.SYNTAX ("syntax error in declaration");
 				} else {
-					Report.error (sym.source_reference, "unexpected declaration in enum");
+					Report.error (member_sym.source_reference, "unexpected declaration in enum");
 				}
 			}
 		}
@@ -2584,14 +2584,14 @@ public class Vala.Parser : CodeVisitor {
 		if (accept (TokenType.SEMICOLON)) {
 			// errordomain methods
 			while (current () != TokenType.CLOSE_BRACE) {
-				var sym = parse_declaration ();
-				if (sym is Method) {
-					ed.add_method ((Method) sym);
-				} else if (sym == null) {
+				var member_sym = parse_declaration ();
+				if (member_sym is Method) {
+					ed.add_method ((Method) member_sym);
+				} else if (member_sym == null) {
 					// workaround for current limitation of exception handling
 					throw new ParseError.SYNTAX ("syntax error in declaration");
 				} else {
-					Report.error (sym.source_reference, "unexpected declaration in errordomain");
+					Report.error (member_sym.source_reference, "unexpected declaration in errordomain");
 				}
 			}
 		}

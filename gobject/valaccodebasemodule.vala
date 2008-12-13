@@ -857,8 +857,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				var this_access = new MemberAccess.simple ("this");
 				this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
 
-				var st = f.parent_symbol as Struct;
-				if (st != null && !st.is_simple_type ()) {
+				var field_st = f.parent_symbol as Struct;
+				if (field_st != null && !field_st.is_simple_type ()) {
 					this_access.ccodenode = new CCodeIdentifier ("(*self)");
 				} else {
 					this_access.ccodenode = new CCodeIdentifier ("self");

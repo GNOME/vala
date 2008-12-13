@@ -254,13 +254,13 @@ public class Vala.ForeachStatement : Block {
 		}
 
 		var iterator_call = new MethodCall (new MemberAccess (collection, "iterator"));
-		add_statement (new DeclarationStatement (new LocalVariable (iterator_type, "%s_it".printf (variable_name), iterator_call, source_reference), source_reference));
+		add_statement (new DeclarationStatement (new LocalVariable (iterator_type, "_%s_it".printf (variable_name), iterator_call, source_reference), source_reference));
 
-		var next_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("%s_it".printf (variable_name), source_reference), "next", source_reference), source_reference);
+		var next_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("_%s_it".printf (variable_name), source_reference), "next", source_reference), source_reference);
 		var loop = new WhileStatement (next_call, body, source_reference);
 		add_statement (loop);
 
-		var get_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("%s_it".printf (variable_name), source_reference), "get", source_reference), source_reference);
+		var get_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("_%s_it".printf (variable_name), source_reference), "get", source_reference), source_reference);
 		body.insert_statement (0, new DeclarationStatement (new LocalVariable (type_reference, variable_name, get_call, source_reference), source_reference));
 
 		checked = false;

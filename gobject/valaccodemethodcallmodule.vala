@@ -106,7 +106,6 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			var cast = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null) + "_CLASS"));
 			
 			CCodeExpression klass;
-			var ma = expr.call as MemberAccess;
 			if (ma.inner == null) {
 				if (in_static_or_class_ctor) {
 					// Accessing the method from a static or class constructor
@@ -194,14 +193,14 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 							if (deleg_type.value_owned) {
 								CCodeExpression delegate_target_destroy_notify;
 								var delegate_method = arg.symbol_reference as Method;
-								var ma = arg as MemberAccess;
+								var arg_ma = arg as MemberAccess;
 								if (delegate_method != null && delegate_method.binding == MemberBinding.INSTANCE
-								    && ma.inner != null && ma.inner.value_type.data_type != null
-								    && ma.inner.value_type.data_type.is_reference_counting ()) {
-									var ref_call = new CCodeFunctionCall (get_dup_func_expression (ma.inner.value_type, arg.source_reference));
+								    && arg_ma.inner != null && arg_ma.inner.value_type.data_type != null
+								    && arg_ma.inner.value_type.data_type.is_reference_counting ()) {
+									var ref_call = new CCodeFunctionCall (get_dup_func_expression (arg_ma.inner.value_type, arg.source_reference));
 									ref_call.add_argument (delegate_target);
 									delegate_target = ref_call;
-									delegate_target_destroy_notify = get_destroy_func_expression (ma.inner.value_type);
+									delegate_target_destroy_notify = get_destroy_func_expression (arg_ma.inner.value_type);
 								} else {
 									delegate_target_destroy_notify = new CCodeConstant ("NULL");
 								}

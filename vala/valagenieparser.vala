@@ -699,7 +699,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 								s_exp.value = st;
 							}
 						} else {
-							string s = "\"\\n\"";
 							var rhs = new StringLiteral (s, get_src (begin));
 							p_expr = new BinaryExpression (BinaryOperator.PLUS, p_expr, rhs, get_src (begin));
 						}
@@ -2110,7 +2109,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 				if (accept (TokenType.OPEN_PARENS)) {
 					if (current () != TokenType.CLOSE_PARENS) {
 						do {
-							string id = parse_identifier ();
+							id = parse_identifier ();
 							expect (TokenType.ASSIGN);
 							var expr = parse_expression ();
 							attr.add_argument (id, expr);

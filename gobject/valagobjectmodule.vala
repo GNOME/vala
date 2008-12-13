@@ -1145,7 +1145,7 @@ public class Vala.GObjectModule : GTypeModule {
 		
 		var block = new CCodeBlock ();
 		
-		var ccall = new InstanceCast (new CCodeIdentifier ("object"), cl);
+		CCodeFunctionCall ccall = new InstanceCast (new CCodeIdentifier ("object"), cl);
 		var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
 		block.add_statement (cdecl);
@@ -1175,7 +1175,7 @@ public class Vala.GObjectModule : GTypeModule {
 			}
 
 			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
 			ccall.add_argument (cself);
 			var csetcall = new CCodeFunctionCall ();
 			csetcall.call = head.get_value_setter_function (prop.property_type);
@@ -1205,7 +1205,7 @@ public class Vala.GObjectModule : GTypeModule {
 		
 		var block = new CCodeBlock ();
 		
-		var ccall = new InstanceCast (new CCodeIdentifier ("object"), cl);
+		CCodeFunctionCall ccall = new InstanceCast (new CCodeIdentifier ("object"), cl);
 		var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
 		block.add_statement (cdecl);
@@ -1235,7 +1235,7 @@ public class Vala.GObjectModule : GTypeModule {
 			}
 
 			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_set_%s".printf (prefix, prop.name)));
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_set_%s".printf (prefix, prop.name)));
 			ccall.add_argument (cself);
 			var cgetcall = new CCodeFunctionCall ();
 			if (prop.property_type.data_type != null) {
@@ -1571,14 +1571,13 @@ public class Vala.GObjectModule : GTypeModule {
 
 			cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
-		
 			cblock.add_statement (cdecl);
 
 			if (current_method_inner_error) {
 				/* always separate error parameter and inner_error local variable
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
-				var cdecl = new CCodeDeclaration ("GError *");
+				cdecl = new CCodeDeclaration ("GError *");
 				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
 				cblock.add_statement (cdecl);
 			}

@@ -1,3 +1,22 @@
+2008-12-13  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valablock.vala:
+
+	Detect conflicting local variables in parent scopes
+
+	* vala/valaarraycreationexpression.vala:
+	* vala/valacodewriter.vala:
+	* vala/valaforeachstatement.vala:
+	* vala/valagenieparser.vala:
+	* vala/valaparser.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodecontrolflowmodule.vala:
+	* gobject/valaccodemethodcallmodule.vala:
+	* gobject/valagobjectmodule.vala:
+	* vapigen/valagidlparser.vala:
+
+	Fix conflicting local variables
+
 2008-12-12  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valadbusclientmodule.vala:
