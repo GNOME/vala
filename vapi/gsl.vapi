@@ -3188,7 +3188,7 @@ namespace Gsl
 		public Histogram.uniform (size_t n, double xmin, double xmax);
 		[NoArrayLength]
 		[CCode (cname="gsl_histogram_calloc_range")]
-		public Histogram.range (size_t n, double[] range);
+		public Histogram.with_range (size_t n, double[] range);
 		
 		public int increment (double x);
 		public int accumulate (double x, double weight);
