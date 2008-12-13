@@ -1,5 +1,11 @@
 2008-12-13  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valadbusmodule.vala:
+
+	Support reading and writing nullable GLib.Value values
+
+2008-12-13  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/gsl.vapi:
 
 	Improve gsl_histogram_calloc_range binding,
