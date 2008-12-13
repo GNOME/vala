@@ -1,5 +1,12 @@
 2008-12-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valagenieparser.vala:
+	* vala/valaparser.vala:
+
+	Remove workarounds for old Vala versions
+
+2008-12-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valablock.vala:
 
 	Detect conflicting local variables in parent scopes

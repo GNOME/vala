@@ -573,11 +573,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 			break;
 		}
 
-		if (expr == null) {
-			// workaround for current limitation of exception handling
-			throw new ParseError.SYNTAX ("syntax error in primary expression");
-		}
-
 		// process primary expressions that start with an inner primary expression
 		bool found = true;
 		while (found) {
@@ -604,11 +599,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 			default:
 				found = false;
 				break;
-			}
-
-			if (expr == null) {
-				// workaround for current limitation of exception handling
-				throw new ParseError.SYNTAX ("syntax error in primary expression");
 			}
 		}
 
@@ -1430,10 +1420,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 				next ();
 				var rhs = parse_expression ();
 				expr = new Assignment (expr, rhs, operator, get_src (begin));
-				if (expr == null) {
-					// workaround for current limitation of exception handling
-					throw new ParseError.SYNTAX ("syntax error in assignment");
-				}
 			} else if (current () == TokenType.OP_GT) { // >>=
 				char* first_gt_pos = tokens[index].begin.pos;
 				next ();
@@ -1442,10 +1428,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 					next ();
 					var rhs = parse_expression ();
 					expr = new Assignment (expr, rhs, AssignmentOperator.SHIFT_RIGHT, get_src (begin));
-					if (expr == null) {
-						// workaround for current limitation of exception handling
-						throw new ParseError.SYNTAX ("syntax error in assignment");
-					}
 				} else {
 					prev ();
 					break;
@@ -1590,10 +1572,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 				}
 
 				if (!is_decl) {
-					if (stmt == null) {
-						// workaround for current limitation of exception handling
-						throw new ParseError.SYNTAX ("syntax error in statement");
-					}
 					block.add_statement (stmt);
 				}
 			} catch (ParseError e) {
@@ -1651,12 +1629,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		comment = scanner.pop_comment ();
 
 		var block = new Block (get_src_com (get_location ()));
-		var stmt = parse_embedded_statement_without_block ();
-		if (stmt == null) {
-			// workaround for current limitation of exception handling
-			throw new ParseError.SYNTAX ("syntax error in embedded statement");
-		}
-		block.add_statement (stmt);
+		block.add_statement (parse_embedded_statement_without_block ());
 		return block;
 
 	}
@@ -2319,9 +2292,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 			ns.add_field (field);
 		} else if (sym is Constant) {
 			ns.add_constant ((Constant) sym);
-		} else if (sym == null) {
-			// workaround for current limitation of exception handling
-			throw new ParseError.SYNTAX ("syntax error in declaration");
 		} else {
 			Report.error (sym.source_reference, "unexpected declaration in namespace");
 		}
@@ -2465,9 +2435,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 			 }
 		} else if (sym is Destructor) {
 			cl.destructor = (Destructor) sym;
-		} else if (sym == null) {
-			// workaround for current limitation of exception handling
-			throw new ParseError.SYNTAX ("syntax error in declaration");
 		} else {
 			Report.error (sym.source_reference, "unexpected declaration in class");
 		}
@@ -2983,9 +2950,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 			st.add_field ((Field) sym);
 		} else if (sym is Constant) {
 			st.add_constant ((Constant) sym);
-		} else if (sym == null) {
-			// workaround for current limitation of exception handling
-			throw new ParseError.SYNTAX ("syntax error in declaration");
 		} else {
 			Report.error (sym.source_reference, "unexpected declaration in struct");
 		}
@@ -3058,9 +3022,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 			iface.add_field ((Field) sym);
 		} else if (sym is Property) {
 			iface.add_property ((Property) sym);
-		} else if (sym == null) {
-			// workaround for current limitation of exception handling
-			throw new ParseError.SYNTAX ("syntax error in declaration");
 		} else {
 			Report.error (sym.source_reference, "unexpected declaration in interface");
 		}
@@ -3200,7 +3161,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 				return flags;
 			}
 		}
-		return flags;
 	}
 
 	ModifierFlags parse_member_declaration_modifiers () {
@@ -3243,7 +3203,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 				return flags;
 			}
 		}
-		return flags;
 	}
 
 	FormalParameter parse_parameter () throws ParseError {
