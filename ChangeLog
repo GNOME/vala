@@ -1,5 +1,11 @@
 2008-12-14  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Add type_id for GHashTable
+
+2008-12-14  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusmodule.vala:
 
 	Support reading and writing nullable struct values
