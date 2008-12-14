@@ -1,5 +1,11 @@
 2008-12-14  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valadbusmodule.vala:
+
+	Support reading and writing nullable struct values
+
+2008-12-14  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 
 	Fix struct dup function for GValue

@@ -359,18 +359,19 @@ public class Vala.DBusModule : GAsyncModule {
 		} else if (type is ArrayType) {
 			result = read_array (fragment, (ArrayType) type, iter_expr, expr);
 		} else if (type.data_type is Struct) {
+			var st = (Struct) type.data_type;
 			if (type.data_type.get_full_name () == "GLib.Value") {
 				result = read_value (fragment, iter_expr);
-				if (type.nullable) {
-					var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-					csizeof.add_argument (new CCodeIdentifier ("GValue"));
-					var cdup = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
-					cdup.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, result));
-					cdup.add_argument (csizeof);
-					result = cdup;
-				}
 			} else {
-				result = read_struct (fragment, (Struct) type.data_type, iter_expr);
+				result = read_struct (fragment, st, iter_expr);
+			}
+			if (type.nullable) {
+				var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				csizeof.add_argument (new CCodeIdentifier (st.get_cname ()));
+				var cdup = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+				cdup.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, result));
+				cdup.add_argument (csizeof);
+				result = cdup;
 			}
 		} else if (type is ObjectType) {
 			if (type.data_type.get_full_name () == "GLib.HashTable") {
@@ -607,14 +608,14 @@ public class Vala.DBusModule : GAsyncModule {
 		} else if (type is ArrayType) {
 			write_array (fragment, (ArrayType) type, iter_expr, expr);
 		} else if (type.data_type is Struct) {
+			var st_expr = expr;
+			if (type.nullable) {
+				st_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, st_expr);
+			}
 			if (type.data_type.get_full_name () == "GLib.Value") {
-				if (type.nullable) {
-					write_value (fragment, iter_expr, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr));
-				} else {
-					write_value (fragment, iter_expr, expr);
-				}
+				write_value (fragment, iter_expr, st_expr);
 			} else {
-				write_struct (fragment, (Struct) type.data_type, iter_expr, expr);
+				write_struct (fragment, (Struct) type.data_type, iter_expr, st_expr);
 			}
 		} else if (type is ObjectType) {
 			if (type.data_type.get_full_name () == "GLib.HashTable") {
