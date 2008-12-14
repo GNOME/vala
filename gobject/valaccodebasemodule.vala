@@ -1533,14 +1533,22 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		var block = new CCodeBlock ();
 
-		var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
-		dup_call.add_argument (new CCodeIdentifier ("self"));
+		if (value_type.type_symbol == gvalue_type) {
+			var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_boxed_copy"));
+			dup_call.add_argument (new CCodeIdentifier ("G_TYPE_VALUE"));
+			dup_call.add_argument (new CCodeIdentifier ("self"));
 
-		var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-		sizeof_call.add_argument (new CCodeIdentifier (value_type.type_symbol.get_cname ()));
-		dup_call.add_argument (sizeof_call);
+			block.add_statement (new CCodeReturnStatement (dup_call));
+		} else {
+			var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
+			dup_call.add_argument (new CCodeIdentifier ("self"));
 
-		block.add_statement (new CCodeReturnStatement (dup_call));
+			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+			sizeof_call.add_argument (new CCodeIdentifier (value_type.type_symbol.get_cname ()));
+			dup_call.add_argument (sizeof_call);
+
+			block.add_statement (new CCodeReturnStatement (dup_call));
+		}
 
 		// append to file
 

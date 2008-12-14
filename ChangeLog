@@ -1,6 +1,12 @@
 2008-12-14  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodebasemodule.vala:
+
+	Fix struct dup function for GValue
+
+2008-12-14  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodemethodmodule.vala:
 
 	Detect unsupported generic type arguments, fixes bug 561674
