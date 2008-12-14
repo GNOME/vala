@@ -75,6 +75,8 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		bool in_gobject_creation_method = false;
 		bool in_fundamental_creation_method = false;
 
+		check_type (m.return_type);
+
 		var creturn_type = current_return_type;
 
 		if (m is CreationMethod) {

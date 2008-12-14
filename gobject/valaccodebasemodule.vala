@@ -96,6 +96,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public DataType ulong_type;
 	public DataType int8_type;
 	public DataType uint8_type;
+	public DataType int16_type;
+	public DataType uint16_type;
 	public DataType int32_type;
 	public DataType uint32_type;
 	public DataType int64_type;
@@ -516,6 +518,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		ulong_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("ulong"));
 		int8_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int8"));
 		uint8_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint8"));
+		int16_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int16"));
+		uint16_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint16"));
 		int32_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int32"));
 		uint32_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint32"));
 		int64_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int64"));
@@ -740,6 +744,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_field (Field f) {
+		check_type (f.field_type);
+
 		f.accept_children (codegen);
 
 		var cl = f.parent_symbol as Class;
@@ -951,6 +957,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_formal_parameter (FormalParameter p) {
+		check_type (p.parameter_type);
+
 		p.accept_children (codegen);
 
 		if (!p.ellipsis) {
@@ -976,6 +984,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_property (Property prop) {
+		check_type (prop.property_type);
+
 		int old_next_temp_var_id = next_temp_var_id;
 		next_temp_var_id = 0;
 
@@ -2388,11 +2398,103 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
+	bool is_reference_type_argument (DataType type_arg) {
+		if (type_arg.data_type != null && type_arg.data_type.is_reference_type ()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	bool is_nullable_value_type_argument (DataType type_arg) {
+		if (type_arg is ValueType && type_arg.nullable) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	bool is_signed_integer_type_argument (DataType type_arg) {
+		var st = type_arg.data_type as Struct;
+		if (type_arg.nullable) {
+			return false;
+		} else if (st == bool_type.data_type) {
+			return true;
+		} else if (st == char_type.data_type) {
+			return true;
+		} else if (st == unichar_type.data_type) {
+			return true;
+		} else if (st == short_type.data_type) {
+			return true;
+		} else if (st == int_type.data_type) {
+			return true;
+		} else if (st == long_type.data_type) {
+			return true;
+		} else if (st == int8_type.data_type) {
+			return true;
+		} else if (st == int16_type.data_type) {
+			return true;
+		} else if (st == int32_type.data_type) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	bool is_unsigned_integer_type_argument (DataType type_arg) {
+		var st = type_arg.data_type as Struct;
+		if (type_arg.nullable) {
+			return false;
+		} else if (st == uchar_type.data_type) {
+			return true;
+		} else if (st == ushort_type.data_type) {
+			return true;
+		} else if (st == uint_type.data_type) {
+			return true;
+		} else if (st == ulong_type.data_type) {
+			return true;
+		} else if (st == uint8_type.data_type) {
+			return true;
+		} else if (st == uint16_type.data_type) {
+			return true;
+		} else if (st == uint32_type.data_type) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public void check_type (DataType type) {
+		var array_type = type as ArrayType;
+		if (array_type != null) {
+			check_type (array_type.element_type);
+		}
+		foreach (var type_arg in type.get_type_arguments ()) {
+			check_type (type_arg);
+			check_type_argument (type_arg);
+		}
+	}
+
+	void check_type_argument (DataType type_arg) {
+		if (type_arg is GenericType
+		    || type_arg is PointerType
+		    || is_reference_type_argument (type_arg)
+		    || is_nullable_value_type_argument (type_arg)
+		    || is_signed_integer_type_argument (type_arg)
+		    || is_unsigned_integer_type_argument (type_arg)) {
+			// no error
+		} else {
+			Report.error (type_arg.source_reference, "`%s' is not a supported generic type argument, use `?' to box value types".printf (type_arg.to_string ()));
+		}
+	}
+
 	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
 		expr.accept_children (codegen);
 
 		CCodeExpression instance = null;
 		CCodeExpression creation_expr = null;
+
+		check_type (expr.type_reference);
 
 		var st = expr.type_reference.data_type as Struct;
 		if ((st != null && !st.is_simple_type ()) || expr.get_object_initializer ().size > 0) {
@@ -2924,36 +3026,30 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 	public CCodeExpression convert_from_generic_pointer (CCodeExpression cexpr, DataType actual_type) {
 		var result = cexpr;
-		if (actual_type.data_type is Struct) {
-			var st = (Struct) actual_type.data_type;
-			if (st == uint_type.data_type) {
-				var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_UINT"));
-				cconv.add_argument (cexpr);
-				result = cconv;
-			} else if (st == bool_type.data_type || st.is_integer_type ()) {
-				var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_INT"));
-				cconv.add_argument (cexpr);
-				result = cconv;
-			}
-		} else if (actual_type.data_type != null && actual_type.data_type.is_reference_type ()) {
+		if (is_reference_type_argument (actual_type) || is_nullable_value_type_argument (actual_type)) {
 			result = new CCodeCastExpression (cexpr, actual_type.get_cname ());
+		} else if (is_signed_integer_type_argument (actual_type)) {
+			var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_INT"));
+			cconv.add_argument (cexpr);
+			result = cconv;
+		} else if (is_unsigned_integer_type_argument (actual_type)) {
+			var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GPOINTER_TO_UINT"));
+			cconv.add_argument (cexpr);
+			result = cconv;
 		}
 		return result;
 	}
 
 	public CCodeExpression convert_to_generic_pointer (CCodeExpression cexpr, DataType actual_type) {
 		var result = cexpr;
-		if (actual_type.data_type is Struct) {
-			var st = (Struct) actual_type.data_type;
-			if (st == uint_type.data_type) {
-				var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GUINT_TO_POINTER"));
-				cconv.add_argument (cexpr);
-				result = cconv;
-			} else if (st == bool_type.data_type || st.is_integer_type ()) {
-				var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GINT_TO_POINTER"));
-				cconv.add_argument (cexpr);
-				result = cconv;
-			}
+		if (is_signed_integer_type_argument (actual_type)) {
+			var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GINT_TO_POINTER"));
+			cconv.add_argument (cexpr);
+			result = cconv;
+		} else if (is_unsigned_integer_type_argument (actual_type)) {
+			var cconv = new CCodeFunctionCall (new CCodeIdentifier ("GUINT_TO_POINTER"));
+			cconv.add_argument (cexpr);
+			result = cconv;
 		}
 		return result;
 	}

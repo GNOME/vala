@@ -1,3 +1,10 @@
+2008-12-14  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+
+	Detect unsupported generic type arguments, fixes bug 561674
+
 2008-12-13  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valadbusmodule.vala:
