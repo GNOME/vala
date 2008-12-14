@@ -2306,6 +2306,13 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			return false;
 		}
 
+		var cl = type.data_type as Class;
+		if (cl != null && cl.is_reference_counting ()
+		    && cl.get_ref_function () == "") {
+			// empty ref_function => no ref necessary
+			return false;
+		}
+
 		if (type.type_parameter != null) {
 			if (!(current_type_symbol is Class) || current_class.is_compact) {
 				return false;
@@ -2317,6 +2324,13 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 	public bool requires_destroy (DataType type) {
 		if (!type.is_disposable ()) {
+			return false;
+		}
+
+		var cl = type.data_type as Class;
+		if (cl != null && cl.is_reference_counting ()
+		    && cl.get_unref_function () == "") {
+			// empty unref_function => no unref necessary
 			return false;
 		}
 

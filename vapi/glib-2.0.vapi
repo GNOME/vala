@@ -2862,9 +2862,9 @@ namespace GLib {
 		public static SequenceIter<G> range_get_midpoint (SequenceIter<G> begin, SequenceIter<G> end);
 	}
 
-	[SimpleType]
-	[CCode (cname = "GSequenceIter*", type_id = "G_TYPE_POINTER")]
-	public struct SequenceIter<G> {
+	[Compact]
+	[CCode (ref_function = "", unref_function = "")]
+	public class SequenceIter<G> {
 		public bool is_begin ();
 		public bool is_end ();
 		public SequenceIter<G> next ();

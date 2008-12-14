@@ -1,6 +1,14 @@
 2008-12-15  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodebasemodule.vala:
+	* vapi/glib-2.0.vapi:
+
+	Support empty ref_function and unref_function attributes,
+	fix GSequenceIter binding
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodebasemodule.vala:
 
 	Support GLib.Type as generic type argument
 
