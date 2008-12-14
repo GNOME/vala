@@ -382,11 +382,7 @@ public class Vala.GSignalModule : GObjectModule {
 
 		csignew.add_argument (new CCodeConstant ("%d".printf (params_len)));
 		foreach (FormalParameter param in params) {
-			if (type.get_attribute ("DBus") != null) {
-				// workaround for dbus-glib based D-Bus servers
-				// drop when bug 560034 has been fixed
-				csignew.add_argument (get_dbus_g_type (param.parameter_type));
-			} else if (param.parameter_type.is_array ()) {
+			if (param.parameter_type.is_array ()) {
 				if (((ArrayType) param.parameter_type).element_type.data_type == string_type.data_type) {
 					csignew.add_argument (new CCodeConstant ("G_TYPE_STRV"));
 				} else {

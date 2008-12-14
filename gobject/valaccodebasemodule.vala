@@ -395,6 +395,45 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			source_include_directives.append (new CCodeIncludeDirective ("dbus/dbus.h"));
 			source_include_directives.append (new CCodeIncludeDirective ("dbus/dbus-glib.h"));
 		}
+		if (dbus_glib_h_needed_in_header || dbus_glib_h_needed) {
+			var dbusvtable = new CCodeStruct ("_DBusObjectVTable");
+			dbusvtable.add_field ("void", "(*register_object) (DBusConnection*, const char*, void*)");
+			source_type_definition.append (dbusvtable);
+
+			source_type_declaration.append (new CCodeTypeDefinition ("struct _DBusObjectVTable", new CCodeVariableDeclarator ("_DBusObjectVTable")));
+
+			var cfunc = new CCodeFunction ("_vala_dbus_register_object", "void");
+			cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
+			cfunc.add_parameter (new CCodeFormalParameter ("path", "const char*"));
+			cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
+
+			cfunc.modifiers |= CCodeModifiers.STATIC;
+			source_type_member_declaration.append (cfunc.copy ());
+
+			var block = new CCodeBlock ();
+			cfunc.block = block;
+
+			var cdecl = new CCodeDeclaration ("const _DBusObjectVTable *");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("vtable"));
+			block.add_statement (cdecl);
+
+			var quark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+			quark.add_argument (new CCodeConstant ("\"DBusObjectVTable\""));
+
+			var get_qdata = new CCodeFunctionCall (new CCodeIdentifier ("g_type_get_qdata"));
+			get_qdata.add_argument (new CCodeIdentifier ("G_TYPE_FROM_INSTANCE (object)"));
+			get_qdata.add_argument (quark);
+
+			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("vtable"), get_qdata)));
+
+			var cregister = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier ("vtable"), "register_object"));
+			cregister.add_argument (new CCodeIdentifier ("connection"));
+			cregister.add_argument (new CCodeIdentifier ("path"));
+			cregister.add_argument (new CCodeIdentifier ("object"));
+			block.add_statement (new CCodeExpressionStatement (cregister));
+
+			source_type_member_definition.append (cfunc);
+		}
 
 		CCodeComment comment = null;
 		if (source_file.comment != null) {

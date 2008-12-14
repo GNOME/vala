@@ -1,5 +1,17 @@
 2008-12-14  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valadbusservermodule.vala:
+	* gobject/valagsignalmodule.vala:
+	* vapi/dbus-glib-1.vapi:
+
+	Rewrite D-Bus server support to directly use libdbus without
+	dbus-glib marshalling, fixes bug 560034 and bug 549980
+
+	Support BusName sender parameter in exported D-Bus methods
+
+2008-12-14  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Add type_id for GHashTable

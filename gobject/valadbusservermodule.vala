@@ -44,42 +44,374 @@ public class Vala.DBusServerModule : DBusClientModule {
 		return true;
 	}
 
-	string dbus_result_name (CodeNode node) {
-		var dbus_attribute = node.get_attribute ("DBus");
+	string dbus_result_name (Method m) {
+		var dbus_attribute = m.get_attribute ("DBus");
 		if (dbus_attribute != null
 		    && dbus_attribute.has_argument ("result")) {
 			var result_name = dbus_attribute.get_string ("result");
-			if (result_name != null && result_name != "")
+			if (result_name != null && result_name != "") {
 				return result_name;
+			}
 		}
 
 		return "result";
 	}
 
-	public override CCodeFragment register_dbus_info (ObjectTypeSymbol bindable) {
+	string generate_dbus_wrapper (Method m, ObjectTypeSymbol sym) {
+		string wrapper_name = "_dbus_%s".printf (m.get_cname ());
 
-		CCodeFragment fragment = new CCodeFragment ();
+		// declaration
 
-		var dbus = bindable.get_attribute ("DBus");
-		if (dbus == null) {
-			return fragment;
+		CCodeDeclaration cdecl;
+
+		var function = new CCodeFunction (wrapper_name, "DBusMessage*");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
+		function.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
+		function.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
+
+		var block = new CCodeBlock ();
+		var prefragment = new CCodeFragment ();
+		var postfragment = new CCodeFragment ();
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("iter"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("GError*");
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("error", new CCodeConstant ("NULL")));
+		block.add_statement (cdecl);
+
+		block.add_statement (prefragment);
+
+		var message_signature = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_get_signature"));
+		message_signature.add_argument (new CCodeIdentifier ("message"));
+		var signature_check = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+		signature_check.add_argument (message_signature);
+		var signature_error_block = new CCodeBlock ();
+		signature_error_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		prefragment.append (new CCodeIfStatement (signature_check, signature_error_block));
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init"));
+		iter_call.add_argument (new CCodeIdentifier ("message"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("iter")));
+		prefragment.append (new CCodeExpressionStatement (iter_call));
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init_append"));
+		iter_call.add_argument (new CCodeIdentifier ("reply"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("iter")));
+		postfragment.append (new CCodeExpressionStatement (iter_call));
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
+
+		ccall.add_argument (new CCodeIdentifier ("self"));
+
+		// expected type signature for input parameters
+		string type_signature = "";
+
+		foreach (FormalParameter param in m.get_parameters ()) {
+			cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
+			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (param.name, default_value_for_type (param.parameter_type, true)));
+			prefragment.append (cdecl);
+			if (type_signature == ""
+			    && param.direction == ParameterDirection.IN
+			    && param.parameter_type.data_type != null
+			    && param.parameter_type.data_type.get_full_name () == "DBus.BusName") {
+				// first parameter is a string parameter called 'sender'
+				// pass bus name of sender
+				var get_sender = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_get_sender"));
+				get_sender.add_argument (new CCodeIdentifier ("message"));
+				ccall.add_argument (get_sender);
+				continue;
+			}
+			var st = param.parameter_type.data_type as Struct;
+			if (param.direction != ParameterDirection.IN
+			    || (st != null && !st.is_simple_type ())) {
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+			} else {
+				ccall.add_argument (new CCodeIdentifier (param.name));
+			}
+
+			if (param.parameter_type is ArrayType) {
+				var array_type = (ArrayType) param.parameter_type;
+
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					string length_cname = get_array_length_cname (param.name, dim);
+
+					cdecl = new CCodeDeclaration ("int");
+					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (length_cname, new CCodeConstant ("0")));
+					prefragment.append (cdecl);
+					if (param.direction != ParameterDirection.IN) {
+						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
+					} else {
+						ccall.add_argument (new CCodeIdentifier (length_cname));
+					}
+				}
+			}
+
+			if (param.direction == ParameterDirection.IN) {
+				type_signature += param.parameter_type.get_type_signature ();
+
+				var target = new CCodeIdentifier (param.name);
+				var expr = read_expression (prefragment, param.parameter_type, new CCodeIdentifier ("iter"), target);
+				prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+			} else {
+				write_expression (postfragment, param.parameter_type, new CCodeIdentifier ("iter"), new CCodeIdentifier (param.name));
+			}
 		}
-		var dbus_iface_name = dbus.get_string ("name");
-		if (dbus_iface_name == null) {
-			return fragment;
+
+		signature_check.add_argument (new CCodeConstant ("\"%s\"".printf (type_signature)));
+
+		if (!(m.return_type is VoidType)) {
+			cdecl = new CCodeDeclaration (m.return_type.get_cname ());
+			cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+			block.add_statement (cdecl);
+			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
+
+			if (m.return_type is ArrayType) {
+				var array_type = (ArrayType) m.return_type;
+
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					string length_cname = get_array_length_cname ("result", dim);
+
+					cdecl = new CCodeDeclaration ("int");
+					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (length_cname, new CCodeConstant ("0")));
+					prefragment.append (cdecl);
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
+				}
+			}
+
+			write_expression (postfragment, m.return_type, new CCodeIdentifier ("iter"), new CCodeIdentifier ("result"));
+		} else {
+			block.add_statement (new CCodeExpressionStatement (ccall));
 		}
 
-		dbus_glib_h_needed = true;
+		cdecl = new CCodeDeclaration ("DBusMessage*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("reply"));
+		block.add_statement (cdecl);
 
-		var dbus_methods = new StringBuilder ();
-		dbus_methods.append ("{\n");
+		if (m.get_error_types ().size > 0) {
+			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")));
 
-		var blob = new StringBuilder ();
-		blob.append_c ('"');
+			var error_block = new CCodeBlock ();
 
-		int method_count = 0;
-		long blob_len = 0;
-		foreach (Method m in bindable.get_methods ()) {
+			var msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_error"));
+			msgcall.add_argument (new CCodeIdentifier ("message"));
+			msgcall.add_argument (new CCodeIdentifier ("DBUS_ERROR_FAILED"));
+			msgcall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("error"), "message"));
+			error_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), msgcall)));
+
+			error_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
+
+			block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("error"), error_block));
+		}
+
+		var msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_method_return"));
+		msgcall.add_argument (new CCodeIdentifier ("message"));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), msgcall)));
+
+		block.add_statement (postfragment);
+
+		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
+
+		source_type_member_declaration.append (function.copy ());
+
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return wrapper_name;
+	}
+
+	string generate_dbus_signal_wrapper (Signal sig, ObjectTypeSymbol sym, string dbus_iface_name) {
+		string wrapper_name = "_dbus_%s_%s".printf (sym.get_lower_case_cname (), sig.get_cname ());
+
+		// declaration
+
+		CCodeDeclaration cdecl;
+
+		var function = new CCodeFunction (wrapper_name, "void");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("_sender", "GObject*"));
+
+		foreach (var param in sig.get_parameters ()) {
+			function.add_parameter ((CCodeFormalParameter) get_ccodenode (param));
+			if (param.parameter_type is ArrayType) {
+				var array_type = (ArrayType) param.parameter_type;
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					function.add_parameter (new CCodeFormalParameter (head.get_array_length_cname (param.name, dim), "int"));
+				}
+			}
+		}
+
+		function.add_parameter (new CCodeFormalParameter ("_connection", "DBusConnection*"));
+
+		var block = new CCodeBlock ();
+		var prefragment = new CCodeFragment ();
+
+		var path = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get_data"));
+		path.add_argument (new CCodeIdentifier ("_sender"));
+		path.add_argument (new CCodeConstant ("\"dbus_object_path\""));
+
+		cdecl = new CCodeDeclaration ("const char *");
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_path", path));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessage");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_message"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_iter"));
+		block.add_statement (cdecl);
+
+		block.add_statement (prefragment);
+
+		var msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_signal"));
+		msgcall.add_argument (new CCodeIdentifier ("_path"));
+		msgcall.add_argument (new CCodeConstant ("\"%s\"".printf (dbus_iface_name)));
+		msgcall.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (sig.name))));
+		prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_message"), msgcall)));
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init_append"));
+		iter_call.add_argument (new CCodeIdentifier ("_message"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_iter")));
+		prefragment.append (new CCodeExpressionStatement (iter_call));
+
+		foreach (FormalParameter param in sig.get_parameters ()) {
+			CCodeExpression expr = new CCodeIdentifier (param.name);
+			if (param.parameter_type.is_real_struct_type ()) {
+				expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);
+			}
+			write_expression (prefragment, param.parameter_type, new CCodeIdentifier ("_iter"), expr);
+		}
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_send"));
+		ccall.add_argument (new CCodeIdentifier ("_connection"));
+		ccall.add_argument (new CCodeIdentifier ("_message"));
+		ccall.add_argument (new CCodeConstant ("NULL"));
+		block.add_statement (new CCodeExpressionStatement (ccall));
+
+		var message_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		message_unref.add_argument (new CCodeIdentifier ("_message"));
+		block.add_statement (new CCodeExpressionStatement (message_unref));
+
+		source_type_member_declaration.append (function.copy ());
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return wrapper_name;
+	}
+
+	void generate_register_function (ObjectType object_type) {
+		var sym = object_type.type_symbol;
+
+		var cfunc = new CCodeFunction (sym.get_lower_case_cprefix () + "dbus_register_object", "void");
+		cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
+		cfunc.add_parameter (new CCodeFormalParameter ("path", "const char*"));
+		cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
+
+		if (!sym.is_internal_symbol ()) {
+			dbus_glib_h_needed_in_header = true;
+
+			header_type_member_declaration.append (cfunc.copy ());
+		} else {
+			dbus_glib_h_needed = true;
+
+			cfunc.modifiers |= CCodeModifiers.STATIC;
+			source_type_member_declaration.append (cfunc.copy ());
+		}
+
+		var block = new CCodeBlock ();
+		cfunc.block = block;
+
+		var get_path = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get_data"));
+		get_path.add_argument (new CCodeIdentifier ("object"));
+		get_path.add_argument (new CCodeConstant ("\"dbus_object_path\""));
+		var register_check = new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, get_path);
+
+		var register_block = new CCodeBlock ();
+
+		var path_dup = new CCodeFunctionCall (new CCodeIdentifier ("g_strdup"));
+		path_dup.add_argument (new CCodeIdentifier ("path"));
+
+		var set_path = new CCodeFunctionCall (new CCodeIdentifier ("g_object_set_data"));
+		set_path.add_argument (new CCodeIdentifier ("object"));
+		set_path.add_argument (new CCodeConstant ("\"dbus_object_path\""));
+		set_path.add_argument (path_dup);
+		register_block.add_statement (new CCodeExpressionStatement (set_path));
+
+		var cregister = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_register_object_path"));
+		cregister.add_argument (new CCodeIdentifier ("connection"));
+		cregister.add_argument (new CCodeIdentifier ("path"));
+		cregister.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_path_vtable (object_type)));
+		cregister.add_argument (new CCodeIdentifier ("object"));
+		register_block.add_statement (new CCodeExpressionStatement (cregister));
+
+		block.add_statement (new CCodeIfStatement (register_check, register_block));
+
+		handle_signals (object_type.type_symbol, block);
+
+		var cl = sym as Class;
+		if (cl != null) {
+			foreach (DataType base_type in cl.get_base_types ()) {
+				var base_obj_type = base_type as ObjectType;
+				if (type_implements_dbus_interface (base_obj_type.type_symbol)) {
+					var base_register = new CCodeFunctionCall (new CCodeIdentifier (base_obj_type.type_symbol.get_lower_case_cprefix () + "dbus_register_object"));
+					base_register.add_argument (new CCodeIdentifier ("connection"));
+					base_register.add_argument (new CCodeIdentifier ("path"));
+					base_register.add_argument (new CCodeIdentifier ("object"));
+					block.add_statement (new CCodeExpressionStatement (base_register));
+				}
+			}
+		}
+
+		source_type_member_definition.append (cfunc);
+	}
+
+	void generate_unregister_function (ObjectType object_type) {
+		var sym = object_type.type_symbol;
+
+		var cfunc = new CCodeFunction ("_" + sym.get_lower_case_cprefix () + "dbus_unregister", "void");
+		cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
+		cfunc.add_parameter (new CCodeFormalParameter ("user_data", "void*"));
+
+		source_type_member_declaration.append (cfunc.copy ());
+
+		var block = new CCodeBlock ();
+		cfunc.block = block;
+
+		source_type_member_definition.append (cfunc);
+	}
+
+	void handle_method (string dbus_iface_name, string dbus_method_name, string handler_name, CCodeBlock block, ref CCodeIfStatement clastif) {
+		var ccheck = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_is_method_call"));
+		ccheck.add_argument (new CCodeIdentifier ("message"));
+		ccheck.add_argument (new CCodeConstant ("\"%s\"".printf (dbus_iface_name)));
+		ccheck.add_argument (new CCodeConstant ("\"%s\"".printf (dbus_method_name)));
+
+		var callblock = new CCodeBlock ();
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (handler_name));
+		ccall.add_argument (new CCodeIdentifier ("object"));
+		ccall.add_argument (new CCodeIdentifier ("connection"));
+		ccall.add_argument (new CCodeIdentifier ("message"));
+
+		callblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), ccall)));
+
+		var cif = new CCodeIfStatement (ccheck, callblock);
+		if (clastif == null) {
+			block.add_statement (cif);
+		} else {
+			clastif.false_statement = cif;
+		}
+
+		clastif = cif;
+	}
+
+	void handle_methods (ObjectTypeSymbol sym, string dbus_iface_name, CCodeBlock block, ref CCodeIfStatement clastif) {
+		foreach (Method m in sym.get_methods ()) {
 			if (m is CreationMethod || m.binding != MemberBinding.INSTANCE
 			    || m.overrides || m.access != SymbolAccessibility.PUBLIC) {
 				continue;
@@ -88,561 +420,141 @@ public class Vala.DBusServerModule : DBusClientModule {
 				continue;
 			}
 
-			var parameters = new Gee.ArrayList<FormalParameter> ();
-			foreach (FormalParameter param in m.get_parameters ()) {
-				parameters.add (param);
-			}
-			if (!(m.return_type is VoidType)) {
-				parameters.add (new FormalParameter ("result", new PointerType (new VoidType ())));
-			}
-			parameters.add (new FormalParameter ("error", gerror_type));
-
-			dbus_methods.append ("{ (GCallback) ");
-			dbus_methods.append (generate_dbus_wrapper (m, bindable));
-			dbus_methods.append (", ");
-			dbus_methods.append (head.get_marshaller_function (parameters, bool_type, null, true));
-			dbus_methods.append (", ");
-			dbus_methods.append (blob_len.to_string ());
-			dbus_methods.append (" },\n");
-
-			head.generate_marshaller (parameters, bool_type, true);
-
-			long start = blob.len;
-
-			blob.append (dbus_iface_name);
-			blob.append ("\\0");
-			start++;
-
-			blob.append (Symbol.lower_case_to_camel_case (m.name));
-			blob.append ("\\0");
-			start++;
-
-			// synchronous
-			blob.append ("S\\0");
-			start++;
-
-			foreach (FormalParameter param in m.get_parameters ()) {
-				blob.append (param.name);
-				blob.append ("\\0");
-				start++;
-
-				if (param.direction == ParameterDirection.IN) {
-					blob.append ("I\\0");
-					start++;
-				} else if (param.direction == ParameterDirection.OUT) {
-					blob.append ("O\\0");
-					start++;
-					blob.append ("F\\0");
-					start++;
-					blob.append ("N\\0");
-					start++;
-				} else {
-					Report.error (param.source_reference, "unsupported parameter direction for D-Bus method");
-				}
-
-				blob.append (param.parameter_type.get_type_signature ());
-				blob.append ("\\0");
-				start++;
-			}
-
-			if (!(m.return_type is VoidType)) {
-				blob.append (dbus_result_name (m));
-				blob.append ("\\0");
-				start++;
-
-				blob.append ("O\\0");
-				start++;
-				blob.append ("F\\0");
-				start++;
-				blob.append ("N\\0");
-				start++;
-
-				blob.append (m.return_type.get_type_signature ());
-				blob.append ("\\0");
-				start++;
-			}
-
-			blob.append ("\\0");
-			start++;
-
-			blob_len += blob.len - start;
-
-			method_count++;
+			handle_method (dbus_iface_name, Symbol.lower_case_to_camel_case (m.name), generate_dbus_wrapper (m, sym), block, ref clastif);
 		}
+	}
 
-		blob.append_c ('"');
+	string generate_dbus_property_get_wrapper (ObjectTypeSymbol sym, string dbus_iface_name) {
+		string wrapper_name = "_dbus_%s_property_get".printf (sym.get_lower_case_cname ());
 
-		dbus_methods.append ("}\n");
+		CCodeDeclaration cdecl;
 
-		var dbus_signals = new StringBuilder ();
-		dbus_signals.append_c ('"');
-		foreach (Signal sig in bindable.get_signals ()) {
-			if (sig.access != SymbolAccessibility.PUBLIC) {
-				continue;
-			}
-			if (!is_dbus_visible (sig)) {
-				continue;
-			}
+		var function = new CCodeFunction (wrapper_name, "DBusMessage*");
+		function.modifiers = CCodeModifiers.STATIC;
 
-			dbus_signals.append (dbus_iface_name);
-			dbus_signals.append ("\\0");
-			dbus_signals.append (Symbol.lower_case_to_camel_case (sig.name));
-			dbus_signals.append ("\\0");
-		}
-		dbus_signals.append_c('"');
+		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
+		function.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
+		function.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
 
-		var dbus_props = new StringBuilder();
-		dbus_props.append_c ('"');
-		foreach (Property prop in bindable.get_properties ()) {
-			if (prop.access != SymbolAccessibility.PUBLIC) {
+		var block = new CCodeBlock ();
+		var prefragment = new CCodeFragment ();
+
+		cdecl = new CCodeDeclaration ("DBusMessage*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("reply"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("iter"));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("reply_iter"));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("subiter"));
+		block.add_statement (cdecl);
+
+		var message_signature = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_get_signature"));
+		message_signature.add_argument (new CCodeIdentifier ("message"));
+		var signature_check = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+		signature_check.add_argument (message_signature);
+		signature_check.add_argument (new CCodeConstant ("\"ss\""));
+		var signature_error_block = new CCodeBlock ();
+		signature_error_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		block.add_statement (new CCodeIfStatement (signature_check, signature_error_block));
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init"));
+		iter_call.add_argument (new CCodeIdentifier ("message"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("iter")));
+		block.add_statement (new CCodeExpressionStatement (iter_call));
+
+		var msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_method_return"));
+		msgcall.add_argument (new CCodeIdentifier ("message"));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), msgcall)));
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init_append"));
+		iter_call.add_argument (new CCodeIdentifier ("reply"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("reply_iter")));
+		block.add_statement (new CCodeExpressionStatement (iter_call));
+
+		block.add_statement (prefragment);
+
+		cdecl = new CCodeDeclaration ("char*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("interface_name"));
+		prefragment.append (cdecl);
+		var target = new CCodeIdentifier ("interface_name");
+		var expr = read_expression (prefragment, string_type, new CCodeIdentifier ("iter"), target);
+		prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+
+		cdecl = new CCodeDeclaration ("char*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("property_name"));
+		prefragment.append (cdecl);
+		target = new CCodeIdentifier ("property_name");
+		expr = read_expression (prefragment, string_type, new CCodeIdentifier ("iter"), target);
+		prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+
+		CCodeIfStatement clastif = null;
+
+		foreach (Property prop in sym.get_properties ()) {
+			if (prop.binding != MemberBinding.INSTANCE
+			    || prop.overrides || prop.access != SymbolAccessibility.PUBLIC) {
 				continue;
 			}
 			if (!is_dbus_visible (prop)) {
 				continue;
 			}
-
-			dbus_props.append (dbus_iface_name);
-			dbus_props.append ("\\0");
-			dbus_props.append (Symbol.lower_case_to_camel_case (prop.name));
-			dbus_props.append ("\\0");
-		}
-		dbus_props.append_c ('"');
-
-		var dbus_methods_decl = new CCodeDeclaration ("const DBusGMethodInfo");
-		dbus_methods_decl.modifiers = CCodeModifiers.STATIC;
-		dbus_methods_decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_dbus_methods[]".printf (bindable.get_lower_case_cname ()), new CCodeConstant (dbus_methods.str)));
-
-		fragment.append (dbus_methods_decl);
-
-		var dbus_object_info = new CCodeDeclaration ("const DBusGObjectInfo");
-		dbus_object_info.modifiers = CCodeModifiers.STATIC;
-		dbus_object_info.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_dbus_object_info".printf (bindable.get_lower_case_cname ()), new CCodeConstant ("{ 0, %s_dbus_methods, %d, %s, %s, %s }".printf (bindable.get_lower_case_cname (), method_count, blob.str, dbus_signals.str, dbus_props.str))));
-
-		fragment.append (dbus_object_info);
-
-		var install_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_object_type_install_info"));
-		install_call.add_argument (new CCodeIdentifier (bindable.get_type_id ()));
-		install_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("%s_dbus_object_info".printf (bindable.get_lower_case_cname ()))));
-
-		fragment.append (new CCodeExpressionStatement (install_call));
-
-		return fragment;
-	}
-
-	void transform_struct_to_value_array (CCodeBlock block, Struct st, CCodeExpression target, CCodeExpression st_expr, string name) {
-		var array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_value_array_new"));
-		array_construct.add_argument (new CCodeConstant ("0"));
-
-		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (target, array_construct)));
-
-		var type_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_struct"));
-		type_call.add_argument (new CCodeConstant ("\"GValueArray\""));
-
-		foreach (Field f in st.get_fields ()) {
-			if (f.binding != MemberBinding.INSTANCE) {
+			if (prop.get_accessor == null) {
 				continue;
 			}
 
-			string val_name = "val_%s_%s".printf (name, f.name);
+			var prop_block = new CCodeBlock ();
+			var postfragment = new CCodeFragment ();
+			prop_block.add_statement (postfragment);
 
-			// 0-initialize struct with struct initializer { 0 }
-			var cvalinit = new CCodeInitializerList ();
-			cvalinit.append (new CCodeConstant ("0"));
+			var ccmp = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+			ccmp.add_argument (new CCodeIdentifier ("interface_name"));
+			ccmp.add_argument (new CCodeConstant ("\"%s\"".printf (dbus_iface_name)));
+			var ccheck1 = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccmp, new CCodeConstant ("0"));
 
-			var cval_decl = new CCodeDeclaration ("GValue");
-			cval_decl.add_declarator (new CCodeVariableDeclarator.with_initializer (val_name, cvalinit));
-			block.add_statement (cval_decl);
+			ccmp = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+			ccmp.add_argument (new CCodeIdentifier ("property_name"));
+			ccmp.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (prop.name))));
+			var ccheck2 = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccmp, new CCodeConstant ("0"));
 
-			var val_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (val_name));
+			var ccheck = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccheck1, ccheck2);
 
-			string type_id = f.field_type.data_type.get_type_id ();
-			string set_value_function = f.field_type.data_type.get_set_value_function ();
+			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("reply_iter")));
+			iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_VARIANT"));
+			iter_call.add_argument (new CCodeConstant ("\"%s\"".printf (prop.property_type.get_type_signature ())));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("subiter")));
+			postfragment.append (new CCodeExpressionStatement (iter_call));
 
-			if (f.field_type.data_type is Enum) {
-				// dbus-glib does not support enums
-				var en = (Enum) f.field_type.data_type;
-				if (!en.is_flags) {
-					type_id = "G_TYPE_INT";
-					set_value_function = "g_value_set_int";
-				} else {
-					type_id = "G_TYPE_UINT";
-					set_value_function = "g_value_set_uint";
-				}
-			}
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier (prop.get_accessor.get_cname ()));
+			ccall.add_argument (new CCodeIdentifier ("self"));
 
-			var cinit_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
-			cinit_call.add_argument (val_ptr);
-			cinit_call.add_argument (new CCodeIdentifier (type_id));
-			block.add_statement (new CCodeExpressionStatement (cinit_call));
+			write_expression (postfragment, prop.property_type, new CCodeIdentifier ("subiter"), ccall);
 
-			var cset_call = new CCodeFunctionCall (new CCodeIdentifier (set_value_function));
-			cset_call.add_argument (val_ptr);
-			if (f.field_type.data_type is Struct) {
-				cset_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess (st_expr, f.name)));
+			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("reply_iter")));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("subiter")));
+			postfragment.append (new CCodeExpressionStatement (iter_call));
+
+			var cif = new CCodeIfStatement (ccheck, prop_block);
+			if (clastif == null) {
+				block.add_statement (cif);
 			} else {
-				cset_call.add_argument (new CCodeMemberAccess (st_expr, f.name));
+				clastif.false_statement = cif;
 			}
-			block.add_statement (new CCodeExpressionStatement (cset_call));
 
-			var cappend_call = new CCodeFunctionCall (new CCodeIdentifier ("g_value_array_append"));
-			cappend_call.add_argument (target);
-			cappend_call.add_argument (val_ptr);
-			block.add_statement (new CCodeExpressionStatement (cappend_call));
-
-			type_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
-		}
-	}
-
-	void transform_struct_hash_table_to_value_array_hash_table (CCodeBlock block, Struct st, CCodeExpression target, CCodeExpression table_expr, string name) {
-		// FIXME take care of memory management
-		var table_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_new"));
-		table_construct.add_argument (new CCodeIdentifier ("g_direct_hash"));
-		table_construct.add_argument (new CCodeIdentifier ("g_direct_equal"));
-		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (target, table_construct)));
-
-		var cdecl = new CCodeDeclaration ("GList");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("*%s_keys".printf (name)));
-		cdecl.add_declarator (new CCodeVariableDeclarator ("*%s_keys_it".printf (name)));
-		cdecl.add_declarator (new CCodeVariableDeclarator ("*%s_values".printf (name)));
-		cdecl.add_declarator (new CCodeVariableDeclarator ("*%s_values_it".printf (name)));
-		block.add_statement (cdecl);
-
-		var get_keys = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_get_keys"));
-		get_keys.add_argument (table_expr);
-		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("%s_keys".printf (name)), get_keys)));
-
-		var get_values = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_get_values"));
-		get_values.add_argument (table_expr);
-		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("%s_values".printf (name)), get_values)));
-
-		var loop_body = new CCodeBlock ();
-		var for_stmt = new CCodeForStatement (new CCodeIdentifier ("%s_keys_it".printf (name)), loop_body);
-		block.add_statement (for_stmt);
-		for_stmt.add_initializer (new CCodeAssignment (new CCodeIdentifier ("%s_keys_it".printf (name)), new CCodeIdentifier ("%s_keys".printf (name))));
-		for_stmt.add_initializer (new CCodeAssignment (new CCodeIdentifier ("%s_values_it".printf (name)), new CCodeIdentifier ("%s_values".printf (name))));
-		for_stmt.add_iterator (new CCodeAssignment (new CCodeIdentifier ("%s_keys_it".printf (name)), new CCodeMemberAccess.pointer (new CCodeIdentifier ("%s_keys_it".printf (name)), "next")));
-		for_stmt.add_iterator (new CCodeAssignment (new CCodeIdentifier ("%s_values_it".printf (name)), new CCodeMemberAccess.pointer (new CCodeIdentifier ("%s_values_it".printf (name)), "next")));
-
-		cdecl = new CCodeDeclaration (st.get_cname () + "*");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_value".printf (name), new CCodeMemberAccess.pointer (new CCodeIdentifier ("%s_values_it".printf (name)), "data")));
-		loop_body.add_statement (cdecl);
-
-		cdecl = new CCodeDeclaration ("GValueArray*");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("%s_value_array".printf (name)));
-		loop_body.add_statement (cdecl);
-
-		transform_struct_to_value_array (loop_body, st, new CCodeIdentifier ("%s_value_array".printf (name)), new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("%s_value".printf (name))), name);
-
-		var insert_call = new CCodeFunctionCall (new CCodeIdentifier ("g_hash_table_insert"));
-		insert_call.add_argument (target);
-		insert_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("%s_keys_it".printf (name)), "data"));
-		insert_call.add_argument (new CCodeIdentifier ("%s_value_array".printf (name)));
-		loop_body.add_statement (new CCodeExpressionStatement (insert_call));
-	}
-
-	string generate_dbus_wrapper (Method m, ObjectTypeSymbol bindable) {
-		string wrapper_name = "_dbus_%s".printf (m.get_cname ());
-
-		// declaration
-
-		var function = new CCodeFunction (wrapper_name, "gboolean");
-		function.modifiers = CCodeModifiers.STATIC;
-		m.ccodenode = function;
-
-		function.add_parameter (new CCodeFormalParameter ("self", bindable.get_cname () + "*"));
-
-		foreach (FormalParameter param in m.get_parameters ()) {
-			string ptr = (param.direction == ParameterDirection.OUT ? "*" : "");
-			var array_type = param.parameter_type as ArrayType;
-			if (array_type != null && array_type.element_type.data_type != string_type.data_type) {
-				if (dbus_use_ptr_array (array_type)) {
-					function.add_parameter (new CCodeFormalParameter ("dbus_%s".printf (param.name), "GPtrArray*" + ptr));
-				} else {
-					function.add_parameter (new CCodeFormalParameter ("dbus_%s".printf (param.name), "GArray*" + ptr));
-				}
-			} else if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
-				function.add_parameter (new CCodeFormalParameter ("dbus_%s".printf (param.name), "GValueArray*" + ptr));
-			} else if (param.parameter_type.get_type_signature ().has_prefix ("a{")) {
-				// hash table output parameter
-				var type_args = param.parameter_type.get_type_arguments ();
-				var value_type = type_args.get (1);
-				if (value_type.get_type_signature ().has_prefix ("(")) {
-					// values are structs
-					function.add_parameter (new CCodeFormalParameter ("dbus_%s".printf (param.name), "GHashTable*" + ptr));
-				} else {
-					function.add_parameter ((CCodeFormalParameter) param.ccodenode);
-				}
-			} else {
-				function.add_parameter ((CCodeFormalParameter) param.ccodenode);
-			}
+			clastif = cif;
 		}
 
-		if (!(m.return_type is VoidType)) {
-			var array_type = m.return_type as ArrayType;
-			if (array_type != null) {
-				if (array_type.element_type.data_type == string_type.data_type) {
-					function.add_parameter (new CCodeFormalParameter ("result", array_type.get_cname () + "*"));
-				} else if (dbus_use_ptr_array (array_type)) {
-					function.add_parameter (new CCodeFormalParameter ("dbus_result", "GPtrArray**"));
-				} else {
-					function.add_parameter (new CCodeFormalParameter ("dbus_result", "GArray**"));
-				}
-			} else if (m.return_type.get_type_signature ().has_prefix ("(")) {
-				function.add_parameter (new CCodeFormalParameter ("dbus_result", "GValueArray**"));
-			} else if (m.return_type.get_type_signature ().has_prefix ("a{")) {
-				// hash table output parameter
-				var type_args = m.return_type.get_type_arguments ();
-				var value_type = type_args.get (1);
-				if (value_type.get_type_signature ().has_prefix ("(")) {
-					// values are structs
-					function.add_parameter (new CCodeFormalParameter ("dbus_result", "GHashTable**"));
-				} else {
-					function.add_parameter (new CCodeFormalParameter ("result", m.return_type.get_cname () + "*"));
-				}
-			} else {
-				function.add_parameter (new CCodeFormalParameter ("result", m.return_type.get_cname () + "*"));
-			}
-		}
-
-		function.add_parameter (new CCodeFormalParameter ("error", "GError**"));
-
-		// definition
-
-		var block = new CCodeBlock ();
-
-		foreach (FormalParameter param in m.get_parameters ()) {
-			if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
-				var st = (Struct) param.parameter_type.data_type;
-
-				var cdecl = new CCodeDeclaration (st.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
-				block.add_statement (cdecl);
-
-				if (param.direction == ParameterDirection.IN) {
-					// struct input parameter
-					int i = 0;
-					foreach (Field f in st.get_fields ()) {
-						if (f.binding == MemberBinding.INSTANCE) {
-							var cget_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_get_value_function ()));
-							cget_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeElementAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "values"), new CCodeConstant (i.to_string ()))));
-							var assign = new CCodeAssignment (new CCodeMemberAccess (new CCodeIdentifier (param.name), f.name), cget_call);
-							block.add_statement (new CCodeExpressionStatement (assign));
-							i++;
-						}
-					}
-				}
-			} else if (param.parameter_type.get_type_signature ().has_prefix ("a{")) {
-				// hash table output parameter
-				var type_args = param.parameter_type.get_type_arguments ();
-				var value_type = type_args.get (1);
-				if (value_type.get_type_signature ().has_prefix ("(")) {
-					// values are structs
-					var cdecl = new CCodeDeclaration ("GHashTable*");
-					cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
-					block.add_statement (cdecl);
-				}
-			}
-		}
-
-		if (!(m.return_type is VoidType)) {
-			var array_type = m.return_type as ArrayType;
-			if (array_type != null) {
-				if (array_type.element_type.data_type != string_type.data_type) {
-					var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
-					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
-					block.add_statement (cdecl);
-				}
-
-				var len_cdecl = new CCodeDeclaration ("int");
-				len_cdecl.add_declarator (new CCodeVariableDeclarator ("result_length1"));
-				block.add_statement (len_cdecl);
-			} else if (m.return_type.get_type_signature ().has_prefix ("a{")) {
-				// hash table return value
-				var type_args = m.return_type.get_type_arguments ();
-				var value_type = type_args.get (1);
-				if (value_type.get_type_signature ().has_prefix ("(")) {
-					// values are structs
-					var cdecl = new CCodeDeclaration ("GHashTable*");
-					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
-					block.add_statement (cdecl);
-				}
-			}
-		}
-
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
-
-		ccall.add_argument (new CCodeIdentifier ("self"));
-
-		foreach (FormalParameter param in m.get_parameters ()) {
-			var array_type = param.parameter_type as ArrayType;
-			if (array_type != null) {
-				if (param.direction == ParameterDirection.IN) {
-					if (array_type.element_type.data_type == string_type.data_type) {
-						ccall.add_argument (new CCodeIdentifier (param.name));
-						if (!m.no_array_length) {
-							var cstrvlen = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
-							cstrvlen.add_argument (new CCodeIdentifier (param.name));
-							ccall.add_argument (cstrvlen);
-						}
-					} else if (dbus_use_ptr_array (array_type)) {
-						ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "pdata"));
-						if (!m.no_array_length) {
-							ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "len"));
-						}
-					} else {
-						ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "data"));
-						if (!m.no_array_length) {
-							ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "len"));
-						}
-					}
-				} else {
-					if (array_type.element_type.data_type != string_type.data_type) {
-						var cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
-						cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
-						block.add_statement (cdecl);
-
-						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
-					} else {
-						ccall.add_argument (new CCodeIdentifier (param.name));
-					}
-
-					if (!m.no_array_length) {
-						var len_cdecl = new CCodeDeclaration ("int");
-						len_cdecl.add_declarator (new CCodeVariableDeclarator ("%s_length1".printf (param.name)));
-						block.add_statement (len_cdecl);
-
-						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("%s_length1".printf (param.name))));
-					}
-				}
-			} else if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
-				// struct input or output parameters
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
-			} else if (param.parameter_type.get_type_signature ().has_prefix ("a{")) {
-				// hash table output parameter
-				var type_args = param.parameter_type.get_type_arguments ();
-				var value_type = type_args.get (1);
-				if (value_type.get_type_signature ().has_prefix ("(")) {
-					// values are structs
-					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
-				} else {
-					ccall.add_argument (new CCodeIdentifier (param.name));
-				}
-			} else {
-				ccall.add_argument (new CCodeIdentifier (param.name));
-			}
-		}
-
-		CCodeExpression expr;
-		if (m.return_type is VoidType) {
-			expr = ccall;
+		if (clastif == null) {
+			block = new CCodeBlock ();
+			block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
 		} else {
-			var array_type = m.return_type as ArrayType;
-			if (array_type != null) {
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result_length1")));
-				if (array_type.element_type.data_type != string_type.data_type) {
-					expr = new CCodeAssignment (new CCodeIdentifier ("result"), ccall);
-				} else {
-					expr = new CCodeAssignment (new CCodeIdentifier ("*result"), ccall);
-				}
-			} else if (m.return_type.get_type_signature ().has_prefix ("a{")) {
-				// hash table output parameter
-				var type_args = m.return_type.get_type_arguments ();
-				var value_type = type_args.get (1);
-				if (value_type.get_type_signature ().has_prefix ("(")) {
-					// values are structs
-					expr = new CCodeAssignment (new CCodeIdentifier ("result"), ccall);
-				} else {
-					expr = new CCodeAssignment (new CCodeIdentifier ("*result"), ccall);
-				}
-			} else {
-				expr = new CCodeAssignment (new CCodeIdentifier ("*result"), ccall);
-			}
+			var else_block = new CCodeBlock ();
+			else_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+			clastif.false_statement = else_block;
+
+			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
 		}
-
-		if (m.get_error_types ().size > 0) {
-			ccall.add_argument (new CCodeIdentifier ("error"));
-		}
-
-		block.add_statement (new CCodeExpressionStatement (expr));
-
-		foreach (FormalParameter param in m.get_parameters ()) {
-			if (param.direction == ParameterDirection.OUT) {
-				if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
-					// struct output parameter
-					var st = (Struct) param.parameter_type.data_type;
-					var dbus_param = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("dbus_%s".printf (param.name)));
-					var st_expr = new CCodeIdentifier (param.name);
-
-					transform_struct_to_value_array (block, st, dbus_param, st_expr, param.name);
-				} else if (param.parameter_type.get_type_signature ().has_prefix ("a{")) {
-					// hash table output parameter
-					var type_args = param.parameter_type.get_type_arguments ();
-					var value_type = type_args.get (1);
-					if (value_type.get_type_signature ().has_prefix ("(")) {
-						// values are structs
-						var st = (Struct) value_type.data_type;
-						var dbus_param = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("dbus_%s".printf (param.name)));
-						var table_expr = new CCodeIdentifier (param.name);
-						transform_struct_hash_table_to_value_array_hash_table (block, st, dbus_param, table_expr, param.name);
-					}
-				}
-			}
-		}
-
-		if (!(m.return_type is VoidType)) {
-			var array_type = m.return_type as ArrayType;
-			if (array_type != null && array_type.element_type.data_type != string_type.data_type) {
-				var garray = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("dbus_result"));
-
-				var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-				sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
-
-				if (dbus_use_ptr_array (array_type)) {
-					var array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_ptr_array_sized_new"));
-					array_construct.add_argument (new CCodeIdentifier ("result_length1"));
-
-					block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (garray, array_construct)));
-
-					var memcpy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
-					memcpy_call.add_argument (new CCodeMemberAccess.pointer (garray, "pdata"));
-					memcpy_call.add_argument (new CCodeIdentifier ("result"));
-					memcpy_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeIdentifier ("result_length1"), sizeof_call));
-					block.add_statement (new CCodeExpressionStatement (memcpy_call));
-
-					var len_assignment = new CCodeAssignment (new CCodeMemberAccess.pointer (garray, "len"), new CCodeIdentifier ("result_length1"));
-					block.add_statement (new CCodeExpressionStatement (len_assignment));
-				} else {
-					var array_construct = new CCodeFunctionCall (new CCodeIdentifier ("g_array_new"));
-					array_construct.add_argument (new CCodeConstant ("TRUE"));
-					array_construct.add_argument (new CCodeConstant ("TRUE"));
-					array_construct.add_argument (sizeof_call);
-
-					block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (garray, array_construct)));
-
-					var cappend_call = new CCodeFunctionCall (new CCodeIdentifier ("g_array_append_vals"));
-					cappend_call.add_argument (garray);
-					cappend_call.add_argument (new CCodeIdentifier ("result"));
-					cappend_call.add_argument (new CCodeIdentifier ("result_length1"));
-					block.add_statement (new CCodeExpressionStatement (cappend_call));
-				}
-			} else if (m.return_type.get_type_signature ().has_prefix ("a{")) {
-				// hash table output parameter
-				var type_args = m.return_type.get_type_arguments ();
-				var value_type = type_args.get (1);
-				if (value_type.get_type_signature ().has_prefix ("(")) {
-					// values are structs
-					var st = (Struct) value_type.data_type;
-					var dbus_param = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("dbus_result"));
-					var table_expr = new CCodeIdentifier ("result");
-					transform_struct_hash_table_to_value_array_hash_table (block, st, dbus_param, table_expr, "result");
-				}
-			}
-		}
-
-		var no_error = new CCodeBinaryExpression (CCodeBinaryOperator.OR, new CCodeIdentifier ("!error"), new CCodeIdentifier ("!*error"));
-		block.add_statement (new CCodeReturnStatement (no_error));
-
-		// append to file
 
 		source_type_member_declaration.append (function.copy ());
 
@@ -650,5 +562,706 @@ public class Vala.DBusServerModule : DBusClientModule {
 		source_type_member_definition.append (function);
 
 		return wrapper_name;
+	}
+
+	string generate_dbus_property_get_all_wrapper (ObjectTypeSymbol sym, string dbus_iface_name) {
+		string wrapper_name = "_dbus_%s_property_get_all".printf (sym.get_lower_case_cname ());
+
+		CCodeDeclaration cdecl;
+
+		var function = new CCodeFunction (wrapper_name, "DBusMessage*");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
+		function.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
+		function.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
+
+		var block = new CCodeBlock ();
+		var prefragment = new CCodeFragment ();
+
+		cdecl = new CCodeDeclaration ("DBusMessage*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("reply"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("iter"));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("reply_iter"));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("subiter"));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("entry_iter"));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("value_iter"));
+		block.add_statement (cdecl);
+
+		var message_signature = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_get_signature"));
+		message_signature.add_argument (new CCodeIdentifier ("message"));
+		var signature_check = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+		signature_check.add_argument (message_signature);
+		signature_check.add_argument (new CCodeConstant ("\"s\""));
+		var signature_error_block = new CCodeBlock ();
+		signature_error_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		block.add_statement (new CCodeIfStatement (signature_check, signature_error_block));
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init"));
+		iter_call.add_argument (new CCodeIdentifier ("message"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("iter")));
+		block.add_statement (new CCodeExpressionStatement (iter_call));
+
+		var msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_method_return"));
+		msgcall.add_argument (new CCodeIdentifier ("message"));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), msgcall)));
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init_append"));
+		iter_call.add_argument (new CCodeIdentifier ("reply"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("reply_iter")));
+		block.add_statement (new CCodeExpressionStatement (iter_call));
+
+		block.add_statement (prefragment);
+
+		cdecl = new CCodeDeclaration ("char*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("interface_name"));
+		prefragment.append (cdecl);
+		var target = new CCodeIdentifier ("interface_name");
+		var expr = read_expression (prefragment, string_type, new CCodeIdentifier ("iter"), target);
+		prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+
+		cdecl = new CCodeDeclaration ("const char*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("property_name"));
+		prefragment.append (cdecl);
+
+		var prop_block = new CCodeBlock ();
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("reply_iter")));
+		iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_ARRAY"));
+		iter_call.add_argument (new CCodeConstant ("\"{sv}\""));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("subiter")));
+		prop_block.add_statement (new CCodeExpressionStatement (iter_call));
+
+		foreach (Property prop in sym.get_properties ()) {
+			if (prop.binding != MemberBinding.INSTANCE
+			    || prop.overrides || prop.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+			if (!is_dbus_visible (prop)) {
+				continue;
+			}
+			if (prop.get_accessor == null) {
+				continue;
+			}
+
+			var postfragment = new CCodeFragment ();
+			prop_block.add_statement (postfragment);
+
+			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("subiter")));
+			iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_DICT_ENTRY"));
+			iter_call.add_argument (new CCodeConstant ("NULL"));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("entry_iter")));
+			postfragment.append (new CCodeExpressionStatement (iter_call));
+
+			postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("property_name"), new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (prop.name))))));
+
+			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_append_basic"));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("entry_iter")));
+			iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_STRING"));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("property_name")));
+			postfragment.append (new CCodeExpressionStatement (iter_call));
+
+			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("entry_iter")));
+			iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_VARIANT"));
+			iter_call.add_argument (new CCodeConstant ("\"%s\"".printf (prop.property_type.get_type_signature ())));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("value_iter")));
+			postfragment.append (new CCodeExpressionStatement (iter_call));
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier (prop.get_accessor.get_cname ()));
+			ccall.add_argument (new CCodeIdentifier ("self"));
+
+			write_expression (postfragment, prop.property_type, new CCodeIdentifier ("value_iter"), ccall);
+
+			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("entry_iter")));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("value_iter")));
+			postfragment.append (new CCodeExpressionStatement (iter_call));
+
+			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("subiter")));
+			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("entry_iter")));
+			postfragment.append (new CCodeExpressionStatement (iter_call));
+		}
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("reply_iter")));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("subiter")));
+		prop_block.add_statement (new CCodeExpressionStatement (iter_call));
+
+		var ccmp = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+		ccmp.add_argument (new CCodeIdentifier ("interface_name"));
+		ccmp.add_argument (new CCodeConstant ("\"%s\"".printf (dbus_iface_name)));
+		var ccheck = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccmp, new CCodeConstant ("0"));
+
+		var else_block = new CCodeBlock ();
+		else_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		block.add_statement (new CCodeIfStatement (ccheck, prop_block, else_block));
+
+		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
+
+		source_type_member_declaration.append (function.copy ());
+
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return wrapper_name;
+	}
+
+	string generate_dbus_property_set_wrapper (ObjectTypeSymbol sym, string dbus_iface_name) {
+		string wrapper_name = "_dbus_%s_property_set".printf (sym.get_lower_case_cname ());
+
+		var function = new CCodeFunction (wrapper_name, "DBusMessage*");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
+		function.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
+		function.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
+
+		var block = new CCodeBlock ();
+		var prefragment = new CCodeFragment ();
+
+		var cdecl = new CCodeDeclaration ("DBusMessage*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("reply"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("iter"));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("subiter"));
+		block.add_statement (cdecl);
+
+		var message_signature = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_get_signature"));
+		message_signature.add_argument (new CCodeIdentifier ("message"));
+		var signature_check = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+		signature_check.add_argument (message_signature);
+		signature_check.add_argument (new CCodeConstant ("\"ssv\""));
+		var signature_error_block = new CCodeBlock ();
+		signature_error_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		block.add_statement (new CCodeIfStatement (signature_check, signature_error_block));
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init"));
+		iter_call.add_argument (new CCodeIdentifier ("message"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("iter")));
+		block.add_statement (new CCodeExpressionStatement (iter_call));
+
+		var msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_method_return"));
+		msgcall.add_argument (new CCodeIdentifier ("message"));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), msgcall)));
+
+		block.add_statement (prefragment);
+
+		cdecl = new CCodeDeclaration ("char*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("interface_name"));
+		prefragment.append (cdecl);
+		var target = new CCodeIdentifier ("interface_name");
+		var expr = read_expression (prefragment, string_type, new CCodeIdentifier ("iter"), target);
+		prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+
+		cdecl = new CCodeDeclaration ("char*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("property_name"));
+		prefragment.append (cdecl);
+		target = new CCodeIdentifier ("property_name");
+		expr = read_expression (prefragment, string_type, new CCodeIdentifier ("iter"), target);
+		prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_recurse"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("iter")));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("subiter")));
+		prefragment.append (new CCodeExpressionStatement (iter_call));
+
+		CCodeIfStatement clastif = null;
+
+		foreach (Property prop in sym.get_properties ()) {
+			if (prop.binding != MemberBinding.INSTANCE
+			    || prop.overrides || prop.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+			if (!is_dbus_visible (prop)) {
+				continue;
+			}
+			if (prop.set_accessor == null) {
+				continue;
+			}
+
+			var prop_block = new CCodeBlock ();
+			prefragment = new CCodeFragment ();
+			prop_block.add_statement (prefragment);
+
+			var ccmp = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+			ccmp.add_argument (new CCodeIdentifier ("interface_name"));
+			ccmp.add_argument (new CCodeConstant ("\"%s\"".printf (dbus_iface_name)));
+			var ccheck1 = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccmp, new CCodeConstant ("0"));
+
+			ccmp = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+			ccmp.add_argument (new CCodeIdentifier ("property_name"));
+			ccmp.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (prop.name))));
+			var ccheck2 = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccmp, new CCodeConstant ("0"));
+
+			var ccheck = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccheck1, ccheck2);
+
+			cdecl = new CCodeDeclaration (prop.property_type.get_cname ());
+			cdecl.add_declarator (new CCodeVariableDeclarator ("value"));
+			prefragment.append (cdecl);
+
+			target = new CCodeIdentifier ("value");
+			expr = read_expression (prefragment, prop.property_type, new CCodeIdentifier ("subiter"), target);
+			prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier (prop.set_accessor.get_cname ()));
+			ccall.add_argument (new CCodeIdentifier ("self"));
+			ccall.add_argument (new CCodeIdentifier ("value"));
+
+			prop_block.add_statement (new CCodeExpressionStatement (ccall));
+
+			var cif = new CCodeIfStatement (ccheck, prop_block);
+			if (clastif == null) {
+				block.add_statement (cif);
+			} else {
+				clastif.false_statement = cif;
+			}
+
+			clastif = cif;
+		}
+
+		if (clastif == null) {
+			block = new CCodeBlock ();
+			block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		} else {
+			var else_block = new CCodeBlock ();
+			else_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+			clastif.false_statement = else_block;
+
+			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
+		}
+
+		source_type_member_declaration.append (function.copy ());
+
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return wrapper_name;
+	}
+
+	string get_dbus_type_introspection (ObjectTypeSymbol sym) {
+		string result = "";
+
+		var cl = sym as Class;
+		if (cl != null) {
+			foreach (DataType base_type in cl.get_base_types ()) {
+				var base_obj_type = base_type as ObjectType;
+				result += get_dbus_type_introspection (base_obj_type.type_symbol);
+			}
+		}
+
+		var dbus = sym.get_attribute ("DBus");
+		if (dbus == null) {
+			return result;
+		}
+		string dbus_iface_name = dbus.get_string ("name");
+		if (dbus_iface_name == null) {
+			return result;
+		}
+
+		result += "<interface name=\"%s\">\n".printf (dbus_iface_name);
+
+		foreach (var m in sym.get_methods ()) {
+			if (m is CreationMethod || m.binding != MemberBinding.INSTANCE
+			    || m.overrides || m.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+			if (!is_dbus_visible (m)) {
+				continue;
+			}
+
+			result += "  <method name=\"%s\">\n".printf (Symbol.lower_case_to_camel_case (m.name));
+
+			foreach (var param in m.get_parameters ()) {
+				string direction = param.direction == ParameterDirection.IN ? "in" : "out";
+				result += "    <arg name=\"%s\" type=\"%s\" direction=\"%s\"/>\n".printf (param.name, param.parameter_type.get_type_signature (), direction);
+			}
+			if (!(m.return_type is VoidType)) {
+				result += "    <arg name=\"%s\" type=\"%s\" direction=\"out\"/>\n".printf (dbus_result_name (m), m.return_type.get_type_signature ());
+			}
+
+			result += "  </method>\n";
+		}
+
+		foreach (var prop in sym.get_properties ()) {
+			if (prop.binding != MemberBinding.INSTANCE
+			    || prop.overrides || prop.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+			if (!is_dbus_visible (prop)) {
+				continue;
+			}
+
+			string access = (prop.get_accessor != null ? "read" : "") + (prop.set_accessor != null ? "write" : "");
+			result += "  <property name=\"%s\" type=\"%s\" access=\"%s\"/>\n".printf (Symbol.lower_case_to_camel_case (prop.name), prop.property_type.get_type_signature (), access);
+		}
+
+		foreach (var sig in sym.get_signals ()) {
+			if (sig.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+			if (!is_dbus_visible (sig)) {
+				continue;
+			}
+
+			result += "  <signal name=\"%s\">\n".printf (Symbol.lower_case_to_camel_case (sig.name));
+
+			foreach (var param in sig.get_parameters ()) {
+				result += "    <arg name=\"%s\" type=\"%s\"/>\n".printf (param.name, param.parameter_type.get_type_signature ());
+			}
+
+			result += "  </signal>\n";
+		}
+
+		result += "</interface>\n";
+
+		return result;
+	}
+
+	string generate_dbus_introspect (ObjectTypeSymbol sym) {
+		string wrapper_name = "_dbus_%s_introspect".printf (sym.get_lower_case_cname ());
+
+		var function = new CCodeFunction (wrapper_name, "DBusMessage*");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
+		function.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
+		function.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
+
+		var block = new CCodeBlock ();
+
+		var cdecl = new CCodeDeclaration ("DBusMessage*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("reply"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("iter"));
+		block.add_statement (cdecl);
+
+		var msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_method_return"));
+		msgcall.add_argument (new CCodeIdentifier ("message"));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), msgcall)));
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init_append"));
+		iter_call.add_argument (new CCodeIdentifier ("reply"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("iter")));
+		block.add_statement (new CCodeExpressionStatement (iter_call));
+
+		cdecl = new CCodeDeclaration ("GString*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("xml_data"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("char**");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("children"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("int");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("i"));
+		block.add_statement (cdecl);
+
+		string xml_data = "<!DOCTYPE node PUBLIC \"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN\" \"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd\">\n";
+		var str_call = new CCodeFunctionCall (new CCodeIdentifier ("g_string_new"));
+		str_call.add_argument (new CCodeConstant ("\"%s\"".printf (xml_data.escape (""))));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("xml_data"), str_call)));
+
+		xml_data = "<node>\n";
+		xml_data +=
+"""<interface name="org.freedesktop.DBus.Introspectable">
+  <method name="Introspect">
+    <arg name="data" direction="out" type="s"/>
+  </method>
+</interface>
+<interface name="org.freedesktop.DBus.Properties">
+  <method name="Get">
+    <arg name="interface" direction="in" type="s"/>
+    <arg name="propname" direction="in" type="s"/>
+    <arg name="value" direction="out" type="v"/>
+  </method>
+  <method name="Set">
+    <arg name="interface" direction="in" type="s"/>
+    <arg name="propname" direction="in" type="s"/>
+    <arg name="value" direction="in" type="v"/>
+  </method>
+  <method name="GetAll">
+    <arg name="interface" direction="in" type="s"/>
+    <arg name="props" direction="out" type="a{sv}"/>
+  </method>
+</interface>
+""";
+		xml_data += get_dbus_type_introspection (sym);
+		str_call = new CCodeFunctionCall (new CCodeIdentifier ("g_string_append"));
+		str_call.add_argument (new CCodeIdentifier ("xml_data"));
+		str_call.add_argument (new CCodeConstant ("\"%s\"".printf (xml_data.escape (""))));
+		block.add_statement (new CCodeExpressionStatement (str_call));
+
+		var get_path = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get_data"));
+		get_path.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GObject *"));
+		get_path.add_argument (new CCodeConstant ("\"dbus_object_path\""));
+
+		var list_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_list_registered"));
+		list_call.add_argument (new CCodeIdentifier ("connection"));
+		list_call.add_argument (get_path);
+		list_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("children")));
+		block.add_statement (new CCodeExpressionStatement (list_call));
+
+		// add child nodes
+		var child_block = new CCodeBlock ();
+		str_call = new CCodeFunctionCall (new CCodeIdentifier ("g_string_append_printf"));
+		str_call.add_argument (new CCodeIdentifier ("xml_data"));
+		str_call.add_argument (new CCodeConstant ("\"%s\"".printf ("<node name=\"%s\"/>\n".escape (""))));
+		str_call.add_argument (new CCodeElementAccess (new CCodeIdentifier ("children"), new CCodeIdentifier ("i")));
+		child_block.add_statement (new CCodeExpressionStatement (str_call));
+		var cfor = new CCodeForStatement (new CCodeElementAccess (new CCodeIdentifier ("children"), new CCodeIdentifier ("i")), child_block);
+		cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")));
+		cfor.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
+		block.add_statement (cfor);
+
+		xml_data = "</node>\n";
+		str_call = new CCodeFunctionCall (new CCodeIdentifier ("g_string_append"));
+		str_call.add_argument (new CCodeIdentifier ("xml_data"));
+		str_call.add_argument (new CCodeConstant ("\"%s\"".printf (xml_data.escape (""))));
+		block.add_statement (new CCodeExpressionStatement (str_call));
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_append_basic"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("iter")));
+		iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_STRING"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeMemberAccess.pointer (new CCodeIdentifier ("xml_data"), "str")));
+		block.add_statement (new CCodeExpressionStatement (iter_call));
+
+		str_call = new CCodeFunctionCall (new CCodeIdentifier ("g_string_free"));
+		str_call.add_argument (new CCodeIdentifier ("xml_data"));
+		str_call.add_argument (new CCodeConstant ("TRUE"));
+		block.add_statement (new CCodeExpressionStatement (str_call));
+
+		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
+
+		source_type_member_declaration.append (function.copy ());
+
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return wrapper_name;
+	}
+
+	void handle_signals (ObjectTypeSymbol sym, CCodeBlock block) {
+		var dbus = sym.get_attribute ("DBus");
+		if (dbus == null) {
+			return;
+		}
+		string dbus_iface_name = dbus.get_string ("name");
+		if (dbus_iface_name == null) {
+			return;
+		}
+
+		foreach (Signal sig in sym.get_signals ()) {
+			if (sig.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+			if (!is_dbus_visible (sig)) {
+				continue;
+			}
+
+			var connect = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_connect"));
+			connect.add_argument (new CCodeIdentifier ("object"));
+			connect.add_argument (sig.get_canonical_cconstant (null));
+			connect.add_argument (new CCodeCastExpression (new CCodeIdentifier (generate_dbus_signal_wrapper (sig, sym, dbus_iface_name)), "GCallback"));
+			connect.add_argument (new CCodeIdentifier ("connection"));
+			block.add_statement (new CCodeExpressionStatement (connect));
+		}
+	}
+
+	void generate_message_function (ObjectType object_type) {
+		var sym = object_type.type_symbol;
+
+		dbus_glib_h_needed = true;
+
+		var cfunc = new CCodeFunction (sym.get_lower_case_cprefix () + "dbus_message", "DBusHandlerResult");
+		cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
+		cfunc.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
+		cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
+
+		if (!sym.is_internal_symbol ()) {
+			header_type_member_declaration.append (cfunc.copy ());
+		} else {
+			cfunc.modifiers |= CCodeModifiers.STATIC;
+			source_type_member_declaration.append (cfunc.copy ());
+		}
+
+		var block = new CCodeBlock ();
+		cfunc.block = block;
+
+		var cdecl = new CCodeDeclaration ("DBusMessage*");
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("reply", new CCodeConstant ("NULL")));
+		block.add_statement (cdecl);
+
+		CCodeIfStatement clastif = null;
+
+		handle_method ("org.freedesktop.DBus.Introspectable", "Introspect", generate_dbus_introspect (sym), block, ref clastif);
+
+		var dbus = sym.get_attribute ("DBus");
+		if (dbus != null) {
+			string dbus_iface_name = dbus.get_string ("name");
+			if (dbus_iface_name != null) {
+				handle_method ("org.freedesktop.DBus.Properties", "Get", generate_dbus_property_get_wrapper (sym, dbus_iface_name), block, ref clastif);
+				handle_method ("org.freedesktop.DBus.Properties", "Set", generate_dbus_property_set_wrapper (sym, dbus_iface_name), block, ref clastif);
+				handle_method ("org.freedesktop.DBus.Properties", "GetAll", generate_dbus_property_get_all_wrapper (sym, dbus_iface_name), block, ref clastif);
+
+				handle_methods (sym, dbus_iface_name, block, ref clastif);
+			}
+		}
+
+		var replyblock = new CCodeBlock ();
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_send"));
+		ccall.add_argument (new CCodeIdentifier ("connection"));
+		ccall.add_argument (new CCodeIdentifier ("reply"));
+		ccall.add_argument (new CCodeConstant ("NULL"));
+		replyblock.add_statement (new CCodeExpressionStatement (ccall));
+		ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		ccall.add_argument (new CCodeIdentifier ("reply"));
+		replyblock.add_statement (new CCodeExpressionStatement (ccall));
+		replyblock.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_HANDLED")));
+
+		var cif = new CCodeIfStatement (new CCodeIdentifier ("reply"), replyblock);
+		block.add_statement (cif);
+		clastif = cif;
+
+		var cl = sym as Class;
+		if (cl != null) {
+			foreach (DataType base_type in cl.get_base_types ()) {
+				var base_obj_type = base_type as ObjectType;
+				if (type_implements_dbus_interface (base_obj_type.type_symbol)) {
+					var base_call = new CCodeFunctionCall (new CCodeIdentifier (base_obj_type.type_symbol.get_lower_case_cprefix () + "dbus_message"));
+					base_call.add_argument (new CCodeIdentifier ("connection"));
+					base_call.add_argument (new CCodeIdentifier ("message"));
+					base_call.add_argument (new CCodeIdentifier ("object"));
+
+					var ccheck = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, base_call, new CCodeIdentifier ("DBUS_HANDLER_RESULT_HANDLED"));
+
+					var base_block = new CCodeBlock ();
+					base_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_HANDLED")));
+
+					cif = new CCodeIfStatement (ccheck, base_block);
+					clastif.false_statement = cif;
+
+					clastif = cif;
+				}
+			}
+		}
+
+		var retblock = new CCodeBlock ();
+		retblock.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_NOT_YET_HANDLED")));
+		clastif.false_statement = retblock;
+
+		source_type_member_definition.append (cfunc);
+	}
+
+	CCodeExpression get_vtable (ObjectType object_type) {
+		var sym = object_type.type_symbol;
+
+		var vtable = new CCodeInitializerList ();
+		vtable.append (new CCodeIdentifier (sym.get_lower_case_cprefix () + "dbus_register_object"));
+
+		generate_register_function (object_type);
+
+		var cdecl = new CCodeDeclaration ("const _DBusObjectVTable");
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_" + sym.get_lower_case_cprefix () + "dbus_vtable", vtable));
+		cdecl.modifiers = CCodeModifiers.STATIC;
+		source_constant_declaration.append (cdecl);
+
+		return new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_vtable");
+	}
+
+	CCodeExpression get_path_vtable (ObjectType object_type) {
+		var sym = object_type.type_symbol;
+
+		var vtable = new CCodeInitializerList ();
+		vtable.append (new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_unregister"));
+		vtable.append (new CCodeIdentifier (sym.get_lower_case_cprefix () + "dbus_message"));
+
+		generate_unregister_function (object_type);
+		generate_message_function (object_type);
+
+		var cdecl = new CCodeDeclaration ("const DBusObjectPathVTable");
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_" + sym.get_lower_case_cprefix () + "dbus_path_vtable", vtable));
+		cdecl.modifiers = CCodeModifiers.STATIC;
+		source_constant_declaration.append (cdecl);
+
+		return new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_path_vtable");
+	}
+
+	public override void visit_method_call (MethodCall expr) {
+		var mtype = expr.call.value_type as MethodType;
+		if (mtype == null || mtype.method_symbol.get_cname () != "dbus_g_connection_register_g_object") {
+			base.visit_method_call (expr);
+			return;
+		}
+
+		dbus_glib_h_needed = true;
+
+		expr.accept_children (codegen);
+
+		var ma = (MemberAccess) expr.call;
+
+		var raw_conn = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_get_connection"));
+		raw_conn.add_argument ((CCodeExpression) ma.inner.ccodenode);
+
+		var args_it = expr.get_argument_list ().iterator ();
+		args_it.next ();
+		var path_arg = args_it.get ();
+		args_it.next ();
+		var obj_arg = args_it.get ();
+
+		var cregister = new CCodeFunctionCall (new CCodeIdentifier ("_vala_dbus_register_object"));
+		cregister.add_argument (raw_conn);
+		cregister.add_argument ((CCodeExpression) path_arg.ccodenode);
+		cregister.add_argument ((CCodeExpression) obj_arg.ccodenode);
+		expr.ccodenode = cregister;
+	}
+
+	bool type_implements_dbus_interface (ObjectTypeSymbol sym) {
+		var dbus = sym.get_attribute ("DBus");
+		if (dbus != null) {
+			return true;
+		}
+
+		var cl = sym as Class;
+		if (cl != null) {
+			foreach (DataType base_type in cl.get_base_types ()) {
+				var base_obj_type = base_type as ObjectType;
+				if (type_implements_dbus_interface (base_obj_type.type_symbol)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public override CCodeFragment register_dbus_info (ObjectTypeSymbol sym) {
+		CCodeFragment fragment = new CCodeFragment ();
+
+		if (!type_implements_dbus_interface (sym)) {
+			return fragment;
+		}
+
+		var quark = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+		quark.add_argument (new CCodeConstant ("\"DBusObjectVTable\""));
+
+		var set_qdata = new CCodeFunctionCall (new CCodeIdentifier ("g_type_set_qdata"));
+		set_qdata.add_argument (new CCodeIdentifier (sym.get_upper_case_cname ("TYPE_")));
+		set_qdata.add_argument (quark);
+		set_qdata.add_argument (new CCodeCastExpression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_vtable (new ObjectType (sym))), "void*"));
+
+		fragment.append (new CCodeExpressionStatement (set_qdata));
+
+		return fragment;
 	}
 }
