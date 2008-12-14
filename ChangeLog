@@ -1,3 +1,9 @@
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodebasemodule.vala:
+
+	Support GLib.Type as generic type argument
+
 2008-12-14  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodebasemodule.vala:

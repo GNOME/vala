@@ -2485,6 +2485,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			return true;
 		} else if (st == int32_type.data_type) {
 			return true;
+		} else if (st == gtype_type) {
+			return true;
 		} else {
 			return false;
 		}
