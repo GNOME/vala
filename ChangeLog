@@ -1,6 +1,13 @@
 2008-12-14  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodebasemodule.vala:
+
+	Detect unsupported generic type arguments in local variable
+	declarations
+
+2008-12-14  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodebasemodule.vala:
 	* gobject/valadbusservermodule.vala:
 	* gobject/valagsignalmodule.vala:
 	* vapi/dbus-glib-1.vapi:

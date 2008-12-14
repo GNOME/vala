@@ -1345,6 +1345,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_local_variable (LocalVariable local) {
+		check_type (local.variable_type);
+
 		local.accept_children (codegen);
 
 		if (local.variable_type is ArrayType) {
