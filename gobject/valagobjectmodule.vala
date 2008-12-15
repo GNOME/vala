@@ -1523,6 +1523,12 @@ public class Vala.GObjectModule : GTypeModule {
 		var cl = (Class) c.parent_symbol;
 
 		if (c.binding == MemberBinding.INSTANCE) {
+			if (!cl.is_subtype_of (gobject_type)) {
+				Report.error (c.source_reference, "construct blocks require GLib.Object");
+				c.error = true;
+				return;
+			}
+
 			function = new CCodeFunction ("%s_constructor".printf (cl.get_lower_case_cname (null)), "GObject *");
 			function.modifiers = CCodeModifiers.STATIC;
 		
