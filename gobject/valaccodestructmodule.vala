@@ -183,10 +183,12 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (dest, copy)));
 
 				var array_type = f.field_type as ArrayType;
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var len_src = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), get_array_length_cname (f.name, dim));
-					var len_dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), get_array_length_cname (f.name, dim));
-					cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (len_dest, len_src)));
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						var len_src = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), get_array_length_cname (f.name, dim));
+						var len_dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), get_array_length_cname (f.name, dim));
+						cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (len_dest, len_src)));
+					}
 				}
 			}
 		}

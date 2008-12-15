@@ -2,6 +2,12 @@
 
 	* gobject/valaccodestructmodule.vala:
 
+	Fix bug introduced in last commit
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodestructmodule.vala:
+
 	Fix handling of array fields in structs, fixes bug 562665
 
 2008-12-15  Jürg Billeter  <j@bitron.ch>
