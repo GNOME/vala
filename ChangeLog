@@ -1,5 +1,13 @@
 2008-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Various ownership fixes, patch by Evan Nemerson, fixes bug 553032
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Add fileno, ferror, and clearerr bindings and fix a few other
