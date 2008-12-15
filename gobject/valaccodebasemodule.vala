@@ -2987,12 +2987,17 @@ public class Vala.CCodeBaseModule : CCodeModule {
 						cright = new InstanceCast (cright, left_cl);
 					}
 				}
-			} else if (left_type_as_struct != null && !expr.left.value_type.nullable
-			           && expr.right.value_type is NullType) {
-				cleft = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cleft);
-			} else if (right_type_as_struct != null && !expr.right.value_type.nullable
-			           && expr.left.value_type is NullType) {
-				cright = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cright);
+			} else if (left_type_as_struct != null && right_type_as_struct != null) {
+				// FIXME generate and use compare/equal function for real structs
+				if (expr.left.value_type.nullable && expr.right.value_type.nullable) {
+					// FIXME also compare contents, not just address
+				} else if (expr.left.value_type.nullable) {
+					// FIXME check left value is not null
+					cleft = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cleft);
+				} else if (expr.right.value_type.nullable) {
+					// FIXME check right value is not null
+					cright = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cright);
+				}
 			}
 		}
 
