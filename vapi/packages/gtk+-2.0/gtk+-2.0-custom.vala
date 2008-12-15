@@ -28,6 +28,10 @@ namespace Gtk {
 		public int height;
 	}
 
+	public class Container {
+		public GLib.List<weak Gtk.Widget> get_children ();
+	}
+
 	public class Widget {
 		public extern Widget (GLib.Type type, ...);
 

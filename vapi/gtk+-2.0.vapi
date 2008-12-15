@@ -1031,7 +1031,7 @@ namespace Gtk {
 		public uint get_border_width ();
 		[NoWrapper]
 		public virtual void get_child_property (Gtk.Widget child, uint property_id, GLib.Value value, GLib.ParamSpec pspec);
-		public GLib.List<Gtk.Widget> get_children ();
+		public GLib.List<weak Gtk.Widget> get_children ();
 		public bool get_focus_chain (GLib.List focusable_widgets);
 		public weak Gtk.Adjustment get_focus_hadjustment ();
 		public weak Gtk.Adjustment get_focus_vadjustment ();

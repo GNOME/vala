@@ -2,6 +2,14 @@
 
 	* vapi/packages/gtk+-2.0/:
 
+	Fix gtk_container_get_children binding
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gtk+-2.0/:
+
 	Add GTK_WIDGET_* bindings, patch by Víctor Manuel Jáquez Leal,
 	fixes bug 561341
 
