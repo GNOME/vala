@@ -2,6 +2,13 @@
 
 	* tests/testrunner.sh:
 
+	Fix make check of uninstalled vala, based on patch by Götz Waschk,
+	fixes bug 562951
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
+	* tests/testrunner.sh:
+
 	Fix order of commandline arguments passed to C compiler,
 	patch by Alexander Bokovoy
 

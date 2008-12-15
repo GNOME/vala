@@ -22,13 +22,14 @@
 
 builddir=$PWD
 topbuilddir=$builddir/..
-srcdir=`dirname $0`
+srcdir=$PWD/`dirname $0`
 topsrcdir=$srcdir/..
 vapidir=$topsrcdir/vapi
 
 export G_DEBUG=fatal_warnings
 
 VALAC=$topbuilddir/compiler/valac
+VALAFLAGS="--vapidir $vapidir"
 CC="gcc -std=c99"
 CFLAGS="-O0 -g3 -I$topsrcdir -I$topbuilddir"
 LDLIBS="-lm"
@@ -57,7 +58,7 @@ function sourceheader() {
 
 function sourceend() {
 	if [ -n "$PROGRAM" ]; then
-		echo "$VALAC $(echo $PACKAGES | xargs -n 1 -r echo --pkg) -C $SOURCEFILE" >> build
+		echo "$VALAC $VALAFLAGS $(echo $PACKAGES | xargs -n 1 -r echo --pkg) -C $SOURCEFILE" >> build
 		echo "$CC $CFLAGS -o $PROGRAM$EXEEXT $PROGRAM.c \$(pkg-config --cflags --libs glib-2.0 gobject-2.0 $PACKAGES) $LDLIBS" >> build
 		echo "./$PROGRAM$EXEEXT" > check
 	fi
