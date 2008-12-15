@@ -1,5 +1,14 @@
 2008-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/unique-1.0/:
+
+	Fix unique_app_new* bindings, patch by Michael Terry,
+	fixes bug 564064
+
+	* vapi/unique-1.0.vapi: regenerated
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gio-2.0/:
 
 	Fix g_themed_icon_new_from_names binding, patch by Michael Terry,

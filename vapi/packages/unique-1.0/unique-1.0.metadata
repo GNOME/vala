@@ -1,5 +1,7 @@
 Unique cheader_filename="unique/unique.h"
 unique_app_is_running hidden="1"
+unique_app_new.startup_id nullable="1"
+unique_app_new_with_commands.startup_id nullable="1"
 unique_app_send_message.message_data nullable="1"
 unique_message_data_copy transfer_ownership="1"
 unique_message_data_set.data nullable="1"
