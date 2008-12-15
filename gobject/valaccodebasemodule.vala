@@ -2987,9 +2987,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 						cright = new InstanceCast (cright, left_cl);
 					}
 				}
-			} else if (left_type_as_struct != null && expr.right.value_type is NullType) {
+			} else if (left_type_as_struct != null && !expr.left.value_type.nullable
+			           && expr.right.value_type is NullType) {
 				cleft = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cleft);
-			} else if (right_type_as_struct != null && expr.left.value_type is NullType) {
+			} else if (right_type_as_struct != null && !expr.right.value_type.nullable
+			           && expr.left.value_type is NullType) {
 				cright = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cright);
 			}
 		}

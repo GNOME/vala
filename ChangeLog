@@ -1,5 +1,11 @@
 2008-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+
+	Fix comparing nullable struct values with null, fixes bug 548672
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodemethodmodule.vala:
 
 	Fix constructors in inner structs
