@@ -1,5 +1,12 @@
 2008-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* tests/testrunner.sh:
+
+	Fix order of commandline arguments passed to C compiler,
+	patch by Alexander Bokovoy
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/unique-1.0/:
 
 	Fix unique_app_new* bindings, patch by Michael Terry,

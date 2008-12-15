@@ -58,7 +58,7 @@ function sourceheader() {
 function sourceend() {
 	if [ -n "$PROGRAM" ]; then
 		echo "$VALAC $(echo $PACKAGES | xargs -n 1 -r echo --pkg) -C $SOURCEFILE" >> build
-		echo "$CC $CFLAGS $LDLIBS \$(pkg-config --cflags --libs glib-2.0 gobject-2.0 $PACKAGES) -o $PROGRAM$EXEEXT $PROGRAM.c" >> build
+		echo "$CC $CFLAGS -o $PROGRAM$EXEEXT $PROGRAM.c \$(pkg-config --cflags --libs glib-2.0 gobject-2.0 $PACKAGES) $LDLIBS" >> build
 		echo "./$PROGRAM$EXEEXT" > check
 	fi
 }
