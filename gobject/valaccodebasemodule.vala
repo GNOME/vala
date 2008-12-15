@@ -1532,9 +1532,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				// allow duplicates of immutable instances as for example strings
 				dup_function = type.data_type.get_dup_function ();
 			} else if (type is ValueType) {
-				if (type.nullable) {
+				dup_function = type.data_type.get_dup_function ();
+				if (dup_function == null && type.nullable) {
 					dup_function = generate_struct_dup_wrapper ((ValueType) type);
-				} else {
+				} else if (dup_function == null) {
 					dup_function = "";
 				}
 			} else {
@@ -1941,10 +1942,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		var cfrag = new CCodeFragment ();
 		append_temp_decl (cfrag, temp_vars);
 		
-		// FIXME cast to CodeNode shouldn't be necessary as Statement requires CodeNode
-		cfrag.append (((CodeNode) stmt).ccodenode);
+		cfrag.append (stmt.ccodenode);
 		
-		((CodeNode) stmt).ccodenode = cfrag;
+		stmt.ccodenode = cfrag;
 	}
 
 	public void append_local_free (Symbol sym, CCodeFragment cfrag, bool stop_at_loop) {
@@ -2377,7 +2377,15 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			ccomma.append_expression (copy_call);
 			ccomma.append_expression (ctemp);
 
-			return ccomma;
+			if (expression_type.data_type == gvalue_type) {
+				// g_value_init/copy must not be called for uninitialized values
+				var cisvalid = new CCodeFunctionCall (new CCodeIdentifier ("G_IS_VALUE"));
+				cisvalid.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr));
+
+				return new CCodeConditionalExpression (cisvalid, ccomma, cexpr);
+			} else {
+				return ccomma;
+			}
 		}
 
 		/* (temp = expr, temp == NULL ? NULL : ref (temp))

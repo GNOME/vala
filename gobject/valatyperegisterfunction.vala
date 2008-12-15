@@ -92,11 +92,11 @@ public abstract class Vala.TypeRegisterFunction {
 		string type_value_table_decl_name = null;
 		var type_init = new CCodeBlock ();
 
-		if ( fundamental ) {
+		if (fundamental) {
 			var cgtypetabledecl = new CCodeDeclaration ("const GTypeValueTable");
 			cgtypetabledecl.modifiers = CCodeModifiers.STATIC;
 
-			cgtypetabledecl.add_declarator ( new CCodeVariableDeclarator.with_initializer ( "g_define_type_value_table", new CCodeConstant ("{ %s, %s, %s, %s, \"p\", %s, \"p\", %s }".printf ( get_gtype_value_table_init_function_name (), get_gtype_value_table_free_function_name (), get_gtype_value_table_copy_function_name (), get_gtype_value_table_peek_pointer_function_name (), get_gtype_value_table_collect_value_function_name (), get_gtype_value_table_lcopy_value_function_name () ))));
+			cgtypetabledecl.add_declarator (new CCodeVariableDeclarator.with_initializer ( "g_define_type_value_table", new CCodeConstant ("{ %s, %s, %s, %s, \"p\", %s, \"p\", %s }".printf (get_gtype_value_table_init_function_name (), get_gtype_value_table_free_function_name (), get_gtype_value_table_copy_function_name (), get_gtype_value_table_peek_pointer_function_name (), get_gtype_value_table_collect_value_function_name (), get_gtype_value_table_lcopy_value_function_name ()))));
 			type_value_table_decl_name = "&g_define_type_value_table";
 			type_init.add_statement ( cgtypetabledecl );
 		}
@@ -105,39 +105,47 @@ public abstract class Vala.TypeRegisterFunction {
 		}
 
 
-		var ctypedecl = new CCodeDeclaration ("const GTypeInfo");
-		ctypedecl.modifiers = CCodeModifiers.STATIC;
-		ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) %s, (GBaseFinalizeFunc) NULL, (GClassInitFunc) %s, (GClassFinalizeFunc) NULL, NULL, %s, 0, (GInstanceInitFunc) %s, %s }".printf (get_type_struct_name (), get_base_init_func_name (), get_class_init_func_name (), get_instance_struct_size (), get_instance_init_func_name (), type_value_table_decl_name))));
-		type_init.add_statement (ctypedecl);
-		if (fundamental) {
-			var ctypefundamentaldecl = new CCodeDeclaration ("const GTypeFundamentalInfo");
-			ctypefundamentaldecl.modifiers = CCodeModifiers.STATIC;
-			ctypefundamentaldecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_fundamental_info", new CCodeConstant ("{ (G_TYPE_FLAG_CLASSED | G_TYPE_FLAG_INSTANTIATABLE | G_TYPE_FLAG_DERIVABLE | G_TYPE_FLAG_DEEP_DERIVABLE) }")));
-			type_init.add_statement (ctypefundamentaldecl);
+		if (get_type_declaration () is ObjectTypeSymbol) {
+			var ctypedecl = new CCodeDeclaration ("const GTypeInfo");
+			ctypedecl.modifiers = CCodeModifiers.STATIC;
+			ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) %s, (GBaseFinalizeFunc) NULL, (GClassInitFunc) %s, (GClassFinalizeFunc) NULL, NULL, %s, 0, (GInstanceInitFunc) %s, %s }".printf (get_type_struct_name (), get_base_init_func_name (), get_class_init_func_name (), get_instance_struct_size (), get_instance_init_func_name (), type_value_table_decl_name))));
+			type_init.add_statement (ctypedecl);
+			if (fundamental) {
+				var ctypefundamentaldecl = new CCodeDeclaration ("const GTypeFundamentalInfo");
+				ctypefundamentaldecl.modifiers = CCodeModifiers.STATIC;
+				ctypefundamentaldecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_fundamental_info", new CCodeConstant ("{ (G_TYPE_FLAG_CLASSED | G_TYPE_FLAG_INSTANTIATABLE | G_TYPE_FLAG_DERIVABLE | G_TYPE_FLAG_DEEP_DERIVABLE) }")));
+				type_init.add_statement (ctypefundamentaldecl);
+			}
 		}
 
 		type_init.add_statement (get_type_interface_init_declaration ());
 
 		CCodeFunctionCall reg_call;
-		if (fundamental) {
+		if (get_type_declaration () is Struct) {
+			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_boxed_type_register_static"));
+		} else if (fundamental) {
 			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_register_fundamental"));
+			reg_call.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("g_type_fundamental_next")));
 		} else if (!plugin) {
 			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_register_static"));
+			reg_call.add_argument (new CCodeIdentifier (get_parent_type_name ()));
 		} else {
 			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_module_register_type"));
 			reg_call.add_argument (new CCodeIdentifier ("module"));
-		}
-		if (fundamental) {
-			reg_call.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("g_type_fundamental_next")));
-		} else {
 			reg_call.add_argument (new CCodeIdentifier (get_parent_type_name ()));
 		}
 		reg_call.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_declaration ().get_cname ())));
-		reg_call.add_argument (new CCodeIdentifier ("&g_define_type_info"));
-		if (fundamental) {
-			reg_call.add_argument (new CCodeIdentifier ("&g_define_type_fundamental_info"));
+		if (get_type_declaration () is Struct) {
+			var st = (Struct) get_type_declaration ();
+			reg_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (st.get_dup_function ()), "GBoxedCopyFunc"));
+			reg_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (st.get_free_function ()), "GBoxedFreeFunc"));
+		} else {
+			reg_call.add_argument (new CCodeIdentifier ("&g_define_type_info"));
+			if (fundamental) {
+				reg_call.add_argument (new CCodeIdentifier ("&g_define_type_fundamental_info"));
+			}
+			reg_call.add_argument (new CCodeConstant (get_type_flags ()));
 		}
-		reg_call.add_argument (new CCodeConstant (get_type_flags ()));
 
 		if (use_thread_safe && !plugin) {
 			var temp_decl = new CCodeDeclaration ("GType");
@@ -197,42 +205,54 @@ public abstract class Vala.TypeRegisterFunction {
 	 *
 	 * @return C struct name
 	 */
-	public abstract string get_type_struct_name ();
+	public virtual string get_type_struct_name () {
+		assert_not_reached ();
+	}
 
 	/**
 	 * Returns the name of the base_init function in C code.
 	 *
 	 * @return C function name
 	 */
-	public abstract string get_base_init_func_name ();
+	public virtual string get_base_init_func_name () {
+		assert_not_reached ();
+	}
 
 	/**
 	 * Returns the name of the class_init function in C code.
 	 *
 	 * @return C function name
 	 */
-	public abstract string get_class_init_func_name ();
+	public virtual string get_class_init_func_name () {
+		assert_not_reached ();
+	}
 
 	/**
 	 * Returns the size of the instance struct in C code.
 	 *
 	 * @return C instance struct size
 	 */
-	public abstract string get_instance_struct_size ();
+	public virtual string get_instance_struct_size () {
+		assert_not_reached ();
+	}
 
 	/**
 	 * Returns the name of the instance_init function in C code.
 	 *
 	 * @return C function name
 	 */
-	public abstract string get_instance_init_func_name ();
+	public virtual string get_instance_init_func_name () {
+		assert_not_reached ();
+	}
 
 	/**
 	 * Returns the name of the parent type in C code.
 	 *
 	 * @return C function name
 	 */
-	public abstract string get_parent_type_name ();
+	public virtual string get_parent_type_name () {
+		assert_not_reached ();
+	}
 
 
 

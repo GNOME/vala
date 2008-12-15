@@ -142,4 +142,28 @@ public class Vala.GTypeModule : GErrorModule {
 
 		source_type_member_definition.append (base_init);
 	}
+
+	public override void visit_struct (Struct st) {
+		base.visit_struct (st);
+
+		CCodeFragment decl_frag;
+		if (st.access != SymbolAccessibility.PRIVATE) {
+			decl_frag = header_type_declaration;
+		} else {
+			decl_frag = source_type_declaration;
+		}
+
+		decl_frag.append (new CCodeNewline ());
+		var macro = "(%s_get_type ())".printf (st.get_lower_case_cname (null));
+		decl_frag.append (new CCodeMacroReplacement (st.get_type_id (), macro));
+
+		var type_fun = new StructRegisterFunction (st, context);
+		type_fun.init_from_type (false);
+		if (st.access != SymbolAccessibility.PRIVATE) {
+			header_type_member_declaration.append (type_fun.get_declaration ());
+		} else {
+			source_type_member_declaration.append (type_fun.get_declaration ());
+		}
+		source_type_member_definition.append (type_fun.get_definition ());
+	}
 }

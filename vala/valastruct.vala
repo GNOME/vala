@@ -373,16 +373,21 @@ public class Vala.Struct : TypeSymbol {
 
 	public override string? get_type_id () {
 		if (type_id == null) {
-			foreach (DataType type in base_types) {
-				var st = type.data_type as Struct;
-				if (st != null) {
-					return st.get_type_id ();;
+			// TODO use attribute check instead
+			if (external_package) {
+				foreach (DataType type in base_types) {
+					var st = type.data_type as Struct;
+					if (st != null) {
+						return st.get_type_id ();;
+					}
 				}
-			}
-			if (is_simple_type ()) {
-				Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (get_full_name ()));
+				if (is_simple_type ()) {
+					Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (get_full_name ()));
+				} else {
+					return "G_TYPE_POINTER";
+				}
 			} else {
-				return "G_TYPE_POINTER";
+				type_id = get_upper_case_cname ("TYPE_");
 			}
 		}
 		return type_id;
@@ -553,6 +558,24 @@ public class Vala.Struct : TypeSymbol {
 		}
 		
 		return false;
+	}
+
+	public override string? get_dup_function () {
+		// TODO use attribute check instead
+		if (external_package) {
+			return null;
+		} else {
+			return get_lower_case_cprefix () + "dup";
+		}
+	}
+	
+	public override string? get_free_function () {
+		// TODO use attribute check instead
+		if (external_package) {
+			return null;
+		} else {
+			return get_lower_case_cprefix () + "free";
+		}
 	}
 
 	public string get_default_copy_function () {

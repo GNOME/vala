@@ -1,5 +1,18 @@
 2008-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valastruct.vala:
+	* gobject/Makefile.am:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodestructmodule.vala:
+	* gobject/valagtypemodule.vala:
+	* gobject/valastructregisterfunction.vala:
+	* gobject/valatyperegisterfunction.vala:
+
+	Register structs as boxed types, generate dup, copy, and free
+	functions, fixes bug 548864
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 	* vapi/glib-2.0.vapi:
 
