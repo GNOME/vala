@@ -1,5 +1,12 @@
 2008-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Fix g_main_current_source binding, patch by Zeeshan Ali Khattak,
+	fixes bug 563349
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Various ownership fixes, patch by Evan Nemerson, fixes bug 553032

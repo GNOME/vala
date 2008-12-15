@@ -1058,7 +1058,8 @@ namespace GLib {
 		public void add_poll (ref PollFD fd, int priority);
 		public void remove_poll (ref PollFD fd);
 		public int depth ();
-		public weak Source current_source ();
+		[CCode (cname = "g_main_current_source")]
+		public static weak Source current_source ();
 	}
 	
 	public static delegate int PollFunc (PollFD[] ufds, uint nfsd, int timeout_);
