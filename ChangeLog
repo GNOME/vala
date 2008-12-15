@@ -1,5 +1,11 @@
 2008-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Add abs, labs, and llabs bindings, patch by Rob Taylor
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 
 	Fix comparison of nullable and non-nullable values

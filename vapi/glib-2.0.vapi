@@ -106,6 +106,9 @@ public struct int {
 
 	[CCode (cname = "GINT_TO_POINTER")]
 	public void* to_pointer ();
+
+	[CCode (cname = "abs")]
+	public int abs ();
 }
 
 [SimpleType]
@@ -189,6 +192,8 @@ public struct long {
 	public static long max (long a, long b);
 	[CCode (cname = "CLAMP")]
 	public long clamp (long low, long high);
+	[CCode (cname = "labs")]
+	public long abs ();
 }
 
 [SimpleType]
@@ -427,6 +432,8 @@ public struct int64 {
 	public static int64 max (int64 a, int64 b);
 	[CCode (cname = "CLAMP")]
 	public int64 clamp (int64 low, int64 high);
+	[CCode (cname = "llabs")]
+	public int64 abs ();
 }
 
 [SimpleType]
