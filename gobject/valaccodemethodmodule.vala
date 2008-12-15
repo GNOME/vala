@@ -846,13 +846,13 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		head.visit_method (m);
 
 		DataType creturn_type;
-		if (current_class != null) {
+		if (current_type_symbol is Class) {
 			creturn_type = new ObjectType (current_class);
 		} else {
 			creturn_type = new VoidType ();
 		}
 
-		if (current_class != null && !current_class.is_compact) {
+		if (current_type_symbol is Class && !current_class.is_compact) {
 			var vfunc = new CCodeFunction (m.get_cname (), creturn_type.get_cname ());
 			vfunc.line = function.line;
 
@@ -881,7 +881,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			source_type_member_definition.append (vfunc);
 		}
 
-		if (current_class != null && current_class.is_subtype_of (gobject_type)
+		if (current_type_symbol is Class && current_class.is_subtype_of (gobject_type)
 		    && (((CreationMethod) m).n_construction_params > 0 || current_class.get_type_parameters ().size > 0)) {
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("__params_it"), new CCodeIdentifier ("__params"));
 			var cdofreeparam = new CCodeBlock ();
