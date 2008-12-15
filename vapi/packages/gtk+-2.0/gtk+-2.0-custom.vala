@@ -49,4 +49,8 @@ namespace Gtk {
 	public delegate void ActionCallback (Action action);
 
 	public delegate void RadioActionCallback (Action action, Action current);
+
+	public delegate bool TreeViewSearchEqualFunc (TreeModel model, int column, string key, TreeIter iter);
+
+	public delegate string CalendarDetailFunc (Gtk.Calendar calendar, uint year, uint month, uint day);
 }

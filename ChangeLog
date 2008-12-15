@@ -1,5 +1,14 @@
 2008-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Various delegate binding fixes, patch by Evan Nemerson,
+	fixes bug 547657
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaswitchstatement.vala:
 
 	Check switch expression

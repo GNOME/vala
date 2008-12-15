@@ -28,13 +28,13 @@ namespace Gtk {
 		public void set_copyright (string copyright);
 		[NoArrayLength]
 		public void set_documenters (string[] documenters);
-		public static void set_email_hook (Gtk.AboutDialogActivateLinkFunc func, GLib.DestroyNotify? destroy);
+		public static void set_email_hook (Gtk.AboutDialogActivateLinkFunc# func);
 		public void set_license (string license);
 		public void set_logo (Gdk.Pixbuf logo);
 		public void set_logo_icon_name (string icon_name);
 		public void set_program_name (string name);
 		public void set_translator_credits (string translator_credits);
-		public static void set_url_hook (Gtk.AboutDialogActivateLinkFunc func, GLib.DestroyNotify? destroy);
+		public static void set_url_hook (Gtk.AboutDialogActivateLinkFunc# func);
 		public void set_version (string version);
 		public void set_website (string website);
 		public void set_website_label (string website_label);
@@ -318,7 +318,7 @@ namespace Gtk {
 		public int prepend_page (Gtk.Widget page);
 		public void remove_action_widget (Gtk.Widget child);
 		public void set_current_page (int page_num);
-		public void set_forward_page_func (Gtk.AssistantPageFunc page_func, void* data, GLib.DestroyNotify destroy);
+		public void set_forward_page_func (Gtk.AssistantPageFunc# page_func);
 		public void set_page_complete (Gtk.Widget page, bool complete);
 		public void set_page_header_image (Gtk.Widget page, Gdk.Pixbuf pixbuf);
 		public void set_page_side_image (Gtk.Widget page, Gdk.Pixbuf pixbuf);
@@ -528,7 +528,7 @@ namespace Gtk {
 		public Calendar ();
 		public void select_day (uint day);
 		public bool select_month (uint month, uint year);
-		public void set_detail_func (Gtk.CalendarDetailFunc func, void* data, GLib.DestroyNotify destroy);
+		public void set_detail_func (Gtk.CalendarDetailFunc# func);
 		public void set_detail_height_rows (int rows);
 		public void set_detail_width_chars (int chars);
 		public void set_display_options (Gtk.CalendarDisplayOptions flags);
@@ -4563,7 +4563,7 @@ namespace Gtk {
 		public void set_rules_hint (bool setting);
 		public void set_search_column (int column);
 		public void set_search_entry (Gtk.Entry entry);
-		public void set_search_equal_func (Gtk.TreeViewSearchEqualFunc search_equal_func, void* search_user_data, Gtk.DestroyNotify search_destroy);
+		public void set_search_equal_func (Gtk.TreeViewSearchEqualFunc# search_equal_func);
 		public void set_search_position_func (Gtk.TreeViewSearchPositionFunc func, void* data, GLib.DestroyNotify destroy);
 		public void set_show_expanders (bool enabled);
 		public void set_tooltip_cell (Gtk.Tooltip tooltip, Gtk.TreePath path, Gtk.TreeViewColumn column, Gtk.CellRenderer cell);
@@ -5497,7 +5497,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void sort_column_changed ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (type_id = "GTK_TYPE_ACTION_ENTRY", cheader_filename = "gtk/gtk.h")]
 	public struct ActionEntry {
 		public weak string name;
 		public weak string stock_id;
@@ -5507,7 +5507,7 @@ namespace Gtk {
 		[CCode (type = "GCallback")]
 		public weak Gtk.ActionCallback callback;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (type_id = "GTK_TYPE_ALLOCATION", cheader_filename = "gtk/gtk.h")]
 	public struct Allocation {
 		public int x;
 		public int y;
@@ -5525,7 +5525,7 @@ namespace Gtk {
 		[CCode (cname = "gtk_border_new", has_construct_function = false)]
 		public Border ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (type_id = "GTK_TYPE_RADIO_ACTION_ENTRY", cheader_filename = "gtk/gtk.h")]
 	public struct RadioActionEntry {
 		public weak string name;
 		public weak string stock_id;
@@ -5534,7 +5534,7 @@ namespace Gtk {
 		public weak string tooltip;
 		public int value;
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (type_id = "GTK_TYPE_RECENT_DATA", cheader_filename = "gtk/gtk.h")]
 	public struct RecentData {
 		public string display_name;
 		public string description;
@@ -5552,7 +5552,7 @@ namespace Gtk {
 		public Gtk.Requisition copy ();
 		public void free ();
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (type_id = "GTK_TYPE_TARGET_ENTRY", cheader_filename = "gtk/gtk.h")]
 	public struct TargetEntry {
 		public weak string target;
 		public uint flags;
@@ -5665,7 +5665,7 @@ namespace Gtk {
 		public bool starts_word ();
 		public bool toggles_tag (Gtk.TextTag tag);
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (type_id = "GTK_TYPE_TOGGLE_ACTION_ENTRY", cheader_filename = "gtk/gtk.h")]
 	public struct ToggleActionEntry {
 		public weak string name;
 		public weak string stock_id;
@@ -6629,7 +6629,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void BuilderConnectFunc (Gtk.Builder builder, GLib.Object object, string signal_name, string handler_name, GLib.Object connect_object, GLib.ConnectFlags flags);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate weak string CalendarDetailFunc (Gtk.Calendar calendar, uint year, uint month, uint day);
+	public delegate string CalendarDetailFunc (Gtk.Calendar calendar, uint year, uint month, uint day);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void Callback (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6725,7 +6725,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool TreeViewRowSeparatorFunc (Gtk.TreeModel model, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate bool TreeViewSearchEqualFunc (Gtk.TreeModel model, int column, string key, Gtk.TreeIter iter, void* search_data);
+	public delegate bool TreeViewSearchEqualFunc (Gtk.TreeModel model, int column, string key, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void TreeViewSearchPositionFunc (Gtk.TreeView tree_view, Gtk.Widget search_dialog);
 	[CCode (cheader_filename = "gtk/gtk.h")]
