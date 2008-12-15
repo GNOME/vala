@@ -1,5 +1,14 @@
 2008-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Add GTK_WIDGET_* bindings, patch by Víctor Manuel Jáquez Leal,
+	fixes bug 561341
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* tests/testrunner.sh:
 
 	Fix make check of uninstalled vala, based on patch by Götz Waschk,

@@ -4857,6 +4857,8 @@ namespace Gtk {
 		public weak Gtk.Widget get_toplevel ();
 		public weak Gdk.Visual get_visual ();
 		public void grab_default ();
+		[CCode (cname = "GTK_WIDGET_HAS_GRAB")]
+		public bool has_grab ();
 		public bool has_screen ();
 		public virtual void hide_all ();
 		public bool hide_on_delete ();
@@ -4868,6 +4870,22 @@ namespace Gtk {
 		public bool intersect (Gdk.Rectangle area, Gdk.Rectangle? intersection);
 		public bool is_ancestor (Gtk.Widget ancestor);
 		public bool is_composited ();
+		[CCode (cname = "GTK_WIDGET_DOUBLE_BUFFERED")]
+		public bool is_double_buffered ();
+		[CCode (cname = "GTK_WIDGET_DRAWABLE")]
+		public bool is_drawable ();
+		[CCode (cname = "GTK_WIDGET_MAPPED")]
+		public bool is_mapped ();
+		[CCode (cname = "GTK_WIDGET_NO_WINDOW")]
+		public bool is_no_window ();
+		[CCode (cname = "GTK_WIDGET_PARENT_SENSITIVE")]
+		public bool is_parent_sensitive ();
+		[CCode (cname = "GTK_WIDGET_RC_STYLE")]
+		public bool is_rc_style ();
+		[CCode (cname = "GTK_WIDGET_REALIZED")]
+		public bool is_realized ();
+		[CCode (cname = "GTK_WIDGET_TOPLEVEL")]
+		public bool is_toplevel ();
 		public weak GLib.List list_accel_closures ();
 		public weak GLib.List list_mnemonic_labels ();
 		[CCode (cname = "gtk_widget_class_list_style_properties")]

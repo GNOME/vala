@@ -34,7 +34,34 @@ namespace Gtk {
 		[CCode (cname = "GTK_WIDGET_FLAGS")]
 		public extern WidgetFlags get_flags ();
 
-		[CCode (cname = "GTK_WIDGET_SET_FLAGS")]
+		[CCode (cname = "GTK_WIDGET_TOPLEVEL")]
+		public extern bool is_toplevel ();
+
+		[CCode (cname = "GTK_WIDGET_NO_WINDOW")]
+		public extern bool is_no_window ();
+
+		[CCode (cname = "GTK_WIDGET_REALIZED")]
+		public extern bool is_realized ();
+
+		[CCode (cname = "GTK_WIDGET_MAPPED")]
+		public extern bool is_mapped ();
+
+ 		[CCode (cname = "GTK_WIDGET_DRAWABLE")]
+		public extern bool is_drawable ();
+
+ 		[CCode (cname = "GTK_WIDGET_PARENT_SENSITIVE")]
+		public extern bool is_parent_sensitive ();    
+    
+ 		[CCode (cname = "GTK_WIDGET_HAS_GRAB")]
+		public extern bool has_grab ();
+
+ 		[CCode (cname = "GTK_WIDGET_RC_STYLE")]
+		public extern bool is_rc_style ();
+
+ 		[CCode (cname = "GTK_WIDGET_DOUBLE_BUFFERED")]
+		public extern bool is_double_buffered ();    
+
+ 		[CCode (cname = "GTK_WIDGET_SET_FLAGS")]
 		public extern void set_flags (WidgetFlags flags);
 
 		[CCode (cname = "GTK_WIDGET_UNSET_FLAGS")]
