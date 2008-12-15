@@ -101,7 +101,17 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 
 		checked = true;
 
-		expression.check (analyzer);
+		if (!expression.check (analyzer)) {
+			error = true;
+			return false;
+		}
+
+		if (!expression.value_type.compatible (analyzer.uint64_type)
+		    && !expression.value_type.compatible (analyzer.string_type)) {
+			Report.error (expression.source_reference, "Integer or string expression expected");
+			error = true;
+			return false;
+		}
 
 		foreach (SwitchSection section in sections) {
 			section.check (analyzer);
