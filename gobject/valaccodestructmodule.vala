@@ -172,10 +172,22 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 			if (f.binding == MemberBinding.INSTANCE) {
 				CCodeExpression copy = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.name);
 				if (requires_copy (f.field_type))  {
-					copy = get_ref_cexpression (f.field_type, copy, null, f);
+					var this_access = new MemberAccess.simple ("this");
+					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
+					this_access.ccodenode = new CCodeIdentifier ("(*self)");
+					var ma = new MemberAccess (this_access, f.name);
+					ma.symbol_reference = f;
+					copy = get_ref_cexpression (f.field_type, copy, ma, f);
 				}
 				var dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), f.name);
 				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (dest, copy)));
+
+				var array_type = f.field_type as ArrayType;
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					var len_src = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), get_array_length_cname (f.name, dim));
+					var len_dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), get_array_length_cname (f.name, dim));
+					cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (len_dest, len_src)));
+				}
 			}
 		}
 

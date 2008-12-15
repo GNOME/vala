@@ -1,5 +1,11 @@
 2008-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodestructmodule.vala:
+
+	Fix handling of array fields in structs, fixes bug 562665
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 
 	Fix comparing nullable struct values with null, fixes bug 548672
