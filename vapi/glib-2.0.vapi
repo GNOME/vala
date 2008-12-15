@@ -1715,7 +1715,7 @@ namespace GLib {
 
 		[CCode (cname = "strftime", instance_pos = -1)]
 		public size_t strftime (char[] s, string format);
-		[CCode (instance_pos = -1)]
+		[CCode (cname = "strptime", instance_pos = -1)]
 		public weak string? strptime (string buf, string format);
 	}
 
@@ -2196,6 +2196,12 @@ namespace GLib {
 		public long tell ();
 		[CCode (cname = "rewind")]
 		public void rewind ();
+		[CCode (cname = "fileno")]
+		public int fileno ();
+		[CCode (cname = "ferror")]
+		public int error ();
+		[CCode (cname = "clearerr")]
+		public void clearerr ();
 	}
 
 	[CCode (lower_case_cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]
@@ -2269,10 +2275,10 @@ namespace GLib {
 		public const string RESERVED_CHARS_GENERIC_DELIMITERS;
 		public const string RESERVED_CHARS_SUBCOMPONENT_DELIMITERS;
 
+		public static string parse_scheme (string uri);
 		public static string escape_string (string unescaped, string reserved_chars_allowed, bool allow_utf8);
-		public static string get_scheme (string uri);
-		public static string unescape_segment (string escaped_string, string escaped_string_end, string illegal_characters);
 		public static string unescape_string (string escaped_string, string illegal_characters);
+		public static string unescape_segment (string escaped_string, string escaped_string_end, string illegal_characters);
 	}
 
 	/* Shell-related Utilities */

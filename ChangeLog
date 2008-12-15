@@ -1,5 +1,12 @@
 2008-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Add fileno, ferror, and clearerr bindings and fix a few other
+	bindings, patch by Evan Nemerson, fixes bug 547921 and bug 558206
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Various delegate binding fixes, patch by Evan Nemerson,
