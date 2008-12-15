@@ -430,7 +430,7 @@ namespace GLib {
 	public class ThemedIcon : GLib.Object, GLib.Icon {
 		public void append_name (string iconname);
 		[CCode (type = "GIcon*", has_construct_function = false)]
-		public ThemedIcon.from_names (string[] iconnames, int len);
+		public ThemedIcon.from_names (string[] iconnames);
 		[NoArrayLength]
 		public weak string[] get_names ();
 		[CCode (type = "GIcon*", has_construct_function = false)]

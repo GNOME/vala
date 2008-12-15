@@ -1,5 +1,14 @@
 2008-12-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gio-2.0/:
+
+	Fix g_themed_icon_new_from_names binding, patch by Michael Terry,
+	fixes bug 564062
+
+	* vapi/gio-2.0.vapi: regenerated
+
+2008-12-15  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Fix g_main_current_source binding, patch by Zeeshan Ali Khattak,
