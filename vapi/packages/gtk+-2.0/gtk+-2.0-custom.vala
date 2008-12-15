@@ -32,6 +32,11 @@ namespace Gtk {
 		public GLib.List<weak Gtk.Widget> get_children ();
 	}
 
+	public class StatusIcon {
+		[CCode (instance_pos = -1)]
+		public void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in);
+	}
+
 	public class Widget {
 		public extern Widget (GLib.Type type, ...);
 
@@ -78,6 +83,8 @@ namespace Gtk {
 	public static delegate void CallbackMarshal (Object object, void* data, Arg[] args);
 
 	public delegate void ActionCallback (Action action);
+
+	public delegate void MenuPositionFunc (Gtk.Menu menu, out int x, out int y, out bool push_in);
 
 	public delegate void RadioActionCallback (Action action, Action current);
 

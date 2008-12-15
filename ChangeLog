@@ -1,5 +1,14 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_status_icon_position_menu and GtkMenuPositionFunc bindings,
+	fixes bug 563457
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valagobjectmodule.vala:
 
 	Report error when using construct blocks in non-GObject classes

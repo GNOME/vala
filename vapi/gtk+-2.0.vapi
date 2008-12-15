@@ -3411,7 +3411,8 @@ namespace Gtk {
 		public bool is_embedded ();
 		[CCode (has_construct_function = false)]
 		public StatusIcon ();
-		public static void position_menu (Gtk.Menu menu, int x, int y, bool push_in);
+		[CCode (instance_pos = -1)]
+		public void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in);
 		public void set_blinking (bool blinking);
 		public void set_from_file (string filename);
 		public void set_from_icon_name (string icon_name);
@@ -6689,7 +6690,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate void MenuDetachFunc (Gtk.Widget attach_widget, Gtk.Menu menu);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public delegate void MenuPositionFunc (Gtk.Menu menu, int x, int y, bool push_in);
+	public delegate void MenuPositionFunc (Gtk.Menu menu, out int x, out int y, out bool push_in);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static delegate void ModuleDisplayInitFunc (Gdk.Display display);
 	[CCode (cheader_filename = "gtk/gtk.h")]
