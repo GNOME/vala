@@ -309,6 +309,8 @@ public class Vala.GIdlParser : CodeVisitor {
 				} else if (nv[0] == "has_target") {
 					if (eval (nv[1]) == "0") {
 						check_has_target = false;
+					} else if (eval (nv[1]) == "1") {
+						cb.has_target = true;
 					}
 				}
 			}
@@ -334,7 +336,26 @@ public class Vala.GIdlParser : CodeVisitor {
 				ParameterDirection direction;
 				var p = new FormalParameter (param_name, parse_param (param, out direction));
 				p.direction = direction;
-				cb.add_parameter (p);
+
+				bool hide_param = false;
+				bool show_param = false;
+				attributes = get_attributes ("%s.%s".printf (node.name, param_node.name));
+				if (attributes != null) {
+					foreach (string attr in attributes) {
+						var nv = attr.split ("=", 2);
+						if (nv[0] == "hidden") {
+							if (eval (nv[1]) == "1") {
+								hide_param = true;
+							} else if (eval (nv[1]) == "0") {
+								show_param = true;
+							}
+						}
+					}
+				}
+
+				if (show_param || !hide_param) {
+					cb.add_parameter (p);
+				}
 			}
 
 			remaining_params--;

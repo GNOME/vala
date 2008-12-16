@@ -1,2 +1,7 @@
 Notify cheader_filename="libnotify/notify.h"
 
+NotifyActionCallback has_target="1"
+NotifyActionCallback.p3 hidden="1"
+notify_notification_add_action.callback transfer_ownership="1"
+notify_notification_add_action.free_func hidden="1"
+

@@ -4,7 +4,7 @@
 namespace Notify {
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public class Notification : GLib.Object {
-		public void add_action (string action, string label, Notify.ActionCallback callback, GLib.FreeFunc free_func);
+		public void add_action (string action, string label, Notify.ActionCallback# callback);
 		public void attach_to_status_icon (Gtk.StatusIcon status_icon);
 		public void attach_to_widget (Gtk.Widget attach);
 		public void clear_actions ();
@@ -15,7 +15,7 @@ namespace Notify {
 		public void set_category (string category);
 		public void set_geometry_hints (Gdk.Screen screen, int x, int y);
 		public void set_hint_byte (string key, uchar value);
-		public void set_hint_byte_array (string key, uchar[] value, ulong len);
+		public void set_hint_byte_array (string key, uchar[] value, size_t len);
 		public void set_hint_double (string key, double value);
 		public void set_hint_int32 (string key, int value);
 		public void set_hint_string (string key, string value);
@@ -45,7 +45,7 @@ namespace Notify {
 		CRITICAL
 	}
 	[CCode (cheader_filename = "libnotify/notify.h")]
-	public static delegate void ActionCallback (Notify.Notification p1, string p2, void* p3);
+	public delegate void ActionCallback (Notify.Notification p1, string p2);
 	[CCode (cheader_filename = "libnotify/notify.h")]
 	public const int EXPIRES_DEFAULT;
 	[CCode (cheader_filename = "libnotify/notify.h")]

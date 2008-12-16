@@ -1,5 +1,18 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala:
+
+	Extend metadata support for delegates
+
+	* vapi/packages/libnotify/:
+
+	Fix NotifyActionCallback and notify_notification_add_action
+	bindings, fixes bug 562726
+
+	* vapi/libnotify.vapi: regenerated
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagirparser.vala:
 
 	Fix crash when parsing metadata, fixes bug 563390
