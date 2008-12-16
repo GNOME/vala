@@ -1,5 +1,14 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gnome-keyring-1/:
+
+	Various delegate parameter fixes, patch by Michael Terry,
+	fixes bug 564068
+
+	* vapi/gnome-keyring-1.vapi: regenerated
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gio-2.0/:
 
 	Add g_io_extension_get_type binding, patch by Jared Moore,
