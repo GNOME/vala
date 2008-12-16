@@ -58,6 +58,11 @@ namespace Gst {
 		public void make_writable ();
 	}
 
+	public class Bus {
+		[CCode (instance_pos = -1)]
+		public Gst.BusSyncReply sync_signal_handler (Gst.Bus bus, Gst.Message message);
+	}
+
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Pad {
 		[CCode (array_length_pos = 0, delegate_target_pos = 0)]

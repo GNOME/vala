@@ -1,5 +1,13 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_bus_sync_signal_handler binding, fixes bug 559721
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadelegate.vala:
 	* vala/valamethodcall.vala:
 	* vala/valaparser.vala:
