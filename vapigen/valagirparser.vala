@@ -885,6 +885,10 @@ public class Vala.GirParser : CodeVisitor {
 
 					foreach (string attribute in tokens[1].split (" ")) {
 						string[] pair = attribute.split ("=", 2);
+						if (pair[0] == null || pair[1] == null) {
+							continue;
+						}
+
 						string key = "%s/@%s".printf (tokens[0], pair[0]);
 						attributes_map.set (key, pair[1].substring (1, pair[1].length - 2));
 					}
