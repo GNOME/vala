@@ -1,5 +1,13 @@
 2008-12-17  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valagobjectmodule.vala:
+
+	Report error when using class fields or constructors in compact
+	classes, fixes bug 564090
+
+2008-12-17  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodearraymodule.vala:
 
 	Fix private array fields in structs, fixes bug 557174

@@ -807,6 +807,12 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 				lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
 			} else if (f.binding == MemberBinding.CLASS) {
+				if (!is_gtypeinstance) {
+					Report.error (f.source_reference, "class fields are not supported in compact classes");
+					f.error = true;
+					return;
+				}
+
 				st = type_struct;
 			} else {
 				var cdecl = new CCodeDeclaration (field_ctype);
@@ -841,6 +847,12 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
 				}
 			} else if (f.binding == MemberBinding.CLASS) {
+				if (!is_gtypeinstance) {
+					Report.error (f.source_reference, "class fields are not supported in compact classes");
+					f.error = true;
+					return;
+				}
+
 				st = type_priv_struct;
 				lhs = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("klass"), "priv"), f.get_cname ());
 			} else {

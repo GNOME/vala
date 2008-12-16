@@ -1705,6 +1705,12 @@ public class Vala.GObjectModule : GTypeModule {
 		} else if (c.binding == MemberBinding.CLASS) {
 			// class constructor
 
+			if (cl.is_compact) {
+				Report.error (c.source_reference, "class constructors are not supported in compact classes");
+				c.error = true;
+				return;
+			}
+
 			if (current_method_inner_error) {
 				/* always separate error parameter and inner_error local variable
 				 * as error may be set to NULL but we're always interested in inner errors
@@ -1718,6 +1724,12 @@ public class Vala.GObjectModule : GTypeModule {
 		} else if (c.binding == MemberBinding.STATIC) {
 			// static class constructor
 			// add to class_init
+
+			if (cl.is_compact) {
+				Report.error (c.source_reference, "static constructors are not supported in compact classes");
+				c.error = true;
+				return;
+			}
 
 			if (current_method_inner_error) {
 				/* always separate error parameter and inner_error local variable
