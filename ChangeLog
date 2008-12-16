@@ -1,5 +1,9 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS: update for 0.5.3 release
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* Makefile.am:
 	* configure.ac:
 	* gen-project/:

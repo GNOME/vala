@@ -1,3 +1,14 @@
+Vala 0.5.3
+==========
+
+ * Rewrite D-Bus server support to directly use libdbus.
+ * Register structs as boxed types.
+ * Improve error reporting on invalid code.
+ * Support private class fields and class destructors.
+ * Add partial raptor and rasqal bindings.
+ * Drop vala-gen-project, moved to vtg.
+ * Many bug fixes.
+
 Vala 0.5.2
 ==========
 
