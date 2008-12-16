@@ -30,11 +30,7 @@ AC_SUBST(LDFLAGS)
 AC_ARG_ENABLE(vapigen, AS_HELP_STRING([--enable-vapigen], [Enable VAPI generator]), enable_vapigen=$enableval, enable_vapigen=no)
 AM_CONDITIONAL(ENABLE_VAPIGEN, test x$enable_vapigen = xyes)
 
-AC_ARG_ENABLE(gen-project, AS_HELP_STRING([--enable-gen-project], [Enable project generator]), enable_gen_project=$enableval, enable_gen_project=no)
-AM_CONDITIONAL(ENABLE_GEN_PROJECT, test x$enable_gen_project = xyes)
-
 GLIB_REQUIRED=2.12.0
-GTK_REQUIRED=2.10.0
 
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)
 
@@ -50,13 +46,6 @@ PKG_CHECK_MODULES(GTHREAD, gthread-2.0 >= $GLIB_REQUIRED)
 
 AC_SUBST(GTHREAD_CFLAGS)
 AC_SUBST(GTHREAD_LIBS)
-
-if test x$enable_gen_project = xyes; then
-	PKG_CHECK_MODULES(GTK, gtk+-2.0 >= $GTK_REQUIRED)
-fi
-
-AC_SUBST(GTK_CFLAGS)
-AC_SUBST(GTK_LIBS)
 
 AC_PATH_PROG([XSLTPROC], [xsltproc], :)
 AM_CONDITIONAL(HAVE_XSLTPROC, test "$XSLTPROC" != :)
@@ -75,8 +64,6 @@ AC_CONFIG_FILES([Makefile
            gobject-introspection/Makefile
            vapigen/Makefile
            vapigen/vala-gen-introspect/Makefile
-           vapigen/vala-gen-introspect/vala-gen-introspect
-           gen-project/Makefile
-           gen-project/licenses/Makefile])
+           vapigen/vala-gen-introspect/vala-gen-introspect])
 
 AC_OUTPUT

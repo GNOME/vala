@@ -7,12 +7,6 @@ VAPIGEN_SUBDIRS = \
 	$(NULL)
 endif
 
-if ENABLE_GEN_PROJECT
-GEN_PROJECT_SUBDIRS = \
-	gen-project \
-	$(NULL)
-endif
-
 SUBDIRS = \
 	gee \
 	ccode \
@@ -23,7 +17,6 @@ SUBDIRS = \
 	tests \
 	doc \
 	$(VAPIGEN_SUBDIRS) \
-	$(GEN_PROJECT_SUBDIRS) \
 	$(NULL)
 
 DIST_SUBDIRS = \
@@ -37,7 +30,6 @@ DIST_SUBDIRS = \
 	doc \
 	gobject-introspection \
 	vapigen \
-	gen-project \
 	$(NULL)
 
 pkgconfigdir = $(libdir)/pkgconfig

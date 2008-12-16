@@ -1,5 +1,13 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* Makefile.am:
+	* configure.ac:
+	* gen-project/:
+
+	Drop vala-gen-project, moved to vtg, Vala Toys for gedit
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodemethodmodule.vala:
 
