@@ -893,6 +893,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 						instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (array_len_lhs, (CCodeExpression) size.ccodenode)));
 					}
 				}
+
+				append_temp_decl (instance_init_fragment, temp_vars);
+				temp_vars.clear ();
 			}
 			
 			if (requires_destroy (f.field_type) && instance_finalize_fragment != null) {

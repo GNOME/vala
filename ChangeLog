@@ -1,5 +1,13 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valafield.vala:
+	* gobject/valaccodebasemodule.vala:
+
+	Fix crash and temporary variable declarations when using struct
+	initialization methods in field initializer, fixes bug 559459
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala:
 
 	Extend metadata support for delegates
