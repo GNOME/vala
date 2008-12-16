@@ -1,5 +1,14 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-pixbuf-2.0/:
+
+	Fix gdk_pixbuf_new_from_stream* bindings, patch by Evan Nemerson,
+	fixes bug 560721
+
+	* vapi/gdk-pixbuf-2.0.vapi: regenerated
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valafield.vala:
 	* gobject/valaccodebasemodule.vala:
 
