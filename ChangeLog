@@ -1,5 +1,18 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodememberaccessmodule.vala:
+	* gobject/valaclassregisterfunction.vala:
+	* gobject/valagobjectmodule.vala:
+	* gobject/valainterfaceregisterfunction.vala:
+	* gobject/valatyperegisterfunction.vala:
+
+	Add support for private class fields, patch by Sebastian Dröge,
+	fixes bug 561469
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 	* vapi/glib-2.0.vapi:
 

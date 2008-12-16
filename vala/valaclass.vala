@@ -81,6 +81,11 @@ public class Vala.Class : ObjectTypeSymbol {
 	 * Specifies whether this class has private fields.
 	 */
 	public bool has_private_fields { get; private set; }
+	
+	/**
+	 * Specifies whether this class has class fields.
+	 */
+	public bool has_class_private_fields { get; private set; }
 
 	private string cname;
 	private string const_cname;
@@ -247,6 +252,8 @@ public class Vala.Class : ObjectTypeSymbol {
 		fields.add (f);
 		if (f.access == SymbolAccessibility.PRIVATE && f.binding == MemberBinding.INSTANCE) {
 			has_private_fields = true;
+		} else if (f.access == SymbolAccessibility.PRIVATE && f.binding == MemberBinding.CLASS) {
+			has_class_private_fields = true;
 		}
 		scope.add (f.name, f);
 	}

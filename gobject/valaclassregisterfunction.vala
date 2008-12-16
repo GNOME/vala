@@ -51,8 +51,16 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 	}
 
 	public override string get_base_init_func_name () {
-		if (class_reference.class_constructor != null) {
+		if (class_reference.class_constructor != null || class_reference.has_class_private_fields) {
 			return "%s_base_init".printf (class_reference.get_lower_case_cname (null));
+		} else {
+			return "NULL";
+		}
+	}
+
+	public override string get_base_finalize_func_name () {
+		if (class_reference.has_class_private_fields) {
+			return "%s_base_finalize".printf (class_reference.get_lower_case_cname (null));
 		} else {
 			return "NULL";
 		}

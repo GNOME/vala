@@ -39,8 +39,11 @@ public class Vala.GObjectModule : GTypeModule {
 		var old_param_spec_struct = param_spec_struct;
 		var old_type_struct = type_struct;
 		var old_instance_priv_struct = instance_priv_struct;
+		var old_type_priv_struct = type_priv_struct;
 		var old_prop_enum = prop_enum;
 		var old_class_init_fragment = class_init_fragment;
+		var old_base_init_fragment = base_init_fragment;
+		var old_base_finalize_fragment = base_finalize_fragment;
 		var old_instance_init_fragment = instance_init_fragment;
 		var old_instance_finalize_fragment = instance_finalize_fragment;
 		current_symbol = cl;
@@ -61,9 +64,12 @@ public class Vala.GObjectModule : GTypeModule {
 		instance_struct = new CCodeStruct ("_%s".printf (cl.get_cname ()));
 		type_struct = new CCodeStruct ("_%sClass".printf (cl.get_cname ()));
 		instance_priv_struct = new CCodeStruct ("_%sPrivate".printf (cl.get_cname ()));
+		type_priv_struct = new CCodeStruct ("_%sClassPrivate".printf (cl.get_cname ()));
 		prop_enum = new CCodeEnum ();
 		prop_enum.add_value (new CCodeEnumValue ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null))));
 		class_init_fragment = new CCodeFragment ();
+		base_init_fragment = new CCodeFragment ();
+		base_finalize_fragment = new CCodeFragment ();
 		instance_init_fragment = new CCodeFragment ();
 		instance_finalize_fragment = new CCodeFragment ();
 
@@ -122,13 +128,22 @@ public class Vala.GObjectModule : GTypeModule {
 				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
 			}
 			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
+			if (cl.has_class_private_fields) {
+				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_priv_struct.name), new CCodeVariableDeclarator ("%sClassPrivate".printf (cl.get_cname ()))));
+			}
 
 			instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
 			if (is_fundamental) {
 				type_struct.add_field ("GTypeClass", "parent_class");
-				type_struct.add_field ("void", "(*finalize) (%s *self)".printf (cl.get_cname ()));
 			} else {
 				type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent_class");
+			}
+			if (cl.has_class_private_fields) {
+				type_struct.add_field ("%sClassPrivate *".printf (cl.get_cname ()), "priv");
+			}
+
+			if (is_fundamental) {
+				type_struct.add_field ("void", "(*finalize) (%s *self)".printf (cl.get_cname ()));
 			}
 		}
 
@@ -144,6 +159,10 @@ public class Vala.GObjectModule : GTypeModule {
 				source_type_member_declaration.append (instance_priv_struct);
 				var macro = "(G_TYPE_INSTANCE_GET_PRIVATE ((o), %s, %sPrivate))".printf (cl.get_type_id (), cl.get_cname ());
 				source_type_member_declaration.append (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
+			}
+
+			if (cl.has_class_private_fields) {
+				source_type_member_declaration.append (type_priv_struct);
 			}
 			source_type_member_declaration.append (prop_enum);
 		}
@@ -181,8 +200,17 @@ public class Vala.GObjectModule : GTypeModule {
 					add_set_property_function (cl);
 				}
 			}
+
+
+			if (cl.class_constructor != null || cl.has_class_private_fields) {
+				add_base_init_function (cl);
+			}
 			add_class_init_function (cl);
-			
+
+			if (cl.has_class_private_fields) {
+				add_base_finalize_function (cl);
+			}
+
 			foreach (DataType base_type in cl.get_base_types ()) {
 				if (base_type.data_type is Interface) {
 					add_interface_init_function (cl, (Interface) base_type.data_type);
@@ -313,8 +341,11 @@ public class Vala.GObjectModule : GTypeModule {
 		param_spec_struct = old_param_spec_struct;
 		type_struct = old_type_struct;
 		instance_priv_struct = old_instance_priv_struct;
+		type_priv_struct = old_type_priv_struct;
 		prop_enum = old_prop_enum;
 		class_init_fragment = old_class_init_fragment;
+		base_init_fragment = old_base_init_fragment;
+		base_finalize_fragment = old_base_finalize_fragment;
 		instance_init_fragment = old_instance_init_fragment;
 		instance_finalize_fragment = old_instance_finalize_fragment;
 	}
@@ -682,6 +713,53 @@ public class Vala.GObjectModule : GTypeModule {
 		source_type_member_definition.append (function);
 	}
 
+	private void add_base_init_function (Class cl) {
+		var base_init = new CCodeFunction ("%s_base_init".printf (cl.get_lower_case_cname (null)), "void");
+		base_init.add_parameter (new CCodeFormalParameter ("klass", "%sClass *".printf (cl.get_cname ())));
+		base_init.modifiers = CCodeModifiers.STATIC;
+
+		var init_block = new CCodeBlock ();
+		base_init.block = init_block;
+
+		if (cl.has_class_private_fields) {
+			var block = new CCodeBlock ();
+			var cdecl = new CCodeDeclaration ("%sClassPrivate *".printf (cl.get_cname ()));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("priv"));
+			block.add_statement (cdecl);
+			
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
+			ccall.add_argument (new CCodeIdentifier ("%sClassPrivate".printf(cl.get_cname())));
+
+			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("priv"), ccall)));
+
+			source_include_directives.append (new CCodeIncludeDirective ("string.h"));
+
+			var iftrue = new CCodeBlock ();
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
+			ccall.add_argument (new CCodeIdentifier ("priv"));
+			ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("klass"), "priv"));
+			ccall.add_argument (new CCodeIdentifier ("sizeof (%sClassPrivate)".printf(cl.get_cname())));
+			iftrue.add_statement (new CCodeExpressionStatement (ccall));
+
+			block.add_statement (new CCodeIfStatement (new CCodeMemberAccess.pointer (new CCodeIdentifier ("klass"), "priv"), iftrue));
+
+			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("klass"), "priv"), new CCodeIdentifier ("priv"))));
+
+
+			init_block.add_statement (block);
+
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
+			ccall.add_argument (new CCodeIdentifier ("%sClassPrivate".printf (cl.get_cname ())));
+			ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("klass"), "priv"));
+			base_finalize_fragment.append (new CCodeExpressionStatement (ccall));
+			base_finalize_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("klass"), "priv"), new CCodeIdentifier ("NULL"))));
+		}
+
+		init_block.add_statement (base_init_fragment);
+
+		source_type_member_definition.append (base_init);
+	}
+
 	private void add_class_init_function (Class cl) {
 		var class_init = new CCodeFunction ("%s_class_init".printf (cl.get_lower_case_cname (null)), "void");
 		class_init.add_parameter (new CCodeFormalParameter ("klass", "%sClass *".printf (cl.get_cname ())));
@@ -790,9 +868,15 @@ public class Vala.GObjectModule : GTypeModule {
 			if (field.binding != MemberBinding.CLASS || field.initializer == null) {
 				continue;
 			}
-			CCodeExpression left = new CCodeMemberAccess (new CCodeIdentifier ("klass"),
-			                                              field.get_cname (), true);
-			CCodeExpression right = (CCodeExpression)field.initializer.ccodenode;
+
+			CCodeExpression left;
+
+			if (field.access == SymbolAccessibility.PRIVATE) {
+				left = new CCodeMemberAccess (new CCodeMemberAccess (new CCodeIdentifier ("klass"), "priv", true), field.get_cname (), true);
+			} else {
+				left = new CCodeMemberAccess (new CCodeIdentifier ("klass"), field.get_cname (), true);
+			}
+			CCodeExpression right = (CCodeExpression) field.initializer.ccodenode;
 			CCodeAssignment assign = new CCodeAssignment (left, right);
 			init_block.add_statement (new CCodeExpressionStatement (assign));
 		}
@@ -1072,7 +1156,22 @@ public class Vala.GObjectModule : GTypeModule {
 
 		source_type_member_definition.append (instance_init);
 	}
-	
+
+	private void add_base_finalize_function (Class cl) {
+		var function = new CCodeFunction ("%s_base_finalize".printf (cl.get_lower_case_cname (null)), "void");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("klass", cl.get_cname () + "Class *"));
+		source_type_member_declaration.append (function.copy ());
+		
+		var cblock = new CCodeBlock ();
+
+		cblock.add_statement (base_finalize_fragment);
+
+		function.block = cblock;
+		source_type_member_definition.append (function);
+	}
+
 	private void add_finalize_function (Class cl) {
 		var function = new CCodeFunction ("%s_finalize".printf (cl.get_lower_case_cname (null)), "void");
 		function.modifiers = CCodeModifiers.STATIC;
@@ -1602,25 +1701,16 @@ public class Vala.GObjectModule : GTypeModule {
 		} else if (c.binding == MemberBinding.CLASS) {
 			// class constructor
 
-			var base_init = new CCodeFunction ("%s_base_init".printf (cl.get_lower_case_cname (null)), "void");
-			base_init.add_parameter (new CCodeFormalParameter ("klass", "%sClass *".printf (cl.get_cname ())));
-			base_init.modifiers = CCodeModifiers.STATIC;
-
-			source_type_member_declaration.append (base_init.copy ());
-
-			var block = (CCodeBlock) c.body.ccodenode;
 			if (current_method_inner_error) {
 				/* always separate error parameter and inner_error local variable
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
 				var cdecl = new CCodeDeclaration ("GError *");
 				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
-				block.prepend_statement (cdecl);
+				base_init_fragment.append (cdecl);
 			}
 
-			base_init.block = block;
-		
-			source_type_member_definition.append (base_init);
+			base_init_fragment.append (c.body.ccodenode);
 		} else if (c.binding == MemberBinding.STATIC) {
 			// static class constructor
 			// add to class_init

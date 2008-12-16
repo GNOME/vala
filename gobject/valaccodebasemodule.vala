@@ -52,6 +52,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public CCodeFragment source_signal_marshaller_declaration;
 	public CCodeFragment source_type_member_definition;
 	public CCodeFragment class_init_fragment;
+	public CCodeFragment base_init_fragment;
+	public CCodeFragment base_finalize_fragment;
 	public CCodeFragment instance_init_fragment;
 	public CCodeFragment instance_finalize_fragment;
 	public CCodeFragment source_signal_marshaller_definition;
@@ -61,6 +63,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public CCodeStruct instance_struct;
 	public CCodeStruct type_struct;
 	public CCodeStruct instance_priv_struct;
+	public CCodeStruct type_priv_struct;
 	public CCodeEnum prop_enum;
 	public CCodeEnum cenum;
 	public CCodeFunction function;
@@ -837,7 +840,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
 				}
 			} else if (f.binding == MemberBinding.CLASS) {
-				st = type_struct;
+				st = type_priv_struct;
+				lhs = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("klass"), "priv"), f.get_cname ());
 			} else {
 				var cdecl = new CCodeDeclaration (field_ctype);
 				var var_decl = new CCodeVariableDeclarator (f.get_cname ());
