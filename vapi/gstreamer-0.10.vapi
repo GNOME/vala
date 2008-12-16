@@ -2394,7 +2394,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static weak Gst.MiniObject value_dup_mini_object (Gst.Value value);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static void version (uint major, uint minor, uint micro, uint nano);
+	public static void version (out uint major, out uint minor, out uint micro, out uint nano);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static string version_string ();
 }

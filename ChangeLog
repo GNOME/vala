@@ -1,5 +1,13 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_version binding, patch by Evan Nemerson, fixes bug 564669
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala:
 	* vala/valaparser.vala:
 	* gobject/valaclassregisterfunction.vala:
