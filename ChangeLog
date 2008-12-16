@@ -1,5 +1,14 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gio-2.0/:
+
+	Add g_io_extension_get_type binding, patch by Jared Moore,
+	fixes bug 537522
+
+	* vapi/gio-2.0.vapi: regenerated
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasizeofexpression.vala:
 
 	Include C header files for types used in sizeof expressions,

@@ -275,6 +275,7 @@ namespace GLib {
 	public class IOExtension {
 		public weak string get_name ();
 		public int get_priority ();
+		public GLib.Type get_type ();
 		public weak GLib.TypeClass ref_class ();
 	}
 	[Compact]
