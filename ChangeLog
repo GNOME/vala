@@ -1,5 +1,13 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+
+	Fix temporary variable handling when using methods defined in
+	VAPI files
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala:
 
 	Fix handling of int16, uint16, int32, and uint32

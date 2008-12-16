@@ -139,7 +139,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 	public Set<string> wrappers;
 
-	Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
+	public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 
 	public CCodeBaseModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
@@ -282,6 +282,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		user_marshal_set = new HashSet<string> (str_hash, str_equal);
 		
 		next_temp_var_id = 0;
+		variable_name_map.clear ();
 		
 		string_h_needed = false;
 		gvaluecollector_h_needed = false;
@@ -1032,11 +1033,14 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		check_type (prop.property_type);
 
 		int old_next_temp_var_id = next_temp_var_id;
+		var old_variable_name_map = variable_name_map;
 		next_temp_var_id = 0;
+		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 
 		prop.accept_children (codegen);
 
 		next_temp_var_id = old_next_temp_var_id;
+		variable_name_map = old_variable_name_map;
 
 		var cl = prop.parent_symbol as Class;
 		if (cl != null && cl.is_subtype_of (gobject_type)
