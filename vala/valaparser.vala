@@ -2002,7 +2002,14 @@ public class Vala.Parser : CodeVisitor {
 				cl.static_constructor = c;
 			}
 		} else if (sym is Destructor) {
-			cl.destructor = (Destructor) sym;
+			var d = (Destructor) sym;
+			if (d.binding == MemberBinding.STATIC) {
+				Report.error (sym.source_reference, "static destructors not supported yet");
+			} else if (d.binding == MemberBinding.CLASS) {
+				cl.class_destructor = (Destructor) d;
+			} else {
+				cl.destructor = (Destructor) d;
+			}
 		} else {
 			Report.error (sym.source_reference, "unexpected declaration in class");
 		}
@@ -2319,11 +2326,17 @@ public class Vala.Parser : CodeVisitor {
 
 	Destructor parse_destructor_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var begin = get_location ();
+		var flags = parse_member_declaration_modifiers ();
 		expect (TokenType.TILDE);
 		parse_identifier ();
 		expect (TokenType.OPEN_PARENS);
 		expect (TokenType.CLOSE_PARENS);
 		var d = new Destructor (get_src_com (begin));
+		if (ModifierFlags.STATIC in flags) {
+			d.binding = MemberBinding.STATIC;
+		} else if (ModifierFlags.CLASS in flags) {
+			d.binding = MemberBinding.CLASS;
+		}
 		d.body = parse_block ();
 		return d;
 	}

@@ -207,7 +207,7 @@ public class Vala.GObjectModule : GTypeModule {
 			}
 			add_class_init_function (cl);
 
-			if (cl.has_class_private_fields) {
+			if (cl.class_destructor != null || cl.has_class_private_fields) {
 				add_base_finalize_function (cl);
 			}
 
@@ -1165,6 +1165,10 @@ public class Vala.GObjectModule : GTypeModule {
 		source_type_member_declaration.append (function.copy ());
 		
 		var cblock = new CCodeBlock ();
+
+		if (cl.class_destructor != null) {
+			cblock.add_statement (cl.class_destructor.ccodenode);
+		}
 
 		cblock.add_statement (base_finalize_fragment);
 

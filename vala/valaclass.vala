@@ -190,6 +190,11 @@ public class Vala.Class : ObjectTypeSymbol {
 			}
 		}
 	}
+	
+	/**
+	 * Specifies the class destructor.
+	 */
+	public Destructor class_destructor { get; set; }
 
 	/**
 	 * Specifies whether this class denotes an error base.
@@ -461,6 +466,10 @@ public class Vala.Class : ObjectTypeSymbol {
 
 		if (destructor != null) {
 			destructor.accept (visitor);
+		}
+
+		if (class_destructor != null) {
+			class_destructor.accept (visitor);
 		}
 		
 		foreach (Class cl in classes) {
@@ -905,6 +914,10 @@ public class Vala.Class : ObjectTypeSymbol {
 
 		if (destructor != null) {
 			destructor.check (analyzer);
+		}
+		
+		if (class_destructor != null) {
+			class_destructor.check (analyzer);
 		}
 		
 		foreach (Class cl in classes) {

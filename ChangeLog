@@ -1,6 +1,16 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaclass.vala:
+	* vala/valaparser.vala:
+	* gobject/valaclassregisterfunction.vala:
+	* gobject/valagobjectmodule.vala:
+
+	Add support for class destructors, patch by Sebastian Dröge,
+	fixes bug 564011
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaclass.vala:
 	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodememberaccessmodule.vala:
 	* gobject/valaclassregisterfunction.vala:
