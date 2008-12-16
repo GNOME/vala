@@ -2978,6 +2978,7 @@ namespace GLib {
 		public weak StringBuilder prepend_len (string val, long len);
 		public weak StringBuilder insert (long pos, string val);
 		public weak StringBuilder erase (long pos, long len);
+		public weak StringBuilder truncate (size_t len);
 
 		[PrintfFormat]
 		public void printf (string format, ...);

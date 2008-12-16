@@ -1,5 +1,11 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Add g_string_truncate binding, patch by Yu Feng, fixes bug 564428
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/sqlite3.vapi:
 
 	Add transaction hook, tracing, profiling, and mutex bindings,
