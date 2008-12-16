@@ -1069,13 +1069,13 @@ public class Vala.GIdlParser : CodeVisitor {
 		} else if (type_node.tag == TypeTag.UINT8) {
 			type.unresolved_symbol = new UnresolvedSymbol (null, "uchar");
 		} else if (type_node.tag == TypeTag.INT16) {
-			type.unresolved_symbol = new UnresolvedSymbol (null, "short");
+			type.unresolved_symbol = new UnresolvedSymbol (null, "int16");
 		} else if (type_node.tag == TypeTag.UINT16) {
-			type.unresolved_symbol = new UnresolvedSymbol (null, "ushort");
+			type.unresolved_symbol = new UnresolvedSymbol (null, "uint16");
 		} else if (type_node.tag == TypeTag.INT32) {
-			type.unresolved_symbol = new UnresolvedSymbol (null, "int");
+			type.unresolved_symbol = new UnresolvedSymbol (null, "int32");
 		} else if (type_node.tag == TypeTag.UINT32) {
-			type.unresolved_symbol = new UnresolvedSymbol (null, "uint");
+			type.unresolved_symbol = new UnresolvedSymbol (null, "uint32");
 		} else if (type_node.tag == TypeTag.INT64) {
 			type.unresolved_symbol = new UnresolvedSymbol (null, "int64");
 		} else if (type_node.tag == TypeTag.UINT64) {

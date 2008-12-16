@@ -1,5 +1,18 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala:
+
+	Fix handling of int16, uint16, int32, and uint32
+
+	* vapi/packages/gstreamer-netbuffer-0.10/:
+
+	Fix gst_netaddress_get_ip4_address binding, patch by Evan Nemerson,
+	fixes bug 564676
+
+	* vapi/gstreamer-netbuffer-0.10.vapi: regenerated
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-netbuffer-0.10/:
 
 	Fix GstNetBuffer binding, patch by Evan Nemerson, fixes bug 564670

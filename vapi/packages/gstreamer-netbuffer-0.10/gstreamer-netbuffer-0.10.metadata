@@ -1,2 +1,5 @@
 Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/netbuffer/gstnetbuffer.h"
 GstNetBuffer base_class="GstBuffer"
+gst_netaddress_get_ip4_address.address is_out="1"
+gst_netaddress_get_ip4_address.port is_out="1"
+gst_netaddress_get_ip6_address.port is_out="1"
