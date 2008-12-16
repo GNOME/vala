@@ -3012,8 +3012,19 @@ namespace GLib {
 	/* Byte Arrays */
 
 	[Compact]
-	[CCode (free_function = "g_byte_array_free")]
+	[CCode (cprefix = "g_byte_array_", free_function = "g_byte_array_free")]
 	public class ByteArray {
+		public ByteArray ();
+		[CCode (cname = "g_byte_array_sized_new")]
+		public ByteArray.sized (uint reserved_size);
+		public void append (uint8[] data);
+		public void prepend (uint8[] data);
+		public void remove_index (uint index);
+		public void remove_index_fast (uint index);
+		public void remove_range (uint index, uint length);
+		public void sort (CompareFunc compare_func);
+		public void sort_with_data (CompareDataFunc compare_func);
+		public void set_size (uint length);
 	}
 
 	/* N-ary Trees */

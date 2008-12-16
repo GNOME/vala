@@ -112,6 +112,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public Class gslist_type;
 	public TypeSymbol gstringbuilder_type;
 	public TypeSymbol garray_type;
+	public TypeSymbol gbytearray_type;
 	public DataType gquark_type;
 	public Struct gvalue_type;
 	public Struct mutex_type;
@@ -574,6 +575,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		gslist_type = (Class) glib_ns.scope.lookup ("SList");
 		gstringbuilder_type = (TypeSymbol) glib_ns.scope.lookup ("StringBuilder");
 		garray_type = (TypeSymbol) glib_ns.scope.lookup ("Array");
+		gbytearray_type = (TypeSymbol) glib_ns.scope.lookup ("ByteArray");
 
 		gquark_type = new ValueType ((TypeSymbol) glib_ns.scope.lookup ("Quark"));
 		gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
@@ -1757,7 +1759,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		/* set freed references to NULL to prevent further use */
 		var ccomma = new CCodeCommaExpression ();
 
-		if (type.data_type == gstringbuilder_type || type.data_type == garray_type) {
+		if (type.data_type == gstringbuilder_type
+		     || type.data_type == garray_type || type.data_type == gbytearray_type) {
 			ccall.add_argument (new CCodeConstant ("TRUE"));
 		} else if (type is ArrayType) {
 			var array_type = (ArrayType) type;
