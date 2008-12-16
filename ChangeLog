@@ -1,5 +1,12 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodemethodcallmodule.vala:
+
+	Fix crash when using out parameters in delegates,
+	fixes bug 563705
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Fix gst_bus_sync_signal_handler binding, fixes bug 559721
