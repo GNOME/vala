@@ -80,6 +80,8 @@ public class Vala.SizeofExpression : Expression {
 
 		value_type = analyzer.ulong_type;
 
+		analyzer.current_source_file.add_type_dependency (type_reference, SourceFileDependencyType.SOURCE);
+
 		return !error;
 	}
 }
