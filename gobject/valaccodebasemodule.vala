@@ -1064,6 +1064,12 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		var t = (TypeSymbol) prop.parent_symbol;
 
+		if (acc.construction && !t.is_subtype_of (gobject_type)) {
+			Report.error (acc.source_reference, "construct properties require GLib.Object");
+			acc.error = true;
+			return;
+		}
+
 		ReferenceType this_type;
 		if (t is Class) {
 			this_type = new ObjectType ((Class) t);
