@@ -1,1 +1,2 @@
 Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/netbuffer/gstnetbuffer.h"
+GstNetBuffer base_class="GstBuffer"

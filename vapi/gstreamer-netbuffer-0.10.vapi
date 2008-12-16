@@ -19,9 +19,8 @@ namespace Gst {
 		[CCode (cname = "gst_netaddress_set_ip6_address")]
 		public void set_ip6_address (uchar[] address, ushort port);
 	}
-	[Compact]
 	[CCode (cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
-	public class NetBuffer {
+	public class NetBuffer : Gst.Buffer {
 		public weak Gst.Buffer buffer;
 		public weak Gst.NetAddress from;
 		public weak Gst.NetAddress to;
