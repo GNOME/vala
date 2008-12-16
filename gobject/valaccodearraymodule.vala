@@ -172,16 +172,14 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 					CCodeExpression length_expr = null;
 
 					if (field.binding == MemberBinding.INSTANCE) {
-						TypeSymbol base_type = null;
-						if (ma.inner.value_type != null) {
-							base_type = ma.inner.value_type.data_type;
-						}
+						var cl = field.parent_symbol as Class;
+						bool is_gtypeinstance = (cl != null && !cl.is_compact);
 
 						var length_cname = get_array_length_cname (field.name, dim);
 						CCodeExpression typed_inst = (CCodeExpression) get_ccodenode (ma.inner);
 
 						CCodeExpression inst;
-						if (field.access == SymbolAccessibility.PRIVATE) {
+						if (is_gtypeinstance && field.access == SymbolAccessibility.PRIVATE) {
 							inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
 						} else {
 							inst = typed_inst;

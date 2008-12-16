@@ -1,3 +1,9 @@
+2008-12-17  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodearraymodule.vala:
+
+	Fix private array fields in structs, fixes bug 557174
+
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
 	* configure.ac: Post-release version bump
