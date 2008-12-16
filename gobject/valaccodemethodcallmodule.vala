@@ -461,34 +461,6 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			ccomma.append_expression (new CCodeAssignment (head.get_array_length_cexpression (ma.inner, 1), temp_ref));
 
 			expr.ccodenode = ccomma;
-		} else if (m == substring_method) {
-			var temp_decl = get_temp_variable (string_type);
-			var temp_ref = new CCodeIdentifier (temp_decl.name);
-
-			temp_vars.insert (0, temp_decl);
-
-			Gee.List<CCodeExpression> args = ccall.get_arguments ();
-
-			var coffsetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_offset_to_pointer"));
-			// full string
-			coffsetcall.add_argument (args[0]);
-			// offset
-			coffsetcall.add_argument (args[1]);
-
-			var coffsetcall2 = new CCodeFunctionCall (new CCodeIdentifier ("g_utf8_offset_to_pointer"));
-			coffsetcall2.add_argument (temp_ref);
-			// len
-			coffsetcall2.add_argument (args[2]);
-
-			var cndupcall = new CCodeFunctionCall (new CCodeIdentifier ("g_strndup"));
-			cndupcall.add_argument (temp_ref);
-			cndupcall.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, coffsetcall2, temp_ref));
-
-			var ccomma = new CCodeCommaExpression ();
-			ccomma.append_expression (new CCodeAssignment (temp_ref, coffsetcall));
-			ccomma.append_expression (cndupcall);
-
-			expr.ccodenode = ccomma;
 		}
 	}
 }

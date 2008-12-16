@@ -1,5 +1,14 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodemethodcallmodule.vala:
+	* vapi/glib-2.0.vapi:
+
+	Move substring method to VAPI file, handle negative and out of
+	bounds values, fixes bug 443524
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gnome-keyring-1/:
 
 	Various delegate parameter fixes, patch by Michael Terry,

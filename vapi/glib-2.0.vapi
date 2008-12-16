@@ -7,16 +7,20 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
-
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
-
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
+ * As a special exception, if you use inline functions from this file, this
+ * file does not by itself cause the resulting executable to be covered by
+ * the GNU Lesser General Public License.
+ * 
  * Author:
  * 	Jürg Billeter <j@bitron.ch>
  *	Raffaele Sandrini <rasa@gmx.ch>
@@ -712,8 +716,6 @@ public class string {
 	public int scanf (...);
 	[CCode (cname = "g_strconcat")]
 	public string concat (string string2, ...);
-	[CCode (cname = "g_strndup")]
-	public string ndup (ulong n); /* FIXME: only UTF-8 */
 	[CCode (cname = "g_strescape")]
 	public string escape (string exceptions);
 	[CCode (cname = "g_strcompress")]
@@ -800,8 +802,25 @@ public class string {
 	[CCode (cname = "g_strcanon")]
 	public void canon (string valid_chars, char substitutor);
 
-	/* internal method */
-	public string substring (long offset, long len);
+	// n is size in bytes, not length in characters
+	[CCode (cname = "g_strndup")]
+	public string ndup (size_t n);
+
+	public string substring (long offset, long len = -1) {
+		long string_length = this.len ();
+		if (offset < 0) {
+			offset = string_length + offset;
+			GLib.warn_if_fail (offset >= 0);
+		} else {
+			GLib.warn_if_fail (offset <= string_length);
+		}
+		if (len < 0) {
+			len = string_length - offset;
+		}
+		GLib.warn_if_fail (offset + len <= string_length);
+		weak string start = this.offset (offset);
+		return start.ndup (((char*) start.offset (len)) - ((char*) start));
+	}
 
 	public bool contains (string needle) {
 		return this.str (needle) != null;

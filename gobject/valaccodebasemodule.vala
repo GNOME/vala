@@ -120,8 +120,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public Interface map_type;
 	public TypeSymbol dbus_object_type;
 
-	public Method substring_method;
-
 	public bool in_plugin = false;
 	public string module_init_param_name;
 	
@@ -566,7 +564,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		float_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("float"));
 		double_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("double"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
-		substring_method = (Method) string_type.data_type.scope.lookup ("substring");
 
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 
