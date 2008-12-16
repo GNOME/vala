@@ -1,5 +1,14 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadelegate.vala:
+	* vala/valamethodcall.vala:
+	* vala/valaparser.vala:
+	* gobject/valaccodedelegatemodule.vala:
+
+	Support delegates throwing errors, fixes bug 557332
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/json-glib-1.0/:
 
 	Various ownership fixes, patch by Evan Nemerson, fixes bug 547450

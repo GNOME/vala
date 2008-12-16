@@ -414,6 +414,17 @@ public class Vala.MethodCall : Expression {
 
 				add_error_type (call_error_type);
 			}
+		} else if (mtype is DelegateType) {
+			var d = ((DelegateType) mtype).delegate_symbol;
+			foreach (DataType error_type in d.get_error_types ()) {
+				may_throw = true;
+
+				// ensure we can trace back which expression may throw errors of this type
+				var call_error_type = error_type.copy ();
+				call_error_type.source_reference = source_reference;
+
+				add_error_type (call_error_type);
+			}
 		}
 
 		analyzer.check_arguments (this, mtype, params, get_argument_list ());

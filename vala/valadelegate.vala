@@ -277,6 +277,14 @@ public class Vala.Delegate : TypeSymbol {
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (return_type == old_type) {
 			return_type = new_type;
+			return;
+		}
+		var error_types = get_error_types ();
+		for (int i = 0; i < error_types.size; i++) {
+			if (error_types[i] == old_type) {
+				error_types[i] = new_type;
+				return;
+			}
 		}
 	}
 
@@ -351,6 +359,10 @@ public class Vala.Delegate : TypeSymbol {
 		
 		foreach (FormalParameter param in parameters) {
 			param.check (analyzer);
+		}
+
+		foreach (DataType error_type in get_error_types ()) {
+			error_type.check (analyzer);
 		}
 
 		analyzer.current_source_file = old_source_file;

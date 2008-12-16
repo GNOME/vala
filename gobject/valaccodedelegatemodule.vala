@@ -57,6 +57,10 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			var cparam = new CCodeFormalParameter ("user_data", "void*");
 			cfundecl.add_parameter (cparam);
 		}
+		if (d.get_error_types ().size > 0) {
+			var cparam = new CCodeFormalParameter ("error", "GError**");
+			cfundecl.add_parameter (cparam);
+		}
 
 		var ctypedef = new CCodeTypeDefinition (d.return_type.get_cname (), cfundecl);
 

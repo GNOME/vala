@@ -2754,7 +2754,7 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.CLOSE_PARENS);
 		if (accept (TokenType.THROWS)) {
 			do {
-				parse_type ();
+				d.add_error_type (parse_type ());
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.SEMICOLON);
