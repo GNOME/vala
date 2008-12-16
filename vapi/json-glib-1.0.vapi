@@ -5,9 +5,9 @@ namespace Json {
 	[Compact]
 	[CCode (ref_function = "json_array_ref", unref_function = "json_array_unref", cheader_filename = "json-glib/json-glib.h")]
 	public class Array {
-		public void add_element (Json.Node node);
+		public void add_element (Json.Node# node);
 		public weak Json.Node get_element (uint index_);
-		public weak GLib.List get_elements ();
+		public GLib.List<weak Json.Node> get_elements ();
 		public uint get_length ();
 		[CCode (has_construct_function = false)]
 		public Array ();
@@ -19,7 +19,7 @@ namespace Json {
 		[CCode (has_construct_function = false)]
 		public Generator ();
 		public void set_root (Json.Node node);
-		public string to_data (out ulong length);
+		public string to_data (out size_t length);
 		public bool to_file (string filename) throws GLib.Error;
 		[NoAccessorMethod]
 		public uint indent { get; set; }
@@ -34,10 +34,10 @@ namespace Json {
 		public void* data;
 		public weak Json.Node parent;
 		public Json.NodeType type;
-		public weak Json.Node copy ();
-		public weak Json.Array dup_array ();
-		public weak Json.Object dup_object ();
-		public weak string dup_string ();
+		public Json.Node copy ();
+		public Json.Array dup_array ();
+		public Json.Object dup_object ();
+		public string dup_string ();
 		public weak Json.Array get_array ();
 		public bool get_boolean ();
 		public double get_double ();
@@ -56,18 +56,18 @@ namespace Json {
 		public void set_object (Json.Object object);
 		public void set_string (string value);
 		public void set_value (GLib.Value value);
-		public void take_array (Json.Array array);
-		public void take_object (Json.Object object);
+		public void take_array (Json.Array# array);
+		public void take_object (Json.Object# object);
 		public weak string type_name ();
 	}
 	[Compact]
 	[CCode (ref_function = "json_object_ref", unref_function = "json_object_unref", cheader_filename = "json-glib/json-glib.h")]
 	public class Object {
-		public void add_member (string member_name, Json.Node node);
+		public void add_member (string member_name, Json.Node# node);
 		public weak Json.Node get_member (string member_name);
-		public weak GLib.List get_members ();
+		public GLib.List<weak string> get_members ();
 		public uint get_size ();
-		public weak GLib.List get_values ();
+		public GLib.List<weak Json.Node> get_values ();
 		public bool has_member (string member_name);
 		[CCode (has_construct_function = false)]
 		public Object ();
@@ -80,7 +80,7 @@ namespace Json {
 		public uint get_current_pos ();
 		public weak Json.Node get_root ();
 		public bool has_assignment (out weak string variable_name);
-		public bool load_from_data (string data, ulong length) throws GLib.Error;
+		public bool load_from_data (string data, size_t length) throws GLib.Error;
 		public bool load_from_file (string filename) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Parser ();
@@ -131,7 +131,7 @@ namespace Json {
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public const string VERSION_S;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
-	public static GLib.Object construct_gobject (GLib.Type gtype, string data, ulong length) throws GLib.Error;
+	public static GLib.Object construct_gobject (GLib.Type gtype, string data, size_t length) throws GLib.Error;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
-	public static string serialize_gobject (GLib.Object gobject, out ulong length);
+	public static string serialize_gobject (GLib.Object gobject, out size_t length);
 }

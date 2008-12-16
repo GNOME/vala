@@ -1,5 +1,13 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/json-glib-1.0/:
+
+	Various ownership fixes, patch by Evan Nemerson, fixes bug 547450
+
+	* vapi/json-glib-1.0.vapi: regenerated
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Add g_string_truncate binding, patch by Yu Feng, fixes bug 564428
