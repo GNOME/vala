@@ -1,5 +1,12 @@
 2008-12-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/sqlite3.vapi:
+
+	Add transaction hook, tracing, profiling, and mutex bindings,
+	patch by Evan Nemerson, fixes bug 564571
+
+2008-12-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodemethodcallmodule.vala:
 	* vapi/glib-2.0.vapi:

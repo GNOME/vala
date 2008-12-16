@@ -45,7 +45,19 @@ namespace Sqlite {
 		public int errcode ();
 		public weak string errmsg ();
 		public int prepare (string sql, int n_bytes, out Statement stmt, out string tail = null);
+		public int prepare_v2 (string sql, int n_bytes, out Statement stmt, out string tail = null);
+		public void trace (TraceCallback? xtrace);
+		public void profile (ProfileCallback? xprofile);
+		public void commit_hook (CommitCallback? commit_hook);
+		public void rollback_hook (RollbackCallback? rollback_hook);
 	}
+
+	[CCode (instance_pos = 0)]
+	public delegate void TraceCallback (string message);
+	[CCode (instance_pos = 0)]
+	public delegate void ProfileCallback (string sql, uint64 time);
+	public delegate int CommitCallback ();
+	public delegate void RollbackCallback ();
 
 	/* Dynamically Typed Value Object */
 	[Compact]
@@ -147,6 +159,10 @@ namespace Sqlite {
 	public const int NULL;
 	[CCode (cname = "SQLITE3_TEXT")]
 	public const int TEXT;
+	[CCode (cname = "SQLITE_MUTEX_FAST")]
+	public const int MUTEX_FAST;
+	[CCode (cname = "SQLITE_MUTEX_RECURSIVE")]
+	public const int MUTEX_RECURSIVE;
 
 	/* SQL Statement Object */
 	[Compact]
@@ -154,7 +170,7 @@ namespace Sqlite {
 	public class Statement {
 		public int bind_parameter_count ();
 		public int bind_parameter_index (string name);
-		public string bind_parameter_name (int index);
+		public weak string bind_parameter_name (int index);
 		public int clear_bindings ();
 		public int column_count ();
 		public int data_count ();
@@ -178,6 +194,17 @@ namespace Sqlite {
 		public int column_type (int col);
 		public weak Value column_value (int col);
 		public weak string column_name (int index);
+		public weak string sql ();
+	}
+
+	[Compact]
+	[CCode (cname = "sqlite3_mutex")]
+	public class Mutex {
+		[CCode (cname = "sqlite3_mutex_alloc")]
+		public Mutex (int mutex_type = MUTEX_RECURSIVE);
+		public void enter ();
+		public int @try ();
+		public void leave ();
 	}
 }
 
