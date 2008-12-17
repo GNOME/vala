@@ -271,8 +271,10 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 					} else if (m.binding == MemberBinding.INSTANCE
 					           && !(m is CreationMethod)) {
 						var ccheckstmt = create_method_type_check_statement (m, creturn_type, cl, true, "self");
-						ccheckstmt.line = function.line;
-						cinit.append (ccheckstmt);
+						if (ccheckstmt != null) {
+							ccheckstmt.line = function.line;
+							cinit.append (ccheckstmt);
+						}
 					}
 				}
 				foreach (FormalParameter param in m.get_parameters ()) {
@@ -411,7 +413,10 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 
 				foreach (Expression precondition in m.get_preconditions ()) {
-					cinit.append (create_precondition_statement (m, creturn_type, precondition));
+					var check_stmt = create_precondition_statement (m, creturn_type, precondition);
+					if (check_stmt != null) {
+						cinit.append (check_stmt);
+					}
 				}
 			} else if (m.is_abstract) {
 				// generate helpful error message if a sublcass does not implement an abstract method.
@@ -421,7 +426,10 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 				var cblock = new CCodeBlock ();
 
 				// add a typecheck statement for "self"
-				cblock.add_statement (create_method_type_check_statement (m, creturn_type, current_type_symbol, true, "self"));
+				var check_stmt = create_method_type_check_statement (m, creturn_type, current_type_symbol, true, "self");
+				if (check_stmt != null) {
+					cblock.add_statement (check_stmt);
+				}
 
 				// add critical warning that this method should not have been called
 				var type_from_instance_call = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_INSTANCE"));
@@ -679,7 +687,10 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		var vblock = new CCodeBlock ();
 
 		foreach (Expression precondition in m.get_preconditions ()) {
-			vblock.add_statement (create_precondition_statement (m, return_type, precondition));
+			var check_stmt = create_precondition_statement (m, return_type, precondition);
+			if (check_stmt != null) {
+				vblock.add_statement (check_stmt);
+			}
 		}
 
 		CCodeFunctionCall vcast = null;
@@ -741,11 +752,11 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		source_type_member_definition.append (vfunc);
 	}
 
-	private CCodeStatement create_method_type_check_statement (Method m, DataType return_type, TypeSymbol t, bool non_null, string var_name) {
+	private CCodeStatement? create_method_type_check_statement (Method m, DataType return_type, TypeSymbol t, bool non_null, string var_name) {
 		return create_type_check_statement (m, return_type, t, non_null, var_name);
 	}
 
-	private CCodeStatement create_precondition_statement (CodeNode method_node, DataType ret_type, Expression precondition) {
+	private CCodeStatement? create_precondition_statement (CodeNode method_node, DataType ret_type, Expression precondition) {
 		var ccheck = new CCodeFunctionCall ();
 
 		ccheck.add_argument ((CCodeExpression) precondition.ccodenode);
@@ -760,7 +771,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			if (cdefault != null) {
 				ccheck.add_argument (cdefault);
 			} else {
-				return new CCodeExpressionStatement (new CCodeConstant ("0"));
+				return null;
 			}
 		}
 		

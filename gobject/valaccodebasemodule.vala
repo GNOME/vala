@@ -1254,10 +1254,14 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			}
 
 			if (prop.binding == MemberBinding.INSTANCE && !is_virtual) {
+				CCodeStatement check_stmt;
 				if (returns_real_struct) {
-					function.block.prepend_statement (create_property_type_check_statement (prop, false, t, true, "self"));
+					check_stmt = create_property_type_check_statement (prop, false, t, true, "self");
 				} else {
-					function.block.prepend_statement (create_property_type_check_statement (prop, acc.readable, t, true, "self"));
+					check_stmt = create_property_type_check_statement (prop, acc.readable, t, true, "self");
+				}
+				if (check_stmt != null) {
+					function.block.prepend_statement (check_stmt);
 				}
 			}
 
@@ -3467,7 +3471,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		return null;
 	}
 	
-	private CCodeStatement create_property_type_check_statement (Property prop, bool check_return_type, TypeSymbol t, bool non_null, string var_name) {
+	private CCodeStatement? create_property_type_check_statement (Property prop, bool check_return_type, TypeSymbol t, bool non_null, string var_name) {
 		if (check_return_type) {
 			return create_type_check_statement (prop, prop.property_type, t, non_null, var_name);
 		} else {
@@ -3506,7 +3510,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			if (cdefault != null) {
 				ccheck.add_argument (cdefault);
 			} else {
-				return new CCodeExpressionStatement (new CCodeConstant ("0"));
+				return null;
 			}
 		}
 		

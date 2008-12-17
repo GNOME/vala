@@ -1,6 +1,13 @@
 2008-12-18  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+
+	Remove statements without effect, fixes bug 530601
+
+2008-12-18  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodebasemodule.vala:
 
 	Fix member initializers for array fields, fixes bug 562600
 
