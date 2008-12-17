@@ -94,7 +94,7 @@ namespace Gtk {
 		public weak Gtk.AccelGroup accel_group;
 		public uint accel_padding;
 		public weak string accel_string;
-		public ushort accel_string_width;
+		public uint16 accel_string_width;
 		public uint gtk_reserved;
 		public weak Gtk.Widget get_accel_widget ();
 		public uint get_accel_width ();
@@ -406,7 +406,7 @@ namespace Gtk {
 		public uint fill;
 		public uint is_secondary;
 		public uint pack;
-		public ushort padding;
+		public uint16 padding;
 		public weak Gtk.Widget widget;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -889,13 +889,13 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ColorButton : Gtk.Button, Atk.Implementor, Gtk.Buildable {
-		public ushort get_alpha ();
+		public uint16 get_alpha ();
 		public void get_color (out Gdk.Color color);
 		public weak string get_title ();
 		public bool get_use_alpha ();
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public ColorButton ();
-		public void set_alpha (ushort alpha);
+		public void set_alpha (uint16 alpha);
 		public void set_color (Gdk.Color color);
 		public void set_title (string title);
 		public void set_use_alpha (bool use_alpha);
@@ -909,11 +909,11 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ColorSelection : Gtk.VBox, Atk.Implementor, Gtk.Buildable {
-		public ushort get_current_alpha ();
+		public uint16 get_current_alpha ();
 		public void get_current_color (out Gdk.Color color);
 		public bool get_has_opacity_control ();
 		public bool get_has_palette ();
-		public ushort get_previous_alpha ();
+		public uint16 get_previous_alpha ();
 		public void get_previous_color (out Gdk.Color color);
 		public bool is_adjusting ();
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
@@ -921,11 +921,11 @@ namespace Gtk {
 		public static bool palette_from_string (string str, Gdk.Color[] colors);
 		public static weak string palette_to_string (Gdk.Color[] colors);
 		public static weak Gtk.ColorSelectionChangePaletteWithScreenFunc set_change_palette_with_screen_hook (Gtk.ColorSelectionChangePaletteWithScreenFunc func);
-		public void set_current_alpha (ushort alpha);
+		public void set_current_alpha (uint16 alpha);
 		public void set_current_color (Gdk.Color color);
 		public void set_has_opacity_control (bool has_opacity);
 		public void set_has_palette (bool has_palette);
-		public void set_previous_alpha (ushort alpha);
+		public void set_previous_alpha (uint16 alpha);
 		public void set_previous_color (Gdk.Color color);
 		public uint current_alpha { get; set; }
 		public Gdk.Color current_color { get; set; }
@@ -1145,20 +1145,20 @@ namespace Gtk {
 		public uint in_drag;
 		public uint is_cell_renderer;
 		public uint mouse_cursor_obscured;
-		public ushort n_bytes;
+		public uint16 n_bytes;
 		public uint need_im_reset;
 		public uint overwrite_mode;
 		public weak Gtk.Widget popup_menu;
-		public ushort preedit_cursor;
-		public ushort preedit_length;
+		public uint16 preedit_cursor;
+		public uint16 preedit_length;
 		public uint recompute_idle;
 		public uint resolved_dir;
 		public uint select_lines;
 		public uint select_words;
 		public weak Gdk.Window text_area;
-		public ushort text_length;
-		public ushort text_max_length;
-		public ushort text_size;
+		public uint16 text_length;
+		public uint16 text_max_length;
+		public uint16 text_size;
 		public uint visible;
 		public bool get_activates_default ();
 		public float get_alignment ();
@@ -1585,7 +1585,7 @@ namespace Gtk {
 		public weak GLib.SList tables;
 		public unichar tentative_match;
 		public int tentative_match_len;
-		public void add_table (ushort data, int max_seq_len, int n_seqs);
+		public void add_table (uint16 data, int max_seq_len, int n_seqs);
 		[CCode (type = "GtkIMContext*", has_construct_function = false)]
 		public IMContextSimple ();
 	}
@@ -2138,7 +2138,7 @@ namespace Gtk {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Menu ();
 		public void popdown ();
-		public void popup (Gtk.Widget? parent_menu_shell, Gtk.Widget? parent_menu_item, Gtk.MenuPositionFunc? func, uint button, uint activate_time);
+		public void popup (Gtk.Widget? parent_menu_shell, Gtk.Widget? parent_menu_item, Gtk.MenuPositionFunc? func, uint button, uint32 activate_time);
 		public void reorder_child (Gtk.Widget child, int position);
 		public void reposition ();
 		public void set_accel_group (Gtk.AccelGroup accel_group);
@@ -2167,7 +2167,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class MenuItem : Gtk.Item, Atk.Implementor, Gtk.Buildable {
 		public weak string accel_path;
-		public ushort accelerator_width;
+		public uint16 accelerator_width;
 		public weak Gdk.Window event_window;
 		public uint from_menubar;
 		public uint right_justify;
@@ -2176,7 +2176,7 @@ namespace Gtk {
 		public uint submenu_placement;
 		public uint timer;
 		public uint timer_from_keypress;
-		public ushort toggle_size;
+		public uint16 toggle_size;
 		public bool get_right_justified ();
 		public weak Gtk.Widget get_submenu ();
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
@@ -2199,7 +2199,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class MenuShell : Gtk.Container, Atk.Implementor, Gtk.Buildable {
-		public uint activate_time;
+		public uint32 activate_time;
 		public uint active;
 		public weak Gtk.Widget active_menu_item;
 		public uint button;
@@ -2321,7 +2321,7 @@ namespace Gtk {
 		public uint in_child;
 		public weak Gtk.Widget menu;
 		public uint need_timer;
-		public uint timer;
+		public uint32 timer;
 		public int append_page (Gtk.Widget child, Gtk.Widget? tab_label);
 		public int append_page_menu (Gtk.Widget child, Gtk.Widget tab_label, Gtk.Widget menu_label);
 		public int get_current_page ();
@@ -2343,6 +2343,7 @@ namespace Gtk {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Notebook ();
 		public void next_page ();
+		public int page_num (Gtk.Widget child);
 		public void popup_disable ();
 		public void popup_enable ();
 		public int prepend_page (Gtk.Widget child, Gtk.Widget tab_label);
@@ -2398,11 +2399,10 @@ namespace Gtk {
 	[Compact]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class NotebookPage {
-		public static int num (Gtk.Notebook notebook, Gtk.Widget child);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Object : GLib.InitiallyUnowned {
-		public uint flags;
+		public uint32 flags;
 		[NoWrapper]
 		public virtual void get_arg (Gtk.Arg arg, uint arg_id);
 		[NoWrapper]
@@ -3317,16 +3317,16 @@ namespace Gtk {
 	public class Socket : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		public weak Gtk.AccelGroup accel_group;
 		public uint active;
-		public ushort current_height;
-		public ushort current_width;
+		public uint16 current_height;
+		public uint16 current_width;
 		public uint focus_in;
 		public uint have_size;
 		public uint is_mapped;
 		public uint need_map;
 		public weak Gtk.Widget plug_widget;
 		public weak Gdk.Window plug_window;
-		public ushort request_height;
-		public ushort request_width;
+		public uint16 request_height;
+		public uint16 request_width;
 		public uint same_app;
 		public weak Gtk.Widget toplevel;
 		public short xembed_version;
@@ -3344,7 +3344,7 @@ namespace Gtk {
 		public uint in_child;
 		public uint need_timer;
 		public weak Gdk.Window panel;
-		public uint timer;
+		public uint32 timer;
 		public uint timer_calls;
 		public double timer_step;
 		public void configure (Gtk.Adjustment adjustment, double climb_rate, uint digits);
@@ -3407,7 +3407,7 @@ namespace Gtk {
 		public weak string get_stock ();
 		public Gtk.ImageType get_storage_type ();
 		public bool get_visible ();
-		public uint get_x11_window_id ();
+		public uint32 get_x11_window_id ();
 		public bool is_embedded ();
 		[CCode (has_construct_function = false)]
 		public StatusIcon ();
@@ -3586,8 +3586,8 @@ namespace Gtk {
 	public class Table : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		public weak GLib.List children;
 		public weak Gtk.TableRowCol cols;
-		public ushort ncols;
-		public ushort nrows;
+		public uint16 ncols;
+		public uint16 nrows;
 		public weak Gtk.TableRowCol rows;
 		public void attach (Gtk.Widget child, uint left_attach, uint right_attach, uint top_attach, uint bottom_attach, Gtk.AttachOptions xoptions, Gtk.AttachOptions yoptions, uint xpadding, uint ypadding);
 		public void attach_defaults (Gtk.Widget widget, uint left_attach, uint right_attach, uint top_attach, uint bottom_attach);
@@ -3616,31 +3616,31 @@ namespace Gtk {
 	[Compact]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TableChild {
-		public ushort bottom_attach;
-		public ushort left_attach;
-		public ushort right_attach;
-		public ushort top_attach;
+		public uint16 bottom_attach;
+		public uint16 left_attach;
+		public uint16 right_attach;
+		public uint16 top_attach;
 		public weak Gtk.Widget widget;
 		public uint xexpand;
 		public uint xfill;
-		public ushort xpadding;
+		public uint16 xpadding;
 		public uint xshrink;
 		public uint yexpand;
 		public uint yfill;
-		public ushort ypadding;
+		public uint16 ypadding;
 		public uint yshrink;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TableRowCol {
-		public ushort allocation;
+		public uint16 allocation;
 		public uint empty;
 		public uint expand;
 		public uint need_expand;
 		public uint need_shrink;
-		public ushort requisition;
+		public uint16 requisition;
 		public uint shrink;
-		public ushort spacing;
+		public uint16 spacing;
 	}
 	[Compact]
 	[CCode (ref_function = "gtk_target_list_ref", unref_function = "gtk_target_list_unref", cheader_filename = "gtk/gtk.h")]
@@ -5083,14 +5083,14 @@ namespace Gtk {
 	[Compact]
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class WidgetShapeInfo {
-		public short offset_x;
-		public short offset_y;
+		public int16 offset_x;
+		public int16 offset_y;
 		public weak Gdk.Bitmap shape_mask;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Window : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
 		public uint configure_notify_received;
-		public ushort configure_request_count;
+		public uint16 configure_request_count;
 		public weak Gtk.Widget default_widget;
 		public weak Gtk.Widget focus_widget;
 		public weak Gdk.Window frame;
@@ -5121,8 +5121,8 @@ namespace Gtk {
 		public void add_accel_group (Gtk.AccelGroup accel_group);
 		public void add_embedded_xid (uint xid);
 		public void add_mnemonic (uint keyval, Gtk.Widget target);
-		public void begin_move_drag (int button, int root_x, int root_y, uint timestamp);
-		public void begin_resize_drag (Gdk.WindowEdge edge, int button, int root_x, int root_y, uint timestamp);
+		public void begin_move_drag (int button, int root_x, int root_y, uint32 timestamp);
+		public void begin_resize_drag (Gdk.WindowEdge edge, int button, int root_x, int root_y, uint32 timestamp);
 		public void deiconify ();
 		public void fullscreen ();
 		public bool get_accept_focus ();
@@ -5165,7 +5165,7 @@ namespace Gtk {
 		public Window (Gtk.WindowType type);
 		public bool parse_geometry (string geometry);
 		public void present ();
-		public void present_with_time (uint timestamp);
+		public void present_with_time (uint32 timestamp);
 		public bool propagate_key_event (Gdk.EventKey event);
 		public void remove_accel_group (Gtk.AccelGroup accel_group);
 		public void remove_embedded_xid (uint xid);
@@ -7108,9 +7108,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void drag_dest_unset (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_finish (Gdk.DragContext context, bool success, bool del, uint time_);
+	public static void drag_finish (Gdk.DragContext context, bool success, bool del, uint32 time_);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void drag_get_data (Gtk.Widget widget, Gdk.DragContext context, Gdk.Atom target, uint time_);
+	public static void drag_get_data (Gtk.Widget widget, Gdk.DragContext context, Gdk.Atom target, uint32 time_);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static weak Gtk.Widget drag_get_source_widget (Gdk.DragContext context);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -7164,7 +7164,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool get_current_event_state (Gdk.ModifierType state);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static uint get_current_event_time ();
+	public static uint32 get_current_event_time ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static weak Pango.Language get_default_language ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -7324,11 +7324,11 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void selection_clear_targets (Gtk.Widget widget, Gdk.Atom selection);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool selection_convert (Gtk.Widget widget, Gdk.Atom selection, Gdk.Atom target, uint time_);
+	public static bool selection_convert (Gtk.Widget widget, Gdk.Atom selection, Gdk.Atom target, uint32 time_);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool selection_owner_set (Gtk.Widget widget, Gdk.Atom selection, uint time_);
+	public static bool selection_owner_set (Gtk.Widget widget, Gdk.Atom selection, uint32 time_);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool selection_owner_set_for_display (Gdk.Display display, Gtk.Widget widget, Gdk.Atom selection, uint time_);
+	public static bool selection_owner_set_for_display (Gdk.Display display, Gtk.Widget widget, Gdk.Atom selection, uint32 time_);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void selection_remove_all (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -7336,7 +7336,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void show_about_dialog (Gtk.Window parent, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool show_uri (Gdk.Screen? screen, string uri, uint timestamp) throws GLib.Error;
+	public static bool show_uri (Gdk.Screen? screen, string uri, uint32 timestamp) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static void stock_add (Gtk.StockItem[] items);
 	[CCode (cheader_filename = "gtk/gtk.h")]

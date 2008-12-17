@@ -1,5 +1,14 @@
 2008-12-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_notebook_page_num binding, patch by Evan Nemerson,
+	fixes bug 512437
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2008-12-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 	* vala/valavoidtype.vala:
 
