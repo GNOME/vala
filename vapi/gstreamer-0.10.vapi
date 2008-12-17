@@ -23,7 +23,7 @@ namespace Gst {
 	public class Bin : Gst.Element, Gst.ChildProxy {
 		public weak Gst.Bus child_bus;
 		public weak GLib.List children;
-		public uint children_cookie;
+		public uint32 children_cookie;
 		public bool clock_dirty;
 		public weak Gst.Element clock_provider;
 		public weak GLib.List messages;
@@ -89,7 +89,7 @@ namespace Gst {
 		public Buffer ();
 		public weak Gst.Buffer @ref ();
 		public void set_caps (Gst.Caps caps);
-		public weak Gst.Buffer span (uint offset, Gst.Buffer buf2, uint len);
+		public weak Gst.Buffer span (uint32 offset, Gst.Buffer buf2, uint32 len);
 		public void stamp (Gst.Buffer src);
 		public static Gst.Buffer try_new_and_alloc (uint size);
 		public void unref ();
@@ -307,16 +307,16 @@ namespace Gst {
 		public Gst.State current_state;
 		public Gst.StateChangeReturn last_return;
 		public Gst.State next_state;
-		public ushort numpads;
-		public ushort numsinkpads;
-		public ushort numsrcpads;
+		public uint16 numpads;
+		public uint16 numsinkpads;
+		public uint16 numsrcpads;
 		public weak GLib.List pads;
-		public uint pads_cookie;
+		public uint32 pads_cookie;
 		public Gst.State pending_state;
 		public weak GLib.List sinkpads;
 		public weak GLib.List srcpads;
 		public weak GLib.Cond state_cond;
-		public uint state_cookie;
+		public uint32 state_cookie;
 		public void* state_lock;
 		public void abort_state ();
 		public bool add_pad (Gst.Pad# pad);
@@ -357,7 +357,7 @@ namespace Gst {
 		public bool link_pads (string srcpadname, Gst.Element dest, string destpadname);
 		public bool link_pads_filtered (string srcpadname, Gst.Element dest, string destpadname, Gst.Caps filter);
 		public void lost_state ();
-		public static weak Gst.Element make_from_uri (Gst.URIType type, string uri, string elementname);
+		public static Gst.Element? make_from_uri (Gst.URIType type, string uri, string? elementname);
 		public void message_full (Gst.MessageType type, GLib.Quark domain, int code, string text, string debug, string file, string function, int line);
 		public bool post_message (Gst.Message message);
 		public virtual weak Gst.Clock provide_clock ();
@@ -560,11 +560,11 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Iterator {
-		public uint cookie;
+		public uint32 cookie;
 		public weak Gst.IteratorFreeFunction free;
 		public weak Gst.IteratorItemFunction item;
 		public weak GLib.Mutex @lock;
-		public uint master_cookie;
+		public uint32 master_cookie;
 		public weak Gst.IteratorNextFunction next;
 		public weak Gst.Iterator pushed;
 		public weak Gst.IteratorResyncFunction resync;
@@ -574,9 +574,9 @@ namespace Gst {
 		public Gst.IteratorResult fold (Gst.IteratorFoldFunction func, Gst.Value ret);
 		public Gst.IteratorResult @foreach (GLib.Func func);
 		[CCode (has_construct_function = false)]
-		public Iterator.list (GLib.Type type, GLib.Mutex @lock, uint master_cookie, GLib.List list, void* owner, Gst.IteratorItemFunction item, Gst.IteratorDisposeFunction free);
+		public Iterator.list (GLib.Type type, GLib.Mutex @lock, uint32 master_cookie, GLib.List list, void* owner, Gst.IteratorItemFunction item, Gst.IteratorDisposeFunction free);
 		[CCode (has_construct_function = false)]
-		public Iterator (uint size, GLib.Type type, GLib.Mutex @lock, uint master_cookie, Gst.IteratorNextFunction next, Gst.IteratorItemFunction item, Gst.IteratorResyncFunction resync, Gst.IteratorFreeFunction free);
+		public Iterator (uint size, GLib.Type type, GLib.Mutex @lock, uint32 master_cookie, Gst.IteratorNextFunction next, Gst.IteratorItemFunction item, Gst.IteratorResyncFunction resync, Gst.IteratorFreeFunction free);
 		public void push (Gst.Iterator other);
 	}
 	[CCode (ref_function = "gst_message_ref", unref_function = "gst_message_unref", cheader_filename = "gst/gst.h")]
@@ -672,7 +672,7 @@ namespace Gst {
 	}
 	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref", cheader_filename = "gst/gst.h")]
 	public class Object : GLib.Object {
-		public uint flags;
+		public uint32 flags;
 		public weak GLib.Mutex @lock;
 		public weak string name_prefix;
 		public weak Gst.Object parent;
@@ -1108,7 +1108,7 @@ namespace Gst {
 		public bool get_double (string fieldname, out double value);
 		public bool get_enum (string fieldname, GLib.Type enumtype, out int value);
 		public GLib.Type get_field_type (string fieldname);
-		public bool get_fourcc (string fieldname, out uint value);
+		public bool get_fourcc (string fieldname, out uint32 value);
 		public bool get_fraction (string fieldname, out int value_numerator, out int value_denominator);
 		public bool get_int (string fieldname, out int value);
 		public weak string get_name ();
@@ -1231,10 +1231,10 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class TraceEntry {
-		public uint data;
+		public uint32 data;
 		[NoArrayLength]
 		public weak char[] message;
-		public uint sequence;
+		public uint32 sequence;
 		public int64 timestamp;
 	}
 	[Compact]

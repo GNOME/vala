@@ -1,5 +1,14 @@
 2008-12-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_element_make_from_uri binding,
+	patch by Zeeshan Ali Khattak, fixes bug 539817
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-12-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_ui_manager_new_merge_id binding, patch by Evan Nemerson,
