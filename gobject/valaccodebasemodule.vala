@@ -2827,6 +2827,19 @@ public class Vala.CCodeBaseModule : CCodeModule {
 						lhs = new CCodeMemberAccess.pointer (typed_inst, f.get_cname ());
 					}
 					ccomma.append_expression (new CCodeAssignment (lhs, (CCodeExpression) init.initializer.ccodenode));
+
+					if (f.field_type is ArrayType && !f.no_array_length) {
+						var array_type = (ArrayType) f.field_type;
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							if (expr.type_reference.data_type is Struct) {
+								lhs = new CCodeMemberAccess (typed_inst, head.get_array_length_cname (f.get_cname (), dim));
+							} else {
+								lhs = new CCodeMemberAccess.pointer (typed_inst, head.get_array_length_cname (f.get_cname (), dim));
+							}
+							var rhs_array_len = head.get_array_length_cexpression (init.initializer, dim);
+							ccomma.append_expression (new CCodeAssignment (lhs, rhs_array_len));
+						}
+					}
 				} else if (init.symbol_reference is Property) {
 					var inst_ma = new MemberAccess.simple ("new");
 					inst_ma.value_type = expr.type_reference;
