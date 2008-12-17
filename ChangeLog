@@ -1,3 +1,10 @@
+2008-12-18  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaassignment.vala:
+
+	Report error when trying to connect signal to instance method
+	from static context, fixes bug 502669
+
 2008-12-17  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodebasemodule.vala:
