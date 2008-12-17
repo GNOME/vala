@@ -169,7 +169,7 @@ namespace Pango {
 		public weak Pango.FontDescription describe ();
 		public weak Pango.FontDescription describe_with_absolute_size ();
 		public static void descriptions_free (Pango.FontDescription[] descs);
-		public weak Pango.EngineShape find_shaper (Pango.Language language, uint ch);
+		public weak Pango.EngineShape find_shaper (Pango.Language language, uint32 ch);
 		public weak Pango.Coverage get_coverage (Pango.Language language);
 		public weak Pango.FontMap get_font_map ();
 		public void get_glyph_extents (Pango.Glyph glyph, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
@@ -483,15 +483,15 @@ namespace Pango {
 	}
 	[CCode (type_id = "PANGO_TYPE_COLOR", cheader_filename = "pango/pango.h")]
 	public struct Color {
-		public ushort red;
-		public ushort green;
-		public ushort blue;
+		public uint16 red;
+		public uint16 green;
+		public uint16 blue;
 		public Pango.Color copy ();
 		public void free ();
 		public bool parse (string spec);
 		public weak string to_string ();
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (type_id = "PANGO_TYPE_LOG_ATTR", cheader_filename = "pango/pango.h")]
 	public struct LogAttr {
 		public uint is_line_break;
 		public uint is_mandatory_break;
@@ -527,7 +527,7 @@ namespace Pango {
 		public void transform_rectangle (ref Pango.Rectangle rect);
 		public void translate (double tx, double ty);
 	}
-	[CCode (cheader_filename = "pango/pango.h")]
+	[CCode (type_id = "PANGO_TYPE_RECTANGLE", cheader_filename = "pango/pango.h")]
 	public struct Rectangle {
 		public int x;
 		public int y;
@@ -643,6 +643,16 @@ namespace Pango {
 		BACKGROUND,
 		UNDERLINE,
 		STRIKETHROUGH
+	}
+	[CCode (cprefix = "PANGO_SCALE_", cheader_filename = "pango/pango.h")]
+	public enum Scale {
+		XX_SMALL,
+		X_SMALL,
+		SMALL,
+		MEDIUM,
+		LARGE,
+		X_LARGE,
+		XX_LARGE
 	}
 	[CCode (cprefix = "PANGO_SCRIPT_", cheader_filename = "pango/pango.h")]
 	public enum Script {
@@ -806,13 +816,13 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	public const string VERSION_STRING;
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static weak Pango.Attribute attr_background_new (ushort red, ushort green, ushort blue);
+	public static weak Pango.Attribute attr_background_new (uint16 red, uint16 green, uint16 blue);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_fallback_new (bool enable_fallback);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_family_new (string family);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static weak Pango.Attribute attr_foreground_new (ushort red, ushort green, ushort blue);
+	public static weak Pango.Attribute attr_foreground_new (uint16 red, uint16 green, uint16 blue);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_gravity_hint_new (Pango.GravityHint hint);
 	[CCode (cheader_filename = "pango/pango.h")]
@@ -826,7 +836,7 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_stretch_new (Pango.Stretch stretch);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static weak Pango.Attribute attr_strikethrough_color_new (ushort red, ushort green, ushort blue);
+	public static weak Pango.Attribute attr_strikethrough_color_new (uint16 red, uint16 green, uint16 blue);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_strikethrough_new (bool strikethrough);
 	[CCode (cheader_filename = "pango/pango.h")]
@@ -836,7 +846,7 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.AttrType attr_type_register (string name);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static weak Pango.Attribute attr_underline_color_new (ushort red, ushort green, ushort blue);
+	public static weak Pango.Attribute attr_underline_color_new (uint16 red, uint16 green, uint16 blue);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static weak Pango.Attribute attr_underline_new (Pango.Underline underline);
 	[CCode (cheader_filename = "pango/pango.h")]

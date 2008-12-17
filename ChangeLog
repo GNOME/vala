@@ -1,5 +1,13 @@
 2008-12-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/pango/:
+
+	Add PangoScale binding, patch by Evan Nemerson, fixes bug 519922
+
+	* vapi/pango.vapi: regenerated
+
+2008-12-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_notebook_page_num binding, patch by Evan Nemerson,
