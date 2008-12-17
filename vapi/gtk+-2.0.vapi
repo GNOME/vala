@@ -4723,10 +4723,9 @@ namespace Gtk {
 		public weak string get_ui ();
 		public virtual weak Gtk.Widget get_widget (string path);
 		public void insert_action_group (Gtk.ActionGroup action_group, int pos);
-		[CCode (type = "guint", has_construct_function = false)]
-		public UIManager.merge_id (Gtk.UIManager self);
 		[CCode (has_construct_function = false)]
 		public UIManager ();
+		public uint new_merge_id ();
 		public void remove_action_group (Gtk.ActionGroup action_group);
 		public void remove_ui (uint merge_id);
 		public void set_add_tearoffs (bool add_tearoffs);

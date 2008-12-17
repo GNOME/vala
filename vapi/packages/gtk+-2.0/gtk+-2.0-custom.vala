@@ -41,6 +41,10 @@ namespace Gtk {
 		public void position_menu (Gtk.Menu menu, out int x, out int y, out bool push_in);
 	}
 
+	public class UIManager {
+		public uint new_merge_id ();
+	}
+
 	public class Widget {
 		public extern Widget (GLib.Type type, ...);
 
