@@ -1,5 +1,12 @@
 2008-12-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	GTree binding improvements, patch by Evan Nemerson,
+	fixes bug 564823
+
+2008-12-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Fix gst_element_make_from_uri binding,

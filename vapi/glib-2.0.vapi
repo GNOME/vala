@@ -3095,7 +3095,7 @@ namespace GLib {
 	
 	/* GTree */
 	
-	public static delegate int TraverseFunc (void* key, void* value, void* data);
+	public delegate int TraverseFunc (void* key, void* value);
 	
 	[CCode (c_prefix="C_", has_type_id = false)]
 	public enum TraverseType {
@@ -3109,16 +3109,16 @@ namespace GLib {
 	[CCode (free_function = "g_tree_destroy")]
 	public class Tree<K,V> {
 		public Tree (CompareFunc key_compare_func);
-		public Tree.with_data (CompareFunc key_compare_func, void* key_compare_data);
-		public Tree.full (CompareFunc key_compare_func, void* key_compare_data, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
-		public void insert (K key, V value);
-		public void replace (K key, V value);
+		public Tree.with_data (CompareDataFunc key_compare_func);
+		public Tree.full (CompareDataFunc key_compare_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
+		public void insert (K# key, V# value);
+		public void replace (K# key, V# value);
 		public int nnodes ();
 		public int height ();
 		public weak V lookup (K key);
 		public bool lookup_extended (K lookup_key, K orig_key, V value);
-		public void tree_foreach (TraverseFunc traverse_func, TraverseType traverse_type, void* user_data);
-		public weak V tree_search (CompareFunc search_func, void* user_data);
+		public void foreach (TraverseFunc traverse_func);
+		public weak V search (CompareFunc search_func, void* user_data);
 		public bool remove (K key);
 		public bool steal (K key);
 	}
