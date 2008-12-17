@@ -26,7 +26,8 @@ using GLib;
  * The void type.
  */
 public class Vala.VoidType : DataType {
-	public VoidType () {
+	public VoidType (SourceReference? source_reference = null) {
+		this.source_reference = source_reference;
 	}
 
 	public override bool stricter (DataType type2) {
@@ -42,7 +43,7 @@ public class Vala.VoidType : DataType {
 	}
 
 	public override DataType copy () {
-		return new VoidType ();
+		return new VoidType (source_reference);
 	}
 
 	public override string? get_type_id () {

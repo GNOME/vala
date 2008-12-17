@@ -359,7 +359,7 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 
 		if (accept (TokenType.VOID)) {
-			DataType type = new VoidType ();
+			DataType type = new VoidType (get_src (begin));
 			while (accept (TokenType.STAR)) {
 				type = new PointerType (type);
 			}
