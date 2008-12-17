@@ -973,6 +973,23 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				if (!is_constant_ccode_expression (rhs)) {
 					if (f.parent_symbol is Class) {
 						class_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, rhs)));
+
+						if (f.field_type is ArrayType && !f.no_array_length &&
+						    f.initializer is ArrayCreationExpression) {
+							var array_type = (ArrayType) f.field_type;
+							var ma = new MemberAccess.simple (f.name);
+							ma.symbol_reference = f;
+					
+							Gee.List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
+							for (int dim = 1; dim <= array_type.rank; dim++) {
+								var array_len_lhs = head.get_array_length_cexpression (ma, dim);
+								var size = sizes[dim - 1];
+								class_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (array_len_lhs, (CCodeExpression) size.ccodenode)));
+							}
+						}
+
+						append_temp_decl (class_init_fragment, temp_vars);
+						temp_vars.clear ();
 					} else {
 						f.error = true;
 						Report.error (f.source_reference, "Non-constant field initializers not supported in this context");
