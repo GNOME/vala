@@ -1,5 +1,12 @@
 2008-12-18  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodecontrolflowmodule.vala:
+
+	Fix temporary variable handling in switch expressions,
+	fixes bug 559278
+
+2008-12-18  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodemethodmodule.vala:
 

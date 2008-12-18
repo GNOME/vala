@@ -208,6 +208,8 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				cblock.add_statement (body_stmt.ccodenode);
 			}
 		}
+		
+		create_temp_decl (stmt, stmt.expression.temp_vars);
 	}
 
 	public override void visit_switch_section (SwitchSection section) {
