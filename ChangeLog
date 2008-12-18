@@ -1,5 +1,11 @@
 2008-12-18  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodemethodcallmodule.vala:
+
+	Support error propagation from base constructor, fixes bug 564984
+
+2008-12-18  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodemethodmodule.vala:
 
 	Fix error propagation in creation methods, fixes part of 564944

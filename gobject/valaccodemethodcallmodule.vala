@@ -362,7 +362,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 		}
 
-		if (expr.tree_can_fail) {
+		if (m is CreationMethod && m.get_error_types ().size > 0) {
+			carg_map.set (get_param_pos (-1), new CCodeIdentifier ("error"));
+		} else if (expr.tree_can_fail) {
 			// method can fail
 			current_method_inner_error = true;
 			// add &inner_error before the ellipsis arguments
