@@ -1,5 +1,11 @@
 2008-12-18  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodemethodmodule.vala:
+
+	Fix error propagation in creation methods, fixes part of 564944
+
+2008-12-18  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodecontrolflowmodule.vala:
 
 	Fix temporary variable handling in switch expressions,

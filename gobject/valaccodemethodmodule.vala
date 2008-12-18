@@ -79,8 +79,6 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 		check_type (m.return_type);
 
-		var creturn_type = current_return_type;
-
 		if (m is CreationMethod) {
 			in_creation_method = true;
 			var cl = current_type_symbol as Class;
@@ -94,9 +92,11 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 
 			if (cl != null) {
-				creturn_type = new ObjectType (cl);
+				current_return_type = new ObjectType (cl);
 			}
 		}
+
+		var creturn_type = current_return_type;
 
 		m.accept_children (codegen);
 
