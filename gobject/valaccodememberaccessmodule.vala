@@ -83,6 +83,8 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 			} else if (m.base_interface_method != null) {
 				expr.ccodenode = new CCodeIdentifier (m.base_interface_method.get_cname ());
+			} else if (m is CreationMethod) {
+				expr.ccodenode = new CCodeIdentifier (m.get_real_cname ());
 			} else {
 				expr.ccodenode = new CCodeIdentifier (m.get_cname ());
 			}

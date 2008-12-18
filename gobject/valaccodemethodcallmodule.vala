@@ -58,6 +58,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			var cl = (Class) ((ObjectType) itype).type_symbol;
 			m = cl.default_construction_method;
 			ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
+		}
+
+		if (m is CreationMethod) {
 			ccall.add_argument (new CCodeIdentifier ("object_type"));
 		}
 

@@ -1,5 +1,12 @@
 2008-12-18  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodememberaccessmodule.vala:
+	* gobject/valaccodemethodcallmodule.vala:
+
+	Fix named constructor chaining, fixes bug 559303
+
+2008-12-18  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/sqlite3.vapi:
 
 	Fix sqlite3_callback binding
