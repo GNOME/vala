@@ -1,5 +1,11 @@
 2008-12-18  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/sqlite3.vapi:
+
+	Fix sqlite3_callback binding
+
+2008-12-18  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodemethodcallmodule.vala:
 
 	Support error propagation from base constructor, fixes bug 564984

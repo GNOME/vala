@@ -28,7 +28,7 @@ namespace Sqlite {
 	public class Database {
 		public int busy_timeout (int ms);
 		public int changes ();
-		public int exec (string sql, Callback? sqlite3_callback = null, void* data = null, out string errmsg = null);
+		public int exec (string sql, Callback? sqlite3_callback = null, out string errmsg = null);
 		public int extended_result_codes (int onoff);
 		public int get_autocommit ();
 		public void interrupt ();
@@ -82,8 +82,8 @@ namespace Sqlite {
 	}
 
 	[NoArrayLength]
-	[CCode (cname = "sqlite3_callback")]
-	public static delegate int Callback (void* data, int n_columns, string[] values, string[] column_names);
+	[CCode (cname = "sqlite3_callback", instance_pos = 0)]
+	public delegate int Callback (int n_columns, string[] values, string[] column_names);
 
 	[CCode (cname = "SQLITE_OK")]
 	public const int OK;
