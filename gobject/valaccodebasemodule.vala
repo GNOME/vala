@@ -1974,7 +1974,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		/* free temporary objects */
 
-		if (((Gee.List<LocalVariable>) temp_vars).size == 0) {
+		if (((Gee.List<LocalVariable>) temp_vars).size == 0
+		     && pre_statement_fragment == null) {
 			/* nothing to do without temporary variables */
 			return;
 		}
