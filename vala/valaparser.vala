@@ -2228,14 +2228,8 @@ public class Vala.Parser : CodeVisitor {
 				if (prop.default_expression != null) {
 					throw new ParseError.SYNTAX (get_error ("property default value already defined"));
 				}
-				if (accept (TokenType.OPEN_PARENS)) {
-					Report.warning (get_last_src (), "deprecated syntax, use `default = value;`");
-					prop.default_expression = parse_expression ();
-					expect (TokenType.CLOSE_PARENS);
-				} else {
-					expect (TokenType.ASSIGN);
-					prop.default_expression = parse_expression ();
-				}
+				expect (TokenType.ASSIGN);
+				prop.default_expression = parse_expression ();
 				expect (TokenType.SEMICOLON);
 			} else {
 				var accessor_begin = get_location ();

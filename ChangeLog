@@ -1,5 +1,11 @@
 2008-12-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala:
+
+	Remove support for deprecated syntax for property default values
+
+2008-12-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamemberaccess.vala:
 
 	Fix crash when using property prototype as value
