@@ -69,7 +69,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public CCodeEnum cenum;
 	public CCodeFunction function;
 	public CCodeBlock block;
-	
+
+	// code nodes to be inserted before the current statement
+	// used by async method calls in coroutines
+	public CCodeFragment pre_statement_fragment;
+
 	/* all temporary variables */
 	public ArrayList<LocalVariable> temp_vars = new ArrayList<LocalVariable> ();
 	/* temporary variables that own their content */
@@ -1479,6 +1483,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		var cfrag = new CCodeFragment ();
 
+		if (pre_statement_fragment != null) {
+			cfrag.append (pre_statement_fragment);
+			pre_statement_fragment = null;
+		}
+
 		if (current_method != null && current_method.coroutine) {
 			closure_struct.add_field (local.variable_type.get_cname (), get_variable_cname (local.name));
 
@@ -1937,25 +1946,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		stmt.ccodenode = new CCodeExpressionStatement ((CCodeExpression) stmt.expression.ccodenode);
 
-		var invoc = stmt.expression as MethodCall;
-		if (invoc != null) {
-			var m = invoc.call.symbol_reference as Method;
-			var ma = invoc.call as MemberAccess;
-			if (m != null && m.coroutine && current_method != null && current_method.coroutine &&
-			    (ma == null || ma.member_name != "begin" || ma.inner.symbol_reference != ma.symbol_reference)) {
-				var cfrag = new CCodeFragment ();
-
-				int state = next_coroutine_state++;
-
-				cfrag.append (stmt.ccodenode);
-				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state"), new CCodeConstant (state.to_string ()))));
-				cfrag.append (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
-				cfrag.append (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
-
-				stmt.ccodenode = cfrag;
-			}
-		}
-
 		if (stmt.tree_can_fail && stmt.expression.tree_can_fail) {
 			// simple case, no node breakdown necessary
 
@@ -1977,7 +1967,12 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		
 		var cfrag = new CCodeFragment ();
 		append_temp_decl (cfrag, temp_vars);
-		
+
+		if (pre_statement_fragment != null) {
+			cfrag.append (pre_statement_fragment);
+			pre_statement_fragment = null;
+		}
+
 		cfrag.append (stmt.ccodenode);
 		
 		foreach (LocalVariable local in temp_ref_vars) {

@@ -35,6 +35,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		// the bare function call
 		var ccall = new CCodeFunctionCall ((CCodeExpression) expr.call.ccodenode);
 
+		CCodeFunctionCall async_call = null;
+
 		Method m = null;
 		Gee.List<FormalParameter> params;
 		
@@ -60,6 +62,32 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
 		}
 
+		HashMap<int,CCodeExpression> in_arg_map, out_arg_map;
+
+		if (m != null && m.coroutine
+		    && ((current_method != null && current_method.coroutine)
+		        || (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference))) {
+			// async call
+
+			in_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+			out_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+
+			async_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname () + "_async"));
+
+			if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
+				// no finish call
+				ccall = async_call;
+			} else {
+				ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname () + "_finish"));
+
+				// pass GAsyncResult stored in closure to finish function
+				out_arg_map.set (get_param_pos (0.1), new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "res"));
+			}
+		} else {
+			in_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+			out_arg_map = in_arg_map;
+		}
+
 		if (m is CreationMethod) {
 			ccall.add_argument (new CCodeIdentifier ("object_type"));
 		}
@@ -67,11 +95,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		// the complete call expression, might include casts, comma expressions, and/or assignments
 		CCodeExpression ccall_expr = ccall;
 
-		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
-
 		if (m is ArrayResizeMethod) {
 			var array_type = (ArrayType) ma.inner.value_type;
-			carg_map.set (get_param_pos (0), new CCodeIdentifier (array_type.element_type.get_cname ()));
+			in_arg_map.set (get_param_pos (0), new CCodeIdentifier (array_type.element_type.get_cname ()));
 		} else if (m is ArrayMoveMethod) {
 			requires_array_move = true;
 		}
@@ -103,7 +129,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				}
 			}
 
-			carg_map.set (get_param_pos (m.cinstance_parameter_position), instance);
+			in_arg_map.set (get_param_pos (m.cinstance_parameter_position), instance);
+			out_arg_map.set (get_param_pos (m.cinstance_parameter_position), instance);
 		} else if (m != null && m.binding == MemberBinding.CLASS) {
 			var cl = (Class) m.parent_symbol;
 			var cast = new CCodeFunctionCall (new CCodeIdentifier (cl.get_upper_case_cname (null) + "_CLASS"));
@@ -127,14 +154,15 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 
 			cast.add_argument (klass);
-			carg_map.set (get_param_pos (m.cinstance_parameter_position), cast);
+			in_arg_map.set (get_param_pos (m.cinstance_parameter_position), cast);
+			out_arg_map.set (get_param_pos (m.cinstance_parameter_position), cast);
 		}
 
 		if (m is ArrayMoveMethod) {
 			var array_type = (ArrayType) ma.inner.value_type;
 			var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 			csizeof.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
-			carg_map.set (get_param_pos (0.1), csizeof);
+			in_arg_map.set (get_param_pos (0.1), csizeof);
 		} else if (m is DynamicMethod) {
 			m.clear_parameters ();
 			int param_nr = 1;
@@ -171,6 +199,9 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		Iterator<FormalParameter> params_it = params.iterator ();
 		foreach (Expression arg in expr.get_argument_list ()) {
 			CCodeExpression cexpr = (CCodeExpression) arg.ccodenode;
+
+			var carg_map = in_arg_map;
+
 			if (params_it.next ()) {
 				var param = params_it.get ();
 				ellipsis = param.params_array || param.ellipsis;
@@ -181,6 +212,10 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					// evaluation order
 					// http://bugzilla.gnome.org/show_bug.cgi?id=519597
 					bool multiple_cargs = false;
+
+					if (param.direction == ParameterDirection.OUT) {
+						carg_map = out_arg_map;
+					}
 
 					if (!param.no_array_length && param.parameter_type is ArrayType) {
 						var array_type = (ArrayType) param.parameter_type;
@@ -327,7 +362,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 					temp_vars.insert (0, temp_var);
 
-					carg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+					out_arg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
 					expr.append_array_size (temp_ref);
 				} else {
@@ -343,7 +378,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 				temp_vars.insert (0, temp_var);
 
-				carg_map.set (get_param_pos (m.cdelegate_target_parameter_position), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+				out_arg_map.set (get_param_pos (m.cdelegate_target_parameter_position), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
 				expr.delegate_target = temp_ref;
 			}
@@ -353,38 +388,37 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			if ((current_method != null && current_method.coroutine)
 			    || (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference)) {
 				// asynchronous call
-				var cid = (CCodeIdentifier) ccall.call;
-				cid.name += "_async";
 				if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
-					carg_map.set (get_param_pos (-1), new CCodeConstant ("NULL"));
-					carg_map.set (get_param_pos (-0.9), new CCodeConstant ("NULL"));
+					in_arg_map.set (get_param_pos (-1), new CCodeConstant ("NULL"));
+					in_arg_map.set (get_param_pos (-0.9), new CCodeConstant ("NULL"));
 				} else {
-					carg_map.set (get_param_pos (-1), new CCodeIdentifier (current_method.get_cname () + "_ready"));
-					carg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("data"));
+					in_arg_map.set (get_param_pos (-1), new CCodeIdentifier (current_method.get_cname () + "_ready"));
+					in_arg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("data"));
 				}
 			}
 		}
 
 		if (m is CreationMethod && m.get_error_types ().size > 0) {
-			carg_map.set (get_param_pos (-1), new CCodeIdentifier ("error"));
+			out_arg_map.set (get_param_pos (-1), new CCodeIdentifier ("error"));
 		} else if (expr.tree_can_fail) {
 			// method can fail
 			current_method_inner_error = true;
 			// add &inner_error before the ellipsis arguments
-			carg_map.set (get_param_pos (-1), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
+			out_arg_map.set (get_param_pos (-1), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
 		}
 
 		if (ellipsis) {
 			/* ensure variable argument list ends with NULL
 			 * except when using printf-style arguments */
 			if (!m.printf_format && m.sentinel != "") {
-				carg_map.set (get_param_pos (-1, true), new CCodeConstant (m.sentinel));
+				in_arg_map.set (get_param_pos (-1, true), new CCodeConstant (m.sentinel));
 			}
 		} else if (itype is DelegateType) {
 			var deleg_type = (DelegateType) itype;
 			var d = deleg_type.delegate_symbol;
 			if (d.has_target) {
-				carg_map.set (get_param_pos (d.cinstance_parameter_position), get_delegate_target_cexpression (expr.call));
+				in_arg_map.set (get_param_pos (d.cinstance_parameter_position), get_delegate_target_cexpression (expr.call));
+				out_arg_map.set (get_param_pos (d.cinstance_parameter_position), get_delegate_target_cexpression (expr.call));
 			}
 		}
 
@@ -400,7 +434,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 				temp_vars.insert (0, temp_var);
 
-				carg_map.set (get_param_pos (-1, true), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+				out_arg_map.set (get_param_pos (-1, true), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 			
 				var ccomma = new CCodeCommaExpression ();
 				ccomma.append_expression ((CCodeExpression) ccall_expr);
@@ -415,7 +449,7 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		int min_pos;
 		while (true) {
 			min_pos = -1;
-			foreach (int pos in carg_map.get_keys ()) {
+			foreach (int pos in out_arg_map.get_keys ()) {
 				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
 					min_pos = pos;
 				}
@@ -423,8 +457,25 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			if (min_pos == -1) {
 				break;
 			}
-			ccall.add_argument (carg_map.get (min_pos));
+			ccall.add_argument (out_arg_map.get (min_pos));
 			last_pos = min_pos;
+		}
+
+		if (async_call != null) {
+			last_pos = -1;
+			while (true) {
+				min_pos = -1;
+				foreach (int pos in in_arg_map.get_keys ()) {
+					if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
+						min_pos = pos;
+					}
+				}
+				if (min_pos == -1) {
+					break;
+				}
+				async_call.add_argument (in_arg_map.get (min_pos));
+				last_pos = min_pos;
+			}
 		}
 
 		if (m != null && m.binding == MemberBinding.INSTANCE && m.returns_modified_pointer) {
@@ -432,7 +483,21 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		} else {
 			expr.ccodenode = ccall_expr;
 		}
-		
+
+		if (m != null && m.coroutine && current_method != null && current_method.coroutine) {
+			if (ma.member_name != "begin" || ma.inner.symbol_reference != ma.symbol_reference) {
+				if (pre_statement_fragment == null) {
+					pre_statement_fragment = new CCodeFragment ();
+				}
+				pre_statement_fragment.append (new CCodeExpressionStatement (async_call));
+
+				int state = next_coroutine_state++;
+				pre_statement_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state"), new CCodeConstant (state.to_string ()))));
+				pre_statement_fragment.append (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+				pre_statement_fragment.append (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
+			}
+		}
+
 		if (m is ArrayResizeMethod) {
 			// FIXME: size expression must not be evaluated twice at runtime (potential side effects)
 			Iterator<Expression> arg_it = expr.get_argument_list ().iterator ();

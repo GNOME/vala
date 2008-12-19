@@ -1,5 +1,13 @@
 2008-12-19  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodemethodcallmodule.vala:
+
+	Generate async and finish calls when calling async methods from
+	coroutines
+
+2008-12-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodemethodmodule.vala:
 
 	Do not generate invalid type check statements in coroutines
