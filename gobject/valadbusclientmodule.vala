@@ -1316,9 +1316,9 @@ public class Vala.DBusClientModule : DBusModule {
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_iter"));
 		block.add_statement (cdecl);
 
-		var get_user_data = new CCodeFunctionCall (new CCodeIdentifier ("g_async_result_get_user_data"));
-		get_user_data.add_argument (new CCodeIdentifier ("res"));
-		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), get_user_data)));
+		var get_source_tag = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_get_source_tag"));
+		get_source_tag.add_argument (new CCodeCastExpression (new CCodeIdentifier ("res"), "GSimpleAsyncResult *"));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), get_source_tag)));
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_pending_call_steal_reply"));
 		ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "pending"));

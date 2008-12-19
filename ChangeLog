@@ -1,5 +1,11 @@
 2008-12-19  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valadbusclientmodule.vala:
+
+	Fix generated finish function for static D-Bus client methods
+
+2008-12-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodememberaccessmodule.vala:
 
