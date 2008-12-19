@@ -567,6 +567,20 @@ public class Vala.DBusServerModule : DBusClientModule {
 	string generate_dbus_property_get_all_wrapper (ObjectTypeSymbol sym, string dbus_iface_name) {
 		string wrapper_name = "_dbus_%s_property_get_all".printf (sym.get_lower_case_cname ());
 
+		bool has_readable_properties = false;
+		foreach (Property prop in sym.get_properties ()) {
+			if (prop.binding != MemberBinding.INSTANCE
+			    || prop.overrides || prop.access != SymbolAccessibility.PUBLIC) {
+				continue;
+			}
+			if (!is_dbus_visible (prop)) {
+				continue;
+			}
+			if (prop.get_accessor != null) {
+				has_readable_properties = true;
+			}
+		}
+
 		CCodeDeclaration cdecl;
 
 		var function = new CCodeFunction (wrapper_name, "DBusMessage*");
@@ -587,8 +601,10 @@ public class Vala.DBusServerModule : DBusClientModule {
 		cdecl.add_declarator (new CCodeVariableDeclarator ("iter"));
 		cdecl.add_declarator (new CCodeVariableDeclarator ("reply_iter"));
 		cdecl.add_declarator (new CCodeVariableDeclarator ("subiter"));
-		cdecl.add_declarator (new CCodeVariableDeclarator ("entry_iter"));
-		cdecl.add_declarator (new CCodeVariableDeclarator ("value_iter"));
+		if (has_readable_properties) {
+			cdecl.add_declarator (new CCodeVariableDeclarator ("entry_iter"));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("value_iter"));
+		}
 		block.add_statement (cdecl);
 
 		var message_signature = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_get_signature"));
@@ -623,9 +639,11 @@ public class Vala.DBusServerModule : DBusClientModule {
 		var expr = read_expression (prefragment, string_type, new CCodeIdentifier ("iter"), target);
 		prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
 
-		cdecl = new CCodeDeclaration ("const char*");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("property_name"));
-		prefragment.append (cdecl);
+		if (has_readable_properties) {
+			cdecl = new CCodeDeclaration ("const char*");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("property_name"));
+			prefragment.append (cdecl);
+		}
 
 		var prop_block = new CCodeBlock ();
 
@@ -1110,8 +1128,30 @@ public class Vala.DBusServerModule : DBusClientModule {
 		if (dbus != null) {
 			string dbus_iface_name = dbus.get_string ("name");
 			if (dbus_iface_name != null) {
-				handle_method ("org.freedesktop.DBus.Properties", "Get", generate_dbus_property_get_wrapper (sym, dbus_iface_name), block, ref clastif);
-				handle_method ("org.freedesktop.DBus.Properties", "Set", generate_dbus_property_set_wrapper (sym, dbus_iface_name), block, ref clastif);
+				bool need_property_get = false;
+				bool need_property_set = false;
+				foreach (Property prop in sym.get_properties ()) {
+					if (prop.binding != MemberBinding.INSTANCE
+					    || prop.overrides || prop.access != SymbolAccessibility.PUBLIC) {
+						continue;
+					}
+					if (!is_dbus_visible (prop)) {
+						continue;
+					}
+					if (prop.get_accessor != null) {
+						need_property_get = true;
+					}
+					if (prop.set_accessor != null) {
+						need_property_set = true;
+					}
+				}
+
+				if (need_property_get) {
+					handle_method ("org.freedesktop.DBus.Properties", "Get", generate_dbus_property_get_wrapper (sym, dbus_iface_name), block, ref clastif);
+				}
+				if (need_property_set) {
+					handle_method ("org.freedesktop.DBus.Properties", "Set", generate_dbus_property_set_wrapper (sym, dbus_iface_name), block, ref clastif);
+				}
 				handle_method ("org.freedesktop.DBus.Properties", "GetAll", generate_dbus_property_get_all_wrapper (sym, dbus_iface_name), block, ref clastif);
 
 				handle_methods (sym, dbus_iface_name, block, ref clastif);

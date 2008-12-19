@@ -1,5 +1,11 @@
 2008-12-19  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valadbusservermodule.vala:
+
+	Do not generate property code if not necessary
+
+2008-12-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 
 	Update wording for error message when trying to duplicate
