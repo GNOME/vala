@@ -250,32 +250,47 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			expr.ccodenode = new CCodeConstant (ev.get_cname ());
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
-			expr.ccodenode = new CCodeIdentifier (get_variable_cname (local.name));
+			if (current_method != null && current_method.coroutine) {
+				// use closure
+				expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (local.name));
+			} else {
+				expr.ccodenode = new CCodeIdentifier (get_variable_cname (local.name));
+			}
 		} else if (expr.symbol_reference is FormalParameter) {
 			var p = (FormalParameter) expr.symbol_reference;
 			if (p.name == "this") {
-				var st = current_type_symbol as Struct;
-				if (st != null && !st.is_simple_type ()) {
-					expr.ccodenode = new CCodeIdentifier ("(*self)");
+				if (current_method != null && current_method.coroutine) {
+					// use closure
+					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self");
 				} else {
-					expr.ccodenode = new CCodeIdentifier ("self");
+					var st = current_type_symbol as Struct;
+					if (st != null && !st.is_simple_type ()) {
+						expr.ccodenode = new CCodeIdentifier ("(*self)");
+					} else {
+						expr.ccodenode = new CCodeIdentifier ("self");
+					}
 				}
 			} else {
-				var type_as_struct = p.parameter_type.data_type as Struct;
-				if (p.direction != ParameterDirection.IN
-				    || (type_as_struct != null && !type_as_struct.is_simple_type () && !p.parameter_type.nullable)) {
-					expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (p.name));
+				if (current_method != null && current_method.coroutine) {
+					// use closure
+					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), p.name);
 				} else {
-					// Property setters of non simple structs shall replace all occurences
-					// of the "value" formal parameter with a dereferencing version of that
-					// parameter.
-					if (current_property_accessor != null &&
-					    current_property_accessor.writable &&
-					    current_property_accessor.value_parameter == p &&
-					    current_property_accessor.prop.property_type.is_real_struct_type ()) {
-						expr.ccodenode = new CCodeIdentifier ("(*value)");
+					var type_as_struct = p.parameter_type.data_type as Struct;
+					if (p.direction != ParameterDirection.IN
+					    || (type_as_struct != null && !type_as_struct.is_simple_type () && !p.parameter_type.nullable)) {
+						expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (p.name));
 					} else {
-						expr.ccodenode = new CCodeIdentifier (p.name);
+						// Property setters of non simple structs shall replace all occurences
+						// of the "value" formal parameter with a dereferencing version of that
+						// parameter.
+						if (current_property_accessor != null &&
+						    current_property_accessor.writable &&
+						    current_property_accessor.value_parameter == p &&
+						    current_property_accessor.prop.property_type.is_real_struct_type ()) {
+							expr.ccodenode = new CCodeIdentifier ("(*value)");
+						} else {
+							expr.ccodenode = new CCodeIdentifier (p.name);
+						}
 					}
 				}
 			}

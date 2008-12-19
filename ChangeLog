@@ -1,5 +1,12 @@
 2008-12-19  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodememberaccessmodule.vala:
+
+	Use closure struct to access local variables and parameters in
+	coroutines
+
+2008-12-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusservermodule.vala:
 
 	Do not generate property code if not necessary
