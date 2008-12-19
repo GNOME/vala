@@ -480,6 +480,8 @@ public class Vala.MemberAccess : Expression {
 				value_type = analyzer.get_value_type_for_symbol (symbol_reference, lvalue);
 			} else if (symbol_reference is Field) {
 				value_type = new FieldPrototype ((Field) symbol_reference);
+			} else {
+				value_type = new InvalidType ();
 			}
 		} else {
 			// implicit this access
