@@ -1,6 +1,13 @@
 2008-12-19  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodememberaccessmodule.vala:
+
+	Fix disposing local variables in coroutines
+
+2008-12-19  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodemethodcallmodule.vala:
 
 	Generate async and finish calls when calling async methods from

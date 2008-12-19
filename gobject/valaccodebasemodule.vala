@@ -1345,7 +1345,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			if (!local.floating && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
-				cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (local.name)), local.variable_type, ma)));
+				cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
 			}
 		}
 
@@ -1355,7 +1355,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				if (requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
-					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.parameter_type, ma)));
+					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.parameter_type, ma)));
 				}
 			}
 		}
@@ -1381,6 +1381,14 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		create_temp_decl (stmt, temp_vars);
 		temp_vars.clear ();
+	}
+
+	public CCodeExpression get_variable_cexpression (string name) {
+		if (current_method != null && current_method.coroutine) {
+			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (name));
+		} else {
+			return new CCodeIdentifier (get_variable_cname (name));
+		}
 	}
 
 	public string get_variable_cname (string name) {
@@ -2011,7 +2019,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			if (local.active && !local.floating && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
-				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (local.name)), local.variable_type, ma)));
+				cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
 			}
 		}
 		
@@ -2035,7 +2043,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			if (requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = param;
-				cfrag.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.parameter_type, ma)));
+				cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.parameter_type, ma)));
 			}
 		}
 	}
@@ -2060,7 +2068,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				found = true;
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
-				ccomma.append_expression (get_unref_expression (new CCodeIdentifier (get_variable_cname (local.name)), local.variable_type, ma));
+				ccomma.append_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
 			}
 		}
 		
@@ -2081,7 +2089,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				found = true;
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = param;
-				ccomma.append_expression (get_unref_expression (new CCodeIdentifier (get_variable_cname (param.name)), param.parameter_type, ma));
+				ccomma.append_expression (get_unref_expression (get_variable_cexpression (param.name), param.parameter_type, ma));
 			}
 		}
 

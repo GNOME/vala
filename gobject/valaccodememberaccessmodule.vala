@@ -250,18 +250,13 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			expr.ccodenode = new CCodeConstant (ev.get_cname ());
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
-			if (current_method != null && current_method.coroutine) {
-				// use closure
-				expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (local.name));
-			} else {
-				expr.ccodenode = new CCodeIdentifier (get_variable_cname (local.name));
-			}
+			expr.ccodenode = get_variable_cexpression (local.name);
 		} else if (expr.symbol_reference is FormalParameter) {
 			var p = (FormalParameter) expr.symbol_reference;
 			if (p.name == "this") {
 				if (current_method != null && current_method.coroutine) {
 					// use closure
-					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self");
+					expr.ccodenode = get_variable_cexpression ("self");
 				} else {
 					var st = current_type_symbol as Struct;
 					if (st != null && !st.is_simple_type ()) {
@@ -273,7 +268,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			} else {
 				if (current_method != null && current_method.coroutine) {
 					// use closure
-					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), p.name);
+					expr.ccodenode = get_variable_cexpression (p.name);
 				} else {
 					var type_as_struct = p.parameter_type.data_type as Struct;
 					if (p.direction != ParameterDirection.IN
