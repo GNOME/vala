@@ -1,3 +1,14 @@
+2008-12-20  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodeassignmentmodule.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodecontrolflowmodule.vala:
+	* gobject/valaccodemethodcallmodule.vala:
+	* gobject/valagasyncmodule.vala:
+	* gobject/valagerrormodule.vala:
+
+	More closure fixes
+
 2008-12-19  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/atk.vapi:

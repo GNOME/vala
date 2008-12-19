@@ -281,11 +281,17 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		
 		var collection_backup = stmt.collection_variable;
 		var collection_type = collection_backup.variable_type.copy ();
-		var ccoldecl = new CCodeDeclaration (collection_type.get_cname ());
-		var ccolvardecl = new CCodeVariableDeclarator.with_initializer (collection_backup.name, (CCodeExpression) stmt.collection.ccodenode);
-		ccolvardecl.line = cblock.line;
-		ccoldecl.add_declarator (ccolvardecl);
-		cblock.add_statement (ccoldecl);
+
+		if (current_method != null && current_method.coroutine) {
+			closure_struct.add_field (collection_type.get_cname (), collection_backup.name);
+			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (collection_backup.name), (CCodeExpression) stmt.collection.ccodenode)));
+		} else {
+			var ccoldecl = new CCodeDeclaration (collection_type.get_cname ());
+			var ccolvardecl = new CCodeVariableDeclarator.with_initializer (collection_backup.name, (CCodeExpression) stmt.collection.ccodenode);
+			ccolvardecl.line = cblock.line;
+			ccoldecl.add_declarator (ccolvardecl);
+			cblock.add_statement (ccoldecl);
+		}
 		
 		if (stmt.tree_can_fail && stmt.collection.tree_can_fail) {
 			// exception handling
@@ -300,22 +306,31 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			var array_len = head.get_array_length_cexpression (stmt.collection);
 
 			// store array length for use by _vala_array_free
-			var clendecl = new CCodeDeclaration ("int");
-			clendecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (collection_backup.name, 1), array_len));
-			cblock.add_statement (clendecl);
+			if (current_method != null && current_method.coroutine) {
+				closure_struct.add_field ("int", head.get_array_length_cname (collection_backup.name, 1));
+				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (collection_backup.name, 1)), array_len)));
+			} else {
+				var clendecl = new CCodeDeclaration ("int");
+				clendecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (collection_backup.name, 1), array_len));
+				cblock.add_statement (clendecl);
+			}
 
 			if (array_len is CCodeConstant) {
 				// the array has no length parameter i.e. it is NULL-terminated array
 
 				var it_name = "%s_it".printf (stmt.variable_name);
 			
-				var citdecl = new CCodeDeclaration (collection_type.get_cname ());
-				citdecl.add_declarator (new CCodeVariableDeclarator (it_name));
-				cblock.add_statement (citdecl);
+				if (current_method != null && current_method.coroutine) {
+					closure_struct.add_field (collection_type.get_cname (), it_name);
+				} else {
+					var citdecl = new CCodeDeclaration (collection_type.get_cname ());
+					citdecl.add_declarator (new CCodeVariableDeclarator (it_name));
+					cblock.add_statement (citdecl);
+				}
 				
 				var cbody = new CCodeBlock ();
 
-				CCodeExpression element_expr = new CCodeIdentifier ("*%s".printf (it_name));
+				CCodeExpression element_expr = get_variable_cexpression ("*%s".printf (it_name));
 
 				var element_type = array_type.element_type.copy ();
 				element_type.value_owned = false;
@@ -326,17 +341,27 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				cbody.add_statement (cfrag);
 				temp_vars.clear ();
 
-				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
-				cbody.add_statement (cdecl);
+				if (current_method != null && current_method.coroutine) {
+					closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
+					cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr)));
+				} else {
+					var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
+					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
+					cbody.add_statement (cdecl);
+				}
 
 				// add array length variable for stacked arrays
 				if (stmt.type_reference is ArrayType) {
 					var inner_array_type = (ArrayType) stmt.type_reference;
 					for (int dim = 1; dim <= inner_array_type.rank; dim++) {
-						cdecl = new CCodeDeclaration ("int");
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
-						cbody.add_statement (cdecl);
+						if (current_method != null && current_method.coroutine) {
+							closure_struct.add_field ("int", head.get_array_length_cname (stmt.variable_name, dim));
+							cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1"))));
+						} else {
+							var cdecl = new CCodeDeclaration ("int");
+							cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
+							cbody.add_statement (cdecl);
+						}
 					}
 				}
 
@@ -355,13 +380,17 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 				var it_name = (stmt.variable_name + "_it");
 			
-				var citdecl = new CCodeDeclaration ("int");
-				citdecl.add_declarator (new CCodeVariableDeclarator (it_name));
-				cblock.add_statement (citdecl);
+				if (current_method != null && current_method.coroutine) {
+					closure_struct.add_field ("int", it_name);
+				} else {
+					var citdecl = new CCodeDeclaration ("int");
+					citdecl.add_declarator (new CCodeVariableDeclarator (it_name));
+					cblock.add_statement (citdecl);
+				}
 				
 				var cbody = new CCodeBlock ();
 
-				CCodeExpression element_expr = new CCodeElementAccess (new CCodeIdentifier (collection_backup.name), new CCodeIdentifier (it_name));
+				CCodeExpression element_expr = new CCodeElementAccess (get_variable_cexpression (collection_backup.name), get_variable_cexpression (it_name));
 
 				var element_type = array_type.element_type.copy ();
 				element_type.value_owned = false;
@@ -372,31 +401,41 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				cbody.add_statement (cfrag);
 				temp_vars.clear ();
 
-				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
-				cbody.add_statement (cdecl);
+				if (current_method != null && current_method.coroutine) {
+					closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
+					cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr)));
+				} else {
+					var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
+					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
+					cbody.add_statement (cdecl);
+				}
 
 				// add array length variable for stacked arrays
 				if (stmt.type_reference is ArrayType) {
 					var inner_array_type = (ArrayType) stmt.type_reference;
 					for (int dim = 1; dim <= inner_array_type.rank; dim++) {
-						cdecl = new CCodeDeclaration ("int");
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
-						cbody.add_statement (cdecl);
+						if (current_method != null && current_method.coroutine) {
+							closure_struct.add_field ("int", head.get_array_length_cname (stmt.variable_name, dim));
+							cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1"))));
+						} else {
+							var cdecl = new CCodeDeclaration ("int");
+							cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
+							cbody.add_statement (cdecl);
+						}
 					}
 				}
 
 				cbody.add_statement (stmt.body.ccodenode);
 				
 				var ccond_ind1 = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, array_len, new CCodeConstant ("-1"));
-				var ccond_ind2 = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier (it_name), array_len);
+				var ccond_ind2 = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (it_name), array_len);
 				var ccond_ind = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccond_ind1, ccond_ind2);
 				
 				/* only check for null if the containers elements are of reference-type */
 				CCodeBinaryExpression ccond;
 				if (array_type.element_type.is_reference_type_or_type_parameter ()) {
 					var ccond_term1 = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, array_len, new CCodeConstant ("-1"));
-					var ccond_term2 = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeElementAccess (new CCodeIdentifier (collection_backup.name), new CCodeIdentifier (it_name)), new CCodeConstant ("NULL"));
+					var ccond_term2 = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeElementAccess (new CCodeIdentifier (collection_backup.name), get_variable_cexpression (it_name)), new CCodeConstant ("NULL"));
 					var ccond_term = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccond_term1, ccond_term2);
 
 					ccond = new CCodeBinaryExpression (CCodeBinaryOperator.OR, ccond_ind, ccond_term);
@@ -410,8 +449,8 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				}
 				
 				var cfor = new CCodeForStatement (ccond, cbody);
-				cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeConstant ("0")));
-				cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (it_name), new CCodeConstant ("1"))));
+				cfor.add_initializer (new CCodeAssignment (get_variable_cexpression (it_name), new CCodeConstant ("0")));
+				cfor.add_iterator (new CCodeAssignment (get_variable_cexpression (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, get_variable_cexpression (it_name), new CCodeConstant ("1"))));
 				cblock.add_statement (cfor);
 			}
 		} else if (stmt.collection.value_type.compatible (new ObjectType (glist_type)) || stmt.collection.value_type.compatible (new ObjectType (gslist_type))) {
@@ -419,15 +458,19 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			var it_name = "%s_it".printf (stmt.variable_name);
 		
-			var citdecl = new CCodeDeclaration (collection_type.get_cname ());
-			var citvardecl = new CCodeVariableDeclarator (it_name);
-			citvardecl.line = cblock.line;
-			citdecl.add_declarator (citvardecl);
-			cblock.add_statement (citdecl);
+			if (current_method != null && current_method.coroutine) {
+				closure_struct.add_field (collection_type.get_cname (), it_name);
+			} else {
+				var citdecl = new CCodeDeclaration (collection_type.get_cname ());
+				var citvardecl = new CCodeVariableDeclarator (it_name);
+				citvardecl.line = cblock.line;
+				citdecl.add_declarator (citvardecl);
+				cblock.add_statement (citdecl);
+			}
 			
 			var cbody = new CCodeBlock ();
 
-			CCodeExpression element_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier (it_name), "data");
+			CCodeExpression element_expr = new CCodeMemberAccess.pointer (get_variable_cexpression (it_name), "data");
 
 			if (collection_type.get_type_arguments ().size != 1) {
 				Report.error (stmt.source_reference, "internal error: missing generic type argument");
@@ -445,21 +488,26 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			cbody.add_statement (cfrag);
 			temp_vars.clear ();
 
-			var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-			var cvardecl = new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr);
-			cvardecl.line = cblock.line;
-			cdecl.add_declarator (cvardecl);
-			cbody.add_statement (cdecl);
+			if (current_method != null && current_method.coroutine) {
+				closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
+				cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr)));
+			} else {
+				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
+				var cvardecl = new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr);
+				cvardecl.line = cblock.line;
+				cdecl.add_declarator (cvardecl);
+				cbody.add_statement (cdecl);
+			}
 			
 			cbody.add_statement (stmt.body.ccodenode);
 			
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier (it_name), new CCodeConstant ("NULL"));
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (it_name), new CCodeConstant ("NULL"));
 			
 			var cfor = new CCodeForStatement (ccond, cbody);
 			
-			cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeIdentifier (collection_backup.name)));
+			cfor.add_initializer (new CCodeAssignment (get_variable_cexpression (it_name), get_variable_cexpression (collection_backup.name)));
 
-			cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeMemberAccess.pointer (new CCodeIdentifier (it_name), "next")));
+			cfor.add_iterator (new CCodeAssignment (get_variable_cexpression (it_name), new CCodeMemberAccess.pointer (get_variable_cexpression (it_name), "next")));
 			cblock.add_statement (cfor);
 		}
 
@@ -467,7 +515,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			if (requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
-				var cunref = new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (get_variable_cname (local.name)), local.variable_type, ma));
+				var cunref = new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
 				cunref.line = cblock.line;
 				cblock.add_statement (cunref);
 			}

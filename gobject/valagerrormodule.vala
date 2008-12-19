@@ -235,9 +235,14 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			variable_name = "__err";
 		}
 
-		var cdecl = new CCodeDeclaration ("GError *");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (variable_name, get_variable_cexpression ("inner_error")));
-		cblock.add_statement (cdecl);
+		if (current_method != null && current_method.coroutine) {
+			closure_struct.add_field ("GError *", variable_name);
+			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (variable_name), get_variable_cexpression ("inner_error"))));
+		} else {
+			var cdecl = new CCodeDeclaration ("GError *");
+			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (variable_name, get_variable_cexpression ("inner_error")));
+			cblock.add_statement (cdecl);
+		}
 		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression ("inner_error"), new CCodeConstant ("NULL"))));
 
 		cblock.add_statement (clause.body.ccodenode);

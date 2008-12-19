@@ -155,7 +155,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			
 			var temp_decl = get_temp_variable (assignment.left.value_type);
 			temp_vars.insert (0, temp_decl);
-			ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), rhs));
+			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), rhs));
 			if (unref_old) {
 				/* unref old value */
 				ccomma.append_expression (get_unref_expression ((CCodeExpression) get_ccodenode (assignment.left), assignment.left.value_type, assignment.left));
@@ -174,7 +174,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
 			}
 			
-			ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
+			ccomma.append_expression (get_variable_cexpression (temp_decl.name));
 			
 			rhs = ccomma;
 		}
@@ -213,10 +213,10 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				temp_vars.insert (0, index_temp_decl);
 				
 				var ccomma = new CCodeCommaExpression ();
-				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (index_temp_decl.name), cea.index));
+				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (index_temp_decl.name), cea.index));
 				ccomma.append_expression (codenode);
 
-				cea.index = new CCodeIdentifier (index_temp_decl.name);
+				cea.index = get_variable_cexpression (index_temp_decl.name);
 				
 				codenode = ccomma;
 			}

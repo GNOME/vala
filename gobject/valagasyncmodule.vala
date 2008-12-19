@@ -48,6 +48,11 @@ public class Vala.GAsyncModule : GSignalModule {
 		closure_struct.add_field ("gpointer", "user_data");
 		closure_struct.add_field ("GAsyncResult*", "res");
 
+		if (m.binding == MemberBinding.INSTANCE) {
+			var type_sym = (TypeSymbol) m.parent_symbol;
+			closure_struct.add_field (type_sym.get_cname () + "*", "self");
+		}
+
 		foreach (FormalParameter param in m.get_parameters ()) {
 			closure_struct.add_field (param.parameter_type.get_cname (), param.name);
 		}
@@ -79,6 +84,10 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "callback"), new CCodeIdentifier ("callback"))));
 		asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "user_data"), new CCodeIdentifier ("user_data"))));
+
+		if (m.binding == MemberBinding.INSTANCE) {
+			asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self"), new CCodeIdentifier ("self"))));
+		}
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {

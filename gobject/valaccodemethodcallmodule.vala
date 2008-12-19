@@ -106,6 +106,11 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (m != null && m.binding == MemberBinding.INSTANCE && !(m is CreationMethod)) {
 			instance = (CCodeExpression) ma.inner.ccodenode;
 
+			if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
+				var inner_ma = (MemberAccess) ma.inner;
+				instance = (CCodeExpression) inner_ma.inner.ccodenode;
+			}
+
 			var st = m.parent_symbol as Struct;
 			if (st != null && !st.is_simple_type ()) {
 				// we need to pass struct instance by reference
@@ -445,20 +450,26 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		// append C arguments in the right order
-		int last_pos = -1;
+		
+		int last_pos;
 		int min_pos;
-		while (true) {
-			min_pos = -1;
-			foreach (int pos in out_arg_map.get_keys ()) {
-				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
-					min_pos = pos;
+
+		if (async_call != ccall) {
+			// don't append out arguments for .begin() calls
+			last_pos = -1;
+			while (true) {
+				min_pos = -1;
+				foreach (int pos in out_arg_map.get_keys ()) {
+					if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
+						min_pos = pos;
+					}
 				}
+				if (min_pos == -1) {
+					break;
+				}
+				ccall.add_argument (out_arg_map.get (min_pos));
+				last_pos = min_pos;
 			}
-			if (min_pos == -1) {
-				break;
-			}
-			ccall.add_argument (out_arg_map.get (min_pos));
-			last_pos = min_pos;
 		}
 
 		if (async_call != null) {

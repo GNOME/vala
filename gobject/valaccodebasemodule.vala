@@ -1440,7 +1440,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 				var temp_var = get_temp_variable (local.variable_type, true, local);
 				temp_vars.insert (0, temp_var);
-				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), rhs));
+				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var lhs_array_len = get_variable_cexpression (head.get_array_length_cname (get_variable_cname (local.name), dim));
@@ -1459,7 +1459,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 					var temp_var = get_temp_variable (local.variable_type, true, local);
 					temp_vars.insert (0, temp_var);
-					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), rhs));
+					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
 					var lhs_delegate_target = get_variable_cexpression (get_delegate_target_cname (get_variable_cname (local.name)));
 					var rhs_delegate_target = get_delegate_target_cexpression (local.initializer);
@@ -2112,14 +2112,14 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		var return_expr_decl = get_temp_variable (expr_type, true, expr);
 		
 		var ccomma = new CCodeCommaExpression ();
-		ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (return_expr_decl.name), (CCodeExpression) expr.ccodenode));
+		ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), (CCodeExpression) expr.ccodenode));
 
 		if (!append_local_free_expr (current_symbol, ccomma, false)) {
 			/* no local variables need to be freed */
 			return;
 		}
 
-		ccomma.append_expression (new CCodeIdentifier (return_expr_decl.name));
+		ccomma.append_expression (get_variable_cexpression (return_expr_decl.name));
 		
 		expr.ccodenode = ccomma;
 		expr.temp_vars.add (return_expr_decl);
@@ -2165,7 +2165,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt);
 
 				var ccomma = new CCodeCommaExpression ();
-				ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (return_expr_decl.name), (CCodeExpression) stmt.return_expression.ccodenode));
+				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), (CCodeExpression) stmt.return_expression.ccodenode));
 
 				var array_type = (ArrayType) current_return_type;
 
@@ -2175,7 +2175,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					ccomma.append_expression (new CCodeAssignment (len_l, len_r));
 				}
 
-				ccomma.append_expression (new CCodeIdentifier (return_expr_decl.name));
+				ccomma.append_expression (get_variable_cexpression (return_expr_decl.name));
 				
 				stmt.return_expression.ccodenode = ccomma;
 				stmt.return_expression.temp_vars.add (return_expr_decl);
@@ -2334,11 +2334,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			// assign current value to temp variable
 			var temp_decl = get_temp_variable (prop.property_type, true, expr);
 			temp_vars.insert (0, temp_decl);
-			ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_decl.name), (CCodeExpression) expr.inner.ccodenode));
+			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), (CCodeExpression) expr.inner.ccodenode));
 			
 			// increment/decrement property
 			var op = expr.increment ? CCodeBinaryOperator.PLUS : CCodeBinaryOperator.MINUS;
-			var cexpr = new CCodeBinaryExpression (op, new CCodeIdentifier (temp_decl.name), new CCodeConstant ("1"));
+			var cexpr = new CCodeBinaryExpression (op, get_variable_cexpression (temp_decl.name), new CCodeConstant ("1"));
 			var ccall = get_property_set_call (prop, ma, cexpr);
 			ccomma.append_expression (ccall);
 			
@@ -2422,7 +2422,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			var decl = get_temp_variable (expression_type, false, node);
 			temp_vars.insert (0, decl);
 
-			var ctemp = new CCodeIdentifier (decl.name);
+			var ctemp = get_variable_cexpression (decl.name);
 			
 			var vt = (ValueType) expression_type;
 			var st = (Struct) vt.type_symbol;
@@ -2484,7 +2484,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			var decl = get_temp_variable (expression_type, false, node);
 			temp_vars.insert (0, decl);
 
-			var ctemp = new CCodeIdentifier (decl.name);
+			var ctemp = get_variable_cexpression (decl.name);
 			
 			var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ctemp, new CCodeConstant ("NULL"));
 			if (expression_type.type_parameter != null) {
@@ -2905,7 +2905,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 					var temp_var = get_temp_variable (arg.value_type);
 					temp_vars.insert (0, temp_var);
-					ccomma.append_expression (new CCodeAssignment (new CCodeIdentifier (temp_var.name), cexpr));
+					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cexpr));
 					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name)));
 
 					return ccomma;
@@ -2963,7 +2963,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 				temp_vars.add (temp_decl);
 
-				var ctemp = new CCodeIdentifier (temp_decl.name);
+				var ctemp = get_variable_cexpression (temp_decl.name);
 				var cinit = new CCodeAssignment (ctemp, (CCodeExpression) expr.inner.ccodenode);
 				var ccheck = create_type_check (ctemp, expr.type_reference);
 				var ccast = new CCodeCastExpression (ctemp, expr.type_reference.get_cname ());
@@ -3001,7 +3001,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		var ccomma = new CCodeCommaExpression ();
 		var temp_decl = get_temp_variable (expr.value_type, true, expr);
 		temp_vars.insert (0, temp_decl);
-		var cvar = new CCodeIdentifier (temp_decl.name);
+		var cvar = get_variable_cexpression (temp_decl.name);
 
 		ccomma.append_expression (new CCodeAssignment (cvar, (CCodeExpression) expr.inner.ccodenode));
 		ccomma.append_expression (new CCodeAssignment ((CCodeExpression) expr.inner.ccodenode, new CCodeConstant ("NULL")));
@@ -3444,7 +3444,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		var ccomma = new CCodeCommaExpression ();
 		var temp_decl = get_temp_variable (e.value_type);
-		var ctemp = new CCodeIdentifier (temp_decl.name);
+		var ctemp = get_variable_cexpression (temp_decl.name);
 		temp_vars.add (temp_decl);
 		ccomma.append_expression (new CCodeAssignment (ctemp, ce));
 		ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
