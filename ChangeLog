@@ -1,3 +1,15 @@
+2008-12-19  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaparser.vala:
+	* vala/valascanner.vala:
+	* vala/valatokentype.vala:
+
+	Add `owned' type modifier and `(owned)' cast to replace `#',
+	add `unowned' type modifier to complement `weak' for non-reference
+	counted objects.
+
+	`#' will be deprecated in Vala 0.5.5
+
 2008-12-18  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodememberaccessmodule.vala:

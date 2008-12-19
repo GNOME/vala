@@ -166,6 +166,9 @@ public class Vala.Scanner {
 			case 'f':
 				if (matches (begin, "false")) return TokenType.FALSE;
 				break;
+			case 'o':
+				if (matches (begin, "owned")) return TokenType.OWNED;
+				break;
 			case 't':
 				if (matches (begin, "throw")) return TokenType.THROW;
 				break;
@@ -273,6 +276,9 @@ public class Vala.Scanner {
 				break;
 			case 'p':
 				if (matches (begin, "private")) return TokenType.PRIVATE;
+				break;
+			case 'u':
+				if (matches (begin, "unowned")) return TokenType.UNOWNED;
 				break;
 			case 'v':
 				if (matches (begin, "virtual")) return TokenType.VIRTUAL;

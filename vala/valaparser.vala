@@ -207,6 +207,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.NULL:
 		case TokenType.OUT:
 		case TokenType.OVERRIDE:
+		case TokenType.OWNED:
 		case TokenType.PARAMS:
 		case TokenType.PRIVATE:
 		case TokenType.PROTECTED:
@@ -226,6 +227,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.TRUE:
 		case TokenType.TRY:
 		case TokenType.TYPEOF:
+		case TokenType.UNOWNED:
 		case TokenType.USING:
 		case TokenType.VAR:
 		case TokenType.VIRTUAL:
@@ -336,6 +338,8 @@ public class Vala.Parser : CodeVisitor {
 			return;
 		}
 		accept (TokenType.DYNAMIC);
+		accept (TokenType.OWNED);
+		accept (TokenType.UNOWNED);
 		accept (TokenType.WEAK);
 		skip_symbol_name ();
 		skip_type_argument_list ();
@@ -369,8 +373,14 @@ public class Vala.Parser : CodeVisitor {
 		bool is_dynamic = accept (TokenType.DYNAMIC);
 
 		bool value_owned = owned_by_default;
+
 		if (owned_by_default) {
-			value_owned = !accept (TokenType.WEAK);
+			if (accept (TokenType.UNOWNED)
+			    || accept (TokenType.WEAK)) {
+				value_owned = false;
+			}
+		} else {
+			value_owned = accept (TokenType.OWNED);
 		}
 
 		var sym = parse_symbol_name ();
@@ -419,7 +429,11 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		if (!owned_by_default) {
-			value_owned = accept (TokenType.HASH);
+			if (accept (TokenType.HASH)) {
+				// TODO enable warning after releasing Vala 0.5.4
+				// Report.warning (get_last_src (), "deprecated syntax, use `owned` modifier");
+				value_owned = true;
+			}
 		}
 
 		type.is_dynamic = is_dynamic;
@@ -776,15 +790,24 @@ public class Vala.Parser : CodeVisitor {
 		}
 		switch (current ()) {
 		case TokenType.HASH:
+			// TODO enable warning after releasing Vala 0.5.4
+			// Report.warning (get_last_src (), "deprecated syntax, use `(owned)` cast");
 			next ();
 			var op = parse_unary_expression ();
 			return new ReferenceTransferExpression (op, get_src (begin));
 		case TokenType.OPEN_PARENS:
 			next ();
 			switch (current ()) {
+			case TokenType.OWNED:
+				// (owned) foo
+				next ();
+				if (accept (TokenType.CLOSE_PARENS)) {
+					var op = parse_unary_expression ();
+					return new ReferenceTransferExpression (op, get_src (begin));
+				}
+				break;
 			case TokenType.VOID:
 			case TokenType.DYNAMIC:
-			case TokenType.WEAK:
 			case TokenType.IDENTIFIER:
 				var type = parse_type ();
 				if (accept (TokenType.CLOSE_PARENS)) {
@@ -807,9 +830,6 @@ public class Vala.Parser : CodeVisitor {
 					case TokenType.SIZEOF:
 					case TokenType.TYPEOF:
 					case TokenType.IDENTIFIER:
-						if (!(type is PointerType) && !type.value_owned) {
-							Report.warning (get_src (begin), "obsolete syntax, weak type modifier unused in cast expressions");
-						}
 						var inner = parse_unary_expression ();
 						return new CastExpression (inner, type, get_src (begin), false);
 					default:
@@ -2179,7 +2199,7 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
-		bool is_weak = accept (TokenType.WEAK);
+		bool is_weak = accept (TokenType.UNOWNED) || accept (TokenType.WEAK);
 		var type = parse_type (false);
 		string id = parse_identifier ();
 		var prop = new Property (id, type, null, null, get_src_com (begin));
@@ -2818,6 +2838,7 @@ public class Vala.Parser : CodeVisitor {
 				switch (current ()) {
 				case TokenType.VOID:
 				case TokenType.DYNAMIC:
+				case TokenType.UNOWNED:
 				case TokenType.WEAK:
 				case TokenType.IDENTIFIER:
 					var type = parse_type ();

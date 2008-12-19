@@ -107,6 +107,7 @@ public enum Vala.TokenType {
 	OPEN_BRACKET,
 	OPEN_PARENS,
 	OVERRIDE,
+	OWNED,
 	PARAMS,
 	PERCENT,
 	PLUS,
@@ -133,6 +134,7 @@ public enum Vala.TokenType {
 	TRUE,
 	TRY,
 	TYPEOF,
+	UNOWNED,
 	USING,
 	VAR,
 	VERBATIM_STRING_LITERAL,
@@ -226,6 +228,7 @@ public enum Vala.TokenType {
 		case OPEN_BRACKET: return "`['";
 		case OPEN_PARENS: return "`('";
 		case OVERRIDE: return "`override'";
+		case OWNED: return "`owned'";
 		case PARAMS: return "`params'";
 		case PERCENT: return "`%'";
 		case PLUS: return "`+'";
@@ -252,6 +255,7 @@ public enum Vala.TokenType {
 		case TRUE: return "`true'";
 		case TRY: return "`try'";
 		case TYPEOF: return "`typeof'";
+		case UNOWNED: return "`unowned'";
 		case USING: return "`using'";
 		case VAR: return "`var'";
 		case VIRTUAL: return "`virtual'";
