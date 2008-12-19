@@ -64,6 +64,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public CCodeStruct type_struct;
 	public CCodeStruct instance_priv_struct;
 	public CCodeStruct type_priv_struct;
+	public CCodeStruct closure_struct;
 	public CCodeEnum prop_enum;
 	public CCodeEnum cenum;
 	public CCodeFunction function;
@@ -1475,21 +1476,31 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				rhs = ccomma;
 			}
 		}
-			
-		var cvar = new CCodeVariableDeclarator.with_initializer (get_variable_cname (local.name), rhs);
 
 		var cfrag = new CCodeFragment ();
-		var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
-		cdecl.add_declarator (cvar);
-		cfrag.append (cdecl);
+
+		if (current_method != null && current_method.coroutine) {
+			closure_struct.add_field (local.variable_type.get_cname (), get_variable_cname (local.name));
+
+			if (local.initializer != null) {
+				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (local.name)), rhs)));
+			}
+		} else {
+			var cvar = new CCodeVariableDeclarator.with_initializer (get_variable_cname (local.name), rhs);
+
+			var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
+			cdecl.add_declarator (cvar);
+			cfrag.append (cdecl);
+
+			// try to initialize uninitialized variables
+			// initialization not necessary for variables stored in closure
+			if (cvar.initializer == null) {
+				cvar.initializer = default_value_for_type (local.variable_type, true);
+			}
+		}
 
 		if (local.initializer != null && local.initializer.tree_can_fail) {
 			head.add_simple_check (local.initializer, cfrag);
-		}
-
-		/* try to initialize uninitialized variables */
-		if (cvar.initializer == null) {
-			cvar.initializer = default_value_for_type (local.variable_type, true);
 		}
 
 		local.ccodenode = cfrag;

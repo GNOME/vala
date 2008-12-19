@@ -29,9 +29,8 @@ public class Vala.GAsyncModule : GSignalModule {
 	}
 
 	public override void visit_method (Method m) {
-		base.visit_method (m);
-
 		if (!m.coroutine) {
+			base.visit_method (m);
 			return;
 		}
 
@@ -42,22 +41,24 @@ public class Vala.GAsyncModule : GSignalModule {
 
 		// generate struct to hold parameters, local variables, and the return value
 		string dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
-		var datastruct = new CCodeStruct ("_" + dataname);
+		closure_struct = new CCodeStruct ("_" + dataname);
 
-		datastruct.add_field ("int", "state");
-		datastruct.add_field ("GAsyncReadyCallback", "callback");
-		datastruct.add_field ("gpointer", "user_data");
-		datastruct.add_field ("GAsyncResult*", "res");
+		closure_struct.add_field ("int", "state");
+		closure_struct.add_field ("GAsyncReadyCallback", "callback");
+		closure_struct.add_field ("gpointer", "user_data");
+		closure_struct.add_field ("GAsyncResult*", "res");
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			datastruct.add_field (param.parameter_type.get_cname (), param.name);
+			closure_struct.add_field (param.parameter_type.get_cname (), param.name);
 		}
 
 		if (!(m.return_type is VoidType)) {
-			datastruct.add_field (m.return_type.get_cname (), "result");
+			closure_struct.add_field (m.return_type.get_cname (), "result");
 		}
 
-		source_type_definition.append (datastruct);
+		base.visit_method (m);
+
+		source_type_definition.append (closure_struct);
 		source_type_declaration.append (new CCodeTypeDefinition ("struct _" + dataname, new CCodeVariableDeclarator (dataname)));
 
 		// generate async function

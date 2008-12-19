@@ -1,6 +1,14 @@
 2008-12-19  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodebasemodule.vala:
+	* gobject/valagasyncmodule.vala:
+
+	Use closure struct to declare and initialize local variables in
+	coroutines
+
+2008-12-19  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodebasemodule.vala:
 
 	Do not use g_error_new for non-format strings, fixes bug 564961
 
