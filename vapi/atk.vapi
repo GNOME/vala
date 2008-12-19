@@ -14,16 +14,16 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class GObjectAccessible : Atk.Object {
-		public static weak Atk.Object for_object (GLib.Object obj);
-		public weak GLib.Object get_object ();
+		public static unowned Atk.Object for_object (GLib.Object obj);
+		public unowned GLib.Object get_object ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Hyperlink : GLib.Object, Atk.Action {
 		public virtual int get_end_index ();
 		public virtual int get_n_anchors ();
-		public virtual weak Atk.Object get_object (int i);
+		public virtual unowned Atk.Object get_object (int i);
 		public virtual int get_start_index ();
-		public virtual weak string get_uri (int i);
+		public virtual unowned string get_uri (int i);
 		public bool is_inline ();
 		public virtual bool is_selected_link ();
 		public virtual bool is_valid ();
@@ -40,18 +40,18 @@ namespace Atk {
 	[Compact]
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class KeyEventStruct {
-		public ushort keycode;
+		public uint16 keycode;
 		public uint keyval;
 		public int length;
 		public uint state;
 		[CCode (cname = "string")]
 		public weak string str;
-		public uint timestamp;
+		public uint32 timestamp;
 		public int type;
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Misc : GLib.Object {
-		public static weak Atk.Misc get_instance ();
+		public static unowned Atk.Misc get_instance ();
 		public virtual void threads_enter ();
 		public virtual void threads_leave ();
 	}
@@ -74,24 +74,24 @@ namespace Atk {
 		public Atk.Role role;
 		public bool add_relationship (Atk.RelationType relationship, Atk.Object target);
 		public virtual uint connect_property_change_handler (Atk.PropertyChangeHandler handler);
-		public virtual weak Atk.AttributeSet get_attributes ();
-		public virtual weak string get_description ();
+		public virtual unowned Atk.AttributeSet get_attributes ();
+		public virtual unowned string get_description ();
 		public virtual int get_index_in_parent ();
 		public virtual Atk.Layer get_layer ();
 		public virtual int get_mdi_zorder ();
 		public int get_n_accessible_children ();
 		[NoWrapper]
 		public virtual int get_n_children ();
-		public virtual weak string get_name ();
-		public virtual weak Atk.Object get_parent ();
+		public virtual unowned string get_name ();
+		public virtual unowned Atk.Object get_parent ();
 		public virtual Atk.Role get_role ();
 		public virtual void initialize (void* data);
 		public void notify_state_change (Atk.State state, bool value);
-		public weak Atk.Object ref_accessible_child (int i);
+		public unowned Atk.Object ref_accessible_child (int i);
 		[NoWrapper]
-		public virtual weak Atk.Object ref_child (int i);
-		public virtual weak Atk.RelationSet ref_relation_set ();
-		public virtual weak Atk.StateSet ref_state_set ();
+		public virtual unowned Atk.Object ref_child (int i);
+		public virtual unowned Atk.RelationSet ref_relation_set ();
+		public virtual unowned Atk.StateSet ref_state_set ();
 		public virtual void remove_property_change_handler (uint handler_id);
 		public bool remove_relationship (Atk.RelationType relationship, Atk.Object target);
 		public virtual void set_description (string description);
@@ -137,7 +137,7 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class ObjectFactory : GLib.Object {
-		public virtual weak Atk.Object create_accessible (GLib.Object obj);
+		public virtual unowned Atk.Object create_accessible (GLib.Object obj);
 		public virtual GLib.Type get_accessible_type ();
 		public virtual void invalidate ();
 	}
@@ -152,7 +152,7 @@ namespace Atk {
 	public class Registry : GLib.Object {
 		public weak GLib.HashTable factory_singleton_cache;
 		public weak GLib.HashTable factory_type_registry;
-		public weak Atk.ObjectFactory get_factory (GLib.Type type);
+		public unowned Atk.ObjectFactory get_factory (GLib.Type type);
 		public GLib.Type get_factory_type (GLib.Type type);
 		public void set_factory_type (GLib.Type type, GLib.Type factory_type);
 	}
@@ -161,11 +161,11 @@ namespace Atk {
 		public Atk.RelationType relationship;
 		public void add_target (Atk.Object target);
 		public Atk.RelationType get_relation_type ();
-		public weak GLib.PtrArray get_target ();
+		public unowned GLib.PtrArray get_target ();
 		[CCode (has_construct_function = false)]
 		public Relation (Atk.Object[] targets, Atk.RelationType relationship);
 		public static Atk.RelationType type_for_name (string name);
-		public static weak string type_get_name (Atk.RelationType type);
+		public static unowned string type_get_name (Atk.RelationType type);
 		public static Atk.RelationType type_register (string name);
 		[NoAccessorMethod]
 		public Atk.RelationType relation_type { get; set; }
@@ -179,8 +179,8 @@ namespace Atk {
 		public void add_relation_by_type (Atk.RelationType relationship, Atk.Object target);
 		public bool contains (Atk.RelationType relationship);
 		public int get_n_relations ();
-		public weak Atk.Relation get_relation (int i);
-		public weak Atk.Relation get_relation_by_type (Atk.RelationType relationship);
+		public unowned Atk.Relation get_relation (int i);
+		public unowned Atk.Relation get_relation_by_type (Atk.RelationType relationship);
 		[CCode (has_construct_function = false)]
 		public RelationSet ();
 		public void remove (Atk.Relation relation);
@@ -189,23 +189,23 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class State {
 		public static Atk.StateType type_for_name (string name);
-		public static weak string type_get_name (Atk.StateType type);
+		public static unowned string type_get_name (Atk.StateType type);
 		public static Atk.StateType type_register (string name);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class StateSet : GLib.Object {
 		public bool add_state (Atk.StateType type);
 		public void add_states (Atk.StateType[] types);
-		public weak Atk.StateSet and_sets (Atk.StateSet compare_set);
+		public unowned Atk.StateSet and_sets (Atk.StateSet compare_set);
 		public void clear_states ();
 		public bool contains_state (Atk.StateType type);
 		public bool contains_states (Atk.StateType[] types);
 		public bool is_empty ();
 		[CCode (has_construct_function = false)]
 		public StateSet ();
-		public weak Atk.StateSet or_sets (Atk.StateSet compare_set);
+		public unowned Atk.StateSet or_sets (Atk.StateSet compare_set);
 		public bool remove_state (Atk.StateType type);
-		public weak Atk.StateSet xor_sets (Atk.StateSet compare_set);
+		public unowned Atk.StateSet xor_sets (Atk.StateSet compare_set);
 	}
 	[Compact]
 	[CCode (cheader_filename = "atk/atk.h")]
@@ -230,11 +230,11 @@ namespace Atk {
 		[NoWrapper]
 		public virtual uint add_key_event_listener (Atk.KeySnoopFunc listener, void* data);
 		[NoWrapper]
-		public virtual weak Atk.Object get_root ();
+		public virtual unowned Atk.Object get_root ();
 		[NoWrapper]
-		public virtual weak string get_toolkit_name ();
+		public virtual unowned string get_toolkit_name ();
 		[NoWrapper]
-		public virtual weak string get_toolkit_version ();
+		public virtual unowned string get_toolkit_version ();
 		[NoWrapper]
 		public virtual void remove_global_event_listener (uint listener_id);
 		[NoWrapper]
@@ -243,11 +243,11 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Action {
 		public abstract bool do_action (int i);
-		public abstract weak string get_description (int i);
-		public abstract weak string get_keybinding (int i);
-		public abstract weak string get_localized_name (int i);
+		public abstract unowned string get_description (int i);
+		public abstract unowned string get_keybinding (int i);
+		public abstract unowned string get_localized_name (int i);
 		public abstract int get_n_actions ();
-		public abstract weak string get_name (int i);
+		public abstract unowned string get_name (int i);
 		public abstract bool set_description (int i, string desc);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
@@ -261,7 +261,7 @@ namespace Atk {
 		public abstract void get_position (int x, int y, Atk.CoordType coord_type);
 		public abstract void get_size (int width, int height);
 		public abstract bool grab_focus ();
-		public abstract weak Atk.Object ref_accessible_at_point (int x, int y, Atk.CoordType coord_type);
+		public abstract unowned Atk.Object ref_accessible_at_point (int x, int y, Atk.CoordType coord_type);
 		public abstract void remove_focus_handler (uint handler_id);
 		public abstract bool set_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
 		public abstract bool set_position (int x, int y, Atk.CoordType coord_type);
@@ -270,17 +270,17 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Document {
-		public weak string get_attribute_value (string attribute_name);
-		public weak Atk.AttributeSet get_attributes ();
+		public unowned string get_attribute_value (string attribute_name);
+		public unowned Atk.AttributeSet get_attributes ();
 		public abstract void* get_document ();
 		[NoWrapper]
-		public abstract weak string get_document_attribute_value (string attribute_name);
+		public abstract unowned string get_document_attribute_value (string attribute_name);
 		[NoWrapper]
-		public abstract weak Atk.AttributeSet get_document_attributes ();
+		public abstract unowned Atk.AttributeSet get_document_attributes ();
 		[NoWrapper]
-		public abstract weak string get_document_locale ();
-		public abstract weak string get_document_type ();
-		public weak string get_locale ();
+		public abstract unowned string get_document_locale ();
+		public abstract unowned string get_document_type ();
+		public unowned string get_locale ();
 		public bool set_attribute_value (string attribute_name, string attribute_value);
 		[NoWrapper]
 		public abstract bool set_document_attribute (string attribute_name, string attribute_value);
@@ -300,26 +300,26 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface HyperlinkImpl {
-		public abstract weak Atk.Hyperlink get_hyperlink ();
+		public abstract unowned Atk.Hyperlink get_hyperlink ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Hypertext {
-		public abstract weak Atk.Hyperlink get_link (int link_index);
+		public abstract unowned Atk.Hyperlink get_link (int link_index);
 		public abstract int get_link_index (int char_index);
 		public abstract int get_n_links ();
 		public virtual signal void link_selected (int link_index);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Image {
-		public abstract weak string get_image_description ();
-		public abstract weak string get_image_locale ();
+		public abstract unowned string get_image_description ();
+		public abstract unowned string get_image_locale ();
 		public abstract void get_image_position (int x, int y, Atk.CoordType coord_type);
 		public abstract void get_image_size (int width, int height);
 		public abstract bool set_image_description (string description);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Implementor {
-		public abstract weak Atk.Object ref_accessible ();
+		public abstract unowned Atk.Object ref_accessible ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Selection {
@@ -327,41 +327,41 @@ namespace Atk {
 		public abstract bool clear_selection ();
 		public abstract int get_selection_count ();
 		public abstract bool is_child_selected (int i);
-		public abstract weak Atk.Object ref_selection (int i);
+		public abstract unowned Atk.Object ref_selection (int i);
 		public abstract bool remove_selection (int i);
 		public abstract bool select_all_selection ();
 		public virtual signal void selection_changed ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface StreamableContent {
-		public abstract weak string get_mime_type (int i);
+		public abstract unowned string get_mime_type (int i);
 		public abstract int get_n_mime_types ();
-		public abstract weak GLib.IOChannel get_stream (string mime_type);
-		public abstract weak string get_uri (string mime_type);
+		public abstract unowned GLib.IOChannel get_stream (string mime_type);
+		public abstract unowned string get_uri (string mime_type);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Table {
 		public abstract bool add_column_selection (int column);
 		public abstract bool add_row_selection (int row);
-		public abstract weak Atk.Object get_caption ();
+		public abstract unowned Atk.Object get_caption ();
 		public abstract int get_column_at_index (int index_);
-		public abstract weak string get_column_description (int column);
+		public abstract unowned string get_column_description (int column);
 		public abstract int get_column_extent_at (int row, int column);
-		public abstract weak Atk.Object get_column_header (int column);
+		public abstract unowned Atk.Object get_column_header (int column);
 		public abstract int get_index_at (int row, int column);
 		public abstract int get_n_columns ();
 		public abstract int get_n_rows ();
 		public abstract int get_row_at_index (int index_);
-		public abstract weak string get_row_description (int row);
+		public abstract unowned string get_row_description (int row);
 		public abstract int get_row_extent_at (int row, int column);
-		public abstract weak Atk.Object get_row_header (int row);
+		public abstract unowned Atk.Object get_row_header (int row);
 		public abstract int get_selected_columns (int selected);
 		public abstract int get_selected_rows (int selected);
-		public abstract weak Atk.Object get_summary ();
+		public abstract unowned Atk.Object get_summary ();
 		public abstract bool is_column_selected (int column);
 		public abstract bool is_row_selected (int row);
 		public abstract bool is_selected (int row, int column);
-		public abstract weak Atk.Object ref_at (int row, int column);
+		public abstract unowned Atk.Object ref_at (int row, int column);
 		public abstract bool remove_column_selection (int column);
 		public abstract bool remove_row_selection (int row);
 		public abstract void set_caption (Atk.Object caption);
@@ -382,25 +382,25 @@ namespace Atk {
 	public interface Text {
 		public abstract bool add_selection (int start_offset, int end_offset);
 		public static Atk.TextAttribute attribute_for_name (string name);
-		public static weak string attribute_get_name (Atk.TextAttribute attr);
-		public static weak string attribute_get_value (Atk.TextAttribute attr, int index_);
+		public static unowned string attribute_get_name (Atk.TextAttribute attr);
+		public static unowned string attribute_get_value (Atk.TextAttribute attr, int index_);
 		public static Atk.TextAttribute attribute_register (string name);
-		public static void free_ranges (out weak Atk.TextRange ranges);
-		public abstract weak Atk.TextRange get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
+		public static void free_ranges (out unowned Atk.TextRange ranges);
+		public abstract unowned Atk.TextRange get_bounded_ranges (Atk.TextRectangle rect, Atk.CoordType coord_type, Atk.TextClipType x_clip_type, Atk.TextClipType y_clip_type);
 		public abstract int get_caret_offset ();
 		public abstract unichar get_character_at_offset (int offset);
 		public abstract int get_character_count ();
 		public abstract void get_character_extents (int offset, int x, int y, int width, int height, Atk.CoordType coords);
-		public abstract weak Atk.AttributeSet get_default_attributes ();
+		public abstract unowned Atk.AttributeSet get_default_attributes ();
 		public abstract int get_n_selections ();
 		public abstract int get_offset_at_point (int x, int y, Atk.CoordType coords);
 		public abstract void get_range_extents (int start_offset, int end_offset, Atk.CoordType coord_type, Atk.TextRectangle rect);
-		public abstract weak Atk.AttributeSet get_run_attributes (int offset, int start_offset, int end_offset);
-		public abstract weak string get_selection (int selection_num, int start_offset, int end_offset);
-		public abstract weak string get_text (int start_offset, int end_offset);
-		public abstract weak string get_text_after_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
-		public abstract weak string get_text_at_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
-		public abstract weak string get_text_before_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
+		public abstract unowned Atk.AttributeSet get_run_attributes (int offset, int start_offset, int end_offset);
+		public abstract unowned string get_selection (int selection_num, int start_offset, int end_offset);
+		public abstract unowned string get_text (int start_offset, int end_offset);
+		public abstract unowned string get_text_after_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
+		public abstract unowned string get_text_at_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
+		public abstract unowned string get_text_before_offset (int offset, Atk.TextBoundary boundary_type, int start_offset, int end_offset);
 		public abstract bool remove_selection (int selection_num);
 		public abstract bool set_caret_offset (int offset);
 		public abstract bool set_selection (int selection_num, int start_offset, int end_offset);
@@ -678,17 +678,17 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	public static void focus_tracker_notify (Atk.Object object);
 	[CCode (cheader_filename = "atk/atk.h")]
-	public static weak Atk.Registry get_default_registry ();
+	public static unowned Atk.Registry get_default_registry ();
 	[CCode (cheader_filename = "atk/atk.h")]
-	public static weak Atk.Object get_focus_object ();
+	public static unowned Atk.Object get_focus_object ();
 	[CCode (cheader_filename = "atk/atk.h")]
-	public static weak Atk.Object get_root ();
+	public static unowned Atk.Object get_root ();
 	[CCode (cheader_filename = "atk/atk.h")]
-	public static weak string get_toolkit_name ();
+	public static unowned string get_toolkit_name ();
 	[CCode (cheader_filename = "atk/atk.h")]
-	public static weak string get_toolkit_version ();
+	public static unowned string get_toolkit_version ();
 	[CCode (cheader_filename = "atk/atk.h")]
-	public static weak string get_version ();
+	public static unowned string get_version ();
 	[CCode (cheader_filename = "atk/atk.h")]
 	public static void remove_focus_tracker (uint tracker_id);
 	[CCode (cheader_filename = "atk/atk.h")]
@@ -698,9 +698,9 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	public static Atk.Role role_for_name (string name);
 	[CCode (cheader_filename = "atk/atk.h")]
-	public static weak string role_get_localized_name (Atk.Role role);
+	public static unowned string role_get_localized_name (Atk.Role role);
 	[CCode (cheader_filename = "atk/atk.h")]
-	public static weak string role_get_name (Atk.Role role);
+	public static unowned string role_get_name (Atk.Role role);
 	[CCode (cheader_filename = "atk/atk.h")]
 	public static Atk.Role role_register (string name);
 }

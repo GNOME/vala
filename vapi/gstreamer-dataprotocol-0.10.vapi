@@ -44,17 +44,17 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public const int DP_VERSION_MINOR;
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
-	public static weak Gst.Buffer dp_buffer_from_header (uint header_length, uchar header);
+	public static unowned Gst.Buffer dp_buffer_from_header (uint header_length, uchar header);
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
-	public static weak Gst.Caps dp_caps_from_packet (uint header_length, uchar header, uchar payload);
+	public static unowned Gst.Caps dp_caps_from_packet (uint header_length, uchar header, uchar payload);
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
-	public static ushort dp_crc (uchar buffer, uint length);
+	public static uint16 dp_crc (uchar buffer, uint length);
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
-	public static weak Gst.Event dp_event_from_packet (uint header_length, uchar header, uchar payload);
+	public static unowned Gst.Event dp_event_from_packet (uint header_length, uchar header, uchar payload);
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static bool dp_header_from_buffer (Gst.Buffer buffer, Gst.DPHeaderFlag flags, uint length, uchar header);
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
-	public static uint dp_header_payload_length (uchar header);
+	public static uint32 dp_header_payload_length (uchar header);
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public static Gst.DPPayloadType dp_header_payload_type (uchar header);
 	[CCode (cheader_filename = "gst/dataprotocol/dataprotocol.h")]

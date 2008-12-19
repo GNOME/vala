@@ -43,14 +43,14 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.StateChangeReturn async_play ();
 		[NoWrapper]
-		public virtual Gst.FlowReturn buffer_alloc (uint64 offset, uint size, Gst.Caps caps, out weak Gst.Buffer buf);
+		public virtual Gst.FlowReturn buffer_alloc (uint64 offset, uint size, Gst.Caps caps, out unowned Gst.Buffer buf);
 		[NoWrapper]
 		public virtual bool event (Gst.Event event);
 		[NoWrapper]
 		public virtual void fixate (Gst.Caps caps);
 		[NoWrapper]
-		public virtual weak Gst.Caps get_caps ();
-		public weak Gst.Buffer get_last_buffer ();
+		public virtual unowned Gst.Caps get_caps ();
+		public unowned Gst.Buffer get_last_buffer ();
 		public Gst.ClockTime get_latency ();
 		public int64 get_max_lateness ();
 		public bool get_sync ();
@@ -114,7 +114,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool check_get_range ();
 		[NoWrapper]
-		public virtual Gst.FlowReturn create (uint64 offset, uint size, out weak Gst.Buffer buf);
+		public virtual Gst.FlowReturn create (uint64 offset, uint size, out unowned Gst.Buffer buf);
 		[NoWrapper]
 		public virtual bool do_seek (Gst.Segment segment);
 		[NoWrapper]
@@ -122,7 +122,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual void fixate (Gst.Caps caps);
 		[NoWrapper]
-		public virtual weak Gst.Caps get_caps ();
+		public virtual unowned Gst.Caps get_caps ();
 		public bool get_do_timestamp ();
 		[NoWrapper]
 		public virtual bool get_size (uint64 size);
@@ -133,7 +133,6 @@ namespace Gst {
 		public virtual bool is_seekable ();
 		[NoWrapper]
 		public virtual bool negotiate ();
-		public BaseSrc ();
 		[NoWrapper]
 		public virtual bool newsegment ();
 		[NoWrapper]
@@ -191,9 +190,8 @@ namespace Gst {
 		public bool is_in_place ();
 		public bool is_passthrough ();
 		public bool is_qos_enabled ();
-		public BaseTransform ();
 		[NoWrapper]
-		public virtual Gst.FlowReturn prepare_output_buffer (Gst.Buffer input, int size, Gst.Caps caps, out weak Gst.Buffer buf);
+		public virtual Gst.FlowReturn prepare_output_buffer (Gst.Buffer input, int size, Gst.Caps caps, out unowned Gst.Buffer buf);
 		[NoWrapper]
 		public virtual bool set_caps (Gst.Caps incaps, Gst.Caps outcaps);
 		public void set_gap_aware (bool gap_aware);
@@ -209,7 +207,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.FlowReturn transform (Gst.Buffer inbuf, Gst.Buffer outbuf);
 		[NoWrapper]
-		public virtual weak Gst.Caps transform_caps (Gst.PadDirection direction, Gst.Caps caps);
+		public virtual unowned Gst.Caps transform_caps (Gst.PadDirection direction, Gst.Caps caps);
 		[NoWrapper]
 		public virtual Gst.FlowReturn transform_ip (Gst.Buffer buf);
 		[NoWrapper]
@@ -230,7 +228,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]
 	public class CollectPads : Gst.Object {
 		public weak GLib.Cond cond;
-		public uint cookie;
+		public uint32 cookie;
 		public weak GLib.SList<Gst.CollectData> data;
 		public uint eospads;
 		public weak Gst.CollectPadsFunction func;
@@ -238,8 +236,8 @@ namespace Gst {
 		public uint queuedpads;
 		public bool started;
 		public void* user_data;
-		public weak Gst.CollectData add_pad (Gst.Pad pad, uint size);
-		public weak Gst.CollectData add_pad_full (Gst.Pad pad, uint size, Gst.CollectDataDestroyNotify destroy_notify);
+		public unowned Gst.CollectData add_pad (Gst.Pad pad, uint size);
+		public unowned Gst.CollectData add_pad_full (Gst.Pad pad, uint size, Gst.CollectDataDestroyNotify destroy_notify);
 		public uint available ();
 		public Gst.FlowReturn collect ();
 		public Gst.FlowReturn collect_range (uint64 offset, uint length);
@@ -247,10 +245,10 @@ namespace Gst {
 		public bool is_active (Gst.Pad pad);
 		[CCode (has_construct_function = false)]
 		public CollectPads ();
-		public weak Gst.Buffer peek (Gst.CollectData data);
-		public weak Gst.Buffer pop (Gst.CollectData data);
+		public unowned Gst.Buffer peek (Gst.CollectData data);
+		public unowned Gst.Buffer pop (Gst.CollectData data);
 		public uint read (Gst.CollectData data, uchar bytes, uint size);
-		public weak Gst.Buffer read_buffer (Gst.CollectData data, uint size);
+		public unowned Gst.Buffer read_buffer (Gst.CollectData data, uint size);
 		public bool remove_pad (Gst.Pad pad);
 		public void set_flushing (bool flushing);
 		public void set_function (Gst.CollectPadsFunction func);
@@ -276,7 +274,7 @@ namespace Gst {
 		public void limits_changed ();
 		[CCode (has_construct_function = false)]
 		public DataQueue (Gst.DataQueueCheckFullFunction checkfull, void* checkdata);
-		public bool pop (out weak Gst.DataQueueItem item);
+		public bool pop (out unowned Gst.DataQueueItem item);
 		public bool push (Gst.DataQueueItem item);
 		public void set_flushing (bool flushing);
 		[NoAccessorMethod]
@@ -307,7 +305,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/base/gstpushsrc.h")]
 	public class PushSrc : Gst.BaseSrc {
 		[NoWrapper]
-		public virtual Gst.FlowReturn create (out weak Gst.Buffer buf);
+		public virtual Gst.FlowReturn create (out unowned Gst.Buffer buf);
 	}
 	[CCode (cprefix = "GST_BASE_SRC_", has_type_id = "0", cheader_filename = "gst/gst.h")]
 	public enum BaseSrcFlags {
@@ -321,11 +319,11 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/base/gstdataqueue.h")]
 	public static delegate bool DataQueueCheckFullFunction (Gst.DataQueue queue, uint visible, uint bytes, uint64 time, void* checkdata);
 	[CCode (cheader_filename = "gst/base/gsttypefindhelper.h")]
-	public static delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, uint64 offset, uint length, out weak Gst.Buffer buffer);
+	public static delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, uint64 offset, uint length, out unowned Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static weak Gst.Caps type_find_helper (Gst.Pad src, uint64 size);
+	public static unowned Gst.Caps type_find_helper (Gst.Pad src, uint64 size);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static weak Gst.Caps type_find_helper_for_buffer (Gst.Object obj, Gst.Buffer buf, Gst.TypeFindProbability prob);
+	public static unowned Gst.Caps type_find_helper_for_buffer (Gst.Object obj, Gst.Buffer buf, Gst.TypeFindProbability prob);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static weak Gst.Caps type_find_helper_get_range (Gst.Object obj, Gst.TypeFindHelperGetRangeFunction func, uint64 size, Gst.TypeFindProbability prob);
+	public static unowned Gst.Caps type_find_helper_get_range (Gst.Object obj, Gst.TypeFindHelperGetRangeFunction func, uint64 size, Gst.TypeFindProbability prob);
 }

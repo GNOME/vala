@@ -12,7 +12,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public class MixerOptions : Gst.MixerTrack {
 		public weak GLib.List values;
-		public weak GLib.List get_values ();
+		public unowned GLib.List get_values ();
 	}
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public class MixerTrack : GLib.Object {
@@ -51,7 +51,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/interfaces/colorbalance.h")]
 	public interface ColorBalance : Gst.ImplementsInterface, Gst.Element {
 		public abstract int get_value (Gst.ColorBalanceChannel channel);
-		public abstract weak GLib.List list_channels ();
+		public abstract unowned GLib.List list_channels ();
 		public abstract void set_value (Gst.ColorBalanceChannel channel, int value);
 		[HasEmitter]
 		public virtual signal void value_changed (Gst.ColorBalanceChannel channel, int value);
@@ -59,14 +59,14 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public interface Mixer : Gst.ImplementsInterface, Gst.Element {
 		public abstract Gst.MixerFlags get_mixer_flags ();
-		public abstract weak string get_option (Gst.MixerOptions opts);
+		public abstract unowned string get_option (Gst.MixerOptions opts);
 		public abstract void get_volume (Gst.MixerTrack track, int volumes);
-		public abstract weak GLib.List list_tracks ();
+		public abstract unowned GLib.List list_tracks ();
 		public static Gst.MixerMessageType message_get_type (Gst.Message message);
-		public static void message_parse_mute_toggled (Gst.Message message, out weak Gst.MixerTrack track, bool mute);
-		public static void message_parse_option_changed (Gst.Message message, out weak Gst.MixerOptions options, string value);
-		public static void message_parse_record_toggled (Gst.Message message, out weak Gst.MixerTrack track, bool record);
-		public static void message_parse_volume_changed (Gst.Message message, out weak Gst.MixerTrack track, int volumes, int num_channels);
+		public static void message_parse_mute_toggled (Gst.Message message, out unowned Gst.MixerTrack track, bool mute);
+		public static void message_parse_option_changed (Gst.Message message, out unowned Gst.MixerOptions options, string value);
+		public static void message_parse_record_toggled (Gst.Message message, out unowned Gst.MixerTrack track, bool record);
+		public static void message_parse_volume_changed (Gst.Message message, out unowned Gst.MixerTrack track, int volumes, int num_channels);
 		public abstract void set_mute (Gst.MixerTrack track, bool mute);
 		public abstract void set_option (Gst.MixerOptions opts, string value);
 		public abstract void set_record (Gst.MixerTrack track, bool record);
@@ -88,27 +88,27 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/interfaces/propertyprobe.h")]
 	public interface PropertyProbe {
-		public abstract weak GLib.List get_properties ();
-		public weak GLib.ParamSpec get_property (string name);
-		public abstract weak GLib.ValueArray get_values (GLib.ParamSpec pspec);
-		public weak GLib.ValueArray get_values_name (string name);
+		public abstract unowned GLib.List get_properties ();
+		public unowned GLib.ParamSpec get_property (string name);
+		public abstract unowned GLib.ValueArray get_values (GLib.ParamSpec pspec);
+		public unowned GLib.ValueArray get_values_name (string name);
 		public abstract bool needs_probe (GLib.ParamSpec pspec);
 		public bool needs_probe_name (string name);
-		public weak GLib.ValueArray probe_and_get_values (GLib.ParamSpec pspec);
-		public weak GLib.ValueArray probe_and_get_values_name (string name);
+		public unowned GLib.ValueArray probe_and_get_values (GLib.ParamSpec pspec);
+		public unowned GLib.ValueArray probe_and_get_values_name (string name);
 		public abstract void probe_property (GLib.ParamSpec pspec);
 		public void probe_property_name (string name);
 		public virtual signal void probe_needed (void* pspec);
 	}
 	[CCode (cheader_filename = "gst/interfaces/tunerchannel.h")]
 	public interface Tuner : Gst.ImplementsInterface, Gst.Element {
-		public weak Gst.TunerChannel find_channel_by_name (string channel);
-		public weak Gst.TunerNorm find_norm_by_name (string norm);
-		public abstract weak Gst.TunerChannel get_channel ();
+		public unowned Gst.TunerChannel find_channel_by_name (string channel);
+		public unowned Gst.TunerNorm find_norm_by_name (string norm);
+		public abstract unowned Gst.TunerChannel get_channel ();
 		public abstract ulong get_frequency (Gst.TunerChannel channel);
-		public abstract weak Gst.TunerNorm get_norm ();
-		public abstract weak GLib.List list_channels ();
-		public abstract weak GLib.List list_norms ();
+		public abstract unowned Gst.TunerNorm get_norm ();
+		public abstract unowned GLib.List list_channels ();
+		public abstract unowned GLib.List list_norms ();
 		public abstract void set_channel (Gst.TunerChannel channel);
 		public abstract void set_frequency (Gst.TunerChannel channel, ulong frequency);
 		public abstract void set_norm (Gst.TunerNorm norm);

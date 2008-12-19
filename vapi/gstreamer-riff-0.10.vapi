@@ -5,68 +5,68 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_dmlh {
-		public uint totalframes;
+		public uint32 totalframes;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_index_entry {
-		public uint flags;
-		public uint id;
-		public uint offset;
-		public uint size;
+		public uint32 flags;
+		public uint32 id;
+		public uint32 offset;
+		public uint32 size;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_strf_auds {
-		public uint av_bps;
-		public ushort blockalign;
-		public ushort channels;
-		public ushort format;
-		public uint rate;
-		public ushort size;
+		public uint32 av_bps;
+		public uint16 blockalign;
+		public uint16 channels;
+		public uint16 format;
+		public uint32 rate;
+		public uint16 size;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_strf_iavs {
-		public uint DVAAuxCtl;
-		public uint DVAAuxCtl1;
-		public uint DVAAuxSrc;
-		public uint DVAAuxSrc1;
-		public uint DVReserved1;
-		public uint DVReserved2;
-		public uint DVVAuxCtl;
-		public uint DVVAuxSrc;
+		public uint32 DVAAuxCtl;
+		public uint32 DVAAuxCtl1;
+		public uint32 DVAAuxSrc;
+		public uint32 DVAAuxSrc1;
+		public uint32 DVReserved1;
+		public uint32 DVReserved2;
+		public uint32 DVVAuxCtl;
+		public uint32 DVVAuxSrc;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_strf_vids {
-		public ushort bit_cnt;
-		public uint compression;
-		public uint height;
-		public uint image_size;
-		public uint imp_colors;
-		public uint num_colors;
-		public ushort planes;
-		public uint size;
-		public uint width;
-		public uint xpels_meter;
-		public uint ypels_meter;
+		public uint16 bit_cnt;
+		public uint32 compression;
+		public uint32 height;
+		public uint32 image_size;
+		public uint32 imp_colors;
+		public uint32 num_colors;
+		public uint16 planes;
+		public uint32 size;
+		public uint32 width;
+		public uint32 xpels_meter;
+		public uint32 ypels_meter;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public class gst_riff_strh {
-		public uint bufsize;
-		public uint fcc_handler;
-		public uint flags;
-		public uint init_frames;
-		public uint length;
-		public uint priority;
-		public uint quality;
-		public uint rate;
-		public uint samplesize;
-		public uint scale;
-		public uint start;
-		public uint type;
+		public uint32 bufsize;
+		public uint32 fcc_handler;
+		public uint32 flags;
+		public uint32 init_frames;
+		public uint32 length;
+		public uint32 priority;
+		public uint32 quality;
+		public uint32 rate;
+		public uint32 samplesize;
+		public uint32 scale;
+		public uint32 start;
+		public uint32 type;
 	}
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_IBM_FORMAT_ADPCM;
@@ -365,33 +365,33 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_ZYXEL_ADPCM;
 	[CCode (cheader_filename = "gst/riff/riff-media.h")]
-	public static weak Gst.Caps riff_create_audio_caps (ushort codec_id, Gst.gst_riff_strh strh, Gst.gst_riff_strf_auds strf, Gst.Buffer strf_data, Gst.Buffer strd_data, out weak string codec_name);
+	public static unowned Gst.Caps riff_create_audio_caps (uint16 codec_id, Gst.gst_riff_strh strh, Gst.gst_riff_strf_auds strf, Gst.Buffer strf_data, Gst.Buffer strd_data, out unowned string codec_name);
 	[CCode (cheader_filename = "gst/riff/riff-media.h")]
-	public static weak Gst.Caps riff_create_audio_template_caps ();
+	public static unowned Gst.Caps riff_create_audio_template_caps ();
 	[CCode (cheader_filename = "gst/riff/riff-media.h")]
-	public static weak Gst.Caps riff_create_iavs_caps (uint codec_fcc, Gst.gst_riff_strh strh, Gst.gst_riff_strf_iavs strf, Gst.Buffer strf_data, Gst.Buffer strd_data, out weak string codec_name);
+	public static unowned Gst.Caps riff_create_iavs_caps (uint32 codec_fcc, Gst.gst_riff_strh strh, Gst.gst_riff_strf_iavs strf, Gst.Buffer strf_data, Gst.Buffer strd_data, out unowned string codec_name);
 	[CCode (cheader_filename = "gst/riff/riff-media.h")]
-	public static weak Gst.Caps riff_create_iavs_template_caps ();
+	public static unowned Gst.Caps riff_create_iavs_template_caps ();
 	[CCode (cheader_filename = "gst/riff/riff-media.h")]
-	public static weak Gst.Caps riff_create_video_caps (uint codec_fcc, Gst.gst_riff_strh strh, Gst.gst_riff_strf_vids strf, Gst.Buffer strf_data, Gst.Buffer strd_data, out weak string codec_name);
+	public static unowned Gst.Caps riff_create_video_caps (uint32 codec_fcc, Gst.gst_riff_strh strh, Gst.gst_riff_strf_vids strf, Gst.Buffer strf_data, Gst.Buffer strd_data, out unowned string codec_name);
 	[CCode (cheader_filename = "gst/riff/riff-media.h")]
-	public static weak Gst.Caps riff_create_video_template_caps ();
+	public static unowned Gst.Caps riff_create_video_template_caps ();
 	[CCode (cheader_filename = "gst/riff/riff-read.h")]
 	public static void riff_init ();
 	[CCode (cheader_filename = "gst/riff/riff-read.h")]
-	public static bool riff_parse_chunk (Gst.Element element, Gst.Buffer buf, uint offset, uint fourcc, out weak Gst.Buffer chunk_data);
+	public static bool riff_parse_chunk (Gst.Element element, Gst.Buffer buf, uint offset, uint32 fourcc, out unowned Gst.Buffer chunk_data);
 	[CCode (cheader_filename = "gst/riff/riff-read.h")]
-	public static bool riff_parse_file_header (Gst.Element element, Gst.Buffer buf, uint doctype);
+	public static bool riff_parse_file_header (Gst.Element element, Gst.Buffer buf, uint32 doctype);
 	[CCode (cheader_filename = "gst/riff/riff-read.h")]
-	public static void riff_parse_info (Gst.Element element, Gst.Buffer buf, out weak Gst.TagList taglist);
+	public static void riff_parse_info (Gst.Element element, Gst.Buffer buf, out unowned Gst.TagList taglist);
 	[CCode (cheader_filename = "gst/riff/riff-read.h")]
-	public static bool riff_parse_strf_auds (Gst.Element element, Gst.Buffer buf, out weak Gst.gst_riff_strf_auds strf, out weak Gst.Buffer data);
+	public static bool riff_parse_strf_auds (Gst.Element element, Gst.Buffer buf, out unowned Gst.gst_riff_strf_auds strf, out unowned Gst.Buffer data);
 	[CCode (cheader_filename = "gst/riff/riff-read.h")]
-	public static bool riff_parse_strf_iavs (Gst.Element element, Gst.Buffer buf, out weak Gst.gst_riff_strf_iavs strf, out weak Gst.Buffer data);
+	public static bool riff_parse_strf_iavs (Gst.Element element, Gst.Buffer buf, out unowned Gst.gst_riff_strf_iavs strf, out unowned Gst.Buffer data);
 	[CCode (cheader_filename = "gst/riff/riff-read.h")]
-	public static bool riff_parse_strf_vids (Gst.Element element, Gst.Buffer buf, out weak Gst.gst_riff_strf_vids strf, out weak Gst.Buffer data);
+	public static bool riff_parse_strf_vids (Gst.Element element, Gst.Buffer buf, out unowned Gst.gst_riff_strf_vids strf, out unowned Gst.Buffer data);
 	[CCode (cheader_filename = "gst/riff/riff-read.h")]
-	public static bool riff_parse_strh (Gst.Element element, Gst.Buffer buf, out weak Gst.gst_riff_strh strh);
+	public static bool riff_parse_strh (Gst.Element element, Gst.Buffer buf, out unowned Gst.gst_riff_strh strh);
 	[CCode (cheader_filename = "gst/riff/riff-read.h")]
-	public static Gst.FlowReturn riff_read_chunk (Gst.Element element, Gst.Pad pad, uint64 offset, uint tag, out weak Gst.Buffer chunk_data);
+	public static Gst.FlowReturn riff_read_chunk (Gst.Element element, Gst.Pad pad, uint64 offset, uint32 tag, out unowned Gst.Buffer chunk_data);
 }

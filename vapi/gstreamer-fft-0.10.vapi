@@ -44,17 +44,17 @@ namespace Gst {
 		public void* cfg;
 		public bool inverse;
 		public int len;
-		public void fft (short timedata, Gst.FFTS16Complex freqdata);
-		public void inverse_fft (Gst.FFTS16Complex freqdata, short timedata);
+		public void fft (int16 timedata, Gst.FFTS16Complex freqdata);
+		public void inverse_fft (Gst.FFTS16Complex freqdata, int16 timedata);
 		[CCode (has_construct_function = false)]
 		public FFTS16 (int len, bool inverse);
-		public void window (short timedata, Gst.FFTWindow window);
+		public void window (int16 timedata, Gst.FFTWindow window);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts16.h")]
 	public class FFTS16Complex {
-		public short i;
-		public short r;
+		public int16 i;
+		public int16 r;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts32.h")]
@@ -62,17 +62,17 @@ namespace Gst {
 		public void* cfg;
 		public bool inverse;
 		public int len;
-		public void fft (int timedata, Gst.FFTS32Complex freqdata);
-		public void inverse_fft (Gst.FFTS32Complex freqdata, int timedata);
+		public void fft (int32 timedata, Gst.FFTS32Complex freqdata);
+		public void inverse_fft (Gst.FFTS32Complex freqdata, int32 timedata);
 		[CCode (has_construct_function = false)]
 		public FFTS32 (int len, bool inverse);
-		public void window (int timedata, Gst.FFTWindow window);
+		public void window (int32 timedata, Gst.FFTWindow window);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/fft/gstffts32.h")]
 	public class FFTS32Complex {
-		public int i;
-		public int r;
+		public int32 i;
+		public int32 r;
 	}
 	[CCode (cprefix = "GST_FFT_WINDOW_", has_type_id = "0", cheader_filename = "gst/fft/gstfft.h")]
 	public enum FFTWindow {

@@ -59,7 +59,7 @@ namespace Gst {
 		public uint64 next_sample;
 		public weak Gst.Clock provided_clock;
 		public weak Gst.RingBuffer ringbuffer;
-		public virtual weak Gst.RingBuffer create_ringbuffer ();
+		public virtual unowned Gst.RingBuffer create_ringbuffer ();
 		public bool get_provide_clock ();
 		public Gst.BaseAudioSinkSlaveMethod get_slave_method ();
 		public void set_provide_clock (bool provide);
@@ -76,7 +76,7 @@ namespace Gst {
 		public weak Gst.Clock clock;
 		public uint64 next_sample;
 		public weak Gst.RingBuffer ringbuffer;
-		public virtual weak Gst.RingBuffer create_ringbuffer ();
+		public virtual unowned Gst.RingBuffer create_ringbuffer ();
 		public bool get_provide_clock ();
 		public void set_provide_clock (bool provide);
 		[NoAccessorMethod]
@@ -262,9 +262,9 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public const string AUDIO_INT_STANDARD_PAD_TEMPLATE_CAPS;
 	[CCode (cheader_filename = "gst/audio/audio.h")]
-	public static weak Gst.Buffer audio_buffer_clip (Gst.Buffer buffer, Gst.Segment segment, int rate, int frame_size);
+	public static unowned Gst.Buffer audio_buffer_clip (Gst.Buffer buffer, Gst.Segment segment, int rate, int frame_size);
 	[CCode (cheader_filename = "gst/audio/mixerutils.h")]
-	public static weak GLib.List audio_default_registry_mixer_filter (Gst.AudioMixerFilterFunc filter_func, bool first);
+	public static unowned GLib.List audio_default_registry_mixer_filter (Gst.AudioMixerFilterFunc filter_func, bool first);
 	[CCode (cheader_filename = "gst/audio/audio.h")]
 	public static Gst.ClockTime audio_duration_from_pad_buffer (Gst.Pad pad, Gst.Buffer buf);
 	[CCode (cheader_filename = "gst/audio/multichannel.h")]

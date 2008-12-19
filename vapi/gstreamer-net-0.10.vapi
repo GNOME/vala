@@ -24,7 +24,7 @@ namespace Gst {
 		public Gst.ClockTime remote_time;
 		[CCode (has_construct_function = false)]
 		public NetTimePacket (uchar buffer);
-		public static weak Gst.NetTimePacket receive (int fd, void* addr, uint32 len);
+		public static unowned Gst.NetTimePacket receive (int fd, void* addr, uint32 len);
 		public int send (int fd, void* addr, uint32 len);
 		public uchar serialize ();
 	}

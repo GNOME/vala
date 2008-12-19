@@ -10,7 +10,7 @@ namespace Gst {
 		public Gst.RTSPResult connect (GLib.TimeVal timeout);
 		public static Gst.RTSPResult create (Gst.RTSPUrl url, out Gst.RTSPConnection conn);
 		public Gst.RTSPResult flush (bool flush);
-		public weak string get_ip ();
+		public unowned string get_ip ();
 		public Gst.RTSPResult next_timeout (GLib.TimeVal timeout);
 		public Gst.RTSPResult poll (Gst.RTSPEvent events, Gst.RTSPEvent revents, GLib.TimeVal timeout);
 		public Gst.RTSPResult read (uchar data, uint size, GLib.TimeVal timeout);
@@ -33,8 +33,8 @@ namespace Gst {
 		public Gst.RTSPResult add_header (Gst.RTSPHeaderField field, string value);
 		public Gst.RTSPResult append_headers (GLib.StringBuilder str);
 		public Gst.RTSPResult dump ();
-		public Gst.RTSPResult get_body (out weak uchar[] data, uint size);
-		public Gst.RTSPResult get_header (Gst.RTSPHeaderField field, out weak string value, int indx);
+		public Gst.RTSPResult get_body (out unowned uchar[] data, uint size);
+		public Gst.RTSPResult get_header (Gst.RTSPHeaderField field, out unowned string value, int indx);
 		public Gst.RTSPResult init ();
 		public Gst.RTSPResult init_data (uchar channel);
 		public Gst.RTSPResult init_request (Gst.RTSPMethod method, string uri);
@@ -49,7 +49,7 @@ namespace Gst {
 		public Gst.RTSPResult remove_header (Gst.RTSPHeaderField field, int indx);
 		public Gst.RTSPResult set_body (uchar[] data, uint size);
 		public Gst.RTSPResult steal_body (out uchar[] data, uint size);
-		public Gst.RTSPResult take_body (uchar[]# data, uint size);
+		public Gst.RTSPResult take_body (owned uchar[] data, uint size);
 		public Gst.RTSPResult unset ();
 	}
 	[Compact]
@@ -104,14 +104,14 @@ namespace Gst {
 		public Gst.RTSPFamily family;
 		public string host;
 		public string passwd;
-		public ushort port;
+		public uint16 port;
 		public string query;
 		public Gst.RTSPLowerTrans transports;
 		public string user;
-		public Gst.RTSPResult get_port (ushort port);
+		public Gst.RTSPResult get_port (uint16 port);
 		public string get_request_uri ();
 		public static Gst.RTSPResult parse (string urlstr, out Gst.RTSPUrl url);
-		public Gst.RTSPResult set_port (ushort port);
+		public Gst.RTSPResult set_port (uint16 port);
 	}
 	[CCode (cheader_filename = "gst/rtsp/gstrtspextension.h")]
 	public interface RTSPExtension {
@@ -343,19 +343,19 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/rtsp/gstrtspbase64.h")]
 	public static void rtsp_base64_decode_ip (string data, size_t len);
 	[CCode (cheader_filename = "gst/rtsp/gstrtspbase64.h")]
-	public static weak string rtsp_base64_encode (string data, size_t len);
+	public static unowned string rtsp_base64_encode (string data, size_t len);
 	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h")]
 	public static Gst.RTSPHeaderField rtsp_find_header_field (string header);
 	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h")]
 	public static Gst.RTSPMethod rtsp_find_method (string method);
 	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h")]
-	public static weak string rtsp_header_as_text (Gst.RTSPHeaderField field);
+	public static unowned string rtsp_header_as_text (Gst.RTSPHeaderField field);
 	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h")]
-	public static weak string rtsp_method_as_text (Gst.RTSPMethod method);
+	public static unowned string rtsp_method_as_text (Gst.RTSPMethod method);
 	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h")]
-	public static weak string rtsp_status_as_text (Gst.RTSPStatusCode code);
+	public static unowned string rtsp_status_as_text (Gst.RTSPStatusCode code);
 	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h")]
-	public static weak string rtsp_strresult (Gst.RTSPResult _result);
+	public static unowned string rtsp_strresult (Gst.RTSPResult _result);
 	[CCode (cheader_filename = "gst/rtsp/gstrtspdefs.h")]
-	public static weak string rtsp_version_as_text (Gst.RTSPVersion version);
+	public static unowned string rtsp_version_as_text (Gst.RTSPVersion version);
 }

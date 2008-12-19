@@ -10,7 +10,7 @@ namespace Gst {
 		public int size;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static weak Gst.Buffer buffer_straw_get_buffer (Gst.Element bin, Gst.Pad pad);
+	public static unowned Gst.Buffer buffer_straw_get_buffer (Gst.Element bin, Gst.Pad pad);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void buffer_straw_start_pipeline (Gst.Element bin, Gst.Pad pad);
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -26,11 +26,11 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static int check_run_suite (void* suite, string name, string fname);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static weak Gst.Element check_setup_element (string factory);
+	public static unowned Gst.Element check_setup_element (string factory);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static weak Gst.Pad check_setup_sink_pad (Gst.Element element, Gst.StaticPadTemplate template, Gst.Caps caps);
+	public static unowned Gst.Pad check_setup_sink_pad (Gst.Element element, Gst.StaticPadTemplate template, Gst.Caps caps);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static weak Gst.Pad check_setup_src_pad (Gst.Element element, Gst.StaticPadTemplate template, Gst.Caps caps);
+	public static unowned Gst.Pad check_setup_src_pad (Gst.Element element, Gst.StaticPadTemplate template, Gst.Caps caps);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void check_teardown_element (Gst.Element element);
 	[CCode (cheader_filename = "gst/gst.h")]

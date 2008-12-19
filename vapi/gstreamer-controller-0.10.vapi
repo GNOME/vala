@@ -6,7 +6,7 @@ namespace Gst {
 	public class ControlSource : GLib.Object {
 		public bool bound;
 		public bool bind (GLib.ParamSpec pspec);
-		public bool get_value (Gst.ClockTime timestamp, GLib.Value value);
+		public bool get_value (Gst.ClockTime timestamp, Gst.Value value);
 		public bool get_value_array (Gst.ClockTime timestamp, Gst.ValueArray value_array);
 	}
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
@@ -14,12 +14,12 @@ namespace Gst {
 		public weak GLib.Mutex @lock;
 		public weak GLib.Object object;
 		public weak GLib.List properties;
-		public GLib.Value get (string property_name, Gst.ClockTime timestamp);
-		public weak GLib.List get_all (string property_name);
-		public weak Gst.ControlSource get_control_source (string property_name);
+		public Gst.Value get (string property_name, Gst.ClockTime timestamp);
+		public unowned GLib.List get_all (string property_name);
+		public unowned Gst.ControlSource get_control_source (string property_name);
 		public bool get_value_array (Gst.ClockTime timestamp, Gst.ValueArray value_array);
 		public bool get_value_arrays (Gst.ClockTime timestamp, GLib.SList value_arrays);
-		public static bool init (int argc, out weak string argv);
+		public static bool init (int argc, out unowned string argv);
 		[CCode (has_construct_function = false)]
 		public Controller.list (GLib.Object object, GLib.List list);
 		[CCode (has_construct_function = false)]
@@ -27,7 +27,7 @@ namespace Gst {
 		public bool remove_properties ();
 		public bool remove_properties_list (GLib.List list);
 		public bool remove_properties_valist (void* var_args);
-		public bool set (string property_name, Gst.ClockTime timestamp, GLib.Value value);
+		public bool set (string property_name, Gst.ClockTime timestamp, Gst.Value value);
 		public bool set_control_source (string property_name, Gst.ControlSource csource);
 		public void set_disabled (bool disabled);
 		public bool set_from_list (string property_name, GLib.SList timedvalues);
@@ -45,11 +45,11 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class InterpolationControlSource : Gst.ControlSource {
 		public weak GLib.Mutex @lock;
-		public weak GLib.List get_all ();
+		public unowned GLib.List get_all ();
 		public int get_count ();
 		[CCode (has_construct_function = false)]
 		public InterpolationControlSource ();
-		public bool set (Gst.ClockTime timestamp, GLib.Value value);
+		public bool set (Gst.ClockTime timestamp, Gst.Value value);
 		public bool set_from_list (GLib.SList timedvalues);
 		public bool set_interpolation_mode (Gst.InterpolateMode mode);
 		public bool unset (Gst.ClockTime timestamp);
@@ -61,11 +61,11 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public LFOControlSource ();
 		[NoAccessorMethod]
-		public GLib.Value amplitude { get; set; }
+		public Gst.Value amplitude { get; set; }
 		[NoAccessorMethod]
 		public double frequency { get; set; }
 		[NoAccessorMethod]
-		public GLib.Value offset { get; set; }
+		public Gst.Value offset { get; set; }
 		[NoAccessorMethod]
 		public uint64 timeshift { get; set; }
 		[NoAccessorMethod]
@@ -75,7 +75,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class TimedValue {
 		public Gst.ClockTime timestamp;
-		public GLib.Value value;
+		public Gst.Value value;
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
@@ -105,17 +105,17 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static delegate bool ControlSourceBind (Gst.ControlSource _self, GLib.ParamSpec pspec);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
-	public static delegate bool ControlSourceGetValue (Gst.ControlSource _self, Gst.ClockTime timestamp, GLib.Value value);
+	public static delegate bool ControlSourceGetValue (Gst.ControlSource _self, Gst.ClockTime timestamp, Gst.Value value);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static delegate bool ControlSourceGetValueArray (Gst.ControlSource _self, Gst.ClockTime timestamp, Gst.ValueArray value_array);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
-	public static weak Gst.Controller object_control_properties (GLib.Object object);
+	public static unowned Gst.Controller object_control_properties (GLib.Object object);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static Gst.ClockTime object_get_control_rate (GLib.Object object);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
-	public static weak Gst.ControlSource object_get_control_source (GLib.Object object, string property_name);
+	public static unowned Gst.ControlSource object_get_control_source (GLib.Object object, string property_name);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
-	public static weak Gst.Controller object_get_controller (GLib.Object object);
+	public static unowned Gst.Controller object_get_controller (GLib.Object object);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public static bool object_get_value_array (GLib.Object object, Gst.ClockTime timestamp, Gst.ValueArray value_array);
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]

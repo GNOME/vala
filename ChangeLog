@@ -1,5 +1,34 @@
 2008-12-19  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/atk.vapi:
+	* vapi/gdk-2.0.vapi:
+	* vapi/gdk-pixbuf-2.0.vapi:
+	* vapi/gio-2.0.vapi:
+	* vapi/gio-unix-2.0.vapi:
+	* vapi/gstreamer-0.10.vapi:
+	* vapi/gstreamer-audio-0.10.vapi:
+	* vapi/gstreamer-base-0.10.vapi:
+	* vapi/gstreamer-check-0.10.vapi:
+	* vapi/gstreamer-controller-0.10.vapi:
+	* vapi/gstreamer-dataprotocol-0.10.vapi:
+	* vapi/gstreamer-fft-0.10.vapi:
+	* vapi/gstreamer-interfaces-0.10.vapi:
+	* vapi/gstreamer-net-0.10.vapi:
+	* vapi/gstreamer-pbutils-0.10.vapi:
+	* vapi/gstreamer-riff-0.10.vapi:
+	* vapi/gstreamer-rtp-0.10.vapi:
+	* vapi/gstreamer-rtsp-0.10.vapi:
+	* vapi/gstreamer-sdp-0.10.vapi:
+	* vapi/gstreamer-tag-0.10.vapi:
+	* vapi/gstreamer-video-0.10.vapi:
+	* vapi/gtk+-2.0.vapi:
+	* vapi/pango.vapi:
+	* vapi/pangocairo.vapi:
+
+	Regenerated
+
+2008-12-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valagasyncmodule.vala:
 
 	Fix temporary async idle support
