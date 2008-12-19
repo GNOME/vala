@@ -64,12 +64,6 @@ public class Vala.FormalParameter : Symbol {
 	 * if the parameter type is an array.
 	 */
 	public bool no_array_length { get; set; }
-	
-	/**
-	 * Specifies whether this parameter holds a value to be assigned to a
-	 * construct property. This is only allowed in CreationMethod headers.
-	 */
-	public bool construct_parameter { get; set; }
 
 	/**
 	 * Specifies the position of the parameter in the C function.
@@ -232,20 +226,6 @@ public class Vala.FormalParameter : Symbol {
 				error = true;
 				Report.error (source_reference, "parameter type `%s` is less accessible than method `%s`".printf (parameter_type.to_string (), parent_symbol.get_full_name ()));
 			}
-		}
-
-		/* special treatment for construct formal parameters used in creation methods */
-		if (construct_parameter) {
-			if (!(parent_symbol is CreationMethod)) {
-				error = true;
-				Report.error (source_reference, "construct parameters are only allowed in type creation methods");
-			}
-
-			var method_body = ((CreationMethod) parent_symbol).body;
-			var left = new MemberAccess (new MemberAccess.simple ("this"), name);
-			var right = new MemberAccess.simple (name);
-
-			method_body.add_statement (new ExpressionStatement (new Assignment (left, right), source_reference));
 		}
 
 		analyzer.current_source_file = old_source_file;

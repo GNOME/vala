@@ -1,5 +1,18 @@
 2008-12-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaformalparameter.vala:
+	* vala/valagenieparser.vala:
+	* vala/valaparser.vala:
+
+	Remove support for deprecated syntax for construct parameters
+
+	* tests/arrays.test:
+	* tests/objects/test-029.test:
+
+	Update syntax used in test cases
+
+2008-12-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodewriter.vala:
 
 	Update syntax to use owned and unowned where appropriate

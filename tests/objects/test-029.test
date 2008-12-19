@@ -7,8 +7,9 @@ class Maman.Foo : Object {
 	public int p1 { get; set; }
 	public int p2 { get; set; }
 	
-	public Foo (int i, construct int p2) {
+	public Foo (int i, int p2) {
 		p1 = 2 * i;
+		this.p2 = p2;
 	}
 	
 	public static int main (string[] args) {

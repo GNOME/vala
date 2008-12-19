@@ -2679,11 +2679,6 @@ public class Vala.Parser : CodeVisitor {
 			return new FormalParameter.with_ellipsis (get_src (begin));
 		}
 		bool params_array = accept (TokenType.PARAMS);
-		bool construct_param = false;
-		if (accept (TokenType.CONSTRUCT)) {
-			Report.warning (get_last_src (), "deprecated syntax, use assignments in the method body");
-			construct_param = true;
-		}
 		var direction = ParameterDirection.IN;
 		if (accept (TokenType.OUT)) {
 			direction = ParameterDirection.OUT;
@@ -2704,7 +2699,6 @@ public class Vala.Parser : CodeVisitor {
 		set_attributes (param, attrs);
 		param.direction = direction;
 		param.params_array = params_array;
-		param.construct_parameter = construct_param;
 		if (accept (TokenType.ASSIGN)) {
 			param.default_expression = parse_expression ();
 		}

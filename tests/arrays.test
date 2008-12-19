@@ -4,7 +4,8 @@ Program: test
 using GLib;
 
 class Maman.Foo : Object {
-	public Foo (construct string bar) {
+	public Foo (string bar) {
+		this.bar = bar;
 	}
 
 	public string bar { get; set; }
