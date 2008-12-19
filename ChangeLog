@@ -1,5 +1,11 @@
 2008-12-19  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodewriter.vala:
+
+	Update syntax to use owned and unowned where appropriate
+
+2008-12-19  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 
 	Remove support for deprecated syntax for property default values

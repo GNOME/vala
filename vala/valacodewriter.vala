@@ -730,22 +730,22 @@ public class Vala.CodeWriter : CodeVisitor {
 				write_string ("params ");
 			}
 
-			if (param.direction != ParameterDirection.IN) {
+			if (param.direction == ParameterDirection.IN) {
+				if (param.parameter_type.value_owned) {
+					write_string ("owned ");
+				}
+			} else {
 				if (param.direction == ParameterDirection.REF) {
 					write_string ("ref ");
 				} else if (param.direction == ParameterDirection.OUT) {
 					write_string ("out ");
 				}
 				if (is_weak (param.parameter_type)) {
-					write_string ("weak ");
+					write_string ("unowned ");
 				}
 			}
 
 			write_type (param.parameter_type);
-
-			if (param.direction == ParameterDirection.IN && param.parameter_type.value_owned) {
-				write_string ("#");
-			}
 
 			write_string (" ");
 			write_identifier (param.name);
@@ -953,11 +953,11 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("virtual ");
 		}
 
-		write_type (prop.property_type);
-
 		if (prop.property_type.value_owned) {
-			write_string ("#");
+			write_string ("owned ");
 		}
+
+		write_type (prop.property_type);
 
 		write_string (" ");
 		write_identifier (prop.name);
@@ -1393,7 +1393,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
-		write_string ("#");
+		write_string ("(owned) ");
 		expr.inner.accept (this);
 	}
 
@@ -1516,7 +1516,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 	private void write_return_type (DataType type) {
 		if (is_weak (type)) {
-			write_string ("weak ");
+			write_string ("unowned ");
 		}
 
 		write_type (type);
