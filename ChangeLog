@@ -1,5 +1,11 @@
 2008-12-19  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valagasyncmodule.vala:
+
+	Fix temporary async idle support
+
+2008-12-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 
 	Fix async method calls in simple expression statements

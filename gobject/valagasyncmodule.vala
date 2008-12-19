@@ -201,11 +201,15 @@ public class Vala.GAsyncModule : GSignalModule {
 
 	public override void visit_yield_statement (YieldStatement stmt) {
 		if (stmt.yield_expression == null) {
+			// should be replaced by a simple return FALSE; when we have
+			//     void idle () yields;
+			// working in the .vapi
+
 			var cfrag = new CCodeFragment ();
 			stmt.ccodenode = cfrag;
 
 			var idle_call = new CCodeFunctionCall (new CCodeIdentifier ("g_idle_add"));
-			idle_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (current_method.get_real_cname ()), "GSourceFunc"));
+			idle_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (current_method.get_real_cname () + "_co"), "GSourceFunc"));
 			idle_call.add_argument (new CCodeIdentifier ("data"));
 
 			int state = next_coroutine_state++;
