@@ -76,7 +76,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 		// method will fail
 		current_method_inner_error = true;
-		var cassign = new CCodeAssignment (new CCodeIdentifier ("inner_error"), (CCodeExpression) stmt.error_expression.ccodenode);
+		var cassign = new CCodeAssignment (get_variable_cexpression ("inner_error"), (CCodeExpression) stmt.error_expression.ccodenode);
 		cfrag.append (new CCodeExpressionStatement (cassign));
 
 		head.add_simple_check (stmt, cfrag);
@@ -94,10 +94,10 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		ccritical.add_argument (new CCodeConstant ("\"file %s: line %d: uncaught error: %s\""));
 		ccritical.add_argument (new CCodeConstant ("__FILE__"));
 		ccritical.add_argument (new CCodeConstant ("__LINE__"));
-		ccritical.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("inner_error"), "message"));
+		ccritical.add_argument (new CCodeMemberAccess.pointer (get_variable_cexpression ("inner_error"), "message"));
 		cprint_frag.append (new CCodeExpressionStatement (ccritical));
 		var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));
-		cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
+		cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("inner_error")));
 		cprint_frag.append (new CCodeExpressionStatement (cclear));
 
 		if (current_try != null) {
@@ -113,7 +113,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 					// general catch clause
 					cerror_block.add_statement (cgoto_stmt);
 				} else {
-					var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (new CCodeIdentifier ("inner_error"), "domain"), new CCodeIdentifier (clause.error_type.data_type.get_upper_case_cname ()));
+					var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (get_variable_cexpression ("inner_error"), "domain"), new CCodeIdentifier (clause.error_type.data_type.get_upper_case_cname ()));
 
 					var cgoto_block = new CCodeBlock ();
 					cgoto_block.add_statement (cgoto_stmt);
@@ -125,7 +125,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			cerror_block.add_statement (cprint_frag);
 
 			// check error domain if expression failed
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"));
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression ("inner_error"), new CCodeConstant ("NULL"));
 
 			cfrag.append (new CCodeIfStatement (ccond, cerror_block));
 		} else if (current_method != null && current_method.get_error_types ().size > 0) {
@@ -133,8 +133,8 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			// TODO ensure one of the error domains matches
 
 			var cpropagate = new CCodeFunctionCall (new CCodeIdentifier ("g_propagate_error"));
-			cpropagate.add_argument (new CCodeIdentifier ("error"));
-			cpropagate.add_argument (new CCodeIdentifier ("inner_error"));
+			cpropagate.add_argument (get_variable_cexpression ("error"));
+			cpropagate.add_argument (get_variable_cexpression ("inner_error"));
 
 			var cerror_block = new CCodeBlock ();
 			cerror_block.add_statement (new CCodeExpressionStatement (cpropagate));
@@ -150,7 +150,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 				cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type, false)));
 			}
 
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"));
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression ("inner_error"), new CCodeConstant ("NULL"));
 
 			cfrag.append (new CCodeIfStatement (ccond, cerror_block));
 		} else {
@@ -161,7 +161,7 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			cerror_block.add_statement (cprint_frag);
 
 			// check error domain if expression failed
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"));
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression ("inner_error"), new CCodeConstant ("NULL"));
 
 			cfrag.append (new CCodeIfStatement (ccond, cerror_block));
 		}
@@ -236,9 +236,9 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		}
 
 		var cdecl = new CCodeDeclaration ("GError *");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (variable_name, new CCodeIdentifier ("inner_error")));
+		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (variable_name, get_variable_cexpression ("inner_error")));
 		cblock.add_statement (cdecl);
-		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("inner_error"), new CCodeConstant ("NULL"))));
+		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression ("inner_error"), new CCodeConstant ("NULL"))));
 
 		cblock.add_statement (clause.body.ccodenode);
 

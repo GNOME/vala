@@ -1,5 +1,14 @@
 2008-12-19  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodemethodcallmodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+	* gobject/valagerrormodule.vala:
+
+	Redirect more variable access to closure struct
+
+2008-12-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusclientmodule.vala:
 
 	Fix generated finish function for static D-Bus client methods

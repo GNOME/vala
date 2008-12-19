@@ -302,9 +302,15 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 					/* always separate error parameter and inner_error local variable
 					 * as error may be set to NULL but we're always interested in inner errors
 					 */
-					var cdecl = new CCodeDeclaration ("GError *");
-					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
-					cinit.append (cdecl);
+					if (m.coroutine) {
+						closure_struct.add_field ("GError *", "inner_error");
+
+						// no initialization necessary, closure struct is zeroed
+					} else {
+						var cdecl = new CCodeDeclaration ("GError *");
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+						cinit.append (cdecl);
+					}
 				}
 
 				if (!m.coroutine) {
