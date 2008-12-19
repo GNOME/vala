@@ -753,7 +753,11 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	private CCodeStatement? create_method_type_check_statement (Method m, DataType return_type, TypeSymbol t, bool non_null, string var_name) {
-		return create_type_check_statement (m, return_type, t, non_null, var_name);
+		if (m.coroutine) {
+			return null;
+		} else {
+			return create_type_check_statement (m, return_type, t, non_null, var_name);
+		}
 	}
 
 	private CCodeStatement? create_precondition_statement (CodeNode method_node, DataType ret_type, Expression precondition) {
