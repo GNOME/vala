@@ -1589,7 +1589,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				}
 			} else {
 				// duplicating non-reference counted objects may cause side-effects (and performance issues)
-				Report.error (source_reference, "duplicating %s instance, use weak variable or explicitly invoke copy method".printf (type.data_type.name));
+				Report.error (source_reference, "duplicating %s instance, use unowned variable or explicitly invoke copy method".printf (type.data_type.name));
 				return null;
 			}
 
