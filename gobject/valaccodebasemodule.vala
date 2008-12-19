@@ -2797,7 +2797,12 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			var edomain = (ErrorDomain) ecode.parent_symbol;
 			CCodeFunctionCall creation_call;
 
-			creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_error_new"));
+			if (expr.get_argument_list ().size == 1) {
+				// must not be a format argument
+				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_error_new_literal"));
+			} else {
+				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_error_new"));
+			}
 			creation_call.add_argument (new CCodeIdentifier (edomain.get_upper_case_cname ()));
 			creation_call.add_argument (new CCodeIdentifier (ecode.get_cname ()));
 
