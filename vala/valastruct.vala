@@ -54,7 +54,12 @@ public class Vala.Struct : TypeSymbol {
 	 * Specifies the default construction method.
 	 */
 	public Method default_construction_method { get; set; }
-	
+
+	/**
+	 * Specifies whether this struct has a registered GType.
+	 */
+	public bool has_type_id { get; set; default = true; }
+
 	/**
 	 * Creates a new struct.
 	 *
@@ -316,6 +321,9 @@ public class Vala.Struct : TypeSymbol {
 				add_cheader_filename (filename);
 			}
 		}
+		if (a.has_argument ("has_type_id")) {
+			has_type_id = a.get_bool ("has_type_id");
+		}
 		if (a.has_argument ("type_id")) {
 			set_type_id (a.get_string ("type_id"));
 		}
@@ -429,6 +437,8 @@ public class Vala.Struct : TypeSymbol {
 			if (is_simple_type ()) {
 				Report.error (source_reference, "The value type `%s` doesn't declare a GValue get function".printf (get_full_name ()));
 				return null;
+			} else if (has_type_id) {
+				return "g_value_get_boxed";
 			} else {
 				return "g_value_get_pointer";
 			}
@@ -448,6 +458,8 @@ public class Vala.Struct : TypeSymbol {
 			if (is_simple_type ()) {
 				Report.error (source_reference, "The value type `%s` doesn't declare a GValue set function".printf (get_full_name ()));
 				return null;
+			} else if (has_type_id) {
+				return "g_value_set_boxed";
 			} else {
 				return "g_value_set_pointer";
 			}

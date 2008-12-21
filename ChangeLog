@@ -1,5 +1,15 @@
 2008-12-21  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valastruct.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valagobjectmodule.vala:
+	* vapi/glib-2.0.vapi:
+
+	Support boxed structs as GObject properties,
+	based on patch by Étienne Bersac, fixes bug 520001
+
+2008-12-21  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 
 	Use `const' for struct input parameters, fixes bug 548413
@@ -1219,7 +1229,7 @@
 	Convert ternary conditionals into if statements,
 	fixes bug 543870 and bug 554594
 
-2008-11-28  Étienne BERSAC  <bersace03@laposte.net>
+2008-11-28  Étienne Bersac  <bersace03@laposte.net>
 
 	* vapi/gobject-2.0.vapi:
 

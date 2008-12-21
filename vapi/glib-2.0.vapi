@@ -1577,7 +1577,8 @@ namespace GLib {
 	}
 
 	/* Date and Time Functions */
-	
+
+	[CCode (has_type_id = false)]
 	public struct TimeVal {
 		public long tv_sec;
 		public long tv_usec;
@@ -1694,7 +1695,7 @@ namespace GLib {
 		public static bool valid_weekday (DateWeekday weekday);
 	}
 
-	[CCode (cname = "struct tm", cheader_filename="time.h")]
+	[CCode (cname = "struct tm", cheader_filename = "time.h", has_type_id = false)]
 	public struct Time {
 		[CCode (cname = "tm_sec")]
 		public int second;

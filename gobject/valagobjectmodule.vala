@@ -946,12 +946,13 @@ public class Vala.GObjectModule : GTypeModule {
 			/* create properties */
 			var props = cl.get_properties ();
 			foreach (Property prop in props) {
-				// FIXME: omit real struct types for now since they cannot be expressed as gobject property yet
-				if (prop.property_type.is_real_struct_type ()) {
-					continue;
-				}
 				if (prop.access == SymbolAccessibility.PRIVATE) {
 					// don't register private properties
+					continue;
+				}
+
+				var st = prop.property_type.data_type as Struct;
+				if (st != null && !st.has_type_id) {
 					continue;
 				}
 
@@ -1252,16 +1253,24 @@ public class Vala.GObjectModule : GTypeModule {
 		var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
 		block.add_statement (cdecl);
-		
+
+		cdecl = new CCodeDeclaration ("gpointer");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("boxed"));
+		block.add_statement (cdecl);
+
 		var cswitch = new CCodeSwitchStatement (new CCodeIdentifier ("property_id"));
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
-			// FIXME: omit real struct types for now since they cannot be expressed as gobject property yet
-			if (prop.get_accessor == null || prop.is_abstract || prop.property_type.is_real_struct_type ()) {
+			if (prop.get_accessor == null || prop.is_abstract) {
 				continue;
 			}
 			if (prop.access == SymbolAccessibility.PRIVATE) {
 				// don't register private properties
+				continue;
+			}
+
+			var st = prop.property_type.data_type as Struct;
+			if (st != null && !st.has_type_id) {
 				continue;
 			}
 
@@ -1278,13 +1287,27 @@ public class Vala.GObjectModule : GTypeModule {
 			}
 
 			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
-			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
-			ccall.add_argument (cself);
-			var csetcall = new CCodeFunctionCall ();
-			csetcall.call = head.get_value_setter_function (prop.property_type);
-			csetcall.add_argument (new CCodeIdentifier ("value"));
-			csetcall.add_argument (ccall);
-			cswitch.add_statement (new CCodeExpressionStatement (csetcall));
+			if (prop.property_type.is_real_struct_type ()) {
+				var struct_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+				struct_creation.add_argument (new CCodeIdentifier (st.get_cname ()));
+				struct_creation.add_argument (new CCodeConstant ("1"));
+				cswitch.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("boxed"), struct_creation)));
+				ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
+				ccall.add_argument (cself);
+				ccall.add_argument (new CCodeIdentifier ("boxed"));
+				var csetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
+				csetcall.add_argument (new CCodeIdentifier ("value"));
+				csetcall.add_argument (new CCodeIdentifier ("boxed"));
+				cswitch.add_statement (new CCodeExpressionStatement (csetcall));
+			} else {
+				ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
+				ccall.add_argument (cself);
+				var csetcall = new CCodeFunctionCall ();
+				csetcall.call = head.get_value_setter_function (prop.property_type);
+				csetcall.add_argument (new CCodeIdentifier ("value"));
+				csetcall.add_argument (ccall);
+				cswitch.add_statement (new CCodeExpressionStatement (csetcall));
+			}
 			cswitch.add_statement (new CCodeBreakStatement ());
 		}
 		cswitch.add_statement (new CCodeLabel ("default"));
@@ -1316,12 +1339,16 @@ public class Vala.GObjectModule : GTypeModule {
 		var cswitch = new CCodeSwitchStatement (new CCodeIdentifier ("property_id"));
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
-			// FIXME: omit real struct types for now since they cannot be expressed as gobject property yet
-			if (prop.set_accessor == null || prop.is_abstract || prop.property_type.is_real_struct_type ()) {
+			if (prop.set_accessor == null || prop.is_abstract) {
 				continue;
 			}
 			if (prop.access == SymbolAccessibility.PRIVATE) {
 				// don't register private properties
+				continue;
+			}
+
+			var st = prop.property_type.data_type as Struct;
+			if (st != null && !st.has_type_id) {
 				continue;
 			}
 
@@ -1417,7 +1444,7 @@ public class Vala.GObjectModule : GTypeModule {
 			if (param_spec_name == null) {
 				cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
 			} else {
-				cspec.call = new CCodeIdentifier ( param_spec_name );
+				cspec.call = new CCodeIdentifier (param_spec_name);
 				cspec.add_argument (new CCodeIdentifier (prop.property_type.data_type.get_type_id ()));
 			}
 		} else if (prop.property_type.data_type == string_type.data_type) {
@@ -1556,7 +1583,8 @@ public class Vala.GObjectModule : GTypeModule {
 					cspec.add_argument (new CCodeConstant ("G_TYPE_NONE"));
 				}
 			} else {
-				cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
+				cspec.call = new CCodeIdentifier ("g_param_spec_boxed");
+				cspec.add_argument (new CCodeIdentifier (st.get_type_id ()));
 			}
 		} else {
 			cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
@@ -1872,6 +1900,21 @@ public class Vala.GObjectModule : GTypeModule {
 		}
 
 		block.add_statement (new CCodeExpressionStatement (call));
+	}
+
+	public override void visit_property (Property prop) {
+		base.visit_property (prop);
+
+		var cl = prop.parent_symbol as Class;
+		if (cl != null && cl.is_subtype_of (gobject_type)
+		    && prop.binding == MemberBinding.INSTANCE) {
+			// GObject property
+			var st = prop.property_type.data_type as Struct;
+			if (prop.access != SymbolAccessibility.PRIVATE
+			    && (st == null || st.has_type_id)) {
+				prop_enum.add_value (new CCodeEnumValue (prop.get_upper_case_cname ()));
+			}
+		}
 	}
 }
 
