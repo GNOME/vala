@@ -1048,8 +1048,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			// pass non-simple structs always by reference
 			if (p.parameter_type.data_type is Struct) {
 				var st = (Struct) p.parameter_type.data_type;
-				if (!st.is_simple_type () && p.direction == ParameterDirection.IN && !p.parameter_type.nullable) {
-					ctypename += "*";
+				if (!st.is_simple_type () && p.direction == ParameterDirection.IN) {
+					ctypename = "const " + ctypename;
+					if (!p.parameter_type.nullable) {
+						ctypename += "*";
+					}
 				}
 			}
 

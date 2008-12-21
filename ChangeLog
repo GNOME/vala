@@ -1,5 +1,11 @@
 2008-12-21  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+
+	Use `const' for struct input parameters, fixes bug 548413
+
+2008-12-21  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-base-0.10/:
 
 	Fix GstBaseSrc and GstBaseTransform bindings,
