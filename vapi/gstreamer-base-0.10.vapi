@@ -93,7 +93,7 @@ namespace Gst {
 		public bool sync { get; set; }
 		public int64 ts_offset { get; set; }
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstbasesrc.h")]
 	public class BaseSrc : Gst.Element {
 		public bool can_activate_push;
 		public Gst.ClockID clock_id;
@@ -162,7 +162,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public bool typefind { get; set; }
 	}
-	[CCode (cheader_filename = "gst/gst.h")]
+	[CCode (cheader_filename = "gst/base/gstbasetransform.h")]
 	public class BaseTransform : Gst.Element {
 		public bool always_in_place;
 		public Gst.Caps cache_caps1;

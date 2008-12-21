@@ -21,10 +21,12 @@
  */
 
 namespace Gst {
+	[CCode (cheader_filename = "gst/base/gstbasesrc.h")]
 	public class BaseSrc {
 		[NoWrapper]
 		public virtual bool newsegment ();
 	}
+	[CCode (cheader_filename = "gst/base/gstbasetransform.h")]
 	public class BaseTransform {
 		[CCode (cname = "GST_BASE_TRANSFORM_SINK_NAME")]
 		public const string SINK_NAME;
