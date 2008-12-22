@@ -381,8 +381,7 @@ public class Vala.Struct : TypeSymbol {
 
 	public override string? get_type_id () {
 		if (type_id == null) {
-			// TODO use attribute check instead
-			if (external_package) {
+			if (!has_type_id) {
 				foreach (DataType type in base_types) {
 					var st = type.data_type as Struct;
 					if (st != null) {
