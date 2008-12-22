@@ -415,6 +415,8 @@ public class Vala.Struct : TypeSymbol {
 			}
 			if (is_simple_type ()) {
 				Report.error (source_reference, "The type `%s` doesn't declare a marshaller type name".printf (get_full_name ()));
+			} else if (has_type_id) {
+				return "BOXED";
 			} else {
 				return "POINTER";
 			}

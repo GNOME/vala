@@ -1,3 +1,9 @@
+2008-12-22  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valastruct.vala:
+
+	Use BOXED as marshaller name for structs with type id
+
 2008-12-21  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valastruct.vala:
