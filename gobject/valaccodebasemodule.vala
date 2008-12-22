@@ -1649,14 +1649,33 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 			block.add_statement (new CCodeReturnStatement (dup_call));
 		} else {
-			var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
-			dup_call.add_argument (new CCodeIdentifier ("self"));
+			var cdecl = new CCodeDeclaration (value_type.get_cname ());
+			cdecl.add_declarator (new CCodeVariableDeclarator ("dup"));
+			block.add_statement (cdecl);
 
-			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
-			sizeof_call.add_argument (new CCodeIdentifier (value_type.type_symbol.get_cname ()));
-			dup_call.add_argument (sizeof_call);
+			var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+			creation_call.add_argument (new CCodeConstant (value_type.data_type.get_cname ()));
+			creation_call.add_argument (new CCodeConstant ("1"));
+			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("dup"), creation_call)));
 
-			block.add_statement (new CCodeReturnStatement (dup_call));
+			var st = value_type.data_type as Struct;
+			if (st != null && st.is_disposable ()) {
+				var copy_call = new CCodeFunctionCall (new CCodeIdentifier (st.get_copy_function ()));
+				copy_call.add_argument (new CCodeIdentifier ("self"));
+				copy_call.add_argument (new CCodeIdentifier ("dup"));
+				block.add_statement (new CCodeExpressionStatement (copy_call));
+			} else {
+				var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				sizeof_call.add_argument (new CCodeConstant (value_type.data_type.get_cname ()));
+
+				var copy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
+				copy_call.add_argument (new CCodeIdentifier ("dup"));
+				copy_call.add_argument (new CCodeIdentifier ("self"));
+				copy_call.add_argument (sizeof_call);
+				block.add_statement (new CCodeExpressionStatement (copy_call));
+			}
+
+			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("dup")));
 		}
 
 		// append to file
