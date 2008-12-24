@@ -70,7 +70,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 	}
 
 
-
+/*
 	private string get_full_path ( Basic element ) {
 		if ( element.name == null )
 			return "";
@@ -95,7 +95,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		str.append_unichar ( '/' );
 		return str.str;
 	}
-
+*/
 	public Valadoc.Settings settings {
 		construct set;
 		protected get;
@@ -104,7 +104,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 	public override void initialisation ( Settings settings ) {
 		this.settings = settings;
 
-		var rt = DirUtils.create ( this.settings.path, 0777 );
+		DirUtils.create ( this.settings.path, 0777 );
 		this.langlet = new Valadoc.LangletIndex ( settings );
 	}
 
@@ -135,7 +135,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 
 		this.current_path = this.settings.path + this.package_name + "/";
 
-		var rt = DirUtils.create ( this.current_path, 0777 );
+		DirUtils.create ( this.current_path, 0777 );
 		GLib.FileStream sfile = GLib.FileStream.open ( this.current_path + "index.html", "w" );
 		this.write_file_header ( sfile, this.get_css_link ( ), file.name );
 		this.write_navi_file ( sfile, file, file );
@@ -148,7 +148,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		this.current_path = null;
 	}
 
-
+/*
 	private bool is_depency ( string dep ) {
 		foreach ( string file in this.settings.files ) {
 			if ( dep == file )
@@ -156,7 +156,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		}
 		return true;
 	}
-
+*/
 	private Gee.ArrayList<Package> files = new Gee.ArrayList<Package> ();
 	private Package source_package;
 
@@ -194,7 +194,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 
 	public override void visit_property ( Property prop ) {
 		string path = this.current_path + prop.name + "/";
-		var rt = DirUtils.create ( path, 0777 );
+		DirUtils.create ( path, 0777 );
 		this.directory_level++;
 
 		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
@@ -210,7 +210,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 	public override void visit_constant ( Constant constant, ConstantHandler parent ) {
 		string path = this.current_path + constant.name + "/";
 
-		var rt = DirUtils.create ( path, 0777 );
+		DirUtils.create ( path, 0777 );
 		this.directory_level++;
 		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
 		this.write_file_header ( file, this.get_css_link ( ), constant.name );
@@ -223,7 +223,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 
 	public override void visit_field ( Field field, FieldHandler parent ) {
 		string path = this.current_path + field.name + "/";
-		var rt = DirUtils.create ( path, 0777 );
+		DirUtils.create ( path, 0777 );
 		this.directory_level++;
 		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
 		this.write_file_header ( file, this.get_css_link ( ), field.name );
@@ -236,7 +236,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 
 	public override void visit_delegate ( Delegate del ) {
 		string path = this.current_path + del.name + "/";
-		var rt = DirUtils.create ( path, 0777 );
+		DirUtils.create ( path, 0777 );
 
 		this.directory_level++;
 		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
@@ -252,7 +252,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		string path = this.current_path + sig.name + "/";
 		this.directory_level++;
 
-		var rt = DirUtils.create ( path, 0777 );
+		DirUtils.create ( path, 0777 );
 
 		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
 		this.write_file_header ( file, this.get_css_link ( ), sig.name );
@@ -266,7 +266,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 
 	public override void visit_method ( Method m, Valadoc.MethodHandler parent ) {
 		string path = this.current_path + m.name + "/";
-		var rt = DirUtils.create ( path, 0777 );
+		DirUtils.create ( path, 0777 );
 
 		this.directory_level++;
 		GLib.FileStream file = GLib.FileStream.open ( path + "index.html", "w");
@@ -292,7 +292,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 			this.current_path = tmp;
 		}
 
-		var rt = DirUtils.create ( this.current_path, 0777 );
+		DirUtils.create ( this.current_path, 0777 );
 		GLib.FileStream file = GLib.FileStream.open ( this.current_path + "index.html", "w" );
 		this.write_file_header ( file, this.get_css_link ( ), ns.name );
 		this.write_navi_namespace ( file, ns );
@@ -321,7 +321,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		this.directory_level++;
 
 		this.current_path += en.name + "/";
-		var rt = DirUtils.create ( this.current_path, 0777 );
+		DirUtils.create ( this.current_path, 0777 );
 
 		en.visit_enum_values ( this );
 		en.visit_methods ( this );
@@ -342,7 +342,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		this.directory_level++;
 
 		this.current_path += errdom.name + "/";
-		var rt = DirUtils.create ( this.current_path, 0777 );
+		DirUtils.create ( this.current_path, 0777 );
 
 		errdom.visit_methods ( this );
 
@@ -362,7 +362,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		this.directory_level++;
 
 		this.current_path += stru.name + "/";
-		var rt = DirUtils.create ( this.current_path, 0777 );
+		DirUtils.create ( this.current_path, 0777 );
 
 		stru.visit_construction_methods ( this );
 		stru.visit_methods ( this );
@@ -385,7 +385,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		this.directory_level++;
 
 		this.current_path += cl.name + "/";
-		var rt = DirUtils.create ( this.current_path, 0777 );
+		DirUtils.create ( this.current_path, 0777 );
 
 		cl.visit_construction_methods ( this );
 		cl.visit_classes ( this );
@@ -414,7 +414,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		this.directory_level++;
 
 		this.current_path += iface.name + "/";
-		var rt = DirUtils.create ( this.current_path, 0777 );
+		DirUtils.create ( this.current_path, 0777 );
 
 		iface.visit_classes ( this );
 		iface.visit_structs ( this );

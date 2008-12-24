@@ -185,10 +185,6 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		this.devhelp = new DevhelpFormat ( settings.pkg_name, "" );
 	}
 
-	private string vala_file_package_name;
-	private bool visited_non_package = false;
-
-
 	public override void visit_package ( Package file ) {
 		string pkg_name = file.name;
 		string path = this.settings.get_real_path () + pkg_name + "/";

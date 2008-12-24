@@ -91,30 +91,6 @@ public class ValaDoc : Object {
 		}
 	}
 
-	// remove
-	private Gee.ArrayList<string> sort_sources ( ) {
-		var to_doc = new Gee.ArrayList<string>();
-
-		if ( tsources != null ) {
-			foreach ( string str in this.tsources ) {
-				string rpath = realpath ( str );
-				if ( str.has_suffix ( ".vala" ) || str.has_suffix ( ".gs" ) )
-					this.sources.add ( str );
-				else
-					this.packages.add ( str );
-
-				to_doc.add ( rpath );
-			}
-		}
-
-		if ( tpackages != null ) {
-			foreach ( string str in this.tpackages ) {
-				this.packages.add ( str );
-			}
-		}
-
-		return to_doc;
-	}
 /*
 	private bool check_doclet_structure ( string realpath ) {
 		bool tmp = FileUtils.test ( realpath, FileTest.IS_DIR );

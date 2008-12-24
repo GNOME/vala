@@ -970,7 +970,6 @@ public class Parser {
 
 	private bool parse_cell_attribute ( ref TextPosition pos, ref TextVerticalPosition hpos, ref int size, ref int dsize ) {
 		weak string str = this.str.offset ( this.pos );
-		int startpos = this.pos;
 
 		if ( str.has_prefix ( ")(" ) ) {
 			pos = TextPosition.CENTER;
@@ -1181,7 +1180,6 @@ public class Parser {
 					return ;
 				}
 				this.skip_newline ();
-				int reallinestartpos = this.pos;
 				this.next_nonspace_char ();
 				switch ( str[pos+1] ) {
 				case '\n':
@@ -1511,7 +1509,6 @@ public class Parser {
 				}
 				break;
 			case '\n':
-				int linepos = this.pos;
 				this.skip_newline ();
 				this.next_nonspace_char ();
 
