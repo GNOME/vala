@@ -65,8 +65,21 @@ AC_CONFIG_FILES([Makefile
                  src/doclets/html/taglets/throws/Makefile
                  src/doclets/html/taglets/return/Makefile
                  src/doclets/html/taglets/string/Makefile
+                 src/doclets/html/taglets/wikilink/Makefile
+                 src/doclets/html/taglets/image/Makefile
                  src/doclets/html/taglets/link/Makefile
+                 src/doclets/html/taglets/center/Makefile
+                 src/doclets/html/taglets/right/Makefile
+                 src/doclets/html/taglets/italic/Makefile
+                 src/doclets/html/taglets/source/Makefile
+                 src/doclets/html/taglets/bold/Makefile
+                 src/doclets/html/taglets/underline/Makefile
+                 src/doclets/html/taglets/notification/Makefile
                  src/doclets/html/taglets/see/Makefile
+                 src/doclets/html/taglets/table/Makefile
+                 src/doclets/html/taglets/list/Makefile
+                 src/doclets/html/taglets/listelement/Makefile
+                 src/doclets/html/taglets/cell/Makefile
                  src/doclets/valadoc.org/Makefile
                  src/doclets/valadoc.org/linkhelper/Makefile
                  src/doclets/valadoc.org/doclet/Makefile
@@ -79,6 +92,18 @@ AC_CONFIG_FILES([Makefile
                  src/doclets/valadoc.org/taglets/link/Makefile
                  src/doclets/valadoc.org/taglets/see/Makefile
                  src/doclets/devhelp/Makefile
+                 src/doclets/devhelp/taglets/image/Makefile
+                 src/doclets/devhelp/taglets/notification/Makefile
+                 src/doclets/devhelp/taglets/italic/Makefile
+                 src/doclets/devhelp/taglets/center/Makefile
+                 src/doclets/devhelp/taglets/right/Makefile
+                 src/doclets/devhelp/taglets/bold/Makefile
+                 src/doclets/devhelp/taglets/underline/Makefile
+                 src/doclets/devhelp/taglets/list/Makefile
+                 src/doclets/devhelp/taglets/listelement/Makefile
+                 src/doclets/devhelp/taglets/table/Makefile
+                 src/doclets/devhelp/taglets/cell/Makefile
+                 src/doclets/devhelp/taglets/source/Makefile
                  src/doclets/devhelp/deps/Makefile
                  src/doclets/devhelp/linkhelper/Makefile
                  src/doclets/devhelp/doclet/Makefile
@@ -86,6 +111,7 @@ AC_CONFIG_FILES([Makefile
                  src/doclets/devhelp/taglets/parameter/Makefile
                  src/doclets/devhelp/taglets/version/Makefile
                  src/doclets/devhelp/taglets/throws/Makefile
+                 src/doclets/devhelp/taglets/wikilink/Makefile
                  src/doclets/devhelp/taglets/return/Makefile
                  src/doclets/devhelp/taglets/string/Makefile
                  src/doclets/devhelp/taglets/link/Makefile

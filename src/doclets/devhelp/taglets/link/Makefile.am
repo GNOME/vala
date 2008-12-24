@@ -2,30 +2,30 @@
 
 
 
-libtagletlink_VALASOURCES = \
+libtagletparameter_VALASOURCES = \
 	taglet.vala       \
 	$(NULL)
 
 
-BUILT_SOURCES = libtagletlink.vala.stamp
+BUILT_SOURCES = libtagletparameter.vala.stamp
 
 
-libtagletlink.vala.stamp: $(libtagletlink_VALASOURCES)
+libtagletparameter.vala.stamp: $(libtagletparameter_VALASOURCES)
 	$(VALAC) -C --vapidir ../../../htmlhelpers --pkg libhtmlhelpers-1.0 --vapidir ../../../../vapi --pkg valadoc-1.0 --vapidir ../../linkhelper --pkg libhtmlhelper-1.0 --basedir . --disable-non-null --save-temps $^
 	touch $@
 
 
 	
 
-tagletlinkdir = $(libdir)/valadoc/plugins/devhelp/taglets/
+tagletparameterdir = $(libdir)/valadoc/plugins/devhelp/taglets/
 
-tagletlink_LTLIBRARIES = libtagletlink.la
+tagletparameter_LTLIBRARIES = libtagletparameter.la
 
 
-libtagletlink_la_SOURCES =                \
-	libtagletlink.vala.stamp              \
-	$(libtagletlink_VALASOURCES:.vala=.c) \
-	$(libtagletlink_VALASOURCES:.vala=.h) \
+libtagletparameter_la_SOURCES =                \
+	libtagletparameter.vala.stamp              \
+	$(libtagletparameter_VALASOURCES:.vala=.c) \
+	$(libtagletparameter_VALASOURCES:.vala=.h) \
 	$(NULL)
 
 
@@ -40,10 +40,10 @@ AM_CFLAGS =  -g               \
 	$(NULL)
 
 
-libtagletlink_la_LDFLAGS = -module -avoid-version
+libtagletparameter_la_LDFLAGS = -module -avoid-version
 
 
-libtagletlink_la_LIBADD =                 \
+libtagletparameter_la_LIBADD =                 \
 	../../../../libvaladoc/libvaladoc.la \
 	../../../htmlhelpers/libhtmlhelpers.la \
 	../../linkhelper/libhtmlhelper.la    \
@@ -54,4 +54,4 @@ libtagletlink_la_LIBADD =                 \
 
 
 
-EXTRA_DIST = $(libtagletlink_VALASOURCES)  libtagletlink.vala.stamp 
+EXTRA_DIST = $(libtagletparameter_VALASOURCES)  libtagletparameter.vala.stamp 

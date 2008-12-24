@@ -1209,6 +1209,421 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 }
 
 
+public class Valadoc.UnderlinedHtmlHelperDocElement : UnderlinedDocElement {
+	private Gee.ArrayList<DocElement> content;
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content ) {
+		this.content = content;
+		return true;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		int _max = this.content.size;
+		int _index = 0;
+
+		file.printf ( "<u>" );
+
+		foreach ( DocElement element in this.content ) {
+			element.write ( res, _max, _index );
+			_index++;
+		}
+
+		file.printf ( "</u>" );
+		return true;
+	}
+}
+
+
+public class Valadoc.ListHtmlHelperEntryDocElement : ListEntryDocElement {
+	private Gee.ArrayList<DocElement> content;
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, ListType type, Gee.ArrayList<DocElement> content ) {
+		this.content = content;
+		return true;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		int _max = this.content.size;
+		int _index = 0;
+
+		file.printf ( "\t<li>" );
+
+		foreach ( DocElement element in this.content ) {
+			element.write ( res, _max, _index );
+			_index++;
+		}
+
+		file.printf ( "</li>\n" );
+
+		return true;
+	}
+}
+
+public class Valadoc.ListHtmlHelperDocElement : ListDocElement {
+	private Gee.ArrayList<ListEntryDocElement> entries;
+	private ListType type;
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, ListType type, Gee.ArrayList<ListEntryDocElement> entries ) {
+		this.entries = entries;
+		this.type = type;
+		return true;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		int _max = this.entries.size;
+		int _index = 0;
+
+		file.printf ( (this.type == ListType.UNSORTED)? "<ul>\n" : "<ol>\n" );
+
+		foreach ( ListEntryDocElement entry in this.entries ) {
+			entry.write ( res, _max, _index );
+			_index++;
+		}
+
+		file.printf ( (this.type == ListType.UNSORTED)? "</ul>\n" : "</ol>\n" );
+		return true;
+	}
+}
+
+
+
+public class Valadoc.LinkHtmlHelperDocElement : LinkDocElement {
+	protected ImageDocElementPosition position;
+	protected Gee.ArrayList<DocElement>? desc;
+	protected string path;
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, string# path, Gee.ArrayList<DocElement>? desc ) {
+		this.path = #path;
+		this.desc = desc;
+		return true;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+
+		if ( this.desc == null ) {
+			file.printf ( "<a href=\"%s\"/>%s<a>", this.path, this.path );
+		}
+		else {
+			int _max = this.desc.size;
+			int _index = 0;
+
+			file.printf ( "<a href=\"%s\"/>", this.path );
+			foreach ( DocElement element in this.desc ) {
+				element.write ( res, _max, _index );
+				_index++;
+			}
+			file.printf ( "<a>" );
+		}
+		return true;
+	}
+}
+
+
+
+
+public class Valadoc.TableCellHtmlHelperDocElement : TableCellDocElement {
+	private Gee.ArrayList<DocElement> content;
+	private TextVerticalPosition hpos;
+	private TextPosition pos;
+	private int dcells;
+	private int cells;
+	
+	public override void parse ( Settings settings, Tree tree, Basic me, TextPosition pos, TextVerticalPosition hpos, int cells, int dcells, Gee.ArrayList<DocElement> content ) {
+		this.content = content;
+		this.dcells = dcells;
+		this.cells = cells;
+		this.hpos = hpos;
+		this.pos = pos;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		int _max = this.content.size;
+		int _index = 0;
+
+		GLib.StringBuilder td = new GLib.StringBuilder ( "\t\t<td" );
+		if ( this.cells != 1 ) {
+			td.append ( " colspan=\"" );
+			td.append ( this.cells.to_string() );
+			td.append_unichar ( '\"' );
+		}
+
+		if ( this.dcells != 1 ) {
+			td.append ( " rowspan=\"" );
+			td.append ( this.dcells.to_string() );
+			td.append_unichar ( '\"' );
+		}
+
+		switch ( this.pos ) {
+		case TextPosition.CENTER:
+			td.append ( " align=\"center\"" );
+			break;
+		case TextPosition.RIGHT:
+			td.append ( " align=\"right\"" );
+			break;
+		}
+
+		switch ( this.hpos ) {
+		case TextVerticalPosition.TOP:
+			td.append ( " valign=\"top\"" );
+			break;
+		case TextVerticalPosition.BOTTOM:
+			td.append ( " valign=\"bottom\"" );
+			break;
+		}
+
+		td.append_unichar ( '>' );
+
+		file.puts ( td.str );
+		foreach ( DocElement cell in this.content ) {
+			cell.write ( res, _max, _index );
+			_index++;
+		}
+		file.puts ( "</td>\n" );
+		return true;
+	}
+}
+
+
+public class Valadoc.TableHtmlHelperDocElement : TableDocElement {
+	private Gee.ArrayList<Gee.ArrayList<TableCellDocElement>> cells;
+
+	public override void parse ( Gee.ArrayList<Gee.ArrayList<TableCellDocElement>> cells ) {
+		this.cells = cells;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+
+		file.puts ( "<table border=\"1\"\n" );
+		foreach ( Gee.ArrayList<TableCellDocElement> row in this.cells ) {
+			int _max = row.size;
+			int _index = 0;
+
+			file.puts ( "\t<tr>\n" );
+			foreach ( TableCellDocElement cell in row ) {
+				cell.write ( res, _max, _index );
+				_index++;
+			}
+			file.puts ( "\t</tr>\n" );
+
+		}
+		file.puts ( "</table>\n" );
+		return true;
+	}
+}
+
+
+
+public class Valadoc.NotificationHtmlHelperDocElement : NotificationDocElement {
+	private Gee.ArrayList<DocElement> content;
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content ) {
+		this.content = content;
+		return true;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		int _max = this.content.size;
+		int _index = 0;
+
+		file.printf ( "\n<div>\n" );
+
+		foreach ( DocElement element in this.content ) {
+			element.write ( res, _max, _index );
+			_index++;
+		}
+
+		file.printf ( "\n</div>\n" );
+		return true;
+	}
+}
+
+public class Valadoc.SourceCodeHtmlHelerDocElement : SourceCodeDocElement {
+	public Language lang;
+	public string src;
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, string# src, Language lang ) {
+		this.lang = lang;
+		this.src = #src;
+		return true;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		file.puts ( "<pre>" );
+		file.puts ( src );
+		file.puts ( "</pre>" );
+		return true;
+	}
+}
+
+
+
+public class Valadoc.ItalicHtmlHelperDocElement : ItalicDocElement {
+	private Gee.ArrayList<DocElement> content;
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content ) {
+		this.content = content;
+		return true;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		int _max = this.content.size;
+		int _index = 0;
+
+		file.printf ( "<i>" );
+
+		foreach ( DocElement element in this.content ) {
+			element.write ( res, _max, _index );
+			_index++;
+		}
+
+		file.printf ( "</i>" );
+		return true;
+	}
+}
+
+
+public class Valadoc.BoldHtmlHelperDocElement : BoldDocElement {
+	private Gee.ArrayList<DocElement> content;
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content ) {
+		this.content = content;
+		return true;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		int _max = this.content.size;
+		int _index = 0;
+
+		file.printf ( "<b>" );
+
+		foreach ( DocElement element in this.content ) {
+			element.write ( res, _max, _index );
+			_index++;
+		}
+
+		file.printf ( "</b>" );
+		return true;
+	}
+}
+
+
+
+public class Valadoc.RightAlignedHtmlHelperDocElement : RightAlignedDocElement {
+	private Gee.ArrayList<DocElement> content;
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content ) {
+		this.content = content;
+		return true;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		int _max = this.content.size;
+		int _index = 0;
+
+		file.printf ( "<div align=\"right\">" );
+
+		foreach ( DocElement element in this.content ) {
+			element.write ( res, _max, _index );
+			_index++;
+		}
+
+		file.printf ( "</div>" );
+		return true;
+	}
+}
+
+
+
+
+
+public class Valadoc.CenterHtmlHelperDocElement : CenterDocElement {
+	private Gee.ArrayList<DocElement> content;
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content ) {
+		this.content = content;
+		return true;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		int _max = this.content.size;
+		int _index = 0;
+
+		file.printf ( "<center>" );
+
+		foreach ( DocElement element in this.content ) {
+			element.write ( res, _max, _index );
+			_index++;
+		}
+
+		file.printf ( "</center>" );
+		return true;
+	}
+}
+
+
+
+
+
+
+
+
+public class Valadoc.ImageHtmlHelperDocElement : ImageDocElement {
+	protected ImageDocElementPosition position;
+	protected string path;
+
+	public override bool parse ( Settings settings, Tree tree, Basic me, string# path, ImageDocElementPosition pos ) {
+		this.position = pos;
+		this.path = #path;
+		return true;
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		switch ( this.position ) {
+		case ImageDocElementPosition.NEUTRAL:
+			((GLib.FileStream)res).printf ( "<img src=\"%s\" />", this.path );
+			break;
+		case ImageDocElementPosition.MIDDLE:
+			((GLib.FileStream)res).printf ( "<img src=\"%s\" align=\"middle\"/>", this.path );
+			break;
+		case ImageDocElementPosition.RIGHT:
+			((GLib.FileStream)res).printf ( "<img src=\"%s\" align=\"right\"/>", this.path );
+			break;
+		case ImageDocElementPosition.LEFT:
+			((GLib.FileStream)res).printf ( "<img src=\"%s\" align=\"left\" />", this.path );
+			break;
+		}
+		return true;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1898,6 +2313,8 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		if ( brief.size > 0 ) {
 			doctree.write_brief ( file );
 		}
+		file.printf ( "\n<br />\n" );
+		file.printf ( "\n<br />\n" );
 		doctree.write_content ( file );
 	}
 

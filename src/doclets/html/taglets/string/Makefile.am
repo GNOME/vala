@@ -2,30 +2,30 @@
 
 
 
-libtagletstring_VALASOURCES = \
+libexceptionparameter_VALASOURCES = \
 	taglet.vala       \
 	$(NULL)
 
 
-BUILT_SOURCES = libtagletstring.vala.stamp
+BUILT_SOURCES = libexceptionparameter.vala.stamp
 
 
-libtagletstring.vala.stamp: $(libtagletstring_VALASOURCES)
-	$(VALAC) -C --vapidir ../../../../vapi --pkg valadoc-1.0 --vapidir ../../linkhelper --vapidir ../../../htmlhelpers/ --pkg libhtmlhelpers-1.0 --pkg libhtmlhelper-1.0 --basedir . --disable-non-null --save-temps $^
+libexceptionparameter.vala.stamp: $(libexceptionparameter_VALASOURCES)
+	$(VALAC) -C --vapidir ../../../htmlhelpers --pkg libhtmlhelpers-1.0 --vapidir ../../../../vapi --pkg valadoc-1.0 --vapidir ../../linkhelper --pkg libhtmlhelper-1.0 --basedir . --disable-non-null --save-temps $^
 	touch $@
 
 
 	
 
-tagletstringdir = $(libdir)/valadoc/plugins/template/taglets/
+exceptionparameterdir = $(libdir)/valadoc/plugins/template/taglets/
 
-tagletstring_LTLIBRARIES = libtagletstring.la
+exceptionparameter_LTLIBRARIES = libexceptionparameter.la
 
 
-libtagletstring_la_SOURCES =                \
-	libtagletstring.vala.stamp              \
-	$(libtagletstring_VALASOURCES:.vala=.c) \
-	$(libtagletstring_VALASOURCES:.vala=.h) \
+libexceptionparameter_la_SOURCES =                \
+	libexceptionparameter.vala.stamp              \
+	$(libexceptionparameter_VALASOURCES:.vala=.c) \
+	$(libexceptionparameter_VALASOURCES:.vala=.h) \
 	$(NULL)
 
 
@@ -40,10 +40,10 @@ AM_CFLAGS =  -g               \
 	$(NULL)
 
 
-libtagletstring_la_LDFLAGS = -module -avoid-version
+libexceptionparameter_la_LDFLAGS = -module -avoid-version
 
 
-libtagletstring_la_LIBADD =                 \
+libexceptionparameter_la_LIBADD =                 \
 	../../../../libvaladoc/libvaladoc.la \
 	../../../htmlhelpers/libhtmlhelpers.la \
 	../../linkhelper/libhtmlhelper.la    \
@@ -54,4 +54,4 @@ libtagletstring_la_LIBADD =                 \
 
 
 
-EXTRA_DIST = $(libtagletstring_VALASOURCES)  libtagletstring.vala.stamp 
+EXTRA_DIST = $(libexceptionparameter_VALASOURCES)  libexceptionparameter.vala.stamp 

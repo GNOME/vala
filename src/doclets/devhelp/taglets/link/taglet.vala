@@ -23,30 +23,17 @@ using Vala;
 using Gee;
 
 
-public class Valadoc.LinkDevhelpTaglet : Valadoc.LinkHtmlHelperTaglet, HtmlHelper {
-	protected override string? get_link ( Settings settings, Tree tree, Basic element, Basic? pos ) {
-		return this.get_html_link ( settings, element, pos );
-	}
 
-	public override string to_string () {
-		return to_string_imp ( );
-	}
-
-	public override bool write ( void* res, int max, int index ) {
-		return write_imp ( res, max, index );
-	}
-
-	public override bool parse ( Settings settings, Tree tree, Basic me, string content, out string[] errmsg ) {
-		return this.parse_imp ( settings, tree, me, content, out errmsg );
-	}
-}
+using Valadoc;
+using GLib;
+using Vala;
+using Gee;
 
 
 [ModuleInit]
 public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
-        GLib.Type type = typeof ( LinkDevhelpTaglet );
-		taglets.set ( "link", type );
+        GLib.Type type = typeof ( ParameterHtmlTaglet );
+		taglets.set ( "param", type );
 		return type;
 }
-
 

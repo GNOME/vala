@@ -24,10 +24,10 @@ using Gee;
 
 
 
+
 [ModuleInit]
 public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
-        GLib.Type type = typeof ( ExceptionHtmlTaglet );
-		taglets.set ( "throws", type );
-		return type;
+	return typeof ( TableCellHtmlHelperDocElement );
 }
+
 
