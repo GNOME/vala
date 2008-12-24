@@ -65,11 +65,11 @@ public class DevhelpFormat : Object {
 	private Xml.Node* functions = null;
 	private Xml.Node* chapters = null;
 	private Xml.Node* current = null;
-
+/*
 	~DevhelpFormat ( ) {
 		delete this.devhelp;
 	}
-
+*/
 	public void save_file ( string path ) {
 		Xml.Doc.save_format_file ( path, this.devhelp, 1 );
 	}

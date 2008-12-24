@@ -56,10 +56,6 @@ public class ValaDoc : Object {
 	[NoArrayLength ()]
 	private static weak string[] tpackages;
 
-	private Gee.ArrayList<string> packages = new Gee.ArrayList<string>(); // remove
-	private Gee.ArrayList<string> sources  = new Gee.ArrayList<string>(); // remove
-
-
 	private const GLib.OptionEntry[] options = {
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, out vapi_directories,
 			"Look for package bindings in DIRECTORY", "DIRECTORY..." },
@@ -91,27 +87,6 @@ public class ValaDoc : Object {
 		}
 	}
 
-/*
-	private bool check_doclet_structure ( string realpath ) {
-		bool tmp = FileUtils.test ( realpath, FileTest.IS_DIR );
-		if ( tmp == false ) {
-			return false;
-		}
-
-		tmp = FileUtils.test ( realpath + "/libdoclet.so", FileTest.IS_EXECUTABLE );
-		if ( tmp == false ) {
-			return false;
-		}
-
-
-		tmp = FileUtils.test ( realpath + "/taglets/", FileTest.IS_DIR );
-		if ( tmp == false ) {
-			return false;
-		}
-
-		return true;
-	}
-*/
 	private static bool check_pkg_name () {
 		if ( pkg_name == null )
 			return true;
@@ -143,8 +118,6 @@ public class ValaDoc : Object {
 		settings.pkg_version = this.pkg_version;
 
 		settings.add_inherited = this.add_inherited;
-
-//		settings.files = this.sort_sources ( ); /// <--- remove!
 
 		settings._protected = this._protected;
 		settings.with_deps = this.with_deps;

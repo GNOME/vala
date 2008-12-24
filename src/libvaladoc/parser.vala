@@ -286,8 +286,8 @@ public class DocumentationTree : Object {
 
 		foreach ( Gee.ArrayList<MainTaglet> tags in alst ) {
 			MainTaglet ftag = tags.get ( 0 );
-			int max = tags.size;
-			int i = 0;
+			max = tags.size;
+			i = 0;
 
 			tmp = ftag.write_block_start ( res );
 			if ( tmp == false )

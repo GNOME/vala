@@ -10,8 +10,6 @@ libvaladoc_VALASOURCES = \
 	parser.vala          \
 	doctree.vala         \
 	langlet.vala         \
-	xmlparser.vala       \
-	xmlimporter.vala     \
 	$(NULL)
 
 

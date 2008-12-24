@@ -21,7 +21,6 @@ using GLib;
 
 
 public class Valadoc.Settings : Object {
-	public Gee.ArrayList<string> files;
 	private string rpath;
 	public string path = "documentation/";
 	public string pkg_name = null;
@@ -42,32 +41,6 @@ public class Valadoc.Settings : Object {
 		}
 
 		return this.rpath;
-	}
-
-	/*/
-	public bool application {
-		get {
-			foreach ( string path in this.files ) {
-				if ( path.has_prefix ( ".vapi" ) )
-					return true;
-			}
-			return false;
-		}
-	}
-*/
-	// remove!
-	public bool to_doc ( string name ) {
-		if ( with_deps == true )
-			return true;
-
-		// FIXME: Compare with full path
-		string nstr = Path.get_basename ( name ) ;
-
-		foreach ( string str in this.files ) {
-			if ( Path.get_basename ( str ) == nstr )
-				return true;
-		}
-		return false;
 	}
 }
 

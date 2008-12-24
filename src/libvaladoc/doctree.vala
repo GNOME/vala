@@ -4461,10 +4461,7 @@ public class Valadoc.Package : Basic, NamespaceHandler {
 public class Valadoc.Tree : Vala.CodeVisitor {
 	private Gee.ArrayList<Package> files = new Gee.ArrayList<Package>();
 
-	public Valadoc.Settings settings {
-		construct set;
-		private get;
-	}
+	private Valadoc.Settings settings;
 
 	public Tree (	Valadoc.Settings settings,
 					bool non_null_experimental,
@@ -4606,10 +4603,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		return true;
 	}
 
-	public CodeContext context {
-		construct set;
-		private get;
-	}
+	private CodeContext context;
 
 	public void visit ( Doclet doclet ) {
 		foreach ( Package file in this.files ) {
@@ -4695,7 +4689,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return tmp;
 
 		if ( element != null ) {
-			var tmp = this.search_symbol_in_namespaces ( element, params );
+			tmp = this.search_symbol_in_namespaces ( element, params );
 			if ( tmp != null )
 				return tmp;
 		}
