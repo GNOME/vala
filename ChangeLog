@@ -1,3 +1,9 @@
+2008-12-25  Étienne BERSAC  <bersace03@laposte.net>
+
+	* gobject/valaccodebasemodule.vala:
+
+	Don't prevent notifying struct property.
+
 2008-12-22  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodebasemodule.vala:
