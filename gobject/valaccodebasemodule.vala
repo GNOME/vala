@@ -1262,7 +1262,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 			// notify on property changes
 			var typesymbol = (TypeSymbol) prop.parent_symbol;
+			var st = prop.property_type.data_type as Struct;
 			if (typesymbol.is_subtype_of (gobject_type) &&
+			    (st == null || st.has_type_id) &&
 			    prop.notify &&
 			    prop.access != SymbolAccessibility.PRIVATE && // FIXME: use better means to detect gobject properties
 			    prop.binding == MemberBinding.INSTANCE &&
