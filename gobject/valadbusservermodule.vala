@@ -125,6 +125,12 @@ public class Vala.DBusServerModule : DBusClientModule {
 				ccall.add_argument (get_sender);
 				continue;
 			}
+
+			if (param.parameter_type.get_type_signature () == null) {
+				Report.error (param.parameter_type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (param.parameter_type.to_string ()));
+				continue;
+			}
+
 			var st = param.parameter_type.data_type as Struct;
 			if (param.direction != ParameterDirection.IN
 			    || (st != null && !st.is_simple_type ())) {
@@ -164,25 +170,29 @@ public class Vala.DBusServerModule : DBusClientModule {
 		signature_check.add_argument (new CCodeConstant ("\"%s\"".printf (type_signature)));
 
 		if (!(m.return_type is VoidType)) {
-			cdecl = new CCodeDeclaration (m.return_type.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
-			block.add_statement (cdecl);
-			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
+			if (m.return_type.get_type_signature () == null) {
+				Report.error (m.return_type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (m.return_type.to_string ()));
+			} else {
+				cdecl = new CCodeDeclaration (m.return_type.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+				block.add_statement (cdecl);
+				block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
 
-			if (m.return_type is ArrayType) {
-				var array_type = (ArrayType) m.return_type;
+				if (m.return_type is ArrayType) {
+					var array_type = (ArrayType) m.return_type;
 
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					string length_cname = get_array_length_cname ("result", dim);
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						string length_cname = get_array_length_cname ("result", dim);
 
-					cdecl = new CCodeDeclaration ("int");
-					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (length_cname, new CCodeConstant ("0")));
-					prefragment.append (cdecl);
-					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
+						cdecl = new CCodeDeclaration ("int");
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (length_cname, new CCodeConstant ("0")));
+						prefragment.append (cdecl);
+						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
+					}
 				}
-			}
 
-			write_expression (postfragment, m.return_type, new CCodeIdentifier ("iter"), new CCodeIdentifier ("result"));
+				write_expression (postfragment, m.return_type, new CCodeIdentifier ("iter"), new CCodeIdentifier ("result"));
+			}
 		} else {
 			block.add_statement (new CCodeExpressionStatement (ccall));
 		}

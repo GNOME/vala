@@ -439,9 +439,7 @@ public abstract class Vala.DataType : CodeNode {
 			string sig = data_type.get_type_signature ();
 
 			var type_args = get_type_arguments ();
-			if (type_args.size > 0) {
-				assert (sig.str ("%s") != null);
-
+			if (sig != null && sig.str ("%s") != null && type_args.size > 0) {
 				string element_sig = "";
 				foreach (DataType type_arg in type_args) {
 					var s = type_arg.get_type_signature ();

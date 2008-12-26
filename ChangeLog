@@ -1,3 +1,10 @@
+2008-12-26  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valadatatype.vala:
+	* gobject/valadbusservermodule.vala:
+
+	Fix crash when using unsupported types in D-Bus servers
+
 2008-12-25  Étienne BERSAC  <bersace03@laposte.net>
 
 	* gobject/valaccodebasemodule.vala:
