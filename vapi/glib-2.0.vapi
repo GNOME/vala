@@ -1436,6 +1436,7 @@ namespace GLib {
 	public static void print (string format, ...);
 	public static void set_print_handler (PrintFunc func);
 	public static delegate void PrintFunc (string text);
+	[PrintfFormat]
 	public static void printerr (string format, ...);
 	public static void set_printerr_handler (PrintFunc func);
 
