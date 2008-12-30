@@ -1,5 +1,14 @@
 2008-12-30  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_element_get_static_pad and gst_regitry_* bindings,
+	patch by Zeeshan Ali Khattak, fixes bug 539817
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2008-12-30  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valalambdaexpression.vala:
 
 	Support instance access in lambda expressions in property accessors
