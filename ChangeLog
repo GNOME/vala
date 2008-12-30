@@ -1,5 +1,11 @@
 2008-12-30  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodearraymodule.vala:
+
+	More closure fixes for array variables
+
+2008-12-30  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Fix g_printerr binding

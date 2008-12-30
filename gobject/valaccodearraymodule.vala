@@ -144,7 +144,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			if (array_expr.symbol_reference is FormalParameter) {
 				var param = (FormalParameter) array_expr.symbol_reference;
 				if (!param.no_array_length) {
-					CCodeExpression length_expr = new CCodeIdentifier (get_array_length_cname (param.name, dim));
+					CCodeExpression length_expr = get_variable_cexpression (get_array_length_cname (param.name, dim));
 					if (param.direction != ParameterDirection.IN) {
 						// accessing argument of out/ref param
 						length_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, length_expr);
@@ -158,7 +158,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				}
 			} else if (array_expr.symbol_reference is LocalVariable) {
 				var local = (LocalVariable) array_expr.symbol_reference;
-				var length_expr = new CCodeIdentifier (get_array_length_cname (get_variable_cname (local.name), dim));
+				var length_expr = get_variable_cexpression (get_array_length_cname (get_variable_cname (local.name), dim));
 				if (is_out) {
 					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
 				} else {
