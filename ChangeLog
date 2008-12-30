@@ -1,5 +1,14 @@
 2008-12-30  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gnome-vfs-2.0/:
+
+	Fix gnome_vfs_*xfer* bindings, patch by Michael Terry,
+	fixes bug 565412
+
+	* vapi/gnome-vfs-2.0.vapi: regenerated
+
+2008-12-30  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/sdl-mixer.vapi:
 	* vapi/sdl-net.vapi:
 	* vapi/sdl-ttf.vapi:
