@@ -342,7 +342,7 @@ namespace Gst {
 		public virtual Gst.QueryType get_query_types ();
 		public unowned Gst.Pad get_request_pad (string name);
 		public virtual Gst.StateChangeReturn get_state (out Gst.State state, out Gst.State pending, Gst.ClockTime timeout);
-		public unowned Gst.Pad get_static_pad (string name);
+		public Gst.Pad? get_static_pad (string name);
 		public bool implements_interface (GLib.Type iface_type);
 		[CCode (cname = "gst_element_class_install_std_props")]
 		public class void install_std_props (...);
@@ -1038,19 +1038,19 @@ namespace Gst {
 		public bool add_feature (Gst.PluginFeature feature);
 		public void add_path (string path);
 		public bool add_plugin (Gst.Plugin plugin);
-		public unowned GLib.List feature_filter ([CCode (delegate_target_pos = 2.1)] Gst.PluginFeatureFilter filter, bool first);
-		public unowned Gst.PluginFeature find_feature (string name, GLib.Type type);
-		public unowned Gst.Plugin find_plugin (string name);
+		public GLib.List<Gst.PluginFeature> feature_filter ([CCode (delegate_target_pos = 2.1)] Gst.PluginFeatureFilter filter, bool first);
+		public Gst.PluginFeature find_feature (string name, GLib.Type type);
+		public Gst.Plugin find_plugin (string name);
 		public static bool fork_is_enabled ();
 		public static void fork_set_enabled (bool enabled);
 		public static unowned Gst.Registry get_default ();
-		public unowned GLib.List get_feature_list (GLib.Type type);
-		public unowned GLib.List get_feature_list_by_plugin (string name);
-		public unowned GLib.List get_path_list ();
-		public unowned GLib.List get_plugin_list ();
-		public unowned Gst.Plugin lookup (string filename);
-		public unowned Gst.PluginFeature lookup_feature (string name);
-		public unowned GLib.List plugin_filter (Gst.PluginFilter filter, bool first);
+		public GLib.List<Gst.PluginFeature> get_feature_list (GLib.Type type);
+		public GLib.List<Gst.PluginFeature> get_feature_list_by_plugin (string name);
+		public GLib.List<string> get_path_list ();
+		public GLib.List<Gst.Plugin> get_plugin_list ();
+		public Gst.Plugin lookup (string filename);
+		public Gst.PluginFeature lookup_feature (string name);
+		public GLib.List<Gst.Plugin> plugin_filter (Gst.PluginFilter filter, bool first);
 		public void remove_feature (Gst.PluginFeature feature);
 		public void remove_plugin (Gst.Plugin plugin);
 		public bool scan_path (string path);
