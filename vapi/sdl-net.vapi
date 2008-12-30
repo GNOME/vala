@@ -37,7 +37,7 @@ namespace SDLNet {
 
 
 
-	[CCode (cname="IPaddress", free_function="g_free")]
+	[CCode (cname="IPaddress", free_function="g_free", has_type_id=false)]
 	public struct IPAddress {
 		public uint host;
 		public uint16 port;

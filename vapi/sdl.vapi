@@ -5,7 +5,7 @@ namespace SDL {
 	///
 	/// Initialization
 	///
-	[CCode (cprefix="SDL_INIT_")]
+	[CCode (cname="int", cprefix="SDL_INIT_")]
 	public enum InitFlag {
 		TIMER, AUDIO, VIDEO, CDROM, JOYSTICK, 
 		NOPARACHUTE, EVENTTHREAD, EVERYTHING
@@ -40,7 +40,7 @@ namespace SDL {
 	///
 	/// Error
 	///
-	[CCode (cprefix="SDL_")]
+	[CCode (cname="int", cprefix="SDL_")]
 	public enum Error {
 		ENOMEM, EFREAD, EFWRITE, EFSEEK, 
 		UNSUPPORTED, LASTERROR
@@ -62,7 +62,7 @@ namespace SDL {
 	///
 	/// Video
 	///
-	[CCode (cprefix="SDL_ALPHA_")]
+	[CCode (cname="int", cprefix="SDL_ALPHA_")]
 	public enum Opacity {
 		OPAQUE, TRANSPARENT
 	}// Opacity
@@ -85,7 +85,7 @@ namespace SDL {
 		public static void* list_modes(PixelFormat? format, uint32 flags);
 	}// Video
 
-	[CCode (cprefix="SDL_")]
+	[CCode (cname="int", cprefix="SDL_")]
 	public enum SurfaceFlag {
 		SWSURFACE, HWSURFACE, ASYNCBLIT, ANYFORMAT, HWPALETTE, DOUBLEBUF, 
 		FULLSCREEN, OPENGL, OPENGLBLIT, RESIZABLE, NOFRAME, HWACCEL, 
@@ -209,7 +209,7 @@ namespace SDL {
 		public static void get_rgba(uint32 pixel, PixelFormat fmt, ref uchar r, ref uchar g, ref uchar b, ref uchar a);
 	}// PixelFormat
 
-	[CCode (cname="SDL_Rect")]
+	[CCode (cname="SDL_Rect", has_type_id=false)]
 	public struct Rect {
 		public int16 x; 
 		public int16 y;
@@ -217,7 +217,7 @@ namespace SDL {
 		public uint16 h;
 	}// Rect
 
-	[CCode (cname="SDL_Color")]
+	[CCode (cname="SDL_Color", has_type_id=false)]
 	[SimpleType]
 	public struct Color {
 		public uchar r;
@@ -226,7 +226,7 @@ namespace SDL {
 		public uchar unused;
 	}// Color
 
-	[CCode (cprefix="SDL_")]
+	[CCode (cname="int", cprefix="SDL_")]
 	public enum PaletteFlags {
 		LOGPAL, PHYSPAL
 	}// PaletteFlags
@@ -263,7 +263,7 @@ namespace SDL {
 		public static weak VideoInfo get();
 	}// VideoInfo
 
-	[CCode (cprefix="SDL_")]
+	[CCode (cname="int", cprefix="SDL_")]
 	public enum OverlayFormat {
 		YV12_OVERLAY, IYUV_OVERLAY, YUY2_OVERLAY, 
 		UYVY_OVERLAY, YVYU_OVERLAY
@@ -313,7 +313,7 @@ namespace SDL {
 	///
 	/// OpenGL
 	///
-	[CCode (cprefix="SDL_GL_")]
+	[CCode (cname="int", cprefix="SDL_GL_")]
 	public enum GLattr {
 		RED_SIZE, GREEN_SIZE, BLUE_SIZE, ALPHA_SIZE, 
 		BUFFER_SIZE, DOUBLEBUFFER, DEPTH_SIZE, STENCIL_SIZE, 
@@ -345,7 +345,7 @@ namespace SDL {
 	///
 	/// Window manager
 	///
-	[CCode (cprefix="SDL_GRAB_")]
+	[CCode (cname="int", cprefix="SDL_GRAB_")]
 	public enum GrabMode {
 		QUERY, OFF, ON
 	}// GrabMode
@@ -376,7 +376,7 @@ namespace SDL {
 	///
 	/// Events
 	///
-	[CCode (cprefix="SDL_")]
+	[CCode (cname="int", cprefix="SDL_")]
 	public enum EventType {
 		NOEVENT, ACTIVEEVENT, KEYDOWN, KEYUP, MOUSEMOTION, 
 		MOUSEBUTTONDOWN, MOUSEBUTTONUP, JOYAXISMOTION, 
@@ -385,7 +385,7 @@ namespace SDL {
 		NUMEVENTS
 	}// EventType
 
-	[CCode (cprefix="SDL_")]
+	[CCode (cname="int", cprefix="SDL_")]
 	public enum EventMask {
 		ACTIVEEVENTMASK, KEYDOWNMASK, KEYUPMASK, KEYEVENTMASK, 
 		MOUSEMOTIONMASK, MOUSEBUTTONDOWNMASK, MOUSEBUTTONUPMASK, 
@@ -395,7 +395,7 @@ namespace SDL {
 		SYSWMEVENTMASK
 	}// EventMask
 
-	[CCode (cname="SDL_MouseButtonEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_MouseButtonEvent", has_type_id=false)]
 	public struct MouseButtonEvent {
 		public uchar type;
 		public uchar which;
@@ -405,21 +405,21 @@ namespace SDL {
 		public uint16 y;
 	}// MouseButtonEvent
 
-	[CCode (cheader_filename="SDL_active.h", cprefix="SDL_APP")]
+	[CCode (cheader_filename="SDL_active.h", cname="int", cprefix="SDL_APP")]
 	public enum ActiveState {
 		MOUSEFOCUS,
 		INPUTFOCUS,
 		ACTIVE
 	}// ActiveState
 
-	[CCode (cname="SDL_ActiveEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_ActiveEvent", has_type_id=false)]
 	public struct ActiveEvent {
 		public uchar type;
 		public uchar gain;
 		public uchar state;
 	}// ActiveEvent
 
-	[CCode (cname="SDL_KeyboardEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_KeyboardEvent", has_type_id=false)]
 	public struct KeyboardEvent {
 		public uchar type;
 		public uchar which;
@@ -427,7 +427,7 @@ namespace SDL {
 		public Key keysym;
 	}// KeyboardEvent
 
-	[CCode (cname="SDL_MouseMotionEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_MouseMotionEvent", has_type_id=false)]
 	public struct MouseMotionEvent {
 		public uchar type;
 		public uchar which;
@@ -438,7 +438,7 @@ namespace SDL {
 		public int16 yrel;
 	}// MouseMotionEvent
 
-	[CCode (cname="SDL_JoyAxisEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_JoyAxisEvent", has_type_id=false)]
 	public struct JoyAxisEvent {
 		public uchar type;
 		public uchar which;
@@ -446,7 +446,7 @@ namespace SDL {
 		public uint16 @value;
 	}// JoyAxisEvent
 
-	[CCode (cname="SDL_JoyBallEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_JoyBallEvent", has_type_id=false)]
 	public struct JoyBallEvent {
 		public uchar type;
 		public uchar which;
@@ -455,7 +455,7 @@ namespace SDL {
 		public int16 yrel;
 	}// JoyBallEvent
 
-	[CCode (cname="SDL_JoyHatEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_JoyHatEvent", has_type_id=false)]
 	public struct JoyHatEvent {
 		public uchar type;
 		public uchar which;
@@ -463,7 +463,7 @@ namespace SDL {
 		public uchar @value;
 	}// JoyHatEvent
 
-	[CCode (cname="SDL_JoyButtonEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_JoyButtonEvent", has_type_id=false)]
 	public struct JoyButtonEvent {
 		public uchar type;
 		public uchar which;
@@ -471,24 +471,24 @@ namespace SDL {
 		public uchar state;
 	}// JoyButtonEvent
 
-	[CCode (cname="SDL_ResizeEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_ResizeEvent", has_type_id=false)]
 	public struct ResizeEvent {
 		public uchar type;
 		public int w;
 		public int h;
 	}// ResizeEvent
 
-	[CCode (cname="SDL_ExposeEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_ExposeEvent", has_type_id=false)]
 	public struct ExposeEvent {
 		public uchar type;
 	}// ExposeEvent
 
-	[CCode (cname="SDL_QuitEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_QuitEvent", has_type_id=false)]
 	public struct QuitEvent {
 		public uchar type;
 	}// QuitEvent
 
-	[CCode (cname="SDL_UserEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_UserEvent", has_type_id=false)]
 	public struct UserEvent {
 		public uchar type;
 		public int code;
@@ -496,7 +496,7 @@ namespace SDL {
 		public void* data2;
 	}// UserEvent
 
-	[CCode (cname="SDL_SysWMEvent", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_SysWMEvent", has_type_id=false)]
 	public struct SysWMEvent {
 		public uchar type;
 		public weak SysWMmsg msg;
@@ -506,7 +506,7 @@ namespace SDL {
 	public class SysWMmsg {
 	}// SysWMmsg
 
-	[CCode (cname="SDL_Event", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_Event", has_type_id=false)]
 	public struct Event {
 		public uchar type;
 		public ActiveEvent active;
@@ -543,12 +543,12 @@ namespace SDL {
 		public static uchar state(uchar type, EventState state);
 	}// Event
 
-	[CCode (cprefix="SDL_")]
+	[CCode (cname="int", cprefix="SDL_")]
 	public enum EventAction {
 		ADDEVENT, PEEKEVENT, GETEVENT
 	}// EventAction
 
-	[CCode (cprefix="SDL_")]
+	[CCode (cname="int", cprefix="SDL_")]
 	public enum EventState {
 		QUERY, IGNORE, DISABLE, ENABLE
 	}// EventState
@@ -557,12 +557,12 @@ namespace SDL {
 	///
 	/// Input
 	///
-	[CCode (cprefix="SDL_")]
+	[CCode (cname="int", cprefix="SDL_")]
 	public enum ButtonState {
 		RELEASED, PRESSED
 	}// ButtonState
 
-	[CCode (cname="SDL_keysym", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER")]
+	[CCode (cname="SDL_keysym", has_type_id=false)]
 	public struct Key {
 		public uchar scancode;
 		public KeySymbol sym;
@@ -591,7 +591,7 @@ namespace SDL {
 		public static string get_name(KeySymbol key);
 	}// Key
 
-	[CCode (cprefix="SDLK_", cheader_filename="SDL_keysym.h")]
+	[CCode (cname="int", cprefix="SDLK_", cheader_filename="SDL_keysym.h")]
 	public enum KeySymbol {
 		UNKNOWN,
 		FIRST,
@@ -848,7 +848,7 @@ namespace SDL {
 		LAST
 	}// KeySymbol
 
-	[CCode (cprefix="KMOD_", cheader_filename="SDL_keysym.h")]
+	[CCode (cname="int", cprefix="KMOD_", cheader_filename="SDL_keysym.h")]
 	public enum KeyModifier {
 		NONE,
 		LSHIFT,
@@ -869,7 +869,7 @@ namespace SDL {
 		META
 	}// KeyModifier
 
-	[CCode (cprefix="SDL_BUTTON_")]
+	[CCode (cname="int", cprefix="SDL_BUTTON_")]
 	public enum MouseButton {
 		LEFT, MIDDLE, RIGHT, WHEELUP, WHEELDOWN
 	}// Buttons
@@ -907,7 +907,7 @@ namespace SDL {
 		public static int show(int toggle);
 	}// Cursor
 
-	[CCode (cprefix="SDL_HAT_")]
+	[CCode (cname="int", cprefix="SDL_HAT_")]
 	public enum HatValue {
 		CENTERED, UP, RIGHT, DOWN, LEFT, 
 		RIGHTUP, RIGHTDOWN, LEFTUP, LEFTDOWN
@@ -966,13 +966,13 @@ namespace SDL {
 	///
 	/// Audio
 	///
-	[CCode (cprefix="AUDIO_")]
+	[CCode (cname="int", cprefix="AUDIO_")]
 	public enum AudioFormat {
 		U8, S8, U16LSB, S16LSB, U16MSB, S16MSB, U16, S16, 
 		U16SYS, S16SYS
 	}// AudioFormat
 
-	[CCode (cprefix="SDL_AUDIO_")]
+	[CCode (cname="int", cprefix="SDL_AUDIO_")]
 	public enum AudioStatus {
 		STOPPED, PLAYING, PAUSED
 	}// AudioStatus

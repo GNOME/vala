@@ -1,5 +1,14 @@
 2008-12-30  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/sdl-mixer.vapi:
+	* vapi/sdl-net.vapi:
+	* vapi/sdl-ttf.vapi:
+	* vapi/sdl.vapi:
+
+	Various enum and struct fixes, patch by Levi Bard, fixes bug 565359
+
+2008-12-30  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodearraymodule.vala:
 
 	More closure fixes for array variables

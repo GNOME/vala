@@ -30,12 +30,12 @@ namespace SDLMixer {
 	public delegate void EffectCallback(int chan, void* stream, int len, void* udata);
 	public delegate void EffectDoneCallback(int chan, void* udata);
 
-	[CCode (cprefix="MIX_")]
+	[CCode (cname="int", cprefix="MIX_")]
 	public enum FadeStatus {
 		NO_FADING, FADING_OUT, FADING_IN
 	}// FadeStatus
 
-	[CCode (cprefix="MUS_")]
+	[CCode (cname="int", cprefix="MUS_")]
 	public enum MusicType {
 		NONE, CMD, WAV, MOD, MID, OGG, MP3, MP3_MAD
 	}// MusicType
