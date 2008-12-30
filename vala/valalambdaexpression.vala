@@ -133,17 +133,9 @@ public class Vala.LambdaExpression : Expression {
 			return false;
 		}
 
-		bool in_instance_method = false;
-		var current_method = analyzer.find_current_method ();
-		if (current_method != null) {
-			in_instance_method = (current_method.binding == MemberBinding.INSTANCE);
-		} else {
-			in_instance_method = analyzer.is_in_constructor ();
-		}
-
 		var cb = (Delegate) ((DelegateType) target_type).delegate_symbol;
 		method = new Method (get_lambda_name (analyzer), cb.return_type);
-		if (!cb.has_target || !in_instance_method) {
+		if (!cb.has_target || !analyzer.is_in_instance_method ()) {
 			method.binding = MemberBinding.STATIC;
 		}
 		method.owner = analyzer.current_symbol.scope;
