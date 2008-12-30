@@ -1,5 +1,12 @@
 2008-12-30  Jürg Billeter  <j@bitron.ch>
 
+	* doc/valac.1:
+
+	Fix dashes in option descriptions, patch by Andrew Feren,
+	fixes bug 565479
+
+2008-12-30  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gnome-vfs-2.0/:
 
 	Fix gnome_vfs_*xfer* bindings, patch by Michael Terry,
