@@ -2084,7 +2084,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public ListStore (int n_columns, ...);
 		[CCode (cname = "gtk_list_store_newv", has_construct_function = false)]
-		public ListStore.newv (int n_columns, GLib.Type[] types);
+		public ListStore.newv ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
 		public void prepend (out Gtk.TreeIter iter);
 		public bool remove (Gtk.TreeIter iter);
 		public void reorder (int new_order);
@@ -4464,7 +4464,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public TreeStore (int n_columns, ...);
 		[CCode (cname = "gtk_tree_store_newv", has_construct_function = false)]
-		public TreeStore.newv (int n_columns, GLib.Type[] types);
+		public TreeStore.newv ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
 		public void prepend (out Gtk.TreeIter iter, Gtk.TreeIter? parent);
 		public bool remove (Gtk.TreeIter iter);
 		public void reorder (Gtk.TreeIter? parent, int new_order);

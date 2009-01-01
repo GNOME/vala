@@ -1,5 +1,14 @@
 2009-01-01  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_{list,tree}_store_newv bindings,
+	based on patch by Michael Lawrence, fixes bug 565462
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2009-01-01  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 	* gobject/valagerrormodule.vala:
 
