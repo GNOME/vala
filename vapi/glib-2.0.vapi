@@ -810,14 +810,14 @@ public class string {
 		long string_length = this.len ();
 		if (offset < 0) {
 			offset = string_length + offset;
-			GLib.warn_if_fail (offset >= 0);
+			GLib.return_val_if_fail (offset >= 0, null);
 		} else {
-			GLib.warn_if_fail (offset <= string_length);
+			GLib.return_val_if_fail (offset <= string_length, null);
 		}
 		if (len < 0) {
 			len = string_length - offset;
 		}
-		GLib.warn_if_fail (offset + len <= string_length);
+		GLib.return_val_if_fail (offset + len <= string_length, null);
 		weak string start = this.offset (offset);
 		return start.ndup (((char*) start.offset (len)) - ((char*) start));
 	}
@@ -1441,7 +1441,13 @@ namespace GLib {
 	public static void set_printerr_handler (PrintFunc func);
 
 	public static void return_if_fail (bool expr);
+	[CCode (sentinel = "")]
+	public static void return_val_if_fail (bool expr, ...);
+	[NoReturn]
 	public static void return_if_reached ();
+	[NoReturn]
+	[CCode (sentinel = "")]
+	public static void return_val_if_reached (...);
 	public static void warn_if_fail (bool expr);
 	public static void warn_if_reached ();
 

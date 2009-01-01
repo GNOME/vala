@@ -1,5 +1,11 @@
 2009-01-01  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Do not use g_warn_if_fail to not require glib 2.16
+
+2009-01-01  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_{list,tree}_store_newv bindings,
