@@ -2055,6 +2055,29 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
+	public void append_error_free (Symbol sym, CCodeFragment cfrag, TryStatement current_try) {
+		var b = (Block) sym;
+
+		var local_vars = b.get_local_variables ();
+		foreach (LocalVariable local in local_vars) {
+			if (local.active && !local.floating && requires_destroy (local.variable_type)) {
+				var ma = new MemberAccess.simple (local.name);
+				ma.symbol_reference = local;
+				cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
+			}
+		}
+
+		if (sym == current_try.body) {
+			return;
+		}
+
+		if (sym.parent_symbol is Block) {
+			append_error_free (sym.parent_symbol, cfrag, current_try);
+		} else if (sym.parent_symbol is Method) {
+			append_param_free ((Method) sym.parent_symbol, cfrag);
+		}
+	}
+
 	private void append_param_free (Method m, CCodeFragment cfrag) {
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {

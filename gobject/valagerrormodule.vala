@@ -105,6 +105,12 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			// TODO might be the wrong one when using nested try statements
 
 			var cerror_block = new CCodeBlock ();
+
+			// free local variables
+			var free_frag = new CCodeFragment ();
+			append_error_free (current_symbol, free_frag, current_try);
+			cerror_block.add_statement (free_frag);
+
 			foreach (CatchClause clause in current_try.get_catch_clauses ()) {
 				// go to catch clause if error domain matches
 				var cgoto_stmt = new CCodeGotoStatement (clause.clabel_name);
@@ -157,6 +163,12 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 			// unhandled error
 
 			var cerror_block = new CCodeBlock ();
+
+			// free local variables
+			var free_frag = new CCodeFragment ();
+			append_local_free (current_symbol, free_frag, false);
+			cerror_block.add_statement (free_frag);
+
 			// print critical message
 			cerror_block.add_statement (cprint_frag);
 

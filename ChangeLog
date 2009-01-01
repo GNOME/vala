@@ -1,3 +1,11 @@
+2009-01-01  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valagerrormodule.vala:
+
+	Fix memory leaks when handling errors, patch by Philip Van Hoof,
+	fixes bug 557856
+
 2008-12-30  Jürg Billeter  <j@bitron.ch>
 
 	* doc/valac.1:
