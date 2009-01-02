@@ -1,6 +1,7 @@
 /* glib-2.0.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  * Copyright (C) 2007  Mathias Hasselmann
  *
  * This library is free software; you can redistribute it and/or
@@ -37,11 +38,6 @@ public struct bool {
 			return "false";
 		}
 	}
-}
-
-[SimpleType]
-[CCode (cname = "gconstpointer", cheader_filename = "glib.h", type_id = "G_TYPE_POINTER", marshaller_type_name = "POINTER", get_value_function = "g_value_get_pointer", set_value_function = "g_value_set_pointer", default_value = "NULL")]
-public struct constpointer {
 }
 
 [SimpleType]
@@ -3089,11 +3085,11 @@ namespace GLib {
 		[CCode (cname = "g_array_sized_new")]
 		public Array.sized (bool zero_terminated, bool clear, uint element_size, uint reserved_size);
 		public void append_val (G value);
-		public void append_vals (constpointer data, uint len);
+		public void append_vals (void* data, uint len);
 		public void prepend_val (G value);
-		public void prepend_vals (constpointer data, uint len);
+		public void prepend_vals (void* data, uint len);
 		public void insert_val (uint index, G value);
-		public void insert_vals (uint index, constpointer data, uint len);
+		public void insert_vals (uint index, void* data, uint len);
 		public void remove_index (uint index);
 		public void remove_index_fast (uint index);
 		public void remove_range (uint index, uint length);
