@@ -1,6 +1,7 @@
 /* valacodewriter.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1043,6 +1044,19 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	public override void visit_initializer_list (InitializerList list) {
+		write_string ("{");
+
+		bool first = true;
+		foreach (Expression initializer in list.get_initializers ()) {
+			if (!first) {
+				write_string (", ");
+			} else {
+				write_string (" ");
+			}
+			first = false;
+			initializer.accept (this);
+		}
+		write_string (" }");
 	}
 
 	public override void visit_expression_statement (ExpressionStatement stmt) {
@@ -1218,6 +1232,26 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
+		write_string ("new ");
+		write_type (expr.element_type);
+		write_string ("[");
+
+		bool first = true;
+		foreach (Expression size in expr.get_sizes ()) {
+			if (!first) {
+				write_string (", ");
+			}
+			first = false;
+
+			size.accept (this);
+		}
+
+		write_string ("]");
+
+		if (expr.initializer_list != null) {
+			write_string (" ");
+			expr.initializer_list.accept (this);
+		}
 	}
 
 	public override void visit_boolean_literal (BooleanLiteral lit) {

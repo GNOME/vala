@@ -1,5 +1,11 @@
 2009-01-03  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodewriter.vala:
+
+	Support writing array creation expressions and initializer lists
+
+2009-01-03  Jürg Billeter  <j@bitron.ch>
+
 	* vala/Makefile.am:
 	* vala/valaarraytype.vala:
 	* vala/valabinaryexpression.vala:
