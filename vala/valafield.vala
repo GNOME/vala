@@ -1,6 +1,6 @@
 /* valafield.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -221,11 +221,7 @@ public class Vala.Field : Member, Lockable {
 
 		if (initializer != null) {
 			initializer.target_type = field_type;
-		}
 
-		field_type.check (analyzer);
-		
-		if (initializer != null) {
 			initializer.check (analyzer);
 		}
 

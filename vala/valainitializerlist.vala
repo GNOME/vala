@@ -1,6 +1,7 @@
-/* valainitializervala
+/* valainitializerlist.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -107,6 +108,23 @@ public class Vala.InitializerList : Expression {
 		} else if (target_type is ArrayType) {
 			/* initializer is used as array initializer */
 			var array_type = (ArrayType) target_type;
+
+			if (!(parent_node is ArrayCreationExpression)
+			      && !(parent_node is Constant)) {
+				// transform shorthand form
+				//     int[] array = { 42 };
+				// into
+				//     int[] array = new int[] { 42 };
+
+				var old_parent_node = parent_node;
+
+				var array_creation = new ArrayCreationExpression (array_type.element_type.copy (), array_type.rank, this, source_reference);
+				array_creation.target_type = target_type;
+				old_parent_node.replace_expression (this, array_creation);
+
+				checked = false;
+				return array_creation.check (analyzer);
+			}
 
 			foreach (Expression e in get_initializers ()) {
 				e.target_type = array_type.element_type.copy ();

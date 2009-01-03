@@ -1,6 +1,7 @@
 /* valaarraycreationexpression.vala
  *
- * Copyright (C) 2006-2008  Raffaele Sandrini, Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -52,9 +53,18 @@ public class Vala.ArrayCreationExpression : Expression {
 	/**
 	 * The root array initializer list.
 	 */
-	public InitializerList? initializer_list { get; set; }
+	public InitializerList? initializer_list {
+		get { return _initializer_list; }
+		set {
+			_initializer_list = value;
+			if (_initializer_list != null) {
+				_initializer_list.parent_node = this;
+			}
+		}
+	}
 
 	private DataType _element_type;
+	private InitializerList? _initializer_list;
 
 	/**
 	 * Add a size expression.

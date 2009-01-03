@@ -1,6 +1,6 @@
 /* valaparser.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -249,7 +249,7 @@ public class Vala.Parser : CodeVisitor {
 		return get_last_string ();
 	}
 
-	Expression parse_literal () throws ParseError {
+		Expression parse_literal () throws ParseError {
 		var begin = get_location ();
 
 		switch (current ()) {
@@ -466,6 +466,9 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.VERBATIM_STRING_LITERAL:
 		case TokenType.NULL:
 			expr = parse_literal ();
+			break;
+		case TokenType.OPEN_BRACE:
+			expr = parse_initializer ();
 			break;
 		case TokenType.OPEN_PARENS:
 			expr = parse_tuple ();
@@ -1386,16 +1389,7 @@ public class Vala.Parser : CodeVisitor {
 		string id = parse_identifier ();
 		Expression initializer = null;
 		if (accept (TokenType.ASSIGN)) {
-			initializer = parse_variable_initializer ();
-
-			// transform shorthand form
-			//     int[] array = { 42 };
-			// into
-			//     int[] array = new int[] { 42 };
-			var array_type = variable_type as ArrayType;
-			if (array_type != null && initializer is InitializerList) {
-				initializer = new ArrayCreationExpression (array_type.element_type.copy (), array_type.rank, (InitializerList) initializer, initializer.source_reference);
-			}
+			initializer = parse_expression ();
 		}
 		return new LocalVariable (variable_type, id, initializer, get_src_com (begin));
 	}
@@ -2044,7 +2038,7 @@ public class Vala.Parser : CodeVisitor {
 		string id = parse_identifier ();
 		Expression initializer = null;
 		if (accept (TokenType.ASSIGN)) {
-			initializer = parse_variable_initializer ();
+			initializer = parse_expression ();
 		}
 		expect (TokenType.SEMICOLON);
 
@@ -2098,22 +2092,12 @@ public class Vala.Parser : CodeVisitor {
 		var initializer = new InitializerList (get_src (begin));
 		if (current () != TokenType.CLOSE_BRACE) {
 			do {
-				var init = parse_variable_initializer ();
+				var init = parse_expression ();
 				initializer.append (init);
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_BRACE);
 		return initializer;
-	}
-
-	Expression parse_variable_initializer () throws ParseError {
-		if (current () == TokenType.OPEN_BRACE) {
-			var expr = parse_initializer ();
-			return expr;
-		} else {
-			var expr = parse_expression ();
-			return expr;
-		}
 	}
 
 	Method parse_method_declaration (Gee.List<Attribute>? attrs) throws ParseError {

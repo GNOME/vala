@@ -1,6 +1,6 @@
 /* valalocalvariable.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -111,16 +111,14 @@ public class Vala.LocalVariable : Symbol {
 
 		checked = true;
 
-		if (initializer != null) {
-			initializer.target_type = variable_type;
+		if (variable_type != null) {
+			variable_type.check (analyzer);
 		}
 
 		if (initializer != null) {
+			initializer.target_type = variable_type;
+
 			initializer.check (analyzer);
-		}
-		
-		if (variable_type != null) {
-			variable_type.check (analyzer);
 		}
 
 		if (variable_type == null) {

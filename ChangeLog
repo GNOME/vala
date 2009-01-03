@@ -1,5 +1,17 @@
 2009-01-03  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarraycreationexpression.vala:
+	* vala/valafield.vala:
+	* vala/valagenieparser.vala:
+	* vala/valainitializerlist.vala:
+	* vala/valalocalvariable.vala:
+	* vala/valaparser.vala:
+
+	Support short-form of array creation expressions not just in
+	local variable initializers, fixes bug 547410
+
+2009-01-03  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodewriter.vala:
 
 	Support writing array creation expressions and initializer lists
