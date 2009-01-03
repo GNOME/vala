@@ -2322,13 +2322,13 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static unowned GLib.ParamSpec param_spec_mini_object (string name, string nick, string blurb, GLib.Type object_type, GLib.ParamFlags flags);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static unowned Gst.Element parse_bin_from_description (string bin_description, bool ghost_unconnected_pads) throws GLib.Error;
+	public static Gst.Element? parse_bin_from_description (string bin_description, bool ghost_unconnected_pads) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static GLib.Quark parse_error_quark ();
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static unowned Gst.Element parse_launch (string pipeline_description) throws GLib.Error;
+	public static Gst.Element? parse_launch (string pipeline_description) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static unowned Gst.Element parse_launchv (string[] argv) throws GLib.Error;
+	public static Gst.Element? parse_launchv (string[] argv) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void print_element_args (GLib.StringBuilder buf, int indent, Gst.Element element);
 	[CCode (cheader_filename = "gst/gst.h")]

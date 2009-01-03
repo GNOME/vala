@@ -1,5 +1,14 @@
 2009-01-03  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix gst_parse_* bindings, patch by Zeeshan Ali Khattak,
+	fixes bug 539817
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2009-01-03  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraycreationexpression.vala:
 	* vala/valafield.vala:
 	* vala/valagenieparser.vala:
