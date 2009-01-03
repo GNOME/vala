@@ -572,11 +572,11 @@ namespace GLib {
 		public abstract bool has_uri_scheme (string uri_scheme);
 		public abstract uint hash (void* file);
 		public abstract bool is_native ();
-		public bool load_contents (GLib.Cancellable? cancellable, out unowned string contents, out size_t length, out unowned string etag_out) throws GLib.Error;
+		public bool load_contents (GLib.Cancellable? cancellable, out string contents, out size_t length, out string etag_out) throws GLib.Error;
 		public void load_contents_async (GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
-		public bool load_contents_finish (GLib.AsyncResult res, out unowned string contents, out size_t length, out unowned string etag_out) throws GLib.Error;
+		public bool load_contents_finish (GLib.AsyncResult res, out string contents, out size_t length, out string etag_out) throws GLib.Error;
 		public void load_partial_contents_async (GLib.Cancellable? cancellable, GLib.FileReadMoreCallback read_more_callback, GLib.AsyncReadyCallback callback);
-		public bool load_partial_contents_finish (GLib.AsyncResult res, out unowned string contents, size_t length, out unowned string etag_out) throws GLib.Error;
+		public bool load_partial_contents_finish (GLib.AsyncResult res, out string contents, out size_t length, out string etag_out) throws GLib.Error;
 		public abstract bool make_directory (GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool make_directory_with_parents (GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool make_symbolic_link (string symlink_value, GLib.Cancellable? cancellable) throws GLib.Error;

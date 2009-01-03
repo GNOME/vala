@@ -1,5 +1,14 @@
 2009-01-03  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gio-2.0/:
+
+	Fix g_file_load_contents bindings, patch by Zeeshan Ali Khattak,
+	fixes bug 565779
+
+	* vapi/gio-2.0.vapi: regenerated
+
+2009-01-03  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valafield.vala:
 	* gobject/valaccodearraymodule.vala:
 
