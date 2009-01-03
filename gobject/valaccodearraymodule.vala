@@ -175,7 +175,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 						var cl = field.parent_symbol as Class;
 						bool is_gtypeinstance = (cl != null && !cl.is_compact);
 
-						var length_cname = get_array_length_cname (field.name, dim);
+						string length_cname;
+						if (field.has_array_length_cname) {
+							length_cname = field.get_array_length_cname ();
+						} else {
+							length_cname = get_array_length_cname (field.name, dim);
+						}
 						CCodeExpression typed_inst = (CCodeExpression) get_ccodenode (ma.inner);
 
 						CCodeExpression inst;

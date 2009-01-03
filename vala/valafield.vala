@@ -69,6 +69,15 @@ public class Vala.Field : Member, Lockable {
 	 */
 	public bool no_array_length { get; set; }
 
+	/**
+	 * Specifies whether the array length field uses a custom name in C.
+	 */
+	public bool has_array_length_cname {
+		get { return (array_length_cname != null); }
+	}
+
+	private string? array_length_cname;
+
 	private string cname;
 	
 	private bool lock_used = false;
@@ -140,6 +149,25 @@ public class Vala.Field : Member, Lockable {
 		}
 	}
 
+	/**
+	 * Returns the name of the array length field as it is used in C code
+	 *
+	 * @return the name of the array length field to be used in C code
+	 */
+	public string? get_array_length_cname () {
+		return this.array_length_cname;
+	}
+
+	/**
+	 * Sets the name of the array length field as it is used in C code
+	 *
+	 * @param array_length_cname the name of the array length field to be
+	 * used in C code
+	 */
+	public void set_array_length_cname (string? array_length_cname) {
+		this.array_length_cname = array_length_cname;
+	}
+
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
@@ -149,6 +177,9 @@ public class Vala.Field : Member, Lockable {
 			foreach (string filename in val.split (",")) {
 				add_cheader_filename (filename);
 			}
+		}
+		if (a.has_argument ("array_length_cname")) {
+			set_array_length_cname (a.get_string ("array_length_cname"));
 		}
 	}
 	

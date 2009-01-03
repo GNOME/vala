@@ -1,5 +1,13 @@
 2009-01-03  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valafield.vala:
+	* gobject/valaccodearraymodule.vala:
+
+	Add array_length_cname attribute for fields,
+	patch by Andreas Brauchli, fixes bug 565793
+
+2009-01-03  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Fix gst_parse_* bindings, patch by Zeeshan Ali Khattak,
