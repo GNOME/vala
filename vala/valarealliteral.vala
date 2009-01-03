@@ -1,6 +1,6 @@
 /* valarealliteral.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -77,7 +77,7 @@ public class Vala.RealLiteral : Literal {
 
 		checked = true;
 
-		value_type = new ValueType ((TypeSymbol) analyzer.root_symbol.scope.lookup (get_type_name ()));
+		value_type = new FloatingType ((Struct) analyzer.root_symbol.scope.lookup (get_type_name ()));
 
 		return !error;
 	}

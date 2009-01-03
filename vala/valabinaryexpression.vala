@@ -1,6 +1,6 @@
 /* valabinaryexpression.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -157,7 +157,7 @@ public class Vala.BinaryExpression : Expression {
 			// convert conditional expression into if statement
 			// required for flow analysis and exception handling
 
-			var local = new LocalVariable (new ValueType (analyzer.bool_type.data_type), get_temp_name (), null, source_reference);
+			var local = new LocalVariable (analyzer.bool_type.copy (), get_temp_name (), null, source_reference);
 			var decl = new DeclarationStatement (local, source_reference);
 			decl.check (analyzer);
 

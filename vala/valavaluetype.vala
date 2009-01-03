@@ -1,6 +1,6 @@
 /* valavaluetype.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@ using GLib;
 /**
  * A value type, i.e. a struct or an enum type.
  */
-public class Vala.ValueType : DataType {
+public abstract class Vala.ValueType : DataType {
 	/**
 	 * The referred struct or enum.
 	 */
@@ -34,21 +34,6 @@ public class Vala.ValueType : DataType {
 	public ValueType (TypeSymbol type_symbol) {
 		this.type_symbol = type_symbol;
 		data_type = type_symbol;
-	}
-
-	public override DataType copy () {
-		var result = new ValueType (type_symbol);
-		result.source_reference = source_reference;
-		result.value_owned = value_owned;
-		result.nullable = nullable;
-		result.is_dynamic = is_dynamic;
-		result.floating_reference = floating_reference;
-		
-		foreach (DataType arg in get_type_arguments ()) {
-			result.add_type_argument (arg.copy ());
-		}
-		
-		return result;
 	}
 
 	public override string? get_cname () {

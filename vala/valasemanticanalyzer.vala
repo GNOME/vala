@@ -1,6 +1,6 @@
 /* valasemanticanalyzer.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -83,22 +83,22 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 		root_symbol = context.root;
 
-		bool_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("bool"));
+		bool_type = new BooleanType ((Struct) root_symbol.scope.lookup ("bool"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
 
-		uchar_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uchar"));
-		short_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("short"));
-		ushort_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("ushort"));
-		int_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int"));
-		uint_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint"));
-		long_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("long"));
-		ulong_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("ulong"));
-		size_t_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("size_t"));
-		ssize_t_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("ssize_t"));
-		uint64_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint64"));
-		int8_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int8"));
-		unichar_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("unichar"));
-		double_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("double"));
+		uchar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uchar"));
+		short_type = new IntegerType ((Struct) root_symbol.scope.lookup ("short"));
+		ushort_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ushort"));
+		int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
+		uint_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint"));
+		long_type = new IntegerType ((Struct) root_symbol.scope.lookup ("long"));
+		ulong_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ulong"));
+		size_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("size_t"));
+		ssize_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ssize_t"));
+		uint64_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint64"));
+		int8_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int8"));
+		unichar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("unichar"));
+		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 
 		// TODO: don't require GLib namespace in semantic analyzer
 		var glib_ns = root_symbol.scope.lookup ("GLib");
@@ -106,7 +106,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			object_type = (Class) glib_ns.scope.lookup ("Object");
 			initially_unowned_type = (TypeSymbol) glib_ns.scope.lookup ("InitiallyUnowned");
 
-			type_type = new ValueType ((TypeSymbol) glib_ns.scope.lookup ("Type"));
+			type_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Type"));
 
 			glist_type = new ObjectType ((Class) glib_ns.scope.lookup ("List"));
 			gslist_type = new ObjectType ((Class) glib_ns.scope.lookup ("SList"));
@@ -181,7 +181,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 			return type;
 		} else if (sym is EnumValue) {
-			return new ValueType ((TypeSymbol) sym.parent_symbol);
+			return new EnumValueType ((Enum) sym.parent_symbol);
 		} else if (sym is Method) {
 			return new MethodType ((Method) sym);
 		} else if (sym is Signal) {
@@ -251,9 +251,18 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (sym is ObjectTypeSymbol) {
 			type = new ObjectType ((ObjectTypeSymbol) sym);
 		} else if (sym is Struct) {
-			type = new ValueType ((Struct) sym);
+			var st = (Struct) sym;
+			if (st.is_boolean_type ()) {
+				type = new BooleanType (st);
+			} else if (st.is_integer_type ()) {
+				type = new IntegerType (st);
+			} else if (st.is_floating_type ()) {
+				type = new FloatingType (st);
+			} else {
+				type = new StructValueType (st);
+			}
 		} else if (sym is Enum) {
-			type = new ValueType ((Enum) sym);
+			type = new EnumValueType ((Enum) sym);
 		} else if (sym is ErrorDomain) {
 			type = new ErrorType ((ErrorDomain) sym, null);
 		} else if (sym is ErrorCode) {

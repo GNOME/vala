@@ -1,6 +1,6 @@
 /* valaccodemethodmodule.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -346,7 +346,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 
 							prop_name = new CCodeConstant ("\"%s-type\"".printf (type_param.name.down ()));
 							param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.down ()));
-							cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new ValueType (gtype_type), param_name)));
+							cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new IntegerType ((Struct) gtype_type), param_name)));
 
 							prop_name = new CCodeConstant ("\"%s-dup-func\"".printf (type_param.name.down ()));
 							param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ()));
@@ -522,8 +522,12 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 				this_type = new ObjectType ((Class) parent_type);
 			} else if (parent_type is Interface) {
 				this_type = new ObjectType ((Interface) parent_type);
+			} else if (parent_type is Struct) {
+				this_type = new StructValueType ((Struct) parent_type);
+			} else if (parent_type is Enum) {
+				this_type = new EnumValueType ((Enum) parent_type);
 			} else {
-				this_type = new ValueType (parent_type);
+				assert_not_reached ();
 			}
 
 			CCodeFormalParameter instance_param = null;

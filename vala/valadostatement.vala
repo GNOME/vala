@@ -1,6 +1,6 @@
 /* valadostatement.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -130,7 +130,7 @@ public class Vala.DoStatement : CodeNode, Statement {
 		 * } while (true);
 		 */
 
-		var first_local = new LocalVariable (new ValueType (analyzer.bool_type.data_type), get_temp_name (), new BooleanLiteral (false, source_reference), source_reference);
+		var first_local = new LocalVariable (analyzer.bool_type.copy (), get_temp_name (), new BooleanLiteral (false, source_reference), source_reference);
 		var first_decl = new DeclarationStatement (first_local, source_reference);
 		first_decl.check (analyzer);
 		var block = (Block) analyzer.current_symbol;

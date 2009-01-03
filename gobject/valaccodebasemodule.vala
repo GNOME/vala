@@ -1,6 +1,6 @@
 /* valaccodebasemodule.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -553,26 +553,26 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		root_symbol = context.root;
 
-		bool_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("bool"));
-		char_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("char"));
-		uchar_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uchar"));
-		unichar_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("unichar"));
-		short_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("short"));
-		ushort_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("ushort"));
-		int_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int"));
-		uint_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint"));
-		long_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("long"));
-		ulong_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("ulong"));
-		int8_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int8"));
-		uint8_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint8"));
-		int16_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int16"));
-		uint16_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint16"));
-		int32_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int32"));
-		uint32_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint32"));
-		int64_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int64"));
-		uint64_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("uint64"));
-		float_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("float"));
-		double_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("double"));
+		bool_type = new BooleanType ((Struct) root_symbol.scope.lookup ("bool"));
+		char_type = new IntegerType ((Struct) root_symbol.scope.lookup ("char"));
+		uchar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uchar"));
+		unichar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("unichar"));
+		short_type = new IntegerType ((Struct) root_symbol.scope.lookup ("short"));
+		ushort_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ushort"));
+		int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
+		uint_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint"));
+		long_type = new IntegerType ((Struct) root_symbol.scope.lookup ("long"));
+		ulong_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ulong"));
+		int8_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int8"));
+		uint8_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint8"));
+		int16_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int16"));
+		uint16_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint16"));
+		int32_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int32"));
+		uint32_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint32"));
+		int64_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int64"));
+		uint64_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint64"));
+		float_type = new FloatingType ((Struct) root_symbol.scope.lookup ("float"));
+		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
 
 		var glib_ns = root_symbol.scope.lookup ("GLib");
@@ -586,7 +586,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		garray_type = (TypeSymbol) glib_ns.scope.lookup ("Array");
 		gbytearray_type = (TypeSymbol) glib_ns.scope.lookup ("ByteArray");
 
-		gquark_type = new ValueType ((TypeSymbol) glib_ns.scope.lookup ("Quark"));
+		gquark_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Quark"));
 		gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
 		mutex_type = (Struct) glib_ns.scope.lookup ("StaticRecMutex");
 		
@@ -3496,9 +3496,18 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		} else if (sym is Interface) {
 			type = new ObjectType ((Interface) sym);
 		} else if (sym is Struct) {
-			type = new ValueType ((Struct) sym);
+			var st = (Struct) sym;
+			if (st.is_boolean_type ()) {
+				type = new BooleanType (st);
+			} else if (st.is_integer_type ()) {
+				type = new IntegerType (st);
+			} else if (st.is_floating_type ()) {
+				type = new FloatingType (st);
+			} else {
+				type = new StructValueType (st);
+			}
 		} else if (sym is Enum) {
-			type = new ValueType ((Enum) sym);
+			type = new EnumValueType ((Enum) sym);
 		} else if (sym is ErrorDomain) {
 			type = new ErrorType ((ErrorDomain) sym, null);
 		} else if (sym is ErrorCode) {

@@ -1,6 +1,6 @@
 /* valaerrordomain.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -68,7 +68,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 			return;
 		}
 		if (m.binding == MemberBinding.INSTANCE) {
-			m.this_parameter = new FormalParameter ("this", new ValueType (this));
+			m.this_parameter = new FormalParameter ("this", new ErrorType (this, null));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 

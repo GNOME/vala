@@ -1,6 +1,6 @@
 /* valacharacterliteral.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -85,7 +85,7 @@ public class Vala.CharacterLiteral : Literal {
 
 		checked = true;
 
-		value_type = new ValueType ((TypeSymbol) analyzer.root_symbol.scope.lookup ("char"));
+		value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup ("char"));
 
 		return !error;
 	}

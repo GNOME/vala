@@ -1,6 +1,6 @@
 /* valaarraytype.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -74,10 +74,10 @@ public class Vala.ArrayType : ReferenceType {
 			var root_symbol = source_reference.file.context.root;
 			if (rank > 1) {
 				// length is an int[] containing the dimensions of the array, starting at 0
-				ValueType integer = new ValueType((TypeSymbol) root_symbol.scope.lookup("int"));
+				ValueType integer = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
 				length_field.field_type = new ArrayType (integer, 1, source_reference);
 			} else {
-				length_field.field_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int"));
+				length_field.field_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
 			}
 
 		}
@@ -94,7 +94,7 @@ public class Vala.ArrayType : ReferenceType {
 			resize_method.set_cname ("g_renew");
 			
 			var root_symbol = source_reference.file.context.root;
-			var int_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int"));
+			var int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
 
 			resize_method.add_parameter (new FormalParameter ("length", int_type));
 			
@@ -113,7 +113,7 @@ public class Vala.ArrayType : ReferenceType {
 			move_method.set_cname ("_vala_array_move");
 
 			var root_symbol = source_reference.file.context.root;
-			var int_type = new ValueType ((TypeSymbol) root_symbol.scope.lookup ("int"));
+			var int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
 
 			move_method.add_parameter (new FormalParameter ("src", int_type));
 			move_method.add_parameter (new FormalParameter ("dest", int_type));

@@ -30,6 +30,7 @@
 
 [SimpleType]
 [CCode (cname = "gboolean", cheader_filename = "glib.h", type_id = "G_TYPE_BOOLEAN", marshaller_type_name = "BOOLEAN", get_value_function = "g_value_get_boolean", set_value_function = "g_value_set_boolean", default_value = "FALSE", type_signature = "b")]
+[BooleanType]
 public struct bool {
 	public string to_string () {
 		if (this) {

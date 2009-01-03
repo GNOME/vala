@@ -1,3 +1,31 @@
+2009-01-03  Jürg Billeter  <j@bitron.ch>
+
+	* vala/Makefile.am:
+	* vala/valaarraytype.vala:
+	* vala/valabinaryexpression.vala:
+	* vala/valabooleantype.vala:
+	* vala/valacharacterliteral.vala:
+	* vala/valadostatement.vala:
+	* vala/valaenum.vala:
+	* vala/valaenumvaluetype.vala:
+	* vala/valaerrordomain.vala:
+	* vala/valafloatingtype.vala:
+	* vala/valaintegerliteral.vala:
+	* vala/valaintegertype.vala:
+	* vala/valaobjectcreationexpression.vala:
+	* vala/valarealliteral.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valastruct.vala:
+	* vala/valastructvaluetype.vala:
+	* vala/valasymbolresolver.vala:
+	* vala/valavaluetype.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+	* vapi/glib-2.0.vapi:
+
+	Add BooleanType, EnumValueType, FloatingType, and StructValueType
+	as ValueType subclasses
+
 2009-01-02  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gdk-2.0/gdk-2.0.metadata:

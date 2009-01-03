@@ -1,6 +1,6 @@
 /* valastruct.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,6 +39,7 @@ public class Vala.Struct : TypeSymbol {
 	private string type_id;
 	private string lower_case_cprefix;
 	private string lower_case_csuffix;
+	private bool boolean_type;
 	private bool integer_type;
 	private bool floating_type;
 	private int rank;
@@ -138,7 +139,7 @@ public class Vala.Struct : TypeSymbol {
 		return_if_fail (m != null);
 		
 		if (m.binding == MemberBinding.INSTANCE || m is CreationMethod) {
-			m.this_parameter = new FormalParameter ("this", new ValueType (this));
+			m.this_parameter = new FormalParameter ("this", new StructValueType (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
@@ -270,6 +271,21 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	/**
+	 * Returns whether this is a boolean type.
+	 *
+	 * @return true if this is a boolean type, false otherwise
+	 */
+	public bool is_boolean_type () {
+		foreach (DataType type in base_types) {
+			var st = type.data_type as Struct;
+			if (st != null && st.is_boolean_type ()) {
+				return true;
+			}
+		}
+		return boolean_type;
+	}
+
+	/**
 	 * Returns whether this is an integer type.
 	 *
 	 * @return true if this is an integer type, false otherwise
@@ -350,13 +366,17 @@ public class Vala.Struct : TypeSymbol {
 		}
 	}
 
+	private void process_boolean_type_attribute (Attribute a) {
+		boolean_type = true;
+	}
+
 	private void process_integer_type_attribute (Attribute a) {
 		integer_type = true;
 		if (a.has_argument ("rank")) {
 			rank = a.get_integer ("rank");
 		}
 	}
-	
+
 	private void process_floating_type_attribute (Attribute a) {
 		floating_type = true;
 		if (a.has_argument ("rank")) {
@@ -371,6 +391,8 @@ public class Vala.Struct : TypeSymbol {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
+			} else if (a.name == "BooleanType") {
+				process_boolean_type_attribute (a);
 			} else if (a.name == "IntegerType") {
 				process_integer_type_attribute (a);
 			} else if (a.name == "FloatingType") {

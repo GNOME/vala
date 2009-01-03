@@ -1,6 +1,6 @@
 /* valaenum.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -79,7 +79,7 @@ public class Vala.Enum : TypeSymbol {
 			return;
 		}
 		if (m.binding == MemberBinding.INSTANCE) {
-			m.this_parameter = new FormalParameter ("this", new ValueType (this));
+			m.this_parameter = new FormalParameter ("this", new EnumValueType (this));
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 

@@ -1,6 +1,6 @@
 /* valasymbolresolver.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter, Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -276,9 +276,18 @@ public class Vala.SymbolResolver : CodeVisitor {
 			} else if (sym is Interface) {
 				type = new ObjectType ((Interface) sym);
 			} else if (sym is Struct) {
-				type = new ValueType ((Struct) sym);
+				var st = (Struct) sym;
+				if (st.is_boolean_type ()) {
+					type = new BooleanType (st);
+				} else if (st.is_integer_type ()) {
+					type = new IntegerType (st);
+				} else if (st.is_floating_type ()) {
+					type = new FloatingType (st);
+				} else {
+					type = new StructValueType (st);
+				}
 			} else if (sym is Enum) {
-				type = new ValueType ((Enum) sym);
+				type = new EnumValueType ((Enum) sym);
 			} else if (sym is ErrorDomain) {
 				type = new ErrorType ((ErrorDomain) sym, null, unresolved_type.source_reference);
 			} else if (sym is ErrorCode) {

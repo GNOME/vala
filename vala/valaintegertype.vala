@@ -1,6 +1,6 @@
 /* valaintegertype.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,18 +26,21 @@ using GLib;
  * An integer type.
  */
 public class Vala.IntegerType : ValueType {
-	string literal_value;
-	string literal_type_name;
+	string? literal_value;
+	string? literal_type_name;
 
-	public IntegerType (TypeSymbol type_symbol, string literal_value, string literal_type_name) {
-		this.type_symbol = type_symbol;
-		data_type = type_symbol;
+	public IntegerType (Struct type_symbol, string? literal_value = null, string? literal_type_name = null) {
+		base (type_symbol);
 		this.literal_value = literal_value;
 		this.literal_type_name = literal_type_name;
 	}
 
 	public override DataType copy () {
-		return new IntegerType (type_symbol, literal_value, literal_type_name);
+		var result = new IntegerType ((Struct) type_symbol, literal_value, literal_type_name);
+		result.source_reference = source_reference;
+		result.value_owned = value_owned;
+		result.nullable = nullable;
+		return result;
 	}
 
 	public override bool compatible (DataType target_type) {

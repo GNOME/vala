@@ -27,6 +27,7 @@ libvalacore_la_VALASOURCES = \
 	valabinaryexpression.vala \
 	valablock.vala \
 	valabooleanliteral.vala \
+	valabooleantype.vala \
 	valabreakstatement.vala \
 	valacastexpression.vala \
 	valacatchclause.vala \
@@ -57,6 +58,7 @@ libvalacore_la_VALASOURCES = \
 	valaemptystatement.vala \
 	valaenum.vala \
 	valaenumvalue.vala \
+	valaenumvaluetype.vala \
 	valaerrorcode.vala \
 	valaerrordomain.vala \
 	valaerrortype.vala \
@@ -64,6 +66,7 @@ libvalacore_la_VALASOURCES = \
 	valaexpressionstatement.vala \
 	valafield.vala \
 	valafieldprototype.vala \
+	valafloatingtype.vala \
 	valaflowanalyzer.vala \
 	valaforeachstatement.vala \
 	valaformalparameter.vala \
@@ -125,6 +128,7 @@ libvalacore_la_VALASOURCES = \
 	valastatementlist.vala \
 	valastringliteral.vala \
 	valastruct.vala \
+	valastructvaluetype.vala \
 	valaswitchlabel.vala \
 	valaswitchsection.vala \
 	valaswitchstatement.vala \

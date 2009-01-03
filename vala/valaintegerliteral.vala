@@ -114,7 +114,7 @@ public class Vala.IntegerLiteral : Literal {
 
 		checked = true;
 
-		value_type = new IntegerType ((TypeSymbol) analyzer.root_symbol.scope.lookup (get_type_name ()), value, get_type_name ());
+		value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup (get_type_name ()), value, get_type_name ());
 
 		return !error;
 	}
