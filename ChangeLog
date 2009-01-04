@@ -1,3 +1,10 @@
+2009-01-04  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodebasemodule.vala:
+
+	Fix generated code for static array and delegate fields,
+	based on patch by Andreas Brauchli, fixes bug 521246
+
 2009-01-03  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gstreamer-netbuffer-0.10/:

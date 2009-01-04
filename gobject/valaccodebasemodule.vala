@@ -806,78 +806,15 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			field_ctype = "volatile " + field_ctype;
 		}
 
-		if (f.access != SymbolAccessibility.PRIVATE) {
-			if (f.binding == MemberBinding.INSTANCE) {
-				st = instance_struct;
-
-				lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
-			} else if (f.binding == MemberBinding.CLASS) {
-				if (!is_gtypeinstance) {
-					Report.error (f.source_reference, "class fields are not supported in compact classes");
-					f.error = true;
-					return;
-				}
-
-				st = type_struct;
-			} else {
-				var cdecl = new CCodeDeclaration (field_ctype);
-				cdecl.add_declarator (new CCodeVariableDeclarator (f.get_cname ()));
-				cdecl.modifiers = CCodeModifiers.EXTERN;
-				header_type_member_declaration.append (cdecl);
-
-				var var_decl = new CCodeVariableDeclarator (f.get_cname ());
-				var_decl.initializer = default_value_for_type (f.field_type, true);
-
-				if (f.initializer != null) {
-					var init = (CCodeExpression) f.initializer.ccodenode;
-					if (is_constant_ccode_expression (init)) {
-						var_decl.initializer = init;
-					}
-				}
-
-				var var_def = new CCodeDeclaration (field_ctype);
-				var_def.add_declarator (var_decl);
-				var_def.modifiers = CCodeModifiers.EXTERN;
-				source_type_member_declaration.append (var_def);
-
-				lhs = new CCodeIdentifier (f.get_cname ());
-			}
-		} else if (f.access == SymbolAccessibility.PRIVATE) {
-			if (f.binding == MemberBinding.INSTANCE) {
-				if (is_gtypeinstance) {
-					st = instance_priv_struct;
-					lhs = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), f.get_cname ());
-				} else {
-					st = instance_struct;
-					lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
-				}
-			} else if (f.binding == MemberBinding.CLASS) {
-				if (!is_gtypeinstance) {
-					Report.error (f.source_reference, "class fields are not supported in compact classes");
-					f.error = true;
-					return;
-				}
-
-				st = type_priv_struct;
-				lhs = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("klass"), "priv"), f.get_cname ());
-			} else {
-				var cdecl = new CCodeDeclaration (field_ctype);
-				var var_decl = new CCodeVariableDeclarator (f.get_cname ());
-				if (f.initializer != null) {
-					var init = (CCodeExpression) f.initializer.ccodenode;
-					if (is_constant_ccode_expression (init)) {
-						var_decl.initializer = init;
-					}
-				}
-				cdecl.add_declarator (var_decl);
-				cdecl.modifiers = CCodeModifiers.STATIC;
-				source_type_member_declaration.append (cdecl);
-
-				lhs = new CCodeIdentifier (f.get_cname ());
-			}
-		}
-
 		if (f.binding == MemberBinding.INSTANCE)  {
+			if (is_gtypeinstance && f.access == SymbolAccessibility.PRIVATE) {
+				st = instance_priv_struct;
+				lhs = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), f.get_cname ());
+			} else {
+				st = instance_struct;
+				lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
+			}
+
 			st.add_field (field_ctype, f.get_cname ());
 			if (f.field_type is ArrayType && !f.no_array_length) {
 				// create fields to store array dimensions
@@ -938,8 +875,48 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				instance_finalize_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.field_type, ma)));
 			}
 		} else if (f.binding == MemberBinding.CLASS)  {
+			if (!is_gtypeinstance) {
+				Report.error (f.source_reference, "class fields are not supported in compact classes");
+				f.error = true;
+				return;
+			}
+
+			if (f.access != SymbolAccessibility.PRIVATE) {
+				st = type_struct;
+			} else {
+				st = type_priv_struct;
+			}
+
 			st.add_field (field_ctype, f.get_cname ());
 		} else {
+			lhs = new CCodeIdentifier (f.get_cname ());
+
+			if (!f.is_internal_symbol ()) {
+				var cdecl = new CCodeDeclaration (field_ctype);
+				cdecl.add_declarator (new CCodeVariableDeclarator (f.get_cname ()));
+				cdecl.modifiers = CCodeModifiers.EXTERN;
+				header_type_member_declaration.append (cdecl);
+			}
+
+			var var_decl = new CCodeVariableDeclarator (f.get_cname ());
+			var_decl.initializer = default_value_for_type (f.field_type, true);
+
+			if (f.initializer != null) {
+				var init = (CCodeExpression) f.initializer.ccodenode;
+				if (is_constant_ccode_expression (init)) {
+					var_decl.initializer = init;
+				}
+			}
+
+			var var_def = new CCodeDeclaration (field_ctype);
+			var_def.add_declarator (var_decl);
+			if (!f.is_internal_symbol ()) {
+				var_def.modifiers = CCodeModifiers.EXTERN;
+			} else {
+				var_def.modifiers = CCodeModifiers.STATIC;
+			}
+			source_type_member_declaration.append (var_def);
+
 			/* add array length fields where necessary */
 			if (f.field_type is ArrayType && !f.no_array_length) {
 				var array_type = (ArrayType) f.field_type;
@@ -947,29 +924,42 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					var len_type = int_type.copy ();
 
-					var cdecl = new CCodeDeclaration (len_type.get_cname ());
-					cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (f.get_cname (), dim)));
-					if (f.access != SymbolAccessibility.PRIVATE) {
+					if (!f.is_internal_symbol ()) {
+						var cdecl = new CCodeDeclaration (len_type.get_cname ());
+						cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (f.get_cname (), dim)));
 						cdecl.modifiers = CCodeModifiers.EXTERN;
 						header_type_member_declaration.append (cdecl);
-					} else {
-						cdecl.modifiers = CCodeModifiers.STATIC;
-						source_type_member_declaration.append (cdecl);
 					}
+
+					var len_def = new CCodeDeclaration (len_type.get_cname ());
+					len_def.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (f.get_cname (), dim), new CCodeConstant ("0")));
+					if (!f.is_internal_symbol ()) {
+						len_def.modifiers = CCodeModifiers.EXTERN;
+					} else {
+						len_def.modifiers = CCodeModifiers.STATIC;
+					}
+					source_type_member_declaration.append (len_def);
 				}
 			} else if (f.field_type is DelegateType) {
 				var delegate_type = (DelegateType) f.field_type;
 				if (delegate_type.delegate_symbol.has_target) {
 					// create field to store delegate target
-					var cdecl = new CCodeDeclaration ("gpointer");
-					cdecl.add_declarator (new CCodeVariableDeclarator (get_delegate_target_cname  (f.get_cname ())));
-					if (f.access != SymbolAccessibility.PRIVATE) {
+
+					if (!f.is_internal_symbol ()) {
+						var cdecl = new CCodeDeclaration ("gpointer");
+						cdecl.add_declarator (new CCodeVariableDeclarator (get_delegate_target_cname  (f.get_cname ())));
 						cdecl.modifiers = CCodeModifiers.EXTERN;
 						header_type_member_declaration.append (cdecl);
-					} else {
-						cdecl.modifiers = CCodeModifiers.STATIC;
-						source_type_member_declaration.append (cdecl);
 					}
+
+					var target_def = new CCodeDeclaration ("gpointer");
+					target_def.add_declarator (new CCodeVariableDeclarator.with_initializer (get_delegate_target_cname  (f.get_cname ()), new CCodeConstant ("NULL")));
+					if (!f.is_internal_symbol ()) {
+						target_def.modifiers = CCodeModifiers.EXTERN;
+					} else {
+						target_def.modifiers = CCodeModifiers.STATIC;
+					}
+					source_type_member_declaration.append (target_def);
 				}
 			}
 
