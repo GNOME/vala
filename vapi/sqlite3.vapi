@@ -36,10 +36,8 @@ namespace Sqlite {
 		public int total_changes ();
 
 		public int complete (string sql);
-		[NoArrayLength]
-		public int get_table (string sql, out weak string[] resultp, out int nrow, out int ncolumn, out string errmsg);
-		[NoArrayLength]
-		public static void free_table (string[] result);
+		public int get_table (string sql, [CCode (array_length = false)] out weak string[] resultp, out int nrow, out int ncolumn, out string errmsg);
+		public static void free_table ([CCode (array_length = false)] string[] result);
 		public static int open (string filename, out Database db);
 		public static int open_v2 (string filename, out Database db, int flags = OPEN_READWRITE | OPEN_CREATE, string? zVfs = null);
 		public int errcode ();
@@ -81,9 +79,8 @@ namespace Sqlite {
 		public int to_numeric_type ();
 	}
 
-	[NoArrayLength]
 	[CCode (cname = "sqlite3_callback", instance_pos = 0)]
-	public delegate int Callback (int n_columns, string[] values, string[] column_names);
+	public delegate int Callback (int n_columns, [CCode (array_length = false)] string[] values, [CCode (array_length = false)] string[] column_names);
 
 	[CCode (cname = "SQLITE_OK")]
 	public const int OK;

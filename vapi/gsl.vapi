@@ -679,12 +679,9 @@ namespace Gsl
 		[CCode (cname="gsl_complex_poly_complex_eval")]
 		public static Complex poly_complex_eval (Complex[] c, Complex z);
 				
-		[NoArrayLength]
-		public static int dd_init (double[] dd, double[] xa, double[] ya, size_t size);
-		[NoArrayLength]
-		public static double dd_eval (double[] dd, double[] xa, size_t size, double x);
-		[NoArrayLength]
-		public static int dd_taylor (double[] c, double xp, double[] dd, double[] xa, size_t size, double[] w);
+		public static int dd_init ([CCode (array_length = false)] double[] dd, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size);
+		public static double dd_eval ([CCode (array_length = false)] double[] dd, [CCode (array_length = false)] double[] xa, size_t size, double x);
+		public static int dd_taylor ([CCode (array_length = false)] double[] c, double xp, [CCode (array_length = false)] double[] dd, [CCode (array_length = false)] double[] xa, size_t size, [CCode (array_length = false)] double[] w);
 		
 		public static int solve_quadratic (double a, double b, double c, out double x0, out double x1);
 		public static int complex_solve_quadratic (double a, double b, double c, out Complex z0, out Complex z1);
@@ -768,8 +765,7 @@ namespace Gsl
 		public static int J1_e (double x, out Result result);
 		public static double Jn (int n, double x);
 		public static int Jn_e (int n, double x, out Result result);
-		[NoArrayLength]
-		public static int Jn_array (int nmin, int nmax, double x, double[] result_array);
+		public static int Jn_array (int nmin, int nmax, double x, [CCode (array_length = false)] double[] result_array);
 		
 		public static double Y0 (double x);
 		public static int Y0_e (double x, out Result result);
@@ -777,8 +773,7 @@ namespace Gsl
 		public static int Y1_e (double x, out Result result);
 		public static double Yn (int n, double x);
 		public static int Yn_e (int n, double x, out Result result);
-		[NoArrayLength]
-		public static int Yn_array (int nmin, int nmax, double x, double[] result_array);
+		public static int Yn_array (int nmin, int nmax, double x, [CCode (array_length = false)] double[] result_array);
 		
 		public static double I0 (double x);
 		public static int I0_e (double x, out Result result);
@@ -786,16 +781,14 @@ namespace Gsl
 		public static int I1_e (double x, out Result result);
 		public static double In (int n, double x);
 		public static int In_e (int n, double x, out Result result);
-		[NoArrayLength]
-		public static int In_array (int nmin, int nmax, double x, double[] result_array);
+		public static int In_array (int nmin, int nmax, double x, [CCode (array_length = false)] double[] result_array);
 		public static double I0_scaled (double x);
 		public static int I0_scaled_e (double x, out Result result);
 		public static double I1_scaled (double x);
 		public static int I1_scaled_e (double x, out Result result);
 		public static double In_scaled (int n, double x);
 		public static int In_scaled_e (int n, double x, out Result result);
-		[NoArrayLength]
-		public static int In_scaled_array (int nmin, int nmax, double x, double[] result_array);
+		public static int In_scaled_array (int nmin, int nmax, double x, [CCode (array_length = false)] double[] result_array);
 		
 		public static double K0 (double x);
 		public static int K0_e (double x, out Result result);
@@ -803,16 +796,14 @@ namespace Gsl
 		public static int K1_e (double x, out Result result);
 		public static double Kn (int n, double x);
 		public static int Kn_e (int n, double x, out Result result);
-		[NoArrayLength]
-		public static int Kn_array (int nmin, int nmax, double x, double[] result_array);
+		public static int Kn_array (int nmin, int nmax, double x, [CCode (array_length = false)] double[] result_array);
 		public static double K0_scaled (double x);
 		public static int K0_scaled_e (double x, out Result result);
 		public static double K1_scaled (double x);
 		public static int K1_scaled_e (double x, out Result result);
 		public static double Kn_scaled (int n, double x);
 		public static int Kn_scaled_e (int n, double x, out Result result);
-		[NoArrayLength]
-		public static int Kn_scaled_array (int nmin, int nmax, double x, double[] result_array);
+		public static int Kn_scaled_array (int nmin, int nmax, double x, [CCode (array_length = false)] double[] result_array);
 		
 		public static double j0 (double x);
 		public static int j0_e (double x, out Result result);
@@ -822,10 +813,8 @@ namespace Gsl
 		public static int j2_e (double x, out Result result);
 		public static double jl (int l, double x);
 		public static int jl_e (int l, double x, out Result result);
-		[NoArrayLength]
-		public static int jl_array (int lmax, double x, double[] result_array);
-		[NoArrayLength]
-		public static int jl_steed_array (int lmax, double x, double[] jl_x_array);
+		public static int jl_array (int lmax, double x, [CCode (array_length = false)] double[] result_array);
+		public static int jl_steed_array (int lmax, double x, [CCode (array_length = false)] double[] jl_x_array);
 		
 		public static double y0 (double x);
 		public static int y0_e (double x, out Result result);
@@ -835,8 +824,7 @@ namespace Gsl
 		public static int y2_e (double x, out Result result);
 		public static double yl (int l, double x);
 		public static int yl_e (int l, double x, out Result result);
-		[NoArrayLength]
-		public static int yl_array (int lmax, double x, double[] result_array);
+		public static int yl_array (int lmax, double x, [CCode (array_length = false)] double[] result_array);
 		
 		public static double i0_scaled (double x);
 		public static int i0_scaled_e (double x, out Result result);
@@ -846,8 +834,7 @@ namespace Gsl
 		public static int i2_scaled_e (double x, out Result result);
 		public static double il_scaled (int l, double x);
 		public static int il_scaled_e (int l, double x, out Result result);
-		[NoArrayLength]
-		public static int il_scaled_array (int lmax, double x, double[] result_array);
+		public static int il_scaled_array (int lmax, double x, [CCode (array_length = false)] double[] result_array);
 		
 		public static double k0_scaled (double x);
 		public static int k0_scaled_e (double x, out Result result);
@@ -857,13 +844,11 @@ namespace Gsl
 		public static int k2_scaled_e (double x, out Result result);
 		public static double kl_scaled (int l, double x);
 		public static int kl_scaled_e (int l, double x, out Result result);
-		[NoArrayLength]
-		public static int kl_scaled_array (int lmax, double x, double[] result_array);
+		public static int kl_scaled_array (int lmax, double x, [CCode (array_length = false)] double[] result_array);
 		
 		public static double Jnu (double nu, double x);
 		public static int Jnu_e (double nu, double x, out Result result);
-		[NoArrayLength]
-		public static int sequence_Jnu_e (double nu, Mode mode, size_t size, double[] v);
+		public static int sequence_Jnu_e (double nu, Mode mode, size_t size, [CCode (array_length = false)] double[] v);
 		
 		public static double Ynu (double nu, double x);
 		public static int Ynu_e (double nu, double x, out Result result);
@@ -908,22 +893,17 @@ namespace Gsl
 	namespace CoulombWave
 	{
 		public static int FG_e (double eta, double x, double l_f, int k, out Result f, out Result fp, out Result g, out Result gp, out double exp_f, out double exp_g);
-		[NoArrayLength]
-		public static int F_array (double l_min, int kmax, double eta, double x, double[] fc_array, out double f_exponent);
-		[NoArrayLength]
-		public static int FG_array (double l_min, int kmax, double eta, double x, double[] fc_array, double[] gc_array, out double f_exponent, out double g_exponent);
-		[NoArrayLength]
-		public static int FGp_array (double l_min, int kmax, double eta, double x, double[] fc_array, double[] fcp_array, double[] gc_array, double[] gcp_array, out double f_exponent, out double g_exponent);
-		[NoArrayLength]
-		public static int sphF_array (double l_min, int kmax, double eta, double x, double[] fc_array, double[] f_exponent);
+		public static int F_array (double l_min, int kmax, double eta, double x, [CCode (array_length = false)] double[] fc_array, out double f_exponent);
+		public static int FG_array (double l_min, int kmax, double eta, double x, [CCode (array_length = false)] double[] fc_array, [CCode (array_length = false)] double[] gc_array, out double f_exponent, out double g_exponent);
+		public static int FGp_array (double l_min, int kmax, double eta, double x, [CCode (array_length = false)] double[] fc_array, [CCode (array_length = false)] double[] fcp_array, [CCode (array_length = false)] double[] gc_array, [CCode (array_length = false)] double[] gcp_array, out double f_exponent, out double g_exponent);
+		public static int sphF_array (double l_min, int kmax, double eta, double x, [CCode (array_length = false)] double[] fc_array, [CCode (array_length = false)] double[] f_exponent);
 	}
 	
 	[CCode (lower_case_cprefix="gsl_sf_coulomb_", cheader_filename="gsl/gsl_sf_coulomb.h")]
 	namespace Coulomb
 	{
 		public static int CL_e (double l, double eta, out Result result);
-		[NoArrayLength]
-		public static int CL_array (double lmin, int kmax, double eta, double[] cl);
+		public static int CL_array (double lmin, int kmax, double eta, [CCode (array_length = false)] double[] cl);
 	}
 	
 	[CCode (lower_case_cprefix="gsl_sf_coupling_", cheader_filename="gsl/gsl_coupling.h")]
@@ -1264,10 +1244,8 @@ namespace Gsl
 		public static int P3_e (double x, out Result result);
 		public static double Pl (int l, double x);
 		public static int Pl_e (int l, double x, out Result result);
-		[NoArrayLength]
-		public static int Pl_array (int lmax, double x, double[] result_array);
-		[NoArrayLength]
-		public static int Pl_deriv_array (int lmax, double x, double[] result_array, double[] result_deriv_array);
+		public static int Pl_array (int lmax, double x, [CCode (array_length = false)] double[] result_array);
+		public static int Pl_deriv_array (int lmax, double x, [CCode (array_length = false)] double[] result_array, [CCode (array_length = false)] double[] result_deriv_array);
 		public static double Q0 (double x);
 		public static int Q0_e (double x, out Result result);		
 		public static double Q1 (double x);
@@ -1277,16 +1255,12 @@ namespace Gsl
 		
 		public static double Plm (int l, int m, double x);
 		public static int Plm_e (int l, int m, double x, out Result result);
-		[NoArrayLength]
-		public static int Plm_array (int lmax, int m, double x, double[] result_array);
-		[NoArrayLength]
-		public static int Plm_deriv_array (int lmax, int m, double x, double[] result_array, double[] result_deriv_array);
+		public static int Plm_array (int lmax, int m, double x, [CCode (array_length = false)] double[] result_array);
+		public static int Plm_deriv_array (int lmax, int m, double x, double[] result_array, [CCode (array_length = false)] double[] result_deriv_array);
 		public static double sphPlm (int l, int m, double x);
 		public static int sphPlm_e (int l, int m, double x, out Result result);
-		[NoArrayLength]
-		public static int sphPlm_array (int lmax, int m, double x, double[] result_array);
-		[NoArrayLength]
-		public static int sphPlm_deriv_array (int lmax, int m, double x, double[] result_array, double[] result_deriv_array);
+		public static int sphPlm_array (int lmax, int m, double x, [CCode (array_length = false)] double[] result_array);
+		public static int sphPlm_deriv_array (int lmax, int m, double x, double[] result_array, [CCode (array_length = false)] double[] result_deriv_array);
 		public static int array_size (int lmax, int m);
 		
 		[CCode (cname="gsl_sf_conicalP_half")]
@@ -1320,8 +1294,7 @@ namespace Gsl
 		public static int H3d_1_e (double lambda, double eta, out Result result);
 		public static double H3d (int l, double lambda, double eta);
 		public static int H3d_e (int l, double lambda, double eta, out Result result);
-		[NoArrayLength]
-		public static int H3d_array (int lmax, double lambda, double eta, double[] result_array);
+		public static int H3d_array (int lmax, double lambda, double eta, [CCode (array_length = false)] double[] result_array);
 	}
 	
 	[CCode (lower_case_cprefix="gsl_sf_", cheader_filename="gsl/gsl_sf_log.h")]
@@ -1359,33 +1332,25 @@ namespace Gsl
 		public Matrix evec;
 		public EigenSymmvWorkspace wmat;
 		
-		[NoArrayLength]
-		public static int a_array (int order_min, int order_max, double qq, MathieuWorkspace work, double[] result_array);
-		[NoArrayLength]
-		public static int b_array (int order_min, int order_max, double qq, MathieuWorkspace work, double[] result_array);
+		public static int a_array (int order_min, int order_max, double qq, MathieuWorkspace work, [CCode (array_length = false)] double[] result_array);
+		public static int b_array (int order_min, int order_max, double qq, MathieuWorkspace work, [CCode (array_length = false)] double[] result_array);
 		public static int a (int order, double qq, out Result result);
 		public static int b (int order, double qq, out Result result);
-		[NoArrayLength]
-		public static int a_coeff (int order, double qq, double aa, double[] coeff);
-		[NoArrayLength]
-		public static int b_coeff (int order, double qq, double aa, double[] coeff);
+		public static int a_coeff (int order, double qq, double aa, [CCode (array_length = false)] double[] coeff);
+		public static int b_coeff (int order, double qq, double aa, [CCode (array_length = false)] double[] coeff);
 		
 		[CCode (cname="gsl_sf_mathieu_alloc")]
 		public MathieuWorkspace (size_t nn, double qq);
 
 		public static int ce (int order, double qq, double zz, out Result result);
 		public static int se (int order, double qq, double zz, out Result result);
-		[NoArrayLength]
-		public static int ce_array (int nmin, int nmax, double qq, double zz, MathieuWorkspace work, double[] result_array);
-		[NoArrayLength]
-		public static int se_array (int nmin, int nmax, double qq, double zz, MathieuWorkspace work, double[] result_array);
+		public static int ce_array (int nmin, int nmax, double qq, double zz, MathieuWorkspace work, [CCode (array_length = false)] double[] result_array);
+		public static int se_array (int nmin, int nmax, double qq, double zz, MathieuWorkspace work, [CCode (array_length = false)] double[] result_array);
 		
 		public static int Mc (int kind, int order, double qq, double zz, out Result result);
 		public static int Ms (int kind, int order, double qq, double zz, out Result result);
-		[NoArrayLength]
-		public static int Mc_array (int kind, int nmin, int nmax, double qq, double zz, MathieuWorkspace work, double[] result_array);
-		[NoArrayLength]
-		public static int Ms_array (int kind, int nmin, int nmax, double qq, double zz, MathieuWorkspace work, double[] result_array);
+		public static int Mc_array (int kind, int nmin, int nmax, double qq, double zz, MathieuWorkspace work, [CCode (array_length = false)] double[] result_array);
+		public static int Ms_array (int kind, int nmin, int nmax, double qq, double zz, MathieuWorkspace work, [CCode (array_length = false)] double[] result_array);
 	}
 	
 	[CCode (lower_case_cprefix="gsl_sf_", cheader_filename="gsl/gsl_sf_pow_int.h")]
@@ -1536,8 +1501,7 @@ namespace Gsl
 		public Vector vector;
 		
 		public static VectorView array (double[] v);
-		[NoArrayLength]
-		public static VectorView array_with_stride (double[] v, size_t stride, size_t n);
+		public static VectorView array_with_stride ([CCode (array_length = false)] double[] v, size_t stride, size_t n);
 	}
 	
 	[Compact]
@@ -1611,8 +1575,7 @@ namespace Gsl
 		public VectorComplex vector;
 		
 		public static VectorComplexView array (double[] v);
-		[NoArrayLength]
-		public static VectorComplexView array_with_stride (double[] v, size_t stride, size_t n);
+		public static VectorComplexView array_with_stride ([CCode (array_length = false)] double[] v, size_t stride, size_t n);
 	}
 	
 	[Compact]
@@ -1687,10 +1650,8 @@ namespace Gsl
 	{
 		public Matrix matrix;
 		
-		[NoArrayLength]
-		public static MatrixView array (double[] v, size_t n1, size_t n2);
-		[NoArrayLength]
-		public static MatrixView array_with_tda (double[] v, size_t n1, size_t n2, size_t tda);
+		public static MatrixView array ([CCode (array_length = false)] double[] v, size_t n1, size_t n2);
+		public static MatrixView array_with_tda ([CCode (array_length = false)] double[] v, size_t n1, size_t n2, size_t tda);
 		public static MatrixView vector (Vector v, size_t n1, size_t n2);
 		public static MatrixView vectr_with_tda (Vector v, size_t n1, size_t n2, size_t tda);
 	}
@@ -1784,10 +1745,8 @@ namespace Gsl
 	{
 		public MatrixComplex matrix;
 		
-		[NoArrayLength]
-		public static MatrixComplexView array (double[] v, size_t n1, size_t n2);
-		[NoArrayLength]
-		public static MatrixComplexView array_with_tda (double[] v, size_t n1, size_t n2, size_t tda);
+		public static MatrixComplexView array ([CCode (array_length = false)] double[] v, size_t n1, size_t n2);
+		public static MatrixComplexView array_with_tda ([CCode (array_length = false)] double[] v, size_t n1, size_t n2, size_t tda);
 		public static MatrixComplexView vector (VectorComplex v, size_t n1, size_t n2);
 		public static MatrixComplexView vectr_with_tda (VectorComplex v, size_t n1, size_t n2, size_t tda);
 	}
@@ -1924,21 +1883,17 @@ namespace Gsl
 	[CCode (lower_case_cprefix="gsl_", cheader_filename="gsl/gsl_permute_double.h")]
 	namespace Permute
 	{
-		[NoArrayLength]
-		public static int permute (size_t* p, double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int permute_inverse (size_t* p, double[] data, size_t stride, size_t n);
+		public static int permute (size_t* p, [CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static int permute_inverse (size_t* p, [CCode (array_length = false)] double[] data, size_t stride, size_t n);
 	}
 	
 	[CCode (cheader_filename="gsl/gsl_permute_complex_double.h")]
 	namespace PermuteComplex
 	{
-		[NoArrayLength]
 		[CCode (cname="gsl_permute_complex")]
-		public static int permute (size_t* p, double[] data, size_t stride, size_t n);
-		[NoArrayLength]
+		public static int permute (size_t* p, [CCode (array_length = false)] double[] data, size_t stride, size_t n);
 		[CCode (cname="gsl_permute_complex_inverse")]
-		public static int permute_inverse (size_t* p, double[] data, size_t stride, size_t n);
+		public static int permute_inverse (size_t* p, [CCode (array_length = false)] double[] data, size_t stride, size_t n);
 	}
 	
 	[CCode (cheader_filename="gsl/gsl_permute_vector_double.h")]
@@ -2003,20 +1958,14 @@ namespace Gsl
 	[CCode (lower_case_cprefix="gsl_sort_", cheader_filename="gsl/gsl_sort_double.h")]
 	namespace Sort
 	{
-		[NoArrayLength]
 		[CCode (cname="gsl_sort")]
-		public static void sort (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
+		public static void sort ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
 		[CCode (cname="gsl_sort_index")]
-		public static void sort_index (size_t[] p, double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int smallest (double[] dest, size_t k, double[] src, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int smallest_index (size_t[] p, size_t k, double[] src, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int largest (double[] dest, size_t k, double[] src, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int largest_index (size_t[] p, size_t k, double[] src, size_t stride, size_t n);
+		public static void sort_index ([CCode (array_length = false)] size_t[] p, [CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static int smallest ([CCode (array_length = false)] double[] dest, size_t k, [CCode (array_length = false)] double[] src, size_t stride, size_t n);
+		public static int smallest_index ([CCode (array_length = false)] size_t[] p, size_t k, [CCode (array_length = false)] double[] src, size_t stride, size_t n);
+		public static int largest ([CCode (array_length = false)] double[] dest, size_t k, [CCode (array_length = false)] double[] src, size_t stride, size_t n);
+		public static int largest_index ([CCode (array_length = false)] size_t[] p, size_t k, [CCode (array_length = false)] double[] src, size_t stride, size_t n);
 	}
 	
 	[CCode (lower_case_cprefix="gsl_sort_vector_", cheader_filename="gsl/gsl_sort_vector_double.h")]
@@ -2026,14 +1975,10 @@ namespace Gsl
 		public static void sort (Vector v);
 		[CCode (cname="gsl_sort_vector_index")]
 		public static int sort_index (Permutation p, Vector v);
-		[NoArrayLength]
-		public static int smallest (double[] dest, size_t k, Vector v);
-		[NoArrayLength]
-		public static int smallest_index (size_t[] p, size_t k, Vector v);
-		[NoArrayLength]
-		public static int largest (double[] dest, size_t k, Vector v);
-		[NoArrayLength]
-		public static int largest_index (size_t[] p, size_t k, Vector v);
+		public static int smallest ([CCode (array_length = false)] double[] dest, size_t k, Vector v);
+		public static int smallest_index ([CCode (array_length = false)] size_t[] p, size_t k, Vector v);
+		public static int largest ([CCode (array_length = false)] double[] dest, size_t k, Vector v);
+		public static int largest_index ([CCode (array_length = false)] size_t[] p, size_t k, Vector v);
 	}
 	
 	
@@ -2410,31 +2355,19 @@ namespace Gsl
 	[CCode (lower_case_cprefix="gsl_fft_complex_", cheader_filename="gsl/gsl_fft_complex.h")]
 	namespace FFTComplex
 	{
-		[NoArrayLength]
-		public static int radix2_forward (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int radix2_transform (double[] data, size_t stride, size_t n, FFTDirection sign);
-		[NoArrayLength]
-		public static int radix2_backward (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int radix2_inverse (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int radix2_dif_forward (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int radix2_dif_transform (double[] data, size_t stride, size_t n, FFTDirection sign);
-		[NoArrayLength]
-		public static int radix2_dif_backward (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int radix2_dif_inverse (double[] data, size_t stride, size_t n);
+		public static int radix2_forward ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static int radix2_transform ([CCode (array_length = false)] double[] data, size_t stride, size_t n, FFTDirection sign);
+		public static int radix2_backward ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static int radix2_inverse ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static int radix2_dif_forward ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static int radix2_dif_transform ([CCode (array_length = false)] double[] data, size_t stride, size_t n, FFTDirection sign);
+		public static int radix2_dif_backward ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static int radix2_dif_inverse ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
 		
-		[NoArrayLength]
-		public static int forward (double[] data, size_t stride, size_t n, FFTComplexWavetable wavetable, FFTComplexWorkspace work);
-		[NoArrayLength]
-		public static int transform (double[] data, size_t stride, size_t n, FFTComplexWavetable wavetable, FFTComplexWorkspace work, FFTDirection sign);
-		[NoArrayLength]
-		public static int backward (double[] data, size_t stride, size_t n, FFTComplexWavetable wavetable, FFTComplexWorkspace work);
-		[NoArrayLength]
-		public static int inverse (double[] data, size_t stride, size_t n, FFTComplexWavetable wavetable, FFTComplexWorkspace work);
+		public static int forward ([CCode (array_length = false)] double[] data, size_t stride, size_t n, FFTComplexWavetable wavetable, FFTComplexWorkspace work);
+		public static int transform ([CCode (array_length = false)] double[] data, size_t stride, size_t n, FFTComplexWavetable wavetable, FFTComplexWorkspace work, FFTDirection sign);
+		public static int backward ([CCode (array_length = false)] double[] data, size_t stride, size_t n, FFTComplexWavetable wavetable, FFTComplexWorkspace work);
+		public static int inverse ([CCode (array_length = false)] double[] data, size_t stride, size_t n, FFTComplexWavetable wavetable, FFTComplexWorkspace work);
 	}
 	
 	[Compact]
@@ -2466,12 +2399,9 @@ namespace Gsl
 	[CCode (lower_case_cprefix="gsl_fft_real_", cheader_filename="gsl/gsl_fft_real.h")]
 	namespace FFTReal
 	{
-		[NoArrayLength]
-		public static int radix2_forward (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int transform (double[] data, size_t stride, size_t n, FFTRealWavetable wavetable, FFTRealWorkspace work);
-		[NoArrayLength]
-		public static int unpack (double[] real_coefficient, double[] complex_coeficient, size_t stride, size_t n);
+		public static int radix2_forward ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static int transform ([CCode (array_length = false)] double[] data, size_t stride, size_t n, FFTRealWavetable wavetable, FFTRealWorkspace work);
+		public static int unpack ([CCode (array_length = false)] double[] real_coefficient, [CCode (array_length = false)] double[] complex_coeficient, size_t stride, size_t n);
 	}
 	
 	[Compact]
@@ -2491,22 +2421,14 @@ namespace Gsl
 	[CCode (lower_case_cprefix="gsl_fft_halfcomplex_", cheader_filename="gsl/gsl_fft_halfcomplex.h")]
 	namespace FFTHalfcomplex
 	{
-		[NoArrayLength]
-		public static int radix2_inverse (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int radix2_backward (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int radix2_transform (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int backward (double[] data, size_t stride, size_t n, FFTHalfcomplexWavetable wavetable, FFTRealWorkspace work);
-		[NoArrayLength]
-		public static int inverse (double[] data, size_t stride, size_t n, FFTHalfcomplexWavetable wavetable, FFTRealWorkspace work);
-		[NoArrayLength]
-		public static int transform (double[] data, size_t stride, size_t n, FFTHalfcomplexWavetable wavetable, FFTRealWorkspace work);
-		[NoArrayLength]
-		public static int unpack (double[] halfcomplex_coefficient, double[] complex_coefficient, size_t stride, size_t n);
-		[NoArrayLength]
-		public static int radix2_unpack (double[] halfcomplex_coefficient, double[] complex_coefficient, size_t stride, size_t n);
+		public static int radix2_inverse ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static int radix2_backward ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static int radix2_transform ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static int backward ([CCode (array_length = false)] double[] data, size_t stride, size_t n, FFTHalfcomplexWavetable wavetable, FFTRealWorkspace work);
+		public static int inverse ([CCode (array_length = false)] double[] data, size_t stride, size_t n, FFTHalfcomplexWavetable wavetable, FFTRealWorkspace work);
+		public static int transform ([CCode (array_length = false)] double[] data, size_t stride, size_t n, FFTHalfcomplexWavetable wavetable, FFTRealWorkspace work);
+		public static int unpack ([CCode (array_length = false)] double[] halfcomplex_coefficient, [CCode (array_length = false)] double[] complex_coefficient, size_t stride, size_t n);
+		public static int radix2_unpack ([CCode (array_length = false)] double[] halfcomplex_coefficient, [CCode (array_length = false)] double[] complex_coefficient, size_t stride, size_t n);
 	}
 	
 	
@@ -2597,16 +2519,14 @@ namespace Gsl
 		public static void qk61 (Function* f, double a, double b, out double result, out double abserr, out double resabs, out double resasc);
 		public static void qcheb (Function* f, double a, double b, out double cheb12, out double cheb24);
 		
-		[NoArrayLength]
-		public static void qk (int n, double[] xgk, double[] wg, double[] wgk, double[] fv1, double[] fv2, Function* f, double a, double b, out double result, out double abserr, out double resabs, double resasc);
+		public static void qk (int n, [CCode (array_length = false)] double[] xgk, [CCode (array_length = false)] double[] wg, [CCode (array_length = false)] double[] wgk, [CCode (array_length = false)] double[] fv1, [CCode (array_length = false)] double[] fv2, Function* f, double a, double b, out double result, out double abserr, out double resabs, double resasc);
 		public static int qng (Function* f, double a, double b, double epsabs, double epsrel, out double result, out double abserr, out size_t neval);
 		public static int qag (Function* f, double a, double b, double epsabs, double epsrel, size_t limit, int key, IntegrationWorkspace workspace, out double result, out double abserr);
 		public static int qagi (Function* f, double epsabs, double epsrel, size_t limit, IntegrationWorkspace workspace, out double result, out double abserr);
 		public static int qagiu (Function* f, double a, double epsabs, double epsrel, size_t limit, IntegrationWorkspace workspace, out double result, out double abserr);
 		public static int qagil (Function* f, double b, double epsabs, double epsrel, size_t limit, IntegrationWorkspace workspace, out double result, out double abserr);
 		public static int qags (Function* f, double a, double b, double epsabs, double epsrel, size_t limit, IntegrationWorkspace workspace, out double result, out double abserr);
-		[NoArrayLength]
-		public static int qagp (Function* f, double[] pts, size_t npts, double epsabs, double epsrel, size_t limit, IntegrationWorkspace workspace, out double result, out double abserr);
+		public static int qagp (Function* f, [CCode (array_length = false)] double[] pts, size_t npts, double epsabs, double epsrel, size_t limit, IntegrationWorkspace workspace, out double result, out double abserr);
 		public static int qawc (Function* f, double a, double b, double c, double epsabs, double epsrel, size_t limit, IntegrationWorkspace workspace, out double result, out double abserr);
 		public static int qaws (Function* f, double a, double b, IntegrationQAWSTable t, double epsabs, double epsrel, size_t limit, IntegrationWorkspace workspace, out double result, out double abserr);
 		public static int qawo (Function* f, double a, double epsabs, double epsrel, size_t limit, IntegrationWorkspace workspace, IntegrationQAWOTable wf, out double result, out double abserr);
@@ -2910,8 +2830,7 @@ namespace Gsl
   		public QRNG clone ();
   		public string name ();
   		public size_t size ();
-  		[NoArrayLength]
-  		public int @get (double[] x);
+  		public int @get ([CCode (array_length = false)] double[] x);
   	}
   	
   	
@@ -3005,12 +2924,9 @@ namespace Gsl
 		public static uint logarithmic (RNG r, double p);
 		public static double logarithmic_pdf (uint k, double p);
 		
-		[NoArrayLength]
-		public static void multinomial (RNG r, size_t K, uint N, double[] p, uint[] n);
-		[NoArrayLength]
-		public static double multinomial_pdf (size_t K, double[] p, uint[] n);
-		[NoArrayLength]
-		public static double multinomial_lnpdf (size_t K, double[] p, uint[] n);
+		public static void multinomial (RNG r, size_t K, uint N, [CCode (array_length = false)] double[] p, [CCode (array_length = false)] uint[] n);
+		public static double multinomial_pdf (size_t K, [CCode (array_length = false)] double[] p, [CCode (array_length = false)] uint[] n);
+		public static double multinomial_lnpdf (size_t K, [CCode (array_length = false)] double[] p, [CCode (array_length = false)] uint[] n);
 		
 		public static uint negative_binomial (RNG r, double p, double n);
 		public static double negative_binomial_pdf (uint k, double p, double n);
@@ -3022,8 +2938,7 @@ namespace Gsl
 		public static double pareto_pdf (double x, double a, double b);
 		
 		public static uint poisson (RNG r, double mu);
-		[NoArrayLength]
-		public static void poisson_array (RNG r, size_t n, uint[] array, double mu);
+		public static void poisson_array (RNG r, size_t n, [CCode (array_length = false)] uint[] array, double mu);
 		public static double poisson_pdf (uint k, double mu);
 		
 		public static double rayleigh (RNG r, double sigma);
@@ -3077,95 +2992,52 @@ namespace Gsl
 	[CCode (lower_case_cprefix="gsl_stats_", cheader_filename="gsl/gsl_statistics.h")]
 	namespace Stats
 	{
-		[NoArrayLength]
-		public static double mean (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double variance (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double variance_m (double[] data, size_t stride, size_t n, double mean);
-		[NoArrayLength]
-		public static double sd (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double sd_m (double[] data, size_t stride, size_t n, double mean);
-		[NoArrayLength]
-		public static double tss (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double tss_m (double[] data, size_t stride, size_t n, double mean);
-		[NoArrayLength]
-		public static double variance_with_fixed_mean (double[] data, size_t stride, size_t n, double mean);
-		[NoArrayLength]
-		public static double sd_with_fixed_mean (double[] data, size_t stride, size_t n, double mean);
-		[NoArrayLength]
-		public static double absdev (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double absdev_m (double[] data, size_t stride, size_t n, double mean);
-		[NoArrayLength]
-		public static double skew (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double skew_m_sd (double[] data, size_t stride, size_t n, double mean, double sd);
-		[NoArrayLength]
-		public static double kurtosis (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double kurtosis_m_sd (double[] data, size_t stride, size_t n, double mean, double sd);
-		[NoArrayLength]
-		public static double lag1_autocorrelation (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double lag1_autocorrelation_m (double[] data, size_t stride, size_t n, double mean);
-		[NoArrayLength]
-		public static double covariance (double[] data1, size_t stride1, double[] data2, size_t stride2, size_t n);
-		[NoArrayLength]
-		public static double covariance_m (double[] data1, size_t stride1, double[] data2, size_t stride2, size_t n, double mean1, double mean2);
-		[NoArrayLength]
-		public static double correlation (double[] data1, size_t stride1, double[] data2, size_t stride2, size_t n);
+		public static double mean ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double variance ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double variance_m ([CCode (array_length = false)] double[] data, size_t stride, size_t n, double mean);
+		public static double sd ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double sd_m ([CCode (array_length = false)] double[] data, size_t stride, size_t n, double mean);
+		public static double tss ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double tss_m ([CCode (array_length = false)] double[] data, size_t stride, size_t n, double mean);
+		public static double variance_with_fixed_mean ([CCode (array_length = false)] double[] data, size_t stride, size_t n, double mean);
+		public static double sd_with_fixed_mean ([CCode (array_length = false)] double[] data, size_t stride, size_t n, double mean);
+		public static double absdev ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double absdev_m ([CCode (array_length = false)] double[] data, size_t stride, size_t n, double mean);
+		public static double skew ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double skew_m_sd ([CCode (array_length = false)] double[] data, size_t stride, size_t n, double mean, double sd);
+		public static double kurtosis ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double kurtosis_m_sd ([CCode (array_length = false)] double[] data, size_t stride, size_t n, double mean, double sd);
+		public static double lag1_autocorrelation ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double lag1_autocorrelation_m ([CCode (array_length = false)] double[] data, size_t stride, size_t n, double mean);
+		public static double covariance ([CCode (array_length = false)] double[] data1, size_t stride1, [CCode (array_length = false)] double[] data2, size_t stride2, size_t n);
+		public static double covariance_m ([CCode (array_length = false)] double[] data1, size_t stride1, [CCode (array_length = false)] double[] data2, size_t stride2, size_t n, double mean1, double mean2);
+		public static double correlation ([CCode (array_length = false)] double[] data1, size_t stride1, [CCode (array_length = false)] double[] data2, size_t stride2, size_t n);
 		
-		[NoArrayLength]
-		public static double wmean (double[] w, size_t wstride, double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double wvariance (double[] w, size_t wstride, double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double wvariance_m (double[] w, size_t wstride, double[] data, size_t stride, size_t n, double wmean);
-		[NoArrayLength]
-		public static double wsd (double[] w, size_t wstride, double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double wsd_m (double[] w, size_t wstride, double[] data, size_t stride, size_t n, double wmean);
-		[NoArrayLength]
-		public static double wtss (double[] w, size_t wstride, double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double wtss_m (double[] w, size_t wstride, double[] data, size_t stride, size_t n, double mean);
-		[NoArrayLength]
-		public static double wvariance_with_fixed_mean (double[] w, size_t wstride, double[] data, size_t stride, size_t n, double wmean);
-		[NoArrayLength]
-		public static double wsd_with_fixed_mean (double[] w, size_t wstride, double[] data, size_t stride, size_t n, double wmean);
-		[NoArrayLength]
-		public static double wabsdev (double[] w, size_t wstride, double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double wabsdev_m (double[] w, size_t wstride, double[] data, size_t stride, size_t n, double wmean);
-		[NoArrayLength]
-		public static double wskew (double[] w, size_t wstride, double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double wskew_m_sd (double[] w, size_t wstride, double[] data, size_t stride, size_t n, double wmean, double wsd);
-		[NoArrayLength]
-		public static double wkurtosis (double[] w, size_t wstride, double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double wkurtosis_m_sd (double[] w, size_t wstride, double[] data, size_t stride, size_t n, double wmean, double wsd);
+		public static double wmean ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double wvariance ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double wvariance_m ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n, double wmean);
+		public static double wsd ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double wsd_m ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n, double wmean);
+		public static double wtss ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double wtss_m ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n, double mean);
+		public static double wvariance_with_fixed_mean ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n, double wmean);
+		public static double wsd_with_fixed_mean ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n, double wmean);
+		public static double wabsdev ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double wabsdev_m ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n, double wmean);
+		public static double wskew ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double wskew_m_sd ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n, double wmean, double wsd);
+		public static double wkurtosis ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double wkurtosis_m_sd ([CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] data, size_t stride, size_t n, double wmean, double wsd);
 		
-		[NoArrayLength]
-		public static double max (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double min (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static void minmax (out double min, out double max, double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static size_t max_index (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static size_t min_index (double[] data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static void minmax_index (out size_t min, out size_t max, double[] data, size_t stride, size_t n);
+		public static double max ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static double min ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static void minmax (out double min, out double max, [CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static size_t max_index ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static size_t min_index ([CCode (array_length = false)] double[] data, size_t stride, size_t n);
+		public static void minmax_index (out size_t min, out size_t max, [CCode (array_length = false)] double[] data, size_t stride, size_t n);
 		
-		[NoArrayLength]
-		public static double median_from_sorted_data (double[] sorted_data, size_t stride, size_t n);
-		[NoArrayLength]
-		public static double quantile_from_sorted_data (double[] sorted_data, size_t stride, size_t n, double f);
+		public static double median_from_sorted_data ([CCode (array_length = false)] double[] sorted_data, size_t stride, size_t n);
+		public static double quantile_from_sorted_data ([CCode (array_length = false)] double[] sorted_data, size_t stride, size_t n, double f);
 	}
 	
 	
@@ -3186,9 +3058,8 @@ namespace Gsl
 		public Histogram.with_zeros (size_t n);
 		[CCode (cname="gsl_histogram_calloc_uniform")]
 		public Histogram.uniform (size_t n, double xmin, double xmax);
-		[NoArrayLength]
 		[CCode (cname="gsl_histogram_calloc_range")]
-		public Histogram.with_range (size_t n, double[] range);
+		public Histogram.with_range (size_t n, [CCode (array_length = false)] double[] range);
 		
 		public int increment (double x);
 		public int accumulate (double x, double weight);
@@ -3382,8 +3253,7 @@ namespace Gsl
 		STRATIFIED
 	}
 	
-	[NoArrayLength]
-	static delegate double MonteFunc (double[] x_array, size_t dim, void* params);
+	static delegate double MonteFunc ([CCode (array_length = false)] double[] x_array, size_t dim, void* params);
 	
 	[SimpleType]
 	[CCode (cname="gsl_monte_function", cheader_filanema="gsl/gsl_monte.h")]
@@ -3404,8 +3274,7 @@ namespace Gsl
 		[CCode (cname="gsl_monte_plain_alloc")]
 		public MontePlainState (size_t dim);
 		public int init ();
-		[NoArrayLength]
-		public static int integrate (MonteFunction* f, double[] xl, double[] xu, size_t dim, size_t calls,  RNG r, MontePlainState state, out double result, out double abserr);
+		public static int integrate (MonteFunction* f, [CCode (array_length = false)] double[] xl, [CCode (array_length = false)] double[] xu, size_t dim, size_t calls,  RNG r, MontePlainState state, out double result, out double abserr);
 	}
 	
 	[Compact]
@@ -3439,8 +3308,7 @@ namespace Gsl
 		[CCode (cname="gsl_monte_miser_alloc")]
 		public MonteMiserState (size_t dim);
 		public int init ();
-		[NoArrayLength]
-		public static int integrate (MonteFunction* f, double[] xl, double[] xh, size_t dim, size_t calls, RNG r, MonteMiserState state, out double result, out double abserr);
+		public static int integrate (MonteFunction* f, [CCode (array_length = false)] double[] xl, [CCode (array_length = false)] double[] xh, size_t dim, size_t calls, RNG r, MonteMiserState state, out double result, out double abserr);
 	}
 	
 	[Compact]
@@ -3481,8 +3349,7 @@ namespace Gsl
 		[CCode (cname="gsl_monte_vegas_alloc")]
 		public MonteVegasState (size_t dim);
 		public int init ();
-		[NoArrayLength]
-		public static int integrate (MonteFunction* f, double[] xl, double[] xu, size_t dim, size_t calls, RNG r, MonteVegasState state, out double result, out double abserr);
+		public static int integrate (MonteFunction* f, [CCode (array_length = false)] double[] xl, [CCode (array_length = false)] double[] xu, size_t dim, size_t calls, RNG r, MonteVegasState state, out double result, out double abserr);
 	}
 	
 	
@@ -3529,20 +3396,16 @@ namespace Gsl
 		DEC
 	}
 	
-	[NoArrayLength]
-	static delegate int OdeivFunction (double t, double[] y, double[] dydt, void* params);
-	[NoArrayLength]
-	static delegate int OdeivJacobian (double t, double[] y, double[] dfdy, double[] dfdt, void* params);
+	static delegate int OdeivFunction (double t, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] dydt, void* params);
+	static delegate int OdeivJacobian (double t, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] dfdy, [CCode (array_length = false)] double[] dfdt, void* params);
 	static delegate void* OdeivStepAlloc (size_t dim);
-	[NoArrayLength]
-	static delegate int OdeivStepApply (void* state, size_t dim, double t, double h, double[] y, double[] yerr, double[] dydt_in, double[] dydt_out, OdeivSystem* dydt);
+	static delegate int OdeivStepApply (void* state, size_t dim, double t, double h, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] yerr, [CCode (array_length = false)] double[] dydt_in, [CCode (array_length = false)] double[] dydt_out, OdeivSystem* dydt);
 	static delegate int OdeivStepReset (void* state, size_t dim);
 	static delegate uint OdeivStepOrder (void* state);
 	static delegate void OdeivStepFree (void* state);
 	static delegate void* OdeivControlAlloc ();
 	static delegate int OdeivControlInit (void* state, double eps_abs, double eps_rel, double a_y, double a_dydt);
-	[NoArrayLength]
-	static delegate int OdeivControlHadjust (void* state, size_t dim, uint ord, double[] y, double[] yerr, double[] yp, double[] h);
+	static delegate int OdeivControlHadjust (void* state, size_t dim, uint ord, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] yerr, [CCode (array_length = false)] double[] yp, [CCode (array_length = false)] double[] h);
 	static delegate void OdeivControlFree (void* state);
 	
 	[SimpleType]
@@ -3599,8 +3462,7 @@ namespace Gsl
 		public string name ();
 		public uint order ();
 		
-		[NoArrayLength]
-		public int apply (double t, double h, double[] y, double[] yerr, double[] dydt_in, double[] dydt_out, OdeivSystem* dydt);
+		public int apply (double t, double h, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] yerr, [CCode (array_length = false)] double[] dydt_in, [CCode (array_length = false)] double[] dydt_out, OdeivSystem* dydt);
 	}
 	
 	[SimpleType]
@@ -3652,8 +3514,7 @@ namespace Gsl
 		
 		[CCode (cname="gsl_odeiv_evolve_alloc")]
 		public OdeivEvolve (size_t dim);
-		[NoArrayLength]
-		public int apply (OdeivControl con, OdeivStep step, OdeivSystem* dydt, double[] t, double t1, double[] h, double[] y);
+		public int apply (OdeivControl con, OdeivStep step, OdeivSystem* dydt, [CCode (array_length = false)] double[] t, double t1, [CCode (array_length = false)] double[] h, [CCode (array_length = false)] double[] y);
 		public int reset ();
 	}
 	
@@ -3662,16 +3523,11 @@ namespace Gsl
 	 * Interpolation
 	 */
 	static delegate void* InterpAlloc (size_t size);
-	[NoArrayLength]
-	static delegate int InterpInit (void* t, double[] xa, double[] ya, size_t size);
-	[NoArrayLength]
-	static delegate int InterpEval (void* t, double[] xa, double[] ya, size_t size, double x, InterpAccel* i, out double y);
-	[NoArrayLength]
-	static delegate int InterpEvalDeriv (void* t, double[] xa, double[] ya, size_t size, double x, InterpAccel* i, out double y_p);
-	[NoArrayLength]
-	static delegate int InterpEvalDeriv2 (void* t, double[] xa, double[] ya, size_t size, double x, InterpAccel* i, out double y_pp);
-	[NoArrayLength]
-	static delegate int InterpEvalInteg (void* t, double[] xa, double[] ya, size_t size, InterpAccel* i, double a, double b, out double result);
+	static delegate int InterpInit (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size);
+	static delegate int InterpEval (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, double x, InterpAccel* i, out double y);
+	static delegate int InterpEvalDeriv (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, double x, InterpAccel* i, out double y_p);
+	static delegate int InterpEvalDeriv2 (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, double x, InterpAccel* i, out double y_pp);
+	static delegate int InterpEvalInteg (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, InterpAccel* i, double a, double b, out double result);
 	static delegate void InterpFree (void* t);
 	
 	[Compact]
@@ -3726,28 +3582,18 @@ namespace Gsl
 		
 		[CCode (cname="gsl_interp_alloc")]
 		public Interp (InterpType T, size_t n);
-		[NoArrayLength]
-		public int init (double[] xa, double[] ya, size_t size);
+		public int init ([CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size);
 		public string name ();
 		public uint min_size ();
-		[NoArrayLength]
-		public int eval_e (double[] xa, double[] ya, double x, InterpAccel a, out double y);
-		[NoArrayLength]
-		public double eval (double[] xa, double[] ya, double x, InterpAccel a);
-		[NoArrayLength]
-		public int eval_deriv_e (double[] xa, double[] ya, double x, InterpAccel a, out double d);
-		[NoArrayLength]
-		public double eval_deriv (double[] xa, double[] ya, double x, InterpAccel a);
-		[NoArrayLength]
-		public int eval_deriv2_e (double[] xa, double[] ya, double x, InterpAccel a, out double d2);
-		[NoArrayLength]
-		public double eval_deriv2 (double[] xa, double[] ya, double x, InterpAccel a);
-		[NoArrayLength]
-		public int eval_integ_e (double[] xa, double[] ya, double a, double b, InterpAccel acc, out double result);
-		[NoArrayLength]
-		public double eval_integ (double[] xa, double[] ya, double a, double b, InterpAccel acc);
-		[NoArrayLength]
-		public static size_t bsearch(double[] x_array, double x, size_t index_lo, size_t index_hi);
+		public int eval_e ([CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, double x, InterpAccel a, out double y);
+		public double eval ([CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, double x, InterpAccel a);
+		public int eval_deriv_e ([CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, double x, InterpAccel a, out double d);
+		public double eval_deriv ([CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, double x, InterpAccel a);
+		public int eval_deriv2_e ([CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, double x, InterpAccel a, out double d2);
+		public double eval_deriv2 ([CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, double x, InterpAccel a);
+		public int eval_integ_e ([CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, double a, double b, InterpAccel acc, out double result);
+		public double eval_integ ([CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, double a, double b, InterpAccel acc);
+		public static size_t bsearch([CCode (array_length = false)] double[] x_array, double x, size_t index_lo, size_t index_hi);
 	}
 	
 	[Compact]
@@ -3761,8 +3607,7 @@ namespace Gsl
 		
 		[CCode (cname="gsl_spline_alloc")]
 		public Spline (InterpType* T, size_t size);
-		[NoArrayLength]
-		public int init (double[] xa, double[] ya, size_t size);
+		public int init ([CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size);
 		public string name ();
 		public uint min_size ();
 		public int eval_e (double x, InterpAccel a, out double y);
@@ -3925,31 +3770,22 @@ namespace Gsl
 		[CCode (cname="gsl_wavelet_alloc")]
 		public Wavelet (WaveletType* T, size_t k);
 		public string name ();
-		[NoArrayLength]
-		public int transform (double[] data, size_t stride, size_t n, WaveletDirection dir, WaveletWorkspace work);
-		[NoArrayLength]
-		public int transform_forward (double[] data, size_t stride, size_t n, WaveletWorkspace work);
-		[NoArrayLength]
-		public int transform_inverse (double[] data, size_t stride, size_t n, WaveletWorkspace work);
+		public int transform ([CCode (array_length = false)] double[] data, size_t stride, size_t n, WaveletDirection dir, WaveletWorkspace work);
+		public int transform_forward ([CCode (array_length = false)] double[] data, size_t stride, size_t n, WaveletWorkspace work);
+		public int transform_inverse ([CCode (array_length = false)] double[] data, size_t stride, size_t n, WaveletWorkspace work);
 		
-		[NoArrayLength]
 		[CCode (cname="gsl_wavelet2d_transform")]
-		public int transform_2d (double[] data, size_t tda, size_t size1, size_t size2, WaveletDirection dir, WaveletWorkspace work);
-		[NoArrayLength]
+		public int transform_2d ([CCode (array_length = false)] double[] data, size_t tda, size_t size1, size_t size2, WaveletDirection dir, WaveletWorkspace work);
 		[CCode (cname="gsl_wavelet2d_transform_forward")]
-		public int transform_forward_2d (double[] data, size_t tda, size_t size1, size_t size2, WaveletWorkspace work);
-		[NoArrayLength]
+		public int transform_forward_2d ([CCode (array_length = false)] double[] data, size_t tda, size_t size1, size_t size2, WaveletWorkspace work);
 		[CCode (cname="gsl_wavelet2d__transform_inverse")]
-		public int transform_inverse_2d (double[] data, size_t tda, size_t size1, size_t size2, WaveletWorkspace work);
-		[NoArrayLength]
+		public int transform_inverse_2d ([CCode (array_length = false)] double[] data, size_t tda, size_t size1, size_t size2, WaveletWorkspace work);
 		[CCode (cprefix="gsl_wavelet2d_")]
-		public int nstransform (double[] data, size_t tda, size_t size1, size_t size2, WaveletDirection dir,WaveletWorkspace work);
-		[NoArrayLength]
+		public int nstransform ([CCode (array_length = false)] double[] data, size_t tda, size_t size1, size_t size2, WaveletDirection dir,WaveletWorkspace work);
 		[CCode (cprefix="gsl_wavelet2d_")]
-		public int nstransform_forward (double[] data, size_t tda, size_t size1, size_t size2, WaveletWorkspace work);
-		[NoArrayLength]
+		public int nstransform_forward ([CCode (array_length = false)] double[] data, size_t tda, size_t size1, size_t size2, WaveletWorkspace work);
 		[CCode (cprefix="gsl_wavelet2d_")]
-		public int nstransform_inverse (double[] data, size_t tda, size_t size1, size_t size2, WaveletWorkspace * work);
+		public int nstransform_inverse ([CCode (array_length = false)] double[] data, size_t tda, size_t size1, size_t size2, WaveletWorkspace * work);
 		[CCode (cprefix="gsl_wavelet2d_")]
 		public int transform_matrix (Matrix a, WaveletDirection dir, WaveletWorkspace work);
 		[CCode (cprefix="gsl_wavelet2d_")]
@@ -3987,8 +3823,7 @@ namespace Gsl
 		public int init (double nu, double xmax);
 		public double x_sample (int n);
 		public double k_sample (int n);
-		[NoArrayLength]
-		public int apply (double[] f_in, double[] f_out);
+		public int apply ([CCode (array_length = false)] double[] f_in, [CCode (array_length = false)] double[] f_out);
 	}
 	
 	
@@ -4397,16 +4232,11 @@ namespace Gsl
 	[CCode (lower_case_cprefix="gsl_fit_", cheader_filename="gsl/gsl_fit.h")]
 	namespace Fit
 	{
-		[NoArrayLength]
-		public static int linear (double[] x, size_t xstride, double[] y, size_t ystride, size_t n, out double c0, out double c1, out double cov00, out double cov01, out double cov11, out double sumsq);
-		[NoArrayLength]
-		public static int wlinear (double[] x, size_t xstride, double[] w, size_t wstride, double[] y, size_t ystride, size_t n, out double c0, out double c1, out double cov00, out double cov01, out double cov11, double chisq);
-		[NoArrayLength]
+		public static int linear ([CCode (array_length = false)] double[] x, size_t xstride, [CCode (array_length = false)] double[] y, size_t ystride, size_t n, out double c0, out double c1, out double cov00, out double cov01, out double cov11, out double sumsq);
+		public static int wlinear ([CCode (array_length = false)] double[] x, size_t xstride, [CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] y, size_t ystride, size_t n, out double c0, out double c1, out double cov00, out double cov01, out double cov11, double chisq);
 		public static int linear_est (double x, double c0, double c1, double cov00, double cov01, double cov11, out double y, out double y_err);
-		[NoArrayLength]
-		public static int mul (double[] x, size_t xstride, double[] y, size_t ystride, size_t n, out double c1, out double cov11, out double sumsq);
-		[NoArrayLength]
-		public static int wmul (double[] x, size_t xstride, double[] w, size_t wstride, double[] y, size_t ystride, size_t n, out double c1, out double cov11, out double sumsq);
+		public static int mul ([CCode (array_length = false)] double[] x, size_t xstride, [CCode (array_length = false)] double[] y, size_t ystride, size_t n, out double c1, out double cov11, out double sumsq);
+		public static int wmul ([CCode (array_length = false)] double[] x, size_t xstride, [CCode (array_length = false)] double[] w, size_t wstride, [CCode (array_length = false)] double[] y, size_t ystride, size_t n, out double c1, out double cov11, out double sumsq);
 		public static int mul_est (double x, double c1, double cov11, out double y, out double y_err);
 	}
 	

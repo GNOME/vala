@@ -23,14 +23,12 @@ namespace Enchant {
 	public class Dict {
 		public int check (string word, long len = -1);
 		public weak string[] suggest (string word, long len = -1);	
-		[NoArrayLength ()]
-		public void free_string_list (string[] string_list); 	
+		public void free_string_list ([CCode (array_length = false)] string[] string_list); 	
 		public void add_to_session (string word, long len = -1);
 		public int is_in_session (string word, long len = -1);
 		public void store_replacement ( string mis, long mis_len, string cor, long cor_len);
 		public void add_to_pwl ( string word, long len = -1);
 		public void describe (DictDescribeFn fn);
-		[NoArrayLength ()]
 		public weak string get_error ();
 	}
 }

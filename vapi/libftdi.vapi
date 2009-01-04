@@ -89,8 +89,7 @@ namespace FTDI {
 		public int set_interface (Interface iface);
 		public void set_usbdev (USB.Device * usbdev);
 		public int usb_find_all (out DeviceList devlist, int vendor, int product);
-		[NoArrayLength]
-		public int usb_get_strings (USB.Device * usbdev, char[] manufacturer, int manufacturer_len, char[] description, int description_len, char[] serial, int serial_len);
+		public int usb_get_strings (USB.Device * usbdev, [CCode (array_length = false)] char[] manufacturer, int manufacturer_len, [CCode (array_length = false)] char[] description, int description_len, [CCode (array_length = false)] char[] serial, int serial_len);
 		public int usb_open_dev (USB.Device * usbdev);
 		public int usb_open (int vendor, int product);
 		public int usb_open_desc (int vendor, int product, string description, string serial);
@@ -99,12 +98,10 @@ namespace FTDI {
 		public int usb_close ();
 		public int set_baudrate (int baudrate);
 		public int set_line_property (BitsType bits, StopBitsType sbit, ParityType parity);
-		[NoArrayLength]
-		public int write_data (uchar[] buf, int size);
+		public int write_data ([CCode (array_length = false)] uchar[] buf, int size);
 		public int write_data_set_chunksize (int chunksize);
 		public int write_data_get_chunksize (out int chunksize);
-		[NoArrayLength]
-		public int read_data (uchar[] buf, uint size);
+		public int read_data ([CCode (array_length = false)] uchar[] buf, uint size);
 		public int read_data_set_chunksize (int chunksize);
 		public int read_data_get_chunksize (out int chunksize);
 		public int enable_bitbang (uchar bitmask);
@@ -125,7 +122,7 @@ namespace FTDI {
 		public ChipType type;
 		public int baudrate;
 		public uchar bitbang_enabled;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public uchar[] readbuffer;
 		public uint readbuffer_offset;
 		public uint readbuffer_remaining;
@@ -136,7 +133,6 @@ namespace FTDI {
 		public int in_ep;
 		public int out_ep;
 		public uchar bitbang_mode;
-		[NoArrayLength]
 		public string error_str;
 	}
 }

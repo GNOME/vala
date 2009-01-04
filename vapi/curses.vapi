@@ -79,11 +79,9 @@ namespace Curses {
 		[CCode (cname = "mvwaddch")]
 		public int mvaddch(int y, int x, ulong ch);
 		[CCode (cname = "mvwaddchnstr")]
-		[NoArrayLength]
-		public int mvaddchnstr(int y, int x, ulong[] chstr, int n);
+		public int mvaddchnstr(int y, int x, [CCode (array_length = false)] ulong[] chstr, int n);
 		[CCode (cname = "mvwaddchstr")]
-		[NoArrayLength]
-		public int mvaddchstr(int y, int x, ulong[] chstr);
+		public int mvaddchstr(int y, int x, [CCode (array_length = false)] ulong[] chstr);
 		[CCode (cname = "mvwaddnstr")]
 		public int mvaddnstr(int y, int x, string str, int n);
 		[CCode (cname = "mvwaddstr")]
@@ -104,11 +102,9 @@ namespace Curses {
 		[CCode (cname = "mvwinch")]
 		public ulong mvinch(int y, int x);
 		[CCode (cname = "mvwinchnstr")]
-		[NoArrayLength]
-		public int mvinchnstr(int y, int x, ulong[] chstr, int n);
+		public int mvinchnstr(int y, int x, [CCode (array_length = false)] ulong[] chstr, int n);
 		[CCode (cname = "mvwinchstr")]
-		[NoArrayLength]
-		public int mvinchstr(int y, int x, ulong[] chstr);
+		public int mvinchstr(int y, int x, [CCode (array_length = false)] ulong[] chstr);
 		[CCode (cname = "mvwinnstr")]
 		public int mvinnstr(int y, int x, string str, int n);
 		[CCode (cname = "mvwinsch")]
@@ -145,10 +141,8 @@ namespace Curses {
 		public int untouchwin();
 		[CCode (cname = "waddch")]
 		public int addch(ulong ch);
-		[NoArrayLength]
-		public int waddchnstr(ulong[] chstr, int n);
-		[NoArrayLength]
-		public int waddchstr(ulong[] chstr);
+		public int waddchnstr([CCode (array_length = false)] ulong[] chstr, int n);
+		public int waddchstr([CCode (array_length = false)] ulong[] chstr);
 		public int waddnstr(string str, int n);
 		[CCode (cname = "waddstr")]
 		public int addstr(string str);
@@ -203,11 +197,9 @@ namespace Curses {
 		[CCode (cname = "winch")]
 		public ulong inch();
 		[CCode (cname = "winchnstr")]
-		[NoArrayLength]
-		public int inchnstr(ulong[] chstr, int n);
+		public int inchnstr([CCode (array_length = false)] ulong[] chstr, int n);
 		[CCode (cname = "winchstr")]
-		[NoArrayLength]
-		public int inchstr(ulong[] chstr);
+		public int inchstr([CCode (array_length = false)] ulong[] chstr);
 		[CCode (cname = "winnstr")]
 		public int innstr(string str, int n);
 		[CCode (cname = "winsch")]
@@ -278,10 +270,8 @@ namespace Curses {
 	}
 
 	public int addch(ulong ch);
-	[NoArrayLength]
-	public int addchnstr(ulong[] chstr, int n);
-	[NoArrayLength]
-	public int addchstr(ulong[] chstr);
+	public int addchnstr([CCode (array_length = false)] ulong[] chstr, int n);
+	public int addchstr([CCode (array_length = false)] ulong[] chstr);
 	public int addnstr(string str, int n);
 	public int addstr(string str);
 	public int attroff(ulong attr);
@@ -329,10 +319,8 @@ namespace Curses {
 	public bool has_il();
 	public int hline(ulong ch, int n);
 	public ulong inch();
-	[NoArrayLength]
-	public int inchnstr(ulong[] chstr, int n);
-	[NoArrayLength]
-	public int inchstr(ulong[] chstr);
+	public int inchnstr([CCode (array_length = false)] ulong[] chstr, int n);
+	public int inchstr([CCode (array_length = false)] ulong[] chstr);
 	public weak Window initscr();
 	public int init_color(short color, short r, short g, short b);
 	public int init_pair(short pair, Color f, Color b);
@@ -349,10 +337,8 @@ namespace Curses {
 	public string ulongname();
 	public int move(int y, int x);
 	public int mvaddch(int y, int x, ulong ch);
-	[NoArrayLength]
-	public int mvaddchnstr(int y, int x, ulong[] chstr, int n);
-	[NoArrayLength]
-	public int mvaddchstr(int y, int x, ulong[] chstr);
+	public int mvaddchnstr(int y, int x, [CCode (array_length = false)] ulong[] chstr, int n);
+	public int mvaddchstr(int y, int x, [CCode (array_length = false)] ulong[] chstr);
 	public int mvaddnstr(int y, int x, string str, int n);
 	public int mvaddstr(int y, int x, string str);
 	public int mvchgat(int y, int x, int n, ulong attr, short color);
@@ -363,10 +349,8 @@ namespace Curses {
 	public int mvgetstr(int y, int x, string str);
 	public int mvhline(int y, int x, ulong ch, int n);
 	public ulong mvinch(int y, int x);
-	[NoArrayLength]
-	public int mvinchnstr(int y, int x, ulong[] chstr, int n);
-	[NoArrayLength]
-	public int mvinchstr(int y, int x, ulong[] chstr);
+	public int mvinchnstr(int y, int x, [CCode (array_length = false)] ulong[] chstr, int n);
+	public int mvinchstr(int y, int x, [CCode (array_length = false)] ulong[] chstr);
 	public int mvinnstr(int y, int x, string str, int n);
 	public int mvinsch(int y, int x, ulong ch);
 	public int mvinsnstr(int y, int x, string str, int n);

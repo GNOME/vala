@@ -385,8 +385,7 @@ namespace GLib {
 		public static void stop_emission (void* instance, uint signal_id, Quark detail);
 		public static void stop_emission_by_name (void* instance, string detailed_signal);
 		public static void override_class_closure (uint signal_id, Type instance_type, Closure class_closure);
-		[NoArrayLength]
-		public static void chain_from_overridden (Value[] instance_and_params, out Value return_value);
+		public static void chain_from_overridden ([CCode (array_length = false)] Value[] instance_and_params, out Value return_value);
 		public static ulong add_emission_hook (uint signal_id, Quark detail, SignalEmissionHook hook_func, DestroyNotify? data_destroy);
 		public static void remove_emission_hook (uint signal_id, ulong hook_id);
 		public static bool parse_name (string detailed_signal, Type itype, out uint signal_id, out Quark detail, bool force_detail_quark);
@@ -420,7 +419,7 @@ namespace GLib {
 		public SignalFlags signal_flags;
 		public Type return_type;
 		public uint n_params;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak Type[] param_types;
 	}
 

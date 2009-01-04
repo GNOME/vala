@@ -56,7 +56,6 @@ namespace SDLNet {
 		 * If 'host' is NULL, the resolved host will be set to INADDR_ANY.
 		 */
 		[CCode (cname="SDLNet_ResolveHost")]
-		[NoArrayLength]
 		public static int from_host(IPAddress address, string host, uint16 port);
 
 		/**
@@ -249,8 +248,7 @@ namespace SDLNet {
 		 * on error.  This function does not block, so can return 0 packets pending.
 		 */
 		[CCode (cname="SDLNet_UDP_RecvV")]
-		[NoArrayLength]
-		public int receive_many(UDPPacket[] packets);
+		public int receive_many([CCode (array_length = false)] UDPPacket[] packets);
 	}// UDPSocket
 
 	[CCode (cname="struct _SDLNet_SocketSet", free_function="SDLNet_FreeSocketSet")]

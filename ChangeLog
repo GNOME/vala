@@ -1,5 +1,29 @@
 2009-01-04  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/curses.vapi:
+	* vapi/enchant.vapi:
+	* vapi/gnome-keyring-1.vapi:
+	* vapi/gobject-2.0.vapi:
+	* vapi/goocanvas.vapi:
+	* vapi/gsl.vapi:
+	* vapi/hildon-1.vapi:
+	* vapi/libftdi.vapi:
+	* vapi/libpanelapplet-2.0.vapi:
+	* vapi/libusb.vapi:
+	* vapi/libxml-2.0.vapi:
+	* vapi/packages/unique-1.0/:
+	* vapi/sdl-gfx.vapi:
+	* vapi/sdl-mixer.vapi:
+	* vapi/sdl-net.vapi:
+	* vapi/sdl-ttf.vapi:
+	* vapi/sqlite3.vapi:
+	* vapi/tiff.vapi:
+	* vapi/unique-1.0.vapi:
+
+	Array length attribute fixes
+
+2009-01-04  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala:
 
 	Fix array length handling for get_attributes method

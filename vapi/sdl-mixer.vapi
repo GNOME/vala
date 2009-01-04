@@ -47,8 +47,7 @@ namespace SDLMixer {
 		public Chunk.WAV(RWops src, int freesrc=0);
 
 		[CCode (cname="Mix_QuickLoad_WAV")]
-		[NoArrayLength]
-		public Chunk.QuickWAV(uchar[] mem);
+		public Chunk.QuickWAV([CCode ([CCode (array_length = false)] uchar[] mem);
 
 		[CCode (cname="Mix_QuickLoad_RAW")]
 		public Chunk.QuickRAW(uchar[] mem);

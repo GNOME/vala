@@ -136,7 +136,7 @@ namespace USB {
 		public uint8 bmAttributes;
 		public uint8 MaxPower;
 
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Interface[] @interface;
 
 		public uchar[] extra;
@@ -168,7 +168,7 @@ namespace USB {
 		public string filename;
 		public Bus * bus;
 		public DeviceDescriptor descriptor;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public ConfigDescriptor[] config;
 		public void * dev;
 		public uint8 devnum;
@@ -191,21 +191,15 @@ namespace USB {
 	public class DeviceHandle {
 		[CCode (cname = "usb_open")]
 		public DeviceHandle (Device * dev);
-		[NoArrayLength]
-		public int get_string (int index, int langid, char[] buf, size_t buflen);
-		[NoArrayLength]
-		public int get_string_simple (int index, char[] buf, size_t buflen);
+		public int get_string (int index, int langid, [CCode (array_length = false)] char[] buf, size_t buflen);
+		public int get_string_simple (int index, [CCode (array_length = false)] char[] buf, size_t buflen);
 
 		public int get_descriptor_by_endpoint (int ep, uchar type, uchar index, void * buf, int size);
 		public int get_descriptor (uchar type, uchar index, void * buf, int size);
-		[NoArrayLength]
-		public int bulk_write (int ep, char[] bytes, int size, int timeout);
-		[NoArrayLength]
-		public int bulk_read (int ep, char[] bytes, int size, int timeout);
-		[NoArrayLength]
-		public int interrupt_write (int ep, char[] bytes, int size, int timeout);
-		[NoArrayLength]
-		public int interrupt_read (int ep, char[] bytes, int size, int timeout);
+		public int bulk_write (int ep, [CCode (array_length = false)] char[] bytes, int size, int timeout);
+		public int bulk_read (int ep, [CCode (array_length = false)] char[] bytes, int size, int timeout);
+		public int interrupt_write (int ep, [CCode (array_length = false)] char[] bytes, int size, int timeout);
+		public int interrupt_read (int ep, [CCode (array_length = false)] char[] bytes, int size, int timeout);
 		public int control_msg (int requesttype, int request, int value, int index, char[] bytes, int size, int timeout);
 		public int set_configuration (int configuration);
 		public int claim_interface (int @interface);
@@ -217,7 +211,7 @@ namespace USB {
 		public Device * device ();
 	}
 
-	[NoArrayLength]
+	[CCode (array_length = false)]
 	public static weak char[] strerror ();
 	public static void init ();
 	public static void set_debug (int level);

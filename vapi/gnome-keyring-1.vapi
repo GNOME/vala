@@ -18,7 +18,7 @@ namespace GnomeKeyring {
 	}
 	[CCode (ref_function = "gnome_keyring_attribute_list_ref", unref_function = "gnome_keyring_attribute_list_unref", cheader_filename = "gnome-keyring.h")]
 	public class AttributeList {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public GnomeKeyring.Attribute[] data;
 		public uint len;
 		public void append_string (string name, string value);

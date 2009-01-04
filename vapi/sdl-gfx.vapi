@@ -180,33 +180,27 @@ namespace SDLGraphics {
 	[Compact]
 	public class Polygon {
 		[CCode (cname="polygonColor")]
-		[NoArrayLength]
-		public static int outline_color(Surface dst, int16[] vx, int16[] vy, 
+		public static int outline_color(Surface dst, [CCode (array_length = false)] int16[] vx, [CCode (array_length = false)] int16[] vy, 
 			int n, uint32 color);
 
 		[CCode (cname="polygonRGBA")]
-		[NoArrayLength]
-		public static int outline_rgba(Surface dst, int16[] vx, int16[] vy, 
+		public static int outline_rgba(Surface dst, [CCode (array_length = false)] int16[] vx, [CCode (array_length = false)] int16[] vy, 
 			int n, uchar r, uchar g, uchar b, uchar a);
 
 		[CCode (cname="aapolygonColor")]
-		[NoArrayLength]
-		public static int outline_color_aa(Surface dst, int16[] vx, int16[] vy, 
+		public static int outline_color_aa(Surface dst, [CCode (array_length = false)] int16[] vx, [CCode (array_length = false)] int16[] vy, 
 			int n, uint32 color);
 
 		[CCode (cname="aapolygonRGBA")]
-		[NoArrayLength]
-		public static int outline_rgba_aa(Surface dst, int16[] vx, int16[] vy, 
+		public static int outline_rgba_aa(Surface dst, [CCode (array_length = false)] int16[] vx, [CCode (array_length = false)] int16[] vy, 
 			int n, uchar r, uchar g, uchar b, uchar a);
 
 		[CCode (cname="filledPolygonColor")]
-		[NoArrayLength]
-		public static int fill_color(Surface dst, int16[] vx, int16[] vy, 
+		public static int fill_color(Surface dst, [CCode (array_length = false)] int16[] vx, [CCode (array_length = false)] int16[] vy, 
 			int n, uint32 color);
 
 		[CCode (cname="filledPolygonRGBA")]
-		[NoArrayLength]
-		public static int fill_rgba(Surface dst, int16[] vx, int16[] vy, 
+		public static int fill_rgba(Surface dst, [CCode (array_length = false)] int16[] vx, [CCode (array_length = false)] int16[] vy, 
 			int n, uchar r, uchar g, uchar b, uchar a);
 	}// Polygon
 
@@ -214,13 +208,11 @@ namespace SDLGraphics {
 	[Compact]
 	public class BezierCurve {
 		[CCode (cname="bezierColor")]
-		[NoArrayLength]
-		public static int color(Surface dst, int16[] vx, int16[] vy, 
+		public static int color(Surface dst, [CCode (array_length = false)] int16[] vx, [CCode (array_length = false)] int16[] vy, 
 			int vertices, int steps, uint32 color);
 
 		[CCode (cname="bezierRGBA")]
-		[NoArrayLength]
-		public static int rgba(Surface dst, int16[] vx, int16[] vy, 
+		public static int rgba(Surface dst, [CCode (array_length = false)] int16[] vx, [CCode (array_length = false)] int16[] vy, 
 			int vertices, int steps, uchar r, uchar g, uchar b, uchar a);
 	}// BezierCurve
 
@@ -295,147 +287,111 @@ namespace SDLGraphics {
 		public static void disable_mmx();
 
 		[CCode (cname="SDL_imageFilterAdd")]
-		[NoArrayLength]
-		public static int add(uchar[] src1, uchar[] src2, uchar[] dst, int length);
+		public static int add([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] src2, [CCode (array_length = false)] uchar[] dst, int length);
 
 		[CCode (cname="SDL_imageFilterMean")]
-		[NoArrayLength]
-		public static int mean(uchar[] src1, uchar[] src2, uchar[] dst, int length);
+		public static int mean([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] src2, [CCode (array_length = false)] uchar[] dst, int length);
 
 		[CCode (cname="SDL_imageFilterSub")]
-		[NoArrayLength]
-		public static int subtract(uchar[] src1, uchar[] src2, uchar[] dst, int length);
+		public static int subtract([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] src2, [CCode (array_length = false)] uchar[] dst, int length);
 
 		[CCode (cname="SDL_imageFilterAbsDiff")]
-		[NoArrayLength]
-		public static int absolute_difference(uchar[] src1, uchar[] src2, uchar[] dst, int length);
+		public static int absolute_difference([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] src2, [CCode (array_length = false)] uchar[] dst, int length);
 
 		[CCode (cname="SDL_imageFilterMult")]
-		[NoArrayLength]
-		public static int multiply(uchar[] src1, uchar[] src2, uchar[] dst, int length);
+		public static int multiply([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] src2, [CCode (array_length = false)] uchar[] dst, int length);
 
 		[CCode (cname="SDL_imageFilterMultNor")]
-		[NoArrayLength]
-		public static int multiply_normalized(uchar[] src1, uchar[] src2, uchar[] dst, int length);
+		public static int multiply_normalized([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] src2, [CCode (array_length = false)] uchar[] dst, int length);
 
 		[CCode (cname="SDL_imageFilterMultDivby2")]
-		[NoArrayLength]
-		public static int multiply_half(uchar[] src1, uchar[] src2, uchar[] dst, int length);
+		public static int multiply_half([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] src2, [CCode (array_length = false)] uchar[] dst, int length);
 
 		[CCode (cname="SDL_imageFilterMultDivby4")]
-		[NoArrayLength]
-		public static int multiply_quarter(uchar[] src1, uchar[] src2, uchar[] dst, int length);
+		public static int multiply_quarter([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] src2, [CCode (array_length = false)] uchar[] dst, int length);
 
 		[CCode (cname="SDL_imageFilterBitAnd")]
-		[NoArrayLength]
-		public static int and(uchar[] src1, uchar[] src2, uchar[] dst, int length);
+		public static int and([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] src2, [CCode (array_length = false)] uchar[] dst, int length);
 
 		[CCode (cname="SDL_imageFilterBitOr")]
-		[NoArrayLength]
-		public static int or(uchar[] src1, uchar[] src2, uchar[] dst, int length);
+		public static int or([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] src2, [CCode (array_length = false)] uchar[] dst, int length);
 
 		[CCode (cname="SDL_imageFilterDiv")]
-		[NoArrayLength]
-		public static int divide(uchar[] src1, uchar[] src2, uchar[] dst, int length);
+		public static int divide([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] src2, [CCode (array_length = false)] uchar[] dst, int length);
 
 		[CCode (cname="SDL_imageFilterBitNegation")]
-		[NoArrayLength]
-		public static int negate(uchar[] src1, uchar[] dst, int length);
+		public static int negate([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length);
 
 		[CCode (cname="SDL_imageFilterAddByte")]
-		[NoArrayLength]
-		public static int add_uchar(uchar[] src1, uchar[] dst, int length, uchar addend);
+		public static int add_uchar([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, uchar addend);
 
 		[CCode (cname="SDL_imageFilterAddUint")]
-		[NoArrayLength]
-		public static int add_uint(uchar[] src1, uchar[] dst, int length, uint addend);
+		public static int add_uint([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, uint addend);
 
 		[CCode (cname="SDL_imageFilterAddByteToHalf")]
-		[NoArrayLength]
-		public static int halve_add_uchar(uchar[] src1, uchar[] dst, int length, uchar addend);
+		public static int halve_add_uchar([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, uchar addend);
 
 		[CCode (cname="SDL_imageFilterSubByte")]
-		[NoArrayLength]
-		public static int subtract_uchar(uchar[] src1, uchar[] dst, int length, uchar subtrahend);
+		public static int subtract_uchar([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, uchar subtrahend);
 
 		[CCode (cname="SDL_imageFilterSubUint")]
-		[NoArrayLength]
-		public static int subtract_uint(uchar[] src1, uchar[] dst, int length, uint subtrahend);
+		public static int subtract_uint([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, uint subtrahend);
 
 		[CCode (cname="SDL_imageFilterShiftRight")]
-		[NoArrayLength]
-		public static int shift_right_uchar(uchar[] src1, uchar[] dst, int length, uchar shiftcount);
+		public static int shift_right_uchar([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, uchar shiftcount);
 
 		[CCode (cname="SDL_imageFilterShiftRightUint")]
-		[NoArrayLength]
-		public static int shift_right_uint(uchar[] src1, uchar[] dst, int length, uint shiftcount);
+		public static int shift_right_uint([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, uint shiftcount);
 
 		[CCode (cname="SDL_imageFilterMultByByte")]
-		[NoArrayLength]
-		public static int multiply_uchar(uchar[] src1, uchar[] dst, int length, uchar multiplicand);
+		public static int multiply_uchar([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, uchar multiplicand);
 
 		[CCode (cname="SDL_imageFilterShiftRightAndMultByByte")]
-		[NoArrayLength]
-		public static int shift_right_multiply_uchar(uchar[] src1, uchar[] dst, int length, uchar shiftcount, uchar multiplicand);
+		public static int shift_right_multiply_uchar([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, uchar shiftcount, uchar multiplicand);
 
 		[CCode (cname="SDL_imageFilterShiftLeftByte")]
-		[NoArrayLength]
-		public static int shift_left_uchar(uchar[] src1, uchar[] dst, int length, uchar shiftcount);
+		public static int shift_left_uchar([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, uchar shiftcount);
 
 		[CCode (cname="SDL_imageFilterShiftLeftUint")]
-		[NoArrayLength]
-		public static int shift_left_uint(uchar[] src1, uchar[] dst, int length, uint shiftcount);
+		public static int shift_left_uint([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, uint shiftcount);
 
 		[CCode (cname="SDL_imageFilterBinarizeUsingThreshold")]
-		[NoArrayLength]
-		public static int binarize(uchar[] src1, uchar[] dst, int length, uchar threshold);
+		public static int binarize([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, uchar threshold);
 
 		[CCode (cname="SDL_imageFilterClipToRange")]
-		[NoArrayLength]
-		public static int clip(uchar[] src1, uchar[] dst, int length, uchar min, uchar max);
+		public static int clip([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, uchar min, uchar max);
 
 		[CCode (cname="SDL_imageFilterNormalize")]
-		[NoArrayLength]
-		public static int normalize(uchar[] src1, uchar[] dst, int length, int cmin, int cmax, int nmin, int nmax);
+		public static int normalize([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int length, int cmin, int cmax, int nmin, int nmax);
 
 		[CCode (cname="SDL_imageFilterConvolveKernel3x3Divide")]
-		[NoArrayLength]
-		public static int convolve_3x3_divide(uchar[] src1, uchar[] dst, int rows, int columns, int16[] kernel, uchar divisor);
+		public static int convolve_3x3_divide([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int rows, int columns, [CCode (array_length = false)] int16[] kernel, uchar divisor);
 
 		[CCode (cname="SDL_imageFilterConvolveKernel5x5Divide")]
-		[NoArrayLength]
-		public static int convolve_5x5_divide(uchar[] src1, uchar[] dst, int rows, int columns, int16[] kernel, uchar divisor);
+		public static int convolve_5x5_divide([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int rows, int columns, [CCode (array_length = false)] int16[] kernel, uchar divisor);
 
 		[CCode (cname="SDL_imageFilterConvolveKernel7x7Divide")]
-		[NoArrayLength]
-		public static int convolve_7x7_divide(uchar[] src1, uchar[] dst, int rows, int columns, int16[] kernel, uchar divisor);
+		public static int convolve_7x7_divide([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int rows, int columns, [CCode (array_length = false)] int16[] kernel, uchar divisor);
 
 		[CCode (cname="SDL_imageFilterConvolveKernel9x9Divide")]
-		[NoArrayLength]
-		public static int convolve_9x9_divide(uchar[] src1, uchar[] dst, int rows, int columns, int16[] kernel, uchar divisor);
+		public static int convolve_9x9_divide([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int rows, int columns, [CCode (array_length = false)] int16[] kernel, uchar divisor);
 
 		[CCode (cname="SDL_imageFilterConvolveKernel3x3ShiftRight")]
-		[NoArrayLength]
-		public static int convolve_3x3_shift(uchar[] src1, uchar[] dst, int rows, int columns, int16[] kernel, uchar shiftcount);
+		public static int convolve_3x3_shift([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int rows, int columns, [CCode (array_length = false)] int16[] kernel, uchar shiftcount);
 
 		[CCode (cname="SDL_imageFilterConvolveKernel5x5ShiftRight")]
-		[NoArrayLength]
-		public static int convolve_5x5_shift(uchar[] src1, uchar[] dst, int rows, int columns, int16[] kernel, uchar shiftcount);
+		public static int convolve_5x5_shift([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int rows, int columns, [CCode (array_length = false)] int16[] kernel, uchar shiftcount);
 
 		[CCode (cname="SDL_imageFilterConvolveKernel7x7ShiftRight")]
-		[NoArrayLength]
-		public static int convolve_7x7_shift(uchar[] src1, uchar[] dst, int rows, int columns, int16[] kernel, uchar shiftcount);
+		public static int convolve_7x7_shift([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int rows, int columns, [CCode (array_length = false)] int16[] kernel, uchar shiftcount);
 
 		[CCode (cname="SDL_imageFilterConvolveKernel9x9ShiftRight")]
-		[NoArrayLength]
-		public static int convolve_9x9_shift(uchar[] src1, uchar[] dst, int rows, int columns, int16[] kernel, uchar shiftcount);
+		public static int convolve_9x9_shift([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int rows, int columns, [CCode (array_length = false)] int16[] kernel, uchar shiftcount);
 
 		[CCode (cname="SDL_imageFilterSobelX")]
-		[NoArrayLength]
-		public static int sobel(uchar[] src1, uchar[] dst, int rows, int columns);
+		public static int sobel([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int rows, int columns);
 
 		[CCode (cname="SDL_imageFilterSobelXShiftRight")]
-		[NoArrayLength]
-		public static int sobel_shift(uchar[] src1, uchar[] dst, int rows, int columns, uchar shiftcount);
+		public static int sobel_shift([CCode (array_length = false)] uchar[] src1, [CCode (array_length = false)] uchar[] dst, int rows, int columns, uchar shiftcount);
 	}// Filter
 }// SDLGraphics

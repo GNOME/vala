@@ -59,11 +59,11 @@ namespace Tiff {
 		public float Y0;
 		public float Z0;
 		public Display display;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public float[] Yr2r;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public float[] Yg2g;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public float[] Yb2b;
 	}
 
@@ -713,18 +713,14 @@ namespace Tiff {
 		public tsize_t ReadEncodedStrip (tstrip_t p1, tdata_t p2, tsize_t p3);
 		[CCode (cname = "TIFFReadEncodedTile")]
 		public tsize_t ReadEncodedTile (ttile_t p1, tdata_t p2, tsize_t p3);
-		[NoArrayLength]
 		[CCode (cname = "TIFFReadRGBAImage")]
-		public bool ReadRGBAImage (uint32 p1, uint32 p2, uint32[] p3, int p4);
-		[NoArrayLength]
+		public bool ReadRGBAImage (uint32 p1, uint32 p2, [CCode (array_length = false)] uint32[] p3, int p4);
 		[CCode (cname = "TIFFReadRGBAImageOriented")]
-		public bool ReadRGBAImageOriented (uint32 p1, uint32 p2, uint32[] p3, int p4, int p5);
-		[NoArrayLength]
+		public bool ReadRGBAImageOriented (uint32 p1, uint32 p2, [CCode (array_length = false)] uint32[] p3, int p4, int p5);
 		[CCode (cname = "TIFFReadRGBAStrip")]
-		public bool ReadRGBAStrip (tstrip_t p1, uint32[] p2);
-		[NoArrayLength]
+		public bool ReadRGBAStrip (tstrip_t p1, [CCode (array_length = false)] uint32[] p2);
 		[CCode (cname = "TIFFReadRGBATile")]
-		public bool ReadRGBATile (uint32 p1, uint32 p2, uint32[] p3);
+		public bool ReadRGBATile (uint32 p1, uint32 p2, [CCode (array_length = false)] uint32[] p3);
 		[CCode (cname = "TIFFReadRawStrip")]
 		public tsize_t ReadRawStrip (tstrip_t p1, tdata_t p2, tsize_t p3);
 		[CCode (cname = "TIFFReadRawTile")]
@@ -834,9 +830,8 @@ namespace Tiff {
 		public static int IsCODECConfigured (ushort p1);
 		[CCode (cname = "TIFFRGBAImageEnd")]
 		public static void RGBAImageEnd (RGBAImage p1);
-		[NoArrayLength]
 		[CCode (cname = "TIFFRGBAImageGet")]
-		public static int RGBAImageGet (RGBAImage p1, uint32[] p2, uint32 p3, uint32 p4);
+		public static int RGBAImageGet (RGBAImage p1, [CCode (array_length = false)] uint32[] p2, uint32 p3, uint32 p4);
 		[CCode (cname = "TIFFReassignTagToIgnore")]
 		public static int ReassignTagToIgnore (IgnoreSense p1, int p2);
 		[CCode (cname = "TIFFRegisterCODEC")]

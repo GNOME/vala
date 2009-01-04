@@ -27,8 +27,7 @@ namespace Xml {
 	/* nanoftp - minimal FTP implementation */
 
 	[CCode (cname = "ftpDataCallback", cheader_filename = "libxml/nanoftp.h")]
-	[NoArrayLength]
-	public static delegate void FtpDataCallback (void* userData, char[] data, int len);
+	public static delegate void FtpDataCallback (void* userData, [CCode (array_length = false)] char[] data, int len);
 
 	[CCode (cname = "ftpListCallback", cheader_filename = "libxml/nanoftp.h")]
 	public static delegate void FtpListCallback (void* userData, string filename, string attrib, string owner, string group, ulong size, int links, int year, string month, int day, int hour, int minute);
@@ -805,8 +804,7 @@ namespace Xml {
 	public static delegate int InputCloseCallback (void* context);
 
 	[CCode (cname = "xmlInputReadCallback", cheader_filename = "libxml/xmlIO.h")]
-	[NoArrayLength]
-	public static delegate int InputReadCallback (void* context, char[] buffer, int len);
+	public static delegate int InputReadCallback (void* context, [CCode (array_length = false)] char[] buffer, int len);
 
 
 	/* xmlschemas - incomplete XML Schemas structure implementation */
@@ -876,8 +874,7 @@ namespace Xml {
 		public TextReader.for_io (InputReadCallback ioread, InputCloseCallback ioclose, void* ioctx, string url, string encoding, int options);
 
 		[CCode (cname = "xmlReaderForMemory")]
-		[NoArrayLength]
-		public TextReader.for_memory (char[] buffer, int size, string url, string encoding, int options);
+		public TextReader.for_memory ([CCode (array_length = false)] char[] buffer, int size, string url, string encoding, int options);
 
 		[CCode (cname = "xmlReaderNewDoc")]
 		public int new_doc (string cur, string url, string? encoding, int options);
@@ -892,8 +889,7 @@ namespace Xml {
 		public int new_io (InputReadCallback ioread, InputCloseCallback ioclose, void* ioctx, string url, string encoding, int options);
 
 		[CCode (cname = "xmlReaderNewMemory")]
-		[NoArrayLength]
-		public int new_memory (char[] buffer, int size, string url, string? encoding, int options);
+		public int new_memory ([CCode (array_length = false)] char[] buffer, int size, string url, string? encoding, int options);
 
 		[CCode (cname = "xmlReaderNewWalker")]
 		public int new_walker (Doc* doc);
@@ -1043,8 +1039,7 @@ namespace Xml {
 		public Node* preserve ();
 
 		[CCode (cname = "xmlTextReaderPreservePattern")]
-		[NoArrayLength]
-		public int preserve_pattern (string pattern, string[] namespaces);
+		public int preserve_pattern (string pattern, [CCode (array_length = false)] string[] namespaces);
 
 		[CCode (cname = "xmlTextReaderQuoteChar")]
 		public int quote_char ();
@@ -1283,13 +1278,11 @@ namespace Xml {
 	[CCode (cname = "startDocumentSAXFunc")]
 	public static delegate void startDocumentSAXFunc (void* ctx);
 
-	[NoArrayLength]
 	[CCode (cname = "startElementNsSAX2Func")]
-	public static delegate void startElementNsSAX2Func (void* ctx, string localname, string prefix, string URI, int nb_namespaces, string[] namespaces, int nb_attributes, int nb_defaulted, string[] attributes);
+	public static delegate void startElementNsSAX2Func (void* ctx, string localname, string prefix, string URI, int nb_namespaces, [CCode (array_length = false)] string[] namespaces, int nb_attributes, int nb_defaulted, [CCode (array_length = false)] string[] attributes);
 
-	[NoArrayLength]
 	[CCode (cname = "startElementSAXFunc")]
-	public static delegate void startElementSAXFunc (void* ctx, string name, string[] atts);
+	public static delegate void startElementSAXFunc (void* ctx, string name, [CCode (array_length = false)] string[] atts);
 
 	[CCode (cname = "unparsedEntityDeclSAXFunc")]
 	public static delegate void unparsedEntityDeclSAXFunc (void* ctx, string name, string publicId, string systemId, string notationName);

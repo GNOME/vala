@@ -79,8 +79,7 @@ namespace SDLTTF {
 		public int size_utf8(string text, ref int w, ref int h);
 
 		[CCode (cname="TTF_SizeUNICODE")]
-		[NoArrayLength]
-		public int size_unicode(uint16[] text, ref int w, ref int h);
+		public int size_unicode([CCode (array_length = false)] uint16[] text, ref int w, ref int h);
 
 		[CCode (cname="TTF_RenderText_Solid")]
 		public Surface? render(string text, Color fg);
@@ -89,8 +88,7 @@ namespace SDLTTF {
 		public Surface? render_utf8(string text, Color fg);
 
 		[CCode (cname="TTF_RenderUNICODE_Solid")]
-		[NoArrayLength]
-		public Surface? render_unicode(uint16[] text, Color fg);
+		public Surface? render_unicode([CCode (array_length = false)] uint16[] text, Color fg);
 
 		[CCode (cname="TTF_RenderText_Shaded")]
 		public Surface? render_shaded(string text, Color fg, Color bg);
@@ -99,8 +97,7 @@ namespace SDLTTF {
 		public Surface? render_shaded_utf8(string text, Color fg, Color bg);
 
 		[CCode (cname="TTF_RenderUNICODE_Shaded")]
-		[NoArrayLength]
-		public Surface? render_shaded_unicode(uint16[] text, Color fg, Color bg);
+		public Surface? render_shaded_unicode([CCode (array_length = false)] uint16[] text, Color fg, Color bg);
 
 		[CCode (cname="TTF_RenderText_Blended")]
 		public Surface? render_blended(string text, Color fg);
@@ -109,7 +106,6 @@ namespace SDLTTF {
 		public Surface? render_blended_utf8(string text, Color fg);
 
 		[CCode (cname="TTF_RenderUNICODE_Blended")]
-		[NoArrayLength]
-		public Surface? render_blended_unicode(uint16[] text, Color fg);
+		public Surface? render_blended_unicode([CCode (array_length = false)] uint16[] text, Color fg);
 	}// Font
 }// SDLTTF
