@@ -1808,8 +1808,6 @@ public class Vala.GIdlParser : CodeVisitor {
 		return field;
 	}
 
-	[CCode (array_length = false)]
-	[NoArrayLength]
 	private string[]? get_attributes (string codenode) {
 		var attributes = codenode_attributes_map.get (codenode);
 

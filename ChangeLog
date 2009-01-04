@@ -1,5 +1,11 @@
 2009-01-04  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala:
+
+	Fix array length handling for get_attributes method
+
+2009-01-04  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodecontrolflowmodule.vala:
 
 	Drop obsolete foreach support for null-terminated arrays
