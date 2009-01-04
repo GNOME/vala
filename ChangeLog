@@ -1,5 +1,13 @@
 2009-01-04  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_init_with_args binding, fixes bug 547135
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2009-01-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamethodcall.vala:
 
 	Fix potential crash when argument check of method call fails,
