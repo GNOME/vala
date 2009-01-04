@@ -1,5 +1,26 @@
 2009-01-04  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/cairo.vapi:
+	* vapi/packages/gdk-2.0/:
+	* vapi/packages/gdk-pixbuf-2.0/:
+	* vapi/packages/gstreamer-netbuffer-0.10/:
+	* vapi/packages/gtk+-2.0/:
+
+	Fix parameters without array length
+
+	* vapi/gdk-2.0.vapi:
+	* vapi/gdk-pixbuf-2.0.vapi:
+	* vapi/gio-2.0.vapi:
+	* vapi/gstreamer-0.10.vapi:
+	* vapi/gstreamer-audio-0.10.vapi:
+	* vapi/gstreamer-net-0.10.vapi:
+	* vapi/gstreamer-netbuffer-0.10.vapi:
+	* vapi/gtk+-2.0.vapi:
+
+	Regenerated
+
+2009-01-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodewriter.vala:
 	* vala/valadelegate.vala:
 	* vala/valafield.vala:

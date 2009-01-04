@@ -20,14 +20,11 @@ namespace Gtk {
 		public bool get_wrap_license ();
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public AboutDialog ();
-		[NoArrayLength]
-		public void set_artists (string[] artists);
-		[NoArrayLength]
-		public void set_authors (string[] authors);
+		public void set_artists ([CCode (array_length = false)] string[] artists);
+		public void set_authors ([CCode (array_length = false)] string[] authors);
 		public void set_comments (string comments);
 		public void set_copyright (string copyright);
-		[NoArrayLength]
-		public void set_documenters (string[] documenters);
+		public void set_documenters ([CCode (array_length = false)] string[] documenters);
 		public static void set_email_hook (owned Gtk.AboutDialogActivateLinkFunc func);
 		public void set_license (string license);
 		public void set_logo (Gdk.Pixbuf logo);
@@ -499,21 +496,21 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Calendar : Gtk.Widget, Atk.Implementor, Gtk.Buildable {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak int[] day_month;
 		public Gtk.CalendarDisplayOptions display_flags;
 		public int focus_col;
 		public int focus_row;
 		public weak Gdk.GC gc;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak char[] grow_space;
 		public weak Gtk.Style header_style;
 		public int highlight_col;
 		public int highlight_row;
 		public weak Gtk.Style label_style;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak int[] marked_date;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak Gdk.Color[] marked_date_color;
 		public int num_marked_dates;
 		public int selected_day;
@@ -1064,7 +1061,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Curve : Gtk.DrawingArea, Atk.Implementor, Gtk.Buildable {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak float[] ctlpoint;
 		public int cursor_type;
 		public int grab_point;
@@ -1471,7 +1468,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class GammaCurve : Gtk.VBox, Atk.Implementor, Gtk.Buildable {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak Gtk.Widget[] button;
 		public weak Gtk.Widget curve;
 		public float gamma;
@@ -1578,7 +1575,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class IMContextSimple : Gtk.IMContext {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak uint[] compose_buffer;
 		public uint in_hex_sequence;
 		public uint modifiers_dropped;
@@ -1898,7 +1895,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class InputDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak Gtk.Widget[] axis_items;
 		public weak Gtk.Widget axis_list;
 		public weak Gtk.Widget axis_listbox;
@@ -2057,7 +2054,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ListStore : GLib.Object, Gtk.Buildable, Gtk.TreeModel, Gtk.TreeSortable, Gtk.TreeDragSource, Gtk.TreeDragDest {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak GLib.Type[] column_headers;
 		public uint columns_dirty;
 		public void* default_sort_data;
@@ -2872,23 +2869,23 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class RcStyle : GLib.Object {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak Gdk.Color[] @base;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak Gdk.Color[] bg;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak string[] bg_pixmap_name;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak Gtk.RcFlags[] color_flags;
 		public uint engine_specified;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak Gdk.Color[] fg;
 		public weak Pango.FontDescription font_desc;
 		public weak GLib.SList icon_factories;
 		public weak string name;
 		public weak GLib.Array rc_properties;
 		public weak GLib.SList rc_style_lists;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak Gdk.Color[] text;
 		public int xthickness;
 		public int ythickness;
@@ -3050,9 +3047,9 @@ namespace Gtk {
 		public weak string abbrev;
 		public weak string metric_name;
 		public double pixels_per_unit;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak double[] ruler_scale;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak int[] subdivide;
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -3076,12 +3073,10 @@ namespace Gtk {
 		public weak Gtk.Widget plus_button;
 		public unowned Gtk.Adjustment get_adjustment ();
 		public double get_value ();
-		[NoArrayLength]
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public ScaleButton (Gtk.IconSize size, double min, double max, double step, string[] icons);
+		public ScaleButton (Gtk.IconSize size, double min, double max, double step, [CCode (array_length = false)] string[] icons);
 		public void set_adjustment (Gtk.Adjustment adjustment);
-		[NoArrayLength]
-		public void set_icons (string[] icons);
+		public void set_icons ([CCode (array_length = false)] string[] icons);
 		public void set_value (double value);
 		public Gtk.Adjustment adjustment { get; set; }
 		[NoAccessorMethod]
@@ -3136,7 +3131,7 @@ namespace Gtk {
 	[Compact]
 	[CCode (copy_function = "gtk_selection_data_copy", cheader_filename = "gtk/gtk.h")]
 	public class SelectionData {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak uchar[] data;
 		public weak Gdk.Display display;
 		public int format;
@@ -3148,7 +3143,7 @@ namespace Gtk {
 		public Gdk.Pixbuf? get_pixbuf ();
 		public bool get_targets (out Gdk.Atom targets, int n_atoms);
 		public string? get_text ();
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public string[] get_uris ();
 		public void set (Gdk.Atom type, int format, uchar[] data);
 		public bool set_pixbuf (Gdk.Pixbuf pixbuf);
@@ -3476,48 +3471,48 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Style : GLib.Object {
 		public int attach_count;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.Color[] @base;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.GC[] base_gc;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.Color[] bg;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.GC[] bg_gc;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.Pixmap[] bg_pixmap;
 		public Gdk.Color black;
 		public weak Gdk.GC black_gc;
 		public weak Gdk.Colormap colormap;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.Color[] dark;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.GC[] dark_gc;
 		public int depth;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.Color[] fg;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.GC[] fg_gc;
 		public weak Pango.FontDescription font_desc;
 		public weak GLib.SList icon_factories;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.Color[] light;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.GC[] light_gc;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.Color[] mid;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.GC[] mid_gc;
 		public weak GLib.Array property_cache;
 		public weak Gtk.RcStyle rc_style;
 		public weak GLib.SList styles;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.Color[] text;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.Color[] text_aa;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.GC[] text_aa_gc;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Gdk.GC[] text_gc;
 		public Gdk.Color white;
 		public weak Gdk.GC white_gc;
@@ -4378,7 +4373,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public TreePath.from_string (string path);
 		public int get_depth ();
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public unowned int[] get_indices ();
 		public bool is_ancestor (Gtk.TreePath descendant);
 		public bool is_descendant (Gtk.TreePath ancestor);
@@ -4435,7 +4430,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TreeStore : GLib.Object, Gtk.Buildable, Gtk.TreeModel, Gtk.TreeSortable, Gtk.TreeDragSource, Gtk.TreeDragDest {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak GLib.Type[] column_headers;
 		public uint columns_dirty;
 		public void* default_sort_data;
@@ -5559,7 +5554,7 @@ namespace Gtk {
 		public string mime_type;
 		public string app_name;
 		public string app_exec;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public string[] groups;
 		public bool is_private;
 	}

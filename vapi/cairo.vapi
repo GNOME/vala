@@ -1,6 +1,6 @@
 /* cairo.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -197,7 +197,7 @@ namespace Cairo {
 	[CCode (free_function = "cairo_path_destroy", cname = "cairo_path_t")]
 	public class Path {
 		public Status status;
-		[NoArrayLength ()]
+		[CCode (array_length = false)]
 		public PathData[] data;
 		public int num_data;
 	}
@@ -449,8 +449,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_image_surface_create")]
 		public ImageSurface (Format format, int width, int height);
 		[CCode (cname = "cairo_image_surface_create_for_data")]
-		[NoArrayLength ()]
-		public ImageSurface.for_data (uchar[] data, Format format, int width, int height, int stride);
+		public ImageSurface.for_data ([CCode (array_length = false)] uchar[] data, Format format, int width, int height, int stride);
 		public uchar[] get_data ();
 		public Format get_format ();
 		public int get_width ();

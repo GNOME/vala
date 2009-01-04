@@ -145,7 +145,7 @@ namespace Gst {
 		public int segsize;
 		public int segtotal;
 		public bool sign;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak uchar[] silence_sample;
 		public Gst.BufferFormatType type;
 		public int width;

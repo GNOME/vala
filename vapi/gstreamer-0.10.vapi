@@ -61,7 +61,7 @@ namespace Gst {
 	[CCode (ref_function = "gst_buffer_ref", unref_function = "gst_buffer_unref", cheader_filename = "gst/gst.h")]
 	public class Buffer : Gst.MiniObject {
 		public weak Gst.Caps caps;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak uchar[] data;
 		public Gst.ClockTime duration;
 		public uchar malloc_data;
@@ -1232,7 +1232,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class TraceEntry {
 		public uint32 data;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak char[] message;
 		public uint32 sequence;
 		public int64 timestamp;

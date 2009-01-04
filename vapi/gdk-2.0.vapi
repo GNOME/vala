@@ -55,10 +55,10 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Device : GLib.Object {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak Gdk.DeviceAxis[] axes;
 		public bool has_cursor;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak Gdk.DeviceKey[] keys;
 		public Gdk.InputMode mode;
 		public weak string name;
@@ -77,15 +77,15 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Display : GLib.Object {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak uint32[] button_click_time;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak int[] button_number;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak Gdk.Window[] button_window;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak int[] button_x;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak int[] button_y;
 		public weak Gdk.Device core_pointer;
 		public uint double_click_distance;
@@ -355,9 +355,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Screen : GLib.Object {
 		public uint closed;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak Gdk.GC[] exposure_gcs;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak Gdk.GC[] normal_gcs;
 		public void broadcast_client_message (Gdk.Event event);
 		public unowned Gdk.Window get_active_window ();
@@ -910,7 +910,7 @@ namespace Gdk {
 	}
 	[CCode (type_id = "GDK_TYPE_RGB_CMAP", cheader_filename = "gdk/gdk.h")]
 	public struct RgbCmap {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak uint32[] colors;
 		public int n_colors;
 		public weak GLib.SList info_list;
@@ -934,7 +934,7 @@ namespace Gdk {
 	[CCode (type_id = "GDK_TYPE_TIME_COORD", cheader_filename = "gdk/gdk.h")]
 	public struct TimeCoord {
 		public uint32 time;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak double[] axes;
 	}
 	[CCode (type_id = "GDK_TYPE_TRAPEZOID", cheader_filename = "gdk/gdk.h")]
@@ -1771,9 +1771,8 @@ namespace Gdk {
 	public static bool setting_get (string name, GLib.Value value);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool spawn_command_line_on_screen (Gdk.Screen screen, string command_line) throws GLib.Error;
-	[NoArrayLength]
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool spawn_on_screen (Gdk.Screen screen, string working_directory, string[] argv, string[] envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, int child_pid) throws GLib.Error;
+	public static bool spawn_on_screen (Gdk.Screen screen, string working_directory, [CCode (array_length = false)] string[] argv, [CCode (array_length = false)] string[] envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, int child_pid) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool spawn_on_screen_with_pipes (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, int child_pid, int standard_input, int standard_output, int standard_error) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]

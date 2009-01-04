@@ -14,16 +14,14 @@ namespace Gdk {
 		public static GLib.Quark error_quark ();
 		public void fill (uint32 pixel);
 		public unowned Gdk.Pixbuf flip (bool horizontal);
-		[NoArrayLength]
 		[CCode (has_construct_function = false)]
-		public Pixbuf.from_data (uchar[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify? destroy_fn);
+		public Pixbuf.from_data ([CCode (array_length = false)] uchar[] data, Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height, int rowstride, Gdk.PixbufDestroyNotify? destroy_fn);
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_file (string filename) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_file_at_scale (string filename, int width, int height, bool preserve_aspect_ratio) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_file_at_size (string filename, int width, int height) throws GLib.Error;
-		[NoArrayLength]
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_inline (int data_length, uchar[] data, bool copy_pixels) throws GLib.Error;
 		public static unowned Gdk.Pixbuf from_pixdata (Gdk.Pixdata pixdata, bool copy_pixels) throws GLib.Error;
@@ -31,7 +29,6 @@ namespace Gdk {
 		public Pixbuf.from_stream (GLib.InputStream stream, GLib.Cancellable? cancellable) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_stream_at_scale (GLib.InputStream stream, int width, int height, bool preserve_aspect_ratio, GLib.Cancellable? cancellable) throws GLib.Error;
-		[NoArrayLength]
 		[CCode (has_construct_function = false)]
 		public Pixbuf.from_xpm_data (string[] data);
 		public int get_bits_per_sample ();
@@ -42,7 +39,7 @@ namespace Gdk {
 		public int get_height ();
 		public int get_n_channels ();
 		public unowned string get_option (string key);
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public unowned uchar[] get_pixels ();
 		public int get_rowstride ();
 		public int get_width ();
@@ -148,7 +145,7 @@ namespace Gdk {
 		public uint32 rowstride;
 		public uint32 width;
 		public uint32 height;
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak uchar[] pixel_data;
 		public bool deserialize ([CCode (array_length_pos = 0.9)] uchar[] stream) throws GLib.Error;
 		public void* from_pixbuf (Gdk.Pixbuf pixbuf, bool use_rle);

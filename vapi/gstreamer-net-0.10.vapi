@@ -4,7 +4,7 @@
 namespace Gst {
 	[CCode (cheader_filename = "gst/net/gstnet.h")]
 	public class NetClientClock : Gst.SystemClock {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak int[] control_sock;
 		public Gst.ClockTime current_timeout;
 		public void* servaddr;
@@ -30,7 +30,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/net/gstnet.h")]
 	public class NetTimeProvider : Gst.Object {
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public weak int[] control_sock;
 		public int sock;
 		public weak GLib.Thread thread;

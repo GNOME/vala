@@ -10,16 +10,14 @@ namespace Gst {
 		public Gst.NetType type;
 		[CCode (cname = "gst_netaddress_get_ip4_address")]
 		public bool get_ip4_address (out uint32 address, out uint16 port);
-		[NoArrayLength]
 		[CCode (cname = "gst_netaddress_get_ip6_address")]
-		public bool get_ip6_address (uchar[] address, out uint16 port);
+		public bool get_ip6_address ([CCode (array_length = false)] uchar[] address, out uint16 port);
 		[CCode (cname = "gst_netaddress_get_net_type")]
 		public Gst.NetType get_net_type ();
 		[CCode (cname = "gst_netaddress_set_ip4_address")]
 		public void set_ip4_address (uint32 address, uint16 port);
-		[NoArrayLength]
 		[CCode (cname = "gst_netaddress_set_ip6_address")]
-		public void set_ip6_address (uchar[] address, uint16 port);
+		public void set_ip6_address ([CCode (array_length = false)] uchar[] address, uint16 port);
 	}
 	[CCode (cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
 	public class NetBuffer : Gst.Buffer {
