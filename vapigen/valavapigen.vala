@@ -1,6 +1,6 @@
 /* valavapigen.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,12 +26,15 @@ class Vala.VAPIGen : Object {
 	static string directory;
 	static bool version;
 	static bool quiet_mode;
-	[NoArrayLength ()]
+	[CCode (array_length = false)]
+	[NoArrayLength]
 	static string[] sources;
-	[NoArrayLength ()]
+	[CCode (array_length = false)]
+	[NoArrayLength]
 	static string[] vapi_directories;
 	static string library;
-	[NoArrayLength ()]
+	[CCode (array_length = false)]
+	[NoArrayLength]
 	static string[] packages;
 	static string metadata_filename;
 	CodeContext context;

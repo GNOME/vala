@@ -607,7 +607,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		bool custom_cname = (f.get_cname () != f.get_default_cname ());
 		bool custom_ctype = (f.get_ctype () != null);
 		bool custom_cheaders = (f.parent_symbol is Namespace);
-		if (custom_cname || custom_ctype || custom_cheaders) {
+		if (custom_cname || custom_ctype || custom_cheaders || (f.no_array_length && f.field_type is ArrayType)) {
 			write_indent ();
 			write_string ("[CCode (");
 
@@ -641,12 +641,15 @@ public class Vala.CodeWriter : CodeVisitor {
 				write_string ("cheader_filename = \"%s\"".printf (cheaders));
 			}
 
-			write_string (")]");
-		}
+			if (f.no_array_length && f.field_type is ArrayType) {
+				if (custom_cname || custom_ctype || custom_cheaders) {
+					write_string (", ");
+				}
 
-		if (f.no_array_length && f.field_type is ArrayType) {
-			write_indent ();
-			write_string ("[NoArrayLength]");
+				write_string ("array_length = false");
+			}
+
+			write_string (")]");
 		}
 
 		write_indent ();
@@ -712,6 +715,10 @@ public class Vala.CodeWriter : CodeVisitor {
 
 			if (param.ctype != null) {
 				ccode_params.append_printf ("%stype = \"%s\"", separator, param.ctype);
+				separator = ", ";
+			}
+			if (param.no_array_length && param.parameter_type is ArrayType) {
+				ccode_params.append_printf ("%sarray_length = false", separator);
 				separator = ", ";
 			}
 			if (!float_equal (param.carray_length_parameter_position, i + 0.1)) {
@@ -827,19 +834,6 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[ReturnsModifiedPointer]");
 		}
-		if (m.no_array_length) {
-			bool array_found = (m.return_type is ArrayType);
-			foreach (FormalParameter param in m.get_parameters ()) {
-				if (param.parameter_type is ArrayType) {
-					array_found = true;
-					break;
-				}
-			}
-			if (array_found) {
-				write_indent ();
-				write_string ("[NoArrayLength]");
-			}
-		}
 
 		var ccode_params = new StringBuilder ();
 		var separator = "";
@@ -864,6 +858,10 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 		if (!float_equal (m.cinstance_parameter_position, 0)) {
 			ccode_params.append_printf ("%sinstance_pos = %g", separator, m.cinstance_parameter_position);
+			separator = ", ";
+		}
+		if (m.no_array_length && m.return_type is ArrayType) {
+			ccode_params.append_printf ("%sarray_length = false", separator);
 			separator = ", ";
 		}
 		if (!float_equal (m.carray_length_parameter_position, -3)) {

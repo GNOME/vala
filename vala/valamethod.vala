@@ -1,6 +1,7 @@
 /* valamethod.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -176,20 +177,10 @@ public class Vala.Method : Member {
 	public double cdelegate_target_parameter_position { get; set; }
 
 	/**
-	 * Specifies whether the array length should implicitly be passed
-	 * if the parameter type is an array.
+	 * Specifies whether the array length should be returned implicitly
+	 * if the return type is an array.
 	 */
-	public bool no_array_length {
-		get {
-			return _no_array_length;
-		}
-		set {
-			_no_array_length = value;
-			foreach (FormalParameter param in parameters) {
-				param.no_array_length = value;
-			}
-		}
-	}
+	public bool no_array_length { get; set; }
 
 	/**
 	 * Specifies whether this method expects printf-style format arguments.
@@ -208,7 +199,6 @@ public class Vala.Method : Member {
 	private string cname;
 	private string _vfunc_name;
 	private string _sentinel;
-	private bool _no_array_length;
 	private Gee.List<Expression> preconditions = new ArrayList<Expression> ();
 	private Gee.List<Expression> postconditions = new ArrayList<Expression> ();
 	private DataType _return_type;
@@ -240,9 +230,6 @@ public class Vala.Method : Member {
 	 * @param param a formal parameter
 	 */
 	public void add_parameter (FormalParameter param) {
-		if (no_array_length) {
-			param.no_array_length = true;
-		}
 		// default C parameter position
 		param.cparameter_position = parameters.size + 1;
 		param.carray_length_parameter_position = param.cparameter_position + 0.1;
@@ -375,6 +362,9 @@ public class Vala.Method : Member {
 		if (a.has_argument ("instance_pos")) {
 			cinstance_parameter_position = a.get_double ("instance_pos");
 		}
+		if (a.has_argument ("array_length")) {
+			no_array_length = !a.get_bool ("array_length");
+		}
 		if (a.has_argument ("array_length_pos")) {
 			carray_length_parameter_position = a.get_double ("array_length_pos");
 		}
@@ -397,8 +387,6 @@ public class Vala.Method : Member {
 				returns_modified_pointer = true;
 			} else if (a.name == "FloatingReference") {
 				return_type.floating_reference = true;
-			} else if (a.name == "NoArrayLength") {
-				no_array_length = true;
 			} else if (a.name == "PrintfFormat") {
 				printf_format = true;
 			}

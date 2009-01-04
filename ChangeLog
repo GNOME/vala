@@ -1,5 +1,24 @@
 2009-01-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodewriter.vala:
+	* vala/valadelegate.vala:
+	* vala/valafield.vala:
+	* vala/valaformalparameter.vala:
+	* vala/valamethod.vala:
+
+	Replace [NoArrayLength] by [CCode (array_length = false)], which
+	can also be applied to single parameters, fixes bug 532486
+
+	* gobject/valaccodecompiler.vala:
+	* compiler/valacompiler.vala:
+	* vapi/glib-2.0.vapi:
+	* vapigen/valagidlparser.vala:
+	* vapigen/valavapigen.vala:
+
+	Adapt to attribute changes
+
+2009-01-04  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valabinaryexpression.vala:
 	* gobject/valaccodearraymodule.vala:
 	* gobject/valaccodeassignmentmodule.vala:

@@ -1,6 +1,6 @@
 /* valadelegate.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -63,20 +63,10 @@ public class Vala.Delegate : TypeSymbol {
 	public double cdelegate_target_parameter_position { get; set; }
 
 	/**
-	 * Specifies whether the array length should implicitly be passed
-	 * if the parameter type is an array.
+	 * Specifies whether the array length should be returned implicitly
+	 * if the return type is an array.
 	 */
-	public bool no_array_length {
-		get {
-			return _no_array_length;
-		}
-		set {
-			_no_array_length = value;
-			foreach (FormalParameter param in parameters) {
-				param.no_array_length = value;
-			}
-		}
-	}
+	public bool no_array_length { get; set; }
 
 	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
@@ -84,7 +74,6 @@ public class Vala.Delegate : TypeSymbol {
 	private string cname;
 
 	private DataType _return_type;
-	private bool _no_array_length;
 
 	/**
 	 * Creates a new delegate.
@@ -121,9 +110,6 @@ public class Vala.Delegate : TypeSymbol {
 	 * @param param a formal parameter
 	 */
 	public void add_parameter (FormalParameter param) {
-		if (no_array_length) {
-			param.no_array_length = true;
-		}
 		// default C parameter position
 		param.cparameter_position = parameters.size + 1;
 		param.carray_length_parameter_position = param.cparameter_position + 0.1;
@@ -227,6 +213,9 @@ public class Vala.Delegate : TypeSymbol {
 		if (a.has_argument ("instance_pos")) {
 			cinstance_parameter_position = a.get_double ("instance_pos");
 		}
+		if (a.has_argument ("array_length")) {
+			no_array_length = !a.get_bool ("array_length");
+		}
 		if (a.has_argument ("array_length_pos")) {
 			carray_length_parameter_position = a.get_double ("array_length_pos");
 		}
@@ -248,8 +237,6 @@ public class Vala.Delegate : TypeSymbol {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
-			} else if (a.name == "NoArrayLength") {
-				no_array_length = true;
 			}
 		}
 	}

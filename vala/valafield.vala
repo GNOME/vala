@@ -178,6 +178,9 @@ public class Vala.Field : Member, Lockable {
 				add_cheader_filename (filename);
 			}
 		}
+		if (a.has_argument ("array_length")) {
+			no_array_length = !a.get_bool ("array_length");
+		}
 		if (a.has_argument ("array_length_cname")) {
 			set_array_length_cname (a.get_string ("array_length_cname"));
 		}
@@ -190,8 +193,6 @@ public class Vala.Field : Member, Lockable {
 		foreach (Attribute a in attributes) {
 			if (a.name == "CCode") {
 				process_ccode_attribute (a);
-			} else if (a.name == "NoArrayLength") {
-				no_array_length = true;
 			}
 		}
 	}

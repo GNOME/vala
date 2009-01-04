@@ -1,6 +1,6 @@
 /* valacompiler.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  * Copyright (C) 1996-2002, 2004, 2005, 2006 Free Software Foundation, Inc.
  *
  * This library is free software; you can redistribute it and/or
@@ -27,12 +27,15 @@ class Vala.Compiler {
 	static string basedir;
 	static string directory;
 	static bool version;
-	[NoArrayLength ()]
+	[CCode (array_length = false)]
+	[NoArrayLength]
 	static string[] sources;
-	[NoArrayLength ()]
+	[CCode (array_length = false)]
+	[NoArrayLength]
 	static string[] vapi_directories;
 	static string library;
-	[NoArrayLength ()]
+	[CCode (array_length = false)]
+	[NoArrayLength]
 	static string[] packages;
 	static string target_glib;
 
@@ -47,6 +50,7 @@ class Vala.Compiler {
 	static bool non_null_experimental;
 	static bool disable_dbus_transformation;
 	static string cc_command;
+	[CCode (array_length = false)]
 	[NoArrayLength]
 	static string[] cc_options;
 	static string dump_tree;

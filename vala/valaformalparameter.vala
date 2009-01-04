@@ -1,6 +1,7 @@
 /* valaformalparameter.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -60,7 +61,7 @@ public class Vala.FormalParameter : Symbol {
 	public Expression default_expression { get; set; }
 	
 	/**
-	 * Specifies whether the array length should implicitly be passed
+	 * Specifies whether the array length should be passed implicitly
 	 * if the parameter type is an array.
 	 */
 	public bool no_array_length { get; set; }
@@ -138,6 +139,9 @@ public class Vala.FormalParameter : Symbol {
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("type")) {
 			ctype = a.get_string ("type");
+		}
+		if (a.has_argument ("array_length")) {
+			no_array_length = !a.get_bool ("array_length");
 		}
 		if (a.has_argument ("array_length_pos")) {
 			carray_length_parameter_position = a.get_double ("array_length_pos");

@@ -1,6 +1,7 @@
 /* valagidlparser.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1509,6 +1510,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						} else if (eval (nv[1]) == "0") {
 							show_param = true;
 						}
+					} else if (nv[0] == "no_array_length") {
+						if (eval (nv[1]) == "1") {
+							p.no_array_length = true;
+						}
 					} else if (nv[0] == "array_length_pos") {
 						set_array_length_pos = true;
 						array_length_pos = eval (nv[1]).to_double ();
@@ -1803,6 +1808,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		return field;
 	}
 
+	[CCode (array_length = false)]
 	[NoArrayLength]
 	private string[]? get_attributes (string codenode) {
 		var attributes = codenode_attributes_map.get (codenode);

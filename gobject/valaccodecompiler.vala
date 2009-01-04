@@ -1,6 +1,6 @@
 /* valaccodecompiler.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,7 +49,7 @@ public class Vala.CCodeCompiler {
 	 * @param context a code context
 	 */
 	[NoArrayLength]
-	public void compile (CodeContext context, string? cc_command, string[] cc_options) {
+	public void compile (CodeContext context, string? cc_command, [CCode (array_length = false)] string[] cc_options) {
 		string pc = "pkg-config --cflags";
 		if (!context.compile_only) {
 			pc += " --libs";
