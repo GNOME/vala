@@ -1,6 +1,7 @@
 /* valaccodeassignmentmodule.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -167,6 +168,16 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 					var lhs_array_len = head.get_array_length_cexpression (assignment.left, dim);
 					var rhs_array_len = head.get_array_length_cexpression (assignment.right, dim);
 					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
+				}
+				if (array_type.rank == 1) {
+					var array_var = assignment.left.symbol_reference;
+					if (array_var != null && array_var.is_internal_symbol ()
+					    && (assignment.left.symbol_reference is LocalVariable
+					        || assignment.left.symbol_reference is Field)) {
+						var lhs_array_size = head.get_array_size_cexpression (assignment.left);
+						var rhs_array_len = head.get_array_length_cexpression (assignment.left, 1);
+						ccomma.append_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
+					}
 				}
 			} else if (instance_delegate) {
 				var lhs_delegate_target = get_delegate_target_cexpression (assignment.left);

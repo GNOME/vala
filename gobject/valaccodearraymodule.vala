@@ -1,6 +1,7 @@
 /* valaccodearraymodule.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,14 +22,11 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-using GLib;
 using Gee;
 
-/**
- * The link between an assignment and generated code.
- */
 public class Vala.CCodeArrayModule : CCodeMethodCallModule {
-	private int next_array_dup_id = 0;
+	int next_array_dup_id = 0;
+	int next_array_add_id = 0;
 
 	public CCodeArrayModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
@@ -225,6 +223,48 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		} else {
 			return new CCodeConstant ("NULL");
 		}
+	}
+
+	public override string get_array_size_cname (string array_cname) {
+		return "%s_size".printf (array_cname);
+	}
+
+	public override CCodeExpression get_array_size_cexpression (Expression array_expr) {
+		if (array_expr.symbol_reference is LocalVariable) {
+			var local = (LocalVariable) array_expr.symbol_reference;
+			return get_variable_cexpression (get_array_size_cname (get_variable_cname (local.name)));
+		} else if (array_expr.symbol_reference is Field) {
+			var field = (Field) array_expr.symbol_reference;
+			var ma = (MemberAccess) array_expr;
+
+			CCodeExpression size_expr = null;
+
+			if (field.binding == MemberBinding.INSTANCE) {
+				var cl = field.parent_symbol as Class;
+				bool is_gtypeinstance = (cl != null && !cl.is_compact);
+
+				string size_cname = get_array_size_cname (field.name);
+				CCodeExpression typed_inst = (CCodeExpression) get_ccodenode (ma.inner);
+
+				CCodeExpression inst;
+				if (is_gtypeinstance && field.access == SymbolAccessibility.PRIVATE) {
+					inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
+				} else {
+					inst = typed_inst;
+				}
+				if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
+					size_expr = new CCodeMemberAccess.pointer (inst, size_cname);
+				} else {
+					size_expr = new CCodeMemberAccess (inst, size_cname);
+				}
+			} else {
+				size_expr = new CCodeIdentifier (get_array_size_cname (field.get_cname ()));
+			}
+
+			return size_expr;
+		}
+
+		assert_not_reached ();
 	}
 
 	public override void visit_element_access (ElementAccess expr) {
@@ -480,6 +520,68 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		return dup_func;
 	}
 
+	string generate_array_add_wrapper (ArrayType array_type) {
+		string add_func = "_vala_array_add%d".printf (++next_array_add_id);
+
+		if (!add_wrapper (add_func)) {
+			// wrapper already defined
+			return add_func;
+		}
+
+		// declaration
+
+		var function = new CCodeFunction (add_func, "void");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("array", array_type.get_cname () + "*"));
+		function.add_parameter (new CCodeFormalParameter ("length", "int*"));
+		function.add_parameter (new CCodeFormalParameter ("size", "int*"));
+
+		string typename = array_type.element_type.get_cname ();
+		CCodeExpression value = new CCodeIdentifier ("value");
+		if (array_type.element_type.is_real_struct_type ()) {
+			if (!array_type.element_type.nullable || !array_type.element_type.value_owned) {
+				typename = "const " + typename;
+			}
+			if (!array_type.element_type.nullable) {
+				typename += "*";
+				value = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, value);
+			}
+		}
+		function.add_parameter (new CCodeFormalParameter ("value", typename));
+
+		var array = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("array"));
+		var length = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("length"));
+		var size = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("size"));
+
+		// definition
+
+		var block = new CCodeBlock ();
+
+		var renew_call = new CCodeFunctionCall (new CCodeIdentifier ("g_renew"));
+		renew_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+		renew_call.add_argument (array);
+		renew_call.add_argument (size);
+
+		var resize_block = new CCodeBlock ();
+		resize_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (size, new CCodeConditionalExpression (size, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("2"), size), new CCodeConstant ("4")))));
+		resize_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (array, renew_call)));
+
+		var csizecheck = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, length, size);
+		block.add_statement (new CCodeIfStatement (csizecheck, resize_block));
+
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (array, new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, length)), value)));
+
+		// append to file
+
+		source_type_member_declaration.append (function.copy ());
+
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return add_func;
+	}
+
 	public override void visit_method_call (MethodCall expr) {
 		base.visit_method_call (expr);
 
@@ -499,5 +601,45 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var element_type = ma.inner.value_type.get_type_arguments ().get (0);
 
 		ccall.insert_argument (1, new CCodeIdentifier (element_type.get_cname ()));
+	}
+
+	bool is_array_add (Assignment assignment) {
+		var binary = assignment.right as BinaryExpression;
+		if (binary != null && binary.left.value_type is ArrayType) {
+			if (binary.operator == BinaryOperator.PLUS) {
+				if (assignment.left.symbol_reference == binary.left.symbol_reference) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public override void visit_assignment (Assignment assignment) {
+		if (!is_array_add (assignment)) {
+			base.visit_assignment (assignment);
+			return;
+		}
+
+		var binary = assignment.right as BinaryExpression;
+
+		var array = binary.left;
+		var array_type = (ArrayType) array.value_type;
+		var element = binary.right;
+
+		array.accept (codegen);
+		element.target_type = array_type.element_type.copy ();
+		element.accept (codegen);
+
+		var value_param = new FormalParameter ("value", element.target_type);
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_array_add_wrapper (array_type)));
+		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) array.ccodenode));
+		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_length_cexpression (array)));
+		ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_array_size_cexpression (array)));
+		ccall.add_argument (handle_struct_argument (value_param, element, (CCodeExpression) element.ccodenode));
+
+		assignment.ccodenode = ccall;
 	}
 }

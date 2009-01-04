@@ -229,6 +229,19 @@ public class Vala.BinaryExpression : Expression {
 			} else {
 				value_type.value_owned = true;
 			}
+		} else if (left.value_type is ArrayType && operator == BinaryOperator.PLUS) {
+			// array concatenation
+
+			var array_type = (ArrayType) left.value_type;
+
+			if (right.value_type == null || !right.value_type.compatible (array_type.element_type)) {
+				error = true;
+				Report.error (source_reference, "Incompatible operand");
+				return false;
+			}
+
+			value_type = array_type.copy ();
+			value_type.value_owned = true;
 		} else if (operator == BinaryOperator.PLUS
 			   || operator == BinaryOperator.MINUS
 			   || operator == BinaryOperator.MUL

@@ -1,6 +1,7 @@
 /* valaccodebasemodule.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -819,11 +820,14 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			if (f.field_type is ArrayType && !f.no_array_length) {
 				// create fields to store array dimensions
 				var array_type = (ArrayType) f.field_type;
+				var len_type = int_type.copy ();
 				
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var len_type = int_type.copy ();
-
 					st.add_field (len_type.get_cname (), head.get_array_length_cname (f.name, dim));
+				}
+
+				if (array_type.rank == 1 && f.is_internal_symbol ()) {
+					st.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
 				}
 			} else if (f.field_type is DelegateType) {
 				var delegate_type = (DelegateType) f.field_type;
@@ -939,6 +943,15 @@ public class Vala.CCodeBaseModule : CCodeModule {
 						len_def.modifiers = CCodeModifiers.STATIC;
 					}
 					source_type_member_declaration.append (len_def);
+				}
+
+				if (array_type.rank == 1 && f.is_internal_symbol ()) {
+					var len_type = int_type.copy ();
+
+					var cdecl = new CCodeDeclaration (len_type.get_cname ());
+					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_size_cname (f.get_cname ()), new CCodeConstant ("0")));
+					cdecl.modifiers = CCodeModifiers.STATIC;
+					source_type_member_declaration.append (cdecl);
 				}
 			} else if (f.field_type is DelegateType) {
 				var delegate_type = (DelegateType) f.field_type;
@@ -1400,6 +1413,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				var len_var = new LocalVariable (int_type.copy (), head.get_array_length_cname (get_variable_cname (local.name), dim));
 				temp_vars.insert (0, len_var);
 			}
+
+			if (array_type.rank == 1) {
+				var size_var = new LocalVariable (int_type.copy (), head.get_array_size_cname (get_variable_cname (local.name)));
+				temp_vars.insert (0, size_var);
+			}
 		} else if (local.variable_type is DelegateType) {
 			var deleg_type = (DelegateType) local.variable_type;
 			var d = deleg_type.delegate_symbol;
@@ -1427,6 +1445,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					var lhs_array_len = get_variable_cexpression (head.get_array_length_cname (get_variable_cname (local.name), dim));
 					var rhs_array_len = head.get_array_length_cexpression (local.initializer, dim);
 					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
+				}
+				if (array_type.rank == 1) {
+					var lhs_array_size = get_variable_cexpression (head.get_array_size_cname (get_variable_cname (local.name)));
+					var rhs_array_len = get_variable_cexpression (head.get_array_length_cname (get_variable_cname (local.name), 1));
+					ccomma.append_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
 				}
 				
 				ccomma.append_expression (get_variable_cexpression (temp_var.name));

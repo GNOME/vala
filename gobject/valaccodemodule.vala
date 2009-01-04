@@ -1,6 +1,6 @@
 /* valaccodemodule.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -402,6 +402,14 @@ public abstract class Vala.CCodeModule {
 
 	public virtual CCodeExpression get_array_length_cexpression (Expression array_expr, int dim = -1) {
 		return next.get_array_length_cexpression (array_expr, dim);
+	}
+
+	public virtual string get_array_size_cname (string array_cname) {
+		return next.get_array_size_cname (array_cname);
+	}
+
+	public virtual CCodeExpression get_array_size_cexpression (Expression array_expr) {
+		return next.get_array_size_cexpression (array_expr);
 	}
 
 	public virtual void add_simple_check (CodeNode node, CCodeFragment cfrag) {

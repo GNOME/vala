@@ -1,5 +1,16 @@
 2009-01-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valabinaryexpression.vala:
+	* gobject/valaccodearraymodule.vala:
+	* gobject/valaccodeassignmentmodule.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodemodule.vala:
+
+	Support += to efficiently append elements to arrays,
+	fixes part of bug 566425
+
+2009-01-04  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 
 	Fix generated code for static array and delegate fields,
