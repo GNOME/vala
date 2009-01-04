@@ -1,6 +1,6 @@
 /* valamethodcall.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -427,7 +427,10 @@ public class Vala.MethodCall : Expression {
 			}
 		}
 
-		analyzer.check_arguments (this, mtype, params, get_argument_list ());
+		if (!analyzer.check_arguments (this, mtype, params, get_argument_list ())) {
+			error = true;
+			return false;
+		}
 
 		if (may_throw) {
 			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
