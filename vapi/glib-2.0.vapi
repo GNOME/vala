@@ -1787,7 +1787,7 @@ namespace GLib {
 		public static bool set_variable (string variable, string value, bool overwrite);
 		[CCode (cname = "g_unsetenv")]
 		public static void unset_variable (string variable);
-		[CCode (cname = "g_listenv", array_length = false)]
+		[CCode (cname = "g_listenv", array_length = false, array_null_terminated = true)]
 		public static string[] list_variables ();
 		[CCode (cname = "g_get_user_name")]
 		public static weak string get_user_name ();
@@ -1801,7 +1801,7 @@ namespace GLib {
 		public static weak string get_user_config_dir ();
 		[CCode (cname = "g_get_user_special_dir")]
 		public static weak string get_user_special_dir (UserDirectory directory);
-		[CCode (cname = "g_get_system_data_dirs", array_length = false)]
+		[CCode (cname = "g_get_system_data_dirs", array_length = false, array_null_terminated = true)]
 		[NoArrayLength]
 		public static weak string[] get_system_data_dirs ();
 		[CCode (cname = "g_get_system_config_dirs")]

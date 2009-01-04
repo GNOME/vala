@@ -1,3 +1,26 @@
+2009-01-04  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodecontrolflowmodule.vala:
+
+	Drop obsolete foreach support for null-terminated arrays
+
+	* gobject/valaccodearraymodule.vala:
+
+	Fix array length C expression for null-terminated array fields,
+	drop obsolete array_free support for null-terminated arrays
+
+	* gobject/valaccodeassignmentmodule.vala:
+
+	Correctly obey no_array_length when assigning to fields
+
+	* vala/valacodecontext.vala:
+	* gobject/valaccodecompiler.vala:
+	* compiler/valacompiler.vala:
+	* vapi/glib-2.0.vapi:
+	* vapigen/valavapigen.vala:
+
+	Use array_null_termianted attribute where appropriate
+
 2009-01-04  Thijs Vermeir  <thijsvermeir@gmail.com>
 
 	* vapi/packages/vte/vte.metadata:

@@ -27,14 +27,14 @@ class Vala.Compiler {
 	static string basedir;
 	static string directory;
 	static bool version;
-	[CCode (array_length = false)]
+	[CCode (array_length = false, array_null_terminated = true)]
 	[NoArrayLength]
 	static string[] sources;
-	[CCode (array_length = false)]
+	[CCode (array_length = false, array_null_terminated = true)]
 	[NoArrayLength]
 	static string[] vapi_directories;
 	static string library;
-	[CCode (array_length = false)]
+	[CCode (array_length = false, array_null_terminated = true)]
 	[NoArrayLength]
 	static string[] packages;
 	static string target_glib;
@@ -50,7 +50,7 @@ class Vala.Compiler {
 	static bool non_null_experimental;
 	static bool disable_dbus_transformation;
 	static string cc_command;
-	[CCode (array_length = false)]
+	[CCode (array_length = false, array_null_terminated = true)]
 	[NoArrayLength]
 	static string[] cc_options;
 	static string dump_tree;

@@ -315,144 +315,61 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				cblock.add_statement (clendecl);
 			}
 
-			if (array_len is CCodeConstant) {
-				// the array has no length parameter i.e. it is NULL-terminated array
-
-				var it_name = "%s_it".printf (stmt.variable_name);
-			
-				if (current_method != null && current_method.coroutine) {
-					closure_struct.add_field (collection_type.get_cname (), it_name);
-				} else {
-					var citdecl = new CCodeDeclaration (collection_type.get_cname ());
-					citdecl.add_declarator (new CCodeVariableDeclarator (it_name));
-					cblock.add_statement (citdecl);
-				}
-				
-				var cbody = new CCodeBlock ();
-
-				CCodeExpression element_expr = get_variable_cexpression ("*%s".printf (it_name));
-
-				var element_type = array_type.element_type.copy ();
-				element_type.value_owned = false;
-				element_expr = transform_expression (element_expr, element_type, stmt.type_reference);
-
-				cfrag = new CCodeFragment ();
-				append_temp_decl (cfrag, temp_vars);
-				cbody.add_statement (cfrag);
-				temp_vars.clear ();
-
-				if (current_method != null && current_method.coroutine) {
-					closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
-					cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr)));
-				} else {
-					var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
-					cbody.add_statement (cdecl);
-				}
-
-				// add array length variable for stacked arrays
-				if (stmt.type_reference is ArrayType) {
-					var inner_array_type = (ArrayType) stmt.type_reference;
-					for (int dim = 1; dim <= inner_array_type.rank; dim++) {
-						if (current_method != null && current_method.coroutine) {
-							closure_struct.add_field ("int", head.get_array_length_cname (stmt.variable_name, dim));
-							cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1"))));
-						} else {
-							var cdecl = new CCodeDeclaration ("int");
-							cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
-							cbody.add_statement (cdecl);
-						}
-					}
-				}
-
-				cbody.add_statement (stmt.body.ccodenode);
-				
-				var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("*%s".printf (it_name)), new CCodeConstant ("NULL"));
-				
-				var cfor = new CCodeForStatement (ccond, cbody);
-
-				cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeIdentifier (collection_backup.name)));
+			var it_name = (stmt.variable_name + "_it");
 		
-				cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (it_name), new CCodeConstant ("1"))));
-				cblock.add_statement (cfor);
+			if (current_method != null && current_method.coroutine) {
+				closure_struct.add_field ("int", it_name);
 			} else {
-				// the array has a length parameter
-
-				var it_name = (stmt.variable_name + "_it");
+				var citdecl = new CCodeDeclaration ("int");
+				citdecl.add_declarator (new CCodeVariableDeclarator (it_name));
+				cblock.add_statement (citdecl);
+			}
 			
-				if (current_method != null && current_method.coroutine) {
-					closure_struct.add_field ("int", it_name);
-				} else {
-					var citdecl = new CCodeDeclaration ("int");
-					citdecl.add_declarator (new CCodeVariableDeclarator (it_name));
-					cblock.add_statement (citdecl);
-				}
-				
-				var cbody = new CCodeBlock ();
+			var cbody = new CCodeBlock ();
 
-				CCodeExpression element_expr = new CCodeElementAccess (get_variable_cexpression (collection_backup.name), get_variable_cexpression (it_name));
+			CCodeExpression element_expr = new CCodeElementAccess (get_variable_cexpression (collection_backup.name), get_variable_cexpression (it_name));
 
-				var element_type = array_type.element_type.copy ();
-				element_type.value_owned = false;
-				element_expr = transform_expression (element_expr, element_type, stmt.type_reference);
+			var element_type = array_type.element_type.copy ();
+			element_type.value_owned = false;
+			element_expr = transform_expression (element_expr, element_type, stmt.type_reference);
 
-				cfrag = new CCodeFragment ();
-				append_temp_decl (cfrag, temp_vars);
-				cbody.add_statement (cfrag);
-				temp_vars.clear ();
+			cfrag = new CCodeFragment ();
+			append_temp_decl (cfrag, temp_vars);
+			cbody.add_statement (cfrag);
+			temp_vars.clear ();
 
-				if (current_method != null && current_method.coroutine) {
-					closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
-					cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr)));
-				} else {
-					var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
-					cbody.add_statement (cdecl);
-				}
+			if (current_method != null && current_method.coroutine) {
+				closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
+				cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr)));
+			} else {
+				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
+				cbody.add_statement (cdecl);
+			}
 
-				// add array length variable for stacked arrays
-				if (stmt.type_reference is ArrayType) {
-					var inner_array_type = (ArrayType) stmt.type_reference;
-					for (int dim = 1; dim <= inner_array_type.rank; dim++) {
-						if (current_method != null && current_method.coroutine) {
-							closure_struct.add_field ("int", head.get_array_length_cname (stmt.variable_name, dim));
-							cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1"))));
-						} else {
-							var cdecl = new CCodeDeclaration ("int");
-							cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
-							cbody.add_statement (cdecl);
-						}
+			// add array length variable for stacked arrays
+			if (stmt.type_reference is ArrayType) {
+				var inner_array_type = (ArrayType) stmt.type_reference;
+				for (int dim = 1; dim <= inner_array_type.rank; dim++) {
+					if (current_method != null && current_method.coroutine) {
+						closure_struct.add_field ("int", head.get_array_length_cname (stmt.variable_name, dim));
+						cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1"))));
+					} else {
+						var cdecl = new CCodeDeclaration ("int");
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
+						cbody.add_statement (cdecl);
 					}
 				}
-
-				cbody.add_statement (stmt.body.ccodenode);
-				
-				var ccond_ind1 = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, array_len, new CCodeConstant ("-1"));
-				var ccond_ind2 = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (it_name), array_len);
-				var ccond_ind = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccond_ind1, ccond_ind2);
-				
-				/* only check for null if the containers elements are of reference-type */
-				CCodeBinaryExpression ccond;
-				if (array_type.element_type.is_reference_type_or_type_parameter ()) {
-					var ccond_term1 = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, array_len, new CCodeConstant ("-1"));
-					var ccond_term2 = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeElementAccess (new CCodeIdentifier (collection_backup.name), get_variable_cexpression (it_name)), new CCodeConstant ("NULL"));
-					var ccond_term = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccond_term1, ccond_term2);
-
-					ccond = new CCodeBinaryExpression (CCodeBinaryOperator.OR, ccond_ind, ccond_term);
-				} else {
-					/* assert when trying to iterate over value-type arrays of unknown length */
-					var cassert = new CCodeFunctionCall (new CCodeIdentifier ("g_assert"));
-					cassert.add_argument (ccond_ind1);
-					cblock.add_statement (new CCodeExpressionStatement (cassert));
-
-					ccond = ccond_ind2;
-				}
-				
-				var cfor = new CCodeForStatement (ccond, cbody);
-				cfor.add_initializer (new CCodeAssignment (get_variable_cexpression (it_name), new CCodeConstant ("0")));
-				cfor.add_iterator (new CCodeAssignment (get_variable_cexpression (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, get_variable_cexpression (it_name), new CCodeConstant ("1"))));
-				cblock.add_statement (cfor);
 			}
+
+			cbody.add_statement (stmt.body.ccodenode);
+			
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (it_name), array_len);
+
+			var cfor = new CCodeForStatement (ccond, cbody);
+			cfor.add_initializer (new CCodeAssignment (get_variable_cexpression (it_name), new CCodeConstant ("0")));
+			cfor.add_iterator (new CCodeAssignment (get_variable_cexpression (it_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, get_variable_cexpression (it_name), new CCodeConstant ("1"))));
+			cblock.add_statement (cfor);
 		} else if (stmt.collection.value_type.compatible (new ObjectType (glist_type)) || stmt.collection.value_type.compatible (new ObjectType (gslist_type))) {
 			// iterating over a GList or GSList
 

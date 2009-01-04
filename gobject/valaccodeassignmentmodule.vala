@@ -145,7 +145,8 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		bool array = false;
 		bool instance_delegate = false;
 		if (assignment.left.value_type is ArrayType) {
-			array = !(head.get_array_length_cexpression (assignment.left, 1) is CCodeConstant);
+			var array_field = assignment.left.symbol_reference as Field;
+			array = (array_field == null || !array_field.no_array_length);
 		} else if (assignment.left.value_type is DelegateType) {
 			var delegate_type = (DelegateType) assignment.left.value_type;
 			instance_delegate = delegate_type.delegate_symbol.has_target;
@@ -172,8 +173,7 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				if (array_type.rank == 1) {
 					var array_var = assignment.left.symbol_reference;
 					if (array_var != null && array_var.is_internal_symbol ()
-					    && (assignment.left.symbol_reference is LocalVariable
-					        || assignment.left.symbol_reference is Field)) {
+					    && (array_var is LocalVariable || array_var is Field)) {
 						var lhs_array_size = head.get_array_size_cexpression (assignment.left);
 						var rhs_array_len = head.get_array_length_cexpression (assignment.left, 1);
 						ccomma.append_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));

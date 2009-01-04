@@ -1,6 +1,6 @@
 /* valacodecontext.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -380,7 +380,7 @@ public class Vala.CodeContext {
 		file.mark = 2;
 	}
 
-	public string? get_package_path (string pkg, [CCode (array_length_pos = 1.9)] string[] vapi_directories) {
+	public string? get_package_path (string pkg, string[] vapi_directories) {
 		string basename = "%s.vapi".printf (pkg);
 		string filename = null;
 

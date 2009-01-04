@@ -170,7 +170,32 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			} else if (array_expr.symbol_reference is Field) {
 				var field = (Field) array_expr.symbol_reference;
 				if (field.array_null_terminated) {
-					var carray_expr = (CCodeExpression) array_expr.ccodenode;
+					var ma = (MemberAccess) array_expr;
+
+					CCodeExpression carray_expr = null;
+
+					if (field.binding == MemberBinding.INSTANCE) {
+						var cl = field.parent_symbol as Class;
+						bool is_gtypeinstance = (cl != null && !cl.is_compact);
+
+						string array_cname = field.get_cname ();
+						CCodeExpression typed_inst = (CCodeExpression) get_ccodenode (ma.inner);
+
+						CCodeExpression inst;
+						if (is_gtypeinstance && field.access == SymbolAccessibility.PRIVATE) {
+							inst = new CCodeMemberAccess.pointer (typed_inst, "priv");
+						} else {
+							inst = typed_inst;
+						}
+						if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
+							carray_expr = new CCodeMemberAccess.pointer (inst, array_cname);
+						} else {
+							carray_expr = new CCodeMemberAccess (inst, array_cname);
+						}
+					} else {
+						carray_expr = new CCodeIdentifier (field.get_cname ());
+					}
+
 					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
 					len_call.add_argument (carray_expr);
 					return len_call;
@@ -343,7 +368,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 	}
 
-	private CCodeForStatement get_vala_array_free_loop (bool have_length) {
+	private CCodeForStatement get_vala_array_free_loop () {
 		var cbody = new CCodeBlock ();
 		var cptrarray = new CCodeCastExpression (new CCodeIdentifier ("array"), "gpointer*");
 		var cea = new CCodeElementAccess (cptrarray, new CCodeIdentifier ("i"));
@@ -351,16 +376,11 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var cfreecall = new CCodeFunctionCall (new CCodeIdentifier ("destroy_func"));
 		cfreecall.add_argument (cea);
 
-		CCodeExpression cforcond;
-
-		if (have_length) {
-			var cfreecond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, cea, new CCodeConstant ("NULL"));
-			cforcond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("array_length"));
-			cbody.add_statement (new CCodeIfStatement (cfreecond, new CCodeExpressionStatement (cfreecall)));
-		} else {
-			cforcond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, cea, new CCodeConstant ("NULL"));
-			cbody.add_statement (new CCodeExpressionStatement (cfreecall));
-		}
+		var cfreecond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, cea, new CCodeConstant ("NULL"));
+		var cforcond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("array_length"));
+		var cfreeblock = new CCodeBlock ();
+		cfreeblock.add_statement (new CCodeExpressionStatement (cfreecall));
+		cbody.add_statement (new CCodeIfStatement (cfreecond, cfreeblock));
 
 		var cfor = new CCodeForStatement (cforcond, cbody);
 		cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")));
@@ -383,9 +403,7 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		citdecl.add_declarator (new CCodeVariableDeclarator ("i"));
 		cdofree.add_statement (citdecl);
 
-		var clencheck = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN_OR_EQUAL, new CCodeIdentifier ("array_length"), new CCodeConstant ("0"));
-		var ciflen = new CCodeIfStatement (clencheck, get_vala_array_free_loop (true), get_vala_array_free_loop (false));
-		cdofree.add_statement (ciflen);
+		cdofree.add_statement (get_vala_array_free_loop ());
 
 		var ccondarr = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("array"), new CCodeConstant ("NULL"));
 		var ccondfunc = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("destroy_func"), new CCodeConstant ("NULL"));
