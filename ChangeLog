@@ -1,5 +1,13 @@
 2009-01-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaarraycreationexpression.vala:
+	* vala/valainitializerlist.vala:
+	* gobject/valaccodearraymodule.vala:
+
+	Support initializers for multi-dimensional arrays, fixes bug 541256
+
+2009-01-04  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/curses.vapi:
 	* vapi/enchant.vapi:
 	* vapi/gnome-keyring-1.vapi:

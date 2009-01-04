@@ -32,6 +32,17 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		base (codegen, next);
 	}
 
+	void append_initializer_list (CCodeCommaExpression ce, CCodeExpression name_cnode, InitializerList initializer_list, int rank, ref int i) {
+		foreach (Expression e in initializer_list.get_initializers ()) {
+			if (rank > 1) {
+				append_initializer_list (ce, name_cnode, (InitializerList) e, rank - 1, ref i);
+			} else {
+				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) e.ccodenode));
+				i++;
+			}
+		}
+	}
+
 	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
 		expr.accept_children (codegen);
 
@@ -70,12 +81,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		gnew.add_argument (cexpr);
 
 		if (expr.initializer_list != null) {
-			// FIXME rank > 1 not supported yet
-			if (expr.rank > 1) {
-				expr.error = true;
-				Report.error (expr.source_reference, "Creating arrays with rank greater than 1 with initializers is not supported yet");
-			}
-
 			var ce = new CCodeCommaExpression ();
 			var temp_var = get_temp_variable (expr.value_type, true, expr);
 			var name_cnode = new CCodeIdentifier (temp_var.name);
@@ -84,11 +89,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			temp_vars.insert (0, temp_var);
 			
 			ce.append_expression (new CCodeAssignment (name_cnode, gnew));
-			
-			foreach (Expression e in expr.initializer_list.get_initializers ()) {
-				ce.append_expression (new CCodeAssignment (new CCodeElementAccess (name_cnode, new CCodeConstant (i.to_string ())), (CCodeExpression) e.ccodenode));
-				i++;
-			}
+
+			append_initializer_list (ce, name_cnode, expr.initializer_list, expr.rank, ref i);
 			
 			ce.append_expression (name_cnode);
 			

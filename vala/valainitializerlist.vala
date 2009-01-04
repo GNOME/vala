@@ -110,7 +110,8 @@ public class Vala.InitializerList : Expression {
 			var array_type = (ArrayType) target_type;
 
 			if (!(parent_node is ArrayCreationExpression)
-			      && !(parent_node is Constant)) {
+			      && !(parent_node is Constant)
+			      && !(parent_node is InitializerList)) {
 				// transform shorthand form
 				//     int[] array = { 42 };
 				// into
@@ -126,8 +127,18 @@ public class Vala.InitializerList : Expression {
 				return array_creation.check (analyzer);
 			}
 
+			DataType inner_target_type;
+			if (array_type.rank > 1) {
+				// allow initialization of multi-dimensional arrays
+				var inner_array_type = (ArrayType) array_type.copy ();
+				inner_array_type.rank--;
+				inner_target_type = inner_array_type;
+			} else {
+				inner_target_type = array_type.element_type.copy ();
+			}
+
 			foreach (Expression e in get_initializers ()) {
-				e.target_type = array_type.element_type.copy ();
+				e.target_type = inner_target_type;
 			}
 		} else if (target_type.data_type is Struct) {
 			/* initializer is used as struct initializer */

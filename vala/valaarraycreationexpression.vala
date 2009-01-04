@@ -118,9 +118,12 @@ public class Vala.ArrayCreationExpression : Expression {
 	}
 
 	private int create_sizes_from_initializer_list (SemanticAnalyzer analyzer, InitializerList il, int rank, Gee.List<Literal> sl) {
-		var init = new IntegerLiteral (il.size.to_string (), il.source_reference);
-		init.check (analyzer);
-		sl.add (init);
+		if (sl.size == (this.rank - rank)) {
+			// only add size if this is the first initializer list of the current dimension
+			var init = new IntegerLiteral (il.size.to_string (), il.source_reference);
+			init.check (analyzer);
+			sl.add (init);
+		}
 
 		int subsize = -1;
 		foreach (Expression e in il.get_initializers ()) {
