@@ -1,5 +1,11 @@
 2009-01-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valathrowstatement.vala:
+
+	Fix crash when using invalid throw expressions, fixes bug 565571
+
+2009-01-04  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_init_with_args binding, fixes bug 547135

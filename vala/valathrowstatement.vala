@@ -1,6 +1,6 @@
 /* valathrowstatement.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -84,7 +84,10 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 		error_expression.target_type.value_owned = true;
 
 		if (error_expression != null) {
-			error_expression.check (analyzer);
+			if (!error_expression.check (analyzer)) {
+				error = true;
+				return false;
+			}
 
 			if (!(error_expression.value_type is ErrorType)) {
 				Report.error (error_expression.source_reference, "`%s' is not an error type".printf (error_expression.value_type.to_string ()));
