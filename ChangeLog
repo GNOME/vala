@@ -1,3 +1,11 @@
+2009-01-04  Thijs Vermeir  <thijsvermeir@gmail.com>
+
+	* vapi/packages/vte/vte.metadata:
+
+	Fix fork_command binding
+
+	* vapi/vte.vapi: Regenerated
+
 2009-01-04  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valadelegate.vala:
