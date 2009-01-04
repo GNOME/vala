@@ -67,6 +67,11 @@ public class Vala.FormalParameter : Symbol {
 	public bool no_array_length { get; set; }
 
 	/**
+	 * Specifies whether the array is null terminated.
+	 */
+	public bool array_null_terminated { get; set; }
+
+	/**
 	 * Specifies the position of the parameter in the C function.
 	 */
 	public double cparameter_position { get; set; }
@@ -142,6 +147,9 @@ public class Vala.FormalParameter : Symbol {
 		}
 		if (a.has_argument ("array_length")) {
 			no_array_length = !a.get_bool ("array_length");
+		}
+		if (a.has_argument ("array_null_terminated")) {
+			array_null_terminated = a.get_bool ("array_null_terminated");
 		}
 		if (a.has_argument ("array_length_pos")) {
 			carray_length_parameter_position = a.get_double ("array_length_pos");

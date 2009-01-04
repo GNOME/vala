@@ -70,6 +70,11 @@ public class Vala.Field : Member, Lockable {
 	public bool no_array_length { get; set; }
 
 	/**
+	 * Specifies whether the array is null terminated.
+	 */
+	public bool array_null_terminated { get; set; }
+
+	/**
 	 * Specifies whether the array length field uses a custom name in C.
 	 */
 	public bool has_array_length_cname {
@@ -180,6 +185,9 @@ public class Vala.Field : Member, Lockable {
 		}
 		if (a.has_argument ("array_length")) {
 			no_array_length = !a.get_bool ("array_length");
+		}
+		if (a.has_argument ("array_null_terminated")) {
+			array_null_terminated = a.get_bool ("array_null_terminated");
 		}
 		if (a.has_argument ("array_length_cname")) {
 			set_array_length_cname (a.get_string ("array_length_cname"));

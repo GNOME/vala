@@ -1,5 +1,21 @@
 2009-01-04  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valadelegate.vala:
+	* vala/valafield.vala:
+	* vala/valaformalparameter.vala:
+	* vala/valamethod.vala:
+	* gobject/valaccodearraymodule.vala:
+	* gobject/valaccodemethodcallmodule.vala:
+
+	Support [CCode (array_null_terminated = true)] attribute to fix
+	length handling of null terminated arrays, fixes bug 514186
+
+	* vapi/glib-2.0.vapi:
+
+	Fix g_strsplit binding
+
+2009-01-04  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/cairo.vapi:
 	* vapi/packages/gdk-2.0/:
 	* vapi/packages/gdk-pixbuf-2.0/:

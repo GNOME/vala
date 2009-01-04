@@ -141,7 +141,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		} else if (array_expr.symbol_reference != null) {
 			if (array_expr.symbol_reference is FormalParameter) {
 				var param = (FormalParameter) array_expr.symbol_reference;
-				if (!param.no_array_length) {
+				if (param.array_null_terminated) {
+					var carray_expr = get_variable_cexpression (param.name);
+					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+					len_call.add_argument (carray_expr);
+					return len_call;
+				} else if (!param.no_array_length) {
 					CCodeExpression length_expr = get_variable_cexpression (get_array_length_cname (param.name, dim));
 					if (param.direction != ParameterDirection.IN) {
 						// accessing argument of out/ref param
@@ -164,7 +169,12 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				}
 			} else if (array_expr.symbol_reference is Field) {
 				var field = (Field) array_expr.symbol_reference;
-				if (!field.no_array_length) {
+				if (field.array_null_terminated) {
+					var carray_expr = (CCodeExpression) array_expr.ccodenode;
+					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+					len_call.add_argument (carray_expr);
+					return len_call;
+				} else if (!field.no_array_length) {
 					var ma = (MemberAccess) array_expr;
 
 					CCodeExpression length_expr = null;

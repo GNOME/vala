@@ -1,6 +1,7 @@
 /* valaccodemethodcallmodule.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -361,7 +362,20 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (m != null && m.return_type is ArrayType) {
 			var array_type = (ArrayType) m.return_type;
 			for (int dim = 1; dim <= array_type.rank; dim++) {
-				if (!m.no_array_length) {
+				if (m.array_null_terminated) {
+					// handle calls to methods returning null-terminated arrays
+					var temp_var = get_temp_variable (itype.get_return_type ());
+					var temp_ref = get_variable_cexpression (temp_var.name);
+
+					temp_vars.insert (0, temp_var);
+
+					ccall_expr = new CCodeAssignment (temp_ref, ccall_expr);
+
+					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+					len_call.add_argument (temp_ref);
+
+					expr.append_array_size (len_call);
+				} else if (!m.no_array_length) {
 					var temp_var = get_temp_variable (int_type);
 					var temp_ref = get_variable_cexpression (temp_var.name);
 

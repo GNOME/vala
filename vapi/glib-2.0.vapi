@@ -717,7 +717,7 @@ public class string {
 	public string escape (string exceptions);
 	[CCode (cname = "g_strcompress")]
 	public string compress ();
-	[CCode (cname = "g_strsplit", array_length = false)]
+	[CCode (cname = "g_strsplit", array_length = false, array_null_terminated = true)]
 	[NoArrayLength]
 	public string[] split (string delimiter, int max_tokens = 0);
 	[CCode (cname = "g_strsplit_set", array_length = false)]
