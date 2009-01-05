@@ -1536,10 +1536,12 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 
 			if (last_param != null && p.name == "n_" + last_param.name) {
-				// last_param is array, p is array length
-				last_param_type = new ArrayType (last_param_type, 1, last_param_type.source_reference);
-				last_param.parameter_type = last_param_type;
-				last_param.direction = ParameterDirection.IN;
+				if (!(last_param_type is ArrayType)) {
+					// last_param is array, p is array length
+					last_param_type = new ArrayType (last_param_type, 1, last_param_type.source_reference);
+					last_param.parameter_type = last_param_type;
+					last_param.direction = ParameterDirection.IN;
+				}
 
 				// hide array length param
 				hide_param = true;

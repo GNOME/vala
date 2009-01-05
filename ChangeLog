@@ -1,5 +1,19 @@
 2009-01-05  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala:
+
+	Do not accidentally generate stacked arrays
+
+	* vapi/packages/gdk-2.0/:
+
+	Fix gdk_keymap_get_entries_for_keyval, gdk_threads_add_idle, and
+	gdk_window_remove_filter bindings, patch by Mark Lee,
+	fixes bug 566679
+
+	* vapi/gdk-2.0.vapi: regenerated
+
+2009-01-05  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix GtkWidget::style_set and gtk_rc_get_style_by_paths bindings
