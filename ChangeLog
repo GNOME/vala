@@ -1,3 +1,11 @@
+2009-01-05  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gtk+-2.0/:
+
+	Fix GtkWidget::style_set and gtk_rc_get_style_by_paths bindings
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
 2009-01-04  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valathrowstatement.vala:

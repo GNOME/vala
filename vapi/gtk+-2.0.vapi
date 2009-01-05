@@ -5055,7 +5055,7 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void size_request (out Gtk.Requisition requisition);
 		public virtual signal void state_changed (Gtk.StateType previous_state);
-		public virtual signal void style_set (Gtk.Style previous_style);
+		public virtual signal void style_set (Gtk.Style? previous_style);
 		[HasEmitter]
 		public virtual signal void unmap ();
 		public virtual signal bool unmap_event (Gdk.Event event);
@@ -7284,7 +7284,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned Gtk.Style rc_get_style (Gtk.Widget widget);
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static unowned Gtk.Style rc_get_style_by_paths (Gtk.Settings settings, string widget_path, string class_path, GLib.Type type);
+	public static unowned Gtk.Style? rc_get_style_by_paths (Gtk.Settings settings, string? widget_path, string? class_path, GLib.Type type);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned string rc_get_theme_dir ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
