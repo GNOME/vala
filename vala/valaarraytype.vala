@@ -179,7 +179,7 @@ public class Vala.ArrayType : ReferenceType {
 			return null;
 		}
 
-		return "a" + element_type_signature;
+		return string.nfill (rank, 'a') + element_type_signature;
 	}
 
 	public override void accept_children (CodeVisitor visitor) {

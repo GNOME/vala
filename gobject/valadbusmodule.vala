@@ -1,6 +1,6 @@
 /* valadbusmodule.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -406,6 +406,18 @@ public class Vala.DBusModule : GAsyncModule {
 	}
 
 	void write_array (CCodeFragment fragment, ArrayType array_type, CCodeExpression iter_expr, CCodeExpression array_expr) {
+		string array_iter_name = "_tmp%d".printf (next_temp_var_id++);
+
+		var cdecl = new CCodeDeclaration (array_type.get_cname ());
+		cdecl.add_declarator (new CCodeVariableDeclarator (array_iter_name));
+		fragment.append (cdecl);
+
+		fragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (array_iter_name), array_expr)));
+
+		write_array_dim (fragment, array_type, 1, iter_expr, array_expr, new CCodeIdentifier (array_iter_name));
+	}
+
+	void write_array_dim (CCodeFragment fragment, ArrayType array_type, int dim, CCodeExpression iter_expr, CCodeExpression array_expr, CCodeExpression array_iter_expr) {
 		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
 		string index_name = "_tmp%d".printf (next_temp_var_id++);
 
@@ -420,18 +432,24 @@ public class Vala.DBusModule : GAsyncModule {
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
 		iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_ARRAY"));
-		iter_call.add_argument (new CCodeConstant ("\"%s\"".printf (array_type.element_type.get_type_signature ())));
+		iter_call.add_argument (new CCodeConstant ("\"%s%s\"".printf (string.nfill (array_type.rank - dim, 'a'), array_type.element_type.get_type_signature ())));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
 		fragment.append (new CCodeExpressionStatement (iter_call));
 
 		var cforblock = new CCodeBlock ();
 		var cforfragment = new CCodeFragment ();
 		cforblock.add_statement (cforfragment);
-		var cfor = new CCodeForStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier (index_name), get_array_length (array_expr, 1)), cforblock);
+		var cfor = new CCodeForStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier (index_name), get_array_length (array_expr, dim)), cforblock);
 		cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier (index_name), new CCodeConstant ("0")));
 		cfor.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier (index_name)));
-
-		write_expression (cforfragment, array_type.element_type, new CCodeIdentifier (subiter_name), new CCodeElementAccess (array_expr, new CCodeIdentifier (index_name)));
+		
+		if (dim < array_type.rank) {
+			write_array_dim (cforfragment, array_type, dim + 1, new CCodeIdentifier (subiter_name), array_expr, array_iter_expr);
+		} else {
+			var array_iter_incr = new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, array_iter_expr);
+			var element_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, array_iter_incr);
+			write_expression (cforfragment, array_type.element_type, new CCodeIdentifier (subiter_name), element_expr);
+		}
 		fragment.append (cfor);
 
 		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));

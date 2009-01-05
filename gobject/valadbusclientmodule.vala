@@ -1,6 +1,6 @@
 /* valadbusclientmodule.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
 *  Copyright (C) 2008  Philip Van Hoof
  *
  * This library is free software; you can redistribute it and/or
@@ -1013,6 +1013,16 @@ public class Vala.DBusClientModule : DBusModule {
 				cdecl.add_declarator (new CCodeVariableDeclarator ("_" + param.name));
 				postfragment.append (cdecl);
 
+				var array_type = param.parameter_type as ArrayType;
+
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						cdecl = new CCodeDeclaration ("int");
+						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_%s_length%d".printf (param.name, dim), new CCodeConstant ("0")));
+						postfragment.append (cdecl);
+					}
+				}
+
 				var target = new CCodeIdentifier ("_" + param.name);
 				var expr = read_expression (postfragment, param.parameter_type, new CCodeIdentifier ("_iter"), target);
 				postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
@@ -1022,13 +1032,11 @@ public class Vala.DBusClientModule : DBusModule {
 				postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), target)));
 
 
-				if (param.parameter_type is ArrayType) {
-					cdecl = new CCodeDeclaration ("int");
-					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_%s_length1".printf (param.name), new CCodeConstant ("0")));
-					postfragment.append (cdecl);
-
-					// TODO check that parameter is not NULL (out parameters are optional)
-					postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("%s_length1".printf (param.name))), new CCodeIdentifier ("_%s_length1".printf (param.name)))));
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						// TODO check that parameter is not NULL (out parameters are optional)
+						postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("%s_length%d".printf (param.name, dim))), new CCodeIdentifier ("_%s_length%d".printf (param.name, dim)))));
+					}
 				}
 			}
 		}

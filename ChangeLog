@@ -1,3 +1,15 @@
+2009-01-06  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaarraytype.vala:
+	* gobject/valadbusmodule.vala:
+
+	Support marshalling multi-dimensional arrays,
+	based on patch by Didier Villevalois, fixes bug 565792
+
+	* gobject/valadbusclientmodule.vala:
+
+	Fix array out parameters in static D-Bus clients
+
 2009-01-05  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagidlparser.vala:
