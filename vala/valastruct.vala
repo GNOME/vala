@@ -679,6 +679,12 @@ public class Vala.Struct : TypeSymbol {
 
 		foreach (DataType type in base_types) {
 			type.check (analyzer);
+
+			if (!(type is StructValueType)) {
+				error = true;
+				Report.error (source_reference, "The base type `%s` of value type `%s` is not a struct".printf (type.data_type.to_string (), get_full_name ()));
+				return false;
+			}
 		}
 
 		foreach (TypeParameter p in type_parameters) {

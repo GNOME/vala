@@ -1,5 +1,14 @@
 2009-01-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* vala/valainterface.vala:
+	* vala/valastruct.vala:
+
+	Check base types of classes, interfaces, and structs,
+	patch by Andreas Brauchli, fixes bug 566592
+
+2009-01-07  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodememberaccessmodule.vala:
 	* gobject/valagobjectmodule.vala:
 	* gobject/valatyperegisterfunction.vala:

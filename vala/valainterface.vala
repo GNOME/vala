@@ -545,6 +545,13 @@ public class Vala.Interface : ObjectTypeSymbol {
 				error = true;
 				continue;
 			}
+
+			if (!(class_or_interface is ObjectTypeSymbol)) {
+				error = true;
+				Report.error (source_reference, "Prerequisite `%s` of interface `%s` is not a class or interface".printf (get_full_name (), class_or_interface.to_string ()));
+				return false;
+			}
+
 			/* interfaces are not allowed to have multiple instantiable prerequisites */
 			if (class_or_interface is Class) {
 				if (prereq_class != null) {
