@@ -71,6 +71,12 @@ public class Vala.Class : ObjectTypeSymbol {
 	}
 
 	/**
+	 * Specifies wheather the ref function returns void instead of the
+	 * object.
+	 */
+	public bool ref_function_void { get; set; }
+
+	/**
 	 * The name of the function to use to check whether a value is an instance of
 	 * this class. If this is null then the default type check function should be 
 	 * used instead.
@@ -574,6 +580,9 @@ public class Vala.Class : ObjectTypeSymbol {
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("ref_function")) {
 			set_ref_function (a.get_string ("ref_function"));
+		}
+		if (a.has_argument ("ref_function_void")) {
+			this.ref_function_void = a.get_bool ("ref_function_void");
 		}
 		if (a.has_argument ("unref_function")) {
 			set_unref_function (a.get_string ("unref_function"));

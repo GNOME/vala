@@ -1,5 +1,13 @@
 2009-01-06  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* gobject/valaccodebasemodule.vala:
+
+	Support [CCode (ref_function_void = true)] attribute for bindings,
+	based on patch by Andreas Brauchli, fixes bug 566078
+
+2009-01-06  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaarraytype.vala:
 	* gobject/valadbusmodule.vala:
 

@@ -2460,6 +2460,15 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		return true;
 	}
 
+	bool is_ref_function_void (DataType type) {
+		var cl = type.data_type as Class;
+		if (cl != null && cl.ref_function_void) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public CCodeExpression? get_ref_cexpression (DataType expression_type, CCodeExpression cexpr, Expression? expr, CodeNode node) {
 		if (expression_type is ValueType && !expression_type.nullable) {
 			// normal value type, no null check
@@ -2521,7 +2530,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		var ccall = new CCodeFunctionCall (dupexpr);
 
-		if (!(expression_type is ArrayType) && expr != null && expr.is_non_null ()) {
+		if (!(expression_type is ArrayType) && expr != null && expr.is_non_null ()
+		    && !is_ref_function_void (expression_type)) {
 			// expression is non-null
 			ccall.add_argument ((CCodeExpression) expr.ccodenode);
 			
@@ -2581,6 +2591,12 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				cifnull = new CCodeCastExpression (ctemp, "gpointer");
 			}
 			ccomma.append_expression (new CCodeConditionalExpression (cisnull, cifnull, ccall));
+
+			// repeat temp variable at the end of the comma expression
+			// if the ref function returns void
+			if (is_ref_function_void (expression_type)) {
+				ccomma.append_expression (ctemp);
+			}
 
 			return ccomma;
 		}
