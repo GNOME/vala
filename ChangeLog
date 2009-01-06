@@ -1,3 +1,12 @@
+2009-01-07  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodememberaccessmodule.vala:
+	* gobject/valagobjectmodule.vala:
+	* gobject/valatyperegisterfunction.vala:
+
+	Do not break ABI when using private class fields,
+	patch by Sebastian Dröge, fixes bug 561469
+
 2009-01-06  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaclass.vala:

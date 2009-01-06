@@ -120,6 +120,20 @@ public abstract class Vala.TypeRegisterFunction {
 
 		type_init.add_statement (get_type_interface_init_declaration ());
 
+		if (cl != null && cl.has_class_private_fields) {
+			CCodeFunctionCall quark_reg_call;
+
+			if (plugin) {
+				quark_reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_string"));
+			} else {
+				quark_reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_static_string"));
+			}
+
+			quark_reg_call.add_argument (new CCodeConstant ("\"Vala%sClassPrivate\"".printf (get_type_declaration ().get_cname ())));
+
+			type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_vala_%s_class_private_quark".printf (get_type_declaration ().get_lower_case_cname ())), quark_reg_call)));
+		}
+
 		CCodeFunctionCall reg_call;
 		if (get_type_declaration () is Struct) {
 			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_boxed_type_register_static"));

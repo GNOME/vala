@@ -133,7 +133,11 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				cast.add_argument (klass);
 
 				if (f.access == SymbolAccessibility.PRIVATE) {
-					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (cast, "priv"), f.get_cname ());
+					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (cl.get_upper_case_cname ())));
+					var ccall2 = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_CLASS"));
+					ccall2.add_argument (cast);
+					ccall.add_argument (ccall2);
+					expr.ccodenode = new CCodeMemberAccess.pointer (ccall, f.get_cname ());
 				} else {
 					expr.ccodenode = new CCodeMemberAccess.pointer (cast, f.get_cname ());
 				}

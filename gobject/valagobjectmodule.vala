@@ -130,6 +130,10 @@ public class Vala.GObjectModule : GTypeModule {
 			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
 			if (cl.has_class_private_fields) {
 				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_priv_struct.name), new CCodeVariableDeclarator ("%sClassPrivate".printf (cl.get_cname ()))));
+				var cdecl = new CCodeDeclaration ("GQuark");
+				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_vala_%s_class_private_quark".printf (cl.get_lower_case_cname ()), new CCodeConstant ("0")));
+				cdecl.modifiers = CCodeModifiers.STATIC;
+				decl_frag.append (cdecl);
 			}
 
 			instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
@@ -137,9 +141,6 @@ public class Vala.GObjectModule : GTypeModule {
 				type_struct.add_field ("GTypeClass", "parent_class");
 			} else {
 				type_struct.add_field ("%sClass".printf (cl.base_class.get_cname ()), "parent_class");
-			}
-			if (cl.has_class_private_fields) {
-				type_struct.add_field ("%sClassPrivate *".printf (cl.get_cname ()), "priv");
 			}
 
 			if (is_fundamental) {
@@ -163,6 +164,9 @@ public class Vala.GObjectModule : GTypeModule {
 
 			if (cl.has_class_private_fields) {
 				source_type_member_declaration.append (type_priv_struct);
+				
+				var macro = "((%sClassPrivate *) g_type_get_qdata (type, _vala_%s_class_private_quark))".printf (cl.get_cname(), cl.get_lower_case_cname ());
+				source_type_member_declaration.append (new CCodeMacroReplacement ("%s_GET_CLASS_PRIVATE(type)".printf (cl.get_upper_case_cname (null)), macro));
 			}
 			source_type_member_declaration.append (prop_enum);
 		}
@@ -726,33 +730,67 @@ public class Vala.GObjectModule : GTypeModule {
 			var cdecl = new CCodeDeclaration ("%sClassPrivate *".printf (cl.get_cname ()));
 			cdecl.add_declarator (new CCodeVariableDeclarator ("priv"));
 			block.add_statement (cdecl);
-			
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
+			cdecl = new CCodeDeclaration ("%sClassPrivate *".printf (cl.get_cname ()));
+			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("parent_priv", new CCodeConstant ("NULL")));
+			block.add_statement (cdecl);
+			cdecl = new CCodeDeclaration ("GType");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("parent_type"));
+			block.add_statement (cdecl);
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_parent"));
+			var ccall2 = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_CLASS"));
+			ccall2.add_argument (new CCodeIdentifier ("klass"));
+			ccall.add_argument (ccall2);
+			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("parent_type"), ccall)));
+
+			var iftrue = new CCodeBlock ();
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (cl.get_upper_case_cname (null))));
+			ccall.add_argument (new CCodeIdentifier ("parent_type"));
+			iftrue.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("parent_priv"), ccall)));
+			block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("parent_type"), iftrue));
+
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
 			ccall.add_argument (new CCodeIdentifier ("%sClassPrivate".printf(cl.get_cname())));
 
 			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("priv"), ccall)));
 
 			source_include_directives.append (new CCodeIncludeDirective ("string.h"));
 
-			var iftrue = new CCodeBlock ();
+			iftrue = new CCodeBlock ();
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
 			ccall.add_argument (new CCodeIdentifier ("priv"));
-			ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("klass"), "priv"));
+			ccall.add_argument (new CCodeIdentifier ("parent_priv"));
 			ccall.add_argument (new CCodeIdentifier ("sizeof (%sClassPrivate)".printf(cl.get_cname())));
 			iftrue.add_statement (new CCodeExpressionStatement (ccall));
 
-			block.add_statement (new CCodeIfStatement (new CCodeMemberAccess.pointer (new CCodeIdentifier ("klass"), "priv"), iftrue));
+			block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("parent_priv"), iftrue));
 
-			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("klass"), "priv"), new CCodeIdentifier ("priv"))));
-
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_set_qdata"));
+			ccall2 = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_CLASS"));
+			ccall2.add_argument (new CCodeIdentifier ("klass"));
+			ccall.add_argument (ccall2);
+			ccall.add_argument (new CCodeIdentifier ("_vala_%s_class_private_quark".printf (cl.get_lower_case_cname ())));
+			ccall.add_argument (new CCodeIdentifier ("priv"));
+			block.add_statement (new CCodeExpressionStatement (ccall));
 
 			init_block.add_statement (block);
 
+			block = new CCodeBlock ();
+			cdecl = new CCodeDeclaration ("%sClassPrivate *".printf (cl.get_cname ()));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("priv"));
+			block.add_statement (cdecl);
+
+			ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (cl.get_upper_case_cname (null))));
+			ccall2 = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_CLASS"));
+			ccall2.add_argument (new CCodeIdentifier ("klass"));
+			ccall.add_argument (ccall2);
+			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("priv"), ccall)));
+
 			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 			ccall.add_argument (new CCodeIdentifier ("%sClassPrivate".printf (cl.get_cname ())));
-			ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("klass"), "priv"));
-			base_finalize_fragment.append (new CCodeExpressionStatement (ccall));
-			base_finalize_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("klass"), "priv"), new CCodeIdentifier ("NULL"))));
+			ccall.add_argument (new CCodeIdentifier ("priv"));
+			block.add_statement (new CCodeExpressionStatement (ccall));
+			base_finalize_fragment.append (block);
 		}
 
 		init_block.add_statement (base_init_fragment);
@@ -872,7 +910,11 @@ public class Vala.GObjectModule : GTypeModule {
 			CCodeExpression left;
 
 			if (field.access == SymbolAccessibility.PRIVATE) {
-				left = new CCodeMemberAccess (new CCodeMemberAccess (new CCodeIdentifier ("klass"), "priv", true), field.get_cname (), true);
+				ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_GET_CLASS_PRIVATE".printf (cl.get_upper_case_cname ())));
+				var ccall2 = new CCodeFunctionCall (new CCodeIdentifier ("G_TYPE_FROM_CLASS"));
+				ccall2.add_argument (new CCodeIdentifier ("klass"));
+				ccall.add_argument (ccall2);
+				left = new CCodeMemberAccess (ccall, field.get_cname (), true);
 			} else {
 				left = new CCodeMemberAccess (new CCodeIdentifier ("klass"), field.get_cname (), true);
 			}
