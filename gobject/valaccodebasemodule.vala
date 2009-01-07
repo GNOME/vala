@@ -54,6 +54,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public CCodeFragment source_type_member_definition;
 	public CCodeFragment class_init_fragment;
 	public CCodeFragment base_init_fragment;
+	public CCodeFragment class_finalize_fragment;
 	public CCodeFragment base_finalize_fragment;
 	public CCodeFragment instance_init_fragment;
 	public CCodeFragment instance_finalize_fragment;
@@ -1289,6 +1290,12 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		current_method_inner_error = false;
 
 		d.accept_children (codegen);
+
+		if (d.binding == MemberBinding.STATIC && !in_plugin) {
+			Report.error (d.source_reference, "static destructors are only supported for dynamic types");
+			d.error = true;
+			return;
+		}
 
 		CCodeFragment cfrag = new CCodeFragment ();
 

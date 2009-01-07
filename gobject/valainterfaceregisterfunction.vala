@@ -48,7 +48,11 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 	public override string get_base_init_func_name () {
 		return "%s_base_init".printf (interface_reference.get_lower_case_cname (null));
 	}
-	
+
+	public override string get_class_finalize_func_name () {
+		return "NULL";
+	}
+
 	public override string get_base_finalize_func_name () {
 		return "NULL";
 	}

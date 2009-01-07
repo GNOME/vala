@@ -1,5 +1,18 @@
 2009-01-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* vala/valaparser.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaclassregisterfunction.vala:
+	* gobject/valagobjectmodule.vala:
+	* gobject/valainterfaceregisterfunction.vala:
+	* gobject/valatyperegisterfunction.vala:
+
+	Add support for static destructors, patch by Sebastian Dröge,
+	fixes bug 564011
+
+2009-01-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/taglib_c.vapi:
 
 	Update to taglib_c 1.5, patch by Andreas Brauchli, fixes bug 566919

@@ -108,7 +108,7 @@ public abstract class Vala.TypeRegisterFunction {
 		if (get_type_declaration () is ObjectTypeSymbol) {
 			var ctypedecl = new CCodeDeclaration ("const GTypeInfo");
 			ctypedecl.modifiers = CCodeModifiers.STATIC;
-			ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) %s, (GBaseFinalizeFunc) %s, (GClassInitFunc) %s, (GClassFinalizeFunc) NULL, NULL, %s, 0, (GInstanceInitFunc) %s, %s }".printf (get_type_struct_name (), get_base_init_func_name (), get_base_finalize_func_name (), get_class_init_func_name (), get_instance_struct_size (), get_instance_init_func_name (), type_value_table_decl_name))));
+			ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) %s, (GBaseFinalizeFunc) %s, (GClassInitFunc) %s, (GClassFinalizeFunc) %s, NULL, %s, 0, (GInstanceInitFunc) %s, %s }".printf (get_type_struct_name (), get_base_init_func_name (), (plugin) ? get_base_finalize_func_name () : "NULL", get_class_init_func_name (), get_class_finalize_func_name (), get_instance_struct_size (), get_instance_init_func_name (), type_value_table_decl_name))));
 			type_init.add_statement (ctypedecl);
 			if (fundamental) {
 				var ctypefundamentaldecl = new CCodeDeclaration ("const GTypeFundamentalInfo");
@@ -228,6 +228,15 @@ public abstract class Vala.TypeRegisterFunction {
 	 * @return C function name
 	 */
 	public virtual string get_base_init_func_name () {
+		assert_not_reached ();
+	}
+
+	/**
+	 * Returns the name of the class_finalize function in C code.
+	 *
+	 * @return C function name
+	 */
+	public virtual string get_class_finalize_func_name () {
 		assert_not_reached ();
 	}
 

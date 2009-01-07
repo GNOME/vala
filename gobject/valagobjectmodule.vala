@@ -43,6 +43,7 @@ public class Vala.GObjectModule : GTypeModule {
 		var old_prop_enum = prop_enum;
 		var old_class_init_fragment = class_init_fragment;
 		var old_base_init_fragment = base_init_fragment;
+		var old_class_finalize_fragment = class_finalize_fragment;
 		var old_base_finalize_fragment = base_finalize_fragment;
 		var old_instance_init_fragment = instance_init_fragment;
 		var old_instance_finalize_fragment = instance_finalize_fragment;
@@ -69,6 +70,7 @@ public class Vala.GObjectModule : GTypeModule {
 		prop_enum.add_value (new CCodeEnumValue ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null))));
 		class_init_fragment = new CCodeFragment ();
 		base_init_fragment = new CCodeFragment ();
+		class_finalize_fragment = new CCodeFragment ();
 		base_finalize_fragment = new CCodeFragment ();
 		instance_init_fragment = new CCodeFragment ();
 		instance_finalize_fragment = new CCodeFragment ();
@@ -215,6 +217,10 @@ public class Vala.GObjectModule : GTypeModule {
 				add_base_finalize_function (cl);
 			}
 
+			if (cl.static_destructor != null) {
+				add_class_finalize_function (cl);
+			}
+
 			foreach (DataType base_type in cl.get_base_types ()) {
 				if (base_type.data_type is Interface) {
 					add_interface_init_function (cl, (Interface) base_type.data_type);
@@ -349,6 +355,7 @@ public class Vala.GObjectModule : GTypeModule {
 		prop_enum = old_prop_enum;
 		class_init_fragment = old_class_init_fragment;
 		base_init_fragment = old_base_init_fragment;
+		class_finalize_fragment = old_class_finalize_fragment;
 		base_finalize_fragment = old_base_finalize_fragment;
 		instance_init_fragment = old_instance_init_fragment;
 		instance_finalize_fragment = old_instance_finalize_fragment;
@@ -1198,6 +1205,25 @@ public class Vala.GObjectModule : GTypeModule {
 		init_block.add_statement (instance_init_fragment);
 
 		source_type_member_definition.append (instance_init);
+	}
+
+	private void add_class_finalize_function (Class cl) {
+		var function = new CCodeFunction ("%s_class_finalize".printf (cl.get_lower_case_cname (null)), "void");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("klass", cl.get_cname () + "Class *"));
+		source_type_member_declaration.append (function.copy ());
+		
+		var cblock = new CCodeBlock ();
+
+		if (cl.class_destructor != null) {
+			cblock.add_statement (cl.class_destructor.ccodenode);
+		}
+
+		cblock.add_statement (class_finalize_fragment);
+
+		function.block = cblock;
+		source_type_member_definition.append (function);
 	}
 
 	private void add_base_finalize_function (Class cl) {

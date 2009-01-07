@@ -2018,7 +2018,7 @@ public class Vala.Parser : CodeVisitor {
 		} else if (sym is Destructor) {
 			var d = (Destructor) sym;
 			if (d.binding == MemberBinding.STATIC) {
-				Report.error (sym.source_reference, "static destructors not supported yet");
+				cl.static_destructor = (Destructor) d;
 			} else if (d.binding == MemberBinding.CLASS) {
 				cl.class_destructor = (Destructor) d;
 			} else {
