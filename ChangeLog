@@ -1,5 +1,11 @@
 2009-01-07  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasymbolresolver.vala:
+
+	Fix critical when using invalid `using' directive
+
+2009-01-07  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valagerrormodule.vala:
 
 	Handle errors that occur within a try block but are not handled

@@ -1,6 +1,7 @@
 /* valasymbolresolver.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -210,7 +211,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			}
 			if (sym == null) {
 				foreach (UsingDirective ns in current_using_directives) {
-					if (ns.error) {
+					if (ns.error || ns.namespace_symbol is UnresolvedSymbol) {
 						continue;
 					}
 
