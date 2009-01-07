@@ -102,7 +102,6 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 		if (current_try != null) {
 			// surrounding try found
-			// TODO might be the wrong one when using nested try statements
 
 			var cerror_block = new CCodeBlock ();
 
@@ -127,8 +126,9 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 					cerror_block.add_statement (new CCodeIfStatement (ccond, cgoto_block));
 				}
 			}
-			// print critical message if no catch clause matches
-			cerror_block.add_statement (cprint_frag);
+
+			// go to finally clause if no catch clause matches
+			cerror_block.add_statement (new CCodeGotoStatement ("__finally%d".printf (current_try_id)));
 
 			// check error domain if expression failed
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression ("inner_error"), new CCodeConstant ("NULL"));
@@ -171,6 +171,12 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 
 			// print critical message
 			cerror_block.add_statement (cprint_frag);
+
+			if (current_return_type is VoidType) {
+				cerror_block.add_statement (new CCodeReturnStatement ());
+			} else if (current_return_type != null) {
+				cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type, false)));
+			}
 
 			// check error domain if expression failed
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression ("inner_error"), new CCodeConstant ("NULL"));
@@ -220,10 +226,11 @@ public class Vala.GErrorModule : CCodeDelegateModule {
 		cfrag.append (new CCodeLabel ("__finally%d".printf (this_try_id)));
 		if (stmt.finally_body != null) {
 			cfrag.append (stmt.finally_body.ccodenode);
-		} else {
-			// avoid gcc error: label at end of compound statement
-			cfrag.append (new CCodeEmptyStatement ());
 		}
+
+		// check for errors not handled by this try statement
+		// may be handled by outer try statements or propagated
+		add_simple_check (stmt, cfrag);
 
 		stmt.ccodenode = cfrag;
 	}

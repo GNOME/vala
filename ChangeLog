@@ -1,5 +1,12 @@
 2009-01-07  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valagerrormodule.vala:
+
+	Handle errors that occur within a try block but are not handled
+	by a catch clause, fixes bug 533929
+
+2009-01-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/taglib_c.vapi:
 
 	Fix TagLib_AudioProperties binding, patch by Andreas Brauchli,
