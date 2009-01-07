@@ -3458,9 +3458,10 @@ namespace Gtk {
 		public virtual signal void text_popped (uint context_id, string text);
 		public virtual signal void text_pushed (uint context_id, string text);
 	}
-	[Compact]
 	[CCode (copy_function = "gtk_stock_item_copy", cheader_filename = "gtk/gtk.h")]
-	public class StockItem {
+	public struct StockItem {
+		[CCode (cname = "gtk_stock_lookup")]
+		public static bool lookup(string stock_id, StockItem item);
 		public uint keyval;
 		public weak string label;
 		public Gdk.ModifierType modifier;

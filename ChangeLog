@@ -1,3 +1,11 @@
+2009-01-07  Étienne BERSAC  <bersace03@laposte.net>
+
+	* vapi/gtk+-2.0.vapi:
+
+	Use struct instead of compact class for GtkStockItem.
+
+	Added binding for gtk_stock_lookup().
+
 2009-01-07  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaclass.vala:
