@@ -1,3 +1,9 @@
+2009-01-08  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valadelegate.vala:
+
+	Visit declared error types to resolve symbols
+
 2009-01-07  Jürg Billeter  <j@bitron.ch>
 
 	* configure.ac: Post-release version bump

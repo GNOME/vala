@@ -193,6 +193,10 @@ public class Vala.Delegate : TypeSymbol {
 		foreach (FormalParameter param in parameters) {
 			param.accept (visitor);
 		}
+
+		foreach (DataType error_type in get_error_types ()) {
+			error_type.accept (visitor);
+		}
 	}
 
 	public override string get_cname (bool const_type = false) {
