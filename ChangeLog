@@ -1,3 +1,11 @@
+2009-01-07  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gtk+-2.0/:
+
+	Fix GtkStockItem binding
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
 2009-01-07  Étienne BERSAC  <bersace03@laposte.net>
 
 	* vapi/gtk+-2.0.vapi:

@@ -3458,17 +3458,6 @@ namespace Gtk {
 		public virtual signal void text_popped (uint context_id, string text);
 		public virtual signal void text_pushed (uint context_id, string text);
 	}
-	[CCode (copy_function = "gtk_stock_item_copy", cheader_filename = "gtk/gtk.h")]
-	public struct StockItem {
-		[CCode (cname = "gtk_stock_lookup")]
-		public static bool lookup(string stock_id, StockItem item);
-		public uint keyval;
-		public weak string label;
-		public Gdk.ModifierType modifier;
-		public weak string stock_id;
-		public weak string translation_domain;
-		public unowned Gtk.StockItem copy ();
-	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Style : GLib.Object {
 		public int attach_count;
@@ -5564,6 +5553,16 @@ namespace Gtk {
 		public int width;
 		public int height;
 		public Gtk.Requisition copy ();
+		public void free ();
+	}
+	[CCode (type_id = "GTK_TYPE_STOCK_ITEM", cheader_filename = "gtk/gtk.h")]
+	public struct StockItem {
+		public weak string stock_id;
+		public weak string label;
+		public Gdk.ModifierType modifier;
+		public uint keyval;
+		public weak string translation_domain;
+		public Gtk.StockItem copy ();
 		public void free ();
 	}
 	[CCode (type_id = "GTK_TYPE_TARGET_ENTRY", cheader_filename = "gtk/gtk.h")]
