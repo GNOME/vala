@@ -1,5 +1,11 @@
 2009-01-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/taglib_c.vapi:
+
+	Update to taglib_c 1.5, patch by Andreas Brauchli, fixes bug 566919
+
+2009-01-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/gobject-2.0.vapi:
 
 	Fix g_object_class_find_property binding,

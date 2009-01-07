@@ -1,6 +1,6 @@
 /* taglib_c.vapi
  *
- * Copyright (C) 2008 Andreas Brauchli
+ * Copyright (C) 2009 Andreas Brauchli
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,71 +23,96 @@
 [CCode (cprefix = "TagLib_", lower_case_cprefix = "taglib_", cheader_filename = "tag_c.h")]
 namespace TagLib
 {
-	[CCode (free_function = "taglib_file_free", lower_case_cprefix = "taglib_file_")]
+	public static void set_strings_unicode (bool unicode);
+	/* TagLib can keep track of strings that are created when outputting tag values
+	 * and clear them using taglib_tag_clear_strings().  This is enabled by default.
+	 * However if you wish to do more fine grained management of strings, you can do
+	 * so by setting a management to FALSE.
+	 */
+	public static void set_string_management_enabled (bool management);
+
+	[CCode (free_function = "taglib_file_free")]
 	[Compact]
 	public class File
 	{
-		[CCode (cname = "taglib_file_new")]
 		public File (string filename);
-
-		[CCode (cname = "taglib_file_new_type")]
 		public File.type (string filename, FileType type);
 
-		public Tag tag();
-		public AudioProperties audioproperties(); //FIXME: should be assigned to a const TagLib_Audio_Properties*
-		public int save();
+		public bool is_valid ();
+		public unowned Tag tag {
+			[CCode (cname = "taglib_file_tag")]
+			get;
+		}
+		public /*immutable*/ unowned AudioProperties audioproperties {
+			[CCode (cname = "taglib_file_audioproperties")]
+			get;
+		}
+		public bool save ();
 	}
 
-	[CCode (free_function = "", lower_case_cprefix = "taglib_tag_")]
+	[CCode (free_function = "")]
 	[Compact]
 	public class Tag
 	{
-		public weak string title();
-		public weak string artist();
-		public weak string album();
-		public weak string comment();
-		public weak string genre();
-		public uint year();
-		public uint track();
+		public unowned string title {
+			[CCode (cname = "taglib_tag_title")]
+			get;
+			set;
+		}
+		public unowned string artist {
+			[CCode (cname = "taglib_tag_artist")]
+			get;
+			set;
+		}
+		public unowned string album {
+			[CCode (cname = "taglib_tag_album")]
+			get;
+			set;
+		}
+		public unowned string comment {
+			[CCode (cname = "taglib_tag_comment")]
+			get;
+			set;
+		}
+		public unowned string genre {
+			[CCode (cname = "taglib_tag_genre")]
+			get;
+			set;
+		}
+		public uint year {
+			[CCode (cname = "taglib_tag_year")]
+			get;
+			set;
+		}
+		public uint track {
+			[CCode (cname = "taglib_tag_track")]
+			get;
+			set;
+		}
 
-		public void set_title(string title);
-		public void set_artist(string artist);
-		public void set_album(string album);
-		public void set_comment(string comment);
-		public void set_genre(string genre);
-		public void set_year(uint year);
-		public void set_track(uint track);
+		public static void free_strings ();
 	}
 
-	[CCode (free_function = "", cname = "TagLib_AudioProperties", cprefix = "taglib_audioproperties_")]
+	[CCode (free_function = "", cname = "TagLib_AudioProperties")]
 	[Compact]
 	public class AudioProperties
 	{
-		public int length ();
-		public int bitrate ();
-		public int samplerate ();
-		public int channels ();
-	}
-
-	namespace TagLib
-	{
-		/* By default all strings coming into or out of TagLib's C API are in UTF8.
-		 * However, it may be desirable for TagLib to operate on Latin1 (ISO-8859-1)
-		 * strings in which case this should be set to FALSE.
-		 */
-		[CCode (cname = "taglib_set_strings_unicode")]
-		public static void set_strings_unicode (int unicode);
-
-		/* TagLib can keep track of strings that are created when outputting tag values
-		 * and clear them using taglib_tag_clear_strings().  This is enabled by default.
-		 * However if you wish to do more fine grained management of strings, you can do
-		 * so by setting a management to FALSE.
-		 */
-		[CCode (cname = "taglib_set_string_management_enabled")]
-		public static void set_string_management_enabled (int management);
-
-		[CCode (cname = "taglib_tag_free_strings")]
-		public static void free_strings ();
+		public int length {
+			[CCode (cname = "taglib_audioproperties_length")]
+			get;
+		}
+		public int bitrate {
+			[CCode (cname = "taglib_audioproperties_bitrate")]
+			get;
+		}
+		public int samplerate {
+			[CCode (cname = "taglib_audioproperties_samplerate")]
+			get;
+		}
+		public int channels {
+			[CCode (cname = "taglib_audioproperties_channels")]
+			get;
+		}
 	}
 
 	[CCode (cname = "TagLib_File_Type", cprefix = "TagLib_File_")]
@@ -96,7 +121,24 @@ namespace TagLib
 		MPEG,
 		OggVorbis,
 		FLAC,
-		MPC
+		MPC,
+		OggFlac,
+		WavPack,
+		Speex,
+		TrueAudio
+	}
+
+	namespace ID3v2 {
+		[CCode (cname = "taglib_id3v2_set_default_text_encoding")]
+		public void set_default_text_encoding (Encoding encoding);
+
+		[CCode (cname = "TagLib_ID3v2_Encoding", cprefix = "TagLib_ID3v2_")]
+		public enum Encoding {
+			Latin1,
+			UTF16,
+			UTF16BE,
+			UTF8
+		}
 	}
 }
 
