@@ -154,7 +154,7 @@ namespace GLib {
 
 	[CCode (lower_case_csuffix = "object_class")]
 	public class ObjectClass : TypeClass {
-		public weak ParamSpec find_property (string property_name);
+		public weak ParamSpec? find_property (string property_name);
 		public weak ParamSpec[] list_properties ();
 		public void install_property (uint property_id, ParamSpec pspec);
 	}

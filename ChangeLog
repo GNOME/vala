@@ -1,5 +1,12 @@
 2009-01-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/gobject-2.0.vapi:
+
+	Fix g_object_class_find_property binding,
+	patch by Zeeshan Ali Khattak, fixes bug 566889
+
+2009-01-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala:
 	* vala/valainterface.vala:
 	* vala/valastruct.vala:
