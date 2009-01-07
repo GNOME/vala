@@ -1,3 +1,15 @@
+Vala 0.5.4
+==========
+
+ * Support array initializers as expressions.
+ * Support += to efficiently append elements to arrays.
+ * Calculate length for null-terminated arrays.
+ * Support initializers for multi-dimensional arrays.
+ * Add `owned' keyword to replace `#'.
+ * Various fixes in coroutine support.
+ * Support boxed structs as GObject properties.
+ * Many bug fixes.
+
 Vala 0.5.3
 ==========
 
