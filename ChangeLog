@@ -1,5 +1,12 @@
 2009-01-07  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/taglib_c.vapi:
+
+	Fix TagLib_AudioProperties binding, patch by Andreas Brauchli,
+	fixes bug 566919
+
+2009-01-07  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix GtkStockItem binding

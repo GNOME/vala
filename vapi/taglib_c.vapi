@@ -43,7 +43,7 @@ namespace TagLib
 			[CCode (cname = "taglib_file_tag")]
 			get;
 		}
-		public /*immutable*/ unowned AudioProperties audioproperties {
+		public unowned AudioProperties audioproperties {
 			[CCode (cname = "taglib_file_audioproperties")]
 			get;
 		}
@@ -95,6 +95,7 @@ namespace TagLib
 
 	[CCode (free_function = "", cname = "TagLib_AudioProperties")]
 	[Compact]
+	[Immutable]
 	public class AudioProperties
 	{
 		public int length {
