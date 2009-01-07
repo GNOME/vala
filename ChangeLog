@@ -1,5 +1,11 @@
 2009-01-07  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+
+	Fix critical when using immutable classes without copy function
+
+2009-01-07  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valasymbolresolver.vala:
 
 	Fix critical when using invalid `using' directive

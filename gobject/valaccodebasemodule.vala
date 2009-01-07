@@ -1619,6 +1619,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			} else if (cl != null && cl.is_immutable) {
 				// allow duplicates of immutable instances as for example strings
 				dup_function = type.data_type.get_dup_function ();
+				if (dup_function == null) {
+					dup_function = "";
+				}
 			} else if (type is ValueType) {
 				dup_function = type.data_type.get_dup_function ();
 				if (dup_function == null && type.nullable) {
