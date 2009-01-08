@@ -1,5 +1,13 @@
 2009-01-08  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_selection_data_set_uris binding, fixes bug 566742
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2009-01-08  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valadelegate.vala:
 
 	Visit declared error types to resolve symbols

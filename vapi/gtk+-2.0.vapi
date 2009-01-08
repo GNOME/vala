@@ -3148,7 +3148,7 @@ namespace Gtk {
 		public void set (Gdk.Atom type, int format, uchar[] data);
 		public bool set_pixbuf (Gdk.Pixbuf pixbuf);
 		public bool set_text (string str, int len);
-		public bool set_uris (string uris);
+		public bool set_uris ([CCode (array_length = false)] string[] uris);
 		public bool targets_include_image (bool writable);
 		public bool targets_include_rich_text (Gtk.TextBuffer buffer);
 		public bool targets_include_text ();
