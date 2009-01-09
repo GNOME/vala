@@ -1,5 +1,12 @@
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* tests/Makefile.am:
+	* tests/basic-types/integers.test:
+
+	Improve integer tests
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodemethodmodule.vala:
 
 	Fix error handling in try statements nested across method

@@ -15,8 +15,8 @@ noinst_PROGRAMS = \
 TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) $(srcdir)/testrunner.sh
 
 TESTS = \
-	basic-types/floats.test \
 	basic-types/integers.test \
+	basic-types/floats.test \
 	basic-types/strings.test \
 	basic-types/test-027.test \
 	namespaces.test \
