@@ -1,6 +1,7 @@
 /* valaccodedelegatemodule.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -123,14 +124,13 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 				var ma = (MemberAccess) delegate_expr;
 
-				var base_type = ma.inner.value_type;
 				CCodeExpression target_expr = null;
 
-				var pub_inst = (CCodeExpression) get_ccodenode (ma.inner);
-
 				if (field.binding == MemberBinding.INSTANCE) {
-					var instance_expression_type = base_type;
+					var instance_expression_type = ma.inner.value_type;
 					var instance_target_type = get_data_type_for_symbol ((TypeSymbol) field.parent_symbol);
+
+					var pub_inst = (CCodeExpression) get_ccodenode (ma.inner);
 					CCodeExpression typed_inst = transform_expression (pub_inst, instance_expression_type, instance_target_type);
 
 					CCodeExpression inst;

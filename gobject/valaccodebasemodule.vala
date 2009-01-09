@@ -3581,7 +3581,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public CCodeExpression? default_value_for_type (DataType type, bool initializer_expression) {
-		if ((type.data_type != null && type.data_type.is_reference_type ()) || type is PointerType || type is ArrayType) {
+		if ((type.data_type != null && type.data_type.is_reference_type ())
+		    || type is PointerType || type is ArrayType || type is DelegateType) {
 			return new CCodeConstant ("NULL");
 		} else if (type.data_type != null && type.data_type.get_default_value () != null) {
 			return new CCodeConstant (type.data_type.get_default_value ());

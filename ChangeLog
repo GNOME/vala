@@ -1,5 +1,13 @@
 2009-01-10  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodedelegatemodule.vala:
+
+	Fix critical and generated code for static delegate fields,
+	fixes bug 563016
+
+2009-01-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valafield.vala:
 
 	Report error when field type is less accessible than field
