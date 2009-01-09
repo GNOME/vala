@@ -1324,9 +1324,9 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface URIHandler {
-		public abstract unowned string get_protocols ();
+		public abstract unowned string[] get_protocols ();
 		[NoWrapper]
-		public abstract unowned string get_protocols_full (GLib.Type type);
+		public abstract unowned string[] get_protocols_full (GLib.Type type);
 		[NoWrapper]
 		public abstract Gst.URIType get_type ();
 		[NoWrapper]

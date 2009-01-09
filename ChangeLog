@@ -2,6 +2,14 @@
 
 	* vapi/packages/gstreamer-0.10/:
 
+	Fix gst_uri_handler_get_protocols* bindings, fixes bug 566375
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gstreamer-0.10/:
+
 	Fix gst_object_get_name, gst_object_get_name_prefix, and
 	gst_object_get_path_string bindings, fixes bug 566353
 
