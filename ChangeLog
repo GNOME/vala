@@ -1,5 +1,14 @@
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodearraymodule.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodemethodcallmodule.vala:
+
+	Fix critical in compiled applications using null-terminated arrays,
+	fixes bug 567025
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* ccode/valaccodevariabledeclarator.vala:
 	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodecontrolflowmodule.vala:

@@ -145,7 +145,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				var param = (FormalParameter) array_expr.symbol_reference;
 				if (param.array_null_terminated) {
 					var carray_expr = get_variable_cexpression (param.name);
-					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+					requires_array_length = true;
+					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 					len_call.add_argument (carray_expr);
 					return len_call;
 				} else if (!param.no_array_length) {
@@ -198,7 +199,8 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 						carray_expr = new CCodeIdentifier (field.get_cname ());
 					}
 
-					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+					requires_array_length = true;
+					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 					len_call.add_argument (carray_expr);
 					return len_call;
 				} else if (!field.no_array_length) {
@@ -466,6 +468,38 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		czeroblock2.add_statement (new CCodeExpressionStatement (czero2));
 
 		fun.block.add_statement (new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, src, dest), czeroblock1, czeroblock2));
+
+		source_type_member_definition.append (fun);
+	}
+
+	public override void append_vala_array_length () {
+		var fun = new CCodeFunction ("_vala_array_length", "gint");
+		fun.modifiers = CCodeModifiers.STATIC;
+		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
+		source_type_member_declaration.append (fun.copy ());
+
+		var block = new CCodeBlock ();
+
+		var len_decl = new CCodeDeclaration ("int");
+		len_decl.add_declarator (new CCodeVariableDeclarator ("length", new CCodeConstant ("0")));
+		block.add_statement (len_decl);
+
+		var non_null_block = new CCodeBlock ();
+
+		var while_body = new CCodeBlock ();
+		while_body.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("length"))));
+
+		var array_element_check = new CCodeElementAccess (new CCodeCastExpression (new CCodeIdentifier ("array"), "gpointer*"), new CCodeConstant ("length"));
+		non_null_block.add_statement (new CCodeWhileStatement (array_element_check, while_body));
+
+		// return 0 if the array is NULL
+		// avoids an extra NULL check on the caller side
+		var array_check = new CCodeIdentifier ("array");
+		block.add_statement (new CCodeIfStatement (array_check, non_null_block));
+
+		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("length")));
+
+		fun.block = block;
 
 		source_type_member_definition.append (fun);
 	}

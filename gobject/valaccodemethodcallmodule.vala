@@ -371,7 +371,8 @@ public class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 					ccall_expr = new CCodeAssignment (temp_ref, ccall_expr);
 
-					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+					requires_array_length = true;
+					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
 					len_call.add_argument (temp_ref);
 
 					expr.append_array_size (len_call);

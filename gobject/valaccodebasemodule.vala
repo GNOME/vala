@@ -140,6 +140,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public bool requires_free_checked;
 	public bool requires_array_free;
 	public bool requires_array_move;
+	public bool requires_array_length;
 	public bool requires_strcmp0;
 	public bool dbus_glib_h_needed;
 	public bool dbus_glib_h_needed_in_header;
@@ -234,6 +235,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public virtual void append_vala_array_move () {
 	}
 
+	public virtual void append_vala_array_length () {
+	}
+
 	private void append_vala_strcmp0 () {
 		var fun = new CCodeFunction ("_vala_strcmp0", "int");
 		fun.modifiers = CCodeModifiers.STATIC;
@@ -299,6 +303,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		requires_free_checked = false;
 		requires_array_free = false;
 		requires_array_move = false;
+		requires_array_length = false;
 		requires_strcmp0 = false;
 
 		wrappers = new HashSet<string> (str_hash, str_equal);
@@ -381,6 +386,9 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		}
 		if (requires_array_move) {
 			append_vala_array_move ();
+		}
+		if (requires_array_length) {
+			append_vala_array_length ();
 		}
 		if (requires_strcmp0) {
 			append_vala_strcmp0 ();
