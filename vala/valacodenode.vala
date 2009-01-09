@@ -1,6 +1,6 @@
 /* valacodenode.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -188,5 +188,9 @@ public abstract class Vala.CodeNode {
 
 	public string get_temp_name () {
 		return "." + (++last_temp_nr).to_string ();
+	}
+
+	public weak string get_type_name () {
+		return Type.from_instance (this).name ();
 	}
 }

@@ -1,6 +1,7 @@
 /* gobject-2.0.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  * Copyright (C) 2007  Mathias Hasselmann
  *
  * This library is free software; you can redistribute it and/or
@@ -47,7 +48,10 @@ namespace GLib {
 		public bool is_interface ();
 		[CCode (cname = "G_TYPE_IS_VALUE_TYPE")]
 		public bool is_value_type ();
-		
+
+		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
+		public static Type from_instance (void* instance);
+
 		public Type[] children ();
 		public uint depth ();
 		public static Type from_name (string name);

@@ -1,5 +1,15 @@
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodenode.vala:
+
+	Add CodeNode.get_type_name method
+
+	* vapi/gobject-2.0.vapi:
+
+	Add G_TYPE_FROM_INSTANCE binding
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-netbuffer-0.10/:
 
 	Fix GstNetAddress binding, fixes bug 564924
