@@ -1,5 +1,13 @@
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-netbuffer-0.10/:
+
+	Fix GstNetAddress binding, fixes bug 564924
+
+	* vapi/gstreamer-netbuffer-0.10.vapi: regenerated
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-base-0.10/:
 
 	Fix gst_base_transform_get_unit_size bindings, fixes bug 565978
