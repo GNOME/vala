@@ -1,5 +1,12 @@
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasemanticanalyzer.vala:
+
+	Fix memory leak when retrieving values from property getters
+	returning owned values, fixes bug 564081
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodememberaccessmodule.vala:
 
 	Do not free values returned via g_object_get prematurely, require

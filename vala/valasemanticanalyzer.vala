@@ -1,6 +1,7 @@
 /* valasemanticanalyzer.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -163,7 +164,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			var prop = (Property) sym;
 			if (prop.property_type != null) {
 				var type = prop.property_type.copy ();
-				type.value_owned = false;
+				if (lvalue) {
+					// setters never take ownership
+					type.value_owned = false;
+				}
 				return type;
 			}
 		} else if (sym is FormalParameter) {
