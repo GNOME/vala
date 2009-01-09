@@ -2354,7 +2354,20 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_real_literal (RealLiteral expr) {
-		expr.ccodenode = new CCodeConstant (expr.value);
+		string c_literal = expr.value;
+		if (c_literal.has_suffix ("d") || c_literal.has_suffix ("D")) {
+			// there is no suffix for double in C
+			c_literal = c_literal.substring (0, c_literal.length - 1);
+		}
+		if (!("." in c_literal || "e" in c_literal || "E" in c_literal)) {
+			// C requires period or exponent part for floating constants
+			if ("f" in c_literal || "F" in c_literal) {
+				c_literal = c_literal.substring (0, c_literal.length - 1) + ".f";
+			} else {
+				c_literal += ".";
+			}
+		}
+		expr.ccodenode = new CCodeConstant (c_literal);
 	}
 
 	public override void visit_string_literal (StringLiteral expr) {

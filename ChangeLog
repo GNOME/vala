@@ -1,5 +1,16 @@
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valascanner.vala:
+	* gobject/valaccodebasemodule.vala:
+
+	Fix some type suffix issues with real literals
+
+	* tests/basic-types/floats.test:
+
+	Improve float tests
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* tests/Makefile.am:
 	* tests/basic-types/integers.test:
 
