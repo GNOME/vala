@@ -1,6 +1,6 @@
 /* valalambdaexpression.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -160,6 +160,10 @@ public class Vala.LambdaExpression : Expression {
 			error = true;
 			Report.error (source_reference, "lambda expression: too many parameters");
 			return false;
+		}
+
+		foreach (var error_type in cb.get_error_types ()) {
+			method.add_error_type (error_type.copy ());
 		}
 
 		if (expression_body != null) {

@@ -1,5 +1,11 @@
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valalambdaexpression.vala:
+
+	Support lambda expressions throwing errors, fixes bug 563018
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 
 	Do not allow empty enums and errordomains, fixes bug 543564
