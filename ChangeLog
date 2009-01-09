@@ -1,3 +1,9 @@
+2009-01-10  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valafield.vala:
+
+	Report error when field type is less accessible than field
+
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valasemanticanalyzer.vala:
