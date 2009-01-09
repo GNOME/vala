@@ -2477,7 +2477,8 @@ public class Vala.Parser : CodeVisitor {
 
 		expect (TokenType.OPEN_BRACE);
 		do {
-			if (current () == TokenType.CLOSE_BRACE) {
+			if (current () == TokenType.CLOSE_BRACE
+			    && en.get_values ().size > 0) {
 				// allow trailing comma
 				break;
 			}
@@ -2534,7 +2535,8 @@ public class Vala.Parser : CodeVisitor {
 
 		expect (TokenType.OPEN_BRACE);
 		do {
-			if (current () == TokenType.CLOSE_BRACE) {
+			if (current () == TokenType.CLOSE_BRACE
+			    && ed.get_codes ().size > 0) {
 				// allow trailing comma
 				break;
 			}

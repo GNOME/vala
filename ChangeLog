@@ -1,5 +1,11 @@
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala:
+
+	Do not allow empty enums and errordomains, fixes bug 543564
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaflowanalyzer.vala:
 
 	Perform flow analysis on code in creation methods, fixes bug 566000
