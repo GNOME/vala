@@ -202,8 +202,8 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					ccall.add_argument (pub_inst);
 				}
 
-				// Property acesses to real struct types are handeled different to other properties.
-				// They are returned as out parameter.
+				// Property access to real struct types is handled differently
+				// The value is returned by out parameter
 				if (base_property.property_type.is_real_struct_type ()) {
 					var ccomma = new CCodeCommaExpression ();
 					var temp_var = get_temp_variable (base_property.property_type);
@@ -218,33 +218,21 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 			} else {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
-			
-				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
-				ccast.add_argument (pub_inst);
-				ccall.add_argument (ccast);
+				ccall.add_argument (pub_inst);
 
 				// property name is second argument of g_object_get
 				ccall.add_argument (prop.get_canonical_cconstant ());
 
 				// g_object_get always returns owned values
-				var temp_type = expr.value_type.copy ();
-				temp_type.value_owned = true;
+				// therefore, property getters of properties
+				// without accessor methods need to be marked as owned
 
-				// we need a temporary variable to save the property value
-				var temp_var = get_temp_variable (expr.value_type);
-				temp_vars.insert (0, temp_var);
-
-				if (requires_destroy (temp_type)) {
-					temp_ref_vars.insert (0, temp_var);
-				}
-
-				var ctemp = new CCodeIdentifier (temp_var.name);
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
-				
-				
-				ccall.add_argument (new CCodeConstant ("NULL"));
-				
 				var ccomma = new CCodeCommaExpression ();
+				var temp_var = get_temp_variable (expr.value_type);
+				var ctemp = new CCodeIdentifier (temp_var.name);
+				temp_vars.add (temp_var);
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
+				ccall.add_argument (new CCodeConstant ("NULL"));
 				ccomma.append_expression (ccall);
 				ccomma.append_expression (ctemp);
 				expr.ccodenode = ccomma;
