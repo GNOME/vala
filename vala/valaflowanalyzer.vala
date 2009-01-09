@@ -1,6 +1,6 @@
 /* valaflowanalyzer.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -465,6 +465,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		LocalVariable versioned_var = new LocalVariable (var_symbol.variable_type, var_symbol.name, null, var_symbol.source_reference);
 		variable_stack.add (versioned_var);
 		return versioned_var;
+	}
+
+	public override void visit_creation_method (CreationMethod m) {
+		visit_method (m);
 	}
 
 	public override void visit_property (Property prop) {
