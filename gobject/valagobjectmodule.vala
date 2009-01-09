@@ -133,7 +133,7 @@ public class Vala.GObjectModule : GTypeModule {
 			if (cl.has_class_private_fields) {
 				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_priv_struct.name), new CCodeVariableDeclarator ("%sClassPrivate".printf (cl.get_cname ()))));
 				var cdecl = new CCodeDeclaration ("GQuark");
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_vala_%s_class_private_quark".printf (cl.get_lower_case_cname ()), new CCodeConstant ("0")));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("_vala_%s_class_private_quark".printf (cl.get_lower_case_cname ()), new CCodeConstant ("0")));
 				cdecl.modifiers = CCodeModifiers.STATIC;
 				decl_frag.append (cdecl);
 			}
@@ -272,7 +272,7 @@ public class Vala.GObjectModule : GTypeModule {
 				var unref_block = new CCodeBlock ();
 
 				var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", new CCodeIdentifier ("instance")));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("self", new CCodeIdentifier ("instance")));
 				ref_block.add_statement (cdecl);
 				unref_block.add_statement (cdecl);
 
@@ -449,7 +449,7 @@ public class Vala.GObjectModule : GTypeModule {
 		var init_block = new CCodeBlock ();
 
 		var ctypedecl = new CCodeDeclaration (cl.get_cname () + "**");
-		ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("object_p", new CCodeMemberAccess (new CCodeIdentifier ("collect_values[0]"),"v_pointer")));
+		ctypedecl.add_declarator (new CCodeVariableDeclarator ("object_p", new CCodeMemberAccess (new CCodeIdentifier ("collect_values[0]"),"v_pointer")));
 		init_block.add_statement (ctypedecl);
 
 		var value_type_name_fct = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_TYPE_NAME"));
@@ -509,7 +509,7 @@ public class Vala.GObjectModule : GTypeModule {
 		var obj_identifier = new CCodeIdentifier ("object");
 
 		var ctypedecl = new CCodeDeclaration (cl.get_cname () + "*");
-		ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("object", collect_vpointer));
+		ctypedecl.add_declarator (new CCodeVariableDeclarator ("object", collect_vpointer));
 		true_stmt.add_statement (ctypedecl);
 
 		var l_expression = new CCodeMemberAccess (new CCodeMemberAccess.pointer (obj_identifier, "parent_instance"), "g_class");
@@ -738,7 +738,7 @@ public class Vala.GObjectModule : GTypeModule {
 			cdecl.add_declarator (new CCodeVariableDeclarator ("priv"));
 			block.add_statement (cdecl);
 			cdecl = new CCodeDeclaration ("%sClassPrivate *".printf (cl.get_cname ()));
-			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("parent_priv", new CCodeConstant ("NULL")));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("parent_priv", new CCodeConstant ("NULL")));
 			block.add_statement (cdecl);
 			cdecl = new CCodeDeclaration ("GType");
 			cdecl.add_declarator (new CCodeVariableDeclarator ("parent_type"));
@@ -1264,7 +1264,7 @@ public class Vala.GObjectModule : GTypeModule {
 		CCodeFunctionCall ccall = new InstanceCast (new CCodeIdentifier ("obj"), cl);
 
 		var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("self", ccall));
 		
 		cblock.add_statement (cdecl);
 
@@ -1319,7 +1319,7 @@ public class Vala.GObjectModule : GTypeModule {
 		
 		CCodeFunctionCall ccall = new InstanceCast (new CCodeIdentifier ("object"), cl);
 		var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("self", ccall));
 		block.add_statement (cdecl);
 
 		cdecl = new CCodeDeclaration ("gpointer");
@@ -1401,7 +1401,7 @@ public class Vala.GObjectModule : GTypeModule {
 		
 		CCodeFunctionCall ccall = new InstanceCast (new CCodeIdentifier ("object"), cl);
 		var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("self", ccall));
 		block.add_statement (cdecl);
 		
 		var cswitch = new CCodeSwitchStatement (new CCodeIdentifier ("property_id"));
@@ -1775,7 +1775,7 @@ public class Vala.GObjectModule : GTypeModule {
 			ccall = new InstanceCast (new CCodeIdentifier ("obj"), cl);
 
 			cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
-			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("self", ccall));
 			cblock.add_statement (cdecl);
 
 			if (current_method_inner_error) {
@@ -1783,7 +1783,7 @@ public class Vala.GObjectModule : GTypeModule {
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
 				cdecl = new CCodeDeclaration ("GError *");
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("inner_error", new CCodeConstant ("NULL")));
 				cblock.add_statement (cdecl);
 			}
 
@@ -1812,7 +1812,7 @@ public class Vala.GObjectModule : GTypeModule {
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
 				var cdecl = new CCodeDeclaration ("GError *");
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("inner_error", new CCodeConstant ("NULL")));
 				base_init_fragment.append (cdecl);
 			}
 
@@ -1832,7 +1832,7 @@ public class Vala.GObjectModule : GTypeModule {
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
 				var cdecl = new CCodeDeclaration ("GError *");
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("inner_error", new CCodeConstant ("NULL")));
 				class_init_fragment.append (cdecl);
 			}
 

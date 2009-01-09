@@ -104,7 +104,7 @@ public class Vala.GTypeModule : GErrorModule {
 		base_init.block = new CCodeBlock ();
 		var decl = new CCodeDeclaration (bool_type.get_cname ());
 		decl.modifiers |= CCodeModifiers.STATIC;
-		decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("initialized", new CCodeConstant ("FALSE")));
+		decl.add_declarator (new CCodeVariableDeclarator ("initialized", new CCodeConstant ("FALSE")));
 		base_init.block.add_statement (decl);
 		var cif = new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, new CCodeIdentifier ("initialized")), init_block);
 		base_init.block.add_statement (cif);

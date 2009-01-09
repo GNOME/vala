@@ -77,7 +77,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 					var cdecl = new CCodeDeclaration (gquark_type.get_cname ());
 
 					cdecl.modifiers = CCodeModifiers.STATIC;
-					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (cname, czero));
+					cdecl.add_declarator (new CCodeVariableDeclarator (cname, czero));
 
 					cswitchblock.append (cdecl);
 				}
@@ -287,7 +287,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (collection_backup.name), (CCodeExpression) stmt.collection.ccodenode)));
 		} else {
 			var ccoldecl = new CCodeDeclaration (collection_type.get_cname ());
-			var ccolvardecl = new CCodeVariableDeclarator.with_initializer (collection_backup.name, (CCodeExpression) stmt.collection.ccodenode);
+			var ccolvardecl = new CCodeVariableDeclarator (collection_backup.name, (CCodeExpression) stmt.collection.ccodenode);
 			ccolvardecl.line = cblock.line;
 			ccoldecl.add_declarator (ccolvardecl);
 			cblock.add_statement (ccoldecl);
@@ -311,7 +311,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (collection_backup.name, 1)), array_len)));
 			} else {
 				var clendecl = new CCodeDeclaration ("int");
-				clendecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (collection_backup.name, 1), array_len));
+				clendecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (collection_backup.name, 1), array_len));
 				cblock.add_statement (clendecl);
 			}
 
@@ -343,7 +343,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr)));
 			} else {
 				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr));
+				cdecl.add_declarator (new CCodeVariableDeclarator (stmt.variable_name, element_expr));
 				cbody.add_statement (cdecl);
 			}
 
@@ -356,7 +356,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 						cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (stmt.variable_name, dim)), new CCodeConstant ("-1"))));
 					} else {
 						var cdecl = new CCodeDeclaration ("int");
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
+						cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (stmt.variable_name, dim), new CCodeConstant ("-1")));
 						cbody.add_statement (cdecl);
 					}
 				}
@@ -410,7 +410,7 @@ public class Vala.CCodeControlFlowModule : CCodeMethodModule {
 				cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr)));
 			} else {
 				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
-				var cvardecl = new CCodeVariableDeclarator.with_initializer (stmt.variable_name, element_expr);
+				var cvardecl = new CCodeVariableDeclarator (stmt.variable_name, element_expr);
 				cvardecl.line = cblock.line;
 				cdecl.add_declarator (cvardecl);
 				cbody.add_statement (cdecl);

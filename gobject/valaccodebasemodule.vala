@@ -672,7 +672,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		clist_ev.append (new CCodeConstant ("NULL"));
 		clist.append (clist_ev);
 
-		var enum_decl = new CCodeVariableDeclarator.with_initializer ("values[]", clist);
+		var enum_decl = new CCodeVariableDeclarator ("values[]", clist);
 
 		CCodeDeclaration cdecl = null;
 		if (en.is_flags) {
@@ -694,7 +694,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		cdecl = new CCodeDeclaration ("GType");
 		string type_id_name = "%s_type_id".printf (en.get_lower_case_cname (null));
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (type_id_name, new CCodeConstant ("0")));
+		cdecl.add_declarator (new CCodeVariableDeclarator (type_id_name, new CCodeConstant ("0")));
 		cdecl.modifiers = CCodeModifiers.STATIC;
 		regblock.add_statement (cdecl);
 
@@ -774,7 +774,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			if (c.type_reference is ArrayType) {
 				arr = "[]";
 			}
-			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s%s".printf (c.get_cname (), arr), (CCodeExpression) c.initializer.ccodenode));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("%s%s".printf (c.get_cname (), arr), (CCodeExpression) c.initializer.ccodenode));
 			cdecl.modifiers = CCodeModifiers.STATIC;
 		
 			if (!c.is_internal_symbol ()) {
@@ -937,7 +937,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					}
 
 					var len_def = new CCodeDeclaration (len_type.get_cname ());
-					len_def.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_length_cname (f.get_cname (), dim), new CCodeConstant ("0")));
+					len_def.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (f.get_cname (), dim), new CCodeConstant ("0")));
 					if (!f.is_internal_symbol ()) {
 						len_def.modifiers = CCodeModifiers.EXTERN;
 					} else {
@@ -950,7 +950,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					var len_type = int_type.copy ();
 
 					var cdecl = new CCodeDeclaration (len_type.get_cname ());
-					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (head.get_array_size_cname (f.get_cname ()), new CCodeConstant ("0")));
+					cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_size_cname (f.get_cname ()), new CCodeConstant ("0")));
 					cdecl.modifiers = CCodeModifiers.STATIC;
 					source_type_member_declaration.append (cdecl);
 				}
@@ -967,7 +967,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					}
 
 					var target_def = new CCodeDeclaration ("gpointer");
-					target_def.add_declarator (new CCodeVariableDeclarator.with_initializer (get_delegate_target_cname  (f.get_cname ()), new CCodeConstant ("NULL")));
+					target_def.add_declarator (new CCodeVariableDeclarator (get_delegate_target_cname  (f.get_cname ()), new CCodeConstant ("NULL")));
 					if (!f.is_internal_symbol ()) {
 						target_def.modifiers = CCodeModifiers.EXTERN;
 					} else {
@@ -1242,13 +1242,13 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 			if (is_virtual) {
 				var cdecl = new CCodeDeclaration (this_type.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", transform_expression (new CCodeIdentifier ("base"), base_type, this_type)));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("self", transform_expression (new CCodeIdentifier ("base"), base_type, this_type)));
 				function.block.prepend_statement (cdecl);
 			}
 
 			if (current_method_inner_error) {
 				var cdecl = new CCodeDeclaration ("GError *");
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("inner_error", new CCodeConstant ("NULL")));
 				function.block.prepend_statement (cdecl);
 			}
 
@@ -1301,7 +1301,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		if (current_method_inner_error) {
 			var cdecl = new CCodeDeclaration ("GError *");
-			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("inner_error", new CCodeConstant ("NULL")));
 			cfrag.append (cdecl);
 		}
 
@@ -1514,7 +1514,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (local.name)), rhs)));
 			}
 		} else {
-			var cvar = new CCodeVariableDeclarator.with_initializer (get_variable_cname (local.name), rhs);
+			var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), rhs);
 
 			var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
 			cdecl.add_declarator (cvar);

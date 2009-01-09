@@ -212,7 +212,7 @@ public class Vala.GSignalModule : GObjectModule {
 		
 		var_decl = new CCodeDeclaration ("GCClosure *");
 		var_decl.modifiers = CCodeModifiers.REGISTER;
-		var_decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("cc", new CCodeCastExpression (new CCodeIdentifier ("closure"), "GCClosure *")));
+		var_decl.add_declarator (new CCodeVariableDeclarator ("cc", new CCodeCastExpression (new CCodeIdentifier ("closure"), "GCClosure *")));
 		marshaller_body.add_statement (var_decl);
 		
 		var_decl = new CCodeDeclaration ("gpointer");

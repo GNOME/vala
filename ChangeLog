@@ -1,5 +1,23 @@
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* ccode/valaccodevariabledeclarator.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodecontrolflowmodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+	* gobject/valaclassregisterfunction.vala:
+	* gobject/valadbusclientmodule.vala:
+	* gobject/valadbusmodule.vala:
+	* gobject/valadbusservermodule.vala:
+	* gobject/valagerrormodule.vala:
+	* gobject/valagobjectmodule.vala:
+	* gobject/valagsignalmodule.vala:
+	* gobject/valagtypemodule.vala:
+	* gobject/valatyperegisterfunction.vala:
+
+	Simplify CCodeVariableDeclarator construction with initializer
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/gsl.vapi:
 
 	Fix gsl_error_set_error_handler binding

@@ -265,7 +265,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						CCodeExpression cself = transform_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
 
 						var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", cself));
+						cdecl.add_declarator (new CCodeVariableDeclarator ("self", cself));
 					
 						cinit.append (cdecl);
 					} else if (m.binding == MemberBinding.INSTANCE
@@ -308,7 +308,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						// no initialization necessary, closure struct is zeroed
 					} else {
 						var cdecl = new CCodeDeclaration ("GError *");
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("inner_error", new CCodeConstant ("NULL")));
+						cdecl.add_declarator (new CCodeVariableDeclarator ("inner_error", new CCodeConstant ("NULL")));
 						cinit.append (cdecl);
 					}
 				}
@@ -331,11 +331,11 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 							cparamsinit.add_argument (new CCodeConstant ((n_params + 3 * current_class.get_type_parameters ().size).to_string ()));
 						
 							var cdecl = new CCodeDeclaration ("GParameter *");
-							cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params", cparamsinit));
+							cdecl.add_declarator (new CCodeVariableDeclarator ("__params", cparamsinit));
 							cinit.append (cdecl);
 						
 							cdecl = new CCodeDeclaration ("GParameter *");
-							cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("__params_it", new CCodeIdentifier ("__params")));
+							cdecl.add_declarator (new CCodeVariableDeclarator ("__params_it", new CCodeIdentifier ("__params")));
 							cinit.append (cdecl);
 						}
 
@@ -394,7 +394,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 						var cdecl = new CCodeDeclaration (cl.get_cname () + "*");
 						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
 						ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("self", ccall));
+						cdecl.add_declarator (new CCodeVariableDeclarator ("self", ccall));
 						cinit.append (cdecl);
 
 						var cinitcall = new CCodeFunctionCall (new CCodeIdentifier ("%s_instance_init".printf (cl.get_lower_case_cname (null))));
@@ -729,7 +729,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		} else {
 			/* store method return value for postconditions */
 			var cdecl = new CCodeDeclaration (get_creturn_type (m, return_type.get_cname ()));
-			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("result", vcall));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("result", vcall));
 			cstmt = cdecl;
 		}
 		cstmt.line = vfunc.line;

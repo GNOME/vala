@@ -126,7 +126,7 @@ public class Vala.DBusClientModule : DBusModule {
 			cb_fun.add_parameter (new CCodeFormalParameter ("user_data", "void*"));
 			cb_fun.block = new CCodeBlock ();
 			var cerrdecl = new CCodeDeclaration ("GError*");
-			cerrdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("error", new CCodeConstant ("NULL")));
+			cerrdecl.add_declarator (new CCodeVariableDeclarator ("error", new CCodeConstant ("NULL")));
 			cb_fun.block.add_statement (cerrdecl);
 			var cend_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_end_call"));
 			cend_call.add_argument (new CCodeIdentifier ("proxy"));
@@ -234,7 +234,7 @@ public class Vala.DBusClientModule : DBusModule {
 						array_construct.add_argument (sizeof_call);
 					}
 
-					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("dbus_%s".printf (param.name), array_construct));
+					cdecl.add_declarator (new CCodeVariableDeclarator ("dbus_%s".printf (param.name), array_construct));
 					block.add_statement (cdecl);
 
 					if (dbus_use_ptr_array (array_type)) {
@@ -268,7 +268,7 @@ public class Vala.DBusClientModule : DBusModule {
 				array_construct.add_argument (new CCodeConstant ("0"));
 
 				var cdecl = new CCodeDeclaration ("GValueArray*");
-				cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("dbus_%s".printf (param.name), array_construct));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("dbus_%s".printf (param.name), array_construct));
 				block.add_statement (cdecl);
 
 				var type_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_struct"));
@@ -286,7 +286,7 @@ public class Vala.DBusClientModule : DBusModule {
 					cvalinit.append (new CCodeConstant ("0"));
 
 					var cval_decl = new CCodeDeclaration ("GValue");
-					cval_decl.add_declarator (new CCodeVariableDeclarator.with_initializer (val_name, cvalinit));
+					cval_decl.add_declarator (new CCodeVariableDeclarator (val_name, cvalinit));
 					block.add_statement (cval_decl);
 
 					var val_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (val_name));
@@ -607,7 +607,7 @@ public class Vala.DBusClientModule : DBusModule {
 		prop_proxy_call.add_argument (new CCodeConstant ("NULL"));
 
 		var prop_proxy_decl = new CCodeDeclaration ("DBusGProxy*");
-		prop_proxy_decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("property_proxy", prop_proxy_call));
+		prop_proxy_decl.add_declarator (new CCodeVariableDeclarator ("property_proxy", prop_proxy_call));
 		block.add_statement (prop_proxy_decl);
 	}
 
@@ -619,7 +619,7 @@ public class Vala.DBusClientModule : DBusModule {
 		cvalinit.append (new CCodeConstant ("0"));
 
 		var cval_decl = new CCodeDeclaration ("GValue");
-		cval_decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("gvalue", cvalinit));
+		cval_decl.add_declarator (new CCodeVariableDeclarator ("gvalue", cvalinit));
 		block.add_statement (cval_decl);
 
 		var val_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("gvalue"));
@@ -674,7 +674,7 @@ public class Vala.DBusClientModule : DBusModule {
 		cvalinit.append (new CCodeConstant ("0"));
 
 		var cval_decl = new CCodeDeclaration ("GValue");
-		cval_decl.add_declarator (new CCodeVariableDeclarator.with_initializer ("gvalue", cvalinit));
+		cval_decl.add_declarator (new CCodeVariableDeclarator ("gvalue", cvalinit));
 		block.add_statement (cval_decl);
 
 		var val_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("gvalue"));
@@ -1018,7 +1018,7 @@ public class Vala.DBusClientModule : DBusModule {
 				if (array_type != null) {
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						cdecl = new CCodeDeclaration ("int");
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_%s_length%d".printf (param.name, dim), new CCodeConstant ("0")));
+						cdecl.add_declarator (new CCodeVariableDeclarator ("_%s_length%d".printf (param.name, dim), new CCodeConstant ("0")));
 						postfragment.append (cdecl);
 					}
 				}
@@ -1051,7 +1051,7 @@ public class Vala.DBusClientModule : DBusModule {
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					cdecl = new CCodeDeclaration ("int");
-					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_result_length%d".printf (dim), new CCodeConstant ("0")));
+					cdecl.add_declarator (new CCodeVariableDeclarator ("_result_length%d".printf (dim), new CCodeConstant ("0")));
 					postfragment.append (cdecl);
 				}
 			}

@@ -50,10 +50,10 @@ public abstract class Vala.TypeRegisterFunction {
 		CCodeDeclaration cdecl;
 		if (use_thread_safe) {
 			cdecl = new CCodeDeclaration ("gsize");
-			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (type_id_name + "__volatile", new CCodeConstant ("0")));
+			cdecl.add_declarator (new CCodeVariableDeclarator (type_id_name + "__volatile", new CCodeConstant ("0")));
 		} else {
 			cdecl = new CCodeDeclaration ("GType");
-			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (type_id_name, new CCodeConstant ("0")));
+			cdecl.add_declarator (new CCodeVariableDeclarator (type_id_name, new CCodeConstant ("0")));
 		}
 		cdecl.modifiers = CCodeModifiers.STATIC;
 		if (use_thread_safe) {
@@ -96,7 +96,7 @@ public abstract class Vala.TypeRegisterFunction {
 			var cgtypetabledecl = new CCodeDeclaration ("const GTypeValueTable");
 			cgtypetabledecl.modifiers = CCodeModifiers.STATIC;
 
-			cgtypetabledecl.add_declarator (new CCodeVariableDeclarator.with_initializer ( "g_define_type_value_table", new CCodeConstant ("{ %s, %s, %s, %s, \"p\", %s, \"p\", %s }".printf (get_gtype_value_table_init_function_name (), get_gtype_value_table_free_function_name (), get_gtype_value_table_copy_function_name (), get_gtype_value_table_peek_pointer_function_name (), get_gtype_value_table_collect_value_function_name (), get_gtype_value_table_lcopy_value_function_name ()))));
+			cgtypetabledecl.add_declarator (new CCodeVariableDeclarator ( "g_define_type_value_table", new CCodeConstant ("{ %s, %s, %s, %s, \"p\", %s, \"p\", %s }".printf (get_gtype_value_table_init_function_name (), get_gtype_value_table_free_function_name (), get_gtype_value_table_copy_function_name (), get_gtype_value_table_peek_pointer_function_name (), get_gtype_value_table_collect_value_function_name (), get_gtype_value_table_lcopy_value_function_name ()))));
 			type_value_table_decl_name = "&g_define_type_value_table";
 			type_init.add_statement ( cgtypetabledecl );
 		}
@@ -108,12 +108,12 @@ public abstract class Vala.TypeRegisterFunction {
 		if (get_type_declaration () is ObjectTypeSymbol) {
 			var ctypedecl = new CCodeDeclaration ("const GTypeInfo");
 			ctypedecl.modifiers = CCodeModifiers.STATIC;
-			ctypedecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) %s, (GBaseFinalizeFunc) %s, (GClassInitFunc) %s, (GClassFinalizeFunc) %s, NULL, %s, 0, (GInstanceInitFunc) %s, %s }".printf (get_type_struct_name (), get_base_init_func_name (), (plugin) ? get_base_finalize_func_name () : "NULL", get_class_init_func_name (), get_class_finalize_func_name (), get_instance_struct_size (), get_instance_init_func_name (), type_value_table_decl_name))));
+			ctypedecl.add_declarator (new CCodeVariableDeclarator ("g_define_type_info", new CCodeConstant ("{ sizeof (%s), (GBaseInitFunc) %s, (GBaseFinalizeFunc) %s, (GClassInitFunc) %s, (GClassFinalizeFunc) %s, NULL, %s, 0, (GInstanceInitFunc) %s, %s }".printf (get_type_struct_name (), get_base_init_func_name (), (plugin) ? get_base_finalize_func_name () : "NULL", get_class_init_func_name (), get_class_finalize_func_name (), get_instance_struct_size (), get_instance_init_func_name (), type_value_table_decl_name))));
 			type_init.add_statement (ctypedecl);
 			if (fundamental) {
 				var ctypefundamentaldecl = new CCodeDeclaration ("const GTypeFundamentalInfo");
 				ctypefundamentaldecl.modifiers = CCodeModifiers.STATIC;
-				ctypefundamentaldecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("g_define_type_fundamental_info", new CCodeConstant ("{ (G_TYPE_FLAG_CLASSED | G_TYPE_FLAG_INSTANTIATABLE | G_TYPE_FLAG_DERIVABLE | G_TYPE_FLAG_DEEP_DERIVABLE) }")));
+				ctypefundamentaldecl.add_declarator (new CCodeVariableDeclarator ("g_define_type_fundamental_info", new CCodeConstant ("{ (G_TYPE_FLAG_CLASSED | G_TYPE_FLAG_INSTANTIATABLE | G_TYPE_FLAG_DERIVABLE | G_TYPE_FLAG_DEEP_DERIVABLE) }")));
 				type_init.add_statement (ctypefundamentaldecl);
 			}
 		}
@@ -163,7 +163,7 @@ public abstract class Vala.TypeRegisterFunction {
 
 		if (use_thread_safe && !plugin) {
 			var temp_decl = new CCodeDeclaration ("GType");
-			temp_decl.add_declarator (new CCodeVariableDeclarator.with_initializer (type_id_name, reg_call));
+			temp_decl.add_declarator (new CCodeVariableDeclarator (type_id_name, reg_call));
 			type_init.add_statement (temp_decl);
 		} else {
 			type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (type_id_name), reg_call)));

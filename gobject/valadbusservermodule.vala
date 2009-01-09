@@ -80,7 +80,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		block.add_statement (cdecl);
 
 		cdecl = new CCodeDeclaration ("GError*");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("error", new CCodeConstant ("NULL")));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("error", new CCodeConstant ("NULL")));
 		block.add_statement (cdecl);
 
 		block.add_statement (prefragment);
@@ -112,7 +112,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (param.name, default_value_for_type (param.parameter_type, true)));
+			cdecl.add_declarator (new CCodeVariableDeclarator (param.name, default_value_for_type (param.parameter_type, true)));
 			prefragment.append (cdecl);
 			if (type_signature == ""
 			    && param.direction == ParameterDirection.IN
@@ -146,7 +146,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 					string length_cname = get_array_length_cname (param.name, dim);
 
 					cdecl = new CCodeDeclaration ("int");
-					cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (length_cname, new CCodeConstant ("0")));
+					cdecl.add_declarator (new CCodeVariableDeclarator (length_cname, new CCodeConstant ("0")));
 					prefragment.append (cdecl);
 					if (param.direction != ParameterDirection.IN) {
 						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
@@ -185,7 +185,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 						string length_cname = get_array_length_cname ("result", dim);
 
 						cdecl = new CCodeDeclaration ("int");
-						cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (length_cname, new CCodeConstant ("0")));
+						cdecl.add_declarator (new CCodeVariableDeclarator (length_cname, new CCodeConstant ("0")));
 						prefragment.append (cdecl);
 						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
 					}
@@ -265,7 +265,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		path.add_argument (new CCodeConstant ("\"dbus_object_path\""));
 
 		cdecl = new CCodeDeclaration ("const char *");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_path", path));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_path", path));
 		block.add_statement (cdecl);
 
 		cdecl = new CCodeDeclaration ("DBusMessage");
@@ -1127,7 +1127,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		cfunc.block = block;
 
 		var cdecl = new CCodeDeclaration ("DBusMessage*");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("reply", new CCodeConstant ("NULL")));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("reply", new CCodeConstant ("NULL")));
 		block.add_statement (cdecl);
 
 		CCodeIfStatement clastif = null;
@@ -1222,7 +1222,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		generate_register_function (object_type);
 
 		var cdecl = new CCodeDeclaration ("const _DBusObjectVTable");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_" + sym.get_lower_case_cprefix () + "dbus_vtable", vtable));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_" + sym.get_lower_case_cprefix () + "dbus_vtable", vtable));
 		cdecl.modifiers = CCodeModifiers.STATIC;
 		source_constant_declaration.append (cdecl);
 
@@ -1240,7 +1240,7 @@ public class Vala.DBusServerModule : DBusClientModule {
 		generate_message_function (object_type);
 
 		var cdecl = new CCodeDeclaration ("const DBusObjectPathVTable");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("_" + sym.get_lower_case_cprefix () + "dbus_path_vtable", vtable));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_" + sym.get_lower_case_cprefix () + "dbus_path_vtable", vtable));
 		cdecl.modifiers = CCodeModifiers.STATIC;
 		source_constant_declaration.append (cdecl);
 

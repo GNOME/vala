@@ -1,6 +1,6 @@
 /* valaccodevariabledeclarator.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,11 +36,7 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 	 */
 	public CCodeExpression? initializer { get; set; }
 
-	public CCodeVariableDeclarator (string name) {
-		this.name = name;
-	}
-
-	public CCodeVariableDeclarator.with_initializer (string name, CCodeExpression? initializer) {
+	public CCodeVariableDeclarator (string name, CCodeExpression? initializer = null) {
 		this.name = name;
 		this.initializer = initializer;
 	}

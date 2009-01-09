@@ -99,15 +99,15 @@ public class Vala.DBusModule : GAsyncModule {
 		string temp_name = "_tmp%d".printf (next_temp_var_id++);
 
 		var cdecl = new CCodeDeclaration (array_type.get_cname ());
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (temp_name, new CCodeConstant ("NULL")));
+		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name, new CCodeConstant ("NULL")));
 		fragment.append (cdecl);
 
 		cdecl = new CCodeDeclaration ("int");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (temp_name + "_length", new CCodeConstant ("0")));
+		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name + "_length", new CCodeConstant ("0")));
 		fragment.append (cdecl);
 
 		cdecl = new CCodeDeclaration ("int");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (temp_name + "_size", new CCodeConstant ("0")));
+		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name + "_size", new CCodeConstant ("0")));
 		fragment.append (cdecl);
 
 		read_array_dim (fragment, array_type, 1, temp_name, iter_expr, expr);
@@ -119,7 +119,7 @@ public class Vala.DBusModule : GAsyncModule {
 		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
 
 		var cdecl = new CCodeDeclaration ("int");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer ("%s_length%d".printf (temp_name, dim), new CCodeConstant ("0")));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("%s_length%d".printf (temp_name, dim), new CCodeConstant ("0")));
 		fragment.append (cdecl);
 
 		cdecl = new CCodeDeclaration ("DBusMessageIter");
@@ -215,7 +215,7 @@ public class Vala.DBusModule : GAsyncModule {
 		cvalinit.append (new CCodeConstant ("0"));
 
 		var cdecl = new CCodeDeclaration ("GValue");
-		cdecl.add_declarator (new CCodeVariableDeclarator.with_initializer (temp_name, cvalinit));
+		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name, cvalinit));
 		fragment.append (cdecl);
 
 		cdecl = new CCodeDeclaration ("DBusMessageIter");
