@@ -63,6 +63,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		bool old_method_inner_error = current_method_inner_error;
 		int old_next_temp_var_id = next_temp_var_id;
 		var old_variable_name_map = variable_name_map;
+		var old_try = current_try;
 		if (m.parent_symbol is TypeSymbol) {
 			current_type_symbol = (TypeSymbol) m.parent_symbol;
 		}
@@ -72,6 +73,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		current_method_inner_error = false;
 		next_temp_var_id = 0;
 		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
+		current_try = null;
 
 		bool in_gtypeinstance_creation_method = false;
 		bool in_gobject_creation_method = false;
@@ -163,6 +165,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		current_method_inner_error = old_method_inner_error;
 		next_temp_var_id = old_next_temp_var_id;
 		variable_name_map = old_variable_name_map;
+		current_try = old_try;
 
 		function = new CCodeFunction (m.get_real_cname (), get_creturn_type (m, creturn_type.get_cname ()));
 		m.ccodenode = function;

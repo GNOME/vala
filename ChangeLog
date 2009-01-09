@@ -1,5 +1,12 @@
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodemethodmodule.vala:
+
+	Fix error handling in try statements nested across method
+	boundaries (using lambda expressions)
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* compiler/valacompiler.vala:
 
 	Do not pass null as option to CCodeCompiler
