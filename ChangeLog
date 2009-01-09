@@ -1,5 +1,13 @@
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-base-0.10/:
+
+	Fix gst_base_transform_get_unit_size bindings, fixes bug 565978
+
+	* vapi/gstreamer-base-0.10.vapi: regenerated
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Fix gst_uri_handler_get_protocols* bindings, fixes bug 566375
