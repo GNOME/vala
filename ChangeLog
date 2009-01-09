@@ -1,3 +1,9 @@
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/gsl.vapi:
+
+	Fix gsl_error_set_error_handler binding
+
 2009-01-08  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gtk+-2.0/:
