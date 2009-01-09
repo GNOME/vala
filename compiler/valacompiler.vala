@@ -321,7 +321,7 @@ class Vala.Compiler {
 				cc_command = Environment.get_variable ("CC");
 			}
 			if (cc_options == null) {
-				ccompiler.compile (context, cc_command, new string[] { null });
+				ccompiler.compile (context, cc_command, new string[] { });
 			} else {
 				ccompiler.compile (context, cc_command, cc_options);
 			}

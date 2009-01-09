@@ -1,5 +1,11 @@
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* compiler/valacompiler.vala:
+
+	Do not pass null as option to CCodeCompiler
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodearraymodule.vala:
 	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodemethodcallmodule.vala:
