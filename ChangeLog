@@ -1,6 +1,13 @@
 2009-01-10  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodebasemodule.vala:
+
+	Use correct C type for set accessors of properties whose get
+	accessor returns owned value, fixes bug 538666
+
+2009-01-10  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodebasemodule.vala:
 	* gobject/valaccodedelegatemodule.vala:
 
 	Fix critical and generated code for static delegate fields,

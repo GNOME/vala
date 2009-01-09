@@ -1128,6 +1128,8 @@ public class Vala.CCodeBaseModule : CCodeModule {
 		if (returns_real_struct) {
 			cvalueparam = new CCodeFormalParameter ("value", value_type.get_cname () + "*");
 		} else {
+			// property setters never take ownership
+			value_type.value_owned = false;
 			cvalueparam = new CCodeFormalParameter ("value", value_type.get_cname ());
 		}
 
