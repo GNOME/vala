@@ -1,5 +1,12 @@
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaunaryexpression.vala:
+
+	Fix critical when trying to access instance member,
+	fixes bug 566337
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodenode.vala:
 
 	Add CodeNode.get_type_name method

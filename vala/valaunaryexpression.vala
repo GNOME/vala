@@ -154,6 +154,12 @@ public class Vala.UnaryExpression : Expression {
 			return false;
 		}
 
+		if (inner.value_type is FieldPrototype) {
+			error = true;
+			Report.error (inner.source_reference, "Access to instance member `%s' denied".printf (inner.symbol_reference.get_full_name ()));
+			return false;
+		}
+
 		if (operator == UnaryOperator.PLUS || operator == UnaryOperator.MINUS) {
 			// integer or floating point type
 			if (!is_numeric_type (inner.value_type)) {
