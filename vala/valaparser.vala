@@ -445,10 +445,24 @@ public class Vala.Parser : CodeVisitor {
 		var list = new ArrayList<Expression> ();
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
-				list.add (parse_expression ());
+				list.add (parse_argument ());
 			} while (accept (TokenType.COMMA));
 		}
 		return list;
+	}
+
+	Expression parse_argument () throws ParseError {
+		var begin = get_location ();
+
+		if (accept (TokenType.REF)) {
+			var inner = parse_expression ();
+			return new UnaryExpression (UnaryOperator.REF, inner, get_src (begin));
+		} else if (accept (TokenType.OUT)) {
+			var inner = parse_expression ();
+			return new UnaryExpression (UnaryOperator.OUT, inner, get_src (begin));
+		} else {
+			return parse_expression ();
+		}
 	}
 
 	Expression parse_primary_expression () throws ParseError {
@@ -777,8 +791,6 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.TILDE:  return UnaryOperator.BITWISE_COMPLEMENT;
 		case TokenType.OP_INC: return UnaryOperator.INCREMENT;
 		case TokenType.OP_DEC: return UnaryOperator.DECREMENT;
-		case TokenType.REF:    return UnaryOperator.REF;
-		case TokenType.OUT:    return UnaryOperator.OUT;
 		default:               return UnaryOperator.NONE;
 		}
 	}
@@ -2092,7 +2104,7 @@ public class Vala.Parser : CodeVisitor {
 		var initializer = new InitializerList (get_src (begin));
 		if (current () != TokenType.CLOSE_BRACE) {
 			do {
-				var init = parse_expression ();
+				var init = parse_argument ();
 				initializer.append (init);
 			} while (accept (TokenType.COMMA));
 		}

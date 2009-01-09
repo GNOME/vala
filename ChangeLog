@@ -1,5 +1,12 @@
 2009-01-09  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala:
+
+	Do not accept `ref' and `out' expressions outside of arguments,
+	fixes bug 548418
+
+2009-01-09  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valalambdaexpression.vala:
 
 	Support lambda expressions throwing errors, fixes bug 563018
