@@ -137,7 +137,7 @@ public abstract class Vala.CodeNode {
 	}
 
 	public virtual bool check (SemanticAnalyzer analyzer) {
-		return false;
+		return true;
 	}
 
 	public virtual void replace_type (DataType old_type, DataType new_type) {

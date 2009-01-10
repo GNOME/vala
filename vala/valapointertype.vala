@@ -1,6 +1,6 @@
 /* valapointertype.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -110,5 +110,10 @@ public class Vala.PointerType : DataType {
 
 	public override bool is_disposable () {
 		return false;
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		error = !base_type.check (analyzer);
+		return !error;
 	}
 }

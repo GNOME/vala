@@ -2198,8 +2198,10 @@ public class Vala.Parser : CodeVisitor {
 		var type = parse_type ();
 
 		bool getter_owned = false;
-		if (accept (TokenType.HASH) && !context.deprecated) {
-			Report.warning (get_last_src (), "deprecated syntax, use `owned` modifier before `get'");
+		if (accept (TokenType.HASH)) {
+			if (!context.deprecated) {
+				Report.warning (get_last_src (), "deprecated syntax, use `owned` modifier before `get'");
+			}
 			getter_owned = true;
 		}
 
