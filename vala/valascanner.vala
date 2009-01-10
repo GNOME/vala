@@ -859,15 +859,15 @@ public class Vala.Scanner {
 			return null;
 		}
 		
-		var result = new StringBuilder (_comment);
+		var result_builder = new StringBuilder (_comment);
 		_comment = null;
 		
 		weak string index;
-		while ((index = result.str.chr (-1, '\t')) != null) {
-			result.erase (result.str.pointer_to_offset (index), 1);
+		while ((index = result_builder.str.chr (-1, '\t')) != null) {
+			result_builder.erase (result_builder.str.pointer_to_offset (index), 1);
 		}
 		
-		return result.str;
+		return result_builder.str;
 	}
 }
 

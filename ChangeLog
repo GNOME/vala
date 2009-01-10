@@ -1,5 +1,18 @@
 2009-01-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valalocalvariable.vala:
+
+	Warn when using result variable with incompatible type to prepare
+	possible introduction of implicit result variable
+
+	* vala/valageniescanner.vala:
+	* vala/valascanner.vala:
+	* vala/valasymbol.vala:
+
+	Fix new warnings
+
+2009-01-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodecontext.vala:
 	* vala/valaobjectcreationexpression.vala:
 	* compiler/valacompiler.vala:

@@ -1,6 +1,6 @@
 /* valasymbol.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -205,7 +205,7 @@ public abstract class Vala.Symbol : CodeNode {
 	 * @return           the specified string converted to lower case
 	 */
 	public static string camel_case_to_lower_case (string camel_case) {
-		var result = new StringBuilder ("");
+		var result_builder = new StringBuilder ("");
 
 		weak string i = camel_case;
 
@@ -222,21 +222,21 @@ public abstract class Vala.Symbol : CodeNode {
 				if (!prev_upper || (i.len () >= 2 && !next_upper)) {
 					/* previous character wasn't upper case or
 					 * next character isn't upper case*/
-					long len = result.str.len ();
-					if (len != 1 && result.str.offset (len - 2).get_char () != '_') {
+					long len = result_builder.str.len ();
+					if (len != 1 && result_builder.str.offset (len - 2).get_char () != '_') {
 						/* we're not creating 1 character words */
-						result.append_c ('_');
+						result_builder.append_c ('_');
 					}
 				}
 			}
 			
-			result.append_unichar (c.tolower ());
+			result_builder.append_unichar (c.tolower ());
 			
 			first = false;
 			i = i.next_char ();
 		}
 		
-		return result.str;
+		return result_builder.str;
 	}
 
 	/**
@@ -246,7 +246,7 @@ public abstract class Vala.Symbol : CodeNode {
 	 * @return           the specified string converted to camel case
 	 */
 	public static string lower_case_to_camel_case (string lower_case) {
-		var result = new StringBuilder ("");
+		var result_builder = new StringBuilder ("");
 
 		weak string i = lower_case;
 
@@ -259,16 +259,16 @@ public abstract class Vala.Symbol : CodeNode {
 				// original string is not lower_case, don't apply transformation
 				return lower_case;
 			} else if (last_underscore) {
-				result.append_unichar (c.toupper ());
+				result_builder.append_unichar (c.toupper ());
 				last_underscore = false;
 			} else {
-				result.append_unichar (c);
+				result_builder.append_unichar (c);
 			}
 			
 			i = i.next_char ();
 		}
 
-		return result.str;
+		return result_builder.str;
 	}
 
 	// get the top scope from where this symbol is still accessible
