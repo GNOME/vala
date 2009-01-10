@@ -1,5 +1,13 @@
 2009-01-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* vala/valalocalvariable.vala:
+	* vala/valamethod.vala:
+
+	Fix compile errors when using postconditions
+
+2009-01-10  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusclientmodule.vala:
 
 	Use dbus-glib types for dynamic D-Bus signals, fixes bug 561545

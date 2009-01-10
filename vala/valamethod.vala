@@ -280,7 +280,7 @@ public class Vala.Method : Member {
 		}
 
 		if (result_var != null) {
-			result_var.variable_type.accept (visitor);
+			result_var.accept (visitor);
 		}
 
 		foreach (Expression precondition in preconditions) {
@@ -703,7 +703,7 @@ public class Vala.Method : Member {
 		}
 
 		if (result_var != null) {
-			result_var.variable_type.check (analyzer);
+			result_var.check (analyzer);
 		}
 
 		foreach (Expression precondition in preconditions) {

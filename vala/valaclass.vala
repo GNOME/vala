@@ -1,6 +1,6 @@
 /* valaclass.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -310,7 +310,6 @@ public class Vala.Class : ObjectTypeSymbol {
 				m.scope.remove (m.result_var.name);
 			}
 			m.result_var = new LocalVariable (m.return_type.copy (), "result");
-			m.scope.add (m.result_var.name, m.result_var);
 		}
 		if (m is CreationMethod) {
 			if (m.name == null) {

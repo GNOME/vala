@@ -192,8 +192,12 @@ public class Vala.LocalVariable : Symbol {
 
 		analyzer.current_symbol.scope.add (name, this);
 
-		var block = (Block) analyzer.current_symbol;
-		block.add_local_variable (this);
+		// current_symbol is a Method if this is the `result'
+		// variable used for postconditions
+		var block = analyzer.current_symbol as Block;
+		if (block != null) {
+			block.add_local_variable (this);
+		}
 
 		active = true;
 
