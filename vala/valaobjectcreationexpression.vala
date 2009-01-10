@@ -266,7 +266,7 @@ public class Vala.ObjectCreationExpression : Expression {
 
 			expected_num_type_args = st.get_type_parameters ().size;
 
-			if (!struct_creation) {
+			if (!struct_creation && !analyzer.context.deprecated) {
 				Report.warning (source_reference, "deprecated syntax, don't use `new' to initialize structs");
 			}
 

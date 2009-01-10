@@ -51,6 +51,16 @@ public class Vala.CodeContext {
 	public bool checking { get; set; }
 
 	/**
+	 * Do not warn when using deprecated features.
+	 */
+	public bool deprecated { get; set; }
+
+	/**
+	 * Do not warn when using experimental features.
+	 */
+	public bool experimental { get; set; }
+
+	/**
 	 * Enable experimental enhancements for non-null types.
 	 */
 	public bool non_null_experimental { get; set; }

@@ -1,6 +1,16 @@
 2009-01-10  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodecontext.vala:
+	* vala/valaobjectcreationexpression.vala:
+	* compiler/valacompiler.vala:
+
+	Add --enable-deprecated and --enable-experimental command-line
+	options to disable warnings when using deprecated and experimental
+	features, respectively
+
+2009-01-10  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodecontext.vala:
 	* vala/valaformalparameter.vala:
 	* vala/valareturnstatement.vala:
 	* vala/valasemanticanalyzer.vala:

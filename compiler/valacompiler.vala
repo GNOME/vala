@@ -46,6 +46,8 @@ class Vala.Compiler {
 	static bool thread;
 	static bool disable_assert;
 	static bool enable_checking;
+	static bool deprecated;
+	static bool experimental;
 	static bool non_null_experimental;
 	static bool disable_dbus_transformation;
 	static string cc_command;
@@ -72,6 +74,8 @@ class Vala.Compiler {
 		{ "thread", 0, 0, OptionArg.NONE, ref thread, "Enable multithreading support", null },
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
 		{ "enable-checking", 0, 0, OptionArg.NONE, ref enable_checking, "Enable additional run-time checks", null },
+		{ "enable-deprecated", 0, 0, OptionArg.NONE, ref deprecated, "Enable deprecated features", null },
+		{ "enable-experimental", 0, 0, OptionArg.NONE, ref experimental, "Enable experimental features", null },
 		{ "enable-non-null-experimental", 0, 0, OptionArg.NONE, ref non_null_experimental, "Enable experimental enhancements for non-null types", null },
 		{ "disable-dbus-transformation", 0, 0, OptionArg.NONE, ref disable_dbus_transformation, "Disable transformation of D-Bus member names", null },
 		{ "cc", 0, 0, OptionArg.STRING, ref cc_command, "Use COMMAND as C compiler command", "COMMAND" },
@@ -154,6 +158,8 @@ class Vala.Compiler {
 		context.library = library;
 		context.assert = !disable_assert;
 		context.checking = enable_checking;
+		context.deprecated = deprecated;
+		context.experimental = experimental;
 		context.non_null_experimental = non_null_experimental;
 		context.dbus_transformation = !disable_dbus_transformation;
 		Report.set_verbose_errors (!quiet_mode);
