@@ -1,6 +1,19 @@
 2009-01-10  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodewriter.vala:
+	* vapigen/valagidlparser.vala:
+
+	Support methods returning null-terminated arrays
+
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_selection_data_get_uris binding
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2009-01-10  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodewriter.vala:
 	* vala/valagenieparser.vala:
 	* vala/valamemberaccess.vala:
 	* vala/valaparser.vala:

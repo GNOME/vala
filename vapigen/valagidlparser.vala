@@ -1367,6 +1367,11 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						m.no_array_length = true;
 					}
+				} else if (nv[0] == "array_null_terminated") {
+					if (eval (nv[1]) == "1") {
+						m.no_array_length = true;
+						m.array_null_terminated = true;
+					}
 				} else if (nv[0] == "type_name") {
 					var sym = new UnresolvedSymbol (null, eval (nv[1]));
 					if (return_type is UnresolvedType) {
@@ -1513,6 +1518,11 @@ public class Vala.GIdlParser : CodeVisitor {
 					} else if (nv[0] == "no_array_length") {
 						if (eval (nv[1]) == "1") {
 							p.no_array_length = true;
+						}
+					} else if (nv[0] == "array_null_terminated") {
+						if (eval (nv[1]) == "1") {
+							p.no_array_length = true;
+							p.array_null_terminated = true;
 						}
 					} else if (nv[0] == "array_length_pos") {
 						set_array_length_pos = true;

@@ -868,6 +868,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			ccode_params.append_printf ("%sarray_length_pos = %g", separator, m.carray_length_parameter_position);
 			separator = ", ";
 		}
+		if (m.array_null_terminated && m.return_type is ArrayType) {
+			ccode_params.append_printf ("%sarray_null_terminated = true", separator);
+			separator = ", ";
+		}
 		if (!float_equal (m.cdelegate_target_parameter_position, -3)) {
 			ccode_params.append_printf ("%sdelegate_target_pos = %g", separator, m.cdelegate_target_parameter_position);
 			separator = ", ";
