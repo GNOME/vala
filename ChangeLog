@@ -1,5 +1,11 @@
 2009-01-10  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valadbusclientmodule.vala:
+
+	Use dbus-glib types for dynamic D-Bus signals, fixes bug 561545
+
+2009-01-10  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 
 	Use correct C type for set accessors of properties whose get

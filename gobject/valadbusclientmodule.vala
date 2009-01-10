@@ -163,12 +163,7 @@ public class Vala.DBusClientModule : DBusModule {
 					var cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
 					cdecl.add_declarator (new CCodeVariableDeclarator (param.name));
 					cb_fun.block.add_statement (cdecl);
-					if (param.parameter_type is ArrayType && ((ArrayType) param.parameter_type).element_type.data_type == string_type.data_type) {
-						// special case string array
-						cend_call.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
-					} else {
-						cend_call.add_argument (get_dbus_g_type (param.parameter_type));
-					}
+					cend_call.add_argument (get_dbus_g_type (param.parameter_type));
 					cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 					creply_call.add_argument (new CCodeIdentifier (param.name));
 
@@ -271,9 +266,6 @@ public class Vala.DBusClientModule : DBusModule {
 				cdecl.add_declarator (new CCodeVariableDeclarator ("dbus_%s".printf (param.name), array_construct));
 				block.add_statement (cdecl);
 
-				var type_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_struct"));
-				type_call.add_argument (new CCodeConstant ("\"GValueArray\""));
-
 				foreach (Field f in st.get_fields ()) {
 					if (f.binding != MemberBinding.INSTANCE) {
 						continue;
@@ -305,13 +297,9 @@ public class Vala.DBusClientModule : DBusModule {
 					cappend_call.add_argument (new CCodeIdentifier ("dbus_%s".printf (param.name)));
 					cappend_call.add_argument (val_ptr);
 					block.add_statement (new CCodeExpressionStatement (cappend_call));
-
-					type_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
 				}
 
-				type_call.add_argument (new CCodeConstant ("G_TYPE_INVALID"));
-
-				ccall.add_argument (type_call);
+				ccall.add_argument (get_dbus_g_type (param.parameter_type));
 				ccall.add_argument (new CCodeIdentifier ("dbus_%s".printf (param.name)));
 			} else {
 				ccall.add_argument (get_dbus_g_type (param.parameter_type));
@@ -341,9 +329,6 @@ public class Vala.DBusClientModule : DBusModule {
 				cdecl.add_declarator (new CCodeVariableDeclarator ("dbus_%s".printf (param.name)));
 				block.add_statement (cdecl);
 
-				var type_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_struct"));
-				type_call.add_argument (new CCodeConstant ("\"GValueArray\""));
-
 				int i = 0;
 				foreach (Field f in st.get_fields ()) {
 					if (f.binding != MemberBinding.INSTANCE) {
@@ -364,16 +349,13 @@ public class Vala.DBusClientModule : DBusModule {
 					var assign = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier (param.name), f.name), converted_value);
 					out_marshalling_fragment.append (new CCodeExpressionStatement (assign));
 
-					type_call.add_argument (new CCodeIdentifier (f.field_type.data_type.get_type_id ()));
 					i++;
 				}
 
-				type_call.add_argument (new CCodeConstant ("G_TYPE_INVALID"));
-
-				ccall.add_argument (type_call);
+				ccall.add_argument (get_dbus_g_type (param.parameter_type));
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("dbus_%s".printf (param.name))));
 			} else {
-				ccall.add_argument (new CCodeIdentifier (param.parameter_type.data_type.get_type_id ()));
+				ccall.add_argument (get_dbus_g_type (param.parameter_type));
 				ccall.add_argument (new CCodeIdentifier (param.name));
 			}
 		}
@@ -787,32 +769,8 @@ public class Vala.DBusClientModule : DBusModule {
 				continue;
 			}
 
-			var array_type = param.parameter_type as ArrayType;
-			if (array_type != null) {
-				if (array_type.element_type.data_type == string_type.data_type) {
-					register_call.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
-					add_call.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
-				} else {
-					if (array_type.element_type.data_type.get_type_id () == null) {
-						Report.error (param.source_reference, "unsupported parameter type for D-Bus signals");
-						return;
-					}
-
-					var carray_type = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_type_get_collection"));
-					carray_type.add_argument (new CCodeConstant ("\"GArray\""));
-					carray_type.add_argument (new CCodeIdentifier (array_type.element_type.data_type.get_type_id ()));
-					register_call.add_argument (carray_type);
-					add_call.add_argument (carray_type);
-				}
-			} else {
-				if (param.parameter_type.get_type_id () == null) {
-					Report.error (param.source_reference, "unsupported parameter type for D-Bus signals");
-					return;
-				}
-
-				register_call.add_argument (new CCodeIdentifier (param.parameter_type.get_type_id ()));
-				add_call.add_argument (new CCodeIdentifier (param.parameter_type.get_type_id ()));
-			}
+			register_call.add_argument (get_dbus_g_type (param.parameter_type));
+			add_call.add_argument (get_dbus_g_type (param.parameter_type));
 		}
 		register_call.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
 		add_call.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
