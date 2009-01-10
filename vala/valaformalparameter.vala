@@ -215,7 +215,7 @@ public class Vala.FormalParameter : Symbol {
 			}
 		}
 
-		if (analyzer.context.non_null && default_expression != null) {
+		if (default_expression != null) {
 			if (default_expression is NullLiteral
 			    && !parameter_type.nullable
 			    && direction != ParameterDirection.OUT) {

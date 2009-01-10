@@ -1,6 +1,6 @@
 /* valareturnstatement.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -132,7 +132,7 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 			Report.warning (source_reference, "Local variable with strong reference used as return value and method return type hasn't been declared to transfer ownership");
 		}
 
-		if (analyzer.context.non_null && return_expression is NullLiteral
+		if (return_expression is NullLiteral
 		    && !analyzer.current_return_type.nullable) {
 			Report.warning (source_reference, "`null' incompatible with return type `%s`".printf (analyzer.current_return_type.to_string ()));
 		}

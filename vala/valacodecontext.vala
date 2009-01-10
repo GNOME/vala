@@ -51,11 +51,6 @@ public class Vala.CodeContext {
 	public bool checking { get; set; }
 
 	/**
-	 * Enable non-null types.
-	 */
-	public bool non_null { get; set; }
-
-	/**
 	 * Enable experimental enhancements for non-null types.
 	 */
 	public bool non_null_experimental { get; set; }

@@ -415,7 +415,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (direction == ParameterDirection.REF) {
 					Report.error (arg.source_reference, "Argument %d: Cannot pass null to reference parameter".printf (i + 1));
 					return false;
-				} else if (context.non_null && direction != ParameterDirection.OUT && !arg.target_type.nullable) {
+				} else if (direction != ParameterDirection.OUT && !arg.target_type.nullable) {
 					Report.warning (arg.source_reference, "Argument %d: Cannot pass null to non-null parameter type".printf (i + 1));
 				}
 			} else if (arg_type == 1) {

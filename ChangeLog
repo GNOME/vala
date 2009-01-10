@@ -1,5 +1,17 @@
 2009-01-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodecontext.vala:
+	* vala/valaformalparameter.vala:
+	* vala/valareturnstatement.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodemethodmodule.vala:
+	* compiler/valacompiler.vala:
+
+	Remove --disable-non-null option after transition period
+	of 9 months
+
+2009-01-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaclass.vala:
 	* vala/valalocalvariable.vala:
 	* vala/valamethod.vala:

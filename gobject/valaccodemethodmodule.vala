@@ -288,7 +288,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 					var t = param.parameter_type.data_type;
 					if (t != null && t.is_reference_type ()) {
 						if (param.direction != ParameterDirection.OUT) {
-							var type_check = create_method_type_check_statement (m, creturn_type, t, (context.non_null && !param.parameter_type.nullable), param.name);
+							var type_check = create_method_type_check_statement (m, creturn_type, t, !param.parameter_type.nullable, param.name);
 							if (type_check != null) {
 								type_check.line = function.line;
 								cinit.append (type_check);
