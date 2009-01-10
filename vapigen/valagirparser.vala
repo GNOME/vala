@@ -1,6 +1,6 @@
 /* valagirparser.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -660,10 +660,10 @@ public class Vala.GirParser : CodeVisitor {
 		var prop = new Property (name, type, null, null, get_current_src ());
 		prop.access = SymbolAccessibility.PUBLIC;
 		if (readable != "0") {
-			prop.get_accessor = new PropertyAccessor (true, false, false, null, null);
+			prop.get_accessor = new PropertyAccessor (true, false, false, prop.property_type.copy (), null, null);
 		}
 		if (writable == "1" || construct_ == "1") {
-			prop.set_accessor = new PropertyAccessor (false, (writable == "1"), (construct_ == "1"), null, null);
+			prop.set_accessor = new PropertyAccessor (false, (writable == "1"), (construct_ == "1"), prop.property_type.copy (), null, null);
 		}
 		end_element ("property");
 		return prop;

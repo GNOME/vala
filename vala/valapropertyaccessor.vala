@@ -1,6 +1,6 @@
 /* valapropertyaccessor.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,6 +30,19 @@ public class Vala.PropertyAccessor : CodeNode {
 	 * The corresponding property.
 	 */
 	public weak Property prop { get; set; }
+
+	/**
+	 * The property type.
+	 */
+	public DataType? value_type {
+		get { return _value_type; }
+		set {
+			_value_type = value;
+			if (value != null) {
+				_value_type.parent_node = this;
+			}
+		}
+	}
 
 	/**
 	 * Specifies whether this accessor may be used to get the property.
@@ -89,6 +102,7 @@ public class Vala.PropertyAccessor : CodeNode {
 		}
 	}
 
+	private DataType _value_type;
 	private string? _cname;
 	
 	/**
@@ -101,10 +115,11 @@ public class Vala.PropertyAccessor : CodeNode {
 	 * @param source       reference to source code
 	 * @return             newly created property accessor
 	 */
-	public PropertyAccessor (bool readable, bool writable, bool construction, Block? body, SourceReference? source_reference) {
+	public PropertyAccessor (bool readable, bool writable, bool construction, DataType? value_type, Block? body, SourceReference? source_reference) {
 		this.readable = readable;
 		this.writable = writable;
 		this.construction = construction;
+		this.value_type = value_type;
 		this.body = body;
 		this.source_reference = source_reference;
 	}
@@ -114,6 +129,8 @@ public class Vala.PropertyAccessor : CodeNode {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
+		value_type.accept (visitor);
+
 		if (body != null) {
 			body.accept (visitor);
 		}
@@ -141,9 +158,14 @@ public class Vala.PropertyAccessor : CodeNode {
 
 		process_attributes ();
 
+		if (!value_type.check (analyzer)) {
+			error = true;
+			return false;
+		}
+
 		var old_return_type = analyzer.current_return_type;
 		if (readable) {
-			analyzer.current_return_type = prop.property_type;
+			analyzer.current_return_type = value_type;
 		} else {
 			// void
 			analyzer.current_return_type = new VoidType ();
@@ -170,7 +192,6 @@ public class Vala.PropertyAccessor : CodeNode {
 			}
 
 			if (body != null && (writable || construction)) {
-				var value_type = prop.property_type.copy ();
 				value_parameter = new FormalParameter ("value", value_type, source_reference);
 				body.scope.add (value_parameter.name, value_parameter);
 			}
@@ -183,5 +204,11 @@ public class Vala.PropertyAccessor : CodeNode {
 		analyzer.current_return_type = old_return_type;
 
 		return !error;
+	}
+
+	public override void replace_type (DataType old_type, DataType new_type) {
+		if (value_type == old_type) {
+			value_type = new_type;
+		}
 	}
 }

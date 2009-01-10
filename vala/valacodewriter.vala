@@ -952,20 +952,24 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("virtual ");
 		}
 
-		if (prop.property_type.value_owned) {
-			write_string ("owned ");
-		}
-
 		write_type (prop.property_type);
 
 		write_string (" ");
 		write_identifier (prop.name);
 		write_string (" {");
 		if (prop.get_accessor != null) {
+			if (prop.get_accessor.value_type.value_owned) {
+				write_string ("owned ");
+			}
+
 			write_string (" get");
 			write_code_block (prop.get_accessor.body);
 		}
 		if (prop.set_accessor != null) {
+			if (prop.set_accessor.value_type.value_owned) {
+				write_string ("owned ");
+			}
+
 			if (prop.set_accessor.writable) {
 				write_string (" set");
 			}

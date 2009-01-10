@@ -206,7 +206,7 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				// The value is returned by out parameter
 				if (base_property.property_type.is_real_struct_type ()) {
 					var ccomma = new CCodeCommaExpression ();
-					var temp_var = get_temp_variable (base_property.property_type);
+					var temp_var = get_temp_variable (base_property.get_accessor.value_type);
 					var ctemp = new CCodeIdentifier (temp_var.name);
 					temp_vars.add (temp_var);
 					ccall.add_argument (new CCodeUnaryExpression(CCodeUnaryOperator.ADDRESS_OF, ctemp));

@@ -162,13 +162,14 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			return c.type_reference;
 		} else if (sym is Property) {
 			var prop = (Property) sym;
-			if (prop.property_type != null) {
-				var type = prop.property_type.copy ();
-				if (lvalue) {
-					// setters never take ownership
-					type.value_owned = false;
+			if (lvalue) {
+				if (prop.set_accessor != null) {
+					return prop.set_accessor.value_type.copy ();
 				}
-				return type;
+			} else {
+				if (prop.get_accessor != null) {
+					return prop.get_accessor.value_type.copy ();
+				}
 			}
 		} else if (sym is FormalParameter) {
 			var p = (FormalParameter) sym;

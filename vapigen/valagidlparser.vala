@@ -1655,24 +1655,22 @@ public class Vala.GIdlParser : CodeVisitor {
 			prop_node.writable = true;
 		}
 		
-		PropertyAccessor get_acc = null;
-		PropertyAccessor set_acc = null;
-		if (prop_node.readable) {
-			get_acc = new PropertyAccessor (true, false, false, null, null);
-		}
-		if (prop_node.writable) {
-			set_acc = new PropertyAccessor (false, false, false, null, null);
-			if (prop_node.construct_only) {
-				set_acc.construction = true;
-			} else {
-				set_acc.writable = true;
-				set_acc.construction = prop_node.@construct;
-			}
-		}
-		
-		var prop = new Property (fix_prop_name (node.name), parse_type (prop_node.type), get_acc, set_acc, current_source_reference);
+		var prop = new Property (fix_prop_name (node.name), parse_type (prop_node.type), null, null, current_source_reference);
 		prop.access = SymbolAccessibility.PUBLIC;
 		prop.interface_only = true;
+		
+		if (prop_node.readable) {
+			prop.get_accessor = new PropertyAccessor (true, false, false, prop.property_type.copy (), null, null);
+		}
+		if (prop_node.writable) {
+			prop.set_accessor = new PropertyAccessor (false, false, false, prop.property_type.copy (), null, null);
+			if (prop_node.construct_only) {
+				prop.set_accessor.construction = true;
+			} else {
+				prop.set_accessor.writable = true;
+				prop.set_accessor.construction = prop_node.@construct;
+			}
+		}
 
 		var attributes = get_attributes ("%s:%s".printf (current_data_type.get_cname (), node.name));
 		if (attributes != null) {

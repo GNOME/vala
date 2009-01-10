@@ -1123,14 +1123,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			this_type = new ObjectType ((Interface) t);
 		}
 		var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
-		var value_type = prop.property_type.copy ();
 		CCodeFormalParameter cvalueparam;
 		if (returns_real_struct) {
-			cvalueparam = new CCodeFormalParameter ("value", value_type.get_cname () + "*");
+			cvalueparam = new CCodeFormalParameter ("value", acc.value_type.get_cname () + "*");
 		} else {
-			// property setters never take ownership
-			value_type.value_owned = false;
-			cvalueparam = new CCodeFormalParameter ("value", value_type.get_cname ());
+			cvalueparam = new CCodeFormalParameter ("value", acc.value_type.get_cname ());
 		}
 
 		if (prop.is_abstract || prop.is_virtual) {
@@ -1217,7 +1214,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			if (acc.writable || acc.construction || returns_real_struct) {
 				function = new CCodeFunction (cname, "void");
 			} else {
-				function = new CCodeFunction (cname, prop.property_type.get_cname ());
+				function = new CCodeFunction (cname, acc.value_type.get_cname ());
 			}
 
 			ObjectType base_type = null;

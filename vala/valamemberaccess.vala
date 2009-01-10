@@ -350,7 +350,7 @@ public class Vala.MemberAccess : Expression {
 						// dynamic property assignment
 						var prop = new DynamicProperty (inner.value_type, member_name, source_reference);
 						prop.access = SymbolAccessibility.PUBLIC;
-						prop.set_accessor = new PropertyAccessor (false, true, false, null, prop.source_reference);
+						prop.set_accessor = new PropertyAccessor (false, true, false, prop.property_type.copy (), null, prop.source_reference);
 						prop.set_accessor.access = SymbolAccessibility.PUBLIC;
 						prop.owner = inner.value_type.data_type.scope;
 						dynamic_object_type.type_symbol.scope.add (null, prop);
@@ -367,7 +367,7 @@ public class Vala.MemberAccess : Expression {
 						prop.property_type = inner.value_type.copy ();
 					}
 					prop.access = SymbolAccessibility.PUBLIC;
-					prop.get_accessor = new PropertyAccessor (true, false, false, null, prop.source_reference);
+					prop.get_accessor = new PropertyAccessor (true, false, false, prop.property_type.copy (), null, prop.source_reference);
 					prop.get_accessor.access = SymbolAccessibility.PUBLIC;
 					prop.owner = inner.value_type.data_type.scope;
 					dynamic_object_type.type_symbol.scope.add (null, prop);

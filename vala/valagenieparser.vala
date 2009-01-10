@@ -2749,6 +2749,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 			while (current () != TokenType.DEDENT) {
 				var accessor_begin = get_location ();
 				parse_attributes ();
+
+				var value_type = type.copy ();
+				value_type.value_owned = false;
+
 				if (accept (TokenType.GET)) {
 					if (prop.get_accessor != null) {
 						throw new ParseError.SYNTAX (get_error ("property get accessor already defined"));
@@ -2757,7 +2761,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 					if (accept_block ()) {
 						block = parse_block ();
 					}
-					prop.get_accessor = new PropertyAccessor (true, false, false, block, get_src (accessor_begin));
+					prop.get_accessor = new PropertyAccessor (true, false, false, type.copy (), block, get_src (accessor_begin));
 					prop.get_accessor.access = SymbolAccessibility.PUBLIC;
 				} else {
 					bool _construct = false;
@@ -2780,18 +2784,24 @@ public class Vala.Genie.Parser : CodeVisitor {
 					if (accept_block ()) {
 						block = parse_block ();
 					}
-					prop.set_accessor = new PropertyAccessor (false, !readonly, _construct, block, get_src (accessor_begin));
+					prop.set_accessor = new PropertyAccessor (false, !readonly, _construct, value_type, block, get_src (accessor_begin));
 					prop.set_accessor.access = SymbolAccessibility.PUBLIC;
 				}
 			}
 			accept (TokenType.EOL);
 			expect (TokenType.DEDENT);
 		} else {
-			prop.get_accessor = new PropertyAccessor (true, false, false, null, get_src (begin));
+			var value_type = type.copy ();
+			value_type.value_owned = false;
+
+			prop.get_accessor = new PropertyAccessor (true, false, false, value_type, null, get_src (begin));
 			prop.get_accessor.access = SymbolAccessibility.PUBLIC;
 
 			if (!readonly) {
-				prop.set_accessor = new PropertyAccessor (false, true, false, null, get_src (begin));
+				value_type = type.copy ();
+				value_type.value_owned = false;
+
+				prop.set_accessor = new PropertyAccessor (false, true, false, value_type, null, get_src (begin));
 				prop.set_accessor.access = SymbolAccessibility.PUBLIC;
 			
 			}

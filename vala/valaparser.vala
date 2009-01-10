@@ -430,7 +430,7 @@ public class Vala.Parser : CodeVisitor {
 
 		if (!owned_by_default) {
 			if (accept (TokenType.HASH)) {
-				// TODO enable warning after releasing Vala 0.5.4
+				// TODO enable warning after releasing Vala 0.5.5
 				// Report.warning (get_last_src (), "deprecated syntax, use `owned` modifier");
 				value_owned = true;
 			}
@@ -805,7 +805,7 @@ public class Vala.Parser : CodeVisitor {
 		}
 		switch (current ()) {
 		case TokenType.HASH:
-			// TODO enable warning after releasing Vala 0.5.4
+			// TODO enable warning after releasing Vala 0.5.5
 			// Report.warning (get_last_src (), "deprecated syntax, use `(owned)` cast");
 			next ();
 			var op = parse_unary_expression ();
@@ -2195,8 +2195,14 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
-		bool is_weak = accept (TokenType.UNOWNED) || accept (TokenType.WEAK);
-		var type = parse_type (false);
+		var type = parse_type ();
+
+		bool getter_owned = false;
+		if (accept (TokenType.HASH) && !context.deprecated) {
+			Report.warning (get_last_src (), "deprecated syntax, use `owned` modifier before `get'");
+			getter_owned = true;
+		}
+
 		string id = parse_identifier ();
 		var prop = new Property (id, type, null, null, get_src_com (begin));
 		prop.access = access;
@@ -2231,16 +2237,25 @@ public class Vala.Parser : CodeVisitor {
 				var accessor_begin = get_location ();
 				var attrs = parse_attributes ();
 				var accessor_access = parse_access_modifier (SymbolAccessibility.PUBLIC);
+
+				var value_type = type.copy ();
+				value_type.value_owned = accept (TokenType.OWNED);
+
 				if (accept (TokenType.GET)) {
 					if (prop.get_accessor != null) {
 						throw new ParseError.SYNTAX (get_error ("property get accessor already defined"));
 					}
+
+					if (getter_owned) {
+						value_type.value_owned = true;
+					}
+
 					Block block = null;
 					if (!accept (TokenType.SEMICOLON)) {
 						block = parse_block ();
 						prop.external = false;
 					}
-					prop.get_accessor = new PropertyAccessor (true, false, false, block, get_src (accessor_begin));
+					prop.get_accessor = new PropertyAccessor (true, false, false, value_type, block, get_src (accessor_begin));
 					set_attributes (prop.get_accessor, attrs);
 					prop.get_accessor.access = accessor_access;
 				} else {
@@ -2262,7 +2277,7 @@ public class Vala.Parser : CodeVisitor {
 						block = parse_block ();
 						prop.external = false;
 					}
-					prop.set_accessor = new PropertyAccessor (false, writable, _construct, block, get_src (accessor_begin));
+					prop.set_accessor = new PropertyAccessor (false, writable, _construct, value_type, block, get_src (accessor_begin));
 					set_attributes (prop.set_accessor, attrs);
 					prop.set_accessor.access = accessor_access;
 				}
@@ -2286,7 +2301,6 @@ public class Vala.Parser : CodeVisitor {
 			if (empty_get && empty_set) {
 				/* automatic property accessor body generation */
 				var field_type = prop.property_type.copy ();
-				field_type.value_owned = !is_weak;
 				prop.field = new Field ("_%s".printf (prop.name), field_type, prop.default_expression, prop.source_reference);
 				prop.field.access = SymbolAccessibility.PRIVATE;
 			}

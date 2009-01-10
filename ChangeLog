@@ -1,5 +1,21 @@
 2009-01-10  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodewriter.vala:
+	* vala/valagenieparser.vala:
+	* vala/valamemberaccess.vala:
+	* vala/valaparser.vala:
+	* vala/valapropertyaccessor.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodememberaccessmodule.vala:
+	* vapigen/valagidlparser.vala:
+	* vapigen/valagirparser.vala:
+
+	Replace `#' in property declarations by `owned' modifier
+	before `get'
+
+2009-01-10  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valalocalvariable.vala:
 
 	Warn when using result variable with incompatible type to prepare
