@@ -1,3 +1,11 @@
+Vala 0.5.5
+==========
+
+ * Improve syntax of owned property getters.
+ * Add --enable-deprecated and --enable-experimental commandline options.
+ * Remove --disable-non-null commandline option.
+ * Many bug fixes.
+
 Vala 0.5.4
 ==========
 
