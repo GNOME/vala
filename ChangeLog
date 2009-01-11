@@ -1,3 +1,10 @@
+2009-01-11  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valamemberaccess.vala:
+	* vala/valasemanticanalyzer.vala:
+
+	Fix crash when assigning to dynamic properties
+
 2009-01-10  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodenode.vala:

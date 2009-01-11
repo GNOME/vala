@@ -163,11 +163,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (sym is Property) {
 			var prop = (Property) sym;
 			if (lvalue) {
-				if (prop.set_accessor != null) {
+				if (prop.set_accessor != null && prop.set_accessor.value_type != null) {
 					return prop.set_accessor.value_type.copy ();
 				}
 			} else {
-				if (prop.get_accessor != null) {
+				if (prop.get_accessor != null && prop.get_accessor.value_type != null) {
 					return prop.get_accessor.value_type.copy ();
 				}
 			}

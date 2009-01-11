@@ -1,6 +1,6 @@
 /* valamemberaccess.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -350,7 +350,7 @@ public class Vala.MemberAccess : Expression {
 						// dynamic property assignment
 						var prop = new DynamicProperty (inner.value_type, member_name, source_reference);
 						prop.access = SymbolAccessibility.PUBLIC;
-						prop.set_accessor = new PropertyAccessor (false, true, false, prop.property_type.copy (), null, prop.source_reference);
+						prop.set_accessor = new PropertyAccessor (false, true, false, null, null, prop.source_reference);
 						prop.set_accessor.access = SymbolAccessibility.PUBLIC;
 						prop.owner = inner.value_type.data_type.scope;
 						dynamic_object_type.type_symbol.scope.add (null, prop);
