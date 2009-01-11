@@ -35,18 +35,18 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool add_element (Gst.Element element);
 		public void add_many (params owned Gst.Element[] elements);
-		public unowned Gst.Pad find_unconnected_pad (Gst.PadDirection direction);
-		public unowned Gst.Element get_by_interface (GLib.Type iface);
-		public unowned Gst.Element get_by_name (string name);
-		public unowned Gst.Element get_by_name_recurse_up (string name);
+		public Gst.Pad find_unconnected_pad (Gst.PadDirection direction);
+		public Gst.Element get_by_interface (GLib.Type iface);
+		public Gst.Element get_by_name (string name);
+		public Gst.Element get_by_name_recurse_up (string name);
 		[NoWrapper]
 		public virtual void handle_message (Gst.Message message);
-		public unowned Gst.Iterator iterate_all_by_interface (GLib.Type iface);
-		public unowned Gst.Iterator iterate_elements ();
-		public unowned Gst.Iterator iterate_recurse ();
-		public unowned Gst.Iterator iterate_sinks ();
-		public unowned Gst.Iterator iterate_sorted ();
-		public unowned Gst.Iterator iterate_sources ();
+		public Gst.Iterator iterate_all_by_interface (GLib.Type iface);
+		public Gst.Iterator iterate_elements ();
+		public Gst.Iterator iterate_recurse ();
+		public Gst.Iterator iterate_sinks ();
+		public Gst.Iterator iterate_sorted ();
+		public Gst.Iterator iterate_sources ();
 		[CCode (type = "GstElement*", has_construct_function = false)]
 		public Bin (string name);
 		public bool remove (Gst.Element element);

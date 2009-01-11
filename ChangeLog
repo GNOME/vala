@@ -1,5 +1,13 @@
 2009-01-11  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Ownership fixes  in gst_bin_* bindings, patch by Sebastian Pölsterl
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2009-01-11  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Fix GMarkupParser binding, patch by Ali Sabil
