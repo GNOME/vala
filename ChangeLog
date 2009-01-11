@@ -1,5 +1,14 @@
 2009-01-11  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gstreamer-0.10/:
+
+	Fix GstMessage ownership in gst_bus_* bindings,
+	patch by Sebastian Pölsterl
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2009-01-11  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamemberaccess.vala:
 	* vala/valasemanticanalyzer.vala:
 

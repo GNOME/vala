@@ -117,18 +117,18 @@ namespace Gst {
 		public bool have_pending ();
 		[CCode (has_construct_function = false)]
 		public Bus ();
-		public unowned Gst.Message peek ();
-		public unowned Gst.Message poll (Gst.MessageType events, Gst.ClockTimeDiff timeout);
-		public unowned Gst.Message pop ();
-		public unowned Gst.Message pop_filtered (Gst.MessageType types);
+		public Gst.Message peek ();
+		public Gst.Message poll (Gst.MessageType events, Gst.ClockTimeDiff timeout);
+		public Gst.Message pop ();
+		public Gst.Message pop_filtered (Gst.MessageType types);
 		public bool post (Gst.Message message);
 		public void remove_signal_watch ();
 		public void set_flushing (bool flushing);
 		public void set_sync_handler (Gst.BusSyncHandler func);
 		[CCode (instance_pos = -1)]
 		public Gst.BusSyncReply sync_signal_handler (Gst.Bus bus, Gst.Message message);
-		public unowned Gst.Message timed_pop (Gst.ClockTime timeout);
-		public unowned Gst.Message timed_pop_filtered (Gst.ClockTime timeout, Gst.MessageType types);
+		public Gst.Message timed_pop (Gst.ClockTime timeout);
+		public Gst.Message timed_pop_filtered (Gst.ClockTime timeout, Gst.MessageType types);
 		public virtual signal void message (Gst.Message message);
 		public virtual signal void sync_message (Gst.Message message);
 	}
