@@ -1,5 +1,12 @@
 2009-01-11  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodedelegatemodule.vala:
+
+	Support null-terminated array parameters in delegates,
+	patch by Ali Sabil
+
+2009-01-11  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gstreamer-0.10/:
 
 	Fix GstMessage ownership in gst_bus_* bindings,
