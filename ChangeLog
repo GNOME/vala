@@ -1,5 +1,11 @@
 2009-01-11  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/glib-2.0.vapi:
+
+	Fix GMarkupParser binding, patch by Ali Sabil
+
+2009-01-11  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodedelegatemodule.vala:
 
 	Support null-terminated array parameters in delegates,
