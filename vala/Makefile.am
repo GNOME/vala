@@ -153,7 +153,6 @@ libvalacore_la_VALASOURCES = \
 	$(NULL)
 
 libvalacore_la_SOURCES = \
-	vala.h \
 	vala.vala.stamp \
 	$(libvalacore_la_VALASOURCES:.vala=.c) \
 	$(libvalacore_la_VALASOURCES:.vala=.h) \
@@ -162,7 +161,6 @@ libvalacore_la_SOURCES = \
 valaincludedir = $(includedir)/vala-1.0/vala
 
 valainclude_HEADERS = \
-	vala.h \
 	$(libvalacore_la_VALASOURCES:.vala=.h) \
 	$(NULL)
 

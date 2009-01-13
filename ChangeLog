@@ -1,5 +1,12 @@
 2009-01-13  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am:
+	* vala/vala.h:
+
+	Remove obsolete vala.h
+
+2009-01-13  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodecontext.vala:
 	* gobject/valaccodebasemodule.vala:
 	* compiler/valacompiler.vala:
