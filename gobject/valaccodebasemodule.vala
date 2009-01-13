@@ -631,6 +631,26 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				file.accept (codegen);
 			}
 		}
+
+		// generate C header file for public API
+		if (context.header_filename != null) {
+			var writer = new CCodeWriter (context.header_filename);
+			if (!writer.open ()) {
+				Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
+				return;
+			}
+			writer.write_newline ();
+			var once = new CCodeOnceSection (get_define_for_filename (writer.filename));
+			once.append (new CCodeNewline ());
+			once.append (new CCodeIdentifier ("G_BEGIN_DECLS"));
+			once.append (new CCodeNewline ());
+			once.append (new CCodeNewline ());
+			once.append (new CCodeIdentifier ("G_END_DECLS"));
+			once.append (new CCodeNewline ());
+			once.append (new CCodeNewline ());
+			once.write (writer);
+			writer.close ();
+		}
 	}
 
 	public override void visit_enum (Enum en) {

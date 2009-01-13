@@ -76,6 +76,11 @@ public class Vala.CodeContext {
 	public bool ccode_only { get; set; }
 
 	/**
+	 * Output C header file.
+	 */
+	public string header_filename { get; set; }
+
+	/**
 	 * Compile but do not link.
 	 */
 	public bool compile_only { get; set; }
