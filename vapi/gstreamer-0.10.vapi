@@ -147,7 +147,7 @@ namespace Gst {
 		public bool do_simplify ();
 		[CCode (has_construct_function = false)]
 		public Caps.empty ();
-		public static unowned Gst.Caps from_string (string str);
+		public static Gst.Caps from_string (string str);
 		[CCode (has_construct_function = false)]
 		public Caps.full (Gst.Structure struct1, ...);
 		[CCode (has_construct_function = false)]
