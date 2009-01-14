@@ -1,3 +1,9 @@
+2009-01-14  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaparser.vala:
+
+	Improve syntax error message when expecting declaration
+
 2009-01-13  Jürg Billeter  <j@bitron.ch>
 
 	* vala/Makefile.am:

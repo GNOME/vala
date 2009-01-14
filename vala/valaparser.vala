@@ -1775,6 +1775,8 @@ public class Vala.Parser : CodeVisitor {
 			break;
 		}
 
+		rollback (begin);
+
 		throw new ParseError.SYNTAX (get_error ("expected declaration"));
 	}
 
