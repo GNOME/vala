@@ -101,7 +101,7 @@ namespace Gtk {
 		public void set_accel_closure (GLib.Closure accel_closure);
 		public void set_accel_widget (Gtk.Widget accel_widget);
 		[NoAccessorMethod]
-		public GLib.Closure accel_closure { get; set; }
+		public GLib.Closure accel_closure { owned get; set; }
 		public Gtk.Widget accel_widget { get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -157,24 +157,24 @@ namespace Gtk {
 		public void set_visible (bool visible);
 		public void unblock_activate_from (Gtk.Widget proxy);
 		[NoAccessorMethod]
-		public Gtk.ActionGroup action_group { get; set; }
+		public Gtk.ActionGroup action_group { owned get; set; }
 		[NoAccessorMethod]
 		public bool hide_if_empty { get; set; }
 		[NoAccessorMethod]
-		public string icon_name { get; set; }
+		public string icon_name { owned get; set; }
 		[NoAccessorMethod]
 		public bool is_important { get; set; }
 		[NoAccessorMethod]
-		public string label { get; set; }
+		public string label { owned get; set; }
 		[NoAccessorMethod]
 		public string name { get; construct; }
 		public bool sensitive { get; set; }
 		[NoAccessorMethod]
-		public string short_label { get; set; }
+		public string short_label { owned get; set; }
 		[NoAccessorMethod]
-		public string stock_id { get; set; }
+		public string stock_id { owned get; set; }
 		[NoAccessorMethod]
-		public string tooltip { get; set; }
+		public string tooltip { owned get; set; }
 		public bool visible { get; set; }
 		[NoAccessorMethod]
 		public bool visible_horizontal { get; set; }
@@ -624,7 +624,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool has_entry { get; set; }
 		[NoAccessorMethod]
-		public Gtk.TreeModel model { get; set; }
+		public Gtk.TreeModel model { owned get; set; }
 		[NoAccessorMethod]
 		public int text_column { get; set; }
 		public virtual signal void changed (string p0, Gtk.TreeIter p1);
@@ -636,17 +636,17 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool follow_state { get; set; }
 		[NoAccessorMethod]
-		public string icon_name { get; set; }
+		public string icon_name { owned get; set; }
 		[NoAccessorMethod]
-		public Gdk.Pixbuf pixbuf { get; set; }
+		public Gdk.Pixbuf pixbuf { owned get; set; }
 		[NoAccessorMethod]
-		public Gdk.Pixbuf pixbuf_expander_closed { get; set; }
+		public Gdk.Pixbuf pixbuf_expander_closed { owned get; set; }
 		[NoAccessorMethod]
-		public Gdk.Pixbuf pixbuf_expander_open { get; set; }
+		public Gdk.Pixbuf pixbuf_expander_open { owned get; set; }
 		[NoAccessorMethod]
-		public string stock_detail { get; set; }
+		public string stock_detail { owned get; set; }
 		[NoAccessorMethod]
-		public string stock_id { get; set; }
+		public string stock_id { owned get; set; }
 		[NoAccessorMethod]
 		public uint stock_size { get; set; }
 	}
@@ -659,7 +659,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public int pulse { get; set; }
 		[NoAccessorMethod]
-		public string text { get; set; }
+		public string text { owned get; set; }
 		[NoAccessorMethod]
 		public float text_xalign { get; set; }
 		[NoAccessorMethod]
@@ -672,7 +672,7 @@ namespace Gtk {
 		[CCode (type = "GtkCellRenderer*", has_construct_function = false)]
 		public CellRendererSpin ();
 		[NoAccessorMethod]
-		public Gtk.Adjustment adjustment { get; set; }
+		public Gtk.Adjustment adjustment { owned get; set; }
 		[NoAccessorMethod]
 		public double climb_rate { get; set; }
 		[NoAccessorMethod]
@@ -693,7 +693,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Pango.Alignment alignment { get; set; }
 		[NoAccessorMethod]
-		public Pango.AttrList attributes { get; set; }
+		public Pango.AttrList attributes { owned get; set; }
 		[NoAccessorMethod]
 		public string background { set; }
 		[NoAccessorMethod]
@@ -709,13 +709,13 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool ellipsize_set { get; set; }
 		[NoAccessorMethod]
-		public string family { get; set; }
+		public string family { owned get; set; }
 		[NoAccessorMethod]
 		public bool family_set { get; set; }
 		[NoAccessorMethod]
-		public string font { get; set; }
+		public string font { owned get; set; }
 		[NoAccessorMethod]
-		public Pango.FontDescription font_desc { get; set; }
+		public Pango.FontDescription font_desc { owned get; set; }
 		[NoAccessorMethod]
 		public string foreground { set; }
 		[NoAccessorMethod]
@@ -723,7 +723,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool foreground_set { get; set; }
 		[NoAccessorMethod]
-		public string language { get; set; }
+		public string language { owned get; set; }
 		[NoAccessorMethod]
 		public bool language_set { get; set; }
 		[NoAccessorMethod]
@@ -757,7 +757,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool style_set { get; set; }
 		[NoAccessorMethod]
-		public string text { get; set; }
+		public string text { owned get; set; }
 		[NoAccessorMethod]
 		public Pango.Underline underline { get; set; }
 		[NoAccessorMethod]
@@ -819,7 +819,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool background_set { get; set; }
 		[NoAccessorMethod]
-		public Gtk.TreeModel model { get; set; }
+		public Gtk.TreeModel model { owned get; set; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class CheckButton : Gtk.ToggleButton, Atk.Implementor, Gtk.Buildable {
@@ -984,7 +984,7 @@ namespace Gtk {
 		public bool popup_shown { get; }
 		public int row_span_column { get; set; }
 		[NoAccessorMethod]
-		public string tearoff_title { get; set; }
+		public string tearoff_title { owned get; set; }
 		public int wrap_width { get; set; }
 		public virtual signal void changed ();
 		public virtual signal void move_active (Gtk.ScrollType p0);
@@ -1420,7 +1420,7 @@ namespace Gtk {
 		public bool set_font_name (string fontname);
 		public void set_preview_text (string text);
 		[NoAccessorMethod]
-		public Gdk.Font font { get; }
+		public Gdk.Font font { owned get; }
 		public string font_name { get; set; }
 		public string preview_text { get; set; }
 	}
@@ -1809,7 +1809,7 @@ namespace Gtk {
 		public void set_from_stock (string stock_id, Gtk.IconSize size);
 		public void set_pixel_size (int pixel_size);
 		[NoAccessorMethod]
-		public string file { get; set; }
+		public string file { owned get; set; }
 		[NoAccessorMethod]
 		public GLib.Icon gicon { get; set; }
 		[NoAccessorMethod]
@@ -1821,11 +1821,11 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Gdk.Image image { get; set; }
 		[NoAccessorMethod]
-		public Gdk.Pixmap mask { get; set; }
+		public Gdk.Pixmap mask { owned get; set; }
 		[NoAccessorMethod]
 		public Gdk.Pixbuf pixbuf { get; set; }
 		[NoAccessorMethod]
-		public Gdk.PixbufAnimation pixbuf_animation { get; set; }
+		public Gdk.PixbufAnimation pixbuf_animation { owned get; set; }
 		public int pixel_size { get; set; }
 		[NoAccessorMethod]
 		public Gdk.Pixmap pixmap { get; set; }
@@ -2147,7 +2147,7 @@ namespace Gtk {
 		public void set_title (string title);
 		public bool tearoff_state { get; set; }
 		[NoAccessorMethod]
-		public string tearoff_title { get; set; }
+		public string tearoff_title { owned get; set; }
 		public virtual signal void move_scroll (Gtk.ScrollType p0);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -2256,15 +2256,15 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public Gtk.ButtonsType buttons { construct; }
 		[NoAccessorMethod]
-		public Gtk.Widget image { get; set; }
+		public Gtk.Widget image { owned get; set; }
 		[NoAccessorMethod]
 		public Gtk.MessageType message_type { get; set construct; }
 		[NoAccessorMethod]
-		public string secondary_text { get; set; }
+		public string secondary_text { owned get; set; }
 		[NoAccessorMethod]
 		public bool secondary_use_markup { get; set; }
 		[NoAccessorMethod]
-		public string text { get; set; }
+		public string text { owned get; set; }
 		[NoAccessorMethod]
 		public bool use_markup { get; set; }
 	}
@@ -2578,12 +2578,12 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public int current_page { get; set; }
 		[NoAccessorMethod]
-		public string custom_tab_label { get; set; }
+		public string custom_tab_label { owned get; set; }
 		public Gtk.PageSetup default_page_setup { get; set; }
 		[NoAccessorMethod]
-		public string export_filename { get; set; }
+		public string export_filename { owned get; set; }
 		[NoAccessorMethod]
-		public string job_name { get; set; }
+		public string job_name { owned get; set; }
 		[NoAccessorMethod]
 		public int n_pages { get; set; }
 		public Gtk.PrintSettings print_settings { get; set; }
@@ -2707,7 +2707,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public uint activity_step { get; set; }
 		[NoAccessorMethod]
-		public Gtk.Adjustment adjustment { get; set; }
+		public Gtk.Adjustment adjustment { owned get; set; }
 		[NoAccessorMethod]
 		public Gtk.ProgressBarStyle bar_style { get; set; }
 		[NoAccessorMethod]
@@ -3012,7 +3012,7 @@ namespace Gtk {
 		public bool remove_item (string uri) throws GLib.Error;
 		public void set_limit (int limit);
 		[NoAccessorMethod]
-		public string filename { get; construct; }
+		public string filename { owned get; construct; }
 		public int limit { get; set; }
 		[NoAccessorMethod]
 		public int size { get; }
@@ -3080,7 +3080,7 @@ namespace Gtk {
 		public void set_value (double value);
 		public Gtk.Adjustment adjustment { get; set; }
 		[NoAccessorMethod]
-		public string[] icons { get; set; }
+		public string[] icons { owned get; set; }
 		[NoAccessorMethod]
 		public Gtk.IconSize size { get; set; }
 		public double value { get; set; }
@@ -3184,13 +3184,13 @@ namespace Gtk {
 		public void set_property_value (string name, Gtk.SettingsValue svalue);
 		public void set_string_property (string name, string v_string, string origin);
 		[NoAccessorMethod]
-		public GLib.HashTable color_hash { get; }
+		public GLib.HashTable color_hash { owned get; }
 		[NoAccessorMethod]
 		public bool gtk_alternative_button_order { get; set; }
 		[NoAccessorMethod]
 		public bool gtk_alternative_sort_arrows { get; set; }
 		[NoAccessorMethod]
-		public string gtk_color_scheme { get; set; }
+		public string gtk_color_scheme { owned get; set; }
 		[NoAccessorMethod]
 		public bool gtk_cursor_blink { get; set; }
 		[NoAccessorMethod]
@@ -3198,7 +3198,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public int gtk_cursor_blink_timeout { get; set; }
 		[NoAccessorMethod]
-		public string gtk_cursor_theme_name { get; set; }
+		public string gtk_cursor_theme_name { owned get; set; }
 		[NoAccessorMethod]
 		public int gtk_cursor_theme_size { get; set; }
 		[NoAccessorMethod]
@@ -3216,33 +3216,33 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool gtk_error_bell { get; set; }
 		[NoAccessorMethod]
-		public string gtk_fallback_icon_theme { get; set; }
+		public string gtk_fallback_icon_theme { owned get; set; }
 		[NoAccessorMethod]
-		public string gtk_file_chooser_backend { get; set; }
+		public string gtk_file_chooser_backend { owned get; set; }
 		[NoAccessorMethod]
-		public string gtk_font_name { get; set; }
+		public string gtk_font_name { owned get; set; }
 		[NoAccessorMethod]
 		public int gtk_fontconfig_timestamp { get; set; }
 		[NoAccessorMethod]
-		public string gtk_icon_sizes { get; set; }
+		public string gtk_icon_sizes { owned get; set; }
 		[NoAccessorMethod]
-		public string gtk_icon_theme_name { get; set; }
+		public string gtk_icon_theme_name { owned get; set; }
 		[NoAccessorMethod]
-		public string gtk_im_module { get; set; }
+		public string gtk_im_module { owned get; set; }
 		[NoAccessorMethod]
-		public string gtk_key_theme_name { get; set; }
+		public string gtk_key_theme_name { owned get; set; }
 		[NoAccessorMethod]
 		public bool gtk_keynav_cursor_only { get; set; }
 		[NoAccessorMethod]
 		public bool gtk_keynav_wrap_around { get; set; }
 		[NoAccessorMethod]
-		public string gtk_menu_bar_accel { get; set; }
+		public string gtk_menu_bar_accel { owned get; set; }
 		[NoAccessorMethod]
-		public string gtk_modules { get; set; }
+		public string gtk_modules { owned get; set; }
 		[NoAccessorMethod]
-		public string gtk_print_backends { get; set; }
+		public string gtk_print_backends { owned get; set; }
 		[NoAccessorMethod]
-		public string gtk_print_preview_command { get; set; }
+		public string gtk_print_preview_command { owned get; set; }
 		[NoAccessorMethod]
 		public int gtk_recent_files_limit { get; set; }
 		[NoAccessorMethod]
@@ -3254,7 +3254,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool gtk_split_cursor { get; set; }
 		[NoAccessorMethod]
-		public string gtk_theme_name { get; set; }
+		public string gtk_theme_name { owned get; set; }
 		[NoAccessorMethod]
 		public int gtk_timeout_expand { get; set; }
 		[NoAccessorMethod]
@@ -3276,9 +3276,9 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public int gtk_xft_hinting { get; set; }
 		[NoAccessorMethod]
-		public string gtk_xft_hintstyle { get; set; }
+		public string gtk_xft_hintstyle { owned get; set; }
 		[NoAccessorMethod]
-		public string gtk_xft_rgba { get; set; }
+		public string gtk_xft_rgba { owned get; set; }
 	}
 	[Compact]
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -3875,7 +3875,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool background_set { get; set; }
 		[NoAccessorMethod]
-		public Gdk.Pixmap background_stipple { get; set; }
+		public Gdk.Pixmap background_stipple { owned get; set; }
 		[NoAccessorMethod]
 		public bool background_stipple_set { get; set; }
 		[NoAccessorMethod]
@@ -3885,13 +3885,13 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool editable_set { get; set; }
 		[NoAccessorMethod]
-		public string family { get; set; }
+		public string family { owned get; set; }
 		[NoAccessorMethod]
 		public bool family_set { get; set; }
 		[NoAccessorMethod]
-		public string font { get; set; }
+		public string font { owned get; set; }
 		[NoAccessorMethod]
-		public Pango.FontDescription font_desc { get; set; }
+		public Pango.FontDescription font_desc { owned get; set; }
 		[NoAccessorMethod]
 		public string foreground { set; }
 		[NoAccessorMethod]
@@ -3899,7 +3899,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool foreground_set { get; set; }
 		[NoAccessorMethod]
-		public Gdk.Pixmap foreground_stipple { get; set; }
+		public Gdk.Pixmap foreground_stipple { owned get; set; }
 		[NoAccessorMethod]
 		public bool foreground_stipple_set { get; set; }
 		[NoAccessorMethod]
@@ -3915,7 +3915,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool justification_set { get; set; }
 		[NoAccessorMethod]
-		public string language { get; set; }
+		public string language { owned get; set; }
 		[NoAccessorMethod]
 		public bool language_set { get; set; }
 		[NoAccessorMethod]
@@ -3923,7 +3923,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool left_margin_set { get; set; }
 		[NoAccessorMethod]
-		public string name { get; construct; }
+		public string name { owned get; construct; }
 		[NoAccessorMethod]
 		public string paragraph_background { set; }
 		[NoAccessorMethod]
@@ -3973,7 +3973,7 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public bool style_set { get; set; }
 		[NoAccessorMethod]
-		public Pango.TabArray tabs { get; set; }
+		public Pango.TabArray tabs { owned get; set; }
 		[NoAccessorMethod]
 		public bool tabs_set { get; set; }
 		[NoAccessorMethod]
@@ -4314,9 +4314,9 @@ namespace Gtk {
 		public void set_visible_column (int column);
 		public void set_visible_func (owned Gtk.TreeModelFilterVisibleFunc func);
 		[NoAccessorMethod]
-		public Gtk.TreeModel child_model { get; construct; }
+		public Gtk.TreeModel child_model { owned get; construct; }
 		[NoAccessorMethod]
-		public Gtk.TreePath virtual_root { get; construct; }
+		public Gtk.TreePath virtual_root { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class TreeModelSort : GLib.Object, Gtk.TreeModel, Gtk.TreeSortable, Gtk.TreeDragSource {

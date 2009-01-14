@@ -827,7 +827,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public Gst.PadDirection direction { get; construct; }
 		[NoAccessorMethod]
-		public Gst.PadTemplate template { get; set; }
+		public Gst.PadTemplate template { owned get; set; }
 		public virtual signal bool have_data (Gst.MiniObject data);
 		public virtual signal void linked (Gst.Pad peer);
 		public virtual signal void request_link ();

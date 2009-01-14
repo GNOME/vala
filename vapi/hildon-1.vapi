@@ -18,7 +18,7 @@ namespace Hildon {
 		[NoAccessorMethod]
 		public bool is_timed { get; construct; }
 		[NoAccessorMethod]
-		public Gtk.Window parent_window { get; construct; }
+		public Gtk.Window parent_window { owned get; construct; }
 		[NoAccessorMethod]
 		public uint timeout { get; construct; }
 	}
@@ -137,7 +137,7 @@ namespace Hildon {
 		public void set_size_group (Gtk.SizeGroup new_group);
 		public void set_status (Hildon.CaptionStatus flag);
 		[NoAccessorMethod]
-		public Gtk.Widget icon { get; set; }
+		public Gtk.Widget icon { owned get; set; }
 		public Hildon.CaptionIconPosition icon_position { get; set; }
 		public string label { get; set; }
 		[NoAccessorMethod]
@@ -240,13 +240,13 @@ namespace Hildon {
 		[NoAccessorMethod]
 		public int history_limit { get; set construct; }
 		[NoAccessorMethod]
-		public string label { get; set construct; }
+		public string label { owned get; set construct; }
 		[NoAccessorMethod]
-		public Gtk.ListStore list { get; set; }
+		public Gtk.ListStore list { owned get; set; }
 		[NoAccessorMethod]
 		public int max_characters { get; set construct; }
 		[NoAccessorMethod]
-		public string prefix { get; set; }
+		public string prefix { owned get; set; }
 		public virtual signal void close ();
 		public virtual signal bool history_append ();
 		public virtual signal void invalid_input ();
@@ -267,7 +267,7 @@ namespace Hildon {
 		[NoAccessorMethod]
 		public bool color_set { get; set construct; }
 		[NoAccessorMethod]
-		public string family { get; set; }
+		public string family { owned get; set; }
 		[NoAccessorMethod]
 		public bool family_set { get; set construct; }
 		[NoAccessorMethod]
@@ -305,13 +305,13 @@ namespace Hildon {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public GetPasswordDialog.with_default (Gtk.Window parent, string password, bool get_old);
 		[NoAccessorMethod]
-		public string caption_label { get; set; }
+		public string caption_label { owned get; set; }
 		[NoAccessorMethod]
 		public bool get_old { get; construct; }
 		[NoAccessorMethod]
 		public int max_characters { get; set; }
 		[NoAccessorMethod]
-		public string message { get; set; }
+		public string message { owned get; set; }
 		[NoAccessorMethod]
 		public bool numbers_only { get; set; }
 		[NoAccessorMethod]
@@ -332,7 +332,7 @@ namespace Hildon {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public LoginDialog.with_default (Gtk.Window parent, string name, string password);
 		[NoAccessorMethod]
-		public string message { get; set; }
+		public string message { owned get; set; }
 		[NoAccessorMethod]
 		public string password { get; set; }
 		[NoAccessorMethod]
@@ -355,13 +355,13 @@ namespace Hildon {
 		public void set_button_text (string text);
 		public void set_button_texts (string text_ok, string text_cancel);
 		[NoAccessorMethod]
-		public string description { get; set; }
+		public string description { owned get; set; }
 		[NoAccessorMethod]
-		public string icon { get; set; }
+		public string icon { owned get; set; }
 		[NoAccessorMethod]
-		public Gtk.ProgressBar progressbar { get; set; }
+		public Gtk.ProgressBar progressbar { owned get; set; }
 		[NoAccessorMethod]
-		public string stock_icon { get; set; }
+		public string stock_icon { owned get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class NumberEditor : Gtk.Container, Atk.Implementor, Gtk.Buildable {
@@ -437,7 +437,7 @@ namespace Hildon {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public SetPasswordDialog.with_default (Gtk.Window parent, string password, bool modify_protection);
 		[NoAccessorMethod]
-		public string message { get; set; }
+		public string message { owned get; set; }
 		[NoAccessorMethod]
 		public bool modify_protection { get; construct; }
 		[NoAccessorMethod]
@@ -557,9 +557,9 @@ namespace Hildon {
 		[NoAccessorMethod]
 		public bool autotitle { get; set; }
 		[NoAccessorMethod]
-		public string wizard_name { get; set; }
+		public string wizard_name { owned get; set; }
 		[NoAccessorMethod]
-		public Gtk.Notebook wizard_notebook { get; set; }
+		public Gtk.Notebook wizard_notebook { owned get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public interface BreadCrumb : Gtk.Widget {

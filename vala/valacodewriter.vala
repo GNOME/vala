@@ -962,8 +962,8 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_identifier (prop.name);
 		write_string (" {");
 		if (prop.get_accessor != null) {
-			if (prop.get_accessor.value_type.value_owned) {
-				write_string ("owned ");
+			if (prop.get_accessor.value_type.is_disposable ()) {
+				write_string (" owned");
 			}
 
 			write_string (" get");

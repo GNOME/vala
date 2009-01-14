@@ -1,5 +1,17 @@
 2009-01-14  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodewriter.vala:
+
+	Improve output for owned property getters
+
+	* vapigen/valagidlparser.vala:
+
+	Getters of properties without accessor have to return owned value
+
+	* vapi/: regenerated
+
+2009-01-14  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodememberaccessmodule.vala:
 
 	Report error when using getters of properties with unowned return

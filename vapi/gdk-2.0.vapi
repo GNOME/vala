@@ -306,7 +306,7 @@ namespace Gdk {
 		public void set_override_color (Pango.RenderPart part, Gdk.Color color);
 		public void set_stipple (Pango.RenderPart part, Gdk.Bitmap stipple);
 		[NoAccessorMethod]
-		public Gdk.Screen screen { get; construct; }
+		public Gdk.Screen screen { owned get; construct; }
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Pixmap : Gdk.Drawable {

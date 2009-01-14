@@ -208,9 +208,9 @@ namespace Goo {
 		[NoAccessorMethod]
 		public Goo.CairoFillRule fill_rule { get; set; }
 		[NoAccessorMethod]
-		public string font { get; set; }
+		public string font { owned get; set; }
 		[NoAccessorMethod]
-		public Pango.FontDescription font_desc { get; set; }
+		public Pango.FontDescription font_desc { owned get; set; }
 		[NoAccessorMethod]
 		public Goo.CairoHintMetrics hint_metrics { get; set; }
 		[NoAccessorMethod]
@@ -276,9 +276,9 @@ namespace Goo {
 		[NoAccessorMethod]
 		public Goo.CairoFillRule fill_rule { get; set; }
 		[NoAccessorMethod]
-		public string font { get; set; }
+		public string font { owned get; set; }
 		[NoAccessorMethod]
-		public Pango.FontDescription font_desc { get; set; }
+		public Pango.FontDescription font_desc { owned get; set; }
 		[NoAccessorMethod]
 		public Goo.CairoHintMetrics hint_metrics { get; set; }
 		[NoAccessorMethod]
@@ -359,7 +359,7 @@ namespace Goo {
 		[NoAccessorMethod]
 		public bool end_arrow { get; set; }
 		[NoAccessorMethod]
-		public Goo.CanvasPoints points { get; set; }
+		public Goo.CanvasPoints points { owned get; set; }
 		[NoAccessorMethod]
 		public bool start_arrow { get; set; }
 	}
@@ -383,7 +383,7 @@ namespace Goo {
 		[NoAccessorMethod]
 		public bool end_arrow { get; set; }
 		[NoAccessorMethod]
-		public Goo.CanvasPoints points { get; set; }
+		public Goo.CanvasPoints points { owned get; set; }
 		[NoAccessorMethod]
 		public bool start_arrow { get; set; }
 	}
@@ -486,7 +486,7 @@ namespace Goo {
 		[NoAccessorMethod]
 		public Pango.EllipsizeMode ellipsize { get; set; }
 		[NoAccessorMethod]
-		public string text { get; set; }
+		public string text { owned get; set; }
 		[NoAccessorMethod]
 		public bool use_markup { get; set; }
 		[NoAccessorMethod]
@@ -510,7 +510,7 @@ namespace Goo {
 		[NoAccessorMethod]
 		public Pango.EllipsizeMode ellipsize { get; set; }
 		[NoAccessorMethod]
-		public string text { get; set; }
+		public string text { owned get; set; }
 		[NoAccessorMethod]
 		public bool use_markup { get; set; }
 		[NoAccessorMethod]
@@ -531,7 +531,7 @@ namespace Goo {
 		[NoAccessorMethod]
 		public double height { get; set; }
 		[NoAccessorMethod]
-		public Gtk.Widget widget { get; set; }
+		public Gtk.Widget widget { owned get; set; }
 		[NoAccessorMethod]
 		public double width { get; set; }
 		[NoAccessorMethod]
