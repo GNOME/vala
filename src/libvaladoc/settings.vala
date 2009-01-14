@@ -30,6 +30,8 @@ public class Valadoc.Settings : Object {
 	public bool with_deps = false;
 	public bool add_inherited = false;
 
+
+	// remove
 	public string get_real_path () {
 		if ( rpath == null ) {
 			string path = realpath ( this.path );

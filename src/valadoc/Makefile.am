@@ -41,7 +41,7 @@ valadoc_LDADD =                 \
 
 
 valadoc.vala.stamp: $(libvaladoc_VALASOURCES)
-	$(VALAC) -C --pkg gmodule-2.0 --pkg config --vapidir ../vapi --pkg valadoc-1.0 --basedir $(top_srcdir)/src/valadoc/ valadoc.vala --disable-non-null --save-temps $^
+	$(VALAC) -C --pkg gmodule-2.0 --pkg config --vapidir ../vapi --pkg valadoc-1.0 --basedir $(top_srcdir)/src/valadoc/ valadoc.vala --save-temps $^
 	touch $@
 
 EXTRA_DIST = $(valadoc_VALASOURCES)  valadoc.vala.stamp 

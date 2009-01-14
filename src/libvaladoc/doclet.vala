@@ -27,9 +27,9 @@ public static delegate Type Valadoc.DocletRegisterFunction ( );
 
 
 public abstract class Valadoc.Doclet : GLib.Object {
-	public abstract void initialisation ( Settings settings );
+	public abstract void initialisation ( Settings settings, Tree tree );
 
-	// walkarround for a strage bug
+	// walkarround for a strange valac-bug
 	public abstract void cleanups ( );
 
 	public abstract void visit_package ( Package pkg );

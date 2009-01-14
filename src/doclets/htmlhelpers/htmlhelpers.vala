@@ -277,7 +277,7 @@ public abstract class Valadoc.SeeHtmlHelperTaglet : MainTaglet {
 	private string link;
 	private string css;
 
-	protected abstract string? get_link ( Settings settings, Tree tree, Basic element, Basic? pos );
+	protected abstract string? get_link ( Settings settings, Tree tree, DocumentedElement element, DocumentedElement? pos );
 
 	// override-bug
 	protected bool write_block_start_imp ( void* res ) {
@@ -302,7 +302,7 @@ public abstract class Valadoc.SeeHtmlHelperTaglet : MainTaglet {
 	}
 
 	// override-bug
-	protected bool parse_imp ( Settings settings, Tree tree, Basic me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+	protected bool parse_imp ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, out string[] errmsg ) {
 		if ( content.size != 1 ) {
 			errmsg = new string[1];
 			errmsg[0] = "Type name was expected.";
@@ -319,7 +319,7 @@ public abstract class Valadoc.SeeHtmlHelperTaglet : MainTaglet {
 			return false;
 		}
 
-		Valadoc.Basic? node = tree.search_symbol_str ( me, ((StringTaglet)element).content.strip ( ) );
+		Valadoc.DocumentedElement? node = tree.search_symbol_str ( me, ((StringTaglet)element).content.strip ( ) );
 		if ( node == null ) {
 			errmsg = new string[1];
 			errmsg[0] = "Linked type is not available.";
@@ -355,7 +355,7 @@ public class Valadoc.SinceHtmlTaglet : MainTaglet {
 		return true;
 	}
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, out string[] errmsg ) {
 		if ( content.size != 1 ) {
 			errmsg = new string[1];
 			errmsg[0] = "Version name was expected.";
@@ -384,7 +384,7 @@ public abstract class Valadoc.LinkHtmlHelperTaglet : InlineTaglet {
 	private string? name = null;
 	private string? css = null;
 
-	protected abstract string? get_link ( Settings settings, Tree tree, Basic element, Basic? pos );
+	protected abstract string? get_link ( Settings settings, Tree tree, DocumentedElement element, DocumentedElement? pos );
 
 	protected string to_string_imp ( ) {
 		return this.name;
@@ -399,8 +399,8 @@ public abstract class Valadoc.LinkHtmlHelperTaglet : InlineTaglet {
 		return true;
 	}
 
-	protected bool parse_imp ( Settings settings, Tree tree, Basic me, string content, out string[] errmsg ) {
-		Valadoc.Basic? element = tree.search_symbol_str ( me, content.strip() );
+	protected bool parse_imp ( Settings settings, Tree tree, DocumentedElement me, string content, out string[] errmsg ) {
+		Valadoc.DocumentedElement? element = tree.search_symbol_str ( me, content.strip() );
 		if ( element == null ) {
 			errmsg = new string[1];
 			errmsg[0] = "Linked type is not available.";
@@ -420,7 +420,7 @@ public class Valadoc.ExceptionHtmlTaglet : MainTaglet {
 	private Gee.ArrayList<DocElement> content;
 	private string paramname;
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, out string[] errmsg ) {
 		if ( me is Valadoc.ExceptionHandler == false ) {
 			errmsg = new string[1];
 			errmsg[0] = "Tag @throws cannot be used in %s documentation.  It can only be used in the following types of documentation: method, signal, delegate.".printf ( this.get_data_type ( me ) );
@@ -481,11 +481,8 @@ public class Valadoc.ExceptionHtmlTaglet : MainTaglet {
 	}
 
 	private bool check_exception_parameter_name ( Valadoc.ExceptionHandler me, string paramname ) {
-		if ( paramname[0] == '.' || paramname == "" )
-			return false;
-
-		foreach ( Valadoc.TypeReference param in me.get_error_domains() ) {
-			if ( param.type_name.has_suffix ( paramname ) )
+		foreach ( Valadoc.DataType param in me.get_error_domains() ) {
+			if ( param.name == paramname )
 				return true;
 		}
 		return false;
@@ -580,7 +577,7 @@ public class Valadoc.ParameterHtmlTaglet : MainTaglet {
 		return true;
 	}
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, out string[] errmsg ) {
 		if ( me is Valadoc.ParameterListHandler == false ) {
 			errmsg = new string[1];
 			errmsg[0] = "Tag @param cannot be used in %s documentation.  It can only be used in the following types of documentation: method, signal, delegate.".printf ( this.get_data_type ( me ) );
@@ -644,7 +641,7 @@ public class Valadoc.ReturnHtmlTaglet : MainTaglet {
 	public override int order { get { return 300; } }
 	private Gee.Collection<DocElement> content;
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, out string[] errmsg ) {
 		if ( !(me is Valadoc.Method || me is Valadoc.Signal || me is Valadoc.Delegate) ) {
 			errmsg = new string[1];
 			errmsg[0] = "Tag @return cannot be used in %s documentation.  It can only be used in the following types of documentation: method, signal, delegate.".printf ( this.get_data_type ( me ) );
@@ -679,7 +676,7 @@ public class Valadoc.ReturnHtmlTaglet : MainTaglet {
 
 
 public class Valadoc.StringHtmlTaglet : StringTaglet {
-	public override bool parse ( Settings settings, Tree tree, Basic me, string content ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, string content ) {
 		this.content = content;
 		return true;
 	}
@@ -735,9 +732,9 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 		this.settings = settings;
 	}
 
-	private Basic position = null;
+	private DocumentedElement position = null;
 
-	protected abstract string get_link ( Basic type, Basic position );
+	protected abstract string get_link ( DocumentedElement type, DocumentedElement? position );
 
 	private inline bool is_basic_type ( string name ) {
 		string[] basic_types = new string[] { "bool", "char", "uchar", "int", "uint", "short", "ushort",
@@ -760,7 +757,7 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 		}
 
 		string typename = datatype.full_name ();
-		if ( datatype.parent.name == null && (datatype is Class || datatype is Struct) ) {
+		if ( ((DocumentedElement)datatype.parent).name == null && (datatype is Class || datatype is Struct) ) {
 			if ( this.is_basic_type ( typename ) ) {
 				string link = this.get_link(datatype, this.position );
 				if ( link == null )
@@ -824,6 +821,10 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 
 		if ( type_reference.is_weak )
 			modifiers.append ( "weak " );
+		else if ( type_reference.is_unowned )
+			modifiers.append ( "unowned " );
+		else if ( type_reference.is_owned )
+			modifiers.append ( "owned " );
 
 		if ( modifiers.len > 0 )
 			file.printf ( "<font class=\"%s\">%s</font> ", css_keyword, modifiers.str );
@@ -837,13 +838,8 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 			file.printf ( "[%s]", str );
 		}
 
-		if ( type_reference.pass_ownership ) {
-			file.putc ( '#' );
-		}
-
-		if ( type_reference.is_nullable ) {
+		if ( type_reference.is_nullable )
 			file.putc ( '?' );
-		}
 
 		string str = string.nfill ( type_reference.pointer_rank, '*' );
 		file.puts ( str );
@@ -912,7 +908,7 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 		foreach ( FormalParameter param in params ) {
 			i++;
 
-			if ( param.default_value != null && open_bracket == false ) {
+			if ( param.has_default_value == true && open_bracket == false ) {
 				file.printf ( "<span class=\"%s\">[", css_optional_parameter );
 				open_bracket = true;
 			}
@@ -930,7 +926,7 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 	}
 
 	private void write_exception_list ( ExceptionHandler exception_handler, GLib.FileStream file ) {
-		Gee.ReadOnlyCollection<TypeReference> error_domains = exception_handler.get_error_domains ();
+		Gee.ReadOnlyCollection<DataType> error_domains = exception_handler.get_error_domains ();
 		int size = error_domains.size;
 		int i = 1;
 
@@ -939,14 +935,8 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 
 		file.printf ( " <span class=\"%s\">throws</span> ", css_keyword );
 
-		foreach ( TypeReference type_reference in error_domains ) {
-			if ( type_reference == null ) {
-				file.printf ( "<span class=\"%s\">GLib.Error</span>", css_other_type );
-			}
-			else {
-				this.write_type_reference ( type_reference, file );
-			}
-
+		foreach ( DataType type in error_domains ) {
+			this.write_type_name ( type, file );
 			if ( error_domains.size > i ) {
 				file.puts ( ", " );
 			}
@@ -974,7 +964,7 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 			modifiers.append ( " inline" );
 
 		file.printf ( " <span class=\"%s\">%s</span> ", css_keyword, modifiers.str );
-		this.write_type_reference ( m.return_type, file );
+		this.write_type_reference ( m.type_reference, file );
 		file.puts ( m.name );
 		file.puts ( " " );
 		this.write_parameter_list ( m, file );
@@ -987,7 +977,7 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 
 	public override void write_type_parameter ( TypeParameter param, void* ptr ) {
 		weak GLib.FileStream file = (GLib.FileStream)ptr;
-		file.puts ( param.datatype_name );
+		file.puts ( param.name );
 	}
 
 	public override void write_template_parameters ( TemplateParameterListHandler thandler, void* ptr ) {
@@ -1039,27 +1029,27 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 
 		Property prop = (Property)propac.parent;
 
+		file.printf ( "<span class=\"%s\">", css_keyword );
+
 		if ( !(prop.is_public == propac.is_public && prop.is_private == propac.is_private && prop.is_protected == propac.is_protected) ) {
 			// FIXME: PropertyAccessor isn't a SymbolAccessibility. (Valac-Bug.)
 			if ( propac.is_public )
-				file.printf ( "<span class=\"%s\">public</span> ", css_keyword );
+				file.puts ( "public " );
 			else if ( propac.is_protected )
-				file.printf ( "<span class=\"%s\">protected</span> ", css_keyword );
+				file.puts ( "protected " );
 			else if ( propac.is_private )
-				file.printf ( "<span class=\"%s\">private</span> ", css_keyword );
+				file.puts ( "private " );
 		}
 
+		if ( propac.is_owned )
+			file.puts ( "owned " );
 
-		if ( propac.is_get ) {
-			file.printf ( "<span class=\"%s\"> get</span>;", css_keyword );
-		}
-		else if ( propac.is_set ) {
-			if ( propac.is_construct ) {
-				file.printf ( "<span class=\"%s\"> construct</span> ", css_keyword );
-			}
+		if ( propac.is_get )
+			file.puts ( "get" );
+		else if ( propac.is_set )
+			file.puts ( "set" );
 
-			file.printf ( "<span class=\"%s\"> set</span>;", css_keyword );
-		}
+		file.puts ( "</span>;" );
 	}
 
 	public override void write_property ( Valadoc.Property prop, void* ptr ) {
@@ -1079,7 +1069,7 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 		if ( modifiers.len > 0 )
 			file.printf ( " <span class=\"%s\">%s</span> ", css_keyword, modifiers.str );
 
-		this.write_type_reference ( prop.return_type, file );
+		this.write_type_reference ( prop.type_reference, file );
 		file.printf ( " %s { ", prop.name );
 
 		if ( prop.setter != null )
@@ -1100,9 +1090,14 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 
 		this.write_accessor ( sig, file );
 
-		file.printf ( " <span class=\"%s\">signal</span> ", css_keyword );
+		file.printf ( " <span class=\"%s\">", css_keyword );
 
-		this.write_type_reference ( sig.return_type, file );
+		if ( sig.is_virtual == true )
+			file.printf ( "virtual " );
+
+		file.printf ( "signal</span> " );
+
+		this.write_type_reference ( sig.type_reference, file );
 		file.printf ( " %s ", sig.name );
 		this.write_parameter_list ( sig, file );
 	}
@@ -1120,7 +1115,7 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 		this.write_accessor ( del, file );
 
 		file.printf ( " <span class=\"%s\">delegate</span> ", css_keyword );
-		this.write_type_reference ( del.return_type, file );
+		this.write_type_reference ( del.type_reference, file );
 		file.printf ( " %s ", del.name );
 		this.write_parameter_list ( del, file );
 		this.write_exception_list ( del, file );
@@ -1212,7 +1207,7 @@ public abstract class Valadoc.BasicHtmlLanglet : Valadoc.Langlet {
 public class Valadoc.UnderlinedHtmlHelperDocElement : UnderlinedDocElement {
 	private Gee.ArrayList<DocElement> content;
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content ) {
 		this.content = content;
 		return true;
 	}
@@ -1238,7 +1233,7 @@ public class Valadoc.UnderlinedHtmlHelperDocElement : UnderlinedDocElement {
 public class Valadoc.ListHtmlHelperEntryDocElement : ListEntryDocElement {
 	private Gee.ArrayList<DocElement> content;
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, ListType type, Gee.ArrayList<DocElement> content ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, ListType type, Gee.ArrayList<DocElement> content ) {
 		this.content = content;
 		return true;
 	}
@@ -1265,7 +1260,7 @@ public class Valadoc.ListHtmlHelperDocElement : ListDocElement {
 	private Gee.ArrayList<ListEntryDocElement> entries;
 	private ListType type;
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, ListType type, Gee.ArrayList<ListEntryDocElement> entries ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, ListType type, Gee.ArrayList<ListEntryDocElement> entries ) {
 		this.entries = entries;
 		this.type = type;
 		return true;
@@ -1295,7 +1290,7 @@ public class Valadoc.LinkHtmlHelperDocElement : LinkDocElement {
 	protected Gee.ArrayList<DocElement>? desc;
 	protected string path;
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, string# path, Gee.ArrayList<DocElement>? desc ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, string# path, Gee.ArrayList<DocElement>? desc ) {
 		this.path = #path;
 		this.desc = desc;
 		return true;
@@ -1332,7 +1327,7 @@ public class Valadoc.TableCellHtmlHelperDocElement : TableCellDocElement {
 	private int dcells;
 	private int cells;
 	
-	public override void parse ( Settings settings, Tree tree, Basic me, TextPosition pos, TextVerticalPosition hpos, int cells, int dcells, Gee.ArrayList<DocElement> content ) {
+	public override void parse ( Settings settings, Tree tree, DocumentedElement me, TextPosition pos, TextVerticalPosition hpos, int cells, int dcells, Gee.ArrayList<DocElement> content ) {
 		this.content = content;
 		this.dcells = dcells;
 		this.cells = cells;
@@ -1422,7 +1417,7 @@ public class Valadoc.TableHtmlHelperDocElement : TableDocElement {
 public class Valadoc.NotificationHtmlHelperDocElement : NotificationDocElement {
 	private Gee.ArrayList<DocElement> content;
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content ) {
 		this.content = content;
 		return true;
 	}
@@ -1448,7 +1443,7 @@ public class Valadoc.SourceCodeHtmlHelerDocElement : SourceCodeDocElement {
 	public Language lang;
 	public string src;
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, string# src, Language lang ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, string# src, Language lang ) {
 		this.lang = lang;
 		this.src = #src;
 		return true;
@@ -1468,7 +1463,7 @@ public class Valadoc.SourceCodeHtmlHelerDocElement : SourceCodeDocElement {
 public class Valadoc.ItalicHtmlHelperDocElement : ItalicDocElement {
 	private Gee.ArrayList<DocElement> content;
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content ) {
 		this.content = content;
 		return true;
 	}
@@ -1494,7 +1489,7 @@ public class Valadoc.ItalicHtmlHelperDocElement : ItalicDocElement {
 public class Valadoc.BoldHtmlHelperDocElement : BoldDocElement {
 	private Gee.ArrayList<DocElement> content;
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content ) {
 		this.content = content;
 		return true;
 	}
@@ -1521,7 +1516,7 @@ public class Valadoc.BoldHtmlHelperDocElement : BoldDocElement {
 public class Valadoc.RightAlignedHtmlHelperDocElement : RightAlignedDocElement {
 	private Gee.ArrayList<DocElement> content;
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content ) {
 		this.content = content;
 		return true;
 	}
@@ -1550,7 +1545,7 @@ public class Valadoc.RightAlignedHtmlHelperDocElement : RightAlignedDocElement {
 public class Valadoc.CenterHtmlHelperDocElement : CenterDocElement {
 	private Gee.ArrayList<DocElement> content;
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content ) {
 		this.content = content;
 		return true;
 	}
@@ -1583,7 +1578,7 @@ public class Valadoc.ImageHtmlHelperDocElement : ImageDocElement {
 	protected ImageDocElementPosition position;
 	protected string path;
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, string# path, ImageDocElementPosition pos ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, string# path, ImageDocElementPosition pos ) {
 		this.position = pos;
 		this.path = #path;
 		return true;
@@ -1637,7 +1632,7 @@ public class Valadoc.ImageHtmlHelperDocElement : ImageDocElement {
 public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	protected Valadoc.Langlet langlet;
 
-	protected abstract string get_link ( Valadoc.Basic p1, Valadoc.Basic? p2 );
+	protected abstract string get_link ( DocumentedElement p1, DocumentedElement? p2 );
 
 
 	// Navi:
@@ -1649,7 +1644,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", style, css_navi_link, link, content );
 	}
 
-	protected void write_navi_entry ( GLib.FileStream file, Basic element, Basic pos, string style, bool link, bool full_name = false ) {
+	protected void write_navi_entry ( GLib.FileStream file, DocumentedElement element, DocumentedElement? pos, string style, bool link, bool full_name = false ) {
 		string name;
 
 		if ( element is Class ) {
@@ -1659,7 +1654,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 				name = element.name;
 		}
 		else if ( element is Package ) {
-			name = element.file.name;
+			name = element.package.name;
 		}
 		else if ( full_name == true && element is Namespace ) {
 			string tmp = element.full_name();
@@ -1676,7 +1671,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 			this.write_navi_entry_html_template ( file, style, name );
 	}
 
-	protected void write_navi_top_entry ( GLib.FileStream file, Basic element, Basic mself ) {
+	protected void write_navi_top_entry ( GLib.FileStream file, DocumentedElement element, DocumentedElement? mself ) {
 		string name = (element.name == null)? "Global Namespace" : element.name;
 		string style = null;
 
@@ -1693,7 +1688,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		else if ( element is Interface )
 			style = css_navi_iface;
 		else if ( element is Package ) {
-			name = element.file.name;
+			name = element.package.name;
 			style = css_navi_package;
 		}
 
@@ -1713,12 +1708,12 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	}
 
 	//FIXME: Basic pos => Basic? pos
-	protected virtual void write_top_element ( GLib.FileStream file, Basic? pos ) {
+	protected virtual void write_top_element ( GLib.FileStream file, DocumentedElement? pos ) {
 	}
 
-	protected void write_top_elements ( GLib.FileStream file, Basic element, Basic? mself ) {
-		Gee.ArrayList<Basic> lst = new Gee.ArrayList<Basic> ();
-		Basic pos = element;
+	protected void write_top_elements ( GLib.FileStream file, DocumentedElement element, DocumentedElement? mself ) {
+		Gee.ArrayList<DocumentedElement> lst = new Gee.ArrayList<DocumentedElement> ();
+		DocumentedElement pos = element;
 
 //		if ( mself == null )
 //			mself = element;
@@ -1729,11 +1724,11 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 
 		while ( pos != null ) {
 			lst.add ( pos );
-			pos = pos.parent;
+			pos = (DocumentedElement)pos.parent;
 		}
 
 		for ( int i = lst.size-1; i >= 0  ; i-- ) {
-			Basic el = lst.get ( i );
+			DocumentedElement el = lst.get ( i );
 
 			if ( el.name != null ) {
 				this.write_navi_top_entry ( file, el, mself );
@@ -1750,7 +1745,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_file ( GLib.FileStream file, Package efile, Basic pos ) {
+	protected void write_navi_file ( GLib.FileStream file, Package efile, DocumentedElement? pos ) {
 		Gee.ArrayList<Namespace> ns_list = new Gee.ArrayList<Namespace> ();
 		this.fetch_subnamespace_names (efile, ns_list );
 
@@ -1763,7 +1758,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		else if ( pos == efile )
 			this.write_top_elements ( file, efile, efile );
 		else
-			this.write_top_elements ( file, pos.parent.parent, pos );
+			this.write_top_elements ( file, (DocumentedElement)pos.parent.parent, pos );
 
 		file.printf ( "\t\t\t\t<ul class=\"%s\">\n", css_navi );
 
@@ -1785,7 +1780,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	protected void write_navi_child_namespaces_inline_withouth_block ( GLib.FileStream file, Namespace ns, Basic mself ) {
+	protected void write_navi_child_namespaces_inline_withouth_block ( GLib.FileStream file, Namespace ns, DocumentedElement? mself ) {
 		this.write_navi_child_namespaces_without_childs ( file, ns, mself );
 		this.write_navi_child_classes_without_childs ( file, ns, mself );
 		this.write_navi_child_interfaces_without_childs ( file, ns, mself );
@@ -1799,7 +1794,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		this.write_navi_child_constants ( file, ns, mself );
 	}
 
-	protected void write_navi_child_namespaces_inline ( GLib.FileStream file, Namespace ns, Basic mself ) {
+	protected void write_navi_child_namespaces_inline ( GLib.FileStream file, Namespace ns, DocumentedElement? mself ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
 
 		if ( ns.name == null ) {
@@ -1811,12 +1806,12 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "</ul>\n" );
 	}
 
-	protected void write_navi_child_namespaces ( GLib.FileStream file, Namespace ns, Basic mself ) {
+	protected void write_navi_child_namespaces ( GLib.FileStream file, Namespace ns, DocumentedElement? mself ) {
 		this.write_top_elements ( file, ns, mself );
 		this.write_navi_child_namespaces_inline ( file, ns, mself );
 	}
 
-	protected void write_navi_struct_inline ( GLib.FileStream file, Struct stru, Basic mself ) {
+	protected void write_navi_struct_inline ( GLib.FileStream file, Struct stru, DocumentedElement? mself ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
 		this.write_navi_child_construction_methods ( file, stru, mself );
 		this.write_navi_child_static_methods ( file, stru, mself );
@@ -1826,14 +1821,14 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "</ul>\n" );
 	}
 
-	protected void write_navi_struct ( GLib.FileStream file, Struct stru, Basic mself ) {
+	protected void write_navi_struct ( GLib.FileStream file, Struct stru, DocumentedElement? mself ) {
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
 		this.write_top_elements ( file, stru, mself );
 		this.write_navi_struct_inline ( file, stru, mself );
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	protected void write_navi_interface_inline ( GLib.FileStream file, Interface iface, Basic mself ) {
+	protected void write_navi_interface_inline ( GLib.FileStream file, Interface iface, DocumentedElement? mself ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
 		this.write_navi_child_static_methods ( file, iface, mself );
 		this.write_navi_child_delegates ( file, iface, mself );
@@ -1844,14 +1839,14 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "</ul>\n" );
 	}
 
-	protected void write_navi_interface ( GLib.FileStream file, Interface iface, Basic mself ) {
+	protected void write_navi_interface ( GLib.FileStream file, Interface iface, DocumentedElement? mself ) {
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
 		this.write_top_elements ( file, iface, mself );
 		this.write_navi_interface_inline ( file, iface, mself );
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	protected void write_navi_enum_inline ( GLib.FileStream file, Enum en, Basic mself ) {
+	protected void write_navi_enum_inline ( GLib.FileStream file, Enum en, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<EnumValue> enum_values = en.get_enum_values ( );
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
 
@@ -1864,14 +1859,14 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "</ul>\n" );
 	}
 
-	protected void write_navi_enum ( GLib.FileStream file, Enum en, Basic mself ) {
+	protected void write_navi_enum ( GLib.FileStream file, Enum en, DocumentedElement? mself ) {
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
 		this.write_top_elements ( file, en, mself );
 		this.write_navi_enum_inline ( file, en, mself );
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	protected void write_navi_error_domain_inline ( GLib.FileStream file, ErrorDomain errdom, Basic mself = null ) {
+	protected void write_navi_error_domain_inline ( GLib.FileStream file, ErrorDomain errdom, DocumentedElement? mself = null ) {
 		Gee.ReadOnlyCollection<ErrorCode> error_codes = errdom.get_error_code_list ( );
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
 
@@ -1891,14 +1886,14 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	protected void write_navi_error_domain ( GLib.FileStream file, ErrorDomain errdom, Basic mself ) {
+	protected void write_navi_error_domain ( GLib.FileStream file, ErrorDomain errdom, DocumentedElement? mself ) {
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
 		this.write_top_elements ( file, errdom, mself );
 		this.write_navi_error_domain_inline ( file, errdom, mself );
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	protected void write_navi_class_inline ( GLib.FileStream file, Class cl, Basic mself ) {
+	protected void write_navi_class_inline ( GLib.FileStream file, Class cl, DocumentedElement? mself ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
 		this.write_navi_child_construction_methods ( file, cl, mself );
 		this.write_navi_child_static_methods ( file, cl, mself );
@@ -1914,7 +1909,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "</ul>\n" );
 	}
 
-	protected void write_navi_class ( GLib.FileStream file, Class cl, Basic mself ) {
+	protected void write_navi_class ( GLib.FileStream file, Class cl, DocumentedElement? mself ) {
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
 		this.write_top_elements ( file, cl, mself );
 		this.write_navi_class_inline ( file, cl, mself );
@@ -1922,7 +1917,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	}
 
 	protected void write_navi_method ( GLib.FileStream file, Method m ) {
-		Basic parent = m.parent;
+		DocumentedElement parent = (DocumentedElement)m.parent;
 
 		if ( parent.name == null ) {
 			this.write_navi_file ( file, (Package)parent.parent, m );
@@ -1950,10 +1945,10 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	}
 
 	protected void write_navi_property ( GLib.FileStream file, Property prop ) {
-		Basic parent = prop.parent;
+		DocumentedElement parent = (DocumentedElement)prop.parent;
 
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-		this.write_top_elements ( file, prop.parent, prop );
+		this.write_top_elements ( file, parent, prop );
 
 		if ( parent is Class )
 			this.write_navi_class_inline ( file, (Class)parent, prop );
@@ -1964,11 +1959,11 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	}
 
 	protected void write_navi_signal ( GLib.FileStream file, Signal sig ) {
-		Basic parent = sig.parent;
+		DocumentedElement parent = (DocumentedElement)sig.parent;
 
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
 
-		this.write_top_elements ( file, sig.parent, sig );
+		this.write_top_elements ( file, parent, sig );
 
 		if ( parent is Class )
 			this.write_navi_class_inline ( file, (Class)parent, sig );
@@ -1979,7 +1974,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	}
 
 	protected void write_navi_constant ( GLib.FileStream file, Constant c ) {
-		Basic parent = c.parent;
+		DocumentedElement parent = (DocumentedElement)c.parent;
 
 		if ( parent.name == null ) {
 			this.write_navi_file ( file, (Package)parent.parent, c );
@@ -2002,7 +1997,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	}
 
 	protected void write_navi_field ( GLib.FileStream file, Field f ) {
-		Basic parent = f.parent;
+		DocumentedElement parent = (DocumentedElement)f.parent;
 
 		if ( parent.name == null ) {
 			this.write_navi_file ( file, (Package)parent.parent, f );
@@ -2025,7 +2020,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	}
 
 	protected void write_navi_delegate ( GLib.FileStream file, Delegate del ) {
-		Basic parent = del.parent;
+		DocumentedElement parent = (DocumentedElement)del.parent;
 
 		if ( parent.name == null ) {
 			this.write_navi_file ( file, (Package)parent.parent, del );
@@ -2045,7 +2040,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_child_methods_collection ( GLib.FileStream file, Gee.Collection<Method> methods, Basic mself ) {
+	protected void write_navi_child_methods_collection ( GLib.FileStream file, Gee.Collection<Method> methods, DocumentedElement? mself ) {
 		foreach ( Method m in methods ) {
 			if ( !m.is_static ) {
 				string css;
@@ -2065,7 +2060,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_child_construction_methods_collection ( GLib.FileStream file, Gee.Collection<Method> methods, Basic mself ) {
+	protected void write_navi_child_construction_methods_collection ( GLib.FileStream file, Gee.Collection<Method> methods, DocumentedElement? mself ) {
 		foreach ( Method m in methods ) {
 			if ( m == mself )
 				this.write_navi_entry ( file, m, mself, css_navi_construction_method, false );
@@ -2074,7 +2069,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_child_static_methods_collection ( GLib.FileStream file, Gee.Collection<Method> methods, Basic mself ) {
+	protected void write_navi_child_static_methods_collection ( GLib.FileStream file, Gee.Collection<Method> methods, DocumentedElement? mself ) {
 		foreach ( Method m in methods ) {
 			if ( m.is_static ) {
 				if ( m == mself )
@@ -2085,17 +2080,17 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_child_methods ( GLib.FileStream file, MethodHandler mh, Basic mself ) {
+	protected void write_navi_child_methods ( GLib.FileStream file, MethodHandler mh, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Method> methods = mh.get_method_list ( );
 		this.write_navi_child_methods_collection ( file, methods, mself );
 	}
 
-	protected void write_navi_child_static_methods ( GLib.FileStream file, MethodHandler mh, Basic mself ) {
+	protected void write_navi_child_static_methods ( GLib.FileStream file, MethodHandler mh, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Method> methods = mh.get_method_list ( );
 		this.write_navi_child_static_methods_collection ( file, methods, mself );
 	}
 
-	protected void write_navi_child_classes_without_childs_collection ( GLib.FileStream file, Gee.Collection<Class> classes, Basic mself ) {
+	protected void write_navi_child_classes_without_childs_collection ( GLib.FileStream file, Gee.Collection<Class> classes, DocumentedElement? mself ) {
 		foreach ( Class cl in classes ) {
 			if ( cl == mself )
 				this.write_navi_entry ( file, cl, mself, (cl.is_abstract)? css_navi_abstract_class : css_navi_class, false );
@@ -2104,17 +2099,17 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_child_classes_without_childs ( GLib.FileStream file, ClassHandler clh, Basic mself ) {
+	protected void write_navi_child_classes_without_childs ( GLib.FileStream file, ClassHandler clh, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Class> classes = clh.get_class_list ( );
 		this.write_navi_child_classes_without_childs_collection ( file, classes, mself );
 	}
 
-	protected void write_navi_child_construction_methods ( GLib.FileStream file, ConstructionMethodHandler cmh, Basic mself ) {
+	protected void write_navi_child_construction_methods ( GLib.FileStream file, ConstructionMethodHandler cmh, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Method> methods = cmh.get_construction_method_list ( );
 		this.write_navi_child_construction_methods_collection ( file, methods, mself );
 	}
 
-	protected void write_navi_child_signals ( GLib.FileStream file, SignalHandler sh, Basic mself ) {
+	protected void write_navi_child_signals ( GLib.FileStream file, SignalHandler sh, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Signal> signals = sh.get_signal_list ( );
 
 		foreach ( Signal sig in signals ) {
@@ -2125,7 +2120,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_child_properties ( GLib.FileStream file, PropertyHandler ph, Basic mself ) {
+	protected void write_navi_child_properties ( GLib.FileStream file, PropertyHandler ph, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Property> properties = ph.get_property_list ( );
 
 		foreach ( Property p in properties ) {
@@ -2144,7 +2139,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_child_fields_collection ( GLib.FileStream file, Gee.Collection<Field> fields, Basic mself ) {
+	protected void write_navi_child_fields_collection ( GLib.FileStream file, Gee.Collection<Field> fields, DocumentedElement? mself ) {
 		foreach ( Field f in fields ) {
 			if ( f == mself )
 				this.write_navi_entry ( file, f, mself, css_navi_field, false );
@@ -2153,12 +2148,12 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_child_fields ( GLib.FileStream file, FieldHandler fh, Basic mself ) {
+	protected void write_navi_child_fields ( GLib.FileStream file, FieldHandler fh, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Field> fields = fh.get_field_list ( );
 		this.write_navi_child_fields_collection ( file, fields, mself );
 	}
 
-	protected void write_navi_child_constants_collection ( GLib.FileStream file, Gee.Collection<Constant> constants, Basic mself ) {
+	protected void write_navi_child_constants_collection ( GLib.FileStream file, Gee.Collection<Constant> constants, DocumentedElement? mself ) {
 		foreach ( Constant c in constants ) {
 			if ( c == mself )
 				this.write_navi_entry ( file, c, mself, css_navi_constant, false );
@@ -2167,12 +2162,12 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_child_constants ( GLib.FileStream file, ConstantHandler ch, Basic mself ) {
+	protected void write_navi_child_constants ( GLib.FileStream file, ConstantHandler ch, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Constant> constants = ch.get_constant_list ( );
 		this.write_navi_child_constants_collection ( file, constants, mself );
 	}
 
-	protected void write_navi_child_structs_without_childs_collection ( GLib.FileStream file, Gee.Collection<Struct> structs, Basic mself ) {
+	protected void write_navi_child_structs_without_childs_collection ( GLib.FileStream file, Gee.Collection<Struct> structs, DocumentedElement? mself ) {
 		foreach ( Struct stru in structs ) {
 			if ( stru == mself )
 				this.write_navi_entry ( file, stru, mself, css_navi_struct, false );
@@ -2181,12 +2176,12 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_child_structs_without_childs ( GLib.FileStream file, StructHandler strh, Basic mself ) {
+	protected void write_navi_child_structs_without_childs ( GLib.FileStream file, StructHandler strh, DocumentedElement? mself ) {
 		Gee.Collection<Struct> structs = strh.get_struct_list ( );
 		this.write_navi_child_structs_without_childs_collection ( file, structs, mself );
 	}
 
-	protected void write_navi_child_delegates_collection ( GLib.FileStream file, Gee.Collection<Delegate> delegates, Basic mself ) {
+	protected void write_navi_child_delegates_collection ( GLib.FileStream file, Gee.Collection<Delegate> delegates, DocumentedElement? mself ) {
 		foreach ( Delegate del in delegates ) {
 			if ( del == mself )
 				this.write_navi_entry ( file, del, mself, css_navi_del, false );
@@ -2195,12 +2190,12 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_child_delegates ( GLib.FileStream file, DelegateHandler delh, Basic mself ) {
+	protected void write_navi_child_delegates ( GLib.FileStream file, DelegateHandler delh, DocumentedElement? mself ) {
 		Gee.Collection<Delegate> delegates = delh.get_delegate_list ( );
 		this.write_navi_child_delegates_collection ( file, delegates, mself );
 	}
 
-	protected void write_navi_child_interfaces_without_childs_collection ( GLib.FileStream file, Gee.Collection<Interface> interfaces, Basic mself ) {
+	protected void write_navi_child_interfaces_without_childs_collection ( GLib.FileStream file, Gee.Collection<Interface> interfaces, DocumentedElement? mself ) {
 		foreach ( Interface iface in interfaces ) {
 			if ( iface == mself )
 				this.write_navi_entry ( file, iface, mself, css_navi_iface, false );
@@ -2209,12 +2204,12 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_child_interfaces_without_childs ( GLib.FileStream file, Namespace ifh, Basic mself ) {
+	protected void write_navi_child_interfaces_without_childs ( GLib.FileStream file, Namespace ifh, DocumentedElement? mself ) {
 		Gee.Collection<Interface> interfaces = ifh.get_interface_list ( );
 		this.write_navi_child_interfaces_without_childs_collection ( file, interfaces, mself );
 	}
 
-	protected void write_navi_child_enums_without_childs_collection ( GLib.FileStream file, Gee.Collection<Enum> enums, Basic mself ) {
+	protected void write_navi_child_enums_without_childs_collection ( GLib.FileStream file, Gee.Collection<Enum> enums, DocumentedElement? mself ) {
 		foreach ( Enum en in enums ) {
 			if ( en == mself )
 				this.write_navi_entry ( file, en, mself, css_navi_enum, false );
@@ -2223,12 +2218,12 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_child_enums_without_childs ( GLib.FileStream file, EnumHandler eh, Basic mself ) {
+	protected void write_navi_child_enums_without_childs ( GLib.FileStream file, EnumHandler eh, DocumentedElement? mself ) {
 		Gee.Collection<Enum> enums = eh.get_enum_list ( );
 		this.write_navi_child_enums_without_childs_collection ( file, enums, mself );
 	}
 
-	protected void write_navi_child_error_domains_without_childs_collection ( GLib.FileStream file, Gee.Collection<ErrorDomain> errordomains, Basic mself ) {
+	protected void write_navi_child_error_domains_without_childs_collection ( GLib.FileStream file, Gee.Collection<ErrorDomain> errordomains, DocumentedElement? mself ) {
 		foreach ( ErrorDomain errdom in errordomains ) {
 			if ( errdom == mself )
 				this.write_navi_entry ( file, errdom, mself, css_navi_error_domain, false );
@@ -2237,12 +2232,12 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_navi_child_error_domains_without_childs ( GLib.FileStream file, Namespace errdomh, Basic mself ) {
+	protected void write_navi_child_error_domains_without_childs ( GLib.FileStream file, Namespace errdomh, DocumentedElement? mself ) {
 		Gee.Collection<ErrorDomain> errordomains = errdomh.get_error_domain_list ( );
 		this.write_navi_child_error_domains_without_childs_collection ( file, errordomains, mself );
 	}
 
-	protected void write_navi_child_namespaces_without_childs ( GLib.FileStream file, NamespaceHandler nsh, Basic mself ) {
+	protected void write_navi_child_namespaces_without_childs ( GLib.FileStream file, NamespaceHandler nsh, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Namespace> namespaces = nsh.get_namespace_list ( );
 		foreach ( Namespace ns in namespaces ) {
 			if ( ns.name == null )
@@ -2255,32 +2250,26 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-
-////////////////
-
-
-	protected void write_package_note ( GLib.FileStream file, Basic element ) {
-		string package = element.package;
+	protected void write_package_note ( GLib.FileStream file, DocumentedElement element ) {
+		string package = element.package.name;
 		if ( package == null )
 			return ;
 
 		file.printf ( "\n\n<br />\n<b>Package:</b> %s\n\n", package );
 	}
 
-	protected void write_namespace_note ( GLib.FileStream file, Basic element ) {
-		for ( ; element is Namespace == false; element = element.parent )
-			;
-
-		if ( element.parent == null )
+	protected void write_namespace_note ( GLib.FileStream file, DocumentedElement element ) {
+		Namespace? ns = element.nspace;
+		if ( ns == null )
 			return ;
 
-		if ( element.name == null )
+		if ( ns.name == null )
 			return ;
 
-		file.printf ( "\n\n<br />\n<b>Namespace:</b> %s\n\n", element.full_name() );
+		file.printf ( "\n\n<br />\n<b>Namespace:</b> %s\n\n", ns.full_name() );
 	}
 
-	private void write_brief_description ( GLib.FileStream file, Valadoc.Basic element , Valadoc.Basic? pos ) {
+	private void write_brief_description ( GLib.FileStream file, DocumentedElement element , DocumentedElement? pos ) {
 		DocumentationTree? doctree = element.documentation;
 		if ( doctree == null )
 			return ;
@@ -2304,7 +2293,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	private void write_documentation ( GLib.FileStream file, Valadoc.Basic element , Valadoc.Basic? pos ) {
+	private void write_documentation ( GLib.FileStream file, DocumentedElement element , DocumentedElement? pos ) {
 		DocumentationTree? doctree = element.documentation;
 		if ( doctree == null )
 			return ;
@@ -2449,7 +2438,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	public void write_enum_content ( GLib.FileStream file, Enum en, Basic? mself ) {
+	public void write_enum_content ( GLib.FileStream file, Enum en, DocumentedElement? mself ) {
 		string full_name = en.full_name ( );
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
@@ -2490,7 +2479,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_namespaces ( GLib.FileStream file, NamespaceHandler nh, Basic? mself ) {
+	protected void write_child_namespaces ( GLib.FileStream file, NamespaceHandler nh, DocumentedElement? mself ) {
 		Gee.ArrayList<Namespace> nsl = new Gee.ArrayList<Namespace> ();
 		this.fetch_subnamespace_names ( nh, nsl );
 
@@ -2525,7 +2514,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "</ul>\n" );
 	}
 
-	protected void write_child_methods ( GLib.FileStream file, MethodHandler mh, Basic? mself ) {
+	protected void write_child_methods ( GLib.FileStream file, MethodHandler mh, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Method> methods = mh.get_method_list ();
 		Gee.ArrayList<Method> imethods = new Gee.ArrayList<Method> ( );
 		foreach ( Method m in methods ) {
@@ -2545,7 +2534,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_dependencies ( GLib.FileStream file, Package package, Basic? mself ) {
+	protected void write_child_dependencies ( GLib.FileStream file, Package package, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Package> deps = package.get_full_dependency_list ();
 		if ( deps.size == 0 )
 			return ;
@@ -2573,7 +2562,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "</ul>\n" );
 	}
 
-	protected void write_child_static_methods ( GLib.FileStream file, MethodHandler mh, Basic? mself ) {
+	protected void write_child_static_methods ( GLib.FileStream file, MethodHandler mh, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Method> methods = mh.get_method_list ();
 
 		Gee.ArrayList<Method> static_methods = new Gee.ArrayList<Method> ( );
@@ -2594,7 +2583,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	public void write_class_content ( GLib.FileStream file, Class cl, Basic? mself ) {
+	public void write_class_content ( GLib.FileStream file, Class cl, DocumentedElement? mself ) {
 		string full_name = cl.full_name ( );
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
@@ -2627,7 +2616,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	public void write_interface_content ( GLib.FileStream file, Interface iface, Basic? mself ) {
+	public void write_interface_content ( GLib.FileStream file, Interface iface, DocumentedElement? mself ) {
 		string full_name = iface.full_name ();
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
@@ -2657,7 +2646,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	public void write_error_domain_content ( GLib.FileStream file, ErrorDomain errdom, Basic? mself ) {
+	public void write_error_domain_content ( GLib.FileStream file, ErrorDomain errdom, DocumentedElement? mself ) {
 		string full_name = errdom.full_name ( );
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
@@ -2678,7 +2667,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	public void write_struct_content ( GLib.FileStream file, Struct stru, Basic? mself ) {
+	public void write_struct_content ( GLib.FileStream file, Struct stru, DocumentedElement? mself ) {
 		string full_name = stru.full_name ( );
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
@@ -2707,12 +2696,12 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 	}
 
 
-	protected abstract string get_img_real_path ( Basic element );
+	protected abstract string get_img_real_path ( DocumentedElement element );
 
-	protected abstract string get_img_path ( Basic element );
+	protected abstract string get_img_path ( DocumentedElement element );
 
 
-	protected void write_child_constants ( GLib.FileStream file, ConstantHandler ch, Basic? mself ) {
+	protected void write_child_constants ( GLib.FileStream file, ConstantHandler ch, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Constant> constants = ch.get_constant_list ();
 		if ( constants.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Constants:</h3>\n", css_title );
@@ -2726,7 +2715,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_enums ( GLib.FileStream file, EnumHandler eh, Basic? mself ) {
+	protected void write_child_enums ( GLib.FileStream file, EnumHandler eh, DocumentedElement? mself ) {
 		Gee.Collection<Enum> enums = eh.get_enum_list ();
 		if ( enums.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Enums:</h3>\n", css_title );
@@ -2740,7 +2729,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_errordomains ( GLib.FileStream file, ErrorDomainHandler eh, Basic? mself ) {
+	protected void write_child_errordomains ( GLib.FileStream file, ErrorDomainHandler eh, DocumentedElement? mself ) {
 		Gee.Collection<ErrorDomain> errdoms = eh.get_error_domain_list ();
 		if ( errdoms.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Errordomains:</h3>\n", css_title );
@@ -2754,7 +2743,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_construction_methods ( GLib.FileStream file, ConstructionMethodHandler cmh, Basic? mself ) {
+	protected void write_child_construction_methods ( GLib.FileStream file, ConstructionMethodHandler cmh, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Method> methods = cmh.get_construction_method_list ();
 		if ( methods.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Construction Methods:</h3>\n", css_title );
@@ -2786,7 +2775,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.printf ( "<img cass=\"%s\" src=\"%s\"/>\n", css_diagram, imgpath );
 	}
 
-	protected void write_child_fields ( GLib.FileStream file, FieldHandler fh, Basic? mself ) {
+	protected void write_child_fields ( GLib.FileStream file, FieldHandler fh, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Field> fields = fh.get_field_list ();
 		if ( fields.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Fields:</h3>\n", css_title );
@@ -2800,7 +2789,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_properties ( GLib.FileStream file, PropertyHandler ph, Basic? mself ) {
+	protected void write_child_properties ( GLib.FileStream file, PropertyHandler ph, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Property> properties = ph.get_property_list ();
 		if ( properties.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Properties:</h3>\n", css_title );
@@ -2814,7 +2803,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_signals ( GLib.FileStream file, SignalHandler sh, Basic? mself ) {
+	protected void write_child_signals ( GLib.FileStream file, SignalHandler sh, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Signal> signals = sh.get_signal_list ();
 		if ( signals.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Signals:</h3>\n", css_title );
@@ -2828,7 +2817,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_classes ( GLib.FileStream file, ClassHandler clh, Basic? mself ) {
+	protected void write_child_classes ( GLib.FileStream file, ClassHandler clh, DocumentedElement? mself ) {
 		Gee.ReadOnlyCollection<Class> classes = clh.get_class_list ();
 		if ( classes.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Classes:</h3>\n", css_title );
@@ -2850,7 +2839,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_interfaces ( GLib.FileStream file, InterfaceHandler ih, Basic? mself ) {
+	protected void write_child_interfaces ( GLib.FileStream file, InterfaceHandler ih, DocumentedElement? mself ) {
 		Gee.Collection<Interface> ifaces = ih.get_interface_list ( );
 		if ( ifaces.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Interfaces:</h3>\n", css_title );
@@ -2864,7 +2853,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_delegates ( GLib.FileStream file, DelegateHandler dh, Basic? mself ) {
+	protected void write_child_delegates ( GLib.FileStream file, DelegateHandler dh, DocumentedElement? mself ) {
 		Gee.Collection<Delegate> delegates = dh.get_delegate_list ();
 		if ( delegates.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Delegates:</h3>\n", css_title );
@@ -2878,7 +2867,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_structs ( GLib.FileStream file, StructHandler struh, Basic? mself ) {
+	protected void write_child_structs ( GLib.FileStream file, StructHandler struh, DocumentedElement? mself ) {
 		Gee.Collection<Struct> structs = struh.get_struct_list ();
 		if ( structs.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Structs:</h3>\n", css_title );
@@ -2892,7 +2881,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		}
 	}
 
-	public void write_namespace_content ( GLib.FileStream file, Namespace ns, Basic? mself ) {
+	public void write_namespace_content ( GLib.FileStream file, Namespace ns, DocumentedElement? mself ) {
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, (ns.name == null)? "Global Namespace" : ns.full_name () );
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_hr );
@@ -2918,7 +2907,7 @@ public abstract class Valadoc.BasicHtmlDoclet : Valadoc.Doclet {
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	protected void write_file_content ( GLib.FileStream file, Package f, Basic? mself ) {
+	protected void write_file_content ( GLib.FileStream file, Package f, DocumentedElement? mself ) {
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, f.name );
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );

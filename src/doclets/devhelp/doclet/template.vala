@@ -26,7 +26,7 @@ using Gee;
 
 
 public class Valadoc.LangletIndex : Valadoc.BasicHtmlLanglet, Valadoc.HtmlHelper {
-	protected override string get_link ( Basic element, Basic pos ) {
+	protected override string get_link ( DocumentedElement element, DocumentedElement? pos ) {
 		return this.get_html_link ( this.settings, element, pos );
 	}
 
@@ -150,23 +150,23 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 	private string package_dir_name = "";
 	private DevhelpFormat devhelp;
 
-	protected override string get_link ( Valadoc.Basic p1, Valadoc.Basic? p2 ) {
+	protected override string get_link ( DocumentedElement p1, DocumentedElement? p2 ) {
 		return this.get_html_link ( this.settings, p1, p2 );		
 	}
 
-	private string get_path ( Valadoc.Basic element ) {
+	private string get_path ( DocumentedElement element ) {
 		return element.full_name () + ".html";
 	}
 
-	private string get_real_path ( Valadoc.Basic element ) {
+	private string get_real_path ( DocumentedElement element ) {
 		return this.settings.get_real_path ( ) + "/" + this.package_dir_name + "/" + element.full_name () + ".html";
 	}
 
-	protected override string get_img_path ( Valadoc.Basic element ) {
+	protected override string get_img_path ( DocumentedElement element ) {
 		return "img/" + element.full_name () + ".png";
 	}
 
-	protected override string get_img_real_path ( Valadoc.Basic element ) {
+	protected override string get_img_real_path ( DocumentedElement element ) {
 		return this.settings.get_real_path ( ) + "/" + this.package_dir_name + "/" + "img/" + element.full_name () + ".png";
 	}
 
@@ -175,7 +175,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		protected get;
 	}
 
-	public override void initialisation ( Settings settings ) {
+	public override void initialisation ( Settings settings, Tree tree ) {
 		this.settings = settings;
 
 		var rt = DirUtils.create ( this.settings.path, 0777 );
@@ -183,6 +183,11 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 
 		this.langlet = new Valadoc.LangletIndex ( settings );
 		this.devhelp = new DevhelpFormat ( settings.pkg_name, "" );
+
+		Gee.ReadOnlyCollection<Package> packages = tree.get_package_list ();
+		foreach ( Package pkg in packages ) {
+			pkg.visit ( this );
+		}
 	}
 
 	public override void visit_package ( Package file ) {
@@ -313,7 +318,6 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		this.write_file_header ( file, "style.css", stru.full_name() );
 
-		// HIER CRASHT ES!!
 		this.write_struct_content ( file, stru, stru );
 		this.write_file_footer ( file );
 		file = null;

@@ -11,7 +11,7 @@ BUILT_SOURCES = libhtmlhelper.vala.stamp
 
 
 libhtmlhelper.vala.stamp: $(libhtmlhelper_VALASOURCES)
-	$(VALAC) -C --library libhtmlhelper-1.0 --basedir . --vapidir ../../htmlhelpers --pkg libhtmlhelpers-1.0 --vapidir ../../../vapi --pkg valadoc-1.0 --disable-non-null $^
+	$(VALAC) -C --library libhtmlhelper-1.0 --basedir . --vapidir ../../htmlhelpers --pkg libhtmlhelpers-1.0 --vapidir ../../../vapi --pkg valadoc-1.0 $^
 	touch $@
 
 

@@ -25,7 +25,7 @@ using Gee;
 
 
 public class Valadoc.SeeDevhelpTaglet : SeeHtmlHelperTaglet, HtmlHelper {
-	protected override string? get_link ( Settings settings, Tree tree, Basic element, Basic? pos ) {
+	protected override string? get_link ( Settings settings, Tree tree, DocumentedElement element, DocumentedElement? pos ) {
 		return this.get_html_link ( settings, element, pos );
 	}
 
@@ -41,7 +41,7 @@ public class Valadoc.SeeDevhelpTaglet : SeeHtmlHelperTaglet, HtmlHelper {
 		return this.write_imp ( res, max, index );
 	}
 
-	public override bool parse ( Settings settings, Tree tree, Basic me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, out string[] errmsg ) {
 		return this.parse_imp ( settings, tree, me, content, out errmsg );
 	}
 }

@@ -17,7 +17,7 @@ BUILT_SOURCES = libvaladoc.vala.stamp
 
 
 libvaladoc.vala.stamp: $(libvaladoc_VALASOURCES)
-	$(VALAC) -C --pkg vala-1.0 --pkg gmodule-2.0 --vapidir ../vapi --pkg libxml-2.0 --pkg libgvc --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --disable-non-null --save-temps $^
+	$(VALAC) -C --pkg vala-1.0 --pkg gmodule-2.0 --vapidir ../vapi --pkg libxml-2.0 --pkg libgvc --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
 	touch $@
 
 

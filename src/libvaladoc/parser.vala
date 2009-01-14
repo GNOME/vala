@@ -37,12 +37,12 @@ public abstract class Taglet : DocElement {
 }
 
 public abstract class InlineTaglet : Taglet {
-	public abstract bool parse ( Settings settings, Tree tree, Basic me, string content, out string[] errmsg );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, string content, out string[] errmsg );
 	public abstract string to_string ( );
 }
 
 public abstract class MainTaglet : Taglet {
-	protected string? get_data_type ( Basic me ) {
+	protected string? get_data_type ( DocumentedElement me ) {
 		if ( me is Valadoc.Class )
 			return "class";
 		if ( me is Valadoc.Delegate )
@@ -74,7 +74,7 @@ public abstract class MainTaglet : Taglet {
 	}
 
 	public virtual int order { get { return 0; } }
-	public abstract bool parse ( Settings settings, Tree tree, Basic me, Gee.Collection<DocElement> content, out string[] errmsg );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, out string[] errmsg );
 	public abstract bool write_block_start ( void* res );
 	public abstract bool write_block_end ( void* res );
 }
@@ -84,7 +84,7 @@ public abstract class StringTaglet : Taglet {
 		set; get;
 	}
 
-	public abstract bool parse ( Settings settings, Tree tree, Basic me, string content );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, string content );
 }
 
 public enum ImageDocElementPosition {
@@ -106,32 +106,32 @@ public enum ListType {
 }
 
 public abstract class ImageDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, Basic me, string# path, ImageDocElementPosition pos );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, string# path, ImageDocElementPosition pos );
 }
 
 public abstract class LinkDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, Basic me, string# link, Gee.ArrayList<DocElement>? desc );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, string# link, Gee.ArrayList<DocElement>? desc );
 }
 
 public abstract class SourceCodeDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, Basic me, string# src, Language lang );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, string# src, Language lang );
 }
 
 public abstract class ListEntryDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, Basic me, ListType type, Gee.ArrayList<DocElement> content );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, ListType type, Gee.ArrayList<DocElement> content );
 }
 
 public abstract class ListDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, Basic me, ListType type, Gee.ArrayList<ListEntryDocElement> entries );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, ListType type, Gee.ArrayList<ListEntryDocElement> entries );
 }
 
 public abstract class NotificationDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content );
 }
 
 
 public abstract class HighlightedDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content );
 }
 
 public abstract class ItalicDocElement : HighlightedDocElement {
@@ -144,7 +144,7 @@ public abstract class UnderlinedDocElement : HighlightedDocElement {
 }
 
 public abstract class ContentPositionDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, Basic me, Gee.ArrayList<DocElement> content );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content );
 }
 
 public abstract class CenterDocElement : ContentPositionDocElement {
@@ -169,7 +169,7 @@ public enum TextVerticalPosition {
 
 
 public abstract class TableCellDocElement : DocElement {
-	public abstract void parse ( Settings settings, Tree tree, Basic me, TextPosition pos, TextVerticalPosition hpos, int size, int dsize, Gee.ArrayList<DocElement> content );
+	public abstract void parse ( Settings settings, Tree tree, DocumentedElement me, TextPosition pos, TextVerticalPosition hpos, int size, int dsize, Gee.ArrayList<DocElement> content );
 }
 
 public abstract class TableDocElement : DocElement {
@@ -340,7 +340,6 @@ public class ModuleLoader : Object {
 	private Module docletmodule;
 	private Type doclettype;
 
-
 	public bool load ( string path ) {
 		bool tmp = this.load_doclet ( path );
 		if ( tmp == false )
@@ -349,7 +348,7 @@ public class ModuleLoader : Object {
 		return this.load_taglets ( path );
 	}
 
-	public bool load_doclet ( string path ) {
+	private bool load_doclet ( string path ) {
 		void* function;
 
 		docletmodule = Module.open ( path + "/libdoclet.so", ModuleFlags.BIND_LAZY);
@@ -368,7 +367,7 @@ public class ModuleLoader : Object {
 		return true;
 	}
 
-	public bool load_taglets ( string fulldirpath ) {
+	private bool load_taglets ( string fulldirpath ) {
 		try {
 			taglets = new Gee.HashMap<string, Type> ( GLib.str_hash, GLib.str_equal );
 			Gee.ArrayList<Module*> modules = new Gee.ArrayList<weak Module*> ( );
@@ -384,7 +383,6 @@ public class ModuleLoader : Object {
 
 				Module* module = Module.open ( tagletpath, ModuleFlags.BIND_LAZY);
 				if (module == null) {
-					stderr.printf ( "Can't load plugin.\n" );
 					taglets = null;
 					return false;
 				}
@@ -445,7 +443,6 @@ public class ModuleLoader : Object {
 			return true;
 		}
 		catch ( FileError err ) {
-			stderr.printf ( "Can't load plugin.\n" );
 			taglets = null;
 			return false;
 		}
@@ -466,7 +463,7 @@ public class Parser {
 	private int line;
 	private int pos;
 
-	private weak string filename;
+	private string filename;
 	private weak string str;
 	private bool run;
 
@@ -617,7 +614,7 @@ public class Parser {
 		}
 	}
 
-	private void parse_inline_taglet ( Tree tree, Basic me, string content, InlineTaglet taglet, int namelen, int starttag_linestartpos, int starttag_startpos, int starttag_line, int starttag_pos ) {
+	private void parse_inline_taglet ( Tree tree, DocumentedElement me, string content, InlineTaglet taglet, int namelen, int starttag_linestartpos, int starttag_startpos, int starttag_line, int starttag_pos ) {
 		string[] errmsgs;
 
 		bool tmp = taglet.parse ( settings, tree, me, content, out errmsgs );
@@ -626,7 +623,7 @@ public class Parser {
 		}
 	}
 
-	private void parse_main_taglet ( Tree tree, Basic me, Gee.ArrayList<DocElement> content, MainTaglet taglet, int namelen, int starttag_linestartpos, int starttag_startpos, int starttag_line, int starttag_pos ) {
+	private void parse_main_taglet ( Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content, MainTaglet taglet, int namelen, int starttag_linestartpos, int starttag_startpos, int starttag_line, int starttag_pos ) {
 		string[] errmsgs;
 
 		bool tmp = taglet.parse ( settings, tree, me, content, out errmsgs );
@@ -635,7 +632,7 @@ public class Parser {
 		}
 	}
 
-	private void append_main_taglet ( Tree tree, DocumentationTree dtree, Basic me, MainTaglet? curtag, int paragraph, string? curtagname, Gee.ArrayList<DocElement> content, int starttag_linestartpos, int starttag_startpos, int starttag_line, int starttag_pos ) {
+	private void append_main_taglet ( Tree tree, DocumentationTree dtree, DocumentedElement me, MainTaglet? curtag, int paragraph, string? curtagname, Gee.ArrayList<DocElement> content, int starttag_linestartpos, int starttag_startpos, int starttag_line, int starttag_pos ) {
 		if ( curtag == null ) {
 			dtree.add_description ( content );
 		}
@@ -645,14 +642,14 @@ public class Parser {
 		}
 	}
 
-	private StringTaglet create_string_taglet ( Tree tree, Basic? me, GLib.StringBuilder buf ) {
+	private StringTaglet create_string_taglet ( Tree tree, DocumentedElement? me, GLib.StringBuilder buf ) {
 		StringTaglet strtag = (StringTaglet)GLib.Object.new ( this.modules.strtag );
 		strtag.parse ( settings, tree, me, buf.str );
 		buf.erase ( 0, -1 );
 		return strtag;
 	}
 
-	private void append_and_create_string_taglet ( Gee.ArrayList<DocElement> content, Tree tree, Basic? me, GLib.StringBuilder buf ) {
+	private void append_and_create_string_taglet ( Gee.ArrayList<DocElement> content, Tree tree, DocumentedElement? me, GLib.StringBuilder buf ) {
 		if ( buf.len == 0 )
 			return ;
 
@@ -692,7 +689,7 @@ public class Parser {
 		return (int)offset;
 	}
 
-	private void parse_inline_taglets ( Tree tree, Basic me, Gee.ArrayList<DocElement> elements ) {
+	private void parse_inline_taglets ( Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> elements ) {
 		this.pos++;
 
 		for ( unichar chr = this.str[this.pos]; ; chr = this.str[++this.pos] ) {
@@ -775,7 +772,7 @@ public class Parser {
 		return ( str[this.pos] == '\n' );
 	}
 
-	private int parse_list_entry ( Tree tree, Basic me, ListType type, Gee.ArrayList<ListEntryDocElement> entries, GLib.Queue<int> queue, int deep, int prevdeep ) {
+	private int parse_list_entry ( Tree tree, DocumentedElement me, ListType type, Gee.ArrayList<ListEntryDocElement> entries, GLib.Queue<int> queue, int deep, int prevdeep ) {
 		Gee.ArrayList<DocElement> content = new Gee.ArrayList<DocElement> ();
 		GLib.StringBuilder buf = new GLib.StringBuilder ( );
 
@@ -908,7 +905,7 @@ public class Parser {
 		return -2;
 	}
 
-	private int parse_list ( Tree tree, Basic me, ListType listtype, Gee.ArrayList<DocElement> content, GLib.Queue<int> stack, int deep, int prevdeep ) {
+	private int parse_list ( Tree tree, DocumentedElement me, ListType listtype, Gee.ArrayList<DocElement> content, GLib.Queue<int> stack, int deep, int prevdeep ) {
 		Gee.ArrayList<ListEntryDocElement> entries = new Gee.ArrayList<ListEntryDocElement> ();
 		unichar chr = this.str[this.pos];
 		int ndeep = -1;
@@ -1040,7 +1037,7 @@ public class Parser {
 
 	
 
-	private bool parse_row ( Tree tree, Basic me, Gee.ArrayList<Gee.ArrayList<TableCellDocElement>> rows ) {
+	private bool parse_row ( Tree tree, DocumentedElement me, Gee.ArrayList<Gee.ArrayList<TableCellDocElement>> rows ) {
 		Gee.ArrayList<TableCellDocElement> row = new Gee.ArrayList<TableCellDocElement> ();
 		Gee.ArrayList<DocElement> content = new Gee.ArrayList<DocElement> ();
 		GLib.StringBuilder buf = new GLib.StringBuilder ( );
@@ -1126,7 +1123,7 @@ public class Parser {
 		return false;
 	}
 
-	private void parse_table ( Tree tree, Basic me, Gee.ArrayList<DocElement> content ) {
+	private void parse_table ( Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content ) {
 		Gee.ArrayList<Gee.ArrayList<TableCellDocElement>> rows = new Gee.ArrayList<Gee.ArrayList<TableCellDocElement>> ();
 		bool next = true;
 		this.pos++;
@@ -1140,19 +1137,19 @@ public class Parser {
 		content.add ( table );
 	}
 
-	private void parse_italic_content ( Tree tree, Basic me, Gee.ArrayList<DocElement> content, bool newline = true  ) {
+	private void parse_italic_content ( Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content, bool newline = true  ) {
 		this.parse_highlighted_content ( tree, me, this.modules.italictag, '/', content, newline );
 	}
 
-	private void parse_bold_content ( Tree tree, Basic me, Gee.ArrayList<DocElement> content, bool newline = true  ) {
+	private void parse_bold_content ( Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content, bool newline = true  ) {
 		this.parse_highlighted_content ( tree, me, this.modules.boldtag, '+', content, newline );
 	}
 
-	private void parse_underlined_content ( Tree tree, Basic me, Gee.ArrayList<DocElement> content, bool newline = true  ) {
+	private void parse_underlined_content ( Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content, bool newline = true  ) {
 		this.parse_highlighted_content ( tree, me, this.modules.underlinedtag, '_', content, newline );
 	}
 
-	private void parse_highlighted_content ( Tree tree, Basic me, GLib.Type tagtype, unichar separator, Gee.ArrayList<DocElement> content2, bool newline = true  ) {
+	private void parse_highlighted_content ( Tree tree, DocumentedElement me, GLib.Type tagtype, unichar separator, Gee.ArrayList<DocElement> content2, bool newline = true  ) {
 		Gee.ArrayList<DocElement> content = new Gee.ArrayList<DocElement> ();
 		GLib.StringBuilder buf = new GLib.StringBuilder ( );
 		int starttag_linestartpos = this.linestartpos;
@@ -1267,7 +1264,7 @@ public class Parser {
 		this.run = false;
 	}
 
-	private void parse_notification ( Tree tree, Basic me, Gee.ArrayList<DocElement> content2 ) {
+	private void parse_notification ( Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content2 ) {
 		Gee.ArrayList<DocElement> content = new Gee.ArrayList<DocElement> ();
 		GLib.StringBuilder buf = new GLib.StringBuilder ( );
 		int starttag_linestartpos = this.linestartpos;
@@ -1382,7 +1379,7 @@ public class Parser {
 		this.run = false;
 	}
 
-	private void parse_content_position ( Tree tree, Basic me, GLib.Type postagtype, Gee.ArrayList<DocElement> content2 ) {
+	private void parse_content_position ( Tree tree, DocumentedElement me, GLib.Type postagtype, Gee.ArrayList<DocElement> content2 ) {
 		Gee.ArrayList<DocElement> content = new Gee.ArrayList<DocElement> ();
 		GLib.StringBuilder buf = new GLib.StringBuilder ( );
 		this.pos = this.pos + 3;
@@ -1496,7 +1493,7 @@ public class Parser {
 		this.run = false;
 	}
 
-	private void parse_brief_description ( Tree tree, Basic me, DocumentationTree dtree ) {
+	private void parse_brief_description ( Tree tree, DocumentedElement me, DocumentationTree dtree ) {
 		Gee.ArrayList<DocElement> content = new Gee.ArrayList<DocElement> ();
 		GLib.StringBuilder buf = new GLib.StringBuilder ( );
 
@@ -1529,7 +1526,7 @@ public class Parser {
 		this.run = false;
 	}
 
-	public DocumentationTree? parse ( Tree tree, Basic me, string str ) {
+	public DocumentationTree? parse ( Tree tree, DocumentedElement me, string str ) {
 		Gee.ArrayList<DocElement> content = new Gee.ArrayList<DocElement> ();
 		GLib.StringBuilder buf = new GLib.StringBuilder ( );
 		DocumentationTree dtree = new DocumentationTree ();
@@ -1715,7 +1712,7 @@ public class Parser {
 		return dtree;
 	}
 
-	private void parse_source_code ( Tree tree, Basic me, Gee.ArrayList<DocElement> elements ) {
+	private void parse_source_code ( Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> elements ) {
 		GLib.StringBuilder buf = new GLib.StringBuilder ();	
 		Language lang = Language.VALA;
 		int startpos = this.pos;
@@ -1793,7 +1790,7 @@ public class Parser {
 		return ImageDocElementPosition.NEUTRAL;
 	}
 
-	private void parse_image ( Tree tree, Basic me, Gee.ArrayList<DocElement> elements ) {
+	private void parse_image ( Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> elements ) {
 		GLib.StringBuilder buf = new GLib.StringBuilder ();
 		ImageDocElementPosition imgpos = ImageDocElementPosition.NEUTRAL;
 		int startpos = this.pos;
@@ -1841,7 +1838,7 @@ public class Parser {
 		return false;
 	}
 
-	private Gee.ArrayList<DocElement>? parse_link_text ( Tree tree, Basic me, int startpos ) {
+	private Gee.ArrayList<DocElement>? parse_link_text ( Tree tree, DocumentedElement me, int startpos ) {
 		Gee.ArrayList<DocElement> content = new Gee.ArrayList<DocElement> ();
 		GLib.StringBuilder buf = new GLib.StringBuilder ();
 		int separatorpos = ++this.pos;
@@ -1903,7 +1900,7 @@ public class Parser {
 		return null;
 	}
 
-	private void parse_link ( Tree tree, Basic me, Gee.ArrayList<DocElement> elements ) {
+	private void parse_link ( Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> elements ) {
 		GLib.StringBuilder buf = new GLib.StringBuilder ();
 		int startpos = this.pos;
 		this.pos = this.pos+2;

@@ -23,7 +23,7 @@ using GLib;
 
 
 public interface Valadoc.HtmlHelper {
-	protected string? get_html_link ( Settings settings, Basic element, Basic pos ) {
+	protected string? get_html_link ( Settings settings, DocumentedElement element, DocumentedElement? pos ) {
 		if ( element is Package ) {
 			return "../" + element.name + "/index.html";
 		}
@@ -32,12 +32,12 @@ public interface Valadoc.HtmlHelper {
 		string prefix = "";
 	
 		if ( element != pos ) {
-			prefix =  "../" + element.file.name;
+			prefix =  "../" + element.package.name;
 		}
 
 		if ( element is Valadoc.EnumValue || element is Valadoc.ErrorCode ) {
 			tmp = "#" + element.name;
-			element = element.parent;
+			element = (DocumentedElement)element.parent;
 		}
 
 		return prefix + "/" + element.full_name () + ".html" + tmp;

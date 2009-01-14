@@ -1,16 +1,17 @@
 # src/Makefile.am
 
+
+
+
+
+if ENABLE_VALADOCORG
+
 NULL =
 
 
 SUBDIRS = \
-          linkhelper  \
           doclet      \
-          taglets     \
           $(NULL)
 
-#          langlet     \
-#          doclet      \
-#          $(NULL)
 
-
+endif

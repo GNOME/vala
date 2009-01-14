@@ -26,7 +26,7 @@ using Gee;
 
 
 public class Valadoc.LangletIndex : Valadoc.BasicHtmlLanglet, Valadoc.LinkHelper {
-	protected override string get_link ( Basic element, Basic pos ) {
+	protected override string get_link ( DocumentedElement element, DocumentedElement? pos ) {
 		return this.get_html_link ( this.settings, element, pos );
 	}
 
@@ -56,11 +56,11 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		return css_path.str;
 	}
 
-	protected override string get_link ( Valadoc.Basic element, Valadoc.Basic? pos ) {
+	protected override string get_link ( DocumentedElement element, DocumentedElement? pos ) {
 		return this.get_html_link ( this.settings, element, pos );
 	}
 
-	protected override void write_top_element ( GLib.FileStream file, Basic? pos ) {
+	protected override void write_top_element ( GLib.FileStream file, DocumentedElement? pos ) {
 		string top = "";
 
 		if ( pos != null )
@@ -101,14 +101,19 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		protected get;
 	}
 
-	public override void initialisation ( Settings settings ) {
+	public override void initialisation ( Settings settings, Tree tree ) {
 		this.settings = settings;
 
 		DirUtils.create ( this.settings.path, 0777 );
 		this.langlet = new Valadoc.LangletIndex ( settings );
+
+		Gee.ReadOnlyCollection<Package> packages = tree.get_package_list ();
+		foreach ( Package pkg in packages ) {
+			pkg.visit ( this );
+		}
 	}
 
-	protected override string get_img_real_path ( Basic element ) {
+	protected override string get_img_real_path ( DocumentedElement element ) {
 		if ( element is Package ) {
 			return this.current_path + element.name + ".png";
 		}
@@ -116,7 +121,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.LinkHelper {
 		return this.current_path + "tree.png";
 	}
 
-	protected override string get_img_path ( Basic element ) {
+	protected override string get_img_path ( DocumentedElement element ) {
 		if ( element is Package ) {
 			return element.name + ".png";
 		}

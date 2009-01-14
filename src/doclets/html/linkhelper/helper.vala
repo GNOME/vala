@@ -23,7 +23,7 @@ using GLib;
 
 
 public interface Valadoc.LinkHelper {
-	protected string get_html_top_link ( Valadoc.Basic postag ) {
+	protected string get_html_top_link ( DocumentedElement? postag ) {
 		GLib.StringBuilder str = new GLib.StringBuilder ( "" );
 		Valadoc.Basic pos = postag;
 
@@ -34,41 +34,38 @@ public interface Valadoc.LinkHelper {
 		return str.str;
 	}
 
-	protected string? get_html_link ( Valadoc.Settings settings, Valadoc.Basic element, Valadoc.Basic pos2 ) {
-		Package pkg = ( element is Package )? (Package)element : element.file;
+	protected string? get_html_link ( Valadoc.Settings settings, DocumentedElement element, DocumentedElement? pos2 ) {
+		Package pkg = ( element is Package )? (Package)element : element.package;
 		if ( pkg.is_visitor_accessible () == false )
 			return null;
 
 		GLib.StringBuilder str = new GLib.StringBuilder ( "" );
-		Valadoc.Basic pos = element;
+		DocumentedElement pos = element;
 		string? link_id = null;
 
 		if ( element is Valadoc.Package == false ) {
 			if ( element is Valadoc.EnumValue || element is Valadoc.ErrorCode ) {
 				link_id = "#" + element.name;
-				pos = pos.parent;
+				pos = (DocumentedElement)pos.parent;
 			}
 			else if ( element is Visitable ) {
 				if ( !((Visitable)element).is_visitor_accessible() )
 					return null;
 			}
 
-			while ( pos != null ) {
-				if ( pos.name == null )
+			while ( pos is Package == false ) {
+				string name = pos.name;
+				if ( name == null )
 					str.prepend ( "0" );
 				else
-					str.prepend ( pos.name );
+					str.prepend ( name );
 
 				str.prepend ( "/" );
-
-				if ( pos.parent is Valadoc.Package )
-					break;
-
-				pos = pos.parent;
+				pos = (DocumentedElement)pos.parent;
 			}
 		}
 
-		str.prepend ( pos.file.name );
+		str.prepend ( pos.package.name );
 		str.prepend ( this.get_html_top_link ( pos2 ) );
 		str.append ( "/index.html" );
 

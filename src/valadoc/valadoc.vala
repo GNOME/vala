@@ -44,35 +44,36 @@ public class ValaDoc : Object {
 	private static string pluginpath;
 
 	private static bool non_null_experimental = false;
-	private static bool disable_non_null = false;
 	private static bool disable_checking;
 	private static bool force = false;
 
 
+	[CCode (array_length = false, array_null_terminated = true)]
 	[NoArrayLength ()]
 	private static string[] vapi_directories;
+	[CCode (array_length = false, array_null_terminated = true)]
 	[NoArrayLength ()]
-	private static weak string[] tsources;
+	private static string[] tsources;
+	[CCode (array_length = false, array_null_terminated = true)]
 	[NoArrayLength ()]
-	private static weak string[] tpackages;
+	private static string[] tpackages;
 
 	private const GLib.OptionEntry[] options = {
-		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, out vapi_directories,
+		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories,
 			"Look for package bindings in DIRECTORY", "DIRECTORY..." },
-		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, out tpackages, "Include binding for PACKAGE", "PACKAGE..." },
-		{ "directory", 'o', 0, OptionArg.FILENAME, out directory, "Output directory", "DIRECTORY" },
+		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref tpackages, "Include binding for PACKAGE", "PACKAGE..." },
+		{ "directory", 'o', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
 		{ "protected", 0, 0, OptionArg.NONE, ref _protected, "Adds protected elements to documentation", null },
 		{ "private", 0, 0, OptionArg.NONE, ref _private, "Adds private elements to documentation", null },
 		{ "inherit", 0, 0, OptionArg.NONE, ref add_inherited, "Adds inherited elements to a class", null },
 		{ "deps", 0, 0, OptionArg.NONE, ref with_deps, "Adds packages to the documentation", null },
-		{ "disable-non-null", 0, 0, OptionArg.NONE, ref disable_non_null, "Disable non-null types", null },
 		{ "enable-non-null-experimental", 0, 0, OptionArg.NONE, ref non_null_experimental,
-				"Enable experimentalenhancements for non-null types", null },
-		{ "", 0, 0, OptionArg.FILENAME_ARRAY, out tsources, null, "FILE..." },
+			"Enable experimentalenhancements for non-null types", null },
 		{ "doclet", 0, 0, OptionArg.FILENAME, ref pluginpath, "plugin", "DIRECTORY" },
 		{ "package-name", 0, 0, OptionArg.STRING, ref pkg_name, "package name", "DIRECTORY" },
 		{ "package-version", 0, 0, OptionArg.STRING, ref pkg_version, "package version", "DIRECTORY" },
 		{ "force", 0, 0, OptionArg.NONE, ref force, "force", null },
+		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref tsources, null, "FILE..." },
 		{ null }
 	};
 
@@ -137,7 +138,7 @@ public class ValaDoc : Object {
 
 		Valadoc.Parser docparser = new Valadoc.Parser ( settings, reporter, modules );
 
-		Valadoc.Tree doctree = new Valadoc.Tree ( settings, non_null_experimental, disable_non_null, disable_checking, basedir, directory );
+		Valadoc.Tree doctree = new Valadoc.Tree ( settings, non_null_experimental, disable_checking, basedir, directory );
 
 		if (!doctree.add_external_package ( vapi_directories, "glib-2.0" )) {
 			Report.error (null, "glib-2.0 not found in specified Vala API directories" );
@@ -159,14 +160,14 @@ public class ValaDoc : Object {
 			this.tpackages = null;
 		}
 
-		if ( this.tsources != null ) {
-			foreach ( string src in this.tsources ) {
+		if ( tsources != null ) {
+			foreach ( string src in tsources ) {
 				if ( !doctree.add_file ( src ) ) {
 					Report.error (null, "%s not found".printf (src));
 					return quit ();
 				}
 			}
-			this.tsources = null;
+			tsources = null;
 		}
 
 		if ( !doctree.create_tree( ) )
@@ -176,8 +177,6 @@ public class ValaDoc : Object {
 		if ( reporter.errors > 0 )
 			return 1;
 
-
-		modules.doclet.initialisation ( settings );
 		doctree.visit ( modules.doclet );
 		modules.doclet.cleanups ( );
 

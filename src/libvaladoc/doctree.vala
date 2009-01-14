@@ -119,77 +119,73 @@ namespace Valadoc {
 public Valadoc.Class glib_error = null;
 
 
-public enum CommentContext {
-	NAMESPACE,
-	ERRORDOMAIN,
-	ENUMVALUE,
-	ERRORCODE,
-	INTERFACE,
-	DELEGATE,
-	CONSTANT,
-	PROPERTY,
-	SIGNAL,
-	STRUCT,
-	CLASS,
-	FIELD,
-	ENUM
+
+public abstract class Valadoc.Basic : Object {
+	public Valadoc.Settings settings {
+		construct set;
+		protected get;
+	}
+
+	public Basic parent {
+		construct set;
+		get;
+	}
+
+	protected Vala.Symbol vsymbol {
+		protected get;
+		set;
+	}
+
+	public Tree head {
+		construct set;
+		protected get;
+	}
 }
 
 
-
-public class Valadoc.Basic : Object {
+public abstract class Valadoc.DocumentedElement : Basic {
+	private Namespace? _nspace = null;
+	private Package? _package = null;
 	private string _full_name = null;
+	private int _line = -1;
 
-	public string? full_name () {
-		if ( this.name == null )
-			return null;
-
-		if ( this._full_name == null ) {
-			this._full_name = this.name;
-			Basic pos = this.parent;
-
-			while ( pos is Package == false ) {
-				if ( pos.name != null )
-					this._full_name = pos.name + "." + this._full_name;
-
-				pos = pos.parent;
-			}
-		}
-		return this._full_name;
-	}
-
-	public string?# package {
+	public Package? package {
 		get {
-			SourceReference? sref = this.vsymbol.source_reference;
-			if ( sref == null )
-				return null;
-
-			Vala.SourceFile? file = sref.file;
-			if ( file == null )
-				return null;
-
-			string path = sref.file.filename;
-			if ( path.has_suffix (".vapi") ) {
-				string file_name = GLib.Path.get_basename ( path );
-				return file_name.ndup ( file_name.size() - ".vapi".size() );
+			if ( this._package == null ) {
+				Valadoc.Basic ast = this;
+				while ( ast is Valadoc.Package == false ) {
+					ast = ast.parent;
+					if ( ast == null )
+						return null;
+				}
+				this._package = (Valadoc.Package)ast;
 			}
-
-			return this.settings.pkg_name;
+			return this._package;
 		}
 	}
 
-	public string?# filename {
+	public Namespace? nspace {
 		get {
-			SourceReference? sref = this.vsymbol.source_reference;
-			if ( sref == null )
-				return null;
+			if ( this._nspace == null ) {
+				Valadoc.Basic ast = this;
+				while ( ast is Valadoc.Namespace == false ) {
+					ast = ast.parent;
+					if ( ast == null )
+						return null;
+				}
+				this._nspace = (Valadoc.Namespace)ast;
+			}
+			return this._nspace;
+		}
+	}
 
-			Vala.SourceFile? file = sref.file;
-			if ( file == null )
-				return null;
-
-			string path = sref.file.filename;
-			return GLib.Path.get_basename ( path );
+	public int line {
+		get {
+			if ( this._line == -1 ) {
+				Vala.SourceReference vsref = this.vsymbol.source_reference;
+				this._line = ( vsref == null )? 0 : vsref.first_line;
+			}
+			return this._line;
 		}
 	}
 
@@ -210,24 +206,56 @@ public class Valadoc.Basic : Object {
 		}
 	}
 
-	//- Nur dort hin packen, wo es gebraucht wird.
 	public DocumentationTree? documentation {
 		protected set;
 		get;
 	}
 
-	// internal
-	public virtual weak Basic? search_element ( string[] params, int pos ) {
-		return null;
+	public virtual string? name {
+		owned get {
+			return null;
+		}
 	}
 
-	// internal
-	public virtual weak Basic? search_element_vala ( Gee.ArrayList<Vala.Symbol> list, int pos ) {
-		return null;
+	// rename to get_full_name, weak
+	public string? full_name () {
+		if ( this._full_name == null ) {
+			if ( this.name == null )
+				return null;
+
+			GLib.StringBuilder full_name = new GLib.StringBuilder ( this.name );
+
+			if ( this.parent != null ) {
+				for ( Basic pos = this.parent; pos is Package == false ; pos = pos.parent ) {
+					string name = ((DocumentedElement)pos).name;
+					if ( name != null ) {
+						full_name.prepend_unichar ( '.' );
+						full_name.prepend ( name );
+					}
+				}
+			}
+			this._full_name = full_name.str;
+		}
+		return this._full_name;
 	}
 
-	//Vala.Symbol symbol, Gee.HashMap<string, Valadoc.TagletCreator> taglets, CommentContext context
-	protected void parse_comment_helper ( Valadoc.Parser docparser, CommentContext context ) {
+	// rename to file_name
+	public string? filename {
+		owned get {
+			SourceReference? sref = this.vsymbol.source_reference;
+			if ( sref == null )
+				return null;
+
+			Vala.SourceFile? file = sref.file;
+			if ( file == null )
+				return null;
+
+			string path = sref.file.filename;
+			return GLib.Path.get_basename ( path );
+		}
+	}
+
+	protected void parse_comment_helper ( Valadoc.Parser docparser ) {
 		if ( this.documentation != null )
 			return ;
 
@@ -242,124 +270,17 @@ public class Valadoc.Basic : Object {
 		this.documentation = docparser.parse ( this.head, this, docu );
 	}
 
-	public int line {
-		get {
-			Vala.SourceReference vsref = this.vsymbol.source_reference;
-			if ( vsref == null )
-				return 0;
-
-			return vsref.first_line;
-		}
+	// internal
+	public virtual weak DocumentedElement? search_element ( string[] params, int pos ) {
+		return null;
 	}
 
-	// Herausnehmen, dort übergeben wo es sein muss.
-	public Valadoc.Settings settings {
-		construct set;
-		protected get;
-	}
-
-	public DataType? parent_data_type {
-		get {
-			if ( this.parent is DataType )
-				return (DataType)this.parent;
-
-			return null;
-		}
-	}
-
-	public string? file_name {
-		get {
-			Basic element = this;
-			while ( element != null ) {
-				if ( element is Package )
-					return element.name;
-
-				element = element.parent;
-			}
-			return null;
-		}
-	}
-
-	// construct set -> creation method
-	public Package? file {
-		get {
-			Valadoc.Basic ast = this;
-			while ( ast is Valadoc.Package == false ) {
-				ast = ast.parent;
-				if ( ast == null )
-					return null;
-			}
-			return (Valadoc.Package)ast;
-		}
-	}
-
-	// construct set -> creation method
-	public Namespace? nspace {
-		get {
-			Valadoc.Basic ast = this;
-			while ( ast is Valadoc.Namespace == false ) {
-				ast = ast.parent;
-				if ( ast == null )
-					return null;
-			}
-			return (Valadoc.Namespace)ast;
-		}
-	}
-
-	public Basic parent {
-		construct set;
-		get;
-	}
-
-	protected Vala.Symbol vsymbol {
-		// internal
-		protected get;
-		set;
-	}
-
-	public Tree head {
-		construct set;
-		protected get;
-	}
-
-	public virtual string?# name {
-		get {
-			return null;
-		}
-	}
-
-
-	public bool is_public {
-		get {
-			Vala.SymbolAccessibility access = vsymbol.access;
-			return ( access == Vala.SymbolAccessibility.PUBLIC );
-		}
-	}
-
-	public bool is_protected {
-		get {
-			Vala.SymbolAccessibility access = vsymbol.access;
-			return ( access == Vala.SymbolAccessibility.PROTECTED );
-		}
-	}
-
-	public bool is_private {
-		get {
-			Vala.SymbolAccessibility access = vsymbol.access;
-			return ( access == Vala.SymbolAccessibility.PRIVATE );
-		}
-	}
-
-
-	// Move to Valadoc.SymbolAccessibility
-	protected Basic? find_member_lst ( Gee.Collection<Basic> lst, string name ) {
-		foreach ( Basic element in lst ) {
-			if ( element.name == name )
-				return element;
-		}
+	// internal
+	public virtual weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> list, int pos ) {
 		return null;
 	}
 }
+
 
 public interface Valadoc.EnumHandler : Basic {
 	protected abstract Gee.ArrayList<Enum> enums {
@@ -373,18 +294,18 @@ public interface Valadoc.EnumHandler : Basic {
 		}
 	}
 
-	protected weak Basic? search_enum_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected weak DocumentedElement? search_enum_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		foreach ( Enum en in this.enums ) {
-			Basic element = en.search_element_vala ( params, pos+1 );
+			DocumentedElement element = en.search_element_vala ( params, pos+1 );
 			if ( element != null )
 				return element;			
 		}
 		return null;
 	}
 
-	protected weak Basic? search_enum ( string[] params, int pos ) {
+	protected weak DocumentedElement? search_enum ( string[] params, int pos ) {
 		foreach ( Enum en in this.enums ) {
-			Basic element = en.search_element ( params, pos+1 );
+			DocumentedElement element = en.search_element ( params, pos+1 );
 			if ( element != null )
 				return element;
 		}
@@ -434,7 +355,7 @@ public interface Valadoc.DelegateHandler : Basic {
 		get;
 	}
 
-	protected weak Basic? search_delegate_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected weak DocumentedElement? search_delegate_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.Delegate == false )
 			return null;
@@ -447,7 +368,7 @@ public interface Valadoc.DelegateHandler : Basic {
 		return null;
 	}
 
-	protected weak Basic? search_delegate ( string[] params, int pos ) {
+	protected weak DocumentedElement? search_delegate ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -509,18 +430,18 @@ public interface Valadoc.InterfaceHandler : Basic {
 		get;
 	}
 
-	protected weak Basic? search_interface_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected weak DocumentedElement? search_interface_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		foreach ( Interface iface in this.interfaces ) {
-			Basic? element = iface.search_element_vala ( params, pos+1 );
+			DocumentedElement? element = iface.search_element_vala ( params, pos+1 );
 			if ( element != null )
 				return element;
 		}
 		return null;
 	}
 
-	protected weak Basic? search_interface ( string[] params, int pos ) {
+	protected weak DocumentedElement? search_interface ( string[] params, int pos ) {
 		foreach ( Interface iface in this.interfaces ) {
-			Basic element = iface.search_element ( params, pos+1 );
+			DocumentedElement? element = iface.search_element ( params, pos+1 );
 			if ( element != null )
 				return element;
 		}
@@ -579,18 +500,18 @@ public interface Valadoc.ErrorDomainHandler : Basic {
 		get;
 	}
 
-	protected weak Basic? search_error_domain_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected weak DocumentedElement? search_error_domain_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		foreach ( ErrorDomain errdom in this.errdoms ) {
-			Basic? element = errdom.search_element_vala ( params, pos+1 );
+			DocumentedElement? element = errdom.search_element_vala ( params, pos+1 );
 			if ( element != null )
 				return element;
 		}
 		return null;
 	}
 
-	protected weak Basic? search_error_domain ( string[] params, int pos ) {
+	protected weak DocumentedElement? search_error_domain ( string[] params, int pos ) {
 		foreach ( ErrorDomain errdom in this.errdoms ) {
-			Basic? element = errdom.search_element ( params, pos+1 );
+			DocumentedElement? element = errdom.search_element ( params, pos+1 );
 			if ( element != null )
 				return element;
 		}
@@ -649,21 +570,12 @@ public interface Valadoc.ErrorDomainHandler : Basic {
 	}
 }
 
-// remove
+// rename
 public interface Valadoc.Writeable : Basic {
 	public abstract DocumentationTree? documentation {
 		protected set;
 		get;
 	}
-
-	/* rename to write_documentation
-	public bool write_comment ( void* ptr ) {
-		if ( this.documentation == null )
-			return false;
-
-		this.documentation.write ( ptr );
-		return true;
-	}*/
 }
 
 public interface Valadoc.NamespaceHandler : Basic {
@@ -805,18 +717,18 @@ public interface Valadoc.ClassHandler : Basic {
 		get;
 	}
 
-	protected weak Basic? search_class_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected weak DocumentedElement? search_class_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		foreach ( Class cl in this.classes ) {
-			Basic element = cl.search_element_vala ( params, pos+1 );
+			DocumentedElement? element = cl.search_element_vala ( params, pos+1 );
 			if ( element != null )
 				return element;			
 		}
 		return null;
 	}
 
-	protected weak Basic? search_class ( string[] params, int pos ) {
+	protected weak DocumentedElement? search_class ( string[] params, int pos ) {
 		foreach ( Class cl in this.classes ) {
-			Basic element = cl.search_element ( params, pos+1 );
+			DocumentedElement? element = cl.search_element ( params, pos+1 );
 			if ( element != null )
 				return element;
 		}
@@ -845,11 +757,6 @@ public interface Valadoc.ClassHandler : Basic {
 		}
 
 		return new Gee.ReadOnlyCollection<Class>( lst );
-	}
-
-	// internal, remove
-	public void append_class ( Valadoc.Class cl ) {
-		this.classes.add( cl );
 	}
 
 	// internal
@@ -893,7 +800,7 @@ public interface Valadoc.PropertyHandler : ContainerDataType {
 		set;
 	}
 
-	protected weak Basic? search_property_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected weak DocumentedElement? search_property_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.Property == false )
 			return null;
@@ -909,7 +816,7 @@ public interface Valadoc.PropertyHandler : ContainerDataType {
 		return null;
 	}
 
-	protected weak Basic? search_property ( string[] params, int pos ) {
+	protected weak DocumentedElement? search_property ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -982,7 +889,7 @@ public interface Valadoc.ConstructionMethodHandler : DataType, MethodHandler {
 		get;
 	}
 
-	protected weak Basic? search_construction_method_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected weak DocumentedElement? search_construction_method_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.Method == false )
 			return null;
@@ -998,7 +905,7 @@ public interface Valadoc.ConstructionMethodHandler : DataType, MethodHandler {
 		return null;
 	}
 
-	protected weak Basic? search_construction_method ( string[] params, int pos ) {
+	protected weak DocumentedElement? search_construction_method ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] == null )
@@ -1072,7 +979,7 @@ public interface Valadoc.SignalHandler : ContainerDataType {
 		set;
 	}
 
-	protected weak Basic? search_signal_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected weak DocumentedElement? search_signal_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.Signal == false )
 			return null;
@@ -1088,7 +995,7 @@ public interface Valadoc.SignalHandler : ContainerDataType {
 		return null;
 	}
 
-	protected weak Basic? search_signal ( string[] params, int pos ) {
+	protected weak DocumentedElement? search_signal ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -1151,9 +1058,9 @@ public interface Valadoc.StructHandler : Basic {
 		get;
 	} 
 
-	protected weak Basic? search_struct_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected weak DocumentedElement? search_struct_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		foreach ( Struct stru in this.structs ) {
-			Basic element = stru.search_element_vala ( params, pos+1 );
+			DocumentedElement? element = stru.search_element_vala ( params, pos+1 );
 			if ( element != null )
 				return element;
 		}
@@ -1161,9 +1068,9 @@ public interface Valadoc.StructHandler : Basic {
 	}
 
 
-	protected weak Basic? search_struct ( string[] params, int pos ) {
+	protected weak DocumentedElement? search_struct ( string[] params, int pos ) {
 		foreach ( Struct stru in this.structs ) {
-			Basic element = stru.search_element ( params, pos+1 );
+			DocumentedElement? element = stru.search_element ( params, pos+1 );
 			if ( element != null )
 				return element;
 		}
@@ -1180,11 +1087,6 @@ public interface Valadoc.StructHandler : Basic {
 		}
 
 		return new Gee.ReadOnlyCollection<Struct>( lst );
-	}
-
-	// internal, remove
-	public void append_struct ( Valadoc.Struct stru ) {
-		this.structs.add( stru );
 	}
 
 	public void add_struct ( Vala.Struct vstru ) {
@@ -1246,44 +1148,53 @@ public interface Valadoc.Visitable : Basic, SymbolAccessibility {
 }
 
 
-public interface Valadoc.SymbolAccessibility {
-	public abstract bool is_public {
-		get;
+public interface Valadoc.SymbolAccessibility : Basic {
+	public bool is_public {
+		get {
+			Vala.SymbolAccessibility access = vsymbol.access;
+			return ( access == Vala.SymbolAccessibility.PUBLIC );
+		}
 	}
 
-	public abstract bool is_protected {
-		get;
+	public bool is_protected {
+		get {
+			Vala.SymbolAccessibility access = vsymbol.access;
+			return ( access == Vala.SymbolAccessibility.PROTECTED );
+		}
 	}
 
-	public abstract bool is_private {
-		get;
+	public bool is_private {
+		get {
+			Vala.SymbolAccessibility access = vsymbol.access;
+			return ( access == Vala.SymbolAccessibility.PRIVATE );
+		}
 	}
 }
 
 
 
 public interface Valadoc.ReturnTypeHandler : Basic {
-	public abstract TypeReference return_type {
+	public abstract TypeReference? type_reference {
 		protected set;
 		get;
 	}
 
 	// internal
 	public void set_return_type_references ( ) {
-		if ( this.return_type == null )
+		if ( this.type_reference == null )
 			return ;
 
-		this.return_type.set_type_references ( );
+		this.type_reference.set_type_references ( );
 	}
 
 	// internal, rename
-	protected void set_ret_type ( Vala.DataType vtref ) {
+	protected void set_ret_type ( Vala.DataType? vtref ) {
 		var tmp = new TypeReference ( this.settings, vtref, this, this.head );
-		this.return_type = tmp;
+		this.type_reference = tmp;
 	}
 }
 
-
+/*
 // ????
 public interface Valadoc.TypeHandler : Basic {
 	public abstract TypeReference type_reference {
@@ -1304,7 +1215,7 @@ public interface Valadoc.TypeHandler : Basic {
 		this.type_reference = tmp;
 	}
 }
-
+*/
 
 public interface Valadoc.ConstantHandler : Basic {
 	protected abstract Gee.ArrayList<Constant> constants {
@@ -1312,7 +1223,7 @@ public interface Valadoc.ConstantHandler : Basic {
 		get;
 	}
 
-	protected weak Basic? search_constant_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected weak DocumentedElement? search_constant_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.Constant == false )
 			return null;
@@ -1329,7 +1240,7 @@ public interface Valadoc.ConstantHandler : Basic {
 	}
 
 	// internal
-	protected weak Basic? search_constant ( string[] params, int pos ) {
+	protected weak DocumentedElement? search_constant ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -1396,7 +1307,7 @@ public interface Valadoc.FieldHandler : Basic {
 		get;
 	}
 
-	protected weak Basic? search_field_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected weak DocumentedElement? search_field_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.Field == false )
 			return null;
@@ -1413,7 +1324,7 @@ public interface Valadoc.FieldHandler : Basic {
 	}
 
 	// internal
-	protected weak Basic? search_field ( string[] params, int pos ) {
+	protected weak DocumentedElement? search_field ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -1476,28 +1387,28 @@ public interface Valadoc.FieldHandler : Basic {
 	}
 }
 
+// rename to ExceptionListHandler
 public interface Valadoc.ExceptionHandler : Basic {
-	protected abstract Gee.ArrayList<TypeReference> err_domains {
+	protected abstract Gee.ArrayList<DataType> err_domains {
 		protected set;
 		get;
 	}
 
-	public Gee.ReadOnlyCollection<TypeReference> get_error_domains ( ) {
-		return new Gee.ReadOnlyCollection<TypeReference> ( this.err_domains );
+	public Gee.ReadOnlyCollection<DataType> get_error_domains ( ) {
+		return new Gee.ReadOnlyCollection<DataType> ( this.err_domains );
 	}
 
-	// internal
-	public void add_error_domains ( Gee.Collection<Vala.DataType> vexceptions ) {
-		foreach ( Vala.DataType vtref in vexceptions ) {
-			var tmp = new TypeReference ( this.settings, vtref, (Valadoc.Basic)this, this.head );
-			this.err_domains.add ( tmp );
-		}
-	}
-
-	// internal
-	public void set_exception_type_references ( ) {
-		foreach ( TypeReference tref in this.err_domains ) {
-			tref.set_type_references ( );
+	public void add_exception_list ( Gee.Collection<Vala.DataType> vexceptions ) {
+		foreach ( Vala.DataType vtype in vexceptions  ) {
+			if ( vtype is Vala.ErrorType ) {
+				if ( ((Vala.ErrorType)vtype).error_domain == null ) {
+					this.err_domains.add ( glib_error );
+				}
+				else {
+					ErrorDomain type = (ErrorDomain)this.head.search_vala_symbol ( ((Vala.ErrorType)vtype).error_domain );
+					this.err_domains.add ( type );
+				}
+			}
 		}
 	}
 }
@@ -1536,7 +1447,7 @@ public interface Valadoc.MethodHandler : Basic {
 		get;
 	}
 
-	protected weak Basic? search_method_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected weak DocumentedElement? search_method_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.Method == false )
 			return null;
@@ -1553,7 +1464,7 @@ public interface Valadoc.MethodHandler : Basic {
 	}
 
 	// internal
-	protected weak Basic? search_method ( string[] params, int pos ) {
+	protected weak DocumentedElement? search_method ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -1640,8 +1551,8 @@ public interface Valadoc.TemplateParameterListHandler : Basic {
 	}
 }
 
-public class Valadoc.Constant : Basic, SymbolAccessibility, TypeHandler, Visitable, Writeable  {
-	public TypeReference type_reference {
+public class Valadoc.Constant : DocumentedElement, SymbolAccessibility, ReturnTypeHandler, Visitable, Writeable  {
+	public TypeReference? type_reference {
 		protected set;
 		get;
 	}
@@ -1651,8 +1562,8 @@ public class Valadoc.Constant : Basic, SymbolAccessibility, TypeHandler, Visitab
 		private get;
 	}
 
-	public override string?# name {
-		get {
+	public override string? name {
+		owned get {
 			return this.vconst.name;
 		}
 	}
@@ -1677,12 +1588,12 @@ public class Valadoc.Constant : Basic, SymbolAccessibility, TypeHandler, Visitab
 
 	// internal
 	public void set_type_references ( ) {
-		((TypeHandler)this).set_type_references ( );
+		((ReturnTypeHandler)this).set_return_type_references ( );
 	}
 
 	// internal
 	public void parse_comment ( Valadoc.Parser docparser ) {
-		this.parse_comment_helper ( docparser, CommentContext.CONSTANT );
+		this.parse_comment_helper ( docparser );
 	}
 
 	public void visit ( Doclet doclet, ConstantHandler? parent ) {
@@ -1698,7 +1609,7 @@ public class Valadoc.Constant : Basic, SymbolAccessibility, TypeHandler, Visitab
 }
 
 
-public class Valadoc.Field : Basic, SymbolAccessibility, TypeHandler, Visitable, Writeable {
+public class Valadoc.Field : DocumentedElement, SymbolAccessibility, ReturnTypeHandler, Visitable, Writeable {
 	public Field ( Valadoc.Settings settings, Vala.Field vfield, FieldHandler parent, Tree head ) {
 		this.settings = settings;
 		this.vfield = vfield;
@@ -1706,6 +1617,7 @@ public class Valadoc.Field : Basic, SymbolAccessibility, TypeHandler, Visitable,
 		this.head = head;
 	}
 
+	// internal
 	public bool is_vfield ( Vala.Field vfield ) {
 		return ( this.vfield == vfield );
 	}
@@ -1714,13 +1626,13 @@ public class Valadoc.Field : Basic, SymbolAccessibility, TypeHandler, Visitable,
 		return this.vfield.get_cname();
 	}
 
-	public TypeReference type_reference {
+	public TypeReference? type_reference {
 		protected set;
 		get;
 	}
 
-	public override string?# name {
-		get {
+	public override string? name {
+		owned get {
 			return this.vfield.name;
 		}
 	}
@@ -1744,21 +1656,14 @@ public class Valadoc.Field : Basic, SymbolAccessibility, TypeHandler, Visitable,
 		}
 	}
 
-	// remove
-	public bool is_global {
-		get {
-			return ( this.parent is Valadoc.Namespace );
-		}
-	}
-
 	// internal
 	public void set_type_references ( ) {
-		((TypeHandler)this).set_type_references ( );
+		((ReturnTypeHandler)this).set_return_type_references ( );
 	}
 
 	// internal
 	public void parse_comment ( Valadoc.Parser docparser ) {
-		this.parse_comment_helper ( docparser, CommentContext.FIELD );
+		this.parse_comment_helper ( docparser );
 	}
 
 	public void visit ( Doclet doclet, FieldHandler? parent ) {
@@ -1774,7 +1679,7 @@ public class Valadoc.Field : Basic, SymbolAccessibility, TypeHandler, Visitable,
 }
 
 public class Valadoc.TypeReference : Basic {
-	public TypeReference ( Valadoc.Settings settings, Vala.DataType vtyperef, Basic parent, Tree head ) {
+	public TypeReference ( Valadoc.Settings settings, Vala.DataType? vtyperef, Basic parent, Tree head ) {
 		this.settings = settings;
 		this.vtyperef = vtyperef;
 		this.parent = parent;
@@ -1796,12 +1701,12 @@ public class Valadoc.TypeReference : Basic {
 		}
 	}
 
-	public DataType data_type {
+	public DataType? data_type {
 		private set;
 		get;
 	}
 
-	public Vala.DataType vtyperef {
+	public Vala.DataType? vtyperef {
 		construct set;
 		private get;
 	}
@@ -1825,17 +1730,62 @@ public class Valadoc.TypeReference : Basic {
 		}
 	}
 
-	// from vala/valainterfacewriter.vala
-	private bool is_weak_helper (Vala.DataType type) {
+	public bool is_owned {
+		get {
+			Vala.CodeNode parent = this.vtyperef.parent_node;
+
+			// parameter:
+			if ( parent is Vala.FormalParameter ) {
+				if ( ((Vala.FormalParameter)parent).direction != ParameterDirection.IN )
+					return false;
+
+				return ((Vala.FormalParameter)parent).parameter_type.value_owned;
+			}
+			return false;
+		}
+	}
+
+	public bool is_unowned {
+		get {
+			Vala.CodeNode parent = this.vtyperef.parent_node;
+
+			// parameter:
+			if ( parent is Vala.FormalParameter ) {
+				if ( ((Vala.FormalParameter)parent).direction == ParameterDirection.IN )
+					return false;
+
+				return this.is_weak_helper ( ((Vala.FormalParameter)parent).parameter_type );
+			}
+
+			// return type
+			if ( parent is Vala.Method == true )
+				return this.is_weak_helper ( ((Vala.Method)parent).return_type );
+			else if ( parent is Vala.Signal == true )
+				return this.is_weak_helper ( ((Vala.Signal)parent).return_type );
+			else if ( parent is Vala.Delegate == true )
+				return this.is_weak_helper ( ((Vala.Delegate)parent).return_type );
+
+			return false;
+		}
+	}
+
+
+	// from vala/valacodewriter.vala
+	private bool is_weak_helper ( Vala.DataType type ) {
 		if (type.value_owned) {
 			return false;
-		} else if (type is VoidType || type is PointerType) {
+		} else if (type is Vala.VoidType || type is Vala.PointerType) {
 			return false;
-		} else if (type is ValueType) {
+		} else if (type is Vala.ValueType) {
 			if (type.nullable) {
-				return false;
+				// nullable structs are heap allocated
+				return true;
 			}
+
+			// TODO return true for structs with destroy
+			return false;
 		}
+
 		return true;
 	}
 	
@@ -1847,23 +1797,7 @@ public class Valadoc.TypeReference : Basic {
 
 	public bool is_weak {
 		get {
-			Vala.CodeNode? node = this.vtyperef.parent_node;
-			if ( node == null )
-				return false;
-
-			if ( node is Vala.Constant || node is Vala.Property )
-				return false;
-
-			if ( node is Vala.FormalParameter ) {
-				var direction = ((Vala.FormalParameter)node).direction;
-
-				if ( direction == Vala.ParameterDirection.OUT || direction == Vala.ParameterDirection.IN )
-					return false;
-
-				return !this.vtyperef.value_owned;
-			}
-
-			return is_weak_helper( this.vtyperef );
+			return ( this.vtyperef.parent_node is Field )? this.is_weak_helper( this.vtyperef ) : false;
 		}
 	}
 
@@ -1933,8 +1867,8 @@ public class Valadoc.TypeReference : Basic {
 	}
 
 	// remove
-	public string# type_name {
-		get {
+	public string type_name {
+		owned get {
 			return this.extract_type_name ( this.vtyperef );
 		}
 	}
@@ -1952,10 +1886,12 @@ public class Valadoc.TypeReference : Basic {
 
 		if ( vtype is Vala.ErrorType ) {
 			Vala.ErrorDomain verrdom = ((Vala.ErrorType)vtype).error_domain;		
-			if ( verrdom != null )
+			if ( verrdom != null ) {
 				this.data_type = (DataType?)this.head.search_vala_symbol ( verrdom );
-			else
+			}
+			else {
 				this.data_type = glib_error;
+			}
 		}
 		else if (vtype is Vala.DelegateType ) {
 			this.data_type = (DataType?)this.head.search_vala_symbol ( ((Vala.DelegateType)vtype).delegate_symbol );
@@ -1974,7 +1910,7 @@ public class Valadoc.TypeReference : Basic {
 // TODO: Remove unused stuff
 // You just need it for the name in a template-parameter-list.
 // remove TypeHandler-interface
-public class Valadoc.TypeParameter : Basic, TypeHandler {
+public class Valadoc.TypeParameter : Basic, ReturnTypeHandler {
 	public TypeParameter ( Valadoc.Settings settings, Vala.TypeParameter vtypeparam, Basic parent, Tree head ) {
 		this.vtypeparam = vtypeparam;
 		this.settings = settings;
@@ -1982,7 +1918,7 @@ public class Valadoc.TypeParameter : Basic, TypeHandler {
 		this.head = head;
 	}
 
-	public TypeReference type_reference {
+	public TypeReference? type_reference {
 		protected set;
 		get;
 	}
@@ -1996,14 +1932,15 @@ public class Valadoc.TypeParameter : Basic, TypeHandler {
 		protected get;
 	}
 
-	public string# datatype_name {
-		get {
+	public string? name {
+		owned get {
 			return this.vtypeparam.name;
 		}
 	}
 
 	// internal
 	public void initialisation ( ) {
+		this.vsymbol = this.vtypeparam;
 	}
 
 	// internal
@@ -2012,7 +1949,7 @@ public class Valadoc.TypeParameter : Basic, TypeHandler {
 }
 
 
-public class Valadoc.FormalParameter : Basic, TypeHandler {
+public class Valadoc.FormalParameter : Basic, ReturnTypeHandler {
 	public FormalParameter ( Valadoc.Settings settings, Vala.FormalParameter vformalparam, Basic parent, Tree head ) {
 		this.settings = settings;
 		this.vformalparam = vformalparam;
@@ -2032,12 +1969,20 @@ public class Valadoc.FormalParameter : Basic, TypeHandler {
 		}
 	}
 
+	/*
 	public string? default_value {
 		private set;
 		public get;
 	}
+	*/
 
-	// internal
+	public bool has_default_value {
+		get {
+			return this.vformalparam.default_expression != null;
+		}
+	}
+
+	// internal, FIXME:
 	public void initialisation ( ) {
 		this.vsymbol = this.vformalparam;
 
@@ -2065,7 +2010,7 @@ public class Valadoc.FormalParameter : Basic, TypeHandler {
 		*/
 	}
 
-	public TypeReference type_reference {
+	public TypeReference? type_reference {
 		protected set;
 		get;
 	}
@@ -2076,14 +2021,8 @@ public class Valadoc.FormalParameter : Basic, TypeHandler {
 		}
 	}
 
-	public bool is_construct {
-		get {
-			return this.vformalparam.construct_parameter;
-		}
-	}
-
-	public override string?# name {
-		get {
+	public string? name {
+		owned get {
 			return ( this.vformalparam.name == null )? "" : this.vformalparam.name;
 		}
 	}
@@ -2098,7 +2037,7 @@ public class Valadoc.FormalParameter : Basic, TypeHandler {
 		if ( this.vformalparam.ellipsis )
 			return ;
 
-		((TypeHandler)this).set_type_references ( );
+		((ReturnTypeHandler)this).set_return_type_references ( );
 	}
 
 	public void write ( Langlet langlet, void* ptr ) {
@@ -2178,12 +2117,18 @@ public class Valadoc.PropertyAccessor : Object /*, FIXME: Valac-Bug! Can't overr
 		}
 	}
 
+	public bool is_owned {
+		get {
+			return this.vpropacc.value_type.value_owned;
+		}
+	}
+
 	public void write ( Langlet langlet, void* ptr ) {
 		langlet.write_property_accessor ( this, ptr );
 	}
 }
 
-public class Valadoc.Property : Basic, SymbolAccessibility, ReturnTypeHandler, Visitable, Writeable {
+public class Valadoc.Property : DocumentedElement, SymbolAccessibility, ReturnTypeHandler, Visitable, Writeable {
 	public Property ( Valadoc.Settings settings, Vala.Property vproperty, ContainerDataType parent, Tree head ) {
 		this.settings = settings;
 		this.vproperty = vproperty;
@@ -2203,7 +2148,7 @@ public class Valadoc.Property : Basic, SymbolAccessibility, ReturnTypeHandler, V
 		return this.vproperty.equals ( p.vproperty );
 	}
 
-	public TypeReference return_type {
+	public TypeReference? type_reference {
 		protected set;
 		get;
 	}
@@ -2255,8 +2200,8 @@ public class Valadoc.Property : Basic, SymbolAccessibility, ReturnTypeHandler, V
 		protected get;
 	}
 
-	public override string?# name {
-		get {
+	public override string? name {
+		owned get {
 			return this.vproperty.name;
 		}
 	}
@@ -2292,7 +2237,7 @@ public class Valadoc.Property : Basic, SymbolAccessibility, ReturnTypeHandler, V
 			return ;
 		}
 
-		this.parse_comment_helper ( docparser, CommentContext.PROPERTY );
+		this.parse_comment_helper ( docparser );
 	}
 
 	public void visit ( Doclet doclet ) {
@@ -2309,29 +2254,28 @@ public class Valadoc.Property : Basic, SymbolAccessibility, ReturnTypeHandler, V
 
 
 
-public class Valadoc.Signal : Basic, ParameterListHandler, SymbolAccessibility,
+public class Valadoc.Signal : DocumentedElement, ParameterListHandler, SymbolAccessibility,
 							  ReturnTypeHandler, Visitable, Writeable
 {
 	public Signal ( Valadoc.Settings settings, Vala.Signal vsignal, ContainerDataType parent, Tree head ) {
+		this.param_list = new Gee.ArrayList<FormalParameter> ();
+
 		this.settings = settings;
 		this.vsignal = vsignal;
 		this.parent = parent;
 		this.head = head;
 	}
 
+	// internal
 	public bool is_vsignal ( Vala.Signal vsig ) {
 		return ( this.vsignal == vsig );
-	}
-
-	construct {
-		this.param_list = new Gee.ArrayList<FormalParameter> ();
 	}
 
 	public string? get_cname () {
 		return this.vsignal.get_cname();
 	}
 
-	public TypeReference return_type {
+	public TypeReference? type_reference {
 		protected set;
 		get;
 	}
@@ -2365,12 +2309,18 @@ public class Valadoc.Signal : Basic, ParameterListHandler, SymbolAccessibility,
 
 	// internal
 	public void parse_comment ( Valadoc.Parser docparser ) {
-		this.parse_comment_helper ( docparser, CommentContext.SIGNAL );
+		this.parse_comment_helper ( docparser );
 	}
 
-	public override string?# name {
-		get {
+	public override string? name {
+		owned get {
 			return this.vsignal.name;
+		}
+	}
+
+	public bool is_virtual {
+		get {
+			return this.vsignal.is_virtual;
 		}
 	}
 
@@ -2388,16 +2338,21 @@ public class Valadoc.Signal : Basic, ParameterListHandler, SymbolAccessibility,
 
 
 
-public class Valadoc.Method : Basic, ParameterListHandler, ExceptionHandler, TemplateParameterListHandler,
-								SymbolAccessibility, ReturnTypeHandler, Visitable, Writeable
+public class Valadoc.Method : DocumentedElement, ParameterListHandler, ExceptionHandler, TemplateParameterListHandler,
+                              SymbolAccessibility, ReturnTypeHandler, Visitable, Writeable
 {
 	public Method ( Valadoc.Settings settings, Vala.Method vmethod, MethodHandler parent, Tree head ) {
+		this.template_param_lst = new Gee.ArrayList<TypeParameter> ();
+		this.param_list = new Gee.ArrayList<FormalParameter>();
+		this.err_domains = new Gee.ArrayList<TypeReference>();
+
 		this.settings = settings;
 		this.vmethod = vmethod;
 		this.parent = parent;
 		this.head = head;
 	}
 
+	// intern
 	public bool is_vmethod ( Vala.Method vm ) {
 		return ( this.vmethod == vm );
 	}
@@ -2406,18 +2361,12 @@ public class Valadoc.Method : Basic, ParameterListHandler, ExceptionHandler, Tem
 		return this.vmethod.get_cname();
 	}
 
-	construct {
-		this.err_domains = new Gee.ArrayList<TypeReference>();
-		this.param_list = new Gee.ArrayList<FormalParameter>();
-		this.template_param_lst = new Gee.ArrayList<TypeParameter> ();
-	}
-
-	public Method base_method {
+	public Method? base_method {
 		private set;
 		get;
 	}
 
-	public TypeReference return_type {
+	public TypeReference? type_reference {
 		protected set;
 		get;
 	}
@@ -2432,14 +2381,14 @@ public class Valadoc.Method : Basic, ParameterListHandler, ExceptionHandler, Tem
 		get;
 	}
 
-	public Gee.ArrayList<TypeReference> err_domains {
+	public Gee.ArrayList<DataType> err_domains {
 		protected set;
 		get;
 	}
 
 	// FIXME
-	public string?# comment_str {
-		get {
+	public string? comment_str {
+		owned get {
 			return this.vmethod.source_reference.comment;
 		}
 	}
@@ -2467,8 +2416,7 @@ public class Valadoc.Method : Basic, ParameterListHandler, ExceptionHandler, Tem
 			return ;
 		}
 
-		// wrong context!
-		this.parse_comment_helper ( docparser, CommentContext.CLASS );
+		this.parse_comment_helper ( docparser );
 	}
 
 	// internal
@@ -2481,8 +2429,8 @@ public class Valadoc.Method : Basic, ParameterListHandler, ExceptionHandler, Tem
 		var vparamlst = this.vmethod.get_parameters ();
 		this.add_parameter_list ( vparamlst );
 
-		var vexceptionlst = this.vmethod.get_error_types ();
-		this.add_error_domains ( vexceptionlst );
+		//var vexceptionlst = this.vmethod.get_error_types ();
+		//this.add_error_domains ( vexceptionlst );
 	}
 
 	public Vala.Method vmethod {
@@ -2523,18 +2471,6 @@ public class Valadoc.Method : Basic, ParameterListHandler, ExceptionHandler, Tem
 		}
 	}
 
-	public string# parent_name {
-		get {
-			return this.parent.name;
-		}
-	}
-
-	public bool is_global {
-		get {
-			return ( this.parent is Namespace );
-		}
-	}
-
 	public bool is_constructor {
 		get {
 			return ( this.vmethod is Vala.CreationMethod );
@@ -2547,13 +2483,13 @@ public class Valadoc.Method : Basic, ParameterListHandler, ExceptionHandler, Tem
 		}
 	}
 
-	public override string?# name {
-		get {
+	public override string? name {
+		owned get {
 			if ( this.is_constructor ) {
 				if ( this.vmethod.name == "new" )
-					return this.parent_name;
+					return ((DocumentedElement)this.parent).name;
 				else
-					return this.parent_name + "." + this.vmethod.name;
+					return ((DocumentedElement)this.parent).name + "." + this.vmethod.name;
 			}
 			else {
 				return this.vmethod.name;
@@ -2569,9 +2505,11 @@ public class Valadoc.Method : Basic, ParameterListHandler, ExceptionHandler, Tem
 		}
 
 		this.set_return_type_references ( );
-
-		this.set_exception_type_references ( );
+//		this.set_exception_type_references ( );
 		this.set_parameter_list_type_references ( );
+
+		var vexceptionlst = this.vmethod.get_error_types ();
+		this.add_exception_list ( vexceptionlst );
 	}
 
 	public void visit ( Doclet doclet, Valadoc.MethodHandler in_type ) {
@@ -2587,7 +2525,7 @@ public class Valadoc.Method : Basic, ParameterListHandler, ExceptionHandler, Tem
 }
 
 
-public class Valadoc.EnumValue: Basic, Writeable {
+public class Valadoc.EnumValue: DocumentedElement, Writeable {
 	public EnumValue ( Valadoc.Settings settings, Vala.EnumValue venval, Enum parent, Tree head ) {
 		this.settings = settings;
 		this.venval = venval;
@@ -2603,8 +2541,8 @@ public class Valadoc.EnumValue: Basic, Writeable {
 		this.vsymbol = venval;
 	}
 
-	public override string?# name {
-		get {
+	public override string? name {
+		owned get {
 			return this.venval.name;
 		}
 	}
@@ -2615,7 +2553,7 @@ public class Valadoc.EnumValue: Basic, Writeable {
 	}
 
 	public void parse_comment ( Valadoc.Parser docparser ) {
-		this.parse_comment_helper ( docparser, CommentContext.ENUMVALUE );
+		this.parse_comment_helper ( docparser );
 	}
 
 	public void write ( Langlet langlet, void* ptr ) {
@@ -2627,7 +2565,7 @@ public class Valadoc.EnumValue: Basic, Writeable {
 	}
 }
 
-public class Valadoc.ErrorCode : Basic, Writeable {
+public class Valadoc.ErrorCode : DocumentedElement, Writeable {
 	public ErrorCode ( Valadoc.Settings settings, Vala.ErrorCode verrcode, ErrorDomain parent, Tree head ) {
 		this.settings = settings;
 		this.verrcode = verrcode;
@@ -2644,8 +2582,8 @@ public class Valadoc.ErrorCode : Basic, Writeable {
 		this.vsymbol = verrcode;
 	}
 
-	public override string?# name {
-		get {
+	public override string? name {
+		owned get {
 			return this.verrcode.name;
 		}
 	}
@@ -2660,7 +2598,7 @@ public class Valadoc.ErrorCode : Basic, Writeable {
 	}
 
 	public void parse_comment ( Valadoc.Parser docparser ) {
-		this.parse_comment_helper ( docparser, CommentContext.ENUMVALUE );
+		this.parse_comment_helper ( docparser );
 	}
 
 	public void visit ( Doclet doclet ) {
@@ -2668,20 +2606,24 @@ public class Valadoc.ErrorCode : Basic, Writeable {
 	}
 }
 
-public abstract class Valadoc.DataType: Basic, SymbolAccessibility, Visitable, Writeable {
-	public override string?# name {
-		get {
+
+
+public abstract class Valadoc.DataType: DocumentedElement, SymbolAccessibility, Visitable, Writeable {
+	public override string? name {
+		owned get {
 			return this.vsymbol.name;
 		}
 	}
 
-	// internal
+	// remove
 	public virtual void set_type_references ( ) {
 	}
 
+	// move to DocumentedElement
 	public virtual void visit ( Doclet doclet ) {
 	}
 
+	// Move to Basic; add a third parameter for "parent"
 	public virtual void write ( Langlet langlet, void* ptr ) {
 	}
 }
@@ -2692,6 +2634,10 @@ public class Valadoc.Delegate : DataType, ParameterListHandler, SymbolAccessibil
 																ReturnTypeHandler, TemplateParameterListHandler,
 																ExceptionHandler {
 	public Delegate ( Valadoc.Settings settings, Vala.Delegate vdelegate, DelegateHandler parent, Tree head ) {
+		this.template_param_lst = new Gee.ArrayList<TypeParameter> ();
+		this.param_list = new Gee.ArrayList<FormalParameter>();
+		this.err_domains = new Gee.ArrayList<TypeReference>();
+
 		this.settings = settings;
 		this.vdelegate = vdelegate;
 		this.parent = parent;
@@ -2702,7 +2648,7 @@ public class Valadoc.Delegate : DataType, ParameterListHandler, SymbolAccessibil
 		return this.vdelegate.get_cname();
 	}
 
-	public TypeReference return_type {
+	public TypeReference? type_reference {
 		protected set;
 		get;
 	}
@@ -2724,7 +2670,7 @@ public class Valadoc.Delegate : DataType, ParameterListHandler, SymbolAccessibil
 		get;
 	}
 
-	protected Gee.ArrayList<TypeReference> err_domains {
+	protected Gee.ArrayList<DataType> err_domains {
 		protected set;
 		get;
 	}
@@ -2733,18 +2679,11 @@ public class Valadoc.Delegate : DataType, ParameterListHandler, SymbolAccessibil
 	public void initialisation ( ) {
 		this.vsymbol = this.vdelegate;
 
-		this.template_param_lst = new Gee.ArrayList<TypeParameter> ();
-
-		var vparamlst = this.vdelegate.get_parameters ();
-		this.param_list = new Gee.ArrayList<FormalParameter> ();
-		this.add_parameter_list ( vparamlst );
-
-		var vexceptionlst = this.vdelegate.get_error_types ();
-		this.err_domains = new Gee.ArrayList<TypeReference>();
-		this.add_error_domains ( vexceptionlst );
-
 		var ret = this.vdelegate.return_type;
 		this.set_ret_type ( ret );
+
+		var vparamlst = this.vdelegate.get_parameters ();
+		this.add_parameter_list ( vparamlst );
 	}
 
 	public Vala.Delegate vdelegate {
@@ -2760,14 +2699,16 @@ public class Valadoc.Delegate : DataType, ParameterListHandler, SymbolAccessibil
 
 	// internal
 	public override void set_type_references ( ) {
-		this.set_template_parameter_list_references ( );
-		this.set_parameter_list_type_references ( );
 		this.set_return_type_references ( );
+		this.set_parameter_list_type_references ( );
+
+		var vexceptionlst = this.vdelegate.get_error_types ();
+		this.add_exception_list ( vexceptionlst );
 	}
 
 	// internal
 	public void parse_comment ( Valadoc.Parser docparser ) {
-		this.parse_comment_helper ( docparser, CommentContext.DELEGATE );
+		this.parse_comment_helper ( docparser );
 	}
 
 	// internal
@@ -2775,14 +2716,13 @@ public class Valadoc.Delegate : DataType, ParameterListHandler, SymbolAccessibil
 		return ( this.vdelegate == vdel );
 	}
 
+	// new parameter: DelegateHandler parent
 	public override void write ( Langlet langlet, void* ptr ) {
 		langlet.write_delegate ( this, ptr );
 	}
 }
 
-public abstract class Valadoc.ContainerDataType : DataType, MethodHandler, Visitable,
-												TemplateParameterListHandler
-{
+public abstract class Valadoc.ContainerDataType : DataType, MethodHandler, TemplateParameterListHandler {
 	protected Gee.ArrayList<DataType> parent_types = new Gee.ArrayList<DataType>();
 
 	construct {
@@ -2801,8 +2741,8 @@ public abstract class Valadoc.ContainerDataType : DataType, MethodHandler, Visit
 		get;
 	}
 
-	public string?# comment_str {
-		get {
+	public string? comment_str {
+		owned get {
 			return null;
 		}
 	}
@@ -2817,6 +2757,7 @@ public abstract class Valadoc.ContainerDataType : DataType, MethodHandler, Visit
 		return this.parent_types;
 	}
 
+	// remove
 	public bool derived_from_interface ( Interface iface ) {
 		foreach ( DataType dtype in this.parent_types ) {
 			if ( dtype == iface )
@@ -2825,7 +2766,6 @@ public abstract class Valadoc.ContainerDataType : DataType, MethodHandler, Visit
 		return false;
 	}
 
-	// rename, remove virtual
 	public virtual void parse_comments ( Valadoc.Parser docparser ) {
 		this.parse_method_comments ( docparser );
 	}
@@ -2835,13 +2775,10 @@ public abstract class Valadoc.ContainerDataType : DataType, MethodHandler, Visit
 			return ;
 
 		foreach ( Vala.DataType vtyperef in lst ) {
-			DataType? element = (DataType?)this.head.search_vala_symbol ( vtyperef.data_type );
+			ContainerDataType? element = (ContainerDataType?)this.head.search_vala_symbol ( vtyperef.data_type );
 			this.parent_types.add ( element );
-			if ( element is Class ) {
-				this.parent_class = (Class)element;
-			}
-			else if ( element is Struct ) {
-				this.parent_class = (Struct)element;
+			if ( element is Class || element is Struct ) {
+				this.parent_class = element;
 			}
 		}
 	}
@@ -2916,7 +2853,7 @@ public class Valadoc.Class : ContainerDataType, Visitable, ClassHandler, StructH
 	}
 
 	// internal
-	public override weak Basic? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos];
 
 		if ( velement is Vala.Class == false )
@@ -2930,68 +2867,50 @@ public class Valadoc.Class : ContainerDataType, Visitable, ClassHandler, StructH
 
 		velement = params[pos+1];
 
+		DocumentedElement? element = null;
+
 		if ( velement is Vala.Field ) {
-			var element = this.search_field_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_field_vala ( params, pos );
 		}
 		else if ( velement is Vala.Method ) {
-			var element = this.search_method_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_method_vala ( params, pos );
 		}
 		else if ( velement is Vala.Delegate ) {
-			var element = this.search_delegate_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_delegate_vala ( params, pos );
 		}
 		else if ( velement is Vala.CreationMethod ) {
-			var element = this.search_construction_method_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_construction_method_vala ( params, pos );
 		}
 		else if ( velement is Vala.Signal ) {
-			var element = this.search_signal_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_signal_vala ( params, pos );
 		}
 		else if ( velement is Vala.Property ) {
-			var element = this.search_property_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_property_vala ( params, pos );
 		}
 		else if ( velement is Vala.Struct ) {
-			var element = this.search_struct_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_struct_vala ( params, pos );
 		}
 		else if ( velement is Vala.Class ) {
-			var element = this.search_class_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_class_vala ( params, pos );
 		}
 		else if ( velement is Vala.Enum ) {
-			var element = this.search_enum_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_enum_vala ( params, pos );
 		}
 		else if ( velement is Vala.Constant ) {
-			var element = this.search_constant_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_constant_vala ( params, pos );
 		}
-		return null;
+		return element;
 	}
 
 	// internal
-	public override weak Basic? search_element ( string[] params, int pos ) {
+	public override weak DocumentedElement? search_element ( string[] params, int pos ) {
 		if ( !(this.name == params[pos] || params[0] == "this") )
 			return null;
 
 		if ( params[pos+1] == null )
 			return this;
 
-		var element = this.search_field ( params, pos );
+		DocumentedElement? element = this.search_field ( params, pos );
 		if ( element != null )
 			return element;
 
@@ -3084,8 +3003,8 @@ public class Valadoc.Class : ContainerDataType, Visitable, ClassHandler, StructH
 		this.add_constants ( vconstants );
 	}
 
-	public string?# comment_str {
-		get {
+	public string? comment_str {
+		owned get {
 			return this.vclass.source_reference.comment;
 		}
 	}
@@ -3130,7 +3049,7 @@ public class Valadoc.Class : ContainerDataType, Visitable, ClassHandler, StructH
 					this.documentation = this.parent_class.documentation;
 				}
 				else {
-					this.parse_comment_helper ( docparser, CommentContext.CLASS );
+					this.parse_comment_helper ( docparser );
 				}
 			}
 		}
@@ -3283,7 +3202,7 @@ public class Valadoc.ErrorDomain : DataType, MethodHandler, Visitable {
 		return ( this.verrdom == ver );
 	}
 
-	private weak Basic? search_error_code ( string[] params, int pos ) {
+	private weak DocumentedElement? search_error_code ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -3296,7 +3215,7 @@ public class Valadoc.ErrorDomain : DataType, MethodHandler, Visitable {
 		return null;
 	}
 
-	private weak Basic? search_error_code_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	private weak DocumentedElement? search_error_code_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.ErrorCode == false )
 			return null;
@@ -3312,7 +3231,7 @@ public class Valadoc.ErrorDomain : DataType, MethodHandler, Visitable {
 		return null;
 	}
 
-	public override weak Basic? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos];
 
 		if ( velement is Vala.ErrorDomain == false )
@@ -3326,28 +3245,26 @@ public class Valadoc.ErrorDomain : DataType, MethodHandler, Visitable {
 
 		velement = params[pos+1];
 
+		DocumentedElement? element = null;
+
 		if ( velement is Vala.ErrorCode ) {
-			var element = this.search_error_code_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_error_code_vala ( params, pos );
 		}
 		else if ( velement is Vala.Method ) {
-			var element = this.search_method_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_method_vala ( params, pos );
 		}
-		return null;
+		return element;
 	}
 
 	// internal
-	public override weak Basic? search_element ( string[] params, int pos ) {
+	public override weak DocumentedElement? search_element ( string[] params, int pos ) {
 		if ( this.name != params[pos] )
 			return null;
 
 		if ( params[pos+1] == null )
 			return this;
 
-		var element = this.search_method ( params, pos );
+		DocumentedElement? element = this.search_method ( params, pos );
 		if ( element != null )
 			return element;
 
@@ -3360,7 +3277,7 @@ public class Valadoc.ErrorDomain : DataType, MethodHandler, Visitable {
 
 	// internal
 	public void parse_comments ( Valadoc.Parser docparser ) {
-		this.parse_comment_helper ( docparser, CommentContext.ERRORDOMAIN );
+		this.parse_comment_helper ( docparser );
 		this.parse_method_comments ( docparser );
 
 		foreach ( ErrorCode errcode in this.errcodes ) {
@@ -3426,7 +3343,7 @@ public class Valadoc.Enum : DataType, MethodHandler, Visitable {
 		return this.venum.get_cname();
 	}
 
-	private weak Basic? search_enum_value_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	private weak DocumentedElement? search_enum_value_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.EnumValue == false )
 			return null;
@@ -3442,7 +3359,7 @@ public class Valadoc.Enum : DataType, MethodHandler, Visitable {
 		return null;
 	}
 
-	private weak Basic? search_enum_value ( string[] params, int pos ) {
+	private weak DocumentedElement? search_enum_value ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -3455,7 +3372,7 @@ public class Valadoc.Enum : DataType, MethodHandler, Visitable {
 		return null;
 	}
 
-	public override weak Basic? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos];
 
 		if ( velement is Vala.Enum == false )
@@ -3469,21 +3386,19 @@ public class Valadoc.Enum : DataType, MethodHandler, Visitable {
 
 		velement = params[pos+1];
 
+		DocumentedElement? element = null;
+
 		if ( velement is Vala.EnumValue ) {
-			var element = this.search_enum_value_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_enum_value_vala ( params, pos );
 		}
 		else if ( velement is Vala.Method ) {
-			var element = this.search_method_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_method_vala ( params, pos );
 		}
-		return null;
+		return element;
 	}
 
 	// internal
-	public override weak Basic? search_element ( string[] params, int pos ) {
+	public override weak DocumentedElement? search_element ( string[] params, int pos ) {
 		if ( this.name != params[pos] )
 			return null;
 
@@ -3491,7 +3406,7 @@ public class Valadoc.Enum : DataType, MethodHandler, Visitable {
 			return this;
 
 
-		var element = this.search_method ( params, pos );
+		DocumentedElement? element = this.search_method ( params, pos );
 		if ( element != null )
 			return element;
 
@@ -3523,8 +3438,7 @@ public class Valadoc.Enum : DataType, MethodHandler, Visitable {
 
 	// internal
 	public void parse_comments ( Valadoc.Parser docparser ) {
-		// CommentContext.ENUM
-		this.parse_comment_helper ( docparser, CommentContext.ENUM );
+		this.parse_comment_helper ( docparser );
 
 		foreach ( EnumValue enval in this.en_values ) {
 			enval.parse_comment ( docparser );
@@ -3610,7 +3524,7 @@ public class Valadoc.Struct : ContainerDataType, Visitable, ConstructionMethodHa
 		get;
 	}
 
-	public override weak Basic? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos];
 
 		if ( velement is Vala.Struct == false )
@@ -3624,39 +3538,33 @@ public class Valadoc.Struct : ContainerDataType, Visitable, ConstructionMethodHa
 
 		velement = params[pos+1];
 
+		DocumentedElement? element = null;
+
 		if ( velement is Vala.Field ) {
-			var element = this.search_field_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_field_vala ( params, pos );
 		}
 		else if ( velement is Vala.CreationMethod ) {
-			var element = this.search_construction_method_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_construction_method_vala ( params, pos );
 		}
 		else if ( velement is Vala.Method ) {
-			var element = this.search_method_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_method_vala ( params, pos );
 		}
 		else if ( velement is Vala.Constant ) {
-			var element = this.search_constant_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_constant_vala ( params, pos );
 		}
 
-		return null;
+		return element;
 	}
 
 	// internal
-	public override weak Basic? search_element ( string[] params, int pos ) {
+	public override weak DocumentedElement? search_element ( string[] params, int pos ) {
 		if ( this.name != params[pos] )
 			return null;
 
 		if ( params[pos+1] == null )
 			return this;
 
-		var element = this.search_field ( params, pos );
+		DocumentedElement? element = this.search_field ( params, pos );
 		if ( element != null )
 			return element;
 
@@ -3692,8 +3600,8 @@ public class Valadoc.Struct : ContainerDataType, Visitable, ConstructionMethodHa
 	}
 
 	// TODO remove
-	public string?# comment_str {
-		get {
+	public string? comment_str {
+		owned get {
 			return this.vstruct.source_reference.comment;
 		}
 	}
@@ -3733,7 +3641,7 @@ public class Valadoc.Struct : ContainerDataType, Visitable, ConstructionMethodHa
 					this.documentation = this.parent_class.documentation;
 				}
 				else {
-					this.parse_comment_helper ( docparser, CommentContext.STRUCT );
+					this.parse_comment_helper ( docparser );
 				}
 			}
 		}
@@ -3809,7 +3717,7 @@ public class Valadoc.Interface : ContainerDataType, Visitable, SignalHandler, Pr
 		protected get;
 	}
 
-	public override weak Basic? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos];
 
 		if ( velement is Vala.Interface == false )
@@ -3823,58 +3731,44 @@ public class Valadoc.Interface : ContainerDataType, Visitable, SignalHandler, Pr
 
 		velement = params[pos+1];
 
+		DocumentedElement? element = null;
+
 		if ( velement is Vala.Field ) {
-			var element = this.search_field_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_field_vala ( params, pos );
 		}
 		else if ( velement is Vala.Method ) {
-			var element = this.search_method_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_method_vala ( params, pos );
 		}
 		else if ( velement is Vala.Signal ) {
-			var element = this.search_signal_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_signal_vala ( params, pos );
 		}
 		else if ( velement is Vala.Property ) {
-			var element = this.search_property_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_property_vala ( params, pos );
 		}
 		else if ( velement is Vala.Delegate ) {
-			var element = this.search_delegate_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_delegate_vala ( params, pos );
 		}
 		else if ( velement is Vala.Struct ) {
-			var element = this.search_struct_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_struct_vala ( params, pos );
 		}
 		else if ( velement is Vala.Enum ) {
-			var element = this.search_enum_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_enum_vala ( params, pos );
 		}
 		else if ( velement is Vala.Class ) {
-			var element = this.search_class_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_class_vala ( params, pos );
 		}
-		return null;
+		return element;
 	}
 
 	// internal
-	public override weak Basic? search_element ( string[] params, int pos ) {
+	public override weak DocumentedElement? search_element ( string[] params, int pos ) {
 		if ( !(this.name == params[pos] || params[0] == "this") )
 			return null;
 
 		if ( params[pos+1] == null )
 			return this;
 
-		var element = this.search_field ( params, pos );
+		DocumentedElement? element = this.search_field ( params, pos );
 		if ( element != null )
 			return element;
 
@@ -3949,8 +3843,8 @@ public class Valadoc.Interface : ContainerDataType, Visitable, SignalHandler, Pr
 		this.add_enums ( enums );
 	}
 
-	public string?# comment_str {
-		get {
+	public string? comment_str {
+		owned get {
 			return this.vinterface.source_reference.comment;
 		}
 	}
@@ -3973,7 +3867,7 @@ public class Valadoc.Interface : ContainerDataType, Visitable, SignalHandler, Pr
 
 	// internal
 	public override void parse_comments ( Valadoc.Parser docparser ) {
-		this.parse_comment_helper ( docparser, CommentContext.INTERFACE );
+		this.parse_comment_helper ( docparser );
 		this.parse_delegate_comments ( docparser );
 		this.parse_property_comments ( docparser );
 		this.parse_signal_comments ( docparser );
@@ -4001,7 +3895,7 @@ public class Valadoc.Interface : ContainerDataType, Visitable, SignalHandler, Pr
 	}
 }
 
-public class Valadoc.Namespace : Basic, MethodHandler, FieldHandler, NamespaceHandler, ErrorDomainHandler,
+public class Valadoc.Namespace : DocumentedElement, MethodHandler, FieldHandler, NamespaceHandler, ErrorDomainHandler,
                                  EnumHandler, ClassHandler, StructHandler, Writeable, InterfaceHandler,
                                  DelegateHandler, ConstantHandler
 {
@@ -4060,9 +3954,9 @@ public class Valadoc.Namespace : Basic, MethodHandler, FieldHandler, NamespaceHa
 	}
 
 	// interface
-	private weak Basic? search_namespace ( string[] params, int pos ) {
+	private weak DocumentedElement? search_namespace ( string[] params, int pos ) {
 		foreach ( Namespace ns in this.namespaces ) {
-			Basic element = ns.search_element ( params, pos+1 );
+			DocumentedElement? element = ns.search_element ( params, pos+1 );
 			if ( element != null )
 				return element;
 		}
@@ -4070,16 +3964,16 @@ public class Valadoc.Namespace : Basic, MethodHandler, FieldHandler, NamespaceHa
 	}
 
 	//interface
-	private weak Basic? search_namespace_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	private weak DocumentedElement? search_namespace_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		foreach ( Namespace ns in this.namespaces ) {
-			Basic element = ns.search_element_vala ( params, pos+1 );
+			DocumentedElement? element = ns.search_element_vala ( params, pos+1 );
 			if ( element != null )
 				return element;
 		}
 		return null;
 	}
 
-	public override weak Basic? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos];
 
 		if ( velement is Vala.Namespace == false )
@@ -4093,61 +3987,43 @@ public class Valadoc.Namespace : Basic, MethodHandler, FieldHandler, NamespaceHa
 
 		velement = params[pos+1];
 
+		DocumentedElement? element = null;
+
 		if ( velement is Vala.Namespace ) {
-			Basic element = this.search_namespace_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_namespace_vala ( params, pos );
 		}
 		else if ( velement is Vala.Class ) {
-			Basic element = this.search_class_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_class_vala ( params, pos );
 		}
 		else if ( velement is Vala.Interface ) {
-			Basic element = this.search_interface_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_interface_vala ( params, pos );
 		}
 		else if ( velement is Vala.Struct ) {
-			Basic element = this.search_struct_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_struct_vala ( params, pos );
 		}
 		else if ( velement is Vala.Enum ) {
-			Basic element = this.search_enum_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_enum_vala ( params, pos );
 		}
 		else if ( velement is Vala.ErrorDomain ) {
-			Basic element = this.search_error_domain_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_error_domain_vala ( params, pos );
 		}
 		else if ( velement is Vala.Method ) {
-			Basic element = this.search_method_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_method_vala ( params, pos );
 		}
 		else if ( velement is Vala.Field ) {
-			Basic element = this.search_field_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_field_vala ( params, pos );
 		}
 		else if ( velement is Vala.DelegateType || velement is Vala.Delegate ) {
-			Basic element = this.search_delegate_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_delegate_vala ( params, pos );
 		}
 		else if ( velement is Vala.Constant ) {
-			Basic element = this.search_constant_vala ( params, pos );
-			if ( element != null )
-				return element;
+			element = this.search_constant_vala ( params, pos );
 		}
-		return null;
+		return element;
 	}
 
 	// internal
-	public override weak Basic? search_element ( string[] params, int pos ) {
+	public override weak DocumentedElement? search_element ( string[] params, int pos ) {
 		if ( this.name != params[pos] )
 			return null;
 
@@ -4155,7 +4031,7 @@ public class Valadoc.Namespace : Basic, MethodHandler, FieldHandler, NamespaceHa
 			return this;
 
 
-		Basic element = this.search_namespace ( params, pos );
+		DocumentedElement? element = this.search_namespace ( params, pos );
 		if ( element != null )
 			return element;
 
@@ -4224,8 +4100,8 @@ public class Valadoc.Namespace : Basic, MethodHandler, FieldHandler, NamespaceHa
 		private get;
 	}
 
-	public override string?# name {
-		get {
+	public override string? name {
+		owned get {
 			return this.vnspace.name;
 		}
 	}
@@ -4254,7 +4130,7 @@ public class Valadoc.Namespace : Basic, MethodHandler, FieldHandler, NamespaceHa
 
 	// internal
 	public void parse_comments ( Valadoc.Parser docparser ) {
-		//this.parse_comment_helper ( docparser, CommentContext.NAMESPACE );
+		//this.parse_comment_helper ( docparser );
 
 		this.parse_enum_comments ( docparser );
 		this.parse_field_comments ( docparser );
@@ -4279,7 +4155,7 @@ public class Valadoc.Namespace : Basic, MethodHandler, FieldHandler, NamespaceHa
 }
 
 
-public class Valadoc.Package : Basic, NamespaceHandler {
+public class Valadoc.Package : DocumentedElement, NamespaceHandler {
 	private Gee.ArrayList<Vala.SourceFile> vfiles = new Gee.ArrayList<Vala.SourceFile> ();
 
 	// internal
@@ -4292,12 +4168,7 @@ public class Valadoc.Package : Basic, NamespaceHandler {
 		private set;
 		private get;
 	}
-/*
-	public bool is_external_package {
-		 /+ internal +/ set;
-		 get;
-	}
-*/
+
 	public bool is_package {
 		 private set;
 		 get;
@@ -4309,24 +4180,6 @@ public class Valadoc.Package : Basic, NamespaceHandler {
 	}
 
 	private Gee.ArrayList<Package> _dependencies;
-
-	// internal remove
-	public bool is_dependency ( Package dep ) {
-		if ( dep == this )
-			return false;
-
-		foreach ( Package pkg in this._dependencies ) {
-			if ( pkg == dep ) {
-				return true;
-			}
-
-			bool tmp = pkg.is_dependency ( dep );
-			if ( tmp == true ) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	public Gee.ReadOnlyCollection<Package> get_full_dependency_list () {
 		Gee.ArrayList<Package> list = new Gee.ArrayList<Package> ();
@@ -4379,6 +4232,7 @@ public class Valadoc.Package : Basic, NamespaceHandler {
 		this.package_name = name;
 
 		this.vfiles.add ( vfile );
+		this.parent = null;
 	}
 
 	public Package ( Valadoc.Settings settings, Vala.SourceFile vfile, Tree head, bool is_package = false ) {
@@ -4387,23 +4241,16 @@ public class Valadoc.Package : Basic, NamespaceHandler {
 
 	private string package_name;
 
-	public override string?# name {
-		get {
+	public override string? name {
+		owned get {
 			return package_name;
 		}
 	}
 
-/*
-	public Vala.SourceFile vfile {
-		construct set;
-		private get;
-	}
-*/
-
 	// internal
-	public override weak Basic? search_element ( string[] params, int pos ) {
+	public override weak DocumentedElement? search_element ( string[] params, int pos ) {
 		foreach ( Namespace ns in this.namespaces ) {
-			Basic element = ns.search_element ( params, pos );
+			DocumentedElement? element = ns.search_element ( params, pos );
 			if ( element != null )
 				return element;
 		}
@@ -4411,9 +4258,9 @@ public class Valadoc.Package : Basic, NamespaceHandler {
 	}
 
 	// internal
-	public override weak Basic? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		foreach ( Namespace ns in this.namespaces ) {
-			Basic element = ns.search_element_vala ( params, pos );
+			DocumentedElement? element = ns.search_element_vala ( params, pos );
 			if ( element != null )
 				return element;
 		}
@@ -4459,16 +4306,19 @@ public class Valadoc.Package : Basic, NamespaceHandler {
 
 
 public class Valadoc.Tree : Vala.CodeVisitor {
-	private Gee.ArrayList<Package> files = new Gee.ArrayList<Package>();
+	private Gee.ArrayList<Package> packages = new Gee.ArrayList<Package>();
+
+	public Gee.ReadOnlyCollection<Package> get_package_list () {
+		return new Gee.ReadOnlyCollection<Package> ( this.packages );
+	}
 
 	private Valadoc.Settings settings;
 
 	public Tree (	Valadoc.Settings settings,
 					bool non_null_experimental,
-					bool disable_non_null,
 					bool disable_checking,
-					string basedir,
-					string directory )
+					string? basedir,
+					string? directory )
 	{
 		this.context = new Vala.CodeContext ( );
 		this.settings = settings;
@@ -4484,7 +4334,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			this.context.directory = context.basedir;
 		}
 
-		this.context.non_null = !disable_non_null || non_null_experimental;
+//		this.context.non_null = !disable_non_null || non_null_experimental;
 		this.context.non_null_experimental = non_null_experimental;
 		this.context.checking = !disable_checking;
 
@@ -4506,7 +4356,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	private void add_dependencies_to_source_package () {
 		if ( this.source_package != null ) {
 			Gee.ArrayList<Package> deplst = new Gee.ArrayList<Package> ();
-			foreach ( Package pkg in this.files ) {
+			foreach ( Package pkg in this.packages ) {
 				if ( pkg != this.source_package ) {
 					deplst.add ( pkg );
 				}
@@ -4532,7 +4382,6 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			vfile = new Vala.SourceFile (this.context, source, false);
 			vfile.add_using_directive (new Vala.UsingDirective (new Vala.UnresolvedSymbol (null, "GLib", null)));
 			this.context.add_source_file ( vfile );
-
 		}
 		else if ( path.has_suffix ( ".vapi" ) ) {
 			vfile = new Vala.SourceFile ( this.context, source, true );
@@ -4544,7 +4393,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 
 		if ( this.source_package == null ) {
 			this.source_package = new Package.with_name ( this.settings, vfile, this.settings.pkg_name, this );
-			this.files.add ( this.source_package );
+			this.packages.add ( this.source_package );
 		}
 
 		this.source_package.add_file ( vfile );
@@ -4569,7 +4418,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 
 
 		Package vdpkg = new Package ( this.settings, vfile, this, true ); 
-		this.files.add ( vdpkg );
+		this.packages.add ( vdpkg );
 
 
 		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
@@ -4606,17 +4455,10 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	private CodeContext context;
 
 	public void visit ( Doclet doclet ) {
-		foreach ( Package file in this.files ) {
-			file.visit ( doclet );
-		}
+		doclet.initialisation ( this.settings, this );
 	}
 
-/*
-	private weak Basic?  search_symbol_in_namespace ( Basic element, string[] params ) {
-		return this.search_symbol_in_symbol ( element.nspace, params );
-	}
-*/
-	private weak Basic? search_symbol_in_type ( Basic element, string[] params, int params_offset = 0 ) {
+	private weak DocumentedElement? search_symbol_in_type ( DocumentedElement element, string[] params, int params_offset = 0 ) {
 		if ( !( element.parent is ContainerDataType || element.parent is Enum || element.parent is ErrorDomain ) )
 			return null;
 
@@ -4626,13 +4468,13 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			for ( int i = 0; params.length > i ; i++ ) {
 				nparams [i+1] = params[i];
 			}
-			return this.search_symbol_in_symbol ( element.parent, nparams, 0 );
+			return this.search_symbol_in_symbol ( (DocumentedElement)element.parent, nparams, 0 );
 		}
 
-		return this.search_symbol_in_symbol ( element.parent, params, 0 );
+		return this.search_symbol_in_symbol ( (DocumentedElement)element.parent, params, 0 );
 	}
 
-	private weak Basic? search_symbol_in_symbol ( Basic element, string[] params, int params_offset = 0 ) {
+	private weak DocumentedElement? search_symbol_in_symbol ( DocumentedElement element, string[] params, int params_offset = 0 ) {
 		if ( element is Class || element is Interface || element is Struct ) {
 			return element.search_element ( params, params_offset );
 		}
@@ -4645,7 +4487,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		return null;
 	}
 
-	private weak Basic? search_symbol_in_global_namespaces ( Basic? element, string[] params ) {
+	private weak DocumentedElement? search_symbol_in_global_namespaces ( DocumentedElement? element, string[] params ) {
 		int param_size = 0;
 		for ( param_size = 0; params[param_size] != null; param_size++ );
 
@@ -4656,24 +4498,24 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			global_params[i+1] = params[i];
 		}
 
-		foreach ( Package f in this.files ) {
-			Basic element = f.search_element ( global_params, 0 );
+		foreach ( Package pkg in this.packages ) {
+			DocumentedElement? element = pkg.search_element ( global_params, 0 );
 			if ( element != null )
 				return element;
 		}
 		return null;
 	}
 
-	private weak Basic? search_symbol_in_namespaces ( Basic element, string[] params ) {
-		foreach ( Package f in this.files ) {
-			Basic element = f.search_element ( params, 0 );
+	private weak DocumentedElement? search_symbol_in_namespaces ( DocumentedElement element, string[] params ) {
+		foreach ( Package pkg in this.packages ) {
+			DocumentedElement? element = pkg.search_element ( params, 0 );
 			if ( element != null )
 				return element;
 		}
 		return null;
 	}
 
-	private weak Basic? search_element ( Basic? element, string[] params ) {
+	private weak DocumentedElement? search_element ( DocumentedElement? element, string[] params ) {
 		if ( element != null ) {
 			if ( params[0] == "this" ) {
 				return search_symbol_in_type ( element, params, 1 );
@@ -4696,7 +4538,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		return null;
 	}
 
-	public weak Basic? search_symbol_str ( Valadoc.Basic? element, string symname ) {
+	public weak DocumentedElement? search_symbol_str ( DocumentedElement? element, string symname ) {
 		string[] params = symname.split( ".", -1 );
 		int i = 0; while ( params[i] != null ) i++;
 		params.length = i;
@@ -4835,33 +4677,33 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 
 	// internal
 	public Package? find_file ( Vala.SourceFile vfile ) {
-		foreach ( Package f in this.files ) {
-			if ( f.is_vpackage( vfile ) )
-				return f;
+		foreach ( Package pkg in this.packages ) {
+			if ( pkg.is_vpackage( vfile ) )
+				return pkg;
 		}
 		return null;
 	}
 
 	private void set_type_references ( ) {
-		foreach ( Package f in this.files ) {
-			f.set_type_references( );
+		foreach ( Package pkg in this.packages ) {
+			pkg.set_type_references( );
 		}
 	}
 
 	private void inheritance ( ) {
-		foreach ( Package f in this.files ) {
-			f.inheritance( );
+		foreach ( Package pkg in this.packages ) {
+			pkg.inheritance( );
 		}
 	}
 
 	public void parse_comments ( Valadoc.Parser docparser ) {
-		foreach ( Package f in this.files ) {
-			f.parse_comments( docparser );
+		foreach ( Package pkg in this.packages ) {
+			pkg.parse_comments( docparser );
 		}
 	}
 
 	// internal
-	public weak Basic? search_vala_symbol ( Vala.Symbol vnode ) {
+	public weak DocumentedElement? search_vala_symbol ( Vala.Symbol? vnode ) {
 		if ( vnode == null )
 			return null;
 
@@ -4888,66 +4730,8 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		return file.search_element_vala ( params, 0 );
 	}
 
-	/*/ => add_external_package
-	private Gee.ArrayList<Package>? load_dependency_list ( string vapi_path ) {
-		if ( vapi_path.has_suffix ( ".vapi" ) ) {
-			string deps_filename = vapi_path.ndup ( vapi_path.size() - ".vapi".size() ) + ".deps";
-			Gee.ArrayList<Package> list = new Gee.ArrayList<Package> ();
-
-			if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
-				try {
-					string deps_content;
-					ulong deps_len;
-
-					FileUtils.get_contents (deps_filename, out deps_content, out deps_len);
-					foreach (string dep in deps_content.split ("\n")) {
-						if (dep != "") {
-							foreach ( Package pkg in this.files ) {
-								if ( pkg.name == dep ) {
-									list.add ( pkg );
-									continue ;
-								}
-							}
-						}
-					}
-				}
-				catch (FileError e) {
-					Report.error (null, "Unable to read dependency file: %s".printf (e.message));
-				}
-			}
-			return list;
-		}
-		return null;
-	}
-*/
-//	private Gee.ArrayList<weak Vala.SourceFile> vfiles = new Gee.ArrayList<weak Vala.SourceFile> ();
-
-/*
-	private void add_dependencies () {
-		foreach ( weak Vala.SourceFile vfile in this.vfiles ) {
-			Gee.ArrayList<Package>? deps = this.load_dependency_list ( vfile.filename );
-			if ( deps != null ) {
-				Package pkg = this.get_file ( vfile );
-				pkg.set_dependency_list ( deps );
-			}
-		}
-
-		if ( this.source_package != null ) {
-			Gee.ArrayList<Package> list = new Gee.ArrayList<Package> ();
-			foreach ( Package pkg in this.files ) {
-				if ( pkg != this.source_package ) {
-					list.add ( pkg );
-				}
-			}
-			this.source_package.set_dependency_list ( list );
-		}
-
-		this.source_package = null;
-		this.vfiles = null;
-	}
-*/
 	private Package? get_external_package_by_name ( string name ) {
-		foreach ( Package pkg in this.files ) {
+		foreach ( Package pkg in this.packages ) {
 			if ( name == pkg.name ) {
 				return pkg;
 			}
@@ -4955,15 +4739,5 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		return null;
 	}
 
-	/*/ internal, deprecated
-	public Package? get_file ( Vala.SourceFile vfile ) {
-		Package file = this.find_file( vfile );
-		if ( file != null )
-			return file;
-
-		Package tmp = new Package ( this.settings, vfile, this ); 
-		this.files.add ( tmp );
-		return tmp;
-	} */
 }
 
