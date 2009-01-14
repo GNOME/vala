@@ -1,5 +1,12 @@
 2009-01-14  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodememberaccessmodule.vala:
+
+	Report error when using getters of properties with unowned return
+	value and without accessor, fixes bug 567750
+
+2009-01-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 
 	Improve syntax error message when expecting declaration

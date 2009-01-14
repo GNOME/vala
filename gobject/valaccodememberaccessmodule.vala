@@ -1,6 +1,7 @@
 /* valaccodememberaccessmodule.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -226,6 +227,15 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				// g_object_get always returns owned values
 				// therefore, property getters of properties
 				// without accessor methods need to be marked as owned
+				if (!prop.get_accessor.value_type.value_owned) {
+					// only report error for types where there actually
+					// is a difference between `owned' and `unowned'
+					var owned_value_type = prop.get_accessor.value_type.copy ();
+					owned_value_type.value_owned = true;
+					if (requires_copy (owned_value_type)) {
+						Report.error (prop.get_accessor.source_reference, "unowned return value for getter of property `%s' not supported without accessor".printf (prop.get_full_name ()));
+					}
+				}
 
 				var ccomma = new CCodeCommaExpression ();
 				var temp_var = get_temp_variable (expr.value_type);
