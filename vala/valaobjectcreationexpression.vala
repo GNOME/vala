@@ -251,6 +251,11 @@ public class Vala.ObjectCreationExpression : Expression {
 
 			if (symbol_reference == null) {
 				symbol_reference = cl.default_construction_method;
+
+				if (symbol_reference != null) {
+					// track usage for flow analyzer
+					symbol_reference.used = true;
+				}
 			}
 
 			while (cl != null) {

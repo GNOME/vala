@@ -1,5 +1,12 @@
 2009-01-15  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaobjectcreationexpression.vala:
+
+	Track usage of creation methods to avoid bogus warnings from the
+	flow analyzer
+
+2009-01-15  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusservermodule.vala:
 
 	Fix generated introspection information when using DBus.BusName
