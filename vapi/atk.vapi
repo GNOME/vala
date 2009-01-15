@@ -170,7 +170,7 @@ namespace Atk {
 		[NoAccessorMethod]
 		public Atk.RelationType relation_type { get; set; }
 		[NoAccessorMethod]
-		public GLib.ValueArray target { get; set; }
+		public GLib.ValueArray target { owned get; set; }
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class RelationSet : GLib.Object {

@@ -75,7 +75,6 @@ namespace Gtk {
 		public SourceMark (string name, string category);
 		public unowned Gtk.SourceMark next (string category);
 		public unowned Gtk.SourceMark prev (string category);
-		[NoAccessorMethod]
 		public string category { get; construct; }
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
@@ -120,7 +119,6 @@ namespace Gtk {
 		public void set_top_margin (double margin, Gtk.Unit unit);
 		public void set_wrap_mode (Gtk.WrapMode wrap_mode);
 		public string body_font_name { get; set; }
-		[NoAccessorMethod]
 		public Gtk.SourceBuffer buffer { get; construct; }
 		public string footer_font_name { get; set; }
 		public string header_font_name { get; set; }
@@ -175,7 +173,6 @@ namespace Gtk {
 		public unowned Gtk.SourceStyle get_style (string style_id);
 		public string description { get; }
 		public string filename { get; }
-		[NoAccessorMethod]
 		public string id { get; construct; }
 		public string name { get; }
 	}

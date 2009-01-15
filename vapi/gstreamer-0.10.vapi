@@ -824,7 +824,6 @@ namespace Gst {
 		public bool unlink (Gst.Pad sinkpad);
 		public void use_fixed_caps ();
 		public Gst.Caps caps { get; }
-		[NoAccessorMethod]
 		public Gst.PadDirection direction { get; construct; }
 		[NoAccessorMethod]
 		public Gst.PadTemplate template { owned get; set; }

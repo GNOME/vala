@@ -18,7 +18,6 @@ namespace Oobs {
 		[NoAccessorMethod]
 		public string crypted_password { owned get; set; }
 		public int gid { get; set; }
-		[NoAccessorMethod]
 		public string name { get; construct; }
 		public string password { set; }
 	}
@@ -177,7 +176,6 @@ namespace Oobs {
 		public void prepend (Oobs.ListIter iter);
 		public bool remove (Oobs.ListIter iter);
 		public void set (Oobs.ListIter iter, void* data);
-		[NoAccessorMethod]
 		public void* contained_type { construct; }
 	}
 	[Compact]
@@ -216,7 +214,6 @@ namespace Oobs {
 		public void process_requests ();
 		public virtual void update ();
 		public Oobs.Result update_async (Oobs.ObjectAsyncFunc func, void* data);
-		[NoAccessorMethod]
 		public string remote_object { construct; }
 		public virtual signal void changed ();
 		public virtual signal void committed ();
@@ -260,7 +257,6 @@ namespace Oobs {
 		public unowned string get_name ();
 		public void get_runlevel_configuration (Oobs.ServicesRunlevel runlevel, Oobs.ServiceStatus status, int priority);
 		public void set_runlevel_configuration (Oobs.ServicesRunlevel runlevel, Oobs.ServiceStatus status, int priority);
-		[NoAccessorMethod]
 		public string name { get; construct; }
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]

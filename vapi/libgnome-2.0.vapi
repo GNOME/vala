@@ -65,13 +65,10 @@ namespace Gnome {
 		public string gnome_sysconfdir { owned get; construct; }
 		[NoAccessorMethod]
 		public void* goption_context { get; construct; }
-		[NoAccessorMethod]
 		public string human_readable_name { get; construct; }
 		[NoAccessorMethod]
 		public void* popt_context { get; }
-		[NoAccessorMethod]
 		public int popt_flags { construct; }
-		[NoAccessorMethod]
 		public void* popt_table { construct; }
 	}
 	[Compact]

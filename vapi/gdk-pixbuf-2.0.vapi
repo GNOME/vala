@@ -58,21 +58,13 @@ namespace Gdk {
 		public unowned Gdk.Pixbuf scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);
 		[CCode (has_construct_function = false)]
 		public Pixbuf.subpixbuf (Gdk.Pixbuf src_pixbuf, int src_x, int src_y, int width, int height);
-		[NoAccessorMethod]
 		public int bits_per_sample { get; construct; }
-		[NoAccessorMethod]
 		public Gdk.Colorspace colorspace { get; construct; }
-		[NoAccessorMethod]
 		public bool has_alpha { get; construct; }
-		[NoAccessorMethod]
 		public int height { get; construct; }
-		[NoAccessorMethod]
 		public int n_channels { get; construct; }
-		[NoAccessorMethod]
 		public void* pixels { get; construct; }
-		[NoAccessorMethod]
 		public int rowstride { get; construct; }
-		[NoAccessorMethod]
 		public int width { get; construct; }
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]

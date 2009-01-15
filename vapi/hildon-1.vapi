@@ -315,7 +315,7 @@ namespace Hildon {
 		[NoAccessorMethod]
 		public bool numbers_only { get; set; }
 		[NoAccessorMethod]
-		public string password { get; set; }
+		public string password { owned get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class HVolumebar : Hildon.Volumebar, Atk.Implementor, Gtk.Buildable {
@@ -334,9 +334,9 @@ namespace Hildon {
 		[NoAccessorMethod]
 		public string message { owned get; set; }
 		[NoAccessorMethod]
-		public string password { get; set; }
+		public string password { owned get; set; }
 		[NoAccessorMethod]
-		public string username { get; set; }
+		public string username { owned get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class Note : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
@@ -441,7 +441,7 @@ namespace Hildon {
 		[NoAccessorMethod]
 		public bool modify_protection { get; construct; }
 		[NoAccessorMethod]
-		public string password { get; set; }
+		public string password { owned get; set; }
 	}
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public class SortDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {

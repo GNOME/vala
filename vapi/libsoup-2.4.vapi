@@ -23,12 +23,9 @@ namespace Soup {
 		public uint resolve_sync (GLib.Cancellable cancellable);
 		[NoAccessorMethod]
 		public Soup.AddressFamily family { get; construct; }
-		[NoAccessorMethod]
 		public string name { get; construct; }
 		public string physical { get; }
-		[NoAccessorMethod]
 		public int port { get; construct; }
-		[NoAccessorMethod]
 		public void* sockaddr { get; construct; }
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -44,13 +41,11 @@ namespace Soup {
 		[CCode (has_construct_function = false)]
 		public Auth (GLib.Type type, Soup.Message msg, string auth_header);
 		public virtual bool update (Soup.Message msg, string auth_header);
-		[NoAccessorMethod]
 		public string host { get; construct; }
 		[NoAccessorMethod]
 		public bool is_authenticated { get; }
 		[NoAccessorMethod]
 		public bool is_for_proxy { get; construct; }
-		[NoAccessorMethod]
 		public string realm { get; construct; }
 		public string scheme_name { get; }
 	}
@@ -76,7 +71,6 @@ namespace Soup {
 		public void* generic_auth_data { get; set; }
 		[NoAccessorMethod]
 		public bool proxy { get; construct; }
-		[NoAccessorMethod]
 		public string realm { get; construct; }
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -357,11 +351,9 @@ namespace Soup {
 		public void run ();
 		public void run_async ();
 		public void unpause_message (Soup.Message msg);
-		[NoAccessorMethod]
 		public void* async_context { get; construct; }
 		[NoAccessorMethod]
 		public Soup.Address @interface { owned get; construct; }
-		[NoAccessorMethod]
 		public uint port { get; construct; }
 		[NoAccessorMethod]
 		public bool raw_paths { get; construct; }
@@ -391,7 +383,6 @@ namespace Soup {
 		public Soup.SessionFeature add_feature { owned get; set; }
 		[NoAccessorMethod]
 		public GLib.Type add_feature_by_type { get; set; }
-		[NoAccessorMethod]
 		public void* async_context { get; construct; }
 		[NoAccessorMethod]
 		public uint idle_timeout { get; set; }
@@ -451,11 +442,9 @@ namespace Soup {
 		public void* async_context { get; construct; }
 		[NoAccessorMethod]
 		public bool is_server { get; }
-		[NoAccessorMethod]
 		public Soup.Address local_address { get; construct; }
 		[NoAccessorMethod]
 		public bool non_blocking { get; set; }
-		[NoAccessorMethod]
 		public Soup.Address remote_address { get; construct; }
 		[NoAccessorMethod]
 		public void* ssl_creds { get; set; }

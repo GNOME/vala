@@ -166,7 +166,6 @@ namespace Gtk {
 		public bool is_important { get; set; }
 		[NoAccessorMethod]
 		public string label { owned get; set; }
-		[NoAccessorMethod]
 		public string name { get; construct; }
 		public bool sensitive { get; set; }
 		[NoAccessorMethod]
@@ -207,7 +206,6 @@ namespace Gtk {
 		public void set_translation_domain (string domain);
 		public void set_visible (bool visible);
 		public unowned string translate_string (string str);
-		[NoAccessorMethod]
 		public string name { get; construct; }
 		public bool sensitive { get; set; }
 		public bool visible { get; set; }
@@ -1312,7 +1310,6 @@ namespace Gtk {
 		public FileChooserButton.with_backend (string title, Gtk.FileChooserAction action, string backend);
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public FileChooserButton.with_dialog (Gtk.Widget dialog);
-		[NoAccessorMethod]
 		public Gtk.FileChooser dialog { construct; }
 		public bool focus_on_click { get; set; }
 		public string title { get; set; }
@@ -1811,26 +1808,26 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string file { owned get; set; }
 		[NoAccessorMethod]
-		public GLib.Icon gicon { get; set; }
+		public GLib.Icon gicon { owned get; set; }
 		[NoAccessorMethod]
-		public string icon_name { get; set; }
+		public string icon_name { owned get; set; }
 		[NoAccessorMethod]
-		public Gtk.IconSet icon_set { get; set; }
+		public Gtk.IconSet icon_set { owned get; set; }
 		[NoAccessorMethod]
 		public int icon_size { get; set; }
 		[NoAccessorMethod]
-		public Gdk.Image image { get; set; }
+		public Gdk.Image image { owned get; set; }
 		[NoAccessorMethod]
 		public Gdk.Pixmap mask { owned get; set; }
 		[NoAccessorMethod]
-		public Gdk.Pixbuf pixbuf { get; set; }
+		public Gdk.Pixbuf pixbuf { owned get; set; }
 		[NoAccessorMethod]
 		public Gdk.PixbufAnimation pixbuf_animation { owned get; set; }
 		public int pixel_size { get; set; }
 		[NoAccessorMethod]
-		public Gdk.Pixmap pixmap { get; set; }
+		public Gdk.Pixmap pixmap { owned get; set; }
 		[NoAccessorMethod]
-		public string stock { get; set; }
+		public string stock { owned get; set; }
 		public Gtk.ImageType storage_type { get; }
 	}
 	[Compact]
@@ -2253,7 +2250,6 @@ namespace Gtk {
 		public void set_markup (string str);
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public MessageDialog.with_markup (Gtk.Window? parent, Gtk.DialogFlags flags, Gtk.MessageType type, Gtk.ButtonsType buttons, string message_format, ...);
-		[NoAccessorMethod]
 		public Gtk.ButtonsType buttons { construct; }
 		[NoAccessorMethod]
 		public Gtk.Widget image { owned get; set; }
@@ -3422,15 +3418,15 @@ namespace Gtk {
 		[NoAccessorMethod]
 		public string file { set; }
 		[NoAccessorMethod]
-		public string icon_name { get; set; }
+		public string icon_name { owned get; set; }
 		[NoAccessorMethod]
 		public Gtk.Orientation orientation { get; }
 		[NoAccessorMethod]
-		public Gdk.Pixbuf pixbuf { get; set; }
+		public Gdk.Pixbuf pixbuf { owned get; set; }
 		public Gdk.Screen screen { get; set; }
 		public int size { get; }
 		[NoAccessorMethod]
-		public string stock { get; set; }
+		public string stock { owned get; set; }
 		public Gtk.ImageType storage_type { get; }
 		public bool visible { get; set; }
 		public virtual signal void activate ();
@@ -3792,7 +3788,6 @@ namespace Gtk {
 		public int cursor_position { get; }
 		public bool has_selection { get; }
 		public Gtk.TargetList paste_target_list { get; }
-		[NoAccessorMethod]
 		public Gtk.TextTagTable tag_table { get; construct; }
 		public string text { get; set; }
 		[HasEmitter]
@@ -3837,9 +3832,7 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public TextMark (string name, bool left_gravity);
 		public void set_visible (bool setting);
-		[NoAccessorMethod]
 		public bool left_gravity { get; construct; }
-		[NoAccessorMethod]
 		public string name { get; construct; }
 	}
 	[Compact]
@@ -4346,7 +4339,6 @@ namespace Gtk {
 		public void reset_default_sort_func ();
 		[CCode (type = "GtkTreeModel*", has_construct_function = false)]
 		public TreeModelSort.with_model (Gtk.TreeModel child_model);
-		[NoAccessorMethod]
 		public Gtk.TreeModel model { get; construct; }
 	}
 	[Compact]

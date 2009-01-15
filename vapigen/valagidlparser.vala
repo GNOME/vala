@@ -967,13 +967,17 @@ public class Vala.GIdlParser : CodeVisitor {
 			
 			if (prop.get_accessor != null && !current_type_symbol_set.contains (getter)) {
 				prop.no_accessor_method = true;
-				prop.get_accessor.value_type.value_owned = true;
 			}
 			
 			var setter = "set_%s".printf (prop.name);
 			
-			if (prop.set_accessor != null && !current_type_symbol_set.contains (setter)) {
+			if (prop.set_accessor != null && prop.set_accessor.writable
+			    && !current_type_symbol_set.contains (setter)) {
 				prop.no_accessor_method = true;
+			}
+
+			if (prop.no_accessor_method && prop.get_accessor != null) {
+				prop.get_accessor.value_type.value_owned = true;
 			}
 		}
 		

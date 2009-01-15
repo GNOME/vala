@@ -1,5 +1,13 @@
 2009-01-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagidlparser.vala:
+
+	Fix accessor detection for properties
+
+	* vapi/: regenerated
+
+2009-01-15  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/sdl-mixer.vapi:
 
 	Fix syntax error, patch by Frederik

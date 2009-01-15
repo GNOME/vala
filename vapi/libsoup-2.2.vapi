@@ -151,11 +151,9 @@ namespace Soup {
 		public void remove_handler (string path);
 		public void run ();
 		public void run_async ();
-		[NoAccessorMethod]
 		public void* async_context { get; construct; }
 		[NoAccessorMethod]
 		public Soup.Address @interface { owned get; construct; }
-		[NoAccessorMethod]
 		public uint port { get; construct; }
 		[NoAccessorMethod]
 		public string ssl_cert_file { owned get; construct; }
@@ -252,7 +250,6 @@ namespace Soup {
 		public virtual void requeue_message (Soup.Message msg);
 		public virtual uint send_message (Soup.Message msg);
 		public bool try_prune_connection ();
-		[NoAccessorMethod]
 		public void* async_context { get; construct; }
 		[NoAccessorMethod]
 		public int max_conns { get; set; }
