@@ -1,5 +1,11 @@
 2009-01-15  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/sdl-mixer.vapi:
+
+	Fix syntax error, patch by Frederik
+
+2009-01-15  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaobjectcreationexpression.vala:
 
 	Track usage of creation methods to avoid bogus warnings from the
