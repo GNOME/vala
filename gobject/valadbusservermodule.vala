@@ -1,6 +1,6 @@
 /* valadbusservermodule.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
 *  Copyright (C) 2008  Philip Van Hoof
  *
  * This library is free software; you can redistribute it and/or
@@ -909,6 +909,13 @@ public class Vala.DBusServerModule : DBusClientModule {
 			result += "  <method name=\"%s\">\n".printf (Symbol.lower_case_to_camel_case (m.name));
 
 			foreach (var param in m.get_parameters ()) {
+				if (param.parameter_type.data_type != null
+				    && param.parameter_type.data_type.get_full_name () == "DBus.BusName") {
+					// skip sender parameter
+					// (implicit in D-Bus)
+					continue;
+				}
+
 				string direction = param.direction == ParameterDirection.IN ? "in" : "out";
 				result += "    <arg name=\"%s\" type=\"%s\" direction=\"%s\"/>\n".printf (param.name, param.parameter_type.get_type_signature (), direction);
 			}

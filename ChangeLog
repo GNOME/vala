@@ -1,5 +1,12 @@
 2009-01-15  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valadbusservermodule.vala:
+
+	Fix generated introspection information when using DBus.BusName
+	sender parameter
+
+2009-01-15  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 
 	Accept numbers with characters as identifiers where possible
