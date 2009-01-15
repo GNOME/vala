@@ -131,6 +131,10 @@ public class Vala.Parser : CodeVisitor {
 		return tokens[index].begin;
 	}
 
+	string get_current_string () {
+		return ((string) tokens[index].begin.pos).ndup ((tokens[index].end.pos - tokens[index].begin.pos));
+	}
+
 	string get_last_string () {
 		int last_index = (index + BUFFER_SIZE - 1) % BUFFER_SIZE;
 		return ((string) tokens[last_index].begin.pos).ndup ((tokens[last_index].end.pos - tokens[last_index].begin.pos));
@@ -239,9 +243,21 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.YIELDS:
 			next ();
 			return;
-		default:
-			throw new ParseError.SYNTAX (get_error ("expected identifier"));
+		case TokenType.INTEGER_LITERAL:
+		case TokenType.REAL_LITERAL:
+			// also accept integer and real literals
+			// as long as they contain at least one character
+			// and no decimal point
+			// for example, 2D and 3D
+			string id = get_current_string ();
+			if (id[id.length - 1].isalpha () && !("." in id)) {
+				next ();
+				return;
+			}
+			break;
 		}
+
+		throw new ParseError.SYNTAX (get_error ("expected identifier"));
 	}
 
 	string parse_identifier () throws ParseError {
@@ -249,7 +265,7 @@ public class Vala.Parser : CodeVisitor {
 		return get_last_string ();
 	}
 
-		Expression parse_literal () throws ParseError {
+	Expression parse_literal () throws ParseError {
 		var begin = get_location ();
 
 		switch (current ()) {
