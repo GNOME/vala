@@ -961,6 +961,11 @@ public class Vala.DBusClientModule : DBusModule {
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction == ParameterDirection.IN) {
+				if (param.parameter_type.data_type != null
+				    && param.parameter_type.data_type.get_full_name () == "DBus.BusName") {
+					// ignore BusName sender parameters
+					continue;
+				}
 				CCodeExpression expr = new CCodeIdentifier (param.name);
 				if (param.parameter_type.is_real_struct_type ()) {
 					expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, expr);

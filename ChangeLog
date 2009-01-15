@@ -1,5 +1,11 @@
 2009-01-15  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valadbusclientmodule.vala:
+
+	Ignore BusName sender parameters in marshalling code
+
+2009-01-15  Jürg Billeter  <j@bitron.ch>
+
 	* vapigen/valagidlparser.vala:
 
 	Fix accessor detection for properties
