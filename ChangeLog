@@ -1,5 +1,12 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valafield.vala:
+	* vala/valaparser.vala:
+
+	Use `internal' accessibility for namespace members by default
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* tests/:
 
 	Rearrange test cases

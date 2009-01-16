@@ -294,12 +294,6 @@ public class Vala.Field : Member, Lockable {
 				analyzer.current_source_file.add_type_dependency (field_type, SourceFileDependencyType.HEADER_SHALLOW);
 			}
 		} else {
-			if (parent_symbol is Namespace) {
-				error = true;
-				Report.error (source_reference, "Namespaces may not have private members");
-				return false;
-			}
-
 			analyzer.current_source_file.add_type_dependency (field_type, SourceFileDependencyType.SOURCE);
 		}
 

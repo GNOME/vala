@@ -1911,6 +1911,12 @@ public class Vala.Parser : CodeVisitor {
 
 	void parse_namespace_member (Namespace ns) throws ParseError {
 		var sym = parse_declaration ();
+
+		// namespaces do not support private memebers
+		if (sym.access == SymbolAccessibility.PRIVATE) {
+			sym.access = SymbolAccessibility.INTERNAL;
+		}
+
 		if (sym is Namespace) {
 			ns.add_namespace ((Namespace) sym);
 		} else if (sym is Class) {
