@@ -1,5 +1,12 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* tests/Makefile.am:
+	* tests/dbus/basic-types.test:
+
+	Test marshalling of basic types over D-Bus
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valafield.vala:
 	* vala/valaparser.vala:
 

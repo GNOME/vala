@@ -40,6 +40,7 @@ TESTS = \
 	objects/test-029.test \
 	objects/test-034.test \
 	errors/errors.test \
+	dbus/basic-types.test \
 	$(NULL)
 
 EXTRA_DIST = \
