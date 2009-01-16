@@ -1,5 +1,13 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valafield.vala:
+	* gobject/valaccodearraymodule.vala:
+
+	Add array_length_cexpr CCode attribute for fields with constant
+	array length, patch by Andreas Brauchli, fixes bug 567301
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodewriter.vala:
 
 	Support void ref functions

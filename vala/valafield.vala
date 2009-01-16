@@ -81,7 +81,16 @@ public class Vala.Field : Member, Lockable {
 		get { return (array_length_cname != null); }
 	}
 
+	/**
+	 * Specifies whether the array uses a custom C expression as length.
+	 */
+	public bool has_array_length_cexpr {
+		get { return (array_length_cexpr != null); }
+	}
+
 	private string? array_length_cname;
+
+	private string? array_length_cexpr;
 
 	private string cname;
 	
@@ -173,6 +182,26 @@ public class Vala.Field : Member, Lockable {
 		this.array_length_cname = array_length_cname;
 	}
 
+	/**
+	 * Returns the array length expression as it is used in C code
+	 *
+	 * @return the array length expression to be used in C code
+	 */
+	public string? get_array_length_cexpr () {
+		return this.array_length_cexpr;
+	}
+
+
+	/**
+	 * Sets the array length expression as it is used in C code
+	 *
+	 * @param array_length_cexpr the array length expression to be used in C
+	 * code
+	 */
+	public void set_array_length_cexpr (string? array_length_cexpr) {
+		this.array_length_cexpr = array_length_cexpr;
+	}
+
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
@@ -191,6 +220,9 @@ public class Vala.Field : Member, Lockable {
 		}
 		if (a.has_argument ("array_length_cname")) {
 			set_array_length_cname (a.get_string ("array_length_cname"));
+		}
+		if (a.has_argument ("array_length_cexpr")) {
+			set_array_length_cexpr (a.get_string ("array_length_cexpr"));
 		}
 	}
 	

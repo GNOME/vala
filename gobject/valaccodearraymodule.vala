@@ -208,7 +208,9 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 					CCodeExpression length_expr = null;
 
-					if (field.binding == MemberBinding.INSTANCE) {
+					if (field.has_array_length_cexpr) {
+						length_expr = new CCodeConstant (field.get_array_length_cexpr ());
+					} else if (field.binding == MemberBinding.INSTANCE) {
 						var cl = field.parent_symbol as Class;
 						bool is_gtypeinstance = (cl != null && !cl.is_compact);
 
