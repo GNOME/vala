@@ -1,5 +1,12 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valastruct.vala:
+
+	Fix struct base type error message, patch by Carlos Cadete,
+	fixes bug 567366
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Fix g_datalist*_get bindings, patch by Yu Feng, fixes bug 567324
