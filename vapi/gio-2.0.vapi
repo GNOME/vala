@@ -666,9 +666,8 @@ namespace GLib {
 		public abstract bool can_truncate ();
 		public abstract bool seek (int64 offset, GLib.SeekType type, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract int64 tell ();
-		public bool truncate (int64 offset, GLib.Cancellable? cancellable) throws GLib.Error;
-		[NoWrapper]
-		public abstract bool truncate_fn (int64 offset, GLib.Cancellable? cancellable) throws GLib.Error;
+		[CCode (vfunc_name = "truncate_fn")]
+		public abstract bool truncate (int64 offset, GLib.Cancellable? cancellable) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Volume : GLib.Object {

@@ -1412,6 +1412,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						m.is_virtual = true;
 					}
+				} else if (nv[0] == "vfunc_name") {
+					m.vfunc_name = eval (nv[1]);
 				}
 
 			}

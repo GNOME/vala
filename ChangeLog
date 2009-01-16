@@ -1,5 +1,18 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodewriter.vala:
+	* vapigen/valagidlparser.vala:
+
+	Support vfunc_name attribute
+
+	* vapi/packages/gio-2.0/:
+
+	Fix g_seekable_truncate binding, fixes bug 564448
+
+	* vapi/gio-2.0.vapi: regenerated
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix GtkTreePath binding, fixes bug 566274

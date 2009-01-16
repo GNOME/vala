@@ -869,6 +869,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			ccode_params.append_printf ("%sdelegate_target_pos = %g", separator, m.cdelegate_target_parameter_position);
 			separator = ", ";
 		}
+		if (m.vfunc_name != m.name) {
+			ccode_params.append_printf ("%svfunc_name = \"%s\"", separator, m.vfunc_name);
+			separator = ", ";
+		}
 		if (m.sentinel != m.DEFAULT_SENTINEL) {
 			ccode_params.append_printf ("%ssentinel = \"%s\"", separator, m.sentinel);
 			separator = ", ";
