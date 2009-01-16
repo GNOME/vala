@@ -62,8 +62,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType gslist_type;
 	public DataType garray_type;
 	public Class gerror_type;
-	public Interface list_type;
-	public Interface map_type;
 
 	public int next_lambda_id = 0;
 
@@ -114,12 +112,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			garray_type = new ObjectType ((Class) glib_ns.scope.lookup ("Array"));
 
 			gerror_type = (Class) glib_ns.scope.lookup ("Error");
-		}
-
-		var gee_ns = root_symbol.scope.lookup ("Gee");
-		if (gee_ns != null) {
-			list_type = (Interface) gee_ns.scope.lookup ("List");
-			map_type = (Interface) gee_ns.scope.lookup ("Map");
 		}
 
 		current_symbol = root_symbol;

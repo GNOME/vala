@@ -127,8 +127,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public Struct gvalue_type;
 	public Struct mutex_type;
 	public TypeSymbol type_module_type;
-	public Interface list_type;
-	public Interface map_type;
 	public TypeSymbol dbus_object_type;
 
 	public bool in_plugin = false;
@@ -611,12 +609,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 					break;
 				}
 			}
-		}
-
-		var gee_ns = root_symbol.scope.lookup ("Gee");
-		if (gee_ns != null) {
-			list_type = (Interface) gee_ns.scope.lookup ("List");
-			map_type = (Interface) gee_ns.scope.lookup ("Map");
 		}
 
 		var dbus_ns = root_symbol.scope.lookup ("DBus");

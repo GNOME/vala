@@ -92,52 +92,6 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		}
 	}
 
-	private CCodeExpression? emit_non_array_element_access (Assignment assignment) {
-		// custom element access
-		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
-
-		var expr = (ElementAccess) assignment.left;
-		var container_type = expr.container.value_type.data_type;
-		Gee.List<Expression> indices = expr.get_indices ();
-		Iterator<Expression> indices_it = indices.iterator ();
-		indices_it.next ();
-
-		var ccontainer = (CCodeExpression) get_ccodenode (expr.container);
-		var cindex = (CCodeExpression) get_ccodenode (indices_it.get ());
-
-		if (container_type != null && list_type != null && map_type != null &&
-		    (container_type.is_subtype_of (list_type) || container_type.is_subtype_of (map_type))) {
-			// lookup symbol in interface instead of class as implemented interface methods are not in VAPI files
-			TypeSymbol collection_iface = null;
-			if (container_type.is_subtype_of (list_type)) {
-				collection_iface = list_type;
-			} else if (container_type.is_subtype_of (map_type)) {
-				collection_iface = map_type;
-			}
-			var set_method = (Method) collection_iface.scope.lookup ("set");
-			Gee.List<FormalParameter> set_params = set_method.get_parameters ();
-			Iterator<FormalParameter> set_params_it = set_params.iterator ();
-			set_params_it.next ();
-			var set_param = set_params_it.get ();
-
-			if (set_param.parameter_type is GenericType) {
-				var index_type = SemanticAnalyzer.get_actual_type (expr.container.value_type, (GenericType) set_param.parameter_type, assignment);
-				cindex = convert_to_generic_pointer (cindex, index_type);
-			}
-
-			var set_ccall = new CCodeFunctionCall (new CCodeIdentifier (set_method.get_cname ()));
-			set_ccall.add_argument (new CCodeCastExpression (ccontainer, collection_iface.get_cname () + "*"));
-			set_ccall.add_argument (cindex);
-			set_ccall.add_argument (convert_to_generic_pointer (rhs, expr.value_type));
-
-			return set_ccall;
-		} else {
-			Report.error (assignment.source_reference, "internal error: unsupported element access");
-			assignment.error = true;
-			return null;
-		}
-	}
-
 	CCodeExpression emit_simple_assignment (Assignment assignment) {
 		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
 
@@ -246,10 +200,6 @@ public class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 		if (assignment.left.symbol_reference is Property) {
 			assignment.ccodenode = emit_property_assignment (assignment);
-		} else if (assignment.left is ElementAccess
-		           && !(((ElementAccess) assignment.left).container.value_type is ArrayType)
-		           && !(((ElementAccess) assignment.left).container.value_type is PointerType)) {
-			assignment.ccodenode = emit_non_array_element_access (assignment);
 		} else {
 			assignment.ccodenode = emit_simple_assignment (assignment);
 		}

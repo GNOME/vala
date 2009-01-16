@@ -1,6 +1,7 @@
 /* valaelementaccess.vala
  *
- * Copyright (C) 2006-2008  Raffaele Sandrini, Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -148,56 +149,33 @@ public class Vala.ElementAccess : Expression {
 			}
 
 			value_type = analyzer.unichar_type;
-		} else if (container_type != null && analyzer.list_type != null && analyzer.map_type != null &&
-		           (container_type.is_subtype_of (analyzer.list_type) || container_type.is_subtype_of (analyzer.map_type))) {
-			Gee.List<Expression> indices = get_indices ();
-			if (indices.size != 1) {
-				error = true;
-				Report.error (source_reference, "Element access with more than one dimension is not supported for the specified type");
-				return false;
-			}
-			Iterator<Expression> indices_it = indices.iterator ();
-			indices_it.next ();
-			var index = indices_it.get ();
-			index_int_type_check = false;
-
-			// lookup symbol in interface instead of class as implemented interface methods are not in VAPI files
-			Symbol get_sym = null;
-			if (container_type.is_subtype_of (analyzer.list_type)) {
-				get_sym = analyzer.list_type.scope.lookup ("get");
-			} else if (container_type.is_subtype_of (analyzer.map_type)) {
-				get_sym = analyzer.map_type.scope.lookup ("get");
-			}
-			var get_method = (Method) get_sym;
-			Gee.List<FormalParameter> get_params = get_method.get_parameters ();
-			Iterator<FormalParameter> get_params_it = get_params.iterator ();
-			get_params_it.next ();
-			var get_param = get_params_it.get ();
-
-			var index_type = get_param.parameter_type;
-			if (index_type is GenericType) {
-				index_type = analyzer.get_actual_type (container.value_type, (GenericType) index_type, this);
-			}
-
-			if (!index.value_type.compatible (index_type)) {
-				error = true;
-				Report.error (source_reference, "index expression: Cannot convert from `%s' to `%s'".printf (index.value_type.to_string (), index_type.to_string ()));
-				return false;
-			}
-
-			value_type = analyzer.get_actual_type (container.value_type, (GenericType) get_method.return_type, this).copy ();
-			if (lvalue) {
-				// get () returns owned value, set () accepts unowned value
-				value_type.value_owned = false;
-			}
 		} else if (container is MemberAccess && container.symbol_reference is Signal) {
 			index_int_type_check = false;
 
 			symbol_reference = container.symbol_reference;
 			value_type = container.value_type;
 		} else {
+			if (lvalue) {
+				var set_method = container.value_type.get_member ("set") as Method;
+				var assignment = parent_node as Assignment;
+				if (set_method != null && assignment != null) {
+					return !error;
+				}
+			} else {
+				var get_method = container.value_type.get_member ("get") as Method;
+				if (get_method != null) {
+					var get_call = new MethodCall (new MemberAccess (container, "get"));
+					foreach (Expression e in get_indices ()) {
+						get_call.add_argument (e);
+					}
+					get_call.target_type = this.target_type;
+					parent_node.replace_expression (this, get_call);
+					return get_call.check (analyzer);
+				}
+			}
+
 			error = true;
-			Report.error (source_reference, "The expression `%s' does not denote an Array".printf (container.value_type.to_string ()));
+			Report.error (source_reference, "The expression `%s' does not denote an array".printf (container.value_type.to_string ()));
 		}
 
 		if (index_int_type_check) {

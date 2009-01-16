@@ -338,32 +338,6 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			ccall.add_argument (coffsetcall);
 
 			expr.ccodenode = ccall;
-		} else if (container_type != null && list_type != null && map_type != null &&
-		           (container_type.is_subtype_of (list_type) || container_type.is_subtype_of (map_type))) {
-			// should be moved to a different module
-
-			TypeSymbol collection_iface = null;
-			if (container_type.is_subtype_of (list_type)) {
-				collection_iface = list_type;
-			} else if (container_type.is_subtype_of (map_type)) {
-				collection_iface = map_type;
-			}
-			var get_method = (Method) collection_iface.scope.lookup ("get");
-			Gee.List<FormalParameter> get_params = get_method.get_parameters ();
-			Iterator<FormalParameter> get_params_it = get_params.iterator ();
-			get_params_it.next ();
-			var get_param = get_params_it.get ();
-
-			if (get_param.parameter_type is GenericType) {
-				var index_type = SemanticAnalyzer.get_actual_type (expr.container.value_type, (GenericType) get_param.parameter_type, expr);
-				cindex = convert_to_generic_pointer (cindex, index_type);
-			}
-
-			var get_ccall = new CCodeFunctionCall (new CCodeIdentifier (get_method.get_cname ()));
-			get_ccall.add_argument (new CCodeCastExpression (ccontainer, collection_iface.get_cname () + "*"));
-			get_ccall.add_argument (cindex);
-
-			expr.ccodenode = convert_from_generic_pointer (get_ccall, expr.value_type);
 		} else {
 			// access to element in an array
 			for (int i = 1; i < rank; i++) {

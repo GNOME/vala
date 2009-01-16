@@ -1,5 +1,16 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaassignment.vala:
+	* vala/valaelementaccess.vala:
+	* vala/valasemanticanalyzer.vala:
+	* gobject/valaccodearraymodule.vala:
+	* gobject/valaccodeassignmentmodule.vala:
+	* gobject/valaccodebasemodule.vala:
+
+	Do not require libgee to support element access in custom types
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaexpression.vala:
 	* vala/valareturnstatement.vala:
 

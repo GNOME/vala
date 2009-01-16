@@ -1,6 +1,6 @@
 /* valaassignment.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -148,6 +148,14 @@ public class Vala.Assignment : Expression {
 				var ma = (MemberAccess) ea.container;
 				var sig = (Signal) ea.container.symbol_reference;
 				right.target_type = new DelegateType (sig.get_delegate (ma.inner.value_type, this));
+			} else if (ea.container.value_type.get_member ("set") is Method) {
+				var set_call = new MethodCall (new MemberAccess (ea.container, "set"));
+				foreach (Expression e in ea.get_indices ()) {
+					set_call.add_argument (e);
+				}
+				set_call.add_argument (right);
+				parent_node.replace_expression (this, set_call);
+				return set_call.check (analyzer);
 			} else {
 				right.target_type = left.value_type;
 			}
