@@ -1,5 +1,12 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+
+	Warn about possibly missing GLib.Object prerequisite,
+	patch by Andreas Brauchli, fixes bug 554329
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* tests/Makefile.am:
 	* tests/dbus/basic-types.test:
 

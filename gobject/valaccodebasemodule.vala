@@ -1640,7 +1640,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			if (type.data_type.is_reference_counting ()) {
 				dup_function = type.data_type.get_ref_function ();
 				if (type.data_type is Interface && dup_function == null) {
-					Report.error (source_reference, "missing class prerequisite for interface `%s'".printf (type.data_type.get_full_name ()));
+					Report.error (source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (type.data_type.get_full_name ()));
 					return null;
 				}
 			} else if (cl != null && cl.is_immutable) {
@@ -1766,7 +1766,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				if (type.data_type.is_reference_counting ()) {
 					unref_function = type.data_type.get_unref_function ();
 					if (type.data_type is Interface && unref_function == null) {
-						Report.error (type.source_reference, "missing class prerequisite for interface `%s'".printf (type.data_type.get_full_name ()));
+						Report.error (type.source_reference, "missing class prerequisite for interface `%s', add GLib.Object to interface declaration if unsure".printf (type.data_type.get_full_name ()));
 						return null;
 					}
 				} else {
