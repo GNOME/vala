@@ -18,14 +18,13 @@ TESTS = \
 	basic-types/integers.test \
 	basic-types/floats.test \
 	basic-types/strings.test \
-	basic-types/test-027.test \
+	basic-types/arrays.test \
 	namespaces.test \
 	methods/lambda.test \
 	control-flow/break.test \
 	control-flow/expressions-conditional.test \
 	control-flow/for.test \
 	control-flow/switch.test \
-	arrays.test \
 	enums.test \
 	structs.test \
 	delegates.test \
