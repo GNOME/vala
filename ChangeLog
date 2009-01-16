@@ -1,5 +1,12 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am:
+	* vapi/mysql.vapi:
+
+	Add MySQL bindings, patch by Jukka-Pekka Iivonen, fixes bug 567342
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valastruct.vala:
 
 	Fix struct base type error message, patch by Carlos Cadete,
