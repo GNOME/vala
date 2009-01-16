@@ -3,7 +3,7 @@
 [CCode (cprefix = "GConf", lower_case_cprefix = "gconf_")]
 namespace GConf {
 	[Compact]
-	[CCode (ref_function = "gconf_change_set_ref", unref_function = "gconf_change_set_unref", cheader_filename = "gconf/gconf.h")]
+	[CCode (ref_function = "gconf_change_set_ref", ref_function_void = true, unref_function = "gconf_change_set_unref", cheader_filename = "gconf/gconf.h")]
 	public class ChangeSet {
 		public bool check_value (string key, out unowned GConf.Value value_retloc);
 		public void clear ();
@@ -86,7 +86,7 @@ namespace GConf {
 		public virtual signal void value_changed (string key, void* value);
 	}
 	[Compact]
-	[CCode (ref_function = "gconf_engine_ref", unref_function = "gconf_engine_unref", cheader_filename = "gconf/gconf.h")]
+	[CCode (ref_function = "gconf_engine_ref", ref_function_void = true, unref_function = "gconf_engine_unref", cheader_filename = "gconf/gconf.h")]
 	public class Engine {
 		public unowned GLib.SList all_dirs (string dir) throws GLib.Error;
 		public unowned GLib.SList all_entries (string dir) throws GLib.Error;
@@ -129,7 +129,7 @@ namespace GConf {
 		public bool unset (string key) throws GLib.Error;
 	}
 	[Compact]
-	[CCode (ref_function = "gconf_entry_ref", unref_function = "gconf_entry_unref", cheader_filename = "gconf/gconf.h")]
+	[CCode (ref_function = "gconf_entry_ref", ref_function_void = true, unref_function = "gconf_entry_unref", cheader_filename = "gconf/gconf.h")]
 	public class Entry {
 		public weak string key;
 		public weak GConf.Value value;

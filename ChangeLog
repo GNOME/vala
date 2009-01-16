@@ -1,5 +1,18 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodewriter.vala:
+
+	Support void ref functions
+
+	* vapigen/valagidlparser.vala:
+
+	Detect void ref functions, patch by Andreas Brauchli,
+	fixes bug 549061
+
+	* vapi/gconf-2.0.vapi: regenerated
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodestructmodule.vala:
 	* gobject/valagobjectmodule.vala:
 

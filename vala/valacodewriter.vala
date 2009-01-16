@@ -135,6 +135,9 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (cl.is_reference_counting ()) {
 			if (cl.base_class == null || cl.base_class.get_ref_function () == null || cl.base_class.get_ref_function () != cl.get_ref_function ()) {
 				write_string ("ref_function = \"%s\", ".printf (cl.get_ref_function ()));
+				if (cl.ref_function_void) {
+					write_string ("ref_function_void = true, ");
+				}
 			}
 			if (cl.base_class == null || cl.base_class.get_unref_function () == null || cl.base_class.get_unref_function () != cl.get_unref_function ()) {
 				write_string ("unref_function = \"%s\", ".printf (cl.get_unref_function ()));

@@ -480,6 +480,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			current_data_type = cl;
 
+			bool ref_function_void = false;
 			string ref_function = null;
 			string unref_function = null;
 			string copy_function = null;
@@ -489,6 +490,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (member.type == IdlNodeTypeId.FUNCTION) {
 					if (member.name == "ref") {
 						ref_function = ((IdlNodeFunction) member).symbol;
+						ref_function_void = (parse_type (((IdlNodeFunction) member).result.type) is VoidType);
 					} else if (member.name == "unref") {
 						unref_function = ((IdlNodeFunction) member).symbol;
 					} else if (member.name == "free" || member.name == "destroy") {
@@ -512,6 +514,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			if (ref_function != null) {
 				cl.set_ref_function (ref_function);
+				cl.ref_function_void = ref_function_void;
 			}
 			if (copy_function != null) {
 				cl.set_dup_function (copy_function);
@@ -603,6 +606,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			current_data_type = cl;
 
+			bool ref_function_void = false;
 			string ref_function = null;
 			string unref_function = null;
 			string copy_function = null;
@@ -612,6 +616,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (member.type == IdlNodeTypeId.FUNCTION) {
 					if (member.name == "ref") {
 						ref_function = ((IdlNodeFunction) member).symbol;
+						ref_function_void = (parse_type (((IdlNodeFunction) member).result.type) is VoidType);
 					} else if (member.name == "unref") {
 						unref_function = ((IdlNodeFunction) member).symbol;
 					} else if (member.name == "free" || member.name == "destroy") {
@@ -635,6 +640,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			if (ref_function != null) {
 				cl.set_ref_function (ref_function);
+				cl.ref_function_void = ref_function_void;
 			}
 			if (copy_function != null) {
 				cl.set_dup_function (copy_function);
@@ -730,6 +736,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			current_data_type = cl;
 
+			bool ref_function_void = false;
 			string ref_function = null;
 			string unref_function = null;
 			string copy_function = null;
@@ -739,6 +746,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				if (member.type == IdlNodeTypeId.FUNCTION) {
 					if (member.name == "ref") {
 						ref_function = ((IdlNodeFunction) member).symbol;
+						ref_function_void = (parse_type (((IdlNodeFunction) member).result.type) is VoidType);
 					} else if (member.name == "unref") {
 						unref_function = ((IdlNodeFunction) member).symbol;
 					} else if (member.name == "free" || member.name == "destroy") {
@@ -762,6 +770,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			if (ref_function != null) {
 				cl.set_ref_function (ref_function);
+				cl.ref_function_void = ref_function_void;
 			}
 			if (copy_function != null) {
 				cl.set_dup_function (copy_function);
