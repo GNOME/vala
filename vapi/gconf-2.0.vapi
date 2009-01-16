@@ -318,8 +318,6 @@ namespace GConf {
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static unowned string escape_key (string arbitrary_text, int len);
 	[CCode (cheader_filename = "gconf/gconf.h")]
-	public static bool init (int argc, out unowned string argv) throws GLib.Error;
-	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static bool is_initialized ();
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public static bool key_is_below (string above, string below);

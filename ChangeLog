@@ -1,5 +1,14 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gconf-2.0/:
+
+	Remove gconf_init binding, it is broken and deprecated,
+	fixes bug 548435
+
+	* vapi/gconf-2.0.vapi: regenerated
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodewriter.vala:
 	* vapigen/valagidlparser.vala:
 
