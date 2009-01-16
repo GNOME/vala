@@ -1,5 +1,13 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaexpression.vala:
+	* vala/valareturnstatement.vala:
+
+	Report error when returning owned variable in method or property
+	with unowned return value, fixes bug 547102
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gconf-2.0/:
 
 	Remove gconf_init binding, it is broken and deprecated,

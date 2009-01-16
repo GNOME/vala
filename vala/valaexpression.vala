@@ -1,6 +1,6 @@
 /* valaexpression.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -91,7 +91,7 @@ public abstract class Vala.Expression : CodeNode {
 			var stmt = parent_node as Statement;
 			var local = parent_node as LocalVariable;
 			if (stmt != null) {
-				return stmt;
+				return (Statement) parent_node;
 			} else if (expr != null) {
 				return expr.parent_statement;
 			} else if (local != null) {

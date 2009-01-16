@@ -126,10 +126,12 @@ public class Vala.ReturnStatement : CodeNode, Statement {
 			return false;
 		}
 
-		if (return_expression.symbol_reference is LocalVariable &&
-		    return_expression.value_type.is_disposable () &&
+		var local = return_expression.symbol_reference as LocalVariable;
+		if (local != null && local.variable_type.is_disposable () &&
 		    !analyzer.current_return_type.value_owned) {
-			Report.warning (source_reference, "Local variable with strong reference used as return value and method return type hasn't been declared to transfer ownership");
+			error = true;
+			Report.error (source_reference, "Local variable with strong reference used as return value and method return type has not been declared to transfer ownership");
+			return false;
 		}
 
 		if (return_expression is NullLiteral
