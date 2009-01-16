@@ -1,5 +1,17 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valablock.vala:
+
+	Detect local variables conflicting with parameters,
+	patch by Andreas Brauchli, fixes bug 523189
+
+	* vala/valaflowanalyzer.vala:
+	* vala/valaparser.vala:
+
+	Fix conflicts
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am:
 	* vapi/mysql.vapi:
 

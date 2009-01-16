@@ -2261,7 +2261,7 @@ public class Vala.Parser : CodeVisitor {
 				expect (TokenType.SEMICOLON);
 			} else {
 				var accessor_begin = get_location ();
-				var attrs = parse_attributes ();
+				var accessor_attrs = parse_attributes ();
 				var accessor_access = parse_access_modifier (SymbolAccessibility.PUBLIC);
 
 				var value_type = type.copy ();
@@ -2282,7 +2282,7 @@ public class Vala.Parser : CodeVisitor {
 						prop.external = false;
 					}
 					prop.get_accessor = new PropertyAccessor (true, false, false, value_type, block, get_src (accessor_begin));
-					set_attributes (prop.get_accessor, attrs);
+					set_attributes (prop.get_accessor, accessor_attrs);
 					prop.get_accessor.access = accessor_access;
 				} else {
 					bool writable, _construct;
@@ -2304,7 +2304,7 @@ public class Vala.Parser : CodeVisitor {
 						prop.external = false;
 					}
 					prop.set_accessor = new PropertyAccessor (false, writable, _construct, value_type, block, get_src (accessor_begin));
-					set_attributes (prop.set_accessor, attrs);
+					set_attributes (prop.set_accessor, accessor_attrs);
 					prop.set_accessor.access = accessor_access;
 				}
 			}
