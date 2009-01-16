@@ -1,5 +1,19 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valabaseaccess.vala:
+	* vala/valacodewriter.vala:
+	* vala/valagenieparser.vala:
+	* vala/valaparser.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valastruct.vala:
+	* vala/valasymbolresolver.vala:
+	* vapigen/valagirparser.vala:
+
+	Do not allow structs to have more than one base type and detect
+	cycles, patch by Andreas Brauchli, fixes bug 556063 and bug 567661
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_text_iter_forward_find_char binding,

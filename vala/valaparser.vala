@@ -2398,11 +2398,9 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.STRUCT);
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
-		var base_types = new ArrayList<DataType> ();
+		DataType base_type = null;
 		if (accept (TokenType.COLON)) {
-			do {
-				base_types.add (parse_type ());
-			} while (accept (TokenType.COMMA));
+			base_type = parse_type ();
 		}
 		var st = new Struct (sym.name, get_src_com (begin));
 		st.access = access;
@@ -2413,8 +2411,8 @@ public class Vala.Parser : CodeVisitor {
 		foreach (TypeParameter type_param in type_param_list) {
 			st.add_type_parameter (type_param);
 		}
-		foreach (DataType base_type in base_types) {
-			st.add_base_type (base_type);
+		if (base_type != null) {
+			st.base_type = base_type;
 		}
 
 		parse_declarations (st);

@@ -83,6 +83,17 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 		st.accept_children (this);
 
+		if (st.base_type != null) {
+			var base_type = st.base_type.data_type as Struct;
+			if (base_type != null) {
+				if (base_type.is_subtype_of (st)) {
+					st.error = true;
+					Report.error (base_type.source_reference, "Base struct cycle (`%s' and `%s')".printf (st.get_full_name (), base_type.get_full_name ()));
+					return;
+				}
+			}
+		}
+
 		current_scope = current_scope.parent_scope;
 	}
 

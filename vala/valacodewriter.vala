@@ -317,19 +317,9 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_string ("struct ");
 		write_identifier (st.name);
 
-		var base_types = st.get_base_types ();
-		if (base_types.size > 0) {
+		if (st.base_type != null) {
 			write_string (" : ");
-		
-			first = true;
-			foreach (DataType base_type in base_types) {
-				if (!first) {
-					write_string (", ");
-				} else {
-					first = false;
-				}
-				write_type (base_type);
-			}
+			write_type (st.base_type);
 		}
 
 		write_begin_block ();

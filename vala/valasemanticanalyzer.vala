@@ -219,8 +219,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else if (sym is Struct) {
 			var st = (Struct) sym;
-			foreach (DataType base_type in st.get_base_types ()) {
-				result = symbol_lookup_inherited (base_type.data_type, name);
+			if (st.base_type != null) {
+				result = symbol_lookup_inherited (st.base_type.data_type, name);
 				if (result != null) {
 					return result;
 				}
@@ -526,8 +526,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			}
 		} else if (instance_type.data_type is Struct) {
 			var st = (Struct) instance_type.data_type;
-			foreach (DataType base_type in st.get_base_types ()) {
-				instance_base_type = get_instance_base_type_for_member (get_instance_base_type (instance_type, base_type, node_reference), type_symbol, node_reference);
+			if (st.base_type != null) {
+				instance_base_type = get_instance_base_type_for_member (get_instance_base_type (instance_type, st.base_type, node_reference), type_symbol, node_reference);
 				if (instance_base_type != null) {
 					return instance_base_type;
 				}

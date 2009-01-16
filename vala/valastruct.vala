@@ -31,9 +31,8 @@ public class Vala.Struct : TypeSymbol {
 	private Gee.List<Constant> constants = new ArrayList<Constant> ();
 	private Gee.List<Field> fields = new ArrayList<Field> ();
 	private Gee.List<Method> methods = new ArrayList<Method> ();
+	private DataType _base_type = null;
 
-	private Gee.List<DataType> base_types = new ArrayList<DataType> ();
-	
 	private string cname;
 	private string const_cname;
 	private string type_id;
@@ -50,6 +49,19 @@ public class Vala.Struct : TypeSymbol {
 	private string? type_signature;
 	private string copy_function;
 	private string destroy_function;
+
+	/**
+	 * Specifies the base struct.
+	 */
+	public DataType? base_type {
+		get {
+			return _base_type;
+		}
+		set {
+			value.parent_node = this;
+			_base_type = value;
+		}
+	}
 
 	/**
 	 * Specifies the default construction method.
@@ -179,8 +191,8 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
-		foreach (DataType type in base_types) {
-			type.accept (visitor);
+		if (base_type != null) {
+			base_type.accept (visitor);
 		}
 
 		foreach (TypeParameter p in type_parameters) {
@@ -276,8 +288,8 @@ public class Vala.Struct : TypeSymbol {
 	 * @return true if this is a boolean type, false otherwise
 	 */
 	public bool is_boolean_type () {
-		foreach (DataType type in base_types) {
-			var st = type.data_type as Struct;
+		if (base_type != null) {
+			var st = base_type.data_type as Struct;
 			if (st != null && st.is_boolean_type ()) {
 				return true;
 			}
@@ -291,8 +303,8 @@ public class Vala.Struct : TypeSymbol {
 	 * @return true if this is an integer type, false otherwise
 	 */
 	public bool is_integer_type () {
-		foreach (DataType type in base_types) {
-			var st = type.data_type as Struct;
+		if (base_type != null) {
+			var st = base_type.data_type as Struct;
 			if (st != null && st.is_integer_type ()) {
 				return true;
 			}
@@ -306,8 +318,8 @@ public class Vala.Struct : TypeSymbol {
 	 * @return true if this is a floating point type, false otherwise
 	 */
 	public bool is_floating_type () {
-		foreach (DataType type in base_types) {
-			var st = type.data_type as Struct;
+		if (base_type != null) {
+			var st = base_type.data_type as Struct;
 			if (st != null && st.is_floating_type ()) {
 				return true;
 			}
@@ -404,10 +416,10 @@ public class Vala.Struct : TypeSymbol {
 	public override string? get_type_id () {
 		if (type_id == null) {
 			if (!has_type_id) {
-				foreach (DataType type in base_types) {
-					var st = type.data_type as Struct;
+				if (base_type != null) {
+					var st = base_type.data_type as Struct;
 					if (st != null) {
-						return st.get_type_id ();;
+						return st.get_type_id ();
 					}
 				}
 				if (is_simple_type ()) {
@@ -428,8 +440,8 @@ public class Vala.Struct : TypeSymbol {
 
 	public override string? get_marshaller_type_name () {
 		if (marshaller_type_name == null) {
-			foreach (DataType type in base_types) {
-				var st = type.data_type as Struct;
+			if (base_type != null) {
+				var st = base_type.data_type as Struct;
 				if (st != null) {
 					return st.get_marshaller_type_name ();
 				}
@@ -451,8 +463,8 @@ public class Vala.Struct : TypeSymbol {
 	
 	public override string? get_get_value_function () {
 		if (get_value_function == null) {
-			foreach (DataType type in base_types) {
-				var st = type.data_type as Struct;
+			if (base_type != null) {
+				var st = base_type.data_type as Struct;
 				if (st != null) {
 					return st.get_get_value_function ();
 				}
@@ -472,8 +484,8 @@ public class Vala.Struct : TypeSymbol {
 	
 	public override string? get_set_value_function () {
 		if (set_value_function == null) {
-			foreach (DataType type in base_types) {
-				var st = type.data_type as Struct;
+			if (base_type != null) {
+				var st = base_type.data_type as Struct;
 				if (st != null) {
 					return st.get_set_value_function ();
 				}
@@ -505,8 +517,8 @@ public class Vala.Struct : TypeSymbol {
 		}
 
 		// inherit default value from base type
-		foreach (DataType type in base_types) {
-			var st = type.data_type as Struct;
+		if (base_type != null) {
+			var st = base_type.data_type as Struct;
 			if (st != null) {
 				return st.get_default_value ();
 			}
@@ -518,25 +530,6 @@ public class Vala.Struct : TypeSymbol {
 		default_value = value;
 	}
 
-	/**
-	 * Adds the specified struct to the list of base types of this struct.
-	 *
-	 * @param type a class or interface reference
-	 */
-	public void add_base_type (DataType type) {
-		base_types.add (type);
-		type.parent_node = this;
-	}
-
-	/**
-	 * Returns a copy of the base type list.
-	 *
-	 * @return list of base types
-	 */
-	public Gee.List<DataType> get_base_types () {
-		return new ReadOnlyList<DataType> (base_types);
-	}
-	
 	public override int get_type_parameter_index (string name) {
 		int i = 0;
 		
@@ -555,8 +548,8 @@ public class Vala.Struct : TypeSymbol {
 	 * instances are passed by value.
 	 */
 	public bool is_simple_type () {
-		foreach (DataType type in base_types) {
-			var st = type.data_type as Struct;
+		if (base_type != null) {
+			var st = base_type.data_type as Struct;
 			if (st != null && st.is_simple_type ()) {
 				return true;
 			}
@@ -573,11 +566,8 @@ public class Vala.Struct : TypeSymbol {
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
-		for (int i = 0; i < base_types.size; i++) {
-			if (base_types[i] == old_type) {
-				base_types[i] = new_type;
-				return;
-			}
+		if (base_type == old_type) {
+			base_type = new_type;
 		}
 	}
 
@@ -586,12 +576,12 @@ public class Vala.Struct : TypeSymbol {
 			return true;
 		}
 
-		foreach (DataType base_type in base_types) {
+		if (base_type != null) {
 			if (base_type.data_type != null && base_type.data_type.is_subtype_of (t)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -677,12 +667,12 @@ public class Vala.Struct : TypeSymbol {
 		analyzer.current_symbol = this;
 		analyzer.current_struct = this;
 
-		foreach (DataType type in base_types) {
-			type.check (analyzer);
+		if (base_type != null) {
+			base_type.check (analyzer);
 
-			if (!(type is StructValueType)) {
+			if (!(base_type is StructValueType)) {
 				error = true;
-				Report.error (source_reference, "The base type `%s` of struct `%s` is not a struct".printf (type.to_string (), get_full_name ()));
+				Report.error (source_reference, "The base type `%s` of struct `%s` is not a struct".printf (base_type.to_string (), get_full_name ()));
 				return false;
 			}
 		}
@@ -690,20 +680,20 @@ public class Vala.Struct : TypeSymbol {
 		foreach (TypeParameter p in type_parameters) {
 			p.check (analyzer);
 		}
-		
+
 		foreach (Field f in fields) {
 			f.check (analyzer);
 		}
-		
+
 		foreach (Constant c in constants) {
 			c.check (analyzer);
 		}
-		
+
 		foreach (Method m in methods) {
 			m.check (analyzer);
 		}
 
-		if (!external && !external_package && get_base_types ().size == 0 && get_fields ().size == 0) {
+		if (!external && !external_package && base_type == null && get_fields ().size == 0) {
 			Report.error (source_reference, "structs cannot be empty");
 		}
 

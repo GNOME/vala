@@ -68,14 +68,12 @@ public class Vala.BaseAccess : Expression {
 				error = true;
 				Report.error (source_reference, "Base access invalid outside of class and struct");
 				return false;
-			} else if (analyzer.current_struct.get_base_types ().size != 1) {
+			} else if (analyzer.current_struct.base_type == null) {
 				error = true;
-				Report.error (source_reference, "Base access invalid without base type %d".printf (analyzer.current_struct.get_base_types ().size));
+				Report.error (source_reference, "Base access invalid without base type");
 				return false;
 			}
-			Iterator<DataType> base_type_it = analyzer.current_struct.get_base_types ().iterator ();
-			base_type_it.next ();
-			value_type = base_type_it.get ();
+			value_type = analyzer.current_struct.base_type;
 		} else if (analyzer.current_class.base_class == null) {
 			error = true;
 			Report.error (source_reference, "Base access invalid without base class");
