@@ -423,7 +423,9 @@ gtk_tree_model_sort_convert_iter_to_child_iter.child_iter is_out="1"
 gtk_tree_path_get_indices is_array="1" no_array_length="1"
 gtk_tree_path_new_from_indices sentinel="-1"
 gtk_tree_path_copy transfer_ownership="1"
-GtkTreePath is_value_type="0"
+# GtkTreePath should be an opaque value type as it is not immutable
+# but should have copy-on-assignment semantics
+GtkTreePath is_value_type="0" is_immutable="1"
 gtk_tree_row_reference_reordered.new_order is_array="1"
 gtk_tree_row_reference_get_path transfer_ownership="1"
 gtk_tree_selection_get_selected.iter is_out="1"

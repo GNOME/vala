@@ -4342,6 +4342,7 @@ namespace Gtk {
 		public Gtk.TreeModel model { get; construct; }
 	}
 	[Compact]
+	[Immutable]
 	[CCode (copy_function = "gtk_tree_path_copy", cheader_filename = "gtk/gtk.h")]
 	public class TreePath {
 		public void append_index (int index_);
