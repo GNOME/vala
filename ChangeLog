@@ -1,5 +1,12 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodebasemodule.vala:
+
+	Use correct cname when calling property set accessor,
+	fixes bug 562172
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaassignment.vala:
 	* vala/valaelementaccess.vala:
 	* vala/valasemanticanalyzer.vala:

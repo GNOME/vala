@@ -3486,8 +3486,7 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			} else if (prop.base_interface_property != null) {
 				base_property = prop.base_interface_property;
 			}
-			var base_property_type = (TypeSymbol) base_property.parent_symbol;
-			set_func = "%s_set_%s".printf (base_property_type.get_lower_case_cname (null), base_property.name);
+			set_func = base_property.set_accessor.get_cname ();
 			if (prop is DynamicProperty) {
 				set_func = head.get_dynamic_property_setter_cname ((DynamicProperty) prop);
 			}
