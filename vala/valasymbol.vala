@@ -272,25 +272,30 @@ public abstract class Vala.Symbol : CodeNode {
 	}
 
 	// get the top scope from where this symbol is still accessible
-	public Scope? get_top_accessible_scope () {
-		if (access != SymbolAccessibility.PUBLIC) {
+	public Scope? get_top_accessible_scope (bool is_internal = false) {
+		if (access == SymbolAccessibility.PRIVATE) {
 			// private symbols are accessible within the scope where the symbol has been declared
-			Scope scope = owner;
+			return owner;
+		}
 
-			// skip scopes of normal namespaces, they don't influence accessibility
-			while (scope != null && scope.owner is Namespace && scope.owner.name != null) {
-				scope = scope.parent_scope;
-			}
-
-			return scope;
+		if (access == SymbolAccessibility.INTERNAL) {
+			is_internal = true;
 		}
 
 		if (parent_symbol == null) {
-			return null;
+			// this is the root symbol
+			if (is_internal) {
+				// only accessible within the same library
+				// return root scope
+				return scope;
+			} else {
+				// unlimited access
+				return null;
+			}
 		}
 
 		// if this is a public symbol, it's equally accessible as the parent symbol
-		return parent_symbol.get_top_accessible_scope ();
+		return parent_symbol.get_top_accessible_scope (is_internal);
 	}
 }
 

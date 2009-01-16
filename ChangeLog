@@ -1,5 +1,11 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valasymbol.vala:
+
+	Fix determining relative accessibility, fixes bug 559798
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacreationmethod.vala:
 
 	Fix bogus errors about missing return type in creation methods,
