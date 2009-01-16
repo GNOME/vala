@@ -5612,7 +5612,7 @@ namespace Gtk {
 		public bool forward_chars (int count);
 		public bool forward_cursor_position ();
 		public bool forward_cursor_positions (int count);
-		public bool forward_find_char (Gtk.TextCharPredicate pred, Gtk.TextIter limit);
+		public bool forward_find_char (Gtk.TextCharPredicate pred, Gtk.TextIter? limit);
 		public bool forward_line ();
 		public bool forward_lines (int count);
 		public bool forward_search (string str, Gtk.TextSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, Gtk.TextIter? limit);

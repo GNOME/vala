@@ -1,5 +1,14 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_text_iter_forward_find_char binding,
+	patch by Nicolas Joseph, fixes bug 567543
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valablock.vala:
 
 	Detect local variables conflicting with parameters,
