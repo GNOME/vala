@@ -1,5 +1,11 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* tests/:
+
+	Rearrange test cases
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* tests/Makefile.am:
 	* tests/basic-types/arrays.test:
 

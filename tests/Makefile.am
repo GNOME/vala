@@ -19,15 +19,16 @@ TESTS = \
 	basic-types/floats.test \
 	basic-types/strings.test \
 	basic-types/arrays.test \
+	basic-types/pointers.test \
 	namespaces.test \
 	methods/lambda.test \
 	control-flow/break.test \
 	control-flow/expressions-conditional.test \
 	control-flow/for.test \
 	control-flow/switch.test \
-	enums.test \
-	structs.test \
-	delegates.test \
+	enums/enums.test \
+	structs/structs.test \
+	delegates/delegates.test \
 	objects/classes.test \
 	objects/fields.test \
 	objects/interfaces.test \
@@ -38,9 +39,7 @@ TESTS = \
 	objects/test-026.test \
 	objects/test-029.test \
 	objects/test-034.test \
-	exceptions.test \
-	pointers.test \
-	test-023.test \
+	errors/errors.test \
 	$(NULL)
 
 EXTRA_DIST = \
