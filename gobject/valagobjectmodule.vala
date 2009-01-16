@@ -109,7 +109,9 @@ public class Vala.GObjectModule : GTypeModule {
 		}
 
 
-		if (cl.source_reference.file.cycle == null) {
+		if (cl.access == SymbolAccessibility.PRIVATE
+		    || cl.source_reference.file.cycle == null) {
+			// no file dependency cycle for private symbols
 			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_struct.name), new CCodeVariableDeclarator (cl.get_cname ())));
 		}
 
@@ -126,7 +128,9 @@ public class Vala.GObjectModule : GTypeModule {
 		}
 
 		if (is_gtypeinstance) {
-			if (cl.source_reference.file.cycle == null) {
+			if (cl.access == SymbolAccessibility.PRIVATE
+			    || cl.source_reference.file.cycle == null) {
+				// no file dependency cycle for private symbols
 				decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
 			}
 			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));

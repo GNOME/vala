@@ -1,5 +1,13 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodestructmodule.vala:
+	* gobject/valagobjectmodule.vala:
+
+	Fix typedef generation for private types, patch by Yu Feng,
+	fixes bug 567237
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 
 	Warn about possibly missing GLib.Object prerequisite,

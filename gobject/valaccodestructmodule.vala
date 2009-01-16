@@ -46,7 +46,9 @@ public class Vala.CCodeStructModule : CCodeBaseModule {
 			def_frag = source_type_definition;
 		}
 
-		if (st.source_reference.file.cycle == null) {
+		if (st.access == SymbolAccessibility.PRIVATE
+		    || st.source_reference.file.cycle == null) {
+			// no file dependency cycle for private symbols
 			decl_frag.append (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
 		}
 
