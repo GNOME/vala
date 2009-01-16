@@ -1,5 +1,12 @@
 2009-01-16  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacreationmethod.vala:
+
+	Fix bogus errors about missing return type in creation methods,
+	fixes bug 564178
+
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 
 	Use correct cname when calling property set accessor,
