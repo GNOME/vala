@@ -1,3 +1,9 @@
+2009-01-16  Jürg Billeter  <j@bitron.ch>
+
+	* tests/basic-types/strings.test:
+
+	Improve string tests
+
 2009-01-15  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valadbusclientmodule.vala:
