@@ -1,5 +1,13 @@
 2009-01-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am:
+	* vapi/lua.vapi:
+
+	Add Lua binding, patch by pancake and Phil Housley,
+	fixes bug 540820
+
+2009-01-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/gsl.vapi:
 
 	Fix delegate bindings, patch by Matías De la Puente
