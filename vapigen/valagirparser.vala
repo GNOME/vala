@@ -179,7 +179,7 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "bitfield") {
 				sym = parse_bitfield ();
 			} else if (reader.name == "function") {
-				sym = parse_function ();
+				sym = parse_method ("function");
 			} else if (reader.name == "callback") {
 				sym = parse_callback ();
 			} else if (reader.name == "record") {
@@ -307,45 +307,6 @@ public class Vala.GirParser : CodeVisitor {
 		return ev;
 	}
 
-	Method parse_function () {
-		start_element ("function");
-		string name = reader.get_attribute ("name");
-		next ();
-		DataType return_type;
-		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
-			return_type = parse_return_value ();
-		} else {
-			return_type = new VoidType ();
-		}
-		var m = new Method (name, return_type, get_current_src ());
-		m.access = SymbolAccessibility.PUBLIC;
-		m.binding = MemberBinding.STATIC;
-		var parameters = new ArrayList<FormalParameter> ();
-		var array_length_parameters = new ArrayList<int> ();
-		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
-			start_element ("parameters");
-			next ();
-			while (current_token == MarkupTokenType.START_ELEMENT) {
-				int array_length_idx;
-				var param = parse_parameter (out array_length_idx);
-				if (array_length_idx != -1) {
-					array_length_parameters.add (array_length_idx);
-				}
-				parameters.add (param);
-			}
-			end_element ("parameters");
-		}
-		int i = 0;
-		foreach (FormalParameter param in parameters) {
-			if (!array_length_parameters.contains (i)) {
-				m.add_parameter (param);
-			}
-			i++;
-		}
-		end_element ("function");
-		return m;
-	}
-
 	DataType parse_return_value () {
 		start_element ("return-value");
 		string transfer = reader.get_attribute ("transfer-ownership");
@@ -358,11 +319,17 @@ public class Vala.GirParser : CodeVisitor {
 		return type;
 	}
 
-	FormalParameter parse_parameter (out int array_length_idx = null) {
+	FormalParameter parse_parameter (out int array_length_idx = null, out int closure_idx = null, out int destroy_idx = null) {
 		FormalParameter param;
 
 		if (&array_length_idx != null) {
 			array_length_idx = -1;
+		}
+		if (&closure_idx != null) {
+			closure_idx = -1;
+		}
+		if (&destroy_idx != null) {
+			destroy_idx = -1;
 		}
 
 		start_element ("parameter");
@@ -370,6 +337,16 @@ public class Vala.GirParser : CodeVisitor {
 		string direction = reader.get_attribute ("direction");
 		string transfer = reader.get_attribute ("transfer-ownership");
 		string allow_none = reader.get_attribute ("allow-none");
+
+		string closure = reader.get_attribute ("closure");
+		string destroy = reader.get_attribute ("destroy");
+		if (closure != null && &closure_idx != null) {
+			closure_idx = closure.to_int ();
+		}
+		if (destroy != null && &destroy_idx != null) {
+			destroy_idx = destroy.to_int ();
+		}
+
 		next ();
 		if (reader.name == "varargs") {
 			start_element ("varargs");
@@ -483,7 +460,7 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "constructor") {
 				parse_constructor ();
 			} else if (reader.name == "method") {
-				parse_method ();
+				parse_method ("method");
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `record'".printf (reader.name));
@@ -522,11 +499,11 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "constructor") {
 				cl.add_method (parse_constructor ());
 			} else if (reader.name == "function") {
-				methods.add (parse_function ());
+				methods.add (parse_method ("function"));
 			} else if (reader.name == "method") {
-				methods.add (parse_method ());
+				methods.add (parse_method ("method"));
 			} else if (reader.name == "callback") {
-				vmethods.add (parse_vmethod ());
+				vmethods.add (parse_method ("callback"));
 			} else if (reader.name == "glib:signal") {
 				signals.add (parse_signal ());
 			} else {
@@ -598,6 +575,7 @@ public class Vala.GirParser : CodeVisitor {
 		iface.access = SymbolAccessibility.PUBLIC;
 		next ();
 		var methods = new ArrayList<Method> ();
+		var vmethods = new ArrayList<Method> ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.name == "prerequisite") {
 				start_element ("prerequisite");
@@ -609,15 +587,28 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "property") {
 				iface.add_property (parse_property ());
 			} else if (reader.name == "callback") {
-				parse_callback ();
+				vmethods.add (parse_method ("callback"));
 			} else if (reader.name == "method") {
-				methods.add (parse_method ());
+				methods.add (parse_method ("method"));
 			} else if (reader.name == "glib:signal") {
 				iface.add_signal (parse_signal ());
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `interface'".printf (reader.name));
 				break;
+			}
+		}
+
+		// virtual method merging
+		foreach (Method m in vmethods) {
+			var symbol = iface.scope.lookup (m.name);
+			if (symbol == null) {
+				iface.add_method (m);
+			} else if (symbol is Signal) {
+				var sig = (Signal) symbol;
+				sig.is_virtual = true;
+			} else {
+				Report.error (get_current_src (), "duplicate member `%s' in `%s'".printf (m.name, iface.name));
 			}
 		}
 
@@ -629,6 +620,8 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (symbol is Signal) {
 				var sig = (Signal) symbol;
 				sig.has_emitter = true;
+			} else if (symbol is Method) {
+				// assume method is wrapper for virtual method
 			} else {
 				Report.error (get_current_src (), "duplicate member `%s' in `%s'".printf (m.name, iface.name));
 			}
@@ -718,8 +711,8 @@ public class Vala.GirParser : CodeVisitor {
 		return m;
 	}
 
-	Method parse_method () {
-		start_element ("method");
+	Method parse_method (string element_name) {
+		start_element (element_name);
 		string name = reader.get_attribute ("name");
 		string throws_string = reader.get_attribute ("throws");
 		next ();
@@ -731,54 +724,62 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		var m = new Method (name, return_type, get_current_src ());
 		m.access = SymbolAccessibility.PUBLIC;
-		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
-			start_element ("parameters");
-			next ();
-			while (current_token == MarkupTokenType.START_ELEMENT) {
-				m.add_parameter (parse_parameter ());
-			}
-			end_element ("parameters");
-		}
-		if (throws_string == "1") {
-			m.add_error_type (new ErrorType (null, null));
-		}
-		end_element ("method");
-		return m;
-	}
 
-	Method parse_vmethod () {
-		start_element ("callback");
-		string name = reader.get_attribute ("name");
-		string throws_string = reader.get_attribute ("throws");
-		next ();
-		DataType return_type;
-		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
-			return_type = parse_return_value ();
-		} else {
-			return_type = new VoidType ();
+		if (element_name == "callback") {
+			m.is_virtual = true;
+		} else if (element_name == "function") {
+			m.binding = MemberBinding.STATIC;
 		}
-		var m = new Method (name, return_type, get_current_src ());
-		m.access = SymbolAccessibility.PUBLIC;
-		m.is_virtual = true;
+
+		var parameters = new ArrayList<FormalParameter> ();
+		var array_length_parameters = new ArrayList<int> ();
+		var closure_parameters = new ArrayList<int> ();
+		var destroy_parameters = new ArrayList<int> ();
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
 			start_element ("parameters");
 			next ();
+
 			bool first = true;
 			while (current_token == MarkupTokenType.START_ELEMENT) {
-				var param = parse_parameter ();
-				// first parameter is instance pointer, ignore
-				if (!first) {
-					m.add_parameter (param);
+				int array_length_idx, closure_idx, destroy_idx;
+				var param = parse_parameter (out array_length_idx, out closure_idx, out destroy_idx);
+				if (array_length_idx != -1) {
+					array_length_parameters.add (array_length_idx);
+				}
+				if (closure_idx != -1) {
+					closure_parameters.add (closure_idx);
+				}
+				if (destroy_idx != -1) {
+					destroy_parameters.add (destroy_idx);
+				}
+				// first parameter is instance pointer in virtual methods, ignore
+				if (element_name != "callback" || !first) {
+					parameters.add (param);
 				} else {
 					first = false;
 				}
 			}
 			end_element ("parameters");
 		}
+		int i = 0;
+
+		if (element_name == "method") {
+			// implicit instance parameter
+			i++;
+		}
+
+		foreach (FormalParameter param in parameters) {
+			if (!array_length_parameters.contains (i)
+			    && !closure_parameters.contains (i)
+			    && !destroy_parameters.contains (i)) {
+				m.add_parameter (param);
+			}
+			i++;
+		}
 		if (throws_string == "1") {
 			m.add_error_type (new ErrorType (null, null));
 		}
-		end_element ("callback");
+		end_element (element_name);
 		return m;
 	}
 
@@ -818,7 +819,7 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "constructor") {
 				parse_constructor ();
 			} else if (reader.name == "method") {
-				st.add_method (parse_method ());
+				st.add_method (parse_method ("method"));
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `class'".printf (reader.name));
@@ -842,7 +843,7 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "constructor") {
 				parse_constructor ();
 			} else if (reader.name == "method") {
-				st.add_method (parse_method ());
+				st.add_method (parse_method ("method"));
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `union'".printf (reader.name));
