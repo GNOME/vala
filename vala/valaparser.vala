@@ -861,6 +861,7 @@ public class Vala.Parser : CodeVisitor {
 					case TokenType.SIZEOF:
 					case TokenType.TYPEOF:
 					case TokenType.IDENTIFIER:
+					case TokenType.PARAMS:
 						var inner = parse_unary_expression ();
 						return new CastExpression (inner, type, get_src (begin), false);
 					default:

@@ -1,5 +1,11 @@
 2009-01-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaparser.vala:
+
+	Accept `params' as identifier after cast parentheses
+
+2009-01-18  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Fix sincos binding, patch by Jukka-Pekka Iivonen, fixes bug 568038
