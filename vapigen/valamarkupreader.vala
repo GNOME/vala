@@ -153,17 +153,14 @@ public class Vala.MarkupReader : Object {
 					current++;
 					char* attr_begin = current;
 					while (current < end && current[0] != '"') {
-						if (current[0] == '&') {
-							// process &amp; &gt; &lt; &quot; &apos;
+						unichar u = ((string) current).get_char_validated ((long) (end - current));
+						if (u != (unichar) (-1)) {
+							current += u.to_utf8 (null);
 						} else {
-							unichar u = ((string) current).get_char_validated ((long) (end - current));
-							if (u != (unichar) (-1)) {
-								current += u.to_utf8 (null);
-							} else {
-								Report.error (null, "invalid UTF-8 character");
-							}
+							Report.error (null, "invalid UTF-8 character");
 						}
 					}
+					// TODO process &amp; &gt; &lt; &quot; &apos;
 					string attr_value = ((string) attr_begin).ndup (current - attr_begin);
 					if (current >= end || current[0] != '"') {
 						// error
@@ -188,15 +185,11 @@ public class Vala.MarkupReader : Object {
 			space ();
 			char* text_begin = current;
 			while (current < end && current[0] != '<') {
-				if (current[0] == '&') {
-					// process &amp; &gt; &lt; &quot; &apos;
+				unichar u = ((string) current).get_char_validated ((long) (end - current));
+				if (u != (unichar) (-1)) {
+					current += u.to_utf8 (null);
 				} else {
-					unichar u = ((string) current).get_char_validated ((long) (end - current));
-					if (u != (unichar) (-1)) {
-						current += u.to_utf8 (null);
-					} else {
-						Report.error (null, "invalid UTF-8 character");
-					}
+					Report.error (null, "invalid UTF-8 character");
 				}
 			}
 			if (text_begin == current) {
@@ -205,6 +198,7 @@ public class Vala.MarkupReader : Object {
 				return read_token (out token_begin, out token_end);
 			}
 			type = MarkupTokenType.TEXT;
+			// TODO process &amp; &gt; &lt; &quot; &apos;
 			// string text = ((string) text_begin).ndup (current - text_begin);
 		}
 

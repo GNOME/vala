@@ -2,6 +2,12 @@
 
 	* vapigen/valamarkupreader.vala:
 
+	Fix infinite loop when reading entity references
+
+2009-01-17  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valamarkupreader.vala:
+
 	Read comments
 
 2009-01-17  Jürg Billeter  <j@bitron.ch>
