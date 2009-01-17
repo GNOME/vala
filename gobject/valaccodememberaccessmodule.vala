@@ -146,10 +146,6 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			} else {
 				expr.ccodenode = new CCodeIdentifier (f.get_cname ());
 			}
-
-			if (f.field_type.type_parameter != null && expr.value_type.type_parameter == null) {
-				expr.ccodenode = convert_from_generic_pointer ((CCodeExpression) expr.ccodenode, expr.value_type);
-			}
 		} else if (expr.symbol_reference is Constant) {
 			var c = (Constant) expr.symbol_reference;
 			expr.ccodenode = new CCodeIdentifier (c.get_cname ());
