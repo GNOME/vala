@@ -1,5 +1,13 @@
 2009-01-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaconstant.vala:
+	* vala/valafield.vala:
+
+	Fix symbol lookup in constant and field initializers,
+	fixes bug 567760
+
+2009-01-17  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodedelegatemodule.vala:
 
 	Fix wrapper for delegates returning arrays, fixes bug 564474

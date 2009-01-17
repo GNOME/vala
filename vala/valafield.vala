@@ -282,10 +282,12 @@ public class Vala.Field : Member, Lockable {
 		checked = true;
 
 		var old_source_file = analyzer.current_source_file;
+		var old_symbol = analyzer.current_symbol;
 
 		if (source_reference != null) {
 			analyzer.current_source_file = source_reference.file;
 		}
+		analyzer.current_symbol = this;
 
 		field_type.check (analyzer);
 
@@ -330,6 +332,7 @@ public class Vala.Field : Member, Lockable {
 		}
 
 		analyzer.current_source_file = old_source_file;
+		analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}

@@ -1,6 +1,6 @@
 /* valaconstant.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -160,6 +160,14 @@ public class Vala.Constant : Member, Lockable {
 
 		process_attributes ();
 
+		var old_source_file = analyzer.current_source_file;
+		var old_symbol = analyzer.current_symbol;
+
+		if (source_reference != null) {
+			analyzer.current_source_file = source_reference.file;
+		}
+		analyzer.current_symbol = this;
+
 		type_reference.check (analyzer);
 
 		if (!external_package) {
@@ -172,6 +180,9 @@ public class Vala.Constant : Member, Lockable {
 				initializer.check (analyzer);
 			}
 		}
+
+		analyzer.current_source_file = old_source_file;
+		analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}
