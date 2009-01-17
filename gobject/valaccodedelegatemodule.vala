@@ -54,6 +54,15 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				}
 			}
 		}
+		if (!d.no_array_length && d.return_type is ArrayType) {
+			// return array length if appropriate
+			var array_type = (ArrayType) d.return_type;
+
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				var cparam = new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*");
+				cfundecl.add_parameter (cparam);
+			}
+		}
 		if (d.has_target) {
 			var cparam = new CCodeFormalParameter ("user_data", "void*");
 			cfundecl.add_parameter (cparam);
@@ -244,6 +253,15 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			}
 
 		}
+		if (!d.no_array_length && d.return_type is ArrayType) {
+			// return array length if appropriate
+			var array_type = (ArrayType) d.return_type;
+
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				var cparam = new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*");
+				cparam_map.set (get_param_pos (d.carray_length_parameter_position + 0.01 * dim), cparam);
+			}
+		}
 
 		if (m.get_error_types ().size > 0) {
 			var cparam = new CCodeFormalParameter ("error", "GError**");
@@ -310,6 +328,18 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 			}
 
 			i++;
+		}
+		if (!m.no_array_length && m.return_type is ArrayType) {
+			var array_type = (ArrayType) m.return_type;
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				CCodeExpression clength;
+				if (d.no_array_length) {
+					clength = new CCodeConstant ("NULL");
+				} else {
+					clength = new CCodeIdentifier (head.get_array_length_cname ("result", dim));
+				}
+				carg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), clength);
+			}
 		}
 
 		if (m.get_error_types ().size > 0) {
