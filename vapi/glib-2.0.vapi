@@ -836,7 +836,6 @@ public class string {
 	}
 }
 
-[Import ()]
 [CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "glib.h")]
 namespace GLib {
 	[CCode (lower_case_cprefix = "", cheader_filename = "math.h")]
@@ -868,7 +867,7 @@ namespace GLib {
 		public static float sinhf (float x);
 		public static double tanh (double x);
 		public static float tanhf (float x);
-		public static void sincos (double x, out double sinx, ref double cosx);
+		public static void sincos (double x, out double sinx, out double cosx);
 		public static void sincosf (float x, out float sinx, out float cosx);
 		public static double acosh (double x);
 		public static float acoshf (float x);
