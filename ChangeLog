@@ -1,5 +1,12 @@
 2009-01-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaobjectcreationexpression.vala:
+
+	Set formal_target_type to fix constructors using generic parameter
+	types, fixes bug 543477
+
+2009-01-17  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodememberaccessmodule.vala:
 
 	Do not try to convert from generic pointer twice when accessing

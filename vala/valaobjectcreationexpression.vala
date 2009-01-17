@@ -311,7 +311,8 @@ public class Vala.ObjectCreationExpression : Expression {
 					Expression arg = arg_it.get ();
 
 					/* store expected type for callback parameters */
-					arg.target_type = param.parameter_type;
+					arg.formal_target_type = param.parameter_type;
+					arg.target_type = arg.formal_target_type.get_actual_type (value_type, this);
 				}
 			}
 
