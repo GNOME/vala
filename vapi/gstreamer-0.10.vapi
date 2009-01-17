@@ -1336,6 +1336,9 @@ namespace Gst {
 		[HasEmitter]
 		public virtual signal void new_uri (string uri);
 	}
+	[CCode (type_id = "GST_TYPE_ARRAY", cheader_filename = "gst/gst.h")]
+	public struct Array {
+	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	[SimpleType]
 	[IntegerType (rank = 0)]
@@ -1345,6 +1348,9 @@ namespace Gst {
 	[SimpleType]
 	[IntegerType (rank = 0)]
 	public struct ClockTimeDiff : int64 {
+	}
+	[CCode (type_id = "GST_TYPE_DOUBLE_RANGE", cheader_filename = "gst/gst.h")]
+	public struct DoubleRange {
 	}
 	[CCode (type_id = "GST_TYPE_ELEMENT_DETAILS", cheader_filename = "gst/gst.h")]
 	public struct ElementDetails {
@@ -1359,6 +1365,18 @@ namespace Gst {
 		public weak string nick;
 		public weak string description;
 		public GLib.Quark quark;
+	}
+	[CCode (type_id = "GST_TYPE_FRACTION", cheader_filename = "gst/gst.h")]
+	public struct Fraction {
+	}
+	[CCode (type_id = "GST_TYPE_FRACTION_RANGE", cheader_filename = "gst/gst.h")]
+	public struct FractionRange {
+	}
+	[CCode (type_id = "GST_TYPE_INT_RANGE", cheader_filename = "gst/gst.h")]
+	public struct IntRange {
+	}
+	[CCode (type_id = "GST_TYPE_LIST", cheader_filename = "gst/gst.h")]
+	public struct List {
 	}
 	[CCode (type_id = "GST_TYPE_STATIC_CAPS", cheader_filename = "gst/gst.h")]
 	public struct StaticCaps {
