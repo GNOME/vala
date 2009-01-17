@@ -1,5 +1,12 @@
 2009-01-17  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaenumvalue.vala:
+	* vala/valasourcefile.vala:
+
+	Add missing include for enum values, fixes bug 531724
+
+2009-01-17  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaconstant.vala:
 	* vala/valafield.vala:
 

@@ -1,6 +1,6 @@
 /* valaenumvalue.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -140,6 +140,12 @@ public class Vala.EnumValue : Symbol {
 
 		if (value != null) {
 			value.check (analyzer);
+
+			// ensure to include dependency in header file as well if necessary
+			if (!parent_symbol.is_internal_symbol ()
+			    &&value is MemberAccess && value.symbol_reference != null) {
+				analyzer.current_source_file.add_symbol_dependency (value.symbol_reference, SourceFileDependencyType.HEADER_SHALLOW);
+			}
 		}
 
 		return !error;

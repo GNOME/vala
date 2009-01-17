@@ -1,6 +1,6 @@
 /* valasourcefile.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -282,7 +282,7 @@ public class Vala.SourceFile {
 
 		Symbol s;
 		
-		if (sym is ErrorCode) {
+		if (sym is ErrorCode || sym is EnumValue) {
 			s = sym.parent_symbol;
 		} else if (sym is TypeSymbol ||
 		    sym is Method ||
