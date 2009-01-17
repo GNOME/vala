@@ -1,5 +1,11 @@
 2009-01-17  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valamarkupreader.vala:
+
+	Read comments
+
+2009-01-17  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_widget_create_pango_* bindings

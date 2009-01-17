@@ -1,6 +1,6 @@
 /* valamarkupreader.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -112,6 +112,22 @@ public class Vala.MarkupReader : Object {
 				// processing instruction
 			} else if (current[0] == '!') {
 				// comment or doctype
+				current++;
+				if (current < end - 1 && current[0] == '-' && current[1] == '-') {
+					// comment
+					current += 2;
+					while (current < end - 2) {
+						if (current[0] == '-' && current[1] == '-' && current[2] == '>') {
+							// end of comment
+							current += 3;
+							break;
+						}
+						current++;
+					}
+
+					// ignore comment, read next token
+					return read_token (out token_begin, out token_end);
+				}
 			} else if (current[0] == '/') {
 				type = MarkupTokenType.END_ELEMENT;
 				current++;
