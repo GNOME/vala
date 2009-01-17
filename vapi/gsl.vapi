@@ -566,8 +566,8 @@ namespace Gsl
 	
 	/* The isnan, isinf and finite are define in the double type. The elementary functions are in GLib.Math */
 	
-	static delegate double _Function (double x, void* params);
-	static delegate void _FunctionFdf (double x, void* params, out double f, out double df);
+	public static delegate double _Function (double x, void* params);
+	public static delegate void _FunctionFdf (double x, void* params, out double f, out double df);
 	
 	[SimpleType]
 	[CCode (cname="gsl_function", cheader_filename="gsl/gsl_math.h")]
@@ -2537,9 +2537,9 @@ namespace Gsl
 	/*
 	 * Random Number Generation
 	 */
-	static delegate void RNGSetState (void *state, ulong seed);
-	static delegate ulong RNGGetState (void* state);
-	static delegate double RNGGetDouble (void* state);
+	public static delegate void RNGSetState (void *state, ulong seed);
+	public static delegate ulong RNGGetState (void* state);
+	public static delegate double RNGGetDouble (void* state);
 
 	[SimpleType]
 	[CCode (cname="gsl_rng_type", cheader_filename="gsl/gsl_rng.h")]
@@ -2790,9 +2790,9 @@ namespace Gsl
 	/*
 	 * Quasi-Random Sequences
 	 */
-	static delegate size_t QRNGStateSize (uint dimension);
-	static delegate int QRNGInitState (void* state, uint dimension);
-	static delegate int QRNGGetState2 (void* state, uint dimension, out double x);
+	public static delegate size_t QRNGStateSize (uint dimension);
+	public static delegate int QRNGInitState (void* state, uint dimension);
+	public static delegate int QRNGGetState2 (void* state, uint dimension, out double x);
 	
 	[SimpleType]
 	[CCode (cname="gsl_qrng_type", cheader_filename="gsl/gsl_qrng.h")]
@@ -3206,7 +3206,7 @@ namespace Gsl
 	/*
 	 * N-Tuples
 	 */
-	static delegate int NTupleFunc (void* ntuple_data, void* params);
+	public static delegate int NTupleFunc (void* ntuple_data, void* params);
 	
 	[SimpleType]
 	[CCode (cname="gsl_ntuple_select_fn", cheader_filename="gsl/gsl_ntuple.h")]
@@ -3253,7 +3253,7 @@ namespace Gsl
 		STRATIFIED
 	}
 	
-	static delegate double MonteFunc ([CCode (array_length = false)] double[] x_array, size_t dim, void* params);
+	public static delegate double MonteFunc ([CCode (array_length = false)] double[] x_array, size_t dim, void* params);
 	
 	[SimpleType]
 	[CCode (cname="gsl_monte_function", cheader_filanema="gsl/gsl_monte.h")]
@@ -3396,17 +3396,17 @@ namespace Gsl
 		DEC
 	}
 	
-	static delegate int OdeivFunction (double t, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] dydt, void* params);
-	static delegate int OdeivJacobian (double t, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] dfdy, [CCode (array_length = false)] double[] dfdt, void* params);
-	static delegate void* OdeivStepAlloc (size_t dim);
-	static delegate int OdeivStepApply (void* state, size_t dim, double t, double h, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] yerr, [CCode (array_length = false)] double[] dydt_in, [CCode (array_length = false)] double[] dydt_out, OdeivSystem* dydt);
-	static delegate int OdeivStepReset (void* state, size_t dim);
-	static delegate uint OdeivStepOrder (void* state);
-	static delegate void OdeivStepFree (void* state);
-	static delegate void* OdeivControlAlloc ();
-	static delegate int OdeivControlInit (void* state, double eps_abs, double eps_rel, double a_y, double a_dydt);
-	static delegate int OdeivControlHadjust (void* state, size_t dim, uint ord, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] yerr, [CCode (array_length = false)] double[] yp, [CCode (array_length = false)] double[] h);
-	static delegate void OdeivControlFree (void* state);
+	public static delegate int OdeivFunction (double t, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] dydt, void* params);
+	public static delegate int OdeivJacobian (double t, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] dfdy, [CCode (array_length = false)] double[] dfdt, void* params);
+	public static delegate void* OdeivStepAlloc (size_t dim);
+	public static delegate int OdeivStepApply (void* state, size_t dim, double t, double h, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] yerr, [CCode (array_length = false)] double[] dydt_in, [CCode (array_length = false)] double[] dydt_out, OdeivSystem* dydt);
+	public static delegate int OdeivStepReset (void* state, size_t dim);
+	public static delegate uint OdeivStepOrder (void* state);
+	public static delegate void OdeivStepFree (void* state);
+	public static delegate void* OdeivControlAlloc ();
+	public static delegate int OdeivControlInit (void* state, double eps_abs, double eps_rel, double a_y, double a_dydt);
+	public static delegate int OdeivControlHadjust (void* state, size_t dim, uint ord, [CCode (array_length = false)] double[] y, [CCode (array_length = false)] double[] yerr, [CCode (array_length = false)] double[] yp, [CCode (array_length = false)] double[] h);
+	public static delegate void OdeivControlFree (void* state);
 	
 	[SimpleType]
 	[CCode (cname="gsl_odeiv_system", cheader_filename="gsl/gsl_odeiv.h")]
@@ -3522,13 +3522,13 @@ namespace Gsl
 	/*
 	 * Interpolation
 	 */
-	static delegate void* InterpAlloc (size_t size);
-	static delegate int InterpInit (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size);
-	static delegate int InterpEval (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, double x, InterpAccel* i, out double y);
-	static delegate int InterpEvalDeriv (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, double x, InterpAccel* i, out double y_p);
-	static delegate int InterpEvalDeriv2 (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, double x, InterpAccel* i, out double y_pp);
-	static delegate int InterpEvalInteg (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, InterpAccel* i, double a, double b, out double result);
-	static delegate void InterpFree (void* t);
+	public static delegate void* InterpAlloc (size_t size);
+	public static delegate int InterpInit (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size);
+	public static delegate int InterpEval (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, double x, InterpAccel* i, out double y);
+	public static delegate int InterpEvalDeriv (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, double x, InterpAccel* i, out double y_p);
+	public static delegate int InterpEvalDeriv2 (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, double x, InterpAccel* i, out double y_pp);
+	public static delegate int InterpEvalInteg (void* t, [CCode (array_length = false)] double[] xa, [CCode (array_length = false)] double[] ya, size_t size, InterpAccel* i, double a, double b, out double result);
+	public static delegate void InterpFree (void* t);
 	
 	[Compact]
 	[CCode (cname="gsl_interp_accel", cheader_filname="gsl/gsl_interp.h")]
@@ -3723,7 +3723,7 @@ namespace Gsl
 		backward = -1
 	}
 	
-	static delegate int WaveletInit (double** h1, double** g1, double** h2, double** g2, size_t* nc, size_t* offset, size_t member);
+	public static delegate int WaveletInit (double** h1, double** g1, double** h2, double** g2, size_t* nc, size_t* offset, size_t member);
 	
 	[SimpleType]
 	[CCode (cname="gsl_wavelet_type", cheader_filename="gsl/gsl_wavelet.h")]
@@ -3830,10 +3830,10 @@ namespace Gsl
 	/*
 	 * One dimensional Root-Finding
 	 */
-	static delegate int RootFsolverSet (void* state, Function* f, double* root, double x_lower, double x_upper);
-	static delegate int RootFsolverIterate (void* state, Function* f, double* root, double* x_lower, double* x_upper);
-	static delegate int RootFdfsolverSet (void* state, FunctionFdf* f, double* root);
-	static delegate int RootFdfsolverIterate (void* state, FunctionFdf* d, double* root);
+	public static delegate int RootFsolverSet (void* state, Function* f, double* root, double x_lower, double x_upper);
+	public static delegate int RootFsolverIterate (void* state, Function* f, double* root, double* x_lower, double* x_upper);
+	public static delegate int RootFdfsolverSet (void* state, FunctionFdf* f, double* root);
+	public static delegate int RootFdfsolverIterate (void* state, FunctionFdf* d, double* root);
 	
 	[SimpleType]
 	[CCode (cname="gsl_root_fsolver_type", cheader_filename="gsl/gsl_roots.h")]
@@ -3917,8 +3917,8 @@ namespace Gsl
 	/*
 	 * One dimensional Minimization
 	 */
-	static delegate int MinSet (void* state, Function* f, double xminimun, double f_minimum, double x_lower, double f_lower, double x_upper, double f_upper);
-	static delegate int MinIterate (void *state, Function* f, double* x_minimum, double* f_minimum, double* x_lower, double* f_lower, double* x_upper, double* f_upper);
+	public static delegate int MinSet (void* state, Function* f, double xminimun, double f_minimum, double x_lower, double f_lower, double x_upper, double f_upper);
+	public static delegate int MinIterate (void *state, Function* f, double* x_minimum, double* f_minimum, double* x_lower, double* f_lower, double* x_upper, double* f_upper);
 	public static delegate int MinBracketingFunction (Function* f, double* x_minimum, double* f_minimum, double* x_lower, double* f_lower, double* x_upper, double* f_upper, size_t eval_max);
 	
 	[SimpleType]
@@ -3973,17 +3973,17 @@ namespace Gsl
 	/*
 	 * Multidimensional Root-Finding
 	 */
-	static delegate int MultirootF (Vector x, void* params, Vector f);
-	static delegate int MultirootFAlloc (void* state, size_t n);
-	static delegate int MultirootFSet (void* state, MultirootFunction* function, Vector x, Vector f, Vector dx);
-	static delegate int MultirootFIterate (void* state, MultirootFunction* function, Vector x, Vector f, Vector dx);
-	static delegate void MultirootFFree (void* state);
-	static delegate int MultirootDF (Vector x, void* params, Matrix df);
-	static delegate int MultirootFDF (Vector x, void* params, Vector f, Matrix df);
-	static delegate int MultirootFdfAlloc (void* state, size_t n);
-	static delegate int MultirootFdfSet (void* state, MultirootFunctionFdf* fdf, Vector x, Vector f, Matrix J, Vector dx);
-	static delegate int MultirootFdfIterate (void* state, MultirootFunctionFdf* fdf, Vector x, Vector f, Matrix J, Vector dx);
-	static delegate int MultirootFdfFree (void* state);
+	public static delegate int MultirootF (Vector x, void* params, Vector f);
+	public static delegate int MultirootFAlloc (void* state, size_t n);
+	public static delegate int MultirootFSet (void* state, MultirootFunction* function, Vector x, Vector f, Vector dx);
+	public static delegate int MultirootFIterate (void* state, MultirootFunction* function, Vector x, Vector f, Vector dx);
+	public static delegate void MultirootFFree (void* state);
+	public static delegate int MultirootDF (Vector x, void* params, Matrix df);
+	public static delegate int MultirootFDF (Vector x, void* params, Vector f, Matrix df);
+	public static delegate int MultirootFdfAlloc (void* state, size_t n);
+	public static delegate int MultirootFdfSet (void* state, MultirootFunctionFdf* fdf, Vector x, Vector f, Matrix J, Vector dx);
+	public static delegate int MultirootFdfIterate (void* state, MultirootFunctionFdf* fdf, Vector x, Vector f, Matrix J, Vector dx);
+	public static delegate int MultirootFdfFree (void* state);
 	
 	[SimpleType]
 	[CCode (cname="gsl_multiroot_function", cheaer_filename="gsl/gsl_multiroots.h")]
@@ -4100,13 +4100,13 @@ namespace Gsl
 	/*
 	 * Multidimensional Minimization
 	 */
-	static delegate double MultiminF (Vector x, void* params);
-	static delegate void MultiminDf (Vector x, void* params, Vector df);
-	static delegate void MultiminFdf (Vector x, void* params, double* f, Vector df);
-	static delegate int MultiminFAlloc (void *state, size_t n);
-	static delegate int MultiminFSet (void* state, MultiminFunction* f, Vector x, double* size);
-	static delegate int MultiminFIterate (void* state, MultiminFunction* f, Vector x, double* size, double* fval);
-	static delegate int MultiminFFree (void* state);
+	public static delegate double MultiminF (Vector x, void* params);
+	public static delegate void MultiminDf (Vector x, void* params, Vector df);
+	public static delegate void MultiminFdf (Vector x, void* params, double* f, Vector df);
+	public static delegate int MultiminFAlloc (void *state, size_t n);
+	public static delegate int MultiminFSet (void* state, MultiminFunction* f, Vector x, double* size);
+	public static delegate int MultiminFIterate (void* state, MultiminFunction* f, Vector x, double* size, double* fval);
+	public static delegate int MultiminFFree (void* state);
 	
 	[SimpleType]
 	[CCode (cname="gsl_multimin_function", cheader_filename="gsl/gsl_multimin.h")]
@@ -4169,11 +4169,11 @@ namespace Gsl
 		public static int size (double size, double epsabs);
 	}
 	
-	static delegate int MultiminFdfAlloc (void *state, size_t n);
-	static delegate int MultiminFdfSet (void* state, MultiminFunctionFdf* fdf, Vector x, double* f, Vector gradient, double step_size, double tol);
-	static delegate int MultiminFdfIterate (void* state, MultiminFunctionFdf* fdf, Vector x, double* f, Vector gradient, Vector dx);
-	static delegate int MultiminFdfRestart (void* state);
-	static delegate int MultiminFdfFree (void* state);
+	public static delegate int MultiminFdfAlloc (void *state, size_t n);
+	public static delegate int MultiminFdfSet (void* state, MultiminFunctionFdf* fdf, Vector x, double* f, Vector gradient, double step_size, double tol);
+	public static delegate int MultiminFdfIterate (void* state, MultiminFunctionFdf* fdf, Vector x, double* f, Vector gradient, Vector dx);
+	public static delegate int MultiminFdfRestart (void* state);
+	public static delegate int MultiminFdfFree (void* state);
 	
 	[SimpleType]
 	[CCode (cname="gsl_multimin_fdfminimizer_type", cheader_filename="gsl/gsl_multimin.h")]
@@ -4273,17 +4273,17 @@ namespace Gsl
 	/*
 	 * Nonlinear Least-Squares Fitting
 	 */
-	static delegate int MultifitF (Vector x, void* params, Vector f);
-	static delegate int MultifitFAlloc (void* state, size_t n, size_t p);
-	static delegate int MultifitFSet (void* state, MultifitFunction* function, Vector x, Vector f, Vector dx);
-	static delegate int MultifitFIterate (void* state, MultifitFunction* function, Vector x, Vector f, Vector dx);
-	static delegate void MultifitFFree (void* state);
-	static delegate int MultifitDf (Vector x, void* params, Matrix df);
-	static delegate int MultifitFdf (Vector x, void* params, Vector f, Matrix df);
-	static delegate int MultifitFdfAlloc (void* state, size_t n, size_t p);
-	static delegate int MultifitFdfSet (void* state, MultifitFunctionFdf fdf, Vector x, Vector f, Matrix J, Vector dx);
-	static delegate int MultifitFdfIterate (void* state, MultifitFunctionFdf fdf, Vector x, Vector f, Matrix J, Vector dx);
-	static delegate void MultifitFdfFree (void* state);
+	public static delegate int MultifitF (Vector x, void* params, Vector f);
+	public static delegate int MultifitFAlloc (void* state, size_t n, size_t p);
+	public static delegate int MultifitFSet (void* state, MultifitFunction* function, Vector x, Vector f, Vector dx);
+	public static delegate int MultifitFIterate (void* state, MultifitFunction* function, Vector x, Vector f, Vector dx);
+	public static delegate void MultifitFFree (void* state);
+	public static delegate int MultifitDf (Vector x, void* params, Matrix df);
+	public static delegate int MultifitFdf (Vector x, void* params, Vector f, Matrix df);
+	public static delegate int MultifitFdfAlloc (void* state, size_t n, size_t p);
+	public static delegate int MultifitFdfSet (void* state, MultifitFunctionFdf fdf, Vector x, Vector f, Matrix J, Vector dx);
+	public static delegate int MultifitFdfIterate (void* state, MultifitFunctionFdf fdf, Vector x, Vector f, Matrix J, Vector dx);
+	public static delegate void MultifitFdfFree (void* state);
 
 	[CCode (lower_case_cprefix="gsl_multifit_", cheader_filename="gsl/gsl_multifit_nlin.h")]
 	namespace Multifit
