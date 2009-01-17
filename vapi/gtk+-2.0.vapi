@@ -4788,8 +4788,8 @@ namespace Gtk {
 		public void add_mnemonic_label (Gtk.Widget label);
 		public bool child_focus (Gtk.DirectionType direction);
 		public void class_path (out uint path_length, out unowned string path, out unowned string path_reversed);
-		public unowned Pango.Context create_pango_context ();
-		public unowned Pango.Layout create_pango_layout (string? text);
+		public Pango.Context create_pango_context ();
+		public Pango.Layout create_pango_layout (string? text);
 		public void destroyed (out unowned Gtk.Widget widget_pointer);
 		[NoWrapper]
 		public virtual void dispatch_child_properties_changed (uint n_pspecs, out unowned GLib.ParamSpec pspecs);
