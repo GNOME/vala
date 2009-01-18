@@ -745,7 +745,7 @@ namespace Gst {
 		public Gst.FlowReturn alloc_buffer (uint64 offset, int size, Gst.Caps caps, out unowned Gst.Buffer buf);
 		public Gst.FlowReturn alloc_buffer_and_set_caps (uint64 offset, int size, Gst.Caps caps, out unowned Gst.Buffer buf);
 		public bool can_link (Gst.Pad sinkpad);
-		public Gst.FlowReturn chain (Gst.Buffer buffer);
+		public Gst.FlowReturn chain (owned Gst.Buffer buffer);
 		public bool check_pull_range ();
 		public bool dispatcher (Gst.PadDispatcherFunction dispatch, void* data);
 		public bool event_default (Gst.Event event);
