@@ -1,5 +1,13 @@
 2009-01-18  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodememberaccessmodule.vala:
+	* vapi/glib-2.0.vapi:
+
+	Add Log.FILE, Log.LINE, and Log.METHOD constants as replacements
+	for __FILE__ and __LINE__ as they are used in C
+
+2009-01-18  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am:
 	* vapi/posix.vapi:
 

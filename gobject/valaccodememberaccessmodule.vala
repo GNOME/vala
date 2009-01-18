@@ -148,7 +148,23 @@ public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 		} else if (expr.symbol_reference is Constant) {
 			var c = (Constant) expr.symbol_reference;
-			expr.ccodenode = new CCodeIdentifier (c.get_cname ());
+
+			string fn = c.get_full_name ();
+			if (fn == "GLib.Log.FILE") {
+				string s = Path.get_basename (expr.source_reference.file.filename);
+				expr.ccodenode = new CCodeConstant ("\"%s\"".printf (s));
+			} else if (fn == "GLib.Log.LINE") {
+				int i = expr.source_reference.first_line;
+				expr.ccodenode = new CCodeConstant ("%d".printf (i));
+			} else if (fn == "GLib.Log.METHOD") {
+				string s = "";
+				if (current_method != null) {
+					s = current_method.get_full_name ();
+				}
+				expr.ccodenode = new CCodeConstant ("\"%s\"".printf (s));
+			} else {
+				expr.ccodenode = new CCodeIdentifier (c.get_cname ());
+			}
 		} else if (expr.symbol_reference is Property) {
 			var prop = (Property) expr.symbol_reference;
 

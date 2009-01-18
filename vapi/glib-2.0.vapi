@@ -1499,6 +1499,10 @@ namespace GLib {
 	namespace Log {
 		public static uint set_handler (string? log_domain, LogLevelFlags log_levels, LogFunc log_func);
 		public static void set_default_handler (LogFunc log_func);
+
+		public const string FILE;
+		public const int LINE;
+		public const string METHOD;
 	}
 
 	/* String Utility Functions */
