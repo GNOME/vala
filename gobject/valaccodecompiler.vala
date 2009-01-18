@@ -95,7 +95,7 @@ public class Vala.CCodeCompiler {
 		}
 
 		/* make sure include files can be found if -d is used */
-		if (context.directory != null && context.directory != "") {
+		if (context.legacy_headers && context.directory != null && context.directory != "") {
 			cmdline += " -I" + Shell.quote (context.directory);
 		}
 
@@ -130,10 +130,12 @@ public class Vala.CCodeCompiler {
 		/* remove generated C source and header files */
 		foreach (SourceFile file in source_files) {
 			if (!file.external_package) {
-				if (!context.save_csources)
+				if (!context.save_csources) {
 					FileUtils.unlink (file.get_csource_filename ());
-				if (!context.save_cheaders)
+				}
+				if (context.legacy_headers && !context.save_cheaders) {
 					FileUtils.unlink (file.get_cheader_filename ());
+				}
 			}
 		}
 	}

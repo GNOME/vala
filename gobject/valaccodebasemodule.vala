@@ -308,62 +308,68 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 		header_begin.append (new CCodeIncludeDirective ("glib.h"));
 		header_begin.append (new CCodeIncludeDirective ("glib-object.h"));
-		if (context.basedir != null || context.library != null) {
-			source_include_directives.append (new CCodeIncludeDirective (source_file.get_cinclude_filename ()));
-		} else {
-			source_include_directives.append (new CCodeIncludeDirective (source_file.get_cinclude_filename (), true));
+
+		if (context.legacy_headers) {
+			if (context.basedir != null || context.library != null) {
+				source_include_directives.append (new CCodeIncludeDirective (source_file.get_cinclude_filename ()));
+			} else {
+				source_include_directives.append (new CCodeIncludeDirective (source_file.get_cinclude_filename (), true));
+			}
 		}
 		
 		Gee.List<string> used_includes = new ArrayList<string> (str_equal);
 		used_includes.add ("glib.h");
 		used_includes.add ("glib-object.h");
-		used_includes.add (source_file.get_cinclude_filename ());
+
+		if (context.legacy_headers) {
+			used_includes.add (source_file.get_cinclude_filename ());
 		
-		foreach (string filename in source_file.get_header_external_includes ()) {
-			if (!used_includes.contains (filename)) {
-				header_begin.append (new CCodeIncludeDirective (filename));
-				used_includes.add (filename);
+			foreach (string filename in source_file.get_header_external_includes ()) {
+				if (!used_includes.contains (filename)) {
+					header_begin.append (new CCodeIncludeDirective (filename));
+					used_includes.add (filename);
+				}
 			}
-		}
-		foreach (string filename in source_file.get_header_internal_includes ()) {
-			if (!used_includes.contains (filename)) {
-				header_begin.append (get_internal_include (filename));
-				used_includes.add (filename);
+			foreach (string filename in source_file.get_header_internal_includes ()) {
+				if (!used_includes.contains (filename)) {
+					header_begin.append (get_internal_include (filename));
+					used_includes.add (filename);
+				}
 			}
-		}
-		foreach (string filename in source_file.get_source_external_includes ()) {
-			if (!used_includes.contains (filename)) {
-				source_include_directives.append (new CCodeIncludeDirective (filename));
-				used_includes.add (filename);
+			foreach (string filename in source_file.get_source_external_includes ()) {
+				if (!used_includes.contains (filename)) {
+					source_include_directives.append (new CCodeIncludeDirective (filename));
+					used_includes.add (filename);
+				}
 			}
-		}
-		foreach (string filename in source_file.get_source_internal_includes ()) {
-			if (!used_includes.contains (filename)) {
-				source_include_directives.append (get_internal_include (filename));
-				used_includes.add (filename);
+			foreach (string filename in source_file.get_source_internal_includes ()) {
+				if (!used_includes.contains (filename)) {
+					source_include_directives.append (get_internal_include (filename));
+					used_includes.add (filename);
+				}
+			}
+			if (source_file.is_cycle_head) {
+				foreach (SourceFile cycle_file in source_file.cycle.files) {
+					foreach (CodeNode node in cycle_file.get_nodes ()) {
+						if (node is Struct) {
+							var st = (Struct) node;
+							header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
+						} else if (node is Class) {
+							var cl = (Class) node;
+							header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (cl.get_cname ()), new CCodeVariableDeclarator (cl.get_cname ())));
+							header_type_declaration.append (new CCodeTypeDefinition ("struct _%sClass".printf (cl.get_cname ()), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
+						} else if (node is Interface) {
+							var iface = (Interface) node;
+							header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
+							header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_type_cname ()), new CCodeVariableDeclarator (iface.get_type_cname ())));
+						}
+					}
+				}
 			}
 		}
 		foreach (Symbol symbol in source_file.get_source_symbol_dependencies ()) {
 			if (!symbol.external && symbol.external_package) {
 				symbol.accept (codegen);
-			}
-		}
-		if (source_file.is_cycle_head) {
-			foreach (SourceFile cycle_file in source_file.cycle.files) {
-				foreach (CodeNode node in cycle_file.get_nodes ()) {
-					if (node is Struct) {
-						var st = (Struct) node;
-						header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
-					} else if (node is Class) {
-						var cl = (Class) node;
-						header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (cl.get_cname ()), new CCodeVariableDeclarator (cl.get_cname ())));
-						header_type_declaration.append (new CCodeTypeDefinition ("struct _%sClass".printf (cl.get_cname ()), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
-					} else if (node is Interface) {
-						var iface = (Interface) node;
-						header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
-						header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_type_cname ()), new CCodeVariableDeclarator (iface.get_type_cname ())));
-					}
-				}
 			}
 		}
 
@@ -456,37 +462,39 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			comment = new CCodeComment (source_file.comment);
 		}
 
-		var writer = new CCodeWriter (source_file.get_cheader_filename ());
-		if (!writer.open ()) {
-			Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
-			return;
+		if (context.legacy_headers) {
+			var writer = new CCodeWriter (source_file.get_cheader_filename ());
+			if (!writer.open ()) {
+				Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
+				return;
+			}
+			if (comment != null) {
+				comment.write (writer);
+			}
+			writer.write_newline ();
+			var once = new CCodeOnceSection (header_define);
+			once.append (new CCodeNewline ());
+			once.append (header_begin);
+			once.append (new CCodeNewline ());
+			once.append (new CCodeIdentifier ("G_BEGIN_DECLS"));
+			once.append (new CCodeNewline ());
+			once.append (new CCodeNewline ());
+			once.append (header_type_declaration);
+			once.append (new CCodeNewline ());
+			once.append (header_type_definition);
+			once.append (new CCodeNewline ());
+			once.append (header_type_member_declaration);
+			once.append (new CCodeNewline ());
+			once.append (header_constant_declaration);
+			once.append (new CCodeNewline ());
+			once.append (new CCodeIdentifier ("G_END_DECLS"));
+			once.append (new CCodeNewline ());
+			once.append (new CCodeNewline ());
+			once.write (writer);
+			writer.close ();
 		}
-		if (comment != null) {
-			comment.write (writer);
-		}
-		writer.write_newline ();
-		var once = new CCodeOnceSection (header_define);
-		once.append (new CCodeNewline ());
-		once.append (header_begin);
-		once.append (new CCodeNewline ());
-		once.append (new CCodeIdentifier ("G_BEGIN_DECLS"));
-		once.append (new CCodeNewline ());
-		once.append (new CCodeNewline ());
-		once.append (header_type_declaration);
-		once.append (new CCodeNewline ());
-		once.append (header_type_definition);
-		once.append (new CCodeNewline ());
-		once.append (header_type_member_declaration);
-		once.append (new CCodeNewline ());
-		once.append (header_constant_declaration);
-		once.append (new CCodeNewline ());
-		once.append (new CCodeIdentifier ("G_END_DECLS"));
-		once.append (new CCodeNewline ());
-		once.append (new CCodeNewline ());
-		once.write (writer);
-		writer.close ();
 		
-		writer = new CCodeWriter (source_file.get_csource_filename ());
+		var writer = new CCodeWriter (source_file.get_csource_filename ());
 		if (!writer.open ()) {
 			Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
 			return;
@@ -556,8 +564,10 @@ public class Vala.CCodeBaseModule : CCodeModule {
 
 	public override void emit (CodeContext context) {
 		this.context = context;
-	
-		context.find_header_cycles ();
+
+		if (context.legacy_headers) {
+			context.find_header_cycles ();
+		}
 
 		root_symbol = context.root;
 

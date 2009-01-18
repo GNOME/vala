@@ -1,5 +1,13 @@
 2009-01-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodecontext.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodecompiler.vala:
+
+	Do not generate legacy header files when using -H
+
+2009-01-18  Jürg Billeter  <j@bitron.ch>
+
 	* configure.ac: Post-release version bump
 
 2009-01-18  Jürg Billeter  <j@bitron.ch>
