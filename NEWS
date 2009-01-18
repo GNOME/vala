@@ -1,3 +1,14 @@
+Vala 0.5.6
+==========
+
+ * Do not require libgee for custom indexer access.
+ * Add Log.FILE, Log.LINE, and Log.METHOD constants.
+ * Various improvements to the .gir reader.
+ * Add Lua bindings (pancake and Phil Housley).
+ * Add MySQL bindings (Jukka-Pekka Iivonen).
+ * Add partial POSIX bindings.
+ * Many bug fixes.
+
 Vala 0.5.5
 ==========
 
