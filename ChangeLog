@@ -1,5 +1,12 @@
 2009-01-18  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am:
+	* vapi/posix.vapi:
+
+	Add stub POSIX binding
+
+2009-01-18  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaparser.vala:
 
 	Accept `params' as identifier after cast parentheses

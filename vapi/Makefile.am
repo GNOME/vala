@@ -115,6 +115,7 @@ dist_vapi_DATA = \
 	pangocairo.vapi \
 	poppler-glib.deps \
 	poppler-glib.vapi \
+	posix.vapi \
 	raptor.vapi \
 	rasqal.vapi \
 	sdl.vapi \
