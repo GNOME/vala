@@ -61,6 +61,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		Method old_method = current_method;
 		DataType old_return_type = current_return_type;
 		bool old_method_inner_error = current_method_inner_error;
+		bool old_in_creation_method = in_creation_method;
 		int old_next_temp_var_id = next_temp_var_id;
 		var old_variable_name_map = variable_name_map;
 		var old_try = current_try;
@@ -96,6 +97,8 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			if (cl != null) {
 				current_return_type = new ObjectType (cl);
 			}
+		} else {
+			in_creation_method = false;
 		}
 
 		var creturn_type = current_return_type;
@@ -153,7 +156,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 				m.body.ccodenode = cblock;
 			}
 
-			in_creation_method = false;
+			in_creation_method = old_in_creation_method;
 		}
 
 		bool inner_error = current_method_inner_error;
