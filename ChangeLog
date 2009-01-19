@@ -1,5 +1,11 @@
 2009-01-19  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodedelegatemodule.vala:
+
+	Use correct C identifier for delegate target of static fields
+
+2009-01-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodemethodmodule.vala:
 
 	Fix assigning to properties in lambda expressions in creation

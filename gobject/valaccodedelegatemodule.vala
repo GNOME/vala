@@ -129,7 +129,7 @@ public class Vala.CCodeDelegateModule : CCodeArrayModule {
 				}
 			} else if (delegate_expr.symbol_reference is Field) {
 				var field = (Field) delegate_expr.symbol_reference;
-				var target_cname = get_delegate_target_cname (field.name);
+				var target_cname = get_delegate_target_cname (field.get_cname ());
 
 				var ma = (MemberAccess) delegate_expr;
 
