@@ -1498,7 +1498,7 @@ namespace Gsl
 	[CCode (cname="gsl_vector_view", cheader_filename="gsl/gsl_vector_double.h")]
 	public struct VectorView
 	{
-		public Vector vector;
+		public unowned Vector vector;
 		
 		public static VectorView array (double[] v);
 		public static VectorView array_with_stride ([CCode (array_length = false)] double[] v, size_t stride, size_t n);
@@ -1572,7 +1572,7 @@ namespace Gsl
 	[CCode (cname="gsl_vector_complex_view", cheader_filename="gsl/gsl_vector_complex_double.h")]
 	public struct VectorComplexView
 	{
-		public VectorComplex vector;
+		public unowned VectorComplex vector;
 		
 		public static VectorComplexView array (double[] v);
 		public static VectorComplexView array_with_stride ([CCode (array_length = false)] double[] v, size_t stride, size_t n);
@@ -1648,7 +1648,7 @@ namespace Gsl
 	[CCode (cname="gsl_matrix_view", cheader_filename="gsl/gsl_matrix_double.h")]
 	public struct MatrixView
 	{
-		public Matrix matrix;
+		public unowned Matrix matrix;
 		
 		public static MatrixView array ([CCode (array_length = false)] double[] v, size_t n1, size_t n2);
 		public static MatrixView array_with_tda ([CCode (array_length = false)] double[] v, size_t n1, size_t n2, size_t tda);
@@ -1743,7 +1743,7 @@ namespace Gsl
 	[CCode (cname="gsl_matrix_complex_view", cheader_filename="gsl/gsl_matrix_complex_double.h")]
 	public struct MatrixComplexView
 	{
-		public MatrixComplex matrix;
+		public unowned MatrixComplex matrix;
 		
 		public static MatrixComplexView array ([CCode (array_length = false)] double[] v, size_t n1, size_t n2);
 		public static MatrixComplexView array_with_tda ([CCode (array_length = false)] double[] v, size_t n1, size_t n2, size_t tda);

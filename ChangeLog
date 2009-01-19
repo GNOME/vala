@@ -1,5 +1,11 @@
 2009-01-19  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/gsl.vapi:
+
+	More fixes, patch by Matías De la Puente
+
+2009-01-19  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodedelegatemodule.vala:
 
 	Use correct C identifier for delegate target of static fields
