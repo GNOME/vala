@@ -805,11 +805,11 @@ public class Vala.CCodeBaseModule : CCodeModule {
 				arr = "[]";
 			}
 			cdecl.add_declarator (new CCodeVariableDeclarator ("%s%s".printf (c.get_cname (), arr), (CCodeExpression) c.initializer.ccodenode));
-			cdecl.modifiers = CCodeModifiers.STATIC;
-		
+
 			if (!c.is_internal_symbol ()) {
 				header_constant_declaration.append (cdecl);
 			} else {
+				cdecl.modifiers = CCodeModifiers.STATIC;
 				source_constant_declaration.append (cdecl);
 			}
 		} else {

@@ -1,3 +1,9 @@
+2009-01-20  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodebasemodule.vala:
+
+	Do not declare public constants as `static'
+
 2009-01-19  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/gsl.vapi:
