@@ -1,5 +1,11 @@
 2009-01-20  Jürg Billeter  <j@bitron.ch>
 
+	* vapigen/valagirparser.vala:
+
+	Support struct methods
+
+2009-01-20  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 
 	Do not declare public constants as `static'

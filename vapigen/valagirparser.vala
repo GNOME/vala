@@ -460,7 +460,7 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "constructor") {
 				parse_constructor ();
 			} else if (reader.name == "method") {
-				parse_method ("method");
+				st.add_method (parse_method ("method"));
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `record'".printf (reader.name));
