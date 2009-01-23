@@ -1,6 +1,6 @@
 /* valagasyncmodule.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -110,7 +110,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			type_struct.add_declaration (vdecl);
 		}
 
-		generate_cparameters (m, creturn_type, false, cparam_map, asyncfunc, vdeclarator, null, null, 1);
+		generate_cparameters (m, cparam_map, asyncfunc, vdeclarator, null, null, 1);
 
 		if (!m.is_abstract) {
 			if (visible && m.base_method == null && m.base_interface_method == null) {
@@ -126,7 +126,7 @@ public class Vala.GAsyncModule : GSignalModule {
 		}
 
 		// generate finish function
-		var finishfunc = new CCodeFunction (m.get_real_cname () + "_finish", creturn_type.get_cname ());
+		var finishfunc = new CCodeFunction (m.get_real_cname () + "_finish");
 		finishfunc.line = function.line;
 
 		cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
@@ -142,7 +142,7 @@ public class Vala.GAsyncModule : GSignalModule {
 			type_struct.add_declaration (vdecl);
 		}
 
-		generate_cparameters (m, creturn_type, false, cparam_map, finishfunc, vdeclarator, null, null, 2);
+		generate_cparameters (m, cparam_map, finishfunc, vdeclarator, null, null, 2);
 
 		if (!m.is_abstract) {
 			if (visible && m.base_method == null && m.base_interface_method == null) {

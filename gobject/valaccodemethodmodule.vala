@@ -55,6 +55,62 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		return type;
 	}
 
+	bool is_gtypeinstance_creation_method (Method m) {
+		bool result = false;
+
+		var cl = m.parent_symbol as Class;
+		if (m is CreationMethod && cl != null && !cl.is_compact) {
+			result = true;
+		}
+
+		return result;
+	}
+
+	public virtual void generate_method_result_declaration (Method m, CCodeFunction cfunc, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+		var creturn_type = m.return_type;
+		if (m is CreationMethod) {
+			var cl = current_type_symbol as Class;
+			if (cl != null) {
+				// object creation methods return the new object in C
+				// in Vala they have no return type
+				creturn_type = new ObjectType (cl);
+			}
+		}
+		cfunc.return_type = get_creturn_type (m, creturn_type.get_cname ());
+
+		if (!m.no_array_length && m.return_type is ArrayType) {
+			// return array length if appropriate
+			var array_type = (ArrayType) m.return_type;
+
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				var cparam = new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*");
+				cparam_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), cparam);
+				if (carg_map != null) {
+					carg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), new CCodeIdentifier (cparam.name));
+				}
+			}
+		} else if (m.return_type is DelegateType) {
+			// return delegate target if appropriate
+			var deleg_type = (DelegateType) m.return_type;
+			var d = deleg_type.delegate_symbol;
+			if (d.has_target) {
+				var cparam = new CCodeFormalParameter (get_delegate_target_cname ("result"), "void*");
+				cparam_map.set (get_param_pos (m.cdelegate_target_parameter_position), cparam);
+				if (carg_map != null) {
+					carg_map.set (get_param_pos (m.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
+				}
+			}
+		}
+
+		if (m.get_error_types ().size > 0) {
+			var cparam = new CCodeFormalParameter ("error", "GError**");
+			cparam_map.set (get_param_pos (-1), cparam);
+			if (carg_map != null) {
+				carg_map.set (get_param_pos (-1), new CCodeIdentifier (cparam.name));
+			}
+		}
+	}
+
 	public override void visit_method (Method m) {
 		var old_type_symbol = current_type_symbol;
 		var old_symbol = current_symbol;
@@ -76,7 +132,6 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 		current_try = null;
 
-		bool in_gtypeinstance_creation_method = false;
 		bool in_gobject_creation_method = false;
 		bool in_fundamental_creation_method = false;
 
@@ -86,16 +141,11 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			in_creation_method = true;
 			var cl = current_type_symbol as Class;
 			if (cl != null && !cl.is_compact) {
-				in_gtypeinstance_creation_method = true;
 				if (cl.base_class == null) {
 					in_fundamental_creation_method = true;
 				} else if (cl.is_subtype_of (gobject_type)) {
 					in_gobject_creation_method = true;
 				}
-			}
-
-			if (cl != null) {
-				current_return_type = new ObjectType (cl);
 			}
 		} else {
 			in_creation_method = false;
@@ -170,7 +220,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		variable_name_map = old_variable_name_map;
 		current_try = old_try;
 
-		function = new CCodeFunction (m.get_real_cname (), get_creturn_type (m, creturn_type.get_cname ()));
+		function = new CCodeFunction (m.get_real_cname ());
 		m.ccodenode = function;
 
 		if (m.is_inline) {
@@ -187,7 +237,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			type_struct.add_declaration (vdecl);
 		}
 
-		generate_cparameters (m, creturn_type, in_gtypeinstance_creation_method, cparam_map, function, vdeclarator);
+		generate_cparameters (m, cparam_map, function, vdeclarator);
 
 		bool visible = !m.is_internal_symbol ();
 
@@ -362,7 +412,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 							param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
 							cinit.append (new CCodeExpressionStatement (get_construct_property_assignment (prop_name, new PointerType (new VoidType ()), param_name)));
 						}
-					} else if (in_gtypeinstance_creation_method) {
+					} else if (is_gtypeinstance_creation_method (m)) {
 						var cl = (Class) m.parent_symbol;
 						var cdeclaration = new CCodeDeclaration (cl.get_cname () + "*");
 						var cdecl = new CCodeVariableDeclarator ("self");
@@ -522,7 +572,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 	}
 
-	public override void generate_cparameters (Method m, DataType creturn_type, bool in_gtypeinstance_creation_method, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
+	public override void generate_cparameters (Method m, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
 		if (m.parent_symbol is Class && m is CreationMethod) {
 			var cl = (Class) m.parent_symbol;
 			if (!cl.is_compact && vcall == null) {
@@ -566,7 +616,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			cparam_map.set (get_param_pos (m.cinstance_parameter_position), class_param);
 		}
 
-		if (in_gtypeinstance_creation_method) {
+		if (is_gtypeinstance_creation_method (m)) {
 			// memory management for generic types
 			int type_param_index = 0;
 			foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
@@ -599,37 +649,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if ((direction & 2) != 0) {
-			if (!m.no_array_length && creturn_type is ArrayType) {
-				// return array length if appropriate
-				var array_type = (ArrayType) creturn_type;
-
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var cparam = new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*");
-					cparam_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), cparam);
-					if (carg_map != null) {
-						carg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), new CCodeIdentifier (cparam.name));
-					}
-				}
-			} else if (creturn_type is DelegateType) {
-				// return delegate target if appropriate
-				var deleg_type = (DelegateType) creturn_type;
-				var d = deleg_type.delegate_symbol;
-				if (d.has_target) {
-					var cparam = new CCodeFormalParameter (get_delegate_target_cname ("result"), "void*");
-					cparam_map.set (get_param_pos (m.cdelegate_target_parameter_position), cparam);
-					if (carg_map != null) {
-						carg_map.set (get_param_pos (m.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
-					}
-				}
-			}
-
-			if (m.get_error_types ().size > 0) {
-				var cparam = new CCodeFormalParameter ("error", "GError**");
-				cparam_map.set (get_param_pos (-1), cparam);
-				if (carg_map != null) {
-					carg_map.set (get_param_pos (-1), new CCodeIdentifier (cparam.name));
-				}
-			}
+			generate_method_result_declaration (m, func, cparam_map, carg_map);
 		}
 
 		// append C parameters in the right order
@@ -659,7 +679,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 	public void generate_vfunc (Method m, DataType return_type, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression> carg_map, string suffix = "", int direction = 3) {
 		bool visible = !m.is_internal_symbol ();
 
-		var vfunc = new CCodeFunction (m.get_cname () + suffix, return_type.get_cname ());
+		var vfunc = new CCodeFunction (m.get_cname () + suffix);
 		vfunc.line = function.line;
 
 		var vblock = new CCodeBlock ();
@@ -686,7 +706,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, m.vfunc_name + suffix));
 		carg_map.set (get_param_pos (m.cinstance_parameter_position), new CCodeIdentifier ("self"));
 
-		generate_cparameters (m, return_type, false, cparam_map, vfunc, null, carg_map, vcall, direction);
+		generate_cparameters (m, cparam_map, vfunc, null, carg_map, vcall, direction);
 
 		CCodeStatement cstmt;
 		if (return_type is VoidType) {
@@ -849,7 +869,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if (current_type_symbol is Class && !current_class.is_compact) {
-			var vfunc = new CCodeFunction (m.get_cname (), creturn_type.get_cname ());
+			var vfunc = new CCodeFunction (m.get_cname ());
 			vfunc.line = function.line;
 
 			var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
@@ -860,7 +880,7 @@ public class Vala.CCodeMethodModule : CCodeStructModule {
 			var vcall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
 			vcall.add_argument (new CCodeIdentifier (current_class.get_type_id ()));
 
-			generate_cparameters (m, creturn_type, true, cparam_map, vfunc, null, carg_map, vcall);
+			generate_cparameters (m, cparam_map, vfunc, null, carg_map, vcall);
 			CCodeStatement cstmt = new CCodeReturnStatement (vcall);
 			cstmt.line = vfunc.line;
 			vblock.add_statement (cstmt);

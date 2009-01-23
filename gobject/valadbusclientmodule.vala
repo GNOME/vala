@@ -48,11 +48,11 @@ public class Vala.DBusClientModule : DBusModule {
 	public override void generate_dynamic_method_wrapper (DynamicMethod method) {
 		var dynamic_method = (DynamicMethod) method;
 
-		var func = new CCodeFunction (method.get_cname (), method.return_type.get_cname ());
+		var func = new CCodeFunction (method.get_cname ());
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		generate_cparameters (method, method.return_type, false, cparam_map, func);
+		generate_cparameters (method, cparam_map, func);
 
 		var block = new CCodeBlock ();
 		if (dynamic_method.dynamic_type.data_type == dbus_object_type) {
@@ -1039,12 +1039,12 @@ public class Vala.DBusClientModule : DBusModule {
 
 		CCodeDeclaration cdecl;
 
-		var function = new CCodeFunction (proxy_name, m.return_type.get_cname ());
+		var function = new CCodeFunction (proxy_name);
 		function.modifiers = CCodeModifiers.STATIC;
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		generate_cparameters (m, m.return_type, false, cparam_map, function);
+		generate_cparameters (m, cparam_map, function);
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -1140,7 +1140,7 @@ public class Vala.DBusClientModule : DBusModule {
 		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("callback", "GAsyncReadyCallback"));
 		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("user_data", "gpointer"));
 
-		generate_cparameters (m, m.return_type, false, cparam_map, function, null, null, null, 1);
+		generate_cparameters (m, cparam_map, function, null, null, null, 1);
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -1261,14 +1261,14 @@ public class Vala.DBusClientModule : DBusModule {
 
 		CCodeDeclaration cdecl;
 
-		var function = new CCodeFunction (proxy_name, m.return_type.get_cname ());
+		var function = new CCodeFunction (proxy_name);
 		function.modifiers = CCodeModifiers.STATIC;
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
 		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("res", "GAsyncResult*"));
 
-		generate_cparameters (m, m.return_type, false, cparam_map, function, null, null, null, 2);
+		generate_cparameters (m, cparam_map, function, null, null, null, 2);
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();

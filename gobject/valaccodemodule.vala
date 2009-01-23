@@ -332,8 +332,8 @@ public abstract class Vala.CCodeModule {
 		next.visit_assignment (a);
 	}
 
-	public virtual void generate_cparameters (Method m, DataType creturn_type, bool in_gtypeinstance_creation_method, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
-		next.generate_cparameters (m, creturn_type, in_gtypeinstance_creation_method, cparam_map, func, vdeclarator, carg_map, vcall, direction);
+	public virtual void generate_cparameters (Method m, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
+		next.generate_cparameters (m, cparam_map, func, vdeclarator, carg_map, vcall, direction);
 	}
 
 	public virtual string? get_custom_creturn_type (Method m) {

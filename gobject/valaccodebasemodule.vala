@@ -3648,8 +3648,12 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			var cnonnull = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier (var_name), new CCodeConstant ("NULL"));
 			ccheck.add_argument (cnonnull);
 		}
-		
-		if (ret_type is VoidType) {
+
+		var cm = method_node as CreationMethod;
+		if (cm != null && cm.parent_symbol is ObjectTypeSymbol) {
+			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
+			ccheck.add_argument (new CCodeConstant ("NULL"));
+		} else if (ret_type is VoidType) {
 			/* void function */
 			ccheck.call = new CCodeIdentifier ("g_return_if_fail");
 		} else {

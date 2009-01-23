@@ -1,6 +1,7 @@
 /* valagobjectmodule.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,7 +22,7 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-using GLib;
+using Gee;
 
 public class Vala.GObjectModule : GTypeModule {
 	int dynamic_property_id;
@@ -29,6 +30,18 @@ public class Vala.GObjectModule : GTypeModule {
 
 	public GObjectModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
+	}
+
+	public override void generate_parameter (FormalParameter param, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+		if (!(param.parameter_type is ObjectType)) {
+			base.generate_parameter (param, cparam_map, carg_map);
+			return;
+		}
+
+		cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+		if (carg_map != null) {
+			carg_map.set (get_param_pos (param.cparameter_position), new CCodeIdentifier (param.name));
+		}
 	}
 
 	public override void visit_class (Class cl) {
