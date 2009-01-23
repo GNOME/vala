@@ -1,3 +1,12 @@
+2009-01-23  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodearraymodule.vala:
+	* gobject/valaccodedelegatemodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+
+	Add virtual generate_parameter method. Move array and delegate type
+	specific parameter generation to corresponding modules.
+
 2009-01-20  Jürg Billeter  <j@bitron.ch>
 
 	* vapigen/valagirparser.vala:

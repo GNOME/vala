@@ -682,4 +682,33 @@ public class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		assignment.ccodenode = ccall;
 	}
+
+	public override void generate_parameter (FormalParameter param, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+		if (!(param.parameter_type is ArrayType)) {
+			base.generate_parameter (param, cparam_map, carg_map);
+			return;
+		}
+
+		var array_type = (ArrayType) param.parameter_type;
+
+		cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
+		if (carg_map != null) {
+			carg_map.set (get_param_pos (param.cparameter_position), new CCodeIdentifier (param.name));
+		}
+
+		if (!param.no_array_length) {
+			var length_ctype = "int";
+			if (param.direction != ParameterDirection.IN) {
+				length_ctype = "int*";
+			}
+			
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				var cparam = new CCodeFormalParameter (head.get_array_length_cname (param.name, dim), length_ctype);
+				cparam_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
+				if (carg_map != null) {
+					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), new CCodeIdentifier (cparam.name));
+				}
+			}
+		}
+	}
 }
