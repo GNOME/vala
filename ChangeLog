@@ -1,3 +1,9 @@
+2009-01-24  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaclass.vala:
+
+	Fix type of implicit `this' parameter when using generics
+
 2009-01-23  Jürg Billeter  <j@bitron.ch>
 
 	* ccode/valaccodefunction.vala:

@@ -191,7 +191,7 @@ public class Vala.Class : ObjectTypeSymbol {
 				if (_destructor.this_parameter != null) {
 					_destructor.scope.remove (_destructor.this_parameter.name);
 				}
-				_destructor.this_parameter = new FormalParameter ("this", new ObjectType (this));
+				_destructor.this_parameter = new FormalParameter ("this", get_this_type ());
 				_destructor.scope.add (_destructor.this_parameter.name, _destructor.this_parameter);
 			}
 		}
@@ -292,6 +292,16 @@ public class Vala.Class : ObjectTypeSymbol {
 		return new ReadOnlyList<Constant> (constants);
 	}
 
+	ObjectType get_this_type () {
+		var result = new ObjectType (this);
+		foreach (var type_parameter in get_type_parameters ()) {
+			var type_arg = new GenericType (type_parameter);
+			type_arg.value_owned = true;
+			result.add_type_argument (type_arg);
+		}
+		return result;
+	}
+
 	/**
 	 * Adds the specified method as a member to this class.
 	 *
@@ -302,7 +312,7 @@ public class Vala.Class : ObjectTypeSymbol {
 			if (m.this_parameter != null) {
 				m.scope.remove (m.this_parameter.name);
 			}
-			m.this_parameter = new FormalParameter ("this", new ObjectType (this));
+			m.this_parameter = new FormalParameter ("this", get_this_type ());
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
@@ -348,7 +358,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		properties.add (prop);
 		scope.add (prop.name, prop);
 
-		prop.this_parameter = new FormalParameter ("this", new ObjectType (this));
+		prop.this_parameter = new FormalParameter ("this", get_this_type ());
 		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
 
 		if (prop.field != null) {
