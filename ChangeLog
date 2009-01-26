@@ -1,3 +1,10 @@
+2009-01-26  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodebasemodule.vala:
+
+	Revert incorrect code generation change for constants, will need to
+	use `extern' to properly export constants
+
 2009-01-25  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valadbusclientmodule.vala:
