@@ -191,6 +191,67 @@ namespace Posix {
 	[CCode (cheader_filename = "string.h")]
 	public unowned string strerror (int errnum);
 
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_PUSH;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_POP;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_LOOK;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_FLUSH;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_FLUSHBAND;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_SETSIG;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_GETSIG;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_FIND;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_PEEK;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_SRDOPT;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_GRDOPT;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_NREAD;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_FDINSERT;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_STR;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_SWROPT;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_GWROPT;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_SENDFD;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_RECVFD;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_LIST;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_ATMARK;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_CKBAND;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_GETBAND;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_CANPUT;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_SETCLTIME;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_GETCLTIME;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_LINK;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_UNLINK;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_PLINK;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int I_PUNLINK;
+	[CCode (cheader_filename = "stropts.h")]
+	public int ioctl (int fildes, int request, ...);
+
 	[CCode (cheader_filename = "sys/socket.h")]
 	public const int SOCK_DGRAM;
 	[CCode (cheader_filename = "sys/socket.h")]

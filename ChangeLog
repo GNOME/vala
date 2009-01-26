@@ -1,5 +1,11 @@
 2009-01-26  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/posix.vapi:
+
+	Add bindings for ioctl and associated constants
+
+2009-01-26  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valaccodebasemodule.vala:
 
 	Revert incorrect code generation change for constants, will need to
