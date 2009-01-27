@@ -813,7 +813,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		// don't write interface implementation unless it's an abstract or virtual method
-		if (!check_accessibility (m) || m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
+		if (!check_accessibility (m) || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
 			if (!dump_tree) {
 				return;
 			}
@@ -910,6 +910,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("abstract ");
 		} else if (m.is_virtual) {
 			write_string ("virtual ");
+		} else if (m.overrides) {
+			write_string ("override ");
 		}
 		
 		if (!(m is CreationMethod)) {
@@ -933,7 +935,7 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	public override void visit_property (Property prop) {
-		if (!check_accessibility (prop) || prop.overrides || (prop.base_interface_property != null && !prop.is_abstract && !prop.is_virtual)) {
+		if (!check_accessibility (prop) || (prop.base_interface_property != null && !prop.is_abstract && !prop.is_virtual)) {
 			return;
 		}
 
@@ -951,6 +953,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("abstract ");
 		} else if (prop.is_virtual) {
 			write_string ("virtual ");
+		} else if (prop.overrides) {
+			write_string ("override ");
 		}
 
 		write_type (prop.property_type);

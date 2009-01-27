@@ -1,5 +1,12 @@
 2009-01-27  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodewriter.vala:
+	* vala/valamethod.vala:
+
+	Add overriding members to .vapi files, fixes bug 569219
+
+2009-01-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamemberaccess.vala:
 
 	Skip overriding methods and properties in member access,

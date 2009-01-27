@@ -526,16 +526,11 @@ public class Vala.Method : Member {
 		}
 
 		if (parent_symbol is Class) {
-			/* VAPI classes don't specify overridden methods */
-			if (!parent_symbol.external_package) {
-				if (!(this is CreationMethod)) {
-					find_base_interface_method ((Class) parent_symbol);
-					if (is_virtual || is_abstract || overrides) {
-						find_base_class_method ((Class) parent_symbol);
-					}
+			if (!(this is CreationMethod)) {
+				find_base_interface_method ((Class) parent_symbol);
+				if (is_virtual || is_abstract || overrides) {
+					find_base_class_method ((Class) parent_symbol);
 				}
-			} else if (is_virtual || is_abstract) {
-				_base_method = this;
 			}
 		} else if (parent_symbol is Interface) {
 			if (is_virtual || is_abstract) {
