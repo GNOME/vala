@@ -1,3 +1,10 @@
+2009-01-27  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valamemberaccess.vala:
+
+	Skip overriding methods and properties in member access,
+	fixes default arguments when calling virtual methods
+
 2009-01-27  Thijs Vermeir  <thijsvermeir@gmail.com>
 
 	* vapi/packages/gdk-pixbuf-2.0/gdk-pixbuf-2.0.metadata:

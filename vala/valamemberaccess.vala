@@ -409,6 +409,17 @@ public class Vala.MemberAccess : Expression {
 			klass = (f.binding == MemberBinding.CLASS);
 		} else if (member is Method) {
 			var m = (Method) member;
+			if (m.base_method != null) {
+				// refer to base method to inherit default arguments
+				m = m.base_method;
+				symbol_reference = m;
+				member = symbol_reference;
+			} else if (m.base_interface_method != null) {
+				// refer to base method to inherit default arguments
+				m = m.base_interface_method;
+				symbol_reference = m;
+				member = symbol_reference;
+			}
 			access = m.access;
 			if (!(m is CreationMethod)) {
 				instance = (m.binding == MemberBinding.INSTANCE);
@@ -419,6 +430,17 @@ public class Vala.MemberAccess : Expression {
 			if (!prop.check (analyzer)) {
 				error = true;
 				return false;
+			}
+			if (prop.base_property != null) {
+				// refer to base property
+				prop = prop.base_property;
+				symbol_reference = prop;
+				member = symbol_reference;
+			} else if (prop.base_interface_property != null) {
+				// refer to base property
+				prop = prop.base_interface_property;
+				symbol_reference = prop;
+				member = symbol_reference;
 			}
 			access = prop.access;
 			if (lvalue) {
