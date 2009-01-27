@@ -1,3 +1,11 @@
+2009-01-27  Thijs Vermeir  <thijsvermeir@gmail.com>
+
+	* vapi/packages/gdk-pixbuf-2.0/gdk-pixbuf-2.0.metadata:
+
+	Fix binding for gdk_pixbuf_scale_simple
+
+	* vapi/gdk-pixbuf-2.0.vapi: regenerated
+
 2009-01-26  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/posix.vapi:

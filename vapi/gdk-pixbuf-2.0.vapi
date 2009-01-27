@@ -55,7 +55,7 @@ namespace Gdk {
 		public bool save_to_stream (GLib.OutputStream stream, string type, GLib.Cancellable cancellable) throws GLib.Error;
 		public bool savev (string filename, string type, out unowned string option_keys, out unowned string option_values) throws GLib.Error;
 		public void scale (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type);
-		public unowned Gdk.Pixbuf scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);
+		public Gdk.Pixbuf scale_simple (int dest_width, int dest_height, Gdk.InterpType interp_type);
 		[CCode (has_construct_function = false)]
 		public Pixbuf.subpixbuf (Gdk.Pixbuf src_pixbuf, int src_x, int src_y, int width, int height);
 		public int bits_per_sample { get; construct; }
