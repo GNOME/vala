@@ -186,6 +186,33 @@ namespace Posix {
 	[CCode (cheader_filename = "errno.h")]
 	public const int EXDEV;
 
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_ACCMODE;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_RDONLY;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_WRONLY;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_RDWR;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_CREAT;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_EXCL;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_NOCTTY;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_TRUNC;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_APPEND;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_NONBLOCK;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_SYNC;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_ASYNC;
+	[CCode (cheader_filename = "fcntl.h")]
+	public int open (string path, int oflag);
+
 	[CCode (cheader_filename = "string.h")]
 	public int memcmp (void* s1, void* s2, size_t n);
 	[CCode (cheader_filename = "string.h")]
@@ -270,6 +297,12 @@ namespace Posix {
 	public int socket (int domain, int type, int protocol);
 
 	[CCode (cheader_filename = "unistd.h")]
+	public int close (int fd);
+	[CCode (cheader_filename = "unistd.h")]
 	public int execl (string path, params string[] arg);
+	[CCode (cheader_filename = "unistd.h")]
+	public ssize_t read (int fd, void* buf, size_t count);
+	[CCode (cheader_filename = "unistd.h")]
+	public ssize_t write (int fd, void* buf, size_t count);
 }
 

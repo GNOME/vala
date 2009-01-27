@@ -1,5 +1,12 @@
 2009-01-27  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/posix.vapi:
+
+	Add bindings for open and associated functions and constants,
+	patch by Michael Lauer
+
+2009-01-27  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodewriter.vala:
 	* vala/valamethod.vala:
 
