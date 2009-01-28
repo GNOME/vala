@@ -25,9 +25,9 @@ using Gee;
 
 
 
-public class Valadoc.LangletIndex : Valadoc.BasicHtmlLanglet, Valadoc.HtmlHelper {
+public class Valadoc.LangletIndex : Valadoc.BasicHtmlLanglet {
 	protected override string get_link ( DocumentedElement element, DocumentedElement? pos ) {
-		return this.get_html_link ( this.settings, element, pos );
+		return get_html_link ( this.settings, element, pos );
 	}
 
 	public LangletIndex ( Settings settings ) {
@@ -146,13 +146,10 @@ public class DevhelpFormat : Object {
 
 
 
-public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
-	private string package_dir_name = "";
+public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet {
+	private const string css_path = "style.css";
+	private string package_dir_name = ""; // remove
 	private DevhelpFormat devhelp;
-
-	protected override string get_link ( DocumentedElement p1, DocumentedElement? p2 ) {
-		return this.get_html_link ( this.settings, p1, p2 );		
-	}
 
 	private string get_path ( DocumentedElement element ) {
 		return element.full_name () + ".html";
@@ -160,19 +157,6 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 
 	private string get_real_path ( DocumentedElement element ) {
 		return this.settings.get_real_path ( ) + "/" + this.package_dir_name + "/" + element.full_name () + ".html";
-	}
-
-	protected override string get_img_path ( DocumentedElement element ) {
-		return "img/" + element.full_name () + ".png";
-	}
-
-	protected override string get_img_real_path ( DocumentedElement element ) {
-		return this.settings.get_real_path ( ) + "/" + this.package_dir_name + "/" + "img/" + element.full_name () + ".png";
-	}
-
-	public Valadoc.Settings settings {
-		construct set;
-		protected get;
 	}
 
 	public override void initialisation ( Settings settings, Tree tree ) {
@@ -202,7 +186,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		this.devhelp = new DevhelpFormat ( pkg_name, "" );
 
 		GLib.FileStream ifile = GLib.FileStream.open ( path + "index.htm", "w" );
-		this.write_file_header ( ifile, "style.css", pkg_name );
+		this.write_file_header ( ifile, this.css_path, pkg_name );
 		this.write_file_content ( ifile, file, file );
 		this.write_file_footer ( ifile );
 		ifile = null;
@@ -217,7 +201,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		string path = this.get_path ( ns );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w" );
-		this.write_file_header ( file, "style.css", ns.full_name() );
+		this.write_file_header ( file, this.css_path, ns.full_name() );
 		this.write_namespace_content ( file, ns, ns );
 		this.write_file_footer ( file );
 		file = null;
@@ -264,7 +248,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		this.devhelp.add_keyword ( KeywordType.INTERFACE, iface.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, "style.css", iface.full_name() );
+		this.write_file_header ( file, this.css_path, iface.full_name() );
 		this.write_interface_content ( file, iface, iface );
 		this.write_file_footer ( file );
 		file = null;
@@ -293,7 +277,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, "style.css", cl.full_name() );
+		this.write_file_header ( file, this.css_path, cl.full_name() );
 		this.write_class_content ( file, cl, cl );
 		this.write_file_footer ( file );
 		file = null;
@@ -316,7 +300,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, "style.css", stru.full_name() );
+		this.write_file_header ( file, this.css_path, stru.full_name() );
 
 		this.write_struct_content ( file, stru, stru );
 		this.write_file_footer ( file );
@@ -333,7 +317,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		this.devhelp.add_chapter ( errdom.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, "style.css", errdom.full_name() );
+		this.write_file_header ( file, this.css_path, errdom.full_name() );
 		this.write_error_domain_content ( file, errdom, errdom );
 		this.write_file_footer ( file );
 		file = null;
@@ -350,7 +334,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		this.devhelp.add_chapter ( en.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, "style.css", en.full_name() );
+		this.write_file_header ( file, this.css_path, en.full_name() );
 		this.write_enum_content ( file, en, en );
 		this.write_file_footer ( file );
 		file = null;
@@ -364,7 +348,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		this.devhelp.add_chapter ( prop.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, "style.css", prop.full_name() );
+		this.write_file_header ( file, this.css_path, prop.full_name() );
 		this.write_property_content ( file, prop );
 		this.write_file_footer ( file );
 		file = null;
@@ -378,7 +362,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		this.devhelp.add_chapter ( constant.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, "style.css", constant.full_name() );
+		this.write_file_header ( file, this.css_path, constant.full_name() );
 		this.write_constant_content ( file, constant, parent );
 		this.write_file_footer ( file );
 		file = null;
@@ -392,7 +376,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		this.devhelp.add_chapter ( field.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, "style.css", field.full_name() );
+		this.write_file_header ( file, this.css_path, field.full_name() );
 		this.write_field_content ( file, field, parent );
 		this.write_file_footer ( file );
 		file = null;
@@ -412,7 +396,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		this.devhelp.add_chapter ( del.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, "style.css", del.full_name() );
+		this.write_file_header ( file, this.css_path, del.full_name() );
 		this.write_delegate_content ( file, del );
 		this.write_file_footer ( file );
 		file = null;
@@ -426,7 +410,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		this.devhelp.add_chapter ( sig.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, "style.css", sig.full_name() );
+		this.write_file_header ( file, this.css_path, sig.full_name() );
 		write_signal_content ( file, sig );
 		this.write_file_footer ( file );
 		file = null;
@@ -440,7 +424,7 @@ public class Valadoc.HtmlDoclet : Valadoc.BasicHtmlDoclet, Valadoc.HtmlHelper {
 		this.devhelp.add_chapter ( m.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, "style.css", m.full_name() );
+		this.write_file_header ( file, this.css_path, m.full_name() );
 		this.write_method_content ( file, m, parent );
 		this.write_file_footer ( file );
 		file = null;

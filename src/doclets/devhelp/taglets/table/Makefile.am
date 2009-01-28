@@ -11,7 +11,7 @@ BUILT_SOURCES = libtaglettable.vala.stamp
 
 
 libtaglettable.vala.stamp: $(libtaglettable_VALASOURCES)
-	$(VALAC) -C --vapidir ../../../../vapi --pkg valadoc-1.0 --vapidir ../../linkhelper --vapidir ../../../htmlhelpers/ --pkg libhtmlhelpers-1.0 --pkg libhtmlhelper-1.0 --basedir . --save-temps $^
+	$(VALAC) -C --vapidir ../../../../vapi --pkg valadoc-1.0 --vapidir ../../../htmlhelpers/ --pkg libhtmlhelpers-1.0 --basedir . $^
 	touch $@
 
 
@@ -33,7 +33,6 @@ libtaglettable_la_SOURCES =                \
 AM_CFLAGS =  -g                  \
 	-I ../../../../libvaladoc/   \
 	-I ../../../htmlhelpers/     \
-	-I ../../linkhelper/         \
 	-I ../../                    \
 	$(GLIB_CFLAGS)               \
 	$(LIBVALA_CFLAGS)            \
@@ -46,7 +45,6 @@ libtaglettable_la_LDFLAGS = -module -avoid-version
 libtaglettable_la_LIBADD =                 \
 	../../../../libvaladoc/libvaladoc.la   \
 	../../../htmlhelpers/libhtmlhelpers.la \
-	../../linkhelper/libhtmlhelper.la      \
 	$(GLIB_LIBS)                           \
 	$(LIBVALA_LIBS)                        \
 	$(NULL)

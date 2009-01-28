@@ -19,21 +19,33 @@
 
 using Valadoc;
 using GLib;
-using Vala;
 using Gee;
 
 
+public class Valadoc.LinkHtmlTaglet : Valadoc.LinkHtmlHelperTaglet {
+	protected override string? get_link ( Settings settings, Tree tree, DocumentedElement element, DocumentedElement? pos ) {
+		return get_html_link ( settings, element, pos );
+	}
 
-using Valadoc;
-using GLib;
-using Vala;
-using Gee;
+	public override string to_string () {
+		return to_string_imp ( );
+	}
+
+	public override bool write ( void* res, int max, int index ) {
+		return write_imp ( res, max, index );
+	}
+
+	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, string content, out string[] errmsg ) {
+		return this.parse_imp ( settings, tree, me, content, out errmsg );
+	}
+}
 
 
 [ModuleInit]
 public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
-        GLib.Type type = typeof ( ParameterHtmlTaglet );
-		taglets.set ( "param", type );
+        GLib.Type type = typeof ( LinkHtmlTaglet );
+		taglets.set ( "link", type );
 		return type;
 }
+
 

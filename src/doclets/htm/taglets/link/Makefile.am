@@ -1,0 +1,55 @@
+# src/Makefile.am
+
+
+
+libtagletlink_VALASOURCES = \
+	taglet.vala       \
+	$(NULL)
+
+
+BUILT_SOURCES = libtagletlink.vala.stamp
+
+
+libtagletlink.vala.stamp: $(libtagletlink_VALASOURCES)
+	$(VALAC) -C --vapidir ../../../htmlhelpers --pkg libhtmlhelpers-1.0 --vapidir ../../../../vapi --pkg valadoc-1.0 --basedir . $^
+	touch $@
+
+
+	
+
+tagletlinkdir = $(libdir)/valadoc/plugins/html/taglets/
+
+tagletlink_LTLIBRARIES = libtagletlink.la
+
+
+libtagletlink_la_SOURCES =                \
+	libtagletlink.vala.stamp              \
+	$(libtagletlink_VALASOURCES:.vala=.c) \
+	$(libtagletlink_VALASOURCES:.vala=.h) \
+	$(NULL)
+
+
+
+AM_CFLAGS =  -g               \
+	-I ../../../../libvaladoc/   \
+	-I ../../../htmlhelpers/     \
+	-I ../../                    \
+	$(GLIB_CFLAGS)            \
+	$(LIBVALA_CFLAGS)         \
+	$(NULL)
+
+
+libtagletlink_la_LDFLAGS = -module -avoid-version
+
+
+libtagletlink_la_LIBADD =                 \
+	../../../../libvaladoc/libvaladoc.la \
+	../../../htmlhelpers/libhtmlhelpers.la \
+	$(GLIB_LIBS)                      \
+	$(LIBVALA_LIBS)                   \
+	$(NULL)
+
+
+
+
+EXTRA_DIST = $(libtagletlink_VALASOURCES)  libtagletlink.vala.stamp 

@@ -2,30 +2,30 @@
 
 
 
-libtagletXXXX_VALASOURCES = \
+libtagletreturn_VALASOURCES = \
 	taglet.vala       \
 	$(NULL)
 
 
-BUILT_SOURCES = libtagletXXXX.vala.stamp
+BUILT_SOURCES = libtagletreturn.vala.stamp
 
 
-libtagletXXXX.vala.stamp: $(libtagletXXXX_VALASOURCES)
-	$(VALAC) -C --vapidir ../../../htmlhelpers --pkg libhtmlhelpers-1.0 --vapidir ../../../../vapi --pkg valadoc-1.0 --vapidir ../../linkhelper --pkg libhtmlhelper-1.0 --basedir . --save-temps $^
+libtagletreturn.vala.stamp: $(libtagletreturn_VALASOURCES)
+	$(VALAC) -C --vapidir ../../../htmlhelpers --pkg libhtmlhelpers-1.0 --vapidir ../../../../vapi --pkg valadoc-1.0 --basedir . $^
 	touch $@
 
 
 	
 
-tagletXXXXdir = $(libdir)/valadoc/plugins/devhelp/taglets/
+tagletreturndir = $(libdir)/valadoc/plugins/devhelp/taglets/
 
-tagletXXXX_LTLIBRARIES = libtagletXXXX.la
+tagletreturn_LTLIBRARIES = libtagletreturn.la
 
 
-libtagletXXXX_la_SOURCES =                \
-	libtagletXXXX.vala.stamp              \
-	$(libtagletXXXX_VALASOURCES:.vala=.c) \
-	$(libtagletXXXX_VALASOURCES:.vala=.h) \
+libtagletreturn_la_SOURCES =                \
+	libtagletreturn.vala.stamp              \
+	$(libtagletreturn_VALASOURCES:.vala=.c) \
+	$(libtagletreturn_VALASOURCES:.vala=.h) \
 	$(NULL)
 
 
@@ -33,20 +33,18 @@ libtagletXXXX_la_SOURCES =                \
 AM_CFLAGS =  -g               \
 	-I ../../../../libvaladoc/   \
 	-I ../../../htmlhelpers/     \
-	-I ../../linkhelper/         \
 	-I ../../                    \
 	$(GLIB_CFLAGS)            \
 	$(LIBVALA_CFLAGS)         \
 	$(NULL)
 
 
-libtagletXXXX_la_LDFLAGS = -module -avoid-version
+libtagletreturn_la_LDFLAGS = -module -avoid-version
 
 
-libtagletXXXX_la_LIBADD =                 \
+libtagletreturn_la_LIBADD =                 \
 	../../../../libvaladoc/libvaladoc.la \
 	../../../htmlhelpers/libhtmlhelpers.la \
-	../../linkhelper/libhtmlhelper.la    \
 	$(GLIB_LIBS)                      \
 	$(LIBVALA_LIBS)                   \
 	$(NULL)
@@ -54,4 +52,4 @@ libtagletXXXX_la_LIBADD =                 \
 
 
 
-EXTRA_DIST = $(libtagletXXXX_VALASOURCES)  libtagletXXXX.vala.stamp 
+EXTRA_DIST = $(libtagletreturn_VALASOURCES)  libtagletreturn.vala.stamp 

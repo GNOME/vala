@@ -45,8 +45,8 @@ namespace Valadoc.Diagrams {
 			if ( type is Struct == false )
 				break;
 
-			weak Graphviz.Node stru = draw_struct ( g, (Struct)type, me );
-			draw_struct_parents ( (Struct)type, g, stru );
+			weak Graphviz.Node stru2 = draw_struct ( g, (Struct)type, me );
+			draw_struct_parents ( (Struct)type, g, stru2 );
 		}
 	}
 

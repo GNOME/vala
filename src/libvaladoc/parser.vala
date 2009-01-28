@@ -1762,11 +1762,6 @@ public class Parser {
 		}
 	}
 
-	private bool check_image_path ( int startpos, GLib.StringBuilder buf ) {
-		//this.error ( "invalid image path", startpos-this.pos );
-		return true;
-	}
-
 	private ImageDocElementPosition parse_image_position () {
 		int separatorpos = this.pos;
 
@@ -1804,12 +1799,12 @@ public class Parser {
 					imgpos = parse_image_position ();
 
 				if ( str[pos+1] == '}' ) {
-					bool tmp = check_image_path ( startpos+2, buf );
-					if ( tmp == true ) {
-						ImageDocElement img = (ImageDocElement)GLib.Object.new ( this.modules.imgtag );
-						img.parse ( this.settings, tree, me, buf.str, imgpos );
-						elements.add ( img );
+					ImageDocElement img = (ImageDocElement)GLib.Object.new ( this.modules.imgtag );
+					bool tmp = img.parse ( this.settings, tree, me, buf.str, imgpos );
+					if ( tmp == false ) {
+						this.error ( "image not found.", startpos-this.pos );
 					}
+					elements.add ( img );
 					pos++;
 					return ;
 				}
@@ -1917,7 +1912,7 @@ public class Parser {
 				}
 
 				if ( this.str[this.pos+1] == ']' ) {
-					bool tmp = check_image_path ( startpos, buf );
+					bool tmp = check_link_path ( startpos, buf );
 					if ( tmp == true && linkstat == true ) {
 						LinkDocElement linktag = (LinkDocElement)GLib.Object.new ( this.modules.linktag );
 						linktag.parse ( this.settings, tree, me, buf.str, txt );

@@ -26,9 +26,14 @@ using Gee;
 namespace Valadoc {
 	public bool copy_file ( string src, string dest ) {
 		GLib.FileStream fsrc = GLib.FileStream.open ( src, "rb" );
-		GLib.FileStream fdest = GLib.FileStream.open ( dest, "wb" );
-		if ( fsrc == null || fdest == null )
+		if ( fsrc == null ) {
 			return false;
+		}
+
+		GLib.FileStream fdest = GLib.FileStream.open ( dest, "wb" );
+		if ( fdest == null ) {
+			return false;
+		}
 
 		for ( int c = fsrc.getc() ; !fsrc.eof() ; c = fsrc.getc() ) {
 			fdest.putc ( (char)c );
@@ -271,12 +276,12 @@ public abstract class Valadoc.DocumentedElement : Basic {
 	}
 
 	// internal
-	public virtual weak DocumentedElement? search_element ( string[] params, int pos ) {
+	public virtual DocumentedElement? search_element ( string[] params, int pos ) {
 		return null;
 	}
 
 	// internal
-	public virtual weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> list, int pos ) {
+	public virtual DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> list, int pos ) {
 		return null;
 	}
 }
@@ -294,7 +299,7 @@ public interface Valadoc.EnumHandler : Basic {
 		}
 	}
 
-	protected weak DocumentedElement? search_enum_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected DocumentedElement? search_enum_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		foreach ( Enum en in this.enums ) {
 			DocumentedElement element = en.search_element_vala ( params, pos+1 );
 			if ( element != null )
@@ -303,7 +308,7 @@ public interface Valadoc.EnumHandler : Basic {
 		return null;
 	}
 
-	protected weak DocumentedElement? search_enum ( string[] params, int pos ) {
+	protected DocumentedElement? search_enum ( string[] params, int pos ) {
 		foreach ( Enum en in this.enums ) {
 			DocumentedElement element = en.search_element ( params, pos+1 );
 			if ( element != null )
@@ -355,7 +360,7 @@ public interface Valadoc.DelegateHandler : Basic {
 		get;
 	}
 
-	protected weak DocumentedElement? search_delegate_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected DocumentedElement? search_delegate_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.Delegate == false )
 			return null;
@@ -368,7 +373,7 @@ public interface Valadoc.DelegateHandler : Basic {
 		return null;
 	}
 
-	protected weak DocumentedElement? search_delegate ( string[] params, int pos ) {
+	protected DocumentedElement? search_delegate ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -430,7 +435,7 @@ public interface Valadoc.InterfaceHandler : Basic {
 		get;
 	}
 
-	protected weak DocumentedElement? search_interface_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected DocumentedElement? search_interface_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		foreach ( Interface iface in this.interfaces ) {
 			DocumentedElement? element = iface.search_element_vala ( params, pos+1 );
 			if ( element != null )
@@ -439,7 +444,7 @@ public interface Valadoc.InterfaceHandler : Basic {
 		return null;
 	}
 
-	protected weak DocumentedElement? search_interface ( string[] params, int pos ) {
+	protected DocumentedElement? search_interface ( string[] params, int pos ) {
 		foreach ( Interface iface in this.interfaces ) {
 			DocumentedElement? element = iface.search_element ( params, pos+1 );
 			if ( element != null )
@@ -500,7 +505,7 @@ public interface Valadoc.ErrorDomainHandler : Basic {
 		get;
 	}
 
-	protected weak DocumentedElement? search_error_domain_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected DocumentedElement? search_error_domain_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		foreach ( ErrorDomain errdom in this.errdoms ) {
 			DocumentedElement? element = errdom.search_element_vala ( params, pos+1 );
 			if ( element != null )
@@ -509,7 +514,7 @@ public interface Valadoc.ErrorDomainHandler : Basic {
 		return null;
 	}
 
-	protected weak DocumentedElement? search_error_domain ( string[] params, int pos ) {
+	protected DocumentedElement? search_error_domain ( string[] params, int pos ) {
 		foreach ( ErrorDomain errdom in this.errdoms ) {
 			DocumentedElement? element = errdom.search_element ( params, pos+1 );
 			if ( element != null )
@@ -717,7 +722,7 @@ public interface Valadoc.ClassHandler : Basic {
 		get;
 	}
 
-	protected weak DocumentedElement? search_class_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected DocumentedElement? search_class_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		foreach ( Class cl in this.classes ) {
 			DocumentedElement? element = cl.search_element_vala ( params, pos+1 );
 			if ( element != null )
@@ -726,7 +731,7 @@ public interface Valadoc.ClassHandler : Basic {
 		return null;
 	}
 
-	protected weak DocumentedElement? search_class ( string[] params, int pos ) {
+	protected DocumentedElement? search_class ( string[] params, int pos ) {
 		foreach ( Class cl in this.classes ) {
 			DocumentedElement? element = cl.search_element ( params, pos+1 );
 			if ( element != null )
@@ -800,7 +805,7 @@ public interface Valadoc.PropertyHandler : ContainerDataType {
 		set;
 	}
 
-	protected weak DocumentedElement? search_property_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected DocumentedElement? search_property_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.Property == false )
 			return null;
@@ -816,7 +821,7 @@ public interface Valadoc.PropertyHandler : ContainerDataType {
 		return null;
 	}
 
-	protected weak DocumentedElement? search_property ( string[] params, int pos ) {
+	protected DocumentedElement? search_property ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -889,7 +894,7 @@ public interface Valadoc.ConstructionMethodHandler : DataType, MethodHandler {
 		get;
 	}
 
-	protected weak DocumentedElement? search_construction_method_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected DocumentedElement? search_construction_method_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.Method == false )
 			return null;
@@ -905,7 +910,7 @@ public interface Valadoc.ConstructionMethodHandler : DataType, MethodHandler {
 		return null;
 	}
 
-	protected weak DocumentedElement? search_construction_method ( string[] params, int pos ) {
+	protected DocumentedElement? search_construction_method ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] == null )
@@ -979,7 +984,7 @@ public interface Valadoc.SignalHandler : ContainerDataType {
 		set;
 	}
 
-	protected weak DocumentedElement? search_signal_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected DocumentedElement? search_signal_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.Signal == false )
 			return null;
@@ -995,7 +1000,7 @@ public interface Valadoc.SignalHandler : ContainerDataType {
 		return null;
 	}
 
-	protected weak DocumentedElement? search_signal ( string[] params, int pos ) {
+	protected DocumentedElement? search_signal ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -1058,7 +1063,7 @@ public interface Valadoc.StructHandler : Basic {
 		get;
 	} 
 
-	protected weak DocumentedElement? search_struct_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected DocumentedElement? search_struct_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		foreach ( Struct stru in this.structs ) {
 			DocumentedElement? element = stru.search_element_vala ( params, pos+1 );
 			if ( element != null )
@@ -1068,7 +1073,7 @@ public interface Valadoc.StructHandler : Basic {
 	}
 
 
-	protected weak DocumentedElement? search_struct ( string[] params, int pos ) {
+	protected DocumentedElement? search_struct ( string[] params, int pos ) {
 		foreach ( Struct stru in this.structs ) {
 			DocumentedElement? element = stru.search_element ( params, pos+1 );
 			if ( element != null )
@@ -1223,7 +1228,7 @@ public interface Valadoc.ConstantHandler : Basic {
 		get;
 	}
 
-	protected weak DocumentedElement? search_constant_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected DocumentedElement? search_constant_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.Constant == false )
 			return null;
@@ -1240,7 +1245,7 @@ public interface Valadoc.ConstantHandler : Basic {
 	}
 
 	// internal
-	protected weak DocumentedElement? search_constant ( string[] params, int pos ) {
+	protected DocumentedElement? search_constant ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -1307,7 +1312,7 @@ public interface Valadoc.FieldHandler : Basic {
 		get;
 	}
 
-	protected weak DocumentedElement? search_field_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected DocumentedElement? search_field_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.Field == false )
 			return null;
@@ -1324,7 +1329,7 @@ public interface Valadoc.FieldHandler : Basic {
 	}
 
 	// internal
-	protected weak DocumentedElement? search_field ( string[] params, int pos ) {
+	protected DocumentedElement? search_field ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -1447,7 +1452,7 @@ public interface Valadoc.MethodHandler : Basic {
 		get;
 	}
 
-	protected weak DocumentedElement? search_method_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	protected DocumentedElement? search_method_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.Method == false )
 			return null;
@@ -1464,7 +1469,7 @@ public interface Valadoc.MethodHandler : Basic {
 	}
 
 	// internal
-	protected weak DocumentedElement? search_method ( string[] params, int pos ) {
+	protected DocumentedElement? search_method ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -2853,7 +2858,7 @@ public class Valadoc.Class : ContainerDataType, Visitable, ClassHandler, StructH
 	}
 
 	// internal
-	public override weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos];
 
 		if ( velement is Vala.Class == false )
@@ -2903,7 +2908,7 @@ public class Valadoc.Class : ContainerDataType, Visitable, ClassHandler, StructH
 	}
 
 	// internal
-	public override weak DocumentedElement? search_element ( string[] params, int pos ) {
+	public override DocumentedElement? search_element ( string[] params, int pos ) {
 		if ( !(this.name == params[pos] || params[0] == "this") )
 			return null;
 
@@ -3202,7 +3207,7 @@ public class Valadoc.ErrorDomain : DataType, MethodHandler, Visitable {
 		return ( this.verrdom == ver );
 	}
 
-	private weak DocumentedElement? search_error_code ( string[] params, int pos ) {
+	private DocumentedElement? search_error_code ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -3215,7 +3220,7 @@ public class Valadoc.ErrorDomain : DataType, MethodHandler, Visitable {
 		return null;
 	}
 
-	private weak DocumentedElement? search_error_code_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	private DocumentedElement? search_error_code_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.ErrorCode == false )
 			return null;
@@ -3231,7 +3236,7 @@ public class Valadoc.ErrorDomain : DataType, MethodHandler, Visitable {
 		return null;
 	}
 
-	public override weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos];
 
 		if ( velement is Vala.ErrorDomain == false )
@@ -3257,7 +3262,7 @@ public class Valadoc.ErrorDomain : DataType, MethodHandler, Visitable {
 	}
 
 	// internal
-	public override weak DocumentedElement? search_element ( string[] params, int pos ) {
+	public override DocumentedElement? search_element ( string[] params, int pos ) {
 		if ( this.name != params[pos] )
 			return null;
 
@@ -3343,7 +3348,7 @@ public class Valadoc.Enum : DataType, MethodHandler, Visitable {
 		return this.venum.get_cname();
 	}
 
-	private weak DocumentedElement? search_enum_value_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	private DocumentedElement? search_enum_value_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos+1];
 		if ( velement is Vala.EnumValue == false )
 			return null;
@@ -3359,7 +3364,7 @@ public class Valadoc.Enum : DataType, MethodHandler, Visitable {
 		return null;
 	}
 
-	private weak DocumentedElement? search_enum_value ( string[] params, int pos ) {
+	private DocumentedElement? search_enum_value ( string[] params, int pos ) {
 		pos++;
 
 		if ( params[pos+1] != null )
@@ -3372,7 +3377,7 @@ public class Valadoc.Enum : DataType, MethodHandler, Visitable {
 		return null;
 	}
 
-	public override weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos];
 
 		if ( velement is Vala.Enum == false )
@@ -3398,7 +3403,7 @@ public class Valadoc.Enum : DataType, MethodHandler, Visitable {
 	}
 
 	// internal
-	public override weak DocumentedElement? search_element ( string[] params, int pos ) {
+	public override DocumentedElement? search_element ( string[] params, int pos ) {
 		if ( this.name != params[pos] )
 			return null;
 
@@ -3524,7 +3529,7 @@ public class Valadoc.Struct : ContainerDataType, Visitable, ConstructionMethodHa
 		get;
 	}
 
-	public override weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos];
 
 		if ( velement is Vala.Struct == false )
@@ -3557,7 +3562,7 @@ public class Valadoc.Struct : ContainerDataType, Visitable, ConstructionMethodHa
 	}
 
 	// internal
-	public override weak DocumentedElement? search_element ( string[] params, int pos ) {
+	public override DocumentedElement? search_element ( string[] params, int pos ) {
 		if ( this.name != params[pos] )
 			return null;
 
@@ -3659,8 +3664,8 @@ public class Valadoc.Struct : ContainerDataType, Visitable, ConstructionMethodHa
 		this.set_field_type_references ( );
 		base.set_type_references ( );
 
-		var lst = this.vstruct.get_base_types ();
-		this.set_parent_references ( lst );
+//		var lst = this.vstruct.get_base_types ();
+//		this.set_parent_references ( lst );
 	}
 }
 
@@ -3717,7 +3722,7 @@ public class Valadoc.Interface : ContainerDataType, Visitable, SignalHandler, Pr
 		protected get;
 	}
 
-	public override weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos];
 
 		if ( velement is Vala.Interface == false )
@@ -3761,7 +3766,7 @@ public class Valadoc.Interface : ContainerDataType, Visitable, SignalHandler, Pr
 	}
 
 	// internal
-	public override weak DocumentedElement? search_element ( string[] params, int pos ) {
+	public override DocumentedElement? search_element ( string[] params, int pos ) {
 		if ( !(this.name == params[pos] || params[0] == "this") )
 			return null;
 
@@ -3954,7 +3959,7 @@ public class Valadoc.Namespace : DocumentedElement, MethodHandler, FieldHandler,
 	}
 
 	// interface
-	private weak DocumentedElement? search_namespace ( string[] params, int pos ) {
+	private DocumentedElement? search_namespace ( string[] params, int pos ) {
 		foreach ( Namespace ns in this.namespaces ) {
 			DocumentedElement? element = ns.search_element ( params, pos+1 );
 			if ( element != null )
@@ -3964,7 +3969,7 @@ public class Valadoc.Namespace : DocumentedElement, MethodHandler, FieldHandler,
 	}
 
 	//interface
-	private weak DocumentedElement? search_namespace_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	private DocumentedElement? search_namespace_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		foreach ( Namespace ns in this.namespaces ) {
 			DocumentedElement? element = ns.search_element_vala ( params, pos+1 );
 			if ( element != null )
@@ -3973,7 +3978,7 @@ public class Valadoc.Namespace : DocumentedElement, MethodHandler, FieldHandler,
 		return null;
 	}
 
-	public override weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		Vala.Symbol velement = params[pos];
 
 		if ( velement is Vala.Namespace == false )
@@ -4023,7 +4028,7 @@ public class Valadoc.Namespace : DocumentedElement, MethodHandler, FieldHandler,
 	}
 
 	// internal
-	public override weak DocumentedElement? search_element ( string[] params, int pos ) {
+	public override DocumentedElement? search_element ( string[] params, int pos ) {
 		if ( this.name != params[pos] )
 			return null;
 
@@ -4248,7 +4253,7 @@ public class Valadoc.Package : DocumentedElement, NamespaceHandler {
 	}
 
 	// internal
-	public override weak DocumentedElement? search_element ( string[] params, int pos ) {
+	public override DocumentedElement? search_element ( string[] params, int pos ) {
 		foreach ( Namespace ns in this.namespaces ) {
 			DocumentedElement? element = ns.search_element ( params, pos );
 			if ( element != null )
@@ -4258,7 +4263,7 @@ public class Valadoc.Package : DocumentedElement, NamespaceHandler {
 	}
 
 	// internal
-	public override weak DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
 		foreach ( Namespace ns in this.namespaces ) {
 			DocumentedElement? element = ns.search_element_vala ( params, pos );
 			if ( element != null )
@@ -4334,7 +4339,6 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			this.context.directory = context.basedir;
 		}
 
-//		this.context.non_null = !disable_non_null || non_null_experimental;
 		this.context.non_null_experimental = non_null_experimental;
 		this.context.checking = !disable_checking;
 
@@ -4458,7 +4462,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		doclet.initialisation ( this.settings, this );
 	}
 
-	private weak DocumentedElement? search_symbol_in_type ( DocumentedElement element, string[] params, int params_offset = 0 ) {
+	private DocumentedElement? search_symbol_in_type ( DocumentedElement element, string[] params, int params_offset = 0 ) {
 		if ( !( element.parent is ContainerDataType || element.parent is Enum || element.parent is ErrorDomain ) )
 			return null;
 
@@ -4474,7 +4478,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		return this.search_symbol_in_symbol ( (DocumentedElement)element.parent, params, 0 );
 	}
 
-	private weak DocumentedElement? search_symbol_in_symbol ( DocumentedElement element, string[] params, int params_offset = 0 ) {
+	private DocumentedElement? search_symbol_in_symbol ( DocumentedElement element, string[] params, int params_offset = 0 ) {
 		if ( element is Class || element is Interface || element is Struct ) {
 			return element.search_element ( params, params_offset );
 		}
@@ -4487,7 +4491,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		return null;
 	}
 
-	private weak DocumentedElement? search_symbol_in_global_namespaces ( DocumentedElement? element, string[] params ) {
+	private DocumentedElement? search_symbol_in_global_namespaces ( DocumentedElement? element, string[] params ) {
 		int param_size = 0;
 		for ( param_size = 0; params[param_size] != null; param_size++ );
 
@@ -4499,23 +4503,23 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		}
 
 		foreach ( Package pkg in this.packages ) {
-			DocumentedElement? element = pkg.search_element ( global_params, 0 );
-			if ( element != null )
-				return element;
+			DocumentedElement? element2 = pkg.search_element ( global_params, 0 );
+			if ( element2 != null )
+				return element2;
 		}
 		return null;
 	}
 
-	private weak DocumentedElement? search_symbol_in_namespaces ( DocumentedElement element, string[] params ) {
+	private DocumentedElement? search_symbol_in_namespaces ( DocumentedElement element, string[] params ) {
 		foreach ( Package pkg in this.packages ) {
-			DocumentedElement? element = pkg.search_element ( params, 0 );
-			if ( element != null )
-				return element;
+			DocumentedElement? element2 = pkg.search_element ( params, 0 );
+			if ( element2 != null )
+				return element2;
 		}
 		return null;
 	}
 
-	private weak DocumentedElement? search_element ( DocumentedElement? element, string[] params ) {
+	private DocumentedElement? search_element ( DocumentedElement? element, string[] params ) {
 		if ( element != null ) {
 			if ( params[0] == "this" ) {
 				return search_symbol_in_type ( element, params, 1 );
@@ -4538,7 +4542,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		return null;
 	}
 
-	public weak DocumentedElement? search_symbol_str ( DocumentedElement? element, string symname ) {
+	public DocumentedElement? search_symbol_str ( DocumentedElement? element, string symname ) {
 		string[] params = symname.split( ".", -1 );
 		int i = 0; while ( params[i] != null ) i++;
 		params.length = i;
@@ -4703,7 +4707,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	}
 
 	// internal
-	public weak DocumentedElement? search_vala_symbol ( Vala.Symbol? vnode ) {
+	public DocumentedElement? search_vala_symbol ( Vala.Symbol? vnode ) {
 		if ( vnode == null )
 			return null;
 
@@ -4719,7 +4723,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return null;
 
 		if ( params.size >= 2 ) {
-			if ( params[1] is Vala.Namespace ) {
+			if ( params.get(1) is Vala.Namespace ) {
 				params.remove_at ( 0 );
 			}
 		}

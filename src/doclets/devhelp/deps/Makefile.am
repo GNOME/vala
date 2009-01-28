@@ -4,10 +4,11 @@ NULL =
 vapidir = $(libdir)/valadoc/plugins/devhelp/deps/
 
 
-dist_vapi_DATA =    \
-    abstractclass.png \
-    abstractmethod.png \
-    staticmethod.png \
+dist_vapi_DATA =        \
+    warning.png         \
+    abstractclass.png   \
+    abstractmethod.png  \
+    staticmethod.png    \
 	style.css       \
 	class.png       \
 	interface.png   \
@@ -23,6 +24,10 @@ dist_vapi_DATA =    \
 	field.png       \
 	package.png     \
 	struct.png      \
+	abstractproperty.png \
+	constructor.png      \
+	virtualmethod.png    \
+	virtualproperty.png  \
 	$(NULL)
 
 dist_noinst_DATA =  \

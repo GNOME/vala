@@ -29,6 +29,7 @@ libhtmlhelpers_la_SOURCES =                \
 
 AM_CFLAGS =             \
 	-I ../../libvaladoc/   \
+	$(LIBGVC_CFLAGS)    \
 	$(LIBVALA_CFLAGS)   \
 	$(GLIB_CFLAGS)      \
 	$(NULL)
@@ -36,6 +37,7 @@ AM_CFLAGS =             \
 
 libhtmlhelper_la_LIBADD = \
 	../../libvaladoc/libvaladoc.la \
+	$(LIBGVC_LIBS)     \
 	$(LIBVALA_LIBS)                \
 	$(GLIB_LIBS)                   \
 	$(NULL)

@@ -43,20 +43,20 @@ ccodeinclude_HEADERS =                 \
 
 
 AM_CFLAGS =             \
+	$(LIBGVC_CFLAGS)    \
 	$(LIBXML2_CFLAGS)   \
 	$(GLIB_CFLAGS)      \
 	$(LIBVALA_CFLAGS)   \
 	$(GMODULE_CFLAGS)   \
-	$(LIBGVC_CFLAGS)    \
 	$(NULL)
 
 
 libvaladoc_la_LIBADD = \
+	$(LIBGVC_LIBS)     \
 	$(LIBXML2_LIBS)    \
 	$(GLIB_LIBS)       \
 	$(LIBVALA_LIBS)    \
 	$(GMODULE_LIBS)    \
-	$(LIBGVC_LIBS)     \
 	$(NULL)
 
 

@@ -23,13 +23,6 @@ using Vala;
 using Gee;
 
 
-
-using Valadoc;
-using GLib;
-using Vala;
-using Gee;
-
-
 [ModuleInit]
 public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
         GLib.Type type = typeof ( ParameterHtmlTaglet );

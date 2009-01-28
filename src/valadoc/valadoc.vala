@@ -255,7 +255,7 @@ public class ValaDoc : Object {
 
 
 		if ( pluginpath == null ) {
-			pluginpath = Config.plugin_dir + "/template/";
+			pluginpath = Config.plugin_dir + "/html/";
 		}
 		else {
 			if ( !pluginpath.has_suffix ( "/" ) )
