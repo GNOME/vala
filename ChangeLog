@@ -1,3 +1,10 @@
+2009-01-29  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valapropertyaccessor.vala:
+
+	Honor lower_case_cprefix attribute for property accessors,
+	fixes bug 569646
+
 2009-01-27  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/posix.vapi:

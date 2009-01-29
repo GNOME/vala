@@ -96,9 +96,9 @@ public class Vala.PropertyAccessor : CodeNode {
 		var t = (TypeSymbol) prop.parent_symbol;
 
 		if (readable) {
-			return "%s_get_%s".printf (t.get_lower_case_cname (null), prop.name);
+			return "%sget_%s".printf (t.get_lower_case_cprefix (), prop.name);
 		} else {
-			return "%s_set_%s".printf (t.get_lower_case_cname (null), prop.name);
+			return "%sset_%s".printf (t.get_lower_case_cprefix (), prop.name);
 		}
 	}
 
