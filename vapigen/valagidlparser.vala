@@ -1936,6 +1936,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						if (eval (nv[1]) == "1") {
 							param_type.nullable = true;
 						}
+					} else if (nv[0] == "transfer_ownership") {
+						if (eval (nv[1]) == "1") {
+							param_type.value_owned = true;
+						}
 					} else if (nv[0] == "type_name") {
 						((UnresolvedType) param_type).unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
 					} else if (nv[0] == "namespace_name") {

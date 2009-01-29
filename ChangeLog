@@ -1,3 +1,9 @@
+2009-01-29  Jürg Billeter  <j@bitron.ch>
+
+	* vapigen/valagidlparser.vala:
+
+	Support transfer_ownership attribute for signal parameters
+
 2009-01-29  Philip Van Hoof  <philip@codeminded.be>
 
 	* gobject/valaccodebasemodule.vala:
