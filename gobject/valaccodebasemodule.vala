@@ -452,7 +452,18 @@ public class Vala.CCodeBaseModule : CCodeModule {
 			cregister.add_argument (new CCodeIdentifier ("connection"));
 			cregister.add_argument (new CCodeIdentifier ("path"));
 			cregister.add_argument (new CCodeIdentifier ("object"));
-			block.add_statement (new CCodeExpressionStatement (cregister));
+
+			var ifblock = new CCodeBlock ();
+			ifblock.add_statement (new CCodeExpressionStatement (cregister));
+
+			var elseblock = new CCodeBlock ();
+
+			var warn = new CCodeFunctionCall (new CCodeIdentifier ("g_warning"));
+			warn.add_argument (new CCodeConstant ("\"Object does not implement any D-Bus interface\""));
+
+			elseblock.add_statement (new CCodeExpressionStatement(warn));
+
+			block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("vtable"), ifblock, elseblock));
 
 			source_type_member_definition.append (cfunc);
 		}

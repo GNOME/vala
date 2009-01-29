@@ -1,3 +1,10 @@
+2009-01-29  Philip Van Hoof  <philip@codeminded.be>
+
+	* gobject/valaccodebasemodule.vala:
+
+	Checking for vstore in vala_dbus_register_object. Fixes a crash when
+	you use conn.register_object with an instance that isn't a DBus one
+
 2009-01-29  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valapropertyaccessor.vala:
