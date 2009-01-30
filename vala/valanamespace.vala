@@ -1,6 +1,6 @@
 /* valanamespace.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -119,6 +119,11 @@ public class Vala.Namespace : Symbol {
 	 * @param cl a class
 	 */
 	public void add_class (Class cl) {
+		// namespaces do not support private memebers
+		if (cl.access == SymbolAccessibility.PRIVATE) {
+			cl.access = SymbolAccessibility.INTERNAL;
+		}
+
 		if (scope.lookup (cl.name) is Class) {
 			// merge
 			var old_class = (Class) scope.lookup (cl.name);
@@ -151,6 +156,11 @@ public class Vala.Namespace : Symbol {
 	 * @param iface an interface
 	 */
 	public void add_interface (Interface iface) {
+		// namespaces do not support private memebers
+		if (iface.access == SymbolAccessibility.PRIVATE) {
+			iface.access = SymbolAccessibility.INTERNAL;
+		}
+
 		interfaces.add (iface);
 		scope.add (iface.name, iface);
 	}
@@ -161,6 +171,11 @@ public class Vala.Namespace : Symbol {
 	 * @param st a struct
 	 */
 	public void add_struct (Struct st) {
+		// namespaces do not support private memebers
+		if (st.access == SymbolAccessibility.PRIVATE) {
+			st.access = SymbolAccessibility.INTERNAL;
+		}
+
 		structs.add (st);
 		scope.add (st.name, st);
 	}
@@ -181,6 +196,11 @@ public class Vala.Namespace : Symbol {
 	 * @param en an enum
 	 */
 	public void add_enum (Enum en) {
+		// namespaces do not support private memebers
+		if (en.access == SymbolAccessibility.PRIVATE) {
+			en.access = SymbolAccessibility.INTERNAL;
+		}
+
 		enums.add (en);
 		scope.add (en.name, en);
 	}
@@ -191,6 +211,11 @@ public class Vala.Namespace : Symbol {
 	 * @param edomain an error domain
 	 */
 	public void add_error_domain (ErrorDomain edomain) {
+		// namespaces do not support private memebers
+		if (edomain.access == SymbolAccessibility.PRIVATE) {
+			edomain.access = SymbolAccessibility.INTERNAL;
+		}
+
 		error_domains.add (edomain);
 		scope.add (edomain.name, edomain);
 	}
@@ -201,6 +226,11 @@ public class Vala.Namespace : Symbol {
 	 * @param d a delegate
 	 */
 	public void add_delegate (Delegate d) {
+		// namespaces do not support private memebers
+		if (d.access == SymbolAccessibility.PRIVATE) {
+			d.access = SymbolAccessibility.INTERNAL;
+		}
+
 		delegates.add (d);
 		scope.add (d.name, d);
 	}
@@ -292,6 +322,11 @@ public class Vala.Namespace : Symbol {
 	 * @param constant a constant
 	 */
 	public void add_constant (Constant constant) {
+		// namespaces do not support private memebers
+		if (constant.access == SymbolAccessibility.PRIVATE) {
+			constant.access = SymbolAccessibility.INTERNAL;
+		}
+
 		constants.add (constant);
 		scope.add (constant.name, constant);
 	}
@@ -302,6 +337,11 @@ public class Vala.Namespace : Symbol {
 	 * @param f a field
 	 */
 	public void add_field (Field f) {
+		// namespaces do not support private memebers
+		if (f.access == SymbolAccessibility.PRIVATE) {
+			f.access = SymbolAccessibility.INTERNAL;
+		}
+
 		if (f.binding == MemberBinding.INSTANCE) {
 			Report.error (f.source_reference, "instance members are not allowed outside of data types");
 			f.error = true;
@@ -322,6 +362,11 @@ public class Vala.Namespace : Symbol {
 	 * @param m a method
 	 */
 	public void add_method (Method m) {
+		// namespaces do not support private memebers
+		if (m.access == SymbolAccessibility.PRIVATE) {
+			m.access = SymbolAccessibility.INTERNAL;
+		}
+
 		if (m is CreationMethod) {
 			Report.error (m.source_reference, "construction methods may only be declared within classes and structs");
 			m.error = true;
