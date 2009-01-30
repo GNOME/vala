@@ -25,6 +25,37 @@ namespace Posix {
 	[CCode (cheader_filename = "assert.h")]
 	public void assert (bool expression);
 
+	[CCode (cheader_filename = "ctype.h")]
+	public bool isalnum (int c);
+	[CCode (cheader_filename = "ctype.h")]
+	public bool isalpha (int c);
+	[CCode (cheader_filename = "ctype.h")]
+	public bool isascii (int c);
+	[CCode (cheader_filename = "ctype.h")]
+	public bool iscntrl (int c);
+	[CCode (cheader_filename = "ctype.h")]
+	public bool isdigit (int c);
+	[CCode (cheader_filename = "ctype.h")]
+	public bool isgraph (int c);
+	[CCode (cheader_filename = "ctype.h")]
+	public bool islower (int c);
+	[CCode (cheader_filename = "ctype.h")]
+	public bool isprint (int c);
+	[CCode (cheader_filename = "ctype.h")]
+	public bool ispunct (int c);
+	[CCode (cheader_filename = "ctype.h")]
+	public bool isspace (int c);
+	[CCode (cheader_filename = "ctype.h")]
+	public bool isupper (int c);
+	[CCode (cheader_filename = "ctype.h")]
+	public bool isxdigit (int c);
+	[CCode (cheader_filename = "ctype.h")]
+	public int toascii (int c);
+	[CCode (cheader_filename = "ctype.h")]
+	public int tolower (int c);
+	[CCode (cheader_filename = "ctype.h")]
+	public int toupper (int c);
+
 	[CCode (cheader_filename = "errno.h")]
 	public int errno;
 	[CCode (cheader_filename = "errno.h")]
@@ -187,13 +218,33 @@ namespace Posix {
 	public const int EXDEV;
 
 	[CCode (cheader_filename = "fcntl.h")]
-	public const int O_ACCMODE;
+	public const int F_DUPFD;
 	[CCode (cheader_filename = "fcntl.h")]
-	public const int O_RDONLY;
+	public const int F_GETFD;
 	[CCode (cheader_filename = "fcntl.h")]
-	public const int O_WRONLY;
+	public const int F_SETFD;
 	[CCode (cheader_filename = "fcntl.h")]
-	public const int O_RDWR;
+	public const int F_GETFL;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int F_SETFL;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int F_GETLK;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int F_SETLK;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int F_SETLKW;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int F_GETOWN;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int F_SETOWN;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int FD_CLOEXEC;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int F_RDLCK;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int F_UNLCK;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int F_WRLCK;
 	[CCode (cheader_filename = "fcntl.h")]
 	public const int O_CREAT;
 	[CCode (cheader_filename = "fcntl.h")]
@@ -205,13 +256,43 @@ namespace Posix {
 	[CCode (cheader_filename = "fcntl.h")]
 	public const int O_APPEND;
 	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_DSYNC;
+	[CCode (cheader_filename = "fcntl.h")]
 	public const int O_NONBLOCK;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_RSYNC;
 	[CCode (cheader_filename = "fcntl.h")]
 	public const int O_SYNC;
 	[CCode (cheader_filename = "fcntl.h")]
-	public const int O_ASYNC;
+	public const int O_ACCMODE;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_RDONLY;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_RDWR;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int O_WRONLY;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int POSIX_FADV_NORMAL;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int POSIX_FADV_SEQUENTIAL;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int POSIX_FADV_RANDOM;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int POSIX_FADV_WILLNEED;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int POSIX_FADV_DONTNEED;
+	[CCode (cheader_filename = "fcntl.h")]
+	public const int POSIX_FADV_NOREUSE;
+	[CCode (cheader_filename = "fcntl.h")]
+	public int creat (string path, int mode);
+	[CCode (cheader_filename = "fcntl.h")]
+	public int fcntl (int fd, int cmd, ...);
 	[CCode (cheader_filename = "fcntl.h")]
 	public int open (string path, int oflag);
+	[CCode (cheader_filename = "fcntl.h")]
+	public int posix_fadvice (int fd, long offset, long len, int advice);
+	[CCode (cheader_filename = "fcntl.h")]
+	public int posix_fallocate (int fd, long offset, long len);
 
 	[CCode (cheader_filename = "string.h")]
 	public int memcmp (void* s1, void* s2, size_t n);
@@ -276,6 +357,66 @@ namespace Posix {
 	public const int I_PLINK;
 	[CCode (cheader_filename = "stropts.h")]
 	public const int I_PUNLINK;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int FLUSHR;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int FLUSHW;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int FLUSHRW;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int S_RDNORM;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int S_RDBAND;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int S_INPUT;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int S_HIPRI;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int S_OUTPUT;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int S_WRNORM;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int S_WRBAND;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int S_MSG;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int S_ERROR;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int S_HANGUP;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int S_BANDURG;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int RS_HIPRI;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int RNORM;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int RMSGD;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int RMSGN;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int RPROTNORN;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int RPROTDAT;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int RPROTDIS;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int SNDZERO;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int ANYMARK;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int LASTMARK;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int MUXID_ALL;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int MSG_ANY;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int MSG_BAND;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int MSG_HIPRI;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int MORECTL;
+	[CCode (cheader_filename = "stropts.h")]
+	public const int MOREDATA;
 	[CCode (cheader_filename = "stropts.h")]
 	public int ioctl (int fildes, int request, ...);
 
