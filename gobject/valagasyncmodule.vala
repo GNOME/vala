@@ -23,7 +23,7 @@
 using GLib;
 using Gee;
 
-class Vala.GAsyncModule : GSignalModule {
+internal class Vala.GAsyncModule : GSignalModule {
 	public GAsyncModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}

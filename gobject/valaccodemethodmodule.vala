@@ -27,7 +27,7 @@ using Gee;
 /**
  * The link between a method and generated code.
  */
-class Vala.CCodeMethodModule : CCodeStructModule {
+internal class Vala.CCodeMethodModule : CCodeStructModule {
 	public CCodeMethodModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}

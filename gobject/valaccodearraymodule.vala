@@ -24,7 +24,7 @@
 
 using Gee;
 
-class Vala.CCodeArrayModule : CCodeMethodCallModule {
+internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	int next_array_dup_id = 0;
 	int next_array_add_id = 0;
 

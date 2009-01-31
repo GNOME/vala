@@ -27,7 +27,7 @@ using Gee;
 /**
  * Code visitor generating C Code.
  */
-class Vala.CCodeBaseModule : CCodeModule {
+internal class Vala.CCodeBaseModule : CCodeModule {
 	public CodeContext context { get; set; }
 
 	public Symbol root_symbol;

@@ -25,7 +25,7 @@
 using GLib;
 using Gee;
 
-class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
+internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 	public CCodeMethodCallModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}

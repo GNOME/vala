@@ -1,5 +1,28 @@
 2009-01-31  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valaccodearraymodule.vala:
+	* gobject/valaccodeassignmentmodule.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodecontrolflowmodule.vala:
+	* gobject/valaccodedelegatemodule.vala:
+	* gobject/valaccodememberaccessmodule.vala:
+	* gobject/valaccodemethodcallmodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+	* gobject/valaccodestructmodule.vala:
+	* gobject/valadbusclientmodule.vala:
+	* gobject/valadbusmodule.vala:
+	* gobject/valadbusservermodule.vala:
+	* gobject/valagasyncmodule.vala:
+	* gobject/valagerrormodule.vala:
+	* gobject/valagobjectmodule.vala:
+	* gobject/valagsignalmodule.vala:
+	* gobject/valagtypemodule.vala:
+
+	Use `internal' modifier in class declarations to fix build with
+	Vala older than r2411
+
+2009-01-31  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valagobjectmodule.vala:
 
 	Fix struct construct properties

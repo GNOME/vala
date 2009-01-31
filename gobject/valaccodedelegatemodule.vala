@@ -27,7 +27,7 @@ using Gee;
 /**
  * The link between an assignment and generated code.
  */
-class Vala.CCodeDelegateModule : CCodeArrayModule {
+internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 	public CCodeDelegateModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}

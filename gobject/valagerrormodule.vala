@@ -23,7 +23,7 @@
 using GLib;
 using Gee;
 
-class Vala.GErrorModule : CCodeDelegateModule {
+internal class Vala.GErrorModule : CCodeDelegateModule {
 	private int current_try_id = 0;
 	private int next_try_id = 0;
 

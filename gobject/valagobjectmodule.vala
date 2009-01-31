@@ -24,7 +24,7 @@
 
 using Gee;
 
-class Vala.GObjectModule : GTypeModule {
+internal class Vala.GObjectModule : GTypeModule {
 	int dynamic_property_id;
 	int signal_wrapper_id;
 

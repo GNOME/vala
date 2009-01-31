@@ -23,7 +23,7 @@
 
 using GLib;
 
-class Vala.CCodeStructModule : CCodeBaseModule {
+internal class Vala.CCodeStructModule : CCodeBaseModule {
 	public CCodeStructModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}

@@ -23,7 +23,7 @@
 
 using GLib;
 
-class Vala.GTypeModule : GErrorModule {
+internal class Vala.GTypeModule : GErrorModule {
 	public GTypeModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}

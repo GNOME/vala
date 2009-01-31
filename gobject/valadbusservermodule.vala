@@ -28,7 +28,7 @@ using Gee;
 /**
  * The link between a dynamic method and generated code.
  */
-class Vala.DBusServerModule : DBusClientModule {
+internal class Vala.DBusServerModule : DBusClientModule {
 	public DBusServerModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}
