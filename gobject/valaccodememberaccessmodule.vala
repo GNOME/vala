@@ -24,7 +24,7 @@
 
 using GLib;
 
-public class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
+class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 	public CCodeMemberAccessModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}

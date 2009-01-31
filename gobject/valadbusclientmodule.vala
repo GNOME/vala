@@ -28,7 +28,7 @@ using Gee;
 /**
  * The link between a dynamic method and generated code.
  */
-public class Vala.DBusClientModule : DBusModule {
+class Vala.DBusClientModule : DBusModule {
 	int dynamic_property_id;
 
 	public DBusClientModule (CCodeGenerator codegen, CCodeModule? next) {

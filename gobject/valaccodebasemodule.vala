@@ -27,7 +27,7 @@ using Gee;
 /**
  * Code visitor generating C Code.
  */
-public class Vala.CCodeBaseModule : CCodeModule {
+class Vala.CCodeBaseModule : CCodeModule {
 	public CodeContext context { get; set; }
 
 	public Symbol root_symbol;
@@ -70,7 +70,6 @@ public class Vala.CCodeBaseModule : CCodeModule {
 	public CCodeEnum prop_enum;
 	public CCodeEnum cenum;
 	public CCodeFunction function;
-	public CCodeBlock block;
 
 	// code nodes to be inserted before the current statement
 	// used by async method calls in coroutines

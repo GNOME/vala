@@ -1,3 +1,30 @@
+2009-01-31  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaflowanalyzer.vala:
+	* vala/valasymbol.vala:
+
+	Report unused internal methods
+
+	* gobject/valaccodearraymodule.vala:
+	* gobject/valaccodeassignmentmodule.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodecontrolflowmodule.vala:
+	* gobject/valaccodedelegatemodule.vala:
+	* gobject/valaccodememberaccessmodule.vala:
+	* gobject/valaccodemethodcallmodule.vala:
+	* gobject/valaccodemethodmodule.vala:
+	* gobject/valaccodestructmodule.vala:
+	* gobject/valadbusclientmodule.vala:
+	* gobject/valadbusmodule.vala:
+	* gobject/valadbusservermodule.vala:
+	* gobject/valagasyncmodule.vala:
+	* gobject/valagerrormodule.vala:
+	* gobject/valagobjectmodule.vala:
+	* gobject/valagsignalmodule.vala:
+	* gobject/valagtypemodule.vala:
+
+	Mark modules as internal
+
 2009-01-30  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valanamespace.vala:

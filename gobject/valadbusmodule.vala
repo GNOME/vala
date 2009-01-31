@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-public class Vala.DBusModule : GAsyncModule {
+class Vala.DBusModule : GAsyncModule {
 	struct BasicTypeInfo {
 		public weak string signature;
 		public weak string type_name;

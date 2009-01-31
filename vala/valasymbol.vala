@@ -101,6 +101,17 @@ public abstract class Vala.Symbol : CodeNode {
 		return false;
 	}
 
+	public bool is_library_internal_symbol () {
+		for (Symbol sym = this; null != sym; sym = sym.parent_symbol) {
+			if (sym.access == SymbolAccessibility.PRIVATE
+			    || sym.access == SymbolAccessibility.INTERNAL) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public Scope scope {
 		get { return _scope; }
 	}
