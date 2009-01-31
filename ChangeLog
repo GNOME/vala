@@ -1,5 +1,11 @@
 2009-01-31  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valagobjectmodule.vala:
+
+	Fix struct construct properties
+
+2009-01-31  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valaflowanalyzer.vala:
 	* vala/valasymbol.vala:
 

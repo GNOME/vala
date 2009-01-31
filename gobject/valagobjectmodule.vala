@@ -1715,7 +1715,11 @@ class Vala.GObjectModule : GTypeModule {
 		// set GValue for current parameter
 		var cvalueset = new CCodeFunctionCall (get_value_setter_function (property_type));
 		cvalueset.add_argument (gvaluearg);
-		cvalueset.add_argument (value);
+		if (property_type.is_real_struct_type ()) {
+			cvalueset.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, value));
+		} else {
+			cvalueset.add_argument (value);
+		}
 		ccomma.append_expression (cvalueset);
 		
 		// move pointer to next parameter in array
