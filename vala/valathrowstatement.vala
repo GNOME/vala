@@ -89,6 +89,12 @@ public class Vala.ThrowStatement : CodeNode, Statement {
 				return false;
 			}
 
+			if (error_expression.value_type == null) {
+				Report.error (error_expression.source_reference, "invalid error expression");
+				error = true;
+				return false;
+			}
+
 			if (!(error_expression.value_type is ErrorType)) {
 				Report.error (error_expression.source_reference, "`%s' is not an error type".printf (error_expression.value_type.to_string ()));
 				error = true;
