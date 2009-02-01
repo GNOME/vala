@@ -1,6 +1,6 @@
 /* valaproperty.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -343,14 +343,9 @@ public class Vala.Property : Member, Lockable {
 		}
 
 		if (parent_symbol is Class) {
-			/* VAPI classes don't specify overridden properties */
-			if (!parent_symbol.external_package) {
-				find_base_interface_property ((Class) parent_symbol);
-				if (is_virtual || overrides) {
-					find_base_class_property ((Class) parent_symbol);
-				}
-			} else if (is_virtual || is_abstract) {
-				_base_property = this;
+			find_base_interface_property ((Class) parent_symbol);
+			if (is_virtual || overrides) {
+				find_base_class_property ((Class) parent_symbol);
 			}
 		} else if (parent_symbol is Interface) {
 			if (is_virtual || is_abstract) {
