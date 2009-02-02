@@ -36,7 +36,7 @@ namespace Gdk {
 		public void query_color (ulong pixel, out Gdk.Color _result);
 	}
 	[Compact]
-	[CCode (ref_function = "gdk_cursor_ref", unref_function = "gdk_cursor_unref", cheader_filename = "gdk/gdk.h")]
+	[CCode (ref_function = "gdk_cursor_ref", unref_function = "gdk_cursor_unref", type_id = "GDK_TYPE_CURSOR", cheader_filename = "gdk/gdk.h")]
 	public class Cursor {
 		public uint ref_count;
 		public Gdk.CursorType type;
@@ -215,7 +215,7 @@ namespace Gdk {
 		public virtual void set_colormap (Gdk.Colormap colormap);
 	}
 	[Compact]
-	[CCode (ref_function = "gdk_font_ref", unref_function = "gdk_font_unref", cheader_filename = "gdk/gdk.h")]
+	[CCode (ref_function = "gdk_font_ref", unref_function = "gdk_font_unref", type_id = "GDK_TYPE_FONT", cheader_filename = "gdk/gdk.h")]
 	public class Font {
 		public int ascent;
 		public int descent;

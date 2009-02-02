@@ -1,5 +1,17 @@
 2009-02-02  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodewriter.vala:
+
+	Write type_id attribute for GBoxed compact classes
+
+	* vapi/gdk-2.0.vapi:
+	* vapi/gtk+-2.0.vapi:
+	* vapi/pango.vapi:
+
+	Regenerated
+
+2009-02-02  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valathrowstatement.vala:
 
 	Fix crash on invalid error expressions

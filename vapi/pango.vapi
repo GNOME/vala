@@ -68,7 +68,7 @@ namespace Pango {
 		public AttrLanguage (Pango.Language language);
 	}
 	[Compact]
-	[CCode (ref_function = "pango_attr_list_ref", unref_function = "pango_attr_list_unref", cheader_filename = "pango/pango.h")]
+	[CCode (ref_function = "pango_attr_list_ref", unref_function = "pango_attr_list_unref", type_id = "PANGO_TYPE_ATTR_LIST", cheader_filename = "pango/pango.h")]
 	public class AttrList {
 		public void change (Pango.Attribute attr);
 		public unowned Pango.AttrList copy ();
@@ -176,7 +176,7 @@ namespace Pango {
 		public unowned Pango.FontMetrics get_metrics (Pango.Language language);
 	}
 	[Compact]
-	[CCode (copy_function = "pango_font_description_copy", cheader_filename = "pango/pango.h")]
+	[CCode (copy_function = "pango_font_description_copy", type_id = "PANGO_TYPE_FONT_DESCRIPTION", cheader_filename = "pango/pango.h")]
 	public class FontDescription {
 		public bool better_match (Pango.FontDescription old_match, Pango.FontDescription new_match);
 		public unowned Pango.FontDescription copy ();
@@ -230,7 +230,7 @@ namespace Pango {
 		public unowned Pango.Fontset load_fontset (Pango.Context context, Pango.FontDescription desc, Pango.Language language);
 	}
 	[Compact]
-	[CCode (ref_function = "pango_font_metrics_ref", unref_function = "pango_font_metrics_unref", cheader_filename = "pango/pango.h")]
+	[CCode (ref_function = "pango_font_metrics_ref", unref_function = "pango_font_metrics_unref", type_id = "PANGO_TYPE_FONT_METRICS", cheader_filename = "pango/pango.h")]
 	public class FontMetrics {
 		public int get_approximate_char_width ();
 		public int get_approximate_digit_width ();
@@ -266,7 +266,7 @@ namespace Pango {
 		public weak Pango.Glyph glyph;
 	}
 	[Compact]
-	[CCode (copy_function = "pango_glyph_item_copy", cheader_filename = "pango/pango.h")]
+	[CCode (copy_function = "pango_glyph_item_copy", type_id = "PANGO_TYPE_GLYPH_ITEM", cheader_filename = "pango/pango.h")]
 	public class GlyphItem {
 		public weak Pango.GlyphString glyphs;
 		public weak Pango.Item item;
@@ -276,7 +276,7 @@ namespace Pango {
 		public unowned Pango.GlyphItem split (string text, int split_index);
 	}
 	[Compact]
-	[CCode (copy_function = "pango_glyph_string_copy", cheader_filename = "pango/pango.h")]
+	[CCode (copy_function = "pango_glyph_string_copy", type_id = "PANGO_TYPE_GLYPH_STRING", cheader_filename = "pango/pango.h")]
 	public class GlyphString {
 		public weak Pango.GlyphInfo glyphs;
 		public int log_clusters;
@@ -303,7 +303,7 @@ namespace Pango {
 		public uint is_cluster_start;
 	}
 	[Compact]
-	[CCode (copy_function = "pango_item_copy", cheader_filename = "pango/pango.h")]
+	[CCode (copy_function = "pango_item_copy", type_id = "PANGO_TYPE_ITEM", cheader_filename = "pango/pango.h")]
 	public class Item {
 		public weak Pango.Analysis analysis;
 		public int length;
@@ -386,7 +386,7 @@ namespace Pango {
 	public class LayoutClass {
 	}
 	[Compact]
-	[CCode (copy_function = "pango_layout_iter_copy", cheader_filename = "pango/pango.h")]
+	[CCode (copy_function = "pango_layout_iter_copy", type_id = "PANGO_TYPE_LAYOUT_ITER", cheader_filename = "pango/pango.h")]
 	public class LayoutIter {
 		public bool at_last_line ();
 		public unowned Pango.LayoutIter copy ();
@@ -409,7 +409,7 @@ namespace Pango {
 		public bool next_run ();
 	}
 	[Compact]
-	[CCode (ref_function = "pango_layout_line_ref", unref_function = "pango_layout_line_unref", cheader_filename = "pango/pango.h")]
+	[CCode (ref_function = "pango_layout_line_ref", unref_function = "pango_layout_line_unref", type_id = "PANGO_TYPE_LAYOUT_LINE", cheader_filename = "pango/pango.h")]
 	public class LayoutLine {
 		public uint is_paragraph_start;
 		public weak Pango.Layout layout;
@@ -467,7 +467,7 @@ namespace Pango {
 		public bool next ();
 	}
 	[Compact]
-	[CCode (copy_function = "pango_tab_array_copy", cheader_filename = "pango/pango.h")]
+	[CCode (copy_function = "pango_tab_array_copy", type_id = "PANGO_TYPE_TAB_ARRAY", cheader_filename = "pango/pango.h")]
 	public class TabArray {
 		public unowned Pango.TabArray copy ();
 		public bool get_positions_in_pixels ();

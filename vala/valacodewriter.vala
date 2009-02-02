@@ -159,6 +159,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("type_check_function = \"%s\", ".printf (cl.type_check_function ));
 		}
 
+		if (cl.is_compact && cl.get_type_id () != "G_TYPE_POINTER") {
+			write_string ("type_id = \"%s\", ".printf (cl.get_type_id ()));
+		}
+
 		if (cl.get_param_spec_function () != null
 		    && (cl.base_class == null || cl.get_param_spec_function () != cl.base_class.get_param_spec_function ())) {
 			write_string ("param_spec_function = \"%s\", ".printf (cl.get_param_spec_function ()));
