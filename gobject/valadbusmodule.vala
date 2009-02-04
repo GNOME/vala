@@ -98,8 +98,13 @@ internal class Vala.DBusModule : GAsyncModule {
 	CCodeExpression read_array (CCodeFragment fragment, ArrayType array_type, CCodeExpression iter_expr, CCodeExpression? expr) {
 		string temp_name = "_tmp%d".printf (next_temp_var_id++);
 
+		var new_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new"));
+		new_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+		// add one extra element for NULL-termination
+		new_call.add_argument (new CCodeConstant ("5"));
+
 		var cdecl = new CCodeDeclaration (array_type.get_cname ());
-		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name, new CCodeConstant ("NULL")));
+		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name, new_call));
 		fragment.append (cdecl);
 
 		cdecl = new CCodeDeclaration ("int");
@@ -107,10 +112,17 @@ internal class Vala.DBusModule : GAsyncModule {
 		fragment.append (cdecl);
 
 		cdecl = new CCodeDeclaration ("int");
-		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name + "_size", new CCodeConstant ("0")));
+		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name + "_size", new CCodeConstant ("4")));
 		fragment.append (cdecl);
 
 		read_array_dim (fragment, array_type, 1, temp_name, iter_expr, expr);
+
+		if (array_type.element_type.is_reference_type_or_type_parameter ()) {
+			// NULL terminate array
+			var length = new CCodeIdentifier (temp_name + "_length");
+			var element_access = new CCodeElementAccess (new CCodeIdentifier (temp_name), length);
+			fragment.append (new CCodeExpressionStatement (new CCodeAssignment (element_access, new CCodeIdentifier ("NULL"))));
+		}
 
 		return new CCodeIdentifier (temp_name);
 	}
@@ -150,15 +162,15 @@ internal class Vala.DBusModule : GAsyncModule {
 			var size_check = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier (temp_name + "_size"), new CCodeIdentifier (temp_name + "_length"));
 			var renew_block = new CCodeBlock ();
 
-			// tmp_size = (tmp_size > 0) ? (2 * tmp_size) : 4;
-			var init_check = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier (temp_name + "_size"), new CCodeConstant ("0"));
-			var new_size = new CCodeConditionalExpression (init_check, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("2"), new CCodeIdentifier (temp_name + "_size")), new CCodeConstant ("4"));
+			// tmp_size = (2 * tmp_size);
+			var new_size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("2"), new CCodeIdentifier (temp_name + "_size"));
 			renew_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (temp_name + "_size"), new_size)));
 
 			var renew_call = new CCodeFunctionCall (new CCodeIdentifier ("g_renew"));
 			renew_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
 			renew_call.add_argument (new CCodeIdentifier (temp_name));
-			renew_call.add_argument (new CCodeIdentifier (temp_name + "_size"));
+			// add one extra element for NULL-termination
+			renew_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier (temp_name + "_size"), new CCodeConstant ("1")));
 			var renew_stmt = new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (temp_name), renew_call));
 			renew_block.add_statement (renew_stmt);
 

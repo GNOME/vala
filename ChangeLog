@@ -1,5 +1,11 @@
 2009-02-04  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valadbusmodule.vala:
+
+	NULL-terminate arrays when demarshalling
+
+2009-02-04  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusclientmodule.vala:
 
 	Do not handle signals of irrelevant object paths
