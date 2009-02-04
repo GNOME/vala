@@ -938,10 +938,46 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		generate_proxy_filter_function (iface);
 
+		// dbus proxy dispose
+		var proxy_dispose = new CCodeFunction (lower_cname + "_dispose", "void");
+		proxy_dispose.add_parameter (new CCodeFormalParameter ("self", "GObject*"));
+		proxy_dispose.modifiers = CCodeModifiers.STATIC;
+		proxy_dispose.block = new CCodeBlock ();
+
+		cdecl = new CCodeDeclaration ("DBusGConnection");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*connection"));
+		proxy_dispose.block.add_statement (cdecl);
+
+		var gconnection = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
+		gconnection.add_argument (new CCodeIdentifier ("self"));
+		gconnection.add_argument (new CCodeConstant ("\"connection\""));
+		gconnection.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("connection")));
+		gconnection.add_argument (new CCodeConstant ("NULL"));
+		proxy_dispose.block.add_statement (new CCodeExpressionStatement (gconnection));
+
+		// remove filter
+		filter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_remove_filter"));
+		filter_call.add_argument (raw_connection);
+		filter_call.add_argument (new CCodeIdentifier (lower_cname + "_filter"));
+		filter_call.add_argument (new CCodeIdentifier ("self"));
+		proxy_dispose.block.add_statement (new CCodeExpressionStatement (filter_call));
+
+		// chain up
+		var parent_class = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+		parent_class.add_argument (new CCodeIdentifier (lower_cname + "_parent_class"));
+		var chainup = new CCodeFunctionCall (new CCodeMemberAccess.pointer (parent_class, "dispose"));
+		chainup.add_argument (new CCodeIdentifier ("self"));
+		proxy_dispose.block.add_statement (new CCodeExpressionStatement (chainup));
+
+		source_type_member_definition.append (proxy_dispose);
+
 		var proxy_class_init = new CCodeFunction (lower_cname + "_class_init", "void");
 		proxy_class_init.add_parameter (new CCodeFormalParameter ("klass", cname + "Class*"));
 		proxy_class_init.modifiers = CCodeModifiers.STATIC;
 		proxy_class_init.block = new CCodeBlock ();
+		var gobject_class = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+		gobject_class.add_argument (new CCodeIdentifier ("klass"));
+		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "dispose"), new CCodeIdentifier (lower_cname + "_dispose"))));
 		source_type_member_definition.append (proxy_class_init);
 
 		var proxy_instance_init = new CCodeFunction (lower_cname + "_init", "void");
@@ -983,29 +1019,17 @@ internal class Vala.DBusClientModule : DBusModule {
 		var filter_block = new CCodeBlock ();
 
 		// only handle signals concering the object path
-		var cdecl = new CCodeDeclaration ("char*");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("path"));
-		filter_block.add_statement (cdecl);
-
-		var get_path = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
-		get_path.add_argument (new CCodeIdentifier ("user_data"));
-		get_path.add_argument (new CCodeConstant ("\"path\""));
-		get_path.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("path")));
-		get_path.add_argument (new CCodeConstant ("NULL"));
-		filter_block.add_statement (new CCodeExpressionStatement (get_path));
+		var path = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_get_path"));
+		path.add_argument (new CCodeIdentifier ("user_data"));
 
 		var ccheck = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_has_path"));
 		ccheck.add_argument (new CCodeIdentifier ("message"));
-		ccheck.add_argument (new CCodeIdentifier ("path"));
+		ccheck.add_argument (path);
 
 		var object_filter_block = new CCodeBlock ();
 		filter_block.add_statement (new CCodeIfStatement (ccheck, object_filter_block));
 
 		handle_signals (iface, object_filter_block);
-
-		var free_path = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
-		free_path.add_argument (new CCodeIdentifier ("path"));
-		filter_block.add_statement (new CCodeExpressionStatement (free_path));
 
 		filter_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_NOT_YET_HANDLED")));
 
