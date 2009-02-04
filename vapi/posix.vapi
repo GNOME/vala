@@ -294,6 +294,72 @@ namespace Posix {
 	[CCode (cheader_filename = "fcntl.h")]
 	public int posix_fallocate (int fd, long offset, long len);
 
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGABRT;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGALRM;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGBUS;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGCHLD;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGCONT;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGFPE;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGHUP;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGILL;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGINT;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGKILL;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGPIPE;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGQUIT;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGSEGV;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGSTOP;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGTERM;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGTSTP;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGTTIN;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGTTOU;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGUSR1;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGUSR2;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGPOLL;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGPROF;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGSYS;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGTRAP;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGURG;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGVTALRM;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGXCPU;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGXFSZ;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGIOT;
+	[CCode (cheader_filename = "signal.h")]
+	public const int SIGSTKFLT;
+
+	public static delegate void sighandler_t (int signal);
+
+	[CCode (cheader_filename = "signal.h")]
+	public sighandler_t signal (int signum, sighandler_t handler);
+
 	[CCode (cheader_filename = "string.h")]
 	public int memcmp (void* s1, void* s2, size_t n);
 	[CCode (cheader_filename = "string.h")]

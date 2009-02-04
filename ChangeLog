@@ -1,5 +1,12 @@
 2009-02-04  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/posix.vapi:
+
+	Add bindings for signal functions and constants,
+	patch by Michael Lauer
+
+2009-02-04  Jürg Billeter  <j@bitron.ch>
+
 	* gobject/valadbusclientmodule.vala:
 
 	Remove D-Bus message filter when disposing proxy object
