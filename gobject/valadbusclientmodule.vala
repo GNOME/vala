@@ -982,7 +982,30 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		var filter_block = new CCodeBlock ();
 
-		handle_signals (iface, filter_block);
+		// only handle signals concering the object path
+		var cdecl = new CCodeDeclaration ("char*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("path"));
+		filter_block.add_statement (cdecl);
+
+		var get_path = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
+		get_path.add_argument (new CCodeIdentifier ("user_data"));
+		get_path.add_argument (new CCodeConstant ("\"path\""));
+		get_path.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("path")));
+		get_path.add_argument (new CCodeConstant ("NULL"));
+		filter_block.add_statement (new CCodeExpressionStatement (get_path));
+
+		var ccheck = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_has_path"));
+		ccheck.add_argument (new CCodeIdentifier ("message"));
+		ccheck.add_argument (new CCodeIdentifier ("path"));
+
+		var object_filter_block = new CCodeBlock ();
+		filter_block.add_statement (new CCodeIfStatement (ccheck, object_filter_block));
+
+		handle_signals (iface, object_filter_block);
+
+		var free_path = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		free_path.add_argument (new CCodeIdentifier ("path"));
+		filter_block.add_statement (new CCodeExpressionStatement (free_path));
 
 		filter_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_NOT_YET_HANDLED")));
 
