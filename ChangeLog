@@ -1,3 +1,10 @@
+2009-02-04  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
+	Add GTestCase and GTestSuite bindings, patch by John Carr,
+	fixes bug 570518
+
 2009-02-02  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valacodewriter.vala:
