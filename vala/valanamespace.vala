@@ -124,30 +124,8 @@ public class Vala.Namespace : Symbol {
 			cl.access = SymbolAccessibility.INTERNAL;
 		}
 
-		if (scope.lookup (cl.name) is Class) {
-			// merge
-			var old_class = (Class) scope.lookup (cl.name);
-			foreach (DataType base_type in cl.get_base_types ()) {
-				old_class.add_base_type (base_type);
-			}
-			foreach (Field f in cl.get_fields ()) {
-				old_class.add_field (f);
-			}
-			foreach (Method m in cl.get_methods ()) {
-				if (m == cl.default_construction_method && old_class.default_construction_method != null) {
-					// ignore secondary default creation method
-					continue;
-				}
-				old_class.add_method (m);
-			}
-			if (cl.constructor != null) {
-				old_class.constructor = cl.constructor;
-			}
-			cl.source_reference.file.remove_node (cl);
-		} else {
-			classes.add (cl);
-			scope.add (cl.name, cl);
-		}
+		classes.add (cl);
+		scope.add (cl.name, cl);
 	}
 
 	/**

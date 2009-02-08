@@ -1,3 +1,9 @@
+2009-02-08  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valanamespace.vala:
+
+	Drop experimental support for partial classes
+
 2009-02-04  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/posix.vapi:
