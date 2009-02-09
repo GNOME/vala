@@ -1,3 +1,9 @@
+2009-02-09  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodedelegatemodule.vala:
+
+	Emit delegate documentation to the C header files
+
 2009-02-08  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valanamespace.vala:

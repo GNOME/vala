@@ -75,8 +75,14 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 		var ctypedef = new CCodeTypeDefinition (d.return_type.get_cname (), cfundecl);
 
 		if (!d.is_internal_symbol ()) {
+			if (d.source_reference != null && d.source_reference.comment != null) {
+				header_type_declaration.append (new CCodeComment (d.source_reference.comment));
+			}
 			header_type_declaration.append (ctypedef);
 		} else {
+			if (d.source_reference != null && d.source_reference.comment != null) {
+				source_type_declaration.append (new CCodeComment (d.source_reference.comment));
+			}
 			source_type_declaration.append (ctypedef);
 		}
 	}
