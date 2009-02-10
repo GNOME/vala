@@ -219,6 +219,7 @@ namespace GLib {
 		public Value value;
 	}
 
+	[CCode (ref_sink_function = "g_object_ref_sink")]
 	public class InitiallyUnowned : Object {
 	}
 

@@ -399,6 +399,16 @@ public class Vala.Interface : ObjectTypeSymbol {
 		return null;
 	}
 
+	public override string? get_ref_sink_function () {
+		foreach (DataType prerequisite in prerequisites) {
+			string ref_sink_func = prerequisite.data_type.get_ref_sink_function ();
+			if (ref_sink_func != null) {
+				return ref_sink_func;
+			}
+		}
+		return null;
+	}
+
 	public override bool is_subtype_of (TypeSymbol t) {
 		if (this == t) {
 			return true;

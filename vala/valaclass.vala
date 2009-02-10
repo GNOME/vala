@@ -100,6 +100,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	private string type_id;
 	private string ref_function;
 	private string unref_function;
+	private string ref_sink_function;
 	private string param_spec_function;
 	private string copy_function;
 	private string free_function;
@@ -605,6 +606,9 @@ public class Vala.Class : ObjectTypeSymbol {
 		if (a.has_argument ("unref_function")) {
 			set_unref_function (a.get_string ("unref_function"));
 		}
+		if (a.has_argument ("ref_sink_function")) {
+			set_ref_sink_function (a.get_string ("ref_sink_function"));
+		}
 		if (a.has_argument ("copy_function")) {
 			set_dup_function (a.get_string ("copy_function"));
 		}
@@ -777,6 +781,18 @@ public class Vala.Class : ObjectTypeSymbol {
 
 	public void set_unref_function (string? name) {
 		this.unref_function = name;
+	}
+
+	public override string? get_ref_sink_function () {
+		if (ref_sink_function == null && base_class != null) {
+			return base_class.get_ref_sink_function ();
+		} else {
+			return ref_sink_function;
+		}
+	}
+
+	public void set_ref_sink_function (string? name) {
+		this.ref_sink_function = name;
 	}
 
 	public override string? get_dup_function () {

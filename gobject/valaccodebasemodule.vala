@@ -3357,13 +3357,19 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		if (expression_type.value_owned
 		    && expression_type.floating_reference) {
-			/* constructor of GInitiallyUnowned subtype
-			 * returns floating reference, sink it
+			/* floating reference, sink it.
 			 */
-			var csink = new CCodeFunctionCall (new CCodeIdentifier ("g_object_ref_sink"));
-			csink.add_argument (cexpr);
-			
-			cexpr = csink;
+			var cl = expression_type.data_type as ObjectTypeSymbol;
+			var sink_func = (cl != null) ? cl.get_ref_sink_function () : null;
+
+			if (sink_func != null) {
+				var csink = new CCodeFunctionCall (new CCodeIdentifier (sink_func));
+				csink.add_argument (cexpr);
+				
+				cexpr = csink;
+			} else {
+				Report.error (null, "type `%s' does not support floating references".printf (expression_type.data_type.name));
+			}
 		}
 
 		bool boxing = (expression_type is ValueType && !expression_type.nullable

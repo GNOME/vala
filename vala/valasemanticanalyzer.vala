@@ -57,7 +57,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType double_type;
 	public DataType type_type;
 	public Class object_type;
-	public TypeSymbol initially_unowned_type;
 	public DataType glist_type;
 	public DataType gslist_type;
 	public DataType garray_type;
@@ -103,8 +102,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 		if (glib_ns != null) {
 			object_type = (Class) glib_ns.scope.lookup ("Object");
-			initially_unowned_type = (TypeSymbol) glib_ns.scope.lookup ("InitiallyUnowned");
-
 			type_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Type"));
 
 			glist_type = new ObjectType ((Class) glib_ns.scope.lookup ("List"));

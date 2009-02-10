@@ -1,3 +1,22 @@
+2009-02-10  Ryan Lortie  <desrt@desrt.ca>
+
+	Bug 571169 – make floating references generic
+
+	* gobject/valaccodebasemodule.vala:
+	* vala/valainterface.vala:
+	* vala/valaclass.vala:
+	* vala/valaobjectcreationexpression.vala:
+	* vala/valasemanticanalyzer.vala:
+	* vala/valatypesymbol.vala:
+
+	Add support for 'ref_sink_function' CCode attribute on classes. 
+	Use this instead of hardcoding g_object_ref_sink() for
+	GInitiallyUnowned.
+
+	* vapi/gobject-2.0.vapi:
+
+	Set ref_sink_function on InitiallyUnowned class.
+
 2009-02-09  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodedelegatemodule.vala:

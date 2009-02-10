@@ -134,7 +134,25 @@ public abstract class Vala.TypeSymbol : Symbol {
 	public virtual string? get_unref_function () {
 		return null;
 	}
-	
+
+	/**
+	 * Returns the C function name that sinks the reference count of
+	 * "floating" instances of this data type. This is only valid for data
+	 * types supporting floating references. The specified C function must
+	 * accept one argument referencing the instance of this data type and
+	 * return a non-floating reference.
+	 *
+	 * The ref_sink function is called for any constructor of the class and
+	 * for other methods that have the class as a return value and are
+	 * marked with the 'floating' attribute.
+	 *
+	 * @return the name of the C function or null if this data type does not
+	 *         support floating reference counts
+	 */
+	public virtual string? get_ref_sink_function () {
+		return null;
+	}
+
 	/**
 	 * Returns the C symbol representing the runtime type id for this data
 	 * type. The specified symbol must express a registered GType.
