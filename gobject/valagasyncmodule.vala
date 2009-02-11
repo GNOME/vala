@@ -44,9 +44,8 @@ internal class Vala.GAsyncModule : GSignalModule {
 		closure_struct = new CCodeStruct ("_" + dataname);
 
 		closure_struct.add_field ("int", "state");
-		closure_struct.add_field ("GAsyncReadyCallback", "callback");
-		closure_struct.add_field ("gpointer", "user_data");
 		closure_struct.add_field ("GAsyncResult*", "res");
+		closure_struct.add_field ("GSimpleAsyncResult*", "_async_result");
 
 		if (m.binding == MemberBinding.INSTANCE) {
 			var type_sym = (TypeSymbol) m.parent_symbol;
@@ -82,8 +81,25 @@ internal class Vala.GAsyncModule : GSignalModule {
 		asyncblock.add_statement (datadecl);
 		asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), dataalloc)));
 
-		asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "callback"), new CCodeIdentifier ("callback"))));
-		asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "user_data"), new CCodeIdentifier ("user_data"))));
+		var create_result = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
+
+		var cl = m.parent_symbol as Class;
+		if (m.binding == MemberBinding.INSTANCE &&
+		    cl != null && cl.is_subtype_of (gobject_type)) {
+			create_result.add_argument (new CCodeIdentifier ("self"));
+		} else {
+			var object_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_object_newv"));
+			object_creation.add_argument (new CCodeConstant ("G_TYPE_OBJECT"));
+			object_creation.add_argument (new CCodeConstant ("0"));
+			object_creation.add_argument (new CCodeConstant ("NULL"));
+			create_result.add_argument (object_creation);
+		}
+
+		create_result.add_argument (new CCodeIdentifier ("callback"));
+		create_result.add_argument (new CCodeIdentifier ("user_data"));
+		create_result.add_argument (new CCodeIdentifier (m.get_real_cname () + "_async"));
+
+		asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_async_result"), create_result)));
 
 		if (m.binding == MemberBinding.INSTANCE) {
 			asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self"), new CCodeIdentifier ("self"))));
@@ -283,25 +299,11 @@ internal class Vala.GAsyncModule : GSignalModule {
 		}
 
 		var block = new CCodeBlock ();
-		var cl = current_method.parent_symbol as Class;
 
-		var report_idle = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_report_gerror_in_idle"));
-
-		if (current_method.binding == MemberBinding.INSTANCE &&
-		    cl != null && cl.is_subtype_of (gobject_type)) {
-			report_idle.add_argument (new CCodeIdentifier ("self"));
-		} else {
-			var object_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_object_newv"));
-			object_creation.add_argument (new CCodeConstant ("G_TYPE_OBJECT"));
-			object_creation.add_argument (new CCodeConstant ("0"));
-			object_creation.add_argument (new CCodeConstant ("NULL"));
-			report_idle.add_argument (object_creation);
-		}
-
-		report_idle.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "callback"));
-		report_idle.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "user_data"));
-		report_idle.add_argument (error_expr);
-		block.add_statement (new CCodeExpressionStatement (report_idle));
+		var set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_set_from_error"));
+		set_error.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_async_result"));
+		set_error.add_argument (error_expr);
+		block.add_statement (new CCodeExpressionStatement (set_error));
 
 		var free_error = new CCodeFunctionCall (new CCodeIdentifier ("g_error_free"));
 		free_error.add_argument (error_expr);
@@ -311,9 +313,34 @@ internal class Vala.GAsyncModule : GSignalModule {
 		append_local_free (current_symbol, free_locals, false);
 		block.add_statement (free_locals);
 
-		block.add_statement (new CCodeReturnStatement ());
+		block.add_statement (complete_async ());
 
 		return block;
+	}
+
+	public override void visit_return_statement (ReturnStatement stmt) {
+		if (current_method == null || !current_method.coroutine) {
+			base.visit_return_statement (stmt);
+			return;
+		}
+
+		stmt.accept_children (codegen);
+
+		var result_block = new CCodeBlock ();
+		stmt.ccodenode = result_block;
+
+		if (stmt.return_expression != null) {
+			var result_var = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "result");
+			var assign_result = new CCodeAssignment (result_var, (CCodeExpression) stmt.return_expression.ccodenode);
+			result_block.add_statement (new CCodeExpressionStatement (assign_result));
+			create_temp_decl (stmt, stmt.return_expression.temp_vars);
+		}
+
+		var free_locals = new CCodeFragment ();
+		append_local_free (current_symbol, free_locals, false);
+		result_block.add_statement (free_locals);
+
+		result_block.add_statement (complete_async ());
 	}
 }
 

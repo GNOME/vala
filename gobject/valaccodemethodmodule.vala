@@ -111,6 +111,35 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 	}
 
+	public CCodeStatement complete_async () {
+		var complete_block = new CCodeBlock ();
+
+		var direct_block = new CCodeBlock ();
+		var direct_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete"));
+		var async_result_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_async_result");
+		direct_call.add_argument (async_result_expr);
+		direct_block.add_statement (new CCodeExpressionStatement (direct_call));
+
+		var idle_block = new CCodeBlock ();
+		var idle_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete_in_idle"));
+		idle_call.add_argument (async_result_expr);
+		idle_block.add_statement (new CCodeExpressionStatement (idle_call));
+
+		var state = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state");
+		var zero = new CCodeConstant ("0");
+		var state_is_zero = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, state, zero);
+		var dispatch = new CCodeIfStatement (state_is_zero, idle_block, direct_block);
+		complete_block.add_statement (dispatch);
+
+		var unref = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+		unref.add_argument (async_result_expr);
+		complete_block.add_statement (new CCodeExpressionStatement (unref));
+
+		complete_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+
+		return complete_block;
+	}
+
 	public override void visit_method (Method m) {
 		var old_type_symbol = current_type_symbol;
 		var old_symbol = current_symbol;
@@ -281,23 +310,8 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					// coroutine body
 					cswitch.add_statement (function.block);
 
-					// complete async call by invoking callback
-					var object_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_object_newv"));
-					object_creation.add_argument (new CCodeConstant ("G_TYPE_OBJECT"));
-					object_creation.add_argument (new CCodeConstant ("0"));
-					object_creation.add_argument (new CCodeConstant ("NULL"));
-
-					var async_result_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
-					async_result_creation.add_argument (object_creation);
-					async_result_creation.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "callback"));
-					async_result_creation.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "user_data"));
-					async_result_creation.add_argument (new CCodeIdentifier ("data"));
-
-					var completecall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete"));
-					completecall.add_argument (async_result_creation);
-					cswitch.add_statement (new CCodeExpressionStatement (completecall));
-
-					cswitch.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+					// epilogue
+					cswitch.add_statement (complete_async ());
 
 					co_function.block = new CCodeBlock ();
 					co_function.block.add_statement (cswitch);
@@ -924,3 +938,5 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 	}
 }
+
+// vim:sw=8 noet

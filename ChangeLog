@@ -1,5 +1,17 @@
 2009-02-11  Ryan Lortie  <desrt@desrt.ca>
 
+	Bug 571263 – make yielding functions dispatch results to mainloop
+
+	* gobject/valaccodemethodmodule.vala:
+	* valagasyncmodule.vala:
+	
+	Create simple async result from _async entry function and use it when
+	doing return; throw; or at the end of the function.  Fix return
+	statements for the async case.  Dispatch via idle handler in the case
+	that we are returning without having yielded.
+
+2009-02-11  Ryan Lortie  <desrt@desrt.ca>
+
 	Bug 566363 – yielding functions that throw don't work
 
 	* gobject/valagerrormodule.vala:
