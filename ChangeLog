@@ -1,5 +1,19 @@
 2009-02-11  Ryan Lortie  <desrt@desrt.ca>
 
+	Bug 566363 – yielding functions that throw don't work
+
+	* gobject/valagerrormodule.vala:
+	* gobject/valagasyncmodule.vala:
+
+	Refactor GErrorModule to remove some common code and introduce a
+	separate (virtual) function 'return_with_exception' to create
+	the code for returning exceptions from functions.
+
+	In GAsyncModule, override the new virtual function to call
+	g_simple_async_report_gerror_in_idle().
+
+2009-02-11  Ryan Lortie  <desrt@desrt.ca>
+
 	Bug 571256 – [CCode (async_only = true)] formal parameter annotation
 
 	* vala/valacodewriter.vala:

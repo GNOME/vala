@@ -86,19 +86,45 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		create_temp_decl (stmt, stmt.error_expression.temp_vars);
 	}
 
+	public virtual CCodeStatement return_with_exception (CCodeExpression error_expr)
+	{
+		var cpropagate = new CCodeFunctionCall (new CCodeIdentifier ("g_propagate_error"));
+		cpropagate.add_argument (get_variable_cexpression ("error"));
+		cpropagate.add_argument (error_expr);
+
+		var cerror_block = new CCodeBlock ();
+		cerror_block.add_statement (new CCodeExpressionStatement (cpropagate));
+
+		// free local variables
+		var free_frag = new CCodeFragment ();
+		append_local_free (current_symbol, free_frag, false);
+		cerror_block.add_statement (free_frag);
+
+		if (current_return_type is VoidType) {
+			cerror_block.add_statement (new CCodeReturnStatement ());
+		} else {
+			cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type, false)));
+		}
+
+		return cerror_block;
+	}
+
 	public override void add_simple_check (CodeNode node, CCodeFragment cfrag) {
 		current_method_inner_error = true;
 
+		var inner_error = get_variable_cexpression ("inner_error");
 		var cprint_frag = new CCodeFragment ();
 		var ccritical = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
 		ccritical.add_argument (new CCodeConstant ("\"file %s: line %d: uncaught error: %s\""));
 		ccritical.add_argument (new CCodeConstant ("__FILE__"));
 		ccritical.add_argument (new CCodeConstant ("__LINE__"));
-		ccritical.add_argument (new CCodeMemberAccess.pointer (get_variable_cexpression ("inner_error"), "message"));
+		ccritical.add_argument (new CCodeMemberAccess.pointer (inner_error, "message"));
 		cprint_frag.append (new CCodeExpressionStatement (ccritical));
 		var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));
-		cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("inner_error")));
+		cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, inner_error));
 		cprint_frag.append (new CCodeExpressionStatement (cclear));
+
+		CCodeStatement cerror_handler;
 
 		if (current_try != null) {
 			// surrounding try found
@@ -118,47 +144,25 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 					// general catch clause
 					cerror_block.add_statement (cgoto_stmt);
 				} else {
-					var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (get_variable_cexpression ("inner_error"), "domain"), new CCodeIdentifier (clause.error_type.data_type.get_upper_case_cname ()));
+					var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (inner_error, "domain"), new CCodeIdentifier (clause.error_type.data_type.get_upper_case_cname ()));
 
 					var cgoto_block = new CCodeBlock ();
 					cgoto_block.add_statement (cgoto_stmt);
 
 					cerror_block.add_statement (new CCodeIfStatement (ccond, cgoto_block));
 				}
+
 			}
 
 			// go to finally clause if no catch clause matches
 			cerror_block.add_statement (new CCodeGotoStatement ("__finally%d".printf (current_try_id)));
 
-			// check error domain if expression failed
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression ("inner_error"), new CCodeConstant ("NULL"));
-
-			cfrag.append (new CCodeIfStatement (ccond, cerror_block));
+			cerror_handler = cerror_block;
 		} else if (current_method != null && current_method.get_error_types ().size > 0) {
 			// current method can fail, propagate error
 			// TODO ensure one of the error domains matches
 
-			var cpropagate = new CCodeFunctionCall (new CCodeIdentifier ("g_propagate_error"));
-			cpropagate.add_argument (get_variable_cexpression ("error"));
-			cpropagate.add_argument (get_variable_cexpression ("inner_error"));
-
-			var cerror_block = new CCodeBlock ();
-			cerror_block.add_statement (new CCodeExpressionStatement (cpropagate));
-
-			// free local variables
-			var free_frag = new CCodeFragment ();
-			append_local_free (current_symbol, free_frag, false);
-			cerror_block.add_statement (free_frag);
-
-			if (current_return_type is VoidType) {
-				cerror_block.add_statement (new CCodeReturnStatement ());
-			} else {
-				cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type, false)));
-			}
-
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression ("inner_error"), new CCodeConstant ("NULL"));
-
-			cfrag.append (new CCodeIfStatement (ccond, cerror_block));
+			cerror_handler = return_with_exception (inner_error);
 		} else {
 			// unhandled error
 
@@ -178,11 +182,11 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 				cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type, false)));
 			}
 
-			// check error domain if expression failed
-			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression ("inner_error"), new CCodeConstant ("NULL"));
-
-			cfrag.append (new CCodeIfStatement (ccond, cerror_block));
+			cerror_handler = cerror_block;
 		}
+		
+		var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, inner_error, new CCodeConstant ("NULL"));
+		cfrag.append (new CCodeIfStatement (ccond, cerror_handler));
 	}
 
 	public override void visit_try_statement (TryStatement stmt) {
@@ -271,3 +275,5 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		clause.ccodenode = cfrag;
 	}
 }
+
+// vim:sw=8 noet

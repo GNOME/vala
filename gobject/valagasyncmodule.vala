@@ -275,4 +275,46 @@ internal class Vala.GAsyncModule : GSignalModule {
 		temp_vars.clear ();
 		temp_ref_vars.clear ();
 	}
+
+	public override CCodeStatement return_with_exception (CCodeExpression error_expr)
+	{
+		if (!current_method.coroutine) {
+			return base.return_with_exception (error_expr);
+		}
+
+		var block = new CCodeBlock ();
+		var cl = current_method.parent_symbol as Class;
+
+		var report_idle = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_report_gerror_in_idle"));
+
+		if (current_method.binding == MemberBinding.INSTANCE &&
+		    cl != null && cl.is_subtype_of (gobject_type)) {
+			report_idle.add_argument (new CCodeIdentifier ("self"));
+		} else {
+			var object_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_object_newv"));
+			object_creation.add_argument (new CCodeConstant ("G_TYPE_OBJECT"));
+			object_creation.add_argument (new CCodeConstant ("0"));
+			object_creation.add_argument (new CCodeConstant ("NULL"));
+			report_idle.add_argument (object_creation);
+		}
+
+		report_idle.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "callback"));
+		report_idle.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "user_data"));
+		report_idle.add_argument (error_expr);
+		block.add_statement (new CCodeExpressionStatement (report_idle));
+
+		var free_error = new CCodeFunctionCall (new CCodeIdentifier ("g_error_free"));
+		free_error.add_argument (error_expr);
+		block.add_statement (new CCodeExpressionStatement (free_error));
+
+		var free_locals = new CCodeFragment ();
+		append_local_free (current_symbol, free_locals, false);
+		block.add_statement (free_locals);
+
+		block.add_statement (new CCodeReturnStatement ());
+
+		return block;
+	}
 }
+
+// vim:sw=8 noet
