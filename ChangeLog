@@ -1,3 +1,15 @@
+2009-02-11  Ryan Lortie  <desrt@desrt.ca>
+
+	Bug 571256 – [CCode (async_only = true)] formal parameter annotation
+
+	* vala/valacodewriter.vala:
+	* vala/valaformalparameter.vala:
+	* gobject/valaccodemethodcallmodule.vala:
+
+	Allow emitting some C code arguments only in the case that we are
+	calling the asynchronous version of a yielding function.  This helps
+	with the io_priority oddity in GIO.
+
 2009-02-11  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaenum.vala:

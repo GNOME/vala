@@ -212,6 +212,25 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				var param = params_it.get ();
 				ellipsis = param.params_array || param.ellipsis;
 				if (!ellipsis) {
+					if (param.async_only &&
+                                          /* only skip if we are in a sync function (or property handler) */
+                                            (current_method == null || !current_method.coroutine) &&
+                                          /* and not manually starting async */
+					    (ma == null || ma.member_name != "begin")) {
+						/* [CCode (async_only = true)] and we're making a
+						 * synchronous version of the call.  Emit the arg
+						 * at the start of a comma expression so that we
+						 * get any side effects but otherwise ignore the
+						 * value.
+						 */
+						var comma = new CCodeCommaExpression ();
+						comma.append_expression ((CCodeExpression) arg.ccodenode);
+						comma.append_expression (ccall_expr);
+						ccall_expr = comma;
+
+						continue;
+					}
+
 					// if the vala argument expands to multiple C arguments,
 					// we have to make sure that the C arguments don't depend
 					// on each other as there is no guaranteed argument

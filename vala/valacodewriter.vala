@@ -726,6 +726,10 @@ public class Vala.CodeWriter : CodeVisitor {
 				ccode_params.append_printf ("%sdelegate_target_pos = %g", separator, param.cdelegate_target_parameter_position);
 				separator = ", ";
 			}
+			if (param.async_only) {
+				ccode_params.append_printf ("%sasync_only = true", separator);
+				separator = ", ";
+			}
 
 			if (ccode_params.len > 0) {
 				write_string ("[CCode (%s)] ".printf (ccode_params.str));
