@@ -1,0 +1,10 @@
+# reverse general ignorance of *.[ch]
+!*.c
+!*.h
+
+# but ignore these generated ones anyway
+scannerparser.c
+scannerparser.h
+scannerlexer.c
+
+gen-introspect
