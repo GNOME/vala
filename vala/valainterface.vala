@@ -1,6 +1,6 @@
 /* valainterface.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -262,6 +262,10 @@ public class Vala.Interface : ObjectTypeSymbol {
 			cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
 		}
 		return cname;
+	}
+
+	public void set_cname (string cname) {
+		this.cname = cname;
 	}
 	
 	/**

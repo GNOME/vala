@@ -229,6 +229,10 @@ public class Vala.Struct : TypeSymbol {
 		return cname;
 	}
 
+	public void set_cname (string cname) {
+		this.cname = cname;
+	}
+
 	/**
 	 * Returns the default name of this struct as it is used in C code.
 	 *

@@ -242,6 +242,12 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("enumeration");
 		var en = new Enum (reader.get_attribute ("name"), get_current_src ());
 		en.access = SymbolAccessibility.PUBLIC;
+
+		string enum_cname = reader.get_attribute ("c:type");
+		if (enum_cname != null) {
+			en.set_cname (enum_cname);
+		}
+
 		next ();
 
 		string common_prefix = null;
@@ -476,6 +482,11 @@ public class Vala.GirParser : CodeVisitor {
 		var cl = new Class (reader.get_attribute ("name"), get_current_src ());
 		cl.access = SymbolAccessibility.PUBLIC;
 
+		string cname = reader.get_attribute ("c:type");
+		if (cname != null) {
+			cl.set_cname (cname);
+		}
+
 		string parent = reader.get_attribute ("parent");
 		if (parent != null) {
 			cl.add_base_type (parse_type_from_name (parent));
@@ -573,6 +584,12 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("interface");
 		var iface = new Interface (reader.get_attribute ("name"), get_current_src ());
 		iface.access = SymbolAccessibility.PUBLIC;
+
+		string cname = reader.get_attribute ("c:type");
+		if (cname != null) {
+			iface.set_cname (cname);
+		}
+
 		next ();
 		var methods = new ArrayList<Method> ();
 		var vmethods = new ArrayList<Method> ();
@@ -811,6 +828,12 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("glib:boxed");
 		var st = new Struct (reader.get_attribute ("glib:name"));
 		st.access = SymbolAccessibility.PUBLIC;
+
+		string cname = reader.get_attribute ("c:type");
+		if (cname != null) {
+			st.set_cname (cname);
+		}
+
 		next ();
 
 		while (current_token == MarkupTokenType.START_ELEMENT) {

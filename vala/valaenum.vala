@@ -132,6 +132,10 @@ public class Vala.Enum : TypeSymbol {
 		return cname;
 	}
 
+	public void set_cname (string cname) {
+		this.cname = cname;
+	}
+
 	public override string get_lower_case_cprefix () {
 		if (lower_case_cprefix == null) {
 			lower_case_cprefix = "%s_".printf (get_lower_case_cname (null));

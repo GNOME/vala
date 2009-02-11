@@ -1,3 +1,12 @@
+2009-02-11  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valaenum.vala:
+	* vala/valainterface.vala:
+	* vala/valastruct.vala:
+	* vapigen/valagirparser.vala:
+
+	Recognize c:type attributes in .gir
+
 2009-02-10  Ryan Lortie  <desrt@desrt.ca>
 
 	Bug 571169 – make floating references generic
