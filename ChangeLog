@@ -1,3 +1,9 @@
+2009-02-12  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valagenieparser.vala:
+
+	Fix else if parsing, fixes bug 562632
+
 2009-02-12  Ryan Lortie  <desrt@desrt.ca>
 
 	* gobject/valagasyncmodule.vala:

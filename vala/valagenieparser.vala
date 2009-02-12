@@ -1775,6 +1775,13 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var true_stmt = parse_embedded_statement ();
 		Block false_stmt = null;
 		if (accept (TokenType.ELSE)) {
+			// allow `else if' on the same line without `do'
+			if (!accept (TokenType.DO) && current () != TokenType.IF) {
+				expect (TokenType.EOL);
+			} else {
+				accept (TokenType.EOL);
+			}
+
 			false_stmt = parse_embedded_statement ();
 		}
 		return new IfStatement (condition, true_stmt, false_stmt, src);
