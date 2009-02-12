@@ -68,6 +68,32 @@ public abstract class Vala.Member : Symbol {
 	public void add_cheader_filename (string filename) {
 		cheader_filenames.add (filename);
 	}
+
+	public Symbol? get_hidden_member () {
+		Symbol sym = null;
+
+		if (parent_symbol is Class) {
+			var cl = ((Class) parent_symbol).base_class;
+			while (cl != null) {
+				sym = cl.scope.lookup (name);
+				if (sym != null && sym.access != SymbolAccessibility.PRIVATE) {
+					return sym;
+				}
+				cl = cl.base_class;
+			}
+		} else if (parent_symbol is Struct) {
+			var st = ((Struct) parent_symbol).base_struct;
+			while (st != null) {
+				sym = st.scope.lookup (name);
+				if (sym != null && sym.access != SymbolAccessibility.PRIVATE) {
+					return sym;
+				}
+				st = st.base_struct;
+			}
+		}
+
+		return null;
+	}
 }
 
 public enum MemberBinding {

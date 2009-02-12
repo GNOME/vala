@@ -181,6 +181,10 @@ public class Vala.Constant : Member, Lockable {
 			}
 		}
 
+		if (!external_package && !hides && get_hidden_member () != null) {
+			Report.warning (source_reference, "%s hides inherited constant `%s'. Use the `new' keyword if hiding was intentional".printf (get_full_name (), get_hidden_member ().get_full_name ()));
+		}
+
 		analyzer.current_source_file = old_source_file;
 		analyzer.current_symbol = old_symbol;
 

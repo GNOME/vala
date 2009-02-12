@@ -34,18 +34,18 @@ public class Vala.CCodeLineDirective : CCodeNode {
 	/**
 	 * The line number in the source file to be presumed.
 	 */
-	public int line { get; set; }
+	public int line_number { get; set; }
 	
 	public CCodeLineDirective (string _filename, int _line) {
 		filename = _filename;
-		line = _line;
+		line_number = _line;
 	}
 
 	public override void write (CCodeWriter writer) {
 		if (!writer.bol) {
 			writer.write_newline ();
 		}
-		writer.write_string ("#line %d \"%s\"".printf (line, filename));
+		writer.write_string ("#line %d \"%s\"".printf (line_number, filename));
 		writer.write_newline ();
 	}
 }

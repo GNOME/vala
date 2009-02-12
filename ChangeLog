@@ -1,5 +1,27 @@
 2009-02-12  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valaclass.vala:
+	* vala/valaconstant.vala:
+	* vala/valafield.vala:
+	* vala/valamember.vala:
+	* vala/valamethod.vala:
+	* vala/valaproperty.vala:
+	* vala/valastruct.vala:
+
+	Warn when hiding members, support `new' keyword to suppress
+	warning, based on patch by Andreas Brauchli, fixes bug 567743
+
+	* vala/valacodenode.vala:
+	* vala/valacreationmethod.vala:
+	* vala/valaenum.vala:
+	* vala/valaerrordomain.vala:
+	* vala/valanamespace.vala:
+	* ccode/valaccodelinedirective.vala:
+
+	Avoid hidden members
+
+2009-02-12  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valastruct.vala:
 	* vala/valasymbolresolver.vala:
 

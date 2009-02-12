@@ -321,6 +321,10 @@ public class Vala.Field : Member, Lockable {
 			}
 		}
 
+		if (!external_package && !hides && get_hidden_member () != null) {
+			Report.warning (source_reference, "%s hides inherited field `%s'. Use the `new' keyword if hiding was intentional".printf (get_full_name (), get_hidden_member ().get_full_name ()));
+		}
+
 		if (field_in_header) {
 			if (field_type is ValueType) {
 				analyzer.current_source_file.add_type_dependency (field_type, SourceFileDependencyType.HEADER_FULL);

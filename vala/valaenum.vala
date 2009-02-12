@@ -165,13 +165,7 @@ public class Vala.Enum : TypeSymbol {
 		return false;
 	}
 
-	/**
-	 * Returns the string to be prepended to the name of members of this
-	 * enum when used in C code.
-	 *
-	 * @return the prefix to be used in C code
-	 */
-	public string get_cprefix () {
+	public override string get_cprefix () {
 		if (cprefix == null) {
 			cprefix = "%s_".printf (get_upper_case_cname ());
 		}

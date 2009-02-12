@@ -744,6 +744,10 @@ public class Vala.Method : Member {
 			Report.error (source_reference, "%s: no suitable method found to override".printf (get_full_name ()));
 		}
 
+		if (!external_package && !overrides && !hides && get_hidden_member () != null) {
+			Report.warning (source_reference, "%s hides inherited method `%s'. Use the `new' keyword if hiding was intentional".printf (get_full_name (), get_hidden_member ().get_full_name ()));
+		}
+
 		// check whether return type is at least as accessible as the method
 		if (!analyzer.is_type_accessible (this, return_type)) {
 			error = true;

@@ -45,6 +45,10 @@ public abstract class Vala.CodeNode {
 	 * Contains all attributes that have been specified for this code node.
 	 */
 	public GLib.List<Attribute> attributes;
+
+	public string type_name {
+		get { return Type.from_instance (this).name (); }
+	}
 	
 	/**
 	 * Generated CCodeNode that corresponds to this code node.
@@ -188,9 +192,5 @@ public abstract class Vala.CodeNode {
 
 	public string get_temp_name () {
 		return "." + (++last_temp_nr).to_string ();
-	}
-
-	public weak string get_type_name () {
-		return Type.from_instance (this).name ();
 	}
 }
