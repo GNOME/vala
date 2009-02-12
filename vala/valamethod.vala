@@ -609,6 +609,16 @@ public class Vala.Method : Member {
 
 		process_attributes ();
 
+		if (coroutine) {
+			foreach (var param in parameters) {
+				if (param.direction != ParameterDirection.IN) {
+					error = true;
+					Report.error (param.source_reference, "Reference parameter types are not yet supported for yielding functions");
+					return false;
+				}
+			}
+		}
+
 		if (is_abstract) {
 			if (parent_symbol is Class) {
 				var cl = (Class) parent_symbol;
@@ -847,3 +857,5 @@ public class Vala.Method : Member {
 		return true;
 	}
 }
+
+// vim:sw=8 noet

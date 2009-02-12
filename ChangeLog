@@ -1,3 +1,10 @@
+2009-02-12  Ryan Lortie  <desrt@desrt.ca>
+
+	* vala/valamethod.vala:
+
+	For now, just forbid ref/out paramters on yielding functions since
+	they are hard to deal with.
+
 2009-02-12  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valagenieparser.vala:
