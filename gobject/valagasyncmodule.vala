@@ -28,6 +28,29 @@ internal class Vala.GAsyncModule : GSignalModule {
 		base (codegen, next);
 	}
 
+	CCodeFunction generate_free_function (Method m) {
+		var dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
+
+		var freefunc = new CCodeFunction (m.get_real_cname () + "_data_free", "void");
+		freefunc.line = function.line;
+		freefunc.modifiers = CCodeModifiers.STATIC;
+		freefunc.add_parameter (new CCodeFormalParameter ("_data", "gpointer"));
+
+		var freeblock = new CCodeBlock ();
+		freefunc.block = freeblock;
+
+		var datadecl = new CCodeDeclaration (dataname + "*");
+		datadecl.add_declarator (new CCodeVariableDeclarator ("data", new CCodeIdentifier ("_data")));
+		freeblock.add_statement (datadecl);
+
+		var freecall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
+		freecall.add_argument (new CCodeIdentifier (dataname));
+		freecall.add_argument (new CCodeIdentifier ("data"));
+		freeblock.add_statement (new CCodeExpressionStatement (freecall));
+
+		return freefunc;
+	}
+
 	public override void visit_method (Method m) {
 		if (!m.coroutine) {
 			base.visit_method (m);
@@ -65,6 +88,8 @@ internal class Vala.GAsyncModule : GSignalModule {
 		source_type_definition.append (closure_struct);
 		source_type_declaration.append (new CCodeTypeDefinition ("struct _" + dataname, new CCodeVariableDeclarator (dataname)));
 
+		source_type_member_definition.append (generate_free_function (m));
+
 		// generate async function
 		var asyncfunc = new CCodeFunction (m.get_real_cname () + "_async", "void");
 		asyncfunc.line = function.line;
@@ -100,6 +125,12 @@ internal class Vala.GAsyncModule : GSignalModule {
 		create_result.add_argument (new CCodeIdentifier (m.get_real_cname () + "_async"));
 
 		asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_async_result"), create_result)));
+
+		var set_op_res_call = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_set_op_res_gpointer"));
+		set_op_res_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_async_result"));
+		set_op_res_call.add_argument (new CCodeIdentifier ("data"));
+		set_op_res_call.add_argument (new CCodeIdentifier (m.get_real_cname () + "_data_free"));
+		asyncblock.add_statement (new CCodeExpressionStatement (set_op_res_call));
 
 		if (m.binding == MemberBinding.INSTANCE) {
 			asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self"), new CCodeIdentifier ("self"))));

@@ -1,3 +1,10 @@
+2009-02-12  Ryan Lortie  <desrt@desrt.ca>
+
+	* gobject/valagasyncmodule.vala:
+
+	Store the Data structure as the op_res gpointer of the
+	GSimpleAsyncResult.  Emit a function to free it and hook it in.
+
 2009-02-12  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodearraymodule.vala:
