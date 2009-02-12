@@ -1,3 +1,9 @@
+2009-02-12  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodearraymodule.vala:
+
+	Keep arrays NULL-terminated when appending
+
 2009-02-11  Ryan Lortie  <desrt@desrt.ca>
 
 	Bug 571263 – make yielding functions dispatch results to mainloop

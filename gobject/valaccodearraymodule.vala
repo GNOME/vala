@@ -601,7 +601,12 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var renew_call = new CCodeFunctionCall (new CCodeIdentifier ("g_renew"));
 		renew_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
 		renew_call.add_argument (array);
-		renew_call.add_argument (size);
+		if (array_type.element_type.is_reference_type_or_type_parameter ()) {
+			// NULL terminate array
+			renew_call.add_argument (new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, size, new CCodeConstant ("1")));
+		} else {
+			renew_call.add_argument (size);
+		}
 
 		var resize_block = new CCodeBlock ();
 		resize_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (size, new CCodeConditionalExpression (size, new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("2"), size), new CCodeConstant ("4")))));
@@ -611,6 +616,11 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		block.add_statement (new CCodeIfStatement (csizecheck, resize_block));
 
 		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (array, new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, length)), value)));
+
+		if (array_type.element_type.is_reference_type_or_type_parameter ()) {
+			// NULL terminate array
+			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeElementAccess (array, length), new CCodeConstant ("NULL"))));
+		}
 
 		// append to file
 
