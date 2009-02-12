@@ -1,5 +1,12 @@
 2009-02-12  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valastruct.vala:
+	* vala/valasymbolresolver.vala:
+
+	Add base_struct property to Struct class, patch by Andreas Brauchli
+
+2009-02-12  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valamember.vala:
 	* vala/valaparser.vala:
 

@@ -51,7 +51,7 @@ public class Vala.Struct : TypeSymbol {
 	private string destroy_function;
 
 	/**
-	 * Specifies the base struct.
+	 * Specifies the base type.
 	 */
 	public DataType? base_type {
 		get {
@@ -60,6 +60,18 @@ public class Vala.Struct : TypeSymbol {
 		set {
 			value.parent_node = this;
 			_base_type = value;
+		}
+	}
+
+	/**
+	 * Specifies the base Struct.
+	 */
+	public Struct? base_struct {
+		get {
+			if (_base_type != null) {
+				return _base_type.data_type as Struct;
+			}
+			return null;
 		}
 	}
 
@@ -293,7 +305,7 @@ public class Vala.Struct : TypeSymbol {
 	 */
 	public bool is_boolean_type () {
 		if (base_type != null) {
-			var st = base_type.data_type as Struct;
+			var st = base_struct;
 			if (st != null && st.is_boolean_type ()) {
 				return true;
 			}
@@ -308,7 +320,7 @@ public class Vala.Struct : TypeSymbol {
 	 */
 	public bool is_integer_type () {
 		if (base_type != null) {
-			var st = base_type.data_type as Struct;
+			var st = base_struct;
 			if (st != null && st.is_integer_type ()) {
 				return true;
 			}
@@ -323,7 +335,7 @@ public class Vala.Struct : TypeSymbol {
 	 */
 	public bool is_floating_type () {
 		if (base_type != null) {
-			var st = base_type.data_type as Struct;
+			var st = base_struct;
 			if (st != null && st.is_floating_type ()) {
 				return true;
 			}
@@ -421,7 +433,7 @@ public class Vala.Struct : TypeSymbol {
 		if (type_id == null) {
 			if (!has_type_id) {
 				if (base_type != null) {
-					var st = base_type.data_type as Struct;
+					var st = base_struct;
 					if (st != null) {
 						return st.get_type_id ();
 					}
@@ -445,7 +457,7 @@ public class Vala.Struct : TypeSymbol {
 	public override string? get_marshaller_type_name () {
 		if (marshaller_type_name == null) {
 			if (base_type != null) {
-				var st = base_type.data_type as Struct;
+				var st = base_struct;
 				if (st != null) {
 					return st.get_marshaller_type_name ();
 				}
@@ -468,7 +480,7 @@ public class Vala.Struct : TypeSymbol {
 	public override string? get_get_value_function () {
 		if (get_value_function == null) {
 			if (base_type != null) {
-				var st = base_type.data_type as Struct;
+				var st = base_struct;
 				if (st != null) {
 					return st.get_get_value_function ();
 				}
@@ -489,7 +501,7 @@ public class Vala.Struct : TypeSymbol {
 	public override string? get_set_value_function () {
 		if (set_value_function == null) {
 			if (base_type != null) {
-				var st = base_type.data_type as Struct;
+				var st = base_struct;
 				if (st != null) {
 					return st.get_set_value_function ();
 				}
@@ -522,7 +534,7 @@ public class Vala.Struct : TypeSymbol {
 
 		// inherit default value from base type
 		if (base_type != null) {
-			var st = base_type.data_type as Struct;
+			var st = base_struct;
 			if (st != null) {
 				return st.get_default_value ();
 			}
@@ -553,7 +565,7 @@ public class Vala.Struct : TypeSymbol {
 	 */
 	public bool is_simple_type () {
 		if (base_type != null) {
-			var st = base_type.data_type as Struct;
+			var st = base_struct;
 			if (st != null && st.is_simple_type ()) {
 				return true;
 			}

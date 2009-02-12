@@ -84,7 +84,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 		st.accept_children (this);
 
 		if (st.base_type != null) {
-			var base_type = st.base_type.data_type as Struct;
+			var base_type = st.base_struct;
 			if (base_type != null) {
 				if (base_type.is_subtype_of (st)) {
 					st.error = true;
