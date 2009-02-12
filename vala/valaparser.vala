@@ -54,9 +54,10 @@ public class Vala.Parser : CodeVisitor {
 		CLASS = 1 << 1,
 		EXTERN = 1 << 2,
 		INLINE = 1 << 3,
-		OVERRIDE = 1 << 4,
-		STATIC = 1 << 5,
-		VIRTUAL = 1 << 6
+		NEW = 1 << 4,
+		OVERRIDE = 1 << 5,
+		STATIC = 1 << 6,
+		VIRTUAL = 1 << 7
 	}
 
 	public Parser () {
@@ -1858,6 +1859,7 @@ public class Vala.Parser : CodeVisitor {
 			case TokenType.INTERFACE:
 			case TokenType.INTERNAL:
 			case TokenType.NAMESPACE:
+			case TokenType.NEW:
 			case TokenType.OVERRIDE:
 			case TokenType.PRIVATE:
 			case TokenType.PROTECTED:
@@ -2085,6 +2087,9 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
 			c.external = true;
 		}
+		if (ModifierFlags.NEW in flags) {
+			c.hides = true;
+		}
 		set_attributes (c, attrs);
 		return c;
 	}
@@ -2110,6 +2115,9 @@ public class Vala.Parser : CodeVisitor {
 		}
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
 			f.external = true;
+		}
+		if (ModifierFlags.NEW in flags) {
+			f.hides = true;
 		}
 		if (accept (TokenType.ASSIGN)) {
 			f.initializer = parse_expression ();
@@ -2146,6 +2154,9 @@ public class Vala.Parser : CodeVisitor {
 			method.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {
 			method.binding = MemberBinding.CLASS;
+		}
+		if (ModifierFlags.NEW in flags) {
+			method.hides = true;
 		}
 
 		if (method.binding == MemberBinding.INSTANCE) {
@@ -2242,6 +2253,9 @@ public class Vala.Parser : CodeVisitor {
 		}
 		if (ModifierFlags.OVERRIDE in flags) {
 			prop.overrides = true;
+		}
+		if (ModifierFlags.NEW in flags) {
+			prop.hides = true;
 		}
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
 			prop.external = true;
@@ -2344,6 +2358,9 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.VIRTUAL in flags) {
 			sig.is_virtual = true;
 		}
+		if (ModifierFlags.NEW in flags) {
+			sig.hides = true;
+		}
 		expect (TokenType.OPEN_PARENS);
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
@@ -2360,6 +2377,9 @@ public class Vala.Parser : CodeVisitor {
 		var begin = get_location ();
 		var flags = parse_member_declaration_modifiers ();
 		expect (TokenType.CONSTRUCT);
+		if (ModifierFlags.NEW in flags) {
+			throw new ParseError.SYNTAX (get_error ("`new' modifier not allowed on constructor"));
+		}
 		var c = new Constructor (get_src_com (begin));
 		if (ModifierFlags.STATIC in flags) {
 			c.binding = MemberBinding.STATIC;
@@ -2377,6 +2397,9 @@ public class Vala.Parser : CodeVisitor {
 		parse_identifier ();
 		expect (TokenType.OPEN_PARENS);
 		expect (TokenType.CLOSE_PARENS);
+		if (ModifierFlags.NEW in flags) {
+			throw new ParseError.SYNTAX (get_error ("`new' modifier not allowed on destructor"));
+		}
 		var d = new Destructor (get_src_com (begin));
 		if (ModifierFlags.STATIC in flags) {
 			d.binding = MemberBinding.STATIC;
@@ -2685,6 +2708,10 @@ public class Vala.Parser : CodeVisitor {
 				next ();
 				flags |= ModifierFlags.INLINE;
 				break;
+			case TokenType.NEW:
+				next ();
+				flags |= ModifierFlags.NEW;
+				break;
 			case TokenType.OVERRIDE:
 				next ();
 				flags |= ModifierFlags.OVERRIDE;
@@ -2742,6 +2769,9 @@ public class Vala.Parser : CodeVisitor {
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
 		var sym = parse_symbol_name ();
+		if (ModifierFlags.NEW in flags) {
+			throw new ParseError.SYNTAX (get_error ("`new' modifier not allowed on creation method"));
+		}
 		CreationMethod method;
 		if (sym.inner == null) {
 			method = new CreationMethod (sym.name, null, get_src_com (begin));
@@ -2782,6 +2812,9 @@ public class Vala.Parser : CodeVisitor {
 		var access = parse_access_modifier ();
 		var flags = parse_member_declaration_modifiers ();
 		expect (TokenType.DELEGATE);
+		if (ModifierFlags.NEW in flags) {
+			throw new ParseError.SYNTAX (get_error ("`new' modifier not allowed on delegates"));
+		}
 		var type = parse_type ();
 		var sym = parse_symbol_name ();
 		var type_param_list = parse_type_parameter_list ();
@@ -2940,6 +2973,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.INTERFACE:
 		case TokenType.INTERNAL:
 		case TokenType.NAMESPACE:
+		case TokenType.NEW:
 		case TokenType.OVERRIDE:
 		case TokenType.PRIVATE:
 		case TokenType.PROTECTED:

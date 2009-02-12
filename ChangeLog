@@ -1,3 +1,11 @@
+2009-02-12  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valamember.vala:
+	* vala/valaparser.vala:
+
+	Support `new' as member modifier in parser to prepare support for
+	hiding members, patch by Andreas Brauchli
+
 2009-02-12  Ryan Lortie  <desrt@desrt.ca>
 
 	* vala/valamethod.vala:

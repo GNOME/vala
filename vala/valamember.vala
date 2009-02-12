@@ -29,6 +29,12 @@ using Gee;
 public abstract class Vala.Member : Symbol {
 	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
 
+	/**
+	 * Specifies whether this method explicitly hides a member of a base
+	 * type.
+	 */
+	public bool hides { get; set; }
+
 	public Member (string? name, SourceReference? source_reference) {
 		base (name, source_reference);
 	}
