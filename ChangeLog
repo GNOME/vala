@@ -1,3 +1,9 @@
+2009-02-14  Jürg Billeter  <j@bitron.ch>
+
+	* vala/valacodewriter.vala:
+
+	Add error domains to VAPI files, fixes bug 571692
+
 2009-02-13  Ryan Lortie  <desrt@desrt.ca>
 
 	* gobject/valamethodmodule.vala:

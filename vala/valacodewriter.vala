@@ -95,7 +95,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		visit_sorted (ns.get_interfaces ());
 		visit_sorted (ns.get_structs ());
 		visit_sorted (ns.get_enums ());
-		visit_sorted (ns.get_error_types ());
+		visit_sorted (ns.get_error_domains ());
 		visit_sorted (ns.get_delegates ());
 		visit_sorted (ns.get_fields ());
 		visit_sorted (ns.get_constants ());
