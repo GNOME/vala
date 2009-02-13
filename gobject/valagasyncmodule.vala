@@ -43,6 +43,16 @@ internal class Vala.GAsyncModule : GSignalModule {
 		datadecl.add_declarator (new CCodeVariableDeclarator ("data", new CCodeIdentifier ("_data")));
 		freeblock.add_statement (datadecl);
 
+		if (requires_destroy (m.return_type)) {
+			/* this is very evil. */
+			var v = new LocalVariable (m.return_type, "result");
+			var ma = new MemberAccess.simple ("result");
+			ma.symbol_reference = v;
+			current_method = m;
+			freeblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression ("result"), m.return_type, ma)));
+			current_method = null;
+		}
+
 		var freecall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 		freecall.add_argument (new CCodeIdentifier (dataname));
 		freecall.add_argument (new CCodeIdentifier ("data"));

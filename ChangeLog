@@ -1,3 +1,12 @@
+2009-02-13  Ryan Lortie  <desrt@desrt.ca>
+
+	Bug 571484 – free owned result even if _finish isn't called
+
+	* gobject/valagasyncmodule.vala:
+
+	Emit code to free the result in the result in the event that _finish
+	was not called.
+
 2009-02-12  Jürg Billeter  <j@bitron.ch>
 
 	* vala/valaclass.vala:
