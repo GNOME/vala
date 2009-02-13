@@ -259,7 +259,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
 		CCodeFunctionDeclarator vdeclarator = null;
-		if (m.is_abstract || m.is_virtual) {
+		if ((m.is_abstract || m.is_virtual) && !m.coroutine) {
 			var vdecl = new CCodeDeclaration (get_creturn_type (m, creturn_type.get_cname ()));
 			vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
 			vdecl.add_declarator (vdeclarator);
@@ -304,6 +304,10 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 
 					var cswitch = new CCodeSwitchStatement (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state"));
 
+					// let gcc know that this can't happen
+					cswitch.add_statement (new CCodeLabel ("default"));
+					cswitch.add_statement (new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("g_assert_not_reached"))));
+
 					// initial coroutine state
 					cswitch.add_statement (new CCodeCaseStatement (new CCodeConstant ("0")));
 
@@ -319,7 +323,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					source_type_member_definition.append (co_function);
 				}
 
-				if (m.parent_symbol is Class) {
+				if (m.parent_symbol is Class && !m.coroutine) {
 					var cl = (Class) m.parent_symbol;
 					if (m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
 						Method base_method;
@@ -530,7 +534,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
-		if (m.is_abstract || m.is_virtual) {
+		if ((m.is_abstract || m.is_virtual) && !m.coroutine) {
 			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 

@@ -1,5 +1,13 @@
 2009-02-13  Ryan Lortie  <desrt@desrt.ca>
 
+	* gobject/valamethodmodule.vala:
+
+	Emit 'default:' label with g_assert_not_reached() for async state
+	switch statement (to avoid GCC warning).  Don't emit virtual functions
+	or vtable entries for synchronous functions when emitting async code.
+
+2009-02-13  Ryan Lortie  <desrt@desrt.ca>
+
 	Bug 571484 – free owned result even if _finish isn't called
 
 	* gobject/valagasyncmodule.vala:
