@@ -1,5 +1,19 @@
 2009-02-14  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/packages/gdk-2.0/:
+	* vapi/packages/gtk+-2.0/:
+	* vapi/packages/libsoup-2.4/:
+
+	Nullable fixes, patch by Mark Lee, fixes bug 571407
+
+	* vapi/gdk-2.0.vapi:
+	* vapi/gtk+-2.0.vapi:
+	* vapi/libsoup-2.4.vapi:
+
+	Regenerated
+
+2009-02-14  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodewriter.vala:
 
 	Add error domains to VAPI files, fixes bug 571692

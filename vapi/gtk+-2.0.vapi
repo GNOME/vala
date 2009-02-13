@@ -2139,7 +2139,7 @@ namespace Gtk {
 		public void set_accel_path (string accel_path);
 		public void set_active (uint index_);
 		public void set_monitor (int monitor_num);
-		public void set_screen (Gdk.Screen screen);
+		public void set_screen (Gdk.Screen? screen);
 		public void set_tearoff_state (bool torn_off);
 		public void set_title (string title);
 		public bool tearoff_state { get; set; }

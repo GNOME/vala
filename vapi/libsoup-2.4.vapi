@@ -95,7 +95,7 @@ namespace Soup {
 		public void* auth_data { get; set; }
 	}
 	[Compact]
-	[CCode (copy_function = "soup_buffer_copy", cheader_filename = "libsoup/soup.h")]
+	[CCode (copy_function = "soup_buffer_copy", type_id = "SOUP_TYPE_BUFFER", cheader_filename = "libsoup/soup.h")]
 	public class Buffer {
 		public weak string data;
 		public size_t length;
@@ -109,11 +109,11 @@ namespace Soup {
 		public Buffer.with_owner (void* data, size_t length, void* owner, GLib.DestroyNotify owner_dnotify);
 	}
 	[Compact]
-	[CCode (cheader_filename = "libsoup/soup.h")]
+	[CCode (type_id = "SOUP_TYPE_BYTE_ARRAY", cheader_filename = "libsoup/soup.h")]
 	public class ByteArray {
 	}
 	[Compact]
-	[CCode (cheader_filename = "libsoup/soup.h")]
+	[CCode (type_id = "SOUP_TYPE_CLIENT_CONTEXT", cheader_filename = "libsoup/soup.h")]
 	public class ClientContext {
 		public unowned Soup.Address get_address ();
 		public unowned Soup.AuthDomain get_auth_domain ();
@@ -122,7 +122,7 @@ namespace Soup {
 		public unowned Soup.Socket get_socket ();
 	}
 	[Compact]
-	[CCode (copy_function = "soup_cookie_copy", cheader_filename = "libsoup/soup.h")]
+	[CCode (copy_function = "soup_cookie_copy", type_id = "SOUP_TYPE_COOKIE", cheader_filename = "libsoup/soup.h")]
 	public class Cookie {
 		public weak string domain;
 		public weak Soup.Date expires;
@@ -170,7 +170,7 @@ namespace Soup {
 		public string filename { owned get; construct; }
 	}
 	[Compact]
-	[CCode (copy_function = "soup_date_copy", cheader_filename = "libsoup/soup.h")]
+	[CCode (copy_function = "soup_date_copy", type_id = "SOUP_TYPE_DATE", cheader_filename = "libsoup/soup.h")]
 	public class Date {
 		public int day;
 		public int hour;
@@ -262,7 +262,7 @@ namespace Soup {
 		public virtual signal void wrote_informational ();
 	}
 	[Compact]
-	[CCode (cheader_filename = "libsoup/soup.h")]
+	[CCode (type_id = "SOUP_TYPE_MESSAGE_BODY", cheader_filename = "libsoup/soup.h")]
 	public class MessageBody {
 		public weak string data;
 		public int64 length;
@@ -280,7 +280,7 @@ namespace Soup {
 		public void wrote_chunk (Soup.Buffer chunk);
 	}
 	[Compact]
-	[CCode (cheader_filename = "libsoup/soup.h")]
+	[CCode (type_id = "SOUP_TYPE_MESSAGE_HEADERS", cheader_filename = "libsoup/soup.h")]
 	public class MessageHeaders {
 		public void append (string name, string value);
 		public void clear ();
@@ -315,7 +315,7 @@ namespace Soup {
 		public bool next (out unowned string name, out unowned string value);
 	}
 	[Compact]
-	[CCode (cheader_filename = "libsoup/soup.h")]
+	[CCode (type_id = "SOUP_TYPE_MULTIPART", cheader_filename = "libsoup/soup.h")]
 	public class Multipart {
 		public void append_form_file (string control_name, string filename, string content_type, Soup.Buffer body);
 		public void append_form_string (string control_name, string data);
@@ -456,7 +456,7 @@ namespace Soup {
 		public virtual signal void writable ();
 	}
 	[Compact]
-	[CCode (copy_function = "soup_uri_copy", cheader_filename = "libsoup/soup.h")]
+	[CCode (copy_function = "soup_uri_copy", type_id = "SOUP_TYPE_URI", cheader_filename = "libsoup/soup.h")]
 	public class URI {
 		public weak string fragment;
 		public weak string host;
@@ -468,7 +468,7 @@ namespace Soup {
 		public weak string user;
 		public Soup.URI copy ();
 		public static string decode (string part);
-		public static string encode (string part, string escape_extra);
+		public static string encode (string part, string? escape_extra);
 		public bool equal (Soup.URI uri2);
 		[CCode (has_construct_function = false)]
 		public URI (string uri_string);
