@@ -28,11 +28,34 @@ internal class Vala.GAsyncModule : GSignalModule {
 		base (codegen, next);
 	}
 
+	CCodeStruct generate_data_struct (Method m) {
+		string dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
+		var data = new CCodeStruct ("_" + dataname);
+
+		data.add_field ("int", "state");
+		data.add_field ("GAsyncResult*", "res");
+		data.add_field ("GSimpleAsyncResult*", "_async_result");
+
+		if (m.binding == MemberBinding.INSTANCE) {
+			var type_sym = (TypeSymbol) m.parent_symbol;
+			data.add_field (type_sym.get_cname () + "*", "self");
+		}
+
+		foreach (FormalParameter param in m.get_parameters ()) {
+			data.add_field (param.parameter_type.get_cname (), param.name);
+		}
+
+		if (!(m.return_type is VoidType)) {
+			data.add_field (m.return_type.get_cname (), "result");
+		}
+
+		return data;
+	}
+
 	CCodeFunction generate_free_function (Method m) {
 		var dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
 
 		var freefunc = new CCodeFunction (m.get_real_cname () + "_data_free", "void");
-		freefunc.line = function.line;
 		freefunc.modifiers = CCodeModifiers.STATIC;
 		freefunc.add_parameter (new CCodeFormalParameter ("_data", "gpointer"));
 
@@ -49,7 +72,8 @@ internal class Vala.GAsyncModule : GSignalModule {
 			var ma = new MemberAccess.simple ("result");
 			ma.symbol_reference = v;
 			current_method = m;
-			freeblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression ("result"), m.return_type, ma)));
+			var unref_expr = get_unref_expression (get_variable_cexpression ("result"), m.return_type, ma);
+			freeblock.add_statement (new CCodeExpressionStatement (unref_expr));
 			current_method = null;
 		}
 
@@ -61,52 +85,32 @@ internal class Vala.GAsyncModule : GSignalModule {
 		return freefunc;
 	}
 
-	public override void visit_method (Method m) {
-		if (!m.coroutine) {
-			base.visit_method (m);
-			return;
-		}
-
-		var creturn_type = m.return_type;
-		bool visible = !m.is_internal_symbol ();
-
-		gio_h_needed = true;
-
-		// generate struct to hold parameters, local variables, and the return value
-		string dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
-		closure_struct = new CCodeStruct ("_" + dataname);
-
-		closure_struct.add_field ("int", "state");
-		closure_struct.add_field ("GAsyncResult*", "res");
-		closure_struct.add_field ("GSimpleAsyncResult*", "_async_result");
-
-		if (m.binding == MemberBinding.INSTANCE) {
-			var type_sym = (TypeSymbol) m.parent_symbol;
-			closure_struct.add_field (type_sym.get_cname () + "*", "self");
-		}
-
-		foreach (FormalParameter param in m.get_parameters ()) {
-			closure_struct.add_field (param.parameter_type.get_cname (), param.name);
-		}
-
-		if (!(m.return_type is VoidType)) {
-			closure_struct.add_field (m.return_type.get_cname (), "result");
-		}
-
-		base.visit_method (m);
-
-		source_type_definition.append (closure_struct);
-		source_type_declaration.append (new CCodeTypeDefinition ("struct _" + dataname, new CCodeVariableDeclarator (dataname)));
-
-		source_type_member_definition.append (generate_free_function (m));
-
-		// generate async function
-		var asyncfunc = new CCodeFunction (m.get_real_cname () + "_async", "void");
-		asyncfunc.line = function.line;
-
-		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
-
+	CCodeFunction generate_async_function (Method m) {
 		var asyncblock = new CCodeBlock ();
+
+		// logic copied from valaccodemethodmodule
+		if (m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
+			Method base_method;
+
+			if (m.overrides) {
+				base_method = m.base_method;
+			} else {
+				base_method = m.base_interface_method;
+			}
+
+			var base_expression_type = new ObjectType ((ObjectTypeSymbol) base_method.parent_symbol);
+			var type_symbol = m.parent_symbol as ObjectTypeSymbol;
+
+			var self_target_type = new ObjectType (type_symbol);
+			var cself = transform_expression (new CCodeIdentifier ("base"), base_expression_type, self_target_type);
+			var cdecl = new CCodeDeclaration ("%s *".printf (type_symbol.get_cname ()));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("self", cself));
+			asyncblock.add_statement (cdecl);
+		}
+
+		var dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
+		var asyncfunc = new CCodeFunction (m.get_real_cname () + "_async", "void");
+		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
 		var dataalloc = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
 		dataalloc.add_argument (new CCodeIdentifier (dataname));
@@ -159,110 +163,154 @@ internal class Vala.GAsyncModule : GSignalModule {
 		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("callback", "GAsyncReadyCallback"));
 		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("user_data", "gpointer"));
 
-		CCodeFunctionDeclarator vdeclarator = null;
-		if (m.is_abstract || m.is_virtual) {
-			var vdecl = new CCodeDeclaration ("void");
-			vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name + "_async");
-			vdecl.add_declarator (vdeclarator);
-			type_struct.add_declaration (vdecl);
+		generate_cparameters (m, cparam_map, asyncfunc, null, null, null, 1);
+
+		if (!m.is_internal_symbol () && m.base_method == null && m.base_interface_method == null) {
+			asyncfunc.modifiers |= CCodeModifiers.STATIC;
 		}
 
-		generate_cparameters (m, cparam_map, asyncfunc, vdeclarator, null, null, 1);
+		asyncfunc.block = asyncblock;
 
-		if (!m.is_abstract) {
-			if (visible && m.base_method == null && m.base_interface_method == null) {
-				header_type_member_declaration.append (asyncfunc.copy ());
-			} else {
-				asyncfunc.modifiers |= CCodeModifiers.STATIC;
-				source_type_member_declaration.append (asyncfunc.copy ());
+		return asyncfunc;
+	}
+
+	void append_struct (CCodeStruct structure) {
+		var typename = new CCodeVariableDeclarator (structure.name.substring (1));
+		var typedef = new CCodeTypeDefinition ("struct " + structure.name, typename);
+		source_type_declaration.append (typedef);
+		source_type_definition.append (structure);
+	}
+
+	void append_function (CCodeFunction function) {
+		var block = function.block;
+		function.block = null;
+ 
+		if ((function.modifiers & CCodeModifiers.STATIC) != 0) {
+			source_type_member_declaration.append (function.copy ());
+		} else {
+			header_type_member_declaration.append (function.copy ());
+		}
+
+		function.block = block;
+		source_type_member_definition.append (function);
+	}
+
+	public override void visit_method (Method m) {
+		if (m.coroutine) {
+			gio_h_needed = true;
+
+			// append the synchronous version
+			m.coroutine = false;
+			base.visit_method (m);
+			m.coroutine = true;
+
+			if (!m.is_abstract) {
+				var data = generate_data_struct (m);
+				append_struct (data);
+
+				append_function (generate_free_function (m));
+				append_function (generate_async_function (m));
+				append_function (generate_finish_function (m));
+				append_function (generate_ready_function (m));
+
+				// append the _co function
+				closure_struct = data;
+				base.visit_method (m);
+				closure_struct = null;
 			}
-		
-			asyncfunc.block = asyncblock;
 
-			source_type_member_definition.append (asyncfunc);
+			if (m.is_abstract || m.is_virtual) {
+				append_async_virtual_function (m);
+				append_finish_virtual_function (m);
+			}
+		} else {
+			base.visit_method (m);
 		}
+	}
 
-		// generate finish function
+
+	CCodeFunction generate_finish_function (Method m) {
 		var finishfunc = new CCodeFunction (m.get_real_cname () + "_finish");
-		finishfunc.line = function.line;
 
-		cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
 		var finishblock = new CCodeBlock ();
 
 		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("res", "GAsyncResult*"));
 
-		if (m.is_abstract || m.is_virtual) {
-			var vdecl = new CCodeDeclaration (creturn_type.get_cname ());
-			vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name + "_finish");
-			vdecl.add_declarator (vdeclarator);
-			type_struct.add_declaration (vdecl);
-		}
+		generate_cparameters (m, cparam_map, finishfunc, null, null, null, 2);
 
-		generate_cparameters (m, cparam_map, finishfunc, vdeclarator, null, null, 2);
+		finishfunc.block = finishblock;
 
-		if (!m.is_abstract) {
-			if (visible && m.base_method == null && m.base_interface_method == null) {
-				header_type_member_declaration.append (finishfunc.copy ());
-			} else {
-				finishfunc.modifiers |= CCodeModifiers.STATIC;
-				source_type_member_declaration.append (finishfunc.copy ());
-			}
-		
-			finishfunc.block = finishblock;
+		return finishfunc;
+	}
 
-			source_type_member_definition.append (finishfunc);
-		}
+	CCodeFunction generate_ready_function (Method m) {
+		// generate ready callback handler
+		var dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
 
-		if (!m.is_abstract) {
-			// generate ready callback handler
-			var readyfunc = new CCodeFunction (m.get_cname () + "_ready", "void");
-			readyfunc.line = function.line;
+		var readyfunc = new CCodeFunction (m.get_cname () + "_ready", "void");
 
-			readyfunc.add_parameter (new CCodeFormalParameter ("source_object", "GObject*"));
-			readyfunc.add_parameter (new CCodeFormalParameter ("res", "GAsyncResult*"));
-			readyfunc.add_parameter (new CCodeFormalParameter ("user_data", "gpointer"));
+		readyfunc.add_parameter (new CCodeFormalParameter ("source_object", "GObject*"));
+		readyfunc.add_parameter (new CCodeFormalParameter ("res", "GAsyncResult*"));
+		readyfunc.add_parameter (new CCodeFormalParameter ("user_data", "gpointer"));
 
-			var readyblock = new CCodeBlock ();
+		var readyblock = new CCodeBlock ();
 
-			datadecl = new CCodeDeclaration (dataname + "*");
-			datadecl.add_declarator (new CCodeVariableDeclarator ("data"));
-			readyblock.add_statement (datadecl);
-			readyblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), new CCodeIdentifier ("user_data"))));
-			readyblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "res"), new CCodeIdentifier ("res"))));
+		var datadecl = new CCodeDeclaration (dataname + "*");
+		datadecl.add_declarator (new CCodeVariableDeclarator ("data"));
+		readyblock.add_statement (datadecl);
+		readyblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), new CCodeIdentifier ("user_data"))));
+		readyblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "res"), new CCodeIdentifier ("res"))));
 
-			ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname () + "_co"));
-			ccall.add_argument (new CCodeIdentifier ("data"));
-			readyblock.add_statement (new CCodeExpressionStatement (ccall));
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname () + "_co"));
+		ccall.add_argument (new CCodeIdentifier ("data"));
+		readyblock.add_statement (new CCodeExpressionStatement (ccall));
 
-			readyfunc.modifiers |= CCodeModifiers.STATIC;
-			source_type_member_declaration.append (readyfunc.copy ());
+		readyfunc.modifiers |= CCodeModifiers.STATIC;
+		source_type_member_declaration.append (readyfunc.copy ());
 
-			readyfunc.block = readyblock;
+		readyfunc.block = readyblock;
 
-			source_type_member_definition.append (readyfunc);
-		}
+		return readyfunc;
+	}
 
-		if (m.is_abstract || m.is_virtual) {
-			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
-			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+	void append_async_virtual_function (Method m) {
+		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
-			cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("callback", "GAsyncReadyCallback"));
-			cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("user_data", "gpointer"));
-			carg_map.set (get_param_pos (-1), new CCodeIdentifier ("callback"));
-			carg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("user_data"));
+		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("callback", "GAsyncReadyCallback"));
+		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("user_data", "gpointer"));
+		carg_map.set (get_param_pos (-1), new CCodeIdentifier ("callback"));
+		carg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("user_data"));
 
-			generate_vfunc (m, new VoidType (), cparam_map, carg_map, "_async", 1);
+		generate_vfunc (m, new VoidType (), cparam_map, carg_map, "_async", 1);
 
+		var vdecl = new CCodeDeclaration ("void");
+		var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name + "_async");
+		vdecl.add_declarator (vdeclarator);
+		type_struct.add_declaration (vdecl);
 
-			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
-			carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+		var fake = new CCodeFunction ("fake", "void");
+		generate_cparameters (m, cparam_map, fake, vdeclarator, null, null, 1);
+	}
 
-			cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("res", "GAsyncResult*"));
-			carg_map.set (get_param_pos (0.1), new CCodeIdentifier ("res"));
+	void append_finish_virtual_function (Method m) {
+		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
-			generate_vfunc (m, m.return_type, cparam_map, carg_map, "_finish", 2);
-		}
+		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("res", "GAsyncResult*"));
+		carg_map.set (get_param_pos (0.1), new CCodeIdentifier ("res"));
+
+		generate_vfunc (m, m.return_type, cparam_map, carg_map, "_finish", 2);
+
+		var vdecl = new CCodeDeclaration (m.return_type.get_cname ());
+		var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name + "_finish");
+		vdecl.add_declarator (vdeclarator);
+		type_struct.add_declaration (vdecl);
+
+		var fake = new CCodeFunction ("fake", "void");
+		generate_cparameters (m, cparam_map, fake, vdeclarator, null, null, 2);
 	}
 
 	public override void visit_yield_statement (YieldStatement stmt) {

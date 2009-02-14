@@ -1,3 +1,10 @@
+2009-02-14  Ryan Lortie  <desrt@desrt.ca>
+
+	* gobject/valagasyncmodule.vala:
+
+	Split method code generation into many smaller functions.  Enable
+	experimental generation of synchronous code.
+
 2009-02-14  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/gdk-2.0/:
