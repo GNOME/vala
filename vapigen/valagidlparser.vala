@@ -407,6 +407,10 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								st.set_simple_type (true);
 							}
+						} else if (nv[0] == "use_const") {
+							if (eval (nv[1]) == "0") {
+								st.use_const = false;
+							}
 						}
 					}
 				}
@@ -682,6 +686,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						var nv = attr.split ("=", 2);
 						if (nv[0] == "cheader_filename") {
 							st.add_cheader_filename (eval (nv[1]));
+						} else if (nv[0] == "use_const") {
+							if (eval (nv[1]) == "0") {
+								st.use_const = false;
+							}
 						}
 					}
 				}
@@ -1044,7 +1052,7 @@ public class Vala.GIdlParser : CodeVisitor {
 					var m = parse_function ((IdlNodeFunction) member, true);
 					if (m != null) {
 						iface.add_method (m);
-			        	}
+					}
 				}
 			} else if (member.type == IdlNodeTypeId.VFUNC) {
 				var m = parse_virtual ((IdlNodeVFunc) member, current_type_func_map.get (member.name), true);
@@ -1955,3 +1963,5 @@ public class Vala.GIdlParser : CodeVisitor {
 		return sig;
 	}
 }
+
+// vim:sw=8 noet

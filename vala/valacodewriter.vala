@@ -285,6 +285,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("type_id = \"%s\", ".printf (st.get_type_id ()));
 		}
 
+                if (!st.use_const) {
+                        write_string ("use_const = false, ");
+                }
+
 		bool first = true;
 		string cheaders = "";
 		foreach (string cheader in st.get_cheader_filenames ()) {

@@ -1093,7 +1093,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (p.parameter_type.data_type is Struct) {
 				var st = (Struct) p.parameter_type.data_type;
 				if (!st.is_simple_type () && p.direction == ParameterDirection.IN) {
-					ctypename = "const " + ctypename;
+					if (st.use_const) {
+						ctypename = "const " + ctypename;
+					}
+
 					if (!p.parameter_type.nullable) {
 						ctypename += "*";
 					}
@@ -3709,3 +3712,5 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		return node.ccodenode;
 	}
 }
+
+// vim:sw=8 noet

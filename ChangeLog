@@ -1,3 +1,21 @@
+2009-02-17  Ryan Lortie  <desrt@desrt.ca>
+
+	* gobject/valaccodebasemodule.vala:
+	* vala/valacodewriter.vala:
+	* vala/valastruct.vala:
+	* vapigen/valagidlparser.vala:
+
+	Add support for a 'use_const' CCode attribute and GIDL XML attribute
+	that, when set to false, causes Vala not to emit the 'const' modifier
+	on structure type input arguments.  This is useful for structure types
+	that, by convention, are not used with const (eg: GtkTreeIter).
+
+	* vapi/packages/gtk+-2.0/gtk+-2.0.metadata:
+	* vapi/gtk+-2.0.vapi:
+
+	Add 'use_const' for GtkTreeIter to the gtk+-2.0 metadata.  Regenerate
+	vapi.
+
 2009-02-16  Ryan Lortie  <desrt@desrt.ca>
 
 	* vala/valaclass.vala: only use g_value_set_pointer if the GType of a

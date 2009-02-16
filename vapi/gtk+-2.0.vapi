@@ -5682,7 +5682,7 @@ namespace Gtk {
 		public weak Gtk.ActionCallback callback;
 		public bool is_active;
 	}
-	[CCode (type_id = "GTK_TYPE_TREE_ITER", cheader_filename = "gtk/gtk.h")]
+	[CCode (type_id = "GTK_TYPE_TREE_ITER", use_const = false, cheader_filename = "gtk/gtk.h")]
 	public struct TreeIter {
 		public int stamp;
 		public void* user_data;

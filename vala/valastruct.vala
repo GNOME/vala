@@ -81,6 +81,12 @@ public class Vala.Struct : TypeSymbol {
 	public Method default_construction_method { get; set; }
 
 	/**
+	 * Specifies if 'const' should be emitted for input parameters
+	 * of this type.
+	 */
+	public bool use_const { get; set; default = true; }
+
+	/**
 	 * Specifies whether this struct has a registered GType.
 	 */
 	public bool has_type_id { get; set; default = true; }
@@ -391,6 +397,9 @@ public class Vala.Struct : TypeSymbol {
 		}
 		if (a.has_argument ("destroy_function")) {
 			set_destroy_function (a.get_string ("destroy_function"));
+		}
+		if (a.has_argument ("use_const")) {
+			use_const = a.get_bool ("use_const");
 		}
 	}
 
@@ -720,3 +729,5 @@ public class Vala.Struct : TypeSymbol {
 		return !error;
 	}
 }
+
+// vim:sw=8 noet
