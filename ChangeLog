@@ -1,3 +1,8 @@
+2009-02-16  Ryan Lortie  <desrt@desrt.ca>
+
+	* gobject/valagasyncmodule.vala: remove the dummy-object hack since
+	gio now supports NULL source objects for GSimpleAsyncResult
+
 2009-02-14  Ryan Lortie  <desrt@desrt.ca>
 
 	* gobject/valagasyncmodule.vala:
