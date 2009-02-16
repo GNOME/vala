@@ -718,8 +718,10 @@ public class Vala.Class : ObjectTypeSymbol {
 				get_value_function = get_lower_case_cname ("value_get_");
 			} else if (base_class != null) {
 				get_value_function = base_class.get_get_value_function ();
-			} else {
+			} else if (get_type_id () == "G_TYPE_POINTER") {
 				get_value_function = "g_value_get_pointer";
+			} else {
+				get_value_function = "g_value_get_boxed";
 			}
 		}
 
@@ -732,8 +734,10 @@ public class Vala.Class : ObjectTypeSymbol {
 				set_value_function = get_lower_case_cname ("value_set_");
 			} else if (base_class != null) {
 				set_value_function = base_class.get_set_value_function ();
-			} else {
+			} else if (get_type_id () == "G_TYPE_POINTER") {
 				set_value_function = "g_value_set_pointer";
+			} else {
+				set_value_function = "g_value_set_boxed";
 			}
 		}
 
@@ -1112,3 +1116,4 @@ public class Vala.Class : ObjectTypeSymbol {
 	}
 }
 
+// vim:sw=8 noet

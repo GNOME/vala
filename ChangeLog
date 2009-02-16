@@ -1,5 +1,10 @@
 2009-02-16  Ryan Lortie  <desrt@desrt.ca>
 
+	* vala/valaclass.vala: only use g_value_set_pointer if the GType of a
+	class is G_TYPE_POINTER; else use g_value_set_boxed.
+
+2009-02-16  Ryan Lortie  <desrt@desrt.ca>
+
 	* gobject/valagasyncmodule.vala: remove the dummy-object hack since
 	gio now supports NULL source objects for GSimpleAsyncResult
 
