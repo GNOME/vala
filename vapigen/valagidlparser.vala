@@ -335,7 +335,8 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 
 				ParameterDirection direction;
-				var p = new FormalParameter (param_name, parse_param (param, out direction));
+				var param_type = parse_param (param, out direction);
+				var p = new FormalParameter (param_name, param_type);
 				p.direction = direction;
 
 				bool hide_param = false;
@@ -349,6 +350,10 @@ public class Vala.GIdlParser : CodeVisitor {
 								hide_param = true;
 							} else if (eval (nv[1]) == "0") {
 								show_param = true;
+							}
+						} else if (nv[0] == "takes_ownership") {
+							if (eval (nv[1]) == "1") {
+								param_type.value_owned = true;
 							}
 						}
 					}
