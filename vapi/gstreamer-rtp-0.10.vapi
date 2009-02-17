@@ -43,7 +43,7 @@ namespace Gst {
 	public class BaseRTPPayload : Gst.Element {
 		public uint32 clock_rate;
 		public uint current_ssrc;
-		public bool dynamic;
+		public bool @dynamic;
 		public weak string encoding_name;
 		public weak string media;
 		public weak Gst.Segment segment;
@@ -68,7 +68,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool set_caps (Gst.Caps caps);
 		[CCode (cname = "gst_basertppayload_set_options")]
-		public void set_options (string media, bool dynamic, string encoding_name, uint32 clock_rate);
+		public void set_options (string media, bool @dynamic, string encoding_name, uint32 clock_rate);
 		[CCode (cname = "gst_basertppayload_set_outcaps")]
 		public bool set_outcaps (string fieldname);
 		[NoAccessorMethod]
@@ -170,7 +170,7 @@ namespace Gst {
 	[CCode (cprefix = "GST_RTP_PAYLOAD_", has_type_id = "0", cheader_filename = "gst/rtp/gstbasertpaudiopayload.h")]
 	public enum RTPPayload {
 		PCMU,
-		1016,
+		@1016,
 		G721,
 		GSM,
 		G723,

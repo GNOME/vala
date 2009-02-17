@@ -1,5 +1,9 @@
 2009-02-17  Ali Sabil  <ali.sabil@gmail.com>
 
+	* vapi/gstreamer-rtp-0.10.vapi: regenerated
+
+2009-02-16  Ali Sabil  <ali.sabil@gmail.com>
+
 	* vala/valacodewriter.vala: escape the dynamic keyword, and identifiers
 	starting with a digit
 
