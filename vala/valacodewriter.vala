@@ -1558,10 +1558,10 @@ public class Vala.CodeWriter : CodeVisitor {
 	private void write_identifier (string s) {
 		if (s == "base" || s == "break" || s == "class" ||
 		    s == "construct" || s == "delegate" || s == "delete" ||
-		    s == "do" || s == "foreach" || s == "in" ||
+		    s == "do" || s == "dynamic" || s == "foreach" || s == "in" ||
 		    s == "interface" || s == "lock" || s == "namespace" ||
 		    s == "new" || s == "out" || s == "ref" ||
-		    s == "signal") {
+		    s == "signal" || s.get_char ().isdigit ()) {
 			stream.putc ('@');
 		}
 		write_string (s);

@@ -1,3 +1,8 @@
+2009-02-17  Ali Sabil  <ali.sabil@gmail.com>
+
+	* vala/valacodewriter.vala: escape the dynamic keyword, and identifiers
+	starting with a digit
+
 2009-02-17  Ryan Lortie  <desrt@desrt.ca>
 
 	* gobject/valaccodebasemodule.vala:
