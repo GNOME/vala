@@ -1,3 +1,10 @@
+2009-02-17  Jürg Billeter  <j@bitron.ch>
+
+	* gobject/valaccodemethodcallmodule.vala:
+
+	Support chaining up to constructors in generic classes,
+	fixes bug 567319
+
 2009-02-17  Ali Sabil  <ali.sabil@gmail.com>
 
 	* vapigen/valagidlparser.vala:
