@@ -101,7 +101,6 @@ libvalacore_la_VALASOURCES = \
 	valaobjectcreationexpression.vala \
 	valaobjecttype.vala \
 	valaobjecttypesymbol.vala \
-	valaparenthesizedexpression.vala \
 	valaparser.vala \
 	valaphifunction.vala \
 	valapointerindirection.vala \

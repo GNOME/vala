@@ -2412,12 +2412,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		expr.ccodenode = new CCodeConstant ("NULL");
 	}
 
-	public override void visit_parenthesized_expression (ParenthesizedExpression expr) {
-		expr.accept_children (codegen);
-
-		expr.ccodenode = new CCodeParenthesizedExpression ((CCodeExpression) expr.inner.ccodenode);
-	}
-
 	public virtual string get_delegate_target_cname (string delegate_cname) {
 		assert_not_reached ();
 	}
@@ -2466,11 +2460,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 	
 	private MemberAccess? find_property_access (Expression expr) {
-		if (expr is ParenthesizedExpression) {
-			var pe = (ParenthesizedExpression) expr;
-			return find_property_access (pe.inner);
-		}
-	
 		if (!(expr is MemberAccess)) {
 			return null;
 		}

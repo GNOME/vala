@@ -1,6 +1,6 @@
 /* valaunaryexpression.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -124,11 +124,6 @@ public class Vala.UnaryExpression : Expression {
 	}
 
 	MemberAccess? find_member_access (Expression expr) {
-		if (expr is ParenthesizedExpression) {
-			var pe = (ParenthesizedExpression) expr;
-			return find_member_access (pe.inner);
-		}
-
 		if (expr is MemberAccess) {
 			return (MemberAccess) expr;
 		}
@@ -207,11 +202,10 @@ public class Vala.UnaryExpression : Expression {
 			var bin = new BinaryExpression (operator == UnaryOperator.INCREMENT ? BinaryOperator.PLUS : BinaryOperator.MINUS, old_value, new IntegerLiteral ("1"), source_reference);
 
 			var assignment = new Assignment (ma, bin, AssignmentOperator.SIMPLE, source_reference);
-			var parenthexp = new ParenthesizedExpression (assignment, source_reference);
-			parenthexp.target_type = target_type;
+			assignment.target_type = target_type;
 			analyzer.replaced_nodes.add (this);
-			parent_node.replace_expression (this, parenthexp);
-			parenthexp.check (analyzer);
+			parent_node.replace_expression (this, assignment);
+			assignment.check (analyzer);
 			return true;
 		} else if (operator == UnaryOperator.REF || operator == UnaryOperator.OUT) {
 			if (inner.symbol_reference is Field || inner.symbol_reference is FormalParameter || inner.symbol_reference is LocalVariable) {

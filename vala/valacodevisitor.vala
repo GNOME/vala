@@ -1,6 +1,7 @@
 /* valacodevisitor.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -465,14 +466,6 @@ public abstract class Vala.CodeVisitor {
 	 * @param lit a null literal
 	 */
 	public virtual void visit_null_literal (NullLiteral lit) {
-	}
-
-	/**
-	 * Visit operation called for parenthesized expressions.
-	 *
-	 * @param expr a parenthesized expression
-	 */
-	public virtual void visit_parenthesized_expression (ParenthesizedExpression expr) {
 	}
 
 	/**

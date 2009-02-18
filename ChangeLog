@@ -1,5 +1,22 @@
 2009-02-18  Jürg Billeter  <j@bitron.ch>
 
+	* vala/Makefile.am:
+	* vala/valaassignment.vala:
+	* vala/valacodevisitor.vala:
+	* vala/valacodewriter.vala:
+	* vala/valagenieparser.vala:
+	* vala/valaparenthesizedexpression.vala:
+	* vala/valaparser.vala:
+	* vala/valasymbolresolver.vala:
+	* vala/valaunaryexpression.vala:
+	* gobject/valaccodebasemodule.vala:
+	* gobject/valaccodegenerator.vala:
+	* gobject/valaccodemodule.vala:
+
+	Remove ParenthesizedExpression to simmplify AST
+
+2009-02-18  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/packages/gtk+-2.0/:
 
 	Fix gtk_tree_view_insert_column_with_data_func binding

@@ -184,7 +184,7 @@ public class Vala.Assignment : Expression {
 			if (!(ma.symbol_reference is Signal)) {
 				var old_value = new MemberAccess (ma.inner, ma.member_name);
 
-				var bin = new BinaryExpression (BinaryOperator.PLUS, old_value, new ParenthesizedExpression (right, right.source_reference));
+				var bin = new BinaryExpression (BinaryOperator.PLUS, old_value, right);
 				bin.target_type = right.target_type;
 				right.target_type = right.target_type.copy ();
 				right.target_type.value_owned = false;

@@ -1297,12 +1297,6 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_string ("null");
 	}
 
-	public override void visit_parenthesized_expression (ParenthesizedExpression expr) {
-		write_string ("(");
-		expr.inner.accept (this);
-		write_string (")");
-	}
-
 	public override void visit_member_access (MemberAccess expr) {
 		if (expr.inner != null) {
 			expr.inner.accept (this);

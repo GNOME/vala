@@ -260,10 +260,6 @@ public abstract class Vala.CCodeModule {
 		next.visit_null_literal (expr);
 	}
 
-	public virtual void visit_parenthesized_expression (ParenthesizedExpression expr) {
-		next.visit_parenthesized_expression (expr);
-	}
-
 	public virtual void visit_member_access (MemberAccess expr) {
 		next.visit_member_access (expr);
 	}

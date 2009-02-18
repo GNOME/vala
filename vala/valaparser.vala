@@ -575,7 +575,6 @@ public class Vala.Parser : CodeVisitor {
 	}
 
 	Expression parse_tuple () throws ParseError {
-		var begin = get_location ();
 		expect (TokenType.OPEN_PARENS);
 		var expr_list = new ArrayList<Expression> ();
 		if (current () != TokenType.CLOSE_PARENS) {
@@ -591,7 +590,7 @@ public class Vala.Parser : CodeVisitor {
 			}
 			return tuple;
 		}
-		return new ParenthesizedExpression (expr_list.get (0), get_src (begin));
+		return expr_list.get (0);
 	}
 
 	Expression parse_member_access (SourceLocation begin, Expression inner) throws ParseError {

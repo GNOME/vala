@@ -1,6 +1,7 @@
 /* valaccodegenerator.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -261,10 +262,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 
 	public override void visit_null_literal (NullLiteral expr) {
 		head.visit_null_literal (expr);
-	}
-
-	public override void visit_parenthesized_expression (ParenthesizedExpression expr) {
-		head.visit_parenthesized_expression (expr);
 	}
 
 	public override void visit_member_access (MemberAccess expr) {
