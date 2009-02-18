@@ -1,3 +1,11 @@
+2009-02-18  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/gtk+-2.0/:
+
+	Fix gtk_tree_view_insert_column_with_data_func binding
+
+	* vapi/gtk+-2.0.vapi: regenerated
+
 2009-02-17  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valaccodemethodcallmodule.vala:
