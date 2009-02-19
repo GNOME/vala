@@ -1,5 +1,14 @@
 2009-02-19  Ali Sabil  <ali.sabil@gmail.com>
 
+	* vapi/packages/gstreamer-0.10/gstreamer-0.10-custom.vala:
+	* vapi/packages/gstreamer-0.10/gstreamer-0.10.metadata:
+
+	Various ownership and missing type parameters fixes
+
+	* vapi/gstreamer-0.10.vapi: regenerated
+
+2009-02-19  Ali Sabil  <ali.sabil@gmail.com>
+
 	* vapigen/valagidlparser.vala:
 
 	Support to_string attribute for enums

@@ -106,6 +106,16 @@ namespace Gst {
 	}
 
 	[Compact]
+	[Immutable]
+	[CCode (copy_function = "gst_structure_copy", cheader_filename = "gst/gst.h")]
+	public class Structure {
+		[CCode (cname = "gst_structure_empty_new", has_construct_function = false)]
+		public Structure.empty (string name);
+		[CCode (cname = "gst_structure_id_empty_new", has_construct_function = false)]
+		public Structure.id_empty (GLib.Quark quark);
+	}
+
+	[Compact]
 	public class DebugCategory {
 		[CCode (cname="GST_DEBUG_CATEGORY_INIT")]
 		public void init (string name, uint color, string description);
