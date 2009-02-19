@@ -1,3 +1,12 @@
+2009-02-19  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/packages/pango/:
+
+	Fix pango_font_description_from_string binding and support implicit
+	copies of PangoFontDescription
+
+	* vapi/pango.vapi: regenerated
+
 2009-02-18  Jürg Billeter  <j@bitron.ch>
 
 	* vala/Makefile.am:

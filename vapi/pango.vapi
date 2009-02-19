@@ -176,13 +176,14 @@ namespace Pango {
 		public unowned Pango.FontMetrics get_metrics (Pango.Language language);
 	}
 	[Compact]
+	[Immutable]
 	[CCode (copy_function = "pango_font_description_copy", type_id = "PANGO_TYPE_FONT_DESCRIPTION", cheader_filename = "pango/pango.h")]
 	public class FontDescription {
 		public bool better_match (Pango.FontDescription old_match, Pango.FontDescription new_match);
 		public unowned Pango.FontDescription copy ();
 		public unowned Pango.FontDescription copy_static ();
 		public bool equal (Pango.FontDescription desc2);
-		public static unowned Pango.FontDescription from_string (string str);
+		public static Pango.FontDescription from_string (string str);
 		public unowned string get_family ();
 		public Pango.Gravity get_gravity ();
 		public Pango.FontMask get_set_fields ();
