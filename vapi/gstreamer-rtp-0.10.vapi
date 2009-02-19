@@ -325,7 +325,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
 	public static bool rtp_buffer_get_extension (Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
-	public static bool rtp_buffer_get_extension_data (Gst.Buffer buffer, uint16 bits, void* data, uint wordlen);
+	public static bool rtp_buffer_get_extension_data (Gst.Buffer buffer, out uint16 bits, out void* data, out uint wordlen);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
 	public static uint rtp_buffer_get_header_len (Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]

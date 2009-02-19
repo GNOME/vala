@@ -1,5 +1,13 @@
 2009-02-19  Ali Sabil  <ali.sabil@gmail.com>
 
+	* vapi/packages/gstreamer-rtp-0.10/:
+
+	Fix gst_rtp_buffer_get_extension_data binding
+
+	* vapi/gstreamer-rtp-0.10.vapi: regenerated
+
+2009-02-19  Ali Sabil  <ali.sabil@gmail.com>
+
 	* vapi/glib-2.0.vapi:
 
 	Add byte order conversion methods to int types
