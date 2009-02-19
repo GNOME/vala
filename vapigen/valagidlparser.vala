@@ -849,6 +849,14 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						is_errordomain = true;
 					}
+				} else if (nv[0] == "to_string") {
+					var return_type = new UnresolvedType ();
+					return_type.unresolved_symbol = new UnresolvedSymbol (null, "string");
+					return_type.value_owned = false;
+					var m = new Method ("to_string", return_type, current_source_reference);
+					m.access = SymbolAccessibility.PUBLIC;
+					m.set_cname (eval(nv[1]));
+					en.add_method (m);
 				}
 			}
 		}

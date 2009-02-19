@@ -1,5 +1,11 @@
 2009-02-19  Ali Sabil  <ali.sabil@gmail.com>
 
+	* vapigen/valagidlparser.vala:
+
+	Support to_string attribute for enums
+
+2009-02-19  Ali Sabil  <ali.sabil@gmail.com>
+
 	* vapi/packages/gstreamer-rtp-0.10/:
 
 	Fix gst_rtp_buffer_get_extension_data binding
