@@ -1,3 +1,9 @@
+2009-02-19  Ali Sabil  <ali.sabil@gmail.com>
+
+	* vapi/glib-2.0.vapi:
+
+	Add byte order conversion methods to int types
+
 2009-02-19  Jürg Billeter  <j@bitron.ch>
 
 	* vapi/packages/pango/:

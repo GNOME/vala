@@ -110,6 +110,16 @@ public struct int {
 
 	[CCode (cname = "abs")]
 	public int abs ();
+
+	[CCode (cname = "GINT_TO_BE")]
+	public int to_big_endian ();
+	[CCode (cname = "GINT_TO_LE")]
+	public int to_little_endian ();
+
+	[CCode (cname = "GINT_FROM_BE")]
+	public static int from_big_endian (int val);
+	[CCode (cname = "GINT_FROM_LE")]
+	public static int from_little_endian (int val);
 }
 
 [SimpleType]
@@ -133,6 +143,16 @@ public struct uint {
 
 	[CCode (cname = "GUINT_TO_POINTER")]
 	public void* to_pointer ();
+
+	[CCode (cname = "GUINT_TO_BE")]
+	public uint to_big_endian ();
+	[CCode (cname = "GUINT_TO_LE")]
+	public uint to_little_endian ();
+
+	[CCode (cname = "GUINT_FROM_BE")]
+	public static uint from_big_endian (uint val);
+	[CCode (cname = "GUINT_FROM_LE")]
+	public static uint from_little_endian (uint val);
 }
 
 [SimpleType]
@@ -195,6 +215,16 @@ public struct long {
 	public long clamp (long low, long high);
 	[CCode (cname = "labs")]
 	public long abs ();
+
+	[CCode (cname = "GLONG_TO_BE")]
+	public long to_big_endian ();
+	[CCode (cname = "GLONG_TO_LE")]
+	public long to_little_endian ();
+
+	[CCode (cname = "GLONG_FROM_BE")]
+	public static long from_big_endian (long val);
+	[CCode (cname = "GLONG_FROM_LE")]
+	public static long from_little_endian (long val);
 }
 
 [SimpleType]
@@ -215,6 +245,16 @@ public struct ulong {
 	public static ulong max (ulong a, ulong b);
 	[CCode (cname = "CLAMP")]
 	public ulong clamp (ulong low, ulong high);
+
+	[CCode (cname = "GULONG_TO_BE")]
+	public ulong to_big_endian ();
+	[CCode (cname = "GULONG_TO_LE")]
+	public ulong to_little_endian ();
+
+	[CCode (cname = "GULONG_FROM_BE")]
+	public static ulong from_big_endian (ulong val);
+	[CCode (cname = "GULONG_FROM_LE")]
+	public static ulong from_little_endian (ulong val);
 }
 
 [SimpleType]
@@ -333,6 +373,16 @@ public struct int16 {
 	public static int16 max (int16 a, int16 b);
 	[CCode (cname = "CLAMP")]
 	public int16 clamp (int16 low, int16 high);
+
+	[CCode (cname = "GINT16_TO_BE")]
+	public int16 to_big_endian ();
+	[CCode (cname = "GINT16_TO_LE")]
+	public int16 to_little_endian ();
+
+	[CCode (cname = "GINT16_FROM_BE")]
+	public static int16 from_big_endian (int16 val);
+	[CCode (cname = "GINT16_FROM_LE")]
+	public static int16 from_little_endian (int16 val);
 }
 
 [SimpleType]
@@ -358,6 +408,16 @@ public struct uint16 {
 	public static uint16 max (uint16 a, uint16 b);
 	[CCode (cname = "CLAMP")]
 	public uint16 clamp (uint16 low, uint16 high);
+
+	[CCode (cname = "GUINT16_TO_BE")]
+	public uint16 to_big_endian ();
+	[CCode (cname = "GUINT16_TO_LE")]
+	public uint16 to_little_endian ();
+
+	[CCode (cname = "GUINT16_FROM_BE")]
+	public static uint16 from_big_endian (uint16 val);
+	[CCode (cname = "GUINT16_FROM_LE")]
+	public static uint16 from_little_endian (uint16 val);
 }
 
 [SimpleType]
@@ -383,6 +443,16 @@ public struct int32 {
 	public static int32 max (int32 a, int32 b);
 	[CCode (cname = "CLAMP")]
 	public int32 clamp (int32 low, int32 high);
+
+	[CCode (cname = "GINT32_TO_BE")]
+	public int32 to_big_endian ();
+	[CCode (cname = "GINT32_TO_LE")]
+	public int32 to_little_endian ();
+
+	[CCode (cname = "GINT32_FROM_BE")]
+	public static int32 from_big_endian (int32 val);
+	[CCode (cname = "GINT32_FROM_LE")]
+	public static int32 from_little_endian (int32 val);
 }
 
 [SimpleType]
@@ -408,6 +478,16 @@ public struct uint32 {
 	public static uint32 max (uint32 a, uint32 b);
 	[CCode (cname = "CLAMP")]
 	public uint32 clamp (uint32 low, uint32 high);
+
+	[CCode (cname = "GUINT32_TO_BE")]
+	public uint32 to_big_endian ();
+	[CCode (cname = "GUINT32_TO_LE")]
+	public uint32 to_little_endian ();
+
+	[CCode (cname = "GUINT32_FROM_BE")]
+	public static uint32 from_big_endian (uint32 val);
+	[CCode (cname = "GUINT32_FROM_LE")]
+	public static uint32 from_little_endian (uint32 val);
 }
 
 [SimpleType]
@@ -435,6 +515,16 @@ public struct int64 {
 	public int64 clamp (int64 low, int64 high);
 	[CCode (cname = "llabs")]
 	public int64 abs ();
+
+	[CCode (cname = "GINT64_TO_BE")]
+	public int64 to_big_endian ();
+	[CCode (cname = "GINT64_TO_LE")]
+	public int64 to_little_endian ();
+
+	[CCode (cname = "GINT64_FROM_BE")]
+	public static int64 from_big_endian (int64 val);
+	[CCode (cname = "GINT64_FROM_LE")]
+	public static int64 from_little_endian (int64 val);
 }
 
 [SimpleType]
@@ -460,6 +550,16 @@ public struct uint64 {
 	public static uint64 max (uint64 a, uint64 b);
 	[CCode (cname = "CLAMP")]
 	public uint64 clamp (uint64 low, uint64 high);
+
+	[CCode (cname = "GUINT64_TO_BE")]
+	public uint64 to_big_endian ();
+	[CCode (cname = "GUINT64_TO_LE")]
+	public uint64 to_little_endian ();
+
+	[CCode (cname = "GUINT64_FROM_BE")]
+	public static uint64 from_big_endian (uint64 val);
+	[CCode (cname = "GUINT64_FROM_LE")]
+	public static uint64 from_little_endian (uint64 val);
 }
 
 [SimpleType]
