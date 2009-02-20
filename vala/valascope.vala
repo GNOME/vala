@@ -122,5 +122,9 @@ public class Vala.Scope {
 
 		return false;
 	}
+
+	public Map<string,Symbol> get_symbol_table () {
+		return new ReadOnlyMap<string,Symbol> (symbol_table);
+	}
 }
 

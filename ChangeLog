@@ -1,5 +1,11 @@
 2009-02-20  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valascope.vala:
+
+	Add Scope.get_symbol_table method, patch by Abderrahim Kitouni
+
+2009-02-20  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valacodecontext.vala:
 	* vala/valareport.vala:
 
