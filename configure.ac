@@ -30,6 +30,19 @@ AC_SUBST(LDFLAGS)
 AC_ARG_ENABLE(vapigen, AS_HELP_STRING([--enable-vapigen], [Enable VAPI generator]), enable_vapigen=$enableval, enable_vapigen=no)
 AM_CONDITIONAL(ENABLE_VAPIGEN, test x$enable_vapigen = xyes)
 
+if test "$enable_vapigen" = "yes"; then
+  vapigen_decl='vapigen=${bindir}/vapigen'
+  gen_introspect_decl='gen_introspect=${libdir}/vala/gen-introspect'
+  vala_gen_introspect_decl='vala_gen_introspect=${bindir}/vala-gen-introspect'
+else
+  vapigen_decl=''
+  gen_introspect_decl=''
+  vala_gen_introspect_decl=''
+fi
+AC_SUBST(vapigen_decl)
+AC_SUBST(gen_introspect_decl)
+AC_SUBST(vala_gen_introspect_decl)
+
 GLIB_REQUIRED=2.12.0
 
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED)

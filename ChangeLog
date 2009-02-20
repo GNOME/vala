@@ -1,3 +1,11 @@
+2009-02-20  Ryan Lortie  <desrt@desrt.ca>
+
+	* configure.ac:
+	* vala-1.0.pc.in:
+
+	Output 'vapigen' 'gen_introspect' and 'vala_gen_introspect' variables
+	into the vala-1.0.pc file if --enable-vapigen, fixes bug 572554
+
 2009-02-20  Jürg Billeter  <j@bitron.ch>
 
 	* gobject/valadbusclientmodule.vala:
