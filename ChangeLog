@@ -1,5 +1,13 @@
 2009-02-20  Jürg Billeter  <j@bitron.ch>
 
+	* gobject-introspection/scanner.c:
+
+	Include unistd.h to support compilation with
+	-Werror-implicit-function-declaration, patch by Tobias Müller,
+	fixes bug 571544
+
+2009-02-20  Jürg Billeter  <j@bitron.ch>
+
 	* vala/valascope.vala:
 
 	Add Scope.get_symbol_table method, patch by Abderrahim Kitouni
