@@ -3151,6 +3151,9 @@ namespace GLib {
 		public void sort (CompareFunc compare_func);
 		public void sort_with_data (CompareDataFunc compare_func);
 		public void set_size (uint length);
+
+		public uint len;
+		public uint8[] data;
 	}
 
 	/* N-ary Trees */
