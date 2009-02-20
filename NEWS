@@ -1,3 +1,14 @@
+Vala 0.5.7
+==========
+
+ * Support signals in static D-Bus clients.
+ * Various improvements to asynchronous method support (Ryan Lortie).
+ * Report unused internal methods.
+ * Extend POSIX bindings.
+ * Add FUSE bindings (John Carr).
+ * Add libdaemon bindings (Jukka-Pekka Iivonen).
+ * Many bug fixes.
+
 Vala 0.5.6
 ==========
 

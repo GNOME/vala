@@ -1,5 +1,9 @@
 2009-02-20  Jürg Billeter  <j@bitron.ch>
 
+	* NEWS: update for 0.5.7 release
+
+2009-02-20  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am:
 	* vapi/fuse.deps:
 	* vapi/fuse.vapi:
