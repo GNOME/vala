@@ -1756,6 +1756,13 @@ namespace GLib {
 		public bool valid (); 
 	}
 
+	[CCode (cprefix = "G_DATE_", has_type_id = false)]
+	public enum DateDMY {
+		DAY,
+		MONTH,
+		YEAR
+	}
+
 	public struct Date {
 		public void clear (uint n_dates = 1);
 		public void set_day (DateDay day);
