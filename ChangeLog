@@ -2,6 +2,12 @@
 
 	* vapi/glib-2.0.vapi:
 
+	Add g_io_add_watch_full binding, patch by Michael Lauer
+
+2009-02-20  Jürg Billeter  <j@bitron.ch>
+
+	* vapi/glib-2.0.vapi:
+
 	Complete GByteArray binding, patch by Michael Lauer
 
 2009-02-20  Ryan Lortie  <desrt@desrt.ca>

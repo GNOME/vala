@@ -1443,6 +1443,8 @@ namespace GLib {
 		public GLib.Source create_watch (IOCondition condition);
 		[CCode (cname = "g_io_add_watch")]
 		public uint add_watch (IOCondition condition, IOFunc func);
+		[CCode (cname = "g_io_add_watch_full")]
+		public uint add_watch_full (int priority, IOCondition condition, IOFunc# func);
 		public size_t get_buffer_size ();
 		public void set_buffer_size (size_t size);
 		public IOCondition get_buffer_condition ();
