@@ -184,12 +184,10 @@ internal class Vala.DBusClientModule : DBusModule {
 			ccall.add_argument (new CCodeIdentifier (cb_fun.name));
 			ccall.add_argument (new CCodeConstant ("param%d_target".printf (callback_index)));
 			ccall.add_argument (new CCodeConstant ("NULL"));
-		} else if (found_out || !(method.return_type is VoidType)) {
+		} else { 
 			ccall.call = new CCodeIdentifier ("dbus_g_proxy_call");
 
 			ccall.add_argument (new CCodeIdentifier ("error"));
-		} else {
-			ccall.call = new CCodeIdentifier ("dbus_g_proxy_call_no_reply");
 		}
 
 		foreach (FormalParameter param in method.get_parameters ()) {
@@ -433,9 +431,7 @@ internal class Vala.DBusClientModule : DBusModule {
 				block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
 			}
 		} else {
-			if (found_out) {
-				ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
-			}
+			ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
 
 			block.add_statement (new CCodeExpressionStatement (ccall));
 

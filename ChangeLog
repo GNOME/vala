@@ -1,5 +1,12 @@
 2009-02-20  Jürg Billeter  <j@bitron.ch>
 
+	* gobject/valadbusclientmodule.vala:
+
+	Support error handling when dynamically calling void methods,
+	patch by Frederik Sdun, fixes bug 571258
+
+2009-02-20  Jürg Billeter  <j@bitron.ch>
+
 	* gobject-introspection/scanner.c:
 
 	Include unistd.h to support compilation with
