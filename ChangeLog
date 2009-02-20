@@ -1,5 +1,13 @@
 2009-02-20  Jürg Billeter  <j@bitron.ch>
 
+	* vapi/Makefile.am:
+	* vapi/libdaemon.vapi:
+
+	Add libdaemon bindings, patch by Jukka-Pekka Iivonen,
+	fixes bug 568758
+
+2009-02-20  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/glib-2.0.vapi:
 
 	Add GDateDMY binding, patch by Frederik, fixes bug 568691
