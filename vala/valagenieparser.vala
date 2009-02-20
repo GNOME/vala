@@ -1660,7 +1660,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		parse_statements (block);
 		if (!accept (TokenType.DEDENT)) {
 			// only report error if it's not a secondary error
-			if (Report.get_errors () == 0) {
+			if (context.report.get_errors () == 0) {
 				Report.error (get_current_src (), "tab indentation is incorrect");
 			}
 		}
@@ -2199,7 +2199,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		if (!root) {
 			if (!accept (TokenType.DEDENT)) {
 				// only report error if it's not a secondary error
-				if (Report.get_errors () == 0) {
+				if (context.report.get_errors () == 0) {
 					Report.error (get_current_src (), "expected dedent");
 				}
 			}

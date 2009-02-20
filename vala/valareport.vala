@@ -25,12 +25,12 @@ using GLib;
 /**
  * Namespace to centralize reporting warnings and errors.
  */
-namespace Vala.Report {
-	public int warnings;
-	public int errors;
+public class Vala.Report : Object {
+	int warnings;
+	int errors;
 
-	public bool verbose_errors;
-	
+	bool verbose_errors;
+
 	/**
 	 * Set the error verbosity.
 	 */
@@ -55,7 +55,7 @@ namespace Vala.Report {
 	/**
 	 * Pretty-print the actual line of offending code if possible.
 	 */
-	public void report_source (SourceReference source) {
+	static void report_source (SourceReference source) {
 		if (source.first_line != source.last_line) {
 			// FIXME Cannot report multi-line issues currently
 			return;
@@ -96,7 +96,7 @@ namespace Vala.Report {
 	 * @param source  reference to source code
 	 * @param message warning message
 	 */
-	public void warning (SourceReference? source, string message) {
+	public virtual void warn (SourceReference? source, string message) {
 		warnings++;
 		if (source == null) {
 			stderr.printf ("warning: %s\n", message);
@@ -114,7 +114,7 @@ namespace Vala.Report {
 	 * @param source  reference to source code
 	 * @param message error message
 	 */
-	public void error (SourceReference? source, string message) {
+	public virtual void err (SourceReference? source, string message) {
 		errors++;
 		if (source == null) {
 			stderr.printf ("error: %s\n", message);
@@ -124,5 +124,13 @@ namespace Vala.Report {
 				report_source (source);
 			}
 		}
+	}
+
+	/* Convenience methods calling warn and err on correct instance */
+	public static void warning (SourceReference? source, string message) {
+		CodeContext.get ().report.warn (source, message);
+	}
+	public static void error (SourceReference? source, string message) {
+		CodeContext.get ().report.err (source, message);
 	}
 }

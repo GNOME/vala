@@ -52,14 +52,14 @@ class Vala.VAPIGen : Object {
 	};
 	
 	private int quit () {
-		if (Report.get_errors () == 0) {
+		if (context.report.get_errors () == 0) {
 			if (!quiet_mode) {
-				stdout.printf ("Generation succeeded - %d warning(s)\n", Report.get_warnings ());
+				stdout.printf ("Generation succeeded - %d warning(s)\n", context.report.get_warnings ());
 			}
 			return 0;
 		} else {
 			if (!quiet_mode) {
-				stdout.printf ("Generation failed: %d error(s), %d warning(s)\n", Report.get_errors (), Report.get_warnings ());
+				stdout.printf ("Generation failed: %d error(s), %d warning(s)\n", context.report.get_errors (), context.report.get_warnings ());
 			}
 			return 1;
 		}
@@ -97,6 +97,7 @@ class Vala.VAPIGen : Object {
 
 	private int run () {
 		context = new CodeContext ();
+		CodeContext.push (context);
 		
 		/* default package */
 		if (!add_package ("glib-2.0")) {
@@ -134,7 +135,7 @@ class Vala.VAPIGen : Object {
 			packages = null;
 		}
 		
-		if (Report.get_errors () > 0) {
+		if (context.report.get_errors () > 0) {
 			return quit ();
 		}
 		
@@ -147,14 +148,14 @@ class Vala.VAPIGen : Object {
 		}
 		sources = null;
 		
-		if (Report.get_errors () > 0) {
+		if (context.report.get_errors () > 0) {
 			return quit ();
 		}
 		
 		var parser = new Parser ();
 		parser.parse (context);
 		
-		if (Report.get_errors () > 0) {
+		if (context.report.get_errors () > 0) {
 			return quit ();
 		}
 		
@@ -164,28 +165,28 @@ class Vala.VAPIGen : Object {
 		}
 		girparser.parse (context);
 		
-		if (Report.get_errors () > 0) {
+		if (context.report.get_errors () > 0) {
 			return quit ();
 		}
 		
 		var gidlparser = new GIdlParser ();
 		gidlparser.parse (context);
 		
-		if (Report.get_errors () > 0) {
+		if (context.report.get_errors () > 0) {
 			return quit ();
 		}
 		
 		var resolver = new SymbolResolver ();
 		resolver.resolve (context);
 		
-		if (Report.get_errors () > 0) {
+		if (context.report.get_errors () > 0) {
 			return quit ();
 		}
 
 		var analyzer = new SemanticAnalyzer ();
 		analyzer.analyze (context);
 
-		if (Report.get_errors () > 0) {
+		if (context.report.get_errors () > 0) {
 			return quit ();
 		}
 		

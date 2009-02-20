@@ -158,6 +158,8 @@ public class Vala.CodeContext {
 		get { return save_csources || null != library; }
 	}
 
+	public Report report { get; set; default = new Report ();}
+
 	private Gee.List<SourceFile> source_files = new ArrayList<SourceFile> ();
 	private Gee.List<string> c_source_files = new ArrayList<string> ();
 	private Namespace _root = new Namespace (null);
@@ -165,6 +167,8 @@ public class Vala.CodeContext {
 	private Gee.List<SourceFileCycle> cycles = new ArrayList<SourceFileCycle> ();
 
 	private Gee.List<string> packages = new ArrayList<string> (str_equal);
+
+	static Gee.List<CodeContext> context_stack;
 
 	/**
 	 * The root namespace of the symbol tree.
@@ -181,6 +185,30 @@ public class Vala.CodeContext {
 	public CodeGenerator codegen { get; set; default = new CodeGenerator (); }
 
 	public CodeContext () {
+	}
+
+	/**
+	 * Return the topmost context from the context stack.
+	 */
+	public static CodeContext get () {
+		return context_stack[context_stack.size - 1];
+	}
+
+	/**
+	 * Push the specified context to the context stack.
+	 */
+	public static void push (CodeContext context) {
+		if (context_stack == null) {
+			context_stack = new ArrayList<CodeContext> ();
+		}
+		context_stack.add (context);
+	}
+
+	/**
+	 * Remove the topmost context from the context stack.
+	 */
+	public static void pop () {
+		context_stack.remove_at (context_stack.size - 1);
 	}
 
 	/**

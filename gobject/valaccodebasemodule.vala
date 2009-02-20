@@ -374,7 +374,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		source_file.accept_children (codegen);
 
-		if (Report.get_errors () > 0) {
+		if (context.report.get_errors () > 0) {
 			return;
 		}
 

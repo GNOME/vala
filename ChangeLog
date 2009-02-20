@@ -1,5 +1,21 @@
 2009-02-20  Jürg Billeter  <j@bitron.ch>
 
+	* vala/valacodecontext.vala:
+	* vala/valareport.vala:
+
+	Support context-specific error reporting and add a context stack,
+	based on patch by Abderrahim Kitouni, fixes bug 542920
+
+	* vala/valagenieparser.vala:
+	* vala/valaparser.vala:
+	* gobject/valaccodebasemodule.vala:
+	* compiler/valacompiler.vala:
+	* vapigen/valavapigen.vala:
+
+	Adapt to interface changes
+
+2009-02-20  Jürg Billeter  <j@bitron.ch>
+
 	* vapi/Makefile.am:
 	* vapi/libdaemon.vapi:
 
