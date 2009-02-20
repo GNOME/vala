@@ -1,5 +1,15 @@
 2009-02-20  Ryan Lortie  <desrt@desrt.ca>
 
+	* vapi/gio-2.0.vapi
+	* vapi/gio-unix-2.0.vapi
+	* vapi/packages/gio-2.0/gio-2.0.gi
+	* vapi/packages/gio-unix-2.0/gio-unix-2.0.gi
+
+	Generate gio GIDL on a machine with my gresolver glib branch
+	installed. Regenerate vapi. Fixes bug 572474.
+
+2009-02-20  Ryan Lortie  <desrt@desrt.ca>
+
 	* configure.ac:
 	* vala-1.0.pc.in:
 

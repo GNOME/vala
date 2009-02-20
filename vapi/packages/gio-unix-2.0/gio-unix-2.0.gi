@@ -200,6 +200,12 @@
 					<parameter name="filename" type="char*"/>
 				</parameters>
 			</constructor>
+			<constructor name="new_from_keyfile" symbol="g_desktop_app_info_new_from_keyfile">
+				<return-type type="GDesktopAppInfo*"/>
+				<parameters>
+					<parameter name="key_file" type="GKeyFile*"/>
+				</parameters>
+			</constructor>
 			<method name="set_desktop_env" symbol="g_desktop_app_info_set_desktop_env">
 				<return-type type="void"/>
 				<parameters>
@@ -208,13 +214,34 @@
 			</method>
 		</object>
 		<object name="GUnixInputStream" parent="GInputStream" type-name="GUnixInputStream" get-type="g_unix_input_stream_get_type">
+			<method name="get_close_fd" symbol="g_unix_input_stream_get_close_fd">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GUnixInputStream*"/>
+				</parameters>
+			</method>
+			<method name="get_fd" symbol="g_unix_input_stream_get_fd">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="stream" type="GUnixInputStream*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="g_unix_input_stream_new">
 				<return-type type="GInputStream*"/>
 				<parameters>
-					<parameter name="fd" type="int"/>
-					<parameter name="close_fd_at_close" type="gboolean"/>
+					<parameter name="fd" type="gint"/>
+					<parameter name="close_fd" type="gboolean"/>
 				</parameters>
 			</constructor>
+			<method name="set_close_fd" symbol="g_unix_input_stream_set_close_fd">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stream" type="GUnixInputStream*"/>
+					<parameter name="close_fd" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="close-fd" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="fd" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GUnixMountMonitor" parent="GObject" type-name="GUnixMountMonitor" get-type="g_unix_mount_monitor_get_type">
 			<constructor name="new" symbol="g_unix_mount_monitor_new">
@@ -241,13 +268,46 @@
 			</signal>
 		</object>
 		<object name="GUnixOutputStream" parent="GOutputStream" type-name="GUnixOutputStream" get-type="g_unix_output_stream_get_type">
+			<method name="get_close_fd" symbol="g_unix_output_stream_get_close_fd">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GUnixOutputStream*"/>
+				</parameters>
+			</method>
+			<method name="get_fd" symbol="g_unix_output_stream_get_fd">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="stream" type="GUnixOutputStream*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="g_unix_output_stream_new">
 				<return-type type="GOutputStream*"/>
 				<parameters>
-					<parameter name="fd" type="int"/>
-					<parameter name="close_fd_at_close" type="gboolean"/>
+					<parameter name="fd" type="gint"/>
+					<parameter name="close_fd" type="gboolean"/>
 				</parameters>
 			</constructor>
+			<method name="set_close_fd" symbol="g_unix_output_stream_set_close_fd">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stream" type="GUnixOutputStream*"/>
+					<parameter name="close_fd" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="close-fd" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="fd" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GUnixSocketAddress" parent="GSocketAddress" type-name="GUnixSocketAddress" get-type="g_unix_socket_address_get_type">
+			<implements>
+				<interface name="GSocketConnectable"/>
+			</implements>
+			<constructor name="new" symbol="g_unix_socket_address_new">
+				<return-type type="GSocketAddress*"/>
+				<parameters>
+					<parameter name="path" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<property name="path" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<interface name="GDesktopAppInfoLookup" type-name="GDesktopAppInfoLookup" get-type="g_desktop_app_info_lookup_get_type">
 			<requires>
