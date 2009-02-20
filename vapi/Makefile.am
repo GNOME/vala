@@ -12,6 +12,8 @@ dist_vapi_DATA = \
 	curses.vapi \
 	dbus-glib-1.vapi \
 	enchant.vapi \
+	fuse.deps \
+	fuse.vapi \
 	gconf-2.0.vapi \
 	glib-2.0.vapi \
 	gdk-2.0.deps \
