@@ -615,7 +615,7 @@ namespace Gdk {
 		public unowned Gdk.Screen get_screen ();
 		public bool get_state (out Gdk.ModifierType state);
 		public uint32 get_time ();
-		public static void handler_set (Gdk.EventFunc func, void* data, GLib.DestroyNotify notify);
+		public static void handler_set (owned Gdk.EventFunc func);
 		[CCode (cname = "gdk_event_new", has_construct_function = false)]
 		public Event (Gdk.EventType type);
 		public static Gdk.Event peek ();
@@ -1136,8 +1136,8 @@ namespace Gdk {
 		EXPOSE,
 		MOTION_NOTIFY,
 		BUTTON_PRESS,
-		2BUTTON_PRESS,
-		3BUTTON_PRESS,
+		@2BUTTON_PRESS,
+		@3BUTTON_PRESS,
 		BUTTON_RELEASE,
 		KEY_PRESS,
 		KEY_RELEASE,
