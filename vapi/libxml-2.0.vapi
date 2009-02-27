@@ -1138,6 +1138,9 @@ namespace Xml {
 		[CCode (cname = "xmlXPathEvalExpression", instance_pos = -1)]
 		public XPathObject* eval_expression (string str);
 
+		[CCode (cname = "xmlXPathRegisterNs")]
+		public int register_ns (string prefix, string ns_uri);
+
 		[CCode (cname = "xmlXPathNewContext")]
 		public XPathContext (Doc* doc);
 	}
