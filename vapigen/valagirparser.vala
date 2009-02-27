@@ -210,9 +210,9 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "interface") {
 				sym = parse_interface ();
 			} else if (reader.name == "glib:boxed") {
-				parse_boxed ();
+				sym = parse_boxed ();
 			} else if (reader.name == "union") {
-				parse_union ();
+				sym = parse_union ();
 			} else if (reader.name == "constant") {
 				sym = parse_constant ();
 			} else {
