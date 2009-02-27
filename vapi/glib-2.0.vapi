@@ -820,11 +820,11 @@ public class string {
 	[CCode (cname = "g_strsplit", array_length = false, array_null_terminated = true)]
 	[NoArrayLength]
 	public string[] split (string delimiter, int max_tokens = 0);
-	[CCode (cname = "g_strsplit_set", array_length = false)]
+	[CCode (cname = "g_strsplit_set", array_length = false, array_null_terminated = true)]
 	public string[] split_set (string delimiters, int max_tokens = 0);
 	[CCode (cname = "g_strjoinv")]
 	[NoArrayLength]
-	public static string joinv (string separator, [CCode (array_length = false)] string[] str_array);
+	public static string joinv (string separator, [CCode (array_length = false, array_null_terminated = true)] string[] str_array);
 	[CCode (cname = "g_strjoin")]
 	public static string join (string separator, ...);
 	[CCode (cname = "g_strnfill")]
@@ -1609,7 +1609,7 @@ namespace GLib {
 
 	/* String Utility Functions */
 
-	public uint strv_length ([CCode (array_length = false)] string[] str_array);
+	public uint strv_length ([CCode (array_length = false, array_null_terminated = true)] string[] str_array);
 
 	[CCode (cname = "errno", cheader_filename = "errno.h")]
 	public int errno;
@@ -2195,9 +2195,9 @@ namespace GLib {
 
 	[CCode (lower_case_cprefix = "g_")]
 	namespace Process {
-		public static bool spawn_async_with_pipes (string? working_directory, [CCode (array_length = false)] string[] argv, [CCode (array_length = false)] string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
-		public static bool spawn_async (string? working_directory, [CCode (array_length = false)] string[] argv, [CCode (array_length = false)] string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out Pid child_pid) throws SpawnError;
-		public static bool spawn_sync (string? working_directory, [CCode (array_length = false)] string[] argv, [CCode (array_length = false)] string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
+		public static bool spawn_async_with_pipes (string? working_directory, [CCode (array_length = false, array_null_terminated = true)] string[] argv, [CCode (array_length = false, array_null_terminated = true)] string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out Pid child_pid, out int standard_input = null, out int standard_output = null, out int standard_error = null) throws SpawnError;
+		public static bool spawn_async (string? working_directory, [CCode (array_length = false, array_null_terminated = true)] string[] argv, [CCode (array_length = false, array_null_terminated = true)] string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out Pid child_pid) throws SpawnError;
+		public static bool spawn_sync (string? working_directory, [CCode (array_length = false, array_null_terminated = true)] string[] argv, [CCode (array_length = false, array_null_terminated = true)] string[]? envp, SpawnFlags _flags, SpawnChildSetupFunc? child_setup, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
 		public static bool spawn_command_line_async (string command_line) throws SpawnError;
 		public static bool spawn_command_line_sync (string command_line, out string standard_output = null, out string standard_error = null, out int exit_status = null) throws SpawnError;
 		[CCode (cname = "g_spawn_close_pid")]
@@ -2563,11 +2563,11 @@ namespace GLib {
 		public bool match_full (string str, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
 		public bool match_all (string str, RegexMatchFlags match_options = 0, out MatchInfo match_info = null);
 		public bool match_all_full (string str, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public static string[] split_simple (string pattern, string str, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] split (string str, RegexMatchFlags match_options = 0);
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] split_full (string str, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, int max_tokens = 0) throws RegexError;
 		public string replace (string str, long string_len, int start_position, string replacement, RegexMatchFlags match_options = 0) throws RegexError;
 		public string replace_literal (string str, long string_len, int start_position, string replacement, RegexMatchFlags match_options = 0) throws RegexError;
@@ -2591,7 +2591,7 @@ namespace GLib {
 		public bool fetch_pos (int match_num, out int start_pos, out int end_pos);
 		public string fetch_named (string name);
 		public bool fetch_named_pos (string name, out int start_pos, out int end_pos);
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] fetch_all ();
 	}
 
@@ -2663,7 +2663,7 @@ namespace GLib {
 		public KeyFile ();
 		public void set_list_separator (char separator);
 		public bool load_from_file (string file, KeyFileFlags @flags) throws KeyFileError;
-		public bool load_from_dirs (string file, [CCode (array_length = false)] string[] search_dirs, out string full_path, KeyFileFlags @flags) throws KeyFileError;
+		public bool load_from_dirs (string file, [CCode (array_length = false, array_null_terminated = true)] string[] search_dirs, out string full_path, KeyFileFlags @flags) throws KeyFileError;
 		public bool load_from_data (string data, ulong length, KeyFileFlags @flags) throws KeyFileError;
 		public bool load_from_data_dirs (string file, out string full_path, KeyFileFlags @flags) throws KeyFileError;
 		public string to_data (out size_t length) throws KeyFileError;
