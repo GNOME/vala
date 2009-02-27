@@ -27,6 +27,8 @@ using Gee;
  * Code visitor parsing all Vala source files.
  */
 public class Vala.GirParser : CodeVisitor {
+	public string package_name { get; private set; }
+
 	MarkupReader reader;
 
 	CodeContext context;
@@ -36,6 +38,8 @@ public class Vala.GirParser : CodeVisitor {
 	SourceLocation begin;
 	SourceLocation end;
 	MarkupTokenType current_token;
+
+	string[] cheader_filenames;
 
 	HashMap<string,string> attributes_map = new HashMap<string,string> (str_hash, str_equal);
 
@@ -134,6 +138,10 @@ public class Vala.GirParser : CodeVisitor {
 				}
 			} else if (reader.name == "include") {
 				parse_include ();
+			} else if (reader.name == "package") {
+				parse_package ();
+			} else if (reader.name == "c:include") {
+				parse_c_include ();
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `repository'".printf (reader.name));
@@ -147,6 +155,20 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("include");
 		next ();
 		end_element ("include");
+	}
+
+	void parse_package () {
+		start_element ("package");
+		package_name = reader.get_attribute ("name");
+		next ();
+		end_element ("package");
+	}
+
+	void parse_c_include () {
+		start_element ("c:include");
+		cheader_filenames += reader.get_attribute ("name");
+		next ();
+		end_element ("c:include");
 	}
 
 	Namespace? parse_namespace () {
@@ -165,9 +187,8 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
-		string cheader = get_attribute (ns.name, "c:header-filename");
-		if (cheader != null) {
-			ns.set_cheader_filename (cheader);
+		foreach (string c_header in cheader_filenames) {
+			ns.add_cheader_filename (c_header);
 		}
 		next ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {

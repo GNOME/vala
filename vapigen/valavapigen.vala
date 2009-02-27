@@ -190,6 +190,10 @@ class Vala.VAPIGen : Object {
 			return quit ();
 		}
 		
+		if (library == null && girparser.package_name != null) {
+			library = girparser.package_name;
+		}
+
 		if (library != null) {
 			// interface writer ignores external packages
 			foreach (SourceFile file in context.get_source_files ()) {

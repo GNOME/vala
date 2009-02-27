@@ -512,6 +512,15 @@ public class Vala.Namespace : Symbol {
 		cheader_filenames.add (cheader_filename);
 	}
 	
+	/**
+	 * Adds a C header filename of this namespace.
+	 *
+	 * @param cheader_filename header filename
+	 */
+	public void add_cheader_filename (string cheader_filename) {
+		cheader_filenames.add (cheader_filename);
+	}
+
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cprefix")) {
 			foreach (string name in a.get_string ("cprefix").split (","))
