@@ -1,10 +1,14 @@
-[CCode (cprefix = "ftdi_", lower_case_prefix = "ftdi_", cheader_filename = "ftdi.h,usb.h")]
+[CCode (cprefix = "FTDI_", lower_case_prefix = "ftdi_", cheader_filename = "ftdi.h")]
 namespace FTDI {
+	
+	public const int DEFAULT_EEPROM_SIZE;
+	
 	[CCode (cprefix = "TYPE_")]
 	public enum ChipType {
 		AM,
 		BM,
-		2232C
+		2232C,
+		R
 	}
 
 	[CCode (cprefix = "")]
@@ -28,6 +32,12 @@ namespace FTDI {
 		BITS_7,
 		BITS_8
 	}
+	
+	[CCode (cprefix="BREAK_")]
+	public enum BreakType {
+		OFF,
+		ON,
+	}
 
 	[CCode (cprefix = "BITMODE_", cname = "ftdi_mpsse_mode")]
 	public enum MPSSEMode {
@@ -47,21 +57,111 @@ namespace FTDI {
 		B
 	}
 
-	[CCode (cprefix = "SIO_")]
-	public enum FlowControlType {
-		DISABLE_FLOW_CTRL,
-		RTS_CTS_HS,
-		DTR_DSR_HS,
-		XON_XOFF_HS
+	[CCode (cprefix="MPSSE_")]
+	public enum ShiftingCommands {
+		WRITE_NEG,
+		BITMODE,
+		READ_NEG,
+		LSB,
+		DO_WRITE,
+		DO_READ,
+		WRITE_TMS
+	}
+	
+	[CCode (cprefix="")]
+	public enum MPSSECommands {
+		SET_BITS_LOW,
+		SET_BITS_HIGH,
+		GET_BITS_LOW,
+		GET_BITS_HIGH,
+		LOOPBACK_START,
+		LOOPBACK_END,
+		TCK_DIVISOR,
+		SEND_IMMEDIATE,
+		WAIT_ON_HIGH,
+		WAIT_ON_LOW
+	}
+	
+	[CCode (cname="DIV_VALUE")]
+	public int div_value (int rate);
+		
+	[CCode (cprefix="")]
+	public enum HostEmultationModeCommands {
+		SEND_IMMEDIATE,
+		WAIT_ON_HIGH,
+		WAIT_ON_LOW,
+		READ_SHORT,
+		READ_EXTENDED,
+		WRITE_SHORT,
+		WRITE_EXTENDED
+	}
+	
+	[CCode (cprefix="SIO_")]
+	public const int RESET;
+	[CCode (cprefix="SIO_")]
+	public const int MODEM_CTRL;
+	[CCode (cprefix="SIO_")]
+	public const int SET_FLOW_CTRL;
+	[CCode (cprefix="SIO_")]
+	public const int SET_BAUD_RATE;
+	[CCode (cprefix="SIO_")]
+	public const int SET_DATA;
+	[CCode (cprefix="SIO_")]
+	public const int RESET_REQUEST_TYPE;
+	[CCode (cprefix="SIO_")]
+	public const int RESET_REQUEST;
+	[CCode (cprefix="SIO_")]
+	public const int RESET_SIO;
+	[CCode (cprefix="SIO_")]
+	public const int RESET_PURGE_RX;
+	[CCode (cprefix="SIO_")]
+	public const int RESET_PURGE_TX;
+	[CCode (cprefix="SIO_")]
+	public const int SET_BAUDRATE_REQUEST_TYPE;
+	[CCode (cprefix="SIO_")]
+	public const int SET_BAUDRATE_REQUEST;
+	[CCode (cprefix="SIO_")]
+	public const int SET_DATA_REQUEST_TYPE;
+	[CCode (cprefix="SIO_")]
+	public const int SET_DATA_REQUEST;
+	[CCode (cprefix="SIO_")]
+	public const int SET_FLOW_CTRL_REQUEST;
+	[CCode (cprefix="SIO_")]
+	public const int SET_FLOW_CTRL_REQUEST_TYPE;
+	[CCode (cprefix="SIO_")]
+	public const int DISABLE_FLOW_CTRL;
+	[CCode (cprefix="SIO_")]
+	public const int RTS_CTS_HS;
+	[CCode (cprefix="SIO_")]
+	public const int DTR_DSR_HS;
+	[CCode (cprefix="SIO_")]
+	public const int XON_XOFF_HS;
+	[CCode (cprefix="SIO_")]
+	public const int SET_MODEM_CTRL_REQUEST_TYPE;
+	[CCode (cprefix="SIO_")]
+	public const int SET_MODEM_CTRL_REQUEST;
+	[CCode (cprefix="SIO_")]
+	public const int SET_DTR_MASK;
+	[CCode (cprefix="SIO_")]
+	public const int SET_DTR_HIGH;
+	[CCode (cprefix="SIO_")]
+	public const int SET_DTR_LOW;
+	[CCode (cprefix="SIO_")]
+	public const int SET_RTS_MASK;
+	[CCode (cprefix="SIO_")]
+	public const int SET_RTS_HIGH;
+	[CCode (cprefix="SIO_")]
+	public const int SET_RTS_LOW;
+	
+	public const int URB_USERCONTEXT_COOKIE;
+	
+	[CCode (cname = "struct ftdi_device_list", destroy_function = "ftdi_list_free")]
+	public struct DeviceList {
+		public DeviceList* next;
+		public USB.Device* dev;
 	}
 
-	[CCode (cname = "struct ftdi_device_list", cheader_filename = "usb.h", free_function = "ftdi_list_free2")]
-	public class DeviceList {
-		public DeviceList next;
-		public USB.Device * dev;
-	}
-
-	[CCode (cname = "struct ftdi_eeprom")]
+	[CCode (cname = "struct ftdi_eeprom", cprefix="ftdi_eeprom_")]
 	public struct EEPROM {
 		public int vendor_id;
 		public int product_id;
@@ -75,47 +175,65 @@ namespace FTDI {
 		public int change_usb_version;
 		public int usb_version;
 		public int max_power;
-		public string manufacturer;
-		public string product;
-		public string serial;
+		public unowned string manufacturer;
+		public unowned string product;
+		public unowned string serial;
+		public int size;
+		public void initdefaults ();
+		public int build (out uchar output);
 	}
 
-	[CCode (cname = "struct ftdi_context", free_function = "ftdi_free", cprefix = "ftdi_")]
+	[Compact]
+	[CCode (cname = "struct ftdi_context", cprefix ="ftdi_", free_function="ftdi_free")]
 	public class Context {
 		[CCode (cname = "ftdi_new")]
 		public Context ();
 		public int init ();
 		public void deinit ();
 		public int set_interface (Interface iface);
-		public void set_usbdev (USB.Device * usbdev);
+		public void set_usbdev (USB.Device* usbdev);
 		public int usb_find_all (out DeviceList devlist, int vendor, int product);
-		public int usb_get_strings (USB.Device * usbdev, [CCode (array_length = false)] char[] manufacturer, int manufacturer_len, [CCode (array_length = false)] char[] description, int description_len, [CCode (array_length = false)] char[] serial, int serial_len);
-		public int usb_open_dev (USB.Device * usbdev);
+		public int usb_get_strings (USB.Device* usbdev, [CCode (array_length = false)] char[] manufacturer, int manufacturer_len, [CCode (array_length = false)] char[] description, int description_len, [CCode (array_length = false)] char[] serial, int serial_len);
+		public int usb_open_dev (USB.Device* usbdev);
 		public int usb_open (int vendor, int product);
 		public int usb_open_desc (int vendor, int product, string description, string serial);
 		public int usb_reset ();
+		public int usb_purge_rx_buffers ();
+		public int usb_purge_tx_buffers ();
 		public int usb_purge_buffers ();
 		public int usb_close ();
 		public int set_baudrate (int baudrate);
 		public int set_line_property (BitsType bits, StopBitsType sbit, ParityType parity);
-		public int write_data ([CCode (array_length = false)] uchar[] buf, int size);
+		public int set_line_property2 (BitsType bits, StopBitsType sbit, ParityType parity, BreakType break_type);
+		public int write_data (uchar[] buf);
 		public int write_data_set_chunksize (int chunksize);
 		public int write_data_get_chunksize (out int chunksize);
-		public int read_data ([CCode (array_length = false)] uchar[] buf, uint size);
+		public int read_data (uchar[] buf);
 		public int read_data_set_chunksize (int chunksize);
 		public int read_data_get_chunksize (out int chunksize);
+		public int write_data_async (uchar[] buf);
+		public void async_complete (int wait_for_more);
 		public int enable_bitbang (uchar bitmask);
 		public int disable_bitbang ();
 		public int set_bitmode (uchar bitmask, uchar mode);
 		public int read_pins (out uchar pins);
 		public int set_latency_timer (uchar latency);
 		public int get_latency_timer (out uchar latency);
-		public void eeprom_initdefaults (out EEPROM eeprom);
-		public weak string get_error_string ();
-		public int setflowctrl (FlowControlType flowctrl);
+		public int poll_modem_status (out ushort status);
+		public int setflowctrl (int flowctrl);
+		public int setdtr_rts (int dtr, int rts);
 		public int setdtr (int state);
 		public int setrts (int state);
-
+		public int set_event_char (uchar eventch, uchar enable);
+		public int set_error_char (uchar errorch, uchar enable);
+		public void eeprom_setsize (EEPROM* eeprom, int size);
+		public int read_eeprom (out uchar eeprom);
+		public int read_chipid (out uint chipid);
+		public int read_eeprom_getsize (out uchar eeprom, int maxsize);
+		public int write_eeprom (ref uchar eeprom);
+		public int erase_eeprom ();
+		public unowned string get_error_string ();
+		
 		public USB.DeviceHandle usb_dev;
 		public int usb_read_timeout;
 		public int usb_write_timeout;
@@ -133,6 +251,9 @@ namespace FTDI {
 		public int in_ep;
 		public int out_ep;
 		public uchar bitbang_mode;
-		public string error_str;
+		public int eeprom_size;
+		public unowned string error_str;
+		public char* async_usb_buffer;
+		public uint async_usb_buffer_size;
 	}
 }
