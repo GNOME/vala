@@ -187,7 +187,7 @@ namespace GLib {
 		public void remove_weak_pointer (void **data);
 		public void get (string first_property_name, ...);
 		public void set (string first_property_name, ...);
-		public void get_property (string property_name, Value value);
+		public void get_property (string property_name, ref Value value);
 		public void set_property (string property_name, Value value);
 		public void* get_data (string key);
 		public void set_data (string key, void* data);
