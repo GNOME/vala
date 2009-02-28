@@ -65,13 +65,13 @@ namespace GLib {
 		public int16 read_int16 (GLib.Cancellable? cancellable) throws GLib.Error;
 		public int32 read_int32 (GLib.Cancellable? cancellable) throws GLib.Error;
 		public int64 read_int64 (GLib.Cancellable? cancellable) throws GLib.Error;
-		public unowned string read_line (out size_t length, GLib.Cancellable? cancellable) throws GLib.Error;
+		public unowned string? read_line (out size_t length, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void read_line_async (int io_priority, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public unowned string read_line_finish (GLib.AsyncResult _result, size_t length) throws GLib.Error;
 		public uint16 read_uint16 (GLib.Cancellable? cancellable) throws GLib.Error;
 		public uint32 read_uint32 (GLib.Cancellable? cancellable) throws GLib.Error;
 		public uint64 read_uint64 (GLib.Cancellable? cancellable) throws GLib.Error;
-		public unowned string read_until (string stop_chars, out size_t length, GLib.Cancellable? cancellable) throws GLib.Error;
+		public unowned string? read_until (string stop_chars, out size_t length, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void read_until_async (string stop_chars, int io_priority, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public unowned string read_until_finish (GLib.AsyncResult _result, size_t length) throws GLib.Error;
 		public void set_byte_order (GLib.DataStreamByteOrder order);
@@ -314,7 +314,6 @@ namespace GLib {
 	public class IOExtension {
 		public unowned string get_name ();
 		public int get_priority ();
-		public GLib.Type get_type ();
 		public unowned GLib.TypeClass ref_class ();
 	}
 	[Compact]
