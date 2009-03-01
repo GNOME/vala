@@ -1916,7 +1916,8 @@ namespace GLib {
 		[CCode (cname = "g_get_system_data_dirs", array_length = false, array_null_terminated = true)]
 		[NoArrayLength]
 		public static weak string[] get_system_data_dirs ();
-		[CCode (cname = "g_get_system_config_dirs")]
+		[CCode (cname = "g_get_system_config_dirs", array_length = false, array_null_terminated = true)]
+		[NoArrayLength]
 		public static weak string[] get_system_config_dirs ();
 		[CCode (cname = "g_get_host_name")]
 		public static weak string get_host_name ();
