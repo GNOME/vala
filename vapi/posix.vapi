@@ -288,7 +288,7 @@ namespace Posix {
 	[CCode (cheader_filename = "fcntl.h")]
 	public int fcntl (int fd, int cmd, ...);
 	[CCode (cheader_filename = "fcntl.h")]
-	public int open (string path, int oflag);
+	public int open (string path, int oflag, mode_t mode=0);
 	[CCode (cheader_filename = "fcntl.h")]
 	public int posix_fadvice (int fd, long offset, long len, int advice);
 	[CCode (cheader_filename = "fcntl.h")]
