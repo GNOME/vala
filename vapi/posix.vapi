@@ -486,6 +486,70 @@ namespace Posix {
 	[CCode (cheader_filename = "stropts.h")]
 	public int ioctl (int fildes, int request, ...);
 
+	[CCode (cheader_filename = "syslog.h")]
+	public void openlog (string ident, int option, int facility );
+
+	[CCode (cheader_filename = "syslog.h")]
+	public void syslog (int priority, string format, ... );
+
+	[CCode (cheader_filename = "syslog.h")]
+	public void closelog ();
+
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_EMERG;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_ALERT;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_CRIT;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_ERR;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_WARNING;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_NOTICE;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_INFO;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_DEBUG;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_KERN;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_USER;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_MAIL;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_DAEMON;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_SYSLOG;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_LPR;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_NEWS;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_UUCP;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_CRON;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_AUTHPRIV;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_FTP;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_LOCAL0;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_LOCAL1;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_LOCAL2;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_LOCAL3;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_LOCAL4;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_LOCAL5;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_LOCAL6;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_LOCAL7;
+
 	[CCode (cheader_filename = "sys/socket.h")]
 	public const int SOCK_DGRAM;
 	[CCode (cheader_filename = "sys/socket.h")]
