@@ -496,6 +496,16 @@ namespace Posix {
 	public void closelog ();
 
 	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_PID;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_CONS;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_ODELAY;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_NDELAY;
+	[CCode (cheader_filename = "syslog.h")]
+	public const int LOG_NOWAIT;
+	[CCode (cheader_filename = "syslog.h")]
 	public const int LOG_EMERG;
 	[CCode (cheader_filename = "syslog.h")]
 	public const int LOG_ALERT;
