@@ -626,6 +626,8 @@ public class Vala.GirParser : CodeVisitor {
 				iface.add_property (parse_property ());
 			} else if (reader.name == "callback") {
 				vmethods.add (parse_method ("callback"));
+			} else if (reader.name == "function") {
+				methods.add (parse_method ("function"));
 			} else if (reader.name == "method") {
 				methods.add (parse_method ("method"));
 			} else if (reader.name == "glib:signal") {
