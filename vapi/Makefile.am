@@ -98,6 +98,7 @@ dist_vapi_DATA = \
 	libnotify.deps \
 	libnotify.vapi \
 	liboobs-1.vapi \
+	libosso.vapi \
 	libpanelapplet-2.0.deps \
 	libpanelapplet-2.0.vapi \
 	libsexy.deps \
