@@ -14,6 +14,7 @@ namespace Gst {
 		public void set_frame_options (int frame_duration, int frame_size);
 		public void set_sample_based ();
 		public void set_sample_options (int sample_size);
+		public void set_samplebits_options (int sample_size);
 	}
 	[CCode (cheader_filename = "gst/rtp/gstbasertpdepayload.h")]
 	public class BaseRTPDepayload : Gst.Element {
@@ -28,6 +29,8 @@ namespace Gst {
 		public bool thread_running;
 		[NoWrapper]
 		public virtual Gst.FlowReturn add_to_queue (Gst.Buffer @in);
+		[NoWrapper]
+		public virtual bool packet_lost (Gst.Event event);
 		[NoWrapper]
 		public virtual unowned Gst.Buffer process (Gst.Buffer @in);
 		public Gst.FlowReturn push (Gst.Buffer out_buf);
@@ -366,6 +369,8 @@ namespace Gst {
 	public static void rtp_buffer_set_csrc (Gst.Buffer buffer, uchar idx, uint32 csrc);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
 	public static void rtp_buffer_set_extension (Gst.Buffer buffer, bool extension);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static bool rtp_buffer_set_extension_data (Gst.Buffer buffer, uint16 bits, uint16 length);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
 	public static void rtp_buffer_set_marker (Gst.Buffer buffer, bool marker);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]

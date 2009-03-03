@@ -284,6 +284,14 @@
 				<parameter name="extension" type="gboolean"/>
 			</parameters>
 		</function>
+		<function name="rtp_buffer_set_extension_data" symbol="gst_rtp_buffer_set_extension_data">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="buffer" type="GstBuffer*"/>
+				<parameter name="bits" type="guint16"/>
+				<parameter name="length" type="guint16"/>
+			</parameters>
+		</function>
 		<function name="rtp_buffer_set_marker" symbol="gst_rtp_buffer_set_marker">
 			<return-type type="void"/>
 			<parameters>
@@ -705,6 +713,13 @@
 					<parameter name="sample_size" type="gint"/>
 				</parameters>
 			</method>
+			<method name="set_samplebits_options" symbol="gst_base_rtp_audio_payload_set_samplebits_options">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="basertpaudiopayload" type="GstBaseRTPAudioPayload*"/>
+					<parameter name="sample_size" type="gint"/>
+				</parameters>
+			</method>
 			<field name="base_ts" type="GstClockTime"/>
 			<field name="frame_size" type="gint"/>
 			<field name="frame_duration" type="gint"/>
@@ -732,6 +747,13 @@
 				<parameters>
 					<parameter name="filter" type="GstBaseRTPDepayload*"/>
 					<parameter name="in" type="GstBuffer*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="packet_lost">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="filter" type="GstBaseRTPDepayload*"/>
+					<parameter name="event" type="GstEvent*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="process">
