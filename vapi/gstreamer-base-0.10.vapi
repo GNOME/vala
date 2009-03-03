@@ -211,7 +211,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.FlowReturn transform_ip (Gst.Buffer buf);
 		[NoWrapper]
-		public virtual bool transform_size (Gst.PadDirection direction, Gst.Caps caps, uint size, Gst.Caps othercaps, uint othersize);
+		public virtual bool transform_size (Gst.PadDirection direction, Gst.Caps caps, uint size, Gst.Caps othercaps, out uint othersize);
 		public void update_qos (double proportion, Gst.ClockTimeDiff diff, Gst.ClockTime timestamp);
 		[NoAccessorMethod]
 		public bool qos { get; set; }
