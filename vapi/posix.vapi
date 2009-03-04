@@ -284,7 +284,7 @@ namespace Posix {
 	[CCode (cheader_filename = "fcntl.h")]
 	public const int POSIX_FADV_NOREUSE;
 	[CCode (cheader_filename = "fcntl.h")]
-	public int creat (string path, int mode);
+	public int creat (string path, mode_t mode);
 	[CCode (cheader_filename = "fcntl.h")]
 	public int fcntl (int fd, int cmd, ...);
 	[CCode (cheader_filename = "fcntl.h")]
