@@ -183,6 +183,7 @@ public class Vala.FormalParameter : Symbol {
 		if (!ellipsis) {
 			var result = new FormalParameter (name, parameter_type, source_reference);
 			result.params_array = params_array;
+			result.direction = this.direction;
 			return result;
 		} else {
 			return new FormalParameter.with_ellipsis ();
