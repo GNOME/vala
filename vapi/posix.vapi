@@ -355,6 +355,14 @@ namespace Posix {
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGSTKFLT;
 
+	[SimpleType]
+	[IntegerType (rank = 6)]
+	[CCode (cname = "pid_t", default_value = "0", cheader_filename = "sys/types.h")]
+	public struct pid_t {
+	}
+	[CCode (cheader_filename = "signal.h")]
+	public int kill (pid_t pid, int signum);
+
 	public static delegate void sighandler_t (int signal);
 
 	[CCode (cheader_filename = "signal.h")]
