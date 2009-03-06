@@ -483,7 +483,7 @@ namespace Posix {
 	public const int MORECTL;
 	[CCode (cheader_filename = "stropts.h")]
 	public const int MOREDATA;
-	[CCode (cheader_filename = "stropts.h")]
+	[CCode (cheader_filename = "stropts.h", sentinel = "")]
 	public int ioctl (int fildes, int request, ...);
 
 	[CCode (cheader_filename = "syslog.h")]
