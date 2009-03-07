@@ -701,7 +701,7 @@ namespace Posix {
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cheader_filename = "sys/types.h")]
+	[CCode (cname = "mode_t", cheader_filename = "sys/types.h")]
 	public struct mode_t {
 	}
 
