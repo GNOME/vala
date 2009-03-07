@@ -458,9 +458,11 @@ internal class Vala.DBusModule : GAsyncModule {
 		if (dim < array_type.rank) {
 			write_array_dim (cforfragment, array_type, dim + 1, new CCodeIdentifier (subiter_name), array_expr, array_iter_expr);
 		} else {
-			var array_iter_incr = new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, array_iter_expr);
-			var element_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, array_iter_incr);
+			var element_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, array_iter_expr);
 			write_expression (cforfragment, array_type.element_type, new CCodeIdentifier (subiter_name), element_expr);
+
+			var array_iter_incr = new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, array_iter_expr);
+			cforfragment.append (new CCodeExpressionStatement (array_iter_incr));
 		}
 		fragment.append (cfor);
 
