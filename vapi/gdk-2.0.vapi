@@ -1606,13 +1606,13 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_rectangle (Gdk.Drawable drawable, Gdk.GC gc, bool filled, int x, int y, int width, int height);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void draw_rgb_32_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride);
+	public static void draw_rgb_32_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, [CCode (array_length = false)] uchar[] buf, int rowstride);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void draw_rgb_32_image_dithalign (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] buf, int rowstride, int xdith, int ydith);
+	public static void draw_rgb_32_image_dithalign (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, [CCode (array_length = false)] uchar[] buf, int rowstride, int xdith, int ydith);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void draw_rgb_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] rgb_buf, int rowstride);
+	public static void draw_rgb_image (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, [CCode (array_length = false)] uchar[] rgb_buf, int rowstride);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void draw_rgb_image_dithalign (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, uchar[] rgb_buf, int rowstride, int xdith, int ydith);
+	public static void draw_rgb_image_dithalign (Gdk.Drawable drawable, Gdk.GC gc, int x, int y, int width, int height, Gdk.RgbDither dith, [CCode (array_length = false)] uchar[] rgb_buf, int rowstride, int xdith, int ydith);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void draw_segments (Gdk.Drawable drawable, Gdk.GC gc, Gdk.Segment[] segs);
 	[CCode (cheader_filename = "gdk/gdk.h")]
