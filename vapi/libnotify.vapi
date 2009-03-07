@@ -11,7 +11,7 @@ namespace Notify {
 		public void clear_hints ();
 		public bool close () throws GLib.Error;
 		[CCode (has_construct_function = false)]
-		public Notification (string summary, string body, string icon, Gtk.Widget attach);
+		public Notification (string summary, string? body, string? icon, Gtk.Widget? attach);
 		public void set_category (string category);
 		public void set_geometry_hints (Gdk.Screen screen, int x, int y);
 		public void set_hint_byte (string key, uchar value);
