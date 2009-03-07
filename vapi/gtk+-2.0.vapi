@@ -2284,7 +2284,7 @@ namespace Gtk {
 		public unowned Gtk.Window get_parent ();
 		public unowned Gdk.Screen get_screen ();
 		[CCode (type = "GMountOperation*", has_construct_function = false)]
-		public MountOperation (Gtk.Window parent);
+		public MountOperation (Gtk.Window? parent);
 		public void set_parent (Gtk.Window parent);
 		public void set_screen (Gdk.Screen screen);
 		[NoAccessorMethod]
