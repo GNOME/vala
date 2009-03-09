@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cheader_filename = "gst/interfaces/colorbalancechannel.h")]
+	[CCode (cheader_filename = "gst/interfaces/colorbalance.h")]
 	public class ColorBalanceChannel : GLib.Object {
 		public weak string label;
 		public int max_value;
@@ -11,8 +11,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public class MixerOptions : Gst.MixerTrack {
-		public weak GLib.List values;
-		public unowned GLib.List get_values ();
+		public unowned GLib.List<string> get_values ();
 	}
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public class MixerTrack : GLib.Object {
@@ -29,7 +28,7 @@ namespace Gst {
 		[NoAccessorMethod]
 		public string untranslated_label { owned get; construct; }
 	}
-	[CCode (cheader_filename = "gst/interfaces/tunerchannel.h")]
+	[CCode (cheader_filename = "gst/interfaces/tuner.h")]
 	public class TunerChannel : GLib.Object {
 		public Gst.TunerChannelFlags flags;
 		public float freq_multiplicator;
@@ -51,7 +50,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/interfaces/colorbalance.h")]
 	public interface ColorBalance : Gst.ImplementsInterface, Gst.Element {
 		public abstract int get_value (Gst.ColorBalanceChannel channel);
-		public abstract unowned GLib.List list_channels ();
+		public abstract unowned GLib.List<Gst.ColorBalanceChannel> list_channels ();
 		public abstract void set_value (Gst.ColorBalanceChannel channel, int value);
 		[HasEmitter]
 		public virtual signal void value_changed (Gst.ColorBalanceChannel channel, int value);
@@ -61,7 +60,7 @@ namespace Gst {
 		public abstract Gst.MixerFlags get_mixer_flags ();
 		public abstract unowned string get_option (Gst.MixerOptions opts);
 		public abstract void get_volume (Gst.MixerTrack track, int volumes);
-		public abstract unowned GLib.List list_tracks ();
+		public abstract unowned GLib.List<Gst.MixerTrack> list_tracks ();
 		public static Gst.MixerMessageType message_get_type (Gst.Message message);
 		public static void message_parse_mute_toggled (Gst.Message message, out unowned Gst.MixerTrack track, bool mute);
 		public static void message_parse_option_changed (Gst.Message message, out unowned Gst.MixerOptions options, string value);
@@ -88,7 +87,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/interfaces/propertyprobe.h")]
 	public interface PropertyProbe {
-		public abstract unowned GLib.List get_properties ();
+		public abstract unowned GLib.List<string> get_properties ();
 		public unowned GLib.ParamSpec get_property (string name);
 		public abstract unowned GLib.ValueArray get_values (GLib.ParamSpec pspec);
 		public unowned GLib.ValueArray get_values_name (string name);
@@ -100,15 +99,15 @@ namespace Gst {
 		public void probe_property_name (string name);
 		public virtual signal void probe_needed (void* pspec);
 	}
-	[CCode (cheader_filename = "gst/interfaces/tunerchannel.h")]
+	[CCode (cheader_filename = "gst/interfaces/tuner.h")]
 	public interface Tuner : Gst.ImplementsInterface, Gst.Element {
 		public unowned Gst.TunerChannel find_channel_by_name (string channel);
 		public unowned Gst.TunerNorm find_norm_by_name (string norm);
 		public abstract unowned Gst.TunerChannel get_channel ();
 		public abstract ulong get_frequency (Gst.TunerChannel channel);
 		public abstract unowned Gst.TunerNorm get_norm ();
-		public abstract unowned GLib.List list_channels ();
-		public abstract unowned GLib.List list_norms ();
+		public abstract unowned GLib.List<Gst.TunerChannel> list_channels ();
+		public abstract unowned GLib.List<Gst.TunerNorm> list_norms ();
 		public abstract void set_channel (Gst.TunerChannel channel);
 		public abstract void set_frequency (Gst.TunerChannel channel, ulong frequency);
 		public abstract void set_norm (Gst.TunerNorm norm);
@@ -173,7 +172,7 @@ namespace Gst {
 		HARDWARE,
 		SOFTWARE
 	}
-	[CCode (cprefix = "GST_TUNER_CHANNEL_", has_type_id = "0", cheader_filename = "gst/interfaces/tunerchannel.h")]
+	[CCode (cprefix = "GST_TUNER_CHANNEL_", has_type_id = "0", cheader_filename = "gst/interfaces/tuner.h")]
 	[Flags]
 	public enum TunerChannelFlags {
 		INPUT,
