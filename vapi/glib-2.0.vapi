@@ -888,6 +888,14 @@ public class string {
 	public ulong to_ulong (out weak string endptr = null, int _base = 0);
 	[CCode (cname = "g_ascii_strtoll")]
 	public int64 to_int64 (out weak string endptr = null, int _base = 0);
+	public bool to_bool () {
+		if (this == "true") {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	[CCode (cname = "strlen")]
 	public long size ();
 
