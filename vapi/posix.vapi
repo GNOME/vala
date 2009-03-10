@@ -649,7 +649,7 @@ namespace Posix {
 	public bool S_ISSOCK (mode_t mode);
 
 	[CCode (cheader_filename = "sys/stat.h", cname = "struct stat")]
-	public struct stat {
+	public struct Stat {
 		public dev_t st_dev;
 		public ino_t st_ino;
 		public mode_t st_mode;
@@ -664,6 +664,10 @@ namespace Posix {
 		public blksize_t st_blksize;
 		public blkcnt_t st_blocks;
 	}
+	[CCode (cheader_filename = "sys/stat.h")]
+	int fstat( int fd, out Stat buf);
+	[CCode (cheader_filename = "sys/stat.h")]
+	int stat (string filename, out Stat buf);
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
