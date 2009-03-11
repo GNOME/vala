@@ -357,6 +357,14 @@ public class Vala.GIdlParser : CodeVisitor {
 							} else if (eval (nv[1]) == "0") {
 								show_param = true;
 							}
+						} else if (nv[0] == "is_out") {
+							if (eval (nv[1]) == "1") {
+								p.direction = ParameterDirection.OUT;
+							}
+						} else if (nv[0] == "is_ref") {
+							if (eval (nv[1]) == "1") {
+								p.direction = ParameterDirection.REF;
+							}
 						} else if (nv[0] == "takes_ownership") {
 							if (eval (nv[1]) == "1") {
 								param_type.value_owned = true;
