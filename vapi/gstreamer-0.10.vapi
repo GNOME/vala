@@ -836,7 +836,7 @@ namespace Gst {
 		public Gst.PadPresence presence;
 		public unowned Gst.Caps get_caps ();
 		[CCode (has_construct_function = false)]
-		public PadTemplate (string name_template, Gst.PadDirection direction, Gst.PadPresence presence, Gst.Caps caps);
+		public PadTemplate (string name_template, Gst.PadDirection direction, Gst.PadPresence presence, owned Gst.Caps caps);
 		[HasEmitter]
 		public virtual signal void pad_created (Gst.Pad pad);
 	}
