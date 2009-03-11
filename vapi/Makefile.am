@@ -101,6 +101,8 @@ dist_vapi_DATA = \
 	libosso.vapi \
 	libpanelapplet-2.0.deps \
 	libpanelapplet-2.0.vapi \
+	librsvg-2.0.vapi \
+	librsvg-2.0.deps \
 	libsexy.deps \
 	libsexy.vapi \
 	libsoup-2.2.vapi \

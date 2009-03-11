@@ -1,0 +1,5 @@
+Rsvg cheader_filename="librsvg/rsvg.h"
+RsvgSizeFunc.width is_ref="1"
+RsvgSizeFunc.height is_ref="1"
+rsvg_handle_set_size_callback.size_func transfer_ownership="1"
+rsvg_handle_set_size_callback.user_data_destroy hidden="1"
