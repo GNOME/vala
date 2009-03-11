@@ -39,17 +39,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public TryStatement current_try;
 	public PropertyAccessor current_property_accessor;
 
-	public CCodeFragment header_begin;
-	public CCodeFragment header_type_declaration;
-	public CCodeFragment header_type_definition;
-	public CCodeFragment header_type_member_declaration;
-	public CCodeFragment header_constant_declaration;
-	public CCodeFragment source_begin;
-	public CCodeFragment source_include_directives;
-	public CCodeFragment source_type_declaration;
-	public CCodeFragment source_type_definition;
-	public CCodeFragment source_type_member_declaration;
-	public CCodeFragment source_constant_declaration;
+	public CCodeDeclarationSpace header_declarations;
+	public CCodeDeclarationSpace source_declarations;
+
 	public CCodeFragment source_signal_marshaller_declaration;
 	public CCodeFragment source_type_member_definition;
 	public CCodeFragment class_init_fragment;
@@ -222,10 +214,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	private CCodeIncludeDirective get_internal_include (string filename) {
-		return new CCodeIncludeDirective (filename, context.library == null);
-	}
-
 	public virtual void append_vala_array_free () {
 	}
 
@@ -240,7 +228,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeFormalParameter ("str1", "const char *"));
 		fun.add_parameter (new CCodeFormalParameter ("str2", "const char *"));
-		source_type_member_declaration.append (fun.copy ());
+		source_declarations.add_type_member_declaration (fun.copy ());
 
 		// (str1 != str2)
 		var cineq = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("str1"), new CCodeIdentifier ("str2"));
@@ -272,17 +260,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_source_file (SourceFile source_file) {
-		header_begin = new CCodeFragment ();
-		header_type_declaration = new CCodeFragment ();
-		header_type_definition = new CCodeFragment ();
-		header_type_member_declaration = new CCodeFragment ();
-		header_constant_declaration = new CCodeFragment ();
-		source_begin = new CCodeFragment ();
-		source_include_directives = new CCodeFragment ();
-		source_type_declaration = new CCodeFragment ();
-		source_type_definition = new CCodeFragment ();
-		source_type_member_declaration = new CCodeFragment ();
-		source_constant_declaration = new CCodeFragment ();
+		header_declarations = new CCodeDeclarationSpace ();
+		source_declarations = new CCodeDeclarationSpace ();
 		source_type_member_definition = new CCodeFragment ();
 		source_signal_marshaller_definition = new CCodeFragment ();
 		source_signal_marshaller_declaration = new CCodeFragment ();
@@ -305,14 +284,14 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		wrappers = new HashSet<string> (str_hash, str_equal);
 
-		header_begin.append (new CCodeIncludeDirective ("glib.h"));
-		header_begin.append (new CCodeIncludeDirective ("glib-object.h"));
+		header_declarations.add_include ("glib.h");
+		header_declarations.add_include ("glib-object.h");
 
 		if (context.legacy_headers) {
 			if (context.basedir != null || context.library != null) {
-				source_include_directives.append (new CCodeIncludeDirective (source_file.get_cinclude_filename ()));
+				source_declarations.add_include (source_file.get_cinclude_filename ());
 			} else {
-				source_include_directives.append (new CCodeIncludeDirective (source_file.get_cinclude_filename (), true));
+				source_declarations.add_include (source_file.get_cinclude_filename (), true);
 			}
 		}
 		
@@ -325,25 +304,25 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		
 			foreach (string filename in source_file.get_header_external_includes ()) {
 				if (!used_includes.contains (filename)) {
-					header_begin.append (new CCodeIncludeDirective (filename));
+					header_declarations.add_include (filename);
 					used_includes.add (filename);
 				}
 			}
 			foreach (string filename in source_file.get_header_internal_includes ()) {
 				if (!used_includes.contains (filename)) {
-					header_begin.append (get_internal_include (filename));
+					header_declarations.add_include (filename, (context.library == null));
 					used_includes.add (filename);
 				}
 			}
 			foreach (string filename in source_file.get_source_external_includes ()) {
 				if (!used_includes.contains (filename)) {
-					source_include_directives.append (new CCodeIncludeDirective (filename));
+					source_declarations.add_include (filename);
 					used_includes.add (filename);
 				}
 			}
 			foreach (string filename in source_file.get_source_internal_includes ()) {
 				if (!used_includes.contains (filename)) {
-					source_include_directives.append (get_internal_include (filename));
+					source_declarations.add_include (filename, (context.library == null));
 					used_includes.add (filename);
 				}
 			}
@@ -352,15 +331,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					foreach (CodeNode node in cycle_file.get_nodes ()) {
 						if (node is Struct) {
 							var st = (Struct) node;
-							header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
+							header_declarations.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
 						} else if (node is Class) {
 							var cl = (Class) node;
-							header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (cl.get_cname ()), new CCodeVariableDeclarator (cl.get_cname ())));
-							header_type_declaration.append (new CCodeTypeDefinition ("struct _%sClass".printf (cl.get_cname ()), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
+							header_declarations.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (cl.get_cname ()), new CCodeVariableDeclarator (cl.get_cname ())));
+							header_declarations.add_type_declaration (new CCodeTypeDefinition ("struct _%sClass".printf (cl.get_cname ()), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
 						} else if (node is Interface) {
 							var iface = (Interface) node;
-							header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
-							header_type_declaration.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_type_cname ()), new CCodeVariableDeclarator (iface.get_type_cname ())));
+							header_declarations.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
+							header_declarations.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (iface.get_type_cname ()), new CCodeVariableDeclarator (iface.get_type_cname ())));
 						}
 					}
 				}
@@ -382,7 +361,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		
 		/* generate hardcoded "well-known" macros */
 		if (requires_free_checked) {
-			source_begin.append (new CCodeMacroReplacement ("VALA_FREE_CHECKED(o,f)", "((o) == NULL ? NULL : ((o) = (f (o), NULL)))"));
+			source_declarations.add_begin (new CCodeMacroReplacement ("VALA_FREE_CHECKED(o,f)", "((o) == NULL ? NULL : ((o) = (f (o), NULL)))"));
 		}
 		if (requires_array_free) {
 			append_vala_array_free ();
@@ -398,30 +377,30 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 		
 		if (string_h_needed) {
-			source_include_directives.append (new CCodeIncludeDirective ("string.h"));
+			source_declarations.add_include ("string.h");
 		}
 
 		if (gvaluecollector_h_needed) {
-			source_include_directives.append (new CCodeIncludeDirective ("gobject/gvaluecollector.h"));
+			source_declarations.add_include ("gobject/gvaluecollector.h");
 		}
 
 		if (gio_h_needed) {
-			header_begin.append (new CCodeIncludeDirective ("gio/gio.h"));
+			header_declarations.add_include ("gio/gio.h");
 		}
 
 		if (dbus_glib_h_needed_in_header) {
-			header_begin.append (new CCodeIncludeDirective ("dbus/dbus.h"));
-			header_begin.append (new CCodeIncludeDirective ("dbus/dbus-glib.h"));
+			header_declarations.add_include ("dbus/dbus.h");
+			header_declarations.add_include ("dbus/dbus-glib.h");
 		} else if (dbus_glib_h_needed) {
-			source_include_directives.append (new CCodeIncludeDirective ("dbus/dbus.h"));
-			source_include_directives.append (new CCodeIncludeDirective ("dbus/dbus-glib.h"));
+			source_declarations.add_include ("dbus/dbus.h");
+			source_declarations.add_include ("dbus/dbus-glib.h");
 		}
 		if (dbus_glib_h_needed_in_header || dbus_glib_h_needed) {
 			var dbusvtable = new CCodeStruct ("_DBusObjectVTable");
 			dbusvtable.add_field ("void", "(*register_object) (DBusConnection*, const char*, void*)");
-			source_type_definition.append (dbusvtable);
+			source_declarations.add_type_definition (dbusvtable);
 
-			source_type_declaration.append (new CCodeTypeDefinition ("struct _DBusObjectVTable", new CCodeVariableDeclarator ("_DBusObjectVTable")));
+			source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct _DBusObjectVTable", new CCodeVariableDeclarator ("_DBusObjectVTable")));
 
 			var cfunc = new CCodeFunction ("_vala_dbus_register_object", "void");
 			cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
@@ -429,7 +408,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
 
 			cfunc.modifiers |= CCodeModifiers.STATIC;
-			source_type_member_declaration.append (cfunc.copy ());
+			source_declarations.add_type_member_declaration (cfunc.copy ());
 
 			var block = new CCodeBlock ();
 			cfunc.block = block;
@@ -484,18 +463,18 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			writer.write_newline ();
 			var once = new CCodeOnceSection (header_define);
 			once.append (new CCodeNewline ());
-			once.append (header_begin);
+			once.append (header_declarations.include_directives);
 			once.append (new CCodeNewline ());
 			once.append (new CCodeIdentifier ("G_BEGIN_DECLS"));
 			once.append (new CCodeNewline ());
 			once.append (new CCodeNewline ());
-			once.append (header_type_declaration);
+			once.append (header_declarations.type_declaration);
 			once.append (new CCodeNewline ());
-			once.append (header_type_definition);
+			once.append (header_declarations.type_definition);
 			once.append (new CCodeNewline ());
-			once.append (header_type_member_declaration);
+			once.append (header_declarations.type_member_declaration);
 			once.append (new CCodeNewline ());
-			once.append (header_constant_declaration);
+			once.append (header_declarations.constant_declaration);
 			once.append (new CCodeNewline ());
 			once.append (new CCodeIdentifier ("G_END_DECLS"));
 			once.append (new CCodeNewline ());
@@ -513,19 +492,19 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (comment != null) {
 			comment.write (writer);
 		}
-		source_begin.write (writer);
+		source_declarations.begin.write (writer);
 		writer.write_newline ();
-		source_include_directives.write (writer);
+		source_declarations.include_directives.write (writer);
 		writer.write_newline ();
-		source_type_declaration.write_combined (writer);
+		source_declarations.type_declaration.write_combined (writer);
 		writer.write_newline ();
-		source_type_definition.write_combined (writer);
+		source_declarations.type_definition.write_combined (writer);
 		writer.write_newline ();
-		source_type_member_declaration.write_declaration (writer);
+		source_declarations.type_member_declaration.write_declaration (writer);
 		writer.write_newline ();
-		source_type_member_declaration.write (writer);
+		source_declarations.type_member_declaration.write (writer);
 		writer.write_newline ();
-		source_constant_declaration.write (writer);
+		source_declarations.constant_declaration.write (writer);
 		writer.write_newline ();
 		source_signal_marshaller_declaration.write_declaration (writer);
 		source_signal_marshaller_declaration.write (writer);
@@ -536,17 +515,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		writer.write_newline ();
 		writer.close ();
 
-		header_begin = null;
-		header_type_declaration = null;
-		header_type_definition = null;
-		header_type_member_declaration = null;
-		header_constant_declaration = null;
-		source_begin = null;
-		source_include_directives = null;
-		source_type_declaration = null;
-		source_type_definition = null;
-		source_type_member_declaration = null;
-		source_constant_declaration = null;
+		header_declarations = null;
+		source_declarations = null;
 		source_type_member_definition = null;
 		source_signal_marshaller_definition = null;
 		source_signal_marshaller_declaration = null;
@@ -668,22 +638,19 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public override void visit_enum (Enum en) {
 		cenum = new CCodeEnum (en.get_cname ());
 
-		CCodeFragment decl_frag;
-		CCodeFragment def_frag;
+		CCodeDeclarationSpace decl_space;
 		if (en.access != SymbolAccessibility.PRIVATE) {
-			decl_frag = header_type_declaration;
-			def_frag = header_type_definition;
+			decl_space = header_declarations;
 		} else {
-			decl_frag = source_type_declaration;
-			def_frag = source_type_definition;
+			decl_space = source_declarations;
 		}
 		
 		if (en.source_reference.comment != null) {
-			def_frag.append (new CCodeComment (en.source_reference.comment));
+			decl_space.add_type_definition (new CCodeComment (en.source_reference.comment));
 		}
 
-		def_frag.append (cenum);
-		def_frag.append (new CCodeNewline ());
+		decl_space.add_type_definition (cenum);
+		decl_space.add_type_definition (new CCodeNewline ());
 
 		en.accept_children (codegen);
 
@@ -691,10 +658,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return;
 		}
 
-		decl_frag.append (new CCodeNewline ());
+		decl_space.add_type_declaration (new CCodeNewline ());
 
 		var macro = "(%s_get_type ())".printf (en.get_lower_case_cname (null));
-		decl_frag.append (new CCodeMacroReplacement (en.get_type_id (), macro));
+		decl_space.add_type_declaration (new CCodeMacroReplacement (en.get_type_id (), macro));
 
 		var clist = new CCodeInitializerList (); /* or during visit time? */
 		CCodeInitializerList clist_ev = null;
@@ -758,9 +725,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		regblock.add_statement (new CCodeReturnStatement (new CCodeConstant (type_id_name)));
 
 		if (en.access != SymbolAccessibility.PRIVATE) {
-			header_type_member_declaration.append (regfun.copy ());
+			header_declarations.add_type_member_declaration (regfun.copy ());
 		} else {
-			source_type_member_declaration.append (regfun.copy ());
+			source_declarations.add_type_member_declaration (regfun.copy ());
 		}
 		regfun.block = regblock;
 
@@ -818,16 +785,16 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			cdecl.modifiers = CCodeModifiers.STATIC;
 		
 			if (!c.is_internal_symbol ()) {
-				header_constant_declaration.append (cdecl);
+				header_declarations.add_constant_declaration (cdecl);
 			} else {
-				source_constant_declaration.append (cdecl);
+				source_declarations.add_constant_declaration (cdecl);
 			}
 		} else {
 			var cdefine = new CCodeMacroReplacement.with_expression (c.get_cname (), (CCodeExpression) c.initializer.ccodenode);
 			if (!c.is_internal_symbol ()) {
-				header_type_member_declaration.append (cdefine);
+				header_declarations.add_type_member_declaration (cdefine);
 			} else {
-				source_type_member_declaration.append (cdefine);
+				source_declarations.add_type_member_declaration (cdefine);
 			}
 		}
 	}
@@ -940,7 +907,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				var cdecl = new CCodeDeclaration (field_ctype);
 				cdecl.add_declarator (new CCodeVariableDeclarator (f.get_cname ()));
 				cdecl.modifiers = CCodeModifiers.EXTERN;
-				header_type_member_declaration.append (cdecl);
+				header_declarations.add_type_member_declaration (cdecl);
 			}
 
 			var var_decl = new CCodeVariableDeclarator (f.get_cname ());
@@ -960,7 +927,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			} else {
 				var_def.modifiers = CCodeModifiers.STATIC;
 			}
-			source_type_member_declaration.append (var_def);
+			source_declarations.add_type_member_declaration (var_def);
 
 			/* add array length fields where necessary */
 			if (f.field_type is ArrayType && !f.no_array_length) {
@@ -973,7 +940,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						var cdecl = new CCodeDeclaration (len_type.get_cname ());
 						cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname (f.get_cname (), dim)));
 						cdecl.modifiers = CCodeModifiers.EXTERN;
-						header_type_member_declaration.append (cdecl);
+						header_declarations.add_type_member_declaration (cdecl);
 					}
 
 					var len_def = new CCodeDeclaration (len_type.get_cname ());
@@ -983,7 +950,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					} else {
 						len_def.modifiers = CCodeModifiers.STATIC;
 					}
-					source_type_member_declaration.append (len_def);
+					source_declarations.add_type_member_declaration (len_def);
 				}
 
 				if (array_type.rank == 1 && f.is_internal_symbol ()) {
@@ -992,7 +959,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					var cdecl = new CCodeDeclaration (len_type.get_cname ());
 					cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_size_cname (f.get_cname ()), new CCodeConstant ("0")));
 					cdecl.modifiers = CCodeModifiers.STATIC;
-					source_type_member_declaration.append (cdecl);
+					source_declarations.add_type_member_declaration (cdecl);
 				}
 			} else if (f.field_type is DelegateType) {
 				var delegate_type = (DelegateType) f.field_type;
@@ -1003,7 +970,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						var cdecl = new CCodeDeclaration ("gpointer");
 						cdecl.add_declarator (new CCodeVariableDeclarator (get_delegate_target_cname  (f.get_cname ())));
 						cdecl.modifiers = CCodeModifiers.EXTERN;
-						header_type_member_declaration.append (cdecl);
+						header_declarations.add_type_member_declaration (cdecl);
 					}
 
 					var target_def = new CCodeDeclaration ("gpointer");
@@ -1013,7 +980,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					} else {
 						target_def.modifiers = CCodeModifiers.STATIC;
 					}
-					source_type_member_declaration.append (target_def);
+					source_declarations.add_type_member_declaration (target_def);
 				}
 			}
 
@@ -1192,10 +1159,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			
 			if (!prop.is_internal_symbol () && (acc.readable || acc.writable) && acc.access != SymbolAccessibility.PRIVATE) {
 				// accessor function should be public if the property is a public symbol and it's not a construct-only setter
-				header_type_member_declaration.append (function.copy ());
+				header_declarations.add_type_member_declaration (function.copy ());
 			} else {
 				function.modifiers |= CCodeModifiers.STATIC;
-				source_type_member_declaration.append (function.copy ());
+				source_declarations.add_type_member_declaration (function.copy ());
 			}
 			
 			var block = new CCodeBlock ();
@@ -1273,10 +1240,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (!is_virtual) {
 				if (!prop.is_internal_symbol () && (acc.readable || acc.writable) && acc.access != SymbolAccessibility.PRIVATE) {
 					// accessor function should be public if the property is a public symbol and it's not a construct-only setter
-					header_type_member_declaration.append (function.copy ());
+					header_declarations.add_type_member_declaration (function.copy ());
 				} else {
 					function.modifiers |= CCodeModifiers.STATIC;
-					source_type_member_declaration.append (function.copy ());
+					source_declarations.add_type_member_declaration (function.copy ());
 				}
 			}
 
@@ -1746,7 +1713,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		// append to file
 
-		source_type_member_declaration.append (function.copy ());
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		function.block = block;
 		source_type_member_definition.append (function);
@@ -1850,7 +1817,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		// append to file
 
-		source_type_member_declaration.append (function.copy ());
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		function.block = block;
 		source_type_member_definition.append (function);

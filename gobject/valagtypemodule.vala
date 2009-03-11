@@ -38,44 +38,41 @@ internal class Vala.GTypeModule : GErrorModule {
 			return;
 		}
 
-		CCodeFragment decl_frag;
-		CCodeFragment def_frag;
+		CCodeDeclarationSpace decl_space;
 		if (iface.access != SymbolAccessibility.PRIVATE) {
-			decl_frag = header_type_declaration;
-			def_frag = header_type_definition;
+			decl_space = header_declarations;
 		} else {
-			decl_frag = source_type_declaration;
-			def_frag = source_type_definition;
+			decl_space = source_declarations;
 		}
 
 		type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
 		
-		decl_frag.append (new CCodeNewline ());
+		decl_space.add_type_declaration (new CCodeNewline ());
 		var macro = "(%s_get_type ())".printf (iface.get_lower_case_cname (null));
-		decl_frag.append (new CCodeMacroReplacement (iface.get_type_id (), macro));
+		decl_space.add_type_declaration (new CCodeMacroReplacement (iface.get_type_id (), macro));
 
 		macro = "(G_TYPE_CHECK_INSTANCE_CAST ((obj), %s, %s))".printf (iface.get_type_id (), iface.get_cname ());
-		decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname (null)), macro));
+		decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (iface.get_upper_case_cname (null)), macro));
 
 		macro = "(G_TYPE_CHECK_INSTANCE_TYPE ((obj), %s))".printf (iface.get_type_id ());
-		decl_frag.append (new CCodeMacroReplacement ("%s(obj)".printf (get_type_check_function (iface)), macro));
+		decl_space.add_type_declaration (new CCodeMacroReplacement ("%s(obj)".printf (get_type_check_function (iface)), macro));
 
 		macro = "(G_TYPE_INSTANCE_GET_INTERFACE ((obj), %s, %s))".printf (iface.get_type_id (), iface.get_type_cname ());
-		decl_frag.append (new CCodeMacroReplacement ("%s_GET_INTERFACE(obj)".printf (iface.get_upper_case_cname (null)), macro));
-		decl_frag.append (new CCodeNewline ());
+		decl_space.add_type_declaration (new CCodeMacroReplacement ("%s_GET_INTERFACE(obj)".printf (iface.get_upper_case_cname (null)), macro));
+		decl_space.add_type_declaration (new CCodeNewline ());
 
 
 		if (iface.source_reference.file.cycle == null) {
-			decl_frag.append (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
-			decl_frag.append (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
+			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
+			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
 		}
 		
 		type_struct.add_field ("GTypeInterface", "parent_iface");
 
 		if (iface.source_reference.comment != null) {
-			def_frag.append (new CCodeComment (iface.source_reference.comment));
+			decl_space.add_type_definition (new CCodeComment (iface.source_reference.comment));
 		}
-		def_frag.append (type_struct);
+		decl_space.add_type_definition (type_struct);
 
 		iface.accept_children (codegen);
 
@@ -84,9 +81,9 @@ internal class Vala.GTypeModule : GErrorModule {
 		var type_fun = new InterfaceRegisterFunction (iface, context);
 		type_fun.init_from_type ();
 		if (iface.access != SymbolAccessibility.PRIVATE) {
-			header_type_member_declaration.append (type_fun.get_declaration ());
+			header_declarations.add_type_member_declaration (type_fun.get_declaration ());
 		} else {
-			source_type_member_declaration.append (type_fun.get_declaration ());
+			source_declarations.add_type_member_declaration (type_fun.get_declaration ());
 		}
 		source_type_member_definition.append (type_fun.get_definition ());
 
@@ -146,23 +143,23 @@ internal class Vala.GTypeModule : GErrorModule {
 	public override void visit_struct (Struct st) {
 		base.visit_struct (st);
 
-		CCodeFragment decl_frag;
+		CCodeDeclarationSpace decl_space;
 		if (st.access != SymbolAccessibility.PRIVATE) {
-			decl_frag = header_type_declaration;
+			decl_space = header_declarations;
 		} else {
-			decl_frag = source_type_declaration;
+			decl_space = source_declarations;
 		}
 
-		decl_frag.append (new CCodeNewline ());
+		decl_space.add_type_declaration (new CCodeNewline ());
 		var macro = "(%s_get_type ())".printf (st.get_lower_case_cname (null));
-		decl_frag.append (new CCodeMacroReplacement (st.get_type_id (), macro));
+		decl_space.add_type_declaration (new CCodeMacroReplacement (st.get_type_id (), macro));
 
 		var type_fun = new StructRegisterFunction (st, context);
 		type_fun.init_from_type (false);
 		if (st.access != SymbolAccessibility.PRIVATE) {
-			header_type_member_declaration.append (type_fun.get_declaration ());
+			header_declarations.add_type_member_declaration (type_fun.get_declaration ());
 		} else {
-			source_type_member_declaration.append (type_fun.get_declaration ());
+			source_declarations.add_type_member_declaration (type_fun.get_declaration ());
 		}
 		source_type_member_definition.append (type_fun.get_definition ());
 	}

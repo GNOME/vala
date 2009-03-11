@@ -276,12 +276,12 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			if (visible && m.base_method == null && m.base_interface_method == null) {
 				/* public methods need function declaration in
 				 * header file except virtual/overridden methods */
-				header_type_member_declaration.append (function.copy ());
+				header_declarations.add_type_member_declaration (function.copy ());
 			} else {
 				/* declare all other functions in source file to
 				 * avoid dependency on order within source file */
 				function.modifiers |= CCodeModifiers.STATIC;
-				source_type_member_declaration.append (function.copy ());
+				source_declarations.add_type_member_declaration (function.copy ());
 			}
 		
 			/* Methods imported from a plain C file don't
@@ -300,7 +300,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					co_function.add_parameter (new CCodeFormalParameter ("data", Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data*"));
 
 					co_function.modifiers |= CCodeModifiers.STATIC;
-					source_type_member_declaration.append (co_function.copy ());
+					source_declarations.add_type_member_declaration (co_function.copy ());
 
 					var cswitch = new CCodeSwitchStatement (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state"));
 
@@ -754,10 +754,10 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if (visible) {
-			header_type_member_declaration.append (vfunc.copy ());
+			header_declarations.add_type_member_declaration (vfunc.copy ());
 		} else {
 			vfunc.modifiers |= CCodeModifiers.STATIC;
-			source_type_member_declaration.append (vfunc.copy ());
+			source_declarations.add_type_member_declaration (vfunc.copy ());
 		}
 		
 		vfunc.block = vblock;
@@ -904,10 +904,10 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			vblock.add_statement (cstmt);
 
 			if (visible) {
-				header_type_member_declaration.append (vfunc.copy ());
+				header_declarations.add_type_member_declaration (vfunc.copy ());
 			} else {
 				vfunc.modifiers |= CCodeModifiers.STATIC;
-				source_type_member_declaration.append (vfunc.copy ());
+				source_declarations.add_type_member_declaration (vfunc.copy ());
 			}
 		
 			vfunc.block = vblock;

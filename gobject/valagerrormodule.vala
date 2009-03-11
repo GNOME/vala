@@ -35,16 +35,16 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		cenum = new CCodeEnum (edomain.get_cname ());
 
 		if (edomain.source_reference.comment != null) {
-			header_type_definition.append (new CCodeComment (edomain.source_reference.comment));
+			header_declarations.add_type_definition (new CCodeComment (edomain.source_reference.comment));
 		}
-		header_type_definition.append (cenum);
+		header_declarations.add_type_definition (cenum);
 
 		edomain.accept_children (codegen);
 
 		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
 
 		var error_domain_define = new CCodeMacroReplacement (edomain.get_upper_case_cname (), quark_fun_name + " ()");
-		header_type_definition.append (error_domain_define);
+		header_declarations.add_type_definition (error_domain_define);
 
 		var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
 		var cquark_block = new CCodeBlock ();
@@ -54,7 +54,7 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 
 		cquark_block.add_statement (new CCodeReturnStatement (cquark_call));
 
-		header_type_member_declaration.append (cquark_fun.copy ());
+		header_declarations.add_type_member_declaration (cquark_fun.copy ());
 
 		cquark_fun.block = cquark_block;
 		source_type_member_definition.append (cquark_fun);

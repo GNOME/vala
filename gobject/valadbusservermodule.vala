@@ -225,7 +225,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
 
-		source_type_member_declaration.append (function.copy ());
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		function.block = block;
 		source_type_member_definition.append (function);
@@ -307,7 +307,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		message_unref.add_argument (new CCodeIdentifier ("_message"));
 		block.add_statement (new CCodeExpressionStatement (message_unref));
 
-		source_type_member_declaration.append (function.copy ());
+		source_declarations.add_type_member_declaration (function.copy ());
 		function.block = block;
 		source_type_member_definition.append (function);
 
@@ -325,12 +325,12 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		if (!sym.is_internal_symbol ()) {
 			dbus_glib_h_needed_in_header = true;
 
-			header_type_member_declaration.append (cfunc.copy ());
+			header_declarations.add_type_member_declaration (cfunc.copy ());
 		} else {
 			dbus_glib_h_needed = true;
 
 			cfunc.modifiers |= CCodeModifiers.STATIC;
-			source_type_member_declaration.append (cfunc.copy ());
+			source_declarations.add_type_member_declaration (cfunc.copy ());
 		}
 
 		var block = new CCodeBlock ();
@@ -387,7 +387,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
 		cfunc.add_parameter (new CCodeFormalParameter ("user_data", "void*"));
 
-		source_type_member_declaration.append (cfunc.copy ());
+		source_declarations.add_type_member_declaration (cfunc.copy ());
 
 		var block = new CCodeBlock ();
 		cfunc.block = block;
@@ -566,7 +566,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
 		}
 
-		source_type_member_declaration.append (function.copy ());
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		function.block = block;
 		source_type_member_definition.append (function);
@@ -733,7 +733,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
 
-		source_type_member_declaration.append (function.copy ());
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		function.block = block;
 		source_type_member_definition.append (function);
@@ -867,7 +867,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
 		}
 
-		source_type_member_declaration.append (function.copy ());
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		function.block = block;
 		source_type_member_definition.append (function);
@@ -1078,7 +1078,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
 
-		source_type_member_declaration.append (function.copy ());
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		function.block = block;
 		source_type_member_definition.append (function);
@@ -1124,10 +1124,10 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
 
 		if (!sym.is_internal_symbol ()) {
-			header_type_member_declaration.append (cfunc.copy ());
+			header_declarations.add_type_member_declaration (cfunc.copy ());
 		} else {
 			cfunc.modifiers |= CCodeModifiers.STATIC;
-			source_type_member_declaration.append (cfunc.copy ());
+			source_declarations.add_type_member_declaration (cfunc.copy ());
 		}
 
 		var block = new CCodeBlock ();
@@ -1231,7 +1231,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		var cdecl = new CCodeDeclaration ("const _DBusObjectVTable");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_" + sym.get_lower_case_cprefix () + "dbus_vtable", vtable));
 		cdecl.modifiers = CCodeModifiers.STATIC;
-		source_constant_declaration.append (cdecl);
+		source_declarations.add_constant_declaration (cdecl);
 
 		return new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_vtable");
 	}
@@ -1249,7 +1249,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		var cdecl = new CCodeDeclaration ("const DBusObjectPathVTable");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_" + sym.get_lower_case_cprefix () + "dbus_path_vtable", vtable));
 		cdecl.modifiers = CCodeModifiers.STATIC;
-		source_constant_declaration.append (cdecl);
+		source_declarations.add_constant_declaration (cdecl);
 
 		return new CCodeIdentifier ("_" + sym.get_lower_case_cprefix () + "dbus_path_vtable");
 	}

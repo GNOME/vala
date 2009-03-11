@@ -76,14 +76,14 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		if (!d.is_internal_symbol ()) {
 			if (d.source_reference != null && d.source_reference.comment != null) {
-				header_type_declaration.append (new CCodeComment (d.source_reference.comment));
+				header_declarations.add_type_declaration (new CCodeComment (d.source_reference.comment));
 			}
-			header_type_declaration.append (ctypedef);
+			header_declarations.add_type_declaration (ctypedef);
 		} else {
 			if (d.source_reference != null && d.source_reference.comment != null) {
-				source_type_declaration.append (new CCodeComment (d.source_reference.comment));
+				source_declarations.add_type_declaration (new CCodeComment (d.source_reference.comment));
 			}
-			source_type_declaration.append (ctypedef);
+			source_declarations.add_type_declaration (ctypedef);
 		}
 	}
 
@@ -379,7 +379,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		// append to file
 
-		source_type_member_declaration.append (function.copy ());
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		function.block = block;
 		source_type_member_definition.append (function);

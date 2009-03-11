@@ -173,8 +173,8 @@ internal class Vala.GAsyncModule : GSignalModule {
 	void append_struct (CCodeStruct structure) {
 		var typename = new CCodeVariableDeclarator (structure.name.substring (1));
 		var typedef = new CCodeTypeDefinition ("struct " + structure.name, typename);
-		source_type_declaration.append (typedef);
-		source_type_definition.append (structure);
+		source_declarations.add_type_declaration (typedef);
+		source_declarations.add_type_definition (structure);
 	}
 
 	void append_function (CCodeFunction function) {
@@ -182,9 +182,9 @@ internal class Vala.GAsyncModule : GSignalModule {
 		function.block = null;
  
 		if ((function.modifiers & CCodeModifiers.STATIC) != 0) {
-			source_type_member_declaration.append (function.copy ());
+			source_declarations.add_type_member_declaration (function.copy ());
 		} else {
-			header_type_member_declaration.append (function.copy ());
+			header_declarations.add_type_member_declaration (function.copy ());
 		}
 
 		function.block = block;
@@ -264,7 +264,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 		readyblock.add_statement (new CCodeExpressionStatement (ccall));
 
 		readyfunc.modifiers |= CCodeModifiers.STATIC;
-		source_type_member_declaration.append (readyfunc.copy ());
+		source_declarations.add_type_member_declaration (readyfunc.copy ());
 
 		readyfunc.block = readyblock;
 

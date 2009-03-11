@@ -36,26 +36,23 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 		instance_struct = new CCodeStruct ("_%s".printf (st.get_cname ()));
 		instance_finalize_fragment = new CCodeFragment ();
 
-		CCodeFragment decl_frag;
-		CCodeFragment def_frag;
+		CCodeDeclarationSpace decl_space;
 		if (st.access != SymbolAccessibility.PRIVATE) {
-			decl_frag = header_type_declaration;
-			def_frag = header_type_definition;
+			decl_space = header_declarations;
 		} else {
-			decl_frag = source_type_declaration;
-			def_frag = source_type_definition;
+			decl_space = source_declarations;
 		}
 
 		if (st.access == SymbolAccessibility.PRIVATE
 		    || st.source_reference.file.cycle == null) {
 			// no file dependency cycle for private symbols
-			decl_frag.append (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
+			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
 		}
 
 		if (st.source_reference.comment != null) {
-			def_frag.append (new CCodeComment (st.source_reference.comment));
+			decl_space.add_type_definition (new CCodeComment (st.source_reference.comment));
 		}
-		def_frag.append (instance_struct);
+		decl_space.add_type_definition (instance_struct);
 
 		st.accept_children (codegen);
 
@@ -81,9 +78,9 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 		function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
 
 		if (st.access != SymbolAccessibility.PRIVATE) {
-			header_type_member_declaration.append (function.copy ());
+			header_declarations.add_type_member_declaration (function.copy ());
 		} else {
-			source_type_member_declaration.append (function.copy ());
+			source_declarations.add_type_member_declaration (function.copy ());
 		}
 
 		var cblock = new CCodeBlock ();
@@ -129,9 +126,9 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
 
 		if (st.access != SymbolAccessibility.PRIVATE) {
-			header_type_member_declaration.append (function.copy ());
+			header_declarations.add_type_member_declaration (function.copy ());
 		} else {
-			source_type_member_declaration.append (function.copy ());
+			source_declarations.add_type_member_declaration (function.copy ());
 		}
 
 		var cblock = new CCodeBlock ();
@@ -161,9 +158,9 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 		function.add_parameter (new CCodeFormalParameter ("dest", st.get_cname () + "*"));
 
 		if (st.access != SymbolAccessibility.PRIVATE) {
-			header_type_member_declaration.append (function.copy ());
+			header_declarations.add_type_member_declaration (function.copy ());
 		} else {
-			source_type_member_declaration.append (function.copy ());
+			source_declarations.add_type_member_declaration (function.copy ());
 		}
 
 		var cblock = new CCodeBlock ();
@@ -212,9 +209,9 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
 
 		if (st.access != SymbolAccessibility.PRIVATE) {
-			header_type_member_declaration.append (function.copy ());
+			header_declarations.add_type_member_declaration (function.copy ());
 		} else {
-			source_type_member_declaration.append (function.copy ());
+			source_declarations.add_type_member_declaration (function.copy ());
 		}
 
 		var cblock = new CCodeBlock ();

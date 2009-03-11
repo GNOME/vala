@@ -375,7 +375,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
 		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("destroy_func", "GDestroyNotify"));
-		source_type_member_declaration.append (fun.copy ());
+		source_declarations.add_type_member_declaration (fun.copy ());
 
 		var cdofree = new CCodeBlock ();
 
@@ -410,7 +410,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		fun.add_parameter (new CCodeFormalParameter ("src", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("dest", "gint"));
 		fun.add_parameter (new CCodeFormalParameter ("length", "gint"));
-		source_type_member_declaration.append (fun.copy ());
+		source_declarations.add_type_member_declaration (fun.copy ());
 
 		var array = new CCodeCastExpression (new CCodeIdentifier ("array"), "char*");
 		var element_size = new CCodeIdentifier ("element_size");
@@ -452,7 +452,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var fun = new CCodeFunction ("_vala_array_length", "gint");
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeFormalParameter ("array", "gpointer"));
-		source_type_member_declaration.append (fun.copy ());
+		source_declarations.add_type_member_declaration (fun.copy ());
 
 		var block = new CCodeBlock ();
 
@@ -552,7 +552,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		// append to file
 
-		source_type_member_declaration.append (function.copy ());
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		function.block = block;
 		source_type_member_definition.append (function);
@@ -624,7 +624,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		// append to file
 
-		source_type_member_declaration.append (function.copy ());
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		function.block = block;
 		source_type_member_definition.append (function);
