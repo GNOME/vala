@@ -330,7 +330,7 @@ namespace Gst {
 		public Gst.ClockTime get_base_time ();
 		public Gst.Bus get_bus ();
 		public unowned Gst.Clock get_clock ();
-		public unowned Gst.Pad get_compatible_pad (Gst.Pad pad, Gst.Caps caps);
+		public unowned Gst.Pad get_compatible_pad (Gst.Pad pad, Gst.Caps? caps);
 		public unowned Gst.PadTemplate get_compatible_pad_template (Gst.PadTemplate compattempl);
 		public unowned Gst.ElementFactory get_factory ();
 		public virtual unowned Gst.Index get_index ();
