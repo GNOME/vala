@@ -359,7 +359,7 @@ namespace Gst {
 		public void lost_state ();
 		public static Gst.Element? make_from_uri (Gst.URIType type, string uri, string? elementname);
 		public void message_full (Gst.MessageType type, GLib.Quark domain, int code, string text, string debug, string file, string function, int line);
-		public bool post_message (Gst.Message message);
+		public bool post_message (owned Gst.Message message);
 		public virtual unowned Gst.Clock provide_clock ();
 		public bool provides_clock ();
 		public virtual bool query (Gst.Query query);
