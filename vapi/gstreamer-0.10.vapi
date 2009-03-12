@@ -473,7 +473,7 @@ namespace Gst {
 		public GhostPad.from_template (string name, Gst.Pad target, Gst.PadTemplate templ);
 		public unowned Gst.Pad get_target ();
 		[CCode (type = "GstPad*", has_construct_function = false)]
-		public GhostPad (string name, Gst.Pad target);
+		public GhostPad (string? name, Gst.Pad target);
 		[CCode (type = "GstPad*", has_construct_function = false)]
 		public GhostPad.no_target (string name, Gst.PadDirection dir);
 		[CCode (type = "GstPad*", has_construct_function = false)]
