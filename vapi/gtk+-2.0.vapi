@@ -4061,7 +4061,7 @@ namespace Gtk {
 		public Gtk.Justification get_justification ();
 		public int get_left_margin ();
 		public void get_line_at_y (out Gtk.TextIter target_iter, int y, out int line_top);
-		public void get_line_yrange (Gtk.TextIter iter, int y, int height);
+		public void get_line_yrange (Gtk.TextIter iter, out int y, out int height);
 		public bool get_overwrite ();
 		public int get_pixels_above_lines ();
 		public int get_pixels_below_lines ();
