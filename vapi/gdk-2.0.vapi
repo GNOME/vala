@@ -1772,9 +1772,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool spawn_command_line_on_screen (Gdk.Screen screen, string command_line) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool spawn_on_screen (Gdk.Screen screen, string? working_directory, [CCode (array_length = false)] string[] argv, [CCode (array_length = false)] string[]? envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc? child_setup, int child_pid) throws GLib.Error;
+	public static bool spawn_on_screen (Gdk.Screen screen, string? working_directory, [CCode (array_length = false)] string[] argv, [CCode (array_length = false)] string[]? envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc? child_setup, out int child_pid) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static bool spawn_on_screen_with_pipes (Gdk.Screen screen, string working_directory, string argv, string envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc child_setup, int child_pid, int standard_input, int standard_output, int standard_error) throws GLib.Error;
+	public static bool spawn_on_screen_with_pipes (Gdk.Screen screen, string? working_directory, [CCode (array_length = false)] string[] argv, [CCode (array_length = false)] string[] envp, GLib.SpawnFlags flags, GLib.SpawnChildSetupFunc? child_setup, out int child_pid, out int standard_input, out int standard_output, out int standard_error) throws GLib.Error;
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static int string_to_compound_text (string str, Gdk.Atom encoding, int format, uchar[] ctext, int length);
 	[CCode (cheader_filename = "gdk/gdk.h")]
