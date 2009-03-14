@@ -770,5 +770,14 @@ namespace Posix {
 	public ssize_t read (int fd, void* buf, size_t count);
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t write (int fd, void* buf, size_t count);
+	[CCode (cheader_filename = "unistd.h")]
+	public off_t lseek(int fildes, off_t offset, int whence);
+
+	[CCode (cheader_filename = "unistd.h")]
+	public const int SEEK_SET;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int SEEK_CUR;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int SEEK_END;
 }
 
