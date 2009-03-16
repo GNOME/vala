@@ -56,6 +56,36 @@ namespace Posix {
 	[CCode (cheader_filename = "ctype.h")]
 	public int toupper (int c);
 
+	[Compact]
+	[CCode (cname = "struct dirent", cheader_filename = "dirent.h")]
+	public class DirEnt {
+		public ino_t d_ino;
+		public off_t d_off;
+		public ushort d_reclen;
+		public char d_type;
+		public char[265] d_name;
+		}
+
+	[Compact]
+	[CCode (cname = "DIR", free_function = "closedir", cheader_filename = "dirent.h")]
+	public class Dir {
+	}
+
+	[CCode (cheader_filename = "dirent.h")]
+	public int dirfd (Dir dir);
+	[CCode (cheader_filename = "dirent.h")]
+	public Dir? opendir (string filename);
+	[CCode (cheader_filename = "dirent.h")]
+	public Dir? fdopendir (int fd);
+	[CCode (cheader_filename = "dirent.h")]
+	public unowned DirEnt? readdir (Dir dir);
+	[CCode (cheader_filename = "dirent.h")]
+	public void rewinddir (Dir dir);
+	[CCode (cheader_filename = "dirent.h")]
+	public void seekdir (Dir dir, long pos);
+	[CCode (cheader_filename = "dirent.h")]
+	public long telldir (Dir dir);
+
 	[CCode (cheader_filename = "errno.h")]
 	public int errno;
 	[CCode (cheader_filename = "errno.h")]
