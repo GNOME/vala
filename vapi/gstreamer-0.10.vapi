@@ -378,7 +378,7 @@ namespace Gst {
 		public bool seek_simple (Gst.Format format, Gst.SeekFlags seek_flags, int64 seek_pos);
 		public virtual bool send_event (owned Gst.Event event);
 		public void set_base_time (Gst.ClockTime time);
-		public virtual void set_bus (Gst.Bus bus);
+		public virtual void set_bus (Gst.Bus? bus);
 		public virtual bool set_clock (Gst.Clock clock);
 		[CCode (cname = "gst_element_class_set_details")]
 		public class void set_details (Gst.ElementDetails details);
