@@ -130,8 +130,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 	public override void visit_method (Method m) {
 		if (m.is_library_internal_symbol () && !m.used && !m.entry_point
-		     && !m.overrides && (m.base_interface_method == null || m.base_interface_method == m)
-		     && !(m is CreationMethod)) {
+			 && !m.overrides && (m.base_interface_method == null || m.base_interface_method == m)
+			 && !(m is CreationMethod)) {
 			Report.warning (m.source_reference, "method `%s' never used".printf (m.get_full_name ()));
 		}
 
@@ -1014,7 +1014,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		for (int i = catch_clauses.size - 1; i >= 0; i--) {
 			var catch_clause = catch_clauses[i];
 			if (catch_clause.error_type != null) {
-				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, catch_clause.error_type.data_type as ErrorDomain, null));
+				var error_type = catch_clause.error_type as ErrorType;
+				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, catch_clause.error_type.data_type as ErrorDomain, error_type.error_code));
 			} else {
 				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, null, null));
 			}
@@ -1041,6 +1042,25 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		foreach (JumpTarget jump_target in catch_stack) {
+
+			foreach (JumpTarget prev_target in catch_stack) {
+				if (prev_target == jump_target)
+					break;
+
+				if (prev_target.error_domain == jump_target.error_domain &&
+				  prev_target.error_code == jump_target.error_code) {
+					Report.error (stmt.source_reference, "double catch clause of same error detected");
+					stmt.error = true;
+					return;
+				}
+
+				if ((prev_target.error_domain == null) ||
+				  ((prev_target.error_domain != jump_target.error_domain) &&
+				  (prev_target.error_code == null))) {
+					Report.warning (jump_target.catch_clause.source_reference, "unreachable catch clause detected");
+				}
+			}
+
 			if (jump_target.basic_block.get_predecessors ().size == 0) {
 				// unreachable
 				Report.warning (jump_target.catch_clause.source_reference, "unreachable catch clause detected");
