@@ -164,15 +164,30 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 				var cgoto_stmt = new CCodeGotoStatement (clause.clabel_name);
 
 				if (clause.error_type.equals (gerror_type)) {
-					// general catch clause
+					// general catch clause, this should be the last one
 					cerror_block.add_statement (cgoto_stmt);
+					break;
 				} else {
-					var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (inner_error, "domain"), new CCodeIdentifier (clause.error_type.data_type.get_upper_case_cname ()));
-
+					var catch_type = clause.error_type as ErrorType;
 					var cgoto_block = new CCodeBlock ();
 					cgoto_block.add_statement (cgoto_stmt);
 
-					cerror_block.add_statement (new CCodeIfStatement (ccond, cgoto_block));
+					if (catch_type.error_code != null) {
+						/* catch clause specifies a specific error code */
+						var error_match = new CCodeFunctionCall (new CCodeIdentifier ("g_error_matches"));
+						error_match.add_argument (inner_error);
+						error_match.add_argument (new CCodeIdentifier (catch_type.data_type.get_upper_case_cname ()));
+						error_match.add_argument (new CCodeIdentifier (catch_type.error_code.get_cname ()));
+
+						cerror_block.add_statement (new CCodeIfStatement (error_match, cgoto_block));
+					} else {
+						/* catch clause specifies a full error domain */
+						var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY,
+								new CCodeMemberAccess.pointer (inner_error, "domain"), new CCodeIdentifier
+								(clause.error_type.data_type.get_upper_case_cname ()));
+
+						cerror_block.add_statement (new CCodeIfStatement (ccond, cgoto_block));
+					}
 				}
 			}
 
