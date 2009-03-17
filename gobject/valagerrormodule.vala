@@ -17,7 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Author:
- * 	Jürg Billeter <j@bitron.ch>
+ *	Jürg Billeter <j@bitron.ch>
+ *	Thijs Vermeir <thijsvermeir@gmail.com>
  */
 
 using GLib;
@@ -109,26 +110,48 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		return cerror_block;
 	}
 
-	public override void add_simple_check (CodeNode node, CCodeFragment cfrag) {
-		current_method_inner_error = true;
+	CCodeStatement uncaught_error_statement (CCodeExpression inner_error) {
+		var cerror_block = new CCodeBlock ();
 
-		var inner_error = get_variable_cexpression ("inner_error");
-		var cprint_frag = new CCodeFragment ();
+		// free local variables
+		var free_frag = new CCodeFragment ();
+		append_local_free (current_symbol, free_frag, false);
+		cerror_block.add_statement (free_frag);
+
 		var ccritical = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
 		ccritical.add_argument (new CCodeConstant ("\"file %s: line %d: uncaught error: %s\""));
 		ccritical.add_argument (new CCodeConstant ("__FILE__"));
 		ccritical.add_argument (new CCodeConstant ("__LINE__"));
 		ccritical.add_argument (new CCodeMemberAccess.pointer (inner_error, "message"));
-		cprint_frag.append (new CCodeExpressionStatement (ccritical));
+
 		var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));
 		cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, inner_error));
+
+		var cprint_frag = new CCodeFragment ();
+		cprint_frag.append (new CCodeExpressionStatement (ccritical));
 		cprint_frag.append (new CCodeExpressionStatement (cclear));
 
-		CCodeStatement cerror_handler;
+		// print critical message
+		cerror_block.add_statement (cprint_frag);
+
+		if (current_return_type is VoidType) {
+			cerror_block.add_statement (new CCodeReturnStatement ());
+		} else if (current_return_type != null) {
+			cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type, false)));
+		}
+
+		return cerror_block;
+	}
+
+	public override void add_simple_check (CodeNode node, CCodeFragment cfrag) {
+		current_method_inner_error = true;
+
+		var inner_error = get_variable_cexpression ("inner_error");
+
+		CCodeStatement cerror_handler = null;
 
 		if (current_try != null) {
 			// surrounding try found
-
 			var cerror_block = new CCodeBlock ();
 
 			// free local variables
@@ -151,7 +174,6 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 
 					cerror_block.add_statement (new CCodeIfStatement (ccond, cgoto_block));
 				}
-
 			}
 
 			// go to finally clause if no catch clause matches
@@ -160,29 +182,36 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 			cerror_handler = cerror_block;
 		} else if (current_method != null && current_method.get_error_types ().size > 0) {
 			// current method can fail, propagate error
-			// TODO ensure one of the error domains matches
+			CCodeBinaryExpression ccond = null;
 
-			cerror_handler = return_with_exception (inner_error);
-		} else {
-			// unhandled error
+			foreach (DataType error_type in current_method.get_error_types ()) {
+				// If GLib.Error is allowed we propagate everything
+				if (error_type.equals (gerror_type)) {
+					ccond = null;
+					break;
+				}
 
-			var cerror_block = new CCodeBlock ();
-
-			// free local variables
-			var free_frag = new CCodeFragment ();
-			append_local_free (current_symbol, free_frag, false);
-			cerror_block.add_statement (free_frag);
-
-			// print critical message
-			cerror_block.add_statement (cprint_frag);
-
-			if (current_return_type is VoidType) {
-				cerror_block.add_statement (new CCodeReturnStatement ());
-			} else if (current_return_type != null) {
-				cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type, false)));
+				// Check the allowed error domains to propagate
+				var domain_check = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer
+					(inner_error, "domain"), new CCodeIdentifier (error_type.data_type.get_upper_case_cname ()));
+				if (ccond == null) {
+					ccond = domain_check;
+				} else {
+					ccond = new CCodeBinaryExpression (CCodeBinaryOperator.OR, ccond, domain_check);
+				}
 			}
 
-			cerror_handler = cerror_block;
+			if (ccond == null) {
+				cerror_handler = return_with_exception (inner_error);
+			} else {
+				var cerror_block = new CCodeBlock ();
+				cerror_block.add_statement (new CCodeIfStatement (ccond,
+					return_with_exception (inner_error),
+					uncaught_error_statement (inner_error)));
+				cerror_handler = cerror_block;
+			}
+		} else {
+			cerror_handler = uncaught_error_statement (inner_error);
 		}
 		
 		var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, inner_error, new CCodeConstant ("NULL"));
