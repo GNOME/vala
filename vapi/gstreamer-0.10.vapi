@@ -802,7 +802,7 @@ namespace Gst {
 		public bool set_blocked (bool blocked);
 		public bool set_blocked_async (bool blocked, Gst.PadBlockCallback callback);
 		public void set_bufferalloc_function (Gst.PadBufferAllocFunction bufalloc);
-		public bool set_caps (Gst.Caps caps);
+		public bool set_caps (Gst.Caps? caps);
 		public void set_chain_function (Gst.PadChainFunction chain);
 		public void set_checkgetrange_function (Gst.PadCheckGetRangeFunction check);
 		public void set_element_private (void* priv);
