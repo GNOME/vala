@@ -138,6 +138,9 @@ public class Vala.GIRWriter : CodeVisitor {
 			write_gtype_attributes (cl);
 			stream.printf (" glib:type-struct=\"%s\"", gtype_struct_name);
 			stream.printf (" parent=\"%s\"", cl.base_class.get_full_name ());
+			if (cl.is_abstract) {
+				stream.printf (" abstract=\"1\"");
+			}
 			stream.printf (">\n");
 			indent++;
 
