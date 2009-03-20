@@ -131,9 +131,12 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		if (cl.is_subtype_of (gobject_type)) {
+			string gtype_struct_name = cl.name + "Class";
+
 			write_indent ();
 			stream.printf ("<class name=\"%s\"", cl.name);
 			write_gtype_attributes (cl);
+			stream.printf (" glib:type-struct=\"%s\"", gtype_struct_name);
 			stream.printf (" parent=\"%s\"", cl.base_class.get_full_name ());
 			stream.printf (">\n");
 			indent++;
@@ -164,6 +167,17 @@ public class Vala.GIRWriter : CodeVisitor {
 			indent--;
 			write_indent ();
 			stream.printf ("</class>\n");
+
+			write_indent ();
+			stream.printf ("<record name=\"%s\"", gtype_struct_name);
+			write_ctype_attributes (cl, "Class");
+			stream.printf (" glib:is-gtype-struct-for=\"%s\"", cl.name);
+			stream.printf (">\n");
+			indent++;
+
+			indent--;
+			write_indent ();
+			stream.printf ("</record>\n");
 		} else {
 			write_indent ();
 			stream.printf ("<record name=\"%s\"", cl.name);
@@ -208,9 +222,12 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		string gtype_struct_name = iface.name + "Iface";
+
 		write_indent ();
 		stream.printf ("<interface name=\"%s\"", iface.name);
 		write_gtype_attributes (iface);
+		stream.printf (" glib:type-struct=\"%s\"", gtype_struct_name);
 		stream.printf (">\n");
 		indent++;
 
@@ -243,6 +260,17 @@ public class Vala.GIRWriter : CodeVisitor {
 		indent--;
 		write_indent ();
 		stream.printf ("</interface>\n");
+
+		write_indent ();
+		stream.printf ("<record name=\"%s\"", gtype_struct_name);
+		write_ctype_attributes (iface, "Iface");
+		stream.printf (" glib:is-gtype-struct-for=\"%s\"", iface.name);
+		stream.printf (">\n");
+		indent++;
+
+		indent--;
+		write_indent ();
+		stream.printf ("</record>\n");
 	}
 
 	public override void visit_enum (Enum en) {
@@ -525,8 +553,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf ("</return-value>\n");
 	}
 
-	private void write_ctype_attributes (TypeSymbol symbol) {
-		stream.printf (" c:type=\"%s\"", symbol.get_cname ());
+	private void write_ctype_attributes (TypeSymbol symbol, string suffix = "") {
+		stream.printf (" c:type=\"%s%s\"", symbol.get_cname (), suffix);
 	}
 
 	private void write_gtype_attributes (TypeSymbol symbol) {
