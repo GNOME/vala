@@ -445,13 +445,23 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		string tag_name = "method";
+		var parent = m.parent_symbol;
+		if (parent is Namespace || m.binding == MemberBinding.STATIC) {
+			tag_name = "function";
+		}
+
+		write_signature (m, tag_name);
+	}
+
+	private void write_signature (Method m, string tag_name, bool instance = false) {
 		write_indent ();
-		stream.printf ("<method name=\"%s\" c:identifier=\"%s\"", m.name, m.get_cname ());
+		stream.printf ("<%s name=\"%s\" c:identifier=\"%s\"", tag_name, m.name, m.get_cname ());
 		stream.printf (">\n");
 		indent++;
 
 		DataType instance_type = null;
-		if (m.binding == MemberBinding.INSTANCE) {
+		if (instance) {
 			instance_type = CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
 		}
 
@@ -461,7 +471,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		indent--;
 		write_indent ();
-		stream.printf ("</method>\n");
+		stream.printf ("</%s>\n", tag_name);
 	}
 	
 	public override void visit_creation_method (CreationMethod m) {
