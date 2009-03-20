@@ -350,8 +350,21 @@ public class Vala.GIRWriter : CodeVisitor {
 			return;
 		}
 
+		//TODO Add better constant evaluation
+		var initializer = c.initializer;
+		string value = literal_expression_to_value_string (initializer);
+
 		write_indent ();
-		stream.printf ("<constant name=\"%s\"/>\n", c.get_cname ());
+		stream.printf ("<constant name=\"%s\" c:identifier=\"%s\"", c.name, c.get_cname ());
+		stream.printf (" value=\"%s\"", value);
+		stream.printf (">\n");
+		indent++;
+
+		write_type (initializer.value_type);
+
+		indent--;
+		write_indent ();
+		stream.printf ("</constant>\n");
 	}
 
 	public override void visit_field (Field f) {
@@ -668,6 +681,41 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 			return type_name.str;
 		}
+	}
+
+	private string? literal_expression_to_value_string (Expression literal) {
+		if (literal is StringLiteral) {
+			var lit = literal as StringLiteral;
+			if (lit != null) {
+				return escape_attribute_string (lit.eval ());
+			}
+		} else if (literal is CharacterLiteral) {
+			return "%lc".printf (((CharacterLiteral) literal).get_char ());
+		} else if (literal is BooleanLiteral) {
+			return ((BooleanLiteral) literal).value ? "true" : "false";
+		} else if (literal is RealLiteral) {
+			return ((RealLiteral) literal).value;
+		} else if (literal is IntegerLiteral) {
+			return ((IntegerLiteral) literal).value;
+		} else if (literal is UnaryExpression) {
+			var unary = (UnaryExpression) literal;
+			if (unary.operator == UnaryOperator.MINUS) {
+				if (unary.inner is RealLiteral) {
+					return "-" + ((RealLiteral) unary.inner).value;
+				} else if (unary.inner is IntegerLiteral) {
+					return "-" + ((IntegerLiteral) unary.inner).value;
+				}
+			}
+		}
+		return null;
+	}
+
+	private string escape_attribute_string(string value) {
+		return value.replace ("&", "&amp;")
+			.replace ("<", "&lt;")
+			.replace (">", "&gt;")
+			.replace ("'", "&apos;")
+			.replace ("\"", "&quot;");
 	}
 
 	private bool check_accessibility (Symbol sym) {
