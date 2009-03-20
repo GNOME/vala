@@ -617,9 +617,56 @@ public class Vala.GIRWriter : CodeVisitor {
 		} else if (type is VoidType) {
 			write_indent ();
 			stream.printf ("<type name=\"none\"/>\n");
+		} else if (type is PointerType) {
+			write_indent ();
+			stream.printf ("<type name=\"any\" c:type=\"%s\"/>\n", type.get_cname ());
 		} else {
 			write_indent ();
-			stream.printf ("<type name=\"%s\"/>\n", type.to_string ());
+			stream.printf ("<type name=\"%s\" c:type=\"%s\"", gi_type_name (type.data_type), type.get_cname ());
+
+			Gee.List<DataType> type_arguments = type.get_type_arguments ();
+			if (type_arguments.size == 0) {
+				stream.printf ("/>\n");
+			} else {
+				stream.printf (">\n");
+				indent++;
+
+				foreach (DataType type_argument in type_arguments) {
+					write_type (type_argument);
+				}
+
+				indent--;
+				write_indent ();
+				stream.printf ("</type>\n");
+			}
+		}
+	}
+
+	private string gi_type_name (TypeSymbol type_symbol) {
+		return vala_to_gi_type_name (type_symbol.get_full_name());
+	}
+
+	private string vala_to_gi_type_name (string name) {
+		if (name == "bool") {
+			return "boolean";
+		} else if (name == "string") {
+			return "utf8";
+		} else if (!name.contains (".")) {
+			return name;
+		} else {
+			string[] split_name = name.split (".");
+
+			StringBuilder type_name = new StringBuilder ();
+			type_name.append (split_name[0]);
+			type_name.append_unichar ('.');
+			for (int i = 1; i < split_name.length; i++) {
+				type_name.append (split_name[i]);
+			}
+
+			if (type_name.str == "GLib.Object") {
+				return "GObject.Object";
+			}
+			return type_name.str;
 		}
 	}
 
