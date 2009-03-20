@@ -54,9 +54,11 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf ("<?xml version=\"1.0\"?>\n");
 
 		stream.printf ("<repository version=\"1.0\">\n");
+		indent++;
 
 		context.accept (this);
 
+		indent--;
 		stream.printf ("</repository>\n");
 
 		stream = null;
