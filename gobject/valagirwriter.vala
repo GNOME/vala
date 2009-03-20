@@ -303,6 +303,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf (">\n");
 		indent++;
 
+		enum_value = 0;
 		en.accept_children (this);
 
 		indent--;
@@ -310,9 +311,18 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf ("</enumeration>\n");
 	}
 
+	private int enum_value;
+
 	public override void visit_enum_value (EnumValue ev) {
 		write_indent ();
-		stream.printf ("<member name=\"%s\"/>\n", string.joinv ("-", ev.name.down ().split ("_")));
+		stream.printf ("<member name=\"%s\" c:identifier=\"%s\"", ev.name.down (), ev.get_cname ());
+		if (ev.value != null) {
+			string value = literal_expression_to_value_string (ev.value);
+			stream.printf (" value=\"%s\"", value);
+		} else {
+			stream.printf (" value=\"%d\"", enum_value++);
+		}
+		stream.printf ("/>\n");
 	}
 
 	public override void visit_error_domain (ErrorDomain edomain) {
