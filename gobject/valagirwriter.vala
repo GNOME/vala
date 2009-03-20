@@ -360,6 +360,10 @@ public class Vala.GIRWriter : CodeVisitor {
 	}
 
 	private void write_params (Gee.List<FormalParameter> params, DataType? instance_type = null) {
+		if (params.size == 0 && instance_type == null) {
+			return;
+		}
+
 		write_indent ();
 		stream.printf ("<parameters>\n");
 		indent++;
