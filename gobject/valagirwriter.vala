@@ -175,6 +175,12 @@ public class Vala.GIRWriter : CodeVisitor {
 			stream.printf (">\n");
 			indent++;
 
+			foreach (Method m in cl.get_methods ()) {
+				if (m.is_abstract || m.is_virtual) {
+					write_signature(m, "callback", true);
+				}
+			}
+
 			indent--;
 			write_indent ();
 			stream.printf ("</record>\n");
@@ -267,6 +273,12 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf (" glib:is-gtype-struct-for=\"%s\"", iface.name);
 		stream.printf (">\n");
 		indent++;
+
+		foreach (Method m in iface.get_methods ()) {
+			if (m.is_abstract || m.is_virtual) {
+				write_signature(m, "callback", true);
+			}
+		}
 
 		indent--;
 		write_indent ();
@@ -456,11 +468,20 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		write_signature (m, tag_name);
+
+		if (m.is_abstract || m.is_virtual) {
+			write_signature (m, "virtual-method", false, true);
+		}
 	}
 
-	private void write_signature (Method m, string tag_name, bool instance = false) {
+	private void write_signature (Method m, string tag_name, bool instance = false, bool is_virtual = false) {
 		write_indent ();
-		stream.printf ("<%s name=\"%s\" c:identifier=\"%s\"", tag_name, m.name, m.get_cname ());
+		stream.printf ("<%s name=\"%s\"", tag_name, m.name);
+		if (is_virtual) {
+			stream.printf (" invoker=\"%s\"", m.name);
+		} else {
+			stream.printf (" c:identifier=\"%s\"", m.get_cname ());
+		}
 		stream.printf (">\n");
 		indent++;
 
