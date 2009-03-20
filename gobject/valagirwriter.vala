@@ -68,6 +68,29 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream = null;
 	}
 
+	private void write_c_includes (Namespace ns) {
+		// Collect C header filenames
+		Gee.Set<string> header_filenames = new Gee.HashSet<string> (str_hash, str_equal);
+		foreach (string c_header_filename in ns.get_cheader_filenames ()) {
+			header_filenames.add (c_header_filename);
+		}
+		foreach (Symbol symbol in ns.scope.get_symbol_table ().get_values ()) {
+			foreach (string c_header_filename in symbol.get_cheader_filenames ()) {
+				header_filenames.add (c_header_filename);
+			}
+		}
+
+		// Generate c:include tags
+		foreach (string c_header_filename in header_filenames) {
+			write_c_include (c_header_filename);
+		}
+	}
+
+	private void write_c_include (string name) {
+		write_indent ();
+		stream.printf ("<c:include name=\"%s\"/>\n", name);
+	}
+
 	public override void visit_namespace (Namespace ns) {
 		if (ns.external_package) {
 			return;
@@ -84,6 +107,8 @@ public class Vala.GIRWriter : CodeVisitor {
 			// not supported in GIR at the moment
 			return;
 		}
+
+		write_c_includes (ns);
 
 		write_indent ();
 		stream.printf ("<namespace name=\"%s\" version=\"1.0\">\n", ns.name);
