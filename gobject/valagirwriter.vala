@@ -133,9 +133,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (cl.is_subtype_of (gobject_type)) {
 			write_indent ();
 			stream.printf ("<class name=\"%s\"", cl.name);
+			write_gtype_attributes (cl);
 			stream.printf (" parent=\"%s\"", cl.base_class.get_full_name ());
-			stream.printf (" glib:type-name=\"%s\"", cl.get_cname ());
-			stream.printf (" glib:get-type=\"%sget_type\"", cl.get_lower_case_cprefix ());
 			stream.printf (">\n");
 			indent++;
 
@@ -211,7 +210,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 		stream.printf ("<interface name=\"%s\"", iface.name);
-		stream.printf (" glib:get-type=\"%sget_type\"", iface.get_lower_case_cprefix ());
+		write_gtype_attributes (iface);
 		stream.printf (">\n");
 		indent++;
 
@@ -257,8 +256,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 		stream.printf ("<enumeration name=\"%s\"", en.name);
-		stream.printf (" c:type=\"%s\"", en.get_cname ());
-		stream.printf (" glib:get-type=\"%sget_type\"", en.get_lower_case_cprefix ());
+		write_gtype_attributes (en);
 		stream.printf (">\n");
 		indent++;
 
@@ -525,6 +523,16 @@ public class Vala.GIRWriter : CodeVisitor {
 		indent--;
 		write_indent ();
 		stream.printf ("</return-value>\n");
+	}
+
+	private void write_ctype_attributes (TypeSymbol symbol) {
+		stream.printf (" c:type=\"%s\"", symbol.get_cname ());
+	}
+
+	private void write_gtype_attributes (TypeSymbol symbol) {
+		write_ctype_attributes(symbol);
+		stream.printf (" glib:type-name=\"%s\"", symbol.get_cname ());
+		stream.printf (" glib:get-type=\"%sget_type\"", symbol.get_lower_case_cprefix ());
 	}
 
 	private void write_type (DataType type) {
