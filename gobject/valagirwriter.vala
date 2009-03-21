@@ -562,11 +562,18 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 		stream.printf ("<property name=\"%s\"", prop.get_canonical_name ());
-		if (prop.get_accessor != null) {
-			stream.printf (" readable=\"1\"");
+		if (prop.get_accessor == null) {
+			stream.printf (" readable=\"0\"");
 		}
 		if (prop.set_accessor != null) {
 			stream.printf (" writable=\"1\"");
+			if (prop.set_accessor.construction) {
+				if (!prop.set_accessor.writable) {
+					stream.printf (" construct-only=\"1\"");
+				} else {
+					stream.printf (" construct=\"1\"");
+				}
+			}
 		}
 		stream.printf (">\n");
 		indent++;
