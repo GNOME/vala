@@ -398,7 +398,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		if (instance_type != null) {
 			write_indent ();
-			stream.printf ("<parameter name=\"self\">\n");
+			stream.printf ("<parameter name=\"self\" transfer-ownership=\"none\">\n");
 			indent++;
 
 			write_type (instance_type);
@@ -416,17 +416,23 @@ public class Vala.GIRWriter : CodeVisitor {
 				// in/out paramter
 				if (param.parameter_type.value_owned) {
 					stream.printf (" transfer-ownership=\"full\"");
+				} else {
+					stream.printf (" transfer-ownership=\"none\"");
 				}
 			} else if (param.direction == ParameterDirection.OUT) {
 				// out paramter
 				stream.printf (" direction=\"out\"");
 				if (param.parameter_type.value_owned) {
 					stream.printf (" transfer-ownership=\"full\"");
+				} else {
+					stream.printf (" transfer-ownership=\"none\"");
 				}
 			} else {
 				// normal in paramter
 				if (param.parameter_type.value_owned) {
 					stream.printf (" transfer-ownership=\"full\"");
+				} else {
+					stream.printf (" transfer-ownership=\"none\"");
 				}
 			}
 			stream.printf (">\n");
@@ -531,7 +537,8 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_params (m.get_parameters ());
 
-		write_return_type (CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol));
+		var datatype = CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
+		write_return_type (datatype, true);
 
 		indent--;
 		write_indent ();
@@ -588,11 +595,13 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 	}
 
-	private void write_return_type (DataType type) {
+	private void write_return_type (DataType type, bool constructor = false) {
 		write_indent ();
 		stream.printf ("<return-value");
-		if (type.value_owned) {
+		if (type.value_owned || constructor) {
 			stream.printf (" transfer-ownership=\"full\"");
+		} else {
+			stream.printf (" transfer-ownership=\"none\"");
 		}
 		stream.printf (">\n");
 		indent++;
