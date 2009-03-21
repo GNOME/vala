@@ -467,7 +467,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		stream.printf ("<callback name=\"%s\"", cb.get_cname ());
+		stream.printf ("<callback name=\"%s\"", cb.name);
+		stream.printf (" c:type=\"%s\"", cb.get_cname ());
 		stream.printf (">\n");
 		indent++;
 
@@ -499,15 +500,17 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_signature (m, tag_name);
 
 		if (m.is_abstract || m.is_virtual) {
-			write_signature (m, "virtual-method", false, true);
+			write_signature (m, "virtual-method", false);
 		}
 	}
 
-	private void write_signature (Method m, string tag_name, bool instance = false, bool is_virtual = false) {
+	private void write_signature (Method m, string tag_name, bool instance = false) {
 		write_indent ();
 		stream.printf ("<%s name=\"%s\"", tag_name, m.name);
-		if (is_virtual) {
+		if (tag_name == "virtual-method") {
 			stream.printf (" invoker=\"%s\"", m.name);
+		} else if (tag_name == "callback") {
+			stream.printf (" c:type=\"%s\"", m.get_cname ());
 		} else {
 			stream.printf (" c:identifier=\"%s\"", m.get_cname ());
 		}
