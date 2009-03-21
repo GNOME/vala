@@ -469,6 +469,9 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_indent ();
 		stream.printf ("<callback name=\"%s\"", cb.name);
 		stream.printf (" c:type=\"%s\"", cb.get_cname ());
+		if (cb.tree_can_fail) {
+			stream.printf (" throws=\"1\"");
+		}
 		stream.printf (">\n");
 		indent++;
 
@@ -514,6 +517,9 @@ public class Vala.GIRWriter : CodeVisitor {
 		} else {
 			stream.printf (" c:identifier=\"%s\"", m.get_cname ());
 		}
+		if (m.tree_can_fail) {
+			stream.printf (" throws=\"1\"");
+		}
 		stream.printf (">\n");
 		indent++;
 
@@ -542,6 +548,9 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_indent ();
 		stream.printf ("<constructor name=\"%s\" c:identifier=\"%s\"", m.name, m.get_cname ());
+		if (m.tree_can_fail) {
+			stream.printf (" throws=\"1\"");
+		}
 		stream.printf (">\n");
 		indent++;
 
