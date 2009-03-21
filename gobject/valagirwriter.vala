@@ -377,7 +377,11 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		stream.printf ("<field name=\"%s\">\n", f.get_cname ());
+		stream.printf ("<field name=\"%s\"", f.get_cname ());
+		if (f.field_type.nullable) {
+			stream.printf (" allow-none=\"1\"");
+		}
+		stream.printf (">\n");
 		indent++;
 
 		write_type (f.field_type);
@@ -434,6 +438,9 @@ public class Vala.GIRWriter : CodeVisitor {
 				} else {
 					stream.printf (" transfer-ownership=\"none\"");
 				}
+			}
+			if (param.parameter_type.nullable) {
+				stream.printf (" allow-none=\"1\"");
 			}
 			stream.printf (">\n");
 			indent++;
@@ -602,6 +609,9 @@ public class Vala.GIRWriter : CodeVisitor {
 			stream.printf (" transfer-ownership=\"full\"");
 		} else {
 			stream.printf (" transfer-ownership=\"none\"");
+		}
+		if (type.nullable) {
+			stream.printf (" allow-none=\"1\"");
 		}
 		stream.printf (">\n");
 		indent++;
