@@ -243,7 +243,7 @@ public class Vala.Property : Member, Lockable {
 		return new CCodeConstant ("\"%s\"".printf (get_canonical_name ()));
 	}
 
-	private string get_canonical_name () {
+	public string get_canonical_name () {
 		var str = new StringBuilder ();
 		
 		string i = name;
