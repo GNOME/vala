@@ -335,20 +335,35 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		stream.printf ("<errordomain name=\"%s\"", edomain.get_cname ());
+		stream.printf ("<errordomain name=\"%s\"", edomain.name);
+		stream.printf (" get-quark=\"%squark\"", edomain.get_lower_case_cprefix ());
+		stream.printf (" codes=\"%s\"", edomain.name);
+		stream.printf ("/>\n");
+
+		write_indent ();
+		stream.printf ("<enumeration name=\"%s\"", edomain.name);
+		write_ctype_attributes (edomain);
 		stream.printf (">\n");
 		indent++;
 
+		enum_value = 0;
 		edomain.accept_children (this);
 
 		indent--;
 		write_indent ();
-		stream.printf ("</errordomain>\n");
+		stream.printf ("</enumeration>\n");
 	}
 
 	public override void visit_error_code (ErrorCode ecode) {
 		write_indent ();
-		stream.printf ("<member name=\"%s\"/>\n", ecode.get_cname ());
+		stream.printf ("<member name=\"%s\" c:identifier=\"%s\"", ecode.name.down (), ecode.get_cname ());
+		if (ecode.value != null) {
+			string value = literal_expression_to_value_string (ecode.value);
+			stream.printf (" value=\"%s\"", value);
+		} else {
+			stream.printf (" value=\"%d\"", enum_value++);
+		}
+		stream.printf ("/>\n");
 	}
 
 	public override void visit_constant (Constant c) {
