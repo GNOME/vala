@@ -114,6 +114,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf ("<namespace name=\"%s\" version=\"1.0\">\n", ns.name);
 		indent++;
 
+		write_annotations (ns);
+
 		ns.accept_children (this);
 
 		indent--;
@@ -165,6 +167,8 @@ public class Vala.GIRWriter : CodeVisitor {
 				stream.printf ("</implements>\n");
 			}
 
+			write_annotations (cl);
+
 			cl.accept_children (this);
 
 			indent--;
@@ -193,6 +197,8 @@ public class Vala.GIRWriter : CodeVisitor {
 			stream.printf (">\n");
 			indent++;
 
+			write_annotations (cl);
+
 			cl.accept_children (this);
 
 			indent--;
@@ -214,6 +220,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf ("<record name=\"%s\"", st.name);
 		stream.printf (">\n");
 		indent++;
+
+		write_annotations (st);
 
 		st.accept_children (this);
 
@@ -264,6 +272,8 @@ public class Vala.GIRWriter : CodeVisitor {
 			stream.printf ("</requires>\n");
 		}
 
+		write_annotations (iface);
+
 		iface.accept_children (this);
 
 		indent--;
@@ -303,6 +313,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf (">\n");
 		indent++;
 
+		write_annotations (en);
+
 		enum_value = 0;
 		en.accept_children (this);
 
@@ -338,7 +350,11 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf ("<errordomain name=\"%s\"", edomain.name);
 		stream.printf (" get-quark=\"%squark\"", edomain.get_lower_case_cprefix ());
 		stream.printf (" codes=\"%s\"", edomain.name);
-		stream.printf ("/>\n");
+		stream.printf (">\n");
+
+		write_annotations (edomain);
+
+		stream.printf ("</errordomain>\n");
 
 		write_indent ();
 		stream.printf ("<enumeration name=\"%s\"", edomain.name);
@@ -409,6 +425,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf (">\n");
 		indent++;
 
+		write_annotations (f);
+
 		write_type (f.field_type);
 
 		indent--;
@@ -470,6 +488,8 @@ public class Vala.GIRWriter : CodeVisitor {
 			stream.printf (">\n");
 			indent++;
 
+			write_annotations (param);
+
 			write_type (param.parameter_type);
 
 			indent--;
@@ -499,6 +519,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 		stream.printf (">\n");
 		indent++;
+
+		write_annotations (cb);
 
 		write_params (cb.get_parameters ());
 
@@ -548,6 +570,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf (">\n");
 		indent++;
 
+		write_annotations (m);
+
 		DataType instance_type = null;
 		if (instance) {
 			instance_type = CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
@@ -578,6 +602,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 		stream.printf (">\n");
 		indent++;
+
+		write_annotations (m);
 
 		write_params (m.get_parameters ());
 
@@ -612,6 +638,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf (">\n");
 		indent++;
 
+		write_annotations (prop);
+
 		write_type (prop.property_type);
 
 		indent--;
@@ -628,6 +656,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf ("<glib:signal name=\"%s\"", sig.get_cname ());
 		stream.printf (">\n");
 		indent++;
+
+		write_annotations (sig);
 
 		write_params (sig.get_parameters ());
 
@@ -721,6 +751,23 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 	}
 
+	private void write_annotations (CodeNode node) {
+		foreach (Attribute attr in node.attributes) {
+			string name = camel_case_to_canonical (attr.name);
+			foreach (string arg_name in attr.args.get_keys ()) {
+				var arg = attr.args.get (arg_name);
+
+				string value = literal_expression_to_value_string ((Literal) arg);
+
+				if (value != null) {
+					write_indent ();
+					stream.printf ("<annotation key=\"%s.%s\" value=\"%s\"/>\n",
+						name, camel_case_to_canonical (arg_name), value);
+				}
+			}
+		}
+	}
+
 	private string gi_type_name (TypeSymbol type_symbol) {
 		return vala_to_gi_type_name (type_symbol.get_full_name());
 	}
@@ -782,6 +829,10 @@ public class Vala.GIRWriter : CodeVisitor {
 			.replace (">", "&gt;")
 			.replace ("'", "&apos;")
 			.replace ("\"", "&quot;");
+	}
+
+	private string camel_case_to_canonical (string name) {
+		return Symbol.camel_case_to_lower_case (name).replace ("_", "-");
 	}
 
 	private bool check_accessibility (Symbol sym) {
