@@ -851,6 +851,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[ReturnsModifiedPointer]");
 		}
+		if (m.printf_format) {
+			write_indent ();
+			write_string ("[PrintfFormat]");
+		}
 
 		var ccode_params = new StringBuilder ();
 		var separator = "";

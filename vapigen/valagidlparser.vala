@@ -1393,6 +1393,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						add_ellipsis = true;
 					}
+				} else if (nv[0] == "printf_format") {
+					if (eval (nv[1]) == "1") {
+						m.printf_format = true;
+					}
 				} else if (nv[0] == "transfer_ownership") {
 					if (eval (nv[1]) == "1") {
 						return_type.value_owned = true;
@@ -1450,7 +1454,6 @@ public class Vala.GIdlParser : CodeVisitor {
 				} else if (nv[0] == "vfunc_name") {
 					m.vfunc_name = eval (nv[1]);
 				}
-
 			}
 		}
 		
