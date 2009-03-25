@@ -292,7 +292,9 @@ public class Vala.GIdlParser : CodeVisitor {
 	private Delegate? parse_delegate (IdlNodeFunction f_node) {
 		weak IdlNode node = (IdlNode) f_node;
 
-		var cb = new Delegate (node.name, parse_param (f_node.result), current_source_reference);
+		var return_type = parse_param (f_node.result);
+
+		var cb = new Delegate (node.name, return_type, current_source_reference);
 		cb.access = SymbolAccessibility.PUBLIC;
 
 		bool check_has_target = true;
@@ -312,6 +314,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						check_has_target = false;
 					} else if (eval (nv[1]) == "1") {
 						cb.has_target = true;
+					}
+				} else if (nv[0] == "transfer_ownership") {
+					if (eval (nv[1]) == "1") {
+						return_type.value_owned = true;
 					}
 				}
 			}
