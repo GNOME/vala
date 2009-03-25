@@ -121,7 +121,7 @@ namespace Gst {
 		public Gst.Message poll (Gst.MessageType events, Gst.ClockTimeDiff timeout);
 		public Gst.Message pop ();
 		public Gst.Message pop_filtered (Gst.MessageType types);
-		public bool post (Gst.Message message);
+		public bool post (owned Gst.Message message);
 		public void remove_signal_watch ();
 		public void set_flushing (bool flushing);
 		public void set_sync_handler (Gst.BusSyncHandler func);
