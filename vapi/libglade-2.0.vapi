@@ -140,7 +140,7 @@ namespace Glade {
 	[CCode (cheader_filename = "glade/glade.h")]
 	public static void register_custom_prop (GLib.Type type, string prop_name, Glade.ApplyCustomPropFunc apply_prop);
 	[CCode (cheader_filename = "glade/glade.h")]
-	public static void register_widget (GLib.Type type, Glade.NewFunc new_func, Glade.BuildChildrenFunc build_children, Glade.FindInternalChildFunc find_internal_child);
+	public static void register_widget (GLib.Type type, Glade.NewFunc new_func, Glade.BuildChildrenFunc? build_children, Glade.FindInternalChildFunc? find_internal_child);
 	[CCode (cheader_filename = "glade/glade.h")]
 	public static void require (string library);
 	[CCode (cheader_filename = "glade/glade.h")]
