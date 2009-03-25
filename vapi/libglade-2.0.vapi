@@ -110,7 +110,7 @@ namespace Glade {
 	[CCode (cheader_filename = "glade/glade.h")]
 	public static delegate unowned Gtk.Widget FindInternalChildFunc (Glade.XML xml, Gtk.Widget parent, string childname);
 	[CCode (cheader_filename = "glade/glade.h")]
-	public static delegate unowned Gtk.Widget NewFunc (Glade.XML xml, GLib.Type widget_type, Glade.WidgetInfo info);
+	public static delegate Gtk.Widget NewFunc (Glade.XML xml, GLib.Type widget_type, Glade.WidgetInfo info);
 	[CCode (cheader_filename = "glade/glade.h")]
 	public delegate void XMLConnectFunc (string handler_name, GLib.Object object, string signal_name, string signal_data, GLib.Object connect_object, bool after);
 	[CCode (cheader_filename = "glade/glade.h")]

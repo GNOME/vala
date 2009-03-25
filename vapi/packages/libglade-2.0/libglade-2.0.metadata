@@ -6,4 +6,4 @@ glade_xml_new.root nullable="1"
 glade_xml_new.domain nullable="1"
 glade_xml_new_from_buffer.root nullable="1"
 glade_xml_new_from_buffer.domain nullable="1"
-
+GladeNewFunc transfer_ownership="1"
