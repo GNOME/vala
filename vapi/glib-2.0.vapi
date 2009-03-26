@@ -949,10 +949,25 @@ namespace GLib {
 	[CCode (lower_case_cprefix = "", cheader_filename = "math.h")]
 	namespace Math {
 		[CCode (cname = "G_E")]
-		public static double E;
+		public const double E;
 		
 		[CCode (cname = "G_PI")]
-		public static double PI;
+		public const double PI;
+
+		[CCode (cname = "G_LN2")]
+		public const double LN2;
+
+		[CCode (cname = "G_LN10")]
+		public const double LN10;
+
+		[CCode (cname = "G_PI_2")]
+		public const double PI_2;
+
+		[CCode (cname = "G_PI_4")]
+		public const double PI_4;
+
+		[CCode (cname = "G_SQRT2")]
+		public const double SQRT2;
 
 		/* generated from <bits/mathcalls.h> of glibc */
 		public static double acos (double x);
