@@ -30,6 +30,8 @@ namespace Gtk {
 
 	public class Container {
 		public GLib.List<weak Gtk.Widget> get_children ();
+		[CCode (vfunc_name = "forall")]
+		public virtual void forall_internal(bool include_internal, Gtk.Callback callback);
 	}
 
 	public class Notebook {

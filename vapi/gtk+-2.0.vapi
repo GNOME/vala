@@ -1059,6 +1059,8 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual unowned string composite_name (Gtk.Widget child);
 		public virtual void forall (Gtk.Callback callback, void* callback_data);
+		[CCode (vfunc_name = "forall")]
+		public virtual void forall_internal (bool include_internal, Gtk.Callback callback);
 		public void @foreach (Gtk.Callback callback);
 		public uint get_border_width ();
 		[NoWrapper]
