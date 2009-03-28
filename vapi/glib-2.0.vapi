@@ -1210,7 +1210,7 @@ namespace GLib {
 		public static uint add (uint interval, SourceFunc function);
 		public static uint add_full (int priority, uint interval, SourceFunc# function);
 		public static uint add_seconds (uint interval, SourceFunc function);
-		public static uint add_seconds_full (int priority, uint interval, SourceFunc function, DestroyNotify? notify);
+		public static uint add_seconds_full (int priority, uint interval, SourceFunc# function);
 	}
 
 	[CCode (cname = "GSource")]
@@ -1260,7 +1260,7 @@ namespace GLib {
 		public bool get_can_recurse ();
 		public uint get_id ();
 		public weak MainContext get_context ();
-		public void set_callback (SourceFunc func, DestroyNotify? notify);
+		public void set_callback (SourceFunc# func);
 		public void set_callback_indirect (void* callback_data, SourceCallbackFuncs callback_funcs);
 		public void add_poll (ref PollFD fd);
 		public void remove_poll (ref PollFD fd);
