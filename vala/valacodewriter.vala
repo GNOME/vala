@@ -83,6 +83,8 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_string ("[CCode (cprefix = \"%s\", lower_case_cprefix = \"%s\")]".printf (ns.get_cprefix (), ns.get_lower_case_cprefix ()));
 		write_newline ();
 
+		write_attributes (ns);
+
 		write_indent ();
 		write_string ("namespace ");
 		write_identifier (ns.name);
@@ -180,6 +182,8 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 		write_string ("cheader_filename = \"%s\")]".printf (cheaders));
 		write_newline ();
+
+		write_attributes (cl);
 		
 		write_indent ();
 		write_accessibility (cl);
@@ -320,6 +324,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_newline ();
 		}
 
+		write_attributes (st);
+
 		write_indent ();
 		write_accessibility (st);
 		write_string ("struct ");
@@ -373,6 +379,8 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		write_string (")]");
 		write_newline ();
+
+		write_attributes (iface);
 
 		write_indent ();
 		write_accessibility (iface);
@@ -462,6 +470,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("[Flags]");
 		}
 
+		write_attributes (en);
+
 		write_indent ();
 		write_accessibility (en);
 		write_string ("enum ");
@@ -524,6 +534,8 @@ public class Vala.CodeWriter : CodeVisitor {
 			}
 		}
 		write_string ("[CCode (cprefix = \"%s\", cheader_filename = \"%s\")]".printf (edomain.get_cprefix (), cheaders));
+
+		write_attributes (edomain);
 
 		write_indent ();
 		write_accessibility (edomain);
@@ -1634,6 +1646,42 @@ public class Vala.CodeWriter : CodeVisitor {
 			return true;
 		}
 
+		return false;
+	}
+
+	private void write_attributes (CodeNode node) {
+		foreach (Attribute attr in node.attributes) {
+			if (!filter_attribute (attr)) {
+				write_indent ();
+				stream.printf ("[%s", attr.name);
+
+				var keys = attr.args.get_keys ();
+				if (keys.size != 0) {
+					stream.printf (" (");
+
+					string separator = "";
+					foreach (string arg_name in keys) {
+						stream.printf ("%s%s = ", separator, arg_name);
+						var expr = attr.args.get (arg_name);
+						expr.accept (this);
+						separator = ", ";
+					}
+
+					stream.printf (")");
+				}
+				stream.printf ("]");
+				write_newline ();
+			}
+		}
+	}
+
+	private bool filter_attribute (Attribute attr) {
+		if (attr.name == "CCode"
+		    || attr.name == "Compact" || attr.name == "Immutable"
+		    || attr.name == "SimpleType" || attr.name == "IntegerType" || attr.name == "FloatingType"
+		    || attr.name == "Flags") {
+			return true;
+		}
 		return false;
 	}
 
