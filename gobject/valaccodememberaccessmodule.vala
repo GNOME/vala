@@ -52,13 +52,13 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
 					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
 					
-					expr.ccodenode = new CCodeMemberAccess.pointer (vcast, m.name);
+					expr.ccodenode = new CCodeMemberAccess.pointer (vcast, m.vfunc_name);
 					return;
 				} else if (m.base_interface_method != null) {
 					var base_iface = (Interface) m.base_interface_method.parent_symbol;
 					string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
 
-					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), m.name);
+					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), m.vfunc_name);
 					return;
 				}
 			}
