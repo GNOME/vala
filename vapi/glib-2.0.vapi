@@ -3161,6 +3161,20 @@ namespace GLib {
 	[Compact]
 	[CCode (free_function = "g_ptr_array_free")]
 	public class PtrArray {
+		public PtrArray ();
+		[CCode (cname = "g_ptr_array_sized_new")]
+		public PtrArray.sized (uint reserved_size);
+		public void add (void* data);
+		public bool remove (void* data);
+		public void* remove_index (uint index);
+		public bool remove_fast (void *data);
+		public void remove_range (uint index, uint length);
+		public void sort (CompareFunc compare_func);
+		public void sort_with_data (CompareDataFunc compare_func);
+		public void set_size (uint length);
+
+		public uint len;
+		public void** pdata;
 	}
 
 	/* Byte Arrays */
