@@ -1641,6 +1641,7 @@ namespace GLib {
 	/* Character Set Conversions */
 	
 	public static string convert (string str, long len, string to_codeset, string from_codeset, out int bytes_read = null, out int bytes_written = null) throws ConvertError;
+	public static bool get_charset (out weak string charset);
 
 	public struct IConv {
 		[CCode (cname = "g_iconv_open")]
