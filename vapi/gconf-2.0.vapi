@@ -3,7 +3,7 @@
 [CCode (cprefix = "GConf", lower_case_cprefix = "gconf_")]
 namespace GConf {
 	[Compact]
-	[CCode (ref_function = "gconf_change_set_ref", ref_function_void = true, unref_function = "gconf_change_set_unref", cheader_filename = "gconf/gconf.h")]
+	[CCode (ref_function = "gconf_change_set_ref", ref_function_void = true, unref_function = "gconf_change_set_unref", type_id = "GCONF_TYPE_CHANGE_SET", cheader_filename = "gconf/gconf.h")]
 	public class ChangeSet {
 		public bool check_value (string key, out unowned GConf.Value value_retloc);
 		public void clear ();
@@ -57,7 +57,7 @@ namespace GConf {
 		public bool get_pair (string key, GConf.ValueType car_type, GConf.ValueType cdr_type, void* car_retloc, void* cdr_retloc) throws GLib.Error;
 		public unowned GConf.Schema get_schema (string key) throws GLib.Error;
 		public unowned string get_string (string key) throws GLib.Error;
-		public unowned GConf.Value get_without_default (string key) throws GLib.Error;
+		public GConf.Value get_without_default (string key) throws GLib.Error;
 		public bool key_is_writable (string key) throws GLib.Error;
 		public void notify (string key);
 		public uint notify_add (string namespace_section, owned GConf.ClientNotifyFunc func) throws GLib.Error;
