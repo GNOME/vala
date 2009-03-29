@@ -58,11 +58,11 @@ namespace BZLib {
 		public uint total_out_hi32;
 		public void *state;
 		public void *opaque;
-		[CCode (cname = "BZ2_bzDecompressInit")]
+		[CCode (cname = "BZ2_bzCompressInit")]
 		public Status compress_init (int block_size_100k, int verbosity, int work_factor);
-		[CCode (cname = "BZ2_bzDecompress")]
+		[CCode (cname = "BZ2_bzCompress")]
 		public Status compress (Action action);
-		[CCode (cname = "BZ2_bzDecompressEnd")]
+		[CCode (cname = "BZ2_bzCompressEnd")]
 		public Status compress_end ();
 		[CCode (cname = "BZ2_bzDecompressInit")]
 		public Status decompress_init (int verbosity, int small);
