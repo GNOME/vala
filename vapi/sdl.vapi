@@ -588,7 +588,7 @@ namespace SDL {
 		public static void set_modifiers(KeyModifier modstate);
 
 		[CCode (cname="SDL_GetKeyName")]
-		public static string get_name(KeySymbol key);
+		public static weak string get_name(KeySymbol key);
 	}// Key
 
 	[CCode (cname="int", cprefix="SDLK_", cheader_filename="SDL_keysym.h")]
