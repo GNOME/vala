@@ -359,6 +359,12 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		cregister.add_argument (new CCodeIdentifier ("object"));
 		register_block.add_statement (new CCodeExpressionStatement (cregister));
 
+		var weak_unregister = new CCodeFunctionCall (new CCodeIdentifier ("g_object_weak_ref"));
+		weak_unregister.add_argument (new CCodeIdentifier ("object"));
+		weak_unregister.add_argument (new CCodeIdentifier ("_vala_dbus_unregister_object"));
+		weak_unregister.add_argument (new CCodeIdentifier ("connection"));
+		register_block.add_statement (new CCodeExpressionStatement (weak_unregister));
+
 		block.add_statement (new CCodeIfStatement (register_check, register_block));
 
 		handle_signals (object_type.type_symbol, block);

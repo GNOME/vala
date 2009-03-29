@@ -444,6 +444,37 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("vtable"), ifblock, elseblock));
 
 			source_type_member_definition.append (cfunc);
+
+			// unregister function
+			cfunc = new CCodeFunction ("_vala_dbus_unregister_object", "void");
+			cfunc.add_parameter (new CCodeFormalParameter ("connection", "gpointer"));
+			cfunc.add_parameter (new CCodeFormalParameter ("object", "GObject*"));
+
+			cfunc.modifiers |= CCodeModifiers.STATIC;
+			source_declarations.add_type_member_declaration (cfunc.copy ());
+
+			block = new CCodeBlock ();
+			cfunc.block = block;
+
+			cdecl = new CCodeDeclaration ("char*");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("path"));
+			block.add_statement (cdecl);
+
+			var path = new CCodeFunctionCall (new CCodeIdentifier ("g_object_steal_data"));
+			path.add_argument (new CCodeCastExpression (new CCodeIdentifier ("object"), "GObject*"));
+			path.add_argument (new CCodeConstant ("\"dbus_object_path\""));
+			block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("path"), path)));
+
+			var unregister_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_unregister_object_path"));
+			unregister_call.add_argument (new CCodeIdentifier ("connection"));
+			unregister_call.add_argument (new CCodeIdentifier ("path"));
+			block.add_statement (new CCodeExpressionStatement (unregister_call));
+
+			var path_free = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+			path_free.add_argument (new CCodeIdentifier ("path"));
+			block.add_statement (new CCodeExpressionStatement (path_free));
+
+			source_type_member_definition.append (cfunc);
 		}
 
 		CCodeComment comment = null;
