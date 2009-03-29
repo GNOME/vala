@@ -412,7 +412,15 @@ public class Vala.MemberAccess : Expression {
 			if (m.base_method != null) {
 				// refer to base method to inherit default arguments
 				m = m.base_method;
-				symbol_reference = m;
+
+				if (m.signal_reference != null) {
+					// method is class/default handler for a signal
+					// let signal deal with member access
+					symbol_reference = m.signal_reference;
+				} else {
+					symbol_reference = m;
+				}
+
 				member = symbol_reference;
 			} else if (m.base_interface_method != null) {
 				// refer to base method to inherit default arguments

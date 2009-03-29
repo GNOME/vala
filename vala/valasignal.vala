@@ -1,6 +1,6 @@
 /* valasignal.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -210,8 +210,10 @@ public class Vala.Signal : Member, Lockable {
 
 		if (generated_method == null) {
 			generated_method = new Method (name, return_type, source_reference);
+			generated_method.access = access;
 			generated_method.is_virtual = true;
 			generated_method.vfunc_name = name;
+			generated_method.signal_reference = this;
 
 			foreach (FormalParameter param in parameters) {
 				generated_method.add_parameter (param);

@@ -198,6 +198,8 @@ public class Vala.Method : Member {
 	 */
 	public bool has_construct_function { get; set; default = true; }
 
+	public weak Signal signal_reference { get; set; }
+
 	public bool coroutine { get; set; }
 
 	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
