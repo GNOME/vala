@@ -2246,7 +2246,7 @@ namespace GLib {
 		public static bool if_continued (int status);
 	}
 	
-	[CCode (cname = "int", has_type_id = false)]
+	[CCode (cname = "int", has_type_id = false, cheader_filename = "signal.h", cprefix = "SIG")]
 	public enum ProcessSignal {
 		HUP,
 		INT,
