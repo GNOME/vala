@@ -392,9 +392,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (dbus_glib_h_needed_in_header) {
 			header_declarations.add_include ("dbus/dbus.h");
 			header_declarations.add_include ("dbus/dbus-glib.h");
+			header_declarations.add_include ("dbus/dbus-glib-lowlevel.h");
 		} else if (dbus_glib_h_needed) {
 			source_declarations.add_include ("dbus/dbus.h");
 			source_declarations.add_include ("dbus/dbus-glib.h");
+			source_declarations.add_include ("dbus/dbus-glib-lowlevel.h");
 		}
 		if (dbus_glib_h_needed_in_header || dbus_glib_h_needed) {
 			var dbusvtable = new CCodeStruct ("_DBusObjectVTable");
