@@ -1361,7 +1361,7 @@ namespace GLib {
 	public struct StaticPrivate {
 		public StaticPrivate ();
 		public void* get ();
-		public void set (void* data, DestroyNotify destroy_func);
+		public void set (void* data, DestroyNotify? destroy_func);
 	}
 
 	[Compact]
