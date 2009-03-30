@@ -1,4 +1,4 @@
-AC_INIT([vala], [0.6.0], [j@bitron.ch], [vala])
+AC_INIT([vala], [0.6.1], [j@bitron.ch], [vala])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([dist-bzip2])
