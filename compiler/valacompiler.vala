@@ -35,6 +35,7 @@ class Vala.Compiler {
 	static string[] vapi_directories;
 	static string vapi_filename;
 	static string library;
+	static string gir;
 	[CCode (array_length = false, array_null_terminated = true)]
 	[NoArrayLength]
 	static string[] packages;
@@ -74,6 +75,7 @@ class Vala.Compiler {
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "vapi", 0, 0, OptionArg.FILENAME, ref vapi_filename, "Output VAPI file name", "FILE" },
 		{ "library", 0, 0, OptionArg.STRING, ref library, "Library name", "NAME" },
+		{ "gir", 0, 0, OptionArg.STRING, ref gir, "GObject-Introspection repository file name", "NAME-VERSION.gir" },
 		{ "basedir", 'b', 0, OptionArg.FILENAME, ref basedir, "Base source directory", "DIRECTORY" },
 		{ "directory", 'd', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
@@ -359,16 +361,28 @@ class Vala.Compiler {
 		}
 
 		if (library != null) {
-			if (context.profile == Profile.GOBJECT) {
-				var gir_writer = new GIRWriter ();
-				string gir_filename = "%s.gir".printf (library);
+			if (gir != null) {
+				if (context.profile == Profile.GOBJECT) {
+					string[] split_gir = Regex.split_simple("(.*)-([0-9]+(\\.[0-9]+)?)\\.gir$", gir);
 
-				// put .gir file in current directory unless -d has been explicitly specified
-				if (directory != null && !Path.is_absolute (gir_filename)) {
-					gir_filename = "%s%c%s".printf (context.directory, Path.DIR_SEPARATOR, gir_filename);
+					if (split_gir.length < 4) {
+						Report.error (null, "GIR file name `%s' is not well-formed, expected NAME-VERSION.gir".printf (gir));
+					} else {
+						var gir_writer = new GIRWriter ();
+						string gir_namespace = split_gir[1];
+						string gir_version = split_gir[2];
+
+						// put .gir file in current directory unless -d has been explicitly specified
+						string gir_directory = ".";
+						if (directory != null) {
+							gir_directory = context.directory;
+						}
+
+						gir_writer.write_file (context, gir_directory, gir_namespace, gir_version);
+					}
 				}
 
-				gir_writer.write_file (context, gir_filename);
+				gir = null;
 			}
 
 			library = null;

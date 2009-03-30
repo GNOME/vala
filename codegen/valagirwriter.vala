@@ -28,6 +28,9 @@ using Gee;
  */
 public class Vala.GIRWriter : CodeVisitor {
 	private CodeContext context;
+	private string directory;
+	private string gir_namespace;
+	private string gir_version;
 	
 	FileStream stream;
 	
@@ -42,13 +45,17 @@ public class Vala.GIRWriter : CodeVisitor {
 	 * @param context  a code context
 	 * @param filename a relative or absolute filename
 	 */
-	public void write_file (CodeContext context, string filename) {
+	public void write_file (CodeContext context, string directory, string gir_namespace, string gir_version) {
 		this.context = context;
+		this.directory = directory;
+		this.gir_namespace = gir_namespace;
+		this.gir_version = gir_version;
 
 		var root_symbol = context.root;
 		var glib_ns = root_symbol.scope.lookup ("GLib");
 		gobject_type = (TypeSymbol) glib_ns.scope.lookup ("Object");
 
+		string filename = "%s%c%s-%s.gir".printf (directory, Path.DIR_SEPARATOR, gir_namespace, gir_version);
 		stream = FileStream.open (filename, "w");
 
 		stream.printf ("<?xml version=\"1.0\"?>\n");
