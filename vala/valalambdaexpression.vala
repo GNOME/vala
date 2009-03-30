@@ -137,6 +137,25 @@ public class Vala.LambdaExpression : Expression {
 		method = new Method (get_lambda_name (analyzer), cb.return_type);
 		if (!cb.has_target || !analyzer.is_in_instance_method ()) {
 			method.binding = MemberBinding.STATIC;
+		} else {
+			var sym = analyzer.current_symbol;
+			while (method.this_parameter == null) {
+				if (sym is Property) {
+					var prop = (Property) sym;
+					method.this_parameter = prop.this_parameter;
+				} else if (sym is Constructor) {
+					var c = (Constructor) sym;
+					method.this_parameter = c.this_parameter;
+				} else if (sym is Destructor) {
+					var d = (Destructor) sym;
+					method.this_parameter = d.this_parameter;
+				} else if (sym is Method) {
+					var m = (Method) sym;
+					method.this_parameter = m.this_parameter;
+				}
+
+				sym = sym.parent_symbol;
+			}
 		}
 		method.owner = analyzer.current_symbol.scope;
 
