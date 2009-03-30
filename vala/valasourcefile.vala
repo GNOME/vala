@@ -41,29 +41,7 @@ public class Vala.SourceFile {
 	 * Specifies whether this file is a VAPI package file.
 	 */
 	public bool external_package { get; set; }
-	
-	/**
-	 * Specifies the dependency cycle this source file is member of. If this
-	 * source file is in a cycle, all type definitions of that cycle will
-	 * only be written to the C header file of the cycle head.
-	 */
-	public SourceFileCycle cycle { get; set; }
-	
-	/**
-	 * Specifies whether this source file is the head of the cycle, if it is
-	 * in a cycle at all.
-	 */
-	public bool is_cycle_head { get; set; }
-	
-	/**
-	 * Mark used for cycle detection.
-	 *
-	 * 0: not yet visited
-	 * 1: currently visiting
-	 * 2: already visited
-	 */
-	public int mark { get; set; }
-	
+
 	/**
 	 * The context this source file belongs to.
 	 */
@@ -84,16 +62,6 @@ public class Vala.SourceFile {
 	private string cheader_filename = null;
 	private string csource_filename = null;
 	private string cinclude_filename = null;
-	
-	private Gee.List<string> header_external_includes = new ArrayList<string> ();
-	private Gee.List<string> header_internal_includes = new ArrayList<string> ();
-	private Gee.List<string> source_external_includes = new ArrayList<string> ();
-	private Gee.List<string> source_internal_includes = new ArrayList<string> ();
-	
-	private Gee.List<weak SourceFile> header_internal_full_dependencies = new ArrayList<weak SourceFile> ();
-	private Gee.List<weak SourceFile> header_internal_dependencies = new ArrayList<weak SourceFile> ();
-
-	private Gee.Set<Symbol> source_symbol_dependencies = new HashSet<Symbol> ();
 
 	private Gee.ArrayList<string> source_array = null;
 
@@ -260,170 +228,13 @@ public class Vala.SourceFile {
 	 */
 	public string get_cinclude_filename () {
 		if (cinclude_filename == null) {
-			cinclude_filename = "%s%s.h".printf (get_subdir (), get_basename ());
+			if (context.header_filename != null) {
+				cinclude_filename = Path.get_basename (context.header_filename);
+			} else {
+				cinclude_filename = "%s%s.h".printf (get_subdir (), get_basename ());
+			}
 		}
 		return cinclude_filename;
-	}
-	
-	/**
-	 * Adds the specified symbol to the list of symbols code in this source
-	 * file depends on.
-	 *
-	 * TODO Move source and header file dependency analysis to
-	 * code generator.
-	 *
-	 * @param sym      a symbol
-	 * @param dep_type type of dependency
-	 */
-	public void add_symbol_dependency (Symbol? sym, SourceFileDependencyType dep_type) {
-		if (external_package) {
-			return;
-		}
-
-		Symbol s;
-		
-		if (sym is ErrorCode || sym is EnumValue) {
-			s = sym.parent_symbol;
-		} else if (sym is TypeSymbol ||
-		    sym is Method ||
-		    sym is Field ||
-		    sym is Property ||
-		    sym is Constant) {
-			s = sym;
-		} else if (sym is FormalParameter) {
-			var fp = (FormalParameter) sym;
-			s = fp.parameter_type.data_type;
-			if (s == null) {
-				/* generic type parameter */
-				return;
-			}
-		} else {
-			return;
-		}
-		
-		if (dep_type == SourceFileDependencyType.SOURCE) {
-			source_symbol_dependencies.add (s);
-			if (s.external_package) {
-				foreach (string fn in s.get_cheader_filenames ()) {
-					source_external_includes.add (fn);
-				}
-			} else {
-				foreach (string fn in s.get_cheader_filenames ()) {
-					source_internal_includes.add (fn);
-				}
-			}
-			return;
-		}
-
-		if (s.external_package) {
-			/* external package */
-			foreach (string fn in s.get_cheader_filenames ()) {
-				header_external_includes.add (fn);
-			}
-			return;
-		}
-		
-		if (dep_type == SourceFileDependencyType.HEADER_FULL) {
-			foreach (string fn in s.get_cheader_filenames ()) {
-				header_internal_includes.add (fn);
-			}
-			header_internal_full_dependencies.add (s.source_reference.file);
-		}
-
-		header_internal_dependencies.add (s.source_reference.file);
-	}
-
-	/**
-	 * Adds the symbols that define the specified type to the list of
-	 * symbols code in this source file depends on.
-	 *
-	 * TODO Move source and header file dependency analysis to
-	 * code generator.
-	 *
-	 * @param type     a data type
-	 * @param dep_type type of dependency
-	 */
-	public void add_type_dependency (DataType type, SourceFileDependencyType dep_type) {
-		foreach (Symbol type_symbol in type.get_symbols ()) {
-			add_symbol_dependency (type_symbol, dep_type);
-		}
-	}
-
-	/**
-	 * Returns the list of external includes the generated C header file
-	 * requires.
-	 *
-	 * @return external include list for C header file
-	 */
-	public Gee.List<string> get_header_external_includes () {
-		return new ReadOnlyList<string> (header_external_includes);
-	}
-	
-	/**
-	 * Adds the specified filename to the list of package-internal includes
-	 * the generated C header file requires.
-	 *
-	 * @param include internal include for C header file
-	 */
-	public void add_header_internal_include (string include) {
-		/* skip includes to self */
-		if (include != get_cinclude_filename ()) {
-			header_internal_includes.add (include);
-		}
-	}
-	
-	/**
-	 * Returns the list of package-internal includes the generated C header
-	 * file requires.
-	 *
-	 * @return internal include list for C header file
-	 */
-	public Gee.List<string> get_header_internal_includes () {
-		return new ReadOnlyList<string> (header_internal_includes);
-	}
-	
-	/**
-	 * Returns the list of external includes the generated C source file
-	 * requires.
-	 *
-	 * @return include list for C source file
-	 */
-	public Gee.List<string> get_source_external_includes () {
-		return new ReadOnlyList<string> (source_external_includes);
-	}
-	
-	/**
-	 * Returns the list of package-internal includes the generated C source
-	 * file requires.
-	 *
-	 * @return include list for C source file
-	 */
-	public Gee.List<string> get_source_internal_includes () {
-		return new ReadOnlyList<string> (source_internal_includes);
-	}
-	
-	/**
-	 * Returns the list of source files the generated C header file requires
-	 * definitely.
-	 *
-	 * @return definite source file dependencies
-	 */
-	public Gee.List<weak SourceFile> get_header_internal_full_dependencies () {
-		return new ReadOnlyList<weak SourceFile> (header_internal_full_dependencies);
-	}
-	
-	/**
-	 * Returns the list of source files the generated C header file loosely
-	 * depends on.
-	 *
-	 * @return loose source file dependencies
-	 */
-	public Gee.List<weak SourceFile> get_header_internal_dependencies () {
-		return new ReadOnlyList<weak SourceFile> (header_internal_dependencies);
-	}
-
-	public Gee.Set<Symbol> get_source_symbol_dependencies () {
-		return new ReadOnlySet<Symbol> (source_symbol_dependencies);
 	}
 
 	/**
@@ -502,8 +313,3 @@ public class Vala.SourceFile {
 	}
 }
 
-public enum Vala.SourceFileDependencyType {
-	HEADER_FULL,
-	HEADER_SHALLOW,
-	SOURCE
-}

@@ -324,14 +324,13 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 		if (!sym.is_internal_symbol ()) {
 			dbus_glib_h_needed_in_header = true;
-
-			header_declarations.add_type_member_declaration (cfunc.copy ());
 		} else {
 			dbus_glib_h_needed = true;
 
 			cfunc.modifiers |= CCodeModifiers.STATIC;
-			source_declarations.add_type_member_declaration (cfunc.copy ());
 		}
+
+		source_declarations.add_type_member_declaration (cfunc.copy ());
 
 		var block = new CCodeBlock ();
 		cfunc.block = block;
@@ -1129,12 +1128,11 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		cfunc.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
 		cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
 
-		if (!sym.is_internal_symbol ()) {
-			header_declarations.add_type_member_declaration (cfunc.copy ());
-		} else {
+		if (sym.is_internal_symbol ()) {
 			cfunc.modifiers |= CCodeModifiers.STATIC;
-			source_declarations.add_type_member_declaration (cfunc.copy ());
 		}
+
+		source_declarations.add_type_member_declaration (cfunc.copy ());
 
 		var block = new CCodeBlock ();
 		cfunc.block = block;

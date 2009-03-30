@@ -38,6 +38,18 @@ internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 		var prop = (Property) assignment.left.symbol_reference;
 
+		if (!(prop is DynamicProperty)) {
+			generate_property_accessor_declaration (prop.set_accessor, source_declarations);
+
+			if (!prop.external && prop.external_package) {
+				// internal VAPI properties
+				// only add them once per source file
+				if (add_generated_external_symbol (prop)) {
+					visit_property (prop);
+				}
+			}
+		}
+
 		if (prop.set_accessor.construction && current_type_symbol is Class && current_class.is_subtype_of (gobject_type) && in_creation_method) {
 			return head.get_construct_property_assignment (prop.get_canonical_cconstant (), prop.property_type, (CCodeExpression) assignment.right.ccodenode);
 		} else {

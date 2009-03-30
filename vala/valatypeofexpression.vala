@@ -1,6 +1,6 @@
 /* valatypeofexpression.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -79,8 +79,6 @@ public class Vala.TypeofExpression : Expression {
 		type_reference.check (analyzer);
 
 		value_type = analyzer.type_type;
-
-		analyzer.current_source_file.add_type_dependency (type_reference, SourceFileDependencyType.SOURCE);
 
 		return !error;
 	}

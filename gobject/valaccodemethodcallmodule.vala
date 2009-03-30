@@ -60,6 +60,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			// constructor
 			var cl = (Class) ((ObjectType) itype).type_symbol;
 			m = cl.default_construction_method;
+			generate_method_declaration (m, source_declarations);
 			ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
 		}
 

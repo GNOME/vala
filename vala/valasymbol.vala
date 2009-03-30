@@ -93,7 +93,8 @@ public abstract class Vala.Symbol : CodeNode {
 		}
 
 		for (Symbol sym = this; null != sym; sym = sym.parent_symbol) {
-			if (SymbolAccessibility.PRIVATE == sym.access) {
+			if (sym.access == SymbolAccessibility.PRIVATE
+			    || sym.access == SymbolAccessibility.INTERNAL) {
 				return true;
 			}
 		}
@@ -101,10 +102,14 @@ public abstract class Vala.Symbol : CodeNode {
 		return false;
 	}
 
-	public bool is_library_internal_symbol () {
+	public bool is_private_symbol () {
+		if (!external && external_package) {
+			// non-external symbols in VAPI files are private symbols
+			return true;
+		}
+
 		for (Symbol sym = this; null != sym; sym = sym.parent_symbol) {
-			if (sym.access == SymbolAccessibility.PRIVATE
-			    || sym.access == SymbolAccessibility.INTERNAL) {
+			if (sym.access == SymbolAccessibility.PRIVATE) {
 				return true;
 			}
 		}

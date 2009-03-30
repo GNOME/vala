@@ -688,15 +688,6 @@ public class Vala.Method : Member {
 			source_reference.file.context.module_init_method = this;
 		}
 
-		if (!is_internal_symbol ()) {
-			if (return_type is ValueType) {
-				analyzer.current_source_file.add_type_dependency (return_type, SourceFileDependencyType.HEADER_FULL);
-			} else {
-				analyzer.current_source_file.add_type_dependency (return_type, SourceFileDependencyType.HEADER_SHALLOW);
-			}
-		}
-		analyzer.current_source_file.add_type_dependency (return_type, SourceFileDependencyType.SOURCE);
-
 		if (return_type != null) {
 			return_type.check (analyzer);
 		}

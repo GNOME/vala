@@ -1,6 +1,6 @@
 /* valagerrormodule.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,20 +32,41 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		base (codegen, next);
 	}
 
-	public override void visit_error_domain (ErrorDomain edomain) {
-		cenum = new CCodeEnum (edomain.get_cname ());
+	public override void generate_error_domain_declaration (ErrorDomain edomain, CCodeDeclarationSpace decl_space) {
+		if (decl_space.add_symbol_declaration (edomain, edomain.get_cname ())) {
+			return;
+		}
+
+		var cenum = new CCodeEnum (edomain.get_cname ());
+
+		foreach (ErrorCode ecode in edomain.get_codes ()) {
+			if (ecode.value == null) {
+				cenum.add_value (new CCodeEnumValue (ecode.get_cname ()));
+			} else {
+				ecode.value.accept (codegen);
+				cenum.add_value (new CCodeEnumValue (ecode.get_cname (), (CCodeExpression) ecode.value.ccodenode));
+			}
+		}
 
 		if (edomain.source_reference.comment != null) {
-			header_declarations.add_type_definition (new CCodeComment (edomain.source_reference.comment));
+			decl_space.add_type_definition (new CCodeComment (edomain.source_reference.comment));
 		}
-		header_declarations.add_type_definition (cenum);
-
-		edomain.accept_children (codegen);
+		decl_space.add_type_definition (cenum);
 
 		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
 
 		var error_domain_define = new CCodeMacroReplacement (edomain.get_upper_case_cname (), quark_fun_name + " ()");
-		header_declarations.add_type_definition (error_domain_define);
+		decl_space.add_type_definition (error_domain_define);
+
+		var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
+
+		decl_space.add_type_member_declaration (cquark_fun);
+	}
+
+	public override void visit_error_domain (ErrorDomain edomain) {
+		generate_error_domain_declaration (edomain, source_declarations);
+
+		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
 
 		var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
 		var cquark_block = new CCodeBlock ();
@@ -55,19 +76,8 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 
 		cquark_block.add_statement (new CCodeReturnStatement (cquark_call));
 
-		header_declarations.add_type_member_declaration (cquark_fun.copy ());
-
 		cquark_fun.block = cquark_block;
 		source_type_member_definition.append (cquark_fun);
-	}
-
-	public override void visit_error_code (ErrorCode ecode) {
-		if (ecode.value == null) {
-			cenum.add_value (new CCodeEnumValue (ecode.get_cname ()));
-		} else {
-			ecode.value.accept (codegen);
-			cenum.add_value (new CCodeEnumValue (ecode.get_cname (), (CCodeExpression) ecode.value.ccodenode));
-		}
 	}
 
 	public override void visit_throw_statement (ThrowStatement stmt) {

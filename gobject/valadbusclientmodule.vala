@@ -52,7 +52,7 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		generate_cparameters (method, cparam_map, func);
+		generate_cparameters (method, source_declarations, cparam_map, func);
 
 		var block = new CCodeBlock ();
 		if (dynamic_method.dynamic_type.data_type == dbus_object_type) {
@@ -840,12 +840,9 @@ internal class Vala.DBusClientModule : DBusModule {
 		string cname = iface.get_cname () + "DBusProxy";
 		string lower_cname = iface.get_lower_case_cprefix () + "dbus_proxy";
 
-		CCodeDeclarationSpace decl_space;
 		if (iface.access != SymbolAccessibility.PRIVATE) {
-			decl_space = header_declarations;
 			dbus_glib_h_needed_in_header = true;
 		} else {
-			decl_space = source_declarations;
 			dbus_glib_h_needed = true;
 		}
 
@@ -922,7 +919,7 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		new_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("self")));
 
-		decl_space.add_type_member_declaration (proxy_new.copy ());
+		source_declarations.add_type_member_declaration (proxy_new.copy ());
 		proxy_new.block = new_block;
 		source_type_member_definition.append (proxy_new);
 
@@ -1272,7 +1269,7 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		generate_cparameters (m, cparam_map, function);
+		generate_cparameters (m, source_declarations, cparam_map, function);
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -1368,7 +1365,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("callback", "GAsyncReadyCallback"));
 		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("user_data", "gpointer"));
 
-		generate_cparameters (m, cparam_map, function, null, null, null, 1);
+		generate_cparameters (m, source_declarations, cparam_map, function, null, null, null, 1);
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
@@ -1496,7 +1493,7 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("res", "GAsyncResult*"));
 
-		generate_cparameters (m, cparam_map, function, null, null, null, 2);
+		generate_cparameters (m, source_declarations, cparam_map, function, null, null, null, 2);
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();

@@ -1,6 +1,6 @@
 /* valaforeachstatement.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -277,8 +277,6 @@ public class Vala.ForeachStatement : Block {
 			Report.error (source_reference, "Foreach: Cannot convert from `%s' to `%s'".printf (element_type.to_string (), type_reference.to_string ()));
 			return false;
 		}
-
-		analyzer.current_source_file.add_type_dependency (type_reference, SourceFileDependencyType.SOURCE);
 
 		element_variable = new LocalVariable (type_reference, variable_name);
 

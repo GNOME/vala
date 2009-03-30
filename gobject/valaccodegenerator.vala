@@ -76,16 +76,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head.visit_enum (en);
 	}
 
-	public override void visit_enum_value (EnumValue ev) {
-		head.visit_enum_value (ev);
-	}
-
 	public override void visit_error_domain (ErrorDomain edomain) {
 		head.visit_error_domain (edomain);
-	}
-
-	public override void visit_error_code (ErrorCode ecode) {
-		head.visit_error_code (ecode);
 	}
 
 	public override void visit_delegate (Delegate d) {

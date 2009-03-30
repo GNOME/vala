@@ -72,16 +72,8 @@ public abstract class Vala.CCodeModule {
 		next.visit_enum (en);
 	}
 
-	public virtual void visit_enum_value (EnumValue ev) {
-		next.visit_enum_value (ev);
-	}
-
 	public virtual void visit_error_domain (ErrorDomain edomain) {
 		next.visit_error_domain (edomain);
-	}
-
-	public virtual void visit_error_code (ErrorCode ecode) {
-		next.visit_error_code (ecode);
 	}
 
 	public virtual void visit_delegate (Delegate d) {
@@ -326,10 +318,6 @@ public abstract class Vala.CCodeModule {
 
 	public virtual void visit_assignment (Assignment a) {
 		next.visit_assignment (a);
-	}
-
-	public virtual void generate_cparameters (Method m, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
-		next.generate_cparameters (m, cparam_map, func, vdeclarator, carg_map, vcall, direction);
 	}
 
 	public virtual string? get_custom_creturn_type (Method m) {

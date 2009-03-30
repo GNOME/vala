@@ -1,6 +1,7 @@
 /* valaccodestructmodule.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,31 +29,62 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 		base (codegen, next);
 	}
 
-	public override void visit_struct (Struct st) {
-		var old_type_symbol = current_type_symbol;
-		var old_instance_struct = instance_struct;
-		var old_instance_finalize_fragment = instance_finalize_fragment;
-		current_type_symbol = st;
-		instance_struct = new CCodeStruct ("_%s".printf (st.get_cname ()));
-		instance_finalize_fragment = new CCodeFragment ();
-
-		CCodeDeclarationSpace decl_space;
-		if (st.access != SymbolAccessibility.PRIVATE) {
-			decl_space = header_declarations;
-		} else {
-			decl_space = source_declarations;
+	public override void generate_struct_declaration (Struct st, CCodeDeclarationSpace decl_space) {
+		if (decl_space.add_symbol_declaration (st, st.get_cname ())) {
+			return;
 		}
 
-		if (st.access == SymbolAccessibility.PRIVATE
-		    || st.source_reference.file.cycle == null) {
-			// no file dependency cycle for private symbols
-			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
+		var instance_struct = new CCodeStruct ("_%s".printf (st.get_cname ()));
+
+		foreach (Field f in st.get_fields ()) {
+			string field_ctype = f.field_type.get_cname ();
+			if (f.is_volatile) {
+				field_ctype = "volatile " + field_ctype;
+			}
+
+			if (f.binding == MemberBinding.INSTANCE)  {
+				instance_struct.add_field (field_ctype, f.get_cname ());
+				if (f.field_type is ArrayType && !f.no_array_length) {
+					// create fields to store array dimensions
+					var array_type = (ArrayType) f.field_type;
+					var len_type = int_type.copy ();
+
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						instance_struct.add_field (len_type.get_cname (), head.get_array_length_cname (f.name, dim));
+					}
+
+					if (array_type.rank == 1 && f.is_internal_symbol ()) {
+						instance_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
+					}
+				} else if (f.field_type is DelegateType) {
+					var delegate_type = (DelegateType) f.field_type;
+					if (delegate_type.delegate_symbol.has_target) {
+						// create field to store delegate target
+						instance_struct.add_field ("gpointer", get_delegate_target_cname (f.name));
+					}
+				}
+			}
 		}
+
+		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
 
 		if (st.source_reference.comment != null) {
 			decl_space.add_type_definition (new CCodeComment (st.source_reference.comment));
 		}
 		decl_space.add_type_definition (instance_struct);
+	}
+
+	public override void visit_struct (Struct st) {
+		var old_type_symbol = current_type_symbol;
+		var old_instance_finalize_fragment = instance_finalize_fragment;
+		current_type_symbol = st;
+		instance_finalize_fragment = new CCodeFragment ();
+
+		generate_struct_declaration (st, source_declarations);
+
+		if (!st.is_internal_symbol ()) {
+			generate_struct_declaration (st, header_declarations);
+		}
 
 		st.accept_children (codegen);
 
@@ -65,7 +97,6 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 		add_struct_free_function (st);
 
 		current_type_symbol = old_type_symbol;
-		instance_struct = old_instance_struct;
 		instance_finalize_fragment = old_instance_finalize_fragment;
 	}
 
@@ -77,11 +108,7 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 
 		function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
 
-		if (st.access != SymbolAccessibility.PRIVATE) {
-			header_declarations.add_type_member_declaration (function.copy ());
-		} else {
-			source_declarations.add_type_member_declaration (function.copy ());
-		}
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		var cblock = new CCodeBlock ();
 
@@ -125,11 +152,7 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 
 		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
 
-		if (st.access != SymbolAccessibility.PRIVATE) {
-			header_declarations.add_type_member_declaration (function.copy ());
-		} else {
-			source_declarations.add_type_member_declaration (function.copy ());
-		}
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		var cblock = new CCodeBlock ();
 
@@ -157,11 +180,7 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 		function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
 		function.add_parameter (new CCodeFormalParameter ("dest", st.get_cname () + "*"));
 
-		if (st.access != SymbolAccessibility.PRIVATE) {
-			header_declarations.add_type_member_declaration (function.copy ());
-		} else {
-			source_declarations.add_type_member_declaration (function.copy ());
-		}
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		var cblock = new CCodeBlock ();
 		var cfrag = new CCodeFragment ();
@@ -208,11 +227,7 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 
 		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
 
-		if (st.access != SymbolAccessibility.PRIVATE) {
-			header_declarations.add_type_member_declaration (function.copy ());
-		} else {
-			source_declarations.add_type_member_declaration (function.copy ());
-		}
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		var cblock = new CCodeBlock ();
 

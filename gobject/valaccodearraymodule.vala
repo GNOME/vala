@@ -693,11 +693,19 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		assignment.ccodenode = ccall;
 	}
 
-	public override void generate_parameter (FormalParameter param, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+	public override void generate_parameter (FormalParameter param, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		if (!(param.parameter_type is ArrayType)) {
-			base.generate_parameter (param, cparam_map, carg_map);
+			base.generate_parameter (param, decl_space, cparam_map, carg_map);
 			return;
 		}
+
+		string ctypename = param.parameter_type.get_cname ();
+
+		if (param.direction != ParameterDirection.IN) {
+			ctypename += "*";
+		}
+
+		param.ccodenode = new CCodeFormalParameter (param.name, ctypename);
 
 		var array_type = (ArrayType) param.parameter_type;
 

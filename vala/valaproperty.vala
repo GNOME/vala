@@ -435,15 +435,6 @@ public class Vala.Property : Member, Lockable {
 			Report.error (source_reference, "property type `%s` is less accessible than property `%s`".printf (property_type.to_string (), get_full_name ()));
 		}
 
-		if (!is_internal_symbol ()) {
-			if (property_type is ValueType && !property_type.is_real_struct_type ()) {
-				analyzer.current_source_file.add_type_dependency (property_type, SourceFileDependencyType.HEADER_FULL);
-			} else {
-				analyzer.current_source_file.add_type_dependency (property_type, SourceFileDependencyType.HEADER_SHALLOW);
-			}
-		}
-		analyzer.current_source_file.add_type_dependency (property_type, SourceFileDependencyType.SOURCE);
-
 		if (overrides && base_property == null) {
 			Report.error (source_reference, "%s: no suitable property found to override".printf (get_full_name ()));
 		}

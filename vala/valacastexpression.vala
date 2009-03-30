@@ -1,6 +1,6 @@
 /* valacastexpression.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -113,8 +113,6 @@ public class Vala.CastExpression : Expression {
 		type_reference.check (analyzer);
 
 		// FIXME: check whether cast is allowed
-
-		analyzer.current_source_file.add_type_dependency (type_reference, SourceFileDependencyType.SOURCE);
 
 		value_type = type_reference;
 		value_type.value_owned = inner.value_type.value_owned;

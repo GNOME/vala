@@ -234,15 +234,6 @@ public class Vala.FormalParameter : Symbol {
 		}
 
 		if (!ellipsis) {
-			if (!is_internal_symbol ()) {
-				if (parameter_type is ValueType && !parameter_type.is_real_struct_type ()) {
-					analyzer.current_source_file.add_type_dependency (parameter_type, SourceFileDependencyType.HEADER_FULL);
-				} else {
-					analyzer.current_source_file.add_type_dependency (parameter_type, SourceFileDependencyType.HEADER_SHALLOW);
-				}
-			}
-			analyzer.current_source_file.add_type_dependency (parameter_type, SourceFileDependencyType.SOURCE);
-
 			// check whether parameter type is at least as accessible as the method
 			if (!analyzer.is_type_accessible (this, parameter_type)) {
 				error = true;

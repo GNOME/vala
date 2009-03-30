@@ -140,12 +140,6 @@ public class Vala.EnumValue : Symbol {
 
 		if (value != null) {
 			value.check (analyzer);
-
-			// ensure to include dependency in header file as well if necessary
-			if (!parent_symbol.is_internal_symbol ()
-			    &&value is MemberAccess && value.symbol_reference != null) {
-				analyzer.current_source_file.add_symbol_dependency (value.symbol_reference, SourceFileDependencyType.HEADER_SHALLOW);
-			}
 		}
 
 		return !error;

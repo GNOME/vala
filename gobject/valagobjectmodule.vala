@@ -32,11 +32,21 @@ internal class Vala.GObjectModule : GTypeModule {
 		base (codegen, next);
 	}
 
-	public override void generate_parameter (FormalParameter param, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+	public override void generate_parameter (FormalParameter param, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		if (!(param.parameter_type is ObjectType)) {
-			base.generate_parameter (param, cparam_map, carg_map);
+			base.generate_parameter (param, decl_space, cparam_map, carg_map);
 			return;
 		}
+
+		generate_type_declaration (param.parameter_type, decl_space);
+
+		string ctypename = param.parameter_type.get_cname ();
+
+		if (param.direction != ParameterDirection.IN) {
+			ctypename += "*";
+		}
+
+		param.ccodenode = new CCodeFormalParameter (param.name, ctypename);
 
 		cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
 		if (carg_map != null) {
@@ -44,57 +54,19 @@ internal class Vala.GObjectModule : GTypeModule {
 		}
 	}
 
-	public override void visit_class (Class cl) {
-		var old_symbol = current_symbol;
-		var old_type_symbol = current_type_symbol;
-		var old_class = current_class;
-		var old_instance_struct = instance_struct;
-		var old_param_spec_struct = param_spec_struct;
-		var old_type_struct = type_struct;
-		var old_instance_priv_struct = instance_priv_struct;
-		var old_type_priv_struct = type_priv_struct;
-		var old_prop_enum = prop_enum;
-		var old_class_init_fragment = class_init_fragment;
-		var old_base_init_fragment = base_init_fragment;
-		var old_class_finalize_fragment = class_finalize_fragment;
-		var old_base_finalize_fragment = base_finalize_fragment;
-		var old_instance_init_fragment = instance_init_fragment;
-		var old_instance_finalize_fragment = instance_finalize_fragment;
-		current_symbol = cl;
-		current_type_symbol = cl;
-		current_class = cl;
-		
-		bool is_gtypeinstance = !cl.is_compact;
-		bool is_gobject = cl.is_subtype_of (gobject_type);
-		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
-
-		if (cl.get_cname().len () < 3) {
-			cl.error = true;
-			Report.error (cl.source_reference, "Class name `%s' is too short".printf (cl.get_cname ()));
+	public override void generate_class_declaration (Class cl, CCodeDeclarationSpace decl_space) {
+		if (decl_space.add_symbol_declaration (cl, cl.get_cname ())) {
 			return;
 		}
 
-
-		instance_struct = new CCodeStruct ("_%s".printf (cl.get_cname ()));
-		type_struct = new CCodeStruct ("_%sClass".printf (cl.get_cname ()));
-		instance_priv_struct = new CCodeStruct ("_%sPrivate".printf (cl.get_cname ()));
-		type_priv_struct = new CCodeStruct ("_%sClassPrivate".printf (cl.get_cname ()));
-		prop_enum = new CCodeEnum ();
-		prop_enum.add_value (new CCodeEnumValue ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null))));
-		class_init_fragment = new CCodeFragment ();
-		base_init_fragment = new CCodeFragment ();
-		class_finalize_fragment = new CCodeFragment ();
-		base_finalize_fragment = new CCodeFragment ();
-		instance_init_fragment = new CCodeFragment ();
-		instance_finalize_fragment = new CCodeFragment ();
-
-
-		CCodeDeclarationSpace decl_space;
-		if (cl.access != SymbolAccessibility.PRIVATE) {
-			decl_space = header_declarations;
-		} else {
-			decl_space = source_declarations;
+		if (cl.base_class != null) {
+			// base class declaration
+			// necessary for ref and unref function declarations
+			generate_class_declaration (cl.base_class, decl_space);
 		}
+
+		bool is_gtypeinstance = !cl.is_compact;
+		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
 
 		if (is_gtypeinstance) {
 			decl_space.add_type_declaration (new CCodeNewline ());
@@ -118,12 +90,92 @@ internal class Vala.GObjectModule : GTypeModule {
 			decl_space.add_type_declaration (new CCodeNewline ());
 		}
 
+		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (cl.get_cname ()), new CCodeVariableDeclarator (cl.get_cname ())));
 
-		if (cl.access == SymbolAccessibility.PRIVATE
-		    || cl.source_reference.file.cycle == null) {
-			// no file dependency cycle for private symbols
-			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (instance_struct.name), new CCodeVariableDeclarator (cl.get_cname ())));
+		if (is_fundamental) {
+			var ref_fun = new CCodeFunction (cl.get_lower_case_cprefix () + "ref", "gpointer");
+			var unref_fun = new CCodeFunction (cl.get_lower_case_cprefix () + "unref", "void");
+			if (cl.access == SymbolAccessibility.PRIVATE) {
+				ref_fun.modifiers = CCodeModifiers.STATIC;
+				unref_fun.modifiers = CCodeModifiers.STATIC;
+			}
+
+			ref_fun.add_parameter (new CCodeFormalParameter ("instance", "gpointer"));
+			unref_fun.add_parameter (new CCodeFormalParameter ("instance", "gpointer"));
+
+			decl_space.add_type_member_declaration (ref_fun.copy ());
+			decl_space.add_type_member_declaration (unref_fun.copy ());
+
+			// GParamSpec and GValue functions
+			var function_name = cl.get_lower_case_cname ("param_spec_");
+
+			var function = new CCodeFunction (function_name, "GParamSpec*");
+			function.add_parameter (new CCodeFormalParameter ("name", "const gchar*"));
+			function.add_parameter (new CCodeFormalParameter ("nick", "const gchar*"));
+			function.add_parameter (new CCodeFormalParameter ("blurb", "const gchar*"));
+			function.add_parameter (new CCodeFormalParameter ("object_type", "GType"));
+			function.add_parameter (new CCodeFormalParameter ("flags", "GParamFlags"));
+
+			cl.set_param_spec_function (function_name);
+
+			if (cl.access == SymbolAccessibility.PRIVATE) {
+				function.modifiers = CCodeModifiers.STATIC;
+			}
+
+			decl_space.add_type_member_declaration (function);
+
+			function = new CCodeFunction (cl.get_set_value_function (), "void");
+			function.add_parameter (new CCodeFormalParameter ("value", "GValue*"));
+			function.add_parameter (new CCodeFormalParameter ("v_object", "gpointer"));
+
+			if (cl.access == SymbolAccessibility.PRIVATE) {
+				function.modifiers = CCodeModifiers.STATIC;
+			}
+
+			decl_space.add_type_member_declaration (function);
+
+			function = new CCodeFunction (cl.get_get_value_function (), "gpointer");
+			function.add_parameter (new CCodeFormalParameter ("value", "const GValue*"));
+
+			if (cl.access == SymbolAccessibility.PRIVATE) {
+				function.modifiers = CCodeModifiers.STATIC;
+			}
+
+			decl_space.add_type_member_declaration (function);
 		}
+
+		if (is_gtypeinstance) {
+			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%sClass".printf (cl.get_cname ()), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
+
+			var type_fun = new ClassRegisterFunction (cl, context);
+			type_fun.init_from_type (in_plugin);
+			decl_space.add_type_member_declaration (type_fun.get_declaration ());
+		}
+	}
+
+	public override void generate_class_struct_declaration (Class cl, CCodeDeclarationSpace decl_space) {
+		if (decl_space.add_symbol_declaration (cl, "struct _" + cl.get_cname ())) {
+			return;
+		}
+
+		if (cl.base_class != null) {
+			// base class declaration
+			generate_class_struct_declaration (cl.base_class, decl_space);
+		}
+		foreach (DataType base_type in cl.get_base_types ()) {
+			var iface = base_type.data_type as Interface;
+			if (iface != null) {
+				generate_interface_declaration (iface, decl_space);
+			}
+		}
+
+		generate_class_declaration (cl, decl_space);
+
+		bool is_gtypeinstance = !cl.is_compact;
+		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
+
+		var instance_struct = new CCodeStruct ("_%s".printf (cl.get_cname ()));
+		var type_struct = new CCodeStruct ("_%sClass".printf (cl.get_cname ()));
 
 		if (cl.base_class != null) {
 			instance_struct.add_field (cl.base_class.get_cname (), "parent_instance");
@@ -138,19 +190,7 @@ internal class Vala.GObjectModule : GTypeModule {
 		}
 
 		if (is_gtypeinstance) {
-			if (cl.access == SymbolAccessibility.PRIVATE
-			    || cl.source_reference.file.cycle == null) {
-				// no file dependency cycle for private symbols
-				decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator ("%sClass".printf (cl.get_cname ()))));
-			}
-			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (instance_priv_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
-			if (cl.has_class_private_fields) {
-				decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_priv_struct.name), new CCodeVariableDeclarator ("%sClassPrivate".printf (cl.get_cname ()))));
-				var cdecl = new CCodeDeclaration ("GQuark");
-				cdecl.add_declarator (new CCodeVariableDeclarator ("_vala_%s_class_private_quark".printf (cl.get_lower_case_cname ()), new CCodeConstant ("0")));
-				cdecl.modifiers = CCodeModifiers.STATIC;
-				decl_space.add_type_declaration (cdecl);
-			}
+			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %sPrivate".printf (instance_struct.name), new CCodeVariableDeclarator ("%sPrivate".printf (cl.get_cname ()))));
 
 			instance_struct.add_field ("%sPrivate *".printf (cl.get_cname ()), "priv");
 			if (is_fundamental) {
@@ -171,20 +211,246 @@ internal class Vala.GObjectModule : GTypeModule {
 
 		if (is_gtypeinstance) {
 			decl_space.add_type_definition (type_struct);
+		}
+
+		foreach (Method m in cl.get_methods ()) {
+			generate_virtual_method_declaration (m, decl_space, type_struct);
+		}
+
+		foreach (Property prop in cl.get_properties ()) {
+			if (!prop.is_abstract && !prop.is_virtual) {
+				continue;
+			}
+
+			var t = (ObjectTypeSymbol) prop.parent_symbol;
+
+			bool returns_real_struct = prop.property_type.is_real_struct_type ();
+
+			var this_type = new ObjectType (t);
+			var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
+			CCodeFormalParameter cvalueparam;
+			if (returns_real_struct) {
+				cvalueparam = new CCodeFormalParameter ("value", prop.property_type.get_cname () + "*");
+			} else {
+				cvalueparam = new CCodeFormalParameter ("value", prop.property_type.get_cname ());
+			}
+
+			if (prop.get_accessor != null) {
+				var vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (prop.name));
+				vdeclarator.add_parameter (cselfparam);
+				string creturn_type;
+				if (returns_real_struct) {
+					vdeclarator.add_parameter (cvalueparam);
+					creturn_type = "void";
+				} else {
+					creturn_type = prop.property_type.get_cname ();
+				}
+				var vdecl = new CCodeDeclaration (creturn_type);
+				vdecl.add_declarator (vdeclarator);
+				type_struct.add_declaration (vdecl);
+			}
+			if (prop.set_accessor != null) {
+				var vdeclarator = new CCodeFunctionDeclarator ("set_%s".printf (prop.name));
+				vdeclarator.add_parameter (cselfparam);
+				vdeclarator.add_parameter (cvalueparam);
+				var vdecl = new CCodeDeclaration ("void");
+				vdecl.add_declarator (vdeclarator);
+				type_struct.add_declaration (vdecl);
+			}
+		}
+
+		foreach (Field f in cl.get_fields ()) {
+			string field_ctype = f.field_type.get_cname ();
+			if (f.is_volatile) {
+				field_ctype = "volatile " + field_ctype;
+			}
+
+			if (f.binding == MemberBinding.INSTANCE && f.access != SymbolAccessibility.PRIVATE)  {
+				generate_type_declaration (f.field_type, decl_space);
+
+				instance_struct.add_field (field_ctype, f.get_cname ());
+				if (f.field_type is ArrayType && !f.no_array_length) {
+					// create fields to store array dimensions
+					var array_type = (ArrayType) f.field_type;
+					var len_type = int_type.copy ();
+
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						instance_struct.add_field (len_type.get_cname (), head.get_array_length_cname (f.name, dim));
+					}
+
+					if (array_type.rank == 1 && f.is_internal_symbol ()) {
+						instance_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
+					}
+				} else if (f.field_type is DelegateType) {
+					var delegate_type = (DelegateType) f.field_type;
+					if (delegate_type.delegate_symbol.has_target) {
+						// create field to store delegate target
+						instance_struct.add_field ("gpointer", get_delegate_target_cname (f.name));
+					}
+				}
+			} else if (f.binding == MemberBinding.CLASS && f.access != SymbolAccessibility.PRIVATE)  {
+				type_struct.add_field (field_ctype, f.get_cname ());
+			}
+		}
+	}
+
+	public virtual void generate_virtual_method_declaration (Method m, CCodeDeclarationSpace decl_space, CCodeStruct type_struct) {
+		if (!m.is_abstract && !m.is_virtual) {
+			return;
+		}
+
+		// add vfunc field to the type struct
+		var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
+		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+
+		generate_cparameters (m, decl_space, cparam_map, new CCodeFunction ("fake"), vdeclarator);
+
+		var vdecl = new CCodeDeclaration (m.return_type.get_cname ());
+		vdecl.add_declarator (vdeclarator);
+		type_struct.add_declaration (vdecl);
+	}
+
+	void generate_class_private_declaration (Class cl, CCodeDeclarationSpace decl_space) {
+		if (decl_space.add_symbol_declaration (cl, cl.get_cname () + "Private")) {
+			return;
+		}
+
+		bool is_gtypeinstance = !cl.is_compact;
+
+		var instance_priv_struct = new CCodeStruct ("_%sPrivate".printf (cl.get_cname ()));
+		var type_priv_struct = new CCodeStruct ("_%sClassPrivate".printf (cl.get_cname ()));
+
+		if (is_gtypeinstance) {
+			/* create type, dup_func, and destroy_func fields for generic types */
+			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
+				string func_name;
+
+				func_name = "%s_type".printf (type_param.name.down ());
+				instance_priv_struct.add_field ("GType", func_name);
+
+				func_name = "%s_dup_func".printf (type_param.name.down ());
+				instance_priv_struct.add_field ("GBoxedCopyFunc", func_name);
+
+				func_name = "%s_destroy_func".printf (type_param.name.down ());
+				instance_priv_struct.add_field ("GDestroyNotify", func_name);
+			}
+		}
+
+		foreach (Field f in cl.get_fields ()) {
+			string field_ctype = f.field_type.get_cname ();
+			if (f.is_volatile) {
+				field_ctype = "volatile " + field_ctype;
+			}
+
+			if (f.binding == MemberBinding.INSTANCE && f.access == SymbolAccessibility.PRIVATE)  {
+				generate_type_declaration (f.field_type, decl_space);
+
+				instance_priv_struct.add_field (field_ctype, f.get_cname ());
+				if (f.field_type is ArrayType && !f.no_array_length) {
+					// create fields to store array dimensions
+					var array_type = (ArrayType) f.field_type;
+					var len_type = int_type.copy ();
+
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						instance_priv_struct.add_field (len_type.get_cname (), head.get_array_length_cname (f.name, dim));
+					}
+
+					if (array_type.rank == 1 && f.is_internal_symbol ()) {
+						instance_priv_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
+					}
+				} else if (f.field_type is DelegateType) {
+					var delegate_type = (DelegateType) f.field_type;
+					if (delegate_type.delegate_symbol.has_target) {
+						// create field to store delegate target
+						instance_priv_struct.add_field ("gpointer", get_delegate_target_cname (f.name));
+					}
+				}
+
+				if (f.get_lock_used ()) {
+					// add field for mutex
+					instance_priv_struct.add_field (mutex_type.get_cname (), get_symbol_lock_name (f));
+				}
+			} else if (f.binding == MemberBinding.CLASS && f.access == SymbolAccessibility.PRIVATE)  {
+				type_priv_struct.add_field (field_ctype, f.get_cname ());
+			}
+		}
+
+		if (is_gtypeinstance) {
+			if (cl.has_class_private_fields) {
+				decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_priv_struct.name), new CCodeVariableDeclarator ("%sClassPrivate".printf (cl.get_cname ()))));
+				var cdecl = new CCodeDeclaration ("GQuark");
+				cdecl.add_declarator (new CCodeVariableDeclarator ("_vala_%s_class_private_quark".printf (cl.get_lower_case_cname ()), new CCodeConstant ("0")));
+				cdecl.modifiers = CCodeModifiers.STATIC;
+				decl_space.add_type_declaration (cdecl);
+			}
+
 			/* only add the *Private struct if it is not empty, i.e. we actually have private data */
 			if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
-				source_declarations.add_type_member_declaration (instance_priv_struct);
+				decl_space.add_type_definition (instance_priv_struct);
 				var macro = "(G_TYPE_INSTANCE_GET_PRIVATE ((o), %s, %sPrivate))".printf (cl.get_type_id (), cl.get_cname ());
-				source_declarations.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
+				decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
 			}
 
 			if (cl.has_class_private_fields) {
-				source_declarations.add_type_member_declaration (type_priv_struct);
-				
+				decl_space.add_type_member_declaration (type_priv_struct);
+
 				var macro = "((%sClassPrivate *) g_type_get_qdata (type, _vala_%s_class_private_quark))".printf (cl.get_cname(), cl.get_lower_case_cname ());
-				source_declarations.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_CLASS_PRIVATE(type)".printf (cl.get_upper_case_cname (null)), macro));
+				decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_CLASS_PRIVATE(type)".printf (cl.get_upper_case_cname (null)), macro));
 			}
-			source_declarations.add_type_member_declaration (prop_enum);
+			decl_space.add_type_member_declaration (prop_enum);
+		} else {
+			var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
+			if (cl.access == SymbolAccessibility.PRIVATE) {
+				function.modifiers = CCodeModifiers.STATIC;
+			}
+
+			function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
+
+			decl_space.add_type_member_declaration (function);
+		}
+	}
+
+	public override void visit_class (Class cl) {
+		var old_symbol = current_symbol;
+		var old_type_symbol = current_type_symbol;
+		var old_class = current_class;
+		var old_param_spec_struct = param_spec_struct;
+		var old_prop_enum = prop_enum;
+		var old_class_init_fragment = class_init_fragment;
+		var old_base_init_fragment = base_init_fragment;
+		var old_class_finalize_fragment = class_finalize_fragment;
+		var old_base_finalize_fragment = base_finalize_fragment;
+		var old_instance_init_fragment = instance_init_fragment;
+		var old_instance_finalize_fragment = instance_finalize_fragment;
+		current_symbol = cl;
+		current_type_symbol = cl;
+		current_class = cl;
+
+		bool is_gtypeinstance = !cl.is_compact;
+		bool is_gobject = cl.is_subtype_of (gobject_type);
+		bool is_fundamental = is_gtypeinstance && cl.base_class == null;
+
+		if (cl.get_cname().len () < 3) {
+			cl.error = true;
+			Report.error (cl.source_reference, "Class name `%s' is too short".printf (cl.get_cname ()));
+			return;
+		}
+
+		prop_enum = new CCodeEnum ();
+		prop_enum.add_value (new CCodeEnumValue ("%s_DUMMY_PROPERTY".printf (cl.get_upper_case_cname (null))));
+		class_init_fragment = new CCodeFragment ();
+		base_init_fragment = new CCodeFragment ();
+		class_finalize_fragment = new CCodeFragment ();
+		base_finalize_fragment = new CCodeFragment ();
+		instance_init_fragment = new CCodeFragment ();
+		instance_finalize_fragment = new CCodeFragment ();
+
+
+		generate_class_struct_declaration (cl, source_declarations);
+		generate_class_private_declaration (cl, source_declarations);
+
+		if (!cl.is_internal_symbol ()) {
+			generate_class_struct_declaration (cl, header_declarations);
 		}
 
 		cl.accept_children (codegen);
@@ -193,9 +459,9 @@ internal class Vala.GObjectModule : GTypeModule {
 			if (is_fundamental) {
 				param_spec_struct = new CCodeStruct ( "_%sParamSpec%s".printf(cl.parent_symbol.get_cprefix (), cl.name));
 				param_spec_struct.add_field ("GParamSpec", "parent_instance");
-				decl_space.add_type_definition (param_spec_struct);
+				source_declarations.add_type_definition (param_spec_struct);
 
-				decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (param_spec_struct.name), new CCodeVariableDeclarator ( "%sParamSpec%s".printf(cl.parent_symbol.get_cprefix (), cl.name))));
+				source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (param_spec_struct.name), new CCodeVariableDeclarator ( "%sParamSpec%s".printf(cl.parent_symbol.get_cprefix (), cl.name))));
 
 
 				gvaluecollector_h_needed = true;
@@ -249,11 +515,6 @@ internal class Vala.GObjectModule : GTypeModule {
 
 			var type_fun = new ClassRegisterFunction (cl, context);
 			type_fun.init_from_type (in_plugin);
-			if (cl.access != SymbolAccessibility.PRIVATE) {
-				header_declarations.add_type_member_declaration (type_fun.get_declaration ());
-			} else {
-				source_declarations.add_type_member_declaration (type_fun.get_declaration ());
-			}
 			source_type_member_definition.append (type_fun.get_definition ());
 			
 			if (in_plugin) {
@@ -273,14 +534,6 @@ internal class Vala.GObjectModule : GTypeModule {
 
 				ref_fun.add_parameter (new CCodeFormalParameter ("instance", "gpointer"));
 				unref_fun.add_parameter (new CCodeFormalParameter ("instance", "gpointer"));
-
-				if (cl.access != SymbolAccessibility.PRIVATE) {
-					header_declarations.add_type_member_declaration (ref_fun.copy ());
-					header_declarations.add_type_member_declaration (unref_fun.copy ());
-				} else {
-					source_declarations.add_type_member_declaration (ref_fun.copy ());
-					source_declarations.add_type_member_declaration (unref_fun.copy ());
-				}
 
 				var ref_block = new CCodeBlock ();
 				var unref_block = new CCodeBlock ();
@@ -334,12 +587,6 @@ internal class Vala.GObjectModule : GTypeModule {
 
 			function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
 
-			if (cl.access != SymbolAccessibility.PRIVATE) {
-				header_declarations.add_type_member_declaration (function.copy ());
-			} else {
-				source_declarations.add_type_member_declaration (function.copy ());
-			}
-
 			var cblock = new CCodeBlock ();
 
 			cblock.add_statement (instance_finalize_fragment);
@@ -361,11 +608,7 @@ internal class Vala.GObjectModule : GTypeModule {
 		current_symbol = old_symbol;
 		current_type_symbol = old_type_symbol;
 		current_class = old_class;
-		instance_struct = old_instance_struct;
 		param_spec_struct = old_param_spec_struct;
-		type_struct = old_type_struct;
-		instance_priv_struct = old_instance_priv_struct;
-		type_priv_struct = old_type_priv_struct;
 		prop_enum = old_prop_enum;
 		class_init_fragment = old_class_init_fragment;
 		base_init_fragment = old_base_init_fragment;
@@ -594,9 +837,6 @@ internal class Vala.GObjectModule : GTypeModule {
 
 		if (cl.access == SymbolAccessibility.PRIVATE) {
 			function.modifiers = CCodeModifiers.STATIC;
-			source_declarations.add_type_member_declaration (function.copy ());
-		} else {
-			header_declarations.add_type_member_declaration (function.copy ());
 		}
 
 		var init_block = new CCodeBlock ();
@@ -639,9 +879,6 @@ internal class Vala.GObjectModule : GTypeModule {
 
 		if (cl.access == SymbolAccessibility.PRIVATE) {
 			function.modifiers = CCodeModifiers.STATIC;
-			source_declarations.add_type_member_declaration (function.copy ());
-		} else {
-			header_declarations.add_type_member_declaration (function.copy ());
 		}
 
 		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
@@ -715,9 +952,6 @@ internal class Vala.GObjectModule : GTypeModule {
 
 		if (cl.access == SymbolAccessibility.PRIVATE) {
 			function.modifiers = CCodeModifiers.STATIC;
-			source_declarations.add_type_member_declaration (function.copy ());
-		} else {
-			header_declarations.add_type_member_declaration (function.copy ());
 		}
 
 		var vpointer = new CCodeMemberAccess(new CCodeMemberAccess.pointer (new CCodeIdentifier ("value"), "data[0]"),"v_pointer");
@@ -967,8 +1201,6 @@ internal class Vala.GObjectModule : GTypeModule {
 				init_block.add_statement (new CCodeExpressionStatement (cinst));
 				prop_enum.add_value (new CCodeEnumValue (enum_value));
 
-				instance_priv_struct.add_field ("GType", func_name);
-
 
 				func_name = "%s_dup_func".printf (type_param.name.down ());
 				func_name_constant = new CCodeConstant ("\"%s-dup-func\"".printf (type_param.name.down ()));
@@ -985,8 +1217,6 @@ internal class Vala.GObjectModule : GTypeModule {
 				init_block.add_statement (new CCodeExpressionStatement (cinst));
 				prop_enum.add_value (new CCodeEnumValue (enum_value));
 
-				instance_priv_struct.add_field ("GBoxedCopyFunc", func_name);
-
 
 				func_name = "%s_destroy_func".printf (type_param.name.down ());
 				func_name_constant = new CCodeConstant ("\"%s-destroy-func\"".printf (type_param.name.down ()));
@@ -1002,8 +1232,6 @@ internal class Vala.GObjectModule : GTypeModule {
 				cinst.add_argument (cspec);
 				init_block.add_statement (new CCodeExpressionStatement (cinst));
 				prop_enum.add_value (new CCodeEnumValue (enum_value));
-
-				instance_priv_struct.add_field ("GDestroyNotify", func_name);
 			}
 
 			/* create properties */
@@ -1034,20 +1262,6 @@ internal class Vala.GObjectModule : GTypeModule {
 				
 					init_block.add_statement (new CCodeExpressionStatement (cinst));
 				}
-			}
-		} else if (!cl.is_compact) {
-			/* create type, dup_func, and destroy_func fields for generic types */
-			foreach (TypeParameter type_param in cl.get_type_parameters ()) {
-				string func_name;
-
-				func_name = "%s_type".printf (type_param.name.down ());
-				instance_priv_struct.add_field ("GType", func_name);
-
-				func_name = "%s_dup_func".printf (type_param.name.down ());
-				instance_priv_struct.add_field ("GBoxedCopyFunc", func_name);
-
-				func_name = "%s_destroy_func".printf (type_param.name.down ());
-				instance_priv_struct.add_field ("GDestroyNotify", func_name);
 			}
 		}
 

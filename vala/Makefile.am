@@ -120,7 +120,6 @@ libvalacore_la_VALASOURCES = \
 	valasignaltype.vala \
 	valasizeofexpression.vala \
 	valasourcefile.vala \
-	valasourcefilecycle.vala \
 	valasourcelocation.vala \
 	valasourcereference.vala \
 	valastatement.vala \

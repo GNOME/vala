@@ -123,15 +123,15 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_field (Field f) {
-		if (f.is_library_internal_symbol () && !f.used) {
+		if (f.is_internal_symbol () && !f.used) {
 			Report.warning (f.source_reference, "field `%s' never used".printf (f.get_full_name ()));
 		}
 	}
 
 	public override void visit_method (Method m) {
-		if (m.is_library_internal_symbol () && !m.used && !m.entry_point
-			 && !m.overrides && (m.base_interface_method == null || m.base_interface_method == m)
-			 && !(m is CreationMethod)) {
+		if (m.is_internal_symbol () && !m.used && !m.entry_point
+		    && !m.overrides && (m.base_interface_method == null || m.base_interface_method == m)
+		    && !(m is CreationMethod)) {
 			Report.warning (m.source_reference, "method `%s' never used".printf (m.get_full_name ()));
 		}
 

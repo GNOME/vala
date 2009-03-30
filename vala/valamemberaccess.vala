@@ -565,8 +565,6 @@ public class Vala.MemberAccess : Expression {
 			}
 		}
 
-		analyzer.current_source_file.add_symbol_dependency (symbol_reference, SourceFileDependencyType.SOURCE);
-
 		return !error;
 	}
 

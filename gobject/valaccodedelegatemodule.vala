@@ -32,11 +32,15 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 		base (codegen, next);
 	}
 
-	public override void visit_delegate (Delegate d) {
-		d.accept_children (codegen);
+	public override void generate_delegate_declaration (Delegate d, CCodeDeclarationSpace decl_space) {
+		if (decl_space.add_symbol_declaration (d, d.get_cname ())) {
+			return;
+		}
 
 		var cfundecl = new CCodeFunctionDeclarator (d.get_cname ());
 		foreach (FormalParameter param in d.get_parameters ()) {
+			generate_parameter (param, decl_space, new HashMap<int,CCodeFormalParameter> (), null);
+
 			cfundecl.add_parameter ((CCodeFormalParameter) param.ccodenode);
 
 			// handle array parameters
@@ -74,17 +78,16 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		var ctypedef = new CCodeTypeDefinition (d.return_type.get_cname (), cfundecl);
 
-		if (!d.is_internal_symbol ()) {
-			if (d.source_reference != null && d.source_reference.comment != null) {
-				header_declarations.add_type_declaration (new CCodeComment (d.source_reference.comment));
-			}
-			header_declarations.add_type_declaration (ctypedef);
-		} else {
-			if (d.source_reference != null && d.source_reference.comment != null) {
-				source_declarations.add_type_declaration (new CCodeComment (d.source_reference.comment));
-			}
-			source_declarations.add_type_declaration (ctypedef);
+		if (d.source_reference != null && d.source_reference.comment != null) {
+			decl_space.add_type_declaration (new CCodeComment (d.source_reference.comment));
 		}
+		decl_space.add_type_declaration (ctypedef);
+	}
+
+	public override void visit_delegate (Delegate d) {
+		d.accept_children (codegen);
+
+		generate_delegate_declaration (d, source_declarations);
 	}
 
 	public override string get_delegate_target_cname (string delegate_cname) {
@@ -238,26 +241,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		var d_params = d.get_parameters ();
 		foreach (FormalParameter param in d_params) {
-			// ensure that C code node has been generated
-			param.accept (codegen);
-
-			cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
-
-			// handle array parameters
-			if (!param.no_array_length && param.parameter_type is ArrayType) {
-				var array_type = (ArrayType) param.parameter_type;
-				
-				var length_ctype = "int";
-				if (param.direction != ParameterDirection.IN) {
-					length_ctype = "int*";
-				}
-				
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var cparam = new CCodeFormalParameter (head.get_array_length_cname (param.name, dim), length_ctype);
-					cparam_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
-				}
-			}
-
+			generate_parameter (param, source_declarations, cparam_map, null);
 		}
 		if (!d.no_array_length && d.return_type is ArrayType) {
 			// return array length if appropriate
@@ -387,11 +371,19 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 		return wrapper_name;
 	}
 
-	public override void generate_parameter (FormalParameter param, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
+	public override void generate_parameter (FormalParameter param, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression>? carg_map) {
 		if (!(param.parameter_type is DelegateType || param.parameter_type is MethodType)) {
-			base.generate_parameter (param, cparam_map, carg_map);
+			base.generate_parameter (param, decl_space, cparam_map, carg_map);
 			return;
 		}
+
+		string ctypename = param.parameter_type.get_cname ();
+
+		if (param.direction != ParameterDirection.IN) {
+			ctypename += "*";
+		}
+
+		param.ccodenode = new CCodeFormalParameter (param.name, ctypename);
 
 		cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
 		if (carg_map != null) {
@@ -401,6 +393,9 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 		if (param.parameter_type is DelegateType) {
 			var deleg_type = (DelegateType) param.parameter_type;
 			var d = deleg_type.delegate_symbol;
+
+			generate_delegate_declaration (d, decl_space);
+
 			if (d.has_target) {
 				var cparam = new CCodeFormalParameter (get_delegate_target_cname (param.name), "void*");
 				cparam_map.set (get_param_pos (param.cdelegate_target_parameter_position), cparam);

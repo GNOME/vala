@@ -45,7 +45,19 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 		if (expr.symbol_reference is Method) {
 			var m = (Method) expr.symbol_reference;
-			
+
+			if (!(m is DynamicMethod || m is ArrayMoveMethod || m is ArrayResizeMethod)) {
+				generate_method_declaration (m, source_declarations);
+
+				if (!m.external && m.external_package) {
+					// internal VAPI methods
+					// only add them once per source file
+					if (add_generated_external_symbol (m)) {
+						visit_method (m);
+					}
+				}
+			}
+
 			if (expr.inner is BaseAccess) {
 				if (m.base_method != null) {
 					var base_class = (Class) m.base_method.parent_symbol;
@@ -103,6 +115,9 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				if (is_gtypeinstance && f.access == SymbolAccessibility.PRIVATE) {
 					inst = new CCodeMemberAccess.pointer (pub_inst, "priv");
 				} else {
+					if (cl != null) {
+						generate_class_struct_declaration (cl, source_declarations);
+					}
 					inst = pub_inst;
 				}
 				if (instance_target_type.data_type.is_reference_type () || (expr.inner != null && expr.inner.value_type is PointerType)) {
@@ -149,6 +164,8 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 		} else if (expr.symbol_reference is Constant) {
 			var c = (Constant) expr.symbol_reference;
 
+			generate_constant_declaration (c, source_declarations);
+
 			string fn = c.get_full_name ();
 			if (fn == "GLib.Log.FILE") {
 				string s = Path.get_basename (expr.source_reference.file.filename);
@@ -167,6 +184,18 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			}
 		} else if (expr.symbol_reference is Property) {
 			var prop = (Property) expr.symbol_reference;
+
+			if (!(prop is DynamicProperty)) {
+				generate_property_accessor_declaration (prop.get_accessor, source_declarations);
+
+				if (!prop.external && prop.external_package) {
+					// internal VAPI properties
+					// only add them once per source file
+					if (add_generated_external_symbol (prop)) {
+						visit_property (prop);
+					}
+				}
+			}
 
 			if (expr.inner is BaseAccess) {
 				if (prop.base_property != null) {

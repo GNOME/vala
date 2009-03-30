@@ -1,6 +1,7 @@
 /* valagtypemodule.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,31 +22,29 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-using GLib;
+using Gee;
 
 internal class Vala.GTypeModule : GErrorModule {
 	public GTypeModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 	}
 
-	public override void visit_interface (Interface iface) {
-		current_symbol = iface;
-		current_type_symbol = iface;
-
-		if (iface.get_cname().len () < 3) {
-			iface.error = true;
-			Report.error (iface.source_reference, "Interface name `%s' is too short".printf (iface.get_cname ()));
+	public override void generate_interface_declaration (Interface iface, CCodeDeclarationSpace decl_space) {
+		if (decl_space.add_symbol_declaration (iface, iface.get_cname ())) {
 			return;
 		}
 
-		CCodeDeclarationSpace decl_space;
-		if (iface.access != SymbolAccessibility.PRIVATE) {
-			decl_space = header_declarations;
-		} else {
-			decl_space = source_declarations;
+		foreach (DataType prerequisite in iface.get_prerequisites ()) {
+			var prereq_cl = prerequisite.data_type as Class;
+			var prereq_iface = prerequisite.data_type as Interface;
+			if (prereq_cl != null) {
+				generate_class_declaration (prereq_cl, decl_space);
+			} else if (prereq_iface != null) {
+				generate_interface_declaration (prereq_iface, decl_space);
+			}
 		}
 
-		type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
+		var type_struct = new CCodeStruct ("_%s".printf (iface.get_type_cname ()));
 		
 		decl_space.add_type_declaration (new CCodeNewline ());
 		var macro = "(%s_get_type ())".printf (iface.get_lower_case_cname (null));
@@ -61,12 +60,9 @@ internal class Vala.GTypeModule : GErrorModule {
 		decl_space.add_type_declaration (new CCodeMacroReplacement ("%s_GET_INTERFACE(obj)".printf (iface.get_upper_case_cname (null)), macro));
 		decl_space.add_type_declaration (new CCodeNewline ());
 
+		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
+		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
 
-		if (iface.source_reference.file.cycle == null) {
-			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (iface.get_cname ()), new CCodeVariableDeclarator (iface.get_cname ())));
-			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_struct.name), new CCodeVariableDeclarator (iface.get_type_cname ())));
-		}
-		
 		type_struct.add_field ("GTypeInterface", "parent_iface");
 
 		if (iface.source_reference.comment != null) {
@@ -74,17 +70,87 @@ internal class Vala.GTypeModule : GErrorModule {
 		}
 		decl_space.add_type_definition (type_struct);
 
+		foreach (Method m in iface.get_methods ()) {
+			if ((!m.is_abstract && !m.is_virtual) || m.coroutine) {
+				continue;
+			}
+
+			// add vfunc field to the type struct
+			var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
+			var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+
+			generate_cparameters (m, decl_space, cparam_map, new CCodeFunction ("fake"), vdeclarator);
+
+			var vdecl = new CCodeDeclaration (m.return_type.get_cname ());
+			vdecl.add_declarator (vdeclarator);
+			type_struct.add_declaration (vdecl);
+		}
+
+		foreach (Property prop in iface.get_properties ()) {
+			if (!prop.is_abstract && !prop.is_virtual) {
+				continue;
+			}
+
+			var t = (ObjectTypeSymbol) prop.parent_symbol;
+
+			bool returns_real_struct = prop.property_type.is_real_struct_type ();
+
+			var this_type = new ObjectType (t);
+			var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
+			CCodeFormalParameter cvalueparam;
+			if (returns_real_struct) {
+				cvalueparam = new CCodeFormalParameter ("value", prop.property_type.get_cname () + "*");
+			} else {
+				cvalueparam = new CCodeFormalParameter ("value", prop.property_type.get_cname ());
+			}
+
+			if (prop.get_accessor != null) {
+				var vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (prop.name));
+				vdeclarator.add_parameter (cselfparam);
+				string creturn_type;
+				if (returns_real_struct) {
+					vdeclarator.add_parameter (cvalueparam);
+					creturn_type = "void";
+				} else {
+					creturn_type = prop.property_type.get_cname ();
+				}
+				var vdecl = new CCodeDeclaration (creturn_type);
+				vdecl.add_declarator (vdeclarator);
+				type_struct.add_declaration (vdecl);
+			}
+			if (prop.set_accessor != null) {
+				var vdeclarator = new CCodeFunctionDeclarator ("set_%s".printf (prop.name));
+				vdeclarator.add_parameter (cselfparam);
+				vdeclarator.add_parameter (cvalueparam);
+				var vdecl = new CCodeDeclaration ("void");
+				vdecl.add_declarator (vdeclarator);
+				type_struct.add_declaration (vdecl);
+			}
+		}
+
+		var type_fun = new InterfaceRegisterFunction (iface, context);
+		type_fun.init_from_type ();
+		decl_space.add_type_member_declaration (type_fun.get_declaration ());
+	}
+
+	public override void visit_interface (Interface iface) {
+		current_symbol = iface;
+		current_type_symbol = iface;
+
+		if (iface.get_cname().len () < 3) {
+			iface.error = true;
+			Report.error (iface.source_reference, "Interface name `%s' is too short".printf (iface.get_cname ()));
+			return;
+		}
+
+		generate_interface_declaration (iface, source_declarations);
+
 		iface.accept_children (codegen);
 
 		add_interface_base_init_function (iface);
 
 		var type_fun = new InterfaceRegisterFunction (iface, context);
 		type_fun.init_from_type ();
-		if (iface.access != SymbolAccessibility.PRIVATE) {
-			header_declarations.add_type_member_declaration (type_fun.get_declaration ());
-		} else {
-			source_declarations.add_type_member_declaration (type_fun.get_declaration ());
-		}
 		source_type_member_definition.append (type_fun.get_definition ());
 
 		current_type_symbol = null;
@@ -143,24 +209,13 @@ internal class Vala.GTypeModule : GErrorModule {
 	public override void visit_struct (Struct st) {
 		base.visit_struct (st);
 
-		CCodeDeclarationSpace decl_space;
-		if (st.access != SymbolAccessibility.PRIVATE) {
-			decl_space = header_declarations;
-		} else {
-			decl_space = source_declarations;
-		}
-
-		decl_space.add_type_declaration (new CCodeNewline ());
+		source_declarations.add_type_declaration (new CCodeNewline ());
 		var macro = "(%s_get_type ())".printf (st.get_lower_case_cname (null));
-		decl_space.add_type_declaration (new CCodeMacroReplacement (st.get_type_id (), macro));
+		source_declarations.add_type_declaration (new CCodeMacroReplacement (st.get_type_id (), macro));
 
 		var type_fun = new StructRegisterFunction (st, context);
 		type_fun.init_from_type (false);
-		if (st.access != SymbolAccessibility.PRIVATE) {
-			header_declarations.add_type_member_declaration (type_fun.get_declaration ());
-		} else {
-			source_declarations.add_type_member_declaration (type_fun.get_declaration ());
-		}
+		source_declarations.add_type_member_declaration (type_fun.get_declaration ());
 		source_type_member_definition.append (type_fun.get_definition ());
 	}
 }

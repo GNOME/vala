@@ -216,14 +216,10 @@ public class Vala.ObjectCreationExpression : Expression {
 
 			foreach (DataType type_arg in type_args) {
 				type_reference.add_type_argument (type_arg);
-
-				analyzer.current_source_file.add_type_dependency (type_arg, SourceFileDependencyType.SOURCE);
 			}
 		} else {
 			type = type_reference.data_type;
 		}
-
-		analyzer.current_source_file.add_symbol_dependency (type, SourceFileDependencyType.SOURCE);
 
 		value_type = type_reference.copy ();
 		value_type.value_owned = true;

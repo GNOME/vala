@@ -198,8 +198,6 @@ public class Vala.LocalVariable : Symbol {
 			}
 		}
 
-		analyzer.current_source_file.add_type_dependency (variable_type, SourceFileDependencyType.SOURCE);
-
 		analyzer.current_symbol.scope.add (name, this);
 
 		// current_symbol is a Method if this is the `result'

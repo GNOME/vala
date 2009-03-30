@@ -159,7 +159,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("callback", "GAsyncReadyCallback"));
 		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("user_data", "gpointer"));
 
-		generate_cparameters (m, cparam_map, asyncfunc, null, null, null, 1);
+		generate_cparameters (m, source_declarations, cparam_map, asyncfunc, null, null, null, 1);
 
 		if (!m.is_internal_symbol () && m.base_method == null && m.base_interface_method == null) {
 			asyncfunc.modifiers |= CCodeModifiers.STATIC;
@@ -181,11 +181,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 		var block = function.block;
 		function.block = null;
  
-		if ((function.modifiers & CCodeModifiers.STATIC) != 0) {
-			source_declarations.add_type_member_declaration (function.copy ());
-		} else {
-			header_declarations.add_type_member_declaration (function.copy ());
-		}
+		source_declarations.add_type_member_declaration (function.copy ());
 
 		function.block = block;
 		source_type_member_definition.append (function);
@@ -214,11 +210,6 @@ internal class Vala.GAsyncModule : GSignalModule {
 				base.visit_method (m);
 				closure_struct = null;
 			}
-
-			if (m.is_abstract || m.is_virtual) {
-				append_async_virtual_function (m);
-				append_finish_virtual_function (m);
-			}
 		} else {
 			base.visit_method (m);
 		}
@@ -234,7 +225,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 
 		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("res", "GAsyncResult*"));
 
-		generate_cparameters (m, cparam_map, finishfunc, null, null, null, 2);
+		generate_cparameters (m, source_declarations, cparam_map, finishfunc, null, null, null, 2);
 
 		finishfunc.block = finishblock;
 
@@ -271,7 +262,19 @@ internal class Vala.GAsyncModule : GSignalModule {
 		return readyfunc;
 	}
 
-	void append_async_virtual_function (Method m) {
+	public override void generate_virtual_method_declaration (Method m, CCodeDeclarationSpace decl_space, CCodeStruct type_struct) {
+		if (!m.coroutine) {
+			base.generate_virtual_method_declaration (m, decl_space, type_struct);
+			return;
+		}
+
+		if (m.is_abstract || m.is_virtual) {
+			append_async_virtual_function (m, decl_space, type_struct);
+			append_finish_virtual_function (m, decl_space, type_struct);
+		}
+	}
+
+	void append_async_virtual_function (Method m, CCodeDeclarationSpace decl_space, CCodeStruct type_struct) {
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
@@ -288,10 +291,10 @@ internal class Vala.GAsyncModule : GSignalModule {
 		type_struct.add_declaration (vdecl);
 
 		var fake = new CCodeFunction ("fake", "void");
-		generate_cparameters (m, cparam_map, fake, vdeclarator, null, null, 1);
+		generate_cparameters (m, decl_space, cparam_map, fake, vdeclarator, null, null, 1);
 	}
 
-	void append_finish_virtual_function (Method m) {
+	void append_finish_virtual_function (Method m, CCodeDeclarationSpace decl_space, CCodeStruct type_struct) {
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
@@ -306,7 +309,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 		type_struct.add_declaration (vdecl);
 
 		var fake = new CCodeFunction ("fake", "void");
-		generate_cparameters (m, cparam_map, fake, vdeclarator, null, null, 2);
+		generate_cparameters (m, decl_space, cparam_map, fake, vdeclarator, null, null, 2);
 	}
 
 	public override void visit_yield_statement (YieldStatement stmt) {

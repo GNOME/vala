@@ -23,23 +23,44 @@
 using Gee;
 
 class Vala.CCodeDeclarationSpace {
+	Set<string> declarations = new HashSet<string> (str_hash, str_equal);
 	Set<string> includes = new HashSet<string> (str_hash, str_equal);
-	internal CCodeFragment begin = new CCodeFragment ();
 	internal CCodeFragment include_directives = new CCodeFragment ();
 	internal CCodeFragment type_declaration = new CCodeFragment ();
 	internal CCodeFragment type_definition = new CCodeFragment ();
 	internal CCodeFragment type_member_declaration = new CCodeFragment ();
 	internal CCodeFragment constant_declaration = new CCodeFragment ();
 
+	public bool add_declaration (string name) {
+		if (name in declarations) {
+			return true;
+		}
+		declarations.add (name);
+		return false;
+	}
+
+	public bool add_symbol_declaration (Symbol sym, string name) {
+		if (add_declaration (name)) {
+			return true;
+		}
+		if (sym.external_package) {
+			// add appropriate include file
+			foreach (string header_filename in sym.get_cheader_filenames ()) {
+				add_include (header_filename);
+			}
+			// declaration complete
+			return true;
+		} else {
+			// require declaration
+			return false;
+		}
+	}
+
 	public void add_include (string filename, bool local = false) {
 		if (!(filename in includes)) {
 			include_directives.append (new CCodeIncludeDirective (filename, local));
 			includes.add (filename);
 		}
-	}
-
-	public void add_begin (CCodeNode node) {
-		begin.append (node);
 	}
 
 	public void add_type_declaration (CCodeNode node) {

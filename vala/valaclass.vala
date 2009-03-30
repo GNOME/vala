@@ -916,8 +916,6 @@ public class Vala.Class : ObjectTypeSymbol {
 				Report.error (source_reference, "base type `%s` is less accessible than class `%s`".printf (base_type_reference.to_string (), get_full_name ()));
 				return false;
 			}
-
-			analyzer.current_source_file.add_type_dependency (base_type_reference, SourceFileDependencyType.HEADER_FULL);
 		}
 
 		foreach (DataType type in base_types) {

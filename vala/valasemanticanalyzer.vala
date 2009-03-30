@@ -287,9 +287,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				break;
 			}
 
-			/* header file necessary if we need to cast argument */
-			current_source_file.add_type_dependency (param.parameter_type, SourceFileDependencyType.SOURCE);
-
 			if (param.params_array) {
 				while (arg_it.next ()) {
 					var arg = arg_it.get ();
