@@ -1349,6 +1349,17 @@ namespace GLib {
 		public void lock_full ();
 	}
 
+	[CCode (destroy_function = "g_static_rw_lock_free")]
+	public struct StaticRWLock {
+		public StaticRWLock ();
+		public void reader_lock ();
+		public bool reader_trylock ();
+		public void reader_unlock ();
+		public void writer_lock ();
+		public bool writer_trylock ();
+		public void writer_unlock ();
+	}
+
 	[Compact]
 	[CCode (ref_function = "", unref_function = "")]
 	public class Private {
