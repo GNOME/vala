@@ -1350,6 +1350,21 @@ namespace GLib {
 	}
 
 	[Compact]
+	[CCode (ref_function = "", unref_function = "")]
+	public class Private {
+		public Private (DestroyNotify destroy_func);
+		public void* get ();
+		public void set (void* data);
+	}
+
+	[CCode (destroy_function = "g_static_private_free")]
+	public struct StaticPrivate {
+		public StaticPrivate ();
+		public void* get ();
+		public void set (void* data, DestroyNotify destroy_func);
+	}
+
+	[Compact]
 	[CCode (free_function = "g_cond_free")]
 	public class Cond {
 		public Cond ();
