@@ -168,7 +168,7 @@ public class Vala.CodeContext {
 
 	private Gee.List<string> packages = new ArrayList<string> (str_equal);
 
-	static Gee.List<CodeContext> context_stack;
+	static StaticPrivate context_stack_key = StaticPrivate ();
 
 	/**
 	 * The root namespace of the symbol tree.
@@ -191,24 +191,31 @@ public class Vala.CodeContext {
 	 * Return the topmost context from the context stack.
 	 */
 	public static CodeContext get () {
-		return context_stack[context_stack.size - 1];
+		Gee.List<CodeContext>* context_stack = context_stack_key.get ();
+
+		return context_stack->get (context_stack->size - 1);
 	}
 
 	/**
 	 * Push the specified context to the context stack.
 	 */
 	public static void push (CodeContext context) {
+		Gee.List<CodeContext>* context_stack = context_stack_key.get ();
 		if (context_stack == null) {
 			context_stack = new ArrayList<CodeContext> ();
+			context_stack_key.set (context_stack, null);
 		}
-		context_stack.add (context);
+
+		context_stack->add (context);
 	}
 
 	/**
 	 * Remove the topmost context from the context stack.
 	 */
 	public static void pop () {
-		context_stack.remove_at (context_stack.size - 1);
+		Gee.List<CodeContext>* context_stack = context_stack_key.get ();
+
+		context_stack->remove_at (context_stack->size - 1);
 	}
 
 	/**
