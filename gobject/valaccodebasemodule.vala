@@ -1073,13 +1073,32 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		} else if (cexpr is CCodeBinaryExpression) {
 			var cbinary = (CCodeBinaryExpression) cexpr;
 			return is_pure_ccode_expression (cbinary.left) && is_constant_ccode_expression (cbinary.right);
+		} else if (cexpr is CCodeUnaryExpression) {
+			var cunary = (CCodeUnaryExpression) cexpr;
+			switch (cunary.operator) {
+			case CCodeUnaryOperator.PREFIX_INCREMENT:
+			case CCodeUnaryOperator.PREFIX_DECREMENT:
+			case CCodeUnaryOperator.POSTFIX_INCREMENT:
+			case CCodeUnaryOperator.POSTFIX_DECREMENT:
+				return false;
+			default:
+				return is_pure_ccode_expression (cunary.inner);
+			}
 		} else if (cexpr is CCodeMemberAccess) {
 			var cma = (CCodeMemberAccess) cexpr;
 			return is_pure_ccode_expression (cma.inner);
+		} else if (cexpr is CCodeElementAccess) {
+			var cea = (CCodeElementAccess) cexpr;
+			return is_pure_ccode_expression (cea.container) && is_pure_ccode_expression (cea.index);
+		} else if (cexpr is CCodeCastExpression) {
+			var ccast = (CCodeCastExpression) cexpr;
+			return is_pure_ccode_expression (ccast.inner);
+		} else if (cexpr is CCodeParenthesizedExpression) {
+			var cparenthesized = (CCodeParenthesizedExpression) cexpr;
+			return is_pure_ccode_expression (cparenthesized.inner);
 		}
 
-		var cparenthesized = (cexpr as CCodeParenthesizedExpression);
-		return (null != cparenthesized && is_pure_ccode_expression (cparenthesized.inner));
+		return false;
 	}
 
 	public override void visit_formal_parameter (FormalParameter p) {
@@ -2013,7 +2032,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 				var st = local.variable_type.data_type as Struct;
 
-				if (local.variable_type.is_reference_type_or_type_parameter ()) {
+				if (local.name.has_prefix ("*")) {
+					// do not dereference unintialized variable
+					// initialization is not needed for these special
+					// pointer temp variables
+					// used to avoid side-effects in assignments
+				} else if (local.variable_type.is_reference_type_or_type_parameter ()) {
 					vardecl.initializer = new CCodeConstant ("NULL");
 				} else if (st != null && !st.is_simple_type ()) {
 					// 0-initialize struct with struct initializer { 0 }

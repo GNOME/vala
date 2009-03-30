@@ -94,6 +94,8 @@ internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 
 	CCodeExpression emit_simple_assignment (Assignment assignment) {
 		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
+		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
+		CCodeCommaExpression outer_ccomma = null;
 
 		bool unref_old = requires_destroy (assignment.left.value_type);
 		bool array = false;
@@ -105,16 +107,28 @@ internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			var delegate_type = (DelegateType) assignment.left.value_type;
 			instance_delegate = delegate_type.delegate_symbol.has_target;
 		}
-		
+
 		if (unref_old || array || instance_delegate) {
 			var ccomma = new CCodeCommaExpression ();
-			
+
+			if (!is_pure_ccode_expression (lhs)) {
+				/* Assign lhs to temp var to avoid repeating side effect */
+				outer_ccomma = new CCodeCommaExpression ();
+
+				var lhs_value_type = assignment.left.value_type.copy ();
+				string lhs_temp_name = "_tmp%d".printf (next_temp_var_id++);
+				var lhs_temp = new LocalVariable (lhs_value_type, "*" + lhs_temp_name);
+				temp_vars.insert (0, lhs_temp);
+				outer_ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (lhs_temp_name), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, lhs)));
+				lhs = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (lhs_temp_name)));
+			}
+
 			var temp_decl = get_temp_variable (assignment.left.value_type);
 			temp_vars.insert (0, temp_decl);
 			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), rhs));
 			if (unref_old) {
 				/* unref old value */
-				ccomma.append_expression (get_unref_expression ((CCodeExpression) get_ccodenode (assignment.left), assignment.left.value_type, assignment.left));
+				ccomma.append_expression (get_unref_expression (lhs, assignment.left.value_type, assignment.left));
 			}
 			
 			if (array) {
@@ -166,25 +180,12 @@ internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		} else if (assignment.operator == AssignmentOperator.SHIFT_RIGHT) {
 			cop = CCodeAssignmentOperator.SHIFT_RIGHT;
 		}
-	
-		CCodeExpression codenode = new CCodeAssignment ((CCodeExpression) get_ccodenode (assignment.left), rhs, cop);
 
-		if (unref_old && get_ccodenode (assignment.left) is CCodeElementAccess) {
-			// ensure that index expression in element access doesn't get evaluated more than once
-			// except when it's a simple expression
-			var cea = (CCodeElementAccess) get_ccodenode (assignment.left);
-			if (!(cea.index is CCodeConstant || cea.index is CCodeIdentifier)) {
-				var index_temp_decl = get_temp_variable (int_type);
-				temp_vars.insert (0, index_temp_decl);
-				
-				var ccomma = new CCodeCommaExpression ();
-				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (index_temp_decl.name), cea.index));
-				ccomma.append_expression (codenode);
+		CCodeExpression codenode = new CCodeAssignment (lhs, rhs, cop);
 
-				cea.index = get_variable_cexpression (index_temp_decl.name);
-				
-				codenode = ccomma;
-			}
+		if (outer_ccomma != null) {
+			outer_ccomma.append_expression (codenode);
+			codenode = outer_ccomma;
 		}
 
 		return codenode;
