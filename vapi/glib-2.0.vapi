@@ -2642,9 +2642,9 @@ namespace GLib {
 		public int get_match_count ();
 		public bool is_partial_match ();
 		public string expand_references (string string_to_expand) throws RegexError;
-		public string fetch (int match_num);
+		public string? fetch (int match_num);
 		public bool fetch_pos (int match_num, out int start_pos, out int end_pos);
-		public string fetch_named (string name);
+		public string? fetch_named (string name);
 		public bool fetch_named_pos (string name, out int start_pos, out int end_pos);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] fetch_all ();
