@@ -73,6 +73,10 @@ public class Vala.ErrorCode : TypeSymbol {
 		return cname;
 	}
 
+	public override string? get_lower_case_cname (string? infix) {
+		return get_cname ().down ();
+	}
+
 	public override bool check (SemanticAnalyzer analyzer) {
 		if (checked) {
 			return !error;

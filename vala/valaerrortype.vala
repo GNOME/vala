@@ -101,8 +101,10 @@ public class Vala.ErrorType : ReferenceType {
 			} else {
 				return "g_%s_error".printf (infix);
 			}
-		} else {
+		} else if (error_code == null) {
 			return error_domain.get_lower_case_cname (infix);
+		} else {
+			return error_code.get_lower_case_cname (infix);
 		}
 	}
 
