@@ -45,7 +45,7 @@ public class Vala.GIRWriter : CodeVisitor {
 	 * @param context  a code context
 	 * @param filename a relative or absolute filename
 	 */
-	public void write_file (CodeContext context, string directory, string gir_namespace, string gir_version) {
+	public void write_file (CodeContext context, string directory, string gir_namespace, string gir_version, string package) {
 		this.context = context;
 		this.directory = directory;
 		this.gir_namespace = gir_namespace;
@@ -67,12 +67,19 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf (">\n");
 		indent++;
 
+		write_package (package);
+
 		context.accept (this);
 
 		indent--;
 		stream.printf ("</repository>\n");
 
 		stream = null;
+	}
+
+	private void write_package (string package) {
+		write_indent ();
+		stream.printf ("<package name=\"%s\"/>\n", package);
 	}
 
 	private void write_c_includes (Namespace ns) {

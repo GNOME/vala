@@ -378,7 +378,7 @@ class Vala.Compiler {
 							gir_directory = context.directory;
 						}
 
-						gir_writer.write_file (context, gir_directory, gir_namespace, gir_version);
+						gir_writer.write_file (context, gir_directory, gir_namespace, gir_version, library);
 					}
 				}
 
