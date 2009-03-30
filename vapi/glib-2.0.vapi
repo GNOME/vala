@@ -2019,6 +2019,8 @@ namespace GLib {
 	public static delegate void FreeFunc (void* data);
 	public static delegate void VoidFunc ();
 
+	public string format_size_for_display (int64 size);
+
 	/* Lexical Scanner */
 
 	[Compact]
