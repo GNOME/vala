@@ -136,6 +136,7 @@ dist_vapi_DATA = \
 	tracker-indexer-module-1.0.vapi \
 	unique-1.0.deps \
 	unique-1.0.vapi \
+	v4l2.vapi \
 	vala-1.0.vapi \
 	vte.deps \
 	vte.vapi \
