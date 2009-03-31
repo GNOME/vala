@@ -1077,6 +1077,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		} else if (type is StructValueType) {
 			var struct_type = (StructValueType) type;
 			generate_struct_declaration ((Struct) struct_type.type_symbol, decl_space);
+		} else if (type is ArrayType) {
+			var array_type = (ArrayType) type;
+			generate_type_declaration (array_type.element_type, decl_space);
 		}
 
 		foreach (DataType type_arg in type.get_type_arguments ()) {
