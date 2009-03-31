@@ -627,7 +627,6 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			// pass non-simple structs always by reference
 			if (param.parameter_type.data_type is Struct) {
 				var st = (Struct) param.parameter_type.data_type;
-				generate_struct_declaration (st, decl_space);
 				if (!st.is_simple_type () && param.direction == ParameterDirection.IN) {
 					if (st.use_const) {
 						ctypename = "const " + ctypename;
