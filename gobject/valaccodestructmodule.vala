@@ -43,6 +43,8 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 			}
 
 			if (f.binding == MemberBinding.INSTANCE)  {
+				generate_type_declaration (f.field_type, decl_space);
+
 				instance_struct.add_field (field_ctype, f.get_cname ());
 				if (f.field_type is ArrayType && !f.no_array_length) {
 					// create fields to store array dimensions
