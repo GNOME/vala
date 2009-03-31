@@ -730,7 +730,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 			}
 
-			generate_parameter (param, source_declarations, cparam_map, carg_map);
+			generate_parameter (param, decl_space, cparam_map, carg_map);
 		}
 
 		if ((direction & 2) != 0) {
