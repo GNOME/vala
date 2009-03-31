@@ -3543,11 +3543,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				base_property = prop.base_interface_property;
 			}
 
-			generate_property_accessor_declaration (base_property.set_accessor, source_declarations);
-
-			set_func = base_property.set_accessor.get_cname ();
 			if (prop is DynamicProperty) {
 				set_func = head.get_dynamic_property_setter_cname ((DynamicProperty) prop);
+			} else {
+				generate_property_accessor_declaration (base_property.set_accessor, source_declarations);
+				set_func = base_property.set_accessor.get_cname ();
 			}
 		}
 		
