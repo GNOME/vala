@@ -709,6 +709,8 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 		var array_type = (ArrayType) param.parameter_type;
 
+		generate_type_declaration (array_type.element_type, decl_space);
+
 		cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
 		if (carg_map != null) {
 			carg_map.set (get_param_pos (param.cparameter_position), new CCodeIdentifier (param.name));
