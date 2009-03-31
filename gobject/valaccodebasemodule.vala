@@ -1642,6 +1642,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			string type_id = type.get_type_id ();
 			if (type_id == null) {
 				type_id = "G_TYPE_INVALID";
+			} else {
+				generate_type_declaration (type, source_declarations);
 			}
 			return new CCodeIdentifier (type_id);
 		}
