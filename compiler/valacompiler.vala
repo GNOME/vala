@@ -171,7 +171,9 @@ class Vala.Compiler {
 		context.compile_only = compile_only;
 		context.header_filename = header_filename;
 		context.output = output;
-		if (basedir != null) {
+		if (basedir == null) {
+			context.basedir = realpath (".");
+		} else {
 			context.basedir = realpath (basedir);
 		}
 		if (directory != null) {
