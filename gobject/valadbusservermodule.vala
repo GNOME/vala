@@ -246,6 +246,9 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		function.add_parameter (new CCodeFormalParameter ("_sender", "GObject*"));
 
 		foreach (var param in sig.get_parameters ()) {
+			// ensure ccodenode of parameter is set
+			generate_parameter (param, source_declarations, new HashMap<int,CCodeFormalParameter> (), null);
+
 			function.add_parameter ((CCodeFormalParameter) get_ccodenode (param));
 			if (param.parameter_type is ArrayType) {
 				var array_type = (ArrayType) param.parameter_type;
