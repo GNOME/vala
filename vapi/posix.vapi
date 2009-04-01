@@ -619,6 +619,9 @@ namespace Posix {
 	public int socketpair (int domain, int type, int protocol, int[] sv);
 
 	[CCode (cheader_filename = "sys/stat.h")]
+	public int mkfifo (string filename, mode_t mode);
+
+	[CCode (cheader_filename = "sys/stat.h")]
 	public const mode_t S_IFMT;
 	[CCode (cheader_filename = "sys/stat.h")]
 	public const mode_t S_IFBLK;
@@ -807,6 +810,8 @@ namespace Posix {
 	public int pipe ([CCode (array_length = false, null_terminated = false)] int[] pipefd);
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t read (int fd, void* buf, size_t count);
+	[CCode (cheader_filename = "unistd.h")]
+	public int unlink (string filename);
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t write (int fd, void* buf, size_t count);
 	[CCode (cheader_filename = "unistd.h")]
