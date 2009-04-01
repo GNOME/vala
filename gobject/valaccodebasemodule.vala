@@ -423,6 +423,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		wrappers = new HashSet<string> (str_hash, str_equal);
 		generated_external_symbols = new HashSet<Symbol> ();
 
+		header_declarations.add_include ("glib.h");
 		source_declarations.add_include ("glib.h");
 		source_declarations.add_include ("glib-object.h");
 
