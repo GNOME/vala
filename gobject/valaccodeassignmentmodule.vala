@@ -117,7 +117,12 @@ internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			array = (array_field == null || !array_field.no_array_length);
 		} else if (assignment.left.value_type is DelegateType) {
 			var delegate_type = (DelegateType) assignment.left.value_type;
-			instance_delegate = delegate_type.delegate_symbol.has_target;
+			if (delegate_type.delegate_symbol.has_target) {
+				var delegate_field = assignment.left.symbol_reference as Field;
+				if (delegate_field == null || !delegate_field.no_delegate_target) {
+					instance_delegate = true;
+				}
+			}
 		}
 
 		if (unref_old || array || instance_delegate) {
