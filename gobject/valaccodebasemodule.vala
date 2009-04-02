@@ -40,6 +40,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public PropertyAccessor current_property_accessor;
 
 	public CCodeDeclarationSpace header_declarations;
+	public CCodeDeclarationSpace internal_header_declarations;
 	public CCodeDeclarationSpace source_declarations;
 
 	public CCodeFragment source_signal_marshaller_declaration;
@@ -266,6 +267,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		header_declarations = new CCodeDeclarationSpace ();
+		internal_header_declarations = new CCodeDeclarationSpace ();
 
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
@@ -343,6 +345,37 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				once.write (writer);
 				writer.close ();
 			}
+		}
+
+		// generate C header file for internal API
+		if (context.internal_header_filename != null) {
+			var writer = new CCodeWriter (context.internal_header_filename);
+			if (!writer.open ()) {
+				Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
+				return;
+			}
+			writer.write_newline ();
+
+			var once = new CCodeOnceSection (get_define_for_filename (writer.filename));
+			once.append (new CCodeNewline ());
+			once.append (internal_header_declarations.include_directives);
+			once.append (new CCodeNewline ());
+			once.append (new CCodeIdentifier ("G_BEGIN_DECLS"));
+			once.append (new CCodeNewline ());
+			once.append (new CCodeNewline ());
+			once.append (internal_header_declarations.type_declaration);
+			once.append (new CCodeNewline ());
+			once.append (internal_header_declarations.type_definition);
+			once.append (new CCodeNewline ());
+			once.append (internal_header_declarations.type_member_declaration);
+			once.append (new CCodeNewline ());
+			once.append (internal_header_declarations.constant_declaration);
+			once.append (new CCodeNewline ());
+			once.append (new CCodeIdentifier ("G_END_DECLS"));
+			once.append (new CCodeNewline ());
+			once.append (new CCodeNewline ());
+			once.write (writer);
+			writer.close ();
 		}
 	}
 
@@ -424,6 +457,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		generated_external_symbols = new HashSet<Symbol> ();
 
 		header_declarations.add_include ("glib.h");
+		internal_header_declarations.add_include ("glib.h");
 		source_declarations.add_include ("glib.h");
 		source_declarations.add_include ("glib-object.h");
 
@@ -653,6 +687,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (!en.is_internal_symbol ()) {
 			generate_enum_declaration (en, header_declarations);
 		}
+		generate_enum_declaration (en, internal_header_declarations);
 
 		if (!en.has_type_id) {
 			return;
@@ -895,6 +930,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (!f.is_internal_symbol ()) {
 				generate_field_declaration (f, header_declarations);
 			}
+			generate_field_declaration (f, internal_header_declarations);
 
 			lhs = new CCodeIdentifier (f.get_cname ());
 
@@ -1174,6 +1210,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				|| acc.access == SymbolAccessibility.PROTECTED)) {
 				generate_property_accessor_declaration (acc, header_declarations);
 			}
+			generate_property_accessor_declaration (acc, internal_header_declarations);
 		}
 
 		var this_type = new ObjectType (t);

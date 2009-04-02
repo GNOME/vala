@@ -78,7 +78,12 @@ public class Vala.CodeContext {
 	/**
 	 * Output C header file.
 	 */
-	public string header_filename { get; set; }
+	public string? header_filename { get; set; }
+
+	/**
+	 * Output internal C header file.
+	 */
+	public string? internal_header_filename { get; set; }
 
 	/**
 	 * Compile but do not link.

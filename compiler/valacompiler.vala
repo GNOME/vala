@@ -41,6 +41,7 @@ class Vala.Compiler {
 
 	static bool ccode_only;
 	static string header_filename;
+	static string internal_header_filename;
 	static bool compile_only;
 	static string output;
 	static bool debug;
@@ -70,6 +71,7 @@ class Vala.Compiler {
 		{ "version", 0, 0, OptionArg.NONE, ref version, "Display version number", null },
 		{ "ccode", 'C', 0, OptionArg.NONE, ref ccode_only, "Output C code", null },
 		{ "header", 'H', 0, OptionArg.FILENAME, ref header_filename, "Output C header file", "FILE" },
+		{ "internal-header", 'h', 0, OptionArg.FILENAME, ref internal_header_filename, "Output internal C header file", "FILE" },
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
 		{ "output", 'o', 0, OptionArg.FILENAME, ref output, "Place output in file FILE", "FILE" },
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
@@ -170,6 +172,7 @@ class Vala.Compiler {
 		context.ccode_only = ccode_only;
 		context.compile_only = compile_only;
 		context.header_filename = header_filename;
+		context.internal_header_filename = internal_header_filename;
 		context.output = output;
 		if (basedir == null) {
 			context.basedir = realpath (".");

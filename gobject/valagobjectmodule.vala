@@ -452,6 +452,7 @@ internal class Vala.GObjectModule : GTypeModule {
 		if (!cl.is_internal_symbol ()) {
 			generate_class_struct_declaration (cl, header_declarations);
 		}
+		generate_class_struct_declaration (cl, internal_header_declarations);
 
 		cl.accept_children (codegen);
 
