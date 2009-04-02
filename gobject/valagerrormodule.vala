@@ -66,6 +66,11 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 	public override void visit_error_domain (ErrorDomain edomain) {
 		generate_error_domain_declaration (edomain, source_declarations);
 
+		if (!edomain.is_internal_symbol ()) {
+			generate_error_domain_declaration (edomain, header_declarations);
+		}
+		generate_error_domain_declaration (edomain, internal_header_declarations);
+
 		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
 
 		var cquark_fun = new CCodeFunction (quark_fun_name, gquark_type.data_type.get_cname ());
@@ -299,6 +304,11 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		}
 
 		current_method_inner_error = true;
+
+		var error_type = (ErrorType) clause.error_type;
+		if (error_type.error_domain != null) {
+			generate_error_domain_declaration (error_type.error_domain, source_declarations);
+		}
 
 		clause.accept_children (codegen);
 
