@@ -93,7 +93,7 @@ namespace Gdk {
 		public weak Gdk.DisplayPointerHooks pointer_hooks;
 		public weak GLib.List queued_events;
 		public weak GLib.List queued_tail;
-		public void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, void* data);
+		public void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func);
 		public void beep ();
 		public void close ();
 		public void flush ();
@@ -1524,7 +1524,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public const Gdk.Atom SELECTION_SECONDARY;
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func, void* data);
+	public static void add_client_message_filter (Gdk.Atom message_type, Gdk.FilterFunc func);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void add_option_entries_libgtk_only (GLib.OptionGroup group);
 	[CCode (cheader_filename = "gdk/gdk.h")]
