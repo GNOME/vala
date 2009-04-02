@@ -70,6 +70,12 @@ public class Vala.Field : Member, Lockable {
 	public bool no_array_length { get; set; }
 
 	/**
+	 * Specifies whether a delegate target field should implicitly be created
+	 * if the field type is a delegate.
+	 */
+	public bool no_delegate_target { get; set; }
+
+	/**
 	 * Specifies whether the array is null terminated.
 	 */
 	public bool array_null_terminated { get; set; }
@@ -223,6 +229,9 @@ public class Vala.Field : Member, Lockable {
 		}
 		if (a.has_argument ("array_length_cexpr")) {
 			set_array_length_cexpr (a.get_string ("array_length_cexpr"));
+		}
+		if (a.has_argument ("delegate_target")) {
+			no_delegate_target = !a.get_bool ("delegate_target");
 		}
 	}
 	
