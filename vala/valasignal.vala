@@ -105,8 +105,7 @@ public class Vala.Signal : Member, Lockable {
 		sender_param_type.value_owned = false;
 		sender_param_type.nullable = false;
 
-		var sender_param = new FormalParameter ("_sender", sender_param_type);
-		generated_delegate.add_parameter (sender_param);
+		generated_delegate.sender_type = sender_param_type;
 
 		foreach (FormalParameter param in parameters) {
 			var actual_param = param.copy ();

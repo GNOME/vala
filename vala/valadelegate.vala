@@ -45,6 +45,8 @@ public class Vala.Delegate : TypeSymbol {
 	 */
 	public bool has_target { get; set; }
 
+	public DataType? sender_type { get; set; }
+
 	/**
 	 * Specifies the position of the instance parameter in the C function.
 	 */
@@ -148,6 +150,18 @@ public class Vala.Delegate : TypeSymbol {
 		
 		var method_params = m.get_parameters ();
 		Iterator<FormalParameter> method_params_it = method_params.iterator ();
+
+		if (sender_type != null && method_params.size == parameters.size + 1) {
+			// method has sender parameter
+			method_params_it.next ();
+
+			// method is allowed to accept arguments of looser types (weaker precondition)
+			var method_param = method_params_it.get ();
+			if (!sender_type.stricter (method_param.parameter_type)) {
+				return false;
+			}
+		}
+
 		bool first = true;
 		foreach (FormalParameter param in parameters) {
 			/* use first callback parameter as instance parameter if

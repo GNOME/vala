@@ -239,6 +239,11 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 			cparam_map.set (get_param_pos (d.cinstance_parameter_position), cparam);
 		}
 
+		if (d.sender_type != null) {
+			var param = new FormalParameter ("_sender", d.sender_type);
+			generate_parameter (param, source_declarations, cparam_map, null);
+		}
+
 		var d_params = d.get_parameters ();
 		foreach (FormalParameter param in d_params) {
 			generate_parameter (param, source_declarations, cparam_map, null);
@@ -293,7 +298,17 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 			carg_map.set (get_param_pos (m.cinstance_parameter_position), arg);
 		}
 
+		bool first = true;
+
 		foreach (FormalParameter param in m.get_parameters ()) {
+			if (first && d.sender_type != null && m.get_parameters ().size == d.get_parameters ().size + 1) {
+				// sender parameter
+				carg_map.set (get_param_pos (param.cparameter_position), new CCodeIdentifier ("_sender"));
+
+				first = false;
+				continue;
+			}
+
 			CCodeExpression arg;
 			arg = new CCodeIdentifier ((d_params.get (i).ccodenode as CCodeFormalParameter).name);
 			carg_map.set (get_param_pos (param.cparameter_position), arg);
