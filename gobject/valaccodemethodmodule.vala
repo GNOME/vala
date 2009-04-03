@@ -105,6 +105,10 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		if (m.get_error_types ().size > 0) {
+			foreach (DataType error_type in m.get_error_types ()) {
+				generate_type_declaration (error_type, decl_space);
+			}
+
 			var cparam = new CCodeFormalParameter ("error", "GError**");
 			cparam_map.set (get_param_pos (-1), cparam);
 			if (carg_map != null) {

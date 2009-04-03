@@ -1117,6 +1117,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		} else if (type is ArrayType) {
 			var array_type = (ArrayType) type;
 			generate_type_declaration (array_type.element_type, decl_space);
+		} else if (type is ErrorType) {
+			var error_type = (ErrorType) type;
+			if (error_type.error_domain != null) {
+				generate_error_domain_declaration (error_type.error_domain, decl_space);
+			}
 		}
 
 		foreach (DataType type_arg in type.get_type_arguments ()) {
