@@ -123,6 +123,7 @@ gnome_keyring_find_network_password_sync.server nullable="1"
 gnome_keyring_find_network_password_sync.object nullable="1"
 gnome_keyring_find_network_password_sync.protocol nullable="1"
 gnome_keyring_find_network_password_sync.authtype nullable="1"
+gnome_keyring_find_network_password_sync.results is_out="1"
 
 #item api
 GnomeKeyringAttribute is_value_type="1"

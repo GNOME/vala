@@ -196,7 +196,7 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* find_network_password (string? user, string? domain, string? server, string? object, string? protocol, string? authtype, uint32 port, owned GnomeKeyring.OperationGetListCallback callback);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public static GnomeKeyring.Result find_network_password_sync (string? user, string? domain, string? server, string? object, string? protocol, string? authtype, uint32 port, GLib.List results);
+	public static GnomeKeyring.Result find_network_password_sync (string? user, string? domain, string? server, string? object, string? protocol, string? authtype, uint32 port, out unowned GLib.List results);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void* find_password (GnomeKeyring.PasswordSchema schema, owned GnomeKeyring.OperationGetStringCallback callback, ...);
 	[CCode (cheader_filename = "gnome-keyring.h")]
