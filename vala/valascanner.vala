@@ -786,7 +786,7 @@ public class Vala.Scanner {
 
 	bool pp_whitespace () {
 		bool found = false;
-		while (current < end && current[0] == ' ') {
+		while (current < end && current[0].isspace () && current[0] != '\n') {
 			found = true;
 			current++;
 			column++;
@@ -795,10 +795,11 @@ public class Vala.Scanner {
 	}
 
 	void pp_directive () {
-		do {
-			current++;
-			column++;
-		} while (current < end && current[0] == ' ');
+		// hash sign
+		current++;
+		column++;
+
+		pp_whitespace ();
 
 		char* begin = current;
 		int len = 0;
@@ -826,13 +827,16 @@ public class Vala.Scanner {
 			bool bol = false;
 			while (current < end) {
 				if (bol && current[0] == '#') {
+					// go back to begin of line
+					current -= column;
+					column = 0;
 					return;
 				}
 				if (current[0] == '\n') {
 					line++;
 					column = 0;
 					bol = true;
-				} else if (current[0] != ' ') {
+				} else if (!current[0].isspace ()) {
 					bol = false;
 				}
 				current++;
