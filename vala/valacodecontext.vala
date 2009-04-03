@@ -106,13 +106,6 @@ public class Vala.CodeContext {
 	public string directory { get; set; }
 
 	/**
-	 * Generate a C header file per Vala source file.
-	 */
-	public bool legacy_headers {
-		get { return header_filename == null; }
-	}
-
-	/**
 	 * Produce debug information.
 	 */
 	public bool debug { get; set; }

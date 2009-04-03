@@ -94,11 +94,6 @@ public class Vala.CCodeCompiler {
 			cmdline += " -o " + Shell.quote (output);
 		}
 
-		/* make sure include files can be found if -d is used */
-		if (context.legacy_headers && context.directory != null && context.directory != "") {
-			cmdline += " -I" + Shell.quote (context.directory);
-		}
-
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
 		foreach (SourceFile file in source_files) {
@@ -132,9 +127,6 @@ public class Vala.CCodeCompiler {
 			if (!file.external_package) {
 				if (!context.save_csources) {
 					FileUtils.unlink (file.get_csource_filename ());
-				}
-				if (context.legacy_headers && !context.save_cheaders) {
-					FileUtils.unlink (file.get_cheader_filename ());
 				}
 			}
 		}

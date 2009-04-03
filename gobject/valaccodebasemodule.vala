@@ -135,8 +135,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 	public Map<string,string> variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 
-	string? legacy_header_define;
-
 	public CCodeBaseModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
 
@@ -306,45 +304,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			once.append (new CCodeNewline ());
 			once.write (writer);
 			writer.close ();
-		} else if (context.legacy_headers) {
-			foreach (SourceFile file in source_files) {
-				if (file.external_package) {
-					continue;
-				}
-
-				if (legacy_header_define == null) {
-					// share the same define for all legacy headers
-					legacy_header_define = get_define_for_filename (file.get_cinclude_filename ());
-				}
-
-				var writer = new CCodeWriter (file.get_cheader_filename ());
-				if (!writer.open ()) {
-					Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
-					return;
-				}
-				writer.write_newline ();
-
-				var once = new CCodeOnceSection (legacy_header_define);
-				once.append (new CCodeNewline ());
-				once.append (header_declarations.include_directives);
-				once.append (new CCodeNewline ());
-				once.append (new CCodeIdentifier ("G_BEGIN_DECLS"));
-				once.append (new CCodeNewline ());
-				once.append (new CCodeNewline ());
-				once.append (header_declarations.type_declaration);
-				once.append (new CCodeNewline ());
-				once.append (header_declarations.type_definition);
-				once.append (new CCodeNewline ());
-				once.append (header_declarations.type_member_declaration);
-				once.append (new CCodeNewline ());
-				once.append (header_declarations.constant_declaration);
-				once.append (new CCodeNewline ());
-				once.append (new CCodeIdentifier ("G_END_DECLS"));
-				once.append (new CCodeNewline ());
-				once.append (new CCodeNewline ());
-				once.write (writer);
-				writer.close ();
-			}
 		}
 
 		// generate C header file for internal API
