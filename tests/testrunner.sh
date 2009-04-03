@@ -31,7 +31,7 @@ export G_DEBUG=fatal_warnings
 VALAC=$topbuilddir/compiler/valac
 VALAFLAGS="--vapidir $vapidir"
 CC="gcc -std=c99"
-CFLAGS="-O0 -g3 -I$topsrcdir -I$topbuilddir"
+CFLAGS="-O0 -g3"
 LDLIBS="-lm"
 
 CODE=0

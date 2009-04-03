@@ -1,7 +1,6 @@
 NULL =
 
 AM_CPPFLAGS = \
-	-I$(top_srcdir) \
 	$(GLIB_CFLAGS) \
 	$(NULL)
 
@@ -31,17 +30,16 @@ libgee_la_VALASOURCES = \
 libgee_la_SOURCES = \
 	gee.vala.stamp \
 	$(libgee_la_VALASOURCES:.vala=.c) \
-	$(libgee_la_VALASOURCES:.vala=.h) \
 	$(NULL)
 
-geeincludedir = $(includedir)/vala-1.0/gee
+geeincludedir = $(includedir)/vala-1.0
 
 geeinclude_HEADERS = \
-	$(libgee_la_VALASOURCES:.vala=.h) \
+	gee.h \
 	$(NULL)
 
 gee.vapi gee.vala.stamp: $(libgee_la_VALASOURCES)
-	$(VALAC) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --basedir $(top_srcdir) --library gee $^
+	$(VALAC) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 -H gee.h --library gee $^
 	touch $@
 
 libgee_la_LIBADD = \

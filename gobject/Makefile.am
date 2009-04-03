@@ -1,7 +1,9 @@
 NULL =
 
 AM_CPPFLAGS = \
-	-I$(top_srcdir) \
+	-I$(top_srcdir)/gee \
+	-I$(top_srcdir)/ccode \
+	-I$(top_srcdir)/vala \
 	$(GLIB_CFLAGS) \
 	$(NULL)
 
@@ -43,17 +45,16 @@ libvala_la_VALASOURCES = \
 libvala_la_SOURCES = \
 	gobject.vala.stamp \
 	$(libvala_la_VALASOURCES:.vala=.c) \
-	$(libvala_la_VALASOURCES:.vala=.h) \
 	$(NULL)
 
-gobjectincludedir = $(includedir)/vala-1.0/gobject
+gobjectincludedir = $(includedir)/vala-1.0
 
 gobjectinclude_HEADERS = \
-	$(libvala_la_VALASOURCES:.vala=.h) \
+	valagobject.h \
 	$(NULL)
 
 gobject.vapi gobject.vala.stamp: $(libvala_la_VALASOURCES)
-	$(VALAC) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --basedir $(top_srcdir) --library gobject $^
+	$(VALAC) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala -H valagobject.h --library gobject $^
 	touch $@
 
 libvala_la_LDFLAGS = -no-undefined

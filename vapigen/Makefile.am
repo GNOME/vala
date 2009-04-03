@@ -8,7 +8,9 @@ SUBDIRS = \
 
 AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
-	-I$(top_srcdir) \
+	-I$(top_srcdir)/gee \
+	-I$(top_srcdir)/ccode \
+	-I$(top_srcdir)/vala \
 	-I$(top_srcdir)/gobject-introspection \
 	$(NULL)
 
@@ -29,7 +31,6 @@ vapigen_VALASOURCES = \
 vapigen_SOURCES = \
 	vapigen.vala.stamp \
 	$(vapigen_VALASOURCES:.vala=.c) \
-	$(vapigen_VALASOURCES:.vala=.h) \
 	$(NULL)
 
 vapicheck_VALASOURCES = \
@@ -39,15 +40,14 @@ vapicheck_VALASOURCES = \
 vapicheck_SOURCES = \
 	vapicheck.vala.stamp \
 	$(vapicheck_VALASOURCES:.vala=.c) \
-	$(vapicheck_VALASOURCES:.vala=.h) \
 	$(NULL)
 
 vapigen.vala.stamp: $(vapigen_VALASOURCES)
-	$(VALAC) -C --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config --basedir $(top_srcdir) $^
+	$(VALAC) -C --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
 	touch $@
 
 vapicheck.vala.stamp: $(vapicheck_VALASOURCES)
-	$(VALAC) -C --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config --basedir $(top_srcdir) $^
+	$(VALAC) -C --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
 	touch $@
 
 vapigen_LDADD = \

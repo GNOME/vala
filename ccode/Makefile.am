@@ -1,7 +1,7 @@
 NULL =
 
 AM_CPPFLAGS = \
-	-I$(top_srcdir) \
+	-I$(top_srcdir)/gee \
 	$(GLIB_CFLAGS) \
 	$(NULL)
 
@@ -66,17 +66,16 @@ libvalaccode_la_VALASOURCES = \
 libvalaccode_la_SOURCES = \
 	ccode.vala.stamp \
 	$(libvalaccode_la_VALASOURCES:.vala=.c) \
-	$(libvalaccode_la_VALASOURCES:.vala=.h) \
 	$(NULL)
 
-ccodeincludedir = $(includedir)/vala-1.0/ccode
+ccodeincludedir = $(includedir)/vala-1.0
 
 ccodeinclude_HEADERS = \
-	$(libvalaccode_la_VALASOURCES:.vala=.h) \
+	valaccode.h \
 	$(NULL)
 
 ccode.vapi ccode.vala.stamp: $(libvalaccode_la_VALASOURCES)
-	$(VALAC) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --basedir $(top_srcdir) --library ccode $^
+	$(VALAC) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee -H valaccode.h --library ccode $^
 	touch $@
 
 libvalaccode_la_LIBADD = \

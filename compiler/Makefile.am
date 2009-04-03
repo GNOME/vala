@@ -1,7 +1,10 @@
 NULL =
 
 AM_CPPFLAGS = \
-	-I$(top_srcdir) \
+	-I$(top_srcdir)/gee \
+	-I$(top_srcdir)/ccode \
+	-I$(top_srcdir)/vala \
+	-I$(top_srcdir)/gobject \
 	$(GLIB_CFLAGS) \
 	-include config.h \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
@@ -20,11 +23,10 @@ valac_VALASOURCES = \
 valac_SOURCES = \
 	valac.vala.stamp \
 	$(valac_VALASOURCES:.vala=.c) \
-	$(valac_VALASOURCES:.vala=.h) \
 	$(NULL)
 
 valac.vala.stamp: $(valac_VALASOURCES)
-	$(VALAC) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject --pkg gobject --pkg config --basedir $(top_srcdir) $^
+	$(VALAC) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject --pkg gobject --pkg config $^
 	touch $@
 
 valac_LDADD = \
