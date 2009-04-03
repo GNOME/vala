@@ -171,6 +171,8 @@ public class Vala.CodeContext {
 
 	private Gee.List<string> packages = new ArrayList<string> (str_equal);
 
+	private Set<string> defines = new HashSet<string> (str_hash, str_equal);
+
 	static StaticPrivate context_stack_key = StaticPrivate ();
 
 	/**
@@ -296,6 +298,14 @@ public class Vala.CodeContext {
 		foreach (SourceFile file in source_files) {
 			file.accept (visitor);
 		}
+	}
+
+	public void add_define (string define) {
+		defines.add (define);
+	}
+
+	public bool is_defined (string define) {
+		return (define in defines);
 	}
 
 	public string? get_package_path (string pkg, string[] vapi_directories) {

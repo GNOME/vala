@@ -58,6 +58,9 @@ class Vala.Compiler {
 	static string[] cc_options;
 	static string dump_tree;
 	static bool save_temps;
+	[CCode (array_length = false, array_null_terminated = true)]
+	[NoArrayLength]
+	static string[] defines;
 	static bool quiet_mode;
 
 	private CodeContext context;
@@ -76,6 +79,7 @@ class Vala.Compiler {
 		{ "output", 'o', 0, OptionArg.FILENAME, ref output, "Place output in file FILE", "FILE" },
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
 		{ "thread", 0, 0, OptionArg.NONE, ref thread, "Enable multithreading support", null },
+		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
 		{ "enable-checking", 0, 0, OptionArg.NONE, ref enable_checking, "Enable additional run-time checks", null },
 		{ "enable-deprecated", 0, 0, OptionArg.NONE, ref deprecated, "Enable deprecated features", null },
@@ -187,6 +191,12 @@ class Vala.Compiler {
 		context.debug = debug;
 		context.thread = thread;
 		context.save_temps = save_temps;
+
+		if (defines != null) {
+			foreach (string define in defines) {
+				context.add_define (define);
+			}
+		}
 
 		int glib_major = 2;
 		int glib_minor = 12;
