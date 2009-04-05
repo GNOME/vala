@@ -190,6 +190,8 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		bool old_method_inner_error = current_method_inner_error;
 		bool old_in_creation_method = in_creation_method;
 		int old_next_temp_var_id = next_temp_var_id;
+		var old_temp_vars = temp_vars;
+		var old_temp_ref_vars = temp_ref_vars;
 		var old_variable_name_map = variable_name_map;
 		var old_try = current_try;
 		if (m.parent_symbol is TypeSymbol) {
@@ -200,6 +202,8 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		current_return_type = m.return_type;
 		current_method_inner_error = false;
 		next_temp_var_id = 0;
+		temp_vars = new ArrayList<LocalVariable> ();
+		temp_ref_vars = new ArrayList<LocalVariable> ();
 		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 		current_try = null;
 
@@ -296,6 +300,8 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		current_return_type = old_return_type;
 		current_method_inner_error = old_method_inner_error;
 		next_temp_var_id = old_next_temp_var_id;
+		temp_vars = old_temp_vars;
+		temp_ref_vars = old_temp_ref_vars;
 		variable_name_map = old_variable_name_map;
 		current_try = old_try;
 
