@@ -467,7 +467,7 @@
 				</parameters>
 			</method>
 			<method name="remove" symbol="gst_rtcp_packet_remove">
-				<return-type type="void"/>
+				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="packet" type="GstRTCPPacket*"/>
 				</parameters>
