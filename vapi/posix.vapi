@@ -398,6 +398,11 @@ namespace Posix {
 	[CCode (cheader_filename = "signal.h")]
 	public sighandler_t signal (int signum, sighandler_t? handler);
 
+	[CCode (cheader_filename = "stdlib.h")]
+	public void abort ();
+	[CCode (cheader_filename = "stdlib.h")]
+	public void exit (int status);
+
 	[CCode (cheader_filename = "string.h")]
 	public int memcmp (void* s1, void* s2, size_t n);
 	[CCode (cheader_filename = "string.h")]
