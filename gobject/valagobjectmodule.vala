@@ -204,15 +204,6 @@ internal class Vala.GObjectModule : GTypeModule {
 			}
 		}
 
-		if (cl.source_reference.comment != null) {
-			decl_space.add_type_definition (new CCodeComment (cl.source_reference.comment));
-		}
-		decl_space.add_type_definition (instance_struct);
-
-		if (is_gtypeinstance) {
-			decl_space.add_type_definition (type_struct);
-		}
-
 		foreach (Method m in cl.get_methods ()) {
 			generate_virtual_method_declaration (m, decl_space, type_struct);
 		}
@@ -291,6 +282,15 @@ internal class Vala.GObjectModule : GTypeModule {
 			} else if (f.binding == MemberBinding.CLASS && f.access != SymbolAccessibility.PRIVATE)  {
 				type_struct.add_field (field_ctype, f.get_cname ());
 			}
+		}
+
+		if (cl.source_reference.comment != null) {
+			decl_space.add_type_definition (new CCodeComment (cl.source_reference.comment));
+		}
+		decl_space.add_type_definition (instance_struct);
+
+		if (is_gtypeinstance) {
+			decl_space.add_type_definition (type_struct);
 		}
 	}
 
