@@ -828,8 +828,8 @@ public class Vala.Scanner {
 			while (current < end) {
 				if (bol && current[0] == '#') {
 					// go back to begin of line
-					current -= column;
-					column = 0;
+					current -= (column - 1);
+					column = 1;
 					return;
 				}
 				if (current[0] == '\n') {
