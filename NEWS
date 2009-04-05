@@ -1,3 +1,10 @@
+Vala 0.7.0
+==========
+
+ * Do not generate header files unless requested by the -H commandline
+   option. This requires changes in the build system of Vala projects.
+ * Support conditional compilation.
+
 Vala 0.6.0
 ==========
 
