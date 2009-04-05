@@ -61,7 +61,7 @@ namespace GnomeKeyring {
 		public void set_type (GnomeKeyring.ItemType type);
 	}
 	[Compact]
-	[CCode (cheader_filename = "gnome-keyring.h")]
+	[CCode (free_function = "gnome_keyring_network_password_free", cheader_filename = "gnome-keyring.h")]
 	public class NetworkPasswordData {
 		public weak string authtype;
 		public weak string domain;
