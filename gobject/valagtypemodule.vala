@@ -85,6 +85,7 @@ internal class Vala.GTypeModule : GErrorModule {
 			if (!prop.is_abstract && !prop.is_virtual) {
 				continue;
 			}
+			generate_type_declaration (prop.property_type, decl_space);
 
 			var t = (ObjectTypeSymbol) prop.parent_symbol;
 
