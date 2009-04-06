@@ -15,7 +15,7 @@ GtkSourceContextReplace hidden="1"
 GtkSourceEngine hidden="1"
 GtkSourceLanguageManager cheader_filename="gtksourceview/gtksourcelanguagemanager.h"
 GtkSourceSearchFlags cheader_filename="gtksourceview/gtksourceiter.h"
-GtkSourceStyleSchemeManager cheader_filename="gtksourceview/gtksourcestyleschemamanager.h"
+GtkSourceStyleSchemeManager cheader_filename="gtksourceview/gtksourcestyleschememanager.h"
 GtkTextRegion hidden="1"
 GtkTextRegionIterator hidden="1"
 
