@@ -176,7 +176,7 @@ namespace Gtk {
 		public string id { get; construct; }
 		public string name { get; }
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksourcestyleschemamanager.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourcestyleschememanager.h")]
 	public class SourceStyleSchemeManager : GLib.Object {
 		public void append_search_path (string path);
 		public void force_rescan ();
