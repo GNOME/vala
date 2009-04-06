@@ -179,7 +179,11 @@ internal class Vala.DBusClientModule : DBusModule {
 			cb_fun.block.add_statement (new CCodeExpressionStatement (cend_call));
 			creply_call.add_argument (new CCodeIdentifier ("error"));
 			cb_fun.block.add_statement (new CCodeExpressionStatement (creply_call));
-			source_type_member_definition.append (cb_fun);
+
+			if (!source_declarations.add_declaration (cb_fun.name)) {
+				// avoid duplicate function definition
+				source_type_member_definition.append (cb_fun);
+			}
 
 			ccall.add_argument (new CCodeIdentifier (cb_fun.name));
 			ccall.add_argument (new CCodeConstant ("param%d_target".printf (callback_index)));
