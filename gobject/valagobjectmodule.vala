@@ -212,6 +212,7 @@ internal class Vala.GObjectModule : GTypeModule {
 			if (!prop.is_abstract && !prop.is_virtual) {
 				continue;
 			}
+			generate_type_declaration (prop.property_type, decl_space);
 
 			var t = (ObjectTypeSymbol) prop.parent_symbol;
 
