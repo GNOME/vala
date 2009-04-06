@@ -108,7 +108,7 @@ namespace Gdk {
 		public void get_maximal_cursor_size (out uint width, out uint height);
 		public virtual int get_n_screens ();
 		public unowned string get_name ();
-		public void get_pointer (out unowned Gdk.Screen screen, int x, int y, Gdk.ModifierType mask);
+		public void get_pointer (out unowned Gdk.Screen screen, out int x, out int y, out Gdk.ModifierType mask);
 		public virtual unowned Gdk.Screen get_screen (int screen_num);
 		public unowned Gdk.Window get_window_at_pointer (int win_x, int win_y);
 		public void keyboard_ungrab (uint32 time_);
