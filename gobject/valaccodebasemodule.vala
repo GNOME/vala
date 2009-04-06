@@ -1151,7 +1151,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		var old_return_type = current_return_type;
 		if (acc.readable && !returns_real_struct) {
-			current_return_type = prop.property_type;
+			current_return_type = acc.value_type;
 		} else {
 			current_return_type = new VoidType ();
 		}
