@@ -1,6 +1,6 @@
 /* valasignaltype.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -47,5 +47,13 @@ public class Vala.SignalType : DataType {
 
 	public override DataType copy () {
 		return new SignalType (signal_symbol);
+	}
+
+	public override bool compatible (DataType target_type) {
+		return false;
+	}
+
+	public override string to_qualified_string (Scope? scope) {
+		return signal_symbol.get_full_name ();
 	}
 }
