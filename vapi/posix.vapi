@@ -1033,5 +1033,279 @@ namespace Posix {
 	public const int SEEK_CUR;
 	[CCode (cheader_filename = "unistd.h")]
 	public const int SEEK_END;
+
+	[SimpleType]
+	[CCode (cname = "cc_t", cheader_filename = "termios.h")]
+	[IntegerType (rank = 3, min = 0, max = 255)]
+	public struct cc_t {
+	}
+
+	[SimpleType]
+	[CCode (cname = "speed_t", cheader_filename = "termios.h")]
+	[IntegerType (rank = 7)]
+	public struct speed_t {
+	}
+
+	[SimpleType]
+	[CCode (cname = "tcflag_t", cheader_filename = "termios.h")]
+	[IntegerType (rank = 7)]
+	public struct tcflag_t {
+	}
+
+	[CCode (cname="struct termios", cheader_filename = "termios.h")]
+	public struct termios
+	{
+		public tcflag_t c_iflag;
+		public tcflag_t c_oflag;
+		public tcflag_t c_cflag;
+		public tcflag_t c_lflag;
+		public cc_t c_line;
+		public unowned cc_t[] c_cc;
+		public speed_t c_ispeed;
+		public speed_t c_ospeed;
+	}
+
+	[CCode (cheader_filename = "termios.h")]
+	public int tcgetattr (int fd, termios termios_p);
+	[CCode (cheader_filename = "termios.h")]
+	public int tcsetattr (int fd, int optional_actions, termios termios_p);
+	[CCode (cheader_filename = "termios.h")]
+	public int tcsendbreak (int fd, int duration);
+	[CCode (cheader_filename = "termios.h")]
+	public int tcdrain (int fd);
+	[CCode (cheader_filename = "termios.h")]
+	public int tcflush (int fd, int queue_selector);
+	[CCode (cheader_filename = "termios.h")]
+	public int tcflow (int fd, int action);
+	[CCode (cheader_filename = "termios.h")]
+	public void cfmakeraw (termios termios_p);
+	[CCode (cheader_filename = "termios.h")]
+	public speed_t cfgetispeed (termios termios_p);
+	[CCode (cheader_filename = "termios.h")]
+	public speed_t cfgetospeed (termios termios_p);
+	[CCode (cheader_filename = "termios.h")]
+	public int cfsetispeed (termios termios_p, speed_t speed);
+	[CCode (cheader_filename = "termios.h")]
+	public int cfsetospeed (termios termios_p, speed_t speed);
+	[CCode (cheader_filename = "termios.h")]
+	public int cfsetspeed (termios termios, speed_t speed);
+
+	//c_iflag
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t IGNBRK;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t BRKINT;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t IGNPAR;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t PARMRK;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t INPCK;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t ISTRIP;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t INLCR;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t IGNCR;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t IXON;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t IXANY;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t IXOFF;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t ICRNL;
+
+	//c_oflag
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t OPOST;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t ONLCR;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t OCRNL;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t ONOCR;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t ONLRET;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t OFILL;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t NLDLY;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t NL0;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t NL1;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t CRDLY;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t CR0;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t CR1;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t CR2;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t CR3;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t TABDLY;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t TAB0;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t TAB1;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t TAB2;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t TAB3;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t BSDLY;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t BS0;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t BS1;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t VTDLY;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t VT0;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t VT1;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t FFDLY;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t FF0;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t FF1;
+
+	//c_cflag
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t CSIZE;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t CS5;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t CS6;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t CS7;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t CS8;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t CSTOPB;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t CREAD;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t PARENB;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t PARODD;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t HUPCL;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t CLOCAL;
+
+	//c_lflag
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t ISIG;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t ICANON;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t ECHO;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t ECHOE;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t ECHOK;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t ECHONL;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t NOFLSH;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t TOSTOP;
+	[CCode (cheader_filename = "termios.h")]
+	public const tcflag_t IEXTEN;
+
+	//c_cc indexes
+	[CCode (cheader_filename = "termios.h")]
+	public const int VINTR;
+	[CCode (cheader_filename = "termios.h")]
+	public const int VQUIT;
+	[CCode (cheader_filename = "termios.h")]
+	public const int VERASE;
+	[CCode (cheader_filename = "termios.h")]
+	public const int VKILL;
+	[CCode (cheader_filename = "termios.h")]
+	public const int VEOF;
+	[CCode (cheader_filename = "termios.h")]
+	public const int VMIN;
+	[CCode (cheader_filename = "termios.h")]
+	public const int VEOL;
+	[CCode (cheader_filename = "termios.h")]
+	public const int VTIME;
+	[CCode (cheader_filename = "termios.h")]
+	public const int VSTART;
+	[CCode (cheader_filename = "termios.h")]
+	public const int VSTOP;
+	[CCode (cheader_filename = "termios.h")]
+	public const int VSUSP;
+
+	//optional_actions
+	[CCode (cheader_filename = "termios.h")]
+	public const int TCSANOW;
+	[CCode (cheader_filename = "termios.h")]
+	public const int TCSADRAIN;
+	[CCode (cheader_filename = "termios.h")]
+	public const int TCSAFLUSH;
+
+	//queue_selector
+	[CCode (cheader_filename = "termios.h")]
+	public const int TCIFLUSH;
+	[CCode (cheader_filename = "termios.h")]
+	public const int TCOFLUSH;
+	[CCode (cheader_filename = "termios.h")]
+	public const int TCIOFLUSH;
+
+	//action
+	[CCode (cheader_filename = "termios.h")]
+	public const int TCOOFF;
+	[CCode (cheader_filename = "termios.h")]
+	public const int TCOON;
+	[CCode (cheader_filename = "termios.h")]
+	public const int TCIOFF;
+	[CCode (cheader_filename = "termios.h")]
+	public const int TCION;
+
+	//speed
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B0;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B50;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B75;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B110;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B134;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B150;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B200;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B300;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B600;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B1200;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B1800;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B2400;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B4800;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B9600;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B19200;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B38400;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B57600;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B115200;
+	[CCode (cheader_filename = "termios.h")]
+	public const speed_t B230400;
 }
 
