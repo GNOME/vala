@@ -65,11 +65,6 @@ internal class Vala.GTypeModule : GErrorModule {
 
 		type_struct.add_field ("GTypeInterface", "parent_iface");
 
-		if (iface.source_reference.comment != null) {
-			decl_space.add_type_definition (new CCodeComment (iface.source_reference.comment));
-		}
-		decl_space.add_type_definition (type_struct);
-
 		foreach (Method m in iface.get_methods ()) {
 			if ((!m.is_abstract && !m.is_virtual) || m.coroutine) {
 				continue;
@@ -127,6 +122,11 @@ internal class Vala.GTypeModule : GErrorModule {
 				type_struct.add_declaration (vdecl);
 			}
 		}
+
+		if (iface.source_reference.comment != null) {
+			decl_space.add_type_definition (new CCodeComment (iface.source_reference.comment));
+		}
+		decl_space.add_type_definition (type_struct);
 
 		var type_fun = new InterfaceRegisterFunction (iface, context);
 		type_fun.init_from_type ();
