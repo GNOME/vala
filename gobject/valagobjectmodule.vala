@@ -1942,6 +1942,7 @@ internal class Vala.GObjectModule : GTypeModule {
 	}
 
 	public override void visit_constructor (Constructor c) {
+		bool old_method_inner_error = current_method_inner_error;
 		current_method_inner_error = false;
 		in_constructor = true;
 
@@ -2074,6 +2075,8 @@ internal class Vala.GObjectModule : GTypeModule {
 		} else {
 			Report.error (c.source_reference, "internal error: constructors must have instance, class, or static binding");
 		}
+
+		current_method_inner_error = old_method_inner_error;
 	}
 
 	public override string get_dynamic_property_getter_cname (DynamicProperty prop) {

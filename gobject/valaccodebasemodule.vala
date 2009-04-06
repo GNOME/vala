@@ -1140,6 +1140,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_property_accessor (PropertyAccessor acc) {
+		var old_property_accessor = current_property_accessor;
+		bool old_method_inner_error = current_method_inner_error;
 		current_property_accessor = acc;
 		current_method_inner_error = false;
 
@@ -1325,11 +1327,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			source_type_member_definition.append (function);
 		}
 
-		current_property_accessor = null;
+		current_property_accessor = old_property_accessor;
 		current_return_type = old_return_type;
+		current_method_inner_error = old_method_inner_error;
 	}
 
 	public override void visit_destructor (Destructor d) {
+		bool old_method_inner_error = current_method_inner_error;
 		current_method_inner_error = false;
 
 		d.accept_children (codegen);
@@ -1351,6 +1355,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		cfrag.append (d.body.ccodenode);
 
 		d.ccodenode = cfrag;
+
+		current_method_inner_error = old_method_inner_error;
 	}
 
 	public override void visit_block (Block b) {
