@@ -767,7 +767,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		generate_constant_declaration (c, source_declarations);
 	}
 
-	void generate_field_declaration (Field f, CCodeDeclarationSpace decl_space) {
+	public void generate_field_declaration (Field f, CCodeDeclarationSpace decl_space) {
+		if (decl_space.add_symbol_declaration (f, f.get_cname ())) {
+			return;
+		}
+
 		string field_ctype = f.field_type.get_cname ();
 		if (f.is_volatile) {
 			field_ctype = "volatile " + field_ctype;

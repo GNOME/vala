@@ -159,6 +159,8 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 
 			} else {
+				generate_field_declaration (f, source_declarations);
+
 				expr.ccodenode = new CCodeIdentifier (f.get_cname ());
 			}
 		} else if (expr.symbol_reference is Constant) {
