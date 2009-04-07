@@ -145,11 +145,11 @@ namespace Cairo {
 		public void show_glyphs (Glyph[] glyphs);
 		
 		public weak FontFace get_font_face ();
-		public void font_extents (ref FontExtents extents);
+		public void font_extents (out FontExtents extents);
 		public void set_font_face (FontFace font_face);
 		public void set_scaled_font (ScaledFont font);
-		public void text_extents (string utf8, ref TextExtents extents);
-		public void glyph_extents (Glyph[] glyphs, ref TextExtents extents);
+		public void text_extents (string utf8, out TextExtents extents);
+		public void glyph_extents (Glyph[] glyphs, out TextExtents extents);
 	}
 	
 	public enum Antialias {
