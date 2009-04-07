@@ -16,6 +16,13 @@
 				<parameter name="prob" type="GstTypeFindProbability*"/>
 			</parameters>
 		</function>
+		<function name="type_find_helper_for_extension" symbol="gst_type_find_helper_for_extension">
+			<return-type type="GstCaps*"/>
+			<parameters>
+				<parameter name="obj" type="GstObject*"/>
+				<parameter name="extension" type="gchar*"/>
+			</parameters>
+		</function>
 		<function name="type_find_helper_get_range" symbol="gst_type_find_helper_get_range">
 			<return-type type="GstCaps*"/>
 			<parameters>
@@ -57,6 +64,531 @@
 				<parameter name="buffer" type="GstBuffer**"/>
 			</parameters>
 		</callback>
+		<struct name="GstBitReader">
+			<method name="free" symbol="gst_bit_reader_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+				</parameters>
+			</method>
+			<method name="get_bits_uint16" symbol="gst_bit_reader_get_bits_uint16">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+					<parameter name="val" type="guint16*"/>
+					<parameter name="nbits" type="guint"/>
+				</parameters>
+			</method>
+			<method name="get_bits_uint32" symbol="gst_bit_reader_get_bits_uint32">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+					<parameter name="val" type="guint32*"/>
+					<parameter name="nbits" type="guint"/>
+				</parameters>
+			</method>
+			<method name="get_bits_uint64" symbol="gst_bit_reader_get_bits_uint64">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+					<parameter name="val" type="guint64*"/>
+					<parameter name="nbits" type="guint"/>
+				</parameters>
+			</method>
+			<method name="get_bits_uint8" symbol="gst_bit_reader_get_bits_uint8">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+					<parameter name="val" type="guint8*"/>
+					<parameter name="nbits" type="guint"/>
+				</parameters>
+			</method>
+			<method name="get_pos" symbol="gst_bit_reader_get_pos">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+				</parameters>
+			</method>
+			<method name="get_remaining" symbol="gst_bit_reader_get_remaining">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+				</parameters>
+			</method>
+			<method name="init" symbol="gst_bit_reader_init">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+					<parameter name="data" type="guint8*"/>
+					<parameter name="size" type="guint"/>
+				</parameters>
+			</method>
+			<method name="init_from_buffer" symbol="gst_bit_reader_init_from_buffer">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+					<parameter name="buffer" type="GstBuffer*"/>
+				</parameters>
+			</method>
+			<method name="new" symbol="gst_bit_reader_new">
+				<return-type type="GstBitReader*"/>
+				<parameters>
+					<parameter name="data" type="guint8*"/>
+					<parameter name="size" type="guint"/>
+				</parameters>
+			</method>
+			<method name="new_from_buffer" symbol="gst_bit_reader_new_from_buffer">
+				<return-type type="GstBitReader*"/>
+				<parameters>
+					<parameter name="buffer" type="GstBuffer*"/>
+				</parameters>
+			</method>
+			<method name="peek_bits_uint16" symbol="gst_bit_reader_peek_bits_uint16">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+					<parameter name="val" type="guint16*"/>
+					<parameter name="nbits" type="guint"/>
+				</parameters>
+			</method>
+			<method name="peek_bits_uint32" symbol="gst_bit_reader_peek_bits_uint32">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+					<parameter name="val" type="guint32*"/>
+					<parameter name="nbits" type="guint"/>
+				</parameters>
+			</method>
+			<method name="peek_bits_uint64" symbol="gst_bit_reader_peek_bits_uint64">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+					<parameter name="val" type="guint64*"/>
+					<parameter name="nbits" type="guint"/>
+				</parameters>
+			</method>
+			<method name="peek_bits_uint8" symbol="gst_bit_reader_peek_bits_uint8">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+					<parameter name="val" type="guint8*"/>
+					<parameter name="nbits" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_pos" symbol="gst_bit_reader_set_pos">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+					<parameter name="pos" type="guint"/>
+				</parameters>
+			</method>
+			<method name="skip" symbol="gst_bit_reader_skip">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+					<parameter name="nbits" type="guint"/>
+				</parameters>
+			</method>
+			<method name="skip_to_byte" symbol="gst_bit_reader_skip_to_byte">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstBitReader*"/>
+				</parameters>
+			</method>
+			<field name="data" type="guint8*"/>
+			<field name="size" type="guint"/>
+			<field name="byte" type="guint"/>
+			<field name="bit" type="guint"/>
+		</struct>
+		<struct name="GstByteReader">
+			<method name="free" symbol="gst_byte_reader_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+				</parameters>
+			</method>
+			<method name="get_data" symbol="gst_byte_reader_get_data">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="size" type="guint"/>
+					<parameter name="val" type="guint8**"/>
+				</parameters>
+			</method>
+			<method name="get_float32_be" symbol="gst_byte_reader_get_float32_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gfloat*"/>
+				</parameters>
+			</method>
+			<method name="get_float32_le" symbol="gst_byte_reader_get_float32_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gfloat*"/>
+				</parameters>
+			</method>
+			<method name="get_float64_be" symbol="gst_byte_reader_get_float64_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gdouble*"/>
+				</parameters>
+			</method>
+			<method name="get_float64_le" symbol="gst_byte_reader_get_float64_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gdouble*"/>
+				</parameters>
+			</method>
+			<method name="get_int16_be" symbol="gst_byte_reader_get_int16_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint16*"/>
+				</parameters>
+			</method>
+			<method name="get_int16_le" symbol="gst_byte_reader_get_int16_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint16*"/>
+				</parameters>
+			</method>
+			<method name="get_int24_be" symbol="gst_byte_reader_get_int24_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint32*"/>
+				</parameters>
+			</method>
+			<method name="get_int24_le" symbol="gst_byte_reader_get_int24_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint32*"/>
+				</parameters>
+			</method>
+			<method name="get_int32_be" symbol="gst_byte_reader_get_int32_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint32*"/>
+				</parameters>
+			</method>
+			<method name="get_int32_le" symbol="gst_byte_reader_get_int32_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint32*"/>
+				</parameters>
+			</method>
+			<method name="get_int64_be" symbol="gst_byte_reader_get_int64_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint64*"/>
+				</parameters>
+			</method>
+			<method name="get_int64_le" symbol="gst_byte_reader_get_int64_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint64*"/>
+				</parameters>
+			</method>
+			<method name="get_int8" symbol="gst_byte_reader_get_int8">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint8*"/>
+				</parameters>
+			</method>
+			<method name="get_pos" symbol="gst_byte_reader_get_pos">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+				</parameters>
+			</method>
+			<method name="get_remaining" symbol="gst_byte_reader_get_remaining">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+				</parameters>
+			</method>
+			<method name="get_uint16_be" symbol="gst_byte_reader_get_uint16_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint16*"/>
+				</parameters>
+			</method>
+			<method name="get_uint16_le" symbol="gst_byte_reader_get_uint16_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint16*"/>
+				</parameters>
+			</method>
+			<method name="get_uint24_be" symbol="gst_byte_reader_get_uint24_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint32*"/>
+				</parameters>
+			</method>
+			<method name="get_uint24_le" symbol="gst_byte_reader_get_uint24_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint32*"/>
+				</parameters>
+			</method>
+			<method name="get_uint32_be" symbol="gst_byte_reader_get_uint32_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint32*"/>
+				</parameters>
+			</method>
+			<method name="get_uint32_le" symbol="gst_byte_reader_get_uint32_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint32*"/>
+				</parameters>
+			</method>
+			<method name="get_uint64_be" symbol="gst_byte_reader_get_uint64_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint64*"/>
+				</parameters>
+			</method>
+			<method name="get_uint64_le" symbol="gst_byte_reader_get_uint64_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint64*"/>
+				</parameters>
+			</method>
+			<method name="get_uint8" symbol="gst_byte_reader_get_uint8">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint8*"/>
+				</parameters>
+			</method>
+			<method name="init" symbol="gst_byte_reader_init">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="data" type="guint8*"/>
+					<parameter name="size" type="guint"/>
+				</parameters>
+			</method>
+			<method name="init_from_buffer" symbol="gst_byte_reader_init_from_buffer">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="buffer" type="GstBuffer*"/>
+				</parameters>
+			</method>
+			<method name="new" symbol="gst_byte_reader_new">
+				<return-type type="GstByteReader*"/>
+				<parameters>
+					<parameter name="data" type="guint8*"/>
+					<parameter name="size" type="guint"/>
+				</parameters>
+			</method>
+			<method name="new_from_buffer" symbol="gst_byte_reader_new_from_buffer">
+				<return-type type="GstByteReader*"/>
+				<parameters>
+					<parameter name="buffer" type="GstBuffer*"/>
+				</parameters>
+			</method>
+			<method name="peek_data" symbol="gst_byte_reader_peek_data">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="size" type="guint"/>
+					<parameter name="val" type="guint8**"/>
+				</parameters>
+			</method>
+			<method name="peek_float32_be" symbol="gst_byte_reader_peek_float32_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gfloat*"/>
+				</parameters>
+			</method>
+			<method name="peek_float32_le" symbol="gst_byte_reader_peek_float32_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gfloat*"/>
+				</parameters>
+			</method>
+			<method name="peek_float64_be" symbol="gst_byte_reader_peek_float64_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gdouble*"/>
+				</parameters>
+			</method>
+			<method name="peek_float64_le" symbol="gst_byte_reader_peek_float64_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gdouble*"/>
+				</parameters>
+			</method>
+			<method name="peek_int16_be" symbol="gst_byte_reader_peek_int16_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint16*"/>
+				</parameters>
+			</method>
+			<method name="peek_int16_le" symbol="gst_byte_reader_peek_int16_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint16*"/>
+				</parameters>
+			</method>
+			<method name="peek_int24_be" symbol="gst_byte_reader_peek_int24_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint32*"/>
+				</parameters>
+			</method>
+			<method name="peek_int24_le" symbol="gst_byte_reader_peek_int24_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint32*"/>
+				</parameters>
+			</method>
+			<method name="peek_int32_be" symbol="gst_byte_reader_peek_int32_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint32*"/>
+				</parameters>
+			</method>
+			<method name="peek_int32_le" symbol="gst_byte_reader_peek_int32_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint32*"/>
+				</parameters>
+			</method>
+			<method name="peek_int64_be" symbol="gst_byte_reader_peek_int64_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint64*"/>
+				</parameters>
+			</method>
+			<method name="peek_int64_le" symbol="gst_byte_reader_peek_int64_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint64*"/>
+				</parameters>
+			</method>
+			<method name="peek_int8" symbol="gst_byte_reader_peek_int8">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="gint8*"/>
+				</parameters>
+			</method>
+			<method name="peek_uint16_be" symbol="gst_byte_reader_peek_uint16_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint16*"/>
+				</parameters>
+			</method>
+			<method name="peek_uint16_le" symbol="gst_byte_reader_peek_uint16_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint16*"/>
+				</parameters>
+			</method>
+			<method name="peek_uint24_be" symbol="gst_byte_reader_peek_uint24_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint32*"/>
+				</parameters>
+			</method>
+			<method name="peek_uint24_le" symbol="gst_byte_reader_peek_uint24_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint32*"/>
+				</parameters>
+			</method>
+			<method name="peek_uint32_be" symbol="gst_byte_reader_peek_uint32_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint32*"/>
+				</parameters>
+			</method>
+			<method name="peek_uint32_le" symbol="gst_byte_reader_peek_uint32_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint32*"/>
+				</parameters>
+			</method>
+			<method name="peek_uint64_be" symbol="gst_byte_reader_peek_uint64_be">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint64*"/>
+				</parameters>
+			</method>
+			<method name="peek_uint64_le" symbol="gst_byte_reader_peek_uint64_le">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint64*"/>
+				</parameters>
+			</method>
+			<method name="peek_uint8" symbol="gst_byte_reader_peek_uint8">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="val" type="guint8*"/>
+				</parameters>
+			</method>
+			<method name="set_pos" symbol="gst_byte_reader_set_pos">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="pos" type="guint"/>
+				</parameters>
+			</method>
+			<method name="skip" symbol="gst_byte_reader_skip">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="reader" type="GstByteReader*"/>
+					<parameter name="nbytes" type="guint"/>
+				</parameters>
+			</method>
+			<field name="data" type="guint8*"/>
+			<field name="size" type="guint"/>
+			<field name="byte" type="guint"/>
+		</struct>
 		<struct name="GstCollectData">
 			<field name="collect" type="GstCollectPads*"/>
 			<field name="pad" type="GstPad*"/>
@@ -156,6 +688,19 @@
 			<field name="buflist_end" type="GSList*"/>
 		</object>
 		<object name="GstBaseSink" parent="GstElement" type-name="GstBaseSink" get-type="gst_base_sink_get_type">
+			<method name="do_preroll" symbol="gst_base_sink_do_preroll">
+				<return-type type="GstFlowReturn"/>
+				<parameters>
+					<parameter name="sink" type="GstBaseSink*"/>
+					<parameter name="obj" type="GstMiniObject*"/>
+				</parameters>
+			</method>
+			<method name="get_blocksize" symbol="gst_base_sink_get_blocksize">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="sink" type="GstBaseSink*"/>
+				</parameters>
+			</method>
 			<method name="get_last_buffer" symbol="gst_base_sink_get_last_buffer">
 				<return-type type="GstBuffer*"/>
 				<parameters>
@@ -170,6 +715,12 @@
 			</method>
 			<method name="get_max_lateness" symbol="gst_base_sink_get_max_lateness">
 				<return-type type="gint64"/>
+				<parameters>
+					<parameter name="sink" type="GstBaseSink*"/>
+				</parameters>
+			</method>
+			<method name="get_render_delay" symbol="gst_base_sink_get_render_delay">
+				<return-type type="GstClockTime"/>
 				<parameters>
 					<parameter name="sink" type="GstBaseSink*"/>
 				</parameters>
@@ -215,6 +766,13 @@
 					<parameter name="enabled" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_blocksize" symbol="gst_base_sink_set_blocksize">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="sink" type="GstBaseSink*"/>
+					<parameter name="blocksize" type="guint"/>
+				</parameters>
+			</method>
 			<method name="set_max_lateness" symbol="gst_base_sink_set_max_lateness">
 				<return-type type="void"/>
 				<parameters>
@@ -227,6 +785,13 @@
 				<parameters>
 					<parameter name="sink" type="GstBaseSink*"/>
 					<parameter name="enabled" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_render_delay" symbol="gst_base_sink_set_render_delay">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="sink" type="GstBaseSink*"/>
+					<parameter name="delay" type="GstClockTime"/>
 				</parameters>
 			</method>
 			<method name="set_sync" symbol="gst_base_sink_set_sync">
@@ -246,7 +811,7 @@
 			<method name="wait_clock" symbol="gst_base_sink_wait_clock">
 				<return-type type="GstClockReturn"/>
 				<parameters>
-					<parameter name="basesink" type="GstBaseSink*"/>
+					<parameter name="sink" type="GstBaseSink*"/>
 					<parameter name="time" type="GstClockTime"/>
 					<parameter name="jitter" type="GstClockTimeDiff*"/>
 				</parameters>
@@ -266,10 +831,12 @@
 				</parameters>
 			</method>
 			<property name="async" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="blocksize" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="last-buffer" type="GstBuffer" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="max-lateness" type="gint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="preroll-queue-len" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="qos" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="render-delay" type="guint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="sync" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="ts-offset" type="gint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<vfunc name="activate_pull">
@@ -393,6 +960,12 @@
 			<field name="abidata" type="gpointer"/>
 		</object>
 		<object name="GstBaseSrc" parent="GstElement" type-name="GstBaseSrc" get-type="gst_base_src_get_type">
+			<method name="get_blocksize" symbol="gst_base_src_get_blocksize">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="src" type="GstBaseSrc*"/>
+				</parameters>
+			</method>
 			<method name="get_do_timestamp" symbol="gst_base_src_get_do_timestamp">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -412,6 +985,13 @@
 					<parameter name="live" type="gboolean*"/>
 					<parameter name="min_latency" type="GstClockTime*"/>
 					<parameter name="max_latency" type="GstClockTime*"/>
+				</parameters>
+			</method>
+			<method name="set_blocksize" symbol="gst_base_src_set_blocksize">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="src" type="GstBaseSrc*"/>
+					<parameter name="blocksize" type="gulong"/>
 				</parameters>
 			</method>
 			<method name="set_do_timestamp" symbol="gst_base_src_set_do_timestamp">
@@ -606,6 +1186,12 @@
 					<parameter name="trans" type="GstBaseTransform*"/>
 				</parameters>
 			</method>
+			<method name="reconfigure" symbol="gst_base_transform_reconfigure">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="trans" type="GstBaseTransform*"/>
+				</parameters>
+			</method>
 			<method name="set_gap_aware" symbol="gst_base_transform_set_gap_aware">
 				<return-type type="void"/>
 				<parameters>
@@ -634,6 +1220,14 @@
 					<parameter name="enabled" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="suggest" symbol="gst_base_transform_suggest">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="trans" type="GstBaseTransform*"/>
+					<parameter name="caps" type="GstCaps*"/>
+					<parameter name="size" type="guint"/>
+				</parameters>
+			</method>
 			<method name="update_qos" symbol="gst_base_transform_update_qos">
 				<return-type type="void"/>
 				<parameters>
@@ -644,6 +1238,13 @@
 				</parameters>
 			</method>
 			<property name="qos" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<vfunc name="before_transform">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="trans" type="GstBaseTransform*"/>
+					<parameter name="buffer" type="GstBuffer*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="event">
 				<return-type type="gboolean"/>
 				<parameters>
