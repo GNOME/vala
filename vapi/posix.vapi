@@ -1004,8 +1004,8 @@ namespace Posix {
 
 	[CCode (cheader_filename = "time.h")]
 	public struct timespec {
-		time_t tv_sec;
-		long tv_nsec;
+		public time_t tv_sec;
+		public long tv_nsec;
 	}
 
 	[CCode (cheader_filename = "unistd.h")]
@@ -1307,5 +1307,32 @@ namespace Posix {
 	public const speed_t B115200;
 	[CCode (cheader_filename = "termios.h")]
 	public const speed_t B230400;
+
+	[CCode (cname = "fd_set", cheader_filename = "sys/select.h")]
+	public struct fd_set {
+	}
+
+	[CCode (cname = "struct timeval", cheader_filename = "sys/select.h")]
+	public struct timeval {
+		public time_t tv_sec;
+		public long tv_usec;
+	}
+
+	[CCode (cname = "sigset_t", cheader_filename = "sys/select.h")]
+	public struct sigset_t {
+	}
+
+	[CCode (cheader_filename = "sys/select.h")]
+	public int select (int nfds, fd_set? readfds, fd_set? writefds, fd_set? exceptfds, timeval timeout);
+	[CCode (cheader_filename = "sys/select.h")]
+	public void FD_CLR (int fd, fd_set @set);
+	[CCode (cheader_filename = "sys/select.h")]
+	public int  FD_ISSET (int fd, fd_set @set);
+	[CCode (cheader_filename = "sys/select.h")]
+	public void FD_SET (int fd, fd_set @set);
+	[CCode (cheader_filename = "sys/select.h")]
+	public void FD_ZERO (fd_set @set);
+	[CCode (cheader_filename = "sys/select.h")]
+	public int pselect (int nfds, fd_set? readfds, fd_set? writefds, fd_set? exceptfds, timespec timeout, sigset_t sigmask);
 }
 
