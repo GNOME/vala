@@ -21,3 +21,5 @@ gst_audio_default_registry_mixer_filter cheader_filename="gst/audio/mixerutils.h
 gst_audio_fixate_channel_positions cheader_filename="gst/audio/multichannel.h"
 gst_audio_set_caps_channel_positions_list cheader_filename="gst/audio/multichannel.h"
 gst_audio_set_structure_channel_positions_list cheader_filename="gst/audio/multichannel.h"
+gst_ring_buffer_convert.dest_val is_out="1"
+gst_ring_buffer_commit_full.accum is_ref="1"
