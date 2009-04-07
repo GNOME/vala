@@ -112,6 +112,19 @@
 				<parameter name="par_d" type="int"/>
 			</parameters>
 		</function>
+		<function name="video_format_new_caps_interlaced" symbol="gst_video_format_new_caps_interlaced">
+			<return-type type="GstCaps*"/>
+			<parameters>
+				<parameter name="format" type="GstVideoFormat"/>
+				<parameter name="width" type="int"/>
+				<parameter name="height" type="int"/>
+				<parameter name="framerate_n" type="int"/>
+				<parameter name="framerate_d" type="int"/>
+				<parameter name="par_n" type="int"/>
+				<parameter name="par_d" type="int"/>
+				<parameter name="interlaced" type="gboolean"/>
+			</parameters>
+		</function>
 		<function name="video_format_parse_caps" symbol="gst_video_format_parse_caps">
 			<return-type type="gboolean"/>
 			<parameters>
@@ -119,6 +132,13 @@
 				<parameter name="format" type="GstVideoFormat*"/>
 				<parameter name="width" type="int*"/>
 				<parameter name="height" type="int*"/>
+			</parameters>
+		</function>
+		<function name="video_format_parse_caps_interlaced" symbol="gst_video_format_parse_caps_interlaced">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="caps" type="GstCaps*"/>
+				<parameter name="interlaced" type="gboolean*"/>
 			</parameters>
 		</function>
 		<function name="video_format_to_fourcc" symbol="gst_video_format_to_fourcc">
@@ -163,7 +183,7 @@
 			<field name="w" type="gint"/>
 			<field name="h" type="gint"/>
 		</struct>
-		<enum name="GstVideoFormat">
+		<enum name="GstVideoFormat" type-name="GstVideoFormat" get-type="gst_video_format_get_type">
 			<member name="GST_VIDEO_FORMAT_UNKNOWN" value="0"/>
 			<member name="GST_VIDEO_FORMAT_I420" value="1"/>
 			<member name="GST_VIDEO_FORMAT_YV12" value="2"/>
