@@ -47,7 +47,7 @@ namespace DBus {
 		public string name;
 		public string message;
 
-		public void init ();
+		public RawError ();
 		public bool has_name (string name);
 		public bool is_set ();
 	}
