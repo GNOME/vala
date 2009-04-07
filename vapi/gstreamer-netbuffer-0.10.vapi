@@ -20,12 +20,18 @@ namespace Gst {
 		public Gst.NetType type;
 		public void* address;
 		public uint16 port;
+		[CCode (cname = "gst_netaddress_equal")]
+		public bool equal (Gst.NetAddress naddr2);
+		[CCode (cname = "gst_netaddress_get_address_bytes")]
+		public int get_address_bytes ([CCode (array_length = false)] uchar[] address, out uint16 port);
 		[CCode (cname = "gst_netaddress_get_ip4_address")]
 		public bool get_ip4_address (out uint32 address, out uint16 port);
 		[CCode (cname = "gst_netaddress_get_ip6_address")]
 		public bool get_ip6_address ([CCode (array_length = false)] uchar[] address, out uint16 port);
 		[CCode (cname = "gst_netaddress_get_net_type")]
 		public Gst.NetType get_net_type ();
+		[CCode (cname = "gst_netaddress_set_address_bytes")]
+		public int set_address_bytes (Gst.NetType type, [CCode (array_length = false)] uchar[] address, uint16 port);
 		[CCode (cname = "gst_netaddress_set_ip4_address")]
 		public void set_ip4_address (uint32 address, uint16 port);
 		[CCode (cname = "gst_netaddress_set_ip6_address")]
