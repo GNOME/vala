@@ -1,2 +1,3 @@
 Gst cprefix="Gst" lower_case_cprefix="gst_" cheader_filename="gst/gst.h"
 Suite name="pointer"
+gst_check_setup_* transfer_ownership="1"
