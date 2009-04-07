@@ -56,6 +56,36 @@ namespace Posix {
 	[CCode (cheader_filename = "ctype.h")]
 	public int toupper (int c);
 
+	[Compact]
+	[CCode (cname = "struct dirent", cheader_filename = "dirent.h")]
+	public class DirEnt {
+		public ino_t d_ino;
+		public off_t d_off;
+		public ushort d_reclen;
+		public char d_type;
+		public char[265] d_name;
+		}
+
+	[Compact]
+	[CCode (cname = "DIR", free_function = "closedir", cheader_filename = "dirent.h")]
+	public class Dir {
+	}
+
+	[CCode (cheader_filename = "dirent.h")]
+	public int dirfd (Dir dir);
+	[CCode (cheader_filename = "dirent.h")]
+	public Dir? opendir (string filename);
+	[CCode (cheader_filename = "dirent.h")]
+	public Dir? fdopendir (int fd);
+	[CCode (cheader_filename = "dirent.h")]
+	public unowned DirEnt? readdir (Dir dir);
+	[CCode (cheader_filename = "dirent.h")]
+	public void rewinddir (Dir dir);
+	[CCode (cheader_filename = "dirent.h")]
+	public void seekdir (Dir dir, long pos);
+	[CCode (cheader_filename = "dirent.h")]
+	public long telldir (Dir dir);
+
 	[CCode (cheader_filename = "errno.h")]
 	public int errno;
 	[CCode (cheader_filename = "errno.h")]
@@ -368,6 +398,11 @@ namespace Posix {
 	[CCode (cheader_filename = "signal.h")]
 	public sighandler_t signal (int signum, sighandler_t? handler);
 
+	[CCode (cheader_filename = "stdlib.h")]
+	public void abort ();
+	[CCode (cheader_filename = "stdlib.h")]
+	public void exit (int status);
+
 	[CCode (cheader_filename = "string.h")]
 	public int memcmp (void* s1, void* s2, size_t n);
 	[CCode (cheader_filename = "string.h")]
@@ -585,6 +620,12 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/socket.h")]
 	public int socket (int domain, int type, int protocol);
 
+	[CCode (cheader_filename = "sys/socket.h")]
+	public int socketpair (int domain, int type, int protocol, int[] sv);
+
+	[CCode (cheader_filename = "sys/stat.h")]
+	public int mkfifo (string filename, mode_t mode);
+
 	[CCode (cheader_filename = "sys/stat.h")]
 	public const mode_t S_IFMT;
 	[CCode (cheader_filename = "sys/stat.h")]
@@ -771,7 +812,11 @@ namespace Posix {
 	[CCode (cheader_filename = "unistd.h")]
 	public int execl (string path, params string[] arg);
 	[CCode (cheader_filename = "unistd.h")]
+	public int pipe ([CCode (array_length = false, null_terminated = false)] int[] pipefd);
+	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t read (int fd, void* buf, size_t count);
+	[CCode (cheader_filename = "unistd.h")]
+	public int unlink (string filename);
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t write (int fd, void* buf, size_t count);
 	[CCode (cheader_filename = "unistd.h")]

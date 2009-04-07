@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <section id="types">
 	<h>Types</h>
-	<p>Vala supports four kinds of data types: value types, reference types, type parameters, and pointer types. Value types include simple types (e.g. char, int, and float), enum types, and struct types. Reference types include object types, array types, delegate types, and error types. Type parameters are parameters used in generic types.</p>
+	<p>Vala supports four kinds of data types: value types, reference types, type parameters, and pointer types. Value types include simple types (e.g. char, int, and float), enum types, array types, and struct types. Reference types include object types, delegate types, and error types. Type parameters are parameters used in generic types.</p>
 	<p>Value types differ from reference types in that variables of the value types directly contain their data, whereas variables of the reference types store references to their data, the latter being known as objects. With reference types, it is possible for two variables to reference the same object, and thus possible for operations on one variable to affect the object referenced by the other variable. With value types, the variables each have their own copy of the data, and it is not possible for operations on one to affect the other.</p>
 	<blockquote>
 type:
@@ -18,6 +18,7 @@ type:
 value-type:
 	struct-type
 	enum-type
+        array-type
 
 struct-type:
 	type-name
@@ -52,6 +53,21 @@ floating-point-type:
 
 enum-type:
 	type-name
+
+array-type:
+	non-array-type <l>[]</l>
+	non-array-type <l>[</l> dim-seperators <l>]</l>
+
+non-array-type:
+	value-type
+	object-type
+	class-type
+	delegate-type
+	error-type
+
+dim-separators:
+	<l>,</l>
+	dim-separators <l>,</l>
 		</blockquote>
 		<section id="structtypes">
 			<h>Struct types</h>
@@ -86,7 +102,6 @@ enum-type:
 reference-type:
 	object-type
 	class-type
-	array-type
 	delegate-type
 	error-type
 	weak-reference-type
@@ -104,21 +119,6 @@ object-type:
 
 class-type:
 	type-name <l>. Class</l>
-
-array-type:
-	non-array-type <l>[]</l>
-	non-array-type <l>[</l> dim-seperators <l>]</l>
-
-non-array-type:
-	value-type
-	object-type
-	class-type
-	delegate-type
-	error-type
-
-dim-separators:
-	<l>,</l>
-	dim-separators <l>,</l>
 
 delegate-type:
 	type-name
