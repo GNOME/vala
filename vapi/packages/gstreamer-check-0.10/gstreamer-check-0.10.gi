@@ -29,11 +29,38 @@
 				<parameter name="have_abi_sizes" type="gboolean"/>
 			</parameters>
 		</function>
+		<function name="check_caps_equal" symbol="gst_check_caps_equal">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="caps1" type="GstCaps*"/>
+				<parameter name="caps2" type="GstCaps*"/>
+			</parameters>
+		</function>
 		<function name="check_chain_func" symbol="gst_check_chain_func">
 			<return-type type="GstFlowReturn"/>
 			<parameters>
 				<parameter name="pad" type="GstPad*"/>
 				<parameter name="buffer" type="GstBuffer*"/>
+			</parameters>
+		</function>
+		<function name="check_drop_buffers" symbol="gst_check_drop_buffers">
+			<return-type type="void"/>
+		</function>
+		<function name="check_element_push_buffer" symbol="gst_check_element_push_buffer">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="element_name" type="gchar*"/>
+				<parameter name="buffer_in" type="GstBuffer*"/>
+				<parameter name="buffer_out" type="GstBuffer*"/>
+			</parameters>
+		</function>
+		<function name="check_element_push_buffer_list" symbol="gst_check_element_push_buffer_list">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="element_name" type="gchar*"/>
+				<parameter name="buffer_in" type="GList*"/>
+				<parameter name="buffer_out" type="GList*"/>
+				<parameter name="last_flow_return" type="GstFlowReturn"/>
 			</parameters>
 		</function>
 		<function name="check_init" symbol="gst_check_init">
@@ -74,6 +101,14 @@
 				<parameter name="caps" type="GstCaps*"/>
 			</parameters>
 		</function>
+		<function name="check_setup_sink_pad_by_name" symbol="gst_check_setup_sink_pad_by_name">
+			<return-type type="GstPad*"/>
+			<parameters>
+				<parameter name="element" type="GstElement*"/>
+				<parameter name="template" type="GstStaticPadTemplate*"/>
+				<parameter name="name" type="gchar*"/>
+			</parameters>
+		</function>
 		<function name="check_setup_src_pad" symbol="gst_check_setup_src_pad">
 			<return-type type="GstPad*"/>
 			<parameters>
@@ -82,10 +117,25 @@
 				<parameter name="caps" type="GstCaps*"/>
 			</parameters>
 		</function>
+		<function name="check_setup_src_pad_by_name" symbol="gst_check_setup_src_pad_by_name">
+			<return-type type="GstPad*"/>
+			<parameters>
+				<parameter name="element" type="GstElement*"/>
+				<parameter name="template" type="GstStaticPadTemplate*"/>
+				<parameter name="name" type="gchar*"/>
+			</parameters>
+		</function>
 		<function name="check_teardown_element" symbol="gst_check_teardown_element">
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="element" type="GstElement*"/>
+			</parameters>
+		</function>
+		<function name="check_teardown_pad_by_name" symbol="gst_check_teardown_pad_by_name">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="element" type="GstElement*"/>
+				<parameter name="name" type="gchar*"/>
 			</parameters>
 		</function>
 		<function name="check_teardown_sink_pad" symbol="gst_check_teardown_sink_pad">
