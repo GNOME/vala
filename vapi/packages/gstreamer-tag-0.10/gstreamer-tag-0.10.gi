@@ -37,6 +37,23 @@
 				<parameter name="id" type="guint"/>
 			</parameters>
 		</function>
+		<function name="tag_image_data_to_image_buffer" symbol="gst_tag_image_data_to_image_buffer">
+			<return-type type="GstBuffer*"/>
+			<parameters>
+				<parameter name="image_data" type="guint8*"/>
+				<parameter name="image_data_len" type="guint"/>
+				<parameter name="image_type" type="GstTagImageType"/>
+			</parameters>
+		</function>
+		<function name="tag_list_add_id3_image" symbol="gst_tag_list_add_id3_image">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="tag_list" type="GstTagList*"/>
+				<parameter name="image_data" type="guint8*"/>
+				<parameter name="image_data_len" type="guint"/>
+				<parameter name="id3_picture_type" type="guint"/>
+			</parameters>
+		</function>
 		<function name="tag_list_from_vorbiscomment_buffer" symbol="gst_tag_list_from_vorbiscomment_buffer">
 			<return-type type="GstTagList*"/>
 			<parameters>
@@ -101,12 +118,13 @@
 				<parameter name="value" type="gchar*"/>
 			</parameters>
 		</function>
-		<enum name="GstTagDemuxResult">
+		<enum name="GstTagDemuxResult" type-name="GstTagDemuxResult" get-type="gst_tag_demux_result_get_type">
 			<member name="GST_TAG_DEMUX_RESULT_BROKEN_TAG" value="0"/>
 			<member name="GST_TAG_DEMUX_RESULT_AGAIN" value="1"/>
 			<member name="GST_TAG_DEMUX_RESULT_OK" value="2"/>
 		</enum>
-		<enum name="GstTagImageType">
+		<enum name="GstTagImageType" type-name="GstTagImageType" get-type="gst_tag_image_type_get_type">
+			<member name="GST_TAG_IMAGE_TYPE_NONE" value="-1"/>
 			<member name="GST_TAG_IMAGE_TYPE_UNDEFINED" value="0"/>
 			<member name="GST_TAG_IMAGE_TYPE_FRONT_COVER" value="1"/>
 			<member name="GST_TAG_IMAGE_TYPE_BACK_COVER" value="2"/>
