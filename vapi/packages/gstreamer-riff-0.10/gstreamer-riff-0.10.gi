@@ -117,6 +117,16 @@
 				<parameter name="chunk_data" type="GstBuffer**"/>
 			</parameters>
 		</function>
+		<struct name="gst_riff_acid">
+			<field name="loop_type" type="guint32"/>
+			<field name="root_note" type="guint16"/>
+			<field name="unknown1" type="guint16"/>
+			<field name="unknown2" type="gfloat"/>
+			<field name="number_of_beats" type="guint32"/>
+			<field name="meter_d" type="guint16"/>
+			<field name="meter_n" type="guint16"/>
+			<field name="tempo" type="gfloat"/>
+		</struct>
 		<struct name="gst_riff_dmlh">
 			<field name="totalframes" type="guint32"/>
 		</struct>
@@ -182,8 +192,15 @@
 		<constant name="GST_RIFF_STRH_VIDEOPALCHANGES" type="int" value="65536"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_A52" type="int" value="8192"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_AAC" type="int" value="255"/>
+		<constant name="GST_RIFF_WAVE_FORMAT_AAC_AC" type="int" value="16707"/>
+		<constant name="GST_RIFF_WAVE_FORMAT_AAC_pm" type="int" value="28781"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_ADPCM" type="int" value="2"/>
+		<constant name="GST_RIFF_WAVE_FORMAT_ADPCM_IMA_DK3" type="int" value="98"/>
+		<constant name="GST_RIFF_WAVE_FORMAT_ADPCM_IMA_DK4" type="int" value="97"/>
+		<constant name="GST_RIFF_WAVE_FORMAT_ADPCM_IMA_WAV" type="int" value="105"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_ALAW" type="int" value="6"/>
+		<constant name="GST_RIFF_WAVE_FORMAT_AMR_NB" type="int" value="87"/>
+		<constant name="GST_RIFF_WAVE_FORMAT_AMR_WB" type="int" value="88"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_APTX" type="int" value="37"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_AUDIOFILE_AF10" type="int" value="38"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_AUDIOFILE_AF36" type="int" value="36"/>
@@ -216,6 +233,7 @@
 		<constant name="GST_RIFF_WAVE_FORMAT_ECHOSC3" type="int" value="58"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_ESPCM" type="int" value="97"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_EXTENSIBLE" type="int" value="65534"/>
+		<constant name="GST_RIFF_WAVE_FORMAT_FLAC" type="int" value="61868"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_FM_TOWNS_SND" type="int" value="768"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_G722_ADPCM" type="int" value="101"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_G723_ADPCM" type="int" value="20"/>
@@ -229,6 +247,7 @@
 		<constant name="GST_RIFF_WAVE_FORMAT_IBM_CVSD" type="int" value="5"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_IEEE_FLOAT" type="int" value="3"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_ILINK_VC" type="int" value="560"/>
+		<constant name="GST_RIFF_WAVE_FORMAT_IMC" type="int" value="1025"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_IPI_HSX" type="int" value="592"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_IPI_RPELP" type="int" value="593"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_ISIAUDIO" type="int" value="136"/>
@@ -282,6 +301,8 @@
 		<constant name="GST_RIFF_WAVE_FORMAT_SIPROLAB_KELVIN" type="int" value="309"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_SOFTSOUND" type="int" value="128"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_SONARC" type="int" value="33"/>
+		<constant name="GST_RIFF_WAVE_FORMAT_SONIC" type="int" value="8264"/>
+		<constant name="GST_RIFF_WAVE_FORMAT_SONIC_LS" type="int" value="8264"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_SONY_ATRAC3" type="int" value="624"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_SOUNDSPACE_MUSICOMPRESS" type="int" value="5376"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_TPC" type="int" value="1665"/>
