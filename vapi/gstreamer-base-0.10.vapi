@@ -44,15 +44,18 @@ namespace Gst {
 		public virtual Gst.StateChangeReturn async_play ();
 		[NoWrapper]
 		public virtual Gst.FlowReturn buffer_alloc (uint64 offset, uint size, Gst.Caps caps, out unowned Gst.Buffer buf);
+		public Gst.FlowReturn do_preroll (Gst.MiniObject obj);
 		[NoWrapper]
 		public virtual bool event (Gst.Event event);
 		[NoWrapper]
 		public virtual void fixate (Gst.Caps caps);
+		public uint get_blocksize ();
 		[NoWrapper]
 		public virtual unowned Gst.Caps get_caps ();
 		public unowned Gst.Buffer get_last_buffer ();
 		public Gst.ClockTime get_latency ();
 		public int64 get_max_lateness ();
+		public Gst.ClockTime get_render_delay ();
 		public bool get_sync ();
 		[NoWrapper]
 		public virtual void get_times (Gst.Buffer buffer, out Gst.ClockTime start, out Gst.ClockTime end);
@@ -65,10 +68,12 @@ namespace Gst {
 		[NoWrapper]
 		public virtual Gst.FlowReturn render (Gst.Buffer buffer);
 		public void set_async_enabled (bool enabled);
+		public void set_blocksize (uint blocksize);
 		[NoWrapper]
 		public virtual bool set_caps (Gst.Caps caps);
 		public void set_max_lateness (int64 max_lateness);
 		public void set_qos_enabled (bool enabled);
+		public void set_render_delay (Gst.ClockTime delay);
 		public void set_sync (bool sync);
 		public void set_ts_offset (Gst.ClockTimeDiff offset);
 		[NoWrapper]
@@ -84,12 +89,14 @@ namespace Gst {
 		public Gst.FlowReturn wait_preroll ();
 		[NoAccessorMethod]
 		public bool async { get; set; }
+		public uint blocksize { get; set; }
 		public Gst.Buffer last_buffer { get; }
 		public int64 max_lateness { get; set; }
 		[NoAccessorMethod]
 		public uint preroll_queue_len { get; set construct; }
 		[NoAccessorMethod]
 		public bool qos { get; set; }
+		public uint64 render_delay { get; set; }
 		public bool sync { get; set; }
 		public int64 ts_offset { get; set; }
 	}
@@ -121,6 +128,7 @@ namespace Gst {
 		public virtual bool event (Gst.Event event);
 		[NoWrapper]
 		public virtual void fixate (Gst.Caps caps);
+		public ulong get_blocksize ();
 		[NoWrapper]
 		public virtual unowned Gst.Caps get_caps ();
 		public bool get_do_timestamp ();
@@ -140,6 +148,7 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool query (Gst.Query query);
 		public bool query_latency (bool live, out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);
+		public void set_blocksize (ulong blocksize);
 		[NoWrapper]
 		public virtual bool set_caps (Gst.Caps caps);
 		public void set_do_timestamp (bool timestamp);
@@ -154,7 +163,6 @@ namespace Gst {
 		[NoWrapper]
 		public virtual bool unlock_stop ();
 		public Gst.FlowReturn wait_playing ();
-		[NoAccessorMethod]
 		public ulong blocksize { get; set; }
 		public bool do_timestamp { get; set; }
 		[NoAccessorMethod]
@@ -182,6 +190,8 @@ namespace Gst {
 		public const string SINK_NAME;
 		public const string SRC_NAME;
 		[NoWrapper]
+		public virtual void before_transform (Gst.Buffer buffer);
+		[NoWrapper]
 		public virtual bool event (Gst.Event event);
 		[NoWrapper]
 		public virtual void fixate_caps (Gst.PadDirection direction, Gst.Caps caps, Gst.Caps othercaps);
@@ -192,6 +202,7 @@ namespace Gst {
 		public bool is_qos_enabled ();
 		[NoWrapper]
 		public virtual Gst.FlowReturn prepare_output_buffer (Gst.Buffer input, int size, Gst.Caps caps, out unowned Gst.Buffer buf);
+		public void reconfigure ();
 		[NoWrapper]
 		public virtual bool set_caps (Gst.Caps incaps, Gst.Caps outcaps);
 		public void set_gap_aware (bool gap_aware);
@@ -204,6 +215,7 @@ namespace Gst {
 		public virtual bool start ();
 		[NoWrapper]
 		public virtual bool stop ();
+		public void suggest (Gst.Caps caps, uint size);
 		[NoWrapper]
 		public virtual Gst.FlowReturn transform (Gst.Buffer inbuf, Gst.Buffer outbuf);
 		[NoWrapper]
@@ -215,6 +227,96 @@ namespace Gst {
 		public void update_qos (double proportion, Gst.ClockTimeDiff diff, Gst.ClockTime timestamp);
 		[NoAccessorMethod]
 		public bool qos { get; set; }
+	}
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class BitReader {
+		public uint bit;
+		public uint byte;
+		public uchar data;
+		public uint size;
+		[CCode (has_construct_function = false)]
+		public BitReader.from_buffer (Gst.Buffer buffer);
+		public bool get_bits_uint16 (out uint16 val, uint nbits);
+		public bool get_bits_uint32 (out uint32 val, uint nbits);
+		public bool get_bits_uint64 (out uint64 val, uint nbits);
+		public bool get_bits_uint8 (out uchar val, uint nbits);
+		public uint get_pos ();
+		public uint get_remaining ();
+		public void init (uchar data, uint size);
+		public void init_from_buffer (Gst.Buffer buffer);
+		[CCode (has_construct_function = false)]
+		public BitReader (uchar data, uint size);
+		public bool peek_bits_uint16 (out uint16 val, uint nbits);
+		public bool peek_bits_uint32 (out uint32 val, uint nbits);
+		public bool peek_bits_uint64 (out uint64 val, uint nbits);
+		public bool peek_bits_uint8 (out uchar val, uint nbits);
+		public bool set_pos (uint pos);
+		public bool skip (uint nbits);
+		public bool skip_to_byte ();
+	}
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class ByteReader {
+		public uint byte;
+		public uchar data;
+		public uint size;
+		[CCode (has_construct_function = false)]
+		public ByteReader.from_buffer (Gst.Buffer buffer);
+		public bool get_data (uint size, out uchar val);
+		public bool get_float32_be (out float val);
+		public bool get_float32_le (out float val);
+		public bool get_float64_be (out double val);
+		public bool get_float64_le (out double val);
+		public bool get_int16_be (out int16 val);
+		public bool get_int16_le (out int16 val);
+		public bool get_int24_be (out int32 val);
+		public bool get_int24_le (out int32 val);
+		public bool get_int32_be (out int32 val);
+		public bool get_int32_le (out int32 val);
+		public bool get_int64_be (out int64 val);
+		public bool get_int64_le (out int64 val);
+		public bool get_int8 (out char val);
+		public uint get_pos ();
+		public uint get_remaining ();
+		public bool get_uint16_be (out uint16 val);
+		public bool get_uint16_le (out uint16 val);
+		public bool get_uint24_be (out uint32 val);
+		public bool get_uint24_le (out uint32 val);
+		public bool get_uint32_be (out uint32 val);
+		public bool get_uint32_le (out uint32 val);
+		public bool get_uint64_be (out uint64 val);
+		public bool get_uint64_le (out uint64 val);
+		public bool get_uint8 (out uchar val);
+		public void init (uchar data, uint size);
+		public void init_from_buffer (Gst.Buffer buffer);
+		[CCode (has_construct_function = false)]
+		public ByteReader (uchar data, uint size);
+		public bool peek_data (uint size, out uchar val);
+		public bool peek_float32_be (out float val);
+		public bool peek_float32_le (out float val);
+		public bool peek_float64_be (out double val);
+		public bool peek_float64_le (out double val);
+		public bool peek_int16_be (out int16 val);
+		public bool peek_int16_le (out int16 val);
+		public bool peek_int24_be (out int32 val);
+		public bool peek_int24_le (out int32 val);
+		public bool peek_int32_be (out int32 val);
+		public bool peek_int32_le (out int32 val);
+		public bool peek_int64_be (out int64 val);
+		public bool peek_int64_le (out int64 val);
+		public bool peek_int8 (out char val);
+		public bool peek_uint16_be (out uint16 val);
+		public bool peek_uint16_le (out uint16 val);
+		public bool peek_uint24_be (out uint32 val);
+		public bool peek_uint24_le (out uint32 val);
+		public bool peek_uint32_be (out uint32 val);
+		public bool peek_uint32_le (out uint32 val);
+		public bool peek_uint64_be (out uint64 val);
+		public bool peek_uint64_le (out uint64 val);
+		public bool peek_uint8 (out uchar val);
+		public bool set_pos (uint pos);
+		public bool skip (uint nbytes);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]
@@ -324,6 +426,8 @@ namespace Gst {
 	public static unowned Gst.Caps type_find_helper (Gst.Pad src, uint64 size);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static unowned Gst.Caps type_find_helper_for_buffer (Gst.Object obj, Gst.Buffer buf, Gst.TypeFindProbability prob);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static Gst.Caps type_find_helper_for_extension (Gst.Object obj, string extension);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static unowned Gst.Caps type_find_helper_get_range (Gst.Object obj, Gst.TypeFindHelperGetRangeFunction func, uint64 size, Gst.TypeFindProbability prob);
 }
