@@ -42,6 +42,7 @@ class Vala.Compiler {
 	static bool ccode_only;
 	static string header_filename;
 	static string internal_header_filename;
+	static string internal_vapi_filename;
 	static bool compile_only;
 	static string output;
 	static bool debug;
@@ -75,6 +76,7 @@ class Vala.Compiler {
 		{ "ccode", 'C', 0, OptionArg.NONE, ref ccode_only, "Output C code", null },
 		{ "header", 'H', 0, OptionArg.FILENAME, ref header_filename, "Output C header file", "FILE" },
 		{ "internal-header", 'h', 0, OptionArg.FILENAME, ref internal_header_filename, "Output internal C header file", "FILE" },
+		{ "internal-vapi", 0, 0, OptionArg.FILENAME, ref target_glib, "Output vapi with internal api", "FILE" },
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
 		{ "output", 'o', 0, OptionArg.FILENAME, ref output, "Place output in file FILE", "FILE" },
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
@@ -335,6 +337,19 @@ class Vala.Compiler {
 
 
 			library = null;
+		}
+		if (internal_vapi_filename != null) {
+			var interface_writer = new CodeWriter (false, true);
+			string vapi_filename = "%s.vapi".printf (internal_vapi_filename);
+
+			// put .vapi file in current directory unless -d has been explicitly specified
+			if (directory != null && !Path.is_absolute (vapi_filename)) {
+				vapi_filename = "%s%c%s".printf (context.directory, Path.DIR_SEPARATOR, vapi_filename);
+			}
+
+			interface_writer.write_file (context, vapi_filename);
+
+			internal_vapi_filename = null;
 		}
 
 		if (!ccode_only) {

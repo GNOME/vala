@@ -39,9 +39,11 @@ public class Vala.CodeWriter : CodeVisitor {
 	Scope current_scope;
 
 	bool dump_tree;
+	bool emit_internal;
 
-	public CodeWriter (bool dump_tree = false) {
+	public CodeWriter (bool dump_tree = false, bool emit_internal = false) {
 		this.dump_tree = dump_tree;
+		this.emit_internal = emit_internal;
 	}
 
 	/**
@@ -1644,10 +1646,19 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	private bool check_accessibility (Symbol sym) {
-		if (dump_tree ||
-		    sym.access == SymbolAccessibility.PUBLIC ||
-		    sym.access == SymbolAccessibility.PROTECTED) {
+		if (dump_tree) {
 			return true;
+		} else {
+		    if (!emit_internal &&
+			( sym.access == SymbolAccessibility.PUBLIC ||
+			  sym.access == SymbolAccessibility.PROTECTED)) {
+			return true;
+		    } else if (emit_internal &&
+			( sym.access == SymbolAccessibility.INTERNAL ||
+			  sym.access == SymbolAccessibility.PUBLIC ||
+			  sym.access == SymbolAccessibility.PROTECTED)) {
+			return true;
+		    }
 		}
 
 		return false;
