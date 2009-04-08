@@ -149,7 +149,9 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		// print critical message
 		cerror_block.add_statement (cprint_frag);
 
-		if (current_return_type is VoidType) {
+		if (current_method is CreationMethod) {
+			cerror_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		} else if (current_return_type is VoidType) {
 			cerror_block.add_statement (new CCodeReturnStatement ());
 		} else if (current_return_type != null) {
 			cerror_block.add_statement (new CCodeReturnStatement (default_value_for_type (current_return_type, false)));

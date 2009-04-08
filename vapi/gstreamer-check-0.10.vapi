@@ -18,7 +18,15 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void check_abi_list (Gst.CheckABIStruct[] list, bool have_abi_sizes);
 	[CCode (cheader_filename = "gst/gst.h")]
+	public static void check_caps_equal (Gst.Caps caps1, Gst.Caps caps2);
+	[CCode (cheader_filename = "gst/gst.h")]
 	public static Gst.FlowReturn check_chain_func (Gst.Pad pad, Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static void check_drop_buffers ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static void check_element_push_buffer (string element_name, Gst.Buffer buffer_in, Gst.Buffer buffer_out);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static void check_element_push_buffer_list (string element_name, GLib.List buffer_in, GLib.List buffer_out, Gst.FlowReturn last_flow_return);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void check_init (int argc, string argv);
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -26,13 +34,19 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static int check_run_suite (void* suite, string name, string fname);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static unowned Gst.Element check_setup_element (string factory);
+	public static Gst.Element check_setup_element (string factory);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static unowned Gst.Pad check_setup_sink_pad (Gst.Element element, Gst.StaticPadTemplate template, Gst.Caps caps);
+	public static Gst.Pad check_setup_sink_pad (Gst.Element element, Gst.StaticPadTemplate template, Gst.Caps caps);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static unowned Gst.Pad check_setup_src_pad (Gst.Element element, Gst.StaticPadTemplate template, Gst.Caps caps);
+	public static Gst.Pad check_setup_sink_pad_by_name (Gst.Element element, Gst.StaticPadTemplate template, string name);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static Gst.Pad check_setup_src_pad (Gst.Element element, Gst.StaticPadTemplate template, Gst.Caps caps);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static Gst.Pad check_setup_src_pad_by_name (Gst.Element element, Gst.StaticPadTemplate template, string name);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void check_teardown_element (Gst.Element element);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static void check_teardown_pad_by_name (Gst.Element element, string name);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void check_teardown_sink_pad (Gst.Element element);
 	[CCode (cheader_filename = "gst/gst.h")]

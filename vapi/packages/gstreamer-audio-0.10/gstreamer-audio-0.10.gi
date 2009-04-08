@@ -10,6 +10,13 @@
 				<parameter name="frame_size" type="gint"/>
 			</parameters>
 		</function>
+		<function name="audio_check_channel_positions" symbol="gst_audio_check_channel_positions">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="pos" type="GstAudioChannelPosition*"/>
+				<parameter name="channels" type="guint"/>
+			</parameters>
+		</function>
 		<function name="audio_default_registry_mixer_filter" symbol="gst_audio_default_registry_mixer_filter">
 			<return-type type="GList*"/>
 			<parameters>
@@ -126,9 +133,10 @@
 			<field name="segtotal" type="gint"/>
 			<field name="bytes_per_sample" type="gint"/>
 			<field name="silence_sample" type="guint8[]"/>
-			<field name="_gst_reserved" type="gpointer[]"/>
+			<field name="seglatency" type="gint"/>
+			<field name="_gst_reserved" type="guint8[]"/>
 		</struct>
-		<enum name="GstAudioChannelPosition">
+		<enum name="GstAudioChannelPosition" type-name="GstAudioChannelPosition" get-type="gst_audio_channel_position_get_type">
 			<member name="GST_AUDIO_CHANNEL_POSITION_INVALID" value="-1"/>
 			<member name="GST_AUDIO_CHANNEL_POSITION_FRONT_MONO" value="0"/>
 			<member name="GST_AUDIO_CHANNEL_POSITION_FRONT_LEFT" value="1"/>
@@ -153,12 +161,18 @@
 			<member name="GST_AUDIO_FIELD_DEPTH" value="16"/>
 			<member name="GST_AUDIO_FIELD_SIGNED" value="32"/>
 		</enum>
-		<enum name="GstBaseAudioSinkSlaveMethod">
-			<member name="GST_BASE_AUDIO_SINK_SLAVE_RESAMPLE" value="0"/>
-			<member name="GST_BASE_AUDIO_SINK_SLAVE_SKEW" value="1"/>
-			<member name="GST_BASE_AUDIO_SINK_SLAVE_NONE" value="2"/>
+		<enum name="GstBaseAudioSinkSlaveMethod" type-name="GstBaseAudioSinkSlaveMethod" get-type="gst_base_audio_sink_slave_method_get_type">
+			<member name="Resampling slaving" value="0"/>
+			<member name="Skew slaving" value="1"/>
+			<member name="No slaving" value="2"/>
 		</enum>
-		<enum name="GstBufferFormat">
+		<enum name="GstBaseAudioSrcSlaveMethod" type-name="GstBaseAudioSrcSlaveMethod" get-type="gst_base_audio_src_slave_method_get_type">
+			<member name="Resampling slaving" value="0"/>
+			<member name="Re-timestamp" value="1"/>
+			<member name="Skew" value="2"/>
+			<member name="No slaving" value="3"/>
+		</enum>
+		<enum name="GstBufferFormat" type-name="GstBufferFormat" get-type="gst_buffer_format_get_type">
 			<member name="GST_UNKNOWN" value="0"/>
 			<member name="GST_S8" value="1"/>
 			<member name="GST_U8" value="2"/>
@@ -195,8 +209,12 @@
 			<member name="GST_IMA_ADPCM" value="33"/>
 			<member name="GST_MPEG" value="34"/>
 			<member name="GST_GSM" value="35"/>
+			<member name="GST_IEC958" value="36"/>
+			<member name="GST_AC3" value="37"/>
+			<member name="GST_EAC3" value="38"/>
+			<member name="GST_DTS" value="39"/>
 		</enum>
-		<enum name="GstBufferFormatType">
+		<enum name="GstBufferFormatType" type-name="GstBufferFormatType" get-type="gst_buffer_format_type_get_type">
 			<member name="GST_BUFTYPE_LINEAR" value="0"/>
 			<member name="GST_BUFTYPE_FLOAT" value="1"/>
 			<member name="GST_BUFTYPE_MU_LAW" value="2"/>
@@ -204,14 +222,18 @@
 			<member name="GST_BUFTYPE_IMA_ADPCM" value="4"/>
 			<member name="GST_BUFTYPE_MPEG" value="5"/>
 			<member name="GST_BUFTYPE_GSM" value="6"/>
+			<member name="GST_BUFTYPE_IEC958" value="7"/>
+			<member name="GST_BUFTYPE_AC3" value="8"/>
+			<member name="GST_BUFTYPE_EAC3" value="9"/>
+			<member name="GST_BUFTYPE_DTS" value="10"/>
 		</enum>
-		<enum name="GstRingBufferSegState">
+		<enum name="GstRingBufferSegState" type-name="GstRingBufferSegState" get-type="gst_ring_buffer_seg_state_get_type">
 			<member name="GST_SEGSTATE_INVALID" value="0"/>
 			<member name="GST_SEGSTATE_EMPTY" value="1"/>
 			<member name="GST_SEGSTATE_FILLED" value="2"/>
 			<member name="GST_SEGSTATE_PARTIAL" value="3"/>
 		</enum>
-		<enum name="GstRingBufferState">
+		<enum name="GstRingBufferState" type-name="GstRingBufferState" get-type="gst_ring_buffer_state_get_type">
 			<member name="GST_RING_BUFFER_STATE_STOPPED" value="0"/>
 			<member name="GST_RING_BUFFER_STATE_PAUSED" value="1"/>
 			<member name="GST_RING_BUFFER_STATE_STARTED" value="2"/>
@@ -225,9 +247,17 @@
 					<parameter name="user_data" type="gpointer"/>
 				</parameters>
 			</constructor>
+			<method name="reset" symbol="gst_audio_clock_reset">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="clock" type="GstAudioClock*"/>
+					<parameter name="time" type="GstClockTime"/>
+				</parameters>
+			</method>
 			<field name="func" type="GstAudioClockGetTimeFunc"/>
 			<field name="user_data" type="gpointer"/>
 			<field name="last_time" type="GstClockTime"/>
+			<field name="abidata" type="gpointer"/>
 		</object>
 		<object name="GstAudioFilter" parent="GstBaseTransform" type-name="GstAudioFilter" get-type="gst_audio_filter_get_type">
 			<method name="class_add_pad_templates" symbol="gst_audio_filter_class_add_pad_templates">
@@ -405,6 +435,12 @@
 					<parameter name="src" type="GstBaseAudioSrc*"/>
 				</parameters>
 			</method>
+			<method name="get_slave_method" symbol="gst_base_audio_src_get_slave_method">
+				<return-type type="GstBaseAudioSrcSlaveMethod"/>
+				<parameters>
+					<parameter name="src" type="GstBaseAudioSrc*"/>
+				</parameters>
+			</method>
 			<method name="set_provide_clock" symbol="gst_base_audio_src_set_provide_clock">
 				<return-type type="void"/>
 				<parameters>
@@ -412,9 +448,19 @@
 					<parameter name="provide" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_slave_method" symbol="gst_base_audio_src_set_slave_method">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="src" type="GstBaseAudioSrc*"/>
+					<parameter name="method" type="GstBaseAudioSrcSlaveMethod"/>
+				</parameters>
+			</method>
+			<property name="actual-buffer-time" type="gint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="actual-latency-time" type="gint64" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="buffer-time" type="gint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="latency-time" type="gint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="provide-clock" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="slave-method" type="GstBaseAudioSrcSlaveMethod" readable="1" writable="1" construct="0" construct-only="0"/>
 			<vfunc name="create_ringbuffer">
 				<return-type type="GstRingBuffer*"/>
 				<parameters>
@@ -433,6 +479,13 @@
 				<parameters>
 					<parameter name="buf" type="GstRingBuffer*"/>
 					<parameter name="spec" type="GstRingBufferSpec*"/>
+				</parameters>
+			</method>
+			<method name="activate" symbol="gst_ring_buffer_activate">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="buf" type="GstRingBuffer*"/>
+					<parameter name="active" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="advance" symbol="gst_ring_buffer_advance">
@@ -481,6 +534,16 @@
 					<parameter name="accum" type="gint*"/>
 				</parameters>
 			</method>
+			<method name="convert" symbol="gst_ring_buffer_convert">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="buf" type="GstRingBuffer*"/>
+					<parameter name="src_fmt" type="GstFormat"/>
+					<parameter name="src_val" type="gint64"/>
+					<parameter name="dest_fmt" type="GstFormat"/>
+					<parameter name="dest_val" type="gint64*"/>
+				</parameters>
+			</method>
 			<method name="debug_spec_buff" symbol="gst_ring_buffer_debug_spec_buff">
 				<return-type type="void"/>
 				<parameters>
@@ -506,6 +569,12 @@
 				</parameters>
 			</method>
 			<method name="is_acquired" symbol="gst_ring_buffer_is_acquired">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="buf" type="GstRingBuffer*"/>
+				</parameters>
+			</method>
+			<method name="is_active" symbol="gst_ring_buffer_is_active">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="buf" type="GstRingBuffer*"/>
@@ -606,6 +675,13 @@
 				<parameters>
 					<parameter name="buf" type="GstRingBuffer*"/>
 					<parameter name="spec" type="GstRingBufferSpec*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="activate">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="buf" type="GstRingBuffer*"/>
+					<parameter name="active" type="gboolean"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="close_device">
