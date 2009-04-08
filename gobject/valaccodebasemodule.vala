@@ -769,6 +769,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (!c.is_internal_symbol ()) {
 			generate_constant_declaration (c, header_declarations);
 		}
+		generate_constant_declaration (c, internal_header_declarations);
 	}
 
 	public void generate_field_declaration (Field f, CCodeDeclarationSpace decl_space) {
