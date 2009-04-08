@@ -1133,6 +1133,56 @@
 			<field name="item" type="PangoItem*"/>
 			<field name="glyphs" type="PangoGlyphString*"/>
 		</boxed>
+		<boxed name="PangoGlyphItemIter" type-name="PangoGlyphItemIter" get-type="pango_glyph_item_iter_get_type">
+			<method name="copy" symbol="pango_glyph_item_iter_copy">
+				<return-type type="PangoGlyphItemIter*"/>
+				<parameters>
+					<parameter name="orig" type="PangoGlyphItemIter*"/>
+				</parameters>
+			</method>
+			<method name="free" symbol="pango_glyph_item_iter_free">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="iter" type="PangoGlyphItemIter*"/>
+				</parameters>
+			</method>
+			<method name="init_end" symbol="pango_glyph_item_iter_init_end">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="iter" type="PangoGlyphItemIter*"/>
+					<parameter name="glyph_item" type="PangoGlyphItem*"/>
+					<parameter name="text" type="char*"/>
+				</parameters>
+			</method>
+			<method name="init_start" symbol="pango_glyph_item_iter_init_start">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="iter" type="PangoGlyphItemIter*"/>
+					<parameter name="glyph_item" type="PangoGlyphItem*"/>
+					<parameter name="text" type="char*"/>
+				</parameters>
+			</method>
+			<method name="next_cluster" symbol="pango_glyph_item_iter_next_cluster">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="iter" type="PangoGlyphItemIter*"/>
+				</parameters>
+			</method>
+			<method name="prev_cluster" symbol="pango_glyph_item_iter_prev_cluster">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="iter" type="PangoGlyphItemIter*"/>
+				</parameters>
+			</method>
+			<field name="glyph_item" type="PangoGlyphItem*"/>
+			<field name="text" type="gchar*"/>
+			<field name="start_glyph" type="int"/>
+			<field name="start_index" type="int"/>
+			<field name="start_char" type="int"/>
+			<field name="end_glyph" type="int"/>
+			<field name="end_index" type="int"/>
+			<field name="end_char" type="int"/>
+		</boxed>
 		<boxed name="PangoGlyphString" type-name="PangoGlyphString" get-type="pango_glyph_string_get_type">
 			<method name="copy" symbol="pango_glyph_string_copy">
 				<return-type type="PangoGlyphString*"/>
@@ -1266,6 +1316,13 @@
 					<parameter name="language" type="PangoLanguage*"/>
 				</parameters>
 			</method>
+			<method name="get_scripts" symbol="pango_language_get_scripts">
+				<return-type type="PangoScript*"/>
+				<parameters>
+					<parameter name="language" type="PangoLanguage*"/>
+					<parameter name="num_scripts" type="int*"/>
+				</parameters>
+			</method>
 			<method name="includes_script" symbol="pango_language_includes_script">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -1278,6 +1335,12 @@
 				<parameters>
 					<parameter name="language" type="PangoLanguage*"/>
 					<parameter name="range_list" type="char*"/>
+				</parameters>
+			</method>
+			<method name="to_string" symbol="pango_language_to_string">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="language" type="PangoLanguage*"/>
 				</parameters>
 			</method>
 		</boxed>
@@ -1841,13 +1904,17 @@
 			<member name="PANGO_VARIANT_SMALL_CAPS" value="1"/>
 		</enum>
 		<enum name="PangoWeight" type-name="PangoWeight" get-type="pango_weight_get_type">
+			<member name="PANGO_WEIGHT_THIN" value="100"/>
 			<member name="PANGO_WEIGHT_ULTRALIGHT" value="200"/>
 			<member name="PANGO_WEIGHT_LIGHT" value="300"/>
+			<member name="PANGO_WEIGHT_BOOK" value="380"/>
 			<member name="PANGO_WEIGHT_NORMAL" value="400"/>
+			<member name="PANGO_WEIGHT_MEDIUM" value="500"/>
 			<member name="PANGO_WEIGHT_SEMIBOLD" value="600"/>
 			<member name="PANGO_WEIGHT_BOLD" value="700"/>
 			<member name="PANGO_WEIGHT_ULTRABOLD" value="800"/>
 			<member name="PANGO_WEIGHT_HEAVY" value="900"/>
+			<member name="PANGO_WEIGHT_ULTRAHEAVY" value="1000"/>
 		</enum>
 		<enum name="PangoWrapMode" type-name="PangoWrapMode" get-type="pango_wrap_mode_get_type">
 			<member name="PANGO_WRAP_WORD" value="0"/>
@@ -1943,6 +2010,9 @@
 					<parameter name="language" type="PangoLanguage*"/>
 				</parameters>
 			</method>
+			<constructor name="new" symbol="pango_context_new">
+				<return-type type="PangoContext*"/>
+			</constructor>
 			<method name="set_base_dir" symbol="pango_context_set_base_dir">
 				<return-type type="void"/>
 				<parameters>
@@ -1962,6 +2032,13 @@
 				<parameters>
 					<parameter name="context" type="PangoContext*"/>
 					<parameter name="desc" type="PangoFontDescription*"/>
+				</parameters>
+			</method>
+			<method name="set_font_map" symbol="pango_context_set_font_map">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="context" type="PangoContext*"/>
+					<parameter name="font_map" type="PangoFontMap*"/>
 				</parameters>
 			</method>
 			<method name="set_gravity_hint" symbol="pango_context_set_gravity_hint">
@@ -2095,6 +2172,12 @@
 			</method>
 		</object>
 		<object name="PangoFontMap" parent="GObject" type-name="PangoFontMap" get-type="pango_font_map_get_type">
+			<method name="create_context" symbol="pango_font_map_create_context">
+				<return-type type="PangoContext*"/>
+				<parameters>
+					<parameter name="fontmap" type="PangoFontMap*"/>
+				</parameters>
+			</method>
 			<method name="list_families" symbol="pango_font_map_list_families">
 				<return-type type="void"/>
 				<parameters>
@@ -2555,6 +2638,16 @@
 					<parameter name="y" type="double"/>
 				</parameters>
 			</method>
+			<method name="draw_glyph_item" symbol="pango_renderer_draw_glyph_item">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="renderer" type="PangoRenderer*"/>
+					<parameter name="text" type="char*"/>
+					<parameter name="glyph_item" type="PangoGlyphItem*"/>
+					<parameter name="x" type="int"/>
+					<parameter name="y" type="int"/>
+				</parameters>
+			</method>
 			<method name="draw_glyphs" symbol="pango_renderer_draw_glyphs">
 				<return-type type="void"/>
 				<parameters>
@@ -2680,6 +2773,16 @@
 					<parameter name="y" type="double"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="draw_glyph_item">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="renderer" type="PangoRenderer*"/>
+					<parameter name="text" type="char*"/>
+					<parameter name="glyph_item" type="PangoGlyphItem*"/>
+					<parameter name="x" type="int"/>
+					<parameter name="y" type="int"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="draw_glyphs">
 				<return-type type="void"/>
 				<parameters>
@@ -2749,6 +2852,7 @@
 			<field name="matrix" type="PangoMatrix*"/>
 		</object>
 		<constant name="PANGO_ANALYSIS_FLAG_CENTERED_BASELINE" type="int" value="1"/>
+		<constant name="PANGO_ATTR_INDEX_FROM_TEXT_BEGINNING" type="int" value="0"/>
 		<constant name="PANGO_ENGINE_TYPE_LANG" type="char*" value="PangoEngineLang"/>
 		<constant name="PANGO_ENGINE_TYPE_SHAPE" type="char*" value="PangoEngineShape"/>
 		<constant name="PANGO_RENDER_TYPE_NONE" type="char*" value="PangoRenderNone"/>
@@ -2756,8 +2860,8 @@
 		<constant name="PANGO_UNKNOWN_GLYPH_HEIGHT" type="int" value="14"/>
 		<constant name="PANGO_UNKNOWN_GLYPH_WIDTH" type="int" value="10"/>
 		<constant name="PANGO_VERSION_MAJOR" type="int" value="1"/>
-		<constant name="PANGO_VERSION_MICRO" type="int" value="2"/>
-		<constant name="PANGO_VERSION_MINOR" type="int" value="21"/>
-		<constant name="PANGO_VERSION_STRING" type="char*" value="1.21.2"/>
+		<constant name="PANGO_VERSION_MICRO" type="int" value="0"/>
+		<constant name="PANGO_VERSION_MINOR" type="int" value="24"/>
+		<constant name="PANGO_VERSION_STRING" type="char*" value="1.24.0"/>
 	</namespace>
 </api>

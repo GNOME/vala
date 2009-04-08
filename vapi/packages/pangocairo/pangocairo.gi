@@ -97,6 +97,14 @@
 				<parameter name="height" type="double"/>
 			</parameters>
 		</function>
+		<function name="cairo_show_glyph_item" symbol="pango_cairo_show_glyph_item">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="cr" type="cairo_t*"/>
+				<parameter name="text" type="char*"/>
+				<parameter name="glyph_item" type="PangoGlyphItem*"/>
+			</parameters>
+		</function>
 		<function name="cairo_show_glyph_string" symbol="pango_cairo_show_glyph_string">
 			<return-type type="void"/>
 			<parameters>

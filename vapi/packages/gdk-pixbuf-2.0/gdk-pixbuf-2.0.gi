@@ -741,9 +741,9 @@
 		<constant name="GDK_PIXBUF_FEATURES_H" type="int" value="1"/>
 		<constant name="GDK_PIXBUF_MAGIC_NUMBER" type="int" value="1197763408"/>
 		<constant name="GDK_PIXBUF_MAJOR" type="int" value="2"/>
-		<constant name="GDK_PIXBUF_MICRO" type="int" value="3"/>
-		<constant name="GDK_PIXBUF_MINOR" type="int" value="13"/>
-		<constant name="GDK_PIXBUF_VERSION" type="char*" value="2.13.3"/>
+		<constant name="GDK_PIXBUF_MICRO" type="int" value="0"/>
+		<constant name="GDK_PIXBUF_MINOR" type="int" value="16"/>
+		<constant name="GDK_PIXBUF_VERSION" type="char*" value="2.16.0"/>
 		<constant name="GDK_PIXDATA_HEADER_LENGTH" type="int" value="24"/>
 	</namespace>
 </api>

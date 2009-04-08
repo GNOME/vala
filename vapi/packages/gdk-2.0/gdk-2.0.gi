@@ -137,17 +137,17 @@
 			</parameters>
 		</function>
 		<function name="drag_get_protocol" symbol="gdk_drag_get_protocol">
-			<return-type type="guint32"/>
+			<return-type type="GdkNativeWindow"/>
 			<parameters>
-				<parameter name="xid" type="guint32"/>
+				<parameter name="xid" type="GdkNativeWindow"/>
 				<parameter name="protocol" type="GdkDragProtocol*"/>
 			</parameters>
 		</function>
 		<function name="drag_get_protocol_for_display" symbol="gdk_drag_get_protocol_for_display">
-			<return-type type="guint32"/>
+			<return-type type="GdkNativeWindow"/>
 			<parameters>
 				<parameter name="display" type="GdkDisplay*"/>
-				<parameter name="xid" type="guint32"/>
+				<parameter name="xid" type="GdkNativeWindow"/>
 				<parameter name="protocol" type="GdkDragProtocol*"/>
 			</parameters>
 		</function>
@@ -932,7 +932,7 @@
 		<function name="selection_send_notify" symbol="gdk_selection_send_notify">
 			<return-type type="void"/>
 			<parameters>
-				<parameter name="requestor" type="guint32"/>
+				<parameter name="requestor" type="GdkNativeWindow"/>
 				<parameter name="selection" type="GdkAtom"/>
 				<parameter name="target" type="GdkAtom"/>
 				<parameter name="property" type="GdkAtom"/>
@@ -943,7 +943,7 @@
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="display" type="GdkDisplay*"/>
-				<parameter name="requestor" type="guint32"/>
+				<parameter name="requestor" type="GdkNativeWindow"/>
 				<parameter name="selection" type="GdkAtom"/>
 				<parameter name="target" type="GdkAtom"/>
 				<parameter name="property" type="GdkAtom"/>
@@ -1162,6 +1162,24 @@
 				<parameter name="notify" type="GDestroyNotify"/>
 			</parameters>
 		</function>
+		<function name="threads_add_timeout_seconds" symbol="gdk_threads_add_timeout_seconds">
+			<return-type type="guint"/>
+			<parameters>
+				<parameter name="interval" type="guint"/>
+				<parameter name="function" type="GSourceFunc"/>
+				<parameter name="data" type="gpointer"/>
+			</parameters>
+		</function>
+		<function name="threads_add_timeout_seconds_full" symbol="gdk_threads_add_timeout_seconds_full">
+			<return-type type="guint"/>
+			<parameters>
+				<parameter name="priority" type="gint"/>
+				<parameter name="interval" type="guint"/>
+				<parameter name="function" type="GSourceFunc"/>
+				<parameter name="data" type="gpointer"/>
+				<parameter name="notify" type="GDestroyNotify"/>
+			</parameters>
+		</function>
 		<function name="threads_enter" symbol="gdk_threads_enter">
 			<return-type type="void"/>
 		</function>
@@ -1211,12 +1229,6 @@
 				<parameter name="str" type="gchar*"/>
 			</parameters>
 		</function>
-		<callback name="GdkDestroyNotify">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="data" type="gpointer"/>
-			</parameters>
-		</callback>
 		<callback name="GdkEventFunc">
 			<return-type type="void"/>
 			<parameters>
@@ -1247,8 +1259,6 @@
 				<parameter name="data" type="gpointer"/>
 			</parameters>
 		</callback>
-		<struct name="GdkAppLaunchContextClass">
-		</struct>
 		<struct name="GdkAtom">
 			<method name="intern" symbol="gdk_atom_intern">
 				<return-type type="GdkAtom"/>
@@ -2161,6 +2171,9 @@
 			<member name="GDK_CROSSING_NORMAL" value="0"/>
 			<member name="GDK_CROSSING_GRAB" value="1"/>
 			<member name="GDK_CROSSING_UNGRAB" value="2"/>
+			<member name="GDK_CROSSING_GTK_GRAB" value="3"/>
+			<member name="GDK_CROSSING_GTK_UNGRAB" value="4"/>
+			<member name="GDK_CROSSING_STATE_CHANGED" value="5"/>
 		</enum>
 		<enum name="GdkCursorType" type-name="GdkCursorType" get-type="gdk_cursor_type_get_type">
 			<member name="GDK_X_CURSOR" value="0"/>
@@ -2241,6 +2254,7 @@
 			<member name="GDK_WATCH" value="150"/>
 			<member name="GDK_XTERM" value="152"/>
 			<member name="GDK_LAST_CURSOR" value="153"/>
+			<member name="GDK_BLANK_CURSOR" value="-2"/>
 			<member name="GDK_CURSOR_IS_PIXMAP" value="-1"/>
 		</enum>
 		<enum name="GdkDragProtocol" type-name="GdkDragProtocol" get-type="gdk_drag_protocol_get_type">
@@ -3755,6 +3769,12 @@
 			<field name="windowing_data" type="gpointer"/>
 		</object>
 		<object name="GdkKeymap" parent="GObject" type-name="GdkKeymap" get-type="gdk_keymap_get_type">
+			<method name="get_caps_lock_state" symbol="gdk_keymap_get_caps_lock_state">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="keymap" type="GdkKeymap*"/>
+				</parameters>
+			</method>
 			<method name="get_default" symbol="gdk_keymap_get_default">
 				<return-type type="GdkKeymap*"/>
 			</method>
@@ -3822,6 +3842,12 @@
 				</parameters>
 			</signal>
 			<signal name="keys-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="keymap" type="GdkKeymap*"/>
+				</parameters>
+			</signal>
+			<signal name="state-changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="keymap" type="GdkKeymap*"/>
@@ -4554,9 +4580,6 @@
 				<parameters>
 					<parameter name="window" type="GdkWindow*"/>
 				</parameters>
-			</method>
-			<method name="get_toplevels" symbol="gdk_window_get_toplevels">
-				<return-type type="GList*"/>
 			</method>
 			<method name="get_type_hint" symbol="gdk_window_get_type_hint">
 				<return-type type="GdkWindowTypeHint"/>

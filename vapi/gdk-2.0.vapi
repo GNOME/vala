@@ -285,6 +285,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class Keymap : GLib.Object {
 		public weak Gdk.Display display;
+		public bool get_caps_lock_state ();
 		public static unowned Gdk.Keymap get_default ();
 		public Pango.Direction get_direction ();
 		public bool get_entries_for_keycode (uint hardware_keycode, out unowned Gdk.KeymapKey[] keys, out unowned uint[] keyvals, int n_entries);
@@ -295,6 +296,7 @@ namespace Gdk {
 		public bool translate_keyboard_state (uint hardware_keycode, Gdk.ModifierType state, int group, uint keyval, int effective_group, int level, Gdk.ModifierType consumed_modifiers);
 		public virtual signal void direction_changed ();
 		public virtual signal void keys_changed ();
+		public virtual signal void state_changed ();
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public class PangoRenderer : Pango.Renderer {
@@ -468,7 +470,6 @@ namespace Gdk {
 		public void get_root_origin (out int x, out int y);
 		public Gdk.WindowState get_state ();
 		public unowned Gdk.Window get_toplevel ();
-		public static unowned GLib.List get_toplevels ();
 		public Gdk.WindowTypeHint get_type_hint ();
 		public unowned Gdk.Region get_update_area ();
 		public void get_user_data (void* data);
@@ -998,7 +999,10 @@ namespace Gdk {
 	public enum CrossingMode {
 		NORMAL,
 		GRAB,
-		UNGRAB
+		UNGRAB,
+		GTK_GRAB,
+		GTK_UNGRAB,
+		STATE_CHANGED
 	}
 	[CCode (cprefix = "GDK_", cheader_filename = "gdk/gdk.h")]
 	public enum CursorType {
@@ -1080,6 +1084,7 @@ namespace Gdk {
 		WATCH,
 		XTERM,
 		LAST_CURSOR,
+		BLANK_CURSOR,
 		CURSOR_IS_PIXMAP
 	}
 	[CCode (cprefix = "GDK_ACTION_", cheader_filename = "gdk/gdk.h")]
@@ -1500,8 +1505,6 @@ namespace Gdk {
 		DND
 	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static delegate void DestroyNotify (void* data);
-	[CCode (cheader_filename = "gdk/gdk.h")]
 	public delegate void EventFunc (Gdk.Event event);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public delegate Gdk.FilterReturn FilterFunc (Gdk.XEvent xevent, Gdk.Event event);
@@ -1560,9 +1563,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void drag_find_window_for_screen (Gdk.DragContext context, Gdk.Window drag_window, Gdk.Screen screen, int x_root, int y_root, out unowned Gdk.Window dest_window, Gdk.DragProtocol protocol);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static uint32 drag_get_protocol (uint32 xid, Gdk.DragProtocol protocol);
+	public static Gdk.NativeWindow drag_get_protocol (Gdk.NativeWindow xid, Gdk.DragProtocol protocol);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static uint32 drag_get_protocol_for_display (Gdk.Display display, uint32 xid, Gdk.DragProtocol protocol);
+	public static Gdk.NativeWindow drag_get_protocol_for_display (Gdk.Display display, Gdk.NativeWindow xid, Gdk.DragProtocol protocol);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static Gdk.Atom drag_get_selection (Gdk.DragContext context);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1752,9 +1755,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static bool selection_property_get (Gdk.Window requestor, uchar[] data, Gdk.Atom prop_type, int prop_format);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void selection_send_notify (uint32 requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
+	public static void selection_send_notify (Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static void selection_send_notify_for_display (Gdk.Display display, uint32 requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
+	public static void selection_send_notify_for_display (Gdk.Display display, Gdk.NativeWindow requestor, Gdk.Atom selection, Gdk.Atom target, Gdk.Atom property, uint32 time_);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void set_double_click_time (uint msec);
 	[CCode (cheader_filename = "gdk/gdk.h")]
@@ -1803,6 +1806,10 @@ namespace Gdk {
 	public static uint threads_add_timeout (uint interval, GLib.SourceFunc function, void* data);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static uint threads_add_timeout_full (int priority, uint interval, GLib.SourceFunc function, void* data, GLib.DestroyNotify notify);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static uint threads_add_timeout_seconds (uint interval, GLib.SourceFunc function, void* data);
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	public static uint threads_add_timeout_seconds_full (int priority, uint interval, GLib.SourceFunc function, void* data, GLib.DestroyNotify notify);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public static void threads_enter ();
 	[CCode (cheader_filename = "gdk/gdk.h")]

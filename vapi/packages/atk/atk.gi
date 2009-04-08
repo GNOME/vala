@@ -573,16 +573,16 @@
 		</object>
 		<object name="AtkNoOpObject" parent="AtkObject" type-name="AtkNoOpObject" get-type="atk_no_op_object_get_type">
 			<implements>
+				<interface name="AtkValue"/>
+				<interface name="AtkDocument"/>
+				<interface name="AtkComponent"/>
 				<interface name="AtkText"/>
 				<interface name="AtkAction"/>
 				<interface name="AtkHypertext"/>
 				<interface name="AtkSelection"/>
 				<interface name="AtkTable"/>
 				<interface name="AtkImage"/>
-				<interface name="AtkValue"/>
-				<interface name="AtkComponent"/>
 				<interface name="AtkEditableText"/>
-				<interface name="AtkDocument"/>
 			</implements>
 			<constructor name="new" symbol="atk_no_op_object_new">
 				<return-type type="AtkObject*"/>
@@ -1020,6 +1020,13 @@
 					<parameter name="relationship" type="AtkRelationType"/>
 				</parameters>
 			</constructor>
+			<method name="remove_target" symbol="atk_relation_remove_target">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="relation" type="AtkRelation*"/>
+					<parameter name="target" type="AtkObject*"/>
+				</parameters>
+			</method>
 			<method name="type_for_name" symbol="atk_relation_type_for_name">
 				<return-type type="AtkRelationType"/>
 				<parameters>

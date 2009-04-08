@@ -56,7 +56,7 @@ namespace Atk {
 		public virtual void threads_leave ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
-	public class NoOpObject : Atk.Object, Atk.Text, Atk.Action, Atk.Hypertext, Atk.Selection, Atk.Table, Atk.Image, Atk.Value, Atk.Component, Atk.EditableText, Atk.Document {
+	public class NoOpObject : Atk.Object, Atk.Value, Atk.Document, Atk.Component, Atk.Text, Atk.Action, Atk.Hypertext, Atk.Selection, Atk.Table, Atk.Image, Atk.EditableText {
 		[CCode (type = "AtkObject*", has_construct_function = false)]
 		public NoOpObject (GLib.Object obj);
 	}
@@ -164,6 +164,7 @@ namespace Atk {
 		public unowned GLib.PtrArray get_target ();
 		[CCode (has_construct_function = false)]
 		public Relation (Atk.Object[] targets, Atk.RelationType relationship);
+		public bool remove_target (Atk.Object target);
 		public static Atk.RelationType type_for_name (string name);
 		public static unowned string type_get_name (Atk.RelationType type);
 		public static Atk.RelationType type_register (string name);

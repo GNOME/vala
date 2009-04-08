@@ -133,9 +133,12 @@ namespace Pango {
 		public void list_families (Pango.FontFamily[] families);
 		public unowned Pango.Font load_font (Pango.FontDescription desc);
 		public unowned Pango.Fontset load_fontset (Pango.FontDescription desc, Pango.Language language);
+		[CCode (has_construct_function = false)]
+		public Context ();
 		public void set_base_dir (Pango.Direction direction);
 		public void set_base_gravity (Pango.Gravity gravity);
 		public void set_font_description (Pango.FontDescription desc);
+		public void set_font_map (Pango.FontMap font_map);
 		public void set_gravity_hint (Pango.GravityHint hint);
 		public void set_language (Pango.Language language);
 		public void set_matrix (Pango.Matrix matrix);
@@ -226,6 +229,7 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class FontMap : GLib.Object {
+		public unowned Pango.Context create_context ();
 		public void list_families (Pango.FontFamily[] families);
 		public unowned Pango.Font load_font (Pango.Context context, Pango.FontDescription desc);
 		public unowned Pango.Fontset load_fontset (Pango.Context context, Pango.FontDescription desc, Pango.Language language);
@@ -277,6 +281,23 @@ namespace Pango {
 		public unowned Pango.GlyphItem split (string text, int split_index);
 	}
 	[Compact]
+	[CCode (copy_function = "pango_glyph_item_iter_copy", type_id = "PANGO_TYPE_GLYPH_ITEM_ITER", cheader_filename = "pango/pango.h")]
+	public class GlyphItemIter {
+		public int end_char;
+		public int end_glyph;
+		public int end_index;
+		public weak Pango.GlyphItem glyph_item;
+		public int start_char;
+		public int start_glyph;
+		public int start_index;
+		public weak string text;
+		public unowned Pango.GlyphItemIter copy ();
+		public bool init_end (Pango.GlyphItem glyph_item, string text);
+		public bool init_start (Pango.GlyphItem glyph_item, string text);
+		public bool next_cluster ();
+		public bool prev_cluster ();
+	}
+	[Compact]
 	[CCode (copy_function = "pango_glyph_string_copy", type_id = "PANGO_TYPE_GLYPH_STRING", cheader_filename = "pango/pango.h")]
 	public class GlyphString {
 		public weak Pango.GlyphInfo glyphs;
@@ -315,11 +336,13 @@ namespace Pango {
 		public Item ();
 		public unowned Pango.Item split (int split_index, int split_offset);
 	}
-	[CCode (ref_function = "pango_language_ref", unref_function = "pango_language_unref", cheader_filename = "pango/pango.h")]
+	[Compact]
+	[CCode (type_id = "PANGO_TYPE_LANGUAGE", cheader_filename = "pango/pango.h")]
 	public class Language {
 		public static unowned Pango.Language from_string (string language);
 		public static unowned Pango.Language get_default ();
 		public unowned string get_sample_string ();
+		public Pango.Script get_scripts (int num_scripts);
 		public bool includes_script (Pango.Script script);
 		public bool matches (string range_list);
 		public unowned string to_string ();
@@ -440,6 +463,7 @@ namespace Pango {
 		public void deactivate ();
 		public virtual void draw_error_underline (int x, int y, int width, int height);
 		public virtual void draw_glyph (Pango.Font font, Pango.Glyph glyph, double x, double y);
+		public virtual void draw_glyph_item (string text, Pango.GlyphItem glyph_item, int x, int y);
 		public virtual void draw_glyphs (Pango.Font font, Pango.GlyphString glyphs, int x, int y);
 		public void draw_layout (Pango.Layout layout, int x, int y);
 		public void draw_layout_line (Pango.LayoutLine line, int x, int y);
@@ -774,13 +798,17 @@ namespace Pango {
 	}
 	[CCode (cprefix = "PANGO_WEIGHT_", cheader_filename = "pango/pango.h")]
 	public enum Weight {
+		THIN,
 		ULTRALIGHT,
 		LIGHT,
+		BOOK,
 		NORMAL,
+		MEDIUM,
 		SEMIBOLD,
 		BOLD,
 		ULTRABOLD,
-		HEAVY
+		HEAVY,
+		ULTRAHEAVY
 	}
 	[CCode (cprefix = "PANGO_WRAP_", cheader_filename = "pango/pango.h")]
 	public enum WrapMode {
@@ -796,6 +824,8 @@ namespace Pango {
 	public delegate bool FontsetForeachFunc (Pango.Fontset fontset, Pango.Font font);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public const int ANALYSIS_FLAG_CENTERED_BASELINE;
+	[CCode (cheader_filename = "pango/pango.h")]
+	public const int ATTR_INDEX_FROM_TEXT_BEGINNING;
 	[CCode (cheader_filename = "pango/pango.h")]
 	public const string ENGINE_TYPE_LANG;
 	[CCode (cheader_filename = "pango/pango.h")]

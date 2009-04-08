@@ -21,10 +21,6 @@
  */
 
 namespace Pango {
-	public class Language {
-		public extern weak string to_string ();
-	}
-
 	[CCode (cprefix = "PANGO_SCALE_", cheader_filename = "pango/pango.h")]
 	public enum Scale {
 		XX_SMALL,
