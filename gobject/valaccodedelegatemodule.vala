@@ -90,6 +90,10 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 		d.accept_children (codegen);
 
 		generate_delegate_declaration (d, source_declarations);
+
+		if (!d.is_internal_symbol ()) {
+			generate_delegate_declaration (d, header_declarations);
+		}
 	}
 
 	public override string get_delegate_target_cname (string delegate_cname) {
