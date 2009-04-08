@@ -1067,6 +1067,10 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		cfor.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
 		block.add_statement (cfor);
 
+		var list_free_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_free_string_array"));
+		list_free_call.add_argument (new CCodeIdentifier ("children"));
+		block.add_statement (new CCodeExpressionStatement (list_free_call));
+
 		xml_data = "</node>\n";
 		str_call = new CCodeFunctionCall (new CCodeIdentifier ("g_string_append"));
 		str_call.add_argument (new CCodeIdentifier ("xml_data"));
