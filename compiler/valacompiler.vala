@@ -339,7 +339,14 @@ class Vala.Compiler {
 			library = null;
 		}
 		if (internal_vapi_filename != null) {
+			if (internal_header_filename == null ||
+			    header_filename == null) {
+				Report.error (null, "--internal-vapi may only be used in combination with --header and --internal-header");
+				return quit();
+			}
+
 			var interface_writer = new CodeWriter (false, true);
+			interface_writer.set_cheader_override(header_filename, internal_header_filename);
 			string vapi_filename = internal_vapi_filename;
 
 			// put .vapi file in current directory unless -d has been explicitly specified
