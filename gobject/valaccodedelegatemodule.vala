@@ -37,6 +37,8 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 			return;
 		}
 
+		generate_type_declaration (d.return_type, decl_space);
+
 		var cfundecl = new CCodeFunctionDeclarator (d.get_cname ());
 		foreach (FormalParameter param in d.get_parameters ()) {
 			generate_parameter (param, decl_space, new HashMap<int,CCodeFormalParameter> (), null);
