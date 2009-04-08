@@ -325,7 +325,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		cfunc.add_parameter (new CCodeFormalParameter ("path", "const char*"));
 		cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
 
-		if (!sym.is_internal_symbol ()) {
+		if (!sym.is_private_symbol ()) {
 			dbus_glib_h_needed_in_header = true;
 		} else {
 			dbus_glib_h_needed = true;
@@ -1135,7 +1135,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		cfunc.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
 		cfunc.add_parameter (new CCodeFormalParameter ("object", "void*"));
 
-		if (sym.is_internal_symbol ()) {
+		if (sym.is_private_symbol ()) {
 			cfunc.modifiers |= CCodeModifiers.STATIC;
 		}
 
