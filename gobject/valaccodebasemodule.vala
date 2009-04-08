@@ -765,6 +765,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 	public override void visit_constant (Constant c) {
 		generate_constant_declaration (c, source_declarations);
+
+		if (!c.is_internal_symbol ()) {
+			generate_constant_declaration (c, header_declarations);
+		}
+		generate_constant_declaration (c, internal_header_declarations);
 	}
 
 	public void generate_field_declaration (Field f, CCodeDeclarationSpace decl_space) {

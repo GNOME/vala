@@ -37,6 +37,8 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 			return;
 		}
 
+		generate_type_declaration (d.return_type, decl_space);
+
 		var cfundecl = new CCodeFunctionDeclarator (d.get_cname ());
 		foreach (FormalParameter param in d.get_parameters ()) {
 			generate_parameter (param, decl_space, new HashMap<int,CCodeFormalParameter> (), null);
@@ -88,6 +90,11 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 		d.accept_children (codegen);
 
 		generate_delegate_declaration (d, source_declarations);
+
+		if (!d.is_internal_symbol ()) {
+			generate_delegate_declaration (d, header_declarations);
+		}
+		generate_delegate_declaration (d, internal_header_declarations);
 	}
 
 	public override string get_delegate_target_cname (string delegate_cname) {
