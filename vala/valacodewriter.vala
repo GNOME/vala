@@ -41,9 +41,23 @@ public class Vala.CodeWriter : CodeVisitor {
 	bool dump_tree;
 	bool emit_internal;
 
+	string? override_header = null;
+	string? header_to_override = null;
+
 	public CodeWriter (bool dump_tree = false, bool emit_internal = false) {
 		this.dump_tree = dump_tree;
 		this.emit_internal = emit_internal;
+	}
+
+	/**
+	 * Allows overriding of a specific cheader in the output
+	 * @param original orignal cheader to override
+	 * @param replacement cheader to replace original with
+	 */
+	public void set_cheader_override (string original, string replacement)
+	{
+		header_to_override = original;
+		override_header = replacement;
 	}
 
 	/**
@@ -111,6 +125,24 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_newline ();
 	}
 
+	private string get_cheaders (Symbol cl) {
+		bool first = true;
+		string cheaders = "";
+		foreach (string cheader in cl.get_cheader_filenames ()) {
+			if (header_to_override != null &&
+			    cheader == header_to_override) {
+				cheader = override_header;
+			}
+			if (first) {
+				cheaders = cheader;
+				first = false;
+			} else {
+				cheaders = "%s,%s".printf (cheaders, cheader);
+			}
+		}
+		return cheaders;
+	}
+
 	public override void visit_class (Class cl) {
 		if (cl.external_package) {
 			return;
@@ -172,17 +204,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("param_spec_function = \"%s\", ".printf (cl.get_param_spec_function ()));
 		}
 
-		bool first = true;
-		string cheaders = "";
-		foreach (string cheader in cl.get_cheader_filenames ()) {
-			if (first) {
-				cheaders = cheader;
-				first = false;
-			} else {
-				cheaders = "%s,%s".printf (cheaders, cheader);
-			}
-		}
-		write_string ("cheader_filename = \"%s\")]".printf (cheaders));
+		write_string ("cheader_filename = \"%s\")]".printf (get_cheaders(cl)));
 		write_newline ();
 
 		write_attributes (cl);
@@ -198,7 +220,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		var type_params = cl.get_type_parameters ();
 		if (type_params.size > 0) {
 			write_string ("<");
-			first = true;
+			bool first = true;
 			foreach (TypeParameter type_param in type_params) {
 				if (first) {
 					first = false;
@@ -214,7 +236,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (base_types.size > 0) {
 			write_string (" : ");
 		
-			first = true;
+			bool first = true;
 			foreach (DataType base_type in base_types) {
 				if (!first) {
 					write_string (", ");
@@ -295,17 +317,7 @@ public class Vala.CodeWriter : CodeVisitor {
                         write_string ("use_const = false, ");
                 }
 
-		bool first = true;
-		string cheaders = "";
-		foreach (string cheader in st.get_cheader_filenames ()) {
-			if (first) {
-				cheaders = cheader;
-				first = false;
-			} else {
-				cheaders = "%s,%s".printf (cheaders, cheader);
-			}
-		}
-		write_string ("cheader_filename = \"%s\")]".printf (cheaders));
+		write_string ("cheader_filename = \"%s\")]".printf (get_cheaders(st)));
 		write_newline ();
 
 		if (st.is_simple_type ()) {
@@ -365,17 +377,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		write_indent ();
 
-		bool first = true;
-		string cheaders = "";
-		foreach (string cheader in iface.get_cheader_filenames ()) {
-			if (first) {
-				cheaders = cheader;
-				first = false;
-			} else {
-				cheaders = "%s,%s".printf (cheaders, cheader);
-			}
-		}
-		write_string ("[CCode (cheader_filename = \"%s\"".printf (cheaders));
+		write_string ("[CCode (cheader_filename = \"%s\"".printf (get_cheaders(iface)));
 		if (iface.get_lower_case_csuffix () != iface.get_default_lower_case_csuffix ())
 			write_string (", lower_case_csuffix = \"%s\"".printf (iface.get_lower_case_csuffix ()));
 
@@ -392,7 +394,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		var type_params = iface.get_type_parameters ();
 		if (type_params.size > 0) {
 			write_string ("<");
-			first = true;
+			bool first = true;
 			foreach (TypeParameter type_param in type_params) {
 				if (first) {
 					first = false;
@@ -408,7 +410,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (prerequisites.size > 0) {
 			write_string (" : ");
 		
-			first = true;
+			bool first = true;
 			foreach (DataType prerequisite in prerequisites) {
 				if (!first) {
 					write_string (", ");
@@ -448,24 +450,13 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		write_indent ();
 
-		bool first = true;
-		string cheaders = "";
-		foreach (string cheader in en.get_cheader_filenames ()) {
-			if (first) {
-				cheaders = cheader;
-				first = false;
-			} else {
-				cheaders = "%s,%s".printf (cheaders, cheader);
-			}
-		}
-
 		write_string ("[CCode (cprefix = \"%s\", ".printf (en.get_cprefix ()));
 
 		if (!en.has_type_id) {
 			write_string ("has_type_id = \"%d\", ".printf (en.has_type_id ? 1 : 0));
 		}
 
-		write_string ("cheader_filename = \"%s\")]".printf (cheaders));
+		write_string ("cheader_filename = \"%s\")]".printf (get_cheaders(en)));
 
 		if (en.is_flags) {
 			write_indent ();
@@ -480,7 +471,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_identifier (en.name);
 		write_begin_block ();
 
-		first = true;
+		bool first = true;
 		foreach (EnumValue ev in en.get_values ()) {
 			if (first) {
 				first = false;
@@ -525,17 +516,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		write_indent ();
 
-		var first = true;
-		string cheaders = "";
-		foreach (string cheader in edomain.get_cheader_filenames ()) {
-			if (first) {
-				cheaders = cheader;
-				first = false;
-			} else {
-				cheaders = "%s,%s".printf (cheaders, cheader);
-			}
-		}
-		write_string ("[CCode (cprefix = \"%s\", cheader_filename = \"%s\")]".printf (edomain.get_cprefix (), cheaders));
+		write_string ("[CCode (cprefix = \"%s\", cheader_filename = \"%s\")]".printf (edomain.get_cprefix (), get_cheaders(edomain)));
 
 		write_attributes (edomain);
 
@@ -582,17 +563,7 @@ public class Vala.CodeWriter : CodeVisitor {
 					write_string (", ");
 				}
 
-				bool first = true;
-				string cheaders = "";
-				foreach (string cheader in c.get_cheader_filenames ()) {
-					if (first) {
-						cheaders = cheader;
-						first = false;
-					} else {
-						cheaders = "%s,%s".printf (cheaders, cheader);
-					}
-				}
-				write_string ("cheader_filename = \"%s\"".printf (cheaders));
+				write_string ("cheader_filename = \"%s\"".printf (get_cheaders(c)));
 			}
 
 			write_string (")]");
@@ -643,17 +614,7 @@ public class Vala.CodeWriter : CodeVisitor {
 					write_string (", ");
 				}
 
-				bool first = true;
-				string cheaders = "";
-				foreach (string cheader in f.get_cheader_filenames ()) {
-					if (first) {
-						cheaders = cheader;
-						first = false;
-					} else {
-						cheaders = "%s,%s".printf (cheaders, cheader);
-					}
-				}
-				write_string ("cheader_filename = \"%s\"".printf (cheaders));
+				write_string ("cheader_filename = \"%s\"".printf (get_cheaders(f)));
 			}
 
 			if (f.no_array_length && f.field_type is ArrayType) {
@@ -799,17 +760,7 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		write_indent ();
 
-		var first = true;
-		string cheaders = "";
-		foreach (string cheader in cb.get_cheader_filenames ()) {
-			if (first) {
-				cheaders = cheader;
-				first = false;
-			} else {
-				cheaders = "%s,%s".printf (cheaders, cheader);
-			}
-		}
-		write_string ("[CCode (cheader_filename = \"%s\")]".printf (cheaders));
+		write_string ("[CCode (cheader_filename = \"%s\")]".printf (get_cheaders(cb)));
 
 		write_indent ();
 
@@ -866,17 +817,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			separator = ", ";
 		}
 		if (m.parent_symbol is Namespace) {
-			bool first = true;
-			string cheaders = "";
-			foreach (string cheader in m.get_cheader_filenames ()) {
-				if (first) {
-					cheaders = cheader;
-					first = false;
-				} else {
-					cheaders = "%s,%s".printf (cheaders, cheader);
-				}
-			}
-			ccode_params.append_printf ("%scheader_filename = \"%s\"", separator, cheaders);
+			ccode_params.append_printf ("%scheader_filename = \"%s\"", separator, get_cheaders(m));
 			separator = ", ";
 		}
 		if (!float_equal (m.cinstance_parameter_position, 0)) {
