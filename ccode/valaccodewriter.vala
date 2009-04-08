@@ -1,6 +1,6 @@
 /* valaccodewriter.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -49,6 +49,8 @@ public class Vala.CCodeWriter {
 	private FileStream stream;
 	
 	private int indent;
+	private int current_line_number = 1;
+	private bool using_line_directive;
 
 	/* at begin of line */
 	private bool _bol = true;
@@ -111,12 +113,20 @@ public class Vala.CCodeWriter {
 	 * Writes tabs according to the current indent level.
 	 */
 	public void write_indent (CCodeLineDirective? line = null) {
-		if (line_directives && line != null) {
-			line.write (this);
+		if (line_directives) {
+			if (line != null) {
+				line.write (this);
+				using_line_directive = true;
+			} else if (using_line_directive) {
+				// no corresponding Vala line, emit line directive for C line
+				write_string ("#line %d \"%s\"".printf (current_line_number + 1, Path.get_basename (filename)));
+				write_newline ();
+				using_line_directive = false;
+			}
 		}
 
 		if (!bol) {
-			stream.putc ('\n');
+			write_newline ();
 		}
 		
 		for (int i = 0; i < indent; i++) {
@@ -141,6 +151,7 @@ public class Vala.CCodeWriter {
 	 */
 	public void write_newline () {
 		stream.putc ('\n');
+		current_line_number++;
 		_bol = true;
 	}
 	
