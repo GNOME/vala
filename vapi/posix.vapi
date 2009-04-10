@@ -325,6 +325,19 @@ namespace Posix {
 	public int posix_fallocate (int fd, long offset, long len);
 
 	[Compact]
+	[CCode (cname = "struct group", cheader_filename = "grp.h")]
+	public class Group {
+		public string gr_name;
+		public string gr_passwd;
+		public gid_t gr_gid;
+		public string[] gr_mem;
+	}
+	[CCode (cheader_filename = "grp.h")]
+	public void endgrent ();
+	public unowned Group? getgrent ();
+	public void setgrent ();
+
+	[Compact]
 	[CCode (cname = "struct passwd", cheader_filename = "pwd.h")]
 	public class Passwd {
 		public string pw_name;
