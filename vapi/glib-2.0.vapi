@@ -1978,7 +1978,7 @@ namespace GLib {
 		[CCode (cname = "g_get_current_dir")]
 		public static string get_current_dir ();
 		[CCode (cname = "g_find_program_in_path")]
-		public static string find_program_in_path (string program);
+		public static string? find_program_in_path (string program);
 		[CCode (cname = "g_atexit")]
 		public static void atexit (VoidFunc func);
 		[CCode (cname = "g_chdir")]
