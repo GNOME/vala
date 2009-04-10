@@ -197,18 +197,6 @@ public class Vala.SourceFile {
 	}
 
 	/**
-	 * Returns the filename to use when generating C header files.
-	 *
-	 * @return generated C header filename
-	 */
-	public string get_cheader_filename () {
-		if (cheader_filename == null) {
-			cheader_filename = "%s%s.h".printf (get_destination_directory (), get_basename ());
-		}
-		return cheader_filename;
-	}
-	
-	/**
 	 * Returns the filename to use when generating C source files.
 	 *
 	 * @return generated C source filename

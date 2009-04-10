@@ -481,26 +481,7 @@ public class Vala.Namespace : Symbol {
 	public override Gee.List<string> get_cheader_filenames () {
 		return new ReadOnlyList<string> (cheader_filenames);
 	}
-	
-	/**
-	 * Returns the C header filename of this namespace.
-	 *
-	 * @return header filename
-	 */
-	public string get_cheader_filename () {
-		var s = new StringBuilder ();
-		bool first = true;
-		foreach (string cheader_filename in get_cheader_filenames ()) {
-			if (first) {
-				first = false;
-			} else {
-				s.append_c (',');
-			}
-			s.append (cheader_filename);
-		}
-		return s.str;
-	}
-	
+
 	/**
 	 * Sets the C header filename of this namespace to the specified
 	 * filename.
