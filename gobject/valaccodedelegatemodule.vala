@@ -55,7 +55,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				}
 				
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var cparam = new CCodeFormalParameter (head.get_array_length_cname (param.name, dim), length_ctype);
+					var cparam = new CCodeFormalParameter (head.get_array_length_cname (get_variable_cname (param.name), dim), length_ctype);
 					cfundecl.add_parameter (cparam);
 				}
 			}
@@ -124,7 +124,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 		} else if (delegate_expr.symbol_reference != null) {
 			if (delegate_expr.symbol_reference is FormalParameter) {
 				var param = (FormalParameter) delegate_expr.symbol_reference;
-				CCodeExpression target_expr = new CCodeIdentifier (get_delegate_target_cname (param.name));
+				CCodeExpression target_expr = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name)));
 				if (param.direction != ParameterDirection.IN) {
 					// accessing argument of out/ref param
 					target_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_expr);
@@ -405,11 +405,11 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 			ctypename += "*";
 		}
 
-		param.ccodenode = new CCodeFormalParameter (param.name, ctypename);
+		param.ccodenode = new CCodeFormalParameter (get_variable_cname (param.name), ctypename);
 
 		cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
 		if (carg_map != null) {
-			carg_map.set (get_param_pos (param.cparameter_position), new CCodeIdentifier (param.name));
+			carg_map.set (get_param_pos (param.cparameter_position), get_variable_cexpression (param.name));
 		}
 
 		if (param.parameter_type is DelegateType) {
@@ -419,24 +419,24 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 			generate_delegate_declaration (d, decl_space);
 
 			if (d.has_target) {
-				var cparam = new CCodeFormalParameter (get_delegate_target_cname (param.name), "void*");
+				var cparam = new CCodeFormalParameter (get_delegate_target_cname (get_variable_cname (param.name)), "void*");
 				cparam_map.set (get_param_pos (param.cdelegate_target_parameter_position), cparam);
 				if (carg_map != null) {
-					carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
+					carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), get_variable_cexpression (param.name));
 				}
 				if (deleg_type.value_owned) {
-					cparam = new CCodeFormalParameter (get_delegate_target_destroy_notify_cname (param.name), "GDestroyNotify");
+					cparam = new CCodeFormalParameter (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)), "GDestroyNotify");
 					cparam_map.set (get_param_pos (param.cdelegate_target_parameter_position + 0.01), cparam);
 					if (carg_map != null) {
-						carg_map.set (get_param_pos (param.cdelegate_target_parameter_position + 0.01), new CCodeIdentifier (cparam.name));
+						carg_map.set (get_param_pos (param.cdelegate_target_parameter_position + 0.01), get_variable_cexpression (param.name));
 					}
 				}
 			}
 		} else if (param.parameter_type is MethodType) {
-			var cparam = new CCodeFormalParameter (get_delegate_target_cname (param.name), "void*");
+			var cparam = new CCodeFormalParameter (get_delegate_target_cname (get_variable_cname (param.name)), "void*");
 			cparam_map.set (get_param_pos (param.cdelegate_target_parameter_position), cparam);
 			if (carg_map != null) {
-				carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
+				carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), get_variable_cexpression (param.name));
 			}
 		}
 	}

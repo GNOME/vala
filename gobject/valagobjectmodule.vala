@@ -488,7 +488,7 @@ internal class Vala.GObjectModule : GTypeModule {
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
 				cdecl = new CCodeDeclaration ("GError *");
-				cdecl.add_declarator (new CCodeVariableDeclarator ("inner_error", new CCodeConstant ("NULL")));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("_inner_error_", new CCodeConstant ("NULL")));
 				cblock.add_statement (cdecl);
 			}
 
@@ -517,7 +517,7 @@ internal class Vala.GObjectModule : GTypeModule {
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
 				var cdecl = new CCodeDeclaration ("GError *");
-				cdecl.add_declarator (new CCodeVariableDeclarator ("inner_error", new CCodeConstant ("NULL")));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("_inner_error_", new CCodeConstant ("NULL")));
 				base_init_fragment.append (cdecl);
 			}
 
@@ -537,7 +537,7 @@ internal class Vala.GObjectModule : GTypeModule {
 				 * as error may be set to NULL but we're always interested in inner errors
 				 */
 				var cdecl = new CCodeDeclaration ("GError *");
-				cdecl.add_declarator (new CCodeVariableDeclarator ("inner_error", new CCodeConstant ("NULL")));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("_inner_error_", new CCodeConstant ("NULL")));
 				class_init_fragment.append (cdecl);
 			}
 

@@ -43,11 +43,11 @@ internal class Vala.GTypeModule : GErrorModule {
 			ctypename += "*";
 		}
 
-		param.ccodenode = new CCodeFormalParameter (param.name, ctypename);
+		param.ccodenode = new CCodeFormalParameter (get_variable_cname (param.name), ctypename);
 
 		cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
 		if (carg_map != null) {
-			carg_map.set (get_param_pos (param.cparameter_position), new CCodeIdentifier (param.name));
+			carg_map.set (get_param_pos (param.cparameter_position), get_variable_cexpression (param.name));
 		}
 	}
 

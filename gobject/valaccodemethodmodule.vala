@@ -88,7 +88,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 				var cparam = new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*");
 				cparam_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), cparam);
 				if (carg_map != null) {
-					carg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), new CCodeIdentifier (cparam.name));
+					carg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), get_variable_cexpression (cparam.name));
 				}
 			}
 		} else if (m.return_type is DelegateType) {
@@ -99,7 +99,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 				var cparam = new CCodeFormalParameter (get_delegate_target_cname ("result"), "void*");
 				cparam_map.set (get_param_pos (m.cdelegate_target_parameter_position), cparam);
 				if (carg_map != null) {
-					carg_map.set (get_param_pos (m.cdelegate_target_parameter_position), new CCodeIdentifier (cparam.name));
+					carg_map.set (get_param_pos (m.cdelegate_target_parameter_position), get_variable_cexpression (cparam.name));
 				}
 			}
 		}
@@ -112,7 +112,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			var cparam = new CCodeFormalParameter ("error", "GError**");
 			cparam_map.set (get_param_pos (-1), cparam);
 			if (carg_map != null) {
-				carg_map.set (get_param_pos (-1), new CCodeIdentifier (cparam.name));
+				carg_map.set (get_param_pos (-1), get_variable_cexpression (cparam.name));
 			}
 		}
 	}
@@ -413,14 +413,14 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					var t = param.parameter_type.data_type;
 					if (t != null && t.is_reference_type ()) {
 						if (param.direction != ParameterDirection.OUT) {
-							var type_check = create_method_type_check_statement (m, creturn_type, t, !param.parameter_type.nullable, param.name);
+							var type_check = create_method_type_check_statement (m, creturn_type, t, !param.parameter_type.nullable, get_variable_cname (param.name));
 							if (type_check != null) {
 								type_check.line = function.line;
 								cinit.append (type_check);
 							}
 						} else {
 							// ensure that the passed reference for output parameter is cleared
-							var a = new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), new CCodeConstant ("NULL"));
+							var a = new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (param.name)), new CCodeConstant ("NULL"));
 							cinit.append (new CCodeExpressionStatement (a));
 						}
 					}
@@ -431,12 +431,12 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					 * as error may be set to NULL but we're always interested in inner errors
 					 */
 					if (m.coroutine) {
-						closure_struct.add_field ("GError *", "inner_error");
+						closure_struct.add_field ("GError *", "_inner_error_");
 
 						// no initialization necessary, closure struct is zeroed
 					} else {
 						var cdecl = new CCodeDeclaration ("GError *");
-						cdecl.add_declarator (new CCodeVariableDeclarator ("inner_error", new CCodeConstant ("NULL")));
+						cdecl.add_declarator (new CCodeVariableDeclarator ("_inner_error_", new CCodeConstant ("NULL")));
 						cinit.append (cdecl);
 					}
 				}
@@ -661,14 +661,14 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 				ctypename += "*";
 			}
 
-			param.ccodenode = new CCodeFormalParameter (param.name, ctypename);
+			param.ccodenode = new CCodeFormalParameter (get_variable_cname (param.name), ctypename);
 		} else {
 			param.ccodenode = new CCodeFormalParameter.with_ellipsis ();
 		}
 
 		cparam_map.set (get_param_pos (param.cparameter_position), (CCodeFormalParameter) param.ccodenode);
 		if (carg_map != null && !param.ellipsis) {
-			carg_map.set (get_param_pos (param.cparameter_position), new CCodeIdentifier (param.name));
+			carg_map.set (get_param_pos (param.cparameter_position), get_variable_cexpression (param.name));
 		}
 	}
 

@@ -321,7 +321,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					var type_as_struct = p.parameter_type.data_type as Struct;
 					if (p.direction != ParameterDirection.IN
 					    || (type_as_struct != null && !type_as_struct.is_simple_type () && !p.parameter_type.nullable)) {
-						expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (p.name));
+						expr.ccodenode = new CCodeIdentifier ("(*%s)".printf (get_variable_cname (p.name)));
 					} else {
 						// Property setters of non simple structs shall replace all occurences
 						// of the "value" formal parameter with a dereferencing version of that
@@ -332,7 +332,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						    current_property_accessor.prop.property_type.is_real_struct_type ()) {
 							expr.ccodenode = new CCodeIdentifier ("(*value)");
 						} else {
-							expr.ccodenode = new CCodeIdentifier (p.name);
+							expr.ccodenode = get_variable_cexpression (p.name);
 						}
 					}
 				}

@@ -133,7 +133,7 @@ internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				outer_ccomma = new CCodeCommaExpression ();
 
 				var lhs_value_type = assignment.left.value_type.copy ();
-				string lhs_temp_name = "_tmp%d".printf (next_temp_var_id++);
+				string lhs_temp_name = "_tmp%d_".printf (next_temp_var_id++);
 				var lhs_temp = new LocalVariable (lhs_value_type, "*" + lhs_temp_name);
 				temp_vars.insert (0, lhs_temp);
 				outer_ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (lhs_temp_name), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, lhs)));

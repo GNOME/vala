@@ -92,7 +92,7 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 
 		// method will fail
 		current_method_inner_error = true;
-		var cassign = new CCodeAssignment (get_variable_cexpression ("inner_error"), (CCodeExpression) stmt.error_expression.ccodenode);
+		var cassign = new CCodeAssignment (new CCodeIdentifier ("_inner_error_"), (CCodeExpression) stmt.error_expression.ccodenode);
 		cfrag.append (new CCodeExpressionStatement (cassign));
 
 		head.add_simple_check (stmt, cfrag);
@@ -105,7 +105,7 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 	public virtual CCodeStatement return_with_exception (CCodeExpression error_expr)
 	{
 		var cpropagate = new CCodeFunctionCall (new CCodeIdentifier ("g_propagate_error"));
-		cpropagate.add_argument (get_variable_cexpression ("error"));
+		cpropagate.add_argument (new CCodeIdentifier ("error"));
 		cpropagate.add_argument (error_expr);
 
 		var cerror_block = new CCodeBlock ();
@@ -163,7 +163,7 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 	public override void add_simple_check (CodeNode node, CCodeFragment cfrag) {
 		current_method_inner_error = true;
 
-		var inner_error = get_variable_cexpression ("inner_error");
+		var inner_error = get_variable_cexpression ("_inner_error_");
 
 		CCodeStatement cerror_handler = null;
 
@@ -319,20 +319,20 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 
 		var cblock = new CCodeBlock ();
 
-		string variable_name = clause.variable_name;
+		string variable_name = get_variable_cname (clause.variable_name);
 		if (variable_name == null) {
 			variable_name = "__err";
 		}
 
 		if (current_method != null && current_method.coroutine) {
 			closure_struct.add_field ("GError *", variable_name);
-			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (variable_name), get_variable_cexpression ("inner_error"))));
+			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (variable_name), get_variable_cexpression ("_inner_error_"))));
 		} else {
 			var cdecl = new CCodeDeclaration ("GError *");
-			cdecl.add_declarator (new CCodeVariableDeclarator (variable_name, get_variable_cexpression ("inner_error")));
+			cdecl.add_declarator (new CCodeVariableDeclarator (variable_name, get_variable_cexpression ("_inner_error_")));
 			cblock.add_statement (cdecl);
 		}
-		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression ("inner_error"), new CCodeConstant ("NULL"))));
+		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression ("_inner_error_"), new CCodeConstant ("NULL"))));
 
 		cblock.add_statement (clause.body.ccodenode);
 

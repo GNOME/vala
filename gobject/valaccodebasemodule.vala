@@ -71,8 +71,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public Gee.Set<string> user_marshal_set;
 	/* (constant) hash table with all predefined marshallers */
 	public Gee.Set<string> predefined_marshal_set;
-	/* (constant) hash table with all C keywords */
-	public Gee.Set<string> c_keywords;
+	/* (constant) hash table with all reserved identifiers in the generated code */
+	Gee.Set<string> reserved_identifiers;
 	
 	public int next_temp_var_id = 0;
 	public bool in_creation_method = false;
@@ -158,49 +158,54 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		predefined_marshal_set.add ("VOID:UINT,POINTER");
 		predefined_marshal_set.add ("BOOLEAN:FLAGS");
 
-		c_keywords = new HashSet<string> (str_hash, str_equal);
+		reserved_identifiers = new HashSet<string> (str_hash, str_equal);
 
 		// C99 keywords
-		c_keywords.add ("_Bool");
-		c_keywords.add ("_Complex");
-		c_keywords.add ("_Imaginary");
-		c_keywords.add ("auto");
-		c_keywords.add ("break");
-		c_keywords.add ("case");
-		c_keywords.add ("char");
-		c_keywords.add ("const");
-		c_keywords.add ("continue");
-		c_keywords.add ("default");
-		c_keywords.add ("do");
-		c_keywords.add ("double");
-		c_keywords.add ("else");
-		c_keywords.add ("enum");
-		c_keywords.add ("extern");
-		c_keywords.add ("float");
-		c_keywords.add ("for");
-		c_keywords.add ("goto");
-		c_keywords.add ("if");
-		c_keywords.add ("inline");
-		c_keywords.add ("int");
-		c_keywords.add ("long");
-		c_keywords.add ("register");
-		c_keywords.add ("restrict");
-		c_keywords.add ("return");
-		c_keywords.add ("short");
-		c_keywords.add ("signed");
-		c_keywords.add ("sizeof");
-		c_keywords.add ("static");
-		c_keywords.add ("struct");
-		c_keywords.add ("switch");
-		c_keywords.add ("typedef");
-		c_keywords.add ("union");
-		c_keywords.add ("unsigned");
-		c_keywords.add ("void");
-		c_keywords.add ("volatile");
-		c_keywords.add ("while");
+		reserved_identifiers.add ("_Bool");
+		reserved_identifiers.add ("_Complex");
+		reserved_identifiers.add ("_Imaginary");
+		reserved_identifiers.add ("auto");
+		reserved_identifiers.add ("break");
+		reserved_identifiers.add ("case");
+		reserved_identifiers.add ("char");
+		reserved_identifiers.add ("const");
+		reserved_identifiers.add ("continue");
+		reserved_identifiers.add ("default");
+		reserved_identifiers.add ("do");
+		reserved_identifiers.add ("double");
+		reserved_identifiers.add ("else");
+		reserved_identifiers.add ("enum");
+		reserved_identifiers.add ("extern");
+		reserved_identifiers.add ("float");
+		reserved_identifiers.add ("for");
+		reserved_identifiers.add ("goto");
+		reserved_identifiers.add ("if");
+		reserved_identifiers.add ("inline");
+		reserved_identifiers.add ("int");
+		reserved_identifiers.add ("long");
+		reserved_identifiers.add ("register");
+		reserved_identifiers.add ("restrict");
+		reserved_identifiers.add ("return");
+		reserved_identifiers.add ("short");
+		reserved_identifiers.add ("signed");
+		reserved_identifiers.add ("sizeof");
+		reserved_identifiers.add ("static");
+		reserved_identifiers.add ("struct");
+		reserved_identifiers.add ("switch");
+		reserved_identifiers.add ("typedef");
+		reserved_identifiers.add ("union");
+		reserved_identifiers.add ("unsigned");
+		reserved_identifiers.add ("void");
+		reserved_identifiers.add ("volatile");
+		reserved_identifiers.add ("while");
 
 		// MSVC keywords
-		c_keywords.add ("cdecl");
+		reserved_identifiers.add ("cdecl");
+
+		// reserved for Vala/GObject naming conventions
+		reserved_identifiers.add ("error");
+		reserved_identifiers.add ("result");
+		reserved_identifiers.add ("self");
 	}
 
 	public override void emit (CodeContext context) {
@@ -1302,7 +1307,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			if (current_method_inner_error) {
 				var cdecl = new CCodeDeclaration ("GError *");
-				cdecl.add_declarator (new CCodeVariableDeclarator ("inner_error", new CCodeConstant ("NULL")));
+				cdecl.add_declarator (new CCodeVariableDeclarator ("_inner_error_", new CCodeConstant ("NULL")));
 				function.block.prepend_statement (cdecl);
 			}
 
@@ -1357,7 +1362,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		if (current_method_inner_error) {
 			var cdecl = new CCodeDeclaration ("GError *");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("inner_error", new CCodeConstant ("NULL")));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_inner_error_", new CCodeConstant ("NULL")));
 			cfrag.append (cdecl);
 		}
 
@@ -1454,12 +1459,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (name[0] == '.') {
 			// compiler-internal variable
 			if (!variable_name_map.contains (name)) {
-				variable_name_map.set (name, "_tmp%d".printf (next_temp_var_id));
+				variable_name_map.set (name, "_tmp%d_".printf (next_temp_var_id));
 				next_temp_var_id++;
 			}
 			return variable_name_map.get (name);
-		} else if (c_keywords.contains (name)) {
-			return name + "_";
+		} else if (reserved_identifiers.contains (name)) {
+			return "_%s_".printf (name);
 		} else {
 			return name;
 		}
@@ -1640,7 +1645,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public LocalVariable get_temp_variable (DataType type, bool value_owned = true, CodeNode? node_reference = null) {
 		var var_type = type.copy ();
 		var_type.value_owned = value_owned;
-		var local = new LocalVariable (var_type, "_tmp%d".printf (next_temp_var_id));
+		var local = new LocalVariable (var_type, "_tmp%d_".printf (next_temp_var_id));
 
 		if (node_reference != null) {
 			local.source_reference = node_reference.source_reference;
@@ -2956,7 +2961,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (expr.tree_can_fail) {
 				// method can fail
 				current_method_inner_error = true;
-				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("inner_error")));
+				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_inner_error_")));
 			}
 
 			if (ellipsis) {

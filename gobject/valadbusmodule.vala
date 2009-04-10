@@ -71,7 +71,7 @@ internal class Vala.DBusModule : GAsyncModule {
 	}
 
 	CCodeExpression read_basic (CCodeFragment fragment, BasicTypeInfo basic_type, CCodeExpression iter_expr) {
-		string temp_name = "_tmp%d".printf (next_temp_var_id++);
+		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var cdecl = new CCodeDeclaration (basic_type.cname);
 		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name));
@@ -96,7 +96,7 @@ internal class Vala.DBusModule : GAsyncModule {
 	}
 
 	CCodeExpression read_array (CCodeFragment fragment, ArrayType array_type, CCodeExpression iter_expr, CCodeExpression? expr) {
-		string temp_name = "_tmp%d".printf (next_temp_var_id++);
+		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var new_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new"));
 		new_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
@@ -128,7 +128,7 @@ internal class Vala.DBusModule : GAsyncModule {
 	}
 
 	void read_array_dim (CCodeFragment fragment, ArrayType array_type, int dim, string temp_name, CCodeExpression iter_expr, CCodeExpression? expr) {
-		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
+		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var cdecl = new CCodeDeclaration ("int");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("%s_length%d".printf (temp_name, dim), new CCodeConstant ("0")));
@@ -190,8 +190,8 @@ internal class Vala.DBusModule : GAsyncModule {
 	}
 
 	CCodeExpression read_struct (CCodeFragment fragment, Struct st, CCodeExpression iter_expr) {
-		string temp_name = "_tmp%d".printf (next_temp_var_id++);
-		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
+		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
+		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var cdecl = new CCodeDeclaration (st.get_cname ());
 		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name));
@@ -219,8 +219,8 @@ internal class Vala.DBusModule : GAsyncModule {
 	}
 
 	CCodeExpression read_value (CCodeFragment fragment, CCodeExpression iter_expr) {
-		string temp_name = "_tmp%d".printf (next_temp_var_id++);
-		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
+		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
+		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		// 0-initialize struct with struct initializer { 0 }
 		var cvalinit = new CCodeInitializerList ();
@@ -275,9 +275,9 @@ internal class Vala.DBusModule : GAsyncModule {
 	}
 
 	CCodeExpression read_hash_table (CCodeFragment fragment, ObjectType type, CCodeExpression iter_expr) {
-		string temp_name = "_tmp%d".printf (next_temp_var_id++);
-		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
-		string entryiter_name = "_tmp%d".printf (next_temp_var_id++);
+		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
+		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
+		string entryiter_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var type_args = type.get_type_arguments ();
 		assert (type_args.size == 2);
@@ -402,7 +402,7 @@ internal class Vala.DBusModule : GAsyncModule {
 	}
 
 	void write_basic (CCodeFragment fragment, BasicTypeInfo basic_type, CCodeExpression iter_expr, CCodeExpression expr) {
-		string temp_name = "_tmp%d".printf (next_temp_var_id++);
+		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var cdecl = new CCodeDeclaration (basic_type.cname);
 		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name));
@@ -418,7 +418,7 @@ internal class Vala.DBusModule : GAsyncModule {
 	}
 
 	void write_array (CCodeFragment fragment, ArrayType array_type, CCodeExpression iter_expr, CCodeExpression array_expr) {
-		string array_iter_name = "_tmp%d".printf (next_temp_var_id++);
+		string array_iter_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var cdecl = new CCodeDeclaration (array_type.get_cname ());
 		cdecl.add_declarator (new CCodeVariableDeclarator (array_iter_name));
@@ -430,8 +430,8 @@ internal class Vala.DBusModule : GAsyncModule {
 	}
 
 	void write_array_dim (CCodeFragment fragment, ArrayType array_type, int dim, CCodeExpression iter_expr, CCodeExpression array_expr, CCodeExpression array_iter_expr) {
-		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
-		string index_name = "_tmp%d".printf (next_temp_var_id++);
+		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
+		string index_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var cdecl = new CCodeDeclaration ("DBusMessageIter");
 		cdecl.add_declarator (new CCodeVariableDeclarator (subiter_name));
@@ -473,7 +473,7 @@ internal class Vala.DBusModule : GAsyncModule {
 	}
 
 	void write_struct (CCodeFragment fragment, Struct st, CCodeExpression iter_expr, CCodeExpression struct_expr) {
-		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
+		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var cdecl = new CCodeDeclaration ("DBusMessageIter");
 		cdecl.add_declarator (new CCodeVariableDeclarator (subiter_name));
@@ -501,7 +501,7 @@ internal class Vala.DBusModule : GAsyncModule {
 	}
 
 	void write_value (CCodeFragment fragment, CCodeExpression iter_expr, CCodeExpression expr) {
-		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
+		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var cdecl = new CCodeDeclaration ("DBusMessageIter");
 		cdecl.add_declarator (new CCodeVariableDeclarator (subiter_name));
@@ -552,11 +552,11 @@ internal class Vala.DBusModule : GAsyncModule {
 	}
 
 	void write_hash_table (CCodeFragment fragment, ObjectType type, CCodeExpression iter_expr, CCodeExpression hash_table_expr) {
-		string subiter_name = "_tmp%d".printf (next_temp_var_id++);
-		string entryiter_name = "_tmp%d".printf (next_temp_var_id++);
-		string tableiter_name = "_tmp%d".printf (next_temp_var_id++);
-		string key_name = "_tmp%d".printf (next_temp_var_id++);
-		string value_name = "_tmp%d".printf (next_temp_var_id++);
+		string subiter_name = "_tmp%d_".printf (next_temp_var_id++);
+		string entryiter_name = "_tmp%d_".printf (next_temp_var_id++);
+		string tableiter_name = "_tmp%d_".printf (next_temp_var_id++);
+		string key_name = "_tmp%d_".printf (next_temp_var_id++);
+		string value_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var type_args = type.get_type_arguments ();
 		assert (type_args.size == 2);
