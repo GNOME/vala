@@ -203,7 +203,12 @@ public class Vala.SourceFile {
 	 */
 	public string get_csource_filename () {
 		if (csource_filename == null) {
-			csource_filename = "%s%s.c".printf (get_destination_directory (), get_basename ());
+			if (context.ccode_only || context.save_csources) {
+				csource_filename = "%s%s.c".printf (get_destination_directory (), get_basename ());
+			} else {
+				// temporary file
+				csource_filename = "%s%s.vala.c".printf (get_destination_directory (), get_basename ());
+			}
 		}
 		return csource_filename;
 	}
