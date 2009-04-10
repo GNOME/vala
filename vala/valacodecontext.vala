@@ -152,10 +152,6 @@ public class Vala.CodeContext {
 		get { return save_temps; }
 	}
 
-	public bool save_cheaders {
-		get { return save_csources || null != library; }
-	}
-
 	public Report report { get; set; default = new Report ();}
 
 	private Gee.List<SourceFile> source_files = new ArrayList<SourceFile> ();
