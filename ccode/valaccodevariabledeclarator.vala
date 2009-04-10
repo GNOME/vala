@@ -36,13 +36,22 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 	 */
 	public CCodeExpression? initializer { get; set; }
 
-	public CCodeVariableDeclarator (string name, CCodeExpression? initializer = null) {
+	/**
+	 * The optional declarator suffix.
+	 */
+	public string? declarator_suffix { get; set; }
+
+	public CCodeVariableDeclarator (string name, CCodeExpression? initializer = null, string? declarator_suffix = null) {
 		this.name = name;
 		this.initializer = initializer;
+		this.declarator_suffix = declarator_suffix;
 	}
 
 	public override void write (CCodeWriter writer) {
 		writer.write_string (name);
+		if (declarator_suffix != null) {
+			writer.write_string (declarator_suffix);
+		}
 
 		if (initializer != null) {
 			writer.write_string (" = ");
@@ -52,6 +61,9 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 
 	public override void write_declaration (CCodeWriter writer) {
 		writer.write_string (name);
+		if (declarator_suffix != null) {
+			writer.write_string (declarator_suffix);
+		}
 
 		// initializer lists can't be moved to a separate statement
 		if (initializer is CCodeInitializerList) {

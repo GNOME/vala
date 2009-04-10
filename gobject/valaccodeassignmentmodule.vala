@@ -208,6 +208,23 @@ internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		return codenode;
 	}
 
+	CCodeExpression emit_fixed_length_array_assignment (Assignment assignment, ArrayType array_type) {
+		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
+		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
+
+		// it is necessary to use memcpy for fixed-length (stack-allocated) arrays
+		// simple assignments do not work in C
+		var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+		sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+		var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call);
+		var ccopy = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
+		ccopy.add_argument (lhs);
+		ccopy.add_argument (rhs);
+		ccopy.add_argument (size);
+
+		return ccopy;
+	}
+
 	public override void visit_assignment (Assignment assignment) {
 		assignment.right.accept (codegen);
 
@@ -219,7 +236,12 @@ internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		if (assignment.left.symbol_reference is Property) {
 			assignment.ccodenode = emit_property_assignment (assignment);
 		} else {
-			assignment.ccodenode = emit_simple_assignment (assignment);
+			var array_type = assignment.left.value_type as ArrayType;
+			if (array_type != null && array_type.fixed_length) {
+				assignment.ccodenode = emit_fixed_length_array_assignment (assignment, array_type);
+			} else {
+				assignment.ccodenode = emit_simple_assignment (assignment);
+			}
 		}
 	}
 }

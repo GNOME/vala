@@ -1480,15 +1480,17 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (local.variable_type is ArrayType) {
 			// create variables to store array dimensions
 			var array_type = (ArrayType) local.variable_type;
-			
-			for (int dim = 1; dim <= array_type.rank; dim++) {
-				var len_var = new LocalVariable (int_type.copy (), head.get_array_length_cname (get_variable_cname (local.name), dim));
-				temp_vars.insert (0, len_var);
-			}
 
-			if (array_type.rank == 1) {
-				var size_var = new LocalVariable (int_type.copy (), head.get_array_size_cname (get_variable_cname (local.name)));
-				temp_vars.insert (0, size_var);
+			if (!array_type.fixed_length) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					var len_var = new LocalVariable (int_type.copy (), head.get_array_length_cname (get_variable_cname (local.name), dim));
+					temp_vars.insert (0, len_var);
+				}
+
+				if (array_type.rank == 1) {
+					var size_var = new LocalVariable (int_type.copy (), head.get_array_size_cname (get_variable_cname (local.name)));
+					temp_vars.insert (0, size_var);
+				}
 			}
 		} else if (local.variable_type is DelegateType) {
 			var deleg_type = (DelegateType) local.variable_type;
@@ -1507,26 +1509,30 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (local.variable_type is ArrayType) {
 				var array_type = (ArrayType) local.variable_type;
 
-				var ccomma = new CCodeCommaExpression ();
+				if (array_type.fixed_length) {
+					rhs = null;
+				} else {
+					var ccomma = new CCodeCommaExpression ();
 
-				var temp_var = get_temp_variable (local.variable_type, true, local);
-				temp_vars.insert (0, temp_var);
-				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
+					var temp_var = get_temp_variable (local.variable_type, true, local);
+					temp_vars.insert (0, temp_var);
+					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var lhs_array_len = get_variable_cexpression (head.get_array_length_cname (get_variable_cname (local.name), dim));
-					var rhs_array_len = head.get_array_length_cexpression (local.initializer, dim);
-					ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
-				}
-				if (array_type.rank == 1) {
-					var lhs_array_size = get_variable_cexpression (head.get_array_size_cname (get_variable_cname (local.name)));
-					var rhs_array_len = get_variable_cexpression (head.get_array_length_cname (get_variable_cname (local.name), 1));
-					ccomma.append_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
-				}
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						var lhs_array_len = get_variable_cexpression (head.get_array_length_cname (get_variable_cname (local.name), dim));
+						var rhs_array_len = head.get_array_length_cexpression (local.initializer, dim);
+						ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
+					}
+					if (array_type.rank == 1) {
+						var lhs_array_size = get_variable_cexpression (head.get_array_size_cname (get_variable_cname (local.name)));
+						var rhs_array_len = get_variable_cexpression (head.get_array_length_cname (get_variable_cname (local.name), 1));
+						ccomma.append_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
+					}
 				
-				ccomma.append_expression (get_variable_cexpression (temp_var.name));
+					ccomma.append_expression (get_variable_cexpression (temp_var.name));
 				
-				rhs = ccomma;
+					rhs = ccomma;
+				}
 			} else if (local.variable_type is DelegateType) {
 				var deleg_type = (DelegateType) local.variable_type;
 				var d = deleg_type.delegate_symbol;
@@ -1553,15 +1559,19 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				// initialize array length variables
 				var array_type = (ArrayType) local.variable_type;
 
-				var ccomma = new CCodeCommaExpression ();
+				if (array_type.fixed_length) {
+					rhs = null;
+				} else {
+					var ccomma = new CCodeCommaExpression ();
 
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (get_variable_cname (local.name), dim)), new CCodeConstant ("0")));
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (head.get_array_length_cname (get_variable_cname (local.name), dim)), new CCodeConstant ("0")));
+					}
+
+					ccomma.append_expression (rhs);
+
+					rhs = ccomma;
 				}
-
-				ccomma.append_expression (rhs);
-
-				rhs = ccomma;
 			}
 		}
 
@@ -1573,13 +1583,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		if (current_method != null && current_method.coroutine) {
-			closure_struct.add_field (local.variable_type.get_cname (), get_variable_cname (local.name));
+			closure_struct.add_field (local.variable_type.get_cname (), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
 
 			if (local.initializer != null) {
 				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (local.name)), rhs)));
 			}
 		} else {
-			var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), rhs);
+			var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), rhs, local.variable_type.get_cdeclarator_suffix ());
 
 			var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
 			cdecl.add_declarator (cvar);
@@ -1589,6 +1599,24 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			// initialization not necessary for variables stored in closure
 			if (cvar.initializer == null) {
 				cvar.initializer = default_value_for_type (local.variable_type, true);
+			}
+		}
+
+		if (local.initializer != null && local.variable_type is ArrayType) {
+			var array_type = (ArrayType) local.variable_type;
+
+			if (array_type.fixed_length) {
+				// it is necessary to use memcpy for fixed-length (stack-allocated) arrays
+				// simple assignments do not work in C
+				var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+				sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+				var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call);
+
+				var ccopy = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
+				ccopy.add_argument (get_variable_cexpression (local.name));
+				ccopy.add_argument ((CCodeExpression) local.initializer.ccodenode);
+				ccopy.add_argument (size);
+				cfrag.append (new CCodeExpressionStatement (ccopy));
 			}
 		}
 
@@ -1883,7 +1911,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		return destroy_func;
 	}
 
-	public CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression expr) {
+	public virtual CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression expr) {
 		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
 
 		if (type is ValueType && !type.nullable) {
@@ -1938,8 +1966,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (array_type.element_type.data_type == null || array_type.element_type.data_type.is_reference_type ()) {
 				requires_array_free = true;
 
-				bool first = true;
 				CCodeExpression csizeexpr = null;
+				bool first = true;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					if (first) {
 						csizeexpr = head.get_array_length_cexpression (expr, dim);
@@ -2029,27 +2057,29 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			} else {
 				var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
 		
-				var vardecl = new CCodeVariableDeclarator (local.name);
+				var vardecl = new CCodeVariableDeclarator (local.name, null, local.variable_type.get_cdeclarator_suffix ());
 				// sets #line
 				local.ccodenode = vardecl;
 				cdecl.add_declarator (vardecl);
 
 				var st = local.variable_type.data_type as Struct;
+				var array_type = local.variable_type as ArrayType;
 
 				if (local.name.has_prefix ("*")) {
 					// do not dereference unintialized variable
 					// initialization is not needed for these special
 					// pointer temp variables
 					// used to avoid side-effects in assignments
-				} else if (local.variable_type.is_reference_type_or_type_parameter ()) {
-					vardecl.initializer = new CCodeConstant ("NULL");
-				} else if (st != null && !st.is_simple_type ()) {
+				} else if ((st != null && !st.is_simple_type ()) ||
+				           (array_type != null && array_type.fixed_length)) {
 					// 0-initialize struct with struct initializer { 0 }
 					// necessary as they will be passed by reference
 					var clist = new CCodeInitializerList ();
 					clist.append (new CCodeConstant ("0"));
 
 					vardecl.initializer = clist;
+				} else if (local.variable_type.is_reference_type_or_type_parameter ()) {
+					vardecl.initializer = new CCodeConstant ("NULL");
 				}
 			
 				cfrag.append (cdecl);
@@ -2530,6 +2560,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return false;
 		}
 
+		var array_type = type as ArrayType;
+		if (array_type != null && array_type.fixed_length) {
+			return requires_destroy (array_type.element_type);
+		}
+
 		var cl = type.data_type as Class;
 		if (cl != null && cl.is_reference_counting ()
 		    && cl.get_unref_function () == "") {
@@ -2555,7 +2590,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	public CCodeExpression? get_ref_cexpression (DataType expression_type, CCodeExpression cexpr, Expression? expr, CodeNode node) {
+	public virtual CCodeExpression? get_ref_cexpression (DataType expression_type, CCodeExpression cexpr, Expression? expr, CodeNode node) {
 		if (expression_type is ValueType && !expression_type.nullable) {
 			// normal value type, no null check
 			// (copy (&expr, &temp), temp)
@@ -3678,17 +3713,20 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public CCodeExpression? default_value_for_type (DataType type, bool initializer_expression) {
-		if ((type.data_type != null && type.data_type.is_reference_type ())
-		    || type is PointerType || type is ArrayType || type is DelegateType) {
-			return new CCodeConstant ("NULL");
-		} else if (type.data_type != null && type.data_type.get_default_value () != null) {
-			return new CCodeConstant (type.data_type.get_default_value ());
-		} else if (type.data_type is Struct && initializer_expression) {
+		var array_type = type as ArrayType;
+		if (initializer_expression && (type.data_type is Struct ||
+		    (array_type != null && array_type.fixed_length))) {
 			// 0-initialize struct with struct initializer { 0 }
 			// only allowed as initializer expression in C
 			var clist = new CCodeInitializerList ();
 			clist.append (new CCodeConstant ("0"));
 			return clist;
+		} else if ((type.data_type != null && type.data_type.is_reference_type ())
+		           || type is PointerType || type is DelegateType
+		           || (array_type != null && !array_type.fixed_length)) {
+			return new CCodeConstant ("NULL");
+		} else if (type.data_type != null && type.data_type.get_default_value () != null) {
+			return new CCodeConstant (type.data_type.get_default_value ());
 		} else if (type.type_parameter != null) {
 			return new CCodeConstant ("NULL");
 		} else if (type is ErrorType) {

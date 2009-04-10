@@ -37,6 +37,13 @@ public class Vala.ArrayType : ReferenceType {
 		}
 	}
 
+	public bool fixed_length { get; set; }
+
+	/**
+	 * The length of this fixed-length array.
+	 */
+	public int length { get; set; }
+
 	/**
 	 * The rank of this array.
 	 */
@@ -127,13 +134,30 @@ public class Vala.ArrayType : ReferenceType {
 		result.value_owned = value_owned;
 		result.nullable = nullable;
 		result.floating_reference = floating_reference;
-		
+
+		if (fixed_length) {
+			result.fixed_length = true;
+			result.length = length;
+		}
+
 		return result;
 	}
 
 	public override string? get_cname () {
 		// FIXME add support for [Immutable] or [Const] attribute to support arrays to const data
-		return element_type.get_cname () + "*";
+		if (fixed_length) {
+			return element_type.get_cname ();
+		} else {
+			return element_type.get_cname () + "*";
+		}
+	}
+
+	public override string get_cdeclarator_suffix () {
+		if (fixed_length) {
+			return "[%d]".printf (length);
+		} else {
+			return "";
+		}
 	}
 
 	public override bool is_array () {

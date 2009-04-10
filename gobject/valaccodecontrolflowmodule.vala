@@ -1,6 +1,7 @@
 /* valaccodecontrolflowmodule.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -282,6 +283,12 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		var collection_backup = stmt.collection_variable;
 		var collection_type = collection_backup.variable_type.copy ();
 
+		var array_type = collection_type as ArrayType;
+		if (array_type != null) {
+			// avoid assignment issues
+			array_type.fixed_length = false;
+		}
+
 		if (current_method != null && current_method.coroutine) {
 			closure_struct.add_field (collection_type.get_cname (), collection_backup.name);
 			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (collection_backup.name), (CCodeExpression) stmt.collection.ccodenode)));
@@ -301,7 +308,7 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		}
 
 		if (stmt.collection.value_type is ArrayType) {
-			var array_type = (ArrayType) stmt.collection.value_type;
+			array_type = (ArrayType) stmt.collection.value_type;
 			
 			var array_len = head.get_array_length_cexpression (stmt.collection);
 

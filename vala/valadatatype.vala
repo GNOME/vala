@@ -118,6 +118,10 @@ public abstract class Vala.DataType : CodeNode {
 		return null;
 	}
 
+	public virtual string get_cdeclarator_suffix () {
+		return "";
+	}
+
 	/**
 	 * Returns the name and qualifiers of this type as it is used in C code
 	 * in a const declaration.

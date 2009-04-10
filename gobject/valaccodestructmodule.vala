@@ -45,18 +45,21 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 			if (f.binding == MemberBinding.INSTANCE)  {
 				generate_type_declaration (f.field_type, decl_space);
 
-				instance_struct.add_field (field_ctype, f.get_cname ());
+				instance_struct.add_field (field_ctype, f.get_cname () + f.field_type.get_cdeclarator_suffix ());
 				if (f.field_type is ArrayType && !f.no_array_length) {
 					// create fields to store array dimensions
 					var array_type = (ArrayType) f.field_type;
-					var len_type = int_type.copy ();
 
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						instance_struct.add_field (len_type.get_cname (), head.get_array_length_cname (f.name, dim));
-					}
+					if (!array_type.fixed_length) {
+						var len_type = int_type.copy ();
 
-					if (array_type.rank == 1 && f.is_internal_symbol ()) {
-						instance_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							instance_struct.add_field (len_type.get_cname (), head.get_array_length_cname (f.name, dim));
+						}
+
+						if (array_type.rank == 1 && f.is_internal_symbol ()) {
+							instance_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
+						}
 					}
 				} else if (f.field_type is DelegateType) {
 					var delegate_type = (DelegateType) f.field_type;
@@ -201,14 +204,28 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 					copy = get_ref_cexpression (f.field_type, copy, ma, f);
 				}
 				var dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), f.name);
-				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (dest, copy)));
 
 				var array_type = f.field_type as ArrayType;
-				if (array_type != null) {
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var len_src = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), get_array_length_cname (f.name, dim));
-						var len_dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), get_array_length_cname (f.name, dim));
-						cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (len_dest, len_src)));
+				if (array_type != null && array_type.fixed_length) {
+					// fixed-length (stack-allocated) arrays
+					var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+					sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+					var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call);
+
+					var array_copy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
+					array_copy_call.add_argument (dest);
+					array_copy_call.add_argument (copy);
+					array_copy_call.add_argument (size);
+					cblock.add_statement (new CCodeExpressionStatement (array_copy_call));
+				} else {
+					cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (dest, copy)));
+
+					if (array_type != null) {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							var len_src = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), get_array_length_cname (f.name, dim));
+							var len_dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), get_array_length_cname (f.name, dim));
+							cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (len_dest, len_src)));
+						}
 					}
 				}
 			}

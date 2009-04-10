@@ -422,13 +422,18 @@ public class Vala.Parser : CodeVisitor {
 		// this is more logical, especially when nullable arrays
 		// or pointers are involved
 		while (accept (TokenType.OPEN_BRACKET)) {
+			int array_length = -1;
 			int array_rank = 0;
 			do {
 				array_rank++;
 				// support for stack-allocated arrays
 				// also required for decision between expression and declaration statement
 				if (current () != TokenType.COMMA && current () != TokenType.CLOSE_BRACKET) {
-					parse_expression ();
+					var length_expression = parse_expression ();
+					var length_literal = length_expression as IntegerLiteral;
+					if (length_literal != null) {
+						array_length = length_literal.value.to_int ();
+					}
 				}
 			}
 			while (accept (TokenType.COMMA));
@@ -437,8 +442,16 @@ public class Vala.Parser : CodeVisitor {
 			// arrays contain strong references by default
 			type.value_owned = true;
 
-			type = new ArrayType (type, array_rank, get_src (begin));
-			type.nullable = accept (TokenType.INTERR);
+			var array_type = new ArrayType (type, array_rank, get_src (begin));
+			array_type.nullable = accept (TokenType.INTERR);
+
+			if (array_rank == 1 && array_length > 0) {
+				// fixed length (stack-allocated) array
+				array_type.fixed_length = true;
+				array_type.length = array_length;
+			}
+
+			type = array_type;
 		}
 
 		if (accept (TokenType.OP_NEG)) {
