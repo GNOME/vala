@@ -1095,6 +1095,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (error_type.error_domain != null) {
 				generate_error_domain_declaration (error_type.error_domain, decl_space);
 			}
+		} else if (type is PointerType) {
+			var pointer_type = (PointerType) type;
+			generate_type_declaration (pointer_type.base_type, decl_space);
 		}
 
 		foreach (DataType type_arg in type.get_type_arguments ()) {
