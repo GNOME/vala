@@ -324,6 +324,22 @@ namespace Posix {
 	[CCode (cheader_filename = "fcntl.h")]
 	public int posix_fallocate (int fd, long offset, long len);
 
+	[Compact]
+	[CCode (cname = "struct passwd", cheader_filename = "pwd.h")]
+	public class Passwd {
+		public string pw_name;
+		public string pw_passwd;
+		public uid_t pw_uid;
+		public gid_t pw_gid;
+		public string pw_gecos;
+		public string pw_dir;
+		public string pw_shell;
+	}
+	[CCode (cheader_filename = "pwd.h")]
+	public void endpwent ();
+	public unowned Passwd? getpwent ();
+	public void setpwent ();
+
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGABRT;
 	[CCode (cheader_filename = "signal.h")]
