@@ -59,7 +59,6 @@ public class Vala.SourceFile {
 
 	private Gee.List<CodeNode> nodes = new ArrayList<CodeNode> ();
 	
-	private string cheader_filename = null;
 	private string csource_filename = null;
 	private string cinclude_filename = null;
 
