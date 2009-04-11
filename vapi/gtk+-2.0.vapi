@@ -1791,7 +1791,7 @@ namespace Gtk {
 		public unowned Gdk.Pixbuf get_pixbuf ();
 		public int get_pixel_size ();
 		public void get_pixmap (out unowned Gdk.Pixmap pixmap, out unowned Gdk.Bitmap mask);
-		public void get_stock (out unowned string stock_id, out Gtk.IconSize size);
+		public void get_stock (out string stock_id, out Gtk.IconSize size);
 		public Gtk.ImageType get_storage_type ();
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Image ();
