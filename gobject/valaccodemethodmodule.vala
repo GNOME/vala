@@ -112,7 +112,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			var cparam = new CCodeFormalParameter ("error", "GError**");
 			cparam_map.set (get_param_pos (-1), cparam);
 			if (carg_map != null) {
-				carg_map.set (get_param_pos (-1), get_variable_cexpression (cparam.name));
+				carg_map.set (get_param_pos (-1), new CCodeIdentifier (cparam.name));
 			}
 		}
 	}
