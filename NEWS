@@ -1,3 +1,9 @@
+Vala 0.6.1
+==========
+
+ * Updates to the GLib, Cairo, GTK+, GStreamer, and POSIX bindings.
+ * Minor bug fixes.
+
 Vala 0.6.0
 ==========
 
