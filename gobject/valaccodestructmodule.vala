@@ -133,6 +133,8 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 			copy_call.add_argument (new CCodeIdentifier ("dup"));
 			cblock.add_statement (new CCodeExpressionStatement (copy_call));
 		} else {
+			source_declarations.add_include ("string.h");
+
 			var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 			sizeof_call.add_argument (new CCodeConstant (st.get_cname ()));
 
@@ -208,6 +210,8 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 				var array_type = f.field_type as ArrayType;
 				if (array_type != null && array_type.fixed_length) {
 					// fixed-length (stack-allocated) arrays
+					source_declarations.add_include ("string.h");
+
 					var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 					sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
 					var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call);

@@ -532,7 +532,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 						var st = (Struct) m.parent_symbol;
 
 						// memset needs string.h
-						string_h_needed = true;
+						source_declarations.add_include ("string.h");
 						var czero = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 						czero.add_argument (new CCodeIdentifier ("self"));
 						czero.add_argument (new CCodeConstant ("0"));

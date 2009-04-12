@@ -235,6 +235,8 @@ internal class Vala.DBusClientModule : DBusModule {
 					block.add_statement (cdecl);
 
 					if (dbus_use_ptr_array (array_type)) {
+						source_declarations.add_include ("string.h");
+
 						var memcpy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
 						memcpy_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_%s".printf (param.name)), "pdata"));
 						memcpy_call.add_argument (new CCodeIdentifier (param.name));

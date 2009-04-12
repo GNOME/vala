@@ -212,6 +212,8 @@ internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 		CCodeExpression rhs = (CCodeExpression) assignment.right.ccodenode;
 		CCodeExpression lhs = (CCodeExpression) get_ccodenode (assignment.left);
 
+		source_declarations.add_include ("string.h");
+
 		// it is necessary to use memcpy for fixed-length (stack-allocated) arrays
 		// simple assignments do not work in C
 		var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));

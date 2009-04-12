@@ -446,7 +446,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	}
 
 	public override void append_vala_array_move () {
-		string_h_needed = true;
+		source_declarations.add_include ("string.h");
 
 		// assumes that overwritten array elements are null before invocation
 		// FIXME will leak memory if that's not the case
@@ -702,6 +702,8 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			block.add_statement (cfrag);
 			temp_vars = old_temp_vars;
 		} else {
+			source_declarations.add_include ("string.h");
+
 			var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
 			dup_call.add_argument (new CCodeIdentifier ("dest"));
 			dup_call.add_argument (new CCodeIdentifier ("self"));

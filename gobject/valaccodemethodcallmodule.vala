@@ -595,7 +595,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			temp_vars.insert (0, temp_decl);
 
 			/* memset needs string.h */
-			string_h_needed = true;
+			source_declarations.add_include ("string.h");
 
 			var clen = head.get_array_length_cexpression (ma.inner, 1);
 			var celems = (CCodeExpression) ma.inner.ccodenode;

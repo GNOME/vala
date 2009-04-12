@@ -120,7 +120,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public bool in_plugin = false;
 	public string module_init_param_name;
 	
-	public bool string_h_needed;
 	public bool gvaluecollector_h_needed;
 	public bool gio_h_needed;
 	public bool requires_array_free;
@@ -407,7 +406,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		next_temp_var_id = 0;
 		variable_name_map.clear ();
 		
-		string_h_needed = false;
 		gvaluecollector_h_needed = false;
 		gio_h_needed = false;
 		dbus_glib_h_needed = false;
@@ -442,10 +440,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 		if (requires_strcmp0) {
 			append_vala_strcmp0 ();
-		}
-		
-		if (string_h_needed) {
-			source_declarations.add_include ("string.h");
 		}
 
 		if (gvaluecollector_h_needed) {
@@ -1609,6 +1603,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			var array_type = (ArrayType) local.variable_type;
 
 			if (array_type.fixed_length) {
+				source_declarations.add_include ("string.h");
+
 				// it is necessary to use memcpy for fixed-length (stack-allocated) arrays
 				// simple assignments do not work in C
 				var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
@@ -1787,6 +1783,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				copy_call.add_argument (new CCodeIdentifier ("dup"));
 				block.add_statement (new CCodeExpressionStatement (copy_call));
 			} else {
+				source_declarations.add_include ("string.h");
+
 				var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 				sizeof_call.add_argument (new CCodeConstant (value_type.data_type.get_cname ()));
 
@@ -2867,7 +2865,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				creation_call.add_argument (new CCodeConstant ("1"));
 			} else if (expr.type_reference.data_type is Struct) {
 				// memset needs string.h
-				string_h_needed = true;
+				source_declarations.add_include ("string.h");
 				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 				creation_call.add_argument (new CCodeConstant ("0"));
