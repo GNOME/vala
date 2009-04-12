@@ -177,6 +177,7 @@ internal class Vala.GTypeModule : GErrorModule {
 		if (cl.base_class != null) {
 			instance_struct.add_field (cl.base_class.get_cname (), "parent_instance");
 		} else if (is_fundamental) {
+			decl_space.add_include ("glib-object.h");
 			instance_struct.add_field ("GTypeInstance", "parent_instance");
 			instance_struct.add_field ("volatile int", "ref_count");
 		}
