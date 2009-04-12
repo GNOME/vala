@@ -947,9 +947,5 @@ public class Vala.GirParser : CodeVisitor {
 			Report.error (null, "Metadata file `%s' not found".printf (metadata_filename));
 		}
 	}
-
-	string? get_attribute (string node, string key) {
-		return attributes_map["%s/@%s".printf (node, key)];
-	}
 }
 
