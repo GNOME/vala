@@ -113,7 +113,7 @@ public class Vala.LambdaExpression : Expression {
 	}
 
 	string get_lambda_name (SemanticAnalyzer analyzer) {
-		var result = "__lambda%d".printf (analyzer.next_lambda_id);
+		var result = "_lambda%d_".printf (analyzer.next_lambda_id);
 
 		analyzer.next_lambda_id++;
 

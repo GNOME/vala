@@ -119,8 +119,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public override void visit_source_file (SourceFile file) {
 		current_source_file = file;
 
-		next_lambda_id = 0;
-
 		file.check (this);
 	}
 
