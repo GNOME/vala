@@ -2341,11 +2341,13 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var type_param_list = parse_type_parameter_list ();
 		var base_types = new ArrayList<DataType> ();
 		if (accept (TokenType.COLON)) {
-			base_types.add (parse_type ());
+			var type1 = parse_type ();
+			base_types.add (type1);
 			
 			if (accept (TokenType.IMPLEMENTS)) {
 				do {
-					base_types.add (parse_type ());
+					var type2 = parse_type ();
+					base_types.add (type2);
 				} while (accept (TokenType.COMMA));
 			}
 		}
@@ -2975,7 +2977,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var base_types = new ArrayList<DataType> ();
 		if (accept (TokenType.COLON)) {
 			do {
-				base_types.add (parse_type ());
+				var type = parse_type ();
+				base_types.add (type);
 			} while (accept (TokenType.COMMA));
 		}
 		var iface = new Interface (sym.name, get_src_com (begin));
