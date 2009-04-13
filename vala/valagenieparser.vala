@@ -2756,7 +2756,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			expect (TokenType.INDENT);
 			while (current () != TokenType.DEDENT) {
 				var accessor_begin = get_location ();
-				parse_attributes ();
+				var attribs = parse_attributes ();
 
 				var value_type = type.copy ();
 				value_type.value_owned = false;
@@ -2770,6 +2770,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 						block = parse_block ();
 					}
 					prop.get_accessor = new PropertyAccessor (true, false, false, type.copy (), block, get_src (accessor_begin));
+					set_attributes (prop.get_accessor, attribs);
 					prop.get_accessor.access = SymbolAccessibility.PUBLIC;
 				} else {
 					bool _construct = false;
@@ -2793,6 +2794,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 						block = parse_block ();
 					}
 					prop.set_accessor = new PropertyAccessor (false, !readonly, _construct, value_type, block, get_src (accessor_begin));
+					set_attributes (prop.set_accessor, attribs);
 					prop.set_accessor.access = SymbolAccessibility.PUBLIC;
 				}
 			}
