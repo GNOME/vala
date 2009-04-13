@@ -2663,6 +2663,11 @@ public class Vala.Genie.Parser : CodeVisitor {
 		if (ModifierFlags.OVERRIDE in flags) {
 			method.overrides = true;
 		}
+		if ((method.is_abstract && method.is_virtual)
+		    || (method.is_abstract && method.overrides)
+		    || (method.is_virtual && method.overrides)) {
+			throw new ParseError.SYNTAX (get_error ("only one of `abstract', `virtual', or `override' may be specified"));
+		}
 		if (ModifierFlags.INLINE in flags) {
 			method.is_inline = true;
 		}
