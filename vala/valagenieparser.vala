@@ -3116,9 +3116,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 				break;
 			}
 			var code_attrs = parse_attributes ();
+			var code_begin = get_location ();
 			string id = parse_identifier ();
 
-			var ec = new ErrorCode (id);
+			var ec = new ErrorCode (id, get_src (code_begin));
 			set_attributes (ec, code_attrs);
 			if (accept (TokenType.ASSIGN)) {
 				ec.value = parse_expression ();
