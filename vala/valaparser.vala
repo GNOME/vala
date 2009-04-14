@@ -2833,7 +2833,12 @@ public class Vala.Parser : CodeVisitor {
 		var d = new Delegate (sym.name, type, get_src_com (begin));
 		d.access = access;
 		set_attributes (d, attrs);
-		if (!(ModifierFlags.STATIC in flags)) {
+		if (ModifierFlags.STATIC in flags) {
+			if (!context.deprecated) {
+				// TODO enable warning in future releases
+				// Report.warning (get_last_src (), "deprecated syntax, use [CCode (has_target = false)]");
+			}
+		} else {
 			d.has_target = true;
 		}
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {

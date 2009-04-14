@@ -233,6 +233,9 @@ public class Vala.Delegate : TypeSymbol {
 		if (a.has_argument ("cname")) {
 			set_cname (a.get_string ("cname"));
 		}
+		if (a.has_argument ("has_target")) {
+			has_target = a.get_bool ("has_target");
+		}
 		if (a.has_argument ("instance_pos")) {
 			cinstance_parameter_position = a.get_double ("instance_pos");
 		}

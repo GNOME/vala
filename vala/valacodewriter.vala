@@ -760,14 +760,17 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		write_indent ();
 
-		write_string ("[CCode (cheader_filename = \"%s\")]".printf (get_cheaders(cb)));
+		write_string ("[CCode (cheader_filename = \"%s\"".printf (get_cheaders(cb)));
+
+		if (!cb.has_target) {
+			write_string (", has_target = false");
+		}
+
+		write_string (")]");
 
 		write_indent ();
 
 		write_accessibility (cb);
-		if (!cb.has_target) {
-			write_string ("static ");
-		}
 		write_string ("delegate ");
 		
 		write_return_type (cb.return_type);
