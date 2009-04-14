@@ -140,6 +140,8 @@ public class Vala.CodeContext {
 	 */
 	public int target_glib_minor { get; set; }
 
+	public bool verbose_mode { get; set; }
+
 	/**
 	 * Returns true if the target version of glib is greater than or 
 	 * equal to the specified version.

@@ -63,6 +63,7 @@ class Vala.Compiler {
 	[NoArrayLength]
 	static string[] defines;
 	static bool quiet_mode;
+	static bool verbose_mode;
 
 	private CodeContext context;
 
@@ -93,6 +94,7 @@ class Vala.Compiler {
 		{ "dump-tree", 0, 0, OptionArg.FILENAME, ref dump_tree, "Write code tree to FILE", "FILE" },
 		{ "save-temps", 0, 0, OptionArg.NONE, ref save_temps, "Keep temporary files", null },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
+		{ "verbose", 'v', 0, OptionArg.NONE, ref verbose_mode, "Print additional messages to the console", null },
 		{ "target-glib", 0, 0, OptionArg.STRING, ref target_glib, "Target version of glib for code generation", "MAJOR.MINOR" },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref sources, null, "FILE..." },
 		{ null }
@@ -174,6 +176,7 @@ class Vala.Compiler {
 		context.non_null_experimental = non_null_experimental;
 		context.dbus_transformation = !disable_dbus_transformation;
 		context.report.set_verbose_errors (!quiet_mode);
+		context.verbose_mode = verbose_mode;
 
 		context.ccode_only = ccode_only;
 		context.compile_only = compile_only;

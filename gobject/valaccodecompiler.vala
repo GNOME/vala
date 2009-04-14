@@ -113,6 +113,10 @@ public class Vala.CCodeCompiler {
 			cmdline += " " + Shell.quote (cc_option);
 		}
 
+		if (context.verbose_mode) {
+			stdout.printf ("%s\n", cmdline);
+		}
+
 		try {
 			Process.spawn_command_line_sync (cmdline, null, null, out exit_status);
 			if (exit_status != 0) {
