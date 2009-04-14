@@ -29,4 +29,4 @@ GnomeMDI::add_child has_emitter="1"
 GnomeMDI::add_view has_emitter="1"
 GnomeMDI::remove_child has_emitter="1"
 GnomeMDI::remove_view has_emitter="1"
-
+GtkDestroyNotify namespace="GLib" name="DestroyNotify"

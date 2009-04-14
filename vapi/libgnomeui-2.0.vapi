@@ -15,11 +15,11 @@ namespace Gnome {
 		public void @construct (string appname, string title);
 		public void create_menus (Gnome.UIInfo uiinfo);
 		public void create_menus_custom (Gnome.UIInfo uiinfo, Gnome.UIBuilderData uibdata);
-		public void create_menus_interp (Gnome.UIInfo uiinfo, Gtk.CallbackMarshal relay_func, void* data, Gtk.DestroyNotify destroy_func);
+		public void create_menus_interp (Gnome.UIInfo uiinfo, Gtk.CallbackMarshal relay_func, void* data, GLib.DestroyNotify destroy_func);
 		public void create_menus_with_data (Gnome.UIInfo uiinfo);
 		public void create_toolbar (Gnome.UIInfo uiinfo);
 		public void create_toolbar_custom (Gnome.UIInfo uiinfo, Gnome.UIBuilderData uibdata);
-		public void create_toolbar_interp (Gnome.UIInfo uiinfo, Gtk.CallbackMarshal relay_func, void* data, Gtk.DestroyNotify destroy_func);
+		public void create_toolbar_interp (Gnome.UIInfo uiinfo, Gtk.CallbackMarshal relay_func, void* data, GLib.DestroyNotify destroy_func);
 		public void create_toolbar_with_data (Gnome.UIInfo uiinfo);
 		public void enable_layout_config (bool enable);
 		public static void fill_menu (Gtk.MenuShell menu_shell, Gnome.UIInfo uiinfo, Gtk.AccelGroup accel_group, bool uline_accels, int pos);
@@ -32,7 +32,7 @@ namespace Gnome {
 		public static unowned string helper_gettext (string str);
 		public void insert_menus (string path, Gnome.UIInfo menuinfo);
 		public void insert_menus_custom (string path, Gnome.UIInfo uiinfo, Gnome.UIBuilderData uibdata);
-		public void insert_menus_interp (string path, Gnome.UIInfo menuinfo, Gtk.CallbackMarshal relay_func, void* data, Gtk.DestroyNotify destroy_func);
+		public void insert_menus_interp (string path, Gnome.UIInfo menuinfo, Gtk.CallbackMarshal relay_func, void* data, GLib.DestroyNotify destroy_func);
 		public void insert_menus_with_data (string path, Gnome.UIInfo menuinfo, void* data);
 		public static void install_appbar_menu_hints (Gnome.AppBar appbar, Gnome.UIInfo uiinfo);
 		public void install_menu_hints (Gnome.UIInfo uiinfo);
@@ -132,7 +132,7 @@ namespace Gnome {
 		[CCode (has_construct_function = false)]
 		public Client ();
 		public void request_interaction (Gnome.DialogType dialog_type, Gnome.InteractFunction function, void* data);
-		public void request_interaction_interp (Gnome.DialogType dialog_type, Gtk.CallbackMarshal function, void* data, Gtk.DestroyNotify destroy);
+		public void request_interaction_interp (Gnome.DialogType dialog_type, Gtk.CallbackMarshal function, void* data, GLib.DestroyNotify destroy);
 		public void request_phase_2 ();
 		public void request_save (Gnome.SaveStyle save_style, bool shutdown, Gnome.InteractStyle interact_style, bool fast, bool global);
 		public void save_any_dialog (Gtk.Dialog dialog);
@@ -312,7 +312,7 @@ namespace Gnome {
 	public class UIBuilderData {
 		public weak Gnome.UISignalConnectFunc connect_func;
 		public void* data;
-		public weak Gtk.DestroyNotify destroy_func;
+		public weak GLib.DestroyNotify destroy_func;
 		public bool is_interp;
 		public weak Gtk.CallbackMarshal relay_func;
 	}
@@ -352,7 +352,7 @@ namespace Gnome {
 	[Flags]
 	public enum DateEditFlags {
 		SHOW_TIME,
-		24_HR,
+		@24_HR,
 		WEEK_STARTS_ON_MONDAY,
 		DISPLAY_SECONDS
 	}
@@ -494,10 +494,10 @@ namespace Gnome {
 		DATA,
 		FILENAME
 	}
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public static delegate void GdkPixbufDoneCallback (Gnome.GdkPixbufAsyncHandle handle, void* cb_data);
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public static delegate void GdkPixbufLoadCallback (Gnome.GdkPixbufAsyncHandle handle, GnomeVFS.Result error, Gdk.Pixbuf pixbuf, void* cb_data);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h", has_target = false)]
+	public delegate void GdkPixbufDoneCallback (Gnome.GdkPixbufAsyncHandle handle, void* cb_data);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h", has_target = false)]
+	public delegate void GdkPixbufLoadCallback (Gnome.GdkPixbufAsyncHandle handle, GnomeVFS.Result error, Gdk.Pixbuf pixbuf, void* cb_data);
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public delegate void InteractFunction (Gnome.Client client, int key, Gnome.DialogType dialog_type);
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
@@ -506,8 +506,8 @@ namespace Gnome {
 	public delegate void ReplyCallback (int reply);
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public delegate void StringCallback (string str);
-	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
-	public static delegate void UISignalConnectFunc (Gnome.UIInfo uiinfo, string signal_name, Gnome.UIBuilderData uibdata);
+	[CCode (cheader_filename = "libgnomeui/libgnomeui.h", has_target = false)]
+	public delegate void UISignalConnectFunc (Gnome.UIInfo uiinfo, string signal_name, Gnome.UIBuilderData uibdata);
 	[CCode (cname = "LIBGNOMEUI_MODULE", cheader_filename = "libgnomeui/libgnomeui.h")]
 	public static Gnome.ModuleInfo libgnomeui_module;
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
