@@ -47,3 +47,10 @@ libgee_la_LIBADD = \
 	$(NULL)
 
 EXTRA_DIST = $(libgee_la_VALASOURCES) gee.vapi gee.vala.stamp
+
+MAINTAINERCLEANFILES = \
+	gee.vapi \
+	gee.h \
+	$(libgee_la_VALASOURCES:.vala=.c) \
+	$(NULL)
+

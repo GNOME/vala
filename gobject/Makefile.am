@@ -65,3 +65,10 @@ libvala_la_LIBADD = \
 	$(NULL)
 
 EXTRA_DIST = $(libvala_la_VALASOURCES) gobject.vapi gobject.vala.stamp
+
+MAINTAINERCLEANFILES = \
+	gobject.vapi \
+	valagobject.h \
+	$(libvala_la_VALASOURCES:.vala=.c) \
+	$(NULL)
+

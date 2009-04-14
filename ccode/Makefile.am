@@ -83,3 +83,10 @@ libvalaccode_la_LIBADD = \
 	$(NULL)
 
 EXTRA_DIST = $(libvalaccode_la_VALASOURCES) ccode.vapi ccode.vala.stamp
+
+MAINTAINERCLEANFILES = \
+	ccode.vapi \
+	valaccode.h \
+	$(libvalaccode_la_VALASOURCES:.vala=.c) \
+	$(NULL)
+

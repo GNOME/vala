@@ -173,3 +173,10 @@ libvalacore_la_LIBADD = \
 	$(NULL)
 
 EXTRA_DIST = $(libvalacore_la_VALASOURCES) vala.vapi vala.vala.stamp
+
+MAINTAINERCLEANFILES = \
+	vala.vapi \
+	vala.h \
+	$(libvalacore_la_VALASOURCES:.vala=.c) \
+	$(NULL)
+

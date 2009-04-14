@@ -65,3 +65,9 @@ vapicheck_LDADD = \
 	$(NULL)
 
 EXTRA_DIST = $(vapigen_VALASOURCES) $(vapicheck_VALASOURCES) vapigen.vala.stamp vapicheck.vala.stamp
+
+MAINTAINERCLEANFILES = \
+	$(vapigen_VALASOURCES:.vala=.c) \
+	$(vapicheck_VALASOURCES:.vala=.c) \
+	$(NULL)
+

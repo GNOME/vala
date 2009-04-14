@@ -35,3 +35,8 @@ valac_LDADD = \
 	$(NULL)
 
 EXTRA_DIST = $(valac_VALASOURCES) valac.vala.stamp
+
+MAINTAINERCLEANFILES = \
+	$(valac_VALASOURCES:.vala=.c) \
+	$(NULL)
+
