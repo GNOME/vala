@@ -3764,6 +3764,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			ccheck.add_argument (cexpr);
 		} else if (!non_null) {
 			return null;
+		} else if (t == glist_type || t == gslist_type) {
+			// NULL is empty list
+			return null;
 		} else {
 			var cnonnull = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier (var_name), new CCodeConstant ("NULL"));
 			ccheck.add_argument (cnonnull);
