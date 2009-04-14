@@ -48,6 +48,14 @@ public class Vala.Genie.Scanner {
 
 	string _comment;
 	
+	Conditional[] conditional_stack;
+
+	struct Conditional {
+		public bool matched;
+		public bool else_found;
+		public bool skip_section;
+	}
+	
 	public Scanner (SourceFile source_file) {
 		this.source_file = source_file;
 
@@ -246,6 +254,9 @@ public class Vala.Genie.Scanner {
 					break;
 				}
 				break;
+			case 'o':
+				if (matches (begin, "owned")) return TokenType.OWNED;
+				break;	
 			case 'p':
 				if (matches (begin, "print")) return TokenType.PRINT;
 				break;
@@ -257,6 +268,9 @@ public class Vala.Genie.Scanner {
 				break;
 			case 'w':
 				if (matches (begin, "while")) return TokenType.WHILE;
+				break;
+			case 'y':
+				if (matches (begin, "yield")) return TokenType.YIELD;
 				break;
 			}
 			break;
@@ -325,6 +339,9 @@ public class Vala.Genie.Scanner {
 			case 't':
 				if (matches (begin, "typeof")) return TokenType.TYPEOF;
 				break;
+			case 'y':
+				if (matches (begin, "yields")) return TokenType.YIELDS;
+				break;
 			}
 			break;
 		case 7:
@@ -355,6 +372,9 @@ public class Vala.Genie.Scanner {
 			case 'p':
 				if (matches (begin, "private")) return TokenType.PRIVATE;
 				break;
+			case 'u':
+				if (matches (begin, "unowned")) return TokenType.UNOWNED;
+				break;
 			case 'v':
 				if (matches (begin, "virtual")) return TokenType.VIRTUAL;
 				break;
@@ -370,6 +390,9 @@ public class Vala.Genie.Scanner {
 				break;
 			case 'd':
 				if (matches (begin, "delegate")) return TokenType.DELEGATE;
+				break;
+			case 'i':
+				if (matches (begin, "internal")) return TokenType.INTERNAL;
 				break;
 			case 'o':
 				if (matches (begin, "override")) return TokenType.OVERRIDE;
@@ -817,6 +840,34 @@ public class Vala.Genie.Scanner {
 			case '"':
 				if (begin[0] == '\'') {
 					type = TokenType.CHARACTER_LITERAL;
+				} else if (current < end - 6 && begin[1] == '"' && begin[2] == '"') {
+					type = TokenType.VERBATIM_STRING_LITERAL;
+					token_length_in_chars = 6;
+					current += 3;
+					while (current < end - 4) {
+						if (current[0] == '"' && current[1] == '"' && current[2] == '"') {
+							break;
+						} else if (current[0] == '\n') {
+							current++;
+							line++;
+							column = 1;
+							token_length_in_chars = 3;
+						} else {
+							unichar u = ((string) current).get_char_validated ((long) (end - current));
+							if (u != (unichar) (-1)) {
+								current += u.to_utf8 (null);
+								token_length_in_chars++;
+							} else {
+								Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "invalid UTF-8 character");
+							}
+						}
+					}
+					if (current[0] == '"' && current[1] == '"' && current[2] == '"') {
+						current += 3;
+					} else {
+						Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "syntax error, expected \"\"\"");
+					}
+					break;
 				} else {
 					type = TokenType.STRING_LITERAL;
 				}
@@ -938,6 +989,12 @@ public class Vala.Genie.Scanner {
 			current++;
 			column++;
 		}
+		
+		if ((column == 1) && (current[0] == '#')) {
+			pp_directive ();
+			return true;
+		}
+		
 		return found;
 	}
 
@@ -1070,6 +1127,259 @@ public class Vala.Genie.Scanner {
 		}
 
 		return result_builder.str;
+	}
+	
+		bool pp_whitespace () {
+		bool found = false;
+		while (current < end && current[0].isspace () && current[0] != '\n') {
+			found = true;
+			current++;
+			column++;
+		}
+		return found;
+	}
+
+	void pp_directive () {
+		// hash sign
+		current++;
+		column++;
+
+		pp_whitespace ();
+
+		char* begin = current;
+		int len = 0;
+		while (current < end && current[0].isalnum ()) {
+			current++;
+			column++;
+			len++;
+		}
+
+		if (len == 2 && matches (begin, "if")) {
+			parse_pp_if ();
+		} else if (len == 4 && matches (begin, "elif")) {
+			parse_pp_elif ();
+		} else if (len == 4 && matches (begin, "else")) {
+			parse_pp_else ();
+		} else if (len == 5 && matches (begin, "endif")) {
+			parse_pp_endif ();
+		} else {
+			Report.error (new SourceReference (source_file, line, column - len, line, column), "syntax error, invalid preprocessing directive");
+		}
+
+		if (conditional_stack.length > 0
+		    && conditional_stack[conditional_stack.length - 1].skip_section) {
+			// skip lines until next preprocessing directive
+			bool bol = false;
+			while (current < end) {
+				if (bol && current[0] == '#') {
+					// go back to begin of line
+					current -= (column - 1);
+					column = 1;
+					return;
+				}
+				if (current[0] == '\n') {
+					line++;
+					column = 0;
+					bol = true;
+				} else if (!current[0].isspace ()) {
+					bol = false;
+				}
+				current++;
+				column++;
+			}
+		}
+	}
+
+	void pp_eol () {
+		pp_whitespace ();
+		if (current >= end || current[0] != '\n') {
+			Report.error (new SourceReference (source_file, line, column, line, column), "syntax error, expected newline");
+		}
+	}
+
+	void parse_pp_if () {
+		pp_whitespace ();
+
+		bool condition = parse_pp_expression ();
+
+		pp_eol ();
+
+		conditional_stack += Conditional ();
+
+		if (condition && (conditional_stack.length == 1 || !conditional_stack[conditional_stack.length - 2].skip_section)) {
+			// condition true => process code within if
+			conditional_stack[conditional_stack.length - 1].matched = true;
+		} else {
+			// skip lines until next preprocessing directive
+			conditional_stack[conditional_stack.length - 1].skip_section = true;
+		}
+	}
+
+	void parse_pp_elif () {
+		pp_whitespace ();
+
+		bool condition = parse_pp_expression ();
+
+		pp_eol ();
+
+		if (conditional_stack.length == 0 || conditional_stack[conditional_stack.length - 1].else_found) {
+			Report.error (new SourceReference (source_file, line, column, line, column), "syntax error, unexpected #elif");
+			return;
+		}
+
+		if (condition && !conditional_stack[conditional_stack.length - 1].matched
+		    && (conditional_stack.length == 1 || !conditional_stack[conditional_stack.length - 2].skip_section)) {
+			// condition true => process code within if
+			conditional_stack[conditional_stack.length - 1].matched = true;
+			conditional_stack[conditional_stack.length - 1].skip_section = false;
+		} else {
+			// skip lines until next preprocessing directive
+			conditional_stack[conditional_stack.length - 1].skip_section = true;
+		}
+	}
+
+	void parse_pp_else () {
+		pp_eol ();
+
+		if (conditional_stack.length == 0 || conditional_stack[conditional_stack.length - 1].else_found) {
+			Report.error (new SourceReference (source_file, line, column, line, column), "syntax error, unexpected #else");
+			return;
+		}
+
+		if (!conditional_stack[conditional_stack.length - 1].matched
+		    && (conditional_stack.length == 1 || !conditional_stack[conditional_stack.length - 2].skip_section)) {
+			// condition true => process code within if
+			conditional_stack[conditional_stack.length - 1].matched = true;
+			conditional_stack[conditional_stack.length - 1].skip_section = false;
+		} else {
+			// skip lines until next preprocessing directive
+			conditional_stack[conditional_stack.length - 1].skip_section = true;
+		}
+	}
+
+	void parse_pp_endif () {
+		pp_eol ();
+
+		if (conditional_stack.length == 0) {
+			Report.error (new SourceReference (source_file, line, column, line, column), "syntax error, unexpected #endif");
+			return;
+		}
+
+		conditional_stack.length--;
+	}
+
+	bool parse_pp_symbol () {
+		int len = 0;
+		while (current < end && is_ident_char (current[0])) {
+			current++;
+			column++;
+			len++;
+		}
+
+		if (len == 0) {
+			Report.error (new SourceReference (source_file, line, column, line, column), "syntax error, expected identifier");
+			return false;
+		}
+
+		string identifier = ((string) (current - len)).ndup (len);
+		bool defined;
+		if (identifier == "true") {
+			defined = true;
+		} else if (identifier == "false") {
+			defined = false;
+		} else {
+			defined = source_file.context.is_defined (identifier);
+		}
+
+		return defined;
+	}
+
+	bool parse_pp_primary_expression () {
+		if (current >= end) {
+			Report.error (new SourceReference (source_file, line, column, line, column), "syntax error, expected identifier");
+		} else if (is_ident_char (current[0])) {
+			return parse_pp_symbol ();
+		} else if (current[0] == '(') {
+			current++;
+			column++;
+			pp_whitespace ();
+			bool result = parse_pp_expression ();
+			pp_whitespace ();
+			if (current < end && current[0] ==  ')') {
+				current++;
+				column++;
+			} else {
+				Report.error (new SourceReference (source_file, line, column, line, column), "syntax error, expected `)'");
+			}
+			return result;
+		} else {
+			Report.error (new SourceReference (source_file, line, column, line, column), "syntax error, expected identifier");
+		}
+		return false;
+	}
+
+	bool parse_pp_unary_expression () {
+		if (current < end && current[0] == '!') {
+			current++;
+			column++;
+			pp_whitespace ();
+			return !parse_pp_unary_expression ();
+		}
+
+		return parse_pp_primary_expression ();
+	}
+
+	bool parse_pp_equality_expression () {
+		bool left = parse_pp_unary_expression ();
+		pp_whitespace ();
+		while (true) {
+			if (current < end - 1 && current[0] == '=' && current[1] == '=') {
+				current += 2;
+				column += 2;
+				pp_whitespace ();
+				bool right = parse_pp_unary_expression ();
+				left = (left == right);
+			} else if (current < end - 1 && current[0] == '!' && current[1] == '=') {
+				current += 2;
+				column += 2;
+				pp_whitespace ();
+				bool right = parse_pp_unary_expression ();
+				left = (left != right);
+			} else {
+				break;
+			}
+		}
+		return left;
+	}
+
+	bool parse_pp_and_expression () {
+		bool left = parse_pp_equality_expression ();
+		pp_whitespace ();
+		while (current < end - 1 && current[0] == '&' && current[1] == '&') {
+			current += 2;
+			column += 2;
+			pp_whitespace ();
+			bool right = parse_pp_equality_expression ();
+			left = left && right;
+		}
+		return left;
+	}
+
+	bool parse_pp_or_expression () {
+		bool left = parse_pp_and_expression ();
+		pp_whitespace ();
+		while (current < end - 1 && current[0] == '|' && current[1] == '|') {
+			current += 2;
+			column += 2;
+			pp_whitespace ();
+			bool right = parse_pp_and_expression ();
+			left = left || right;
+		}
+		return left;
+	}
+
+	bool parse_pp_expression () {
+		return parse_pp_or_expression ();
 	}
 }
 

@@ -91,6 +91,7 @@ public enum Vala.Genie.TokenType {
 	INLINE,
 	INTEGER_LITERAL,
 	INTERFACE,
+	INTERNAL,
 	INTERR,
 	IS,
 	ISA,
@@ -120,6 +121,7 @@ public enum Vala.Genie.TokenType {
 	OPEN_BRACKET,
 	OPEN_PARENS,
 	OVERRIDE,
+	OWNED,
 	PASS,
 	PERCENT,
 	PLUS,
@@ -149,15 +151,19 @@ public enum Vala.Genie.TokenType {
 	TRUE,
 	TRY,
 	TYPEOF,
+	UNOWNED,
 	USES,
 	VAR,
+	VERBATIM_STRING_LITERAL,
 	VIRTUAL,
 	VOID,
 	VOLATILE,
 	WEAK,
 	WHEN,
 	WHILE,
-	WRITEONLY;
+	WRITEONLY,
+	YIELD,
+	YIELDS;
 
 	public weak string to_string () {
 		switch (this) {
@@ -227,6 +233,7 @@ public enum Vala.Genie.TokenType {
 		case INLINE: return "`inline'";
 		case INTEGER_LITERAL: return "integer literal";
 		case INTERFACE: return "`interface'";
+		case INTERNAL: return "`internal'";
 		case INTERR: return "`?'";
 		case IS: return "`is'";
 		case ISA: return "`isa'";
@@ -256,6 +263,7 @@ public enum Vala.Genie.TokenType {
 		case OPEN_BRACKET: return "`['";
 		case OPEN_PARENS: return "`('";
 		case OVERRIDE: return "`override'";
+		case OWNED: return "`owned'";
 		case PASS: return "`pass'";
 		case PERCENT: return "`%'";
 		case PLUS: return "`+'";
@@ -285,6 +293,7 @@ public enum Vala.Genie.TokenType {
 		case TRUE: return "`true'";
 		case TRY: return "`try'";
 		case TYPEOF: return "`typeof'";
+		case UNOWNED: return "`unowned'";
 		case USES: return "`uses'";
 		case VAR: return "`var'";
 		case VIRTUAL: return "`virtual'";
@@ -294,6 +303,8 @@ public enum Vala.Genie.TokenType {
 		case WHEN: return "`when'";
 		case WHILE: return "`while'";
 		case WRITEONLY: return "`writeonly'";
+		case YIELD: return "`yield'";
+		case YIELDS: return "`yields'";
 		default: return "unknown token";
 		}
 	}
