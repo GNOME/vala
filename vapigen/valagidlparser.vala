@@ -1771,6 +1771,7 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		var c = new Constant (node.name, type, null, current_source_reference);
+		c.external = true;
 		
 		string[] attributes = get_attributes (node.name);
 		if (attributes != null) {
