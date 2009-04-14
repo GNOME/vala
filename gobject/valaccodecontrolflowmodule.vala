@@ -44,7 +44,7 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 	void visit_string_switch_statement (SwitchStatement stmt) {
 		// we need a temporary variable to save the property value
-		var temp_var = get_temp_variable (stmt.expression.value_type, true, stmt);
+		var temp_var = get_temp_variable (stmt.expression.value_type, false, stmt);
 		stmt.expression.temp_vars.insert (0, temp_var);
 
 		var ctemp = new CCodeIdentifier (temp_var.name);
