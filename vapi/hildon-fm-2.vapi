@@ -240,6 +240,6 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon-file-system-info.h")]
 	public delegate void FileSystemInfoCallback (Hildon.FileSystemInfoHandle handle, Hildon.FileSystemInfo info, GLib.Error error);
-	[CCode (cheader_filename = "hildon/hildon-file-system-model.h")]
-	public static delegate bool FileSystemModelThumbnailCallback (string uri, string path, string thumbnail_file);
+	[CCode (cheader_filename = "hildon/hildon-file-system-model.h", has_target = false)]
+	public delegate bool FileSystemModelThumbnailCallback (string uri, string path, string thumbnail_file);
 }

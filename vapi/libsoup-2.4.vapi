@@ -679,8 +679,8 @@ namespace Soup {
 	public delegate void LoggerPrinter (Soup.Logger logger, Soup.LoggerLogLevel level, string direction, string data);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void MessageHeadersForeachFunc (string name, string value);
-	[CCode (cheader_filename = "libsoup/soup.h")]
-	public static delegate void ProxyResolverCallback (Soup.ProxyResolver p1, Soup.Message p2, uint p3, Soup.Address p4, void* p5);
+	[CCode (cheader_filename = "libsoup/soup.h", has_target = false)]
+	public delegate void ProxyResolverCallback (Soup.ProxyResolver p1, Soup.Message p2, uint p3, Soup.Address p4, void* p5);
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public delegate void ServerCallback (Soup.Server server, Soup.Message msg, string path, GLib.HashTable query, Soup.ClientContext client);
 	[CCode (cheader_filename = "libsoup/soup.h")]

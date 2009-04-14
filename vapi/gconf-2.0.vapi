@@ -295,8 +295,8 @@ namespace GConf {
 	}
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public delegate void ChangeSetForeachFunc (GConf.ChangeSet cs, string key, GConf.Value value);
-	[CCode (cheader_filename = "gconf/gconf.h")]
-	public static delegate void ClientErrorHandlerFunc (GConf.Client client, GLib.Error error);
+	[CCode (cheader_filename = "gconf/gconf.h", has_target = false)]
+	public delegate void ClientErrorHandlerFunc (GConf.Client client, GLib.Error error);
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public delegate void ClientNotifyFunc (GConf.Client client, uint cnxn_id, GConf.Entry entry);
 	[CCode (cheader_filename = "gconf/gconf.h")]

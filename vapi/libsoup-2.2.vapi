@@ -410,8 +410,8 @@ namespace Soup {
 	}
 	[CCode (cprefix = "SOUP_HTTP_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
 	public enum HttpVersion {
-		1_0,
-		1_1
+		@1_0,
+		@1_1
 	}
 	[CCode (cprefix = "SOUP_STATUS_", has_type_id = "0", cheader_filename = "libsoup/soup.h")]
 	public enum KnownStatusCode {

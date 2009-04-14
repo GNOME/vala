@@ -29,7 +29,7 @@ namespace Json {
 		public Json.Node root { owned get; set; }
 	}
 	[Compact]
-	[CCode (copy_function = "json_node_copy", cheader_filename = "json-glib/json-glib.h")]
+	[CCode (copy_function = "json_node_copy", type_id = "JSON_TYPE_NODE", cheader_filename = "json-glib/json-glib.h")]
 	public class Node {
 		public void* data;
 		public weak Json.Node parent;

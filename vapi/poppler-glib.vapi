@@ -3,7 +3,7 @@
 [CCode (cprefix = "Poppler", lower_case_cprefix = "poppler_")]
 namespace Poppler {
 	[Compact]
-	[CCode (copy_function = "poppler_action_copy", cheader_filename = "poppler.h")]
+	[CCode (copy_function = "poppler_action_copy", type_id = "POPPLER_TYPE_ACTION", cheader_filename = "poppler.h")]
 	public class Action {
 		public weak Poppler.ActionAny any;
 		public weak Poppler.ActionGotoDest goto_dest;
@@ -76,7 +76,7 @@ namespace Poppler {
 		public bool save_to_callback (Poppler.AttachmentSaveFunc save_func) throws GLib.Error;
 	}
 	[Compact]
-	[CCode (copy_function = "poppler_dest_copy", cheader_filename = "poppler.h")]
+	[CCode (copy_function = "poppler_dest_copy", type_id = "POPPLER_TYPE_DEST", cheader_filename = "poppler.h")]
 	public class Dest {
 		public double bottom;
 		public uint change_left;
@@ -144,7 +144,7 @@ namespace Poppler {
 		public bool scan (int n_pages, out unowned Poppler.FontsIter iter);
 	}
 	[Compact]
-	[CCode (copy_function = "poppler_fonts_iter_copy", cheader_filename = "poppler.h")]
+	[CCode (copy_function = "poppler_fonts_iter_copy", type_id = "POPPLER_TYPE_FONTS_ITER", cheader_filename = "poppler.h")]
 	public class FontsIter {
 		public unowned Poppler.FontsIter copy ();
 		public unowned string get_file_name ();
@@ -187,7 +187,7 @@ namespace Poppler {
 		public void text_set_text (string text);
 	}
 	[Compact]
-	[CCode (copy_function = "poppler_form_field_mapping_copy", cheader_filename = "poppler.h")]
+	[CCode (copy_function = "poppler_form_field_mapping_copy", type_id = "POPPLER_TYPE_FORM_FIELD_MAPPING", cheader_filename = "poppler.h")]
 	public class FormFieldMapping {
 		public weak Poppler.Rectangle area;
 		public weak Poppler.FormField field;
@@ -196,7 +196,7 @@ namespace Poppler {
 		public FormFieldMapping ();
 	}
 	[Compact]
-	[CCode (copy_function = "poppler_image_mapping_copy", cheader_filename = "poppler.h")]
+	[CCode (copy_function = "poppler_image_mapping_copy", type_id = "POPPLER_TYPE_IMAGE_MAPPING", cheader_filename = "poppler.h")]
 	public class ImageMapping {
 		public weak Poppler.Rectangle area;
 		public weak Gdk.Pixbuf image;
@@ -205,7 +205,7 @@ namespace Poppler {
 		public ImageMapping ();
 	}
 	[Compact]
-	[CCode (copy_function = "poppler_index_iter_copy", cheader_filename = "poppler.h")]
+	[CCode (copy_function = "poppler_index_iter_copy", type_id = "POPPLER_TYPE_INDEX_ITER", cheader_filename = "poppler.h")]
 	public class IndexIter {
 		public unowned Poppler.IndexIter copy ();
 		public unowned Poppler.Action get_action ();
@@ -216,7 +216,7 @@ namespace Poppler {
 		public bool next ();
 	}
 	[Compact]
-	[CCode (copy_function = "poppler_link_mapping_copy", cheader_filename = "poppler.h")]
+	[CCode (copy_function = "poppler_link_mapping_copy", type_id = "POPPLER_TYPE_LINK_MAPPING", cheader_filename = "poppler.h")]
 	public class LinkMapping {
 		public weak Poppler.Action action;
 		public weak Poppler.Rectangle area;
@@ -259,7 +259,7 @@ namespace Poppler {
 		public string label { owned get; }
 	}
 	[Compact]
-	[CCode (copy_function = "poppler_page_transition_copy", cheader_filename = "poppler.h")]
+	[CCode (copy_function = "poppler_page_transition_copy", type_id = "POPPLER_TYPE_PAGE_TRANSITION", cheader_filename = "poppler.h")]
 	public class PageTransition {
 		public Poppler.PageTransitionAlignment alignment;
 		public int angle;
@@ -273,7 +273,7 @@ namespace Poppler {
 		public PageTransition ();
 	}
 	[Compact]
-	[CCode (copy_function = "poppler_rectangle_copy", cheader_filename = "poppler.h")]
+	[CCode (copy_function = "poppler_rectangle_copy", type_id = "POPPLER_TYPE_RECTANGLE", cheader_filename = "poppler.h")]
 	public class Rectangle {
 		public double x1;
 		public double x2;
@@ -436,8 +436,8 @@ namespace Poppler {
 		DISPLAY_DOC_TITLE,
 		DIRECTION_RTL
 	}
-	[CCode (cheader_filename = "poppler.h")]
-	public static delegate bool AttachmentSaveFunc (string buf, size_t count, void* data, GLib.Error error);
+	[CCode (cheader_filename = "poppler.h", has_target = false)]
+	public delegate bool AttachmentSaveFunc (string buf, size_t count, void* data, GLib.Error error);
 	[CCode (cheader_filename = "poppler.h")]
 	public const int HAS_CAIRO;
 	[CCode (cheader_filename = "poppler.h")]

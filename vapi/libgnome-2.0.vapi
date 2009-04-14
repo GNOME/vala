@@ -3,7 +3,7 @@
 [CCode (cprefix = "Gnome", lower_case_cprefix = "gnome_")]
 namespace Gnome {
 	[Compact]
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
+	[CCode (type_id = "GNOME_TYPE_MODULE_INFO", cheader_filename = "libgnome/libgnome.h")]
 	public class ModuleInfo {
 		public weak Gnome.ModuleClassInitHook class_init;
 		public weak string description;
@@ -116,16 +116,16 @@ namespace Gnome {
 		VFS,
 		CANCELLED
 	}
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public static delegate void ModuleClassInitHook (void* klass, Gnome.ModuleInfo mod_info);
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public static delegate unowned GLib.OptionGroup ModuleGetGOptionGroupFunc ();
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public static delegate void ModuleHook (Gnome.Program program, Gnome.ModuleInfo mod_info);
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public static delegate void ModuleInitHook (Gnome.ModuleInfo mod_info);
-	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public static delegate void TriggerActionFunction (string msg, string level, string[] supinfo);
+	[CCode (cheader_filename = "libgnome/libgnome.h", has_target = false)]
+	public delegate void ModuleClassInitHook (void* klass, Gnome.ModuleInfo mod_info);
+	[CCode (cheader_filename = "libgnome/libgnome.h", has_target = false)]
+	public delegate unowned GLib.OptionGroup ModuleGetGOptionGroupFunc ();
+	[CCode (cheader_filename = "libgnome/libgnome.h", has_target = false)]
+	public delegate void ModuleHook (Gnome.Program program, Gnome.ModuleInfo mod_info);
+	[CCode (cheader_filename = "libgnome/libgnome.h", has_target = false)]
+	public delegate void ModuleInitHook (Gnome.ModuleInfo mod_info);
+	[CCode (cheader_filename = "libgnome/libgnome.h", has_target = false)]
+	public delegate void TriggerActionFunction (string msg, string level, string[] supinfo);
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public const string DOT_GNOME;
 	[CCode (cheader_filename = "libgnome/libgnome.h")]

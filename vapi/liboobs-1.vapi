@@ -179,7 +179,7 @@ namespace Oobs {
 		public void* contained_type { construct; }
 	}
 	[Compact]
-	[CCode (copy_function = "oobs_list_iter_copy", cheader_filename = "oobs/oobs.h")]
+	[CCode (copy_function = "oobs_list_iter_copy", type_id = "OOBS_TYPE_LIST_ITER", cheader_filename = "oobs/oobs.h")]
 	public class ListIter {
 		public void* data;
 		public uint stamp;

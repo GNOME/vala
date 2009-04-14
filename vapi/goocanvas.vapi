@@ -3,7 +3,7 @@
 [CCode (cprefix = "Goo", lower_case_cprefix = "goo_")]
 namespace Goo {
 	[Compact]
-	[CCode (copy_function = "goo_cairo_matrix_copy", cheader_filename = "goocanvas.h")]
+	[CCode (copy_function = "goo_cairo_matrix_copy", type_id = "GOO_TYPE_CAIRO_MATRIX", cheader_filename = "goocanvas.h")]
 	public class CairoMatrix {
 		public static Cairo.Matrix copy (Cairo.Matrix matrix);
 	}
@@ -331,7 +331,7 @@ namespace Goo {
 		public string data { set; }
 	}
 	[Compact]
-	[CCode (ref_function = "goo_canvas_points_ref", unref_function = "goo_canvas_points_unref", cheader_filename = "goocanvas.h")]
+	[CCode (ref_function = "goo_canvas_points_ref", unref_function = "goo_canvas_points_unref", type_id = "GOO_TYPE_CANVAS_POINTS", cheader_filename = "goocanvas.h")]
 	public class CanvasPoints {
 		public double coords;
 		public int num_points;

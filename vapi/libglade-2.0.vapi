@@ -103,14 +103,14 @@ namespace Glade {
 		public void signal_connect_data (string handlername, GLib.Callback func);
 		public void signal_connect_full (string handler_name, Glade.XMLConnectFunc func);
 	}
-	[CCode (cheader_filename = "glade/glade.h")]
-	public static delegate void ApplyCustomPropFunc (Glade.XML xml, Gtk.Widget widget, string propname, string value);
-	[CCode (cheader_filename = "glade/glade.h")]
-	public static delegate void BuildChildrenFunc (Glade.XML xml, Gtk.Widget parent, Glade.WidgetInfo info);
-	[CCode (cheader_filename = "glade/glade.h")]
-	public static delegate unowned Gtk.Widget FindInternalChildFunc (Glade.XML xml, Gtk.Widget parent, string childname);
-	[CCode (cheader_filename = "glade/glade.h")]
-	public static delegate Gtk.Widget NewFunc (Glade.XML xml, GLib.Type widget_type, Glade.WidgetInfo info);
+	[CCode (cheader_filename = "glade/glade.h", has_target = false)]
+	public delegate void ApplyCustomPropFunc (Glade.XML xml, Gtk.Widget widget, string propname, string value);
+	[CCode (cheader_filename = "glade/glade.h", has_target = false)]
+	public delegate void BuildChildrenFunc (Glade.XML xml, Gtk.Widget parent, Glade.WidgetInfo info);
+	[CCode (cheader_filename = "glade/glade.h", has_target = false)]
+	public delegate unowned Gtk.Widget FindInternalChildFunc (Glade.XML xml, Gtk.Widget parent, string childname);
+	[CCode (cheader_filename = "glade/glade.h", has_target = false)]
+	public delegate Gtk.Widget NewFunc (Glade.XML xml, GLib.Type widget_type, Glade.WidgetInfo info);
 	[CCode (cheader_filename = "glade/glade.h")]
 	public delegate void XMLConnectFunc (string handler_name, GLib.Object object, string signal_name, string signal_data, GLib.Object connect_object, bool after);
 	[CCode (cheader_filename = "glade/glade.h")]
