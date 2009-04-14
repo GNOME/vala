@@ -891,7 +891,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				var cparam = new CCodeFormalParameter (head.get_array_length_cname (get_variable_cname (param.name), dim), length_ctype);
 				cparam_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), cparam);
 				if (carg_map != null) {
-					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), get_variable_cexpression (param.name));
+					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), get_variable_cexpression (cparam.name));
 				}
 			}
 		}
