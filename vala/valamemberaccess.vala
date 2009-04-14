@@ -564,7 +564,7 @@ public class Vala.MemberAccess : Expression {
 					base_method = m;
 				}
 
-				if (instance && base_method.parent_symbol != null) {
+				if (instance && base_method.parent_symbol is TypeSymbol) {
 					inner.target_type = analyzer.get_data_type_for_symbol ((TypeSymbol) base_method.parent_symbol);
 				}
 			} else if (symbol_reference is Property) {

@@ -29,6 +29,9 @@ using Gee;
 public class Vala.SignalType : DataType {
 	public Signal signal_symbol { get; set; }
 
+	Method? connect_method;
+	Method? disconnect_method;
+
 	public SignalType (Signal signal_symbol) {
 		this.signal_symbol = signal_symbol;
 	}
@@ -55,5 +58,47 @@ public class Vala.SignalType : DataType {
 
 	public override string to_qualified_string (Scope? scope) {
 		return signal_symbol.get_full_name ();
+	}
+
+	DelegateType get_handler_type () {
+		var sender_type = new ObjectType ((ObjectTypeSymbol) signal_symbol.parent_symbol);
+		return new DelegateType (signal_symbol.get_delegate (sender_type, this));
+	}
+
+	Method get_connect_method () {
+		if (connect_method == null) {
+			connect_method = new Method ("connect", new VoidType ());
+			connect_method.access = SymbolAccessibility.PUBLIC;
+			connect_method.external = true;
+			connect_method.owner = signal_symbol.scope;
+			connect_method.add_parameter (new FormalParameter ("handler", get_handler_type ()));
+		}
+		return connect_method;
+	}
+
+	Method get_disconnect_method () {
+		if (disconnect_method == null) {
+			disconnect_method = new Method ("disconnect", new VoidType ());
+			disconnect_method.access = SymbolAccessibility.PUBLIC;
+			disconnect_method.external = true;
+			disconnect_method.owner = signal_symbol.scope;
+			disconnect_method.add_parameter (new FormalParameter ("handler", get_handler_type ()));
+		}
+		return disconnect_method;
+	}
+
+	public override Symbol? get_member (string member_name) {
+		if (member_name == "connect") {
+			return get_connect_method ();
+		} else if (member_name == "disconnect") {
+			return get_disconnect_method ();
+		}
+		return null;
+	}
+
+	public override Gee.List<Symbol> get_symbols () {
+		var symbols = new ArrayList<Symbol> ();
+		symbols.add (signal_symbol);
+		return symbols;
 	}
 }

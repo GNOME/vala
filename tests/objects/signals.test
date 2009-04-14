@@ -25,15 +25,15 @@ class Maman.Bar : Object {
 		
 		var foo = new Foo ();
 		
-		foo.activated += (foo, b) => {
+		foo.activated.connect ((foo, b) => {
 			if (b) {
 				stdout.printf (" 8");
 			} else {
 				stdout.printf (" 4");
 			}
-		};
+		});
 
-		foo.activated += activated;
+		foo.activated.connect (activated);
 
 		stdout.printf (" 3");
 		
@@ -41,7 +41,7 @@ class Maman.Bar : Object {
 
 		stdout.printf (" 6");
 		
-		foo.activated -= activated;
+		foo.activated.disconnect (activated);
 
 		stdout.printf (" 7");
 
@@ -90,9 +90,9 @@ class Maman.UserBar : Object {
 		
 		var foo = new UserFoo ();
 		
-		foo.activated += (foo, i1, i2) => {
+		foo.activated.connect ((foo, i1, i2) => {
 			stdout.printf (" %d", i1 + i2);
-		};
+		});
 
 		stdout.printf (" 3");
 		
@@ -113,15 +113,15 @@ class Maman.ReturnBar : Object {
 
 		var foo = new ReturnFoo ();
 
-		foo.int_activated += (foo, arg) => {
+		foo.int_activated.connect ((foo, arg) => {
 			stdout.printf (" %d", arg);
 			return arg + 1;
-		};
+		});
 
-		foo.string_activated += (foo, arg) => {
+		foo.string_activated.connect ((foo, arg) => {
 			stdout.printf (arg);
 			return " 6";
-		};
+		});
 
 		stdout.printf (" %d", foo.int_activated (3));
 

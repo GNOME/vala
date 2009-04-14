@@ -99,6 +99,8 @@ public class Vala.Signal : Member, Lockable {
 
 		var generated_delegate = new Delegate (null, actual_return_type);
 		generated_delegate.has_target = true;
+		generated_delegate.access = SymbolAccessibility.PUBLIC;
+		generated_delegate.owner = scope;
 
 		// sender parameter is never null and doesn't own its value
 		var sender_param_type = sender_type.copy ();

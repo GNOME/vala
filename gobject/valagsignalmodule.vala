@@ -628,5 +628,161 @@ internal class Vala.GSignalModule : GObjectModule {
 			base.visit_member_access (expr);
 		}
 	}
+
+	public override void visit_method_call (MethodCall expr) {
+		var method_type = expr.call.value_type as MethodType;
+
+		if (method_type == null || !(method_type.method_symbol.parent_symbol is Signal)) {
+			// no signal connect/disconnect call
+			base.visit_method_call (expr);
+			return;
+		}
+
+		var sig = (Signal) method_type.method_symbol.parent_symbol;
+		var signal_access = ((MemberAccess) expr.call).inner;
+		var handler = expr.get_argument_list ().get (0);
+
+		signal_access.accept (codegen);
+		handler.accept (codegen);
+
+		var m = (Method) handler.symbol_reference;
+		var target_type_symbol = m.parent_symbol as TypeSymbol;
+
+		string connect_func;
+		bool disconnect = (method_type.method_symbol.name == "disconnect");
+
+		if (!disconnect) {
+			// connect
+			if (sig is DynamicSignal) {
+				connect_func = head.get_dynamic_signal_connect_wrapper_name ((DynamicSignal) sig);
+			} else {
+				if (m.binding == MemberBinding.INSTANCE) {
+					if (target_type_symbol != null && target_type_symbol.is_subtype_of (gobject_type)) {
+						connect_func = "g_signal_connect_object";
+					} else {
+						connect_func = "g_signal_connect";
+					}
+				} else {
+					connect_func = "g_signal_connect";
+				}
+			}
+		} else {
+			// disconnect
+			if (sig is DynamicSignal) {
+				connect_func = head.get_dynamic_signal_disconnect_wrapper_name ((DynamicSignal) sig);
+			} else {
+				connect_func = "g_signal_handlers_disconnect_matched";
+			}
+		}
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier (connect_func));
+
+		string signal_detail = null;
+
+		// first argument: instance of sender
+		MemberAccess ma;
+		if (signal_access is ElementAccess) {
+			var ea = (ElementAccess) signal_access;
+			ma = (MemberAccess) ea.container;
+			var detail_expr = ea.get_indices ().get (0) as StringLiteral;
+			if (detail_expr == null) {
+				expr.error = true;
+				Report.error (detail_expr.source_reference, "internal error: only literal string details supported");
+				return;
+			}
+			signal_detail = detail_expr.eval ();
+		} else {
+			ma = (MemberAccess) signal_access;
+		}
+		if (ma.inner != null) {
+			ccall.add_argument ((CCodeExpression) get_ccodenode (ma.inner));
+		} else {
+			ccall.add_argument (new CCodeIdentifier ("self"));
+		}
+
+		if (sig is DynamicSignal) {
+			// dynamic_signal_connect or dynamic_signal_disconnect
+
+			// second argument: signal name
+			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
+		} else if (!disconnect) {
+			// g_signal_connect_object or g_signal_connect
+
+			// second argument: signal name
+			ccall.add_argument (sig.get_canonical_cconstant (signal_detail));
+		} else {
+			// g_signal_handlers_disconnect_matched
+
+			// second argument: mask
+			if (signal_detail == null) {
+				ccall.add_argument (new CCodeConstant ("G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA"));
+			} else {
+				ccall.add_argument (new CCodeConstant ("G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_DETAIL | G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA"));
+			}
+
+			// get signal id
+			var ccomma = new CCodeCommaExpression ();
+			var temp_decl = get_temp_variable (uint_type);
+			temp_vars.insert (0, temp_decl);
+			var parse_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_parse_name"));
+			parse_call.add_argument (sig.get_canonical_cconstant (signal_detail));
+			var decl_type = (TypeSymbol) sig.parent_symbol;
+			parse_call.add_argument (new CCodeIdentifier (decl_type.get_type_id ()));
+			parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
+			if (signal_detail == null) {
+				parse_call.add_argument (new CCodeConstant ("NULL"));
+			} else {
+				var detail_temp_decl = get_temp_variable (gquark_type);
+				temp_vars.insert (0, detail_temp_decl);
+				parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (detail_temp_decl.name)));
+			}
+			parse_call.add_argument (new CCodeConstant ("FALSE"));
+			ccomma.append_expression (parse_call);
+			ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
+
+			// third argument: signal_id
+			ccall.add_argument (ccomma);
+
+			// fourth argument: detail
+			ccall.add_argument (new CCodeConstant ("0"));
+			// fifth argument: closure
+			ccall.add_argument (new CCodeConstant ("NULL"));
+		}
+
+		// third resp. sixth argument: handler
+		ccall.add_argument (new CCodeCastExpression ((CCodeExpression) handler.ccodenode, "GCallback"));
+
+		if (m.binding == MemberBinding.INSTANCE) {
+			// g_signal_connect_object or g_signal_handlers_disconnect_matched
+			// or dynamic_signal_connect or dynamic_signal_disconnect
+
+			// fourth resp. seventh argument: object/user_data
+			if (handler is MemberAccess) {
+				var right_ma = (MemberAccess) handler;
+				if (right_ma.inner != null) {
+					ccall.add_argument ((CCodeExpression) right_ma.inner.ccodenode);
+				} else {
+					ccall.add_argument (new CCodeIdentifier ("self"));
+				}
+			} else if (handler is LambdaExpression) {
+				ccall.add_argument (new CCodeIdentifier ("self"));
+			}
+			if (!disconnect && !(sig is DynamicSignal)
+			    && target_type_symbol != null && target_type_symbol.is_subtype_of (gobject_type)) {
+				// g_signal_connect_object
+
+				// fifth argument: connect_flags
+				ccall.add_argument (new CCodeConstant ("0"));
+			}
+		} else {
+			// g_signal_connect or g_signal_handlers_disconnect_matched
+			// or dynamic_signal_connect or dynamic_signal_disconnect
+
+			// fourth resp. seventh argument: user_data
+			ccall.add_argument (new CCodeConstant ("NULL"));
+		}
+
+		expr.ccodenode = ccall;
+	}
 }
 
