@@ -122,6 +122,7 @@ public enum Vala.Genie.TokenType {
 	OPEN_PARENS,
 	OVERRIDE,
 	OWNED,
+	PARAMS,
 	PASS,
 	PERCENT,
 	PLUS,
@@ -264,6 +265,7 @@ public enum Vala.Genie.TokenType {
 		case OPEN_PARENS: return "`('";
 		case OVERRIDE: return "`override'";
 		case OWNED: return "`owned'";
+		case PARAMS: return "`params'";
 		case PASS: return "`pass'";
 		case PERCENT: return "`%'";
 		case PLUS: return "`+'";

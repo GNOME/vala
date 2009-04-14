@@ -307,7 +307,14 @@ public class Vala.Genie.Scanner {
 				if (matches (begin, "inline")) return TokenType.INLINE;
 				break;
 			case 'p':
-				if (matches (begin, "public")) return TokenType.PUBLIC;
+				switch (begin[1]) {
+				case 'a':
+					if (matches (begin, "params")) return TokenType.PARAMS;
+					break;
+				case 'u':
+					if (matches (begin, "public")) return TokenType.PUBLIC;
+					break;
+				}
 				break;
 			case 'r':
 				switch (begin[1]) {

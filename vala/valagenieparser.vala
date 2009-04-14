@@ -61,10 +61,11 @@ public class Vala.Genie.Parser : CodeVisitor {
 		CLASS = 1 << 1,
 		EXTERN = 1 << 2,
 		INLINE = 1 << 3,
-		OVERRIDE = 1 << 4,
-		STATIC = 1 << 5,
-		VIRTUAL = 1 << 6,
-		PRIVATE = 1 << 7
+		NEW = 1 << 4,
+		OVERRIDE = 1 << 5,
+		STATIC = 1 << 6,
+		VIRTUAL = 1 << 7,
+		PRIVATE = 1 << 8
 	}
 
 	public Parser () {
@@ -177,6 +178,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 	inline SourceLocation get_location () {
 		return tokens[index].begin;
 	}
+	
+	string get_current_string () {
+		return ((string) tokens[index].begin.pos).ndup ((tokens[index].end.pos - tokens[index].begin.pos));
+	}
 
 	string get_last_string () {
 		int last_index = (index + BUFFER_SIZE - 1) % BUFFER_SIZE;
@@ -253,6 +258,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.INIT:
 		case TokenType.INLINE:
 		case TokenType.INTERFACE:
+		case TokenType.INTERNAL:
 		case TokenType.IS:
 		case TokenType.ISA:
 		case TokenType.LOCK:
@@ -262,6 +268,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.OF:
 		case TokenType.OUT:
 		case TokenType.OVERRIDE:
+		case TokenType.OWNED:
 		case TokenType.PASS:
 		case TokenType.PRINT:
 		case TokenType.PRIVATE:
@@ -281,6 +288,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.TRUE:
 		case TokenType.TRY:
 		case TokenType.TYPEOF:
+		case TokenType.UNOWNED:
 		case TokenType.USES:
 		case TokenType.VAR:
 		case TokenType.VIRTUAL:
@@ -289,11 +297,25 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.WEAK:
 		case TokenType.WHEN:
 		case TokenType.WHILE:
+		case TokenType.YIELD:
+		case TokenType.YIELDS:
 			next ();
 			return;
-		default:
-			throw new ParseError.SYNTAX (get_error ("expected identifier"));
-		}
+		case TokenType.INTEGER_LITERAL:
+		case TokenType.REAL_LITERAL:
+			// also accept integer and real literals
+			// as long as they contain at least one character
+			// and no decimal point
+			// for example, 2D and 3D
+			string id = get_current_string ();
+			if (id[id.length - 1].isalpha () && !("." in id)) {
+				next ();
+				return;
+			}
+			break;
+		}	
+
+		throw new ParseError.SYNTAX (get_error ("expected identifier"));
 	}
 
 	string parse_identifier () throws ParseError {
@@ -328,6 +350,11 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.STRING_LITERAL:
 			next ();
 			return new StringLiteral (get_last_string (), get_src (begin));
+		case TokenType.VERBATIM_STRING_LITERAL:
+			next ();
+			string raw_string = get_last_string ();
+			string escaped_string = raw_string.substring (3, raw_string.len () - 6).escape ("");
+			return new StringLiteral ("\"%s\"".printf (escaped_string), get_src (begin));	
 		case TokenType.NULL:
 			next ();
 			return new NullLiteral (get_src (begin));
@@ -392,9 +419,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 			return;
 		}
 		accept (TokenType.DYNAMIC);
-
+		accept (TokenType.OWNED);
+		accept (TokenType.UNOWNED);
 		accept (TokenType.WEAK);
-		
 		if (accept (TokenType.ARRAY) || accept (TokenType.LIST) || accept (TokenType.DICT)) {
 			accept (TokenType.OF);
 		}
@@ -431,7 +458,12 @@ public class Vala.Genie.Parser : CodeVisitor {
 		bool is_dynamic = accept (TokenType.DYNAMIC);
 		bool value_owned = owned_by_default;
 		if (owned_by_default) {
-			value_owned = !accept (TokenType.WEAK);
+			if (accept (TokenType.UNOWNED)
+			    || accept (TokenType.WEAK)) {
+				value_owned = false;
+			}
+		} else {
+			value_owned = accept (TokenType.OWNED);
 		}
 
 		/* handle arrays */
@@ -498,21 +530,34 @@ public class Vala.Genie.Parser : CodeVisitor {
 				prev ();
 			
 				while (accept (TokenType.OPEN_BRACKET))	{		
+					int array_length = -1;
 					int array_rank = 0;
 					do {
 						array_rank++;
 						// support for stack-allocated arrays
 						// also required for decision between expression and declaration statement
 						if (current () != TokenType.COMMA && current () != TokenType.CLOSE_BRACKET) {
-							parse_expression ();
+							var length_expression = parse_expression ();
+							var length_literal = length_expression as IntegerLiteral;
+							if (length_literal != null) {
+								array_length = length_literal.value.to_int ();
+							}
 						}
 					}
 					while (accept (TokenType.COMMA));
 					expect (TokenType.CLOSE_BRACKET);
 
 					type.value_owned = true;
-					type = new ArrayType (type, array_rank, get_src (begin));
-					type.nullable = accept (TokenType.INTERR);
+					var array_type = new ArrayType (type, array_rank, get_src (begin));
+					array_type.nullable = accept (TokenType.INTERR);
+					
+					if (array_rank == 1 && array_length > 0) {
+						// fixed length (stack-allocated) array
+						array_type.fixed_length = true;
+						array_type.length = array_length;
+					}
+					
+					type = array_type;
 				}
 			}
 		}
@@ -530,10 +575,24 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var list = new ArrayList<Expression> ();
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
-				list.add (parse_expression ());
+				list.add (parse_argument ());
 			} while (accept (TokenType.COMMA));
 		}
 		return list;
+	}
+	
+	Expression parse_argument () throws ParseError {
+		var begin = get_location ();
+
+		if (accept (TokenType.REF)) {
+			var inner = parse_expression ();
+			return new UnaryExpression (UnaryOperator.REF, inner, get_src (begin));
+		} else if (accept (TokenType.OUT)) {
+			var inner = parse_expression ();
+			return new UnaryExpression (UnaryOperator.OUT, inner, get_src (begin));
+		} else {
+			return parse_expression ();
+		}
 	}
 
 	Expression parse_primary_expression () throws ParseError {
@@ -548,11 +607,15 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.REAL_LITERAL:
 		case TokenType.CHARACTER_LITERAL:
 		case TokenType.STRING_LITERAL:
+		case TokenType.VERBATIM_STRING_LITERAL:
 		case TokenType.NULL:
 			expr = parse_literal ();
 			break;
 		case TokenType.ASSERT:
 			return parse_assert_expression ();	
+		case TokenType.OPEN_BRACE:
+			expr = parse_initializer ();
+			break;
 		case TokenType.OPEN_PARENS:
 			expr = parse_tuple ();
 			break;
@@ -1033,8 +1096,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.TILDE:  return UnaryOperator.BITWISE_COMPLEMENT;
 		case TokenType.OP_INC: return UnaryOperator.INCREMENT;
 		case TokenType.OP_DEC: return UnaryOperator.DECREMENT;
-		case TokenType.REF:    return UnaryOperator.REF;
-		case TokenType.OUT:    return UnaryOperator.OUT;
 		default:               return UnaryOperator.NONE;
 		}
 	}
@@ -1055,9 +1116,16 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.OPEN_PARENS:
 			next ();
 			switch (current ()) {
+			case TokenType.OWNED:
+				// (owned) foo
+				next ();
+				if (accept (TokenType.CLOSE_PARENS)) {
+					var op = parse_unary_expression ();
+					return new ReferenceTransferExpression (op, get_src (begin));
+				}
+				break;
 			case TokenType.VOID:
 			case TokenType.DYNAMIC:
-			case TokenType.WEAK:
 			case TokenType.IDENTIFIER:
 				var type = parse_type ();
 				if (accept (TokenType.CLOSE_PARENS)) {
@@ -1072,6 +1140,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 					case TokenType.REAL_LITERAL:
 					case TokenType.CHARACTER_LITERAL:
 					case TokenType.STRING_LITERAL:
+					case TokenType.VERBATIM_STRING_LITERAL:
 					case TokenType.NULL:
 					case TokenType.THIS:
 					case TokenType.SUPER:
@@ -1079,9 +1148,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 					case TokenType.SIZEOF:
 					case TokenType.TYPEOF:
 					case TokenType.IDENTIFIER:
-						if (!(type is PointerType) && !type.value_owned) {
-							Report.warning (get_src (begin), "obsolete syntax, weak type modifier unused in cast expressions");
-						}
+					case TokenType.PARAMS:
 						var inner = parse_unary_expression ();
 						return new CastExpression (inner, type, get_src (begin), false);
 					default:
@@ -1553,7 +1620,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 					is_decl = true;
 					parse_local_variable_declarations (block);
 					break;
-
+				case TokenType.YIELD:
+					stmt = parse_yield_statement ();
+					break;
 
 				case TokenType.OP_INC:
 				case TokenType.OP_DEC:
@@ -1650,6 +1719,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.BREAK:     return parse_break_statement ();
 		case TokenType.CONTINUE:  return parse_continue_statement ();
 		case TokenType.RETURN:    return parse_return_statement ();
+		case TokenType.YIELD:     return parse_yield_statement ();
 		case TokenType.RAISE:     return parse_throw_statement ();
 		case TokenType.TRY:       return parse_try_statement ();
 		case TokenType.LOCK:      return parse_lock_statement ();
@@ -1670,6 +1740,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 			}
 		}
 
+		block.source_reference.last_line = get_current_src ().last_line;
+		block.source_reference.last_column = get_current_src ().last_column;
+		
 		return block;
 	}
 
@@ -1737,7 +1810,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var begin = get_location ();
 		Expression initializer = null;
 		if (accept (TokenType.ASSIGN)) {
-			initializer = parse_variable_initializer ();
+			initializer = parse_expression ();
 		}
 		return new LocalVariable (variable_type, id, initializer, get_src_com (begin));
 	}
@@ -2004,6 +2077,17 @@ public class Vala.Genie.Parser : CodeVisitor {
 		return new ReturnStatement (expr, get_src_com (begin));
 	}
 
+	Statement parse_yield_statement () throws ParseError {
+		var begin = get_location ();
+		expect (TokenType.YIELD);
+		Expression expr = null;
+		if (current () != TokenType.SEMICOLON && current () != TokenType.EOL) {
+			expr = parse_expression ();
+		}
+		expect_terminator ();
+		return new YieldStatement (expr, get_src (begin));
+	}
+
 	Statement parse_throw_statement () throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.RAISE);
@@ -2117,6 +2201,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 	Symbol parse_declaration (bool is_root = false) throws ParseError {
 		comment = scanner.pop_comment ();
 		var attrs = parse_attributes ();
+		var begin = get_location ();
 		
 		switch (current ()) {
 		case TokenType.CONST:
@@ -2151,7 +2236,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		case TokenType.STRUCT:	
 			return parse_struct_declaration (attrs);
 		default: 
-			var begin = get_location ();
+			
 			while (current () != TokenType.EOL && current () != TokenType.SEMICOLON && current () != TokenType.EOF) {
 				if (current () == TokenType.COLON) {
 					rollback (begin);
@@ -2241,6 +2326,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			case TokenType.DELETE:
 			case TokenType.DO:
 			case TokenType.FOR:
+			case TokenType.FOREACH:
 			case TokenType.IF:
 			case TokenType.LOCK:
 			case TokenType.RETURN:
@@ -2248,6 +2334,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			case TokenType.TRY:
 			case TokenType.VAR:
 			case TokenType.WHILE:
+			case TokenType.YIELD:
 				return RecoveryState.STATEMENT_BEGIN;
 			default:
 				next ();
@@ -2265,7 +2352,15 @@ public class Vala.Genie.Parser : CodeVisitor {
 		set_attributes (ns, attrs);
 		expect (TokenType.EOL);
 		parse_declarations (ns);
-		return ns;
+		
+		Namespace result = ns;
+		while (sym.inner != null) {
+			sym = sym.inner;
+			ns = new Namespace (sym.name, result.source_reference);
+			ns.add_namespace ((Namespace) result);
+			result = ns;
+		}
+		return result;
 	}
 
 	void parse_namespace_member (Namespace ns) throws ParseError {
@@ -2392,7 +2487,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		    && !cl.is_abstract
 		    && cl.default_construction_method == null) {
 			var m = new CreationMethod (cl.name, null, cl.source_reference);
-			m.binding = MemberBinding.STATIC;
 			m.access = SymbolAccessibility.PUBLIC;
 			m.body = new Block (cl.source_reference);
 			cl.add_method (m);
@@ -2443,7 +2537,14 @@ public class Vala.Genie.Parser : CodeVisitor {
 			 	cl.static_constructor = c;
 			 }
 		} else if (sym is Destructor) {
-			cl.destructor = (Destructor) sym;
+			var d = (Destructor) sym;
+			if (d.binding == MemberBinding.STATIC) {
+				cl.static_destructor = (Destructor) d;
+			} else if (d.binding == MemberBinding.CLASS) {
+				cl.class_destructor = (Destructor) d;
+			} else {
+				cl.destructor = (Destructor) d;
+			}
 		} else {
 			Report.error (sym.source_reference, "unexpected declaration in class");
 		}
@@ -2454,7 +2555,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		expect (TokenType.CONST);
 
-		parse_member_declaration_modifiers ();
+		var flags = parse_member_declaration_modifiers ();
 
 		string id = parse_identifier ();
 		expect (TokenType.COLON);
@@ -2462,7 +2563,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		Expression initializer = null;
 		if (accept (TokenType.ASSIGN)) {
-			initializer = parse_variable_initializer ();
+			initializer = parse_expression ();
 		}
 		expect_terminator ();
 
@@ -2474,6 +2575,14 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		var c = new Constant (id, type, initializer, get_src_com (begin));
 		c.access = get_access (id);
+		
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			c.external = true;
+		}
+		if (ModifierFlags.NEW in flags) {
+			c.hides = true;
+		}
+		
 		set_attributes (c, attrs);
 		return c;
 	}
@@ -2501,6 +2610,13 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		set_attributes (f, attrs);
 
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			f.external = true;
+		}
+		if (ModifierFlags.NEW in flags) {
+			f.hides = true;
+		}
+
 		if (accept (TokenType.ASSIGN)) {
 			f.initializer = parse_expression ();
 		}
@@ -2524,7 +2640,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var initializer = new InitializerList (get_src (begin));
 		if (current () != TokenType.DEDENT) {
 			do {
-				var init = parse_variable_initializer ();
+				var init = parse_argument ();
 				initializer.append (init);
 			} while (accept (TokenType.COMMA));
 		}
@@ -2534,41 +2650,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 		return initializer;
 	}
 	
-	bool is_initializer () throws ParseError { 
-		if (current () == TokenType.OPEN_BRACE) {
-			return true;
-		}
-		
-		/*
-		if (current () == TokenType.OPEN_PARENS) {
-			var begin = get_location ();
-			var is_array = false;
-						
-			next ();
-						
-			var expr = parse_expression ();
-			is_array = (accept (TokenType.COMMA));
-			
-			rollback (begin);
-			
-			return is_array;
-		}
-		*/
-		
-		return false;
-	}
 	
-
-	Expression parse_variable_initializer () throws ParseError {
-		if (is_initializer ()) {
-			var expr = parse_initializer ();
-			return expr;
-		} else {
-			var expr = parse_expression ();
-			return expr;
-		}
-	}
-
+	
 
 	Method parse_main_method_declaration (Gee.List<Attribute>? attrs) throws ParseError {
 		var id = "main";
@@ -2644,6 +2727,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 			method.add_parameter (param);
 		}
 
+		if (accept (TokenType.YIELDS)) {
+			method.coroutine = true;
+		}
+
 		if (accept (TokenType.RAISES)) {
 			do {
 				method.add_error_type (parse_type ());
@@ -2653,23 +2740,41 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		if (ModifierFlags.STATIC in flags || id == "main") {
 			method.binding = MemberBinding.STATIC;
+		} else if (ModifierFlags.CLASS in flags) {
+			method.binding = MemberBinding.CLASS;
 		}
-		if (ModifierFlags.ABSTRACT in flags) {
-			method.is_abstract = true;
+		if (ModifierFlags.NEW in flags) {
+			method.hides = true;
 		}
-		if (ModifierFlags.VIRTUAL in flags) {
-			method.is_virtual = true;
+
+		if (method.binding == MemberBinding.INSTANCE) {
+			if (ModifierFlags.ABSTRACT in flags) {
+				method.is_abstract = true;
+			}
+			if (ModifierFlags.VIRTUAL in flags) {
+				method.is_virtual = true;
+			}
+			if (ModifierFlags.OVERRIDE in flags) {
+				method.overrides = true;
+			}
+			if ((method.is_abstract && method.is_virtual)
+			    || (method.is_abstract && method.overrides)
+			    || (method.is_virtual && method.overrides)) {
+				throw new ParseError.SYNTAX (get_error ("only one of `abstract', `virtual', or `override' may be specified"));
+			}
+		} else {
+			if (ModifierFlags.ABSTRACT in flags
+			    || ModifierFlags.VIRTUAL in flags
+			    || ModifierFlags.OVERRIDE in flags) {
+				throw new ParseError.SYNTAX (get_error ("the modifiers `abstract', `virtual', and `override' are not valid for static methods"));
+			}
 		}
-		if (ModifierFlags.OVERRIDE in flags) {
-			method.overrides = true;
-		}
-		if ((method.is_abstract && method.is_virtual)
-		    || (method.is_abstract && method.overrides)
-		    || (method.is_virtual && method.overrides)) {
-			throw new ParseError.SYNTAX (get_error ("only one of `abstract', `virtual', or `override' may be specified"));
-		}
+
 		if (ModifierFlags.INLINE in flags) {
 			method.is_inline = true;
+		}
+		if (ModifierFlags.EXTERN in flags) {
+			method.external = true;
 		}
 
 		expect (TokenType.EOL);
@@ -2719,6 +2824,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		if (accept_block ()) {
 			method.body = parse_block ();
+		} else if (scanner.source_file.external_package) {
+			method.external = true;
 		}
 		return method;
 	}
@@ -2736,7 +2843,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		string id = parse_identifier ();
 		expect (TokenType.COLON);
 
-		bool is_weak = accept (TokenType.WEAK);
 		var type = parse_type (false);
 
 		var prop = new Property (id, type, null, null, get_src_com (begin));
@@ -2762,6 +2868,13 @@ public class Vala.Genie.Parser : CodeVisitor {
 		if (ModifierFlags.OVERRIDE in flags) {
 			prop.overrides = true;
 		}
+		
+		if (ModifierFlags.NEW in flags) {
+			prop.hides = true;
+		}
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			prop.external = true;
+		}
 
 		if (accept (TokenType.ASSIGN)) {
 			prop.default_expression = parse_expression ();
@@ -2775,7 +2888,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 				var attribs = parse_attributes ();
 
 				var value_type = type.copy ();
-				value_type.value_owned = false;
+				value_type.value_owned = accept (TokenType.OWNED);
 
 				if (accept (TokenType.GET)) {
 					if (prop.get_accessor != null) {
@@ -2784,8 +2897,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 					Block block = null;
 					if (accept_block ()) {
 						block = parse_block ();
+						prop.external = false;
 					}
-					prop.get_accessor = new PropertyAccessor (true, false, false, type.copy (), block, get_src (accessor_begin));
+					prop.get_accessor = new PropertyAccessor (true, false, false, value_type, block, get_src (accessor_begin));
 					set_attributes (prop.get_accessor, attribs);
 					prop.get_accessor.access = SymbolAccessibility.PUBLIC;
 				} else {
@@ -2808,6 +2922,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 					Block block = null;
 					if (accept_block ()) {
 						block = parse_block ();
+						prop.external = false;
 					}
 					prop.set_accessor = new PropertyAccessor (false, !readonly, _construct, value_type, block, get_src (accessor_begin));
 					set_attributes (prop.set_accessor, attribs);
@@ -2845,7 +2960,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 			if (needs_var) {
 				/* automatic property accessor body generation */
 				var field_type = prop.property_type.copy ();
-				field_type.value_owned = !is_weak;
 				prop.field = new Field ("_%s".printf (prop.name), field_type, prop.default_expression, prop.source_reference);
 				prop.field.access = SymbolAccessibility.PRIVATE;
 			}
@@ -2890,7 +3004,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 		if (ModifierFlags.VIRTUAL in flags) {
 			sig.is_virtual = true;
 		}
-
+		if (ModifierFlags.NEW in flags) {
+			sig.hides = true;
+		}
 		set_attributes (sig, attrs);
 		
 		foreach (FormalParameter formal_param in params) {
@@ -3005,7 +3121,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 		} else {
 			iface.access = get_access (sym.name);
 		}
-		
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			iface.external = true;
+		}
 		set_attributes (iface, attrs);
 		foreach (TypeParameter type_param in type_param_list) {
 			iface.add_type_parameter (type_param);
@@ -3069,6 +3187,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 			en.access = SymbolAccessibility.PRIVATE;
 		} else {
 			en.access = get_access (sym.name);
+		}
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			en.external = true;
 		}
 		set_attributes (en, attrs);
 
@@ -3215,6 +3336,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 				next ();
 				flags |= ModifierFlags.INLINE;
 				break;
+			case TokenType.NEW:
+				next ();
+				flags |= ModifierFlags.NEW;
+				break;	
 			case TokenType.OVERRIDE:
 				next ();
 				flags |= ModifierFlags.OVERRIDE;
@@ -3244,7 +3369,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 			// varargs
 			return new FormalParameter.with_ellipsis (get_src (begin));
 		}
-
+		bool params_array = accept (TokenType.PARAMS);
 		var direction = ParameterDirection.IN;
 		if (accept (TokenType.OUT)) {
 			direction = ParameterDirection.OUT;
@@ -3266,6 +3391,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var param = new FormalParameter (id, type, get_src (begin));
 		set_attributes (param, attrs);
 		param.direction = direction;
+		param.params_array = params_array;
 		if (accept (TokenType.ASSIGN)) {
 			param.default_expression = parse_expression ();
 		}
@@ -3277,7 +3403,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 		CreationMethod method;
 
 		expect (TokenType.CONSTRUCT);
-
 		parse_member_declaration_modifiers ();
 
 
@@ -3307,6 +3432,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
+		if (accept (TokenType.YIELDS)) {
+			method.coroutine = true;
+		}
 		if (accept (TokenType.RAISES)) {
 			do {
 				method.add_error_type (parse_type ());
@@ -3318,6 +3446,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		if (accept_block ()) {
 			method.body = parse_block ();
+		} else if (scanner.source_file.external_package) {
+			method.external = true;
 		}
 		
 		return method;
@@ -3334,7 +3464,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var sym = parse_symbol_name ();
 
 		var type_param_list = parse_type_parameter_list ();
-
+		
+		if (ModifierFlags.NEW in flags) {
+			throw new ParseError.SYNTAX (get_error ("`new' modifier not allowed on delegates"));
+		}
 
 		var params = new ArrayList<FormalParameter> ();
 
@@ -3354,19 +3487,28 @@ public class Vala.Genie.Parser : CodeVisitor {
 			type = new VoidType ();
 		}
 
+		var d = new Delegate (sym.name, type, get_src_com (begin));
+
 		if (accept (TokenType.RAISES)) {
 			do {
-				parse_type ();
+				d.add_error_type (parse_type ());
 			} while (accept (TokenType.COMMA));
 		}
 
 		expect_terminator ();
 
-		var d = new Delegate (sym.name, type, get_src_com (begin));
+		
 		if (ModifierFlags.PRIVATE in flags) {
 			d.access = SymbolAccessibility.PRIVATE;
 		} else {
 			d.access = get_access (sym.name);
+		}
+
+		if (!(ModifierFlags.STATIC in flags)) {
+			d.has_target = true;
+		}
+		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
+			d.external = true;
 		}
 
 		set_attributes (d, attrs);
@@ -3379,9 +3521,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 			d.add_parameter (formal_param);
 		}
 
-		if (!(ModifierFlags.STATIC in flags)) {
-			d.has_target = true;
-		}
 
 
 		Symbol result = d;
@@ -3430,6 +3569,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 				switch (current ()) {
 				case TokenType.VOID:
 				case TokenType.DYNAMIC:
+				case TokenType.UNOWNED:
 				case TokenType.WEAK:
 				case TokenType.IDENTIFIER:
 					var type = parse_type ();
