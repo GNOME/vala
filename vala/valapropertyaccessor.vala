@@ -190,14 +190,14 @@ public class Vala.PropertyAccessor : CodeNode {
 					body.add_statement (new ExpressionStatement (assignment));
 				}
 			}
-
-			if (body != null && (writable || construction)) {
-				value_parameter = new FormalParameter ("value", value_type, source_reference);
-				body.scope.add (value_parameter.name, value_parameter);
-			}
 		}
 
 		if (body != null) {
+			if (writable || construction) {
+				value_parameter = new FormalParameter ("value", value_type, source_reference);
+				body.scope.add (value_parameter.name, value_parameter);
+			}
+
 			body.check (analyzer);
 		}
 
