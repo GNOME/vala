@@ -133,10 +133,34 @@ public class Vala.MemberAccess : Expression {
 	}
 
 	public override string to_string () {
-		if (inner == null) {
-			return member_name;
+		bool instance = true;
+		if (symbol_reference is Field) {
+			var f = (Field) symbol_reference;
+			instance = (f.binding == MemberBinding.INSTANCE);
+		} else if (symbol_reference is Method) {
+			var m = (Method) symbol_reference;
+			if (!(m is CreationMethod)) {
+				instance = (m.binding == MemberBinding.INSTANCE);
+			}
+		} else if (symbol_reference is Property) {
+			var prop = (Property) symbol_reference;
+			instance = (prop.binding == MemberBinding.INSTANCE);
+		} else if (symbol_reference is EnumValue) {
+			instance = false;
+		} else if (symbol_reference is ErrorCode) {
+			instance = false;
+		}
+
+		if (instance) {
+			if (inner == null) {
+				return member_name;
+			} else {
+				return "%s.%s".printf (inner.to_string (), member_name);
+			}
 		} else {
-			return "%s.%s".printf (inner.to_string (), member_name);
+			// ensure to always use fully-qualified name
+			// to refer to static members
+			return symbol_reference.get_full_name ();
 		}
 	}
 
