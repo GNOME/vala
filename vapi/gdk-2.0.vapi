@@ -1508,8 +1508,8 @@ namespace Gdk {
 	public delegate void EventFunc (Gdk.Event event);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public delegate Gdk.FilterReturn FilterFunc (Gdk.XEvent xevent, Gdk.Event event);
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public static delegate void InputFunction (void* data, int source, Gdk.InputCondition condition);
+	[CCode (cheader_filename = "gdk/gdk.h", has_target = false)]
+	public delegate void InputFunction (void* data, int source, Gdk.InputCondition condition);
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	public delegate void SpanFunc (Gdk.Span span);
 	[CCode (cheader_filename = "gdk/gdk.h")]

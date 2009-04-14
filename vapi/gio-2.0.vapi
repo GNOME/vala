@@ -314,6 +314,7 @@ namespace GLib {
 	public class IOExtension {
 		public unowned string get_name ();
 		public int get_priority ();
+		public GLib.Type get_type ();
 		public unowned GLib.TypeClass ref_class ();
 	}
 	[Compact]
@@ -1064,14 +1065,14 @@ namespace GLib {
 	public delegate void AsyncReadyCallback (GLib.Object source_object, GLib.AsyncResult res);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate void FileProgressCallback (int64 current_num_bytes, int64 total_num_bytes);
-	[CCode (cheader_filename = "gio/gio.h")]
-	public static delegate bool FileReadMoreCallback (string file_contents, int64 file_size, void* callback_data);
+	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
+	public delegate bool FileReadMoreCallback (string file_contents, int64 file_size, void* callback_data);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate bool IOSchedulerJobFunc (GLib.IOSchedulerJob job, GLib.Cancellable cancellable);
-	[CCode (cheader_filename = "gio/gio.h")]
-	public static delegate void* ReallocFunc (void* data, size_t size);
-	[CCode (cheader_filename = "gio/gio.h")]
-	public static delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable cancellable);
+	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
+	public delegate void* ReallocFunc (void* data, size_t size);
+	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
+	public delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable cancellable);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_ACCESS_CAN_DELETE;
 	[CCode (cheader_filename = "gio/gio.h")]

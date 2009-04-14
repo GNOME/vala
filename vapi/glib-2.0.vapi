@@ -1199,7 +1199,8 @@ namespace GLib {
 		public static weak Source current_source ();
 	}
 	
-	public static delegate int PollFunc (PollFD[] ufds, uint nfsd, int timeout_);
+	[CCode (has_target = false)]
+	public delegate int PollFunc (PollFD[] ufds, uint nfsd, int timeout_);
 
 	[CCode (cname = "GSource")]
 	public class TimeoutSource : Source {
@@ -1269,14 +1270,19 @@ namespace GLib {
 		public static bool remove_by_funcs_user_data (void* user_data);
 		public static bool remove_by_user_data (void* user_data);
 	}
-	
-	public static delegate void SourceDummyMarshal ();
-	
-	public static delegate bool SourcePrepareFunc (Source source, out int timeout_);
-	public static delegate bool SourceCheckFunc (Source source);
-	public static delegate bool SourceDispatchFunc (Source source, SourceFunc _callback);
-	public static delegate void SourceFinalizeFunc (Source source);
-	
+
+	[CCode (has_target = false)]
+	public delegate void SourceDummyMarshal ();
+
+	[CCode (has_target = false)]
+	public delegate bool SourcePrepareFunc (Source source, out int timeout_);
+	[CCode (has_target = false)]
+	public delegate bool SourceCheckFunc (Source source);
+	[CCode (has_target = false)]
+	public delegate bool SourceDispatchFunc (Source source, SourceFunc _callback);
+	[CCode (has_target = false)]
+	public delegate void SourceFinalizeFunc (Source source);
+
 	[Compact]
 	public class SourceFuncs {
 		public SourcePrepareFunc prepare;
@@ -1284,11 +1290,14 @@ namespace GLib {
 		public SourceDispatchFunc dispatch;
 		public SourceFinalizeFunc finalize;
 	}
-	
-	public static delegate void SourceCallbackRefFunc (void* cb_data);
-	public static delegate void SourceCallbackUnrefFunc (void* cb_data);
-	public static delegate void SourceCallbackGetFunc (void* cb_data, Source source, SourceFunc func);
-	
+
+	[CCode (has_target = false)]
+	public delegate void SourceCallbackRefFunc (void* cb_data);
+	[CCode (has_target = false)]
+	public delegate void SourceCallbackUnrefFunc (void* cb_data);
+	[CCode (has_target = false)]
+	public delegate void SourceCallbackGetFunc (void* cb_data, Source source, SourceFunc func);
+
 	[Compact]
 	public class SourceCallbackFuncs {
 		public SourceCallbackRefFunc @ref;
@@ -1581,7 +1590,8 @@ namespace GLib {
 	[PrintfFormat]
 	public static void print (string format, ...);
 	public static void set_print_handler (PrintFunc func);
-	public static delegate void PrintFunc (string text);
+	[CCode (has_target = false)]
+	public delegate void PrintFunc (string text);
 	[PrintfFormat]
 	public static void printerr (string format, ...);
 	public static void set_printerr_handler (PrintFunc func);
@@ -2027,8 +2037,10 @@ namespace GLib {
 		public static uint closest (uint num);
 	}
 
-	public static delegate void FreeFunc (void* data);
-	public static delegate void VoidFunc ();
+	[CCode (has_target = false)]
+	public delegate void FreeFunc (void* data);
+	[CCode (has_target = false)]
+	public delegate void VoidFunc ();
 
 	public string format_size_for_display (int64 size);
 
@@ -2192,8 +2204,10 @@ namespace GLib {
 		public weak List<void*> complete_utf8 (string prefix, out string? new_prefix = null);
 	}
 
-	public static delegate string CompletionFunc (void* item);
-	public static delegate int CompletionStrncmpFunc (string s1, string s2, size_t n);
+	[CCode (has_target = false)]
+	public delegate string CompletionFunc (void* item);
+	[CCode (has_target = false)]
+	public delegate int CompletionStrncmpFunc (string s1, string s2, size_t n);
 
 	/* Timers */
 
@@ -2561,8 +2575,10 @@ namespace GLib {
 		public void set_translation_domain (string domain);
 	}
 
-	public static delegate bool OptionParseFunc (OptionContext context, OptionGroup group, void* data) throws OptionError;
-	public static delegate void OptionErrorFunc (OptionContext context, OptionGroup group, void* data, ref Error error);
+	[CCode (has_target = false)]
+	public delegate bool OptionParseFunc (OptionContext context, OptionGroup group, void* data) throws OptionError;
+	[CCode (has_target = false)]
+	public delegate void OptionErrorFunc (OptionContext context, OptionGroup group, void* data, ref Error error);
 
 	/* Perl-compatible regular expressions */
 
@@ -2630,7 +2646,8 @@ namespace GLib {
 		public static bool check_replacement (out bool has_references = null) throws RegexError;
 	}
 
-	public static delegate bool RegexEvalCallback (MatchInfo match_info, StringBuilder result, void* user_data);
+	[CCode (has_target = false)]
+	public delegate bool RegexEvalCallback (MatchInfo match_info, StringBuilder result, void* user_data);
 
 	[Compact]
 	[CCode (free_function = "g_match_info_free")]
@@ -3001,8 +3018,9 @@ namespace GLib {
 		public G data;
 		public SList<G> next;
 	}
-	
-	public static delegate int CompareFunc (void* a, void* b);
+
+	[CCode (has_target = false)]
+	public delegate int CompareFunc (void* a, void* b);
 
 	public delegate int CompareDataFunc (void* a, void* b);
 	
@@ -3116,13 +3134,16 @@ namespace GLib {
 		public bool steal (K key);
 		public void steal_all ();
 	}
-	
+
+	[CCode (has_target = false)]
 	public static delegate uint HashFunc (void* key);
+	[CCode (has_target = false)]
 	public static delegate bool EqualFunc (void* a, void* b);
 	public delegate void HFunc (void* key, void* value);
 
+	[CCode (has_target = false)]
 	public static delegate void DestroyNotify (void* data);
-	
+
 	[CCode (cname = "g_direct_hash")]
 	public static GLib.HashFunc direct_hash;
 	[CCode (cname = "g_direct_equal")]

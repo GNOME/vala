@@ -418,10 +418,10 @@ namespace Gst {
 	public delegate void CollectDataDestroyNotify ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate Gst.FlowReturn CollectPadsFunction (Gst.CollectPads pads);
-	[CCode (cheader_filename = "gst/base/gstdataqueue.h")]
-	public static delegate bool DataQueueCheckFullFunction (Gst.DataQueue queue, uint visible, uint bytes, uint64 time, void* checkdata);
-	[CCode (cheader_filename = "gst/base/gsttypefindhelper.h")]
-	public static delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, uint64 offset, uint length, out unowned Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/base/gstdataqueue.h", has_target = false)]
+	public delegate bool DataQueueCheckFullFunction (Gst.DataQueue queue, uint visible, uint bytes, uint64 time, void* checkdata);
+	[CCode (cheader_filename = "gst/base/gsttypefindhelper.h", has_target = false)]
+	public delegate Gst.FlowReturn TypeFindHelperGetRangeFunction (Gst.Object obj, uint64 offset, uint length, out unowned Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static unowned Gst.Caps type_find_helper (Gst.Pad src, uint64 size);
 	[CCode (cheader_filename = "gst/gst.h")]

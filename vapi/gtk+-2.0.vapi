@@ -6878,12 +6878,12 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void AboutDialogActivateLinkFunc (Gtk.AboutDialog about, string link_);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate bool AccelGroupActivate (Gtk.AccelGroup accel_group, GLib.Object acceleratable, uint keyval, Gdk.ModifierType modifier);
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	public delegate bool AccelGroupActivate (Gtk.AccelGroup accel_group, GLib.Object acceleratable, uint keyval, Gdk.ModifierType modifier);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool AccelGroupFindFunc (Gtk.AccelKey key, GLib.Closure closure);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void AccelMapForeach (void* data, string accel_path, uint accel_key, Gdk.ModifierType accel_mods, bool changed);
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	public delegate void AccelMapForeach (void* data, string accel_path, uint accel_key, Gdk.ModifierType accel_mods, bool changed);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void ActionCallback (Gtk.Action action);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6894,14 +6894,14 @@ namespace Gtk {
 	public delegate string CalendarDetailFunc (Gtk.Calendar calendar, uint year, uint month, uint day);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void Callback (Gtk.Widget widget);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void CallbackMarshal (Gtk.Object object, void* data, Gtk.Arg[] args);
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	public delegate void CallbackMarshal (Gtk.Object object, void* data, Gtk.Arg[] args);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void CellLayoutDataFunc (Gtk.CellLayout cell_layout, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, Gtk.TreeIter iter);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void ClipboardClearFunc (Gtk.Clipboard clipboard, void* user_data_or_owner);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void ClipboardGetFunc (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data, uint info, void* user_data_or_owner);
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	public delegate void ClipboardClearFunc (Gtk.Clipboard clipboard, void* user_data_or_owner);
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	public delegate void ClipboardGetFunc (Gtk.Clipboard clipboard, Gtk.SelectionData selection_data, uint info, void* user_data_or_owner);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void ClipboardImageReceivedFunc (Gtk.Clipboard clipboard, Gdk.Pixbuf pixbuf);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6914,10 +6914,10 @@ namespace Gtk {
 	public delegate void ClipboardTextReceivedFunc (Gtk.Clipboard clipboard, string text);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void ClipboardURIReceivedFunc (Gtk.Clipboard clipboard, string uris);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void ColorSelectionChangePaletteFunc (Gdk.Color colors, int n_colors);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void ColorSelectionChangePaletteWithScreenFunc (Gdk.Screen screen, Gdk.Color colors, int n_colors);
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	public delegate void ColorSelectionChangePaletteFunc (Gdk.Color colors, int n_colors);
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	public delegate void ColorSelectionChangePaletteWithScreenFunc (Gdk.Screen screen, Gdk.Color colors, int n_colors);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool EntryCompletionMatchFunc (Gtk.EntryCompletion completion, string key, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6926,18 +6926,18 @@ namespace Gtk {
 	public delegate bool Function ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void IconViewForeachFunc (Gtk.IconView icon_view, Gtk.TreePath path);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate int KeySnoopFunc (Gtk.Widget grab_widget, Gdk.EventKey event, void* func_data);
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	public delegate int KeySnoopFunc (Gtk.Widget grab_widget, Gdk.EventKey event, void* func_data);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void LinkButtonUriFunc (Gtk.LinkButton button, string link_);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void MenuDetachFunc (Gtk.Widget attach_widget, Gtk.Menu menu);
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	public delegate void MenuDetachFunc (Gtk.Widget attach_widget, Gtk.Menu menu);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void MenuPositionFunc (Gtk.Menu menu, out int x, out int y, out bool push_in);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void ModuleDisplayInitFunc (Gdk.Display display);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate void ModuleInitFunc (int argc, string argv);
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	public delegate void ModuleDisplayInitFunc (Gdk.Display display);
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	public delegate void ModuleInitFunc (int argc, string argv);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate unowned Gtk.Notebook NotebookWindowCreationFunc (Gtk.Notebook source, Gtk.Widget page, int x, int y);
 	[CCode (cheader_filename = "gtk/gtk.h")]
@@ -6946,22 +6946,22 @@ namespace Gtk {
 	public delegate void PrintSettingsFunc (string key, string value);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void RadioActionCallback (Gtk.Action action, Gtk.Action current);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate bool RcPropertyParser (GLib.ParamSpec pspec, GLib.StringBuilder rc_string, GLib.Value property_value);
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	public delegate bool RcPropertyParser (GLib.ParamSpec pspec, GLib.StringBuilder rc_string, GLib.Value property_value);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool RecentFilterFunc (Gtk.RecentFilterInfo filter_info);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate int RecentSortFunc (Gtk.RecentInfo a, Gtk.RecentInfo b);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, uchar data, size_t length, bool create_tags, void* user_data, GLib.Error error);
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	public delegate bool TextBufferDeserializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter iter, uchar data, size_t length, bool create_tags, void* user_data, GLib.Error error);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate uchar TextBufferSerializeFunc (Gtk.TextBuffer register_buffer, Gtk.TextBuffer content_buffer, Gtk.TextIter start, Gtk.TextIter end, size_t length);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate bool TextCharPredicate (unichar ch);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void TextTagTableForeach (Gtk.TextTag tag);
-	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static delegate unowned string TranslateFunc (string path, void* func_data);
+	[CCode (cheader_filename = "gtk/gtk.h", has_target = false)]
+	public delegate unowned string TranslateFunc (string path, void* func_data);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public delegate void TreeCellDataFunc (Gtk.TreeViewColumn tree_column, Gtk.CellRenderer cell, Gtk.TreeModel tree_model, Gtk.TreeIter iter);
 	[CCode (cheader_filename = "gtk/gtk.h")]

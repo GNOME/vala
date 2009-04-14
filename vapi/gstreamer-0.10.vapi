@@ -1977,8 +1977,8 @@ namespace Gst {
 	public delegate bool ClockCallback (Gst.Clock clock, Gst.ClockTime time, Gst.ClockID id);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool DataProbeCallback (Gst.Pad pad, Gst.MiniObject data);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate void DebugFuncPtr ();
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate void DebugFuncPtr ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool EventProbeCallback (Gst.Pad pad, Gst.Event event);
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1987,90 +1987,90 @@ namespace Gst {
 	public delegate bool IndexFilter (Gst.Index index, Gst.IndexEntry entry);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool IndexResolver (Gst.Index index, Gst.Object writer, string writer_string);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate void IteratorDisposeFunction (void* owner);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate void IteratorDisposeFunction (void* owner);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool IteratorFoldFunction (void* item, Gst.Value ret);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate void IteratorFreeFunction (Gst.Iterator it);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate Gst.IteratorItem IteratorItemFunction (Gst.Iterator it, void* item);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate Gst.IteratorResult IteratorNextFunction (Gst.Iterator it, void* result);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate void IteratorResyncFunction (Gst.Iterator it);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate void IteratorFreeFunction (Gst.Iterator it);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate Gst.IteratorItem IteratorItemFunction (Gst.Iterator it, void* item);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate Gst.IteratorResult IteratorNextFunction (Gst.Iterator it, void* result);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate void IteratorResyncFunction (Gst.Iterator it);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate void LogFunction (Gst.DebugCategory category, Gst.DebugLevel level, string file, string function, int line, GLib.Object object, Gst.DebugMessage message);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate unowned Gst.MiniObject MiniObjectCopyFunction (Gst.MiniObject obj);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate void MiniObjectFinalizeFunction (Gst.MiniObject obj);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate bool PadAcceptCapsFunction (Gst.Pad pad, Gst.Caps caps);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate bool PadActivateFunction (Gst.Pad pad);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate bool PadActivateModeFunction (Gst.Pad pad, bool active);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate unowned Gst.MiniObject MiniObjectCopyFunction (Gst.MiniObject obj);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate void MiniObjectFinalizeFunction (Gst.MiniObject obj);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate bool PadAcceptCapsFunction (Gst.Pad pad, Gst.Caps caps);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate bool PadActivateFunction (Gst.Pad pad);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate bool PadActivateModeFunction (Gst.Pad pad, bool active);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate void PadBlockCallback (Gst.Pad pad, bool blocked);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate Gst.FlowReturn PadBufferAllocFunction (Gst.Pad pad, uint64 offset, uint size, Gst.Caps caps, out Gst.Buffer buf);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate Gst.FlowReturn PadChainFunction (Gst.Pad pad, owned Gst.Buffer buffer);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate bool PadCheckGetRangeFunction (Gst.Pad pad);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate Gst.FlowReturn PadBufferAllocFunction (Gst.Pad pad, uint64 offset, uint size, Gst.Caps caps, out Gst.Buffer buf);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate Gst.FlowReturn PadChainFunction (Gst.Pad pad, owned Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate bool PadCheckGetRangeFunction (Gst.Pad pad);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool PadDispatcherFunction (Gst.Pad pad);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate bool PadEventFunction (Gst.Pad pad, owned Gst.Event event);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate void PadFixateCapsFunction (Gst.Pad pad, Gst.Caps caps);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate unowned Gst.Caps PadGetCapsFunction (Gst.Pad pad);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate Gst.FlowReturn PadGetRangeFunction (Gst.Pad pad, uint64 offset, uint length, out Gst.Buffer buffer);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate unowned GLib.List PadIntLinkFunction (Gst.Pad pad);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate Gst.PadLinkReturn PadLinkFunction (Gst.Pad pad, Gst.Pad peer);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate bool PadQueryFunction (Gst.Pad pad, Gst.Query query);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate Gst.QueryType PadQueryTypeFunction (Gst.Pad pad);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate bool PadSetCapsFunction (Gst.Pad pad, Gst.Caps caps);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate void PadUnlinkFunction (Gst.Pad pad);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate bool PadEventFunction (Gst.Pad pad, owned Gst.Event event);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate void PadFixateCapsFunction (Gst.Pad pad, Gst.Caps caps);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate unowned Gst.Caps PadGetCapsFunction (Gst.Pad pad);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate Gst.FlowReturn PadGetRangeFunction (Gst.Pad pad, uint64 offset, uint length, out Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate unowned GLib.List PadIntLinkFunction (Gst.Pad pad);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate Gst.PadLinkReturn PadLinkFunction (Gst.Pad pad, Gst.Pad peer);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate bool PadQueryFunction (Gst.Pad pad, Gst.Query query);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate Gst.QueryType PadQueryTypeFunction (Gst.Pad pad);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate bool PadSetCapsFunction (Gst.Pad pad, Gst.Caps caps);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate void PadUnlinkFunction (Gst.Pad pad);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool PluginFeatureFilter (Gst.PluginFeature feature);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool PluginFilter (Gst.Plugin plugin);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate bool PluginInitFunc (Gst.Plugin plugin);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate bool PluginInitFunc (Gst.Plugin plugin);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool StructureForeachFunc (GLib.Quark field_id, Gst.Value value);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate bool StructureMapFunc (GLib.Quark field_id, Gst.Value value);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate void TagForeachFunc (Gst.TagList list, string tag);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate void TagMergeFunc (Gst.Value dest, Gst.Value src);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate void TagMergeFunc (Gst.Value dest, Gst.Value src);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate void TaskFunction ();
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate void TypeFindFunction (Gst.TypeFind find);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate int ValueCompareFunc (Gst.Value value1, Gst.Value value2);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate bool ValueDeserializeFunc (Gst.Value dest, string s);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate bool ValueIntersectFunc (Gst.Value dest, Gst.Value value1, Gst.Value value2);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate unowned string ValueSerializeFunc (Gst.Value value1);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate bool ValueSubtractFunc (Gst.Value dest, Gst.Value minuend, Gst.Value subtrahend);
-	[CCode (cheader_filename = "gst/gst.h")]
-	public static delegate bool ValueUnionFunc (Gst.Value dest, Gst.Value value1, Gst.Value value2);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate int ValueCompareFunc (Gst.Value value1, Gst.Value value2);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate bool ValueDeserializeFunc (Gst.Value dest, string s);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate bool ValueIntersectFunc (Gst.Value dest, Gst.Value value1, Gst.Value value2);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate unowned string ValueSerializeFunc (Gst.Value value1);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate bool ValueSubtractFunc (Gst.Value dest, Gst.Value minuend, Gst.Value subtrahend);
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate bool ValueUnionFunc (Gst.Value dest, Gst.Value value1, Gst.Value value2);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public const int BUFFER_COPY_ALL;
 	[CCode (cheader_filename = "gst/gst.h")]
