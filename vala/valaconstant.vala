@@ -170,7 +170,7 @@ public class Vala.Constant : Member, Lockable {
 
 		type_reference.check (analyzer);
 
-		if (!external_package) {
+		if (!external) {
 			if (initializer == null) {
 				error = true;
 				Report.error (source_reference, "A const field requires a initializer to be provided");
