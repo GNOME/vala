@@ -34,6 +34,16 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 			return;
 		}
 
+		if (st.has_type_id) {
+			decl_space.add_type_declaration (new CCodeNewline ());
+			var macro = "(%s_get_type ())".printf (st.get_lower_case_cname (null));
+			decl_space.add_type_declaration (new CCodeMacroReplacement (st.get_type_id (), macro));
+
+			var type_fun = new StructRegisterFunction (st, context);
+			type_fun.init_from_type (false);
+			decl_space.add_type_member_declaration (type_fun.get_declaration ());
+		}
+
 		var instance_struct = new CCodeStruct ("_%s".printf (st.get_cname ()));
 
 		foreach (Field f in st.get_fields ()) {

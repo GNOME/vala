@@ -1760,13 +1760,10 @@ internal class Vala.GTypeModule : GErrorModule {
 	public override void visit_struct (Struct st) {
 		base.visit_struct (st);
 
-		source_declarations.add_type_declaration (new CCodeNewline ());
-		var macro = "(%s_get_type ())".printf (st.get_lower_case_cname (null));
-		source_declarations.add_type_declaration (new CCodeMacroReplacement (st.get_type_id (), macro));
-
-		var type_fun = new StructRegisterFunction (st, context);
-		type_fun.init_from_type (false);
-		source_declarations.add_type_member_declaration (type_fun.get_declaration ());
-		source_type_member_definition.append (type_fun.get_definition ());
+		if (st.has_type_id) {
+			var type_fun = new StructRegisterFunction (st, context);
+			type_fun.init_from_type (false);
+			source_type_member_definition.append (type_fun.get_definition ());
+		}
 	}
 }
