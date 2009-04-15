@@ -182,6 +182,7 @@ public class Vala.BinaryExpression : Expression {
 			insert_statement (analyzer.insert_block, if_stmt);
 
 			if (!if_stmt.check (analyzer)) {
+				error = true;
 				return false;
 			}
 			analyzer.insert_block = old_insert_block;
@@ -357,7 +358,8 @@ public class Vala.BinaryExpression : Expression {
 				var contains_call = new MethodCall (new MemberAccess (right, "contains"));
 				contains_call.add_argument (left);
 				parent_node.replace_expression (this, contains_call);
-				return contains_call.check (analyzer);
+				error = !contains_call.check (analyzer);
+				return !error;
 			}
 			
 			value_type = analyzer.bool_type;
