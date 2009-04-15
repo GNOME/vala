@@ -1055,13 +1055,19 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		check_type (prop.property_type);
 
 		int old_next_temp_var_id = next_temp_var_id;
+		var old_temp_vars = temp_vars;
+		var old_temp_ref_vars = temp_ref_vars;
 		var old_variable_name_map = variable_name_map;
 		next_temp_var_id = 0;
+		temp_vars = new ArrayList<LocalVariable> ();
+		temp_ref_vars = new ArrayList<LocalVariable> ();
 		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
 
 		prop.accept_children (codegen);
 
 		next_temp_var_id = old_next_temp_var_id;
+		temp_vars = old_temp_vars;
+		temp_ref_vars = old_temp_ref_vars;
 		variable_name_map = old_variable_name_map;
 	}
 
