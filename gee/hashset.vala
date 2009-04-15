@@ -2,7 +2,7 @@
  *
  * Copyright (C) 1995-1997  Peter Mattis, Spencer Kimball and Josh MacDonald
  * Copyright (C) 1997-2000  GLib Team and others
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -111,11 +111,11 @@ public class Gee.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set<
 
 	public void clear () {
 		for (int i = 0; i < _array_size; i++) {
-			Node<G> node = #_nodes[i];
+			Node<G> node = (owned) _nodes[i];
 			while (node != null) {
-				Node next = #node.next;
+				Node next = (owned) node.next;
 				node.key = null;
-				node = #next;
+				node = (owned) next;
 			}
 		}
 		_nnodes = 0;
@@ -133,14 +133,14 @@ public class Gee.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set<
 			for (int i = 0; i < _array_size; i++) {
 				Node<G> node;
 				Node<G> next;
-				for (node = #_nodes[i]; node != null; node = #next) {
-					next = #node.next;
+				for (node = (owned) _nodes[i]; node != null; node = (owned) next) {
+					next = (owned) node.next;
 					uint hash_val = node.key_hash % new_array_size;
-					node.next = #new_nodes[hash_val];
-					new_nodes[hash_val] = #node;
+					node.next = (owned) new_nodes[hash_val];
+					new_nodes[hash_val] = (owned) node;
 				}
 			}
-			_nodes = #new_nodes;
+			_nodes = (owned) new_nodes;
 			_array_size = new_array_size;
 		}
 	}
@@ -155,8 +155,8 @@ public class Gee.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set<
 		public Node<G> next;
 		public uint key_hash;
 
-		public Node (G# k, uint hash) {
-			key = #k;
+		public Node (owned G k, uint hash) {
+			key = (owned) k;
 			key_hash = hash;
 		}
 	}

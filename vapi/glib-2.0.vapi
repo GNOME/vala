@@ -1209,9 +1209,9 @@ namespace GLib {
 
 	namespace Timeout {
 		public static uint add (uint interval, SourceFunc function);
-		public static uint add_full (int priority, uint interval, SourceFunc# function);
+		public static uint add_full (int priority, uint interval, owned SourceFunc function);
 		public static uint add_seconds (uint interval, SourceFunc function);
-		public static uint add_seconds_full (int priority, uint interval, SourceFunc# function);
+		public static uint add_seconds_full (int priority, uint interval, owned SourceFunc function);
 	}
 
 	[CCode (cname = "GSource")]
@@ -1221,7 +1221,7 @@ namespace GLib {
 
 	namespace Idle {
 		public static uint add (SourceFunc function);
-		public static uint add_full (int priority, SourceFunc# function);
+		public static uint add_full (int priority, owned SourceFunc function);
 		public static bool remove_by_data (void* data);
 	}
 
@@ -1238,7 +1238,7 @@ namespace GLib {
 	
 	namespace ChildWatch {
 		public static uint add (Pid pid, ChildWatchFunc function);
-		public static uint add_full (int priority, Pid pid, ChildWatchFunc# function);
+		public static uint add_full (int priority, Pid pid, owned ChildWatchFunc function);
 	}
 	
 	public struct PollFD {
@@ -1261,7 +1261,7 @@ namespace GLib {
 		public bool get_can_recurse ();
 		public uint get_id ();
 		public weak MainContext get_context ();
-		public void set_callback (SourceFunc# func);
+		public void set_callback (owned SourceFunc func);
 		public void set_callback_indirect (void* callback_data, SourceCallbackFuncs callback_funcs);
 		public void add_poll (ref PollFD fd);
 		public void remove_poll (ref PollFD fd);
@@ -1420,8 +1420,8 @@ namespace GLib {
 	[CCode (ref_function = "g_async_queue_ref", unref_function = "g_async_queue_unref")]
 	public class AsyncQueue<G> {
 		public AsyncQueue ();
-		public void push (G# data);
-		public void push_sorted (G# data, CompareDataFunc func);
+		public void push (owned G data);
+		public void push_sorted (owned G data, CompareDataFunc func);
 		public G pop ();
 		public G try_pop ();
 		public G timed_pop (ref TimeVal end_time);
@@ -1431,8 +1431,8 @@ namespace GLib {
 		public void unlock ();
 		public void ref_unlocked ();
 		public void unref_and_unlock ();
-		public void push_unlocked (G# data);
-		public void push_sorted_unlocked (G# data, CompareDataFunc func);
+		public void push_unlocked (owned G data);
+		public void push_sorted_unlocked (owned G data, CompareDataFunc func);
 		public G pop_unlocked ();
 		public G try_pop_unlocked ();
 		public G timed_pop_unlocked (ref TimeVal end_time);
@@ -1502,7 +1502,7 @@ namespace GLib {
 		[CCode (cname = "g_io_add_watch")]
 		public uint add_watch (IOCondition condition, IOFunc func);
 		[CCode (cname = "g_io_add_watch_full")]
-		public uint add_watch_full (int priority, IOCondition condition, IOFunc# func);
+		public uint add_watch_full (int priority, IOCondition condition, owned IOFunc func);
 		public size_t get_buffer_size ();
 		public void set_buffer_size (size_t size);
 		public IOCondition get_buffer_condition ();
@@ -2520,8 +2520,8 @@ namespace GLib {
 		public string get_help (bool main_help, OptionGroup? group);
 		[NoArrayLength]
 		public void add_main_entries ([CCode (array_length = false)] OptionEntry[] entries, string? translation_domain);
-		public void add_group (OptionGroup# group);
-		public void set_main_group (OptionGroup# group);
+		public void add_group (owned OptionGroup group);
+		public void set_main_group (owned OptionGroup group);
 		public weak OptionGroup get_main_group ();
 	}
 
@@ -2920,15 +2920,15 @@ namespace GLib {
 	[CCode (dup_function = "g_list_copy", free_function = "g_list_free")]
 	public class List<G> {
 		[ReturnsModifiedPointer ()]
-		public void append (G# data);
+		public void append (owned G data);
 		[ReturnsModifiedPointer ()]
-		public void prepend (G# data);
+		public void prepend (owned G data);
 		[ReturnsModifiedPointer ()]
-		public void insert (G# data, int position);
+		public void insert (owned G data, int position);
 		[ReturnsModifiedPointer ()]
-		public void insert_before (List<G> sibling, G# data);
+		public void insert_before (List<G> sibling, owned G data);
 		[ReturnsModifiedPointer ()]
-		public void insert_sorted (G# data, CompareFunc compare_func);
+		public void insert_sorted (owned G data, CompareFunc compare_func);
 		[ReturnsModifiedPointer ()]
 		public void remove (G data);
 		[ReturnsModifiedPointer ()]
@@ -2945,11 +2945,11 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void sort (CompareFunc compare_func);
 		[ReturnsModifiedPointer ()]
-		public void insert_sorted_with_data (G# data, CompareDataFunc compare_func);
+		public void insert_sorted_with_data (owned G data, CompareDataFunc compare_func);
 		[ReturnsModifiedPointer ()]
 		public void sort_with_data (CompareDataFunc compare_func);
 		[ReturnsModifiedPointer ()]
-		public void concat (List<G># list2);
+		public void concat (owned List<G> list2);
 		public void @foreach (Func func);
 
 		public weak List<G> first ();
@@ -2974,15 +2974,15 @@ namespace GLib {
 	[CCode (dup_function = "g_slist_copy", free_function = "g_slist_free")]
 	public class SList<G> {
 		[ReturnsModifiedPointer ()]
-		public void append (G# data);
+		public void append (owned G data);
 		[ReturnsModifiedPointer ()]
-		public void prepend (G# data);
+		public void prepend (owned G data);
 		[ReturnsModifiedPointer ()]
-		public void insert (G# data, int position);
+		public void insert (owned G data, int position);
 		[ReturnsModifiedPointer ()]
-		public void insert_before (SList<G> sibling, G# data);
+		public void insert_before (SList<G> sibling, owned G data);
 		[ReturnsModifiedPointer ()]
-		public void insert_sorted (G# data, CompareFunc compare_func);
+		public void insert_sorted (owned G data, CompareFunc compare_func);
 		[ReturnsModifiedPointer ()]
 		public void remove (G data);
 		[ReturnsModifiedPointer ()]
@@ -2997,13 +2997,13 @@ namespace GLib {
 		[ReturnsModifiedPointer ()]
 		public void reverse ();
 		[ReturnsModifiedPointer ()]
-		public void insert_sorted_with_data (G# data, CompareDataFunc compare_func);
+		public void insert_sorted_with_data (owned G data, CompareDataFunc compare_func);
 		[ReturnsModifiedPointer ()]
 		public void sort (CompareFunc compare_func);
 		[ReturnsModifiedPointer ()]
 		public void sort_with_data (CompareDataFunc compare_func);
 		[ReturnsModifiedPointer ()]
-		public void concat (SList<G># list2);
+		public void concat (owned SList<G> list2);
 		public void @foreach (Func func);
 
 		public weak SList<G> last ();
@@ -3046,9 +3046,9 @@ namespace GLib {
 		public weak List<G> find (G data);
 		public weak List<G> find_custom (G data, CompareFunc func);
 		public void sort (CompareDataFunc compare_func, void* user_data);
-		public void push_head (G# data);
-		public void push_tail (G# data);
-		public void push_nth (G# data, int n);
+		public void push_head (owned G data);
+		public void push_tail (owned G data);
+		public void push_nth (owned G data, int n);
 		public G pop_head ();
 		public G pop_tail ();
 		public G pop_nth (uint n);
@@ -3058,9 +3058,9 @@ namespace GLib {
 		public int index (G data);
 		public void remove (G data);
 		public void remove_all (G data);
-		public void insert_before (List<G> sibling, G# data);
-		public void insert_after (List<G> sibling, G# data);
-		public void insert_sorted (List<G> sibling, G# data, CompareDataFunc func, void* user_data);
+		public void insert_before (List<G> sibling, owned G data);
+		public void insert_after (List<G> sibling, owned G data);
+		public void insert_sorted (List<G> sibling, owned G data, CompareDataFunc func, void* user_data);
 	}
 
 	/* Sequences */
@@ -3077,13 +3077,13 @@ namespace GLib {
 		public SequenceIter<G> get_begin_iter ();
 		public SequenceIter<G> get_end_iter ();
 		public SequenceIter<G> get_iter_at_pos (int pos);
-		public SequenceIter<G> append (G# data);
-		public SequenceIter<G> prepend (G# data);
-		public static SequenceIter<G> insert_before (SequenceIter<G> iter, G# data);
+		public SequenceIter<G> append (owned G data);
+		public SequenceIter<G> prepend (owned G data);
+		public static SequenceIter<G> insert_before (SequenceIter<G> iter, owned G data);
 		public static void move (SequenceIter<G> src, SequenceIter<G> dest);
 		public static void swap (SequenceIter<G> src, SequenceIter<G> dest);
-		public SequenceIter<G> insert_sorted (G# data, CompareDataFunc cmp_func);
-		public SequenceIter<G> insert_sorted_iter (G# data, SequenceIterCompareFunc<G> iter_cmp);
+		public SequenceIter<G> insert_sorted (owned G data, CompareDataFunc cmp_func);
+		public SequenceIter<G> insert_sorted_iter (owned G data, SequenceIterCompareFunc<G> iter_cmp);
 		public static void sort_changed (SequenceIter<G> iter, CompareDataFunc cmp_func);
 		public static void sort_changed_iter (SequenceIter<G> iter, SequenceIterCompareFunc<G> iter_cmp);
 		public static void remove (SequenceIter<G> iter);
@@ -3092,7 +3092,7 @@ namespace GLib {
 		public SequenceIter<G> search (G data, CompareDataFunc cmp_func);
 		public SequenceIter<G> search_iter (G data, SequenceIterCompareFunc<G> iter_cmp);
 		public static weak G get (SequenceIter<G> iter);
-		public static void set (SequenceIter<G> iter, G# data);
+		public static void set (SequenceIter<G> iter, owned G data);
 		public static SequenceIter<G> range_get_midpoint (SequenceIter<G> begin, SequenceIter<G> end);
 	}
 
@@ -3121,8 +3121,8 @@ namespace GLib {
 	public class HashTable<K,V> : Boxed {
 		public HashTable (HashFunc? hash_func, EqualFunc? key_equal_func);
 		public HashTable.full (HashFunc? hash_func, EqualFunc? key_equal_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
-		public void insert (K# key, V# value);
-		public void replace (K# key, V# value);
+		public void insert (owned K key, owned V value);
+		public void replace (owned K key, owned V value);
 		public weak V lookup (K key);
 		public bool remove (K key);
 		public void remove_all ();
@@ -3275,15 +3275,15 @@ namespace GLib {
 		public Datalist ();
 		public void clear ();
 		public weak G id_get_data (Quark key_id);
-		public void id_set_data (Quark key_id, G# data);
-		public void id_set_data_full (Quark key_id, G# data, DestroyNotify? destroy_func);
+		public void id_set_data (Quark key_id, owned G data);
+		public void id_set_data_full (Quark key_id, owned G data, DestroyNotify? destroy_func);
 		public void id_remove_data (Quark key_id);
 		public G id_remove_no_notify (Quark key_id);
 		public void @foreach (DataForeachFunc func);
 		public weak G get_data (string key);
-		public void set_data_full (string key, G# data, DestroyNotify? destry_func);
+		public void set_data_full (string key, owned G data, DestroyNotify? destry_func);
 		public G remove_no_notify (string key);
-		public void set_data (string key, G# data);
+		public void set_data (string key, owned G data);
 		public void remove_data (string key);
 	}
 
@@ -3332,8 +3332,8 @@ namespace GLib {
 		public Tree (CompareFunc key_compare_func);
 		public Tree.with_data (CompareDataFunc key_compare_func);
 		public Tree.full (CompareDataFunc key_compare_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
-		public void insert (K# key, V# value);
-		public void replace (K# key, V# value);
+		public void insert (owned K key, owned V value);
+		public void replace (owned K key, owned V value);
 		public int nnodes ();
 		public int height ();
 		public weak V lookup (K key);

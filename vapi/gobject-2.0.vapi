@@ -309,7 +309,7 @@ namespace GLib {
 		public uint get_flags ();
 		public void set_string (string v_string);
 		public void set_static_string (string v_string);
-		public void take_string (string# v_string);
+		public void take_string (owned string v_string);
 		public weak string get_string ();
 		public string dup_string ();
 		public void set_pointer (void* v_pointer);
@@ -318,7 +318,7 @@ namespace GLib {
 		public weak Boxed get_boxed ();
 		public Boxed dup_boxed ();
 		public void set_object (Object v_object);
-		public void take_object (Object# v_object);
+		public void take_object (owned Object v_object);
 		public weak Object get_object ();
 		public Object dup_object ();
 		public void set_gtype (Type v_gtype);

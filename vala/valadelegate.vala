@@ -327,7 +327,11 @@ public class Vala.Delegate : TypeSymbol {
 				str += ", ";
 			}
 
-			if (param.direction != ParameterDirection.IN) {
+			if (param.direction == ParameterDirection.IN) {
+				if (param.parameter_type.value_owned) {
+					str += "owned ";
+				}
+			} else {
 				if (param.direction == ParameterDirection.REF) {
 					str += "ref ";
 				} else if (param.direction == ParameterDirection.OUT) {
@@ -339,10 +343,6 @@ public class Vala.Delegate : TypeSymbol {
 			}
 
 			str += param.parameter_type.to_string ();
-
-			if (param.direction == ParameterDirection.IN && param.parameter_type.value_owned) {
-				str += "#";
-			}
 
 			i++;
 		}
