@@ -460,8 +460,9 @@ public class Vala.Parser : CodeVisitor {
 
 		if (!owned_by_default) {
 			if (accept (TokenType.HASH)) {
-				// TODO enable warning after releasing Vala 0.5.5
-				// Report.warning (get_last_src (), "deprecated syntax, use `owned` modifier");
+				if (!context.deprecated) {
+					Report.warning (get_last_src (), "deprecated syntax, use `owned` modifier");
+				}
 				value_owned = true;
 			}
 		}
@@ -834,8 +835,9 @@ public class Vala.Parser : CodeVisitor {
 		}
 		switch (current ()) {
 		case TokenType.HASH:
-			// TODO enable warning after releasing Vala 0.5.5
-			// Report.warning (get_last_src (), "deprecated syntax, use `(owned)` cast");
+			if (!context.deprecated) {
+				Report.warning (get_last_src (), "deprecated syntax, use `(owned)` cast");
+			}
 			next ();
 			var op = parse_unary_expression ();
 			return new ReferenceTransferExpression (op, get_src (begin));
