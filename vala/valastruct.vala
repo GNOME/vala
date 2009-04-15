@@ -719,6 +719,7 @@ public class Vala.Struct : TypeSymbol {
 		}
 
 		if (!external && !external_package && base_type == null && get_fields ().size == 0) {
+			error = true;
 			Report.error (source_reference, "structs cannot be empty");
 		}
 

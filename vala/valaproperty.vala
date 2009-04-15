@@ -451,7 +451,7 @@ public class Vala.Property : Member, Lockable {
 			}
 		}
 
-		if (default_expression != null && !(default_expression.value_type.compatible (property_type))) {
+		if (default_expression != null && !default_expression.error && !(default_expression.value_type.compatible (property_type))) {
 			error = true;
 			Report.error (default_expression.source_reference, "Expected initializer of type `%s' but got `%s'".printf (property_type.to_string (), default_expression.value_type.to_string ()));
 		}
