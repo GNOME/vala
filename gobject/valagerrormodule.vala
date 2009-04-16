@@ -319,8 +319,10 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 
 		var cblock = new CCodeBlock ();
 
-		string variable_name = get_variable_cname (clause.variable_name);
-		if (variable_name == null) {
+		string variable_name;
+		if (clause.variable_name != null) {
+			variable_name = get_variable_cname (clause.variable_name);
+		} else {
 			variable_name = "__err";
 		}
 
