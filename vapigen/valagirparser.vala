@@ -470,6 +470,8 @@ public class Vala.GirParser : CodeVisitor {
 			return "GLib";
 		} else if (gir_module_name == "Gio") {
 			return "GLib";
+		} else if (gir_module_name == "GModule") {
+			return "GLib";
 		}
 		return gir_module_name;
 	}
