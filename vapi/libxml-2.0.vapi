@@ -361,7 +361,7 @@ namespace Xml {
 		public Node* new_node (Ns* ns, string name, string? content = null);
 
 		[CCode (cname = "xmlNewDocNodeEatName")]
-		public Node* new_node_eat_name (Ns* ns, string# name, string? content = null);
+		public Node* new_node_eat_name (Ns* ns, owned string name, string? content = null);
 
 		[CCode (cname = "xmlNewDocPI")]
 		public Node* new_pi (string name, string content);
@@ -677,7 +677,7 @@ namespace Xml {
 		public Node (Ns* ns, string name);
 
 		[CCode (cname = "xmlNewNodeEatName")]
-		public Node.eat_name (Ns* ns, string# name);
+		public Node.eat_name (Ns* ns, owned string name);
 
 		[CCode (cname = "xmlNewText")]
 		public Node.text (string content);
