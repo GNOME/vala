@@ -4404,7 +4404,7 @@ namespace Gtk {
 		public void select_range (Gtk.TreePath start_path, Gtk.TreePath end_path);
 		public void selected_foreach (Gtk.TreeSelectionForeachFunc func);
 		public void set_mode (Gtk.SelectionMode type);
-		public void set_select_function (Gtk.TreeSelectionFunc func, void* data, Gtk.DestroyNotify destroy);
+		public void set_select_function (Gtk.TreeSelectionFunc func, GLib.DestroyNotify? destroy);
 		public void unselect_all ();
 		public void unselect_iter (Gtk.TreeIter iter);
 		public void unselect_path (Gtk.TreePath path);
