@@ -94,17 +94,28 @@ namespace Gst {
 		public uint timestamp_offset { get; set; }
 	}
 	[Compact]
-	[CCode (cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
-	public class RTCPPacket {
+	[CCode (cheader_filename = "gst/rtp/gstrtppayloads.h")]
+	public class RTPPayloadInfo {
+		public uint bitrate;
+		public uint clock_rate;
+		public weak string encoding_name;
+		public weak string encoding_parameters;
+		public weak string media;
+		public uchar payload_type;
+		public static unowned Gst.RTPPayloadInfo for_name (string media, string encoding_name);
+		public static unowned Gst.RTPPayloadInfo for_pt (uchar payload_type);
+	}
+	[CCode (type_id = "GST_TYPE_RTCP_PACKET", cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
+	public struct RTCPPacket {
 		public weak Gst.Buffer buffer;
-		public uchar count;
-		public uint entry_offset;
-		public uint item_count;
-		public uint item_offset;
-		public uint16 length;
 		public uint offset;
 		public bool padding;
+		public uchar count;
 		public Gst.RTCPType type;
+		public uint16 length;
+		public uint item_offset;
+		public uint item_count;
+		public uint entry_offset;
 		public bool add_rb (uint32 ssrc, uchar fractionlost, int32 packetslost, uint32 exthighestseq, uint32 jitter, uint32 lsr, uint32 dlsr);
 		public bool bye_add_ssrc (uint32 ssrc);
 		public bool bye_add_ssrcs (uint32 ssrc, uint len);
@@ -135,18 +146,6 @@ namespace Gst {
 		public void set_rb (uint nth, uint32 ssrc, uchar fractionlost, int32 packetslost, uint32 exthighestseq, uint32 jitter, uint32 lsr, uint32 dlsr);
 		public void sr_get_sender_info (uint32 ssrc, uint64 ntptime, uint32 rtptime, uint32 packet_count, uint32 octet_count);
 		public void sr_set_sender_info (uint32 ssrc, uint64 ntptime, uint32 rtptime, uint32 packet_count, uint32 octet_count);
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/rtp/gstrtppayloads.h")]
-	public class RTPPayloadInfo {
-		public uint bitrate;
-		public uint clock_rate;
-		public weak string encoding_name;
-		public weak string encoding_parameters;
-		public weak string media;
-		public uchar payload_type;
-		public static unowned Gst.RTPPayloadInfo for_name (string media, string encoding_name);
-		public static unowned Gst.RTPPayloadInfo for_pt (uchar payload_type);
 	}
 	[CCode (cprefix = "GST_RTCP_SDES_", has_type_id = "0", cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
 	public enum RTCPSDESType {
@@ -286,11 +285,11 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
 	public const int RTP_VERSION;
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static bool rtcp_buffer_add_packet (Gst.Buffer buffer, Gst.RTCPType type, Gst.RTCPPacket packet);
+	public static bool rtcp_buffer_add_packet (Gst.Buffer buffer, Gst.RTCPType type, ref Gst.RTCPPacket packet);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void rtcp_buffer_end (Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static bool rtcp_buffer_get_first_packet (Gst.Buffer buffer, Gst.RTCPPacket packet);
+	public static bool rtcp_buffer_get_first_packet (Gst.Buffer buffer, ref Gst.RTCPPacket packet);
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static uint rtcp_buffer_get_packet_count (Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/gst.h")]
