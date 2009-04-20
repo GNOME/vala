@@ -3722,9 +3722,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public CCodeExpression? default_value_for_type (DataType type, bool initializer_expression) {
+		var st = type.data_type as Struct;
 		var array_type = type as ArrayType;
-		if (initializer_expression && (type.data_type is Struct ||
-		    (array_type != null && array_type.fixed_length))) {
+		if (initializer_expression &&
+		    ((st != null && !st.is_simple_type ()) ||
+		     (array_type != null && array_type.fixed_length))) {
 			// 0-initialize struct with struct initializer { 0 }
 			// only allowed as initializer expression in C
 			var clist = new CCodeInitializerList ();
