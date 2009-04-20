@@ -1,3 +1,12 @@
+Vala 0.7.1
+==========
+
+ * Introduce new syntax to connect/disconnect signal handlers.
+ * Add experimental support for fixed-length arrays.
+ * Update Genie parser (Jamie McCracken).
+ * Updates to the GLib, Cairo, GTK+, GStreamer, and POSIX bindings.
+ * Many bug fixes.
+
 Vala 0.7.0
 ==========
 
