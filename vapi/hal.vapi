@@ -1,6 +1,6 @@
 /* hal.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -45,6 +45,10 @@ namespace Hal {
 		public int device_get_property_int (string udi, string key, ref DBus.RawError error);
 		[CCode (cname = "libhal_device_get_property_uint64")]
 		public uint64 device_get_property_uint64 (string udi, string key, ref DBus.RawError error);
+		[CCode (cname = "libhal_device_get_property_double")]
+		public double device_get_property_double (string udi, string key, ref DBus.RawError error);
+		[CCode (cname = "libhal_device_get_property_bool")]
+		public bool device_get_property_bool (string udi, string key, ref DBus.RawError error);
 		[CCode (cname = "libhal_device_query_capability")]
 		public bool device_query_capability (string udi, string capability, ref DBus.RawError error);
 	}
