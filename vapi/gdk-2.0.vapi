@@ -592,10 +592,6 @@ namespace Gdk {
 		public void unstick ();
 		public void withdraw ();
 	}
-	[Compact]
-	[CCode (cheader_filename = "gdk/gdk.h")]
-	public class XEvent {
-	}
 	[CCode (cheader_filename = "gdk/gdk.h")]
 	[SimpleType]
 	public struct Atom {
@@ -971,6 +967,9 @@ namespace Gdk {
 	[CCode (type_id = "GDK_TYPE_WINDOW_REDIRECT", cheader_filename = "gdk/gdk.h")]
 	public struct WindowRedirect {
 		public static void to_drawable (Gdk.Window window, Gdk.Drawable drawable, int src_x, int src_y, int dest_x, int dest_y, int width, int height);
+	}
+	[CCode (type_id = "GDK_TYPE_XEVENT", cheader_filename = "gdk/gdk.h")]
+	public struct XEvent {
 	}
 	[CCode (cprefix = "GDK_AXIS_", cheader_filename = "gdk/gdk.h")]
 	public enum AxisUse {

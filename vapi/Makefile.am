@@ -9,6 +9,8 @@ dist_vapi_DATA = \
 	atk.vapi \
 	bzlib.vapi \
 	cairo.vapi \
+	cairo-xcb.deps \
+	cairo-xcb.vapi \
 	curses.vapi \
 	dbus-glib-1.vapi \
 	enchant.vapi \
@@ -141,6 +143,8 @@ dist_vapi_DATA = \
 	vte.vapi \
 	webkit-1.0.deps \
 	webkit-1.0.vapi \
+	x11.vapi \
+	xcb.vapi \
 	zlib.vapi \
 	$(NULL)
 

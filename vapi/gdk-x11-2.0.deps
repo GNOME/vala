@@ -4,3 +4,4 @@ gdk-pixbuf-2.0
 cairo
 pango
 pangocairo
+x11
