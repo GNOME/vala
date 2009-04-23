@@ -33,7 +33,7 @@ namespace Gdk {
 		public Pixbuf.from_xpm_data ([CCode (array_length = false)] string[] data);
 		public int get_bits_per_sample ();
 		public Gdk.Colorspace get_colorspace ();
-		public static unowned Gdk.PixbufFormat get_file_info (string filename, int width, int height);
+		public static unowned Gdk.PixbufFormat get_file_info (string filename, out int width, out int height);
 		public static unowned GLib.SList get_formats ();
 		public bool get_has_alpha ();
 		public int get_height ();

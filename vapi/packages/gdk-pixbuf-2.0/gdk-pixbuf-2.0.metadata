@@ -1,4 +1,6 @@
 Gdk cheader_filename="gdk-pixbuf/gdk-pixdata.h"
+gdk_pixbuf_get_file_info.width is_out="1"
+gdk_pixbuf_get_file_info.height is_out="1"
 gdk_pixbuf_get_pixels no_array_length="1"
 gdk_pixbuf_new_from_data.destroy_fn nullable="1"
 gdk_pixbuf_new_from_data.destroy_fn_data hidden="1"
