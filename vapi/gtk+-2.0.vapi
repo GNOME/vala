@@ -1353,7 +1353,7 @@ namespace Gtk {
 		public EntryCompletion ();
 		public void set_inline_completion (bool inline_completion);
 		public void set_inline_selection (bool inline_selection);
-		public void set_match_func (Gtk.EntryCompletionMatchFunc func, void* func_data, GLib.DestroyNotify func_notify);
+		public void set_match_func (owned Gtk.EntryCompletionMatchFunc func);
 		public void set_minimum_key_length (int length);
 		public void set_model (Gtk.TreeModel? model);
 		public void set_popup_completion (bool popup_completion);
