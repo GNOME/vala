@@ -450,6 +450,7 @@ namespace Cairo {
 		public ImageSurface (Format format, int width, int height);
 		[CCode (cname = "cairo_image_surface_create_for_data")]
 		public ImageSurface.for_data ([CCode (array_length = false)] uchar[] data, Format format, int width, int height, int stride);
+		[CCode (array_length = false)]
 		public uchar[] get_data ();
 		public Format get_format ();
 		public int get_width ();
