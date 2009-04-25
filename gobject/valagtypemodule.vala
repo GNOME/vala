@@ -1196,12 +1196,42 @@ internal class Vala.GTypeModule : GErrorModule {
 			}
 			
 			var ciface = new CCodeIdentifier ("iface");
-			string cname = m.get_real_cname ();
+			CCodeExpression cfunc;
 			if (m.is_abstract || m.is_virtual) {
-				// FIXME results in C compiler warning
-				cname = m.get_cname ();
+				cfunc = new CCodeIdentifier (m.get_cname ());
+				// Cast the function pointer to match the interface
+				string cast = m.return_type.get_cname () + " (*)";
+				string cast_args = iface.get_cname () + "*";
+
+				var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
+				var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+
+				generate_cparameters (m, source_declarations, cparam_map, new CCodeFunction ("fake"), vdeclarator);
+
+				// append C arguments in the right order
+				int last_pos = -1;
+				int min_pos;
+				while (true) {
+					min_pos = -1;
+					foreach (int pos in cparam_map.get_keys ()) {
+						if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
+							min_pos = pos;
+						}
+					}
+					if (last_pos != -1) { // Skip the 1st parameter
+						if (min_pos == -1) {
+							break;
+						}
+						cast_args += " ," + cparam_map.get (min_pos).type_name;
+					}
+					last_pos = min_pos;
+				}
+				cast += "(" + cast_args + ")";
+				cfunc = new CCodeCastExpression (cfunc, cast);
+			} else {
+				cfunc = new CCodeIdentifier (m.get_real_cname ());
 			}
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.base_interface_method.vfunc_name), new CCodeIdentifier (cname))));
+			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.base_interface_method.vfunc_name), cfunc)));
 		}
 
 		// connect inherited implementations
