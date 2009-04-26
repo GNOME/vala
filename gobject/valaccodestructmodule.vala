@@ -87,6 +87,37 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 			decl_space.add_type_definition (new CCodeComment (st.source_reference.comment));
 		}
 		decl_space.add_type_definition (instance_struct);
+
+		var function = new CCodeFunction (st.get_dup_function (), st.get_cname () + "*");
+		if (st.is_private_symbol ()) {
+			function.modifiers = CCodeModifiers.STATIC;
+		}
+		function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
+		decl_space.add_type_member_declaration (function);
+
+		function = new CCodeFunction (st.get_free_function (), "void");
+		if (st.is_private_symbol ()) {
+			function.modifiers = CCodeModifiers.STATIC;
+		}
+		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
+		decl_space.add_type_member_declaration (function);
+
+		if (st.is_disposable ()) {
+			function = new CCodeFunction (st.get_copy_function (), "void");
+			if (st.is_private_symbol ()) {
+				function.modifiers = CCodeModifiers.STATIC;
+			}
+			function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
+			function.add_parameter (new CCodeFormalParameter ("dest", st.get_cname () + "*"));
+			decl_space.add_type_member_declaration (function);
+
+			function = new CCodeFunction (st.get_destroy_function (), "void");
+			if (st.is_private_symbol ()) {
+				function.modifiers = CCodeModifiers.STATIC;
+			}
+			function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
+			decl_space.add_type_member_declaration (function);
+		}
 	}
 
 	public override void visit_struct (Struct st) {
@@ -123,8 +154,6 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 		}
 
 		function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
-
-		source_declarations.add_type_member_declaration (function.copy ());
 
 		var cblock = new CCodeBlock ();
 
@@ -170,8 +199,6 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 
 		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
 
-		source_declarations.add_type_member_declaration (function.copy ());
-
 		var cblock = new CCodeBlock ();
 
 		if (st.is_disposable ()) {
@@ -197,8 +224,6 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 
 		function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
 		function.add_parameter (new CCodeFormalParameter ("dest", st.get_cname () + "*"));
-
-		source_declarations.add_type_member_declaration (function.copy ());
 
 		var cblock = new CCodeBlock ();
 		var cfrag = new CCodeFragment ();
@@ -260,8 +285,6 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 		}
 
 		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
-
-		source_declarations.add_type_member_declaration (function.copy ());
 
 		var cblock = new CCodeBlock ();
 
