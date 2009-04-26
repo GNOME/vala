@@ -435,6 +435,7 @@ namespace Cairo {
 		SVG
 	}
 	
+	[CCode (cname = "cairo_format_t")]
 	public enum Format {
 		ARGB32,
 		RGB24,
