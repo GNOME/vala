@@ -968,6 +968,10 @@ namespace Posix {
 	public int pipe ([CCode (array_length = false, null_terminated = false)] int[] pipefd);
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t read (int fd, void* buf, size_t count);
+	[CCode (cheader_filename = "unistd.h,sys/types.h")]
+	public int setgid (gid_t gid);
+	[CCode (cheader_filename = "unistd.h,sys/types.h")]
+	public int setuid (uid_t uid);
 	[CCode (cheader_filename = "unistd.h")]
 	public int unlink (string filename);
 	[CCode (cheader_filename = "unistd.h")]
