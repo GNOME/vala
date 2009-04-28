@@ -337,10 +337,14 @@ public class Vala.GirParser : CodeVisitor {
 	DataType parse_return_value (out string? ctype = null) {
 		start_element ("return-value");
 		string transfer = reader.get_attribute ("transfer-ownership");
+		string allow_none = reader.get_attribute ("allow-none");
 		next ();
 		var type = &ctype != null ? parse_type(out ctype) : parse_type ();
 		if (transfer == "full") {
 			type.value_owned = true;
+		}
+		if (allow_none == "1") {
+			type.nullable = true;
 		}
 		end_element ("return-value");
 		return type;
@@ -681,10 +685,14 @@ public class Vala.GirParser : CodeVisitor {
 	Field parse_field () {
 		start_element ("field");
 		string name = reader.get_attribute ("name");
+		string allow_none = reader.get_attribute ("allow-none");
 		next ();
 		var type = parse_type ();
 		var field = new Field (name, type, null, get_current_src ());
 		field.access = SymbolAccessibility.PUBLIC;
+		if (allow_none == "1") {
+			type.nullable = true;
+		}
 		end_element ("field");
 		return field;
 	}
