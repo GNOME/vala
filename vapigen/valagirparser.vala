@@ -529,6 +529,8 @@ public class Vala.GirParser : CodeVisitor {
 				cl.add_base_type (parse_type_from_name (reader.get_attribute ("name")));
 				next ();
 				end_element ("implements");
+			} else if (reader.name == "constant") {
+				cl.add_constant (parse_constant ());
 			} else if (reader.name == "field") {
 				fields.add (parse_field ());
 			} else if (reader.name == "property") {
