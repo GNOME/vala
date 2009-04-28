@@ -695,6 +695,7 @@ public class Vala.GirParser : CodeVisitor {
 		string readable = reader.get_attribute ("readable");
 		string writable = reader.get_attribute ("writable");
 		string construct_ = reader.get_attribute ("construct");
+		string construct_only = reader.get_attribute ("construct-only");
 		next ();
 		var type = parse_type ();
 		var prop = new Property (name, type, null, null, get_current_src ());
@@ -702,8 +703,8 @@ public class Vala.GirParser : CodeVisitor {
 		if (readable != "0") {
 			prop.get_accessor = new PropertyAccessor (true, false, false, prop.property_type.copy (), null, null);
 		}
-		if (writable == "1" || construct_ == "1") {
-			prop.set_accessor = new PropertyAccessor (false, (writable == "1"), (construct_ == "1"), prop.property_type.copy (), null, null);
+		if (writable == "1" || construct_only == "1") {
+			prop.set_accessor = new PropertyAccessor (false, (construct_only != "1") && (writable == "1"), (construct_only == "1") || (construct_ == "1"), prop.property_type.copy (), null, null);
 		}
 		end_element ("property");
 		return prop;
