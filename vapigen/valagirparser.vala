@@ -334,11 +334,11 @@ public class Vala.GirParser : CodeVisitor {
 		return ev;
 	}
 
-	DataType parse_return_value () {
+	DataType parse_return_value (out string? ctype = null) {
 		start_element ("return-value");
 		string transfer = reader.get_attribute ("transfer-ownership");
 		next ();
-		var type = parse_type ();
+		var type = &ctype != null ? parse_type(out ctype) : parse_type ();
 		if (transfer == "full") {
 			type.value_owned = true;
 		}
@@ -381,7 +381,7 @@ public class Vala.GirParser : CodeVisitor {
 			param = new FormalParameter.with_ellipsis (get_current_src ());
 			end_element ("varargs");
 		} else {
-			var type = parse_type (out array_length_idx);
+			var type = parse_type (null, out array_length_idx);
 			if (transfer == "full") {
 				type.value_owned = true;
 			}
@@ -399,7 +399,7 @@ public class Vala.GirParser : CodeVisitor {
 		return param;
 	}
 
-	DataType parse_type (out int array_length_index = null) {
+	DataType parse_type (out string? ctype = null, out int array_length_index = null) {
 		if (reader.name == "array") {
 			start_element ("array");
 			if (reader.get_attribute ("length") != null
@@ -413,6 +413,9 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			start_element ("type");
 			DataType type = parse_type_from_name (reader.get_attribute ("name"));
+			if (&ctype != null) {
+				ctype = reader.get_attribute("c:type");
+			}
 			next ();
 
 			// type arguments / element types
@@ -531,7 +534,7 @@ public class Vala.GirParser : CodeVisitor {
 			} else if (reader.name == "property") {
 				cl.add_property (parse_property ());
 			} else if (reader.name == "constructor") {
-				cl.add_method (parse_constructor ());
+				cl.add_method (parse_constructor (cname));
 			} else if (reader.name == "function") {
 				methods.add (parse_method ("function"));
 			} else if (reader.name == "method") {
@@ -728,16 +731,20 @@ public class Vala.GirParser : CodeVisitor {
 		return d;
 	}
 
-	Method parse_constructor () {
+	Method parse_constructor (string? parent_ctype = null) {
 		start_element ("constructor");
 		string name = reader.get_attribute ("name");
 		next ();
 
-		parse_return_value ();
+		string? ctype;
+		parse_return_value (out ctype);
 
 		var m = new CreationMethod (null, name, get_current_src ());
 		m.access = SymbolAccessibility.PUBLIC;
 		m.has_construct_function = false;
+		if (ctype != null && (parent_ctype == null || ctype != parent_ctype + "*")) {
+			m.custom_return_type_cname = ctype;
+		}
 		if (m.name.has_prefix ("new_")) {
 			m.name = m.name.offset ("new_".len ());
 		}
