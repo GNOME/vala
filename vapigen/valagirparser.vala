@@ -189,6 +189,12 @@ public class Vala.GirParser : CodeVisitor {
 			}
 		}
 
+		string? cprefix = reader.get_attribute ("c:prefix");
+		if (cprefix != null) {
+			ns.add_cprefix (cprefix.up ());
+			ns.set_lower_case_cprefix (cprefix + "_");
+		}
+
 		foreach (string c_header in cheader_filenames) {
 			ns.add_cheader_filename (c_header);
 		}
