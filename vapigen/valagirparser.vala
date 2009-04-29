@@ -43,6 +43,8 @@ public class Vala.GirParser : CodeVisitor {
 
 	HashMap<string,string> attributes_map = new HashMap<string,string> (str_hash, str_equal);
 
+	HashMap<string,ArrayList<Method>> gtype_callbacks = new HashMap<string,ArrayList<Method>> (str_hash, str_equal);
+
 	/**
 	 * Parses all .gir source files in the specified code
 	 * context and builds a code tree.
@@ -241,6 +243,8 @@ public class Vala.GirParser : CodeVisitor {
 			current_source_file.add_node (sym);
 		}
 		end_element ("namespace");
+
+		postprocess_gtype_callbacks (ns);
 
 		if (!new_namespace) {
 			ns = null;
@@ -486,13 +490,25 @@ public class Vala.GirParser : CodeVisitor {
 	Struct parse_record () {
 		start_element ("record");
 		var st = new Struct (reader.get_attribute ("name"), get_current_src ());
+
+		string glib_is_gtype_struct_for = reader.get_attribute ("glib:is-gtype-struct-for");
+
 		st.access = SymbolAccessibility.PUBLIC;
 		next ();
 		while (current_token == MarkupTokenType.START_ELEMENT) {
 			if (reader.name == "field") {
 				st.add_field (parse_field ());
 			} else if (reader.name == "callback") {
-				parse_callback ();
+				if (glib_is_gtype_struct_for != null) {
+					ArrayList<Method> callbacks = gtype_callbacks.get (glib_is_gtype_struct_for);
+					if (callbacks == null) {
+						callbacks = new ArrayList<Method> ();
+						gtype_callbacks.set (glib_is_gtype_struct_for, callbacks);
+					}
+					callbacks.add (parse_method ("callback"));
+				} else {
+					parse_callback ();
+				}
 			} else if (reader.name == "constructor") {
 				parse_constructor ();
 			} else if (reader.name == "method") {
@@ -505,6 +521,31 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		end_element ("record");
 		return st;
+	}
+
+	void postprocess_gtype_callbacks (Namespace ns) {
+		foreach (string gtype_name in gtype_callbacks.get_keys ()) {
+			var gtype = ns.scope.lookup (gtype_name) as ObjectTypeSymbol;
+			ArrayList<Method> callbacks = gtype_callbacks.get (gtype_name);
+			foreach (Method m in callbacks) {
+				var symbol = gtype.scope.lookup (m.name);
+				if (symbol == null) {
+					continue;
+				} else if (symbol is Method)  {
+					var meth = (Method) symbol;
+					if (gtype is Class) {
+						meth.is_virtual = true;
+					} else if (gtype is Interface) {
+						meth.is_abstract = true;
+					}
+				} else if (symbol is Signal) {
+					var sig = (Signal) symbol;
+					sig.is_virtual = true;
+				} else {
+					Report.error (get_current_src (), "unknown member type `%s' in `%s'".printf (m.name, gtype.name));
+				}
+			}
+		}
 	}
 
 	Class parse_class () {
@@ -545,8 +586,8 @@ public class Vala.GirParser : CodeVisitor {
 				methods.add (parse_method ("function"));
 			} else if (reader.name == "method") {
 				methods.add (parse_method ("method"));
-			} else if (reader.name == "callback") {
-				vmethods.add (parse_method ("callback"));
+			} else if (reader.name == "virtual-method") {
+				vmethods.add (parse_method ("virtual-method"));
 			} else if (reader.name == "glib:signal") {
 				signals.add (parse_signal ());
 			} else {
@@ -635,8 +676,8 @@ public class Vala.GirParser : CodeVisitor {
 				parse_field ();
 			} else if (reader.name == "property") {
 				iface.add_property (parse_property ());
-			} else if (reader.name == "callback") {
-				vmethods.add (parse_method ("callback"));
+			} else if (reader.name == "virtual-method") {
+				vmethods.add (parse_method ("virtual-method"));
 			} else if (reader.name == "function") {
 				methods.add (parse_method ("function"));
 			} else if (reader.name == "method") {
@@ -775,6 +816,7 @@ public class Vala.GirParser : CodeVisitor {
 		start_element (element_name);
 		string name = reader.get_attribute ("name");
 		string throws_string = reader.get_attribute ("throws");
+		string invoker = reader.get_attribute ("invoker");
 		next ();
 		DataType return_type;
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "return-value") {
@@ -785,8 +827,11 @@ public class Vala.GirParser : CodeVisitor {
 		var m = new Method (name, return_type, get_current_src ());
 		m.access = SymbolAccessibility.PUBLIC;
 
-		if (element_name == "callback") {
+		if (element_name == "virtual-method" || element_name == "callback") {
 			m.is_virtual = true;
+			if (invoker != null){
+				m.name = invoker;
+			}
 		} else if (element_name == "function") {
 			m.binding = MemberBinding.STATIC;
 		}
