@@ -1146,6 +1146,48 @@ internal class Vala.DBusClientModule : DBusModule {
 		return new DBusInterfaceRegisterFunction (iface, context);
 	}
 
+	public override void visit_method_call (MethodCall expr) {
+		var mtype = expr.call.value_type as MethodType;
+		if (mtype == null || mtype.method_symbol.get_cname () != "dbus_g_proxy_new_from_type") {
+			base.visit_method_call (expr);
+			return;
+		}
+
+		var args = expr.get_argument_list ();
+		Expression connection = ((MemberAccess) expr.call).inner;
+		Expression bus_name = args.get (0);
+		Expression object_path = args.get (1);
+		Expression interface_name = args.get (2);
+		Expression type = args.get (3);
+
+		var quark_call = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_string"));
+		quark_call.add_argument (new CCodeConstant ("\"ValaDBusInterfaceProxyType\""));
+
+		var qdata_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_get_qdata"));
+		type.accept (codegen);
+		qdata_call.add_argument ((CCodeExpression) type.ccodenode);
+		qdata_call.add_argument (quark_call);
+
+		var get_type_call = new CCodeFunctionCall (new CCodeCastExpression (qdata_call, "GType (*)(void)"));
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_object_new"));
+		ccall.add_argument (get_type_call);
+		ccall.add_argument (new CCodeConstant ("\"connection\""));
+		connection.accept (codegen);
+		ccall.add_argument ((CCodeExpression) connection.ccodenode);
+		ccall.add_argument (new CCodeConstant ("\"name\""));
+		bus_name.accept (codegen);
+		ccall.add_argument ((CCodeExpression) bus_name.ccodenode);
+		ccall.add_argument (new CCodeConstant ("\"path\""));
+		object_path.accept (codegen);
+		ccall.add_argument ((CCodeExpression) object_path.ccodenode);
+		ccall.add_argument (new CCodeConstant ("\"interface\""));
+		interface_name.accept (codegen);
+		ccall.add_argument ((CCodeExpression) interface_name.ccodenode);
+		ccall.add_argument (new CCodeConstant ("NULL"));
+		expr.ccodenode = ccall;
+	}
+
 	void generate_proxy_filter_function (Interface iface) {
 		string lower_cname = iface.get_lower_case_cprefix () + "dbus_proxy";
 

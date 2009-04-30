@@ -101,6 +101,8 @@ namespace DBus {
 	public class Connection {
 		[CCode (cname = "dbus_g_proxy_new_for_name")]
 		public Object get_object (string name, string path, string? interface_ = null);
+		[CCode (cname = "dbus_g_proxy_new_from_type")]
+		public GLib.Object get_object_from_type (string name, string path, string interface_, GLib.Type type);
 		[CCode (cname = "dbus_g_connection_register_g_object")]
 		public void register_object (string at_path, GLib.Object object);
 		[CCode (cname = "dbus_g_connection_lookup_g_object")]
