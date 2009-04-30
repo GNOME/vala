@@ -633,7 +633,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		} else if (type is PointerType) {
 			write_indent ();
 			stream.printf ("<type name=\"any\" c:type=\"%s\"/>\n", type.get_cname ());
-		} else {
+		} else if (type.data_type != null) {
 			write_indent ();
 			stream.printf ("<type name=\"%s\" c:type=\"%s\"", gi_type_name (type.data_type), type.get_cname ());
 
@@ -652,6 +652,9 @@ public class Vala.GIRWriter : CodeVisitor {
 				write_indent ();
 				stream.printf ("</type>\n");
 			}
+		} else {
+			write_indent ();
+			stream.printf ("<type name=\"%s\"/>\n", type.to_string ());
 		}
 	}
 
