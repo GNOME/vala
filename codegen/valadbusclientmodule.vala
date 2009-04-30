@@ -863,6 +863,8 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		source_declarations.add_type_definition (instance_struct);
 
+		source_declarations.add_type_member_declaration (new CCodeFunction(lower_cname + "_get_type", "GType"));
+
 		var implement = new CCodeFunctionCall (new CCodeIdentifier ("G_IMPLEMENT_INTERFACE"));
 		implement.add_argument (new CCodeIdentifier (iface.get_upper_case_cname ("TYPE_")));
 		implement.add_argument (new CCodeIdentifier (lower_cname + "_interface_init"));
@@ -1128,6 +1130,20 @@ internal class Vala.DBusClientModule : DBusModule {
 		source_declarations.add_type_member_declaration (set_prop.copy ());
 		set_prop.block = new CCodeBlock ();
 		source_type_member_definition.append (set_prop);
+	}
+
+	public override TypeRegisterFunction create_interface_register_function (Interface iface) {
+		var dbus = iface.get_attribute ("DBus");
+		if (dbus == null) {
+			return new InterfaceRegisterFunction (iface, context);
+		}
+
+		string dbus_iface_name = dbus.get_string ("name");
+		if (dbus_iface_name == null) {
+			return new InterfaceRegisterFunction (iface, context);
+		}
+
+		return new DBusInterfaceRegisterFunction (iface, context);
 	}
 
 	void generate_proxy_filter_function (Interface iface) {
