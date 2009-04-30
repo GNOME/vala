@@ -59,6 +59,10 @@ internal class Vala.DBusModule : GAsyncModule {
 		return false;
 	}
 
+	public static string get_type_signature (DataType datatype) {
+		return datatype.get_type_signature ();
+	}
+
 	CCodeExpression? get_array_length (CCodeExpression expr, int dim) {
 		var id = expr as CCodeIdentifier;
 		var ma = expr as CCodeMemberAccess;
@@ -366,7 +370,7 @@ internal class Vala.DBusModule : GAsyncModule {
 	public CCodeExpression? read_expression (CCodeFragment fragment, DataType type, CCodeExpression iter_expr, CCodeExpression? expr) {
 		BasicTypeInfo basic_type;
 		CCodeExpression result = null;
-		if (get_basic_type_info (type.get_type_signature (), out basic_type)) {
+		if (get_basic_type_info (get_type_signature (type), out basic_type)) {
 			result = read_basic (fragment, basic_type, iter_expr);
 		} else if (type is ArrayType) {
 			result = read_array (fragment, (ArrayType) type, iter_expr, expr);
@@ -444,7 +448,7 @@ internal class Vala.DBusModule : GAsyncModule {
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
 		iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_ARRAY"));
-		iter_call.add_argument (new CCodeConstant ("\"%s%s\"".printf (string.nfill (array_type.rank - dim, 'a'), array_type.element_type.get_type_signature ())));
+		iter_call.add_argument (new CCodeConstant ("\"%s%s\"".printf (string.nfill (array_type.rank - dim, 'a'), get_type_signature (array_type.element_type))));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
 		fragment.append (new CCodeExpressionStatement (iter_call));
 
@@ -566,7 +570,7 @@ internal class Vala.DBusModule : GAsyncModule {
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, iter_expr));
 		iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_ARRAY"));
-		iter_call.add_argument (new CCodeConstant ("\"{%s%s}\"".printf (key_type.get_type_signature (), value_type.get_type_signature ())));
+		iter_call.add_argument (new CCodeConstant ("\"{%s%s}\"".printf (get_type_signature (key_type), get_type_signature (value_type))));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (subiter_name)));
 		fragment.append (new CCodeExpressionStatement (iter_call));
 
@@ -635,7 +639,7 @@ internal class Vala.DBusModule : GAsyncModule {
 
 	public void write_expression (CCodeFragment fragment, DataType type, CCodeExpression iter_expr, CCodeExpression expr) {
 		BasicTypeInfo basic_type;
-		if (get_basic_type_info (type.get_type_signature (), out basic_type)) {
+		if (get_basic_type_info (get_type_signature (type), out basic_type)) {
 			write_basic (fragment, basic_type, iter_expr, expr);
 		} else if (type is ArrayType) {
 			write_array (fragment, (ArrayType) type, iter_expr, expr);

@@ -261,7 +261,7 @@ internal class Vala.DBusClientModule : DBusModule {
 					ccall.add_argument (new CCodeIdentifier ("G_TYPE_STRV"));
 					ccall.add_argument (new CCodeIdentifier (param.name));
 				}
-			} else if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
+			} else if (get_type_signature (param.parameter_type).has_prefix ("(")) {
 				// struct parameter
 				var st = (Struct) param.parameter_type.data_type;
 
@@ -327,7 +327,7 @@ internal class Vala.DBusClientModule : DBusModule {
 				continue;
 			}
 
-			if (param.parameter_type.get_type_signature ().has_prefix ("(")) {
+			if (get_type_signature (param.parameter_type).has_prefix ("(")) {
 				// struct output parameter
 				var st = (Struct) param.parameter_type.data_type;
 
@@ -488,7 +488,7 @@ internal class Vala.DBusClientModule : DBusModule {
 			}
 
 			return cmap_type;
-		} else if (data_type.data_type.get_type_signature ().has_prefix ("(")) {
+		} else if (get_type_signature (data_type).has_prefix ("(")) {
 			// struct parameter
 			var st = (Struct) data_type.data_type;
 
@@ -1153,7 +1153,7 @@ internal class Vala.DBusClientModule : DBusModule {
 			cdecl.add_declarator (new CCodeVariableDeclarator (param.name, default_value_for_type (param.parameter_type, true)));
 			prefragment.append (cdecl);
 
-			if (param.parameter_type.get_type_signature () == null) {
+			if (get_type_signature (param.parameter_type) == null) {
 				Report.error (param.parameter_type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (param.parameter_type.to_string ()));
 				continue;
 			}
@@ -1178,7 +1178,7 @@ internal class Vala.DBusClientModule : DBusModule {
 				}
 			}
 
-			type_signature += param.parameter_type.get_type_signature ();
+			type_signature += get_type_signature (param.parameter_type);
 
 			var target = new CCodeIdentifier (param.name);
 			var expr = read_expression (prefragment, param.parameter_type, new CCodeIdentifier ("iter"), target);

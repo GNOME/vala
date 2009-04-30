@@ -129,7 +129,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 				continue;
 			}
 
-			if (param.parameter_type.get_type_signature () == null) {
+			if (get_type_signature (param.parameter_type) == null) {
 				Report.error (param.parameter_type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (param.parameter_type.to_string ()));
 				continue;
 			}
@@ -160,7 +160,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			}
 
 			if (param.direction == ParameterDirection.IN) {
-				type_signature += param.parameter_type.get_type_signature ();
+				type_signature += get_type_signature (param.parameter_type);
 
 				var target = new CCodeIdentifier (param.name);
 				var expr = read_expression (prefragment, param.parameter_type, new CCodeIdentifier ("iter"), target);
@@ -181,7 +181,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		signature_check.add_argument (new CCodeConstant ("\"%s\"".printf (type_signature)));
 
 		if (!(m.return_type is VoidType)) {
-			if (m.return_type.get_type_signature () == null) {
+			if (get_type_signature (m.return_type) == null) {
 				Report.error (m.return_type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (m.return_type.to_string ()));
 			} else {
 				cdecl = new CCodeDeclaration (m.return_type.get_cname ());
@@ -560,7 +560,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
 			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("reply_iter")));
 			iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_VARIANT"));
-			iter_call.add_argument (new CCodeConstant ("\"%s\"".printf (prop.property_type.get_type_signature ())));
+			iter_call.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_signature (prop.property_type))));
 			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("subiter")));
 			postfragment.append (new CCodeExpressionStatement (iter_call));
 
@@ -768,7 +768,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
 			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("entry_iter")));
 			iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_VARIANT"));
-			iter_call.add_argument (new CCodeConstant ("\"%s\"".printf (prop.property_type.get_type_signature ())));
+			iter_call.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_signature (prop.property_type))));
 			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("value_iter")));
 			postfragment.append (new CCodeExpressionStatement (iter_call));
 
@@ -1059,10 +1059,10 @@ internal class Vala.DBusServerModule : DBusClientModule {
 				}
 
 				string direction = param.direction == ParameterDirection.IN ? "in" : "out";
-				result += "    <arg name=\"%s\" type=\"%s\" direction=\"%s\"/>\n".printf (param.name, param.parameter_type.get_type_signature (), direction);
+				result += "    <arg name=\"%s\" type=\"%s\" direction=\"%s\"/>\n".printf (param.name, get_type_signature (param.parameter_type), direction);
 			}
 			if (!(m.return_type is VoidType)) {
-				result += "    <arg name=\"%s\" type=\"%s\" direction=\"out\"/>\n".printf (dbus_result_name (m), m.return_type.get_type_signature ());
+				result += "    <arg name=\"%s\" type=\"%s\" direction=\"out\"/>\n".printf (dbus_result_name (m), get_type_signature (m.return_type));
 			}
 
 			result += "  </method>\n";
@@ -1078,7 +1078,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			}
 
 			string access = (prop.get_accessor != null ? "read" : "") + (prop.set_accessor != null ? "write" : "");
-			result += "  <property name=\"%s\" type=\"%s\" access=\"%s\"/>\n".printf (Symbol.lower_case_to_camel_case (prop.name), prop.property_type.get_type_signature (), access);
+			result += "  <property name=\"%s\" type=\"%s\" access=\"%s\"/>\n".printf (Symbol.lower_case_to_camel_case (prop.name), get_type_signature (prop.property_type), access);
 		}
 
 		foreach (var sig in sym.get_signals ()) {
@@ -1092,7 +1092,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			result += "  <signal name=\"%s\">\n".printf (Symbol.lower_case_to_camel_case (sig.name));
 
 			foreach (var param in sig.get_parameters ()) {
-				result += "    <arg name=\"%s\" type=\"%s\"/>\n".printf (param.name, param.parameter_type.get_type_signature ());
+				result += "    <arg name=\"%s\" type=\"%s\"/>\n".printf (param.name, get_type_signature (param.parameter_type));
 			}
 
 			result += "  </signal>\n";
