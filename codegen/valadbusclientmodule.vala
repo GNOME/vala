@@ -900,6 +900,53 @@ internal class Vala.DBusClientModule : DBusModule {
 		var cdecl = new CCodeDeclaration (iface.get_cname () + "*");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("self", new_call));
 		new_block.add_statement (cdecl);
+		new_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("self")));
+
+		source_declarations.add_type_member_declaration (proxy_new.copy ());
+		proxy_new.block = new_block;
+		source_type_member_definition.append (proxy_new);
+
+		// dbus proxy construct
+		var proxy_construct = new CCodeFunction (lower_cname + "_construct", "GObject*");
+		proxy_construct.add_parameter (new CCodeFormalParameter ("gtype", "GType"));
+		proxy_construct.add_parameter (new CCodeFormalParameter ("n_properties", "guint"));
+		proxy_construct.add_parameter (new CCodeFormalParameter ("properties", "GObjectConstructParam*"));
+		proxy_construct.modifiers = CCodeModifiers.STATIC;
+		proxy_construct.block = new CCodeBlock ();
+
+		// chain up
+		var parent_class = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+		parent_class.add_argument (new CCodeIdentifier (lower_cname + "_parent_class"));
+		var chainup = new CCodeFunctionCall (new CCodeMemberAccess.pointer (parent_class, "constructor"));
+		chainup.add_argument (new CCodeIdentifier ("gtype"));
+		chainup.add_argument (new CCodeIdentifier ("n_properties"));
+		chainup.add_argument (new CCodeIdentifier ("properties"));
+
+		cdecl = new CCodeDeclaration ("GObject*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("self", chainup));
+		proxy_construct.block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusGConnection");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*connection"));
+		proxy_construct.block.add_statement (cdecl);
+
+		var gconnection = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
+		gconnection.add_argument (new CCodeIdentifier ("self"));
+		gconnection.add_argument (new CCodeConstant ("\"connection\""));
+		gconnection.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("connection")));
+		gconnection.add_argument (new CCodeConstant ("NULL"));
+		proxy_construct.block.add_statement (new CCodeExpressionStatement (gconnection));
+
+		cdecl = new CCodeDeclaration ("char*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("path"));
+		proxy_construct.block.add_statement (cdecl);
+
+		var path = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
+		path.add_argument (new CCodeIdentifier ("self"));
+		path.add_argument (new CCodeConstant ("\"path\""));
+		path.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("path")));
+		path.add_argument (new CCodeConstant ("NULL"));
+		proxy_construct.block.add_statement (new CCodeExpressionStatement (path));
 
 		var raw_connection = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_get_connection"));
 		raw_connection.add_argument (new CCodeIdentifier ("connection"));
@@ -910,7 +957,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		filter_call.add_argument (new CCodeIdentifier (lower_cname + "_filter"));
 		filter_call.add_argument (new CCodeIdentifier ("self"));
 		filter_call.add_argument (new CCodeConstant ("NULL"));
-		new_block.add_statement (new CCodeExpressionStatement (filter_call));
+		proxy_construct.block.add_statement (new CCodeExpressionStatement (filter_call));
 
 		var filter_printf = new CCodeFunctionCall (new CCodeIdentifier ("g_strdup_printf"));
 		filter_printf.add_argument (new CCodeConstant ("\"type='signal',path='%s'\""));
@@ -918,25 +965,32 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		cdecl = new CCodeDeclaration ("char*");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("filter", filter_printf));
-		new_block.add_statement (cdecl);
+		proxy_construct.block.add_statement (cdecl);
 
 		// ensure we receive signals from the remote object
 		var match_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_bus_add_match"));
 		match_call.add_argument (raw_connection);
 		match_call.add_argument (new CCodeIdentifier ("filter"));
 		match_call.add_argument (new CCodeConstant ("NULL"));
-		new_block.add_statement (new CCodeExpressionStatement (match_call));
+		proxy_construct.block.add_statement (new CCodeExpressionStatement (match_call));
+
+		var connection_free = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_unref"));
+		connection_free.add_argument (new CCodeIdentifier ("connection"));
+		proxy_construct.block.add_statement (new CCodeExpressionStatement (connection_free));
+
+		var path_free = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		path_free.add_argument (new CCodeIdentifier ("path"));
+		proxy_construct.block.add_statement (new CCodeExpressionStatement (path_free));
 
 		var filter_free = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
 		filter_free.add_argument (new CCodeIdentifier ("filter"));
-		new_block.add_statement (new CCodeExpressionStatement (filter_free));
+		proxy_construct.block.add_statement (new CCodeExpressionStatement (filter_free));
 
-		new_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("self")));
+		proxy_construct.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("self")));
 
-		source_declarations.add_type_member_declaration (proxy_new.copy ());
-		proxy_new.block = new_block;
-		source_type_member_definition.append (proxy_new);
+		source_type_member_definition.append (proxy_construct);
 
+		// dbus proxy filter function
 		generate_proxy_filter_function (iface);
 
 		// dbus proxy dispose
@@ -957,7 +1011,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		// mark proxy as disposed
 		proxy_dispose.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeCastExpression (new CCodeIdentifier ("self"), cname + "*"), "disposed"), new CCodeConstant ("TRUE"))));
 
-		var gconnection = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
+		gconnection = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
 		gconnection.add_argument (new CCodeIdentifier ("self"));
 		gconnection.add_argument (new CCodeConstant ("\"connection\""));
 		gconnection.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("connection")));
@@ -972,9 +1026,9 @@ internal class Vala.DBusClientModule : DBusModule {
 		proxy_dispose.block.add_statement (new CCodeExpressionStatement (filter_call));
 
 		// chain up
-		var parent_class = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+		parent_class = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 		parent_class.add_argument (new CCodeIdentifier (lower_cname + "_parent_class"));
-		var chainup = new CCodeFunctionCall (new CCodeMemberAccess.pointer (parent_class, "dispose"));
+		chainup = new CCodeFunctionCall (new CCodeMemberAccess.pointer (parent_class, "dispose"));
 		chainup.add_argument (new CCodeIdentifier ("self"));
 		proxy_dispose.block.add_statement (new CCodeExpressionStatement (chainup));
 
@@ -986,6 +1040,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		proxy_class_init.block = new CCodeBlock ();
 		var gobject_class = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 		gobject_class.add_argument (new CCodeIdentifier ("klass"));
+		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "constructor"), new CCodeIdentifier (lower_cname + "_construct"))));
 		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "dispose"), new CCodeIdentifier (lower_cname + "_dispose"))));
 		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "get_property"), new CCodeIdentifier (lower_cname + "_get_property"))));
 		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "set_property"), new CCodeIdentifier (lower_cname + "_set_property"))));
