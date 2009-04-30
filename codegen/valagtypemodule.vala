@@ -1791,7 +1791,7 @@ internal class Vala.GTypeModule : GErrorModule {
 		}
 		decl_space.add_type_definition (type_struct);
 
-		var type_fun = new InterfaceRegisterFunction (iface, context);
+		var type_fun = create_interface_register_function (iface);
 		type_fun.init_from_type ();
 		decl_space.add_type_member_declaration (type_fun.get_declaration ());
 	}
@@ -1812,11 +1812,15 @@ internal class Vala.GTypeModule : GErrorModule {
 
 		add_interface_base_init_function (iface);
 
-		var type_fun = new InterfaceRegisterFunction (iface, context);
+		var type_fun = create_interface_register_function (iface);
 		type_fun.init_from_type ();
 		source_type_member_definition.append (type_fun.get_definition ());
 
 		current_type_symbol = null;
+	}
+
+	public virtual TypeRegisterFunction create_interface_register_function (Interface iface) {
+		return new InterfaceRegisterFunction (iface, context);
 	}
 
 	private void add_interface_base_init_function (Interface iface) {
