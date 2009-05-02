@@ -45,7 +45,7 @@ namespace Json {
 		public unowned Json.Object get_object ();
 		public unowned Json.Node get_parent ();
 		public unowned string get_string ();
-		public void get_value (GLib.Value value);
+		public void get_value (out GLib.Value value);
 		public GLib.Type get_value_type ();
 		[CCode (has_construct_function = false)]
 		public Node (Json.NodeType type);
@@ -94,9 +94,9 @@ namespace Json {
 		public virtual signal void parse_end ();
 		public virtual signal void parse_start ();
 	}
-	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	[CCode (cheader_filename = "json-glib/json-gobject.h")]
 	public interface Serializable {
-		public abstract bool deserialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node);
+		public abstract bool deserialize_property (string property_name, out GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node);
 		public abstract Json.Node serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
 	}
 	[CCode (cprefix = "JSON_NODE_", has_type_id = "0", cheader_filename = "json-glib/json-glib.h")]
@@ -130,8 +130,8 @@ namespace Json {
 	public const int VERSION_HEX;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public const string VERSION_S;
-	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	[CCode (cheader_filename = "json-glib/json-gobject.h")]
 	public static GLib.Object construct_gobject (GLib.Type gtype, string data, size_t length) throws GLib.Error;
-	[CCode (cheader_filename = "json-glib/json-glib.h")]
+	[CCode (cheader_filename = "json-glib/json-gobject.h")]
 	public static string serialize_gobject (GLib.Object gobject, out size_t length);
 }
