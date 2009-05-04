@@ -1253,6 +1253,8 @@ internal class Vala.GTypeModule : GErrorModule {
 						base_method = cl_method.base_interface_method;
 					}
 
+					generate_method_declaration (base_method, source_declarations);
+
 					var ciface = new CCodeIdentifier ("iface");
 					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), new CCodeIdentifier (base_method.get_cname ()))));
 				}
