@@ -1,6 +1,7 @@
 /* valagsignalmodule.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter, Raffaele Sandrini
+ * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,7 +22,7 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-using GLib;
+using Gee;
 
 internal class Vala.GSignalModule : GObjectModule {
 	public GSignalModule (CCodeGenerator codegen, CCodeModule? next) {
@@ -195,6 +196,9 @@ internal class Vala.GSignalModule : GObjectModule {
 		callback_decl.add_parameter (new CCodeFormalParameter ("data1", "gpointer"));
 		n_params = 1;
 		foreach (FormalParameter p in params) {
+			// declare parameter type
+			generate_parameter (p, source_declarations, new HashMap<int,CCodeFormalParameter> (), null);
+
 			callback_decl.add_parameter (new CCodeFormalParameter ("arg_%d".printf (n_params), get_value_type_name_from_parameter (p)));
 			n_params++;
 			if (p.parameter_type.is_array () && !dbus) {
