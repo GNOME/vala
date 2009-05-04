@@ -38,9 +38,9 @@ namespace Gsf {
 		public weak string get_name ();
 		public weak GLib.Value? get_val ();
 		[CCode (has_construct_function = false)]
-		public DocProp (string# name);
-		public void set_link (string# link);
-		public void set_val (GLib.Value# val);
+		public DocProp (owned string name);
+		public void set_link (owned string link);
+		public void set_val (owned GLib.Value val);
 		public GLib.Value swap_val (GLib.Value val);
 	}
 	[CCode (cheader_filename = "gsf/gsf-docprop-vector.h")]
@@ -122,7 +122,7 @@ namespace Gsf {
 		public weak Gsf.Input? sibling (string name) throws GLib.Error;
 		public Gsf.off_t size ();
 		public Gsf.off_t tell ();
-		public static Gsf.Input uncompress (Gsf.Input# src);
+		public static Gsf.Input uncompress (owned Gsf.Input src);
 		[NoAccessorMethod]
 		public int64 position { get; }
 	}
