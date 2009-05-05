@@ -1,6 +1,6 @@
 /* valagirwriter.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -800,7 +800,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (literal is StringLiteral) {
 			var lit = literal as StringLiteral;
 			if (lit != null) {
-				return escape_attribute_string (lit.eval ());
+				return Markup.escape_text (lit.eval ());
 			}
 		} else if (literal is CharacterLiteral) {
 			return "%lc".printf (((CharacterLiteral) literal).get_char ());
@@ -821,14 +821,6 @@ public class Vala.GIRWriter : CodeVisitor {
 			}
 		}
 		return null;
-	}
-
-	private string escape_attribute_string(string value) {
-		return value.replace ("&", "&amp;")
-			.replace ("<", "&lt;")
-			.replace (">", "&gt;")
-			.replace ("'", "&apos;")
-			.replace ("\"", "&quot;");
 	}
 
 	private string camel_case_to_canonical (string name) {
