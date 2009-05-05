@@ -824,7 +824,8 @@ public class Vala.GIRWriter : CodeVisitor {
 	}
 
 	private string camel_case_to_canonical (string name) {
-		return Symbol.camel_case_to_lower_case (name).replace ("_", "-");
+		string[] parts = Symbol.camel_case_to_lower_case (name).split ("_");
+		return string.joinv ("-", parts);
 	}
 
 	private bool check_accessibility (Symbol sym) {
