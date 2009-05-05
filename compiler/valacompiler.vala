@@ -64,6 +64,7 @@ class Vala.Compiler {
 	static string[] defines;
 	static bool quiet_mode;
 	static bool verbose_mode;
+	static string profile;
 
 	private CodeContext context;
 
@@ -93,6 +94,7 @@ class Vala.Compiler {
 		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, ref cc_options, "Pass OPTION to the C compiler", "OPTION..." },
 		{ "dump-tree", 0, 0, OptionArg.FILENAME, ref dump_tree, "Write code tree to FILE", "FILE" },
 		{ "save-temps", 0, 0, OptionArg.NONE, ref save_temps, "Keep temporary files", null },
+		{ "profile", 0, 0, OptionArg.STRING, ref profile, "Use the given profile instead of the default", "PROFILE" },
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
 		{ "verbose", 'v', 0, OptionArg.NONE, ref verbose_mode, "Print additional messages to the console", null },
 		{ "target-glib", 0, 0, OptionArg.STRING, ref target_glib, "Target version of glib for code generation", "MAJOR.MINOR" },
@@ -197,6 +199,16 @@ class Vala.Compiler {
 		context.debug = debug;
 		context.thread = thread;
 		context.save_temps = save_temps;
+		if (profile == "posix") {
+			context.profile = Profile.POSIX;
+			context.add_define ("POSIX");
+		} else if (profile == "gobject-2.0" || profile == "gobject" || profile == null) {
+			// default profile
+			context.profile = Profile.GOBJECT;
+			context.add_define ("GOBJECT");
+		} else {
+			Report.error (null, "Unknown profile %s".printf (profile));
+		}
 
 		if (defines != null) {
 			foreach (string define in defines) {
@@ -204,27 +216,34 @@ class Vala.Compiler {
 			}
 		}
 
-		int glib_major = 2;
-		int glib_minor = 12;
-		if (target_glib != null && target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2) {
-			Report.error (null, "Invalid format for --target-glib");
-		}
+		if (context.profile == Profile.POSIX) {
+			/* default package */
+			if (!add_package (context, "posix")) {
+				Report.error (null, "posix not found in specified Vala API directories");
+			}
+		} else if (context.profile == Profile.GOBJECT) {
+			int glib_major = 2;
+			int glib_minor = 12;
+			if (target_glib != null && target_glib.scanf ("%d.%d", out glib_major, out glib_minor) != 2) {
+				Report.error (null, "Invalid format for --target-glib");
+			}
 
-		context.target_glib_major = glib_major;
-		context.target_glib_minor = glib_minor;
-		if (context.target_glib_major != 2) {
-			Report.error (null, "This version of valac only supports GLib 2");
+			context.target_glib_major = glib_major;
+			context.target_glib_minor = glib_minor;
+			if (context.target_glib_major != 2) {
+				Report.error (null, "This version of valac only supports GLib 2");
+			}
+
+			/* default packages */
+			if (!add_package (context, "glib-2.0")) {
+				Report.error (null, "glib-2.0 not found in specified Vala API directories");
+			}
+			if (!add_package (context, "gobject-2.0")) {
+				Report.error (null, "gobject-2.0 not found in specified Vala API directories");
+			}
 		}
 
 		context.codegen = new CCodeGenerator ();
-
-		/* default packages */
-		if (!add_package (context, "glib-2.0")) {
-			Report.error (null, "glib-2.0 not found in specified Vala API directories");
-		}
-		if (!add_package (context, "gobject-2.0")) {
-			Report.error (null, "gobject-2.0 not found in specified Vala API directories");
-		}
 
 		if (packages != null) {
 			foreach (string package in packages) {
@@ -245,8 +264,13 @@ class Vala.Compiler {
 				if (source.has_suffix (".vala") || source.has_suffix (".gs")) {
 					var source_file = new SourceFile (context, rpath);
 
-					// import the GLib namespace by default (namespace of backend-specific standard library)
-					source_file.add_using_directive (new UsingDirective (new UnresolvedSymbol (null, "GLib", null)));
+					if (context.profile == Profile.POSIX) {
+						// import the Posix namespace by default (namespace of backend-specific standard library)
+						source_file.add_using_directive (new UsingDirective (new UnresolvedSymbol (null, "Posix", null)));
+					} else if (context.profile == Profile.GOBJECT) {
+						// import the GLib namespace by default (namespace of backend-specific standard library)
+						source_file.add_using_directive (new UsingDirective (new UnresolvedSymbol (null, "GLib", null)));
+					}
 
 					context.add_source_file (source_file);
 				} else if (source.has_suffix (".vapi")) {
@@ -328,17 +352,17 @@ class Vala.Compiler {
 
 			interface_writer.write_file (context, vapi_filename);
 
+			if (context.profile == Profile.GOBJECT) {
+				var gir_writer = new GIRWriter ();
+				string gir_filename = "%s.gir".printf (library);
 
-			var gir_writer = new GIRWriter ();
-			string gir_filename = "%s.gir".printf (library);
+				// put .gir file in current directory unless -d has been explicitly specified
+				if (directory != null && !Path.is_absolute (gir_filename)) {
+					gir_filename = "%s%c%s".printf (context.directory, Path.DIR_SEPARATOR, gir_filename);
+				}
 
-			// put .gir file in current directory unless -d has been explicitly specified
-			if (directory != null && !Path.is_absolute (gir_filename)) {
-				gir_filename = "%s%c%s".printf (context.directory, Path.DIR_SEPARATOR, gir_filename);
+				gir_writer.write_file (context, gir_filename);
 			}
-
-			gir_writer.write_file (context, gir_filename);
-
 
 			library = null;
 		}

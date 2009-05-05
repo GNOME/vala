@@ -218,7 +218,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			if (cl != null && !cl.is_compact) {
 				if (cl.base_class == null) {
 					in_fundamental_creation_method = true;
-				} else if (cl.is_subtype_of (gobject_type)) {
+				} else if (gobject_type != null && cl.is_subtype_of (gobject_type)) {
 					in_gobject_creation_method = true;
 				}
 			}
@@ -603,16 +603,18 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			cmain.add_parameter (new CCodeFormalParameter ("argv", "char **"));
 			var main_block = new CCodeBlock ();
 
-			if (context.thread) {
-				var thread_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_thread_init"));
-				thread_init_call.line = cmain.line;
-				thread_init_call.add_argument (new CCodeConstant ("NULL"));
-				main_block.add_statement (new CCodeExpressionStatement (thread_init_call)); 
-			}
+			if (context.profile == Profile.GOBJECT) {
+				if (context.thread) {
+					var thread_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_thread_init"));
+					thread_init_call.line = cmain.line;
+					thread_init_call.add_argument (new CCodeConstant ("NULL"));
+					main_block.add_statement (new CCodeExpressionStatement (thread_init_call)); 
+				}
 
-			var type_init_call = new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("g_type_init")));
-			type_init_call.line = cmain.line;
-			main_block.add_statement (type_init_call);
+				var type_init_call = new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("g_type_init")));
+				type_init_call.line = cmain.line;
+				main_block.add_statement (type_init_call);
+			}
 
 			var main_call = new CCodeFunctionCall (new CCodeIdentifier (function.name));
 			if (m.get_parameters ().size == 1) {
@@ -944,7 +946,8 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 	public override void visit_creation_method (CreationMethod m) {
 		bool visible = !m.is_private_symbol ();
 
-		if (m.body != null && current_type_symbol is Class && current_class.is_subtype_of (gobject_type)) {
+		if (m.body != null && current_type_symbol is Class
+		    && gobject_type != null && current_class.is_subtype_of (gobject_type)) {
 			int n_params = 0;
 			foreach (Statement stmt in m.body.get_statements ()) {
 				var expr_stmt = stmt as ExpressionStatement;
@@ -995,7 +998,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			source_type_member_definition.append (vfunc);
 		}
 
-		if (current_type_symbol is Class && current_class.is_subtype_of (gobject_type)
+		if (current_type_symbol is Class && gobject_type != null && current_class.is_subtype_of (gobject_type)
 		    && (((CreationMethod) m).n_construction_params > 0 || current_class.get_type_parameters ().size > 0)) {
 			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.GREATER_THAN, new CCodeIdentifier ("__params_it"), new CCodeIdentifier ("__params"));
 			var cdofreeparam = new CCodeBlock ();

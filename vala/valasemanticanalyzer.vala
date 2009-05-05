@@ -90,15 +90,25 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		uint_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint"));
 		long_type = new IntegerType ((Struct) root_symbol.scope.lookup ("long"));
 		ulong_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ulong"));
-		size_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("size_t"));
-		ssize_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ssize_t"));
 		int8_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int8"));
-		unichar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("unichar"));
 		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 
-		// TODO: don't require GLib namespace in semantic analyzer
-		var glib_ns = root_symbol.scope.lookup ("GLib");
-		if (glib_ns != null) {
+		var unichar_struct = (Struct) root_symbol.scope.lookup ("unichar");
+		if (unichar_struct != null) {
+			unichar_type = new IntegerType (unichar_struct);
+		}
+		var size_t_struct = (Struct) root_symbol.scope.lookup ("size_t");
+		if (size_t_struct != null) {
+			size_t_type = new IntegerType (size_t_struct);
+		}
+		var ssize_t_struct = (Struct) root_symbol.scope.lookup ("ssize_t");
+		if (ssize_t_struct != null) {
+			ssize_t_type = new IntegerType (ssize_t_struct);
+		}
+
+		if (context.profile == Profile.GOBJECT) {
+			var glib_ns = root_symbol.scope.lookup ("GLib");
+
 			object_type = (Class) glib_ns.scope.lookup ("Object");
 			type_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Type"));
 

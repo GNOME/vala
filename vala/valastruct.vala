@@ -91,6 +91,10 @@ public class Vala.Struct : TypeSymbol {
 	 */
 	public bool has_type_id { get; set; default = true; }
 
+	public int width { get; set; default = 32; }
+
+	public bool signed { get; set; default = true; }
+
 	/**
 	 * Creates a new struct.
 	 *
@@ -412,12 +416,21 @@ public class Vala.Struct : TypeSymbol {
 		if (a.has_argument ("rank")) {
 			rank = a.get_integer ("rank");
 		}
+		if (a.has_argument ("width")) {
+			width = a.get_integer ("width");
+		}
+		if (a.has_argument ("signed")) {
+			signed = a.get_bool ("signed");
+		}
 	}
 
 	private void process_floating_type_attribute (Attribute a) {
 		floating_type = true;
 		if (a.has_argument ("rank")) {
 			rank = a.get_integer ("rank");
+		}
+		if (a.has_argument ("width")) {
+			width = a.get_integer ("width");
 		}
 	}
 	
@@ -579,7 +592,8 @@ public class Vala.Struct : TypeSymbol {
 				return true;
 			}
 		}
-		return get_attribute ("SimpleType") != null;
+		return (boolean_type || integer_type || floating_type
+		        || get_attribute ("SimpleType") != null);
 	}
 
 	/**
@@ -718,7 +732,8 @@ public class Vala.Struct : TypeSymbol {
 			m.check (analyzer);
 		}
 
-		if (!external && !external_package && base_type == null && get_fields ().size == 0) {
+		if (!external && !external_package && base_type == null && get_fields ().size == 0
+		    && !is_boolean_type () && !is_integer_type () && !is_floating_type ()) {
 			error = true;
 			Report.error (source_reference, "structs cannot be empty");
 		}

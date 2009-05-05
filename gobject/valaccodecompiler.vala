@@ -50,29 +50,38 @@ public class Vala.CCodeCompiler {
 	 */
 	[NoArrayLength]
 	public void compile (CodeContext context, string? cc_command, string[] cc_options) {
+		bool use_pkgconfig = false;
+
 		string pc = "pkg-config --cflags";
 		if (!context.compile_only) {
 			pc += " --libs";
 		}
-		pc += " gobject-2.0";
-		if (context.thread) {
-			pc += " gthread-2.0";
+		if (context.profile == Profile.GOBJECT) {
+			use_pkgconfig = true;
+			pc += " gobject-2.0";
+			if (context.thread) {
+				pc += " gthread-2.0";
+			}
 		}
 		foreach (string pkg in context.get_packages ()) {
-			if (package_exists (pkg))
+			if (package_exists (pkg)) {
+				use_pkgconfig = true;
 				pc += " " + pkg;
+			}
 		}
-		string pkgflags;
-		int exit_status;
-		try {
-			Process.spawn_command_line_sync (pc, out pkgflags, null, out exit_status);
-			if (exit_status != 0) {
-				Report.error (null, "pkg-config exited with status %d".printf (exit_status));
+		string pkgflags = "";
+		if (use_pkgconfig) {
+			try {
+				int exit_status;
+				Process.spawn_command_line_sync (pc, out pkgflags, null, out exit_status);
+				if (exit_status != 0) {
+					Report.error (null, "pkg-config exited with status %d".printf (exit_status));
+					return;
+				}
+			} catch (SpawnError e) {
+				Report.error (null, e.message);
 				return;
 			}
-		} catch (SpawnError e) {
-			Report.error (null, e.message);
-			return;
 		}
 
 		// TODO compile the C code files in parallel
@@ -118,6 +127,7 @@ public class Vala.CCodeCompiler {
 		}
 
 		try {
+			int exit_status;
 			Process.spawn_command_line_sync (cmdline, null, null, out exit_status);
 			if (exit_status != 0) {
 				Report.error (null, "cc exited with status %d".printf (exit_status));

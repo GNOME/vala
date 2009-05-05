@@ -34,6 +34,22 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 			return;
 		}
 
+		if (st.is_boolean_type ()) {
+			// typedef for boolean types
+			decl_space.add_include ("stdbool.h");
+			st.set_cname ("bool");
+			return;
+		} else if (st.is_integer_type ()) {
+			// typedef for integral types
+			decl_space.add_include ("stdint.h");
+			st.set_cname ("%sint%d_t".printf (st.signed ? "" : "u", st.width));
+			return;
+		} else if (st.is_floating_type ()) {
+			// typedef for floating types
+			st.set_cname (st.width == 64 ? "double" : "float");
+			return;
+		}
+
 		if (st.has_type_id) {
 			decl_space.add_type_declaration (new CCodeNewline ());
 			var macro = "(%s_get_type ())".printf (st.get_lower_case_cname (null));
@@ -135,13 +151,15 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 
 		st.accept_children (codegen);
 
-		if (st.is_disposable ()) {
-			add_struct_copy_function (st);
-			add_struct_destroy_function (st);
-		}
+		if (!st.is_boolean_type () && !st.is_integer_type () && !st.is_floating_type ()) {
+			if (st.is_disposable ()) {
+				add_struct_copy_function (st);
+				add_struct_destroy_function (st);
+			}
 
-		add_struct_dup_function (st);
-		add_struct_free_function (st);
+			add_struct_dup_function (st);
+			add_struct_free_function (st);
+		}
 
 		current_type_symbol = old_type_symbol;
 		instance_finalize_fragment = old_instance_finalize_fragment;

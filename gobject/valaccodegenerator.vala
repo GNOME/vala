@@ -32,28 +32,45 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public CCodeModule head;
 
 	public CCodeGenerator () {
-		/* included by inheritance
-		head = new CCodeBaseModule (this, head);
-		head = new CCodeStructModule (this, head);
-		head = new CCodeMethodModule (this, head);
-		head = new CCodeControlFlowModule (this, head);
-		head = new CCodeMemberAccessModule (this, head);
-		head = new CCodeAssignmentModule (this, head);
-		head = new CCodeMethodCallModule (this, head);
-		head = new CCodeArrayModule (this, head);
-		head = new CCodeDelegateModule (this, head);
-		head = new GErrorModule (this, head);
-		head = new GTypeModule (this, head);
-		head = new GObjectModule (this, head);
-		head = new GSignalModule (this, head);
-		head = new GAsyncModule (this, head);
-		head = new DBusClientModule (this, head);
-		*/
-		head = new DBusServerModule (this, head);
 	}
 
 	public override void emit (CodeContext context) {
+		if (context.profile == Profile.GOBJECT) {
+			/* included by inheritance
+			head = new CCodeBaseModule (this, head);
+			head = new CCodeStructModule (this, head);
+			head = new CCodeMethodModule (this, head);
+			head = new CCodeControlFlowModule (this, head);
+			head = new CCodeMemberAccessModule (this, head);
+			head = new CCodeAssignmentModule (this, head);
+			head = new CCodeMethodCallModule (this, head);
+			head = new CCodeArrayModule (this, head);
+			head = new CCodeDelegateModule (this, head);
+			head = new GErrorModule (this, head);
+			head = new GTypeModule (this, head);
+			head = new GObjectModule (this, head);
+			head = new GSignalModule (this, head);
+			head = new GAsyncModule (this, head);
+			head = new DBusClientModule (this, head);
+			*/
+			head = new DBusServerModule (this, head);
+		} else {
+			/* included by inheritance
+			head = new CCodeBaseModule (this, head);
+			head = new CCodeStructModule (this, head);
+			head = new CCodeMethodModule (this, head);
+			head = new CCodeControlFlowModule (this, head);
+			head = new CCodeMemberAccessModule (this, head);
+			head = new CCodeAssignmentModule (this, head);
+			head = new CCodeMethodCallModule (this, head);
+			head = new CCodeArrayModule (this, head);
+			*/
+			head = new CCodeDelegateModule (this, head);
+		}
+
 		head.emit (context);
+
+		head = null;
 	}
 
 	public override void visit_source_file (SourceFile source_file) {

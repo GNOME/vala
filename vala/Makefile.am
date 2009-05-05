@@ -107,6 +107,7 @@ libvalacore_la_VALASOURCES = \
 	valapointerindirection.vala \
 	valapointertype.vala \
 	valapostfixexpression.vala \
+	valaprofile.vala \
 	valapropertyaccessor.vala \
 	valaproperty.vala \
 	valarealliteral.vala \

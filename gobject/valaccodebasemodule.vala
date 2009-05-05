@@ -84,7 +84,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public DataType bool_type;
 	public DataType char_type;
 	public DataType uchar_type;
-	public DataType unichar_type;
+	public DataType? unichar_type;
 	public DataType short_type;
 	public DataType ushort_type;
 	public DataType int_type;
@@ -215,7 +215,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		bool_type = new BooleanType ((Struct) root_symbol.scope.lookup ("bool"));
 		char_type = new IntegerType ((Struct) root_symbol.scope.lookup ("char"));
 		uchar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uchar"));
-		unichar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("unichar"));
 		short_type = new IntegerType ((Struct) root_symbol.scope.lookup ("short"));
 		ushort_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ushort"));
 		int_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int"));
@@ -234,38 +233,45 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
 		string_type = new ObjectType ((Class) root_symbol.scope.lookup ("string"));
 
-		var glib_ns = root_symbol.scope.lookup ("GLib");
-
-		gtype_type = (TypeSymbol) glib_ns.scope.lookup ("Type");
-		gobject_type = (TypeSymbol) glib_ns.scope.lookup ("Object");
-		gerror_type = new ErrorType (null, null);
-		glist_type = (Class) glib_ns.scope.lookup ("List");
-		gslist_type = (Class) glib_ns.scope.lookup ("SList");
-		gstringbuilder_type = (TypeSymbol) glib_ns.scope.lookup ("StringBuilder");
-		garray_type = (TypeSymbol) glib_ns.scope.lookup ("Array");
-		gbytearray_type = (TypeSymbol) glib_ns.scope.lookup ("ByteArray");
-		gptrarray_type = (TypeSymbol) glib_ns.scope.lookup ("PtrArray");
-
-		gquark_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Quark"));
-		gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
-		mutex_type = (Struct) glib_ns.scope.lookup ("StaticRecMutex");
-
-		type_module_type = (TypeSymbol) glib_ns.scope.lookup ("TypeModule");
-
-		if (context.module_init_method != null) {
-			module_init_fragment = new CCodeFragment ();
-			foreach (FormalParameter parameter in context.module_init_method.get_parameters ()) {
-				if (parameter.parameter_type.data_type == type_module_type) {
-					in_plugin = true;
-					module_init_param_name = parameter.name;
-					break;
-				}
-			}
+		var unichar_struct = (Struct) root_symbol.scope.lookup ("unichar");
+		if (unichar_struct != null) {
+			unichar_type = new IntegerType (unichar_struct);
 		}
 
-		var dbus_ns = root_symbol.scope.lookup ("DBus");
-		if (dbus_ns != null) {
-			dbus_object_type = (TypeSymbol) dbus_ns.scope.lookup ("Object");
+		if (context.profile == Profile.GOBJECT) {
+			var glib_ns = root_symbol.scope.lookup ("GLib");
+
+			gtype_type = (TypeSymbol) glib_ns.scope.lookup ("Type");
+			gobject_type = (TypeSymbol) glib_ns.scope.lookup ("Object");
+			gerror_type = new ErrorType (null, null);
+			glist_type = (Class) glib_ns.scope.lookup ("List");
+			gslist_type = (Class) glib_ns.scope.lookup ("SList");
+			gstringbuilder_type = (TypeSymbol) glib_ns.scope.lookup ("StringBuilder");
+			garray_type = (TypeSymbol) glib_ns.scope.lookup ("Array");
+			gbytearray_type = (TypeSymbol) glib_ns.scope.lookup ("ByteArray");
+			gptrarray_type = (TypeSymbol) glib_ns.scope.lookup ("PtrArray");
+
+			gquark_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Quark"));
+			gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
+			mutex_type = (Struct) glib_ns.scope.lookup ("StaticRecMutex");
+
+			type_module_type = (TypeSymbol) glib_ns.scope.lookup ("TypeModule");
+
+			if (context.module_init_method != null) {
+				module_init_fragment = new CCodeFragment ();
+				foreach (FormalParameter parameter in context.module_init_method.get_parameters ()) {
+					if (parameter.parameter_type.data_type == type_module_type) {
+						in_plugin = true;
+						module_init_param_name = parameter.name;
+						break;
+					}
+				}
+			}
+
+			var dbus_ns = root_symbol.scope.lookup ("DBus");
+			if (dbus_ns != null) {
+				dbus_object_type = (TypeSymbol) dbus_ns.scope.lookup ("Object");
+			}
 		}
 
 		header_declarations = new CCodeDeclarationSpace ();
@@ -292,8 +298,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			once.append (new CCodeNewline ());
 			once.append (header_declarations.include_directives);
 			once.append (new CCodeNewline ());
-			once.append (new CCodeIdentifier ("G_BEGIN_DECLS"));
-			once.append (new CCodeNewline ());
+
+			if (context.profile == Profile.GOBJECT) {
+				once.append (new CCodeIdentifier ("G_BEGIN_DECLS"));
+				once.append (new CCodeNewline ());
+			}
+
 			once.append (new CCodeNewline ());
 			once.append (header_declarations.type_declaration);
 			once.append (new CCodeNewline ());
@@ -303,8 +313,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			once.append (new CCodeNewline ());
 			once.append (header_declarations.constant_declaration);
 			once.append (new CCodeNewline ());
-			once.append (new CCodeIdentifier ("G_END_DECLS"));
-			once.append (new CCodeNewline ());
+
+			if (context.profile == Profile.GOBJECT) {
+				once.append (new CCodeIdentifier ("G_END_DECLS"));
+				once.append (new CCodeNewline ());
+			}
+
 			once.append (new CCodeNewline ());
 			once.write (writer);
 			writer.close ();
@@ -323,8 +337,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			once.append (new CCodeNewline ());
 			once.append (internal_header_declarations.include_directives);
 			once.append (new CCodeNewline ());
-			once.append (new CCodeIdentifier ("G_BEGIN_DECLS"));
-			once.append (new CCodeNewline ());
+
+			if (context.profile == Profile.GOBJECT) {
+				once.append (new CCodeIdentifier ("G_BEGIN_DECLS"));
+				once.append (new CCodeNewline ());
+			}
+
 			once.append (new CCodeNewline ());
 			once.append (internal_header_declarations.type_declaration);
 			once.append (new CCodeNewline ());
@@ -334,8 +352,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			once.append (new CCodeNewline ());
 			once.append (internal_header_declarations.constant_declaration);
 			once.append (new CCodeNewline ());
-			once.append (new CCodeIdentifier ("G_END_DECLS"));
-			once.append (new CCodeNewline ());
+
+			if (context.profile == Profile.GOBJECT) {
+				once.append (new CCodeIdentifier ("G_END_DECLS"));
+				once.append (new CCodeNewline ());
+			}
+
 			once.append (new CCodeNewline ());
 			once.write (writer);
 			writer.close ();
@@ -418,10 +440,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		wrappers = new HashSet<string> (str_hash, str_equal);
 		generated_external_symbols = new HashSet<Symbol> ();
 
-		header_declarations.add_include ("glib.h");
-		internal_header_declarations.add_include ("glib.h");
-		source_declarations.add_include ("glib.h");
-		source_declarations.add_include ("glib-object.h");
+		if (context.profile == Profile.GOBJECT) {
+			header_declarations.add_include ("glib.h");
+			internal_header_declarations.add_include ("glib.h");
+			source_declarations.add_include ("glib.h");
+			source_declarations.add_include ("glib-object.h");
+		}
 
 		source_file.accept_children (codegen);
 
@@ -1086,9 +1110,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		} else if (type.data_type is Enum) {
 			var en = (Enum) type.data_type;
 			generate_enum_declaration (en, decl_space);
-		} else if (type is StructValueType) {
-			var struct_type = (StructValueType) type;
-			generate_struct_declaration ((Struct) struct_type.type_symbol, decl_space);
+		} else if (type is ValueType) {
+			var value_type = (ValueType) type;
+			generate_struct_declaration ((Struct) value_type.type_symbol, decl_space);
 		} else if (type is ArrayType) {
 			var array_type = (ArrayType) type;
 			generate_type_declaration (array_type.element_type, decl_space);
@@ -2445,7 +2469,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_boolean_literal (BooleanLiteral expr) {
-		expr.ccodenode = new CCodeConstant (expr.value ? "TRUE" : "FALSE");
+		if (context.profile == Profile.GOBJECT) {
+			expr.ccodenode = new CCodeConstant (expr.value ? "TRUE" : "FALSE");
+		} else {
+			source_declarations.add_include ("stdbool.h");
+			expr.ccodenode = new CCodeConstant (expr.value ? "true" : "false");
+		}
 	}
 
 	public override void visit_character_literal (CharacterLiteral expr) {
@@ -2482,6 +2511,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_null_literal (NullLiteral expr) {
+		if (context.profile != Profile.GOBJECT) {
+			source_declarations.add_include ("stddef.h");
+		}
 		expr.ccodenode = new CCodeConstant ("NULL");
 	}
 
@@ -2758,7 +2790,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return true;
 		} else if (st == char_type.data_type) {
 			return true;
-		} else if (st == unichar_type.data_type) {
+		} else if (unichar_type != null && st == unichar_type.data_type) {
 			return true;
 		} else if (st == short_type.data_type) {
 			return true;
@@ -2827,6 +2859,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public virtual void generate_class_declaration (Class cl, CCodeDeclarationSpace decl_space) {
+		if (decl_space.add_symbol_declaration (cl, cl.get_cname ())) {
+			return;
+		}
 	}
 
 	public virtual void generate_interface_declaration (Interface iface, CCodeDeclarationSpace decl_space) {
@@ -3825,6 +3860,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			node.accept (codegen);
 		}
 		return node.ccodenode;
+	}
+
+	public override void visit_class (Class cl) {
 	}
 }
 

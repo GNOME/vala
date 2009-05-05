@@ -130,6 +130,8 @@ public class Vala.CodeContext {
 	 */
 	public bool save_temps { get; set; }
 
+	public Profile profile { get; set; }
+
 	/**
 	 * Target major version number of glib for code generation.
 	 */

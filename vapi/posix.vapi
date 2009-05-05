@@ -20,6 +20,126 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
+#if POSIX
+[CCode (cname = "bool", cheader_filename = "stdbool.h", default_value = "false")]
+[BooleanType]
+public struct bool {
+}
+
+[CCode (cname = "char", default_value = "\'\\0\'")]
+[IntegerType (rank = 2, min = 0, max = 127)]
+public struct char {
+}
+
+[CCode (cname = "unsigned char", default_value = "\'\\0\'")]
+[IntegerType (rank = 3, min = 0, max = 255)]
+public struct uchar {
+}
+
+[CCode (cname = "int", default_value = "0")]
+[IntegerType (rank = 6)]
+public struct int {
+}
+
+[CCode (cname = "unsigned int", default_value = "0U")]
+[IntegerType (rank = 7)]
+public struct uint {
+}
+
+[CCode (cname = "short", default_value = "0")]
+[IntegerType (rank = 4, min = -32768, max = 32767)]
+public struct short {
+}
+
+[CCode (cname = "unsigned short", default_value = "0U")]
+[IntegerType (rank = 5, min = 0, max = 65535)]
+public struct ushort {
+}
+
+[CCode (cname = "long", default_value = "0L")]
+[IntegerType (rank = 8)]
+public struct long {
+}
+
+[CCode (cname = "unsigned long", default_value = "0UL")]
+[IntegerType (rank = 9)]
+public struct ulong {
+}
+
+[CCode (cname = "size_t", cheader_filename = "sys/types.h", default_value = "0UL")]
+[IntegerType (rank = 9)]
+public struct size_t {
+}
+
+[CCode (cname = "ssize_t", cheader_filename = "sys/types.h", default_value = "0L")]
+[IntegerType (rank = 8)]
+public struct ssize_t {
+}
+
+[CCode (cname = "int8_t", cheader_filename = "stdint.h", default_value = "0")]
+[IntegerType (rank = 1, min = -128, max = 127)]
+public struct int8 {
+}
+
+[CCode (cname = "uint8_t", cheader_filename = "stdint.h", default_value = "0U")]
+[IntegerType (rank = 3, min = 0, max = 255)]
+public struct uint8 {
+}
+
+[CCode (cname = "int16_t", cheader_filename = "stdint.h", default_value = "0")]
+[IntegerType (rank = 4, min = -32768, max = 32767)]
+public struct int16 {
+}
+
+[CCode (cname = "uint16_t", cheader_filename = "stdint.h", default_value = "0U")]
+[IntegerType (rank = 5, min = 0, max = 65535)]
+public struct uint16 {
+}
+
+[CCode (cname = "int32_t", cheader_filename = "stdint.h", default_value = "0")]
+[IntegerType (rank = 6)]
+public struct int32 {
+}
+
+[CCode (cname = "uint32_t", cheader_filename = "stdint.h", default_value = "0U")]
+[IntegerType (rank = 7)]
+public struct uint32 {
+}
+
+[CCode (cname = "int64_t", cheader_filename = "stdint.h", default_value = "0LL")]
+[IntegerType (rank = 10)]
+public struct int64 {
+}
+
+[CCode (cname = "uint64_t", cheader_filename = "stdint.h", default_value = "0ULL")]
+[IntegerType (rank = 11)]
+public struct uint64 {
+}
+
+[CCode (cname = "float", default_value = "0.0F")]
+[FloatingType (rank = 1)]
+public struct float {
+}
+
+[CCode (cname = "double", default_value = "0.0")]
+[FloatingType (rank = 2)]
+public struct double {
+}
+
+[CCode (cheader_filename = "time.h")]
+[IntegerType (rank = 8)]
+public struct time_t {
+	[CCode (cname = "time")]
+	public time_t ();
+}
+
+[Compact]
+[Immutable]
+[CCode (cname = "char", const_cname = "const char", copy_function = "strdup", free_function = "free", cheader_filename = "stdlib.h,string.h")]
+public class string {
+}
+#endif
+
 [CCode (cprefix = "", lower_case_cprefix = "")]
 namespace Posix {
 	[CCode (cheader_filename = "assert.h")]
@@ -426,6 +546,10 @@ namespace Posix {
 
 	[CCode (cheader_filename = "signal.h")]
 	public sighandler_t signal (int signum, sighandler_t? handler);
+
+	[CCode (cheader_filename = "stdio.h")]
+	[PrintfFormat]
+	public void printf (string format,...);
 
 	[CCode (cheader_filename = "stdlib.h")]
 	public void abort ();
