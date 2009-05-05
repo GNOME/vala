@@ -179,7 +179,7 @@ namespace Sqlite {
 		public int bind_int (int index, int value);
 		public int bind_int64 (int index, int64 value);
 		public int bind_null (int index);
-		public int bind_text (int index, string# value, int n = -1, GLib.DestroyNotify destroy_notify = GLib.g_free);
+		public int bind_text (int index, owned string value, int n = -1, GLib.DestroyNotify destroy_notify = GLib.g_free);
 		public int bind_value (int index, Value value);
 		public int bind_zeroblob (int index, int n);
 		public void* column_blob (int col);
