@@ -289,11 +289,12 @@ public class Vala.SymbolResolver : CodeVisitor {
 				type = new ObjectType ((Interface) sym);
 			} else if (sym is Struct) {
 				var st = (Struct) sym;
-				if (st.is_boolean_type ()) {
+				// attributes are not processed yet, access them directly
+				if (st.get_attribute ("BooleanType") != null) {
 					type = new BooleanType (st);
-				} else if (st.is_integer_type ()) {
+				} else if (st.get_attribute ("IntegerType") != null) {
 					type = new IntegerType (st);
-				} else if (st.is_floating_type ()) {
+				} else if (st.get_attribute ("FloatingType") != null) {
 					type = new FloatingType (st);
 				} else {
 					type = new StructValueType (st);
