@@ -1,6 +1,6 @@
 /* valaswitchstatement.vala
  *
- * Copyright (C) 2006-2007  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -106,7 +106,8 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 			return false;
 		}
 
-		if (!expression.value_type.compatible (analyzer.uint64_type)
+		if (!(expression.value_type is IntegerType)
+		    && !(expression.value_type is EnumValueType)
 		    && !expression.value_type.compatible (analyzer.string_type)) {
 			Report.error (expression.source_reference, "Integer or string expression expected");
 			error = true;

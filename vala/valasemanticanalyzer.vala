@@ -51,7 +51,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType ulong_type;
 	public DataType size_t_type;
 	public DataType ssize_t_type;
-	public DataType uint64_type;
 	public DataType int8_type;
 	public DataType unichar_type;
 	public DataType double_type;
@@ -93,7 +92,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		ulong_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ulong"));
 		size_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("size_t"));
 		ssize_t_type = new IntegerType ((Struct) root_symbol.scope.lookup ("ssize_t"));
-		uint64_type = new IntegerType ((Struct) root_symbol.scope.lookup ("uint64"));
 		int8_type = new IntegerType ((Struct) root_symbol.scope.lookup ("int8"));
 		unichar_type = new IntegerType ((Struct) root_symbol.scope.lookup ("unichar"));
 		double_type = new FloatingType ((Struct) root_symbol.scope.lookup ("double"));
