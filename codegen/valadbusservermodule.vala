@@ -128,7 +128,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 		cdecl = new CCodeDeclaration ("GError*");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("error", new CCodeConstant ("NULL")));
-		block.add_statement (cdecl);
+		out_postfragment.append (cdecl);
 
 		block.add_statement (prefragment);
 
@@ -317,21 +317,25 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			ccall.add_argument (new CCodeIdentifier ("user_data"));
 		}
 
-		if (m.get_error_types ().size > 0 && !m.coroutine) {
-			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")));
+		if (m.get_error_types ().size > 0) {
+			if (m.coroutine) {
+				finish_ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")));
+			} else {
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")));
+			}
 
 			var error_block = new CCodeBlock ();
 
-			msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_error"));
-			msgcall.add_argument (new CCodeIdentifier ("message"));
-			msgcall.add_argument (new CCodeIdentifier ("DBUS_ERROR_FAILED"));
-			msgcall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("error"), "message"));
-			error_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), msgcall)));
+			generate_server_error_cases (error_block, m.get_error_types (), new CCodeIdentifier ("error"), new CCodeIdentifier ("message"), new CCodeIdentifier ("reply"));
 
 			send_reply (error_block);
 			error_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_HANDLED")));
 
-			block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("error"), error_block));
+			if (m.coroutine) {
+				ready_block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("error"), error_block));
+			} else {
+				block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("error"), error_block));
+			}
 		}
 
 		block.add_statement (in_postfragment);
@@ -369,6 +373,55 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		}
 
 		return wrapper_name;
+	}
+
+	void generate_server_error_cases (CCodeBlock error_block, Gee.List<DataType> error_types, CCodeExpression error, CCodeExpression message, CCodeExpression reply) {
+		CCodeStatement if_else_if = null;
+		CCodeIfStatement last_statement = null;
+
+		foreach (DataType error_type in error_types) {
+			var edomain = ((ErrorType) error_type).error_domain;
+
+			var edomain_dbus_name = get_dbus_name (edomain);
+			if (edomain_dbus_name == null) {
+				Report.error (edomain.source_reference, "Errordomain must have a DBus.name annotation to be serialized over DBus");
+			}
+
+			var true_block = new CCodeBlock ();
+			true_block.suppress_newline = true;
+
+			var cswitch = new CCodeSwitchStatement (new CCodeMemberAccess.pointer (error, "code"));
+			foreach (ErrorCode ecode in edomain.get_codes ()) {
+				cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (ecode.get_cname ())));
+
+				var ecode_dbus_name = get_dbus_name (ecode);
+				if (ecode_dbus_name == null) {
+					ecode_dbus_name = Symbol.lower_case_to_camel_case (ecode.name.down ());
+				}
+
+				string dbus_name = "%s.%s".printf (edomain_dbus_name, ecode_dbus_name);
+
+				var msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_error"));
+				msgcall.add_argument (message);
+				msgcall.add_argument (new CCodeConstant ("\"%s\"".printf (dbus_name)));
+				msgcall.add_argument (new CCodeMemberAccess.pointer (error, "message"));
+				cswitch.add_statement (new CCodeExpressionStatement (new CCodeAssignment (reply, msgcall)));
+
+				cswitch.add_statement (new CCodeBreakStatement ());
+			}
+			true_block.add_statement (cswitch);
+
+			var equal_test = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeMemberAccess.pointer (error, "domain"), new CCodeIdentifier (edomain.get_upper_case_cname ()));
+			var stmt = new CCodeIfStatement (equal_test, true_block);
+
+			if (last_statement != null) {
+				last_statement.false_statement = stmt;
+			} else {
+				if_else_if = stmt;
+			}
+			last_statement = stmt;
+		}
+		error_block.add_statement (if_else_if);
 	}
 
 	string generate_dbus_signal_wrapper (Signal sig, ObjectTypeSymbol sym, string dbus_iface_name) {
