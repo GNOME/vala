@@ -45,6 +45,15 @@ internal class Vala.DBusClientModule : DBusModule {
 		}
 	}
 
+	bool has_dbus_error (Gee.List<DataType> error_types) {
+		foreach (DataType error_type in error_types) {
+			if (((ErrorType) error_type).error_domain.get_full_name () == "DBus.Error") {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public override void generate_dynamic_method_wrapper (DynamicMethod method) {
 		var dynamic_method = (DynamicMethod) method;
 
@@ -1486,6 +1495,12 @@ internal class Vala.DBusClientModule : DBusModule {
 		}
 		block.add_statement (new CCodeIfStatement (new CCodeMemberAccess.pointer (new CCodeCastExpression (new CCodeIdentifier ("self"), iface.get_cname () + "DBusProxy*"), "disposed"), dispose_return_block));
 
+		cdecl = new CCodeDeclaration ("DBusError");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_dbus_error"));
+		block.add_statement (cdecl);
+
+		var dbus_error = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_dbus_error"));
+
 		cdecl = new CCodeDeclaration ("DBusGConnection");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("*_connection"));
 		block.add_statement (cdecl);
@@ -1510,6 +1525,10 @@ internal class Vala.DBusClientModule : DBusModule {
 		gconnection.add_argument (new CCodeConstant ("NULL"));
 		block.add_statement (new CCodeExpressionStatement (gconnection));
 
+		var dbus_error_init = new CCodeFunctionCall (new CCodeIdentifier ("dbus_error_init"));
+		dbus_error_init.add_argument (dbus_error);
+		block.add_statement (new CCodeExpressionStatement (dbus_error_init));
+
 		var connection = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_get_connection"));
 		connection.add_argument (new CCodeIdentifier ("_connection"));
 
@@ -1517,7 +1536,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		ccall.add_argument (connection);
 		ccall.add_argument (new CCodeIdentifier ("_message"));
 		ccall.add_argument (new CCodeConstant ("-1"));
-		ccall.add_argument (new CCodeConstant ("NULL"));
+		ccall.add_argument (dbus_error);
 		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall)));
 
 		var conn_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_unref"));
@@ -1527,6 +1546,42 @@ internal class Vala.DBusClientModule : DBusModule {
 		var message_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
 		message_unref.add_argument (new CCodeIdentifier ("_message"));
 		block.add_statement (new CCodeExpressionStatement (message_unref));
+
+		var error_types = m.get_error_types ();
+		if (!has_dbus_error (error_types)) {
+			Report.error (m.source_reference, "D-Bus methods must throw DBus.Error");
+		} else {
+			var error_block = new CCodeBlock ();
+
+			cdecl = new CCodeDeclaration ("GQuark");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_edomain"));
+			error_block.add_statement (cdecl);
+
+			cdecl = new CCodeDeclaration ("gint");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_ecode"));
+			error_block.add_statement (cdecl);
+
+			generate_client_error_cases (error_block, error_types, new CCodeMemberAccess (new CCodeIdentifier ("_dbus_error"), "name"), new CCodeIdentifier ("_edomain"), new CCodeIdentifier ("_ecode"));
+
+			var g_set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
+			g_set_error.add_argument (new CCodeIdentifier ("error"));
+			g_set_error.add_argument (new CCodeIdentifier ("_edomain"));
+			g_set_error.add_argument (new CCodeIdentifier ("_ecode"));
+			g_set_error.add_argument (new CCodeMemberAccess (new CCodeIdentifier ("_dbus_error"), "message"));
+			error_block.add_statement (new CCodeExpressionStatement (g_set_error));
+
+			var dbus_error_free = new CCodeFunctionCall (new CCodeIdentifier ("dbus_error_free"));
+			dbus_error_free.add_argument (dbus_error);
+			error_block.add_statement (new CCodeExpressionStatement (dbus_error_free));
+
+			if (!(m.return_type is VoidType)) {
+				error_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
+			}
+
+			var dbus_error_is_set = new CCodeFunctionCall (new CCodeIdentifier ("dbus_error_is_set"));
+			dbus_error_is_set.add_argument (dbus_error);
+			block.add_statement (new CCodeIfStatement (dbus_error_is_set, error_block));
+		}
 
 		block.add_statement (postfragment);
 
@@ -1543,6 +1598,72 @@ internal class Vala.DBusClientModule : DBusModule {
 		source_type_member_definition.append (function);
 
 		return proxy_name;
+	}
+
+	void generate_client_error_cases (CCodeBlock error_block, Gee.List<DataType> error_types, CCodeExpression dbus_error_name, CCodeExpression result_edomain, CCodeExpression result_ecode) {
+		CCodeStatement if_else_if = null;
+		CCodeIfStatement last_statement = null;
+
+		foreach (DataType error_type in error_types) {
+			var edomain = ((ErrorType) error_type).error_domain;
+
+			var edomain_dbus_name = get_dbus_name (edomain);
+			if (edomain_dbus_name == null) {
+				Report.error (edomain.source_reference, "Errordomain must have a DBus.name annotation to be serialized over DBus");
+			}
+
+			var true_block = new CCodeBlock ();
+			true_block.suppress_newline = true;
+
+			string temp_name = "_tmp%d_".printf (next_temp_var_id++);
+
+			var cdecl = new CCodeDeclaration ("const char*");
+			cdecl.add_declarator (new CCodeVariableDeclarator (temp_name));
+			true_block.add_statement (cdecl);
+
+			true_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (result_edomain, new CCodeIdentifier (edomain.get_upper_case_cname ()))));
+
+			true_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (temp_name), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, dbus_error_name, new CCodeConstant ("%ld".printf (edomain_dbus_name.length + 1))))));
+
+			CCodeStatement inner_if_else_if = null;
+			CCodeIfStatement inner_last_statement = null;
+			foreach (ErrorCode ecode in edomain.get_codes ()) {
+				var inner_true_block = new CCodeBlock ();
+				inner_true_block.suppress_newline = true;
+				inner_true_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (result_ecode, new CCodeIdentifier (ecode.get_cname ()))));
+
+				var ecode_dbus_name = get_dbus_name (ecode);
+				if (ecode_dbus_name == null) {
+					ecode_dbus_name = Symbol.lower_case_to_camel_case (ecode.name.down ());
+				}
+
+				var string_comparison = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+				string_comparison.add_argument (new CCodeIdentifier (temp_name));
+				string_comparison.add_argument (new CCodeConstant ("\"%s\"".printf (ecode_dbus_name)));
+				var stmt = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, string_comparison, new CCodeConstant ("0")), inner_true_block);
+
+				if (inner_last_statement != null) {
+					inner_last_statement.false_statement = stmt;
+				} else {
+					inner_if_else_if = stmt;
+				}
+				inner_last_statement = stmt;
+			}
+			true_block.add_statement (inner_if_else_if);
+
+			var string_comparison = new CCodeFunctionCall (new CCodeIdentifier ("strstr"));
+			string_comparison.add_argument (dbus_error_name);
+			string_comparison.add_argument (new CCodeConstant ("\"%s\"".printf (edomain_dbus_name)));
+			var stmt = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, string_comparison, dbus_error_name), true_block);
+
+			if (last_statement != null) {
+				last_statement.false_statement = stmt;
+			} else {
+				if_else_if = stmt;
+			}
+			last_statement = stmt;
+		}
+		error_block.add_statement (if_else_if);
 	}
 
 	string generate_async_dbus_proxy_method (Interface iface, Method m) {

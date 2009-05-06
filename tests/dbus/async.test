@@ -4,8 +4,8 @@ Program: client
 
 [DBus (name = "org.example.Test")]
 interface Test : Object {
-	public abstract async int test_int (int i);
-	public abstract async string test_string (string s);
+	public abstract async int test_int (int i) throws DBus.Error;
+	public abstract async string test_string (string s) throws DBus.Error;
 }
 
 MainLoop main_loop;
