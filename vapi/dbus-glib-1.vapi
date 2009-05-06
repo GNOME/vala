@@ -54,6 +54,7 @@ namespace DBus {
 		public bool is_set ();
 	}
 
+	[DBus (name = "org.freedesktop.DBus.Error")]
 	[CCode (cname = "DBusGError", lower_case_csuffix = "gerror", cprefix = "DBUS_GERROR_")]
 	public errordomain Error {
 		FAILED,
@@ -61,6 +62,7 @@ namespace DBus {
 		SERVICE_UNKNOWN,
 		NAME_HAS_NO_OWNER,
 		NO_REPLY,
+		[DBus (name = "IOError")]
 		IO_ERROR,
 		BAD_ADDRESS,
 		NOT_SUPPORTED,
@@ -79,14 +81,20 @@ namespace DBus {
 		TIMED_OUT,
 		MATCH_RULE_NOT_FOUND,
 		MATCH_RULE_INVALID,
+		[DBus (name = "Spawn.ExecFailed")]
 		SPAWN_EXEC_FAILED,
+		[DBus (name = "Spawn.ForkFailed")]
 		SPAWN_FORK_FAILED,
+		[DBus (name = "Spawn.ChildExited")]
 		SPAWN_CHILD_EXITED,
+		[DBus (name = "Spawn.ChildSignaled")]
 		SPAWN_CHILD_SIGNALED,
+		[DBus (name = "Spawn.Failed")]
 		SPAWN_FAILED,
 		UNIX_PROCESS_ID_UNKNOWN,
 		INVALID_SIGNATURE,
 		INVALID_FILE_CONTENT,
+		[DBus (name = "SELinuxSecurityContextUnknown")]
 		SELINUX_SECURITY_CONTEXT_UNKNOWN,
 		REMOTE_EXCEPTION
 	}
