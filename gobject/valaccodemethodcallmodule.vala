@@ -39,6 +39,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		CCodeFunctionCall async_call = null;
 
 		Method m = null;
+		Delegate deleg = null;
 		Gee.List<FormalParameter> params;
 		
 		var ma = expr.call as MemberAccess;
@@ -62,6 +63,8 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			m = cl.default_construction_method;
 			generate_method_declaration (m, source_declarations);
 			ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
+		} else if (itype is DelegateType) {
+			deleg = ((DelegateType) itype).delegate_symbol;
 		}
 
 		HashMap<int,CCodeExpression> in_arg_map, out_arg_map;
@@ -458,6 +461,53 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				temp_vars.insert (0, temp_var);
 
 				out_arg_map.set (get_param_pos (m.cdelegate_target_parameter_position), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+
+				expr.delegate_target = temp_ref;
+			}
+		}
+
+		// add length argument for delegates returning arrays
+		// TODO: avoid code duplication with methods returning arrays, see above
+		if (deleg != null && deleg.return_type is ArrayType) {
+			var array_type = (ArrayType) deleg.return_type;
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				if (deleg.array_null_terminated) {
+					// handle calls to methods returning null-terminated arrays
+					var temp_var = get_temp_variable (itype.get_return_type ());
+					var temp_ref = get_variable_cexpression (temp_var.name);
+
+					temp_vars.insert (0, temp_var);
+
+					ccall_expr = new CCodeAssignment (temp_ref, ccall_expr);
+
+					requires_array_length = true;
+					var len_call = new CCodeFunctionCall (new CCodeIdentifier ("_vala_array_length"));
+					len_call.add_argument (temp_ref);
+
+					expr.append_array_size (len_call);
+				} else if (!deleg.no_array_length) {
+					var temp_var = get_temp_variable (int_type);
+					var temp_ref = get_variable_cexpression (temp_var.name);
+
+					temp_vars.insert (0, temp_var);
+
+					out_arg_map.set (get_param_pos (deleg.carray_length_parameter_position + 0.01 * dim), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+
+					expr.append_array_size (temp_ref);
+				} else {
+					expr.append_array_size (new CCodeConstant ("-1"));
+				}
+			}
+		} else if (deleg != null && deleg.return_type is DelegateType) {
+			var deleg_type = (DelegateType) deleg.return_type;
+			var d = deleg_type.delegate_symbol;
+			if (d.has_target) {
+				var temp_var = get_temp_variable (new PointerType (new VoidType ()));
+				var temp_ref = get_variable_cexpression (temp_var.name);
+
+				temp_vars.insert (0, temp_var);
+
+				out_arg_map.set (get_param_pos (deleg.cdelegate_target_parameter_position), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
 				expr.delegate_target = temp_ref;
 			}

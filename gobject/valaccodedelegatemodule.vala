@@ -37,7 +37,14 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 			return;
 		}
 
-		generate_type_declaration (d.return_type, decl_space);
+		string return_type_cname = d.return_type.get_cname ();
+
+		if (return_type_cname == d.get_cname ()) {
+			// recursive delegate
+			return_type_cname = "GCallback";
+		} else {
+			generate_type_declaration (d.return_type, decl_space);
+		}
 
 		var cfundecl = new CCodeFunctionDeclarator (d.get_cname ());
 		foreach (FormalParameter param in d.get_parameters ()) {
@@ -59,6 +66,15 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 					cfundecl.add_parameter (cparam);
 				}
 			}
+			// handle delegate parameters
+			if (param.parameter_type is DelegateType) {
+				var deleg_type = (DelegateType) param.parameter_type;
+				var param_d = deleg_type.delegate_symbol;
+				if (param_d.has_target) {
+					var cparam = new CCodeFormalParameter (get_delegate_target_cname (get_variable_cname (param.name)), "void*");
+					cfundecl.add_parameter (cparam);
+				}
+			}
 		}
 		if (!d.no_array_length && d.return_type is ArrayType) {
 			// return array length if appropriate
@@ -66,6 +82,14 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				var cparam = new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*");
+				cfundecl.add_parameter (cparam);
+			}
+		} else if (d.return_type is DelegateType) {
+			// return delegate target if appropriate
+			var deleg_type = (DelegateType) d.return_type;
+			var result_d = deleg_type.delegate_symbol;
+			if (result_d.has_target) {
+				var cparam = new CCodeFormalParameter (get_delegate_target_cname ("result"), "void**");
 				cfundecl.add_parameter (cparam);
 			}
 		}
@@ -78,7 +102,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 			cfundecl.add_parameter (cparam);
 		}
 
-		var ctypedef = new CCodeTypeDefinition (d.return_type.get_cname (), cfundecl);
+		var ctypedef = new CCodeTypeDefinition (return_type_cname, cfundecl);
 
 		if (d.source_reference != null && d.source_reference.comment != null) {
 			decl_space.add_type_declaration (new CCodeComment (d.source_reference.comment));
@@ -263,6 +287,14 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				var cparam = new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*");
 				cparam_map.set (get_param_pos (d.carray_length_parameter_position + 0.01 * dim), cparam);
 			}
+		} else if (d.return_type is DelegateType) {
+			// return delegate target if appropriate
+			var deleg_type = (DelegateType) d.return_type;
+
+			if (deleg_type.delegate_symbol.has_target) {
+				var cparam = new CCodeFormalParameter (get_delegate_target_cname ("result"), "void**");
+				cparam_map.set (get_param_pos (d.cdelegate_target_parameter_position), cparam);
+			}
 		}
 
 		if (m.get_error_types ().size > 0) {
@@ -337,6 +369,13 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 					}
 					carg_map.set (get_param_pos (param.carray_length_parameter_position + 0.01 * dim), clength);
 				}
+			} else if (param.parameter_type is DelegateType) {
+				var deleg_type = (DelegateType) param.parameter_type;
+
+				if (deleg_type.delegate_symbol.has_target) {
+					var ctarget = new CCodeIdentifier (get_delegate_target_cname (d_params.get (i).name));
+					carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), ctarget);
+				}
 			}
 
 			i++;
@@ -351,6 +390,13 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 					clength = new CCodeIdentifier (head.get_array_length_cname ("result", dim));
 				}
 				carg_map.set (get_param_pos (m.carray_length_parameter_position + 0.01 * dim), clength);
+			}
+		} else if (m.return_type is DelegateType) {
+			var deleg_type = (DelegateType) m.return_type;
+
+			if (deleg_type.delegate_symbol.has_target) {
+				var ctarget = new CCodeIdentifier (get_delegate_target_cname ("result"));
+				carg_map.set (get_param_pos (m.cdelegate_target_parameter_position), ctarget);
 			}
 		}
 
@@ -401,6 +447,12 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		string ctypename = param.parameter_type.get_cname ();
 		string target_ctypename = "void*";
+
+		if (param.parent_symbol is Delegate
+		    && param.parameter_type.get_cname () == ((Delegate) param.parent_symbol).get_cname ()) {
+			// recursive delegate
+			ctypename = "GCallback";
+		}
 
 		if (param.direction != ParameterDirection.IN) {
 			ctypename += "*";

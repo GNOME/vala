@@ -96,7 +96,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			var deleg_type = (DelegateType) m.return_type;
 			var d = deleg_type.delegate_symbol;
 			if (d.has_target) {
-				var cparam = new CCodeFormalParameter (get_delegate_target_cname ("result"), "void*");
+				var cparam = new CCodeFormalParameter (get_delegate_target_cname ("result"), "void**");
 				cparam_map.set (get_param_pos (m.cdelegate_target_parameter_position), cparam);
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (m.cdelegate_target_parameter_position), get_variable_cexpression (cparam.name));
