@@ -159,7 +159,7 @@ namespace WebKit {
 		public virtual signal void copy_clipboard ();
 		[HasEmitter]
 		public virtual signal void cut_clipboard ();
-		public virtual signal void hovering_over_link (string p0, string p1);
+		public virtual signal void hovering_over_link (string? p0, string p1);
 		public virtual signal void icon_loaded ();
 		public virtual signal void load_committed (WebKit.WebFrame p0);
 		public virtual signal void load_finished (WebKit.WebFrame p0);
