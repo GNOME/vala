@@ -215,6 +215,50 @@ namespace Gdk {
 		public virtual void set_colormap (Gdk.Colormap colormap);
 	}
 	[Compact]
+	[CCode (copy_function = "gdk_event_copy", type_id = "GDK_TYPE_EVENT", cheader_filename = "gdk/gdk.h")]
+	public class Event {
+		public Gdk.EventAny any;
+		public Gdk.EventButton button;
+		public Gdk.EventClient client;
+		public Gdk.EventConfigure configure;
+		public Gdk.EventCrossing crossing;
+		public Gdk.EventDND dnd;
+		public Gdk.EventExpose expose;
+		public Gdk.EventFocus focus_change;
+		public Gdk.EventGrabBroken grab_broken;
+		public Gdk.EventKey key;
+		public Gdk.EventMotion motion;
+		public Gdk.EventNoExpose no_expose;
+		public Gdk.EventOwnerChange owner_change;
+		public Gdk.EventProperty property;
+		public Gdk.EventProximity proximity;
+		public Gdk.EventScroll scroll;
+		public Gdk.EventSelection selection;
+		public Gdk.EventSetting setting;
+		public Gdk.EventType type;
+		public Gdk.EventVisibility visibility;
+		public Gdk.EventWindowState window_state;
+		public Gdk.Event copy ();
+		public static unowned Gdk.Event get ();
+		public bool get_axis (Gdk.AxisUse axis_use, out double value);
+		public bool get_coords (out double x_win, out double y_win);
+		public static unowned Gdk.Event get_graphics_expose (Gdk.Window window);
+		public bool get_root_coords (out double x_root, out double y_root);
+		public unowned Gdk.Screen get_screen ();
+		public bool get_state (out Gdk.ModifierType state);
+		public uint32 get_time ();
+		public static void handler_set (owned Gdk.EventFunc func);
+		[CCode (has_construct_function = false)]
+		public Event (Gdk.EventType type);
+		public static unowned Gdk.Event peek ();
+		public void put ();
+		public static void request_motions (Gdk.EventMotion event);
+		public bool send_client_message (Gdk.NativeWindow winid);
+		public static bool send_client_message_for_display (Gdk.Display display, Gdk.Event event, Gdk.NativeWindow winid);
+		public void send_clientmessage_toall ();
+		public void set_screen (Gdk.Screen screen);
+	}
+	[Compact]
 	[CCode (ref_function = "gdk_font_ref", unref_function = "gdk_font_unref", type_id = "GDK_TYPE_FONT", cheader_filename = "gdk/gdk.h")]
 	public class Font {
 		public int ascent;
@@ -582,50 +626,6 @@ namespace Gdk {
 	public struct DeviceKey {
 		public uint keyval;
 		public Gdk.ModifierType modifiers;
-	}
-	[CCode (type_id = "GDK_TYPE_EVENT", cheader_filename = "gdk/gdk.h")]
-	public struct Event {
-		public Gdk.EventType type;
-		public Gdk.EventAny any;
-		public Gdk.EventExpose expose;
-		public Gdk.EventNoExpose no_expose;
-		public Gdk.EventVisibility visibility;
-		public Gdk.EventMotion motion;
-		public Gdk.EventButton button;
-		public Gdk.EventScroll scroll;
-		public Gdk.EventKey key;
-		public Gdk.EventCrossing crossing;
-		public Gdk.EventFocus focus_change;
-		public Gdk.EventConfigure configure;
-		public Gdk.EventProperty property;
-		public Gdk.EventSelection selection;
-		public Gdk.EventOwnerChange owner_change;
-		public Gdk.EventProximity proximity;
-		public Gdk.EventClient client;
-		public Gdk.EventDND dnd;
-		public Gdk.EventWindowState window_state;
-		public Gdk.EventSetting setting;
-		public Gdk.EventGrabBroken grab_broken;
-		public Gdk.Event copy ();
-		public void free ();
-		public static Gdk.Event get ();
-		public bool get_axis (Gdk.AxisUse axis_use, out double value);
-		public bool get_coords (out double x_win, out double y_win);
-		public static Gdk.Event get_graphics_expose (Gdk.Window window);
-		public bool get_root_coords (out double x_root, out double y_root);
-		public unowned Gdk.Screen get_screen ();
-		public bool get_state (out Gdk.ModifierType state);
-		public uint32 get_time ();
-		public static void handler_set (owned Gdk.EventFunc func);
-		[CCode (cname = "gdk_event_new", has_construct_function = false)]
-		public Event (Gdk.EventType type);
-		public static Gdk.Event peek ();
-		public void put ();
-		public static void request_motions (Gdk.EventMotion event);
-		public bool send_client_message (Gdk.NativeWindow winid);
-		public static bool send_client_message_for_display (Gdk.Display display, Gdk.Event event, Gdk.NativeWindow winid);
-		public void send_clientmessage_toall ();
-		public void set_screen (Gdk.Screen screen);
 	}
 	[CCode (type_id = "GDK_TYPE_EVENT_ANY", cheader_filename = "gdk/gdk.h")]
 	public struct EventAny {
