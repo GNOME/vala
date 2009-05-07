@@ -41,6 +41,10 @@ class Maman.Bar : Object, Foo {
 		instance_cb (42);
 	}
 
+	void assign_instance_delegate (out InstanceCallback instance_cb) {
+		instance_cb = foo_method;
+	}
+
 	static void test_function_pointers () {
 		stdout.printf ("testing function pointers:");
 		var table = new HashTable<string, Bar>.full (str_hash, str_equal, g_free, Object.unref);
@@ -80,6 +84,9 @@ class Maman.Bar : Object, Foo {
 		var bar = new Bar ();
 
 		InstanceCallback instance_cb = bar.do_instance_action;
+		call_instance_delegate (instance_cb);
+
+		bar.assign_instance_delegate (out instance_cb);
 		call_instance_delegate (instance_cb);
 
 		stdout.printf (" 7\n");
