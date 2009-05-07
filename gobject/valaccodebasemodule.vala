@@ -2079,7 +2079,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					// initialization is not needed for these special
 					// pointer temp variables
 					// used to avoid side-effects in assignments
-				} else if ((st != null && !st.is_simple_type ()) ||
+				} else if (!local.variable_type.nullable &&
+				           (st != null && !st.is_simple_type ()) ||
 				           (array_type != null && array_type.fixed_length)) {
 					// 0-initialize struct with struct initializer { 0 }
 					// necessary as they will be passed by reference
@@ -2087,7 +2088,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					clist.append (new CCodeConstant ("0"));
 
 					vardecl.initializer = clist;
-				} else if (local.variable_type.is_reference_type_or_type_parameter ()) {
+				} else if (local.variable_type.is_reference_type_or_type_parameter () ||
+				       local.variable_type.nullable) {
 					vardecl.initializer = new CCodeConstant ("NULL");
 				}
 			
@@ -3724,7 +3726,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public CCodeExpression? default_value_for_type (DataType type, bool initializer_expression) {
 		var st = type.data_type as Struct;
 		var array_type = type as ArrayType;
-		if (initializer_expression &&
+		if (initializer_expression && !type.nullable &&
 		    ((st != null && !st.is_simple_type ()) ||
 		     (array_type != null && array_type.fixed_length))) {
 			// 0-initialize struct with struct initializer { 0 }
@@ -3733,6 +3735,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			clist.append (new CCodeConstant ("0"));
 			return clist;
 		} else if ((type.data_type != null && type.data_type.is_reference_type ())
+		           || type.nullable
 		           || type is PointerType || type is DelegateType
 		           || (array_type != null && !array_type.fixed_length)) {
 			return new CCodeConstant ("NULL");
