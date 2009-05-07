@@ -118,6 +118,7 @@ namespace GnomeKeyring {
 		NOTE,
 		CHAINED_KEYRING_PASSWORD,
 		ENCRYPTION_KEY_PASSWORD,
+		PK_STORAGE,
 		LAST_TYPE
 	}
 	[CCode (cprefix = "GNOME_KEYRING_RESULT_", has_type_id = "0", cheader_filename = "gnome-keyring.h")]

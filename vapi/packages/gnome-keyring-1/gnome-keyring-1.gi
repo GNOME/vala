@@ -982,7 +982,8 @@
 			<member name="GNOME_KEYRING_ITEM_NOTE" value="2"/>
 			<member name="GNOME_KEYRING_ITEM_CHAINED_KEYRING_PASSWORD" value="3"/>
 			<member name="GNOME_KEYRING_ITEM_ENCRYPTION_KEY_PASSWORD" value="4"/>
-			<member name="GNOME_KEYRING_ITEM_LAST_TYPE" value="5"/>
+			<member name="GNOME_KEYRING_ITEM_PK_STORAGE" value="256"/>
+			<member name="GNOME_KEYRING_ITEM_LAST_TYPE" value="257"/>
 		</enum>
 		<enum name="GnomeKeyringResult">
 			<member name="GNOME_KEYRING_RESULT_OK" value="0"/>
