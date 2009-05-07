@@ -138,6 +138,13 @@ namespace DBus {
 	public class ProxyCall {
 	}
 
+	[Flags]
+	public enum NameFlag {
+		ALLOW_REPLACEMENT,
+		REPLACE_EXISTING,
+		DO_NOT_QUEUE
+	}
+
 	public enum RequestNameReply {
 		PRIMARY_OWNER,
 		IN_QUEUE,
