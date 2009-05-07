@@ -358,8 +358,7 @@ public class Vala.BinaryExpression : Expression {
 				var contains_call = new MethodCall (new MemberAccess (right, "contains"));
 				contains_call.add_argument (left);
 				parent_node.replace_expression (this, contains_call);
-				error = !contains_call.check (analyzer);
-				return !error;
+				return contains_call.check (analyzer);
 			}
 			
 			value_type = analyzer.bool_type;
