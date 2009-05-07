@@ -323,7 +323,7 @@ namespace Gdk {
 		public static unowned Gdk.Pixmap lookup (Gdk.NativeWindow anid);
 		public static unowned Gdk.Pixmap lookup_for_display (Gdk.Display display, Gdk.NativeWindow anid);
 		[CCode (has_construct_function = false)]
-		public Pixmap (Gdk.Drawable drawable, int width, int height, int depth);
+		public Pixmap (Gdk.Drawable? drawable, int width, int height, int depth);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gdk/gdk.h")]
