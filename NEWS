@@ -1,3 +1,9 @@
+Vala 0.7.2
+==========
+
+ * Improvements to the .gir reader and writer (Didier Ptitjes).
+ * Many bug fixes and binding updates.
+
 Vala 0.7.1
 ==========
 
