@@ -802,36 +802,45 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		stmt.error = true;
 	}
 
-	private void handle_errors (CodeNode node) {
+	private void handle_errors (CodeNode node, bool always_fail = false) {
 		if (node.tree_can_fail) {
 			var last_block = current_block;
 
 			// exceptional control flow
-			for (int i = jump_stack.size - 1; i >= 0; i--) {
-				var jump_target = jump_stack[i];
-				if (jump_target.is_return_target) {
-					current_block.connect (jump_target.basic_block);
-					current_block = null;
-					unreachable_reported = false;
-					break;
-				} else if (jump_target.is_error_target) {
-					// TODO check whether jump target catches node.error_type
-					current_block.connect (jump_target.basic_block);
-					if (jump_target.error_domain == null) {
-						// catch all clause
+			foreach (DataType error_data_type in node.get_error_types()) {
+				var error_type = error_data_type as ErrorType;
+				current_block = last_block;
+				unreachable_reported = true;
+
+				for (int i = jump_stack.size - 1; i >= 0; i--) {
+					var jump_target = jump_stack[i];
+					if (jump_target.is_return_target) {
+						current_block.connect (jump_target.basic_block);
 						current_block = null;
 						unreachable_reported = false;
 						break;
+					} else if (jump_target.is_error_target) {
+						if (jump_target.error_domain == null
+						    || (jump_target.error_domain == error_type.error_domain
+						        && (jump_target.error_code == null
+						            || jump_target.error_code == error_type.error_code))) {
+							current_block.connect (jump_target.basic_block);
+							current_block = null;
+							unreachable_reported = false;
+							break;
+						}
+					} else if (jump_target.is_finally_clause) {
+						current_block.connect (jump_target.basic_block);
+						current_block = jump_target.last_block;
 					}
-				} else if (jump_target.is_finally_clause) {
-					current_block.connect (jump_target.basic_block);
-					current_block = jump_target.last_block;
 				}
 			}
 
 			// normal control flow
-			current_block = new BasicBlock ();
-			last_block.connect (current_block);
+			if (!always_fail) {
+				current_block = new BasicBlock ();
+				last_block.connect (current_block);
+			}
 		}
 	}
 
@@ -849,29 +858,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		current_block.add_node (stmt);
-
-		for (int i = jump_stack.size - 1; i >= 0; i--) {
-			var jump_target = jump_stack[i];
-			if (jump_target.is_return_target) {
-				current_block.connect (jump_target.basic_block);
-				current_block = null;
-				unreachable_reported = false;
-				return;
-			} else if (jump_target.is_error_target) {
-				// TODO check whether jump target catches stmt.error_type
-				current_block.connect (jump_target.basic_block);
-				if (jump_target.error_domain == null) {
-					current_block = null;
-					unreachable_reported = false;
-					return;
-				}
-			} else if (jump_target.is_finally_clause) {
-				current_block.connect (jump_target.basic_block);
-				current_block = jump_target.last_block;
-			}
-		}
-
-		assert_not_reached ();
+		handle_errors (stmt, true);
 	}
 
 	public override void visit_try_statement (TryStatement stmt) {
@@ -934,20 +921,15 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		foreach (JumpTarget jump_target in catch_stack) {
 
 			foreach (JumpTarget prev_target in catch_stack) {
-				if (prev_target == jump_target)
+				if (prev_target == jump_target) {
 					break;
+				}
 
 				if (prev_target.error_domain == jump_target.error_domain &&
 				  prev_target.error_code == jump_target.error_code) {
 					Report.error (stmt.source_reference, "double catch clause of same error detected");
 					stmt.error = true;
 					return;
-				}
-
-				if ((prev_target.error_domain == null) ||
-				  ((prev_target.error_domain != jump_target.error_domain) &&
-				  (prev_target.error_code == null))) {
-					Report.warning (jump_target.catch_clause.source_reference, "unreachable catch clause detected");
 				}
 			}
 
