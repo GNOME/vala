@@ -193,7 +193,7 @@ public class Vala.ArrayCreationExpression : Expression {
 				if (e.value_type == null) {
 					/* return on previous error */
 					return false;
-				} else if (!(e.value_type is IntegerType)) {
+				} else if (!(e.value_type is IntegerType || e.value_type is EnumValueType)) {
 					error = true;
 					Report.error (e.source_reference, "Expression of integer type expected");
 				}

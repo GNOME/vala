@@ -187,7 +187,7 @@ public class Vala.ElementAccess : Expression {
 				}
 
 				/* check if the index is of type integer */
-				if (!(e.value_type is IntegerType)) {
+				if (!(e.value_type is IntegerType || e.value_type is EnumValueType)) {
 					error = true;
 					Report.error (e.source_reference, "Expression of integer type expected");
 				}
