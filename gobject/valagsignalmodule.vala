@@ -165,6 +165,11 @@ internal class Vala.GSignalModule : GObjectModule {
 
 		sig.accept_children (codegen);
 
+		// declare parameter type
+		foreach (FormalParameter p in sig.get_parameters ()) {
+			generate_parameter (p, source_declarations, new HashMap<int,CCodeFormalParameter> (), null);
+		}
+
 		generate_marshaller (sig.get_parameters (), sig.return_type);
 	}
 
@@ -196,9 +201,6 @@ internal class Vala.GSignalModule : GObjectModule {
 		callback_decl.add_parameter (new CCodeFormalParameter ("data1", "gpointer"));
 		n_params = 1;
 		foreach (FormalParameter p in params) {
-			// declare parameter type
-			generate_parameter (p, source_declarations, new HashMap<int,CCodeFormalParameter> (), null);
-
 			callback_decl.add_parameter (new CCodeFormalParameter ("arg_%d".printf (n_params), get_value_type_name_from_parameter (p)));
 			n_params++;
 			if (p.parameter_type.is_array () && !dbus) {
