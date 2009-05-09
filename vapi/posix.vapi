@@ -557,9 +557,57 @@ namespace Posix {
 	public void exit (int status);
 
 	[CCode (cheader_filename = "string.h")]
+	public void* memccpy (void* s1, void* s2, int c, size_t n);
+	[CCode (cheader_filename = "string.h")]
+	public void* memchr (void* s, int c, size_t n);
+	[CCode (cheader_filename = "string.h")]
 	public int memcmp (void* s1, void* s2, size_t n);
 	[CCode (cheader_filename = "string.h")]
+	public void* memcpy (void* s1, void* s2, size_t n);
+	[CCode (cheader_filename = "string.h")]
+	public void* memmove (void* s1, void* s2, size_t n);
+	[CCode (cheader_filename = "string.h")]
+	public void* memset (void* s, int c, size_t n);
+	[CCode (cheader_filename = "string.h")]
+	public unowned string strcat (string s1, string s2);
+	[CCode (cheader_filename = "string.h")]
+	public unowned string strchr (string s, int c);
+	[CCode (cheader_filename = "string.h")]
+	public int strcmp (string s1, string s2);
+	[CCode (cheader_filename = "string.h")]
+	public int strcoll (string s1, string s2);
+	[CCode (cheader_filename = "string.h")]
+	public unowned string strcpy (string s1, string s2);
+	[CCode (cheader_filename = "string.h")]
+	public size_t strcspn (string s1, string s2);
+	[CCode (cheader_filename = "string.h")]
+	public unowned string strdup (string s1);
+	[CCode (cheader_filename = "string.h")]
 	public unowned string strerror (int errnum);
+	[CCode (cheader_filename = "string.h")]
+	public int* strerror_r (int errnum, string strerrbuf, size_t buflen);
+	[CCode (cheader_filename = "string.h")]
+	public size_t strlen (string s);
+	[CCode (cheader_filename = "string.h")]
+	public unowned string strncat (string s1, string s2, size_t n);
+	[CCode (cheader_filename = "string.h")]
+	public int strncmp (string s1, string s2, size_t n);
+	[CCode (cheader_filename = "string.h")]
+	public unowned string strncpy (string s1, string s2, size_t n);
+	[CCode (cheader_filename = "string.h")]
+	public unowned string strpbrk (string s1, string s2);
+	[CCode (cheader_filename = "string.h")]
+	public unowned string strrchr (string s, int c);
+	[CCode (cheader_filename = "string.h")]
+	public size_t strspn (string s1, string s2);
+	[CCode (cheader_filename = "string.h")]
+	public unowned string strstr (string s1, string s2);
+	[CCode (cheader_filename = "string.h")]
+	public unowned string strtok (string s1, string s2);
+	[CCode (cheader_filename = "string.h")]
+	public unowned string strtok_r (string s, string sep, out string lasts);
+	[CCode (cheader_filename = "string.h")]
+	public size_t strxfrm (string s1, string s2, size_t n);
 
 	[CCode (cheader_filename = "stropts.h")]
 	public const int I_PUSH;
