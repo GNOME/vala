@@ -171,7 +171,6 @@ class Vala.Compiler {
 			}
 		}
 
-		context.library = library;
 		context.assert = !disable_assert;
 		context.checking = enable_checking;
 		context.deprecated = deprecated;

@@ -28,14 +28,6 @@ using Gee;
  */
 public class Vala.CodeContext {
 	/**
-	 * Specifies the name of the library to be built.
-	 *
-	 * Public header files of a library will be assumed to be installed in
-	 * a subdirectory named like the library.
-	 */
-	public string library { get; set; }
-
-	/**
 	 * Enable automatic memory management.
 	 */
 	public bool memory_management { get; set; }
