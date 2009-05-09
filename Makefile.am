@@ -11,7 +11,7 @@ SUBDIRS = \
 	gee \
 	ccode \
 	vala \
-	gobject \
+	codegen \
 	compiler \
 	vapi \
 	tests \
@@ -23,7 +23,7 @@ DIST_SUBDIRS = \
 	gee \
 	ccode \
 	vala \
-	gobject \
+	codegen \
 	compiler \
 	vapi \
 	tests \

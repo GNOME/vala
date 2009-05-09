@@ -7,7 +7,7 @@ AM_CPPFLAGS = \
 	$(GLIB_CFLAGS) \
 	$(NULL)
 
-BUILT_SOURCES = gobject.vala.stamp
+BUILT_SOURCES = codegen.vala.stamp
 
 lib_LTLIBRARIES = \
 	libvala.la
@@ -43,18 +43,18 @@ libvala_la_VALASOURCES = \
 	$(NULL)
 
 libvala_la_SOURCES = \
-	gobject.vala.stamp \
+	codegen.vala.stamp \
 	$(libvala_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-gobjectincludedir = $(includedir)/vala-1.0
+codegenincludedir = $(includedir)/vala-1.0
 
-gobjectinclude_HEADERS = \
-	valagobject.h \
+codegeninclude_HEADERS = \
+	valacodegen.h \
 	$(NULL)
 
-gobject.vapi gobject.vala.stamp: $(libvala_la_VALASOURCES)
-	$(VALAC) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala -H valagobject.h --library gobject $^
+codegen.vapi codegen.vala.stamp: $(libvala_la_VALASOURCES)
+	$(VALAC) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala -H valacodegen.h --library codegen $^
 	touch $@
 
 libvala_la_LDFLAGS = -no-undefined
@@ -64,11 +64,11 @@ libvala_la_LIBADD = \
 	../vala/libvalacore.la \
 	$(NULL)
 
-EXTRA_DIST = $(libvala_la_VALASOURCES) gobject.vapi gobject.vala.stamp
+EXTRA_DIST = $(libvala_la_VALASOURCES) codegen.vapi codegen.vala.stamp
 
 MAINTAINERCLEANFILES = \
-	gobject.vapi \
-	valagobject.h \
+	codegen.vapi \
+	valacodegen.h \
 	$(libvala_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 

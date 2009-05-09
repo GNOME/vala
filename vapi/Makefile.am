@@ -2,7 +2,7 @@ NULL =
 
 vapidir = $(pkgdatadir)/vapi
 
-vala-1.0.vapi: ../gee/gee.vapi ../ccode/ccode.vapi ../vala/vala.vapi ../gobject/gobject.vapi
+vala-1.0.vapi: ../gee/gee.vapi ../ccode/ccode.vapi ../vala/vala.vapi ../codegen/codegen.vapi
 	cat $^ > $@
 
 dist_vapi_DATA = \

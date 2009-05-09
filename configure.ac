@@ -68,7 +68,7 @@ AC_CONFIG_FILES([Makefile
            gee/Makefile
            ccode/Makefile
            vala/Makefile
-           gobject/Makefile
+           codegen/Makefile
            compiler/Makefile
            vapi/Makefile
            tests/Makefile
