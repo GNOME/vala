@@ -441,7 +441,6 @@ public class Vala.Namespace : Symbol {
 	 * @param cprefixes the camel case prefixes used in C code
 	 */
 	public void add_cprefix (string cprefix) {
-		return_if_fail (cprefix.len() >= 1);
 		cprefixes.add (cprefix);
 	}
 
@@ -504,8 +503,15 @@ public class Vala.Namespace : Symbol {
 
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("cprefix")) {
-			foreach (string name in a.get_string ("cprefix").split (","))
-				add_cprefix (name);
+			string value = a.get_string ("cprefix");
+			if (value == "") {
+				// split of an empty string returns an empty array
+				add_cprefix ("");
+			} else {
+				foreach (string name in value.split (",")) {
+					add_cprefix (name);
+				}
+			}
 		}
 		if (a.has_argument ("lower_case_cprefix")) {
 			set_lower_case_cprefix (a.get_string ("lower_case_cprefix"));
