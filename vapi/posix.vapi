@@ -457,6 +457,39 @@ namespace Posix {
 	public unowned Group? getgrent ();
 	public void setgrent ();
 
+	[CCode (cheader_filename = "poll.h", cname = "struct pollfd")]
+	public struct pollfd {
+		public int fd;
+		public int events;
+		public int revents;
+	}
+
+	[CCode (cheader_filename = "poll.h")]
+	public const int POLLIN;
+	[CCode (cheader_filename = "poll.h")]
+	public const int POLLPRI;
+	[CCode (cheader_filename = "poll.h")]
+	public const int POLLOUT;
+	[CCode (cheader_filename = "poll.h")]
+	public const int POLLRDHUP;
+	[CCode (cheader_filename = "poll.h")]
+	public const int POLLERR;
+	[CCode (cheader_filename = "poll.h")]
+	public const int POLLHUP;
+	[CCode (cheader_filename = "poll.h")]
+	public const int POLLNVAL;
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cheader_filename = "poll.h", cname = "nfds_t")]
+	public struct nfds_t {
+	}
+
+	[CCode (cheader_filename = "poll.h")]
+	public int poll (pollfd fds, nfds_t nfds, int timeout);
+	[CCode (cheader_filename = "poll.h")]
+	public int ppoll (pollfd fds, nfds_t nfds, timespec? timeout, sigset_t? sigmask);
+
 	[Compact]
 	[CCode (cname = "struct passwd", cheader_filename = "pwd.h")]
 	public class Passwd {
@@ -555,6 +588,39 @@ namespace Posix {
 	public void abort ();
 	[CCode (cheader_filename = "stdlib.h")]
 	public void exit (int status);
+
+	[CCode (cheader_filename = "stdlib.h")]
+	public void _exit (int status);
+
+	public delegate void AtExitFunc ();
+
+	[CCode (cheader_filename = "stdlib.h")]
+	public void atexit (AtExitFunc func);
+
+	[CCode (cheader_filename = "stdlib.h")]
+	public int mkstemp (string template);
+
+	[CCode (cheader_filename = "stdlib.h")]
+	public int mkostemp (string template, int flags);
+
+	[CCode (cheader_filename = "stdlib.h")]
+	public int system (string command);
+
+	public delegate int compar_fn_t (void* key1, void* key2);
+
+	[CCode (cheader_filename = "stdlib.h")]
+	public void* bsearch (void* key, void* base, size_t nmemb, size_t size, compar_fn_t func);
+
+	[CCode (cheader_filename = "stdlib.h")]
+	public void qsort (void* base, size_t nmemb, size_t size, compar_fn_t func);
+
+	[CCode (cheader_filename = "stdlib.h")]
+	public void qsort_r (void* base, size_t nmemb, size_t size, compar_fn_t func, void* arg);
+
+	[CCode (cheader_filename = "stdlib.h")]
+	public const int EXIT_FAILURE;
+	[CCode (cheader_filename = "stdlib.h")]
+	public const int EXIT_SUCCESS;
 
 	[CCode (cheader_filename = "string.h")]
 	public void* memccpy (void* s1, void* s2, int c, size_t n);
@@ -911,6 +977,24 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/stat.h")]
 	int stat (string filename, out Stat buf);
 
+	[CCode (cheader_filename = "sys/stat.h")]
+	public int chmod (string filename, mode_t mode);
+	[CCode (cheader_filename = "sys/stat.h")]
+	public mode_t umask (mode_t mask);
+	[CCode (cheader_filename = "sys/stat.h")]
+	public int mkdir (string path, mode_t mode);
+
+	[CCode (cheader_filename = "sys/wait.h")]
+	public pid_t wait (out int status);
+	[CCode (cheader_filename = "sys/wait.h")]
+	public pid_t waitpid (pid_t pid, out int status, int options);
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cheader_filename = "sys/types.h", cname = "key_t")]
+	public struct key_t {
+	}
+
 	[SimpleType]
 	[IntegerType (rank = 9)]
 	[CCode (cheader_filename = "sys/statvfs.h")]
@@ -1033,6 +1117,118 @@ namespace Posix {
 	public const int SEEK_CUR;
 	[CCode (cheader_filename = "unistd.h")]
 	public const int SEEK_END;
+
+	[CCode (cheader_filename = "unistd.h")]
+	public pid_t fork ();
+	[CCode (cheader_filename = "unistd.h")]
+	public pid_t vfork ();
+	[CCode (cheader_filename = "unistd.h")]
+	public unowned string ttyname (int fd);
+	[CCode (cheader_filename = "unistd.h")]
+	public bool isatty (int fd);
+	[CCode (cheader_filename = "unistd.h")]
+	public int link (string from, string to);
+	[CCode (cheader_filename = "unistd.h")]
+	public int symlink (string from, string to);
+	[CCode (cheader_filename = "unistd.h")]
+	public int rmdir (string path);
+	[CCode (cheader_filename = "unistd.h")]
+	public pid_t tcgetpgrp (int fd);
+	[CCode (cheader_filename = "unistd.h")]
+	public int tcsetpgrp (int fd, pid_t pgrp_id);
+	[CCode (cheader_filename = "unistd.h")]
+	public unowned string getlogin ();
+	[CCode (cheader_filename = "unistd.h")]
+	public int vhangup ();
+	[CCode (cheader_filename = "unistd.h")]
+	public int revoke (string file);
+	[CCode (cheader_filename = "unistd.h")]
+	public int acct (string name);
+	[CCode (cheader_filename = "unistd.h")]
+	public unowned string getusershell ();
+	[CCode (cheader_filename = "unistd.h")]
+	public void endusershell ();
+	[CCode (cheader_filename = "unistd.h")]
+	public void setusershell ();
+	[CCode (cheader_filename = "unistd.h")]
+	public int chroot (string path);
+	[CCode (cheader_filename = "unistd.h")]
+	public unowned string getpass (string promt);
+	[CCode (cheader_filename = "unistd.h")]
+	public int getpagesize ();
+	[CCode (cheader_filename = "unistd.h")]
+	public int getdtablesize ();
+
+	[CCode (cheader_filename = "unistd.h")]
+	public const int STDIN_FILENO;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int STDOUT_FILENO;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int STDERR_FILENO;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int R_OK;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int W_OK;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int X_OK;
+	[CCode (cheader_filename = "unistd.h")]
+	public const int F_OK;
+
+	[CCode (cheader_filename = "unistd.h")]
+	public int access (string patchname, int mode);
+	[CCode (cheader_filename = "unistd.h")]
+	public int euidaccess (string patchname, int mode);
+	[CCode (cheader_filename = "unistd.h")]
+	public int eaccess (string patchname, int mode);
+
+	[CCode (cheader_filename = "unistd.h")]
+	public uint alarm (uint seconds);
+	[CCode (cheader_filename = "unistd.h")]
+	public uint ualarm (uint useconds);
+	[CCode (cheader_filename = "unistd.h")]
+	public uint sleep (uint seconds);
+	[CCode (cheader_filename = "unistd.h")]
+	public uint usleep (uint useconds);
+	[CCode (cheader_filename = "unistd.h")]
+	public int pause ();
+	[CCode (cheader_filename = "unistd.h")]
+	public int chown (string filename, uid_t owner, gid_t group);
+	[CCode (cheader_filename = "unistd.h")]
+	public int fchown (int fd, uid_t owner, gid_t group);
+	[CCode (cheader_filename = "unistd.h")]
+	public int lchown (string filename, uid_t owner, gid_t group);
+	[CCode (cheader_filename = "unistd.h")]
+	public int chdir (string filepath);
+	[CCode (cheader_filename = "unistd.h")]
+	public int fchdir (int file);
+	[CCode (cheader_filename = "unistd.h")]
+	public int dup (int fd);
+	[CCode (cheader_filename = "unistd.h")]
+	public int dup2 (int fd1, int fd2);
+	[CCode (cheader_filename = "unistd.h")]
+	public pid_t getpid ();
+	[CCode (cheader_filename = "unistd.h")]
+	public pid_t getppid ();
+	[CCode (cheader_filename = "unistd.h")]
+	public pid_t getpgrp ();
+	[CCode (cheader_filename = "unistd.h")]
+	public pid_t getpgid ();
+	[CCode (cheader_filename = "unistd.h")]
+	public int setpgid (pid_t pid, pid_t pgid);
+	[CCode (cheader_filename = "unistd.h")]
+	public pid_t setpgrp ();
+	[CCode (cheader_filename = "unistd.h")]
+	public pid_t getsid (pid_t pid);
+	[CCode (cheader_filename = "unistd.h")]
+	public uid_t getuid ();
+	[CCode (cheader_filename = "unistd.h")]
+	public uid_t geteuid ();
+	[CCode (cheader_filename = "unistd.h")]
+	public gid_t getgid ();
+	[CCode (cheader_filename = "unistd.h")]
+	public gid_t getegid ();
+	[CCode (cheader_filename = "unistd.h")]
+	public int group_member (gid_t gid);
 
 	[SimpleType]
 	[CCode (cname = "cc_t", cheader_filename = "termios.h")]
