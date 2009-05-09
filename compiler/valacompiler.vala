@@ -33,6 +33,7 @@ class Vala.Compiler {
 	[CCode (array_length = false, array_null_terminated = true)]
 	[NoArrayLength]
 	static string[] vapi_directories;
+	static string vapi_filename;
 	static string library;
 	[CCode (array_length = false, array_null_terminated = true)]
 	[NoArrayLength]
@@ -71,6 +72,7 @@ class Vala.Compiler {
 	const OptionEntry[] options = {
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
+		{ "vapi", 0, 0, OptionArg.FILENAME, ref vapi_filename, "Output VAPI file name", "FILE" },
 		{ "library", 0, 0, OptionArg.STRING, ref library, "Library name", "NAME" },
 		{ "basedir", 'b', 0, OptionArg.FILENAME, ref basedir, "Base source directory", "DIRECTORY" },
 		{ "directory", 'd', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
@@ -339,10 +341,14 @@ class Vala.Compiler {
 		if (context.report.get_errors () > 0) {
 			return quit ();
 		}
-		
-		if (library != null) {
+
+		if (vapi_filename == null && library != null) {
+			// keep backward compatibility with --library option
+			vapi_filename = "%s.vapi".printf (library);
+		}
+
+		if (vapi_filename != null) {
 			var interface_writer = new CodeWriter ();
-			string vapi_filename = "%s.vapi".printf (library);
 
 			// put .vapi file in current directory unless -d has been explicitly specified
 			if (directory != null && !Path.is_absolute (vapi_filename)) {
@@ -350,7 +356,9 @@ class Vala.Compiler {
 			}
 
 			interface_writer.write_file (context, vapi_filename);
+		}
 
+		if (library != null) {
 			if (context.profile == Profile.GOBJECT) {
 				var gir_writer = new GIRWriter ();
 				string gir_filename = "%s.gir".printf (library);
