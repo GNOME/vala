@@ -28,11 +28,6 @@ using Gee;
  */
 public class Vala.CodeContext {
 	/**
-	 * Enable automatic memory management.
-	 */
-	public bool memory_management { get; set; }
-
-	/**
 	 * Enable run-time checks for programming errors.
 	 */
 	public bool assert { get; set; }
