@@ -18,6 +18,7 @@ configure
 depcomp
 libtool
 install-sh
+m4
 missing
 ltmain.sh
 ylwrap
