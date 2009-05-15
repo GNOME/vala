@@ -1100,6 +1100,8 @@ namespace Posix {
 	public int pipe ([CCode (array_length = false, null_terminated = false)] int[] pipefd);
 	[CCode (cheader_filename = "unistd.h")]
 	public ssize_t read (int fd, void* buf, size_t count);
+	[CCode (cheader_filename = "unistd.h")]
+	public ssize_t readlink (string path, char[] buf);
 	[CCode (cheader_filename = "unistd.h,sys/types.h")]
 	public int setgid (gid_t gid);
 	[CCode (cheader_filename = "unistd.h,sys/types.h")]
@@ -1124,6 +1126,8 @@ namespace Posix {
 	public pid_t vfork ();
 	[CCode (cheader_filename = "unistd.h")]
 	public unowned string ttyname (int fd);
+	[CCode (cheader_filename = "unistd.h")]
+	public int ttyname_r (int fd, char[] buf);
 	[CCode (cheader_filename = "unistd.h")]
 	public bool isatty (int fd);
 	[CCode (cheader_filename = "unistd.h")]
