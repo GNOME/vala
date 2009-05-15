@@ -884,6 +884,8 @@ namespace Posix {
 	public const int AF_INET6;
 	[CCode (cheader_filename = "sys/socket.h")]
 	public const int AF_UNIX;
+	[CCode (cheader_filename = "sys/socket.h", sentinel = "")]
+	public int bind (int sockfd, ...);
 	[CCode (cheader_filename = "sys/socket.h")]
 	public int socket (int domain, int type, int protocol);
 
