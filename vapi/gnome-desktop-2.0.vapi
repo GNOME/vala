@@ -49,7 +49,8 @@ namespace Gnome {
 		public unowned string get_localestring_lang (string attr, string language);
 		public unowned string get_location ();
 		public unowned string get_string (string attr);
-		public unowned string get_strings (string attr);
+		[CCode (array_length = false, array_null_terminated = true)]
+		public unowned string[] get_strings (string attr);
 		public int launch (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags) throws GLib.Error;
 		public int launch_on_screen (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags, Gdk.Screen screen, int workspace) throws GLib.Error;
 		public int launch_with_env (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags, string[] envp) throws GLib.Error;
@@ -64,7 +65,7 @@ namespace Gnome {
 		public void set_location (string location);
 		public void set_location_file (string file);
 		public void set_string (string attr, string value);
-		public void set_strings (string attr, string[] strings);
+		public void set_strings (string attr, [CCode (array_length = false)] string[] strings);
 	}
 	[CCode (cheader_filename = "libgnomeui/gnome-hint.h")]
 	public class Hint : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {

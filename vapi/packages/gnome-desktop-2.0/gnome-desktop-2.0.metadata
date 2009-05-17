@@ -1,7 +1,8 @@
 Gnome cheader_filename="libgnome/gnome-desktop-item.h"
 gnome_desktop_item_drop_uri_list_with_env.envp is_array="1"
+gnome_desktop_item_get_strings is_array="1" array_null_terminated="1"
 gnome_desktop_item_launch_with_env.envp is_array="1"
-gnome_desktop_item_set_strings.strings is_array="1"
+gnome_desktop_item_set_strings.strings is_array="1" array_null_terminated="1"
 GnomeDItemEdit cheader_filename="libgnomeui/gnome-ditem-edit.h"
 GnomeHint cheader_filename="libgnomeui/gnome-hint.h"
 
