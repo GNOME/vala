@@ -162,15 +162,15 @@
 			<member name="GST_AUDIO_FIELD_SIGNED" value="32"/>
 		</enum>
 		<enum name="GstBaseAudioSinkSlaveMethod" type-name="GstBaseAudioSinkSlaveMethod" get-type="gst_base_audio_sink_slave_method_get_type">
-			<member name="Resampling slaving" value="0"/>
-			<member name="Skew slaving" value="1"/>
-			<member name="No slaving" value="2"/>
+			<member name="GST_BASE_AUDIO_SINK_SLAVE_RESAMPLE" value="0"/>
+			<member name="GST_BASE_AUDIO_SINK_SLAVE_SKEW" value="1"/>
+			<member name="GST_BASE_AUDIO_SINK_SLAVE_NONE" value="2"/>
 		</enum>
 		<enum name="GstBaseAudioSrcSlaveMethod" type-name="GstBaseAudioSrcSlaveMethod" get-type="gst_base_audio_src_slave_method_get_type">
-			<member name="Resampling slaving" value="0"/>
-			<member name="Re-timestamp" value="1"/>
-			<member name="Skew" value="2"/>
-			<member name="No slaving" value="3"/>
+			<member name="GST_BASE_AUDIO_SRC_SLAVE_RESAMPLE" value="0"/>
+			<member name="GST_BASE_AUDIO_SRC_SLAVE_RETIMESTAMP" value="1"/>
+			<member name="GST_BASE_AUDIO_SRC_SLAVE_SKEW" value="2"/>
+			<member name="GST_BASE_AUDIO_SRC_SLAVE_NONE" value="3"/>
 		</enum>
 		<enum name="GstBufferFormat" type-name="GstBufferFormat" get-type="gst_buffer_format_get_type">
 			<member name="GST_UNKNOWN" value="0"/>

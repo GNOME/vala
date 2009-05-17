@@ -190,18 +190,18 @@ namespace Gst {
 		DEPTH,
 		SIGNED
 	}
-	[CCode (cprefix = "", cheader_filename = "gst/audio/gstbaseaudiosink.h")]
+	[CCode (cprefix = "GST_BASE_AUDIO_SINK_SLAVE_", cheader_filename = "gst/audio/gstbaseaudiosink.h")]
 	public enum BaseAudioSinkSlaveMethod {
-		Resampling slaving,
-		Skew slaving,
-		No slaving
+		RESAMPLE,
+		SKEW,
+		NONE
 	}
-	[CCode (cprefix = "", cheader_filename = "gst/audio/audio.h")]
+	[CCode (cprefix = "GST_BASE_AUDIO_SRC_SLAVE_", cheader_filename = "gst/audio/audio.h")]
 	public enum BaseAudioSrcSlaveMethod {
-		Resampling slaving,
-		Re-timestamp,
-		Skew,
-		No slaving
+		RESAMPLE,
+		RETIMESTAMP,
+		SKEW,
+		NONE
 	}
 	[CCode (cprefix = "GST_", cheader_filename = "gst/audio/gstringbuffer.h")]
 	public enum BufferFormat {
