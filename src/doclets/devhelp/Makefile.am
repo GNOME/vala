@@ -1,12 +1,6 @@
-# src/Makefile.am
-
 NULL =
 
 
-SUBDIRS = \
-          doclet      \
-          taglets     \
-          deps        \
+SUBDIRS = doclet \
           $(NULL)
-
 

@@ -1,10 +1,8 @@
-# src/Makefile.am
-
 NULL =
 
 
 AM_CFLAGS =                             \
-	-DPACKAGE_DATADIR=\"$(libdir)/valadoc/plugins/\" \
+	-DPACKAGE_DATADIR=\"$(libdir)/valadoc/plugins\" \
 	-DPACKAGE_VERSION=\"$(VERSION)\"    \
 	-I ../libvaladoc/                   \
 	$(GLIB_CFLAGS)                      \
@@ -14,11 +12,11 @@ AM_CFLAGS =                             \
 	$(NULL)
 
 
-
-
 bin_PROGRAMS = valadoc
 
+
 BUILT_SOURCES = valadoc.vala.stamp
+
 
 valadoc_VALASOURCES = \
 	valadoc.vala      \
@@ -41,8 +39,15 @@ valadoc_LDADD =                 \
 
 
 valadoc.vala.stamp: $(libvaladoc_VALASOURCES)
-	$(VALAC) -C --pkg gmodule-2.0 --pkg config --vapidir ../vapi --pkg valadoc-1.0 --basedir $(top_srcdir)/src/valadoc/ valadoc.vala --save-temps $^
+	$(VALAC) -C -H valadoc.h --pkg gmodule-2.0 --pkg config --vapidir ../vapi --pkg valadoc-1.0 --basedir $(top_srcdir)/src/valadoc/ valadoc.vala --save-temps $^
 	touch $@
 
+
 EXTRA_DIST = $(valadoc_VALASOURCES)  valadoc.vala.stamp 
+
+
+MAINTAINERCLEANFILES =              \
+	$(valadoc_VALASOURCES:.vala=.c) \
+	$(valadoc_VALASOURCES:.vala=.h) \
+	$(NULL)
 

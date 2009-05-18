@@ -1,45 +1,4 @@
-# src/Makefile.am
-
-
-
-libvaladoc_VALASOURCES = \
-	drawer.vala          \
-	settings.vala        \
-	doclet.vala          \
-	errorreporter.vala   \
-	parser.vala          \
-	doctree.vala         \
-	langlet.vala         \
-	$(NULL)
-
-
-BUILT_SOURCES = libvaladoc.vala.stamp
-
-
-libvaladoc.vala.stamp: $(libvaladoc_VALASOURCES)
-	$(VALAC) -C --pkg vala-1.0 --pkg gmodule-2.0 --vapidir ../vapi --pkg libxml-2.0 --pkg libgvc --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
-	touch $@
-
-
-vapis:
-	
-valadocdir = $(libdir)/valadoc/
-valadoc_LTLIBRARIES = libvaladoc.la
-
-
-libvaladoc_la_SOURCES =                \
-	libvaladoc.vala.stamp              \
-	$(libvaladoc_VALASOURCES:.vala=.c) \
-	$(libvaladoc_VALASOURCES:.vala=.h) \
-	$(NULL)
-
-
-ccodeincludedir = $(includedir)/valadoc-1.0
-
-ccodeinclude_HEADERS =                 \
-	$(libvaladoc_VALASOURCES:.vala=.h) \
-	$(NULL)
-
+NULL =
 
 
 AM_CFLAGS =             \
@@ -51,6 +10,49 @@ AM_CFLAGS =             \
 	$(NULL)
 
 
+BUILT_SOURCES = libvaladoc.vala.stamp
+
+
+valadoc_LTLIBRARIES = \
+	libvaladoc.la     \
+	$(NULL)
+
+valadocdir = $(libdir)/valadoc/
+
+
+libvaladoc_la_VALASOURCES = \
+	filehelper.vala      \
+	drawer.vala          \
+	settings.vala        \
+	doclet.vala          \
+	errorreporter.vala   \
+	doctree.vala         \
+	moduleloader.vala    \
+	parser.vala          \
+	apitree.vala         \
+	langlet.vala         \
+	$(NULL)
+
+
+libvaladoc_la_SOURCES =                \
+	libvaladoc.vala.stamp              \
+	$(libvaladoc_la_VALASOURCES:.vala=.c) \
+	$(NULL)
+
+
+libvaladocinclude_HEADERS = \
+	valadoc-1.0.h           \
+	$(NULL)
+
+
+libvaladocincludedir = $(includedir)/
+
+
+libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES)
+	$(VALAC) -C -H valadoc-1.0.h --pkg vala-1.0 --pkg gmodule-2.0 --vapidir ../vapi --pkg libxml-2.0 --pkg libgvc --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
+	touch $@
+
+
 libvaladoc_la_LIBADD = \
 	$(LIBGVC_LIBS)     \
 	$(LIBXML2_LIBS)    \
@@ -60,9 +62,16 @@ libvaladoc_la_LIBADD = \
 	$(NULL)
 
 
+EXTRA_DIST = $(libvaladoc_la_VALASOURCES)  libvaladoc.vala.stamp
+
+
+MAINTAINERCLEANFILES =                    \
+	valadoc-1.0.vapi                      \
+	valadoc-1.0.h                         \
+	valadoc-1.0.gir                       \
+	$(libvaladoc_la_VALASOURCES:.vala=.c) \
+	$(NULL)
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = valadoc-1.0.pc
 
-
-
-EXTRA_DIST = $(libvaladoc_VALASOURCES)  libvaladoc.vala.stamp 

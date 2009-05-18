@@ -21,7 +21,6 @@ using GLib;
 
 
 public class Valadoc.Settings : Object {
-	private string rpath;
 	public string path = "documentation/";
 	public string pkg_name = null;
 	public string pkg_version;
@@ -29,21 +28,6 @@ public class Valadoc.Settings : Object {
 	public bool _protected = false;
 	public bool with_deps = false;
 	public bool add_inherited = false;
-
-
-	// remove
-	public string get_real_path () {
-		if ( rpath == null ) {
-			string path = realpath ( this.path );
-
-			if ( path.has_suffix ( "/" ) )
-				this.rpath = path;
-			else
-				this.rpath = path + "/";	
-		}
-
-		return this.rpath;
-	}
 }
 
 

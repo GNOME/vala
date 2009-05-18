@@ -20,75 +20,31 @@
 using GLib;
 
 
-public class Valadoc.Langlet : Object {
-	public signal void puts_keyword ( void* ptr, string str );
-	public signal void puts ( void* ptr, string str );
-
-	public virtual void write_type_parameter ( TypeParameter param, void* ptr ) {
-	}
-
-	public virtual void write_template_parameters ( TemplateParameterListHandler thandler, void* ptr ) {
-	}
-
-	public void write_parent_type_list ( Valadoc.ContainerDataType dtype, void* ptr ) {
-	}
-
-	public virtual void write_parameter_list ( ParameterListHandler thandler, void* ptr ) {
-	}
-
-	public virtual void write_field ( Valadoc.Field field, Valadoc.FieldHandler parent, void* ptr ) {
-	}
-
-	public virtual void write_constant ( Valadoc.Constant constant, Valadoc.ConstantHandler parent, void* ptr ) {
-	}
-
-	public virtual void write_type_reference ( Valadoc.TypeReference tref, void* ptr ) {
-	}
-
-	public virtual void write_formal_parameter ( Valadoc.FormalParameter param, void* ptr ) {
-	}
-
-	public virtual void write_property_accessor ( Valadoc.PropertyAccessor propac, void* ptr ) {
-	}
-
-	public virtual void write_property ( Valadoc.Property prop, void* ptr ) {
-	}
-
-	public virtual void write_signal ( Valadoc.Signal sig, void* ptr ) {
-	}
-
-	public virtual void write_method ( void* ptr, Valadoc.Method m, Valadoc.MethodHandler parent ) {
-	}
-
-	public virtual void write_error_domain ( Valadoc.ErrorDomain errdom, void* ptr ) {
-	}
-
-	public virtual void write_error_code ( Valadoc.ErrorCode errcode, void* ptr ) {
-	}
-
-	public virtual void write_enum_value ( Valadoc.EnumValue enval, void* ptr ) {
-	}
-
-	public virtual void write_delegate ( Valadoc.Delegate del, void* ptr ) {
-	}
-
-	public virtual void write_class ( Valadoc.Class cl, void* ptr ) {
-	}
-
-	public virtual void write_enum ( Valadoc.Enum en, void* ptr ) {
-	}
-
-	public virtual void write_struct ( Valadoc.Struct stru, void* ptr ) {
-	}
-
-	public virtual void write_interface ( Valadoc.Interface iface, void* ptr ) {
-	}
-
-	public virtual void write_namespace ( Valadoc.Namespace ns, void* ptr ) {
-	}
-
-	public virtual void write_file ( Valadoc.Package file, void* ptr ) {
-	}
+public abstract class Valadoc.Langlet : Object {
+	public abstract void write_pointer ( Pointer param, void* ptr, DocumentedElement pos );
+	public abstract void write_array ( Array param, void* ptr, DocumentedElement pos );
+	public abstract void write_type_parameter ( TypeParameter param, void* ptr );
+	public abstract void write_template_parameters ( TemplateParameterListHandler thandler, void* ptr );
+	public abstract void write_inheritance_list ( Inheritable dtype, void* ptr );
+	public abstract void write_parameter_list ( ParameterListHandler thandler, void* ptr );
+	public abstract void write_field ( Valadoc.Field field, Valadoc.FieldHandler pos, void* ptr );
+	public abstract void write_constant ( Valadoc.Constant constant, Valadoc.ConstantHandler parent, void* ptr );
+	public abstract void write_type_reference ( Valadoc.TypeReference tref, void* ptr );
+	public abstract void write_formal_parameter ( Valadoc.FormalParameter param, void* ptr );
+	public abstract void write_property_accessor ( Valadoc.PropertyAccessor propac, void* ptr );
+	public abstract void write_property ( Valadoc.Property prop, void* ptr );
+	public abstract void write_signal ( Valadoc.Signal sig, void* ptr );
+	public abstract void write_method ( void* ptr, Valadoc.Method m, Valadoc.MethodHandler pos );
+	public abstract void write_error_domain ( Valadoc.ErrorDomain errdom, void* ptr );
+	public abstract void write_error_code ( Valadoc.ErrorCode errcode, void* ptr );
+	public abstract void write_enum_value ( Valadoc.EnumValue enval, void* ptr );
+	public abstract void write_delegate ( Valadoc.Delegate del, void* ptr );
+	public abstract void write_class ( Valadoc.Class cl, void* ptr );
+	public abstract void write_enum ( Valadoc.Enum en, void* ptr );
+	public abstract void write_struct ( Valadoc.Struct stru, void* ptr );
+	public abstract void write_interface ( Valadoc.Interface iface, void* ptr );
+	public abstract void write_namespace ( Valadoc.Namespace ns, void* ptr );
+	public abstract void write_file ( Valadoc.Package file, void* ptr );
 }
 
 

@@ -1,59 +1,64 @@
-# src/Makefile.am
+NULL =
 
 
-
-
-libdoclet_VALASOURCES = \
-	template.vala       \
+AM_CFLAGS =  -g                                             \
+	-DPACKAGE_PLUGINDIR=\"$(libdir)/valadoc/plugins/html/\" \
+	-I ../../../libvaladoc/                                 \
+	-I ../../htmlhelpers/doclet/                            \
+	-I ../                                                  \
+	$(GLIB_CFLAGS)                                          \
+	$(LIBXML2_CFLAGS)                                       \
+	$(LIBVALA_CFLAGS)                                       \
 	$(NULL)
+
 
 
 BUILT_SOURCES = libdoclet.vala.stamp
 
 
-libdoclet.vala.stamp: $(libdoclet_VALASOURCES)
-	$(VALAC) -C --vapidir ../../htmlhelpers --pkg libhtmlhelpers-1.0 --vapidir ../../../vapi --pkg valadoc-1.0 --pkg libxml-2.0 --vapidir . --pkg docletconfig --basedir . $^
+docletdir = $(libdir)/valadoc/plugins/devhelp/
+
+
+doclet_LTLIBRARIES =  \
+	libdoclet.la      \
+	$(NULL)
+
+
+libdoclet_la_VALASOURCES = \
+	doclet.vala            \
+	$(NULL)
+
+
+libdoclet_la_SOURCES =      \
+	libdoclet.vala.stamp                 \
+	$(libdoclet_la_VALASOURCES:.vala=.c) \
+	$(NULL)
+
+
+libdoclet.vala.stamp: $(libdoclet_la_VALASOURCES)
+	$(VALAC) -C --vapidir ../../htmlhelpers/doclet --pkg libhtmlhelpers-1.0 --vapidir ../../../vapi --pkg valadoc-1.0 --pkg libxml-2.0 --vapidir . --pkg docletconfig --basedir . $^
 	touch $@
 
 
-	
-
-docletdir = $(libdir)/valadoc/plugins/devhelp/
-
-doclet_LTLIBRARIES = libdoclet.la
-
-
-libdoclet_la_SOURCES =                \
-	libdoclet.vala.stamp              \
-	$(libdoclet_VALASOURCES:.vala=.c) \
-	$(libdoclet_VALASOURCES:.vala=.h) \
+libdoclet_la_LIBADD =                          \
+	../../../libvaladoc/libvaladoc.la          \
+	../../htmlhelpers/doclet/libhtmlhelpers.la \
+	$(GLIB_LIBS)                               \
+	$(LIBXML2_LIBS)                            \
+	$(LIBVALA_LIBS)                            \
 	$(NULL)
 
 
+EXTRA_DIST = $(libdoclet_la_VALASOURCES)  libdoclet.vala.stamp 
 
-AM_CFLAGS =  -g               \
-	-DPACKAGE_PLUGINDIR=\"$(libdir)/valadoc/plugins/devhelp/\" \
-	-I ../../../libvaladoc/   \
-	-I ../../htmlhelpers/     \
-	-I ../                    \
-	$(GLIB_CFLAGS)            \
-	$(LIBXML2_CFLAGS)         \
-	$(LIBVALA_CFLAGS)         \
+
+MAINTAINERCLEANFILES =                                \
+	$(libdoclet_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
 
-libdoclet_la_LDFLAGS = -module -avoid-version
-
-
-libdoclet_la_LIBADD =                   \
-	../../../libvaladoc/libvaladoc.la   \
-	../../htmlhelpers/libhtmlhelpers.la \
-	$(LIBXML2_LIBS)                     \
-	$(GLIB_LIBS)                        \
-	$(LIBVALA_LIBS)                     \
-	$(NULL)
+install-data-hook:
+	cd $(libdir)/valadoc/plugins/devhelp/ && if test -d taglets; then unlink taglets; fi && ln -s ../htmlhelpers/taglets && if test -d deps; then unlink deps; fi && ln -s ../htmlhelpers/deps 
 
 
 
-
-EXTRA_DIST = $(libdoclet_VALASOURCES)  libdoclet.vala.stamp 
