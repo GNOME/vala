@@ -429,8 +429,8 @@ namespace Gtk {
 	public class Builder : GLib.Object {
 		public uint add_from_file (string filename) throws GLib.Error;
 		public uint add_from_string (string buffer, size_t length) throws GLib.Error;
-		public uint add_objects_from_file (string filename, string object_ids) throws GLib.Error;
-		public uint add_objects_from_string (string buffer, size_t length, string object_ids) throws GLib.Error;
+		public uint add_objects_from_file (string filename, [CCode (array_length = false)] string[] object_ids) throws GLib.Error;
+		public uint add_objects_from_string (string buffer, size_t length, [CCode (array_length = false)] string[] object_ids) throws GLib.Error;
 		public void connect_signals (void* user_data);
 		public void connect_signals_full (Gtk.BuilderConnectFunc func);
 		public static GLib.Quark error_quark ();
@@ -4673,12 +4673,12 @@ namespace Gtk {
 		public void collapse_all ();
 		public bool collapse_row (Gtk.TreePath path);
 		public void columns_autosize ();
-		public void convert_bin_window_to_tree_coords (int bx, int by, int tx, int ty);
-		public void convert_bin_window_to_widget_coords (int bx, int by, int wx, int wy);
-		public void convert_tree_to_bin_window_coords (int tx, int ty, int bx, int by);
-		public void convert_tree_to_widget_coords (int tx, int ty, int wx, int wy);
-		public void convert_widget_to_bin_window_coords (int wx, int wy, int bx, int by);
-		public void convert_widget_to_tree_coords (int wx, int wy, int tx, int ty);
+		public void convert_bin_window_to_tree_coords (int bx, int by, out int tx, out int ty);
+		public void convert_bin_window_to_widget_coords (int bx, int by, out int wx, out int wy);
+		public void convert_tree_to_bin_window_coords (int tx, int ty, out int bx, out int by);
+		public void convert_tree_to_widget_coords (int tx, int ty, out int wx, out int wy);
+		public void convert_widget_to_bin_window_coords (int wx, int wy, out int bx, out int by);
+		public void convert_widget_to_tree_coords (int wx, int wy, out int tx, out int ty);
 		public unowned Gdk.Pixmap create_row_drag_icon (Gtk.TreePath path);
 		public void enable_model_drag_dest (Gtk.TargetEntry[] targets, Gdk.DragAction actions);
 		public void enable_model_drag_source (Gdk.ModifierType start_button_mask, Gtk.TargetEntry[] targets, Gdk.DragAction actions);
