@@ -1182,7 +1182,7 @@ public class Valadoc.Parser {
 
 						content = new Gee.ArrayList<DocElement> ();
 						curtag = create_main_taglet ( name );
-						curtagname = #name;
+						curtagname = (owned)name;
 						break;
 					case '#':
 						this.append_and_create_string_taglet ( content, tree, me, buf );

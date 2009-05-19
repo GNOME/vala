@@ -28,8 +28,8 @@ namespace Valadoc.Html {
 		protected Gee.ArrayList<DocElement>? desc;
 		protected string path;
 
-		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, string# path, Gee.ArrayList<DocElement>? desc ) {
-			this.path = #path;
+		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, owned string path, Gee.ArrayList<DocElement>? desc ) {
+			this.path = (owned)path;
 			this.desc = desc;
 			return true;
 		}

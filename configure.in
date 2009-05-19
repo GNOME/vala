@@ -59,7 +59,6 @@ AC_SUBST(LIBVALA_LIBS)
 
 
 
-
 # Checks for header files.
 
 # Checks for typedefs, structures, and compiler characteristics.
@@ -74,57 +73,35 @@ AC_CONFIG_FILES([Makefile
                  src/vapi/Makefile
                  src/doclets/Makefile
                  src/doclets/htmlhelpers/Makefile
+                 src/doclets/htmlhelpers/deps/Makefile
+                 src/doclets/htmlhelpers/doclet/Makefile
+                 src/doclets/htmlhelpers/taglets/Makefile
+                 src/doclets/htmlhelpers/taglets/see/Makefile
+                 src/doclets/htmlhelpers/taglets/link/Makefile
+                 src/doclets/htmlhelpers/taglets/list/Makefile
+                 src/doclets/htmlhelpers/taglets/bold/Makefile
+                 src/doclets/htmlhelpers/taglets/since/Makefile
+                 src/doclets/htmlhelpers/taglets/table/Makefile
+                 src/doclets/htmlhelpers/taglets/right/Makefile
+                 src/doclets/htmlhelpers/taglets/image/Makefile
+                 src/doclets/htmlhelpers/taglets/throws/Makefile
+                 src/doclets/htmlhelpers/taglets/string/Makefile
+                 src/doclets/htmlhelpers/taglets/center/Makefile
+                 src/doclets/htmlhelpers/taglets/italic/Makefile
+                 src/doclets/htmlhelpers/taglets/return/Makefile
+                 src/doclets/htmlhelpers/taglets/source/Makefile
+                 src/doclets/htmlhelpers/taglets/typelink/Makefile
+                 src/doclets/htmlhelpers/taglets/underline/Makefile
+                 src/doclets/htmlhelpers/taglets/parameter/Makefile
+                 src/doclets/htmlhelpers/taglets/tablecell/Makefile
+                 src/doclets/htmlhelpers/taglets/listelement/Makefile
+                 src/doclets/htmlhelpers/taglets/notification/Makefile
                  src/doclets/htm/Makefile
                  src/doclets/htm/doclet/Makefile
-                 src/doclets/htm/deps/Makefile
-                 src/doclets/htm/taglets/Makefile
-                 src/doclets/htm/taglets/parameter/Makefile
-                 src/doclets/htm/taglets/version/Makefile
-                 src/doclets/htm/taglets/throws/Makefile
-                 src/doclets/htm/taglets/return/Makefile
-                 src/doclets/htm/taglets/string/Makefile
-                 src/doclets/htm/taglets/wikilink/Makefile
-                 src/doclets/htm/taglets/image/Makefile
-                 src/doclets/htm/taglets/link/Makefile
-                 src/doclets/htm/taglets/center/Makefile
-                 src/doclets/htm/taglets/right/Makefile
-                 src/doclets/htm/taglets/italic/Makefile
-                 src/doclets/htm/taglets/source/Makefile
-                 src/doclets/htm/taglets/bold/Makefile
-                 src/doclets/htm/taglets/underline/Makefile
-                 src/doclets/htm/taglets/notification/Makefile
-                 src/doclets/htm/taglets/see/Makefile
-                 src/doclets/htm/taglets/table/Makefile
-                 src/doclets/htm/taglets/list/Makefile
-                 src/doclets/htm/taglets/listelement/Makefile
-                 src/doclets/htm/taglets/cell/Makefile
                  src/doclets/valadoc.org/Makefile
                  src/doclets/valadoc.org/doclet/Makefile
                  src/doclets/devhelp/Makefile
-                 src/doclets/devhelp/taglets/image/Makefile
-                 src/doclets/devhelp/taglets/notification/Makefile
-                 src/doclets/devhelp/taglets/italic/Makefile
-                 src/doclets/devhelp/taglets/center/Makefile
-                 src/doclets/devhelp/taglets/right/Makefile
-                 src/doclets/devhelp/taglets/bold/Makefile
-                 src/doclets/devhelp/taglets/underline/Makefile
-                 src/doclets/devhelp/taglets/list/Makefile
-                 src/doclets/devhelp/taglets/listelement/Makefile
-                 src/doclets/devhelp/taglets/table/Makefile
-                 src/doclets/devhelp/taglets/cell/Makefile
-                 src/doclets/devhelp/taglets/source/Makefile
-                 src/doclets/devhelp/deps/Makefile
                  src/doclets/devhelp/doclet/Makefile
-                 src/doclets/devhelp/taglets/Makefile
-                 src/doclets/devhelp/taglets/parameter/Makefile
-                 src/doclets/devhelp/taglets/version/Makefile
-                 src/doclets/devhelp/taglets/throws/Makefile
-                 src/doclets/devhelp/taglets/wikilink/Makefile
-                 src/doclets/devhelp/taglets/return/Makefile
-                 src/doclets/devhelp/taglets/string/Makefile
-                 src/doclets/devhelp/taglets/link/Makefile
-                 src/doclets/devhelp/taglets/see/Makefile
                  src/valadoc/Makefile])
-
 
 AC_OUTPUT

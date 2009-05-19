@@ -117,15 +117,15 @@ public abstract class Valadoc.StringTaglet : Taglet {
 }
 
 public abstract class Valadoc.ImageDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, string# path, ImageDocElementPosition pos );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, owned string path, ImageDocElementPosition pos );
 }
 
 public abstract class Valadoc.LinkDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, string# link, Gee.ArrayList<DocElement>? desc );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, owned string link, Gee.ArrayList<DocElement>? desc );
 }
 
 public abstract class Valadoc.SourceCodeDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, string# src, Language lang );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, owned string src, Language lang );
 }
 
 public abstract class Valadoc.ListEntryDocElement : DocElement {

@@ -136,7 +136,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	public override void initialisation ( Settings settings, Tree tree ) {
 		this.settings = settings;
 
-		var rt = DirUtils.create ( this.settings.path, 0777 );
+		DirUtils.create ( this.settings.path, 0777 );
 
 		this.langlet = new Valadoc.Html.BasicLanglet ( settings );
 		this.devhelp = new DevhelpFormat ( settings.pkg_name, "" );

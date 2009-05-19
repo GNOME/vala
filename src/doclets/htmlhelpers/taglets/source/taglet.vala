@@ -34,9 +34,9 @@ namespace Valadoc.Html {
 			get;
 		}
 
-		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, string# src, Language lang ) {
+		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, owned string src, Language lang ) {
 			this.lang = lang;
-			this.src = #src;
+			this.src = (owned)src;
 			return true;
 		}
 
