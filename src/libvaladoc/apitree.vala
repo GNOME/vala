@@ -3406,7 +3406,7 @@ public class Valadoc.Struct : DocumentedElement, SymbolAccessibility, Writeable,
 	}
 
 	private void set_parent_references ( ) {
-		Vala.StructValueType? basetype = (Vala.StructValueType?)this.vstruct.base_type;
+		Vala.ValueType? basetype = (Vala.ValueType?)this.vstruct.base_type;
 		if ( basetype == null )
 			return ;
 
