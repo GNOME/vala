@@ -57,3 +57,7 @@
 
 /* Version number of package */
 #undef VERSION
+
+/* Valadoc data directory */
+#undef PACKAGE_DATADIR
+

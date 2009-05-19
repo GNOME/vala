@@ -185,13 +185,6 @@ public abstract class Valadoc.DocumentedElement : Basic {
 
 			return sref.comment;
 		}
-		set {
-			SourceReference sref = this.vsymbol.source_reference;
-			if ( sref == null )
-				return ;
-
-			sref.comment = value;
-		}
 	}
 
 	public DocumentationTree? documentation {
@@ -2252,7 +2245,6 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 		get;
 	}
 
-	// FIXME
 	public string? comment_str {
 		owned get {
 			return this.vmethod.source_reference.comment;
@@ -3355,7 +3347,6 @@ public class Valadoc.Struct : DocumentedElement, SymbolAccessibility, Writeable,
 		return this.search_construction_method ( params, pos );
 	}
 
-	// TODO remove
 	public string? comment_str {
 		owned get {
 			return this.vstruct.source_reference.comment;
@@ -4454,7 +4445,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 
 		this.context.accept( this );
 		this.set_type_references ( );
-		this.inheritance ( ); // create a switch!
+		this.inheritance ( ); // add a switch
 		this.add_dependencies_to_source_package ();
 		return true;
 	}
