@@ -3045,7 +3045,7 @@ namespace GLib {
 		public Queue copy ();
 		public weak List<G> find (G data);
 		public weak List<G> find_custom (G data, CompareFunc func);
-		public void sort (CompareDataFunc compare_func, void* user_data);
+		public void sort (CompareDataFunc compare_func);
 		public void push_head (owned G data);
 		public void push_tail (owned G data);
 		public void push_nth (owned G data, int n);
@@ -3060,7 +3060,7 @@ namespace GLib {
 		public void remove_all (G data);
 		public void insert_before (List<G> sibling, owned G data);
 		public void insert_after (List<G> sibling, owned G data);
-		public void insert_sorted (List<G> sibling, owned G data, CompareDataFunc func, void* user_data);
+		public void insert_sorted (owned G data, CompareDataFunc func);
 	}
 
 	/* Sequences */
@@ -3309,7 +3309,7 @@ namespace GLib {
 		public void remove_index_fast (uint index);
 		public void remove_range (uint index, uint length);
 		public void sort (CompareFunc compare_func);
-		public void sort_with_data (CompareDataFunc compare_func, void* user_data);
+		public void sort_with_data (CompareDataFunc compare_func);
 		public G index (uint index);
 		public void set_size (uint length);
 	}
