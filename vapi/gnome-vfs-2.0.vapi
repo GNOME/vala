@@ -146,7 +146,7 @@ namespace GnomeVFS {
 	public class FileInfo {
 		public weak GnomeVFS.ACL acl;
 		public ulong atime;
-		public weak GnomeVFS.FileSize block_count;
+		public GnomeVFS.FileSize block_count;
 		public ulong ctime;
 		public GnomeVFS.FileFlags flags;
 		public uint gid;
@@ -162,7 +162,7 @@ namespace GnomeVFS {
 		public void* reserved2;
 		public void* reserved3;
 		public weak string selinux_context;
-		public weak GnomeVFS.FileSize size;
+		public GnomeVFS.FileSize size;
 		public weak string symlink_name;
 		public GnomeVFS.FileType type;
 		public uint uid;
@@ -182,10 +182,6 @@ namespace GnomeVFS {
 	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class FileOffset {
-	}
-	[Compact]
-	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public class FileSize {
 	}
 	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
@@ -547,12 +543,12 @@ namespace GnomeVFS {
 	[Compact]
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public class XferProgressInfo {
-		public weak GnomeVFS.FileSize bytes_copied;
-		public weak GnomeVFS.FileSize bytes_total;
+		public GnomeVFS.FileSize bytes_copied;
+		public GnomeVFS.FileSize bytes_total;
 		public int duplicate_count;
 		public weak string duplicate_name;
 		public ulong file_index;
-		public weak GnomeVFS.FileSize file_size;
+		public GnomeVFS.FileSize file_size;
 		public ulong files_total;
 		public GnomeVFS.XferPhase phase;
 		public void* reserved1;
@@ -561,8 +557,13 @@ namespace GnomeVFS {
 		public GnomeVFS.XferProgressStatus status;
 		public weak string target_name;
 		public bool top_level_item;
-		public weak GnomeVFS.FileSize total_bytes_copied;
+		public GnomeVFS.FileSize total_bytes_copied;
 		public GnomeVFS.Result vfs_status;
+	}
+	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[SimpleType]
+	[IntegerType (rank = 0)]
+	public struct FileSize : uint64 {
 	}
 	[CCode (cprefix = "GNOME_VFS_DNS_SD_SERVICE_", has_type_id = "0", cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public enum DNSSDServiceStatus {
@@ -1377,7 +1378,7 @@ namespace GnomeVFS {
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static void preinit (void* app, void* modinfo);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public static GnomeVFS.Result read (GnomeVFS.Handle handle, void* buffer, GnomeVFS.FileSize bytes, GnomeVFS.FileSize bytes_read);
+	public static GnomeVFS.Result read (GnomeVFS.Handle handle, void* buffer, GnomeVFS.FileSize bytes, out GnomeVFS.FileSize bytes_read);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static GnomeVFS.Result read_entire_file (string uri, int file_size, out unowned string file_contents);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
@@ -1433,7 +1434,7 @@ namespace GnomeVFS {
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static GnomeVFS.Result url_show_with_env (string url, out unowned string envp);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
-	public static GnomeVFS.Result write (GnomeVFS.Handle handle, void* buffer, GnomeVFS.FileSize bytes, GnomeVFS.FileSize bytes_written);
+	public static GnomeVFS.Result write (GnomeVFS.Handle handle, void* buffer, GnomeVFS.FileSize bytes, out GnomeVFS.FileSize bytes_written);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
 	public static GnomeVFS.Result xfer_delete_list (GLib.List source_uri_list, GnomeVFS.XferErrorMode error_mode, GnomeVFS.XferOptions xfer_options, GnomeVFS.XferProgressCallback progress_callback);
 	[CCode (cheader_filename = "libgnomevfs/gnome-vfs.h")]
