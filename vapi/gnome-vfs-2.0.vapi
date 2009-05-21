@@ -235,7 +235,7 @@ namespace GnomeVFS {
 		public GnomeVFS.Result launch_with_env (GLib.List uris, out unowned string envp);
 	}
 	[Compact]
-	[CCode (copy_function = "gnome_vfs_mime_application_copy", cheader_filename = "libgnomevfs/gnome-vfs.h")]
+	[CCode (copy_function = "gnome_vfs_mime_application_copy", cheader_filename = "libgnomevfs/gnome-vfs-mime-handlers.h")]
 	public class MimeApplication {
 		public bool can_open_multiple_files;
 		public weak string command;
