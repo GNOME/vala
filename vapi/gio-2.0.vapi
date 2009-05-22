@@ -648,7 +648,7 @@ namespace GLib {
 		public abstract unowned GLib.Icon get_icon ();
 		public abstract unowned string get_id ();
 		public abstract unowned string get_name ();
-		public abstract bool launch (GLib.List? files, GLib.AppLaunchContext launch_context) throws GLib.Error;
+		public abstract bool launch (GLib.List? files, GLib.AppLaunchContext? launch_context) throws GLib.Error;
 		public static bool launch_default_for_uri (string uri, GLib.AppLaunchContext? launch_context) throws GLib.Error;
 		public abstract bool launch_uris (GLib.List? uris, GLib.AppLaunchContext launch_context) throws GLib.Error;
 		public abstract bool remove_supports_type (string content_type) throws GLib.Error;
