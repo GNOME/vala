@@ -604,6 +604,13 @@ namespace Posix {
 	public int mkostemp (string template, int flags);
 
 	[CCode (cheader_filename = "stdlib.h")]
+	public int posix_openpt (int flags);
+	[CCode (cheader_filename = "stdlib.h")]
+	public int grantpt (int fd);
+	[CCode (cheader_filename = "stdlib.h")]
+	public int unlockpt (int fd);
+
+	[CCode (cheader_filename = "stdlib.h")]
 	public int system (string command);
 
 	public delegate int compar_fn_t (void* key1, void* key2);
