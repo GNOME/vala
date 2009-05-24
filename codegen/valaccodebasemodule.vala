@@ -1214,12 +1214,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		    || (prop.base_property == null && prop.base_interface_property == null)) {
 			generate_property_accessor_declaration (acc, source_declarations);
 
-			if (!prop.is_internal_symbol ()
-			    && (acc.access == SymbolAccessibility.PUBLIC
-				|| acc.access == SymbolAccessibility.PROTECTED)) {
-				generate_property_accessor_declaration (acc, header_declarations);
+			// do not declare construct-only properties in header files
+			if (acc.readable || acc.writable) {
+				if (!prop.is_internal_symbol ()
+				    && (acc.access == SymbolAccessibility.PUBLIC
+					|| acc.access == SymbolAccessibility.PROTECTED)) {
+					generate_property_accessor_declaration (acc, header_declarations);
+				}
+				generate_property_accessor_declaration (acc, internal_header_declarations);
 			}
-			generate_property_accessor_declaration (acc, internal_header_declarations);
 		}
 
 		var this_type = new ObjectType (t);
