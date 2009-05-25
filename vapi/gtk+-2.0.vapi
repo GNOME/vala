@@ -261,7 +261,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Alignment : Gtk.Bin, Atk.Implementor, Gtk.Buildable {
-		public void get_padding (uint padding_top, uint padding_bottom, uint padding_left, uint padding_right);
+		public void get_padding (out uint padding_top, out uint padding_bottom, out uint padding_left, out uint padding_right);
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Alignment (float xalign, float yalign, float xscale, float yscale);
 		public void set (float xalign, float yalign, float xscale, float yscale);
