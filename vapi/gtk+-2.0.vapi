@@ -3999,7 +3999,8 @@ namespace Gtk {
 		public bool has_selection { get; }
 		public Gtk.TargetList paste_target_list { get; }
 		public Gtk.TextTagTable tag_table { get; construct; }
-		public string text { get; set; }
+		[NoAccessorMethod]
+		public string text { owned get; set; }
 		[HasEmitter]
 		public virtual signal void apply_tag (Gtk.TextTag tag, Gtk.TextIter start_char, Gtk.TextIter end_char);
 		[HasEmitter]
