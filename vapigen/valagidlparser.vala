@@ -1751,6 +1751,10 @@ public class Vala.GIdlParser : CodeVisitor {
 						arg_type.value_owned = true;
 						prop.property_type.add_type_argument (arg_type);
 					}
+				} else if (nv[0] == "accessor_method") {
+					if (eval (nv[1]) == "0") {
+						prop.no_accessor_method = true;
+					}
 				}
 			}
 		}
