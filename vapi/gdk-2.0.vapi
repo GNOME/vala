@@ -610,7 +610,7 @@ namespace Gdk {
 		public void free ();
 		public uint hash ();
 		public static bool parse (string spec, out Gdk.Color color);
-		public unowned string to_string ();
+		public string to_string ();
 	}
 	[CCode (type_id = "GDK_TYPE_DEVICE_AXIS", cheader_filename = "gdk/gdk.h")]
 	public struct DeviceAxis {
