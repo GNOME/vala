@@ -1,3 +1,11 @@
+Vala 0.7.3
+==========
+
+ * Add initial support for POSIX profile.
+ * Add --vapi and --gir commandline options.
+ * Add initial x11, xcb, and cairo-xcb bindings.
+ * Many bug fixes and binding updates.
+
 Vala 0.7.2
 ==========
 
