@@ -592,6 +592,10 @@ public class Vala.Struct : TypeSymbol {
 				return true;
 			}
 		}
+		if (get_attribute ("ByRef") != null) {
+			// used by time_t
+			return false;
+		}
 		return (boolean_type || integer_type || floating_type
 		        || get_attribute ("SimpleType") != null);
 	}

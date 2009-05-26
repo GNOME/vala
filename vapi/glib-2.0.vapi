@@ -665,6 +665,7 @@ public struct double {
 }
 
 [CCode (cheader_filename = "time.h")]
+[ByRef]
 [IntegerType (rank = 8)]
 public struct time_t {
 	[CCode (cname = "time")]
