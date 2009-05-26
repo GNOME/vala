@@ -125,7 +125,12 @@ public class Vala.GIRWriter : CodeVisitor {
 		write_c_includes (ns);
 
 		write_indent ();
-		stream.printf ("<namespace name=\"%s\" version=\"%s\">\n", gir_namespace, gir_version);
+		stream.printf ("<namespace name=\"%s\" version=\"%s\"", gir_namespace, gir_version);
+		string? cprefix = ns.get_cprefix ();
+		if (cprefix != null) {
+			stream.printf (" c:prefix=\"%s\"", cprefix);
+		}
+		stream.printf (">\n");
 		indent++;
 
 		write_annotations (ns);
