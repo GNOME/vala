@@ -133,7 +133,9 @@ internal class Vala.DBusClientModule : DBusModule {
 			cend_call.add_argument (new CCodeIdentifier ("call"));
 			cend_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")));
 			var creply_call = new CCodeFunctionCall ((CCodeExpression) callback.ccodenode);
-			creply_call.add_argument (new CCodeIdentifier ("user_data"));
+			if (reply_method.binding != MemberBinding.STATIC) {
+				creply_call.add_argument (new CCodeIdentifier ("user_data"));
+			}
 			int param_count = reply_method.get_parameters ().size;
 			int i = 0;
 			foreach (FormalParameter param in reply_method.get_parameters ()) {
