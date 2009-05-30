@@ -854,8 +854,14 @@ internal class Vala.DBusClientModule : DBusModule {
 			dbus_glib_h_needed = true;
 		}
 
-		source_declarations.add_type_declaration (new CCodeTypeDefinition ("DBusGProxy", new CCodeVariableDeclarator (cname)));
+		source_declarations.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (cname), new CCodeVariableDeclarator (cname)));
 		source_declarations.add_type_declaration (new CCodeTypeDefinition ("DBusGProxyClass", new CCodeVariableDeclarator (cname + "Class")));
+
+		var instance_struct = new CCodeStruct ("_%s".printf (cname));
+		instance_struct.add_field ("DBusGProxy", "parent_instance");
+		instance_struct.add_field ("gboolean", "disposed");
+
+		source_declarations.add_type_definition (instance_struct);
 
 		var implement = new CCodeFunctionCall (new CCodeIdentifier ("G_IMPLEMENT_INTERFACE"));
 		implement.add_argument (new CCodeIdentifier (iface.get_upper_case_cname ("TYPE_")));
@@ -942,6 +948,14 @@ internal class Vala.DBusClientModule : DBusModule {
 		cdecl = new CCodeDeclaration ("DBusGConnection");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("*connection"));
 		proxy_dispose.block.add_statement (cdecl);
+
+		// return if proxy is already disposed
+		var dispose_return_block = new CCodeBlock ();
+		dispose_return_block.add_statement (new CCodeReturnStatement ());
+		proxy_dispose.block.add_statement (new CCodeIfStatement (new CCodeMemberAccess.pointer (new CCodeCastExpression (new CCodeIdentifier ("self"), cname + "*"), "disposed"), dispose_return_block));
+
+		// mark proxy as disposed
+		proxy_dispose.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeCastExpression (new CCodeIdentifier ("self"), cname + "*"), "disposed"), new CCodeConstant ("TRUE"))));
 
 		var gconnection = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
 		gconnection.add_argument (new CCodeIdentifier ("self"));
@@ -1282,6 +1296,23 @@ internal class Vala.DBusClientModule : DBusModule {
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
 		var postfragment = new CCodeFragment ();
+
+		// throw error and return if proxy is disposed
+		var dispose_return_block = new CCodeBlock ();
+		if (m.get_error_types ().size > 0) {
+			var set_error_call = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error_literal"));
+			set_error_call.add_argument (new CCodeIdentifier ("error"));
+			set_error_call.add_argument (new CCodeIdentifier ("DBUS_GERROR"));
+			set_error_call.add_argument (new CCodeIdentifier ("DBUS_GERROR_DISCONNECTED"));
+			set_error_call.add_argument (new CCodeConstant ("\"Connection is closed\""));
+			dispose_return_block.add_statement (new CCodeExpressionStatement (set_error_call));
+		}
+		if (m.return_type is VoidType) {
+			dispose_return_block.add_statement (new CCodeReturnStatement ());
+		} else {
+			dispose_return_block.add_statement (new CCodeReturnStatement (default_value_for_type (m.return_type, false)));
+		}
+		block.add_statement (new CCodeIfStatement (new CCodeMemberAccess.pointer (new CCodeCastExpression (new CCodeIdentifier ("self"), iface.get_cname () + "DBusProxy*"), "disposed"), dispose_return_block));
 
 		cdecl = new CCodeDeclaration ("DBusGConnection");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("*_connection"));
