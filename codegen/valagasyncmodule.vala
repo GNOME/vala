@@ -220,11 +220,46 @@ internal class Vala.GAsyncModule : GSignalModule {
 
 
 	CCodeFunction generate_finish_function (Method m) {
+		string dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
+
 		var finishfunc = new CCodeFunction (m.get_real_cname () + "_finish");
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
 		var finishblock = new CCodeBlock ();
+
+		var return_type = m.return_type;
+		if (!(return_type is VoidType)) {
+			var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
+			cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+			finishblock.add_statement (cdecl);
+		}
+
+		var datadecl = new CCodeDeclaration (dataname + "*");
+		datadecl.add_declarator (new CCodeVariableDeclarator ("data"));
+		finishblock.add_statement (datadecl);
+
+		var simple_async_result_cast = new CCodeFunctionCall (new CCodeIdentifier ("G_SIMPLE_ASYNC_RESULT"));
+		simple_async_result_cast.add_argument (new CCodeIdentifier ("res"));
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_get_op_res_gpointer"));
+		ccall.add_argument (simple_async_result_cast);
+		finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), ccall)));
+
+		foreach (FormalParameter param in m.get_parameters ()) {
+			if (param.direction != ParameterDirection.IN) {
+				finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (param.name)), new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (param.name)))));
+				finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (param.name)), new CCodeConstant ("NULL"))));
+			}
+		}
+
+		if (!(return_type is VoidType)) {
+			finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "result"))));
+			if (!(return_type is ValueType) || return_type.nullable) {
+				finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "result"), new CCodeConstant ("NULL"))));
+			}
+			finishblock.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+		}
 
 		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("res", "GAsyncResult*"));
 
