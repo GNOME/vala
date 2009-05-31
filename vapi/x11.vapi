@@ -22,87 +22,202 @@
 
 [CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "X11/Xlib.h,X11/Xatom.h,X11/Xutil.h")]
 namespace X {
+	// Note: must be called before opening a display or calling any other Xlib function,
+	// see http://tronche.com/gui/x/xlib/display/XInitThreads.html
+	[CCode (cname = "XInitThreads")]
+	public Status init_threads ();
+
 	[Compact]
 	[CCode (cname = "Display", ref_function = "", unref_function = "")]
 	public class Display {
+		[CCode (cname = "XOpenDisplay")]
+		public Display (string? name = null);
+
+		[CCode (cname = "XAllPlanes")]
+		public static ulong get_all_planes ();
+
 		[CCode (cname = "XAddToSaveSet")]
 		public int add_to_save_set (Window w);
+
 		[CCode (cname = "XAllowEvents")]
 		public int allow_events (int event_mode, int time);
+
+		[CCode (cname = "XBitmapBitOrder")]
+		public int bitmap_bit_order ();
+
+		[CCode (cname = "XBitmapUnit")]
+		public int bitmap_scanline_unit ();
+
+		[CCode (cname = "XBitmapPad")]
+		public int bitmap_scanline_padding ();
+
 		[CCode (cname = "XChangeProperty")]
 		public int change_property (Window w, Atom property, Atom type, int format, int mode, [CCode (array_length = false)] uchar[] data, int nelements);
+
 		[CCode (cname = "XChangeWindowAttributes")]
 		public int change_window_attributes (Window w, ulong valuemask, SetWindowAttributes attributes);
+
 		[CCode (cname = "XConfigureWindow")]
 		public int configure_window (Window w, uint value_mask, WindowChanges values);
+
 		[CCode (cname = "ConnectionNumber")]
 		public int connection_number ();
+
 		[CCode (cname = "DefaultRootWindow")]
 		public Window default_root_window ();
+
+		[CCode (cname = "XDefaultScreenOfDisplay")]
+		public unowned Screen default_screen ();
+
+		[CCode (cname = "XScreenOfDisplay")]
+		public unowned Screen screen_by_id (int screen_number);
+
 		[CCode (cname = "DisplayString")]
 		public string display_string ();
+
+		[CCode (cname = "XQLength")]
+		public int event_queue_length ();
+
 		[CCode (cname = "XFlush")]
 		public int flush ();
+
 		[CCode (cname = "XGetKeyboardMapping", array_length = false)]
 		public weak uint[] get_keyboard_mapping (uint first_keycode, int keycode_count, ref int keysyms_per_keycode_return);
+
 		[CCode (cname = "XGetModifierMapping")]
 		public ModifierKeymap get_modifier_mapping ();
+
 		[CCode (cname = "XGetSelectionOwner")]
 		public Window get_selection_owner (Atom selection);
+
 		[CCode (cname = "XGetWindowAttributes")]
 		public void get_window_attributes (Window w, out WindowAttributes window_attributes_return);
+
 		[CCode (cname = "XGetWindowProperty")]
 		public int get_window_property (Window w, Atom property, long long_offset, long long_length, bool delete, Atom req_type, out Atom actual_type_return, out int actual_format_return, out ulong nitems_return, out ulong bytes_after_return, out void* prop_return);
+
 		[CCode (cname = "XGrabButton")]
 		public int grab_button (uint button, uint modifiers, Window grab_window, bool owner_events, uint event_mask, int pointer_mode, int keyboard_mode, Window confine_to, uint cursor);
+
 		[CCode (cname = "XGrabPointer")]
 		public int grab_pointer (Window grab_window, bool owner_events, uint event_mask, int pointer_mode, int keyboard_mode, Window confine_to, uint cursor, int time);
+
 		[CCode (cname = "XGrabServer")]
 		public int grab_server ();
+
+		[CCode (cname = "XImageByteOrder")]
+		public int image_byte_order ();
+
 		[CCode (cname = "XInternAtom")]
 		public Atom intern_atom (string atom_name, bool only_if_exists);
+
 		[CCode (cname = "XInternAtoms")]
 		public void intern_atoms (string[] names, bool only_if_exists, [CCode (array_length = false)] Atom[] atoms_return);
+
+		[CCode (cname = "XInternalConnectionNumbers")]
+		public Status internal_connection_numbers (ref int[] fd_return);
+
 		[CCode (cname = "XDisplayKeycodes")]
 		public int keycodes (ref int min_keycodes_return, ref int max_keycodes_return);
+
+		[CCode (cname = "XLastKnownRequestProcessed")]
+		public ulong last_known_request_processed ();
+
+		[CCode (cname = "XLockDisplay")]
+		public void lock_display ();
+
 		[CCode (cname = "XMapWindow")]
 		public int map_window (Window w);
+
+		[CCode (cname = "XMaxRequestSize")]
+		public long max_request_size ();
+
+		[CCode (cname = "XExtendedMaxRequestSize")]
+		public long max_extended_request_size ();
+
 		[CCode (cname = "XNextEvent")]
 		public int next_event (ref Event event_return);
+
+		[CCode (cname = "XNextRequest")]
+		public ulong next_request ();
+
+		[CCode (cname = "XNoOp")]
+		public void no_operation ();
+
+		[CCode (cname = "XScreenCount")]
+		public int number_of_screens ();
+
 		[CCode (cname = "XPending")]
 		public int pending ();
+
+		[CCode (cname = "XProcessInternalConnection")]
+		public void process_internal_connection (int fd);
+
+		[CCode (cname = "XProtocolVersion")]
+		public int protocol_version ();
+
+		[CCode (cname = "XProtocolRevision")]
+		public int protocol_revision ();
+
 		[CCode (cname = "XRaiseWindow")]
 		public int raise_window (Window w);
+
 		[CCode (cname = "XReparentWindow")]
 		public int reparent_window (Window w, Window parent, int x, int y);
+
 		[CCode (cname = "XResizeWindow")]
 		public int resize_window (Window w, uint width, uint height);
+
 		[CCode (cname = "XRootWindow")]
 		public Window root_window (int screen_number);
+
 		[CCode (cname = "ScreenCount")]
 		public int screen_count ();
+
 		[CCode (cname = "XScreenOfDisplay")]
 		public weak Screen screen_of_display (int screen_number);
+
 		[CCode (cname = "XSelectInput")]
 		public int select_input (Window w, long event_mask);
+
 		[CCode (cname = "XSendEvent")]
 		public void send_event (Window w, bool prpagate, long event_mask, ref Event event_send);
+
+		[CCode (cname = "XSetCloseDownMode")]
+		public void set_close_down_mode (int close_mode);
+
 		[CCode (cname = "XSetSelectionOwner")]
 		public Window set_selection_owner (Atom selection, Window owner, int time);
+
 		[CCode (cname = "XSetInputFocus")]
 		public int set_input_focus (Window focus, int revert_to, int time);
+
 		[CCode (cname = "XUngrabButton")]
 		public int ungrab_button (uint button, uint modifiers, Window grab_window);
+
 		[CCode (cname = "XUngrabPointer")]
 		public int ungrab_pointer (int time);
+
 		[CCode (cname = "XUngrabServer")]
 		public int ungrab_server ();
+
+		[CCode (cname = "XUnlockDisplay")]
+		public void unlock_display ();
+
 		[CCode (cname = "XUnmapWindow")]
 		public int unmap_window (Window w);
+
 		[CCode (cname = "XQueryTree")]
 		public void query_tree (Window w, out Window root_return, out Window parent_return, out Window[] children_return);
+
 		[CCode (cname = "XWindowEvent")]
 		public int window_event (Window w, EventMask event_mask, out Event event_return);
+
+		[CCode (cname = "XServerVendor")]
+		public string xserver_vendor_name ();
+
+		[CCode (cname = "XVendorRelease")]
+		public string xserver_vendor_release ();
 	}
 
 	[Compact]
@@ -118,6 +233,23 @@ namespace X {
 	[IntegerType (rank = 9)]
 	[CCode (cname = "Atom")]
 	public struct Atom {
+	}
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "Colormap")]
+	public struct Colormap {
+	}
+
+	[SimpleType]
+	[CCode (cname = "GC")]
+	public struct GC {
+	}
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "Status")]
+	public struct Status {
 	}
 
 	[SimpleType]
@@ -207,13 +339,28 @@ namespace X {
 
 	[CCode (cprefix = "CW")]
 	public enum CW {
-		OverrideRedirect,
-		EventMask,
+		BackPixmap,
+		BackPixel,
+		BackingStore,
+		BackingPlanes,
+		BackingPixel,
+		BitGravity,
+		BorderPixmap,
+		BorderPixel,
 		BorderWidth,
+		Colormap,
+		Cursor,
+		DontPropagate,
+		EventMask,
+		Height,
+		OverrideRedirect,
+		SaveUnder,
+		Sibling,
+		StackMode,
 		X,
 		Y,
 		Width,
-		Height
+		WinGravity
 	}
 
 	[CCode (cprefix = "GrabMode")]
@@ -302,6 +449,7 @@ namespace X {
 	}
 
 	// union
+	[CCode (cname = "XEvent")]
 	public struct Event {
 		public int type;
 		public AnyEvent xany;
@@ -325,6 +473,7 @@ namespace X {
 		public ClientMessageEvent xclient;
 	}
 
+	[CCode (cname = "XAnyEvent")]
 	public struct AnyEvent {
 		public int type;
 		public ulong serial;
@@ -333,6 +482,7 @@ namespace X {
 		public Window window;
 	}
 
+	[CCode (cname = "XKeyEvent")]
 	public struct KeyEvent {
 		public int type;
 		public ulong serial;
@@ -351,6 +501,7 @@ namespace X {
 		public bool same_screen;
 	}
 
+	[CCode (cname = "XButtonEvent")]
 	public struct ButtonEvent {
 		public int type;
 		public ulong serial;
@@ -368,6 +519,7 @@ namespace X {
 		public bool same_screen;
 	}
 
+	[CCode (cname = "XMotionEvent")]
 	public struct MotionEvent {
 		public int type;
 		public ulong serial;
@@ -385,6 +537,7 @@ namespace X {
 		public bool same_screen;
 	}
 
+	[CCode (cname = "XCrossingEvent")]
 	public struct CrossingEvent {
 		public int type;
 		public ulong serial;
@@ -405,6 +558,7 @@ namespace X {
 		public uint state;
 	}
 
+	[CCode (cname = "XCreateWindowEvent")]
 	public struct CreateWindowEvent {
 		public int type;
 		public ulong serial;
@@ -420,6 +574,7 @@ namespace X {
 		public bool override_redirect;
 	}
 
+	[CCode (cname = "XDestroyWindowEvent")]
 	public struct DestroyWindowEvent {
 		public int type;
 		public ulong serial;
@@ -429,6 +584,7 @@ namespace X {
 		public Window window;
 	}
 
+	[CCode (cname = "XUnmapEvent")]
 	public struct UnmapEvent {
 		public int type;
 		public ulong serial;
@@ -439,6 +595,7 @@ namespace X {
 		public bool from_configure;
 	}
 
+	[CCode (cname = "XMapEvent")]
 	public struct MapEvent {
 		public int type;
 		public ulong serial;
@@ -449,6 +606,7 @@ namespace X {
 		public bool override_redirect;
 	}
 
+	[CCode (cname = "XMapRequestEvent")]
 	public struct MapRequestEvent {
 		public int type;
 		public ulong serial;
@@ -458,6 +616,7 @@ namespace X {
 		public Window window;
 	}
 
+	[CCode (cname = "XReparentEvent")]
 	public struct ReparentEvent {
 		public int type;
 		public ulong serial;
@@ -471,6 +630,7 @@ namespace X {
 		public bool override_redirect;
 	}
 
+	[CCode (cname = "XConfigureEvent")]
 	public struct ConfigureEvent {
 		public int type;
 		public ulong serial;
@@ -487,6 +647,7 @@ namespace X {
 		public bool override_redirect;
 	}
 
+	[CCode (cname = "XGravityEvent")]
 	public struct GravityEvent {
 		public int type;
 		public ulong serial;
@@ -498,6 +659,7 @@ namespace X {
 		public int y;
 	}
 
+	[CCode (cname = "XConfigureRequestEvent")]
 	public struct ConfigureRequestEvent {
 		public int type;
 		public ulong serial;
@@ -515,6 +677,7 @@ namespace X {
 		public ulong value_mask;
 	}
 
+	[CCode (cname = "XCirculateEvent")]
 	public struct CirculateEvent {
 		public int type;
 		public ulong serial;
@@ -525,6 +688,7 @@ namespace X {
 		public int place;
 	}
 
+	[CCode (cname = "XCirculateRequestEvent")]
 	public struct CirculateRequestEvent {
 		public int type;
 		public ulong serial;
@@ -535,6 +699,7 @@ namespace X {
 		public int place;
 	}
 
+	[CCode (cname = "XPropertyEvent")]
 	public struct PropertyEvent {
 		public int type;
 		public ulong serial;
@@ -546,6 +711,7 @@ namespace X {
 		public int state;
 	}
 
+	[CCode (cname = "XSelectionEvent")]
 	public struct SelectionEvent {
 		public int type;
 		public ulong serial;
@@ -558,6 +724,7 @@ namespace X {
 		public ulong time;
 	}
 
+	[CCode (cname = "XClientMessageEvent")]
 	public struct ClientMessageEvent {
 		public int type;
 		public ulong serial;	/* # of last request processed by server */
@@ -616,6 +783,69 @@ namespace X {
 		public Window root;
 		public int width;
 		public int height;
+
+		[CCode (cname = "XScreenOfDisplay")]
+		public static unowned Screen get_screen (Display disp, int screen_number);
+
+		[CCode (cname = "XBlackPixelOfScreen")]
+		public ulong black_pixel_of_screen ();
+
+		[CCode (cname = "XCellsOfScreen")]
+		public int cells_of_screen ();
+
+		[CCode (cname = "XDefaultColormapOfScreen")]
+		public Colormap default_colormap_of_screen ();
+
+		[CCode (cname = "XDefaultDepthOfScreen")]
+		public int default_depth_of_screen ();
+
+		[CCode (cname = "XDefaultGCOfScreen")]
+		public GC default_gc_of_screen ();
+
+		[CCode (cname = "XDefaultVisualOfScreen")]
+		public Visual default_visual_of_screen ();
+
+		[CCode (cname = "XDisplayOfScreen")]
+		public unowned Display display_of_screen ();
+
+		[CCode (cname = "XDoesBackingStore")]
+		public int does_backing_store ();
+
+		[CCode (cname = "XDoesSaveUnders")]
+		public bool does_save_unders ();
+
+		[CCode (cname = "XEventMaskOfScreen")]
+		public long event_mask_of_Screen ();
+
+		[CCode (cname = "XHeightMMOfScreen")]
+		public int height_in_mm_of_screen ();
+
+		[CCode (cname = "XHeightOfScreen")]
+		public int height_of_screen ();
+
+		[CCode (cname = "XMaxCmapsOfScreen")]
+		public int max_colormaps_of_screen ();
+
+		[CCode (cname = "XMinCmapsOfScreen")]
+		public int min_colormaps_of_screen ();
+
+		[CCode (cname = "XPlanesOfScreen")]
+		public int planes_of_screen ();
+
+		[CCode (cname = "XRootWindowOfScreen")]
+		public Window root_window_of_screen ();
+
+		[CCode (cname = "XScreenNumberOfScreen")]
+		public int screen_number_of_screen ();
+
+		[CCode (cname = "XWhitePixelOfScreen")]
+		public ulong white_pixel_of_screen ();
+
+		[CCode (cname = "XWidthMMOfScreen")]
+		public int width_in_mm_of_screen ();
+
+		[CCode (cname = "XWidthOfScreen")]
+		public int width_of_screen ();
 	}
 
 	public const X.Atom XA_ATOM;
