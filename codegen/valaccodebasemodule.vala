@@ -3599,6 +3599,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return cexpr;
 		}
 
+		generate_type_declaration (target_type, source_declarations);
+
 		var cl = target_type.data_type as Class;
 		var iface = target_type.data_type as Interface;
 		if (context.checking && (iface != null || (cl != null && !cl.is_compact))) {
