@@ -3,19 +3,19 @@
 [CCode (cprefix = "Gdk", lower_case_cprefix = "gdk_")]
 namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static Gdk.Atom x11_atom_to_xatom (Gdk.Atom atom);
+	public static X.Atom x11_atom_to_xatom (Gdk.Atom atom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static Gdk.Atom x11_atom_to_xatom_for_display (Gdk.Display display, Gdk.Atom atom);
+	public static X.Atom x11_atom_to_xatom_for_display (Gdk.Display display, Gdk.Atom atom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned Gdk.Colormap x11_colormap_foreign_new (Gdk.Visual visual, Gdk.Colormap xcolormap);
+	public static unowned Gdk.Colormap x11_colormap_foreign_new (Gdk.Visual visual, X.Colormap xcolormap);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned Gdk.Colormap x11_colormap_get_xcolormap (Gdk.Colormap colormap);
+	public static X.Colormap x11_colormap_get_xcolormap (Gdk.Colormap colormap);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void* x11_colormap_get_xdisplay (Gdk.Colormap colormap);
+	public static unowned X.Display x11_colormap_get_xdisplay (Gdk.Colormap colormap);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned Gdk.Cursor x11_cursor_get_xcursor (Gdk.Cursor cursor);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void* x11_cursor_get_xdisplay (Gdk.Cursor cursor);
+	public static unowned X.Display x11_cursor_get_xdisplay (Gdk.Cursor cursor);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_display_broadcast_startup_message (Gdk.Display display, string message_type);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -23,7 +23,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static uint32 x11_display_get_user_time (Gdk.Display display);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void* x11_display_get_xdisplay (Gdk.Display display);
+	public static unowned X.Display x11_display_get_xdisplay (Gdk.Display display);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_display_grab (Gdk.Display display);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -31,37 +31,37 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_display_ungrab (Gdk.Display display);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void* x11_drawable_get_xdisplay (Gdk.Drawable drawable);
+	public static unowned X.Display x11_drawable_get_xdisplay (Gdk.Drawable drawable);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static uint32 x11_drawable_get_xid (Gdk.Drawable drawable);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void* x11_gc_get_xdisplay (Gdk.GC gc);
+	public static unowned X.Display x11_gc_get_xdisplay (Gdk.GC gc);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void* x11_gc_get_xgc (Gdk.GC gc);
+	public static X.GC x11_gc_get_xgc (Gdk.GC gc);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned Gdk.Window x11_get_default_root_xwindow ();
+	public static X.Window x11_get_default_root_xwindow ();
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static int x11_get_default_screen ();
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void* x11_get_default_xdisplay ();
+	public static unowned X.Display x11_get_default_xdisplay ();
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static uint32 x11_get_server_time (Gdk.Window window);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static Gdk.Atom x11_get_xatom_by_name (string atom_name);
+	public static X.Atom x11_get_xatom_by_name (string atom_name);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static Gdk.Atom x11_get_xatom_by_name_for_display (Gdk.Display display, string atom_name);
+	public static X.Atom x11_get_xatom_by_name_for_display (Gdk.Display display, string atom_name);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned string x11_get_xatom_name (Gdk.Atom xatom);
+	public static unowned string x11_get_xatom_name (X.Atom xatom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned string x11_get_xatom_name_for_display (Gdk.Display display, Gdk.Atom xatom);
+	public static unowned string x11_get_xatom_name_for_display (Gdk.Display display, X.Atom xatom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_grab_server ();
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static void* x11_image_get_xdisplay (Gdk.Image image);
+	public static unowned X.Display x11_image_get_xdisplay (Gdk.Image image);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void* x11_image_get_ximage (Gdk.Image image);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned Gdk.Display x11_lookup_xdisplay (void* xdisplay);
+	public static unowned Gdk.Display x11_lookup_xdisplay (X.Display xdisplay);
 	[CCode (cname = "gdk_net_wm_supports", cheader_filename = "gdk/gdkx.h")]
 	public static bool x11_net_wm_supports (Gdk.Atom property);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -71,7 +71,7 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned string x11_screen_get_window_manager_name (Gdk.Screen screen);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static unowned Gdk.Screen x11_screen_get_xscreen (Gdk.Screen screen);
+	public static unowned X.Screen x11_screen_get_xscreen (Gdk.Screen screen);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static unowned Gdk.Visual x11_screen_lookup_visual (Gdk.Screen screen, uint32 xvisualid);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
@@ -87,9 +87,9 @@ namespace Gdk {
 	[CCode (cheader_filename = "gdk/gdkx.h")]
 	public static void x11_window_set_user_time (Gdk.Window window, uint32 timestamp);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static Gdk.Atom x11_xatom_to_atom (Gdk.Atom xatom);
+	public static Gdk.Atom x11_xatom_to_atom (X.Atom xatom);
 	[CCode (cheader_filename = "gdk/gdkx.h")]
-	public static Gdk.Atom x11_xatom_to_atom_for_display (Gdk.Display display, Gdk.Atom xatom);
+	public static Gdk.Atom x11_xatom_to_atom_for_display (Gdk.Display display, X.Atom xatom);
 	[CCode (cname = "gdk_xid_table_lookup", cheader_filename = "gdk/gdkx.h")]
 	public static void* x11_xid_table_lookup (uint32 xid);
 	[CCode (cname = "gdk_xid_table_lookup_for_display", cheader_filename = "gdk/gdkx.h")]
