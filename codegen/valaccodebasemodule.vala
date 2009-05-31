@@ -121,7 +121,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public string module_init_param_name;
 	
 	public bool gvaluecollector_h_needed;
-	public bool gio_h_needed;
 	public bool requires_array_free;
 	public bool requires_array_move;
 	public bool requires_array_length;
@@ -429,7 +428,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		variable_name_map.clear ();
 		
 		gvaluecollector_h_needed = false;
-		gio_h_needed = false;
 		dbus_glib_h_needed = false;
 		dbus_glib_h_needed_in_header = false;
 		requires_array_free = false;

@@ -189,7 +189,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 
 	public override void visit_method (Method m) {
 		if (m.coroutine) {
-			gio_h_needed = true;
+			source_declarations.add_include ("gio/gio.h");
 
 			// append the synchronous version
 			m.coroutine = false;
