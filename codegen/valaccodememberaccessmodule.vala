@@ -320,7 +320,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			if (p.name == "this") {
 				if (current_method != null && current_method.coroutine) {
 					// use closure
-					expr.ccodenode = get_variable_cexpression ("self");
+					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self");
 				} else {
 					var st = current_type_symbol as Struct;
 					if (st != null && !st.is_simple_type ()) {

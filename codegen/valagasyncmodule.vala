@@ -42,7 +42,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 		}
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			data.add_field (param.parameter_type.get_cname (), param.name);
+			data.add_field (param.parameter_type.get_cname (), get_variable_cname (param.name));
 		}
 
 		if (!(m.return_type is VoidType)) {
@@ -151,7 +151,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
-				asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), param.name), new CCodeIdentifier (param.name))));
+				asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (param.name)), new CCodeIdentifier (get_variable_cname (param.name)))));
 			}
 		}
 
