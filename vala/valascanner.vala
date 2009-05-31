@@ -1129,9 +1129,9 @@ public class Vala.Scanner {
 		var result_builder = new StringBuilder (_comment);
 		_comment = null;
 		
-		weak string index;
+		string* index;
 		while ((index = result_builder.str.chr (-1, '\t')) != null) {
-			result_builder.erase (result_builder.str.pointer_to_offset (index), 1);
+			result_builder.erase ((long) (index - (string*) result_builder.str), 1);
 		}
 		
 		return result_builder.str;
