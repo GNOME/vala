@@ -2739,7 +2739,8 @@ namespace GLib {
 		public bool load_from_dirs (string file, [CCode (array_length = false, array_null_terminated = true)] string[] search_dirs, out string full_path, KeyFileFlags @flags) throws KeyFileError;
 		public bool load_from_data (string data, ulong length, KeyFileFlags @flags) throws KeyFileError;
 		public bool load_from_data_dirs (string file, out string full_path, KeyFileFlags @flags) throws KeyFileError;
-		public string to_data (out size_t length = null) throws KeyFileError;
+		// g_key_file_to_data never throws an error according to the documentation
+		public string to_data (out size_t length = null, out GLib.Error error = null);
 		public string get_start_group ();
 		[CCode (array_length_type = "gsize")]
 		public string[] get_groups ();
