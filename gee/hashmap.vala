@@ -113,9 +113,14 @@ public class Gee.HashMap<K,V> : CollectionObject, Map<K,V> {
 	public bool remove (K key) {
 		Node<K,V>** node = lookup_node (key);
 		if (*node != null) {
+			Node<K,V> next = (owned) (*node)->next;
+
 			(*node)->key = null;
 			(*node)->value = null;
-			*node = (*node)->next;
+			delete *node;
+
+			*node = (owned) next;
+
 			_nnodes--;
 			resize ();
 			_stamp++;
