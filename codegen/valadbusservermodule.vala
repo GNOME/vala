@@ -170,8 +170,10 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			}
 
 			if (requires_destroy (owned_type)) {
+				// keep local alive (symbol_reference is weak)
+				var local = new LocalVariable (owned_type, param.name);
 				var ma = new MemberAccess.simple (param.name);
-				ma.symbol_reference = param;
+				ma.symbol_reference = local;
 				postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (param.name), owned_type, ma)));
 			}
 		}
@@ -203,8 +205,12 @@ internal class Vala.DBusServerModule : DBusClientModule {
 				write_expression (postfragment, m.return_type, new CCodeIdentifier ("iter"), new CCodeIdentifier ("result"));
 
 				if (requires_destroy (m.return_type)) {
+					// keep local alive (symbol_reference is weak)
+					// space before `result' is work around to not trigger
+					// variable renaming, we really mean C identifier `result' here
+					var local = new LocalVariable (m.return_type, " result");
 					var ma = new MemberAccess.simple ("result");
-					ma.symbol_reference = new LocalVariable (m.return_type, "result");
+					ma.symbol_reference = local;
 					postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("result"), m.return_type, ma)));
 				}
 			}
