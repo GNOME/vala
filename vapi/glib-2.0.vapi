@@ -3389,4 +3389,16 @@ namespace GLib {
 		[CCode (cname = "g_pattern_match_simple")]
 		public static bool match_simple (string pattern, string str);
 	}
+
+	namespace Win32 {
+		public string error_message (int error);
+		public string getlocale ();
+		public string get_package_installation_directory_of_module (void* hmodule);
+		public uint get_windows_version ();
+		public string locale_filename_from_utf8 (string utf8filename);
+		[CCode (cname = "G_WIN32_HAVE_WIDECHAR_API")]
+		public bool have_widechar_api ();
+		[CCode (cname = "G_WIN32_IS_NT_BASED")]
+		public bool is_nt_based ();
+	}
 }
