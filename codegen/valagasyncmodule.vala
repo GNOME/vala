@@ -125,7 +125,10 @@ internal class Vala.GAsyncModule : GSignalModule {
 		var cl = m.parent_symbol as Class;
 		if (m.binding == MemberBinding.INSTANCE &&
 		    cl != null && cl.is_subtype_of (gobject_type)) {
-			create_result.add_argument (new CCodeIdentifier ("self"));
+			var gobject_cast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT"));
+			gobject_cast.add_argument (new CCodeIdentifier ("self"));
+
+			create_result.add_argument (gobject_cast);
 		} else {
 			create_result.add_argument (new CCodeConstant ("NULL"));
 		}
