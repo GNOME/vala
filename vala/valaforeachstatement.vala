@@ -199,7 +199,7 @@ public class Vala.ForeachStatement : Block {
 			error = true;
 			return false;
 		}
-		var iterator_type = iterator_method.return_type.get_actual_type (collection_type, this);
+		var iterator_type = iterator_method.return_type.get_actual_type (collection_type, null, this);
 		if (iterator_type is VoidType) {
 			Report.error (collection.source_reference, "`%s' must return an iterator".printf (iterator_method.get_full_name ()));
 			error = true;
@@ -232,7 +232,7 @@ public class Vala.ForeachStatement : Block {
 			error = true;
 			return false;
 		}
-		var element_type = get_method.return_type.get_actual_type (iterator_type, this);
+		var element_type = get_method.return_type.get_actual_type (iterator_type, null, this);
 		if (element_type is VoidType) {
 			Report.error (collection.source_reference, "`%s' must return an element".printf (get_method.get_full_name ()));
 			error = true;

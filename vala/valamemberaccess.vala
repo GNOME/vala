@@ -547,7 +547,7 @@ public class Vala.MemberAccess : Expression {
 
 			formal_value_type = analyzer.get_value_type_for_symbol (symbol_reference, lvalue);
 			if (inner != null && formal_value_type != null) {
-				value_type = formal_value_type.get_actual_type (inner.value_type, this);
+				value_type = formal_value_type.get_actual_type (inner.value_type, null, this);
 			} else {
 				value_type = formal_value_type;
 			}

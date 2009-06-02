@@ -1,6 +1,6 @@
 /* valatypeparameter.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,11 +27,6 @@ using Gee;
  * Represents a generic type parameter in the source code.
  */
 public class Vala.TypeParameter : Symbol {
-	/**
-	 * The generic type declaring this parameter.
-	 */
-	public weak TypeSymbol type;
-
 	/**
 	 * Creates a new generic type parameter.
 	 *

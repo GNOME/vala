@@ -29,6 +29,8 @@ using Gee;
  * Represents a type or namespace method.
  */
 public class Vala.Method : Member {
+	Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
+
 	public const string DEFAULT_SENTINEL = "NULL";
 
 	/**
@@ -422,7 +424,7 @@ public class Vala.Method : Member {
 			}
 		}
 
-		var actual_base_type = base_method.return_type.get_actual_type (object_type, this);
+		var actual_base_type = base_method.return_type.get_actual_type (object_type, null, this);
 		if (!return_type.equals (actual_base_type)) {
 			invalid_match = "incompatible return type";
 			return false;
@@ -437,7 +439,7 @@ public class Vala.Method : Member {
 				return false;
 			}
 			
-			actual_base_type = base_param.parameter_type.get_actual_type (object_type, this);
+			actual_base_type = base_param.parameter_type.get_actual_type (object_type, null, this);
 			if (!actual_base_type.equals (method_params_it.get ().parameter_type)) {
 				invalid_match = "incompatible type of parameter %d".printf (param_index);
 				return false;
@@ -468,6 +470,36 @@ public class Vala.Method : Member {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Appends the specified parameter to the list of type parameters.
+	 *
+	 * @param p a type parameter
+	 */
+	public void add_type_parameter (TypeParameter p) {
+		type_parameters.add (p);
+		scope.add (p.name, p);
+	}
+
+	/**
+	 * Returns a copy of the type parameter list.
+	 *
+	 * @return list of type parameters
+	 */
+	public Gee.List<TypeParameter> get_type_parameters () {
+		return new ReadOnlyList<TypeParameter> (type_parameters);
+	}
+
+	public int get_type_parameter_index (string name) {
+		int i = 0;
+		foreach (TypeParameter parameter in type_parameters) {
+			if (parameter.name == name) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
 	}
 
 	/**

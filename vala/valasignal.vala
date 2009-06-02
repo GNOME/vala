@@ -95,7 +95,7 @@ public class Vala.Signal : Member, Lockable {
 	 * @return delegate
 	 */
 	public Delegate get_delegate (DataType sender_type, CodeNode node_reference) {
-		var actual_return_type = return_type.get_actual_type (sender_type, node_reference);
+		var actual_return_type = return_type.get_actual_type (sender_type, null, node_reference);
 
 		var generated_delegate = new Delegate (null, actual_return_type);
 		generated_delegate.has_target = true;
@@ -111,7 +111,7 @@ public class Vala.Signal : Member, Lockable {
 
 		foreach (FormalParameter param in parameters) {
 			var actual_param = param.copy ();
-			actual_param.parameter_type = actual_param.parameter_type.get_actual_type (sender_type, node_reference);
+			actual_param.parameter_type = actual_param.parameter_type.get_actual_type (sender_type, null, node_reference);
 			generated_delegate.add_parameter (actual_param);
 		}
 

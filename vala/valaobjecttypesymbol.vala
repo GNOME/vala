@@ -1,6 +1,6 @@
 /* valaobjecttypesymbol.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  * Copyright (C) 2008  Philip Van Hoof
  *
  * This library is free software; you can redistribute it and/or
@@ -47,7 +47,6 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	 */
 	public void add_type_parameter (TypeParameter p) {
 		type_parameters.add (p);
-		p.type = this;
 		scope.add (p.name, p);
 	}
 

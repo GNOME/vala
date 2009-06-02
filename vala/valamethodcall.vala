@@ -238,7 +238,7 @@ public class Vala.MethodCall : Expression {
 
 				/* store expected type for callback parameters */
 				arg.formal_target_type = param.parameter_type;
-				arg.target_type = arg.formal_target_type.get_actual_type (target_object_type, this);
+				arg.target_type = arg.formal_target_type.get_actual_type (target_object_type, call as MemberAccess, this);
 
 				last_arg = arg;
 			}
@@ -399,7 +399,7 @@ public class Vala.MethodCall : Expression {
 		}
 
 		formal_value_type = ret_type;
-		value_type = formal_value_type.get_actual_type (target_object_type, this);
+		value_type = formal_value_type.get_actual_type (target_object_type, call as MemberAccess, this);
 
 		bool may_throw = false;
 

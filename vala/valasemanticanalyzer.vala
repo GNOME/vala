@@ -551,30 +551,62 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return null;
 	}
 
-	public static DataType? get_actual_type (DataType derived_instance_type, GenericType generic_type, CodeNode node_reference) {
-		// trace type arguments back to the datatype where the method has been declared
-		var instance_type = get_instance_base_type_for_member (derived_instance_type, (TypeSymbol) generic_type.type_parameter.parent_symbol, node_reference);
+	public static DataType? get_actual_type (DataType? derived_instance_type, MemberAccess? method_access, GenericType generic_type, CodeNode node_reference) {
+		if (generic_type.type_parameter.parent_symbol is TypeSymbol) {
+			if (derived_instance_type == null) {
+				return generic_type;
+			}
 
-		assert (instance_type != null);
+			// trace type arguments back to the datatype where the method has been declared
+			var instance_type = get_instance_base_type_for_member (derived_instance_type, (TypeSymbol) generic_type.type_parameter.parent_symbol, node_reference);
 
-		int param_index = instance_type.data_type.get_type_parameter_index (generic_type.type_parameter.name);
-		if (param_index == -1) {
-			Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (generic_type.type_parameter.name));
-			node_reference.error = true;
-			return null;
-		}
+			assert (instance_type != null);
 
-		DataType actual_type = null;
-		if (param_index < instance_type.get_type_arguments ().size) {
-			actual_type = (DataType) instance_type.get_type_arguments ().get (param_index);
+			int param_index = instance_type.data_type.get_type_parameter_index (generic_type.type_parameter.name);
+			if (param_index == -1) {
+				Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (generic_type.type_parameter.name));
+				node_reference.error = true;
+				return null;
+			}
+
+			DataType actual_type = null;
+			if (param_index < instance_type.get_type_arguments ().size) {
+				actual_type = (DataType) instance_type.get_type_arguments ().get (param_index);
+			}
+			if (actual_type == null) {
+				// no actual type available
+				return generic_type;
+			}
+			actual_type = actual_type.copy ();
+			actual_type.value_owned = actual_type.value_owned && generic_type.value_owned;
+			return actual_type;
+		} else {
+			// generic method
+			var m = (Method) generic_type.type_parameter.parent_symbol;
+
+			if (method_access == null) {
+				return generic_type;
+			}
+
+			int param_index = m.get_type_parameter_index (generic_type.type_parameter.name);
+			if (param_index == -1) {
+				Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (generic_type.type_parameter.name));
+				node_reference.error = true;
+				return null;
+			}
+
+			DataType actual_type = null;
+			if (param_index < method_access.get_type_arguments ().size) {
+				actual_type = (DataType) method_access.get_type_arguments ().get (param_index);
+			}
+			if (actual_type == null) {
+				// no actual type available
+				return generic_type;
+			}
+			actual_type = actual_type.copy ();
+			actual_type.value_owned = actual_type.value_owned && generic_type.value_owned;
+			return actual_type;
 		}
-		if (actual_type == null) {
-			// no actual type available
-			return generic_type;
-		}
-		actual_type = actual_type.copy ();
-		actual_type.value_owned = actual_type.value_owned && generic_type.value_owned;
-		return actual_type;
 	}
 
 	public bool is_in_instance_method () {

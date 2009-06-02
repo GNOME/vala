@@ -2160,10 +2160,13 @@ public class Vala.Parser : CodeVisitor {
 		var flags = parse_member_declaration_modifiers ();
 		var type = parse_type ();
 		string id = parse_identifier ();
-		parse_type_parameter_list ();
+		var type_param_list = parse_type_parameter_list ();
 		var method = new Method (id, type, get_src_com (begin));
 		method.access = access;
 		set_attributes (method, attrs);
+		foreach (TypeParameter type_param in type_param_list) {
+			method.add_type_parameter (type_param);
+		}
 		if (ModifierFlags.STATIC in flags) {
 			method.binding = MemberBinding.STATIC;
 		} else if (ModifierFlags.CLASS in flags) {

@@ -1719,7 +1719,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	private CCodeExpression get_type_id_expression (DataType type) {
 		if (type is GenericType) {
 			string var_name = "%s_type".printf (type.type_parameter.name.down ());
-			return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), var_name);
+			if (type.type_parameter.parent_symbol is TypeSymbol) {
+				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), var_name);
+			} else {
+				return new CCodeIdentifier (var_name);
+			}
 		} else {
 			string type_id = type.get_type_id ();
 			if (type_id == null) {
@@ -1765,7 +1769,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return new CCodeIdentifier (dup_function);
 		} else if (type.type_parameter != null && current_type_symbol is Class) {
 			string func_name = "%s_dup_func".printf (type.type_parameter.name.down ());
-			return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+			if (type.type_parameter.parent_symbol is TypeSymbol) {
+				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+			} else {
+				return new CCodeIdentifier (func_name);
+			}
 		} else if (type is PointerType) {
 			var pointer_type = (PointerType) type;
 			return get_dup_func_expression (pointer_type.base_type, source_reference);
@@ -1891,7 +1899,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return new CCodeIdentifier (unref_function);
 		} else if (type.type_parameter != null && current_type_symbol is Class) {
 			string func_name = "%s_destroy_func".printf (type.type_parameter.name.down ());
-			return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+			if (type.type_parameter.parent_symbol is TypeSymbol) {
+				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
+			} else {
+				return new CCodeIdentifier (func_name);
+			}
 		} else if (type is ArrayType) {
 			return new CCodeIdentifier ("g_free");
 		} else if (type is PointerType) {

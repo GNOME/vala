@@ -107,7 +107,6 @@ public class Vala.Delegate : TypeSymbol {
 	 */
 	public void add_type_parameter (TypeParameter p) {
 		type_parameters.add (p);
-		p.type = this;
 		scope.add (p.name, p);
 	}
 	
