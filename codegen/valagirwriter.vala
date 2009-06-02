@@ -153,7 +153,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			stream.printf ("<class name=\"%s\"", cl.name);
 			write_gtype_attributes (cl);
 			stream.printf (" glib:type-struct=\"%s\"", gtype_struct_name);
-			stream.printf (" parent=\"%s\"", cl.base_class.get_full_name ());
+			stream.printf (" parent=\"%s\"", gi_type_name (cl.base_class));
 			if (cl.is_abstract) {
 				stream.printf (" abstract=\"1\"");
 			}
@@ -172,7 +172,7 @@ public class Vala.GIRWriter : CodeVisitor {
 						first = false;
 					}
 					write_indent ();
-					stream.printf ("<interface name=\"%s\"/>\n", object_type.type_symbol.get_full_name ());
+					stream.printf ("<interface name=\"%s\"/>\n", gi_type_name (object_type.type_symbol));
 				}
 			}
 			if (!first) {
@@ -272,10 +272,10 @@ public class Vala.GIRWriter : CodeVisitor {
 				var object_type = (ObjectType) base_type;
 				if (object_type.type_symbol is Class) {
 					write_indent ();
-					stream.printf ("<object name=\"%s\"/>\n", object_type.type_symbol.get_full_name ());
+					stream.printf ("<object name=\"%s\"/>\n", gi_type_name (object_type.type_symbol));
 				} else if (object_type.type_symbol is Interface) {
 					write_indent ();
-					stream.printf ("<interface name=\"%s\"/>\n", object_type.type_symbol.get_full_name ());
+					stream.printf ("<interface name=\"%s\"/>\n", gi_type_name (object_type.type_symbol));
 				} else {
 					assert_not_reached ();
 				}
