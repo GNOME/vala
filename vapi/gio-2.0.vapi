@@ -721,7 +721,7 @@ namespace GLib {
 		public abstract string get_uri_scheme ();
 		public bool has_prefix (GLib.File prefix);
 		public abstract bool has_uri_scheme (string uri_scheme);
-		public abstract uint hash (void* file);
+		public abstract uint hash ();
 		public abstract bool is_native ();
 		public bool load_contents (GLib.Cancellable? cancellable, out string contents, out size_t length, out string etag_out) throws GLib.Error;
 		public void load_contents_async (GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
