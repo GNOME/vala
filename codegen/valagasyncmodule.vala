@@ -316,6 +316,11 @@ internal class Vala.GAsyncModule : GSignalModule {
 	}
 
 	public override void visit_yield_statement (YieldStatement stmt) {
+		if (current_method == null || !current_method.coroutine) {
+			stmt.ccodenode = new CCodeEmptyStatement ();
+			return;
+		}
+
 		if (stmt.yield_expression == null) {
 			// should be replaced by a simple return FALSE; when we have
 			//     void idle () yields;
