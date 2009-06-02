@@ -4581,6 +4581,7 @@ namespace Gtk {
 		public bool up ();
 	}
 	[Compact]
+	[Immutable]
 	[CCode (copy_function = "gtk_tree_row_reference_copy", type_id = "GTK_TYPE_TREE_ROW_REFERENCE", cheader_filename = "gtk/gtk.h")]
 	public class TreeRowReference {
 		public unowned Gtk.TreeRowReference copy ();
