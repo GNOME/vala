@@ -5538,7 +5538,7 @@ namespace Gtk {
 		public unowned Gtk.Widget get_extra_widget ();
 		public unowned GLib.File get_file ();
 		public string get_filename ();
-		public unowned GLib.SList get_filenames ();
+		public GLib.SList<string> get_filenames ();
 		public unowned GLib.SList get_files ();
 		public unowned Gtk.FileFilter get_filter ();
 		public bool get_local_only ();
@@ -5550,7 +5550,7 @@ namespace Gtk {
 		public bool get_select_multiple ();
 		public bool get_show_hidden ();
 		public string get_uri ();
-		public unowned GLib.SList get_uris ();
+		public GLib.SList<string> get_uris ();
 		public bool get_use_preview_label ();
 		public unowned GLib.SList list_filters ();
 		public unowned GLib.SList list_shortcut_folder_uris ();
