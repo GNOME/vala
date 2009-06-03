@@ -1716,10 +1716,19 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		return local;
 	}
 
+	bool is_in_generic_type (DataType type) {
+		if (type.type_parameter.parent_symbol is TypeSymbol
+		    && (current_method == null || current_method.binding == MemberBinding.INSTANCE)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	private CCodeExpression get_type_id_expression (DataType type) {
 		if (type is GenericType) {
 			string var_name = "%s_type".printf (type.type_parameter.name.down ());
-			if (type.type_parameter.parent_symbol is TypeSymbol) {
+			if (is_in_generic_type (type)) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), var_name);
 			} else {
 				return new CCodeIdentifier (var_name);
@@ -1769,7 +1778,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return new CCodeIdentifier (dup_function);
 		} else if (type.type_parameter != null && current_type_symbol is Class) {
 			string func_name = "%s_dup_func".printf (type.type_parameter.name.down ());
-			if (type.type_parameter.parent_symbol is TypeSymbol) {
+			if (is_in_generic_type (type)) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
 			} else {
 				return new CCodeIdentifier (func_name);
@@ -1899,7 +1908,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return new CCodeIdentifier (unref_function);
 		} else if (type.type_parameter != null && current_type_symbol is Class) {
 			string func_name = "%s_destroy_func".printf (type.type_parameter.name.down ());
-			if (type.type_parameter.parent_symbol is TypeSymbol) {
+			if (is_in_generic_type (type)) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
 			} else {
 				return new CCodeIdentifier (func_name);
