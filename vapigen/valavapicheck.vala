@@ -84,7 +84,7 @@ class Vala.VAPICheck : Object {
 
 				case IdlNodeTypeId.FUNCTION:
 					parse_members (((IdlNodeFunction) node).symbol,
-								   ((IdlNodeFunction) node).parameters);
+								   (List<IdlNode>) ((IdlNodeFunction) node).parameters);
 					break;
 
 				case IdlNodeTypeId.BOXED:

@@ -328,6 +328,23 @@ public abstract class Vala.DataType : CodeNode {
 		}
 
 		if (data_type == target_type.data_type) {
+			// check compatibility of generic type arguments
+			if (type_argument_list != null
+			    && type_argument_list.size > 0
+			    && type_argument_list.size == target_type.get_type_arguments ().size) {
+				for (int i = 0; i < type_argument_list.size; i++) {
+					var type_arg = type_argument_list[i];
+					var target_type_arg = target_type.get_type_arguments ()[i];
+					// mutable generic types require type argument equality,
+					// not just one way compatibility
+					// as we do not currently have immutable generic container types,
+					// the additional check would be very inconvenient, so we
+					// skip the additional check for now
+					if (!type_arg.compatible (target_type_arg)) {
+						return false;
+					}
+				}
+			}
 			return true;
 		}
 
