@@ -26,5 +26,12 @@ namespace GLib {
 	public class IOExtension {
 		public extern Type get_type ();
 	}
+
+	[CCode (cname = "GFile")]
+	public interface File : Object {
+		[CCode (vfunc_name = "monitor_dir")]
+		public abstract GLib.FileMonitor monitor_directory (GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+		public abstract GLib.FileMonitor monitor_file (GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable = null) throws GLib.IOError;
+	}
 }
 

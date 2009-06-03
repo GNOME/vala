@@ -259,7 +259,13 @@ public class Vala.Interface : ObjectTypeSymbol {
 
 	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
-			cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
+			var attr = get_attribute ("CCode");
+			if (attr != null) {
+				cname = attr.get_string ("cname");
+			}
+			if (cname == null) {
+				cname = "%s%s".printf (parent_symbol.get_cprefix (), name);
+			}
 		}
 		return cname;
 	}
