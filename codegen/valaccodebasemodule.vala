@@ -1335,6 +1335,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				function.block.prepend_statement (cdecl);
 			}
 
+			if (acc.readable) {
+				var cdecl = new CCodeDeclaration (acc.value_type.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+				function.block.prepend_statement (cdecl);
+			}
+
 			if (current_method_inner_error) {
 				var cdecl = new CCodeDeclaration ("GError *");
 				cdecl.add_declarator (new CCodeVariableDeclarator ("_inner_error_", new CCodeConstant ("NULL")));
@@ -2212,7 +2218,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		stmt.ccodenode = cfrag;
 	}
 
-	public void append_local_free (Symbol sym, CCodeFragment cfrag, bool stop_at_loop) {
+	public void append_local_free (Symbol sym, CCodeFragment cfrag, bool stop_at_loop = false) {
 		var b = (Block) sym;
 
 		var local_vars = b.get_local_variables ();
@@ -2281,7 +2287,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		stmt.ccodenode = cfrag;
 	}
 
-	private bool append_local_free_expr (Symbol sym, CCodeCommaExpression ccomma, bool stop_at_loop) {
+	private bool append_local_free_expr (Symbol sym, CCodeCommaExpression ccomma, bool stop_at_loop = false) {
 		bool found = false;
 	
 		var b = (Block) sym;
@@ -2318,28 +2324,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		return found;
-	}
-
-	private void create_local_free_expr (Expression expr) {
-		var expr_type = expr.value_type;
-		if (expr.target_type != null) {
-			expr_type = expr.target_type;
-		}
-
-		var return_expr_decl = get_temp_variable (expr_type, true, expr);
-		
-		var ccomma = new CCodeCommaExpression ();
-		ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), (CCodeExpression) expr.ccodenode));
-
-		if (!append_local_free_expr (current_symbol, ccomma, false)) {
-			/* no local variables need to be freed */
-			return;
-		}
-
-		ccomma.append_expression (get_variable_cexpression (return_expr_decl.name));
-		
-		expr.ccodenode = ccomma;
-		expr.temp_vars.add (return_expr_decl);
 	}
 
 	public override void visit_return_statement (ReturnStatement stmt) {
@@ -2398,7 +2382,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				stmt.return_expression.temp_vars.add (return_expr_decl);
 			}
 
-			create_local_free_expr (stmt.return_expression);
+			var cfrag = new CCodeFragment ();
+
+			// assign method result to `result'
+			cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), (CCodeExpression) stmt.return_expression.ccodenode)));
+
+			// free local variables
+			append_local_free (current_symbol, cfrag);
 
 			// Property getters of non simple structs shall return the struct value as out parameter,
 			// therefore replace any return statement with an assignment statement to the out formal
@@ -2406,13 +2396,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (current_property_accessor != null &&
 			    current_property_accessor.readable &&
 			    current_property_accessor.prop.property_type.is_real_struct_type()) {
-			    	var cfragment = new CCodeFragment ();
-				cfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("*value"), (CCodeExpression) stmt.return_expression.ccodenode)));
-				cfragment.append (new CCodeReturnStatement ());
-				stmt.ccodenode = cfragment;
+				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("*value"), new CCodeIdentifier ("result"))));
+				cfrag.append (new CCodeReturnStatement ());
 			} else {
-				stmt.ccodenode = new CCodeReturnStatement ((CCodeExpression) stmt.return_expression.ccodenode);
+				cfrag.append (new CCodeReturnStatement (new CCodeIdentifier ("result")));
 			}
+
+			stmt.ccodenode = cfrag;
 
 			create_temp_decl (stmt, stmt.return_expression.temp_vars);
 

@@ -431,6 +431,12 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					}
 				}
 
+				if (!(m.return_type is VoidType)) {
+					var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
+					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+					cinit.append (cdecl);
+				}
+
 				if (inner_error) {
 					/* always separate error parameter and inner_error local variable
 					 * as error may be set to NULL but we're always interested in inner errors
