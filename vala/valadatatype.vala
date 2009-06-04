@@ -298,6 +298,11 @@ public abstract class Vala.DataType : CodeNode {
 	}
 
 	public virtual bool compatible (DataType target_type) {
+		if (target_type.get_type_id () == "G_TYPE_VALUE" && get_type_id () != null) {
+			// allow implicit conversion to GValue
+			return true;
+		}
+
 		if (target_type is DelegateType && this is DelegateType) {
 			return ((DelegateType) target_type).delegate_symbol == ((DelegateType) this).delegate_symbol;
 		}

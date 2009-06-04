@@ -3182,7 +3182,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					// (tmp = expr, &tmp)
 					var ccomma = new CCodeCommaExpression ();
 
-					var temp_var = get_temp_variable (arg.value_type);
+					var temp_var = get_temp_variable (param.parameter_type);
 					temp_vars.insert (0, temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cexpr));
 					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name)));
@@ -3232,6 +3232,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {
+		if (expr.inner.value_type != null && expr.inner.value_type.data_type == gvalue_type
+		    && expr.type_reference.get_type_id () != null) {
+			// explicit conversion from GValue
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier (expr.type_reference.data_type.get_get_value_function ()));
+			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) expr.inner.ccodenode));
+			expr.ccodenode = ccall;
+			return;
+		}
+
 		var cl = expr.type_reference.data_type as Class;
 		var iface = expr.type_reference.data_type as Interface;
 		if (iface != null || (cl != null && !cl.is_compact)) {
@@ -3534,8 +3543,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		bool unboxing = (expression_type is ValueType && expression_type.nullable
 		                 && target_type is ValueType && !target_type.nullable);
 
+		bool gvalue_boxing = (target_type != null
+		                      && target_type.data_type == gvalue_type
+		                      && expression_type.data_type != gvalue_type);
+
 		if (expression_type.value_owned
-		    && (target_type == null || !target_type.value_owned || boxing || unboxing)) {
+		    && (target_type == null || !target_type.value_owned || boxing || unboxing || gvalue_boxing)) {
 			// value leaked, destroy it
 			var pointer_type = target_type as PointerType;
 			if (pointer_type != null && !(pointer_type.base_type is VoidType)) {
@@ -3567,7 +3580,28 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return cexpr;
 		}
 
-		if (boxing) {
+		if (gvalue_boxing) {
+			// implicit conversion to GValue
+			var decl = get_temp_variable (target_type, true, target_type);
+			temp_vars.insert (0, decl);
+
+			var ccomma = new CCodeCommaExpression ();
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
+			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name)));
+			ccall.add_argument (new CCodeIdentifier (expression_type.get_type_id ()));
+			ccomma.append_expression (ccall);
+
+			ccall = new CCodeFunctionCall (get_value_setter_function (expression_type));
+			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name)));
+			ccall.add_argument (cexpr);
+			ccomma.append_expression (ccall);
+
+			ccomma.append_expression (get_variable_cexpression (decl.name));
+			cexpr = ccomma;
+
+			return cexpr;
+		} else if (boxing) {
 			// value needs to be boxed
 
 			var unary = cexpr as CCodeUnaryExpression;
