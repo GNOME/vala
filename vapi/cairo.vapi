@@ -152,6 +152,7 @@ namespace Cairo {
 		public void glyph_extents (Glyph[] glyphs, out TextExtents extents);
 	}
 	
+	[CCode (cname = "cairo_antialias_t")]
 	public enum Antialias {
 		DEFAULT,
 		NONE,
@@ -159,23 +160,27 @@ namespace Cairo {
 		SUBPIXEL
 	}
 	
+	[CCode (cname = "cairo_fill_rule_t")]
 	public enum FillRule {
 		WINDING,
 		EVEN_ODD
 	}
 	
+	[CCode (cname = "cairo_line_cap_t")]
 	public enum LineCap {
 		BUTT,
 		ROUND,
 		SQUARE
 	}
 	
+	[CCode (cname = "cairo_line_join_t")]
 	public enum LineJoin {
 		MITER,
 		ROUND,
 		BEVEL
 	}
 	
+	[CCode (cname = "cairo_operator_t")]
 	public enum Operator {
 		CLEAR,
 		SOURCE,
@@ -415,12 +420,14 @@ namespace Cairo {
 		public Status write_to_png_stream (WriteFunc write_func, void* closure);
 	}
 	
+	[CCode (cname = "cairo_content_t")]
 	public enum Content {
 		COLOR,
 		ALPHA,
 		COLOR_ALPHA
 	}
 	
+	[CCode (cname = "cairo_surface_type_t")]
 	public enum SurfaceType {
 		IMAGE,
 		PDF,
@@ -541,6 +548,7 @@ namespace Cairo {
 		public void transform_point (ref double x, ref double y);
 	}
 	
+	[CCode (cname = "cairo_status_t")]
 	public enum Status {
 		SUCCESS,
 		NO_MEMORY,
