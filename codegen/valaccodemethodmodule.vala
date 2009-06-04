@@ -918,14 +918,6 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		return new CCodeExpressionStatement (ccheck);
 	}
 
-	private CCodeStatement create_postcondition_statement (Expression postcondition) {
-		var cassert = new CCodeFunctionCall (new CCodeIdentifier ("g_assert"));
-
-		cassert.add_argument ((CCodeExpression) postcondition.ccodenode);
-
-		return new CCodeExpressionStatement (cassert);
-	}
-
 	private TypeSymbol? find_parent_type (Symbol sym) {
 		while (sym != null) {
 			if (sym is TypeSymbol) {

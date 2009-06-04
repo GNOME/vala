@@ -2343,9 +2343,21 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		stmt.accept_children (codegen);
 
 		if (stmt.return_expression == null) {
-			stmt.ccodenode = new CCodeReturnStatement ();
-			
-			create_local_free (stmt);
+			var cfrag = new CCodeFragment ();
+
+			// free local variables
+			append_local_free (current_symbol, cfrag);
+
+			if (current_method != null) {
+				// check postconditions
+				foreach (Expression postcondition in current_method.get_postconditions ()) {
+					cfrag.append (create_postcondition_statement (postcondition));
+				}
+			}
+
+			cfrag.append (new CCodeReturnStatement ());
+
+			stmt.ccodenode = cfrag;
 		} else {
 			Symbol return_expression_symbol = null;
 
@@ -2389,6 +2401,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			// free local variables
 			append_local_free (current_symbol, cfrag);
+
+			if (current_method != null) {
+				// check postconditions
+				foreach (Expression postcondition in current_method.get_postconditions ()) {
+					cfrag.append (create_postcondition_statement (postcondition));
+				}
+			}
 
 			// Property getters of non simple structs shall return the struct value as out parameter,
 			// therefore replace any return statement with an assignment statement to the out formal
@@ -3911,6 +3930,14 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_class (Class cl) {
+	}
+
+	public CCodeStatement create_postcondition_statement (Expression postcondition) {
+		var cassert = new CCodeFunctionCall (new CCodeIdentifier ("g_warn_if_fail"));
+
+		cassert.add_argument ((CCodeExpression) postcondition.ccodenode);
+
+		return new CCodeExpressionStatement (cassert);
 	}
 }
 

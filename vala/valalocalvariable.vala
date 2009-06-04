@@ -54,6 +54,8 @@ public class Vala.LocalVariable : Symbol {
 		}
 	}
 
+	public bool is_result { get; set; }
+
 	/**
 	 * Floating variables may only be accessed exactly once.
 	 */

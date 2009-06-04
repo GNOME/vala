@@ -298,7 +298,12 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			expr.ccodenode = new CCodeConstant (ev.get_cname ());
 		} else if (expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) expr.symbol_reference;
-			expr.ccodenode = get_variable_cexpression (local.name);
+			if (local.is_result) {
+				// used in postconditions
+				expr.ccodenode = new CCodeIdentifier ("result");
+			} else {
+				expr.ccodenode = get_variable_cexpression (local.name);
+			}
 		} else if (expr.symbol_reference is FormalParameter) {
 			var p = (FormalParameter) expr.symbol_reference;
 			if (p.name == "this") {

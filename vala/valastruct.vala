@@ -177,7 +177,7 @@ public class Vala.Struct : TypeSymbol {
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
 			m.result_var = new LocalVariable (m.return_type.copy (), "result");
-			m.scope.add (m.result_var.name, m.result_var);
+			m.result_var.is_result = true;
 		}
 		if (m is CreationMethod) {
 			if (m.name == null) {
