@@ -405,6 +405,10 @@ internal class Vala.GTypeModule : GErrorModule {
 				function.modifiers = CCodeModifiers.STATIC;
 			}
 
+			if (cl.has_private_fields) {
+				Report.error (cl.source_reference, "Private fields not supported in compact classes");
+			}
+
 			function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
 
 			decl_space.add_type_member_declaration (function);
