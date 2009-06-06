@@ -72,7 +72,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 			var ma = new MemberAccess.simple ("result");
 			ma.symbol_reference = v;
 			current_method = m;
-			var unref_expr = get_unref_expression (get_variable_cexpression ("result"), m.return_type, ma);
+			var unref_expr = get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "result"), m.return_type, ma);
 			freeblock.add_statement (new CCodeExpressionStatement (unref_expr));
 			current_method = null;
 		}
