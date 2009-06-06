@@ -386,9 +386,16 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				Report.error (arg.source_reference, "Invalid type for argument %d".printf (i + 1));
 				return false;
 			}
-		} else if (arg.target_type != null && !arg.value_type.compatible (arg.target_type)
-		           && !(arg is NullLiteral && direction == ParameterDirection.OUT)) {
+		} else if (arg.target_type != null
+		           && (direction == ParameterDirection.IN || direction == ParameterDirection.REF)
+		           && !arg.value_type.compatible (arg.target_type)) {
 			Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.value_type.to_string (), arg.target_type.to_string ()));
+			return false;
+		} else if (arg.target_type != null
+		           && (direction == ParameterDirection.REF || direction == ParameterDirection.OUT)
+		           && !arg.target_type.compatible (arg.value_type)
+		           && !(arg is NullLiteral)) {
+			Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.target_type.to_string (), arg.value_type.to_string ()));
 			return false;
 		} else {
 			// 0 => null, 1 => in, 2 => ref, 3 => out
