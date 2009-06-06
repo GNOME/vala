@@ -40,7 +40,7 @@ namespace Gst {
 	}
 
 	public class Bin {
-		public void add_many (params Gst.Element[]# elements);
+		public void add_many (params owned Gst.Element[] elements);
 	}
 
 	[CCode (ref_function = "gst_buffer_ref", unref_function = "gst_buffer_unref")]
