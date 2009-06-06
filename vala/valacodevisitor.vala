@@ -301,6 +301,14 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
+	 * Visit operation called for loops.
+	 *
+	 * @param stmt a loop
+	 */
+	public virtual void visit_loop (Loop stmt) {
+	}
+
+	/**
 	 * Visit operation called for while statements.
 	 *
 	 * @param stmt an while statement

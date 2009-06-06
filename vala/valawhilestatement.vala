@@ -1,6 +1,6 @@
 /* valawhilestatement.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -81,55 +81,29 @@ public class Vala.WhileStatement : CodeNode, Statement {
 		body.accept (visitor);
 	}
 
-	public override void replace_expression (Expression old_node, Expression new_node) {
-		if (condition == old_node) {
-			condition = new_node;
-		}
+	bool always_true (Expression condition) {
+		var literal = condition as BooleanLiteral;
+		return (literal != null && literal.value);
 	}
 
 	public override bool check (SemanticAnalyzer analyzer) {
-		if (checked) {
-			return !error;
+		// convert to simple loop
+
+		// do not generate if block if condition is always true
+		if (!always_true (condition)) {
+			var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, condition, condition.source_reference);
+			var true_block = new Block (condition.source_reference);
+			true_block.add_statement (new BreakStatement (condition.source_reference));
+			var if_stmt = new IfStatement (if_condition, true_block, null, condition.source_reference);
+			body.insert_statement (0, if_stmt);
 		}
 
-		checked = true;
+		var loop = new Loop (body, source_reference);
 
-		condition.check (analyzer);
-		
-		body.check (analyzer);
+		var parent_block = (Block) parent_node;
+		parent_block.replace_statement (this, loop);
 
-		if (condition.error) {
-			/* if there was an error in the condition, skip this check */
-			error = true;
-			return false;
-		}
-
-		if (!condition.value_type.compatible (analyzer.bool_type)) {
-			error = true;
-			Report.error (condition.source_reference, "Condition must be boolean");
-			return false;
-		}
-
-		add_error_types (condition.get_error_types ());
-		add_error_types (body.get_error_types ());
-
-		return !error;
-	}
-
-	public Block prepare_condition_split (SemanticAnalyzer analyzer) {
-		// move condition into the loop body to allow split
-		// in multiple statements
-
-		var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, condition, condition.source_reference);
-		var true_block = new Block (condition.source_reference);
-		true_block.add_statement (new BreakStatement (condition.source_reference));
-		var if_stmt = new IfStatement (if_condition, true_block, null, condition.source_reference);
-		body.insert_statement (0, if_stmt);
-
-		condition = new BooleanLiteral (true, source_reference);
-		condition.check (analyzer);
-
-		return body;
+		return loop.check (analyzer);
 	}
 }
 

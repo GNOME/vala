@@ -1098,6 +1098,13 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 	}
 
+	public override void visit_loop (Loop stmt) {
+		write_indent ();
+		write_string ("loop");
+		stmt.body.accept (this);
+		write_newline ();
+	}
+
 	public override void visit_while_statement (WhileStatement stmt) {
 		write_indent ();
 		write_string ("while (");

@@ -168,8 +168,8 @@ public abstract class Vala.CCodeModule {
 		next.visit_switch_label (label);
 	}
 
-	public virtual void visit_while_statement (WhileStatement stmt) {
-		next.visit_while_statement (stmt);
+	public virtual void visit_loop (Loop stmt) {
+		next.visit_loop (stmt);
 	}
 
 	public virtual void visit_do_statement (DoStatement stmt) {

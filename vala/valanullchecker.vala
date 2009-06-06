@@ -1,6 +1,6 @@
 /* valanullchecker.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -152,10 +152,8 @@ public class Vala.NullChecker : CodeVisitor {
 		section.accept_children (this);
 	}
 
-	public override void visit_while_statement (WhileStatement stmt) {
+	public override void visit_loop (Loop stmt) {
 		stmt.accept_children (this);
-
-		check_non_null (stmt.condition);
 	}
 
 	public override void visit_do_statement (DoStatement stmt) {

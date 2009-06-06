@@ -221,12 +221,10 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		label.accept_children (codegen);
 	}
 
-	public override void visit_while_statement (WhileStatement stmt) {
+	public override void visit_loop (Loop stmt) {
 		stmt.accept_children (codegen);
 
-		stmt.ccodenode = new CCodeWhileStatement ((CCodeExpression) stmt.condition.ccodenode, (CCodeStatement) stmt.body.ccodenode);
-		
-		create_temp_decl (stmt, stmt.condition.temp_vars);
+		stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("TRUE"), (CCodeStatement) stmt.body.ccodenode);
 	}
 
 	public override void visit_do_statement (DoStatement stmt) {

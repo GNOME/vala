@@ -655,45 +655,35 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		jump_stack.remove_at (jump_stack.size - 1);
 	}
 
-	public override void visit_while_statement (WhileStatement stmt) {
+	public override void visit_loop (Loop stmt) {
 		if (unreachable (stmt)) {
 			return;
 		}
 
-		var condition_block = new BasicBlock ();
-		jump_stack.add (new JumpTarget.continue_target (condition_block));
+		var loop_block = new BasicBlock ();
+		jump_stack.add (new JumpTarget.continue_target (loop_block));
 		var after_loop_block = new BasicBlock ();
 		jump_stack.add (new JumpTarget.break_target (after_loop_block));
 
-		// condition
-		var last_block = current_block;
-		last_block.connect (condition_block);
-		current_block = condition_block;
-		current_block.add_node (stmt.condition);
-
-		handle_errors (stmt.condition);
-
 		// loop block
-		if (always_false (stmt.condition)) {
-			current_block = null;
-			unreachable_reported = false;
-		} else {
-			current_block = new BasicBlock ();
-			condition_block.connect (current_block);
-		}
+		var last_block = current_block;
+		last_block.connect (loop_block);
+		current_block = loop_block;
+
 		stmt.body.accept (this);
 		// end of loop block reachable?
 		if (current_block != null) {
-			current_block.connect (condition_block);
+			current_block.connect (loop_block);
 		}
 
 		// after loop
 		// reachable?
-		if (always_true (stmt.condition) && after_loop_block.get_predecessors ().size == 0) {
+		if (after_loop_block.get_predecessors ().size == 0) {
+			// after loop block not reachable
 			current_block = null;
 			unreachable_reported = false;
 		} else {
-			condition_block.connect (after_loop_block);
+			// after loop block reachable
 			current_block = after_loop_block;
 		}
 

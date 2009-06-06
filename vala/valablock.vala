@@ -51,10 +51,12 @@ public class Vala.Block : Symbol, Statement {
 	 * @param stmt a statement
 	 */
 	public void add_statement (Statement stmt) {
+		stmt.parent_node = this;
 		statement_list.add (stmt);
 	}
 
 	public void insert_statement (int index, Statement stmt) {
+		stmt.parent_node = this;
 		statement_list.insert (index, stmt);
 	}
 

@@ -89,6 +89,7 @@ libvalacore_la_VALASOURCES = \
 	valalocalvariable.vala \
 	valalockable.vala \
 	valalockstatement.vala \
+	valaloop.vala \
 	valamember.vala \
 	valamemberaccess.vala \
 	valamemberinitializer.vala \

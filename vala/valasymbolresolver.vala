@@ -380,6 +380,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 		label.accept_children (this);
 	}
 
+	public override void visit_loop (Loop stmt) {
+		stmt.accept_children (this);
+	}
+
 	public override void visit_while_statement (WhileStatement stmt) {
 		stmt.accept_children (this);
 	}

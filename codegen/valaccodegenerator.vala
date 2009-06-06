@@ -189,8 +189,8 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head.visit_switch_label (label);
 	}
 
-	public override void visit_while_statement (WhileStatement stmt) {
-		head.visit_while_statement (stmt);
+	public override void visit_loop (Loop stmt) {
+		head.visit_loop (stmt);
 	}
 
 	public override void visit_do_statement (DoStatement stmt) {
