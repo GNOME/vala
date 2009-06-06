@@ -26,7 +26,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public delegate void InstallPluginsResultFunc (Gst.InstallPluginsReturn result);
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
-	public static Gst.InstallPluginsReturn install_plugins_async (string details, Gst.InstallPluginsContext ctx, Gst.InstallPluginsResultFunc func);
+	public static Gst.InstallPluginsReturn install_plugins_async ([CCode (array_length = false)] string[] details, Gst.InstallPluginsContext? ctx, Gst.InstallPluginsResultFunc func);
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
 	public static bool install_plugins_installation_in_progress ();
 	[CCode (cheader_filename = "gst/pbutils/pbutils.h")]
