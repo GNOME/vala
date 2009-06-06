@@ -691,61 +691,6 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		jump_stack.remove_at (jump_stack.size - 1);
 	}
 
-	public override void visit_for_statement (ForStatement stmt) {
-		if (unreachable (stmt)) {
-			return;
-		}
-
-		// initializer
-		foreach (Expression init_expr in stmt.get_initializer ()) {
-			current_block.add_node (init_expr);
-			handle_errors (init_expr);
-		}
-
-		var iterator_block = new BasicBlock ();
-		jump_stack.add (new JumpTarget.continue_target (iterator_block));
-		var after_loop_block = new BasicBlock ();
-		jump_stack.add (new JumpTarget.break_target (after_loop_block));
-
-		// condition
-		var condition_block = new BasicBlock ();
-		current_block.connect (condition_block);
-		current_block = condition_block;
-		if (stmt.condition != null) {
-			current_block.add_node (stmt.condition);
-		}
-
-		if (stmt.condition != null) {
-			handle_errors (stmt.condition);
-		}
-
-		// loop block
-		current_block = new BasicBlock ();
-		condition_block.connect (current_block);
-		stmt.body.accept (this);
-
-		// iterator
-		// reachable?
-		if (current_block != null || iterator_block.get_predecessors ().size > 0) {
-			if (current_block != null) {
-				current_block.connect (iterator_block);
-			}
-			current_block = iterator_block;
-			foreach (Expression it_expr in stmt.get_iterator ()) {
-				current_block.add_node (it_expr);
-				handle_errors (it_expr);
-			}
-			current_block.connect (condition_block);
-		}
-
-		// after loop
-		condition_block.connect (after_loop_block);
-		current_block = after_loop_block;
-
-		jump_stack.remove_at (jump_stack.size - 1);
-		jump_stack.remove_at (jump_stack.size - 1);
-	}
-
 	public override void visit_foreach_statement (ForeachStatement stmt) {
 		if (unreachable (stmt)) {
 			return;

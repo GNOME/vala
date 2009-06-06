@@ -156,12 +156,6 @@ public class Vala.NullChecker : CodeVisitor {
 		stmt.accept_children (this);
 	}
 
-	public override void visit_for_statement (ForStatement stmt) {
-		stmt.accept_children (this);
-
-		check_non_null (stmt.condition);
-	}
-
 	public override void visit_foreach_statement (ForeachStatement stmt) {
 		stmt.accept_children (this);
 

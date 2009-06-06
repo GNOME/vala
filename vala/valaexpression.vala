@@ -102,16 +102,6 @@ public abstract class Vala.Expression : CodeNode {
 		}
 	}
 
-	public Block prepare_condition_split (SemanticAnalyzer analyzer) {
-		var for_stmt = parent_statement as ForStatement;
-
-		if (for_stmt != null) {
-			return for_stmt.prepare_condition_split (analyzer);
-		}
-
-		return analyzer.insert_block;
-	}
-
 	public void insert_statement (Block block, Statement stmt) {
 		block.insert_before (parent_statement, stmt);
 	}

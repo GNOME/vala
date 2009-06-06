@@ -436,9 +436,6 @@ public class Vala.MethodCall : Expression {
 			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
 				// simple statements, no side effects after method call
 			} else {
-				var old_insert_block = analyzer.insert_block;
-				analyzer.insert_block = prepare_condition_split (analyzer);
-
 				// store parent_node as we need to replace the expression in the old parent node later on
 				var old_parent_node = parent_node;
 
@@ -463,8 +460,6 @@ public class Vala.MethodCall : Expression {
 				var block = (Block) analyzer.current_symbol;
 				block.remove_local_variable (local);
 				analyzer.insert_block.add_local_variable (local);
-
-				analyzer.insert_block = old_insert_block;
 
 				old_parent_node.replace_expression (this, temp_access);
 			}

@@ -1,6 +1,6 @@
 /* valaforstatement.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -137,87 +137,49 @@ public class Vala.ForStatement : CodeNode, Statement {
 		body.accept (visitor);
 	}
 
-	public override void replace_expression (Expression old_node, Expression new_node) {
-		if (condition == old_node) {
-			condition = new_node;
-			return;
-		}
-
-		for (int i = 0; i < initializer.size; i++) {
-			if (initializer[i] == old_node) {
-				initializer[i] = new_node;
-				return;
-			}
-		}
-		for (int i = 0; i < iterator.size; i++) {
-			if (iterator[i] == old_node) {
-				iterator[i] = new_node;
-				return;
-			}
-		}
+	bool always_true (Expression condition) {
+		var literal = condition as BooleanLiteral;
+		return (literal != null && literal.value);
 	}
 
 	public override bool check (SemanticAnalyzer analyzer) {
-		if (checked) {
-			return !error;
+		// convert to simple loop
+
+		var block = new Block (source_reference);
+
+		// initializer
+		foreach (var init_expr in initializer) {
+			block.add_statement (new ExpressionStatement (init_expr, init_expr.source_reference));
 		}
 
-		checked = true;
-
-		foreach (Expression init_expr in initializer) {
-			init_expr.check (analyzer);
+		// do not generate if block if condition is always true
+		if (condition != null && !always_true (condition)) {
+			// condition
+			var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, condition, condition.source_reference);
+			var true_block = new Block (condition.source_reference);
+			true_block.add_statement (new BreakStatement (condition.source_reference));
+			var if_stmt = new IfStatement (if_condition, true_block, null, condition.source_reference);
+			body.insert_statement (0, if_stmt);
 		}
 
-		if (condition != null) {
-			condition.check (analyzer);
+		// iterator
+		var first_local = new LocalVariable (analyzer.bool_type.copy (), get_temp_name (), new BooleanLiteral (true, source_reference), source_reference);
+		block.add_statement (new DeclarationStatement (first_local, source_reference));
+
+		var iterator_block = new Block (source_reference);
+		foreach (var it_expr in iterator) {
+			iterator_block.add_statement (new ExpressionStatement (it_expr, it_expr.source_reference));
 		}
 
-		foreach (Expression it_expr in iterator) {
-			it_expr.check (analyzer);
-		}
-		
-		body.check (analyzer);
+		var first_if = new IfStatement (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, new MemberAccess.simple (first_local.name, source_reference), source_reference), iterator_block, null, source_reference);
+		body.insert_statement (0, first_if);
+		body.insert_statement (1, new ExpressionStatement (new Assignment (new MemberAccess.simple (first_local.name, source_reference), new BooleanLiteral (false, source_reference), AssignmentOperator.SIMPLE, source_reference), source_reference));
 
-		if (condition != null && condition.error) {
-			/* if there was an error in the condition, skip this check */
-			error = true;
-			return false;
-		}
+		block.add_statement (new Loop (body, source_reference));
 
-		if (condition != null && !condition.value_type.compatible (analyzer.bool_type)) {
-			error = true;
-			Report.error (condition.source_reference, "Condition must be boolean");
-			return false;
-		}
+		var parent_block = (Block) parent_node;
+		parent_block.replace_statement (this, block);
 
-		if (condition != null) {
-			add_error_types (condition.get_error_types ());
-		}
-
-		add_error_types (body.get_error_types ());
-		foreach (Expression exp in get_initializer ()) {
-			add_error_types (exp.get_error_types ());
-		}
-		foreach (Expression exp in get_iterator ()) {
-			add_error_types (exp.get_error_types ());
-		}
-
-		return !error;
-	}
-
-	public Block prepare_condition_split (SemanticAnalyzer analyzer) {
-		// move condition into the loop body to allow split
-		// in multiple statements
-
-		var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, condition, condition.source_reference);
-		var true_block = new Block (condition.source_reference);
-		true_block.add_statement (new BreakStatement (condition.source_reference));
-		var if_stmt = new IfStatement (if_condition, true_block, null, condition.source_reference);
-		body.insert_statement (0, if_stmt);
-
-		condition = new BooleanLiteral (true, source_reference);
-		condition.check (analyzer);
-
-		return body;
+		return block.check (analyzer);
 	}
 }

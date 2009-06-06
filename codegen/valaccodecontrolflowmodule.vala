@@ -227,32 +227,6 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("TRUE"), (CCodeStatement) stmt.body.ccodenode);
 	}
 
-	public override void visit_for_statement (ForStatement stmt) {
-		stmt.accept_children (codegen);
-
-		CCodeExpression ccondition = null;
-		if (stmt.condition != null) {
-			ccondition = (CCodeExpression) stmt.condition.ccodenode;
-		}
-
-		var cfor = new CCodeForStatement (ccondition, (CCodeStatement) stmt.body.ccodenode);
-		stmt.ccodenode = cfor;
-		
-		foreach (Expression init_expr in stmt.get_initializer ()) {
-			cfor.add_initializer ((CCodeExpression) init_expr.ccodenode);
-			create_temp_decl (stmt, init_expr.temp_vars);
-		}
-		
-		foreach (Expression it_expr in stmt.get_iterator ()) {
-			cfor.add_iterator ((CCodeExpression) it_expr.ccodenode);
-			create_temp_decl (stmt, it_expr.temp_vars);
-		}
-
-		if (stmt.condition != null) {
-			create_temp_decl (stmt, stmt.condition.temp_vars);
-		}
-	}
-
 	public override void visit_foreach_statement (ForeachStatement stmt) {
 		stmt.element_variable.active = true;
 		stmt.collection_variable.active = true;

@@ -172,10 +172,6 @@ public abstract class Vala.CCodeModule {
 		next.visit_loop (stmt);
 	}
 
-	public virtual void visit_for_statement (ForStatement stmt) {
-		next.visit_for_statement (stmt);
-	}
-
 	public virtual void visit_foreach_statement (ForeachStatement stmt) {
 		next.visit_foreach_statement (stmt);
 	}

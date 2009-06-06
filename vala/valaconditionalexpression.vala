@@ -1,6 +1,6 @@
 /* valaconditionalexpression.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -111,9 +111,6 @@ public class Vala.ConditionalExpression : Expression {
 			return false;
 		}
 
-		var old_insert_block = analyzer.insert_block;
-		analyzer.insert_block = prepare_condition_split (analyzer);
-
 		// convert ternary expression into if statement
 		// required for flow analysis and exception handling
 
@@ -143,7 +140,6 @@ public class Vala.ConditionalExpression : Expression {
 		if (!if_stmt.check (analyzer)) {
 			return false;
 		}
-		analyzer.insert_block = old_insert_block;
 
 		true_expression = true_local.initializer;
 		false_expression = false_local.initializer;

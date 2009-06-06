@@ -151,9 +151,6 @@ public class Vala.BinaryExpression : Expression {
 		// for example, expressions in method contracts
 		if (analyzer.current_symbol is Block
 		    && (operator == BinaryOperator.AND || operator == BinaryOperator.OR)) {
-			var old_insert_block = analyzer.insert_block;
-			analyzer.insert_block = prepare_condition_split (analyzer);
-
 			// convert conditional expression into if statement
 			// required for flow analysis and exception handling
 
@@ -185,7 +182,6 @@ public class Vala.BinaryExpression : Expression {
 				error = true;
 				return false;
 			}
-			analyzer.insert_block = old_insert_block;
 
 			var ma = new MemberAccess.simple (local.name, source_reference);
 			ma.target_type = target_type;
