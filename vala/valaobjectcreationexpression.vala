@@ -224,6 +224,8 @@ public class Vala.ObjectCreationExpression : Expression {
 		value_type = type_reference.copy ();
 		value_type.value_owned = true;
 
+		bool may_throw = false;
+
 		int given_num_type_args = type_reference.get_type_arguments ().size;
 		int expected_num_type_args = 0;
 
@@ -319,6 +321,8 @@ public class Vala.ObjectCreationExpression : Expression {
 			analyzer.check_arguments (this, new MethodType (m), m.get_parameters (), args);
 
 			foreach (DataType error_type in m.get_error_types ()) {
+				may_throw = true;
+
 				// ensure we can trace back which expression may throw errors of this type
 				var call_error_type = error_type.copy ();
 				call_error_type.source_reference = source_reference;
@@ -358,6 +362,39 @@ public class Vala.ObjectCreationExpression : Expression {
 
 		foreach (MemberInitializer init in get_object_initializer ()) {
 			analyzer.visit_member_initializer (init, type_reference);
+		}
+
+		if (may_throw) {
+			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
+				// simple statements, no side effects after method call
+			} else {
+				// store parent_node as we need to replace the expression in the old parent node later on
+				var old_parent_node = parent_node;
+
+				var local = new LocalVariable (value_type, get_temp_name (), null, source_reference);
+				// use floating variable to avoid unnecessary (and sometimes impossible) copies
+				local.floating = true;
+				var decl = new DeclarationStatement (local, source_reference);
+
+				insert_statement (analyzer.insert_block, decl);
+
+				Expression temp_access = new MemberAccess.simple (local.name, source_reference);
+				temp_access.target_type = target_type;
+
+				// don't set initializer earlier as this changes parent_node and parent_statement
+				local.initializer = this;
+				decl.check (analyzer);
+				temp_access.check (analyzer);
+
+				// move temp variable to insert block to ensure the
+				// variable is in the same block as the declaration
+				// otherwise there will be scoping issues in the generated code
+				var block = (Block) analyzer.current_symbol;
+				block.remove_local_variable (local);
+				analyzer.insert_block.add_local_variable (local);
+
+				old_parent_node.replace_expression (this, temp_access);
+			}
 		}
 
 		return !error;
