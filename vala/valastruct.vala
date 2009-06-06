@@ -690,6 +690,22 @@ public class Vala.Struct : TypeSymbol {
 		return false;
 	}
 
+	bool is_recursive_value_type (DataType type) {
+		var struct_type = type as StructValueType;
+		if (struct_type != null) {
+			var st = (Struct) struct_type.type_symbol;
+			if (st == this) {
+				return true;
+			}
+			foreach (Field f in st.fields) {
+				if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (f.field_type)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public override bool check (SemanticAnalyzer analyzer) {
 		if (checked) {
 			return !error;
@@ -725,6 +741,12 @@ public class Vala.Struct : TypeSymbol {
 
 		foreach (Field f in fields) {
 			f.check (analyzer);
+
+			if (f.binding == MemberBinding.INSTANCE && is_recursive_value_type (f.field_type)) {
+				error = true;
+				Report.error (f.source_reference, "Recursive value types are not allowed");
+				return false;
+			}
 		}
 
 		foreach (Constant c in constants) {
