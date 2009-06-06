@@ -193,10 +193,6 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head.visit_loop (stmt);
 	}
 
-	public override void visit_do_statement (DoStatement stmt) {
-		head.visit_do_statement (stmt);
-	}
-
 	public override void visit_for_statement (ForStatement stmt) {
 		head.visit_for_statement (stmt);
 	}

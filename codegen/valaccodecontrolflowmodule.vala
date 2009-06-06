@@ -227,14 +227,6 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("TRUE"), (CCodeStatement) stmt.body.ccodenode);
 	}
 
-	public override void visit_do_statement (DoStatement stmt) {
-		stmt.accept_children (codegen);
-
-		stmt.ccodenode = new CCodeDoStatement ((CCodeStatement) stmt.body.ccodenode, (CCodeExpression) stmt.condition.ccodenode);
-		
-		create_temp_decl (stmt, stmt.condition.temp_vars);
-	}
-
 	public override void visit_for_statement (ForStatement stmt) {
 		stmt.accept_children (codegen);
 

@@ -691,51 +691,6 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		jump_stack.remove_at (jump_stack.size - 1);
 	}
 
-	public override void visit_do_statement (DoStatement stmt) {
-		if (unreachable (stmt)) {
-			return;
-		}
-
-		var condition_block = new BasicBlock ();
-		jump_stack.add (new JumpTarget.continue_target (condition_block));
-		var after_loop_block = new BasicBlock ();
-		jump_stack.add (new JumpTarget.break_target (after_loop_block));
-
-		// loop block
-		var last_block = current_block;
-		var loop_block = new BasicBlock ();
-		last_block.connect (loop_block);
-		current_block = loop_block;
-		stmt.body.accept (this);
-
-		// condition
-		// reachable?
-		if (current_block != null || condition_block.get_predecessors ().size > 0) {
-			if (current_block != null) {
-				last_block = current_block;
-				last_block.connect (condition_block);
-			}
-			condition_block.add_node (stmt.condition);
-			condition_block.connect (loop_block);
-			current_block = condition_block;
-
-			handle_errors (stmt.condition);
-		}
-
-		// after loop
-		// reachable?
-		if (current_block != null || after_loop_block.get_predecessors ().size > 0) {
-			if (current_block != null) {
-				last_block = current_block;
-				last_block.connect (after_loop_block);
-			}
-			current_block = after_loop_block;
-		}
-
-		jump_stack.remove_at (jump_stack.size - 1);
-		jump_stack.remove_at (jump_stack.size - 1);
-	}
-
 	public override void visit_for_statement (ForStatement stmt) {
 		if (unreachable (stmt)) {
 			return;

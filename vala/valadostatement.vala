@@ -81,60 +81,28 @@ public class Vala.DoStatement : CodeNode, Statement {
 		visitor.visit_end_full_expression (condition);
 	}
 
-	public override void replace_expression (Expression old_node, Expression new_node) {
-		if (condition == old_node) {
-			condition = new_node;
-		}
+	bool always_true (Expression condition) {
+		var literal = condition as BooleanLiteral;
+		return (literal != null && literal.value);
 	}
 
 	public override bool check (SemanticAnalyzer analyzer) {
-		if (checked) {
-			return !error;
+		// convert to simple loop
+
+		// do not generate variable and if block if condition is always true
+		if (always_true (condition)) {
+			var loop = new Loop (body, source_reference);
+
+			var parent_block = (Block) parent_node;
+			parent_block.replace_statement (this, loop);
+
+			return loop.check (analyzer);
 		}
 
-		checked = true;
+		var block = new Block (source_reference);
 
-		if (!condition.check (analyzer)) {
-			/* if there was an error in the condition, skip this check */
-			error = true;
-			return false;
-		}
-
-		if (!condition.value_type.compatible (analyzer.bool_type)) {
-			error = true;
-			Report.error (condition.source_reference, "Condition must be boolean");
-			return false;
-		}
-
-		body.check (analyzer);
-
-		add_error_types (condition.get_error_types ());
-		add_error_types (body.get_error_types ());
-
-		return !error;
-	}
-
-	public Block prepare_condition_split (SemanticAnalyzer analyzer) {
-		/* move condition into the loop body to allow split
-		 * in multiple statements
-		 *
-		 * first = false;
-		 * do {
-		 *     if (first) {
-		 *         if (!condition) {
-		 *             break;
-		 *         }
-		 *     }
-		 *     first = true;
-		 *     ...
-		 * } while (true);
-		 */
-
-		var first_local = new LocalVariable (analyzer.bool_type.copy (), get_temp_name (), new BooleanLiteral (false, source_reference), source_reference);
-		var first_decl = new DeclarationStatement (first_local, source_reference);
-		first_decl.check (analyzer);
-		var block = (Block) analyzer.current_symbol;
-		block.insert_before (this, first_decl);
+		var first_local = new LocalVariable (analyzer.bool_type.copy (), get_temp_name (), new BooleanLiteral (true, source_reference), source_reference);
+		block.add_statement (new DeclarationStatement (first_local, source_reference));
 
 		var if_condition = new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, condition, condition.source_reference);
 		var true_block = new Block (condition.source_reference);
@@ -144,13 +112,15 @@ public class Vala.DoStatement : CodeNode, Statement {
 		var condition_block = new Block (condition.source_reference);
 		condition_block.add_statement (if_stmt);
 
-		var first_if = new IfStatement (new MemberAccess.simple (first_local.name, source_reference), condition_block, null, source_reference);
+		var first_if = new IfStatement (new UnaryExpression (UnaryOperator.LOGICAL_NEGATION, new MemberAccess.simple (first_local.name, source_reference), source_reference), condition_block, null, source_reference);
 		body.insert_statement (0, first_if);
-		body.insert_statement (1, new ExpressionStatement (new Assignment (new MemberAccess.simple (first_local.name, source_reference), new BooleanLiteral (true, source_reference), AssignmentOperator.SIMPLE, source_reference), source_reference));
+		body.insert_statement (1, new ExpressionStatement (new Assignment (new MemberAccess.simple (first_local.name, source_reference), new BooleanLiteral (false, source_reference), AssignmentOperator.SIMPLE, source_reference), source_reference));
 
-		condition = new BooleanLiteral (true, source_reference);
-		condition.check (analyzer);
+		block.add_statement (new Loop (body, source_reference));
 
-		return condition_block;
+		var parent_block = (Block) parent_node;
+		parent_block.replace_statement (this, block);
+
+		return block.check (analyzer);
 	}
 }

@@ -2231,7 +2231,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 		
 		if (stop_at_loop) {
-			if (b.parent_node is DoStatement || b.parent_node is Loop ||
+			if (b.parent_node is Loop ||
 			    b.parent_node is ForStatement || b.parent_node is ForeachStatement ||
 			    b.parent_node is SwitchStatement) {
 				return;
