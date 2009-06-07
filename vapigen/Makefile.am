@@ -43,11 +43,11 @@ vapicheck_SOURCES = \
 	$(NULL)
 
 vapigen.vala.stamp: $(vapigen_VALASOURCES)
-	$(VALAC) -C --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
+	$(VALAC) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
 	touch $@
 
 vapicheck.vala.stamp: $(vapicheck_VALASOURCES)
-	$(VALAC) -C --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
+	$(VALAC) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
 	touch $@
 
 vapigen_LDADD = \

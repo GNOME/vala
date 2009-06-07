@@ -54,7 +54,7 @@ codegeninclude_HEADERS = \
 	$(NULL)
 
 codegen.vapi codegen.vala.stamp: $(libvala_la_VALASOURCES)
-	$(VALAC) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala -H valacodegen.h --library codegen $^
+	$(VALAC) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala -H valacodegen.h --library codegen $^
 	touch $@
 
 libvala_la_LDFLAGS = -no-undefined
