@@ -1158,8 +1158,8 @@ namespace Gst {
 		public bool get_boolean_index (string tag, uint index, out bool value);
 		public bool get_char (string tag, out char value);
 		public bool get_char_index (string tag, uint index, out char value);
-		public bool get_date (string tag, out GLib.Date value);
-		public bool get_date_index (string tag, uint index, out GLib.Date value);
+		public bool get_date (string tag, out GLib.Date? value);
+		public bool get_date_index (string tag, uint index, out GLib.Date? value);
 		public bool get_double (string tag, out double value);
 		public bool get_double_index (string tag, uint index, out double value);
 		public bool get_float (string tag, out float value);
