@@ -822,6 +822,24 @@ public class Vala.GirParser : CodeVisitor {
 		return m;
 	}
 
+	class MethodInfo {
+		public MethodInfo (FormalParameter param, int array_length_idx, int closure_idx, int destroy_idx) {
+			this.param = param;
+			this.array_length_idx = array_length_idx;
+			this.closure_idx = closure_idx;
+			this.destroy_idx = destroy_idx;
+			this.vala_idx = 0.0F;
+			this.keep = false;
+		}
+
+		public FormalParameter param;
+		public float vala_idx;
+		public int array_length_idx;
+		public int closure_idx;
+		public int destroy_idx;
+		public bool keep;
+	}
+
 	Method parse_method (string element_name) {
 		start_element (element_name);
 		string name = reader.get_attribute ("name");
@@ -846,7 +864,7 @@ public class Vala.GirParser : CodeVisitor {
 			m.binding = MemberBinding.STATIC;
 		}
 
-		var parameters = new ArrayList<FormalParameter> ();
+		var parameters = new ArrayList<MethodInfo> ();
 		var array_length_parameters = new ArrayList<int> ();
 		var closure_parameters = new ArrayList<int> ();
 		var destroy_parameters = new ArrayList<int> ();
@@ -869,28 +887,69 @@ public class Vala.GirParser : CodeVisitor {
 				}
 				// first parameter is instance pointer in virtual methods, ignore
 				if (element_name != "callback" || !first) {
-					parameters.add (param);
+					parameters.add (new MethodInfo(param, array_length_idx, closure_idx, destroy_idx));
 				} else {
 					first = false;
 				}
 			}
 			end_element ("parameters");
 		}
-		int i = 0;
+		int i = 0, j=1, add=0;
 
-		if (element_name == "method" || element_name == "virtual-method") {
+		if (element_name == "method" || element_name == "virtual-method" || element_name == "callback") {
 			// implicit instance parameter
-			i++;
+			add = 1;
 		}
 
-		foreach (FormalParameter param in parameters) {
-			if (!array_length_parameters.contains (i)
-			    && !closure_parameters.contains (i)
-			    && !destroy_parameters.contains (i)) {
-				m.add_parameter (param);
+		int last = i;
+		foreach (MethodInfo info in parameters) {
+			if (!array_length_parameters.contains (i+add)
+			    && !closure_parameters.contains (i+add)
+			    && !destroy_parameters.contains (i+add)) {
+				info.vala_idx = (float) j;
+				info.keep = true;
+
+				/* interpolate for vala_idx between this and last*/
+				float last_idx = parameters[last].vala_idx;
+				for (int k=last+1; k < i; k++) {
+					parameters[k].vala_idx =  last_idx + (((j - last_idx) / (i-last)) * (k-last));
+				}
+				last = i+1;
+				j++;
 			}
 			i++;
 		}
+
+		foreach (MethodInfo info in parameters) {
+			if (info.keep) {
+				if (info.array_length_idx != -1) {
+					if ((info.array_length_idx) - add >= parameters.size) {
+						Report.error (get_current_src (), "invalid array_length index");
+						continue;
+					}
+					info.param.carray_length_parameter_position = parameters[info.array_length_idx-add].vala_idx;
+				}
+
+				if (info.closure_idx != -1) {
+					if ((info.closure_idx - add) >= parameters.size) {
+						Report.error (get_current_src (), "invalid closure index");
+						continue;
+					}
+					info.param.cdelegate_target_parameter_position = parameters[info.closure_idx - add].vala_idx;
+				}
+/*
+				if (info.destroy_idx != -1) {
+					if (info.destroy_idx - add >= parameters.size) {
+						Report.error (get_current_src (), "invalid destroy index");
+						continue;
+					}
+					info.param.cdelegate_target_parameter_position = parameters[info.destroy_idx - add].vala_idx;
+				}
+*/
+				m.add_parameter (info.param);
+			}
+		}
+
 		if (throws_string == "1") {
 			m.add_error_type (new ErrorType (null, null));
 		}
