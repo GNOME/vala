@@ -815,6 +815,7 @@ public class Vala.GirParser : CodeVisitor {
 			}
 			end_element ("parameters");
 		}
+
 		if (throws_string == "1") {
 			m.add_error_type (new ErrorType (null, null));
 		}
@@ -901,7 +902,7 @@ public class Vala.GirParser : CodeVisitor {
 			add = 1;
 		}
 
-		int last = i;
+		int last = -1;
 		foreach (MethodInfo info in parameters) {
 			if (!array_length_parameters.contains (i+add)
 			    && !closure_parameters.contains (i+add)
@@ -910,7 +911,10 @@ public class Vala.GirParser : CodeVisitor {
 				info.keep = true;
 
 				/* interpolate for vala_idx between this and last*/
-				float last_idx = parameters[last].vala_idx;
+				float last_idx = 0.0F;
+				if (last != -1) {
+					last_idx = parameters[last].vala_idx;
+				}
 				for (int k=last+1; k < i; k++) {
 					parameters[k].vala_idx =  last_idx + (((j - last_idx) / (i-last)) * (k-last));
 				}
@@ -920,13 +924,25 @@ public class Vala.GirParser : CodeVisitor {
 			i++;
 		}
 
+		i =0;
+		foreach (MethodInfo info in parameters) {
+			debug ("%d %s %f %d %d %d %d", i, info.param.name, info.vala_idx, (int)info.keep, info.array_length_idx, info.closure_idx, info.destroy_idx);
+			i++;
+		}
+
 		foreach (MethodInfo info in parameters) {
 			if (info.keep) {
+
+				/* add_parameter sets carray_length_parameter_position and cdelegate_target_parameter_position
+				 so do it first*/
+				m.add_parameter (info.param);
+
 				if (info.array_length_idx != -1) {
 					if ((info.array_length_idx) - add >= parameters.size) {
 						Report.error (get_current_src (), "invalid array_length index");
 						continue;
 					}
+					debug ("Setting carray_length_parameter_position on %s to %f", info.param.name, parameters[info.array_length_idx-add].vala_idx);
 					info.param.carray_length_parameter_position = parameters[info.array_length_idx-add].vala_idx;
 				}
 
@@ -946,7 +962,6 @@ public class Vala.GirParser : CodeVisitor {
 					info.param.cdelegate_target_parameter_position = parameters[info.destroy_idx - add].vala_idx;
 				}
 */
-				m.add_parameter (info.param);
 			}
 		}
 
