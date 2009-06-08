@@ -126,7 +126,22 @@ class Vala.VAPIGen : Object {
 				}
 			}
 		}
-		
+
+		// depsfile for gir case
+		if (library != null) {
+			var depsfile = library + ".deps";
+			if (FileUtils.test (depsfile, FileTest.EXISTS)) {
+
+				string[] deps = get_packages_from_depsfile (depsfile);
+
+				foreach (string dep in deps) {
+					if (!add_package (dep)) {
+						Report.error (null, "%s not found in specified Vala API directories".printf (dep));
+					}
+				}
+			}
+		}
+
 		if (packages != null) {
 			foreach (string package in packages) {
 				if (!add_package (package)) {
