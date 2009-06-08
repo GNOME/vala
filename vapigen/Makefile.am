@@ -52,14 +52,12 @@ vapicheck.vala.stamp: $(vapicheck_VALASOURCES)
 
 vapigen_LDADD = \
 	$(GLIB_LIBS) \
-	../gee/libgee.la \
 	../codegen/libvala.la \
 	../gobject-introspection/libgidl.la \
 	$(NULL)
 
 vapicheck_LDADD = \
 	$(GLIB_LIBS) \
-	../gee/libgee.la \
 	../codegen/libvala.la \
 	../gobject-introspection/libgidl.la \
 	$(NULL)
