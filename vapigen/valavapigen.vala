@@ -65,6 +65,7 @@ class Vala.VAPIGen : Object {
 		}
 	}
 
+	/* TODO: this is duplicated between here and the compiler. its should go somewhere on its own */
 	private bool add_package (string pkg) {
 		if (context.has_package (pkg)) {
 			// ignore multiple occurences of the same package
@@ -80,7 +81,26 @@ class Vala.VAPIGen : Object {
 		context.add_package (pkg);
 
 		context.add_source_file (new SourceFile (context, package_path, true));
-		
+
+		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
+		if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
+			try {
+				string deps_content;
+				ulong deps_len;
+				FileUtils.get_contents (deps_filename, out deps_content, out deps_len);
+				foreach (string dep in deps_content.split ("\n")) {
+					dep.strip ();
+					if (dep != "") {
+						if (!add_package (dep)) {
+							Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg));
+						}
+					}
+				}
+			} catch (FileError e) {
+				Report.error (null, "Unable to read dependency file: %s".printf (e.message));
+			}
+		}
+
 		return true;
 	}
 	
