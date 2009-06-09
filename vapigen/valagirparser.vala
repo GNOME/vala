@@ -924,12 +924,6 @@ public class Vala.GirParser : CodeVisitor {
 			i++;
 		}
 
-		i =0;
-		foreach (MethodInfo info in parameters) {
-			debug ("%d %s %f %d %d %d %d", i, info.param.name, info.vala_idx, (int)info.keep, info.array_length_idx, info.closure_idx, info.destroy_idx);
-			i++;
-		}
-
 		foreach (MethodInfo info in parameters) {
 			if (info.keep) {
 
@@ -942,7 +936,6 @@ public class Vala.GirParser : CodeVisitor {
 						Report.error (get_current_src (), "invalid array_length index");
 						continue;
 					}
-					debug ("Setting carray_length_parameter_position on %s to %f", info.param.name, parameters[info.array_length_idx-add].vala_idx);
 					info.param.carray_length_parameter_position = parameters[info.array_length_idx-add].vala_idx;
 				}
 
@@ -953,7 +946,7 @@ public class Vala.GirParser : CodeVisitor {
 					}
 					info.param.cdelegate_target_parameter_position = parameters[info.closure_idx - add].vala_idx;
 				}
-/*
+/* Leaving this as a TODO, needs more testing
 				if (info.destroy_idx != -1) {
 					if (info.destroy_idx - add >= parameters.size) {
 						Report.error (get_current_src (), "invalid destroy index");
