@@ -760,7 +760,7 @@ public class Vala.Struct : TypeSymbol {
 		if (!external && !external_package && base_type == null && get_fields ().size == 0
 		    && !is_boolean_type () && !is_integer_type () && !is_floating_type ()) {
 			error = true;
-			Report.error (source_reference, "structs cannot be empty");
+			Report.error (source_reference, "structs cannot be empty: %s".printf(name));
 		}
 
 		analyzer.current_source_file = old_source_file;
