@@ -62,6 +62,7 @@ namespace Gtk {
 		public unowned Gtk.SourceLanguage get_language (string id);
 		public unowned string get_language_ids ();
 		public unowned string get_search_path ();
+		public unowned Gtk.SourceLanguage guess_language (string filename, string content_type);
 		[CCode (has_construct_function = false)]
 		public SourceLanguageManager ();
 		public void set_search_path (string dirs);
@@ -196,10 +197,12 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceView : Gtk.TextView, Atk.Implementor, Gtk.Buildable {
 		public bool get_auto_indent ();
+		public Gtk.SourceDrawSpacesFlags get_draw_spaces ();
 		public bool get_highlight_current_line ();
 		public bool get_indent_on_tab ();
 		public int get_indent_width ();
 		public bool get_insert_spaces_instead_of_tabs ();
+		public bool get_mark_category_background (string category, Gdk.Color dest);
 		public unowned Gdk.Pixbuf get_mark_category_pixbuf (string category);
 		public int get_mark_category_priority (string category);
 		public uint get_right_margin_position ();
@@ -211,12 +214,16 @@ namespace Gtk {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public SourceView ();
 		public void set_auto_indent (bool enable);
+		public void set_draw_spaces (Gtk.SourceDrawSpacesFlags flags);
 		public void set_highlight_current_line (bool show);
 		public void set_indent_on_tab (bool enable);
 		public void set_indent_width (int width);
 		public void set_insert_spaces_instead_of_tabs (bool enable);
+		public void set_mark_category_background (string category, Gdk.Color color);
 		public void set_mark_category_pixbuf (string category, Gdk.Pixbuf pixbuf);
 		public void set_mark_category_priority (string category, int priority);
+		public void set_mark_category_tooltip_func (string category, Gtk.SourceViewMarkTooltipFunc func, GLib.DestroyNotify user_data_notify);
+		public void set_mark_category_tooltip_markup_func (string category, Gtk.SourceViewMarkTooltipFunc markup_func, GLib.DestroyNotify user_data_notify);
 		public void set_right_margin_position (uint pos);
 		public void set_show_line_marks (bool show);
 		public void set_show_line_numbers (bool show);
@@ -226,6 +233,7 @@ namespace Gtk {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public SourceView.with_buffer (Gtk.SourceBuffer buffer);
 		public bool auto_indent { get; set; }
+		public Gtk.SourceDrawSpacesFlags draw_spaces { get; set; }
 		public bool highlight_current_line { get; set; }
 		public bool indent_on_tab { get; set; }
 		public int indent_width { get; set; }
@@ -239,20 +247,31 @@ namespace Gtk {
 		public virtual signal void redo ();
 		public virtual signal void undo ();
 	}
-	[CCode (cprefix = "GTK_SOURCE_SEARCH_", has_type_id = "0", cheader_filename = "gtksourceview/gtksourceiter.h")]
+	[CCode (cprefix = "GTK_SOURCE_DRAW_SPACES_", cheader_filename = "gtksourceview/gtksourceview.h")]
+	[Flags]
+	public enum SourceDrawSpacesFlags {
+		SPACE,
+		TAB,
+		NEWLINE,
+		NBSP,
+		ALL
+	}
+	[CCode (cprefix = "GTK_SOURCE_SEARCH_", cheader_filename = "gtksourceview/gtksourceiter.h")]
 	[Flags]
 	public enum SourceSearchFlags {
 		VISIBLE_ONLY,
 		TEXT_ONLY,
 		CASE_INSENSITIVE
 	}
-	[CCode (cprefix = "GTK_SOURCE_SMART_HOME_END_", has_type_id = "0", cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cprefix = "GTK_SOURCE_SMART_HOME_END_", cheader_filename = "gtksourceview/gtksourceview.h")]
 	public enum SourceSmartHomeEndType {
 		DISABLED,
 		BEFORE,
 		AFTER,
 		ALWAYS
 	}
+	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	public delegate unowned string SourceViewMarkTooltipFunc (Gtk.SourceMark mark);
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public static bool source_iter_backward_search (Gtk.TextIter iter, string str, Gtk.SourceSearchFlags flags, out Gtk.TextIter match_start, out Gtk.TextIter match_end, Gtk.TextIter? limit);
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]

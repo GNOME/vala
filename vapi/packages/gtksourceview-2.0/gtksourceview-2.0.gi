@@ -23,13 +23,27 @@
 				<parameter name="limit" type="GtkTextIter*"/>
 			</parameters>
 		</function>
-		<enum name="GtkSourceSmartHomeEndType">
+		<callback name="GtkSourceViewMarkTooltipFunc">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="mark" type="GtkSourceMark*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
+		<enum name="GtkSourceSmartHomeEndType" type-name="GtkSourceSmartHomeEndType" get-type="gtk_source_smart_home_end_type_get_type">
 			<member name="GTK_SOURCE_SMART_HOME_END_DISABLED" value="0"/>
 			<member name="GTK_SOURCE_SMART_HOME_END_BEFORE" value="1"/>
 			<member name="GTK_SOURCE_SMART_HOME_END_AFTER" value="2"/>
 			<member name="GTK_SOURCE_SMART_HOME_END_ALWAYS" value="3"/>
 		</enum>
-		<flags name="GtkSourceSearchFlags">
+		<flags name="GtkSourceDrawSpacesFlags" type-name="GtkSourceDrawSpacesFlags" get-type="gtk_source_draw_spaces_flags_get_type">
+			<member name="GTK_SOURCE_DRAW_SPACES_SPACE" value="1"/>
+			<member name="GTK_SOURCE_DRAW_SPACES_TAB" value="2"/>
+			<member name="GTK_SOURCE_DRAW_SPACES_NEWLINE" value="4"/>
+			<member name="GTK_SOURCE_DRAW_SPACES_NBSP" value="8"/>
+			<member name="GTK_SOURCE_DRAW_SPACES_ALL" value="15"/>
+		</flags>
+		<flags name="GtkSourceSearchFlags" type-name="GtkSourceSearchFlags" get-type="gtk_source_search_flags_get_type">
 			<member name="GTK_SOURCE_SEARCH_VISIBLE_ONLY" value="1"/>
 			<member name="GTK_SOURCE_SEARCH_TEXT_ONLY" value="2"/>
 			<member name="GTK_SOURCE_SEARCH_CASE_INSENSITIVE" value="4"/>
@@ -280,10 +294,10 @@
 				</parameters>
 			</method>
 			<method name="get_style_name" symbol="gtk_source_language_get_style_name">
-				<return-type type="char*"/>
+				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="language" type="GtkSourceLanguage*"/>
-					<parameter name="style_id" type="char*"/>
+					<parameter name="style_id" type="gchar*"/>
 				</parameters>
 			</method>
 			<property name="hidden" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -314,6 +328,14 @@
 					<parameter name="lm" type="GtkSourceLanguageManager*"/>
 				</parameters>
 			</method>
+			<method name="guess_language" symbol="gtk_source_language_manager_guess_language">
+				<return-type type="GtkSourceLanguage*"/>
+				<parameters>
+					<parameter name="lm" type="GtkSourceLanguageManager*"/>
+					<parameter name="filename" type="gchar*"/>
+					<parameter name="content_type" type="gchar*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="gtk_source_language_manager_new">
 				<return-type type="GtkSourceLanguageManager*"/>
 			</constructor>
@@ -324,8 +346,8 @@
 					<parameter name="dirs" type="gchar**"/>
 				</parameters>
 			</method>
-			<property name="language-ids" type="char*[]" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="search-path" type="char*[]" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="language-ids" type="GStrv*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="search-path" type="GStrv*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkSourceMark" parent="GtkTextMark" type-name="GtkSourceMark" get-type="gtk_source_mark_get_type">
 			<method name="get_category" symbol="gtk_source_mark_get_category">
@@ -744,8 +766,8 @@
 					<parameter name="path" type="gchar**"/>
 				</parameters>
 			</method>
-			<property name="scheme-ids" type="char*[]" readable="1" writable="0" construct="0" construct-only="0"/>
-			<property name="search-path" type="char*[]" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="scheme-ids" type="GStrv*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="search-path" type="GStrv*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GtkSourceView" parent="GtkTextView" type-name="GtkSourceView" get-type="gtk_source_view_get_type">
 			<implements>
@@ -754,6 +776,12 @@
 			</implements>
 			<method name="get_auto_indent" symbol="gtk_source_view_get_auto_indent">
 				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="view" type="GtkSourceView*"/>
+				</parameters>
+			</method>
+			<method name="get_draw_spaces" symbol="gtk_source_view_get_draw_spaces">
+				<return-type type="GtkSourceDrawSpacesFlags"/>
 				<parameters>
 					<parameter name="view" type="GtkSourceView*"/>
 				</parameters>
@@ -780,6 +808,14 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="view" type="GtkSourceView*"/>
+				</parameters>
+			</method>
+			<method name="get_mark_category_background" symbol="gtk_source_view_get_mark_category_background">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="view" type="GtkSourceView*"/>
+					<parameter name="category" type="gchar*"/>
+					<parameter name="dest" type="GdkColor*"/>
 				</parameters>
 			</method>
 			<method name="get_mark_category_pixbuf" symbol="gtk_source_view_get_mark_category_pixbuf">
@@ -848,6 +884,13 @@
 					<parameter name="enable" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_draw_spaces" symbol="gtk_source_view_set_draw_spaces">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="view" type="GtkSourceView*"/>
+					<parameter name="flags" type="GtkSourceDrawSpacesFlags"/>
+				</parameters>
+			</method>
 			<method name="set_highlight_current_line" symbol="gtk_source_view_set_highlight_current_line">
 				<return-type type="void"/>
 				<parameters>
@@ -876,6 +919,14 @@
 					<parameter name="enable" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_mark_category_background" symbol="gtk_source_view_set_mark_category_background">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="view" type="GtkSourceView*"/>
+					<parameter name="category" type="gchar*"/>
+					<parameter name="color" type="GdkColor*"/>
+				</parameters>
+			</method>
 			<method name="set_mark_category_pixbuf" symbol="gtk_source_view_set_mark_category_pixbuf">
 				<return-type type="void"/>
 				<parameters>
@@ -890,6 +941,26 @@
 					<parameter name="view" type="GtkSourceView*"/>
 					<parameter name="category" type="gchar*"/>
 					<parameter name="priority" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_mark_category_tooltip_func" symbol="gtk_source_view_set_mark_category_tooltip_func">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="view" type="GtkSourceView*"/>
+					<parameter name="category" type="gchar*"/>
+					<parameter name="func" type="GtkSourceViewMarkTooltipFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="user_data_notify" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="set_mark_category_tooltip_markup_func" symbol="gtk_source_view_set_mark_category_tooltip_markup_func">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="view" type="GtkSourceView*"/>
+					<parameter name="category" type="gchar*"/>
+					<parameter name="markup_func" type="GtkSourceViewMarkTooltipFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="user_data_notify" type="GDestroyNotify"/>
 				</parameters>
 			</method>
 			<method name="set_right_margin_position" symbol="gtk_source_view_set_right_margin_position">
@@ -935,6 +1006,7 @@
 				</parameters>
 			</method>
 			<property name="auto-indent" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="draw-spaces" type="GtkSourceDrawSpacesFlags" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="highlight-current-line" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="indent-on-tab" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="indent-width" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
