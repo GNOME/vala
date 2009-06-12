@@ -762,9 +762,9 @@ namespace GLib {
 		public abstract unowned GLib.FileInputStream read_fn (GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract GLib.FileOutputStream replace (string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract void replace_async (string? etag, bool make_backup, GLib.FileCreateFlags flags, int io_priority, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
-		public bool replace_contents (string contents, size_t length, string? etag, bool make_backup, GLib.FileCreateFlags flags, out unowned string new_etag, GLib.Cancellable? cancellable) throws GLib.Error;
+		public bool replace_contents (string contents, size_t length, string? etag, bool make_backup, GLib.FileCreateFlags flags, out string new_etag, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void replace_contents_async (string contents, size_t length, string? etag, bool make_backup, GLib.FileCreateFlags flags, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
-		public bool replace_contents_finish (GLib.AsyncResult res, out unowned string new_etag) throws GLib.Error;
+		public bool replace_contents_finish (GLib.AsyncResult res, out string new_etag) throws GLib.Error;
 		public abstract GLib.FileOutputStream replace_finish (GLib.AsyncResult res) throws GLib.Error;
 		public abstract GLib.File resolve_relative_path (string relative_path);
 		public abstract bool set_attribute (string attribute, GLib.FileAttributeType type, void* value_p, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
