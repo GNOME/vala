@@ -4989,6 +4989,7 @@ namespace Gtk {
 		public Gtk.Requisition requisition;
 		public uchar saved_state;
 		public uchar state;
+		public Gdk.Window window;
 		public bool activate ();
 		public void add_accelerator (string accel_signal, Gtk.AccelGroup accel_group, uint accel_key, Gdk.ModifierType accel_mods, Gtk.AccelFlags accel_flags);
 		public void add_events (int events);
@@ -5171,7 +5172,6 @@ namespace Gtk {
 		public bool visible { get; set; }
 		[NoAccessorMethod]
 		public int width_request { get; set; }
-		public Gdk.Window window { get; }
 		public virtual signal void accel_closures_changed ();
 		public virtual signal bool button_press_event (Gdk.EventButton event);
 		public virtual signal bool button_release_event (Gdk.EventButton event);
