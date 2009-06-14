@@ -53,34 +53,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	}
 	
 	public override void write (CCodeWriter writer) {
-		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.EXTERN)) != 0) {
-			// combined declaration and initialization for static and extern variables
-			writer.write_indent (line);
-			if ((modifiers & CCodeModifiers.STATIC) != 0) {
-				writer.write_string ("static ");
-			}
-			if ((modifiers & CCodeModifiers.VOLATILE) != 0) {
-				writer.write_string ("volatile ");
-			}
-			if ((modifiers & CCodeModifiers.EXTERN) != 0 && !has_initializer ()) {
-				writer.write_string ("extern ");
-			}
-			writer.write_string (type_name);
-			writer.write_string (" ");
-		
-			bool first = true;
-			foreach (CCodeDeclarator decl in declarators) {
-				if (!first) {
-					writer.write_string (", ");
-				} else {
-					first = false;
-				}
-				decl.write (writer);
-			}
-
-			writer.write_string (";");
-			writer.write_newline ();
-		} else {
+		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.EXTERN)) == 0) {
 			foreach (CCodeDeclarator decl in declarators) {
 				decl.write_initialization (writer);
 			}
@@ -99,7 +72,32 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 
 	public override void write_declaration (CCodeWriter writer) {
 		if ((modifiers & (CCodeModifiers.STATIC | CCodeModifiers.EXTERN)) != 0) {
-			// no separate declaration for static variables
+			// combined declaration and initialization for static and extern variables
+			writer.write_indent (line);
+			if ((modifiers & CCodeModifiers.STATIC) != 0) {
+				writer.write_string ("static ");
+			}
+			if ((modifiers & CCodeModifiers.VOLATILE) != 0) {
+				writer.write_string ("volatile ");
+			}
+			if ((modifiers & CCodeModifiers.EXTERN) != 0 && !has_initializer ()) {
+				writer.write_string ("extern ");
+			}
+			writer.write_string (type_name);
+			writer.write_string (" ");
+
+			bool first = true;
+			foreach (CCodeDeclarator decl in declarators) {
+				if (!first) {
+					writer.write_string (", ");
+				} else {
+					first = false;
+				}
+				decl.write (writer);
+			}
+
+			writer.write_string (";");
+			writer.write_newline ();
 			return;
 		}
 

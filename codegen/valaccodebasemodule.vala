@@ -580,7 +580,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		writer.write_newline ();
 		source_declarations.type_member_declaration.write (writer);
 		writer.write_newline ();
-		source_declarations.constant_declaration.write (writer);
+		source_declarations.constant_declaration.write_combined (writer);
 		writer.write_newline ();
 		source_signal_marshaller_declaration.write_declaration (writer);
 		source_signal_marshaller_declaration.write (writer);
