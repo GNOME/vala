@@ -1390,7 +1390,7 @@ namespace Gst {
 		public Gst.PadTemplate get ();
 		public Gst.Caps get_caps ();
 	}
-	[CCode (cname = "GValue", type_id = "GST_TYPE_VALUE", cheader_filename = "gst/gst.h")]
+	[CCode (cname = "GValue", type_id = "G_TYPE_VALUE", cheader_filename = "gst/gst.h")]
 	public struct Value : GLib.Value {
 		public void array_append_value (Gst.Value append_value);
 		public uint array_get_size ();

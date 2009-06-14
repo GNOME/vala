@@ -153,7 +153,7 @@ namespace Gst {
 	public struct Fraction {}
 	public struct FractionRange {}
 
-	[CCode (cname = "GValue")]
+	[CCode (cname = "GValue", type_id = "G_TYPE_VALUE")]
 	public struct Value : GLib.Value {
 
 		public static GLib.Type array_get_type ();
