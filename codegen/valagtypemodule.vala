@@ -235,6 +235,14 @@ internal class Vala.GTypeModule : GErrorModule {
 				} else {
 					creturn_type = prop.property_type.get_cname ();
 				}
+
+				var array_type = prop.property_type as ArrayType;
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						vdeclarator.add_parameter (new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*"));
+					}
+				}
+
 				var vdecl = new CCodeDeclaration (creturn_type);
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
@@ -243,6 +251,14 @@ internal class Vala.GTypeModule : GErrorModule {
 				var vdeclarator = new CCodeFunctionDeclarator ("set_%s".printf (prop.name));
 				vdeclarator.add_parameter (cselfparam);
 				vdeclarator.add_parameter (cvalueparam);
+
+				var array_type = prop.property_type as ArrayType;
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						vdeclarator.add_parameter (new CCodeFormalParameter (head.get_array_length_cname ("value", dim), "int"));
+					}
+				}
+
 				var vdecl = new CCodeDeclaration ("void");
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
@@ -1692,6 +1708,14 @@ internal class Vala.GTypeModule : GErrorModule {
 				} else {
 					creturn_type = prop.get_accessor.value_type.get_cname ();
 				}
+
+				var array_type = prop.property_type as ArrayType;
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						vdeclarator.add_parameter (new CCodeFormalParameter (head.get_array_length_cname ("result", dim), "int*"));
+					}
+				}
+
 				var vdecl = new CCodeDeclaration (creturn_type);
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
@@ -1706,6 +1730,14 @@ internal class Vala.GTypeModule : GErrorModule {
 					var cvalueparam = new CCodeFormalParameter ("value", prop.set_accessor.value_type.get_cname ());
 					vdeclarator.add_parameter (cvalueparam);
 				}
+
+				var array_type = prop.property_type as ArrayType;
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						vdeclarator.add_parameter (new CCodeFormalParameter (head.get_array_length_cname ("value", dim), "int"));
+					}
+				}
+
 				var vdecl = new CCodeDeclaration ("void");
 				vdecl.add_declarator (vdeclarator);
 				type_struct.add_declaration (vdecl);
@@ -1767,6 +1799,11 @@ internal class Vala.GTypeModule : GErrorModule {
 			var props = iface.get_properties ();
 			foreach (Property prop in props) {
 				if (prop.is_abstract) {
+
+					if (prop.property_type is ArrayType) {
+						continue;
+					}
+
 					var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_interface_install_property"));
 					cinst.add_argument (new CCodeIdentifier ("iface"));
 					cinst.add_argument (head.get_param_spec (prop));

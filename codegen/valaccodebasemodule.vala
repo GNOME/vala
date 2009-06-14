@@ -1296,12 +1296,31 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					vcall.add_argument (new CCodeIdentifier ("value"));
 					block.add_statement (new CCodeExpressionStatement (vcall));
 				} else {
+					if (acc.value_type is ArrayType) {
+						var array_type = (ArrayType) acc.value_type;
+
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							var len_expr = new CCodeIdentifier (head.get_array_length_cname ("result", dim));
+							vcall.add_argument (len_expr);
+						}
+					}
+
 					block.add_statement (new CCodeReturnStatement (vcall));
 				}
 			} else {
 				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "set_%s".printf (prop.name)));
 				vcall.add_argument (new CCodeIdentifier ("self"));
 				vcall.add_argument (new CCodeIdentifier ("value"));
+
+				if (acc.value_type is ArrayType) {
+					var array_type = (ArrayType) acc.value_type;
+
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						var len_expr = new CCodeIdentifier (head.get_array_length_cname ("value", dim));
+						vcall.add_argument (len_expr);
+					}
+				}
+
 				block.add_statement (new CCodeExpressionStatement (vcall));
 			}
 

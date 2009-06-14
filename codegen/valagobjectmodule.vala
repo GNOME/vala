@@ -144,6 +144,10 @@ internal class Vala.GObjectModule : GTypeModule {
 				continue;
 			}
 
+			if (prop.property_type is ArrayType) {
+				continue;
+			}
+
 			if (prop.overrides || prop.base_interface_property != null) {
 				var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_override_property"));
 				cinst.add_argument (ccall);
@@ -212,6 +216,10 @@ internal class Vala.GObjectModule : GTypeModule {
 
 			var st = prop.property_type.data_type as Struct;
 			if (st != null && !st.has_type_id) {
+				continue;
+			}
+
+			if (prop.property_type is ArrayType) {
 				continue;
 			}
 
@@ -292,6 +300,10 @@ internal class Vala.GObjectModule : GTypeModule {
 
 			var st = prop.property_type.data_type as Struct;
 			if (st != null && !st.has_type_id) {
+				continue;
+			}
+
+			if (prop.property_type is ArrayType) {
 				continue;
 			}
 
