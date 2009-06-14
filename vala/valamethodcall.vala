@@ -43,7 +43,6 @@ public class Vala.MethodCall : Expression {
 	public Expression _call;
 	
 	private Gee.List<Expression> argument_list = new ArrayList<Expression> ();
-	private Gee.List<CCodeExpression> array_sizes = new ArrayList<CCodeExpression> ();
 
 	/**
 	 * Creates a new invocation expression.
@@ -74,21 +73,6 @@ public class Vala.MethodCall : Expression {
 	 */
 	public Gee.List<Expression> get_argument_list () {
 		return new ReadOnlyList<Expression> (argument_list);
-	}
-
-	/**
-	 * Add an array size C code expression.
-	 */
-	public void append_array_size (CCodeExpression size) {
-		array_sizes.add (size);
-	}
-
-	/**
-	 * Get the C code expression for array sizes for all dimensions
-	 * ascending from left to right.
-	 */
-	public Gee.List<CCodeExpression> get_array_sizes () {
-		return new ReadOnlyList<CCodeExpression> (array_sizes);
 	}
 
 	public override void accept (CodeVisitor visitor) {

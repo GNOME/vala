@@ -1174,6 +1174,19 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			function.add_parameter (cvalueparam);
 		}
 
+		if (acc.value_type is ArrayType) {
+			var array_type = (ArrayType) acc.value_type;
+
+			var length_ctype = "int";
+			if (acc.readable) {
+				length_ctype = "int*";
+			}
+
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				function.add_parameter (new CCodeFormalParameter (head.get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
+			}
+		}
+
 		if (prop.is_private_symbol () || (!acc.readable && !acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
 			function.modifiers |= CCodeModifiers.STATIC;
 		}
@@ -1241,6 +1254,19 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			function.add_parameter (cselfparam);
 			if (acc.writable || acc.construction || returns_real_struct) {
 				function.add_parameter (cvalueparam);
+			}
+
+			if (acc.value_type is ArrayType) {
+				var array_type = (ArrayType) acc.value_type;
+
+				var length_ctype = "int";
+				if (acc.readable) {
+					length_ctype = "int*";
+				}
+
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					function.add_parameter (new CCodeFormalParameter (head.get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
+				}
 			}
 
 			if (prop.is_private_symbol () || !(acc.readable || acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
@@ -1318,6 +1344,19 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			}
 			if (acc.writable || acc.construction || returns_real_struct) {
 				function.add_parameter (cvalueparam);
+			}
+
+			if (acc.value_type is ArrayType) {
+				var array_type = (ArrayType) acc.value_type;
+
+				var length_ctype = "int";
+				if (acc.readable) {
+					length_ctype = "int*";
+				}
+
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					function.add_parameter (new CCodeFormalParameter (head.get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
+				}
 			}
 
 			if (!is_virtual) {
@@ -2374,7 +2413,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			}
 
 			// return array length if appropriate
-			if (current_method != null && !current_method.no_array_length && current_return_type is ArrayType) {
+			if (((current_method != null && !current_method.no_array_length) || current_property_accessor != null) && current_return_type is ArrayType) {
 				var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt);
 
 				var ccomma = new CCodeCommaExpression ();
@@ -3683,7 +3722,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	public CCodeFunctionCall get_property_set_call (Property prop, MemberAccess ma, CCodeExpression cexpr) {
+	public CCodeFunctionCall get_property_set_call (Property prop, MemberAccess ma, CCodeExpression cexpr, Expression? rhs = null) {
 		if (ma.inner is BaseAccess) {
 			if (prop.base_property != null) {
 				var base_class = (Class) prop.base_property.parent_symbol;
@@ -3734,9 +3773,16 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			/* property name is second argument of g_object_set */
 			ccall.add_argument (prop.get_canonical_cconstant ());
 		}
-			
+
 		ccall.add_argument (cexpr);
-		
+
+		var array_type = prop.property_type as ArrayType;
+		if (array_type != null && rhs != null) {
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				ccall.add_argument (head.get_array_length_cexpression (rhs, dim));
+			}
+		}
+
 		if (prop.no_accessor_method) {
 			ccall.add_argument (new CCodeConstant ("NULL"));
 		}

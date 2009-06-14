@@ -64,6 +64,8 @@ public abstract class Vala.Expression : CodeNode {
 	 */
 	public ArrayList<LocalVariable> temp_vars = new ArrayList<LocalVariable> ();
 
+	private Gee.List<CCodeExpression> array_sizes = new ArrayList<CCodeExpression> ();
+
 	/**
 	 * Returns whether this expression is constant, i.e. whether this
 	 * expression only consists of literals and other constants.
@@ -83,6 +85,21 @@ public abstract class Vala.Expression : CodeNode {
 	 */
 	public virtual bool is_non_null () {
 		return false;
+	}
+
+	/**
+	 * Add an array size C code expression.
+	 */
+	public void append_array_size (CCodeExpression size) {
+		array_sizes.add (size);
+	}
+
+	/**
+	 * Get the C code expression for array sizes for all dimensions
+	 * ascending from left to right.
+	 */
+	public Gee.List<CCodeExpression> get_array_sizes () {
+		return new ReadOnlyList<CCodeExpression> (array_sizes);
 	}
 
 	public Statement? parent_statement {

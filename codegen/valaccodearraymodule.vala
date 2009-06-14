@@ -273,6 +273,9 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("G_N_ELEMENTS"));
 				ccall.add_argument (new CCodeIdentifier (constant.get_cname ()));
 				return ccall;
+			} else if (array_expr.symbol_reference is Property) {
+				Gee.List<CCodeExpression> size = array_expr.get_array_sizes ();
+				return size[dim - 1];
 			}
 		} else if (array_expr is NullLiteral) {
 			return new CCodeConstant ("0");

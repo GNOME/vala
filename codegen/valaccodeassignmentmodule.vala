@@ -89,7 +89,7 @@ internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				cexpr = new CCodeBinaryExpression (cop, (CCodeExpression) get_ccodenode (assignment.left), cexpr);
 			}
 			
-			var ccall = get_property_set_call (prop, ma, cexpr);
+			var ccall = get_property_set_call (prop, ma, cexpr, assignment.right);
 			
 			// assignments are expressions, so return the current property value, except if we're sure that it can't be used
 			if (!(assignment.parent_node is ExpressionStatement)) {
