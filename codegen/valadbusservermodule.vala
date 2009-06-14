@@ -567,6 +567,19 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (prop.get_accessor.get_cname ()));
 			ccall.add_argument (new CCodeIdentifier ("self"));
 
+			var array_type = prop.property_type as ArrayType;
+			if (array_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					string length_name = "_tmp%d_".printf (next_temp_var_id++);
+
+					cdecl = new CCodeDeclaration ("int");
+					cdecl.add_declarator (new CCodeVariableDeclarator (length_name));
+					postfragment.append (cdecl);
+
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_name)));
+				}
+			}
+
 			write_expression (postfragment, prop.property_type, new CCodeIdentifier ("subiter"), ccall);
 
 			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
@@ -733,6 +746,19 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (prop.get_accessor.get_cname ()));
 			ccall.add_argument (new CCodeIdentifier ("self"));
 
+			var array_type = prop.property_type as ArrayType;
+			if (array_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					string length_name = "_tmp%d_".printf (next_temp_var_id++);
+
+					cdecl = new CCodeDeclaration ("int");
+					cdecl.add_declarator (new CCodeVariableDeclarator (length_name));
+					postfragment.append (cdecl);
+
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_name)));
+				}
+			}
+
 			write_expression (postfragment, prop.property_type, new CCodeIdentifier ("value_iter"), ccall);
 
 			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
@@ -872,6 +898,17 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (prop.set_accessor.get_cname ()));
 			ccall.add_argument (new CCodeIdentifier ("self"));
 			ccall.add_argument (new CCodeIdentifier ("value"));
+
+			var array_type = prop.property_type as ArrayType;
+			if (array_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					cdecl = new CCodeDeclaration ("int");
+					cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname ("value", dim)));
+					prefragment.append (cdecl);
+
+					ccall.add_argument (new CCodeIdentifier (head.get_array_length_cname ("value", dim)));
+				}
+			}
 
 			prop_block.add_statement (new CCodeExpressionStatement (ccall));
 
