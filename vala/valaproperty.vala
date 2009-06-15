@@ -305,10 +305,6 @@ public class Vala.Property : Member, Lockable {
 	 *             property
 	 */
 	public bool equals (Property prop2) {
-		if (!prop2.property_type.equals (property_type)) {
-			return false;
-		}
-
 		if ((get_accessor == null && prop2.get_accessor != null) ||
 		    (get_accessor != null && prop2.get_accessor == null)) {
 			return false;
@@ -319,7 +315,21 @@ public class Vala.Property : Member, Lockable {
 			return false;
 		}
 
+		if (get_accessor != null) {
+			// check accessor value_type instead of property_type
+			// due to possible ownership differences
+			if (!prop2.get_accessor.value_type.equals (get_accessor.value_type)) {
+				return false;
+			}
+		}
+
 		if (set_accessor != null) {
+			// check accessor value_type instead of property_type
+			// due to possible ownership differences
+			if (!prop2.set_accessor.value_type.equals (set_accessor.value_type)) {
+				return false;
+			}
+
 			if (set_accessor.writable != prop2.set_accessor.writable) {
 				return false;
 			}
