@@ -62,20 +62,10 @@ internal class Vala.DBusModule : GAsyncModule {
 	CCodeExpression? get_array_length (CCodeExpression expr, int dim) {
 		var id = expr as CCodeIdentifier;
 		var ma = expr as CCodeMemberAccess;
-		var call = expr as CCodeFunctionCall;
 		if (id != null) {
 			return new CCodeIdentifier ("%s_length%d".printf (id.name, dim));
 		} else if (ma != null) {
 			return new CCodeMemberAccess.pointer (ma.inner, "%s_length%d".printf (ma.member_name, dim));
-		} else if (call != null) {
-			// array property
-			var args = call.get_arguments ();
-			if (args.size > 0) {
-				var arg = args[args.size - 1] as CCodeUnaryExpression;
-				if (arg != null && arg.operator == CCodeUnaryOperator.ADDRESS_OF) {
-					return arg.inner;
-				}
-			}
 		}
 		return null;
 	}

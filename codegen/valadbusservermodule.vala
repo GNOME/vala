@@ -567,20 +567,35 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (prop.get_accessor.get_cname ()));
 			ccall.add_argument (new CCodeIdentifier ("self"));
 
+			cdecl = new CCodeDeclaration (prop.property_type.get_cname ());
+			cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+			postfragment.append (cdecl);
+			postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
+
 			var array_type = prop.property_type as ArrayType;
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					string length_name = "_tmp%d_".printf (next_temp_var_id++);
+					string length_cname = get_array_length_cname ("result", dim);
 
 					cdecl = new CCodeDeclaration ("int");
-					cdecl.add_declarator (new CCodeVariableDeclarator (length_name));
+					cdecl.add_declarator (new CCodeVariableDeclarator (length_cname));
 					postfragment.append (cdecl);
 
-					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_name)));
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
 				}
 			}
 
-			write_expression (postfragment, prop.property_type, new CCodeIdentifier ("subiter"), ccall);
+			write_expression (postfragment, prop.property_type, new CCodeIdentifier ("subiter"), new CCodeIdentifier ("result"));
+
+			if (requires_destroy (prop.get_accessor.value_type)) {
+				// keep local alive (symbol_reference is weak)
+				// space before `result' is work around to not trigger
+				// variable renaming, we really mean C identifier `result' here
+				var local = new LocalVariable (prop.get_accessor.value_type, " result");
+				var ma = new MemberAccess.simple ("result");
+				ma.symbol_reference = local;
+				postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("result"), prop.get_accessor.value_type, ma)));
+			}
 
 			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
 			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("reply_iter")));
@@ -597,12 +612,24 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			clastif = cif;
 		}
 
+		// free interface_name and property_name
+		var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		free_call.add_argument (new CCodeIdentifier ("interface_name"));
+		block.add_statement (new CCodeExpressionStatement (free_call));
+
+		free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		free_call.add_argument (new CCodeIdentifier ("property_name"));
+		block.add_statement (new CCodeExpressionStatement (free_call));
+
 		if (clastif == null) {
 			block = new CCodeBlock ();
 			block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
 		} else {
 			var else_block = new CCodeBlock ();
-			else_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+			var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+			unref_call.add_argument (new CCodeIdentifier ("reply"));
+			else_block.add_statement (new CCodeExpressionStatement (unref_call));
+			else_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), new CCodeConstant ("NULL"))));
 			clastif.false_statement = else_block;
 
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
@@ -746,20 +773,35 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (prop.get_accessor.get_cname ()));
 			ccall.add_argument (new CCodeIdentifier ("self"));
 
+			cdecl = new CCodeDeclaration (prop.property_type.get_cname ());
+			cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+			postfragment.append (cdecl);
+			postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
+
 			var array_type = prop.property_type as ArrayType;
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					string length_name = "_tmp%d_".printf (next_temp_var_id++);
+					string length_cname = get_array_length_cname ("result", dim);
 
 					cdecl = new CCodeDeclaration ("int");
-					cdecl.add_declarator (new CCodeVariableDeclarator (length_name));
+					cdecl.add_declarator (new CCodeVariableDeclarator (length_cname));
 					postfragment.append (cdecl);
 
-					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_name)));
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
 				}
 			}
 
-			write_expression (postfragment, prop.property_type, new CCodeIdentifier ("value_iter"), ccall);
+			write_expression (postfragment, prop.property_type, new CCodeIdentifier ("value_iter"), new CCodeIdentifier ("result"));
+
+			if (requires_destroy (prop.get_accessor.value_type)) {
+				// keep local alive (symbol_reference is weak)
+				// space before `result' is work around to not trigger
+				// variable renaming, we really mean C identifier `result' here
+				var local = new LocalVariable (prop.get_accessor.value_type, " result");
+				var ma = new MemberAccess.simple ("result");
+				ma.symbol_reference = local;
+				postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("result"), prop.get_accessor.value_type, ma)));
+			}
 
 			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
 			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("entry_iter")));
@@ -783,8 +825,17 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		var ccheck = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccmp, new CCodeConstant ("0"));
 
 		var else_block = new CCodeBlock ();
-		else_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		unref_call.add_argument (new CCodeIdentifier ("reply"));
+		else_block.add_statement (new CCodeExpressionStatement (unref_call));
+		else_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), new CCodeConstant ("NULL"))));
+
 		block.add_statement (new CCodeIfStatement (ccheck, prop_block, else_block));
+
+		// free interface_name
+		var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		free_call.add_argument (new CCodeIdentifier ("interface_name"));
+		block.add_statement (new CCodeExpressionStatement (free_call));
 
 		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
 
@@ -887,7 +938,10 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 			var ccheck = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccheck1, ccheck2);
 
-			cdecl = new CCodeDeclaration (prop.property_type.get_cname ());
+			var owned_type = prop.property_type.copy ();
+			owned_type.value_owned = true;
+
+			cdecl = new CCodeDeclaration (owned_type.get_cname ());
 			cdecl.add_declarator (new CCodeVariableDeclarator ("value"));
 			prefragment.append (cdecl);
 
@@ -912,6 +966,14 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 			prop_block.add_statement (new CCodeExpressionStatement (ccall));
 
+			if (requires_destroy (owned_type)) {
+				// keep local alive (symbol_reference is weak)
+				var local = new LocalVariable (owned_type, "value");
+				var ma = new MemberAccess.simple ("value");
+				ma.symbol_reference = local;
+				prop_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("value"), owned_type, ma)));
+			}
+
 			var cif = new CCodeIfStatement (ccheck, prop_block);
 			if (clastif == null) {
 				block.add_statement (cif);
@@ -922,12 +984,24 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			clastif = cif;
 		}
 
+		// free interface_name and property_name
+		var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		free_call.add_argument (new CCodeIdentifier ("interface_name"));
+		block.add_statement (new CCodeExpressionStatement (free_call));
+
+		free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		free_call.add_argument (new CCodeIdentifier ("property_name"));
+		block.add_statement (new CCodeExpressionStatement (free_call));
+
 		if (clastif == null) {
 			block = new CCodeBlock ();
 			block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
 		} else {
 			var else_block = new CCodeBlock ();
-			else_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+			var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+			unref_call.add_argument (new CCodeIdentifier ("reply"));
+			else_block.add_statement (new CCodeExpressionStatement (unref_call));
+			else_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), new CCodeConstant ("NULL"))));
 			clastif.false_statement = else_block;
 
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
