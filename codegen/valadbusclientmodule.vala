@@ -987,7 +987,32 @@ internal class Vala.DBusClientModule : DBusModule {
 		var gobject_class = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 		gobject_class.add_argument (new CCodeIdentifier ("klass"));
 		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "dispose"), new CCodeIdentifier (lower_cname + "_dispose"))));
+		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "get_property"), new CCodeIdentifier (lower_cname + "_get_property"))));
+		proxy_class_init.block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (gobject_class, "set_property"), new CCodeIdentifier (lower_cname + "_set_property"))));
 		source_type_member_definition.append (proxy_class_init);
+
+		prop_enum = new CCodeEnum ();
+		prop_enum.add_value (new CCodeEnumValue ("%s_DUMMY_PROPERTY".printf (lower_cname.up ())));
+
+		foreach (Property prop in iface.get_properties ()) {
+			if (!prop.is_abstract) {
+				continue;
+			}
+
+			if (prop.property_type is ArrayType) {
+				continue;
+			}
+
+			var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_override_property"));
+			cinst.add_argument (gobject_class);
+			cinst.add_argument (new CCodeConstant (prop.get_upper_case_cname ()));
+			cinst.add_argument (prop.get_canonical_cconstant ());
+			proxy_class_init.block.add_statement (new CCodeExpressionStatement (cinst));
+
+			prop_enum.add_value (new CCodeEnumValue (prop.get_upper_case_cname ()));
+		}
+
+		source_declarations.add_type_member_declaration (prop_enum);
 
 		var proxy_instance_init = new CCodeFunction (lower_cname + "_init", "void");
 		proxy_instance_init.add_parameter (new CCodeFormalParameter ("self", cname + "*"));
@@ -1011,10 +1036,43 @@ internal class Vala.DBusClientModule : DBusModule {
 			}
 		}
 
+		foreach (Property prop in iface.get_properties ()) {
+			if (prop.get_accessor != null) {
+				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "get_" + prop.name);
+				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_get (iface, prop)))));
+			}
+			if (prop.set_accessor != null) {
+				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "set_" + prop.name);
+				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_set (iface, prop)))));
+			}
+		}
+
 		proxy_iface_init.modifiers = CCodeModifiers.STATIC;
 		source_declarations.add_type_member_declaration (proxy_iface_init.copy ());
 		proxy_iface_init.block = iface_block;
 		source_type_member_definition.append (proxy_iface_init);
+
+		// dbus proxy get/set_property stubs
+		// TODO add actual implementation
+		var get_prop = new CCodeFunction ("%s_get_property".printf (lower_cname), "void");
+		get_prop.modifiers = CCodeModifiers.STATIC;
+		get_prop.add_parameter (new CCodeFormalParameter ("object", "GObject *"));
+		get_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
+		get_prop.add_parameter (new CCodeFormalParameter ("value", "GValue *"));
+		get_prop.add_parameter (new CCodeFormalParameter ("pspec", "GParamSpec *"));
+		source_declarations.add_type_member_declaration (get_prop.copy ());
+		get_prop.block = new CCodeBlock ();
+		source_type_member_definition.append (get_prop);
+
+		var set_prop = new CCodeFunction ("%s_set_property".printf (lower_cname), "void");
+		set_prop.modifiers = CCodeModifiers.STATIC;
+		set_prop.add_parameter (new CCodeFormalParameter ("object", "GObject *"));
+		set_prop.add_parameter (new CCodeFormalParameter ("property_id", "guint"));
+		set_prop.add_parameter (new CCodeFormalParameter ("value", "const GValue *"));
+		set_prop.add_parameter (new CCodeFormalParameter ("pspec", "GParamSpec *"));
+		source_declarations.add_type_member_declaration (set_prop.copy ());
+		set_prop.block = new CCodeBlock ();
+		source_type_member_definition.append (set_prop);
 	}
 
 	void generate_proxy_filter_function (Interface iface) {
@@ -1570,6 +1628,272 @@ internal class Vala.DBusClientModule : DBusModule {
 		if (!(m.return_type is VoidType)) {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 		}
+
+		source_declarations.add_type_member_declaration (function.copy ());
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return proxy_name;
+	}
+
+	string generate_dbus_proxy_property_get (Interface iface, Property prop) {
+		string proxy_name = "%sdbus_proxy_get_%s".printf (iface.get_lower_case_cprefix (), prop.name);
+
+		string dbus_iface_name = iface.get_attribute ("DBus").get_string ("name");
+
+		var array_type = prop.get_accessor.value_type as ArrayType;
+
+		CCodeDeclaration cdecl;
+
+		var function = new CCodeFunction (proxy_name);
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("self", "%s*".printf (iface.get_cname ())));
+
+		if (array_type != null) {
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				function.add_parameter (new CCodeFormalParameter ("result_length%d".printf (dim), "int*"));
+			}
+		}
+
+		function.return_type = prop.get_accessor.value_type.get_cname ();
+
+		var block = new CCodeBlock ();
+		var prefragment = new CCodeFragment ();
+		var postfragment = new CCodeFragment ();
+
+		var dispose_return_block = new CCodeBlock ();
+		dispose_return_block.add_statement (new CCodeReturnStatement (default_value_for_type (prop.property_type, false)));
+		block.add_statement (new CCodeIfStatement (new CCodeMemberAccess.pointer (new CCodeCastExpression (new CCodeIdentifier ("self"), iface.get_cname () + "DBusProxy*"), "disposed"), dispose_return_block));
+
+		cdecl = new CCodeDeclaration ("DBusGConnection");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_connection"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessage");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_message"));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_reply"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_iter"));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_subiter"));
+		block.add_statement (cdecl);
+
+		block.add_statement (prefragment);
+
+		var destination = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_get_bus_name"));
+		destination.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "DBusGProxy*"));
+		var path = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_get_path"));
+		path.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "DBusGProxy*"));
+
+		var msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_method_call"));
+		msgcall.add_argument (destination);
+		msgcall.add_argument (path);
+		msgcall.add_argument (new CCodeConstant ("\"org.freedesktop.DBus.Properties\""));
+		msgcall.add_argument (new CCodeConstant ("\"Get\""));
+		prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_message"), msgcall)));
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init_append"));
+		iter_call.add_argument (new CCodeIdentifier ("_message"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_iter")));
+		prefragment.append (new CCodeExpressionStatement (iter_call));
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init"));
+		iter_call.add_argument (new CCodeIdentifier ("_reply"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_iter")));
+		postfragment.append (new CCodeExpressionStatement (iter_call));
+
+		// interface name
+		write_expression (prefragment, string_type, new CCodeIdentifier ("_iter"), new CCodeConstant ("\"%s\"".printf (dbus_iface_name)));
+		// property name
+		write_expression (prefragment, string_type, new CCodeIdentifier ("_iter"), new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (prop.name))));
+
+		cdecl = new CCodeDeclaration (prop.get_accessor.value_type.get_cname ());
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_result"));
+		postfragment.append (cdecl);
+
+		if (array_type != null) {
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				cdecl = new CCodeDeclaration ("int");
+				cdecl.add_declarator (new CCodeVariableDeclarator ("_result_length%d".printf (dim), new CCodeConstant ("0")));
+				postfragment.append (cdecl);
+			}
+		}
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_recurse"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_iter")));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_subiter")));
+		postfragment.append (new CCodeExpressionStatement (iter_call));
+
+		var target = new CCodeIdentifier ("_result");
+		var expr = read_expression (postfragment, prop.get_accessor.value_type, new CCodeIdentifier ("_subiter"), target);
+		postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+
+		if (array_type != null) {
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				// TODO check that parameter is not NULL (out parameters are optional)
+				postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length%d".printf (dim))), new CCodeIdentifier ("_result_length%d".printf (dim)))));
+			}
+		}
+
+		var gconnection = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
+		gconnection.add_argument (new CCodeIdentifier ("self"));
+		gconnection.add_argument (new CCodeConstant ("\"connection\""));
+		gconnection.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_connection")));
+		gconnection.add_argument (new CCodeConstant ("NULL"));
+		block.add_statement (new CCodeExpressionStatement (gconnection));
+
+		var connection = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_get_connection"));
+		connection.add_argument (new CCodeIdentifier ("_connection"));
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_send_with_reply_and_block"));
+		ccall.add_argument (connection);
+		ccall.add_argument (new CCodeIdentifier ("_message"));
+		ccall.add_argument (new CCodeConstant ("-1"));
+		ccall.add_argument (new CCodeConstant ("NULL"));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall)));
+
+		var conn_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_unref"));
+		conn_unref.add_argument (new CCodeIdentifier ("_connection"));
+		block.add_statement (new CCodeExpressionStatement (conn_unref));
+
+		var message_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		message_unref.add_argument (new CCodeIdentifier ("_message"));
+		block.add_statement (new CCodeExpressionStatement (message_unref));
+
+		block.add_statement (postfragment);
+
+		var reply_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		reply_unref.add_argument (new CCodeIdentifier ("_reply"));
+		block.add_statement (new CCodeExpressionStatement (reply_unref));
+
+		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
+
+		source_declarations.add_type_member_declaration (function.copy ());
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return proxy_name;
+	}
+
+	string generate_dbus_proxy_property_set (Interface iface, Property prop) {
+		string proxy_name = "%sdbus_proxy_set_%s".printf (iface.get_lower_case_cprefix (), prop.name);
+
+		string dbus_iface_name = iface.get_attribute ("DBus").get_string ("name");
+
+		var array_type = prop.set_accessor.value_type as ArrayType;
+
+		CCodeDeclaration cdecl;
+
+		var function = new CCodeFunction (proxy_name);
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("self", "%s*".printf (iface.get_cname ())));
+		function.add_parameter (new CCodeFormalParameter ("value", prop.set_accessor.value_type.get_cname ()));
+
+		if (array_type != null) {
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				function.add_parameter (new CCodeFormalParameter ("value_length%d".printf (dim), "int"));
+			}
+		}
+
+		var block = new CCodeBlock ();
+		var prefragment = new CCodeFragment ();
+		var postfragment = new CCodeFragment ();
+
+		var dispose_return_block = new CCodeBlock ();
+		dispose_return_block.add_statement (new CCodeReturnStatement ());
+		block.add_statement (new CCodeIfStatement (new CCodeMemberAccess.pointer (new CCodeCastExpression (new CCodeIdentifier ("self"), iface.get_cname () + "DBusProxy*"), "disposed"), dispose_return_block));
+
+		cdecl = new CCodeDeclaration ("DBusGConnection");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_connection"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessage");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_message"));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_reply"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_iter"));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_subiter"));
+		block.add_statement (cdecl);
+
+		block.add_statement (prefragment);
+
+		var destination = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_get_bus_name"));
+		destination.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "DBusGProxy*"));
+		var path = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_proxy_get_path"));
+		path.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "DBusGProxy*"));
+
+		var msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_method_call"));
+		msgcall.add_argument (destination);
+		msgcall.add_argument (path);
+		msgcall.add_argument (new CCodeConstant ("\"org.freedesktop.DBus.Properties\""));
+		msgcall.add_argument (new CCodeConstant ("\"Set\""));
+		prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_message"), msgcall)));
+
+		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init_append"));
+		iter_call.add_argument (new CCodeIdentifier ("_message"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_iter")));
+		prefragment.append (new CCodeExpressionStatement (iter_call));
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init"));
+		iter_call.add_argument (new CCodeIdentifier ("_reply"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_iter")));
+		postfragment.append (new CCodeExpressionStatement (iter_call));
+
+		// interface name
+		write_expression (prefragment, string_type, new CCodeIdentifier ("_iter"), new CCodeConstant ("\"%s\"".printf (dbus_iface_name)));
+		// property name
+		write_expression (prefragment, string_type, new CCodeIdentifier ("_iter"), new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (prop.name))));
+
+		// property value (as variant)
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_iter")));
+		iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_VARIANT"));
+		iter_call.add_argument (new CCodeConstant ("\"%s\"".printf (prop.property_type.get_type_signature ())));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_subiter")));
+		prefragment.append (new CCodeExpressionStatement (iter_call));
+
+		write_expression (prefragment, prop.set_accessor.value_type, new CCodeIdentifier ("_subiter"), new CCodeIdentifier ("value"));
+
+		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_iter")));
+		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_subiter")));
+		prefragment.append (new CCodeExpressionStatement (iter_call));
+
+		var gconnection = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
+		gconnection.add_argument (new CCodeIdentifier ("self"));
+		gconnection.add_argument (new CCodeConstant ("\"connection\""));
+		gconnection.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_connection")));
+		gconnection.add_argument (new CCodeConstant ("NULL"));
+		block.add_statement (new CCodeExpressionStatement (gconnection));
+
+		var connection = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_get_connection"));
+		connection.add_argument (new CCodeIdentifier ("_connection"));
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_send_with_reply_and_block"));
+		ccall.add_argument (connection);
+		ccall.add_argument (new CCodeIdentifier ("_message"));
+		ccall.add_argument (new CCodeConstant ("-1"));
+		ccall.add_argument (new CCodeConstant ("NULL"));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall)));
+
+		var conn_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_unref"));
+		conn_unref.add_argument (new CCodeIdentifier ("_connection"));
+		block.add_statement (new CCodeExpressionStatement (conn_unref));
+
+		var message_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		message_unref.add_argument (new CCodeIdentifier ("_message"));
+		block.add_statement (new CCodeExpressionStatement (message_unref));
+
+		block.add_statement (postfragment);
+
+		var reply_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		reply_unref.add_argument (new CCodeIdentifier ("_reply"));
+		block.add_statement (new CCodeExpressionStatement (reply_unref));
 
 		source_declarations.add_type_member_declaration (function.copy ());
 		function.block = block;
