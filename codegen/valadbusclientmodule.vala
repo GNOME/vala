@@ -1641,6 +1641,12 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		string dbus_iface_name = iface.get_attribute ("DBus").get_string ("name");
 
+		var owned_type = prop.get_accessor.value_type.copy ();
+		owned_type.value_owned = true;
+		if (owned_type.is_disposable () && !prop.get_accessor.value_type.value_owned) {
+			Report.error (prop.get_accessor.value_type.source_reference, "Properties used in D-Bus clients require owned get accessor");
+		}
+
 		var array_type = prop.get_accessor.value_type as ArrayType;
 
 		CCodeDeclaration cdecl;
