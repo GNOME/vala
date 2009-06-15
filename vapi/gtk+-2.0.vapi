@@ -4725,6 +4725,8 @@ namespace Gtk {
 		public int insert_column (Gtk.TreeViewColumn column, int position);
 		public int insert_column_with_attributes (int position, string? title, Gtk.CellRenderer cell, ...);
 		public int insert_column_with_data_func (int position, string title, Gtk.CellRenderer cell, owned Gtk.TreeCellDataFunc func);
+		[CCode (cname = "gtk_tree_view_row_expanded")]
+		public bool is_row_expanded (Gtk.TreePath path);
 		public bool is_rubber_banding_active ();
 		public void map_expanded_rows (Gtk.TreeViewMappingFunc func, void* data);
 		public void move_column_after (Gtk.TreeViewColumn column, Gtk.TreeViewColumn base_column);
@@ -4794,7 +4796,6 @@ namespace Gtk {
 		[HasEmitter]
 		public virtual signal void row_activated (Gtk.TreePath path, Gtk.TreeViewColumn column);
 		public virtual signal void row_collapsed (Gtk.TreeIter iter, Gtk.TreePath path);
-		[HasEmitter]
 		public virtual signal void row_expanded (Gtk.TreeIter iter, Gtk.TreePath path);
 		public virtual signal bool select_all ();
 		public virtual signal bool select_cursor_parent ();
