@@ -5540,7 +5540,7 @@ namespace Gtk {
 		public unowned GLib.File get_file ();
 		public string get_filename ();
 		public GLib.SList<string> get_filenames ();
-		public unowned GLib.SList get_files ();
+		public GLib.SList<GLib.File> get_files ();
 		public unowned Gtk.FileFilter get_filter ();
 		public bool get_local_only ();
 		public unowned GLib.File get_preview_file ();

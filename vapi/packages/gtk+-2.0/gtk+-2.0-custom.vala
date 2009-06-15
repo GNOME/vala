@@ -90,6 +90,10 @@ namespace Gtk {
 	public interface FileChooserEmbed {
 	}
 
+	public interface FileChooser: Gtk.Widget {
+		public GLib.SList<GLib.File> get_files ();
+	}
+
 	public static delegate void CallbackMarshal (Object object, void* data, Arg[] args);
 
 	public delegate void ActionCallback (Action action);
