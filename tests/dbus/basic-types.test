@@ -4,8 +4,10 @@ Program: client
 
 [DBus (name = "org.example.Test")]
 interface Test : Object {
-    public abstract int test_int (int i, out int j);
-    public abstract string test_string (string s, out string t);
+	public abstract string test_property { owned get; set; }
+
+	public abstract int test_int (int i, out int j);
+	public abstract string test_string (string s, out string t);
 }
 
 void main () {
@@ -23,23 +25,29 @@ void main () {
 	u = test.test_string ("hello", out t);
 	assert (t == "world");
 	assert (u == "vala");
+
+	test.test_property = "hello";
+	t = test.test_property;
+	assert (t == "hello");
 }
 
 Program: server
 
 [DBus (name = "org.example.Test")]
 class Test : Object {
-    public int test_int (int i, out int j) {
-    	assert (i == 42);
-    	j = 23;
-    	return 11;
-    }
+	public string test_property { owned get; set; }
 
-    public string test_string (string s, out string t) {
-    	assert (s == "hello");
-    	t = "world";
-    	return "vala";
-    }
+	public int test_int (int i, out int j) {
+		assert (i == 42);
+		j = 23;
+		return 11;
+	}
+
+	public string test_string (string s, out string t) {
+		assert (s == "hello");
+		t = "world";
+		return "vala";
+	}
 }
 
 MainLoop main_loop;
