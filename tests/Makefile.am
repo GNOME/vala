@@ -42,6 +42,7 @@ TESTS = \
 	objects/test-034.test \
 	errors/errors.test \
 	dbus/basic-types.test \
+	dbus/arrays.test \
 	$(NULL)
 
 EXTRA_DIST = \
