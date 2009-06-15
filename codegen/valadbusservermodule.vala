@@ -745,8 +745,10 @@ internal class Vala.DBusServerModule : DBusClientModule {
 				continue;
 			}
 
+			var inner_block = new CCodeBlock ();
+			prop_block.add_statement (inner_block);
 			var postfragment = new CCodeFragment ();
-			prop_block.add_statement (postfragment);
+			inner_block.add_statement (postfragment);
 
 			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
 			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("subiter")));
