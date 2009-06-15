@@ -78,7 +78,7 @@ namespace Gtk {
 		public unowned Gtk.SourceMark prev (string category);
 		public string category { get; construct; }
 	}
-	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
+	[CCode (cheader_filename = "gtksourceview/gtksourceprintcompositor.h")]
 	public class SourcePrintCompositor : GLib.Object {
 		public void draw_page (Gtk.PrintContext context, int page_nr);
 		[CCode (has_construct_function = false)]
