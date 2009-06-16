@@ -1020,6 +1020,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public bool is_constant_ccode_expression (CCodeExpression cexpr) {
 		if (cexpr is CCodeConstant) {
 			return true;
+		} else if (cexpr is CCodeCastExpression) {
+			var ccast = (CCodeCastExpression) cexpr;
+			return is_constant_ccode_expression (ccast.inner);
 		} else if (cexpr is CCodeBinaryExpression) {
 			var cbinary = (CCodeBinaryExpression) cexpr;
 			return is_constant_ccode_expression (cbinary.left) && is_constant_ccode_expression (cbinary.right);
