@@ -74,7 +74,17 @@ public class Vala.Class : ObjectTypeSymbol {
 	 * Specifies wheather the ref function returns void instead of the
 	 * object.
 	 */
-	public bool ref_function_void { get; set; }
+	public bool ref_function_void {
+		get {
+			if (base_class != null) {
+				return base_class.ref_function_void;
+			}
+			return _ref_function_void;
+		}
+		set {
+			_ref_function_void = value;
+		}
+	}
 
 	/**
 	 * The name of the function to use to check whether a value is an instance of
@@ -100,6 +110,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	private string type_id;
 	private string ref_function;
 	private string unref_function;
+	private bool _ref_function_void;
 	private string ref_sink_function;
 	private string param_spec_function;
 	private string copy_function;
