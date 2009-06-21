@@ -45,10 +45,10 @@ namespace Valadoc.Html {
 			return true;
 		}
 
-		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg ) {
 			if ( content.size != 1 ) {
-				errmsg = new string[1];
-				errmsg[0] = "Version name was expected.";
+				errmsg = "Version name was expected";
+				errlvl = ErrorLevel.ERROR;
 				return false;
 			}
 
@@ -57,8 +57,8 @@ namespace Valadoc.Html {
 
 			DocElement element = it.get ();
 			if ( element is StringTaglet == false ) {
-				errmsg = new string[1];
-				errmsg[0] = "Version name was expected.";
+				errmsg = "Version name was expected";
+				errlvl = ErrorLevel.ERROR;
 				return false;
 			}
 

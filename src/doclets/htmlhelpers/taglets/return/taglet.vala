@@ -27,10 +27,11 @@ namespace Valadoc.Html {
 		public override int order { get { return 300; } }
 		private Gee.Collection<DocElement> content;
 
-		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+
+		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg ) {
 			if ( !(me is Valadoc.Method || me is Valadoc.Signal || me is Valadoc.Delegate) ) {
-				errmsg = new string[1];
-				errmsg[0] = "Tag @return cannot be used in %s documentation.  It can only be used in the following types of documentation: method, signal, delegate.".printf ( this.get_data_type ( me ) );
+				errmsg = "Tag @return cannot be used in this context";
+				errlvl = ErrorLevel.ERROR;
 				return false;
 			}
 			this.content = content;

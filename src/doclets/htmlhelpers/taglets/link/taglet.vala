@@ -24,33 +24,33 @@ using Gee;
 
 namespace Valadoc.Html {
 	public class LinkDocElement : Valadoc.LinkDocElement {
-		protected ImageDocElementPosition position;
-		protected Gee.ArrayList<DocElement>? desc;
+		protected string desc;
 		protected string path;
 
-		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, owned string path, Gee.ArrayList<DocElement>? desc ) {
+		public override bool parse ( Settings settings, Tree tree, Documented pos, owned string path, owned string desc ) {
+			if ( path.has_suffix(".valadoc")&&path.has_prefix("/") ) {
+				if ( tree.wikitree == null ) {
+					return false;
+				}
+
+				WikiPage? wikipage = tree.wikitree.search(path.offset(1));
+				if ( wikipage == null ) {
+					return false;
+				}
+
+				this.path = get_html_link(settings, wikipage, pos);
+				this.desc = (owned)desc;
+				return true;
+			}
+
 			this.path = (owned)path;
-			this.desc = desc;
+			this.desc = (owned)desc;
 			return true;
 		}
 
 		public override bool write ( void* res, int max, int index ) {
 			weak GLib.FileStream file = (GLib.FileStream)res;
-
-			if ( this.desc == null ) {
-				file.printf ( "<a href=\"%s\"/>%s<a>", this.path, this.path );
-			}
-			else {
-				int _max = this.desc.size;
-				int _index = 0;
-
-				file.printf ( "<a href=\"%s\"/>", this.path );
-				foreach ( DocElement element in this.desc ) {
-					element.write ( res, _max, _index );
-					_index++;
-				}
-				file.printf ( "<a>" );
-			}
+			file.printf ("<a href=\"%s\">%s</a>", this.path, (this.desc==null||this.desc=="")? this.path: this.desc );
 			return true;
 		}
 	}

@@ -17,32 +17,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+
 using GLib;
 using Gee;
 
 
 namespace Valadoc.Html {
-	public class NotificationDocElement : Valadoc.NotificationDocElement {
-		private Gee.ArrayList<DocElement> content;
+	public class HeadlineDocElement : Valadoc.HeadlineDocElement {
+		private string title;
+		private int lvl;
 
-		public override bool parse ( Gee.ArrayList<DocElement> content ) {
-			this.content = content;
+		public override bool parse ( owned string title, int lvl ) {
+			this.title = title;
+			this.lvl = lvl;
 			return true;
 		}
 
 		public override bool write ( void* res, int max, int index ) {
 			weak GLib.FileStream file = (GLib.FileStream)res;
-			int _max = this.content.size;
-			int _index = 0;
-
-			file.printf ( "\n<div class=\"%s\">\n", css_notification_area );
-
-			foreach ( DocElement element in this.content ) {
-				element.write ( res, _max, _index );
-				_index++;
-			}
-
-			file.printf ( "\n</div>\n" );
+			file.printf ("\n\n<h%d>%s</h%d>\n", this.lvl, this.title, this.lvl  );
 			return true;
 		}
 	}
@@ -51,8 +44,6 @@ namespace Valadoc.Html {
 
 [ModuleInit]
 public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
-	return typeof ( Valadoc.Html.NotificationDocElement );
+	return typeof ( Valadoc.Html.HeadlineDocElement );
 }
-
-
 

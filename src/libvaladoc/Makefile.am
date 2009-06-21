@@ -31,6 +31,7 @@ libvaladoc_la_VALASOURCES = \
 	parser.vala          \
 	apitree.vala         \
 	langlet.vala         \
+	wiki.vala            \
 	$(NULL)
 
 

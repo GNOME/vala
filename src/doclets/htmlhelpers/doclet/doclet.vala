@@ -64,6 +64,35 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 			this.write_navi_entry_html_template ( file, style, name );
 	}
 
+	protected void write_wiki_pages (Tree tree, string css_path_wiki) {
+		if ( tree.wikitree == null ) {
+			return ;
+		}
+
+		if ( tree.wikitree == null ) {
+			return ;
+		}
+
+		Gee.Collection<WikiPage> pages = tree.wikitree.get_pages();
+		if ( pages.size == 0 ) {
+			return ;
+		}
+
+		string contentp = Path.build_filename (this.settings.path, "content");
+		DirUtils.create (contentp, 0777);
+
+		DirUtils.create (Path.build_filename (contentp, "img"), 0777);
+
+		foreach ( WikiPage page in pages ) {
+			if ( page.name != "index.valadoc" ) {
+				GLib.FileStream file = GLib.FileStream.open ( Path.build_filename(contentp, page.name.ndup( page.name.len()-7).replace ("/", ".")+"html"), "w" );
+				this.write_file_header ( file, css_path_wiki, this.settings.pkg_name );
+				page.write ( file );
+				this.write_file_footer ( file );
+			}
+		}
+	}
+
 	protected void write_navi_top_entry ( GLib.FileStream file, DocumentedElement element, DocumentedElement? mself ) {
 		string name = (element.name == null)? "Global Namespace" : element.name;
 		string style = null;
@@ -715,7 +744,12 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">Packages:</h1>\n", css_title );
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
+
+		WikiPage? wikiindex = (tree.wikitree == null)? null : tree.wikitree.search ( "index.valadoc" );
+		if ( wikiindex != null ) {
+			wikiindex.write ( file );
+		}
+
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
 		file.printf ( "\t\t\t\t<h3 class=\"%s\">Packages:</h2>\n", css_title );
 		this.write_navi_packages_inline ( file, tree );
@@ -1042,6 +1076,7 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		this.write_child_static_methods ( file, iface, mself );
 		this.write_child_classes ( file, iface, mself );
 		this.write_child_structs ( file, iface, mself );
+		this.write_child_enums ( file, iface, mself );
 		this.write_child_delegates ( file, iface, mself );
 		this.write_child_methods ( file, iface, mself );
 		this.write_child_signals ( file, iface, mself );

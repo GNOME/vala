@@ -27,7 +27,7 @@ namespace Valadoc.Html {
 		private Gee.ArrayList<ListEntryDocElement> entries;
 		private ListType type;
 
-		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, ListType type, Gee.ArrayList<ListEntryDocElement> entries ) {
+		public override bool parse ( ListType type, Gee.ArrayList<ListEntryDocElement> entries ) {
 			this.entries = entries;
 			this.type = type;
 			return true;

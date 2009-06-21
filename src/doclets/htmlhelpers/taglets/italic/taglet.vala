@@ -26,7 +26,7 @@ namespace Valadoc.Html {
 	public class ItalicDocElement : Valadoc.ItalicDocElement {
 		private Gee.ArrayList<DocElement> content;
 
-		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content ) {
+		public override bool parse ( Gee.ArrayList<DocElement> content ) {
 			this.content = content;
 			return true;
 		}

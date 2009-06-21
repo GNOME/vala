@@ -22,4 +22,5 @@ SUBDIRS =        \
 	underline    \
 	since        \
 	link         \
+	headline     \
 	$(NULL)

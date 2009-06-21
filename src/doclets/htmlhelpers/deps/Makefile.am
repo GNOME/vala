@@ -9,6 +9,7 @@ dist_vapi_DATA =         \
     abstractclass.png    \
     abstractmethod.png   \
     staticmethod.png     \
+	wikistyle.css        \
 	style.css            \
 	class.png            \
 	interface.png        \

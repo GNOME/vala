@@ -74,16 +74,16 @@ namespace Valadoc.Html {
 			return true;
 		}
 
-		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg ) {
 			if ( me is Valadoc.ParameterListHandler == false ) {
-				errmsg = new string[1];
-				errmsg[0] = "Tag @param cannot be used in %s documentation.  It can only be used in the following types of documentation: method, signal, delegate.".printf ( this.get_data_type ( me ) );
+				errmsg = "Tag @param cannot be used in this context";
+				errlvl = ErrorLevel.ERROR;
 				return false;
 			}
 
 			if ( content.size == 0 ) {
-				errmsg = new string[1];
-				errmsg[0] = "Parameter name was expected.";
+				errmsg = "Parameter name was expected";
+				errlvl = ErrorLevel.ERROR;
 				return false;
 			}
 
@@ -94,8 +94,8 @@ namespace Valadoc.Html {
 
 			DocElement tag = contentlst.get( 0 );
 			if ( tag is StringTaglet == false ) {
-				errmsg = new string[1];
-				errmsg[0] = "Parameter name was expected.";
+				errmsg = "Parameter name was expected";
+				errlvl = ErrorLevel.ERROR;
 				return false;
 			}
 
@@ -124,8 +124,8 @@ namespace Valadoc.Html {
 
 			bool tmp = this.check_parameter_name ( (Valadoc.ParameterListHandler)me, this.paramname );
 			if ( tmp == false ) {
-				errmsg = new string[1];
-				errmsg[0] = "Unknown parameter.";
+				errmsg = "Parameter is not available";
+				errlvl = ErrorLevel.ERROR;
 				return false;
 			}
 

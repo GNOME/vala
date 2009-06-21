@@ -1,5 +1,11 @@
 
 
+public enum Valadoc.ErrorLevel {
+	ASSUMPTION,
+	WARNING,
+	ERROR
+}
+
 
 public class Valadoc.ErrorReporter : Object {
 	private int _warnings = 0;
@@ -36,10 +42,12 @@ public class Valadoc.ErrorReporter : Object {
 		ERROR
 	}
 
-	private inline void msg ( ErrorType type, string file, int line, int startpos, int endpos, string errline, string msg ) {
-		this.stream.printf ( "%s:%d.%d-%d.%d: %s: %s\n", file, line, startpos, line, endpos, (type == ErrorType.ERROR)? "error" : "warning", msg );
-		this.stream.printf ( "\t%s\n", errline );
-		this.stream.printf ( "\t%s%s\n", string.nfill ((uint)startpos, ' '), string.nfill( (uint)(endpos-startpos), '^' ) );
+	private inline void msg ( ErrorType type, string file, long line, long startpos, long endpos, string errline, string msg ) {
+		this.stream.printf ( "%s:%lu.%lu-%lu.%lu: %s: %s\n", file, line, startpos, line, endpos, (type == ErrorType.ERROR)? "error" : "warning", msg );
+		if (startpos <= endpos) {
+			this.stream.printf ( "\t%s\n", errline );
+			this.stream.printf ( "\t%s%s\n", string.nfill ((uint)startpos, ' '), string.nfill( (uint)(endpos-startpos), '^' ) );
+		}
 	}
 
 	public void simple_warning ( string msg ) {
@@ -54,12 +62,12 @@ public class Valadoc.ErrorReporter : Object {
 		this._errors++;
 	}
 
-	public void error ( string file, int line, int startpos, int endpos, string errline, string msg ) {
+	public void error ( string file, long line, long startpos, long endpos, string errline, string msg ) {
 		this.msg ( ErrorType.ERROR, file, line, startpos, endpos, errline, msg );
 		this._errors++;
 	}
 
-	public void warning ( string file, int line, int startpos, int endpos, string errline, string msg ) {
+	public void warning ( string file, long line, long startpos, long endpos, string errline, string msg ) {
 		this.msg ( ErrorType.WARNING, file, line, startpos, endpos, errline, msg );
 		this._warnings++;
 	}

@@ -23,7 +23,6 @@ using GLib;
 using Gee;
 
 
-
 // private
 public Valadoc.Class glib_error = null;
 
@@ -130,7 +129,7 @@ public class Valadoc.Pointer : Basic {
 }
 
 
-public abstract class Valadoc.DocumentedElement : Basic {
+public abstract class Valadoc.DocumentedElement : Basic, Documented {
 	private Namespace? _nspace = null;
 	private Package? _package = null;
 	private string _full_name = null;
@@ -220,6 +219,19 @@ public abstract class Valadoc.DocumentedElement : Basic {
 		return this._full_name;
 	}
 
+	public string? get_filename () {
+		SourceReference? sref = this.vsymbol.source_reference;
+		if ( sref == null )
+			return null;
+
+		Vala.SourceFile? file = sref.file;
+		if ( file == null )
+			return null;
+
+		string path = sref.file.filename;
+		return GLib.Path.get_basename ( path );
+	}
+/*
 	// rename to file_name
 	public string? filename {
 		owned get {
@@ -235,20 +247,9 @@ public abstract class Valadoc.DocumentedElement : Basic {
 			return GLib.Path.get_basename ( path );
 		}
 	}
-
+*/
 	protected void parse_comment_helper ( Valadoc.Parser docparser ) {
-		if ( this.documentation != null )
-			return ;
-
-		string? docu = this.comment_string;
-		if ( docu == null )
-			return ;
-
-		bool tmp = Parser.is_documentation ( docu );
-		if ( tmp == false )
-			return ;
-
-		this.documentation = docparser.parse ( this.head, this, docu );
+		this.documentation = docparser.parse ( this );
 	}
 
 	// internal
@@ -1587,6 +1588,15 @@ public class Valadoc.Field : DocumentedElement, SymbolAccessibility, ReturnTypeH
 		get;
 	}
 
+	public bool is_static {
+		get {
+			if ( this.parent is Namespace )
+				return false;
+
+			return this.vfield.binding == MemberBinding.STATIC;
+		}
+	}
+
 	public bool is_volatile {
 		get {
 			return this.vfield.is_volatile;
@@ -2095,7 +2105,7 @@ public class Valadoc.Property : DocumentedElement, SymbolAccessibility, ReturnTy
 		if ( tmp == false )
 			return ;
 
-		if ( this.is_override && Parser.is_inherit_doc ( this.comment_string ) ) {
+		if ( this.is_override && docparser.is_inherit_doc ( this ) ) {
 			this.base_property.parse_comment ( docparser );
 			this.documentation = this.base_property.documentation;
 			return ;
@@ -2207,6 +2217,9 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 		var vparamlst = this.vmethod.get_parameters ();
 		this.add_parameter_list ( vparamlst );
 
+//		var vtparams = this.vmethod.get_type_parameters ();
+//		this.set_template_parameter_list ( vtparams );
+
 		//var vexceptionlst = this.vmethod.get_error_types ();
 		//this.add_error_domains ( vexceptionlst );
 	}
@@ -2268,7 +2281,7 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 		if ( tmp == false )
 			return ;
 
-		if ( this.is_override && Parser.is_inherit_doc ( this.comment_string ) ) {
+		if ( this.is_override && docparser.is_inherit_doc ( this ) ) {
 			this.base_method.parse_comment ( docparser );
 			this.documentation = this.base_method.documentation;
 			return ;
@@ -2343,8 +2356,9 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 			this.base_method = (Method?)this.head.search_vala_symbol ( vm );
 		}
 
-		this.set_return_type_references ( );
-		this.set_parameter_list_type_references ( );
+		this.set_return_type_references ();
+		this.set_parameter_list_type_references ();
+		this.set_template_parameter_list_references ();
 
 		var vexceptionlst = this.vmethod.get_error_types ();
 		this.add_exception_list ( vexceptionlst );
@@ -2773,9 +2787,9 @@ public class Valadoc.Class : DocumentedElement, SymbolAccessibility, Writeable, 
 			return ;
 
 		if ( this.comment_string != null ) {
-			bool tmp = Parser.is_documentation ( this.comment_string );
+			bool tmp = docparser.is_documentation ( this.comment_string );
 			if ( tmp == true ) {
-				if ( Parser.is_inherit_doc ( this.comment_string ) && this.base_type != null ) {
+				if ( docparser.is_inherit_doc ( this ) && this.base_type != null ) {
 					((Class)this.base_type).parse_comments ( docparser );
 					this.documentation = this.base_type.documentation;
 				}
@@ -3167,8 +3181,8 @@ public class Valadoc.Enum : DocumentedElement, SymbolAccessibility, Visitable, W
 	}
 
 	// internal
-	public void set_type_references ( ) {
-		this.set_method_type_references ( );
+	public void set_type_references () {
+		this.set_method_type_references ();
 	}
 
 	protected Gee.ArrayList<Method> methods {
@@ -3380,7 +3394,7 @@ public class Valadoc.Struct : DocumentedElement, SymbolAccessibility, Writeable,
 		if ( this.comment_string != null ) {
 			bool tmp = Parser.is_documentation ( this.comment_string );
 			if ( tmp == true ) {
-				if ( Parser.is_inherit_doc ( this.comment_string ) && this.base_type != null ) {
+				if ( docparser.is_inherit_doc ( this ) && this.base_type != null ) {
 					((Valadoc.Struct)this.base_type).parse_comments ( docparser );
 					this.documentation = this.base_type.documentation;
 				}
@@ -3891,6 +3905,7 @@ public class Valadoc.Namespace : DocumentedElement, MethodHandler, FieldHandler,
 		this.set_field_type_references ( );
 		this.set_struct_type_references ( );
 		this.set_class_type_references ( );
+		this.set_enum_type_references ( );
 	}
 
 	// internal
@@ -4084,6 +4099,11 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	private CodeContext context;
 	private ErrorReporter reporter;
 
+	public WikiPageTree? wikitree {
+		private set;
+		get;
+	}
+
 	public int get_errors () {
 		return this.context.report.get_errors ();
 	}
@@ -4094,40 +4114,6 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 
 	public Gee.ReadOnlyCollection<Package> get_package_list () {
 		return new Gee.ReadOnlyCollection<Package> ( this.packages );
-	}
-
-	public Tree ( Valadoc.ErrorReporter reporter, Valadoc.Settings settings, bool non_null_experimental, bool disable_checking, string? basedir, string? directory ) {
-		this.context = new Vala.CodeContext ( );
-		this.settings = settings;
-		this.reporter = reporter;
-
-		reporter.vreporter = this.context.report;
-
-		if ( basedir != null ) {
-			this.context.basedir = realpath ( basedir );
-		}
-
-		if ( directory != null ) {
-			this.context.directory = realpath ( directory );
-		}
-		else {
-			this.context.directory = context.basedir;
-		}
-
-		this.context.non_null_experimental = non_null_experimental;
-		this.context.checking = !disable_checking;
-
-		this.context.memory_management = false;
-		this.context.compile_only = false;
-		this.context.save_temps = false;
-		this.context.save_temps = false;
-		this.context.checking = false;
-		this.context.assert = false;
-		this.context.thread = false;
-		this.context.library = null;
-		this.context.debug = false;
-		this.context.output = null;
-		this.context.optlevel = 0;
 	}
 
 	private void add_dependencies_to_source_package () {
@@ -4266,7 +4252,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		int param_size = 0;
 		for ( param_size = 0; params[param_size] != null; param_size++ );
 
-		string[] global_params = new string [ param_size +1];
+		string[] global_params = new string[param_size +1];
 
 		global_params[0] = null;
 		for ( int i = 0; params[i-1] != null ; i++ ) {
@@ -4281,7 +4267,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		return null;
 	}
 
-	private DocumentedElement? search_symbol_in_namespaces ( DocumentedElement element, string[] params ) {
+	private DocumentedElement? search_symbol_in_namespaces ( DocumentedElement? element, string[] params ) {
 		foreach ( Package pkg in this.packages ) {
 			DocumentedElement? element2 = pkg.search_element ( params, 0 );
 			if ( element2 != null )
@@ -4305,11 +4291,10 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		if ( tmp != null )
 			return tmp;
 
-		if ( element != null ) {
-			tmp = this.search_symbol_in_namespaces ( element, params );
-			if ( tmp != null )
-				return tmp;
-		}
+		tmp = this.search_symbol_in_namespaces ( element, params );
+		if ( tmp != null )
+			return tmp;
+
 		return null;
 	}
 
@@ -4415,6 +4400,39 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		ns.add_error_domain ( verrdom );
 	}
 
+	public Tree ( Valadoc.ErrorReporter reporter, Valadoc.Settings settings, bool non_null_experimental, bool disable_checking, string? basedir, string? directory ) {
+		this.context = new Vala.CodeContext ( );
+		CodeContext.push (context);
+
+		this.settings = settings;
+		this.reporter = reporter;
+
+		reporter.vreporter = this.context.report;
+
+		if ( basedir != null ) {
+			this.context.basedir = realpath ( basedir );
+		}
+
+		if ( directory != null ) {
+			this.context.directory = realpath ( directory );
+		}
+		else {
+			this.context.directory = context.basedir;
+		}
+
+		this.context.non_null_experimental = non_null_experimental;
+		this.context.checking = !disable_checking;
+		this.context.compile_only = false;
+		this.context.save_temps = false;
+		this.context.save_temps = false;
+		this.context.checking = false;
+		this.context.assert = false;
+		this.context.thread = false;
+		this.context.debug = false;
+		this.context.output = null;
+		this.context.optlevel = 0;
+	}
+
 	public bool create_tree ( ) {
 		Vala.Parser parser  = new Vala.Parser ();
 		parser.parse ( this.context );
@@ -4472,6 +4490,9 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	}
 
 	public void parse_comments ( Valadoc.Parser docparser ) {
+		this.wikitree = new WikiPageTree( this.reporter, this.settings );
+		wikitree.create_tree ( docparser );
+
 		foreach ( Package pkg in this.packages ) {
 			pkg.parse_comments( docparser );
 		}

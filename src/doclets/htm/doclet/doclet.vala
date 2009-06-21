@@ -27,6 +27,7 @@ using Gee;
 
 public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 	private const string css_path_package = "style.css";
+	private const string css_path_wiki = "../wikistyle.css";
 	private const string css_path = "../style.css";
 
 	private string get_real_path ( DocumentedElement element ) {
@@ -38,6 +39,8 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 
 		DirUtils.create ( this.settings.path, 0777 );
 		copy_directory ( GLib.Path.build_filename ( Config.doclet_path, "deps" ), this.settings.path );
+
+		this.write_wiki_pages ( tree, css_path_wiki );
 
 		GLib.FileStream file = GLib.FileStream.open ( GLib.Path.build_filename ( this.settings.path, "index.html" ), "w" );
 		this.write_file_header ( file, this.css_path_package, this.settings.pkg_name );
@@ -102,6 +105,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 
 		iface.visit_classes ( this );
 		iface.visit_structs ( this );
+		iface.visit_enums ( this );
 		iface.visit_delegates ( this );
 		iface.visit_methods ( this );
 		iface.visit_signals ( this );

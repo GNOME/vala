@@ -215,6 +215,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		iface.visit_classes ( this );
 		iface.visit_structs ( this );
+		iface.visit_enums ( this );
 		iface.visit_delegates ( this );
 		iface.visit_methods ( this );
 		iface.visit_signals ( this );

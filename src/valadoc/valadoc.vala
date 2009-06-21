@@ -26,21 +26,22 @@ using Gee;
 
 
 public class ValaDoc : Object {
-	private static string basedir = null;
+	private static string wikidirectory = null;
+	private static string pkg_version = null;
+	private static string pluginpath = null;
 	private static string directory = null;
 	private static string pkg_name = null;
-	private static string pkg_version = null;
+	private static string basedir = null;
 
 	private static bool add_inherited = false;
 	private static bool _protected = false;
 	private static bool with_deps = false;
 	private static bool _private = false;
-	private static bool version;
-
-	private static string pluginpath;
+	private static bool version = false;
 
 	private static bool non_null_experimental = false;
 	private static bool disable_checking;
+	private static bool verbose = false;
 	private static bool force = false;
 
 
@@ -60,10 +61,12 @@ public class ValaDoc : Object {
 		{ "inherit", 0, 0, OptionArg.NONE, ref add_inherited, "Adds inherited elements to a class", null },
 		{ "deps", 0, 0, OptionArg.NONE, ref with_deps, "Adds packages to the documentation", null },
 		{ "enable-non-null-experimental", 0, 0, OptionArg.NONE, ref non_null_experimental, "Enable experimentalenhancements for non-null types", null },
-		{ "doclet", 0, 0, OptionArg.FILENAME, ref pluginpath, "plugin", "DIRECTORY" },
+		{ "wiki", 0, 0, OptionArg.FILENAME, ref wikidirectory, "Wiki directory", "DIRECTORY" },
+		{ "doclet", 0, 0, OptionArg.STRING, ref pluginpath, "plugin", "Name of an included doclet or path to custom doclet" },
 		{ "package-name", 0, 0, OptionArg.STRING, ref pkg_name, "package name", "DIRECTORY" },
 		{ "package-version", 0, 0, OptionArg.STRING, ref pkg_version, "package version", "DIRECTORY" },
 		{ "force", 0, 0, OptionArg.NONE, ref force, "force", null },
+		{ "verbose", 0, 0, OptionArg.NONE, ref verbose, "Show all warnings", null },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref tsources, null, "FILE..." },
 		{ null }
 	};
@@ -114,8 +117,29 @@ public class ValaDoc : Object {
 		settings.with_deps = this.with_deps;
 		settings._private = this._private;
 		settings.path = realpath ( this.directory );
+		settings.verbose = this.verbose;
+		settings.wiki_directory = this.wikidirectory;
 
-		string fulldirpath = (pluginpath == null)? Config.plugin_dir : pluginpath;
+		string fulldirpath = "";
+		if ( pluginpath == null ) {
+			fulldirpath = build_filename ( Config.plugin_dir, "html" );
+		}
+		else if ( is_absolute ( pluginpath ) == false ) {
+			// Test to see if the plugin exists in the expanded path and then fallback
+			// to using the configured plugin directory
+			string local_path = build_filename ( Environment.get_current_dir(), pluginpath);
+			if ( FileUtils.test( local_path, FileTest.EXISTS ) ) {
+				fulldirpath = local_path;
+			}
+			else {
+				fulldirpath = build_filename ( Config.plugin_dir, pluginpath );
+			}
+		}
+		else {
+			fulldirpath = pluginpath;
+		}
+
+
 		ModuleLoader modules = new ModuleLoader ();
 		bool tmp = modules.load ( fulldirpath );
 		if ( tmp == false ) {
@@ -123,8 +147,8 @@ public class ValaDoc : Object {
 			return quit ( reporter );
 		}
 
-		Valadoc.Parser docparser = new Valadoc.Parser ( settings, reporter, modules );
 		Valadoc.Tree doctree = new Valadoc.Tree ( reporter, settings, non_null_experimental, disable_checking, basedir, directory );
+		Valadoc.Parser docparser = new Valadoc.Parser ( settings, reporter, doctree, modules );
 
 		if (!doctree.add_external_package ( vapi_directories, "glib-2.0" )) {
 			reporter.simple_error ( "glib-2.0 not found in specified Vala API directories" );
@@ -223,10 +247,6 @@ public class ValaDoc : Object {
 			return quit ( reporter );
 		}
 
-
-		pluginpath = build_filename ( Config.plugin_dir, "html", pluginpath );
-
-
 		if ( !check_pkg_name () ) {
 			reporter.simple_error ( "File allready exists" );
 			return quit ( reporter );
@@ -242,6 +262,13 @@ public class ValaDoc : Object {
 			}
 			else {
 				reporter.simple_error ( "File allready exists" );
+				return quit ( reporter );
+			}
+		}
+
+		if ( wikidirectory != null ) {
+			if ( !FileUtils.test(wikidirectory, FileTest.IS_DIR) ) {
+				reporter.simple_error ( "Wiki-directory does not exist." );
 				return quit ( reporter );
 			}
 		}

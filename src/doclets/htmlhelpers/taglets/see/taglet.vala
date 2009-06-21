@@ -24,7 +24,7 @@ using Gee;
 
 
 namespace Valadoc.Html {
-	public abstract class SeeTaglet : MainTaglet {
+	public class SeeTaglet : MainTaglet {
 		public override int order { get { return 400; } }
 		private string name;
 		private string link;
@@ -41,18 +41,23 @@ namespace Valadoc.Html {
 		}
 
 		protected override bool write ( void* res, int max, int index ) {
-			weak GLib.FileStream file = (GLib.FileStream)res;
-			file.printf ( "<a class=\"%s\" href=\"%s\">%s</a>", this.css, this.link, this.name );
-			if ( max != index+1 )
-				file.printf ( ", " );
+			if ( this.link == null ) {
+				((GLib.FileStream)res).printf ( "<span class=\"%s\">%s</span>", this.css, this.name );
+			}
+			else {
+				((GLib.FileStream)res).printf ( "<a class=\"%s\" href=\"%s\">%s</a>", this.css, this.link, this.name );
+			}
 
+			if ( max != index+1 ) {
+				((GLib.FileStream)res).printf ( ", " );
+			}
 			return true;
 		}
 
-		protected override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg ) {
 			if ( content.size != 1 ) {
-				errmsg = new string[1];
-				errmsg[0] = "Type name was expected.";
+				errmsg = "Type name was expected";
+				errlvl = ErrorLevel.ERROR;
 				return false;
 			}
 
@@ -61,22 +66,21 @@ namespace Valadoc.Html {
 
 			DocElement element = it.get ();
 			if ( element is StringTaglet == false ) {
-				errmsg = new string[1];
-				errmsg[0] = "Type name was expected.";
+				errmsg = "Type name was expected";
+				errlvl = ErrorLevel.ERROR;
 				return false;
 			}
 
 			Valadoc.DocumentedElement? node = tree.search_symbol_str ( me, ((StringTaglet)element).content.strip ( ) );
 			if ( node == null ) {
-				errmsg = new string[1];
-				errmsg[0] = "Linked type is not available.";
+				errmsg = "Linked type is not available";
+				errlvl = ErrorLevel.ERROR;
 				return false;
 			}
 
 			this.name = node.full_name ( );
 			this.css = get_html_content_link_css_class ( node );
 			this.link = get_html_link ( settings, node, me );
-			//this.link = this.get_link ( settings, tree, node, me );
 			return true;
 		}
 	}

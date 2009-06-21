@@ -24,27 +24,28 @@ using Gee;
 
 namespace Valadoc.Html {
 	public class SourceCodeDocElement : Valadoc.SourceCodeDocElement {
-		public Language lang {
-			private set;
-			get;
-		}
+		private Language lang;
+		private int srclines;
+		private string src;
 
-		public string src {
-			private set;
-			get;
-		}
-
-		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, owned string src, Language lang ) {
-			this.lang = lang;
+		public override bool parse ( owned string src, Language lang ) {
 			this.src = (owned)src;
+			this.lang = lang;
+			this.srclines=0;
+
+			for (weak string str=this.src; str.get_char()!='\0'; str=str.next_char()) {
+				if ( str.get_char () == '\n' ) {
+					this.srclines++;
+				}
+			}
 			return true;
 		}
 
 		public override bool write ( void* res, int max, int index ) {
 			weak GLib.FileStream file = (GLib.FileStream)res;
-			file.printf ( "\n<div class=\"%s\">\n\t<pre>", css_source_sample );
+			file.printf ( "\n\n\t<pre class=\"%s\">", css_source_sample );
 			file.puts ( src );
-			file.puts ( "<pre>\n</div>" );
+			file.puts ( "</pre>\n\n" );
 			return true;
 		}
 	}

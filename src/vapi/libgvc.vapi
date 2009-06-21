@@ -97,6 +97,7 @@ public class Rank {
 
 [Compact]
 [CCode (cname = "Agraph_t", cheader_filename = "gvc.h", free_function = "agclose", cprefix = "")]
+// AGraph
 public class Graph {
 	//[CCode (cname = "agmemread")]
 	//public static Graph? mem_read( char[] mem ); // some internal cast-magic caused damage to my brain

@@ -24,10 +24,12 @@ public class Valadoc.Settings : Object {
 	public string path = "documentation/";
 	public string pkg_name = null;
 	public string pkg_version;
+	public string wiki_directory;
 	public bool _private = false;
 	public bool _protected = false;
 	public bool with_deps = false;
 	public bool add_inherited = false;
+	public bool verbose = false;
 }
 
 

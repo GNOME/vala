@@ -54,6 +54,10 @@ public enum Valadoc.ListType {
 
 
 
+public interface Valadoc.Documented : Object {
+	public abstract string? get_filename ();
+}
+
 
 public abstract class Valadoc.DocElement : Object {
 	public abstract bool write ( void* res, int max, int index );
@@ -63,7 +67,7 @@ public abstract class Valadoc.Taglet : DocElement {
 }
 
 public abstract class Valadoc.InlineTaglet : Taglet {
-	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, string content, out string[] errmsg );
+	public abstract bool parse ( Settings settings, Tree tree, Documented self, string content, ref ErrorLevel errlvl, out string? errmsg );
 	public abstract string to_string ( );
 }
 
@@ -101,7 +105,7 @@ public abstract class Valadoc.MainTaglet : Taglet {
 	}
 
 	public virtual int order { get { return 0; } }
-	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, out string[] errmsg );
+	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg );
 	public abstract bool write_block_start ( void* res );
 	public abstract bool write_block_end ( void* res );
 }
@@ -110,39 +114,43 @@ public abstract class Valadoc.MainTaglet : Taglet {
 
 public abstract class Valadoc.StringTaglet : Taglet {
 	public string content {
-		set; get;
+		protected set; get;
 	}
 
-	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, string content );
+	public abstract bool parse ( string content );
+}
+
+public abstract class Valadoc.HeadlineDocElement : DocElement {
+	public abstract bool parse ( owned string title, int lvl );
 }
 
 public abstract class Valadoc.ImageDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, owned string path, ImageDocElementPosition pos );
+	public abstract bool parse ( Settings settings, Documented pos, owned string path, owned string alt );
 }
 
 public abstract class Valadoc.LinkDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, owned string link, Gee.ArrayList<DocElement>? desc );
+	public abstract bool parse ( Settings settings, Tree tree, Documented pos, owned string link, owned string desc );
 }
 
 public abstract class Valadoc.SourceCodeDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, owned string src, Language lang );
+	public abstract bool parse ( owned string src, Language lang );
 }
 
 public abstract class Valadoc.ListEntryDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, ListType type, Gee.ArrayList<DocElement> content );
+	public abstract bool parse ( ListType type, Gee.ArrayList<DocElement> content );
 }
 
 public abstract class Valadoc.ListDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, ListType type, Gee.ArrayList<ListEntryDocElement> entries );
+	public abstract bool parse ( ListType type, Gee.ArrayList<ListEntryDocElement> entries );
 }
 
 public abstract class Valadoc.NotificationDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content );
+	public abstract bool parse ( Gee.ArrayList<DocElement> content );
 }
 
 
 public abstract class Valadoc.HighlightedDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content );
+	public abstract bool parse ( Gee.ArrayList<DocElement> content );
 }
 
 public abstract class Valadoc.ItalicDocElement : HighlightedDocElement {
@@ -157,7 +165,7 @@ public abstract class Valadoc.UnderlinedDocElement : HighlightedDocElement {
 
 
 public abstract class Valadoc.ContentPositionDocElement : DocElement {
-	public abstract bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.ArrayList<DocElement> content );
+	public abstract bool parse ( Gee.ArrayList<DocElement> content );
 }
 
 public abstract class Valadoc.CenterDocElement : ContentPositionDocElement {
@@ -167,7 +175,7 @@ public abstract class Valadoc.RightAlignedDocElement : ContentPositionDocElement
 }
 
 public abstract class Valadoc.TableCellDocElement : DocElement {
-	public abstract void parse ( Settings settings, Tree tree, DocumentedElement me, TextPosition pos, TextVerticalPosition hpos, int size, int dsize, Gee.ArrayList<DocElement> content );
+	public abstract void parse ( TextPosition pos, TextVerticalPosition hpos, int size, int dsize, Gee.ArrayList<DocElement> content );
 }
 
 public abstract class Valadoc.TableDocElement : DocElement {
@@ -180,18 +188,24 @@ public abstract class Valadoc.TableDocElement : DocElement {
 public class Valadoc.DocumentationTree : Object {
 	private Gee.ArrayList<DocElement> description = new Gee.ArrayList<DocElement> ();
 	private Gee.ArrayList<DocElement> brief = new Gee.ArrayList<DocElement> ();
-	private Gee.HashMap<string, Gee.ArrayList<MainTaglet> > taglets
-		= new Gee.HashMap<string, Gee.ArrayList<MainTaglet> > ( GLib.str_hash, GLib.str_equal );
+	private Gee.HashMap<Type, Gee.ArrayList<MainTaglet> > taglets
+		= new Gee.HashMap<Type, Gee.ArrayList<MainTaglet> > ( );
 
-	public void add_taglet ( string tag, MainTaglet taglet ) {
-		if ( this.taglets.contains ( tag ) ) {
-			Gee.ArrayList<MainTaglet> lst = this.taglets.get ( tag );
-			lst.add ( taglet );
+	public void add_taglet ( MainTaglet taglet ) {
+		if ( this.taglets.contains ( taglet.get_type() ) ) {
+			ArrayList<MainTaglet> lst = this.taglets.get(taglet.get_type());
+			lst.add(taglet);
 		}
-		else{
-			Gee.ArrayList<MainTaglet> nlst = new Gee.ArrayList<MainTaglet> ();
-			nlst.add ( taglet );
-			this.taglets.set ( tag, nlst );
+		else {
+			ArrayList<MainTaglet> lst = new ArrayList<MainTaglet> ();
+			this.taglets.set(taglet.get_type(), lst);
+			lst.add(taglet);
+		}
+	}
+
+	public void add_taglets ( Collection<MainTaglet> taglets ) {
+		foreach (MainTaglet tag in taglets ) {
+			this.add_taglet(tag);
 		}
 	}
 
@@ -259,10 +273,9 @@ public class Valadoc.DocumentationTree : Object {
 		if ( this.description == null )
 			return true;
 
-		bool tmp;
-
 		int max = this.description.size;
 		int i = 0;
+		bool tmp;
 
 		foreach ( DocElement tag in this.description ) {
 			tmp = tag.write ( res, max, i );
@@ -296,7 +309,6 @@ public class Valadoc.DocumentationTree : Object {
 			if ( tmp == false )
 				return false;
 		}
-
 		return true;
 	}
 }

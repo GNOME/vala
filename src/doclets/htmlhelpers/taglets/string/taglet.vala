@@ -24,7 +24,7 @@ using Gee;
 
 namespace Valadoc.Html {
 	public class StringTaglet : Valadoc.StringTaglet {
-		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, string content ) {
+		public override bool parse ( string content ) {
 			this.content = content;
 			return true;
 		}

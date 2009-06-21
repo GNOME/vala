@@ -28,16 +28,16 @@ namespace Valadoc.Html {
 		private Gee.ArrayList<DocElement> content;
 		private string paramname;
 
-		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, out string[] errmsg ) {
+		public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg ) {
 			if ( me is Valadoc.ExceptionHandler == false ) {
-				errmsg = new string[1];
-				errmsg[0] = "Tag @throws cannot be used in %s documentation.  It can only be used in the following types of documentation: method, signal, delegate.".printf ( this.get_data_type ( me ) );
+				errmsg = "Tag @throws cannot be used in this context";
+				errlvl = ErrorLevel.ERROR;
 				return false;
 			}
 
 			if ( content.size == 0 ) {
-				errmsg = new string[1];
-				errmsg[0] = "Errordomain was expected.";
+				errmsg = "Exception name was expected";
+				errlvl = ErrorLevel.ERROR;
 				return false;
 			}
 
@@ -49,8 +49,8 @@ namespace Valadoc.Html {
 
 			DocElement tag = contentlst.get( 0 );
 			if ( tag is StringTaglet == false ) {
-				errmsg = new string[1];
-				errmsg[0] = "Exception name was expected.";
+				errmsg = "Exception name was expected";
+				errlvl = ErrorLevel.ERROR;
 				return false;
 			}
 
@@ -62,10 +62,12 @@ namespace Valadoc.Html {
 			long lposaoffset = (lposa == null)? long.MAX : str.pointer_to_offset ( lposa );
 			long lposboffset = (lposb == null)? long.MAX : str.pointer_to_offset ( lposb );
 
-			if ( lposaoffset < lposboffset )
+			if ( lposaoffset < lposboffset ) {
 				lpos = lposa;
-			else
+			}
+			else {
 				lpos = lposb;
+			}
 
 			if ( lpos == null ) {
 				this.paramname = str.strip ();
@@ -79,8 +81,8 @@ namespace Valadoc.Html {
 
 			bool tmp = this.check_exception_parameter_name ( (Valadoc.ExceptionHandler)me, this.paramname );
 			if ( tmp == false ) {
-				errmsg = new string[1];
-				errmsg[0] = "Unknown parameter.";
+				errmsg = "Exception name was expected";
+				errlvl = ErrorLevel.ERROR;
 				return false;
 			}
 

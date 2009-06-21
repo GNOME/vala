@@ -255,7 +255,9 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 			modifiers.append ( " inline" );
 
 		file.printf ( " <span class=\"%s\">%s</span> ", css_keyword, modifiers.str );
-		this.write_type_reference ( m.type_reference, file );
+		if ( m.is_constructor == false ) {
+			this.write_type_reference ( m.type_reference, file );
+		}
 		file.printf ( " %s ", m.name );
 		this.write_parameter_list ( m, file );
 
@@ -296,8 +298,13 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 
 		this.write_accessor ( field, file );
 
-		if ( field.is_volatile )
-			file.printf ( " <span class=\"%s\">volatile</span>", css_keyword );
+		if ( field.is_volatile ) {
+			file.printf ( " <span class=\"%s\">volatile</span> ", css_keyword );
+		}
+
+		if ( field.is_static ) {
+			file.printf ( " <span class=\"%s\">static</span> ", css_keyword );
+		}
 
 		this.write_type_reference ( field.type_reference, file );
 		file.printf ( " %s ", field.name );

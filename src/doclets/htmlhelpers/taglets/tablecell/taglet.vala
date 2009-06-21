@@ -29,7 +29,7 @@ namespace Valadoc.Html {
 		private int dcells;
 		private int cells;
 	
-		public override void parse ( Settings settings, Tree tree, DocumentedElement me, TextPosition pos, TextVerticalPosition hpos, int cells, int dcells, Gee.ArrayList<DocElement> content ) {
+		public override void parse ( TextPosition pos, TextVerticalPosition hpos, int cells, int dcells, Gee.ArrayList<DocElement> content ) {
 			this.content = content;
 			this.dcells = dcells;
 			this.cells = cells;

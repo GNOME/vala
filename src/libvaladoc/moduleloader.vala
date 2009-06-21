@@ -29,6 +29,7 @@ public static delegate GLib.Type Valadoc.TagletRegisterFunction ( Gee.HashMap<st
 public class Valadoc.ModuleLoader : Object {
 	public Gee.HashMap< string, GLib.Type > taglets;
 	public GLib.Type underlinedtag;
+	public GLib.Type headlinetag;
 	public GLib.Type notifictag;
 	public GLib.Type centertag;
 	public GLib.Type italictag;
@@ -106,7 +107,6 @@ public class Valadoc.ModuleLoader : Object {
 
 				GLib.Type type = tagletregisterfkt ( taglets );
 
-				// FIXME: Valac-bug: switch ( entry.ndup( entry.size() - modulesuffixlen ) ) do not work!
 				string soname = entry.ndup( entry.size() - modulesuffixlen );
 				switch ( soname ) {
 				case "libtagletstring":
@@ -150,6 +150,9 @@ public class Valadoc.ModuleLoader : Object {
 					break;
 				case "libtagletlistelement":
 					this.ulistetag = type;
+					break;
+				case "libtagletheadline":
+					this.headlinetag = type;
 					break;
 				}
 				modules.add ( module );
