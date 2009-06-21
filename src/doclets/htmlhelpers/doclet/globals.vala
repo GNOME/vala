@@ -134,78 +134,14 @@ namespace Valadoc.Html {
 	public const string css_content_link_construction_method = "css_content_link_construction_method";
 
 
+	public delegate string? HtmlLink (Settings settings, Documented element, Documented? pos);
+	public HtmlLink get_html_link_imp;
+
 	public string? get_html_link ( Settings settings, Documented element, Documented? pos ) {
-		if ( element is Visitable ) {
-			if ( ((Visitable)element).is_visitor_accessible () == false ) {
-				return null;
-			}
+		if (get_html_link_imp == null) {
+			return null;
 		}
-
-		if ( element is DocumentedElement ) {
-			if ( ((DocumentedElement)element).package.is_visitor_accessible () == false ) {
-				return null;
-			}
-		}
-
-		if ( pos == null || ((pos!=null)?(pos is WikiPage)? ((WikiPage)pos).name=="index.valadoc": false : false) ) {
-			if ( element is Package ) {
-				return Path.build_filename(((Package)element).name, "index.htm");
-			}
-			else if ( element is DocumentedElement ) {
-				return Path.build_filename( ((DocumentedElement)element).package.name, ((DocumentedElement)element).full_name()+".html" );
-			}
-			else if ( element is WikiPage ) {
-				if ( pos == element ) {
-					return "#";
-				}
-				else {
-					string wikiname = ((WikiPage)element).name;
-					wikiname = wikiname.ndup ( wikiname.len()-8 );
-					wikiname = wikiname.replace("/", ".") + ".html";
-					return Path.build_filename( "content", wikiname );
-				}
-			}
-		}
-		else if ( pos is DocumentedElement ) {
-			if ( element is Package ) {
-				return Path.build_filename("..", ((Package)element).name, "index.htm");
-			}
-			else if ( element is DocumentedElement ) {
-				return Path.build_filename( "..", ((DocumentedElement)element).package.name, ((DocumentedElement)element).full_name()+".html" );
-			}
-			else if ( element is WikiPage ) {
-				string wikiname = ((WikiPage)element).name;
-				wikiname = wikiname.ndup ( wikiname.len()-8 );
-				wikiname = wikiname.replace("/", ".")+".html";
-				if ( wikiname == "index.html" ) {
-					return Path.build_filename( "..", wikiname );
-				}
-				else {
-					return Path.build_filename( "..", "content", wikiname );
-				}
-			}
-		}
-		else if ( pos is WikiPage ) {
-			if ( element is Package ) {
-				return Path.build_filename("..", ((Package)element).name, "index.htm");
-			}
-			else if ( element is DocumentedElement ) {
-				return Path.build_filename( "..", ((DocumentedElement)element).package.name, ((DocumentedElement)element).full_name()+".html" );
-			}
-			else if ( element is WikiPage ) {
-				string wikiname = ((WikiPage)element).name;
-				wikiname = wikiname.ndup ( wikiname.len()-8 );
-				wikiname = wikiname.replace("/", ".")+".html";
-
-				if ( wikiname == "index.html" ) {
-					return Path.build_filename("..", wikiname);
-				}
-				else {
-					return wikiname;
-				}
-			}
-		}
-		return null;
+		return get_html_link_imp(settings, element, pos);
 	}
 
 	public string get_html_type_link (Settings settings, Documented element, Documented? pos) {

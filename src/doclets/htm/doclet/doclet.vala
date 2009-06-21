@@ -23,11 +23,86 @@ using GLib;
 using Gee;
 
 
+namespace Valadoc {
+	public string? get_html_link ( Settings settings, Documented element, Documented? pos ) {
+		if ( element is Visitable ) {
+			if ( ((Visitable)element).is_visitor_accessible () == false ) {
+				return null;
+			}
+		}
+
+		if ( element is DocumentedElement ) {
+			if ( ((DocumentedElement)element).package.is_visitor_accessible () == false ) {
+				return null;
+			}
+		}
+
+		if ( pos == null || ((pos!=null)?(pos is WikiPage)? ((WikiPage)pos).name=="index.valadoc": false : false) ) {
+			if ( element is Package ) {
+				return Path.build_filename(((Package)element).name, "index.htm");
+			}
+			else if ( element is DocumentedElement ) {
+				return Path.build_filename( ((DocumentedElement)element).package.name, ((DocumentedElement)element).full_name()+".html" );
+			}
+			else if ( element is WikiPage ) {
+				if ( pos == element ) {
+					return "#";
+				}
+				else {
+					string wikiname = ((WikiPage)element).name;
+					wikiname = wikiname.ndup ( wikiname.len()-8 );
+					wikiname = wikiname.replace("/", ".") + ".html";
+					return Path.build_filename( "content", wikiname );
+				}
+			}
+		}
+		else if ( pos is DocumentedElement ) {
+			if ( element is Package ) {
+				return Path.build_filename("..", ((Package)element).name, "index.htm");
+			}
+			else if ( element is DocumentedElement ) {
+				return Path.build_filename( "..", ((DocumentedElement)element).package.name, ((DocumentedElement)element).full_name()+".html" );
+			}
+			else if ( element is WikiPage ) {
+				string wikiname = ((WikiPage)element).name;
+				wikiname = wikiname.ndup ( wikiname.len()-8 );
+				wikiname = wikiname.replace("/", ".")+".html";
+				if ( wikiname == "index.html" ) {
+					return Path.build_filename( "..", wikiname );
+				}
+				else {
+					return Path.build_filename( "..", "content", wikiname );
+				}
+			}
+		}
+		else if ( pos is WikiPage ) {
+			if ( element is Package ) {
+				return Path.build_filename("..", ((Package)element).name, "index.htm");
+			}
+			else if ( element is DocumentedElement ) {
+				return Path.build_filename( "..", ((DocumentedElement)element).package.name, ((DocumentedElement)element).full_name()+".html" );
+			}
+			else if ( element is WikiPage ) {
+				string wikiname = ((WikiPage)element).name;
+				wikiname = wikiname.ndup ( wikiname.len()-8 );
+				wikiname = wikiname.replace("/", ".")+".html";
+
+				if ( wikiname == "index.html" ) {
+					return Path.build_filename("..", wikiname);
+				}
+				else {
+					return wikiname;
+				}
+			}
+		}
+		return null;
+	}
+}
 
 
 public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 	private const string css_path_package = "style.css";
-	private const string css_path_wiki = "../wikistyle.css";
+	private const string css_path_wiki = "../style.css";
 	private const string css_path = "../style.css";
 
 	private string get_real_path ( DocumentedElement element ) {
@@ -38,12 +113,12 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		this.settings = settings;
 
 		DirUtils.create ( this.settings.path, 0777 );
-		copy_directory ( GLib.Path.build_filename ( Config.doclet_path, "deps" ), this.settings.path );
+		copy_directory ( GLib.Path.build_filename ( Config.doclet_path, "deps" ), settings.path );
 
-		this.write_wiki_pages ( tree, css_path_wiki );
+		this.write_wiki_pages ( tree, css_path_wiki, Path.build_filename(settings.path, "content") );
 
-		GLib.FileStream file = GLib.FileStream.open ( GLib.Path.build_filename ( this.settings.path, "index.html" ), "w" );
-		this.write_file_header ( file, this.css_path_package, this.settings.pkg_name );
+		GLib.FileStream file = GLib.FileStream.open ( GLib.Path.build_filename ( settings.path, "index.html" ), "w" );
+		this.write_file_header ( file, this.css_path_package, settings.pkg_name );
 		this.write_navi_packages ( file, tree );
 		this.write_packages_content ( file, tree );
 		this.write_file_footer ( file );
@@ -264,6 +339,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 
 [ModuleInit]
 public Type register_plugin ( ) {
+	Valadoc.Html.get_html_link_imp = Valadoc.get_html_link;
 	return typeof ( Valadoc.HtmlDoclet );
 }
 

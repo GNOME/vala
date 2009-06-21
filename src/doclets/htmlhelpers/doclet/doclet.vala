@@ -64,7 +64,7 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 			this.write_navi_entry_html_template ( file, style, name );
 	}
 
-	protected void write_wiki_pages (Tree tree, string css_path_wiki) {
+	protected void write_wiki_pages (Tree tree, string css_path_wiki, string contentp) {
 		if ( tree.wikitree == null ) {
 			return ;
 		}
@@ -78,7 +78,6 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 			return ;
 		}
 
-		string contentp = Path.build_filename (this.settings.path, "content");
 		DirUtils.create (contentp, 0777);
 
 		DirUtils.create (Path.build_filename (contentp, "img"), 0777);
@@ -1348,11 +1347,16 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	protected void write_file_content ( GLib.FileStream file, Package f, DocumentedElement? mself ) {
+	protected void write_file_content ( GLib.FileStream file, Package f, DocumentedElement? mself, WikiPage? wikipage = null) {
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, f.name );
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
+
+		if (wikipage != null) {
+			wikipage.write (file);
+		}
+
 		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
 
 		this.write_child_namespaces ( file, f, mself );
