@@ -1001,7 +1001,6 @@ public class Valadoc.Parser : Object {
 			return false;
 		}
 
-		long keywordstartpos = pos;
 		pos++;
 
 		string keyword = this.parse_taglet_name ( null, str, strlen, ref pos, line, newlinepos, npos );
@@ -1038,15 +1037,13 @@ public class Valadoc.Parser : Object {
 
 		long strlen = str.len();
 		long newlinepos = 0;
+		uint counter = 0;
 		long line = 0;
 		long pos = 0;
 
 		if (!this.skip_header_pos ( str, strlen, ref pos, ref line, ref newlinepos, false )) {
 			return false;
 		}
-
-		Gee.ArrayList<DocElement> content = new Gee.ArrayList<DocElement> ();
-		uint counter = 0;
 
 		for ( pos++; pos<strlen; pos++ ) {
 			if ( str[pos] == ' '||str[pos]=='\t' ) {
@@ -1082,8 +1079,6 @@ public class Valadoc.Parser : Object {
 		if ( lvl > 5 ) {
 			return false;
 		}
-
-		string endtag = string.nfill(lvl+1, '=');
 
 		GLib.StringBuilder buf = new GLib.StringBuilder();
 		long newlinepos = nnewlinepos;
@@ -1139,8 +1134,8 @@ public class Valadoc.Parser : Object {
 				continue;
 			}
 			else if (this.parse_newline_pos (str, strlen, ref pos, ref line, ref newlinepos, true)) {
-				for (space = pos;(str[pos+1]==' '||str[pos+1]=='\t'); pos++);
-				space = pos-space;
+				for (;(str[pos+1]==' '||str[pos+1]=='\t'); pos++);
+				space = pos-lpos;
 
 				buf.append_len (str.offset(startpos), lpos-startpos+1);
 				linestart = pos+1;
@@ -1355,7 +1350,6 @@ public class Valadoc.Parser : Object {
 		if ( str[pos]!=tag )
 			return false;
 
-
 		Gee.ArrayList<ListEntryDocElement> listelements = new Gee.ArrayList<ListEntryDocElement> ();
 		long lspace = space;
 
@@ -1433,8 +1427,10 @@ public class Valadoc.Parser : Object {
 				this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 			}
 		}
-		for ( space = 0, pos++; str[pos]==' '||str[pos]=='\t' ; pos++, space++ );
+
+		for ( space = pos, pos++; str[pos]==' '||str[pos]=='\t' ; pos++ );
 		this.append_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
+		space = pos-space;
 
 		ListEntryDocElement listeltag = (ListEntryDocElement)GLib.Object.new ( this.modules.ulistetag );
 		listeltag.parse ( listtype, content );
