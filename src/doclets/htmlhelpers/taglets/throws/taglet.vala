@@ -91,9 +91,12 @@ namespace Valadoc.Html {
 		}
 
 		private bool check_exception_parameter_name ( Valadoc.ExceptionHandler me, string paramname ) {
+			string paramname2 = "."+paramname;
+
 			foreach ( DocumentedElement param in me.get_error_domains() ) {
-				if ( param.name == paramname )
+				if ( param.name == paramname || param.full_name() == paramname || param.full_name().has_suffix(paramname2) ) {
 					return true;
+				}
 			}
 			return false;
 		}
