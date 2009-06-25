@@ -1225,7 +1225,7 @@ namespace Posix {
 	[CCode (cheader_filename = "unistd.h")]
 	public pid_t getpgrp ();
 	[CCode (cheader_filename = "unistd.h")]
-	public pid_t getpgid ();
+	public pid_t getpgid (pid_t pid);
 	[CCode (cheader_filename = "unistd.h")]
 	public int setpgid (pid_t pid, pid_t pgid);
 	[CCode (cheader_filename = "unistd.h")]
