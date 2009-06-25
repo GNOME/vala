@@ -97,6 +97,7 @@ class Vala.VAPIGen : Object {
 
 	private int run () {
 		context = new CodeContext ();
+		context.profile = Profile.GOBJECT;
 		CodeContext.push (context);
 		
 		/* default package */
