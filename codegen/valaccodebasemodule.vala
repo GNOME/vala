@@ -800,6 +800,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return;
 		}
 
+		generate_type_declaration (f.field_type, decl_space);
+
 		string field_ctype = f.field_type.get_cname ();
 		if (f.is_volatile) {
 			field_ctype = "volatile " + field_ctype;
