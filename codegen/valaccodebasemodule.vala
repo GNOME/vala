@@ -3616,6 +3616,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		bool gvalue_boxing = (target_type != null
 		                      && target_type.data_type == gvalue_type
+		                      && !(expression_type is NullType)
 		                      && expression_type.get_type_id () != "G_TYPE_VALUE");
 
 		if (expression_type.value_owned
