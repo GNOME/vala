@@ -1,6 +1,6 @@
 /* dbus-glib-1.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -40,6 +40,8 @@ namespace DBus {
 		public void setup_with_main (GLib.MainContext? context = null);
 		[CCode (cname = "dbus_connection_get_g_connection")]
 		public Connection get_g_connection ();
+		[CCode (cname = "dbus_connection_register_g_object")]
+		public void register_object (string at_path, GLib.Object object);
 	}
 
 	[CCode (cname = "DBusError", cprefix = "dbus_error_", destroy_function = "dbus_error_free")]
@@ -92,7 +94,6 @@ namespace DBus {
 	public struct Bus {
 		[CCode (cname = "dbus_g_bus_get")]
 		public static Connection get (BusType type) throws Error;
-		
 	}
 
 	[Compact]

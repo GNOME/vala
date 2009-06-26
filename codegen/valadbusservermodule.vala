@@ -1401,7 +1401,8 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 	public override void visit_method_call (MethodCall expr) {
 		var mtype = expr.call.value_type as MethodType;
-		if (mtype == null || mtype.method_symbol.get_cname () != "dbus_g_connection_register_g_object") {
+		if (mtype == null || (mtype.method_symbol.get_cname () != "dbus_connection_register_g_object" &&
+		                      mtype.method_symbol.get_cname () != "dbus_g_connection_register_g_object")) {
 			base.visit_method_call (expr);
 			return;
 		}
@@ -1422,7 +1423,11 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		var obj_arg = args_it.get ();
 
 		var cregister = new CCodeFunctionCall (new CCodeIdentifier ("_vala_dbus_register_object"));
-		cregister.add_argument (raw_conn);
+		if (mtype.method_symbol.get_cname () == "dbus_g_connection_register_g_object") {
+			cregister.add_argument (raw_conn);
+		} else {
+			cregister.add_argument ((CCodeExpression) ma.inner.ccodenode);
+		}
 		cregister.add_argument ((CCodeExpression) path_arg.ccodenode);
 		cregister.add_argument ((CCodeExpression) obj_arg.ccodenode);
 		expr.ccodenode = cregister;
