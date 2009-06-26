@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:gnome="http://api.gnome.org/doap-extensions#"
+         xmlns="http://usefulinc.com/ns/doap#">
+
+  <name xml:lang="en">vala</name>
+  <shortdesc xml:lang="en">Compiler for the GObject type system</shortdesc>
+
+  <homepage rdf:resource="http://live.gnome.org/Vala" />
+  <mailing-list rdf:resource="http://mail.gnome.org/mailman/listinfo/vala-list" />
+  <download-page rdf:resource="http://live.gnome.org/Vala/Release" />
+  <bug-database rdf:resource="http://bugzilla.gnome.org/browse.cgi?product=vala" />
+  <category rdf:resource="http://api.gnome.org/doap-extensions#development" />
+
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Jürg Billeter</foaf:name>
+      <foaf:mbox rdf:resource="mailto:j@bitron.ch" />
+      <gnome:userid>juergbi</gnome:userid>
+    </foaf:Person>
+  </maintainer>
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Raffaele Sandrini</foaf:name>
+      <foaf:mbox rdf:resource="mailto:rasa@gmx.ch" />
+      <gnome:userid></gnome:userid>
+    </foaf:Person>
+  </maintainer>
+
+</Project>
+
