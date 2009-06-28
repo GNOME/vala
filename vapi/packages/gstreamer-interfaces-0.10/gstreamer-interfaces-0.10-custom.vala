@@ -46,4 +46,8 @@ namespace Gst {
 		public abstract unowned GLib.List<Gst.TunerChannel> list_channels ();
 		public abstract unowned GLib.List<Gst.TunerNorm> list_norms ();
 	}
+
+	[CCode (cheader_filename = "gst/interfaces/navigation.h")]
+	public interface Navigation : Gst.Element {
+	}
 }

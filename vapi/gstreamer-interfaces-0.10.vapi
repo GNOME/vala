@@ -80,7 +80,7 @@ namespace Gst {
 		public virtual signal void volume_changed (Gst.MixerTrack channel, void* volumes);
 	}
 	[CCode (cheader_filename = "gst/interfaces/navigation.h")]
-	public interface Navigation {
+	public interface Navigation : Gst.Element {
 		public abstract void send_event (Gst.Structure structure);
 		public void send_key_event (string event, string key);
 		public void send_mouse_event (string event, int button, double x, double y);
