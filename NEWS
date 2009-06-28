@@ -1,3 +1,12 @@
+Vala 0.7.4
+==========
+
+ * Add support for array properties.
+ * Support implicit and explicit GValue casts.
+ * Add initial support for generic methods.
+ * Add postgres bindings.
+ * Many bug fixes and binding updates.
+
 Vala 0.7.3
 ==========
 
