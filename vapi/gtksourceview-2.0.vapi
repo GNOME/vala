@@ -68,7 +68,9 @@ namespace Gtk {
 		[CCode (has_construct_function = false)]
 		public SourceLanguageManager ();
 		public void set_search_path ([CCode (array_length = false)] string[]? dirs);
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] language_ids { get; }
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] search_path { get; set; }
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
@@ -193,7 +195,9 @@ namespace Gtk {
 		public SourceStyleSchemeManager ();
 		public void prepend_search_path (string path);
 		public void set_search_path (string path);
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] scheme_ids { get; }
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] search_path { get; set; }
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]

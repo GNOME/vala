@@ -917,7 +917,17 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_indent ();
 			write_string ("[NoAccessorMethod]");
 		}
-		
+		if (prop.property_type is ArrayType && prop.no_array_length) {
+			write_indent ();
+			write_string ("[CCode (array_length = false");
+
+			if (prop.array_null_terminated) {
+				write_string (", array_null_terminated = true");
+			}
+
+			write_string (")]");
+		}
+
 		write_indent ();
 		write_accessibility (prop);
 

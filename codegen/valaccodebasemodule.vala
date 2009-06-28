@@ -3803,7 +3803,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		ccall.add_argument (cexpr);
 
 		var array_type = prop.property_type as ArrayType;
-		if (array_type != null && rhs != null) {
+		if (array_type != null && !prop.no_array_length && rhs != null) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				ccall.add_argument (head.get_array_length_cexpression (rhs, dim));
 			}

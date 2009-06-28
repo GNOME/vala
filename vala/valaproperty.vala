@@ -146,6 +146,10 @@ public class Vala.Property : Member, Lockable {
 	 */
 	public Expression default_expression { get; set; }
 
+	public bool no_array_length { get; set; }
+
+	public bool array_null_terminated { get; set; }
+
 	/**
 	 * Nickname of this property.
 	 */
@@ -265,6 +269,12 @@ public class Vala.Property : Member, Lockable {
 	void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("notify")) {
 			notify = a.get_bool ("notify");
+		}
+		if (a.has_argument ("array_length")) {
+			no_array_length = !a.get_bool ("array_length");
+		}
+		if (a.has_argument ("array_null_terminated")) {
+			array_null_terminated = a.get_bool ("array_null_terminated");
 		}
 	}
 

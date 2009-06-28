@@ -36,10 +36,13 @@ namespace Gtk {
 		public void set_website (string website);
 		public void set_website_label (string website_label);
 		public void set_wrap_license (bool wrap_license);
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] artists { get; set; }
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] authors { get; set; }
 		public string comments { get; set; }
 		public string copyright { get; set; }
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] documenters { get; set; }
 		public string license { get; set; }
 		public Gdk.Pixbuf logo { get; set; }
@@ -3249,6 +3252,7 @@ namespace Gtk {
 		public void set_value (double value);
 		public Gtk.Adjustment adjustment { get; set; }
 		[NoAccessorMethod]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] icons { owned get; set; }
 		[NoAccessorMethod]
 		public Gtk.IconSize size { get; set; }

@@ -274,8 +274,11 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				ccall.add_argument (new CCodeIdentifier (constant.get_cname ()));
 				return ccall;
 			} else if (array_expr.symbol_reference is Property) {
-				Gee.List<CCodeExpression> size = array_expr.get_array_sizes ();
-				return size[dim - 1];
+				var prop = (Property) array_expr.symbol_reference;
+				if (!prop.no_array_length) {
+					Gee.List<CCodeExpression> size = array_expr.get_array_sizes ();
+					return size[dim - 1];
+				}
 			}
 		} else if (array_expr is NullLiteral) {
 			return new CCodeConstant ("0");

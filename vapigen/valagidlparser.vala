@@ -1722,7 +1722,12 @@ public class Vala.GIdlParser : CodeVisitor {
 		var prop = new Property (fix_prop_name (node.name), parse_type (prop_node.type), null, null, current_source_reference);
 		prop.access = SymbolAccessibility.PUBLIC;
 		prop.interface_only = true;
-		
+
+		if (prop_node.type.is_interface && prop_node.type.interface == "GStrv") {
+			prop.no_array_length = true;
+			prop.array_null_terminated = true;
+		}
+
 		if (prop_node.readable) {
 			prop.get_accessor = new PropertyAccessor (true, false, false, prop.property_type.copy (), null, null);
 		}

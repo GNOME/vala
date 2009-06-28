@@ -259,7 +259,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					expr.ccodenode = ccomma;
 				} else {
 					var array_type = base_property.property_type as ArrayType;
-					if (array_type != null) {
+					if (array_type != null && !base_property.no_array_length) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							var temp_var = get_temp_variable (int_type);
 							var ctemp = new CCodeIdentifier (temp_var.name);

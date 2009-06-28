@@ -584,6 +584,7 @@ namespace GLib {
 		[CCode (type = "GIcon*", has_construct_function = false)]
 		public ThemedIcon.with_default_fallbacks (string iconname);
 		public string name { construct; }
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] names { get; construct; }
 		[NoAccessorMethod]
 		public bool use_default_fallbacks { get; construct; }
