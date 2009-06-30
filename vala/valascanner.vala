@@ -716,7 +716,24 @@ public class Vala.Scanner {
 					if (current[0] == '\\') {
 						current++;
 						token_length_in_chars++;
-						if (current < end && current[0] == 'x') {
+						if (current >= end) {
+							break;
+						}
+
+						switch (current[0]) {
+						case '\'':
+						case '"':
+						case '\\':
+						case '0':
+						case 'b':
+						case 'f':
+						case 'n':
+						case 'r':
+						case 't':
+							current++;
+							token_length_in_chars++;
+							break;
+						case 'x':
 							// hexadecimal escape character
 							current++;
 							token_length_in_chars++;
@@ -724,9 +741,10 @@ public class Vala.Scanner {
 								current++;
 								token_length_in_chars++;
 							}
-						} else {
-							current++;
-							token_length_in_chars++;
+							break;
+						default:
+							Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "invalid escape sequence");
+							break;
 						}
 					} else if (current[0] == '\n') {
 						break;
@@ -736,6 +754,7 @@ public class Vala.Scanner {
 							current += u.to_utf8 (null);
 							token_length_in_chars++;
 						} else {
+							current++;
 							Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "invalid UTF-8 character");
 						}
 					}
