@@ -584,7 +584,6 @@ namespace GLib {
 		[CCode (type = "GIcon*", has_construct_function = false)]
 		public ThemedIcon.with_default_fallbacks (string iconname);
 		public string name { construct; }
-		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] names { get; construct; }
 		[NoAccessorMethod]
 		public bool use_default_fallbacks { get; construct; }
@@ -1071,6 +1070,10 @@ namespace GLib {
 	public delegate void* ReallocFunc (void* data, size_t size);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
 	public delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable cancellable);
+	[CCode (cheader_filename = "gio/gio.h")]
+	public static GLib.EqualFunc file_equal;
+	[CCode (cheader_filename = "gio/gio.h")]
+	public static GLib.HashFunc file_hash;
 	[CCode (cheader_filename = "gio/gio.h")]
 	public const string FILE_ATTRIBUTE_ACCESS_CAN_DELETE;
 	[CCode (cheader_filename = "gio/gio.h")]

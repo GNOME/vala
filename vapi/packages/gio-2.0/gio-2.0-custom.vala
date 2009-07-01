@@ -33,5 +33,10 @@ namespace GLib {
 		public abstract GLib.FileMonitor monitor_directory (GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public abstract GLib.FileMonitor monitor_file (GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 	}
+
+	[CCode (cname = "g_file_hash", cheader_filename = "gio/gio.h")]
+	public static GLib.HashFunc file_hash;
+	[CCode (cname = "g_file_equal", cheader_filename = "gio/gio.h")]
+	public static GLib.EqualFunc file_equal;
 }
 
