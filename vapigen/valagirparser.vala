@@ -874,7 +874,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		int i = 0;
 
-		if (element_name == "method") {
+		if (element_name == "method" || element_name == "virtual-method") {
 			// implicit instance parameter
 			i++;
 		}
