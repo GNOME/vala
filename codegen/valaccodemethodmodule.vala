@@ -431,7 +431,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					}
 				}
 
-				if (!(m.return_type is VoidType)) {
+				if (!(m.return_type is VoidType) && !m.coroutine) {
 					var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
 					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
 					cinit.append (cdecl);
