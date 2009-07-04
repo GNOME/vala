@@ -19,13 +19,6 @@ AM_CONDITIONAL(ENABLE_VALADOCORG, test x$enable_valadocorg = xyes)
 
 
 
-if test x$enable_valadocorg = xyes; then
-	AC_CHECK_PROGS(YACC, mysql_config, :)
-	if test "$YACC" = :; then
-		AC_MSG_ERROR([mysql_config not found but required])
-	fi
-fi
-
 
 
 # Checks for libraries.
