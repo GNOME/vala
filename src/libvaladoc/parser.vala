@@ -851,7 +851,7 @@ public class Valadoc.Parser : Object {
 		return false;
 	}
 
-	private bool parse_table_cell ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> cells, ref long pos, ref long line, ref long newlinepos, bool wikimode ) {
+	private bool parse_table_cell ( Documented curelement, string str, long strlen, Gee.ArrayList<TableCellDocElement> cells, ref long pos, ref long line, ref long newlinepos, bool wikimode ) {
 		if ( !str.offset(pos).has_prefix("||") ) {
 			return false;
 		}
@@ -926,12 +926,12 @@ public class Valadoc.Parser : Object {
 		return false;
 	}
 
-	private bool parse_table_row ( Documented curelement, string str, long strlen, Gee.ArrayList<Gee.ArrayList<TableCellDocElement>> rows , ref long npos, ref long nline, ref long nnewlinepos, ref long nspace, bool wikimode ) {
+	private bool parse_table_row ( Documented curelement, string str, long strlen, Gee.ArrayList<Gee.ArrayList<TableCellDocElement>> rows, ref long npos, ref long nline, ref long nnewlinepos, ref long nspace, bool wikimode ) {
 		if ( !str.offset(npos).has_prefix("||") ) {
 			return false;
 		}
 
-		Gee.ArrayList<DocElement> cells = new Gee.ArrayList<DocElement> ();
+		Gee.ArrayList<TableCellDocElement> cells = new Gee.ArrayList<TableCellDocElement> ();
 		long newlinepos = nnewlinepos;
 		long space = nspace;
 		long line = nline;
@@ -951,7 +951,7 @@ public class Valadoc.Parser : Object {
 		nspace = space;
 		nline = line;
 		npos = pos;
-
+//Gee.ArrayList<Gee.ArrayList<TableCellDocElement>> rows
 		rows.add ( cells );
 		return true;
 	}
@@ -1319,7 +1319,9 @@ public class Valadoc.Parser : Object {
 		for (; str[npos]==' '||str[npos]=='\t'; npos++ );
 
 		this.parse_newline_pos (str, strlen, ref npos, ref line, ref linestartpos, wikimode);
-		npos++;
+		if ( str[npos]=='*' ) {
+			npos++;
+		}
 		return true;
 	}
 

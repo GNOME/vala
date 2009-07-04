@@ -1220,7 +1220,7 @@ public interface Valadoc.ConstantHandler : Basic {
 			lstd.add ( c );
 		}
 
-		return new Gee.ReadOnlyCollection<Type>( lstd );
+		return new Gee.ReadOnlyCollection<Constant>( lstd );
 	}
 
 	// internal
@@ -1303,7 +1303,7 @@ public interface Valadoc.FieldHandler : Basic {
 			lstd.add ( f );
 		}
 
-		return new Gee.ReadOnlyCollection<Type>( lstd );
+		return new Gee.ReadOnlyCollection<Field>( lstd );
 	}
 
 	// internal
@@ -1535,6 +1535,10 @@ public class Valadoc.Constant : DocumentedElement, SymbolAccessibility, ReturnTy
 
 		var vret = this.vconst.type_reference;
 		this.set_ret_type ( vret );
+	}
+
+	public string get_cname () {
+		return this.vconst.get_cname ();
 	}
 
 	// internal
@@ -2203,7 +2207,7 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 	public Method ( Valadoc.Settings settings, Vala.Method vmethod, MethodHandler parent, Tree head ) {
 		this.template_param_lst = new Gee.ArrayList<TypeParameter> ();
 		this.param_list = new Gee.ArrayList<FormalParameter>();
-		this.err_domains = new Gee.ArrayList<TypeReference>();
+		this.err_domains = new Gee.ArrayList<DocumentedElement>();
 
 		this.settings = settings;
 		this.vsymbol = vmethod;
@@ -2388,6 +2392,10 @@ public class Valadoc.EnumValue: DocumentedElement, Writeable {
 		this.head = head;
 	}
 
+	public string get_cname () {
+		return this.venval.get_cname ();
+	}
+
 	public bool is_venumvalue ( Vala.EnumValue venval ) {
 		return ( this.venval == venval );
 	}
@@ -2418,6 +2426,10 @@ public class Valadoc.ErrorCode : DocumentedElement, Writeable {
 		this.head = head;
 	}
 
+	public string get_cname () {
+		return this.verrcode.get_cname ();
+	}
+
 	public bool is_verrorcode ( Vala.ErrorCode verrcode ) {
 		return ( this.verrcode == verrcode );
 	}
@@ -2443,7 +2455,7 @@ public class Valadoc.Delegate : DocumentedElement, SymbolAccessibility, Visitabl
 	public Delegate ( Valadoc.Settings settings, Vala.Delegate vdelegate, DelegateHandler parent, Tree head ) {
 		this.template_param_lst = new Gee.ArrayList<TypeParameter> ();
 		this.param_list = new Gee.ArrayList<FormalParameter>();
-		this.err_domains = new Gee.ArrayList<TypeReference>();
+		this.err_domains = new Gee.ArrayList<DocumentedElement>();
 
 		this.settings = settings;
 		this.vdelegate = vdelegate;
@@ -3192,6 +3204,7 @@ public class Valadoc.Enum : DocumentedElement, SymbolAccessibility, Visitable, W
 
 	private Gee.ArrayList<EnumValue> en_values;
 
+	// rename: get_enum_value_list
 	public Gee.ReadOnlyCollection<EnumValue> get_enum_values () {
 		return new Gee.ReadOnlyCollection<EnumValue>( this.en_values );
 	}
