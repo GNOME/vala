@@ -257,20 +257,6 @@ namespace Pango {
 	public class Glyph {
 	}
 	[Compact]
-	[CCode (cheader_filename = "pango/pango.h")]
-	public class GlyphGeometry {
-		public weak Pango.GlyphUnit width;
-		public weak Pango.GlyphUnit x_offset;
-		public weak Pango.GlyphUnit y_offset;
-	}
-	[Compact]
-	[CCode (cheader_filename = "pango/pango.h")]
-	public class GlyphInfo {
-		public weak Pango.GlyphVisAttr attr;
-		public weak Pango.GlyphGeometry geometry;
-		public weak Pango.Glyph glyph;
-	}
-	[Compact]
 	[CCode (copy_function = "pango_glyph_item_copy", type_id = "PANGO_TYPE_GLYPH_ITEM", cheader_filename = "pango/pango.h")]
 	public class GlyphItem {
 		public weak Pango.GlyphString glyphs;
@@ -300,7 +286,7 @@ namespace Pango {
 	[Compact]
 	[CCode (copy_function = "pango_glyph_string_copy", type_id = "PANGO_TYPE_GLYPH_STRING", cheader_filename = "pango/pango.h")]
 	public class GlyphString {
-		public weak Pango.GlyphInfo glyphs;
+		public Pango.GlyphInfo glyphs;
 		public int log_clusters;
 		public int num_glyphs;
 		public int space;
@@ -318,11 +304,6 @@ namespace Pango {
 	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class GlyphUnit {
-	}
-	[Compact]
-	[CCode (cheader_filename = "pango/pango.h")]
-	public class GlyphVisAttr {
-		public uint is_cluster_start;
 	}
 	[Compact]
 	[CCode (copy_function = "pango_item_copy", type_id = "PANGO_TYPE_ITEM", cheader_filename = "pango/pango.h")]
@@ -515,6 +496,22 @@ namespace Pango {
 		public void free ();
 		public bool parse (string spec);
 		public unowned string to_string ();
+	}
+	[CCode (type_id = "PANGO_TYPE_GLYPH_GEOMETRY", cheader_filename = "pango/pango.h")]
+	public struct GlyphGeometry {
+		public weak Pango.GlyphUnit width;
+		public weak Pango.GlyphUnit x_offset;
+		public weak Pango.GlyphUnit y_offset;
+	}
+	[CCode (type_id = "PANGO_TYPE_GLYPH_INFO", cheader_filename = "pango/pango.h")]
+	public struct GlyphInfo {
+		public weak Pango.Glyph glyph;
+		public Pango.GlyphGeometry geometry;
+		public Pango.GlyphVisAttr attr;
+	}
+	[CCode (type_id = "PANGO_TYPE_GLYPH_VIS_ATTR", cheader_filename = "pango/pango.h")]
+	public struct GlyphVisAttr {
+		public uint is_cluster_start;
 	}
 	[CCode (type_id = "PANGO_TYPE_LOG_ATTR", cheader_filename = "pango/pango.h")]
 	public struct LogAttr {
