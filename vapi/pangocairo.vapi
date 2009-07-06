@@ -32,9 +32,9 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_context_set_shape_renderer (Pango.Context context, Pango.CairoShapeRendererFunc func, void* data, GLib.DestroyNotify dnotify);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
-	public static unowned Pango.Context cairo_create_context (Cairo.Context cr);
+	public static Pango.Context cairo_create_context (Cairo.Context cr);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
-	public static unowned Pango.Layout cairo_create_layout (Cairo.Context cr);
+	public static Pango.Layout cairo_create_layout (Cairo.Context cr);
 	[CCode (cheader_filename = "pango/pangocairo.h")]
 	public static void cairo_error_underline_path (Cairo.Context cr, double x, double y, double width, double height);
 	[CCode (cheader_filename = "pango/pangocairo.h")]

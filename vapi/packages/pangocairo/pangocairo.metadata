@@ -1,2 +1,4 @@
 Pango cheader_filename="pango/pangocairo.h"
 
+pango_cairo_create_context transfer_ownership="1"
+pango_cairo_create_layout transfer_ownership="1"
