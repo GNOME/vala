@@ -151,7 +151,7 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 
 		if (current_method is CreationMethod) {
 			cerror_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
-		} else if (current_method.coroutine) {
+		} else if (current_method != null && current_method.coroutine) {
 			cerror_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
 		} else if (current_return_type is VoidType) {
 			cerror_block.add_statement (new CCodeReturnStatement ());
