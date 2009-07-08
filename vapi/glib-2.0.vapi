@@ -837,7 +837,7 @@ public class string {
 	[CCode (cname = "g_strjoin")]
 	public static string join (string separator, ...);
 	[CCode (cname = "g_strnfill")]
-	public static string nfill (ulong length, char fill_char);
+	public static string nfill (size_t length, char fill_char);
 
 	[CCode (cname = "g_utf8_next_char")]
 	public weak string next_char ();
@@ -853,29 +853,29 @@ public class string {
 	[CCode (cname = "g_utf8_prev_char")]
 	public weak string prev_char ();
 	[CCode (cname = "g_utf8_strlen")]
-	public long len (long max = -1);
+	public long len (ssize_t max = -1);
 	[CCode (cname = "g_utf8_strchr")]
-	public weak string chr (long len, unichar c);
+	public weak string chr (ssize_t len, unichar c);
 	[CCode (cname = "g_utf8_strrchr")]
-	public weak string rchr (long len, unichar c);
+	public weak string rchr (ssize_t len, unichar c);
 	[CCode (cname = "g_utf8_strreverse")]
-	public string reverse (int len = -1);
+	public string reverse (ssize_t len = -1);
 	[CCode (cname = "g_utf8_validate")]
-	public bool validate (long max_len = -1, out string end = null);
+	public bool validate (ssize_t max_len = -1, out string end = null);
 	[CCode (cname = "g_utf8_normalize")]
-	public string normalize (long len = -1, NormalizeMode mode = NormalizeMode.DEFAULT);
+	public string normalize (ssize_t len = -1, NormalizeMode mode = NormalizeMode.DEFAULT);
 	
 	[CCode (cname = "g_utf8_strup")]
-	public string up (long len = -1);
+	public string up (ssize_t len = -1);
 	[CCode (cname = "g_utf8_strdown")]
-	public string down (long len = -1);
+	public string down (ssize_t len = -1);
 	[CCode (cname = "g_utf8_casefold")]
-	public string casefold (long len = -1);
+	public string casefold (ssize_t len = -1);
 	[CCode (cname = "g_utf8_collate")]
 	public int collate (string str2);
 
 	[CCode (cname = "g_locale_to_utf8")]
-	public string locale_to_utf8 (long len, out ulong bytes_read, out ulong bytes_written, out GLib.Error error = null);
+	public string locale_to_utf8 (ssize_t len, out size_t bytes_read, out size_t bytes_written, out GLib.Error error = null);
   
 	[CCode (cname = "g_strchomp")]
 	public weak string chomp();
@@ -906,7 +906,7 @@ public class string {
 	}
 
 	[CCode (cname = "strlen")]
-	public long size ();
+	public size_t size ();
 
 	[CCode (cname = "g_utf8_skip")]
 	public static char[] skip;

@@ -302,7 +302,7 @@ public class Vala.GirParser : CodeVisitor {
 					}
 				}
 				while (common_prefix.len () > 0 && (!common_prefix.has_suffix ("_") ||
-				       (cname.offset (common_prefix.size ()).get_char ().isdigit ()) && (cname.len () - common_prefix.len ()) <= 1)) {
+				       (cname.offset (common_prefix.length).get_char ().isdigit ()) && (cname.len () - common_prefix.len ()) <= 1)) {
 					// enum values may not consist solely of digits
 					common_prefix = common_prefix.ndup (common_prefix.size () - 1);
 				}

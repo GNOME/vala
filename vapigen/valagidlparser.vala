@@ -840,7 +840,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 			while (common_prefix.len () > 0 && (!common_prefix.has_suffix ("_") ||
-			       (value.name.offset (common_prefix.size ()).get_char ().isdigit ()) && (value.name.len () - common_prefix.len ()) <= 1)) {
+			       (value.name.offset (common_prefix.length).get_char ().isdigit ()) && (value.name.len () - common_prefix.len ()) <= 1)) {
 				// enum values may not consist solely of digits
 				common_prefix = common_prefix.ndup (common_prefix.size () - 1);
 			}
