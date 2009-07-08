@@ -653,15 +653,23 @@ public struct double {
 	[CCode (cname = "isinf")]
 	public int is_infinity ();
 
-	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
-	public string to_string (string format = "%g");
-
 	[CCode (cname = "MIN")]
 	public static double min (double a, double b);
 	[CCode (cname = "MAX")]
 	public static double max (double a, double b);
 	[CCode (cname = "CLAMP")]
 	public double clamp (double low, double high);
+
+	[CCode (cname = "G_ASCII_DTOSTR_BUF_SIZE")]
+	public const int DTOSTR_BUF_SIZE;
+	[CCode (cname = "g_ascii_dtostr", instance_pos = -1)]
+	public weak string to_str (char[] buffer);
+	[CCode (cname = "g_ascii_formatd", instance_pos = -1)]
+	public weak string format (char[] buffer, string format = "%g");
+
+	public string to_string () {
+		return this.to_str(new char[DTOSTR_BUF_SIZE]);
+	}
 }
 
 [CCode (cheader_filename = "time.h")]
