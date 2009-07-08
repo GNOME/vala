@@ -574,7 +574,30 @@ namespace Posix {
 	}
 	[CCode (cheader_filename = "signal.h")]
 	public int kill (pid_t pid, int signum);
+	[CCode (cheader_filename = "signal.h")]
+	public int killpg (pid_t pgpr, int signum);
+	[CCode (cheader_filename = "signal.h")]
+	public int raise (int signum);
+	[CCode (cheader_filename = "signal.h")]
+	public int sigemptyset (sigset_t sigset);
+	[CCode (cheader_filename = "signal.h")]
+	public int sigfillset (sigset_t sigset);
+	[CCode (cheader_filename = "signal.h")]
+	public int sigaddset (sigset_t sigset, int signo);
+	[CCode (cheader_filename = "signal.h")]
+	public int sigdelset (sigset_t sigset, int __signo);
+	[CCode (cheader_filename = "signal.h")]
+	public int sigismember (sigset_t sigset, int __signo);
+	[CCode (cheader_filename = "signal.h")]
+	public int sigprocmask (int how, sigset_t sigset, sigset_t oset);
+	[CCode (cheader_filename = "signal.h")]
+	public int sigsuspend (sigset_t sigset);
+	[CCode (cheader_filename = "signal.h")]
+	public int sigpending (sigset_t sigset);
+	[CCode (cheader_filename = "signal.h")]
+	public int sigwait (sigset_t sigset, out int sig);
 
+	[CCode (cheader_filename = "signal.h")]
 	public static delegate void sighandler_t (int signal);
 
 	[CCode (cheader_filename = "signal.h")]
