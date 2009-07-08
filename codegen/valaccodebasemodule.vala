@@ -1423,14 +1423,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			}
 
 			// notify on property changes
-			var typesymbol = (TypeSymbol) prop.parent_symbol;
-			var st = prop.property_type.data_type as Struct;
-			if (typesymbol.is_subtype_of (gobject_type) &&
-			    (st == null || st.has_type_id) &&
-			    !(prop.property_type is ArrayType) &&
+			if (is_gobject_property (prop) &&
 			    prop.notify &&
-			    prop.access != SymbolAccessibility.PRIVATE && // FIXME: use better means to detect gobject properties
-			    prop.binding == MemberBinding.INSTANCE &&
 			    (acc.writable || acc.construction)) {
 				var notify_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_notify"));
 				notify_call.add_argument (new CCodeCastExpression (new CCodeIdentifier ("self"), "GObject *"));
@@ -4010,6 +4004,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		cassert.add_argument ((CCodeExpression) postcondition.ccodenode);
 
 		return new CCodeExpressionStatement (cassert);
+	}
+
+	public virtual bool is_gobject_property (Property prop) {
+		return false;
 	}
 }
 

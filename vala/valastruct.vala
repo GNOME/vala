@@ -460,7 +460,7 @@ public class Vala.Struct : TypeSymbol {
 					}
 				}
 				if (is_simple_type ()) {
-					Report.error (source_reference, "The type `%s` doesn't declare a type id".printf (get_full_name ()));
+					return null;
 				} else {
 					return "G_TYPE_POINTER";
 				}

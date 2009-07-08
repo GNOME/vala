@@ -156,7 +156,7 @@ public struct uint {
 }
 
 [SimpleType]
-[CCode (cname = "gshort", cheader_filename = "glib.h", default_value = "0", type_signature = "n")]
+[CCode (cname = "gshort", cheader_filename = "glib.h", has_type_id = false, default_value = "0", type_signature = "n")]
 [IntegerType (rank = 4, min = -32768, max = 32767)]
 public struct short {
 	[CCode (cname = "G_MINSHORT")]
@@ -176,7 +176,7 @@ public struct short {
 }
 
 [SimpleType]
-[CCode (cname = "gushort", cheader_filename = "glib.h", default_value = "0U", type_signature = "q")]
+[CCode (cname = "gushort", cheader_filename = "glib.h", has_type_id = false, default_value = "0U", type_signature = "q")]
 [IntegerType (rank = 5, min = 0, max = 65535)]
 public struct ushort {
 	[CCode (cname = "0U")]

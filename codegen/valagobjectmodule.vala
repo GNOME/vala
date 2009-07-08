@@ -134,17 +134,7 @@ internal class Vala.GObjectModule : GTypeModule {
 		/* create properties */
 		var props = cl.get_properties ();
 		foreach (Property prop in props) {
-			if (prop.access == SymbolAccessibility.PRIVATE) {
-				// don't register private properties
-				continue;
-			}
-
-			var st = prop.property_type.data_type as Struct;
-			if (st != null && !st.has_type_id) {
-				continue;
-			}
-
-			if (prop.property_type is ArrayType) {
+			if (!is_gobject_property (prop)) {
 				continue;
 			}
 
@@ -209,17 +199,8 @@ internal class Vala.GObjectModule : GTypeModule {
 			if (prop.get_accessor == null || prop.is_abstract) {
 				continue;
 			}
-			if (prop.access == SymbolAccessibility.PRIVATE) {
+			if (!is_gobject_property (prop)) {
 				// don't register private properties
-				continue;
-			}
-
-			var st = prop.property_type.data_type as Struct;
-			if (st != null && !st.has_type_id) {
-				continue;
-			}
-
-			if (prop.property_type is ArrayType) {
 				continue;
 			}
 
@@ -237,6 +218,7 @@ internal class Vala.GObjectModule : GTypeModule {
 
 			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
 			if (prop.property_type.is_real_struct_type ()) {
+				var st = prop.property_type.data_type as Struct;
 				var struct_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 				struct_creation.add_argument (new CCodeIdentifier (st.get_cname ()));
 				struct_creation.add_argument (new CCodeConstant ("1"));
@@ -293,17 +275,7 @@ internal class Vala.GObjectModule : GTypeModule {
 			if (prop.set_accessor == null || prop.is_abstract) {
 				continue;
 			}
-			if (prop.access == SymbolAccessibility.PRIVATE) {
-				// don't register private properties
-				continue;
-			}
-
-			var st = prop.property_type.data_type as Struct;
-			if (st != null && !st.has_type_id) {
-				continue;
-			}
-
-			if (prop.property_type is ArrayType) {
+			if (!is_gobject_property (prop)) {
 				continue;
 			}
 
@@ -692,16 +664,35 @@ internal class Vala.GObjectModule : GTypeModule {
 	public override void visit_property (Property prop) {
 		base.visit_property (prop);
 
-		var cl = prop.parent_symbol as Class;
-		if (cl != null && cl.is_subtype_of (gobject_type)
-		    && prop.binding == MemberBinding.INSTANCE) {
-			// GObject property
-			var st = prop.property_type.data_type as Struct;
-			if (prop.access != SymbolAccessibility.PRIVATE
-			    && (st == null || st.has_type_id)) {
-				prop_enum.add_value (new CCodeEnumValue (prop.get_upper_case_cname ()));
-			}
+		if (is_gobject_property (prop)) {
+			prop_enum.add_value (new CCodeEnumValue (prop.get_upper_case_cname ()));
 		}
+	}
+
+	public override bool is_gobject_property (Property prop) {
+		var cl = prop.parent_symbol as Class;
+		if (cl == null || !cl.is_subtype_of (gobject_type)) {
+			return false;
+		}
+
+		if (prop.binding != MemberBinding.INSTANCE) {
+			return false;
+		}
+
+		if (prop.access == SymbolAccessibility.PRIVATE) {
+			return false;
+		}
+
+		var st = prop.property_type.data_type as Struct;
+		if (st != null && !st.has_type_id) {
+			return false;
+		}
+
+		if (prop.property_type is ArrayType) {
+			return false;
+		}
+
+		return true;
 	}
 }
 
