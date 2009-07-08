@@ -108,11 +108,14 @@ namespace GnomeKeyring {
 	}
 	[CCode (cprefix = "GNOME_KEYRING_ITEM_INFO_", has_type_id = "0", cheader_filename = "gnome-keyring.h")]
 	public enum ItemInfoFlags {
+		ALL,
 		BASICS,
 		SECRET
 	}
 	[CCode (cprefix = "GNOME_KEYRING_ITEM_", has_type_id = "0", cheader_filename = "gnome-keyring.h")]
 	public enum ItemType {
+		APPLICATION_SECRET,
+		ITEM_TYPE_MASK,
 		GENERIC_SECRET,
 		NETWORK_PASSWORD,
 		NOTE,
@@ -151,15 +154,9 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public const string DEFAULT;
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public const int GNOME_KEYRING_ITEM_APPLICATION_SECRET;
-	[CCode (cheader_filename = "gnome-keyring.h")]
-	public const int GNOME_KEYRING_ITEM_INFO_ALL;
-	[CCode (cheader_filename = "gnome-keyring.h")]
-	public const int GNOME_KEYRING_ITEM_TYPE_MASK;
-	[CCode (cheader_filename = "gnome-keyring.h")]
-	public const string GNOME_KEYRING_SESSION;
-	[CCode (cheader_filename = "gnome-keyring.h")]
 	public const GnomeKeyring.PasswordSchema NETWORK_PASSWORD;
+	[CCode (cheader_filename = "gnome-keyring.h")]
+	public const string SESSION;
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static unowned GLib.List acl_copy (GLib.List list);
 	[CCode (cheader_filename = "gnome-keyring.h")]

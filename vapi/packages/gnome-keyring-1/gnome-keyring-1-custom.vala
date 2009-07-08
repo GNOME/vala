@@ -16,4 +16,27 @@ namespace GnomeKeyring
 		public Attribute[] data;
 		public uint len;
 	}
+
+	[CCode (cprefix = "GNOME_KEYRING_ITEM_", has_type_id = "0", cheader_filename = "gnome-keyring.h")]
+	public enum ItemType {
+		APPLICATION_SECRET,
+		ITEM_TYPE_MASK,
+		GENERIC_SECRET,
+		NETWORK_PASSWORD,
+		NOTE,
+		CHAINED_KEYRING_PASSWORD,
+		ENCRYPTION_KEY_PASSWORD,
+		PK_STORAGE,
+		LAST_TYPE
+	}
+
+	[CCode (cprefix = "GNOME_KEYRING_ITEM_INFO_", has_type_id = "0", cheader_filename = "gnome-keyring.h")]
+	public enum ItemInfoFlags {
+		ALL,
+		BASICS,
+		SECRET
+	}
+
+	[CCode (cname = "GNOME_KEYRING_SESSION")]
+	public const string SESSION;
 }

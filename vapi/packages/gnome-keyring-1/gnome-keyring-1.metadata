@@ -1,6 +1,7 @@
 GnomeKeyring cheader_filename="gnome-keyring.h"
 
 #Simple password api
+GNOME_KEYRING_SESSION hidden="1"
 gnome_keyring_store_password ellipsis="1"
 gnome_keyring_store_password.keyring nullable="1"
 gnome_keyring_store_password.callback transfer_ownership="1"
@@ -77,6 +78,11 @@ gnome_keyring_list_item_ids_sync.ids type_arguments="uint" is_out="1" takes_owne
 gnome_keyring_list_keyring_names.callback transfer_ownership="1"
 gnome_keyring_list_keyring_names.data hidden="1"
 gnome_keyring_list_keyring_names.destroy_data hidden="1"
+GnomeKeyringItemInfoFlags hidden="1"
+GNOME_KEYRING_ITEM_APPLICATION_SECRET hidden="1"
+GNOME_KEYRING_ITEM_INFO_ALL hidden="1"
+GNOME_KEYRING_ITEM_TYPE_MASK hidden="1"
+GnomeKeyringItemType hidden="1"
 
 #find item api
 gnome_keyring_find_items.callback transfer_ownership="1"
