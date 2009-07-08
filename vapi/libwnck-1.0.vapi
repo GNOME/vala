@@ -144,8 +144,8 @@ namespace Wnck {
 		public void release_workspace_layout (int current_token);
 		public void toggle_showing_desktop (bool show);
 		public int try_set_workspace_layout (int current_token, int rows, int columns);
-		public virtual signal void active_window_changed (Wnck.Window previous_window);
-		public virtual signal void active_workspace_changed (Wnck.Workspace previous_workspace);
+		public virtual signal void active_window_changed (Wnck.Window? previous_window);
+		public virtual signal void active_workspace_changed (Wnck.Workspace? previous_workspace);
 		public virtual signal void application_closed (Wnck.Application app);
 		public virtual signal void application_opened (Wnck.Application app);
 		public virtual signal void background_changed ();

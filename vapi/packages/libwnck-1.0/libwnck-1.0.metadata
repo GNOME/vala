@@ -1,2 +1,4 @@
 Wnck cheader_filename="libwnck/libwnck.h"
 
+WnckScreen::active_window_changed.previous_window nullable="1"
+WnckScreen::active_workspace_changed.previous_workspace nullable="1"
