@@ -1,6 +1,6 @@
 /* valatyperegisterfunction.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,9 +26,9 @@ using GLib;
  * C function to register a type at runtime.
  */
 public abstract class Vala.TypeRegisterFunction {
-	private CCodeFragment declaration_fragment = new CCodeFragment ();
-
-	private CCodeFragment definition_fragment = new CCodeFragment ();
+	CCodeFragment source_declaration_fragment = new CCodeFragment ();
+	CCodeFragment declaration_fragment = new CCodeFragment ();
+	CCodeFragment definition_fragment = new CCodeFragment ();
 
 	public CodeContext context { get; set; }
 
@@ -62,7 +62,7 @@ public abstract class Vala.TypeRegisterFunction {
 		if (!plugin) {
 			type_block.add_statement (cdecl);
 		} else {
-			definition_fragment.append (cdecl);
+			source_declaration_fragment.append (cdecl);
 		}
 
 		CCodeFunction fun;
@@ -366,6 +366,10 @@ public abstract class Vala.TypeRegisterFunction {
 	 */
 	public abstract CCodeFragment get_type_interface_init_statements ();
 	
+	public CCodeFragment get_source_declaration () {
+		return source_declaration_fragment;
+	}
+
 	/**
 	 * Returns the declaration for this type register function in C code.
 	 *

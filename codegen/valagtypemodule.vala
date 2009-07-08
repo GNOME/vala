@@ -529,6 +529,7 @@ internal class Vala.GTypeModule : GErrorModule {
 
 			var type_fun = new ClassRegisterFunction (cl, context);
 			type_fun.init_from_type (in_plugin);
+			source_declarations.add_type_member_declaration (type_fun.get_source_declaration ());
 			source_type_member_definition.append (type_fun.get_definition ());
 			
 			if (in_plugin) {
