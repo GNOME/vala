@@ -1061,7 +1061,7 @@ namespace Gtk {
 		public static unowned GLib.ParamSpec class_list_child_properties (GLib.ObjectClass cclass, uint n_properties);
 		[NoWrapper]
 		public virtual unowned string composite_name (Gtk.Widget child);
-		public virtual void forall (Gtk.Callback callback, void* callback_data);
+		public virtual void forall (Gtk.Callback callback);
 		[CCode (vfunc_name = "forall")]
 		public virtual void forall_internal (bool include_internal, Gtk.Callback callback);
 		public void @foreach (Gtk.Callback callback);
@@ -5214,7 +5214,7 @@ namespace Gtk {
 		public virtual signal void grab_notify (bool was_grabbed);
 		[HasEmitter]
 		public virtual signal void hide ();
-		public virtual signal void hierarchy_changed (Gtk.Widget previous_toplevel);
+		public virtual signal void hierarchy_changed (Gtk.Widget? previous_toplevel);
 		public virtual signal bool key_press_event (Gdk.EventKey event);
 		public virtual signal bool key_release_event (Gdk.EventKey event);
 		[HasEmitter]
@@ -5228,7 +5228,7 @@ namespace Gtk {
 		public virtual signal bool motion_notify_event (Gdk.EventMotion event);
 		public virtual signal void move_focus (Gtk.DirectionType p0);
 		public virtual signal bool no_expose_event (Gdk.EventNoExpose event);
-		public virtual signal void parent_set (Gtk.Widget previous_parent);
+		public virtual signal void parent_set (Gtk.Widget? previous_parent);
 		public virtual signal bool popup_menu ();
 		public virtual signal bool property_notify_event (Gdk.EventProperty event);
 		public virtual signal bool proximity_in_event (Gdk.EventProximity event);
