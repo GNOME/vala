@@ -457,6 +457,303 @@ namespace Posix {
 	public unowned Group? getgrent ();
 	public void setgrent ();
 
+	[CCode (cheader_filename = "math.h")]
+	public double acos (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float acosf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double asin (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float asinf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double atan (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float atanf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double atan2 (double y, double x);
+	[CCode (cheader_filename = "math.h")]
+	public float atan2f (float y, float x);
+	[CCode (cheader_filename = "math.h")]
+	public double cos (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float cosf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double sin (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float sinf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double tan (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float tanf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double cosh (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float coshf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double sinh (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float sinhf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double tanh (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float tanhf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public void sincos (double x, out double sinx, out double cosx);
+	[CCode (cheader_filename = "math.h")]
+	public void sincosf (float x, out float sinx, out float cosx);
+	[CCode (cheader_filename = "math.h")]
+	public double acosh (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float acoshf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double asinh (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float asinhf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double atanh (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float atanhf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double exp (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float expf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double frexp (double x, out int exponent);
+	[CCode (cheader_filename = "math.h")]
+	public float frexpf (float x, out int exponent);
+	[CCode (cheader_filename = "math.h")]
+	public double ldexp (double x, int exponent);
+	[CCode (cheader_filename = "math.h")]
+	public float ldexpf (float x, int exponent);
+	[CCode (cheader_filename = "math.h")]
+	public double log (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float logf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double log10 (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float log10f (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double modf (double x, out double iptr);
+	[CCode (cheader_filename = "math.h")]
+	public float modff (float x, out float iptr);
+	[CCode (cheader_filename = "math.h")]
+	public double exp10 (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float exp10f (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double pow10 (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float pow10f (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double expm1 (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float expm1f (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double log1p (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float log1pf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double logb (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float logbf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double exp2 (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float exp2f (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double log2 (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float log2f (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double pow (double x, double y);
+	[CCode (cheader_filename = "math.h")]
+	public float powf (float x, float y);
+	[CCode (cheader_filename = "math.h")]
+	public double sqrt (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float sqrtf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double hypot (double x, double y);
+	[CCode (cheader_filename = "math.h")]
+	public float hypotf (float x, float y);
+	[CCode (cheader_filename = "math.h")]
+	public double cbrt (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float cbrtf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double ceil (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float ceilf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double fabs (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float fabsf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double floor (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float floorf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double fmod (double x, double y);
+	[CCode (cheader_filename = "math.h")]
+	public float fmodf (float x, float y);
+	[CCode (cheader_filename = "math.h")]
+	public int isinf (double value);
+	[CCode (cheader_filename = "math.h")]
+	public int isinff (float value);
+	[CCode (cheader_filename = "math.h")]
+	public int finite (double value);
+	[CCode (cheader_filename = "math.h")]
+	public int finitef (float value);
+	[CCode (cheader_filename = "math.h")]
+	public double drem (double x, double y);
+	[CCode (cheader_filename = "math.h")]
+	public float dremf (float x, float y);
+	[CCode (cheader_filename = "math.h")]
+	public double significand (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float significandf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double copysign (double x, double y);
+	[CCode (cheader_filename = "math.h")]
+	public float copysignf (float x, float y);
+	[CCode (cheader_filename = "math.h")]
+	public double nan (string tagb);
+	[CCode (cheader_filename = "math.h")]
+	public float nanf (string tagb);
+	[CCode (cheader_filename = "math.h")]
+	public int isnan (double value);
+	[CCode (cheader_filename = "math.h")]
+	public int isnanf (float value);
+	[CCode (cheader_filename = "math.h")]
+	public double j0 (double x0);
+	[CCode (cheader_filename = "math.h")]
+	public float j0f (float x0);
+	[CCode (cheader_filename = "math.h")]
+	public double j1 (double x0);
+	[CCode (cheader_filename = "math.h")]
+	public float j1f (float x0);
+	[CCode (cheader_filename = "math.h")]
+	public double jn (int x0, double x1);
+	[CCode (cheader_filename = "math.h")]
+	public float jnf (int x0, float x1);
+	[CCode (cheader_filename = "math.h")]
+	public double y0 (double x0);
+	[CCode (cheader_filename = "math.h")]
+	public float y0f (float x0);
+	[CCode (cheader_filename = "math.h")]
+	public double y1 (double x0);
+	[CCode (cheader_filename = "math.h")]
+	public float y1f (float x0);
+	[CCode (cheader_filename = "math.h")]
+	public double yn (int x0, double x1);
+	[CCode (cheader_filename = "math.h")]
+	public float ynf (int x0, float x1);
+	[CCode (cheader_filename = "math.h")]
+	public double erf (double x0);
+	[CCode (cheader_filename = "math.h")]
+	public float erff (float x0);
+	[CCode (cheader_filename = "math.h")]
+	public double erfc (double x0);
+	[CCode (cheader_filename = "math.h")]
+	public float erfcf (float x0);
+	[CCode (cheader_filename = "math.h")]
+	public double lgamma (double x0);
+	[CCode (cheader_filename = "math.h")]
+	public float lgammaf (float x0);
+	[CCode (cheader_filename = "math.h")]
+	public double tgamma (double x0);
+	[CCode (cheader_filename = "math.h")]
+	public float tgammaf (float x0);
+	[CCode (cheader_filename = "math.h")]
+	public double gamma (double x0);
+	[CCode (cheader_filename = "math.h")]
+	public float gammaf (float x0);
+	[CCode (cheader_filename = "math.h")]
+	public double lgamma_r (double x0, out int signgamp);
+	[CCode (cheader_filename = "math.h")]
+	public float lgamma_rf (float x0, out int signgamp);
+	[CCode (cheader_filename = "math.h")]
+	public double rint (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float rintf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double nextafter (double x, double y);
+	[CCode (cheader_filename = "math.h")]
+	public float nextafterf (float x, float y);
+	[CCode (cheader_filename = "math.h")]
+	public double nexttoward (double x, double y);
+	[CCode (cheader_filename = "math.h")]
+	public float nexttowardf (float x, double y);
+	[CCode (cheader_filename = "math.h")]
+	public double remainder (double x, double y);
+	[CCode (cheader_filename = "math.h")]
+	public float remainderf (float x, float y);
+	[CCode (cheader_filename = "math.h")]
+	public double scalbn (double x, int n);
+	[CCode (cheader_filename = "math.h")]
+	public float scalbnf (float x, int n);
+	[CCode (cheader_filename = "math.h")]
+	public int ilogb (double x);
+	[CCode (cheader_filename = "math.h")]
+	public int ilogbf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double scalbln (double x, long n);
+	[CCode (cheader_filename = "math.h")]
+	public float scalblnf (float x, long n);
+	[CCode (cheader_filename = "math.h")]
+	public double nearbyint (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float nearbyintf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double round (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float roundf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double trunc (double x);
+	[CCode (cheader_filename = "math.h")]
+	public float truncf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double remquo (double x, double y, out int quo);
+	[CCode (cheader_filename = "math.h")]
+	public float remquof (float x, float y, out int quo);
+	[CCode (cheader_filename = "math.h")]
+	public long lrint (double x);
+	[CCode (cheader_filename = "math.h")]
+	public long lrintf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public int64 llrint (double x);
+	[CCode (cheader_filename = "math.h")]
+	public int64 llrintf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public long lround (double x);
+	[CCode (cheader_filename = "math.h")]
+	public long lroundf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public int64 llround (double x);
+	[CCode (cheader_filename = "math.h")]
+	public int64 llroundf (float x);
+	[CCode (cheader_filename = "math.h")]
+	public double fdim (double x, double y);
+	[CCode (cheader_filename = "math.h")]
+	public float fdimf (float x, float y);
+	[CCode (cheader_filename = "math.h")]
+	public double fmax (double x, double y);
+	[CCode (cheader_filename = "math.h")]
+	public float fmaxf (float x, float y);
+	[CCode (cheader_filename = "math.h")]
+	public double fmin (double x, double y);
+	[CCode (cheader_filename = "math.h")]
+	public float fminf (float x, float y);
+	[CCode (cheader_filename = "math.h")]
+	public double fma (double x, double y, double z);
+	[CCode (cheader_filename = "math.h")]
+	public float fmaf (float x, float y, float z);
+	[CCode (cheader_filename = "math.h")]
+	public double scalb (double x, double n);
+	[CCode (cheader_filename = "math.h")]
+	public float scalbf (float x, float n);
+
 	[CCode (cheader_filename = "poll.h", cname = "struct pollfd")]
 	public struct pollfd {
 		public int fd;
