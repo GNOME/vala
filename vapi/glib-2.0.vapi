@@ -3263,7 +3263,8 @@ namespace GLib {
 	}
 
 	/* Quarks */
-	
+
+	[CCode (type_id = "G_TYPE_UINT")]
 	public struct Quark : uint32 {
 		public static Quark from_string (string str);
 		public static Quark try_string (string str);
