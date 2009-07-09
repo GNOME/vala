@@ -867,7 +867,8 @@ namespace Gdk {
 		public int group;
 		public int level;
 	}
-	[CCode (type_id = "GDK_TYPE_NATIVE_WINDOW", cheader_filename = "gdk/gdk.h")]
+	[CCode (cheader_filename = "gdk/gdk.h")]
+	[SimpleType]
 	public struct NativeWindow {
 	}
 	[CCode (type_id = "GDK_TYPE_PANGO_ATTR_EMBOSS_COLOR", cheader_filename = "gdk/gdk.h")]
