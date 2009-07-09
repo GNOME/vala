@@ -2684,7 +2684,8 @@ namespace GLib {
 		PARSE,
 		UNKNOWN_ELEMENT,
 		UNKNOWN_ATTRIBUTE,
-		INVALID_CONTENT
+		INVALID_CONTENT,
+		MISSING_ATTRIBUTE
 	}
 
 	[CCode (cprefix = "G_MARKUP_", has_type_id = false)]
@@ -2701,6 +2702,8 @@ namespace GLib {
 		public weak string get_element ();
 		public weak SList<string> get_element_stack ();
 		public void get_position (out int line_number, out int char_number);
+		public void push (MarkupParser parser, void* user_data);
+		public void* pop (MarkupParser parser);
 	}
 	
 	public delegate void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_names, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_values) throws MarkupError;
@@ -2722,9 +2725,21 @@ namespace GLib {
 	}
 
 	namespace Markup {
+		[CCode (cprefix = "G_MARKUP_COLLECT_", has_type_id = false)]
+		public enum CollectType {
+			INVALID,
+			STRING,
+			STRDUP,
+			BOOLEAN,
+			TRISTATE,
+			OPTIONAL
+		}
+
 		public static string escape_text (string text, long length = -1);
 		[PrintfFormat]
 		public static string printf_escaped (string format, ...);
+		[CCode (sentinel = "G_MARKUP_COLLECT_INVALID")]
+		public static bool collect_attributes (string element_name, string[] attribute_names, string[] attribute_values, ...) throws MarkupError;
 	}
 
 	/* Key-value file parser */
