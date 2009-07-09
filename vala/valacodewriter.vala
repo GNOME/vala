@@ -260,6 +260,10 @@ public class Vala.CodeWriter : CodeVisitor {
 		visit_sorted (cl.get_properties ());
 		visit_sorted (cl.get_signals ());
 
+		if (cl.constructor != null) {
+			cl.constructor.accept (this);
+		}
+
 		current_scope = current_scope.parent_scope;
 
 		write_end_block ();
@@ -784,6 +788,17 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		write_string (";");
 
+		write_newline ();
+	}
+
+	public override void visit_constructor (Constructor c) {
+		if (!dump_tree) {
+			return;
+		}
+
+		write_indent ();
+		write_string ("construct");
+		write_code_block (c.body);
 		write_newline ();
 	}
 
