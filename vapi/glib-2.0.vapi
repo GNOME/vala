@@ -1571,9 +1571,9 @@ namespace GLib {
 	public enum IOFlags {
 		APPEND,
 		NONBLOCK,
-		READABLE,
-		WRITEABLE,
-		SEEKABLE,
+		IS_READABLE,
+		IS_WRITEABLE,
+		IS_SEEKABLE,
 		MASK,
 		GET_MASK,
 		SET_MASK
