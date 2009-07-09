@@ -1,5 +1,6 @@
 Rsvg cheader_filename="librsvg/rsvg.h"
 RsvgSizeFunc.width is_ref="1"
 RsvgSizeFunc.height is_ref="1"
+rsvg_handle_new_from_data.data is_array="1" no_array_length="1"
 rsvg_handle_set_size_callback.size_func transfer_ownership="1"
 rsvg_handle_set_size_callback.user_data_destroy hidden="1"
