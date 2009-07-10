@@ -1069,7 +1069,7 @@ public class Vala.Scanner {
 			current++;
 			column++;
 		}
-		if (bol && current[0] == '#') {
+		if (bol && current < end && current[0] == '#') {
 			pp_directive ();
 			return true;
 		}
