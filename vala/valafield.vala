@@ -313,6 +313,12 @@ public class Vala.Field : Member, Lockable {
 			initializer.target_type = field_type;
 
 			initializer.check (analyzer);
+
+			if (!initializer.value_type.compatible (field_type)) {
+				error = true;
+				Report.error (source_reference, "Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), field_type.to_string ()));
+				return false;
+			}
 		}
 
 		if (binding == MemberBinding.INSTANCE && parent_symbol is Interface) {
