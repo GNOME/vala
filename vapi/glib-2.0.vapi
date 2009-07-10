@@ -3145,6 +3145,14 @@ namespace GLib {
 		public void steal_all ();
 	}
 
+	public struct HashTableIter<K,V> {
+		public HashTableIter (GLib.HashTable<K,V> table);
+		public bool next (out unowned K key, out unowned V value);
+		public void remove ();
+		public void steal ();
+		public unowned GLib.HashTable<K,V> get_hash_table ();
+	}
+
 	[CCode (has_target = false)]
 	public static delegate uint HashFunc (void* key);
 	[CCode (has_target = false)]
