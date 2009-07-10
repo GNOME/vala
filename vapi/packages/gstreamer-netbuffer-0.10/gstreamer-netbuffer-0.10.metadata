@@ -8,5 +8,6 @@ gst_netaddress_get_ip6_address.port is_out="1"
 gst_netaddress_set_address_bytes.address no_array_length="1"
 gst_netaddress_get_address_bytes.address no_array_length="1"
 gst_netaddress_get_address_bytes.port is_out="1"
+GstNetBuffer type_id="GST_TYPE_NETBUFFER"
 GstNetBuffer base_class="GstBuffer"
 

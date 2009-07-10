@@ -2,7 +2,7 @@
 
 [CCode (cprefix = "Gst", lower_case_cprefix = "gst_")]
 namespace Gst {
-	[CCode (cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
+	[CCode (type_id = "GST_TYPE_NETBUFFER", cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
 	public class NetBuffer : Gst.Buffer {
 		public weak Gst.Buffer buffer;
 		public Gst.NetAddress from;
