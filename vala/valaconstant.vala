@@ -170,6 +170,12 @@ public class Vala.Constant : Member, Lockable {
 
 		type_reference.check (analyzer);
 
+		if (!check_const_type (type_reference, analyzer)) {
+			error = true;
+			Report.error (source_reference, "`%s' not supported as type for constants".printf (type_reference.to_string ()));
+			return false;
+		}
+
 		if (!external) {
 			if (initializer == null) {
 				error = true;
@@ -178,6 +184,12 @@ public class Vala.Constant : Member, Lockable {
 				initializer.target_type = type_reference;
 
 				initializer.check (analyzer);
+
+				if (!initializer.value_type.compatible (type_reference)) {
+					error = true;
+					Report.error (source_reference, "Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), type_reference.to_string ()));
+					return false;
+				}
 			}
 		}
 
@@ -189,5 +201,18 @@ public class Vala.Constant : Member, Lockable {
 		analyzer.current_symbol = old_symbol;
 
 		return !error;
+	}
+
+	bool check_const_type (DataType type, SemanticAnalyzer analyzer) {
+		if (type is ValueType) {
+			return true;
+		} else if (type is ArrayType) {
+			var array_type = type as ArrayType;
+			return check_const_type (array_type.element_type, analyzer);
+		} else if (type.data_type == analyzer.string_type.data_type) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
