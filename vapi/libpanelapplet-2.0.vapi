@@ -30,7 +30,7 @@ namespace Panel {
 		public static int factory_main (string iid, GLib.Type applet_type, AppletFactoryCallback callback);
 		public void set_background_widget (Gtk.Widget widget);
 		public void setup_menu (string xml, [CCode (array_length = false)] BonoboUI.Verb[] verb_list, void* data);
-		public signal void change_background (AppletBackgroundType type, ref Gdk.Color color, Gdk.Pixmap pixmap);
+		public signal void change_background (AppletBackgroundType type, Gdk.Color? color, Gdk.Pixmap? pixmap);
 	}
 
 	[CCode (cprefix = "PANEL_")]
