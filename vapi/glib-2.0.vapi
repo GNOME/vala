@@ -3278,6 +3278,7 @@ namespace GLib {
 		public void set_size (uint length);
 
 		public uint len;
+		[CCode (array_length_cname = "len", array_length_type = "guint")]
 		public uint8[] data;
 	}
 
