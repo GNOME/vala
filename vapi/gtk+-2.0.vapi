@@ -36,13 +36,10 @@ namespace Gtk {
 		public void set_website (string website);
 		public void set_website_label (string website_label);
 		public void set_wrap_license (bool wrap_license);
-		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] artists { get; set; }
-		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] authors { get; set; }
 		public string comments { get; set; }
 		public string copyright { get; set; }
-		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] documenters { get; set; }
 		public string license { get; set; }
 		public Gdk.Pixbuf logo { get; set; }
@@ -3252,7 +3249,6 @@ namespace Gtk {
 		public void set_value (double value);
 		public Gtk.Adjustment adjustment { get; set; }
 		[NoAccessorMethod]
-		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] icons { owned get; set; }
 		[NoAccessorMethod]
 		public Gtk.IconSize size { get; set; }
@@ -4694,7 +4690,7 @@ namespace Gtk {
 		public unowned Gdk.Window get_bin_window ();
 		public void get_cell_area (Gtk.TreePath path, Gtk.TreeViewColumn column, out Gdk.Rectangle rect);
 		public unowned Gtk.TreeViewColumn get_column (int n);
-		public unowned GLib.List get_columns ();
+		public GLib.List<Gtk.TreeViewColumn> get_columns ();
 		public void get_cursor (out Gtk.TreePath? path, out unowned Gtk.TreeViewColumn? focus_column);
 		public bool get_dest_row_at_pos (int drag_x, int drag_y, out Gtk.TreePath? path, out Gtk.TreeViewDropPosition pos);
 		public void get_drag_dest_row (out Gtk.TreePath? path, out Gtk.TreeViewDropPosition pos);
