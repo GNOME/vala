@@ -2483,8 +2483,8 @@ namespace GLib {
 
 		public static string parse_scheme (string uri);
 		public static string escape_string (string unescaped, string reserved_chars_allowed, bool allow_utf8);
-		public static string unescape_string (string escaped_string, string illegal_characters);
-		public static string unescape_segment (string escaped_string, string escaped_string_end, string illegal_characters);
+		public static string unescape_string (string escaped_string, string? illegal_characters = null);
+		public static string unescape_segment (string escaped_string, string escaped_string_end, string? illegal_characters = null);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public static string[] list_extract_uris (string uri_list);
 	}
