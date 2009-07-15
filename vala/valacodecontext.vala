@@ -73,6 +73,11 @@ public class Vala.CodeContext {
 	public string? internal_header_filename { get; set; }
 
 	/**
+	 * Base directory used for header_filename in the VAPIs.
+	 */
+	public string? includedir { get; set; }
+
+	/**
 	 * Compile but do not link.
 	 */
 	public bool compile_only { get; set; }

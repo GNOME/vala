@@ -222,6 +222,9 @@ public class Vala.SourceFile {
 		if (cinclude_filename == null) {
 			if (context.header_filename != null) {
 				cinclude_filename = Path.get_basename (context.header_filename);
+				if (context.includedir != null) {
+					cinclude_filename = "%s/%s".printf (context.includedir, cinclude_filename);
+				}
 			} else {
 				cinclude_filename = "%s%s.h".printf (get_subdir (), get_basename ());
 			}
