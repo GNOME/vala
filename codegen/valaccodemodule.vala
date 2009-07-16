@@ -345,10 +345,18 @@ public abstract class Vala.CCodeModule {
 	}
 
 	public virtual string get_dynamic_property_getter_cname (DynamicProperty node) {
+		if (next == null) {
+			Report.error (node.source_reference, "dynamic properties are not supported for %s".printf (node.dynamic_type.to_string ()));
+			return "";
+		}
 		return next.get_dynamic_property_getter_cname (node);
 	}
 
 	public virtual string get_dynamic_property_setter_cname (DynamicProperty node) {
+		if (next == null) {
+			Report.error (node.source_reference, "dynamic properties are not supported for %s".printf (node.dynamic_type.to_string ()));
+			return "";
+		}
 		return next.get_dynamic_property_setter_cname (node);
 	}
 
