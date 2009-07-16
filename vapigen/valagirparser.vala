@@ -792,6 +792,7 @@ public class Vala.GirParser : CodeVisitor {
 	Method parse_constructor (string? parent_ctype = null) {
 		start_element ("constructor");
 		string name = reader.get_attribute ("name");
+		string throws_string = reader.get_attribute ("throws");
 		next ();
 
 		string? ctype;
@@ -813,6 +814,9 @@ public class Vala.GirParser : CodeVisitor {
 				m.add_parameter (parse_parameter ());
 			}
 			end_element ("parameters");
+		}
+		if (throws_string == "1") {
+			m.add_error_type (new ErrorType (null, null));
 		}
 		end_element ("constructor");
 		return m;
