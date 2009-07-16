@@ -90,6 +90,8 @@ dist_vapi_DATA = \
 	libepc-1.0.vapi \
 	libftdi.deps \
 	libftdi.vapi \
+	libgdata.deps \
+	libgdata.vapi \
 	libglade-2.0.deps \
 	libglade-2.0.vapi \
 	libgnome-2.0.vapi \
