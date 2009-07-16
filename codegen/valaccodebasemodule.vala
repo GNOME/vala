@@ -1155,11 +1155,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		bool returns_real_struct = prop.property_type.is_real_struct_type ();
 
-		var t = (ObjectTypeSymbol) prop.parent_symbol;
-
-		var this_type = new ObjectType (t);
-		generate_type_declaration (this_type, decl_space);
-		var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
 
 		CCodeFormalParameter cvalueparam;
 		if (returns_real_struct) {
@@ -1174,7 +1169,16 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		} else {
 			function = new CCodeFunction (acc.get_cname (), "void");
 		}
-		function.add_parameter (cselfparam);
+
+		if (prop.binding == MemberBinding.INSTANCE) {
+			var t = (ObjectTypeSymbol) prop.parent_symbol;
+			var this_type = new ObjectType (t);
+			generate_type_declaration (this_type, decl_space);
+			var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
+
+			function.add_parameter (cselfparam);
+		}
+
 		if (acc.writable || acc.construction || returns_real_struct) {
 			function.add_parameter (cvalueparam);
 		}

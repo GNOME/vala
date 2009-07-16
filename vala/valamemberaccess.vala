@@ -246,7 +246,7 @@ public class Vala.MemberAccess : Expression {
 					} else if (sym is Property) {
 						var prop = (Property) sym;
 						this_parameter = prop.this_parameter;
-						may_access_instance_members = true;
+						may_access_instance_members = (prop.binding == MemberBinding.INSTANCE);
 					} else if (sym is Constructor) {
 						var c = (Constructor) sym;
 						this_parameter = c.this_parameter;

@@ -2359,6 +2359,7 @@ public class Vala.Parser : CodeVisitor {
 				var field_type = prop.property_type.copy ();
 				prop.field = new Field ("_%s".printf (prop.name), field_type, prop.default_expression, prop.source_reference);
 				prop.field.access = SymbolAccessibility.PRIVATE;
+				prop.field.binding = prop.binding;
 			}
 		}
 
