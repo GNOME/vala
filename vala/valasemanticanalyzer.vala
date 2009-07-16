@@ -56,9 +56,11 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public DataType double_type;
 	public DataType type_type;
 	public Class object_type;
+	public StructValueType gvalue_type;
 	public DataType glist_type;
 	public DataType gslist_type;
 	public DataType garray_type;
+	public DataType gvaluearray_type;
 	public Class gerror_type;
 
 	public int next_lambda_id = 0;
@@ -111,10 +113,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 			object_type = (Class) glib_ns.scope.lookup ("Object");
 			type_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Type"));
+			gvalue_type = new StructValueType ((Struct) glib_ns.scope.lookup ("Value"));
 
 			glist_type = new ObjectType ((Class) glib_ns.scope.lookup ("List"));
 			gslist_type = new ObjectType ((Class) glib_ns.scope.lookup ("SList"));
 			garray_type = new ObjectType ((Class) glib_ns.scope.lookup ("Array"));
+			gvaluearray_type = new ObjectType ((Class) glib_ns.scope.lookup ("ValueArray"));
 
 			gerror_type = (Class) glib_ns.scope.lookup ("Error");
 		}

@@ -25,6 +25,7 @@ TESTS = \
 	control-flow/break.test \
 	control-flow/expressions-conditional.test \
 	control-flow/for.test \
+	control-flow/foreach.test \
 	control-flow/switch.test \
 	control-flow/sideeffects.test \
 	enums/enums.test \

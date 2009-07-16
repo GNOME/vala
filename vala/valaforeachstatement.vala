@@ -180,6 +180,8 @@ public class Vala.ForeachStatement : Block {
 			}
 
 			return check_without_iterator (analyzer, collection_type, collection_type.get_type_arguments ().get (0));
+		} else if (collection_type.compatible (analyzer.gvaluearray_type)) {
+			return check_without_iterator (analyzer, collection_type, analyzer.gvalue_type);
 		} else {
 			return check_with_iterator (analyzer, collection_type);
 		}

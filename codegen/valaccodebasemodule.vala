@@ -107,6 +107,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public ErrorType gerror_type;
 	public Class glist_type;
 	public Class gslist_type;
+	public Class gvaluearray_type;
 	public TypeSymbol gstringbuilder_type;
 	public TypeSymbol garray_type;
 	public TypeSymbol gbytearray_type;
@@ -245,6 +246,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			gerror_type = new ErrorType (null, null);
 			glist_type = (Class) glib_ns.scope.lookup ("List");
 			gslist_type = (Class) glib_ns.scope.lookup ("SList");
+			gvaluearray_type = (Class) glib_ns.scope.lookup ("ValueArray");
 			gstringbuilder_type = (TypeSymbol) glib_ns.scope.lookup ("StringBuilder");
 			garray_type = (TypeSymbol) glib_ns.scope.lookup ("Array");
 			gbytearray_type = (TypeSymbol) glib_ns.scope.lookup ("ByteArray");

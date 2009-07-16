@@ -402,6 +402,60 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 			cfor.add_iterator (new CCodeAssignment (get_variable_cexpression (it_name), new CCodeMemberAccess.pointer (get_variable_cexpression (it_name), "next")));
 			cblock.add_statement (cfor);
+		} else if (stmt.collection.value_type.compatible (new ObjectType (gvaluearray_type))) {
+			// iterating over a GValueArray
+
+			var arr_index = "%s_index".printf (stmt.variable_name);
+
+			if (current_method != null && current_method.coroutine) {
+				closure_struct.add_field (uint_type.get_cname (), arr_index);
+			} else {
+				var citdecl = new CCodeDeclaration (uint_type.get_cname ());
+				var citvardecl = new CCodeVariableDeclarator (arr_index);
+				citvardecl.line = cblock.line;
+				citdecl.add_declarator (citvardecl);
+				cblock.add_statement (citdecl);
+			}
+
+			var cbody = new CCodeBlock ();
+
+			var get_item = new CCodeFunctionCall (new CCodeIdentifier ("g_value_array_get_nth"));
+			get_item.add_argument (get_variable_cexpression (collection_backup.name));
+			get_item.add_argument (get_variable_cexpression (arr_index));
+
+			CCodeExpression element_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_item);
+
+			if (stmt.type_reference.value_owned) {
+				element_expr = get_ref_cexpression (stmt.type_reference, element_expr, null, new StructValueType (gvalue_type));
+			}
+
+			cfrag = new CCodeFragment ();
+			append_temp_decl (cfrag, temp_vars);
+			cbody.add_statement (cfrag);
+			temp_vars.clear ();
+
+			if (current_method != null && current_method.coroutine) {
+				closure_struct.add_field (stmt.type_reference.get_cname (), stmt.variable_name);
+				cbody.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (stmt.variable_name), element_expr)));
+			} else {
+				var cdecl = new CCodeDeclaration (stmt.type_reference.get_cname ());
+				var cvardecl = new CCodeVariableDeclarator (stmt.variable_name, element_expr);
+				cvardecl.line = cblock.line;
+				cdecl.add_declarator (cvardecl);
+				cbody.add_statement (cdecl);
+			}
+
+			cbody.add_statement (stmt.body.ccodenode);
+
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, get_variable_cexpression (arr_index), new CCodeMemberAccess.pointer (get_variable_cexpression (collection_backup.name), "n_values"));
+
+			var cfor = new CCodeForStatement (ccond, cbody);
+
+			cfor.add_initializer (new CCodeAssignment (get_variable_cexpression (arr_index), new CCodeConstant ("0")));
+
+			cfor.add_iterator (new CCodeAssignment (get_variable_cexpression (arr_index), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, get_variable_cexpression (arr_index), new CCodeConstant ("1"))));
+
+			cblock.add_statement (cfor);
 		}
 
 		foreach (LocalVariable local in stmt.get_local_variables ()) {
