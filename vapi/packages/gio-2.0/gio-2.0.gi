@@ -164,6 +164,14 @@
 				<parameter name="cancellable" type="GCancellable*"/>
 			</parameters>
 		</callback>
+		<callback name="GSocketSourceFunc">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="socket" type="GSocket*"/>
+				<parameter name="condition" type="GIOCondition"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
 		<struct name="GEmblemClass">
 		</struct>
 		<struct name="GEmblemedIconClass">
@@ -315,6 +323,14 @@
 				</parameters>
 			</method>
 		</struct>
+		<struct name="GInputVector">
+			<field name="buffer" type="gpointer"/>
+			<field name="size" type="gsize"/>
+		</struct>
+		<struct name="GOutputVector">
+			<field name="buffer" type="gconstpointer"/>
+			<field name="size" type="gsize"/>
+		</struct>
 		<struct name="GSimpleAsyncResultClass">
 		</struct>
 		<struct name="GThemedIconClass">
@@ -373,12 +389,6 @@
 					<parameter name="target" type="GSrvTarget*"/>
 				</parameters>
 			</method>
-			<method name="get_expires" symbol="g_srv_target_get_expires">
-				<return-type type="time_t"/>
-				<parameters>
-					<parameter name="target" type="GSrvTarget*"/>
-				</parameters>
-			</method>
 			<method name="get_hostname" symbol="g_srv_target_get_hostname">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -416,7 +426,6 @@
 					<parameter name="port" type="guint16"/>
 					<parameter name="priority" type="guint16"/>
 					<parameter name="weight" type="guint16"/>
-					<parameter name="expires" type="time_t"/>
 				</parameters>
 			</constructor>
 		</boxed>
@@ -430,6 +439,16 @@
 			<member name="G_DATA_STREAM_NEWLINE_TYPE_CR" value="1"/>
 			<member name="G_DATA_STREAM_NEWLINE_TYPE_CR_LF" value="2"/>
 			<member name="G_DATA_STREAM_NEWLINE_TYPE_ANY" value="3"/>
+		</enum>
+		<enum name="GDriveStartFlags" type-name="GDriveStartFlags" get-type="g_drive_start_flags_get_type">
+			<member name="G_DRIVE_START_NONE" value="0"/>
+		</enum>
+		<enum name="GDriveStartStopType" type-name="GDriveStartStopType" get-type="g_drive_start_stop_type_get_type">
+			<member name="G_DRIVE_START_STOP_TYPE_UNKNOWN" value="0"/>
+			<member name="G_DRIVE_START_STOP_TYPE_SHUTDOWN" value="1"/>
+			<member name="G_DRIVE_START_STOP_TYPE_NETWORK" value="2"/>
+			<member name="G_DRIVE_START_STOP_TYPE_MULTIDISK" value="3"/>
+			<member name="G_DRIVE_START_STOP_TYPE_PASSWORD" value="4"/>
 		</enum>
 		<enum name="GEmblemOrigin" type-name="GEmblemOrigin" get-type="g_emblem_origin_get_type">
 			<member name="G_EMBLEM_ORIGIN_UNKNOWN" value="0"/>
@@ -452,6 +471,7 @@
 			<member name="G_FILE_ATTRIBUTE_TYPE_UINT64" value="6"/>
 			<member name="G_FILE_ATTRIBUTE_TYPE_INT64" value="7"/>
 			<member name="G_FILE_ATTRIBUTE_TYPE_OBJECT" value="8"/>
+			<member name="G_FILE_ATTRIBUTE_TYPE_STRINGV" value="9"/>
 		</enum>
 		<enum name="GFileMonitorEvent" type-name="GFileMonitorEvent" get-type="g_file_monitor_event_get_type">
 			<member name="G_FILE_MONITOR_EVENT_CHANGED" value="0"/>
@@ -509,6 +529,8 @@
 			<member name="G_IO_ERROR_WOULD_MERGE" value="29"/>
 			<member name="G_IO_ERROR_FAILED_HANDLED" value="30"/>
 			<member name="G_IO_ERROR_TOO_MANY_OPEN_FILES" value="31"/>
+			<member name="G_IO_ERROR_NOT_INITIALIZED" value="32"/>
+			<member name="G_IO_ERROR_ADDRESS_IN_USE" value="33"/>
 		</enum>
 		<enum name="GMountMountFlags" type-name="GMountMountFlags" get-type="g_mount_mount_flags_get_type">
 			<member name="G_MOUNT_MOUNT_NONE" value="0"/>
@@ -530,9 +552,28 @@
 		</enum>
 		<enum name="GSocketFamily" type-name="GSocketFamily" get-type="g_socket_family_get_type">
 			<member name="G_SOCKET_FAMILY_INVALID" value="0"/>
+			<member name="G_SOCKET_FAMILY_UNIX" value="1"/>
 			<member name="G_SOCKET_FAMILY_IPV4" value="2"/>
 			<member name="G_SOCKET_FAMILY_IPV6" value="10"/>
-			<member name="G_SOCKET_FAMILY_UNIX" value="1"/>
+		</enum>
+		<enum name="GSocketMsgFlags" type-name="GSocketMsgFlags" get-type="g_socket_msg_flags_get_type">
+			<member name="G_SOCKET_MSG_NONE" value="0"/>
+			<member name="G_SOCKET_MSG_OOB" value="1"/>
+			<member name="G_SOCKET_MSG_PEEK" value="2"/>
+			<member name="G_SOCKET_MSG_DONTROUTE" value="4"/>
+		</enum>
+		<enum name="GSocketProtocol" type-name="GSocketProtocol" get-type="g_socket_protocol_get_type">
+			<member name="G_SOCKET_PROTOCOL_UNKNOWN" value="-1"/>
+			<member name="G_SOCKET_PROTOCOL_DEFAULT" value="0"/>
+			<member name="G_SOCKET_PROTOCOL_TCP" value="6"/>
+			<member name="G_SOCKET_PROTOCOL_UDP" value="17"/>
+			<member name="G_SOCKET_PROTOCOL_SCTP" value="132"/>
+		</enum>
+		<enum name="GSocketType" type-name="GSocketType" get-type="g_socket_type_get_type">
+			<member name="G_SOCKET_TYPE_INVALID" value="0"/>
+			<member name="G_SOCKET_TYPE_STREAM" value="1"/>
+			<member name="G_SOCKET_TYPE_DATAGRAM" value="2"/>
+			<member name="G_SOCKET_TYPE_SEQPACKET" value="3"/>
 		</enum>
 		<flags name="GAppInfoCreateFlags" type-name="GAppInfoCreateFlags" get-type="g_app_info_create_flags_get_type">
 			<member name="G_APP_INFO_CREATE_NONE" value="0"/>
@@ -796,6 +837,22 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="cancellable" type="GCancellable*"/>
+				</parameters>
+			</method>
+			<method name="connect" symbol="g_cancellable_connect">
+				<return-type type="gulong"/>
+				<parameters>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GCallback"/>
+					<parameter name="data" type="gpointer"/>
+					<parameter name="data_destroy_func" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="disconnect" symbol="g_cancellable_disconnect">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="handler_id" type="gulong"/>
 				</parameters>
 			</method>
 			<method name="get_current" symbol="g_cancellable_get_current">
@@ -1296,10 +1353,120 @@
 				</parameters>
 			</vfunc>
 		</object>
+		<object name="GFileIOStream" parent="GIOStream" type-name="GFileIOStream" get-type="g_file_io_stream_get_type">
+			<implements>
+				<interface name="GSeekable"/>
+			</implements>
+			<method name="get_etag" symbol="g_file_io_stream_get_etag">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="stream" type="GFileIOStream*"/>
+				</parameters>
+			</method>
+			<method name="query_info" symbol="g_file_io_stream_query_info">
+				<return-type type="GFileInfo*"/>
+				<parameters>
+					<parameter name="stream" type="GFileIOStream*"/>
+					<parameter name="attributes" type="char*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="query_info_async" symbol="g_file_io_stream_query_info_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stream" type="GFileIOStream*"/>
+					<parameter name="attributes" type="char*"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="query_info_finish" symbol="g_file_io_stream_query_info_finish">
+				<return-type type="GFileInfo*"/>
+				<parameters>
+					<parameter name="stream" type="GFileIOStream*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<vfunc name="can_seek">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GFileIOStream*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="can_truncate">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GFileIOStream*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_etag">
+				<return-type type="char*"/>
+				<parameters>
+					<parameter name="stream" type="GFileIOStream*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="query_info">
+				<return-type type="GFileInfo*"/>
+				<parameters>
+					<parameter name="stream" type="GFileIOStream*"/>
+					<parameter name="attributes" type="char*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="query_info_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stream" type="GFileIOStream*"/>
+					<parameter name="attributes" type="char*"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="query_info_finish">
+				<return-type type="GFileInfo*"/>
+				<parameters>
+					<parameter name="stream" type="GFileIOStream*"/>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="seek">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GFileIOStream*"/>
+					<parameter name="offset" type="goffset"/>
+					<parameter name="type" type="GSeekType"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="tell">
+				<return-type type="goffset"/>
+				<parameters>
+					<parameter name="stream" type="GFileIOStream*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="truncate_fn">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GFileIOStream*"/>
+					<parameter name="size" type="goffset"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+		</object>
 		<object name="GFileIcon" parent="GObject" type-name="GFileIcon" get-type="g_file_icon_get_type">
 			<implements>
-				<interface name="GLoadableIcon"/>
 				<interface name="GIcon"/>
+				<interface name="GLoadableIcon"/>
 			</implements>
 			<method name="get_file" symbol="g_file_icon_get_file">
 				<return-type type="GFile*"/>
@@ -1396,6 +1563,13 @@
 			</method>
 			<method name="get_attribute_string" symbol="g_file_info_get_attribute_string">
 				<return-type type="char*"/>
+				<parameters>
+					<parameter name="info" type="GFileInfo*"/>
+					<parameter name="attribute" type="char*"/>
+				</parameters>
+			</method>
+			<method name="get_attribute_stringv" symbol="g_file_info_get_attribute_stringv">
+				<return-type type="char**"/>
 				<parameters>
 					<parameter name="info" type="GFileInfo*"/>
 					<parameter name="attribute" type="char*"/>
@@ -1514,6 +1688,13 @@
 					<parameter name="attribute" type="char*"/>
 				</parameters>
 			</method>
+			<method name="has_namespace" symbol="g_file_info_has_namespace">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="info" type="GFileInfo*"/>
+					<parameter name="name_space" type="char*"/>
+				</parameters>
+			</method>
 			<method name="list_attributes" symbol="g_file_info_list_attributes">
 				<return-type type="char**"/>
 				<parameters>
@@ -1587,12 +1768,28 @@
 					<parameter name="attr_value" type="GObject*"/>
 				</parameters>
 			</method>
+			<method name="set_attribute_status" symbol="g_file_info_set_attribute_status">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="info" type="GFileInfo*"/>
+					<parameter name="attribute" type="char*"/>
+					<parameter name="status" type="GFileAttributeStatus"/>
+				</parameters>
+			</method>
 			<method name="set_attribute_string" symbol="g_file_info_set_attribute_string">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="info" type="GFileInfo*"/>
 					<parameter name="attribute" type="char*"/>
 					<parameter name="attr_value" type="char*"/>
+				</parameters>
+			</method>
+			<method name="set_attribute_stringv" symbol="g_file_info_set_attribute_stringv">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="info" type="GFileInfo*"/>
+					<parameter name="attribute" type="char*"/>
+					<parameter name="attr_value" type="char**"/>
 				</parameters>
 			</method>
 			<method name="set_attribute_uint32" symbol="g_file_info_set_attribute_uint32">
@@ -2063,6 +2260,112 @@
 				</parameters>
 			</method>
 		</object>
+		<object name="GIOStream" parent="GObject" type-name="GIOStream" get-type="g_io_stream_get_type">
+			<method name="clear_pending" symbol="g_io_stream_clear_pending">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stream" type="GIOStream*"/>
+				</parameters>
+			</method>
+			<method name="close" symbol="g_io_stream_close">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GIOStream*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="close_async" symbol="g_io_stream_close_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stream" type="GIOStream*"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="close_finish" symbol="g_io_stream_close_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GIOStream*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_input_stream" symbol="g_io_stream_get_input_stream">
+				<return-type type="GInputStream*"/>
+				<parameters>
+					<parameter name="stream" type="GIOStream*"/>
+				</parameters>
+			</method>
+			<method name="get_output_stream" symbol="g_io_stream_get_output_stream">
+				<return-type type="GOutputStream*"/>
+				<parameters>
+					<parameter name="stream" type="GIOStream*"/>
+				</parameters>
+			</method>
+			<method name="has_pending" symbol="g_io_stream_has_pending">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GIOStream*"/>
+				</parameters>
+			</method>
+			<method name="is_closed" symbol="g_io_stream_is_closed">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GIOStream*"/>
+				</parameters>
+			</method>
+			<method name="set_pending" symbol="g_io_stream_set_pending">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GIOStream*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<property name="closed" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="input-stream" type="GInputStream*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="output-stream" type="GOutputStream*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<vfunc name="close_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stream" type="GIOStream*"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="close_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GIOStream*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="close_fn">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="stream" type="GIOStream*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_input_stream">
+				<return-type type="GInputStream*"/>
+				<parameters>
+					<parameter name="stream" type="GIOStream*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_output_stream">
+				<return-type type="GOutputStream*"/>
+				<parameters>
+					<parameter name="stream" type="GIOStream*"/>
+				</parameters>
+			</vfunc>
+		</object>
 		<object name="GInetAddress" parent="GObject" type-name="GInetAddress" get-type="g_inet_address_get_type">
 			<method name="get_family" symbol="g_inet_address_get_family">
 				<return-type type="GSocketFamily"/>
@@ -2126,6 +2429,12 @@
 			</method>
 			<method name="get_is_site_local" symbol="g_inet_address_get_is_site_local">
 				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="address" type="GInetAddress*"/>
+				</parameters>
+			</method>
+			<method name="get_native_size" symbol="g_inet_address_get_native_size">
+				<return-type type="gsize"/>
 				<parameters>
 					<parameter name="address" type="GInetAddress*"/>
 				</parameters>
@@ -2607,6 +2916,15 @@
 					<parameter name="result" type="GMountOperationResult"/>
 				</parameters>
 			</signal>
+			<signal name="show-processes" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="op" type="GMountOperation*"/>
+					<parameter name="message" type="char*"/>
+					<parameter name="processes" type="GArray*"/>
+					<parameter name="choices" type="GStrv*"/>
+				</parameters>
+			</signal>
 		</object>
 		<object name="GNativeVolumeMonitor" parent="GVolumeMonitor" type-name="GNativeVolumeMonitor" get-type="g_native_volume_monitor_get_type">
 			<vfunc name="get_mount_for_mount_path">
@@ -2640,6 +2958,14 @@
 					<parameter name="port" type="guint16"/>
 				</parameters>
 			</constructor>
+			<method name="parse" symbol="g_network_address_parse">
+				<return-type type="GSocketConnectable*"/>
+				<parameters>
+					<parameter name="host_and_port" type="gchar*"/>
+					<parameter name="default_port" type="guint16"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<property name="hostname" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="port" type="guint" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
@@ -3280,6 +3606,281 @@
 				</parameters>
 			</method>
 		</object>
+		<object name="GSocket" parent="GObject" type-name="GSocket" get-type="g_socket_get_type">
+			<implements>
+				<interface name="GInitable"/>
+			</implements>
+			<method name="accept" symbol="g_socket_accept">
+				<return-type type="GSocket*"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="bind" symbol="g_socket_bind">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="address" type="GSocketAddress*"/>
+					<parameter name="allow_reuse" type="gboolean"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="check_connect_result" symbol="g_socket_check_connect_result">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="close" symbol="g_socket_close">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="condition_check" symbol="g_socket_condition_check">
+				<return-type type="GIOCondition"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="condition" type="GIOCondition"/>
+				</parameters>
+			</method>
+			<method name="condition_wait" symbol="g_socket_condition_wait">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="condition" type="GIOCondition"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="connect" symbol="g_socket_connect">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="address" type="GSocketAddress*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="create_source" symbol="g_socket_create_source">
+				<return-type type="GSource*"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="condition" type="GIOCondition"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+				</parameters>
+			</method>
+			<method name="get_blocking" symbol="g_socket_get_blocking">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+				</parameters>
+			</method>
+			<method name="get_family" symbol="g_socket_get_family">
+				<return-type type="GSocketFamily"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+				</parameters>
+			</method>
+			<method name="get_fd" symbol="g_socket_get_fd">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+				</parameters>
+			</method>
+			<method name="get_keepalive" symbol="g_socket_get_keepalive">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+				</parameters>
+			</method>
+			<method name="get_listen_backlog" symbol="g_socket_get_listen_backlog">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+				</parameters>
+			</method>
+			<method name="get_local_address" symbol="g_socket_get_local_address">
+				<return-type type="GSocketAddress*"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_protocol" symbol="g_socket_get_protocol">
+				<return-type type="GSocketProtocol"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+				</parameters>
+			</method>
+			<method name="get_remote_address" symbol="g_socket_get_remote_address">
+				<return-type type="GSocketAddress*"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_socket_type" symbol="g_socket_get_socket_type">
+				<return-type type="GSocketType"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+				</parameters>
+			</method>
+			<method name="is_closed" symbol="g_socket_is_closed">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+				</parameters>
+			</method>
+			<method name="is_connected" symbol="g_socket_is_connected">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+				</parameters>
+			</method>
+			<method name="listen" symbol="g_socket_listen">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_socket_new">
+				<return-type type="GSocket*"/>
+				<parameters>
+					<parameter name="family" type="GSocketFamily"/>
+					<parameter name="type" type="GSocketType"/>
+					<parameter name="protocol" type="GSocketProtocol"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_from_fd" symbol="g_socket_new_from_fd">
+				<return-type type="GSocket*"/>
+				<parameters>
+					<parameter name="fd" type="gint"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</constructor>
+			<method name="receive" symbol="g_socket_receive">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="buffer" type="gchar*"/>
+					<parameter name="size" type="gsize"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="receive_from" symbol="g_socket_receive_from">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="address" type="GSocketAddress**"/>
+					<parameter name="buffer" type="gchar*"/>
+					<parameter name="size" type="gsize"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="receive_message" symbol="g_socket_receive_message">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="address" type="GSocketAddress**"/>
+					<parameter name="vectors" type="GInputVector*"/>
+					<parameter name="num_vectors" type="gint"/>
+					<parameter name="messages" type="GSocketControlMessage***"/>
+					<parameter name="num_messages" type="gint*"/>
+					<parameter name="flags" type="gint*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="send" symbol="g_socket_send">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="buffer" type="gchar*"/>
+					<parameter name="size" type="gsize"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="send_message" symbol="g_socket_send_message">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="address" type="GSocketAddress*"/>
+					<parameter name="vectors" type="GOutputVector*"/>
+					<parameter name="num_vectors" type="gint"/>
+					<parameter name="messages" type="GSocketControlMessage**"/>
+					<parameter name="num_messages" type="gint"/>
+					<parameter name="flags" type="gint"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="send_to" symbol="g_socket_send_to">
+				<return-type type="gssize"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="address" type="GSocketAddress*"/>
+					<parameter name="buffer" type="gchar*"/>
+					<parameter name="size" type="gsize"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="set_blocking" symbol="g_socket_set_blocking">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="blocking" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_keepalive" symbol="g_socket_set_keepalive">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="keepalive" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_listen_backlog" symbol="g_socket_set_listen_backlog">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="backlog" type="gint"/>
+				</parameters>
+			</method>
+			<method name="shutdown" symbol="g_socket_shutdown">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="shutdown_read" type="gboolean"/>
+					<parameter name="shutdown_write" type="gboolean"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="speaks_ipv4" symbol="g_socket_speaks_ipv4">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+				</parameters>
+			</method>
+			<property name="blocking" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="family" type="GSocketFamily" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="fd" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="keepalive" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="listen-backlog" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="local-address" type="GSocketAddress*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="protocol" type="GSocketProtocol" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="remote-address" type="GSocketAddress*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="type" type="GSocketType" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
 		<object name="GSocketAddress" parent="GObject" type-name="GSocketAddress" get-type="g_socket_address_get_type">
 			<implements>
 				<interface name="GSocketConnectable"/>
@@ -3309,6 +3910,7 @@
 					<parameter name="address" type="GSocketAddress*"/>
 					<parameter name="dest" type="gpointer"/>
 					<parameter name="destlen" type="gsize"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<property name="family" type="GSocketFamily" readable="1" writable="0" construct="0" construct-only="0"/>
@@ -3330,8 +3932,479 @@
 					<parameter name="address" type="GSocketAddress*"/>
 					<parameter name="dest" type="gpointer"/>
 					<parameter name="destlen" type="gsize"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
+		</object>
+		<object name="GSocketAddressEnumerator" parent="GObject" type-name="GSocketAddressEnumerator" get-type="g_socket_address_enumerator_get_type">
+			<method name="next" symbol="g_socket_address_enumerator_next">
+				<return-type type="GSocketAddress*"/>
+				<parameters>
+					<parameter name="enumerator" type="GSocketAddressEnumerator*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="next_async" symbol="g_socket_address_enumerator_next_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="enumerator" type="GSocketAddressEnumerator*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="next_finish" symbol="g_socket_address_enumerator_next_finish">
+				<return-type type="GSocketAddress*"/>
+				<parameters>
+					<parameter name="enumerator" type="GSocketAddressEnumerator*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<vfunc name="next">
+				<return-type type="GSocketAddress*"/>
+				<parameters>
+					<parameter name="enumerator" type="GSocketAddressEnumerator*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="next_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="enumerator" type="GSocketAddressEnumerator*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="next_finish">
+				<return-type type="GSocketAddress*"/>
+				<parameters>
+					<parameter name="enumerator" type="GSocketAddressEnumerator*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="GSocketClient" parent="GObject" type-name="GSocketClient" get-type="g_socket_client_get_type">
+			<method name="connect" symbol="g_socket_client_connect">
+				<return-type type="GSocketConnection*"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="connectable" type="GSocketConnectable*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="connect_async" symbol="g_socket_client_connect_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="connectable" type="GSocketConnectable*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="connect_finish" symbol="g_socket_client_connect_finish">
+				<return-type type="GSocketConnection*"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="connect_to_host" symbol="g_socket_client_connect_to_host">
+				<return-type type="GSocketConnection*"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="host_and_port" type="gchar*"/>
+					<parameter name="default_port" type="guint16"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="connect_to_host_async" symbol="g_socket_client_connect_to_host_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="host_and_port" type="gchar*"/>
+					<parameter name="default_port" type="guint16"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="connect_to_host_finish" symbol="g_socket_client_connect_to_host_finish">
+				<return-type type="GSocketConnection*"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="connect_to_service" symbol="g_socket_client_connect_to_service">
+				<return-type type="GSocketConnection*"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="domain" type="gchar*"/>
+					<parameter name="service" type="gchar*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="connect_to_service_async" symbol="g_socket_client_connect_to_service_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="domain" type="gchar*"/>
+					<parameter name="service" type="gchar*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="connect_to_service_finish" symbol="g_socket_client_connect_to_service_finish">
+				<return-type type="GSocketConnection*"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_family" symbol="g_socket_client_get_family">
+				<return-type type="GSocketFamily"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+				</parameters>
+			</method>
+			<method name="get_local_address" symbol="g_socket_client_get_local_address">
+				<return-type type="GSocketAddress*"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+				</parameters>
+			</method>
+			<method name="get_protocol" symbol="g_socket_client_get_protocol">
+				<return-type type="GSocketProtocol"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+				</parameters>
+			</method>
+			<method name="get_socket_type" symbol="g_socket_client_get_socket_type">
+				<return-type type="GSocketType"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_socket_client_new">
+				<return-type type="GSocketClient*"/>
+			</constructor>
+			<method name="set_family" symbol="g_socket_client_set_family">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="family" type="GSocketFamily"/>
+				</parameters>
+			</method>
+			<method name="set_local_address" symbol="g_socket_client_set_local_address">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="address" type="GSocketAddress*"/>
+				</parameters>
+			</method>
+			<method name="set_protocol" symbol="g_socket_client_set_protocol">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="protocol" type="GSocketProtocol"/>
+				</parameters>
+			</method>
+			<method name="set_socket_type" symbol="g_socket_client_set_socket_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="client" type="GSocketClient*"/>
+					<parameter name="type" type="GSocketType"/>
+				</parameters>
+			</method>
+			<property name="family" type="GSocketFamily" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="local-address" type="GSocketAddress*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="protocol" type="GSocketProtocol" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="type" type="GSocketType" readable="1" writable="1" construct="1" construct-only="0"/>
+		</object>
+		<object name="GSocketConnection" parent="GIOStream" type-name="GSocketConnection" get-type="g_socket_connection_get_type">
+			<method name="factory_create_connection" symbol="g_socket_connection_factory_create_connection">
+				<return-type type="GSocketConnection*"/>
+				<parameters>
+					<parameter name="socket" type="GSocket*"/>
+				</parameters>
+			</method>
+			<method name="factory_lookup_type" symbol="g_socket_connection_factory_lookup_type">
+				<return-type type="GType"/>
+				<parameters>
+					<parameter name="family" type="GSocketFamily"/>
+					<parameter name="type" type="GSocketType"/>
+					<parameter name="protocol_id" type="gint"/>
+				</parameters>
+			</method>
+			<method name="factory_register_type" symbol="g_socket_connection_factory_register_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="g_type" type="GType"/>
+					<parameter name="family" type="GSocketFamily"/>
+					<parameter name="type" type="GSocketType"/>
+					<parameter name="protocol" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_local_address" symbol="g_socket_connection_get_local_address">
+				<return-type type="GSocketAddress*"/>
+				<parameters>
+					<parameter name="connection" type="GSocketConnection*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_remote_address" symbol="g_socket_connection_get_remote_address">
+				<return-type type="GSocketAddress*"/>
+				<parameters>
+					<parameter name="connection" type="GSocketConnection*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="get_socket" symbol="g_socket_connection_get_socket">
+				<return-type type="GSocket*"/>
+				<parameters>
+					<parameter name="connection" type="GSocketConnection*"/>
+				</parameters>
+			</method>
+			<property name="socket" type="GSocket*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GSocketControlMessage" parent="GObject" type-name="GSocketControlMessage" get-type="g_socket_control_message_get_type">
+			<method name="deserialize" symbol="g_socket_control_message_deserialize">
+				<return-type type="GSocketControlMessage*"/>
+				<parameters>
+					<parameter name="level" type="int"/>
+					<parameter name="type" type="int"/>
+					<parameter name="size" type="gsize"/>
+					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="get_level" symbol="g_socket_control_message_get_level">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="message" type="GSocketControlMessage*"/>
+				</parameters>
+			</method>
+			<method name="get_msg_type" symbol="g_socket_control_message_get_msg_type">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="message" type="GSocketControlMessage*"/>
+				</parameters>
+			</method>
+			<method name="get_size" symbol="g_socket_control_message_get_size">
+				<return-type type="gsize"/>
+				<parameters>
+					<parameter name="message" type="GSocketControlMessage*"/>
+				</parameters>
+			</method>
+			<method name="serialize" symbol="g_socket_control_message_serialize">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="message" type="GSocketControlMessage*"/>
+					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</method>
+			<vfunc name="deserialize">
+				<return-type type="GSocketControlMessage*"/>
+				<parameters>
+					<parameter name="level" type="int"/>
+					<parameter name="type" type="int"/>
+					<parameter name="size" type="gsize"/>
+					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_level">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="message" type="GSocketControlMessage*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_size">
+				<return-type type="gsize"/>
+				<parameters>
+					<parameter name="message" type="GSocketControlMessage*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_type">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="message" type="GSocketControlMessage*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="serialize">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="message" type="GSocketControlMessage*"/>
+					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="GSocketListener" parent="GObject" type-name="GSocketListener" get-type="g_socket_listener_get_type">
+			<method name="accept" symbol="g_socket_listener_accept">
+				<return-type type="GSocketConnection*"/>
+				<parameters>
+					<parameter name="listener" type="GSocketListener*"/>
+					<parameter name="source_object" type="GObject**"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="accept_async" symbol="g_socket_listener_accept_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="listener" type="GSocketListener*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="accept_finish" symbol="g_socket_listener_accept_finish">
+				<return-type type="GSocketConnection*"/>
+				<parameters>
+					<parameter name="listener" type="GSocketListener*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="source_object" type="GObject**"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="accept_socket" symbol="g_socket_listener_accept_socket">
+				<return-type type="GSocket*"/>
+				<parameters>
+					<parameter name="listener" type="GSocketListener*"/>
+					<parameter name="source_object" type="GObject**"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="accept_socket_async" symbol="g_socket_listener_accept_socket_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="listener" type="GSocketListener*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="accept_socket_finish" symbol="g_socket_listener_accept_socket_finish">
+				<return-type type="GSocket*"/>
+				<parameters>
+					<parameter name="listener" type="GSocketListener*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="source_object" type="GObject**"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="add_address" symbol="g_socket_listener_add_address">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="listener" type="GSocketListener*"/>
+					<parameter name="address" type="GSocketAddress*"/>
+					<parameter name="type" type="GSocketType"/>
+					<parameter name="protocol" type="GSocketProtocol"/>
+					<parameter name="source_object" type="GObject*"/>
+					<parameter name="effective_address" type="GSocketAddress**"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="add_inet_port" symbol="g_socket_listener_add_inet_port">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="listener" type="GSocketListener*"/>
+					<parameter name="port" type="guint16"/>
+					<parameter name="source_object" type="GObject*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="add_socket" symbol="g_socket_listener_add_socket">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="listener" type="GSocketListener*"/>
+					<parameter name="socket" type="GSocket*"/>
+					<parameter name="source_object" type="GObject*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="close" symbol="g_socket_listener_close">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="listener" type="GSocketListener*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_socket_listener_new">
+				<return-type type="GSocketListener*"/>
+			</constructor>
+			<method name="set_backlog" symbol="g_socket_listener_set_backlog">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="listener" type="GSocketListener*"/>
+					<parameter name="listen_backlog" type="int"/>
+				</parameters>
+			</method>
+			<property name="listen-backlog" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
+			<vfunc name="changed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="listener" type="GSocketListener*"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="GSocketService" parent="GSocketListener" type-name="GSocketService" get-type="g_socket_service_get_type">
+			<method name="is_active" symbol="g_socket_service_is_active">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="service" type="GSocketService*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_socket_service_new">
+				<return-type type="GSocketService*"/>
+			</constructor>
+			<method name="start" symbol="g_socket_service_start">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="service" type="GSocketService*"/>
+				</parameters>
+			</method>
+			<method name="stop" symbol="g_socket_service_stop">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="service" type="GSocketService*"/>
+				</parameters>
+			</method>
+			<signal name="incoming" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="service" type="GSocketService*"/>
+					<parameter name="connection" type="GSocketConnection*"/>
+					<parameter name="source_object" type="GObject*"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="GTcpConnection" parent="GSocketConnection" type-name="GTcpConnection" get-type="g_tcp_connection_get_type">
+			<method name="get_graceful_disconnect" symbol="g_tcp_connection_get_graceful_disconnect">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="connection" type="GTcpConnection*"/>
+				</parameters>
+			</method>
+			<method name="set_graceful_disconnect" symbol="g_tcp_connection_set_graceful_disconnect">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="connection" type="GTcpConnection*"/>
+					<parameter name="graceful_disconnect" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="graceful-disconnect" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="GThemedIcon" parent="GObject" type-name="GThemedIcon" get-type="g_themed_icon_get_type">
 			<implements>
@@ -3345,7 +4418,7 @@
 				</parameters>
 			</method>
 			<method name="get_names" symbol="g_themed_icon_get_names">
-				<return-type type="char**"/>
+				<return-type type="gchar**"/>
 				<parameters>
 					<parameter name="icon" type="GThemedIcon*"/>
 				</parameters>
@@ -3379,6 +4452,23 @@
 			<property name="name" type="char*" readable="0" writable="1" construct="0" construct-only="1"/>
 			<property name="names" type="GStrv*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="use-default-fallbacks" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GThreadedSocketService" parent="GSocketService" type-name="GThreadedSocketService" get-type="g_threaded_socket_service_get_type">
+			<constructor name="new" symbol="g_threaded_socket_service_new">
+				<return-type type="GSocketService*"/>
+				<parameters>
+					<parameter name="max_threads" type="int"/>
+				</parameters>
+			</constructor>
+			<property name="max-threads" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<signal name="run" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="service" type="GThreadedSocketService*"/>
+					<parameter name="connection" type="GSocketConnection*"/>
+					<parameter name="source_object" type="GObject*"/>
+				</parameters>
+			</signal>
 		</object>
 		<object name="GVfs" parent="GObject" type-name="GVfs" get-type="g_vfs_get_type">
 			<method name="get_default" symbol="g_vfs_get_default">
@@ -3420,6 +4510,13 @@
 					<parameter name="parse_name" type="char*"/>
 				</parameters>
 			</method>
+			<vfunc name="add_writable_namespaces">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="vfs" type="GVfs*"/>
+					<parameter name="list" type="GFileAttributeInfoList*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="get_file_for_path">
 				<return-type type="GFile*"/>
 				<parameters>
@@ -3444,6 +4541,45 @@
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="vfs" type="GVfs*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="local_file_add_info">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="vfs" type="GVfs*"/>
+					<parameter name="filename" type="char*"/>
+					<parameter name="device" type="guint64"/>
+					<parameter name="attribute_matcher" type="GFileAttributeMatcher*"/>
+					<parameter name="info" type="GFileInfo*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="extra_data" type="gpointer*"/>
+					<parameter name="free_extra_data" type="GDestroyNotify*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="local_file_moved">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="vfs" type="GVfs*"/>
+					<parameter name="source" type="char*"/>
+					<parameter name="dest" type="char*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="local_file_removed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="vfs" type="GVfs*"/>
+					<parameter name="filename" type="char*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="local_file_set_attributes">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="vfs" type="GVfs*"/>
+					<parameter name="filename" type="char*"/>
+					<parameter name="info" type="GFileInfo*"/>
+					<parameter name="flags" type="GFileQueryInfoFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="parse_name">
@@ -3518,6 +4654,13 @@
 				</parameters>
 			</signal>
 			<signal name="drive-eject-button" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</signal>
+			<signal name="drive-stop-button" when="LAST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="volume_monitor" type="GVolumeMonitor*"/>
@@ -3936,6 +5079,90 @@
 				</parameters>
 			</vfunc>
 		</interface>
+		<interface name="GAsyncInitable" type-name="GAsyncInitable" get-type="g_async_initable_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="init_async" symbol="g_async_initable_init_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="initable" type="GAsyncInitable*"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="init_finish" symbol="g_async_initable_init_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="initable" type="GAsyncInitable*"/>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="new_async" symbol="g_async_initable_new_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object_type" type="GType"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="first_property_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="new_finish" symbol="g_async_initable_new_finish">
+				<return-type type="GObject*"/>
+				<parameters>
+					<parameter name="initable" type="GAsyncInitable*"/>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="new_valist_async" symbol="g_async_initable_new_valist_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object_type" type="GType"/>
+					<parameter name="first_property_name" type="gchar*"/>
+					<parameter name="var_args" type="va_list"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="newv_async" symbol="g_async_initable_newv_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object_type" type="GType"/>
+					<parameter name="n_parameters" type="guint"/>
+					<parameter name="parameters" type="GParameter*"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<vfunc name="init_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="initable" type="GAsyncInitable*"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="init_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="initable" type="GAsyncInitable*"/>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+		</interface>
 		<interface name="GAsyncResult" type-name="GAsyncResult" get-type="g_async_result_get_type">
 			<requires>
 				<interface name="GObject"/>
@@ -3981,6 +5208,24 @@
 					<parameter name="drive" type="GDrive*"/>
 				</parameters>
 			</method>
+			<method name="can_start" symbol="g_drive_can_start">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</method>
+			<method name="can_start_degraded" symbol="g_drive_can_start_degraded">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</method>
+			<method name="can_stop" symbol="g_drive_can_stop">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</method>
 			<method name="eject" symbol="g_drive_eject">
 				<return-type type="void"/>
 				<parameters>
@@ -3992,6 +5237,25 @@
 				</parameters>
 			</method>
 			<method name="eject_finish" symbol="g_drive_eject_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="eject_with_operation" symbol="g_drive_eject_with_operation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="eject_with_operation_finish" symbol="g_drive_eject_with_operation_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
@@ -4020,6 +5284,12 @@
 			</method>
 			<method name="get_name" symbol="g_drive_get_name">
 				<return-type type="char*"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</method>
+			<method name="get_start_stop_type" symbol="g_drive_get_start_stop_type">
+				<return-type type="GDriveStartStopType"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
 				</parameters>
@@ -4071,6 +5341,44 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="start" symbol="g_drive_start">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+					<parameter name="flags" type="GDriveStartFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="start_finish" symbol="g_drive_start_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="stop" symbol="g_drive_stop">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="stop_finish" symbol="g_drive_stop_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<signal name="changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -4089,6 +5397,12 @@
 					<parameter name="drive" type="GDrive*"/>
 				</parameters>
 			</signal>
+			<signal name="stop-button" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</signal>
 			<vfunc name="can_eject">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -4096,6 +5410,24 @@
 				</parameters>
 			</vfunc>
 			<vfunc name="can_poll_for_media">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="can_start">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="can_start_degraded">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="can_stop">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
@@ -4112,6 +5444,25 @@
 				</parameters>
 			</vfunc>
 			<vfunc name="eject_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="eject_with_operation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="eject_with_operation_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
@@ -4140,6 +5491,12 @@
 			</vfunc>
 			<vfunc name="get_name">
 				<return-type type="char*"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_start_stop_type">
+				<return-type type="GDriveStartStopType"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
 				</parameters>
@@ -4184,6 +5541,44 @@
 				</parameters>
 			</vfunc>
 			<vfunc name="poll_for_media_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="start">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+					<parameter name="flags" type="GDriveStartFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="start_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="stop">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="drive" type="GDrive*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="stop_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="drive" type="GDrive*"/>
@@ -4296,6 +5691,34 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="create_readwrite" symbol="g_file_create_readwrite">
+				<return-type type="GFileIOStream*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GFileCreateFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="create_readwrite_async" symbol="g_file_create_readwrite_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GFileCreateFlags"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="create_readwrite_finish" symbol="g_file_create_readwrite_finish">
+				<return-type type="GFileIOStream*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="delete" symbol="g_file_delete">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -4321,6 +5744,25 @@
 				</parameters>
 			</method>
 			<method name="eject_mountable_finish" symbol="g_file_eject_mountable_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="eject_mountable_with_operation" symbol="g_file_eject_mountable_with_operation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="eject_mountable_with_operation_finish" symbol="g_file_eject_mountable_with_operation_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
@@ -4629,10 +6071,53 @@
 					<parameter name="uri" type="char*"/>
 				</parameters>
 			</method>
+			<method name="open_readwrite" symbol="g_file_open_readwrite">
+				<return-type type="GFileIOStream*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="open_readwrite_async" symbol="g_file_open_readwrite_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="open_readwrite_finish" symbol="g_file_open_readwrite_finish">
+				<return-type type="GFileIOStream*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="parse_name" symbol="g_file_parse_name">
 				<return-type type="GFile*"/>
 				<parameters>
 					<parameter name="parse_name" type="char*"/>
+				</parameters>
+			</method>
+			<method name="poll_mountable" symbol="g_file_poll_mountable">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="poll_mountable_finish" symbol="g_file_poll_mountable_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
 			<method name="query_default_handler" symbol="g_file_query_default_handler">
@@ -4827,6 +6312,38 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="replace_readwrite" symbol="g_file_replace_readwrite">
+				<return-type type="GFileIOStream*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="etag" type="char*"/>
+					<parameter name="make_backup" type="gboolean"/>
+					<parameter name="flags" type="GFileCreateFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="replace_readwrite_async" symbol="g_file_replace_readwrite_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="etag" type="char*"/>
+					<parameter name="make_backup" type="gboolean"/>
+					<parameter name="flags" type="GFileCreateFlags"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="replace_readwrite_finish" symbol="g_file_replace_readwrite_finish">
+				<return-type type="GFileIOStream*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="resolve_relative_path" symbol="g_file_resolve_relative_path">
 				<return-type type="GFile*"/>
 				<parameters>
@@ -4971,6 +6488,50 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="start_mountable" symbol="g_file_start_mountable">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GDriveStartFlags"/>
+					<parameter name="start_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="start_mountable_finish" symbol="g_file_start_mountable_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="stop_mountable" symbol="g_file_stop_mountable">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="stop_mountable_finish" symbol="g_file_stop_mountable_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="supports_thread_contexts" symbol="g_file_supports_thread_contexts">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+				</parameters>
+			</method>
 			<method name="trash" symbol="g_file_trash">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -4990,6 +6551,25 @@
 				</parameters>
 			</method>
 			<method name="unmount_mountable_finish" symbol="g_file_unmount_mountable_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="unmount_mountable_with_operation" symbol="g_file_unmount_mountable_with_operation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="unmount_mountable_with_operation_finish" symbol="g_file_unmount_mountable_with_operation_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
@@ -5087,6 +6667,34 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="create_readwrite">
+				<return-type type="GFileIOStream*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GFileCreateFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="create_readwrite_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GFileCreateFlags"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="create_readwrite_finish">
+				<return-type type="GFileIOStream*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="delete_file">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -5112,6 +6720,25 @@
 				</parameters>
 			</vfunc>
 			<vfunc name="eject_mountable_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="eject_mountable_with_operation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="eject_mountable_with_operation_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
@@ -5337,6 +6964,49 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="open_readwrite">
+				<return-type type="GFileIOStream*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="open_readwrite_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="open_readwrite_finish">
+				<return-type type="GFileIOStream*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="poll_mountable">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="poll_mountable_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="prefix_matches">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -5476,6 +7146,38 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="replace_readwrite">
+				<return-type type="GFileIOStream*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="etag" type="char*"/>
+					<parameter name="make_backup" type="gboolean"/>
+					<parameter name="flags" type="GFileCreateFlags"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="replace_readwrite_async">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="etag" type="char*"/>
+					<parameter name="make_backup" type="gboolean"/>
+					<parameter name="flags" type="GFileCreateFlags"/>
+					<parameter name="io_priority" type="int"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="replace_readwrite_finish">
+				<return-type type="GFileIOStream*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="res" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="resolve_relative_path">
 				<return-type type="GFile*"/>
 				<parameters>
@@ -5554,6 +7256,44 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="start_mountable">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GDriveStartFlags"/>
+					<parameter name="start_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="start_mountable_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="stop_mountable">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="stop_mountable_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="trash">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -5573,6 +7313,25 @@
 				</parameters>
 			</vfunc>
 			<vfunc name="unmount_mountable_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="unmount_mountable_with_operation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="unmount_mountable_with_operation_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="file" type="GFile*"/>
@@ -5639,6 +7398,56 @@
 					<parameter name="icon" type="GIcon*"/>
 					<parameter name="tokens" type="GPtrArray*"/>
 					<parameter name="out_version" type="gint*"/>
+				</parameters>
+			</vfunc>
+		</interface>
+		<interface name="GInitable" type-name="GInitable" get-type="g_initable_get_type">
+			<requires>
+				<interface name="GObject"/>
+			</requires>
+			<method name="init" symbol="g_initable_init">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="initable" type="GInitable*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="new" symbol="g_initable_new">
+				<return-type type="gpointer"/>
+				<parameters>
+					<parameter name="object_type" type="GType"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+					<parameter name="first_property_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="new_valist" symbol="g_initable_new_valist">
+				<return-type type="GObject*"/>
+				<parameters>
+					<parameter name="object_type" type="GType"/>
+					<parameter name="first_property_name" type="gchar*"/>
+					<parameter name="var_args" type="va_list"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="newv" symbol="g_initable_newv">
+				<return-type type="gpointer"/>
+				<parameters>
+					<parameter name="object_type" type="GType"/>
+					<parameter name="n_parameters" type="guint"/>
+					<parameter name="parameters" type="GParameter*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<vfunc name="init">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="initable" type="GInitable*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
 		</interface>
@@ -5733,6 +7542,25 @@
 				</parameters>
 			</method>
 			<method name="eject_finish" symbol="g_mount_eject_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="eject_with_operation" symbol="g_mount_eject_with_operation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="eject_with_operation_finish" symbol="g_mount_eject_with_operation_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="mount" type="GMount*"/>
@@ -5852,6 +7680,25 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
+			<method name="unmount_with_operation" symbol="g_mount_unmount_with_operation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="unmount_with_operation_finish" symbol="g_mount_unmount_with_operation_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
 			<method name="unshadow" symbol="g_mount_unshadow">
 				<return-type type="void"/>
 				<parameters>
@@ -5859,6 +7706,12 @@
 				</parameters>
 			</method>
 			<signal name="changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+				</parameters>
+			</signal>
+			<signal name="pre-unmount" when="LAST">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="mount" type="GMount*"/>
@@ -5893,6 +7746,25 @@
 				</parameters>
 			</vfunc>
 			<vfunc name="eject_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="eject_with_operation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="eject_with_operation_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="mount" type="GMount*"/>
@@ -6000,6 +7872,25 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="unmount_with_operation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="unmount_with_operation_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="mount" type="GMount*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
 		</interface>
 		<interface name="GSeekable" type-name="GSeekable" get-type="g_seekable_get_type">
 			<requires>
@@ -6084,64 +7975,14 @@
 			<requires>
 				<interface name="GObject"/>
 			</requires>
-			<method name="get_next" symbol="g_socket_connectable_get_next">
-				<return-type type="GSocketAddress*"/>
-				<parameters>
-					<parameter name="connectable" type="GSocketConnectable*"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
-			<method name="get_next_async" symbol="g_socket_connectable_get_next_async">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="connectable" type="GSocketConnectable*"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="callback" type="GAsyncReadyCallback"/>
-					<parameter name="user_data" type="gpointer"/>
-				</parameters>
-			</method>
-			<method name="get_next_finish" symbol="g_socket_connectable_get_next_finish">
-				<return-type type="GSocketAddress*"/>
-				<parameters>
-					<parameter name="connectable" type="GSocketConnectable*"/>
-					<parameter name="result" type="GAsyncResult*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</method>
-			<method name="reset" symbol="g_socket_connectable_reset">
-				<return-type type="void"/>
+			<method name="enumerate" symbol="g_socket_connectable_enumerate">
+				<return-type type="GSocketAddressEnumerator*"/>
 				<parameters>
 					<parameter name="connectable" type="GSocketConnectable*"/>
 				</parameters>
 			</method>
-			<vfunc name="get_next">
-				<return-type type="GSocketAddress*"/>
-				<parameters>
-					<parameter name="connectable" type="GSocketConnectable*"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="get_next_async">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="connectable" type="GSocketConnectable*"/>
-					<parameter name="cancellable" type="GCancellable*"/>
-					<parameter name="callback" type="GAsyncReadyCallback"/>
-					<parameter name="user_data" type="gpointer"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="get_next_finish">
-				<return-type type="GSocketAddress*"/>
-				<parameters>
-					<parameter name="connectable" type="GSocketConnectable*"/>
-					<parameter name="result" type="GAsyncResult*"/>
-					<parameter name="error" type="GError**"/>
-				</parameters>
-			</vfunc>
-			<vfunc name="reset">
-				<return-type type="void"/>
+			<vfunc name="enumerate">
+				<return-type type="GSocketAddressEnumerator*"/>
 				<parameters>
 					<parameter name="connectable" type="GSocketConnectable*"/>
 				</parameters>
@@ -6174,6 +8015,25 @@
 				</parameters>
 			</method>
 			<method name="eject_finish" symbol="g_volume_eject_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="volume" type="GVolume*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</method>
+			<method name="eject_with_operation" symbol="g_volume_eject_with_operation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="volume" type="GVolume*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="eject_with_operation_finish" symbol="g_volume_eject_with_operation_finish">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="volume" type="GVolume*"/>
@@ -6297,6 +8157,25 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="eject_with_operation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="volume" type="GVolume*"/>
+					<parameter name="flags" type="GMountUnmountFlags"/>
+					<parameter name="mount_operation" type="GMountOperation*"/>
+					<parameter name="cancellable" type="GCancellable*"/>
+					<parameter name="callback" type="GAsyncReadyCallback"/>
+					<parameter name="user_data" type="gpointer"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="eject_with_operation_finish">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="volume" type="GVolume*"/>
+					<parameter name="result" type="GAsyncResult*"/>
+					<parameter name="error" type="GError**"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="enumerate_identifiers">
 				<return-type type="char**"/>
 				<parameters>
@@ -6391,9 +8270,16 @@
 		<constant name="G_FILE_ATTRIBUTE_ID_FILESYSTEM" type="char*" value="id::filesystem"/>
 		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_CAN_EJECT" type="char*" value="mountable::can-eject"/>
 		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_CAN_MOUNT" type="char*" value="mountable::can-mount"/>
+		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_CAN_POLL" type="char*" value="mountable::can-poll"/>
+		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_CAN_START" type="char*" value="mountable::can-start"/>
+		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_CAN_START_DEGRADED" type="char*" value="mountable::can-start-degraded"/>
+		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_CAN_STOP" type="char*" value="mountable::can-stop"/>
 		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_CAN_UNMOUNT" type="char*" value="mountable::can-unmount"/>
 		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_HAL_UDI" type="char*" value="mountable::hal-udi"/>
+		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_IS_MEDIA_CHECK_AUTOMATIC" type="char*" value="mountable::is-media-check-automatic"/>
+		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_START_STOP_TYPE" type="char*" value="mountable::start-stop-type"/>
 		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_UNIX_DEVICE" type="char*" value="mountable::unix-device"/>
+		<constant name="G_FILE_ATTRIBUTE_MOUNTABLE_UNIX_DEVICE_FILE" type="char*" value="mountable::unix-device-file"/>
 		<constant name="G_FILE_ATTRIBUTE_OWNER_GROUP" type="char*" value="owner::group"/>
 		<constant name="G_FILE_ATTRIBUTE_OWNER_USER" type="char*" value="owner::user"/>
 		<constant name="G_FILE_ATTRIBUTE_OWNER_USER_REAL" type="char*" value="owner::user-real"/>
