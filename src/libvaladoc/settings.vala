@@ -25,11 +25,25 @@ public class Valadoc.Settings : Object {
 	public string pkg_name = null;
 	public string pkg_version;
 	public string wiki_directory;
+
 	public bool _private = false;
 	public bool _protected = false;
 	public bool with_deps = false;
 	public bool add_inherited = false;
 	public bool verbose = false;
+
+	public bool enable_checking;
+	public bool deprecated;
+	public bool experimental;
+	public bool non_null_experimental;
+	public bool disable_dbus_transformation;
+
+	public string? profile;
+	public string? basedir;
+	public string? directory;
+
+	public string[] defines;
+	public string[] vapi_directories;
 }
 
 

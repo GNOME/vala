@@ -49,7 +49,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 	// get_type_path()
 	private void write_insert_into_valadoc_element_str (string name, string pkgname, string fullname) {
 		string fullname2 = (pkgname == fullname)? pkgname : pkgname+"/"+fullname;
-		this.file.printf ("INSERT INTO `ValadocElement` (`name`, `fullname`) VALUES ('%s', '%s');\n", name, fullname2);
+		this.file.printf ("INSERT INTO `ValadocApiElement` (`name`, `fullname`) VALUES ('%s', '%s');\n", name, fullname2);
 	}
 
 	// get_type_path()
@@ -69,14 +69,14 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 	}
 
 	private void write_insert_into_valadoc_package (Package pkg) {
-		this.file.printf ("INSERT INTO `ValadocPackage` (`id`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE `fullname`='%s' LIMIT 1));\n", pkg.name);
+		this.file.printf ("INSERT INTO `ValadocPackage` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE `fullname`='%s' LIMIT 1));\n", pkg.name);
 	}
 
 	// get_type_path()
 	private void write_insert_into_code_element_str (string fullname, string pkgname, string valaapi, string parentnodepkgname, string parentnodefullname) {
 		string parentnodetypepath = (parentnodepkgname == parentnodefullname)? parentnodepkgname : parentnodepkgname+"/"+parentnodefullname;
 		string typepath = pkgname+"/"+fullname;
-		this.file.printf ("INSERT INTO `ValadocCodeElement` (`id`, `parent`, `valaapi`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1), (SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1), '%s');\n", typepath, parentnodetypepath, valaapi);
+		this.file.printf ("INSERT INTO `ValadocCodeElement` (`id`, `parent`, `valaapi`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1), (SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1), '%s');\n", typepath, parentnodetypepath, valaapi);
 	}
 
 	// get_type_path()
@@ -230,7 +230,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 			}			
 		}
 
-		this.file.printf ("INSERT INTO `ValadocNamespaces` (`id`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(ns));
+		this.file.printf ("INSERT INTO `ValadocNamespaces` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(ns));
 	}
 
 	public override void visit_interface ( Interface iface ) {
@@ -308,7 +308,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 			}			
 		}
 
-		this.file.printf ("INSERT INTO `ValadocInterfaces` (`id`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(iface));
+		this.file.printf ("INSERT INTO `ValadocInterfaces` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(iface));
 	}
 
 	public override void visit_class ( Class cl ) {
@@ -402,7 +402,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 			modifier = "NORMAL";
 		}
 	
-		this.file.printf ("INSERT INTO `ValadocClasses` (`id`, `modifier`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1),'%s');\n", this.get_type_path(cl), modifier);
+		this.file.printf ("INSERT INTO `ValadocClasses` (`id`, `modifier`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1),'%s');\n", this.get_type_path(cl), modifier);
 	}
 
 	public override void visit_struct ( Struct stru ) {
@@ -440,7 +440,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 			}			
 		}
 
-		this.file.printf ("INSERT INTO `ValadocStructs` (`id`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(stru));
+		this.file.printf ("INSERT INTO `ValadocStructs` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(stru));
 	}
 
 	public override void visit_error_domain ( ErrorDomain errdom ) {
@@ -470,7 +470,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 			}			
 		}
 
-		this.file.printf ("INSERT INTO `ValadocErrordomains` (`id`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(errdom));
+		this.file.printf ("INSERT INTO `ValadocErrordomains` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(errdom));
 	}
 
 	public override void visit_enum ( Enum en ) {
@@ -500,7 +500,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 			}			
 		}
 
-		this.file.printf ("INSERT INTO `ValadocEnum` (`id`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(en));
+		this.file.printf ("INSERT INTO `ValadocEnum` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(en));
 	}
 
 	public override void visit_property ( Property prop ) {
@@ -528,7 +528,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 			modifier = "NORMAL";
 		}
 
-		this.file.printf ("INSERT INTO `ValadocProperties` (`id`, `modifier`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1), '%s');\n", this.get_type_path(prop), modifier);
+		this.file.printf ("INSERT INTO `ValadocProperties` (`id`, `modifier`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1), '%s');\n", this.get_type_path(prop), modifier);
 	}
 
 	public override void visit_constant ( Constant constant, ConstantHandler parent ) {
@@ -542,7 +542,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 			return ;
 		}
 
-		this.file.printf ("INSERT INTO `ValadocConstants` (`id`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(constant));
+		this.file.printf ("INSERT INTO `ValadocConstants` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(constant));
 	}
 
 	public override void visit_field ( Field field, FieldHandler parent ) {
@@ -564,7 +564,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 			modifier = "NORMAL";
 		}
 
-		this.file.printf ("INSERT INTO `ValadocFields` (`id`, `modifier`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1), '%s');\n", this.get_type_path(field), modifier);
+		this.file.printf ("INSERT INTO `ValadocFields` (`id`, `modifier`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1), '%s');\n", this.get_type_path(field), modifier);
 	}
 
 	public override void visit_error_code ( ErrorCode errcode ) {
@@ -578,7 +578,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 			return ;
 		}
 
-		this.file.printf ("INSERT INTO `ValadocErrorcodes` (`id`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n" , this.get_type_path(errcode));
+		this.file.printf ("INSERT INTO `ValadocErrorcodes` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n" , this.get_type_path(errcode));
 	}
 
 	public override void visit_enum_value ( EnumValue enval ) {
@@ -592,7 +592,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 			return ;
 		}
 
-		this.file.printf ("INSERT INTO `ValadocEnumvalues` (`id`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(enval));
+		this.file.printf ("INSERT INTO `ValadocEnumvalues` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(enval));
 	}
 
 	public override void visit_delegate ( Delegate del ) {
@@ -614,7 +614,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 			modifier = "NORMAL";
 		}
 
-		this.file.printf ("INSERT INTO `ValadocDelegates` (`id`, `modifier`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE  BINARY`fullname`='%s' LIMIT 1), '%s');\n", this.get_type_path(del), modifier);
+		this.file.printf ("INSERT INTO `ValadocDelegates` (`id`, `modifier`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE  BINARY`fullname`='%s' LIMIT 1), '%s');\n", this.get_type_path(del), modifier);
 	}
 
 	public override void visit_signal ( Signal sig ) {
@@ -628,7 +628,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 			return ;
 		}
 
-		this.file.printf ("INSERT INTO `ValadocSignals` (`id`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(sig));
+		this.file.printf ("INSERT INTO `ValadocSignals` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(sig));
 	}
 
 	public override void visit_method ( Method m, Valadoc.MethodHandler parent ) {
@@ -644,7 +644,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 
 
 		if (m.is_constructor) {
-			this.file.printf ("INSERT INTO `ValadocConstructors` (`id`) VALUES ((SELECT `id` FROM `ValadocElement` WHERE `fullname`='%s' LIMIT 1));\n", this.get_type_path(m));
+			this.file.printf ("INSERT INTO `ValadocConstructors` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE `fullname`='%s' LIMIT 1));\n", this.get_type_path(m));
 		}
 		else {
 			string modifier;
@@ -661,7 +661,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 				modifier = "NORMAL";
 			}
 
-			this.file.printf("INSERT INTO `ValadocMethods` (`id`, `modifier`)VALUES ((SELECT `id` FROM `ValadocElement` WHERE BINARY `fullname`='%s' LIMIT 1), '%s');\n", this.get_type_path(m), modifier);
+			this.file.printf("INSERT INTO `ValadocMethods` (`id`, `modifier`)VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1), '%s');\n", this.get_type_path(m), modifier);
 		}
 	}
 

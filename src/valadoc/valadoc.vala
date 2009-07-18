@@ -31,7 +31,6 @@ public class ValaDoc : Object {
 	private static string pluginpath = null;
 	private static string directory = null;
 	private static string pkg_name = null;
-	private static string basedir = null;
 
 	private static bool add_inherited = false;
 	private static bool _protected = false;
@@ -39,30 +38,47 @@ public class ValaDoc : Object {
 	private static bool _private = false;
 	private static bool version = false;
 
-	private static bool non_null_experimental = false;
-	private static bool disable_checking;
 	private static bool verbose = false;
 	private static bool force = false;
 
+	private static string basedir = null;
+	private static string[] defines;
+	private static bool enable_checking;
+	private static bool deprecated;
+	private static bool experimental;
+	private static bool non_null_experimental = false;
+	private static bool disable_dbus_transformation;
+	private static string profile;
 
 	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] vapi_directories;
 	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] tsources;
 	[CCode (array_length = false, array_null_terminated = true)]
-	private static string[] tpackages;
+	private static string[] packages;
 
 	private const GLib.OptionEntry[] options = {
+		{ "basedir", 'b', 0, OptionArg.FILENAME, ref basedir, "Base source directory", "DIRECTORY" },
+		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
+		{ "enable-checking", 0, 0, OptionArg.NONE, ref enable_checking, "Enable additional run-time checks", null },
+		{ "enable-deprecated", 0, 0, OptionArg.NONE, ref deprecated, "Enable deprecated features", null },
+		{ "enable-experimental", 0, 0, OptionArg.NONE, ref experimental, "Enable experimental features", null },
+		{ "enable-non-null-experimental", 0, 0, OptionArg.NONE, ref non_null_experimental, "Enable experimental enhancements for non-null types", null },
+		{ "disable-dbus-transformation", 0, 0, OptionArg.NONE, ref disable_dbus_transformation, "Disable transformation of D-Bus member names", null },
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
-		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref tpackages, "Include binding for PACKAGE", "PACKAGE..." },
+		{ "profile", 0, 0, OptionArg.STRING, ref profile, "Use the given profile instead of the default", "PROFILE" },
+
+
+		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "directory", 'o', 0, OptionArg.FILENAME, ref directory, "Output directory", "DIRECTORY" },
+
+		{ "wiki", 0, 0, OptionArg.FILENAME, ref wikidirectory, "Wiki directory", "DIRECTORY" },
+		{ "deps", 0, 0, OptionArg.NONE, ref with_deps, "Adds packages to the documentation", null },
+		{ "doclet", 0, 0, OptionArg.STRING, ref pluginpath, "plugin", "Name of an included doclet or path to custom doclet" },
+
 		{ "protected", 0, 0, OptionArg.NONE, ref _protected, "Adds protected elements to documentation", null },
 		{ "private", 0, 0, OptionArg.NONE, ref _private, "Adds private elements to documentation", null },
-		{ "inherit", 0, 0, OptionArg.NONE, ref add_inherited, "Adds inherited elements to a class", null },
-		{ "deps", 0, 0, OptionArg.NONE, ref with_deps, "Adds packages to the documentation", null },
-		{ "enable-non-null-experimental", 0, 0, OptionArg.NONE, ref non_null_experimental, "Enable experimentalenhancements for non-null types", null },
-		{ "wiki", 0, 0, OptionArg.FILENAME, ref wikidirectory, "Wiki directory", "DIRECTORY" },
-		{ "doclet", 0, 0, OptionArg.STRING, ref pluginpath, "plugin", "Name of an included doclet or path to custom doclet" },
+//		{ "inherit", 0, 0, OptionArg.NONE, ref add_inherited, "Adds inherited elements to a class", null },
 		{ "package-name", 0, 0, OptionArg.STRING, ref pkg_name, "package name", "DIRECTORY" },
 		{ "package-version", 0, 0, OptionArg.STRING, ref pkg_version, "package version", "DIRECTORY" },
 		{ "force", 0, 0, OptionArg.NONE, ref force, "force", null },
@@ -120,6 +136,18 @@ public class ValaDoc : Object {
 		settings.verbose = this.verbose;
 		settings.wiki_directory = this.wikidirectory;
 
+		settings.enable_checking = enable_checking;
+		settings.deprecated = deprecated;
+		settings.experimental = experimental;
+		settings.non_null_experimental = non_null_experimental;
+		settings.disable_dbus_transformation = disable_dbus_transformation;
+		settings.basedir = basedir;
+		settings.directory = directory;
+		settings.vapi_directories = vapi_directories;
+
+		settings.profile = profile;
+		settings.defines = defines;
+
 		string fulldirpath = "";
 		if ( pluginpath == null ) {
 			fulldirpath = build_filename ( Config.plugin_dir, "html" );
@@ -147,41 +175,26 @@ public class ValaDoc : Object {
 			return quit ( reporter );
 		}
 
-		Valadoc.Tree doctree = new Valadoc.Tree ( reporter, settings, non_null_experimental, disable_checking, basedir, directory );
+
+		Valadoc.Tree doctree = new Valadoc.Tree ( reporter, settings);
 		Valadoc.Parser docparser = new Valadoc.Parser ( settings, reporter, doctree, modules );
-
-		if (!doctree.add_external_package ( vapi_directories, "glib-2.0" )) {
-			reporter.simple_error ( "glib-2.0 not found in specified Vala API directories" );
+		if (reporter.errors > 0) {
 			return quit ( reporter );
 		}
 
-		if (!doctree.add_external_package ( vapi_directories, "gobject-2.0" )) {
-			reporter.simple_error ( "gobject-2.0 not found in specified Vala API directories" );
+		doctree.add_depencies (packages);
+		if (reporter.errors > 0) {
 			return quit ( reporter );
 		}
 
-		if ( this.tpackages != null ) {
-			foreach (string package in this.tpackages ) {
-				if (!doctree.add_external_package ( vapi_directories, package )) {
-					reporter.simple_error ( "%s not found in specified Vala API directories".printf(package) );
-					return quit ( reporter );
-				}
-			}
-			this.tpackages = null;
-		}
 
-		if ( tsources != null ) {
-			foreach ( string src in tsources ) {
-				if ( !doctree.add_file ( src ) ) {
-					reporter.simple_error ( "%s not found".printf(src) );
-					return quit ( reporter );
-				}
-			}
-			tsources = null;
-		}
-
-		if ( !doctree.create_tree( ) )
+		doctree.add_documented_file (tsources);
+		if (reporter.errors > 0) {
 			return quit ( reporter );
+		}
+
+		if (!doctree.create_tree())
+			return quit (reporter);
 
 		doctree.parse_comments ( docparser );
 		if ( reporter.errors > 0 )

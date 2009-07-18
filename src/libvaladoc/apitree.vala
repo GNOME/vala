@@ -4117,14 +4117,6 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		get;
 	}
 
-	public int get_errors () {
-		return this.context.report.get_errors ();
-	}
-
-	public int get_warnings () {
-		return this.context.report.get_warnings ();
-	}
-
 	public Gee.ReadOnlyCollection<Package> get_package_list () {
 		return new Gee.ReadOnlyCollection<Package> ( this.packages );
 	}
@@ -4139,93 +4131,6 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			}		
 			this.source_package.set_dependency_list ( deplst );
 		}
-	}
-
-	public bool add_file ( string path ) {
-		string source = realpath ( path );
-
-		if ( FileUtils.test ( source, FileTest.EXISTS ) == false )
-			return false;
-
-		if ( path.has_suffix ( ".c" ) ) {
-			this.context.add_c_source_file ( source );
-			return true;
-		}
-
-		Vala.SourceFile vfile = null;
-
-		if ( path.has_suffix ( ".vala" ) || path.has_suffix ( ".gs" ) ) {
-			vfile = new Vala.SourceFile (this.context, source, false);
-			vfile.add_using_directive (new Vala.UsingDirective (new Vala.UnresolvedSymbol (null, "GLib", null)));
-			this.context.add_source_file ( vfile );
-		}
-		else if ( path.has_suffix ( ".vapi" ) ) {
-			vfile = new Vala.SourceFile ( this.context, source, true );
-			this.context.add_source_file ( vfile );
-		}
-		else {
-			return false;
-		}
-
-		if ( this.source_package == null ) {
-			this.source_package = new Package.with_name ( this.settings, vfile, this.settings.pkg_name, this );
-			this.packages.add ( this.source_package );
-		}
-
-		this.source_package.add_file ( vfile );
-		return true;
-	}
-
-	public bool add_external_package ( string[] vapi_directories, string pkg ) {
-		if ( this.context.has_package ( pkg ) ) {
-			return true;
-		}
-
-		var package_path = this.context.get_package_path ( pkg, vapi_directories );
-		if ( package_path == null ) {
-			return false;
-		}
-	
-		this.context.add_package ( pkg );
-
-
-		Vala.SourceFile vfile = new Vala.SourceFile ( this.context, package_path, true );
-		this.context.add_source_file ( vfile );
-
-
-		Package vdpkg = new Package ( this.settings, vfile, this, true ); 
-		this.packages.add ( vdpkg );
-
-
-		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
-		if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
-			try {
-				Gee.ArrayList<Package> deppkglst = new Gee.ArrayList<Package> ();
-				string deps_content;
-				ulong deps_len;
-
-				FileUtils.get_contents ( deps_filename, out deps_content, out deps_len );
-				foreach (string dep in deps_content.split ( "\n" )) {
-					if (dep != "") {
-						if ( add_external_package ( vapi_directories, dep ) ) {
-							Package? deppkg = get_external_package_by_name ( dep );
-							if ( deppkg != null ) {
-								deppkglst.add ( deppkg );
-							}
-						}
-						else {
-							this.reporter.simple_error  ( "%s, dependency of %s, not found in specified Vala API directories".printf(dep, pkg) );
-						}
-					}
-				}
-				vdpkg.set_dependency_list ( deppkglst );
-			}
-			catch (FileError e) {
-				this.reporter.simple_error ( "Unable to read dependency file: %s".printf(e.message) );
-			}
-		}
-		
-		return true;
 	}
 
 	public void visit ( Doclet doclet ) {
@@ -4413,7 +4318,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		ns.add_error_domain ( verrdom );
 	}
 
-	public Tree ( Valadoc.ErrorReporter reporter, Valadoc.Settings settings, bool non_null_experimental, bool disable_checking, string? basedir, string? directory ) {
+	public Tree ( Valadoc.ErrorReporter reporter, Valadoc.Settings settings) {
 		this.context = new Vala.CodeContext ( );
 		CodeContext.push (context);
 
@@ -4422,28 +4327,153 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 
 		reporter.vreporter = this.context.report;
 
-		if ( basedir != null ) {
-			this.context.basedir = realpath ( basedir );
+		this.context.checking = settings.enable_checking;
+		this.context.deprecated = settings.deprecated;
+		this.context.experimental = settings.experimental;
+		this.context.non_null_experimental = settings.non_null_experimental;
+		this.context.dbus_transformation = !settings.disable_dbus_transformation;
+
+
+		if (settings.basedir == null) {
+			context.basedir = realpath (".");
+		} else {
+			context.basedir = realpath (settings.basedir);
 		}
 
-		if ( directory != null ) {
-			this.context.directory = realpath ( directory );
-		}
-		else {
-			this.context.directory = context.basedir;
+		if (settings.directory != null) {
+			context.directory = realpath (settings.directory);
+		} else {
+			context.directory = context.basedir;
 		}
 
-		this.context.non_null_experimental = non_null_experimental;
-		this.context.checking = !disable_checking;
-		this.context.compile_only = false;
-		this.context.save_temps = false;
-		this.context.save_temps = false;
-		this.context.checking = false;
-		this.context.assert = false;
-		this.context.thread = false;
-		this.context.debug = false;
-		this.context.output = null;
-		this.context.optlevel = 0;
+		if (settings.profile == "gobject-2.0" || settings.profile == "gobject" || settings.profile == null) {
+			context.profile = Profile.GOBJECT;
+			context.add_define ("GOBJECT");
+		}
+
+		if (settings.defines != null) {
+			foreach (string define in settings.defines) {
+				context.add_define (define);
+			}
+		}
+
+		if (context.profile == Profile.POSIX) {
+			/* default package */
+			if (!add_package ("posix")) {
+				Report.error (null, "posix not found in specified Vala API directories");
+			}
+		}
+		else if (context.profile == Profile.GOBJECT) {
+			int glib_major = 2;
+			int glib_minor = 12;
+
+
+			context.target_glib_major = glib_major;
+			context.target_glib_minor = glib_minor;
+			if (context.target_glib_major != 2) {
+				Report.error (null, "This version of valac only supports GLib 2");
+			}
+
+			/* default packages */
+			if (!this.add_package ("glib-2.0")) { //
+				Report.error (null, "glib-2.0 not found in specified Vala API directories");
+			}
+
+			if (!this.add_package ("gobject-2.0")) { //
+				Report.error (null, "gobject-2.0 not found in specified Vala API directories");
+			}
+		}
+	}
+
+
+	private bool add_package (string pkg) {
+		if (context.has_package (pkg)) {
+			// ignore multiple occurences of the same package
+			return true;
+		}
+	
+		var package_path = context.get_package_path (pkg, settings.vapi_directories);
+		
+		if (package_path == null) {
+			return false;
+		}
+
+		context.add_package (pkg);
+
+
+		var vfile = new SourceFile (context, package_path, true);
+		context.add_source_file (vfile);
+
+		Package vdpkg = new Package (this.settings, vfile, this, true);
+		this.packages.add (vdpkg);
+
+		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
+		if (FileUtils.test (deps_filename, FileTest.EXISTS)) {
+			try {
+				string deps_content;
+				ulong deps_len;
+				FileUtils.get_contents (deps_filename, out deps_content, out deps_len);
+				foreach (string dep in deps_content.split ("\n")) {
+					dep.strip ();
+					if (dep != "") {
+						if (!add_package (dep)) {
+							Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg));
+						}
+					}
+				}
+			} catch (FileError e) {
+				Report.error (null, "Unable to read dependency file: %s".printf (e.message));
+			}
+		}
+		
+		return true;
+	}
+
+
+	public void add_depencies (string[] packages) {
+		foreach (string package in packages) {
+			if (!add_package (package)) {
+				Report.error (null, "%s not found in specified Vala API directories".printf (package));
+			}
+		}
+	}
+
+	public void add_documented_file (string[] sources) {
+		if (sources == null) {
+			return ;
+		}
+
+		foreach (string source in sources) {
+			if (FileUtils.test (source, FileTest.EXISTS)) {
+				var rpath = realpath (source);
+				if (source.has_suffix (".vala") || source.has_suffix (".gs")) {
+					var source_file = new SourceFile (context, rpath);
+					Package vdpkg = new Package (this.settings, source_file, this, false); 
+					this.packages.add (vdpkg);
+
+					if (context.profile == Profile.POSIX) {
+						// import the Posix namespace by default (namespace of backend-specific standard library)
+						source_file.add_using_directive (new UsingDirective (new UnresolvedSymbol (null, "Posix", null)));
+					} else if (context.profile == Profile.GOBJECT) {
+						// import the GLib namespace by default (namespace of backend-specific standard library)
+						source_file.add_using_directive (new UsingDirective (new UnresolvedSymbol (null, "GLib", null)));
+					}
+
+					context.add_source_file (source_file);
+				} else if (source.has_suffix (".vapi")) {
+					var vfile = new SourceFile (context, rpath, true);
+					Package vdpkg = new Package (this.settings, vfile, this, true); 
+					context.add_source_file (vfile);
+					this.packages.add (vdpkg);
+				} else if (source.has_suffix (".c")) {
+					context.add_c_source_file (rpath);
+				} else {
+					Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.".printf (source));
+				}
+			} else {
+				Report.error (null, "%s not found".printf (source));
+			}
+		}
 	}
 
 	public bool create_tree ( ) {
