@@ -430,6 +430,12 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "0") {
 								st.use_const = false;
 							}
+						} else if (nv[0] == "has_type_id") {
+							if (eval (nv[1]) == "0") {
+								st.has_type_id = false;
+							}
+						} else if (nv[0] == "type_id") {
+							st.set_type_id (eval (nv[1]));
 						}
 					}
 				}
