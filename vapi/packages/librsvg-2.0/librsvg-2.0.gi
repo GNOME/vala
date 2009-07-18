@@ -96,6 +96,10 @@
 			<field name="em" type="gdouble"/>
 			<field name="ex" type="gdouble"/>
 		</struct>
+		<struct name="RsvgPositionData">
+			<field name="x" type="int"/>
+			<field name="y" type="int"/>
+		</struct>
 		<enum name="RsvgError" type-name="RsvgError" get-type="rsvg_error_get_type">
 			<member name="RSVG_ERROR_FAILED" value="0"/>
 		</enum>
@@ -132,6 +136,14 @@
 					<parameter name="dimension_data" type="RsvgDimensionData*"/>
 				</parameters>
 			</method>
+			<method name="get_dimensions_sub" symbol="rsvg_handle_get_dimensions_sub">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="handle" type="RsvgHandle*"/>
+					<parameter name="dimension_data" type="RsvgDimensionData*"/>
+					<parameter name="id" type="char*"/>
+				</parameters>
+			</method>
 			<method name="get_metadata" symbol="rsvg_handle_get_metadata">
 				<return-type type="char*"/>
 				<parameters>
@@ -151,10 +163,25 @@
 					<parameter name="id" type="char*"/>
 				</parameters>
 			</method>
+			<method name="get_position_sub" symbol="rsvg_handle_get_position_sub">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="handle" type="RsvgHandle*"/>
+					<parameter name="position_data" type="RsvgPositionData*"/>
+					<parameter name="id" type="char*"/>
+				</parameters>
+			</method>
 			<method name="get_title" symbol="rsvg_handle_get_title">
 				<return-type type="char*"/>
 				<parameters>
 					<parameter name="handle" type="RsvgHandle*"/>
+				</parameters>
+			</method>
+			<method name="has_sub" symbol="rsvg_handle_has_sub">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="handle" type="RsvgHandle*"/>
+					<parameter name="id" type="char*"/>
 				</parameters>
 			</method>
 			<constructor name="new" symbol="rsvg_handle_new">
@@ -175,21 +202,6 @@
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</constructor>
-			<method name="render_cairo" symbol="rsvg_handle_render_cairo">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="handle" type="RsvgHandle*"/>
-					<parameter name="cr" type="cairo_t*"/>
-				</parameters>
-			</method>
-			<method name="render_cairo_sub" symbol="rsvg_handle_render_cairo_sub">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="handle" type="RsvgHandle*"/>
-					<parameter name="cr" type="cairo_t*"/>
-					<parameter name="id" type="char*"/>
-				</parameters>
-			</method>
 			<method name="set_base_uri" symbol="rsvg_handle_set_base_uri">
 				<return-type type="void"/>
 				<parameters>
@@ -242,9 +254,11 @@
 			<property name="width" type="gint" readable="1" writable="0" construct="0" construct-only="0"/>
 		</object>
 		<constant name="LIBRSVG_FEATURES_H" type="int" value="1"/>
+		<constant name="LIBRSVG_HAVE_CSS" type="int" value="1"/>
+		<constant name="LIBRSVG_HAVE_SVGZ" type="int" value="1"/>
 		<constant name="LIBRSVG_MAJOR_VERSION" type="int" value="2"/>
-		<constant name="LIBRSVG_MICRO_VERSION" type="int" value="3"/>
-		<constant name="LIBRSVG_MINOR_VERSION" type="int" value="22"/>
+		<constant name="LIBRSVG_MICRO_VERSION" type="int" value="0"/>
+		<constant name="LIBRSVG_MINOR_VERSION" type="int" value="26"/>
 		<constant name="LIBRSVG_VERSION" type="char*" value=""/>
 	</namespace>
 </api>
