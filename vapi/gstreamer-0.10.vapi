@@ -567,7 +567,7 @@ namespace Gst {
 		public weak Gst.IteratorResyncFunction resync;
 		public GLib.Type type;
 		public unowned Gst.Iterator filter (GLib.CompareFunc func);
-		public void* find_custom (GLib.CompareFunc func);
+		public void* find_custom (GLib.CompareFunc func, void* user_data);
 		public Gst.IteratorResult fold (Gst.IteratorFoldFunction func, Gst.Value? ret);
 		public Gst.IteratorResult @foreach (GLib.Func func);
 		[CCode (has_construct_function = false)]
