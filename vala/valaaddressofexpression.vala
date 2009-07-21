@@ -83,7 +83,8 @@ public class Vala.AddressofExpression : Expression {
 		}
 		if (!(inner.value_type is ValueType
 		      || inner.value_type is ObjectType
-		      || inner.value_type is PointerType)) {
+		      || inner.value_type is PointerType
+		      || inner.value_type is GenericType)) {
 			error = true;
 			Report.error (source_reference, "Address-of operator not supported for this expression");
 			return false;
