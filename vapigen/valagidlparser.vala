@@ -1930,7 +1930,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	}
 	
 	private string eval (string s) {
-		return s.offset (1).ndup (s.size () - 2);
+		return ((s.size () >= 2) && s.has_prefix ("\"") && s.has_suffix ("\"")) ? s.offset (1).ndup (s.size () - 2) : s;
 	}
 
 	private Signal? parse_signal (IdlNodeSignal sig_node) {
