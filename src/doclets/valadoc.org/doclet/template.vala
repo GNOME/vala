@@ -17,14 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using Valadoc.Diagrams;
+using Valadoc.Html;
 using Valadoc;
-using Mysql;
 using GLib;
 using Gee;
 
 
 
 public class Valadoc.HtmlDoclet : Valadoc.Doclet {
+	private Valadoc.Html.Api.Vala langwriter = new Valadoc.Html.Api.Vala ();
 	private Settings settings;
 	private FileStream file;
 	private bool run;
@@ -44,6 +46,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 				break;
 			}
 		}
+	}
+
+	private string get_image_path (DocumentedElement element) {
+		return Path.build_filename (this.settings.path, element.package.name, element.package.name, element.full_name () + ".png");
 	}
 
 	// get_type_path()
@@ -81,11 +87,9 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 
 	// get_type_path()
 	private void write_insert_into_code_element (DocumentedElement element) {
-		string api = "foo bar foobaro";
+		string api = this.langwriter.from_documented_element (element).to_string (0, "");
 		string parentnodepkgname;
 		string parentnodename;
-		string typename;
-		string cname;
 
 		Basic parent = element.parent;
 		if (parent is DocumentedElement) {
@@ -107,6 +111,11 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 	public override void visit_package (Package pkg) {
 		string path = Path.build_filename(this.settings.path, pkg.name);
 		if (GLib.DirUtils.create (path, 0777) == -1) {
+			this.run = false;
+			return ;
+		}
+
+		if (GLib.DirUtils.create (Path.build_filename(path, pkg.name), 0777) == -1) {
 			this.run = false;
 			return ;
 		}
@@ -234,6 +243,8 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 	}
 
 	public override void visit_interface ( Interface iface ) {
+		write_interface_diagram (iface, this.get_image_path (iface));
+
 		this.write_insert_into_valadoc_element (iface);
 		if (this.run == false) {
 			return ;
@@ -312,6 +323,8 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 	}
 
 	public override void visit_class ( Class cl ) {
+		write_class_diagram (cl, this.get_image_path (cl));
+
 		this.write_insert_into_valadoc_element (cl);
 		if (this.run == false) {
 			return ;
@@ -320,6 +333,14 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 		this.write_insert_into_code_element (cl);
 		if (this.run == false) {
 			return ;
+		}
+
+		foreach (Method m in cl.get_construction_method_list ()) {
+			m.visit(this, cl);
+
+			if (this.run == false) {
+				return ;
+			}			
 		}
 
 		foreach (Delegate del in cl.get_delegate_list()) {
@@ -406,6 +427,8 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 	}
 
 	public override void visit_struct ( Struct stru ) {
+		write_struct_diagram (stru, this.get_image_path (stru));
+
 		this.write_insert_into_valadoc_element (stru);
 		if (this.run == false) {
 			return ;
@@ -414,6 +437,14 @@ public class Valadoc.HtmlDoclet : Valadoc.Doclet {
 		this.write_insert_into_code_element (stru);
 		if (this.run == false) {
 			return ;
+		}
+
+		foreach (Method m in stru.get_construction_method_list ()) {
+			m.visit(this, stru);
+
+			if (this.run == false) {
+				return ;
+			}			
 		}
 
 		foreach (Method m in stru.get_method_list()) {

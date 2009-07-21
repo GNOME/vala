@@ -611,7 +611,6 @@ public interface Valadoc.NamespaceHandler : Basic {
 		return ns.get_namespace_helper ( node, vnspaces, pos+1 );
 	}
 
-	// TODO: Rename vars
 	protected Namespace get_namespace ( Vala.Symbol node ) {
 		Vala.Symbol vnd = ((Vala.Symbol)node).parent_symbol;
 		if ( vnd is Vala.Namespace == false )
@@ -1704,14 +1703,6 @@ public class Valadoc.TypeReference : Basic {
 				return this.is_weak_helper ( ((Vala.FormalParameter)parent).parameter_type );
 			}
 
-			// return type
-			if ( parent is Vala.Method == true )
-				return this.is_weak_helper ( ((Vala.Method)parent).return_type );
-			else if ( parent is Vala.Signal == true )
-				return this.is_weak_helper ( ((Vala.Signal)parent).return_type );
-			else if ( parent is Vala.Delegate == true )
-				return this.is_weak_helper ( ((Vala.Delegate)parent).return_type );
-
 			return false;
 		}
 	}
@@ -1744,6 +1735,22 @@ public class Valadoc.TypeReference : Basic {
 
 	public bool is_weak {
 		get {
+			Vala.CodeNode parent = this.vtyperef.parent_node;
+
+			if (parent is Vala.FormalParameter) {
+				return false;
+			}
+
+			if (parent is Vala.Method == true) {
+				return this.is_weak_helper ( ((Vala.Method)parent).return_type );
+			}
+			else if (parent is Vala.Signal == true) {
+				return this.is_weak_helper ( ((Vala.Signal)parent).return_type );
+			}
+			else if (parent is Vala.Delegate == true) {
+				return this.is_weak_helper ( ((Vala.Delegate)parent).return_type );
+			}
+
 			return ( this.vtyperef.parent_node is Field )? this.is_weak_helper( this.vtyperef ) : false;
 		}
 	}
@@ -2221,11 +2228,8 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 		var vparamlst = this.vmethod.get_parameters ();
 		this.add_parameter_list ( vparamlst );
 
-//		var vtparams = this.vmethod.get_type_parameters ();
-//		this.set_template_parameter_list ( vtparams );
-
-		//var vexceptionlst = this.vmethod.get_error_types ();
-		//this.add_error_domains ( vexceptionlst );
+		var vtparams = this.vmethod.get_type_parameters ();
+		this.set_template_parameter_list ( vtparams );
 	}
 
 	// intern
@@ -4111,6 +4115,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	private Valadoc.Settings settings;
 	private CodeContext context;
 	private ErrorReporter reporter;
+	private Package sourcefiles = null;
 
 	public WikiPageTree? wikitree {
 		private set;
@@ -4233,8 +4238,8 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			return ;
 
 		Vala.SourceFile vfile = vcl.source_reference.file;
-		Package file = this.find_file( vfile );
-		Namespace ns = file.get_namespace ( vcl );
+		Package file = this.find_file(vfile);
+		Namespace ns = file.get_namespace (vcl);
 		ns.add_class ( vcl );
 	}
 
@@ -4448,8 +4453,15 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 				var rpath = realpath (source);
 				if (source.has_suffix (".vala") || source.has_suffix (".gs")) {
 					var source_file = new SourceFile (context, rpath);
-					Package vdpkg = new Package (this.settings, source_file, this, false); 
-					this.packages.add (vdpkg);
+
+
+					if (this.sourcefiles == null) {
+						this.sourcefiles = new Package (this.settings, source_file, this, false);
+						this.packages.add (this.sourcefiles);
+					}
+					else {
+						this.sourcefiles.add_file (source_file);
+					}
 
 					if (context.profile == Profile.POSIX) {
 						// import the Posix namespace by default (namespace of backend-specific standard library)

@@ -1,8 +1,10 @@
 NULL =
 
 
-SUBDIRS =   \
-	doclet  \
-	taglets \
-	deps    \
+SUBDIRS =     \
+	html      \
+	languages \
+	doclet    \
+	taglets   \
+	deps      \
 	$(NULL)
