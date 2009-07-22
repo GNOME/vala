@@ -462,6 +462,12 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			current_data_type = null;
 		} else {
+			bool ref_function_void = false;
+			string ref_function = null;
+			string unref_function = null;
+			string copy_function = null;
+			string free_function = null;
+
 			var cl = ns.scope.lookup (name) as Class;
 			if (cl == null) {
 				string base_class = null;
@@ -494,6 +500,18 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								cl.is_abstract = true;
 							}
+						} else if (nv[0] == "free_function") {
+							free_function = eval (nv[1]);
+						} else if (nv[0] == "ref_function") {
+							ref_function = eval (nv[1]);
+						} else if (nv[0] == "unref_function") {
+							unref_function = eval (nv[1]);
+						} else if (nv[0] == "copy_function") {
+							copy_function = eval (nv[1]);
+						} else if (nv[0] == "ref_function_void") {
+							if (eval (nv[1]) == "1") {
+								ref_function_void = true;
+							}
 						}
 					}
 				}
@@ -509,23 +527,17 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			current_data_type = cl;
 
-			bool ref_function_void = false;
-			string ref_function = null;
-			string unref_function = null;
-			string copy_function = null;
-			string free_function = null;
-
 			foreach (weak IdlNode member in st_node.members) {
 				if (member.type == IdlNodeTypeId.FUNCTION) {
-					if (member.name == "ref") {
+					if ((ref_function == null) && (member.name == "ref")) {
 						ref_function = ((IdlNodeFunction) member).symbol;
 						ref_function_void = (parse_type (((IdlNodeFunction) member).result.type) is VoidType);
-					} else if (member.name == "unref") {
+					} else if ((unref_function == null) && (member.name == "unref")) {
 						unref_function = ((IdlNodeFunction) member).symbol;
-					} else if (member.name == "free" || member.name == "destroy") {
+					} else if ((free_function == null) && (member.name == "free" || member.name == "destroy")) {
 						free_function = ((IdlNodeFunction) member).symbol;
 					} else {
-						if (member.name == "copy") {
+						if ((copy_function == null) && (member.name == "copy")) {
 							copy_function = ((IdlNodeFunction) member).symbol;
 						}
 						var m = parse_function ((IdlNodeFunction) member);
