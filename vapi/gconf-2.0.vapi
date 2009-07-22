@@ -133,7 +133,7 @@ namespace GConf {
 	public class Entry {
 		public weak string key;
 		public weak GConf.Value value;
-		public unowned GConf.Entry copy ();
+		public GConf.Entry copy ();
 		public bool equal (GConf.Entry b);
 		public bool get_is_default ();
 		public bool get_is_writable ();
@@ -189,7 +189,7 @@ namespace GConf {
 	[Compact]
 	[CCode (copy_function = "gconf_schema_copy", cheader_filename = "gconf/gconf.h")]
 	public class Schema {
-		public unowned GConf.Schema copy ();
+		public GConf.Schema copy ();
 		public GConf.ValueType get_car_type ();
 		public GConf.ValueType get_cdr_type ();
 		public unowned GConf.Value get_default_value ();
@@ -216,7 +216,7 @@ namespace GConf {
 	public class Value {
 		public GConf.ValueType type;
 		public int compare (GConf.Value value_b);
-		public unowned GConf.Value copy ();
+		public GConf.Value copy ();
 		[CCode (has_construct_function = false)]
 		public Value.from_string (GConf.ValueType type, string str) throws GLib.Error;
 		public bool get_bool ();

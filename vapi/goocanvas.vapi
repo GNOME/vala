@@ -427,7 +427,7 @@ namespace Goo {
 	public class CanvasStyle : GLib.Object {
 		public weak Goo.CanvasStyle parent;
 		public weak GLib.Array properties;
-		public unowned Goo.CanvasStyle copy ();
+		public Goo.CanvasStyle copy ();
 		public unowned Goo.CanvasStyle get_parent ();
 		public GLib.Value get_property (GLib.Quark property_id);
 		[CCode (has_construct_function = false)]

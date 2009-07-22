@@ -244,7 +244,7 @@ namespace GnomeVFS {
 		public weak string name;
 		public void* reserved1;
 		public weak GLib.List supported_uri_schemes;
-		public unowned GnomeVFS.MimeApplication copy ();
+		public GnomeVFS.MimeApplication copy ();
 		public bool equal (GnomeVFS.MimeApplication app_b);
 		[CCode (has_construct_function = false)]
 		public MimeApplication.from_desktop_id (string id);

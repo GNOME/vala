@@ -1,4 +1,4 @@
 Oobs cheader_filename="oobs/oobs.h"
 gid_t name="long"
 uid_t name="long"
-
+oobs_list_iter_copy transfer_ownership="1"

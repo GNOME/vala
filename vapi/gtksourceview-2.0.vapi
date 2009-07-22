@@ -138,7 +138,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceStyle : GLib.Object {
-		public unowned Gtk.SourceStyle copy ();
+		public Gtk.SourceStyle copy ();
 		[NoAccessorMethod]
 		public string background { owned get; construct; }
 		[NoAccessorMethod]

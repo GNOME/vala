@@ -747,7 +747,7 @@ namespace GLib {
 	[Compact]
 	[CCode (copy_function = "g_srv_target_copy", type_id = "G_TYPE_SRV_TARGET", cheader_filename = "gio/gio.h")]
 	public class SrvTarget {
-		public unowned GLib.SrvTarget copy ();
+		public GLib.SrvTarget copy ();
 		public unowned string get_hostname ();
 		public uint16 get_port ();
 		public uint16 get_priority ();

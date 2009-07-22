@@ -20,6 +20,7 @@ gtk_source_language_manager_set_search_path.dirs is_array="1" nullable="1" array
 GtkSourcePrintCompositor cheader_filename="gtksourceview/gtksourceprintcompositor.h"
 GtkSourceSearchFlags cheader_filename="gtksourceview/gtksourceiter.h"
 GtkSourceStyleSchemeManager cheader_filename="gtksourceview/gtksourcestyleschememanager.h"
+gtk_source_style_copy transfer_ownership="1"
 gtk_source_style_scheme_manager_get_search_path is_array="1" array_null_terminated="1"
 gtk_source_style_scheme_manager_get_scheme_ids is_array="1" array_null_terminated="1"
 GtkTextRegion hidden="1"

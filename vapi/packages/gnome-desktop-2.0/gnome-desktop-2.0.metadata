@@ -1,4 +1,5 @@
 Gnome cheader_filename="libgnome/gnome-desktop-item.h"
+gnome_desktop_item_copy transfer_ownership="1"
 gnome_desktop_item_drop_uri_list_with_env.envp is_array="1"
 gnome_desktop_item_get_strings is_array="1" array_null_terminated="1"
 gnome_desktop_item_launch_with_env.envp is_array="1"

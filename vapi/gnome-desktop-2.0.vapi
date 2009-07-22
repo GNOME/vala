@@ -25,7 +25,7 @@ namespace Gnome {
 		public bool attr_exists (string attr);
 		public void clear_localestring (string attr);
 		public void clear_section (string section);
-		public unowned Gnome.DesktopItem copy ();
+		public Gnome.DesktopItem copy ();
 		public int drop_uri_list (string uri_list, Gnome.DesktopItemLaunchFlags flags) throws GLib.Error;
 		public int drop_uri_list_with_env (string uri_list, Gnome.DesktopItemLaunchFlags flags, string[] envp) throws GLib.Error;
 		public static GLib.Quark error_quark ();

@@ -1745,7 +1745,7 @@ namespace Gtk {
 	[Compact]
 	[CCode (copy_function = "gtk_icon_info_copy", type_id = "GTK_TYPE_ICON_INFO", cheader_filename = "gtk/gtk.h")]
 	public class IconInfo {
-		public unowned Gtk.IconInfo copy ();
+		public Gtk.IconInfo copy ();
 		[CCode (has_construct_function = false)]
 		public IconInfo.for_pixbuf (Gtk.IconTheme icon_theme, Gdk.Pixbuf pixbuf);
 		public bool get_attach_points (Gdk.Point[] points);
@@ -1761,7 +1761,7 @@ namespace Gtk {
 	[CCode (ref_function = "gtk_icon_set_ref", unref_function = "gtk_icon_set_unref", type_id = "GTK_TYPE_ICON_SET", cheader_filename = "gtk/gtk.h")]
 	public class IconSet {
 		public void add_source (Gtk.IconSource source);
-		public unowned Gtk.IconSet copy ();
+		public Gtk.IconSet copy ();
 		[CCode (has_construct_function = false)]
 		public IconSet.from_pixbuf (Gdk.Pixbuf pixbuf);
 		public void get_sizes (Gtk.IconSize[] sizes);
@@ -1772,7 +1772,7 @@ namespace Gtk {
 	[Compact]
 	[CCode (copy_function = "gtk_icon_source_copy", type_id = "GTK_TYPE_ICON_SOURCE", cheader_filename = "gtk/gtk.h")]
 	public class IconSource {
-		public unowned Gtk.IconSource copy ();
+		public Gtk.IconSource copy ();
 		public Gtk.TextDirection get_direction ();
 		public bool get_direction_wildcarded ();
 		public unowned string get_filename ();
@@ -2575,7 +2575,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class PageSetup : GLib.Object {
-		public unowned Gtk.PageSetup copy ();
+		public Gtk.PageSetup copy ();
 		[CCode (has_construct_function = false)]
 		public PageSetup.from_file (string file_name) throws GLib.Error;
 		[CCode (has_construct_function = false)]
@@ -2651,7 +2651,7 @@ namespace Gtk {
 	[Compact]
 	[CCode (copy_function = "gtk_paper_size_copy", type_id = "GTK_TYPE_PAPER_SIZE", cheader_filename = "gtk/gtk.h")]
 	public class PaperSize {
-		public unowned Gtk.PaperSize copy ();
+		public Gtk.PaperSize copy ();
 		[CCode (has_construct_function = false)]
 		public PaperSize.custom (string name, string display_name, double width, double height, Gtk.Unit unit);
 		[CCode (has_construct_function = false)]
@@ -2770,7 +2770,7 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class PrintSettings : GLib.Object {
-		public unowned Gtk.PrintSettings copy ();
+		public Gtk.PrintSettings copy ();
 		public void @foreach (Gtk.PrintSettingsFunc func);
 		[CCode (has_construct_function = false)]
 		public PrintSettings.from_file (string file_name) throws GLib.Error;
@@ -3056,7 +3056,7 @@ namespace Gtk {
 		public weak Gdk.Color[] text;
 		public int xthickness;
 		public int ythickness;
-		public unowned Gtk.RcStyle copy ();
+		public Gtk.RcStyle copy ();
 		[NoWrapper]
 		public virtual unowned Gtk.RcStyle create_rc_style ();
 		[NoWrapper]
@@ -3912,7 +3912,7 @@ namespace Gtk {
 		public int right_margin;
 		public weak Pango.TabArray tabs;
 		public Gtk.WrapMode wrap_mode;
-		public unowned Gtk.TextAttributes copy ();
+		public Gtk.TextAttributes copy ();
 		public void copy_values (Gtk.TextAttributes dest);
 		[CCode (has_construct_function = false)]
 		public TextAttributes ();
@@ -4588,7 +4588,7 @@ namespace Gtk {
 	[Immutable]
 	[CCode (copy_function = "gtk_tree_row_reference_copy", type_id = "GTK_TYPE_TREE_ROW_REFERENCE", cheader_filename = "gtk/gtk.h")]
 	public class TreeRowReference {
-		public unowned Gtk.TreeRowReference copy ();
+		public Gtk.TreeRowReference copy ();
 		public static void deleted (GLib.Object proxy, Gtk.TreePath path);
 		public unowned Gtk.TreeModel get_model ();
 		public Gtk.TreePath get_path ();

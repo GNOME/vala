@@ -378,7 +378,7 @@ namespace Gdk {
 	[Compact]
 	[CCode (copy_function = "gdk_region_copy", free_function = "gdk_region_destroy", cheader_filename = "gdk/gdk.h")]
 	public class Region {
-		public unowned Gdk.Region copy ();
+		public Gdk.Region copy ();
 		public bool empty ();
 		public bool equal (Gdk.Region region2);
 		public void get_clipbox (out Gdk.Rectangle rectangle);

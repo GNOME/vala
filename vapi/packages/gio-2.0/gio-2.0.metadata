@@ -105,3 +105,4 @@ g_app_info_launch_uris.uris nullable="1"
 g_loadable_icon_load.type nullable="1"
 g_loadable_icon_load_finish.type nullable="1"
 
+g_srv_target_copy transfer_ownership="1"

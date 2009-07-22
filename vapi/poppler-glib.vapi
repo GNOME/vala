@@ -13,7 +13,7 @@ namespace Poppler {
 		public weak Poppler.ActionNamed named;
 		public Poppler.ActionType type;
 		public weak Poppler.ActionUri uri;
-		public unowned Poppler.Action copy ();
+		public Poppler.Action copy ();
 	}
 	[Compact]
 	[CCode (cheader_filename = "poppler.h")]
@@ -89,7 +89,7 @@ namespace Poppler {
 		public double top;
 		public Poppler.DestType type;
 		public double zoom;
-		public unowned Poppler.Dest copy ();
+		public Poppler.Dest copy ();
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class Document : GLib.Object {
@@ -146,7 +146,7 @@ namespace Poppler {
 	[Compact]
 	[CCode (copy_function = "poppler_fonts_iter_copy", type_id = "POPPLER_TYPE_FONTS_ITER", cheader_filename = "poppler.h")]
 	public class FontsIter {
-		public unowned Poppler.FontsIter copy ();
+		public Poppler.FontsIter copy ();
 		public unowned string get_file_name ();
 		public Poppler.FontType get_font_type ();
 		public unowned string get_full_name ();
@@ -191,7 +191,7 @@ namespace Poppler {
 	public class FormFieldMapping {
 		public weak Poppler.Rectangle area;
 		public weak Poppler.FormField field;
-		public unowned Poppler.FormFieldMapping copy ();
+		public Poppler.FormFieldMapping copy ();
 		[CCode (has_construct_function = false)]
 		public FormFieldMapping ();
 	}
@@ -200,14 +200,14 @@ namespace Poppler {
 	public class ImageMapping {
 		public weak Poppler.Rectangle area;
 		public weak Gdk.Pixbuf image;
-		public unowned Poppler.ImageMapping copy ();
+		public Poppler.ImageMapping copy ();
 		[CCode (has_construct_function = false)]
 		public ImageMapping ();
 	}
 	[Compact]
 	[CCode (copy_function = "poppler_index_iter_copy", type_id = "POPPLER_TYPE_INDEX_ITER", cheader_filename = "poppler.h")]
 	public class IndexIter {
-		public unowned Poppler.IndexIter copy ();
+		public Poppler.IndexIter copy ();
 		public unowned Poppler.Action get_action ();
 		public unowned Poppler.IndexIter get_child ();
 		public bool is_open ();
@@ -220,7 +220,7 @@ namespace Poppler {
 	public class LinkMapping {
 		public weak Poppler.Action action;
 		public weak Poppler.Rectangle area;
-		public unowned Poppler.LinkMapping copy ();
+		public Poppler.LinkMapping copy ();
 		[CCode (has_construct_function = false)]
 		public LinkMapping ();
 	}
@@ -268,7 +268,7 @@ namespace Poppler {
 		public bool rectangular;
 		public double scale;
 		public Poppler.PageTransitionType type;
-		public unowned Poppler.PageTransition copy ();
+		public Poppler.PageTransition copy ();
 		[CCode (has_construct_function = false)]
 		public PageTransition ();
 	}
@@ -279,7 +279,7 @@ namespace Poppler {
 		public double x2;
 		public double y1;
 		public double y2;
-		public unowned Poppler.Rectangle copy ();
+		public Poppler.Rectangle copy ();
 		[CCode (has_construct_function = false)]
 		public Rectangle ();
 	}

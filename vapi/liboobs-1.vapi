@@ -183,7 +183,7 @@ namespace Oobs {
 	public class ListIter {
 		public void* data;
 		public uint stamp;
-		public unowned Oobs.ListIter copy ();
+		public Oobs.ListIter copy ();
 		public static bool next (Oobs.List list, Oobs.ListIter iter);
 	}
 	[CCode (cheader_filename = "oobs/oobs.h")]

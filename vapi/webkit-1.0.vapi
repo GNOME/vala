@@ -144,7 +144,7 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebSettings : GLib.Object {
-		public unowned WebKit.WebSettings copy ();
+		public WebKit.WebSettings copy ();
 		[CCode (has_construct_function = false)]
 		public WebSettings ();
 		[NoAccessorMethod]

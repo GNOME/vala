@@ -99,7 +99,7 @@ namespace Soup {
 	public class Buffer {
 		public weak string data;
 		public size_t length;
-		public unowned Soup.Buffer copy ();
+		public Soup.Buffer copy ();
 		public void* get_owner ();
 		[CCode (has_construct_function = false)]
 		public Buffer (Soup.MemoryUse use, void* data, size_t length);
@@ -132,7 +132,7 @@ namespace Soup {
 		public bool secure;
 		public weak string value;
 		public bool applies_to_uri (Soup.URI uri);
-		public unowned Soup.Cookie copy ();
+		public Soup.Cookie copy ();
 		public bool equal (Soup.Cookie cookie2);
 		[CCode (has_construct_function = false)]
 		public Cookie (string name, string value, string domain, string path, int max_age);
@@ -180,7 +180,7 @@ namespace Soup {
 		public int second;
 		public bool utc;
 		public int year;
-		public unowned Soup.Date copy ();
+		public Soup.Date copy ();
 		[CCode (has_construct_function = false)]
 		public Date.from_now (int offset_seconds);
 		[CCode (has_construct_function = false)]

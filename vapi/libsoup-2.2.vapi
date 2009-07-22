@@ -344,7 +344,7 @@ namespace Soup {
 		public weak Soup.Protocol protocol;
 		public weak string query;
 		public weak string user;
-		public unowned Soup.Uri copy ();
+		public Soup.Uri copy ();
 		public unowned Soup.Uri copy_root ();
 		public static void decode (string part);
 		public static string encode (string part, string escape_extra);
