@@ -24,35 +24,31 @@ namespace Pango {
 		public Pango.AttrType type;
 	}
 	[Compact]
-	[CCode (cheader_filename = "pango/pango.h")]
-	public class AttrColor {
-		public weak Pango.Attribute attr;
+	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	public class AttrColor : Pango.Attribute {
 		public Pango.Color color;
 	}
 	[Compact]
-	[CCode (cheader_filename = "pango/pango.h")]
-	public class AttrFloat {
-		public weak Pango.Attribute attr;
+	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	public class AttrFloat : Pango.Attribute {
 		public double value;
 	}
 	[Compact]
-	[CCode (cheader_filename = "pango/pango.h")]
-	public class AttrFontDesc {
-		public weak Pango.Attribute attr;
+	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	public class AttrFontDesc : Pango.Attribute {
 		public weak Pango.FontDescription desc;
 		[CCode (type = "PangoAttribute*", has_construct_function = false)]
 		public AttrFontDesc (Pango.FontDescription desc);
 	}
 	[Compact]
-	[CCode (cheader_filename = "pango/pango.h")]
-	public class AttrInt {
-		public weak Pango.Attribute attr;
+	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	public class AttrInt : Pango.Attribute {
 		public int value;
 	}
 	[Compact]
 	[CCode (copy_function = "pango_attr_iterator_copy", free_function = "pango_attr_iterator_destroy", cheader_filename = "pango/pango.h")]
 	public class AttrIterator {
-		public unowned Pango.AttrIterator copy ();
+		public Pango.AttrIterator copy ();
 		public unowned Pango.Attribute get (Pango.AttrType type);
 		public unowned GLib.SList get_attrs ();
 		public void get_font (Pango.FontDescription desc, out unowned Pango.Language language, GLib.SList extra_attrs);
@@ -60,9 +56,8 @@ namespace Pango {
 		public void range (int start, int end);
 	}
 	[Compact]
-	[CCode (cheader_filename = "pango/pango.h")]
-	public class AttrLanguage {
-		public weak Pango.Attribute attr;
+	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	public class AttrLanguage : Pango.Attribute {
 		public weak Pango.Language value;
 		[CCode (type = "PangoAttribute*", has_construct_function = false)]
 		public AttrLanguage (Pango.Language language);
@@ -71,18 +66,18 @@ namespace Pango {
 	[CCode (ref_function = "pango_attr_list_ref", unref_function = "pango_attr_list_unref", type_id = "PANGO_TYPE_ATTR_LIST", cheader_filename = "pango/pango.h")]
 	public class AttrList {
 		public void change (Pango.Attribute attr);
-		public unowned Pango.AttrList copy ();
+		public Pango.AttrList copy ();
 		public unowned Pango.AttrList filter (Pango.AttrFilterFunc func, void* data);
 		public unowned Pango.AttrIterator get_iterator ();
-		public void insert (Pango.Attribute attr);
+		public void insert (owned Pango.Attribute attr);
 		public void insert_before (Pango.Attribute attr);
 		[CCode (has_construct_function = false)]
 		public AttrList ();
 		public void splice (Pango.AttrList other, int pos, int len);
 	}
 	[Compact]
-	[CCode (cheader_filename = "pango/pango.h")]
-	public class AttrShape {
+	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	public class AttrShape : Pango.Attribute {
 		public weak Pango.Attribute attr;
 		public weak Pango.AttrDataCopyFunc copy_func;
 		public void* data;
@@ -95,18 +90,16 @@ namespace Pango {
 		public AttrShape.with_data (Pango.Rectangle ink_rect, Pango.Rectangle logical_rect, void* data, Pango.AttrDataCopyFunc copy_func, GLib.DestroyNotify destroy_func);
 	}
 	[Compact]
-	[CCode (cheader_filename = "pango/pango.h")]
-	public class AttrSize {
+	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	public class AttrSize : Pango.Attribute {
 		public uint absolute;
-		public weak Pango.Attribute attr;
 		public int size;
 		[CCode (type = "PangoAttribute*", has_construct_function = false)]
 		public AttrSize (int size);
 	}
 	[Compact]
-	[CCode (cheader_filename = "pango/pango.h")]
-	public class AttrString {
-		public weak Pango.Attribute attr;
+	[CCode (free_function = "pango_attribute_destroy", cheader_filename = "pango/pango.h")]
+	public class AttrString : Pango.Attribute {
 		public weak string value;
 	}
 	[Compact]
@@ -115,7 +108,7 @@ namespace Pango {
 		public uint end_index;
 		public weak Pango.AttrClass klass;
 		public uint start_index;
-		public unowned Pango.Attribute copy ();
+		public Pango.Attribute copy ();
 		public bool equal (Pango.Attribute attr2);
 		public void init (Pango.AttrClass klass);
 	}
@@ -150,7 +143,7 @@ namespace Pango {
 	[Compact]
 	[CCode (ref_function = "pango_coverage_ref", unref_function = "pango_coverage_unref", cheader_filename = "pango/pango.h")]
 	public class Coverage {
-		public unowned Pango.Coverage copy ();
+		public Pango.Coverage copy ();
 		public static unowned Pango.Coverage from_bytes (uchar[] bytes);
 		public Pango.CoverageLevel get (int index_);
 		public void max (Pango.Coverage other);
@@ -183,8 +176,7 @@ namespace Pango {
 	[CCode (copy_function = "pango_font_description_copy", type_id = "PANGO_TYPE_FONT_DESCRIPTION", cheader_filename = "pango/pango.h")]
 	public class FontDescription {
 		public bool better_match (Pango.FontDescription old_match, Pango.FontDescription new_match);
-		public unowned Pango.FontDescription copy ();
-		public unowned Pango.FontDescription copy_static ();
+		public Pango.FontDescription copy ();
 		public bool equal (Pango.FontDescription desc2);
 		public static Pango.FontDescription from_string (string str);
 		public unowned string get_family ();
@@ -262,7 +254,7 @@ namespace Pango {
 		public weak Pango.GlyphString glyphs;
 		public weak Pango.Item item;
 		public unowned GLib.SList apply_attrs (string text, Pango.AttrList list);
-		public unowned Pango.GlyphItem copy ();
+		public Pango.GlyphItem copy ();
 		public void letter_space (string text, Pango.LogAttr[] log_attrs, int letter_spacing);
 		public unowned Pango.GlyphItem split (string text, int split_index);
 	}
@@ -277,7 +269,7 @@ namespace Pango {
 		public int start_glyph;
 		public int start_index;
 		public weak string text;
-		public unowned Pango.GlyphItemIter copy ();
+		public Pango.GlyphItemIter copy ();
 		public bool init_end (Pango.GlyphItem glyph_item, string text);
 		public bool init_start (Pango.GlyphItem glyph_item, string text);
 		public bool next_cluster ();
@@ -290,7 +282,7 @@ namespace Pango {
 		public int log_clusters;
 		public int num_glyphs;
 		public int space;
-		public unowned Pango.GlyphString copy ();
+		public Pango.GlyphString copy ();
 		public void extents (Pango.Font font, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public void extents_range (int start, int end, Pango.Font font, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public void get_logical_widths (string text, int length, int embedding_level, int logical_widths);
@@ -312,7 +304,7 @@ namespace Pango {
 		public int length;
 		public int num_chars;
 		public int offset;
-		public unowned Pango.Item copy ();
+		public Pango.Item copy ();
 		[CCode (has_construct_function = false)]
 		public Item ();
 		public unowned Pango.Item split (int split_index, int split_offset);
@@ -331,7 +323,7 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Layout : GLib.Object {
 		public void context_changed ();
-		public unowned Pango.Layout copy ();
+		public Pango.Layout copy ();
 		public Pango.Alignment get_alignment ();
 		public unowned Pango.AttrList get_attributes ();
 		public bool get_auto_dir ();
@@ -394,7 +386,7 @@ namespace Pango {
 	[CCode (copy_function = "pango_layout_iter_copy", type_id = "PANGO_TYPE_LAYOUT_ITER", cheader_filename = "pango/pango.h")]
 	public class LayoutIter {
 		public bool at_last_line ();
-		public unowned Pango.LayoutIter copy ();
+		public Pango.LayoutIter copy ();
 		public int get_baseline ();
 		public void get_char_extents (out Pango.Rectangle logical_rect);
 		public void get_cluster_extents (out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
@@ -475,7 +467,7 @@ namespace Pango {
 	[Compact]
 	[CCode (copy_function = "pango_tab_array_copy", type_id = "PANGO_TYPE_TAB_ARRAY", cheader_filename = "pango/pango.h")]
 	public class TabArray {
-		public unowned Pango.TabArray copy ();
+		public Pango.TabArray copy ();
 		public bool get_positions_in_pixels ();
 		public int get_size ();
 		public void get_tab (int tab_index, Pango.TabAlign alignment, int location);
