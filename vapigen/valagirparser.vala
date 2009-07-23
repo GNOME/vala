@@ -938,6 +938,9 @@ public class Vala.GirParser : CodeVisitor {
 					}
 					info.param.carray_length_parameter_position = parameters[info.array_length_idx-add].vala_idx;
 				}
+				if (info.param.parameter_type is ArrayType && info.array_length_idx == -1) {
+					info.param.no_array_length = true;
+				}
 
 				if (info.closure_idx != -1) {
 					if ((info.closure_idx - add) >= parameters.size) {
