@@ -1544,13 +1544,11 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 	
 	private void write_identifier (string s) {
-		if (s == "base" || s == "break" || s == "class" ||
-		    s == "construct" || s == "delegate" || s == "delete" ||
-		    s == "do" || s == "dynamic" || s == "foreach" || s == "in" ||
-		    s == "interface" || s == "lock" || s == "namespace" ||
-		    s == "new" || s == "out" || s == "ref" ||
-		    s == "signal" || s.get_char ().isdigit ()) {
-			stream.putc ('@');
+		char* id = (char*)s;
+		int id_length = (int)s.length;
+		if ( Vala.Scanner.get_identifier_or_keyword (id, id_length) != Vala.TokenType.IDENTIFIER ||
+                     s.get_char ().isdigit ()) {
+			stream.putc ('@'); 
 		}
 		write_string (s);
 	}

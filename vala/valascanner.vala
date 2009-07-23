@@ -61,7 +61,7 @@ public class Vala.Scanner {
 		return (c.isalnum () || c == '_');
 	}
 
-	TokenType get_identifier_or_keyword (char* begin, int len) {
+	public static TokenType get_identifier_or_keyword (char* begin, int len) {
 		switch (len) {
 		case 2:
 			switch (begin[0]) {
@@ -792,7 +792,7 @@ public class Vala.Scanner {
 		return type;
 	}
 
-	bool matches (char* begin, string keyword) {
+	static bool matches (char* begin, string keyword) {
 		char* keyword_array = keyword;
 		long len = keyword.len ();
 		for (int i = 0; i < len; i++) {
