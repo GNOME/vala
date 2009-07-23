@@ -1340,6 +1340,10 @@ namespace Gst {
 	[SimpleType]
 	[IntegerType (rank = 0)]
 	public struct ClockTime : uint64 {
+		[CCode (cname = "GST_TIME_ARGS")]
+		public unowned string args ();
+		[CCode (cname = "GST_CLOCK_TIME_IS_VALID")]
+		public bool is_valid ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	[SimpleType]

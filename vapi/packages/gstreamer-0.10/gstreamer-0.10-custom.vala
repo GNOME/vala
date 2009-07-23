@@ -23,6 +23,10 @@ namespace Gst {
 	public extern void init ([CCode (array_length_pos = 0.9)] ref weak string[] args);
 
 	public struct ClockTime : uint64 {
+		[CCode (cname="GST_TIME_ARGS")]
+		public weak string args ();
+		[CCode (cname="GST_CLOCK_TIME_IS_VALID")]
+		public bool is_valid ();
 	}
 
 	public struct ClockTimeDiff : int64 {
