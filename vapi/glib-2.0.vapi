@@ -3405,6 +3405,8 @@ namespace GLib {
 	public static weak string Q_ (string str);
 	[CCode (cname = "N_", cheader_filename = "glib.h,glib/gi18n-lib.h")]
 	public static weak string N_ (string str);
+	[CCode (cname = "ngettext", cheader_filename = "glib.h,glib/gi18n-lib.h")]
+	public static weak string ngettext (string msgid, string msgid_plural, ulong n);
 	
 	[CCode (cname = "int", cprefix = "LC_", cheader_filename = "locale.h", has_type_id = false)]
 	public enum LocaleCategory {
