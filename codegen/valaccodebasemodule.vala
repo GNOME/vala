@@ -1927,7 +1927,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public CCodeExpression? get_destroy_func_expression (DataType type) {
-		if (type.data_type == glist_type || type.data_type == gslist_type) {
+		if (context.profile == Profile.GOBJECT && (type.data_type == glist_type || type.data_type == gslist_type)) {
 			// create wrapper function to free list elements if necessary
 
 			bool elements_require_free = false;
@@ -2041,7 +2041,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			// normal value type, no null check
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cvar));
 
-			if (type.data_type == gvalue_type) {
+			if (gvalue_type != null && type.data_type == gvalue_type) {
 				// g_value_unset must not be called for already unset values
 				var cisvalid = new CCodeFunctionCall (new CCodeIdentifier ("G_IS_VALUE"));
 				cisvalid.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cvar));
@@ -2079,10 +2079,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		/* set freed references to NULL to prevent further use */
 		var ccomma = new CCodeCommaExpression ();
 
-		if (type.data_type == gstringbuilder_type
-		     || type.data_type == garray_type
-		     || type.data_type == gbytearray_type
-		     || type.data_type == gptrarray_type) {
+		if (context.profile == Profile.GOBJECT
+		    && (type.data_type == gstringbuilder_type
+		        || type.data_type == garray_type
+		        || type.data_type == gbytearray_type
+		        || type.data_type == gptrarray_type)) {
 			ccall.add_argument (new CCodeConstant ("TRUE"));
 		} else if (type is ArrayType) {
 			var array_type = (ArrayType) type;
@@ -2760,7 +2761,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			ccomma.append_expression (copy_call);
 			ccomma.append_expression (ctemp);
 
-			if (expression_type.data_type == gvalue_type) {
+			if (gvalue_type != null && expression_type.data_type == gvalue_type) {
 				// g_value_init/copy must not be called for uninitialized values
 				var cisvalid = new CCodeFunctionCall (new CCodeIdentifier ("G_IS_VALUE"));
 				cisvalid.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr));
@@ -3303,7 +3304,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {
-		if (expr.inner.value_type != null && expr.inner.value_type.data_type == gvalue_type
+		if (expr.inner.value_type != null && gvalue_type != null && expr.inner.value_type.data_type == gvalue_type
 		    && expr.type_reference.get_type_id () != null) {
 			// explicit conversion from GValue
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (expr.type_reference.data_type.get_get_value_function ()));
@@ -3314,7 +3315,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		var cl = expr.type_reference.data_type as Class;
 		var iface = expr.type_reference.data_type as Interface;
-		if (iface != null || (cl != null && !cl.is_compact)) {
+		if (context.profile == Profile.GOBJECT && (iface != null || (cl != null && !cl.is_compact))) {
 			// checked cast for strict subtypes of GTypeInstance
 			if (expr.is_silent_cast) {
 				var ccomma = new CCodeCommaExpression ();
@@ -3614,7 +3615,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		bool unboxing = (expression_type is ValueType && expression_type.nullable
 		                 && target_type is ValueType && !target_type.nullable);
 
-		bool gvalue_boxing = (target_type != null
+		bool gvalue_boxing = (context.profile == Profile.GOBJECT
+		                      && target_type != null
 		                      && target_type.data_type == gvalue_type
 		                      && !(expression_type is NullType)
 		                      && expression_type.get_type_id () != "G_TYPE_VALUE");

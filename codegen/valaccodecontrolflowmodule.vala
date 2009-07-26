@@ -224,7 +224,12 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 	public override void visit_loop (Loop stmt) {
 		stmt.accept_children (codegen);
 
-		stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("TRUE"), (CCodeStatement) stmt.body.ccodenode);
+		if (context.profile == Profile.GOBJECT) {
+			stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("TRUE"), (CCodeStatement) stmt.body.ccodenode);
+		} else {
+			source_declarations.add_include ("stdbool.h");
+			stmt.ccodenode = new CCodeWhileStatement (new CCodeConstant ("true"), (CCodeStatement) stmt.body.ccodenode);
+		}
 	}
 
 	public override void visit_foreach_statement (ForeachStatement stmt) {

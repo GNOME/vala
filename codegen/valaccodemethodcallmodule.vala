@@ -94,7 +94,11 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		if (m is CreationMethod) {
-			ccall.add_argument (new CCodeIdentifier ("object_type"));
+			if (context.profile == Profile.GOBJECT) {
+				ccall.add_argument (new CCodeIdentifier ("object_type"));
+			} else {
+				ccall.add_argument (new CCodeIdentifier ("self"));
+			}
 
 			foreach (DataType base_type in current_class.get_base_types ()) {
 				if (base_type.data_type is Class) {
@@ -217,7 +221,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				param.accept (codegen);
 			}
 			head.generate_dynamic_method_wrapper ((DynamicMethod) m);
-		} else if (m is CreationMethod) {
+		} else if (m is CreationMethod && context.profile == Profile.GOBJECT) {
 			ccall_expr = new CCodeAssignment (new CCodeIdentifier ("self"), new CCodeCastExpression (ccall, current_class.get_cname () + "*"));
 		}
 

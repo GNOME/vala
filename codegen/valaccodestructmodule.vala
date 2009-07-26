@@ -50,14 +50,16 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 			return;
 		}
 
-		if (st.has_type_id) {
-			decl_space.add_type_declaration (new CCodeNewline ());
-			var macro = "(%s_get_type ())".printf (st.get_lower_case_cname (null));
-			decl_space.add_type_declaration (new CCodeMacroReplacement (st.get_type_id (), macro));
+		if (context.profile == Profile.GOBJECT) {
+			if (st.has_type_id) {
+				decl_space.add_type_declaration (new CCodeNewline ());
+				var macro = "(%s_get_type ())".printf (st.get_lower_case_cname (null));
+				decl_space.add_type_declaration (new CCodeMacroReplacement (st.get_type_id (), macro));
 
-			var type_fun = new StructRegisterFunction (st, context);
-			type_fun.init_from_type (false);
-			decl_space.add_type_member_declaration (type_fun.get_declaration ());
+				var type_fun = new StructRegisterFunction (st, context);
+				type_fun.init_from_type (false);
+				decl_space.add_type_member_declaration (type_fun.get_declaration ());
+			}
 		}
 
 		var instance_struct = new CCodeStruct ("_%s".printf (st.get_cname ()));
@@ -151,7 +153,7 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 
 		st.accept_children (codegen);
 
-		if (!st.is_boolean_type () && !st.is_integer_type () && !st.is_floating_type ()) {
+		if (context.profile == Profile.GOBJECT && !st.is_boolean_type () && !st.is_integer_type () && !st.is_floating_type ()) {
 			if (st.is_disposable ()) {
 				add_struct_copy_function (st);
 				add_struct_destroy_function (st);
