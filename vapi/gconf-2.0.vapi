@@ -12,7 +12,7 @@ namespace GConf {
 		[CCode (has_construct_function = false)]
 		public ChangeSet ();
 		public void remove (string key);
-		public void set (string key, GConf.Value value);
+		public void @set (string key, GConf.Value value);
 		public void set_bool (string key, bool val);
 		public void set_float (string key, double val);
 		public void set_int (string key, int val);
@@ -45,11 +45,11 @@ namespace GConf {
 		public void clear_cache ();
 		public bool commit_change_set (GConf.ChangeSet cs, bool remove_committed) throws GLib.Error;
 		public bool dir_exists (string dir) throws GLib.Error;
-		public unowned GConf.Value get (string key) throws GLib.Error;
+		public unowned GConf.Value @get (string key) throws GLib.Error;
 		public bool get_bool (string key) throws GLib.Error;
 		public static unowned GConf.Client get_default ();
 		public unowned GConf.Value get_default_from_schema (string key) throws GLib.Error;
-		public unowned GConf.Entry get_entry (string key, string locale, bool use_schema_default) throws GLib.Error;
+		public unowned GConf.Entry get_entry (string key, string? locale, bool use_schema_default) throws GLib.Error;
 		public double get_float (string key) throws GLib.Error;
 		public static unowned GConf.Client get_for_engine (GConf.Engine engine);
 		public int get_int (string key) throws GLib.Error;
@@ -66,7 +66,7 @@ namespace GConf {
 		public bool recursive_unset (string key, GConf.UnsetFlags flags) throws GLib.Error;
 		public void remove_dir (string dir) throws GLib.Error;
 		public unowned GConf.ChangeSet reverse_change_set (GConf.ChangeSet cs) throws GLib.Error;
-		public void set (string key, GConf.Value val) throws GLib.Error;
+		public void @set (string key, GConf.Value val) throws GLib.Error;
 		public bool set_bool (string key, bool val) throws GLib.Error;
 		public void set_error_handling (GConf.ClientErrorHandlingMode mode);
 		public bool set_float (string key, double val) throws GLib.Error;
@@ -95,7 +95,7 @@ namespace GConf {
 		public unowned GConf.ChangeSet change_set_from_currentv (string keys) throws GLib.Error;
 		public bool commit_change_set (GConf.ChangeSet cs, bool remove_committed) throws GLib.Error;
 		public bool dir_exists (string dir) throws GLib.Error;
-		public unowned GConf.Value get (string key) throws GLib.Error;
+		public unowned GConf.Value @get (string key) throws GLib.Error;
 		public bool get_bool (string key) throws GLib.Error;
 		public static unowned GConf.Engine get_default ();
 		public unowned GConf.Value get_default_from_schema (string key) throws GLib.Error;
@@ -116,7 +116,7 @@ namespace GConf {
 		public void notify_remove (uint cnxn);
 		public void remove_dir (string dir) throws GLib.Error;
 		public unowned GConf.ChangeSet reverse_change_set (GConf.ChangeSet cs) throws GLib.Error;
-		public bool set (string key, GConf.Value value) throws GLib.Error;
+		public bool @set (string key, GConf.Value value) throws GLib.Error;
 		public bool set_bool (string key, bool val) throws GLib.Error;
 		public bool set_float (string key, double val) throws GLib.Error;
 		public bool set_int (string key, int val) throws GLib.Error;
