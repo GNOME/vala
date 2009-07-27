@@ -2373,6 +2373,9 @@ namespace GLib {
 	[Compact]
 	[CCode (cname = "FILE", free_function = "fclose", cheader_filename = "stdio.h")]
 	public class FileStream {
+		[CCode (cname = "EOF", cheader_filename = "stdio.h")]
+		public const int EOF;
+
 		[CCode (cname = "fopen")]
 		public static FileStream? open (string path, string mode);
 		[CCode (cname = "fdopen")]
@@ -2406,6 +2409,21 @@ namespace GLib {
 		public int error ();
 		[CCode (cname = "clearerr")]
 		public void clearerr ();
+
+		public string? read_line () {
+			int c;
+			StringBuilder ret = null;
+			while ((c = getc ()) != EOF) {
+				if (ret == null) {
+					ret = new StringBuilder ();
+				}
+				if (c == '\n') {
+					break;
+				}
+				ret.append_c ((char) c);
+			}
+			return ret == null ? null : ret.str;
+		}
 	}
 
 	[CCode (lower_case_cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]
