@@ -271,31 +271,33 @@ internal class Vala.GTypeModule : GErrorModule {
 				field_ctype = "volatile " + field_ctype;
 			}
 
-			if (f.binding == MemberBinding.INSTANCE && f.access != SymbolAccessibility.PRIVATE)  {
-				generate_type_declaration (f.field_type, decl_space);
+			if (f.access != SymbolAccessibility.PRIVATE) {
+				if (f.binding == MemberBinding.INSTANCE) {
+					generate_type_declaration (f.field_type, decl_space);
 
-				instance_struct.add_field (field_ctype, f.get_cname ());
-				if (f.field_type is ArrayType && !f.no_array_length) {
-					// create fields to store array dimensions
-					var array_type = (ArrayType) f.field_type;
-					var len_type = int_type.copy ();
+					instance_struct.add_field (field_ctype, f.get_cname ());
+					if (f.field_type is ArrayType && !f.no_array_length) {
+						// create fields to store array dimensions
+						var array_type = (ArrayType) f.field_type;
+						var len_type = int_type.copy ();
 
-					for (int dim = 1; dim <= array_type.rank; dim++) {
-						instance_struct.add_field (len_type.get_cname (), head.get_array_length_cname (f.name, dim));
-					}
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							instance_struct.add_field (len_type.get_cname (), head.get_array_length_cname (f.name, dim));
+						}
 
-					if (array_type.rank == 1 && f.is_internal_symbol ()) {
-						instance_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
+						if (array_type.rank == 1 && f.is_internal_symbol ()) {
+							instance_struct.add_field (len_type.get_cname (), head.get_array_size_cname (f.name));
+						}
+					} else if (f.field_type is DelegateType) {
+						var delegate_type = (DelegateType) f.field_type;
+						if (delegate_type.delegate_symbol.has_target) {
+							// create field to store delegate target
+							instance_struct.add_field ("gpointer", get_delegate_target_cname (f.name));
+						}
 					}
-				} else if (f.field_type is DelegateType) {
-					var delegate_type = (DelegateType) f.field_type;
-					if (delegate_type.delegate_symbol.has_target) {
-						// create field to store delegate target
-						instance_struct.add_field ("gpointer", get_delegate_target_cname (f.name));
-					}
+				} else if (f.binding == MemberBinding.CLASS) {
+					type_struct.add_field (field_ctype, f.get_cname ());
 				}
-			} else if (f.binding == MemberBinding.CLASS && f.access != SymbolAccessibility.PRIVATE)  {
-				type_struct.add_field (field_ctype, f.get_cname ());
 			}
 		}
 
@@ -331,6 +333,8 @@ internal class Vala.GTypeModule : GErrorModule {
 		}
 
 		bool is_gtypeinstance = !cl.is_compact;
+		bool has_instance_locks = false;
+		bool has_class_locks = false;
 
 		var instance_priv_struct = new CCodeStruct ("_%sPrivate".printf (cl.get_cname ()));
 		var type_priv_struct = new CCodeStruct ("_%sClassPrivate".printf (cl.get_cname ()));
@@ -384,16 +388,25 @@ internal class Vala.GTypeModule : GErrorModule {
 				}
 
 				if (f.get_lock_used ()) {
+					has_instance_locks = true;
 					// add field for mutex
-					instance_priv_struct.add_field (mutex_type.get_cname (), get_symbol_lock_name (f));
+					instance_priv_struct.add_field (mutex_type.get_cname (), get_symbol_lock_name (f.name));
 				}
-			} else if (f.binding == MemberBinding.CLASS && f.access == SymbolAccessibility.PRIVATE)  {
-				type_priv_struct.add_field (field_ctype, f.get_cname ());
+			} else if (f.binding == MemberBinding.CLASS) {
+				if (f.access == SymbolAccessibility.PRIVATE) {
+					type_priv_struct.add_field (field_ctype, f.get_cname ());
+				}
+
+				if (f.get_lock_used ()) {
+					has_class_locks = true;
+					// add field for mutex
+					type_priv_struct.add_field (mutex_type.get_cname (), get_symbol_lock_name (f.get_cname ()));
+				}
 			}
 		}
 
 		if (is_gtypeinstance) {
-			if (cl.has_class_private_fields) {
+			if (cl.has_class_private_fields || has_class_locks) {
 				decl_space.add_type_declaration (new CCodeTypeDefinition ("struct %s".printf (type_priv_struct.name), new CCodeVariableDeclarator ("%sClassPrivate".printf (cl.get_cname ()))));
 				var cdecl = new CCodeDeclaration ("GQuark");
 				cdecl.add_declarator (new CCodeVariableDeclarator ("_vala_%s_class_private_quark".printf (cl.get_lower_case_cname ()), new CCodeConstant ("0")));
@@ -402,13 +415,13 @@ internal class Vala.GTypeModule : GErrorModule {
 			}
 
 			/* only add the *Private struct if it is not empty, i.e. we actually have private data */
-			if (cl.has_private_fields || cl.get_type_parameters ().size > 0) {
+			if (cl.has_private_fields || cl.get_type_parameters ().size > 0 || has_instance_locks) {
 				decl_space.add_type_definition (instance_priv_struct);
 				var macro = "(G_TYPE_INSTANCE_GET_PRIVATE ((o), %s, %sPrivate))".printf (cl.get_type_id (), cl.get_cname ());
 				decl_space.add_type_member_declaration (new CCodeMacroReplacement ("%s_GET_PRIVATE(o)".printf (cl.get_upper_case_cname (null)), macro));
 			}
 
-			if (cl.has_class_private_fields) {
+			if (cl.has_class_private_fields || has_class_locks) {
 				decl_space.add_type_member_declaration (type_priv_struct);
 
 				var macro = "((%sClassPrivate *) g_type_get_qdata (type, _vala_%s_class_private_quark))".printf (cl.get_cname(), cl.get_lower_case_cname ());

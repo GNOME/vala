@@ -313,6 +313,50 @@ public abstract class Vala.Symbol : CodeNode {
 		// if this is a public symbol, it's equally accessible as the parent symbol
 		return parent_symbol.get_top_accessible_scope (is_internal);
 	}
+
+	public virtual bool is_instance_member () {
+		bool instance = true;
+		if (this is Field) {
+			var f = (Field) this;
+			instance = (f.binding == MemberBinding.INSTANCE);
+		} else if (this is Method) {
+			var m = (Method) this;
+			if (!(m is CreationMethod)) {
+				instance = (m.binding == MemberBinding.INSTANCE);
+			}
+		} else if (this is Property) {
+			var prop = (Property) this;
+			instance = (prop.binding == MemberBinding.INSTANCE);
+		} else if (this is EnumValue) {
+			instance = false;
+		} else if (this is ErrorCode) {
+			instance = false;
+		}
+
+		return instance;
+	}
+
+	public virtual bool is_class_member () {
+		bool isclass = true;
+		if (this is Field) {
+			var f = (Field) this;
+			isclass = (f.binding == MemberBinding.CLASS);
+		} else if (this is Method) {
+			var m = (Method) this;
+			if (!(m is CreationMethod)) {
+				isclass = (m.binding == MemberBinding.CLASS);
+			}
+		} else if (this is Property) {
+			var prop = (Property) this;
+			isclass = (prop.binding == MemberBinding.CLASS);
+		} else if (this is EnumValue) {
+			isclass = false;
+		} else if (this is ErrorCode) {
+			isclass = false;
+		}
+
+		return isclass;
+	}
 }
 
 public enum Vala.SymbolAccessibility {

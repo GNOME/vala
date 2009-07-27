@@ -747,16 +747,29 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		/* stuff meant for all lockable members */
 		if (m is Lockable && ((Lockable) m).get_lock_used ()) {
 			CCodeExpression l = new CCodeIdentifier ("self");
-			l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (m));
+			CCodeFragment init_fragment = class_init_fragment;
+			CCodeFragment finalize_fragment = class_finalize_fragment;
+
+			if (m.is_instance_member ()) {
+				l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (m.name));
+				init_fragment = instance_init_fragment;
+				finalize_fragment = instance_finalize_fragment;
+			} else if (m.is_class_member ()) {
+				TypeSymbol parent = (TypeSymbol)m.parent_symbol;
+				l = new CCodeIdentifier ("%s_GET_CLASS_PRIVATE(%s)".printf(parent.get_upper_case_cname (), parent.get_type_id ()));
+				l = new CCodeMemberAccess.pointer (l, get_symbol_lock_name (m.name));
+			} else {
+				l = new CCodeIdentifier (get_symbol_lock_name ("%s_%s".printf(m.parent_symbol.get_lower_case_cname (), m.name)));
+			}
 
 			var initf = new CCodeFunctionCall (new CCodeIdentifier (mutex_type.default_construction_method.get_cname ()));
 			initf.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, l));
-			instance_init_fragment.append (new CCodeExpressionStatement (initf));
+			init_fragment.append (new CCodeExpressionStatement (initf));
 
-			if (instance_finalize_fragment != null) {
+			if (finalize_fragment != null) {
 				var fc = new CCodeFunctionCall (new CCodeIdentifier ("g_static_rec_mutex_free"));
 				fc.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, l));
-				instance_finalize_fragment.append (new CCodeExpressionStatement (fc));
+				finalize_fragment.append (new CCodeExpressionStatement (fc));
 			}
 		}
 	}
@@ -815,6 +828,20 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			cdecl.modifiers = CCodeModifiers.EXTERN;
 		}
 		decl_space.add_type_member_declaration (cdecl);
+
+		if (f.get_lock_used ()) {
+			// Declare mutex for static member
+			var flock = new CCodeDeclaration (mutex_type.get_cname ());
+			var flock_decl =  new CCodeVariableDeclarator (get_symbol_lock_name (f.get_cname ()), new CCodeConstant ("{0}"));
+			flock.add_declarator (flock_decl);
+
+			if (f.is_private_symbol ()) {
+				flock.modifiers = CCodeModifiers.STATIC;
+			} else {
+				flock.modifiers = CCodeModifiers.EXTERN;
+			}
+			decl_space.add_type_member_declaration (flock);
+		}
 
 		if (f.field_type is ArrayType && !f.no_array_length) {
 			var array_type = (ArrayType) f.field_type;
@@ -2494,8 +2521,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	public string get_symbol_lock_name (Symbol sym) {
-		return "__lock_%s".printf (sym.name);
+	public string get_symbol_lock_name (string symname) {
+		return "__lock_%s".printf (symname);
 	}
 
 	public override void visit_lock_statement (LockStatement stmt) {
@@ -2503,15 +2530,26 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		CCodeExpression l = null;
 		CCodeFunctionCall fc;
 		var inner_node = ((MemberAccess)stmt.resource).inner;
+		var member = (Member)stmt.resource.symbol_reference;
+		var parent = (TypeSymbol) stmt.resource.symbol_reference.parent_symbol;
 		
-		if (inner_node  == null) {
-			l = new CCodeIdentifier ("self");
-		} else if (stmt.resource.symbol_reference.parent_symbol != current_type_symbol) {
-			 l = new InstanceCast ((CCodeExpression) inner_node.ccodenode, (TypeSymbol) stmt.resource.symbol_reference.parent_symbol);
+		if (member.is_instance_member ()) {
+			if (inner_node  == null) {
+				l = new CCodeIdentifier ("self");
+			} else if (stmt.resource.symbol_reference.parent_symbol != current_type_symbol) {
+				 l = new InstanceCast ((CCodeExpression) inner_node.ccodenode, parent);
+			} else {
+				l = (CCodeExpression) inner_node.ccodenode;
+			}
+
+			l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (stmt.resource.symbol_reference.name));
+		} else if (member.is_class_member ()) {
+			l = new CCodeIdentifier ("%s_GET_CLASS_PRIVATE(%s)".printf(parent.get_upper_case_cname (), parent.get_type_id ()));
+			l = new CCodeMemberAccess.pointer (l, get_symbol_lock_name (stmt.resource.symbol_reference.name));
 		} else {
-			l = (CCodeExpression) inner_node.ccodenode;
+			string lock_name = "%s_%s".printf(parent.get_lower_case_cname (), stmt.resource.symbol_reference.name);
+			l = new CCodeIdentifier (get_symbol_lock_name (lock_name));
 		}
-		l = new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (l, "priv"), get_symbol_lock_name (stmt.resource.symbol_reference));
 		
 		fc = new CCodeFunctionCall (new CCodeIdentifier (((Method) mutex_type.scope.lookup ("lock")).get_cname ()));
 		fc.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, l));

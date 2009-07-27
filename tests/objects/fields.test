@@ -35,10 +35,18 @@ class Maman.Bar : Foo {
 		public_base_field = 9;
 		public_field = 10;
 		private_field = 11;
-		private_static_field = 12;
-		public_static_field = 13;
-		private_class_field = 14;
-		public_class_field = 15;
+		lock (private_static_field) {
+			private_static_field = 12;
+		}
+		lock (public_static_field) {
+			public_static_field = 13;
+		}
+		lock (private_class_field) {
+			private_class_field = 14;
+		}
+		lock (public_class_field) {
+			public_class_field = 15;
+		}
 		stdout.printf (" %d %d %d %d %d %d %d", public_base_field, public_field,
 		               private_field, private_static_field, public_static_field, 
 					   private_class_field, public_class_field);
