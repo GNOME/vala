@@ -453,7 +453,7 @@ public class Vala.Method : Member {
 			return false;
 		}
 
-		/* this method may throw more but not less errors than the base method */
+		/* this method may throw less but not more errors than the base method */
 		foreach (DataType method_error_type in get_error_types ()) {
 			bool match = false;
 			foreach (DataType base_method_error_type in base_method.get_error_types ()) {
