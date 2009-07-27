@@ -191,6 +191,11 @@ public class Vala.Constant : Member, Lockable {
 					return false;
 				}
 			}
+		} else {
+			if (initializer != null) {
+				error = true;
+				Report.error (source_reference, "External constants cannot use initializers");
+			}
 		}
 
 		if (!external_package && !hides && get_hidden_member () != null) {

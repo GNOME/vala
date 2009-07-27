@@ -319,6 +319,11 @@ public class Vala.Field : Member, Lockable {
 				Report.error (source_reference, "Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), field_type.to_string ()));
 				return false;
 			}
+
+			if (external) {
+				error = true;
+				Report.error (source_reference, "External fields cannot use initializers");
+			}
 		}
 
 		if (binding == MemberBinding.INSTANCE && parent_symbol is Interface) {
