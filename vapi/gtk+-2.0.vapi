@@ -117,7 +117,7 @@ namespace Gtk {
 		public static bool change_entry (string accel_path, uint accel_key, Gdk.ModifierType accel_mods, bool replace);
 		public static void @foreach (void* data, Gtk.AccelMapForeach foreach_func);
 		public static void foreach_unfiltered (void* data, Gtk.AccelMapForeach foreach_func);
-		public static unowned Gtk.AccelMap get ();
+		public static unowned Gtk.AccelMap @get ();
 		public static void load (string file_name);
 		public static void load_fd (int fd);
 		public static void load_scanner (GLib.Scanner scanner);
@@ -267,7 +267,7 @@ namespace Gtk {
 		public void get_padding (out uint padding_top, out uint padding_bottom, out uint padding_left, out uint padding_right);
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Alignment (float xalign, float yalign, float xscale, float yscale);
-		public void set (float xalign, float yalign, float xscale, float yscale);
+		public void @set (float xalign, float yalign, float xscale, float yscale);
 		public void set_padding (uint padding_top, uint padding_bottom, uint padding_left, uint padding_right);
 		[NoAccessorMethod]
 		public uint bottom_padding { get; set; }
@@ -296,7 +296,7 @@ namespace Gtk {
 	public class Arrow : Gtk.Misc, Atk.Implementor, Gtk.Buildable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Arrow (Gtk.ArrowType arrow_type, Gtk.ShadowType shadow_type);
-		public void set (Gtk.ArrowType arrow_type, Gtk.ShadowType shadow_type);
+		public void @set (Gtk.ArrowType arrow_type, Gtk.ShadowType shadow_type);
 		[NoAccessorMethod]
 		public Gtk.ArrowType arrow_type { get; set; }
 		[NoAccessorMethod]
@@ -307,7 +307,7 @@ namespace Gtk {
 		public Gtk.Allocation center_allocation;
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public AspectFrame (string label, float xalign, float yalign, float ratio, bool obey_child);
-		public void set (float xalign, float yalign, float ratio, bool obey_child);
+		public void @set (float xalign, float yalign, float ratio, bool obey_child);
 		[NoAccessorMethod]
 		public bool obey_child { get; set; }
 		[NoAccessorMethod]
@@ -885,7 +885,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class Clipboard : GLib.Object {
 		public void clear ();
-		public static unowned Gtk.Clipboard get (Gdk.Atom selection);
+		public static unowned Gtk.Clipboard @get (Gdk.Atom selection);
 		public unowned Gdk.Display get_display ();
 		public static unowned Gtk.Clipboard get_for_display (Gdk.Display display, Gdk.Atom selection);
 		public unowned GLib.Object get_owner ();
@@ -2235,7 +2235,7 @@ namespace Gtk {
 		public bool remove (Gtk.TreeIter iter);
 		public void reorder (int new_order);
 		[CCode (sentinel = "-1")]
-		public void set (Gtk.TreeIter iter, ...);
+		public void @set (Gtk.TreeIter iter, ...);
 		public void set_column_types ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
 		public void set_valist (Gtk.TreeIter iter, void* var_args);
 		public void set_value (Gtk.TreeIter iter, int column, GLib.Value value);
@@ -2776,7 +2776,7 @@ namespace Gtk {
 		public PrintSettings.from_file (string file_name) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public PrintSettings.from_key_file (GLib.KeyFile key_file, string group_name) throws GLib.Error;
-		public unowned string get (string key);
+		public unowned string @get (string key);
 		public bool get_bool (string key);
 		public bool get_collate ();
 		public unowned string get_default_source ();
@@ -2814,7 +2814,7 @@ namespace Gtk {
 		public bool load_key_file (GLib.KeyFile key_file, string group_name) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public PrintSettings ();
-		public void set (string key, string value);
+		public void @set (string key, string value);
 		public void set_bool (string key, bool value);
 		public void set_collate (bool collate);
 		public void set_default_source (string default_source);
@@ -3325,7 +3325,7 @@ namespace Gtk {
 		public string? get_text ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] get_uris ();
-		public void set (Gdk.Atom type, int format, uchar[] data);
+		public void @set (Gdk.Atom type, int format, uchar[] data);
 		public bool set_pixbuf (Gdk.Pixbuf pixbuf);
 		public bool set_text (string str, int len);
 		public bool set_uris ([CCode (array_length = false)] string[] uris);
@@ -3763,7 +3763,7 @@ namespace Gtk {
 		public virtual void draw_tab (Gdk.Window window, Gtk.StateType state_type, Gtk.ShadowType shadow_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int x, int y, int width, int height);
 		[NoWrapper]
 		public virtual void draw_vline (Gdk.Window window, Gtk.StateType state_type, Gdk.Rectangle area, Gtk.Widget widget, string detail, int y1_, int y2_, int x);
-		public void get (GLib.Type widget_type, ...);
+		public void @get (GLib.Type widget_type, ...);
 		public void get_style_property (GLib.Type widget_type, string property_name, GLib.Value value);
 		public void get_valist (GLib.Type widget_type, string first_property_name, void* var_args);
 		[NoWrapper]
@@ -4665,7 +4665,7 @@ namespace Gtk {
 		public bool remove (Gtk.TreeIter iter);
 		public void reorder (Gtk.TreeIter? parent, int new_order);
 		[CCode (sentinel = "-1")]
-		public void set (Gtk.TreeIter iter, ...);
+		public void @set (Gtk.TreeIter iter, ...);
 		public void set_column_types ([CCode (array_length_pos = 0.9)] GLib.Type[] types);
 		public void set_valist (Gtk.TreeIter iter, void* var_args);
 		public void set_value (Gtk.TreeIter iter, int column, GLib.Value value);
@@ -4690,9 +4690,9 @@ namespace Gtk {
 		public void expand_all ();
 		public bool expand_row (Gtk.TreePath path, bool open_all);
 		public void expand_to_path (Gtk.TreePath path);
-		public void get_background_area (Gtk.TreePath path, Gtk.TreeViewColumn column, out Gdk.Rectangle rect);
+		public void get_background_area (Gtk.TreePath? path, Gtk.TreeViewColumn? column, out Gdk.Rectangle rect);
 		public unowned Gdk.Window get_bin_window ();
-		public void get_cell_area (Gtk.TreePath path, Gtk.TreeViewColumn column, out Gdk.Rectangle rect);
+		public void get_cell_area (Gtk.TreePath? path, Gtk.TreeViewColumn? column, out Gdk.Rectangle rect);
 		public unowned Gtk.TreeViewColumn get_column (int n);
 		public GLib.List<Gtk.TreeViewColumn> get_columns ();
 		public void get_cursor (out Gtk.TreePath? path, out unowned Gtk.TreeViewColumn? focus_column);
@@ -5693,7 +5693,7 @@ namespace Gtk {
 	public interface TreeModel : GLib.Object {
 		public void @foreach (Gtk.TreeModelForeachFunc func);
 		[CCode (sentinel = "-1")]
-		public void get (Gtk.TreeIter iter, ...);
+		public void @get (Gtk.TreeIter iter, ...);
 		public abstract GLib.Type get_column_type (int index_);
 		public abstract Gtk.TreeModelFlags get_flags ();
 		public abstract bool get_iter (out Gtk.TreeIter iter, Gtk.TreePath path);
