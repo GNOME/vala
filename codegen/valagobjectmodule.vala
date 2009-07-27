@@ -700,6 +700,11 @@ internal class Vala.GObjectModule : GTypeModule {
 			}
 		}
 
+		if (!prop.name[0].isalpha ()) {
+			// GObject requires properties to start with a letter
+			return false;
+		}
+
 		return true;
 	}
 }
