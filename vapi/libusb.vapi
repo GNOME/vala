@@ -97,8 +97,8 @@ namespace USB {
 		public uint8 bRefresh;
 		public uint8 bSynchAddress;
 
+		[CCode (array_length_cname = "extralen")]
 		public uchar[] extra;
-		public int extralen;
 	}
 
 	[CCode (cname = "struct usb_interface_descriptor", cheader_filename = "usb.h")]
@@ -113,20 +113,21 @@ namespace USB {
 		public uint8 bInterfaceProtocol;
 		public uint8 iInterface;
 
+		[CCode (array_length_cname = "bNumEndpoints", array_length_type = "uint8_t")]
 		public EndpointDescriptor[] endpoint;
 
+		[CCode (array_length_cname = "extralen")]
 		public uchar[] extra;
-		public int extralen;
 	}
 
 	[CCode (cname = "struct usb_interface", cheader_filename = "usb.h")]
 	public struct Interface {
+		[CCode (array_length_cname = "num_altsetting")]
 		public InterfaceDescriptor[] altsetting;
-		public int num_altsetting;
 	}
 
-	[CCode (cname = "struct usd_config_descriptor")]
-	public struct ConfigDescriptor {
+	[Compact, CCode (cname = "struct usd_config_descriptor")]
+	public class ConfigDescriptor {
 		public uint8 bLength;
 		public uint8 bDescriptorType;
 		public uint16 wTotalLength;
@@ -136,11 +137,10 @@ namespace USB {
 		public uint8 bmAttributes;
 		public uint8 MaxPower;
 
-		[CCode (array_length = false)]
+		[CCode (array_length_cname = "bNumInterfaces", array_length_type = "uint8_t")]
 		public Interface[] @interface;
-
+          [CCode (array_length_cname = "extralen")]
 		public uchar[] extra;
-		public int extralen;
 	}
 
 	[CCode (cname = "struct usb_device_descriptor", cheader_filename = "usb.h")]
@@ -161,36 +161,36 @@ namespace USB {
 		public uint8 bNumConfigurations;
 	}
 
-	[CCode (cname = "struct usb_device", cprefix = "usb_", cheader_filename = "usb.h")]
-	public struct Device {
-		public Device * next;
-		public Device * prev;
+	[Compact, CCode (cname = "struct usb_device", cprefix = "usb_", cheader_filename = "usb.h")]
+	public class Device {
+		public Device next;
+		public Device prev;
 		public string filename;
-		public Bus * bus;
+		public Bus bus;
 		public DeviceDescriptor descriptor;
 		[CCode (array_length = false)]
-		public ConfigDescriptor[] config;
+		public ConfigDescriptor config;
 		public void * dev;
 		public uint8 devnum;
 		public uchar num_children;
-		public Device ** children;
+		[CCode (array_length_cname = "num_children", array_length_type = "unsigned char")]
+		public Device[] children;
 	}
 
-	[CCode (cname = "struct usb_bus", cheader_filename = "usb.h")]
-	public struct Bus {
-		public Bus * next;
-		public Bus * prev;
+	[Compact, CCode (cname = "struct usb_bus", cheader_filename = "usb.h")]
+	public class Bus {
+		public Bus next;
+		public Bus prev;
 		public string dirname;
-		public Device * devices;
+		public Device devices;
 		public uint32 location;
-		public Device * root_dev;
+		public Device root_dev;
 	}
 
-	[Compact]
-	[CCode (cname = "usb_dev_handle", cprefix = "usb_", cheader_filename = "usb.h", free_function = "usb_close")]
+	[Compact, CCode (cname = "usb_dev_handle", cprefix = "usb_", cheader_filename = "usb.h", free_function = "usb_close")]
 	public class DeviceHandle {
 		[CCode (cname = "usb_open")]
-		public DeviceHandle (Device * dev);
+		public DeviceHandle (Device dev);
 		public int get_string (int index, int langid, [CCode (array_length = false)] char[] buf, size_t buflen);
 		public int get_string_simple (int index, [CCode (array_length = false)] char[] buf, size_t buflen);
 
@@ -208,7 +208,7 @@ namespace USB {
 		public int resetep (uint ep);
 		public int clear_halt (uint ep);
 		public int reset ();
-		public Device * device ();
+		public unowned Device device ();
 	}
 
 	[CCode (array_length = false)]
@@ -217,7 +217,7 @@ namespace USB {
 	public static void set_debug (int level);
 	public static int find_busses ();
 	public static int find_devices ();
-	public static Bus * get_busses ();
+	public static unowned Bus get_busses ();
 	[CCode (cname = "USB_LE16_TO_CPU")]
 	public static uint16 le16_to_cpu (uint16 x);
 }
