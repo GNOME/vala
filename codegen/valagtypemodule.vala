@@ -87,7 +87,11 @@ internal class Vala.GTypeModule : GErrorModule {
 			decl_space.add_type_declaration (new CCodeNewline ());
 		}
 
-		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (cl.get_cname ()), new CCodeVariableDeclarator (cl.get_cname ())));
+		if (cl.is_compact && cl.base_class != null) {
+			decl_space.add_type_declaration (new CCodeTypeDefinition (cl.base_class.get_cname (), new CCodeVariableDeclarator (cl.get_cname ())));
+		} else {
+			decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (cl.get_cname ()), new CCodeVariableDeclarator (cl.get_cname ())));
+		}
 
 		if (is_fundamental) {
 			var ref_fun = new CCodeFunction (cl.get_lower_case_cprefix () + "ref", "gpointer");
@@ -310,7 +314,10 @@ internal class Vala.GTypeModule : GErrorModule {
 		if (cl.source_reference.comment != null) {
 			decl_space.add_type_definition (new CCodeComment (cl.source_reference.comment));
 		}
-		decl_space.add_type_definition (instance_struct);
+		if (!cl.is_compact || cl.base_class == null) {
+			// derived compact classes do not have a struct
+			decl_space.add_type_definition (instance_struct);
+		}
 
 		if (is_gtypeinstance) {
 			decl_space.add_type_definition (type_struct);
@@ -435,18 +442,20 @@ internal class Vala.GTypeModule : GErrorModule {
 			}
 			decl_space.add_type_member_declaration (prop_enum);
 		} else {
-			var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
-			if (cl.access == SymbolAccessibility.PRIVATE) {
-				function.modifiers = CCodeModifiers.STATIC;
-			}
-
 			if (cl.has_private_fields) {
 				Report.error (cl.source_reference, "Private fields not supported in compact classes");
 			}
 
-			function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
+			if (cl.base_class == null) {
+				var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
+				if (cl.access == SymbolAccessibility.PRIVATE) {
+					function.modifiers = CCodeModifiers.STATIC;
+				}
 
-			decl_space.add_type_member_declaration (function);
+				function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
+
+				decl_space.add_type_member_declaration (function);
+			}
 		}
 	}
 
@@ -612,31 +621,34 @@ internal class Vala.GTypeModule : GErrorModule {
 				source_type_member_definition.append (unref_fun);
 			}
 		} else {
-			add_instance_init_function (cl);
+			if (cl.base_class == null) {
+				// derived compact classes do not have fields
+				add_instance_init_function (cl);
 
-			var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
-			if (cl.access == SymbolAccessibility.PRIVATE) {
-				function.modifiers = CCodeModifiers.STATIC;
+				var function = new CCodeFunction (cl.get_lower_case_cprefix () + "free", "void");
+				if (cl.access == SymbolAccessibility.PRIVATE) {
+					function.modifiers = CCodeModifiers.STATIC;
+				}
+
+				function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
+
+				var cblock = new CCodeBlock ();
+
+				cblock.add_statement (instance_finalize_fragment);
+
+				if (cl.destructor != null) {
+					cblock.add_statement (cl.destructor.ccodenode);
+				}
+
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
+				ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
+				ccall.add_argument (new CCodeIdentifier ("self"));
+				cblock.add_statement (new CCodeExpressionStatement (ccall));
+
+				function.block = cblock;
+
+				source_type_member_definition.append (function);
 			}
-
-			function.add_parameter (new CCodeFormalParameter ("self", cl.get_cname () + "*"));
-
-			var cblock = new CCodeBlock ();
-
-			cblock.add_statement (instance_finalize_fragment);
-
-			if (cl.destructor != null) {
-				cblock.add_statement (cl.destructor.ccodenode);
-			}
-
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
-			ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
-			ccall.add_argument (new CCodeIdentifier ("self"));
-			cblock.add_statement (new CCodeExpressionStatement (ccall));
-
-			function.block = cblock;
-
-			source_type_member_definition.append (function);
 		}
 
 		current_symbol = old_symbol;

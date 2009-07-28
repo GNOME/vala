@@ -95,7 +95,9 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 		if (m is CreationMethod) {
 			if (context.profile == Profile.GOBJECT) {
-				ccall.add_argument (new CCodeIdentifier ("object_type"));
+				if (!((Class) m.parent_symbol).is_compact) {
+					ccall.add_argument (new CCodeIdentifier ("object_type"));
+				}
 			} else {
 				ccall.add_argument (new CCodeIdentifier ("self"));
 			}

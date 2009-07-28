@@ -825,6 +825,9 @@ public class Vala.Class : ObjectTypeSymbol {
 
 	public override string? get_free_function () {
 		if (free_function == null) {
+			if (base_class != null) {
+				return base_class.get_free_function ();
+			}
 			free_function = get_default_free_function ();
 		}
 		return free_function;
@@ -1005,6 +1008,15 @@ public class Vala.Class : ObjectTypeSymbol {
 				if (base_type.data_type is Interface) {
 					error = true;
 					Report.error (source_reference, "compact classes `%s` may not implement interfaces".printf (get_full_name ()));
+				}
+			}
+
+			if (base_class != null) {
+				foreach (Field f in fields) {
+					if (f.binding == MemberBinding.INSTANCE) {
+						error = true;
+						Report.error (source_reference, "derived compact classes may not have instance fields");
+					}
 				}
 			}
 		}
