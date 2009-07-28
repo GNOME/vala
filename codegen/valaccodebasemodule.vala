@@ -3683,13 +3683,31 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			var ccomma = new CCodeCommaExpression ();
 
+			if (target_type.nullable) {
+				var newcall = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+				newcall.add_argument (new CCodeConstant ("GValue"));
+				newcall.add_argument (new CCodeConstant ("1"));
+				var newassignment = new CCodeAssignment (get_variable_cexpression (decl.name), newcall);
+				ccomma.append_expression (newassignment);
+			}
+
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
-			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name)));
+			if (target_type.nullable) {
+				ccall.add_argument (get_variable_cexpression (decl.name));
+			}
+			else {
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name)));
+			}
 			ccall.add_argument (new CCodeIdentifier (expression_type.get_type_id ()));
 			ccomma.append_expression (ccall);
 
 			ccall = new CCodeFunctionCall (get_value_setter_function (expression_type));
-			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name)));
+			if (target_type.nullable) {
+				ccall.add_argument (get_variable_cexpression (decl.name));
+			}
+			else {
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name)));
+			}
 			ccall.add_argument (cexpr);
 			ccomma.append_expression (ccall);
 

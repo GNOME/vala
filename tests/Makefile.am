@@ -29,6 +29,7 @@ TESTS = \
 	control-flow/sideeffects.test \
 	enums/enums.test \
 	structs/structs.test \
+	structs/gvalue.test \
 	delegates/delegates.test \
 	objects/classes.test \
 	objects/fields.test \
