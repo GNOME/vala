@@ -2383,45 +2383,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		stmt.ccodenode = cfrag;
 	}
 
-	private bool append_local_free_expr (Symbol sym, CCodeCommaExpression ccomma, bool stop_at_loop = false) {
-		bool found = false;
-	
-		var b = (Block) sym;
-
-		var local_vars = b.get_local_variables ();
-		foreach (LocalVariable local in local_vars) {
-			if (local.active && !local.floating && requires_destroy (local.variable_type)) {
-				found = true;
-				var ma = new MemberAccess.simple (local.name);
-				ma.symbol_reference = local;
-				ccomma.append_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
-			}
-		}
-		
-		if (sym.parent_symbol is Block) {
-			found = append_local_free_expr (sym.parent_symbol, ccomma, stop_at_loop) || found;
-		} else if (sym.parent_symbol is Method) {
-			found = append_param_free_expr ((Method) sym.parent_symbol, ccomma) || found;
-		}
-		
-		return found;
-	}
-
-	private bool append_param_free_expr (Method m, CCodeCommaExpression ccomma) {
-		bool found = false;
-
-		foreach (FormalParameter param in m.get_parameters ()) {
-			if (requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
-				found = true;
-				var ma = new MemberAccess.simple (param.name);
-				ma.symbol_reference = param;
-				ccomma.append_expression (get_unref_expression (get_variable_cexpression (param.name), param.parameter_type, ma));
-			}
-		}
-
-		return found;
-	}
-
 	public override void visit_return_statement (ReturnStatement stmt) {
 		// avoid unnecessary ref/unref pair
 		if (stmt.return_expression != null) {
