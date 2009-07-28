@@ -120,7 +120,7 @@ public class Vala.TryStatement : CodeNode, Statement {
 		var handled_error_types = new Gee.ArrayList<DataType> ();
 		foreach (CatchClause clause in catch_clauses) {
 			foreach (DataType body_error_type in error_types) {
-				if (body_error_type.compatible (clause.error_type)) {
+				if (clause.error_type == null || body_error_type.compatible (clause.error_type)) {
 					handled_error_types.add (body_error_type);
 				}
 			}
