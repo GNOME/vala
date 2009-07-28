@@ -62,6 +62,14 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			is_error_target = true;
 		}
 
+		public JumpTarget.any_target (BasicBlock basic_block) {
+			this.basic_block = basic_block;
+			is_break_target = true;
+			is_continue_target = true;
+			is_return_target = true;
+			is_error_target = true;
+		}
+
 		public JumpTarget.finally_clause (BasicBlock basic_block, BasicBlock last_block) {
 			this.basic_block = basic_block;
 			this.last_block = last_block;
@@ -873,14 +881,20 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		if (stmt.finally_body != null) {
 			finally_block = new BasicBlock ();
 			current_block = finally_block;
+
+			// trap all forbidden jumps
+			var invalid_block = new BasicBlock ();
+			jump_stack.add (new JumpTarget.any_target (invalid_block));
+
 			stmt.finally_body.accept (this);
 
-			if (current_block == null) {
+			if (invalid_block.get_predecessors ().size > 0) {
 				// don't allow finally blocks with e.g. return statements
-				Report.error (stmt.source_reference, "end of finally block not reachable");
+				Report.error (stmt.source_reference, "jump out of finally block not permitted");
 				stmt.error = true;
 				return;
 			}
+			jump_stack.remove_at (jump_stack.size - 1);
 
 			jump_stack.add (new JumpTarget.finally_clause (finally_block, current_block));
 		}
