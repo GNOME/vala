@@ -2971,6 +2971,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		    || is_signed_integer_type_argument (type_arg)
 		    || is_unsigned_integer_type_argument (type_arg)) {
 			// no error
+		} else if (type_arg is DelegateType) {
+			var delegate_type = (DelegateType) type_arg;
+			if (delegate_type.delegate_symbol.has_target) {
+				Report.error (type_arg.source_reference, "Delegates with target are not supported as generic type arguments");
+			}
 		} else {
 			Report.error (type_arg.source_reference, "`%s' is not a supported generic type argument, use `?' to box value types".printf (type_arg.to_string ()));
 		}
