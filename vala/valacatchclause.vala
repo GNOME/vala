@@ -47,12 +47,24 @@ public class Vala.CatchClause : CodeNode {
 	/**
 	 * Specifies the error handler body.
 	 */
-	public Block body { get; set; }
+	public Block body {
+		get { return _body; }
+		set {
+			_body = value;
+			_body.parent_node = this;
+		}
+	}
 	
 	/**
 	 * Specifies the declarator for the generated error variable.
 	 */
-	public LocalVariable error_variable { get; set; }
+	public LocalVariable error_variable {
+		get { return _error_variable; }
+		set {
+			_error_variable = value;
+			_error_variable.parent_node = this;
+		}
+	}
 
 	/**
 	 * Specifies the label used for this catch clause in the C code.
@@ -60,6 +72,9 @@ public class Vala.CatchClause : CodeNode {
 	public string? clabel_name { get; set; }
 
 	private DataType _data_type;
+
+	private Block _body;
+	private LocalVariable _error_variable;
 
 	/**
 	 * Creates a new catch 

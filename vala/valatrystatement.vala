@@ -30,13 +30,28 @@ public class Vala.TryStatement : CodeNode, Statement {
 	/**
 	 * Specifies the body of the try statement.
 	 */
-	public Block body { get; set; }
+	public Block body {
+		get { return _body; }
+		set {
+			_body = value;
+			_body.parent_node = this;
+		}
+	}
 
 	/**
 	 * Specifies the body of the optional finally clause.
 	 */
-	public Block? finally_body { get; set; }
+	public Block? finally_body {
+		get { return _finally_body; }
+		set {
+			_finally_body = value;
+			if (_finally_body != null)
+				_finally_body.parent_node = this;
+		}
+	}
 
+	private Block _body;
+	private Block _finally_body;
 	private Gee.List<CatchClause> catch_clauses = new ArrayList<CatchClause> ();
 
 	/**
@@ -59,6 +74,7 @@ public class Vala.TryStatement : CodeNode, Statement {
 	 * @param clause a catch clause
 	 */
 	public void add_catch_clause (CatchClause clause) {
+		clause.parent_node = this;
 		catch_clauses.add (clause);
 	}
 

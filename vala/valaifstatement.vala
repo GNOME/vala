@@ -42,14 +42,29 @@ public class Vala.IfStatement : CodeNode, Statement {
 	/**
 	 * The statement to be evaluated if the condition holds.
 	 */
-	public Block true_statement { get; set; }
+	public Block true_statement {
+		get { return _true_statement; }
+		set {
+			_true_statement = value;
+			_true_statement.parent_node = this;
+		}
+	}
 	
 	/**
 	 * The optional statement to be evaluated if the condition doesn't hold.
 	 */
-	public Block? false_statement { get; set; }
+	public Block? false_statement {
+		get { return _false_statement; }
+		set {
+			_false_statement = value;
+			if (_false_statement != null)
+				_false_statement.parent_node = this;
+		}
+	}
 
 	private Expression _condition;
+	private Block _true_statement;
+	private Block _false_statement;
 
 	/**
 	 * Creates a new if statement.

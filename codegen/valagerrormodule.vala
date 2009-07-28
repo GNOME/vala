@@ -27,6 +27,7 @@ using Gee;
 internal class Vala.GErrorModule : CCodeDelegateModule {
 	private int current_try_id = 0;
 	private int next_try_id = 0;
+	private bool is_in_catch = false;
 
 	public GErrorModule (CCodeGenerator codegen, CCodeModule? next) {
 		base (codegen, next);
@@ -169,7 +170,7 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 
 		CCodeStatement cerror_handler = null;
 
-		if (current_try != null) {
+		if (current_try != null && !is_in_catch) {
 			// surrounding try found
 			var cerror_block = new CCodeBlock ();
 
@@ -257,8 +258,10 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 
 		var old_try = current_try;
 		var old_try_id = current_try_id;
+		var old_is_in_catch = is_in_catch;
 		current_try = stmt;
 		current_try_id = this_try_id;
+		is_in_catch = true;
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
 			clause.clabel_name = "__catch%d_%s".printf (this_try_id, clause.error_type.get_lower_case_cname ());
@@ -268,25 +271,23 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 			stmt.finally_body.accept (codegen);
 		}
 
+		is_in_catch = false;
 		stmt.body.accept (codegen);
-
-		current_try = old_try;
-		current_try_id = old_try_id;
+		is_in_catch = true;
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
 			clause.accept (codegen);
 		}
 
-		if (stmt.finally_body != null) {
-			stmt.finally_body.accept (codegen);
-		}
+		current_try = old_try;
+		current_try_id = old_try_id;
+		is_in_catch = old_is_in_catch;
 
 		var cfrag = new CCodeFragment ();
 		cfrag.append (stmt.body.ccodenode);
 
 		foreach (CatchClause clause in stmt.get_catch_clauses ()) {
 			cfrag.append (new CCodeGotoStatement ("__finally%d".printf (this_try_id)));
-
 			cfrag.append (clause.ccodenode);
 		}
 
@@ -343,6 +344,21 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		cfrag.append (cblock);
 
 		clause.ccodenode = cfrag;
+	}
+
+	public override void append_local_free (Symbol sym, CCodeFragment cfrag, bool stop_at_loop = false) {
+		var finally_block = (Block) null;
+		if (sym.parent_node is TryStatement) {
+			finally_block = (sym.parent_node as TryStatement).finally_body;
+		} else if (sym.parent_node is CatchClause) {
+			finally_block = (sym.parent_node.parent_node as TryStatement).finally_body;
+		}
+
+		if (finally_block != null) {
+			cfrag.append (finally_block.ccodenode);
+		}
+
+		base.append_local_free (sym, cfrag, stop_at_loop);
 	}
 }
 

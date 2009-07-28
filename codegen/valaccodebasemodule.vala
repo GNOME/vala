@@ -2316,7 +2316,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		stmt.ccodenode = cfrag;
 	}
 
-	public void append_local_free (Symbol sym, CCodeFragment cfrag, bool stop_at_loop = false) {
+	public virtual void append_local_free (Symbol sym, CCodeFragment cfrag, bool stop_at_loop = false) {
 		var b = (Block) sym;
 
 		var local_vars = b.get_local_variables ();
@@ -2385,12 +2385,32 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		stmt.ccodenode = cfrag;
 	}
 
+	public virtual bool variable_accessible_in_finally (LocalVariable local) {
+		if (current_try == null) {
+			return false;
+		}
+
+		var sym = current_symbol;
+
+		while (!(sym is Method) && sym.scope.lookup (local.name) == null) {
+			if ((sym.parent_node is TryStatement && ((TryStatement) sym.parent_node).finally_body != null) ||
+				(sym.parent_node is CatchClause && ((TryStatement) sym.parent_node.parent_node).finally_body != null)) {
+
+				return true;
+			}
+
+			sym = sym.parent_symbol;
+		}
+
+		return false;
+	}
+
 	public override void visit_return_statement (ReturnStatement stmt) {
 		// avoid unnecessary ref/unref pair
 		if (stmt.return_expression != null) {
 			var local = stmt.return_expression.symbol_reference as LocalVariable;
 			if (current_return_type.value_owned
-			    && local != null && local.variable_type.value_owned) {
+			    && local != null && local.variable_type.value_owned && !variable_accessible_in_finally (local)) {
 				/* return expression is local variable taking ownership and
 				 * current method is transferring ownership */
 
@@ -2423,7 +2443,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			// avoid unnecessary ref/unref pair
 			var local = stmt.return_expression.symbol_reference as LocalVariable;
 			if (current_return_type.value_owned
-			    && local != null && local.variable_type.value_owned) {
+			    && local != null && local.variable_type.value_owned && !variable_accessible_in_finally (local)) {
 				/* return expression is local variable taking ownership and
 				 * current method is transferring ownership */
 
