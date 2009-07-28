@@ -139,7 +139,7 @@ public class Vala.MethodCall : Expression {
 			var cm = analyzer.find_current_method () as CreationMethod;
 			if (cm == null) {
 				error = true;
-				Report.error (source_reference, "use `new' operator to create new objects");
+				Report.error (source_reference, "invocation not supported in this context");
 				return false;
 			} else if (cm.chain_up) {
 				error = true;
