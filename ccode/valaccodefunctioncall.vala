@@ -61,7 +61,7 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 	}
 
 	public override void write (CCodeWriter writer) {
-		call.write (writer);
+		call.write_inner (writer);
 		writer.write_string (" (");
 
 		bool first = true;
