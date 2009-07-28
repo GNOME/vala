@@ -1488,7 +1488,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (ref_function = "g_io_channel_ref", unref_function = "g_io_channel_unref")]
-	public class IOChannel : Boxed {
+	public class IOChannel {
 		[CCode (cname = "g_io_channel_unix_new")]
 		public IOChannel.unix_new (int fd);
 		public int unix_get_fd ();
@@ -2649,7 +2649,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (ref_function = "g_regex_ref", unref_function = "g_regex_unref")]
-	public class Regex : Boxed {
+	public class Regex {
 		public Regex (string pattern, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0) throws RegexError;
 		public string get_pattern ();
 		public int get_max_backref ();
@@ -3161,7 +3161,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (ref_function = "g_hash_table_ref", unref_function = "g_hash_table_unref", type_id = "G_TYPE_HASH_TABLE", type_signature = "a{%s}")]
-	public class HashTable<K,V> : Boxed {
+	public class HashTable<K,V> {
 		public HashTable (HashFunc? hash_func, EqualFunc? key_equal_func);
 		public HashTable.full (HashFunc? hash_func, EqualFunc? key_equal_func, DestroyNotify? key_destroy_func, DestroyNotify? value_destroy_func);
 		public void insert (owned K key, owned V value);
@@ -3218,7 +3218,7 @@ namespace GLib {
 
 	[Compact]
 	[CCode (cname = "GString", cprefix = "g_string_", free_function = "g_string_free", type_id = "G_TYPE_GSTRING")]
-	public class StringBuilder : Boxed {
+	public class StringBuilder {
 		public StringBuilder (string init = "");
 		[CCode (cname = "g_string_sized_new")]
 		public StringBuilder.sized (ulong dfl_size);

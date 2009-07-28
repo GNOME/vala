@@ -251,11 +251,6 @@ namespace GLib {
 		public weak string value_nick;
 	}
 
-	[Compact]
-	[CCode (cname = "gpointer", has_type_id = true, type_id = "G_TYPE_BOXED", marshaller_type_name = "BOXED", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed")]
-	public abstract class Boxed {
-	}
-
 	public static delegate void ValueTransform (Value src_value, out Value dest_value);
 
 	[CCode (copy_function = "g_value_copy", destroy_function = "g_value_unset", type_id = "G_TYPE_VALUE", marshaller_type_name = "BOXED", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed", type_signature = "v")]
@@ -315,8 +310,8 @@ namespace GLib {
 		public void set_pointer (void* v_pointer);
 		public void* get_pointer ();
 		public void set_boxed (void* v_boxed);
-		public weak Boxed get_boxed ();
-		public Boxed dup_boxed ();
+		public void* get_boxed ();
+		public void* dup_boxed ();
 		public void set_object (Object v_object);
 		public void take_object (owned Object v_object);
 		public weak Object get_object ();
@@ -352,14 +347,14 @@ namespace GLib {
 	public static delegate void Callback ();
 
 	[Compact]
-	public class Closure : Boxed {
+	public class Closure {
 	}
 
 	public static delegate void ClosureNotify (void* data, Closure closure);
 
 	[Compact]
 	[CCode (type_id = "G_TYPE_VALUE_ARRAY")]
-	public class ValueArray : Boxed {
+	public class ValueArray {
 		public uint n_values;
 		public Value[] values;
 		public ValueArray (uint n_prealloced);
