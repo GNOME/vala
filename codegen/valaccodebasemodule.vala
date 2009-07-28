@@ -1221,6 +1221,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				function.add_parameter (new CCodeFormalParameter (head.get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
 			}
+		} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
+			function.add_parameter (new CCodeFormalParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
 		}
 
 		if (prop.is_private_symbol () || (!acc.readable && !acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
@@ -1303,6 +1305,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					function.add_parameter (new CCodeFormalParameter (head.get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
 				}
+			} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
+				function.add_parameter (new CCodeFormalParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
 			}
 
 			if (prop.is_private_symbol () || !(acc.readable || acc.writable) || acc.access == SymbolAccessibility.PRIVATE) {
@@ -1412,6 +1416,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					function.add_parameter (new CCodeFormalParameter (head.get_array_length_cname (acc.readable ? "result" : "value", dim), length_ctype));
 				}
+			} else if ((acc.value_type is DelegateType) && ((DelegateType) acc.value_type).delegate_symbol.has_target) {
+				function.add_parameter (new CCodeFormalParameter (get_delegate_target_cname (acc.readable ? "result" : "value"), acc.readable ? "gpointer*" : "gpointer"));
 			}
 
 			if (!is_virtual) {
@@ -2482,6 +2488,23 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				
 				stmt.return_expression.ccodenode = ccomma;
 				stmt.return_expression.temp_vars.add (return_expr_decl);
+			} else if ((current_method != null || current_property_accessor != null) && current_return_type is DelegateType) {
+				var delegate_type = (DelegateType) current_return_type;
+				if (delegate_type.delegate_symbol.has_target) {
+					var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt);
+
+					var ccomma = new CCodeCommaExpression ();
+					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), (CCodeExpression) stmt.return_expression.ccodenode));
+
+					var len_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_delegate_target_cname ("result")));
+					var len_r = get_delegate_target_cexpression (stmt.return_expression);
+					ccomma.append_expression (new CCodeAssignment (len_l, len_r));
+
+					ccomma.append_expression (get_variable_cexpression (return_expr_decl.name));
+
+					stmt.return_expression.ccodenode = ccomma;
+					stmt.return_expression.temp_vars.add (return_expr_decl);
+				}
 			}
 
 			var cfrag = new CCodeFragment ();
@@ -3844,6 +3867,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (array_type != null && !prop.no_array_length && rhs != null) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				ccall.add_argument (head.get_array_length_cexpression (rhs, dim));
+			}
+		} else if (prop.property_type is DelegateType && rhs != null) {
+			var delegate_type = (DelegateType) prop.property_type;
+			if (delegate_type.delegate_symbol.has_target) {
+				ccall.add_argument (get_delegate_target_cexpression (rhs));
 			}
 		}
 

@@ -210,6 +210,8 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				} else {
 					return (CCodeExpression) get_ccodenode (ma.inner);
 				}
+			} else if (delegate_expr.symbol_reference is Property) {
+				return delegate_expr.delegate_target;
 			}
 		}
 

@@ -692,6 +692,11 @@ internal class Vala.GObjectModule : GTypeModule {
 			return false;
 		}
 
+		var d = prop.property_type as DelegateType;
+		if (d != null && d.delegate_symbol.has_target) {
+			return false;
+		}
+
 		if (prop.base_interface_property != null) {
 			var iface = (Interface) prop.base_interface_property.parent_symbol;
 			if (!iface.is_subtype_of (gobject_type)) {

@@ -223,7 +223,8 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			if (prop.get_accessor.automatic_body &&
 			    current_type_symbol == prop.parent_symbol &&
 			    prop.base_property == null &&
-			    prop.base_interface_property == null) {
+			    prop.base_interface_property == null &&
+			    !(prop.property_type is ArrayType || prop.property_type is DelegateType)) {
 				CCodeExpression inst;
 				inst = new CCodeMemberAccess.pointer (pub_inst, "priv");
 				expr.ccodenode = new CCodeMemberAccess.pointer (inst, prop.field.get_cname());
@@ -266,6 +267,15 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							temp_vars.add (temp_var);
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 							expr.append_array_size (ctemp);
+						}
+					} else {
+						var delegate_type = base_property.property_type as DelegateType;
+						if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
+							var temp_var = get_temp_variable (new PointerType (new VoidType ()));
+							var ctemp = new CCodeIdentifier (temp_var.name);
+							temp_vars.add (temp_var);
+							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
+							expr.delegate_target = ctemp;
 						}
 					}
 

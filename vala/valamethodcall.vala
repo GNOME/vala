@@ -38,8 +38,6 @@ public class Vala.MethodCall : Expression {
 		}
 	}
 
-	public CCodeExpression delegate_target { get; set; }
-
 	public Expression _call;
 	
 	private Gee.List<Expression> argument_list = new ArrayList<Expression> ();
