@@ -599,7 +599,12 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
-		if ((m.is_abstract || m.is_virtual) && !m.coroutine) {
+		if ((m.is_abstract || m.is_virtual) && !m.coroutine &&
+		/* If the method is a signal handler, the declaration
+		 * is not needed. -- the name should be reserved for the
+		 * emitter! */
+			    m.signal_reference == null) {
+
 			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 

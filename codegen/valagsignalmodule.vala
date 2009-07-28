@@ -355,10 +355,18 @@ internal class Vala.GSignalModule : GObjectModule {
 
 	public override CCodeFunctionCall get_signal_creation (Signal sig, TypeSymbol type) {	
 		var csignew = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_new"));
+		var cl = sig.parent_symbol as Class;
 		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (sig.get_cname ())));
 		csignew.add_argument (new CCodeIdentifier (type.get_type_id ()));
 		csignew.add_argument (new CCodeConstant ("G_SIGNAL_RUN_LAST"));
-		csignew.add_argument (new CCodeConstant ("0"));
+		if (sig.default_handler == null) {
+			csignew.add_argument (new CCodeConstant ("0"));
+		} else {
+			var struct_offset = new CCodeFunctionCall (new CCodeIdentifier ("G_STRUCT_OFFSET"));
+			struct_offset.add_argument (new CCodeIdentifier ("%sClass".printf (cl.get_cname ())));
+			struct_offset.add_argument (new CCodeIdentifier (sig.default_handler.vfunc_name));
+			csignew.add_argument (struct_offset);
+		}
 		csignew.add_argument (new CCodeConstant ("NULL"));
 		csignew.add_argument (new CCodeConstant ("NULL"));
 
@@ -608,7 +616,7 @@ internal class Vala.GSignalModule : GObjectModule {
 			var cl = (TypeSymbol) sig.parent_symbol;
 			
 			if (expr.inner is BaseAccess && sig.is_virtual) {
-				var m = sig.get_method_handler ();
+				var m = sig.default_handler;
 				var base_class = (Class) m.parent_symbol;
 				var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
 				vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));

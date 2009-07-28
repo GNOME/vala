@@ -53,7 +53,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		} else if (itype is SignalType) {
 			var sig_type = (SignalType) itype;
 			if (ma != null && ma.inner is BaseAccess && sig_type.signal_symbol.is_virtual) {
-				m = sig_type.signal_symbol.get_method_handler ();
+				m = sig_type.signal_symbol.default_handler;
 			} else {
 				ccall = (CCodeFunctionCall) expr.call.ccodenode;
 			}

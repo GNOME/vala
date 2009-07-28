@@ -2390,7 +2390,10 @@ public class Vala.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
-		expect (TokenType.SEMICOLON);
+		if (!accept (TokenType.SEMICOLON)) {
+			sig.body = parse_block ();
+		}
+
 		return sig;
 	}
 

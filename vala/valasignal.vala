@@ -38,6 +38,16 @@ public class Vala.Signal : Member, Lockable {
 		}
 	}
 
+	public Block body {
+		get { return _body; }
+		set {
+			_body = value;
+			if (_body != null) {
+				_body.owner = scope;
+			}
+		}
+	}
+
 	/**
 	 * Specifies whether this signal has an emitter wrapper function.
 	 */
@@ -49,13 +59,19 @@ public class Vala.Signal : Member, Lockable {
 	public bool is_virtual { get; set; }
 
 	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
-	private Method generated_method;
+	/**
+	 * Refers to the default signal handler, which is an anonymous
+	 * function in the scope.
+	 * */
+	public Method default_handler { get; private set; }
 
 	private string cname;
 	
 	private bool lock_used = false;
 
 	private DataType _return_type;
+
+	private Block _body;
 
 	/**
 	 * Creates a new signal.
@@ -179,6 +195,9 @@ public class Vala.Signal : Member, Lockable {
 		foreach (FormalParameter param in parameters) {
 			param.accept (visitor);
 		}
+		if (default_handler != null) {
+			default_handler.accept (visitor);
+		}
 	}
 
 	/**
@@ -206,26 +225,6 @@ public class Vala.Signal : Member, Lockable {
 		}
 	}
 
-	public Method get_method_handler () {
-		assert (is_virtual);
-
-		if (generated_method == null) {
-			generated_method = new Method (name, return_type, source_reference);
-			generated_method.access = access;
-			generated_method.is_virtual = true;
-			generated_method.vfunc_name = name;
-			generated_method.signal_reference = this;
-
-			foreach (FormalParameter param in parameters) {
-				generated_method.add_parameter (param);
-			}
-
-			parent_symbol.scope.add (null, generated_method);
-		}
-		
-		return generated_method;
-	}
-
 	public override bool check (SemanticAnalyzer analyzer) {
 		if (checked) {
 			return !error;
@@ -241,6 +240,26 @@ public class Vala.Signal : Member, Lockable {
 			param.check (analyzer);
 		}
 
+		if (!is_virtual && body != null) {
+			Report.error (source_reference, "Only virtual signals can have a default signal handler body");
+		}
+
+
+		if (is_virtual) {
+			default_handler = new Method (name, return_type, source_reference);
+			default_handler.access = access;
+			default_handler.is_virtual = true;
+			default_handler.vfunc_name = name;
+			default_handler.signal_reference = this;
+			default_handler.body = body;
+
+			foreach (FormalParameter param in parameters) {
+				default_handler.add_parameter (param);
+			}
+
+			parent_symbol.scope.add (null, default_handler);
+			default_handler.check (analyzer);
+		}
 		return !error;
 	}
 }

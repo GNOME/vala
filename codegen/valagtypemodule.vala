@@ -206,6 +206,12 @@ internal class Vala.GTypeModule : GErrorModule {
 			generate_virtual_method_declaration (m, decl_space, type_struct);
 		}
 
+		foreach (Signal sig in cl.get_signals ()) {
+			if (sig.default_handler != null) {
+				generate_virtual_method_declaration (sig.default_handler, decl_space, type_struct);
+			}
+		}
+
 		foreach (Property prop in cl.get_properties ()) {
 			if (!prop.is_abstract && !prop.is_virtual) {
 				continue;
@@ -1138,6 +1144,16 @@ internal class Vala.GTypeModule : GErrorModule {
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (((Class) base_type).get_upper_case_cname (null))));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.base_method.vfunc_name), new CCodeIdentifier (m.get_real_cname ()))));
+		}
+
+		/* connect default signal handlers */
+		foreach (Signal sig in cl.get_signals ()) {
+			if (sig.default_handler == null) {
+				continue;
+			}
+			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (cl.get_upper_case_cname (null))));
+			ccast.add_argument (new CCodeIdentifier ("klass"));
+			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, sig.default_handler.vfunc_name), new CCodeIdentifier (sig.default_handler.get_real_cname ()))));
 		}
 
 		/* connect overridden properties */

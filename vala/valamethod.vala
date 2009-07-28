@@ -593,7 +593,7 @@ public class Vala.Method : Member {
 		} else if (sym is Signal) {
 			var sig = (Signal) sym;
 			if (sig.is_virtual) {
-				var base_method = sig.get_method_handler ();
+				var base_method = sig.default_handler;
 				string invalid_match;
 				if (!compatible (base_method, out invalid_match)) {
 					error = true;
