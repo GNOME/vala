@@ -1312,6 +1312,8 @@ namespace Posix {
 	public mode_t umask (mode_t mask);
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int mkdir (string path, mode_t mode);
+	[CCode (cheader_filename = "sys/types.h,sys/stat.h,fcntl.h,unistd.h")]
+	public pid_t mknod (string pathname, mode_t mode, dev_t dev);
 
 	[CCode (cheader_filename = "sys/wait.h")]
 	public pid_t wait (out int status);
@@ -1562,6 +1564,11 @@ namespace Posix {
 	public gid_t getegid ();
 	[CCode (cheader_filename = "unistd.h")]
 	public int group_member (gid_t gid);
+	[CCode (cheader_filename = "unistd.h")]
+	public pid_t setsid ();
+	[CCode (cheader_filename = "unistd.h")]
+	public pid_t tcgetsid (int fd);
+
 
 	[SimpleType]
 	[CCode (cname = "cc_t", cheader_filename = "termios.h")]
