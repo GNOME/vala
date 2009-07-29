@@ -1011,7 +1011,7 @@ public class Vala.Class : ObjectTypeSymbol {
 				}
 			}
 
-			if (base_class != null) {
+			if (!external && !external_package && base_class != null) {
 				foreach (Field f in fields) {
 					if (f.binding == MemberBinding.INSTANCE) {
 						error = true;
