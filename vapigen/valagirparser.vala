@@ -264,6 +264,7 @@ public class Vala.GirParser : CodeVisitor {
 		var st = new Struct (reader.get_attribute ("name"), get_current_src ());
 		st.access = SymbolAccessibility.PUBLIC;
 		st.base_type = parse_type_from_name (reader.get_attribute ("target"));
+		st.external = true;
 		next ();
 		end_element ("alias");
 		return st;
@@ -496,6 +497,7 @@ public class Vala.GirParser : CodeVisitor {
 	Struct parse_record () {
 		start_element ("record");
 		var st = new Struct (reader.get_attribute ("name"), get_current_src ());
+		st.external = true;
 
 		string glib_is_gtype_struct_for = reader.get_attribute ("glib:is-gtype-struct-for");
 
@@ -558,6 +560,7 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("class");
 		var cl = new Class (reader.get_attribute ("name"), get_current_src ());
 		cl.access = SymbolAccessibility.PUBLIC;
+		cl.external = true;
 
 		string cname = reader.get_attribute ("c:type");
 		if (cname != null) {
@@ -980,6 +983,7 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		var sig = new Signal (name, return_type);
 		sig.access = SymbolAccessibility.PUBLIC;
+		sig.external = true;
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
 			start_element ("parameters");
 			next ();
@@ -996,6 +1000,7 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("glib:boxed");
 		var st = new Struct (reader.get_attribute ("glib:name"));
 		st.access = SymbolAccessibility.PUBLIC;
+		st.external = true;
 
 		string cname = reader.get_attribute ("c:type");
 		if (cname != null) {
@@ -1026,6 +1031,7 @@ public class Vala.GirParser : CodeVisitor {
 		start_element ("union");
 		var st = new Struct (reader.get_attribute ("name"));
 		st.access = SymbolAccessibility.PUBLIC;
+		st.external = true;
 		next ();
 
 		while (current_token == MarkupTokenType.START_ELEMENT) {

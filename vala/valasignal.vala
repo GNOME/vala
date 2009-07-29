@@ -248,6 +248,7 @@ public class Vala.Signal : Member, Lockable {
 		if (is_virtual) {
 			default_handler = new Method (name, return_type, source_reference);
 			default_handler.access = access;
+			default_handler.external = external;
 			default_handler.is_virtual = true;
 			default_handler.vfunc_name = name;
 			default_handler.signal_reference = this;

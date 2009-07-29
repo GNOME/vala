@@ -690,7 +690,7 @@ public class Vala.Method : Member {
 
 		if (is_abstract && body != null) {
 			Report.error (source_reference, "Abstract methods cannot have bodies");
-		} else if ((is_abstract || is_virtual) && external && !external_package) {
+		} else if ((is_abstract || is_virtual) && external && !external_package && !parent_symbol.external) {
 			Report.error (source_reference, "Extern methods cannot be abstract or virtual");
 		} else if (external && body != null) {
 			Report.error (source_reference, "Extern methods cannot have bodies");
