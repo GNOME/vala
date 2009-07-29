@@ -3391,6 +3391,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				Report.error (expr.source_reference, "Operation not supported for this type");
 				return;
 			}
+
+			// retain array length
+			var array_type = expr.type_reference as ArrayType;
+			if (array_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					expr.append_array_size (get_array_length_cexpression (expr.inner, dim));
+				}
+			}
+
 			expr.ccodenode = new CCodeCastExpression ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.get_cname ());
 		}
 	}

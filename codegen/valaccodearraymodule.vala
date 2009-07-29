@@ -161,9 +161,8 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			Gee.List<Expression> size = ((ArrayCreationExpression) array_expr).get_sizes ();
 			var length_expr = size[dim - 1];
 			return (CCodeExpression) get_ccodenode (length_expr);
-		} else if (array_expr is MethodCall) {
-			var invocation_expr = (MethodCall) array_expr;
-			Gee.List<CCodeExpression> size = invocation_expr.get_array_sizes ();
+		} else if (array_expr is MethodCall || array_expr is CastExpression) {
+			Gee.List<CCodeExpression> size = array_expr.get_array_sizes ();
 			return size[dim - 1];
 		} else if (array_expr.symbol_reference != null) {
 			if (array_expr.symbol_reference is FormalParameter) {
