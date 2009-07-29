@@ -424,7 +424,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 							var cblock = new CCodeBlock ();
 							cblock.add_statement (new CCodeExpressionStatement (a));
 
-							var condition = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier (param.name), new CCodeConstant ("NULL"));
+							var condition = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, get_variable_cexpression (param.name), new CCodeConstant ("NULL"));
 							var if_statement = new CCodeIfStatement (condition, cblock);
 							cinit.append (if_statement);
 						}
