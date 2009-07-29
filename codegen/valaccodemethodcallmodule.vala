@@ -225,6 +225,29 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			head.generate_dynamic_method_wrapper ((DynamicMethod) m);
 		} else if (m is CreationMethod && context.profile == Profile.GOBJECT) {
 			ccall_expr = new CCodeAssignment (new CCodeIdentifier ("self"), new CCodeCastExpression (ccall, current_class.get_cname () + "*"));
+
+			if (!current_class.is_compact && current_class.get_type_parameters ().size > 0) {
+				var ccomma = new CCodeCommaExpression ();
+				ccomma.append_expression (ccall_expr);
+
+				/* type, dup func, and destroy func fields for generic types */
+				foreach (TypeParameter type_param in current_class.get_type_parameters ()) {
+					CCodeIdentifier param_name;
+
+					var priv_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv");
+
+					param_name = new CCodeIdentifier ("%s_type".printf (type_param.name.down ()));
+					ccomma.append_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name));
+
+					param_name = new CCodeIdentifier ("%s_dup_func".printf (type_param.name.down ()));
+					ccomma.append_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name));
+
+					param_name = new CCodeIdentifier ("%s_destroy_func".printf (type_param.name.down ()));
+					ccomma.append_expression (new CCodeAssignment (new CCodeMemberAccess.pointer (priv_access, param_name.name), param_name));
+				}
+
+				ccall_expr = ccomma;
+			}
 		}
 
 		bool ellipsis = false;
