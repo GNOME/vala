@@ -234,6 +234,9 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			if (in_gobject_creation_method && m.body != null) {
 				var cblock = new CCodeBlock ();
 
+				// last property assignment statement
+				CodeNode last_stmt = null;
+
 				if (!((CreationMethod) m).chain_up) {
 					// set construct properties
 					foreach (CodeNode stmt in m.body.get_statements ()) {
@@ -241,13 +244,21 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 						if (expr_stmt != null) {
 							var prop = expr_stmt.assigned_property ();
 							if (prop != null && prop.set_accessor.construction) {
-								if (stmt.ccodenode is CCodeFragment) {
-									foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
-										cblock.add_statement (cstmt);
-									}
-								} else {
-									cblock.add_statement (stmt.ccodenode);
+								last_stmt = stmt;
+							}
+						}
+					}
+					if (last_stmt != null) {
+						foreach (CodeNode stmt in m.body.get_statements ()) {
+							if (stmt.ccodenode is CCodeFragment) {
+								foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
+									cblock.add_statement (cstmt);
 								}
+							} else {
+								cblock.add_statement (stmt.ccodenode);
+							}
+							if (last_stmt == stmt) {
+								break;
 							}
 						}
 					}
@@ -262,12 +273,11 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 
 				// other initialization code
 				foreach (CodeNode stmt in m.body.get_statements ()) {
-					var expr_stmt = stmt as ExpressionStatement;
-					if (expr_stmt != null) {
-						var prop = expr_stmt.assigned_property ();
-						if (prop != null && prop.set_accessor.construction) {
-							continue;
+					if (last_stmt != null) {
+						if (last_stmt == stmt) {
+							last_stmt = null;
 						}
+						continue;
 					}
 					if (stmt.ccodenode is CCodeFragment) {
 						foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
