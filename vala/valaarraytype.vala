@@ -139,6 +139,7 @@ public class Vala.ArrayType : ReferenceType {
 		result.nullable = nullable;
 		result.floating_reference = floating_reference;
 
+		result.inline_allocated = inline_allocated;
 		if (fixed_length) {
 			result.fixed_length = true;
 			result.length = length;
@@ -148,8 +149,7 @@ public class Vala.ArrayType : ReferenceType {
 	}
 
 	public override string? get_cname () {
-		// FIXME add support for [Immutable] or [Const] attribute to support arrays to const data
-		if (fixed_length) {
+		if (inline_allocated) {
 			return element_type.get_cname ();
 		} else {
 			return element_type.get_cname () + "*";
@@ -159,6 +159,8 @@ public class Vala.ArrayType : ReferenceType {
 	public override string get_cdeclarator_suffix () {
 		if (fixed_length) {
 			return "[%d]".printf (length);
+		} else if (inline_allocated) {
+			return "[]";
 		} else {
 			return "";
 		}
