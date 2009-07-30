@@ -37,6 +37,10 @@ public class Vala.ArrayType : ReferenceType {
 		}
 	}
 
+	public bool invalid_syntax { get; set; }
+
+	public bool inline_allocated { get; set; }
+
 	public bool fixed_length { get; set; }
 
 	/**
@@ -218,5 +222,14 @@ public class Vala.ArrayType : ReferenceType {
 
 	public override Gee.List<Symbol> get_symbols () {
 		return element_type.get_symbols ();
+	}
+
+	public override bool check (SemanticAnalyzer analyzer) {
+		if (invalid_syntax) {
+			Report.error (source_reference, "syntax error, no expression allowed between array brackets");
+			error = true;
+			return false;
+		}
+		return element_type.check (analyzer);
 	}
 }

@@ -365,6 +365,7 @@ public class Vala.Parser : CodeVisitor {
 		accept (TokenType.INTERR);
 		while (accept (TokenType.OPEN_BRACKET)) {
 			do {
+				// required for decision between expression and declaration statement
 				if (current () != TokenType.COMMA && current () != TokenType.CLOSE_BRACKET) {
 					parse_expression ();
 				}
@@ -422,21 +423,17 @@ public class Vala.Parser : CodeVisitor {
 		// this is more logical, especially when nullable arrays
 		// or pointers are involved
 		while (accept (TokenType.OPEN_BRACKET)) {
-			int array_length = -1;
+			bool invalid_array = false;
 			int array_rank = 0;
 			do {
 				array_rank++;
-				// support for stack-allocated arrays
-				// also required for decision between expression and declaration statement
+				// required for decision between expression and declaration statement
 				if (current () != TokenType.COMMA && current () != TokenType.CLOSE_BRACKET) {
-					var length_expression = parse_expression ();
-					var length_literal = length_expression as IntegerLiteral;
-					if (length_literal != null) {
-						array_length = length_literal.value.to_int ();
-					}
+					parse_expression ();
+					// only used for parsing, reject use as real type
+					invalid_array = true;
 				}
-			}
-			while (accept (TokenType.COMMA));
+			} while (accept (TokenType.COMMA));
 			expect (TokenType.CLOSE_BRACKET);
 
 			// arrays contain strong references by default
@@ -444,12 +441,7 @@ public class Vala.Parser : CodeVisitor {
 
 			var array_type = new ArrayType (type, array_rank, get_src (begin));
 			array_type.nullable = accept (TokenType.INTERR);
-
-			if (array_rank == 1 && array_length > 0) {
-				// fixed length (stack-allocated) array
-				array_type.fixed_length = true;
-				array_type.length = array_length;
-			}
+			array_type.invalid_syntax = invalid_array;
 
 			type = array_type;
 		}
@@ -469,6 +461,35 @@ public class Vala.Parser : CodeVisitor {
 
 		type.is_dynamic = is_dynamic;
 		type.value_owned = value_owned;
+		return type;
+	}
+
+	DataType? parse_inline_array_type (DataType? type) throws ParseError {
+		var begin = get_location ();
+
+		// inline-allocated array
+		if (type != null && accept (TokenType.OPEN_BRACKET)) {
+			int array_length = -1;
+
+			if (current () != TokenType.CLOSE_BRACKET) {
+				if (current () != TokenType.INTEGER_LITERAL) {
+					throw new ParseError.SYNTAX (get_error ("expected `]' or integer literal"));
+				}
+
+				var length_literal = (IntegerLiteral) parse_literal ();
+				array_length = length_literal.value.to_int ();
+			}
+			expect (TokenType.CLOSE_BRACKET);
+
+			var array_type = new ArrayType (type, 1, get_src (begin));
+			array_type.inline_allocated = true;
+			if (array_length > 0) {
+				array_type.fixed_length = true;
+				array_type.length = array_length;
+			}
+
+			return array_type;
+		}
 		return type;
 	}
 
@@ -1431,11 +1452,14 @@ public class Vala.Parser : CodeVisitor {
 	LocalVariable parse_local_variable (DataType? variable_type) throws ParseError {
 		var begin = get_location ();
 		string id = parse_identifier ();
+
+		var type = parse_inline_array_type (variable_type);
+
 		Expression initializer = null;
 		if (accept (TokenType.ASSIGN)) {
 			initializer = parse_expression ();
 		}
-		return new LocalVariable (variable_type, id, initializer, get_src_com (begin));
+		return new LocalVariable (type, id, initializer, get_src_com (begin));
 	}
 
 	Statement parse_expression_statement () throws ParseError {
@@ -2087,6 +2111,9 @@ public class Vala.Parser : CodeVisitor {
 		expect (TokenType.CONST);
 		var type = parse_type (false);
 		string id = parse_identifier ();
+
+		type = parse_inline_array_type (type);
+
 		Expression initializer = null;
 		if (accept (TokenType.ASSIGN)) {
 			initializer = parse_expression ();
@@ -2117,6 +2144,9 @@ public class Vala.Parser : CodeVisitor {
 		var flags = parse_member_declaration_modifiers ();
 		var type = parse_type ();
 		string id = parse_identifier ();
+
+		type = parse_inline_array_type (type);
+
 		var f = new Field (id, type, null, get_src_com (begin));
 		f.access = access;
 		set_attributes (f, attrs);
