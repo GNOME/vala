@@ -104,11 +104,15 @@ public class Vala.ElementAccess : Expression {
 
 		checked = true;
 
-		container.check (analyzer);
-
-		if (container.value_type == null) {
+		if (!container.check (analyzer)) {
 			/* don't proceed if a child expression failed */
 			error = true;
+			return false;
+		}
+
+		if (container.value_type == null) {
+			error = true;
+			Report.error (container.source_reference, "Invalid container expression");
 			return false;
 		}
 
