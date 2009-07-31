@@ -1048,8 +1048,6 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 				vfunc.modifiers |= CCodeModifiers.STATIC;
 			}
 
-			source_declarations.add_type_member_declaration (vfunc.copy ());
-
 			vfunc.block = vblock;
 
 			source_type_member_definition.append (vfunc);
