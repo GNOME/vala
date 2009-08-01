@@ -378,6 +378,59 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 	}
 
+	private CCodeForStatement get_struct_array_free_loop (Struct st) {
+		var cbody = new CCodeBlock ();
+		var cptrarray = new CCodeIdentifier ("array");
+		var cea = new CCodeElementAccess (cptrarray, new CCodeIdentifier ("i"));
+
+		var cfreecall = new CCodeFunctionCall (get_destroy_func_expression (new StructValueType (st)));
+		cfreecall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cea));
+
+		var cforcond = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("array_length"));
+		cbody.add_statement (new CCodeExpressionStatement (cfreecall));
+
+		var cfor = new CCodeForStatement (cforcond, cbody);
+		cfor.add_initializer (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")));
+		cfor.add_iterator (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier ("i"), new CCodeConstant ("1"))));
+
+		return cfor;
+	}
+
+	public override string? append_struct_array_free (Struct st) {
+		string cname = "_vala_%s_array_free".printf (st.get_cname ());;
+
+		if (source_declarations.add_declaration (cname)) {
+			return cname;
+		}
+
+		var fun = new CCodeFunction (cname, "void");
+		fun.modifiers = CCodeModifiers.STATIC;
+		fun.add_parameter (new CCodeFormalParameter ("array", "%s*".printf (st.get_cname ())));
+		fun.add_parameter (new CCodeFormalParameter ("array_length", "gint"));
+		source_declarations.add_type_member_declaration (fun.copy ());
+
+		var cdofree = new CCodeBlock ();
+
+		var citdecl = new CCodeDeclaration ("int");
+		citdecl.add_declarator (new CCodeVariableDeclarator ("i"));
+		cdofree.add_statement (citdecl);
+
+		cdofree.add_statement (get_struct_array_free_loop (st));
+
+		var ccondarr = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, new CCodeIdentifier ("array"), new CCodeConstant ("NULL"));
+		var cif = new CCodeIfStatement (ccondarr, cdofree);
+		fun.block = new CCodeBlock ();
+		fun.block.add_statement (cif);
+
+		var carrfree = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		carrfree.add_argument (new CCodeIdentifier ("array"));
+		fun.block.add_statement (new CCodeExpressionStatement (carrfree));
+
+		source_type_member_definition.append (fun);
+
+		return cname;
+	}
+
 	private CCodeForStatement get_vala_array_free_loop () {
 		var cbody = new CCodeBlock ();
 		var cptrarray = new CCodeCastExpression (new CCodeIdentifier ("array"), "gpointer*");

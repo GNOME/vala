@@ -2106,6 +2106,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		return destroy_func;
 	}
 
+	public virtual string? append_struct_array_free (Struct st) {
+		return null;
+	}
+
 	public virtual CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression expr) {
 		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
 
@@ -2159,9 +2163,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			ccall.add_argument (new CCodeConstant ("TRUE"));
 		} else if (type is ArrayType) {
 			var array_type = (ArrayType) type;
-			if (array_type.element_type.data_type == null || array_type.element_type.data_type.is_reference_type ()) {
-				requires_array_free = true;
-
+			if (requires_destroy (array_type.element_type)) {
 				CCodeExpression csizeexpr = null;
 				bool first = true;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -2173,9 +2175,16 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					}
 				}
 
-				ccall.call = new CCodeIdentifier ("_vala_array_free");
-				ccall.add_argument (csizeexpr);
-				ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), "GDestroyNotify"));
+				var st = array_type.element_type.data_type as Struct;
+				if (st != null && !array_type.element_type.nullable) {
+					ccall.call = new CCodeIdentifier (append_struct_array_free (st));
+					ccall.add_argument (csizeexpr);
+				} else {
+					requires_array_free = true;
+					ccall.call = new CCodeIdentifier ("_vala_array_free");
+					ccall.add_argument (csizeexpr);
+					ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), "GDestroyNotify"));
+				}
 			}
 		}
 		
