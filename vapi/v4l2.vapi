@@ -314,7 +314,7 @@ namespace V4l2
 		public uint8 seconds;
 		public uint8 minutes;
 		public uint8 hours;
-		public uint8[4] userbits;
+		public uint8 userbits[4];
 	}
 	
 	[CCode (cprefix="V4L2_TC_TYPE_")]
@@ -349,9 +349,9 @@ namespace V4l2
 		public int quality;
 		public int APPn;
 		public int APP_len;
-		public char[60] APP_data;
+		public char APP_data[60];
 		public int COM_len;
-		public char[60] COM_data;
+		public char COM_data[60];
 		public uint32 jpeg_markers;
 	}
 	
@@ -1135,7 +1135,7 @@ namespace V4l2
 	{
 		public uint32 entries;
 		public uint32 entries_cap;
-		public EncIdxEntry[V4L2_ENC_IDX_ENTRIES] entry;
+		public EncIdxEntry[] entry;
 	}
 	
 	[CCode (cprefix="V4L2_ENC_CMD_")]
@@ -1151,7 +1151,7 @@ namespace V4l2
 	[CCode (cname="struct raw")]
 	public struct Raw
 	{
-		public uint32[8] data;
+		public uint32 data[8];
 	}
 	
 	[CCode (cname="struct v4l2_encoder_cmd")]
@@ -1169,8 +1169,8 @@ namespace V4l2
 		public uint32 offset;
 		public uint32 samples_per_line;
 		public uint32 sample_format;
-		public int32[2] start;
-		public uint32[2] count;
+		public int32 start[2];
+		public uint32 count[2];
 		public uint32 flags;
 	}
 	
@@ -1185,7 +1185,7 @@ namespace V4l2
 	public struct SlicedVbiFormat
 	{
 		public uint16 service_set;
-		public uint16[2, 24] service_lines;
+		public uint16[] service_lines;
 		public uint32 io_size;
 		public uint32[] reserved;
 	}
@@ -1206,7 +1206,7 @@ namespace V4l2
 	public struct SlicedVbiCap
 	{
 		public uint16 service_set;
-		public uint16[2, 24] service_lines;
+		public uint16[] service_lines;
 		public BufferType type;
 	}
 	
@@ -1216,7 +1216,7 @@ namespace V4l2
 		public uint32 id;
 		public uint32 field;
 		public uint32 line;
-		public uint8[48] data;
+		public uint8 data[48];
 	}
 	
 	public struct Fmt
@@ -1225,7 +1225,7 @@ namespace V4l2
 		public Window win;
 		public VbiFormat vbi;
 		public SlicedVbiFormat sliced;
-		public uint8[200] raw_data;
+		public uint8 raw_data[200];
 	}
 	
 	[CCode (cname="struct v4l2_format")]
@@ -1239,7 +1239,7 @@ namespace V4l2
 	{
 		public CaptureParm capture;
 		public OutputParm output;
-		public uint8[200] raw_data;
+		public uint8 raw_data[200];
 	}
 	
 	[CCode (cname="struct v4l2_streamparm")]

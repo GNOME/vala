@@ -2331,8 +2331,8 @@ namespace Gsl
 	{
 		public size_t n;
 		public size_t nf;
-		public size_t[64] factor;
-		public Complex[64] twiddle;
+		public size_t factor[64];
+		public Complex twiddle[64];
 		public Complex trig;
 		
 		[CCode (cname="gsl_fft_complex_wavetable_alloc")]
@@ -2376,8 +2376,8 @@ namespace Gsl
 	{
 		public size_t n;
 		public size_t nf;
-		public size_t[64] factor;
-		public Complex[64] twiddle;
+		public size_t factor[64];
+		public Complex twiddle[64];
 		public Complex trig;
 		
 		[CCode (cname="gsl_fft_real_wavetable_alloc")]
@@ -2410,8 +2410,8 @@ namespace Gsl
 	{
 		public size_t n;
 		public size_t nf;
-		public size_t[64] factor;
-		public Complex[64] twiddle;
+		public size_t factor[64];
+		public Complex twiddle[64];
 		public Complex trig;
 		
 		[CCode (cname="gsl_fft_halfcomplex_wavetable_alloc")]
@@ -2481,10 +2481,10 @@ namespace Gsl
 		public double beta;
 		public int mu;
 		public int nu;
-		public double[25] ri;
-		public double[25] rj;
-		public double[25] rg;
-		public double[25] rh;
+		public double ri[25];
+		public double rj[25];
+		public double rg[25];
+		public double rh[25];
 		
 		[CCode (cname="gsl_integration_qaws_table_alloc")]
 		public IntegrationQAWSTable (double alpha, double beta, int mu, int nu);

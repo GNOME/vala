@@ -51,9 +51,9 @@ namespace Fuse {
 	}
 
 	[CCode (cname = "fuse_fill_dir_t")]
-	public static delegate int FillDir (void* buf, string name, stat? st, off_t offset);
+	public static delegate int FillDir (void* buf, string name, Stat? st, off_t offset);
 
-	public static delegate int GetAttr (string path, stat* st);
+	public static delegate int GetAttr (string path, Stat* st);
 	public static delegate int Access (string path, int mask);
 	public static delegate int ReadLink (string path, char* buf, size_t size);
 	public static delegate int ReadDir (string path, void* buf, FillDir filler, off_t offset, FileInfo fi);
@@ -67,7 +67,7 @@ namespace Fuse {
 	public static delegate int Chmod (string path, mode_t mode);
 	public static delegate int Chown (string path, uid_t uid, gid_t gid);
 	public static delegate int Truncate (string path, off_t size);
-	public static delegate int Utimens (string path, timespec[2] ts);
+	public static delegate int Utimens (string path, timespec[] ts);
 	public static delegate int Open (string path, FileInfo fi);
 	public static delegate int Read (string path, char* buf, size_t size, off_t offset, FileInfo fi);
 	public static delegate int Write (string path, char* buf, size_t size, off_t offset, FileInfo fi);
