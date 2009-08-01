@@ -104,7 +104,7 @@ namespace Tiff {
 	}
 
 	[Compact]
-	private class PutUnion {
+	public class PutUnion {
 		public delegate void any (RGBAImage p1);
 		TileContigRoutine contig;
 		TileSeparateRoutine separate;
