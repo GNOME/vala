@@ -183,8 +183,8 @@ namespace Posix {
 		public off_t d_off;
 		public ushort d_reclen;
 		public char d_type;
-		public char[265] d_name;
-		}
+		public char d_name[256];
+	}
 
 	[Compact]
 	[CCode (cname = "DIR", free_function = "closedir", cheader_filename = "dirent.h")]
