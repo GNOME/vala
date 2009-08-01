@@ -221,6 +221,11 @@ public abstract class Vala.Symbol : CodeNode {
 	 * @return           the specified string converted to lower case
 	 */
 	public static string camel_case_to_lower_case (string camel_case) {
+		if ("_" in camel_case) {
+			// do not insert additional underscores if input is not real camel case
+			return camel_case.down ();
+		}
+
 		var result_builder = new StringBuilder ("");
 
 		weak string i = camel_case;
