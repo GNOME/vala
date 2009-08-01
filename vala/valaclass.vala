@@ -103,6 +103,12 @@ public class Vala.Class : ObjectTypeSymbol {
 	 */
 	public bool has_class_private_fields { get; private set; }
 
+	/**
+	 * Specifies whether the free function requires the address of a
+	 * pointer instead of just the pointer.
+	 */
+	public bool free_function_address_of { get; private set; }
+
 	private string cname;
 	private string const_cname;
 	private string lower_case_cprefix;
@@ -626,6 +632,9 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 		if (a.has_argument ("free_function")) {
 			set_free_function (a.get_string ("free_function"));
+		}
+		if (a.has_argument ("free_function_address_of")) {
+			free_function_address_of = a.get_bool ("free_function_address_of");
 		}
 		if (a.has_argument ("type_id")) {
 			type_id = a.get_string ("type_id");

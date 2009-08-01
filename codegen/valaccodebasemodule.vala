@@ -1961,6 +1961,38 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		return dup_func;
 	}
 
+	protected string generate_destroy_func_wrapper (DataType type) {
+		string destroy_func = "_vala_%s_free".printf (type.data_type.get_cname ());
+
+		if (!add_wrapper (destroy_func)) {
+			// wrapper already defined
+			return destroy_func;
+		}
+
+		// declaration
+
+		var function = new CCodeFunction (destroy_func, "void");
+		function.add_parameter (new CCodeFormalParameter ("self", type.get_cname ()));
+
+		// definition
+
+		var block = new CCodeBlock ();
+
+		var free_call = new CCodeFunctionCall (new CCodeIdentifier (type.data_type.get_free_function ()));
+		free_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("self")));
+
+		block.add_statement (new CCodeExpressionStatement (free_call));
+
+		// append to file
+
+		source_declarations.add_type_member_declaration (function.copy ());
+
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return destroy_func;
+	}
+
 	public CCodeExpression? get_destroy_func_expression (DataType type) {
 		if (context.profile == Profile.GOBJECT && (type.data_type == glist_type || type.data_type == gslist_type)) {
 			// create wrapper function to free list elements if necessary
@@ -1992,7 +2024,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						return null;
 					}
 				} else {
-					unref_function = type.data_type.get_free_function ();
+					var cl = type.data_type as Class;
+					if (cl != null && cl.free_function_address_of) {
+						unref_function = generate_destroy_func_wrapper (type);
+					} else {
+						unref_function = type.data_type.get_free_function ();
+					}
 				}
 			} else {
 				if (type.nullable) {
