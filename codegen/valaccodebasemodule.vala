@@ -3228,7 +3228,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (ellipsis) {
 				/* ensure variable argument list ends with NULL
 				 * except when using printf-style arguments */
-				if (!m.printf_format && m.sentinel != "") {
+				if (!m.printf_format && !m.scanf_format && m.sentinel != "") {
 					creation_call.add_argument (new CCodeConstant (m.sentinel));
 				}
 			}

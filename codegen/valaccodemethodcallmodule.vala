@@ -556,7 +556,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (ellipsis) {
 			/* ensure variable argument list ends with NULL
 			 * except when using printf-style arguments */
-			if (!m.printf_format && m.sentinel != "") {
+			if (!m.printf_format && !m.scanf_format && m.sentinel != "") {
 				in_arg_map.set (get_param_pos (-1, true), new CCodeConstant (m.sentinel));
 			}
 		} else if (itype is DelegateType) {

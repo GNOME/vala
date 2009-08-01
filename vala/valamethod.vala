@@ -195,6 +195,11 @@ public class Vala.Method : Member {
 	public bool printf_format { get; set; }
 
 	/**
+	 * Specifies whether this method expects scanf-style format arguments.
+	 */
+	public bool scanf_format { get; set; }
+
+	/**
 	 * Specifies whether a construct function with a GType parameter is
 	 * available. This is only applicable to creation methods.
 	 */
@@ -401,6 +406,8 @@ public class Vala.Method : Member {
 				return_type.floating_reference = true;
 			} else if (a.name == "PrintfFormat") {
 				printf_format = true;
+			} else if (a.name == "ScanfFormat") {
+				scanf_format = true;
 			}
 		}
 	}
