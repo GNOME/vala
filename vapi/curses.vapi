@@ -45,9 +45,9 @@ namespace Curses {
 		SBSS, SSSB, SSBS, BSSS, BSBS, SBSB, SSSS
 	}
 
-	public const Window stdscr;
-	public const Window curscr;
-	public const Window newscr;
+	public Window stdscr;
+	public Window curscr;
+	public Window newscr;
 
 	public const int LINES;
 	public const int COLS;
