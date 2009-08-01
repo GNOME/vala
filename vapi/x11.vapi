@@ -254,7 +254,11 @@ namespace X {
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
-	[CCode (cname = "Window")]
+	[CCode (cname = "Window", type_id = "G_TYPE_INT",
+		marshaller_type_name = "INT",
+		get_value_function = "g_value_get_int",
+		set_value_function = "g_value_set_int", default_value = "0",
+		type_signature = "i")]
 	public struct Window {
 	}
 
@@ -281,6 +285,7 @@ namespace X {
 	[CCode (cname = "XCreateWindow")]
 	public Window create_window (Display display, Window parent, int x, int y, uint width, uint height, uint border_width, int depth, uint @class, Visual? visual, X.CW valuemask, ref SetWindowAttributes attributes);
 
+	[CCode (cname = "XSetWindowAttributes")]
 	public struct SetWindowAttributes {
 		// public Pixmap background_pixmap;	/* background or None or ParentRelative */
 		public ulong background_pixel;	/* background pixel */
@@ -337,7 +342,7 @@ namespace X {
 	[CCode (cname = "XFree")]
 	public int free (void* data);
 
-	[CCode (cprefix = "CW")]
+	[CCode (cprefix = "CW", cname = "int")]
 	public enum CW {
 		BackPixmap,
 		BackPixel,
