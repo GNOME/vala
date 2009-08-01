@@ -1656,10 +1656,10 @@ internal class Vala.GTypeModule : GErrorModule {
 		}
 		
 		var pflags = "G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB";
-		if (prop.get_accessor != null) {
+		if (prop.get_accessor != null && prop.get_accessor.access != SymbolAccessibility.PRIVATE) {
 			pflags = "%s%s".printf (pflags, " | G_PARAM_READABLE");
 		}
-		if (prop.set_accessor != null) {
+		if (prop.set_accessor != null && prop.set_accessor.access != SymbolAccessibility.PRIVATE) {
 			pflags = "%s%s".printf (pflags, " | G_PARAM_WRITABLE");
 			if (prop.set_accessor.construction) {
 				if (prop.set_accessor.writable) {
