@@ -421,6 +421,11 @@ public class Vala.Method : Member {
 	 * @return true if the specified method is compatible to this method
 	 */
 	public bool compatible (Method base_method, out string? invalid_match) {
+		if (binding != base_method.binding) {
+			invalid_match = "incompatible binding";
+			return false;
+		}
+
 		ObjectType object_type = null;
 		if (parent_symbol is ObjectTypeSymbol) {
 			object_type = new ObjectType ((ObjectTypeSymbol) parent_symbol);
