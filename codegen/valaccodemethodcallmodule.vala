@@ -104,7 +104,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			foreach (DataType base_type in current_class.get_base_types ()) {
 				if (base_type.data_type is Class) {
-					add_generic_type_arguments (ccall, base_type.get_type_arguments (), expr);
+					add_generic_type_arguments (ccall, base_type.get_type_arguments (), expr, true);
 					break;
 				}
 			}
@@ -683,33 +683,6 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			ccomma.append_expression (new CCodeAssignment (head.get_array_length_cexpression (ma.inner, 1), temp_ref));
 
 			expr.ccodenode = ccomma;
-		}
-	}
-
-	void add_generic_type_arguments (CCodeFunctionCall ccall, Gee.List<DataType> type_args, CodeNode expr) {
-		foreach (var type_arg in type_args) {
-			if (type_arg is GenericType) {
-				// map generic type parameter
-				string type_param = type_arg.type_parameter.name.down ();
-				ccall.add_argument (new CCodeIdentifier ("%s_type".printf (type_param)));
-				ccall.add_argument (new CCodeIdentifier ("%s_dup_func".printf (type_param)));
-				ccall.add_argument (new CCodeIdentifier ("%s_destroy_func".printf (type_param)));
-			} else {
-				ccall.add_argument (new CCodeIdentifier (type_arg.get_type_id ()));
-				if (requires_copy (type_arg)) {
-					var dup_func = get_dup_func_expression (type_arg, type_arg.source_reference);
-					if (dup_func == null) {
-						// type doesn't contain a copy function
-						expr.error = true;
-						return;
-					}
-					ccall.add_argument (new CCodeCastExpression (dup_func, "GBoxedCopyFunc"));
-					ccall.add_argument (get_destroy_func_expression (type_arg));
-				} else {
-					ccall.add_argument (new CCodeConstant ("NULL"));
-					ccall.add_argument (new CCodeConstant ("NULL"));
-				}
-			}
 		}
 	}
 }

@@ -1828,10 +1828,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	private CCodeExpression get_type_id_expression (DataType type) {
+	private CCodeExpression get_type_id_expression (DataType type, bool is_chainup = false) {
 		if (type is GenericType) {
 			string var_name = "%s_type".printf (type.type_parameter.name.down ());
-			if (is_in_generic_type (type)) {
+			if (is_in_generic_type (type) && !is_chainup) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), var_name);
 			} else {
 				return new CCodeIdentifier (var_name);
@@ -1847,7 +1847,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	public virtual CCodeExpression? get_dup_func_expression (DataType type, SourceReference? source_reference) {
+	public virtual CCodeExpression? get_dup_func_expression (DataType type, SourceReference? source_reference, bool is_chainup = false) {
 		if (type is ErrorType) {
 			return new CCodeIdentifier ("g_error_copy");
 		} else if (type.data_type != null) {
@@ -1881,7 +1881,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return new CCodeIdentifier (dup_function);
 		} else if (type.type_parameter != null && current_type_symbol is Class) {
 			string func_name = "%s_dup_func".printf (type.type_parameter.name.down ());
-			if (is_in_generic_type (type)) {
+			if (is_in_generic_type (type) && !is_chainup) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
 			} else {
 				return new CCodeIdentifier (func_name);
@@ -1993,7 +1993,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		return destroy_func;
 	}
 
-	public CCodeExpression? get_destroy_func_expression (DataType type) {
+	public CCodeExpression? get_destroy_func_expression (DataType type, bool is_chainup = false) {
 		if (context.profile == Profile.GOBJECT && (type.data_type == glist_type || type.data_type == gslist_type)) {
 			// create wrapper function to free list elements if necessary
 
@@ -2048,7 +2048,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return new CCodeIdentifier (unref_function);
 		} else if (type.type_parameter != null && current_type_symbol is Class) {
 			string func_name = "%s_destroy_func".printf (type.type_parameter.name.down ());
-			if (is_in_generic_type (type)) {
+			if (is_in_generic_type (type) && !is_chainup) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
 			} else {
 				return new CCodeIdentifier (func_name);
@@ -3062,6 +3062,25 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public virtual void generate_error_domain_declaration (ErrorDomain edomain, CCodeDeclarationSpace decl_space) {
 	}
 
+	public void add_generic_type_arguments (CCodeFunctionCall ccall, Gee.List<DataType> type_args, CodeNode expr, bool is_chainup = false) {
+		foreach (var type_arg in type_args) {
+			ccall.add_argument (get_type_id_expression (type_arg, is_chainup));
+			if (requires_copy (type_arg)) {
+				var dup_func = get_dup_func_expression (type_arg, type_arg.source_reference, is_chainup);
+				if (dup_func == null) {
+					// type doesn't contain a copy function
+					expr.error = true;
+					return;
+				}
+				ccall.add_argument (new CCodeCastExpression (dup_func, "GBoxedCopyFunc"));
+				ccall.add_argument (get_destroy_func_expression (type_arg, is_chainup));
+			} else {
+				ccall.add_argument (new CCodeConstant ("NULL"));
+				ccall.add_argument (new CCodeConstant ("NULL"));
+			}
+		}
+	}
+
 	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
 		expr.accept_children (codegen);
 
@@ -3125,22 +3144,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			var cl = expr.type_reference.data_type as Class;
 			if (cl != null && !cl.is_compact) {
-				foreach (DataType type_arg in expr.type_reference.get_type_arguments ()) {
-					creation_call.add_argument (get_type_id_expression (type_arg));
-					if (requires_copy (type_arg)) {
-						var dup_func = get_dup_func_expression (type_arg, type_arg.source_reference);
-						if (dup_func == null) {
-							// type doesn't contain a copy function
-							expr.error = true;
-							return;
-						}
-						creation_call.add_argument (new CCodeCastExpression (dup_func, "GBoxedCopyFunc"));
-						creation_call.add_argument (get_destroy_func_expression (type_arg));
-					} else {
-						creation_call.add_argument (new CCodeConstant ("NULL"));
-						creation_call.add_argument (new CCodeConstant ("NULL"));
-					}
-				}
+				add_generic_type_arguments (creation_call, expr.type_reference.get_type_arguments (), expr);
 			}
 
 			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);

@@ -613,7 +613,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 	}
 
-	public override CCodeExpression? get_dup_func_expression (DataType type, SourceReference? source_reference) {
+	public override CCodeExpression? get_dup_func_expression (DataType type, SourceReference? source_reference, bool is_chainup) {
 		if (type is ArrayType) {
 			var array_type = (ArrayType) type;
 			// fixed length arrays use different code
@@ -621,7 +621,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			assert (!array_type.fixed_length);
 			return new CCodeIdentifier (generate_array_dup_wrapper (array_type));
 		} else {
-			return base.get_dup_func_expression (type, source_reference);
+			return base.get_dup_func_expression (type, source_reference, is_chainup);
 		}
 	}
 
