@@ -3219,6 +3219,7 @@ namespace GLib {
 		public void remove_all ();
 		public List<weak K> get_keys ();
 		public List<weak V> get_values ();
+		public void @foreach (HFunc func);
 		[CCode (cname = "g_hash_table_foreach")]
 		public void for_each (HFunc func);
 		public uint size ();
