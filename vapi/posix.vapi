@@ -1569,6 +1569,12 @@ namespace Posix {
 	[CCode (cheader_filename = "unistd.h")]
 	public pid_t tcgetsid (int fd);
 
+	[CCode (cheader_filename = "unistd.h")]
+	public int fsync (int fd);
+	[CCode (cheader_filename = "unistd.h")]
+	public int fdatasync (int fd);
+	[CCode (cheader_filename = "unistd.h")]
+	public int sync ();
 
 	[SimpleType]
 	[CCode (cname = "cc_t", cheader_filename = "termios.h")]
