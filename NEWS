@@ -1,3 +1,14 @@
+Vala 0.7.5
+==========
+
+ * Add support for static properties.
+ * Add support for delegate properties.
+ * Support virtual default handler for signals.
+ * Add limited support for derived compact classes.
+ * Add libgdata bindings (Víctor Manuel Jáquez Leal).
+ * Add libusb-1.0 bindings (Evan Nemerson).
+ * Many bug fixes and binding updates.
+
 Vala 0.7.4
 ==========
 
