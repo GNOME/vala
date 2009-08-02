@@ -544,6 +544,11 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		string getter_cname = "_dynamic_get_%s%d".printf (prop.name, dynamic_property_id++);
 
+		if (get_type_signature (prop.property_type) == null) {
+			Report.error (prop.property_type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (prop.property_type.to_string ()));
+			return getter_cname;
+		}
+
 		var func = new CCodeFunction (getter_cname, prop.property_type.get_cname ());
 		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
 
@@ -567,6 +572,11 @@ internal class Vala.DBusClientModule : DBusModule {
 		}
 
 		string setter_cname = "_dynamic_set_%s%d".printf (prop.name, dynamic_property_id++);
+
+		if (get_type_signature (prop.property_type) == null) {
+			Report.error (prop.property_type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (prop.property_type.to_string ()));
+			return setter_cname;
+		}
 
 		var func = new CCodeFunction (setter_cname, "void");
 		func.modifiers |= CCodeModifiers.STATIC | CCodeModifiers.INLINE;
