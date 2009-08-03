@@ -223,7 +223,7 @@ namespace GLib {
 		public bool get_is_backup ();
 		public bool get_is_hidden ();
 		public bool get_is_symlink ();
-		public void get_modification_time (GLib.TimeVal _result);
+		public void get_modification_time (out GLib.TimeVal _result);
 		public unowned string get_name ();
 		public int64 get_size ();
 		public int32 get_sort_order ();
@@ -815,7 +815,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class VolumeMonitor : GLib.Object {
 		public virtual unowned GLib.Volume adopt_orphan_mount (GLib.Mount mount);
-		public static unowned GLib.VolumeMonitor get ();
+		public static unowned GLib.VolumeMonitor @get ();
 		public virtual unowned GLib.List get_connected_drives ();
 		public virtual unowned GLib.Mount get_mount_for_uuid (string uuid);
 		public virtual unowned GLib.List get_mounts ();
