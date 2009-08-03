@@ -310,13 +310,13 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 								var delegate_method = arg.symbol_reference as Method;
 								var lambda = arg as LambdaExpression;
 								var arg_ma = arg as MemberAccess;
-								if (lambda != null && current_method != null && current_method.binding == MemberBinding.INSTANCE) {
+								if (lambda != null && get_this_type () != null) {
 									// type of delegate target is same as `this'
 									// for lambda expressions in instance methods
-									var ref_call = new CCodeFunctionCall (get_dup_func_expression (current_method.this_parameter.parameter_type, arg.source_reference));
+									var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_this_type (), arg.source_reference));
 									ref_call.add_argument (delegate_target);
 									delegate_target = ref_call;
-									delegate_target_destroy_notify = get_destroy_func_expression (current_method.this_parameter.parameter_type);
+									delegate_target_destroy_notify = get_destroy_func_expression (get_this_type ());
 								} else if (delegate_method != null && delegate_method.binding == MemberBinding.INSTANCE
 								           && arg_ma != null && arg_ma.inner != null && arg_ma.inner.value_type.data_type != null
 								           && arg_ma.inner.value_type.data_type.is_reference_counting ()) {

@@ -140,7 +140,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 			var invocation_expr = (MethodCall) delegate_expr;
 			return invocation_expr.delegate_target;
 		} else if (delegate_expr is LambdaExpression) {
-			if ((current_method != null && current_method.binding == MemberBinding.INSTANCE) || in_constructor) {
+			if (get_this_type () != null || in_constructor) {
 				return new CCodeIdentifier ("self");
 			} else {
 				return new CCodeConstant ("NULL");

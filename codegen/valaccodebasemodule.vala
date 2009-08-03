@@ -4146,6 +4146,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public virtual bool is_gobject_property (Property prop) {
 		return false;
 	}
+
+	public DataType? get_this_type () {
+		if (current_method != null && current_method.binding == MemberBinding.INSTANCE) {
+			return current_method.this_parameter.parameter_type;
+		} else if (current_property_accessor != null && current_property_accessor.prop.binding == MemberBinding.INSTANCE) {
+			return current_property_accessor.prop.this_parameter.parameter_type;
+		}
+		return null;
+	}
 }
 
 // vim:sw=8 noet
