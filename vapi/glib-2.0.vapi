@@ -951,6 +951,13 @@ public class string {
 	public long length {
 		get { return this.len (); }
 	}
+
+	public char[] to_utf8 () {
+		char[] result = new char[this.size () + 1];
+		result.length--;
+		GLib.Memory.copy (result, this, this.size ());
+		return result;
+	}
 }
 
 [CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "glib.h")]
