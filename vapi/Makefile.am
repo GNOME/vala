@@ -15,12 +15,14 @@ dist_vapi_DATA = \
 	clutter-1.0.deps \
 	clutter-json-1.0.vapi \
 	cogl-1.0.vapi \
+	cogl-1.0.deps \
 	curses.vapi \
 	dbus-glib-1.vapi \
 	enchant.vapi \
 	fuse.deps \
 	fuse.vapi \
 	gconf-2.0.vapi \
+	gl-1.0.vapi \
 	glib-2.0.vapi \
 	gdk-2.0.deps \
 	gdk-2.0.vapi \
