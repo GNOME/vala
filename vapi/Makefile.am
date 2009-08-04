@@ -11,6 +11,10 @@ dist_vapi_DATA = \
 	cairo.vapi \
 	cairo-xcb.deps \
 	cairo-xcb.vapi \
+	clutter-1.0.vapi \
+	clutter-1.0.deps \
+	clutter-json-1.0.vapi \
+	cogl-1.0.vapi \
 	curses.vapi \
 	dbus-glib-1.vapi \
 	enchant.vapi \
@@ -153,7 +157,7 @@ dist_vapi_DATA = \
 	x11.vapi \
 	xcb.vapi \
 	zlib.vapi \
-	$(NULL)
+	$(null)
 
 dist_noinst_DATA = \
 	config.vapi \
