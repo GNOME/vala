@@ -353,11 +353,12 @@ namespace GLib {
 	public static delegate void ClosureNotify (void* data, Closure closure);
 
 	[Compact]
-	[CCode (type_id = "G_TYPE_VALUE_ARRAY")]
+	[CCode (type_id = "G_TYPE_VALUE_ARRAY", copy_function = "g_value_array_copy")]
 	public class ValueArray {
 		public uint n_values;
 		public Value[] values;
 		public ValueArray (uint n_prealloced);
+		public ValueArray copy ();
 		public weak Value? get_nth (uint index_);
 		public void append (Value value);
 		public void prepend (Value value);
