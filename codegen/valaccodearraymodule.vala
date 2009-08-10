@@ -163,7 +163,9 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			return (CCodeExpression) get_ccodenode (length_expr);
 		} else if (array_expr is MethodCall || array_expr is CastExpression) {
 			Gee.List<CCodeExpression> size = array_expr.get_array_sizes ();
-			return size[dim - 1];
+			if (size.size >= dim) {
+				return size[dim - 1];
+			}
 		} else if (array_expr.symbol_reference != null) {
 			if (array_expr.symbol_reference is FormalParameter) {
 				var param = (FormalParameter) array_expr.symbol_reference;
@@ -276,7 +278,9 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				var prop = (Property) array_expr.symbol_reference;
 				if (!prop.no_array_length) {
 					Gee.List<CCodeExpression> size = array_expr.get_array_sizes ();
-					return size[dim - 1];
+					if (size.size >= dim) {
+						return size[dim - 1];
+					}
 				}
 			}
 		} else if (array_expr is NullLiteral) {

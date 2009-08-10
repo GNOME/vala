@@ -3444,7 +3444,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			// retain array length
 			var array_type = expr.type_reference as ArrayType;
-			if (array_type != null) {
+			if (array_type != null && expr.inner.value_type is ArrayType) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
 					expr.append_array_size (get_array_length_cexpression (expr.inner, dim));
 				}
