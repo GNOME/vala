@@ -456,7 +456,13 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 					expr.append_array_size (len_call);
 				} else if (!m.no_array_length) {
-					var temp_var = get_temp_variable (int_type);
+					LocalVariable temp_var;
+
+					if (m.array_length_type == null) {
+						temp_var = get_temp_variable (int_type);
+					} else {
+						temp_var = get_temp_variable (new CType (m.array_length_type));
+					}
 					var temp_ref = get_variable_cexpression (temp_var.name);
 
 					temp_vars.insert (0, temp_var);

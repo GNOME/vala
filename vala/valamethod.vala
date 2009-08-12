@@ -190,6 +190,11 @@ public class Vala.Method : Member {
 	public bool array_null_terminated { get; set; }
 
 	/**
+	 * Specified a custom type for the array length parameter.
+	 */
+	public string? array_length_type { get; set; default = null; }
+
+	/**
 	 * Specifies whether this method expects printf-style format arguments.
 	 */
 	public bool printf_format { get; set; }
@@ -378,6 +383,9 @@ public class Vala.Method : Member {
 		}
 		if (a.has_argument ("array_length")) {
 			no_array_length = !a.get_bool ("array_length");
+		}
+		if (a.has_argument ("array_length_type")) {
+			array_length_type = a.get_string ("array_length_type");
 		}
 		if (a.has_argument ("array_null_terminated")) {
 			array_null_terminated = a.get_bool ("array_null_terminated");
