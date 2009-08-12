@@ -1282,7 +1282,7 @@ namespace GLib {
 		public void add_poll (ref PollFD fd);
 		public void remove_poll (ref PollFD fd);
 		public void get_current_time (out TimeVal timeval);
-		public static void remove (uint id);
+		public static bool remove (uint id);
 		public static bool remove_by_funcs_user_data (void* user_data);
 		public static bool remove_by_user_data (void* user_data);
 	}
