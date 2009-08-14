@@ -568,7 +568,7 @@ namespace Gst {
 		public GLib.Type type;
 		public unowned Gst.Iterator filter (GLib.CompareFunc func);
 		public void* find_custom (GLib.CompareFunc func, void* user_data);
-		public Gst.IteratorResult fold (Gst.IteratorFoldFunction func, Gst.Value? ret);
+		public Gst.IteratorResult fold ([CCode (delegate_target_pos = 2.1)] Gst.IteratorFoldFunction func, Gst.Value? ret);
 		public Gst.IteratorResult @foreach (GLib.Func func);
 		[CCode (has_construct_function = false)]
 		public Iterator.list (GLib.Type type, GLib.Mutex @lock, uint32 master_cookie, GLib.List list, void* owner, Gst.IteratorItemFunction item, Gst.IteratorDisposeFunction free);
