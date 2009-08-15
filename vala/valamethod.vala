@@ -863,6 +863,10 @@ public class Vala.Method : Member {
 	}
 
 	bool is_possible_entry_point (SemanticAnalyzer analyzer) {
+		if (external_package) {
+			return false;
+		}
+
 		if (name == null || name != "main") {
 			// method must be called "main"
 			return false;
