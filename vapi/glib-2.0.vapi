@@ -878,11 +878,28 @@ public class string {
 	public string locale_to_utf8 (ssize_t len, out size_t bytes_read, out size_t bytes_written, out GLib.Error error = null);
   
 	[CCode (cname = "g_strchomp")]
-	public weak string chomp();
+	public weak string _chomp();
+	public string chomp () {
+		string result = this.dup ();
+		result._chomp ();
+		return result;
+	}
+
 	[CCode (cname = "g_strchug")]
-	public weak string chug();
+	public weak string _chug();
+	public string chug () {
+		string result = this.dup ();
+		result._chug ();
+		return result;
+	}
+
 	[CCode (cname = "g_strstrip")]
-	public weak string strip ();
+	public weak string _strip ();
+	public string strip () {
+		string result = this.dup ();
+		result._strip ();
+		return result;
+	}
 	
 	[CCode (cname = "g_str_hash")]
 	public uint hash ();
@@ -915,6 +932,8 @@ public class string {
 	[CCode (cname = "g_strcanon")]
 	public void canon (string valid_chars, char substitutor);
 
+	[CCode (cname = "g_strdup")]
+	public string dup ();
 	// n is size in bytes, not length in characters
 	[CCode (cname = "g_strndup")]
 	public string ndup (size_t n);
