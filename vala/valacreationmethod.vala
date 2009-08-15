@@ -178,6 +178,21 @@ public class Vala.CreationMethod : Method {
 			return false;
 		}
 
+		// check that all errors that can be thrown in the method body are declared
+		if (body != null) {
+			foreach (DataType body_error_type in body.get_error_types ()) {
+				bool can_propagate_error = false;
+				foreach (DataType method_error_type in get_error_types ()) {
+					if (body_error_type.compatible (method_error_type)) {
+						can_propagate_error = true;
+					}
+				}
+				if (!can_propagate_error) {
+					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+				}
+			}
+		}
+
 		return !error;
 	}
 }
