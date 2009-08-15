@@ -850,7 +850,13 @@ public class Vala.Method : Member {
 		}
 
 		if (is_possible_entry_point (analyzer)) {
+			if (analyzer.context.entry_point != null) {
+				error = true;
+				Report.error (source_reference, "program already has an entry point `%s'".printf (analyzer.context.entry_point.get_full_name ()));
+				return false;
+			}
 			entry_point = true;
+			analyzer.context.entry_point = this;
 		}
 
 		return !error;

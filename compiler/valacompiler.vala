@@ -313,6 +313,13 @@ class Vala.Compiler {
 		var analyzer = new SemanticAnalyzer ();
 		analyzer.analyze (context);
 
+		if (!ccode_only && !compile_only) {
+			// building program, require entry point
+			if (context.entry_point == null) {
+				Report.error (null, "program does not contain a static `main' method");
+			}
+		}
+
 		if (dump_tree != null) {
 			var code_writer = new CodeWriter (true);
 			code_writer.write_file (context, dump_tree);
