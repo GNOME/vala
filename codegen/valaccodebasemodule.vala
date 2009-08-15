@@ -2589,7 +2589,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (inner_node  == null) {
 				l = new CCodeIdentifier ("self");
 			} else if (stmt.resource.symbol_reference.parent_symbol != current_type_symbol) {
-				 l = new InstanceCast ((CCodeExpression) inner_node.ccodenode, parent);
+				 l = generate_instance_cast ((CCodeExpression) inner_node.ccodenode, parent);
 			} else {
 				l = (CCodeExpression) inner_node.ccodenode;
 			}
@@ -2714,7 +2714,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_base_access (BaseAccess expr) {
-		expr.ccodenode = new InstanceCast (new CCodeIdentifier ("self"), expr.value_type.data_type);
+		expr.ccodenode = generate_instance_cast (new CCodeIdentifier ("self"), expr.value_type.data_type);
 	}
 
 	public override void visit_postfix_expression (PostfixExpression expr) {
@@ -3433,7 +3433,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	
 				expr.ccodenode = ccomma;
 			} else {
-				expr.ccodenode = new InstanceCast ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.data_type);
+				expr.ccodenode = generate_instance_cast ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.data_type);
 			}
 		} else {
 			if (expr.is_silent_cast) {
@@ -3539,9 +3539,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				
 				if (left_cl != right_cl) {
 					if (left_cl.is_subtype_of (right_cl)) {
-						cleft = new InstanceCast (cleft, right_cl);
+						cleft = generate_instance_cast (cleft, right_cl);
 					} else if (right_cl.is_subtype_of (left_cl)) {
-						cright = new InstanceCast (cright, left_cl);
+						cright = generate_instance_cast (cright, left_cl);
 					}
 				}
 			} else if (left_type_as_struct != null && right_type_as_struct != null) {
@@ -3860,7 +3860,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		var iface = target_type.data_type as Interface;
 		if (context.checking && (iface != null || (cl != null && !cl.is_compact))) {
 			// checked cast for strict subtypes of GTypeInstance
-			return new InstanceCast (cexpr, target_type.data_type);
+			return generate_instance_cast (cexpr, target_type.data_type);
 		} else if (target_type.data_type != null && expression_type.get_cname () != target_type.get_cname ()) {
 			var st = target_type.data_type as Struct;
 			if (target_type.data_type.is_reference_type () || (st != null && st.is_simple_type ())) {
@@ -4154,6 +4154,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return current_property_accessor.prop.this_parameter.parameter_type;
 		}
 		return null;
+	}
+
+	public CCodeFunctionCall generate_instance_cast (CCodeExpression expr, TypeSymbol type) {
+		var result = new CCodeFunctionCall (new CCodeIdentifier (type.get_upper_case_cname (null)));
+		result.add_argument (expr);
+		return result;
 	}
 }
 

@@ -1469,7 +1469,7 @@ internal class Vala.GTypeModule : GErrorModule {
 
 		var cblock = new CCodeBlock ();
 
-		CCodeFunctionCall ccall = new InstanceCast (new CCodeIdentifier ("obj"), cl);
+		CCodeFunctionCall ccall = generate_instance_cast (new CCodeIdentifier ("obj"), cl);
 
 		var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 		cdecl.add_declarator (new CCodeVariableDeclarator ("self", ccall));

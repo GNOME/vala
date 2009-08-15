@@ -78,7 +78,6 @@ libvalacore_la_VALASOURCES = \
 	valagenietokentype.vala \
 	valaifstatement.vala \
 	valainitializerlist.vala \
-	valainstancecast.vala \
 	valaintegerliteral.vala \
 	valaintegertype.vala \
 	valainterface.vala \

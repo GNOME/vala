@@ -184,7 +184,7 @@ internal class Vala.GObjectModule : GTypeModule {
 		
 		var block = new CCodeBlock ();
 		
-		CCodeFunctionCall ccall = new InstanceCast (new CCodeIdentifier ("object"), cl);
+		CCodeFunctionCall ccall = generate_instance_cast (new CCodeIdentifier ("object"), cl);
 		var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 		cdecl.add_declarator (new CCodeVariableDeclarator ("self", ccall));
 		block.add_statement (cdecl);
@@ -264,7 +264,7 @@ internal class Vala.GObjectModule : GTypeModule {
 		
 		var block = new CCodeBlock ();
 		
-		CCodeFunctionCall ccall = new InstanceCast (new CCodeIdentifier ("object"), cl);
+		CCodeFunctionCall ccall = generate_instance_cast (new CCodeIdentifier ("object"), cl);
 		var cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 		cdecl.add_declarator (new CCodeVariableDeclarator ("self", ccall));
 		block.add_statement (cdecl);
@@ -461,7 +461,7 @@ internal class Vala.GObjectModule : GTypeModule {
 			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("obj"), ccall)));
 
 
-			ccall = new InstanceCast (new CCodeIdentifier ("obj"), cl);
+			ccall = generate_instance_cast (new CCodeIdentifier ("obj"), cl);
 
 			cdecl = new CCodeDeclaration ("%s *".printf (cl.get_cname ()));
 			cdecl.add_declarator (new CCodeVariableDeclarator ("self", ccall));
