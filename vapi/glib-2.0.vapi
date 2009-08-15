@@ -1240,6 +1240,7 @@ namespace GLib {
 	[CCode (cname = "GSource")]
 	public class TimeoutSource : Source {
 		public TimeoutSource (uint interval);
+		public TimeoutSource.seconds (uint interval);
 	}
 
 	namespace Timeout {
