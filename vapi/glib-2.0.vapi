@@ -900,6 +900,14 @@ public class string {
 		result._strip ();
 		return result;
 	}
+
+	[CCode (cname = "g_strdelimit")]
+	public weak string _delimit (string delimiters, char new_delimiter);
+	public string delimit (string delimiters, char new_delimiter) {
+		string result = this.dup ();
+		result._delimit (delimiters, new_delimiter);
+		return result;
+	}
 	
 	[CCode (cname = "g_str_hash")]
 	public uint hash ();
