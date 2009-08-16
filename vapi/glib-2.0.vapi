@@ -46,7 +46,7 @@ public struct bool {
 [IntegerType (rank = 2, min = 0, max = 127)]
 public struct char {
 	[CCode (cname = "g_strdup_printf", instance_pos = -1)]
-	public string to_string (string format = "%hhi");
+	public string to_string (string format = "%c");
 	public bool isalnum ();
 	public bool isalpha ();
 	public bool iscntrl ();
