@@ -32,12 +32,45 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 	public Symbol root_symbol;
 	public Symbol current_symbol;
-	public TypeSymbol current_type_symbol;
-	public Class current_class;
-	public Method current_method;
 	public DataType current_return_type;
 	public TryStatement current_try;
-	public PropertyAccessor current_property_accessor;
+
+	public Method? current_method {
+		get {
+			var sym = current_symbol;
+			while (sym is Block) {
+				sym = sym.parent_symbol;
+			}
+			return sym as Method;
+		}
+	}
+
+	public PropertyAccessor? current_property_accessor {
+		get {
+			var sym = current_symbol;
+			while (sym is Block) {
+				sym = sym.parent_symbol;
+			}
+			return sym as PropertyAccessor;
+		}
+	}
+
+	public TypeSymbol? current_type_symbol {
+		get {
+			var sym = current_symbol;
+			while (sym != null) {
+				if (sym is TypeSymbol) {
+					return (TypeSymbol) sym;
+				}
+				sym = sym.parent_symbol;
+			}
+			return null;
+		}
+	}
+
+	public Class? current_class {
+		get { return current_type_symbol as Class; }
+	}
 
 	public CCodeDeclarationSpace header_declarations;
 	public CCodeDeclarationSpace internal_header_declarations;
@@ -1234,9 +1267,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_property_accessor (PropertyAccessor acc) {
-		var old_property_accessor = current_property_accessor;
+		var old_symbol = current_symbol;
 		bool old_method_inner_error = current_method_inner_error;
-		current_property_accessor = acc;
+		current_symbol = acc;
 		current_method_inner_error = false;
 
 		var prop = (Property) acc.prop;
@@ -1474,7 +1507,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			source_type_member_definition.append (function);
 		}
 
-		current_property_accessor = old_property_accessor;
+		current_symbol = old_symbol;
 		current_return_type = old_return_type;
 		current_method_inner_error = old_method_inner_error;
 	}

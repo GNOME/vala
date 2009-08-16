@@ -139,9 +139,9 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 	}
 
 	public override void visit_struct (Struct st) {
-		var old_type_symbol = current_type_symbol;
+		var old_symbol = current_symbol;
 		var old_instance_finalize_fragment = instance_finalize_fragment;
-		current_type_symbol = st;
+		current_symbol = st;
 		instance_finalize_fragment = new CCodeFragment ();
 
 		generate_struct_declaration (st, source_declarations);
@@ -163,7 +163,7 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 			add_struct_free_function (st);
 		}
 
-		current_type_symbol = old_type_symbol;
+		current_symbol = old_symbol;
 		instance_finalize_fragment = old_instance_finalize_fragment;
 	}
 

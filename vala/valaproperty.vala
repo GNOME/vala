@@ -48,7 +48,7 @@ public class Vala.Property : Member, Lockable {
 		set {
 			_get_accessor = value;
 			if (value != null) {
-				value.prop = this;
+				value.owner = scope;
 			}
 		}
 	}
@@ -61,7 +61,7 @@ public class Vala.Property : Member, Lockable {
 		set {
 			_set_accessor = value;
 			if (value != null) {
-				value.prop = this;
+				value.owner = scope;
 			}
 		}
 	}

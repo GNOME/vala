@@ -183,9 +183,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public override void visit_method (Method m) {
-		var old_type_symbol = current_type_symbol;
 		var old_symbol = current_symbol;
-		Method old_method = current_method;
 		DataType old_return_type = current_return_type;
 		bool old_method_inner_error = current_method_inner_error;
 		bool old_in_creation_method = in_creation_method;
@@ -194,11 +192,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		var old_temp_ref_vars = temp_ref_vars;
 		var old_variable_name_map = variable_name_map;
 		var old_try = current_try;
-		if (m.parent_symbol is TypeSymbol) {
-			current_type_symbol = (TypeSymbol) m.parent_symbol;
-		}
 		current_symbol = m;
-		current_method = m;
 		current_return_type = m.return_type;
 		current_method_inner_error = false;
 		next_temp_var_id = 0;
@@ -304,9 +298,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 
 		bool inner_error = current_method_inner_error;
 
-		current_type_symbol = old_type_symbol;
 		current_symbol = old_symbol;
-		current_method = old_method;
 		current_return_type = old_return_type;
 		current_method_inner_error = old_method_inner_error;
 		next_temp_var_id = old_next_temp_var_id;

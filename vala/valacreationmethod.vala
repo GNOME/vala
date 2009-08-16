@@ -134,19 +134,12 @@ public class Vala.CreationMethod : Method {
 
 		var old_source_file = analyzer.current_source_file;
 		var old_symbol = analyzer.current_symbol;
-		var old_class = analyzer.current_class;
-		var old_struct = analyzer.current_struct;
 		var old_return_type = analyzer.current_return_type;
 
 		if (source_reference != null) {
 			analyzer.current_source_file = source_reference.file;
 		}
 		analyzer.current_symbol = this;
-		if (parent_symbol is Class) {
-			analyzer.current_class = (Class) parent_symbol;
-		} else if (parent_symbol is Struct) {
-			analyzer.current_struct = (Struct) parent_symbol;
-		}
 		analyzer.current_return_type = return_type;
 
 		foreach (FormalParameter param in get_parameters()) {
@@ -163,8 +156,6 @@ public class Vala.CreationMethod : Method {
 
 		analyzer.current_source_file = old_source_file;
 		analyzer.current_symbol = old_symbol;
-		analyzer.current_class = old_class;
-		analyzer.current_struct = old_struct;
 		analyzer.current_return_type = old_return_type;
 
 		if (analyzer.current_symbol.parent_symbol is Method) {

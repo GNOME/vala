@@ -35,8 +35,28 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public Symbol current_symbol { get; set; }
 	public SourceFile current_source_file { get; set; }
 	public DataType current_return_type;
-	public Class current_class;
-	public Struct current_struct;
+
+	public TypeSymbol? current_type_symbol {
+		get {
+			var sym = current_symbol;
+			while (sym != null) {
+				if (sym is TypeSymbol) {
+					return (TypeSymbol) sym;
+				}
+				sym = sym.parent_symbol;
+			}
+			return null;
+		}
+	}
+
+	public Class? current_class {
+		get { return current_type_symbol as Class; }
+	}
+
+
+	public Struct? current_struct {
+		get { return current_type_symbol as Struct; }
+	}
 
 	public Block insert_block;
 

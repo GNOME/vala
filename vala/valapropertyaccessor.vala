@@ -25,11 +25,13 @@ using GLib;
 /**
  * Represents a get or set accessor of a property in the source code.
  */
-public class Vala.PropertyAccessor : CodeNode {
+public class Vala.PropertyAccessor : Symbol {
 	/**
 	 * The corresponding property.
 	 */
-	public weak Property prop { get; set; }
+	public Property prop {
+		get { return parent_symbol as Property; }
+	}
 
 	/**
 	 * The property type.
@@ -61,14 +63,17 @@ public class Vala.PropertyAccessor : CodeNode {
 	public bool construction { get; set; }
 
 	/**
-	 * Specifies the accessibility of this property accessor.
-	 */
-	public SymbolAccessibility access { get; set; }
-
-	/**
 	 * The accessor body.
 	 */
-	public Block? body { get; set; }
+	public Block? body {
+		get { return _body; }
+		set {
+			_body = value;
+			if (_body != null) {
+				_body.owner = scope;
+			}
+		}
+	}
 
 	public BasicBlock entry_block { get; set; }
 
@@ -104,6 +109,7 @@ public class Vala.PropertyAccessor : CodeNode {
 
 	private DataType _value_type;
 	private string? _cname;
+	private Block _body;
 	
 	/**
 	 * Creates a new property accessor.
@@ -116,12 +122,12 @@ public class Vala.PropertyAccessor : CodeNode {
 	 * @return             newly created property accessor
 	 */
 	public PropertyAccessor (bool readable, bool writable, bool construction, DataType? value_type, Block? body, SourceReference? source_reference) {
+		base (null, source_reference);
 		this.readable = readable;
 		this.writable = writable;
 		this.construction = construction;
 		this.value_type = value_type;
 		this.body = body;
-		this.source_reference = source_reference;
 	}
 
 	public override void accept (CodeVisitor visitor) {
@@ -163,7 +169,10 @@ public class Vala.PropertyAccessor : CodeNode {
 			return false;
 		}
 
+		var old_symbol = analyzer.current_symbol;
 		var old_return_type = analyzer.current_return_type;
+
+		analyzer.current_symbol = this;
 		if (readable) {
 			analyzer.current_return_type = value_type;
 		} else {
@@ -201,6 +210,7 @@ public class Vala.PropertyAccessor : CodeNode {
 			body.check (analyzer);
 		}
 
+		analyzer.current_symbol = old_symbol;
 		analyzer.current_return_type = old_return_type;
 
 		return !error;
