@@ -3637,8 +3637,8 @@ namespace Gtk {
 		public string tooltip_text { get; set; }
 		public bool visible { get; set; }
 		public virtual signal void activate ();
-		public virtual signal bool button_press_event (Gdk.Event event);
-		public virtual signal bool button_release_event (Gdk.Event event);
+		public virtual signal bool button_press_event (Gdk.EventButton event);
+		public virtual signal bool button_release_event (Gdk.EventButton event);
 		public virtual signal void popup_menu (uint button, uint activate_time);
 		public virtual signal bool query_tooltip (int x, int y, bool keyboard_mode, Gtk.Tooltip tooltip);
 		public virtual signal bool scroll_event (Gdk.Event event);
