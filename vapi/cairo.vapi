@@ -75,11 +75,12 @@ namespace Cairo {
 		
 		public void clip ();
 		public void clip_preserve ();
+		public void clip_extents (out double x1, out double y1, out double x2, out double y2);
 		public void reset_clip ();
 
 		public void fill ();
 		public void fill_preserve ();
-		public void fill_extents (ref double x1, ref double y1, ref double x2, ref double y2);
+		public void fill_extents (out double x1, out double y1, out double x2, out double y2);
 		public bool in_fill (double x, double y);
 
 		public void mask (Pattern pattern);
@@ -90,7 +91,7 @@ namespace Cairo {
 
 		public void stroke ();
 		public void stroke_preserve ();
-		public void stroke_extents (ref double x1, ref double y1, ref double x2, ref double y2);
+		public void stroke_extents (out double x1, out double y1, out double x2, out double y2);
 		public bool in_stroke (double x, double y);
 
 		public void copy_page ();
@@ -101,7 +102,7 @@ namespace Cairo {
 		
 		public void append_path (Path path);
 		
-		public void get_current_point (ref double x, ref double y);
+		public void get_current_point (out double x, out double y);
 		
 		public void new_path ();
 		public void new_sub_path ();
@@ -138,8 +139,8 @@ namespace Cairo {
 		public void set_font_size (double size);
 		public void set_font_matrix (Matrix matrix);
 		public void get_font_matrix (out Matrix matrix);
-		public void set_font_options (ref FontOptions options);
-		public void get_font_options (ref FontOptions options);
+		public void set_font_options (FontOptions options);
+		public void get_font_options (out FontOptions options);
 		
 		public void show_text (string utf8);
 		public void show_glyphs (Glyph[] glyphs);
@@ -324,13 +325,13 @@ namespace Cairo {
 	[CCode (ref_function = "cairo_scaled_font_reference", unref_function = "cairo_scaled_font_destroy", cname = "cairo_scaled_font_t")]
 	public class ScaledFont {
 		[CCode (cname = "cairo_scaled_font_create")]
-		public ScaledFont (Matrix font_matrix, Matrix ctm, ref FontOptions options);
+		public ScaledFont (Matrix font_matrix, Matrix ctm, FontOptions options);
 		public Status status ();
-		public void extents (ref FontExtents extents);
-		public void text_extents (string utf8, ref TextExtents extents);
-		public void glyph_extents (Glyph[] glyphs, ref TextExtents extents);
+		public void extents (out FontExtents extents);
+		public void text_extents (string utf8, out TextExtents extents);
+		public void glyph_extents (Glyph[] glyphs, out TextExtents extents);
 		public weak FontFace get_font_face ();
-		public void get_font_options (ref FontOptions options);
+		public void get_font_options (out FontOptions options);
 		public void get_font_matrix (out Matrix font_matrix);
 		public void get_ctm (out Matrix ctm);
 		public FontType get_type ();
@@ -406,12 +407,12 @@ namespace Cairo {
 		public Surface.similar (Surface other, Content content, int width, int height);
 		public void finish ();
 		public void flush ();
-		public void get_font_options (ref FontOptions options);
+		public void get_font_options (out FontOptions options);
 		public Content get_content ();
 		public void mark_dirty ();
 		public void mark_dirty_rectangle (int x, int y, int width, int height);
 		public void set_device_offset (double x_offset, double y_offset);
-		public void get_device_offset (ref double x_offset, ref double y_offset);
+		public void get_device_offset (out double x_offset, out double y_offset);
 		public void set_fallback_resolution (double x_pixels_per_inch, double y_pixels_per_inch);
 		public Status status ();
 		public SurfaceType get_type ();
