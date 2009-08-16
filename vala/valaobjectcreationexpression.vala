@@ -256,6 +256,22 @@ public class Vala.ObjectCreationExpression : Expression {
 				}
 			}
 
+			if (symbol_reference != null && symbol_reference.access == SymbolAccessibility.PRIVATE) {
+				bool in_target_type = false;
+				for (Symbol this_symbol = analyzer.current_symbol; this_symbol != null; this_symbol = this_symbol.parent_symbol) {
+					if (this_symbol == cl) {
+						in_target_type = true;
+						break;
+					}
+				}
+
+				if (!in_target_type) {
+					error = true;
+					Report.error (source_reference, "Access to private member `%s' denied".printf (symbol_reference.get_full_name ()));
+					return false;
+				}
+			}
+
 			while (cl != null) {
 				if (cl.get_ref_sink_function () != null) {
 					value_type.floating_reference = true;
