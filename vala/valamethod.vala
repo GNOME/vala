@@ -899,6 +899,18 @@ public class Vala.Method : Member {
 		
 		return true;
 	}
+
+	public int get_required_arguments () {
+		int n = 0;
+		foreach (var param in parameters) {
+			if (param.default_expression != null) {
+				// optional argument
+				break;
+			}
+			n++;
+		}
+		return n;
+	}
 }
 
 // vim:sw=8 noet

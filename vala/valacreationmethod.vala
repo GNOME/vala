@@ -150,6 +150,37 @@ public class Vala.CreationMethod : Method {
 
 		if (body != null) {
 			body.check (analyzer);
+
+			// ensure we chain up to base constructor
+			var cl = parent_symbol as Class;
+			if (!chain_up && cl != null && cl.base_class != null) {
+				if (cl.base_class.default_construction_method != null
+				    && !cl.base_class.default_construction_method.has_construct_function) {
+					// chain up impossible
+				} else if (analyzer.context.profile == Profile.GOBJECT && cl.base_class == analyzer.object_type) {
+					// no chain up necessary for direct GObject subclasses
+				} else if (analyzer.context.profile == Profile.GOBJECT
+				           && cl.is_subtype_of (analyzer.object_type)
+				           && n_construction_params > 0) {
+					// no chain up when using GObject construct properties
+				} else if (cl.base_class.default_construction_method == null
+				    || cl.base_class.default_construction_method.access == SymbolAccessibility.PRIVATE) {
+					Report.warning (source_reference, "unable to chain up to private base constructor");
+				} else if (cl.base_class.default_construction_method.get_required_arguments () > 0) {
+					Report.warning (source_reference, "unable to chain up to base constructor requiring arguments");
+				} else {
+					var old_insert_block = analyzer.insert_block;
+					analyzer.current_symbol = body;
+					analyzer.insert_block = body;
+
+					var stmt = new ExpressionStatement (new MethodCall (new BaseAccess (source_reference), source_reference), source_reference);
+					body.insert_statement (0, stmt);
+					stmt.check (analyzer);
+
+					analyzer.current_symbol = this;
+					analyzer.insert_block = old_insert_block;
+				}
+			}
 		}
 
 		analyzer.current_source_file = old_source_file;

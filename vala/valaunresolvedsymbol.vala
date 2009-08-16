@@ -1,6 +1,6 @@
 /* valaunresolvedsymbol.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,9 +35,8 @@ public class Vala.UnresolvedSymbol : Symbol {
 	public bool qualified { get; set; }
 
 	public UnresolvedSymbol (UnresolvedSymbol? inner, string name, SourceReference? source_reference = null) {
+		base (name, source_reference);
 		this.inner = inner;
-		this.name = name;
-		this.source_reference = source_reference;
 	}
 
 	public override string to_string () {
