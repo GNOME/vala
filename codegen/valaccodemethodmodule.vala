@@ -185,7 +185,6 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 	public override void visit_method (Method m) {
 		var old_symbol = current_symbol;
 		bool old_method_inner_error = current_method_inner_error;
-		bool old_in_creation_method = in_creation_method;
 		int old_next_temp_var_id = next_temp_var_id;
 		var old_temp_vars = temp_vars;
 		var old_temp_ref_vars = temp_ref_vars;
@@ -205,7 +204,6 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		check_type (m.return_type);
 
 		if (m is CreationMethod) {
-			in_creation_method = true;
 			var cl = current_type_symbol as Class;
 			if (cl != null && !cl.is_compact) {
 				if (cl.base_class == null) {
@@ -214,8 +212,6 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					in_gobject_creation_method = true;
 				}
 			}
-		} else {
-			in_creation_method = false;
 		}
 
 		var creturn_type = current_return_type;
@@ -290,8 +286,6 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 
 				m.body.ccodenode = cblock;
 			}
-
-			in_creation_method = old_in_creation_method;
 		}
 
 		bool inner_error = current_method_inner_error;
