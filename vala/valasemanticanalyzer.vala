@@ -34,7 +34,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public Symbol root_symbol;
 	public Symbol current_symbol { get; set; }
 	public SourceFile current_source_file { get; set; }
-	public DataType current_return_type;
 
 	public TypeSymbol? current_type_symbol {
 		get {
@@ -58,8 +57,49 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		get { return current_type_symbol as Struct; }
 	}
 
+	public Method? current_method {
+		get {
+			var sym = current_symbol;
+			while (sym is Block) {
+				sym = sym.parent_symbol;
+			}
+			return sym as Method;
+		}
+	}
+
+	public PropertyAccessor? current_property_accessor {
+		get {
+			var sym = current_symbol;
+			while (sym is Block) {
+				sym = sym.parent_symbol;
+			}
+			return sym as PropertyAccessor;
+		}
+	}
+
+	public DataType? current_return_type {
+		get {
+			var m = current_method;
+			if (m != null) {
+				return m.return_type;
+			}
+
+			var acc = current_property_accessor;
+			if (acc != null) {
+				if (acc.readable) {
+					return acc.value_type;
+				} else {
+					return void_type;
+				}
+			}
+
+			return null;
+		}
+	}
+
 	public Block insert_block;
 
+	public DataType void_type = new VoidType ();
 	public DataType bool_type;
 	public DataType string_type;
 	public DataType uchar_type;

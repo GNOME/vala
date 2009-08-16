@@ -134,13 +134,11 @@ public class Vala.CreationMethod : Method {
 
 		var old_source_file = analyzer.current_source_file;
 		var old_symbol = analyzer.current_symbol;
-		var old_return_type = analyzer.current_return_type;
 
 		if (source_reference != null) {
 			analyzer.current_source_file = source_reference.file;
 		}
 		analyzer.current_symbol = this;
-		analyzer.current_return_type = return_type;
 
 		foreach (FormalParameter param in get_parameters()) {
 			param.check (analyzer);
@@ -156,13 +154,6 @@ public class Vala.CreationMethod : Method {
 
 		analyzer.current_source_file = old_source_file;
 		analyzer.current_symbol = old_symbol;
-		analyzer.current_return_type = old_return_type;
-
-		if (analyzer.current_symbol.parent_symbol is Method) {
-			/* lambda expressions produce nested methods */
-			var up_method = (Method) analyzer.current_symbol.parent_symbol;
-			analyzer.current_return_type = up_method.return_type;
-		}
 
 		if (is_abstract || is_virtual || overrides) {
 			Report.error (source_reference, "The creation method `%s' cannot be marked as override, virtual, or abstract".printf (get_full_name ()));

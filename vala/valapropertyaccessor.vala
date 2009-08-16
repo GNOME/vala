@@ -170,15 +170,8 @@ public class Vala.PropertyAccessor : Symbol {
 		}
 
 		var old_symbol = analyzer.current_symbol;
-		var old_return_type = analyzer.current_return_type;
 
 		analyzer.current_symbol = this;
-		if (readable) {
-			analyzer.current_return_type = value_type;
-		} else {
-			// void
-			analyzer.current_return_type = new VoidType ();
-		}
 
 		if (!prop.external_package) {
 			if (body == null && !prop.interface_only && !prop.is_abstract) {
@@ -211,7 +204,6 @@ public class Vala.PropertyAccessor : Symbol {
 		}
 
 		analyzer.current_symbol = old_symbol;
-		analyzer.current_return_type = old_return_type;
 
 		return !error;
 	}

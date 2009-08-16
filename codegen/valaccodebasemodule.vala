@@ -32,8 +32,24 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 	public Symbol root_symbol;
 	public Symbol current_symbol;
-	public DataType current_return_type;
 	public TryStatement current_try;
+
+	public TypeSymbol? current_type_symbol {
+		get {
+			var sym = current_symbol;
+			while (sym != null) {
+				if (sym is TypeSymbol) {
+					return (TypeSymbol) sym;
+				}
+				sym = sym.parent_symbol;
+			}
+			return null;
+		}
+	}
+
+	public Class? current_class {
+		get { return current_type_symbol as Class; }
+	}
 
 	public Method? current_method {
 		get {
@@ -55,21 +71,24 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	public TypeSymbol? current_type_symbol {
+	public DataType? current_return_type {
 		get {
-			var sym = current_symbol;
-			while (sym != null) {
-				if (sym is TypeSymbol) {
-					return (TypeSymbol) sym;
-				}
-				sym = sym.parent_symbol;
+			var m = current_method;
+			if (m != null) {
+				return m.return_type;
 			}
+
+			var acc = current_property_accessor;
+			if (acc != null) {
+				if (acc.readable) {
+					return acc.value_type;
+				} else {
+					return void_type;
+				}
+			}
+
 			return null;
 		}
-	}
-
-	public Class? current_class {
-		get { return current_type_symbol as Class; }
 	}
 
 	public CCodeDeclarationSpace header_declarations;
@@ -114,6 +133,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public bool current_method_inner_error = false;
 	public int next_coroutine_state = 1;
 
+	public DataType void_type = new VoidType ();
 	public DataType bool_type;
 	public DataType char_type;
 	public DataType uchar_type;
@@ -1276,13 +1296,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		bool returns_real_struct = prop.property_type.is_real_struct_type ();
 
-		var old_return_type = current_return_type;
-		if (acc.readable && !returns_real_struct) {
-			current_return_type = acc.value_type;
-		} else {
-			current_return_type = new VoidType ();
-		}
-
 		acc.accept_children (codegen);
 
 		var t = (ObjectTypeSymbol) prop.parent_symbol;
@@ -1508,7 +1521,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		current_symbol = old_symbol;
-		current_return_type = old_return_type;
 		current_method_inner_error = old_method_inner_error;
 	}
 
