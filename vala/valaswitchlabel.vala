@@ -1,6 +1,6 @@
 /* valaswitchlabel.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,6 +30,8 @@ public class Vala.SwitchLabel : CodeNode {
 	 * Specifies the label expression.
 	 */
 	public Expression expression { get; set; }
+
+	public weak SwitchSection section { get; set; }
 
 	/**
 	 * Creates a new switch case label.
@@ -68,6 +70,18 @@ public class Vala.SwitchLabel : CodeNode {
 	public override bool check (SemanticAnalyzer analyzer) {
 		if (expression != null) {
 			expression.check (analyzer);
+
+			var switch_statement = (SwitchStatement) section.parent_node;
+			if (!expression.is_constant ()) {
+				error = true;
+				Report.error (expression.source_reference, "Expression must be constant");
+				return false;
+			}
+			if (!expression.value_type.compatible (switch_statement.expression.value_type)) {
+				error = true;
+				Report.error (expression.source_reference, "Cannot convert from `%s' to `%s'".printf (expression.value_type.to_string (), switch_statement.expression.value_type.to_string ()));
+				return false;
+			}
 		}
 
 		return true;

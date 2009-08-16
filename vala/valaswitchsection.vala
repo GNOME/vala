@@ -1,6 +1,6 @@
 /* valaswitchsection.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -46,6 +46,7 @@ public class Vala.SwitchSection : Block {
 	 */
 	public void add_label (SwitchLabel label) {
 		labels.add (label);
+		label.section = this;
 	}
 	
 	/**

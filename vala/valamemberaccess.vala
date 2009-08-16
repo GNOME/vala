@@ -167,7 +167,7 @@ public class Vala.MemberAccess : Expression {
 	}
 
 	public override bool is_constant () {
-		if (symbol_reference is Constant) {
+		if (symbol_reference is Constant || symbol_reference is EnumValue) {
 			return true;
 		} else {
 			return false;
