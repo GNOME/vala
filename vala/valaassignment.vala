@@ -145,7 +145,11 @@ public class Vala.Assignment : Expression {
 		} else if (left is ElementAccess) {
 			var ea = (ElementAccess) left;
 
-			if (ea.container is MemberAccess && ea.container.symbol_reference is Signal) {
+			if (ea.container.value_type.data_type == analyzer.string_type.data_type) {
+				error = true;
+				Report.error (ea.source_reference, "strings are immutable");
+				return false;
+			} else if (ea.container is MemberAccess && ea.container.symbol_reference is Signal) {
 				var ma = (MemberAccess) ea.container;
 				var sig = (Signal) ea.container.symbol_reference;
 				right.target_type = new DelegateType (sig.get_delegate (ma.inner.value_type, this));
