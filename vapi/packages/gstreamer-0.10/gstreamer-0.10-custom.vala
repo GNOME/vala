@@ -41,6 +41,7 @@ namespace Gst {
 		public weak Object @ref ();
 		public void unref ();
 		public void sink ();
+		public static void replace (ref Gst.Object oldobj, Gst.Object newobj);
 	}
 
 	public class Bin {

@@ -682,7 +682,7 @@ namespace Gst {
 		public string get_path_string ();
 		public bool has_ancestor (Gst.Object ancestor);
 		public unowned Gst.Object @ref ();
-		public void replace (Gst.Object newobj);
+		public static void replace (ref Gst.Object oldobj, Gst.Object newobj);
 		public virtual void restore_thyself (void* self);
 		public virtual void* save_thyself (void* parent);
 		public bool set_name (string name);
