@@ -147,6 +147,15 @@ public class Vala.MethodCall : Expression {
 				return false;
 			}
 			cm.chain_up = true;
+
+			var otype = (ObjectType) mtype;
+			var cl = (Class) otype.type_symbol;
+			var base_cm = cl.default_construction_method;
+			if (!base_cm.has_construct_function) {
+				error = true;
+				Report.error (source_reference, "chain up to `%s' not supported".printf (base_cm.get_full_name ()));
+				return false;
+			}
 		}
 
 		// check for struct construction
@@ -178,6 +187,13 @@ public class Vala.MethodCall : Expression {
 				return false;
 			}
 			cm.chain_up = true;
+
+			var base_cm = (CreationMethod) call.symbol_reference;
+			if (!base_cm.has_construct_function) {
+				error = true;
+				Report.error (source_reference, "chain up to `%s' not supported".printf (base_cm.get_full_name ()));
+				return false;
+			}
 		}
 
 		Gee.List<FormalParameter> params;
