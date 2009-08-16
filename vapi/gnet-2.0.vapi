@@ -422,8 +422,7 @@ namespace GNet {
 		public string message;
 	}
 
-	public delegate void ConnHttpFunc(ConnHttp c, ConnHttpEvent event,
-									  void *data);
+	public delegate void ConnHttpFunc(ConnHttp c, ConnHttpEvent event);
 
 	[Compact]
 	[Ccode(free_function = "gnet_conn_http_delete",
@@ -463,7 +462,7 @@ namespace GNet {
 		public bool set_main_context(GLib.MainContext ctx);
 
 		[CCode(cname = "gnet_conn_http_run")]
-		public bool run(ConnHttpFunc f, void* data);
+		public bool run(ConnHttpFunc f);
 
 		[CCode(cname = "gnet_conn_http_steal_buffer")]
 		public bool steal_buffer(out string buf, out size_t len);
@@ -472,6 +471,7 @@ namespace GNet {
 		public void cancel();
 	}
 
+	[CCode(cname = "GConnEventType", cprefix="GNET_CONN_")]
 	public enum ConnEventType {
 		ERROR,
 		CONNECT,
@@ -489,7 +489,7 @@ namespace GNet {
 		public int length;
 	}
 
-	public delegate void ConnFunc(Conn c, ConnEvent evt, void* data);
+	public delegate void ConnFunc(Conn c, ConnEvent evt);
 
 	[Compact]
 	[CCode(free_function = "gnet_conn_delete",
@@ -497,16 +497,16 @@ namespace GNet {
 		   unref_function = "gnet_conn_unref")]
 	public class Conn {
 		[CCode(cname = "gnet_conn_new")]
-		public Conn(string hostname, int port, ConnFunc cf, void* data);
+		public Conn(string hostname, int port, ConnFunc cf);
 		[CCode(cname = "gnet_conn_new_inetaddr")]
-		public Conn.inetaddr(InetAddr inetaddr, ConnFunc cf, void* data);
+		public Conn.inetaddr(InetAddr inetaddr, ConnFunc cf);
 		[CCode(cname = "gnet_conn_new_socket")]
-		public Conn.socket(TcpSocket s, ConnFunc cf, void* data);
+		public Conn.socket(TcpSocket s, ConnFunc cf);
 
 		[CCode(cname = "gnet_conn_set_callback")]
-		public void set_callback(ConnFunc cf, void* data);
+		public void set_callback(ConnFunc cf);
 		[CCode(cname = "gnet_conn_set_callback")]
-		public void set_delegate(ConnFunc cf, void* data);
+		public void set_delegate(ConnFunc cf);
 
 		[CCode(cname = "gnet_conn_set_main_context")]
 		public bool set_main_context(GLib.MainContext ctx);
@@ -542,7 +542,7 @@ namespace GNet {
 		public void timeout(uint timeout);
 	}
 
-	public delegate void ServerFunc(Server s, Conn c, void* data);
+	public delegate void ServerFunc(Server s, Conn c);
 
 	[Compact]
 	[CCode(free_function = "gnet_server_delete",
@@ -557,7 +557,7 @@ namespace GNet {
 		public void* user_data;
 
 		[CCode(cname = "gnet_server_new")]
-		public Server(InetAddr iface, int port, ServerFunc f, void* data);
+		public Server(InetAddr iface, int port, ServerFunc f);
 	}
 
 	[Compact]
