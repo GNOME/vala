@@ -2834,6 +2834,11 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.EXTERN in flags) {
 			method.external = true;
 		}
+		if (ModifierFlags.ABSTRACT in flags
+		    || ModifierFlags.VIRTUAL in flags
+		    || ModifierFlags.OVERRIDE in flags) {
+			Report.error (method.source_reference, "abstract, virtual, and override modifiers are not applicable to creation methods");
+		}
 		expect (TokenType.OPEN_PARENS);
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
