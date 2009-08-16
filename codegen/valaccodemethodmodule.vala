@@ -163,11 +163,16 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
-		generate_cparameters (m, decl_space, cparam_map, function, null, carg_map, new CCodeFunctionCall (new CCodeIdentifier ("fake")));
+		var cl = m.parent_symbol as Class;
 
-		decl_space.add_type_member_declaration (function);
+		// do not generate _new functions for creation methods of abstract classes
+		if (!(m is CreationMethod && cl != null && cl.is_abstract)) {
+			generate_cparameters (m, decl_space, cparam_map, function, null, carg_map, new CCodeFunctionCall (new CCodeIdentifier ("fake")));
 
-		if (m is CreationMethod && m.parent_symbol is Class) {
+			decl_space.add_type_member_declaration (function);
+		}
+
+		if (m is CreationMethod && cl != null) {
 			// _construct function
 			function = new CCodeFunction (m.get_real_cname ());
 
@@ -1010,7 +1015,8 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			creturn_type = new VoidType ();
 		}
 
-		if (current_type_symbol is Class && !current_class.is_compact) {
+		// do not generate _new functions for creation methods of abstract classes
+		if (current_type_symbol is Class && !current_class.is_compact && !current_class.is_abstract) {
 			var vfunc = new CCodeFunction (m.get_cname ());
 			vfunc.line = function.line;
 

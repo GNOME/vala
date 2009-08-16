@@ -2038,7 +2038,6 @@ public class Vala.Parser : CodeVisitor {
 
 		// ensure there is always a default construction method
 		if (!scanner.source_file.external_package
-		    && !cl.is_abstract
 		    && cl.default_construction_method == null) {
 			var m = new CreationMethod (cl.name, null, cl.source_reference);
 			m.access = SymbolAccessibility.PUBLIC;
