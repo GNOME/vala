@@ -42,6 +42,7 @@ libvalaccode_la_VALASOURCES = \
 	valaccodeifstatement.vala \
 	valaccodeincludedirective.vala \
 	valaccodeinitializerlist.vala \
+	valaccodeinvalidexpression.vala \
 	valaccodelabel.vala \
 	valaccodelinedirective.vala \
 	valaccodemacroreplacement.vala \

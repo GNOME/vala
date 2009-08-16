@@ -3656,16 +3656,18 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		expr.ccodenode = new CCodeBinaryExpression (op, cleft, cright);
 	}
 
-	public string get_type_check_function (TypeSymbol type) {
+	public string? get_type_check_function (TypeSymbol type) {
 		var cl = type as Class;
 		if (cl != null && cl.type_check_function != null) {
 			return cl.type_check_function;
+		} else if ((cl != null && cl.is_compact) || type is Struct || type is Enum || type is Delegate) {
+			return null;
 		} else {
 			return type.get_upper_case_cname ("IS_");
 		}
 	}
 
-	CCodeExpression create_type_check (CCodeNode ccodenode, DataType type) {
+	CCodeExpression? create_type_check (CCodeNode ccodenode, DataType type) {
 		var et = type as ErrorType;
 		if (et != null && et.error_code != null) {
 			var matches_call = new CCodeFunctionCall (new CCodeIdentifier ("g_error_matches"));
@@ -3678,7 +3680,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			var type_domain = new CCodeIdentifier (et.error_domain.get_upper_case_cname ());
 			return new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, instance_domain, type_domain);
 		} else {
-			var ccheck = new CCodeFunctionCall (new CCodeIdentifier (get_type_check_function (type.data_type)));
+			string type_check_func = get_type_check_function (type.data_type);
+			if (type_check_func == null) {
+				return new CCodeInvalidExpression ();
+			}
+			var ccheck = new CCodeFunctionCall (new CCodeIdentifier (type_check_func));
 			ccheck.add_argument ((CCodeExpression) ccodenode);
 			return ccheck;
 		}
@@ -3688,6 +3694,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		generate_type_declaration (expr.type_reference, source_declarations);
 
 		expr.ccodenode = create_type_check (expr.expression.ccodenode, expr.type_reference);
+		if (expr.ccodenode is CCodeInvalidExpression) {
+			Report.error (expr.source_reference, "type check expressions not supported for compact classes, structs, and enums");
+		}
 	}
 
 	public override void visit_lambda_expression (LambdaExpression l) {
