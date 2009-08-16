@@ -746,36 +746,44 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		}
 	}
 
+	Struct? get_arithmetic_struct (DataType type) {
+		var result = type.data_type as Struct;
+		if (result == null && type is EnumValueType) {
+			return (Struct) int_type.data_type;
+		}
+		return result;
+	}
+
 	public DataType? get_arithmetic_result_type (DataType left_type, DataType right_type) {
-		 if (!(left_type.data_type is Struct) || !(right_type.data_type is Struct)) {
+		var left = get_arithmetic_struct (left_type);
+		var right = get_arithmetic_struct (right_type);
+
+		if (left == null || right == null) {
 			// at least one operand not struct
-		 	return null;
-		 }
+			return null;
+		}
 
-		 var left = (Struct) left_type.data_type;
-		 var right = (Struct) right_type.data_type;
-
-		 if ((!left.is_floating_type () && !left.is_integer_type ()) ||
-		     (!right.is_floating_type () && !right.is_integer_type ())) {
+		if ((!left.is_floating_type () && !left.is_integer_type ()) ||
+		    (!right.is_floating_type () && !right.is_integer_type ())) {
 			// at least one operand not numeric
-		 	return null;
-		 }
+			return null;
+		}
 
-		 if (left.is_floating_type () == right.is_floating_type ()) {
+		if (left.is_floating_type () == right.is_floating_type ()) {
 			// both operands integer or floating type
-		 	if (left.get_rank () >= right.get_rank ()) {
-		 		return left_type;
-		 	} else {
-		 		return right_type;
-		 	}
-		 } else {
+			if (left.get_rank () >= right.get_rank ()) {
+				return left_type;
+			} else {
+				return right_type;
+			}
+		} else {
 			// one integer and one floating type operand
-		 	if (left.is_floating_type ()) {
-		 		return left_type;
-		 	} else {
-		 		return right_type;
-		 	}
-		 }
+			if (left.is_floating_type ()) {
+				return left_type;
+			} else {
+				return right_type;
+			}
+		}
 	}
 
 	public Method? find_current_method () {
