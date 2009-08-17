@@ -151,8 +151,25 @@ public class Vala.CreationMethod : Method {
 		if (body != null) {
 			body.check (analyzer);
 
-			// ensure we chain up to base constructor
 			var cl = parent_symbol as Class;
+
+			// count construction property assignments
+			if (analyzer.context.profile == Profile.GOBJECT && cl != null
+			    && cl.is_subtype_of (analyzer.object_type)) {
+				int n_params = 0;
+				foreach (Statement stmt in body.get_statements ()) {
+					var expr_stmt = stmt as ExpressionStatement;
+					if (expr_stmt != null) {
+						Property prop = expr_stmt.assigned_property ();
+						if (prop != null && prop.set_accessor.construction) {
+							n_params++;
+						}
+					}
+				}
+				n_construction_params = n_params;
+			}
+
+			// ensure we chain up to base constructor
 			if (!chain_up && cl != null && cl.base_class != null) {
 				if (cl.base_class.default_construction_method != null
 				    && !cl.base_class.default_construction_method.has_construct_function) {

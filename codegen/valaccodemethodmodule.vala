@@ -970,21 +970,6 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 	public override void visit_creation_method (CreationMethod m) {
 		bool visible = !m.is_private_symbol ();
 
-		if (m.body != null && current_type_symbol is Class
-		    && gobject_type != null && current_class.is_subtype_of (gobject_type)) {
-			int n_params = 0;
-			foreach (Statement stmt in m.body.get_statements ()) {
-				var expr_stmt = stmt as ExpressionStatement;
-				if (expr_stmt != null) {
-					Property prop = expr_stmt.assigned_property ();
-					if (prop != null && prop.set_accessor.construction) {
-						n_params++;
-					}
-				}
-			}
-			m.n_construction_params = n_params;
-		}
-
 		head.visit_method (m);
 
 		DataType creturn_type;
