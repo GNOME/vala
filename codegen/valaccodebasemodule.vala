@@ -3144,33 +3144,21 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		if (expr.symbol_reference == null) {
-			CCodeFunctionCall creation_call = null;
-
 			// no creation method
-			if (expr.type_reference.data_type == glist_type ||
-			    expr.type_reference.data_type == gslist_type) {
-				// NULL is an empty list
-				expr.ccodenode = new CCodeConstant ("NULL");
-			} else if (expr.type_reference.data_type is Class && expr.type_reference.data_type.is_subtype_of (gobject_type)) {
-				generate_class_declaration ((Class) expr.type_reference.data_type, source_declarations);
-
-				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_object_new"));
-				creation_call.add_argument (new CCodeConstant (expr.type_reference.data_type.get_type_id ()));
-				creation_call.add_argument (new CCodeConstant ("NULL"));
-			} else if (expr.type_reference.data_type is Class) {
-				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-				creation_call.add_argument (new CCodeConstant (expr.type_reference.data_type.get_cname ()));
-				creation_call.add_argument (new CCodeConstant ("1"));
-			} else if (expr.type_reference.data_type is Struct) {
+			if (expr.type_reference.data_type is Struct) {
 				// memset needs string.h
 				source_declarations.add_include ("string.h");
-				creation_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+				var creation_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
 				creation_call.add_argument (new CCodeConstant ("0"));
 				creation_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (expr.type_reference.get_cname ())));
-			}
 
-			creation_expr = creation_call;
+				creation_expr = creation_call;
+			}
+		} else if (expr.type_reference.data_type == glist_type ||
+		           expr.type_reference.data_type == gslist_type) {
+			// NULL is an empty list
+			expr.ccodenode = new CCodeConstant ("NULL");
 		} else if (expr.symbol_reference is Method) {
 			// use creation method
 			var m = (Method) expr.symbol_reference;

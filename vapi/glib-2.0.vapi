@@ -3006,6 +3006,8 @@ namespace GLib {
 	[Compact]
 	[CCode (dup_function = "g_list_copy", free_function = "g_list_free")]
 	public class List<G> {
+		public List ();
+
 		[ReturnsModifiedPointer ()]
 		public void append (owned G data);
 		[ReturnsModifiedPointer ()]
@@ -3060,6 +3062,8 @@ namespace GLib {
 	[Compact]
 	[CCode (dup_function = "g_slist_copy", free_function = "g_slist_free")]
 	public class SList<G> {
+		public SList ();
+
 		[ReturnsModifiedPointer ()]
 		public void append (owned G data);
 		[ReturnsModifiedPointer ()]

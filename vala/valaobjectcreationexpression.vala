@@ -250,10 +250,14 @@ public class Vala.ObjectCreationExpression : Expression {
 			if (symbol_reference == null) {
 				symbol_reference = cl.default_construction_method;
 
-				if (symbol_reference != null) {
-					// track usage for flow analyzer
-					symbol_reference.used = true;
+				if (symbol_reference == null) {
+					error = true;
+					Report.error (source_reference, "`%s' does not have a default constructor".printf (cl.get_full_name ()));
+					return false;
 				}
+
+				// track usage for flow analyzer
+				symbol_reference.used = true;
 			}
 
 			if (symbol_reference != null && symbol_reference.access == SymbolAccessibility.PRIVATE) {
