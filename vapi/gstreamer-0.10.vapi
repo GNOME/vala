@@ -118,7 +118,7 @@ namespace Gst {
 		public void enable_sync_message_emission ();
 		public bool have_pending ();
 		public Gst.Message peek ();
-		public Gst.Message poll (Gst.MessageType events, Gst.ClockTimeDiff timeout);
+		public Gst.Message? poll (Gst.MessageType events, Gst.ClockTimeDiff timeout);
 		public Gst.Message pop ();
 		public Gst.Message pop_filtered (Gst.MessageType types);
 		public bool post (owned Gst.Message message);
