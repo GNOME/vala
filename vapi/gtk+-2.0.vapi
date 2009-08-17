@@ -3806,6 +3806,7 @@ namespace Gtk {
 		public uint n_columns { get; set; }
 		[NoAccessorMethod]
 		public uint n_rows { get; set; }
+		[NoAccessorMethod]
 		public uint row_spacing { get; set; }
 	}
 	[Compact]
