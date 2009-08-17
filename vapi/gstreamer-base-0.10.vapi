@@ -11,8 +11,9 @@ namespace Gst {
 		public void flush (uint flush);
 		[CCode (has_construct_function = false)]
 		public Adapter ();
-		public uchar peek (uint size);
-		public void push (Gst.Buffer buf);
+		[CCode (array_length = false)]
+		public unowned uchar[] peek (uint size);
+		public void push (owned Gst.Buffer buf);
 		public uchar take (uint nbytes);
 		public Gst.Buffer take_buffer (uint nbytes);
 	}

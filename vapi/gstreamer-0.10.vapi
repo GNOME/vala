@@ -10,7 +10,7 @@ namespace Gst {
 		public weak GLib.SList mem_live;
 		public weak string name;
 		public static bool available ();
-		public static unowned Gst.AllocTrace get (string name);
+		public static unowned Gst.AllocTrace @get (string name);
 		public static unowned GLib.List list ();
 		public static int live_all ();
 		public void print ();
@@ -141,7 +141,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Caps.any ();
 		public void append (Gst.Caps caps2);
-		public void append_structure (Gst.Structure structure);
+		public void append_structure (owned Gst.Structure structure);
 		public Gst.Caps copy ();
 		public Gst.Caps copy_nth (uint nth);
 		public bool do_simplify ();
@@ -199,17 +199,17 @@ namespace Gst {
 		public int time_index;
 		public Gst.ClockTime times;
 		public bool add_observation (Gst.ClockTime slave, Gst.ClockTime master, double r_squared);
-		public Gst.ClockTime adjust_unlocked (Gst.ClockTime internal);
+		public Gst.ClockTime adjust_unlocked (Gst.ClockTime @internal);
 		[NoWrapper]
 		public virtual Gst.ClockTime change_resolution (Gst.ClockTime old_resolution, Gst.ClockTime new_resolution);
-		public void get_calibration (Gst.ClockTime internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
+		public void get_calibration (Gst.ClockTime @internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
 		public virtual Gst.ClockTime get_internal_time ();
 		public unowned Gst.Clock get_master ();
 		public virtual Gst.ClockTime get_resolution ();
 		public Gst.ClockTime get_time ();
 		[CCode (type = "GstClockID", has_construct_function = false)]
 		public Clock.periodic_id (Gst.Clock clock, Gst.ClockTime start_time, Gst.ClockTime interval);
-		public void set_calibration (Gst.ClockTime internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
+		public void set_calibration (Gst.ClockTime @internal, Gst.ClockTime external, Gst.ClockTime rate_num, Gst.ClockTime rate_denom);
 		public bool set_master (Gst.Clock master);
 		public Gst.ClockTime set_resolution (Gst.ClockTime resolution);
 		[CCode (type = "GstClockID", has_construct_function = false)]
@@ -296,7 +296,7 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class DebugMessage {
-		public unowned string get ();
+		public unowned string @get ();
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Element : Gst.Object {
@@ -809,7 +809,7 @@ namespace Gst {
 		public void set_event_function (Gst.PadEventFunction event);
 		public void set_fixatecaps_function (Gst.PadFixateCapsFunction fixatecaps);
 		public void set_getcaps_function (Gst.PadGetCapsFunction getcaps);
-		public void set_getrange_function (Gst.PadGetRangeFunction get);
+		public void set_getrange_function (Gst.PadGetRangeFunction @get);
 		public void set_internal_link_function (Gst.PadIntLinkFunction intlink);
 		public void set_link_function (Gst.PadLinkFunction link);
 		public void set_query_function (Gst.PadQueryFunction query);
@@ -947,13 +947,13 @@ namespace Gst {
 	public class PollFD {
 		public int fd;
 		public int idx;
-		public static bool can_read (Gst.Poll set, Gst.PollFD fd);
-		public static bool can_write (Gst.Poll set, Gst.PollFD fd);
-		public static bool ctl_read (Gst.Poll set, Gst.PollFD fd, bool active);
-		public static bool ctl_write (Gst.Poll set, Gst.PollFD fd, bool active);
-		public static bool has_closed (Gst.Poll set, Gst.PollFD fd);
-		public static bool has_error (Gst.Poll set, Gst.PollFD fd);
-		public static void ignored (Gst.Poll set, Gst.PollFD fd);
+		public static bool can_read (Gst.Poll @set, Gst.PollFD fd);
+		public static bool can_write (Gst.Poll @set, Gst.PollFD fd);
+		public static bool ctl_read (Gst.Poll @set, Gst.PollFD fd, bool active);
+		public static bool ctl_write (Gst.Poll @set, Gst.PollFD fd, bool active);
+		public static bool has_closed (Gst.Poll @set, Gst.PollFD fd);
+		public static bool has_error (Gst.Poll @set, Gst.PollFD fd);
+		public static void ignored (Gst.Poll @set, Gst.PollFD fd);
 		public void init ();
 	}
 	[CCode (ref_function = "gst_query_ref", unref_function = "gst_query_unref", cheader_filename = "gst/gst.h")]
@@ -1129,7 +1129,7 @@ namespace Gst {
 		public void remove_field (string fieldname);
 		public void remove_fields (string fieldname, ...);
 		public void remove_fields_valist (string fieldname, void* varargs);
-		public void set (string fieldname, ...);
+		public void @set (string fieldname, ...);
 		public void set_name (string name);
 		public void set_parent_refcount (int refcount);
 		public void set_valist (string fieldname, void* varargs);
@@ -1296,14 +1296,14 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface ChildProxy : Gst.Object {
-		public static void get (Gst.Object object, ...);
+		public static void @get (Gst.Object object, ...);
 		public abstract unowned Gst.Object get_child_by_index (uint index);
 		public unowned Gst.Object get_child_by_name (string name);
 		public abstract uint get_children_count ();
 		public static void get_property (Gst.Object object, string name, Gst.Value value);
 		public static void get_valist (Gst.Object object, string first_property_name, void* var_args);
 		public static bool lookup (Gst.Object object, string name, out unowned Gst.Object target, out unowned GLib.ParamSpec pspec);
-		public static void set (Gst.Object object, ...);
+		public static void @set (Gst.Object object, ...);
 		public static void set_property (Gst.Object object, string name, Gst.Value value);
 		public static void set_valist (Gst.Object object, string first_property_name, void* var_args);
 		[HasEmitter]
@@ -1383,7 +1383,7 @@ namespace Gst {
 	public struct StaticCaps {
 		[CCode (cname = "string")]
 		public weak string str;
-		public Gst.Caps get ();
+		public Gst.Caps @get ();
 	}
 	[CCode (type_id = "GST_TYPE_STATIC_PAD_TEMPLATE", cheader_filename = "gst/gst.h")]
 	public struct StaticPadTemplate {
@@ -1391,7 +1391,7 @@ namespace Gst {
 		public Gst.PadDirection direction;
 		public Gst.PadPresence presence;
 		public Gst.StaticCaps static_caps;
-		public Gst.PadTemplate get ();
+		public Gst.PadTemplate @get ();
 		public Gst.Caps get_caps ();
 	}
 	[CCode (cname = "GValue", type_id = "G_TYPE_VALUE", cheader_filename = "gst/gst.h")]
