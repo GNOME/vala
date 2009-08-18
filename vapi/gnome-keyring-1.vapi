@@ -16,7 +16,8 @@ namespace GnomeKeyring {
 		[CCode (has_construct_function = false)]
 		public ApplicationRef ();
 	}
-	[CCode (ref_function = "gnome_keyring_attribute_list_ref", unref_function = "gnome_keyring_attribute_list_unref", cheader_filename = "gnome-keyring.h")]
+	[Compact]
+	[CCode (copy_function = "gnome_keyring_attribute_list_copy", cheader_filename = "gnome-keyring.h")]
 	public class AttributeList {
 		public GnomeKeyring.Attribute[] data;
 		public uint len;
@@ -24,6 +25,7 @@ namespace GnomeKeyring {
 		public void append_uint32 (string name, uint32 value);
 		public GnomeKeyring.AttributeList copy ();
 		public GnomeKeyring.Attribute index (int i);
+		public AttributeList ();
 	}
 	[Compact]
 	[CCode (cheader_filename = "gnome-keyring.h")]
@@ -152,9 +154,9 @@ namespace GnomeKeyring {
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public delegate void OperationGetStringCallback (GnomeKeyring.Result result, string str);
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public const string DEFAULT;
+	public static GnomeKeyring.PasswordSchema NETWORK_PASSWORD;
 	[CCode (cheader_filename = "gnome-keyring.h")]
-	public const GnomeKeyring.PasswordSchema NETWORK_PASSWORD;
+	public const string DEFAULT;
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public const string SESSION;
 	[CCode (cheader_filename = "gnome-keyring.h")]
