@@ -1854,10 +1854,14 @@ namespace Posix {
 	public struct fd_set {
 	}
 
-	[CCode (cname = "struct timeval", cheader_filename = "sys/select.h")]
+	[CCode (cname = "struct timeval", cheader_filename = "sys/time.h")]
 	public struct timeval {
 		public time_t tv_sec;
 		public long tv_usec;
+		[CCode (cname = "gettimeofday")]
+		public int get_time_of_day (void * timezone = null);
+		[CCode (cname = "settimeofday")]
+		public int set_time_of_day (void * timezone = null);
 	}
 
 	[CCode (cname = "sigset_t", cheader_filename = "sys/select.h")]
