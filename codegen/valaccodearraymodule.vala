@@ -176,7 +176,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 					len_call.add_argument (carray_expr);
 					return len_call;
 				} else if (!param.no_array_length) {
-					CCodeExpression length_expr = get_variable_cexpression (get_array_length_cname (param.name, dim));
+					CCodeExpression length_expr = get_variable_cexpression (get_array_length_cname (get_variable_cname (param.name), dim));
 					if (param.direction != ParameterDirection.IN) {
 						// accessing argument of out/ref param
 						length_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, length_expr);
