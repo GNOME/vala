@@ -1040,13 +1040,16 @@ public class Vala.Genie.Scanner {
 			// single-line comment
 			current += 2;
 			char* begin = current;
+			
 			// skip until end of line or end of file
 			while (current < end && current[0] != '\n') {
 				current++;
 			}
+			
 			push_comment (((string) begin).ndup ((long) (current - begin)), line == 1);
 
-			if (current[0] == '\n') {
+			/* do not ignore EOL if comment does not exclusively occupy the line */
+			if (current[0] == '\n' && last_token == TokenType.EOL) {
 				current++;
 				line++;
 				column = 1;
