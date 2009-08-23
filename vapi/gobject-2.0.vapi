@@ -205,6 +205,7 @@ namespace GLib {
 		public void* steal_qdata (Quark quark);
 		public void freeze_notify ();
 		public void thaw_notify ();
+		[CCode (cname = "g_object_run_dispose")]
 		public virtual void dispose ();
 		public virtual void finalize ();
 		public virtual void constructed ();
