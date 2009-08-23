@@ -892,24 +892,24 @@ public class Vala.Genie.Parser : CodeVisitor {
 		
 		if (accept (TokenType.ARRAY)) {
 			expect (TokenType.OF);
-			var m = parse_member_name ();
-			var expr = parse_array_creation_expression (begin, m);
+			var mtype = parse_type ();
+			var expr = parse_array_creation_expression (begin, mtype);
 			return expr;
 		}
 		
 		if (accept (TokenType.LIST)) {
 			expect (TokenType.OF);
-			var m = parse_member_name ();
-			var expr = parse_list_creation_expression (begin, m);
+			var mtype = parse_type ();
+			var expr = parse_list_creation_expression (begin, mtype);
 			return expr;
 		}
 		
 		if (accept (TokenType.DICT)) {
 			expect (TokenType.OF);
-			var m1 = parse_member_name ();
+			var mtype1 = parse_type ();
 			expect (TokenType.COMMA);
-			var m2 = parse_member_name ();
-			var expr = parse_dict_creation_expression (begin, m1, m2);
+			var mtype2 = parse_type ();
+			var expr = parse_dict_creation_expression (begin, mtype1, mtype2);
 			return expr;
 		}
 		
@@ -942,18 +942,18 @@ public class Vala.Genie.Parser : CodeVisitor {
 		return expr;
 	}
 
-	Expression parse_array_creation_expression (SourceLocation begin, MemberAccess member) throws ParseError {
+	Expression parse_array_creation_expression (SourceLocation begin, DataType element_type) throws ParseError {
 		bool size_specified = false;
 		Gee.List<Expression> size_specifier_list = null;
 		bool first = true;
-		DataType element_type = UnresolvedType.new_from_expression (member);
+		DataType etype = element_type.copy ();
 		
 		var has_bracket = accept (TokenType.OPEN_BRACKET);
 		
 		do {
 			if (!first) {
  				// array of arrays: new T[][42]
-				element_type = new ArrayType (element_type, size_specifier_list.size, element_type.source_reference);
+				etype = new ArrayType (etype, size_specifier_list.size, etype.source_reference);
 			} else {
 				first = false;
 			}
@@ -975,10 +975,10 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 		InitializerList initializer = null;
 		if (accept (TokenType.ASSIGN)) {
-
 			initializer = parse_initializer ();
 		}
-		var expr = new ArrayCreationExpression (element_type, size_specifier_list.size, initializer, get_src (begin));
+		
+		var expr = new ArrayCreationExpression (etype, size_specifier_list.size, initializer, get_src (begin));
 		if (size_specified) {
 			foreach (Expression size in size_specifier_list) {
 				expr.append_size (size);
@@ -988,9 +988,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 	}
 	
 	
-	Expression parse_list_creation_expression (SourceLocation begin, MemberAccess member) throws ParseError {
+	Expression parse_list_creation_expression (SourceLocation begin, DataType element_type) throws ParseError {
 		
-		DataType element_type = UnresolvedType.new_from_expression (member);
 		MemberAccess list_member = null, parent_member = null;
 		
 		parent_member = new MemberAccess (null, "Gee", get_src (begin));
@@ -1000,12 +999,12 @@ public class Vala.Genie.Parser : CodeVisitor {
 		list_member.creation_member = true;
 		
 		var expr = new ObjectCreationExpression (list_member, get_src (begin));
-		
-		if (member.member_name == "string") {
+		var t = element_type.to_qualified_string ();
+		if (t == "string") {
 			parent_member = new MemberAccess (null, "GLib", get_src (begin));			
 			expr.add_argument (new MemberAccess (parent_member, "str_equal", get_src (begin)));
 			
-		} else if (member.member_name == "int") {
+		} else if (t == "int") {
 			parent_member = new MemberAccess (null, "GLib", get_src (begin));
 			expr.add_argument (new MemberAccess (parent_member, "int_equal", get_src (begin)));
 		}
@@ -1013,11 +1012,8 @@ public class Vala.Genie.Parser : CodeVisitor {
 		return expr;
 	}
 	
-	Expression parse_dict_creation_expression (SourceLocation begin, MemberAccess member_key, MemberAccess member_value) throws ParseError {
-		
-		DataType key_type = UnresolvedType.new_from_expression (member_key);
-		DataType value_type = UnresolvedType.new_from_expression (member_value);
-		
+	Expression parse_dict_creation_expression (SourceLocation begin, DataType key_type, DataType value_type) throws ParseError {
+	
 		MemberAccess dict_member = null, parent_member = null, dict_hash = null, dict_equal = null;
 		
 		parent_member = new MemberAccess (null, "Gee", get_src (begin));
@@ -1025,12 +1021,13 @@ public class Vala.Genie.Parser : CodeVisitor {
 		dict_member.add_type_argument (key_type);
 		dict_member.add_type_argument (value_type);
 	
-		if (member_key.member_name == "string") {
+		var key_type_name = key_type.to_qualified_string ();
+		if (key_type_name == "string") {
 			parent_member = new MemberAccess (null, "GLib", get_src (begin));			
 			dict_hash = new MemberAccess (parent_member, "str_hash", get_src (begin));
 			dict_equal = new MemberAccess (parent_member, "str_equal", get_src (begin));
 			
-		} else if (member_key.member_name == "int") {
+		} else if (key_type_name == "int") {
 			parent_member = new MemberAccess (null, "GLib", get_src (begin));
 			dict_hash = new MemberAccess (parent_member, "int_hash", get_src (begin));
 			dict_equal = new MemberAccess (parent_member, "int_equal", get_src (begin));
