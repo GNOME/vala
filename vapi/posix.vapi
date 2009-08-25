@@ -1414,7 +1414,7 @@ namespace Posix {
 		public int tm_year;
 		public int tm_wday;
 		public int tm_yday;
-		public int tm_isdt;
+		public int tm_isdst;
 	}
 
 	[CCode (cheader_filename = "time.h")]
