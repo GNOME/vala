@@ -370,7 +370,7 @@ namespace Xml {
 		public Attr* new_prop (string name, string value);
 
 		[CCode (cname = "xmlNewDocRawNode")]
-		public Node* new_raw_node (Ns* ns, string name, string content);
+		public Node* new_raw_node (Ns* ns, string name, string? content = null);
 
 		[CCode (cname = "xmlNewDocText")]
 		public Node* new_text (string content);
