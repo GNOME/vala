@@ -1924,7 +1924,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			}
 
 			return new CCodeIdentifier (dup_function);
-		} else if (type.type_parameter != null && current_type_symbol is Class) {
+		} else if (type.type_parameter != null) {
 			string func_name = "%s_dup_func".printf (type.type_parameter.name.down ());
 			if (is_in_generic_type (type) && !is_chainup) {
 				return new CCodeMemberAccess.pointer (new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), "priv"), func_name);
@@ -2806,6 +2806,17 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		return null;
 	}
 
+	bool is_limited_generic_type (DataType type) {
+		var cl = type.type_parameter.parent_symbol as Class;
+		var st = type.type_parameter.parent_symbol as Struct;
+		if ((cl != null && cl.is_compact) || st != null) {
+			// compact classes and structs only
+			// have very limited generics support
+			return true;
+		}
+		return false;
+	}
+
 	public bool requires_copy (DataType type) {
 		if (!type.is_disposable ()) {
 			return false;
@@ -2819,7 +2830,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		if (type.type_parameter != null) {
-			if (!(current_type_symbol is Class) || current_class.is_compact) {
+			if (is_limited_generic_type (type)) {
 				return false;
 			}
 		}
@@ -2845,7 +2856,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		if (type.type_parameter != null) {
-			if (!(current_type_symbol is Class) || current_class.is_compact) {
+			if (is_limited_generic_type (type)) {
 				return false;
 			}
 		}
@@ -2937,10 +2948,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			
 			var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ctemp, new CCodeConstant ("NULL"));
 			if (expression_type.type_parameter != null) {
-				if (!(current_type_symbol is Class)) {
-					return cexpr;
-				}
-
 				// dup functions are optional for type parameters
 				var cdupisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, get_dup_func_expression (expression_type, node.source_reference), new CCodeConstant ("NULL"));
 				cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.OR, cisnull, cdupisnull);
