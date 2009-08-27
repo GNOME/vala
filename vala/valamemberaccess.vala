@@ -201,6 +201,7 @@ public class Vala.MemberAccess : Expression {
 		Symbol base_symbol = null;
 		FormalParameter this_parameter = null;
 		bool may_access_instance_members = false;
+		bool may_access_klass_members = false;
 
 		symbol_reference = null;
 
@@ -225,22 +226,27 @@ public class Vala.MemberAccess : Expression {
 						var cm = (CreationMethod) sym;
 						this_parameter = cm.this_parameter;
 						may_access_instance_members = true;
+						may_access_klass_members = true;
 					} else if (sym is Property) {
 						var prop = (Property) sym;
 						this_parameter = prop.this_parameter;
 						may_access_instance_members = (prop.binding == MemberBinding.INSTANCE);
+						may_access_klass_members = (prop.binding != MemberBinding.STATIC);
 					} else if (sym is Constructor) {
 						var c = (Constructor) sym;
 						this_parameter = c.this_parameter;
-						may_access_instance_members = true;
+						may_access_instance_members = (c.binding == MemberBinding.INSTANCE);
+						may_access_klass_members = true;
 					} else if (sym is Destructor) {
 						var d = (Destructor) sym;
 						this_parameter = d.this_parameter;
-						may_access_instance_members = true;
+						may_access_instance_members = (d.binding == MemberBinding.INSTANCE);
+						may_access_klass_members = true;
 					} else if (sym is Method) {
 						var m = (Method) sym;
 						this_parameter = m.this_parameter;
 						may_access_instance_members = (m.binding == MemberBinding.INSTANCE);
+						may_access_klass_members = (m.binding != MemberBinding.STATIC);
 					}
 				}
 
@@ -296,6 +302,7 @@ public class Vala.MemberAccess : Expression {
 						// inner expression is base access
 						// access to instance members of the base type possible
 						may_access_instance_members = true;
+						may_access_klass_members = true;
 					}
 				}
 			}
@@ -313,6 +320,7 @@ public class Vala.MemberAccess : Expression {
 					// inner expression is variable, field, or parameter
 					// access to instance members of the corresponding type possible
 					may_access_instance_members = true;
+					may_access_klass_members = true;
 				}
 			}
 
@@ -381,6 +389,7 @@ public class Vala.MemberAccess : Expression {
 				}
 				if (symbol_reference != null) {
 					may_access_instance_members = true;
+					may_access_klass_members = true;
 				}
 			}
 		}
@@ -506,7 +515,8 @@ public class Vala.MemberAccess : Expression {
 				return false;
 			}
 		}
-		if ((instance || klass) && !may_access_instance_members) {
+		if ((instance && !may_access_instance_members) ||
+		    (klass && !may_access_klass_members)) {
 			prototype_access = true;
 
 			if (symbol_reference is Method) {

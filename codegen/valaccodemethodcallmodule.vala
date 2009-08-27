@@ -172,7 +172,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			
 			CCodeExpression klass;
 			if (ma.inner == null) {
-				if (in_static_or_class_ctor) {
+				if (in_static_or_class_context) {
 					// Accessing the method from a static or class constructor
 					klass = new CCodeIdentifier ("klass");
 				} else {

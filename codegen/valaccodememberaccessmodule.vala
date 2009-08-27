@@ -131,7 +131,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 				CCodeExpression klass;
 				if (expr.inner == null) {
-					if (in_static_or_class_ctor) {
+					if (in_static_or_class_context) {
 						// Accessing the field from a static or class constructor
 						klass = new CCodeIdentifier ("klass");
 					} else {

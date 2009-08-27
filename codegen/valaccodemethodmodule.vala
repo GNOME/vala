@@ -221,7 +221,11 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 
 		var creturn_type = current_return_type;
 
+		if (m.binding == MemberBinding.CLASS || m.binding == MemberBinding.STATIC) {
+			in_static_or_class_context = true;
+		}
 		m.accept_children (codegen);
+		in_static_or_class_context = false;
 
 		if (m is CreationMethod) {
 			if (in_gobject_creation_method && m.body != null) {

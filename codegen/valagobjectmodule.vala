@@ -401,10 +401,10 @@ internal class Vala.GObjectModule : GTypeModule {
 		in_constructor = true;
 
 		if (c.binding == MemberBinding.CLASS || c.binding == MemberBinding.STATIC) {
-			in_static_or_class_ctor = true;
+			in_static_or_class_context = true;
 		}
 		c.accept_children (codegen);
-		in_static_or_class_ctor = false;
+		in_static_or_class_context = false;
 
 		in_constructor = false;
 

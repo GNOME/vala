@@ -129,7 +129,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public int next_temp_var_id = 0;
 	public bool in_creation_method { get { return current_method is CreationMethod; } }
 	public bool in_constructor = false;
-	public bool in_static_or_class_ctor = false;
+	public bool in_static_or_class_context = false;
 	public bool current_method_inner_error = false;
 	public int next_coroutine_state = 1;
 

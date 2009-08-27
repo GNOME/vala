@@ -69,7 +69,36 @@ public class Vala.PostfixExpression : Expression {
 
 		checked = true;
 
-		inner.check (analyzer);
+		if (!inner.check (analyzer)) {
+			error = true;
+			return false;
+		}
+
+		if (inner.value_type == null) {
+			error = true;
+			Report.error (source_reference, "unsupported lvalue in postfix expression");
+			return false;
+		}
+
+		if (inner is MemberAccess) {
+			var ma = (MemberAccess) inner;
+
+			if (ma.prototype_access) {
+				error = true;
+				Report.error (source_reference, "Access to instance member `%s' denied".printf (ma.symbol_reference.get_full_name ()));
+				return false;
+			}
+
+			if (ma.error || ma.symbol_reference == null) {
+				error = true;
+				/* if no symbol found, skip this check */
+				return false;
+			}
+		} else {
+			error = true;
+			Report.error (source_reference, "unsupported lvalue in postfix expression");
+			return false;
+		}
 
 		value_type = inner.value_type;
 
