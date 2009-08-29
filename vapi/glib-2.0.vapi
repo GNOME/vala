@@ -843,7 +843,7 @@ public class string {
 	[CCode (cname = "g_utf8_get_char")]
 	public unichar get_char ();
 	[CCode (cname = "g_utf8_get_char_validated")]
-	public unichar get_char_validated (long max_len = -1);
+	public unichar get_char_validated (ssize_t max_len = -1);
 	[CCode (cname = "g_utf8_offset_to_pointer")]
 	[PlusOperator ()]
 	public weak string offset (long offset);
@@ -1507,13 +1507,13 @@ namespace GLib {
 
 	/* Memory Allocation */
 	
-	public static void* malloc (ulong n_bytes);
-	public static void* malloc0 (ulong n_bytes);
-	public static void* realloc (void* mem, ulong n_bytes);
+	public static void* malloc (size_t n_bytes);
+	public static void* malloc0 (size_t n_bytes);
+	public static void* realloc (void* mem, size_t n_bytes);
 
-	public static void* try_malloc (ulong n_bytes);
-	public static void* try_malloc0 (ulong n_bytes);
-	public static void* try_realloc (void* mem, ulong n_bytes);
+	public static void* try_malloc (size_t n_bytes);
+	public static void* try_malloc0 (size_t n_bytes);
+	public static void* try_realloc (void* mem, size_t n_bytes);
 	
 	public static void free (void* mem);
 
@@ -1743,7 +1743,7 @@ namespace GLib {
 
 	/* Character Set Conversions */
 	
-	public static string convert (string str, long len, string to_codeset, string from_codeset, out int bytes_read = null, out int bytes_written = null) throws ConvertError;
+	public static string convert (string str, ssize_t len, string to_codeset, string from_codeset, out size_t bytes_read = null, out size_t bytes_written = null) throws ConvertError;
 	public static bool get_charset (out weak string charset);
 
 	public struct IConv {
@@ -1755,8 +1755,8 @@ namespace GLib {
 	}
 
 	namespace Filename {
-		public static string to_utf8 (string opsysstring, out ulong bytes_read, out ulong bytes_written) throws ConvertError;
-		public static string from_utf8 (string utf8string, long len, out ulong bytes_read, out ulong bytes_written) throws ConvertError;
+       public static string to_utf8 (string opsysstring, ssize_t len, out size_t bytes_read, out size_t bytes_written) throws ConvertError;
+		public static string from_utf8 (string utf8string, ssize_t len, out size_t bytes_read, out size_t bytes_written) throws ConvertError;
 		public static string from_uri (string uri, out string hostname = null) throws ConvertError;
 		public static string to_uri (string filename, string? hostname = null) throws ConvertError;
 		public static string display_name (string filename);
@@ -2504,8 +2504,8 @@ namespace GLib {
 
 	[CCode (lower_case_cprefix = "g_file_", cheader_filename = "glib/gstdio.h")]
 	namespace FileUtils {
-		public static bool get_contents (string filename, out string contents, out ulong length = null) throws FileError;
-		public static bool set_contents (string filename, string contents, long length = -1) throws FileError;
+		public static bool get_contents (string filename, out string contents, out size_t length = null) throws FileError;
+		public static bool set_contents (string filename, string contents, ssize_t length = -1) throws FileError;
 		public static bool test (string filename, FileTest test);
 		public static int open_tmp (string tmpl, out string name_used) throws FileError;
 		public static string read_link (string filename) throws FileError;
@@ -2553,7 +2553,7 @@ namespace GLib {
 	public class MappedFile {
 		public MappedFile (string filename, bool writable) throws FileError;
 		public void free ();
-		public long get_length ();
+		public size_t get_length ();
 		public char* get_contents ();
 	}
 
@@ -2734,18 +2734,18 @@ namespace GLib {
 		public static string escape_string (string str, int length = -1);
 		public static bool match_simple (string pattern, string str, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
 		public bool match (string str, RegexMatchFlags match_options = 0, out MatchInfo match_info = null);
-		public bool match_full (string str, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
+		public bool match_full (string str, ssize_t string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
 		public bool match_all (string str, RegexMatchFlags match_options = 0, out MatchInfo match_info = null);
-		public bool match_all_full (string str, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
+		public bool match_all_full (string str, ssize_t string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, out MatchInfo match_info = null) throws RegexError;
 		[CCode (array_length = false, array_null_terminated = true)]
 		public static string[] split_simple (string pattern, string str, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] split (string str, RegexMatchFlags match_options = 0);
 		[CCode (array_length = false, array_null_terminated = true)]
-		public string[] split_full (string str, long string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, int max_tokens = 0) throws RegexError;
-		public string replace (string str, long string_len, int start_position, string replacement, RegexMatchFlags match_options = 0) throws RegexError;
-		public string replace_literal (string str, long string_len, int start_position, string replacement, RegexMatchFlags match_options = 0) throws RegexError;
-		public string replace_eval (string str, long string_len, int start_position, RegexMatchFlags match_options = 0, RegexEvalCallback eval, void* user_data) throws RegexError;
+		public string[] split_full (string str, ssize_t string_len = -1, int start_position = 0, RegexMatchFlags match_options = 0, int max_tokens = 0) throws RegexError;
+		public string replace (string str, ssize_t string_len, int start_position, string replacement, RegexMatchFlags match_options = 0) throws RegexError;
+		public string replace_literal (string str, ssize_t string_len, int start_position, string replacement, RegexMatchFlags match_options = 0) throws RegexError;
+		public string replace_eval (string str, ssize_t string_len, int start_position, RegexMatchFlags match_options = 0, RegexEvalCallback eval, void* user_data) throws RegexError;
 		public static bool check_replacement (out bool has_references = null) throws RegexError;
 	}
 
@@ -2791,7 +2791,7 @@ namespace GLib {
 	[CCode (free_function = "g_markup_parse_context_free")]
 	public class MarkupParseContext {
 		public MarkupParseContext (MarkupParser parser, MarkupParseFlags _flags, void* user_data, DestroyNotify? user_data_dnotify);
-		public bool parse (string text, long text_len) throws MarkupError;
+		public bool parse (string text, ssize_t text_len) throws MarkupError;
 		public bool end_parse () throws MarkupError;
 		public weak string get_element ();
 		public weak SList<string> get_element_stack ();
@@ -2804,9 +2804,9 @@ namespace GLib {
 	
 	public delegate void MarkupParserEndElementFunc (MarkupParseContext context, string element_name) throws MarkupError;
 	
-	public delegate void MarkupParserTextFunc (MarkupParseContext context, string text, ulong text_len) throws MarkupError;
+	public delegate void MarkupParserTextFunc (MarkupParseContext context, string text, size_t text_len) throws MarkupError;
 	
-	public delegate void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, ulong text_len) throws MarkupError;
+	public delegate void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, size_t text_len) throws MarkupError;
 	
 	public delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error);
 	
@@ -2829,7 +2829,7 @@ namespace GLib {
 			OPTIONAL
 		}
 
-		public static string escape_text (string text, long length = -1);
+		public static string escape_text (string text, ssize_t length = -1);
 		[PrintfFormat]
 		public static string printf_escaped (string format, ...);
 		[CCode (sentinel = "G_MARKUP_COLLECT_INVALID")]
@@ -2854,7 +2854,7 @@ namespace GLib {
 		public void set_list_separator (char separator);
 		public bool load_from_file (string file, KeyFileFlags @flags) throws KeyFileError, FileError;
 		public bool load_from_dirs (string file, [CCode (array_length = false, array_null_terminated = true)] string[] search_dirs, out string full_path, KeyFileFlags @flags) throws KeyFileError, FileError;
-		public bool load_from_data (string data, ulong length, KeyFileFlags @flags) throws KeyFileError;
+		public bool load_from_data (string data, size_t length, KeyFileFlags @flags) throws KeyFileError;
 		public bool load_from_data_dirs (string file, out string full_path, KeyFileFlags @flags) throws KeyFileError, FileError;
 		// g_key_file_to_data never throws an error according to the documentation
 		public string to_data (out size_t length = null, out GLib.Error error = null);
@@ -2927,22 +2927,22 @@ namespace GLib {
 		public string get_mime_type (string uri) throws BookmarkFileError;
 		public bool get_is_private (string uri) throws BookmarkFileError;
 		public bool get_icon (string uri, out string href, out string mime_type) throws BookmarkFileError;
-		public long get_added (string uri) throws BookmarkFileError;
-		public long get_modified (string uri) throws BookmarkFileError;
-		public long get_visited (string uri) throws BookmarkFileError;
+		public time_t get_added (string uri) throws BookmarkFileError;
+		public time_t get_modified (string uri) throws BookmarkFileError;
+		public time_t get_visited (string uri) throws BookmarkFileError;
 		public string[] get_groups (string uri) throws BookmarkFileError;
 		public string[] get_applications (string uri) throws BookmarkFileError;
-		public bool get_app_info (string uri, string name, out string exec, out uint count, out long stamp) throws BookmarkFileError;
+		public bool get_app_info (string uri, string name, out string exec, out uint count, out time_t stamp) throws BookmarkFileError;
 		public void set_title (string uri, string title);
 		public void set_description (string uri, string description);
 		public void set_mime_type (string uri, string mime_type);
 		public void set_is_private (string uri, bool is_private);
 		public void set_icon (string uri, string href, string mime_type);
-		public void set_added (string uri, long time_);
+		public void set_added (string uri, time_t added);
 		public void set_groups (string uri, string[] groups);
-		public void set_modified (string uri, long time_);
-		public void set_visited (string uri, long time_);
-		public bool set_app_info (string uri, string name, string exec, int count, long time_) throws BookmarkFileError;
+		public void set_modified (string uri, time_t modified);
+		public void set_visited (string uri, time_t visited);
+		public bool set_app_info (string uri, string name, string exec, int count, time_t stamp) throws BookmarkFileError;
 		public void add_group (string uri, string group);
 		public void add_application (string uri, string name, string exec);
 		public bool remove_group (string uri, string group) throws BookmarkFileError;
@@ -3304,18 +3304,18 @@ namespace GLib {
 	public class StringBuilder {
 		public StringBuilder (string init = "");
 		[CCode (cname = "g_string_sized_new")]
-		public StringBuilder.sized (ulong dfl_size);
+		public StringBuilder.sized (size_t dfl_size);
 		public weak StringBuilder assign (string rval);
 		public weak StringBuilder append (string val);
 		public weak StringBuilder append_c (char c);
 		public weak StringBuilder append_unichar (unichar wc);
-		public weak StringBuilder append_len (string val, long len);
+		public weak StringBuilder append_len (string val, ssize_t len);
 		public weak StringBuilder prepend (string val);
 		public weak StringBuilder prepend_c (char c);
 		public weak StringBuilder prepend_unichar (unichar wc);
-		public weak StringBuilder prepend_len (string val, long len);
-		public weak StringBuilder insert (long pos, string val);
-		public weak StringBuilder erase (long pos, long len);
+		public weak StringBuilder prepend_len (string val, ssize_t len);
+		public weak StringBuilder insert (ssize_t pos, string val);
+		public weak StringBuilder erase (ssize_t pos, ssize_t len);
 		public weak StringBuilder truncate (size_t len);
 
 		[PrintfFormat]
@@ -3324,8 +3324,8 @@ namespace GLib {
 		public void append_printf (string format, ...);
 
 		public string str;
-		public long len;
-		public long allocated_len;
+		public size_t len;
+		public size_t allocated_len;
 	}
 
 	/* String Chunks */
