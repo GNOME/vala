@@ -5447,7 +5447,7 @@ namespace Gtk {
 		public virtual signal bool frame_event (Gdk.Event event);
 		public virtual signal void keys_changed ();
 		[HasEmitter]
-		public virtual signal void set_focus (Gtk.Widget focus);
+		public virtual signal void set_focus (Gtk.Widget? focus);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gtk/gtk.h")]
