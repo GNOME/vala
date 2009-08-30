@@ -1884,5 +1884,41 @@ namespace Posix {
 	public void FD_ZERO (fd_set @set);
 	[CCode (cheader_filename = "sys/select.h")]
 	public int pselect (int nfds, fd_set? readfds, fd_set? writefds, fd_set? exceptfds, timespec timeout, sigset_t sigmask);
+
+	// sys/mman.h - Posix mmap(), munmap(), mprotect()
+	[CCode (cheader_filename = "sys/mman.h")]
+	public void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);
+	[CCode (cheader_filename = "sys/mman.h")]
+	public int munmap(void *addr, size_t length);
+	[CCode (cheader_filename = "sys/mman.h")]
+	public int mprotect(void *addr, size_t len, int prot);
+	[CCode (cheader_filename = "sys/mman.h")]
+	public const int PROT_READ;
+	[CCode (cheader_filename = "sys/mman.h")]
+	public const int PROT_WRITE;
+	[CCode (cheader_filename = "sys/mman.h")]
+	public const int PROT_EXEC;
+	[CCode (cheader_filename = "sys/mman.h")]
+	public const int MAP_SHARED;
+	[CCode (cheader_filename = "sys/mman.h")]
+	public const int MAP_PRIVATE;
+	[CCode (cheader_filename = "sys/mman.h")]
+	public const int MAP_FIXED;
+	[CCode (cheader_filename = "sys/mman.h")]
+	public void *MAP_FAILED;
+	// sys/mman.h - [MLR] Range Memory Locking
+	[CCode (cheader_filename = "sys/mman.h")]
+	public int mlock(void *addr, size_t len);
+	[CCode (cheader_filename = "sys/mman.h")]
+	public int munlock(void *addr, size_t len);
+	// sys/mman.h - [XSI] X/Open System Interfaces
+	[CCode (cheader_filename = "sys/mman.h")]
+	public int msync(void *addr, size_t len, int flags);
+	[CCode (cheader_filename = "sys/mman.h")]
+	public const int MS_ASYNC;
+	[CCode (cheader_filename = "sys/mman.h")]
+	public const int MS_INVALIDATE;
+	[CCode (cheader_filename = "sys/mman.h")]
+	public const int MS_SYNC;
 }
 
