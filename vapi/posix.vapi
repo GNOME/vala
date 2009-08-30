@@ -1580,6 +1580,11 @@ namespace Posix {
 	[CCode (cheader_filename = "unistd.h")]
 	public int sync ();
 
+	[CCode (cheader_filename = "unistd.h")]
+	public int ftruncate(int fd, off_t length);
+	[CCode (cheader_filename = "unistd.h")]
+	public int truncate(string path, off_t length);
+
 	[SimpleType]
 	[CCode (cname = "cc_t", cheader_filename = "termios.h")]
 	[IntegerType (rank = 3, min = 0, max = 255)]
