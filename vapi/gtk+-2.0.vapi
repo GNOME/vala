@@ -462,7 +462,7 @@ namespace Gtk {
 		public Button ();
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Button.from_stock (string stock_id);
-		public void get_alignment (float xalign, float yalign);
+		public void get_alignment (out float xalign, out float yalign);
 		public bool get_focus_on_click ();
 		public unowned Gtk.Widget get_image ();
 		public Gtk.PositionType get_image_position ();
