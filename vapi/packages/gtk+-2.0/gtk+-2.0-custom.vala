@@ -87,6 +87,11 @@ namespace Gtk {
 		public extern void unset_flags (WidgetFlags flags);
 	}
 
+	public interface Editable {
+		[CCode (vfunc_name = "set_selection_bounds")]
+		public abstract void select_region (int start_pos, int end_pos);
+	}
+
 	public interface FileChooserEmbed {
 	}
 
