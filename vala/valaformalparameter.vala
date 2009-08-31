@@ -58,7 +58,15 @@ public class Vala.FormalParameter : Symbol {
 	 * Specifies the expression used when the caller doesn't supply an
 	 * argument for this parameter.
 	 */
-	public Expression default_expression { get; set; }
+	public Expression? default_expression {
+		get { return _default_expression; }
+		set {
+			_default_expression = value;
+			if (_default_expression != null) {
+				_default_expression.parent_node = this;
+			}
+		}
+	}
 	
 	/**
 	 * Specifies whether the array length should be passed implicitly
@@ -100,6 +108,7 @@ public class Vala.FormalParameter : Symbol {
 	public string? ctype { get; set; }
 
 	private DataType _data_type;
+	private Expression? _default_expression;
 
 	/**
 	 * Creates a new formal parameter.
@@ -144,6 +153,12 @@ public class Vala.FormalParameter : Symbol {
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (parameter_type == old_type) {
 			parameter_type = new_type;
+		}
+	}
+
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		if (default_expression == old_node) {
+			default_expression = new_node;
 		}
 	}
 
