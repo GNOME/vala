@@ -5476,11 +5476,11 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface Buildable {
-		public abstract void add_child (Gtk.Builder builder, GLib.Object child, string type);
+		public abstract void add_child (Gtk.Builder builder, GLib.Object child, string? type);
 		public abstract unowned GLib.Object construct_child (Gtk.Builder builder, string name);
-		public abstract void custom_finished (Gtk.Builder builder, GLib.Object child, string tagname, void* data);
-		public abstract void custom_tag_end (Gtk.Builder builder, GLib.Object child, string tagname, void* data);
-		public abstract bool custom_tag_start (Gtk.Builder builder, GLib.Object child, string tagname, GLib.MarkupParser parser, void* data);
+		public abstract void custom_finished (Gtk.Builder builder, GLib.Object? child, string tagname, void* data);
+		public abstract void custom_tag_end (Gtk.Builder builder, GLib.Object? child, string tagname, out void* data);
+		public abstract bool custom_tag_start (Gtk.Builder builder, GLib.Object? child, string tagname, out GLib.MarkupParser parser, out void* data);
 		public abstract unowned GLib.Object get_internal_child (Gtk.Builder builder, string childname);
 		public abstract unowned string get_name ();
 		public abstract void parser_finished (Gtk.Builder builder);
