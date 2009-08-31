@@ -1697,6 +1697,19 @@ public class Vala.GIdlParser : CodeVisitor {
 			m.is_virtual = !(m.is_abstract || is_interface);
 			m.is_abstract = m.is_abstract || is_interface;
 
+			var attributes = get_attributes (symbol);
+			if (attributes != null) {
+				foreach (string attr in attributes) {
+					var nv = attr.split ("=", 2);
+					if (nv[0] == "virtual") {
+						if (eval (nv[1]) == "0") {
+							m.is_virtual = false;
+							m.is_abstract = false;
+						}
+					}
+				}
+			}
+
 			if (func == null) {
 				m.attributes.append (new Attribute ("NoWrapper", null));
 			}
