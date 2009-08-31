@@ -890,7 +890,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (m is CreationMethod) {
 			var datatype = (TypeSymbol) m.parent_symbol;
 			write_identifier (datatype.name);
-			if (m.name != "new") {
+			if (m.name != ".new") {
 				write_string (".");
 				write_identifier (m.name);
 			}

@@ -212,6 +212,7 @@ class Vala.Compiler {
 			// default profile
 			context.profile = Profile.GOBJECT;
 			context.add_define ("GOBJECT");
+			context.add_define ("VALA_0_7_6_NEW_METHODS");
 		} else {
 			Report.error (null, "Unknown profile %s".printf (profile));
 		}

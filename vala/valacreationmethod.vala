@@ -93,7 +93,7 @@ public class Vala.CreationMethod : Method {
 			infix = "init";
 		}
 
-		if (name == "new") {
+		if (name == ".new") {
 			return "%s%s".printf (parent.get_lower_case_cprefix (), infix);
 		} else {
 			return "%s%s_%s".printf (parent.get_lower_case_cprefix (), infix, name);
@@ -109,7 +109,7 @@ public class Vala.CreationMethod : Method {
 
 		string infix = "construct";
 
-		if (name == "new") {
+		if (name == ".new") {
 			return "%s%s".printf (parent.get_lower_case_cprefix (), infix);
 		} else {
 			return "%s%s_%s".printf (parent.get_lower_case_cprefix (), infix, name);

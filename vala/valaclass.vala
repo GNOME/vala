@@ -343,7 +343,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		if (m is CreationMethod) {
 			if (m.name == null) {
 				default_construction_method = m;
-				m.name = "new";
+				m.name = ".new";
 			}
 
 			var cm = (CreationMethod) m;
