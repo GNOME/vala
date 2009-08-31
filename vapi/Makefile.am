@@ -144,6 +144,8 @@ dist_vapi_DATA = \
 	posix.vapi \
 	raptor.vapi \
 	rasqal.vapi \
+	rest.deps \
+	rest.vapi \
 	sdl.vapi \
 	sdl-gfx.vapi \
 	sdl-image.vapi \
