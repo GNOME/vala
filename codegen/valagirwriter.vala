@@ -166,24 +166,12 @@ public class Vala.GIRWriter : CodeVisitor {
 			indent++;
 
 			// write implemented interfaces
-			bool first = true;
 			foreach (DataType base_type in cl.get_base_types ()) {
 				var object_type = (ObjectType) base_type;
 				if (object_type.type_symbol is Interface) {
-					if (first) {
-						write_indent ();
-						stream.printf ("<implements>\n");
-						indent++;
-						first = false;
-					}
 					write_indent ();
-					stream.printf ("<interface name=\"%s\"/>\n", gi_type_name (object_type.type_symbol));
+					stream.printf ("<implements name=\"%s\"/>\n", gi_type_name (object_type.type_symbol));
 				}
-			}
-			if (!first) {
-				indent--;
-				write_indent ();
-				stream.printf ("</implements>\n");
 			}
 
 			write_annotations (cl);
