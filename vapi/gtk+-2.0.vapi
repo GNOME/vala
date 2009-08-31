@@ -2495,8 +2495,9 @@ namespace Gtk {
 		public unowned string get_tab_label_text (Gtk.Widget child);
 		public Gtk.PositionType get_tab_pos ();
 		public bool get_tab_reorderable (Gtk.Widget child);
-		public virtual int insert_page (Gtk.Widget child, Gtk.Widget? tab_label, int position);
-		public int insert_page_menu (Gtk.Widget child, Gtk.Widget? tab_label, Gtk.Widget? menu_label, int position);
+		public int insert_page (Gtk.Widget child, Gtk.Widget? tab_label, int position);
+		[CCode (vfunc_name = "insert_page")]
+		public virtual int insert_page_menu (Gtk.Widget child, Gtk.Widget? tab_label, Gtk.Widget? menu_label, int position);
 		public void next_page ();
 		public int page_num (Gtk.Widget child);
 		public void popup_disable ();
