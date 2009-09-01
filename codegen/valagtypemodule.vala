@@ -108,7 +108,7 @@ internal class Vala.GTypeModule : GErrorModule {
 			decl_space.add_type_member_declaration (unref_fun.copy ());
 
 			// GParamSpec and GValue functions
-			var function_name = cl.get_lower_case_cname ("param_spec_");
+			string function_name = cl.get_lower_case_cname ("param_spec_");
 
 			var function = new CCodeFunction (function_name, "GParamSpec*");
 			function.add_parameter (new CCodeFormalParameter ("name", "const gchar*"));
@@ -116,8 +116,6 @@ internal class Vala.GTypeModule : GErrorModule {
 			function.add_parameter (new CCodeFormalParameter ("blurb", "const gchar*"));
 			function.add_parameter (new CCodeFormalParameter ("object_type", "GType"));
 			function.add_parameter (new CCodeFormalParameter ("flags", "GParamFlags"));
-
-			cl.set_param_spec_function (function_name);
 
 			if (cl.access == SymbolAccessibility.PRIVATE) {
 				function.modifiers = CCodeModifiers.STATIC;
@@ -864,7 +862,7 @@ internal class Vala.GTypeModule : GErrorModule {
 	}
 
 	private void add_g_param_spec_type_function (Class cl) {
-		var function_name = cl.get_lower_case_cname ("param_spec_");
+		string function_name = cl.get_lower_case_cname ("param_spec_");
 
 		var function = new CCodeFunction (function_name, "GParamSpec*");
 		function.add_parameter (new CCodeFormalParameter ("name", "const gchar*"));
@@ -872,8 +870,6 @@ internal class Vala.GTypeModule : GErrorModule {
 		function.add_parameter (new CCodeFormalParameter ("blurb", "const gchar*"));
 		function.add_parameter (new CCodeFormalParameter ("object_type", "GType"));
 		function.add_parameter (new CCodeFormalParameter ("flags", "GParamFlags"));
-
-		cl.set_param_spec_function ( function_name );
 
 		if (cl.access == SymbolAccessibility.PRIVATE) {
 			function.modifiers = CCodeModifiers.STATIC;
@@ -1498,17 +1494,14 @@ internal class Vala.GTypeModule : GErrorModule {
 		cspec.add_argument (new CCodeConstant ("\"%s\"".printf (prop.blurb)));
 
 
-		if ((prop.property_type.data_type is Class && !(((Class) prop.property_type.data_type).is_compact)) || prop.property_type.data_type is Interface) {
+		if (prop.property_type.data_type is Class || prop.property_type.data_type is Interface) {
 			string param_spec_name = prop.property_type.data_type.get_param_spec_function ();
-			if (param_spec_name == null) {
-				cspec.call = new CCodeIdentifier ("g_param_spec_pointer");
-			} else {
-				cspec.call = new CCodeIdentifier (param_spec_name);
+			cspec.call = new CCodeIdentifier (param_spec_name);
+			if (prop.property_type.data_type == string_type.data_type) {
+				cspec.add_argument (new CCodeConstant ("NULL"));
+			} else if (prop.property_type.data_type.get_type_id () != "G_TYPE_POINTER") {
 				cspec.add_argument (new CCodeIdentifier (prop.property_type.data_type.get_type_id ()));
 			}
-		} else if (prop.property_type.data_type == string_type.data_type) {
-			cspec.call = new CCodeIdentifier ("g_param_spec_string");
-			cspec.add_argument (new CCodeConstant ("NULL"));
 		} else if (prop.property_type.data_type is Enum) {
 			var e = prop.property_type.data_type as Enum;
 			if (e.has_type_id) {

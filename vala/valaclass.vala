@@ -720,22 +720,24 @@ public class Vala.Class : ObjectTypeSymbol {
 	}
 
 	public override string? get_param_spec_function () {
-		if (param_spec_function == null ) {
-			if (!(is_compact || base_class == null)) {
+		if (param_spec_function == null) {
+			if (is_fundamental ()) {
+				param_spec_function = get_lower_case_cname ("param_spec_");
+			} else if (base_class != null) {
 				param_spec_function = base_class.get_param_spec_function ();
+			} else if (get_type_id () == "G_TYPE_POINTER") {
+				param_spec_function = "g_param_spec_pointer";
+			} else {
+				param_spec_function = "g_param_spec_boxed";
 			}
 		}
 
 		return param_spec_function;
 	}
 
-	public void set_param_spec_function ( string name ) {
-		param_spec_function = name;
-	}
-
 	public override string? get_get_value_function () {
 		if (get_value_function == null) {
-			if (is_fundamental()) {
+			if (is_fundamental ()) {
 				get_value_function = get_lower_case_cname ("value_get_");
 			} else if (base_class != null) {
 				get_value_function = base_class.get_get_value_function ();
@@ -751,7 +753,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	
 	public override string? get_set_value_function () {
 		if (set_value_function == null) {
-			if (is_fundamental()) {
+			if (is_fundamental ()) {
 				set_value_function = get_lower_case_cname ("value_set_");
 			} else if (base_class != null) {
 				set_value_function = base_class.get_set_value_function ();
