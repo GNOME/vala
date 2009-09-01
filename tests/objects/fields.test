@@ -52,11 +52,31 @@ class Maman.Bar : Foo {
 					   private_class_field, public_class_field);
 	}
 
+	class void do_action_class () {
+		stdout.printf (" %d %d %d %d", private_static_field, public_static_field, 
+					   private_class_field, public_class_field);
+		lock (private_static_field) {
+			private_static_field = 12;
+		}
+		lock (public_static_field) {
+			public_static_field = 13;
+		}
+		lock (private_class_field) {
+			private_class_field = 14;
+		}
+		lock (public_class_field) {
+			public_class_field = 15;
+		}
+		stdout.printf (" %d %d %d %d", private_static_field, public_static_field, 
+					   private_class_field, public_class_field);
+	}
+
 	static int main (string[] args) {
 		stdout.printf ("Field Test: 1");
 		
 		var bar = new Bar ();
 		bar.do_action ();
+		bar.do_action_class ();
 
 		bar.public_base_field = 16;
 		bar.public_field = 17;
