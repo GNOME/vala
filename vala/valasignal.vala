@@ -247,6 +247,8 @@ public class Vala.Signal : Member, Lockable {
 
 		if (is_virtual) {
 			default_handler = new Method (name, return_type, source_reference);
+
+			default_handler.owner = owner;
 			default_handler.access = access;
 			default_handler.external = external;
 			default_handler.is_virtual = true;
@@ -254,11 +256,14 @@ public class Vala.Signal : Member, Lockable {
 			default_handler.signal_reference = this;
 			default_handler.body = body;
 
+
 			foreach (FormalParameter param in parameters) {
 				default_handler.add_parameter (param);
 			}
 
-			parent_symbol.scope.add (null, default_handler);
+			var cl = parent_symbol as Class;
+
+			cl.add_hidden_method (default_handler);
 			default_handler.check (analyzer);
 		}
 		return !error;
