@@ -309,9 +309,6 @@ internal class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		if (cl.source_reference.comment != null) {
-			decl_space.add_type_definition (new CCodeComment (cl.source_reference.comment));
-		}
 		if (!cl.is_compact || cl.base_class == null) {
 			// derived compact classes do not have a struct
 			decl_space.add_type_definition (instance_struct);
@@ -1773,9 +1770,6 @@ internal class Vala.GTypeModule : GErrorModule {
 			}
 		}
 
-		if (iface.source_reference.comment != null) {
-			decl_space.add_type_definition (new CCodeComment (iface.source_reference.comment));
-		}
 		decl_space.add_type_definition (type_struct);
 
 		var type_fun = create_interface_register_function (iface);

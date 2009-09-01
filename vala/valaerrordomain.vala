@@ -41,8 +41,8 @@ public class Vala.ErrorDomain : TypeSymbol {
 	 * @param source_reference reference to source code
 	 * @return                 newly created error domain
 	 */
-	public ErrorDomain (string name, SourceReference? source_reference = null) {
-		base (name, source_reference);
+	public ErrorDomain (string name, SourceReference? source_reference = null, Comment? comment = null) {
+		base (name, source_reference, comment);
 	}
 	
 	/**

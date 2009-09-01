@@ -46,7 +46,7 @@ public class Vala.Genie.Scanner {
 	TokenType last_token;
 	bool parse_started;
 
-	string _comment;
+	Comment _comment;
 	
 	Conditional[] conditional_stack;
 
@@ -1039,14 +1039,11 @@ public class Vala.Genie.Scanner {
 		if (current[1] == '/') {
 			// single-line comment
 			current += 2;
-			char* begin = current;
-			
+
 			// skip until end of line or end of file
 			while (current < end && current[0] != '\n') {
 				current++;
 			}
-			
-			push_comment (((string) begin).ndup ((long) (current - begin)), line == 1);
 
 			/* do not ignore EOL if comment does not exclusively occupy the line */
 			if (current[0] == '\n' && last_token == TokenType.EOL) {
@@ -1057,6 +1054,12 @@ public class Vala.Genie.Scanner {
 			}
 		} else {
 			// delimited comment
+			SourceReference source_reference = null;
+
+			if (current[2] == '*') {
+				source_reference = new SourceReference (source_file, line, column, line, column);
+			}
+
 			current += 2;
 			char* begin = current;
 			int begin_line = line;
@@ -1073,7 +1076,12 @@ public class Vala.Genie.Scanner {
 				Report.error (new SourceReference (source_file, line, column, line, column), "syntax error, expected */");
 				return true;
 			}
-			push_comment (((string) begin).ndup ((long) (current - begin)), begin_line == 1);
+
+			if (source_reference != null) {
+				string comment = ((string) begin).ndup ((long) (current - begin));
+				push_comment (comment, source_reference, begin_line == 1 && comment[0] != '*');
+			}
+
 			current += 2;
 			column += 2;
 		}
@@ -1103,17 +1111,13 @@ public class Vala.Genie.Scanner {
 		}
 	}
 
-
-
-
-	void push_comment (string comment_item, bool file_comment) {
-		if (_comment == null) {
-			_comment = comment_item;
-		} else {
-			_comment = "%s\n%s".printf (_comment, comment_item);
+	void push_comment (string comment_item, SourceReference source_reference, bool file_comment) {
+		if (comment_item[0] == '*') {
+			_comment = new Comment (comment_item, source_reference);
 		}
+
 		if (file_comment) {
-			source_file.comment = _comment;
+			source_file.add_comment (new Comment (comment_item, source_reference));
 			_comment = null;
 		}
 	}
@@ -1123,23 +1127,17 @@ public class Vala.Genie.Scanner {
 	 *
 	 * @return saved comment
 	 */
-	public string? pop_comment () {
+	public Comment? pop_comment () {
 		if (_comment == null) {
 			return null;
 		}
 
-		var result_builder = new StringBuilder (_comment);
+		var comment = _comment;
 		_comment = null;
-
-		weak string index;
-		while ((index = result_builder.str.chr (-1, '\t')) != null) {
-			result_builder.erase (result_builder.str.pointer_to_offset (index), 1);
-		}
-
-		return result_builder.str;
+		return comment;
 	}
-	
-		bool pp_whitespace () {
+
+	bool pp_whitespace () {
 		bool found = false;
 		while (current < end && current[0].isspace () && current[0] != '\n') {
 			found = true;

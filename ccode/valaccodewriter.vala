@@ -142,7 +142,7 @@ public class Vala.CCodeWriter {
 	 * @param s a string
 	 */
 	public void write_string (string s) {
-		stream.printf ("%s", s);
+		stream.puts (s);
 		_bol = false;
 	}
 	
@@ -177,7 +177,7 @@ public class Vala.CCodeWriter {
 		
 		indent--;
 		write_indent ();
-		stream.printf ("}");
+		stream.putc ('}');
 	}
 	
 	/**
@@ -187,7 +187,7 @@ public class Vala.CCodeWriter {
 	 */
 	public void write_comment (string text) {
 		write_indent ();
-		stream.printf ("/*");
+		stream.puts ("/*");
 		bool first = true;
 		
 		/* separate declaration due to missing memory management in foreach statements */
@@ -199,9 +199,17 @@ public class Vala.CCodeWriter {
 			} else {
 				first = false;
 			}
-			stream.printf ("%s", line);
+
+			var lineparts = line.split ("*/");
+
+			for (int i = 0; lineparts[i] != null; i++) {
+				stream.puts (lineparts[i]);
+				if (lineparts[i+1] != null) {
+					stream.puts ("* /");
+				}
+			}
 		}
-		stream.printf ("*/");
+		stream.puts ("*/");
 		write_newline ();
 	}
 }

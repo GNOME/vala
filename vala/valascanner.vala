@@ -35,7 +35,7 @@ public class Vala.Scanner {
 	int line;
 	int column;
 
-	string _comment;
+	Comment _comment;
 
 	Conditional[] conditional_stack;
 
@@ -1076,7 +1076,7 @@ public class Vala.Scanner {
 		return found;
 	}
 
-	bool comment () {
+	bool comment (bool file_comment = false) {
 		if (current > end - 2
 		    || current[0] != '/'
 		    || (current[1] != '/' && current[1] != '*')) {
@@ -1084,19 +1084,37 @@ public class Vala.Scanner {
 		}
 
 		if (current[1] == '/') {
+			SourceReference source_reference = null;
+			if (file_comment) {
+				source_reference = new SourceReference (source_file, line, column, line, column);
+			}
+
 			// single-line comment
 			current += 2;
 			char* begin = current;
+
 			// skip until end of line or end of file
 			while (current < end && current[0] != '\n') {
 				current++;
 			}
-			push_comment (((string) begin).ndup ((long) (current - begin)), line == 1);
+
+			if (source_reference != null) {
+				push_comment (((string) begin).ndup ((long) (current - begin)), source_reference, file_comment);
+			}
 		} else {
-			// delimited comment
+			SourceReference source_reference = null;
+
+			if (file_comment && current[2] == '*') {
+				return false;
+			}
+
+			if (current[2] == '*' || file_comment) {
+				source_reference = new SourceReference (source_file, line, column, line, column);
+			}
+
 			current += 2;
+
 			char* begin = current;
-			int begin_line = line;
 			while (current < end - 1
 			       && (current[0] != '*' || current[1] != '/')) {
 				if (current[0] == '\n') {
@@ -1106,11 +1124,16 @@ public class Vala.Scanner {
 				current++;
 				column++;
 			}
+
 			if (current == end - 1) {
 				Report.error (new SourceReference (source_file, line, column, line, column), "syntax error, expected */");
 				return true;
 			}
-			push_comment (((string) begin).ndup ((long) (current - begin)), begin_line == 1);
+
+			if (source_reference != null) {
+				push_comment (((string) begin).ndup ((long) (current - begin)), source_reference, file_comment);
+			}
+
 			current += 2;
 			column += 2;
 		}
@@ -1123,37 +1146,35 @@ public class Vala.Scanner {
 		}
 	}
 
-	void push_comment (string comment_item, bool file_comment) {
-		if (_comment == null) {
-			_comment = comment_item;
-		} else {
-			_comment = "%s\n%s".printf (_comment, comment_item);
+	public void parse_file_comments () {
+		while (whitespace () || comment (true)) {
 		}
+	}
+
+	void push_comment (string comment_item, SourceReference source_reference, bool file_comment) {
+		if (comment_item[0] == '*') {
+			_comment = new Comment (comment_item, source_reference);
+		}
+
 		if (file_comment) {
-			source_file.comment = _comment;
+			source_file.add_comment (new Comment (comment_item, source_reference));
 			_comment = null;
 		}
 	}
-	
+
 	/**
 	 * Clears and returns the content of the comment stack.
 	 *
 	 * @return saved comment
 	 */
-	public string? pop_comment () {
+	public Comment? pop_comment () {
 		if (_comment == null) {
 			return null;
 		}
-		
-		var result_builder = new StringBuilder (_comment);
+
+		var comment = _comment;
 		_comment = null;
-		
-		string* index;
-		while ((index = result_builder.str.chr (-1, '\t')) != null) {
-			result_builder.erase ((long) (index - (string*) result_builder.str), 1);
-		}
-		
-		return result_builder.str;
+		return comment;
 	}
 }
 

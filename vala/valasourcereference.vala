@@ -50,11 +50,6 @@ public class Vala.SourceReference {
 	 * The last column number of the referenced source code.
 	 */
 	public int last_column { get; set; }
-
-	/**
-	 * The text describing the referenced source code.
-	 */
-	public string comment { get; set; }
 	
 	/**
 	 * Creates a new source reference.
@@ -72,26 +67,6 @@ public class Vala.SourceReference {
 		first_column = _first_column;
 		last_line = _last_line;
 		last_column = _last_column;
-	}
-	
-	/**
-	 * Creates a new commented source reference.
-	 *
-	 * @param file         a source file
-	 * @param first_line   first line number
-	 * @param first_column first column number
-	 * @param last_line    last line number
-	 * @param last_column  last column number
-	 * @param comment      code comment
-	 * @return             newly created source reference
-	 */
-	public SourceReference.with_comment (SourceFile _file, int _first_line, int _first_column, int _last_line, int _last_column, string? _comment) {
-		file = _file;
-		first_line = _first_line;
-		first_column = _first_column;
-		last_line = _last_line;
-		last_column = _last_column;
-		comment = _comment;
 	}
 	
 	/**

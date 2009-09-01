@@ -115,8 +115,8 @@ public class Vala.Field : Member, Lockable {
 	 * @param source reference to source code
 	 * @return       newly created field
 	 */
-	public Field (string name, DataType field_type, Expression? initializer, SourceReference? source_reference = null) {
-		base (name, source_reference);
+	public Field (string name, DataType field_type, Expression? initializer, SourceReference? source_reference = null, Comment? comment = null) {
+		base (name, source_reference, comment);
 		this.field_type = field_type;
 		this.initializer = initializer;
 	}

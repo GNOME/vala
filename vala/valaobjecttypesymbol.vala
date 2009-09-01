@@ -32,8 +32,8 @@ using Gee;
 public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
-	public ObjectTypeSymbol (string name, SourceReference? source_reference = null) {
-		base (name, source_reference);
+	public ObjectTypeSymbol (string name, SourceReference? source_reference = null, Comment? comment = null) {
+		base (name, source_reference, comment);
 	}
 
 	public abstract Gee.List<Method> get_methods ();

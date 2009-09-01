@@ -59,8 +59,8 @@ public class Vala.CreationMethod : Method {
 	 * @param source_reference reference to source code
 	 * @return                 newly created method
 	 */
-	public CreationMethod (string? class_name, string? name, SourceReference? source_reference = null) {
-		base (name, new VoidType (), source_reference);
+	public CreationMethod (string? class_name, string? name, SourceReference? source_reference = null, Comment? comment = null) {
+		base (name, new VoidType (), source_reference, comment);
 		this.class_name = class_name;
 
 		carray_length_parameter_position = -3;

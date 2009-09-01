@@ -31,6 +31,8 @@ public class Vala.EnumValue : Symbol {
 	 */
 	public Expression value { get; set; }
 
+	public Comment comment { get; set; }
+
 	private string cname;
 
 	/**
@@ -39,8 +41,9 @@ public class Vala.EnumValue : Symbol {
 	 * @param name enum value name
 	 * @return     newly created enum value
 	 */
-	public EnumValue (string name, SourceReference? source_reference = null) {
+	public EnumValue (string name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference);
+		this.comment = comment;
 	}
 
 	/**
@@ -50,8 +53,8 @@ public class Vala.EnumValue : Symbol {
 	 * @param value numerical representation
 	 * @return      newly created enum value
 	 */
-	public EnumValue.with_value (string name, Expression value, SourceReference? source_reference = null) {
-		this (name, source_reference);
+	public EnumValue.with_value (string name, Expression value, SourceReference? source_reference = null, Comment? comment = null) {
+		this (name, source_reference, comment);
 		this.value = value;
 	}
 	

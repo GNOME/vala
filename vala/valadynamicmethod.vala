@@ -34,8 +34,8 @@ public class Vala.DynamicMethod : Method {
 	private string cname;
 	static int dynamic_method_id;
 
-	public DynamicMethod (DataType dynamic_type, string name, DataType return_type, SourceReference? source_reference = null) {
-		base (name, return_type, source_reference);
+	public DynamicMethod (DataType dynamic_type, string name, DataType return_type, SourceReference? source_reference = null, Comment? comment = null) {
+		base (name, return_type, source_reference, comment);
 		this.dynamic_type = dynamic_type;
 	}
 

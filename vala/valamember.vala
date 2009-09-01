@@ -27,6 +27,8 @@ using Gee;
  * Represents a general class member.
  */
 public abstract class Vala.Member : Symbol {
+	public Comment comment { get; set; }
+
 	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
 
 	/**
@@ -35,8 +37,9 @@ public abstract class Vala.Member : Symbol {
 	 */
 	public bool hides { get; set; }
 
-	public Member (string? name, SourceReference? source_reference) {
+	public Member (string? name, SourceReference? source_reference, Comment? comment = null) {
 		base (name, source_reference);
+		this.comment = comment;
 	}
 
 	public override void accept (CodeVisitor visitor) {

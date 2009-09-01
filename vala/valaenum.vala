@@ -52,8 +52,8 @@ public class Vala.Enum : TypeSymbol {
 	 * @param source_reference reference to source code
 	 * @return                 newly created enum
 	 */
-	public Enum (string name, SourceReference? source_reference = null) {
-		base (name, source_reference);
+	public Enum (string name, SourceReference? source_reference = null, Comment? comment = null) {
+		base (name, source_reference, comment);
 	}
 	
 	/**

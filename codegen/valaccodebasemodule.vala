@@ -609,11 +609,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			source_type_member_definition.append (cfunc);
 		}
-
-		CCodeComment comment = null;
-		if (source_file.comment != null) {
-			comment = new CCodeComment (source_file.comment);
-		}
 		
 		var writer = new CCodeWriter (source_file.get_csource_filename ());
 		if (!writer.open ()) {
@@ -621,9 +616,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return;
 		}
 		writer.line_directives = context.debug;
-		if (comment != null) {
-			comment.write (writer);
+
+		var comments = source_file.get_comments();
+		if (comments != null) {
+			foreach (Comment comment in comments) {
+				var ccomment = new CCodeComment (comment.content);
+				ccomment.write (writer);
+			}
 		}
+
 		writer.write_newline ();
 		source_declarations.include_directives.write (writer);
 		writer.write_newline ();
@@ -686,10 +687,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				ev.value.accept (codegen);
 				cenum.add_value (new CCodeEnumValue (ev.get_cname (), (CCodeExpression) ev.value.ccodenode));
 			}
-		}
-		
-		if (en.source_reference.comment != null) {
-			decl_space.add_type_definition (new CCodeComment (en.source_reference.comment));
 		}
 
 		decl_space.add_type_definition (cenum);
@@ -1567,11 +1564,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		foreach (CodeNode stmt in b.get_statements ()) {
 			if (stmt.error) {
 				continue;
-			}
-
-			var src = stmt.source_reference;
-			if (src != null && src.comment != null) {
-				cblock.add_statement (new CCodeComment (src.comment));
 			}
 			
 			if (stmt.ccodenode is CCodeFragment) {

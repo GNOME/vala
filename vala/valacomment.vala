@@ -1,44 +1,45 @@
-/* valadynamicproperty.vala
+/* valacomment.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
-
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
-
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Author:
- * 	Jürg Billeter <j@bitron.ch>
+ * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
 using GLib;
-using Gee;
 
 /**
- * Represents a late bound property.
+ * A documentation comment used by valadoc
  */
-public class Vala.DynamicProperty : Property {
-	public DataType dynamic_type { get; set; }
-
-	public DynamicProperty (DataType dynamic_type, string name, SourceReference? source_reference = null, Comment? comment = null) {
-		base (name, null, null, null, source_reference, comment);
-		this.dynamic_type = dynamic_type;
+public class Vala.Comment {
+	public Comment (string comment, SourceReference _source_reference) {
+		source_reference = _source_reference;
+		content = comment;
 	}
 
-	public override Gee.List<string> get_cheader_filenames () {
-		return new ArrayList<string> ();
-	}
+	/**
+	 * The text describing the referenced source code.
+	 */
+	public string content { set; get; }
 
-	public override bool check (SemanticAnalyzer analyzer) {
-		return true;
-	}
+	/**
+	 * References the location in the source file where this code node has
+	 * been written.
+	 */
+	public SourceReference source_reference { get; set; }
 }
+

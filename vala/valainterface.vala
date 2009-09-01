@@ -88,8 +88,8 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 * @param source reference to source code
 	 * @return       newly created interface
 	 */
-	public Interface (string name, SourceReference? source_reference = null) {
-		base (name, source_reference);
+	public Interface (string name, SourceReference? source_reference = null, Comment? comment = null) {
+		base (name, source_reference, comment);
 	}
 
 	/**

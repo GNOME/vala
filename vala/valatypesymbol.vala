@@ -29,10 +29,13 @@ using Gee;
  * code or imported from an external library with a Vala API file.
  */
 public abstract class Vala.TypeSymbol : Symbol {
+	public Comment? comment { get; set; }
+
 	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
 
-	public TypeSymbol (string? name, SourceReference? source_reference = null) {
+	public TypeSymbol (string? name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference);
+		this.comment = comment;
 	}
 
 	/**

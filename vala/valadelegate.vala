@@ -90,8 +90,8 @@ public class Vala.Delegate : TypeSymbol {
 	 * @param source      reference to source code
 	 * @return            newly created delegate
 	 */
-	public Delegate (string? name, DataType return_type, SourceReference? source_reference = null) {
-		base (name, source_reference);
+	public Delegate (string? name, DataType return_type, SourceReference? source_reference = null, Comment? comment = null) {
+		base (name, source_reference, comment);
 		this.return_type = return_type;
 
 		// error is -1 (right of user_data)

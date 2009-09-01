@@ -32,10 +32,6 @@ public class Vala.SourceFile {
 	 */
 	public string filename { get; set; }
 	
-	/**
-	 * The header comment of this source file.
-	 */
-	public string comment { get; set; }
 	
 	/**
 	 * Specifies whether this file is a VAPI package file.
@@ -54,6 +50,8 @@ public class Vala.SourceFile {
 			this.source_array = null;
 		}
 	}
+
+	private ArrayList<Comment> comments = new ArrayList<Comment> ();
 
 	private Gee.List<UsingDirective> using_directives = new ArrayList<UsingDirective> ();
 
@@ -81,7 +79,23 @@ public class Vala.SourceFile {
 		this.context = context;
 		this.content = content;
 	}
-	
+
+	/**
+	 * Adds a header comment to this source file.
+	 */
+	public void add_comment (Comment comment) {
+		comments.add (comment);
+	}
+
+	/**
+	 * Returns a copy of the list of header comments.
+	 *
+	 * @return list of comments
+	 */
+	public Gee.List<Comment> get_comments () {
+		return new ReadOnlyList<Comment> (comments);
+	}
+
 	/**
 	 * Adds a new using directive with the specified namespace.
 	 *

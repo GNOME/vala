@@ -37,6 +37,8 @@ public class Vala.Namespace : Symbol {
 	private Gee.List<Field> fields = new ArrayList<Field> ();
 	private Gee.List<Method> methods = new ArrayList<Method> ();
 
+	private Gee.List<Comment> comments = new ArrayList<Comment> ();
+
 	private Gee.List<string> cprefixes = new ArrayList<string> ();
 	private string lower_case_cprefix;
 	
@@ -56,6 +58,19 @@ public class Vala.Namespace : Symbol {
 		access = SymbolAccessibility.PUBLIC;
 	}
 	
+	public void add_comment (Comment comment) {
+		comments.add (comment);
+	}
+
+	/**
+	 * Returns a copy of the list of namespaces.
+	 *
+	 * @return comment list
+	 */
+	public Gee.List<Comment> get_comments () {
+		return new ReadOnlyList<Comment> (comments);
+	}
+
 	/**
 	 * Adds the specified namespace to this source file.
 	 *
@@ -68,6 +83,7 @@ public class Vala.Namespace : Symbol {
 			if (old_ns.external_package && !ns.external_package) {
 				old_ns.source_reference = ns.source_reference;
 			}
+
 			foreach (Namespace sub_ns in ns.get_namespaces ()) {
 				old_ns.add_namespace (sub_ns);
 			}
@@ -97,6 +113,9 @@ public class Vala.Namespace : Symbol {
 			}
 			foreach (Method m in ns.get_methods ()) {
 				old_ns.add_method (m);
+			}
+			foreach (Comment c in ns.get_comments ()) {
+				old_ns.add_comment (c);
 			}
 		} else {
 			namespaces.add (ns);

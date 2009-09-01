@@ -199,8 +199,8 @@ public class Vala.Property : Member, Lockable {
 	 * @param source       reference to source code
 	 * @return             newly created property
 	 */
-	public Property (string name, DataType? property_type, PropertyAccessor? get_accessor, PropertyAccessor? set_accessor, SourceReference? source_reference = null) {
-		base (name, source_reference);
+	public Property (string name, DataType? property_type, PropertyAccessor? get_accessor, PropertyAccessor? set_accessor, SourceReference? source_reference = null, Comment? comment = null) {
+		base (name, source_reference, comment);
 		this.property_type = property_type;
 		this.get_accessor = get_accessor;
 		this.set_accessor = set_accessor;

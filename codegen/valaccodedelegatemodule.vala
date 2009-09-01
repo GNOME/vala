@@ -103,10 +103,6 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 		}
 
 		var ctypedef = new CCodeTypeDefinition (return_type_cname, cfundecl);
-
-		if (d.source_reference != null && d.source_reference.comment != null) {
-			decl_space.add_type_definition (new CCodeComment (d.source_reference.comment));
-		}
 		decl_space.add_type_definition (ctypedef);
 	}
 

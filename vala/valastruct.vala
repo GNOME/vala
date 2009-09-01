@@ -102,8 +102,8 @@ public class Vala.Struct : TypeSymbol {
 	 * @param source_reference reference to source code
 	 * @return                 newly created struct
 	 */
-	public Struct (string name, SourceReference? source_reference = null) {
-		base (name, source_reference);
+	public Struct (string name, SourceReference? source_reference = null, Comment? comment = null) {
+		base (name, source_reference, comment);
 	}
 
 	/**

@@ -455,9 +455,6 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 
 				if (!m.coroutine) {
-					if (m.source_reference != null && m.source_reference.comment != null) {
-						source_type_member_definition.append (new CCodeComment (m.source_reference.comment));
-					}
 					source_type_member_definition.append (function);
 				}
 			
@@ -900,9 +897,6 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 
 		vfunc.block = vblock;
 
-		if (m.is_abstract && m.source_reference != null && m.source_reference.comment != null) {
-			source_type_member_definition.append (new CCodeComment (m.source_reference.comment));
-		}
 		source_type_member_definition.append (vfunc);
 	}
 

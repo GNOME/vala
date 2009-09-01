@@ -39,8 +39,8 @@ public class Vala.ErrorCode : TypeSymbol {
 	 * @param name enum value name
 	 * @return     newly created enum value
 	 */
-	public ErrorCode (string name, SourceReference? source_reference = null) {
-		base (name, source_reference);
+	public ErrorCode (string name, SourceReference? source_reference = null, Comment? comment = null) {
+		base (name, source_reference, comment);
 	}
 
 	/**

@@ -49,9 +49,6 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 			}
 		}
 
-		if (edomain.source_reference.comment != null) {
-			decl_space.add_type_definition (new CCodeComment (edomain.source_reference.comment));
-		}
 		decl_space.add_type_definition (cenum);
 
 		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";

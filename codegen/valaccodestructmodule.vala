@@ -101,9 +101,6 @@ internal class Vala.CCodeStructModule : CCodeBaseModule {
 
 		decl_space.add_type_declaration (new CCodeTypeDefinition ("struct _%s".printf (st.get_cname ()), new CCodeVariableDeclarator (st.get_cname ())));
 
-		if (st.source_reference.comment != null) {
-			decl_space.add_type_definition (new CCodeComment (st.source_reference.comment));
-		}
 		decl_space.add_type_definition (instance_struct);
 
 		var function = new CCodeFunction (st.get_dup_function (), st.get_cname () + "*");

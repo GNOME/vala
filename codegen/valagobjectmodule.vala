@@ -483,9 +483,6 @@ internal class Vala.GObjectModule : GTypeModule {
 		
 			function.block = cblock;
 
-			if (c.source_reference.comment != null) {
-				source_type_member_definition.append (new CCodeComment (c.source_reference.comment));
-			}
 			source_type_member_definition.append (function);
 		} else if (c.binding == MemberBinding.CLASS) {
 			// class constructor
