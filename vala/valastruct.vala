@@ -141,6 +141,9 @@ public class Vala.Struct : TypeSymbol {
 	 * @param f a field
 	 */
 	public void add_field (Field f) {
+		// TODO report error when `private' or `protected' has been specified
+		f.access = SymbolAccessibility.PUBLIC;
+
 		fields.add (f);
 		scope.add (f.name, f);
 	}
