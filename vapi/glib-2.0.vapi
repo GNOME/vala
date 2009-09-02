@@ -3428,7 +3428,11 @@ namespace GLib {
 	}
 
 	[Compact]
+#if GLIB_2_22
+	[CCode (ref_function = "g_tree_ref", unref_function = "g_tree_unref")]
+#else
 	[CCode (free_function = "g_tree_destroy")]
+#endif
 	public class Tree<K,V> {
 		public Tree (CompareFunc key_compare_func);
 		public Tree.with_data (CompareDataFunc key_compare_func);
