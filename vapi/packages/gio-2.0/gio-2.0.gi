@@ -3457,6 +3457,319 @@
 				</parameters>
 			</vfunc>
 		</object>
+		<object name="GSettings" parent="GObject" type-name="GSettings" get-type="g_settings_get_type">
+			<method name="apply" symbol="g_settings_apply">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+				</parameters>
+			</method>
+			<method name="changes" symbol="g_settings_changes">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="keys" type="GQuark*"/>
+					<parameter name="n_keys" type="gint"/>
+				</parameters>
+			</method>
+			<method name="destroy" symbol="g_settings_destroy">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+				</parameters>
+			</method>
+			<method name="get" symbol="g_settings_get">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="first_key" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_delay_apply" symbol="g_settings_get_delay_apply">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+				</parameters>
+			</method>
+			<method name="get_has_unapplied" symbol="g_settings_get_has_unapplied">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+				</parameters>
+			</method>
+			<method name="get_list" symbol="g_settings_get_list">
+				<return-type type="GSettingsList*"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_locked" symbol="g_settings_get_locked">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+				</parameters>
+			</method>
+			<method name="get_settings" symbol="g_settings_get_settings">
+				<return-type type="GSettings*"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_value" symbol="g_settings_get_value">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="key" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="is_writable" symbol="g_settings_is_writable">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="lock" symbol="g_settings_lock">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="g_settings_new">
+				<return-type type="GSettings*"/>
+				<parameters>
+					<parameter name="schema" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_from_path" symbol="g_settings_new_from_path">
+				<return-type type="GSettings*"/>
+				<parameters>
+					<parameter name="path" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="revert" symbol="g_settings_revert">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+				</parameters>
+			</method>
+			<method name="set" symbol="g_settings_set">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="first_key" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_delay_apply" symbol="g_settings_set_delay_apply">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="delay_apply" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_value" symbol="g_settings_set_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="key" type="gchar*"/>
+					<parameter name="value" type="GVariant*"/>
+				</parameters>
+			</method>
+			<property name="backend" type="GSettingsBackend*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="base-path" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="delay-apply" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="has-unapplied" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="schema" type="GObject*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="schema-name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<signal name="changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="key" type="char*"/>
+				</parameters>
+			</signal>
+			<signal name="changes" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="keys" type="gpointer"/>
+					<parameter name="n_keys" type="gint"/>
+				</parameters>
+			</signal>
+			<signal name="destroyed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+				</parameters>
+			</signal>
+			<vfunc name="get_settings">
+				<return-type type="GSettings*"/>
+				<parameters>
+					<parameter name="settings" type="GSettings*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="GSettingsBackend" parent="GObject" type-name="GSettingsBackend" get-type="g_settings_backend_get_type">
+			<method name="changed" symbol="g_settings_backend_changed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="backend" type="GSettingsBackend*"/>
+					<parameter name="prefix" type="gchar*"/>
+					<parameter name="items" type="gchar**"/>
+					<parameter name="n_items" type="gint"/>
+					<parameter name="origin_tag" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="changed_tree" symbol="g_settings_backend_changed_tree">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="backend" type="GSettingsBackend*"/>
+					<parameter name="prefix" type="gchar*"/>
+					<parameter name="tree" type="GTree*"/>
+					<parameter name="origin_tag" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="get_default" symbol="g_settings_backend_get_default">
+				<return-type type="GSettingsBackend*"/>
+			</method>
+			<method name="get_writable" symbol="g_settings_backend_get_writable">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="backend" type="GSettingsBackend*"/>
+					<parameter name="name" type="char*"/>
+				</parameters>
+			</method>
+			<constructor name="new_tree" symbol="g_settings_backend_new_tree">
+				<return-type type="GTree*"/>
+			</constructor>
+			<method name="read" symbol="g_settings_backend_read">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="backend" type="GSettingsBackend*"/>
+					<parameter name="key" type="gchar*"/>
+					<parameter name="expected_type" type="GVariantType*"/>
+				</parameters>
+			</method>
+			<method name="set_default" symbol="g_settings_backend_set_default">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="backend" type="GSettingsBackend*"/>
+				</parameters>
+			</method>
+			<method name="subscribe" symbol="g_settings_backend_subscribe">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="backend" type="GSettingsBackend*"/>
+					<parameter name="name" type="char*"/>
+				</parameters>
+			</method>
+			<method name="unsubscribe" symbol="g_settings_backend_unsubscribe">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="backend" type="GSettingsBackend*"/>
+					<parameter name="name" type="char*"/>
+				</parameters>
+			</method>
+			<method name="write" symbol="g_settings_backend_write">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="backend" type="GSettingsBackend*"/>
+					<parameter name="prefix" type="gchar*"/>
+					<parameter name="values" type="GTree*"/>
+					<parameter name="origin_tag" type="gpointer"/>
+				</parameters>
+			</method>
+			<signal name="changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="backend" type="GSettingsBackend*"/>
+					<parameter name="prefix" type="char*"/>
+					<parameter name="names" type="GStrv*"/>
+					<parameter name="names_len" type="gint"/>
+					<parameter name="origin_tag" type="gpointer"/>
+				</parameters>
+			</signal>
+			<vfunc name="get_writable">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="backend" type="GSettingsBackend*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="read">
+				<return-type type="GVariant*"/>
+				<parameters>
+					<parameter name="backend" type="GSettingsBackend*"/>
+					<parameter name="key" type="gchar*"/>
+					<parameter name="expected_type" type="GVariantType*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="subscribe">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="backend" type="GSettingsBackend*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="unsubscribe">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="backend" type="GSettingsBackend*"/>
+					<parameter name="name" type="gchar*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="write">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="backend" type="GSettingsBackend*"/>
+					<parameter name="prefix" type="gchar*"/>
+					<parameter name="tree" type="GTree*"/>
+					<parameter name="origin_tag" type="gpointer"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="GSettingsList" parent="GSettings" type-name="GSettingsList" get-type="g_settings_list_get_type">
+			<method name="add" symbol="g_settings_list_add">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="list" type="GSettingsList*"/>
+					<parameter name="prefix" type="gchar*"/>
+					<parameter name="before" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get" symbol="g_settings_list_get">
+				<return-type type="GSettings*"/>
+				<parameters>
+					<parameter name="list" type="GSettingsList*"/>
+					<parameter name="id" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="list" symbol="g_settings_list_list">
+				<return-type type="gchar**"/>
+				<parameters>
+					<parameter name="list" type="GSettingsList*"/>
+					<parameter name="n_items" type="gint*"/>
+				</parameters>
+			</method>
+			<method name="move_item" symbol="g_settings_list_move_item">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="list" type="GSettingsList*"/>
+					<parameter name="id" type="gchar*"/>
+					<parameter name="new_index" type="gint"/>
+				</parameters>
+			</method>
+			<method name="remove" symbol="g_settings_list_remove">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="list" type="GSettingsList*"/>
+					<parameter name="id" type="gchar*"/>
+				</parameters>
+			</method>
+		</object>
 		<object name="GSimpleAsyncResult" parent="GObject" type-name="GSimpleAsyncResult" get-type="g_simple_async_result_get_type">
 			<implements>
 				<interface name="GAsyncResult"/>
@@ -8325,6 +8638,7 @@
 		<constant name="G_FILE_ATTRIBUTE_UNIX_RDEV" type="char*" value="unix::rdev"/>
 		<constant name="G_FILE_ATTRIBUTE_UNIX_UID" type="char*" value="unix::uid"/>
 		<constant name="G_NATIVE_VOLUME_MONITOR_EXTENSION_POINT_NAME" type="char*" value="gio-native-volume-monitor"/>
+		<constant name="G_SETTINGS_BACKEND_EXTENSION_POINT_NAME" type="char*" value="gsettings-backend"/>
 		<constant name="G_VFS_EXTENSION_POINT_NAME" type="char*" value="gio-vfs"/>
 		<constant name="G_VOLUME_IDENTIFIER_KIND_HAL_UDI" type="char*" value="hal-udi"/>
 		<constant name="G_VOLUME_IDENTIFIER_KIND_LABEL" type="char*" value="label"/>

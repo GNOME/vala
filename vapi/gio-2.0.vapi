@@ -577,6 +577,65 @@ namespace GLib {
 		public void set_default ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
+	public class Settings : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Settings (string schema);
+		public void apply ();
+		public void destroy ();
+		[CCode (has_construct_function = false)]
+		public Settings.from_path (string path);
+		public void @get (...);
+		public bool get_delay_apply ();
+		public bool get_has_unapplied ();
+		public GLib.SettingsList get_list (string name);
+		public bool get_locked ();
+		public virtual GLib.Settings get_settings (string name);
+		public GLib.variant get_value (string key);
+		public bool is_writable (string name);
+		public void @lock ();
+		public void revert ();
+		public void @set (...);
+		public void set_delay_apply (bool delay_apply);
+		public void set_value (string key, GLib.variant value);
+		[NoAccessorMethod]
+		public GLib.SettingsBackend backend { owned get; construct; }
+		[NoAccessorMethod]
+		public string base_path { owned get; construct; }
+		public bool delay_apply { get; construct; }
+		public bool has_unapplied { get; }
+		[NoAccessorMethod]
+		public GLib.Object schema { owned get; construct; }
+		[NoAccessorMethod]
+		public string schema_name { owned get; construct; }
+		public virtual signal void changed (string key);
+		[HasEmitter]
+		public virtual signal void changes (void* keys, int n_keys);
+		public virtual signal void destroyed ();
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class SettingsBackend : GLib.Object {
+		public void changed_tree (string prefix, GLib.Tree tree, void* origin_tag);
+		public static unowned GLib.SettingsBackend get_default ();
+		public virtual bool get_writable (string name);
+		public virtual GLib.variant read (string key, GLib.VariantType expected_type);
+		public void set_default ();
+		public virtual void subscribe (string name);
+		[CCode (type = "GTree*", has_construct_function = false)]
+		public SettingsBackend.tree ();
+		public virtual void unsubscribe (string name);
+		public virtual void write (string prefix, GLib.Tree values, void* origin_tag);
+		[HasEmitter]
+		public virtual signal void changed (string prefix, string[] names, int names_len, void* origin_tag);
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
+	public class SettingsList : GLib.Settings {
+		public string add (string prefix, int before);
+		public GLib.Settings @get (string id);
+		public string[] list ();
+		public bool move_item (string id, int new_index);
+		public void remove (string id);
+	}
+	[CCode (cheader_filename = "gio/gio.h")]
 	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult {
 		public void complete ();
 		public void complete_in_idle ();
