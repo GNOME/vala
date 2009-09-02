@@ -4,21 +4,21 @@
 namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class AppLaunchContext : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public AppLaunchContext ();
 		public virtual unowned string get_display (GLib.AppInfo info, GLib.List files);
 		public virtual unowned string get_startup_notify_id (GLib.AppInfo info, GLib.List files);
 		public virtual void launch_failed (string startup_notify_id);
-		[CCode (has_construct_function = false)]
-		public AppLaunchContext ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class BufferedInputStream : GLib.FilterInputStream {
+		[CCode (type = "GInputStream*", has_construct_function = false)]
+		public BufferedInputStream (GLib.InputStream base_stream);
 		public virtual ssize_t fill (ssize_t count, GLib.Cancellable? cancellable) throws GLib.Error;
 		public virtual void fill_async (ssize_t count, int io_priority, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public virtual ssize_t fill_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public size_t get_available ();
 		public size_t get_buffer_size ();
-		[CCode (type = "GInputStream*", has_construct_function = false)]
-		public BufferedInputStream (GLib.InputStream base_stream);
 		public size_t peek (void* buffer, size_t offset, size_t count);
 		public void* peek_buffer (size_t count);
 		public int read_byte (GLib.Cancellable? cancellable) throws GLib.Error;
@@ -29,10 +29,10 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class BufferedOutputStream : GLib.FilterOutputStream {
-		public bool get_auto_grow ();
-		public size_t get_buffer_size ();
 		[CCode (type = "GOutputStream*", has_construct_function = false)]
 		public BufferedOutputStream (GLib.OutputStream base_stream);
+		public bool get_auto_grow ();
+		public size_t get_buffer_size ();
 		public void set_auto_grow (bool auto_grow);
 		public void set_buffer_size (size_t size);
 		[CCode (type = "GOutputStream*", has_construct_function = false)]
@@ -42,6 +42,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Cancellable : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Cancellable ();
 		public void cancel ();
 		public ulong connect (GLib.Callback callback, void* data, GLib.DestroyNotify data_destroy_func);
 		public void disconnect (ulong handler_id);
@@ -49,8 +51,6 @@ namespace GLib {
 		public int get_fd ();
 		public bool is_cancelled ();
 		public void make_pollfd (GLib.PollFD pollfd);
-		[CCode (has_construct_function = false)]
-		public Cancellable ();
 		public void pop_current ();
 		public void push_current ();
 		public void reset ();
@@ -59,10 +59,10 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class DataInputStream : GLib.BufferedInputStream {
-		public GLib.DataStreamByteOrder get_byte_order ();
-		public GLib.DataStreamNewlineType get_newline_type ();
 		[CCode (has_construct_function = false)]
 		public DataInputStream (GLib.InputStream base_stream);
+		public GLib.DataStreamByteOrder get_byte_order ();
+		public GLib.DataStreamNewlineType get_newline_type ();
 		public uchar read_byte (GLib.Cancellable? cancellable) throws GLib.Error;
 		public int16 read_int16 (GLib.Cancellable? cancellable) throws GLib.Error;
 		public int32 read_int32 (GLib.Cancellable? cancellable) throws GLib.Error;
@@ -83,9 +83,9 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class DataOutputStream : GLib.FilterOutputStream {
-		public GLib.DataStreamByteOrder get_byte_order ();
 		[CCode (has_construct_function = false)]
 		public DataOutputStream (GLib.OutputStream base_stream);
+		public GLib.DataStreamByteOrder get_byte_order ();
 		public bool put_byte (uchar data, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool put_int16 (int16 data, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool put_int32 (int32 data, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -99,58 +99,58 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Emblem : GLib.Object, GLib.Icon {
-		public unowned GLib.Icon get_icon ();
-		public GLib.EmblemOrigin get_origin ();
 		[CCode (has_construct_function = false)]
 		public Emblem (GLib.Icon icon);
+		public unowned GLib.Icon get_icon ();
+		public GLib.EmblemOrigin get_origin ();
 		[CCode (has_construct_function = false)]
 		public Emblem.with_origin (GLib.Icon icon, GLib.EmblemOrigin origin);
 		public GLib.Object icon { get; construct; }
 		public GLib.EmblemOrigin origin { get; construct; }
 	}
 	[Compact]
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (param_spec_function = "g_param_spec_pointer", cheader_filename = "gio/gio.h")]
 	public class EmblemClass {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class EmblemedIcon : GLib.Object, GLib.Icon {
+		[CCode (type = "GIcon*", has_construct_function = false)]
+		public EmblemedIcon (GLib.Icon icon, GLib.Emblem emblem);
 		public void add_emblem (GLib.Emblem emblem);
 		public unowned GLib.List get_emblems ();
 		public unowned GLib.Icon get_icon ();
-		[CCode (type = "GIcon*", has_construct_function = false)]
-		public EmblemedIcon (GLib.Icon icon, GLib.Emblem emblem);
 	}
 	[Compact]
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (param_spec_function = "g_param_spec_pointer", cheader_filename = "gio/gio.h")]
 	public class EmblemedIconClass {
 	}
 	[Compact]
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (param_spec_function = "g_param_spec_pointer", cheader_filename = "gio/gio.h")]
 	public class FileAttributeInfo {
 		public GLib.FileAttributeInfoFlags flags;
 		public weak string name;
 		public GLib.FileAttributeType type;
 	}
 	[Compact]
-	[CCode (ref_function = "g_file_attribute_info_list_ref", unref_function = "g_file_attribute_info_list_unref", type_id = "G_TYPE_FILE_ATTRIBUTE_INFO_LIST", cheader_filename = "gio/gio.h")]
+	[CCode (ref_function = "g_file_attribute_info_list_ref", unref_function = "g_file_attribute_info_list_unref", type_id = "G_TYPE_FILE_ATTRIBUTE_INFO_LIST", param_spec_function = "g_param_spec_boxed", cheader_filename = "gio/gio.h")]
 	public class FileAttributeInfoList {
 		public weak GLib.FileAttributeInfo infos;
 		public int n_infos;
+		[CCode (has_construct_function = false)]
+		public FileAttributeInfoList ();
 		public void add (string name, GLib.FileAttributeType type, GLib.FileAttributeInfoFlags flags);
 		public unowned GLib.FileAttributeInfoList dup ();
 		public unowned GLib.FileAttributeInfo lookup (string name);
-		[CCode (has_construct_function = false)]
-		public FileAttributeInfoList ();
 	}
 	[Compact]
-	[CCode (ref_function = "g_file_attribute_matcher_ref", unref_function = "g_file_attribute_matcher_unref", cheader_filename = "gio/gio.h")]
+	[CCode (ref_function = "g_file_attribute_matcher_ref", unref_function = "g_file_attribute_matcher_unref", param_spec_function = "g_param_spec_pointer", cheader_filename = "gio/gio.h")]
 	public class FileAttributeMatcher {
+		[CCode (has_construct_function = false)]
+		public FileAttributeMatcher (string attributes);
 		public bool enumerate_namespace (string ns);
 		public unowned string enumerate_next ();
 		public bool matches (string attribute);
 		public bool matches_only (string attribute);
-		[CCode (has_construct_function = false)]
-		public FileAttributeMatcher (string attributes);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileEnumerator : GLib.Object {
@@ -187,17 +187,19 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileIcon : GLib.Object, GLib.Icon, GLib.LoadableIcon {
-		public unowned GLib.File get_file ();
 		[CCode (type = "GIcon*", has_construct_function = false)]
 		public FileIcon (GLib.File file);
+		public unowned GLib.File get_file ();
 		public GLib.File file { get; construct; }
 	}
 	[Compact]
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (param_spec_function = "g_param_spec_pointer", cheader_filename = "gio/gio.h")]
 	public class FileIconClass {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FileInfo : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public FileInfo ();
 		public void clear_status ();
 		public void copy_into (GLib.FileInfo dest_info);
 		public unowned GLib.FileInfo dup ();
@@ -231,8 +233,6 @@ namespace GLib {
 		public bool has_attribute (string attribute);
 		public bool has_namespace (string name_space);
 		public unowned string list_attributes (string name_space);
-		[CCode (has_construct_function = false)]
-		public FileInfo ();
 		public void remove_attribute (string attribute);
 		public void set_attribute (string attribute, GLib.FileAttributeType type, void* value_p);
 		public void set_attribute_boolean (string attribute, bool attr_value);
@@ -261,7 +261,7 @@ namespace GLib {
 		public void unset_attribute_mask ();
 	}
 	[Compact]
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (param_spec_function = "g_param_spec_pointer", cheader_filename = "gio/gio.h")]
 	public class FileInfoClass {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -307,10 +307,10 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class FilenameCompleter : GLib.Object {
-		public unowned string get_completion_suffix (string initial_text);
-		public unowned string get_completions (string initial_text);
 		[CCode (has_construct_function = false)]
 		public FilenameCompleter ();
+		public unowned string get_completion_suffix (string initial_text);
+		public unowned string get_completions (string initial_text);
 		public void set_dirs_only (bool dirs_only);
 		public virtual signal void got_completion_data ();
 	}
@@ -331,7 +331,7 @@ namespace GLib {
 		public bool close_base_stream { get; construct; }
 	}
 	[Compact]
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (param_spec_function = "g_param_spec_pointer", cheader_filename = "gio/gio.h")]
 	public class IOExtension {
 		public unowned string get_name ();
 		public int get_priority ();
@@ -339,7 +339,7 @@ namespace GLib {
 		public unowned GLib.TypeClass ref_class ();
 	}
 	[Compact]
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (param_spec_function = "g_param_spec_pointer", cheader_filename = "gio/gio.h")]
 	public class IOExtensionPoint {
 		public unowned GLib.IOExtension get_extension_by_name (string name);
 		public unowned GLib.List get_extensions ();
@@ -351,17 +351,17 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class IOModule : GLib.TypeModule, GLib.TypePlugin {
-		public void load ();
 		[CCode (has_construct_function = false)]
 		public IOModule (string filename);
+		public void load ();
 		public void unload ();
 	}
 	[Compact]
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (param_spec_function = "g_param_spec_pointer", cheader_filename = "gio/gio.h")]
 	public class IOModuleClass {
 	}
 	[Compact]
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (param_spec_function = "g_param_spec_pointer", cheader_filename = "gio/gio.h")]
 	public class IOSchedulerJob {
 		public bool send_to_mainloop (GLib.SourceFunc func, GLib.DestroyNotify? notify);
 		public void send_to_mainloop_async (GLib.SourceFunc func, GLib.DestroyNotify? notify);
@@ -424,10 +424,10 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class InetSocketAddress : GLib.SocketAddress, GLib.SocketConnectable {
-		public unowned GLib.InetAddress get_address ();
-		public uint16 get_port ();
 		[CCode (type = "GSocketAddress*", has_construct_function = false)]
 		public InetSocketAddress (GLib.InetAddress address, uint16 port);
+		public unowned GLib.InetAddress get_address ();
+		public uint16 get_port ();
 		public GLib.InetAddress address { get; construct; }
 		public uint port { get; construct; }
 	}
@@ -453,37 +453,37 @@ namespace GLib {
 		public virtual ssize_t skip_finish (GLib.AsyncResult _result) throws GLib.Error;
 	}
 	[Compact]
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (param_spec_function = "g_param_spec_pointer", cheader_filename = "gio/gio.h")]
 	public class InputVector {
 		public void* buffer;
 		public size_t size;
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MemoryInputStream : GLib.InputStream, GLib.Seekable {
+		[CCode (type = "GInputStream*", has_construct_function = false)]
+		public MemoryInputStream ();
 		public void add_data (void* data, ssize_t len, GLib.DestroyNotify? destroy);
 		[CCode (type = "GInputStream*", has_construct_function = false)]
 		public MemoryInputStream.from_data (void* data, ssize_t len, GLib.DestroyNotify? destroy);
-		[CCode (type = "GInputStream*", has_construct_function = false)]
-		public MemoryInputStream ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MemoryOutputStream : GLib.OutputStream, GLib.Seekable {
+		[CCode (type = "GOutputStream*", has_construct_function = false)]
+		public MemoryOutputStream (void* data, size_t len, GLib.ReallocFunc realloc_fn, GLib.DestroyNotify? destroy);
 		public void* get_data ();
 		public size_t get_data_size ();
 		public size_t get_size ();
-		[CCode (type = "GOutputStream*", has_construct_function = false)]
-		public MemoryOutputStream (void* data, size_t len, GLib.ReallocFunc realloc_fn, GLib.DestroyNotify? destroy);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class MountOperation : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public MountOperation ();
 		public bool get_anonymous ();
 		public int get_choice ();
 		public unowned string get_domain ();
 		public unowned string get_password ();
 		public GLib.PasswordSave get_password_save ();
 		public unowned string get_username ();
-		[CCode (has_construct_function = false)]
-		public MountOperation ();
 		public void set_anonymous (bool anonymous);
 		public void set_choice (int choice);
 		public void set_domain (string domain);
@@ -510,21 +510,21 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class NetworkAddress : GLib.Object, GLib.SocketConnectable {
-		public unowned string get_hostname ();
-		public uint16 get_port ();
 		[CCode (type = "GSocketConnectable*", has_construct_function = false)]
 		public NetworkAddress (string hostname, uint16 port);
+		public unowned string get_hostname ();
+		public uint16 get_port ();
 		public static unowned GLib.SocketConnectable parse (string host_and_port, uint16 default_port) throws GLib.Error;
 		public string hostname { get; construct; }
 		public uint port { get; construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class NetworkService : GLib.Object, GLib.SocketConnectable {
+		[CCode (type = "GSocketConnectable*", has_construct_function = false)]
+		public NetworkService (string service, string protocol, string domain);
 		public unowned string get_domain ();
 		public unowned string get_protocol ();
 		public unowned string get_service ();
-		[CCode (type = "GSocketConnectable*", has_construct_function = false)]
-		public NetworkService (string service, string protocol, string domain);
 		public string domain { get; construct; }
 		public string protocol { get; construct; }
 		public string service { get; construct; }
@@ -554,7 +554,7 @@ namespace GLib {
 		public virtual ssize_t write_fn (void* buffer, size_t count, GLib.Cancellable? cancellable) throws GLib.Error;
 	}
 	[Compact]
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (param_spec_function = "g_param_spec_pointer", cheader_filename = "gio/gio.h")]
 	public class OutputVector {
 		public void* buffer;
 		public size_t size;
@@ -590,13 +590,13 @@ namespace GLib {
 		public GLib.SettingsList get_list (string name);
 		public bool get_locked ();
 		public virtual GLib.Settings get_settings (string name);
-		public GLib.variant get_value (string key);
+		public GLib.Variant get_value (string key);
 		public bool is_writable (string name);
 		public void @lock ();
 		public void revert ();
 		public void @set (...);
 		public void set_delay_apply (bool delay_apply);
-		public void set_value (string key, GLib.variant value);
+		public void set_value (string key, GLib.Variant value);
 		[NoAccessorMethod]
 		public GLib.SettingsBackend backend { owned get; construct; }
 		[NoAccessorMethod]
@@ -617,7 +617,7 @@ namespace GLib {
 		public void changed_tree (string prefix, GLib.Tree tree, void* origin_tag);
 		public static unowned GLib.SettingsBackend get_default ();
 		public virtual bool get_writable (string name);
-		public virtual GLib.variant read (string key, GLib.VariantType expected_type);
+		public virtual GLib.Variant read (string key, GLib.VariantType expected_type);
 		public void set_default ();
 		public virtual void subscribe (string name);
 		[CCode (type = "GTree*", has_construct_function = false)]
@@ -637,6 +637,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult {
+		[CCode (has_construct_function = false)]
+		public SimpleAsyncResult (GLib.Object source_object, GLib.AsyncReadyCallback callback, void* source_tag);
 		public void complete ();
 		public void complete_in_idle ();
 		[CCode (has_construct_function = false)]
@@ -648,8 +650,6 @@ namespace GLib {
 		public ssize_t get_op_res_gssize ();
 		public void* get_source_tag ();
 		public static bool is_valid (GLib.AsyncResult _result, GLib.Object source, void* source_tag);
-		[CCode (has_construct_function = false)]
-		public SimpleAsyncResult (GLib.Object source_object, GLib.AsyncReadyCallback callback, void* source_tag);
 		public bool propagate_error () throws GLib.Error;
 		public void run_in_thread (GLib.SimpleAsyncThreadFunc func, int io_priority, GLib.Cancellable? cancellable);
 		public void set_error (GLib.Quark domain, int code, string format);
@@ -661,11 +661,13 @@ namespace GLib {
 		public void set_op_res_gssize (ssize_t op_res);
 	}
 	[Compact]
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (param_spec_function = "g_param_spec_pointer", cheader_filename = "gio/gio.h")]
 	public class SimpleAsyncResultClass {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class Socket : GLib.Object, GLib.Initable {
+		[CCode (has_construct_function = false)]
+		public Socket (GLib.SocketFamily family, GLib.SocketType type, GLib.SocketProtocol protocol) throws GLib.Error;
 		public unowned GLib.Socket accept (GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool bind (GLib.SocketAddress address, bool allow_reuse) throws GLib.Error;
 		public bool check_connect_result () throws GLib.Error;
@@ -688,8 +690,6 @@ namespace GLib {
 		public bool is_closed ();
 		public bool is_connected ();
 		public bool listen () throws GLib.Error;
-		[CCode (has_construct_function = false)]
-		public Socket (GLib.SocketFamily family, GLib.SocketType type, GLib.SocketProtocol protocol) throws GLib.Error;
 		public ssize_t receive (string buffer, size_t size, GLib.Cancellable? cancellable) throws GLib.Error;
 		public ssize_t receive_from (out unowned GLib.SocketAddress address, string buffer, size_t size, GLib.Cancellable? cancellable) throws GLib.Error;
 		public ssize_t receive_message (out unowned GLib.SocketAddress address, GLib.InputVector vectors, int num_vectors, out unowned GLib.SocketControlMessage messages, int num_messages, int flags, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -729,6 +729,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SocketClient : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public SocketClient ();
 		public unowned GLib.SocketConnection connect (GLib.SocketConnectable connectable, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void connect_async (GLib.SocketConnectable connectable, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public unowned GLib.SocketConnection connect_finish (GLib.AsyncResult _result) throws GLib.Error;
@@ -742,8 +744,6 @@ namespace GLib {
 		public unowned GLib.SocketAddress get_local_address ();
 		public GLib.SocketProtocol get_protocol ();
 		public GLib.SocketType get_socket_type ();
-		[CCode (has_construct_function = false)]
-		public SocketClient ();
 		public void set_family (GLib.SocketFamily family);
 		public void set_local_address (GLib.SocketAddress address);
 		public void set_protocol (GLib.SocketProtocol protocol);
@@ -776,6 +776,8 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SocketListener : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public SocketListener ();
 		public unowned GLib.SocketConnection accept (out unowned GLib.Object source_object, GLib.Cancellable? cancellable) throws GLib.Error;
 		public void accept_async (GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public unowned GLib.SocketConnection accept_finish (GLib.AsyncResult _result, out unowned GLib.Object source_object) throws GLib.Error;
@@ -788,32 +790,30 @@ namespace GLib {
 		[NoWrapper]
 		public virtual void changed ();
 		public void close ();
-		[CCode (has_construct_function = false)]
-		public SocketListener ();
 		public void set_backlog (int listen_backlog);
 		[NoAccessorMethod]
 		public int listen_backlog { get; set construct; }
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SocketService : GLib.SocketListener {
-		public bool is_active ();
 		[CCode (has_construct_function = false)]
 		public SocketService ();
+		public bool is_active ();
 		public void start ();
 		public void stop ();
 		public virtual signal bool incoming (GLib.SocketConnection connection, GLib.Object source_object);
 	}
 	[Compact]
-	[CCode (copy_function = "g_srv_target_copy", type_id = "G_TYPE_SRV_TARGET", cheader_filename = "gio/gio.h")]
+	[CCode (copy_function = "g_srv_target_copy", type_id = "G_TYPE_SRV_TARGET", param_spec_function = "g_param_spec_boxed", cheader_filename = "gio/gio.h")]
 	public class SrvTarget {
+		[CCode (has_construct_function = false)]
+		public SrvTarget (string hostname, uint16 port, uint16 priority, uint16 weight);
 		public GLib.SrvTarget copy ();
 		public unowned string get_hostname ();
 		public uint16 get_port ();
 		public uint16 get_priority ();
 		public uint16 get_weight ();
 		public static unowned GLib.List list_sort (GLib.List targets);
-		[CCode (has_construct_function = false)]
-		public SrvTarget (string hostname, uint16 port, uint16 priority, uint16 weight);
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class TcpConnection : GLib.SocketConnection {
@@ -823,13 +823,13 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class ThemedIcon : GLib.Object, GLib.Icon {
+		[CCode (type = "GIcon*", has_construct_function = false)]
+		public ThemedIcon (string iconname);
 		public void append_name (string iconname);
 		[CCode (type = "GIcon*", has_construct_function = false)]
 		public ThemedIcon.from_names (string[] iconnames);
 		[CCode (array_length = false)]
 		public unowned string[] get_names ();
-		[CCode (type = "GIcon*", has_construct_function = false)]
-		public ThemedIcon (string iconname);
 		public void prepend_name (string iconname);
 		[CCode (type = "GIcon*", has_construct_function = false)]
 		public ThemedIcon.with_default_fallbacks (string iconname);
@@ -840,7 +840,7 @@ namespace GLib {
 		public bool use_default_fallbacks { get; construct; }
 	}
 	[Compact]
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (param_spec_function = "g_param_spec_pointer", cheader_filename = "gio/gio.h")]
 	public class ThemedIconClass {
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -1582,6 +1582,8 @@ namespace GLib {
 	public const string FILE_ATTRIBUTE_UNIX_UID;
 	[CCode (cheader_filename = "gio/gio.h")]
 	public const string NATIVE_VOLUME_MONITOR_EXTENSION_POINT_NAME;
+	[CCode (cheader_filename = "gio/gio.h")]
+	public const string SETTINGS_BACKEND_EXTENSION_POINT_NAME;
 	[CCode (cheader_filename = "gio/gio.h")]
 	public const string VFS_EXTENSION_POINT_NAME;
 	[CCode (cheader_filename = "gio/gio.h")]
