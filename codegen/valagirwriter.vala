@@ -615,7 +615,13 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		stream.printf ("<constructor name=\"%s\" c:identifier=\"%s\"", m.name, m.get_cname ());
+
+		if (m == ((Class)m.parent_symbol).default_construction_method) {
+			stream.printf ("<constructor name=\"new\" c:identifier=\"%s\"", m.get_cname ());
+		} else {
+			stream.printf ("<constructor name=\"%s\" c:identifier=\"%s\"", m.name, m.get_cname ());
+		}
+
 		if (m.tree_can_fail) {
 			stream.printf (" throws=\"1\"");
 		}
