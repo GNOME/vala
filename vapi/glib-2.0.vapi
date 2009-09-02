@@ -3501,4 +3501,198 @@ namespace GLib {
 		[CCode (cname = "G_WIN32_IS_NT_BASED")]
 		public bool is_nt_based ();
 	}
+
+	[Compact]
+	public class VariantTypeClass {
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_INVALID")]
+		public static VariantTypeClass INVALID;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_BOOLEAN")]
+		public static VariantTypeClass BOOLEAN;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_BYTE")]
+		public static VariantTypeClass BYTE;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_INT16")]
+		public static VariantTypeClass INT16;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_UINT16")]
+		public static VariantTypeClass UINT16;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_INT32")]
+		public static VariantTypeClass INT32;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_UINT32")]
+		public static VariantTypeClass UINT32;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_INT64")]
+		public static VariantTypeClass INT64;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_UINT64")]
+		public static VariantTypeClass UINT64;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_DOUBLE")]
+		public static VariantTypeClass DOUBLE;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_STRING")]
+		public static VariantTypeClass STRING;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_OBJECT_PATH")]
+		public static VariantTypeClass OBJECT_PATH;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_SIGNATURE")]
+		public static VariantTypeClass SIGNATURE;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_VARIANT")]
+		public static VariantTypeClass VARIANT;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_MAYBE")]
+		public static VariantTypeClass MAYBE;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_ARRAY")]
+		public static VariantTypeClass ARRAY;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_STRUCT")]
+		public static VariantTypeClass STRUCT;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_DICT_ENTRY")]
+		public static VariantTypeClass DICT_ENTRY;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_ALL")]
+		public static VariantTypeClass ALL;
+		[CCode (cname = "G_VARIANT_TYPE_CLASS_BASIC")]
+		public static VariantTypeClass BASIC;
+
+		public bool is_container ();
+		public bool is_basic ();
+	}
+
+	[Compact]
+	[CCode (free_function = "g_variant_type_free")]
+	public class VariantType {
+		[CCode (cname = "G_VARIANT_TYPE_BOOLEAN")]
+		public static VariantType BOOLEAN;
+		[CCode (cname = "G_VARIANT_TYPE_BYTE")]
+		public static VariantType BYTE;
+		[CCode (cname = "G_VARIANT_TYPE_INT16")]
+		public static VariantType INT16;
+		[CCode (cname = "G_VARIANT_TYPE_UINT16")]
+		public static VariantType UINT16;
+		[CCode (cname = "G_VARIANT_TYPE_INT32")]
+		public static VariantType INT32;
+		[CCode (cname = "G_VARIANT_TYPE_UINT32")]
+		public static VariantType UINT32;
+		[CCode (cname = "G_VARIANT_TYPE_INT64")]
+		public static VariantType INT64;
+		[CCode (cname = "G_VARIANT_TYPE_UINT64")]
+		public static VariantType UINT64;
+		[CCode (cname = "G_VARIANT_TYPE_DOUBLE")]
+		public static VariantType DOUBLE;
+		[CCode (cname = "G_VARIANT_TYPE_STRING")]
+		public static VariantType STRING;
+		[CCode (cname = "G_VARIANT_TYPE_OBJECT_PATH")]
+		public static VariantType OBJECT_PATH;
+		[CCode (cname = "G_VARIANT_TYPE_SIGNATURE")]
+		public static VariantType SIGNATURE;
+		[CCode (cname = "G_VARIANT_TYPE_VARIANT")]
+		public static VariantType VARIANT;
+		[CCode (cname = "G_VARIANT_TYPE_UNIT")]
+		public static VariantType UNIT;
+		[CCode (cname = "G_VARIANT_TYPE_ANY")]
+		public static VariantType ANY;
+		[CCode (cname = "G_VARIANT_TYPE_ANY_BASIC")]
+		public static VariantType ANY_BASIC;
+		[CCode (cname = "G_VARIANT_TYPE_ANY_MAYBE")]
+		public static VariantType ANY_MAYBE;
+		[CCode (cname = "G_VARIANT_TYPE_ANY_ARRAY")]
+		public static VariantType ANY_ARRAY;
+		[CCode (cname = "G_VARIANT_TYPE_ANY_STRUCT")]
+		public static VariantType ANY_STRUCT;
+		[CCode (cname = "G_VARIANT_TYPE_ANY_DICT_ENTRY")]
+		public static VariantType ANY_DICT_ENTRY;
+		[CCode (cname = "G_VARIANT_TYPE_ANY_DICTIONARY")]
+		public static VariantType ANY_DICTIONARY;
+
+		public static bool string_is_valid (string type_string);
+		public static bool string_scan (string type_string, char *limit, out weak string endptr);
+
+		public VariantType copy ();
+		public VariantType (string type_string);
+
+		size_t get_string_length ();
+		weak string peek_string ();
+		string[] dup_string ();
+
+		public bool is_concrete ();
+		public bool is_container ();
+		public bool is_basic ();
+
+		public uint hash ();
+		public bool equal (VariantType other);
+		public bool matches (VariantType pattern);
+		public bool is_in_class (VariantTypeClass class);
+		public VariantTypeClass get_class ();
+
+		public weak VariantType element ();
+		public weak VariantType first ();
+		public weak VariantType next ();
+		public uint n_items ();
+		public weak VariantType key ();
+		public weak VariantType value ();
+
+		public VariantType.array (VariantType element);
+		public VariantType.maybe (VariantType element);
+		public VariantType.dict_entry (VariantType key, VariantType value);
+	}
+
+	[Compact]
+	[CCode (cname = "GVariant", ref_function = "g_variant_ref", unref_function = "g_variant_unref", ref_sink_function = "g_variant_ref_sink", type_id = "G_TYPE_VARIANT", type_signature = "v")]
+	public class variant {
+		public void flatten ();
+
+		public VariantTypeClass get_type_class ();
+		public weak VariantType get_type ();
+		public weak string get_type_string ();
+		public bool is_basic ();
+		public bool is_container ();
+		public bool matches (VariantType type);
+
+		public variant (string format_string, ...);
+		public void get (string format_string, ...);
+		public bool format_string_scan (string string, string limit, out string endptr);
+		public VariantType format_string_scan_type (string string, char *limit, out weak string endptr);
+
+		public variant.boolean (bool value);
+		public variant.byte (uint8 value);
+		public variant.int16 (int16 value);
+		public variant.uint16 (uint16 value);
+		public variant.int32 (int32 value);
+		public variant.uint32 (uint32 value);
+		public variant.int64 (int64 value);
+		public variant.uint64 (uint64 value);
+		public variant.double (double value);
+		public variant.string (string value);
+		public variant.strv (string[] value);
+		public static bool is_object_path (string object_path);
+		public variant.object_path (string object_path);
+		public static bool is_signature (string signature);
+		public variant.signature (string signature);
+		public variant.variant (variant value);
+
+		public bool get_boolean ();
+		public uint8 get_byte ();
+		public int16 get_int16 ();
+		public uint16 get_uint16 ();
+		public int32 get_int32 ();
+		public uint32 get_uint32 ();
+		public int64 get_int64 ();
+		public uint64 get_uint64 ();
+		public double get_double ();
+		public weak string get_string (out size_t length);
+		public string dup_string (out size_t length);
+		public string*[] get_strv ();
+		public string[] dup_strv ();
+		public variant get_variant ();
+
+		public void* get_fixed (size_t size);
+		public void* get_fixed_array (size_t elem_size, out uint length);
+
+		public uint n_children ();
+		public variant get_child_value (uint index);
+		public void get_child (uint index, string format_string, ...);
+
+		public variant lookup_value (string key);
+		public variant lookup (string key, string format_string, ...);
+
+		public string print (bool type_annotate);
+		public StringBuilder print_string (StringBuilder ?string, bool type_annotate);
+		public variant.parse (string text, int text_length, VariantType? type) throws Error;
+		public variant.parsef (string format_string, ...);
+		public variant.parse_full (string text, char *limit, out weak string endptr, VariantType? type) throws Error;
+
+		public string markup_print (bool newlines, int indentation, int tabstop);
+		public StringBuilder markup_print_string (StringBuilder ?string, bool newlines, int indentation, int tabstop);
+	}
 }
