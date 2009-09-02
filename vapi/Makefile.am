@@ -17,6 +17,7 @@ dist_vapi_DATA = \
 	cogl-1.0.vapi \
 	cogl-1.0.deps \
 	curses.vapi \
+	dconf.vapi \
 	dbus-glib-1.vapi \
 	enchant.vapi \
 	fuse.deps \
