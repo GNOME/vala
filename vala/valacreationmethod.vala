@@ -179,8 +179,6 @@ public class Vala.CreationMethod : Method {
 				if (cl.base_class.default_construction_method != null
 				    && !cl.base_class.default_construction_method.has_construct_function) {
 					// chain up impossible
-				} else if (analyzer.context.profile == Profile.GOBJECT && cl.base_class == analyzer.object_type) {
-					// no chain up necessary for direct GObject subclasses
 				} else if (analyzer.context.profile == Profile.GOBJECT
 				           && cl.is_subtype_of (analyzer.object_type)
 				           && (n_construction_params > 0 || cl.constructor != null)) {
