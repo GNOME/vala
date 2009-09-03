@@ -1282,13 +1282,13 @@ namespace Gst {
 		public weak GLib.List topelements;
 		[CCode (has_construct_function = false)]
 		public XML ();
-		public unowned Gst.Element get_element (uchar[] name);
+		public unowned Gst.Element get_element (string name);
 		public unowned GLib.List get_topelements ();
 		public static unowned Gst.Element make_element (void* cur, Gst.Object parent);
 		[NoWrapper]
 		public virtual void object_saved (Gst.Object object, void* self);
-		public bool parse_doc (void* doc, uchar[] root);
-		public bool parse_file (uchar[] fname, uchar[] root);
+		public bool parse_doc (void* doc, string root);
+		public bool parse_file (string fname, string root);
 		public bool parse_memory (uchar[] buffer, uint size, string root);
 		public static void* write (Gst.Element element);
 		public static int write_file (Gst.Element element, GLib.FileStream @out);

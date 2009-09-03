@@ -237,5 +237,11 @@ namespace Gst {
 		public uint array_get_size ();
 		public weak Gst.Value? array_get_value (uint index);
 		public void array_prepend_value (Gst.Value prepend_value);
-	} 
+	}
+
+	public class XML {
+		public bool parse_doc(void* doc, string root);
+		public bool parse_file(string fname, string root);
+		public unowned Element get_element(string name);
+	}
 }
