@@ -31,6 +31,8 @@ namespace Gst {
 		public bool polling;
 		public weak Gst.Clock provided_clock;
 		public bool state_dirty;
+		[CCode (type = "GstElement*", has_construct_function = false)]
+		public Bin (string name);
 		public bool add (owned Gst.Element element);
 		[NoWrapper]
 		public virtual bool add_element (Gst.Element element);
@@ -47,8 +49,6 @@ namespace Gst {
 		public Gst.Iterator iterate_sinks ();
 		public Gst.Iterator iterate_sorted ();
 		public Gst.Iterator iterate_sources ();
-		[CCode (type = "GstElement*", has_construct_function = false)]
-		public Bin (string name);
 		public bool remove (Gst.Element element);
 		[NoWrapper]
 		public virtual bool remove_element (Gst.Element element);
@@ -69,6 +69,7 @@ namespace Gst {
 		public uint64 offset_end;
 		public uint size;
 		public Gst.ClockTime timestamp;
+		public Buffer ();
 		[CCode (has_construct_function = false)]
 		public Buffer.and_alloc (uint size);
 		public void copy_metadata (Gst.Buffer src, Gst.BufferCopyFlags flags);
@@ -86,7 +87,6 @@ namespace Gst {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
 		public unowned Gst.Buffer merge (Gst.Buffer buf2);
-		public Buffer ();
 		public unowned Gst.Buffer @ref ();
 		public void set_caps (Gst.Caps caps);
 		public unowned Gst.Buffer span (uint32 offset, Gst.Buffer buf2, uint32 len);
@@ -106,6 +106,8 @@ namespace Gst {
 		public uint signal_watch_id;
 		public weak Gst.BusSyncHandler sync_handler;
 		public void* sync_handler_data;
+		[CCode (has_construct_function = false)]
+		public Bus ();
 		public void add_signal_watch ();
 		public void add_signal_watch_full (int priority);
 		public uint add_watch (Gst.BusFunc func);
@@ -115,8 +117,6 @@ namespace Gst {
 		public void disable_sync_message_emission ();
 		public void enable_sync_message_emission ();
 		public bool have_pending ();
-		[CCode (has_construct_function = false)]
-		public Bus ();
 		public Gst.Message peek ();
 		public Gst.Message poll (Gst.MessageType events, Gst.ClockTimeDiff timeout);
 		public Gst.Message pop ();
@@ -338,7 +338,7 @@ namespace Gst {
 		[CCode (cname = "gst_element_class_get_pad_template")]
 		public class unowned Gst.PadTemplate get_pad_template (string name);
 		[CCode (cname = "gst_element_class_get_pad_template_list")]
-		public class unowned GLib.List<Gst.Pad> get_pad_template_list ();
+		public class unowned GLib.List<Gst.PadTemplate> get_pad_template_list ();
 		public virtual Gst.QueryType get_query_types ();
 		public unowned Gst.Pad get_request_pad (string name);
 		public virtual Gst.StateChangeReturn get_state (out Gst.State state, out Gst.State pending, Gst.ClockTime timeout);
@@ -470,10 +470,10 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class GhostPad : Gst.Pad {
 		[CCode (type = "GstPad*", has_construct_function = false)]
+		public GhostPad (string? name, Gst.Pad target);
+		[CCode (type = "GstPad*", has_construct_function = false)]
 		public GhostPad.from_template (string name, Gst.Pad target, Gst.PadTemplate templ);
 		public unowned Gst.Pad get_target ();
-		[CCode (type = "GstPad*", has_construct_function = false)]
-		public GhostPad (string? name, Gst.Pad target);
 		[CCode (type = "GstPad*", has_construct_function = false)]
 		public GhostPad.no_target (string name, Gst.PadDirection dir);
 		[CCode (type = "GstPad*", has_construct_function = false)]
@@ -493,6 +493,8 @@ namespace Gst {
 		public void* resolver_user_data;
 		public weak GLib.DestroyNotify resolver_user_data_destroy;
 		public weak GLib.HashTable writers;
+		[CCode (has_construct_function = false)]
+		public Index ();
 		public unowned Gst.IndexEntry add_association (int id, Gst.AssocFlags flags, Gst.Format format, int64 value);
 		public unowned Gst.IndexEntry add_associationv (int id, Gst.AssocFlags flags, int n, Gst.IndexAssociation list);
 		[NoWrapper]
@@ -508,8 +510,6 @@ namespace Gst {
 		public virtual bool get_writer_id (Gst.Object writer, int id);
 		[CCode (type = "gint", has_construct_function = false)]
 		public Index.group (Gst.Index index);
-		[CCode (has_construct_function = false)]
-		public Index ();
 		public void set_certainty (Gst.IndexCertainty certainty);
 		public void set_filter (Gst.IndexFilter filter);
 		public void set_filter_full (Gst.IndexFilter filter, GLib.DestroyNotify user_data_destroy);
@@ -539,12 +539,12 @@ namespace Gst {
 	public class IndexFactory : Gst.PluginFeature {
 		public weak string longdesc;
 		public GLib.Type type;
+		[CCode (has_construct_function = false)]
+		public IndexFactory (string name, string longdesc, GLib.Type type);
 		public unowned Gst.Index create ();
 		public void destroy ();
 		public static unowned Gst.IndexFactory find (string name);
 		public static unowned Gst.Index make (string name);
-		[CCode (has_construct_function = false)]
-		public IndexFactory (string name, string longdesc, GLib.Type type);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -566,14 +566,14 @@ namespace Gst {
 		public weak Gst.Iterator pushed;
 		public weak Gst.IteratorResyncFunction resync;
 		public GLib.Type type;
+		[CCode (has_construct_function = false)]
+		public Iterator (uint size, GLib.Type type, GLib.Mutex @lock, uint32 master_cookie, Gst.IteratorNextFunction next, Gst.IteratorItemFunction item, Gst.IteratorResyncFunction resync, Gst.IteratorFreeFunction free);
 		public unowned Gst.Iterator filter (GLib.CompareFunc func);
 		public void* find_custom (GLib.CompareFunc func, void* user_data);
 		public Gst.IteratorResult fold ([CCode (delegate_target_pos = 2.1)] Gst.IteratorFoldFunction func, Gst.Value? ret);
 		public Gst.IteratorResult @foreach (GLib.Func func);
 		[CCode (has_construct_function = false)]
 		public Iterator.list (GLib.Type type, GLib.Mutex @lock, uint32 master_cookie, GLib.List list, void* owner, Gst.IteratorItemFunction item, Gst.IteratorDisposeFunction free);
-		[CCode (has_construct_function = false)]
-		public Iterator (uint size, GLib.Type type, GLib.Mutex @lock, uint32 master_cookie, Gst.IteratorNextFunction next, Gst.IteratorItemFunction item, Gst.IteratorResyncFunction resync, Gst.IteratorFreeFunction free);
 		public void push (Gst.Iterator other);
 	}
 	[CCode (ref_function = "gst_message_ref", unref_function = "gst_message_unref", cheader_filename = "gst/gst.h")]
@@ -652,12 +652,12 @@ namespace Gst {
 	public class MiniObject {
 		public uint flags;
 		public int refcount;
+		[CCode (has_construct_function = false)]
+		public MiniObject (GLib.Type type);
 		public Gst.MiniObject copy ();
 		public bool is_writable ();
 		[ReturnsModifiedPointer]
 		public void make_writable ();
-		[CCode (has_construct_function = false)]
-		public MiniObject (GLib.Type type);
 		public void replace (Gst.MiniObject newdata);
 	}
 	[Compact]
@@ -729,6 +729,8 @@ namespace Gst {
 		public void* stream_rec_lock;
 		public weak Gst.Task task;
 		public weak Gst.PadUnlinkFunction unlinkfunc;
+		[CCode (array_length_pos = 0, delegate_target_pos = 0)]
+		public Pad (string name, Gst.PadDirection direction);
 		public bool accept_caps (Gst.Caps caps);
 		public bool activate_pull (bool active);
 		public bool activate_push (bool active);
@@ -771,8 +773,6 @@ namespace Gst {
 		public bool is_linked ();
 		public Gst.PadLinkReturn link (Gst.Pad sinkpad);
 		public void load_and_link (Gst.Object parent);
-		[CCode (array_length_pos = 0, delegate_target_pos = 0)]
-		public Pad (string name, Gst.PadDirection direction);
 		public bool pause_task ();
 		public bool peer_accept_caps (Gst.Caps caps);
 		public Gst.Caps peer_get_caps ();
@@ -834,9 +834,9 @@ namespace Gst {
 		public Gst.PadDirection direction;
 		public weak string name_template;
 		public Gst.PadPresence presence;
-		public unowned Gst.Caps get_caps ();
 		[CCode (has_construct_function = false)]
 		public PadTemplate (string name_template, Gst.PadDirection direction, Gst.PadPresence presence, owned Gst.Caps caps);
+		public unowned Gst.Caps get_caps ();
 		[HasEmitter]
 		public virtual signal void pad_created (Gst.Pad pad);
 	}
@@ -856,14 +856,14 @@ namespace Gst {
 	public class Pipeline : Gst.Bin, Gst.ChildProxy {
 		public weak Gst.Clock fixed_clock;
 		public Gst.ClockTime stream_time;
+		[CCode (type = "GstElement*", has_construct_function = false)]
+		public Pipeline (string name);
 		public void auto_clock ();
 		public bool get_auto_flush_bus ();
 		public Gst.Bus get_bus ();
 		public unowned Gst.Clock get_clock ();
 		public Gst.ClockTime get_delay ();
 		public Gst.ClockTime get_last_stream_time ();
-		[CCode (type = "GstElement*", has_construct_function = false)]
-		public Pipeline (string name);
 		public void set_auto_flush_bus (bool auto_flush);
 		public bool set_clock (Gst.Clock clock);
 		public void set_delay (Gst.ClockTime delay);
@@ -933,9 +933,9 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Poll {
-		public bool add_fd (Gst.PollFD fd);
 		[CCode (has_construct_function = false)]
 		public Poll (bool controllable);
+		public bool add_fd (Gst.PollFD fd);
 		public bool remove_fd (Gst.PollFD fd);
 		public void restart ();
 		public bool set_controllable (bool controllable);
@@ -1067,11 +1067,11 @@ namespace Gst {
 		public int64 start;
 		public int64 stop;
 		public int64 time;
+		[CCode (has_construct_function = false)]
+		public Segment ();
 		public bool clip (Gst.Format format, int64 start, int64 stop, out int64 clip_start, out int64 clip_stop);
 		public Gst.Segment copy ();
 		public void init (Gst.Format format);
-		[CCode (has_construct_function = false)]
-		public Segment ();
 		public void set_duration (Gst.Format format, int64 duration);
 		public void set_last_stop (Gst.Format format, int64 position);
 		public void set_newsegment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 time);
@@ -1088,6 +1088,8 @@ namespace Gst {
 		public GLib.Quark name;
 		public int parent_refcount;
 		public GLib.Type type;
+		[CCode (has_construct_function = false)]
+		public Structure (string name, string firstfield, ...);
 		public Gst.Structure copy ();
 		[CCode (cname = "gst_structure_empty_new", has_construct_function = false)]
 		public Structure.empty (string name);
@@ -1122,8 +1124,6 @@ namespace Gst {
 		public void id_set_value (GLib.Quark field, Gst.Value value);
 		public bool map_in_place (Gst.StructureMapFunc func);
 		public int n_fields ();
-		[CCode (has_construct_function = false)]
-		public Structure (string name, string firstfield, ...);
 		public unowned string nth_field_name (uint index);
 		public void remove_all_fields ();
 		public void remove_field (string fieldname);
@@ -1147,6 +1147,8 @@ namespace Gst {
 	[Compact]
 	[CCode (copy_function = "gst_tag_list_copy", cheader_filename = "gst/gst.h")]
 	public class TagList {
+		[CCode (has_construct_function = false)]
+		public TagList ();
 		public void add (Gst.TagMergeMode mode, string tag, ...);
 		public void add_valist (Gst.TagMergeMode mode, string tag, void* var_args);
 		public void add_valist_values (Gst.TagMergeMode mode, string tag, void* var_args);
@@ -1187,8 +1189,6 @@ namespace Gst {
 		public void insert (Gst.TagList from, Gst.TagMergeMode mode);
 		public bool is_empty ();
 		public Gst.TagList merge (Gst.TagList list2, Gst.TagMergeMode mode);
-		[CCode (has_construct_function = false)]
-		public TagList ();
 		public void remove_tag (string tag);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -1217,9 +1217,9 @@ namespace Gst {
 		public int bufsize;
 		public int fd;
 		public weak string filename;
-		public void flush ();
 		[CCode (has_construct_function = false)]
 		public Trace (string filename, int size);
+		public void flush ();
 		public static void read_tsc (int64 dst);
 		public void set_default ();
 		public void text_flush ();
@@ -1280,11 +1280,11 @@ namespace Gst {
 	public class XML : Gst.Object {
 		public void* ns;
 		public weak GLib.List topelements;
+		[CCode (has_construct_function = false)]
+		public XML ();
 		public unowned Gst.Element get_element (uchar[] name);
 		public unowned GLib.List get_topelements ();
 		public static unowned Gst.Element make_element (void* cur, Gst.Object parent);
-		[CCode (has_construct_function = false)]
-		public XML ();
 		[NoWrapper]
 		public virtual void object_saved (Gst.Object object, void* self);
 		public bool parse_doc (void* doc, uchar[] root);
