@@ -721,18 +721,22 @@ public class Vala.Class : ObjectTypeSymbol {
 
 	public override string? get_param_spec_function () {
 		if (param_spec_function == null) {
-			if (is_fundamental ()) {
-				param_spec_function = get_lower_case_cname ("param_spec_");
-			} else if (base_class != null) {
-				param_spec_function = base_class.get_param_spec_function ();
-			} else if (get_type_id () == "G_TYPE_POINTER") {
-				param_spec_function = "g_param_spec_pointer";
-			} else {
-				param_spec_function = "g_param_spec_boxed";
-			}
+			param_spec_function = get_default_param_spec_function ();
 		}
 
 		return param_spec_function;
+	}
+
+	public string? get_default_param_spec_function () {
+		if (is_fundamental ()) {
+			return get_lower_case_cname ("param_spec_");
+		} else if (base_class != null) {
+			return base_class.get_param_spec_function ();
+		} else if (get_type_id () == "G_TYPE_POINTER") {
+			return "g_param_spec_pointer";
+		} else {
+			return "g_param_spec_boxed";
+		}
 	}
 
 	public override string? get_get_value_function () {
