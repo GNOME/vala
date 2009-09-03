@@ -903,7 +903,7 @@ public class Vala.Method : Member {
 	public int get_required_arguments () {
 		int n = 0;
 		foreach (var param in parameters) {
-			if (param.default_expression != null) {
+			if (param.default_expression != null || param.ellipsis) {
 				// optional argument
 				break;
 			}
