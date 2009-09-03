@@ -205,6 +205,12 @@ public class Vala.Method : Member {
 	public bool scanf_format { get; set; }
 
 	/**
+	 * Specifies whether a new function without a GType parameter is
+	 * available. This is only applicable to creation methods.
+	 */
+	public bool has_new_function { get; set; default = true; }
+
+	/**
 	 * Specifies whether a construct function with a GType parameter is
 	 * available. This is only applicable to creation methods.
 	 */
@@ -395,6 +401,9 @@ public class Vala.Method : Member {
 		}
 		if (a.has_argument ("delegate_target_pos")) {
 			cdelegate_target_parameter_position = a.get_double ("delegate_target_pos");
+		}
+		if (a.has_argument ("has_new_function")) {
+			has_new_function = a.get_bool ("has_new_function");
 		}
 		if (a.has_argument ("has_construct_function")) {
 			has_construct_function = a.get_bool ("has_construct_function");

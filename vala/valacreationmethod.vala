@@ -107,6 +107,11 @@ public class Vala.CreationMethod : Method {
 			return get_cname ();
 		}
 
+		var ccode_attribute = get_attribute ("CCode");
+		if (ccode_attribute != null && ccode_attribute.has_argument ("construct_function")) {
+			return ccode_attribute.get_string ("construct_function");
+		}
+
 		string infix = "construct";
 
 		if (name == ".new") {

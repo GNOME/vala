@@ -3174,7 +3174,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			generate_method_declaration (m, source_declarations);
 
-			creation_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
+			var cl = expr.type_reference.data_type as Class;
+
+			if (!m.has_new_function) {
+				// use construct function directly
+				creation_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname ()));
+				creation_call.add_argument (new CCodeIdentifier (cl.get_type_id ()));
+			} else {
+				creation_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
+			}
 
 			if ((st != null && !st.is_simple_type ()) && !(m.cinstance_parameter_position < 0)) {
 				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance));
@@ -3182,7 +3190,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			generate_type_declaration (expr.type_reference, source_declarations);
 
-			var cl = expr.type_reference.data_type as Class;
 			if (cl != null && !cl.is_compact) {
 				add_generic_type_arguments (creation_call, expr.type_reference.get_type_arguments (), expr);
 			}

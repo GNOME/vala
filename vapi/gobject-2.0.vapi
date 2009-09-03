@@ -175,8 +175,8 @@ namespace GLib {
 	public class Object {
 		public uint ref_count;
 
-		[CCode (has_construct_function = false)]
-		public Object (Type type = typeof (Object), ...);
+		[CCode (has_new_function = false, construct_function = "g_object_new")]
+		public Object (...);
 
 #if VALA_0_7_6_NEW_METHODS
 		public static Object @new (Type type, ...);
