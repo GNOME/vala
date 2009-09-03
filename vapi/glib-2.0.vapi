@@ -3671,7 +3671,9 @@ namespace GLib {
 
 		public string print (bool type_annotate);
 		public StringBuilder print_string (StringBuilder ?string, bool type_annotate);
+		[CCode (cname="g_variant_parse")]
 		public static Variant.parse (string text, int text_length, VariantType? type) throws Error;
+		[CCode (cname="g_variant_parsef")]
 		public static Variant.parsef (string format_string, ...);
 
 		public string markup_print (bool newlines, int indentation, int tabstop);
