@@ -941,21 +941,23 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 
 		bool with_childs = (mself == null)? false : mself is Package;
 
-		file.printf ( "<h3 class=\"%s\">Namespaces:</h3>\n", css_title );
-		file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-		foreach ( Namespace ns in nsl ) {
-			if ( ns.name != null ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_namespace, css_navi_link, this.get_link(ns, mself), ns.name );
-				if ( with_childs == true ) {
-					this.write_child_classes ( file, ns, mself );
-					this.write_child_interfaces ( file, ns, mself );
-					this.write_child_structs ( file, ns, mself );
-					this.write_child_enums ( file, ns, mself );
-					this.write_child_errordomains ( file, ns, mself );
-					this.write_child_delegates ( file, ns, mself );
-					this.write_child_methods ( file, ns, mself );
-					this.write_child_fields ( file, ns, mself );
-					this.write_child_constants ( file, ns, mself );
+		file.printf ("<h3 class=\"%s\">Namespaces:</h3>\n", css_title);
+		file.printf ("<ul class=\"%s\">\n", css_inline_navigation);
+		foreach (Namespace ns in nsl) {
+			if (ns.name != null) {
+				file.printf ("\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>\n", css_inline_navigation_namespace, css_navi_link, this.get_link(ns, mself), ns.name);
+				this.write_brief_description (file, ns , mself);
+				file.printf ("</li>\n");
+				if (with_childs == true) {
+					this.write_child_classes (file, ns, mself);
+					this.write_child_interfaces (file, ns, mself);
+					this.write_child_structs (file, ns, mself);
+					this.write_child_enums (file, ns, mself);
+					this.write_child_errordomains (file, ns, mself);
+					this.write_child_delegates (file, ns, mself);
+					this.write_child_methods (file, ns, mself);
+					this.write_child_fields (file, ns, mself);
+					this.write_child_constants (file, ns, mself);
 				}
 			}
 		}

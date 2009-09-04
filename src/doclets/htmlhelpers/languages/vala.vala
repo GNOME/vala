@@ -14,12 +14,43 @@ public class Valadoc.Html.Api.Vala {
 	private Attribute cssbasictype = new Attribute ("class", "apibasictype");
 	private Attribute csslink = new Attribute ("class", "apilink");
 	private Attribute cssoptparamlist = new Attribute ("class", "apioptparameterlist");
-
+	private Attribute cssparentlist = new Attribute ("class", "parentlist");
 
 	private Entry keyword (string str) {
 		Span span = new Span ();
 		span.add_attribute (this.csskeyword);
 		span.add_child (new String(str));
+		return span;
+	}
+
+	private Entry parents (Inheritable type) {
+		Span span = new Span ();
+		span.add_attribute (this.cssparentlist);
+
+		Gee.Collection<Interface> interfaces = type.get_implemented_interface_list ();
+		Basic? basetype = type.base_type;
+		bool documentedelement;
+
+		if (basetype != null || interfaces.size > 0) {
+			span.add_child (new String (" : "));
+		}
+
+		if (basetype != null) {
+			span.add_child (this.type (basetype, out documentedelement));
+		}
+
+		if (basetype != null && interfaces.size > 0) {
+			span.add_child (new String (", "));
+		}
+
+		int i = 0;
+		foreach (Interface iface in interfaces) {
+			span.add_child (this.type (iface, out documentedelement));
+			if (interfaces.size < ++i) {
+				span.add_child (new String (", "));
+			}
+		}
+
 		return span;
 	}
 
@@ -52,7 +83,7 @@ public class Valadoc.Html.Api.Vala {
 					css = this.cssbasictype;
 				}
 
-				Link link = new Link ("/%s/%s.html".printf (dtype.package.name, dtype.full_name ()), new String (dtype.name));
+				HyperLink link = new HyperLink ("/%s/%s.html".printf (dtype.package.name, dtype.full_name ()), new String (dtype.name));
 				link.add_attribute (csslink);
 				elements.insert (0, link);
 				documentedelement = true;
@@ -188,7 +219,7 @@ public class Valadoc.Html.Api.Vala {
 		int i = 0;
 
 		foreach (FormalParameter param in paramh.param_list) {
-			if (param.has_default_value) {
+			if (param.has_default_value && !default_value) {
 				default_value = true;
 
 				span = new Span ();
@@ -455,6 +486,7 @@ public class Valadoc.Html.Api.Vala {
 			api.add_childs (lst);
 		}
 
+		api.add_child (this.parents (stru));
 		api.add_child (new String (";"));
 		return api;
 	}
@@ -480,6 +512,7 @@ public class Valadoc.Html.Api.Vala {
 			api.add_childs (lst);
 		}
 
+		api.add_child (this.parents (cl));
 		api.add_child (new String (";"));
 		return api;
 	}
@@ -497,6 +530,7 @@ public class Valadoc.Html.Api.Vala {
 			api.add_childs (lst);
 		}
 
+		api.add_child (this.parents (iface));
 		api.add_child (new String (";"));
 		return api;
 	}

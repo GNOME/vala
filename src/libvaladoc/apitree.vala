@@ -30,17 +30,17 @@ public Valadoc.Class glib_error = null;
 
 public abstract class Valadoc.Basic : Object {
 	public Valadoc.Settings settings {
-		construct set;
 		protected get;
+		set;
 	}
 
 	public Basic parent {
-		construct set;
+		set;
 		get;
 	}
 
 	public Tree head {
-		construct set;
+		set;
 		get;
 	}
 
@@ -59,7 +59,7 @@ public class Valadoc.Array : Basic {
 		get;
 	}
 
-	public Array ( Valadoc.Settings settings, Vala.ArrayType vtyperef, Basic parent, Tree head ) {
+	public Array (Valadoc.Settings settings, Vala.ArrayType vtyperef, Basic parent, Tree head) {
 		this.settings = settings;
 		this.vtype = vtyperef;
 		this.parent = parent;
@@ -67,13 +67,13 @@ public class Valadoc.Array : Basic {
 
 		Vala.DataType vntype = vtyperef.element_type;
 		if ( vntype is Vala.ArrayType )
-			this.data_type = new Array ( settings, (Vala.ArrayType)vntype, this, head );
+			this.data_type = new Array (settings, (Vala.ArrayType)vntype, this, head);
 		else
-			this.data_type = new TypeReference ( settings, vntype, this, head );
+			this.data_type = new TypeReference (settings, vntype, this, head);
 	}
 
-	public void write ( Langlet langlet, void* ptr, DocumentedElement parent ) {
-		langlet.write_array ( this, ptr, parent);
+	public void write (Langlet langlet, void* ptr, DocumentedElement parent) {
+		langlet.write_array (this, ptr, parent);
 	}
 
 	public void set_type_references () {
@@ -96,23 +96,23 @@ public class Valadoc.Pointer : Basic {
 		get;
 	}
 
-	public Pointer ( Valadoc.Settings settings, Vala.PointerType vtyperef, Basic parent, Tree head ) {
+	public Pointer (Valadoc.Settings settings, Vala.PointerType vtyperef, Basic parent, Tree head) {
 		this.settings = settings;
 		this.vtype = vtyperef;
 		this.parent = parent;
 		this.head = head;
 
 		Vala.DataType vntype = vtype.base_type;
-		if ( vntype is Vala.PointerType )
-			this.data_type = new Pointer ( settings, (Vala.PointerType)vntype, this, head );
-		else if ( vntype is Vala.ArrayType )
-			this.data_type = new Array ( settings, (Vala.ArrayType)vntype, this, head );
+		if (vntype is Vala.PointerType)
+			this.data_type = new Pointer (settings, (Vala.PointerType)vntype, this, head);
+		else if (vntype is Vala.ArrayType)
+			this.data_type = new Array (settings, (Vala.ArrayType)vntype, this, head);
 		else
-			this.data_type = new TypeReference ( settings, vntype, this, head );
+			this.data_type = new TypeReference (settings, vntype, this, head);
 	}
 
-	public void write ( Langlet langlet, void* ptr, DocumentedElement parent ) {
-		langlet.write_pointer ( this, ptr, parent );
+	public void write (Langlet langlet, void* ptr, DocumentedElement parent) {
+		langlet.write_pointer (this, ptr, parent);
 	}
 
 	public void set_type_references () {
@@ -137,11 +137,11 @@ public abstract class Valadoc.DocumentedElement : Basic, Documented {
 
 	public Namespace? nspace {
 		get {
-			if ( this._nspace == null ) {
+			if (this._nspace == null) {
 				Valadoc.Basic ast = this;
-				while ( ast is Valadoc.Namespace == false ) {
+				while (ast is Valadoc.Namespace == false) {
 					ast = ast.parent;
-					if ( ast == null )
+					if (ast == null)
 						return null;
 				}
 				this._nspace = (Valadoc.Namespace)ast;
@@ -153,11 +153,11 @@ public abstract class Valadoc.DocumentedElement : Basic, Documented {
 
 	public Package? package {
 		get {
-			if ( this._package == null ) {
+			if (this._package == null) {
 				Valadoc.Basic ast = this;
-				while ( ast is Valadoc.Package == false ) {
+				while (ast is Valadoc.Package == false) {
 					ast = ast.parent;
-					if ( ast == null )
+					if (ast == null)
 						return null;
 				}
 				this._package = (Valadoc.Package)ast;
@@ -168,22 +168,16 @@ public abstract class Valadoc.DocumentedElement : Basic, Documented {
 
 	public int line {
 		get {
-			if ( this._line == -1 ) {
+			if (this._line == -1) {
 				Vala.SourceReference vsref = this.vsymbol.source_reference;
-				this._line = ( vsref == null )? 0 : vsref.first_line;
+				this._line = (vsref == null)? 0 : vsref.first_line;
 			}
 			return this._line;
 		}
 	}
 
-	protected string? comment_string  {
-		get {
-			SourceReference sref = this.vsymbol.source_reference;
-			if ( sref == null )
-				return null;
-
-			return sref.comment;
-		}
+	protected Vala.Comment vcomment {
+		get; set;
 	}
 
 	public DocumentationTree? documentation {
@@ -197,20 +191,20 @@ public abstract class Valadoc.DocumentedElement : Basic, Documented {
 		}
 	}
 
-	// rename to get_full_name, weak
+	// rename to get_full_name
 	public string? full_name () {
-		if ( this._full_name == null ) {
-			if ( this.name == null )
+		if (this._full_name == null) {
+			if (this.name == null)
 				return null;
 
-			GLib.StringBuilder full_name = new GLib.StringBuilder ( this.name );
+			GLib.StringBuilder full_name = new GLib.StringBuilder (this.name);
 
-			if ( this.parent != null ) {
-				for ( Basic pos = this.parent; pos is Package == false ; pos = pos.parent ) {
+			if (this.parent != null) {
+				for (Basic pos = this.parent; pos is Package == false ; pos = pos.parent) {
 					string name = ((DocumentedElement)pos).name;
-					if ( name != null ) {
-						full_name.prepend_unichar ( '.' );
-						full_name.prepend ( name );
+					if (name != null) {
+						full_name.prepend_unichar ('.');
+						full_name.prepend (name);
 					}
 				}
 			}
@@ -1212,26 +1206,26 @@ public interface Valadoc.ConstantHandler : Basic {
 
 	public Gee.ReadOnlyCollection<Constant> get_constant_list ( ) {
 		var lstd = new Gee.ArrayList<Constant> ();
-		foreach ( Constant c in this.constants ) {
-			if ( !c.is_type_visitor_accessible ( this ) )
+		foreach (Constant c in this.constants) {
+			if (!c.is_type_visitor_accessible (this) )
 				continue ;
 
-			lstd.add ( c );
+			lstd.add (c);
 		}
 
-		return new Gee.ReadOnlyCollection<Constant>( lstd );
+		return new Gee.ReadOnlyCollection<Constant>(lstd);
 	}
 
 	// internal
-	public void add_constants ( Gee.Collection<Vala.Constant> vconstants ) {
-		foreach ( Vala.Constant vc in vconstants ) {
-			this.add_constant ( vc );
+	public void add_constants (Gee.Collection<Vala.Constant> vconstants) {
+		foreach (Vala.Constant vc in vconstants) {
+			this.add_constant (vc);
 		}
 	}
 
 	// internal
-	public void add_constant ( Vala.Constant vc ) {
-		var tmp = new Constant ( this.settings, vc, this, this.head );
+	public void add_constant (Vala.Constant vc) {
+		var tmp = new Constant (this.settings, vc, this, this.head);
 		this.constants.add ( tmp );
 	}
 
@@ -1526,6 +1520,7 @@ public class Valadoc.Constant : DocumentedElement, SymbolAccessibility, ReturnTy
 	}
 
 	public Constant ( Valadoc.Settings settings, Vala.Constant vconst, ConstantHandler parent, Tree head ) {
+		this.vcomment = vconst.comment;
 		this.settings = settings;
 		this.vsymbol = vconst;
 		this.vconst = vconst;
@@ -1567,6 +1562,7 @@ public class Valadoc.Field : DocumentedElement, SymbolAccessibility, ReturnTypeH
 	private Vala.Field vfield;
 
 	public Field ( Valadoc.Settings settings, Vala.Field vfield, FieldHandler parent, Tree head ) {
+		this.vcomment = vfield.comment;
 		this.settings = settings;
 		this.vsymbol = vfield;
 		this.vfield = vfield;
@@ -1960,12 +1956,12 @@ public class Valadoc.PropertyAccessor : Object {
 	}
 
 	public Tree head {
-		construct;
+		set;
 		get;
 	}
 
 	public Settings settings {
-		construct;
+		set;
 		get;
 	}
 
@@ -1975,7 +1971,7 @@ public class Valadoc.PropertyAccessor : Object {
 	}
 
 	public Tree tree {
-		construct;
+		set;
 		get;
 	}
 
@@ -2021,33 +2017,37 @@ public class Valadoc.PropertyAccessor : Object {
 		}
 	}
 
-	public void write ( Langlet langlet, void* ptr ) {
-		langlet.write_property_accessor ( this, ptr );
+	public void write (Langlet langlet, void* ptr) {
+		langlet.write_property_accessor (this, ptr);
 	}
 }
 
 public class Valadoc.Property : DocumentedElement, SymbolAccessibility, ReturnTypeHandler, Visitable, Writeable {
 	private Vala.Property vproperty;
 
-	public Property ( Valadoc.Settings settings, Vala.Property vproperty, PropertyHandler parent, Tree head ) {
+	public Property (Valadoc.Settings settings, Vala.Property vproperty, PropertyHandler parent, Tree head) {
+		this.vcomment = vproperty.comment;
 		this.settings = settings;
-		this.vproperty = vproperty;
-		this.vsymbol = vproperty;
 		this.parent = parent;
 		this.head = head;
 
+		this.vsymbol = vproperty;
+		this.vproperty = vproperty;
+
 		var ret = this.vproperty.property_type;
-		this.set_ret_type ( ret );
+		this.set_ret_type (ret);
 
-		if ( this.vproperty.get_accessor != null )
-			this.getter = new PropertyAccessor ( this.settings, this.vproperty.get_accessor, this, this.head );
+		if (this.vproperty.get_accessor != null) {
+			this.getter = new PropertyAccessor (this.settings, this.vproperty.get_accessor, this, this.head);
+		}
 
-		if ( this.vproperty.set_accessor != null )
-			this.setter = new PropertyAccessor ( this.settings, this.vproperty.set_accessor, this, this.head );
+		if (this.vproperty.set_accessor != null) {
+			this.setter = new PropertyAccessor (this.settings, this.vproperty.set_accessor, this, this.head);
+		}
 	}
 
-	public bool is_vproperty ( Vala.Property vprop ) {
-		return ( this.vproperty == vprop );
+	public bool is_vproperty (Vala.Property vprop) {
+		return (this.vproperty == vprop);
 	}
 
 	public string? get_cname () {
@@ -2098,26 +2098,22 @@ public class Valadoc.Property : DocumentedElement, SymbolAccessibility, ReturnTy
 
 	// internal
 	public void set_type_references ( ) {
-		if ( this.is_override ) {
-			Vala.Property vp = ( this.vproperty.base_property == null )? this.vproperty.base_interface_property : this.vproperty.base_property;
-			this.base_property = (Property?)this.head.search_vala_symbol ( vp );
+		if (this.is_override) {
+			Vala.Property vp = (this.vproperty.base_property == null)? this.vproperty.base_interface_property : this.vproperty.base_property;
+			this.base_property = (Property?)this.head.search_vala_symbol (vp);
 		}
 		this.set_return_type_references ( );
 	}
 
-	public void parse_comment ( Valadoc.Parser docparser ) {
-		if ( this.documentation != null )
+	public void parse_comment (Valadoc.Parser docparser) {
+		if (this.documentation != null)
 			return ;
 
-		if ( this.comment_string == null )
-			return ;
-
-		bool tmp = Parser.is_documentation ( this.comment_string );
-		if ( tmp == false )
+		if (this.vcomment == null)
 			return ;
 
 		if ( this.is_override && docparser.is_inherit_doc ( this ) ) {
-			this.base_property.parse_comment ( docparser );
+			this.base_property.parse_comment (docparser);
 			this.documentation = this.base_property.documentation;
 			return ;
 		}
@@ -2145,6 +2141,7 @@ public class Valadoc.Signal : DocumentedElement, ParameterListHandler, SymbolAcc
 	public Signal ( Valadoc.Settings settings, Vala.Signal vsignal, SignalHandler parent, Tree head ) {
 		this.param_list = new Gee.ArrayList<FormalParameter> ();
 
+		this.vcomment = vsignal.comment;
 		this.settings = settings;
 		this.vsymbol = vsignal;
 		this.vsignal = vsignal;
@@ -2216,6 +2213,7 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 		this.param_list = new Gee.ArrayList<FormalParameter>();
 		this.err_domains = new Gee.ArrayList<DocumentedElement>();
 
+		this.vcomment = vmethod.comment;
 		this.settings = settings;
 		this.vsymbol = vmethod;
 		this.vmethod = vmethod;
@@ -2266,12 +2264,6 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 		get;
 	}
 
-	public string? comment_str {
-		owned get {
-			return this.vmethod.source_reference.comment;
-		}
-	}
-
 	// intern
 	public bool equals ( Method m ) {
 		return ( m.vmethod == this.vmethod );
@@ -2279,14 +2271,10 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 
 	// intern
 	public void parse_comment ( Valadoc.Parser docparser ) {
-		if ( this.documentation != null )
+		if (this.documentation != null)
 			return ;
 
-		if ( this.comment_string == null )
-			return ;
-
-		bool tmp = Parser.is_documentation ( this.comment_string );
-		if ( tmp == false )
+		if (this.vcomment == null)
 			return ;
 
 		if ( this.is_override && docparser.is_inherit_doc ( this ) ) {
@@ -2389,6 +2377,7 @@ public class Valadoc.EnumValue: DocumentedElement, Writeable {
 	private Vala.EnumValue venval;
 
 	public EnumValue ( Valadoc.Settings settings, Vala.EnumValue venval, Enum parent, Tree head ) {
+		this.vcomment = venval.comment;
 		this.settings = settings;
 		this.vsymbol = venval;
 		this.venval = venval;
@@ -2423,6 +2412,7 @@ public class Valadoc.ErrorCode : DocumentedElement, Writeable {
 	private Vala.ErrorCode verrcode;
 
 	public ErrorCode ( Valadoc.Settings settings, Vala.ErrorCode verrcode, ErrorDomain parent, Tree head ) {
+		this.vcomment = verrcode.comment;
 		this.settings = settings;
 		this.verrcode = verrcode;
 		this.vsymbol = verrcode;
@@ -2461,6 +2451,7 @@ public class Valadoc.Delegate : DocumentedElement, SymbolAccessibility, Visitabl
 		this.param_list = new Gee.ArrayList<FormalParameter>();
 		this.err_domains = new Gee.ArrayList<DocumentedElement>();
 
+		this.vcomment = vdelegate.comment;
 		this.settings = settings;
 		this.vdelegate = vdelegate;
 		this.vsymbol = vdelegate;
@@ -2548,6 +2539,7 @@ public class Valadoc.Class : DocumentedElement, SymbolAccessibility, Writeable, 
 		this.parent_types = new Gee.ArrayList<Interface>();
 		this.methods = new Gee.ArrayList<Method> ();
 
+		this.vcomment = vclass.comment;
 		this.settings = settings;
 		this.vsymbol = vclass;
 		this.vclass = vclass;
@@ -2769,12 +2761,6 @@ public class Valadoc.Class : DocumentedElement, SymbolAccessibility, Writeable, 
 		return null;
 	}
 
-	public string? comment_str {
-		owned get {
-			return this.vclass.source_reference.comment;
-		}
-	}
-
 	// internal
 	public bool is_vclass ( Vala.Class vcl ) {
 		return this.vclass == vcl;
@@ -2802,16 +2788,13 @@ public class Valadoc.Class : DocumentedElement, SymbolAccessibility, Writeable, 
 		if ( this.documentation != null )
 			return ;
 
-		if ( this.comment_string != null ) {
-			bool tmp = docparser.is_documentation ( this.comment_string );
-			if ( tmp == true ) {
-				if ( docparser.is_inherit_doc ( this ) && this.base_type != null ) {
-					((Class)this.base_type).parse_comments ( docparser );
-					this.documentation = this.base_type.documentation;
-				}
-				else {
-					this.parse_comment_helper ( docparser );
-				}
+		if ( this.vcomment != null ) {
+			if ( docparser.is_inherit_doc ( this ) && this.base_type != null ) {
+				((Class)this.base_type).parse_comments ( docparser );
+				this.documentation = this.base_type.documentation;
+			}
+			else {
+				this.parse_comment_helper ( docparser );
 			}
 		}
 
@@ -2956,6 +2939,7 @@ public class Valadoc.ErrorDomain : DocumentedElement, SymbolAccessibility, Visit
 	private Vala.ErrorDomain verrdom;
 
 	public ErrorDomain ( Valadoc.Settings settings, Vala.ErrorDomain verrdom, ErrorDomainHandler parent, Tree head ) {
+		this.vcomment = verrdom.comment;
 		this.settings = settings;
 		this.vsymbol = verrdom;
 		this.verrdom = verrdom;
@@ -3103,6 +3087,7 @@ public class Valadoc.ErrorDomain : DocumentedElement, SymbolAccessibility, Visit
 
 public class Valadoc.Enum : DocumentedElement, SymbolAccessibility, Visitable, Writeable, MethodHandler {
 	public Enum ( Valadoc.Settings settings, Vala.Enum venum, EnumHandler parent, Tree head ) {
+		this.vcomment = venum.comment;
 		this.settings = settings;
 		this.vsymbol = venum;
 		this.venum = venum;
@@ -3258,7 +3243,8 @@ public class Valadoc.Enum : DocumentedElement, SymbolAccessibility, Visitable, W
 
 
 public class Valadoc.Struct : DocumentedElement, SymbolAccessibility, Writeable, Visitable, MethodHandler, ConstructionMethodHandler, FieldHandler, ConstantHandler, Inheritable, TemplateParameterListHandler {
-	public Struct ( Valadoc.Settings settings, Vala.Struct vstruct, StructHandler parent, Tree head ) {
+	public Struct (Valadoc.Settings settings, Vala.Struct vstruct, StructHandler parent, Tree head) {
+		this.vcomment = vstruct.comment;
 		this.settings = settings;
 		this.vstruct = vstruct;
 		this.vsymbol = vstruct;
@@ -3269,19 +3255,19 @@ public class Valadoc.Struct : DocumentedElement, SymbolAccessibility, Writeable,
 		this.methods = new Gee.ArrayList<Method> ();
 
 		var vtparams = this.vstruct.get_type_parameters ();
-		this.set_template_parameter_list ( vtparams );
+		this.set_template_parameter_list (vtparams);
 
 		Gee.Collection<Vala.Field> vfields = this.vstruct.get_fields();
 		this.fields = new Gee.ArrayList<Field> ();
-		this.add_fields ( vfields );
+		this.add_fields (vfields);
 
 		Gee.Collection<Vala.Constant> vconstants = this.vstruct.get_constants();
 		this.constants = new Gee.ArrayList<Constant> ();
-		this.add_constants ( vconstants );
+		this.add_constants (vconstants);
 
 		Gee.Collection<Vala.Method> vmethods = this.vstruct.get_methods ();
 		this.construction_methods = new Gee.ArrayList<Method>();
-		this.add_methods_and_construction_methods ( vmethods );
+		this.add_methods_and_construction_methods (vmethods);
 	}
 
 	protected Inheritable? base_type {
@@ -3378,12 +3364,6 @@ public class Valadoc.Struct : DocumentedElement, SymbolAccessibility, Writeable,
 		return this.search_construction_method ( params, pos );
 	}
 
-	public string? comment_str {
-		owned get {
-			return this.vstruct.source_reference.comment;
-		}
-	}
-
 	private Vala.Struct vstruct;
 
 	// internal
@@ -3395,41 +3375,37 @@ public class Valadoc.Struct : DocumentedElement, SymbolAccessibility, Writeable,
 		if ( !this.is_visitor_accessible ( ) )
 			return ;
 
-		doclet.visit_struct ( this );
+		doclet.visit_struct (this);
 	}
 
-	public void write ( Langlet langlet, void* ptr ) {
-		langlet.write_struct ( this, ptr );
+	public void write (Langlet langlet, void* ptr) {
+		langlet.write_struct (this, ptr);
 	}
 
 	// internal
-	public void parse_comments ( Valadoc.Parser docparser ) {
-		if ( this.documentation != null )
+	public void parse_comments (Valadoc.Parser docparser) {
+		if (this.documentation != null)
 			return ;
 
-
-		if ( this.comment_string != null ) {
-			bool tmp = Parser.is_documentation ( this.comment_string );
-			if ( tmp == true ) {
-				if ( docparser.is_inherit_doc ( this ) && this.base_type != null ) {
-					((Valadoc.Struct)this.base_type).parse_comments ( docparser );
-					this.documentation = this.base_type.documentation;
-				}
-				else {
-					this.parse_comment_helper ( docparser );
-				}
+		if (this.vcomment != null) {
+			if ( docparser.is_inherit_doc (this) && this.base_type != null) {
+				((Valadoc.Struct)this.base_type).parse_comments (docparser);
+				this.documentation = this.base_type.documentation;
+			}
+			else {
+				this.parse_comment_helper (docparser);
 			}
 		}
 
-		this.parse_construction_method_comments ( docparser );
-		this.parse_constant_comments ( docparser );
-		this.parse_method_comments ( docparser );
-		this.parse_field_comments ( docparser );
+		this.parse_construction_method_comments (docparser);
+		this.parse_constant_comments (docparser);
+		this.parse_method_comments (docparser);
+		this.parse_field_comments (docparser);
 	}
 
 	private void set_parent_references ( ) {
 		Vala.ValueType? basetype = (Vala.ValueType?)this.vstruct.base_type;
-		if ( basetype == null )
+		if (basetype == null)
 			return ;
 
 		this.base_type = (Struct?)this.head.search_vala_symbol ( (Vala.Struct)basetype.type_symbol );
@@ -3448,7 +3424,8 @@ public class Valadoc.Struct : DocumentedElement, SymbolAccessibility, Writeable,
 
 
 public class Valadoc.Interface : DocumentedElement, SymbolAccessibility, Writeable, Visitable, SignalHandler, PropertyHandler, FieldHandler, TemplateParameterListHandler, MethodHandler, DelegateHandler, EnumHandler, StructHandler, ClassHandler, Inheritable {
-	public Interface ( Valadoc.Settings settings, Vala.Interface vinterface, InterfaceHandler parent, Tree head ) {
+	public Interface (Valadoc.Settings settings, Vala.Interface vinterface, InterfaceHandler parent, Tree head) {
+		this.vcomment = vinterface.comment;
 		this.settings = settings;
 		this.vinterface = vinterface;
 		this.vsymbol = vinterface;
@@ -3459,39 +3436,39 @@ public class Valadoc.Interface : DocumentedElement, SymbolAccessibility, Writeab
 		this.methods = new Gee.ArrayList<Method> ();
 
 		var vtparams = this.vinterface.get_type_parameters ();
-		this.set_template_parameter_list ( vtparams );
+		this.set_template_parameter_list (vtparams);
 
 		Gee.Collection<Vala.Method> methods = this.vinterface.get_methods ();
 		this.methods = new Gee.ArrayList<Method>();
-		this.add_methods ( methods );
+		this.add_methods (methods);
 
 		Gee.Collection<Vala.Delegate> delegates = this.vinterface.get_delegates ();
 		this.delegates = new Gee.ArrayList<Delegate>();
-		this.add_delegates ( delegates );
+		this.add_delegates (delegates);
 
 		Gee.Collection<Vala.Signal> signals = this.vinterface.get_signals();
 		this.signals = new Gee.ArrayList<Signal>();
-		this.add_signals ( signals );
+		this.add_signals (signals);
 
 		Gee.Collection<Vala.Property> properties = this.vinterface.get_properties();
 		this.properties = new Gee.ArrayList<Property>();
-		this.add_properties ( properties );
+		this.add_properties (properties);
 
 		Gee.Collection<Vala.Field> fields = this.vinterface.get_fields();
 		this.fields = new Gee.ArrayList<Field>();
-		this.add_fields ( fields );
+		this.add_fields (fields);
 
 		Gee.Collection<Vala.Struct> structs = this.vinterface.get_structs();
 		this.structs = new Gee.ArrayList<Struct>();
-		this.add_structs ( structs );
+		this.add_structs (structs);
 
 		Gee.Collection<Vala.Class> classes = this.vinterface.get_classes();
 		this.classes = new Gee.ArrayList<Class>();
-		this.add_classes ( classes );
+		this.add_classes (classes);
 
 		Gee.Collection<Vala.Enum> enums = this.vinterface.get_enums();
 		this.enums = new Gee.ArrayList<Enum>();
-		this.add_enums ( enums );
+		this.add_enums (enums);
 	}
 
 	private Gee.ArrayList<Interface> parent_types = new Gee.ArrayList<Interface>();
@@ -3640,12 +3617,6 @@ public class Valadoc.Interface : DocumentedElement, SymbolAccessibility, Writeab
 			return element;
 
 		return null;
-	}
-
-	public string? comment_str {
-		owned get {
-			return this.vinterface.source_reference.comment;
-		}
 	}
 
 	// internal
@@ -3900,61 +3871,71 @@ public class Valadoc.Namespace : DocumentedElement, MethodHandler, FieldHandler,
 		this.errdoms = new Gee.ArrayList<ErrorDomain>();
 		this.enums = new Gee.ArrayList<Enum>();
 		this.fields = new Gee.ArrayList<Field> ();
+
+		if (vnspace.source_reference != null) {
+			var vfile = vnspace.source_reference.file;
+			foreach (Comment c in vnspace.get_comments()) {
+				if (this.package.is_vpackage (c.source_reference.file)) {
+					this.vcomment = c;
+					break;
+				}
+			}
+		}
 	}
 
-	public void visit ( Doclet doclet ) {
-		doclet.visit_namespace ( this );
+	public void visit (Doclet doclet) {
+		doclet.visit_namespace (this);
 	}
 
 	public Vala.Namespace vnspace {
-		construct set;
 		private get;
+		set;
 	}
 
 	// internal
 	public void set_type_references ( ) {
-		this.set_errordomain_type_referenes ( );
-		this.set_namespace_type_references ( );
-		this.set_interface_type_references ( );
-		this.set_delegate_type_references ( );
-		this.set_constant_type_references ( );
-		this.set_method_type_references ( );
-		this.set_field_type_references ( );
-		this.set_struct_type_references ( );
-		this.set_class_type_references ( );
-		this.set_enum_type_references ( );
+		this.set_errordomain_type_referenes ();
+		this.set_namespace_type_references ();
+		this.set_interface_type_references ();
+		this.set_delegate_type_references ();
+		this.set_constant_type_references ();
+		this.set_method_type_references ();
+		this.set_field_type_references ();
+		this.set_struct_type_references ();
+		this.set_class_type_references ();
+		this.set_enum_type_references ();
 	}
 
 	// internal
-	public void inheritance ( ) {
-		this.namespace_inheritance ( );
-		foreach ( Class cl in this.classes ) {
-			cl.inheritance ( );
+	public void inheritance () {
+		this.namespace_inheritance ();
+		foreach (Class cl in this.classes) {
+			cl.inheritance ();
 		}
 	}
 
 	// internal
-	public void parse_comments ( Valadoc.Parser docparser ) {
-		//this.parse_comment_helper ( docparser );
-		this.parse_enum_comments ( docparser );
-		this.parse_field_comments ( docparser );
-		this.parse_class_comments ( docparser );
-		this.parse_method_comments ( docparser );
-		this.parse_struct_comments ( docparser );
-		this.parse_constant_comments ( docparser );
-		this.parse_delegate_comments ( docparser );
-		this.parse_interface_comments ( docparser );
-		this.parse_namespace_comments ( docparser );
- 		this.parse_errordomain_comments ( docparser );
+	public void parse_comments (Valadoc.Parser docparser) {
+		this.parse_comment_helper (docparser);
+		this.parse_enum_comments (docparser);
+		this.parse_field_comments (docparser);
+		this.parse_class_comments (docparser);
+		this.parse_method_comments (docparser);
+		this.parse_struct_comments (docparser);
+		this.parse_constant_comments (docparser);
+		this.parse_delegate_comments (docparser);
+		this.parse_interface_comments (docparser);
+		this.parse_namespace_comments (docparser);
+ 		this.parse_errordomain_comments (docparser);
 	}
 
 	// internal
 	public bool is_vnspace ( Vala.Namespace vns ) {
-		return ( this.vnspace == vns );
+		return (this.vnspace == vns);
 	}
 
-	public void write ( Langlet langlet, void* ptr ) {
-		langlet.write_namespace ( this, ptr );
+	public void write (Langlet langlet, void* ptr) {
+		langlet.write_namespace (this, ptr);
 	}
 }
 
@@ -3963,8 +3944,8 @@ public class Valadoc.Package : DocumentedElement, NamespaceHandler {
 	private Gee.ArrayList<Vala.SourceFile> vfiles = new Gee.ArrayList<Vala.SourceFile> ();
 
 	// internal
-	public void add_file ( Vala.SourceFile vfile ) {
-		this.vfiles.add ( vfile );
+	public void add_file (Vala.SourceFile vfile) {
+		this.vfiles.add (vfile);
 	}
 
 	public Gee.ArrayList<Namespace> namespaces {
@@ -4028,19 +4009,19 @@ public class Valadoc.Package : DocumentedElement, NamespaceHandler {
 		}
 	}
 
-	public Package.with_name ( Valadoc.Settings settings, Vala.SourceFile vfile, string name, Tree head, bool is_package = false ) {
+	public Package.with_name (Valadoc.Settings settings, Vala.SourceFile vfile, string name, Tree head, bool is_package = false) {
+		this.is_package = is_package;
 		this.settings = settings;
 		this.head = head;
 
-		this.is_package = is_package;
 		this.package_name = name;
 
-		this.vfiles.add ( vfile );
+		this.vfiles.add (vfile);
 		this.parent = null;
 	}
 
-	public Package ( Valadoc.Settings settings, Vala.SourceFile vfile, Tree head, bool is_package = false ) {
-		this.with_name ( settings, vfile, this.extract_package_name ( settings, vfile ), head, is_package );
+	public Package (Valadoc.Settings settings, Vala.SourceFile vfile, Tree head, bool is_package = false) {
+		this.with_name (settings, vfile, this.extract_package_name (settings, vfile), head, is_package);
 	}
 
 	private string package_name;
@@ -4052,28 +4033,30 @@ public class Valadoc.Package : DocumentedElement, NamespaceHandler {
 	}
 
 	// internal
-	public override DocumentedElement? search_element ( string[] params, int pos ) {
-		foreach ( Namespace ns in this.namespaces ) {
+	public override DocumentedElement? search_element (string[] params, int pos) {
+		foreach (Namespace ns in this.namespaces) {
 			DocumentedElement? element = ns.search_element ( params, pos );
-			if ( element != null )
+			if (element != null) {
 				return element;
+			}
 		}
 		return null;
 	}
 
 	// internal
-	public override DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
-		foreach ( Namespace ns in this.namespaces ) {
-			DocumentedElement? element = ns.search_element_vala ( params, pos );
-			if ( element != null )
+	public override DocumentedElement? search_element_vala (Gee.ArrayList<Vala.Symbol> params, int pos) {
+		foreach (Namespace ns in this.namespaces) {
+			DocumentedElement? element = ns.search_element_vala (params, pos);
+			if (element != null) {
 				return element;
+			}
 		}
 		return null;
 	}
 
 	// internal
-	public bool is_vpackage ( Vala.SourceFile vfile ) {
-		return this.vfiles.contains ( vfile );
+	public bool is_vpackage (Vala.SourceFile vfile) {
+		return this.vfiles.contains (vfile);
 	}
 
 	public bool is_visitor_accessible () {
@@ -4102,8 +4085,8 @@ public class Valadoc.Package : DocumentedElement, NamespaceHandler {
 		this.set_namespace_type_references ( );
 	}
 
-	public void write ( Langlet langlet, void* ptr ) {
-		langlet.write_file ( this, ptr );
+	public void write (Langlet langlet, void* ptr) {
+		langlet.write_file (this, ptr);
 	}
 }
 
@@ -4546,7 +4529,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 
 	public void parse_comments ( Valadoc.Parser docparser ) {
 		this.wikitree = new WikiPageTree( this.reporter, this.settings );
-		wikitree.create_tree ( docparser );
+		wikitree.create_tree (docparser);
 
 		foreach ( Package pkg in this.packages ) {
 			pkg.parse_comments( docparser );

@@ -26,7 +26,7 @@ namespace Valadoc.Html {
 	public class ListEntryDocElement : Valadoc.ListEntryDocElement {
 		private Gee.ArrayList<DocElement> content;
 
-		public override bool parse ( ListType type, Gee.ArrayList<DocElement> content ) {
+		public override bool parse ( ListType type, long lvl, Gee.ArrayList<DocElement> content ) {
 			this.content = content;
 			return true;
 		}

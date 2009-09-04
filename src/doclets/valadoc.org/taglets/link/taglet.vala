@@ -17,36 +17,46 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Valadoc;
+
 using GLib;
-using Vala;
 using Gee;
 
 
-public class Valadoc.LinkValadocOrgTaglet : Valadoc.LinkHtmlHelperTaglet, LinkHelper {
-	protected override string? get_link ( Settings settings, Tree tree, Basic element, Basic? pos ) {
-		return this.get_html_link ( settings, element );
+public class Valadoc.ValdocOrg.LinkDocElement : Valadoc.LinkDocElement {
+	private string desc;
+	private string path;
+
+	public override bool parse (Settings settings, Tree tree, Documented pos, owned string path, owned string desc) {
+		if ( path.has_suffix(".valadoc")&&path.has_prefix("/") ) {
+			if ( tree.wikitree == null ) {
+				return false;
+			}
+
+			WikiPage? wikipage = tree.wikitree.search(path.offset(1));
+			if ( wikipage == null ) {
+				return false;
+			}
+
+			this.path = settings.pkg_name+"/"+path.substring (0, path.len()-8);
+			this.desc = desc;
+			return true;
+		}
+
+		this.path = path;
+		this.desc = desc;
+		return true;
 	}
 
-	public override string to_string () {
-		return to_string_imp ( );
-	}
-
-	public override bool write ( void* res, int max, int index ) {
-		return write_imp ( res, max, index );
-	}
-
-	public override bool parse ( Settings settings, Tree tree, Basic me, string content, out string[] errmsg ) {
-		return this.parse_imp ( settings, tree, me, content, out errmsg );
+	public override bool write (void* res, int max, int index) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		file.printf ("[[%s|%s]]", this.path, (this.desc==null||this.desc=="")? this.path: this.desc);
+		return true;
 	}
 }
 
 
 [ModuleInit]
-public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
-        GLib.Type type = typeof ( LinkValadocOrgTaglet );
-		taglets.set ( "link", type );
-		return type;
+public GLib.Type register_plugin (Gee.HashMap<string, Type> taglets) {
+	return typeof (Valadoc.ValdocOrg.LinkDocElement);
 }
-
 

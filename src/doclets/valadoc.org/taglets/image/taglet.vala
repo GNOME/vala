@@ -20,17 +20,36 @@
 
 using GLib;
 using Gee;
+using Gdk;
 
 
-public class Valadoc.ValdocOrg.StringTaglet : Valadoc.StringTaglet {
-	public override bool parse (string content) {
-		this.content = content;
+public class Valadoc.ValdocOrg.ImageDocElement : Valadoc.ImageDocElement {
+	private string imgpath;
+	private string path;
+	private string alt;
+
+	public override bool parse (Settings settings, Documented pos, owned string path, owned string alt) {
+		if ( GLib.FileUtils.test (path, GLib.FileTest.EXISTS | GLib.FileTest.IS_REGULAR ) == false) {
+			return false;
+		}
+
+		this.imgpath = (pos is DocumentedElement)?
+			Path.build_filename (settings.path, ((DocumentedElement)pos).package.name, "wiki-images", Path.get_basename (path)) :
+			Path.build_filename (settings.path, settings.pkg_name, "wiki-images", Path.get_basename (path));
+
+		this.path = path;
+		this.alt = alt;
+
 		return true;
 	}
 
 	public override bool write (void* res, int max, int index) {
-		weak GLib.FileStream file = (GLib.FileStream)res;
-		file.puts (this.content); 
+		bool tmp = copy_file (this.path, this.imgpath);
+		if (tmp == false) {
+			return false;
+		}
+
+		((GLib.FileStream)res).printf ("{{%s|%s}}", this.imgpath, (this.alt==null||this.alt=="")? this.imgpath: this.alt);
 		return true;
 	}
 }
@@ -38,9 +57,6 @@ public class Valadoc.ValdocOrg.StringTaglet : Valadoc.StringTaglet {
 
 [ModuleInit]
 public GLib.Type register_plugin (Gee.HashMap<string, Type> taglets) {
-	GLib.Type type = typeof (Valadoc.ValdocOrg.StringTaglet);
-	taglets.set ("", type);
-	return type;
+	return typeof (Valadoc.ValdocOrg.ImageDocElement);
 }
-
 

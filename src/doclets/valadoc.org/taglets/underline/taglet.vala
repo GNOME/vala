@@ -17,17 +17,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Valadoc;
+
 using GLib;
-using Vala;
 using Gee;
 
 
 
-[ModuleInit]
-public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
-        GLib.Type type = typeof ( SinceHtmlTaglet );
-		taglets.set ( "since", type );
-		return type;
+public class Valadoc.ValdocOrg.UnderlinedDocElement : Valadoc.UnderlinedDocElement {
+	private Gee.ArrayList<DocElement> content;
+
+	public override bool parse (Gee.ArrayList<DocElement> content) {
+		this.content = content;
+		return true;
+	}
+
+	public override bool write (void* res, int max, int index) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		int _max = this.content.size;
+		int _index = 0;
+
+		file.printf ("__");
+
+		foreach (DocElement element in this.content) {
+			element.write (res, _max, _index);
+			_index++;
+		}
+
+		file.printf ("__");
+		return true;
+	}
 }
+
+
+
+[ModuleInit]
+public GLib.Type register_plugin (Gee.HashMap<string, Type> taglets) {
+	return typeof (Valadoc.ValdocOrg.UnderlinedDocElement);
+}
+
 

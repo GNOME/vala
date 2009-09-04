@@ -22,15 +22,19 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.ValdocOrg.StringTaglet : Valadoc.StringTaglet {
-	public override bool parse (string content) {
-		this.content = content;
+public class Valadoc.ValdocOrg.HeadlineDocElement : Valadoc.HeadlineDocElement {
+	private string title;
+	private int lvl;
+
+	public override bool parse (owned string title, int lvl) {
+		this.title = title;
+		this.lvl = lvl;
 		return true;
 	}
 
 	public override bool write (void* res, int max, int index) {
 		weak GLib.FileStream file = (GLib.FileStream)res;
-		file.puts (this.content); 
+		file.printf ("\n\n%s %s\n", string.nfill (this.lvl+1, '='), this.title);
 		return true;
 	}
 }
@@ -38,9 +42,6 @@ public class Valadoc.ValdocOrg.StringTaglet : Valadoc.StringTaglet {
 
 [ModuleInit]
 public GLib.Type register_plugin (Gee.HashMap<string, Type> taglets) {
-	GLib.Type type = typeof (Valadoc.ValdocOrg.StringTaglet);
-	taglets.set ("", type);
-	return type;
+	return typeof (Valadoc.ValdocOrg.HeadlineDocElement);
 }
-
 

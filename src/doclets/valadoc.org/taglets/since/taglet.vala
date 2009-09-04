@@ -18,31 +18,32 @@
  */
 
 
-using Valadoc;
 using GLib;
 using Gee;
 
 
-public class Valadoc.ValdocOrg.SeeTaglet : MainTaglet {
+public class Valadoc.ValdocOrg.SinceTaglet : Valadoc.MainTaglet {
 	public override int order { get { return 400; } }
-	private string typename;
+	private StringTaglet content;
 
-	protected override bool write_block_start (void* res) {
+	public override bool write_block_start (void* ptr) {
 		return true;
 	}
 
-	protected override bool write_block_end (void* res) {
+	public override bool write_block_end (void* res) {
 		return true;
 	}
 
-	protected override bool write (void* res, int max, int index) {
-		((GLib.FileStream)res).printf (" @see %s\n", this.typename);
+	public override bool write (void* res, int max, int index) {
+		if (max != index+1 )
+			((GLib.FileStream)res).printf (" @since %s\n", this.content.content);
+
 		return true;
 	}
 
 	public override bool parse (Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg) {
 		if (content.size != 1) {
-			errmsg = "Type name was expected";
+			errmsg = "Version name was expected";
 			errlvl = ErrorLevel.ERROR;
 			return false;
 		}
@@ -52,29 +53,22 @@ public class Valadoc.ValdocOrg.SeeTaglet : MainTaglet {
 
 		DocElement element = it.get ();
 		if (element is StringTaglet == false) {
-			errmsg = "Type name was expected";
+			errmsg = "Version name was expected";
 			errlvl = ErrorLevel.ERROR;
 			return false;
 		}
 
-		Valadoc.DocumentedElement? node = tree.search_symbol_str (me, ((StringTaglet)element).content.strip ());
-		if (node == null) {
-			errmsg = "Linked type is not available";
-			errlvl = ErrorLevel.ERROR;
-			return false;
-		}
-
-		this.typename = node.full_name ();
+		this.content = (StringTaglet)element;
 		return true;
 	}
 }
 
 
+
 [ModuleInit]
 public GLib.Type register_plugin (Gee.HashMap<string, Type> taglets) {
-    GLib.Type type = typeof (Valadoc.ValdocOrg.SeeTaglet);
-	taglets.set ("see", type);
+    GLib.Type type = typeof (Valadoc.ValdocOrg.SinceTaglet);
+	taglets.set ("since", type);
 	return type;
 }
-
 

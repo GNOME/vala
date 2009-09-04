@@ -10,7 +10,7 @@ public class Valadoc.Parser : Object {
 	private ErrorReporter err;
 	private Tree tree;
 
-	public Parser ( Settings settings, ErrorReporter reporter, Tree tree, ModuleLoader modules ) {
+	public Parser (Settings settings, ErrorReporter reporter, Tree tree, ModuleLoader modules) {
 		this.settings = settings;
 		this.modules = modules;
 		this.err = reporter;
@@ -272,7 +272,7 @@ public class Valadoc.Parser : Object {
 		return false;
 	}
 
-	public bool parse_align_helper ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, ref long space, bool wikimode, GLib.Type tagtype, string tag ) {
+	private bool parse_align_helper ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, ref long space, bool wikimode, GLib.Type tagtype, string tag ) {
 		long newlinepos = nnewlinepos;
 		long line = nline;
 		long pos = npos;
@@ -951,7 +951,6 @@ public class Valadoc.Parser : Object {
 		nspace = space;
 		nline = line;
 		npos = pos;
-//Gee.ArrayList<Gee.ArrayList<TableCellDocElement>> rows
 		rows.add ( cells );
 		return true;
 	}
@@ -1025,13 +1024,17 @@ public class Valadoc.Parser : Object {
 	}
 
 	public bool is_inherit_doc ( DocumentedElement self ) {
-		weak string str = self.comment_string;
-
-		if ( self.comment_string == null ) {
+		if (self.vcomment == null) {
 			return false;
 		}
 
-		if ( self.comment_string[0]!='*' ) {
+		weak string str = self.vcomment.content;
+
+		if ( str == null ) {
+			return false;
+		}
+
+		if ( str[0]!='*' ) {
 			return false;
 		}
 
@@ -1197,7 +1200,11 @@ public class Valadoc.Parser : Object {
 	}
 
 	public DocumentationTree? parse ( DocumentedElement self ) {
-		weak string str = self.comment_string;
+		if (self.vcomment == null) {
+			return null;
+		}
+
+		weak string str = self.vcomment.content;
 		if ( str == null ) {
 			return null;
 		}
@@ -1416,11 +1423,11 @@ public class Valadoc.Parser : Object {
 			else if (this.parse_newline_pos (str, strlen, ref pos, ref line, ref newlinepos, wikimode)) {
 				break;
 			}
-			else if (this.parse_inline_taglet_pos ( curelement, str, strlen, content, ref pos, ref line, ref newlinepos, wikimode )) {
-				this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
+			else if (this.parse_inline_taglet_pos ( curelement, str, strlen, content, ref pos, ref line, ref newlinepos, wikimode)) {
+				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
 			}
-			else if ( this.parse_url_pos ( curelement, str, strlen, content, ref pos, ref line, ref newlinepos ) ) {
-				this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
+			else if ( this.parse_url_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos)) {
+				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
 			}
 			//else if ( this.parse_img_pos ( content, ref pos, ref line, ref newlinepos ) ) {
 			//	this.prepend_string_taglet ( content, ref startpos, pos, lpos, buf );
@@ -1430,13 +1437,13 @@ public class Valadoc.Parser : Object {
 			}
 		}
 
-		for ( space = pos, pos++; str[pos]==' '||str[pos]=='\t' ; pos++ );
-		this.append_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
+		for (space = pos, pos++; str[pos]==' '||str[pos]=='\t'; pos++);
+		this.append_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
 		space = pos-space;
 
-		ListEntryDocElement listeltag = (ListEntryDocElement)GLib.Object.new ( this.modules.ulistetag );
-		listeltag.parse ( listtype, content );
-		listelements.add ( listeltag );
+		ListEntryDocElement listeltag = (ListEntryDocElement)GLib.Object.new (this.modules.ulistetag);
+		listeltag.parse (listtype, newlinepos, content);
+		listelements.add (listeltag);
 
 		npos = pos;
 		return true;

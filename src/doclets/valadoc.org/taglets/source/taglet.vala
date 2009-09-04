@@ -22,15 +22,27 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.ValdocOrg.StringTaglet : Valadoc.StringTaglet {
-	public override bool parse (string content) {
-		this.content = content;
+public class Valadoc.ValdocOrg.SourceCodeDocElement : Valadoc.SourceCodeDocElement {
+	private Language lang;
+	private int srclines;
+	private string src;
+
+	public override bool parse (owned string src, Language lang) {
+		this.src = (owned)src;
+		this.lang = lang;
+		this.srclines=0;
+
+		for (weak string str=this.src; str.get_char()!='\0'; str=str.next_char()) {
+			if (str.get_char () == '\n') {
+				this.srclines++;
+			}
+		}
 		return true;
 	}
 
 	public override bool write (void* res, int max, int index) {
 		weak GLib.FileStream file = (GLib.FileStream)res;
-		file.puts (this.content); 
+		file.printf ("\n{{{\n%s\n}}}\n", src);
 		return true;
 	}
 }
@@ -38,9 +50,8 @@ public class Valadoc.ValdocOrg.StringTaglet : Valadoc.StringTaglet {
 
 [ModuleInit]
 public GLib.Type register_plugin (Gee.HashMap<string, Type> taglets) {
-	GLib.Type type = typeof (Valadoc.ValdocOrg.StringTaglet);
-	taglets.set ("", type);
-	return type;
+	return typeof (Valadoc.ValdocOrg.SourceCodeDocElement);
 }
+
 
 

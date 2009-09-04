@@ -22,25 +22,33 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.ValdocOrg.StringTaglet : Valadoc.StringTaglet {
-	public override bool parse (string content) {
+public class Valadoc.ValdocOrg.ItalicDocElement : Valadoc.ItalicDocElement {
+	private Gee.ArrayList<DocElement> content;
+
+	public override bool parse (Gee.ArrayList<DocElement> content) {
 		this.content = content;
 		return true;
 	}
 
 	public override bool write (void* res, int max, int index) {
 		weak GLib.FileStream file = (GLib.FileStream)res;
-		file.puts (this.content); 
+		int _max = this.content.size;
+		int _index = 0;
+
+		file.printf ("//");
+
+		foreach (DocElement element in this.content) {
+			element.write (res, _max, _index);
+			_index++;
+		}
+
+		file.printf ("//");
 		return true;
 	}
 }
 
 
 [ModuleInit]
-public GLib.Type register_plugin (Gee.HashMap<string, Type> taglets) {
-	GLib.Type type = typeof (Valadoc.ValdocOrg.StringTaglet);
-	taglets.set ("", type);
-	return type;
+public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
+	return typeof (Valadoc.ValdocOrg.ItalicDocElement);
 }
-
-

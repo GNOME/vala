@@ -52,8 +52,9 @@ public class Valadoc.ModuleLoader : Object {
 
 	public bool load ( string path ) {
 		bool tmp = this.load_doclet ( path );
-		if ( tmp == false )
+		if ( tmp == false ) {
 			return false;
+		}
 
 		return this.load_taglets ( path );
 	}

@@ -22,15 +22,28 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.ValdocOrg.StringTaglet : Valadoc.StringTaglet {
-	public override bool parse (string content) {
-		this.content = content;
+
+public class Valadoc.ValdocOrg.TypeLinkInlineTaglet : Valadoc.InlineTaglet {
+	private string typename = null;
+
+	protected override string to_string () {
+		return this.typename;
+	}
+
+	protected override bool write (void* res, int max, int index) {
+		((GLib.FileStream)res).printf ("{@link %s}", this.typename);
 		return true;
 	}
 
-	public override bool write (void* res, int max, int index) {
-		weak GLib.FileStream file = (GLib.FileStream)res;
-		file.puts (this.content); 
+	protected override bool parse (Settings settings, Tree tree, Documented self, string content, ref ErrorLevel errlvl, out string? errmsg) {
+		Valadoc.DocumentedElement? element = tree.search_symbol_str ( (self is DocumentedElement)? (DocumentedElement)self : null, content.strip() );
+		if (element == null) {
+			errmsg = "Linked type is not available";
+			errlvl = ErrorLevel.ERROR;
+			return false;
+		}
+
+		this.typename = element.package.name+"/"+element.full_name ();
 		return true;
 	}
 }
@@ -38,9 +51,8 @@ public class Valadoc.ValdocOrg.StringTaglet : Valadoc.StringTaglet {
 
 [ModuleInit]
 public GLib.Type register_plugin (Gee.HashMap<string, Type> taglets) {
-	GLib.Type type = typeof (Valadoc.ValdocOrg.StringTaglet);
-	taglets.set ("", type);
+	GLib.Type type = typeof (Valadoc.ValdocOrg.TypeLinkInlineTaglet);
+	taglets.set ("link", type);
 	return type;
 }
-
 

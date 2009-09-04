@@ -22,15 +22,31 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.ValdocOrg.StringTaglet : Valadoc.StringTaglet {
-	public override bool parse (string content) {
+public class Valadoc.ValdocOrg.ListEntryDocElement : Valadoc.ListEntryDocElement {
+	private Gee.ArrayList<DocElement> content;
+	private ListType type;
+	private long lvl;
+
+	public override bool parse (ListType type, long lvl, Gee.ArrayList<DocElement> content) {
 		this.content = content;
+		this.type = type;
+		this.lvl = lvl;
 		return true;
 	}
 
 	public override bool write (void* res, int max, int index) {
 		weak GLib.FileStream file = (GLib.FileStream)res;
-		file.puts (this.content); 
+		int _max = this.content.size;
+		int _index = 0;
+
+		file.printf ("%s%s", string.nfill (this.lvl, ' '), (this.type == ListType.SORTED)? "#": "-");
+
+		foreach ( DocElement element in this.content ) {
+			element.write ( res, _max, _index );
+			_index++;
+		}
+
+		file.printf ("\n");
 		return true;
 	}
 }
@@ -38,9 +54,7 @@ public class Valadoc.ValdocOrg.StringTaglet : Valadoc.StringTaglet {
 
 [ModuleInit]
 public GLib.Type register_plugin (Gee.HashMap<string, Type> taglets) {
-	GLib.Type type = typeof (Valadoc.ValdocOrg.StringTaglet);
-	taglets.set ("", type);
-	return type;
+	return typeof (Valadoc.ValdocOrg.ListEntryDocElement);
 }
 
 

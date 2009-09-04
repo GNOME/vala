@@ -17,17 +17,56 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Valadoc;
+
 using GLib;
-using Vala;
 using Gee;
 
 
+public class Valadoc.ValdocOrg.ReturnTaglet : Valadoc.MainTaglet {
+	public override int order { get { return 300; } }
+	private Gee.Collection<DocElement> content;
+
+	public override bool parse (Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg) {
+		if (!(me is Valadoc.Method || me is Valadoc.Signal || me is Valadoc.Delegate)) {
+			errmsg = "Tag @return cannot be used in this context";
+			errlvl = ErrorLevel.ERROR;
+			return false;
+		}
+		this.content = content;
+		return true;
+	}
+
+	public override bool write (void* res, int max, int index) {
+		weak GLib.FileStream file = (GLib.FileStream)res;
+		int _max = this.content.size;
+		int _index = 0;
+
+		file.printf (" @return ");
+
+		foreach (DocElement element in this.content) {
+			element.write (res, _max, _index);
+			_index++;
+		}
+
+		file.printf ("\n");
+		return true;
+	}
+
+	public override bool write_block_start (void* res) {
+		return true;
+	}
+
+	public override bool write_block_end (void* res) {
+		return true;
+	}
+}
+
+
 [ModuleInit]
-public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
-        GLib.Type type = typeof ( ReturnHtmlTaglet );
-		taglets.set ( "return", type );
-		return type;
+public GLib.Type register_plugin (Gee.HashMap<string, Type> taglets) {
+   GLib.Type type = typeof (Valadoc.ValdocOrg.ReturnTaglet);
+	taglets.set ("return", type);
+	return type;
 }
 
 
