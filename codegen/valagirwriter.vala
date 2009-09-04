@@ -66,6 +66,10 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf (">\n");
 		indent++;
 
+		// FIXME: find a way to include everything
+		write_gir_include ("GLib", "2.0");
+		write_gir_include ("GObject", "2.0");
+
 		write_package (package);
 
 		context.accept (this);
@@ -74,6 +78,11 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf ("</repository>\n");
 
 		stream = null;
+	}
+
+	private void write_gir_include (string name, string version) {
+		write_indent ();
+		stream.printf ("<include name=\"%s\" version=\"%s\"/>\n", name, version);
 	}
 
 	private void write_package (string package) {
