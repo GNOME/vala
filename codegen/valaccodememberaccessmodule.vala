@@ -244,6 +244,28 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (getter_cname));
 
 				if (prop.binding == MemberBinding.INSTANCE) {
+					if (prop.parent_symbol is Struct) {
+						// we need to pass struct instance by reference
+						var unary = pub_inst as CCodeUnaryExpression;
+						if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
+							// *expr => expr
+							pub_inst = unary.inner;
+						} else if (pub_inst is CCodeIdentifier || pub_inst is CCodeMemberAccess) {
+							pub_inst = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, pub_inst);
+						} else {
+							// if instance is e.g. a function call, we can't take the address of the expression
+							// (tmp = expr, &tmp)
+							var ccomma = new CCodeCommaExpression ();
+
+							var temp_var = get_temp_variable (expr.inner.target_type);
+							temp_vars.insert (0, temp_var);
+							ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), pub_inst));
+							ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
+
+							pub_inst = ccomma;
+						}
+					}
+
 					ccall.add_argument (pub_inst);
 				}
 

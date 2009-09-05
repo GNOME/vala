@@ -2517,6 +2517,8 @@ public class Vala.Parser : CodeVisitor {
 			st.add_field ((Field) sym);
 		} else if (sym is Constant) {
 			st.add_constant ((Constant) sym);
+		} else if (sym is Property) {
+			st.add_property ((Property) sym);
 		} else {
 			Report.error (sym.source_reference, "unexpected declaration in struct");
 		}

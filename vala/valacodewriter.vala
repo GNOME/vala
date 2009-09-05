@@ -362,6 +362,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 		visit_sorted (st.get_constants ());
 		visit_sorted (st.get_methods ());
+		visit_sorted (st.get_properties ());
 
 		current_scope = current_scope.parent_scope;
 

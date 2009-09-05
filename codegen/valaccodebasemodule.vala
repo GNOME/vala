@@ -1250,10 +1250,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		if (prop.binding == MemberBinding.INSTANCE) {
-			var t = (ObjectTypeSymbol) prop.parent_symbol;
-			var this_type = new ObjectType (t);
+			var t = (TypeSymbol) prop.parent_symbol;
+			var this_type = get_data_type_for_symbol (t);
 			generate_type_declaration (this_type, decl_space);
 			var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
+			if (t is Struct) {
+				cselfparam.type_name += "*";
+			}
 
 			function.add_parameter (cselfparam);
 		}
@@ -1295,7 +1298,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		acc.accept_children (codegen);
 
-		var t = (ObjectTypeSymbol) prop.parent_symbol;
+		var t = (TypeSymbol) prop.parent_symbol;
 
 		if (acc.construction && !t.is_subtype_of (gobject_type)) {
 			Report.error (acc.source_reference, "construct properties require GLib.Object");
@@ -1319,8 +1322,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			}
 		}
 
-		var this_type = new ObjectType (t);
+		var this_type = get_data_type_for_symbol (t);
 		var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
+		if (t is Struct) {
+			cselfparam.type_name += "*";
+		}
 		CCodeFormalParameter cvalueparam;
 		if (returns_real_struct) {
 			cvalueparam = new CCodeFormalParameter ("value", acc.value_type.get_cname () + "*");
@@ -3966,7 +3972,31 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		if (prop.binding == MemberBinding.INSTANCE) {
 			/* target instance is first argument */
-			ccall.add_argument ((CCodeExpression) get_ccodenode (ma.inner));
+			var instance = (CCodeExpression) get_ccodenode (ma.inner);
+
+			if (prop.parent_symbol is Struct) {
+				// we need to pass struct instance by reference
+				var unary = instance as CCodeUnaryExpression;
+				if (unary != null && unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
+					// *expr => expr
+					instance = unary.inner;
+				} else if (instance is CCodeIdentifier || instance is CCodeMemberAccess) {
+					instance = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, instance);
+				} else {
+					// if instance is e.g. a function call, we can't take the address of the expression
+					// (tmp = expr, &tmp)
+					var ccomma = new CCodeCommaExpression ();
+
+					var temp_var = get_temp_variable (ma.inner.target_type);
+					temp_vars.insert (0, temp_var);
+					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), instance));
+					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
+
+					instance = ccomma;
+				}
+			}
+
+			ccall.add_argument (instance);
 		}
 
 		if (prop.no_accessor_method) {

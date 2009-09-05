@@ -31,6 +31,7 @@ public class Vala.Struct : TypeSymbol {
 	private Gee.List<Constant> constants = new ArrayList<Constant> ();
 	private Gee.List<Field> fields = new ArrayList<Field> ();
 	private Gee.List<Method> methods = new ArrayList<Method> ();
+	private Gee.List<Property> properties = new ArrayList<Property> ();
 	private DataType _base_type = null;
 
 	private string cname;
@@ -210,6 +211,32 @@ public class Vala.Struct : TypeSymbol {
 		return new ReadOnlyList<Method> (methods);
 	}
 
+	/**
+	 * Adds the specified property as a member to this struct.
+	 *
+	 * @param prop a property
+	 */
+	public void add_property (Property prop) {
+		properties.add (prop);
+		scope.add (prop.name, prop);
+
+		prop.this_parameter = new FormalParameter ("this", SemanticAnalyzer.get_data_type_for_symbol (this));
+		prop.scope.add (prop.this_parameter.name, prop.this_parameter);
+
+		if (prop.field != null) {
+			add_field (prop.field);
+		}
+	}
+
+	/**
+	 * Returns a copy of the list of properties.
+	 *
+	 * @return list of properties
+	 */
+	public Gee.List<Property> get_properties () {
+		return new ReadOnlyList<Property> (properties);
+	}
+
 	public override void accept (CodeVisitor visitor) {
 		visitor.visit_struct (this);
 	}
@@ -233,6 +260,10 @@ public class Vala.Struct : TypeSymbol {
 		
 		foreach (Method m in methods) {
 			m.accept (visitor);
+		}
+
+		foreach (Property prop in properties) {
+			prop.accept (visitor);
 		}
 	}
 
@@ -756,6 +787,10 @@ public class Vala.Struct : TypeSymbol {
 
 		foreach (Method m in methods) {
 			m.check (analyzer);
+		}
+
+		foreach (Property prop in properties) {
+			prop.check (analyzer);
 		}
 
 		if (!external && !external_package && base_type == null && get_fields ().size == 0
