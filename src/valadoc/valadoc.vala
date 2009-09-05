@@ -87,52 +87,52 @@ public class ValaDoc : Object {
 		{ null }
 	};
 
-	private static int quit ( ErrorReporter reporter ) {
+	private static int quit (ErrorReporter reporter) {
 		if ( reporter.errors == 0) {
-			stdout.printf ("Succeeded - %d warning(s)\n", reporter.warnings );
+			stdout.printf ("Succeeded - %d warning(s)\n", reporter.warnings);
 			return 0;
 		}
 		else {
-			stdout.printf ("Failed: %d error(s), %d warning(s)\n", reporter.errors, reporter.warnings );
+			stdout.printf ("Failed: %d error(s), %d warning(s)\n", reporter.errors, reporter.warnings);
 			return 1;
 		}
 	}
 
 	private static bool check_pkg_name () {
-		if ( pkg_name == null )
+		if (pkg_name == null)
 			return true;
 
-		if ( pkg_name == "glib-2.0" || pkg_name == "gobject-2.0" )
+		if (pkg_name == "glib-2.0" || pkg_name == "gobject-2.0")
 			return false;
 
-		foreach (string package in tsources ) {
-			if ( pkg_name == package )
+		foreach (string package in tsources) {
+			if (pkg_name == package)
 				return false;
 		}
 		return true;
 	}
 
-	private string get_pkg_name ( ) {
-		if ( this.pkg_name == null ) {
-			if ( this.directory.has_suffix ( "/" ) )
-				this.pkg_name = GLib.Path.get_dirname ( this.directory );
+	private string get_pkg_name () {
+		if (this.pkg_name == null) {
+			if (this.directory.has_suffix ("/"))
+				this.pkg_name = GLib.Path.get_dirname (this.directory);
 			else
-				this.pkg_name = GLib.Path.get_basename ( this.directory );
+				this.pkg_name = GLib.Path.get_basename (this.directory);
 		}
 
 		return this.pkg_name;
 	}
 
 
-	private int run ( ErrorReporter reporter ) {
-		var settings = new Valadoc.Settings ( );
-		settings.pkg_name = this.get_pkg_name ( );
+	private int run (ErrorReporter reporter) {
+		var settings = new Valadoc.Settings ();
+		settings.pkg_name = this.get_pkg_name ();
 		settings.pkg_version = this.pkg_version;
 		settings.add_inherited = this.add_inherited;
 		settings._protected = this._protected;
 		settings.with_deps = this.with_deps;
 		settings._private = this._private;
-		settings.path = realpath ( this.directory );
+		settings.path = realpath (this.directory);
 		settings.verbose = this.verbose;
 		settings.wiki_directory = this.wikidirectory;
 
@@ -149,18 +149,18 @@ public class ValaDoc : Object {
 		settings.defines = defines;
 
 		string fulldirpath = "";
-		if ( pluginpath == null ) {
-			fulldirpath = build_filename ( Config.plugin_dir, "html" );
+		if (pluginpath == null) {
+			fulldirpath = build_filename (Config.plugin_dir, "html");
 		}
-		else if ( is_absolute ( pluginpath ) == false ) {
+		else if ( is_absolute (pluginpath ) == false) {
 			// Test to see if the plugin exists in the expanded path and then fallback
 			// to using the configured plugin directory
-			string local_path = build_filename ( Environment.get_current_dir(), pluginpath);
-			if ( FileUtils.test( local_path, FileTest.EXISTS ) ) {
+			string local_path = build_filename (Environment.get_current_dir(), pluginpath);
+			if ( FileUtils.test(local_path, FileTest.EXISTS)) {
 				fulldirpath = local_path;
 			}
 			else {
-				fulldirpath = build_filename ( Config.plugin_dir, pluginpath );
+				fulldirpath = build_filename (Config.plugin_dir, pluginpath);
 			}
 		}
 		else {
@@ -169,125 +169,125 @@ public class ValaDoc : Object {
 
 
 		ModuleLoader modules = new ModuleLoader ();
-		bool tmp = modules.load ( fulldirpath );
-		if ( tmp == false ) {
-			reporter.simple_error ( "failed to load plugin" );
-			return quit ( reporter );
+		bool tmp = modules.load (fulldirpath);
+		if (tmp == false) {
+			reporter.simple_error ("failed to load plugin");
+			return quit (reporter);
 		}
 
 
-		Valadoc.Tree doctree = new Valadoc.Tree ( reporter, settings);
-		Valadoc.Parser docparser = new Valadoc.Parser ( settings, reporter, doctree, modules );
+		Valadoc.Tree doctree = new Valadoc.Tree (reporter, settings);
+		Valadoc.Parser docparser = new Valadoc.Parser (settings, reporter, doctree, modules);
 		if (reporter.errors > 0) {
-			return quit ( reporter );
+			return quit (reporter);
 		}
 
 		doctree.add_depencies (packages);
 		if (reporter.errors > 0) {
-			return quit ( reporter );
+			return quit (reporter);
 		}
 
 
 		doctree.add_documented_file (tsources);
 		if (reporter.errors > 0) {
-			return quit ( reporter );
+			return quit (reporter);
 		}
 
 		if (!doctree.create_tree())
 			return quit (reporter);
 
-		doctree.parse_comments ( docparser );
-		if ( reporter.errors > 0 )
-			return quit ( reporter );
+		doctree.parse_comments (docparser);
+		if (reporter.errors > 0)
+			return quit (reporter);
 
-		doctree.visit ( modules.doclet );
-		return quit ( reporter );
+		doctree.visit (modules.doclet);
+		return quit (reporter);
 	}
 
-	private static bool remove_directory ( string rpath ) {
+	private static bool remove_directory (string rpath) {
 		try {
 			GLib.Dir dir = GLib.Dir.open ( rpath );
-			if ( dir == null )
+			if (dir == null)
 				return false;
 
-			for ( weak string entry = dir.read_name(); entry != null ; entry = dir.read_name() ) {
+			for (weak string entry = dir.read_name(); entry != null ; entry = dir.read_name()) {
 				string path = rpath + entry;
 
-				bool is_dir = GLib.FileUtils.test ( path, GLib.FileTest.IS_DIR );
-				if ( is_dir == true ) {
-					bool tmp = remove_directory ( path );
-					if ( tmp == false ) {
+				bool is_dir = GLib.FileUtils.test (path, GLib.FileTest.IS_DIR);
+				if (is_dir == true) {
+					bool tmp = remove_directory (path);
+					if (tmp == false) {
 						return false;
 					}
 				}
 				else {
-					int tmp = GLib.FileUtils.unlink ( path );
-					if ( tmp > 0 ) {
+					int tmp = GLib.FileUtils.unlink (path);
+					if (tmp > 0) {
 						return false;
 					}
 				}
 			}
 		}
-		catch ( GLib.FileError err ) {
+		catch (GLib.FileError err) {
 			return false;
 		}
 
 		return true;
 	}
 
-	static int main ( string[] args ) {
+	static int main (string[] args) {
 		ErrorReporter reporter = new ErrorReporter();
 
 		try {
 			var opt_context = new OptionContext ("- Vala Documentation Tool");
 			opt_context.set_help_enabled (true);
 			opt_context.add_main_entries (options, null);
-			opt_context.parse ( ref args);
+			opt_context.parse (ref args);
 		}
 		catch (OptionError e) {
-			reporter.simple_error ( e.message );
+			reporter.simple_error (e.message);
 			stdout.printf ("Run '%s --help' to see a full list of available command line options.\n", args[0]);
-			return quit ( reporter );
+			return quit (reporter);
 		}
 
-		if ( version ) {
-			stdout.printf ("Valadoc %s\n", "0.1" );
-			return quit ( reporter );
+		if (version) {
+			stdout.printf ("Valadoc %s\n", "0.1");
+			return quit (reporter);
 		}
 
-		if ( directory == null ) {
-			reporter.simple_error ( "No output directory specified." );
-			return quit ( reporter );
+		if (directory == null) {
+			reporter.simple_error ("No output directory specified.");
+			return quit (reporter);
 		}
 
-		if ( !check_pkg_name () ) {
-			reporter.simple_error ( "File allready exists" );
-			return quit ( reporter );
+		if (!check_pkg_name ()) {
+			reporter.simple_error ("File already exists");
+			return quit (reporter);
 		}
 
-		if ( FileUtils.test ( directory, FileTest.EXISTS ) ) {
-			if ( force == true ) {
-				bool tmp = remove_directory ( directory );
-				if ( tmp == false ) {
-					reporter.simple_error ( "Can't remove directory." );
-					return quit ( reporter );
+		if (FileUtils.test (directory, FileTest.EXISTS)) {
+			if (force == true) {
+				bool tmp = remove_directory (directory);
+				if (tmp == false) {
+					reporter.simple_error ("Can't remove directory.");
+					return quit (reporter);
 				}
 			}
 			else {
-				reporter.simple_error ( "File allready exists" );
-				return quit ( reporter );
+				reporter.simple_error ("File already exists");
+				return quit (reporter);
 			}
 		}
 
-		if ( wikidirectory != null ) {
-			if ( !FileUtils.test(wikidirectory, FileTest.IS_DIR) ) {
-				reporter.simple_error ( "Wiki-directory does not exist." );
-				return quit ( reporter );
+		if (wikidirectory != null) {
+			if (!FileUtils.test(wikidirectory, FileTest.IS_DIR)) {
+				reporter.simple_error ("Wiki-directory does not exist.");
+				return quit (reporter);
 			}
 		}
 
 		var valadoc = new ValaDoc( );
-		return valadoc.run ( reporter );
+		return valadoc.run (reporter);
 	}
 }
 

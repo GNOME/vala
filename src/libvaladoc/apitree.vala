@@ -4457,7 +4457,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 					context.add_source_file (source_file);
 				} else if (source.has_suffix (".vapi")) {
 					var vfile = new SourceFile (context, rpath, true);
-					Package vdpkg = new Package (this.settings, vfile, this, true); 
+					Package vdpkg = new Package (this.settings, vfile, this); 
 					context.add_source_file (vfile);
 					this.packages.add (vdpkg);
 				} else if (source.has_suffix (".c")) {
@@ -4472,36 +4472,36 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	}
 
 	public bool create_tree ( ) {
-		Vala.Parser parser  = new Vala.Parser ();
-		parser.parse ( this.context );
+		Vala.Parser parser = new Vala.Parser ();
+		parser.parse (this.context);
 		if (this.context.report.get_errors () > 0) {
 			return false;
 		}
 
 		Vala.SymbolResolver resolver = new SymbolResolver ();
-		resolver.resolve( this.context );
+		resolver.resolve(this.context);
 		if (this.context.report.get_errors () > 0) {
 			return false;
 		}
 
 		Vala.SemanticAnalyzer analyzer = new SemanticAnalyzer ( );
-		analyzer.analyze( this.context );
+		analyzer.analyze(this.context);
 		if (this.context.report.get_errors () > 0) {
 			return false;
 		}
 
-		if ( context.non_null_experimental ) {
+		if (context.non_null_experimental) {
 			Vala.NullChecker null_checker = new NullChecker ();
-			null_checker.check ( this.context );
+			null_checker.check (this.context);
 
 			if (this.context.report.get_errors () > 0) {
 				return false;
 			}
 		}
 
-		this.context.accept( this );
-		this.set_type_references ( );
-		this.inheritance ( ); // add a switch
+		this.context.accept(this);
+		this.set_type_references ();
+		this.inheritance (); // add a switch
 		this.add_dependencies_to_source_package ();
 		return true;
 	}
@@ -4537,36 +4537,36 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	}
 
 	// internal
-	public DocumentedElement? search_vala_symbol ( Vala.Symbol? vnode ) {
-		if ( vnode == null )
+	public DocumentedElement? search_vala_symbol (Vala.Symbol? vnode) {
+		if (vnode == null)
 			return null;
 
 		Gee.ArrayList<Vala.Symbol> params = new Gee.ArrayList<Vala.Symbol> ();
-		for ( Vala.Symbol iter = vnode; iter != null ; iter = iter.parent_symbol ) {
-			if ( iter is Vala.DataType )
-				params.insert ( 0, ((Vala.DataType)iter).data_type );
+		for (Vala.Symbol iter = vnode; iter != null ; iter = iter.parent_symbol) {
+			if (iter is Vala.DataType)
+				params.insert (0, ((Vala.DataType)iter).data_type);
 			else
-				params.insert ( 0, iter );
+				params.insert (0, iter);
 		}
 
-		if ( params.size == 0 )
+		if (params.size == 0)
 			return null;
 
-		if ( params.size >= 2 ) {
-			if ( params.get(1) is Vala.Namespace ) {
-				params.remove_at ( 0 );
+		if (params.size >= 2) {
+			if (params.get(1) is Vala.Namespace) {
+				params.remove_at (0);
 			}
 		}
 
 		Vala.SourceFile vfile = vnode.source_reference.file;
-		Package file = this.find_file( vfile );
+		Package file = this.find_file(vfile);
 
-		return file.search_element_vala ( params, 0 );
+		return file.search_element_vala (params, 0);
 	}
 
-	private Package? get_external_package_by_name ( string name ) {
-		foreach ( Package pkg in this.packages ) {
-			if ( name == pkg.name ) {
+	private Package? get_external_package_by_name (string name) {
+		foreach (Package pkg in this.packages) {
+			if (name == pkg.name) {
 				return pkg;
 			}
 		}
