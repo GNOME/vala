@@ -1,6 +1,6 @@
 /* valamemberinitializer.vala
  *
- * Copyright (C) 2007  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,12 +35,20 @@ public class Vala.MemberInitializer : CodeNode {
 	/**
 	 * Initializer expression.
 	 */
-	public Expression initializer { get; set; }
+	public Expression initializer {
+		get { return _initializer; }
+		set {
+			_initializer = value;
+			_initializer.parent_node = this;
+		}
+	}
 
 	/**
 	 * The symbol this expression refers to.
 	 */
 	public weak Symbol symbol_reference { get; set; }
+
+	Expression _initializer;
 
 	/**
 	 * Creates a new member initializer.
@@ -62,6 +70,12 @@ public class Vala.MemberInitializer : CodeNode {
 	
 	public override bool check (SemanticAnalyzer analyzer) {
 		return initializer.check (analyzer);
+	}
+
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		if (initializer == old_node) {
+			initializer = new_node;
+		}
 	}
 }
 
