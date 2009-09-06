@@ -175,6 +175,11 @@ public class Vala.ArrayType : ReferenceType {
 	}
 
 	public override bool compatible (DataType target_type) {
+		if (target_type.get_type_id () == "G_TYPE_VALUE" && element_type.data_type == CodeContext.get ().root.scope.lookup ("string")) {
+			// allow implicit conversion from string[] to GValue
+			return true;
+		}
+
 		if (target_type is PointerType || (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {
 			/* any array type can be cast to a generic pointer */
 			return true;
@@ -233,5 +238,13 @@ public class Vala.ArrayType : ReferenceType {
 			return false;
 		}
 		return element_type.check (analyzer);
+	}
+
+	public override string? get_type_id () {
+		if (element_type.data_type == CodeContext.get ().root.scope.lookup ("string")) {
+			return "G_TYPE_STRV";
+		} else {
+			return null;
+		}
 	}
 }

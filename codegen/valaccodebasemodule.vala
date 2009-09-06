@@ -419,10 +419,26 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override CCodeIdentifier get_value_setter_function (DataType type_reference) {
+		var array_type = type_reference as ArrayType;
 		if (type_reference.data_type != null) {
 			return new CCodeIdentifier (type_reference.data_type.get_set_value_function ());
+		} else if (array_type != null && array_type.element_type.data_type == string_type.data_type) {
+			// G_TYPE_STRV
+			return new CCodeIdentifier ("g_value_set_boxed");
 		} else {
 			return new CCodeIdentifier ("g_value_set_pointer");
+		}
+	}
+
+	CCodeIdentifier get_value_getter_function (DataType type_reference) {
+		var array_type = type_reference as ArrayType;
+		if (type_reference.data_type != null) {
+			return new CCodeIdentifier (type_reference.data_type.get_get_value_function ());
+		} else if (array_type != null && array_type.element_type.data_type == string_type.data_type) {
+			// G_TYPE_STRV
+			return new CCodeIdentifier ("g_value_get_boxed");
+		} else {
+			return new CCodeIdentifier ("g_value_get_pointer");
 		}
 	}
 
@@ -3451,9 +3467,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (expr.inner.value_type != null && gvalue_type != null && expr.inner.value_type.data_type == gvalue_type
 		    && expr.type_reference.get_type_id () != null) {
 			// explicit conversion from GValue
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier (expr.type_reference.data_type.get_get_value_function ()));
+			var ccall = new CCodeFunctionCall (get_value_getter_function (expr.type_reference));
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) expr.inner.ccodenode));
 			expr.ccodenode = ccall;
+			if (expr.type_reference is ArrayType) {
+				// null-terminated string array
+				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+				len_call.add_argument (ccall);
+				expr.append_array_size (len_call);
+			}
 			return;
 		}
 
