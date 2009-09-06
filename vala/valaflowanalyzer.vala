@@ -170,15 +170,15 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			current_block.connect (m.exit_block);
 		}
 
-		build_dominator_tree (m);
-		build_dominator_frontier (m);
-		insert_phi_functions (m);
-		check_variables (m);
+		build_dominator_tree (m.entry_block);
+		build_dominator_frontier (m.entry_block);
+		insert_phi_functions (m.entry_block);
+		check_variables (m.entry_block);
 	}
 
-	Gee.List<BasicBlock> get_depth_first_list (Method m) {
+	Gee.List<BasicBlock> get_depth_first_list (BasicBlock entry_block) {
 		var list = new ArrayList<BasicBlock> ();
-		depth_first_traverse (m.entry_block, list);
+		depth_first_traverse (entry_block, list);
 		return list;
 	}
 
@@ -192,10 +192,10 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
-	void build_dominator_tree (Method m) {
+	void build_dominator_tree (BasicBlock entry_block) {
 		// set dom(n) = {E,1,2...,N,X} forall n
 		var dom = new HashMap<BasicBlock, Set<BasicBlock>> ();
-		var block_list = get_depth_first_list (m);
+		var block_list = get_depth_first_list (entry_block);
 		foreach (BasicBlock block in block_list) {
 			var block_set = new HashSet<BasicBlock> ();
 			foreach (BasicBlock b in block_list) {
@@ -206,8 +206,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		// set dom(E) = {E}
 		var entry_dom_set = new HashSet<BasicBlock> ();
-		entry_dom_set.add (m.entry_block);
-		dom.set (m.entry_block, entry_dom_set);
+		entry_dom_set.add (entry_block);
+		dom.set (entry_block, entry_dom_set);
 
 		bool changes = true;
 		while (changes) {
@@ -255,7 +255,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		// build tree
 		foreach (BasicBlock block in block_list) {
-			if (block == m.entry_block) {
+			if (block == entry_block) {
 				continue;
 			}
 
@@ -280,8 +280,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
-	void build_dominator_frontier (Method m) {
-		var block_list = get_depth_first_list (m);
+	void build_dominator_frontier (BasicBlock entry_block) {
+		var block_list = get_depth_first_list (entry_block);
 		for (int i = block_list.size - 1; i >= 0; i--) {
 			var block = block_list[i];
 
@@ -303,9 +303,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
-	Map<LocalVariable, Set<BasicBlock>> get_assignment_map (Method m) {
+	Map<LocalVariable, Set<BasicBlock>> get_assignment_map (BasicBlock entry_block) {
 		var map = new HashMap<LocalVariable, Set<BasicBlock>> ();
-		foreach (BasicBlock block in get_depth_first_list (m)) {
+		foreach (BasicBlock block in get_depth_first_list (entry_block)) {
 			var defined_variables = new ArrayList<LocalVariable> ();
 			foreach (CodeNode node in block.get_nodes ()) {
 				node.get_defined_variables (defined_variables);
@@ -323,15 +323,15 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		return map;
 	}
 
-	void insert_phi_functions (Method m) {
-		var assign = get_assignment_map (m);
+	void insert_phi_functions (BasicBlock entry_block) {
+		var assign = get_assignment_map (entry_block);
 
 		int counter = 0;
 		var work_list = new ArrayList<BasicBlock> ();
 
 		var added = new HashMap<BasicBlock, int> ();
 		var phi = new HashMap<BasicBlock, int> ();
-		foreach (BasicBlock block in get_depth_first_list (m)) {
+		foreach (BasicBlock block in get_depth_first_list (entry_block)) {
 			added.set (block, 0);
 			phi.set (block, 0);
 		}
@@ -361,12 +361,12 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
-	void check_variables (Method m) {
+	void check_variables (BasicBlock entry_block) {
 		var_map = new HashMap<Symbol, Gee.List<LocalVariable>>();
 		used_vars = new HashSet<LocalVariable> ();
 		phi_functions = new HashMap<LocalVariable, PhiFunction> ();
 
-		check_block_variables (m, m.entry_block);
+		check_block_variables (entry_block);
 
 		// check for variables used before initialization
 		var used_vars_queue = new ArrayList<LocalVariable> ();
@@ -394,9 +394,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
-	void check_block_variables (Method m, BasicBlock block) {
+	void check_block_variables (BasicBlock block) {
 		foreach (PhiFunction phi in block.get_phi_functions ()) {
-			LocalVariable versioned_var = process_assignment (m, var_map, phi.original_variable);
+			LocalVariable versioned_var = process_assignment (var_map, phi.original_variable);
 
 			phi_functions.set (versioned_var, phi);
 		}
@@ -422,7 +422,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			node.get_defined_variables (defined_variables);
 
 			foreach (LocalVariable local in defined_variables) {
-				process_assignment (m, var_map, local);
+				process_assignment (var_map, local);
 			}
 		}
 
@@ -444,7 +444,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		foreach (BasicBlock child in block.get_children ()) {
-			check_block_variables (m, child);
+			check_block_variables (child);
 		}
 
 		foreach (PhiFunction phi in block.get_phi_functions ()) {
@@ -462,7 +462,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
-	LocalVariable process_assignment (Method m, Map<Symbol, Gee.List<LocalVariable>> var_map, LocalVariable var_symbol) {
+	LocalVariable process_assignment (Map<Symbol, Gee.List<LocalVariable>> var_map, LocalVariable var_symbol) {
 		var variable_stack = var_map.get (var_symbol);
 		if (variable_stack == null) {
 			variable_stack = new ArrayList<LocalVariable> ();
@@ -508,6 +508,11 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 			current_block.connect (acc.exit_block);
 		}
+
+		build_dominator_tree (acc.entry_block);
+		build_dominator_frontier (acc.entry_block);
+		insert_phi_functions (acc.entry_block);
+		check_variables (acc.entry_block);
 	}
 
 	public override void visit_block (Block b) {
