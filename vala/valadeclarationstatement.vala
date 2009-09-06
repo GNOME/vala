@@ -1,6 +1,6 @@
 /* valadeclarationstatement.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -88,9 +88,14 @@ public class Vala.DeclarationStatement : CodeNode, Statement {
 
 	public override void get_defined_variables (Collection<LocalVariable> collection) {
 		var local = declaration as LocalVariable;
-		if (local != null && local.initializer != null) {
-			local.initializer.get_defined_variables (collection);
-			collection.add (local);
+		if (local != null) {
+			var array_type = local.variable_type as ArrayType;
+			if (local.initializer != null) {
+				local.initializer.get_defined_variables (collection);
+				collection.add (local);
+			} else if (array_type != null && array_type.fixed_length) {
+				collection.add (local);
+			}
 		}
 	}
 
