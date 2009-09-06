@@ -150,16 +150,16 @@ public class Valadoc.Parser : Object {
 		return false;
 	}
 
-	private string? parse_taglet_name ( Documented? curelement, string str, long strlen, ref long pos, long line, long newlinepos, long npos ) {
+	private string? parse_taglet_name (Documented? curelement, string str, long strlen, ref long pos, long line, long newlinepos, long npos, bool _inline) {
 		long startpos = pos;
-		for ( ; str[pos]!=' '&&str[pos]!='\t'&&str[pos]!='\n'&&str[pos]!='\0'; pos++ );
-		if ( str[pos]=='\0'|| !str[pos].isspace() ) {
+		for (; str[pos]!=' '&&str[pos]!='\t'&&str[pos]!='\n'&&str[pos]!='\0'&&(_inline&&str[pos+1]!='}'); pos++);
+		if (str[pos]=='\0'|| !str[pos].isspace()) {
 			if (curelement != null) {
-				this.printr ( ErrorNumber.OPEN_TAG, curelement.get_filename(), str, strlen, line, newlinepos, npos, -1 );
+				this.printr (ErrorNumber.OPEN_TAG, curelement.get_filename(), str, strlen, line, newlinepos, npos, -1);
 			}
 			return null;
 		}
-		return str.substring ( startpos, pos-startpos );
+		return str.substring (startpos, pos-startpos);
 	}
 
 	private bool parse_inline_taglet_pos ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, bool wikimode ) {
@@ -193,7 +193,7 @@ public class Valadoc.Parser : Object {
 		long keywordline = line;
 		pos++;
 
-		string keyword = this.parse_taglet_name ( curelement, str, strlen, ref pos, line, newlinepos, npos );
+		string keyword = this.parse_taglet_name (curelement, str, strlen, ref pos, line, newlinepos, npos, true);
 		if ( keyword == null ) {
 			return false;
 		}
@@ -661,7 +661,7 @@ public class Valadoc.Parser : Object {
 		long keywordline =  nline;
 
 
-		string keyword = this.parse_taglet_name ( curelement, str, strlen, ref pos, line, newlinepos, npos );
+		string keyword = this.parse_taglet_name (curelement, str, strlen, ref pos, line, newlinepos, npos, false);
 		if ( keyword == null ) {
 			return false;
 		}
@@ -1002,7 +1002,7 @@ public class Valadoc.Parser : Object {
 
 		pos++;
 
-		string keyword = this.parse_taglet_name ( null, str, strlen, ref pos, line, newlinepos, npos );
+		string keyword = this.parse_taglet_name (null, str, strlen, ref pos, line, newlinepos, npos, true);
 		if ( keyword != "inheritDoc" ) {
 			return false;
 		}
