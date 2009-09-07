@@ -599,16 +599,16 @@ namespace Xml {
 		public long get_line_no ();
 
 		[CCode (cname = "xmlGetNoNsProp")]
-		public string get_no_ns_prop (string name);
+		public string? get_no_ns_prop (string name);
 
 		[CCode (cname = "xmlGetNodePath")]
 		public string get_path ();
 
 		[CCode (cname = "xmlGetNsProp")]
-		public string get_ns_prop (string name, string ns);
+		public string? get_ns_prop (string name, string ns);
 
 		[CCode (cname = "xmlGetProp")]
-		public string get_prop (string name);
+		public string? get_prop (string name);
 
 		[CCode (cname = "xmlHasNsProp")]
 		public Attr* has_ns_prop (string name, string name_space);
