@@ -2098,9 +2098,17 @@ public class Valadoc.Property : DocumentedElement, SymbolAccessibility, ReturnTy
 
 	// internal
 	public void set_type_references ( ) {
-		if (this.is_override) {
-			Vala.Property vp = (this.vproperty.base_property == null)? this.vproperty.base_interface_property : this.vproperty.base_property;
-			this.base_property = (Property?)this.head.search_vala_symbol (vp);
+		Vala.Property? vp = null;
+		if (vproperty.base_property != null) {
+			vp = vproperty.base_property;
+		} else if (vproperty.base_interface_property != null) {
+			vp = vproperty.base_interface_property;
+		}
+		if (vp == vproperty && vproperty.base_interface_property != null) {
+			vp = vproperty.base_interface_property;
+		}
+		if (vp != null) {
+			this.base_property = (Property?) this.head.search_vala_symbol (vp);
 		}
 		this.set_return_type_references ( );
 	}
@@ -2112,24 +2120,24 @@ public class Valadoc.Property : DocumentedElement, SymbolAccessibility, ReturnTy
 		if (this.vcomment == null)
 			return ;
 
-		if ( this.is_override && docparser.is_inherit_doc ( this ) ) {
+		if (this.base_property != null && docparser.is_inherit_doc (this)) {
 			this.base_property.parse_comment (docparser);
 			this.documentation = this.base_property.documentation;
 			return ;
 		}
 
-		this.parse_comment_helper ( docparser );
+		this.parse_comment_helper (docparser);
 	}
 
-	public void visit ( Doclet doclet ) {
-		if ( !this.is_visitor_accessible ( ) )
+	public void visit (Doclet doclet) {
+		if (!this.is_visitor_accessible ())
 			return ;
 
-		doclet.visit_property ( this );
+		doclet.visit_property (this);
 	}
 
-	public void write ( Langlet langlet, void* ptr ) {
-		langlet.write_property ( this, ptr );
+	public void write (Langlet langlet, void* ptr) {
+		langlet.write_property (this, ptr);
 	}
 }
 
@@ -2138,7 +2146,7 @@ public class Valadoc.Property : DocumentedElement, SymbolAccessibility, ReturnTy
 public class Valadoc.Signal : DocumentedElement, ParameterListHandler, SymbolAccessibility, ReturnTypeHandler, Visitable, Writeable {
 	private Vala.Signal vsignal;
 
-	public Signal ( Valadoc.Settings settings, Vala.Signal vsignal, SignalHandler parent, Tree head ) {
+	public Signal (Valadoc.Settings settings, Vala.Signal vsignal, SignalHandler parent, Tree head) {
 		this.param_list = new Gee.ArrayList<FormalParameter> ();
 
 		this.vcomment = vsignal.comment;
@@ -2149,15 +2157,15 @@ public class Valadoc.Signal : DocumentedElement, ParameterListHandler, SymbolAcc
 		this.head = head;
 
 		var vparamlst = this.vsignal.get_parameters ();
-		this.add_parameter_list ( vparamlst );
+		this.add_parameter_list (vparamlst);
 
 		var ret = this.vsignal.return_type;
-		this.set_ret_type ( ret );
+		this.set_ret_type (ret);
 	}
 
 	// internal
-	public bool is_vsignal ( Vala.Signal vsig ) {
-		return ( this.vsignal == vsig );
+	public bool is_vsignal (Vala.Signal vsig) {
+		return (this.vsignal == vsig);
 	}
 
 	public string? get_cname () {
@@ -2181,8 +2189,8 @@ public class Valadoc.Signal : DocumentedElement, ParameterListHandler, SymbolAcc
 	}
 
 	// internal
-	public void parse_comment ( Valadoc.Parser docparser ) {
-		this.parse_comment_helper ( docparser );
+	public void parse_comment (Valadoc.Parser docparser) {
+		this.parse_comment_helper (docparser);
 	}
 
 	public bool is_virtual {
@@ -2191,15 +2199,15 @@ public class Valadoc.Signal : DocumentedElement, ParameterListHandler, SymbolAcc
 		}
 	}
 
-	public void visit ( Doclet doclet ) {
-		if ( !this.is_visitor_accessible ( ) )
+	public void visit (Doclet doclet) {
+		if ( !this.is_visitor_accessible () )
 			return ;
 
-		doclet.visit_signal ( this );
+		doclet.visit_signal (this);
 	}
 
-	public void write ( Langlet langlet, void* ptr ) {
-		langlet.write_signal ( this, ptr );
+	public void write (Langlet langlet, void* ptr) {
+		langlet.write_signal (this, ptr);
 	}
 }
 
@@ -2208,10 +2216,10 @@ public class Valadoc.Signal : DocumentedElement, ParameterListHandler, SymbolAcc
 public class Valadoc.Method : DocumentedElement, ParameterListHandler, ExceptionHandler, TemplateParameterListHandler, SymbolAccessibility, ReturnTypeHandler, Visitable, Writeable {
 	private Vala.Method vmethod;
 
-	public Method ( Valadoc.Settings settings, Vala.Method vmethod, MethodHandler parent, Tree head ) {
+	public Method (Valadoc.Settings settings, Vala.Method vmethod, MethodHandler parent, Tree head) {
 		this.template_param_lst = new Gee.ArrayList<TypeParameter> ();
-		this.param_list = new Gee.ArrayList<FormalParameter>();
-		this.err_domains = new Gee.ArrayList<DocumentedElement>();
+		this.param_list = new Gee.ArrayList<FormalParameter> ();
+		this.err_domains = new Gee.ArrayList<DocumentedElement> ();
 
 		this.vcomment = vmethod.comment;
 		this.settings = settings;
@@ -2221,22 +2229,22 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 		this.head = head;
 
 		var vret = this.vmethod.return_type;
-		this.set_ret_type ( vret );
+		this.set_ret_type (vret);
 
 		var vparamlst = this.vmethod.get_parameters ();
-		this.add_parameter_list ( vparamlst );
+		this.add_parameter_list (vparamlst);
 
 		var vtparams = this.vmethod.get_type_parameters ();
-		this.set_template_parameter_list ( vtparams );
+		this.set_template_parameter_list (vtparams);
 	}
 
 	// intern
-	public bool is_vmethod ( Vala.Method vm ) {
-		return ( this.vmethod == vm );
+	public bool is_vmethod (Vala.Method vm) {
+		return (this.vmethod == vm);
 	}
 
 	public string? get_cname () {
-		return this.vmethod.get_cname();
+		return this.vmethod.get_cname ();
 	}
 
 	public Method? base_method {
@@ -2265,25 +2273,25 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 	}
 
 	// intern
-	public bool equals ( Method m ) {
-		return ( m.vmethod == this.vmethod );
+	public bool equals (Method m) {
+		return (m.vmethod == this.vmethod);
 	}
 
 	// intern
-	public void parse_comment ( Valadoc.Parser docparser ) {
+	public void parse_comment (Valadoc.Parser docparser) {
 		if (this.documentation != null)
 			return ;
 
 		if (this.vcomment == null)
 			return ;
 
-		if ( this.is_override && docparser.is_inherit_doc ( this ) ) {
-			this.base_method.parse_comment ( docparser );
+		if (this.base_method != null && docparser.is_inherit_doc (this)) {
+			this.base_method.parse_comment (docparser);
 			this.documentation = this.base_method.documentation;
 			return ;
 		}
 
-		this.parse_comment_helper ( docparser );
+		this.parse_comment_helper (docparser);
 	}
 
 	public bool is_yields {
@@ -2312,7 +2320,7 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 
 	public bool is_static {
 		get {
-			if ( this.parent is Namespace || this.is_constructor )
+			if (this.parent is Namespace || this.is_constructor)
 				return false;
 
 			return this.vmethod.binding == MemberBinding.STATIC;
@@ -2333,8 +2341,8 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 
 	public override string? name {
 		owned get {
-			if ( this.is_constructor ) {
-				if ( this.vmethod.name == "new" )
+			if (this.is_constructor) {
+				if (this.vmethod.name == ".new")
 					return ((DocumentedElement)this.parent).name;
 				else
 					return ((DocumentedElement)this.parent).name + "." + this.vmethod.name;
@@ -2347,9 +2355,17 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 
 	// internal
 	public void set_type_references ( ) {
-		if ( this.is_override ) {
-			Vala.Method vm = ( this.vmethod.base_method == null )? this.vmethod.base_interface_method : this.vmethod.base_method;
-			this.base_method = (Method?)this.head.search_vala_symbol ( vm );
+		Vala.Method? vm = null;
+		if (vmethod.base_method != null) {
+			vm = vmethod.base_method;
+		} else if (vmethod.base_interface_method != null) {
+			vm = vmethod.base_interface_method;
+		}
+		if (vm == vmethod && vmethod.base_interface_method != null) {
+			vm = vmethod.base_interface_method;
+		}
+		if (vm != null) {
+			this.base_method = (Method?) this.head.search_vala_symbol (vm);
 		}
 
 		this.set_return_type_references ();
@@ -3723,70 +3739,70 @@ public class Valadoc.Namespace : DocumentedElement, MethodHandler, FieldHandler,
 	}
 
 	// interface
-	private DocumentedElement? search_namespace ( string[] params, int pos ) {
-		foreach ( Namespace ns in this.namespaces ) {
-			DocumentedElement? element = ns.search_element ( params, pos+1 );
-			if ( element != null )
+	private DocumentedElement? search_namespace (string[] params, int pos) {
+		foreach (Namespace ns in this.namespaces) {
+			DocumentedElement? element = ns.search_element (params, pos+1);
+			if (element != null)
 				return element;
 		}
 		return null;
 	}
 
 	//interface
-	private DocumentedElement? search_namespace_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
-		foreach ( Namespace ns in this.namespaces ) {
-			DocumentedElement? element = ns.search_element_vala ( params, pos+1 );
-			if ( element != null )
+	private DocumentedElement? search_namespace_vala (Gee.ArrayList<Vala.Symbol> params, int pos) {
+		foreach (Namespace ns in this.namespaces) {
+			DocumentedElement? element = ns.search_element_vala (params, pos+1);
+			if (element != null)
 				return element;
 		}
 		return null;
 	}
 
-	public override DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
+	public override DocumentedElement? search_element_vala (Gee.ArrayList<Vala.Symbol> params, int pos) {
 		Vala.Symbol velement = params[pos];
 
-		if ( velement is Vala.Namespace == false )
+		if (velement is Vala.Namespace == false)
 			return null;
 
-		if ( this.is_vnspace ( (Vala.Namespace)velement ) == false )
+		if (this.is_vnspace ((Vala.Namespace)velement) == false)
 			return null;
 
-		if ( params.size == pos+1 )
+		if (params.size == pos+1)
 			return this;
 
 		velement = params[pos+1];
 
 		DocumentedElement? element = null;
 
-		if ( velement is Vala.Namespace ) {
-			element = this.search_namespace_vala ( params, pos );
+		if (velement is Vala.Namespace) {
+			element = this.search_namespace_vala (params, pos);
 		}
-		else if ( velement is Vala.Class ) {
-			element = this.search_class_vala ( params, pos );
+		else if (velement is Vala.Class) {
+			element = this.search_class_vala (params, pos);
 		}
-		else if ( velement is Vala.Interface ) {
-			element = this.search_interface_vala ( params, pos );
+		else if (velement is Vala.Interface) {
+			element = this.search_interface_vala (params, pos);
 		}
-		else if ( velement is Vala.Struct ) {
-			element = this.search_struct_vala ( params, pos );
+		else if (velement is Vala.Struct) {
+			element = this.search_struct_vala (params, pos);
 		}
-		else if ( velement is Vala.Enum ) {
-			element = this.search_enum_vala ( params, pos );
+		else if (velement is Vala.Enum) {
+			element = this.search_enum_vala (params, pos);
 		}
-		else if ( velement is Vala.ErrorDomain ) {
-			element = this.search_error_domain_vala ( params, pos );
+		else if (velement is Vala.ErrorDomain) {
+			element = this.search_error_domain_vala (params, pos);
 		}
-		else if ( velement is Vala.Method ) {
-			element = this.search_method_vala ( params, pos );
+		else if (velement is Vala.Method) {
+			element = this.search_method_vala (params, pos);
 		}
-		else if ( velement is Vala.Field ) {
-			element = this.search_field_vala ( params, pos );
+		else if (velement is Vala.Field) {
+			element = this.search_field_vala (params, pos);
 		}
-		else if ( velement is Vala.DelegateType || velement is Vala.Delegate ) {
-			element = this.search_delegate_vala ( params, pos );
+		else if (velement is Vala.DelegateType || velement is Vala.Delegate) {
+			element = this.search_delegate_vala (params, pos);
 		}
-		else if ( velement is Vala.Constant ) {
-			element = this.search_constant_vala ( params, pos );
+		else if (velement is Vala.Constant) {
+			element = this.search_constant_vala (params, pos);
 		}
 		return element;
 	}
@@ -4507,32 +4523,32 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	}
 
 	// internal
-	public Package? find_file ( Vala.SourceFile vfile ) {
-		foreach ( Package pkg in this.packages ) {
-			if ( pkg.is_vpackage( vfile ) )
+	public Package? find_file (Vala.SourceFile vfile) {
+		foreach (Package pkg in this.packages) {
+			if (pkg.is_vpackage(vfile))
 				return pkg;
 		}
 		return null;
 	}
 
 	private void set_type_references ( ) {
-		foreach ( Package pkg in this.packages ) {
+		foreach (Package pkg in this.packages) {
 			pkg.set_type_references( );
 		}
 	}
 
 	private void inheritance ( ) {
-		foreach ( Package pkg in this.packages ) {
-			pkg.inheritance( );
+		foreach (Package pkg in this.packages) {
+			pkg.inheritance ();
 		}
 	}
 
-	public void parse_comments ( Valadoc.Parser docparser ) {
-		this.wikitree = new WikiPageTree( this.reporter, this.settings );
+	public void parse_comments (Valadoc.Parser docparser) {
+		this.wikitree = new WikiPageTree(this.reporter, this.settings);
 		wikitree.create_tree (docparser);
 
-		foreach ( Package pkg in this.packages ) {
-			pkg.parse_comments( docparser );
+		foreach (Package pkg in this.packages) {
+			pkg.parse_comments(docparser);
 		}
 	}
 
