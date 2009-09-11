@@ -2861,7 +2861,7 @@ namespace GLib {
 		public void set_boolean_list (string group_name, string key, bool[] list);
 		public void set_integer_list (string group_name, string key, int[] list);
 		public void set_double_list (string group_name, string key, double[] list);
-		public void set_comment (string group_name, string key, string comment);
+		public void set_comment (string group_name, string key, string comment) throws KeyFileError;
 		public void remove_group (string group_name) throws KeyFileError;
 		public void remove_key (string group_name, string key) throws KeyFileError;
 		public void remove_comment (string group_name, string key) throws KeyFileError;
