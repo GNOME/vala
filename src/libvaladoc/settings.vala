@@ -28,6 +28,7 @@ public class Valadoc.Settings : Object {
 
 	public bool _private = false;
 	public bool _protected = false;
+	public bool _internal = false;
 	public bool with_deps = false;
 	public bool add_inherited = false;
 	public bool verbose = false;

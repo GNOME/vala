@@ -335,6 +335,8 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 				file.puts ( "protected " );
 			else if ( propac.is_private )
 				file.puts ( "private " );
+			else if ( propac.is_internal )
+				file.puts ( "internal " );
 		}
 
 		if ( propac.is_owned )
@@ -430,6 +432,8 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 			file.printf ( "<span class=\"%s\">protected</span> ", css_keyword );
 		else if ( element.is_private )
 			file.printf ( "<span class=\"%s\">private</span> ", css_keyword );
+		else if ( element.is_internal )
+			file.printf ( "<span class=\"%s\">internal</span> ", css_keyword );
 	}
 
 

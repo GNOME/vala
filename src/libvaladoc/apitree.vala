@@ -1097,24 +1097,30 @@ public interface Valadoc.StructHandler : Basic {
 
 
 public interface Valadoc.Visitable : Basic, SymbolAccessibility {
-	protected bool is_type_visitor_accessible ( Valadoc.Basic element ) {
-		if ( !this.settings._private && this.is_private )
+	protected bool is_type_visitor_accessible (Valadoc.Basic element) {
+		if (!this.settings._private && this.is_private)
 			return false;
 
-		if ( !this.settings._protected && this.is_protected )
+		if (!this.settings._internal && this.is_internal)
 			return false;
 
-		if ( this.parent != element && !this.settings.add_inherited )
+		if (!this.settings._protected && this.is_protected)
+			return false;
+
+		if (this.parent != element && !this.settings.add_inherited)
 				return false;
 
 		return true;
 	}
 
 	public bool is_visitor_accessible ( ) {
-		if ( !this.settings._private && this.is_private )
+		if (!this.settings._private && this.is_private)
 			return false;
 
-		if ( !this.settings._protected && this.is_protected )
+		if (!this.settings._internal && this.is_internal)
+			return false;
+
+		if (!this.settings._protected && this.is_protected)
 			return false;
 
 		return true;
@@ -1133,14 +1139,21 @@ public interface Valadoc.SymbolAccessibility : Basic {
 	public bool is_protected {
 		get {
 			Vala.SymbolAccessibility access = vsymbol.access;
-			return ( access == Vala.SymbolAccessibility.PROTECTED );
+			return (access == Vala.SymbolAccessibility.PROTECTED);
+		}
+	}
+
+	public bool is_internal {
+		get {
+			Vala.SymbolAccessibility access = vsymbol.access;
+			return (access == Vala.SymbolAccessibility.INTERNAL);
 		}
 	}
 
 	public bool is_private {
 		get {
 			Vala.SymbolAccessibility access = vsymbol.access;
-			return ( access == Vala.SymbolAccessibility.PRIVATE );
+			return (access == Vala.SymbolAccessibility.PRIVATE);
 		}
 	}
 }
@@ -1996,6 +2009,12 @@ public class Valadoc.PropertyAccessor : Object {
 	public bool is_private {
 		get {
 			return this.vpropacc.access == Vala.SymbolAccessibility.PRIVATE;
+		}
+	}
+
+	public bool is_internal {
+		get {
+			return this.vpropacc.access == Vala.SymbolAccessibility.INTERNAL;
 		}
 	}
 

@@ -250,6 +250,9 @@ public class Valadoc.Html.Api.Vala {
 		else if (symbol.is_protected) {
 			return "protected ";
 		}
+		else if (symbol.is_internal) {
+			return "internal ";
+		}
 		else {
 			return "private ";
 		}
@@ -544,8 +547,11 @@ public class Valadoc.Html.Api.Vala {
 		else if (propac.is_public) {
 			str.append ("public ");
 		}
-		else {
+		else if (propac.is_protected) {
 			str.append ("protected ");
+		}
+		else {
+			str.append ("internal ");
 		}
 
 		if (propac.is_owned) {
