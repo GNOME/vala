@@ -64,6 +64,17 @@ public class Vala.Signal : Member, Lockable {
 	 * */
 	public Method default_handler { get; private set; }
 
+	public bool is_detailed { get; set; }
+
+	public bool no_recurse { get; set; }
+
+	public string run_type { get; set; }
+
+	public bool is_action { get; set; }
+
+	public bool no_hooks { get; set; }
+
+
 	private string cname;
 	
 	private bool lock_used = false;
@@ -83,6 +94,7 @@ public class Vala.Signal : Member, Lockable {
 	public Signal (string name, DataType return_type, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 		this.return_type = return_type;
+		this.run_type = "last";
 	}
 	
 	/**
@@ -199,6 +211,33 @@ public class Vala.Signal : Member, Lockable {
 		}
 	}
 
+	void process_signal_attribute (Attribute a) {
+		if (a.has_argument ("detailed")) {
+			is_detailed = a.get_bool ("detailed");
+		}
+		if (a.has_argument ("no_recurse")) {
+			no_recurse = a.get_bool ("no_recurse");
+		}
+		if (a.has_argument ("run")) {
+			var arg = a.get_string ("run");
+			if (arg == "first") {
+				run_type = "first";
+			} else if (arg == "last") {
+				run_type = "last";
+			} else if (arg == "cleanup") {
+				run_type = "cleanup";
+			}
+		}
+
+		if (a.has_argument ("action")) {
+			is_action = a.get_bool ("action");
+		}
+
+		if (a.has_argument ("no_hooks")) {
+			no_hooks = a.get_bool ("no_hooks");
+		}
+	}
+
 	/**
 	 * Process all associated attributes.
 	 */
@@ -206,6 +245,9 @@ public class Vala.Signal : Member, Lockable {
 		foreach (Attribute a in attributes) {
 			if (a.name == "HasEmitter") {
 				has_emitter = true;
+			}
+			if (a.name == "Signal") {
+				process_signal_attribute (a);
 			}
 		}
 	}

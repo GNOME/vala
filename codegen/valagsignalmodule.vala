@@ -367,7 +367,32 @@ internal class Vala.GSignalModule : GObjectModule {
 		var cl = sig.parent_symbol as Class;
 		csignew.add_argument (new CCodeConstant ("\"%s\"".printf (sig.get_cname ())));
 		csignew.add_argument (new CCodeIdentifier (type.get_type_id ()));
-		csignew.add_argument (new CCodeConstant ("G_SIGNAL_RUN_LAST"));
+		string[] flags = new string[0];
+		if (sig.run_type == "first") {
+			flags += "G_SIGNAL_RUN_FIRST";
+		} else if (sig.run_type == "cleanup") {
+			flags += "G_SIGNAL_RUN_CLEANUP";
+		} else {
+			flags += "G_SIGNAL_RUN_LAST";
+		}
+		if (sig.is_detailed) {
+			flags += "G_SIGNAL_DETAILED";
+		}
+
+		if (sig.no_recurse) {
+			flags += "G_SIGNAL_NO_RECURSE";
+		}
+
+		if (sig.is_action) {
+			flags += "G_SIGNAL_ACTION";
+		}
+
+		if (sig.no_hooks) {
+			flags += "G_SIGNAL_NO_HOOKS";
+		}
+
+		csignew.add_argument (new CCodeConstant (string.joinv (" | ", flags)));
+
 		if (sig.default_handler == null) {
 			csignew.add_argument (new CCodeConstant ("0"));
 		} else {
