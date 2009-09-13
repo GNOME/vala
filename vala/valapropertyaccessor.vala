@@ -201,6 +201,12 @@ public class Vala.PropertyAccessor : Symbol {
 			}
 
 			body.check (analyzer);
+
+			foreach (DataType body_error_type in body.get_error_types ()) {
+				if (!((ErrorType) body_error_type).dynamic_error) {
+					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+				}
+			}
 		}
 
 		analyzer.current_symbol = old_symbol;
