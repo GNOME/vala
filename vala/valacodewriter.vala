@@ -320,6 +320,14 @@ public class Vala.CodeWriter : CodeVisitor {
                         write_string ("use_const = false, ");
                 }
 
+                if (!st.has_copy_function) {
+                        write_string ("has_copy_function = false, ");
+                }
+
+                if (!st.has_destroy_function) {
+                        write_string ("has_destroy_function = false, ");
+                }
+
 		write_string ("cheader_filename = \"%s\")]".printf (get_cheaders(st)));
 		write_newline ();
 
@@ -627,6 +635,10 @@ public class Vala.CodeWriter : CodeVisitor {
 				}
 
 				write_string ("array_length = false");
+
+				if (f.array_null_terminated) {
+					write_string (", array_null_terminated = true");
+				}
 			}
 
 			write_string (")]");

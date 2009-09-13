@@ -436,6 +436,14 @@ public class Vala.GIdlParser : CodeVisitor {
 							}
 						} else if (nv[0] == "type_id") {
 							st.set_type_id (eval (nv[1]));
+						} else if (nv[0] == "has_copy_function") {
+							if (eval (nv[1]) == "0") {
+								st.has_copy_function = false;
+							}
+						} else if (nv[0] == "has_destroy_function") {
+							if (eval (nv[1]) == "0") {
+								st.has_destroy_function = false;
+							}
 						}
 					}
 				}
@@ -726,6 +734,14 @@ public class Vala.GIdlParser : CodeVisitor {
 						} else if (nv[0] == "use_const") {
 							if (eval (nv[1]) == "0") {
 								st.use_const = false;
+							}
+						} else if (nv[0] == "has_copy_function") {
+							if (eval (nv[1]) == "0") {
+								st.has_copy_function = false;
+							}
+						} else if (nv[0] == "has_destroy_function") {
+							if (eval (nv[1]) == "0") {
+								st.has_destroy_function = false;
 							}
 						}
 					}
@@ -1877,6 +1893,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		string cheader_filename = null;
 		string ctype = null;
+		bool array_null_terminated = false;
 
 		var attributes = get_attributes ("%s.%s".printf (current_data_type.get_cname (), node.name));
 		if (attributes != null) {
@@ -1909,6 +1926,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					cheader_filename = eval (nv[1]);
 				} else if (nv[0] == "ctype") {
 					ctype = eval (nv[1]);
+				} else if (nv[0] == "array_null_terminated") {
+					if (eval (nv[1]) == "1") {
+						array_null_terminated = true;
+					}
 				}
 			}
 		}
@@ -1943,6 +1964,9 @@ public class Vala.GIdlParser : CodeVisitor {
 		}
 
 		field.no_array_length = true;
+		if (array_null_terminated) {
+			field.array_null_terminated = true;
+		}
 
 		return field;
 	}

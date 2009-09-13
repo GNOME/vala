@@ -1990,6 +1990,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			var st = value_type.data_type as Struct;
 			if (st != null && st.is_disposable ()) {
+				if (!st.has_copy_function) {
+					generate_struct_copy_function (st);
+				}
+
 				var copy_call = new CCodeFunctionCall (new CCodeIdentifier (st.get_copy_function ()));
 				copy_call.add_argument (new CCodeIdentifier ("self"));
 				copy_call.add_argument (new CCodeIdentifier ("dup"));
@@ -2098,6 +2102,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					}
 				} else {
 					var st = (Struct) type.data_type;
+					if (!st.has_destroy_function) {
+						generate_struct_destroy_function (st);
+					}
 					unref_function = st.get_destroy_function ();
 				}
 			}
@@ -2902,6 +2909,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			var copy_call = new CCodeFunctionCall (new CCodeIdentifier (st.get_copy_function ()));
 			copy_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr));
 			copy_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
+
+			if (!st.has_copy_function) {
+				generate_struct_copy_function (st);
+			}
 
 			var ccomma = new CCodeCommaExpression ();
 
@@ -4260,6 +4271,116 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		var result = new CCodeFunctionCall (new CCodeIdentifier (type.get_upper_case_cname (null)));
 		result.add_argument (expr);
 		return result;
+	}
+
+	void generate_struct_destroy_function (Struct st) {
+		if (source_declarations.add_declaration (st.get_destroy_function ())) {
+			// only generate function once per source file
+			return;
+		}
+
+		var function = new CCodeFunction (st.get_destroy_function (), "void");
+		function.modifiers = CCodeModifiers.STATIC;
+		function.add_parameter (new CCodeFormalParameter ("self", st.get_cname () + "*"));
+
+		var cblock = new CCodeBlock ();
+		foreach (Field f in st.get_fields ()) {
+			if (f.binding == MemberBinding.INSTANCE) {
+				if (requires_destroy (f.field_type)) {
+					var lhs = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.get_cname ());
+
+					var this_access = new MemberAccess.simple ("this");
+					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
+					this_access.ccodenode = new CCodeIdentifier ("(*self)");
+
+					var ma = new MemberAccess (this_access, f.name);
+					ma.symbol_reference = f;
+					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (lhs, f.field_type, ma)));
+				}
+			}
+		}
+
+		source_declarations.add_type_member_declaration (function.copy ());
+		function.block = cblock;
+		source_type_member_definition.append (function);
+	}
+
+	void generate_struct_copy_function (Struct st) {
+		if (source_declarations.add_declaration (st.get_copy_function ())) {
+			// only generate function once per source file
+			return;
+		}
+
+		var function = new CCodeFunction (st.get_copy_function (), "void");
+		function.modifiers = CCodeModifiers.STATIC;
+		function.add_parameter (new CCodeFormalParameter ("self", "const " + st.get_cname () + "*"));
+		function.add_parameter (new CCodeFormalParameter ("dest", st.get_cname () + "*"));
+
+		int old_next_temp_var_id = next_temp_var_id;
+		var old_temp_vars = temp_vars;
+		var old_temp_ref_vars = temp_ref_vars;
+		var old_variable_name_map = variable_name_map;
+		next_temp_var_id = 0;
+		temp_vars = new ArrayList<LocalVariable> ();
+		temp_ref_vars = new ArrayList<LocalVariable> ();
+		variable_name_map = new HashMap<string,string> (str_hash, str_equal);
+
+		var cblock = new CCodeBlock ();
+		var cfrag = new CCodeFragment ();
+		cblock.add_statement (cfrag);
+
+		foreach (Field f in st.get_fields ()) {
+			if (f.binding == MemberBinding.INSTANCE) {
+				CCodeExpression copy = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), f.name);
+				if (requires_copy (f.field_type))  {
+					var this_access = new MemberAccess.simple ("this");
+					this_access.value_type = get_data_type_for_symbol ((TypeSymbol) f.parent_symbol);
+					this_access.ccodenode = new CCodeIdentifier ("(*self)");
+					var ma = new MemberAccess (this_access, f.name);
+					ma.symbol_reference = f;
+					copy = get_ref_cexpression (f.field_type, copy, ma, f);
+				}
+				var dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), f.name);
+
+				var array_type = f.field_type as ArrayType;
+				if (array_type != null && array_type.fixed_length) {
+					// fixed-length (stack-allocated) arrays
+					source_declarations.add_include ("string.h");
+
+					var sizeof_call = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+					sizeof_call.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
+					var size = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, new CCodeConstant ("%d".printf (array_type.length)), sizeof_call);
+
+					var array_copy_call = new CCodeFunctionCall (new CCodeIdentifier ("memcpy"));
+					array_copy_call.add_argument (dest);
+					array_copy_call.add_argument (copy);
+					array_copy_call.add_argument (size);
+					cblock.add_statement (new CCodeExpressionStatement (array_copy_call));
+				} else {
+					cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (dest, copy)));
+
+					if (array_type != null && !f.no_array_length) {
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							var len_src = new CCodeMemberAccess.pointer (new CCodeIdentifier ("self"), get_array_length_cname (f.name, dim));
+							var len_dest = new CCodeMemberAccess.pointer (new CCodeIdentifier ("dest"), get_array_length_cname (f.name, dim));
+							cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (len_dest, len_src)));
+						}
+					}
+				}
+			}
+		}
+
+		append_temp_decl (cfrag, temp_vars);
+		temp_vars.clear ();
+
+		next_temp_var_id = old_next_temp_var_id;
+		temp_vars = old_temp_vars;
+		temp_ref_vars = old_temp_ref_vars;
+		variable_name_map = old_variable_name_map;
+
+		source_declarations.add_type_member_declaration (function.copy ());
+		function.block = cblock;
+		source_type_member_definition.append (function);
 	}
 }
 

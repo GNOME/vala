@@ -96,6 +96,10 @@ public class Vala.Struct : TypeSymbol {
 
 	public bool signed { get; set; default = true; }
 
+	public bool has_copy_function { get; set; default = true; }
+
+	public bool has_destroy_function { get; set; default = true; }
+
 	/**
 	 * Creates a new struct.
 	 *
@@ -432,8 +436,14 @@ public class Vala.Struct : TypeSymbol {
 		if (a.has_argument ("copy_function")) {
 			set_copy_function (a.get_string ("copy_function"));
 		}
+		if (a.has_argument ("has_copy_function")) {
+			has_copy_function = a.get_bool ("has_copy_function");
+		}
 		if (a.has_argument ("destroy_function")) {
 			set_destroy_function (a.get_string ("destroy_function"));
+		}
+		if (a.has_argument ("has_destroy_function")) {
+			has_destroy_function = a.get_bool ("has_destroy_function");
 		}
 		if (a.has_argument ("use_const")) {
 			use_const = a.get_bool ("use_const");
