@@ -84,8 +84,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_finish_cname ()));
 				params = m.get_async_end_parameters ();
 			} else if (!expr.is_yield_expression) {
-				Report.warning (expr.source_reference, "Calling async methods requires use of `yield' or `begin'");
-
+				// same as .begin, backwards compatible to bindings without async methods
 				ccall = async_call;
 				params = m.get_async_begin_parameters ();
 			} else {
