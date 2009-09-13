@@ -343,7 +343,9 @@ public class Vala.MemberAccess : Expression {
 						}
 						var m = new DynamicMethod (inner.value_type, member_name, ret_type, source_reference);
 						m.invocation = invoc;
-						m.add_error_type (new ErrorType (null, null));
+						var err = new ErrorType (null, null);
+						err.dynamic_error = true;
+						m.add_error_type (err);
 						m.access = SymbolAccessibility.PUBLIC;
 						m.add_parameter (new FormalParameter.with_ellipsis ());
 						dynamic_object_type.type_symbol.scope.add (null, m);

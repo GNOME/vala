@@ -858,7 +858,7 @@ public class Vala.Method : Member {
 						can_propagate_error = true;
 					}
 				}
-				if (!can_propagate_error) {
+				if (!can_propagate_error && !((ErrorType) body_error_type).dynamic_error) {
 					Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
 				}
 			}

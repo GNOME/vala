@@ -37,6 +37,8 @@ public class Vala.ErrorType : ReferenceType {
 	 */
 	public weak ErrorCode? error_code { get; set; }
 
+	public bool dynamic_error { get; set; }
+
 	public ErrorType (ErrorDomain? error_domain, ErrorCode? error_code, SourceReference? source_reference = null) {
 		this.error_domain = error_domain;
 		this.data_type = error_domain;
@@ -86,6 +88,7 @@ public class Vala.ErrorType : ReferenceType {
 		var result = new ErrorType (error_domain, error_code, source_reference);
 		result.value_owned = value_owned;
 		result.nullable = nullable;
+		result.dynamic_error = dynamic_error;
 
 		return result;
 	}
