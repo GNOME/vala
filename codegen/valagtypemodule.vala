@@ -1695,19 +1695,7 @@ internal class Vala.GTypeModule : GErrorModule {
 		type_struct.add_field ("GTypeInterface", "parent_iface");
 
 		foreach (Method m in iface.get_methods ()) {
-			if ((!m.is_abstract && !m.is_virtual) || m.coroutine) {
-				continue;
-			}
-
-			// add vfunc field to the type struct
-			var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
-			var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
-
-			generate_cparameters (m, decl_space, cparam_map, new CCodeFunction ("fake"), vdeclarator);
-
-			var vdecl = new CCodeDeclaration (m.return_type.get_cname ());
-			vdecl.add_declarator (vdeclarator);
-			type_struct.add_declaration (vdecl);
+			generate_virtual_method_declaration (m, decl_space, type_struct);
 		}
 
 		foreach (Property prop in iface.get_properties ()) {
