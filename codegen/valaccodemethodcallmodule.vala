@@ -75,7 +75,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			in_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 			out_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
-			async_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname () + "_async"));
+			async_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
 
 			if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
 				// no finish call
@@ -85,7 +85,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 				ccall = async_call;
 			} else {
-				ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname () + "_finish"));
+				ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_finish_cname ()));
 
 				// pass GAsyncResult stored in closure to finish function
 				out_arg_map.set (get_param_pos (0.1), new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "res"));

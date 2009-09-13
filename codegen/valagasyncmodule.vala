@@ -110,7 +110,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 		}
 
 		var dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
-		var asyncfunc = new CCodeFunction (m.get_real_cname () + "_async", "void");
+		var asyncfunc = new CCodeFunction (m.get_real_cname (), "void");
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
 		var dataalloc = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
@@ -136,7 +136,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 
 		create_result.add_argument (new CCodeIdentifier ("callback"));
 		create_result.add_argument (new CCodeIdentifier ("user_data"));
-		create_result.add_argument (new CCodeIdentifier (m.get_real_cname () + "_async"));
+		create_result.add_argument (new CCodeIdentifier (m.get_real_cname ()));
 
 		asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_async_result"), create_result)));
 
@@ -165,7 +165,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 
 		generate_cparameters (m, source_declarations, cparam_map, asyncfunc, null, null, null, 1);
 
-		if (!m.is_internal_symbol () && m.base_method == null && m.base_interface_method == null) {
+		if (m.is_private_symbol () || m.base_method != null || m.base_interface_method != null) {
 			asyncfunc.modifiers |= CCodeModifiers.STATIC;
 		}
 
@@ -191,6 +191,41 @@ internal class Vala.GAsyncModule : GSignalModule {
 		source_type_member_definition.append (function);
 	}
 
+	public override void generate_method_declaration (Method m, CCodeDeclarationSpace decl_space) {
+		if (m.coroutine) {
+			if (decl_space.add_symbol_declaration (m, m.get_cname ())) {
+				return;
+			}
+
+			var asyncfunc = new CCodeFunction (m.get_cname (), "void");
+			var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+			cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("callback", "GAsyncReadyCallback"));
+			cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("user_data", "gpointer"));
+
+			generate_cparameters (m, decl_space, cparam_map, asyncfunc, null, null, null, 1);
+
+			if (m.is_private_symbol ()) {
+				asyncfunc.modifiers |= CCodeModifiers.STATIC;
+			}
+
+			decl_space.add_type_member_declaration (asyncfunc);
+
+			var finishfunc = new CCodeFunction (m.get_finish_real_cname ());
+			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+			cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("res", "GAsyncResult*"));
+
+			generate_cparameters (m, source_declarations, cparam_map, finishfunc, null, null, null, 2);
+
+			if (m.is_private_symbol ()) {
+				finishfunc.modifiers |= CCodeModifiers.STATIC;
+			}
+
+			decl_space.add_type_member_declaration (finishfunc);
+		} else {
+			base.generate_method_declaration (m, decl_space);
+		}
+	}
+
 	public override void visit_method (Method m) {
 		if (m.coroutine) {
 			source_declarations.add_include ("gio/gio.h");
@@ -203,8 +238,8 @@ internal class Vala.GAsyncModule : GSignalModule {
 				append_struct (data);
 
 				append_function (generate_free_function (m));
-				append_function (generate_async_function (m));
-				append_function (generate_finish_function (m));
+				source_type_member_definition.append (generate_async_function (m));
+				source_type_member_definition.append (generate_finish_function (m));
 				append_function (generate_ready_function (m));
 
 				// append the _co function
@@ -221,7 +256,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 	CCodeFunction generate_finish_function (Method m) {
 		string dataname = Symbol.lower_case_to_camel_case (m.get_cname ()) + "Data";
 
-		var finishfunc = new CCodeFunction (m.get_real_cname () + "_finish");
+		var finishfunc = new CCodeFunction (m.get_finish_real_cname ());
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
@@ -264,6 +299,10 @@ internal class Vala.GAsyncModule : GSignalModule {
 
 		generate_cparameters (m, source_declarations, cparam_map, finishfunc, null, null, null, 2);
 
+		if (m.is_private_symbol () || m.base_method != null || m.base_interface_method != null) {
+			finishfunc.modifiers |= CCodeModifiers.STATIC;
+		}
+
 		finishfunc.block = finishblock;
 
 		return finishfunc;
@@ -292,7 +331,6 @@ internal class Vala.GAsyncModule : GSignalModule {
 		readyblock.add_statement (new CCodeExpressionStatement (ccall));
 
 		readyfunc.modifiers |= CCodeModifiers.STATIC;
-		source_declarations.add_type_member_declaration (readyfunc.copy ());
 
 		readyfunc.block = readyblock;
 
@@ -320,10 +358,10 @@ internal class Vala.GAsyncModule : GSignalModule {
 		carg_map.set (get_param_pos (-1), new CCodeIdentifier ("callback"));
 		carg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("user_data"));
 
-		generate_vfunc (m, new VoidType (), cparam_map, carg_map, "_async", 1);
+		generate_vfunc (m, new VoidType (), cparam_map, carg_map, "", 1);
 
 		var vdecl = new CCodeDeclaration ("void");
-		var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name + "_async");
+		var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
 		vdecl.add_declarator (vdeclarator);
 		type_struct.add_declaration (vdecl);
 
@@ -341,7 +379,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 		generate_vfunc (m, m.return_type, cparam_map, carg_map, "_finish", 2);
 
 		var vdecl = new CCodeDeclaration (m.return_type.get_cname ());
-		var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name + "_finish");
+		var vdeclarator = new CCodeFunctionDeclarator (m.get_finish_vfunc_name ());
 		vdecl.add_declarator (vdeclarator);
 		type_struct.add_declaration (vdecl);
 

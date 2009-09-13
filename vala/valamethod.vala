@@ -332,6 +332,16 @@ public class Vala.Method : Member {
 		return cname;
 	}
 
+	public string get_finish_cname () {
+		assert (coroutine);
+		string result = get_cname ();
+		if (result.has_suffix ("_async")) {
+			result = result.substring (0, result.length - "_async".length);
+		}
+		result += "_finish";
+		return result;
+	}
+
 	/**
 	 * Returns the default interface name of this method as it is used in C
 	 * code.
@@ -361,6 +371,26 @@ public class Vala.Method : Member {
 		} else {
 			return get_cname ();
 		}
+	}
+
+	public string get_finish_real_cname () {
+		assert (coroutine);
+		string result = get_real_cname ();
+		if (result.has_suffix ("_async")) {
+			result = result.substring (0, result.length - "_async".length);
+		}
+		result += "_finish";
+		return result;
+	}
+
+	public string get_finish_vfunc_name () {
+		assert (coroutine);
+		string result = vfunc_name;
+		if (result.has_suffix ("_async")) {
+			result = result.substring (0, result.length - "_async".length);
+		}
+		result += "_finish";
+		return result;
 	}
 	
 	/**
