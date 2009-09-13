@@ -1143,6 +1143,10 @@ internal class Vala.GTypeModule : GErrorModule {
 			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (((Class) base_type).get_upper_case_cname (null))));
 			ccast.add_argument (new CCodeIdentifier ("klass"));
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.base_method.vfunc_name), new CCodeIdentifier (m.get_real_cname ()))));
+
+			if (m.coroutine) {
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.base_method.get_finish_vfunc_name ()), new CCodeIdentifier (m.get_finish_real_cname ()))));
+			}
 		}
 
 		/* connect default signal handlers */
@@ -1283,6 +1287,10 @@ internal class Vala.GTypeModule : GErrorModule {
 				cfunc = new CCodeIdentifier (m.get_real_cname ());
 			}
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.base_interface_method.vfunc_name), cfunc)));
+
+			if (m.coroutine) {
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.base_interface_method.get_finish_vfunc_name ()), new CCodeIdentifier (m.get_finish_real_cname ()))));
+			}
 		}
 
 		// connect inherited implementations

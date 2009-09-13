@@ -335,12 +335,14 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		// generate *_real_* functions for virtual methods
 		// also generate them for abstract methods of classes to prevent faulty subclassing
 		if (!m.is_abstract || (m.is_abstract && current_type_symbol is Class)) {
-			if (m.base_method != null || m.base_interface_method != null) {
-				// declare *_real_* function
-				function.modifiers |= CCodeModifiers.STATIC;
-				source_declarations.add_type_member_declaration (function.copy ());
-			} else if (m.is_private_symbol ()) {
-				function.modifiers |= CCodeModifiers.STATIC;
+			if (!m.coroutine) {
+				if (m.base_method != null || m.base_interface_method != null) {
+					// declare *_real_* function
+					function.modifiers |= CCodeModifiers.STATIC;
+					source_declarations.add_type_member_declaration (function.copy ());
+				} else if (m.is_private_symbol ()) {
+					function.modifiers |= CCodeModifiers.STATIC;
+				}
 			}
 		
 			/* Methods imported from a plain C file don't
