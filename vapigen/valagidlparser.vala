@@ -1042,7 +1042,9 @@ public class Vala.GIdlParser : CodeVisitor {
 				prop.get_accessor.value_type.value_owned = true;
 			}
 		}
-		
+
+		handle_async_methods (cl);
+
 		current_data_type = null;
 		current_type_symbol_set = null;
 	}
@@ -1117,7 +1119,33 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 		}
 
+		handle_async_methods (iface);
+
 		current_data_type = null;
+	}
+
+	void handle_async_methods (ObjectTypeSymbol type_symbol) {
+		foreach (Method m in type_symbol.get_methods ()) {
+			if (m.coroutine) {
+				var finish_method = type_symbol.scope.lookup (m.name.substring (0, m.name.length - "_async".length) + "_finish") as Method;
+				if (finish_method != null) {
+					m.return_type = finish_method.return_type.copy ();
+					foreach (var param in finish_method.get_parameters ()) {
+						if (param.direction == ParameterDirection.OUT) {
+							var async_param = param.copy ();
+							if (m.scope.lookup (param.name) != null) {
+								// parameter name conflict
+								async_param.name += "_out";
+							}
+							m.add_parameter (async_param);
+						}
+					}
+					foreach (DataType error_type in finish_method.get_error_types ()) {
+						m.add_error_type (error_type.copy ());
+					}
+				}
+			}
+		}
 	}
 	
 	private DataType? parse_type (IdlNodeType type_node, out ParameterDirection direction = null) {
@@ -1507,6 +1535,12 @@ public class Vala.GIdlParser : CodeVisitor {
 					// static method
 					m.binding = MemberBinding.STATIC;
 				}
+			}
+
+			if (param.type.@interface == "GAsyncReadyCallback" && symbol.has_suffix ("_async")) {
+				// async method
+				m.coroutine = true;
+				continue;
 			}
 
 			if (suppress_throws == false && param_is_exception (param)) {
