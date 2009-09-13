@@ -198,11 +198,6 @@ internal class Vala.GAsyncModule : GSignalModule {
 				header_declarations.add_include ("gio/gio.h");
 			}
 
-			// append the synchronous version
-			m.coroutine = false;
-			base.visit_method (m);
-			m.coroutine = true;
-
 			if (!m.is_abstract) {
 				var data = generate_data_struct (m);
 				append_struct (data);
