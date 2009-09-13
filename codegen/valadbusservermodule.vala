@@ -58,15 +58,19 @@ internal class Vala.DBusServerModule : DBusClientModule {
 	}
 
 	void send_reply (CCodeBlock block) {
-		var handled = new CCodeBlock ();
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_send"));
 		ccall.add_argument (new CCodeIdentifier ("connection"));
 		ccall.add_argument (new CCodeIdentifier ("reply"));
 		ccall.add_argument (new CCodeConstant ("NULL"));
-		handled.add_statement (new CCodeExpressionStatement (ccall));
+		block.add_statement (new CCodeExpressionStatement (ccall));
 		ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
 		ccall.add_argument (new CCodeIdentifier ("reply"));
-		handled.add_statement (new CCodeExpressionStatement (ccall));
+		block.add_statement (new CCodeExpressionStatement (ccall));
+	}
+
+	void handle_reply (CCodeBlock block) {
+		var handled = new CCodeBlock ();
+		send_reply (handled);
 		handled.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_HANDLED")));
 
 		var not_handled = new CCodeBlock ();
@@ -84,18 +88,43 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 		var function = new CCodeFunction (wrapper_name, "DBusHandlerResult");
 		function.modifiers = CCodeModifiers.STATIC;
-
 		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
 		function.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
 		function.add_parameter (new CCodeFormalParameter ("message", "DBusMessage*"));
-
 		var block = new CCodeBlock ();
+
+		CCodeFunction ready_function = null;
+		CCodeBlock ready_block = null;
+		if (m.coroutine) {
+			// GAsyncResult
+			source_declarations.add_include ("gio/gio.h");
+
+			ready_function = new CCodeFunction (wrapper_name + "_ready", "void");
+			ready_function.modifiers = CCodeModifiers.STATIC;
+			ready_function.add_parameter (new CCodeFormalParameter ("source_object", "GObject *"));
+			ready_function.add_parameter (new CCodeFormalParameter ("res", "GAsyncResult *"));
+			ready_function.add_parameter (new CCodeFormalParameter ("user_data", "gpointer *"));
+			ready_block = new CCodeBlock ();
+
+			cdecl = new CCodeDeclaration ("DBusConnection *");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("connection", new CCodeIdentifier ("user_data[0]")));
+			ready_block.add_statement (cdecl);
+			cdecl = new CCodeDeclaration ("DBusMessage *");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("message", new CCodeIdentifier ("user_data[1]")));
+			ready_block.add_statement (cdecl);
+		}
+
 		var prefragment = new CCodeFragment ();
-		var postfragment = new CCodeFragment ();
+		var in_postfragment = new CCodeFragment ();
+		var out_postfragment = in_postfragment;
 
 		cdecl = new CCodeDeclaration ("DBusMessageIter");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("iter"));
 		block.add_statement (cdecl);
+		if (m.coroutine) {
+			out_postfragment = new CCodeFragment ();
+			ready_block.add_statement (cdecl);
+		}
 
 		cdecl = new CCodeDeclaration ("GError*");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("error", new CCodeConstant ("NULL")));
@@ -116,12 +145,27 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("iter")));
 		prefragment.append (new CCodeExpressionStatement (iter_call));
 
+		cdecl = new CCodeDeclaration ("DBusMessage*");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("reply"));
+		out_postfragment.append (cdecl);
+
+		var msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_method_return"));
+		msgcall.add_argument (new CCodeIdentifier ("message"));
+		out_postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), msgcall)));
+
 		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init_append"));
 		iter_call.add_argument (new CCodeIdentifier ("reply"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("iter")));
-		postfragment.append (new CCodeExpressionStatement (iter_call));
+		out_postfragment.append (new CCodeExpressionStatement (iter_call));
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
+
+		CCodeFunctionCall finish_ccall = null;
+		if (m.coroutine) {
+			finish_ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_finish_cname ()));
+			finish_ccall.add_argument (new CCodeIdentifier ("source_object"));
+			finish_ccall.add_argument (new CCodeIdentifier ("res"));
+		}
 
 		ccall.add_argument (new CCodeIdentifier ("self"));
 
@@ -152,12 +196,16 @@ internal class Vala.DBusServerModule : DBusClientModule {
 				continue;
 			}
 
-			var st = param.parameter_type.data_type as Struct;
-			if (param.direction != ParameterDirection.IN
-			    || (st != null && !st.is_simple_type ())) {
-				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+			if (!m.coroutine || param.direction == ParameterDirection.IN) {
+				var st = param.parameter_type.data_type as Struct;
+				if (param.direction != ParameterDirection.IN
+				    || (st != null && !st.is_simple_type ())) {
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
+				} else {
+					ccall.add_argument (new CCodeIdentifier (param.name));
+				}
 			} else {
-				ccall.add_argument (new CCodeIdentifier (param.name));
+				finish_ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (param.name)));
 			}
 
 			if (param.parameter_type is ArrayType) {
@@ -184,7 +232,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 				var expr = read_expression (prefragment, param.parameter_type, new CCodeIdentifier ("iter"), target);
 				prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
 			} else {
-				write_expression (postfragment, param.parameter_type, new CCodeIdentifier ("iter"), new CCodeIdentifier (param.name));
+				write_expression (out_postfragment, param.parameter_type, new CCodeIdentifier ("iter"), new CCodeIdentifier (param.name));
 			}
 
 			if (requires_destroy (owned_type)) {
@@ -192,7 +240,12 @@ internal class Vala.DBusServerModule : DBusClientModule {
 				var local = new LocalVariable (owned_type, param.name);
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = local;
-				postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (param.name), owned_type, ma)));
+				var stmt = new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (param.name), owned_type, ma));
+				if (param.direction == ParameterDirection.IN) {
+					in_postfragment.append (stmt);
+				} else {
+					out_postfragment.append (stmt);
+				}
 			}
 		}
 
@@ -204,8 +257,13 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			} else {
 				cdecl = new CCodeDeclaration (m.return_type.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
-				block.add_statement (cdecl);
-				block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
+				out_postfragment.append (cdecl);
+				if (!m.coroutine) {
+					block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
+				} else {
+					block.add_statement (new CCodeExpressionStatement (ccall));
+					ready_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), finish_ccall)));
+				}
 
 				if (m.return_type is ArrayType) {
 					var array_type = (ArrayType) m.return_type;
@@ -220,7 +278,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 					}
 				}
 
-				write_expression (postfragment, m.return_type, new CCodeIdentifier ("iter"), new CCodeIdentifier ("result"));
+				write_expression (out_postfragment, m.return_type, new CCodeIdentifier ("iter"), new CCodeIdentifier ("result"));
 
 				if (requires_destroy (m.return_type)) {
 					// keep local alive (symbol_reference is weak)
@@ -229,23 +287,42 @@ internal class Vala.DBusServerModule : DBusClientModule {
 					var local = new LocalVariable (m.return_type, " result");
 					var ma = new MemberAccess.simple ("result");
 					ma.symbol_reference = local;
-					postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("result"), m.return_type, ma)));
+					out_postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("result"), m.return_type, ma)));
 				}
 			}
 		} else {
 			block.add_statement (new CCodeExpressionStatement (ccall));
+			if (m.coroutine) {
+				ready_block.add_statement (new CCodeExpressionStatement (finish_ccall));
+			}
 		}
 
-		cdecl = new CCodeDeclaration ("DBusMessage*");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("reply"));
-		block.add_statement (cdecl);
+		if (m.coroutine) {
+			ccall.add_argument (new CCodeIdentifier (wrapper_name + "_ready"));
 
-		if (m.get_error_types ().size > 0) {
+			var new_call = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+			new_call.add_argument (new CCodeIdentifier ("gpointer"));
+			new_call.add_argument (new CCodeConstant ("2"));
+			cdecl = new CCodeDeclaration ("gpointer *");
+			cdecl.add_declarator (new CCodeVariableDeclarator ("user_data", new_call));
+			prefragment.append (cdecl);
+
+			var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_ref"));
+			ref_call.add_argument (new CCodeIdentifier ("connection"));
+			prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("user_data[0]"), ref_call)));
+			ref_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_ref"));
+			ref_call.add_argument (new CCodeIdentifier ("message"));
+			prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("user_data[1]"), ref_call)));
+
+			ccall.add_argument (new CCodeIdentifier ("user_data"));
+		}
+
+		if (m.get_error_types ().size > 0 && !m.coroutine) {
 			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("error")));
 
 			var error_block = new CCodeBlock ();
 
-			var msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_error"));
+			msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_error"));
 			msgcall.add_argument (new CCodeIdentifier ("message"));
 			msgcall.add_argument (new CCodeIdentifier ("DBUS_ERROR_FAILED"));
 			msgcall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("error"), "message"));
@@ -256,18 +333,39 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("error"), error_block));
 		}
 
-		var msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_method_return"));
-		msgcall.add_argument (new CCodeIdentifier ("message"));
-		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), msgcall)));
+		block.add_statement (in_postfragment);
 
-		block.add_statement (postfragment);
+		if (!m.coroutine) {
+			handle_reply (block);
+		} else {
+			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_HANDLED")));
 
-		send_reply (block);
+			ready_block.add_statement (out_postfragment);
+
+			send_reply (ready_block);
+
+			var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_unref"));
+			unref_call.add_argument (new CCodeIdentifier ("connection"));
+			ready_block.add_statement (new CCodeExpressionStatement (unref_call));
+			unref_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+			unref_call.add_argument (new CCodeIdentifier ("message"));
+			ready_block.add_statement (new CCodeExpressionStatement (unref_call));
+			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+			free_call.add_argument (new CCodeIdentifier ("user_data"));
+			ready_block.add_statement (new CCodeExpressionStatement (free_call));
+		}
 
 		source_declarations.add_type_member_declaration (function.copy ());
 
 		function.block = block;
 		source_type_member_definition.append (function);
+
+		if (m.coroutine) {
+			source_declarations.add_type_member_declaration (ready_function.copy ());
+
+			ready_function.block = ready_block;
+			source_type_member_definition.append (ready_function);
+		}
 
 		return wrapper_name;
 	}
@@ -650,7 +748,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			else_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), new CCodeConstant ("NULL"))));
 			clastif.false_statement = else_block;
 
-			send_reply (block);
+			handle_reply (block);
 		}
 
 		source_declarations.add_type_member_declaration (function.copy ());
@@ -857,7 +955,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		free_call.add_argument (new CCodeIdentifier ("interface_name"));
 		block.add_statement (new CCodeExpressionStatement (free_call));
 
-		send_reply (block);
+		handle_reply (block);
 
 		source_declarations.add_type_member_declaration (function.copy ());
 
@@ -1024,7 +1122,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			else_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), new CCodeIdentifier ("NULL"))));
 			clastif.false_statement = else_block;
 
-			send_reply (block);
+			handle_reply (block);
 		}
 
 		source_declarations.add_type_member_declaration (function.copy ());
@@ -1240,7 +1338,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		str_call.add_argument (new CCodeConstant ("TRUE"));
 		block.add_statement (new CCodeExpressionStatement (str_call));
 
-		send_reply (block);
+		handle_reply (block);
 
 		source_declarations.add_type_member_declaration (function.copy ());
 
