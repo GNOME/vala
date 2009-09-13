@@ -155,6 +155,9 @@ public class Vala.Scanner {
 			break;
 		case 5:
 			switch (begin[0]) {
+			case 'a':
+				if (matches (begin, "async")) return TokenType.ASYNC;
+				break;
 			case 'b':
 				if (matches (begin, "break")) return TokenType.BREAK;
 				break;
@@ -251,9 +254,6 @@ public class Vala.Scanner {
 					if (matches (begin, "typeof")) return TokenType.TYPEOF;
 					break;
 				}
-				break;
-			case 'y':
-				if (matches (begin, "yields")) return TokenType.YIELDS;
 				break;
 			}
 			break;

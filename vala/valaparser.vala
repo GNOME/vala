@@ -57,7 +57,8 @@ public class Vala.Parser : CodeVisitor {
 		NEW = 1 << 4,
 		OVERRIDE = 1 << 5,
 		STATIC = 1 << 6,
-		VIRTUAL = 1 << 7
+		VIRTUAL = 1 << 7,
+		ASYNC = 1 << 8
 	}
 
 	public Parser () {
@@ -168,6 +169,7 @@ public class Vala.Parser : CodeVisitor {
 		switch (current ()) {
 		case TokenType.ABSTRACT:
 		case TokenType.AS:
+		case TokenType.ASYNC:
 		case TokenType.BASE:
 		case TokenType.BREAK:
 		case TokenType.CASE:
@@ -233,7 +235,6 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.WEAK:
 		case TokenType.WHILE:
 		case TokenType.YIELD:
-		case TokenType.YIELDS:
 			next ();
 			return;
 		case TokenType.INTEGER_LITERAL:
@@ -2208,6 +2209,9 @@ public class Vala.Parser : CodeVisitor {
 		} else if (ModifierFlags.CLASS in flags) {
 			method.binding = MemberBinding.CLASS;
 		}
+		if (ModifierFlags.ASYNC in flags) {
+			method.coroutine = true;
+		}
 		if (ModifierFlags.NEW in flags) {
 			method.hides = true;
 		}
@@ -2249,9 +2253,6 @@ public class Vala.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
-		if (accept (TokenType.YIELDS)) {
-			method.coroutine = true;
-		}
 		if (accept (TokenType.THROWS)) {
 			do {
 				method.add_error_type (parse_type ());
@@ -2758,6 +2759,10 @@ public class Vala.Parser : CodeVisitor {
 				next ();
 				flags |= ModifierFlags.ABSTRACT;
 				break;
+			case TokenType.ASYNC:
+				next ();
+				flags |= ModifierFlags.ASYNC;
+				break;
 			case TokenType.CLASS:
 				next ();
 				flags |= ModifierFlags.CLASS;
@@ -2848,6 +2853,9 @@ public class Vala.Parser : CodeVisitor {
 		    || ModifierFlags.OVERRIDE in flags) {
 			Report.error (method.source_reference, "abstract, virtual, and override modifiers are not applicable to creation methods");
 		}
+		if (ModifierFlags.ASYNC in flags) {
+			method.coroutine = true;
+		}
 		expect (TokenType.OPEN_PARENS);
 		if (current () != TokenType.CLOSE_PARENS) {
 			do {
@@ -2856,9 +2864,6 @@ public class Vala.Parser : CodeVisitor {
 			} while (accept (TokenType.COMMA));
 		}
 		expect (TokenType.CLOSE_PARENS);
-		if (accept (TokenType.YIELDS)) {
-			method.coroutine = true;
-		}
 		if (accept (TokenType.THROWS)) {
 			do {
 				method.add_error_type (parse_type ());
@@ -3035,6 +3040,7 @@ public class Vala.Parser : CodeVisitor {
 	bool is_declaration_keyword (TokenType type) {
 		switch (type) {
 		case TokenType.ABSTRACT:
+		case TokenType.ASYNC:
 		case TokenType.CLASS:
 		case TokenType.CONST:
 		case TokenType.DELEGATE:

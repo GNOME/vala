@@ -902,6 +902,10 @@ public class Vala.CodeWriter : CodeVisitor {
 		} else if (m.overrides) {
 			write_string ("override ");
 		}
+
+		if (m.coroutine) {
+			write_string ("async ");
+		}
 		
 		if (!(m is CreationMethod)) {
 			write_return_type (m.return_type);

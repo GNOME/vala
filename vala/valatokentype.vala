@@ -1,6 +1,6 @@
 /* valatokentype.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,6 +36,7 @@ public enum Vala.TokenType {
 	ASSIGN_PERCENT,
 	ASSIGN_SHIFT_LEFT,
 	ASSIGN_SUB,
+	ASYNC,
 	BASE,
 	BITWISE_AND,
 	BITWISE_OR,
@@ -143,8 +144,7 @@ public enum Vala.TokenType {
 	VOLATILE,
 	WEAK,
 	WHILE,
-	YIELD,
-	YIELDS;
+	YIELD;
 
 	public weak string to_string () {
 		switch (this) {
@@ -160,6 +160,7 @@ public enum Vala.TokenType {
 		case ASSIGN_PERCENT: return "`%='";
 		case ASSIGN_SHIFT_LEFT: return "`<<='";
 		case ASSIGN_SUB: return "`-='";
+		case ASYNC: return "`async'";
 		case BASE: return "`base'";
 		case BITWISE_AND: return "`&'";
 		case BITWISE_OR: return "`|'";
@@ -264,7 +265,6 @@ public enum Vala.TokenType {
 		case WEAK: return "`weak'";
 		case WHILE: return "`while'";
 		case YIELD: return "`yield'";
-		case YIELDS: return "`yields'";
 		default: return "unknown token";
 		}
 	}
