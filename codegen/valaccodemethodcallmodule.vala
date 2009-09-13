@@ -69,9 +69,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 		HashMap<int,CCodeExpression> in_arg_map, out_arg_map;
 
-		if (m != null && m.coroutine
-		    && ((current_method != null && current_method.coroutine)
-		        || (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference))) {
+		if (m != null && m.coroutine) {
 			// async call
 
 			in_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
@@ -81,6 +79,10 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
 				// no finish call
+				ccall = async_call;
+			} else if (!expr.is_yield_expression) {
+				Report.warning (expr.source_reference, "Calling async methods requires use of `yield' or `begin'");
+
 				ccall = async_call;
 			} else {
 				ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname () + "_finish"));

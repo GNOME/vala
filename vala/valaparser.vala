@@ -547,6 +547,9 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.NEW:
 			expr = parse_object_or_array_creation_expression ();
 			break;
+		case TokenType.YIELD:
+			expr = parse_yield_expression ();
+			break;
 		case TokenType.SIZEOF:
 			expr = parse_sizeof_expression ();
 			break;
@@ -811,6 +814,15 @@ public class Vala.Parser : CodeVisitor {
 		var expr = parse_expression ();
 
 		return new MemberInitializer (id, expr, get_src (begin));
+	}
+
+	Expression parse_yield_expression () throws ParseError {
+		var begin = get_location ();
+		expect (TokenType.YIELD);
+		var member = parse_member_name ();
+		var call = (MethodCall) parse_method_call (begin, member);
+		call.is_yield_expression = true;
+		return call;
 	}
 
 	Expression parse_sizeof_expression () throws ParseError {
@@ -1651,8 +1663,13 @@ public class Vala.Parser : CodeVisitor {
 	Statement parse_yield_statement () throws ParseError {
 		var begin = get_location ();
 		expect (TokenType.YIELD);
+		if (current () != TokenType.SEMICOLON && current () != TokenType.RETURN) {
+			// yield expression
+			prev ();
+			return parse_expression_statement ();
+		}
 		Expression expr = null;
-		if (current () != TokenType.SEMICOLON) {
+		if (accept (TokenType.RETURN)) {
 			expr = parse_expression ();
 		}
 		expect (TokenType.SEMICOLON);

@@ -38,6 +38,8 @@ public class Vala.MethodCall : Expression {
 		}
 	}
 
+	public bool is_yield_expression { get; set; }
+
 	public Expression _call;
 	
 	private Gee.List<Expression> argument_list = new ArrayList<Expression> ();
@@ -403,6 +405,10 @@ public class Vala.MethodCall : Expression {
 
 		if (mtype is MethodType) {
 			var m = ((MethodType) mtype).method_symbol;
+			if (is_yield_expression && !m.coroutine) {
+				error = true;
+				Report.error (source_reference, "yield expression requires async method");
+			}
 			foreach (DataType error_type in m.get_error_types ()) {
 				may_throw = true;
 
