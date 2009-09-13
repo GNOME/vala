@@ -328,7 +328,8 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			msgcall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("error"), "message"));
 			error_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), msgcall)));
 
-			error_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
+			send_reply (error_block);
+			error_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_HANDLED")));
 
 			block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("error"), error_block));
 		}
