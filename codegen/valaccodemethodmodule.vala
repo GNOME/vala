@@ -845,7 +845,9 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 
 	public void generate_vfunc (Method m, DataType return_type, Map<int,CCodeFormalParameter> cparam_map, Map<int,CCodeExpression> carg_map, string suffix = "", int direction = 3) {
 		var vfunc = new CCodeFunction (m.get_cname () + suffix);
-		vfunc.line = function.line;
+		if (function != null) {
+			vfunc.line = function.line;
+		}
 
 		var vblock = new CCodeBlock ();
 
