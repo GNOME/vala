@@ -361,20 +361,11 @@ internal class Vala.GAsyncModule : GSignalModule {
 		}
 
 		if (stmt.yield_expression == null) {
-			// should be replaced by a simple return FALSE; when we have
-			//     void idle () yields;
-			// working in the .vapi
-
 			var cfrag = new CCodeFragment ();
 			stmt.ccodenode = cfrag;
 
-			var idle_call = new CCodeFunctionCall (new CCodeIdentifier ("g_idle_add"));
-			idle_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (current_method.get_real_cname () + "_co"), "GSourceFunc"));
-			idle_call.add_argument (new CCodeIdentifier ("data"));
-
 			int state = next_coroutine_state++;
 
-			cfrag.append (new CCodeExpressionStatement (idle_call));
 			cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state"), new CCodeConstant (state.to_string ()))));
 			cfrag.append (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
 			cfrag.append (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
