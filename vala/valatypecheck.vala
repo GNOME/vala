@@ -29,7 +29,13 @@ public class Vala.TypeCheck : Expression {
 	/**
 	 * The expression to be checked.
 	 */
-	public Expression expression { get; set; }
+	public Expression expression {
+		get { return _expression; }
+		set {
+			_expression = value;
+			_expression.parent_node = this;
+		}
+	}
 	
 	/**
 	 * The type to be matched against.
@@ -42,6 +48,7 @@ public class Vala.TypeCheck : Expression {
 		}
 	}
 
+	Expression _expression;
 	private DataType _data_type;
 
 	/**
@@ -75,6 +82,12 @@ public class Vala.TypeCheck : Expression {
 	public override void replace_type (DataType old_type, DataType new_type) {
 		if (type_reference == old_type) {
 			type_reference = new_type;
+		}
+	}
+
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		if (expression == old_node) {
+			expression = new_node;
 		}
 	}
 
