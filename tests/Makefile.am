@@ -45,6 +45,7 @@ TESTS = \
 	errors/errors.test \
 	dbus/basic-types.test \
 	dbus/arrays.test \
+	dbus/async.test \
 	$(NULL)
 
 EXTRA_DIST = \
