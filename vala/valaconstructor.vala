@@ -1,6 +1,6 @@
 /* valaconstructor.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -79,7 +79,9 @@ public class Vala.Constructor : Symbol {
 		}
 
 		foreach (DataType body_error_type in body.get_error_types ()) {
-			Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+			if (!((ErrorType) body_error_type).dynamic_error) {
+				Report.warning (body_error_type.source_reference, "unhandled error `%s'".printf (body_error_type.to_string()));
+			}
 		}
 
 		analyzer.current_symbol = analyzer.current_symbol.parent_symbol;
