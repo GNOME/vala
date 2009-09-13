@@ -67,32 +67,35 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			deleg = ((DelegateType) itype).delegate_symbol;
 		}
 
-		HashMap<int,CCodeExpression> in_arg_map, out_arg_map;
+		var in_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+		var out_arg_map = in_arg_map;
 
 		if (m != null && m.coroutine) {
 			// async call
-
-			in_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
-			out_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
 			async_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
 
 			if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
 				// no finish call
 				ccall = async_call;
+				params = m.get_async_begin_parameters ();
+			} else if (ma.member_name == "end" && ma.inner.symbol_reference == ma.symbol_reference) {
+				// no async call
+				ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_finish_cname ()));
+				params = m.get_async_end_parameters ();
 			} else if (!expr.is_yield_expression) {
 				Report.warning (expr.source_reference, "Calling async methods requires use of `yield' or `begin'");
 
 				ccall = async_call;
+				params = m.get_async_begin_parameters ();
 			} else {
 				ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_finish_cname ()));
 
+				// output arguments used separately
+				out_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 				// pass GAsyncResult stored in closure to finish function
 				out_arg_map.set (get_param_pos (0.1), new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "res"));
 			}
-		} else {
-			in_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
-			out_arg_map = in_arg_map;
 		}
 
 		if (m is CreationMethod) {
@@ -520,16 +523,10 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		if (m != null && m.coroutine) {
-			if ((current_method != null && current_method.coroutine)
-			    || (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference)) {
+			if (expr.is_yield_expression) {
 				// asynchronous call
-				if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
-					in_arg_map.set (get_param_pos (-1), new CCodeConstant ("NULL"));
-					in_arg_map.set (get_param_pos (-0.9), new CCodeConstant ("NULL"));
-				} else {
-					in_arg_map.set (get_param_pos (-1), new CCodeIdentifier (current_method.get_cname () + "_ready"));
-					in_arg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("data"));
-				}
+				in_arg_map.set (get_param_pos (-1), new CCodeIdentifier (current_method.get_cname () + "_ready"));
+				in_arg_map.set (get_param_pos (-0.9), new CCodeIdentifier ("data"));
 			}
 		}
 

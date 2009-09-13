@@ -70,6 +70,8 @@ public class Vala.MethodType : DataType {
 	public override Symbol? get_member (string member_name) {
 		if (method_symbol.coroutine && member_name == "begin") {
 			return method_symbol;
+		} else if (method_symbol.coroutine && member_name == "end") {
+			return method_symbol;
 		} else if (method_symbol.coroutine && member_name == "callback") {
 			return method_symbol.get_callback_method ();
 		}

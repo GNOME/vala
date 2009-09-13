@@ -961,6 +961,54 @@ public class Vala.Method : Member {
 		}
 		return callback_method;
 	}
+
+	public Gee.List<FormalParameter> get_async_begin_parameters () {
+		assert (this.coroutine);
+
+		var glib_ns = CodeContext.get ().root.scope.lookup ("GLib");
+
+		var params = new ArrayList<FormalParameter> ();
+		foreach (var param in parameters) {
+			if (param.direction == ParameterDirection.IN) {
+				params.add (param);
+			}
+		}
+
+		var callback_type = new DelegateType ((Delegate) glib_ns.scope.lookup ("AsyncReadyCallback"));
+		callback_type.nullable = true;
+
+		var callback_param = new FormalParameter ("callback", callback_type);
+		callback_param.default_expression = new NullLiteral (source_reference);
+		callback_param.cparameter_position = -1;
+		callback_param.cdelegate_target_parameter_position = -0.9;
+
+		params.add (callback_param);
+
+		return params;
+	}
+
+	public Gee.List<FormalParameter> get_async_end_parameters () {
+		assert (this.coroutine);
+
+		var glib_ns = CodeContext.get ().root.scope.lookup ("GLib");
+
+		var params = new ArrayList<FormalParameter> ();
+		foreach (var param in parameters) {
+			if (param.direction == ParameterDirection.OUT) {
+				params.add (param);
+			}
+		}
+
+		var result_type = new ObjectType ((ObjectTypeSymbol) glib_ns.scope.lookup ("AsyncResult"));
+
+		var result_param = new FormalParameter ("res", result_type);
+		result_param.default_expression = new NullLiteral (source_reference);
+		result_param.cparameter_position = 0.1;
+
+		params.add (result_param);
+
+		return params;
+	}
 }
 
 // vim:sw=8 noet

@@ -198,10 +198,8 @@ public class Vala.MethodCall : Expression {
 			}
 		}
 
-		Gee.List<FormalParameter> params;
-
 		if (mtype != null && mtype.is_invokable ()) {
-			params = mtype.get_parameters ();
+			// call ok, expression is invokable
 		} else if (call.symbol_reference is Class) {
 			error = true;
 			Report.error (source_reference, "use `new' operator to create new objects");
@@ -210,6 +208,25 @@ public class Vala.MethodCall : Expression {
 			error = true;
 			Report.error (source_reference, "invocation not supported in this context");
 			return false;
+		}
+
+		var ret_type = mtype.get_return_type ();
+		var params = mtype.get_parameters ();
+
+		if (mtype is MethodType) {
+			var m = ((MethodType) mtype).method_symbol;
+			if (m != null && m.coroutine && !is_yield_expression) {
+				// begin or end call of async method
+				var ma = (MemberAccess) call;
+				if (ma.member_name != "end") {
+					// begin (possibly implicit)
+					params = m.get_async_begin_parameters ();
+					ret_type = new VoidType ();
+				} else {
+					// end
+					params = m.get_async_end_parameters ();
+				}
+			}
 		}
 
 		Expression last_arg = null;
@@ -381,9 +398,6 @@ public class Vala.MethodCall : Expression {
 		foreach (Expression arg in get_argument_list ()) {
 			arg.check (analyzer);
 		}
-
-		DataType ret_type = mtype.get_return_type ();
-		params = mtype.get_parameters ();
 
 		if (ret_type is VoidType) {
 			// void return type
