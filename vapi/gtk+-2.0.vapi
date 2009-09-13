@@ -5772,14 +5772,14 @@ namespace Gtk {
 		public weak string tooltip;
 		public int value;
 	}
-	[CCode (type_id = "GTK_TYPE_RECENT_DATA", cheader_filename = "gtk/gtk.h")]
+	[CCode (type_id = "GTK_TYPE_RECENT_DATA", has_copy_function = false, has_destroy_function = false, cheader_filename = "gtk/gtk.h")]
 	public struct RecentData {
 		public string display_name;
 		public string description;
 		public string mime_type;
 		public string app_name;
 		public string app_exec;
-		[CCode (array_length = false)]
+		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] groups;
 		public bool is_private;
 	}
