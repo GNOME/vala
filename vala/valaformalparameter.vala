@@ -97,12 +97,6 @@ public class Vala.FormalParameter : Symbol {
 	public double cdelegate_target_parameter_position { get; set; }
 
 	/**
-	 * Specifies that the argument should only be emitted for async
-	 * calls (ie: from yielding functions).
-	 */
-	public bool async_only { get; set; }
-
-	/**
 	 * Specifies the type of the parameter in the C function.
 	 */
 	public string? ctype { get; set; }
@@ -177,9 +171,6 @@ public class Vala.FormalParameter : Symbol {
 		}
 		if (a.has_argument ("delegate_target_pos")) {
 			cdelegate_target_parameter_position = a.get_double ("delegate_target_pos");
-		}
-		if (a.has_argument ("async_only")) {
-			async_only = a.get_bool ("async_only");
 		}
 	}
 
