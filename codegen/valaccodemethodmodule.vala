@@ -147,6 +147,9 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public override void generate_method_declaration (Method m, CCodeDeclarationSpace decl_space) {
+		if (m.is_async_callback) {
+			return;
+		}
 		if (decl_space.add_symbol_declaration (m, m.get_cname ())) {
 			return;
 		}

@@ -203,6 +203,8 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				var ma = (MemberAccess) delegate_expr;
 				if (m.binding == MemberBinding.STATIC) {
 					return new CCodeConstant ("NULL");
+				} else if (m.is_async_callback) {
+					return new CCodeIdentifier ("data");
 				} else {
 					return (CCodeExpression) get_ccodenode (ma.inner);
 				}
@@ -231,9 +233,9 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 			}
 
 			return new CCodeIdentifier (generate_delegate_wrapper (method, dt.delegate_symbol));
-		} else {
-			return base.get_implicit_cast_expression (source_cexpr, expression_type, target_type, expr);
 		}
+
+		return base.get_implicit_cast_expression (source_cexpr, expression_type, target_type, expr);
 	}
 
 	private string generate_delegate_wrapper (Method m, Delegate d) {

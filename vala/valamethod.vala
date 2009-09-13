@@ -220,6 +220,8 @@ public class Vala.Method : Member {
 
 	public bool coroutine { get; set; }
 
+	public bool is_async_callback { get; set; }
+
 	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private string cname;
 	private string _vfunc_name;
@@ -232,6 +234,8 @@ public class Vala.Method : Member {
 	private weak Method _base_method;
 	private Method _base_interface_method;
 	private bool base_methods_valid;
+
+	Method? callback_method;
 
 	/**
 	 * Creates a new method.
@@ -919,6 +923,23 @@ public class Vala.Method : Member {
 			n++;
 		}
 		return n;
+	}
+
+	public Method get_callback_method () {
+		assert (this.coroutine);
+
+		if (callback_method == null) {
+			var bool_type = new BooleanType ((Struct) CodeContext.get ().root.scope.lookup ("bool"));
+			bool_type.value_owned = true;
+			callback_method = new Method ("callback", bool_type, source_reference);
+			callback_method.access = SymbolAccessibility.PUBLIC;
+			callback_method.external = true;
+			callback_method.binding = MemberBinding.INSTANCE;
+			callback_method.owner = scope;
+			callback_method.is_async_callback = true;
+			callback_method.set_cname (get_real_cname () + "_co");
+		}
+		return callback_method;
 	}
 }
 
