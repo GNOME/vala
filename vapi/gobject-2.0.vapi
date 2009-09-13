@@ -221,8 +221,9 @@ namespace GLib {
 	[CCode (instance_pos = 0)]
 	public delegate void ToggleNotify (GLib.Object object, bool is_last_ref);
 
+	[CCode (has_copy_function = false, has_destroy_function = false)]
 	public struct Parameter {
-		public string name;
+		public unowned string name;
 		public Value value;
 	}
 
