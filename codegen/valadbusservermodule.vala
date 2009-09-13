@@ -57,6 +57,24 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		return "result";
 	}
 
+	void send_reply (CCodeBlock block) {
+		var handled = new CCodeBlock ();
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_send"));
+		ccall.add_argument (new CCodeIdentifier ("connection"));
+		ccall.add_argument (new CCodeIdentifier ("reply"));
+		ccall.add_argument (new CCodeConstant ("NULL"));
+		handled.add_statement (new CCodeExpressionStatement (ccall));
+		ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		ccall.add_argument (new CCodeIdentifier ("reply"));
+		handled.add_statement (new CCodeExpressionStatement (ccall));
+		handled.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_HANDLED")));
+
+		var not_handled = new CCodeBlock ();
+		not_handled.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_NOT_YET_HANDLED")));
+
+		block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("reply"), handled, not_handled));
+	}
+
 	string generate_dbus_wrapper (Method m, ObjectTypeSymbol sym) {
 		string wrapper_name = "_dbus_%s".printf (m.get_cname ());
 
@@ -64,7 +82,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 		CCodeDeclaration cdecl;
 
-		var function = new CCodeFunction (wrapper_name, "DBusMessage*");
+		var function = new CCodeFunction (wrapper_name, "DBusHandlerResult");
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
@@ -90,7 +108,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		var signature_check = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
 		signature_check.add_argument (message_signature);
 		var signature_error_block = new CCodeBlock ();
-		signature_error_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		signature_error_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_NOT_YET_HANDLED")));
 		prefragment.append (new CCodeIfStatement (signature_check, signature_error_block));
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init"));
@@ -244,7 +262,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 		block.add_statement (postfragment);
 
-		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
+		send_reply (block);
 
 		source_declarations.add_type_member_declaration (function.copy ());
 
@@ -437,7 +455,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		ccall.add_argument (new CCodeIdentifier ("connection"));
 		ccall.add_argument (new CCodeIdentifier ("message"));
 
-		callblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), ccall)));
+		callblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
 
 		var cif = new CCodeIfStatement (ccheck, callblock);
 		if (clastif == null) {
@@ -468,7 +486,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 		CCodeDeclaration cdecl;
 
-		var function = new CCodeFunction (wrapper_name, "DBusMessage*");
+		var function = new CCodeFunction (wrapper_name, "DBusHandlerResult");
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
@@ -494,7 +512,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		signature_check.add_argument (message_signature);
 		signature_check.add_argument (new CCodeConstant ("\"ss\""));
 		var signature_error_block = new CCodeBlock ();
-		signature_error_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		signature_error_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_NOT_YET_HANDLED")));
 		block.add_statement (new CCodeIfStatement (signature_check, signature_error_block));
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init"));
@@ -632,7 +650,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			else_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), new CCodeConstant ("NULL"))));
 			clastif.false_statement = else_block;
 
-			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
+			send_reply (block);
 		}
 
 		source_declarations.add_type_member_declaration (function.copy ());
@@ -662,7 +680,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 		CCodeDeclaration cdecl;
 
-		var function = new CCodeFunction (wrapper_name, "DBusMessage*");
+		var function = new CCodeFunction (wrapper_name, "DBusHandlerResult");
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
@@ -692,7 +710,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		signature_check.add_argument (message_signature);
 		signature_check.add_argument (new CCodeConstant ("\"s\""));
 		var signature_error_block = new CCodeBlock ();
-		signature_error_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		signature_error_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_NOT_YET_HANDLED")));
 		block.add_statement (new CCodeIfStatement (signature_check, signature_error_block));
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init"));
@@ -839,7 +857,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		free_call.add_argument (new CCodeIdentifier ("interface_name"));
 		block.add_statement (new CCodeExpressionStatement (free_call));
 
-		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
+		send_reply (block);
 
 		source_declarations.add_type_member_declaration (function.copy ());
 
@@ -852,7 +870,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 	string generate_dbus_property_set_wrapper (ObjectTypeSymbol sym, string dbus_iface_name) {
 		string wrapper_name = "_dbus_%s_property_set".printf (sym.get_lower_case_cname ());
 
-		var function = new CCodeFunction (wrapper_name, "DBusMessage*");
+		var function = new CCodeFunction (wrapper_name, "DBusHandlerResult");
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
@@ -877,7 +895,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		signature_check.add_argument (message_signature);
 		signature_check.add_argument (new CCodeConstant ("\"ssv\""));
 		var signature_error_block = new CCodeBlock ();
-		signature_error_block.add_statement (new CCodeReturnStatement (new CCodeConstant ("NULL")));
+		signature_error_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_NOT_YET_HANDLED")));
 		block.add_statement (new CCodeIfStatement (signature_check, signature_error_block));
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init"));
@@ -1003,10 +1021,10 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
 			unref_call.add_argument (new CCodeIdentifier ("reply"));
 			else_block.add_statement (new CCodeExpressionStatement (unref_call));
-			else_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), new CCodeConstant ("NULL"))));
+			else_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("reply"), new CCodeIdentifier ("NULL"))));
 			clastif.false_statement = else_block;
 
-			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
+			send_reply (block);
 		}
 
 		source_declarations.add_type_member_declaration (function.copy ());
@@ -1106,7 +1124,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 	string generate_dbus_introspect (ObjectTypeSymbol sym) {
 		string wrapper_name = "_dbus_%s_introspect".printf (sym.get_lower_case_cname ());
 
-		var function = new CCodeFunction (wrapper_name, "DBusMessage*");
+		var function = new CCodeFunction (wrapper_name, "DBusHandlerResult");
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeFormalParameter ("self", sym.get_cname () + "*"));
@@ -1222,7 +1240,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		str_call.add_argument (new CCodeConstant ("TRUE"));
 		block.add_statement (new CCodeExpressionStatement (str_call));
 
-		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("reply")));
+		send_reply (block);
 
 		source_declarations.add_type_member_declaration (function.copy ());
 
@@ -1278,8 +1296,8 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		var block = new CCodeBlock ();
 		cfunc.block = block;
 
-		var cdecl = new CCodeDeclaration ("DBusMessage*");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("reply", new CCodeConstant ("NULL")));
+		var cdecl = new CCodeDeclaration ("DBusHandlerResult");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("result", new CCodeConstant ("DBUS_HANDLER_RESULT_NOT_YET_HANDLED")));
 		block.add_statement (cdecl);
 
 		CCodeIfStatement clastif = null;
@@ -1320,18 +1338,9 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			}
 		}
 
-		var replyblock = new CCodeBlock ();
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_send"));
-		ccall.add_argument (new CCodeIdentifier ("connection"));
-		ccall.add_argument (new CCodeIdentifier ("reply"));
-		ccall.add_argument (new CCodeConstant ("NULL"));
-		replyblock.add_statement (new CCodeExpressionStatement (ccall));
-		ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
-		ccall.add_argument (new CCodeIdentifier ("reply"));
-		replyblock.add_statement (new CCodeExpressionStatement (ccall));
-		replyblock.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_HANDLED")));
-
-		var cif = new CCodeIfStatement (new CCodeIdentifier ("reply"), replyblock);
+		var resultblock = new CCodeBlock ();
+		resultblock.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+		var cif = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("result"), new CCodeIdentifier ("DBUS_HANDLER_RESULT_HANDLED")), resultblock);
 		block.add_statement (cif);
 		clastif = cif;
 
