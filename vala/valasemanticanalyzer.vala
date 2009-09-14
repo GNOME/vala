@@ -641,21 +641,6 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 				if (param_index < instance_type.get_type_arguments ().size) {
 					actual_type = (DataType) instance_type.get_type_arguments ().get (param_index);
 				}
-			} else if (method_access != null && method_access.inner is MemberAccess) {
-				// static method in generic type
-				var type_symbol = (ObjectTypeSymbol) generic_type.type_parameter.parent_symbol;
-
-				int param_index = type_symbol.get_type_parameter_index (generic_type.type_parameter.name);
-				if (param_index == -1) {
-					Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (generic_type.type_parameter.name));
-					node_reference.error = true;
-					return null;
-				}
-
-				var type_ma = (MemberAccess) method_access.inner;
-				if (param_index < type_ma.get_type_arguments ().size) {
-					actual_type = (DataType) type_ma.get_type_arguments ().get (param_index);
-				}
 			}
 		} else {
 			// generic method

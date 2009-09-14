@@ -112,18 +112,9 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					break;
 				}
 			}
-		} else if (m != null) {
-			if (m.binding != MemberBinding.INSTANCE && m.parent_symbol is ObjectTypeSymbol) {
-				// support static methods in generic types
-				var type_symbol = (ObjectTypeSymbol) m.parent_symbol;
-				if (type_symbol.get_type_parameters ().size > 0 && ma.inner is MemberAccess) {
-					var type_ma = (MemberAccess) ma.inner;
-					add_generic_type_arguments (ccall, type_ma.get_type_arguments (), expr);
-				}
-			}
-			if (m.get_type_parameters ().size > 0) {
-				add_generic_type_arguments (ccall, ma.get_type_arguments (), expr);
-			}
+		} else if (m != null && m.get_type_parameters ().size > 0) {
+			// generic method
+			add_generic_type_arguments (ccall, ma.get_type_arguments (), expr);
 		}
 
 		// the complete call expression, might include casts, comma expressions, and/or assignments
