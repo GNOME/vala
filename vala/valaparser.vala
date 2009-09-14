@@ -2427,6 +2427,11 @@ public class Vala.Parser : CodeVisitor {
 		var sig = new Signal (id, type, get_src (begin), comment);
 		sig.access = access;
 		set_attributes (sig, attrs);
+		if (ModifierFlags.STATIC in flags) {
+			throw new ParseError.SYNTAX (get_error ("`static' modifier not allowed on signals"));
+		} else if (ModifierFlags.CLASS in flags) {
+			throw new ParseError.SYNTAX (get_error ("`class' modifier not allowed on signals"));
+		}
 		if (ModifierFlags.VIRTUAL in flags) {
 			sig.is_virtual = true;
 		}
