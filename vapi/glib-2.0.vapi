@@ -3413,6 +3413,7 @@ namespace GLib {
 		public void remove_range (uint index, uint length);
 		public void sort (CompareFunc compare_func);
 		public void sort_with_data (CompareDataFunc compare_func);
+		[CCode (generic_type_pos = 0.1)]
 		public G index (uint index);
 		public void set_size (uint length);
 	}

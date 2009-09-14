@@ -188,6 +188,15 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			out_arg_map.set (get_param_pos (m.cinstance_parameter_position), cast);
 		}
 
+		if (m != null && m.has_generic_type_parameter) {
+			// insert type argument for macros
+			int type_param_index = 0;
+			foreach (var type_arg in ma.inner.value_type.get_type_arguments ()) {
+				in_arg_map.set (get_param_pos (m.generic_type_parameter_position + 0.01 * type_param_index), new CCodeIdentifier (type_arg.get_cname ()));
+				type_param_index++;
+			}
+		}
+
 		if (m is ArrayMoveMethod) {
 			var array_type = (ArrayType) ma.inner.value_type;
 			var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));

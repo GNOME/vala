@@ -216,6 +216,10 @@ public class Vala.Method : Member {
 	 */
 	public bool has_construct_function { get; set; default = true; }
 
+	public bool has_generic_type_parameter { get; set; }
+
+	public double generic_type_parameter_position { get; set; }
+
 	public weak Signal signal_reference { get; set; }
 
 	public bool coroutine { get; set; }
@@ -441,6 +445,10 @@ public class Vala.Method : Member {
 		}
 		if (a.has_argument ("has_construct_function")) {
 			has_construct_function = a.get_bool ("has_construct_function");
+		}
+		if (a.has_argument ("generic_type_pos")) {
+			has_generic_type_parameter = true;
+			generic_type_parameter_position = a.get_double ("generic_type_pos");
 		}
 	}
 	
