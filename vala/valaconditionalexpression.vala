@@ -137,7 +137,8 @@ public class Vala.ConditionalExpression : Expression {
 		insert_statement (analyzer.insert_block, decl);
 		insert_statement (analyzer.insert_block, if_stmt);
 
-		if (!if_stmt.check (analyzer)) {
+		if (!if_stmt.check (analyzer) || true_expression.error || false_expression.error) {
+			error = true;
 			return false;
 		}
 
