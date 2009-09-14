@@ -249,9 +249,9 @@ public class Vala.Parser : CodeVisitor {
 				return;
 			}
 			break;
+		default:
+			throw new ParseError.SYNTAX (get_error ("expected identifier"));
 		}
-
-		throw new ParseError.SYNTAX (get_error ("expected identifier"));
 	}
 
 	string parse_identifier () throws ParseError {
