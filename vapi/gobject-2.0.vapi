@@ -66,8 +66,11 @@ namespace GLib {
 		public TypeClass class_ref ();
 		public weak TypeClass class_peek ();
 
-		[CCode (cname = "G_TYPE_INVALID")]
-		public static Type INVALID;
+		public const Type INVALID;
+		public const Type INTERFACE;
+		public const Type ENUM;
+		public const Type FLAGS;
+		public const Type BOXED;
 	}
 
 	public struct TypeQuery {
@@ -355,6 +358,7 @@ namespace GLib {
 	public static delegate void Callback ();
 
 	[Compact]
+	[CCode (type_id = "G_TYPE_CLOSURE")]
 	public class Closure {
 	}
 
