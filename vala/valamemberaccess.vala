@@ -426,7 +426,12 @@ public class Vala.MemberAccess : Expression {
 			klass = (f.binding == MemberBinding.CLASS);
 		} else if (member is Method) {
 			var m = (Method) member;
-			if (m.base_method != null) {
+			if (m.is_async_callback) {
+				// ensure to use right callback method for virtual/abstract async methods
+				m = analyzer.current_method.get_callback_method ();
+				symbol_reference = m;
+				member = symbol_reference;
+			} else if (m.base_method != null) {
 				// refer to base method to inherit default arguments
 				m = m.base_method;
 
