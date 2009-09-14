@@ -128,7 +128,11 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 		cdecl = new CCodeDeclaration ("GError*");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("error", new CCodeConstant ("NULL")));
-		out_postfragment.append (cdecl);
+		if (m.coroutine) {
+			ready_block.add_statement (cdecl);
+		} else {
+			block.add_statement (cdecl);
+		}
 
 		block.add_statement (prefragment);
 
