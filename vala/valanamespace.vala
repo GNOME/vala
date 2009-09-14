@@ -378,6 +378,10 @@ public class Vala.Namespace : Symbol {
 			m.error = true;
 			return;
 		}
+		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
+			m.result_var = new LocalVariable (m.return_type.copy (), "result", null, source_reference);
+			m.result_var.is_result = true;
+		}
 
 		methods.add (m);
 		scope.add (m.name, m);
