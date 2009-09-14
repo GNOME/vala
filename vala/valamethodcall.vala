@@ -429,14 +429,18 @@ public class Vala.MethodCall : Expression {
 					Report.error (source_reference, "yield expression not available outside async method");
 				}
 			}
-			foreach (DataType error_type in m.get_error_types ()) {
-				may_throw = true;
+			if (m != null && m.coroutine && !is_yield_expression && ((MemberAccess) call).member_name != "end") {
+				// .begin call of async method, no error can happen here
+			} else {
+				foreach (DataType error_type in m.get_error_types ()) {
+					may_throw = true;
 
-				// ensure we can trace back which expression may throw errors of this type
-				var call_error_type = error_type.copy ();
-				call_error_type.source_reference = source_reference;
+					// ensure we can trace back which expression may throw errors of this type
+					var call_error_type = error_type.copy ();
+					call_error_type.source_reference = source_reference;
 
-				add_error_type (call_error_type);
+					add_error_type (call_error_type);
+				}
 			}
 		} else if (mtype is DelegateType) {
 			var d = ((DelegateType) mtype).delegate_symbol;
