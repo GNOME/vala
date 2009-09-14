@@ -2607,6 +2607,8 @@ public class Vala.Parser : CodeVisitor {
 			iface.add_signal ((Signal) sym);
 		} else if (sym is Field) {
 			iface.add_field ((Field) sym);
+		} else if (sym is Constant) {
+			iface.add_constant ((Constant) sym);
 		} else if (sym is Property) {
 			iface.add_property ((Property) sym);
 		} else {

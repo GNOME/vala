@@ -31,6 +31,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 
 	private Gee.List<Method> methods = new ArrayList<Method> ();
 	private Gee.List<Field> fields = new ArrayList<Field> ();
+	private Gee.List<Constant> constants = new ArrayList<Constant> ();
 	private Gee.List<Property> properties = new ArrayList<Property> ();
 	private Gee.List<Signal> signals = new ArrayList<Signal> ();
 
@@ -174,6 +175,25 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 */
 	public Gee.List<Field> get_fields () {
 		return new ReadOnlyList<Field> (fields);
+	}
+
+	/**
+	 * Adds the specified constant as a member to this interface.
+	 *
+	 * @param c a constant
+	 */
+	public void add_constant (Constant c) {
+		constants.add (c);
+		scope.add (c.name, c);
+	}
+
+	/**
+	 * Returns a copy of the list of constants.
+	 *
+	 * @return list of constants
+	 */
+	public Gee.List<Constant> get_constants () {
+		return new ReadOnlyList<Constant> (constants);
 	}
 
 	/**
@@ -359,7 +379,11 @@ public class Vala.Interface : ObjectTypeSymbol {
 		foreach (Field f in fields) {
 			f.accept (visitor);
 		}
-		
+
+		foreach (Constant c in constants) {
+			c.accept (visitor);
+		}
+
 		foreach (Property prop in properties) {
 			prop.accept (visitor);
 		}
@@ -601,7 +625,11 @@ public class Vala.Interface : ObjectTypeSymbol {
 		foreach (Field f in fields) {
 			f.check (analyzer);
 		}
-		
+
+		foreach (Constant c in constants) {
+			c.check (analyzer);
+		}
+
 		foreach (Property prop in properties) {
 			prop.check (analyzer);
 		}

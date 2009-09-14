@@ -441,6 +441,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		visit_sorted (iface.get_enums ());
 		visit_sorted (iface.get_delegates ());
 		visit_sorted (iface.get_fields ());
+		visit_sorted (iface.get_constants ());
 		visit_sorted (iface.get_methods ());
 		visit_sorted (iface.get_properties ());
 		visit_sorted (iface.get_signals ());
