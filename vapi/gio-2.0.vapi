@@ -784,9 +784,9 @@ namespace GLib {
 		public unowned GLib.Socket accept_socket (out unowned GLib.Object source_object, GLib.Cancellable? cancellable) throws GLib.Error;
 		public async unowned GLib.Socket accept_socket_async (GLib.Cancellable? cancellable, out unowned GLib.Object source_object) throws GLib.Error;
 		public unowned GLib.Socket accept_socket_finish (GLib.AsyncResult _result, out unowned GLib.Object source_object) throws GLib.Error;
-		public bool add_address (GLib.SocketAddress address, GLib.SocketType type, GLib.SocketProtocol protocol, GLib.Object source_object, out unowned GLib.SocketAddress effective_address) throws GLib.Error;
-		public bool add_inet_port (uint16 port, GLib.Object source_object) throws GLib.Error;
-		public bool add_socket (GLib.Socket socket, GLib.Object source_object) throws GLib.Error;
+		public bool add_address (GLib.SocketAddress address, GLib.SocketType type, GLib.SocketProtocol protocol, GLib.Object? source_object, out unowned GLib.SocketAddress effective_address) throws GLib.Error;
+		public bool add_inet_port (uint16 port, GLib.Object? source_object) throws GLib.Error;
+		public bool add_socket (GLib.Socket socket, GLib.Object? source_object) throws GLib.Error;
 		[NoWrapper]
 		public virtual void changed ();
 		public void close ();
