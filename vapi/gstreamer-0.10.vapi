@@ -428,7 +428,7 @@ namespace Gst {
 		public uint64 timestamp;
 		public Gst.EventType type;
 		[CCode (has_construct_function = false)]
-		public Event.buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool async);
+		public Event.buffer_size (Gst.Format format, int64 minsize, int64 maxsize, bool @async);
 		[CCode (has_construct_function = false)]
 		public Event.custom (Gst.EventType type, owned Gst.Structure structure);
 		[CCode (has_construct_function = false)]
@@ -447,7 +447,7 @@ namespace Gst {
 		public Event.new_segment (bool update, double rate, Gst.Format format, int64 start, int64 stop, int64 position);
 		[CCode (has_construct_function = false)]
 		public Event.new_segment_full (bool update, double rate, double applied_rate, Gst.Format format, int64 start, int64 stop, int64 position);
-		public void parse_buffer_size (out Gst.Format format, out int64 minsize, out int64 maxsize, out bool async);
+		public void parse_buffer_size (out Gst.Format format, out int64 minsize, out int64 maxsize, out bool @async);
 		public void parse_latency (out Gst.ClockTime latency);
 		public void parse_new_segment (out bool update, out double rate, out Gst.Format format, out int64 start, out int64 stop, out int64 position);
 		public void parse_new_segment_full (out bool update, out double rate, out double applied_rate, out Gst.Format format, out int64 start, out int64 stop, out int64 position);
@@ -2354,7 +2354,7 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static Gst.Element? parse_launch (string pipeline_description) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
-	public static Gst.Element? parse_launchv (string[] argv) throws GLib.Error;
+	public static Gst.Element? parse_launchv ([CCode (array_length = false)] string[] argv) throws GLib.Error;
 	[CCode (cheader_filename = "gst/gst.h")]
 	public static void print_element_args (GLib.StringBuilder buf, int indent, Gst.Element element);
 	[CCode (cheader_filename = "gst/gst.h")]
