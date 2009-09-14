@@ -44,12 +44,15 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 	void visit_string_switch_statement (SwitchStatement stmt) {
 		// we need a temporary variable to save the property value
-		var temp_var = get_temp_variable (stmt.expression.value_type, false, stmt);
+		var temp_var = get_temp_variable (stmt.expression.value_type, stmt.expression.value_type.value_owned, stmt);
 		stmt.expression.temp_vars.insert (0, temp_var);
 
 		var ctemp = new CCodeIdentifier (temp_var.name);
 		var cinit = new CCodeAssignment (ctemp, (CCodeExpression) stmt.expression.ccodenode);
 		var czero = new CCodeConstant ("0");
+
+		var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
+		free_call.add_argument (ctemp);
 
 		var cswitchblock = new CCodeFragment ();
 		stmt.ccodenode = cswitchblock;
@@ -92,6 +95,11 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 		cswitchblock.append (new CCodeExpressionStatement (cinit));
 		create_temp_decl (stmt, stmt.expression.temp_vars);
+
+		if (stmt.expression.value_type.value_owned) {
+			// free owned string
+			cswitchblock.append (new CCodeExpressionStatement (free_call));
+		}
 
 		Gee.List<Statement> default_statements = null;
 		label_count = 0;

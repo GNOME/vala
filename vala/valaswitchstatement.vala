@@ -114,6 +114,9 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 			return false;
 		}
 
+		// ensure that possibly owned (string) expression stays alive
+		expression.target_type = expression.value_type.copy ();
+
 		foreach (SwitchSection section in sections) {
 			section.check (analyzer);
 		}
