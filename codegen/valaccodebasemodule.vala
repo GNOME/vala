@@ -1351,7 +1351,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		if (prop.is_abstract || prop.is_virtual) {
-			if (acc.readable) {
+			if (acc.readable && !returns_real_struct) {
 				function = new CCodeFunction (acc.get_cname (), current_return_type.get_cname ());
 			} else {
 				function = new CCodeFunction (acc.get_cname (), "void");
