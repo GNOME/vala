@@ -1145,11 +1145,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			}
 		}
 
-		var dbus = sym.get_attribute ("DBus");
-		if (dbus == null) {
-			return result;
-		}
-		string dbus_iface_name = dbus.get_string ("name");
+		string dbus_iface_name = get_dbus_name (sym);
 		if (dbus_iface_name == null) {
 			return result;
 		}
@@ -1350,11 +1346,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 	}
 
 	void handle_signals (ObjectTypeSymbol sym, CCodeBlock block) {
-		var dbus = sym.get_attribute ("DBus");
-		if (dbus == null) {
-			return;
-		}
-		string dbus_iface_name = dbus.get_string ("name");
+		string dbus_iface_name = get_dbus_name (sym);
 		if (dbus_iface_name == null) {
 			return;
 		}
@@ -1403,38 +1395,35 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 		handle_method ("org.freedesktop.DBus.Introspectable", "Introspect", generate_dbus_introspect (sym), block, ref clastif);
 
-		var dbus = sym.get_attribute ("DBus");
-		if (dbus != null) {
-			string dbus_iface_name = dbus.get_string ("name");
-			if (dbus_iface_name != null) {
-				bool need_property_get = false;
-				bool need_property_set = false;
-				foreach (Property prop in sym.get_properties ()) {
-					if (prop.binding != MemberBinding.INSTANCE
-					    || prop.overrides || prop.access != SymbolAccessibility.PUBLIC) {
-						continue;
-					}
-					if (!is_dbus_visible (prop)) {
-						continue;
-					}
-					if (prop.get_accessor != null) {
-						need_property_get = true;
-					}
-					if (prop.set_accessor != null) {
-						need_property_set = true;
-					}
+		string dbus_iface_name = get_dbus_name (sym);
+		if (dbus_iface_name != null) {
+			bool need_property_get = false;
+			bool need_property_set = false;
+			foreach (Property prop in sym.get_properties ()) {
+				if (prop.binding != MemberBinding.INSTANCE
+				    || prop.overrides || prop.access != SymbolAccessibility.PUBLIC) {
+					continue;
 				}
-
-				if (need_property_get) {
-					handle_method ("org.freedesktop.DBus.Properties", "Get", generate_dbus_property_get_wrapper (sym, dbus_iface_name), block, ref clastif);
+				if (!is_dbus_visible (prop)) {
+					continue;
 				}
-				if (need_property_set) {
-					handle_method ("org.freedesktop.DBus.Properties", "Set", generate_dbus_property_set_wrapper (sym, dbus_iface_name), block, ref clastif);
+				if (prop.get_accessor != null) {
+					need_property_get = true;
 				}
-				handle_method ("org.freedesktop.DBus.Properties", "GetAll", generate_dbus_property_get_all_wrapper (sym, dbus_iface_name), block, ref clastif);
-
-				handle_methods (sym, dbus_iface_name, block, ref clastif);
+				if (prop.set_accessor != null) {
+					need_property_set = true;
+				}
 			}
+
+			if (need_property_get) {
+				handle_method ("org.freedesktop.DBus.Properties", "Get", generate_dbus_property_get_wrapper (sym, dbus_iface_name), block, ref clastif);
+			}
+			if (need_property_set) {
+				handle_method ("org.freedesktop.DBus.Properties", "Set", generate_dbus_property_set_wrapper (sym, dbus_iface_name), block, ref clastif);
+			}
+			handle_method ("org.freedesktop.DBus.Properties", "GetAll", generate_dbus_property_get_all_wrapper (sym, dbus_iface_name), block, ref clastif);
+
+			handle_methods (sym, dbus_iface_name, block, ref clastif);
 		}
 
 		var resultblock = new CCodeBlock ();

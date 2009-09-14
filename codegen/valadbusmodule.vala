@@ -49,6 +49,15 @@ internal class Vala.DBusModule : GAsyncModule {
 		base (codegen, next);
 	}
 
+	public string? get_dbus_name (TypeSymbol symbol) {
+		var dbus = symbol.get_attribute ("DBus");
+		if (dbus == null) {
+			return null;
+		}
+
+		return dbus.get_string ("name");
+	}
+
 	bool get_basic_type_info (string signature, out BasicTypeInfo basic_type) {
 		foreach (BasicTypeInfo info in basic_types) {
 			if (info.signature == signature) {

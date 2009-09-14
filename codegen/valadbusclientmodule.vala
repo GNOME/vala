@@ -845,11 +845,7 @@ internal class Vala.DBusClientModule : DBusModule {
 	public override void visit_interface (Interface iface) {
 		base.visit_interface (iface);
 
-		var dbus = iface.get_attribute ("DBus");
-		if (dbus == null) {
-			return;
-		}
-		string dbus_iface_name = dbus.get_string ("name");
+		string dbus_iface_name = get_dbus_name (iface);
 		if (dbus_iface_name == null) {
 			return;
 		}
@@ -1143,12 +1139,7 @@ internal class Vala.DBusClientModule : DBusModule {
 	}
 
 	public override TypeRegisterFunction create_interface_register_function (Interface iface) {
-		var dbus = iface.get_attribute ("DBus");
-		if (dbus == null) {
-			return new InterfaceRegisterFunction (iface, context);
-		}
-
-		string dbus_iface_name = dbus.get_string ("name");
+		string dbus_iface_name = get_dbus_name (iface);
 		if (dbus_iface_name == null) {
 			return new InterfaceRegisterFunction (iface, context);
 		}
@@ -1350,7 +1341,7 @@ internal class Vala.DBusClientModule : DBusModule {
 	}
 
 	void handle_signals (Interface iface, CCodeBlock block) {
-		string dbus_iface_name = iface.get_attribute ("DBus").get_string ("name");
+		string dbus_iface_name = get_dbus_name (iface);
 
 		CCodeIfStatement clastif = null;
 		foreach (Signal sig in iface.get_signals ()) {
@@ -1463,7 +1454,7 @@ internal class Vala.DBusClientModule : DBusModule {
 	string generate_dbus_proxy_method (Interface iface, Method m) {
 		string proxy_name = "%sdbus_proxy_%s".printf (iface.get_lower_case_cprefix (), m.name);
 
-		string dbus_iface_name = iface.get_attribute ("DBus").get_string ("name");
+		string dbus_iface_name = get_dbus_name (iface);
 
 		CCodeDeclaration cdecl;
 
@@ -1557,7 +1548,7 @@ internal class Vala.DBusClientModule : DBusModule {
 	string generate_async_dbus_proxy_method (Interface iface, Method m) {
 		string proxy_name = "%sdbus_proxy_%s_async".printf (iface.get_lower_case_cprefix (), m.name);
 
-		string dbus_iface_name = iface.get_attribute ("DBus").get_string ("name");
+		string dbus_iface_name = get_dbus_name (iface);
 
 		CCodeDeclaration cdecl;
 
@@ -1702,7 +1693,7 @@ internal class Vala.DBusClientModule : DBusModule {
 	string generate_finish_dbus_proxy_method (Interface iface, Method m) {
 		string proxy_name = "%sdbus_proxy_%s_finish".printf (iface.get_lower_case_cprefix (), m.name);
 
-		string dbus_iface_name = iface.get_attribute ("DBus").get_string ("name");
+		string dbus_iface_name = get_dbus_name (iface);
 
 		CCodeDeclaration cdecl;
 
@@ -1762,7 +1753,7 @@ internal class Vala.DBusClientModule : DBusModule {
 	string generate_dbus_proxy_property_get (Interface iface, Property prop) {
 		string proxy_name = "%sdbus_proxy_get_%s".printf (iface.get_lower_case_cprefix (), prop.name);
 
-		string dbus_iface_name = iface.get_attribute ("DBus").get_string ("name");
+		string dbus_iface_name = get_dbus_name (iface);
 
 		var owned_type = prop.get_accessor.value_type.copy ();
 		owned_type.value_owned = true;
@@ -1909,7 +1900,7 @@ internal class Vala.DBusClientModule : DBusModule {
 	string generate_dbus_proxy_property_set (Interface iface, Property prop) {
 		string proxy_name = "%sdbus_proxy_set_%s".printf (iface.get_lower_case_cprefix (), prop.name);
 
-		string dbus_iface_name = iface.get_attribute ("DBus").get_string ("name");
+		string dbus_iface_name = get_dbus_name (iface);
 
 		var array_type = prop.set_accessor.value_type as ArrayType;
 
