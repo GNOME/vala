@@ -1841,6 +1841,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "0") {
 						prop.no_accessor_method = true;
 					}
+				} else if (nv[0] == "owned_get") {
+					if (eval (nv[1]) == "1") {
+						prop.get_accessor.value_type.value_owned = true;
+					}
 				}
 			}
 		}
