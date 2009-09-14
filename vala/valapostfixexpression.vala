@@ -1,6 +1,6 @@
 /* valapostfixexpression.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -98,6 +98,20 @@ public class Vala.PostfixExpression : Expression {
 			error = true;
 			Report.error (source_reference, "unsupported lvalue in postfix expression");
 			return false;
+		}
+
+		if (inner is MemberAccess) {
+			var ma = (MemberAccess) inner;
+
+			if (ma.symbol_reference is Property) {
+				var prop = (Property) ma.symbol_reference;
+
+				if (prop.set_accessor == null || !prop.set_accessor.writable) {
+					ma.error = true;
+					Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
+					return false;
+				}
+			}
 		}
 
 		value_type = inner.value_type;
