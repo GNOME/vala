@@ -419,9 +419,15 @@ public class Vala.MethodCall : Expression {
 
 		if (mtype is MethodType) {
 			var m = ((MethodType) mtype).method_symbol;
-			if (is_yield_expression && !m.coroutine) {
-				error = true;
-				Report.error (source_reference, "yield expression requires async method");
+			if (is_yield_expression) {
+				if (!m.coroutine) {
+					error = true;
+					Report.error (source_reference, "yield expression requires async method");
+				}
+				if (analyzer.current_method == null || !analyzer.current_method.coroutine) {
+					error = true;
+					Report.error (source_reference, "yield expression not available outside async method");
+				}
 			}
 			foreach (DataType error_type in m.get_error_types ()) {
 				may_throw = true;
