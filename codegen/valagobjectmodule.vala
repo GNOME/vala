@@ -226,6 +226,7 @@ internal class Vala.GObjectModule : GTypeModule {
 				ccall = new CCodeFunctionCall (new CCodeIdentifier ("%s_get_%s".printf (prefix, prop.name)));
 				ccall.add_argument (cself);
 				ccall.add_argument (new CCodeIdentifier ("boxed"));
+				cswitch.add_statement (new CCodeExpressionStatement (ccall));
 				var csetcall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_take_boxed"));
 				csetcall.add_argument (new CCodeIdentifier ("value"));
 				csetcall.add_argument (new CCodeIdentifier ("boxed"));
