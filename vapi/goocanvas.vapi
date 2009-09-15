@@ -33,6 +33,8 @@ namespace Goo {
 		public weak Gdk.Window tmp_window;
 		public weak Gtk.Adjustment vadjustment;
 		public weak GLib.List widget_items;
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public Canvas ();
 		public void convert_from_item_space (Goo.CanvasItem item, double x, double y);
 		public void convert_from_pixels (double x, double y);
 		public void convert_to_item_space (Goo.CanvasItem item, double x, double y);
@@ -56,8 +58,6 @@ namespace Goo {
 		public static void marshal_BOOLEAN__OBJECT_BOXED (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 		public static void marshal_VOID__INT_INT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
 		public static void marshal_VOID__OBJECT_OBJECT (GLib.Closure closure, GLib.Value return_value, uint n_param_values, GLib.Value param_values, void* invocation_hint, void* marshal_data);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public Canvas ();
 		public static unowned GLib.Array parse_path_data (string path_data);
 		public Gdk.GrabStatus pointer_grab (Goo.CanvasItem item, Gdk.EventMask event_mask, Gdk.Cursor cursor, uint32 time);
 		public void pointer_ungrab (Goo.CanvasItem item, uint32 time);
@@ -427,11 +427,11 @@ namespace Goo {
 	public class CanvasStyle : GLib.Object {
 		public weak Goo.CanvasStyle parent;
 		public weak GLib.Array properties;
+		[CCode (has_construct_function = false)]
+		public CanvasStyle ();
 		public Goo.CanvasStyle copy ();
 		public unowned Goo.CanvasStyle get_parent ();
 		public GLib.Value get_property (GLib.Quark property_id);
-		[CCode (has_construct_function = false)]
-		public CanvasStyle ();
 		public bool set_fill_options (Cairo.Context cr);
 		public void set_parent (Goo.CanvasStyle parent);
 		public void set_property (GLib.Quark property_id, GLib.Value value);
@@ -568,12 +568,12 @@ namespace Goo {
 		public abstract bool get_transform_for_child (Goo.CanvasItem child, Cairo.Matrix transform);
 		public bool is_container ();
 		public abstract bool is_visible ();
-		public void lower (Goo.CanvasItem below);
+		public void lower (Goo.CanvasItem? below);
 		public abstract void move_child (int old_position, int new_position);
 		public abstract void paint (Cairo.Context cr, Goo.CanvasBounds bounds, double scale);
 		[NoWrapper]
 		public abstract bool query_tooltip (double x, double y, bool keyboard_tooltip, void* tooltip);
-		public void raise (Goo.CanvasItem above);
+		public void raise (Goo.CanvasItem? above);
 		public void remove ();
 		public abstract void remove_child (int child_num);
 		public abstract void request_update ();
@@ -588,7 +588,7 @@ namespace Goo {
 		public abstract void set_parent (Goo.CanvasItem parent);
 		public void set_simple_transform (double x, double y, double scale, double rotation);
 		public abstract void set_style (Goo.CanvasStyle style);
-		public abstract void set_transform (Cairo.Matrix transform);
+		public abstract void set_transform (Cairo.Matrix? transform);
 		public void skew_x (double degrees, double cx, double cy);
 		public void skew_y (double degrees, double cx, double cy);
 		public void stop_animation ();
