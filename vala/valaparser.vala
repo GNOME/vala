@@ -1841,6 +1841,7 @@ public class Vala.Parser : CodeVisitor {
 					default:              return parse_field_declaration (attrs);
 					}
 				case TokenType.OPEN_BRACE:
+				case TokenType.THROWS:
 					rollback (begin);
 					return parse_property_declaration (attrs);
 				default:
@@ -2328,8 +2329,17 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.NEW in flags) {
 			prop.hides = true;
 		}
+		if (ModifierFlags.ASYNC in flags) {
+			Report.error (prop.source_reference, "async properties are not supported yet");
+		}
 		if (ModifierFlags.EXTERN in flags || scanner.source_file.external_package) {
 			prop.external = true;
+		}
+		if (accept (TokenType.THROWS)) {
+			do {
+				prop.add_error_type (parse_type ());
+			} while (accept (TokenType.COMMA));
+			Report.error (prop.source_reference, "properties throwing errors are not supported yet");
 		}
 		expect (TokenType.OPEN_BRACE);
 		while (current () != TokenType.CLOSE_BRACE) {
