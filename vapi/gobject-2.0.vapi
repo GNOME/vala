@@ -184,6 +184,7 @@ namespace GLib {
 #if VALA_0_7_6_NEW_METHODS
 		public static Object @new (Type type, ...);
 #endif
+		public static Object newv (Type type, [CCode (array_length_pos = 1.9)] Parameter[] parameters);
 
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
 		public Type get_type ();
