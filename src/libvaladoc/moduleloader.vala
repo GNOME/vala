@@ -28,6 +28,7 @@ public static delegate GLib.Type Valadoc.TagletRegisterFunction ( Gee.HashMap<st
 
 public class Valadoc.ModuleLoader : Object {
 	public Gee.HashMap< string, GLib.Type > taglets;
+	public GLib.Type codeconstanttag;
 	public GLib.Type underlinedtag;
 	public GLib.Type headlinetag;
 	public GLib.Type notifictag;
@@ -41,7 +42,6 @@ public class Valadoc.ModuleLoader : Object {
 	public GLib.Type srctag;
 	public GLib.Type imgtag;
 	public GLib.Type boldtag;
-
 	public GLib.Type tabletag;
 	public GLib.Type celltag;
 
@@ -154,6 +154,9 @@ public class Valadoc.ModuleLoader : Object {
 					break;
 				case "libtagletheadline":
 					this.headlinetag = type;
+					break;
+				case "libtagletcodeconstant":
+					this.codeconstanttag = type;
 					break;
 				}
 				modules.add ( module );

@@ -12,7 +12,7 @@ BUILT_SOURCES = libdoclet.vala.stamp
 
 
 libdoclet.vala.stamp: $(libdoclet_VALASOURCES)
-	$(VALAC) -C --vapidir ../../htmlhelpers/html/ --pkg htmlwriter-1.0 --vapidir ../../htmlhelpers/languages/ --pkg apiwriter-1.0 --pkg valadoc-1.0 --basedir . --save-temps $^
+	$(VALAC) -C --vapidir ../../htmlhelpers/html/ --pkg htmlwriter-1.0 --vapidir ../../htmlhelpers/languages/ --pkg apiwriter-1.0 --vapidir ../../../vapi/ --pkg valadoc-1.0 --basedir . --save-temps $^
 	touch $@
 
 

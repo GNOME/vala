@@ -485,3 +485,8 @@ a.navi_link:hover, a.external_link:hover {
 .main_inline_navigation {
 }
 
+.css_content_literal {
+	font: monospace;
+	color: #ff01ff;
+}
+

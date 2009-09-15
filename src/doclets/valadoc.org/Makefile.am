@@ -11,6 +11,7 @@ NULL =
 
 SUBDIRS = \
           doclet      \
+          taglets     \
           $(NULL)
 
 

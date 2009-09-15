@@ -71,6 +71,10 @@ public abstract class Valadoc.InlineTaglet : Taglet {
 	public abstract string to_string ();
 }
 
+public abstract class Valadoc.CodeConstantDocElement : Valadoc.DocElement {
+	public abstract bool parse (string constant);
+}
+
 public abstract class Valadoc.MainTaglet : Taglet {
 	// remove
 	protected string? get_data_type (DocumentedElement me) {

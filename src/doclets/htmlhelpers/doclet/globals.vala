@@ -132,6 +132,7 @@ namespace Valadoc.Html {
 	public const string css_content_link_virtual_method = "css_content_link_virtual_method";
 	public const string css_content_link_abstract_method = "css_content_link_abstract_method";
 	public const string css_content_link_construction_method = "css_content_link_construction_method";
+	public const string css_content_literal = "css_content_literal";
 
 
 	public delegate string? HtmlLink (Settings settings, Documented element, Documented? pos);

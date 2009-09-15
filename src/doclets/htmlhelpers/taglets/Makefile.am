@@ -2,25 +2,26 @@ NULL =
 
 
 SUBDIRS =        \
-	typelink     \
-	tablecell    \
+	bold         \
 	center       \
+	constants    \
+	headline     \
 	image        \
 	italic       \
-	bold         \
-	right        \
-	see          \
-	table        \
-	throws       \
-	string       \
+	link         \
 	list         \
-	return       \
-	source       \
-	parameter    \
 	listelement  \
 	notification \
-	underline    \
+	parameter    \
+	return       \
+	right        \
+	see          \
 	since        \
-	link         \
-	headline     \
+	source       \
+	string       \
+	table        \
+	tablecell    \
+	throws       \
+	typelink     \
+	underline    \
 	$(NULL)
