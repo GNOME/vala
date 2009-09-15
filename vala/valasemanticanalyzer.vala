@@ -408,6 +408,10 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 					// ignore inner error
 					expr.error = true;
 					return false;
+				} else if (arg.value_type is SignalType) {
+					arg.error = true;
+					Report.error (arg.source_reference, "Cannot pass signals as arguments");
+					return false;
 				} else if (arg.value_type == null) {
 					// disallow untyped arguments except for type inference of callbacks
 					if (!(arg.symbol_reference is Method)) {
