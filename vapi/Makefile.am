@@ -128,6 +128,8 @@ dist_vapi_DATA = \
 	libwnck-1.0.deps \
 	libwnck-1.0.vapi \
 	libxml-2.0.vapi \
+	linux.deps \
+	linux.vapi \
 	loudmouth-1.0.vapi \
 	lua.vapi \
 	mysql.vapi \

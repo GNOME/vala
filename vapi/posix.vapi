@@ -1219,6 +1219,10 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/socket.h")]
 	public int socketpair (int domain, int type, int protocol, int[] sv);
 
+	[CCode (cname = "struct sock_addr", cheader_filename = "sys/socket.h", destroy_function = "")]
+	public struct SockAddr {
+	}
+
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int mkfifo (string filename, mode_t mode);
 
