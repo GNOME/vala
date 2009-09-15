@@ -521,6 +521,14 @@ public class Vala.GirParser : CodeVisitor {
 				parse_constructor ();
 			} else if (reader.name == "method") {
 				st.add_method (parse_method ("method"));
+			} else if (reader.name == "union") {
+				Struct s = parse_union ();
+				var s_fields = s.get_fields ();
+				foreach (var f in s_fields) {
+					f.set_cname (s.get_cname () + "." + f.get_cname ());
+					f.name = s.name + "_" + f.name;
+					st.add_field (f);
+				}
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `record'".printf (reader.name));
@@ -597,6 +605,14 @@ public class Vala.GirParser : CodeVisitor {
 				methods.add (parse_method ("method"));
 			} else if (reader.name == "virtual-method") {
 				vmethods.add (parse_method ("virtual-method"));
+			} else if (reader.name == "union") {
+				Struct s = parse_union ();
+				var s_fields = s.get_fields ();
+				foreach (var f in s_fields) {
+					f.set_cname (s.get_cname () + "." + f.get_cname ());
+					f.name = s.name + "_" + f.name;
+					fields.add (f);
+				}
 			} else if (reader.name == "glib:signal") {
 				signals.add (parse_signal ());
 			} else {
@@ -1042,6 +1058,14 @@ public class Vala.GirParser : CodeVisitor {
 				parse_constructor ();
 			} else if (reader.name == "method") {
 				st.add_method (parse_method ("method"));
+			} else if (reader.name == "record") {
+				Struct s = parse_record ();
+				var fs = s.get_fields ();
+				foreach (var f in fs) {
+					f.set_cname (s.get_cname () + "." + f.get_cname ());
+					f.name = s.name + "_" + f.name;
+					st.add_field (f);
+				}
 			} else {
 				// error
 				Report.error (get_current_src (), "unknown child element `%s' in `union'".printf (reader.name));

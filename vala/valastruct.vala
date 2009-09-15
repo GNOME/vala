@@ -298,7 +298,12 @@ public class Vala.Struct : TypeSymbol {
 	 * @return the name to be used in C code by default
 	 */
 	public string get_default_cname () {
-		return "%s%s".printf (parent_symbol.get_cprefix (), name);
+		// parent_symbol may be null in GIR parser
+		if (parent_symbol != null) {
+			return "%s%s".printf (parent_symbol.get_cprefix (), name);
+		} else {
+			return name;
+		}
 	}
 
 	private void set_const_cname (string cname) {
