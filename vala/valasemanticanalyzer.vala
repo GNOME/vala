@@ -786,6 +786,13 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return null;
 	}
 
+	public Method? find_parent_method (Symbol sym) {
+		while (sym is Block) {
+			sym = sym.parent_symbol;
+		}
+		return sym as Method;
+	}
+
 	public bool is_in_constructor () {
 		var sym = current_symbol;
 		while (sym != null) {

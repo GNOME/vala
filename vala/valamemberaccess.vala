@@ -419,7 +419,15 @@ public class Vala.MemberAccess : Expression {
 			return false;
 		}
 
-		if (member is Field) {
+		if (member is LocalVariable) {
+			var local = (LocalVariable) member;
+			var block = (Block) local.parent_symbol;
+			if (analyzer.find_parent_method (block) != analyzer.current_method) {
+				local.captured = true;
+				block.captured = true;
+				analyzer.current_method.closure = true;
+			}
+		} else if (member is Field) {
 			var f = (Field) member;
 			access = f.access;
 			instance = (f.binding == MemberBinding.INSTANCE);

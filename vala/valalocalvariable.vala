@@ -61,6 +61,8 @@ public class Vala.LocalVariable : Symbol {
 	 */
 	public bool floating { get; set; }
 
+	public bool captured { get; set; }
+
 	private Expression? _initializer;
 	private DataType? _variable_type;
 

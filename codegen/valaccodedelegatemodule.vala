@@ -136,7 +136,13 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 			var invocation_expr = (MethodCall) delegate_expr;
 			return invocation_expr.delegate_target;
 		} else if (delegate_expr is LambdaExpression) {
-			if (get_this_type () != null || in_constructor) {
+			var closure_block = current_symbol as Block;
+			while (closure_block != null && !closure_block.captured) {
+				closure_block = closure_block.parent_symbol as Block;
+			}
+			if (closure_block != null) {
+				return new CCodeIdentifier ("_data%d_".printf (get_block_id (closure_block)));
+			} else if (get_this_type () != null || in_constructor) {
 				return new CCodeIdentifier ("self");
 			} else {
 				return new CCodeConstant ("NULL");
@@ -157,11 +163,17 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				}
 			} else if (delegate_expr.symbol_reference is LocalVariable) {
 				var local = (LocalVariable) delegate_expr.symbol_reference;
-				var target_expr = new CCodeIdentifier (get_delegate_target_cname (local.name));
-				if (is_out) {
-					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
+				if (local.captured) {
+					// captured variables are stored on the heap
+					var block = (Block) local.parent_symbol;
+					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (local.name));
 				} else {
-					return target_expr;
+					var target_expr = new CCodeIdentifier (get_delegate_target_cname (local.name));
+					if (is_out) {
+						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
+					} else {
+						return target_expr;
+					}
 				}
 			} else if (delegate_expr.symbol_reference is Field) {
 				var field = (Field) delegate_expr.symbol_reference;

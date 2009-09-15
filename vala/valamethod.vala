@@ -222,6 +222,8 @@ public class Vala.Method : Member {
 
 	public weak Signal signal_reference { get; set; }
 
+	public bool closure { get; set; }
+
 	public bool coroutine { get; set; }
 
 	public bool is_async_callback { get; set; }

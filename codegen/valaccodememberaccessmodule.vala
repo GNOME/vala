@@ -344,6 +344,10 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			if (local.is_result) {
 				// used in postconditions
 				expr.ccodenode = new CCodeIdentifier ("result");
+			} else if (local.captured) {
+				// captured variables are stored on the heap
+				var block = (Block) local.parent_symbol;
+				expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name));
 			} else {
 				expr.ccodenode = get_variable_cexpression (local.name);
 			}

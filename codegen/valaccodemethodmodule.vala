@@ -398,7 +398,44 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					source_type_member_definition.append (co_function);
 				}
 
-				if (m.parent_symbol is Class && !m.coroutine) {
+				if (m.closure) {
+					// add variables for parent closure blocks
+					// as closures only have one parameter for the innermost closure block
+					var closure_block = m.parent_symbol as Block;
+					while (closure_block != null && !closure_block.captured) {
+						closure_block = closure_block.parent_symbol as Block;
+					}
+					int block_id = get_block_id (closure_block);
+					while (true) {
+						var parent_closure_block = closure_block.parent_symbol as Block;
+						while (parent_closure_block != null && !parent_closure_block.captured) {
+							parent_closure_block = parent_closure_block.parent_symbol as Block;
+						}
+						if (parent_closure_block == null) {
+							break;
+						}
+						int parent_block_id = get_block_id (parent_closure_block);
+
+						var parent_data = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id));
+						var cdecl = new CCodeDeclaration ("Block%dData*".printf (parent_block_id));
+						cdecl.add_declarator (new CCodeVariableDeclarator ("_data%d_".printf (parent_block_id), parent_data));
+
+						cinit.append (cdecl);
+
+						closure_block = parent_closure_block;
+						block_id = parent_block_id;
+					}
+
+					// add self variable for closures
+					// as closures have block data parameter
+					if (m.binding == MemberBinding.INSTANCE) {
+						var cself = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self");
+						var cdecl = new CCodeDeclaration ("%s *".printf (current_class.get_cname ()));
+						cdecl.add_declarator (new CCodeVariableDeclarator ("self", cself));
+
+						cinit.append (cdecl);
+					}
+				} else if (m.parent_symbol is Class && !m.coroutine) {
 					var cl = (Class) m.parent_symbol;
 					if (m.overrides || (m.base_interface_method != null && !m.is_abstract && !m.is_virtual)) {
 						Method base_method;
@@ -720,7 +757,15 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 	}
 
 	public override void generate_cparameters (Method m, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
-		if (m.parent_symbol is Class && m is CreationMethod) {
+		if (m.closure) {
+			var closure_block = m.parent_symbol as Block;
+			while (closure_block != null && !closure_block.captured) {
+				closure_block = closure_block.parent_symbol as Block;
+			}
+			int block_id = get_block_id (closure_block);
+			var instance_param = new CCodeFormalParameter ("_data%d_".printf (block_id), "Block%dData*".printf (block_id));
+			cparam_map.set (get_param_pos (m.cinstance_parameter_position), instance_param);
+		} else if (m.parent_symbol is Class && m is CreationMethod) {
 			var cl = (Class) m.parent_symbol;
 			if (!cl.is_compact && vcall == null) {
 				cparam_map.set (get_param_pos (m.cinstance_parameter_position), new CCodeFormalParameter ("object_type", "GType"));

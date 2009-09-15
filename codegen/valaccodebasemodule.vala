@@ -132,6 +132,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public bool in_static_or_class_context = false;
 	public bool current_method_inner_error = false;
 	public int next_coroutine_state = 1;
+	int next_block_id = 0;
+	Map<Block,int> block_map = new HashMap<Block,int> ();
 
 	public DataType void_type = new VoidType ();
 	public DataType bool_type;
@@ -1574,6 +1576,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		current_method_inner_error = old_method_inner_error;
 	}
 
+	public int get_block_id (Block b) {
+		int result = block_map[b];
+		if (result == 0) {
+			result = ++next_block_id;
+			block_map[b] = result;
+		}
+		return result;
+	}
+
 	public override void visit_block (Block b) {
 		var old_symbol = current_symbol;
 		current_symbol = b;
@@ -1586,7 +1597,104 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 		
 		var cblock = new CCodeBlock ();
-		
+
+		if (b.captured) {
+			var parent_block = b.parent_symbol as Block;
+			while (parent_block != null && !parent_block.captured) {
+				parent_block = parent_block.parent_symbol as Block;
+			}
+
+			int block_id = get_block_id (b);
+			string struct_name = "Block%dData".printf (block_id);
+
+			var free_block = new CCodeBlock ();
+
+			var data = new CCodeStruct ("_" + struct_name);
+			data.add_field ("int", "ref_count");
+			if (parent_block != null) {
+				int parent_block_id = get_block_id (parent_block);
+
+				data.add_field ("Block%dData *".printf (parent_block_id), "_data%d_".printf (parent_block_id));
+
+				var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (parent_block_id)));
+				unref_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_data%d_".printf (parent_block_id)));
+				free_block.add_statement (new CCodeExpressionStatement (unref_call));
+			} else if (current_method.binding == MemberBinding.INSTANCE) {
+				data.add_field ("%s *".printf (current_class.get_cname ()), "self");
+
+				var ma = new MemberAccess.simple ("this");
+				ma.symbol_reference = current_class;
+				free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self"), new ObjectType (current_class), ma)));
+			}
+			foreach (var local in local_vars) {
+				if (local.captured) {
+					data.add_field (local.variable_type.get_cname (), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
+
+					if (local.variable_type is DelegateType) {
+						data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (local.name)));
+					}
+
+					if (requires_destroy (local.variable_type)) {
+						var ma = new MemberAccess.simple (local.name);
+						ma.symbol_reference = local;
+						free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (local.name)), local.variable_type, ma)));
+					}
+				}
+			}
+
+			var typedef = new CCodeTypeDefinition ("struct _" + struct_name, new CCodeVariableDeclarator (struct_name));
+			source_declarations.add_type_declaration (typedef);
+			source_declarations.add_type_definition (data);
+
+			var data_alloc = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
+			data_alloc.add_argument (new CCodeIdentifier (struct_name));
+
+			var data_decl = new CCodeDeclaration (struct_name + "*");
+			data_decl.add_declarator (new CCodeVariableDeclarator ("_data%d_".printf (block_id), data_alloc));
+			cblock.add_statement (data_decl);
+
+			// initialize ref_count
+			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "ref_count"), new CCodeIdentifier ("1"))));
+
+			if (parent_block != null) {
+				int parent_block_id = get_block_id (parent_block);
+
+				var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_ref".printf (parent_block_id)));
+				ref_call.add_argument (new CCodeIdentifier ("_data%d_".printf (parent_block_id)));
+
+				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), ref_call)));
+			} else if (current_method.binding == MemberBinding.INSTANCE) {
+				var ref_call = new CCodeFunctionCall (get_dup_func_expression (new ObjectType (current_class), b.source_reference));
+				ref_call.add_argument (new CCodeIdentifier ("self"));
+
+				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self"), ref_call)));
+			}
+
+			var data_free = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
+			data_free.add_argument (new CCodeIdentifier (struct_name));
+			data_free.add_argument (new CCodeIdentifier ("data"));
+			free_block.add_statement (new CCodeExpressionStatement (data_free));
+
+			// create ref/unref functions
+			var ref_fun = new CCodeFunction ("block%d_data_ref".printf (block_id), struct_name + "*");
+			ref_fun.add_parameter (new CCodeFormalParameter ("data", struct_name + "*"));
+			ref_fun.modifiers = CCodeModifiers.STATIC;
+			source_declarations.add_type_member_declaration (ref_fun.copy ());
+			ref_fun.block = new CCodeBlock ();
+			ref_fun.block.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_INCREMENT, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "ref_count"))));
+			ref_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("data")));
+			source_type_member_definition.append (ref_fun);
+
+			var unref_fun = new CCodeFunction ("block%d_data_unref".printf (block_id), struct_name + "*");
+			unref_fun.add_parameter (new CCodeFormalParameter ("data", struct_name + "*"));
+			unref_fun.modifiers = CCodeModifiers.STATIC;
+			source_declarations.add_type_member_declaration (unref_fun.copy ());
+			unref_fun.block = new CCodeBlock ();
+			var dec = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "ref_count")), new CCodeConstant ("0"));
+			unref_fun.block.add_statement (new CCodeIfStatement (dec, free_block));
+			source_type_member_definition.append (unref_fun);
+		}
+
 		foreach (CodeNode stmt in b.get_statements ()) {
 			if (stmt.error) {
 				continue;
@@ -1602,7 +1710,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		foreach (LocalVariable local in local_vars) {
-			if (!local.floating && requires_destroy (local.variable_type)) {
+			if (!local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
 				cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
@@ -1618,6 +1726,14 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.parameter_type, ma)));
 				}
 			}
+		}
+
+		if (b.captured) {
+			int block_id = get_block_id (b);
+
+			var data_unref = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (block_id)));
+			data_unref.add_argument (new CCodeIdentifier ("_data%d_".printf (block_id)));
+			cblock.add_statement (new CCodeExpressionStatement (data_unref));
 		}
 
 		b.ccodenode = cblock;
@@ -1778,7 +1894,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			pre_statement_fragment = null;
 		}
 
-		if (current_method != null && current_method.coroutine) {
+		if (local.captured) {
+			if (local.initializer != null) {
+				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (get_block_id ((Block) local.parent_symbol))), get_variable_cname (local.name)), rhs)));
+			}
+		} else if (current_method != null && current_method.coroutine) {
 			closure_struct.add_field (local.variable_type.get_cname (), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
 
 			if (local.initializer != null) {

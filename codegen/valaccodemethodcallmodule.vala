@@ -295,13 +295,27 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 								var delegate_method = arg.symbol_reference as Method;
 								var lambda = arg as LambdaExpression;
 								var arg_ma = arg as MemberAccess;
-								if (lambda != null && get_this_type () != null) {
-									// type of delegate target is same as `this'
-									// for lambda expressions in instance methods
-									var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_this_type (), arg.source_reference));
-									ref_call.add_argument (delegate_target);
-									delegate_target = ref_call;
-									delegate_target_destroy_notify = get_destroy_func_expression (get_this_type ());
+								if (lambda != null) {
+									if (delegate_method.closure) {
+										var closure_block = current_symbol as Block;
+										while (closure_block != null && !closure_block.captured) {
+											closure_block = closure_block.parent_symbol as Block;
+										}
+										int block_id = get_block_id (closure_block);
+										var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_ref".printf (block_id)));
+										ref_call.add_argument (delegate_target);
+										delegate_target = ref_call;
+										delegate_target_destroy_notify = new CCodeIdentifier ("block%d_data_unref".printf (block_id));
+									} else if (get_this_type () != null) {
+										// type of delegate target is same as `this'
+										// for lambda expressions in instance methods
+										var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_this_type (), arg.source_reference));
+										ref_call.add_argument (delegate_target);
+										delegate_target = ref_call;
+										delegate_target_destroy_notify = get_destroy_func_expression (get_this_type ());
+									} else {
+										delegate_target_destroy_notify = new CCodeConstant ("NULL");
+									}
 								} else if (delegate_method != null && delegate_method.binding == MemberBinding.INSTANCE
 								           && arg_ma != null && arg_ma.inner != null && arg_ma.inner.value_type.data_type != null
 								           && arg_ma.inner.value_type.data_type.is_reference_counting ()) {

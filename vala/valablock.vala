@@ -33,6 +33,8 @@ public class Vala.Block : Symbol, Statement {
 	 */
 	public bool contains_jump_statement { get; set; }
 
+	public bool captured { get; set; }
+
 	private Gee.List<Statement> statement_list = new ArrayList<Statement> ();
 	private Gee.List<LocalVariable> local_variables = new ArrayList<LocalVariable> ();
 	
