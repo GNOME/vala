@@ -1092,7 +1092,10 @@ public class Vala.Class : ObjectTypeSymbol {
 								sym = base_class.scope.lookup (m.name);
 								base_class = base_class.base_class;
 							}
-							if (!(sym is Method)) {
+							if (sym is Method) {
+								// method is used as interface implementation, so it is not unused
+								sym.used = true;
+							} else {
 								error = true;
 								Report.error (source_reference, "`%s' does not implement interface method `%s'".printf (get_full_name (), m.get_full_name ()));
 							}
@@ -1108,7 +1111,10 @@ public class Vala.Class : ObjectTypeSymbol {
 								sym = base_class.scope.lookup (prop.name);
 								base_class = base_class.base_class;
 							}
-							if (!(sym is Property)) {
+							if (sym is Property) {
+								// property is used as interface implementation, so it is not unused
+								sym.used = true;
+							} else {
 								error = true;
 								Report.error (source_reference, "`%s' does not implement interface property `%s'".printf (get_full_name (), prop.get_full_name ()));
 							}
