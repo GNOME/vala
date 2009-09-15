@@ -366,7 +366,11 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					}
 				}
 			} else {
-				if (current_method != null && current_method.coroutine) {
+				if (p.captured) {
+					// captured variables are stored on the heap
+					var block = ((Method) p.parent_symbol).body;
+					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (get_block_id (block))), get_variable_cname (p.name));
+				} else if (current_method != null && current_method.coroutine) {
 					// use closure
 					expr.ccodenode = get_variable_cexpression (p.name);
 				} else {

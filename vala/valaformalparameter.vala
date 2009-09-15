@@ -101,6 +101,8 @@ public class Vala.FormalParameter : Symbol {
 	 */
 	public string? ctype { get; set; }
 
+	public bool captured { get; set; }
+
 	private DataType _data_type;
 	private Expression? _default_expression;
 

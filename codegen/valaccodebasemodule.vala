@@ -1670,6 +1670,21 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self"), ref_call)));
 			}
 
+			if (b.parent_symbol is Method) {
+				// parameters are captured with the top-level block of the method
+				foreach (var param in ((Method) b.parent_symbol).get_parameters ()) {
+					if (param.captured) {
+						data.add_field (param.parameter_type.get_cname (), get_variable_cname (param.name));
+						cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), new CCodeIdentifier (get_variable_cname (param.name)))));
+
+						if (param.parameter_type is DelegateType) {
+							data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
+							cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
+						}
+					}
+				}
+			}
+
 			var data_free = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 			data_free.add_argument (new CCodeIdentifier (struct_name));
 			data_free.add_argument (new CCodeIdentifier ("data"));
@@ -1856,6 +1871,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
 					var lhs_delegate_target = get_variable_cexpression (get_delegate_target_cname (get_variable_cname (local.name)));
+					if (local.captured) {
+						var block = (Block) local.parent_symbol;
+						lhs_delegate_target = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (local.name));
+					}
 					var rhs_delegate_target = get_delegate_target_cexpression (local.initializer);
 					ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
 				

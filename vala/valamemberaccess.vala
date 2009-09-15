@@ -427,6 +427,14 @@ public class Vala.MemberAccess : Expression {
 				block.captured = true;
 				analyzer.current_method.closure = true;
 			}
+		} else if (member is FormalParameter) {
+			var param = (FormalParameter) member;
+			var m = param.parent_symbol as Method;
+			if (m != null && m != analyzer.current_method) {
+				param.captured = true;
+				m.body.captured = true;
+				analyzer.current_method.closure = true;
+			}
 		} else if (member is Field) {
 			var f = (Field) member;
 			access = f.access;

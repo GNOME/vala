@@ -150,16 +150,22 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 		} else if (delegate_expr.symbol_reference != null) {
 			if (delegate_expr.symbol_reference is FormalParameter) {
 				var param = (FormalParameter) delegate_expr.symbol_reference;
-				CCodeExpression target_expr = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name)));
-				if (param.direction != ParameterDirection.IN) {
-					// accessing argument of out/ref param
-					target_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_expr);
-				}
-				if (is_out) {
-					// passing array as out/ref
-					return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
+				if (param.captured) {
+					// captured variables are stored on the heap
+					var block = ((Method) param.parent_symbol).body;
+					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (param.name));
 				} else {
-					return target_expr;
+					CCodeExpression target_expr = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name)));
+					if (param.direction != ParameterDirection.IN) {
+						// accessing argument of out/ref param
+						target_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_expr);
+					}
+					if (is_out) {
+						// passing array as out/ref
+						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
+					} else {
+						return target_expr;
+					}
 				}
 			} else if (delegate_expr.symbol_reference is LocalVariable) {
 				var local = (LocalVariable) delegate_expr.symbol_reference;
@@ -337,7 +343,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 		var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 
 		int i = 0;
-		if (m.binding == MemberBinding.INSTANCE) {
+		if (m.binding == MemberBinding.INSTANCE || m.closure) {
 			CCodeExpression arg;
 			if (d.has_target) {
 				arg = new CCodeIdentifier ("self");
