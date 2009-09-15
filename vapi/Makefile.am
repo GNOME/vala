@@ -42,6 +42,7 @@ dist_vapi_DATA = \
 	gnome-desktop-2.0.vapi \
 	gnome-keyring-1.vapi \
 	gnome-vfs-2.0.vapi \
+	gnutls.vapi \
 	gobject-2.0.vapi \
 	goocanvas.deps \
 	goocanvas.vapi \
