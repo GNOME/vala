@@ -6,6 +6,7 @@ vala-1.0.vapi: ../gee/gee.vapi ../ccode/ccode.vapi ../vala/vala.vapi ../codegen/
 	cat $^ > $@
 
 dist_vapi_DATA = \
+	alsa.vapi \
 	atk.vapi \
 	bzlib.vapi \
 	cairo.vapi \
