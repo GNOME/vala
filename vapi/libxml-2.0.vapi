@@ -719,11 +719,13 @@ namespace Xml {
 	[Compact]
 	[CCode (cname = "xmlNs", cheader_filename = "libxml/tree.h")]
 	public class Ns {
-		public Ns next;
+		[CCode (cname = "xmlNewNs")]
+		public static Ns* create (Xml.Node* node, string href, string prefix);
+		public Ns* next;
 		public ElementType type;
 		public string href;
 		public string prefix;
-		public Doc context;
+		public Doc* context;
 	}
 
 	[Compact]
