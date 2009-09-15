@@ -1248,11 +1248,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		var prop = (Property) acc.prop;
 
-		bool returns_real_struct = prop.property_type.is_real_struct_type ();
+		bool returns_real_struct = acc.readable && prop.property_type.is_real_struct_type ();
 
 
 		CCodeFormalParameter cvalueparam;
 		if (returns_real_struct) {
+			cvalueparam = new CCodeFormalParameter ("result", acc.value_type.get_cname () + "*");
+		} else if (!acc.readable && prop.property_type.is_real_struct_type ()) {
 			cvalueparam = new CCodeFormalParameter ("value", acc.value_type.get_cname () + "*");
 		} else {
 			cvalueparam = new CCodeFormalParameter ("value", acc.value_type.get_cname ());
@@ -1310,7 +1312,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		var prop = (Property) acc.prop;
 
-		bool returns_real_struct = prop.property_type.is_real_struct_type ();
+		bool returns_real_struct = acc.readable && prop.property_type.is_real_struct_type ();
 
 		acc.accept_children (codegen);
 
@@ -1345,6 +1347,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 		CCodeFormalParameter cvalueparam;
 		if (returns_real_struct) {
+			cvalueparam = new CCodeFormalParameter ("result", acc.value_type.get_cname () + "*");
+		} else if (!acc.readable && prop.property_type.is_real_struct_type ()) {
 			cvalueparam = new CCodeFormalParameter ("value", acc.value_type.get_cname () + "*");
 		} else {
 			cvalueparam = new CCodeFormalParameter ("value", acc.value_type.get_cname ());
@@ -1400,7 +1404,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				var vcall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (vcast, "get_%s".printf (prop.name)));
 				vcall.add_argument (new CCodeIdentifier ("self"));
 				if (returns_real_struct) {
-					vcall.add_argument (new CCodeIdentifier ("value"));
+					vcall.add_argument (new CCodeIdentifier ("result"));
 					block.add_statement (new CCodeExpressionStatement (vcall));
 				} else {
 					if (acc.value_type is ArrayType) {
@@ -1502,7 +1506,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				function.block.prepend_statement (cdecl);
 			}
 
-			if (acc.readable) {
+			if (acc.readable && !returns_real_struct) {
 				var cdecl = new CCodeDeclaration (acc.value_type.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
 				function.block.prepend_statement (cdecl);
@@ -1516,10 +1520,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			if (prop.binding == MemberBinding.INSTANCE && !is_virtual) {
 				CCodeStatement check_stmt;
-				if (returns_real_struct) {
+				if (!acc.readable || returns_real_struct) {
 					check_stmt = create_property_type_check_statement (prop, false, t, true, "self");
 				} else {
-					check_stmt = create_property_type_check_statement (prop, acc.readable, t, true, "self");
+					check_stmt = create_property_type_check_statement (prop, true, t, true, "self");
 				}
 				if (check_stmt != null) {
 					function.block.prepend_statement (check_stmt);
@@ -2605,7 +2609,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			var cfrag = new CCodeFragment ();
 
 			// assign method result to `result'
-			cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), (CCodeExpression) stmt.return_expression.ccodenode)));
+			CCodeExpression result_lhs = new CCodeIdentifier ("result");
+			if (current_return_type.is_real_struct_type ()) {
+				result_lhs = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, result_lhs);
+			}
+			cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (result_lhs, (CCodeExpression) stmt.return_expression.ccodenode)));
 
 			// free local variables
 			append_local_free (current_symbol, cfrag);
@@ -2617,13 +2625,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				}
 			}
 
-			// Property getters of non simple structs shall return the struct value as out parameter,
-			// therefore replace any return statement with an assignment statement to the out formal
-			// paramenter and insert an empty return statement afterwards.
-			if (current_property_accessor != null &&
-			    current_property_accessor.readable &&
-			    current_property_accessor.prop.property_type.is_real_struct_type()) {
-				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("*value"), new CCodeIdentifier ("result"))));
+			// structs are returned via out parameter
+			if (current_return_type.is_real_struct_type()) {
 				cfrag.append (new CCodeReturnStatement ());
 			} else {
 				cfrag.append (new CCodeReturnStatement (new CCodeIdentifier ("result")));

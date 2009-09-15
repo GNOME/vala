@@ -222,22 +222,15 @@ internal class Vala.GTypeModule : GErrorModule {
 
 			var t = (ObjectTypeSymbol) prop.parent_symbol;
 
-			bool returns_real_struct = prop.property_type.is_real_struct_type ();
-
 			var this_type = new ObjectType (t);
 			var cselfparam = new CCodeFormalParameter ("self", this_type.get_cname ());
-			CCodeFormalParameter cvalueparam;
-			if (returns_real_struct) {
-				cvalueparam = new CCodeFormalParameter ("value", prop.property_type.get_cname () + "*");
-			} else {
-				cvalueparam = new CCodeFormalParameter ("value", prop.property_type.get_cname ());
-			}
 
 			if (prop.get_accessor != null) {
 				var vdeclarator = new CCodeFunctionDeclarator ("get_%s".printf (prop.name));
 				vdeclarator.add_parameter (cselfparam);
 				string creturn_type;
-				if (returns_real_struct) {
+				if (prop.property_type.is_real_struct_type ()) {
+					var cvalueparam = new CCodeFormalParameter ("result", prop.property_type.get_cname () + "*");
 					vdeclarator.add_parameter (cvalueparam);
 					creturn_type = "void";
 				} else {
@@ -256,6 +249,13 @@ internal class Vala.GTypeModule : GErrorModule {
 				type_struct.add_declaration (vdecl);
 			}
 			if (prop.set_accessor != null) {
+				CCodeFormalParameter cvalueparam;
+				if (prop.property_type.is_real_struct_type ()) {
+					cvalueparam = new CCodeFormalParameter ("value", prop.property_type.get_cname () + "*");
+				} else {
+					cvalueparam = new CCodeFormalParameter ("value", prop.property_type.get_cname ());
+				}
+
 				var vdeclarator = new CCodeFunctionDeclarator ("set_%s".printf (prop.name));
 				vdeclarator.add_parameter (cselfparam);
 				vdeclarator.add_parameter (cvalueparam);

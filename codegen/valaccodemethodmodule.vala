@@ -75,12 +75,22 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 				// in Vala they have no return type
 				creturn_type = new ObjectType (cl);
 			}
+		} else if (m.return_type.is_real_struct_type ()) {
+			// structs are returned via out parameter
+			creturn_type = new VoidType ();
 		}
 		cfunc.return_type = get_creturn_type (m, creturn_type.get_cname ());
 
 		generate_type_declaration (m.return_type, decl_space);
 
-		if (!m.no_array_length && m.return_type is ArrayType) {
+		if (m.return_type.is_real_struct_type ()) {
+			// structs are returned via out parameter
+			var cparam = new CCodeFormalParameter ("result", m.return_type.get_cname () + "*");
+			cparam_map.set (get_param_pos (-3), cparam);
+			if (carg_map != null) {
+				carg_map.set (get_param_pos (-3), get_variable_cexpression (cparam.name));
+			}
+		} else if (!m.no_array_length && m.return_type is ArrayType) {
 			// return array length if appropriate
 			var array_type = (ArrayType) m.return_type;
 
@@ -222,7 +232,11 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			}
 		}
 
-		var creturn_type = current_return_type;
+		var creturn_type = m.return_type;
+		if (m.return_type.is_real_struct_type ()) {
+			// structs are returned via out parameter
+			creturn_type = new VoidType ();
+		}
 
 		if (m.binding == MemberBinding.CLASS || m.binding == MemberBinding.STATIC) {
 			in_static_or_class_context = true;
@@ -438,7 +452,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					}
 				}
 
-				if (!(m.return_type is VoidType) && !m.coroutine) {
+				if (!(m.return_type is VoidType) && !m.return_type.is_real_struct_type () && !m.coroutine) {
 					var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
 					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
 					cinit.append (cdecl);

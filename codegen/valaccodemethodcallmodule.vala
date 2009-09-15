@@ -553,6 +553,9 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			}
 		}
 
+		// structs are returned via out parameter
+		bool return_result_via_out_param = itype.get_return_type ().is_real_struct_type ();
+
 		// pass address for the return value of non-void signals without emitter functions
 		if (itype is SignalType && !(itype.get_return_type () is VoidType)) {
 			var sig = ((SignalType) itype).signal_symbol;
@@ -560,19 +563,23 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			if (ma != null && ma.inner is BaseAccess && sig.is_virtual) {
 				// normal return value for base access
 			} else if (!sig.has_emitter) {
-				var temp_var = get_temp_variable (itype.get_return_type ());
-				var temp_ref = get_variable_cexpression (temp_var.name);
-
-				temp_vars.insert (0, temp_var);
-
-				out_arg_map.set (get_param_pos (-1, true), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
-			
-				var ccomma = new CCodeCommaExpression ();
-				ccomma.append_expression ((CCodeExpression) ccall_expr);
-				ccomma.append_expression ((CCodeExpression) temp_ref);
-
-				ccall_expr = ccomma;
+				return_result_via_out_param = true;
 			}
+		}
+
+		if (return_result_via_out_param) {
+			var temp_var = get_temp_variable (itype.get_return_type ());
+			var temp_ref = get_variable_cexpression (temp_var.name);
+
+			temp_vars.insert (0, temp_var);
+
+			out_arg_map.set (get_param_pos (-3, true), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.append_expression ((CCodeExpression) ccall_expr);
+			ccomma.append_expression ((CCodeExpression) temp_ref);
+
+			ccall_expr = ccomma;
 		}
 
 		// append C arguments in the right order
