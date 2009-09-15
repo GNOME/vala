@@ -22,6 +22,7 @@ TESTS = \
 	basic-types/pointers.test \
 	namespaces.test \
 	methods/lambda.test \
+	methods/closures.test \
 	control-flow/break.test \
 	control-flow/expressions-conditional.test \
 	control-flow/for.test \
