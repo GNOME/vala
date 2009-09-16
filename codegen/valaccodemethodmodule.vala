@@ -492,9 +492,12 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 				}
 
 				if (!(m.return_type is VoidType) && !m.return_type.is_real_struct_type () && !m.coroutine) {
-					var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
-					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
-					cinit.append (cdecl);
+					// do not declare result variable if exit block is known to be unreachable
+					if (m.exit_block == null || m.exit_block.get_predecessors ().size > 0) {
+						var cdecl = new CCodeDeclaration (m.return_type.get_cname ());
+						cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+						cinit.append (cdecl);
+					}
 				}
 
 				if (inner_error) {

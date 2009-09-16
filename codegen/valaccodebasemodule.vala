@@ -1517,9 +1517,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			}
 
 			if (acc.readable && !returns_real_struct) {
-				var cdecl = new CCodeDeclaration (acc.value_type.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
-				function.block.prepend_statement (cdecl);
+				// do not declare result variable if exit block is known to be unreachable
+				if (acc.exit_block == null || acc.exit_block.get_predecessors ().size > 0) {
+					var cdecl = new CCodeDeclaration (acc.value_type.get_cname ());
+					cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
+					function.block.prepend_statement (cdecl);
+				}
 			}
 
 			if (current_method_inner_error) {
