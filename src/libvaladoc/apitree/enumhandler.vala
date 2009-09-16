@@ -82,7 +82,7 @@ public interface Valadoc.EnumHandler : Basic {
 		this.enums.add( tmp );
 	}
 
-	protected void parse_enum_comments ( Valadoc.Parser docparser ) {
+	protected void parse_enum_comments ( DocumentationParser docparser ) {
 		foreach ( Enum en in this.enums ) {
 			en.parse_comments ( docparser );
 		}

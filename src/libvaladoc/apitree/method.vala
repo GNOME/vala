@@ -85,18 +85,12 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 		return (m.vmethod == this.vmethod);
 	}
 
-	internal void parse_comment (Valadoc.Parser docparser) {
+	internal void parse_comment (DocumentationParser docparser) {
 		if (this.documentation != null)
 			return ;
 
 		if (this.vcomment == null)
 			return ;
-
-		if (this.base_method != null && docparser.is_inherit_doc (this)) {
-			this.base_method.parse_comment (docparser);
-			this.documentation = this.base_method.documentation;
-			return ;
-		}
 
 		this.parse_comment_helper (docparser);
 	}

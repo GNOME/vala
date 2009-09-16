@@ -74,7 +74,7 @@ public abstract class Valadoc.DocumentedElement : Basic, Documentation {
 		get; set;
 	}
 
-	public DocumentationTree? documentation {
+	public Content.Comment? documentation {
 		protected set;
 		get;
 	}
@@ -120,7 +120,7 @@ public abstract class Valadoc.DocumentedElement : Basic, Documentation {
 		return GLib.Path.get_basename ( path );
 	}
 
-	protected void parse_comment_helper ( Valadoc.Parser docparser ) {
+	protected void parse_comment_helper ( DocumentationParser docparser ) {
 		this.documentation = docparser.parse ( this );
 	}
 

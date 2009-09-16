@@ -1,0 +1,48 @@
+*
+	 * This is a stupid {@dumb} ''toto'' //''documentation''// comment
+	 * for everything I didn't comment until now
+	 *
+	 * __Another__ description //line//
+	 *
+	 * Yet another __description__ line, but this one __lasts__
+	 * along some [[http://live.gnome.org/valadoc/|The Valadoc Website]]
+	 * {{./img/an_image.png|An image}}
+	 * //lines//
+	 *
+	 * )) A right-aligned paragraph+ {@link AType} that continues at the
+	 * next line
+	 *
+	 * )( Center-aligned stuff
+	 *
+	 * {@inheritDoc}
+	 *
+	 * {{{
+	 *	if (toto) {
+	 *		do_bad_stuff (my_variable++);
+	 *	}
+	 * }}}
+	 *  * A list item
+	 *  * Another list item
+	 *    . No bullet
+	 *  * A list item
+	 *    * Another list item
+	 *
+	 * ||<header-3> Joint Header Cell ||
+	 * ||<header> Joint Cell || Cell3 ||
+	 * || Cell1 || <|2> Joint Cell ||
+	 *
+	 * == Header 2 ==
+	 * === Header 3 ===
+	 * One can write immediately after headers
+	 * 
+	 * ==== Header 4 ====
+	 *  A. Mixed with ordered items
+	 *    1. Another ordered items
+	 *
+	 * And some other data
+	 *
+	 * @param test a test parameter
+	 *             that continues here
+	 * @return the value it returns
+	 * 				and this is the @@last line
+	 

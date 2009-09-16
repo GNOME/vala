@@ -113,18 +113,12 @@ public class Valadoc.Property : DocumentedElement, SymbolAccessibility, ReturnTy
 		this.set_return_type_references ( );
 	}
 
-	public void parse_comment (Valadoc.Parser docparser) {
+	public void parse_comment (DocumentationParser docparser) {
 		if (this.documentation != null)
 			return ;
 
 		if (this.vcomment == null)
 			return ;
-
-		if (this.base_property != null && docparser.is_inherit_doc (this)) {
-			this.base_property.parse_comment (docparser);
-			this.documentation = this.base_property.documentation;
-			return ;
-		}
 
 		this.parse_comment_helper (docparser);
 	}

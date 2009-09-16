@@ -156,18 +156,12 @@ public class Valadoc.Struct : DocumentedElement, SymbolAccessibility, Visitable,
 		langlet.write_struct (this, ptr);
 	}
 
-	internal void parse_comments (Valadoc.Parser docparser) {
+	internal void parse_comments (DocumentationParser docparser) {
 		if (this.documentation != null)
 			return ;
 
 		if (this.vcomment != null) {
-			if ( docparser.is_inherit_doc (this) && this.base_type != null) {
-				((Valadoc.Struct)this.base_type).parse_comments (docparser);
-				this.documentation = this.base_type.documentation;
-			}
-			else {
-				this.parse_comment_helper (docparser);
-			}
+			this.parse_comment_helper (docparser);
 		}
 
 		this.parse_construction_method_comments (docparser);

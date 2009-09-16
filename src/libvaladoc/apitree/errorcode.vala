@@ -47,7 +47,7 @@ public class Valadoc.ErrorCode : DocumentedElement {
 		langlet.write_error_code ( this, ptr );
 	}
 
-	public void parse_comment ( Valadoc.Parser docparser ) {
+	public void parse_comment ( DocumentationParser docparser ) {
 		this.parse_comment_helper ( docparser );
 	}
 

@@ -64,7 +64,7 @@ public interface Valadoc.MethodHandler : Basic {
 		}
 	}
 
-	internal void parse_method_comments ( Valadoc.Parser docparser ) {
+	internal void parse_method_comments ( DocumentationParser docparser ) {
 		foreach ( Method m in this.methods ) {
 			m.parse_comment ( docparser );
 		}

@@ -90,7 +90,7 @@ public interface Valadoc.FieldHandler : Basic {
 		}
 	}
 
-	internal void parse_field_comments ( Valadoc.Parser docparser ) {
+	internal void parse_field_comments ( DocumentationParser docparser ) {
 		foreach ( Field field in this.fields ) {
 			field.parse_comment ( docparser );
 		}

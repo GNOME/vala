@@ -82,7 +82,7 @@ public interface Valadoc.InterfaceHandler : Basic {
 		}
 	}
 
-	protected void parse_interface_comments ( Valadoc.Parser docparser ) {
+	protected void parse_interface_comments ( DocumentationParser docparser ) {
 		foreach ( Interface iface in this.interfaces ) {
 			iface.parse_comments ( docparser );
 		}

@@ -247,7 +247,7 @@ public class Valadoc.Namespace : DocumentedElement, MethodHandler, FieldHandler,
 		this.set_enum_type_references ();
 	}
 
-	internal void parse_comments (Valadoc.Parser docparser) {
+	internal void parse_comments (DocumentationParser docparser) {
 		this.parse_comment_helper (docparser);
 		this.parse_enum_comments (docparser);
 		this.parse_field_comments (docparser);

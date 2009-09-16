@@ -89,7 +89,7 @@ public interface Valadoc.SignalHandler : Basic {
 		}
 	}
 
-	internal void parse_signal_comments ( Valadoc.Parser docparser ) {
+	internal void parse_signal_comments ( DocumentationParser docparser ) {
 		foreach ( Signal sig in this.signals ) {
 			sig.parse_comment ( docparser );
 		}

@@ -75,7 +75,7 @@ public interface Valadoc.ConstructionMethodHandler : Basic, MethodHandler {
 		return lst.read_only_view;
 	}
 
-	protected void parse_construction_method_comments ( Valadoc.Parser docparser ) {
+	protected void parse_construction_method_comments ( DocumentationParser docparser ) {
 		foreach ( Method cm in this.construction_methods ) {
 			cm.parse_comment ( docparser );
 		}

@@ -130,7 +130,7 @@ public interface Valadoc.NamespaceHandler : Basic {
 		}
 	}
 
-	internal void parse_namespace_comments ( Valadoc.Parser docparser ) {
+	internal void parse_namespace_comments ( DocumentationParser docparser ) {
 		foreach ( Namespace ns in this.namespaces ){
 			ns.parse_comments ( docparser );
 		}

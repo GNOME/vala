@@ -90,7 +90,7 @@ public class Valadoc.Delegate : DocumentedElement, SymbolAccessibility, Visitabl
 		this.add_exception_list ( vexceptionlst );
 	}
 
-	internal void parse_comment ( Valadoc.Parser docparser ) {
+	internal void parse_comment ( DocumentationParser docparser ) {
 		this.parse_comment_helper ( docparser );
 	}
 

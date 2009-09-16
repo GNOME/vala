@@ -84,7 +84,7 @@ public interface Valadoc.PropertyHandler : Basic {
 		return lst.read_only_view;
 	}
 
-	protected void parse_property_comments ( Valadoc.Parser docparser ) {
+	protected void parse_property_comments ( DocumentationParser docparser ) {
 		foreach ( Property prop in this.properties ) {
 			prop.parse_comment ( docparser );
 		}

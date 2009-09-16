@@ -134,7 +134,7 @@ public class Valadoc.Enum : DocumentedElement, SymbolAccessibility, Visitable, M
 		return this.en_values.read_only_view;
 	}
 
-	internal void parse_comments ( Valadoc.Parser docparser ) {
+	internal void parse_comments ( DocumentationParser docparser ) {
 		this.parse_comment_helper ( docparser );
 
 		foreach ( EnumValue enval in this.en_values ) {

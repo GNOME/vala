@@ -246,7 +246,7 @@ public class Valadoc.Interface : DocumentedElement, SymbolAccessibility, Visitab
 		langlet.write_interface ( this, ptr );
 	}
 
-	internal void parse_comments ( Valadoc.Parser docparser ) {
+	internal void parse_comments ( DocumentationParser docparser ) {
 		this.parse_comment_helper ( docparser );
 		this.parse_delegate_comments ( docparser );
 		this.parse_property_comments ( docparser );

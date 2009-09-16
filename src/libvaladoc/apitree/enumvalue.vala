@@ -43,7 +43,7 @@ public class Valadoc.EnumValue: DocumentedElement {
 		return ( this.venval == venval );
 	}
 
-	public void parse_comment ( Valadoc.Parser docparser ) {
+	public void parse_comment ( DocumentationParser docparser ) {
 		this.parse_comment_helper ( docparser );
 	}
 

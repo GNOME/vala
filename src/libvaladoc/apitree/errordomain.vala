@@ -128,7 +128,7 @@ public class Valadoc.ErrorDomain : DocumentedElement, SymbolAccessibility, Visit
 		return null;
 	}
 
-	internal void parse_comments ( Valadoc.Parser docparser ) {
+	internal void parse_comments ( DocumentationParser docparser ) {
 		this.parse_comment_helper ( docparser );
 		this.parse_method_comments ( docparser );
 

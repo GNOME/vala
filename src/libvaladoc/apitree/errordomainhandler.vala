@@ -90,7 +90,7 @@ public interface Valadoc.ErrorDomainHandler : Basic {
 		}
 	}
 
-	protected void parse_errordomain_comments ( Valadoc.Parser docparser ) {
+	protected void parse_errordomain_comments ( DocumentationParser docparser ) {
 		foreach ( ErrorDomain errdom in this.errdoms ) {
 			errdom.parse_comments ( docparser );
 		}

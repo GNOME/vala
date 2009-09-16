@@ -26,10 +26,9 @@ libvaladoc_la_VALASOURCES = \
 	filehelper.vala \
 	langlet.vala \
 	settings.vala \
-	documentation/doctree.vala \
+	documentation/documentation.vala \
 	documentation/errorreporter.vala \
 	documentation/moduleloader.vala \
-	documentation/parser.vala \
 	documentation/wiki.vala \
 	apitree/apitree.vala \
 	apitree/array.vala \
@@ -74,12 +73,56 @@ libvaladoc_la_VALASOURCES = \
 	apitree/typeparameter.vala \
 	apitree/typereference.vala \
 	apitree/visitable.vala \
-	html/attribute.vala \
-	html/block.vala \
-	html/htmlwriter.vala \
-	html/inline.vala \
-	html-apiwriter/apiwriter.vala \
-	html-apiwriter/apiwriter-vala.vala \
+	content/block.vala \
+	content/blockcontent.vala \
+	content/comment.vala \
+	content/contentfactory.vala \
+	content/contentelement.vala \
+	content/contentrenderer.vala \
+	content/contentvisitor.vala \
+	content/embedded.vala \
+	content/headline.vala \
+	content/highlighted.vala \
+	content/inline.vala \
+	content/inlinetaglet.vala \
+	content/inlinecontent.vala \
+	content/link.vala \
+	content/list.vala \
+	content/listitem.vala \
+	content/page.vala \
+	content/paragraph.vala \
+	content/resourcelocator.vala \
+	content/sourcecode.vala \
+	content/styleattributes.vala \
+	content/symbollink.vala \
+	content/table.vala \
+	content/tablecell.vala \
+	content/taglet.vala \
+	content/text.vala \
+	parser/commentscanner.vala \
+	parser/documentationparser.vala \
+	parser/manyrule.vala \
+	parser/oneofrule.vala \
+	parser/optionalrule.vala \
+	parser/parser.vala \
+	parser/parsercallback.vala \
+	parser/rule.vala \
+	parser/scanner.vala \
+	parser/sequencerule.vala \
+	parser/sourcelocation.vala \
+	parser/stubrule.vala \
+	parser/token.vala \
+	parser/tokentype.vala \
+	parser/wikiscanner.vala \
+	taglets/tagletdeprecated.vala \
+	taglets/tagletinheritdoc.vala \
+	taglets/tagletinit.vala \
+	taglets/tagletlink.vala \
+	taglets/tagletparam.vala \
+	taglets/tagletreturn.vala \
+	taglets/tagletsee.vala \
+	taglets/tagletsince.vala \
+	taglets/tagletthrows.vala \
 	$(NULL)
 
 
@@ -98,7 +141,7 @@ libvaladocincludedir = $(includedir)/
 
 
 libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES)
-	$(VALAC) -C -H valadoc-1.0.h --pkg vala-1.0 --pkg gmodule-2.0 --vapidir ../vapi --pkg libxml-2.0 --pkg libgvc --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
+	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg vala-1.0 --pkg gmodule-2.0 --vapidir ../vapi --pkg libxml-2.0 --pkg libgvc --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
 	touch $@
 
 

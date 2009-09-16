@@ -90,7 +90,7 @@ public interface Valadoc.DelegateHandler : Basic {
 		}
 	}
 
-	public void parse_delegate_comments ( Valadoc.Parser docparser ) {
+	public void parse_delegate_comments ( DocumentationParser docparser ) {
 		foreach ( Delegate del in this.delegates ) {
 			del.parse_comment ( docparser );
 		}

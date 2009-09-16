@@ -95,7 +95,7 @@ public interface Valadoc.ClassHandler : Basic {
 		}
 	}
 
-	protected void parse_class_comments ( Valadoc.Parser docparser ) {
+	protected void parse_class_comments ( DocumentationParser docparser ) {
 		foreach ( Class cl in this.classes ) {
 			cl.parse_comments ( docparser );
 		}

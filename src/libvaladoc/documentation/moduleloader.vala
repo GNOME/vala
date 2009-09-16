@@ -29,24 +29,7 @@ public static delegate  void Valadoc.TagletRegisterFunction (ModuleLoader loader
 public class Valadoc.ModuleLoader : Object {
 	public Doclet doclet;
 
-	public Gee.HashMap<string, GLib.Type> taglets;
-	public GLib.Type bold;
-	public GLib.Type center;
-	public GLib.Type headline;
-	public GLib.Type image;
-	public GLib.Type italic;
-	public GLib.Type link;
-	public GLib.Type list;
-	public GLib.Type list_element;
-	public GLib.Type notification;
-	public GLib.Type right;
-	public GLib.Type source;
-	public GLib.Type source_inline;
-	public GLib.Type @string;
-	public GLib.Type table;
-	public GLib.Type table_cell;
-	public GLib.Type underline;
-	public GLib.Type paragraph;
+	public Gee.HashMap<string, GLib.Type> taglets = new Gee.HashMap<string, Type> (GLib.str_hash, GLib.str_equal);
 
 	private Module docletmodule;
 	private Type doclettype;
@@ -56,8 +39,11 @@ public class Valadoc.ModuleLoader : Object {
 		if ( tmp == false ) {
 			return false;
 		}
+		return true;
+	}
 
-		return this.load_taglets ( path );
+	public Content.Taglet create_taglet (string keyword) {
+		return (Content.Taglet) GLib.Object.new (taglets.get (keyword));
 	}
 
 	private bool load_doclet ( string path ) {
@@ -78,48 +64,4 @@ public class Valadoc.ModuleLoader : Object {
 		this.doclet = (Doclet)GLib.Object.new (doclettype);
 		return true;
 	}
-
-	private bool load_taglets (string fulldirpath) {
-		try {
-			taglets = new Gee.HashMap<string, Type> (GLib.str_hash, GLib.str_equal);
-			Gee.ArrayList<Module*> modules = new Gee.ArrayList<weak Module*> ( );
-
-			string pluginpath = build_filename(fulldirpath, "taglets");
-			size_t modulesuffixlen = Module.SUFFIX.size() + 1;
-
-			void* function;
-
-			GLib.Dir dir = GLib.Dir.open (pluginpath);
-
-			taglets.set ("toto", typeof (Type));
-			taglets.unset ("toto");
-
-			for (weak string entry = dir.read_name(); entry != null ; entry = dir.read_name()) {
-				if (!entry.has_suffix("." + Module.SUFFIX))
-					continue;
-
-				string tagletpath = build_filename (pluginpath, entry);
-				Module* module = Module.open (tagletpath, ModuleFlags.BIND_LAZY);
-				if (module == null) {
-					taglets = null;
-					return false;
-				}
-
-				module->symbol("register_plugin", out function);
-				Valadoc.TagletRegisterFunction tagletregisterfkt = (Valadoc.TagletRegisterFunction) function;
-				if (function == null) {
-					taglets = null;
-					return false;
-				}
-
-				tagletregisterfkt (this);
-			}
-			return true;
-		}
-		catch (FileError err) {
-			taglets = null;
-			return false;
-		}
-	}
 }
-

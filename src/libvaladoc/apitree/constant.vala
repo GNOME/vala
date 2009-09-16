@@ -55,7 +55,7 @@ public class Valadoc.Constant : DocumentedElement, SymbolAccessibility, Visitabl
 		((ReturnTypeHandler)this).set_return_type_references ( );
 	}
 
-	internal void parse_comment ( Valadoc.Parser docparser ) {
+	internal void parse_comment ( DocumentationParser docparser ) {
 		this.parse_comment_helper ( docparser );
 	}
 

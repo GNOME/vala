@@ -87,7 +87,7 @@ public interface Valadoc.ConstantHandler : Basic {
 		}
 	}
 
-	internal void parse_constant_comments ( Valadoc.Parser docparser ) {
+	internal void parse_constant_comments ( DocumentationParser docparser ) {
 		foreach ( Constant c in this.constants ) {
 			c.parse_comment ( docparser );
 		}

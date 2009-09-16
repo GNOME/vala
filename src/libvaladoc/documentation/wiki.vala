@@ -19,7 +19,10 @@
 
 
 public class Valadoc.WikiPage : Object, Documentation {
-	private Gee.ArrayList<DocElement> content;
+	public Content.Page documentation {
+		protected set;
+		get;
+	}
 
 	public string documentation_str {
 		private set;
@@ -56,31 +59,8 @@ public class Valadoc.WikiPage : Object, Documentation {
 		}
 	}
 
-	public bool parse ( Parser docparser ) {
-		docparser.parse_wikipage ( this );
-		return true;
-	}
-
-	public void add_content (Gee.ArrayList<DocElement> content) {
-		this.content = content;
-	}
-
-	public bool write (void* res) {
-		if ( this.content == null )
-			return true;
-
-		int max = this.content.size;
-		bool tmp = false;
-		int i = 0;
-
-		foreach ( DocElement tag in this.content ) {
-			tmp = tag.write ( res, max, i );
-			if ( tmp == false )
-				return false;
-
-			i++;
-		}
-
+	public bool parse (DocumentationParser docparser) {
+		documentation = docparser.parse_wikipage ( this );
 		return true;
 	}
 }
@@ -113,7 +93,7 @@ public class Valadoc.WikiPageTree : Object {
 		return null;
 	}
 
-	private void create_tree_from_path (Parser docparser, string path, string? nameoffset = null) throws GLib.FileError {
+	private void create_tree_from_path (DocumentationParser docparser, string path, string? nameoffset = null) throws GLib.FileError {
 		Dir dir = Dir.open (path);
 
 		for (string? curname = dir.read_name(); curname!=null ; curname = dir.read_name()) {
@@ -129,7 +109,7 @@ public class Valadoc.WikiPageTree : Object {
 		}
 	}
 
-	public void create_tree ( Parser docparser ) throws GLib.FileError {
+	public void create_tree ( DocumentationParser docparser ) throws GLib.FileError {
 		try {
 			weak string path = this.settings.wiki_directory;
 			if (path == null) {

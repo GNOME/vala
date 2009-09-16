@@ -149,7 +149,7 @@ public class Valadoc.Package : DocumentedElement, NamespaceHandler {
 		doclet.visit_package ( this );
 	}
 
-	internal void parse_comments ( Valadoc.Parser docparser ) {
+	internal void parse_comments ( DocumentationParser docparser ) {
 		this.parse_namespace_comments ( docparser );
 	}
 

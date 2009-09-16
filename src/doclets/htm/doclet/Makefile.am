@@ -59,5 +59,5 @@ MAINTAINERCLEANFILES =                   \
 
 
 install-data-hook:
-	cd $(libdir)/valadoc/plugins/html/ && if test -d taglets; then unlink taglets; fi && ln -s ../htmlhelpers/taglets && if test -d deps; then unlink deps; fi && ln -s ../htmlhelpers/deps 
+	cd $(libdir)/valadoc/plugins/html/ && if test -d deps; then unlink deps; fi && ln -s ../htmlhelpers/deps 
 

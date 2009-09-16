@@ -14,6 +14,7 @@ AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
 
 
+AC_SUBST(VALAFLAGS)
 
 AC_ARG_ENABLE(valadocorg, AS_HELP_STRING([--enable-valadocorg], []), enable_valadocorg=$enableval, enable_valadocorg=no)
 AM_CONDITIONAL(ENABLE_VALADOCORG, test x$enable_valadocorg = xyes)
@@ -64,7 +65,6 @@ AC_CONFIG_FILES([Makefile
                  src/doclets/htmlhelpers/Makefile
                  src/doclets/htmlhelpers/deps/Makefile
                  src/doclets/htmlhelpers/doclet/Makefile
-                 src/doclets/htmlhelpers/taglets/Makefile
                  src/doclets/htm/Makefile
                  src/doclets/htm/doclet/Makefile
                  src/doclets/valadoc.org/Makefile

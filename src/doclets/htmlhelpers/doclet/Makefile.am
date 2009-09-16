@@ -25,6 +25,7 @@ libhtmlhelpers_la_VALASOURCES = \
 	globals.vala                \
 	langlet.vala                \
 	doclet.vala                 \
+	htmlrenderer.vala                 \
 	$(NULL)
 
 

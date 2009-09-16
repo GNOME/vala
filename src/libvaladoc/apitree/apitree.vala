@@ -471,7 +471,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		}
 	}
 
-	public void parse_comments (Valadoc.Parser docparser) {
+	public void parse_comments (DocumentationParser docparser) {
 		this.wikitree = new WikiPageTree(this.reporter, this.settings);
 		wikitree.create_tree (docparser);
 

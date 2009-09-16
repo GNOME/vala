@@ -19,11 +19,16 @@
 
 
 using GLib;
-
+using Valadoc.Content;
 
 public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 	protected Valadoc.Langlet langlet;
 	protected Settings settings;
+	protected HtmlRenderer _renderer;
+
+	construct {
+		_renderer = new HtmlRenderer (this);
+	}
 
 	protected string? get_link ( DocumentedElement element, DocumentedElement? pos ) {
 		return get_html_link ( this.settings, element, pos );
@@ -86,7 +91,9 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 			if ( page.name != "index.valadoc" ) {
 				GLib.FileStream file = GLib.FileStream.open ( Path.build_filename(contentp, page.name.ndup( page.name.len()-7).replace ("/", ".")+"html"), "w" );
 				this.write_file_header ( file, css_path_wiki, this.settings.pkg_name );
-				page.write ( file );
+				_renderer.set_container (page);
+				_renderer.set_filestream (file);
+				_renderer.render (page.documentation);
 				this.write_file_footer ( file );
 			}
 		}
@@ -682,41 +689,30 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 	}
 
 	private void write_brief_description ( GLib.FileStream file, DocumentedElement element , DocumentedElement? pos ) {
-		DocumentationTree? doctree = element.documentation;
+		Comment? doctree = element.documentation;
 		if ( doctree == null )
 			return ;
 
-		Gee.Collection<DocElement> brief = doctree.get_brief ( );
-		if ( brief.size > 0 ) {
+		Gee.List<Block> description = doctree.content;
+		if ( description.size > 0 ) {
 			file.printf ( " <span class=\"%s\">- ", css_inline_navigation_brief_description );
-			int _max = brief.size;
-			int _index = 0;
 
-			foreach ( DocElement element2 in brief ) {
-				if ( element2 is InlineTaglet )
-					file.puts ( ((InlineTaglet)element2).to_string() );
-				else
-					element2.write ( file, _max, _index );
-
-				_index++;
-			}
+			_renderer.set_container (pos);
+			_renderer.set_filestream (file);
+			_renderer.render_children (description.get (0));
 
 			file.printf ( " </span>\n" );
 		}
 	}
 
 	private void write_documentation ( GLib.FileStream file, DocumentedElement element , DocumentedElement? pos ) {
-		DocumentationTree? doctree = element.documentation;
+		Comment? doctree = element.documentation;
 		if ( doctree == null )
 			return ;
 
-		Gee.Collection<DocElement> brief = doctree.get_brief ( );
-		if ( brief.size > 0 ) {
-			doctree.write_brief ( file );
-		}
-		file.printf ( "\n<br />\n" );
-		file.printf ( "\n<br />\n" );
-		doctree.write_content ( file );
+		_renderer.set_container (pos);
+		_renderer.set_filestream (file);
+		_renderer.render (doctree);
 	}
 
 	public void write_navi_packages_inline ( GLib.FileStream file, Tree tree ) {
@@ -747,7 +743,9 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 
 		WikiPage? wikiindex = (tree.wikitree == null)? null : tree.wikitree.search ( "index.valadoc" );
 		if ( wikiindex != null ) {
-			wikiindex.write ( file );
+			_renderer.set_container (null);
+			_renderer.set_filestream (file);
+			_renderer.render (wikiindex.documentation);
 		}
 
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
@@ -1357,7 +1355,9 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
 
 		if (wikipage != null) {
-			wikipage.write (file);
+			_renderer.set_container (mself);
+			_renderer.set_filestream (file);
+			_renderer.render (wikipage.documentation);
 		}
 
 		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );

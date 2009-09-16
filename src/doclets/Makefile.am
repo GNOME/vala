@@ -7,7 +7,6 @@ SUBDIRS = \
           htmlhelpers \
           htm    \
           devhelp    \
-          valadoc.org    \
           $(NULL)
 
 

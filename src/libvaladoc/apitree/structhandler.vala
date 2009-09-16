@@ -83,7 +83,7 @@ public interface Valadoc.StructHandler : Basic {
 		}
 	}
 
-	protected void parse_struct_comments ( Valadoc.Parser docparser ) {
+	protected void parse_struct_comments ( DocumentationParser docparser ) {
 		foreach ( Struct stru in this.structs ) {
 			stru.parse_comments ( docparser );
 		}
