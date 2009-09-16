@@ -109,6 +109,17 @@ namespace Linux {
     [CCode (cheader_filename = "time.h")]
     public time_t timegm (GLib.Time t);
 
+    // mremap(2)
+    [CCode (cprefix = "MREMAP_", cheader_filename = "sys/mman.h")]
+    public enum MremapFlags {
+        MAYMOVE,
+        FIXED
+    }
+
+    [CCode (cheader_filename = "sys/mman.h")]
+    public void *mremap(void *old_address, size_t old_size, size_t new_size,
+                        MremapFlags flags);
+
     /*
      * Network
      */
