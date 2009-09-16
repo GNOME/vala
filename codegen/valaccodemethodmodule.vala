@@ -246,12 +246,16 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 
 		if (m is CreationMethod) {
 			if (in_gobject_creation_method && m.body != null) {
-				var cblock = new CCodeBlock ();
-
-				// last property assignment statement
-				CodeNode last_stmt = null;
-
 				if (!((CreationMethod) m).chain_up) {
+					if (m.body.captured) {
+						Report.error (m.source_reference, "Closures are not supported in GObject-style creation methods");
+					}
+
+					var cblock = new CCodeBlock ();
+
+					// last property assignment statement
+					CodeNode last_stmt = null;
+
 					// set construct properties
 					foreach (CodeNode stmt in m.body.get_statements ()) {
 						var expr_stmt = stmt as ExpressionStatement;
@@ -278,39 +282,41 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					}
 
 					add_object_creation (cblock, ((CreationMethod) m).n_construction_params > 0 || current_class.get_type_parameters ().size > 0);
+
+					// other initialization code
+					foreach (CodeNode stmt in m.body.get_statements ()) {
+						if (last_stmt != null) {
+							if (last_stmt == stmt) {
+								last_stmt = null;
+							}
+							continue;
+						}
+						if (stmt.ccodenode is CCodeFragment) {
+							foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
+								cblock.add_statement (cstmt);
+							}
+						} else {
+							cblock.add_statement (stmt.ccodenode);
+						}
+					}
+
+					foreach (LocalVariable local in m.body.get_local_variables ()) {
+						if (!local.floating && requires_destroy (local.variable_type)) {
+							var ma = new MemberAccess.simple (local.name);
+							ma.symbol_reference = local;
+							cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
+						}
+					}
+
+					m.body.ccodenode = cblock;
 				} else {
+					var cblock = (CCodeBlock) m.body.ccodenode;
+
 					var cdeclaration = new CCodeDeclaration ("%s *".printf (((Class) current_type_symbol).get_cname ()));
 					cdeclaration.add_declarator (new CCodeVariableDeclarator ("self"));
-		
-					cblock.add_statement (cdeclaration);
-				}
 
-				// other initialization code
-				foreach (CodeNode stmt in m.body.get_statements ()) {
-					if (last_stmt != null) {
-						if (last_stmt == stmt) {
-							last_stmt = null;
-						}
-						continue;
-					}
-					if (stmt.ccodenode is CCodeFragment) {
-						foreach (CCodeNode cstmt in ((CCodeFragment) stmt.ccodenode).get_children ()) {
-							cblock.add_statement (cstmt);
-						}
-					} else {
-						cblock.add_statement (stmt.ccodenode);
-					}
+					cblock.prepend_statement (cdeclaration);
 				}
-
-				foreach (LocalVariable local in m.body.get_local_variables ()) {
-					if (!local.floating && requires_destroy (local.variable_type)) {
-						var ma = new MemberAccess.simple (local.name);
-						ma.symbol_reference = local;
-						cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
-					}
-				}
-
-				m.body.ccodenode = cblock;
 			}
 		}
 
