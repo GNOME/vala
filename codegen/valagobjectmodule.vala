@@ -189,9 +189,7 @@ internal class Vala.GObjectModule : GTypeModule {
 		cdecl.add_declarator (new CCodeVariableDeclarator ("self", ccall));
 		block.add_statement (cdecl);
 
-		cdecl = new CCodeDeclaration ("gpointer");
-		cdecl.add_declarator (new CCodeVariableDeclarator ("boxed"));
-		block.add_statement (cdecl);
+		bool boxed_declared = false;
 
 		var cswitch = new CCodeSwitchStatement (new CCodeIdentifier ("property_id"));
 		var props = cl.get_properties ();
@@ -222,6 +220,13 @@ internal class Vala.GObjectModule : GTypeModule {
 
 			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
 			if (prop.property_type.is_real_struct_type ()) {
+				if (!boxed_declared) {
+					cdecl = new CCodeDeclaration ("gpointer");
+					cdecl.add_declarator (new CCodeVariableDeclarator ("boxed"));
+					block.add_statement (cdecl);
+					boxed_declared = true;
+				}
+
 				var st = prop.property_type.data_type as Struct;
 				var struct_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 				struct_creation.add_argument (new CCodeIdentifier (st.get_cname ()));
