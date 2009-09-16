@@ -347,11 +347,12 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			generate_server_error_cases (error_block, m.get_error_types (), new CCodeIdentifier ("error"), new CCodeIdentifier ("message"), new CCodeIdentifier ("reply"));
 
 			send_reply (error_block);
-			error_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_HANDLED")));
 
 			if (m.coroutine) {
+				error_block.add_statement (new CCodeReturnStatement ());
 				ready_block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("error"), error_block));
 			} else {
+				error_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_HANDLED")));
 				block.add_statement (new CCodeIfStatement (new CCodeIdentifier ("error"), error_block));
 			}
 		}
