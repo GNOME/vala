@@ -268,10 +268,37 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		if (!(m.return_type is VoidType)) {
 			if (get_type_signature (m.return_type) == null) {
 				Report.error (m.return_type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (m.return_type.to_string ()));
+			} else if (m.return_type.is_real_struct_type ()) {
+				cdecl = new CCodeDeclaration (m.return_type.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true)));
+				out_prefragment.append (cdecl);
+
+				if (!m.coroutine) {
+					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
+				} else {
+					finish_ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
+				}
+
+				write_expression (out_postfragment, m.return_type, new CCodeIdentifier ("iter"), new CCodeIdentifier ("result"));
+
+				if (requires_destroy (m.return_type)) {
+					// keep local alive (symbol_reference is weak)
+					// space before `result' is work around to not trigger
+					// variable renaming, we really mean C identifier `result' here
+					var local = new LocalVariable (m.return_type, " result");
+					var ma = new MemberAccess.simple ("result");
+					ma.symbol_reference = local;
+					out_postfragment.append (new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier ("result"), m.return_type, ma)));
+				}
+
+				block.add_statement (new CCodeExpressionStatement (ccall));
+				if (m.coroutine) {
+					ready_block.add_statement (new CCodeExpressionStatement (finish_ccall));
+				}
 			} else {
 				cdecl = new CCodeDeclaration (m.return_type.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
-				out_postfragment.append (cdecl);
+				out_prefragment.append (cdecl);
 				if (!m.coroutine) {
 					block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
 				} else {
