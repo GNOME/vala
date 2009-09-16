@@ -1374,10 +1374,14 @@ internal class Vala.GTypeModule : GErrorModule {
 				var ciface = new CCodeIdentifier ("iface");
 
 				if (base_property.get_accessor != null) {
+					generate_property_accessor_declaration (base_property.get_accessor, source_declarations);
+
 					string cname = base_property.get_accessor.get_cname ();
 					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), new CCodeIdentifier (cname))));
 				}
 				if (base_property.set_accessor != null) {
+					generate_property_accessor_declaration (base_property.set_accessor, source_declarations);
+
 					string cname = base_property.set_accessor.get_cname ();
 					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), new CCodeIdentifier (cname))));
 				}
