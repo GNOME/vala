@@ -332,7 +332,9 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			if (!m.is_internal_symbol ()) {
 				generate_method_declaration (m, header_declarations);
 			}
-			generate_method_declaration (m, internal_header_declarations);
+			if (!m.is_private_symbol ()) {
+				generate_method_declaration (m, internal_header_declarations);
+			}
 		}
 
 		function = new CCodeFunction (m.get_real_cname ());

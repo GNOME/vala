@@ -67,7 +67,9 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		if (!edomain.is_internal_symbol ()) {
 			generate_error_domain_declaration (edomain, header_declarations);
 		}
-		generate_error_domain_declaration (edomain, internal_header_declarations);
+		if (!edomain.is_private_symbol ()) {
+			generate_error_domain_declaration (edomain, internal_header_declarations);
+		}
 
 		string quark_fun_name = edomain.get_lower_case_cprefix () + "quark";
 

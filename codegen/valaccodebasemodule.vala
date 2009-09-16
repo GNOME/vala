@@ -737,7 +737,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (!en.is_internal_symbol ()) {
 			generate_enum_declaration (en, header_declarations);
 		}
-		generate_enum_declaration (en, internal_header_declarations);
+		if (!en.is_private_symbol ()) {
+			generate_enum_declaration (en, internal_header_declarations);
+		}
 
 		if (!en.has_type_id) {
 			return;
@@ -875,7 +877,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (!c.is_internal_symbol ()) {
 			generate_constant_declaration (c, header_declarations);
 		}
-		generate_constant_declaration (c, internal_header_declarations);
+		if (!c.is_private_symbol ()) {
+			generate_constant_declaration (c, internal_header_declarations);
+		}
 	}
 
 	public void generate_field_declaration (Field f, CCodeDeclarationSpace decl_space) {
@@ -1020,7 +1024,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (!f.is_internal_symbol ()) {
 				generate_field_declaration (f, header_declarations);
 			}
-			generate_field_declaration (f, internal_header_declarations);
+			if (!f.is_private_symbol ()) {
+				generate_field_declaration (f, internal_header_declarations);
+			}
 
 			lhs = new CCodeIdentifier (f.get_cname ());
 
@@ -1338,7 +1344,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					|| acc.access == SymbolAccessibility.PROTECTED)) {
 					generate_property_accessor_declaration (acc, header_declarations);
 				}
-				generate_property_accessor_declaration (acc, internal_header_declarations);
+				if (!prop.is_private_symbol () && acc.access != SymbolAccessibility.PRIVATE) {
+					generate_property_accessor_declaration (acc, internal_header_declarations);
+				}
 			}
 		}
 

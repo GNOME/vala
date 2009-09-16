@@ -114,7 +114,9 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 		if (!d.is_internal_symbol ()) {
 			generate_delegate_declaration (d, header_declarations);
 		}
-		generate_delegate_declaration (d, internal_header_declarations);
+		if (!d.is_private_symbol ()) {
+			generate_delegate_declaration (d, internal_header_declarations);
+		}
 	}
 
 	public override string get_delegate_target_cname (string delegate_cname) {
