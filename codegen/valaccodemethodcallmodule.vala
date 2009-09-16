@@ -437,7 +437,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		/* add length argument for methods returning arrays */
-		if (m != null && m.return_type is ArrayType) {
+		if (m != null && m.return_type is ArrayType && async_call != ccall) {
 			var array_type = (ArrayType) m.return_type;
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				if (m.array_null_terminated) {
@@ -473,7 +473,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					expr.append_array_size (new CCodeConstant ("-1"));
 				}
 			}
-		} else if (m != null && m.return_type is DelegateType) {
+		} else if (m != null && m.return_type is DelegateType && async_call != ccall) {
 			var deleg_type = (DelegateType) m.return_type;
 			var d = deleg_type.delegate_symbol;
 			if (d.has_target) {

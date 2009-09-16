@@ -1806,6 +1806,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 	public string get_variable_cname (string name) {
 		if (name[0] == '.') {
+			if (name == ".result") {
+				return "result";
+			}
 			// compiler-internal variable
 			if (!variable_name_map.contains (name)) {
 				variable_name_map.set (name, "_tmp%d_".printf (next_temp_var_id));
@@ -1816,6 +1819,14 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return "_%s_".printf (name);
 		} else {
 			return name;
+		}
+	}
+
+	public CCodeExpression get_result_cexpression (string cname = "result") {
+		if (current_method != null && current_method.coroutine) {
+			return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), cname);
+		} else {
+			return new CCodeIdentifier (cname);
 		}
 	}
 
@@ -2747,7 +2758,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				var array_type = (ArrayType) current_return_type;
 
 				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var len_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (head.get_array_length_cname ("result", dim)));
+					var len_l = get_result_cexpression (head.get_array_length_cname ("result", dim));
+					if (current_method == null || !current_method.coroutine) {
+						len_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, len_l);
+					}
 					var len_r = head.get_array_length_cexpression (stmt.return_expression, dim);
 					ccomma.append_expression (new CCodeAssignment (len_l, len_r));
 				}
@@ -2764,9 +2778,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					var ccomma = new CCodeCommaExpression ();
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), (CCodeExpression) stmt.return_expression.ccodenode));
 
-					var len_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier (get_delegate_target_cname ("result")));
-					var len_r = get_delegate_target_cexpression (stmt.return_expression);
-					ccomma.append_expression (new CCodeAssignment (len_l, len_r));
+					var target_l = get_result_cexpression (get_delegate_target_cname ("result"));
+					if (current_method == null || !current_method.coroutine) {
+						target_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_l);
+					}
+					var target_r = get_delegate_target_cexpression (stmt.return_expression);
+					ccomma.append_expression (new CCodeAssignment (target_l, target_r));
 
 					ccomma.append_expression (get_variable_cexpression (return_expr_decl.name));
 
@@ -2778,8 +2795,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			var cfrag = new CCodeFragment ();
 
 			// assign method result to `result'
-			CCodeExpression result_lhs = new CCodeIdentifier ("result");
-			if (current_return_type.is_real_struct_type ()) {
+			CCodeExpression result_lhs = get_result_cexpression ();
+			if (current_return_type.is_real_struct_type () && (current_method == null || !current_method.coroutine)) {
 				result_lhs = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, result_lhs);
 			}
 			cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (result_lhs, (CCodeExpression) stmt.return_expression.ccodenode)));
@@ -2794,11 +2811,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				}
 			}
 
-			// structs are returned via out parameter
-			if (current_return_type.is_real_struct_type()) {
-				cfrag.append (new CCodeReturnStatement ());
-			} else {
-				cfrag.append (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+			if (current_method == null || !current_method.coroutine) {
+				// structs are returned via out parameter
+				if (current_return_type.is_real_struct_type()) {
+					cfrag.append (new CCodeReturnStatement ());
+				} else {
+					cfrag.append (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+				}
 			}
 
 			stmt.ccodenode = cfrag;

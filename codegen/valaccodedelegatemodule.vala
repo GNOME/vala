@@ -155,9 +155,9 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				if (param.captured) {
 					// captured variables are stored on the heap
 					var block = ((Method) param.parent_symbol).body;
-					return new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (param.name));
+					return new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (get_variable_cname (param.name)));
 				} else if (current_method != null && current_method.coroutine) {
-					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (param.name));
+					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (get_variable_cname (param.name)));
 				} else {
 					CCodeExpression target_expr = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name)));
 					if (param.direction != ParameterDirection.IN) {
@@ -176,11 +176,11 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				if (local.captured) {
 					// captured variables are stored on the heap
 					var block = (Block) local.parent_symbol;
-					return new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (local.name));
+					return new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (get_variable_cname (local.name)));
 				} else if (current_method != null && current_method.coroutine) {
-					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (local.name));
+					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (get_variable_cname (local.name)));
 				} else {
-					var target_expr = new CCodeIdentifier (get_delegate_target_cname (local.name));
+					var target_expr = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (local.name)));
 					if (is_out) {
 						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
 					} else {
