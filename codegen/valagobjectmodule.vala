@@ -412,10 +412,11 @@ internal class Vala.GObjectModule : GTypeModule {
 	public override void visit_constructor (Constructor c) {
 		bool old_method_inner_error = current_method_inner_error;
 		current_method_inner_error = false;
-		in_constructor = true;
 
 		if (c.binding == MemberBinding.CLASS || c.binding == MemberBinding.STATIC) {
 			in_static_or_class_context = true;
+		} else {
+			in_constructor = true;
 		}
 		c.accept_children (codegen);
 		in_static_or_class_context = false;
