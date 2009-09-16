@@ -210,10 +210,14 @@ internal class Vala.GObjectModule : GTypeModule {
 				var base_type = (Class) prop.base_property.parent_symbol;
 				prefix = base_type.get_lower_case_cname (null);
 				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
+
+				generate_property_accessor_declaration (prop.base_property.get_accessor, source_declarations);
 			} else if (prop.base_interface_property != null) {
 				var base_type = (Interface) prop.base_interface_property.parent_symbol;
 				prefix = base_type.get_lower_case_cname (null);
 				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
+
+				generate_property_accessor_declaration (prop.base_interface_property.get_accessor, source_declarations);
 			}
 
 			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
@@ -286,10 +290,14 @@ internal class Vala.GObjectModule : GTypeModule {
 				var base_type = (Class) prop.base_property.parent_symbol;
 				prefix = base_type.get_lower_case_cname (null);
 				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
+
+				generate_property_accessor_declaration (prop.base_property.set_accessor, source_declarations);
 			} else if (prop.base_interface_property != null) {
 				var base_type = (Interface) prop.base_interface_property.parent_symbol;
 				prefix = base_type.get_lower_case_cname (null);
 				cself = transform_expression (cself, new ObjectType (cl), new ObjectType (base_type));
+
+				generate_property_accessor_declaration (prop.base_interface_property.set_accessor, source_declarations);
 			}
 
 			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (prop.get_upper_case_cname ())));
