@@ -672,7 +672,9 @@ internal class Vala.GSignalModule : GObjectModule {
 			if (sig is DynamicSignal) {
 				connect_func = head.get_dynamic_signal_connect_wrapper_name ((DynamicSignal) sig);
 			} else {
-				if (in_gobject_instance (m)) {
+				if (m.closure) {
+					connect_func = "g_signal_connect_data";
+				} else if (in_gobject_instance (m)) {
 					connect_func = "g_signal_connect_object";
 				} else {
 					connect_func = "g_signal_connect";
@@ -764,7 +766,26 @@ internal class Vala.GSignalModule : GObjectModule {
 		// third resp. sixth argument: handler
 		ccall.add_argument (new CCodeCastExpression ((CCodeExpression) handler.ccodenode, "GCallback"));
 
-		if (m.binding == MemberBinding.INSTANCE) {
+		if (m.closure) {
+			// g_signal_connect_data
+
+			var closure_block = current_symbol as Block;
+			while (closure_block != null && !closure_block.captured) {
+				closure_block = closure_block.parent_symbol as Block;
+			}
+			int block_id = get_block_id (closure_block);
+
+			// fourth argument: user_data
+			var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_ref".printf (block_id)));
+			ref_call.add_argument (get_delegate_target_cexpression (handler));
+			ccall.add_argument (new CCodeCastExpression (ref_call, "GCallback"));
+
+			// fifth argument: destroy_notify
+			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("block%d_data_unref".printf (block_id)), "GClosureNotify"));
+
+			// sixth argument: connect_flags
+			ccall.add_argument (new CCodeConstant ("0"));
+		} else if (m.binding == MemberBinding.INSTANCE) {
 			// g_signal_connect_object or g_signal_handlers_disconnect_matched
 			// or dynamic_signal_connect or dynamic_signal_disconnect
 
