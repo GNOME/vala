@@ -478,7 +478,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 								type_check.line = function.line;
 								cinit.append (type_check);
 							}
-						} else {
+						} else if (!m.coroutine) {
 							// ensure that the passed reference for output parameter is cleared
 							var a = new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (param.name)), new CCodeConstant ("NULL"));
 							var cblock = new CCodeBlock ();
