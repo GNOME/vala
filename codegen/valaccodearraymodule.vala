@@ -690,7 +690,9 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var block = new CCodeBlock ();
 
 		if (requires_copy (array_type.element_type)) {
+			var old_symbol = current_symbol;
 			var old_temp_vars = temp_vars;
+			current_symbol = null;
 
 			var cdecl = new CCodeDeclaration (array_type.get_cname ());
 			var cvardecl = new CCodeVariableDeclarator ("result");
@@ -718,6 +720,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			var cfrag = new CCodeFragment ();
 			append_temp_decl (cfrag, temp_vars);
 			block.add_statement (cfrag);
+			current_symbol = old_symbol;
 			temp_vars = old_temp_vars;
 		} else {
 			var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_memdup"));
@@ -761,7 +764,9 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		var block = new CCodeBlock ();
 
 		if (requires_copy (array_type.element_type)) {
+			var old_symbol = current_symbol;
 			var old_temp_vars = temp_vars;
+			current_symbol = null;
 
 			var idx_decl = new CCodeDeclaration ("int");
 			idx_decl.add_declarator (new CCodeVariableDeclarator ("i"));
@@ -778,6 +783,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			var cfrag = new CCodeFragment ();
 			append_temp_decl (cfrag, temp_vars);
 			block.add_statement (cfrag);
+			current_symbol = old_symbol;
 			temp_vars = old_temp_vars;
 		} else {
 			source_declarations.add_include ("string.h");
