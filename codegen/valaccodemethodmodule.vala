@@ -88,7 +88,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			var cparam = new CCodeFormalParameter ("result", m.return_type.get_cname () + "*");
 			cparam_map.set (get_param_pos (-3), cparam);
 			if (carg_map != null) {
-				carg_map.set (get_param_pos (-3), get_variable_cexpression (cparam.name));
+				carg_map.set (get_param_pos (-3), get_result_cexpression ());
 			}
 		} else if (!m.no_array_length && m.return_type is ArrayType) {
 			// return array length if appropriate
