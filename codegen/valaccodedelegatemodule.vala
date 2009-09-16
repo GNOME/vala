@@ -143,7 +143,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				closure_block = closure_block.parent_symbol as Block;
 			}
 			if (closure_block != null) {
-				return new CCodeIdentifier ("_data%d_".printf (get_block_id (closure_block)));
+				return get_variable_cexpression ("_data%d_".printf (get_block_id (closure_block)));
 			} else if (get_this_type () != null || in_constructor) {
 				return new CCodeIdentifier ("self");
 			} else {
@@ -155,7 +155,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				if (param.captured) {
 					// captured variables are stored on the heap
 					var block = ((Method) param.parent_symbol).body;
-					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (param.name));
+					return new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (param.name));
 				} else if (current_method != null && current_method.coroutine) {
 					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (param.name));
 				} else {
@@ -176,7 +176,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				if (local.captured) {
 					// captured variables are stored on the heap
 					var block = (Block) local.parent_symbol;
-					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (local.name));
+					return new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (local.name));
 				} else if (current_method != null && current_method.coroutine) {
 					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (local.name));
 				} else {

@@ -172,7 +172,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				if (param.captured) {
 					// captured variables are stored on the heap
 					var block = ((Method) param.parent_symbol).body;
-					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (get_block_id (block))), get_array_length_cname (param.name, dim));
+					return new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (param.name, dim));
 				} else if (current_method != null && current_method.coroutine) {
 					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_array_length_cname (param.name, dim));
 				} else {
@@ -201,7 +201,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				if (local.captured) {
 					// captured variables are stored on the heap
 					var block = (Block) local.parent_symbol;
-					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (get_block_id (block))), get_array_length_cname (local.name, dim));
+					return new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (local.name, dim));
 				} else if (current_method != null && current_method.coroutine) {
 					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_array_length_cname (local.name, dim));
 				} else {

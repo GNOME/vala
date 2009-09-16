@@ -1660,25 +1660,30 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			var data_alloc = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_new0"));
 			data_alloc.add_argument (new CCodeIdentifier (struct_name));
 
-			var data_decl = new CCodeDeclaration (struct_name + "*");
-			data_decl.add_declarator (new CCodeVariableDeclarator ("_data%d_".printf (block_id), data_alloc));
-			cblock.add_statement (data_decl);
+			if (current_method != null && current_method.coroutine) {
+				closure_struct.add_field (struct_name + "*", "_data%d_".printf (block_id));
+				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression ("_data%d_".printf (block_id)), data_alloc)));
+			} else {
+				var data_decl = new CCodeDeclaration (struct_name + "*");
+				data_decl.add_declarator (new CCodeVariableDeclarator ("_data%d_".printf (block_id), data_alloc));
+				cblock.add_statement (data_decl);
+			}
 
 			// initialize ref_count
-			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "ref_count"), new CCodeIdentifier ("1"))));
+			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "ref_count"), new CCodeIdentifier ("1"))));
 
 			if (parent_block != null) {
 				int parent_block_id = get_block_id (parent_block);
 
 				var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_ref".printf (parent_block_id)));
-				ref_call.add_argument (new CCodeIdentifier ("_data%d_".printf (parent_block_id)));
+				ref_call.add_argument (get_variable_cexpression ("_data%d_".printf (parent_block_id)));
 
-				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), ref_call)));
+				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), ref_call)));
 			} else if (current_method.binding == MemberBinding.INSTANCE) {
 				var ref_call = new CCodeFunctionCall (get_dup_func_expression (new ObjectType (current_class), b.source_reference));
 				ref_call.add_argument (new CCodeIdentifier ("self"));
 
-				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self"), ref_call)));
+				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "self"), ref_call)));
 			}
 
 			if (b.parent_symbol is Method) {
@@ -1686,17 +1691,17 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				foreach (var param in ((Method) b.parent_symbol).get_parameters ()) {
 					if (param.captured) {
 						data.add_field (param.parameter_type.get_cname (), get_variable_cname (param.name));
-						cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), new CCodeIdentifier (get_variable_cname (param.name)))));
+						cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_variable_cname (param.name)), new CCodeIdentifier (get_variable_cname (param.name)))));
 
 						if (param.parameter_type is ArrayType) {
 							var array_type = (ArrayType) param.parameter_type;
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								data.add_field ("gint", get_array_length_cname (get_variable_cname (param.name), dim));
-								cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim)))));
+								cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim)))));
 							}
 						} else if (param.parameter_type is DelegateType) {
 							data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
-							cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
+							cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
 						}
 					}
 				}
@@ -1764,7 +1769,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			int block_id = get_block_id (b);
 
 			var data_unref = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (block_id)));
-			data_unref.add_argument (new CCodeIdentifier ("_data%d_".printf (block_id)));
+			data_unref.add_argument (get_variable_cexpression ("_data%d_".printf (block_id)));
 			cblock.add_statement (new CCodeExpressionStatement (data_unref));
 		}
 
@@ -1890,7 +1895,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					var lhs_delegate_target = get_variable_cexpression (get_delegate_target_cname (get_variable_cname (local.name)));
 					if (local.captured) {
 						var block = (Block) local.parent_symbol;
-						lhs_delegate_target = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (local.name));
+						lhs_delegate_target = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (local.name));
 					}
 					var rhs_delegate_target = get_delegate_target_cexpression (local.initializer);
 					ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
@@ -1932,7 +1937,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		if (local.captured) {
 			if (local.initializer != null) {
-				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (get_block_id ((Block) local.parent_symbol))), get_variable_cname (local.name)), rhs)));
+				cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id ((Block) local.parent_symbol))), get_variable_cname (local.name)), rhs)));
 			}
 		} else if (current_method != null && current_method.coroutine) {
 			closure_struct.add_field (local.variable_type.get_cname (), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
@@ -2604,7 +2609,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			int block_id = get_block_id (b);
 
 			var data_unref = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (block_id)));
-			data_unref.add_argument (new CCodeIdentifier ("_data%d_".printf (block_id)));
+			data_unref.add_argument (get_variable_cexpression ("_data%d_".printf (block_id)));
 			cfrag.append (new CCodeExpressionStatement (data_unref));
 		}
 

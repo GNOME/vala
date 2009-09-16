@@ -347,7 +347,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			} else if (local.captured) {
 				// captured variables are stored on the heap
 				var block = (Block) local.parent_symbol;
-				expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name));
+				expr.ccodenode = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (local.name));
 			} else {
 				expr.ccodenode = get_variable_cexpression (local.name);
 			}
@@ -369,7 +369,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				if (p.captured) {
 					// captured variables are stored on the heap
 					var block = ((Method) p.parent_symbol).body;
-					expr.ccodenode = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (get_block_id (block))), get_variable_cname (p.name));
+					expr.ccodenode = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_variable_cname (p.name));
 				} else if (current_method != null && current_method.coroutine) {
 					// use closure
 					expr.ccodenode = get_variable_cexpression (p.name);
