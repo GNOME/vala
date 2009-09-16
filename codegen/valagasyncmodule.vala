@@ -43,6 +43,14 @@ internal class Vala.GAsyncModule : GSignalModule {
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			data.add_field (param.parameter_type.get_cname (), get_variable_cname (param.name));
+			if (param.parameter_type is ArrayType) {
+				var array_type = (ArrayType) param.parameter_type;
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					data.add_field ("gint", get_array_length_cname (get_variable_cname (param.name), dim));
+				}
+			} else if (param.parameter_type is DelegateType) {
+				data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
+			}
 		}
 
 		if (!(m.return_type is VoidType)) {
@@ -153,6 +161,14 @@ internal class Vala.GAsyncModule : GSignalModule {
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
 				asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (param.name)), new CCodeIdentifier (get_variable_cname (param.name)))));
+				if (param.parameter_type is ArrayType) {
+					var array_type = (ArrayType) param.parameter_type;
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim)))));
+					}
+				} else if (param.parameter_type is DelegateType) {
+					asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
+				}
 			}
 		}
 

@@ -1688,7 +1688,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						data.add_field (param.parameter_type.get_cname (), get_variable_cname (param.name));
 						cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), new CCodeIdentifier (get_variable_cname (param.name)))));
 
-						if (param.parameter_type is DelegateType) {
+						if (param.parameter_type is ArrayType) {
+							var array_type = (ArrayType) param.parameter_type;
+							for (int dim = 1; dim <= array_type.rank; dim++) {
+								data.add_field ("gint", get_array_length_cname (get_variable_cname (param.name), dim));
+								cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim)))));
+							}
+						} else if (param.parameter_type is DelegateType) {
 							data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
 							cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
 						}
