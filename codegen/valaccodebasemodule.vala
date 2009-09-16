@@ -1621,7 +1621,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			var free_block = new CCodeBlock ();
 
 			var data = new CCodeStruct ("_" + struct_name);
-			data.add_field ("int", "ref_count");
+			data.add_field ("int", "_ref_count_");
 			if (parent_block != null) {
 				int parent_block_id = get_block_id (parent_block);
 
@@ -1670,7 +1670,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			}
 
 			// initialize ref_count
-			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "ref_count"), new CCodeIdentifier ("1"))));
+			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_ref_count_"), new CCodeIdentifier ("1"))));
 
 			if (parent_block != null) {
 				int parent_block_id = get_block_id (parent_block);
@@ -1718,7 +1718,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			ref_fun.modifiers = CCodeModifiers.STATIC;
 			source_declarations.add_type_member_declaration (ref_fun.copy ());
 			ref_fun.block = new CCodeBlock ();
-			ref_fun.block.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_INCREMENT, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "ref_count"))));
+			ref_fun.block.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_INCREMENT, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_ref_count_"))));
 			ref_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("data")));
 			source_type_member_definition.append (ref_fun);
 
@@ -1727,7 +1727,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			unref_fun.modifiers = CCodeModifiers.STATIC;
 			source_declarations.add_type_member_declaration (unref_fun.copy ());
 			unref_fun.block = new CCodeBlock ();
-			var dec = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "ref_count")), new CCodeConstant ("0"));
+			var dec = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_ref_count_")), new CCodeConstant ("0"));
 			unref_fun.block.add_statement (new CCodeIfStatement (dec, free_block));
 			source_type_member_definition.append (unref_fun);
 		}
