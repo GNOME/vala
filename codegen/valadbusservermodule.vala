@@ -114,14 +114,16 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			ready_block.add_statement (cdecl);
 		}
 
-		var prefragment = new CCodeFragment ();
+		var in_prefragment = new CCodeFragment ();
 		var in_postfragment = new CCodeFragment ();
+		var out_prefragment = in_prefragment;
 		var out_postfragment = in_postfragment;
 
 		cdecl = new CCodeDeclaration ("DBusMessageIter");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("iter"));
 		block.add_statement (cdecl);
 		if (m.coroutine) {
+			out_prefragment = new CCodeFragment ();
 			out_postfragment = new CCodeFragment ();
 			ready_block.add_statement (cdecl);
 		}
@@ -134,7 +136,10 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			block.add_statement (cdecl);
 		}
 
-		block.add_statement (prefragment);
+		block.add_statement (in_prefragment);
+		if (m.coroutine) {
+			ready_block.add_statement (out_prefragment);
+		}
 
 		var message_signature = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_get_signature"));
 		message_signature.add_argument (new CCodeIdentifier ("message"));
@@ -142,12 +147,12 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		signature_check.add_argument (message_signature);
 		var signature_error_block = new CCodeBlock ();
 		signature_error_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("DBUS_HANDLER_RESULT_NOT_YET_HANDLED")));
-		prefragment.append (new CCodeIfStatement (signature_check, signature_error_block));
+		in_prefragment.append (new CCodeIfStatement (signature_check, signature_error_block));
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init"));
 		iter_call.add_argument (new CCodeIdentifier ("message"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("iter")));
-		prefragment.append (new CCodeExpressionStatement (iter_call));
+		in_prefragment.append (new CCodeExpressionStatement (iter_call));
 
 		cdecl = new CCodeDeclaration ("DBusMessage*");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("reply"));
@@ -182,7 +187,11 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 			cdecl = new CCodeDeclaration (owned_type.get_cname ());
 			cdecl.add_declarator (new CCodeVariableDeclarator (param.name, default_value_for_type (param.parameter_type, true)));
-			prefragment.append (cdecl);
+			if (param.direction == ParameterDirection.IN) {
+				in_prefragment.append (cdecl);
+			} else {
+				out_prefragment.append (cdecl);
+			}
 			if (type_signature == ""
 			    && param.direction == ParameterDirection.IN
 			    && param.parameter_type.data_type != null
@@ -220,10 +229,11 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 					cdecl = new CCodeDeclaration ("int");
 					cdecl.add_declarator (new CCodeVariableDeclarator (length_cname, new CCodeConstant ("0")));
-					prefragment.append (cdecl);
 					if (param.direction != ParameterDirection.IN) {
+						out_prefragment.append (cdecl);
 						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
 					} else {
+						in_prefragment.append (cdecl);
 						ccall.add_argument (new CCodeIdentifier (length_cname));
 					}
 				}
@@ -233,8 +243,8 @@ internal class Vala.DBusServerModule : DBusClientModule {
 				type_signature += get_type_signature (param.parameter_type);
 
 				var target = new CCodeIdentifier (param.name);
-				var expr = read_expression (prefragment, param.parameter_type, new CCodeIdentifier ("iter"), target);
-				prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+				var expr = read_expression (in_prefragment, param.parameter_type, new CCodeIdentifier ("iter"), target);
+				in_prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
 			} else {
 				write_expression (out_postfragment, param.parameter_type, new CCodeIdentifier ("iter"), new CCodeIdentifier (param.name));
 			}
@@ -277,8 +287,12 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 						cdecl = new CCodeDeclaration ("int");
 						cdecl.add_declarator (new CCodeVariableDeclarator (length_cname, new CCodeConstant ("0")));
-						prefragment.append (cdecl);
-						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
+						out_prefragment.append (cdecl);
+						if (!m.coroutine) {
+							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
+						} else {
+							finish_ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
+						}
 					}
 				}
 
@@ -309,14 +323,14 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			new_call.add_argument (new CCodeConstant ("2"));
 			cdecl = new CCodeDeclaration ("gpointer *");
 			cdecl.add_declarator (new CCodeVariableDeclarator ("user_data", new_call));
-			prefragment.append (cdecl);
+			in_prefragment.append (cdecl);
 
 			var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_ref"));
 			ref_call.add_argument (new CCodeIdentifier ("connection"));
-			prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("user_data[0]"), ref_call)));
+			in_prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("user_data[0]"), ref_call)));
 			ref_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_ref"));
 			ref_call.add_argument (new CCodeIdentifier ("message"));
-			prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("user_data[1]"), ref_call)));
+			in_prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("user_data[1]"), ref_call)));
 
 			ccall.add_argument (new CCodeIdentifier ("user_data"));
 		}
