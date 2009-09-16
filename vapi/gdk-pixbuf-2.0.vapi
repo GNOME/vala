@@ -4,6 +4,8 @@
 namespace Gdk {
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class Pixbuf : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Pixbuf (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
 		public unowned Gdk.Pixbuf add_alpha (bool substitute_color, uchar r, uchar g, uchar b);
 		public unowned Gdk.Pixbuf apply_embedded_orientation ();
 		public void composite (Gdk.Pixbuf dest, int dest_x, int dest_y, int dest_width, int dest_height, double offset_x, double offset_y, double scale_x, double scale_y, Gdk.InterpType interp_type, int overall_alpha);
@@ -43,8 +45,6 @@ namespace Gdk {
 		public unowned uchar[] get_pixels ();
 		public int get_rowstride ();
 		public int get_width ();
-		[CCode (has_construct_function = false)]
-		public Pixbuf (Gdk.Colorspace colorspace, bool has_alpha, int bits_per_sample, int width, int height);
 		public Gdk.Pixbuf rotate_simple (Gdk.PixbufRotation angle);
 		public void saturate_and_pixelate (Gdk.Pixbuf dest, float saturation, bool pixelate);
 		public bool save (string filename, string type, ...) throws GLib.Error;
@@ -99,12 +99,12 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufLoader : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public PixbufLoader ();
 		public bool close () throws GLib.Error;
 		public unowned Gdk.PixbufAnimation get_animation ();
 		public unowned Gdk.PixbufFormat get_format ();
 		public unowned Gdk.Pixbuf get_pixbuf ();
-		[CCode (has_construct_function = false)]
-		public PixbufLoader ();
 		public void set_size (int width, int height);
 		[CCode (has_construct_function = false)]
 		public PixbufLoader.with_mime_type (string mime_type) throws GLib.Error;
@@ -118,9 +118,9 @@ namespace Gdk {
 	}
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]
 	public class PixbufSimpleAnim : Gdk.PixbufAnimation {
-		public void add_frame (Gdk.Pixbuf pixbuf);
 		[CCode (has_construct_function = false)]
 		public PixbufSimpleAnim (int width, int height, float rate);
+		public void add_frame (Gdk.Pixbuf pixbuf);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gdk-pixbuf/gdk-pixdata.h")]

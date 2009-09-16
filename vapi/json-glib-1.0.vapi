@@ -5,12 +5,12 @@ namespace Json {
 	[Compact]
 	[CCode (ref_function = "json_array_ref", unref_function = "json_array_unref", cheader_filename = "json-glib/json-glib.h")]
 	public class Array {
+		[CCode (has_construct_function = false)]
+		public Array ();
 		public void add_element (owned Json.Node node);
 		public unowned Json.Node get_element (uint index_);
 		public GLib.List<weak Json.Node> get_elements ();
 		public uint get_length ();
-		[CCode (has_construct_function = false)]
-		public Array ();
 		public void remove_element (uint index_);
 		public static unowned Json.Array sized_new (uint n_elements);
 	}
@@ -34,6 +34,8 @@ namespace Json {
 		public void* data;
 		public weak Json.Node parent;
 		public Json.NodeType type;
+		[CCode (has_construct_function = false)]
+		public Node (Json.NodeType type);
 		public Json.Node copy ();
 		public Json.Array dup_array ();
 		public Json.Object dup_object ();
@@ -47,8 +49,6 @@ namespace Json {
 		public unowned string get_string ();
 		public void get_value (out GLib.Value value);
 		public GLib.Type get_value_type ();
-		[CCode (has_construct_function = false)]
-		public Node (Json.NodeType type);
 		public void set_array (Json.Array array);
 		public void set_boolean (bool value);
 		public void set_double (double value);
@@ -63,18 +63,20 @@ namespace Json {
 	[Compact]
 	[CCode (ref_function = "json_object_ref", unref_function = "json_object_unref", cheader_filename = "json-glib/json-glib.h")]
 	public class Object {
+		[CCode (has_construct_function = false)]
+		public Object ();
 		public void add_member (string member_name, owned Json.Node node);
 		public unowned Json.Node get_member (string member_name);
 		public GLib.List<weak string> get_members ();
 		public uint get_size ();
 		public GLib.List<weak Json.Node> get_values ();
 		public bool has_member (string member_name);
-		[CCode (has_construct_function = false)]
-		public Object ();
 		public void remove_member (string member_name);
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public class Parser : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Parser ();
 		public static GLib.Quark error_quark ();
 		public uint get_current_line ();
 		public uint get_current_pos ();
@@ -82,8 +84,6 @@ namespace Json {
 		public bool has_assignment (out unowned string variable_name);
 		public bool load_from_data (string data, size_t length) throws GLib.Error;
 		public bool load_from_file (string filename) throws GLib.Error;
-		[CCode (has_construct_function = false)]
-		public Parser ();
 		public virtual signal void array_element (Json.Array array, int index_);
 		public virtual signal void array_end (Json.Array array);
 		public virtual signal void array_start ();

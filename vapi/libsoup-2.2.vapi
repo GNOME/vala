@@ -5,13 +5,13 @@ namespace Soup {
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Address : GLib.Object {
 		[CCode (has_construct_function = false)]
+		public Address (string name, uint port);
+		[CCode (has_construct_function = false)]
 		public Address.any (Soup.AddressFamily family, uint port);
 		public unowned string get_name ();
 		public unowned string get_physical ();
 		public uint get_port ();
 		public void* get_sockaddr (int len);
-		[CCode (has_construct_function = false)]
-		public Address (string name, uint port);
 		public void resolve_async (Soup.AddressCallback callback);
 		public void resolve_async_full (GLib.MainContext async_context, Soup.AddressCallback callback);
 		public uint resolve_sync ();
@@ -19,13 +19,13 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Connection : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Connection (string propname1);
 		public void connect_async (Soup.ConnectionCallback callback);
 		public uint connect_sync ();
 		public void disconnect ();
 		public bool is_in_use ();
 		public ulong last_used ();
-		[CCode (has_construct_function = false)]
-		public Connection (string propname1);
 		public void release ();
 		public void reserve ();
 		public virtual void send_request (Soup.Message req);
@@ -58,6 +58,8 @@ namespace Soup {
 		public weak GLib.HashTable response_headers;
 		public Soup.MessageStatus status;
 		public uint status_code;
+		[CCode (has_construct_function = false)]
+		public Message (string method, string uri_string);
 		public void add_chunk (Soup.Ownership owner, owned string body, uint length);
 		public void add_final_chunk ();
 		public void add_handler (Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb);
@@ -80,8 +82,6 @@ namespace Soup {
 		public void io_stop ();
 		public void io_unpause ();
 		public bool is_keepalive ();
-		[CCode (has_construct_function = false)]
-		public Message (string method, string uri_string);
 		public void read_request (Soup.Socket sock);
 		public void remove_handler (Soup.HandlerPhase phase, Soup.MessageCallbackFn handler_cb);
 		public static void remove_header (GLib.HashTable hash, string name);
@@ -117,11 +117,11 @@ namespace Soup {
 	[Compact]
 	[CCode (free_function = "soup_message_queue_destroy", cheader_filename = "libsoup/soup.h")]
 	public class MessageQueue {
+		[CCode (has_construct_function = false)]
+		public MessageQueue ();
 		public void append (Soup.Message msg);
 		public unowned Soup.Message first (Soup.MessageQueueIter iter);
 		public void free_iter (Soup.MessageQueueIter iter);
-		[CCode (has_construct_function = false)]
-		public MessageQueue ();
 		public unowned Soup.Message next (Soup.MessageQueueIter iter);
 		public unowned Soup.Message remove (Soup.MessageQueueIter iter);
 		public void remove_message (Soup.Message msg);
@@ -138,6 +138,8 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Server : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Server (string optname1, ...);
 		public void add_handler (string path, Soup.ServerAuthContext auth_ctx, Soup.ServerCallbackFn callback, Soup.ServerUnregisterFn unreg, void* data);
 		public unowned GLib.MainContext get_async_context ();
 		public unowned Soup.ServerHandler get_handler (string path);
@@ -145,8 +147,6 @@ namespace Soup {
 		public uint get_port ();
 		public unowned Soup.Protocol get_protocol ();
 		public unowned GLib.SList list_handlers ();
-		[CCode (has_construct_function = false)]
-		public Server (string optname1, ...);
 		public void quit ();
 		public void remove_handler (string path);
 		public void run ();
@@ -166,10 +166,10 @@ namespace Soup {
 		public weak Soup.ServerAuthBasic basic;
 		public weak Soup.ServerAuthDigest digest;
 		public Soup.AuthType type;
-		public bool check_passwd (string passwd);
-		public unowned string get_user ();
 		[CCode (has_construct_function = false)]
 		public ServerAuth (Soup.ServerAuthContext auth_ctx, GLib.SList auth_hdrs, Soup.Message msg);
+		public bool check_passwd (string passwd);
+		public unowned string get_user ();
 	}
 	[Compact]
 	[CCode (cheader_filename = "libsoup/soup.h")]
@@ -227,13 +227,13 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class ServerMessage : Soup.Message {
+		[CCode (has_construct_function = false)]
+		public ServerMessage (Soup.Server server);
 		public void finish ();
 		public Soup.TransferEncoding get_encoding ();
 		public unowned Soup.Server get_server ();
 		public bool is_finished ();
 		public bool is_started ();
-		[CCode (has_construct_function = false)]
-		public ServerMessage (Soup.Server server);
 		public void set_encoding (Soup.TransferEncoding encoding);
 		public void start ();
 	}
@@ -294,6 +294,8 @@ namespace Soup {
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Socket : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Socket (string optname1);
 		public static unowned Soup.Socket client_new_async (string hostname, uint port, void* ssl_creds, Soup.SocketCallback callback);
 		public static unowned Soup.Socket client_new_sync (string hostname, uint port, void* ssl_creds, uint status_ret);
 		public uint connect (Soup.Address remote_addr);
@@ -302,8 +304,6 @@ namespace Soup {
 		public unowned Soup.Address get_remote_address ();
 		public bool is_connected ();
 		public bool listen (Soup.Address local_addr);
-		[CCode (has_construct_function = false)]
-		public Socket (string optname1);
 		public Soup.SocketIOStatus read (void* buffer, size_t len, size_t nread);
 		public Soup.SocketIOStatus read_until (void* buffer, size_t len, void* boundary, size_t boundary_len, size_t nread, bool got_boundary);
 		public static unowned Soup.Socket server_new (Soup.Address local_addr, void* ssl_creds, Soup.SocketListenerCallback callback);
@@ -344,13 +344,13 @@ namespace Soup {
 		public weak Soup.Protocol protocol;
 		public weak string query;
 		public weak string user;
+		[CCode (has_construct_function = false)]
+		public Uri (string uri_string);
 		public Soup.Uri copy ();
 		public unowned Soup.Uri copy_root ();
 		public static void decode (string part);
 		public static string encode (string part, string escape_extra);
 		public bool equal (Soup.Uri uri2);
-		[CCode (has_construct_function = false)]
-		public Uri (string uri_string);
 		public unowned string to_string (bool just_path);
 		public bool uses_default_port ();
 		[CCode (has_construct_function = false)]

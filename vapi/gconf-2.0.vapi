@@ -5,12 +5,12 @@ namespace GConf {
 	[Compact]
 	[CCode (ref_function = "gconf_change_set_ref", ref_function_void = true, unref_function = "gconf_change_set_unref", type_id = "GCONF_TYPE_CHANGE_SET", cheader_filename = "gconf/gconf.h")]
 	public class ChangeSet {
+		[CCode (has_construct_function = false)]
+		public ChangeSet ();
 		public bool check_value (string key, out unowned GConf.Value value_retloc);
 		public void clear ();
 		public void @foreach (GConf.ChangeSetForeachFunc func);
 		public void* get_user_data ();
-		[CCode (has_construct_function = false)]
-		public ChangeSet ();
 		public void remove (string key);
 		public void @set (string key, GConf.Value value);
 		public void set_bool (string key, bool val);
@@ -133,6 +133,8 @@ namespace GConf {
 	public class Entry {
 		public weak string key;
 		public weak GConf.Value value;
+		[CCode (has_construct_function = false)]
+		public Entry (string key, GConf.Value val);
 		public GConf.Entry copy ();
 		public bool equal (GConf.Entry b);
 		public bool get_is_default ();
@@ -140,8 +142,6 @@ namespace GConf {
 		public unowned string get_key ();
 		public unowned string get_schema_name ();
 		public unowned GConf.Value get_value ();
-		[CCode (has_construct_function = false)]
-		public Entry (string key, GConf.Value val);
 		[CCode (has_construct_function = false)]
 		public Entry.nocopy (string key, GConf.Value val);
 		public void set_is_default (bool is_default);
@@ -160,12 +160,12 @@ namespace GConf {
 	[Compact]
 	[CCode (cheader_filename = "gconf/gconf.h")]
 	public class Listeners {
+		[CCode (has_construct_function = false)]
+		public Listeners ();
 		public uint add (string listen_point, void* listener_data, GLib.FreeFunc destroy_notify);
 		public uint count ();
 		public void @foreach (GConf.ListenersForeach callback);
 		public bool get_data (uint cnxn_id, void* listener_data_p, string location_p);
-		[CCode (has_construct_function = false)]
-		public Listeners ();
 		public void notify (string all_above, GConf.ListenersCallback callback);
 		public void remove (uint cnxn_id);
 		public void remove_if (GConf.ListenersPredicate predicate);
@@ -176,12 +176,12 @@ namespace GConf {
 		public GLib.Time mod_time;
 		public weak string mod_user;
 		public weak string schema;
+		[CCode (has_construct_function = false)]
+		public MetaInfo ();
 		[CCode (cname = "gconf_meta_info_mod_time")]
 		public GLib.Time get_mod_time ();
 		public unowned string get_mod_user ();
 		public unowned string get_schema ();
-		[CCode (has_construct_function = false)]
-		public MetaInfo ();
 		public void set_mod_time (GLib.Time mod_time);
 		public void set_mod_user (string mod_user);
 		public void set_schema (string schema_name);
@@ -189,6 +189,8 @@ namespace GConf {
 	[Compact]
 	[CCode (copy_function = "gconf_schema_copy", cheader_filename = "gconf/gconf.h")]
 	public class Schema {
+		[CCode (has_construct_function = false)]
+		public Schema ();
 		public GConf.Schema copy ();
 		public GConf.ValueType get_car_type ();
 		public GConf.ValueType get_cdr_type ();
@@ -198,8 +200,6 @@ namespace GConf {
 		public unowned string get_long_desc ();
 		public unowned string get_owner ();
 		public unowned string get_short_desc ();
-		[CCode (has_construct_function = false)]
-		public Schema ();
 		public void set_car_type (GConf.ValueType type);
 		public void set_cdr_type (GConf.ValueType type);
 		public void set_default_value (GConf.Value val);
@@ -215,6 +215,8 @@ namespace GConf {
 	[CCode (copy_function = "gconf_value_copy", cheader_filename = "gconf/gconf.h")]
 	public class Value {
 		public GConf.ValueType type;
+		[CCode (has_construct_function = false)]
+		public Value (GConf.ValueType type);
 		public int compare (GConf.Value value_b);
 		public GConf.Value copy ();
 		[CCode (has_construct_function = false)]
@@ -228,8 +230,6 @@ namespace GConf {
 		public GConf.ValueType get_list_type ();
 		public unowned GConf.Schema get_schema ();
 		public unowned string get_string ();
-		[CCode (has_construct_function = false)]
-		public Value (GConf.ValueType type);
 		public void set_bool (bool the_bool);
 		public void set_car (GConf.Value car);
 		public void set_car_nocopy (GConf.Value car);

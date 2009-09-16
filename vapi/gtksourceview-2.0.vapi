@@ -4,6 +4,8 @@
 namespace Gtk {
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceBuffer : Gtk.TextBuffer {
+		[CCode (has_construct_function = false)]
+		public SourceBuffer (Gtk.TextTagTable table);
 		public bool backward_iter_to_source_mark (Gtk.TextIter iter, string category);
 		public void begin_not_undoable_action ();
 		public unowned Gtk.SourceMark create_source_mark (string name, string category, Gtk.TextIter where);
@@ -17,8 +19,6 @@ namespace Gtk {
 		public unowned GLib.SList get_source_marks_at_iter (Gtk.TextIter iter, string category);
 		public unowned GLib.SList get_source_marks_at_line (int line, string category);
 		public unowned Gtk.SourceStyleScheme get_style_scheme ();
-		[CCode (has_construct_function = false)]
-		public SourceBuffer (Gtk.TextTagTable table);
 		public void redo ();
 		public void remove_source_marks (Gtk.TextIter start, Gtk.TextIter end, string category);
 		public void set_highlight_matching_brackets (bool highlight);
@@ -58,6 +58,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourcelanguagemanager.h")]
 	public class SourceLanguageManager : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public SourceLanguageManager ();
 		public static unowned Gtk.SourceLanguageManager get_default ();
 		public unowned Gtk.SourceLanguage get_language (string id);
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -65,8 +67,6 @@ namespace Gtk {
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[]? get_search_path ();
 		public unowned Gtk.SourceLanguage guess_language (string filename, string content_type);
-		[CCode (has_construct_function = false)]
-		public SourceLanguageManager ();
 		public void set_search_path ([CCode (array_length = false)] string[]? dirs);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] language_ids { get; }
@@ -75,15 +75,17 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceMark : Gtk.TextMark {
-		public unowned string get_category ();
 		[CCode (has_construct_function = false)]
 		public SourceMark (string name, string category);
+		public unowned string get_category ();
 		public unowned Gtk.SourceMark next (string category);
 		public unowned Gtk.SourceMark prev (string category);
 		public string category { get; construct; }
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceprintcompositor.h")]
 	public class SourcePrintCompositor : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public SourcePrintCompositor (Gtk.SourceBuffer buffer);
 		public void draw_page (Gtk.PrintContext context, int page_nr);
 		[CCode (has_construct_function = false)]
 		public SourcePrintCompositor.from_view (Gtk.SourceView view);
@@ -104,8 +106,6 @@ namespace Gtk {
 		public uint get_tab_width ();
 		public double get_top_margin (Gtk.Unit unit);
 		public Gtk.WrapMode get_wrap_mode ();
-		[CCode (has_construct_function = false)]
-		public SourcePrintCompositor (Gtk.SourceBuffer buffer);
 		public bool paginate (Gtk.PrintContext context);
 		public void set_body_font_name (string font_name);
 		public void set_bottom_margin (double margin, Gtk.Unit unit);
@@ -183,6 +183,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourcestyleschememanager.h")]
 	public class SourceStyleSchemeManager : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public SourceStyleSchemeManager ();
 		public void append_search_path (string path);
 		public void force_rescan ();
 		public static unowned Gtk.SourceStyleSchemeManager get_default ();
@@ -191,8 +193,6 @@ namespace Gtk {
 		public unowned string[] get_scheme_ids ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[] get_search_path ();
-		[CCode (has_construct_function = false)]
-		public SourceStyleSchemeManager ();
 		public void prepend_search_path (string path);
 		public void set_search_path (string path);
 		[CCode (array_length = false, array_null_terminated = true)]
@@ -202,6 +202,8 @@ namespace Gtk {
 	}
 	[CCode (cheader_filename = "gtksourceview/gtksourceview.h")]
 	public class SourceView : Gtk.TextView, Atk.Implementor, Gtk.Buildable {
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public SourceView ();
 		public bool get_auto_indent ();
 		public Gtk.SourceDrawSpacesFlags get_draw_spaces ();
 		public bool get_highlight_current_line ();
@@ -217,8 +219,6 @@ namespace Gtk {
 		public bool get_show_right_margin ();
 		public Gtk.SourceSmartHomeEndType get_smart_home_end ();
 		public uint get_tab_width ();
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public SourceView ();
 		public void set_auto_indent (bool enable);
 		public void set_draw_spaces (Gtk.SourceDrawSpacesFlags flags);
 		public void set_highlight_current_line (bool show);

@@ -4,11 +4,11 @@
 namespace Sexy {
 	[CCode (cheader_filename = "libsexy/sexy.h")]
 	public class IconEntry : Gtk.Entry, Atk.Implementor, Gtk.Buildable, Gtk.Editable, Gtk.CellEditable {
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public IconEntry ();
 		public void add_clear_button ();
 		public unowned Gtk.Image get_icon (Sexy.IconEntryPosition position);
 		public bool get_icon_highlight (Sexy.IconEntryPosition position);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public IconEntry ();
 		public void set_icon (Sexy.IconEntryPosition position, Gtk.Image? icon);
 		public void set_icon_highlight (Sexy.IconEntryPosition position, bool highlight);
 		public virtual signal void icon_pressed (int icon_pos, int button);
@@ -16,6 +16,8 @@ namespace Sexy {
 	}
 	[CCode (cheader_filename = "libsexy/sexy.h")]
 	public class SpellEntry : Gtk.Entry, Atk.Implementor, Gtk.Buildable, Gtk.Editable, Gtk.CellEditable {
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public SpellEntry ();
 		public void activate_default_languages ();
 		public bool activate_language (string lang) throws GLib.Error;
 		public void deactivate_language (string lang);
@@ -24,8 +26,6 @@ namespace Sexy {
 		public unowned GLib.SList get_languages ();
 		public bool is_checked ();
 		public bool language_is_active (string lang);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public SpellEntry ();
 		public bool set_active_languages (GLib.SList langs) throws GLib.Error;
 		public void set_checked (bool checked);
 		public virtual signal bool word_check (string word);

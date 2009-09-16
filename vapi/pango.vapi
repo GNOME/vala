@@ -49,7 +49,7 @@ namespace Pango {
 	[CCode (copy_function = "pango_attr_iterator_copy", free_function = "pango_attr_iterator_destroy", cheader_filename = "pango/pango.h")]
 	public class AttrIterator {
 		public Pango.AttrIterator copy ();
-		public unowned Pango.Attribute get (Pango.AttrType type);
+		public unowned Pango.Attribute @get (Pango.AttrType type);
 		public unowned GLib.SList get_attrs ();
 		public void get_font (Pango.FontDescription desc, out unowned Pango.Language language, GLib.SList extra_attrs);
 		public bool next ();
@@ -65,14 +65,14 @@ namespace Pango {
 	[Compact]
 	[CCode (ref_function = "pango_attr_list_ref", unref_function = "pango_attr_list_unref", type_id = "PANGO_TYPE_ATTR_LIST", cheader_filename = "pango/pango.h")]
 	public class AttrList {
+		[CCode (has_construct_function = false)]
+		public AttrList ();
 		public void change (Pango.Attribute attr);
 		public Pango.AttrList copy ();
 		public unowned Pango.AttrList filter (Pango.AttrFilterFunc func, void* data);
 		public unowned Pango.AttrIterator get_iterator ();
 		public void insert (owned Pango.Attribute attr);
 		public void insert_before (Pango.Attribute attr);
-		[CCode (has_construct_function = false)]
-		public AttrList ();
 		public void splice (Pango.AttrList other, int pos, int len);
 	}
 	[Compact]
@@ -114,6 +114,8 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Context : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Context ();
 		public Pango.Direction get_base_dir ();
 		public Pango.Gravity get_base_gravity ();
 		public unowned Pango.FontDescription get_font_description ();
@@ -126,8 +128,6 @@ namespace Pango {
 		public void list_families (Pango.FontFamily[] families);
 		public unowned Pango.Font load_font (Pango.FontDescription desc);
 		public unowned Pango.Fontset load_fontset (Pango.FontDescription desc, Pango.Language language);
-		[CCode (has_construct_function = false)]
-		public Context ();
 		public void set_base_dir (Pango.Direction direction);
 		public void set_base_gravity (Pango.Gravity gravity);
 		public void set_font_description (Pango.FontDescription desc);
@@ -143,13 +143,13 @@ namespace Pango {
 	[Compact]
 	[CCode (ref_function = "pango_coverage_ref", unref_function = "pango_coverage_unref", cheader_filename = "pango/pango.h")]
 	public class Coverage {
-		public Pango.Coverage copy ();
-		public static unowned Pango.Coverage from_bytes (uchar[] bytes);
-		public Pango.CoverageLevel get (int index_);
-		public void max (Pango.Coverage other);
 		[CCode (has_construct_function = false)]
 		public Coverage ();
-		public void set (int index_, Pango.CoverageLevel level);
+		public Pango.Coverage copy ();
+		public static unowned Pango.Coverage from_bytes (uchar[] bytes);
+		public Pango.CoverageLevel @get (int index_);
+		public void max (Pango.Coverage other);
+		public void @set (int index_, Pango.CoverageLevel level);
 		public void to_bytes (uchar[] bytes);
 	}
 	[Compact]
@@ -175,6 +175,8 @@ namespace Pango {
 	[Immutable]
 	[CCode (copy_function = "pango_font_description_copy", type_id = "PANGO_TYPE_FONT_DESCRIPTION", cheader_filename = "pango/pango.h")]
 	public class FontDescription {
+		[CCode (has_construct_function = false)]
+		public FontDescription ();
 		public bool better_match (Pango.FontDescription old_match, Pango.FontDescription new_match);
 		public Pango.FontDescription copy ();
 		public bool equal (Pango.FontDescription desc2);
@@ -191,8 +193,6 @@ namespace Pango {
 		public uint hash ();
 		public void merge (Pango.FontDescription desc_to_merge, bool replace_existing);
 		public void merge_static (Pango.FontDescription desc_to_merge, bool replace_existing);
-		[CCode (has_construct_function = false)]
-		public FontDescription ();
 		public void set_absolute_size (double size);
 		public void set_family (string family);
 		public void set_family_static (string family);
@@ -282,14 +282,14 @@ namespace Pango {
 		public int log_clusters;
 		public int num_glyphs;
 		public int space;
+		[CCode (has_construct_function = false)]
+		public GlyphString ();
 		public Pango.GlyphString copy ();
 		public void extents (Pango.Font font, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public void extents_range (int start, int end, Pango.Font font, out Pango.Rectangle ink_rect, out Pango.Rectangle logical_rect);
 		public void get_logical_widths (string text, int length, int embedding_level, int logical_widths);
 		public int get_width ();
 		public void index_to_x (string text, int length, Pango.Analysis analysis, int index_, bool trailing, int x_pos);
-		[CCode (has_construct_function = false)]
-		public GlyphString ();
 		public void set_size (int new_len);
 		public void x_to_index (string text, int length, Pango.Analysis analysis, int x_pos, int index_, int trailing);
 	}
@@ -304,9 +304,9 @@ namespace Pango {
 		public int length;
 		public int num_chars;
 		public int offset;
-		public Pango.Item copy ();
 		[CCode (has_construct_function = false)]
 		public Item ();
+		public Pango.Item copy ();
 		public unowned Pango.Item split (int split_index, int split_offset);
 	}
 	[Compact]
@@ -322,6 +322,8 @@ namespace Pango {
 	}
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Layout : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Layout (Pango.Context context);
 		public void context_changed ();
 		public Pango.Layout copy ();
 		public Pango.Alignment get_alignment ();
@@ -358,8 +360,6 @@ namespace Pango {
 		public bool is_ellipsized ();
 		public bool is_wrapped ();
 		public void move_cursor_visually (bool strong, int old_index, int old_trailing, int direction, int new_index, int new_trailing);
-		[CCode (has_construct_function = false)]
-		public Layout (Pango.Context context);
 		public void set_alignment (Pango.Alignment alignment);
 		public void set_attributes (Pango.AttrList attrs);
 		public void set_auto_dir (bool auto_dir);
@@ -459,21 +459,21 @@ namespace Pango {
 	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class ScriptIter {
-		public void get_range (out unowned string start, out unowned string end, Pango.Script script);
 		[CCode (has_construct_function = false)]
 		public ScriptIter (string text, int length);
+		public void get_range (out unowned string start, out unowned string end, Pango.Script script);
 		public bool next ();
 	}
 	[Compact]
 	[CCode (copy_function = "pango_tab_array_copy", type_id = "PANGO_TYPE_TAB_ARRAY", cheader_filename = "pango/pango.h")]
 	public class TabArray {
+		[CCode (has_construct_function = false)]
+		public TabArray (int initial_size, bool positions_in_pixels);
 		public Pango.TabArray copy ();
 		public bool get_positions_in_pixels ();
 		public int get_size ();
 		public void get_tab (int tab_index, Pango.TabAlign alignment, int location);
 		public void get_tabs (out Pango.TabAlign alignments, int locations);
-		[CCode (has_construct_function = false)]
-		public TabArray (int initial_size, bool positions_in_pixels);
 		public void resize (int new_size);
 		public void set_tab (int tab_index, Pango.TabAlign alignment, int location);
 		[CCode (has_construct_function = false)]

@@ -1307,9 +1307,9 @@ namespace Gst {
 		public static void set_property (Gst.Object object, string name, Gst.Value value);
 		public static void set_valist (Gst.Object object, string first_property_name, void* var_args);
 		[HasEmitter]
-		public virtual signal void child_added (GLib.Object child);
+		public signal void child_added (GLib.Object child);
 		[HasEmitter]
-		public virtual signal void child_removed (GLib.Object child);
+		public signal void child_removed (GLib.Object child);
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public interface ImplementsInterface : Gst.Element {
@@ -1331,7 +1331,7 @@ namespace Gst {
 		public uint get_uri_type ();
 		public abstract bool set_uri (string uri);
 		[HasEmitter]
-		public virtual signal void new_uri (string uri);
+		public signal void new_uri (string uri);
 	}
 	[CCode (type_id = "GST_TYPE_ARRAY", cheader_filename = "gst/gst.h")]
 	public struct Array {

@@ -25,12 +25,12 @@ namespace Gnome {
 	}
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public class Program : GLib.Object {
-		public static unowned Gnome.Program get ();
+		public static unowned Gnome.Program @get ();
 		public unowned string get_app_id ();
 		public unowned string get_app_version ();
 		public unowned string get_human_readable_name ();
 		public static unowned Gnome.Program init (string app_id, string app_version, Gnome.ModuleInfo module_info, [CCode (array_length_pos = 3.9)] string[] argv, ...);
-		public static unowned Gnome.Program init_paramv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, [CCode (array_length_pos = 4.9)] string[] argv, uint nparams, GLib.Parameter params);
+		public static unowned Gnome.Program init_paramv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, [CCode (array_length_pos = 4.9)] string[] argv, uint nparams, GLib.Parameter @params);
 		public static unowned Gnome.Program initv (GLib.Type type, string app_id, string app_version, Gnome.ModuleInfo module_info, [CCode (array_length_pos = 4.9)] string[] argv, string first_property_name, void* args);
 		public class uint install_property (GLib.ObjectGetPropertyFunc get_fn, GLib.ObjectSetPropertyFunc set_fn, GLib.ParamSpec pspec);
 		public unowned string locate_file (Gnome.FileDomain domain, string file_name, bool only_if_exists, GLib.SList ret_locations);

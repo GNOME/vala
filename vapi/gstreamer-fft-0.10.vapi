@@ -8,10 +8,10 @@ namespace Gst {
 		public void* cfg;
 		public bool inverse;
 		public int len;
-		public void fft (float timedata, Gst.FFTF32Complex freqdata);
-		public void inverse_fft (Gst.FFTF32Complex freqdata, float timedata);
 		[CCode (has_construct_function = false)]
 		public FFTF32 (int len, bool inverse);
+		public void fft (float timedata, Gst.FFTF32Complex freqdata);
+		public void inverse_fft (Gst.FFTF32Complex freqdata, float timedata);
 		public void window (float timedata, Gst.FFTWindow window);
 	}
 	[Compact]
@@ -26,10 +26,10 @@ namespace Gst {
 		public void* cfg;
 		public bool inverse;
 		public int len;
-		public void fft (double timedata, Gst.FFTF64Complex freqdata);
-		public void inverse_fft (Gst.FFTF64Complex freqdata, double timedata);
 		[CCode (has_construct_function = false)]
 		public FFTF64 (int len, bool inverse);
+		public void fft (double timedata, Gst.FFTF64Complex freqdata);
+		public void inverse_fft (Gst.FFTF64Complex freqdata, double timedata);
 		public void window (double timedata, Gst.FFTWindow window);
 	}
 	[Compact]
@@ -44,10 +44,10 @@ namespace Gst {
 		public void* cfg;
 		public bool inverse;
 		public int len;
-		public void fft (int16 timedata, Gst.FFTS16Complex freqdata);
-		public void inverse_fft (Gst.FFTS16Complex freqdata, int16 timedata);
 		[CCode (has_construct_function = false)]
 		public FFTS16 (int len, bool inverse);
+		public void fft (int16 timedata, Gst.FFTS16Complex freqdata);
+		public void inverse_fft (Gst.FFTS16Complex freqdata, int16 timedata);
 		public void window (int16 timedata, Gst.FFTWindow window);
 	}
 	[Compact]
@@ -62,10 +62,10 @@ namespace Gst {
 		public void* cfg;
 		public bool inverse;
 		public int len;
-		public void fft (int32 timedata, Gst.FFTS32Complex freqdata);
-		public void inverse_fft (Gst.FFTS32Complex freqdata, int32 timedata);
 		[CCode (has_construct_function = false)]
 		public FFTS32 (int len, bool inverse);
+		public void fft (int32 timedata, Gst.FFTS32Complex freqdata);
+		public void inverse_fft (Gst.FFTS32Complex freqdata, int32 timedata);
 		public void window (int32 timedata, Gst.FFTWindow window);
 	}
 	[Compact]

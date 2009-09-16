@@ -14,7 +14,9 @@ namespace Gst {
 		public weak GLib.Mutex @lock;
 		public weak GLib.Object object;
 		public weak GLib.List properties;
-		public Gst.Value get (string property_name, Gst.ClockTime timestamp);
+		[CCode (has_construct_function = false)]
+		public Controller (GLib.Object object);
+		public Gst.Value @get (string property_name, Gst.ClockTime timestamp);
 		public unowned GLib.List get_all (string property_name);
 		public unowned Gst.ControlSource get_control_source (string property_name);
 		public bool get_value_array (Gst.ClockTime timestamp, Gst.ValueArray value_array);
@@ -22,12 +24,10 @@ namespace Gst {
 		public static bool init (int argc, out unowned string argv);
 		[CCode (has_construct_function = false)]
 		public Controller.list (GLib.Object object, GLib.List list);
-		[CCode (has_construct_function = false)]
-		public Controller (GLib.Object object);
 		public bool remove_properties ();
 		public bool remove_properties_list (GLib.List list);
 		public bool remove_properties_valist (void* var_args);
-		public bool set (string property_name, Gst.ClockTime timestamp, Gst.Value value);
+		public bool @set (string property_name, Gst.ClockTime timestamp, Gst.Value value);
 		public bool set_control_source (string property_name, Gst.ControlSource csource);
 		public void set_disabled (bool disabled);
 		public bool set_from_list (string property_name, GLib.SList timedvalues);
@@ -45,11 +45,11 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h")]
 	public class InterpolationControlSource : Gst.ControlSource {
 		public weak GLib.Mutex @lock;
-		public unowned GLib.List get_all ();
-		public int get_count ();
 		[CCode (has_construct_function = false)]
 		public InterpolationControlSource ();
-		public bool set (Gst.ClockTime timestamp, Gst.Value value);
+		public unowned GLib.List get_all ();
+		public int get_count ();
+		public bool @set (Gst.ClockTime timestamp, Gst.Value value);
 		public bool set_from_list (GLib.SList timedvalues);
 		public bool set_interpolation_mode (Gst.InterpolateMode mode);
 		public bool unset (Gst.ClockTime timestamp);

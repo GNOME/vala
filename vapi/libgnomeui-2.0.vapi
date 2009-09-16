@@ -12,6 +12,8 @@ namespace Gnome {
 		public weak string prefix;
 		public weak Gtk.Widget statusbar;
 		public weak Gtk.Widget vbox;
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public App (string appname, string title);
 		public void @construct (string appname, string title);
 		public void create_menus (Gnome.UIInfo uiinfo);
 		public void create_menus_custom (Gnome.UIInfo uiinfo, Gnome.UIBuilderData uibdata);
@@ -37,8 +39,6 @@ namespace Gnome {
 		public static void install_appbar_menu_hints (Gnome.AppBar appbar, Gnome.UIInfo uiinfo);
 		public void install_menu_hints (Gnome.UIInfo uiinfo);
 		public static void install_statusbar_menu_hints (Gtk.Statusbar bar, Gnome.UIInfo uiinfo);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public App (string appname, string title);
 		public void remove_menu_range (string path, int start, int items);
 		public void remove_menus (string path, int items);
 		public void set_contents (Gtk.Widget contents);
@@ -52,6 +52,8 @@ namespace Gnome {
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class AppBar : Gtk.HBox, Atk.Implementor, Gtk.Buildable {
+		[CCode (cname = "gnome_appbar_new", type = "GtkWidget*", has_construct_function = false)]
+		public AppBar (bool has_progress, bool has_status, Gnome.PreferencesType interactivity);
 		[CCode (cname = "gnome_appbar_clear_stack")]
 		public void clear_stack ();
 		[CCode (cname = "gnome_appbar_get_progress")]
@@ -60,8 +62,6 @@ namespace Gnome {
 		public unowned string get_response ();
 		[CCode (cname = "gnome_appbar_get_status")]
 		public unowned Gtk.Widget get_status ();
-		[CCode (cname = "gnome_appbar_new", type = "GtkWidget*", has_construct_function = false)]
-		public AppBar (bool has_progress, bool has_status, Gnome.PreferencesType interactivity);
 		[CCode (cname = "gnome_appbar_pop")]
 		public void pop ();
 		[CCode (cname = "gnome_appbar_push")]
@@ -120,6 +120,8 @@ namespace Gnome {
 		public uint state;
 		public weak GLib.List static_args;
 		public weak string user_id;
+		[CCode (has_construct_function = false)]
+		public Client ();
 		public void add_static_arg ();
 		public void flush ();
 		public unowned string get_config_prefix ();
@@ -129,8 +131,6 @@ namespace Gnome {
 		public unowned string get_id ();
 		public unowned string get_previous_id ();
 		public static unowned Gnome.ModuleInfo module_info_get ();
-		[CCode (has_construct_function = false)]
-		public Client ();
 		public void request_interaction (Gnome.DialogType dialog_type, Gnome.InteractFunction function, void* data);
 		public void request_interaction_interp (Gnome.DialogType dialog_type, Gtk.CallbackMarshal function, void* data, GLib.DestroyNotify destroy);
 		public void request_phase_2 ();
@@ -164,14 +164,14 @@ namespace Gnome {
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class DateEdit : Gtk.HBox, Atk.Implementor, Gtk.Buildable {
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public DateEdit (ulong the_time, bool show_time, bool use_24_format);
 		public void @construct (ulong the_time, Gnome.DateEditFlags flags);
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public DateEdit.flags (ulong the_time, Gnome.DateEditFlags flags);
 		public int get_flags ();
 		public ulong get_initial_time ();
 		public ulong get_time ();
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public DateEdit (ulong the_time, bool show_time, bool use_24_format);
 		public void set_flags (Gnome.DateEditFlags flags);
 		public void set_popup_range (int low_hour, int up_hour);
 		public void set_time (ulong the_time);
@@ -193,6 +193,8 @@ namespace Gnome {
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class IconEntry : Gtk.VBox, Atk.Implementor, Gtk.Buildable {
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public IconEntry (string history_id, string browse_dialog_title);
 		public void @construct (string history_id, string browse_dialog_title);
 		public unowned string get_filename ();
 		[CCode (cname = "gnome_icon_entry_pick_dialog")]
@@ -200,8 +202,6 @@ namespace Gnome {
 		public unowned Gtk.Widget gnome_entry ();
 		public unowned Gtk.Widget gnome_file_entry ();
 		public unowned Gtk.Widget gtk_entry ();
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public IconEntry (string history_id, string browse_dialog_title);
 		public void set_browse_dialog_title (string browse_dialog_title);
 		public bool set_filename (string filename);
 		public void set_history_id (string history_id);
@@ -222,14 +222,14 @@ namespace Gnome {
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class IconSelection : Gtk.VBox, Atk.Implementor, Gtk.Buildable {
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public IconSelection ();
 		public void add_defaults ();
 		public void add_directory (string dir);
 		public void clear (bool not_shown);
 		public unowned Gtk.Widget get_box ();
 		public unowned Gtk.Widget get_gil ();
 		public unowned string get_icon (bool full_path);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public IconSelection ();
 		public void select_icon (string filename);
 		public void show_icons ();
 		public void stop_loading ();
@@ -237,14 +237,14 @@ namespace Gnome {
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class PasswordDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
 		public weak Gnome.PasswordDialogDetails details;
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public PasswordDialog (string dialog_title, string message, string username, string password, bool readonly_username);
 		public bool anon_selected ();
 		public unowned string get_domain ();
 		public unowned string get_new_password ();
 		public unowned string get_password ();
 		public Gnome.PasswordDialogRemember get_remember ();
 		public unowned string get_username ();
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public PasswordDialog (string dialog_title, string message, string username, string password, bool readonly_username);
 		public bool run_and_block ();
 		public void set_domain (string domain);
 		public void set_new_password (string password);
@@ -298,13 +298,13 @@ namespace Gnome {
 	}
 	[CCode (cheader_filename = "libgnomeui/libgnomeui.h")]
 	public class ThumbnailFactory : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public ThumbnailFactory (Gnome.ThumbnailSize size);
 		public bool can_thumbnail (string uri, string mime_type, ulong mtime);
 		public void create_failed_thumbnail (string uri, ulong mtime);
 		public unowned Gdk.Pixbuf generate_thumbnail (string uri, string mime_type);
 		public bool has_valid_failed_thumbnail (string uri, ulong mtime);
 		public unowned string lookup (string uri, ulong mtime);
-		[CCode (has_construct_function = false)]
-		public ThumbnailFactory (Gnome.ThumbnailSize size);
 		public void save_thumbnail (Gdk.Pixbuf thumbnail, string uri, ulong original_mtime);
 	}
 	[Compact]

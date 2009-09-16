@@ -159,11 +159,11 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class Relation : GLib.Object {
 		public Atk.RelationType relationship;
+		[CCode (has_construct_function = false)]
+		public Relation (Atk.Object[] targets, Atk.RelationType relationship);
 		public void add_target (Atk.Object target);
 		public Atk.RelationType get_relation_type ();
 		public unowned GLib.PtrArray get_target ();
-		[CCode (has_construct_function = false)]
-		public Relation (Atk.Object[] targets, Atk.RelationType relationship);
 		public bool remove_target (Atk.Object target);
 		public static Atk.RelationType type_for_name (string name);
 		public static unowned string type_get_name (Atk.RelationType type);
@@ -176,14 +176,14 @@ namespace Atk {
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class RelationSet : GLib.Object {
 		public weak GLib.PtrArray relations;
+		[CCode (has_construct_function = false)]
+		public RelationSet ();
 		public void add (Atk.Relation relation);
 		public void add_relation_by_type (Atk.RelationType relationship, Atk.Object target);
 		public bool contains (Atk.RelationType relationship);
 		public int get_n_relations ();
 		public unowned Atk.Relation get_relation (int i);
 		public unowned Atk.Relation get_relation_by_type (Atk.RelationType relationship);
-		[CCode (has_construct_function = false)]
-		public RelationSet ();
 		public void remove (Atk.Relation relation);
 	}
 	[Compact]
@@ -195,6 +195,8 @@ namespace Atk {
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public class StateSet : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public StateSet ();
 		public bool add_state (Atk.StateType type);
 		public void add_states (Atk.StateType[] types);
 		public unowned Atk.StateSet and_sets (Atk.StateSet compare_set);
@@ -202,8 +204,6 @@ namespace Atk {
 		public bool contains_state (Atk.StateType type);
 		public bool contains_states (Atk.StateType[] types);
 		public bool is_empty ();
-		[CCode (has_construct_function = false)]
-		public StateSet ();
 		public unowned Atk.StateSet or_sets (Atk.StateSet compare_set);
 		public bool remove_state (Atk.StateType type);
 		public unowned Atk.StateSet xor_sets (Atk.StateSet compare_set);
@@ -267,7 +267,7 @@ namespace Atk {
 		public abstract bool set_extents (int x, int y, int width, int height, Atk.CoordType coord_type);
 		public abstract bool set_position (int x, int y, Atk.CoordType coord_type);
 		public abstract bool set_size (int width, int height);
-		public virtual signal void bounds_changed (Atk.Rectangle bounds);
+		public signal void bounds_changed (Atk.Rectangle bounds);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Document {
@@ -285,9 +285,9 @@ namespace Atk {
 		public bool set_attribute_value (string attribute_name, string attribute_value);
 		[NoWrapper]
 		public abstract bool set_document_attribute (string attribute_name, string attribute_value);
-		public virtual signal void load_complete ();
-		public virtual signal void load_stopped ();
-		public virtual signal void reload ();
+		public signal void load_complete ();
+		public signal void load_stopped ();
+		public signal void reload ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface EditableText {
@@ -308,7 +308,7 @@ namespace Atk {
 		public abstract unowned Atk.Hyperlink get_link (int link_index);
 		public abstract int get_link_index (int char_index);
 		public abstract int get_n_links ();
-		public virtual signal void link_selected (int link_index);
+		public signal void link_selected (int link_index);
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Image {
@@ -331,7 +331,7 @@ namespace Atk {
 		public abstract unowned Atk.Object ref_selection (int i);
 		public abstract bool remove_selection (int i);
 		public abstract bool select_all_selection ();
-		public virtual signal void selection_changed ();
+		public signal void selection_changed ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface StreamableContent {
@@ -371,13 +371,13 @@ namespace Atk {
 		public abstract void set_row_description (int row, string description);
 		public abstract void set_row_header (int row, Atk.Object header);
 		public abstract void set_summary (Atk.Object accessible);
-		public virtual signal void column_deleted (int column, int num_deleted);
-		public virtual signal void column_inserted (int column, int num_inserted);
-		public virtual signal void column_reordered ();
-		public virtual signal void model_changed ();
-		public virtual signal void row_deleted (int row, int num_deleted);
-		public virtual signal void row_inserted (int row, int num_inserted);
-		public virtual signal void row_reordered ();
+		public signal void column_deleted (int column, int num_deleted);
+		public signal void column_inserted (int column, int num_inserted);
+		public signal void column_reordered ();
+		public signal void model_changed ();
+		public signal void row_deleted (int row, int num_deleted);
+		public signal void row_inserted (int row, int num_inserted);
+		public signal void row_reordered ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Text {
@@ -405,10 +405,10 @@ namespace Atk {
 		public abstract bool remove_selection (int selection_num);
 		public abstract bool set_caret_offset (int offset);
 		public abstract bool set_selection (int selection_num, int start_offset, int end_offset);
-		public virtual signal void text_attributes_changed ();
-		public virtual signal void text_caret_moved (int location);
-		public virtual signal void text_changed (int position, int length);
-		public virtual signal void text_selection_changed ();
+		public signal void text_attributes_changed ();
+		public signal void text_caret_moved (int location);
+		public signal void text_changed (int position, int length);
+		public signal void text_selection_changed ();
 	}
 	[CCode (cheader_filename = "atk/atk.h")]
 	public interface Value {

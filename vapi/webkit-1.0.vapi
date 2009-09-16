@@ -4,6 +4,8 @@
 namespace WebKit {
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class Download : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Download (WebKit.NetworkRequest request);
 		public void cancel ();
 		public uint64 get_current_size ();
 		public unowned string get_destination_uri ();
@@ -14,8 +16,6 @@ namespace WebKit {
 		public unowned string get_suggested_filename ();
 		public uint64 get_total_size ();
 		public unowned string get_uri ();
-		[CCode (has_construct_function = false)]
-		public Download (WebKit.NetworkRequest request);
 		public void set_destination_uri (string destination_uri);
 		public void start ();
 		public uint64 current_size { get; }
@@ -29,10 +29,10 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class NetworkRequest : GLib.Object {
-		public unowned Soup.Message get_message ();
-		public unowned string get_uri ();
 		[CCode (has_construct_function = false)]
 		public NetworkRequest (string uri);
+		public unowned Soup.Message get_message ();
+		public unowned string get_uri ();
 		public void set_uri (string uri);
 		public Soup.Message message { get; construct; }
 		public string uri { get; set; }
@@ -63,6 +63,8 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebFrame : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public WebFrame (WebKit.WebView web_view);
 		public unowned WebKit.WebFrame find_frame (string name);
 		public WebKit.LoadStatus get_load_status ();
 		public unowned string get_name ();
@@ -74,8 +76,6 @@ namespace WebKit {
 		public void load_request (WebKit.NetworkRequest request);
 		public void load_string (string content, string mime_type, string encoding, string base_uri);
 		public void load_uri (string uri);
-		[CCode (has_construct_function = false)]
-		public WebFrame (WebKit.WebView web_view);
 		public void print ();
 		public Gtk.PrintOperationResult print_full (Gtk.PrintOperation operation, Gtk.PrintOperationAction action) throws GLib.Error;
 		public void reload ();
@@ -92,13 +92,13 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebHistoryItem : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public WebHistoryItem ();
 		public unowned string get_alternate_title ();
 		public double get_last_visited_time ();
 		public unowned string get_original_uri ();
 		public unowned string get_title ();
 		public unowned string get_uri ();
-		[CCode (has_construct_function = false)]
-		public WebHistoryItem ();
 		public void set_alternate_title (string title);
 		[CCode (has_construct_function = false)]
 		public WebHistoryItem.with_data (string uri, string title);
@@ -144,9 +144,9 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebSettings : GLib.Object {
-		public WebKit.WebSettings copy ();
 		[CCode (has_construct_function = false)]
 		public WebSettings ();
+		public WebKit.WebSettings copy ();
 		[NoAccessorMethod]
 		public bool auto_load_images { get; set construct; }
 		[NoAccessorMethod]
@@ -204,6 +204,8 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebView : Gtk.Container, Atk.Implementor, Gtk.Buildable {
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public WebView ();
 		public bool can_copy_clipboard ();
 		public bool can_cut_clipboard ();
 		public bool can_go_back ();
@@ -243,8 +245,6 @@ namespace WebKit {
 		public void load_string (string content, string mime_type, string encoding, string base_uri);
 		public void load_uri (string uri);
 		public uint mark_text_matches (string str, bool case_sensitive, uint limit);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public WebView ();
 		public void open (string uri);
 		public void reload ();
 		public void reload_bypass_cache ();
@@ -317,9 +317,9 @@ namespace WebKit {
 	}
 	[CCode (cheader_filename = "webkit/webkit.h")]
 	public class WebWindowFeatures : GLib.Object {
-		public bool equal (WebKit.WebWindowFeatures features2);
 		[CCode (has_construct_function = false)]
 		public WebWindowFeatures ();
+		public bool equal (WebKit.WebWindowFeatures features2);
 		[NoAccessorMethod]
 		public bool fullscreen { get; set construct; }
 		[NoAccessorMethod]

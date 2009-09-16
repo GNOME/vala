@@ -19,7 +19,7 @@ namespace Wnck {
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Application : GLib.Object {
-		public static unowned Wnck.Application get (ulong xwindow);
+		public static unowned Wnck.Application @get (ulong xwindow);
 		public unowned Gdk.Pixbuf get_icon ();
 		public bool get_icon_is_fallback ();
 		public unowned string get_icon_name ();
@@ -43,7 +43,7 @@ namespace Wnck {
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class ClassGroup : GLib.Object {
-		public static unowned Wnck.ClassGroup get (string res_class);
+		public static unowned Wnck.ClassGroup @get (string res_class);
 		public unowned Gdk.Pixbuf get_icon ();
 		public unowned Gdk.Pixbuf get_mini_icon ();
 		public unowned string get_name ();
@@ -110,7 +110,7 @@ namespace Wnck {
 		public void change_workspace_count (int count);
 		public void force_update ();
 		public static void free_workspace_layout (Wnck.WorkspaceLayout layout);
-		public static unowned Wnck.Screen get (int index);
+		public static unowned Wnck.Screen @get (int index);
 		public unowned Wnck.Window get_active_window ();
 		public unowned Wnck.Workspace get_active_workspace ();
 		public ulong get_background_pixmap ();
@@ -175,11 +175,11 @@ namespace Wnck {
 	}
 	[CCode (cheader_filename = "libwnck/libwnck.h")]
 	public class Tasklist : Gtk.Container, Atk.Implementor, Gtk.Buildable {
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public Tasklist (Wnck.Screen screen);
 		public int get_minimum_height ();
 		public int get_minimum_width ();
 		public int get_size_hint_list (int n_elements);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public Tasklist (Wnck.Screen screen);
 		[NoWrapper]
 		public virtual void pad1 ();
 		[NoWrapper]
@@ -203,7 +203,7 @@ namespace Wnck {
 		public void activate (uint32 timestamp);
 		public void activate_transient (uint32 timestamp);
 		public void close (uint32 timestamp);
-		public static unowned Wnck.Window get (ulong xwindow);
+		public static unowned Wnck.Window @get (ulong xwindow);
 		public Wnck.WindowActions get_actions ();
 		public unowned Wnck.Application get_application ();
 		public unowned Wnck.ClassGroup get_class_group ();

@@ -968,10 +968,10 @@ namespace GLib {
 		public abstract bool start_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract void stop (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public abstract bool stop_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public virtual signal void changed ();
-		public virtual signal void disconnected ();
-		public virtual signal void eject_button ();
-		public virtual signal void stop_button ();
+		public signal void changed ();
+		public signal void disconnected ();
+		public signal void eject_button ();
+		public signal void stop_button ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface File : GLib.Object {
@@ -1144,9 +1144,9 @@ namespace GLib {
 		public abstract void unmount_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public abstract bool unmount_with_operation_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public void unshadow ();
-		public virtual signal void changed ();
-		public virtual signal void pre_unmount ();
-		public virtual signal void unmounted ();
+		public signal void changed ();
+		public signal void pre_unmount ();
+		public signal void unmounted ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
 	public interface Seekable : GLib.Object {
@@ -1182,8 +1182,8 @@ namespace GLib {
 		[NoWrapper]
 		public abstract void mount_fn (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
 		public abstract bool should_automount ();
-		public virtual signal void changed ();
-		public virtual signal void removed ();
+		public signal void changed ();
+		public signal void removed ();
 	}
 	[CCode (cprefix = "G_APP_INFO_CREATE_", cheader_filename = "gio/gio.h")]
 	[Flags]

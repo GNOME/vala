@@ -5,27 +5,27 @@ namespace GnomeKeyring {
 	[Compact]
 	[CCode (copy_function = "gnome_keyring_access_control_copy", cheader_filename = "gnome-keyring.h")]
 	public class AccessControl {
-		public GnomeKeyring.AccessControl copy ();
 		[CCode (has_construct_function = false)]
 		public AccessControl (GnomeKeyring.ApplicationRef application, GnomeKeyring.AccessType types_allowed);
+		public GnomeKeyring.AccessControl copy ();
 	}
 	[Compact]
 	[CCode (copy_function = "gnome_keyring_application_ref_copy", cheader_filename = "gnome-keyring.h")]
 	public class ApplicationRef {
-		public GnomeKeyring.ApplicationRef copy ();
 		[CCode (has_construct_function = false)]
 		public ApplicationRef ();
+		public GnomeKeyring.ApplicationRef copy ();
 	}
 	[Compact]
 	[CCode (copy_function = "gnome_keyring_attribute_list_copy", cheader_filename = "gnome-keyring.h")]
 	public class AttributeList {
 		public GnomeKeyring.Attribute[] data;
 		public uint len;
+		public AttributeList ();
 		public void append_string (string name, string value);
 		public void append_uint32 (string name, uint32 value);
 		public GnomeKeyring.AttributeList copy ();
 		public GnomeKeyring.Attribute index (int i);
-		public AttributeList ();
 	}
 	[Compact]
 	[CCode (cheader_filename = "gnome-keyring.h")]
@@ -51,13 +51,13 @@ namespace GnomeKeyring {
 	[Compact]
 	[CCode (copy_function = "gnome_keyring_item_info_copy", cheader_filename = "gnome-keyring.h")]
 	public class ItemInfo {
+		[CCode (has_construct_function = false)]
+		public ItemInfo ();
 		public GnomeKeyring.ItemInfo copy ();
 		public ulong get_ctime ();
 		public unowned string get_display_name ();
 		public ulong get_mtime ();
 		public unowned string get_secret ();
-		[CCode (has_construct_function = false)]
-		public ItemInfo ();
 		public void set_display_name (string value);
 		public void set_secret (string value);
 		public void set_type (GnomeKeyring.ItemType type);

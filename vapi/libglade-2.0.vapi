@@ -35,7 +35,7 @@ namespace Glade {
 		public uint n_requires;
 		public uint n_toplevels;
 		public weak GLib.HashTable names;
-		public weak string requires;
+		public weak string @requires;
 		public weak GLib.HashTable strings;
 		public weak Glade.WidgetInfo toplevels;
 		public void dump (string filename);
@@ -78,6 +78,8 @@ namespace Glade {
 	[CCode (cheader_filename = "glade/glade.h")]
 	public class XML : GLib.Object {
 		public weak string filename;
+		[CCode (has_construct_function = false)]
+		public XML (string fname, string? root, string? domain);
 		public unowned Gtk.Widget build_widget (Glade.WidgetInfo info);
 		public bool @construct (string fname, string? root, string? domain);
 		public bool construct_from_buffer (string buffer, int size, string root, string domain);
@@ -90,8 +92,6 @@ namespace Glade {
 		public void handle_widget_prop (Gtk.Widget widget, string prop_name, string value_name);
 		[NoWrapper]
 		public virtual GLib.Type lookup_type (string gtypename);
-		[CCode (has_construct_function = false)]
-		public XML (string fname, string? root, string? domain);
 		public unowned string relative_file (string filename);
 		public void set_common_params (Gtk.Widget widget, Glade.WidgetInfo info);
 		public void set_packing_property (Gtk.Widget parent, Gtk.Widget child, string name, string value);

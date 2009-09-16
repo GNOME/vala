@@ -1131,6 +1131,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				var sig = parse_signal ((IdlNodeSignal) member);
 				if (sig != null) {
 					iface.add_signal (sig);
+					sig.is_virtual = false;
 				}
 			}
 		}

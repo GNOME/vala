@@ -602,17 +602,17 @@ namespace Goo {
 		public Goo.CairoMatrix transform { get; set; }
 		public Goo.CanvasItemVisibility visibility { get; set; }
 		public double visibility_threshold { get; set; }
-		public virtual signal bool button_press_event (Goo.CanvasItem target, Gdk.EventButton event);
-		public virtual signal bool button_release_event (Goo.CanvasItem target, Gdk.EventButton event);
-		public virtual signal void child_notify (GLib.ParamSpec pspec);
-		public virtual signal bool enter_notify_event (Goo.CanvasItem target, Gdk.EventCrossing event);
-		public virtual signal bool focus_in_event (Goo.CanvasItem target, Gdk.EventFocus event);
-		public virtual signal bool focus_out_event (Goo.CanvasItem target, Gdk.EventFocus event);
-		public virtual signal bool grab_broken_event (Goo.CanvasItem target, Gdk.EventGrabBroken event);
-		public virtual signal bool key_press_event (Goo.CanvasItem target, Gdk.EventKey event);
-		public virtual signal bool key_release_event (Goo.CanvasItem target, Gdk.EventKey event);
-		public virtual signal bool leave_notify_event (Goo.CanvasItem target, Gdk.EventCrossing event);
-		public virtual signal bool motion_notify_event (Goo.CanvasItem target, Gdk.EventMotion event);
+		public signal bool button_press_event (Goo.CanvasItem target, Gdk.EventButton event);
+		public signal bool button_release_event (Goo.CanvasItem target, Gdk.EventButton event);
+		public signal void child_notify (GLib.ParamSpec pspec);
+		public signal bool enter_notify_event (Goo.CanvasItem target, Gdk.EventCrossing event);
+		public signal bool focus_in_event (Goo.CanvasItem target, Gdk.EventFocus event);
+		public signal bool focus_out_event (Goo.CanvasItem target, Gdk.EventFocus event);
+		public signal bool grab_broken_event (Goo.CanvasItem target, Gdk.EventGrabBroken event);
+		public signal bool key_press_event (Goo.CanvasItem target, Gdk.EventKey event);
+		public signal bool key_release_event (Goo.CanvasItem target, Gdk.EventKey event);
+		public signal bool leave_notify_event (Goo.CanvasItem target, Gdk.EventCrossing event);
+		public signal bool motion_notify_event (Goo.CanvasItem target, Gdk.EventMotion event);
 	}
 	[CCode (cheader_filename = "goocanvas.h")]
 	public interface CanvasItemModel : GLib.Object {
@@ -662,11 +662,11 @@ namespace Goo {
 		public Goo.CairoMatrix transform { get; set; }
 		public Goo.CanvasItemVisibility visibility { get; set; }
 		public double visibility_threshold { get; set; }
-		public virtual signal void changed (bool recompute_bounds);
-		public virtual signal void child_added (int child_num);
-		public virtual signal void child_moved (int old_child_num, int new_child_num);
-		public virtual signal void child_notify (GLib.ParamSpec pspec);
-		public virtual signal void child_removed (int child_num);
+		public signal void changed (bool recompute_bounds);
+		public signal void child_added (int child_num);
+		public signal void child_moved (int old_child_num, int new_child_num);
+		public signal void child_notify (GLib.ParamSpec pspec);
+		public signal void child_removed (int child_num);
 	}
 	[CCode (type_id = "GOO_TYPE_CAIRO_LINE_DASH", cheader_filename = "goocanvas.h")]
 	public struct CairoLineDash {

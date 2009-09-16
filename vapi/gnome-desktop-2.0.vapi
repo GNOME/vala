@@ -4,13 +4,13 @@
 namespace Gnome {
 	[CCode (cheader_filename = "libgnomeui/gnome-ditem-edit.h")]
 	public class DItemEdit : Gtk.Notebook, Atk.Implementor, Gtk.Buildable {
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public DItemEdit ();
 		public void clear ();
 		public unowned Gnome.DesktopItem get_ditem ();
 		public unowned string get_icon ();
 		public void grab_focus ();
 		public bool load_uri (string uri) throws GLib.Error;
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public DItemEdit ();
 		public void set_directory_only (bool directory_only);
 		public void set_ditem (Gnome.DesktopItem ditem);
 		public void set_editable (bool editable);
@@ -22,6 +22,8 @@ namespace Gnome {
 	[Compact]
 	[CCode (ref_function = "gnome_desktop_item_ref", unref_function = "gnome_desktop_item_unref", type_id = "GNOME_TYPE_DESKTOP_ITEM", cheader_filename = "libgnome/gnome-desktop-item.h")]
 	public class DesktopItem {
+		[CCode (has_construct_function = false)]
+		public DesktopItem ();
 		public bool attr_exists (string attr);
 		public void clear_localestring (string attr);
 		public void clear_section (string section);
@@ -54,8 +56,6 @@ namespace Gnome {
 		public int launch (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags) throws GLib.Error;
 		public int launch_on_screen (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags, Gdk.Screen screen, int workspace) throws GLib.Error;
 		public int launch_with_env (GLib.List file_list, Gnome.DesktopItemLaunchFlags flags, string[] envp) throws GLib.Error;
-		[CCode (has_construct_function = false)]
-		public DesktopItem ();
 		public bool save (string under, bool force) throws GLib.Error;
 		public void set_boolean (string attr, bool value);
 		public void set_entry_type (Gnome.DesktopItemType type);

@@ -5,20 +5,20 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gdesktopappinfo.h")]
 	public class DesktopAppInfo : GLib.Object, GLib.AppInfo {
 		[CCode (has_construct_function = false)]
+		public DesktopAppInfo (string desktop_id);
+		[CCode (has_construct_function = false)]
 		public DesktopAppInfo.from_filename (string filename);
 		[CCode (has_construct_function = false)]
 		public DesktopAppInfo.from_keyfile (GLib.KeyFile key_file);
 		public bool get_is_hidden ();
-		[CCode (has_construct_function = false)]
-		public DesktopAppInfo (string desktop_id);
 		public static void set_desktop_env (string desktop_env);
 	}
 	[CCode (cheader_filename = "gio/gunixinputstream.h")]
 	public class UnixInputStream : GLib.InputStream {
-		public bool get_close_fd ();
-		public int get_fd ();
 		[CCode (type = "GInputStream*", has_construct_function = false)]
 		public UnixInputStream (int fd, bool close_fd);
+		public bool get_close_fd ();
+		public int get_fd ();
 		public void set_close_fd (bool close_fd);
 		public bool close_fd { get; set; }
 		public int fd { get; construct; }
@@ -26,10 +26,12 @@ namespace GLib {
 	[Compact]
 	[CCode (free_function = "g_unix_mount_free", cheader_filename = "gio/gunixmounts.h")]
 	public class UnixMountEntry {
+		[CCode (cname = "g_unix_mount_at")]
+		public UnixMountEntry (string mount_path, uint64 time_read);
 		[CCode (cname = "g_unix_mount_compare")]
 		public int compare (GLib.UnixMountEntry mount);
 		[CCode (cname = "g_unix_mounts_get")]
-		public static GLib.List<GLib.UnixMountEntry> get (ref uint64? time_read = null);
+		public static GLib.List<GLib.UnixMountEntry> @get (ref uint64? time_read = null);
 		[CCode (cname = "g_unix_mount_get_device_path")]
 		public unowned string get_device_path ();
 		[CCode (cname = "g_unix_mount_get_fs_type")]
@@ -48,8 +50,6 @@ namespace GLib {
 		public bool is_readonly ();
 		[CCode (cname = "g_unix_mount_is_system_internal")]
 		public bool is_system_internal ();
-		[CCode (cname = "g_unix_mount_at")]
-		public UnixMountEntry (string mount_path, uint64 time_read);
 	}
 	[CCode (cheader_filename = "gio/gunixmounts.h")]
 	public class UnixMountMonitor : GLib.Object {
@@ -79,10 +79,10 @@ namespace GLib {
 	}
 	[CCode (cheader_filename = "gio/gunixoutputstream.h")]
 	public class UnixOutputStream : GLib.OutputStream {
-		public bool get_close_fd ();
-		public int get_fd ();
 		[CCode (type = "GOutputStream*", has_construct_function = false)]
 		public UnixOutputStream (int fd, bool close_fd);
+		public bool get_close_fd ();
+		public int get_fd ();
 		public void set_close_fd (bool close_fd);
 		public bool close_fd { get; set; }
 		public int fd { get; construct; }

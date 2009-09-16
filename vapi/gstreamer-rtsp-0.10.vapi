@@ -129,9 +129,9 @@ namespace Gst {
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class RTSPWatch {
-		public uint attach (GLib.MainContext context);
 		[CCode (has_construct_function = false)]
 		public RTSPWatch (Gst.RTSPConnection conn, Gst.RTSPWatchFuncs funcs, GLib.DestroyNotify notify);
+		public uint attach (GLib.MainContext context);
 		public uint queue_message (Gst.RTSPMessage message);
 		public void reset ();
 	}
@@ -157,7 +157,7 @@ namespace Gst {
 		public abstract Gst.RTSPResult setup_media (Gst.SDPMedia media);
 		public abstract Gst.RTSPResult stream_select (Gst.RTSPUrl url);
 		[HasEmitter]
-		public virtual signal Gst.RTSPResult send (void* req, void* resp);
+		public signal Gst.RTSPResult send (void* req, void* resp);
 	}
 	[CCode (cprefix = "GST_RTSP_AUTH_", cheader_filename = "gst/rtsp/gstrtspconnection.h")]
 	public enum RTSPAuthMethod {

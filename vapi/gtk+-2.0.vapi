@@ -5491,9 +5491,9 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface CellEditable : Gtk.Widget {
 		[HasEmitter]
-		public virtual signal void editing_done ();
+		public signal void editing_done ();
 		[HasEmitter]
-		public virtual signal void remove_widget ();
+		public signal void remove_widget ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface CellLayout : GLib.Object {
@@ -5525,11 +5525,11 @@ namespace Gtk {
 		public abstract void select_region (int start_pos, int end_pos);
 		public void set_editable (bool is_editable);
 		public abstract void set_position (int position);
-		public virtual signal void changed ();
+		public signal void changed ();
 		[HasEmitter]
-		public virtual signal void delete_text (int start_pos, int end_pos);
+		public signal void delete_text (int start_pos, int end_pos);
 		[HasEmitter]
-		public virtual signal void insert_text (string text, int length, void* position);
+		public signal void insert_text (string text, int length, void* position);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface FileChooser : Gtk.Widget {
@@ -5601,11 +5601,11 @@ namespace Gtk {
 		public bool select_multiple { get; set; }
 		public bool show_hidden { get; set; }
 		public bool use_preview_label { get; set; }
-		public virtual signal Gtk.FileChooserConfirmation confirm_overwrite ();
-		public virtual signal void current_folder_changed ();
-		public virtual signal void file_activated ();
-		public virtual signal void selection_changed ();
-		public virtual signal void update_preview ();
+		public signal Gtk.FileChooserConfirmation confirm_overwrite ();
+		public signal void current_folder_changed ();
+		public signal void file_activated ();
+		public signal void selection_changed ();
+		public signal void update_preview ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface FileChooserEmbed {
@@ -5620,8 +5620,8 @@ namespace Gtk {
 		public abstract void end_preview ();
 		public abstract bool is_selected (int page_nr);
 		public abstract void render_page (int page_nr);
-		public virtual signal void got_page_size (Gtk.PrintContext context, Gtk.PageSetup page_setup);
-		public virtual signal void ready (Gtk.PrintContext context);
+		public signal void got_page_size (Gtk.PrintContext context, Gtk.PageSetup page_setup);
+		public signal void ready (Gtk.PrintContext context);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface RecentChooser : GLib.Object {
@@ -5669,8 +5669,8 @@ namespace Gtk {
 		public bool show_private { get; set; }
 		public bool show_tips { get; set; }
 		public Gtk.RecentSortType sort_type { get; set; }
-		public virtual signal void item_activated ();
-		public virtual signal void selection_changed ();
+		public signal void item_activated ();
+		public signal void selection_changed ();
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface ToolShell : Gtk.Widget {
@@ -5715,15 +5715,15 @@ namespace Gtk {
 		public abstract void ref_node (Gtk.TreeIter iter);
 		public abstract void unref_node (Gtk.TreeIter iter);
 		[HasEmitter]
-		public virtual signal void row_changed (Gtk.TreePath path, Gtk.TreeIter iter);
+		public signal void row_changed (Gtk.TreePath path, Gtk.TreeIter iter);
 		[HasEmitter]
-		public virtual signal void row_deleted (Gtk.TreePath path);
+		public signal void row_deleted (Gtk.TreePath path);
 		[HasEmitter]
-		public virtual signal void row_has_child_toggled (Gtk.TreePath path, Gtk.TreeIter iter);
+		public signal void row_has_child_toggled (Gtk.TreePath path, Gtk.TreeIter iter);
 		[HasEmitter]
-		public virtual signal void row_inserted (Gtk.TreePath path, Gtk.TreeIter iter);
+		public signal void row_inserted (Gtk.TreePath path, Gtk.TreeIter iter);
 		[HasEmitter]
-		public virtual signal void rows_reordered (Gtk.TreePath path, Gtk.TreeIter iter, void* new_order);
+		public signal void rows_reordered (Gtk.TreePath path, Gtk.TreeIter iter, void* new_order);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public interface TreeSortable : Gtk.TreeModel, GLib.Object {
@@ -5733,7 +5733,7 @@ namespace Gtk {
 		public abstract void set_sort_column_id (int sort_column_id, Gtk.SortType order);
 		public abstract void set_sort_func (int sort_column_id, owned Gtk.TreeIterCompareFunc sort_func);
 		[HasEmitter]
-		public virtual signal void sort_column_changed ();
+		public signal void sort_column_changed ();
 	}
 	[CCode (type_id = "GTK_TYPE_ACTION_ENTRY", cheader_filename = "gtk/gtk.h")]
 	public struct ActionEntry {

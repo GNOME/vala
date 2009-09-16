@@ -40,7 +40,7 @@ namespace Poppler {
 	[CCode (cheader_filename = "poppler.h")]
 	public class ActionLaunch {
 		public weak string file_name;
-		public weak string params;
+		public weak string @params;
 		public weak string title;
 		public Poppler.ActionType type;
 	}
@@ -138,9 +138,9 @@ namespace Poppler {
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class FontInfo : GLib.Object {
-		public void free ();
 		[CCode (has_construct_function = false)]
 		public FontInfo (Poppler.Document document);
+		public void free ();
 		public bool scan (int n_pages, out unowned Poppler.FontsIter iter);
 	}
 	[Compact]
@@ -191,28 +191,28 @@ namespace Poppler {
 	public class FormFieldMapping {
 		public weak Poppler.Rectangle area;
 		public weak Poppler.FormField field;
-		public Poppler.FormFieldMapping copy ();
 		[CCode (has_construct_function = false)]
 		public FormFieldMapping ();
+		public Poppler.FormFieldMapping copy ();
 	}
 	[Compact]
 	[CCode (copy_function = "poppler_image_mapping_copy", type_id = "POPPLER_TYPE_IMAGE_MAPPING", cheader_filename = "poppler.h")]
 	public class ImageMapping {
 		public weak Poppler.Rectangle area;
 		public weak Gdk.Pixbuf image;
-		public Poppler.ImageMapping copy ();
 		[CCode (has_construct_function = false)]
 		public ImageMapping ();
+		public Poppler.ImageMapping copy ();
 	}
 	[Compact]
 	[CCode (copy_function = "poppler_index_iter_copy", type_id = "POPPLER_TYPE_INDEX_ITER", cheader_filename = "poppler.h")]
 	public class IndexIter {
+		[CCode (has_construct_function = false)]
+		public IndexIter (Poppler.Document document);
 		public Poppler.IndexIter copy ();
 		public unowned Poppler.Action get_action ();
 		public unowned Poppler.IndexIter get_child ();
 		public bool is_open ();
-		[CCode (has_construct_function = false)]
-		public IndexIter (Poppler.Document document);
 		public bool next ();
 	}
 	[Compact]
@@ -220,15 +220,15 @@ namespace Poppler {
 	public class LinkMapping {
 		public weak Poppler.Action action;
 		public weak Poppler.Rectangle area;
-		public Poppler.LinkMapping copy ();
 		[CCode (has_construct_function = false)]
 		public LinkMapping ();
+		public Poppler.LinkMapping copy ();
 	}
 	[CCode (cheader_filename = "poppler.h")]
 	public class PSFile : GLib.Object {
-		public void free ();
 		[CCode (has_construct_function = false)]
 		public PSFile (Poppler.Document document, string filename, int first_page, int n_pages);
+		public void free ();
 		public void set_duplex (bool duplex);
 		public void set_paper_size (double width, double height);
 	}
@@ -268,9 +268,9 @@ namespace Poppler {
 		public bool rectangular;
 		public double scale;
 		public Poppler.PageTransitionType type;
-		public Poppler.PageTransition copy ();
 		[CCode (has_construct_function = false)]
 		public PageTransition ();
+		public Poppler.PageTransition copy ();
 	}
 	[Compact]
 	[CCode (copy_function = "poppler_rectangle_copy", type_id = "POPPLER_TYPE_RECTANGLE", cheader_filename = "poppler.h")]
@@ -279,9 +279,9 @@ namespace Poppler {
 		public double x2;
 		public double y1;
 		public double y2;
-		public Poppler.Rectangle copy ();
 		[CCode (has_construct_function = false)]
 		public Rectangle ();
+		public Poppler.Rectangle copy ();
 	}
 	[CCode (cprefix = "POPPLER_ACTION_", has_type_id = "0", cheader_filename = "poppler.h")]
 	public enum ActionType {

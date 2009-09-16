@@ -4,13 +4,13 @@
 namespace Gst {
 	[CCode (cheader_filename = "gst/base/gstadapter.h")]
 	public class Adapter : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Adapter ();
 		public uint available ();
 		public uint available_fast ();
 		public void clear ();
 		public void copy (uchar dest, uint offset, uint size);
 		public void flush (uint flush);
-		[CCode (has_construct_function = false)]
-		public Adapter ();
 		[CCode (array_length = false)]
 		public unowned uchar[] peek (uint size);
 		public void push (owned Gst.Buffer buf);
@@ -89,7 +89,7 @@ namespace Gst {
 		public Gst.FlowReturn wait_eos (Gst.ClockTime time, out Gst.ClockTimeDiff jitter);
 		public Gst.FlowReturn wait_preroll ();
 		[NoAccessorMethod]
-		public bool async { get; set; }
+		public bool @async { get; set; }
 		public uint blocksize { get; set; }
 		public Gst.Buffer last_buffer { get; }
 		public int64 max_lateness { get; set; }
@@ -237,6 +237,8 @@ namespace Gst {
 		public uchar data;
 		public uint size;
 		[CCode (has_construct_function = false)]
+		public BitReader (uchar data, uint size);
+		[CCode (has_construct_function = false)]
 		public BitReader.from_buffer (Gst.Buffer buffer);
 		public bool get_bits_uint16 (out uint16 val, uint nbits);
 		public bool get_bits_uint32 (out uint32 val, uint nbits);
@@ -246,8 +248,6 @@ namespace Gst {
 		public uint get_remaining ();
 		public void init (uchar data, uint size);
 		public void init_from_buffer (Gst.Buffer buffer);
-		[CCode (has_construct_function = false)]
-		public BitReader (uchar data, uint size);
 		public bool peek_bits_uint16 (out uint16 val, uint nbits);
 		public bool peek_bits_uint32 (out uint32 val, uint nbits);
 		public bool peek_bits_uint64 (out uint64 val, uint nbits);
@@ -262,6 +262,8 @@ namespace Gst {
 		public uint byte;
 		public uchar data;
 		public uint size;
+		[CCode (has_construct_function = false)]
+		public ByteReader (uchar data, uint size);
 		[CCode (has_construct_function = false)]
 		public ByteReader.from_buffer (Gst.Buffer buffer);
 		public bool get_data (uint size, out uchar val);
@@ -291,8 +293,6 @@ namespace Gst {
 		public bool get_uint8 (out uchar val);
 		public void init (uchar data, uint size);
 		public void init_from_buffer (Gst.Buffer buffer);
-		[CCode (has_construct_function = false)]
-		public ByteReader (uchar data, uint size);
 		public bool peek_data (uint size, out uchar val);
 		public bool peek_float32_be (out float val);
 		public bool peek_float32_le (out float val);
@@ -339,6 +339,8 @@ namespace Gst {
 		public uint queuedpads;
 		public bool started;
 		public void* user_data;
+		[CCode (has_construct_function = false)]
+		public CollectPads ();
 		public unowned Gst.CollectData add_pad (Gst.Pad pad, uint size);
 		public unowned Gst.CollectData add_pad_full (Gst.Pad pad, uint size, Gst.CollectDataDestroyNotify destroy_notify);
 		public uint available ();
@@ -346,8 +348,6 @@ namespace Gst {
 		public Gst.FlowReturn collect_range (uint64 offset, uint length);
 		public uint flush (Gst.CollectData data, uint size);
 		public bool is_active (Gst.Pad pad);
-		[CCode (has_construct_function = false)]
-		public CollectPads ();
 		public unowned Gst.Buffer peek (Gst.CollectData data);
 		public unowned Gst.Buffer pop (Gst.CollectData data);
 		public uint read (Gst.CollectData data, uchar bytes, uint size);
@@ -369,14 +369,14 @@ namespace Gst {
 		public weak GLib.Cond item_del;
 		public weak GLib.Mutex qlock;
 		public weak GLib.Queue queue;
+		[CCode (has_construct_function = false)]
+		public DataQueue (Gst.DataQueueCheckFullFunction checkfull, void* checkdata);
 		public bool drop_head (GLib.Type type);
 		public void flush ();
 		public void get_level (Gst.DataQueueSize level);
 		public bool is_empty ();
 		public bool is_full ();
 		public void limits_changed ();
-		[CCode (has_construct_function = false)]
-		public DataQueue (Gst.DataQueueCheckFullFunction checkfull, void* checkdata);
 		public bool pop (out unowned Gst.DataQueueItem item);
 		public bool push (Gst.DataQueueItem item);
 		public void set_flushing (bool flushing);

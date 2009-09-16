@@ -4,6 +4,8 @@
 namespace Hildon {
 	[CCode (cheader_filename = "hildon/hildon-file-chooser-dialog.h")]
 	public class FileChooserDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable, Gtk.FileChooser {
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public FileChooserDialog (Gtk.Window parent, Gtk.FileChooserAction action);
 		public unowned Gtk.Widget add_extensions_combo (out unowned string extensions, out unowned string ext_names);
 		public void add_extra (Gtk.Widget widget);
 		public void focus_to_input ();
@@ -11,8 +13,6 @@ namespace Hildon {
 		public unowned string get_safe_folder ();
 		public unowned string get_safe_folder_uri ();
 		public bool get_show_upnp ();
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public FileChooserDialog (Gtk.Window parent, Gtk.FileChooserAction action);
 		public void set_extension (string extension);
 		public void set_safe_folder (string local_path);
 		public void set_safe_folder_uri (string uri);
@@ -42,9 +42,9 @@ namespace Hildon {
 	}
 	[CCode (cheader_filename = "hildon/hildon-file-details-dialog.h")]
 	public class FileDetailsDialog : Gtk.Dialog, Atk.Implementor, Gtk.Buildable {
-		public bool get_file_iter (out Gtk.TreeIter iter);
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public FileDetailsDialog (Gtk.Window parent, string filename);
+		public bool get_file_iter (out Gtk.TreeIter iter);
 		public void set_file_iter (Gtk.TreeIter iter);
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public FileDetailsDialog.with_model (Gtk.Window parent, Hildon.FileSystemModel model);
@@ -125,13 +125,13 @@ namespace Hildon {
 	[Compact]
 	[CCode (cheader_filename = "hildon/hildon-file-system-info.h")]
 	public class FileSystemInfo {
+		[CCode (has_construct_function = false)]
+		public FileSystemInfo (string uri) throws GLib.Error;
 		public static void async_cancel (Hildon.FileSystemInfoHandle handle);
 		public static unowned Hildon.FileSystemInfoHandle async_new (string uri, Hildon.FileSystemInfoCallback callback);
 		public unowned string get_display_name ();
 		public unowned Gdk.Pixbuf get_icon (Gtk.Widget ref_widget);
 		public unowned Gdk.Pixbuf get_icon_at_size (Gtk.Widget ref_widget, int size);
-		[CCode (has_construct_function = false)]
-		public FileSystemInfo (string uri) throws GLib.Error;
 	}
 	[Compact]
 	[CCode (cheader_filename = "hildon/hildon-file-system-info.h")]

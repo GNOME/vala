@@ -53,7 +53,7 @@ namespace Gst {
 		public abstract unowned GLib.List<Gst.ColorBalanceChannel> list_channels ();
 		public abstract void set_value (Gst.ColorBalanceChannel channel, int value);
 		[HasEmitter]
-		public virtual signal void value_changed (Gst.ColorBalanceChannel channel, int value);
+		public signal void value_changed (Gst.ColorBalanceChannel channel, int value);
 	}
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public interface Mixer : Gst.ImplementsInterface, Gst.Element {
@@ -71,13 +71,13 @@ namespace Gst {
 		public abstract void set_record (Gst.MixerTrack track, bool record);
 		public abstract void set_volume (Gst.MixerTrack track, int volumes);
 		[HasEmitter]
-		public virtual signal void mute_toggled (Gst.MixerTrack channel, bool mute);
+		public signal void mute_toggled (Gst.MixerTrack channel, bool mute);
 		[HasEmitter]
-		public virtual signal void option_changed (Gst.MixerOptions opts, string option);
+		public signal void option_changed (Gst.MixerOptions opts, string option);
 		[HasEmitter]
-		public virtual signal void record_toggled (Gst.MixerTrack channel, bool record);
+		public signal void record_toggled (Gst.MixerTrack channel, bool record);
 		[HasEmitter]
-		public virtual signal void volume_changed (Gst.MixerTrack channel, void* volumes);
+		public signal void volume_changed (Gst.MixerTrack channel, void* volumes);
 	}
 	[CCode (cheader_filename = "gst/interfaces/navigation.h")]
 	public interface Navigation : Gst.Element {
@@ -97,7 +97,7 @@ namespace Gst {
 		public unowned GLib.ValueArray probe_and_get_values_name (string name);
 		public abstract void probe_property (GLib.ParamSpec pspec);
 		public void probe_property_name (string name);
-		public virtual signal void probe_needed (void* pspec);
+		public signal void probe_needed (void* pspec);
 	}
 	[CCode (cheader_filename = "gst/interfaces/tuner.h")]
 	public interface Tuner : Gst.ImplementsInterface, Gst.Element {
@@ -112,12 +112,12 @@ namespace Gst {
 		public abstract void set_frequency (Gst.TunerChannel channel, ulong frequency);
 		public abstract void set_norm (Gst.TunerNorm norm);
 		public abstract int signal_strength (Gst.TunerChannel channel);
-		public virtual signal void channel_changed (Gst.TunerChannel channel);
+		public signal void channel_changed (Gst.TunerChannel channel);
 		[HasEmitter]
-		public virtual signal void frequency_changed (Gst.TunerChannel channel, ulong frequency);
-		public virtual signal void norm_changed (Gst.TunerNorm norm);
+		public signal void frequency_changed (Gst.TunerChannel channel, ulong frequency);
+		public signal void norm_changed (Gst.TunerNorm norm);
 		[HasEmitter]
-		public virtual signal void signal_changed (Gst.TunerChannel channel, int @signal);
+		public signal void signal_changed (Gst.TunerChannel channel, int @signal);
 	}
 	[CCode (cheader_filename = "gst/interfaces/videoorientation.h")]
 	public interface VideoOrientation : Gst.ImplementsInterface, Gst.Element {

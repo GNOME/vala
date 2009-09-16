@@ -18,7 +18,7 @@ namespace Vte {
 		[CCode (array_length = false)]
 		public weak int[] iopipe;
 		public static int add_child (GLib.Pid pid);
-		public static unowned Vte.Reaper get ();
+		public static unowned Vte.Reaper @get ();
 		public virtual signal void child_exited (int p0, int p1);
 	}
 	[CCode (cheader_filename = "vte/vte.h")]
@@ -32,6 +32,8 @@ namespace Vte {
 		public weak string icon_title;
 		public long row_count;
 		public weak string window_title;
+		[CCode (type = "GtkWidget*", has_construct_function = false)]
+		public Terminal ();
 		public void copy_primary ();
 		public void feed (string data, long length);
 		public void feed_child (string text, long length);
@@ -71,8 +73,6 @@ namespace Vte {
 		public void match_remove (int tag);
 		public void match_set_cursor (int tag, Gdk.Cursor cursor);
 		public void match_set_cursor_type (int tag, Gdk.CursorType cursor_type);
-		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public Terminal ();
 		public void paste_primary ();
 		public void reset (bool full, bool clear_history);
 		public void select_all ();
