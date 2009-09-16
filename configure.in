@@ -63,7 +63,6 @@ AC_CONFIG_FILES([Makefile
                  src/doclets/Makefile
                  src/doclets/htmlhelpers/Makefile
                  src/doclets/htmlhelpers/deps/Makefile
-                 src/doclets/htmlhelpers/html/Makefile
                  src/doclets/htmlhelpers/languages/Makefile
                  src/doclets/htmlhelpers/doclet/Makefile
                  src/doclets/htmlhelpers/taglets/Makefile

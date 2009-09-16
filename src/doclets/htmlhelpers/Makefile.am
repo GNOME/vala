@@ -2,7 +2,6 @@ NULL =
 
 
 SUBDIRS =     \
-	html      \
 	languages \
 	doclet    \
 	taglets   \

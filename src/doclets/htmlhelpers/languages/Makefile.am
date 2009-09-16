@@ -1,11 +1,10 @@
 NULL =
 
 
-AM_CFLAGS =  -g                  \
-	-I ../../../libvaladoc/      \
-	-I ../html/                  \
-	$(GLIB_CFLAGS)               \
-	$(LIBVALA_CFLAGS)            \
+AM_CFLAGS =  -g \
+	-I ../../../libvaladoc/ \
+	$(GLIB_CFLAGS) \
+	$(LIBVALA_CFLAGS) \
 	$(NULL)
 
 
@@ -32,19 +31,18 @@ libapiwriter_la_SOURCES =                   \
 
 
 libapiwriter.vala.stamp: $(libapiwriter_la_VALASOURCES)
-	$(VALAC) -C --vapidir ../../../vapi --pkg valadoc-1.0 --vapidir ../html/ --pkg htmlwriter-1.0 --basedir . --save-temps -H apiwriter-1.0.h --library apiwriter-1.0 $^
+	$(VALAC) -C --vapidir ../../../vapi --pkg valadoc-1.0 --basedir . --save-temps -H apiwriter-1.0.h --library apiwriter-1.0 $^
 	touch $@
 
 
 libapiwriter_la_LDFLAGS = -module -avoid-version
 
 
-libapiwriter_la_LIBADD =                 \
+libapiwriter_la_LIBADD = \
 	../../../libvaladoc/libvaladoc.la \
-	../html/libhtmlwriter.la                \
-	$(LIBGVC_LIBS)                       \
-	$(LIBVALA_LIBS)                      \
-	$(GLIB_LIBS)                         \
+	$(LIBGVC_LIBS) \
+	$(LIBVALA_LIBS) \
+	$(GLIB_LIBS) \
 	$(NULL)
 
 

@@ -74,6 +74,10 @@ libvaladoc_la_VALASOURCES = \
 	apitree/typeparameter.vala \
 	apitree/typereference.vala \
 	apitree/visitable.vala \
+	html/attribute.vala \
+	html/block.vala \
+	html/htmlwriter.vala \
+	html/inline.vala \
 	$(NULL)
 
 
