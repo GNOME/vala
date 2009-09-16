@@ -2970,7 +2970,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			ccomma.append_expression (ccall);
 			
 			// return previous value
-			ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
+			ccomma.append_expression (get_variable_cexpression (temp_decl.name));
 			
 			expr.ccodenode = ccomma;
 			return;
@@ -3595,7 +3595,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					var temp_var = get_temp_variable (param.parameter_type);
 					temp_vars.insert (0, temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cexpr));
-					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_var.name)));
+					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
 
 					return ccomma;
 				}

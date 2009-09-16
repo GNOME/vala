@@ -47,7 +47,7 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 		var temp_var = get_temp_variable (stmt.expression.value_type, stmt.expression.value_type.value_owned, stmt);
 		stmt.expression.temp_vars.insert (0, temp_var);
 
-		var ctemp = new CCodeIdentifier (temp_var.name);
+		var ctemp = get_variable_cexpression (temp_var.name);
 		var cinit = new CCodeAssignment (ctemp, (CCodeExpression) stmt.expression.ccodenode);
 		var czero = new CCodeConstant ("0");
 
@@ -90,7 +90,7 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 
 		cswitchblock.append (new CCodeExpressionStatement (cinit));
 
-		ctemp = new CCodeIdentifier (temp_var.name);
+		ctemp = get_variable_cexpression (temp_var.name);
 		cinit = new CCodeAssignment (ctemp, ccond);
 
 		cswitchblock.append (new CCodeExpressionStatement (cinit));

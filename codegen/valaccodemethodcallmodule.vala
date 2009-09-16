@@ -350,7 +350,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						temp_vars.insert (0, temp_decl);
 						ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), cexpr));
 
-						cexpr = new CCodeIdentifier (temp_decl.name);
+						cexpr = get_variable_cexpression (temp_decl.name);
 
 						ccomma.append_expression (ccall_expr);
 

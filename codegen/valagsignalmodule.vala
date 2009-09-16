@@ -533,7 +533,7 @@ internal class Vala.GSignalModule : GObjectModule {
 			parse_call.add_argument (sig.get_canonical_cconstant (signal_detail));
 			var decl_type = (TypeSymbol) sig.parent_symbol;
 			parse_call.add_argument (new CCodeIdentifier (decl_type.get_type_id ()));
-			parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
+			parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_decl.name)));
 			if (signal_detail == null) {
 				parse_call.add_argument (new CCodeConstant ("NULL"));
 			} else {
@@ -543,7 +543,7 @@ internal class Vala.GSignalModule : GObjectModule {
 			}
 			parse_call.add_argument (new CCodeConstant ("FALSE"));
 			ccomma.append_expression (parse_call);
-			ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
+			ccomma.append_expression (get_variable_cexpression (temp_decl.name));
 
 			// third argument: signal_id
 			ccall.add_argument (ccomma);
@@ -740,7 +740,7 @@ internal class Vala.GSignalModule : GObjectModule {
 			parse_call.add_argument (sig.get_canonical_cconstant (signal_detail));
 			var decl_type = (TypeSymbol) sig.parent_symbol;
 			parse_call.add_argument (new CCodeIdentifier (decl_type.get_type_id ()));
-			parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (temp_decl.name)));
+			parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_decl.name)));
 			if (signal_detail == null) {
 				parse_call.add_argument (new CCodeConstant ("NULL"));
 			} else {
@@ -750,7 +750,7 @@ internal class Vala.GSignalModule : GObjectModule {
 			}
 			parse_call.add_argument (new CCodeConstant ("FALSE"));
 			ccomma.append_expression (parse_call);
-			ccomma.append_expression (new CCodeIdentifier (temp_decl.name));
+			ccomma.append_expression (get_variable_cexpression (temp_decl.name));
 
 			// third argument: signal_id
 			ccall.add_argument (ccomma);

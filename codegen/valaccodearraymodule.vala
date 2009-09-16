@@ -52,7 +52,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 			var ce = new CCodeCommaExpression ();
 			var temp_var = get_temp_variable (array_type, true, expr);
-			var name_cnode = new CCodeIdentifier (temp_var.name);
+			var name_cnode = get_variable_cexpression (temp_var.name);
 			int i = 0;
 
 			temp_vars.insert (0, temp_var);
@@ -77,7 +77,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 			if (!is_pure_ccode_expression (csize)) {
 				var temp_var = get_temp_variable (int_type, false, expr);
-				var name_cnode = new CCodeIdentifier (temp_var.name);
+				var name_cnode = get_variable_cexpression (temp_var.name);
 				size.ccodenode = name_cnode;
 
 				temp_vars.insert (0, temp_var);
@@ -103,7 +103,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		if (expr.initializer_list != null) {
 			var ce = new CCodeCommaExpression ();
 			var temp_var = get_temp_variable (expr.value_type, true, expr);
-			var name_cnode = new CCodeIdentifier (temp_var.name);
+			var name_cnode = get_variable_cexpression (temp_var.name);
 			int i = 0;
 			
 			temp_vars.insert (0, temp_var);

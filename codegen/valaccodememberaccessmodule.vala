@@ -83,7 +83,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						// store in temp. variable
 						var temp_var = get_temp_variable (expr.inner.value_type);
 						temp_vars.insert (0, temp_var);
-						var ctemp = new CCodeIdentifier (temp_var.name);
+						var ctemp = get_variable_cexpression (temp_var.name);
 						inst = new CCodeAssignment (ctemp, pub_inst);
 						expr.inner.ccodenode = ctemp;
 					}
@@ -274,7 +274,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				if (base_property.property_type.is_real_struct_type ()) {
 					var ccomma = new CCodeCommaExpression ();
 					var temp_var = get_temp_variable (base_property.get_accessor.value_type);
-					var ctemp = new CCodeIdentifier (temp_var.name);
+					var ctemp = get_variable_cexpression (temp_var.name);
 					temp_vars.add (temp_var);
 					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 					ccomma.append_expression (ccall);
@@ -285,7 +285,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					if (array_type != null && !base_property.no_array_length) {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							var temp_var = get_temp_variable (int_type);
-							var ctemp = new CCodeIdentifier (temp_var.name);
+							var ctemp = get_variable_cexpression (temp_var.name);
 							temp_vars.add (temp_var);
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 							expr.append_array_size (ctemp);
@@ -294,7 +294,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						var delegate_type = base_property.property_type as DelegateType;
 						if (delegate_type != null && delegate_type.delegate_symbol.has_target) {
 							var temp_var = get_temp_variable (new PointerType (new VoidType ()));
-							var ctemp = new CCodeIdentifier (temp_var.name);
+							var ctemp = get_variable_cexpression (temp_var.name);
 							temp_vars.add (temp_var);
 							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 							expr.delegate_target = ctemp;
@@ -325,7 +325,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 				var ccomma = new CCodeCommaExpression ();
 				var temp_var = get_temp_variable (expr.value_type);
-				var ctemp = new CCodeIdentifier (temp_var.name);
+				var ctemp = get_variable_cexpression (temp_var.name);
 				temp_vars.add (temp_var);
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ctemp));
 				ccall.add_argument (new CCodeConstant ("NULL"));
