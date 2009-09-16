@@ -43,72 +43,72 @@ public class Valadoc.Parser : Object {
 			{ ErrorLevel.ERROR, "Taglet is not allowed in this context" }
 		};
 
-	private void printr (ErrorNumber errno, string filename, string str, long strlen,  long line, long linestartpos, long pos, long len) {
-		this.printr_custom (errmsg[(int)errno].lvl, filename, str, strlen, line, linestartpos, pos, len, errmsg[(int)errno].msg);
+	private void printr ( ErrorNumber errno, string filename, string str, long strlen,  long line, long linestartpos, long pos, long len ) {
+		this.printr_custom ( errmsg[(int)errno].lvl, filename, str, strlen, line, linestartpos, pos, len, errmsg[(int)errno].msg );
 	}
 
-	private void printr_custom (ErrorLevel errlvl, string filename, string str, long strlen,  long line, long linestartpos, long pos, long len, string errmsg) {
-		if (this.settings.verbose == false && errlvl == ErrorLevel.ASSUMPTION) {
-			return;
+	private void printr_custom ( ErrorLevel errlvl, string filename, string str, long strlen,  long line, long linestartpos, long pos, long len, string errmsg ) {
+		if ( this.settings.verbose == false && errlvl == ErrorLevel.ASSUMPTION ) {
+			return ;
 		}
 
-		weak string linestr = str.offset(linestartpos);
+		weak string linestr = str.offset( linestartpos );
 		if (linestr[0] == '\r') {
 			linestr = linestr.offset(1);
 //			linestartpos++;
 			len--;
 		}
 
-		if (linestr[0] == '\n') {
+		if ( linestr[0] == '\n' ) {
 			linestr = linestr.offset(1);
 //			linestartpos++;
 			len--;
 		}
 
-		weak string end = linestr.chr(-1, '\n');
+		weak string end = linestr.chr( -1, '\n' );
 		long linelen = (end == null)? (long)linestr.len() : linestr.pointer_to_offset(end);
 
 
 		long underlinestartpos = pos-linestartpos;
 		long underlineendpos = underlinestartpos+((len == -1)?(linelen-(pos-linestartpos)):len);
 
-		if (errlvl == ErrorLevel.ERROR) {
-			this.err.error (filename, line, underlinestartpos, /*pos-linestartpos*/ underlineendpos, linestr.ndup(linelen), errmsg);
+		if ( errlvl == ErrorLevel.ERROR ) {
+			this.err.error ( filename, line, underlinestartpos, /*pos-linestartpos*/ underlineendpos, linestr.ndup(linelen), errmsg );
 		}
 		else {
-			this.err.warning (filename, line, underlinestartpos, /*pos-linestartpos*/ underlineendpos, linestr.ndup(linelen), errmsg);
+			this.err.warning ( filename, line, underlinestartpos, /*pos-linestartpos*/ underlineendpos, linestr.ndup(linelen), errmsg );
 		}
 	}
 
 	/* == helpers == */
-	private StringTaglet create_string_taglet (string str, long strlen, ref long startpos, long pos, long lpos, StringBuilder buf) {
+	private StringTaglet create_string_taglet (string str, long strlen, ref long startpos, long pos, long lpos, StringBuilder buf ) {
 		buf.append_len (str.offset(startpos), lpos-startpos);
-		StringTaglet strtag = (StringTaglet)GLib.Object.new (this.modules.strtag);
-		strtag.parse (buf.str);
-		buf.erase (0, -1);
+		StringTaglet strtag = (StringTaglet)GLib.Object.new ( this.modules.strtag );
+		strtag.parse ( buf.str );
+		buf.erase ( 0, -1 );
 		startpos = pos+1;
 		return strtag;
 	}
 
-	private void prepend_string_taglet (string str, long strlen, Gee.ArrayList<DocElement> content, ref long startpos, long pos, long lpos, StringBuilder buf) {
-		StringTaglet strtag = this.create_string_taglet (str, strlen, ref startpos, pos, lpos, buf);
+	private void prepend_string_taglet (string str, long strlen, Gee.ArrayList<DocElement> content, ref long startpos, long pos, long lpos, StringBuilder buf ) {
+		StringTaglet strtag = this.create_string_taglet (str, strlen, ref startpos, pos, lpos, buf );
 		content.insert (content.size-1, strtag);
 	}
 
 	private void append_string_taglet (string str, long strlen, Gee.ArrayList<DocElement> content, ref long startpos, long pos, long lpos, StringBuilder buf ) {
-		StringTaglet strtag = this.create_string_taglet (str, strlen, ref startpos, pos, lpos, buf);
-		content.add (strtag);
+		StringTaglet strtag = this.create_string_taglet ( str, strlen, ref startpos, pos, lpos, buf );
+		content.add ( strtag );
 	}
 
 
 	/* == rules: == */
-	private bool skip_deadzone_pos (string str, long strlen, ref long pos, ref long line, ref long linestartpos, bool wikimode) {
+	private bool skip_deadzone_pos ( string str, long strlen, ref long pos, ref long line, ref long linestartpos, bool wikimode ) {
 		linestartpos=pos;
-		for (pos++; str[pos]==' '||str[pos]=='\t' ; pos++);
+		for ( pos++; str[pos]==' '||str[pos]=='\t' ; pos++ );
 		line++;
 
-		if (wikimode == false) {
-			if (str[pos]=='*') {
+		if ( wikimode == false ) {
+			if ( str[pos]=='*' ) {
 				linestartpos = pos;
 				return true;
 			}
@@ -118,25 +118,25 @@ public class Valadoc.Parser : Object {
 		return true;
 	}
 
-	private bool parse_newline_pos (string str, long strlen, ref long npos, ref long nline, ref long nnewlinepos, bool wikimode) {
-		if (str[npos] == '\n') {
+	private bool parse_newline_pos ( string str, long strlen, ref long npos, ref long nline, ref long nnewlinepos, bool wikimode ) {
+		if ( str[npos] == '\n' ) {
 			return this.skip_deadzone_pos (str, strlen, ref npos, ref nline, ref nnewlinepos, wikimode);
 		}
 		return false;
 	}
 
-	private bool parse_linebreak_pos (string str, long strlen, ref long npos, ref long nline, ref long nnewlinepos, bool wikimode) {
-		if (str[npos] == '\\') {
+	private bool parse_linebreak_pos ( string str, long strlen, ref long npos, ref long nline, ref long nnewlinepos, bool wikimode) {
+		if ( str[npos] == '\\' ) {
 			long newlinepos = nnewlinepos;
 			long line = nline;
 			long pos = npos;
 
 			long mpos =  pos+1;
-			for (; str[mpos]==' '||str[mpos]=='\t' ; mpos++);
-			if (str[mpos]=='\r')
+			for ( ; str[mpos]==' '||str[mpos]=='\t' ; mpos++ );
+			if ( str[mpos]=='\r' )
 				mpos++;
 
-			if (str[mpos]=='\n') {
+			if ( str[mpos]=='\n' ) {
 				pos = mpos;
 				if (this.skip_deadzone_pos (str, strlen, ref pos, ref line, ref newlinepos, wikimode)) {
 					nnewlinepos = newlinepos;
@@ -162,8 +162,8 @@ public class Valadoc.Parser : Object {
 		return str.substring (startpos, pos-startpos);
 	}
 
-	private bool parse_inline_taglet_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, bool wikimode) {
-		if (str[npos] != '{') {
+	private bool parse_inline_taglet_pos ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, bool wikimode ) {
+		if ( str[npos] != '{' ) {
 			return false;
 		}
 
@@ -178,13 +178,13 @@ public class Valadoc.Parser : Object {
 			}
 
 			if(this.parse_linebreak_pos(str, strlen, ref pos, ref line, ref newlinepos, wikimode)) {
-				continue;
+				continue ;
 			}
 
 			return false;
 		}
 
-		if (str[pos]!='@') {
+		if ( str[pos]!='@' ) {
 			return false;
 		}
 
@@ -194,25 +194,25 @@ public class Valadoc.Parser : Object {
 		pos++;
 
 		string keyword = this.parse_taglet_name (curelement, str, strlen, ref pos, line, newlinepos, npos, true);
-		if (keyword == null) {
+		if ( keyword == null ) {
 			return false;
 		}
 
-		if ( !this.modules.taglets.contains(keyword)) {
-			this.printr (ErrorNumber.UNKNOWN_TAGLET, curelement.get_filename (), str, strlen, line, newlinepos, keywordstartpos, keyword.len()+1);
+		if ( !this.modules.taglets.contains(keyword) ) {
+			this.printr ( ErrorNumber.UNKNOWN_TAGLET, curelement.get_filename (), str, strlen, line, newlinepos, keywordstartpos, keyword.len()+1 );
 			return false;
 		}
 
-		Taglet taglet = (Taglet)GLib.Object.new (this.modules.taglets.get (keyword));
-		if (taglet is InlineTaglet == false) {
-			this.printr (ErrorNumber.CONTEXT, curelement.get_filename (), str, strlen, line, newlinepos, keywordstartpos, keyword.len()+1);
+		Taglet taglet = (Taglet)GLib.Object.new ( this.modules.taglets.get (keyword) );
+		if ( taglet is InlineTaglet == false) {
+			this.printr ( ErrorNumber.CONTEXT, curelement.get_filename (), str, strlen, line, newlinepos, keywordstartpos, keyword.len()+1 );
 			return false;
 		}
 
 
-		for (; str[pos]==' '||str[pos]=='\t'; pos++);
-		if (str[pos]=='\0' ) {
-			this.printr (ErrorNumber.OPEN_TAG, curelement.get_filename (), str, strlen, line, newlinepos, npos, -1);
+		for ( ; str[pos]==' '||str[pos]=='\t'; pos++ );
+		if ( str[pos]=='\0' ) {
+			this.printr ( ErrorNumber.OPEN_TAG, curelement.get_filename (), str, strlen, line, newlinepos, npos, -1 );
 			return false;
 		}
 
@@ -222,25 +222,25 @@ public class Valadoc.Parser : Object {
 		for ( ;str[pos]!='}'; pos++ ) {
 			long looppos = pos;
 			if(this.parse_linebreak_pos(str, strlen, ref pos, ref line, ref newlinepos, wikimode)) {
-				strcontent.append (str.substring ( contentstartpos, looppos-contentstartpos));
+				strcontent.append ( str.substring ( contentstartpos, looppos-contentstartpos) );
 				contentstartpos = pos+1;
 			}
-			else if (str[pos]=='\0'||str[pos]=='\n') {
-				this.printr (ErrorNumber.OPEN_TAG, curelement.get_filename (), str, strlen, line, newlinepos, npos, -1);
+			else if ( str[pos]=='\0'||str[pos]=='\n' ) {
+				this.printr ( ErrorNumber.OPEN_TAG, curelement.get_filename (), str, strlen, line, newlinepos, npos, -1 );
 				return false;
 			}
 		}
 
-		strcontent.append (str.substring (contentstartpos, pos-contentstartpos));
+		strcontent.append ( str.substring ( contentstartpos, pos-contentstartpos ) );
 
 		ErrorLevel errlvl = ErrorLevel.ASSUMPTION;
 		string? errmsg;
 
-		if( !((InlineTaglet)taglet).parse (this.settings, this.tree, curelement, strcontent.str, ref errlvl, out errmsg)) {
-			this.printr_custom (errlvl, curelement.get_filename (), str, strlen, keywordline, keywordnewlinepos, keywordstartpos, keyword.len()+1, errmsg);
+		if( !((InlineTaglet)taglet).parse ( this.settings, this.tree, curelement, strcontent.str, ref errlvl, out errmsg ) ) {
+			this.printr_custom ( errlvl, curelement.get_filename (), str, strlen, keywordline, keywordnewlinepos, keywordstartpos, keyword.len()+1, errmsg );
 		}
 
-		content.add (taglet);
+		content.add ( taglet );
 
 		nnewlinepos = newlinepos;
 		nline = line;
@@ -248,39 +248,39 @@ public class Valadoc.Parser : Object {
 		return true;
 	}
 
-	private bool parse_align_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long pos, ref long line, ref long newlinepos, ref long space, bool wikimode) {
-		if ( this.parse_align_helper (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, wikimode, this.modules.righttag, "))")) {
+	private bool parse_align_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long pos, ref long line, ref long newlinepos, ref long space, bool wikimode ) {
+		if ( this.parse_align_helper (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, wikimode, this.modules.righttag, "))" ) ) {
 			return true;
 		}
 
-		if ( this.parse_align_helper (curelement, str, strlen,  content, ref pos, ref line, ref newlinepos, ref space, wikimode, this.modules.centertag, ")(" )) {
+		if ( this.parse_align_helper (curelement, str, strlen,  content, ref pos, ref line, ref newlinepos, ref space, wikimode, this.modules.centertag, ")(" ) ) {
 			return true;
 		}
 		return false;
 	}
 
-	private bool parse_highlighting_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long pos, ref long line, ref long newlinepos, bool wikimode) {
-		if (this.parse_bold_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, wikimode)) {
+	private bool parse_highlighting_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long pos, ref long line, ref long newlinepos, bool wikimode ) {
+		if ( this.parse_bold_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, wikimode) ) {
 			return true;
 		}
-		else if (this.parse_italic_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, wikimode)) {
+		else if ( this.parse_italic_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, wikimode) ) {
 			return true;
 		}
-		else if (this.parse_underline_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, wikimode)) {
+		else if ( this.parse_underline_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, wikimode) ) {
 			return true;
 		}
 		return false;
 	}
 
-	private bool parse_align_helper (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, ref long space, bool wikimode, GLib.Type tagtype, string tag) {
+	private bool parse_align_helper ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, ref long space, bool wikimode, GLib.Type tagtype, string tag ) {
 		long newlinepos = nnewlinepos;
 		long line = nline;
 		long pos = npos;
 
-		if (!str.offset(pos).has_prefix(tag))
+		if ( !str.offset(pos).has_prefix(tag) )
 			return false;
 
-		for (; str[pos]==' '||str[pos]=='\t'; pos++);
+		for ( ; str[pos]==' '||str[pos]=='\t'; pos++ );
 
 		Gee.ArrayList<DocElement> subcontent = new Gee.ArrayList<DocElement> ();
 		StringBuilder buf = new StringBuilder ();
@@ -288,7 +288,7 @@ public class Valadoc.Parser : Object {
 		long lpos = startpos;
 
 
-		for (; pos<strlen; pos++) {
+		for (; pos<strlen; pos++ ) {
 			lpos = pos;
 			if (this.parse_linebreak_pos(str, strlen, ref pos, ref line, ref newlinepos, wikimode)) {
 				buf.append_len (str.offset(startpos), lpos-startpos);
@@ -307,21 +307,18 @@ public class Valadoc.Parser : Object {
 			else if (this.parse_inline_taglet_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos, wikimode)) {
 				this.prepend_string_taglet (str, strlen, subcontent, ref startpos, pos, lpos, buf );
 			}
-			else if (this.parse_url_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos)) {
+			else if ( this.parse_url_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos) ) {
 				this.prepend_string_taglet (str, strlen, subcontent, ref startpos, pos, lpos, buf );
 			}
-			else if (this.parse_img_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos)) {
+			else if ( this.parse_img_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos) ) {
 				this.prepend_string_taglet (str, strlen, subcontent, ref startpos, pos, lpos, buf );
 			}
-			else if (this.parse_code_constant_pos (str, strlen, subcontent, ref pos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
-			}
-			else if (this.parse_highlighting_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos, wikimode)) {
-				this.prepend_string_taglet (str, strlen, subcontent, ref startpos, pos, lpos, buf);
+			else if ( this.parse_highlighting_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos, wikimode) ) {
+				this.prepend_string_taglet (str, strlen, subcontent, ref startpos, pos, lpos, buf );
 			}
 		}
 
-		this.append_string_taglet (str, strlen, subcontent, ref startpos, pos, lpos, buf);
+		this.append_string_taglet ( str, strlen, subcontent, ref startpos, pos, lpos, buf );
 
 		for (space=++pos;str[pos]==' '||str[pos]=='\t';pos++);
 		space = pos-space;
@@ -330,9 +327,9 @@ public class Valadoc.Parser : Object {
 		nline = nline;
 		npos = pos-1;
 
-		ContentPositionDocElement aligntag = (ContentPositionDocElement)GLib.Object.new (tagtype);
-		aligntag.parse (subcontent);
-		content.add (aligntag);
+		ContentPositionDocElement aligntag = (ContentPositionDocElement)GLib.Object.new ( tagtype );
+		aligntag.parse ( subcontent );
+		content.add ( aligntag );
 		return true;
 	}
 
@@ -403,9 +400,9 @@ public class Valadoc.Parser : Object {
 			else if ( this.parse_url_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos) ) {
 				this.prepend_string_taglet (str, strlen, subcontent, ref startpos, pos, lpos, buf );
 			}
-			else if (this.parse_code_constant_pos (str, strlen, subcontent, ref pos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
-			}
+			//else if ( this.parse_img_pos (subcontent, ref pos, ref line, ref newlinepos) ) {
+			//	this.prepend_string_taglet ( subcontent, ref startpos, pos, lpos, buf );
+			//}
 			else if ( this.parse_highlighting_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos, wikimode) ) {
 				this.prepend_string_taglet (str, strlen, subcontent, ref startpos, pos, lpos, buf );
 			}
@@ -474,9 +471,9 @@ public class Valadoc.Parser : Object {
 		return this.parse_highlighting_helper_pos (curelement, str, strlen, content, ref npos, ref line, ref newlinepos, wikimode, this.modules.underlinedtag, "__" );
 	}
 
-	private bool parse_highlighting_helper_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, bool wikimode, GLib.Type tagtype, string markup) {
-		weak string strpos = str.offset(npos);
-		if (!strpos.has_prefix(markup)) {
+	private bool parse_highlighting_helper_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, bool wikimode, GLib.Type tagtype, string markup ) {
+		weak string strpos = str.offset( npos );
+		if ( !strpos.has_prefix( markup ) ) {
 			return false;
 		}
 
@@ -488,13 +485,14 @@ public class Valadoc.Parser : Object {
 		long newlinepos = nnewlinepos;
 		long line = nline;
 
-		for (; pos<strlen ; pos++) {
+
+		for ( ; pos<strlen ; pos++ ) {
 			long lpos = pos;
-			if (str.offset(pos).has_prefix(markup)) {
-				this.append_string_taglet (str, strlen, subcontent, ref startpos, pos, lpos, buf);
-				HighlightedDocElement htag = (HighlightedDocElement)GLib.Object.new (tagtype);
-				htag.parse (subcontent);
-				content.add (htag);
+			if ( str.offset(pos).has_prefix(markup) ) {
+				this.append_string_taglet ( str, strlen, subcontent, ref startpos, pos, lpos, buf );
+				HighlightedDocElement htag = (HighlightedDocElement)GLib.Object.new ( tagtype );
+				htag.parse ( subcontent );
+				content.add ( htag );
 
 				nnewlinepos = newlinepos;
 				npos = startpos;
@@ -502,24 +500,21 @@ public class Valadoc.Parser : Object {
 				return true;
 			}
 
-			if (this.parse_highlighting_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos, wikimode)) {
-				this.prepend_string_taglet (str, strlen, subcontent, ref startpos, pos, lpos, buf);
+			if ( this.parse_highlighting_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos, wikimode) ) {
+				this.prepend_string_taglet ( str, strlen, subcontent, ref startpos, pos, lpos, buf );
 			}
 			else if (this.parse_linebreak_pos(str, strlen, ref pos, ref line, ref newlinepos, wikimode)) {
 				buf.append_len (str.offset(startpos), lpos-startpos);
 				startpos=pos+1;
 				continue;
 			}
-			else if (this.parse_code_constant_pos (str, strlen, subcontent, ref pos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
-			}
-			else if ( this.parse_url_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, subcontent, ref startpos, pos, lpos, buf);
+			else if ( this.parse_url_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos) ) {
+				this.prepend_string_taglet ( str, strlen, subcontent, ref startpos, pos, lpos, buf );
 			}
 			else if (this.parse_inline_taglet_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos, wikimode)) {
-				this.prepend_string_taglet (str, strlen, subcontent, ref startpos, pos, lpos, buf);
+				this.prepend_string_taglet ( str, strlen, subcontent, ref startpos, pos, lpos, buf );
 			}
-			else if (str[pos]=='\n') {
+			else if ( str[pos]=='\n' ) {
 				break;
 			}
 		}
@@ -527,40 +522,37 @@ public class Valadoc.Parser : Object {
 		return false;
 	}
 
-	private bool parse_short_desc_pos (DocumentedElement curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long line, ref long newlinepos, ref long space, bool wikimode) {
+	private bool parse_short_desc_pos (DocumentedElement curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long line, ref long newlinepos, ref long space, bool wikimode ) {
 		StringBuilder buf = new StringBuilder ();
 		long startpos = npos;
 		long lpos = npos;
 
-		for (; npos < strlen ; npos++) {
+		for (; npos < strlen ; npos++ ) {
 			lpos = npos;
 
-			if (this.parse_linebreak_pos (str, strlen, ref npos, ref line, ref newlinepos, wikimode)) {
+			if (this.parse_linebreak_pos (str, strlen, ref npos, ref line, ref newlinepos, wikimode) ) {
 				buf.append_len (str.offset(startpos), lpos-startpos);
 				startpos=npos+1;
 				continue;
 			}
 
-			if (this.parse_newline_pos (str, strlen, ref npos, ref line, ref newlinepos, wikimode)) {
+			if (this.parse_newline_pos ( str, strlen, ref npos, ref line, ref newlinepos, wikimode)) {
 				npos++;
 				break;
 			}
 
 			if (this.parse_inline_taglet_pos (curelement, str, strlen, content, ref npos, ref line, ref newlinepos, wikimode)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, npos, lpos, buf);
+				this.prepend_string_taglet ( str, strlen, content, ref startpos, npos, lpos, buf );
 			}
-			else if (this.parse_url_pos (curelement, str, strlen, content, ref npos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, npos, lpos, buf);
+			else if ( this.parse_url_pos (curelement, str, strlen, content, ref npos, ref line, ref newlinepos ) ) {
+				this.prepend_string_taglet ( str, strlen, content, ref startpos, npos, lpos, buf );
 			}
-			else if (this.parse_code_constant_pos (str, strlen, subcontent, ref pos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
-			}
-			else if (this.parse_highlighting_pos (curelement, str, strlen, content, ref npos, ref line, ref newlinepos, wikimode)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, npos, lpos, buf);
+			else if ( this.parse_highlighting_pos (curelement, str, strlen, content, ref npos, ref line, ref newlinepos, wikimode) ) {
+				this.prepend_string_taglet ( str, strlen, content, ref startpos, npos, lpos, buf );
 			}
 		}
-		this.append_string_taglet (str, strlen, content, ref startpos, lpos, lpos, buf);
-		for (; str[npos]==' '||str[npos]=='\t' ; npos++, space++);
+		this.append_string_taglet ( str, strlen, content, ref startpos, lpos, lpos, buf );
+		for ( ; str[npos]==' '||str[npos]=='\t' ; npos++, space++ );
 		return true;
 	}
 
@@ -572,8 +564,8 @@ public class Valadoc.Parser : Object {
 		return url.has_prefix("http://") || url.has_prefix("http://") || (url.has_prefix("/")&&url.has_suffix(".valadoc"));
 	}
 
-	private bool parse_url_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long rpos, ref long nline, ref long newlinepos) {
-		if (!str.offset(rpos).has_prefix ("[["))
+	private bool parse_url_pos ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long rpos, ref long nline, ref long newlinepos ) {
+		if ( !str.offset(rpos).has_prefix ("[[") )
 			return false;
 
 
@@ -582,23 +574,23 @@ public class Valadoc.Parser : Object {
 		long urlend = -1;
 		long line = nline;
 
-		for (; pos<strlen ; pos++) {
-			switch (str[pos]) {
+		for ( ; pos<strlen ; pos++ ) {
+			switch ( str[pos] ) {
 			case '|':
 				urlend= pos;
 				break;
 			case ']':
 				if (str[pos+1]==']') {
-					string url = str.substring (rpos+2, ((urlend==-1)? pos : urlend)-rpos-2);
-					if ( !this.check_url (url)) {
-						this.printr (ErrorNumber.INVALID_LINK, curelement.get_filename (), str, strlen, nline, newlinepos, rpos+2, pos-rpos-2);
+					string url = str.substring ( rpos+2, ((urlend==-1)? pos : urlend)-rpos-2 );
+					if ( !this.check_url (url) ) {
+						this.printr ( ErrorNumber.INVALID_LINK, curelement.get_filename (), str, strlen, nline, newlinepos, rpos+2, pos-rpos-2 );
 						return false;
 					}
 
-					string urldesc = (urlend==-1)? url : str.substring(urlend+1, pos-urlend-1);
-					LinkDocElement linktag = (LinkDocElement)GLib.Object.new (this.modules.linktag);
-					linktag.parse (this.settings, this.tree, curelement, url, urldesc);
-					content.add (linktag);
+					string urldesc = (urlend==-1)? url : str.substring( urlend+1, pos-urlend-1 );					
+					LinkDocElement linktag = (LinkDocElement)GLib.Object.new ( this.modules.linktag );
+					linktag.parse ( this.settings, this.tree, curelement, url, urldesc );
+					content.add ( linktag );
 
 					nline = line;
 					rpos = pos+1;
@@ -606,11 +598,11 @@ public class Valadoc.Parser : Object {
 				}
 				break;
 			case '\n':
-				this.printr (ErrorNumber.OPEN_TAG, curelement.get_filename (), str, strlen, nline, newlinepos, rpos, -1);
+				this.printr ( ErrorNumber.OPEN_TAG, curelement.get_filename (), str, strlen, nline, newlinepos, rpos, -1 );
 				return false;
 			}
 		}
-		this.printr (ErrorNumber.OPEN_TAG, curelement.get_filename (), str, strlen, nline, newlinepos, rpos, -1);
+		this.printr ( ErrorNumber.OPEN_TAG, curelement.get_filename (), str, strlen, nline, newlinepos, rpos, -1 );
 		return false;
 	}
 
@@ -728,9 +720,6 @@ public class Valadoc.Parser : Object {
 			else if ( this.parse_url_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos ) ) {
 				this.prepend_string_taglet ( str, strlen, subcontent, ref startpos, pos, lpos, buf );
 			}
-			else if (this.parse_code_constant_pos (str, strlen, subcontent, ref pos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
-			}
 			else if ( this.parse_highlighting_pos (curelement, str, strlen, subcontent, ref pos, ref line, ref newlinepos, wikimode) ) {
 				this.prepend_string_taglet ( str, strlen, subcontent, ref startpos, pos, lpos, buf );
 			}
@@ -779,7 +768,7 @@ public class Valadoc.Parser : Object {
 		return true;
 	}
 
-	private long get_table_cell_attributes_error_len (string str, long strlen, long startpos) {
+	private long get_table_cell_attributes_error_len ( string str, long strlen, long startpos ) {
 		weak string strstartpos = str.offset(startpos);
 
 		weak string? endposstr = strstartpos.chr (-1, '>');
@@ -790,11 +779,11 @@ public class Valadoc.Parser : Object {
 		long cellend = (cellendstr == null)? long.MAX : strstartpos.pointer_to_offset(cellendstr);
 		long lineend = (lineendstr == null)? long.MAX : strstartpos.pointer_to_offset(lineendstr);
 
-		return long.min(long.min(long.min(cellend, lineend), endpos), strlen-startpos);
+		return long.min(long.min( long.min( cellend, lineend), endpos), strlen-startpos);
 	}
 
 	private bool parse_table_cell_attributes (Documented curelement, string str, long strlen, ref long npos, long line, long newlinepos, out TextPosition vpos, out TextVerticalPosition hpos, out int hwidth, out int vwidth, out int color) {
-		if (str[npos] != '<') {
+		if ( str[npos] != '<' ) {
 			return false;
 		}
 
@@ -805,22 +794,22 @@ public class Valadoc.Parser : Object {
 		color = -1;
 
 
-		for (long pos = npos+1; pos < strlen; pos++) {
-			switch (str[pos]) {
+		for ( long pos = npos+1; pos < strlen; pos++ ) {
+			switch ( str[pos] ) {
 				case '-':
-					if (!this.extract_decimal (str, strlen, ref pos, out hwidth)) {
-						this.printr (ErrorNumber.TABLE_CELL_ATTRIBUTES, curelement.get_filename (), str, strlen, line, newlinepos, npos, this.get_table_cell_attributes_error_len (str, strlen, npos));
+					if ( !this.extract_decimal ( str, strlen, ref pos, out hwidth ) ) {
+						this.printr ( ErrorNumber.TABLE_CELL_ATTRIBUTES, curelement.get_filename (), str, strlen, line, newlinepos, npos, this.get_table_cell_attributes_error_len (str, strlen, npos) );
 						return false;
 					}
 					break;
 				case '|':
-					if (!this.extract_decimal (str, strlen, ref pos, out vwidth )) {
-						this.printr (ErrorNumber.TABLE_CELL_ATTRIBUTES, curelement.get_filename (), str, strlen, line, newlinepos, npos, this.get_table_cell_attributes_error_len (str, strlen, npos));
+					if ( !this.extract_decimal ( str, strlen, ref pos, out vwidth ) ) {
+						this.printr ( ErrorNumber.TABLE_CELL_ATTRIBUTES, curelement.get_filename (), str, strlen, line, newlinepos, npos, this.get_table_cell_attributes_error_len (str, strlen, npos) );
 						return false;
 					}
 					break;
 				case ')':
-					switch (str[pos+1]) {
+					switch ( str[pos+1] ) {
 					case '(':
 						vpos = TextPosition.CENTER;
 						pos++;
@@ -830,13 +819,13 @@ public class Valadoc.Parser : Object {
 						pos++;
 						break;
 					default:
-						this.printr (ErrorNumber.TABLE_CELL_ATTRIBUTES, curelement.get_filename (), str, strlen, line, newlinepos, npos, this.get_table_cell_attributes_error_len (str, strlen, npos));
+						this.printr ( ErrorNumber.TABLE_CELL_ATTRIBUTES, curelement.get_filename (), str, strlen, line, newlinepos, npos, this.get_table_cell_attributes_error_len (str, strlen, npos) );
 						return false;
 					}
 					break;
 				case '#':
-					if (!this.extract_color(str, strlen, ref pos, out color)) {
-						this.printr (ErrorNumber.TABLE_CELL_ATTRIBUTES, curelement.get_filename (), str, strlen, line, newlinepos, npos, this.get_table_cell_attributes_error_len (str, strlen, npos));
+					if ( !this.extract_color(str, strlen, ref pos, out color) ) {
+						this.printr ( ErrorNumber.TABLE_CELL_ATTRIBUTES, curelement.get_filename (), str, strlen, line, newlinepos, npos, this.get_table_cell_attributes_error_len (str, strlen, npos) );
 						return false;
 					}
 					break;
@@ -854,16 +843,16 @@ public class Valadoc.Parser : Object {
 				case ' ':
 					break;
 				default:
-					this.printr (ErrorNumber.TABLE_CELL_ATTRIBUTES, curelement.get_filename (), str, strlen, line, newlinepos, npos, this.get_table_cell_attributes_error_len (str, strlen, npos));
+					this.printr ( ErrorNumber.TABLE_CELL_ATTRIBUTES, curelement.get_filename (), str, strlen, line, newlinepos, npos, this.get_table_cell_attributes_error_len (str, strlen, npos) );
 					return false;
 			}
 		}
-		this.printr (ErrorNumber.TABLE_CELL_ATTRIBUTES, curelement.get_filename (), str, strlen, line, newlinepos, npos, this.get_table_cell_attributes_error_len (str, strlen, npos));
+		this.printr ( ErrorNumber.TABLE_CELL_ATTRIBUTES, curelement.get_filename (), str, strlen, line, newlinepos, npos, this.get_table_cell_attributes_error_len (str, strlen, npos) );
 		return false;
 	}
 
-	private bool parse_table_cell (Documented curelement, string str, long strlen, Gee.ArrayList<TableCellDocElement> cells, ref long pos, ref long line, ref long newlinepos, bool wikimode) {
-		if (!str.offset(pos).has_prefix("||")) {
+	private bool parse_table_cell ( Documented curelement, string str, long strlen, Gee.ArrayList<TableCellDocElement> cells, ref long pos, ref long line, ref long newlinepos, bool wikimode ) {
+		if ( !str.offset(pos).has_prefix("||") ) {
 			return false;
 		}
 
@@ -884,42 +873,39 @@ public class Valadoc.Parser : Object {
 
 		this.parse_table_cell_attributes (curelement, str, strlen, ref pos, line, newlinepos, out vpos, out hpos, out hwidth, out vwidth, out color);
 
-		for (long startpos = pos; pos < strlen ; pos++) {
+		for ( long startpos = pos; pos < strlen ; pos++ ) {
 			lpos = pos;
-			if (str.offset(pos).has_prefix("||")) {
-				this.append_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf);
+			if ( str.offset(pos).has_prefix("||") ) {
+				this.append_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 
-				TableCellDocElement celltag = (TableCellDocElement)GLib.Object.new (this.modules.celltag);
-				celltag.parse ( vpos, hpos, hwidth, vwidth, content);
+				TableCellDocElement celltag = (TableCellDocElement)GLib.Object.new ( this.modules.celltag );
+				celltag.parse ( vpos, hpos, hwidth, vwidth, content );
 				cells.add ( celltag );
 				return true;
 			}
-			else if (this.parse_linebreak_pos (str, strlen, ref pos, ref line, ref newlinepos, wikimode)) {
+			else if (this.parse_linebreak_pos (str, strlen, ref pos, ref line, ref newlinepos, wikimode) ) {
 				buf.append_len (str.offset(startpos), lpos-startpos);
 				startpos=pos+1;
 			}
-			else if (this.parse_inline_taglet_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, wikimode)) {
-				this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf);
+			else if (this.parse_inline_taglet_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, wikimode )) {
+				this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 				startpos=pos+1;
 			}
-			else if (this.parse_code_constant_pos (str, strlen, content, ref pos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
+			else if ( this.parse_url_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos ) ) {
+				this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 			}
-			else if (this.parse_url_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
+			else if ( this.parse_img_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos ) ) {
+				this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 			}
-			else if (this.parse_img_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
-			}
-			else if (this.parse_highlighting_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, wikimode)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
+			else if ( this.parse_highlighting_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, wikimode) ) {
+				this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 			}
 			else if (this.parse_newline_pos (str, strlen, ref pos, ref line, ref newlinepos, wikimode)) {
-				this.printr (ErrorNumber.TABLE_CELL, curelement.get_filename (), str, strlen, cellstartline, cellstartnewlinepos, cellstartpos, -1);
+				this.printr ( ErrorNumber.TABLE_CELL, curelement.get_filename (), str, strlen, cellstartline, cellstartnewlinepos, cellstartpos, -1 );
 				return false;
 			}
 		}
-		this.printr (ErrorNumber.TABLE_CELL, curelement.get_filename (), str, strlen, cellstartline, cellstartnewlinepos, cellstartpos, -1);
+		this.printr ( ErrorNumber.TABLE_CELL, curelement.get_filename (), str, strlen, cellstartline, cellstartnewlinepos, cellstartpos, -1 );
 		return false;
 	}
 
@@ -1081,7 +1067,7 @@ public class Valadoc.Parser : Object {
 		return counter > 0;
 	}
 
-	private bool parse_headline_pos (string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, ref long space, bool wikimode) {
+	private bool parse_headline_pos ( string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, ref long space, bool wikimode ) {
 		weak string startstr = str.offset(npos);
 		if ( !startstr.has_prefix("==") ) {
 			return false;
@@ -1196,9 +1182,6 @@ public class Valadoc.Parser : Object {
 			if (this.parse_inline_taglet_pos (wikipage, str, strlen, content, ref pos, ref line, ref newlinepos, true)) {
 				this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 			}
-			else if (this.parse_code_constant_pos (str, strlen, content, ref pos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
-			}
 			else if ( this.parse_url_pos (wikipage, str, strlen, content, ref pos, ref line, ref newlinepos) ) {
 				this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 			}
@@ -1216,21 +1199,21 @@ public class Valadoc.Parser : Object {
 		return wikipage;
 	}
 
-	public DocumentationTree? parse (DocumentedElement self) {
+	public DocumentationTree? parse ( DocumentedElement self ) {
 		if (self.vcomment == null) {
 			return null;
 		}
 
 		weak string str = self.vcomment.content;
-		if (str == null) {
+		if ( str == null ) {
 			return null;
 		}
 
-		if (str[0]!='*') {
+		if ( str[0]!='*' ) {
 			return null;
 		}
 
-		if (self.documentation != null) {
+		if ( self.documentation != null ) {
 			return self.documentation;
 		}
 
@@ -1243,15 +1226,15 @@ public class Valadoc.Parser : Object {
 		long line = 0;
 		long pos = 0;
 
-		if (!this.skip_header_pos ( str, strlen, ref pos, ref line, ref newlinepos, false)) {
+		if (!this.skip_header_pos ( str, strlen, ref pos, ref line, ref newlinepos, false )) {
 			return null;
 		}
 
-		if(!this.parse_short_desc_pos(self, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, false)) {
+		if(!this.parse_short_desc_pos(self, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, false )) {
 			return null;
 		}
 
-		doctree.add_brief (content);
+		doctree.add_brief ( content );
 
 		StringBuilder buf = new StringBuilder ();
 		long startpos = pos; //+1
@@ -1261,9 +1244,9 @@ public class Valadoc.Parser : Object {
 		content = new Gee.ArrayList<DocElement> ();
 
 
-		for (; pos<strlen ; pos++) {
+		for ( ; pos<strlen ; pos++ ) {
 			lpos = pos;
-			if (this.parse_linebreak_pos (str, strlen, ref pos, ref line, ref newlinepos, false)) {
+			if ( this.parse_linebreak_pos (str, strlen, ref pos, ref line, ref newlinepos, false) ) {
 				buf.append_len (str.offset(startpos), lpos-startpos);
 				startpos = pos+1;
 				continue;
@@ -1278,57 +1261,54 @@ public class Valadoc.Parser : Object {
 				continue;
 			}
 
-			if (linestart == pos) {
-				if (this.parse_source_pos (self, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, false)) {
-					this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
+			if ( linestart == pos ) {
+				if ( this.parse_source_pos ( self, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, false) ) {
+					this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 					linestart = startpos = pos+1;
 					continue ;
 				}
-				else if (this.parse_notification_pos (self, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, false)) {
-					this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
+				else if ( this.parse_notification_pos ( self, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, false ) ) {
+					this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 					linestart = startpos = pos+1;
 					continue ;
 				}
-				else if ( this.parse_align_pos(self, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, false)) {
-					this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
+				else if ( this.parse_align_pos( self, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, false ) ) {
+					this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 					linestart = startpos = pos+1;
 					continue ;
 				}
-				else if (this.parse_list_pos (self, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, ref linestart, false)) {
-					this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
+				else if ( this.parse_list_pos (self, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, ref linestart, false) ) {
+					this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 					linestart = startpos = pos+1;
 					continue ;
 				}
-				else if (str[pos] == '@' && !str[pos].isspace()) {
+				else if ( str[pos] == '@' && !str[pos].isspace() ) {
 					Gee.ArrayList<MainTaglet> taglets = new Gee.ArrayList<MainTaglet>();
 
-					this.parse_taglet (self, str, strlen, taglets, ref pos, ref line, ref newlinepos, ref space, ref depth, false);
-					this.append_string_taglet (str, strlen, content, ref startpos, strlen-1, lpos, buf);
-					doctree.add_description (content);
+					this.parse_taglet ( self, str, strlen, taglets, ref pos, ref line, ref newlinepos, ref space, ref depth, false );
+					this.append_string_taglet ( str, strlen, content, ref startpos, strlen-1, lpos, buf );
+					doctree.add_description ( content );
 					doctree.add_taglets (taglets);
 					return doctree;
 				}
-				else if (this.parse_table ( self, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, false)) {
-					this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
+				else if ( this.parse_table ( self, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, false ) ) {
+					this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 					linestart = startpos = pos+1;
-					continue;
+					continue ;
 				}
 			}
 
-			if (this.parse_inline_taglet_pos (self, str, strlen, content, ref pos, ref line, ref newlinepos, false)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
+			if (this.parse_inline_taglet_pos ( self, str, strlen, content, ref pos, ref line, ref newlinepos, false )) {
+				this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 			}
-			else if (this.parse_url_pos (self, str, strlen, content, ref pos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
+			else if ( this.parse_url_pos ( self, str, strlen, content, ref pos, ref line, ref newlinepos ) ) {
+				this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 			}
-			else if (this.parse_code_constant_pos (str, strlen, content, ref pos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
+			else if ( this.parse_img_pos ( self, str, strlen, content, ref pos, ref line, ref newlinepos ) ) {
+				this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 			}
-			else if (this.parse_img_pos (self, str, strlen, content, ref pos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
-			}
-			else if (this.parse_highlighting_pos (self, str, strlen, content, ref pos, ref line, ref newlinepos, false)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
+			else if ( this.parse_highlighting_pos ( self, str, strlen, content, ref pos, ref line, ref newlinepos, false ) ) {
+				this.prepend_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 			}
 		}
 
@@ -1446,9 +1426,6 @@ public class Valadoc.Parser : Object {
 			else if (this.parse_inline_taglet_pos ( curelement, str, strlen, content, ref pos, ref line, ref newlinepos, wikimode)) {
 				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
 			}
-			else if ( this.parse_code_constant_pos (str, strlen, content, ref pos, ref line, ref newlinepos)) {
-				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
-			}
 			else if ( this.parse_url_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos)) {
 				this.prepend_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
 			}
@@ -1470,34 +1447,6 @@ public class Valadoc.Parser : Object {
 
 		npos = pos;
 		return true;
-	}
-
-	private bool parse_code_constant_pos (string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long newlinepos) {
-		weak string startstr = str.offset(npos);
-		CodeConstantDocElement? tag = null; 
-
-		if (startstr.has_prefix("{{{null}}}") ) {
-			tag = (CodeConstantDocElement)GLib.Object.new (this.modules.codeconstanttag);
-			tag.parse ("null");
-			content.add (tag);
-			npos += 9;
-			return true;
-		}
-		else if (startstr.has_prefix("{{{true}}}") ) {
-			tag = (CodeConstantDocElement)GLib.Object.new (this.modules.codeconstanttag);
-			tag.parse ("true");
-			content.add (tag);
-			npos += 9;
-			return true;
-		}
-		else if (startstr.has_prefix("{{{false}}}") ) {
-			tag = (CodeConstantDocElement)GLib.Object.new (this.modules.codeconstanttag);
-			tag.parse ("false");
-			content.add (tag);
-			npos += 10;
-			return true;
-		}
-		return false;
 	}
 }
 

@@ -53,7 +53,7 @@ public enum Valadoc.ListType {
 }
 
 
-
+/* deprecated */
 public interface Valadoc.Documented : Object {
 	public abstract string? get_filename ();
 }

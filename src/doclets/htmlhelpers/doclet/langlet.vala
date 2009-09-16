@@ -447,13 +447,28 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 		this.write_inheritance_list ( stru, file );
 	}
 
-	public override void write_inheritance_list ( Inheritable dtype, void* ptr ) {
+	public override void write_inheritance_list ( DocumentedElement dtype, void* ptr ) {
 		weak GLib.FileStream file = (GLib.FileStream)ptr;
 
-		Gee.Collection<Interface> lst = dtype.get_implemented_interface_list ( );
-		Inheritable? base_type = dtype.base_type;
-		int size = lst.size;
+		Gee.Collection<Interface> lst = null;
+		DocumentedElement? base_type = null;
+		int size = 0;
 		int i = 1;
+
+		if (dtype is Class) {
+			lst = ((Class)dtype).get_implemented_interface_list ();
+			base_type = ((Class)dtype).base_type;
+			size = lst.size;
+		}
+		else if (dtype is Interface) {
+			lst = ((Interface)dtype).get_implemented_interface_list ();
+			base_type = ((Interface)dtype).base_type;
+			size = lst.size;
+		}
+		else if (dtype is Struct) {
+			base_type = ((Struct)dtype).base_type;
+		}
+
 
 		if ( size == 0 && base_type == null )
 			return ;
@@ -467,14 +482,15 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 			}
 		}
 
-		foreach ( Interface cntype in lst ) {
-			this.write_type_name ( cntype, file );
-			if ( size > i )
-				file.puts ( ", " );
+		if (lst != null) {
+			foreach ( Interface cntype in lst ) {
+				this.write_type_name ( cntype, file );
+				if ( size > i )
+					file.puts ( ", " );
 
-			i++;
+				i++;
+			}
 		}
-
 		file.putc ( ' ' );
 	}
 

@@ -3,10 +3,11 @@
 NULL =
 
 
-SUBDIRS = libvaladoc \
-          vapi       \
-          doclets    \
-          valadoc    \
-          $(NULL)
+SUBDIRS = \
+    libvaladoc \
+    vapi \
+    valadoc \
+	doclets \
+    $(NULL)
 
 

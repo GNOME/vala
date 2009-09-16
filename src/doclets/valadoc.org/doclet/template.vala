@@ -36,14 +36,14 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet {
 		if(element.documentation == null) {
 			return ;
 		}
-stdout.printf("foooo 1\n");
+
 		string path = Path.build_filename (this.settings.path, element.package.name, "documentation", element.full_name ());
 		FileStream file = FileStream.open (path, "w");
 		if (file == null) {
 			this.run = false;
 			return ;
 		}
-stdout.printf("foooo 2\n");
+
 		element.documentation.write_brief (file);
 		element.documentation.write_content (file);
 	}

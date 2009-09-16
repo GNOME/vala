@@ -23,15 +23,28 @@ public class Valadoc.Html.Api.Vala {
 		return span;
 	}
 
-	private Entry parents (Inheritable type) {
+	private Entry parents (DocumentedElement type) {
 		Span span = new Span ();
 		span.add_attribute (this.cssparentlist);
 
-		Gee.Collection<Interface> interfaces = type.get_implemented_interface_list ();
-		Basic? basetype = type.base_type;
+		Gee.Collection<Interface>? interfaces = null;
+		Basic? basetype = null;
+
 		bool documentedelement;
 
-		if (basetype != null || interfaces.size > 0) {
+		if (type is Interface) {
+			interfaces = ((Interface)type).get_implemented_interface_list ();
+			basetype = ((Interface)type).base_type;
+		}
+		else if (type is Class) {
+			interfaces = ((Class)type).get_implemented_interface_list ();
+			basetype = ((Class)type).base_type;
+		}
+		else if (type is Struct) {
+			basetype = ((Struct)type).base_type;
+		}
+
+		if (basetype != null || (interfaces != null && interfaces.size > 0)) {
 			span.add_child (new String (" : "));
 		}
 
@@ -39,15 +52,17 @@ public class Valadoc.Html.Api.Vala {
 			span.add_child (this.type (basetype, out documentedelement));
 		}
 
-		if (basetype != null && interfaces.size > 0) {
-			span.add_child (new String (", "));
-		}
-
-		int i = 0;
-		foreach (Interface iface in interfaces) {
-			span.add_child (this.type (iface, out documentedelement));
-			if (interfaces.size < ++i) {
+		if (interfaces != null) {
+			if (basetype != null && interfaces.size > 0) {
 				span.add_child (new String (", "));
+			}
+
+			int i = 0;
+			foreach (Interface iface in interfaces) {
+				span.add_child (this.type (iface, out documentedelement));
+				if (interfaces.size < ++i) {
+					span.add_child (new String (", "));
+				}
 			}
 		}
 

@@ -5,9 +5,10 @@ AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([src/valadoc/valadoc.vala])
 AC_CONFIG_HEADER([config.h])
 
-# Checks for programs.
+
 AC_PROG_CC
 AC_PROG_LIBTOOL
+
 
 AC_PATH_PROG(VALAC, valac, valac)
 AC_SUBST(VALAC)
@@ -20,8 +21,6 @@ AM_CONDITIONAL(ENABLE_VALADOCORG, test x$enable_valadocorg = xyes)
 
 
 
-
-# Checks for libraries.
 LIBVALA_REQUIRED=0.3.4
 LIBGVC_REQUIRED=2.16
 GLIB_REQUIRED=2.12.0
@@ -54,13 +53,6 @@ PKG_CHECK_MODULES(LIBGDKPIXBUF, gdk-pixbuf-2.0 >= $LIBGDKPIXBUF_REQUIRED)
 AC_SUBST(LIBGDKPIXBUF_CFLAGS)
 AC_SUBST(LIBGDKPIXBUF_LIBS)
 
-
-
-# Checks for header files.
-
-# Checks for typedefs, structures, and compiler characteristics.
-
-# Checks for library functions.
 
 
 AC_CONFIG_FILES([Makefile
