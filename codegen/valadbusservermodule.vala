@@ -102,15 +102,15 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			ready_function = new CCodeFunction (wrapper_name + "_ready", "void");
 			ready_function.modifiers = CCodeModifiers.STATIC;
 			ready_function.add_parameter (new CCodeFormalParameter ("source_object", "GObject *"));
-			ready_function.add_parameter (new CCodeFormalParameter ("res", "GAsyncResult *"));
-			ready_function.add_parameter (new CCodeFormalParameter ("user_data", "gpointer *"));
+			ready_function.add_parameter (new CCodeFormalParameter ("_res_", "GAsyncResult *"));
+			ready_function.add_parameter (new CCodeFormalParameter ("_user_data_", "gpointer *"));
 			ready_block = new CCodeBlock ();
 
 			cdecl = new CCodeDeclaration ("DBusConnection *");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("connection", new CCodeIdentifier ("user_data[0]")));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("connection", new CCodeIdentifier ("_user_data_[0]")));
 			ready_block.add_statement (cdecl);
 			cdecl = new CCodeDeclaration ("DBusMessage *");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("message", new CCodeIdentifier ("user_data[1]")));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("message", new CCodeIdentifier ("_user_data_[1]")));
 			ready_block.add_statement (cdecl);
 		}
 
@@ -173,7 +173,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		if (m.coroutine) {
 			finish_ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_finish_cname ()));
 			finish_ccall.add_argument (new CCodeIdentifier ("source_object"));
-			finish_ccall.add_argument (new CCodeIdentifier ("res"));
+			finish_ccall.add_argument (new CCodeIdentifier ("_res_"));
 		}
 
 		ccall.add_argument (new CCodeIdentifier ("self"));
@@ -349,17 +349,17 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			new_call.add_argument (new CCodeIdentifier ("gpointer"));
 			new_call.add_argument (new CCodeConstant ("2"));
 			cdecl = new CCodeDeclaration ("gpointer *");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("user_data", new_call));
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_user_data_", new_call));
 			in_prefragment.append (cdecl);
 
 			var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_ref"));
 			ref_call.add_argument (new CCodeIdentifier ("connection"));
-			in_prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("user_data[0]"), ref_call)));
+			in_prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_user_data_[0]"), ref_call)));
 			ref_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_ref"));
 			ref_call.add_argument (new CCodeIdentifier ("message"));
-			in_prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("user_data[1]"), ref_call)));
+			in_prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_user_data_[1]"), ref_call)));
 
-			ccall.add_argument (new CCodeIdentifier ("user_data"));
+			ccall.add_argument (new CCodeIdentifier ("_user_data_"));
 		}
 
 		if (m.get_error_types ().size > 0) {
@@ -402,7 +402,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			unref_call.add_argument (new CCodeIdentifier ("message"));
 			ready_block.add_statement (new CCodeExpressionStatement (unref_call));
 			var free_call = new CCodeFunctionCall (new CCodeIdentifier ("g_free"));
-			free_call.add_argument (new CCodeIdentifier ("user_data"));
+			free_call.add_argument (new CCodeIdentifier ("_user_data_"));
 			ready_block.add_statement (new CCodeExpressionStatement (free_call));
 		}
 
@@ -630,7 +630,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 		var cfunc = new CCodeFunction ("_" + sym.get_lower_case_cprefix () + "dbus_unregister", "void");
 		cfunc.add_parameter (new CCodeFormalParameter ("connection", "DBusConnection*"));
-		cfunc.add_parameter (new CCodeFormalParameter ("user_data", "void*"));
+		cfunc.add_parameter (new CCodeFormalParameter ("_user_data_", "void*"));
 
 		source_declarations.add_type_member_declaration (cfunc.copy ());
 

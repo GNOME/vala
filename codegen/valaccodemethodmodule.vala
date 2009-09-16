@@ -141,7 +141,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		idle_call.add_argument (async_result_expr);
 		idle_block.add_statement (new CCodeExpressionStatement (idle_call));
 
-		var state = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state");
+		var state = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_");
 		var zero = new CCodeConstant ("0");
 		var state_is_zero = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, state, zero);
 		var dispatch = new CCodeIfStatement (state_is_zero, idle_block, direct_block);
@@ -379,7 +379,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					co_function.modifiers |= CCodeModifiers.STATIC;
 					source_declarations.add_type_member_declaration (co_function.copy ());
 
-					var cswitch = new CCodeSwitchStatement (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state"));
+					var cswitch = new CCodeSwitchStatement (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"));
 
 					// let gcc know that this can't happen
 					cswitch.add_statement (new CCodeLabel ("default"));

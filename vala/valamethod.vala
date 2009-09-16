@@ -993,7 +993,7 @@ public class Vala.Method : Member {
 		var callback_type = new DelegateType ((Delegate) glib_ns.scope.lookup ("AsyncReadyCallback"));
 		callback_type.nullable = true;
 
-		var callback_param = new FormalParameter ("callback", callback_type);
+		var callback_param = new FormalParameter ("_callback_", callback_type);
 		callback_param.default_expression = new NullLiteral (source_reference);
 		callback_param.cparameter_position = -1;
 		callback_param.cdelegate_target_parameter_position = -0.9;
@@ -1017,7 +1017,7 @@ public class Vala.Method : Member {
 
 		var result_type = new ObjectType ((ObjectTypeSymbol) glib_ns.scope.lookup ("AsyncResult"));
 
-		var result_param = new FormalParameter ("res", result_type);
+		var result_param = new FormalParameter ("_res_", result_type);
 		result_param.default_expression = new NullLiteral (source_reference);
 		result_param.cparameter_position = 0.1;
 

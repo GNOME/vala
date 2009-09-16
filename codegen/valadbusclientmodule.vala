@@ -1679,8 +1679,8 @@ internal class Vala.DBusClientModule : DBusModule {
 		string dataname = "%sDBusProxy%sData".printf (iface.get_cname (), Symbol.lower_case_to_camel_case (m.name));
 		var datastruct = new CCodeStruct ("_" + dataname);
 
-		datastruct.add_field ("GAsyncReadyCallback", "callback");
-		datastruct.add_field ("gpointer", "user_data");
+		datastruct.add_field ("GAsyncReadyCallback", "_callback_");
+		datastruct.add_field ("gpointer", "_user_data_");
 		datastruct.add_field ("DBusPendingCall*", "pending");
 
 		source_declarations.add_type_definition (datastruct);
@@ -1694,8 +1694,8 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("callback", "GAsyncReadyCallback"));
-		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("user_data", "gpointer"));
+		cparam_map.set (get_param_pos (-1), new CCodeFormalParameter ("_callback_", "GAsyncReadyCallback"));
+		cparam_map.set (get_param_pos (-0.9), new CCodeFormalParameter ("_user_data_", "gpointer"));
 
 		generate_cparameters (m, source_declarations, cparam_map, function, null, null, null, 1);
 
@@ -1756,8 +1756,8 @@ internal class Vala.DBusClientModule : DBusModule {
 		block.add_statement (datadecl);
 		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), dataalloc)));
 
-		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "callback"), new CCodeIdentifier ("callback"))));
-		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "user_data"), new CCodeIdentifier ("user_data"))));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_callback_"), new CCodeIdentifier ("_callback_"))));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_user_data_"), new CCodeIdentifier ("_user_data_"))));
 		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "pending"), new CCodeIdentifier ("_pending"))));
 
 		var pending = new CCodeFunctionCall (new CCodeIdentifier ("dbus_pending_call_set_notify"));
@@ -1795,8 +1795,8 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		var async_result_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
 		async_result_creation.add_argument (object_creation);
-		async_result_creation.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "callback"));
-		async_result_creation.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "user_data"));
+		async_result_creation.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_callback_"));
+		async_result_creation.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_user_data_"));
 		async_result_creation.add_argument (new CCodeIdentifier ("data"));
 
 		var completecall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete"));
@@ -1823,7 +1823,7 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
-		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("res", "GAsyncResult*"));
+		cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("_res_", "GAsyncResult*"));
 
 		generate_cparameters (m, source_declarations, cparam_map, function, null, null, null, 2);
 
@@ -1845,7 +1845,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		block.add_statement (cdecl);
 
 		var get_source_tag = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_get_source_tag"));
-		get_source_tag.add_argument (new CCodeCastExpression (new CCodeIdentifier ("res"), "GSimpleAsyncResult *"));
+		get_source_tag.add_argument (new CCodeCastExpression (new CCodeIdentifier ("_res_"), "GSimpleAsyncResult *"));
 		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("data"), get_source_tag)));
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_pending_call_steal_reply"));

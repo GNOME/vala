@@ -93,7 +93,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				// output arguments used separately
 				out_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
 				// pass GAsyncResult stored in closure to finish function
-				out_arg_map.set (get_param_pos (0.1), new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "res"));
+				out_arg_map.set (get_param_pos (0.1), new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_res_"));
 			}
 		}
 
@@ -650,7 +650,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				pre_statement_fragment.append (new CCodeExpressionStatement (async_call));
 
 				int state = next_coroutine_state++;
-				pre_statement_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "state"), new CCodeConstant (state.to_string ()))));
+				pre_statement_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"), new CCodeConstant (state.to_string ()))));
 				pre_statement_fragment.append (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
 				pre_statement_fragment.append (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
 			}
