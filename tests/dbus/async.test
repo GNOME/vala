@@ -4,19 +4,21 @@ Program: client
 
 [DBus (name = "org.example.Test")]
 interface Test : Object {
-	public abstract async int test_int (int i) throws DBus.Error;
-	public abstract async string test_string (string s) throws DBus.Error;
+	public abstract async int test_int (int i, out int j) throws DBus.Error;
+	public abstract async string test_string (string s, out string t) throws DBus.Error;
 }
 
 MainLoop main_loop;
 
 async void run (Test test) {
-	int k;
-	k = yield test.test_int (42);
+	int j, k;
+	k = yield test.test_int (42, out j);
+	assert (j == 23);
 	assert (k == 11);
 
-	string u;
-	u = yield test.test_string ("hello");
+	string t, u;
+	u = yield test.test_string ("hello", out t);
+	assert (t == "world");
 	assert (u == "vala");
 
 	main_loop.quit ();
@@ -38,17 +40,19 @@ Program: server
 
 [DBus (name = "org.example.Test")]
 class Test : Object {
-	public async int test_int (int i) {
+	public async int test_int (int i, out int j) {
 		assert (i == 42);
 		Idle.add (test_int.callback);
 		yield;
+		j = 23;
 		return 11;
 	}
 
-	public async string test_string (string s) {
+	public async string test_string (string s, out string t) {
 		assert (s == "hello");
 		Idle.add (test_string.callback);
 		yield;
+		t = "world";
 		return "vala";
 	}
 }
