@@ -761,6 +761,12 @@ public class Vala.Method : Member {
 			Report.error (source_reference, "Non-abstract, non-extern methods must have bodies");
 		}
 
+		if (coroutine && !analyzer.context.has_package ("gio-2.0")) {
+			error = true;
+			Report.error (source_reference, "gio-2.0 package required for async methods");
+			return false;
+		}
+
 		var old_source_file = analyzer.current_source_file;
 		var old_symbol = analyzer.current_symbol;
 
