@@ -357,7 +357,7 @@ namespace SDL {
 		public static void set_caption(string title, string icon);
 
 		[CCode (cname="SDL_WM_GetCaption")]
-		public static void get_caption(ref string title, ref string icon);
+               public static void get_caption(out string title, out string icon);
 
 		[CCode (cname="SDL_WM_SetIcon")]
 		public static void set_icon(Surface icon, uchar* mask);

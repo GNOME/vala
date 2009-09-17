@@ -259,8 +259,7 @@ namespace SDLGraphics {
 	}// RotoZoom
 
 	[CCode (cheader_filename="SDL_framerate.h", cname="FPSmanager", free_function="g_free")]
-	[Compact]
-	public class FramerateManager {
+       public struct FramerateManager {
 		[CCode (cname="SDL_initFramerate")]
 		public void init();
 
