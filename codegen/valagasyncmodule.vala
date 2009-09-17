@@ -353,6 +353,20 @@ internal class Vala.GAsyncModule : GSignalModule {
 		var simple_async_result_cast = new CCodeFunctionCall (new CCodeIdentifier ("G_SIMPLE_ASYNC_RESULT"));
 		simple_async_result_cast.add_argument (new CCodeIdentifier ("_res_"));
 
+		if (m.get_error_types ().size > 0) {
+			// propagate error from async method
+			var propagate_error = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_propagate_error"));
+			propagate_error.add_argument (simple_async_result_cast);
+			propagate_error.add_argument (new CCodeIdentifier ("error"));
+			var errorblock = new CCodeBlock ();
+			if (return_type is VoidType) {
+				errorblock.add_statement (new CCodeReturnStatement ());
+			} else {
+				errorblock.add_statement (new CCodeReturnStatement (default_value_for_type (return_type, false)));
+			}
+			finishblock.add_statement (new CCodeIfStatement (propagate_error, errorblock));
+		}
+
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_get_op_res_gpointer"));
 		ccall.add_argument (simple_async_result_cast);
 		finishblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (data_var, ccall)));
