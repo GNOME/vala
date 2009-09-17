@@ -369,6 +369,10 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								param_type.value_owned = true;
 							}
+						} else if (nv[0] == "nullable") {
+							if (eval (nv[1]) == "1") {
+								param_type.nullable = true;
+							}
 						}
 					}
 				}

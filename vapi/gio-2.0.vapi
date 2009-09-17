@@ -1417,7 +1417,7 @@ namespace GLib {
 		ADDRESS_IN_USE,
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
-	public delegate void AsyncReadyCallback (GLib.Object source_object, GLib.AsyncResult res);
+	public delegate void AsyncReadyCallback (GLib.Object? source_object, GLib.AsyncResult res);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public delegate void FileProgressCallback (int64 current_num_bytes, int64 total_num_bytes);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
