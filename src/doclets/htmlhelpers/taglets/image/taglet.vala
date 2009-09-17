@@ -32,7 +32,7 @@ namespace Valadoc.Html {
 		private string path;
 		private string alt;
 
-		public override bool parse ( Settings settings, Documented pos, owned string path, owned string alt ) {
+		public override bool parse ( Settings settings, Documentation pos, owned string path, owned string alt ) {
 			if ( GLib.FileUtils.test ( path, GLib.FileTest.EXISTS | GLib.FileTest.IS_REGULAR ) == false ) {
 				return false;
 			}

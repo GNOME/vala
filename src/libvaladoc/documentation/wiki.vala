@@ -18,7 +18,7 @@
  */
 
 
-public class Valadoc.WikiPage : Object, Documented {
+public class Valadoc.WikiPage : Object, Documentation {
 	private Gee.ArrayList<DocElement> content;
 
 	public string documentation_str {

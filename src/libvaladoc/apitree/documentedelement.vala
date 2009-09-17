@@ -23,7 +23,7 @@ using GLib;
 using Gee;
 
 
-public abstract class Valadoc.DocumentedElement : Basic, Documented {
+public abstract class Valadoc.DocumentedElement : Basic, Documentation {
 	private Namespace? _nspace = null;
 	private Package? _package = null;
 	private string _full_name = null;

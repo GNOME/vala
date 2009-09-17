@@ -24,7 +24,7 @@ using Gee;
 
 
 namespace Valadoc {
-	public string? get_html_link ( Settings settings, Documented element, Documented? pos ) {
+	public string? get_html_link ( Settings settings, Documentation element, Documentation? pos ) {
 		if ( element is Visitable ) {
 			if ( ((Visitable)element).is_visitor_accessible () == false ) {
 				return null;

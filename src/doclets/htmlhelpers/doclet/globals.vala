@@ -135,17 +135,17 @@ namespace Valadoc.Html {
 	public const string css_content_literal = "css_content_literal";
 
 
-	public delegate string? HtmlLink (Settings settings, Documented element, Documented? pos);
+	public delegate string? HtmlLink (Settings settings, Documentation element, Documentation? pos);
 	public HtmlLink get_html_link_imp;
 
-	public string? get_html_link ( Settings settings, Documented element, Documented? pos ) {
+	public string? get_html_link ( Settings settings, Documentation element, Documentation? pos ) {
 		if (get_html_link_imp == null) {
 			return null;
 		}
 		return get_html_link_imp(settings, element, pos);
 	}
 
-	public string get_html_type_link (Settings settings, Documented element, Documented? pos) {
+	public string get_html_type_link (Settings settings, Documentation element, Documentation? pos) {
 		string prefix = "";
 		string tmp = "";
 

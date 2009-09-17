@@ -27,25 +27,26 @@ public static delegate GLib.Type Valadoc.TagletRegisterFunction ( Gee.HashMap<st
 
 
 public class Valadoc.ModuleLoader : Object {
-	public Gee.HashMap< string, GLib.Type > taglets;
-	public GLib.Type codeconstanttag;
-	public GLib.Type underlinedtag;
-	public GLib.Type headlinetag;
-	public GLib.Type notifictag;
-	public GLib.Type centertag;
-	public GLib.Type italictag;
-	public GLib.Type ulistetag;
-	public GLib.Type righttag;
-	public GLib.Type ulisttag;
-	public GLib.Type linktag;
-	public GLib.Type strtag;
-	public GLib.Type srctag;
-	public GLib.Type imgtag;
-	public GLib.Type boldtag;
-	public GLib.Type tabletag;
-	public GLib.Type celltag;
+	public Doclet doclet; //rm
 
-	public Doclet doclet;
+	public Gee.HashMap<string, GLib.Type> taglets;
+	public GLib.Type bold;
+	public GLib.Type center;
+	public GLib.Type headline;
+	public GLib.Type image;
+	public GLib.Type italic;
+	public GLib.Type link;
+	public GLib.Type list;
+	public GLib.Type list_element;
+	public GLib.Type notification;
+	public GLib.Type right;
+	public GLib.Type source;
+	public GLib.Type source_inline;
+	public GLib.Type @string; //
+	public GLib.Type table;
+	public GLib.Type table_cell;
+	public GLib.Type underline;
+
 
 	private Module docletmodule;
 	private Type doclettype;
@@ -111,52 +112,52 @@ public class Valadoc.ModuleLoader : Object {
 				string soname = entry.ndup( entry.size() - modulesuffixlen );
 				switch ( soname ) {
 				case "libtagletstring":
-					this.strtag = type;
+					this.string = type;
 					break;
 				case "libtagletimage":
-					this.imgtag = type;
+					this.image = type;
 					break;
 				case "libtagletcenter":
-					this.centertag = type;
+					this.center = type;
 					break;
 				case "libtagletright":
-					this.righttag = type;
+					this.right = type;
 					break;
 				case "libtagletbold":
-					this.boldtag = type;
+					this.bold = type;
 					break;
 				case "libtagletunderline":
-					this.underlinedtag = type;
+					this.underline = type;
 					break;
 				case "libtagletitalic":
-					this.italictag = type;
+					this.italic = type;
 					break;
 				case "libtagletsource":
-					this.srctag = type;
+					this.source = type;
 					break;
 				case "libtagletnotification":
-					this.notifictag = type;
+					this.notification = type;
 					break;
 				case "libtaglettable":
-					this.tabletag = type;
+					this.table = type;
 					break;
 				case "libtaglettablecell":
-					this.celltag = type;
+					this.table_cell = type;
 					break;
 				case "libtagletlink":
-					this.linktag = type;
+					this.link = type;
 					break;
 				case "libtagletlist":
-					this.ulisttag = type;
+					this.list = type;
 					break;
 				case "libtagletlistelement":
-					this.ulistetag = type;
+					this.list_element = type;
 					break;
 				case "libtagletheadline":
-					this.headlinetag = type;
+					this.headline = type;
 					break;
 				case "libtagletcodeconstant":
-					this.codeconstanttag = type;
+					this.source_inline = type;
 					break;
 				}
 				modules.add ( module );

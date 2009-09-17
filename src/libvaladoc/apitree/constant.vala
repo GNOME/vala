@@ -23,7 +23,7 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.Constant : DocumentedElement, SymbolAccessibility, ReturnTypeHandler, Visitable  {
+public class Valadoc.Constant : DocumentedElement, SymbolAccessibility, Visitable, ReturnTypeHandler {
 	private Vala.Constant vconst;
 
 	public TypeReference? type_reference {

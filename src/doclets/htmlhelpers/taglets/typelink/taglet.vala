@@ -43,7 +43,7 @@ namespace Valadoc.Html {
 			return true;
 		}
 
-		protected override bool parse ( Settings settings, Tree tree, Documented self, string content, ref ErrorLevel errlvl, out string? errmsg ) {
+		protected override bool parse ( Settings settings, Tree tree, Documentation self, string content, ref ErrorLevel errlvl, out string? errmsg ) {
 			Valadoc.DocumentedElement? element = tree.search_symbol_str ( (self is DocumentedElement)? (DocumentedElement)self : null, content.strip() );
 			if ( element == null ) {
 				errmsg = "Linked type is not available";

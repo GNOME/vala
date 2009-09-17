@@ -83,7 +83,7 @@ public class Valadoc.Parser : Object {
 	/* == helpers == */
 	private StringTaglet create_string_taglet (string str, long strlen, ref long startpos, long pos, long lpos, StringBuilder buf ) {
 		buf.append_len (str.offset(startpos), lpos-startpos);
-		StringTaglet strtag = (StringTaglet)GLib.Object.new ( this.modules.strtag );
+		StringTaglet strtag = (StringTaglet)GLib.Object.new ( this.modules.string );
 		strtag.parse ( buf.str );
 		buf.erase ( 0, -1 );
 		startpos = pos+1;
@@ -150,7 +150,7 @@ public class Valadoc.Parser : Object {
 		return false;
 	}
 
-	private string? parse_taglet_name (Documented? curelement, string str, long strlen, ref long pos, long line, long newlinepos, long npos, bool _inline) {
+	private string? parse_taglet_name (Documentation? curelement, string str, long strlen, ref long pos, long line, long newlinepos, long npos, bool _inline) {
 		long startpos = pos;
 		for (; str[pos]!=' '&&str[pos]!='\t'&&str[pos]!='\n'&&str[pos]!='\0'&&(_inline&&str[pos+1]!='}'); pos++);
 		if (str[pos]=='\0'|| !str[pos].isspace()) {
@@ -162,7 +162,7 @@ public class Valadoc.Parser : Object {
 		return str.substring (startpos, pos-startpos);
 	}
 
-	private bool parse_inline_taglet_pos ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, bool wikimode ) {
+	private bool parse_inline_taglet_pos ( Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, bool wikimode ) {
 		if ( str[npos] != '{' ) {
 			return false;
 		}
@@ -248,18 +248,18 @@ public class Valadoc.Parser : Object {
 		return true;
 	}
 
-	private bool parse_align_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long pos, ref long line, ref long newlinepos, ref long space, bool wikimode ) {
-		if ( this.parse_align_helper (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, wikimode, this.modules.righttag, "))" ) ) {
+	private bool parse_align_pos (Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long pos, ref long line, ref long newlinepos, ref long space, bool wikimode ) {
+		if ( this.parse_align_helper (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, wikimode, this.modules.right, "))" ) ) {
 			return true;
 		}
 
-		if ( this.parse_align_helper (curelement, str, strlen,  content, ref pos, ref line, ref newlinepos, ref space, wikimode, this.modules.centertag, ")(" ) ) {
+		if ( this.parse_align_helper (curelement, str, strlen,  content, ref pos, ref line, ref newlinepos, ref space, wikimode, this.modules.center, ")(" ) ) {
 			return true;
 		}
 		return false;
 	}
 
-	private bool parse_highlighting_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long pos, ref long line, ref long newlinepos, bool wikimode ) {
+	private bool parse_highlighting_pos (Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long pos, ref long line, ref long newlinepos, bool wikimode ) {
 		if ( this.parse_bold_pos (curelement, str, strlen, content, ref pos, ref line, ref newlinepos, wikimode) ) {
 			return true;
 		}
@@ -272,7 +272,7 @@ public class Valadoc.Parser : Object {
 		return false;
 	}
 
-	private bool parse_align_helper ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, ref long space, bool wikimode, GLib.Type tagtype, string tag ) {
+	private bool parse_align_helper ( Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, ref long space, bool wikimode, GLib.Type tagtype, string tag ) {
 		long newlinepos = nnewlinepos;
 		long line = nline;
 		long pos = npos;
@@ -333,7 +333,7 @@ public class Valadoc.Parser : Object {
 		return true;
 	}
 
-	private bool parse_notification_pos (Documented curelement,  string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, ref long nspace, bool wikimode ) {
+	private bool parse_notification_pos (Documentation curelement,  string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, ref long nspace, bool wikimode ) {
 		weak string strpos = str.offset( npos );
 		if ( !strpos.has_prefix( "[[warning:" ) ) {
 			return false;
@@ -382,7 +382,7 @@ public class Valadoc.Parser : Object {
 					this.append_string_taglet ( str, strlen, subcontent, ref startpos, pos, nlpos, buf );
 					nnewlinepos = newlinepos;
 
-					NotificationDocElement notificationtag = (NotificationDocElement)GLib.Object.new ( this.modules.notifictag );
+					NotificationDocElement notificationtag = (NotificationDocElement)GLib.Object.new ( this.modules.notification );
 					notificationtag.parse ( subcontent );
 					content.add ( notificationtag );
 
@@ -411,7 +411,7 @@ public class Valadoc.Parser : Object {
 		return false;
 	}
 
-	private bool parse_source_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, ref long space, bool wikimode ) {
+	private bool parse_source_pos (Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, ref long space, bool wikimode ) {
 		weak string strpos = str.offset( npos );
 		if ( !strpos.has_prefix( "{{{" ) )
 			return false;
@@ -443,7 +443,7 @@ public class Valadoc.Parser : Object {
 					for (space=++tmppos;str[tmppos]==' '||str[tmppos]=='\t';tmppos++);
 					space = tmppos-space;
 
-					SourceCodeDocElement srctag = (SourceCodeDocElement)GLib.Object.new ( this.modules.srctag );
+					SourceCodeDocElement srctag = (SourceCodeDocElement)GLib.Object.new ( this.modules.source );
 					srctag.parse ( buf.str, Language.VALA );					
 					content.add ( srctag );
 
@@ -459,19 +459,19 @@ public class Valadoc.Parser : Object {
 		return false;
 	}
 
-	private bool parse_bold_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long line, ref long newlinepos, bool wikimode ) {
-		return this.parse_highlighting_helper_pos (curelement, str, strlen, content, ref npos, ref line, ref newlinepos, wikimode, this.modules.boldtag, "++" );
+	private bool parse_bold_pos (Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long line, ref long newlinepos, bool wikimode ) {
+		return this.parse_highlighting_helper_pos (curelement, str, strlen, content, ref npos, ref line, ref newlinepos, wikimode, this.modules.bold, "++" );
 	}
 
-	private bool parse_italic_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long line, ref long newlinepos, bool wikimode ) {
-		return this.parse_highlighting_helper_pos (curelement, str, strlen, content, ref npos, ref line, ref newlinepos, wikimode, this.modules.italictag, "//" );
+	private bool parse_italic_pos (Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long line, ref long newlinepos, bool wikimode ) {
+		return this.parse_highlighting_helper_pos (curelement, str, strlen, content, ref npos, ref line, ref newlinepos, wikimode, this.modules.italic, "//" );
 	}
 
-	private bool parse_underline_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long line, ref long newlinepos, bool wikimode ) {
-		return this.parse_highlighting_helper_pos (curelement, str, strlen, content, ref npos, ref line, ref newlinepos, wikimode, this.modules.underlinedtag, "__" );
+	private bool parse_underline_pos (Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long line, ref long newlinepos, bool wikimode ) {
+		return this.parse_highlighting_helper_pos (curelement, str, strlen, content, ref npos, ref line, ref newlinepos, wikimode, this.modules.underline, "__" );
 	}
 
-	private bool parse_highlighting_helper_pos (Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, bool wikimode, GLib.Type tagtype, string markup ) {
+	private bool parse_highlighting_helper_pos (Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, bool wikimode, GLib.Type tagtype, string markup ) {
 		weak string strpos = str.offset( npos );
 		if ( !strpos.has_prefix( markup ) ) {
 			return false;
@@ -564,7 +564,7 @@ public class Valadoc.Parser : Object {
 		return url.has_prefix("http://") || url.has_prefix("http://") || (url.has_prefix("/")&&url.has_suffix(".valadoc"));
 	}
 
-	private bool parse_url_pos ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long rpos, ref long nline, ref long newlinepos ) {
+	private bool parse_url_pos ( Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long rpos, ref long nline, ref long newlinepos ) {
 		if ( !str.offset(rpos).has_prefix ("[[") )
 			return false;
 
@@ -588,7 +588,7 @@ public class Valadoc.Parser : Object {
 					}
 
 					string urldesc = (urlend==-1)? url : str.substring( urlend+1, pos-urlend-1 );					
-					LinkDocElement linktag = (LinkDocElement)GLib.Object.new ( this.modules.linktag );
+					LinkDocElement linktag = (LinkDocElement)GLib.Object.new ( this.modules.link );
 					linktag.parse ( this.settings, this.tree, curelement, url, urldesc );
 					content.add ( linktag );
 
@@ -606,7 +606,7 @@ public class Valadoc.Parser : Object {
 		return false;
 	}
 
-	private bool parse_img_pos ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long line, ref long newlinepos ) {
+	private bool parse_img_pos ( Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long line, ref long newlinepos ) {
 		if ( str[npos]!='{'||str[npos+1]!='{' )
 			return false;
 
@@ -626,7 +626,7 @@ public class Valadoc.Parser : Object {
 						return false;
 					}
 					string alt = (urlend==-1)? url : str.substring( urlend+1, pos-urlend-1 );
-					ImageDocElement imgtag = (ImageDocElement)GLib.Object.new ( this.modules.imgtag );
+					ImageDocElement imgtag = (ImageDocElement)GLib.Object.new ( this.modules.image );
 					imgtag.parse ( this.settings, curelement, url, alt );
 					content.add ( imgtag );
 
@@ -782,7 +782,7 @@ public class Valadoc.Parser : Object {
 		return long.min(long.min( long.min( cellend, lineend), endpos), strlen-startpos);
 	}
 
-	private bool parse_table_cell_attributes (Documented curelement, string str, long strlen, ref long npos, long line, long newlinepos, out TextPosition vpos, out TextVerticalPosition hpos, out int hwidth, out int vwidth, out int color) {
+	private bool parse_table_cell_attributes (Documentation curelement, string str, long strlen, ref long npos, long line, long newlinepos, out TextPosition vpos, out TextVerticalPosition hpos, out int hwidth, out int vwidth, out int color) {
 		if ( str[npos] != '<' ) {
 			return false;
 		}
@@ -851,7 +851,7 @@ public class Valadoc.Parser : Object {
 		return false;
 	}
 
-	private bool parse_table_cell ( Documented curelement, string str, long strlen, Gee.ArrayList<TableCellDocElement> cells, ref long pos, ref long line, ref long newlinepos, bool wikimode ) {
+	private bool parse_table_cell ( Documentation curelement, string str, long strlen, Gee.ArrayList<TableCellDocElement> cells, ref long pos, ref long line, ref long newlinepos, bool wikimode ) {
 		if ( !str.offset(pos).has_prefix("||") ) {
 			return false;
 		}
@@ -878,7 +878,7 @@ public class Valadoc.Parser : Object {
 			if ( str.offset(pos).has_prefix("||") ) {
 				this.append_string_taglet ( str, strlen, content, ref startpos, pos, lpos, buf );
 
-				TableCellDocElement celltag = (TableCellDocElement)GLib.Object.new ( this.modules.celltag );
+				TableCellDocElement celltag = (TableCellDocElement)GLib.Object.new ( this.modules.table_cell );
 				celltag.parse ( vpos, hpos, hwidth, vwidth, content );
 				cells.add ( celltag );
 				return true;
@@ -926,7 +926,7 @@ public class Valadoc.Parser : Object {
 		return false;
 	}
 
-	private bool parse_table_row ( Documented curelement, string str, long strlen, Gee.ArrayList<Gee.ArrayList<TableCellDocElement>> rows, ref long npos, ref long nline, ref long nnewlinepos, ref long nspace, bool wikimode ) {
+	private bool parse_table_row ( Documentation curelement, string str, long strlen, Gee.ArrayList<Gee.ArrayList<TableCellDocElement>> rows, ref long npos, ref long nline, ref long nnewlinepos, ref long nspace, bool wikimode ) {
 		if ( !str.offset(npos).has_prefix("||") ) {
 			return false;
 		}
@@ -955,7 +955,7 @@ public class Valadoc.Parser : Object {
 		return true;
 	}
 
-	private bool parse_table ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, ref long nspace, bool wikimode ) {
+	private bool parse_table ( Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long nline, ref long nnewlinepos, ref long nspace, bool wikimode ) {
 		if ( !str.offset(npos).has_prefix("||") ) {
 			return false;
 		}
@@ -970,7 +970,7 @@ public class Valadoc.Parser : Object {
 
 		npos--;
 
-		TableDocElement tabletag = (TableDocElement)GLib.Object.new ( this.modules.tabletag );
+		TableDocElement tabletag = (TableDocElement)GLib.Object.new ( this.modules.table );
 		tabletag.parse ( rows );
 		content.add ( tabletag );
 		return true;
@@ -1099,7 +1099,7 @@ public class Valadoc.Parser : Object {
 			else if (this.parse_newline_pos (str, strlen, ref rpos, ref line, ref newlinepos, wikimode)) {
 				buf.append_len (str.offset(startpos), lpos-startpos);
 
-				HeadlineDocElement htag = (HeadlineDocElement)GLib.Object.new ( this.modules.headlinetag );
+				HeadlineDocElement htag = (HeadlineDocElement)GLib.Object.new ( this.modules.headline );
 				htag.parse ( buf.str, lvl );
 				content.add ( htag );
 
@@ -1355,7 +1355,7 @@ public class Valadoc.Parser : Object {
 		return cmnt[0] == '*';
 	}
 
-	private bool parse_list_template_pos ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long pos, ref long line, ref long newlinepos, ref long space, ref long linestart, bool wikimode, ListType listtype, unichar tag ) {
+	private bool parse_list_template_pos ( Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long pos, ref long line, ref long newlinepos, ref long space, ref long linestart, bool wikimode, ListType listtype, unichar tag ) {
 		if ( str[pos]!=tag )
 			return false;
 
@@ -1377,21 +1377,21 @@ public class Valadoc.Parser : Object {
 		}
 		while ( pos < strlen && space == lspace );
 
-		ListDocElement listtag = (ListDocElement)GLib.Object.new ( this.modules.ulisttag );
+		ListDocElement listtag = (ListDocElement)GLib.Object.new ( this.modules.list );
 		listtag.parse ( listtype, listelements );
 		content.add ( listtag );
 		return true;
 	}
 
-	private bool parse_unsorted_list_pos ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long pos, ref long line, ref long newlinepos, ref long space, ref long linestart, bool wikimode ) {
+	private bool parse_unsorted_list_pos ( Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long pos, ref long line, ref long newlinepos, ref long space, ref long linestart, bool wikimode ) {
 		return parse_list_template_pos ( curelement, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, ref linestart, wikimode, ListType.UNSORTED, '-' );
 	}
 
-	private bool parse_sorted_list_pos ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long pos, ref long line, ref long newlinepos, ref long space, ref long linestart, bool wikimode ) {
+	private bool parse_sorted_list_pos ( Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long pos, ref long line, ref long newlinepos, ref long space, ref long linestart, bool wikimode ) {
 		return parse_list_template_pos ( curelement, str, strlen, content, ref pos, ref line, ref newlinepos, ref space, ref linestart, wikimode, ListType.SORTED, '#' );
 	}
 
-	private bool parse_list_pos ( Documented curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long line, ref long newlinepos, ref long space, ref long linestart, bool wikimode ) {
+	private bool parse_list_pos ( Documentation curelement, string str, long strlen, Gee.ArrayList<DocElement> content, ref long npos, ref long line, ref long newlinepos, ref long space, ref long linestart, bool wikimode ) {
 		if (this.parse_unsorted_list_pos ( curelement, str, strlen, content, ref npos, ref line, ref newlinepos, ref space, ref linestart, wikimode )) {
 			npos--;
 			return true;
@@ -1403,7 +1403,7 @@ public class Valadoc.Parser : Object {
 		return false;
 	}
 
-	private bool parse_list_entry_pos ( Documented curelement, string str, long strlen, Gee.ArrayList<ListEntryDocElement> listelements, ref long npos, ref long line, ref long newlinepos, out long space, bool wikimode, ListType listtype, unichar tag ) {
+	private bool parse_list_entry_pos ( Documentation curelement, string str, long strlen, Gee.ArrayList<ListEntryDocElement> listelements, ref long npos, ref long line, ref long newlinepos, out long space, bool wikimode, ListType listtype, unichar tag ) {
 		if ( str[npos]!=tag )
 			return false;
 
@@ -1441,7 +1441,7 @@ public class Valadoc.Parser : Object {
 		this.append_string_taglet (str, strlen, content, ref startpos, pos, lpos, buf);
 		space = pos-space;
 
-		ListEntryDocElement listeltag = (ListEntryDocElement)GLib.Object.new (this.modules.ulistetag);
+		ListEntryDocElement listeltag = (ListEntryDocElement)GLib.Object.new (this.modules.list_element);
 		listeltag.parse (listtype, newlinepos, content);
 		listelements.add (listeltag);
 

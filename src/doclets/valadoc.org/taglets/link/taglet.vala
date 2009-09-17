@@ -26,7 +26,7 @@ public class Valadoc.ValdocOrg.LinkDocElement : Valadoc.LinkDocElement {
 	private string desc;
 	private string path;
 
-	public override bool parse (Settings settings, Tree tree, Documented pos, owned string path, owned string desc) {
+	public override bool parse (Settings settings, Tree tree, Documentation pos, owned string path, owned string desc) {
 		if ( path.has_suffix(".valadoc")&&path.has_prefix("/") ) {
 			if ( tree.wikitree == null ) {
 				return false;

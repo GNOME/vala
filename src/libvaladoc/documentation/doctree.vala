@@ -54,7 +54,7 @@ public enum Valadoc.ListType {
 
 
 /* deprecated */
-public interface Valadoc.Documented : Object {
+public interface Valadoc.Documentation : Object {
 	public abstract string? get_filename ();
 }
 
@@ -67,7 +67,7 @@ public abstract class Valadoc.Taglet : DocElement {
 }
 
 public abstract class Valadoc.InlineTaglet : Taglet {
-	public abstract bool parse (Settings settings, Tree tree, Documented self, string content, ref ErrorLevel errlvl, out string? errmsg);
+	public abstract bool parse (Settings settings, Tree tree, Documentation self, string content, ref ErrorLevel errlvl, out string? errmsg);
 	public abstract string to_string ();
 }
 
@@ -129,11 +129,11 @@ public abstract class Valadoc.HeadlineDocElement : DocElement {
 }
 
 public abstract class Valadoc.ImageDocElement : DocElement {
-	public abstract bool parse (Settings settings, Documented pos, owned string path, owned string alt);
+	public abstract bool parse (Settings settings, Documentation pos, owned string path, owned string alt);
 }
 
 public abstract class Valadoc.LinkDocElement : DocElement {
-	public abstract bool parse (Settings settings, Tree tree, Documented pos, owned string link, owned string desc);
+	public abstract bool parse (Settings settings, Tree tree, Documentation pos, owned string link, owned string desc);
 }
 
 public abstract class Valadoc.SourceCodeDocElement : DocElement {
