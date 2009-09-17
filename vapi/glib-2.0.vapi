@@ -673,11 +673,10 @@ public struct double {
 }
 
 [CCode (cheader_filename = "time.h", has_type_id = false)]
-[ByRef]
 [IntegerType (rank = 8)]
 public struct time_t {
 	[CCode (cname = "time")]
-	public time_t ();
+	public time_t (out time_t result = null);
 }
 
 [SimpleType]
@@ -1941,10 +1940,21 @@ namespace GLib {
 		[CCode (cname = "tm_isdst")]
 		public int isdst;
 
-		[CCode (cname = "gmtime_r", instance_pos = -1)]
-		public Time.gm (time_t time);
-		[CCode (cname = "localtime_r", instance_pos = -1)]
-		public Time.local (time_t time);
+		[CCode (cname = "gmtime_r")]
+		static void gmtime_r (ref time_t time, out Time result);
+		[CCode (cname = "localtime_r")]
+		static void localtime_r (ref time_t time, out Time result);
+
+		public static Time gm (time_t time) {
+			Time result;
+			gmtime_r (ref time, out result);
+			return result;
+		}
+		public static Time local (time_t time) {
+			Time result;
+			localtime_r (ref time, out result);
+			return result;
+		}
 
 		public string to_string () {
 			return "%04d-%02d-%02d %02d:%02d:%02d".printf (year + 1900, month + 1, day, hour, minute, second);
