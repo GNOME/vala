@@ -75,7 +75,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 				// in Vala they have no return type
 				creturn_type = new ObjectType (cl);
 			}
-		} else if (m.return_type.is_real_struct_type ()) {
+		} else if (m.return_type.is_real_non_null_struct_type ()) {
 			// structs are returned via out parameter
 			creturn_type = new VoidType ();
 		}
@@ -83,7 +83,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 
 		generate_type_declaration (m.return_type, decl_space);
 
-		if (m.return_type.is_real_struct_type ()) {
+		if (m.return_type.is_real_non_null_struct_type ()) {
 			// structs are returned via out parameter
 			var cparam = new CCodeFormalParameter ("result", m.return_type.get_cname () + "*");
 			cparam_map.set (get_param_pos (-3), cparam);
@@ -233,7 +233,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 
 		var creturn_type = m.return_type;
-		if (m.return_type.is_real_struct_type ()) {
+		if (m.return_type.is_real_non_null_struct_type ()) {
 			// structs are returned via out parameter
 			creturn_type = new VoidType ();
 		}
@@ -497,7 +497,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					}
 				}
 
-				if (!(m.return_type is VoidType) && !m.return_type.is_real_struct_type () && !m.coroutine) {
+				if (!(m.return_type is VoidType) && !m.return_type.is_real_non_null_struct_type () && !m.coroutine) {
 					// do not declare result variable if exit block is known to be unreachable
 					if (m.exit_block == null || m.exit_block.get_predecessors ().size > 0) {
 						var cdecl = new CCodeDeclaration (m.return_type.get_cname ());

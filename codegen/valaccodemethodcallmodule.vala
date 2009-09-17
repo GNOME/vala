@@ -568,7 +568,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		// structs are returned via out parameter
-		bool return_result_via_out_param = itype.get_return_type ().is_real_struct_type ();
+		bool return_result_via_out_param = itype.get_return_type ().is_real_non_null_struct_type ();
 
 		// pass address for the return value of non-void signals without emitter functions
 		if (itype is SignalType && !(itype.get_return_type () is VoidType)) {

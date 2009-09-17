@@ -450,6 +450,10 @@ public abstract class Vala.DataType : CodeNode {
 		return false;
 	}
 
+	public bool is_real_non_null_struct_type () {
+		return is_real_struct_type () && !nullable;
+	}
+
 	public virtual string? get_type_id () {
 		if (data_type != null) {
 			return data_type.get_type_id ();

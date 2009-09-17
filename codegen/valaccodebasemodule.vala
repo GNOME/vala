@@ -1256,13 +1256,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		var prop = (Property) acc.prop;
 
-		bool returns_real_struct = acc.readable && prop.property_type.is_real_struct_type ();
+		bool returns_real_struct = acc.readable && prop.property_type.is_real_non_null_struct_type ();
 
 
 		CCodeFormalParameter cvalueparam;
 		if (returns_real_struct) {
 			cvalueparam = new CCodeFormalParameter ("result", acc.value_type.get_cname () + "*");
-		} else if (!acc.readable && prop.property_type.is_real_struct_type ()) {
+		} else if (!acc.readable && prop.property_type.is_real_non_null_struct_type ()) {
 			cvalueparam = new CCodeFormalParameter ("value", acc.value_type.get_cname () + "*");
 		} else {
 			cvalueparam = new CCodeFormalParameter ("value", acc.value_type.get_cname ());
@@ -1320,7 +1320,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		var prop = (Property) acc.prop;
 
-		bool returns_real_struct = acc.readable && prop.property_type.is_real_struct_type ();
+		bool returns_real_struct = acc.readable && prop.property_type.is_real_non_null_struct_type ();
 
 		acc.accept_children (codegen);
 
@@ -1358,7 +1358,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		CCodeFormalParameter cvalueparam;
 		if (returns_real_struct) {
 			cvalueparam = new CCodeFormalParameter ("result", acc.value_type.get_cname () + "*");
-		} else if (!acc.readable && prop.property_type.is_real_struct_type ()) {
+		} else if (!acc.readable && prop.property_type.is_real_non_null_struct_type ()) {
 			cvalueparam = new CCodeFormalParameter ("value", acc.value_type.get_cname () + "*");
 		} else {
 			cvalueparam = new CCodeFormalParameter ("value", acc.value_type.get_cname ());
@@ -2815,7 +2815,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			// assign method result to `result'
 			CCodeExpression result_lhs = get_result_cexpression ();
-			if (current_return_type.is_real_struct_type () && (current_method == null || !current_method.coroutine)) {
+			if (current_return_type.is_real_non_null_struct_type () && (current_method == null || !current_method.coroutine)) {
 				result_lhs = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, result_lhs);
 			}
 			cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (result_lhs, (CCodeExpression) stmt.return_expression.ccodenode)));
@@ -2832,7 +2832,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			if (current_method == null || !current_method.coroutine) {
 				// structs are returned via out parameter
-				if (current_return_type.is_real_struct_type()) {
+				if (current_return_type.is_real_non_null_struct_type()) {
 					cfrag.append (new CCodeReturnStatement ());
 				} else {
 					cfrag.append (new CCodeReturnStatement (new CCodeIdentifier ("result")));
