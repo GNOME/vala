@@ -172,9 +172,21 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				if (param.captured) {
 					// captured variables are stored on the heap
 					var block = ((Method) param.parent_symbol).body;
-					return new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (get_variable_cname (param.name), dim));
+					var length_expr = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (get_variable_cname (param.name), dim));
+					if (is_out) {
+						// passing array as out/ref
+						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
+					} else {
+						return length_expr;
+					}
 				} else if (current_method != null && current_method.coroutine) {
-					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_array_length_cname (get_variable_cname (param.name), dim));
+					var length_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_array_length_cname (get_variable_cname (param.name), dim));
+					if (is_out) {
+						// passing array as out/ref
+						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
+					} else {
+						return length_expr;
+					}
 				} else {
 					if (param.array_null_terminated) {
 						var carray_expr = get_variable_cexpression (param.name);
@@ -201,9 +213,21 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 				if (local.captured) {
 					// captured variables are stored on the heap
 					var block = (Block) local.parent_symbol;
-					return new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (get_variable_cname (local.name), dim));
+					var length_expr = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_length_cname (get_variable_cname (local.name), dim));
+					if (is_out) {
+						// passing array as out/ref
+						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
+					} else {
+						return length_expr;
+					}
 				} else if (current_method != null && current_method.coroutine) {
-					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_array_length_cname (get_variable_cname (local.name), dim));
+					var length_expr = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_array_length_cname (get_variable_cname (local.name), dim));
+					if (is_out) {
+						// passing array as out/ref
+						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, length_expr);
+					} else {
+						return length_expr;
+					}
 				} else {
 					var length_expr = get_variable_cexpression (get_array_length_cname (get_variable_cname (local.name), dim));
 					if (is_out) {
