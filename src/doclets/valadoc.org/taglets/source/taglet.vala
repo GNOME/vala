@@ -27,8 +27,8 @@ public class Valadoc.ValdocOrg.SourceCodeDocElement : Valadoc.SourceCodeDocEleme
 	private int srclines;
 	private string src;
 
-	public override bool parse (owned string src, Language lang) {
-		this.src = (owned)src;
+	public override bool parse (string src, Language lang) {
+		this.src = src;
 		this.lang = lang;
 		this.srclines=0;
 

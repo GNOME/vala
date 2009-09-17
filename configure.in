@@ -75,6 +75,7 @@ AC_CONFIG_FILES([Makefile
                  src/doclets/htmlhelpers/taglets/table/Makefile
                  src/doclets/htmlhelpers/taglets/right/Makefile
                  src/doclets/htmlhelpers/taglets/image/Makefile
+                 src/doclets/htmlhelpers/taglets/paragraph/Makefile
                  src/doclets/htmlhelpers/taglets/throws/Makefile
                  src/doclets/htmlhelpers/taglets/string/Makefile
                  src/doclets/htmlhelpers/taglets/center/Makefile
@@ -94,6 +95,7 @@ AC_CONFIG_FILES([Makefile
                  src/doclets/valadoc.org/doclet/Makefile
                  src/doclets/valadoc.org/taglets/Makefile
                  src/doclets/valadoc.org/taglets/see/Makefile
+                 src/doclets/valadoc.org/taglets/paragraph/Makefile
                  src/doclets/valadoc.org/taglets/link/Makefile
                  src/doclets/valadoc.org/taglets/constants/Makefile
                  src/doclets/valadoc.org/taglets/list/Makefile

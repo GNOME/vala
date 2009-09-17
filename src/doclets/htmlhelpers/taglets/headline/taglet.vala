@@ -27,15 +27,15 @@ namespace Valadoc.Html {
 		private string title;
 		private int lvl;
 
-		public override bool parse ( owned string title, int lvl ) {
+		public override bool parse (string title, int lvl) {
 			this.title = title;
 			this.lvl = lvl;
 			return true;
 		}
 
-		public override bool write ( void* res, int max, int index ) {
+		public override bool write (void* res, int max, int index) {
 			weak GLib.FileStream file = (GLib.FileStream)res;
-			file.printf ("\n\n<h%d>%s</h%d>\n", this.lvl, this.title, this.lvl  );
+			file.printf ("\n\n<h%d>%s</h%d>\n", this.lvl, this.title, this.lvl);
 			return true;
 		}
 	}
@@ -43,7 +43,7 @@ namespace Valadoc.Html {
 
 
 [ModuleInit]
-public GLib.Type register_plugin ( Gee.HashMap<string, Type> taglets ) {
-	return typeof ( Valadoc.Html.HeadlineDocElement );
+public GLib.Type register_plugin (Gee.HashMap<string, Type> taglets) {
+	return typeof (Valadoc.Html.HeadlineDocElement);
 }
 

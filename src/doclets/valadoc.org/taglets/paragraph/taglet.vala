@@ -22,30 +22,26 @@ using GLib;
 using Gee;
 
 
-namespace Valadoc.Html {
-	public class SourceCodeDocElement : Valadoc.SourceCodeDocElement {
-		private Language lang;
-		private int srclines;
-		private string src;
+namespace Valadoc.ValdocOrg {
+	public class ParagraphDocElement : Valadoc.ParagraphDocElement {
+		private ArrayList<DocElement> content;
 
-		public override bool parse (string src, Language lang) {
-			this.src = src;
-			this.lang = lang;
-			this.srclines=0;
-
-			for (weak string str=this.src; str.get_char()!='\0'; str=str.next_char()) {
-				if (str.get_char () == '\n') {
-					this.srclines++;
-				}
-			}
+		public override bool parse (ArrayList<DocElement> content) {
+			this.content = content;
 			return true;
 		}
 
 		public override bool write (void* res, int max, int index) {
 			weak GLib.FileStream file = (GLib.FileStream)res;
-			file.printf ("\n\n\t<pre class=\"%s\">", css_source_sample);
-			file.puts (src);
-			file.puts ("</pre>\n\n");
+			int _max = this.content.size;
+			int _index = 0;
+
+			foreach (DocElement element in this.content) {
+				element.write (res, _max, _index);
+				_index++;
+			}
+
+			file.printf ("\n\n");
 			return true;
 		}
 	}
@@ -54,8 +50,6 @@ namespace Valadoc.Html {
 
 [ModuleInit]
 public GLib.Type register_plugin (Gee.HashMap<string, Type> taglets) {
-	return typeof (Valadoc.Html.SourceCodeDocElement);
+	return typeof (Valadoc.ValdocOrg.ParagraphDocElement);
 }
-
-
 

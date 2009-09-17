@@ -12,6 +12,7 @@ SUBDIRS =        \
 	list         \
 	listelement  \
 	notification \
+	paragraph    \
 	parameter    \
 	return       \
 	right        \

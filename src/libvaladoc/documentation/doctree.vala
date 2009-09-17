@@ -53,11 +53,9 @@ public enum Valadoc.ListType {
 }
 
 
-/* deprecated */
 public interface Valadoc.Documentation : Object {
 	public abstract string? get_filename ();
 }
-
 
 public abstract class Valadoc.DocElement : Object {
 	public abstract bool write (void* res, int max, int index);
@@ -76,7 +74,7 @@ public abstract class Valadoc.CodeConstantDocElement : Valadoc.DocElement {
 }
 
 public abstract class Valadoc.MainTaglet : Taglet {
-	// remove
+	// deprecated
 	protected string? get_data_type (DocumentedElement me) {
 		if (me is Valadoc.Class)
 			return "class";
@@ -117,6 +115,7 @@ public abstract class Valadoc.MainTaglet : Taglet {
 
 
 public abstract class Valadoc.StringTaglet : Taglet {
+	// deprecated
 	public string content {
 		protected set; get;
 	}
@@ -124,8 +123,12 @@ public abstract class Valadoc.StringTaglet : Taglet {
 	public abstract bool parse (string content);
 }
 
+public abstract class Valadoc.ParagraphDocElement : DocElement {
+	public abstract bool parse (ArrayList<DocElement> paragraph);
+}
+
 public abstract class Valadoc.HeadlineDocElement : DocElement {
-	public abstract bool parse (owned string title, int lvl);
+	public abstract bool parse (string title, int lvl);
 }
 
 public abstract class Valadoc.ImageDocElement : DocElement {
@@ -137,7 +140,7 @@ public abstract class Valadoc.LinkDocElement : DocElement {
 }
 
 public abstract class Valadoc.SourceCodeDocElement : DocElement {
-	public abstract bool parse (owned string src, Language lang);
+	public abstract bool parse (string src, Language lang);
 }
 
 public abstract class Valadoc.ListEntryDocElement : DocElement {

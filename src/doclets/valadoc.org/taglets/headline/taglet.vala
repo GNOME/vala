@@ -26,7 +26,7 @@ public class Valadoc.ValdocOrg.HeadlineDocElement : Valadoc.HeadlineDocElement {
 	private string title;
 	private int lvl;
 
-	public override bool parse (owned string title, int lvl) {
+	public override bool parse (string title, int lvl) {
 		this.title = title;
 		this.lvl = lvl;
 		return true;
