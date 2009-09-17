@@ -451,28 +451,13 @@ internal class Vala.GSignalModule : GObjectModule {
 
 	CCodeExpression? emit_signal_assignment (Assignment assignment) {
 		var sig = (Signal) assignment.left.symbol_reference;
-		
-		var m = (Method) assignment.right.symbol_reference;
 
-		string connect_func;
 		bool disconnect = false;
 
 		if (assignment.operator == AssignmentOperator.ADD) {
-			if (sig is DynamicSignal) {
-				connect_func = head.get_dynamic_signal_connect_wrapper_name ((DynamicSignal) sig);
-			} else {
-				if (in_gobject_instance (m)) {
-					connect_func = "g_signal_connect_object";
-				} else {
-					connect_func = "g_signal_connect";
-				}
-			}
+			// connect
 		} else if (assignment.operator == AssignmentOperator.SUB) {
-			if (sig is DynamicSignal) {
-				connect_func = head.get_dynamic_signal_disconnect_wrapper_name ((DynamicSignal) sig);
-			} else {
-				connect_func = "g_signal_handlers_disconnect_matched";
-			}
+			// disconnect
 			disconnect = true;
 		} else {
 			assignment.error = true;
@@ -480,114 +465,7 @@ internal class Vala.GSignalModule : GObjectModule {
 			return null;
 		}
 
-		var ccall = new CCodeFunctionCall (new CCodeIdentifier (connect_func));
-
-		string signal_detail = null;
-
-		// first argument: instance of sender
-		MemberAccess ma;
-		if (assignment.left is ElementAccess) {
-			var ea = (ElementAccess) assignment.left;
-			ma = (MemberAccess) ea.container;
-			var detail_expr = ea.get_indices ().get (0) as StringLiteral;
-			if (detail_expr == null) {
-				assignment.error = true;
-				Report.error (detail_expr.source_reference, "internal error: only literal string details supported");
-				return null;
-			}
-			signal_detail = detail_expr.eval ();
-		} else {
-			ma = (MemberAccess) assignment.left;
-		}
-		if (ma.inner != null) {
-			ccall.add_argument ((CCodeExpression) get_ccodenode (ma.inner));
-		} else {
-			ccall.add_argument (new CCodeIdentifier ("self"));
-		}
-
-		if (sig is DynamicSignal) {
-			// dynamic_signal_connect or dynamic_signal_disconnect
-
-			// second argument: signal name
-			ccall.add_argument (new CCodeConstant ("\"%s\"".printf (sig.name)));
-		} else if (!disconnect) {
-			// g_signal_connect_object or g_signal_connect
-
-			// second argument: signal name
-			ccall.add_argument (sig.get_canonical_cconstant (signal_detail));
-		} else {
-			// g_signal_handlers_disconnect_matched
-
-			// second argument: mask
-			if (signal_detail == null) {
-				ccall.add_argument (new CCodeConstant ("G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA"));
-			} else {
-				ccall.add_argument (new CCodeConstant ("G_SIGNAL_MATCH_ID | G_SIGNAL_MATCH_DETAIL | G_SIGNAL_MATCH_FUNC | G_SIGNAL_MATCH_DATA"));
-			}
-
-			// get signal id
-			var ccomma = new CCodeCommaExpression ();
-			var temp_decl = get_temp_variable (uint_type);
-			temp_vars.insert (0, temp_decl);
-			var parse_call = new CCodeFunctionCall (new CCodeIdentifier ("g_signal_parse_name"));
-			parse_call.add_argument (sig.get_canonical_cconstant (signal_detail));
-			var decl_type = (TypeSymbol) sig.parent_symbol;
-			parse_call.add_argument (new CCodeIdentifier (decl_type.get_type_id ()));
-			parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_decl.name)));
-			if (signal_detail == null) {
-				parse_call.add_argument (new CCodeConstant ("NULL"));
-			} else {
-				var detail_temp_decl = get_temp_variable (gquark_type);
-				temp_vars.insert (0, detail_temp_decl);
-				parse_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (detail_temp_decl.name)));
-			}
-			parse_call.add_argument (new CCodeConstant ("FALSE"));
-			ccomma.append_expression (parse_call);
-			ccomma.append_expression (get_variable_cexpression (temp_decl.name));
-
-			// third argument: signal_id
-			ccall.add_argument (ccomma);
-
-			// fourth argument: detail
-			ccall.add_argument (new CCodeConstant ("0"));
-			// fifth argument: closure
-			ccall.add_argument (new CCodeConstant ("NULL"));
-		}
-		
-		// third resp. sixth argument: handler
-		ccall.add_argument (new CCodeCastExpression ((CCodeExpression) assignment.right.ccodenode, "GCallback"));
-
-		if (m.binding == MemberBinding.INSTANCE) {
-			// g_signal_connect_object or g_signal_handlers_disconnect_matched
-			// or dynamic_signal_connect or dynamic_signal_disconnect
-
-			// fourth resp. seventh argument: object/user_data
-			if (assignment.right is MemberAccess) {
-				var right_ma = (MemberAccess) assignment.right;
-				if (right_ma.inner != null) {
-					ccall.add_argument ((CCodeExpression) right_ma.inner.ccodenode);
-				} else {
-					ccall.add_argument (new CCodeIdentifier ("self"));
-				}
-			} else if (assignment.right is LambdaExpression) {
-				ccall.add_argument (new CCodeIdentifier ("self"));
-			}
-			if (!disconnect && !(sig is DynamicSignal)
-			    && in_gobject_instance (m)) {
-				// g_signal_connect_object
-
-				// fifth argument: connect_flags
-				ccall.add_argument (new CCodeConstant ("0"));
-			}
-		} else {
-			// g_signal_connect or g_signal_handlers_disconnect_matched
-			// or dynamic_signal_connect or dynamic_signal_disconnect
-
-			// fourth resp. seventh argument: user_data
-			ccall.add_argument (new CCodeConstant ("NULL"));
-		}
-		
-		return ccall;
+		return connect_signal (sig, assignment.left, assignment.right, disconnect, assignment);
 	}
 
 	public override void visit_assignment (Assignment assignment) {
@@ -662,10 +540,15 @@ internal class Vala.GSignalModule : GObjectModule {
 		signal_access.accept (codegen);
 		handler.accept (codegen);
 
-		var m = (Method) handler.symbol_reference;
-
-		string connect_func;
 		bool disconnect = (method_type.method_symbol.name == "disconnect");
+
+		expr.ccodenode = connect_signal (sig, signal_access, handler, disconnect, expr);
+	}
+
+	CCodeExpression? connect_signal (Signal sig, Expression signal_access, Expression handler, bool disconnect, CodeNode expr) {
+		string connect_func;
+
+		var m = (Method) handler.symbol_reference;
 
 		if (!disconnect) {
 			// connect
@@ -702,7 +585,7 @@ internal class Vala.GSignalModule : GObjectModule {
 			if (detail_expr == null) {
 				expr.error = true;
 				Report.error (detail_expr.source_reference, "internal error: only literal string details supported");
-				return;
+				return null;
 			}
 			signal_detail = detail_expr.eval ();
 		} else {
@@ -815,7 +698,7 @@ internal class Vala.GSignalModule : GObjectModule {
 			ccall.add_argument (new CCodeConstant ("NULL"));
 		}
 
-		expr.ccodenode = ccall;
+		return ccall;
 	}
 }
 
