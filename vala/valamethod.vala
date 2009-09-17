@@ -1009,22 +1009,20 @@ public class Vala.Method : Member {
 	public Gee.List<FormalParameter> get_async_end_parameters () {
 		assert (this.coroutine);
 
-		var glib_ns = CodeContext.get ().root.scope.lookup ("GLib");
-
 		var params = new ArrayList<FormalParameter> ();
+
+		var glib_ns = CodeContext.get ().root.scope.lookup ("GLib");
+		var result_type = new ObjectType ((ObjectTypeSymbol) glib_ns.scope.lookup ("AsyncResult"));
+
+		var result_param = new FormalParameter ("_res_", result_type);
+		result_param.cparameter_position = 0.1;
+		params.add (result_param);
+
 		foreach (var param in parameters) {
 			if (param.direction == ParameterDirection.OUT) {
 				params.add (param);
 			}
 		}
-
-		var result_type = new ObjectType ((ObjectTypeSymbol) glib_ns.scope.lookup ("AsyncResult"));
-
-		var result_param = new FormalParameter ("_res_", result_type);
-		result_param.default_expression = new NullLiteral (source_reference);
-		result_param.cparameter_position = 0.1;
-
-		params.add (result_param);
 
 		return params;
 	}
