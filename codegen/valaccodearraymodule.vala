@@ -645,12 +645,12 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 	}
 
-	public override CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression expr) {
+	public override CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression expr, bool is_macro_definition) {
 		if (type is ArrayType) {
 			var array_type = (ArrayType) type;
 
 			if (!array_type.fixed_length) {
-				return base.get_unref_expression (cvar, type, expr);
+				return base.get_unref_expression (cvar, type, expr, is_macro_definition);
 			}
 
 			requires_array_free = true;
@@ -664,7 +664,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 
 			return ccall;
 		} else {
-			return base.get_unref_expression (cvar, type, expr);
+			return base.get_unref_expression (cvar, type, expr, is_macro_definition);
 		}
 	}
 

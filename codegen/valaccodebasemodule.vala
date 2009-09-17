@@ -2352,7 +2352,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		return null;
 	}
 
-	public virtual CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression expr) {
+	public virtual CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression expr, bool is_macro_definition = false) {
 		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
 
 		if (type is ValueType && !type.nullable) {
@@ -2372,6 +2372,22 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			} else {
 				return ccall;
 			}
+		}
+
+		if (ccall.call is CCodeIdentifier && !(type is ArrayType) && !is_macro_definition) {
+			// generate and use NULL-aware free macro to simplify code
+
+			var freeid = (CCodeIdentifier) ccall.call;
+			string free0_func = "_%s0".printf (freeid.name);
+
+			if (add_wrapper (free0_func)) {
+				var macro = get_unref_expression (new CCodeIdentifier ("var"), type, expr, true);
+				source_declarations.add_type_declaration (new CCodeMacroReplacement.with_expression ("%s(var)".printf (free0_func), macro));
+			}
+
+			ccall = new CCodeFunctionCall (new CCodeIdentifier (free0_func));
+			ccall.add_argument (cvar);
+			return ccall;
 		}
 
 		/* (foo == NULL ? NULL : foo = (unref (foo), NULL)) */
@@ -3146,6 +3162,35 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (dupexpr == null) {
 			node.error = true;
 			return null;
+		}
+
+		if (dupexpr is CCodeIdentifier && !(expression_type is ArrayType) && !is_ref_function_void (expression_type)) {
+			// generate and call NULL-aware ref function to reduce number
+			// of temporary variables and simplify code
+
+			var dupid = (CCodeIdentifier) dupexpr;
+			string dup0_func = "_%s0".printf (dupid.name);
+
+			// g_strdup is already NULL-safe
+			if (dupid.name == "g_strdup") {
+				dup0_func = dupid.name;
+			} else if (add_wrapper (dup0_func)) {
+				var dup0_fun = new CCodeFunction (dup0_func, "gpointer");
+				dup0_fun.add_parameter (new CCodeFormalParameter ("self", "gpointer"));
+				dup0_fun.modifiers = CCodeModifiers.STATIC;
+				dup0_fun.block = new CCodeBlock ();
+
+				var dup_call = new CCodeFunctionCall (dupexpr);
+				dup_call.add_argument (new CCodeIdentifier ("self"));
+
+				dup0_fun.block.add_statement (new CCodeReturnStatement (new CCodeConditionalExpression (new CCodeIdentifier ("self"), dup_call, new CCodeConstant ("NULL"))));
+
+				source_type_member_definition.append (dup0_fun);
+			}
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier (dup0_func));
+			ccall.add_argument (cexpr);
+			return ccall;
 		}
 
 		var ccall = new CCodeFunctionCall (dupexpr);
