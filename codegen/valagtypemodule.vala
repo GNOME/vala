@@ -1790,6 +1790,12 @@ internal class Vala.GTypeModule : GErrorModule {
 		}
 
 		generate_interface_declaration (iface, source_declarations);
+		if (!iface.is_internal_symbol ()) {
+			generate_interface_declaration (iface, header_declarations);
+		}
+		if (!iface.is_private_symbol ()) {
+			generate_interface_declaration (iface, internal_header_declarations);
+		}
 
 		iface.accept_children (codegen);
 
