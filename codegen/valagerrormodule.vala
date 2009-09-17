@@ -92,7 +92,7 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 
 		// method will fail
 		current_method_inner_error = true;
-		var cassign = new CCodeAssignment (new CCodeIdentifier ("_inner_error_"), (CCodeExpression) stmt.error_expression.ccodenode);
+		var cassign = new CCodeAssignment (get_variable_cexpression ("_inner_error_"), (CCodeExpression) stmt.error_expression.ccodenode);
 		cfrag.append (new CCodeExpressionStatement (cassign));
 
 		head.add_simple_check (stmt, cfrag);
