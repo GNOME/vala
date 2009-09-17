@@ -150,7 +150,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					// (tmp = expr, &tmp)
 					var ccomma = new CCodeCommaExpression ();
 
-					var temp_var = get_temp_variable (ma.inner.target_type);
+					var temp_var = get_temp_variable (ma.inner.target_type, true, null, false);
 					temp_vars.insert (0, temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), instance));
 					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
@@ -346,7 +346,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 						var ccomma = new CCodeCommaExpression ();
 
-						var temp_decl = get_temp_variable (arg.value_type);
+						var temp_decl = get_temp_variable (arg.value_type, true, null, false);
 						temp_vars.insert (0, temp_decl);
 						ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), cexpr));
 
@@ -383,14 +383,14 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						if (itype.get_return_type () is VoidType) {
 							ccomma.append_expression (ccall_expr);
 						} else {
-							ret_temp_var = get_temp_variable (itype.get_return_type ());
+							ret_temp_var = get_temp_variable (itype.get_return_type (), true, null, false);
 							temp_vars.insert (0, ret_temp_var);
 							ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (ret_temp_var.name), ccall_expr));
 						}
 
 						var cassign_comma = new CCodeCommaExpression ();
 
-						var assign_temp_var = get_temp_variable (unary.inner.value_type, unary.inner.value_type.value_owned);
+						var assign_temp_var = get_temp_variable (unary.inner.value_type, unary.inner.value_type.value_owned, null, false);
 						temp_vars.insert (0, assign_temp_var);
 
 						cassign_comma.append_expression (new CCodeAssignment (get_variable_cexpression (assign_temp_var.name), transform_expression (get_variable_cexpression (temp_var.name), param.parameter_type, unary.inner.value_type, arg)));
@@ -442,7 +442,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				if (m.array_null_terminated) {
 					// handle calls to methods returning null-terminated arrays
-					var temp_var = get_temp_variable (itype.get_return_type ());
+					var temp_var = get_temp_variable (itype.get_return_type (), true, null, false);
 					var temp_ref = get_variable_cexpression (temp_var.name);
 
 					temp_vars.insert (0, temp_var);
@@ -495,7 +495,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				if (deleg.array_null_terminated) {
 					// handle calls to methods returning null-terminated arrays
-					var temp_var = get_temp_variable (itype.get_return_type ());
+					var temp_var = get_temp_variable (itype.get_return_type (), true, null, false);
 					var temp_ref = get_variable_cexpression (temp_var.name);
 
 					temp_vars.insert (0, temp_var);

@@ -81,7 +81,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 					if (expr.inner != null && !expr.inner.is_pure ()) {
 						// instance expression has side-effects
 						// store in temp. variable
-						var temp_var = get_temp_variable (expr.inner.value_type);
+						var temp_var = get_temp_variable (expr.inner.value_type, true, null, false);
 						temp_vars.insert (0, temp_var);
 						var ctemp = get_variable_cexpression (temp_var.name);
 						inst = new CCodeAssignment (ctemp, pub_inst);
@@ -257,7 +257,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 							// (tmp = expr, &tmp)
 							var ccomma = new CCodeCommaExpression ();
 
-							var temp_var = get_temp_variable (expr.inner.target_type);
+							var temp_var = get_temp_variable (expr.inner.target_type, true, null, false);
 							temp_vars.insert (0, temp_var);
 							ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), pub_inst));
 							ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));

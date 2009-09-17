@@ -140,7 +140,7 @@ internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				lhs = new CCodeParenthesizedExpression (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, get_variable_cexpression (lhs_temp_name)));
 			}
 
-			var temp_decl = get_temp_variable (assignment.left.value_type);
+			var temp_decl = get_temp_variable (assignment.left.value_type, true, null, false);
 			temp_vars.insert (0, temp_decl);
 			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), rhs));
 			if (unref_old) {

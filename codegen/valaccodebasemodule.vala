@@ -1874,7 +1874,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				} else {
 					var ccomma = new CCodeCommaExpression ();
 
-					var temp_var = get_temp_variable (local.variable_type, true, local);
+					var temp_var = get_temp_variable (local.variable_type, true, local, false);
 					temp_vars.insert (0, temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
@@ -1899,7 +1899,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				if (d.has_target) {
 					var ccomma = new CCodeCommaExpression ();
 
-					var temp_var = get_temp_variable (local.variable_type, true, local);
+					var temp_var = get_temp_variable (local.variable_type, true, local, false);
 					temp_vars.insert (0, temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
@@ -2040,10 +2040,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	public LocalVariable get_temp_variable (DataType type, bool value_owned = true, CodeNode? node_reference = null) {
+	public LocalVariable get_temp_variable (DataType type, bool value_owned = true, CodeNode? node_reference = null, bool init = true) {
 		var var_type = type.copy ();
 		var_type.value_owned = value_owned;
 		var local = new LocalVariable (var_type, "_tmp%d_".printf (next_temp_var_id));
+		local.no_init = !init;
 
 		if (node_reference != null) {
 			local.source_reference = node_reference.source_reference;
@@ -2492,7 +2493,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			expr_type = expr.target_type;
 		}
 
-		var full_expr_var = get_temp_variable (expr_type, true, expr);
+		var full_expr_var = get_temp_variable (expr_type, true, expr, false);
 		expr.temp_vars.add (full_expr_var);
 		
 		var expr_list = new CCodeCommaExpression ();
@@ -2533,6 +2534,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					// initialization is not needed for these special
 					// pointer temp variables
 					// used to avoid side-effects in assignments
+				} else if (local.no_init) {
+					// no initialization necessary for this temp var
 				} else if (!local.variable_type.nullable &&
 				           (st != null && !st.is_simple_type ()) ||
 				           (array_type != null && array_type.fixed_length)) {
@@ -2766,7 +2769,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			// return array length if appropriate
 			if (((current_method != null && !current_method.no_array_length) || current_property_accessor != null) && current_return_type is ArrayType) {
-				var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt);
+				var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt, false);
 
 				var ccomma = new CCodeCommaExpression ();
 				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), (CCodeExpression) stmt.return_expression.ccodenode));
@@ -2789,7 +2792,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			} else if ((current_method != null || current_property_accessor != null) && current_return_type is DelegateType) {
 				var delegate_type = (DelegateType) current_return_type;
 				if (delegate_type.delegate_symbol.has_target) {
-					var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt);
+					var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt, false);
 
 					var ccomma = new CCodeCommaExpression ();
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), (CCodeExpression) stmt.return_expression.ccodenode));
@@ -2999,7 +3002,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			var ccomma = new CCodeCommaExpression ();
 			
 			// assign current value to temp variable
-			var temp_decl = get_temp_variable (prop.property_type, true, expr);
+			var temp_decl = get_temp_variable (prop.property_type, true, expr, false);
 			temp_vars.insert (0, temp_decl);
 			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_decl.name), (CCodeExpression) expr.inner.ccodenode));
 			
@@ -3202,7 +3205,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			
 			return ccall;
 		} else {
-			var decl = get_temp_variable (expression_type, false, node);
+			var decl = get_temp_variable (expression_type, false, node, false);
 			temp_vars.insert (0, decl);
 
 			var ctemp = get_variable_cexpression (decl.name);
@@ -3661,7 +3664,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					// (tmp = expr, &tmp)
 					var ccomma = new CCodeCommaExpression ();
 
-					var temp_var = get_temp_variable (param.parameter_type);
+					var temp_var = get_temp_variable (param.parameter_type, true, null, false);
 					temp_vars.insert (0, temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cexpr));
 					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
@@ -3732,7 +3735,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			// checked cast for strict subtypes of GTypeInstance
 			if (expr.is_silent_cast) {
 				var ccomma = new CCodeCommaExpression ();
-				var temp_decl = get_temp_variable (expr.inner.value_type, true, expr);
+				var temp_decl = get_temp_variable (expr.inner.value_type, true, expr, false);
 
 				temp_vars.add (temp_decl);
 
@@ -3781,7 +3784,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		/* (tmp = var, var = null, tmp) */
 		var ccomma = new CCodeCommaExpression ();
-		var temp_decl = get_temp_variable (expr.value_type, true, expr);
+		var temp_decl = get_temp_variable (expr.value_type, true, expr, false);
 		temp_vars.insert (0, temp_decl);
 		var cvar = get_variable_cexpression (temp_decl.name);
 
@@ -4060,7 +4063,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				// manual memory management for non-void pointers
 				// treat void* special to not leak memory with void* method parameters
 			} else if (requires_destroy (expression_type)) {
-				var decl = get_temp_variable (expression_type, true, expression_type);
+				var decl = get_temp_variable (expression_type, true, expression_type, false);
 				temp_vars.insert (0, decl);
 				temp_ref_vars.insert (0, decl);
 				cexpr = new CCodeAssignment (get_variable_cexpression (decl.name), cexpr);
@@ -4134,7 +4137,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			} else if (cexpr is CCodeIdentifier || cexpr is CCodeMemberAccess) {
 				cexpr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr);
 			} else {
-				var decl = get_temp_variable (expression_type, expression_type.value_owned, expression_type);
+				var decl = get_temp_variable (expression_type, expression_type.value_owned, expression_type, false);
 				temp_vars.insert (0, decl);
 
 				var ccomma = new CCodeCommaExpression ();
@@ -4256,7 +4259,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					// (tmp = expr, &tmp)
 					var ccomma = new CCodeCommaExpression ();
 
-					var temp_var = get_temp_variable (ma.inner.target_type);
+					var temp_var = get_temp_variable (ma.inner.target_type, true, null, false);
 					temp_vars.insert (0, temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), instance));
 					ccomma.append_expression (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (temp_var.name)));
@@ -4327,7 +4330,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		var ccomma = new CCodeCommaExpression ();
-		var temp_decl = get_temp_variable (e.value_type);
+		var temp_decl = get_temp_variable (e.value_type, true, null, false);
 		var ctemp = get_variable_cexpression (temp_decl.name);
 		temp_vars.add (temp_decl);
 		ccomma.append_expression (new CCodeAssignment (ctemp, ce));
