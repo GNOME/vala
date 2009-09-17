@@ -426,6 +426,7 @@ public class Vala.MemberAccess : Expression {
 				local.captured = true;
 				block.captured = true;
 				analyzer.current_method.closure = true;
+				analyzer.current_method.add_captured_variable (local);
 			}
 		} else if (member is FormalParameter) {
 			var param = (FormalParameter) member;

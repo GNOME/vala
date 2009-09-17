@@ -243,6 +243,9 @@ public class Vala.Method : Member {
 
 	Method? callback_method;
 
+	// only valid for closures
+	Gee.List<LocalVariable> captured_variables;
+
 	/**
 	 * Creates a new method.
 	 *
@@ -1024,6 +1027,23 @@ public class Vala.Method : Member {
 		params.add (result_param);
 
 		return params;
+	}
+
+	public void add_captured_variable (LocalVariable local) {
+		assert (this.closure);
+
+		if (captured_variables == null) {
+			captured_variables = new ArrayList<LocalVariable> ();
+		}
+		captured_variables.add (local);
+	}
+
+	public void get_captured_variables (Collection<LocalVariable> variables) {
+		if (captured_variables != null) {
+			foreach (var local in captured_variables) {
+				variables.add (local);
+			}
+		}
 	}
 }
 
