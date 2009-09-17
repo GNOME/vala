@@ -162,6 +162,9 @@ public class Vala.FormalParameter : Symbol {
 		if (a.has_argument ("type")) {
 			ctype = a.get_string ("type");
 		}
+		if (a.has_argument ("pos")) {
+			cparameter_position = a.get_double ("pos");
+		}
 		if (a.has_argument ("array_length")) {
 			no_array_length = !a.get_bool ("array_length");
 		}

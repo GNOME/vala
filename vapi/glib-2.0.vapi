@@ -1263,7 +1263,8 @@ namespace GLib {
 	}
 
 	namespace Idle {
-		public static uint add (SourceFunc function);
+		[CCode (cname = "g_idle_add_full")]
+		public static uint add (owned SourceFunc function, [CCode (pos = 0.1)] int priority = 0);
 		public static uint add_full (int priority, owned SourceFunc function);
 		public static bool remove_by_data (void* data);
 	}
