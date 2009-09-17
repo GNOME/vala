@@ -42,7 +42,10 @@ internal class Vala.GAsyncModule : GSignalModule {
 		}
 
 		foreach (FormalParameter param in m.get_parameters ()) {
-			data.add_field (param.parameter_type.get_cname (), get_variable_cname (param.name));
+			var param_type = param.parameter_type.copy ();
+			param_type.value_owned = true;
+			data.add_field (param_type.get_cname (), get_variable_cname (param.name));
+
 			if (param.parameter_type is ArrayType) {
 				var array_type = (ArrayType) param.parameter_type;
 				for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -82,17 +85,32 @@ internal class Vala.GAsyncModule : GSignalModule {
 		datadecl.add_declarator (new CCodeVariableDeclarator ("data", new CCodeIdentifier ("_data")));
 		freeblock.add_statement (datadecl);
 
+		var old_symbol = current_symbol;
+		current_symbol = m;
+
+		foreach (FormalParameter param in m.get_parameters ()) {
+			if (param.direction != ParameterDirection.OUT) {
+				var param_type = param.parameter_type.copy ();
+				param_type.value_owned = true;
+
+				if (requires_destroy (param_type)) {
+					var ma = new MemberAccess.simple (param.name);
+					ma.symbol_reference = param;
+					freeblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (param.name)), param.parameter_type, ma)));
+				}
+			}
+		}
+
 		if (requires_destroy (m.return_type)) {
 			/* this is very evil. */
 			var v = new LocalVariable (m.return_type, ".result");
 			var ma = new MemberAccess.simple (".result");
 			ma.symbol_reference = v;
-			var old_symbol = current_symbol;
-			current_symbol = m;
 			var unref_expr = get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "result"), m.return_type, ma);
 			freeblock.add_statement (new CCodeExpressionStatement (unref_expr));
-			current_symbol = old_symbol;
 		}
+
+		current_symbol = old_symbol;
 
 		var freecall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 		freecall.add_argument (new CCodeIdentifier (dataname));
@@ -170,7 +188,18 @@ internal class Vala.GAsyncModule : GSignalModule {
 
 		foreach (FormalParameter param in m.get_parameters ()) {
 			if (param.direction != ParameterDirection.OUT) {
-				asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), new CCodeIdentifier (get_variable_cname (param.name)))));
+				var param_type = param.parameter_type.copy ();
+				param_type.value_owned = true;
+
+				// create copy if necessary as variables in async methods may need to be kept alive
+				CCodeExpression cparam = get_variable_cexpression (param.name);
+				if (requires_copy (param_type) && !param.parameter_type.value_owned)  {
+					var ma = new MemberAccess.simple (param.name);
+					ma.symbol_reference = param;
+					cparam = get_ref_cexpression (param.parameter_type, cparam, ma, param);
+				}
+
+				asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_variable_cname (param.name)), cparam)));
 				if (param.parameter_type is ArrayType) {
 					var array_type = (ArrayType) param.parameter_type;
 					for (int dim = 1; dim <= array_type.rank; dim++) {
@@ -181,6 +210,11 @@ internal class Vala.GAsyncModule : GSignalModule {
 				}
 			}
 		}
+
+		var cfrag = new CCodeFragment ();
+		append_temp_decl (cfrag, temp_vars);
+		temp_vars.clear ();
+		asyncblock.add_statement (cfrag);
 
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_real_cname () + "_co"));
 		ccall.add_argument (data_var);

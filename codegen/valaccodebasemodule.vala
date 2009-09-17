@@ -1628,27 +1628,32 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				data.add_field ("Block%dData *".printf (parent_block_id), "_data%d_".printf (parent_block_id));
 
 				var unref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_unref".printf (parent_block_id)));
-				unref_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_data%d_".printf (parent_block_id)));
+				unref_call.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)));
 				free_block.add_statement (new CCodeExpressionStatement (unref_call));
 			} else if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE)) {
 				data.add_field ("%s *".printf (current_class.get_cname ()), "self");
 
 				var ma = new MemberAccess.simple ("this");
 				ma.symbol_reference = current_class;
-				free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self"), new ObjectType (current_class), ma)));
+				free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self"), new ObjectType (current_class), ma)));
 			}
 			foreach (var local in local_vars) {
 				if (local.captured) {
 					data.add_field (local.variable_type.get_cname (), get_variable_cname (local.name) + local.variable_type.get_cdeclarator_suffix ());
 
-					if (local.variable_type is DelegateType) {
+					if (local.variable_type is ArrayType) {
+						var array_type = (ArrayType) local.variable_type;
+						for (int dim = 1; dim <= array_type.rank; dim++) {
+							data.add_field ("gint", get_array_length_cname (get_variable_cname (local.name), dim));
+						}
+					} else if (local.variable_type is DelegateType) {
 						data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (local.name)));
 					}
 
 					if (requires_destroy (local.variable_type)) {
 						var ma = new MemberAccess.simple (local.name);
 						ma.symbol_reference = local;
-						free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (local.name)), local.variable_type, ma)));
+						free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (local.name)), local.variable_type, ma)));
 					}
 				}
 			}
@@ -1690,8 +1695,22 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				// parameters are captured with the top-level block of the method
 				foreach (var param in ((Method) b.parent_symbol).get_parameters ()) {
 					if (param.captured) {
-						data.add_field (param.parameter_type.get_cname (), get_variable_cname (param.name));
-						cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_variable_cname (param.name)), new CCodeIdentifier (get_variable_cname (param.name)))));
+						var param_type = param.parameter_type.copy ();
+						param_type.value_owned = true;
+						data.add_field (param_type.get_cname (), get_variable_cname (param.name));
+
+						// create copy if necessary as captured variables may need to be kept alive
+						CCodeExpression cparam = get_variable_cexpression (param.name);
+						if (requires_copy (param_type) && !param.parameter_type.value_owned)  {
+							var ma = new MemberAccess.simple (param.name);
+							ma.symbol_reference = param;
+							// directly access parameters in ref expressions
+							param.captured = false;
+							cparam = get_ref_cexpression (param.parameter_type, cparam, ma, param);
+							param.captured = true;
+						}
+
+						cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_variable_cname (param.name)), cparam)));
 
 						if (param.parameter_type is ArrayType) {
 							var array_type = (ArrayType) param.parameter_type;
@@ -1703,31 +1722,42 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 							data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
 							cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
 						}
+
+						if (requires_destroy (param_type)) {
+							var ma = new MemberAccess.simple (param.name);
+							ma.symbol_reference = param;
+							free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), param.parameter_type, ma)));
+						}
 					}
 				}
+
+				var cfrag = new CCodeFragment ();
+				append_temp_decl (cfrag, temp_vars);
+				temp_vars.clear ();
+				cblock.add_statement (cfrag);
 			}
 
 			var data_free = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 			data_free.add_argument (new CCodeIdentifier (struct_name));
-			data_free.add_argument (new CCodeIdentifier ("data"));
+			data_free.add_argument (new CCodeIdentifier ("_data%d_".printf (block_id)));
 			free_block.add_statement (new CCodeExpressionStatement (data_free));
 
 			// create ref/unref functions
 			var ref_fun = new CCodeFunction ("block%d_data_ref".printf (block_id), struct_name + "*");
-			ref_fun.add_parameter (new CCodeFormalParameter ("data", struct_name + "*"));
+			ref_fun.add_parameter (new CCodeFormalParameter ("_data%d_".printf (block_id), struct_name + "*"));
 			ref_fun.modifiers = CCodeModifiers.STATIC;
 			source_declarations.add_type_member_declaration (ref_fun.copy ());
 			ref_fun.block = new CCodeBlock ();
-			ref_fun.block.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_INCREMENT, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_ref_count_"))));
-			ref_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("data")));
+			ref_fun.block.add_statement (new CCodeExpressionStatement (new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_INCREMENT, new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_ref_count_"))));
+			ref_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_data%d_".printf (block_id))));
 			source_type_member_definition.append (ref_fun);
 
 			var unref_fun = new CCodeFunction ("block%d_data_unref".printf (block_id), struct_name + "*");
-			unref_fun.add_parameter (new CCodeFormalParameter ("data", struct_name + "*"));
+			unref_fun.add_parameter (new CCodeFormalParameter ("_data%d_".printf (block_id), struct_name + "*"));
 			unref_fun.modifiers = CCodeModifiers.STATIC;
 			source_declarations.add_type_member_declaration (unref_fun.copy ());
 			unref_fun.block = new CCodeBlock ();
-			var dec = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_ref_count_")), new CCodeConstant ("0"));
+			var dec = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeUnaryExpression (CCodeUnaryOperator.PREFIX_DECREMENT, new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_ref_count_")), new CCodeConstant ("0"));
 			unref_fun.block.add_statement (new CCodeIfStatement (dec, free_block));
 			source_type_member_definition.append (unref_fun);
 		}
@@ -1757,7 +1787,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (b.parent_symbol is Method) {
 			var m = (Method) b.parent_symbol;
 			foreach (FormalParameter param in m.get_parameters ()) {
-				if (requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
+				if (!param.captured && requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
 					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.parameter_type, ma)));
