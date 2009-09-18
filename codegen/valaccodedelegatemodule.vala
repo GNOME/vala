@@ -143,10 +143,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 			}
 			return invocation_expr.delegate_target;
 		} else if (delegate_expr is LambdaExpression) {
-			var closure_block = current_symbol as Block;
-			while (closure_block != null && !closure_block.captured) {
-				closure_block = closure_block.parent_symbol as Block;
-			}
+			var closure_block = current_closure_block;
 			if (closure_block != null) {
 				int block_id = get_block_id (closure_block);
 				var delegate_target = get_variable_cexpression ("_data%d_".printf (block_id));

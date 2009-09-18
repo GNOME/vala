@@ -91,6 +91,29 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
+	public Block? current_closure_block {
+		get {
+			return next_closure_block (current_symbol);
+		}
+	}
+
+	public unowned Block? next_closure_block (Symbol sym) {
+		unowned Block block = null;
+		while (true) {
+			block = sym as Block;
+			if (!(sym is Block || sym is Method)) {
+				// no closure block
+				break;
+			}
+			if (block != null && block.captured) {
+				// closure block found
+				break;
+			}
+			sym = sym.parent_symbol;
+		}
+		return block;
+	}
+
 	public CCodeDeclarationSpace header_declarations;
 	public CCodeDeclarationSpace internal_header_declarations;
 	public CCodeDeclarationSpace source_declarations;
@@ -1610,10 +1633,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		var cblock = new CCodeBlock ();
 
 		if (b.captured) {
-			var parent_block = b.parent_symbol as Block;
-			while (parent_block != null && !parent_block.captured) {
-				parent_block = parent_block.parent_symbol as Block;
-			}
+			var parent_block = next_closure_block (b.parent_symbol);
 
 			int block_id = get_block_id (b);
 			string struct_name = "Block%dData".printf (block_id);

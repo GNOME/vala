@@ -416,16 +416,10 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 				if (m.closure) {
 					// add variables for parent closure blocks
 					// as closures only have one parameter for the innermost closure block
-					var closure_block = m.parent_symbol as Block;
-					while (closure_block != null && !closure_block.captured) {
-						closure_block = closure_block.parent_symbol as Block;
-					}
+					var closure_block = current_closure_block;
 					int block_id = get_block_id (closure_block);
 					while (true) {
-						var parent_closure_block = closure_block.parent_symbol as Block;
-						while (parent_closure_block != null && !parent_closure_block.captured) {
-							parent_closure_block = parent_closure_block.parent_symbol as Block;
-						}
+						var parent_closure_block = next_closure_block (closure_block.parent_symbol);
 						if (parent_closure_block == null) {
 							break;
 						}
@@ -776,10 +770,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 
 	public override void generate_cparameters (Method m, CCodeDeclarationSpace decl_space, Map<int,CCodeFormalParameter> cparam_map, CCodeFunction func, CCodeFunctionDeclarator? vdeclarator = null, Map<int,CCodeExpression>? carg_map = null, CCodeFunctionCall? vcall = null, int direction = 3) {
 		if (m.closure) {
-			var closure_block = m.parent_symbol as Block;
-			while (closure_block != null && !closure_block.captured) {
-				closure_block = closure_block.parent_symbol as Block;
-			}
+			var closure_block = current_closure_block;
 			int block_id = get_block_id (closure_block);
 			var instance_param = new CCodeFormalParameter ("_data%d_".printf (block_id), "Block%dData*".printf (block_id));
 			cparam_map.set (get_param_pos (m.cinstance_parameter_position), instance_param);

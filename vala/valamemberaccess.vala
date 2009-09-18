@@ -423,18 +423,40 @@ public class Vala.MemberAccess : Expression {
 			var local = (LocalVariable) member;
 			var block = (Block) local.parent_symbol;
 			if (analyzer.find_parent_method (block) != analyzer.current_method) {
+				// mark all methods between current method and the captured
+				// block as closures (to support nested closures)
+				Symbol sym = analyzer.current_method;
+				while (sym != block) {
+					var method = sym as Method;
+					if (method != null) {
+						method.closure = true;
+						// consider captured variables as used
+						// as we require captured variables to be initialized
+						method.add_captured_variable (local);
+					}
+					sym = sym.parent_symbol;
+				}
+
 				local.captured = true;
 				block.captured = true;
-				analyzer.current_method.closure = true;
-				analyzer.current_method.add_captured_variable (local);
 			}
 		} else if (member is FormalParameter) {
 			var param = (FormalParameter) member;
 			var m = param.parent_symbol as Method;
 			if (m != null && m != analyzer.current_method && param != m.this_parameter) {
+				// mark all methods between current method and the captured
+				// parameter as closures (to support nested closures)
+				Symbol sym = analyzer.current_method;
+				while (sym != m) {
+					var method = sym as Method;
+					if (method != null) {
+						method.closure = true;
+					}
+					sym = sym.parent_symbol;
+				}
+
 				param.captured = true;
 				m.body.captured = true;
-				analyzer.current_method.closure = true;
 			}
 		} else if (member is Field) {
 			var f = (Field) member;
