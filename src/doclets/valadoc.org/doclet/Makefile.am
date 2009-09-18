@@ -14,8 +14,6 @@ libdoclet.vala.stamp: $(libdoclet_VALASOURCES)
 	touch $@
 
 
-	
-
 docletdir = $(libdir)/valadoc/plugins/valadoc.org/
 
 
@@ -51,3 +49,8 @@ libdoclet_la_LIBADD =                           \
 
 
 EXTRA_DIST = $(libdoclet_VALASOURCES)  libdoclet.vala.stamp 
+
+MAINTAINERCLEANFILES = \
+	$(libdoclet_la_SOURCES) \
+	$(NULL)
+

@@ -13,4 +13,7 @@ dist_vapi_DATA =     \
 dist_noinst_DATA = \
 	$(NULL)
 
+MAINTAINERCLEANFILES = \
+	valadoc-1.0.vapi \
+	$(NULL)
 

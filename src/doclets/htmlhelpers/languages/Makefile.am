@@ -49,7 +49,9 @@ libapiwriter_la_LIBADD = \
 EXTRA_DIST = $(libapiwriter_la_VALASOURCES)  libapiwriter.vala.stamp 
 
 
-MAINTAINERCLEANFILES =                        \
-	$(libapiwriter_la_VALASOURCES:.vala=.c)  \
+MAINTAINERCLEANFILES = \
+	$(libapiwriter_la_SOURCES) \
+	apiwriter-1.0.vapi \
+	apiwriter-1.0.h \
 	$(NULL)
 
