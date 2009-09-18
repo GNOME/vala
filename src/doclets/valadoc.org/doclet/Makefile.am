@@ -33,14 +33,12 @@ libdoclet_la_SOURCES =                \
 AM_CFLAGS =  -g                    \
 	-I ../../../libvaladoc/        \
 	-I ../../htmlhelpers/languages \
-	`mysql_config --cflags`        \
 	$(GLIB_CFLAGS)                 \
 	$(LIBVALA_CFLAGS)              \
 	$(NULL)
 
 
 libdoclet_la_LDFLAGS = -module -avoid-version \
-	`mysql_config --libs`                     \
 	$(NULL)
 
 

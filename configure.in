@@ -66,57 +66,11 @@ AC_CONFIG_FILES([Makefile
                  src/doclets/htmlhelpers/languages/Makefile
                  src/doclets/htmlhelpers/doclet/Makefile
                  src/doclets/htmlhelpers/taglets/Makefile
-                 src/doclets/htmlhelpers/taglets/see/Makefile
-                 src/doclets/htmlhelpers/taglets/link/Makefile
-                 src/doclets/htmlhelpers/taglets/constants/Makefile
-                 src/doclets/htmlhelpers/taglets/list/Makefile
-                 src/doclets/htmlhelpers/taglets/bold/Makefile
-                 src/doclets/htmlhelpers/taglets/since/Makefile
-                 src/doclets/htmlhelpers/taglets/table/Makefile
-                 src/doclets/htmlhelpers/taglets/right/Makefile
-                 src/doclets/htmlhelpers/taglets/image/Makefile
-                 src/doclets/htmlhelpers/taglets/paragraph/Makefile
-                 src/doclets/htmlhelpers/taglets/throws/Makefile
-                 src/doclets/htmlhelpers/taglets/string/Makefile
-                 src/doclets/htmlhelpers/taglets/center/Makefile
-                 src/doclets/htmlhelpers/taglets/italic/Makefile
-                 src/doclets/htmlhelpers/taglets/return/Makefile
-                 src/doclets/htmlhelpers/taglets/source/Makefile
-                 src/doclets/htmlhelpers/taglets/headline/Makefile
-                 src/doclets/htmlhelpers/taglets/typelink/Makefile
-                 src/doclets/htmlhelpers/taglets/underline/Makefile
-                 src/doclets/htmlhelpers/taglets/parameter/Makefile
-                 src/doclets/htmlhelpers/taglets/tablecell/Makefile
-                 src/doclets/htmlhelpers/taglets/listelement/Makefile
-                 src/doclets/htmlhelpers/taglets/notification/Makefile
                  src/doclets/htm/Makefile
                  src/doclets/htm/doclet/Makefile
                  src/doclets/valadoc.org/Makefile
                  src/doclets/valadoc.org/doclet/Makefile
                  src/doclets/valadoc.org/taglets/Makefile
-                 src/doclets/valadoc.org/taglets/see/Makefile
-                 src/doclets/valadoc.org/taglets/paragraph/Makefile
-                 src/doclets/valadoc.org/taglets/link/Makefile
-                 src/doclets/valadoc.org/taglets/constants/Makefile
-                 src/doclets/valadoc.org/taglets/list/Makefile
-                 src/doclets/valadoc.org/taglets/bold/Makefile
-                 src/doclets/valadoc.org/taglets/since/Makefile
-                 src/doclets/valadoc.org/taglets/table/Makefile
-                 src/doclets/valadoc.org/taglets/right/Makefile
-                 src/doclets/valadoc.org/taglets/image/Makefile
-                 src/doclets/valadoc.org/taglets/throws/Makefile
-                 src/doclets/valadoc.org/taglets/string/Makefile
-                 src/doclets/valadoc.org/taglets/center/Makefile
-                 src/doclets/valadoc.org/taglets/italic/Makefile
-                 src/doclets/valadoc.org/taglets/return/Makefile
-                 src/doclets/valadoc.org/taglets/source/Makefile
-                 src/doclets/valadoc.org/taglets/headline/Makefile
-                 src/doclets/valadoc.org/taglets/typelink/Makefile
-                 src/doclets/valadoc.org/taglets/underline/Makefile
-                 src/doclets/valadoc.org/taglets/parameter/Makefile
-                 src/doclets/valadoc.org/taglets/tablecell/Makefile
-                 src/doclets/valadoc.org/taglets/listelement/Makefile
-                 src/doclets/valadoc.org/taglets/notification/Makefile
                  src/doclets/devhelp/Makefile
                  src/doclets/devhelp/doclet/Makefile
                  src/valadoc/Makefile])

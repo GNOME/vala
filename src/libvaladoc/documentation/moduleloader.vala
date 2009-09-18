@@ -23,7 +23,7 @@ using Gee;
 
 
 
-public static delegate GLib.Type Valadoc.TagletRegisterFunction ( Gee.HashMap<string, Type> taglets );
+public static delegate  void Valadoc.TagletRegisterFunction (ModuleLoader loader);
 
 
 public class Valadoc.ModuleLoader : Object {
@@ -79,95 +79,41 @@ public class Valadoc.ModuleLoader : Object {
 		return true;
 	}
 
-	private bool load_taglets ( string fulldirpath ) {
+	private bool load_taglets (string fulldirpath) {
 		try {
-			taglets = new Gee.HashMap<string, Type> ( GLib.str_hash, GLib.str_equal );
+			taglets = new Gee.HashMap<string, Type> (GLib.str_hash, GLib.str_equal);
 			Gee.ArrayList<Module*> modules = new Gee.ArrayList<weak Module*> ( );
+
 			string pluginpath = build_filename(fulldirpath, "taglets");
 			size_t modulesuffixlen = Module.SUFFIX.size() + 1;
-			GLib.Dir dir = GLib.Dir.open ( pluginpath );
+
 			void* function;
 
-			for ( weak string entry = dir.read_name(); entry != null ; entry = dir.read_name() ) {
-				if ( !entry.has_suffix( "."+Module.SUFFIX ) )
-					continue ;
+			GLib.Dir dir = GLib.Dir.open (pluginpath);
 
-				string tagletpath = build_filename ( pluginpath, entry );
-				Module* module = Module.open ( tagletpath, ModuleFlags.BIND_LAZY);
+			for (weak string entry = dir.read_name(); entry != null ; entry = dir.read_name()) {
+				if (!entry.has_suffix("." + Module.SUFFIX))
+					continue;
+
+				string tagletpath = build_filename (pluginpath, entry);
+				Module* module = Module.open (tagletpath, ModuleFlags.BIND_LAZY);
 				if (module == null) {
 					taglets = null;
 					return false;
 				}
 
-
-				module->symbol( "register_plugin", out function );
+				module->symbol("register_plugin", out function);
 				Valadoc.TagletRegisterFunction tagletregisterfkt = (Valadoc.TagletRegisterFunction) function;
-				if ( function == null ) {
+				if (function == null) {
 					taglets = null;
 					return false;
 				}
 
-				GLib.Type type = tagletregisterfkt ( taglets );
-
-				string soname = entry.ndup( entry.size() - modulesuffixlen );
-				switch ( soname ) {
-				case "libtagletstring":
-					this.string = type;
-					break;
-				case "libtagletimage":
-					this.image = type;
-					break;
-				case "libtagletcenter":
-					this.center = type;
-					break;
-				case "libtagletright":
-					this.right = type;
-					break;
-				case "libtagletbold":
-					this.bold = type;
-					break;
-				case "libtagletunderline":
-					this.underline = type;
-					break;
-				case "libtagletitalic":
-					this.italic = type;
-					break;
-				case "libtagletsource":
-					this.source = type;
-					break;
-				case "libtagletnotification":
-					this.notification = type;
-					break;
-				case "libtaglettable":
-					this.table = type;
-					break;
-				case "libtaglettablecell":
-					this.table_cell = type;
-					break;
-				case "libtagletlink":
-					this.link = type;
-					break;
-				case "libtagletlist":
-					this.list = type;
-					break;
-				case "libtagletlistelement":
-					this.list_element = type;
-					break;
-				case "libtagletheadline":
-					this.headline = type;
-					break;
-				case "libtagletcodeconstant":
-					this.source_inline = type;
-					break;
-				case "libtagletparagraph":
-					this.source_inline = type;
-					break;
-				}
-				modules.add ( module );
+				tagletregisterfkt (this);
 			}
 			return true;
 		}
-		catch ( FileError err ) {
+		catch (FileError err) {
 			taglets = null;
 			return false;
 		}
