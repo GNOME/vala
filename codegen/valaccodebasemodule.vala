@@ -1648,6 +1648,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						}
 					} else if (local.variable_type is DelegateType) {
 						data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (local.name)));
+						if (local.variable_type.value_owned) {
+							data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+						}
 					}
 
 					if (requires_destroy (local.variable_type)) {
@@ -1721,6 +1724,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						} else if (param.parameter_type is DelegateType) {
 							data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
 							cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
+							if (param.parameter_type.value_owned) {
+								data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+								cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))))));
+							}
 						}
 
 						if (requires_destroy (param_type)) {
@@ -1889,6 +1896,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				// create variable to store delegate target
 				var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (get_variable_cname (local.name)));
 				temp_vars.insert (0, target_var);
+				if (deleg_type.value_owned) {
+					var target_destroy_notify_var = new LocalVariable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")), get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+					temp_vars.insert (0, target_destroy_notify_var);
+				}
 			}
 		}
 	
@@ -1938,11 +1949,21 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						var block = (Block) local.parent_symbol;
 						lhs_delegate_target = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (local.name));
 					}
-					var rhs_delegate_target = get_delegate_target_cexpression (local.initializer);
+					CCodeExpression rhs_delegate_target_destroy_notify;
+					var rhs_delegate_target = get_delegate_target_cexpression (local.initializer, out rhs_delegate_target_destroy_notify);
 					ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
-				
+
+					if (deleg_type.value_owned) {
+						var lhs_delegate_target_destroy_notify = get_variable_cexpression (get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+						if (local.captured) {
+							var block = (Block) local.parent_symbol;
+							lhs_delegate_target = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (local.name));
+						}
+						ccomma.append_expression (new CCodeAssignment (lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify));
+					}
+
 					ccomma.append_expression (get_variable_cexpression (temp_var.name));
-				
+
 					rhs = ccomma;
 				}
 			}
@@ -2831,8 +2852,16 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					if (current_method == null || !current_method.coroutine) {
 						target_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_l);
 					}
-					var target_r = get_delegate_target_cexpression (stmt.return_expression);
+					CCodeExpression target_r_destroy_notify;
+					var target_r = get_delegate_target_cexpression (stmt.return_expression, out target_r_destroy_notify);
 					ccomma.append_expression (new CCodeAssignment (target_l, target_r));
+					if (delegate_type.value_owned) {
+						var target_l_destroy_notify = get_result_cexpression (get_delegate_target_destroy_notify_cname ("result"));
+						if (current_method == null || !current_method.coroutine) {
+							target_l_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_l_destroy_notify);
+						}
+						ccomma.append_expression (new CCodeAssignment (target_l_destroy_notify, target_r_destroy_notify));
+					}
 
 					ccomma.append_expression (get_variable_cexpression (return_expr_decl.name));
 
@@ -3011,7 +3040,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		assert_not_reached ();
 	}
 
-	public virtual CCodeExpression get_delegate_target_cexpression (Expression delegate_expr) {
+	public virtual CCodeExpression get_delegate_target_cexpression (Expression delegate_expr, out CCodeExpression delegate_target_destroy_notify) {
 		assert_not_reached ();
 	}
 
@@ -3511,8 +3540,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 							var deleg_type = (DelegateType) param.parameter_type;
 							var d = deleg_type.delegate_symbol;
 							if (d.has_target) {
-								var delegate_target = get_delegate_target_cexpression (arg);
+								CCodeExpression delegate_target_destroy_notify;
+								var delegate_target = get_delegate_target_cexpression (arg, out delegate_target_destroy_notify);
 								carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), delegate_target);
+								if (deleg_type.value_owned) {
+									carg_map.set (get_param_pos (param.cdelegate_target_parameter_position + 0.01), delegate_target_destroy_notify);
+								}
 							}
 						}
 
@@ -3658,7 +3691,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						} else {
 							lhs = new CCodeMemberAccess.pointer (typed_inst, get_delegate_target_cname (f.get_cname ()));
 						}
-						var rhs_delegate_target = get_delegate_target_cexpression (init.initializer);
+						CCodeExpression rhs_delegate_target_destroy_notify;
+						var rhs_delegate_target = get_delegate_target_cexpression (init.initializer, out rhs_delegate_target_destroy_notify);
 						ccomma.append_expression (new CCodeAssignment (lhs, rhs_delegate_target));
 					}
 				} else if (init.symbol_reference is Property) {
@@ -4316,7 +4350,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		} else if (prop.property_type is DelegateType && rhs != null) {
 			var delegate_type = (DelegateType) prop.property_type;
 			if (delegate_type.delegate_symbol.has_target) {
-				ccall.add_argument (get_delegate_target_cexpression (rhs));
+				CCodeExpression delegate_target_destroy_notify;
+				ccall.add_argument (get_delegate_target_cexpression (rhs, out delegate_target_destroy_notify));
 			}
 		}
 

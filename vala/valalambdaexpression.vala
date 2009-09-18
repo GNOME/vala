@@ -223,6 +223,7 @@ public class Vala.LambdaExpression : Expression {
 		}
 
 		value_type = new MethodType (method);
+		value_type.value_owned = target_type.value_owned;
 
 		return !error;
 	}

@@ -111,6 +111,13 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 				if (carg_map != null) {
 					carg_map.set (get_param_pos (m.cdelegate_target_parameter_position), get_variable_cexpression (cparam.name));
 				}
+				if (deleg_type.value_owned) {
+					cparam = new CCodeFormalParameter (get_delegate_target_destroy_notify_cname ("result"), "GDestroyNotify*");
+					cparam_map.set (get_param_pos (m.cdelegate_target_parameter_position + 0.01), cparam);
+					if (carg_map != null) {
+						carg_map.set (get_param_pos (m.cdelegate_target_parameter_position + 0.01), get_variable_cexpression (cparam.name));
+					}
+				}
 			}
 		}
 

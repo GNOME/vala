@@ -1,6 +1,6 @@
 /* valadelegatetype.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -54,7 +54,16 @@ public class Vala.DelegateType : DataType {
 	}
 
 	public override DataType copy () {
-		return new DelegateType (delegate_symbol);
+		var result = new DelegateType (delegate_symbol);
+		result.source_reference = source_reference;
+		result.value_owned = value_owned;
+		result.nullable = nullable;
+
+		foreach (DataType arg in get_type_arguments ()) {
+			result.add_type_argument (arg.copy ());
+		}
+
+		return result;
 	}
 
 	public override string? get_cname () {

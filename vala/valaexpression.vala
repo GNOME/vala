@@ -66,7 +66,8 @@ public abstract class Vala.Expression : CodeNode {
 
 	private Gee.List<CCodeExpression> array_sizes = new ArrayList<CCodeExpression> ();
 
-	public CCodeExpression delegate_target { get; set; }
+	public CCodeExpression? delegate_target { get; set; }
+	public CCodeExpression? delegate_target_destroy_notify { get; set; }
 
 	/**
 	 * Returns whether this expression is constant, i.e. whether this

@@ -165,9 +165,13 @@ internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 					}
 				}
 			} else if (instance_delegate) {
-				var lhs_delegate_target = get_delegate_target_cexpression (assignment.left);
-				var rhs_delegate_target = get_delegate_target_cexpression (assignment.right);
+				CCodeExpression lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify;
+				var lhs_delegate_target = get_delegate_target_cexpression (assignment.left, out lhs_delegate_target_destroy_notify);
+				var rhs_delegate_target = get_delegate_target_cexpression (assignment.right, out rhs_delegate_target_destroy_notify);
 				ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
+				if (assignment.right.target_type.value_owned) {
+					ccomma.append_expression (new CCodeAssignment (lhs_delegate_target_destroy_notify, rhs_delegate_target_destroy_notify));
+				}
 			}
 			
 			ccomma.append_expression (get_variable_cexpression (temp_decl.name));

@@ -652,19 +652,12 @@ internal class Vala.GSignalModule : GObjectModule {
 		if (m.closure) {
 			// g_signal_connect_data
 
-			var closure_block = current_symbol as Block;
-			while (closure_block != null && !closure_block.captured) {
-				closure_block = closure_block.parent_symbol as Block;
-			}
-			int block_id = get_block_id (closure_block);
-
 			// fourth argument: user_data
-			var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_ref".printf (block_id)));
-			ref_call.add_argument (get_delegate_target_cexpression (handler));
-			ccall.add_argument (new CCodeCastExpression (ref_call, "GCallback"));
+			CCodeExpression handler_destroy_notify;
+			ccall.add_argument (get_delegate_target_cexpression (handler, out handler_destroy_notify));
 
 			// fifth argument: destroy_notify
-			ccall.add_argument (new CCodeCastExpression (new CCodeIdentifier ("block%d_data_unref".printf (block_id)), "GClosureNotify"));
+			ccall.add_argument (new CCodeCastExpression (handler_destroy_notify, "GClosureNotify"));
 
 			// sixth argument: connect_flags
 			ccall.add_argument (new CCodeConstant ("0"));

@@ -289,50 +289,18 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						var deleg_type = (DelegateType) param.parameter_type;
 						var d = deleg_type.delegate_symbol;
 						if (d.has_target) {
-							var delegate_target = get_delegate_target_cexpression (arg);
-							if (deleg_type.value_owned) {
-								CCodeExpression delegate_target_destroy_notify;
-								var delegate_method = arg.symbol_reference as Method;
-								var lambda = arg as LambdaExpression;
-								var arg_ma = arg as MemberAccess;
-								if (lambda != null) {
-									if (delegate_method.closure) {
-										var closure_block = current_symbol as Block;
-										while (closure_block != null && !closure_block.captured) {
-											closure_block = closure_block.parent_symbol as Block;
-										}
-										int block_id = get_block_id (closure_block);
-										var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_ref".printf (block_id)));
-										ref_call.add_argument (delegate_target);
-										delegate_target = ref_call;
-										delegate_target_destroy_notify = new CCodeIdentifier ("block%d_data_unref".printf (block_id));
-									} else if (get_this_type () != null) {
-										// type of delegate target is same as `this'
-										// for lambda expressions in instance methods
-										var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_this_type (), arg.source_reference));
-										ref_call.add_argument (delegate_target);
-										delegate_target = ref_call;
-										delegate_target_destroy_notify = get_destroy_func_expression (get_this_type ());
-									} else {
-										delegate_target_destroy_notify = new CCodeConstant ("NULL");
-									}
-								} else if (delegate_method != null && delegate_method.binding == MemberBinding.INSTANCE
-								           && arg_ma != null && arg_ma.inner != null && arg_ma.inner.value_type.data_type != null
-								           && arg_ma.inner.value_type.data_type.is_reference_counting ()) {
-									var ref_call = new CCodeFunctionCall (get_dup_func_expression (arg_ma.inner.value_type, arg.source_reference));
-									ref_call.add_argument (delegate_target);
-									delegate_target = ref_call;
-									delegate_target_destroy_notify = get_destroy_func_expression (arg_ma.inner.value_type);
-								} else {
-									delegate_target_destroy_notify = new CCodeConstant ("NULL");
-								}
-								carg_map.set (get_param_pos (param.cdelegate_target_parameter_position + 0.01), delegate_target_destroy_notify);
- 							}
+							CCodeExpression delegate_target_destroy_notify;
+							var delegate_target = get_delegate_target_cexpression (arg, out delegate_target_destroy_notify);
 							carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), delegate_target);
+							if (deleg_type.value_owned) {
+								carg_map.set (get_param_pos (param.cdelegate_target_parameter_position + 0.01), delegate_target_destroy_notify);
+							}
 							multiple_cargs = true;
 						}
 					} else if (param.parameter_type is MethodType) {
-						carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), get_delegate_target_cexpression (arg));
+						// callbacks in dynamic method calls
+						CCodeExpression delegate_target_destroy_notify;
+						carg_map.set (get_param_pos (param.cdelegate_target_parameter_position), get_delegate_target_cexpression (arg, out delegate_target_destroy_notify));
 						multiple_cargs = true;
 					}
 
@@ -485,6 +453,17 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				out_arg_map.set (get_param_pos (m.cdelegate_target_parameter_position), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
 				expr.delegate_target = temp_ref;
+
+				if (deleg_type.value_owned) {
+					temp_var = get_temp_variable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")));
+					temp_ref = get_variable_cexpression (temp_var.name);
+
+					temp_vars.insert (0, temp_var);
+
+					out_arg_map.set (get_param_pos (m.cdelegate_target_parameter_position + 0.01), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+
+					expr.delegate_target_destroy_notify = temp_ref;
+				}
 			}
 		}
 
@@ -562,8 +541,9 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			var deleg_type = (DelegateType) itype;
 			var d = deleg_type.delegate_symbol;
 			if (d.has_target) {
-				in_arg_map.set (get_param_pos (d.cinstance_parameter_position), get_delegate_target_cexpression (expr.call));
-				out_arg_map.set (get_param_pos (d.cinstance_parameter_position), get_delegate_target_cexpression (expr.call));
+				CCodeExpression delegate_target_destroy_notify;
+				in_arg_map.set (get_param_pos (d.cinstance_parameter_position), get_delegate_target_cexpression (expr.call, out delegate_target_destroy_notify));
+				out_arg_map.set (get_param_pos (d.cinstance_parameter_position), get_delegate_target_cexpression (expr.call, out delegate_target_destroy_notify));
 			}
 		}
 
