@@ -714,9 +714,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		return define.str;
 	}
 
-	public void generate_enum_declaration (Enum en, CCodeDeclarationSpace decl_space) {
+	public virtual bool generate_enum_declaration (Enum en, CCodeDeclarationSpace decl_space) {
 		if (decl_space.add_symbol_declaration (en, en.get_cname ())) {
-			return;
+			return false;
 		}
 
 		var cenum = new CCodeEnum (en.get_cname ());
@@ -734,7 +734,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		decl_space.add_type_definition (new CCodeNewline ());
 
 		if (!en.has_type_id) {
-			return;
+			return true;
 		}
 
 		decl_space.add_type_declaration (new CCodeNewline ());
@@ -750,6 +750,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		decl_space.add_type_member_declaration (regfun);
+
+		return true;
 	}
 
 	public override void visit_enum (Enum en) {

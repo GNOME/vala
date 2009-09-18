@@ -49,6 +49,27 @@ internal class Vala.DBusModule : GAsyncModule {
 		base (codegen, next);
 	}
 
+	static bool is_string_marshalled_enum (TypeSymbol? symbol) {
+		if (symbol != null && symbol is Enum) {
+			var dbus = symbol.get_attribute ("DBus");
+			return dbus != null && dbus.get_bool ("use_string_marshalling");
+		}
+		return false;
+	}
+
+	string get_dbus_value (EnumValue value, string default_value) {
+			var dbus = value.get_attribute ("DBus");
+			if (dbus == null) {
+				return default_value;
+			}
+
+			string dbus_value = dbus.get_string ("value");
+			if (dbus_value == null) {
+				return default_value;
+			}
+			return dbus_value;
+	}
+
 	public string? get_dbus_name (TypeSymbol symbol) {
 		var dbus = symbol.get_attribute ("DBus");
 		if (dbus == null) {
@@ -78,7 +99,35 @@ internal class Vala.DBusModule : GAsyncModule {
 	}
 
 	public static string get_type_signature (DataType datatype) {
-		return datatype.get_type_signature ();
+		if (is_string_marshalled_enum (datatype.data_type)) {
+			return "s";
+		} else {
+			return datatype.get_type_signature ();
+		}
+	}
+
+	public override void visit_enum (Enum en) {
+		base.visit_enum (en);
+
+		if (is_string_marshalled_enum (en)) {
+			// strcmp
+			source_declarations.add_include ("string.h");
+			source_declarations.add_include ("dbus/dbus-glib.h");
+
+			source_type_member_definition.append (generate_enum_from_string_function (en));
+			source_type_member_definition.append (generate_enum_to_string_function (en));
+		}
+	}
+
+	public override bool generate_enum_declaration (Enum en, CCodeDeclarationSpace decl_space) {
+		if (base.generate_enum_declaration (en, decl_space)) {
+			if (is_string_marshalled_enum (en)) {
+				decl_space.add_type_member_declaration (generate_enum_from_string_function_declaration (en));
+				decl_space.add_type_member_declaration (generate_enum_to_string_function_declaration (en));
+			}
+			return true;
+		}
+		return false;
 	}
 
 	CCodeExpression? get_array_length (CCodeExpression expr, int dim) {
@@ -92,7 +141,81 @@ internal class Vala.DBusModule : GAsyncModule {
 		return null;
 	}
 
-	CCodeExpression read_basic (CCodeFragment fragment, BasicTypeInfo basic_type, CCodeExpression iter_expr) {
+	CCodeExpression? generate_enum_value_from_string (CCodeFragment fragment, EnumValueType type, CCodeExpression? expr) {
+		var en = type.type_symbol as Enum;
+		var from_string_name = "%s_from_string".printf (en.get_lower_case_cname (null));
+
+		var from_string_call = new CCodeFunctionCall (new CCodeIdentifier (from_string_name));
+		from_string_call.add_argument (expr);
+		from_string_call.add_argument (new CCodeConstant ("NULL"));
+
+		return from_string_call;
+	}
+
+	public CCodeFunction generate_enum_from_string_function_declaration (Enum en) {
+		var from_string_name = "%s_from_string".printf (en.get_lower_case_cname (null));
+
+		var from_string_func = new CCodeFunction (from_string_name, en.get_cname ());
+		from_string_func.add_parameter (new CCodeFormalParameter ("str", "const char*"));
+		from_string_func.add_parameter (new CCodeFormalParameter ("error", "GError**"));
+
+		return from_string_func;
+	}
+
+	public CCodeFunction generate_enum_from_string_function (Enum en) {
+		var from_string_name = "%s_from_string".printf (en.get_lower_case_cname (null));
+
+		var from_string_func = new CCodeFunction (from_string_name, en.get_cname ());
+		from_string_func.add_parameter (new CCodeFormalParameter ("str", "const char*"));
+		from_string_func.add_parameter (new CCodeFormalParameter ("error", "GError**"));
+
+		var from_string_block = new CCodeBlock ();
+		from_string_func.block = from_string_block;
+
+		var cdecl = new CCodeDeclaration (en.get_cname ());
+		cdecl.add_declarator (new CCodeVariableDeclarator ("value"));
+		from_string_block.add_statement (cdecl);
+
+		CCodeStatement if_else_if = null;
+		CCodeIfStatement last_statement = null;
+		foreach (EnumValue enum_value in en.get_values ()) {
+			var true_block = new CCodeBlock ();
+			true_block.suppress_newline = true;
+			true_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("value"), new CCodeIdentifier (enum_value.get_cname ()))));
+
+			string dbus_value = get_dbus_value (enum_value, enum_value.name);
+			var string_comparison = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+			string_comparison.add_argument (new CCodeIdentifier ("str"));
+			string_comparison.add_argument (new CCodeConstant ("\"%s\"".printf (dbus_value)));
+			var stmt = new CCodeIfStatement (new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, string_comparison, new CCodeConstant ("0")), true_block);
+
+			if (last_statement != null) {
+				last_statement.false_statement = stmt;
+			} else {
+				if_else_if = stmt;
+			}
+			last_statement = stmt;
+		}
+
+		var error_block = new CCodeBlock ();
+		error_block.suppress_newline = true;
+
+		var set_error_call = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error_literal"));
+		set_error_call.add_argument (new CCodeIdentifier ("error"));
+		set_error_call.add_argument (new CCodeIdentifier ("DBUS_GERROR"));
+		set_error_call.add_argument (new CCodeIdentifier ("DBUS_GERROR_INVALID_ARGS"));
+		set_error_call.add_argument (new CCodeConstant ("\"Invalid enumeration value\""));
+		error_block.add_statement (new CCodeExpressionStatement (set_error_call));
+
+		last_statement.false_statement = error_block;
+		from_string_block.add_statement (if_else_if);
+
+		from_string_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("value")));
+
+		return from_string_func;
+	}
+
+	CCodeExpression read_basic (CCodeFragment fragment, BasicTypeInfo basic_type, CCodeExpression iter_expr, bool transfer = false) {
 		string temp_name = "_tmp%d_".printf (next_temp_var_id++);
 
 		var cdecl = new CCodeDeclaration (basic_type.cname);
@@ -106,9 +229,10 @@ internal class Vala.DBusModule : GAsyncModule {
 
 		var temp_result = new CCodeIdentifier (temp_name);
 
-		if (basic_type.signature == "s"
-		    || basic_type.signature == "o"
-		    || basic_type.signature == "g") {
+		if (!transfer
+		    && (basic_type.signature == "s"
+		        || basic_type.signature == "o"
+		        || basic_type.signature == "g")) {
 			var dup_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strdup"));
 			dup_call.add_argument (temp_result);
 			return dup_call;
@@ -388,7 +512,11 @@ internal class Vala.DBusModule : GAsyncModule {
 	public CCodeExpression? read_expression (CCodeFragment fragment, DataType type, CCodeExpression iter_expr, CCodeExpression? expr) {
 		BasicTypeInfo basic_type;
 		CCodeExpression result = null;
-		if (get_basic_type_info (get_type_signature (type), out basic_type)) {
+		if (is_string_marshalled_enum (type.data_type)) {
+			get_basic_type_info ("s", out basic_type);
+			result = read_basic (fragment, basic_type, iter_expr, true);
+			result = generate_enum_value_from_string (fragment, type as EnumValueType, result);
+		} else if (get_basic_type_info (get_type_signature (type), out basic_type)) {
 			result = read_basic (fragment, basic_type, iter_expr);
 		} else if (type is ArrayType) {
 			result = read_array (fragment, (ArrayType) type, iter_expr, expr);
@@ -421,6 +549,52 @@ internal class Vala.DBusModule : GAsyncModule {
 		fragment.append (new CCodeExpressionStatement (iter_call));
 
 		return result;
+	}
+
+	CCodeExpression? generate_enum_value_to_string (CCodeFragment fragment, EnumValueType type, CCodeExpression? expr) {
+		var en = type.type_symbol as Enum;
+		var to_string_name = "%s_to_string".printf (en.get_lower_case_cname (null));
+
+		var to_string_call = new CCodeFunctionCall (new CCodeIdentifier (to_string_name));
+		to_string_call.add_argument (expr);
+
+		return to_string_call;
+	}
+
+	public CCodeFunction generate_enum_to_string_function_declaration (Enum en) {
+		var to_string_name = "%s_to_string".printf (en.get_lower_case_cname (null));
+
+		var to_string_func = new CCodeFunction (to_string_name, "const char*");
+		to_string_func.add_parameter (new CCodeFormalParameter ("value", en.get_cname ()));
+
+		return to_string_func;
+	}
+
+	public CCodeFunction generate_enum_to_string_function (Enum en) {
+		var to_string_name = "%s_to_string".printf (en.get_lower_case_cname (null));
+
+		var to_string_func = new CCodeFunction (to_string_name, "const char*");
+		to_string_func.add_parameter (new CCodeFormalParameter ("value", en.get_cname ()));
+
+		var to_string_block = new CCodeBlock ();
+		to_string_func.block = to_string_block;
+
+		var cdecl = new CCodeDeclaration ("const char *");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("str"));
+		to_string_block.add_statement (cdecl);
+
+		var cswitch = new CCodeSwitchStatement (new CCodeIdentifier ("value"));
+		foreach (EnumValue enum_value in en.get_values ()) {
+			string dbus_value = get_dbus_value (enum_value, enum_value.name);
+			cswitch.add_statement (new CCodeCaseStatement (new CCodeIdentifier (enum_value.get_cname ())));
+			cswitch.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("str"), new CCodeConstant ("\"%s\"".printf (dbus_value)))));
+			cswitch.add_statement (new CCodeBreakStatement ());
+		}
+		to_string_block.add_statement (cswitch);
+
+		to_string_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("str")));
+
+		return to_string_func;
 	}
 
 	void write_basic (CCodeFragment fragment, BasicTypeInfo basic_type, CCodeExpression iter_expr, CCodeExpression expr) {
@@ -657,7 +831,11 @@ internal class Vala.DBusModule : GAsyncModule {
 
 	public void write_expression (CCodeFragment fragment, DataType type, CCodeExpression iter_expr, CCodeExpression expr) {
 		BasicTypeInfo basic_type;
-		if (get_basic_type_info (get_type_signature (type), out basic_type)) {
+		if (is_string_marshalled_enum (type.data_type)) {
+			get_basic_type_info ("s", out basic_type);
+			var result = generate_enum_value_to_string (fragment, type as EnumValueType, expr);
+			write_basic (fragment, basic_type, iter_expr, result);
+		} else if (get_basic_type_info (get_type_signature (type), out basic_type)) {
 			write_basic (fragment, basic_type, iter_expr, expr);
 		} else if (type is ArrayType) {
 			write_array (fragment, (ArrayType) type, iter_expr, expr);
