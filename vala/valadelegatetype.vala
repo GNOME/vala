@@ -83,4 +83,8 @@ public class Vala.DelegateType : DataType {
 	public override bool check (SemanticAnalyzer analyzer) {
 		return delegate_symbol.check (analyzer);
 	}
+
+	public override bool is_disposable () {
+		return delegate_symbol.has_target && value_owned;
+	}
 }

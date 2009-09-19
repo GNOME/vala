@@ -330,7 +330,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 					// (ret_tmp = call (&tmp), var1 = (assign_tmp = dup (tmp), free (var1), assign_tmp), ret_tmp)
 					if (param.direction != ParameterDirection.IN && requires_destroy (arg.value_type)
 					    && (param.direction == ParameterDirection.OUT || !param.parameter_type.value_owned)
-					    && !(param.parameter_type is ArrayType)) {
+					    && !(param.parameter_type is ArrayType) && !(param.parameter_type is DelegateType)) {
 						var unary = (UnaryExpression) arg;
 
 						var ccomma = new CCodeCommaExpression ();

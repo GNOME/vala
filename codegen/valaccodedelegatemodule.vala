@@ -135,6 +135,13 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				is_out = true;
 			}
 		}
+
+		bool expr_owned = delegate_expr.value_type.value_owned;
+
+		if (delegate_expr is ReferenceTransferExpression) {
+			var reftransfer_expr = (ReferenceTransferExpression) delegate_expr;
+			delegate_expr = reftransfer_expr.inner;
+		}
 		
 		if (delegate_expr is MethodCall) {
 			var invocation_expr = (MethodCall) delegate_expr;
@@ -147,7 +154,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 			if (closure_block != null) {
 				int block_id = get_block_id (closure_block);
 				var delegate_target = get_variable_cexpression ("_data%d_".printf (block_id));
-				if (delegate_expr.value_type.value_owned) {
+				if (expr_owned) {
 					var ref_call = new CCodeFunctionCall (new CCodeIdentifier ("block%d_data_ref".printf (block_id)));
 					ref_call.add_argument (delegate_target);
 					delegate_target = ref_call;
@@ -156,7 +163,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				return delegate_target;
 			} else if (get_this_type () != null || in_constructor) {
 				CCodeExpression delegate_target = new CCodeIdentifier ("self");
-				if (delegate_expr.value_type.value_owned) {
+				if (expr_owned) {
 					if (get_this_type () != null) {
 						var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_this_type (), delegate_expr.source_reference));
 						ref_call.add_argument (delegate_target);
@@ -187,15 +194,21 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (get_variable_cname (param.name)));
 				} else {
 					CCodeExpression target_expr = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name)));
-					delegate_target_destroy_notify = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+					if (expr_owned) {
+						delegate_target_destroy_notify = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
+					}
 					if (param.direction != ParameterDirection.IN) {
 						// accessing argument of out/ref param
 						target_expr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_expr);
-						delegate_target_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, delegate_target_destroy_notify);
+						if (expr_owned) {
+							delegate_target_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, delegate_target_destroy_notify);
+						}
 					}
 					if (is_out) {
 						// passing delegate as out/ref
-						delegate_target_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, delegate_target_destroy_notify);
+						if (expr_owned) {
+							delegate_target_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, delegate_target_destroy_notify);
+						}
 						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
 					} else {
 						return target_expr;
@@ -213,9 +226,13 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 					return new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_delegate_target_cname (get_variable_cname (local.name)));
 				} else {
 					var target_expr = new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (local.name)));
-					delegate_target_destroy_notify = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+					if (expr_owned) {
+						delegate_target_destroy_notify = new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+					}
 					if (is_out) {
-						delegate_target_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, delegate_target_destroy_notify);
+						if (expr_owned) {
+							delegate_target_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, delegate_target_destroy_notify);
+						}
 						return new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, target_expr);
 					} else {
 						return target_expr;
@@ -223,7 +240,8 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				}
 			} else if (delegate_expr.symbol_reference is Field) {
 				var field = (Field) delegate_expr.symbol_reference;
-				var target_cname = get_delegate_target_cname (field.get_cname ());
+				string target_cname = get_delegate_target_cname (field.get_cname ());
+				string target_destroy_notify_cname = get_delegate_target_destroy_notify_cname (field.get_cname ());
 
 				var ma = (MemberAccess) delegate_expr;
 
@@ -244,11 +262,20 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 					}
 					if (((TypeSymbol) field.parent_symbol).is_reference_type ()) {
 						target_expr = new CCodeMemberAccess.pointer (inst, target_cname);
+						if (expr_owned) {
+							delegate_target_destroy_notify = new CCodeMemberAccess.pointer (inst, target_destroy_notify_cname);
+						}
 					} else {
 						target_expr = new CCodeMemberAccess (inst, target_cname);
+						if (expr_owned) {
+							delegate_target_destroy_notify = new CCodeMemberAccess (inst, target_destroy_notify_cname);
+						}
 					}
 				} else {
 					target_expr = new CCodeIdentifier (target_cname);
+					if (expr_owned) {
+						delegate_target_destroy_notify = new CCodeIdentifier (target_destroy_notify_cname);
+					}
 				}
 
 				if (is_out) {

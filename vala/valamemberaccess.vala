@@ -575,6 +575,10 @@ public class Vala.MemberAccess : Expression {
 			} else {
 				value_type = new InvalidType ();
 			}
+
+			if (target_type != null) {
+				value_type.value_owned = target_type.value_owned;
+			}
 		} else {
 			// implicit this access
 			if (instance && inner == null) {
@@ -592,6 +596,10 @@ public class Vala.MemberAccess : Expression {
 
 			if (symbol_reference is Method) {
 				var m = (Method) symbol_reference;
+
+				if (target_type != null) {
+					value_type.value_owned = target_type.value_owned;
+				}
 
 				Method base_method;
 				if (m.base_method != null) {

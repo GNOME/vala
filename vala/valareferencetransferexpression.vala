@@ -102,6 +102,14 @@ public class Vala.ReferenceTransferExpression : Expression {
 			return false;
 		}
 
+		if (inner.value_type is DelegateType) {
+			// would require fixing code generator to ensure _target_destroy_notify
+			// is set to NULL as well after reference transfer, leads to double free otherwise
+			error = true;
+			Report.error (source_reference, "Reference transfer not supported for delegates");
+			return false;
+		}
+
 		value_type = inner.value_type.copy ();
 		value_type.value_owned = true;
 

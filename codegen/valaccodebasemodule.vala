@@ -1033,6 +1033,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 				var ma = new MemberAccess (this_access, f.name);
 				ma.symbol_reference = f;
+				ma.value_type = f.field_type.copy ();
 				instance_finalize_fragment.append (new CCodeExpressionStatement (get_unref_expression (lhs, f.field_type, ma)));
 			}
 		} else if (f.binding == MemberBinding.CLASS)  {
@@ -1676,6 +1677,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					if (requires_destroy (local.variable_type)) {
 						var ma = new MemberAccess.simple (local.name);
 						ma.symbol_reference = local;
+						ma.value_type = local.variable_type.copy ();
 						free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (local.name)), local.variable_type, ma)));
 					}
 				}
@@ -1722,11 +1724,14 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						param_type.value_owned = true;
 						data.add_field (param_type.get_cname (), get_variable_cname (param.name));
 
+						bool is_unowned_delegate = param.parameter_type is DelegateType && !param.parameter_type.value_owned;
+
 						// create copy if necessary as captured variables may need to be kept alive
 						CCodeExpression cparam = get_variable_cexpression (param.name);
-						if (requires_copy (param_type) && !param.parameter_type.value_owned)  {
+						if (requires_copy (param_type) && !param.parameter_type.value_owned && !is_unowned_delegate)  {
 							var ma = new MemberAccess.simple (param.name);
 							ma.symbol_reference = param;
+							ma.value_type = param.parameter_type.copy ();
 							// directly access parameters in ref expressions
 							param.captured = false;
 							cparam = get_ref_cexpression (param.parameter_type, cparam, ma, param);
@@ -1750,9 +1755,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 							}
 						}
 
-						if (requires_destroy (param_type)) {
+						if (requires_destroy (param_type) && !is_unowned_delegate) {
 							var ma = new MemberAccess.simple (param.name);
 							ma.symbol_reference = param;
+							ma.value_type = param_type.copy ();
 							free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), param.parameter_type, ma)));
 						}
 					}
@@ -1807,6 +1813,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (!local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
+				ma.value_type = local.variable_type.copy ();
 				cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
 			}
 		}
@@ -1817,6 +1824,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				if (!param.captured && requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
+					ma.value_type = param.parameter_type.copy ();
 					cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.parameter_type, ma)));
 				}
 			}
@@ -2425,6 +2433,24 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public virtual CCodeExpression get_unref_expression (CCodeExpression cvar, DataType type, Expression expr, bool is_macro_definition = false) {
+		if (type is DelegateType) {
+			CCodeExpression delegate_target_destroy_notify;
+			var delegate_target = get_delegate_target_cexpression (expr, out delegate_target_destroy_notify);
+
+			var ccall = new CCodeFunctionCall (delegate_target_destroy_notify);
+			ccall.add_argument (delegate_target);
+
+			var cisnull = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, delegate_target_destroy_notify, new CCodeConstant ("NULL"));
+
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.append_expression (new CCodeConditionalExpression (cisnull, new CCodeConstant ("NULL"), ccall));
+			ccomma.append_expression (new CCodeAssignment (cvar, new CCodeConstant ("NULL")));
+			ccomma.append_expression (new CCodeAssignment (delegate_target, new CCodeConstant ("NULL")));
+			ccomma.append_expression (new CCodeAssignment (delegate_target_destroy_notify, new CCodeConstant ("NULL")));
+
+			return ccomma;
+		}
+
 		var ccall = new CCodeFunctionCall (get_destroy_func_expression (type));
 
 		if (type is ValueType && !type.nullable) {
@@ -2573,6 +2599,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		foreach (LocalVariable local in temp_ref_vars) {
 			var ma = new MemberAccess.simple (local.name);
 			ma.symbol_reference = local;
+			ma.value_type = local.variable_type.copy ();
 			expr_list.append_expression (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma));
 		}
 		
@@ -2702,6 +2729,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (local.active && !local.floating && !local.captured && requires_destroy (local.variable_type)) {
 				var ma = new MemberAccess.simple (local.name);
 				ma.symbol_reference = local;
+				ma.value_type = local.variable_type.copy ();
 				cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
 			}
 		}
@@ -2757,6 +2785,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (requires_destroy (param.parameter_type) && param.direction == ParameterDirection.IN) {
 				var ma = new MemberAccess.simple (param.name);
 				ma.symbol_reference = param;
+				ma.value_type = param.parameter_type.copy ();
 				cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (param.name), param.parameter_type, ma)));
 			}
 		}
@@ -3184,6 +3213,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public virtual CCodeExpression? get_ref_cexpression (DataType expression_type, CCodeExpression cexpr, Expression? expr, CodeNode node) {
+		if (expression_type is DelegateType) {
+			return cexpr;
+		}
+
 		if (expression_type is ValueType && !expression_type.nullable) {
 			// normal value type, no null check
 			// (copy (&expr, &temp), temp)

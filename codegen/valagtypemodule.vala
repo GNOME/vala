@@ -301,6 +301,9 @@ internal class Vala.GTypeModule : GErrorModule {
 						if (delegate_type.delegate_symbol.has_target) {
 							// create field to store delegate target
 							instance_struct.add_field ("gpointer", get_delegate_target_cname (f.name));
+							if (delegate_type.value_owned) {
+								instance_struct.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (f.name));
+							}
 						}
 					}
 				} else if (f.binding == MemberBinding.CLASS) {
@@ -391,6 +394,9 @@ internal class Vala.GTypeModule : GErrorModule {
 						if (delegate_type.delegate_symbol.has_target) {
 							// create field to store delegate target
 							instance_priv_struct.add_field ("gpointer", get_delegate_target_cname (f.name));
+							if (delegate_type.value_owned) {
+								instance_priv_struct.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (f.name));
+							}
 						}
 					}
 				}
