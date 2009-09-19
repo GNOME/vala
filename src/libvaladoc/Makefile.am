@@ -78,6 +78,8 @@ libvaladoc_la_VALASOURCES = \
 	html/block.vala \
 	html/htmlwriter.vala \
 	html/inline.vala \
+	html-apiwriter/apiwriter.vala \
+	html-apiwriter/apiwriter-vala.vala \
 	$(NULL)
 
 

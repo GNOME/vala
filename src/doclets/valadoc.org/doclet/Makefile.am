@@ -10,7 +10,7 @@ BUILT_SOURCES = libdoclet.vala.stamp
 
 
 libdoclet.vala.stamp: $(libdoclet_VALASOURCES)
-	$(VALAC) -C --vapidir ../../htmlhelpers/languages/ --pkg apiwriter-1.0 --vapidir ../../../vapi/ --pkg valadoc-1.0 --basedir . --save-temps $^
+	$(VALAC) -C --vapidir ../../../vapi/ --pkg valadoc-1.0 --basedir . --save-temps $^
 	touch $@
 
 
@@ -30,7 +30,6 @@ libdoclet_la_SOURCES =                \
 
 AM_CFLAGS =  -g                    \
 	-I ../../../libvaladoc/        \
-	-I ../../htmlhelpers/languages \
 	$(GLIB_CFLAGS)                 \
 	$(LIBVALA_CFLAGS)              \
 	$(NULL)
@@ -42,7 +41,6 @@ libdoclet_la_LDFLAGS = -module -avoid-version \
 
 libdoclet_la_LIBADD =                           \
 	../../../libvaladoc/libvaladoc.la           \
-	../../htmlhelpers/languages/libapiwriter.la \
 	$(GLIB_LIBS)                                \
 	$(LIBVALA_LIBS)                             \
 	$(NULL)

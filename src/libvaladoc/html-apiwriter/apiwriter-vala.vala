@@ -1,21 +1,27 @@
+/*
+ * Valadoc - a documentation tool for vala.
+ * Copyright (C) 2009 Florian Brosch
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 
 
-using Valadoc.Html;
 using Valadoc;
 using Gee;
 
-public class Valadoc.Html.Api.Vala {
-	private Attribute csskeyword = new Attribute ("class", "apikeyword");
-	private Attribute cssformalparam = new Attribute ("class", "apiformalparameter");
-	private Attribute cssparamlist = new Attribute ("class", "apiparameterlist");
-	private Attribute cssexclist = new Attribute ("class", "apiexceptionlist");
-	private Attribute cssapi = new Attribute ("class", "api");
-	private Attribute csstype = new Attribute ("class", "apitype");
-	private Attribute cssbasictype = new Attribute ("class", "apibasictype");
-	private Attribute csslink = new Attribute ("class", "apilink");
-	private Attribute cssoptparamlist = new Attribute ("class", "apioptparameterlist");
-	private Attribute cssparentlist = new Attribute ("class", "parentlist");
-
+public class Valadoc.Html.ValaApiWriter : ApiWriter {
 	private Entry keyword (string str) {
 		Span span = new Span ();
 		span.add_attribute (this.csskeyword);
@@ -297,7 +303,7 @@ public class Valadoc.Html.Api.Vala {
 		return span;
 	}
 
-	public Div from_method (Method m) {
+	public override Div from_method (Method m) {
 		Div api = new Div ();
 		api.add_attribute (cssapi);
 
@@ -357,7 +363,7 @@ public class Valadoc.Html.Api.Vala {
 		return api;
 	}
 
-	public Div from_delegate (Delegate del) {
+	public override Div from_delegate (Delegate del) {
 		Div api = new Div ();
 		api.add_attribute (cssapi);
 
@@ -392,7 +398,7 @@ public class Valadoc.Html.Api.Vala {
 		return api;
 	}
 
-	public Div from_signal (Signal sig) {
+	public override Div from_signal (Signal sig) {
 		Div api = new Div ();
 		api.add_attribute (cssapi);
 
@@ -412,7 +418,7 @@ public class Valadoc.Html.Api.Vala {
 		return api;
 	}
 
-	public Div from_field (Field field) {
+	public override Div from_field (Field field) {
 		Div api = new Div ();
 		api.add_attribute (cssapi);
 
@@ -437,7 +443,7 @@ public class Valadoc.Html.Api.Vala {
 		return api;
 	}
 
-	public Div from_constant (Constant c) {
+	public override Div from_constant (Constant c) {
 		Div api = new Div ();
 		api.add_attribute (cssapi);
 
@@ -451,7 +457,7 @@ public class Valadoc.Html.Api.Vala {
 		return api;
 	}
 
-	public Div from_namespace (Namespace ns) {
+	public override Div from_namespace (Namespace ns) {
 		Div api = new Div ();
 		api.add_attribute (cssapi);
 
@@ -460,7 +466,7 @@ public class Valadoc.Html.Api.Vala {
 		return api;
 	}
 
-	public Div from_enum (Enum en) {
+	public override Div from_enum (Enum en) {
 		Div api = new Div ();
 		api.add_attribute (cssapi);
 
@@ -469,7 +475,7 @@ public class Valadoc.Html.Api.Vala {
 		return api;
 	}
 
-	public Div from_errordomain (ErrorDomain err) {
+	public override Div from_errordomain (ErrorDomain err) {
 		Div api = new Div ();
 		api.add_attribute (cssapi);
 
@@ -478,21 +484,21 @@ public class Valadoc.Html.Api.Vala {
 		return api;
 	}
 
-	public Div from_enumvalue (EnumValue env) {
+	public override Div from_enumvalue (EnumValue env) {
 		Div api = new Div ();
 		api.add_attribute (cssapi);
 		api.add_child (new String (env.name));
 		return api;
 	}
 
-	public Div from_errorcode (ErrorCode errc) {
+	public override Div from_errorcode (ErrorCode errc) {
 		Div api = new Div ();
 		api.add_attribute (cssapi);
 		api.add_child (new String (errc.name));
 		return api;
 	}
 
-	public Div from_struct (Struct stru) {
+	public override Div from_struct (Struct stru) {
 		Div api = new Div ();
 		api.add_attribute (cssapi);
 
@@ -509,7 +515,7 @@ public class Valadoc.Html.Api.Vala {
 		return api;
 	}
 
-	public Div from_class (Class cl) {
+	public override Div from_class (Class cl) {
 		Div api = new Div ();
 		api.add_attribute (cssapi);
 
@@ -535,7 +541,7 @@ public class Valadoc.Html.Api.Vala {
 		return api;
 	}
 
-	public Div from_interface (Interface iface) {
+	public override Div from_interface (Interface iface) {
 		Div api = new Div ();
 		api.add_attribute (cssapi);
 
@@ -586,7 +592,7 @@ public class Valadoc.Html.Api.Vala {
 		return span;
 	}
 
-	public Div from_property (Property prop) {
+	public override Div from_property (Property prop) {
 		Div api = new Div ();
 		api.add_attribute (cssapi);
 
@@ -619,51 +625,6 @@ public class Valadoc.Html.Api.Vala {
 
 		api.add_child (new String("}"));
 		return api;
-	}
-
-	public Div from_documented_element (DocumentedElement el) {
-		if (el is Method) {
-			return this.from_method ((Method)el);
-		}
-		else if (el is Delegate) {
-			return this.from_delegate ((Delegate)el);
-		}
-		else if (el is Signal) {
-			return this.from_signal ((Signal)el);
-		}
-		else if (el is Field) {
-			return this.from_field ((Field)el);
-		}
-		else if (el is Constant) {
-			return this.from_constant ((Constant)el);
-		}
-		else if (el is Namespace) {
-			return this.from_namespace ((Namespace)el);
-		}
-		else if (el is Enum) {
-			return this.from_enum ((Enum)el);
-		}
-		else if (el is ErrorDomain) {
-			return this.from_errordomain ((ErrorDomain)el);
-		}
-		else if (el is EnumValue) {
-			return this.from_enumvalue ((EnumValue)el);
-		}
-		else if (el is ErrorCode) {
-			return this.from_errorcode ((ErrorCode)el);
-		}
-		else if (el is Struct) {
-			return this.from_struct ((Struct)el);
-		}
-		else if (el is Class) {
-			return this.from_class ((Class)el);
-		}
-		else if (el is Interface) {
-			return this.from_interface ((Interface)el);
-		}
-		else {
-			return this.from_property ((Property)el);
-		}
 	}
 }
 

@@ -26,7 +26,7 @@ using Gee;
 
 
 public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet {
-	private Valadoc.Html.Api.Vala langwriter = new Valadoc.Html.Api.Vala ();
+	private Valadoc.Html.ValaApiWriter langwriter = new Valadoc.Html.ValaApiWriter ();
 	private Settings settings;
 	private FileStream types;
 	private FileStream file;
