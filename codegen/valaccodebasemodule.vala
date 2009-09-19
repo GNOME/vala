@@ -2696,6 +2696,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		foreach (LocalVariable local in temp_ref_vars) {
 			var ma = new MemberAccess.simple (local.name);
 			ma.symbol_reference = local;
+			ma.value_type = local.variable_type.copy ();
 			cfrag.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
 		}
 		
@@ -4194,6 +4195,20 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						temp_vars.insert (0, len_decl);
 						ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (len_decl.name), head.get_array_length_cexpression (expr, dim)));
 					}
+					ccomma.append_expression (get_variable_cexpression (decl.name));
+					cexpr = ccomma;
+				} else if (expression_type is DelegateType && expr != null) {
+					var ccomma = new CCodeCommaExpression ();
+					ccomma.append_expression (cexpr);
+
+					var target_decl = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (decl.name));
+					temp_vars.insert (0, target_decl);
+					var target_destroy_notify_decl = new LocalVariable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")), get_delegate_target_destroy_notify_cname (decl.name));
+					temp_vars.insert (0, target_destroy_notify_decl);
+					CCodeExpression target_destroy_notify;
+					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (target_decl.name), get_delegate_target_cexpression (expr, out target_destroy_notify)));
+					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (target_destroy_notify_decl.name), target_destroy_notify));
+
 					ccomma.append_expression (get_variable_cexpression (decl.name));
 					cexpr = ccomma;
 				}
