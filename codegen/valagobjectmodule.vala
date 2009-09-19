@@ -462,10 +462,8 @@ internal class Vala.GObjectModule : GTypeModule {
 			ccast.add_argument (ccall);
 			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("klass"), ccast)));
 
-			ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek_parent"));
-			ccall.add_argument (new CCodeIdentifier ("klass"));
 			ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
-			ccast.add_argument (ccall);
+			ccast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (cl.get_lower_case_cname (null))));
 			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("parent_class"), ccast)));
 
 		
