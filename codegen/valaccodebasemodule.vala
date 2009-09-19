@@ -3279,7 +3279,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return null;
 		}
 
-		if (dupexpr is CCodeIdentifier && !(expression_type is ArrayType) && !is_ref_function_void (expression_type)) {
+		if (dupexpr is CCodeIdentifier && !(expression_type is ArrayType) && !(expression_type is GenericType) && !is_ref_function_void (expression_type)) {
 			// generate and call NULL-aware ref function to reduce number
 			// of temporary variables and simplify code
 
