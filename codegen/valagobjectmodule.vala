@@ -696,7 +696,7 @@ internal class Vala.GObjectModule : GTypeModule {
 		}
 
 		var st = prop.property_type.data_type as Struct;
-		if (st != null && !st.has_type_id) {
+		if (st != null && (!st.has_type_id || prop.property_type.nullable)) {
 			return false;
 		}
 
