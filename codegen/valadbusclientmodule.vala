@@ -1358,7 +1358,7 @@ internal class Vala.DBusClientModule : DBusModule {
 				continue;
 			}
 
-			handle_signal (dbus_iface_name, Symbol.lower_case_to_camel_case (sig.name), generate_dbus_signal_handler (sig, iface), block, ref clastif);
+			handle_signal (dbus_iface_name, get_dbus_name_for_member (sig), generate_dbus_signal_handler (sig, iface), block, ref clastif);
 		}
 	}
 
@@ -1374,7 +1374,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		msgcall.add_argument (destination);
 		msgcall.add_argument (path);
 		msgcall.add_argument (new CCodeConstant ("\"%s\"".printf (dbus_iface_name)));
-		msgcall.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (m.name))));
+		msgcall.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (m))));
 		prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_message"), msgcall)));
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init_append"));
@@ -1948,7 +1948,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		// interface name
 		write_expression (prefragment, string_type, new CCodeIdentifier ("_iter"), new CCodeConstant ("\"%s\"".printf (dbus_iface_name)));
 		// property name
-		write_expression (prefragment, string_type, new CCodeIdentifier ("_iter"), new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (prop.name))));
+		write_expression (prefragment, string_type, new CCodeIdentifier ("_iter"), new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
 
 		cdecl = new CCodeDeclaration (prop.get_accessor.value_type.get_cname ());
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_result"));
@@ -2088,7 +2088,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		// interface name
 		write_expression (prefragment, string_type, new CCodeIdentifier ("_iter"), new CCodeConstant ("\"%s\"".printf (dbus_iface_name)));
 		// property name
-		write_expression (prefragment, string_type, new CCodeIdentifier ("_iter"), new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (prop.name))));
+		write_expression (prefragment, string_type, new CCodeIdentifier ("_iter"), new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
 
 		// property value (as variant)
 		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));

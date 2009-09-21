@@ -521,7 +521,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		var msgcall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_new_signal"));
 		msgcall.add_argument (new CCodeIdentifier ("_path"));
 		msgcall.add_argument (new CCodeConstant ("\"%s\"".printf (dbus_iface_name)));
-		msgcall.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (sig.name))));
+		msgcall.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (sig))));
 		prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_message"), msgcall)));
 
 		var iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_init_append"));
@@ -675,7 +675,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 				continue;
 			}
 
-			handle_method (dbus_iface_name, Symbol.lower_case_to_camel_case (m.name), generate_dbus_wrapper (m, sym), block, ref clastif);
+			handle_method (dbus_iface_name, get_dbus_name_for_member (m), generate_dbus_wrapper (m, sym), block, ref clastif);
 		}
 	}
 
@@ -768,7 +768,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 			ccmp = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
 			ccmp.add_argument (new CCodeIdentifier ("property_name"));
-			ccmp.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (prop.name))));
+			ccmp.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
 			var ccheck2 = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccmp, new CCodeConstant ("0"));
 
 			var ccheck = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccheck1, ccheck2);
@@ -973,7 +973,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("entry_iter")));
 			postfragment.append (new CCodeExpressionStatement (iter_call));
 
-			postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("property_name"), new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (prop.name))))));
+			postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("property_name"), new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))))));
 
 			iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_append_basic"));
 			iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("entry_iter")));
@@ -1151,7 +1151,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 			ccmp = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
 			ccmp.add_argument (new CCodeIdentifier ("property_name"));
-			ccmp.add_argument (new CCodeConstant ("\"%s\"".printf (Symbol.lower_case_to_camel_case (prop.name))));
+			ccmp.add_argument (new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
 			var ccheck2 = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccmp, new CCodeConstant ("0"));
 
 			var ccheck = new CCodeBinaryExpression (CCodeBinaryOperator.AND, ccheck1, ccheck2);
@@ -1260,7 +1260,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 				continue;
 			}
 
-			result += "  <method name=\"%s\">\n".printf (Symbol.lower_case_to_camel_case (m.name));
+			result += "  <method name=\"%s\">\n".printf (get_dbus_name_for_member (m));
 
 			foreach (var param in m.get_parameters ()) {
 				if (param.parameter_type.data_type != null
@@ -1290,7 +1290,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			}
 
 			string access = (prop.get_accessor != null ? "read" : "") + (prop.set_accessor != null ? "write" : "");
-			result += "  <property name=\"%s\" type=\"%s\" access=\"%s\"/>\n".printf (Symbol.lower_case_to_camel_case (prop.name), get_type_signature (prop.property_type), access);
+			result += "  <property name=\"%s\" type=\"%s\" access=\"%s\"/>\n".printf (get_dbus_name_for_member (prop), get_type_signature (prop.property_type), access);
 		}
 
 		foreach (var sig in sym.get_signals ()) {
@@ -1301,7 +1301,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 				continue;
 			}
 
-			result += "  <signal name=\"%s\">\n".printf (Symbol.lower_case_to_camel_case (sig.name));
+			result += "  <signal name=\"%s\">\n".printf (get_dbus_name_for_member (sig));
 
 			foreach (var param in sig.get_parameters ()) {
 				result += "    <arg name=\"%s\" type=\"%s\"/>\n".printf (param.name, get_type_signature (param.parameter_type));
