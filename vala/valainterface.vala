@@ -277,6 +277,10 @@ public class Vala.Interface : ObjectTypeSymbol {
 		scope.add (d.name, d);
 	}
 
+	public override string get_cprefix () {
+		return get_cname ();
+	}
+
 	public override string get_cname (bool const_type = false) {
 		if (cname == null) {
 			var attr = get_attribute ("CCode");
