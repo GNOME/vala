@@ -1675,10 +1675,20 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					}
 
 					if (requires_destroy (local.variable_type)) {
+						bool old_coroutine = false;
+						if (current_method != null) {
+							old_coroutine = current_method.coroutine;
+							current_method.coroutine = false;
+						}
+
 						var ma = new MemberAccess.simple (local.name);
 						ma.symbol_reference = local;
 						ma.value_type = local.variable_type.copy ();
 						free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (local.name)), local.variable_type, ma)));
+
+						if (old_coroutine) {
+							current_method.coroutine = true;
+						}
 					}
 				}
 			}
@@ -1756,10 +1766,20 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						}
 
 						if (requires_destroy (param_type) && !is_unowned_delegate) {
+							bool old_coroutine = false;
+							if (current_method != null) {
+								old_coroutine = current_method.coroutine;
+								current_method.coroutine = false;
+							}
+
 							var ma = new MemberAccess.simple (param.name);
 							ma.symbol_reference = param;
 							ma.value_type = param_type.copy ();
 							free_block.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), get_variable_cname (param.name)), param.parameter_type, ma)));
+
+							if (old_coroutine) {
+								current_method.coroutine = true;
+							}
 						}
 					}
 				}
