@@ -1147,13 +1147,16 @@ internal class Vala.GTypeModule : GErrorModule {
 				continue;
 			}
 			var base_type = m.base_method.parent_symbol;
-			
-			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (((Class) base_type).get_upper_case_cname (null))));
-			ccast.add_argument (new CCodeIdentifier ("klass"));
-			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.base_method.vfunc_name), new CCodeIdentifier (m.get_real_cname ()))));
 
-			if (m.coroutine) {
-				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.base_method.get_finish_vfunc_name ()), new CCodeIdentifier (m.get_finish_real_cname ()))));
+			// there is currently no default handler for abstract async methods
+			if (m.overrides || !m.coroutine) {
+				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (((Class) base_type).get_upper_case_cname (null))));
+				ccast.add_argument (new CCodeIdentifier ("klass"));
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.base_method.vfunc_name), new CCodeIdentifier (m.get_real_cname ()))));
+
+				if (m.coroutine) {
+					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.base_method.get_finish_vfunc_name ()), new CCodeIdentifier (m.get_finish_real_cname ()))));
+				}
 			}
 		}
 
