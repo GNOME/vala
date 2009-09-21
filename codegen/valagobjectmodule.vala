@@ -447,27 +447,17 @@ internal class Vala.GObjectModule : GTypeModule {
 			cdecl.add_declarator (new CCodeVariableDeclarator ("obj"));
 			cblock.add_statement (cdecl);
 
-			cdecl = new CCodeDeclaration ("%sClass *".printf (cl.get_cname ()));
-			cdecl.add_declarator (new CCodeVariableDeclarator ("klass"));
-			cblock.add_statement (cdecl);
-
 			cdecl = new CCodeDeclaration ("GObjectClass *");
 			cdecl.add_declarator (new CCodeVariableDeclarator ("parent_class"));
 			cblock.add_statement (cdecl);
 
 
-			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_peek"));
-			ccall.add_argument (new CCodeIdentifier (cl.get_type_id ()));
-			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (cl.get_upper_case_cname (null))));
-			ccast.add_argument (ccall);
-			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("klass"), ccast)));
-
-			ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+			var ccast = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
 			ccast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (cl.get_lower_case_cname (null))));
 			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("parent_class"), ccast)));
 
 		
-			ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier ("parent_class"), "constructor"));
+			var ccall = new CCodeFunctionCall (new CCodeMemberAccess.pointer (new CCodeIdentifier ("parent_class"), "constructor"));
 			ccall.add_argument (new CCodeIdentifier ("type"));
 			ccall.add_argument (new CCodeIdentifier ("n_construct_properties"));
 			ccall.add_argument (new CCodeIdentifier ("construct_properties"));
