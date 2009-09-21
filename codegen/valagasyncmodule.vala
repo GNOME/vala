@@ -278,7 +278,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 			cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 			cparam_map.set (get_param_pos (0.1), new CCodeFormalParameter ("_res_", "GAsyncResult*"));
 
-			generate_cparameters (m, source_declarations, cparam_map, finishfunc, null, null, null, 2);
+			generate_cparameters (m, decl_space, cparam_map, finishfunc, null, null, null, 2);
 
 			if (m.is_private_symbol ()) {
 				finishfunc.modifiers |= CCodeModifiers.STATIC;
