@@ -385,7 +385,8 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 						if (current_property_accessor != null &&
 						    current_property_accessor.writable &&
 						    current_property_accessor.value_parameter == p &&
-						    current_property_accessor.prop.property_type.is_real_struct_type ()) {
+						    current_property_accessor.prop.property_type.is_real_struct_type () &&
+						    !current_property_accessor.prop.property_type.nullable) {
 							expr.ccodenode = new CCodeIdentifier ("(*value)");
 						} else {
 							expr.ccodenode = get_variable_cexpression (p.name);
