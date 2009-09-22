@@ -1254,7 +1254,8 @@ namespace GLib {
 		[CCode (cname = "g_timeout_add_full")]
 		public static uint add (uint interval, owned SourceFunc function, [CCode (pos = 0.1)] int priority = Priority.DEFAULT);
 		public static uint add_full (int priority, uint interval, owned SourceFunc function);
-		public static uint add_seconds (uint interval, SourceFunc function);
+		[CCode (cname = "g_timeout_add_seconds_full")]
+		public static uint add_seconds (uint interval, owned SourceFunc function, [CCode (pos = 0.1)] int priority = Priority.DEFAULT);
 		public static uint add_seconds_full (int priority, uint interval, owned SourceFunc function);
 	}
 
