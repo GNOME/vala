@@ -425,7 +425,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 						}
 						int parent_block_id = get_block_id (parent_closure_block);
 
-						var parent_data = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id));
+						var parent_data = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id));
 						var cdecl = new CCodeDeclaration ("Block%dData*".printf (parent_block_id));
 						cdecl.add_declarator (new CCodeVariableDeclarator ("_data%d_".printf (parent_block_id), parent_data));
 
@@ -438,7 +438,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					// add self variable for closures
 					// as closures have block data parameter
 					if (m.binding == MemberBinding.INSTANCE) {
-						var cself = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "self");
+						var cself = new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data%d_".printf (block_id)), "self");
 						var cdecl = new CCodeDeclaration ("%s *".printf (current_class.get_cname ()));
 						cdecl.add_declarator (new CCodeVariableDeclarator ("self", cself));
 
