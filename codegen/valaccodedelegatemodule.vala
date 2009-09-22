@@ -292,7 +292,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 					return new CCodeIdentifier ("data");
 				} else {
 					var delegate_target = (CCodeExpression) get_ccodenode (ma.inner);
-					if (ma.inner.value_type.data_type != null && ma.inner.value_type.data_type.is_reference_counting ()) {
+					if (expr_owned && ma.inner.value_type.data_type != null && ma.inner.value_type.data_type.is_reference_counting ()) {
 						var ref_call = new CCodeFunctionCall (get_dup_func_expression (ma.inner.value_type, delegate_expr.source_reference));
 						ref_call.add_argument (delegate_target);
 						delegate_target = ref_call;
