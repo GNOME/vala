@@ -1,6 +1,6 @@
 /* valaccodeunaryexpression.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -51,8 +51,20 @@ public class Vala.CCodeUnaryExpression : CCodeExpression {
 		} else if (operator == CCodeUnaryOperator.BITWISE_COMPLEMENT) {
 			writer.write_string ("~");
 		} else if (operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
+			var inner_unary = inner as CCodeUnaryExpression;
+			if (inner_unary != null && inner_unary.operator == CCodeUnaryOperator.ADDRESS_OF) {
+				// simplify expression
+				inner_unary.inner.write (writer);
+				return;
+			}
 			writer.write_string ("*");
 		} else if (operator == CCodeUnaryOperator.ADDRESS_OF) {
+			var inner_unary = inner as CCodeUnaryExpression;
+			if (inner_unary != null && inner_unary.operator == CCodeUnaryOperator.POINTER_INDIRECTION) {
+				// simplify expression
+				inner_unary.inner.write (writer);
+				return;
+			}
 			writer.write_string ("&");
 		} else if (operator == CCodeUnaryOperator.PREFIX_INCREMENT) {
 			writer.write_string ("++");
