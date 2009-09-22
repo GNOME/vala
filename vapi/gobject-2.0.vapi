@@ -215,6 +215,8 @@ namespace GLib {
 		public virtual void constructed ();
 
 		public signal void notify (ParamSpec pspec);
+		[CCode (cname = "g_object_notify")]
+		public void notify_property (string property_name);
 
 		public weak Object connect (string signal_spec, ...);
 
