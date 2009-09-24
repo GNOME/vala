@@ -2086,7 +2086,6 @@ namespace Gtk {
 		public weak Gtk.Window mnemonic_window;
 		public uint pattern_set;
 		public weak Gtk.LabelSelectionInfo select_info;
-		public weak string text;
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Label (string? str);
 		public double get_angle ();
