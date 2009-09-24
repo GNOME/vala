@@ -1692,7 +1692,7 @@ namespace GLib {
 	
 	[Diagnostics]
 	[PrintfFormat]
-	public void log (string log_domain, LogLevelFlags log_level, string format, ...);
+	public void log (string? log_domain, LogLevelFlags log_level, string format, ...);
 	
 	[Diagnostics]
 	[PrintfFormat]
