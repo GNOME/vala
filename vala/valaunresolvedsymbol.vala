@@ -39,6 +39,20 @@ public class Vala.UnresolvedSymbol : Symbol {
 		this.inner = inner;
 	}
 
+	public static UnresolvedSymbol? new_from_expression (Expression expr) {
+		var ma = expr as MemberAccess;
+		if (ma != null) {
+			if (ma.inner != null) {
+				return new UnresolvedSymbol (new_from_expression (ma.inner), ma.member_name, ma.source_reference);
+			} else {
+				return new UnresolvedSymbol (null, ma.member_name, ma.source_reference);
+			}
+		}
+
+		Report.error (expr.source_reference, "Type reference must be simple name or member access expression");
+		return null;
+	}
+
 	public override string to_string () {
 		if (inner == null) {
 			return name;

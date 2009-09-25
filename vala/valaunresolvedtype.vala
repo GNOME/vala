@@ -52,36 +52,23 @@ public class Vala.UnresolvedType : DataType {
 	 * Creates a new type reference from a code expression.
 	 *
 	 * @param expr   member access expression
-	 * @param source reference to source code
 	 * @return       newly created type reference
 	 */
 	public static UnresolvedType? new_from_expression (Expression expr) {
-		if (expr is MemberAccess) {
-			UnresolvedType type_ref = null;
-		
-			MemberAccess ma = (MemberAccess) expr;
-			if (ma.inner != null) {
-				if (ma.inner is MemberAccess) {
-					var simple = (MemberAccess) ma.inner;
-					type_ref = new UnresolvedType.from_symbol (new UnresolvedSymbol (new UnresolvedSymbol (null, simple.member_name, ma.source_reference), ma.member_name, ma.source_reference), ma.source_reference);
-				}
-			} else {
-				type_ref = new UnresolvedType.from_symbol (new UnresolvedSymbol (null, ma.member_name, ma.source_reference), ma.source_reference);
-			}
-			
-			if (type_ref != null) {
-				type_ref.value_owned = true;
+		var sym = UnresolvedSymbol.new_from_expression (expr);
 
-				var type_args = ma.get_type_arguments ();
-				foreach (DataType arg in type_args) {
-					type_ref.add_type_argument (arg);
-				}
-				
-				return type_ref;
+		if (sym != null) {
+			var type_ref = new UnresolvedType.from_symbol (sym, expr.source_reference);
+			type_ref.value_owned = true;
+
+			var ma = (MemberAccess) expr;
+			foreach (DataType arg in ma.get_type_arguments ()) {
+				type_ref.add_type_argument (arg);
 			}
+
+			return type_ref;
 		}
-		
-		Report.error (expr.source_reference, "Type reference must be simple name or member access expression");
+
 		return null;
 	}
 
