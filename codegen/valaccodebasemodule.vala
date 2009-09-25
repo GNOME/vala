@@ -968,6 +968,17 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					cdecl.modifiers = CCodeModifiers.EXTERN;
 				}
 				decl_space.add_type_member_declaration (cdecl);
+
+				if (delegate_type.value_owned) {
+					cdecl = new CCodeDeclaration ("GDestroyNotify");
+					cdecl.add_declarator (new CCodeVariableDeclarator (get_delegate_target_destroy_notify_cname  (f.get_cname ())));
+					if (f.is_private_symbol ()) {
+						cdecl.modifiers = CCodeModifiers.STATIC;
+					} else {
+						cdecl.modifiers = CCodeModifiers.EXTERN;
+					}
+					decl_space.add_type_member_declaration (cdecl);
+				}
 			}
 		}
 	}
@@ -1111,6 +1122,18 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						target_def.modifiers = CCodeModifiers.STATIC;
 					}
 					source_declarations.add_type_member_declaration (target_def);
+
+					if (delegate_type.value_owned) {
+						var target_destroy_notify_def = new CCodeDeclaration ("GDestroyNotify");
+						target_destroy_notify_def.add_declarator (new CCodeVariableDeclarator (get_delegate_target_destroy_notify_cname  (f.get_cname ()), new CCodeConstant ("NULL")));
+						if (!f.is_private_symbol ()) {
+							target_destroy_notify_def.modifiers = CCodeModifiers.EXTERN;
+						} else {
+							target_destroy_notify_def.modifiers = CCodeModifiers.STATIC;
+						}
+						source_declarations.add_type_member_declaration (target_destroy_notify_def);
+
+					}
 				}
 			}
 
