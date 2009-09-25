@@ -2651,7 +2651,7 @@ namespace GLib {
 	[Compact]
 	[CCode (free_function = "g_option_group_free")]
 	public class OptionGroup {
-		public OptionGroup (string name, string description, string help_description, void* user_data, DestroyNotify? destroy);
+		public OptionGroup (string name, string description, string help_description, void* user_data = null, DestroyNotify? destroy = null);
 		public void add_entries ([CCode (array_length = false)] OptionEntry[] entries);
 		public void set_parse_hooks (OptionParseFunc pre_parse_func, OptionParseFunc post_parse_hook);
 		public void set_error_hook (OptionErrorFunc error_func);
