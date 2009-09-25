@@ -153,7 +153,11 @@ public class Vala.MethodCall : Expression {
 			var otype = (ObjectType) mtype;
 			var cl = (Class) otype.type_symbol;
 			var base_cm = cl.default_construction_method;
-			if (!base_cm.has_construct_function) {
+			if (base_cm == null) {
+				error = true;
+				Report.error (source_reference, "chain up to `%s' not supported".printf (cl.get_full_name ()));
+				return false;
+			} else if (!base_cm.has_construct_function) {
 				error = true;
 				Report.error (source_reference, "chain up to `%s' not supported".printf (base_cm.get_full_name ()));
 				return false;
