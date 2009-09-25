@@ -291,7 +291,7 @@ public class Vala.SourceFile {
 
 	public char* get_mapped_contents () {
 		if (content != null) {
-			return content;
+			return (char*) content;
 		}
 
 		if (mapped_file == null) {
