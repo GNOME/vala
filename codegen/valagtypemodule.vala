@@ -1158,6 +1158,7 @@ internal class Vala.GTypeModule : GErrorModule {
 			if (m.overrides || !m.coroutine) {
 				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (((Class) base_type).get_upper_case_cname (null))));
 				ccast.add_argument (new CCodeIdentifier ("klass"));
+
 				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ccast, m.base_method.vfunc_name), new CCodeIdentifier (m.get_real_cname ()))));
 
 				if (m.coroutine) {
@@ -1271,35 +1272,7 @@ internal class Vala.GTypeModule : GErrorModule {
 			CCodeExpression cfunc;
 			if (m.is_abstract || m.is_virtual) {
 				cfunc = new CCodeIdentifier (m.get_cname ());
-				// Cast the function pointer to match the interface
-				string cast = m.return_type.get_cname () + " (*)";
-				string cast_args = iface.get_cname () + "*";
-
-				var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
-				var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
-
-				generate_cparameters (m, source_declarations, cparam_map, new CCodeFunction ("fake"), vdeclarator);
-
-				// append C arguments in the right order
-				int last_pos = -1;
-				int min_pos;
-				while (true) {
-					min_pos = -1;
-					foreach (int pos in cparam_map.get_keys ()) {
-						if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
-							min_pos = pos;
-						}
-					}
-					if (last_pos != -1) { // Skip the 1st parameter
-						if (min_pos == -1) {
-							break;
-						}
-						cast_args += " ," + cparam_map.get (min_pos).type_name;
-					}
-					last_pos = min_pos;
-				}
-				cast += "(" + cast_args + ")";
-				cfunc = new CCodeCastExpression (cfunc, cast);
+				cfunc = cast_method_pointer (m, cfunc, iface);
 			} else {
 				cfunc = new CCodeIdentifier (m.get_real_cname ());
 			}
@@ -1331,8 +1304,10 @@ internal class Vala.GTypeModule : GErrorModule {
 
 					generate_method_declaration (base_method, source_declarations);
 
+					CCodeExpression cfunc = new CCodeIdentifier (base_method.get_cname ());
+					cfunc = cast_method_pointer (base_method, cfunc, iface);
 					var ciface = new CCodeIdentifier ("iface");
-					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), new CCodeIdentifier (base_method.get_cname ()))));
+					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.vfunc_name), cfunc)));
 				}
 			}
 		}
@@ -1431,6 +1406,38 @@ internal class Vala.GTypeModule : GErrorModule {
 		} else {
 			cast = "void (*) (%s *, %s)".printf (base_type.get_cname (), acc.value_type.get_cname ());
 		}
+		return new CCodeCastExpression (cfunc, cast);
+	}
+
+	CCodeExpression cast_method_pointer (Method m, CCodeExpression cfunc, ObjectTypeSymbol base_type) {
+		// Cast the function pointer to match the interface
+		string cast = m.return_type.get_cname () + " (*)";
+		string cast_args = base_type.get_cname () + "*";
+
+		var vdeclarator = new CCodeFunctionDeclarator (m.vfunc_name);
+		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
+
+		generate_cparameters (m, source_declarations, cparam_map, new CCodeFunction ("fake"), vdeclarator);
+
+		// append C arguments in the right order
+		int last_pos = -1;
+		int min_pos;
+		while (true) {
+			min_pos = -1;
+			foreach (int pos in cparam_map.get_keys ()) {
+				if (pos > last_pos && (min_pos == -1 || pos < min_pos)) {
+					min_pos = pos;
+				}
+			}
+			if (last_pos != -1) { // Skip the 1st parameter
+				if (min_pos == -1) {
+					break;
+				}
+				cast_args += " ," + cparam_map.get (min_pos).type_name;
+			}
+			last_pos = min_pos;
+		}
+		cast += "(" + cast_args + ")";
 		return new CCodeCastExpression (cfunc, cast);
 	}
 
