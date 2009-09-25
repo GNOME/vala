@@ -3649,6 +3649,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						}
 
 						cexpr = handle_struct_argument (param, arg, cexpr);
+
+						if (param.ctype != null) {
+							cexpr = new CCodeCastExpression (cexpr, param.ctype);
+						}
 					}
 
 					arg_pos = get_param_pos (param.cparameter_position, ellipsis);
