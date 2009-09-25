@@ -3511,9 +3511,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public virtual void generate_error_domain_declaration (ErrorDomain edomain, CCodeDeclarationSpace decl_space) {
 	}
 
-	public void add_generic_type_arguments (CCodeFunctionCall ccall, Gee.List<DataType> type_args, CodeNode expr, bool is_chainup = false) {
+	public void add_generic_type_arguments (Map<int,CCodeExpression> arg_map, Gee.List<DataType> type_args, CodeNode expr, bool is_chainup = false) {
+		int type_param_index = 0;
 		foreach (var type_arg in type_args) {
-			ccall.add_argument (get_type_id_expression (type_arg, is_chainup));
+			arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), get_type_id_expression (type_arg, is_chainup));
 			if (requires_copy (type_arg)) {
 				var dup_func = get_dup_func_expression (type_arg, type_arg.source_reference, is_chainup);
 				if (dup_func == null) {
@@ -3521,12 +3522,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					expr.error = true;
 					return;
 				}
-				ccall.add_argument (new CCodeCastExpression (dup_func, "GBoxedCopyFunc"));
-				ccall.add_argument (get_destroy_func_expression (type_arg, is_chainup));
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeCastExpression (dup_func, "GBoxedCopyFunc"));
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), get_destroy_func_expression (type_arg, is_chainup));
 			} else {
-				ccall.add_argument (new CCodeConstant ("NULL"));
-				ccall.add_argument (new CCodeConstant ("NULL"));
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.02), new CCodeConstant ("NULL"));
+				arg_map.set (get_param_pos (0.1 * type_param_index + 0.03), new CCodeConstant ("NULL"));
 			}
+			type_param_index++;
 		}
 	}
 
@@ -3587,11 +3589,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 			generate_type_declaration (expr.type_reference, source_declarations);
 
-			if (cl != null && !cl.is_compact) {
-				add_generic_type_arguments (creation_call, expr.type_reference.get_type_arguments (), expr);
-			}
-
 			var carg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
+
+			if (cl != null && !cl.is_compact) {
+				add_generic_type_arguments (carg_map, expr.type_reference.get_type_arguments (), expr);
+			}
 
 			bool ellipsis = false;
 

@@ -108,13 +108,13 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			foreach (DataType base_type in current_class.get_base_types ()) {
 				if (base_type.data_type is Class) {
-					add_generic_type_arguments (ccall, base_type.get_type_arguments (), expr, true);
+					add_generic_type_arguments (in_arg_map, base_type.get_type_arguments (), expr, true);
 					break;
 				}
 			}
 		} else if (m != null && m.get_type_parameters ().size > 0) {
 			// generic method
-			add_generic_type_arguments (ccall, ma.get_type_arguments (), expr);
+			add_generic_type_arguments (in_arg_map, ma.get_type_arguments (), expr);
 		}
 
 		// the complete call expression, might include casts, comma expressions, and/or assignments
