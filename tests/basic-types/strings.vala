@@ -1,6 +1,3 @@
-
-Program: test
-
 void test_string () {
 	// declaration and initialization
 	string s = "hello";

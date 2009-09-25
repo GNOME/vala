@@ -1,6 +1,3 @@
-
-Program: test
-
 void void_method () {
 }
 

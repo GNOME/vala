@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 class Maman.A : Object {
@@ -13,7 +10,7 @@ class Maman.C : Object {
 }
 
 class Maman.Bar : Object {
-	static void main () {
+	public static void main () {
 		var a = new A ();
 		var b = new B ();
 		var c = new C ();
@@ -29,3 +26,8 @@ class Maman.Bar : Object {
 		stdout.printf ("as C: %d %d %d\n", null != (a as C) ? 1 : 0, null != (b as C) ? 1 : 0, null != (c as C) ? 1 : 0);
 	}
 }
+
+void main () {
+	Maman.Bar.main ();
+}
+

@@ -1,6 +1,3 @@
-
-Program: test
-
 void test_integer_array () {
 	// declaration and initialization
 	int[] a = { 42 };
@@ -64,7 +61,7 @@ void test_array_pass () {
 	assert (b[0] == 42);
 }
 
-void main (string[] args) {
+void main () {
 	test_integer_array ();
 	test_string_array ();
 	test_array_pass ();

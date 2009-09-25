@@ -1,6 +1,3 @@
-
-Program: test
-
 class Maman.Foo : Object {
 	public int i = 1;
 
@@ -12,10 +9,14 @@ class Maman.Foo : Object {
 }
 
 class Maman.Bar : Object {
-	static int main (string[] args) {
+	public static int main () {
 		var foo = new Foo ();
 		foo.sideeffect ().data = "foo";
 		assert (foo.i == 0);
 		return 0;
 	}
+}
+
+void main () {
+	Maman.Bar.main ();
 }

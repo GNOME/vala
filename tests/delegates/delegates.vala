@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 public enum ParameterEnum { FOO, BAR }
@@ -71,7 +68,7 @@ class Maman.Bar : Object, Foo {
 		call_instance_delegate (bar.foo_method);
 	}
 
-	static int main (string[] args) {
+	public static int main () {
 		stdout.printf ("Delegate Test: 1");
 		
 		VoidCallback void_cb = do_void_action;
@@ -103,3 +100,8 @@ class Maman.Bar : Object, Foo {
 		return 0;
 	}
 }
+
+void main () {
+	Maman.Bar.main ();
+}
+

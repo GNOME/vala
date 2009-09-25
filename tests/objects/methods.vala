@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 class Maman.Bar : Object {
@@ -30,7 +27,7 @@ class Maman.SubBar : Bar {
 		accept_ref_string (ref str);
 	}
 
-	static int main (string[] args) {
+	public static int main () {
 		stdout.printf ("Inheritance Test: 1");
 
 		var bar = new SubBar ();
@@ -216,5 +213,9 @@ class Maman.ClassTest {
 
 		c.instance_method ();
 	}
+}
+
+void main () {
+	Maman.SubBar.main ();
 }
 

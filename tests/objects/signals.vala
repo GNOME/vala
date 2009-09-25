@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 class Maman.Foo : Object {
@@ -50,7 +47,7 @@ class Maman.Bar : Object {
 		stdout.printf (" 9");
 	}
 
-	static int main (string[] args) {
+	public static int main () {
 		stdout.printf ("Signal Test: 1");
 		
 		var bar = new Bar ();
@@ -130,3 +127,8 @@ class Maman.ReturnBar : Object {
 		stdout.printf (" 7");
 	}
 }
+
+void main () {
+	Maman.Bar.main ();
+}
+

@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 class Maman.Bar : Object {
@@ -8,7 +5,7 @@ class Maman.Bar : Object {
 		return false ? "BAD" : "4";
 	}
 
-	static int main (string[] args) {
+	public static int main () {
 		stdout.printf ("Conditional Expression Test: 1");
 
 		stdout.printf (" %d", false ? -1 : 2);
@@ -21,4 +18,8 @@ class Maman.Bar : Object {
 
 		return 0;
 	}
+}
+
+void main () {
+	Maman.Bar.main ();
 }

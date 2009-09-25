@@ -1,6 +1,3 @@
-
-Program: test
-
 void test_value () {
 	Value v1 = 1;
 	assert (v1.get_int() == 1);

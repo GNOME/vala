@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 errordomain Maman.BarError {
@@ -74,7 +71,7 @@ class Maman.Bar : Object {
 		}
 	}
 
-	static int main (string[] args) {
+	public static int main () {
 		stdout.printf ("Exception Test: 1");
 		
 		var bar = new Bar ();
@@ -87,3 +84,8 @@ class Maman.Bar : Object {
 		return 0;
 	}
 }
+
+void main () {
+	Maman.Bar.main ();
+}
+

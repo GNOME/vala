@@ -36,6 +36,10 @@ DIST_SUBDIRS = \
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = vala-1.0.pc
 
+.PHONY: test
+test:
+	cd tests && $(MAKE) $(AM_MAKEFLAGS) check
+
 dist-hook: gen-ChangeLog
 
 gen_start_date = 2009-02-25

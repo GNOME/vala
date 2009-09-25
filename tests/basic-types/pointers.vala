@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 struct SimpleStruct {
@@ -10,7 +7,7 @@ struct SimpleStruct {
 		return field;
 	}
 
-	static void main () {
+	public static void main () {
 		SimpleStruct* st = new SimpleStruct[1];
 		st->field = 1;
 		assert (st->field == st->test ());
@@ -37,5 +34,9 @@ struct SimpleStruct {
 		int i = return_pointer ()[0];
 		assert (i == 42);
 	}
+}
+
+void main () {
+	SimpleStruct.main ();
 }
 

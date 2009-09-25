@@ -58,36 +58,30 @@ class Test : Object {
 }
 
 MainLoop main_loop;
-int exit_status;
 
 void client_exit (Pid pid, int status) {
 	// client finished, terminate server
-	if (status != 0) {
-		exit_status = 1;
-	}
+	assert (status == 0);
 	main_loop.quit ();
 }
 
-int main () {
+void main () {
 	var conn = DBus.Bus.get (DBus.BusType.SESSION);
 	dynamic DBus.Object bus = conn.get_object ("org.freedesktop.DBus", "/org/freedesktop/DBus", "org.freedesktop.DBus");
 
 	// try to register service in session bus
 	uint request_name_result = bus.request_name ("org.example.Test", (uint) 0);
-	if (request_name_result == DBus.RequestNameReply.PRIMARY_OWNER) {
-		// start server
-		var server = new Test ();
-		conn.register_object ("/org/example/test", server);
+	assert (request_name_result == DBus.RequestNameReply.PRIMARY_OWNER);
 
-		// server ready, spawn client
-		Pid client_pid;
-		Process.spawn_async (null, { "client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
-		ChildWatch.add (client_pid, client_exit);
+	// start server
+	var server = new Test ();
+	conn.register_object ("/org/example/test", server);
 
-		main_loop = new MainLoop (null, false);
-		main_loop.run ();
-	} else {
-		exit_status = 1;
-	}
-	return exit_status;
+	// server ready, spawn client
+	Pid client_pid;
+	Process.spawn_async (null, { "test", "/dbus/async/client" }, null, SpawnFlags.DO_NOT_REAP_CHILD, null, out client_pid);
+	ChildWatch.add (client_pid, client_exit);
+
+	main_loop = new MainLoop (null, false);
+	main_loop.run ();
 }

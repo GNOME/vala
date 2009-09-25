@@ -1,7 +1,3 @@
-
-Program: test
-
-
 void test_owned (ValueArray array) {
 	uint i = 0;
 

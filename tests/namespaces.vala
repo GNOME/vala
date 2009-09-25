@@ -1,6 +1,3 @@
-
-Program: test
-
 using Foo.Sub;
 
 public class GlobalTestClass {
@@ -9,18 +6,12 @@ public class GlobalTestClass {
 }
 
 namespace Maman {
-	public class GlobalTestClass {
-		public GlobalTestClass() {
-			stdout.printf("Incorrect class constructed");
-		}
-	}
-
-	static int main (string[] args) {
+	static int main () {
 		stdout.printf ("Namespace Test\n");
 
 		Bar.run ();
 
-		new global::GlobalTestClass();
+		new GlobalTestClass();
 
 		var obj = new ClassInNestedNamespace ();
 
@@ -35,5 +26,10 @@ namespace Maman {
 }
 
 public class Foo.Sub.ClassInNestedNamespace {
+}
+
+
+void main () {
+	Maman.main ();
 }
 

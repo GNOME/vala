@@ -1,10 +1,7 @@
-
-Program: test
-
 using GLib;
 
 class Maman.Bar : Object {
-	static int main (string[] args) {
+	public static int main () {
 		stdout.printf ("Break Test: 1");
 		
 		int i;
@@ -17,4 +14,8 @@ class Maman.Bar : Object {
 		
 		return 0;
 	}
+}
+
+void main () {
+	Maman.Bar.main ();
 }

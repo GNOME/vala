@@ -29,18 +29,13 @@ vapidir=$topsrcdir/vapi
 export G_DEBUG=fatal_warnings
 
 VALAC=$topbuilddir/compiler/valac
-VALAFLAGS="--vapidir $vapidir"
-CC="gcc -std=c99"
-CFLAGS="-O0 -g3"
-LDLIBS="-lm"
-
-CODE=0
+VALAFLAGS="--vapidir $vapidir --disable-warnings --main main --save-temps -X -O0 -X -pipe -X -lm"
 
 function testheader() {
 	if [ "$1" = "Packages:" ]; then
 		shift
-		PACKAGES="$@"
-		for pkg in $PACKAGES; do
+		PACKAGES="$PACKAGES $@"
+		for pkg in "$@"; do
 			if [ "$pkg" = "dbus-glib-1" ]; then
 				echo 'eval `dbus-launch --sh-syntax`' >> prepare
 				echo 'trap "kill $DBUS_SESSION_BUS_PID" INT TERM EXIT' >> prepare
@@ -51,36 +46,66 @@ function testheader() {
 
 function sourceheader() {
 	if [ "$1" = "Program:" ]; then
-		PROGRAM=$2
-		SOURCEFILE=$PROGRAM.vala
+		testpath=${testfile/.test/}/$2
+		ns=${testpath//\//.}
+		ns=${ns//-/_}
+		SOURCEFILE=$ns.vala
+		SOURCEFILES="$SOURCEFILES $SOURCEFILE"
+		echo "	case \"/$testpath\": $ns.main (); break;" >> main.vala
+		echo "namespace $ns {" > $SOURCEFILE
 	fi
 }
 
 function sourceend() {
-	if [ -n "$PROGRAM" ]; then
-		echo "$VALAC $VALAFLAGS $(echo $PACKAGES | xargs -n 1 -r echo -n " --pkg") -C $SOURCEFILE" >> build
-		echo "$CC $CFLAGS -o $PROGRAM$EXEEXT $PROGRAM.c \$(pkg-config --cflags --libs glib-2.0 gobject-2.0 $PACKAGES) $LDLIBS" >> build
-		echo "./$PROGRAM$EXEEXT" > check
+	if [ -n "$testpath" ]; then
+		echo "}" >> $SOURCEFILE
+		echo "./test$EXEEXT /$testpath" > check
 	fi
 }
 
+testdir=_test
+rm -rf $testdir
+mkdir $testdir
+cd $testdir
+
+echo -n -e "TEST: Building...\033[72G"
+
+cat << "EOF" > checkall
+all=0
+fail=0
+EOF
+
+cat << "EOF" > main.vala
+void main (string[] args) {
+	switch (args[1]) {
+EOF
+
+PACKAGES=
+SOURCEFILES=
 for testfile in "$@"; do
-	testname=$(basename $testfile)
-	testdir=${testname/.test/.d}
-	rm -rf $testdir
-	mkdir $testdir
-	cd $testdir
-
-	touch prepare build check cleanup
-
+	rm -f prepare check
 	echo 'set -e' >> prepare
 
-	PART=0
-	INHEADER=1
-	PACKAGES=
-	PROGRAM=
-	cat "$builddir/$testfile" | while true; do
-		if IFS="" read -r line; then
+	case "$testfile" in
+	*.vala)
+		testpath=${testfile/.vala/}
+		ns=${testpath//\//.}
+		ns=${ns//-/_}
+		SOURCEFILE=$ns.vala
+		SOURCEFILES="$SOURCEFILES $SOURCEFILE"
+
+		echo "	case \"/$testpath\": $ns.main (); break;" >> main.vala
+		echo "namespace $ns {" > $SOURCEFILE
+		cat "$srcdir/$testfile" >> $SOURCEFILE
+		echo "}" >> $SOURCEFILE
+
+		echo "./test$EXEEXT /$testpath" > check
+		;;
+	*.test)
+		PART=0
+		INHEADER=1
+		testpath=
+		while IFS="" read -r line; do
 			if [ $PART -eq 0 ]; then
 				if [ -n "$line" ]; then
 					testheader $line
@@ -99,31 +124,64 @@ for testfile in "$@"; do
 						sourceend
 						PART=$(($PART + 1))
 						INHEADER=1
-						PROGRAM=
+						testpath=
 						sourceheader $line
 					else
 						echo "$line" >> $SOURCEFILE
 					fi
 				fi
 			fi
-		else
-			sourceend
-			break
-		fi
-	done
+		done < "$srcdir/$testfile"
+		sourceend
+		;;
+	esac
 
-	cat prepare build check cleanup > script
-	if ! bash script >log 2>&1; then
-		cat log
-		CODE=1
-	fi
-
-	cd $builddir
-
-	if [ $CODE -eq 0 ]; then
-		rm -rf $testdir
-	fi
+	cat prepare check > $ns.check
+	cat << EOF >> checkall
+echo -n -e "  /$testpath: \033[72G"
+((all++))
+if bash $ns.check &>log; then
+	echo -e "\033[0;32mOK\033[m"
+else
+	((fail++))
+	echo -e "\033[0;31mFAIL\033[m"
+	cat log
+fi
+EOF
 done
 
-exit $CODE
+cat << "EOF" >> checkall
+if [ $fail -eq 0 ]; then
+	echo "All $all tests passed"
+else
+	echo "$fail of $all tests failed"
+	exit 1
+fi
+EOF
+
+cat << "EOF" >> main.vala
+	default: assert_not_reached ();
+	}
+}
+EOF
+
+cat $SOURCEFILES >> main.vala
+
+if $VALAC $VALAFLAGS -o test$EXEEXT $(echo $PACKAGES | xargs -n 1 -r echo -n " --pkg") main.vala &>log; then
+	echo -e "\033[0;32mOK\033[m"
+else
+	echo -e "\033[0;31mFAIL\033[m"
+	cat log
+
+	cd $builddir
+	exit 1
+fi
+
+if bash checkall; then
+	cd $builddir
+	rm -rf $testdir
+else
+	cd $builddir
+	exit 1
+fi
 

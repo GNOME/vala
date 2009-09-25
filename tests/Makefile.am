@@ -15,39 +15,42 @@ noinst_PROGRAMS = \
 TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) $(srcdir)/testrunner.sh
 
 TESTS = \
-	basic-types/integers.test \
-	basic-types/floats.test \
-	basic-types/strings.test \
-	basic-types/arrays.test \
-	basic-types/pointers.test \
-	namespaces.test \
-	methods/lambda.test \
-	methods/closures.test \
-	control-flow/break.test \
-	control-flow/expressions-conditional.test \
-	control-flow/for.test \
-	control-flow/foreach.test \
-	control-flow/switch.test \
-	control-flow/sideeffects.test \
-	enums/enums.test \
-	structs/structs.test \
-	structs/gvalue.test \
-	delegates/delegates.test \
-	objects/classes.test \
-	objects/fields.test \
-	objects/interfaces.test \
-	objects/methods.test \
-	objects/properties.test \
-	objects/signals.test \
-	objects/test-025.test \
-	objects/test-026.test \
-	objects/test-029.test \
-	objects/test-034.test \
-	errors/errors.test \
+	basic-types/integers.vala \
+	basic-types/floats.vala \
+	basic-types/strings.vala \
+	basic-types/arrays.vala \
+	basic-types/pointers.vala \
+	namespaces.vala \
+	methods/lambda.vala \
+	methods/closures.vala \
+	control-flow/break.vala \
+	control-flow/expressions-conditional.vala \
+	control-flow/for.vala \
+	control-flow/foreach.vala \
+	control-flow/switch.vala \
+	control-flow/sideeffects.vala \
+	enums/enums.vala \
+	structs/structs.vala \
+	structs/gvalue.vala \
+	delegates/delegates.vala \
+	objects/classes.vala \
+	objects/fields.vala \
+	objects/interfaces.vala \
+	objects/methods.vala \
+	objects/properties.vala \
+	objects/signals.vala \
+	objects/test-025.vala \
+	objects/test-026.vala \
+	objects/test-029.vala \
+	objects/test-034.vala \
+	errors/errors.vala \
 	dbus/basic-types.test \
 	dbus/arrays.test \
 	dbus/async.test \
 	$(NULL)
+
+check-TESTS: $(TESTS)
+	@EXEEXT=$(EXEEXT) $(srcdir)/testrunner.sh $(TESTS)
 
 EXTRA_DIST = \
 	testrunner.sh \

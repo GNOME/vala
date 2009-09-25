@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 interface Maman.Ibaz : Object {
@@ -24,7 +21,7 @@ class Maman.SubBaz : Baz {
 		stdout.printf (" 6");
 	}
 
-	static int main (string[] args) {
+	public static int main () {
 		stdout.printf ("Interface Test: 1");
 
 		Ibaz ibaz = new Baz ();
@@ -44,3 +41,8 @@ class Maman.SubBaz : Baz {
 		return 0;
 	}
 }
+
+void main () {
+	Maman.SubBaz.main ();
+}
+

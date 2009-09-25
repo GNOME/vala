@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 class Maman.Bar : Object {
@@ -22,7 +19,7 @@ class Maman.SubBar : Bar {
 		stdout.printf (" 4");
 	}
 
-	static int main (string[] args) {
+	public static int main () {
 		stdout.printf ("Hidden Base Method Access Test: 1");
 
 		var bar = new SubBar ();
@@ -33,3 +30,8 @@ class Maman.SubBar : Bar {
 		return 0;
 	}
 }
+
+void main () {
+	Maman.SubBar.main ();
+}
+

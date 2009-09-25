@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 enum Maman.Foo {
@@ -24,7 +21,7 @@ class Maman.Bar : Object {
 		Foo foo = 0;
 	}
 
-	static int main (string[] args) {
+	public static int main () {
 		stdout.printf ("Enum Test: 1");
 		
 		var bar = new Bar ();
@@ -37,3 +34,8 @@ class Maman.Bar : Object {
 		return 0;
 	}
 }
+
+void main () {
+	Maman.Bar.main ();
+}
+

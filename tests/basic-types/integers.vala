@@ -1,6 +1,3 @@
-
-Program: test
-
 void test_int () {
 	// declaration and initialization
 	int i = 42;

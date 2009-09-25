@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 class Maman.Foo : Object {
@@ -12,7 +9,7 @@ class Maman.Foo : Object {
 		this.p2 = p2;
 	}
 	
-	public static int main (string[] args) {
+	public static int main () {
 		stdout.printf ("Construct Formal Parameter Test: 1");
 		
 		var foo = new Foo (2, 3);
@@ -26,3 +23,8 @@ class Maman.Foo : Object {
 		return 0;
 	}
 }
+
+void main () {
+	Maman.Foo.main ();
+}
+

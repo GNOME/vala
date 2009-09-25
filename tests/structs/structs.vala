@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 struct SimpleStruct {

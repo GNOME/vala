@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 class Maman.Bar : Object {
@@ -14,7 +11,7 @@ class Maman.Bar : Object {
 		}
 	}
 
-	static int main (string[] args) {
+	public static int main () {
 		stdout.printf ("For Test: 1");
 
 		int i;
@@ -82,5 +79,10 @@ class Maman.Foo : Object {
 	}
 	
 	private int counter = 0;
+}
+
+
+void main () {
+	Maman.Bar.main ();
 }
 

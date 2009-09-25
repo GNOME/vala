@@ -1,6 +1,3 @@
-
-Program: test
-
 delegate int Func ();
 
 int A (int k, Func x1, Func x2, Func x3, Func x4, Func x5) {

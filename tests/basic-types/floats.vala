@@ -1,6 +1,3 @@
-
-Program: test
-
 void test_double () {
 	// declaration and initialization
 	double d = 42d;

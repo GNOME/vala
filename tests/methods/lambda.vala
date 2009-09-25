@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 static delegate int Maman.ActionCallback (int i);
@@ -10,7 +7,7 @@ class Maman.Bar : Object {
 		return cb (1);
 	}
 
-	static int main (string[] args) {
+	public static int main () {
 		stdout.printf ("Lambda Test: 1");
 		
 		stdout.printf (" %d", do_action (i => i * 2));
@@ -22,3 +19,8 @@ class Maman.Bar : Object {
 		return 0;
 	}
 }
+
+void main () {
+	Maman.Bar.main ();
+}
+

@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 [Compact]
@@ -71,7 +68,7 @@ class Maman.Bar : Foo {
 					   private_class_field, public_class_field);
 	}
 
-	static int main (string[] args) {
+	public static int main () {
 		stdout.printf ("Field Test: 1");
 		
 		var bar = new Bar ();
@@ -100,3 +97,8 @@ class Maman.Bar : Foo {
 		return 0;
 	}
 }
+
+void main () {
+	Maman.Bar.main ();
+}
+

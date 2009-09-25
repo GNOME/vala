@@ -1,6 +1,3 @@
-
-Program: test
-
 using GLib;
 
 public class Sample : Object {
@@ -45,7 +42,7 @@ public class Sample : Object {
 		stdout.printf("automatic: %s\n", automatic);
         }
 
-	static int main (string[] args) {
+	public static int main () {
 		var test = new Sample("InitialName");
 
 		test.run();
@@ -115,3 +112,8 @@ class Maman.Baz : Object, Ibaz {
 		get { return 2; }
 	}
 }
+
+void main () {
+	Sample.main ();
+}
+
