@@ -1342,7 +1342,7 @@ internal class Vala.GTypeModule : GErrorModule {
 				continue;
 			}
 
-			var base_type = prop.base_interface_property.parent_symbol;
+			var base_type = (ObjectTypeSymbol) prop.base_interface_property.parent_symbol;
 			if (base_type != iface) {
 				continue;
 			}
@@ -1354,14 +1354,24 @@ internal class Vala.GTypeModule : GErrorModule {
 				if (prop.is_abstract || prop.is_virtual) {
 					cname = "%s_get_%s".printf (cl.get_lower_case_cname (null), prop.name);
 				}
-				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), new CCodeIdentifier (cname))));
+
+				CCodeExpression cfunc = new CCodeIdentifier (cname);
+				if (prop.is_abstract || prop.is_virtual) {
+					cfunc = cast_property_accessor_pointer (prop.get_accessor, cfunc, base_type);
+				}
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), cfunc)));
 			}
 			if (prop.set_accessor != null) {
 				string cname = "%s_real_set_%s".printf (cl.get_lower_case_cname (null), prop.name);
 				if (prop.is_abstract || prop.is_virtual) {
 					cname = "%s_set_%s".printf (cl.get_lower_case_cname (null), prop.name);
 				}
-				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), new CCodeIdentifier (cname))));
+
+				CCodeExpression cfunc = new CCodeIdentifier (cname);
+				if (prop.is_abstract || prop.is_virtual) {
+					cfunc = cast_property_accessor_pointer (prop.set_accessor, cfunc, base_type);
+				}
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), cfunc)));
 			}
 		}
 
@@ -1392,20 +1402,38 @@ internal class Vala.GTypeModule : GErrorModule {
 					generate_property_accessor_declaration (base_property.get_accessor, source_declarations);
 
 					string cname = base_property.get_accessor.get_cname ();
-					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), new CCodeIdentifier (cname))));
+					CCodeExpression cfunc = new CCodeIdentifier (cname);
+					cfunc = cast_property_accessor_pointer (prop.get_accessor, cfunc, iface);
+					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "get_%s".printf (prop.name)), cfunc)));
 				}
 				if (base_property.set_accessor != null) {
 					generate_property_accessor_declaration (base_property.set_accessor, source_declarations);
 
 					string cname = base_property.set_accessor.get_cname ();
-					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), new CCodeIdentifier (cname))));
+					CCodeExpression cfunc = new CCodeIdentifier (cname);
+					cfunc = cast_property_accessor_pointer (prop.set_accessor, cfunc, iface);
+					init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, "set_%s".printf (prop.name)), cfunc)));
 				}
 			}
 		}
 
 		source_type_member_definition.append (iface_init);
 	}
-	
+
+	CCodeExpression cast_property_accessor_pointer (PropertyAccessor acc, CCodeExpression cfunc, ObjectTypeSymbol base_type) {
+		string cast;
+		if (acc.readable && acc.value_type.is_real_non_null_struct_type ()) {
+			cast = "void (*) (%s *, %s *)".printf (base_type.get_cname (), acc.value_type.get_cname ());
+		} else if (acc.readable) {
+			cast = "%s (*) (%s *)".printf (acc.value_type.get_cname (), base_type.get_cname ());
+		} else if (acc.value_type.is_real_non_null_struct_type ()) {
+			cast = "void (*) (%s *, %s *)".printf (base_type.get_cname (), acc.value_type.get_cname ());
+		} else {
+			cast = "void (*) (%s *, %s)".printf (base_type.get_cname (), acc.value_type.get_cname ());
+		}
+		return new CCodeCastExpression (cfunc, cast);
+	}
+
 	private void add_instance_init_function (Class cl) {
 		var instance_init = new CCodeFunction ("%s_instance_init".printf (cl.get_lower_case_cname (null)), "void");
 		instance_init.add_parameter (new CCodeFormalParameter ("self", "%s *".printf (cl.get_cname ())));
