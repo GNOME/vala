@@ -2402,6 +2402,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 		var ns_ref = new UsingDirective (sym, get_src (begin));
 
 		scanner.source_file.add_using_directive (ns_ref);
+		context.root.add_using_directive (ns_ref);
 	}
 
 	void parse_using_directives () throws ParseError {

@@ -31,7 +31,6 @@ using Gee;
 public class Vala.SymbolResolver : CodeVisitor {
 	Symbol root_symbol;
 	Scope current_scope;
-	Gee.List<UsingDirective> current_using_directives;
 	
 	/**
 	 * Resolve symbol names in the specified code context.
@@ -40,18 +39,17 @@ public class Vala.SymbolResolver : CodeVisitor {
 	 */
 	public void resolve (CodeContext context) {
 		root_symbol = context.root;
-		current_scope = root_symbol.scope;
 
-		context.accept (this);
+		context.root.accept (this);
 	}
 	
-	public override void visit_source_file (SourceFile file) {
-		current_using_directives = file.get_using_directives ();
-		current_scope = root_symbol.scope;
+	public override void visit_namespace (Namespace ns) {
+		var old_scope = current_scope;
+		current_scope = ns.scope;
 
-		file.accept_children (this);
+		ns.accept_children (this);
 
-		current_using_directives = null;
+		current_scope = old_scope;
 	}
 	
 	public override void visit_class (Class cl) {
@@ -220,8 +218,8 @@ public class Vala.SymbolResolver : CodeVisitor {
 
 				scope = scope.parent_scope;
 			}
-			if (sym == null) {
-				foreach (UsingDirective ns in current_using_directives) {
+			if (sym == null && unresolved_symbol.source_reference != null) {
+				foreach (UsingDirective ns in unresolved_symbol.source_reference.using_directives) {
 					if (ns.error || ns.namespace_symbol is UnresolvedSymbol) {
 						continue;
 					}
@@ -234,7 +232,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 					}
 
 					if (local_sym != null) {
-						if (sym != null) {
+						if (sym != null && sym != local_sym) {
 							unresolved_symbol.error = true;
 							Report.error (unresolved_symbol.source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (unresolved_symbol.name, sym.get_full_name (), local_sym.get_full_name ()));
 							return null;

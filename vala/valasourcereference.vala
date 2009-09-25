@@ -1,6 +1,6 @@
 /* valasourcereference.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -50,7 +50,9 @@ public class Vala.SourceReference {
 	 * The last column number of the referenced source code.
 	 */
 	public int last_column { get; set; }
-	
+
+	public Gee.List<UsingDirective> using_directives { get; private set; }
+
 	/**
 	 * Creates a new source reference.
 	 *
@@ -67,6 +69,7 @@ public class Vala.SourceReference {
 		first_column = _first_column;
 		last_line = _last_line;
 		last_column = _last_column;
+		using_directives = file.current_using_directives;
 	}
 	
 	/**

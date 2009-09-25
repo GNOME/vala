@@ -254,11 +254,11 @@ public class Vala.MemberAccess : Expression {
 				sym = sym.parent_symbol;
 			}
 
-			if (symbol_reference == null) {
-				foreach (UsingDirective ns in analyzer.current_source_file.get_using_directives ()) {
+			if (symbol_reference == null && source_reference != null) {
+				foreach (UsingDirective ns in source_reference.using_directives) {
 					var local_sym = ns.namespace_symbol.scope.lookup (member_name);
 					if (local_sym != null) {
-						if (symbol_reference != null) {
+						if (symbol_reference != null && symbol_reference != local_sym) {
 							error = true;
 							Report.error (source_reference, "`%s' is an ambiguous reference between `%s' and `%s'".printf (member_name, symbol_reference.get_full_name (), local_sym.get_full_name ()));
 							return false;

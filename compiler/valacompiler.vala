@@ -273,10 +273,14 @@ class Vala.Compiler {
 
 					if (context.profile == Profile.POSIX) {
 						// import the Posix namespace by default (namespace of backend-specific standard library)
-						source_file.add_using_directive (new UsingDirective (new UnresolvedSymbol (null, "Posix", null)));
+						var ns_ref = new UsingDirective (new UnresolvedSymbol (null, "Posix", null));
+						source_file.add_using_directive (ns_ref);
+						context.root.add_using_directive (ns_ref);
 					} else if (context.profile == Profile.GOBJECT) {
 						// import the GLib namespace by default (namespace of backend-specific standard library)
-						source_file.add_using_directive (new UsingDirective (new UnresolvedSymbol (null, "GLib", null)));
+						var ns_ref = new UsingDirective (new UnresolvedSymbol (null, "GLib", null));
+						source_file.add_using_directive (ns_ref);
+						context.root.add_using_directive (ns_ref);
 					}
 
 					context.add_source_file (source_file);

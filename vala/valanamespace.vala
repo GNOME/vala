@@ -46,6 +46,8 @@ public class Vala.Namespace : Symbol {
 
 	private Gee.List<Namespace> namespaces = new ArrayList<Namespace> ();
 
+	private Gee.List<UsingDirective> using_directives = new ArrayList<UsingDirective> ();
+
 	/**
 	 * Creates a new namespace.
 	 *
@@ -57,7 +59,16 @@ public class Vala.Namespace : Symbol {
 		base (name, source_reference);
 		access = SymbolAccessibility.PUBLIC;
 	}
-	
+
+	/**
+	 * Adds a new using directive with the specified namespace.
+	 *
+	 * @param ns reference to namespace
+	 */
+	public void add_using_directive (UsingDirective ns) {
+		using_directives.add (ns);
+	}
+
 	public void add_comment (Comment comment) {
 		comments.add (comment);
 	}
@@ -84,6 +95,9 @@ public class Vala.Namespace : Symbol {
 				old_ns.source_reference = ns.source_reference;
 			}
 
+			foreach (var using_directive in ns.using_directives) {
+				old_ns.add_using_directive (using_directive);
+			}
 			foreach (Namespace sub_ns in ns.get_namespaces ()) {
 				old_ns.add_namespace (sub_ns);
 			}
@@ -392,6 +406,10 @@ public class Vala.Namespace : Symbol {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
+		foreach (UsingDirective ns_ref in using_directives) {
+			ns_ref.accept (visitor);
+		}
+
 		foreach (Namespace ns in namespaces) {
 			ns.accept (visitor);
 		}

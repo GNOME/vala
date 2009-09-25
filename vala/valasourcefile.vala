@@ -53,7 +53,7 @@ public class Vala.SourceFile {
 
 	private ArrayList<Comment> comments = new ArrayList<Comment> ();
 
-	private Gee.List<UsingDirective> using_directives = new ArrayList<UsingDirective> ();
+	public Gee.List<UsingDirective> current_using_directives { get; set; default = new ArrayList<UsingDirective> (); }
 
 	private Gee.List<CodeNode> nodes = new ArrayList<CodeNode> ();
 	
@@ -102,44 +102,16 @@ public class Vala.SourceFile {
 	 * @param ns reference to namespace
 	 */
 	public void add_using_directive (UsingDirective ns) {
-		foreach (UsingDirective using_directive in using_directives) {
-			if (same_symbol (using_directive.namespace_symbol, ns.namespace_symbol)) {
-				// ignore duplicates
-				return;
-			}
+		// do not modify current_using_directives, it should be considered immutable
+		// for correct symbol resolving
+		var old_using_directives = current_using_directives;
+		current_using_directives = new ArrayList<UsingDirective> ();
+		foreach (var using_directive in old_using_directives) {
+			current_using_directives.add (using_directive);
 		}
-		using_directives.add (ns);
+		current_using_directives.add (ns);
 	}
 
-	public void clear_using_directives () {
-		using_directives.clear ();
-	}
-
-	bool same_symbol (Symbol? sym1, Symbol? sym2) {
-		if (sym1 == sym2) {
-			return true;
-		}
-
-		var unresolved_symbol1 = sym1 as UnresolvedSymbol;
-		var unresolved_symbol2 = sym2 as UnresolvedSymbol;
-		if (unresolved_symbol1 != null && unresolved_symbol2 != null) {
-			if (same_symbol (unresolved_symbol1.inner, unresolved_symbol2.inner)) {
-				return (unresolved_symbol1.name == unresolved_symbol2.name);
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Returns a copy of the list of using directives.
-	 *
-	 * @return using directive list
-	 */
-	public Gee.List<UsingDirective> get_using_directives () {
-		return new ReadOnlyList<UsingDirective> (using_directives);
-	}
-	
 	/**
 	 * Adds the specified code node to this source file.
 	 *
@@ -167,10 +139,6 @@ public class Vala.SourceFile {
 	}
 
 	public void accept_children (CodeVisitor visitor) {
-		foreach (UsingDirective ns_ref in using_directives) {
-			ns_ref.accept (visitor);
-		}
-		
 		foreach (CodeNode node in nodes) {
 			node.accept (visitor);
 		}

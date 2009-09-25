@@ -310,7 +310,7 @@ public class Vala.Parser : CodeVisitor {
 
 
 		try {
-			parse_using_directives ();
+			parse_using_directives (context.root);
 			parse_declarations (context.root, true);
 		} catch (ParseError e) {
 			// already reported
@@ -1964,7 +1964,22 @@ public class Vala.Parser : CodeVisitor {
 		}
 
 		set_attributes (ns, attrs);
-		parse_declarations (ns);
+
+		expect (TokenType.OPEN_BRACE);
+
+		var old_using_directives = scanner.source_file.current_using_directives;
+		parse_using_directives (ns);
+
+		parse_declarations (ns, true);
+
+		scanner.source_file.current_using_directives = old_using_directives;
+
+		if (!accept (TokenType.CLOSE_BRACE)) {
+			// only report error if it's not a secondary error
+			if (context.report.get_errors () == 0) {
+				Report.error (get_current_src (), "expected `}'");
+			}
+		}
 
 		Namespace result = ns;
 		while (sym.inner != null) {
@@ -2015,13 +2030,14 @@ public class Vala.Parser : CodeVisitor {
 		scanner.source_file.add_node (sym);
 	}
 
-	void parse_using_directives () throws ParseError {
+	void parse_using_directives (Namespace ns) throws ParseError {
 		while (accept (TokenType.USING)) {
 			do {
 				var begin = get_location ();
 				var sym = parse_symbol_name ();
 				var ns_ref = new UsingDirective (sym, get_src (begin));
 				scanner.source_file.add_using_directive (ns_ref);
+				ns.add_using_directive (ns_ref);
 			} while (accept (TokenType.COMMA));
 			expect (TokenType.SEMICOLON);
 		}
