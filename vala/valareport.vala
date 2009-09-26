@@ -31,6 +31,8 @@ public class Vala.Report : Object {
 
 	bool verbose_errors;
 
+	public bool enable_warnings { get; set; default = true; }
+
 	/**
 	 * Set the error verbosity.
 	 */
@@ -97,6 +99,10 @@ public class Vala.Report : Object {
 	 * @param message warning message
 	 */
 	public virtual void warn (SourceReference? source, string message) {
+		if (!enable_warnings) {
+			return;
+		}
+
 		warnings++;
 		if (source == null) {
 			stderr.printf ("warning: %s\n", message);
