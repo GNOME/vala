@@ -864,10 +864,6 @@ public class Vala.Method : Member {
 			}
 		}
 
-		if (tree_can_fail && name == "main") {
-			Report.error (source_reference, "\"main\" method cannot throw errors");
-		}
-
 		// check that all errors that can be thrown in the method body are declared
 		if (body != null) { 
 			foreach (DataType body_error_type in body.get_error_types ()) {
@@ -891,6 +887,10 @@ public class Vala.Method : Member {
 			}
 			entry_point = true;
 			analyzer.context.entry_point = this;
+
+			if (tree_can_fail) {
+				Report.error (source_reference, "\"main\" method cannot throw errors");
+			}
 		}
 
 		return !error;
@@ -901,9 +901,16 @@ public class Vala.Method : Member {
 			return false;
 		}
 
-		if (name == null || name != "main") {
-			// method must be called "main"
-			return false;
+		if (analyzer.context.entry_point_name == null) {
+			if (name == null || name != "main") {
+				// method must be called "main"
+				return false;
+			}
+		} else {
+			// custom entry point name
+			if (get_full_name () != analyzer.context.entry_point_name) {
+				return false;
+			}
 		}
 		
 		if (binding == MemberBinding.INSTANCE) {

@@ -69,6 +69,8 @@ class Vala.Compiler {
 	static bool verbose_mode;
 	static string profile;
 
+	static string entry_point;
+
 	private CodeContext context;
 
 	const OptionEntry[] options = {
@@ -90,6 +92,7 @@ class Vala.Compiler {
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
 		{ "thread", 0, 0, OptionArg.NONE, ref thread, "Enable multithreading support", null },
 		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
+		{ "main", 0, 0, OptionArg.STRING, ref entry_point, "Use SYMBOL as entry point", "SYMBOL..." },
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
 		{ "enable-checking", 0, 0, OptionArg.NONE, ref enable_checking, "Enable additional run-time checks", null },
 		{ "enable-deprecated", 0, 0, OptionArg.NONE, ref deprecated, "Enable deprecated features", null },
@@ -216,6 +219,8 @@ class Vala.Compiler {
 		} else {
 			Report.error (null, "Unknown profile %s".printf (profile));
 		}
+
+		context.entry_point_name = entry_point;
 
 		if (defines != null) {
 			foreach (string define in defines) {

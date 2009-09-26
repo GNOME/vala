@@ -152,6 +152,8 @@ public class Vala.CodeContext {
 
 	public Method? entry_point { get; set; }
 
+	public string entry_point_name { get; set; }
+
 	private Gee.List<SourceFile> source_files = new ArrayList<SourceFile> ();
 	private Gee.List<string> c_source_files = new ArrayList<string> ();
 	private Namespace _root = new Namespace (null);
