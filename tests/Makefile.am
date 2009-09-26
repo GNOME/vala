@@ -34,6 +34,7 @@ TESTS = \
 	structs/gvalue.vala \
 	structs/bug595587.vala \
 	delegates/delegates.vala \
+	delegates/bug595639.vala \
 	objects/classes.vala \
 	objects/fields.vala \
 	objects/interfaces.vala \
