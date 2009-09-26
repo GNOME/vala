@@ -6,5 +6,6 @@ WebKitWebView::cut_clipboard has_emitter="1"
 WebKitWebView::hovering_over_link.p0 nullable="1"
 WebKitWebView::move_cursor has_emitter="1"
 WebKitWebView::paste_clipboard has_emitter="1"
+WebKitWebView::redo has_emitter="1"
 WebKitWebView::select_all has_emitter="1"
-
+WebKitWebView::undo has_emitter="1"

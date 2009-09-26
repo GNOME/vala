@@ -12,6 +12,12 @@
 		<function name="get_default_session" symbol="webkit_get_default_session">
 			<return-type type="SoupSession*"/>
 		</function>
+		<function name="get_default_web_database_quota" symbol="webkit_get_default_web_database_quota">
+			<return-type type="guint64"/>
+		</function>
+		<function name="get_web_database_directory_path" symbol="webkit_get_web_database_directory_path">
+			<return-type type="gchar*"/>
+		</function>
 		<function name="major_version" symbol="webkit_major_version">
 			<return-type type="guint"/>
 		</function>
@@ -30,6 +36,21 @@
 		<function name="policy_error_quark" symbol="webkit_policy_error_quark">
 			<return-type type="GQuark"/>
 		</function>
+		<function name="remove_all_web_databases" symbol="webkit_remove_all_web_databases">
+			<return-type type="void"/>
+		</function>
+		<function name="set_default_web_database_quota" symbol="webkit_set_default_web_database_quota">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="defaultQuota" type="guint64"/>
+			</parameters>
+		</function>
+		<function name="set_web_database_directory_path" symbol="webkit_set_web_database_directory_path">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="path" type="gchar*"/>
+			</parameters>
+		</function>
 		<enum name="WebKitDownloadError" type-name="WebKitDownloadError" get-type="webkit_download_error_get_type">
 			<member name="WEBKIT_DOWNLOAD_ERROR_CANCELLED_BY_USER" value="0"/>
 			<member name="WEBKIT_DOWNLOAD_ERROR_DESTINATION" value="1"/>
@@ -42,10 +63,15 @@
 			<member name="WEBKIT_DOWNLOAD_STATUS_CANCELLED" value="2"/>
 			<member name="WEBKIT_DOWNLOAD_STATUS_FINISHED" value="3"/>
 		</enum>
+		<enum name="WebKitEditingBehavior" type-name="WebKitEditingBehavior" get-type="webkit_editing_behavior_get_type">
+			<member name="WEBKIT_EDITING_BEHAVIOR_MAC" value="0"/>
+			<member name="WEBKIT_EDITING_BEHAVIOR_WINDOWS" value="1"/>
+		</enum>
 		<enum name="WebKitLoadStatus" type-name="WebKitLoadStatus" get-type="webkit_load_status_get_type">
 			<member name="WEBKIT_LOAD_PROVISIONAL" value="0"/>
 			<member name="WEBKIT_LOAD_COMMITTED" value="1"/>
 			<member name="WEBKIT_LOAD_FINISHED" value="2"/>
+			<member name="WEBKIT_LOAD_FIRST_VISUALLY_NON_EMPTY_LAYOUT" value="3"/>
 		</enum>
 		<enum name="WebKitNavigationResponse" type-name="WebKitNavigationResponse" get-type="webkit_navigation_response_get_type">
 			<member name="WEBKIT_NAVIGATION_RESPONSE_ACCEPT" value="0"/>
@@ -85,6 +111,9 @@
 		<enum name="WebKitWebViewTargetInfo" type-name="WebKitWebViewTargetInfo" get-type="webkit_web_view_target_info_get_type">
 			<member name="WEBKIT_WEB_VIEW_TARGET_INFO_HTML" value="0"/>
 			<member name="WEBKIT_WEB_VIEW_TARGET_INFO_TEXT" value="1"/>
+			<member name="WEBKIT_WEB_VIEW_TARGET_INFO_IMAGE" value="2"/>
+			<member name="WEBKIT_WEB_VIEW_TARGET_INFO_URI_LIST" value="3"/>
+			<member name="WEBKIT_WEB_VIEW_TARGET_INFO_NETSCAPE_URL" value="4"/>
 		</enum>
 		<object name="WebKitDownload" parent="GObject" type-name="WebKitDownload" get-type="webkit_download_get_type">
 			<method name="cancel" symbol="webkit_download_cancel">
@@ -212,6 +241,85 @@
 			<property name="message" type="SoupMessage*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="uri" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
+		<object name="WebKitNetworkResponse" parent="GObject" type-name="WebKitNetworkResponse" get-type="webkit_network_response_get_type">
+			<method name="get_message" symbol="webkit_network_response_get_message">
+				<return-type type="SoupMessage*"/>
+				<parameters>
+					<parameter name="response" type="WebKitNetworkResponse*"/>
+				</parameters>
+			</method>
+			<method name="get_uri" symbol="webkit_network_response_get_uri">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="response" type="WebKitNetworkResponse*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="webkit_network_response_new">
+				<return-type type="WebKitNetworkResponse*"/>
+				<parameters>
+					<parameter name="uri" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="set_uri" symbol="webkit_network_response_set_uri">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="response" type="WebKitNetworkResponse*"/>
+					<parameter name="uri" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="message" type="SoupMessage*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="uri" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="WebKitSecurityOrigin" parent="GObject" type-name="WebKitSecurityOrigin" get-type="webkit_security_origin_get_type">
+			<method name="get_all_web_databases" symbol="webkit_security_origin_get_all_web_databases">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="securityOrigin" type="WebKitSecurityOrigin*"/>
+				</parameters>
+			</method>
+			<method name="get_host" symbol="webkit_security_origin_get_host">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="securityOrigin" type="WebKitSecurityOrigin*"/>
+				</parameters>
+			</method>
+			<method name="get_port" symbol="webkit_security_origin_get_port">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="securityOrigin" type="WebKitSecurityOrigin*"/>
+				</parameters>
+			</method>
+			<method name="get_protocol" symbol="webkit_security_origin_get_protocol">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="securityOrigin" type="WebKitSecurityOrigin*"/>
+				</parameters>
+			</method>
+			<method name="get_web_database_quota" symbol="webkit_security_origin_get_web_database_quota">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="securityOrigin" type="WebKitSecurityOrigin*"/>
+				</parameters>
+			</method>
+			<method name="get_web_database_usage" symbol="webkit_security_origin_get_web_database_usage">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="securityOrigin" type="WebKitSecurityOrigin*"/>
+				</parameters>
+			</method>
+			<method name="set_web_database_quota" symbol="webkit_security_origin_set_web_database_quota">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="securityOrigin" type="WebKitSecurityOrigin*"/>
+					<parameter name="quota" type="guint64"/>
+				</parameters>
+			</method>
+			<property name="host" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="port" type="guint" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="protocol" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="web-database-quota" type="guint64" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="web-database-usage" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
 		<object name="WebKitSoupAuthDialog" parent="GObject" type-name="WebKitSoupAuthDialog" get-type="webkit_soup_auth_dialog_get_type">
 			<implements>
 				<interface name="SoupSessionFeature"/>
@@ -329,6 +437,115 @@
 				</parameters>
 			</method>
 		</object>
+		<object name="WebKitWebDataSource" parent="GObject" type-name="WebKitWebDataSource" get-type="webkit_web_data_source_get_type">
+			<method name="get_data" symbol="webkit_web_data_source_get_data">
+				<return-type type="GString*"/>
+				<parameters>
+					<parameter name="data_source" type="WebKitWebDataSource*"/>
+				</parameters>
+			</method>
+			<method name="get_encoding" symbol="webkit_web_data_source_get_encoding">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="data_source" type="WebKitWebDataSource*"/>
+				</parameters>
+			</method>
+			<method name="get_initial_request" symbol="webkit_web_data_source_get_initial_request">
+				<return-type type="WebKitNetworkRequest*"/>
+				<parameters>
+					<parameter name="data_source" type="WebKitWebDataSource*"/>
+				</parameters>
+			</method>
+			<method name="get_main_resource" symbol="webkit_web_data_source_get_main_resource">
+				<return-type type="WebKitWebResource*"/>
+				<parameters>
+					<parameter name="data_source" type="WebKitWebDataSource*"/>
+				</parameters>
+			</method>
+			<method name="get_request" symbol="webkit_web_data_source_get_request">
+				<return-type type="WebKitNetworkRequest*"/>
+				<parameters>
+					<parameter name="data_source" type="WebKitWebDataSource*"/>
+				</parameters>
+			</method>
+			<method name="get_unreachable_uri" symbol="webkit_web_data_source_get_unreachable_uri">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="data_source" type="WebKitWebDataSource*"/>
+				</parameters>
+			</method>
+			<method name="get_web_frame" symbol="webkit_web_data_source_get_web_frame">
+				<return-type type="WebKitWebFrame*"/>
+				<parameters>
+					<parameter name="data_source" type="WebKitWebDataSource*"/>
+				</parameters>
+			</method>
+			<method name="is_loading" symbol="webkit_web_data_source_is_loading">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="data_source" type="WebKitWebDataSource*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="webkit_web_data_source_new">
+				<return-type type="WebKitWebDataSource*"/>
+			</constructor>
+			<constructor name="new_with_request" symbol="webkit_web_data_source_new_with_request">
+				<return-type type="WebKitWebDataSource*"/>
+				<parameters>
+					<parameter name="request" type="WebKitNetworkRequest*"/>
+				</parameters>
+			</constructor>
+		</object>
+		<object name="WebKitWebDatabase" parent="GObject" type-name="WebKitWebDatabase" get-type="webkit_web_database_get_type">
+			<method name="get_display_name" symbol="webkit_web_database_get_display_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="webDatabase" type="WebKitWebDatabase*"/>
+				</parameters>
+			</method>
+			<method name="get_expected_size" symbol="webkit_web_database_get_expected_size">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="webDatabase" type="WebKitWebDatabase*"/>
+				</parameters>
+			</method>
+			<method name="get_filename" symbol="webkit_web_database_get_filename">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="webDatabase" type="WebKitWebDatabase*"/>
+				</parameters>
+			</method>
+			<method name="get_name" symbol="webkit_web_database_get_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="webDatabase" type="WebKitWebDatabase*"/>
+				</parameters>
+			</method>
+			<method name="get_security_origin" symbol="webkit_web_database_get_security_origin">
+				<return-type type="WebKitSecurityOrigin*"/>
+				<parameters>
+					<parameter name="webDatabase" type="WebKitWebDatabase*"/>
+				</parameters>
+			</method>
+			<method name="get_size" symbol="webkit_web_database_get_size">
+				<return-type type="guint64"/>
+				<parameters>
+					<parameter name="webDatabase" type="WebKitWebDatabase*"/>
+				</parameters>
+			</method>
+			<method name="remove" symbol="webkit_web_database_remove">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="webDatabase" type="WebKitWebDatabase*"/>
+				</parameters>
+			</method>
+			<property name="display-name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="expected-size" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="filename" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="name" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="security-origin" type="WebKitSecurityOrigin*" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="size" type="guint64" readable="1" writable="0" construct="0" construct-only="0"/>
+		</object>
 		<object name="WebKitWebFrame" parent="GObject" type-name="WebKitWebFrame" get-type="webkit_web_frame_get_type">
 			<method name="find_frame" symbol="webkit_web_frame_find_frame">
 				<return-type type="WebKitWebFrame*"/>
@@ -337,8 +554,20 @@
 					<parameter name="name" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="get_data_source" symbol="webkit_web_frame_get_data_source">
+				<return-type type="WebKitWebDataSource*"/>
+				<parameters>
+					<parameter name="frame" type="WebKitWebFrame*"/>
+				</parameters>
+			</method>
 			<method name="get_global_context" symbol="webkit_web_frame_get_global_context">
 				<return-type type="JSGlobalContextRef"/>
+				<parameters>
+					<parameter name="frame" type="WebKitWebFrame*"/>
+				</parameters>
+			</method>
+			<method name="get_horizontal_scrollbar_policy" symbol="webkit_web_frame_get_horizontal_scrollbar_policy">
+				<return-type type="GtkPolicyType"/>
 				<parameters>
 					<parameter name="frame" type="WebKitWebFrame*"/>
 				</parameters>
@@ -361,6 +590,18 @@
 					<parameter name="frame" type="WebKitWebFrame*"/>
 				</parameters>
 			</method>
+			<method name="get_provisional_data_source" symbol="webkit_web_frame_get_provisional_data_source">
+				<return-type type="WebKitWebDataSource*"/>
+				<parameters>
+					<parameter name="frame" type="WebKitWebFrame*"/>
+				</parameters>
+			</method>
+			<method name="get_security_origin" symbol="webkit_web_frame_get_security_origin">
+				<return-type type="WebKitSecurityOrigin*"/>
+				<parameters>
+					<parameter name="frame" type="WebKitWebFrame*"/>
+				</parameters>
+			</method>
 			<method name="get_title" symbol="webkit_web_frame_get_title">
 				<return-type type="gchar*"/>
 				<parameters>
@@ -369,6 +610,12 @@
 			</method>
 			<method name="get_uri" symbol="webkit_web_frame_get_uri">
 				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="frame" type="WebKitWebFrame*"/>
+				</parameters>
+			</method>
+			<method name="get_vertical_scrollbar_policy" symbol="webkit_web_frame_get_vertical_scrollbar_policy">
+				<return-type type="GtkPolicyType"/>
 				<parameters>
 					<parameter name="frame" type="WebKitWebFrame*"/>
 				</parameters>
@@ -445,10 +692,12 @@
 					<parameter name="frame" type="WebKitWebFrame*"/>
 				</parameters>
 			</method>
+			<property name="horizontal-scrollbar-policy" type="GtkPolicyType" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="load-status" type="WebKitLoadStatus" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="title" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="uri" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="vertical-scrollbar-policy" type="GtkPolicyType" readable="1" writable="0" construct="0" construct-only="0"/>
 			<signal name="cleared" when="LAST">
 				<return-type type="void"/>
 				<parameters>
@@ -474,6 +723,12 @@
 				<parameters>
 					<parameter name="object" type="WebKitWebFrame*"/>
 					<parameter name="p0" type="gboolean"/>
+				</parameters>
+			</signal>
+			<signal name="scrollbars-policy-changed" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebFrame*"/>
 				</parameters>
 			</signal>
 			<signal name="title-changed" when="LAST">
@@ -617,6 +872,12 @@
 					<parameter name="navigationAction" type="WebKitWebNavigationAction*"/>
 				</parameters>
 			</method>
+			<method name="get_target_frame" symbol="webkit_web_navigation_action_get_target_frame">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="navigationAction" type="WebKitWebNavigationAction*"/>
+				</parameters>
+			</method>
 			<method name="set_original_uri" symbol="webkit_web_navigation_action_set_original_uri">
 				<return-type type="void"/>
 				<parameters>
@@ -635,6 +896,7 @@
 			<property name="modifier-state" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="original-uri" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="reason" type="WebKitWebNavigationReason" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="target-frame" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="WebKitWebPolicyDecision" parent="GObject" type-name="WebKitWebPolicyDecision" get-type="webkit_web_policy_decision_get_type">
 			<method name="download" symbol="webkit_web_policy_decision_download">
@@ -656,9 +918,62 @@
 				</parameters>
 			</method>
 		</object>
+		<object name="WebKitWebResource" parent="GObject" type-name="WebKitWebResource" get-type="webkit_web_resource_get_type">
+			<method name="get_data" symbol="webkit_web_resource_get_data">
+				<return-type type="GString*"/>
+				<parameters>
+					<parameter name="web_resource" type="WebKitWebResource*"/>
+				</parameters>
+			</method>
+			<method name="get_encoding" symbol="webkit_web_resource_get_encoding">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="web_resource" type="WebKitWebResource*"/>
+				</parameters>
+			</method>
+			<method name="get_frame_name" symbol="webkit_web_resource_get_frame_name">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="web_resource" type="WebKitWebResource*"/>
+				</parameters>
+			</method>
+			<method name="get_mime_type" symbol="webkit_web_resource_get_mime_type">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="web_resource" type="WebKitWebResource*"/>
+				</parameters>
+			</method>
+			<method name="get_uri" symbol="webkit_web_resource_get_uri">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="web_resource" type="WebKitWebResource*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="webkit_web_resource_new">
+				<return-type type="WebKitWebResource*"/>
+				<parameters>
+					<parameter name="data" type="gchar*"/>
+					<parameter name="size" type="gssize"/>
+					<parameter name="uri" type="gchar*"/>
+					<parameter name="mime_type" type="gchar*"/>
+					<parameter name="encoding" type="gchar*"/>
+					<parameter name="frame_name" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<property name="encoding" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="frame-name" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="mime-type" type="char*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="uri" type="char*" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
 		<object name="WebKitWebSettings" parent="GObject" type-name="WebKitWebSettings" get-type="webkit_web_settings_get_type">
 			<method name="copy" symbol="webkit_web_settings_copy">
 				<return-type type="WebKitWebSettings*"/>
+				<parameters>
+					<parameter name="web_settings" type="WebKitWebSettings*"/>
+				</parameters>
+			</method>
+			<method name="get_user_agent" symbol="webkit_web_settings_get_user_agent">
+				<return-type type="gchar*"/>
 				<parameters>
 					<parameter name="web_settings" type="WebKitWebSettings*"/>
 				</parameters>
@@ -673,16 +988,21 @@
 			<property name="default-font-family" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="default-font-size" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="default-monospace-font-size" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="editing-behavior" type="WebKitEditingBehavior" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-caret-browsing" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-developer-extras" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-html5-database" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-html5-local-storage" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-offline-web-application-cache" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-plugins" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-private-browsing" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-scripts" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enable-spell-checking" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-universal-access-from-file-uris" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enable-xss-auditor" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="enforce-96-dpi" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="fantasy-font-family" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="javascript-can-open-windows-automatically" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="minimum-font-size" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="minimum-logical-font-size" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="monospace-font-family" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
@@ -691,6 +1011,7 @@
 			<property name="sans-serif-font-family" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="serif-font-family" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="spell-checking-languages" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="user-agent" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="user-stylesheet-uri" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="zoom-step" type="gfloat" readable="1" writable="1" construct="1" construct-only="0"/>
 		</object>
@@ -736,11 +1057,23 @@
 					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
+			<method name="can_redo" symbol="webkit_web_view_can_redo">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="webView" type="WebKitWebView*"/>
+				</parameters>
+			</method>
 			<method name="can_show_mime_type" symbol="webkit_web_view_can_show_mime_type">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="web_view" type="WebKitWebView*"/>
 					<parameter name="mime_type" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="can_undo" symbol="webkit_web_view_can_undo">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="webView" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="copy_clipboard" symbol="webkit_web_view_copy_clipboard">
@@ -864,6 +1197,12 @@
 					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
+			<method name="get_view_source_mode" symbol="webkit_web_view_get_view_source_mode">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</method>
 			<method name="get_window_features" symbol="webkit_web_view_get_window_features">
 				<return-type type="WebKitWebWindowFeatures*"/>
 				<parameters>
@@ -973,6 +1312,12 @@
 					<parameter name="web_view" type="WebKitWebView*"/>
 				</parameters>
 			</method>
+			<method name="redo" symbol="webkit_web_view_redo">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="webView" type="WebKitWebView*"/>
+				</parameters>
+			</method>
 			<method name="reload" symbol="webkit_web_view_reload">
 				<return-type type="void"/>
 				<parameters>
@@ -1050,6 +1395,13 @@
 					<parameter name="flag" type="gboolean"/>
 				</parameters>
 			</method>
+			<method name="set_view_source_mode" symbol="webkit_web_view_set_view_source_mode">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+					<parameter name="view_source_mode" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_zoom_level" symbol="webkit_web_view_set_zoom_level">
 				<return-type type="void"/>
 				<parameters>
@@ -1061,6 +1413,12 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</method>
+			<method name="undo" symbol="webkit_web_view_undo">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="webView" type="WebKitWebView*"/>
 				</parameters>
 			</method>
 			<method name="unmark_text_matches" symbol="webkit_web_view_unmark_text_matches">
@@ -1096,6 +1454,12 @@
 			<property name="web-inspector" type="WebKitWebInspector*" readable="1" writable="0" construct="0" construct-only="0"/>
 			<property name="window-features" type="WebKitWebWindowFeatures*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="zoom-level" type="gfloat" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="close-web-view" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</signal>
 			<signal name="console-message" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -1131,6 +1495,14 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</signal>
+			<signal name="database-quota-exceeded" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebView*"/>
+					<parameter name="p0" type="GObject*"/>
+					<parameter name="p1" type="GObject*"/>
 				</parameters>
 			</signal>
 			<signal name="download-requested" when="LAST">
@@ -1257,6 +1629,22 @@
 					<parameter name="p0" type="WebKitWebFrame*"/>
 				</parameters>
 			</signal>
+			<signal name="redo" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</signal>
+			<signal name="resource-request-starting" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="WebKitWebView*"/>
+					<parameter name="p0" type="WebKitWebFrame*"/>
+					<parameter name="p1" type="WebKitWebResource*"/>
+					<parameter name="p2" type="WebKitNetworkRequest*"/>
+					<parameter name="p3" type="WebKitNetworkResponse*"/>
+				</parameters>
+			</signal>
 			<signal name="script-alert" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -1319,6 +1707,12 @@
 					<parameter name="p1" type="char*"/>
 				</parameters>
 			</signal>
+			<signal name="undo" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="web_view" type="WebKitWebView*"/>
+				</parameters>
+			</signal>
 			<signal name="web-view-ready" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -1366,8 +1760,10 @@
 			<property name="y" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 		</object>
 		<constant name="WEBKIT_MAJOR_VERSION" type="int" value="1"/>
-		<constant name="WEBKIT_MICRO_VERSION" type="int" value="10"/>
+		<constant name="WEBKIT_MICRO_VERSION" type="int" value="14"/>
 		<constant name="WEBKIT_MINOR_VERSION" type="int" value="1"/>
 		<constant name="WEBKIT_SOUP_AUTH_DIALOG_H" type="int" value="1"/>
+		<constant name="WEBKIT_USER_AGENT_MAJOR_VERSION" type="int" value="531"/>
+		<constant name="WEBKIT_USER_AGENT_MINOR_VERSION" type="int" value="2"/>
 	</namespace>
 </api>
