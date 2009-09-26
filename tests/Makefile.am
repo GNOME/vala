@@ -23,6 +23,7 @@ TESTS = \
 	namespaces.vala \
 	methods/lambda.vala \
 	methods/closures.vala \
+	methods/bug595538.vala \
 	control-flow/break.vala \
 	control-flow/expressions-conditional.vala \
 	control-flow/for.vala \
