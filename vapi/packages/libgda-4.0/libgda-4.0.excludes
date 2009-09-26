@@ -1,0 +1,3 @@
+include/libgda-4.0/libgda-report/
+include/libgda-4.0/providers-support/gda-data-select-priv.h
+include/libgda-4.0/libgda/gda-data-model-extra.h
