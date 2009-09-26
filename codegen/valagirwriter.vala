@@ -562,16 +562,30 @@ public class Vala.GIRWriter : CodeVisitor {
 	}
 
 	private void write_signature (Method m, string tag_name, bool instance = false) {
-		write_indent ();
-		stream.printf ("<%s name=\"%s\"", tag_name, m.name);
-		if (tag_name == "virtual-method") {
-			stream.printf (" invoker=\"%s\"", m.name);
-		} else if (tag_name == "callback") {
-			stream.printf (" c:type=\"%s\"", m.get_cname ());
+		if (m.coroutine) {
+			string finish_name = m.name;
+			if (finish_name.has_suffix ("_async")) {
+				finish_name = finish_name.substring (0, finish_name.length - "_async".length);
+			}
+			finish_name += "_finish";
+			do_write_signature (m, tag_name, instance, m.name, m.get_cname (), m.get_async_begin_parameters (), new VoidType (), false);
+			do_write_signature (m, tag_name, instance, finish_name, m.get_finish_cname (), m.get_async_end_parameters (), m.return_type, m.tree_can_fail);
 		} else {
-			stream.printf (" c:identifier=\"%s\"", m.get_cname ());
+			do_write_signature (m, tag_name, instance, m.name, m.get_cname (), m.get_parameters (), m.return_type, m.tree_can_fail);
 		}
-		if (m.tree_can_fail) {
+	}
+
+	private void do_write_signature (Method m, string tag_name, bool instance, string name, string cname, Gee.List<Vala.FormalParameter> params, DataType return_type, bool can_fail) {
+		write_indent ();
+		stream.printf ("<%s name=\"%s\"", tag_name, name);
+		if (tag_name == "virtual-method") {
+			stream.printf (" invoker=\"%s\"", name);
+		} else if (tag_name == "callback") {
+			stream.printf (" c:type=\"%s\"", cname);
+		} else {
+			stream.printf (" c:identifier=\"%s\"", cname);
+		}
+		if (can_fail) {
 			stream.printf (" throws=\"1\"");
 		}
 		stream.printf (">\n");
@@ -584,9 +598,9 @@ public class Vala.GIRWriter : CodeVisitor {
 			instance_type = CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
 		}
 
-		write_params (m.get_parameters (), instance_type);
+		write_params (params, instance_type);
 
-		write_return_type (m.return_type);
+		write_return_type (return_type);
 
 		indent--;
 		write_indent ();
