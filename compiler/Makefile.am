@@ -1,6 +1,7 @@
 NULL =
 
 AM_CPPFLAGS = \
+	$(COVERAGE_CFLAGS) \
 	-I$(top_srcdir)/gee \
 	-I$(top_srcdir)/ccode \
 	-I$(top_srcdir)/vala \
@@ -26,10 +27,11 @@ valac_SOURCES = \
 	$(NULL)
 
 valac.vala.stamp: $(valac_VALASOURCES)
-	$(VALAC) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../codegen --pkg codegen --pkg config $^
+	$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../codegen --pkg codegen --pkg config $^
 	touch $@
 
 valac_LDADD = \
+	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
 	../codegen/libvala.la \
 	$(NULL)

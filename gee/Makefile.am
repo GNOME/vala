@@ -1,6 +1,7 @@
 NULL =
 
 AM_CPPFLAGS = \
+	$(COVERAGE_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(NULL)
 
@@ -39,10 +40,11 @@ geeinclude_HEADERS = \
 	$(NULL)
 
 gee.vapi gee.vala.stamp: $(libgee_la_VALASOURCES)
-	$(VALAC) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 -H gee.h --library gee $^
+	$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 -H gee.h --library gee $^
 	touch $@
 
 libgee_la_LIBADD = \
+	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
 	$(NULL)
 

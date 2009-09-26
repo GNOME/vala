@@ -1,6 +1,7 @@
 NULL =
 
 AM_CPPFLAGS = \
+	$(COVERAGE_CFLAGS) \
 	-I$(top_srcdir)/gee \
 	-I$(top_srcdir)/ccode \
 	-I$(top_srcdir)/vala \
@@ -56,12 +57,13 @@ codegeninclude_HEADERS = \
 	$(NULL)
 
 codegen.vapi codegen.vala.stamp: $(libvala_la_VALASOURCES)
-	$(VALAC) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala -H valacodegen.h --library codegen $^
+	$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala -H valacodegen.h --library codegen $^
 	touch $@
 
 libvala_la_LDFLAGS = -no-undefined
 
 libvala_la_LIBADD = \
+	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
 	../vala/libvalacore.la \
 	$(NULL)

@@ -1,6 +1,7 @@
 NULL =
 
 AM_CPPFLAGS = \
+	$(COVERAGE_CFLAGS) \
 	-I$(top_srcdir)/gee \
 	-I$(top_srcdir)/ccode \
 	$(GLIB_CFLAGS) \
@@ -165,10 +166,11 @@ valainclude_HEADERS = \
 	$(NULL)
 
 vala.vapi vala.vala.stamp: $(libvalacore_la_VALASOURCES)
-	$(VALAC) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --pkg config -H vala.h --library vala $^
+	$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --pkg config -H vala.h --library vala $^
 	touch $@
 
 libvalacore_la_LIBADD = \
+	$(COVERAGE_LIBS) \
 	$(GLIB_LIBS) \
 	../gee/libgee.la \
 	../ccode/libvalaccode.la \

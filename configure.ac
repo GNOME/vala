@@ -29,6 +29,22 @@ AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
+AC_ARG_ENABLE(coverage, AS_HELP_STRING([--enable-coverage], [Enable coverage analysis]), enable_coverage=$enableval, enable_coverage=no)
+AM_CONDITIONAL(ENABLE_COVERAGE, test x$enable_coverage = xyes)
+
+if test "$enable_coverage" = "yes"; then
+	COVERAGE_VALAFLAGS="-g"
+	COVERAGE_CFLAGS="-fprofile-arcs -ftest-coverage"
+	COVERAGE_LIBS="-lgcov"
+else
+	COVERAGE_VALAFLAGS=
+	COVERAGE_CFLAGS=
+	COVERAGE_LIBS=
+fi
+AC_SUBST(COVERAGE_VALAFLAGS)
+AC_SUBST(COVERAGE_CFLAGS)
+AC_SUBST(COVERAGE_LIBS)
+
 AC_ARG_ENABLE(vapigen, AS_HELP_STRING([--enable-vapigen], [Enable VAPI generator]), enable_vapigen=$enableval, enable_vapigen=no)
 AM_CONDITIONAL(ENABLE_VAPIGEN, test x$enable_vapigen = xyes)
 
