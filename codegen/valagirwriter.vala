@@ -441,72 +441,49 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf ("</field>\n");
 	}
 
-	private void write_params (Gee.List<FormalParameter> params, DataType? instance_type = null) {
-		if (params.size == 0 && instance_type == null) {
-			return;
+	private void write_implicit_params (DataType type, ref int index, bool has_array_length, string name, ParameterDirection direction) {
+		if (type is ArrayType && has_array_length) {
+			var int_type = new IntegerType (CodeContext.get ().root.scope.lookup ("int") as Struct);
+			write_param_or_return (int_type, "parameter", ref index, has_array_length, "%s_length1".printf (name), direction);
+		} else if (type is DelegateType) {
+			var data_type = new PointerType (new VoidType ());
+			write_param_or_return (data_type, "parameter", ref index, false, "%s_target".printf (name), direction);
+			if (type.value_owned) {
+				var notify_type = new DelegateType (CodeContext.get ().root.scope.lookup ("GLib").scope.lookup ("DestroyNotify") as Delegate);
+				write_param_or_return (notify_type, "parameter", ref index, false, "%s_target_destroy_notify".printf (name), direction);
+			}
 		}
+	}
 
-		write_indent ();
-		stream.printf ("<parameters>\n");
-		indent++;
-
-		if (instance_type != null) {
+	private void write_params_and_return (Gee.List<FormalParameter> params, DataType? return_type, bool return_array_length, bool constructor = false, DataType? instance_type = null) {
+		int last_index = 0;
+		if (params.size != 0 || instance_type != null || (return_type is ArrayType && return_array_length) || (return_type is DelegateType)) {
 			write_indent ();
-			stream.printf ("<parameter name=\"self\" transfer-ownership=\"none\">\n");
+			stream.printf ("<parameters>\n");
 			indent++;
+			int index = 1;
 
-			write_type (instance_type);
+			if (instance_type != null) {
+				write_param_or_return (instance_type, "parameter", ref index, false, "self");
+			}
+
+			foreach (FormalParameter param in params) {
+				write_param_or_return (param.parameter_type, "parameter", ref index, !param.no_array_length, param.name, param.direction);
+
+				write_implicit_params (param.parameter_type, ref index, !param.no_array_length, param.name, param.direction);
+			}
+
+			last_index = index - 1;
+			write_implicit_params (return_type, ref index, return_array_length, "result", ParameterDirection.OUT);
 
 			indent--;
 			write_indent ();
-			stream.printf ("</parameter>\n");
+			stream.printf ("</parameters>\n");
 		}
 
-		foreach (FormalParameter param in params) {
-			write_indent ();
-			stream.printf ("<parameter name=\"%s\"", param.name);
-			if (param.direction == ParameterDirection.REF) {
-				stream.printf (" direction=\"inout\"");
-				// in/out paramter
-				if (param.parameter_type.value_owned) {
-					stream.printf (" transfer-ownership=\"full\"");
-				} else {
-					stream.printf (" transfer-ownership=\"none\"");
-				}
-			} else if (param.direction == ParameterDirection.OUT) {
-				// out paramter
-				stream.printf (" direction=\"out\"");
-				if (param.parameter_type.value_owned) {
-					stream.printf (" transfer-ownership=\"full\"");
-				} else {
-					stream.printf (" transfer-ownership=\"none\"");
-				}
-			} else {
-				// normal in paramter
-				if (param.parameter_type.value_owned) {
-					stream.printf (" transfer-ownership=\"full\"");
-				} else {
-					stream.printf (" transfer-ownership=\"none\"");
-				}
-			}
-			if (param.parameter_type.nullable) {
-				stream.printf (" allow-none=\"1\"");
-			}
-			stream.printf (">\n");
-			indent++;
-
-			write_annotations (param);
-
-			write_type (param.parameter_type);
-
-			indent--;
-			write_indent ();
-			stream.printf ("</parameter>\n");
+		if (return_type != null) {
+			write_param_or_return (return_type, "return-value", ref last_index, return_array_length, null, ParameterDirection.IN, constructor);
 		}
-
-		indent--;
-		write_indent ();
-		stream.printf ("</parameters>\n");
 	}
 
 	public override void visit_delegate (Delegate cb) {
@@ -529,9 +506,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_annotations (cb);
 
-		write_params (cb.get_parameters ());
-
-		write_return_type (cb.return_type);
+		write_params_and_return (cb.get_parameters (), cb.return_type, !cb.no_array_length);
 
 		indent--;
 		write_indent ();
@@ -598,9 +573,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			instance_type = CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
 		}
 
-		write_params (params, instance_type);
-
-		write_return_type (return_type);
+		write_params_and_return (params, return_type, !m.no_array_length, false, instance_type);
 
 		indent--;
 		write_indent ();
@@ -632,10 +605,9 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_annotations (m);
 
-		write_params (m.get_parameters ());
 
 		var datatype = CCodeBaseModule.get_data_type_for_symbol ((TypeSymbol) m.parent_symbol);
-		write_return_type (datatype, true);
+		write_params_and_return (m.get_parameters (), datatype, false, true);
 
 		indent--;
 		write_indent ();
@@ -686,9 +658,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_annotations (sig);
 
-		write_params (sig.get_parameters ());
-
-		write_return_type (sig.return_type);
+		write_params_and_return (sig.get_parameters (), sig.return_type, false);
 
 		indent--;
 		write_indent ();
@@ -703,10 +673,21 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 	}
 
-	private void write_return_type (DataType type, bool constructor = false) {
+	private void write_param_or_return (DataType type, string tag, ref int index, bool has_array_length, string? name = null, ParameterDirection direction = ParameterDirection.IN, bool constructor = false) {
 		write_indent ();
-		stream.printf ("<return-value");
-		if (type.value_owned || constructor) {
+		stream.printf ("<%s", tag);
+		if (name != null) {
+			stream.printf (" name=\"%s\"", name);
+		}
+		if (direction == ParameterDirection.REF) {
+			stream.printf (" direction=\"inout\"");
+		} else if (direction == ParameterDirection.OUT) {
+			stream.printf (" direction=\"out\"");
+		}
+
+		Delegate delegate_type = type.data_type as Delegate;
+
+		if ((type.value_owned && delegate_type == null) || constructor) {
 			stream.printf (" transfer-ownership=\"full\"");
 		} else {
 			stream.printf (" transfer-ownership=\"none\"");
@@ -714,14 +695,23 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (type.nullable) {
 			stream.printf (" allow-none=\"1\"");
 		}
+
+		if (delegate_type != null && delegate_type.has_target) {
+			stream.printf (" closure=\"%i\"", index + 1);
+			if (type.value_owned) {
+				stream.printf (" destroy=\"%i\"", index + 2);
+			}
+		}
+
 		stream.printf (">\n");
 		indent++;
 
-		write_type (type);
+		write_type (type, has_array_length ? index : -1);
 
 		indent--;
 		write_indent ();
-		stream.printf ("</return-value>\n");
+		stream.printf ("</%s>\n", tag);
+		index++;
 	}
 
 	private void write_ctype_attributes (TypeSymbol symbol, string suffix = "") {
@@ -734,12 +724,18 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf (" glib:get-type=\"%sget_type\"", symbol.get_lower_case_cprefix ());
 	}
 
-	private void write_type (DataType type) {
+	private void write_type (DataType type, int index = -1) {
 		if (type is ArrayType) {
 			var array_type = (ArrayType) type;
 
 			write_indent ();
-			stream.printf ("<array>\n");
+			stream.printf ("<array");
+			if (array_type.fixed_length) {
+				stream.printf (" fixed-length\"%i\"", array_type.length);
+			} else if (index != -1) {
+				stream.printf (" length=\"%i\"", index + 1);
+			}
+			stream.printf (">\n");
 			indent++;
 
 			write_type (array_type.element_type);
