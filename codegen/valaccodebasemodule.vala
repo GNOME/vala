@@ -2082,6 +2082,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			}
 		} else {
 			var cvar = new CCodeVariableDeclarator (get_variable_cname (local.name), rhs, local.variable_type.get_cdeclarator_suffix ());
+			if (rhs != null) {
+				cvar.line = rhs.line;
+			}
 
 			var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
 			cdecl.add_declarator (cvar);
@@ -2934,9 +2937,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				}
 			}
 
-			cfrag.append (new CCodeReturnStatement ());
+			var creturn = new CCodeReturnStatement ();
+			cfrag.append (creturn);
 
 			stmt.ccodenode = cfrag;
+			creturn.line = stmt.ccodenode.line;
 		} else {
 			Symbol return_expression_symbol = null;
 
@@ -3023,16 +3028,22 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				}
 			}
 
+			CCodeReturnStatement creturn = null;
 			if (current_method == null || !current_method.coroutine) {
 				// structs are returned via out parameter
 				if (current_return_type.is_real_non_null_struct_type()) {
-					cfrag.append (new CCodeReturnStatement ());
+					creturn = new CCodeReturnStatement ();
+					cfrag.append (creturn);
 				} else {
-					cfrag.append (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+					creturn = new CCodeReturnStatement (new CCodeIdentifier ("result"));
+					cfrag.append (creturn);
 				}
 			}
 
 			stmt.ccodenode = cfrag;
+			if (creturn != null) {
+				creturn.line = stmt.ccodenode.line;
+			}
 
 			create_temp_decl (stmt, stmt.return_expression.temp_vars);
 
