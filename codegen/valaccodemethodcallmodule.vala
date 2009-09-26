@@ -567,7 +567,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			temp_vars.insert (0, temp_var);
 
-			out_arg_map.set (get_param_pos (-3, true), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
+			out_arg_map.set (get_param_pos (-3), new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, temp_ref));
 
 			var ccomma = new CCodeCommaExpression ();
 			ccomma.append_expression ((CCodeExpression) ccall_expr);
