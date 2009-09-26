@@ -3498,6 +3498,8 @@ namespace GLib {
 		public static weak string? textdomain (string? domainname);
 		[CCode (cname = "bind_textdomain_codeset", cheader_filename = "glib/gi18n-lib.h")]
 		public static weak string? bind_textdomain_codeset (string domainname, string? codeset);
+		[CCode (cname = "g_get_language_names", array_length = false, array_null_terminated = true)]
+		public static weak string[] get_language_names ();
 	}
 
 	[Compact]
