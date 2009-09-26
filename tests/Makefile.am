@@ -43,6 +43,7 @@ TESTS = \
 	objects/test-026.vala \
 	objects/test-029.vala \
 	objects/test-034.vala \
+	objects/bug593260.vala \
 	errors/errors.vala \
 	errors/bug596228.vala \
 	dbus/basic-types.test \
