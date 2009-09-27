@@ -4561,7 +4561,7 @@ namespace Gtk {
 	}
 	[Compact]
 	[Immutable]
-	[CCode (copy_function = "gtk_tree_path_copy", type_id = "GTK_TYPE_TREE_PATH", cheader_filename = "gtk/gtk.h")]
+	[CCode (copy_function = "gtk_tree_path_copy", const_cname = "GtkTreePath", type_id = "GTK_TYPE_TREE_PATH", cheader_filename = "gtk/gtk.h")]
 	public class TreePath {
 		[CCode (has_construct_function = false)]
 		public TreePath ();
@@ -5923,7 +5923,7 @@ namespace Gtk {
 		public weak Gtk.ActionCallback callback;
 		public bool is_active;
 	}
-	[CCode (type_id = "GTK_TYPE_TREE_ITER", use_const = false, cheader_filename = "gtk/gtk.h")]
+	[CCode (type_id = "GTK_TYPE_TREE_ITER", cheader_filename = "gtk/gtk.h")]
 	public struct TreeIter {
 		public int stamp;
 		public void* user_data;
