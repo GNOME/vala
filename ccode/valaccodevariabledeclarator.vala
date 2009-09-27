@@ -78,7 +78,7 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 			writer.write_string (declarator_suffix);
 		}
 
-		if (init0) {
+		if (initializer != null && init0) {
 			writer.write_string (" = ");
 			initializer.write (writer);
 		}
