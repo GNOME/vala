@@ -110,7 +110,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	public bool free_function_address_of { get; private set; }
 
 	private string cname;
-	private string const_cname;
+	public string const_cname { get; set; }
 	private string lower_case_cprefix;
 	private string lower_case_csuffix;
 	private string type_id;
@@ -601,7 +601,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	public void set_cname (string cname) {
 		this.cname = cname;
 	}
-	
+
 	private string get_lower_case_csuffix () {
 		if (lower_case_csuffix == null) {
 			lower_case_csuffix = camel_case_to_lower_case (name);

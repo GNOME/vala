@@ -430,9 +430,9 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								st.set_simple_type (true);
 							}
-						} else if (nv[0] == "use_const") {
-							if (eval (nv[1]) == "0") {
-								st.use_const = false;
+						} else if (nv[0] == "immutable") {
+							if (eval (nv[1]) == "1") {
+								st.is_immutable = true;
 							}
 						} else if (nv[0] == "has_type_id") {
 							if (eval (nv[1]) == "0") {
@@ -504,6 +504,8 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								cl.is_immutable = true;
 							}
+						} else if (nv[0] == "const_cname") {
+							cl.const_cname = eval (nv[1]);
 						} else if (nv[0] == "is_fundamental") {
 							if (eval (nv[1]) == "1") {
 								cl.is_compact = false;
@@ -735,9 +737,9 @@ public class Vala.GIdlParser : CodeVisitor {
 						var nv = attr.split ("=", 2);
 						if (nv[0] == "cheader_filename") {
 							st.add_cheader_filename (eval (nv[1]));
-						} else if (nv[0] == "use_const") {
-							if (eval (nv[1]) == "0") {
-								st.use_const = false;
+						} else if (nv[0] == "immutable") {
+							if (eval (nv[1]) == "1") {
+								st.is_immutable = true;
 							}
 						} else if (nv[0] == "has_copy_function") {
 							if (eval (nv[1]) == "0") {
@@ -790,6 +792,8 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								cl.is_immutable = true;
 							}
+						} else if (nv[0] == "const_cname") {
+							cl.const_cname = eval (nv[1]);
 						}
 					}
 				}

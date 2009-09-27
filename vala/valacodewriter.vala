@@ -190,6 +190,9 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (cl.get_cname () != cl.get_default_cname ()) {
 			write_string ("cname = \"%s\", ".printf (cl.get_cname ()));
 		}
+		if (cl.const_cname != null) {
+			write_string ("const_cname = \"%s\", ".printf (cl.const_cname));
+		}
 
 		if (cl.type_check_function != null) {
 			write_string ("type_check_function = \"%s\", ".printf (cl.type_check_function ));
@@ -304,6 +307,12 @@ public class Vala.CodeWriter : CodeVisitor {
 			return;
 		}
 		
+		if (st.is_immutable) {
+			write_indent ();
+			write_string ("[Immutable]");
+			write_newline ();
+		}
+
 		write_indent ();
 
 		write_string ("[CCode (");
@@ -315,10 +324,6 @@ public class Vala.CodeWriter : CodeVisitor {
 		if (!st.is_simple_type () && st.get_type_id () != "G_TYPE_POINTER") {
 			write_string ("type_id = \"%s\", ".printf (st.get_type_id ()));
 		}
-
-                if (!st.use_const) {
-                        write_string ("use_const = false, ");
-                }
 
                 if (!st.has_copy_function) {
                         write_string ("has_copy_function = false, ");

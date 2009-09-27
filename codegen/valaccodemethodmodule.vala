@@ -743,7 +743,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 			if (param.parameter_type.data_type is Struct) {
 				var st = (Struct) param.parameter_type.data_type;
 				if (!st.is_simple_type () && param.direction == ParameterDirection.IN) {
-					if (st.use_const && !param.parameter_type.value_owned) {
+					if (st.is_immutable && !param.parameter_type.value_owned) {
 						ctypename = "const " + ctypename;
 					}
 

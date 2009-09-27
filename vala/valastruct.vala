@@ -85,7 +85,7 @@ public class Vala.Struct : TypeSymbol {
 	 * Specifies if 'const' should be emitted for input parameters
 	 * of this type.
 	 */
-	public bool use_const { get; set; default = true; }
+	public bool is_immutable { get; set; }
 
 	/**
 	 * Specifies whether this struct has a registered GType.
@@ -450,9 +450,6 @@ public class Vala.Struct : TypeSymbol {
 		if (a.has_argument ("has_destroy_function")) {
 			has_destroy_function = a.get_bool ("has_destroy_function");
 		}
-		if (a.has_argument ("use_const")) {
-			use_const = a.get_bool ("use_const");
-		}
 	}
 
 	private void process_boolean_type_attribute (Attribute a) {
@@ -495,6 +492,8 @@ public class Vala.Struct : TypeSymbol {
 				process_integer_type_attribute (a);
 			} else if (a.name == "FloatingType") {
 				process_floating_type_attribute (a);
+			} else if (a.name == "Immutable") {
+				is_immutable = true;
 			}
 		}
 	}
