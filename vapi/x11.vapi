@@ -218,6 +218,9 @@ namespace X {
 
 		[CCode (cname = "XVendorRelease")]
 		public string xserver_vendor_release ();
+
+		[CCode (cname = "XMoveWindow")]
+		public void move_window (Window window, int x, int y);
 	}
 
 	[Compact]
