@@ -373,7 +373,7 @@ internal class Vala.DBusModule : GAsyncModule {
 		cvalinit.append (new CCodeConstant ("0"));
 
 		var cdecl = new CCodeDeclaration ("GValue");
-		cdecl.add_declarator (new CCodeVariableDeclarator (temp_name, cvalinit));
+		cdecl.add_declarator (new CCodeVariableDeclarator.zero (temp_name, cvalinit));
 		fragment.append (cdecl);
 
 		cdecl = new CCodeDeclaration ("DBusMessageIter");

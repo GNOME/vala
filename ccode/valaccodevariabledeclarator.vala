@@ -41,10 +41,23 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 	 */
 	public string? declarator_suffix { get; set; }
 
+	/**
+	 * Initializer only used to zero memory, safe to initialize as part
+	 * of declaration at beginning of block instead of separate assignment.
+	 */
+	public bool init0 { get; set; }
+
 	public CCodeVariableDeclarator (string name, CCodeExpression? initializer = null, string? declarator_suffix = null) {
 		this.name = name;
 		this.initializer = initializer;
 		this.declarator_suffix = declarator_suffix;
+	}
+
+	public CCodeVariableDeclarator.zero (string name, CCodeExpression initializer, string? declarator_suffix = null) {
+		this.name = name;
+		this.initializer = initializer;
+		this.declarator_suffix = declarator_suffix;
+		this.init0 = true;
 	}
 
 	public override void write (CCodeWriter writer) {
@@ -65,15 +78,14 @@ public class Vala.CCodeVariableDeclarator : CCodeDeclarator {
 			writer.write_string (declarator_suffix);
 		}
 
-		// initializer lists can't be moved to a separate statement
-		if (initializer is CCodeInitializerList) {
+		if (init0) {
 			writer.write_string (" = ");
 			initializer.write (writer);
 		}
 	}
 
 	public override void write_initialization (CCodeWriter writer) {
-		if (initializer != null && !(initializer is CCodeInitializerList)) {
+		if (initializer != null && !init0) {
 			writer.write_indent (line);
 
 			writer.write_string (name);

@@ -293,7 +293,7 @@ internal class Vala.DBusClientModule : DBusModule {
 					cvalinit.append (new CCodeConstant ("0"));
 
 					var cval_decl = new CCodeDeclaration ("GValue");
-					cval_decl.add_declarator (new CCodeVariableDeclarator (val_name, cvalinit));
+					cval_decl.add_declarator (new CCodeVariableDeclarator.zero (val_name, cvalinit));
 					block.add_statement (cval_decl);
 
 					var val_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (val_name));
@@ -624,7 +624,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		cvalinit.append (new CCodeConstant ("0"));
 
 		var cval_decl = new CCodeDeclaration ("GValue");
-		cval_decl.add_declarator (new CCodeVariableDeclarator ("gvalue", cvalinit));
+		cval_decl.add_declarator (new CCodeVariableDeclarator.zero ("gvalue", cvalinit));
 		block.add_statement (cval_decl);
 
 		var val_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("gvalue"));
@@ -679,7 +679,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		cvalinit.append (new CCodeConstant ("0"));
 
 		var cval_decl = new CCodeDeclaration ("GValue");
-		cval_decl.add_declarator (new CCodeVariableDeclarator ("gvalue", cvalinit));
+		cval_decl.add_declarator (new CCodeVariableDeclarator.zero ("gvalue", cvalinit));
 		block.add_statement (cval_decl);
 
 		var val_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("gvalue"));

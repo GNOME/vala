@@ -2091,6 +2091,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			// initialization not necessary for variables stored in closure
 			if (cvar.initializer == null) {
 				cvar.initializer = default_value_for_type (local.variable_type, true);
+				cvar.init0 = true;
 			}
 		}
 
@@ -2724,9 +2725,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					clist.append (new CCodeConstant ("0"));
 
 					vardecl.initializer = clist;
+					vardecl.init0 = true;
 				} else if (local.variable_type.is_reference_type_or_type_parameter () ||
 				       local.variable_type.nullable) {
 					vardecl.initializer = new CCodeConstant ("NULL");
+					vardecl.init0 = true;
 				}
 			
 				cfrag.append (cdecl);
