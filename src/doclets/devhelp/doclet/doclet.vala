@@ -308,6 +308,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		iface.visit_signals ( this );
 		iface.visit_properties ( this );
 		iface.visit_fields ( this );
+		iface.visit_constants ( this );
 
 		this.devhelp.add_chapter_end ( );
 

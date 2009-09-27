@@ -23,7 +23,7 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.Interface : DocumentedElement, SymbolAccessibility, Visitable, SignalHandler, PropertyHandler, FieldHandler, TemplateParameterListHandler, MethodHandler, DelegateHandler, EnumHandler, StructHandler, ClassHandler {
+public class Valadoc.Interface : DocumentedElement, SymbolAccessibility, Visitable, SignalHandler, PropertyHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler, MethodHandler, DelegateHandler, EnumHandler, StructHandler, ClassHandler {
 	public Interface (Valadoc.Settings settings, Vala.Interface vinterface, InterfaceHandler parent, Tree head) {
 		this.vcomment = vinterface.comment;
 		this.settings = settings;
@@ -69,6 +69,10 @@ public class Valadoc.Interface : DocumentedElement, SymbolAccessibility, Visitab
 		Gee.Collection<Vala.Enum> enums = this.vinterface.get_enums();
 		this.enums = new Gee.ArrayList<Enum>();
 		this.add_enums (enums);
+
+		Gee.Collection<Vala.Constant> constants = this.vinterface.get_constants();
+		this.constants = new Gee.ArrayList<Constant>();
+		this.add_constants ( constants );
 	}
 
 	private Gee.ArrayList<Interface> interfaces = new Gee.ArrayList<Interface>();
@@ -127,6 +131,11 @@ public class Valadoc.Interface : DocumentedElement, SymbolAccessibility, Visitab
 	}
 
 	protected Gee.ArrayList<Class> classes {
+		get;
+		set;
+	}
+
+	protected Gee.ArrayList<Constant> constants {
 		get;
 		set;
 	}
@@ -212,6 +221,10 @@ public class Valadoc.Interface : DocumentedElement, SymbolAccessibility, Visitab
 			return element;
 
 		element = this.search_class ( params, pos );
+		if ( element != null )
+			return element;
+
+		element = this.search_constant ( params, pos );
 		if ( element != null )
 			return element;
 

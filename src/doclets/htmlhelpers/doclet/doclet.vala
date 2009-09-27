@@ -248,6 +248,7 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		this.write_navi_child_signals ( file, iface, mself );
 		this.write_navi_child_properties ( file, iface, mself );
 		this.write_navi_child_fields ( file, iface, mself );
+		this.write_navi_child_constants ( file, iface, mself );
 		file.puts ( "</ul>\n" );
 	}
 

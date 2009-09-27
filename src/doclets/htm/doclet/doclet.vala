@@ -186,6 +186,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		iface.visit_signals ( this );
 		iface.visit_properties ( this );
 		iface.visit_fields ( this );
+		iface.visit_constants ( this );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		this.write_file_header ( file, this.css_path, iface.full_name() );

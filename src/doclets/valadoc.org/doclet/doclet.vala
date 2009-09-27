@@ -349,6 +349,14 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet {
 			}			
 		}
 
+		foreach (Constant c in iface.get_constant_list()) {
+			c.visit(this, iface);
+
+			if (this.run == false) {
+				return ;
+			}			
+		}
+
 		this.file.printf ("INSERT INTO `ValadocInterfaces` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(iface));
 		this.write_documentation (iface);
 	}
