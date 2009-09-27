@@ -39,6 +39,7 @@ public enum Vala.Genie.TokenType {
 	ASSIGN_PERCENT,
 	ASSIGN_SHIFT_LEFT,
 	ASSIGN_SUB,
+	ASYNC,
 	BITWISE_AND,
 	BITWISE_OR,
 	BREAK,
@@ -163,8 +164,7 @@ public enum Vala.Genie.TokenType {
 	WHEN,
 	WHILE,
 	WRITEONLY,
-	YIELD,
-	YIELDS;
+	YIELD;
 
 	public weak string to_string () {
 		switch (this) {
@@ -182,6 +182,7 @@ public enum Vala.Genie.TokenType {
 		case ASSIGN_PERCENT: return "`%='";
 		case ASSIGN_SHIFT_LEFT: return "`<<='";
 		case ASSIGN_SUB: return "`-='";
+		case ASYNC: return "`async'";
 		case BITWISE_AND: return "`&'";
 		case BITWISE_OR: return "`|'";
 		case BREAK: return "`break'";
@@ -306,7 +307,6 @@ public enum Vala.Genie.TokenType {
 		case WHILE: return "`while'";
 		case WRITEONLY: return "`writeonly'";
 		case YIELD: return "`yield'";
-		case YIELDS: return "`yields'";
 		default: return "unknown token";
 		}
 	}
