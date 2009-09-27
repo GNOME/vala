@@ -207,7 +207,7 @@ public class Valadoc.Class : DocumentedElement, SymbolAccessibility, Visitable, 
 		if ( !(this.name == params[pos] || params[0] == "this") )
 			return null;
 
-		if ( params[pos+1] == null )
+		if ( params[pos] == this.name && params[pos+1] == null )
 			return this;
 
 		DocumentedElement? element = this.search_field ( params, pos );

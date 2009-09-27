@@ -61,19 +61,18 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	}
 
 	private DocumentedElement? search_symbol_in_type ( DocumentedElement element, string[] params, int params_offset = 0 ) {
-		if (!(element.parent is Enum || element.parent is ErrorDomain))
-			return null;
-
+		string[] nparams = null;
 		if ( params[0] != "this" ) {
-			string[] nparams = new string[ params.length+1 ];
+			nparams = new string[ params.length+1 ];
 			nparams[0] = "this";
 			for ( int i = 0; params.length > i ; i++ ) {
 				nparams [i+1] = params[i];
 			}
-			return this.search_symbol_in_symbol ( (DocumentedElement)element.parent, nparams, 0 );
+		} else {
+			nparams = params;
 		}
 
-		return this.search_symbol_in_symbol ( (DocumentedElement)element.parent, params, 0 );
+		return this.search_symbol_in_symbol (element, nparams, 0);
 	}
 
 	private DocumentedElement? search_symbol_in_symbol ( DocumentedElement element, string[] params, int params_offset = 0 ) {
@@ -118,6 +117,11 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	}
 
 	private DocumentedElement? search_element ( DocumentedElement? element, string[] params ) {
+		if (element is Field || element is Method || element is Delegate
+		    || element is Signal || element is Property || element is Constant) {
+		    element = (DocumentedElement) element.parent;
+		}
+
 		if ( element != null ) {
 			if ( params[0] == "this" ) {
 				return search_symbol_in_type ( element, params, 1 );
@@ -140,11 +144,20 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	}
 
 	public DocumentedElement? search_symbol_str ( DocumentedElement? element, string symname ) {
+		var result = this.search_element (element, split_name (symname));
+		while (result == null && element.parent != null) {
+			var parent_name = element.name;
+			result = this.search_element ( element, split_name (parent_name + "." + symname) );
+			element = (DocumentedElement) element.parent;
+		}
+		return result;
+	}
+
+	private string[] split_name (string symname) {
 		string[] params = symname.split( ".", -1 );
 		int i = 0; while ( params[i] != null ) i++;
 		params.length = i;
-
-		return this.search_element ( element, params );
+		return params;
 	}
 
 	public override void visit_namespace ( Vala.Namespace vns ) {

@@ -114,7 +114,7 @@ public class Valadoc.ErrorDomain : DocumentedElement, SymbolAccessibility, Visit
 		if ( this.name != params[pos] )
 			return null;
 
-		if ( params[pos+1] == null )
+		if ( params[pos] == this.name && params[pos+1] == null )
 			return this;
 
 		DocumentedElement? element = this.search_method ( params, pos );

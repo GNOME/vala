@@ -105,7 +105,7 @@ public class Valadoc.Enum : DocumentedElement, SymbolAccessibility, Visitable, M
 		if ( this.name != params[pos] )
 			return null;
 
-		if ( params[pos+1] == null )
+		if ( params[pos] == this.name && params[pos+1] == null )
 			return this;
 
 
