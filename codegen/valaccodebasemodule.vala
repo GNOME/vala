@@ -2130,31 +2130,67 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			/* initializer is used as struct initializer */
 			var st = (Struct) list.target_type.data_type;
 
-			var clist = new CCodeInitializerList ();
+			if (list.parent_node is Constant || list.parent_node is Field || list.parent_node is InitializerList) {
+				var clist = new CCodeInitializerList ();
 
-			var field_it = st.get_fields ().iterator ();
-			foreach (Expression expr in list.get_initializers ()) {
-				Field field = null;
-				while (field == null) {
-					field_it.next ();
-					field = field_it.get ();
-					if (field.binding != MemberBinding.INSTANCE) {
-						// we only initialize instance fields
-						field = null;
+				var field_it = st.get_fields ().iterator ();
+				foreach (Expression expr in list.get_initializers ()) {
+					Field field = null;
+					while (field == null) {
+						field_it.next ();
+						field = field_it.get ();
+						if (field.binding != MemberBinding.INSTANCE) {
+							// we only initialize instance fields
+							field = null;
+						}
 					}
+
+					var cexpr = (CCodeExpression) expr.ccodenode;
+
+					string ctype = field.get_ctype ();
+					if (ctype != null) {
+						cexpr = new CCodeCastExpression (cexpr, ctype);
+					}
+
+					clist.append (cexpr);
 				}
 
-				var cexpr = (CCodeExpression) expr.ccodenode;
+				list.ccodenode = clist;
+			} else {
+				// used as expression
+				var temp_decl = get_temp_variable (list.target_type, false, list);
+				temp_vars.add (temp_decl);
 
-				string ctype = field.get_ctype ();
-				if (ctype != null) {
-					cexpr = new CCodeCastExpression (cexpr, ctype);
+				var instance = get_variable_cexpression (get_variable_cname (temp_decl.name));
+
+				var ccomma = new CCodeCommaExpression ();
+
+				var field_it = st.get_fields ().iterator ();
+				foreach (Expression expr in list.get_initializers ()) {
+					Field field = null;
+					while (field == null) {
+						field_it.next ();
+						field = field_it.get ();
+						if (field.binding != MemberBinding.INSTANCE) {
+							// we only initialize instance fields
+							field = null;
+						}
+					}
+
+					var cexpr = (CCodeExpression) expr.ccodenode;
+
+					string ctype = field.get_ctype ();
+					if (ctype != null) {
+						cexpr = new CCodeCastExpression (cexpr, ctype);
+					}
+
+					var lhs = new CCodeMemberAccess (instance, field.get_cname ());;
+					ccomma.append_expression (new CCodeAssignment (lhs, cexpr));
 				}
 
-				clist.append (cexpr);
+				ccomma.append_expression (instance);
+				list.ccodenode = ccomma;
 			}
-
-			list.ccodenode = clist;
 		} else {
 			var clist = new CCodeInitializerList ();
 			foreach (Expression expr in list.get_initializers ()) {

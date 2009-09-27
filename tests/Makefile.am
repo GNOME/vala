@@ -33,6 +33,7 @@ TESTS = \
 	enums/enums.vala \
 	structs/structs.vala \
 	structs/gvalue.vala \
+	structs/bug583603.vala \
 	structs/bug595587.vala \
 	delegates/delegates.vala \
 	delegates/bug595639.vala \
