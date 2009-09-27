@@ -51,6 +51,23 @@ public class Valadoc.Html.TypeLinkInlineTaglet : Valadoc.InlineTaglet {
 		}
 
 		this.name = element.full_name ();
+		if (self is DocumentedElement) {
+			var doc_element = (DocumentedElement) self;
+			var doc_element_name = doc_element.full_name ();
+
+			if (this.name == doc_element_name) {
+				this.name = element.name;
+			} else if (this.name.has_prefix (doc_element_name)) {
+				this.name = this.name.substring (doc_element_name.length + 1);
+			} else if (doc_element.parent != null && doc_element.parent is DocumentedElement) {
+				var doc_parent_element_name = ((DocumentedElement) doc_element.parent).full_name ();
+				if (this.name == doc_parent_element_name) {
+					this.name = element.name;
+				} else if (this.name.has_prefix (doc_parent_element_name)) {
+					this.name = this.name.substring (doc_parent_element_name.length + 1);
+				}
+			}
+		}
 		this.css = get_html_content_link_css_class ( element );
 		this.link = get_html_link ( settings, element, self );
 		return true;
