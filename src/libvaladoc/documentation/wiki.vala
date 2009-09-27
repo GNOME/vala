@@ -97,7 +97,7 @@ public class Valadoc.WikiPageTree : Object {
 	}
 
 	public Gee.Collection<WikiPage> get_pages () {
-		return new Gee.ReadOnlyCollection<WikiPage>( (this.wikipages==null)? new Gee.ArrayList<WikiPage>() : this.wikipages );
+		return this.wikipages == null ? Gee.Collection.empty<WikiPage> () : this.wikipages.read_only_view;
 	}
 
 	public WikiPage? search ( string name ) {

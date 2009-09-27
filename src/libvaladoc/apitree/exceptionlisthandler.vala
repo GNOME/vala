@@ -30,8 +30,8 @@ public interface Valadoc.ExceptionHandler : Basic {
 		get;
 	}
 
-	public Gee.ReadOnlyCollection<DocumentedElement> get_error_domains ( ) {
-		return new Gee.ReadOnlyCollection<DocumentedElement> ( this.err_domains );
+	public Gee.Collection<DocumentedElement> get_error_domains ( ) {
+		return this.err_domains.read_only_view;
 	}
 
 	public void add_exception_list ( Gee.Collection<Vala.DataType> vexceptions ) {

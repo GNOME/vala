@@ -91,6 +91,9 @@ public class Valadoc.ModuleLoader : Object {
 
 			GLib.Dir dir = GLib.Dir.open (pluginpath);
 
+			taglets.set ("toto", typeof (Type));
+			taglets.unset ("toto");
+
 			for (weak string entry = dir.read_name(); entry != null ; entry = dir.read_name()) {
 				if (!entry.has_suffix("." + Module.SUFFIX))
 					continue;

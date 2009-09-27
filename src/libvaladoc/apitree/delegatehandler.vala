@@ -64,7 +64,7 @@ public interface Valadoc.DelegateHandler : Basic {
 			lst.add ( del );
 		}
 
-		return new Gee.ReadOnlyCollection<Delegate>( lst );
+		return lst.read_only_view;
 	}
 
 	public void visit_delegates ( Doclet doclet ) {

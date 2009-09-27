@@ -223,7 +223,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		this.write_wiki_pages ( tree, css_path_wiki, Path.build_filename(this.settings.path, this.settings.pkg_name, "content") );
 
-		Gee.ReadOnlyCollection<Package> packages = tree.get_package_list ();
+		Gee.Collection<Package> packages = tree.get_package_list ();
 		foreach ( Package pkg in packages ) {
 			pkg.visit ( this );
 		}

@@ -29,8 +29,8 @@ public interface Valadoc.ParameterListHandler : Basic {
 		get;
 	}
 
-	public Gee.ReadOnlyCollection<FormalParameter> get_parameter_list ( ) {
-		return new Gee.ReadOnlyCollection<FormalParameter> ( this.param_list );
+	public Gee.Collection<FormalParameter> get_parameter_list ( ) {
+		return this.param_list.read_only_view;
 	}
 
 	protected void add_parameter_list ( Gee.Collection<Vala.FormalParameter> vparams ) {

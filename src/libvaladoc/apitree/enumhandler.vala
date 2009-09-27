@@ -62,7 +62,7 @@ public interface Valadoc.EnumHandler : Basic {
 			lst.add ( en );
 		}
 
-		return new Gee.ReadOnlyCollection<Enum>( lst );
+		return lst.read_only_view;
 	}
 
 	public void visit_enums ( Doclet doclet ) {

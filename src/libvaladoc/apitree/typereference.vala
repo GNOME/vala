@@ -34,8 +34,8 @@ public class Valadoc.TypeReference : Basic {
 		this.head = head;
 	}
 
-	public Gee.ReadOnlyCollection<TypeReference> get_type_arguments ( ) {
-		return new Gee.ReadOnlyCollection<TypeReference> ( this.type_arguments );
+	public Gee.Collection<TypeReference> get_type_arguments ( ) {
+		return this.type_arguments.read_only_view;
 	}
 
 	private void set_template_argument_list ( Gee.Collection<Vala.DataType> varguments ) {

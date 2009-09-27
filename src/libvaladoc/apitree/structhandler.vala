@@ -57,7 +57,7 @@ public interface Valadoc.StructHandler : Basic {
 			lst.add ( stru );
 		}
 
-		return new Gee.ReadOnlyCollection<Struct>( lst );
+		return lst.read_only_view;
 	}
 
 	public void add_struct ( Vala.Struct vstru ) {

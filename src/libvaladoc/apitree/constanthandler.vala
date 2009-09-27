@@ -58,7 +58,7 @@ public interface Valadoc.ConstantHandler : Basic {
 		return null;
 	}
 
-	public Gee.ReadOnlyCollection<Constant> get_constant_list ( ) {
+	public Gee.Collection<Constant> get_constant_list ( ) {
 		var lstd = new Gee.ArrayList<Constant> ();
 		foreach (Constant c in this.constants) {
 			if (!c.is_type_visitor_accessible (this) )
@@ -67,7 +67,7 @@ public interface Valadoc.ConstantHandler : Basic {
 			lstd.add (c);
 		}
 
-		return new Gee.ReadOnlyCollection<Constant>(lstd);
+		return lstd.read_only_view;
 	}
 
 	internal void add_constants (Gee.Collection<Vala.Constant> vconstants) {

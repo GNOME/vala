@@ -142,8 +142,8 @@ public class Valadoc.ErrorDomain : DocumentedElement, SymbolAccessibility, Visit
 			errcode.visit ( doclet );
 	}
 
-	public Gee.ReadOnlyCollection<ErrorCode> get_error_code_list ( ) {
-		return new Gee.ReadOnlyCollection<ErrorCode> ( this.errcodes );
+	public Gee.Collection<ErrorCode> get_error_code_list ( ) {
+		return this.errcodes.read_only_view;
 	}
 
 	public void visit ( Doclet doclet ) {

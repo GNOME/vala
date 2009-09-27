@@ -48,11 +48,11 @@ public class Valadoc.Package : DocumentedElement, NamespaceHandler {
 
 	private Gee.ArrayList<Package> _dependencies;
 
-	public Gee.ReadOnlyCollection<Package> get_full_dependency_list () {
+	public Gee.Collection<Package> get_full_dependency_list () {
 		Gee.ArrayList<Package> list = new Gee.ArrayList<Package> ();
 
 		if ( this._dependencies == null )
-			return new Gee.ReadOnlyCollection<Package> ( list );
+			return list.read_only_view;
 
 		foreach ( Package pkg in this._dependencies ) {
 			if ( list.contains ( pkg ) == false ) {
@@ -66,15 +66,15 @@ public class Valadoc.Package : DocumentedElement, NamespaceHandler {
 				}
 			}
 		}
-		return new Gee.ReadOnlyCollection<Package> ( list );
+		return list.read_only_view;
 	}
 
-	public Gee.ReadOnlyCollection<Package> get_dependency_list () {
+	public Gee.Collection<Package> get_dependency_list () {
 		if ( this._dependencies == null ) {
-			return new Gee.ReadOnlyCollection<Package> ( new Gee.ArrayList<Package> () );
+			return Collection.empty<Package> ();
 		}
 
-		return new Gee.ReadOnlyCollection<Package> ( this._dependencies );
+		return this._dependencies.read_only_view;
 	}
 
 	private static string extract_package_name ( Settings settings, Vala.SourceFile vfile ) {

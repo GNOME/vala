@@ -217,7 +217,7 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 	}
 
 	private void write_exception_list ( ExceptionHandler exception_handler, GLib.FileStream file ) {
-		Gee.ReadOnlyCollection<DocumentedElement> error_domains = exception_handler.get_error_domains ();
+		Gee.Collection<DocumentedElement> error_domains = exception_handler.get_error_domains ();
 		int size = error_domains.size;
 		int i = 1;
 

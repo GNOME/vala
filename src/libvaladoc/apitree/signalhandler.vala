@@ -71,7 +71,7 @@ public interface Valadoc.SignalHandler : Basic {
 		}
 	}
 
-	public Gee.ReadOnlyCollection<Signal> get_signal_list () {
+	public Gee.Collection<Signal> get_signal_list () {
 		var lst = new Gee.ArrayList<Signal> ();
 		foreach ( Signal sig in this.signals ) {
 			if ( !sig.is_type_visitor_accessible ( this ) )
@@ -80,7 +80,7 @@ public interface Valadoc.SignalHandler : Basic {
 			lst.add ( sig );
 		}
 
-		return new Gee.ReadOnlyCollection<Signal>( lst );
+		return lst.read_only_view;
 	}
 
 	internal void set_signal_type_references () {

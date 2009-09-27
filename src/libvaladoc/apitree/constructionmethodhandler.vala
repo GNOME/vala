@@ -63,7 +63,7 @@ public interface Valadoc.ConstructionMethodHandler : Basic, MethodHandler {
 		return null;
 	}
 
-	public Gee.ReadOnlyCollection<Method> get_construction_method_list ( ) {
+	public Gee.Collection<Method> get_construction_method_list ( ) {
 		var lst = new Gee.ArrayList<Method> ();
 		foreach ( Method cm in this.construction_methods ) {
 			if ( !cm.is_type_visitor_accessible ( this ) )
@@ -72,7 +72,7 @@ public interface Valadoc.ConstructionMethodHandler : Basic, MethodHandler {
 			lst.add ( cm );
 		}
 
-		return new Gee.ReadOnlyCollection<Method>( lst );
+		return lst.read_only_view;
 	}
 
 	protected void parse_construction_method_comments ( Valadoc.Parser docparser ) {

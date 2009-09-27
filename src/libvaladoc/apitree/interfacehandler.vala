@@ -56,7 +56,7 @@ public interface Valadoc.InterfaceHandler : Basic {
 			lst.add ( iface );
 		}
 
-		return new Gee.ReadOnlyCollection<Interface>( lst );
+		return lst.read_only_view;
 	}
 
 	public void visit_interfaces ( Doclet doclet ) {

@@ -87,7 +87,7 @@ public interface Valadoc.MethodHandler : Basic {
 		}
 	}
 
-	public Gee.ReadOnlyCollection<Method> get_method_list ( ) {
+	public Gee.Collection<Method> get_method_list ( ) {
 		var lst = new Gee.ArrayList<Method> ();
 		foreach ( Method m in this.methods ) {
 			if ( !m.is_type_visitor_accessible ( this ) )
@@ -96,7 +96,7 @@ public interface Valadoc.MethodHandler : Basic {
 			lst.add ( m );
 		}
 
-		return new Gee.ReadOnlyCollection<Method>( lst );
+		return lst.read_only_view;
 	}
 }
 

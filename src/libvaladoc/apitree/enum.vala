@@ -130,8 +130,8 @@ public class Valadoc.Enum : DocumentedElement, SymbolAccessibility, Visitable, M
 	}
 
 	// rename: get_enum_value_list
-	public Gee.ReadOnlyCollection<EnumValue> get_enum_values () {
-		return new Gee.ReadOnlyCollection<EnumValue>( this.en_values );
+	public Gee.Collection<EnumValue> get_enum_values () {
+		return this.en_values.read_only_view;
 	}
 
 	internal void parse_comments ( Valadoc.Parser docparser ) {

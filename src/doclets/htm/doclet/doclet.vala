@@ -127,7 +127,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 
 		this.langlet = new Valadoc.Html.BasicLanglet ( settings );
 
-		Gee.ReadOnlyCollection<Package> packages = tree.get_package_list ();
+		Gee.Collection<Package> packages = tree.get_package_list ();
 		foreach ( Package pkg in packages ) {
 			pkg.visit ( this );
 		}

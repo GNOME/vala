@@ -56,7 +56,7 @@ public interface Valadoc.ErrorDomainHandler : Basic {
 			lst.add ( errdom );
 		}
 
-		return new Gee.ReadOnlyCollection<ErrorDomain>( lst );
+		return lst.read_only_view;
 	}
 
 	internal ErrorDomain? find_errordomain ( Vala.ErrorDomain ver ) {

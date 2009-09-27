@@ -29,8 +29,8 @@ public interface Valadoc.NamespaceHandler : Basic {
 		get;
 	}
 
-	public Gee.ReadOnlyCollection<Namespace> get_namespace_list () {
-			return new Gee.ReadOnlyCollection<Namespace> ( this.namespaces );
+	public Gee.Collection<Namespace> get_namespace_list () {
+			return this.namespaces.read_only_view;
 	}
 
 	public void visit_namespaces ( Doclet doclet ) {

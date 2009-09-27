@@ -216,16 +216,16 @@ public class Valadoc.DocumentationTree : Object {
 		}
 	}
 
-	public Gee.ReadOnlyCollection<DocElement> get_brief ( ) {
-		return new Gee.ReadOnlyCollection<DocElement> ((this.brief == null)? new Gee.ArrayList<DocElement>() : this.brief);
+	public Gee.Collection<DocElement> get_brief ( ) {
+		return this.brief == null ? Collection.empty<DocElement> () : this.brief.read_only_view;
 	}
 
 	public void add_brief (Gee.ArrayList<DocElement> content) {
 		this.brief = content;
 	}
 
-	public Gee.ReadOnlyCollection<DocElement> get_description () {
-		return new Gee.ReadOnlyCollection<DocElement> ((this.description == null)? new Gee.ArrayList<DocElement>() : this.description);
+	public Gee.Collection<DocElement> get_description () {
+		return this.description == null ? Collection.empty<DocElement> () : this.description.read_only_view;
 	}
 
 	public void add_description (Gee.ArrayList<DocElement> content) {
@@ -292,7 +292,7 @@ public class Valadoc.DocumentationTree : Object {
 			i++;
 		}
 
-		Gee.Collection< Gee.ArrayList<MainTaglet> > lst = this.taglets.get_values ( );
+		Gee.Collection< Gee.ArrayList<MainTaglet> > lst = this.taglets.values;
 		Gee.ArrayList< Gee.ArrayList<MainTaglet> > alst = sort_tag_collection ( lst );
 
 		foreach (Gee.ArrayList<MainTaglet> tags in alst) {

@@ -40,8 +40,8 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		get;
 	}
 
-	public Gee.ReadOnlyCollection<Package> get_package_list () {
-		return new Gee.ReadOnlyCollection<Package> ( this.packages );
+	public Gee.Collection<Package> get_package_list () {
+		return this.packages.read_only_view;
 	}
 
 	private void add_dependencies_to_source_package () {

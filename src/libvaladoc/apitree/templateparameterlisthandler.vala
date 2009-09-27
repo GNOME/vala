@@ -41,8 +41,8 @@ public interface Valadoc.TemplateParameterListHandler : Basic {
 		return null;
 	}
 
-	public Gee.ReadOnlyCollection<TypeParameter> get_template_param_list ( ) {
-		return new Gee.ReadOnlyCollection<TypeParameter> ( this.template_param_lst );
+	public Gee.Collection<TypeParameter> get_template_param_list ( ) {
+		return this.template_param_lst.read_only_view;
 	} 
 
 	internal void set_template_parameter_list ( Gee.Collection<Vala.TypeParameter> vtparams ) {

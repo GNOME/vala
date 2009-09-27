@@ -72,7 +72,7 @@ public interface Valadoc.PropertyHandler : Basic {
 		return false;
 	}
 
-	public Gee.ReadOnlyCollection<Property> get_property_list ( ) {
+	public Gee.Collection<Property> get_property_list ( ) {
 		var lst = new Gee.ArrayList<Property> ();
 		foreach ( Property p in this.properties ) {
 			if ( !p.is_type_visitor_accessible ( this ) )
@@ -81,7 +81,7 @@ public interface Valadoc.PropertyHandler : Basic {
 			lst.add ( p );
 		}
 
-		return new Gee.ReadOnlyCollection<Property>( lst );
+		return lst.read_only_view;
 	}
 
 	protected void parse_property_comments ( Valadoc.Parser docparser ) {

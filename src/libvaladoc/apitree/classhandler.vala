@@ -59,7 +59,7 @@ public interface Valadoc.ClassHandler : Basic {
 		return null;
 	}
 
-	public Gee.ReadOnlyCollection<Class> get_class_list ( ) {
+	public Gee.Collection<Class> get_class_list ( ) {
 		var lst = new Gee.ArrayList<Class> ();
 		foreach ( Class cl in this.classes ) {
 			if ( !cl.is_type_visitor_accessible ( this ) )
@@ -68,7 +68,7 @@ public interface Valadoc.ClassHandler : Basic {
 			lst.add ( cl );
 		}
 
-		return new Gee.ReadOnlyCollection<Class>( lst );
+		return lst.read_only_view;
 	}
 
 	internal void add_class ( Vala.Class vcl ) {

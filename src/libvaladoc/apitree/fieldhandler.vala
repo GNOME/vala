@@ -58,7 +58,7 @@ public interface Valadoc.FieldHandler : Basic {
 		return null;
 	}
 
-	public Gee.ReadOnlyCollection<Field> get_field_list ( ) {
+	public Gee.Collection<Field> get_field_list ( ) {
 		var lstd = new Gee.ArrayList<Field> ();
 		foreach ( Field f in this.fields ) {
 			if ( !f.is_type_visitor_accessible ( this ) )
@@ -67,7 +67,7 @@ public interface Valadoc.FieldHandler : Basic {
 			lstd.add ( f );
 		}
 
-		return new Gee.ReadOnlyCollection<Field>( lstd );
+		return lstd.read_only_view;
 	}
 
 	internal void add_fields ( Gee.Collection<Vala.Field> vfields ) {
