@@ -1152,7 +1152,13 @@ public class Vala.GIdlParser : CodeVisitor {
 	void handle_async_methods (ObjectTypeSymbol type_symbol) {
 		foreach (Method m in type_symbol.get_methods ()) {
 			if (m.coroutine) {
-				var finish_method = type_symbol.scope.lookup (m.name.substring (0, m.name.length - "_async".length) + "_finish") as Method;
+				string finish_method_base;
+				if (m.name.has_suffix ("_async")) {
+					finish_method_base = m.name.substring (0, m.name.length - "_async".length);
+				} else {
+					finish_method_base = m.name;
+				}
+				var finish_method = type_symbol.scope.lookup (finish_method_base + "_finish") as Method;
 				if (finish_method != null) {
 					m.return_type = finish_method.return_type.copy ();
 					foreach (var param in finish_method.get_parameters ()) {
@@ -1524,6 +1530,11 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "vfunc_name") {
 					m.vfunc_name = eval (nv[1]);
+				} else if (nv[0] == "async") {
+					if (eval (nv[1]) == "1") {
+						// force async function, even if it doesn't end in _async
+						m.coroutine = true;
+					}
 				}
 			}
 		}
@@ -1562,7 +1573,7 @@ public class Vala.GIdlParser : CodeVisitor {
 				}
 			}
 
-			if (param.type.@interface == "GAsyncReadyCallback" && symbol.has_suffix ("_async")) {
+			if (param.type.@interface == "GAsyncReadyCallback" && (symbol.has_suffix ("_async") || m.coroutine)) {
 				// async method
 				m.coroutine = true;
 				continue;
