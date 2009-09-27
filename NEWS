@@ -1,3 +1,13 @@
+Vala 0.7.7
+==========
+
+ * Support `using' directives inside namespaces.
+ * Use const only for immutable structs.
+ * Support string marshalling for enums in D-Bus (Didier Ptitjes).
+ * Update Genie parser (Jamie McCracken).
+ * Add libgda-4.0 bindings (Shawn Ferris).
+ * Many bug fixes for closures and async methods.
+
 Vala 0.7.6
 ==========
 
