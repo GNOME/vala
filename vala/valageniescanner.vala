@@ -1052,15 +1052,22 @@ public class Vala.Genie.Scanner {
 		return new_lines;
 	}
 
-	bool comment () {
+	bool comment (bool file_comment = false) {
 		if (current > end - 2
 		    || current[0] != '/'
 		    || (current[1] != '/' && current[1] != '*')) {
 			return false;
 		}
 
+
 		if (current[1] == '/') {
 			// single-line comment
+			
+			SourceReference source_reference = null;
+			if (file_comment) {
+				source_reference = new SourceReference (source_file, line, column, line, column);
+			}
+			
 			current += 2;
 
 			// skip until end of line or end of file
@@ -1075,17 +1082,25 @@ public class Vala.Genie.Scanner {
 				column = 1;
 				current_indent_level = 0;
 			}
+			
+			if (source_reference != null) {
+				push_comment (((string) begin).ndup ((long) (current - begin)), source_reference, file_comment);
+			}
+			
 		} else {
 			// delimited comment
 			SourceReference source_reference = null;
+			if (file_comment && current[2] == '*') {
+				return false;
+			}
 
-			if (current[2] == '*') {
+            if (current[2] == '*' || file_comment) {
 				source_reference = new SourceReference (source_file, line, column, line, column);
 			}
 
 			current += 2;
 			char* begin = current;
-			int begin_line = line;
+
 			while (current < end - 1
 			       && (current[0] != '*' || current[1] != '/')) {
 				if (current[0] == '\n') {
@@ -1102,7 +1117,7 @@ public class Vala.Genie.Scanner {
 
 			if (source_reference != null) {
 				string comment = ((string) begin).ndup ((long) (current - begin));
-				push_comment (comment, source_reference, begin_line == 1 && comment[0] != '*');
+				push_comment (comment, source_reference, file_comment);
 			}
 
 			current += 2;
@@ -1132,6 +1147,12 @@ public class Vala.Genie.Scanner {
 	void space () {
 		while (whitespace () || comment ()) {
 		}
+	}
+
+    public void parse_file_comments () {
+		while (whitespace () || comment (true)) {
+		}
+		
 	}
 
 	void push_comment (string comment_item, SourceReference source_reference, bool file_comment) {

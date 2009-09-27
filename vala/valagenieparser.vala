@@ -358,6 +358,7 @@ public class Vala.Genie.Parser : CodeVisitor {
 
 	public void parse_file (SourceFile source_file) {
 		scanner = new Scanner (source_file);
+		scanner.parse_file_comments ();
 		scanner.indent_spaces = 0;
 		index = -1;
 		size = 0;
