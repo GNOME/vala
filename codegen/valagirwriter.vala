@@ -768,6 +768,10 @@ public class Vala.GIRWriter : CodeVisitor {
 				write_indent ();
 				stream.printf ("</type>\n");
 			}
+		} else if (type is DelegateType) {
+			var deleg_type = (DelegateType) type;
+			write_indent ();
+			stream.printf ("<type name=\"%s\" c:type=\"%s\"/>\n", gi_type_name (deleg_type.delegate_symbol), type.get_cname ());
 		} else {
 			write_indent ();
 			stream.printf ("<type name=\"%s\"/>\n", type.to_string ());
