@@ -651,7 +651,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			source_type_member_definition.append (cfunc);
 		}
 		
-		var writer = new CCodeWriter (source_file.get_csource_filename ());
+		var writer = new CCodeWriter (source_file.get_csource_filename (), source_file.filename);
 		if (!writer.open ()) {
 			Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
 			return;
