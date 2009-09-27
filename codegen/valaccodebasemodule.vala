@@ -1030,7 +1030,16 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				}
 
 				append_temp_decl (instance_init_fragment, temp_vars);
+
+				foreach (LocalVariable local in temp_ref_vars) {
+					var ma = new MemberAccess.simple (local.name);
+					ma.symbol_reference = local;
+					ma.value_type = local.variable_type.copy ();
+					instance_init_fragment.append (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
+				}
+
 				temp_vars.clear ();
+				temp_ref_vars.clear ();
 			}
 			
 			if (requires_destroy (f.field_type) && instance_finalize_fragment != null) {
