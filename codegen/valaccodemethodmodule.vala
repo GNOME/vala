@@ -311,6 +311,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 						if (!local.floating && requires_destroy (local.variable_type)) {
 							var ma = new MemberAccess.simple (local.name);
 							ma.symbol_reference = local;
+							ma.value_type = local.variable_type.copy ();
 							cblock.add_statement (new CCodeExpressionStatement (get_unref_expression (get_variable_cexpression (local.name), local.variable_type, ma)));
 						}
 					}
