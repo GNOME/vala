@@ -2922,7 +2922,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		if (stmt.return_expression != null) {
 			var local = stmt.return_expression.symbol_reference as LocalVariable;
 			if (current_return_type.value_owned
-			    && local != null && local.variable_type.value_owned && !variable_accessible_in_finally (local)) {
+			    && local != null && local.variable_type.value_owned
+			    && !local.captured
+			    && !variable_accessible_in_finally (local)) {
 				/* return expression is local variable taking ownership and
 				 * current method is transferring ownership */
 
@@ -2957,7 +2959,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			// avoid unnecessary ref/unref pair
 			var local = stmt.return_expression.symbol_reference as LocalVariable;
 			if (current_return_type.value_owned
-			    && local != null && local.variable_type.value_owned && !variable_accessible_in_finally (local)) {
+			    && local != null && local.variable_type.value_owned
+			    && !local.captured
+			    && !variable_accessible_in_finally (local)) {
 				/* return expression is local variable taking ownership and
 				 * current method is transferring ownership */
 
