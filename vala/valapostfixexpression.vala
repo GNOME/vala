@@ -74,7 +74,7 @@ public class Vala.PostfixExpression : Expression {
 			return false;
 		}
 
-		if (inner.value_type == null) {
+		if (!(inner.value_type is IntegerType) && !(inner.value_type is FloatingType) && !(inner.value_type is PointerType)) {
 			error = true;
 			Report.error (source_reference, "unsupported lvalue in postfix expression");
 			return false;
@@ -92,6 +92,13 @@ public class Vala.PostfixExpression : Expression {
 			if (ma.error || ma.symbol_reference == null) {
 				error = true;
 				/* if no symbol found, skip this check */
+				return false;
+			}
+		} else if (inner is ElementAccess) {
+			var ea = (ElementAccess) inner;
+			if (!(ea.container.value_type is ArrayType)) {
+				error = true;
+				Report.error (source_reference, "unsupported lvalue in postfix expression");
 				return false;
 			}
 		} else {
