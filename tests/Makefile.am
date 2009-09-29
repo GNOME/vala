@@ -21,6 +21,7 @@ TESTS = \
 	basic-types/arrays.vala \
 	basic-types/pointers.vala \
 	basic-types/bug596637.vala \
+	basic-types/bug596785.vala \
 	namespaces.vala \
 	methods/lambda.vala \
 	methods/closures.vala \

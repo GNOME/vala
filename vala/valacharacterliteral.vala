@@ -85,7 +85,11 @@ public class Vala.CharacterLiteral : Literal {
 
 		checked = true;
 
-		value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup ("char"));
+		if (get_char () < 128) {
+			value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup ("char"));
+		} else {
+			value_type = new IntegerType ((Struct) analyzer.root_symbol.scope.lookup ("unichar"));
+		}
 
 		return !error;
 	}
