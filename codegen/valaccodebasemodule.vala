@@ -1839,7 +1839,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			ref_fun.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_data%d_".printf (block_id))));
 			source_type_member_definition.append (ref_fun);
 
-			var unref_fun = new CCodeFunction ("block%d_data_unref".printf (block_id), struct_name + "*");
+			var unref_fun = new CCodeFunction ("block%d_data_unref".printf (block_id), "void");
 			unref_fun.add_parameter (new CCodeFormalParameter ("_data%d_".printf (block_id), struct_name + "*"));
 			unref_fun.modifiers = CCodeModifiers.STATIC;
 			source_declarations.add_type_member_declaration (unref_fun.copy ());
