@@ -145,7 +145,7 @@ class Vala.VAPICheck : Object {
 			}
 
 			return 0;
-		} catch (FileError error) {
+		} catch (Error error) {
 			Report.error (null, "%s: %s".printf (metadata.filename, error.message));
 			return 1;
 		}
