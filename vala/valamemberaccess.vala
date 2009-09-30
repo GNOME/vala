@@ -457,6 +457,11 @@ public class Vala.MemberAccess : Expression {
 
 				param.captured = true;
 				m.body.captured = true;
+
+				if (param.direction != ParameterDirection.IN) {
+					error = true;
+					Report.error (source_reference, "Cannot capture reference or output parameter `%s'".printf (param.get_full_name ()));
+				}
 			}
 		} else if (member is Field) {
 			var f = (Field) member;
