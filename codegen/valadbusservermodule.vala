@@ -186,7 +186,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			owned_type.value_owned = true;
 
 			cdecl = new CCodeDeclaration (owned_type.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator (param.name, default_value_for_type (param.parameter_type, true)));
+			cdecl.add_declarator (new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.parameter_type, true)));
 			if (param.direction == ParameterDirection.IN) {
 				in_prefragment.append (cdecl);
 			} else {
@@ -270,7 +270,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 				Report.error (m.return_type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (m.return_type.to_string ()));
 			} else if (m.return_type.is_real_struct_type ()) {
 				cdecl = new CCodeDeclaration (m.return_type.get_cname ());
-				cdecl.add_declarator (new CCodeVariableDeclarator ("result", default_value_for_type (m.return_type, true)));
+				cdecl.add_declarator (new CCodeVariableDeclarator.zero ("result", default_value_for_type (m.return_type, true)));
 				out_prefragment.append (cdecl);
 
 				if (!m.coroutine) {

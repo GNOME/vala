@@ -1273,7 +1273,7 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		foreach (FormalParameter param in sig.get_parameters ()) {
 			cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator (param.name, default_value_for_type (param.parameter_type, true)));
+			cdecl.add_declarator (new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.parameter_type, true)));
 			prefragment.append (cdecl);
 
 			if (get_type_signature (param.parameter_type) == null) {
