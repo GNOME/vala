@@ -498,4 +498,6 @@ g_idl_writer_save_file (GIdlModule *module,
 
   if (filename)
     fclose (writer->output);
+
+  g_free (writer);
 }
