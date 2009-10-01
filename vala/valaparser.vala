@@ -312,6 +312,12 @@ public class Vala.Parser : CodeVisitor {
 		try {
 			parse_using_directives (context.root);
 			parse_declarations (context.root, true);
+			if (accept (TokenType.CLOSE_BRACE)) {
+				// only report error if it's not a secondary error
+				if (context.report.get_errors () == 0) {
+					Report.error (get_last_src (), "unexpected `}'");
+				}
+			}
 		} catch (ParseError e) {
 			// already reported
 		}
