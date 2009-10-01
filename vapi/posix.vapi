@@ -1376,6 +1376,12 @@ namespace Posix {
 	public pid_t wait (out int status);
 	[CCode (cheader_filename = "sys/wait.h")]
 	public pid_t waitpid (pid_t pid, out int status, int options);
+	[CCode (cheader_filename = "sys/wait.h")]
+	public const int WNOHANG;
+	[CCode (cheader_filename = "sys/wait.h")]
+	public const int WUNTRACED;
+	[CCode (cheader_filename = "sys/wait.h")]
+	public const int WCONTINUED;
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
