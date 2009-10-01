@@ -2707,7 +2707,7 @@ namespace GLib {
 	[CCode (ref_function = "g_regex_ref", unref_function = "g_regex_unref")]
 	public class Regex {
 		public Regex (string pattern, RegexCompileFlags compile_options = 0, RegexMatchFlags match_options = 0) throws RegexError;
-		public string get_pattern ();
+		public unowned string get_pattern ();
 		public int get_max_backref ();
 		public int get_capture_count ();
 		public int get_string_number (string name);
