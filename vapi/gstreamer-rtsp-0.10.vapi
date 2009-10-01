@@ -132,6 +132,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public RTSPWatch (Gst.RTSPConnection conn, Gst.RTSPWatchFuncs funcs, GLib.DestroyNotify notify);
 		public uint attach (GLib.MainContext context);
+		public uint queue_data (uchar data, uint size);
 		public uint queue_message (Gst.RTSPMessage message);
 		public void reset ();
 	}
@@ -234,7 +235,27 @@ namespace Gst {
 		PLAYER_START_TIME,
 		LOCATION,
 		ETAG,
-		IF_MATCH
+		IF_MATCH,
+		ACCEPT_CHARSET,
+		SUPPORTED,
+		VARY,
+		X_ACCELERATE_STREAMING,
+		X_ACCEPT_AUTHENT,
+		X_ACCEPT_PROXY_AUTHENT,
+		X_BROADCAST_ID,
+		X_BURST_STREAMING,
+		X_NOTICE,
+		X_PLAYER_LAG_TIME,
+		X_PLAYLIST,
+		X_PLAYLIST_CHANGE_NOTICE,
+		X_PLAYLIST_GEN_ID,
+		X_PLAYLIST_SEEK_ID,
+		X_PROXY_CLIENT_AGENT,
+		X_PROXY_CLIENT_VERB,
+		X_RECEDING_PLAYLISTCHANGE,
+		X_RTP_INFO,
+		X_STARTUPPROFILE,
+		TIMESTAMP
 	}
 	[CCode (cprefix = "GST_RTSP_LOWER_TRANS_", has_type_id = "0", cheader_filename = "gst/rtsp/gstrtspextension.h")]
 	public enum RTSPLowerTrans {

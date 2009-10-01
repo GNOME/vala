@@ -162,15 +162,15 @@
 			<member name="GST_AUDIO_FIELD_SIGNED" value="32"/>
 		</enum>
 		<enum name="GstBaseAudioSinkSlaveMethod" type-name="GstBaseAudioSinkSlaveMethod" get-type="gst_base_audio_sink_slave_method_get_type">
-			<member name="GST_BASE_AUDIO_SINK_SLAVE_RESAMPLE" value="0"/>
-			<member name="GST_BASE_AUDIO_SINK_SLAVE_SKEW" value="1"/>
-			<member name="GST_BASE_AUDIO_SINK_SLAVE_NONE" value="2"/>
+                       <member name="GST_BASE_AUDIO_SINK_SLAVE_RESAMPLE" value="0"/>
+                       <member name="GST_BASE_AUDIO_SINK_SLAVE_SKEW" value="1"/>
+                       <member name="GST_BASE_AUDIO_SINK_SLAVE_NONE" value="2"/>
 		</enum>
 		<enum name="GstBaseAudioSrcSlaveMethod" type-name="GstBaseAudioSrcSlaveMethod" get-type="gst_base_audio_src_slave_method_get_type">
-			<member name="GST_BASE_AUDIO_SRC_SLAVE_RESAMPLE" value="0"/>
-			<member name="GST_BASE_AUDIO_SRC_SLAVE_RETIMESTAMP" value="1"/>
-			<member name="GST_BASE_AUDIO_SRC_SLAVE_SKEW" value="2"/>
-			<member name="GST_BASE_AUDIO_SRC_SLAVE_NONE" value="3"/>
+                       <member name="GST_BASE_AUDIO_SRC_SLAVE_RESAMPLE" value="0"/>
+                       <member name="GST_BASE_AUDIO_SRC_SLAVE_RETIMESTAMP" value="1"/>
+                       <member name="GST_BASE_AUDIO_SRC_SLAVE_SKEW" value="2"/>
+                       <member name="GST_BASE_AUDIO_SRC_SLAVE_NONE" value="3"/>
 		</enum>
 		<enum name="GstBufferFormat" type-name="GstBufferFormat" get-type="gst_buffer_format_get_type">
 			<member name="GST_UNKNOWN" value="0"/>
@@ -239,6 +239,19 @@
 			<member name="GST_RING_BUFFER_STATE_STARTED" value="2"/>
 		</enum>
 		<object name="GstAudioClock" parent="GstSystemClock" type-name="GstAudioClock" get-type="gst_audio_clock_get_type">
+			<method name="adjust" symbol="gst_audio_clock_adjust">
+				<return-type type="GstClockTime"/>
+				<parameters>
+					<parameter name="clock" type="GstClock*"/>
+					<parameter name="time" type="GstClockTime"/>
+				</parameters>
+			</method>
+			<method name="get_time" symbol="gst_audio_clock_get_time">
+				<return-type type="GstClockTime"/>
+				<parameters>
+					<parameter name="clock" type="GstClock*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="gst_audio_clock_new">
 				<return-type type="GstClock*"/>
 				<parameters>
@@ -406,6 +419,7 @@
 				</parameters>
 			</method>
 			<property name="buffer-time" type="gint64" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="can-activate-pull" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="latency-time" type="gint64" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="provide-clock" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="slave-method" type="GstBaseAudioSinkSlaveMethod" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -684,10 +698,27 @@
 					<parameter name="active" type="gboolean"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="clear_all">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="buf" type="GstRingBuffer*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="close_device">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="buf" type="GstRingBuffer*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="commit">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="buf" type="GstRingBuffer*"/>
+					<parameter name="sample" type="guint64*"/>
+					<parameter name="data" type="guchar*"/>
+					<parameter name="in_samples" type="gint"/>
+					<parameter name="out_samples" type="gint"/>
+					<parameter name="accum" type="gint*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="delay">

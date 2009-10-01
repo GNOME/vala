@@ -158,7 +158,7 @@
 			<member name="GST_DP_PAYLOAD_CAPS" value="2"/>
 			<member name="GST_DP_PAYLOAD_EVENT_NONE" value="64"/>
 		</enum>
-		<enum name="GstDPVersion">
+		<enum name="GstDPVersion" type-name="GstDPVersion" get-type="gst_dp_version_get_type">
 			<member name="GDP Version 0.2" value="1"/>
 			<member name="GDP Version 1.0" value="2"/>
 		</enum>

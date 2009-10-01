@@ -124,7 +124,7 @@
 			<member name="GST_INTERPOLATE_CUBIC" value="4"/>
 			<member name="GST_INTERPOLATE_USER" value="5"/>
 		</enum>
-		<enum name="GstLFOWaveform">
+		<enum name="GstLFOWaveform" type-name="GstLFOWaveform" get-type="gst_lfo_waveform_get_type">
 			<member name="Sine waveform (default)" value="0"/>
 			<member name="Square waveform" value="1"/>
 			<member name="Saw waveform" value="2"/>
@@ -390,6 +390,5 @@
 			<property name="waveform" type="GstLFOWaveform" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="lock" type="GMutex*"/>
 		</object>
-		<constant name="GST_PARAM_CONTROLLABLE" type="int" value="2"/>
 	</namespace>
 </api>

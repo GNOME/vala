@@ -184,7 +184,7 @@
 				</parameters>
 			</method>
 		</boxed>
-		<enum name="GstInstallPluginsReturn">
+		<enum name="GstInstallPluginsReturn" type-name="GstInstallPluginsReturn" get-type="gst_install_plugins_return_get_type">
 			<member name="GST_INSTALL_PLUGINS_SUCCESS" value="0"/>
 			<member name="GST_INSTALL_PLUGINS_NOT_FOUND" value="1"/>
 			<member name="GST_INSTALL_PLUGINS_ERROR" value="2"/>

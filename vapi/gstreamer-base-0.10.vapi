@@ -11,8 +11,10 @@ namespace Gst {
 		public void clear ();
 		public void copy (uchar dest, uint offset, uint size);
 		public void flush (uint flush);
+		public uint masked_scan_uint32 (uint32 mask, uint32 pattern, uint offset, uint size);
 		[CCode (array_length = false)]
 		public unowned uchar[] peek (uint size);
+		public Gst.ClockTime prev_timestamp (uint64 distance);
 		public void push (owned Gst.Buffer buf);
 		public uchar take (uint nbytes);
 		public Gst.Buffer take_buffer (uint nbytes);
@@ -68,6 +70,8 @@ namespace Gst {
 		public bool query_latency (bool live, bool upstream_live, out Gst.ClockTime min_latency, out Gst.ClockTime max_latency);
 		[NoWrapper]
 		public virtual Gst.FlowReturn render (Gst.Buffer buffer);
+		[NoWrapper]
+		public virtual Gst.FlowReturn render_list (Gst.BufferList buffer_list);
 		public void set_async_enabled (bool enabled);
 		public void set_blocksize (uint blocksize);
 		[NoWrapper]
@@ -264,6 +268,10 @@ namespace Gst {
 		public uint size;
 		[CCode (has_construct_function = false)]
 		public ByteReader (uchar data, uint size);
+		public bool dup_data (uint size, uchar val);
+		public bool dup_string_utf16 (uint16 str);
+		public bool dup_string_utf32 (uint32 str);
+		public bool dup_string_utf8 (string str);
 		[CCode (has_construct_function = false)]
 		public ByteReader.from_buffer (Gst.Buffer buffer);
 		public bool get_data (uint size, out uchar val);
@@ -282,6 +290,7 @@ namespace Gst {
 		public bool get_int8 (out char val);
 		public uint get_pos ();
 		public uint get_remaining ();
+		public bool get_string_utf8 (string str);
 		public bool get_uint16_be (out uint16 val);
 		public bool get_uint16_le (out uint16 val);
 		public bool get_uint24_be (out uint32 val);
@@ -293,6 +302,7 @@ namespace Gst {
 		public bool get_uint8 (out uchar val);
 		public void init (uchar data, uint size);
 		public void init_from_buffer (Gst.Buffer buffer);
+		public uint masked_scan_uint32 (uint32 mask, uint32 pattern, uint offset, uint size);
 		public bool peek_data (uint size, out uchar val);
 		public bool peek_float32_be (out float val);
 		public bool peek_float32_le (out float val);
@@ -307,6 +317,7 @@ namespace Gst {
 		public bool peek_int64_be (out int64 val);
 		public bool peek_int64_le (out int64 val);
 		public bool peek_int8 (out char val);
+		public bool peek_string_utf8 (string str);
 		public bool peek_uint16_be (out uint16 val);
 		public bool peek_uint16_le (out uint16 val);
 		public bool peek_uint24_be (out uint32 val);
@@ -318,6 +329,9 @@ namespace Gst {
 		public bool peek_uint8 (out uchar val);
 		public bool set_pos (uint pos);
 		public bool skip (uint nbytes);
+		public bool skip_string_utf16 ();
+		public bool skip_string_utf32 ();
+		public bool skip_string_utf8 ();
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/base/gstcollectpads.h")]

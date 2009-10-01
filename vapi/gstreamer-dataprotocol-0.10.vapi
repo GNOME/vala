@@ -26,7 +26,7 @@ namespace Gst {
 		CAPS,
 		EVENT_NONE
 	}
-	[CCode (cprefix = "", has_type_id = "0", cheader_filename = "gst/dataprotocol/dataprotocol.h")]
+	[CCode (cprefix = "", cheader_filename = "gst/dataprotocol/dataprotocol.h")]
 	public enum DPVersion {
 		GDP Version 0.2,
 		GDP Version 1.0

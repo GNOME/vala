@@ -12,11 +12,14 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public class MixerOptions : Gst.MixerTrack {
 		public unowned GLib.List<string> get_values ();
+		public static void list_changed (Gst.Mixer mixer, Gst.MixerOptions opts);
 	}
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public class MixerTrack : GLib.Object {
 		[NoAccessorMethod]
 		public uint flags { get; }
+		[NoAccessorMethod]
+		public uint index { get; construct; }
 		[NoAccessorMethod]
 		public string label { owned get; }
 		[NoAccessorMethod]
@@ -27,6 +30,46 @@ namespace Gst {
 		public int num_channels { get; }
 		[NoAccessorMethod]
 		public string untranslated_label { owned get; construct; }
+	}
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class PhotoSettings {
+		public uint aperture;
+		public float ev_compensation;
+		public uint32 exposure;
+		public Gst.FlashMode flash_mode;
+		public uint iso_speed;
+		public Gst.SceneMode scene_mode;
+		public Gst.ColourToneMode tone_mode;
+		public Gst.WhiteBalanceMode wb_mode;
+		public float zoom;
+	}
+	[Compact]
+	[CCode (cheader_filename = "gst/gst.h")]
+	public class Photography {
+		public bool get_aperture (uint aperture);
+		public Gst.PhotoCaps get_capabilities ();
+		public bool get_colour_tone_mode (Gst.ColourToneMode tone_mode);
+		public bool get_config (Gst.PhotoSettings config);
+		public bool get_ev_compensation (float ev_comp);
+		public bool get_exposure (uint32 exposure);
+		public bool get_flash_mode (Gst.FlashMode flash_mode);
+		public bool get_iso_speed (uint iso_speed);
+		public bool get_scene_mode (Gst.SceneMode scene_mode);
+		public bool get_white_balance_mode (Gst.WhiteBalanceMode wb_mode);
+		public bool get_zoom (float zoom);
+		public bool prepare_for_capture (Gst.PhotoCapturePrepared func, Gst.Caps capture_caps);
+		public bool set_aperture (uint aperture);
+		public void set_autofocus (bool on);
+		public bool set_colour_tone_mode (Gst.ColourToneMode tone_mode);
+		public bool set_config (Gst.PhotoSettings config);
+		public bool set_ev_compensation (float ev_comp);
+		public bool set_exposure (uint exposure);
+		public bool set_flash_mode (Gst.FlashMode flash_mode);
+		public bool set_iso_speed (uint iso_speed);
+		public bool set_scene_mode (Gst.SceneMode scene_mode);
+		public bool set_white_balance_mode (Gst.WhiteBalanceMode wb_mode);
+		public bool set_zoom (float zoom);
 	}
 	[CCode (cheader_filename = "gst/interfaces/tuner.h")]
 	public class TunerChannel : GLib.Object {
@@ -49,6 +92,7 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/interfaces/colorbalance.h")]
 	public interface ColorBalance : Gst.ImplementsInterface, Gst.Element {
+		public Gst.ColorBalanceType get_balance_type ();
 		public abstract int get_value (Gst.ColorBalanceChannel channel);
 		public abstract unowned GLib.List<Gst.ColorBalanceChannel> list_channels ();
 		public abstract void set_value (Gst.ColorBalanceChannel channel, int value);
@@ -58,14 +102,17 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/interfaces/mixer.h")]
 	public interface Mixer : Gst.ImplementsInterface, Gst.Element {
 		public abstract Gst.MixerFlags get_mixer_flags ();
+		public Gst.MixerType get_mixer_type ();
 		public abstract unowned string get_option (Gst.MixerOptions opts);
 		public abstract void get_volume (Gst.MixerTrack track, int volumes);
 		public abstract unowned GLib.List<Gst.MixerTrack> list_tracks ();
 		public static Gst.MixerMessageType message_get_type (Gst.Message message);
 		public static void message_parse_mute_toggled (Gst.Message message, out unowned Gst.MixerTrack track, bool mute);
 		public static void message_parse_option_changed (Gst.Message message, out unowned Gst.MixerOptions options, string value);
+		public static void message_parse_options_list_changed (Gst.Message message, out unowned Gst.MixerOptions options);
 		public static void message_parse_record_toggled (Gst.Message message, out unowned Gst.MixerTrack track, bool record);
 		public static void message_parse_volume_changed (Gst.Message message, out unowned Gst.MixerTrack track, int volumes, int num_channels);
+		public void mixer_changed ();
 		public abstract void set_mute (Gst.MixerTrack track, bool mute);
 		public abstract void set_option (Gst.MixerOptions opts, string value);
 		public abstract void set_record (Gst.MixerTrack track, bool record);
@@ -81,6 +128,27 @@ namespace Gst {
 	}
 	[CCode (cheader_filename = "gst/interfaces/navigation.h")]
 	public interface Navigation : Gst.Element {
+		public static Gst.NavigationEventType event_get_type (Gst.Event event);
+		public static bool event_parse_command (Gst.Event event, Gst.NavigationCommand command);
+		public static bool event_parse_key_event (Gst.Event event, string key);
+		public static bool event_parse_mouse_button_event (Gst.Event event, int button, double x, double y);
+		public static bool event_parse_mouse_move_event (Gst.Event event, double x, double y);
+		public static Gst.NavigationMessageType message_get_type (Gst.Message message);
+		public static unowned Gst.Message message_new_angles_changed (Gst.Object src, uint cur_angle, uint n_angles);
+		public static unowned Gst.Message message_new_commands_changed (Gst.Object src);
+		public static unowned Gst.Message message_new_mouse_over (Gst.Object src, bool active);
+		public static bool message_parse_angles_changed (Gst.Message message, uint cur_angle, uint n_angles);
+		public static bool message_parse_mouse_over (Gst.Message message, bool active);
+		public static Gst.NavigationQueryType query_get_type (Gst.Query query);
+		public static unowned Gst.Query query_new_angles ();
+		public static unowned Gst.Query query_new_commands ();
+		public static bool query_parse_angles (Gst.Query query, uint cur_angle, uint n_angles);
+		public static bool query_parse_commands_length (Gst.Query query, uint n_cmds);
+		public static bool query_parse_commands_nth (Gst.Query query, uint nth, Gst.NavigationCommand cmd);
+		public static void query_set_angles (Gst.Query query, uint cur_angle, uint n_angles);
+		public static void query_set_commands (Gst.Query query, int n_cmds);
+		public static void query_set_commandsv (Gst.Query query, int n_cmds, Gst.NavigationCommand cmds);
+		public void send_command (Gst.NavigationCommand command);
 		public abstract void send_event (Gst.Structure structure);
 		public void send_key_event (string event, string key);
 		public void send_mouse_event (string event, int button, double x, double y);
@@ -138,26 +206,57 @@ namespace Gst {
 		public void prepare_xwindow_id ();
 		public abstract void set_xwindow_id (ulong xwindow_id);
 	}
-	[CCode (cprefix = "GST_COLOR_BALANCE_", has_type_id = "0", cheader_filename = "gst/interfaces/colorbalance.h")]
+	[CCode (cprefix = "GST_COLOR_BALANCE_", cheader_filename = "gst/interfaces/colorbalance.h")]
 	public enum ColorBalanceType {
 		HARDWARE,
 		SOFTWARE
 	}
-	[CCode (cprefix = "GST_MIXER_FLAG_", has_type_id = "0", cheader_filename = "gst/interfaces/mixer.h")]
+	[CCode (cprefix = "GST_PHOTOGRAPHY_COLOUR_TONE_MODE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	public enum ColourToneMode {
+		NORMAL,
+		SEPIA,
+		NEGATIVE,
+		GRAYSCALE,
+		NATURAL,
+		VIVID,
+		COLORSWAP,
+		SOLARIZE,
+		OUT_OF_FOCUS
+	}
+	[CCode (cprefix = "GST_PHOTOGRAPHY_FLASH_MODE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	public enum FlashMode {
+		AUTO,
+		OFF,
+		ON,
+		FILL_IN,
+		RED_EYE
+	}
+	[CCode (cprefix = "GST_PHOTOGRAPHY_FOCUS_STATUS_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	public enum FocusStatus {
+		NONE,
+		RUNNING,
+		FAIL,
+		SUCCESS
+	}
+	[CCode (cprefix = "GST_MIXER_FLAG_", cheader_filename = "gst/interfaces/mixer.h")]
 	[Flags]
 	public enum MixerFlags {
 		NONE,
-		AUTO_NOTIFICATIONS
+		AUTO_NOTIFICATIONS,
+		HAS_WHITELIST,
+		GROUPING
 	}
-	[CCode (cprefix = "GST_MIXER_MESSAGE_", has_type_id = "0", cheader_filename = "gst/interfaces/mixer.h")]
+	[CCode (cprefix = "GST_MIXER_MESSAGE_", cheader_filename = "gst/interfaces/mixer.h")]
 	public enum MixerMessageType {
 		INVALID,
 		MUTE_TOGGLED,
 		RECORD_TOGGLED,
 		VOLUME_CHANGED,
-		OPTION_CHANGED
+		OPTION_CHANGED,
+		OPTIONS_LIST_CHANGED,
+		MIXER_CHANGED
 	}
-	[CCode (cprefix = "GST_MIXER_TRACK_", has_type_id = "0", cheader_filename = "gst/interfaces/mixertrack.h")]
+	[CCode (cprefix = "GST_MIXER_TRACK_", cheader_filename = "gst/interfaces/mixertrack.h")]
 	[Flags]
 	public enum MixerTrackFlags {
 		INPUT,
@@ -165,14 +264,89 @@ namespace Gst {
 		MUTE,
 		RECORD,
 		MASTER,
-		SOFTWARE
+		SOFTWARE,
+		NO_RECORD,
+		NO_MUTE,
+		WHITELIST
 	}
-	[CCode (cprefix = "GST_MIXER_", has_type_id = "0", cheader_filename = "gst/interfaces/mixer.h")]
+	[CCode (cprefix = "GST_MIXER_", cheader_filename = "gst/interfaces/mixer.h")]
 	public enum MixerType {
 		HARDWARE,
 		SOFTWARE
 	}
-	[CCode (cprefix = "GST_TUNER_CHANNEL_", has_type_id = "0", cheader_filename = "gst/interfaces/tuner.h")]
+	[CCode (cprefix = "GST_NAVIGATION_COMMAND_", cheader_filename = "gst/gst.h")]
+	public enum NavigationCommand {
+		INVALID,
+		MENU1,
+		MENU2,
+		MENU3,
+		MENU4,
+		MENU5,
+		MENU6,
+		MENU7,
+		LEFT,
+		RIGHT,
+		UP,
+		DOWN,
+		ACTIVATE,
+		PREV_ANGLE,
+		NEXT_ANGLE
+	}
+	[CCode (cprefix = "GST_NAVIGATION_EVENT_", cheader_filename = "gst/gst.h")]
+	public enum NavigationEventType {
+		INVALID,
+		KEY_PRESS,
+		KEY_RELEASE,
+		MOUSE_BUTTON_PRESS,
+		MOUSE_BUTTON_RELEASE,
+		MOUSE_MOVE,
+		COMMAND
+	}
+	[CCode (cprefix = "GST_NAVIGATION_MESSAGE_", cheader_filename = "gst/gst.h")]
+	public enum NavigationMessageType {
+		INVALID,
+		MOUSE_OVER,
+		COMMANDS_CHANGED,
+		ANGLES_CHANGED
+	}
+	[CCode (cprefix = "GST_NAVIGATION_QUERY_", cheader_filename = "gst/gst.h")]
+	public enum NavigationQueryType {
+		INVALID,
+		COMMANDS,
+		ANGLES
+	}
+	[CCode (cprefix = "GST_PHOTOGRAPHY_CAPS_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	public enum PhotoCaps {
+		NONE,
+		EV_COMP,
+		ISO_SPEED,
+		WB_MODE,
+		TONE,
+		SCENE,
+		FLASH,
+		ZOOM,
+		FOCUS,
+		APERTURE,
+		EXPOSURE,
+		SHAKE
+	}
+	[CCode (cprefix = "GST_PHOTOGRAPHY_SHAKE_RISK_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	public enum PhotoShakeRisk {
+		LOW,
+		MEDIUM,
+		HIGH
+	}
+	[CCode (cprefix = "GST_PHOTOGRAPHY_SCENE_MODE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	public enum SceneMode {
+		MANUAL,
+		CLOSEUP,
+		PORTRAIT,
+		LANDSCAPE,
+		SPORT,
+		NIGHT,
+		AUTO
+	}
+	[CCode (cprefix = "GST_TUNER_CHANNEL_", cheader_filename = "gst/interfaces/tuner.h")]
 	[Flags]
 	public enum TunerChannelFlags {
 		INPUT,
@@ -180,4 +354,33 @@ namespace Gst {
 		FREQUENCY,
 		AUDIO
 	}
+	[CCode (cprefix = "GST_PHOTOGRAPHY_WB_MODE_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	public enum WhiteBalanceMode {
+		AUTO,
+		DAYLIGHT,
+		CLOUDY,
+		SUNSET,
+		TUNGSTEN,
+		FLUORESCENT
+	}
+	[CCode (cheader_filename = "gst/gst.h", has_target = false)]
+	public delegate void PhotoCapturePrepared (void* data, Gst.Caps configured_caps);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public const string PHOTOGRAPHY_AUTOFOCUS_DONE;
+	[CCode (cheader_filename = "gst/gst.h")]
+	public const string PHOTOGRAPHY_SHAKE_RISK;
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static GLib.Type colour_tone_mode_get_type ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static GLib.Type flash_mode_get_type ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static GLib.Type focus_status_get_type ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static GLib.Type photo_caps_get_type ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static GLib.Type photo_shake_risk_get_type ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static GLib.Type scene_mode_get_type ();
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static GLib.Type white_balance_mode_get_type ();
 }

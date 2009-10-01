@@ -317,6 +317,8 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SIPROLAB_KELVIN;
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
+	public const int RIFF_WAVE_FORMAT_SIREN;
+	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SOFTSOUND;
 	[CCode (cheader_filename = "gst/riff/riff-ids.h")]
 	public const int RIFF_WAVE_FORMAT_SONARC;

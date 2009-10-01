@@ -550,6 +550,14 @@
 					<parameter name="notify" type="GDestroyNotify"/>
 				</parameters>
 			</method>
+			<method name="queue_data" symbol="gst_rtsp_watch_queue_data">
+				<return-type type="guint"/>
+				<parameters>
+					<parameter name="watch" type="GstRTSPWatch*"/>
+					<parameter name="data" type="guint8*"/>
+					<parameter name="size" type="guint"/>
+				</parameters>
+			</method>
 			<method name="queue_message" symbol="gst_rtsp_watch_queue_message">
 				<return-type type="guint"/>
 				<parameters>
@@ -695,6 +703,26 @@
 			<member name="GST_RTSP_HDR_LOCATION" value="53"/>
 			<member name="GST_RTSP_HDR_ETAG" value="54"/>
 			<member name="GST_RTSP_HDR_IF_MATCH" value="55"/>
+			<member name="GST_RTSP_HDR_ACCEPT_CHARSET" value="56"/>
+			<member name="GST_RTSP_HDR_SUPPORTED" value="57"/>
+			<member name="GST_RTSP_HDR_VARY" value="58"/>
+			<member name="GST_RTSP_HDR_X_ACCELERATE_STREAMING" value="59"/>
+			<member name="GST_RTSP_HDR_X_ACCEPT_AUTHENT" value="60"/>
+			<member name="GST_RTSP_HDR_X_ACCEPT_PROXY_AUTHENT" value="61"/>
+			<member name="GST_RTSP_HDR_X_BROADCAST_ID" value="62"/>
+			<member name="GST_RTSP_HDR_X_BURST_STREAMING" value="63"/>
+			<member name="GST_RTSP_HDR_X_NOTICE" value="64"/>
+			<member name="GST_RTSP_HDR_X_PLAYER_LAG_TIME" value="65"/>
+			<member name="GST_RTSP_HDR_X_PLAYLIST" value="66"/>
+			<member name="GST_RTSP_HDR_X_PLAYLIST_CHANGE_NOTICE" value="67"/>
+			<member name="GST_RTSP_HDR_X_PLAYLIST_GEN_ID" value="68"/>
+			<member name="GST_RTSP_HDR_X_PLAYLIST_SEEK_ID" value="69"/>
+			<member name="GST_RTSP_HDR_X_PROXY_CLIENT_AGENT" value="70"/>
+			<member name="GST_RTSP_HDR_X_PROXY_CLIENT_VERB" value="71"/>
+			<member name="GST_RTSP_HDR_X_RECEDING_PLAYLISTCHANGE" value="72"/>
+			<member name="GST_RTSP_HDR_X_RTP_INFO" value="73"/>
+			<member name="GST_RTSP_HDR_X_STARTUPPROFILE" value="74"/>
+			<member name="GST_RTSP_HDR_TIMESTAMP" value="75"/>
 		</enum>
 		<enum name="GstRTSPLowerTrans">
 			<member name="GST_RTSP_LOWER_TRANS_UNKNOWN" value="0"/>

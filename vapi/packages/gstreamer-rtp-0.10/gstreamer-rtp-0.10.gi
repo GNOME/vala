@@ -232,6 +232,70 @@
 				<parameter name="buffer" type="GstBuffer*"/>
 			</parameters>
 		</function>
+		<function name="rtp_buffer_list_get_payload_len" symbol="gst_rtp_buffer_list_get_payload_len">
+			<return-type type="guint"/>
+			<parameters>
+				<parameter name="list" type="GstBufferList*"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_list_get_payload_type" symbol="gst_rtp_buffer_list_get_payload_type">
+			<return-type type="guint8"/>
+			<parameters>
+				<parameter name="list" type="GstBufferList*"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_list_get_seq" symbol="gst_rtp_buffer_list_get_seq">
+			<return-type type="guint16"/>
+			<parameters>
+				<parameter name="list" type="GstBufferList*"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_list_get_ssrc" symbol="gst_rtp_buffer_list_get_ssrc">
+			<return-type type="guint32"/>
+			<parameters>
+				<parameter name="list" type="GstBufferList*"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_list_get_timestamp" symbol="gst_rtp_buffer_list_get_timestamp">
+			<return-type type="guint32"/>
+			<parameters>
+				<parameter name="list" type="GstBufferList*"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_list_set_payload_type" symbol="gst_rtp_buffer_list_set_payload_type">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="list" type="GstBufferList*"/>
+				<parameter name="payload_type" type="guint8"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_list_set_seq" symbol="gst_rtp_buffer_list_set_seq">
+			<return-type type="guint16"/>
+			<parameters>
+				<parameter name="list" type="GstBufferList*"/>
+				<parameter name="seq" type="guint16"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_list_set_ssrc" symbol="gst_rtp_buffer_list_set_ssrc">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="list" type="GstBufferList*"/>
+				<parameter name="ssrc" type="guint32"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_list_set_timestamp" symbol="gst_rtp_buffer_list_set_timestamp">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="list" type="GstBufferList*"/>
+				<parameter name="timestamp" type="guint32"/>
+			</parameters>
+		</function>
+		<function name="rtp_buffer_list_validate" symbol="gst_rtp_buffer_list_validate">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="list" type="GstBufferList*"/>
+			</parameters>
+		</function>
 		<function name="rtp_buffer_new_allocate" symbol="gst_rtp_buffer_new_allocate">
 			<return-type type="GstBuffer*"/>
 			<parameters>
@@ -420,6 +484,45 @@
 				<parameters>
 					<parameter name="packet" type="GstRTCPPacket*"/>
 					<parameter name="reason" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="fb_get_media_ssrc" symbol="gst_rtcp_packet_fb_get_media_ssrc">
+				<return-type type="guint32"/>
+				<parameters>
+					<parameter name="packet" type="GstRTCPPacket*"/>
+				</parameters>
+			</method>
+			<method name="fb_get_sender_ssrc" symbol="gst_rtcp_packet_fb_get_sender_ssrc">
+				<return-type type="guint32"/>
+				<parameters>
+					<parameter name="packet" type="GstRTCPPacket*"/>
+				</parameters>
+			</method>
+			<method name="fb_get_type" symbol="gst_rtcp_packet_fb_get_type">
+				<return-type type="GstRTCPFBType"/>
+				<parameters>
+					<parameter name="packet" type="GstRTCPPacket*"/>
+				</parameters>
+			</method>
+			<method name="fb_set_media_ssrc" symbol="gst_rtcp_packet_fb_set_media_ssrc">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="packet" type="GstRTCPPacket*"/>
+					<parameter name="ssrc" type="guint32"/>
+				</parameters>
+			</method>
+			<method name="fb_set_sender_ssrc" symbol="gst_rtcp_packet_fb_set_sender_ssrc">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="packet" type="GstRTCPPacket*"/>
+					<parameter name="ssrc" type="guint32"/>
+				</parameters>
+			</method>
+			<method name="fb_set_type" symbol="gst_rtcp_packet_fb_set_type">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="packet" type="GstRTCPPacket*"/>
+					<parameter name="type" type="GstRTCPFBType"/>
 				</parameters>
 			</method>
 			<method name="get_count" symbol="gst_rtcp_packet_get_count">
@@ -622,6 +725,14 @@
 			<field name="encoding_parameters" type="gchar*"/>
 			<field name="bitrate" type="guint"/>
 		</struct>
+		<enum name="GstRTCPFBType">
+			<member name="GST_RTCP_FB_TYPE_INVALID" value="0"/>
+			<member name="GST_RTCP_RTPFB_TYPE_NACK" value="1"/>
+			<member name="GST_RTCP_PSFB_TYPE_PLI" value="1"/>
+			<member name="GST_RTCP_PSFB_TYPE_SLI" value="2"/>
+			<member name="GST_RTCP_PSFB_TYPE_RPSI" value="3"/>
+			<member name="GST_RTCP_PSFB_TYPE_AFB" value="15"/>
+		</enum>
 		<enum name="GstRTCPSDESType">
 			<member name="GST_RTCP_SDES_INVALID" value="-1"/>
 			<member name="GST_RTCP_SDES_END" value="0"/>
@@ -641,6 +752,8 @@
 			<member name="GST_RTCP_TYPE_SDES" value="202"/>
 			<member name="GST_RTCP_TYPE_BYE" value="203"/>
 			<member name="GST_RTCP_TYPE_APP" value="204"/>
+			<member name="GST_RTCP_TYPE_RTPFB" value="205"/>
+			<member name="GST_RTCP_TYPE_PSFB" value="206"/>
 		</enum>
 		<enum name="GstRTPPayload">
 			<member name="GST_RTP_PAYLOAD_PCMU" value="0"/>
@@ -803,6 +916,13 @@
 				<parameters>
 					<parameter name="payload" type="GstBaseRTPPayload*"/>
 					<parameter name="buffer" type="GstBuffer*"/>
+				</parameters>
+			</method>
+			<method name="push_list" symbol="gst_basertppayload_push_list">
+				<return-type type="GstFlowReturn"/>
+				<parameters>
+					<parameter name="payload" type="GstBaseRTPPayload*"/>
+					<parameter name="list" type="GstBufferList*"/>
 				</parameters>
 			</method>
 			<method name="set_options" symbol="gst_basertppayload_set_options">

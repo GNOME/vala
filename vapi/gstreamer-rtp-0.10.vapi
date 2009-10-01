@@ -68,6 +68,8 @@ namespace Gst {
 		public bool is_filled (uint size, Gst.ClockTime duration);
 		[CCode (cname = "gst_basertppayload_push")]
 		public Gst.FlowReturn push (Gst.Buffer buffer);
+		[CCode (cname = "gst_basertppayload_push_list")]
+		public Gst.FlowReturn push_list (Gst.BufferList list);
 		[NoWrapper]
 		public virtual bool set_caps (Gst.Caps caps);
 		[CCode (cname = "gst_basertppayload_set_options")]
@@ -124,6 +126,12 @@ namespace Gst {
 		public uchar bye_get_reason_len ();
 		public uint bye_get_ssrc_count ();
 		public bool bye_set_reason (string reason);
+		public uint32 fb_get_media_ssrc ();
+		public uint32 fb_get_sender_ssrc ();
+		public Gst.RTCPFBType fb_get_type ();
+		public void fb_set_media_ssrc (uint32 ssrc);
+		public void fb_set_sender_ssrc (uint32 ssrc);
+		public void fb_set_type (Gst.RTCPFBType type);
 		public uchar get_count ();
 		public uint16 get_length ();
 		public bool get_padding ();
@@ -147,6 +155,15 @@ namespace Gst {
 		public void sr_get_sender_info (uint32 ssrc, uint64 ntptime, uint32 rtptime, uint32 packet_count, uint32 octet_count);
 		public void sr_set_sender_info (uint32 ssrc, uint64 ntptime, uint32 rtptime, uint32 packet_count, uint32 octet_count);
 	}
+	[CCode (cprefix = "GST_RTCP_", has_type_id = "0", cheader_filename = "gst/gst.h")]
+	public enum RTCPFBType {
+		FB_TYPE_INVALID,
+		RTPFB_TYPE_NACK,
+		PSFB_TYPE_PLI,
+		PSFB_TYPE_SLI,
+		PSFB_TYPE_RPSI,
+		PSFB_TYPE_AFB
+	}
 	[CCode (cprefix = "GST_RTCP_SDES_", has_type_id = "0", cheader_filename = "gst/rtp/gstrtcpbuffer.h")]
 	public enum RTCPSDESType {
 		INVALID,
@@ -167,7 +184,9 @@ namespace Gst {
 		RR,
 		SDES,
 		BYE,
-		APP
+		APP,
+		RTPFB,
+		PSFB
 	}
 	[CCode (cprefix = "GST_RTP_PAYLOAD_", has_type_id = "0", cheader_filename = "gst/rtp/gstbasertpaudiopayload.h")]
 	public enum RTPPayload {
@@ -354,6 +373,26 @@ namespace Gst {
 	public static uint32 rtp_buffer_get_timestamp (Gst.Buffer buffer);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
 	public static uchar rtp_buffer_get_version (Gst.Buffer buffer);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static uint rtp_buffer_list_get_payload_len (Gst.BufferList list);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static uchar rtp_buffer_list_get_payload_type (Gst.BufferList list);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static uint16 rtp_buffer_list_get_seq (Gst.BufferList list);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static uint32 rtp_buffer_list_get_ssrc (Gst.BufferList list);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static uint32 rtp_buffer_list_get_timestamp (Gst.BufferList list);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static void rtp_buffer_list_set_payload_type (Gst.BufferList list, uchar payload_type);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static uint16 rtp_buffer_list_set_seq (Gst.BufferList list, uint16 seq);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static void rtp_buffer_list_set_ssrc (Gst.BufferList list, uint32 ssrc);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static void rtp_buffer_list_set_timestamp (Gst.BufferList list, uint32 timestamp);
+	[CCode (cheader_filename = "gst/gst.h")]
+	public static bool rtp_buffer_list_validate (Gst.BufferList list);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]
 	public static unowned Gst.Buffer rtp_buffer_new_allocate (uint payload_len, uchar pad_len, uchar csrc_count);
 	[CCode (cheader_filename = "gst/rtp/gstrtpbuffer.h")]

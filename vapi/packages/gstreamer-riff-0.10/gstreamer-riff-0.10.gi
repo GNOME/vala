@@ -299,6 +299,7 @@
 		<constant name="GST_RIFF_WAVE_FORMAT_SIPROLAB_G729" type="int" value="307"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_SIPROLAB_G729A" type="int" value="308"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_SIPROLAB_KELVIN" type="int" value="309"/>
+		<constant name="GST_RIFF_WAVE_FORMAT_SIREN" type="int" value="654"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_SOFTSOUND" type="int" value="128"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_SONARC" type="int" value="33"/>
 		<constant name="GST_RIFF_WAVE_FORMAT_SONIC" type="int" value="8264"/>

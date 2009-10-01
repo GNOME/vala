@@ -64,6 +64,14 @@
 					<parameter name="port" type="guint16"/>
 				</parameters>
 			</method>
+			<method name="to_string" symbol="gst_netaddress_to_string">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="naddr" type="GstNetAddress*"/>
+					<parameter name="dest" type="gchar*"/>
+					<parameter name="len" type="gulong"/>
+				</parameters>
+			</method>
 			<field name="type" type="GstNetType"/>
 			<field name="address" type="gpointer"/>
 			<field name="port" type="guint16"/>
@@ -87,5 +95,6 @@
 			<member name="GST_NET_TYPE_IP4" value="1"/>
 			<member name="GST_NET_TYPE_IP6" value="2"/>
 		</enum>
+		<constant name="GST_NETADDRESS_MAX_LEN" type="int" value="64"/>
 	</namespace>
 </api>

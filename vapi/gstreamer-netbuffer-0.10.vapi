@@ -36,6 +36,8 @@ namespace Gst {
 		public void set_ip4_address (uint32 address, uint16 port);
 		[CCode (cname = "gst_netaddress_set_ip6_address")]
 		public void set_ip6_address ([CCode (array_length = false)] uchar[] address, uint16 port);
+		[CCode (cname = "gst_netaddress_to_string")]
+		public int to_string (string dest, ulong len);
 	}
 	[CCode (cprefix = "GST_NET_TYPE_", has_type_id = "0", cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
 	public enum NetType {
@@ -43,4 +45,6 @@ namespace Gst {
 		IP4,
 		IP6
 	}
+	[CCode (cheader_filename = "gst/netbuffer/gstnetbuffer.h")]
+	public const int NETADDRESS_MAX_LEN;
 }

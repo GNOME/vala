@@ -10,6 +10,8 @@ namespace Gst {
 		public void* user_data;
 		[CCode (type = "GstClock*", has_construct_function = false)]
 		public AudioClock (string name, Gst.AudioClockGetTimeFunc func);
+		public static Gst.ClockTime adjust (Gst.Clock clock, Gst.ClockTime time);
+		public static Gst.ClockTime get_time (Gst.Clock clock);
 		public void reset (Gst.ClockTime time);
 	}
 	[CCode (cheader_filename = "gst/audio/gstaudiofilter.h")]
@@ -69,6 +71,8 @@ namespace Gst {
 		[NoAccessorMethod]
 		public int64 buffer_time { get; set; }
 		[NoAccessorMethod]
+		public bool can_activate_pull { get; set; }
+		[NoAccessorMethod]
 		public int64 latency_time { get; set; }
 		public bool provide_clock { get; set; }
 		public Gst.BaseAudioSinkSlaveMethod slave_method { get; set; }
@@ -115,9 +119,9 @@ namespace Gst {
 		public virtual bool activate (bool active);
 		public void advance (uint advance);
 		public void clear (int segment);
-		public void clear_all ();
+		public virtual void clear_all ();
 		public virtual bool close_device ();
-		public uint commit (uint64 sample, uchar[] data, uint len);
+		public virtual uint commit (uint64 sample, uchar[] data, uint len);
 		public uint commit_full (uint64 sample, uchar[] data, int in_samples, int out_samples, ref int accum);
 		public bool convert (Gst.Format src_fmt, int64 src_val, Gst.Format dest_fmt, out int64 dest_val);
 		public static void debug_spec_buff (Gst.RingBufferSpec spec);

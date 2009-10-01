@@ -9,7 +9,7 @@ namespace Gst {
 		public InstallPluginsContext ();
 		public void set_xid (uint xid);
 	}
-	[CCode (cprefix = "GST_INSTALL_PLUGINS_", has_type_id = "0", cheader_filename = "gst/pbutils/pbutils.h")]
+	[CCode (cprefix = "GST_INSTALL_PLUGINS_", cheader_filename = "gst/pbutils/pbutils.h")]
 	public enum InstallPluginsReturn {
 		SUCCESS,
 		NOT_FOUND,

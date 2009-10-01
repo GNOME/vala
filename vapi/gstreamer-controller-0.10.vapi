@@ -94,7 +94,7 @@ namespace Gst {
 		CUBIC,
 		USER
 	}
-	[CCode (cprefix = "", has_type_id = "0", cheader_filename = "gst/controller/gstlfocontrolsource.h")]
+	[CCode (cprefix = "", cheader_filename = "gst/controller/gstlfocontrolsource.h")]
 	public enum LFOWaveform {
 		Sine waveform (default),
 		Square waveform,
