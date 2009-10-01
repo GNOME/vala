@@ -1163,15 +1163,13 @@ namespace GLib {
 	}
 
 	/* Byte order */
-	namespace ByteOrder {
+	[CCode (cprefix = "G_", cname = "int", has_type_id = false)]
+	public enum ByteOrder {
 		[CCode (cname = "G_BYTE_ORDER")]
-		public const int HOST;
-		[CCode (cname = "G_LITTLE_ENDIAN")]
-		public const int LITTLE_ENDIAN;
-		[CCode (cname = "G_BIG_ENDIAN")]
-		public const int BIG_ENDIAN;
-		[CCode (cname = "G_PDP_ENDIAN")]
-		public const int PDP_ENDIAN;
+		HOST,
+		LITTLE_ENDIAN,
+		BIG_ENDIAN,
+		PDP_ENDIAN
 	}
 
 	/* Atomic Operations */
