@@ -62,7 +62,9 @@ public class Vala.SignalType : DataType {
 
 	DelegateType get_handler_type () {
 		var sender_type = new ObjectType ((ObjectTypeSymbol) signal_symbol.parent_symbol);
-		return new DelegateType (signal_symbol.get_delegate (sender_type, this));
+		var result = new DelegateType (signal_symbol.get_delegate (sender_type, this));
+		result.value_owned = true;
+		return result;
 	}
 
 	Method get_connect_method () {
