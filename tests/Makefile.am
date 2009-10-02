@@ -20,6 +20,7 @@ TESTS = \
 	basic-types/strings.vala \
 	basic-types/arrays.vala \
 	basic-types/pointers.vala \
+	basic-types/bug595751.vala \
 	basic-types/bug596637.vala \
 	basic-types/bug596785.vala \
 	namespaces.vala \
