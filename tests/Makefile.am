@@ -57,6 +57,7 @@ TESTS = \
 	errors/bug579101.vala \
 	errors/bug596228.vala \
 	asynchronous/bug595735.vala \
+	asynchronous/bug595755.vala \
 	asynchronous/bug596177.vala \
 	dbus/basic-types.test \
 	dbus/arrays.test \

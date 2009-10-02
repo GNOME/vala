@@ -594,7 +594,7 @@ internal class Vala.GSignalModule : GObjectModule {
 		if (ma.inner != null) {
 			ccall.add_argument ((CCodeExpression) get_ccodenode (ma.inner));
 		} else {
-			ccall.add_argument (new CCodeIdentifier ("self"));
+			ccall.add_argument (get_result_cexpression ("self"));
 		}
 
 		if (sig is DynamicSignal) {
@@ -671,10 +671,10 @@ internal class Vala.GSignalModule : GObjectModule {
 				if (right_ma.inner != null) {
 					ccall.add_argument ((CCodeExpression) right_ma.inner.ccodenode);
 				} else {
-					ccall.add_argument (new CCodeIdentifier ("self"));
+					ccall.add_argument (get_result_cexpression ("self"));
 				}
 			} else if (handler is LambdaExpression) {
-				ccall.add_argument (new CCodeIdentifier ("self"));
+				ccall.add_argument (get_result_cexpression ("self"));
 			}
 			if (!disconnect && !(sig is DynamicSignal)
 			    && in_gobject_instance (m)) {
