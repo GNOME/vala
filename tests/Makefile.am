@@ -54,6 +54,7 @@ TESTS = \
 	objects/bug593260.vala \
 	objects/bug596621.vala \
 	objects/bug597155.vala \
+	objects/bug597161.vala \
 	errors/errors.vala \
 	errors/bug579101.vala \
 	errors/bug596228.vala \

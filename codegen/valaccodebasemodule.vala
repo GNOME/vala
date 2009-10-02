@@ -2935,27 +2935,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		stmt.accept_children (codegen);
 
-		if (stmt.return_expression == null) {
-			var cfrag = new CCodeFragment ();
+		Symbol return_expression_symbol = null;
 
-			// free local variables
-			append_local_free (current_symbol, cfrag);
-
-			if (current_method != null) {
-				// check postconditions
-				foreach (Expression postcondition in current_method.get_postconditions ()) {
-					cfrag.append (create_postcondition_statement (postcondition));
-				}
-			}
-
-			var creturn = new CCodeReturnStatement ();
-			cfrag.append (creturn);
-
-			stmt.ccodenode = cfrag;
-			creturn.line = stmt.ccodenode.line;
-		} else {
-			Symbol return_expression_symbol = null;
-
+		if (stmt.return_expression != null) {
 			// avoid unnecessary ref/unref pair
 			var local = stmt.return_expression.symbol_reference as LocalVariable;
 			if (current_return_type.value_owned
@@ -2969,100 +2951,106 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				return_expression_symbol = local;
 				return_expression_symbol.active = false;
 			}
+		}
 
-			// return array length if appropriate
-			if (((current_method != null && !current_method.no_array_length) || current_property_accessor != null) && current_return_type is ArrayType) {
+		// return array length if appropriate
+		if (((current_method != null && !current_method.no_array_length) || current_property_accessor != null) && current_return_type is ArrayType) {
+			var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt, false);
+
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), (CCodeExpression) stmt.return_expression.ccodenode));
+
+			var array_type = (ArrayType) current_return_type;
+
+			for (int dim = 1; dim <= array_type.rank; dim++) {
+				var len_l = get_result_cexpression (head.get_array_length_cname ("result", dim));
+				if (current_method == null || !current_method.coroutine) {
+					len_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, len_l);
+				}
+				var len_r = head.get_array_length_cexpression (stmt.return_expression, dim);
+				ccomma.append_expression (new CCodeAssignment (len_l, len_r));
+			}
+
+			ccomma.append_expression (get_variable_cexpression (return_expr_decl.name));
+
+			stmt.return_expression.ccodenode = ccomma;
+			stmt.return_expression.temp_vars.add (return_expr_decl);
+		} else if ((current_method != null || current_property_accessor != null) && current_return_type is DelegateType) {
+			var delegate_type = (DelegateType) current_return_type;
+			if (delegate_type.delegate_symbol.has_target) {
 				var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt, false);
 
 				var ccomma = new CCodeCommaExpression ();
 				ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), (CCodeExpression) stmt.return_expression.ccodenode));
 
-				var array_type = (ArrayType) current_return_type;
-
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var len_l = get_result_cexpression (head.get_array_length_cname ("result", dim));
+				var target_l = get_result_cexpression (get_delegate_target_cname ("result"));
+				if (current_method == null || !current_method.coroutine) {
+					target_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_l);
+				}
+				CCodeExpression target_r_destroy_notify;
+				var target_r = get_delegate_target_cexpression (stmt.return_expression, out target_r_destroy_notify);
+				ccomma.append_expression (new CCodeAssignment (target_l, target_r));
+				if (delegate_type.value_owned) {
+					var target_l_destroy_notify = get_result_cexpression (get_delegate_target_destroy_notify_cname ("result"));
 					if (current_method == null || !current_method.coroutine) {
-						len_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, len_l);
+						target_l_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_l_destroy_notify);
 					}
-					var len_r = head.get_array_length_cexpression (stmt.return_expression, dim);
-					ccomma.append_expression (new CCodeAssignment (len_l, len_r));
+					ccomma.append_expression (new CCodeAssignment (target_l_destroy_notify, target_r_destroy_notify));
 				}
 
 				ccomma.append_expression (get_variable_cexpression (return_expr_decl.name));
-				
+
 				stmt.return_expression.ccodenode = ccomma;
 				stmt.return_expression.temp_vars.add (return_expr_decl);
-			} else if ((current_method != null || current_property_accessor != null) && current_return_type is DelegateType) {
-				var delegate_type = (DelegateType) current_return_type;
-				if (delegate_type.delegate_symbol.has_target) {
-					var return_expr_decl = get_temp_variable (stmt.return_expression.value_type, true, stmt, false);
-
-					var ccomma = new CCodeCommaExpression ();
-					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (return_expr_decl.name), (CCodeExpression) stmt.return_expression.ccodenode));
-
-					var target_l = get_result_cexpression (get_delegate_target_cname ("result"));
-					if (current_method == null || !current_method.coroutine) {
-						target_l = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_l);
-					}
-					CCodeExpression target_r_destroy_notify;
-					var target_r = get_delegate_target_cexpression (stmt.return_expression, out target_r_destroy_notify);
-					ccomma.append_expression (new CCodeAssignment (target_l, target_r));
-					if (delegate_type.value_owned) {
-						var target_l_destroy_notify = get_result_cexpression (get_delegate_target_destroy_notify_cname ("result"));
-						if (current_method == null || !current_method.coroutine) {
-							target_l_destroy_notify = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, target_l_destroy_notify);
-						}
-						ccomma.append_expression (new CCodeAssignment (target_l_destroy_notify, target_r_destroy_notify));
-					}
-
-					ccomma.append_expression (get_variable_cexpression (return_expr_decl.name));
-
-					stmt.return_expression.ccodenode = ccomma;
-					stmt.return_expression.temp_vars.add (return_expr_decl);
-				}
 			}
+		}
 
-			var cfrag = new CCodeFragment ();
+		var cfrag = new CCodeFragment ();
 
+		if (stmt.return_expression != null) {
 			// assign method result to `result'
 			CCodeExpression result_lhs = get_result_cexpression ();
 			if (current_return_type.is_real_non_null_struct_type () && (current_method == null || !current_method.coroutine)) {
 				result_lhs = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, result_lhs);
 			}
 			cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (result_lhs, (CCodeExpression) stmt.return_expression.ccodenode)));
+		}
 
-			// free local variables
-			append_local_free (current_symbol, cfrag);
+		// free local variables
+		append_local_free (current_symbol, cfrag);
 
-			if (current_method != null) {
-				// check postconditions
-				foreach (Expression postcondition in current_method.get_postconditions ()) {
-					cfrag.append (create_postcondition_statement (postcondition));
-				}
+		if (current_method != null) {
+			// check postconditions
+			foreach (Expression postcondition in current_method.get_postconditions ()) {
+				cfrag.append (create_postcondition_statement (postcondition));
 			}
+		}
 
-			CCodeReturnStatement creturn = null;
-			if (current_method == null || !current_method.coroutine) {
-				// structs are returned via out parameter
-				if (current_return_type.is_real_non_null_struct_type()) {
-					creturn = new CCodeReturnStatement ();
-					cfrag.append (creturn);
-				} else {
-					creturn = new CCodeReturnStatement (new CCodeIdentifier ("result"));
-					cfrag.append (creturn);
-				}
-			}
+		CCodeReturnStatement creturn = null;
+		if (current_method is CreationMethod) {
+			creturn = new CCodeReturnStatement (new CCodeIdentifier ("self"));
+			cfrag.append (creturn);
+		} else if (current_method != null && current_method.coroutine) {
+		} else if (current_return_type is VoidType || current_return_type.is_real_non_null_struct_type ()) {
+			// structs are returned via out parameter
+			creturn = new CCodeReturnStatement ();
+			cfrag.append (creturn);
+		} else {
+			creturn = new CCodeReturnStatement (new CCodeIdentifier ("result"));
+			cfrag.append (creturn);
+		}
 
-			stmt.ccodenode = cfrag;
-			if (creturn != null) {
-				creturn.line = stmt.ccodenode.line;
-			}
+		stmt.ccodenode = cfrag;
+		if (creturn != null) {
+			creturn.line = stmt.ccodenode.line;
+		}
 
+		if (stmt.return_expression != null) {
 			create_temp_decl (stmt, stmt.return_expression.temp_vars);
+		}
 
-			if (return_expression_symbol != null) {
-				return_expression_symbol.active = true;
-			}
+		if (return_expression_symbol != null) {
+			return_expression_symbol.active = true;
 		}
 	}
 

@@ -29,7 +29,7 @@ vapidir=$topsrcdir/vapi
 export G_DEBUG=fatal_warnings
 
 VALAC=$topbuilddir/compiler/valac
-VALAFLAGS="--vapidir $vapidir --disable-warnings --main main --save-temps -X -O0 -X -pipe -X -lm"
+VALAFLAGS="--vapidir $vapidir --disable-warnings --main main --save-temps -X -O0 -X -pipe -X -lm -X -Werror=return-type"
 
 function testheader() {
 	if [ "$1" = "Packages:" ]; then
