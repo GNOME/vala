@@ -53,6 +53,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 				}
 			} else if (param.parameter_type is DelegateType) {
 				data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (param.name)));
+				data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname (get_variable_cname (param.name)));
 			}
 		}
 
@@ -65,6 +66,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 				}
 			} else if (m.return_type is DelegateType) {
 				data.add_field ("gpointer", get_delegate_target_cname ("result"));
+				data.add_field ("GDestroyNotify", get_delegate_target_destroy_notify_cname ("result"));
 			}
 		}
 
@@ -96,6 +98,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 				if (requires_destroy (param_type)) {
 					var ma = new MemberAccess.simple (param.name);
 					ma.symbol_reference = param;
+					ma.value_type = param.parameter_type.copy ();
 					freeblock.add_statement (new CCodeExpressionStatement (get_unref_expression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), get_variable_cname (param.name)), param.parameter_type, ma)));
 				}
 			}
@@ -206,7 +209,11 @@ internal class Vala.GAsyncModule : GSignalModule {
 						asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_array_length_cname (get_variable_cname (param.name), dim)), new CCodeIdentifier (get_array_length_cname (get_variable_cname (param.name), dim)))));
 					}
 				} else if (param.parameter_type is DelegateType) {
+					var deleg_type = (DelegateType) param.parameter_type;
 					asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_cname (get_variable_cname (param.name))))));
+					if (deleg_type.value_owned) {
+						asyncblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (data_var, get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))), new CCodeIdentifier (get_delegate_target_destroy_notify_cname (get_variable_cname (param.name))))));
+					}
 				}
 			}
 		}
