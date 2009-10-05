@@ -1235,8 +1235,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 	public override void visit_formal_parameter (FormalParameter p) {
 		check_type (p.parameter_type);
-
-		p.accept_children (codegen);
 	}
 
 	public override void visit_property (Property prop) {
