@@ -2115,6 +2115,8 @@ namespace GLib {
 	public string format_size_for_display (int64 size);
 
 	/* Lexical Scanner */
+	[CCode (has_target = false)]
+	public delegate void ScannerMsgFunc (Scanner scanner, string message, bool error);
 
 	[Compact]
 	[CCode (free_function = "g_scanner_destroy")]
@@ -2128,6 +2130,7 @@ namespace GLib {
 		public TokenValue next_value;
 		public uint next_line;
 		public uint next_position;
+		public ScannerMsgFunc msg_handler;
 		public Scanner (ScannerConfig? config_templ);
 		public void input_file (int input_fd);
 		public void sync_file_offset ();
