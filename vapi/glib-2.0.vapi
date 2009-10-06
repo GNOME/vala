@@ -932,6 +932,11 @@ public class string {
 	[CCode (cname = "strlen")]
 	public size_t size ();
 
+	[CCode (cname = "g_ascii_strcasecmp")]
+	public int ascii_casecmp (string s2);
+	[CCode (cname = "g_ascii_strncasecmp")]
+	public int ascii_ncasecmp (string s2, size_t n);
+
 	[CCode (cname = "g_utf8_skip")]
 	public static char[] skip;
 
