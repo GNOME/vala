@@ -1,10 +1,126 @@
 <?xml version="1.0"?>
 <api version="1.0">
 	<namespace name="Hildon">
+		<function name="format_file_size_for_display" symbol="hildon_format_file_size_for_display">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="size" type="goffset"/>
+			</parameters>
+		</function>
 		<function name="get_icon_pixel_size" symbol="hildon_get_icon_pixel_size">
 			<return-type type="gint"/>
 			<parameters>
 				<parameter name="size" type="GtkIconSize"/>
+			</parameters>
+		</function>
+		<function name="gtk_button_new" symbol="hildon_gtk_button_new">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="size" type="HildonSizeType"/>
+			</parameters>
+		</function>
+		<function name="gtk_hscale_new" symbol="hildon_gtk_hscale_new">
+			<return-type type="GtkWidget*"/>
+		</function>
+		<function name="gtk_icon_view_new" symbol="hildon_gtk_icon_view_new">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="mode" type="HildonUIMode"/>
+			</parameters>
+		</function>
+		<function name="gtk_icon_view_new_with_model" symbol="hildon_gtk_icon_view_new_with_model">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="mode" type="HildonUIMode"/>
+				<parameter name="model" type="GtkTreeModel*"/>
+			</parameters>
+		</function>
+		<function name="gtk_icon_view_set_ui_mode" symbol="hildon_gtk_icon_view_set_ui_mode">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="iconview" type="GtkIconView*"/>
+				<parameter name="mode" type="HildonUIMode"/>
+			</parameters>
+		</function>
+		<function name="gtk_init" symbol="hildon_gtk_init">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="argc" type="int*"/>
+				<parameter name="argv" type="char***"/>
+			</parameters>
+		</function>
+		<function name="gtk_menu_new" symbol="hildon_gtk_menu_new">
+			<return-type type="GtkWidget*"/>
+		</function>
+		<function name="gtk_radio_button_new" symbol="hildon_gtk_radio_button_new">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="size" type="HildonSizeType"/>
+				<parameter name="group" type="GSList*"/>
+			</parameters>
+		</function>
+		<function name="gtk_radio_button_new_from_widget" symbol="hildon_gtk_radio_button_new_from_widget">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="size" type="HildonSizeType"/>
+				<parameter name="radio_group_member" type="GtkRadioButton*"/>
+			</parameters>
+		</function>
+		<function name="gtk_toggle_button_new" symbol="hildon_gtk_toggle_button_new">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="size" type="HildonSizeType"/>
+			</parameters>
+		</function>
+		<function name="gtk_tree_view_new" symbol="hildon_gtk_tree_view_new">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="mode" type="HildonUIMode"/>
+			</parameters>
+		</function>
+		<function name="gtk_tree_view_new_with_model" symbol="hildon_gtk_tree_view_new_with_model">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="mode" type="HildonUIMode"/>
+				<parameter name="model" type="GtkTreeModel*"/>
+			</parameters>
+		</function>
+		<function name="gtk_tree_view_set_ui_mode" symbol="hildon_gtk_tree_view_set_ui_mode">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="treeview" type="GtkTreeView*"/>
+				<parameter name="mode" type="HildonUIMode"/>
+			</parameters>
+		</function>
+		<function name="gtk_vscale_new" symbol="hildon_gtk_vscale_new">
+			<return-type type="GtkWidget*"/>
+		</function>
+		<function name="gtk_window_set_do_not_disturb" symbol="hildon_gtk_window_set_do_not_disturb">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="window" type="GtkWindow*"/>
+				<parameter name="dndflag" type="gboolean"/>
+			</parameters>
+		</function>
+		<function name="gtk_window_set_portrait_flags" symbol="hildon_gtk_window_set_portrait_flags">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="window" type="GtkWindow*"/>
+				<parameter name="portrait_flags" type="HildonPortraitFlags"/>
+			</parameters>
+		</function>
+		<function name="gtk_window_set_progress_indicator" symbol="hildon_gtk_window_set_progress_indicator">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="window" type="GtkWindow*"/>
+				<parameter name="state" type="guint"/>
+			</parameters>
+		</function>
+		<function name="gtk_window_take_screenshot" symbol="hildon_gtk_window_take_screenshot">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="window" type="GtkWindow*"/>
+				<parameter name="take" type="gboolean"/>
 			</parameters>
 		</function>
 		<function name="helper_event_button_is_finger" symbol="hildon_helper_event_button_is_finger">
@@ -50,21 +166,55 @@
 				<parameter name="thumb" type="gboolean"/>
 			</parameters>
 		</function>
+		<function name="init" symbol="hildon_init">
+			<return-type type="void"/>
+		</function>
+		<function name="pannable_get_child_widget_at" symbol="hildon_pannable_get_child_widget_at">
+			<return-type type="GtkWidget*"/>
+			<parameters>
+				<parameter name="area" type="HildonPannableArea*"/>
+				<parameter name="x" type="gdouble"/>
+				<parameter name="y" type="gdouble"/>
+			</parameters>
+		</function>
 		<function name="play_system_sound" symbol="hildon_play_system_sound">
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="sample" type="gchar*"/>
 			</parameters>
 		</function>
-		<enum name="HildonCaptionIconPosition">
+		<callback name="HildonTouchSelectorPrintFunc">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="selector" type="HildonTouchSelector*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
+		<callback name="HildonWizardDialogPageFunc">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="notebook" type="GtkNotebook*"/>
+				<parameter name="current_page" type="gint"/>
+				<parameter name="data" type="gpointer"/>
+			</parameters>
+		</callback>
+		<enum name="HildonButtonArrangement" type-name="HildonButtonArrangement" get-type="hildon_button_arrangement_get_type">
+			<member name="HILDON_BUTTON_ARRANGEMENT_HORIZONTAL" value="0"/>
+			<member name="HILDON_BUTTON_ARRANGEMENT_VERTICAL" value="1"/>
+		</enum>
+		<enum name="HildonButtonStyle" type-name="HildonButtonStyle" get-type="hildon_button_style_get_type">
+			<member name="HILDON_BUTTON_STYLE_NORMAL" value="0"/>
+			<member name="HILDON_BUTTON_STYLE_PICKER" value="1"/>
+		</enum>
+		<enum name="HildonCaptionIconPosition" type-name="HildonCaptionIconPosition" get-type="hildon_caption_icon_position_get_type">
 			<member name="HILDON_CAPTION_POSITION_LEFT" value="0"/>
 			<member name="HILDON_CAPTION_POSITION_RIGHT" value="1"/>
 		</enum>
-		<enum name="HildonCaptionStatus">
+		<enum name="HildonCaptionStatus" type-name="HildonCaptionStatus" get-type="hildon_caption_status_get_type">
 			<member name="HILDON_CAPTION_OPTIONAL" value="0"/>
 			<member name="HILDON_CAPTION_MANDATORY" value="1"/>
 		</enum>
-		<enum name="HildonDateTimeError">
+		<enum name="HildonDateTimeError" type-name="HildonDateTimeError" get-type="hildon_date_time_error_get_type">
 			<member name="HILDON_DATE_TIME_ERROR_NO_ERROR" value="-1"/>
 			<member name="HILDON_DATE_TIME_ERROR_MAX_HOURS" value="0"/>
 			<member name="HILDON_DATE_TIME_ERROR_MAX_MINS" value="1"/>
@@ -90,36 +240,261 @@
 			<member name="HILDON_DATE_TIME_ERROR_INVALID_DATE" value="21"/>
 			<member name="HILDON_DATE_TIME_ERROR_INVALID_TIME" value="22"/>
 		</enum>
-		<enum name="HildonNoteType">
+		<enum name="HildonMovementDirection" type-name="HildonMovementDirection" get-type="hildon_movement_direction_get_type">
+			<member name="HILDON_MOVEMENT_UP" value="0"/>
+			<member name="HILDON_MOVEMENT_DOWN" value="1"/>
+			<member name="HILDON_MOVEMENT_LEFT" value="2"/>
+			<member name="HILDON_MOVEMENT_RIGHT" value="3"/>
+		</enum>
+		<enum name="HildonNoteType" type-name="HildonNoteType" get-type="hildon_note_type_get_type">
 			<member name="HILDON_NOTE_TYPE_CONFIRMATION" value="0"/>
 			<member name="HILDON_NOTE_TYPE_CONFIRMATION_BUTTON" value="1"/>
 			<member name="HILDON_NOTE_TYPE_INFORMATION" value="2"/>
 			<member name="HILDON_NOTE_TYPE_INFORMATION_THEME" value="3"/>
 			<member name="HILDON_NOTE_TYPE_PROGRESSBAR" value="4"/>
 		</enum>
-		<enum name="HildonNumberEditorErrorType">
+		<enum name="HildonNumberEditorErrorType" type-name="HildonNumberEditorErrorType" get-type="hildon_number_editor_error_type_get_type">
 			<member name="HILDON_NUMBER_EDITOR_ERROR_MAXIMUM_VALUE_EXCEED" value="0"/>
 			<member name="HILDON_NUMBER_EDITOR_ERROR_MINIMUM_VALUE_EXCEED" value="1"/>
 			<member name="HILDON_NUMBER_EDITOR_ERROR_ERRONEOUS_VALUE" value="2"/>
 		</enum>
-		<enum name="HildonWindowClipboardOperation">
+		<enum name="HildonPannableAreaMode" type-name="HildonPannableAreaMode" get-type="hildon_pannable_area_mode_get_type">
+			<member name="HILDON_PANNABLE_AREA_MODE_PUSH" value="0"/>
+			<member name="HILDON_PANNABLE_AREA_MODE_ACCEL" value="1"/>
+			<member name="HILDON_PANNABLE_AREA_MODE_AUTO" value="2"/>
+		</enum>
+		<enum name="HildonSizeRequestPolicy" type-name="HildonSizeRequestPolicy" get-type="hildon_size_request_policy_get_type">
+			<member name="HILDON_SIZE_REQUEST_MINIMUM" value="0"/>
+			<member name="HILDON_SIZE_REQUEST_CHILDREN" value="1"/>
+		</enum>
+		<enum name="HildonTimeSelectorFormatPolicy" type-name="HildonTimeSelectorFormatPolicy" get-type="hildon_time_selector_format_policy_get_type">
+			<member name="HILDON_TIME_SELECTOR_FORMAT_POLICY_AMPM" value="0"/>
+			<member name="HILDON_TIME_SELECTOR_FORMAT_POLICY_24H" value="1"/>
+			<member name="HILDON_TIME_SELECTOR_FORMAT_POLICY_AUTOMATIC" value="2"/>
+		</enum>
+		<enum name="HildonTouchSelectorSelectionMode" type-name="HildonTouchSelectorSelectionMode" get-type="hildon_touch_selector_selection_mode_get_type">
+			<member name="HILDON_TOUCH_SELECTOR_SELECTION_MODE_SINGLE" value="0"/>
+			<member name="HILDON_TOUCH_SELECTOR_SELECTION_MODE_MULTIPLE" value="1"/>
+		</enum>
+		<enum name="HildonWindowClipboardOperation" type-name="HildonWindowClipboardOperation" get-type="hildon_window_clipboard_operation_get_type">
 			<member name="HILDON_WINDOW_CO_COPY" value="0"/>
 			<member name="HILDON_WINDOW_CO_CUT" value="1"/>
 			<member name="HILDON_WINDOW_CO_PASTE" value="2"/>
 		</enum>
-		<enum name="HildonWizardDialogResponse">
+		<enum name="HildonWizardDialogResponse" type-name="HildonWizardDialogResponse" get-type="hildon_wizard_dialog_response_get_type">
 			<member name="HILDON_WIZARD_DIALOG_CANCEL" value="-6"/>
 			<member name="HILDON_WIZARD_DIALOG_PREVIOUS" value="0"/>
 			<member name="HILDON_WIZARD_DIALOG_NEXT" value="1"/>
 			<member name="HILDON_WIZARD_DIALOG_FINISH" value="2"/>
 		</enum>
-		<flags name="HildonCalendarDisplayOptions">
+		<flags name="HildonCalendarDisplayOptions" type-name="HildonCalendarDisplayOptions" get-type="hildon_calendar_display_options_get_type">
 			<member name="HILDON_CALENDAR_SHOW_HEADING" value="1"/>
 			<member name="HILDON_CALENDAR_SHOW_DAY_NAMES" value="2"/>
 			<member name="HILDON_CALENDAR_NO_MONTH_CHANGE" value="4"/>
 			<member name="HILDON_CALENDAR_SHOW_WEEK_NUMBERS" value="8"/>
 			<member name="HILDON_CALENDAR_WEEK_START_MONDAY" value="16"/>
 		</flags>
+		<flags name="HildonMovementMode" type-name="HildonMovementMode" get-type="hildon_movement_mode_get_type">
+			<member name="HILDON_MOVEMENT_MODE_HORIZ" value="2"/>
+			<member name="HILDON_MOVEMENT_MODE_VERT" value="4"/>
+			<member name="HILDON_MOVEMENT_MODE_BOTH" value="6"/>
+		</flags>
+		<flags name="HildonPortraitFlags" type-name="HildonPortraitFlags" get-type="hildon_portrait_flags_get_type">
+			<member name="HILDON_PORTRAIT_MODE_REQUEST" value="1"/>
+			<member name="HILDON_PORTRAIT_MODE_SUPPORT" value="2"/>
+		</flags>
+		<object name="HildonAnimationActor" parent="GtkWindow" type-name="HildonAnimationActor" get-type="hildon_animation_actor_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<constructor name="new" symbol="hildon_animation_actor_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="send_message" symbol="hildon_animation_actor_send_message">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonAnimationActor*"/>
+					<parameter name="message_type" type="guint32"/>
+					<parameter name="l0" type="guint32"/>
+					<parameter name="l1" type="guint32"/>
+					<parameter name="l2" type="guint32"/>
+					<parameter name="l3" type="guint32"/>
+					<parameter name="l4" type="guint32"/>
+				</parameters>
+			</method>
+			<method name="set_anchor" symbol="hildon_animation_actor_set_anchor">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonAnimationActor*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_anchor_from_gravity" symbol="hildon_animation_actor_set_anchor_from_gravity">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonAnimationActor*"/>
+					<parameter name="gravity" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_depth" symbol="hildon_animation_actor_set_depth">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonAnimationActor*"/>
+					<parameter name="depth" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_opacity" symbol="hildon_animation_actor_set_opacity">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonAnimationActor*"/>
+					<parameter name="opacity" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_parent" symbol="hildon_animation_actor_set_parent">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonAnimationActor*"/>
+					<parameter name="parent" type="GtkWindow*"/>
+				</parameters>
+			</method>
+			<method name="set_position" symbol="hildon_animation_actor_set_position">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonAnimationActor*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_position_full" symbol="hildon_animation_actor_set_position_full">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonAnimationActor*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+					<parameter name="depth" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_rotation" symbol="hildon_animation_actor_set_rotation">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonAnimationActor*"/>
+					<parameter name="axis" type="gint"/>
+					<parameter name="degrees" type="double"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+					<parameter name="z" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_rotationx" symbol="hildon_animation_actor_set_rotationx">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonAnimationActor*"/>
+					<parameter name="axis" type="gint"/>
+					<parameter name="degrees" type="gint32"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+					<parameter name="z" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_scale" symbol="hildon_animation_actor_set_scale">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonAnimationActor*"/>
+					<parameter name="x_scale" type="double"/>
+					<parameter name="y_scale" type="double"/>
+				</parameters>
+			</method>
+			<method name="set_scalex" symbol="hildon_animation_actor_set_scalex">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonAnimationActor*"/>
+					<parameter name="x_scale" type="gint32"/>
+					<parameter name="y_scale" type="gint32"/>
+				</parameters>
+			</method>
+			<method name="set_show" symbol="hildon_animation_actor_set_show">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonAnimationActor*"/>
+					<parameter name="show" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_show_full" symbol="hildon_animation_actor_set_show_full">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonAnimationActor*"/>
+					<parameter name="show" type="gint"/>
+					<parameter name="opacity" type="gint"/>
+				</parameters>
+			</method>
+		</object>
+		<object name="HildonAppMenu" parent="GtkWindow" type-name="HildonAppMenu" get-type="hildon_app_menu_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="add_filter" symbol="hildon_app_menu_add_filter">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="HildonAppMenu*"/>
+					<parameter name="filter" type="GtkButton*"/>
+				</parameters>
+			</method>
+			<method name="append" symbol="hildon_app_menu_append">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="HildonAppMenu*"/>
+					<parameter name="item" type="GtkButton*"/>
+				</parameters>
+			</method>
+			<method name="get_filters" symbol="hildon_app_menu_get_filters">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="menu" type="HildonAppMenu*"/>
+				</parameters>
+			</method>
+			<method name="get_items" symbol="hildon_app_menu_get_items">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="menu" type="HildonAppMenu*"/>
+				</parameters>
+			</method>
+			<method name="insert" symbol="hildon_app_menu_insert">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="HildonAppMenu*"/>
+					<parameter name="item" type="GtkButton*"/>
+					<parameter name="position" type="gint"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_app_menu_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="popup" symbol="hildon_app_menu_popup">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="HildonAppMenu*"/>
+					<parameter name="parent_window" type="GtkWindow*"/>
+				</parameters>
+			</method>
+			<method name="prepend" symbol="hildon_app_menu_prepend">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="HildonAppMenu*"/>
+					<parameter name="item" type="GtkButton*"/>
+				</parameters>
+			</method>
+			<method name="reorder_child" symbol="hildon_app_menu_reorder_child">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="menu" type="HildonAppMenu*"/>
+					<parameter name="item" type="GtkButton*"/>
+					<parameter name="position" type="gint"/>
+				</parameters>
+			</method>
+		</object>
 		<object name="HildonBanner" parent="GtkWindow" type-name="HildonBanner" get-type="hildon_banner_get_type">
 			<implements>
 				<interface name="AtkImplementor"/>
@@ -183,6 +558,13 @@
 					<parameter name="text" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="show_information_override_dnd" symbol="hildon_banner_show_information_override_dnd">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="widget" type="GtkWidget*"/>
+					<parameter name="text" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="show_information_with_markup" symbol="hildon_banner_show_information_with_markup">
 				<return-type type="GtkWidget*"/>
 				<parameters>
@@ -237,7 +619,7 @@
 					<parameter name="bct" type="HildonBreadCrumbTrail*"/>
 					<parameter name="item" type="HildonBreadCrumb*"/>
 					<parameter name="id" type="gpointer"/>
-					<parameter name="notify" type="GDestroyNotify"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
 				</parameters>
 			</method>
 			<method name="push_icon" symbol="hildon_bread_crumb_trail_push_icon">
@@ -256,7 +638,7 @@
 					<parameter name="bct" type="HildonBreadCrumbTrail*"/>
 					<parameter name="text" type="gchar*"/>
 					<parameter name="id" type="gpointer"/>
-					<parameter name="notify" type="GDestroyNotify"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
 				</parameters>
 			</method>
 			<signal name="crumb-clicked" when="LAST">
@@ -272,6 +654,164 @@
 					<parameter name="bct" type="HildonBreadCrumbTrail*"/>
 				</parameters>
 			</signal>
+		</object>
+		<object name="HildonButton" parent="GtkButton" type-name="HildonButton" get-type="hildon_button_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="add_image_size_group" symbol="hildon_button_add_image_size_group">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+					<parameter name="size_group" type="GtkSizeGroup*"/>
+				</parameters>
+			</method>
+			<method name="add_size_groups" symbol="hildon_button_add_size_groups">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+					<parameter name="title_size_group" type="GtkSizeGroup*"/>
+					<parameter name="value_size_group" type="GtkSizeGroup*"/>
+					<parameter name="image_size_group" type="GtkSizeGroup*"/>
+				</parameters>
+			</method>
+			<method name="add_title_size_group" symbol="hildon_button_add_title_size_group">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+					<parameter name="size_group" type="GtkSizeGroup*"/>
+				</parameters>
+			</method>
+			<method name="add_value_size_group" symbol="hildon_button_add_value_size_group">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+					<parameter name="size_group" type="GtkSizeGroup*"/>
+				</parameters>
+			</method>
+			<method name="get_image" symbol="hildon_button_get_image">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+				</parameters>
+			</method>
+			<method name="get_style" symbol="hildon_button_get_style">
+				<return-type type="HildonButtonStyle"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+				</parameters>
+			</method>
+			<method name="get_title" symbol="hildon_button_get_title">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+				</parameters>
+			</method>
+			<method name="get_value" symbol="hildon_button_get_value">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_button_new">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="size" type="HildonSizeType"/>
+					<parameter name="arrangement" type="HildonButtonArrangement"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_with_text" symbol="hildon_button_new_with_text">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="size" type="HildonSizeType"/>
+					<parameter name="arrangement" type="HildonButtonArrangement"/>
+					<parameter name="title" type="gchar*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="set_alignment" symbol="hildon_button_set_alignment">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+					<parameter name="xalign" type="gfloat"/>
+					<parameter name="yalign" type="gfloat"/>
+					<parameter name="xscale" type="gfloat"/>
+					<parameter name="yscale" type="gfloat"/>
+				</parameters>
+			</method>
+			<method name="set_image" symbol="hildon_button_set_image">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+					<parameter name="image" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="set_image_alignment" symbol="hildon_button_set_image_alignment">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+					<parameter name="xalign" type="gfloat"/>
+					<parameter name="yalign" type="gfloat"/>
+				</parameters>
+			</method>
+			<method name="set_image_position" symbol="hildon_button_set_image_position">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+					<parameter name="position" type="GtkPositionType"/>
+				</parameters>
+			</method>
+			<method name="set_style" symbol="hildon_button_set_style">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+					<parameter name="style" type="HildonButtonStyle"/>
+				</parameters>
+			</method>
+			<method name="set_text" symbol="hildon_button_set_text">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+					<parameter name="title" type="gchar*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_title" symbol="hildon_button_set_title">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+					<parameter name="title" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_title_alignment" symbol="hildon_button_set_title_alignment">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+					<parameter name="xalign" type="gfloat"/>
+					<parameter name="yalign" type="gfloat"/>
+				</parameters>
+			</method>
+			<method name="set_value" symbol="hildon_button_set_value">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_value_alignment" symbol="hildon_button_set_value_alignment">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonButton*"/>
+					<parameter name="xalign" type="gfloat"/>
+					<parameter name="yalign" type="gfloat"/>
+				</parameters>
+			</method>
+			<property name="arrangement" type="HildonButtonArrangement" readable="0" writable="1" construct="0" construct-only="1"/>
+			<property name="size" type="HildonSizeType" readable="0" writable="1" construct="0" construct-only="1"/>
+			<property name="style" type="HildonButtonStyle" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="value" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
 		<object name="HildonCalendar" parent="GtkWidget" type-name="HildonCalendar" get-type="hildon_calendar_get_type">
 			<implements>
@@ -617,6 +1157,38 @@
 				</parameters>
 			</signal>
 		</object>
+		<object name="HildonCheckButton" parent="GtkButton" type-name="HildonCheckButton" get-type="hildon_check_button_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="get_active" symbol="hildon_check_button_get_active">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="button" type="HildonCheckButton*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_check_button_new">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="size" type="HildonSizeType"/>
+				</parameters>
+			</constructor>
+			<method name="set_active" symbol="hildon_check_button_set_active">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonCheckButton*"/>
+					<parameter name="is_active" type="gboolean"/>
+				</parameters>
+			</method>
+			<property name="size" type="HildonSizeType" readable="0" writable="1" construct="0" construct-only="0"/>
+			<signal name="toggled" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonCheckButton*"/>
+				</parameters>
+			</signal>
+		</object>
 		<object name="HildonCodeDialog" parent="GtkDialog" type-name="HildonCodeDialog" get-type="hildon_code_dialog_get_type">
 			<implements>
 				<interface name="AtkImplementor"/>
@@ -700,6 +1272,13 @@
 			</method>
 			<property name="color" type="GdkColor*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="popup-shown" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<signal name="setup-dialog" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="HildonColorButton*"/>
+					<parameter name="p0" type="HildonColorChooserDialog*"/>
+				</parameters>
+			</signal>
 		</object>
 		<object name="HildonColorChooser" parent="GtkWidget" type-name="HildonColorChooser" get-type="hildon_color_chooser_get_type">
 			<implements>
@@ -827,6 +1406,46 @@
 				</parameters>
 			</signal>
 		</object>
+		<object name="HildonDateButton" parent="HildonPickerButton" type-name="HildonDateButton" get-type="hildon_date_button_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="get_date" symbol="hildon_date_button_get_date">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonDateButton*"/>
+					<parameter name="year" type="guint*"/>
+					<parameter name="month" type="guint*"/>
+					<parameter name="day" type="guint*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_date_button_new">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="size" type="HildonSizeType"/>
+					<parameter name="arrangement" type="HildonButtonArrangement"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_with_year_range" symbol="hildon_date_button_new_with_year_range">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="size" type="HildonSizeType"/>
+					<parameter name="arrangement" type="HildonButtonArrangement"/>
+					<parameter name="min_year" type="gint"/>
+					<parameter name="max_year" type="gint"/>
+				</parameters>
+			</constructor>
+			<method name="set_date" symbol="hildon_date_button_set_date">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonDateButton*"/>
+					<parameter name="year" type="guint"/>
+					<parameter name="month" type="guint"/>
+					<parameter name="day" type="guint"/>
+				</parameters>
+			</method>
+		</object>
 		<object name="HildonDateEditor" parent="GtkContainer" type-name="HildonDateEditor" get-type="hildon_date_editor_get_type">
 			<implements>
 				<interface name="AtkImplementor"/>
@@ -905,10 +1524,172 @@
 				</parameters>
 			</signal>
 		</object>
+		<object name="HildonDateSelector" parent="HildonTouchSelector" type-name="HildonDateSelector" get-type="hildon_date_selector_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="get_date" symbol="hildon_date_selector_get_date">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonDateSelector*"/>
+					<parameter name="year" type="guint*"/>
+					<parameter name="month" type="guint*"/>
+					<parameter name="day" type="guint*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_date_selector_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<constructor name="new_with_year_range" symbol="hildon_date_selector_new_with_year_range">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="min_year" type="gint"/>
+					<parameter name="max_year" type="gint"/>
+				</parameters>
+			</constructor>
+			<method name="select_current_date" symbol="hildon_date_selector_select_current_date">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="selector" type="HildonDateSelector*"/>
+					<parameter name="year" type="guint"/>
+					<parameter name="month" type="guint"/>
+					<parameter name="day" type="guint"/>
+				</parameters>
+			</method>
+			<method name="select_day" symbol="hildon_date_selector_select_day">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonDateSelector*"/>
+					<parameter name="day" type="guint"/>
+				</parameters>
+			</method>
+			<method name="select_month" symbol="hildon_date_selector_select_month">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="selector" type="HildonDateSelector*"/>
+					<parameter name="month" type="guint"/>
+					<parameter name="year" type="guint"/>
+				</parameters>
+			</method>
+			<property name="max-year" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="min-year" type="gint" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="HildonDialog" parent="GtkDialog" type-name="HildonDialog" get-type="hildon_dialog_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="add_button" symbol="hildon_dialog_add_button">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="dialog" type="HildonDialog*"/>
+					<parameter name="button_text" type="gchar*"/>
+					<parameter name="response_id" type="gint"/>
+				</parameters>
+			</method>
+			<method name="add_buttons" symbol="hildon_dialog_add_buttons">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="dialog" type="HildonDialog*"/>
+					<parameter name="first_button_text" type="gchar*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_dialog_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<constructor name="new_with_buttons" symbol="hildon_dialog_new_with_buttons">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="title" type="gchar*"/>
+					<parameter name="parent" type="GtkWindow*"/>
+					<parameter name="flags" type="GtkDialogFlags"/>
+					<parameter name="first_button_text" type="gchar*"/>
+				</parameters>
+			</constructor>
+		</object>
+		<object name="HildonEditToolbar" parent="GtkHBox" type-name="HildonEditToolbar" get-type="hildon_edit_toolbar_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<constructor name="new" symbol="hildon_edit_toolbar_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<constructor name="new_with_text" symbol="hildon_edit_toolbar_new_with_text">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="label" type="gchar*"/>
+					<parameter name="button" type="gchar*"/>
+				</parameters>
+			</constructor>
+			<method name="set_button_label" symbol="hildon_edit_toolbar_set_button_label">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="toolbar" type="HildonEditToolbar*"/>
+					<parameter name="label" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_label" symbol="hildon_edit_toolbar_set_label">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="toolbar" type="HildonEditToolbar*"/>
+					<parameter name="label" type="gchar*"/>
+				</parameters>
+			</method>
+			<signal name="arrow-clicked" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="HildonEditToolbar*"/>
+				</parameters>
+			</signal>
+			<signal name="button-clicked" when="FIRST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="HildonEditToolbar*"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="HildonEntry" parent="GtkEntry" type-name="HildonEntry" get-type="hildon_entry_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+				<interface name="GtkEditable"/>
+				<interface name="GtkCellEditable"/>
+			</implements>
+			<method name="get_text" symbol="hildon_entry_get_text">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="entry" type="HildonEntry*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_entry_new">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="size" type="HildonSizeType"/>
+				</parameters>
+			</constructor>
+			<method name="set_placeholder" symbol="hildon_entry_set_placeholder">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="entry" type="HildonEntry*"/>
+					<parameter name="text" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_text" symbol="hildon_entry_set_text">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="entry" type="HildonEntry*"/>
+					<parameter name="text" type="gchar*"/>
+				</parameters>
+			</method>
+			<property name="size" type="HildonSizeType" readable="0" writable="1" construct="1" construct-only="0"/>
+		</object>
 		<object name="HildonFindToolbar" parent="GtkToolbar" type-name="HildonFindToolbar" get-type="hildon_find_toolbar_get_type">
 			<implements>
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
+				<interface name="GtkToolShell"/>
 			</implements>
 			<method name="get_active" symbol="hildon_find_toolbar_get_active">
 				<return-type type="gint"/>
@@ -1257,6 +2038,250 @@
 				</parameters>
 			</signal>
 		</object>
+		<object name="HildonPannableArea" parent="GtkBin" type-name="HildonPannableArea" get-type="hildon_pannable_area_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="add_with_viewport" symbol="hildon_pannable_area_add_with_viewport">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="HildonPannableArea*"/>
+					<parameter name="child" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="get_hadjustment" symbol="hildon_pannable_area_get_hadjustment">
+				<return-type type="GtkAdjustment*"/>
+				<parameters>
+					<parameter name="area" type="HildonPannableArea*"/>
+				</parameters>
+			</method>
+			<method name="get_size_request_policy" symbol="hildon_pannable_area_get_size_request_policy">
+				<return-type type="HildonSizeRequestPolicy"/>
+				<parameters>
+					<parameter name="area" type="HildonPannableArea*"/>
+				</parameters>
+			</method>
+			<method name="get_vadjustment" symbol="hildon_pannable_area_get_vadjustment">
+				<return-type type="GtkAdjustment*"/>
+				<parameters>
+					<parameter name="area" type="HildonPannableArea*"/>
+				</parameters>
+			</method>
+			<method name="jump_to" symbol="hildon_pannable_area_jump_to">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="HildonPannableArea*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+				</parameters>
+			</method>
+			<method name="jump_to_child" symbol="hildon_pannable_area_jump_to_child">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="HildonPannableArea*"/>
+					<parameter name="child" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_pannable_area_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<constructor name="new_full" symbol="hildon_pannable_area_new_full">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="mode" type="gint"/>
+					<parameter name="enabled" type="gboolean"/>
+					<parameter name="vel_min" type="gdouble"/>
+					<parameter name="vel_max" type="gdouble"/>
+					<parameter name="decel" type="gdouble"/>
+					<parameter name="sps" type="guint"/>
+				</parameters>
+			</constructor>
+			<method name="scroll_to" symbol="hildon_pannable_area_scroll_to">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="HildonPannableArea*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+				</parameters>
+			</method>
+			<method name="scroll_to_child" symbol="hildon_pannable_area_scroll_to_child">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="HildonPannableArea*"/>
+					<parameter name="child" type="GtkWidget*"/>
+				</parameters>
+			</method>
+			<method name="set_size_request_policy" symbol="hildon_pannable_area_set_size_request_policy">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="HildonPannableArea*"/>
+					<parameter name="size_request_policy" type="HildonSizeRequestPolicy"/>
+				</parameters>
+			</method>
+			<property name="bounce-steps" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="deceleration" type="gdouble" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="direction-error-margin" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="drag-inertia" type="gdouble" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="enabled" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="force" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="hadjustment" type="GtkAdjustment*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="hovershoot-max" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="hscrollbar-policy" type="GtkPolicyType" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="initial-hint" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="low-friction-mode" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="mode" type="HildonPannableAreaMode" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="mov-mode" type="HildonMovementMode" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="panning-threshold" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="scroll-time" type="gdouble" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="scrollbar-fade-delay" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="size-request-policy" type="HildonSizeRequestPolicy" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="sps" type="guint" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="vadjustment" type="GtkAdjustment*" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="velocity-fast-factor" type="gdouble" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="velocity-max" type="gdouble" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="velocity-min" type="gdouble" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="velocity-overshooting-max" type="gdouble" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="vovershoot-max" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="vscrollbar-policy" type="GtkPolicyType" readable="1" writable="1" construct="1" construct-only="0"/>
+			<signal name="horizontal-movement" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="HildonPannableArea*"/>
+					<parameter name="direction" type="gint"/>
+					<parameter name="x" type="gdouble"/>
+					<parameter name="y" type="gdouble"/>
+				</parameters>
+			</signal>
+			<signal name="panning-finished" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="HildonPannableArea*"/>
+				</parameters>
+			</signal>
+			<signal name="panning-started" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="object" type="HildonPannableArea*"/>
+				</parameters>
+			</signal>
+			<signal name="vertical-movement" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="area" type="HildonPannableArea*"/>
+					<parameter name="direction" type="gint"/>
+					<parameter name="x" type="gdouble"/>
+					<parameter name="y" type="gdouble"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="HildonPickerButton" parent="HildonButton" type-name="HildonPickerButton" get-type="hildon_picker_button_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="get_active" symbol="hildon_picker_button_get_active">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="button" type="HildonPickerButton*"/>
+				</parameters>
+			</method>
+			<method name="get_done_button_text" symbol="hildon_picker_button_get_done_button_text">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="button" type="HildonPickerButton*"/>
+				</parameters>
+			</method>
+			<method name="get_selector" symbol="hildon_picker_button_get_selector">
+				<return-type type="HildonTouchSelector*"/>
+				<parameters>
+					<parameter name="button" type="HildonPickerButton*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_picker_button_new">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="size" type="HildonSizeType"/>
+					<parameter name="arrangement" type="HildonButtonArrangement"/>
+				</parameters>
+			</constructor>
+			<method name="set_active" symbol="hildon_picker_button_set_active">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonPickerButton*"/>
+					<parameter name="index" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_done_button_text" symbol="hildon_picker_button_set_done_button_text">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonPickerButton*"/>
+					<parameter name="done_button_text" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_selector" symbol="hildon_picker_button_set_selector">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonPickerButton*"/>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+				</parameters>
+			</method>
+			<property name="done-button-text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="touch-selector" type="HildonTouchSelector*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="value-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="HildonPickerButton*"/>
+				</parameters>
+			</signal>
+		</object>
+		<object name="HildonPickerDialog" parent="HildonDialog" type-name="HildonPickerDialog" get-type="hildon_picker_dialog_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="get_done_label" symbol="hildon_picker_dialog_get_done_label">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="dialog" type="HildonPickerDialog*"/>
+				</parameters>
+			</method>
+			<method name="get_selector" symbol="hildon_picker_dialog_get_selector">
+				<return-type type="HildonTouchSelector*"/>
+				<parameters>
+					<parameter name="dialog" type="HildonPickerDialog*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_picker_dialog_new">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="parent" type="GtkWindow*"/>
+				</parameters>
+			</constructor>
+			<method name="set_done_label" symbol="hildon_picker_dialog_set_done_label">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="dialog" type="HildonPickerDialog*"/>
+					<parameter name="label" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_selector" symbol="hildon_picker_dialog_set_selector">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="dialog" type="HildonPickerDialog*"/>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+				</parameters>
+			</method>
+			<property name="center-on-show" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<property name="done-button-text" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
+			<vfunc name="set_selector">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="dialog" type="HildonPickerDialog*"/>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+				</parameters>
+			</vfunc>
+		</object>
 		<object name="HildonProgram" parent="GObject" type-name="HildonProgram" get-type="hildon_program_get_type">
 			<method name="add_window" symbol="hildon_program_add_window">
 				<return-type type="void"/>
@@ -1267,6 +2292,12 @@
 			</method>
 			<method name="get_can_hibernate" symbol="hildon_program_get_can_hibernate">
 				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="HildonProgram*"/>
+				</parameters>
+			</method>
+			<method name="get_common_app_menu" symbol="hildon_program_get_common_app_menu">
+				<return-type type="HildonAppMenu*"/>
 				<parameters>
 					<parameter name="self" type="HildonProgram*"/>
 				</parameters>
@@ -1292,6 +2323,24 @@
 					<parameter name="self" type="HildonProgram*"/>
 				</parameters>
 			</method>
+			<method name="go_to_root_window" symbol="hildon_program_go_to_root_window">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonProgram*"/>
+				</parameters>
+			</method>
+			<method name="peek_window_stack" symbol="hildon_program_peek_window_stack">
+				<return-type type="HildonStackableWindow*"/>
+				<parameters>
+					<parameter name="self" type="HildonProgram*"/>
+				</parameters>
+			</method>
+			<method name="pop_window_stack" symbol="hildon_program_pop_window_stack">
+				<return-type type="HildonStackableWindow*"/>
+				<parameters>
+					<parameter name="self" type="HildonProgram*"/>
+				</parameters>
+			</method>
 			<method name="remove_window" symbol="hildon_program_remove_window">
 				<return-type type="void"/>
 				<parameters>
@@ -1304,6 +2353,13 @@
 				<parameters>
 					<parameter name="self" type="HildonProgram*"/>
 					<parameter name="can_hibernate" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_common_app_menu" symbol="hildon_program_set_common_app_menu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonProgram*"/>
+					<parameter name="menu" type="HildonAppMenu*"/>
 				</parameters>
 			</method>
 			<method name="set_common_menu" symbol="hildon_program_set_common_menu">
@@ -1431,6 +2487,102 @@
 			<property name="max" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="min" type="gint" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="separator" type="char*" readable="1" writable="1" construct="1" construct-only="0"/>
+		</object>
+		<object name="HildonRemoteTexture" parent="GtkWindow" type-name="HildonRemoteTexture" get-type="hildon_remote_texture_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<constructor name="new" symbol="hildon_remote_texture_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="send_message" symbol="hildon_remote_texture_send_message">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonRemoteTexture*"/>
+					<parameter name="message_type" type="guint32"/>
+					<parameter name="l0" type="guint32"/>
+					<parameter name="l1" type="guint32"/>
+					<parameter name="l2" type="guint32"/>
+					<parameter name="l3" type="guint32"/>
+					<parameter name="l4" type="guint32"/>
+				</parameters>
+			</method>
+			<method name="set_image" symbol="hildon_remote_texture_set_image">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonRemoteTexture*"/>
+					<parameter name="key" type="guint32"/>
+					<parameter name="width" type="guint"/>
+					<parameter name="height" type="guint"/>
+					<parameter name="bpp" type="guint"/>
+				</parameters>
+			</method>
+			<method name="set_offset" symbol="hildon_remote_texture_set_offset">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonRemoteTexture*"/>
+					<parameter name="x" type="double"/>
+					<parameter name="y" type="double"/>
+				</parameters>
+			</method>
+			<method name="set_opacity" symbol="hildon_remote_texture_set_opacity">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonRemoteTexture*"/>
+					<parameter name="opacity" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_parent" symbol="hildon_remote_texture_set_parent">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonRemoteTexture*"/>
+					<parameter name="parent" type="GtkWindow*"/>
+				</parameters>
+			</method>
+			<method name="set_position" symbol="hildon_remote_texture_set_position">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonRemoteTexture*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+					<parameter name="width" type="gint"/>
+					<parameter name="height" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_scale" symbol="hildon_remote_texture_set_scale">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonRemoteTexture*"/>
+					<parameter name="x_scale" type="double"/>
+					<parameter name="y_scale" type="double"/>
+				</parameters>
+			</method>
+			<method name="set_show" symbol="hildon_remote_texture_set_show">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonRemoteTexture*"/>
+					<parameter name="show" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_show_full" symbol="hildon_remote_texture_set_show_full">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonRemoteTexture*"/>
+					<parameter name="show" type="gint"/>
+					<parameter name="opacity" type="gint"/>
+				</parameters>
+			</method>
+			<method name="update_area" symbol="hildon_remote_texture_update_area">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonRemoteTexture*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+					<parameter name="width" type="gint"/>
+					<parameter name="height" type="gint"/>
+				</parameters>
+			</method>
 		</object>
 		<object name="HildonSeekbar" parent="GtkScale" type-name="HildonSeekbar" get-type="hildon_seekbar_get_type">
 			<implements>
@@ -1579,6 +2731,94 @@
 			</method>
 			<property name="sort-key" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="sort-order" type="GtkSortType" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="HildonStackableWindow" parent="HildonWindow" type-name="HildonStackableWindow" get-type="hildon_stackable_window_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="get_stack" symbol="hildon_stackable_window_get_stack">
+				<return-type type="HildonWindowStack*"/>
+				<parameters>
+					<parameter name="self" type="HildonStackableWindow*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_stackable_window_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="set_main_menu" symbol="hildon_stackable_window_set_main_menu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonStackableWindow*"/>
+					<parameter name="menu" type="HildonAppMenu*"/>
+				</parameters>
+			</method>
+		</object>
+		<object name="HildonTextView" parent="GtkTextView" type-name="HildonTextView" get-type="hildon_text_view_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="get_buffer" symbol="hildon_text_view_get_buffer">
+				<return-type type="GtkTextBuffer*"/>
+				<parameters>
+					<parameter name="text_view" type="HildonTextView*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_text_view_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="set_buffer" symbol="hildon_text_view_set_buffer">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="text_view" type="HildonTextView*"/>
+					<parameter name="buffer" type="GtkTextBuffer*"/>
+				</parameters>
+			</method>
+			<method name="set_placeholder" symbol="hildon_text_view_set_placeholder">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="text_view" type="HildonTextView*"/>
+					<parameter name="text" type="gchar*"/>
+				</parameters>
+			</method>
+		</object>
+		<object name="HildonTimeButton" parent="HildonPickerButton" type-name="HildonTimeButton" get-type="hildon_time_button_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="get_time" symbol="hildon_time_button_get_time">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonTimeButton*"/>
+					<parameter name="hours" type="guint*"/>
+					<parameter name="minutes" type="guint*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_time_button_new">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="size" type="HildonSizeType"/>
+					<parameter name="arrangement" type="HildonButtonArrangement"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_step" symbol="hildon_time_button_new_step">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="size" type="HildonSizeType"/>
+					<parameter name="arrangement" type="HildonButtonArrangement"/>
+					<parameter name="minutes_step" type="guint"/>
+				</parameters>
+			</constructor>
+			<method name="set_time" symbol="hildon_time_button_set_time">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="button" type="HildonTimeButton*"/>
+					<parameter name="hours" type="guint"/>
+					<parameter name="minutes" type="guint"/>
+				</parameters>
+			</method>
 		</object>
 		<object name="HildonTimeEditor" parent="GtkContainer" type-name="HildonTimeEditor" get-type="hildon_time_editor_get_type">
 			<implements>
@@ -1750,6 +2990,348 @@
 			</method>
 			<property name="minutes" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
+		<object name="HildonTimeSelector" parent="HildonTouchSelector" type-name="HildonTimeSelector" get-type="hildon_time_selector_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="get_time" symbol="hildon_time_selector_get_time">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTimeSelector*"/>
+					<parameter name="hours" type="guint*"/>
+					<parameter name="minutes" type="guint*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_time_selector_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<constructor name="new_step" symbol="hildon_time_selector_new_step">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="minutes_step" type="guint"/>
+				</parameters>
+			</constructor>
+			<method name="set_time" symbol="hildon_time_selector_set_time">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="selector" type="HildonTimeSelector*"/>
+					<parameter name="hours" type="guint"/>
+					<parameter name="minutes" type="guint"/>
+				</parameters>
+			</method>
+			<property name="minutes-step" type="guint" readable="1" writable="1" construct="0" construct-only="1"/>
+			<property name="time-format-policy" type="HildonTimeSelectorFormatPolicy" readable="1" writable="1" construct="1" construct-only="0"/>
+		</object>
+		<object name="HildonTouchSelector" parent="GtkVBox" type-name="HildonTouchSelector" get-type="hildon_touch_selector_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="append_column" symbol="hildon_touch_selector_append_column">
+				<return-type type="HildonTouchSelectorColumn*"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="model" type="GtkTreeModel*"/>
+					<parameter name="cell_renderer" type="GtkCellRenderer*"/>
+				</parameters>
+			</method>
+			<method name="append_text" symbol="hildon_touch_selector_append_text">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="text" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="append_text_column" symbol="hildon_touch_selector_append_text_column">
+				<return-type type="HildonTouchSelectorColumn*"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="model" type="GtkTreeModel*"/>
+					<parameter name="center" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="center_on_selected" symbol="hildon_touch_selector_center_on_selected">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+				</parameters>
+			</method>
+			<method name="get_active" symbol="hildon_touch_selector_get_active">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="column" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_column" symbol="hildon_touch_selector_get_column">
+				<return-type type="HildonTouchSelectorColumn*"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="column" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_column_selection_mode" symbol="hildon_touch_selector_get_column_selection_mode">
+				<return-type type="HildonTouchSelectorSelectionMode"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+				</parameters>
+			</method>
+			<method name="get_current_text" symbol="hildon_touch_selector_get_current_text">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+				</parameters>
+			</method>
+			<method name="get_hildon_ui_mode" symbol="hildon_touch_selector_get_hildon_ui_mode">
+				<return-type type="HildonUIMode"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+				</parameters>
+			</method>
+			<method name="get_last_activated_row" symbol="hildon_touch_selector_get_last_activated_row">
+				<return-type type="GtkTreePath*"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="column" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_model" symbol="hildon_touch_selector_get_model">
+				<return-type type="GtkTreeModel*"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="column" type="gint"/>
+				</parameters>
+			</method>
+			<method name="get_num_columns" symbol="hildon_touch_selector_get_num_columns">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+				</parameters>
+			</method>
+			<method name="get_print_func" symbol="hildon_touch_selector_get_print_func">
+				<return-type type="HildonTouchSelectorPrintFunc"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+				</parameters>
+			</method>
+			<method name="get_selected" symbol="hildon_touch_selector_get_selected">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="column" type="gint"/>
+					<parameter name="iter" type="GtkTreeIter*"/>
+				</parameters>
+			</method>
+			<method name="get_selected_rows" symbol="hildon_touch_selector_get_selected_rows">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="column" type="gint"/>
+				</parameters>
+			</method>
+			<method name="insert_text" symbol="hildon_touch_selector_insert_text">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="position" type="gint"/>
+					<parameter name="text" type="gchar*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_touch_selector_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<constructor name="new_text" symbol="hildon_touch_selector_new_text">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="optimal_size_request" symbol="hildon_touch_selector_optimal_size_request">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="requisition" type="GtkRequisition*"/>
+				</parameters>
+			</method>
+			<method name="prepend_text" symbol="hildon_touch_selector_prepend_text">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="text" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="remove_column" symbol="hildon_touch_selector_remove_column">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="column" type="gint"/>
+				</parameters>
+			</method>
+			<method name="select_iter" symbol="hildon_touch_selector_select_iter">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="column" type="gint"/>
+					<parameter name="iter" type="GtkTreeIter*"/>
+					<parameter name="scroll_to" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_active" symbol="hildon_touch_selector_set_active">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="column" type="gint"/>
+					<parameter name="index" type="gint"/>
+				</parameters>
+			</method>
+			<method name="set_column_attributes" symbol="hildon_touch_selector_set_column_attributes">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="num_column" type="gint"/>
+					<parameter name="cell_renderer" type="GtkCellRenderer*"/>
+				</parameters>
+			</method>
+			<method name="set_column_selection_mode" symbol="hildon_touch_selector_set_column_selection_mode">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="mode" type="HildonTouchSelectorSelectionMode"/>
+				</parameters>
+			</method>
+			<method name="set_hildon_ui_mode" symbol="hildon_touch_selector_set_hildon_ui_mode">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="mode" type="HildonUIMode"/>
+				</parameters>
+			</method>
+			<method name="set_model" symbol="hildon_touch_selector_set_model">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="column" type="gint"/>
+					<parameter name="model" type="GtkTreeModel*"/>
+				</parameters>
+			</method>
+			<method name="set_print_func" symbol="hildon_touch_selector_set_print_func">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="func" type="HildonTouchSelectorPrintFunc"/>
+				</parameters>
+			</method>
+			<method name="set_print_func_full" symbol="hildon_touch_selector_set_print_func_full">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="func" type="HildonTouchSelectorPrintFunc"/>
+					<parameter name="user_data" type="gpointer"/>
+					<parameter name="destroy_func" type="GDestroyNotify"/>
+				</parameters>
+			</method>
+			<method name="unselect_all" symbol="hildon_touch_selector_unselect_all">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="column" type="gint"/>
+				</parameters>
+			</method>
+			<method name="unselect_iter" symbol="hildon_touch_selector_unselect_iter">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="column" type="gint"/>
+					<parameter name="iter" type="GtkTreeIter*"/>
+				</parameters>
+			</method>
+			<property name="has-multiple-selection" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="hildon-ui-mode" type="HildonUIMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="initial-scroll" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
+			<signal name="changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="column" type="gint"/>
+				</parameters>
+			</signal>
+			<signal name="columns-changed" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="HildonTouchSelector*"/>
+				</parameters>
+			</signal>
+			<vfunc name="set_model">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelector*"/>
+					<parameter name="column" type="gint"/>
+					<parameter name="model" type="GtkTreeModel*"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="HildonTouchSelectorColumn" parent="GObject" type-name="HildonTouchSelectorColumn" get-type="hildon_touch_selector_column_get_type">
+			<implements>
+				<interface name="GtkCellLayout"/>
+			</implements>
+			<method name="get_text_column" symbol="hildon_touch_selector_column_get_text_column">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="column" type="HildonTouchSelectorColumn*"/>
+				</parameters>
+			</method>
+			<method name="set_text_column" symbol="hildon_touch_selector_column_set_text_column">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="column" type="HildonTouchSelectorColumn*"/>
+					<parameter name="text_column" type="gint"/>
+				</parameters>
+			</method>
+			<property name="text-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
+		<object name="HildonTouchSelectorEntry" parent="HildonTouchSelector" type-name="HildonTouchSelectorEntry" get-type="hildon_touch_selector_entry_get_type">
+			<implements>
+				<interface name="AtkImplementor"/>
+				<interface name="GtkBuildable"/>
+			</implements>
+			<method name="get_entry" symbol="hildon_touch_selector_entry_get_entry">
+				<return-type type="HildonEntry*"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelectorEntry*"/>
+				</parameters>
+			</method>
+			<method name="get_input_mode" symbol="hildon_touch_selector_entry_get_input_mode">
+				<return-type type="HildonGtkInputMode"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelectorEntry*"/>
+				</parameters>
+			</method>
+			<method name="get_text_column" symbol="hildon_touch_selector_entry_get_text_column">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelectorEntry*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_touch_selector_entry_new">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<constructor name="new_text" symbol="hildon_touch_selector_entry_new_text">
+				<return-type type="GtkWidget*"/>
+			</constructor>
+			<method name="set_input_mode" symbol="hildon_touch_selector_entry_set_input_mode">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelectorEntry*"/>
+					<parameter name="input_mode" type="HildonGtkInputMode"/>
+				</parameters>
+			</method>
+			<method name="set_text_column" symbol="hildon_touch_selector_entry_set_text_column">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="selector" type="HildonTouchSelectorEntry*"/>
+					<parameter name="text_column" type="gint"/>
+				</parameters>
+			</method>
+			<property name="text-column" type="gint" readable="1" writable="1" construct="0" construct-only="0"/>
+		</object>
 		<object name="HildonVVolumebar" parent="HildonVolumebar" type-name="HildonVVolumebar" get-type="hildon_vvolumebar_get_type">
 			<implements>
 				<interface name="AtkImplementor"/>
@@ -1810,7 +3392,6 @@
 					<parameter name="format" type="gchar*"/>
 				</parameters>
 			</method>
-			<property name="can-focus" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="has-mute" type="gboolean" readable="1" writable="1" construct="1" construct-only="0"/>
 			<property name="level" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="mute" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -1928,10 +3509,28 @@
 					<parameter name="child" type="GtkWidget*"/>
 				</parameters>
 			</method>
+			<method name="get_app_menu" symbol="hildon_window_get_app_menu">
+				<return-type type="HildonAppMenu*"/>
+				<parameters>
+					<parameter name="self" type="HildonWindow*"/>
+				</parameters>
+			</method>
 			<method name="get_is_topmost" symbol="hildon_window_get_is_topmost">
 				<return-type type="gboolean"/>
 				<parameters>
 					<parameter name="self" type="HildonWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_main_menu" symbol="hildon_window_get_main_menu">
+				<return-type type="GtkMenu*"/>
+				<parameters>
+					<parameter name="self" type="HildonWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_markup" symbol="hildon_window_get_markup">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="window" type="HildonWindow*"/>
 				</parameters>
 			</method>
 			<method name="get_menu" symbol="hildon_window_get_menu">
@@ -1950,6 +3549,34 @@
 					<parameter name="toolbar" type="GtkToolbar*"/>
 				</parameters>
 			</method>
+			<method name="set_app_menu" symbol="hildon_window_set_app_menu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonWindow*"/>
+					<parameter name="menu" type="HildonAppMenu*"/>
+				</parameters>
+			</method>
+			<method name="set_edit_toolbar" symbol="hildon_window_set_edit_toolbar">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonWindow*"/>
+					<parameter name="toolbar" type="HildonEditToolbar*"/>
+				</parameters>
+			</method>
+			<method name="set_main_menu" symbol="hildon_window_set_main_menu">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="self" type="HildonWindow*"/>
+					<parameter name="menu" type="GtkMenu*"/>
+				</parameters>
+			</method>
+			<method name="set_markup" symbol="hildon_window_set_markup">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="HildonWindow*"/>
+					<parameter name="markup" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="set_menu" symbol="hildon_window_set_menu">
 				<return-type type="void"/>
 				<parameters>
@@ -1958,6 +3585,7 @@
 				</parameters>
 			</method>
 			<property name="is-topmost" type="gboolean" readable="1" writable="0" construct="0" construct-only="0"/>
+			<property name="markup" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<signal name="clipboard-operation" when="FIRST">
 				<return-type type="void"/>
 				<parameters>
@@ -1965,6 +3593,94 @@
 					<parameter name="operation" type="gint"/>
 				</parameters>
 			</signal>
+			<vfunc name="toggle_menu">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="self" type="HildonWindow*"/>
+					<parameter name="button" type="guint"/>
+					<parameter name="time" type="guint32"/>
+				</parameters>
+			</vfunc>
+		</object>
+		<object name="HildonWindowStack" parent="GObject" type-name="HildonWindowStack" get-type="hildon_window_stack_get_type">
+			<method name="get_default" symbol="hildon_window_stack_get_default">
+				<return-type type="HildonWindowStack*"/>
+			</method>
+			<method name="get_windows" symbol="hildon_window_stack_get_windows">
+				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="stack" type="HildonWindowStack*"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="hildon_window_stack_new">
+				<return-type type="HildonWindowStack*"/>
+			</constructor>
+			<method name="peek" symbol="hildon_window_stack_peek">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="stack" type="HildonWindowStack*"/>
+				</parameters>
+			</method>
+			<method name="pop" symbol="hildon_window_stack_pop">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stack" type="HildonWindowStack*"/>
+					<parameter name="nwindows" type="gint"/>
+					<parameter name="popped_windows" type="GList**"/>
+				</parameters>
+			</method>
+			<method name="pop_1" symbol="hildon_window_stack_pop_1">
+				<return-type type="GtkWidget*"/>
+				<parameters>
+					<parameter name="stack" type="HildonWindowStack*"/>
+				</parameters>
+			</method>
+			<method name="pop_and_push" symbol="hildon_window_stack_pop_and_push">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stack" type="HildonWindowStack*"/>
+					<parameter name="nwindows" type="gint"/>
+					<parameter name="popped_windows" type="GList**"/>
+					<parameter name="win1" type="HildonStackableWindow*"/>
+				</parameters>
+			</method>
+			<method name="pop_and_push_list" symbol="hildon_window_stack_pop_and_push_list">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stack" type="HildonWindowStack*"/>
+					<parameter name="nwindows" type="gint"/>
+					<parameter name="popped_windows" type="GList**"/>
+					<parameter name="list" type="GList*"/>
+				</parameters>
+			</method>
+			<method name="push" symbol="hildon_window_stack_push">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stack" type="HildonWindowStack*"/>
+					<parameter name="win1" type="HildonStackableWindow*"/>
+				</parameters>
+			</method>
+			<method name="push_1" symbol="hildon_window_stack_push_1">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stack" type="HildonWindowStack*"/>
+					<parameter name="win" type="HildonStackableWindow*"/>
+				</parameters>
+			</method>
+			<method name="push_list" symbol="hildon_window_stack_push_list">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stack" type="HildonWindowStack*"/>
+					<parameter name="list" type="GList*"/>
+				</parameters>
+			</method>
+			<method name="size" symbol="hildon_window_stack_size">
+				<return-type type="gint"/>
+				<parameters>
+					<parameter name="stack" type="HildonWindowStack*"/>
+				</parameters>
+			</method>
+			<property name="window-group" type="GtkWindowGroup*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="HildonWizardDialog" parent="GtkDialog" type-name="HildonWizardDialog" get-type="hildon_wizard_dialog_get_type">
 			<implements>
@@ -1979,6 +3695,15 @@
 					<parameter name="notebook" type="GtkNotebook*"/>
 				</parameters>
 			</constructor>
+			<method name="set_forward_page_func" symbol="hildon_wizard_dialog_set_forward_page_func">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="wizard_dialog" type="HildonWizardDialog*"/>
+					<parameter name="page_func" type="HildonWizardDialogPageFunc"/>
+					<parameter name="data" type="gpointer"/>
+					<parameter name="destroy" type="GDestroyNotify"/>
+				</parameters>
+			</method>
 			<property name="autotitle" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="wizard-name" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="wizard-notebook" type="GtkNotebook*" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -2016,13 +3741,26 @@
 				</parameters>
 			</vfunc>
 		</interface>
-		<constant name="HILDON_MAJOR_VERSION" type="int" value="1"/>
-		<constant name="HILDON_MARGIN_DEFAULT" type="int" value="6"/>
-		<constant name="HILDON_MARGIN_DOUBLE" type="int" value="12"/>
-		<constant name="HILDON_MARGIN_HALF" type="int" value="3"/>
-		<constant name="HILDON_MARGIN_TRIPLE" type="int" value="18"/>
-		<constant name="HILDON_MICRO_VERSION" type="int" value="0"/>
-		<constant name="HILDON_MINOR_VERSION" type="int" value="99"/>
+		<constant name="HILDON_AA_CENTER_GRAVITY" type="int" value="9"/>
+		<constant name="HILDON_AA_E_GRAVITY" type="int" value="3"/>
+		<constant name="HILDON_AA_NE_GRAVITY" type="int" value="2"/>
+		<constant name="HILDON_AA_NW_GRAVITY" type="int" value="8"/>
+		<constant name="HILDON_AA_N_GRAVITY" type="int" value="1"/>
+		<constant name="HILDON_AA_SE_GRAVITY" type="int" value="4"/>
+		<constant name="HILDON_AA_SW_GRAVITY" type="int" value="6"/>
+		<constant name="HILDON_AA_S_GRAVITY" type="int" value="5"/>
+		<constant name="HILDON_AA_W_GRAVITY" type="int" value="7"/>
+		<constant name="HILDON_AA_X_AXIS" type="int" value="0"/>
+		<constant name="HILDON_AA_Y_AXIS" type="int" value="1"/>
+		<constant name="HILDON_AA_Z_AXIS" type="int" value="2"/>
+		<constant name="HILDON_MAJOR_VERSION" type="int" value="2"/>
+		<constant name="HILDON_MARGIN_DEFAULT" type="int" value="8"/>
+		<constant name="HILDON_MARGIN_DOUBLE" type="int" value="16"/>
+		<constant name="HILDON_MARGIN_HALF" type="int" value="4"/>
+		<constant name="HILDON_MARGIN_TRIPLE" type="int" value="24"/>
+		<constant name="HILDON_MICRO_VERSION" type="int" value="86"/>
+		<constant name="HILDON_MINOR_VERSION" type="int" value="1"/>
 		<constant name="HILDON_WINDOW_LONG_PRESS_TIME" type="int" value="800"/>
+		<constant name="HILDON_WINDOW_TITLEBAR_HEIGHT" type="int" value="56"/>
 	</namespace>
 </api>

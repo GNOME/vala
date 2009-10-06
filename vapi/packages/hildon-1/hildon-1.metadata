@@ -1,4 +1,6 @@
 Hildon cprefix="Hildon" lower_case_cprefix="hildon_" cheader_filename="hildon/hildon.h"
+hildon_banner_show_information.icon_name nullable="1"
+hildon_banner_show_information_with_markup.icon_name nullable="1"
 hildon_color_button_get_color.color is_out="1"
 hildon_color_chooser_get_color.color is_out="1"
 hildon_color_chooser_dialog_get_color.color is_out="1"
