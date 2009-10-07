@@ -684,7 +684,7 @@ public class Vala.Scanner {
 					token_length_in_chars = 6;
 					current += 3;
 					while (current < end - 4) {
-						if (current[0] == '"' && current[1] == '"' && current[2] == '"') {
+						if (current[0] == '"' && current[1] == '"' && current[2] == '"' && current[3] != '"') {
 							break;
 						} else if (current[0] == '\n') {
 							current++;
