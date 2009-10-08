@@ -856,10 +856,10 @@ namespace GLib {
 		[NoWrapper]
 		public virtual void add_writable_namespaces (GLib.FileAttributeInfoList list);
 		public static unowned GLib.Vfs get_default ();
-		public virtual unowned GLib.File get_file_for_path (string path);
-		public virtual unowned GLib.File get_file_for_uri (string uri);
+		public virtual GLib.File get_file_for_path (string path);
+		public virtual GLib.File get_file_for_uri (string uri);
 		public static unowned GLib.Vfs get_local ();
-		public virtual unowned string get_supported_uri_schemes ();
+		public virtual unowned string[] get_supported_uri_schemes ();
 		public virtual bool is_active ();
 		[NoWrapper]
 		public virtual void local_file_add_info (string filename, uint64 device, GLib.FileAttributeMatcher attribute_matcher, GLib.FileInfo info, GLib.Cancellable? cancellable, void* extra_data, GLib.DestroyNotify free_extra_data);
