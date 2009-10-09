@@ -1563,7 +1563,7 @@ internal class Vala.DBusClientModule : DBusModule {
 
 			generate_client_error_cases (error_block, error_types, new CCodeMemberAccess (new CCodeIdentifier ("_dbus_error"), "name"), new CCodeIdentifier ("_edomain"), new CCodeIdentifier ("_ecode"));
 
-			var g_set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
+			var g_set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error_literal"));
 			g_set_error.add_argument (new CCodeIdentifier ("error"));
 			g_set_error.add_argument (new CCodeIdentifier ("_edomain"));
 			g_set_error.add_argument (new CCodeIdentifier ("_ecode"));
