@@ -2322,6 +2322,132 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
+	void make_comparable_cexpression (DataType left_type, ref CCodeExpression cleft, DataType right_type, ref CCodeExpression cright) {
+		var left_type_as_struct = left_type.data_type as Struct;
+		var right_type_as_struct = right_type.data_type as Struct;
+
+		if (left_type.data_type is Class && !((Class) left_type.data_type).is_compact &&
+		    right_type.data_type is Class && !((Class) right_type.data_type).is_compact) {
+			var left_cl = (Class) left_type.data_type;
+			var right_cl = (Class) right_type.data_type;
+
+			if (left_cl != right_cl) {
+				if (left_cl.is_subtype_of (right_cl)) {
+					cleft = generate_instance_cast (cleft, right_cl);
+				} else if (right_cl.is_subtype_of (left_cl)) {
+					cright = generate_instance_cast (cright, left_cl);
+				}
+			}
+		} else if (left_type_as_struct != null && right_type_as_struct != null) {
+			if (left_type is StructValueType) {
+				// real structs (uses compare/equal function)
+				if (!left_type.nullable) {
+					cleft = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cleft);
+				}
+				if (!right_type.nullable) {
+					cright = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cright);
+				}
+			} else {
+				// integer or floating or boolean type
+				if (left_type.nullable && right_type.nullable) {
+					// FIXME also compare contents, not just address
+				} else if (left_type.nullable) {
+					// FIXME check left value is not null
+					cleft = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cleft);
+				} else if (right_type.nullable) {
+					// FIXME check right value is not null
+					cright = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cright);
+				}
+			}
+		}
+	}
+
+	private string generate_struct_equal_function (Struct st) {
+		string equal_func = "_%sequal".printf (st.get_lower_case_cprefix ());
+
+		if (!add_wrapper (equal_func)) {
+			// wrapper already defined
+			return equal_func;
+		}
+		// declaration
+
+		var function = new CCodeFunction (equal_func, "gboolean");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("s1", "const " + st.get_cname () + "*"));
+		function.add_parameter (new CCodeFormalParameter ("s2", "const " + st.get_cname () + "*"));
+
+		// definition
+		var cblock = new CCodeBlock ();
+
+		// if (s1 == s2) return TRUE;
+		{
+			var block = new CCodeBlock ();
+			block.add_statement (new CCodeReturnStatement (new CCodeConstant ("TRUE")));
+
+			var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s1"), new CCodeIdentifier ("s2"));
+			var cif = new CCodeIfStatement (cexp, block);
+			cblock.add_statement (cif);
+		}
+		// if (s1 == NULL || s2 == NULL) return FALSE;
+		{
+			var block = new CCodeBlock ();
+			block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+
+			var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s1"), new CCodeConstant ("NULL"));
+			var cif = new CCodeIfStatement (cexp, block);
+			cblock.add_statement (cif);
+
+			cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s2"), new CCodeConstant ("NULL"));
+			cif = new CCodeIfStatement (cexp, block);
+			cblock.add_statement (cif);
+		}
+
+		foreach (Field f in st.get_fields ()) {
+			if (f.binding != MemberBinding.INSTANCE) {
+				// we only compare instance fields
+				continue;
+			}
+
+			CCodeExpression cexp; // if (cexp) return FALSE;
+			var s1 = (CCodeExpression) new CCodeMemberAccess.pointer (new CCodeIdentifier ("s1"), f.name); // s1->f
+			var s2 = (CCodeExpression) new CCodeMemberAccess.pointer (new CCodeIdentifier ("s2"), f.name); // s2->f
+			make_comparable_cexpression (f.field_type, ref s1, f.field_type, ref s2);
+
+			if (!(f.field_type is NullType) && f.field_type.compatible (string_type)) {
+				requires_strcmp0 = true;
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_strcmp0"));
+				ccall.add_argument (s1);
+				ccall.add_argument (s2);
+				cexp = ccall;
+			} else if (f.field_type is StructValueType) {
+				var equalfunc = generate_struct_equal_function (f.field_type.data_type as Struct);
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
+				ccall.add_argument (s1);
+				ccall.add_argument (s2);
+				cexp = new CCodeUnaryExpression (CCodeUnaryOperator.LOGICAL_NEGATION, ccall);
+			} else {
+				cexp = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, s1, s2);
+			}
+
+			var block = new CCodeBlock ();
+			block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+			var cif = new CCodeIfStatement (cexp, block);
+			cblock.add_statement (cif);
+		}
+
+		cblock.add_statement (new CCodeReturnStatement (new CCodeConstant ("TRUE")));
+
+		// append to file
+
+		source_declarations.add_type_member_declaration (function.copy ());
+
+		function.block = cblock;
+		source_type_member_definition.append (function);
+
+		return equal_func;
+	}
+
 	private string generate_struct_dup_wrapper (ValueType value_type) {
 		string dup_func = "_%sdup".printf (value_type.type_symbol.get_lower_case_cprefix ());
 
@@ -4149,32 +4275,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		
 		if (expr.operator == BinaryOperator.EQUALITY ||
 		    expr.operator == BinaryOperator.INEQUALITY) {
-			var left_type_as_struct = expr.left.value_type.data_type as Struct;
-			var right_type_as_struct = expr.right.value_type.data_type as Struct;
+			make_comparable_cexpression (expr.left.value_type, ref cleft, expr.right.value_type, ref cright);
 
-			if (expr.left.value_type.data_type is Class && !((Class) expr.left.value_type.data_type).is_compact &&
-			    expr.right.value_type.data_type is Class && !((Class) expr.right.value_type.data_type).is_compact) {
-				var left_cl = (Class) expr.left.value_type.data_type;
-				var right_cl = (Class) expr.right.value_type.data_type;
-				
-				if (left_cl != right_cl) {
-					if (left_cl.is_subtype_of (right_cl)) {
-						cleft = generate_instance_cast (cleft, right_cl);
-					} else if (right_cl.is_subtype_of (left_cl)) {
-						cright = generate_instance_cast (cright, left_cl);
-					}
-				}
-			} else if (left_type_as_struct != null && right_type_as_struct != null) {
-				// FIXME generate and use compare/equal function for real structs
-				if (expr.left.value_type.nullable && expr.right.value_type.nullable) {
-					// FIXME also compare contents, not just address
-				} else if (expr.left.value_type.nullable) {
-					// FIXME check left value is not null
-					cleft = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cleft);
-				} else if (expr.right.value_type.nullable) {
-					// FIXME check right value is not null
-					cright = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, cright);
-				}
+			if (expr.left.value_type is StructValueType && expr.right.value_type is StructValueType) {
+				var equalfunc = generate_struct_equal_function ((Struct) expr.left.value_type.data_type as Struct);
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
+				ccall.add_argument (cleft);
+				ccall.add_argument (cright);
+				cleft = ccall;
+				cright = new CCodeConstant ("TRUE");
 			}
 		}
 
