@@ -743,6 +743,9 @@ public class Vala.Struct : TypeSymbol {
 		if (struct_type != null) {
 			var st = (Struct) struct_type.type_symbol;
 			if (st == this) {
+				if (type.nullable) {
+					return false;
+				}
 				return true;
 			}
 			foreach (Field f in st.fields) {
