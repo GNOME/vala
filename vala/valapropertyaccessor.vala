@@ -219,4 +219,8 @@ public class Vala.PropertyAccessor : Symbol {
 			value_type = new_type;
 		}
 	}
+
+	public override Gee.List<string> get_cheader_filenames () {
+		return parent_symbol.get_cheader_filenames ();
+	}
 }

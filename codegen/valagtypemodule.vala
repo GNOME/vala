@@ -345,7 +345,7 @@ internal class Vala.GTypeModule : GErrorModule {
 	}
 
 	void generate_class_private_declaration (Class cl, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (cl, cl.get_cname () + "Private")) {
+		if (decl_space.add_declaration (cl.get_cname () + "Private")) {
 			return;
 		}
 

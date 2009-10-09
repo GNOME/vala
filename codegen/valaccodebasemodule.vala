@@ -354,7 +354,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		header_declarations = new CCodeDeclarationSpace ();
+		header_declarations.is_header = true;
 		internal_header_declarations = new CCodeDeclarationSpace ();
+		internal_header_declarations.is_header = true;
 
 		/* we're only interested in non-pkg source files */
 		var source_files = context.get_source_files ();
@@ -1306,7 +1308,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public void generate_property_accessor_declaration (PropertyAccessor acc, CCodeDeclarationSpace decl_space) {
-		if (decl_space.add_symbol_declaration (acc.prop, acc.get_cname ())) {
+		if (decl_space.add_symbol_declaration (acc, acc.get_cname ())) {
 			return;
 		}
 

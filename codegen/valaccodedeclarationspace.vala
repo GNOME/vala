@@ -23,6 +23,8 @@
 using Gee;
 
 class Vala.CCodeDeclarationSpace {
+	public bool is_header { get; set; }
+
 	Set<string> declarations = new HashSet<string> (str_hash, str_equal);
 	Set<string> includes = new HashSet<string> (str_hash, str_equal);
 	internal CCodeFragment include_directives = new CCodeFragment ();
@@ -43,10 +45,10 @@ class Vala.CCodeDeclarationSpace {
 		if (add_declaration (name)) {
 			return true;
 		}
-		if (sym.external_package) {
+		if (sym.external_package || (!is_header && CodeContext.get ().use_header && !sym.is_internal_symbol ())) {
 			// add appropriate include file
 			foreach (string header_filename in sym.get_cheader_filenames ()) {
-				add_include (header_filename);
+				add_include (header_filename, !sym.external_package);
 			}
 			// declaration complete
 			return true;
