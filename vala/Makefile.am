@@ -136,6 +136,7 @@ libvalacore_la_VALASOURCES = \
 	valaswitchstatement.vala \
 	valasymbol.vala \
 	valasymbolresolver.vala \
+	valatemplate.vala \
 	valathrowstatement.vala \
 	valatokentype.vala \
 	valatrystatement.vala \

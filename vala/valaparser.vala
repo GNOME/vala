@@ -286,6 +286,9 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.STRING_LITERAL:
 			next ();
 			return new StringLiteral (get_last_string (), get_src (begin));
+		case TokenType.TEMPLATE_STRING_LITERAL:
+			next ();
+			return new StringLiteral ("\"%s\"".printf (get_last_string ()), get_src (begin));
 		case TokenType.VERBATIM_STRING_LITERAL:
 			next ();
 			string raw_string = get_last_string ();
@@ -534,6 +537,7 @@ public class Vala.Parser : CodeVisitor {
 		case TokenType.REAL_LITERAL:
 		case TokenType.CHARACTER_LITERAL:
 		case TokenType.STRING_LITERAL:
+		case TokenType.TEMPLATE_STRING_LITERAL:
 		case TokenType.VERBATIM_STRING_LITERAL:
 		case TokenType.NULL:
 			expr = parse_literal ();
@@ -543,6 +547,9 @@ public class Vala.Parser : CodeVisitor {
 			break;
 		case TokenType.OPEN_PARENS:
 			expr = parse_tuple ();
+			break;
+		case TokenType.OPEN_TEMPLATE:
+			expr = parse_template ();
 			break;
 		case TokenType.THIS:
 			expr = parse_this_access ();
@@ -634,6 +641,21 @@ public class Vala.Parser : CodeVisitor {
 			return tuple;
 		}
 		return expr_list.get (0);
+	}
+
+	Expression parse_template () throws ParseError {
+		var begin = get_location ();
+		var template = new Template ();
+
+		expect (TokenType.OPEN_TEMPLATE);
+		while (current () != TokenType.CLOSE_TEMPLATE) {
+			template.add_expression (parse_expression ());
+			expect (TokenType.COMMA);
+		}
+		expect (TokenType.CLOSE_TEMPLATE);
+
+		template.source_reference = get_src (begin);
+		return template;
 	}
 
 	Expression parse_member_access (SourceLocation begin, Expression inner) throws ParseError {
@@ -906,6 +928,7 @@ public class Vala.Parser : CodeVisitor {
 					case TokenType.REAL_LITERAL:
 					case TokenType.CHARACTER_LITERAL:
 					case TokenType.STRING_LITERAL:
+					case TokenType.TEMPLATE_STRING_LITERAL:
 					case TokenType.VERBATIM_STRING_LITERAL:
 					case TokenType.NULL:
 					case TokenType.THIS:

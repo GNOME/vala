@@ -45,6 +45,16 @@ public class Vala.Scanner {
 		public bool skip_section;
 	}
 
+	State[] state_stack;
+
+	enum State {
+		PARENS,
+		BRACE,
+		BRACKET,
+		TEMPLATE,
+		TEMPLATE_PART
+	}
+
 	public Scanner (SourceFile source_file) {
 		this.source_file = source_file;
 
@@ -55,6 +65,14 @@ public class Vala.Scanner {
 
 		line = 1;
 		column = 1;
+	}
+
+	bool in_template () {
+		return (state_stack.length > 0 && state_stack[state_stack.length - 1] == State.TEMPLATE);
+	}
+
+	bool in_template_part () {
+		return (state_stack.length > 0 && state_stack[state_stack.length - 1] == State.TEMPLATE_PART);
 	}
 
 	bool is_ident_char (char c) {
@@ -428,7 +446,139 @@ public class Vala.Scanner {
 		return type;
 	}
 
+	public TokenType read_template_token (out SourceLocation token_begin, out SourceLocation token_end) {
+		TokenType type;
+		char* begin = current;
+		token_begin.pos = begin;
+		token_begin.line = line;
+		token_begin.column = column;
+
+		int token_length_in_chars = -1;
+
+		if (current >= end) {
+			type = TokenType.EOF;
+		} else {
+			switch (current[0]) {
+			case '"':
+				type = TokenType.CLOSE_TEMPLATE;
+				current++;
+				state_stack.length--;
+				break;
+			case '$':
+				token_begin.pos++; // $ is not part of following token
+				current++;
+				if (current[0].isalpha () || current[0] == '_') {
+					int len = 0;
+					while (current < end && is_ident_char (current[0])) {
+						current++;
+						len++;
+					}
+					type = TokenType.IDENTIFIER;
+					state_stack += State.TEMPLATE_PART;
+				} else if (current[0] == '(') {
+					current++;
+					column += 2;
+					state_stack += State.PARENS;
+					return read_token (out token_begin, out token_end);
+				} else if (current[0] == '$') {
+					type = TokenType.TEMPLATE_STRING_LITERAL;
+					current++;
+					state_stack += State.TEMPLATE_PART;
+				} else {
+					Report.error (new SourceReference (source_file, line, column + 1, line, column + 1), "unexpected character");
+					return read_template_token (out token_begin, out token_end);
+				}
+				break;
+			default:
+				type = TokenType.TEMPLATE_STRING_LITERAL;
+				token_length_in_chars = 0;
+				while (current < end && current[0] != '"' && current[0] != '$') {
+					if (current[0] == '\\') {
+						current++;
+						token_length_in_chars++;
+						if (current >= end) {
+							break;
+						}
+
+						switch (current[0]) {
+						case '\'':
+						case '"':
+						case '\\':
+						case '0':
+						case 'b':
+						case 'f':
+						case 'n':
+						case 'r':
+						case 't':
+							current++;
+							token_length_in_chars++;
+							break;
+						case 'x':
+							// hexadecimal escape character
+							current++;
+							token_length_in_chars++;
+							while (current < end && current[0].isxdigit ()) {
+								current++;
+								token_length_in_chars++;
+							}
+							break;
+						default:
+							Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "invalid escape sequence");
+							break;
+						}
+					} else if (current[0] == '\n') {
+						break;
+					} else {
+						unichar u = ((string) current).get_char_validated ((long) (end - current));
+						if (u != (unichar) (-1)) {
+							current += u.to_utf8 (null);
+							token_length_in_chars++;
+						} else {
+							current++;
+							Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "invalid UTF-8 character");
+						}
+					}
+				}
+				if (current >= end || current[0] == '\n') {
+					Report.error (new SourceReference (source_file, line, column + token_length_in_chars, line, column + token_length_in_chars), "syntax error, expected \"");
+					state_stack.length--;
+					return read_token (out token_begin, out token_end);
+				}
+				state_stack += State.TEMPLATE_PART;
+				break;
+			}
+		}
+
+		if (token_length_in_chars < 0) {
+			column += (int) (current - begin);
+		} else {
+			column += token_length_in_chars;
+		}
+
+		token_end.pos = current;
+		token_end.line = line;
+		token_end.column = column - 1;
+
+		return type;
+	}
+
 	public TokenType read_token (out SourceLocation token_begin, out SourceLocation token_end) {
+		if (in_template ()) {
+			return read_template_token (out token_begin, out token_end);
+		} else if (in_template_part ()) {
+			state_stack.length--;
+
+			token_begin.pos = current;
+			token_begin.line = line;
+			token_begin.column = column;
+
+			token_end.pos = current;
+			token_end.line = line;
+			token_end.column = column - 1;
+
+			return TokenType.COMMA;
+		}
+
 		space ();
 
 		TokenType type;
@@ -449,14 +599,20 @@ public class Vala.Scanner {
 			}
 			type = get_identifier_or_keyword (begin, len);
 		} else if (current[0] == '@') {
-			token_begin.pos++; // @ is not part of the identifier
-			current++;
-			int len = 0;
-			while (current < end && is_ident_char (current[0])) {
+			if (current < end - 1 && current[1] == '"') {
+				type = TokenType.OPEN_TEMPLATE;
+				current += 2;
+				state_stack += State.TEMPLATE;
+			} else {
+				token_begin.pos++; // @ is not part of the identifier
 				current++;
-				len++;
+				int len = 0;
+				while (current < end && is_ident_char (current[0])) {
+					current++;
+					len++;
+				}
+				type = TokenType.IDENTIFIER;
 			}
-			type = TokenType.IDENTIFIER;
 		} else if (current[0].isdigit ()) {
 			type = read_number ();
 		} else {
@@ -464,26 +620,35 @@ public class Vala.Scanner {
 			case '{':
 				type = TokenType.OPEN_BRACE;
 				current++;
+				state_stack += State.BRACE;
 				break;
 			case '}':
 				type = TokenType.CLOSE_BRACE;
 				current++;
+				state_stack.length--;
 				break;
 			case '(':
 				type = TokenType.OPEN_PARENS;
 				current++;
+				state_stack += State.PARENS;
 				break;
 			case ')':
 				type = TokenType.CLOSE_PARENS;
 				current++;
+				state_stack.length--;
+				if (in_template ()) {
+					type = TokenType.COMMA;
+				}
 				break;
 			case '[':
 				type = TokenType.OPEN_BRACKET;
 				current++;
+				state_stack += State.BRACKET;
 				break;
 			case ']':
 				type = TokenType.CLOSE_BRACKET;
 				current++;
+				state_stack.length--;
 				break;
 			case '.':
 				type = TokenType.DOT;

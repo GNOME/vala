@@ -989,6 +989,10 @@ public class string {
 		GLib.Memory.copy (result, this, this.size ());
 		return result;
 	}
+
+	public unowned string to_string () {
+		return this;
+	}
 }
 
 [CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "glib.h")]
