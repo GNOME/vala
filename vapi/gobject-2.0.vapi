@@ -188,6 +188,8 @@ namespace GLib {
 
 		[CCode (cname = "G_TYPE_FROM_INSTANCE")]
 		public Type get_type ();
+		[CCode (cname = "G_OBJECT_GET_CLASS")]
+		public unowned ObjectClass get_class ();
 		public weak Object @ref ();
 		public void unref ();
 		public Object ref_sink ();
