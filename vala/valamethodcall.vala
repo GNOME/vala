@@ -271,6 +271,21 @@ public class Vala.MethodCall : Expression {
 			if (last_arg != null) {
 				// use last argument as format string
 				format_literal = last_arg as StringLiteral;
+				if (format_literal == null && args.size == params.size - 1) {
+					// insert "%s" to avoid issues with embedded %
+					format_literal = new StringLiteral ("\"%s\"");
+					format_literal.target_type = analyzer.string_type.copy ();
+					argument_list.insert (args.size - 1, format_literal);
+
+					// recreate iterator and skip to right position
+					arg_it = argument_list.iterator ();
+					foreach (FormalParameter param in params) {
+						if (param.ellipsis) {
+							break;
+						}
+						arg_it.next ();
+					}
+				}
 			} else {
 				// use instance as format string for string.printf (...)
 				var ma = call as MemberAccess;
