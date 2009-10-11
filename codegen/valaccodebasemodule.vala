@@ -3851,6 +3851,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						var rhs_delegate_target = get_delegate_target_cexpression (init.initializer, out rhs_delegate_target_destroy_notify);
 						ccomma.append_expression (new CCodeAssignment (lhs, rhs_delegate_target));
 					}
+
+					var cl = f.parent_symbol as Class;
+					if (cl != null) {
+						generate_class_struct_declaration (cl, source_declarations);
+					}
 				} else if (init.symbol_reference is Property) {
 					var inst_ma = new MemberAccess.simple ("new");
 					inst_ma.value_type = expr.type_reference;
