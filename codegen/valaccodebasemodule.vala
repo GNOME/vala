@@ -3954,6 +3954,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return;
 		}
 
+		generate_type_declaration (expr.type_reference, source_declarations);
+
 		var cl = expr.type_reference.data_type as Class;
 		var iface = expr.type_reference.data_type as Interface;
 		if (context.profile == Profile.GOBJECT && (iface != null || (cl != null && !cl.is_compact))) {
