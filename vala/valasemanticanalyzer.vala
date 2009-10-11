@@ -533,21 +533,8 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			instance_base_type = new ObjectType ((Interface) base_type.data_type);
 		}
 		foreach (DataType type_arg in base_type.get_type_arguments ()) {
-			if (type_arg.type_parameter != null) {
-				// link to type argument of derived type
-				int param_index = instance_type.data_type.get_type_parameter_index (type_arg.type_parameter.name);
-				if (param_index == -1) {
-					Report.error (node_reference.source_reference, "internal error: unknown type parameter %s".printf (type_arg.type_parameter.name));
-					node_reference.error = true;
-					return null;
-				}
-				if (instance_type.get_type_arguments ().size <= param_index) {
-					Report.error (node_reference.source_reference, "internal error: missing type argument for type parameter `%s' in `%s'".printf (type_arg.type_parameter.get_full_name (), instance_type.to_string ()));
-					node_reference.error = true;
-					return null;
-				}
-				type_arg = instance_type.get_type_arguments ().get (param_index);
-			}
+			// resolve type argument specified in base type (possibly recursively for nested generic types)
+			type_arg = type_arg.get_actual_type (instance_type, null, node_reference);
 			instance_base_type.add_type_argument (type_arg);
 		}
 		return instance_base_type;
