@@ -169,9 +169,7 @@ namespace Valadoc.Diagrams {
 		}
 
 		foreach ( Interface type in parents ) {
-			draw_interface ( g, (Valadoc.Interface)type, me );		}
+			draw_interface ( g, (Valadoc.Interface)type, me );
 		}
 	}
 }
-
-
