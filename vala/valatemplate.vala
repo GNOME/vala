@@ -69,6 +69,7 @@ public class Vala.Template : Expression {
 				expr = concat;
 			}
 		}
+		expr.target_type = target_type;
 
 		analyzer.replaced_nodes.add (this);
 		parent_node.replace_expression (this, expr);
