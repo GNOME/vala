@@ -23,13 +23,16 @@ valadocdir = $(libdir)/valadoc/
 libvaladoc_la_VALASOURCES = \
 	doclet.vala \
 	drawer.vala \
+	errorreporter.vala \
 	filehelper.vala \
 	langlet.vala \
+	moduleloader.vala \
 	settings.vala \
+	documentation/commentscanner.vala \
 	documentation/documentation.vala \
-	documentation/errorreporter.vala \
-	documentation/moduleloader.vala \
+	documentation/documentationparser.vala \
 	documentation/wiki.vala \
+	documentation/wikiscanner.vala \
 	apitree/apitree.vala \
 	apitree/array.vala \
 	apitree/basic.vala \
@@ -100,8 +103,6 @@ libvaladoc_la_VALASOURCES = \
 	content/tablerow.vala \
 	content/taglet.vala \
 	content/text.vala \
-	parser/commentscanner.vala \
-	parser/documentationparser.vala \
 	parser/manyrule.vala \
 	parser/oneofrule.vala \
 	parser/optionalrule.vala \
@@ -114,7 +115,6 @@ libvaladoc_la_VALASOURCES = \
 	parser/stubrule.vala \
 	parser/token.vala \
 	parser/tokentype.vala \
-	parser/wikiscanner.vala \
 	taglets/tagletdeprecated.vala \
 	taglets/tagletinheritdoc.vala \
 	taglets/tagletinit.vala \
