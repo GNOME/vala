@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * The type of a signal referencea.
@@ -44,7 +43,7 @@ public class Vala.SignalType : DataType {
 		return signal_symbol.return_type;
 	}
 
-	public override Gee.List<FormalParameter>? get_parameters () {
+	public override List<FormalParameter>? get_parameters () {
 		return signal_symbol.get_parameters ();
 	}
 
@@ -98,7 +97,7 @@ public class Vala.SignalType : DataType {
 		return null;
 	}
 
-	public override Gee.List<Symbol> get_symbols () {
+	public override List<Symbol> get_symbols () {
 		var symbols = new ArrayList<Symbol> ();
 		symbols.add (signal_symbol);
 		return symbols;

@@ -22,7 +22,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Lexical scanner for Genie source files.

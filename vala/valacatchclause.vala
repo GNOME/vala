@@ -20,7 +20,6 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using Gee;
 
 /**
  * Represents a catch clause in a try statement in the source code.

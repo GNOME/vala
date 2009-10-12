@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * The root of the code tree.
@@ -156,11 +155,11 @@ public class Vala.CodeContext {
 
 	public string entry_point_name { get; set; }
 
-	private Gee.List<SourceFile> source_files = new ArrayList<SourceFile> ();
-	private Gee.List<string> c_source_files = new ArrayList<string> ();
+	private List<SourceFile> source_files = new ArrayList<SourceFile> ();
+	private List<string> c_source_files = new ArrayList<string> ();
 	private Namespace _root = new Namespace (null);
 
-	private Gee.List<string> packages = new ArrayList<string> (str_equal);
+	private List<string> packages = new ArrayList<string> (str_equal);
 
 	private Set<string> defines = new HashSet<string> (str_hash, str_equal);
 
@@ -187,7 +186,7 @@ public class Vala.CodeContext {
 	 * Return the topmost context from the context stack.
 	 */
 	public static CodeContext get () {
-		Gee.List<CodeContext>* context_stack = context_stack_key.get ();
+		List<CodeContext>* context_stack = context_stack_key.get ();
 
 		return context_stack->get (context_stack->size - 1);
 	}
@@ -196,7 +195,7 @@ public class Vala.CodeContext {
 	 * Push the specified context to the context stack.
 	 */
 	public static void push (CodeContext context) {
-		Gee.List<CodeContext>* context_stack = context_stack_key.get ();
+		List<CodeContext>* context_stack = context_stack_key.get ();
 		if (context_stack == null) {
 			context_stack = new ArrayList<CodeContext> ();
 			context_stack_key.set (context_stack, null);
@@ -209,7 +208,7 @@ public class Vala.CodeContext {
 	 * Remove the topmost context from the context stack.
 	 */
 	public static void pop () {
-		Gee.List<CodeContext>* context_stack = context_stack_key.get ();
+		List<CodeContext>* context_stack = context_stack_key.get ();
 
 		context_stack->remove_at (context_stack->size - 1);
 	}
@@ -219,7 +218,7 @@ public class Vala.CodeContext {
 	 *
 	 * @return list of source files
 	 */
-	public Gee.List<SourceFile> get_source_files () {
+	public List<SourceFile> get_source_files () {
 		return new ReadOnlyList<SourceFile> (source_files);
 	}
 
@@ -228,7 +227,7 @@ public class Vala.CodeContext {
 	 *
 	 * @return list of C source files
 	 */
-	public Gee.List<string> get_c_source_files () {
+	public List<string> get_c_source_files () {
 		return new ReadOnlyList<string> (c_source_files);
 	}
 	
@@ -255,7 +254,7 @@ public class Vala.CodeContext {
 	 *
 	 * @return list of used packages
 	 */
-	public Gee.List<string> get_packages () {
+	public List<string> get_packages () {
 		return new ReadOnlyList<string> (packages);
 	}
 

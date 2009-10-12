@@ -20,10 +20,9 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using Gee;
 
 public class Vala.Template : Expression {
-	private Gee.List<Expression> expression_list = new ArrayList<Expression> ();
+	private List<Expression> expression_list = new ArrayList<Expression> ();
 
 	public Template () {
 	}
@@ -32,7 +31,7 @@ public class Vala.Template : Expression {
 		expression_list.add (expr);
 	}
 
-	public Gee.List<Expression> get_expressions () {
+	public List<Expression> get_expressions () {
 		return expression_list;
 	}
 

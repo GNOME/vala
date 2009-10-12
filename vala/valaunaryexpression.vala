@@ -20,7 +20,6 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using Gee;
 
 /**
  * Represents an expression with one operand in the source code.

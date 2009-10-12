@@ -20,7 +20,6 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using Gee;
 
 /**
  * A code statement that evaluates a given expression. The value computed by the

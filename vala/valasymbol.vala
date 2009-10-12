@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a node in the symbol tree.
@@ -210,7 +209,7 @@ public abstract class Vala.Symbol : CodeNode {
 	 *
 	 * @return list of C header filenames for this symbol
 	 */
-	public virtual Gee.List<string> get_cheader_filenames () {
+	public virtual List<string> get_cheader_filenames () {
 		return new ArrayList<string> ();
 	}
 

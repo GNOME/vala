@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * The type of a method referencea.
@@ -41,7 +40,7 @@ public class Vala.MethodType : DataType {
 		return method_symbol.return_type;
 	}
 
-	public override Gee.List<FormalParameter>? get_parameters () {
+	public override List<FormalParameter>? get_parameters () {
 		return method_symbol.get_parameters ();
 	}
 

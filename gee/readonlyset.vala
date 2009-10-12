@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a read-only collection of items without duplicates.
  */
-public class Gee.ReadOnlySet<G> : CollectionObject, Iterable<G>, Collection<G>, Set<G> {
+public class Vala.ReadOnlySet<G> : CollectionObject, Iterable<G>, Collection<G>, Set<G> {
 	public int size {
 		get { return _set.size; }
 	}
@@ -44,7 +44,7 @@ public class Gee.ReadOnlySet<G> : CollectionObject, Iterable<G>, Collection<G>, 
 		return typeof (G);
 	}
 
-	public Gee.Iterator<G> iterator () {
+	public Vala.Iterator<G> iterator () {
 		if (_set == null) {
 			return new Iterator<G> ();
 		}
@@ -72,7 +72,7 @@ public class Gee.ReadOnlySet<G> : CollectionObject, Iterable<G>, Collection<G>, 
 		assert_not_reached ();
 	}
 
-	private class Iterator<G> : CollectionObject, Gee.Iterator<G> {
+	private class Iterator<G> : CollectionObject, Vala.Iterator<G> {
 		public bool next () {
 			return false;
 		}

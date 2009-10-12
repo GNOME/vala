@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a read-only collection of items in a well-defined order.
  */
-public class Gee.ReadOnlyList<G> : CollectionObject, Iterable<G>, Collection<G>, List<G> {
+public class Vala.ReadOnlyList<G> : CollectionObject, Iterable<G>, Collection<G>, List<G> {
 	public int size {
 		get { return _list.size; }
 	}
@@ -44,7 +44,7 @@ public class Gee.ReadOnlyList<G> : CollectionObject, Iterable<G>, Collection<G>,
 		return typeof (G);
 	}
 
-	public Gee.Iterator<G> iterator () {
+	public Vala.Iterator<G> iterator () {
 		if (_list == null) {
 			return new Iterator<G> ();
 		}
@@ -100,7 +100,7 @@ public class Gee.ReadOnlyList<G> : CollectionObject, Iterable<G>, Collection<G>,
 		assert_not_reached ();
 	}
 
-	class Iterator<G> : CollectionObject, Gee.Iterator<G> {
+	class Iterator<G> : CollectionObject, Vala.Iterator<G> {
 		public bool next () {
 			return false;
 		}

@@ -23,13 +23,12 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a type or namespace method.
  */
 public class Vala.Method : Member {
-	Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
+	List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
 	public const string DEFAULT_SENTINEL = "NULL";
 
@@ -228,12 +227,12 @@ public class Vala.Method : Member {
 
 	public bool is_async_callback { get; set; }
 
-	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
+	private List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private string cname;
 	private string _vfunc_name;
 	private string _sentinel;
-	private Gee.List<Expression> preconditions = new ArrayList<Expression> ();
-	private Gee.List<Expression> postconditions = new ArrayList<Expression> ();
+	private List<Expression> preconditions = new ArrayList<Expression> ();
+	private List<Expression> postconditions = new ArrayList<Expression> ();
 	private DataType _return_type;
 	private Block _body;
 
@@ -244,7 +243,7 @@ public class Vala.Method : Member {
 	Method? callback_method;
 
 	// only valid for closures
-	Gee.List<LocalVariable> captured_variables;
+	List<LocalVariable> captured_variables;
 
 	/**
 	 * Creates a new method.
@@ -279,7 +278,7 @@ public class Vala.Method : Member {
 		}
 	}
 	
-	public Gee.List<FormalParameter> get_parameters () {
+	public List<FormalParameter> get_parameters () {
 		return new ReadOnlyList<FormalParameter> (parameters);
 	}
 
@@ -563,7 +562,7 @@ public class Vala.Method : Member {
 	 *
 	 * @return list of type parameters
 	 */
-	public Gee.List<TypeParameter> get_type_parameters () {
+	public List<TypeParameter> get_type_parameters () {
 		return new ReadOnlyList<TypeParameter> (type_parameters);
 	}
 
@@ -593,7 +592,7 @@ public class Vala.Method : Member {
 	 *
 	 * @return list of preconditions
 	 */
-	public Gee.List<Expression> get_preconditions () {
+	public List<Expression> get_preconditions () {
 		return new ReadOnlyList<Expression> (preconditions);
 	}
 
@@ -612,7 +611,7 @@ public class Vala.Method : Member {
 	 *
 	 * @return list of postconditions
 	 */
-	public Gee.List<Expression> get_postconditions () {
+	public List<Expression> get_postconditions () {
 		return new ReadOnlyList<Expression> (postconditions);
 	}
 
@@ -988,7 +987,7 @@ public class Vala.Method : Member {
 		return callback_method;
 	}
 
-	public Gee.List<FormalParameter> get_async_begin_parameters () {
+	public List<FormalParameter> get_async_begin_parameters () {
 		assert (this.coroutine);
 
 		var glib_ns = CodeContext.get ().root.scope.lookup ("GLib");
@@ -1013,7 +1012,7 @@ public class Vala.Method : Member {
 		return params;
 	}
 
-	public Gee.List<FormalParameter> get_async_end_parameters () {
+	public List<FormalParameter> get_async_end_parameters () {
 		assert (this.coroutine);
 
 		var params = new ArrayList<FormalParameter> ();

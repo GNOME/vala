@@ -26,7 +26,7 @@ using GLib;
  * Implemented by classes that support a simple iteration over instances of the
  * collection.
  */
-public interface Gee.Iterable<G> : CollectionObject {
+public interface Vala.Iterable<G> : CollectionObject {
 	public abstract Type get_element_type ();
 
 	/**

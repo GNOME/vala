@@ -20,7 +20,6 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using Gee;
 
 /**
  * Represents a pointer indirection in the source code, e.g. `*pointer'.

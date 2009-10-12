@@ -22,7 +22,6 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-using Gee;
 
 /**
  * Code visitor generating Vala API file for the public interface.
@@ -272,8 +271,8 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_newline ();
 	}
 
-	void visit_sorted (Gee.List<Symbol> symbols) {
-		var sorted_symbols = new Gee.ArrayList<Symbol> ();
+	void visit_sorted (List<Symbol> symbols) {
+		var sorted_symbols = new ArrayList<Symbol> ();
 		foreach (Symbol sym in symbols) {
 			int left = 0;
 			int right = sorted_symbols.size - 1;
@@ -671,7 +670,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_newline ();
 	}
 	
-	private void write_error_domains (Gee.List<DataType> error_domains) {
+	private void write_error_domains (List<DataType> error_domains) {
 		if (error_domains.size > 0) {
 			write_string (" throws ");
 
@@ -693,7 +692,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		return ((int) (d1 * 1000)) == ((int) (d2 * 1000));
 	}
 
-	private void write_params (Gee.List<FormalParameter> params) {
+	private void write_params (List<FormalParameter> params) {
 		write_string ("(");
 
 		int i = 1;

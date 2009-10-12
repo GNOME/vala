@@ -23,7 +23,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * The link between an assignment and generated code.

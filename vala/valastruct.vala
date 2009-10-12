@@ -21,17 +21,16 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a struct declaration in the source code.
  */
 public class Vala.Struct : TypeSymbol {
-	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
-	private Gee.List<Constant> constants = new ArrayList<Constant> ();
-	private Gee.List<Field> fields = new ArrayList<Field> ();
-	private Gee.List<Method> methods = new ArrayList<Method> ();
-	private Gee.List<Property> properties = new ArrayList<Property> ();
+	private List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
+	private List<Constant> constants = new ArrayList<Constant> ();
+	private List<Field> fields = new ArrayList<Field> ();
+	private List<Method> methods = new ArrayList<Method> ();
+	private List<Property> properties = new ArrayList<Property> ();
 	private DataType _base_type = null;
 
 	private string cname;
@@ -126,7 +125,7 @@ public class Vala.Struct : TypeSymbol {
 	 *
 	 * @return list of type parameters
 	 */
-	public Gee.List<TypeParameter> get_type_parameters () {
+	public List<TypeParameter> get_type_parameters () {
 		return new ReadOnlyList<TypeParameter> (type_parameters);
 	}
 
@@ -158,7 +157,7 @@ public class Vala.Struct : TypeSymbol {
 	 *
 	 * @return list of fields
 	 */
-	public Gee.List<Field> get_fields () {
+	public List<Field> get_fields () {
 		return new ReadOnlyList<Field> (fields);
 	}
 
@@ -167,7 +166,7 @@ public class Vala.Struct : TypeSymbol {
 	 *
 	 * @return list of constants
 	 */
-	public Gee.List<Constant> get_constants () {
+	public List<Constant> get_constants () {
 		return new ReadOnlyList<Constant> (constants);
 	}
 
@@ -211,7 +210,7 @@ public class Vala.Struct : TypeSymbol {
 	 *
 	 * @return list of methods
 	 */
-	public Gee.List<Method> get_methods () {
+	public List<Method> get_methods () {
 		return new ReadOnlyList<Method> (methods);
 	}
 
@@ -237,7 +236,7 @@ public class Vala.Struct : TypeSymbol {
 	 *
 	 * @return list of properties
 	 */
-	public Gee.List<Property> get_properties () {
+	public List<Property> get_properties () {
 		return new ReadOnlyList<Property> (properties);
 	}
 

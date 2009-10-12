@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a switch selection statement in the C code.

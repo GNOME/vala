@@ -23,7 +23,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Code visitor parsing all GIDL files.
@@ -39,7 +38,7 @@ public class Vala.GIdlParser : CodeVisitor {
 	private TypeSymbol current_data_type;
 	private Map<string,string> codenode_attributes_map;
 	private Map<PatternSpec*,string> codenode_attributes_patterns;
-	private Gee.Set<string> current_type_symbol_set;
+	private Set<string> current_type_symbol_set;
 
 	private Map<string,TypeSymbol> cname_type_map;
 

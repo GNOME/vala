@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents an object signal. Signals enable objects to provide notifications.
@@ -58,7 +57,7 @@ public class Vala.Signal : Member, Lockable {
 	 */
 	public bool is_virtual { get; set; }
 
-	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
+	private List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	/**
 	 * Refers to the default signal handler, which is an anonymous
 	 * function in the scope.
@@ -101,7 +100,7 @@ public class Vala.Signal : Member, Lockable {
 		scope.add (param.name, param);
 	}
 
-	public Gee.List<FormalParameter> get_parameters () {
+	public List<FormalParameter> get_parameters () {
 		return new ReadOnlyList<FormalParameter> (parameters);
 	}
 

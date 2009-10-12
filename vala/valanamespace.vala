@@ -21,32 +21,31 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a namespace declaration in the source code.
  */
 public class Vala.Namespace : Symbol {
-	private Gee.List<Class> classes = new ArrayList<Class> ();
-	private Gee.List<Interface> interfaces = new ArrayList<Interface> ();
-	private Gee.List<Struct> structs = new ArrayList<Struct> ();
-	private Gee.List<Enum> enums = new ArrayList<Enum> ();
-	private Gee.List<ErrorDomain> error_domains = new ArrayList<ErrorDomain> ();
-	private Gee.List<Delegate> delegates = new ArrayList<Delegate> ();
-	private Gee.List<Constant> constants = new ArrayList<Constant> ();
-	private Gee.List<Field> fields = new ArrayList<Field> ();
-	private Gee.List<Method> methods = new ArrayList<Method> ();
+	private List<Class> classes = new ArrayList<Class> ();
+	private List<Interface> interfaces = new ArrayList<Interface> ();
+	private List<Struct> structs = new ArrayList<Struct> ();
+	private List<Enum> enums = new ArrayList<Enum> ();
+	private List<ErrorDomain> error_domains = new ArrayList<ErrorDomain> ();
+	private List<Delegate> delegates = new ArrayList<Delegate> ();
+	private List<Constant> constants = new ArrayList<Constant> ();
+	private List<Field> fields = new ArrayList<Field> ();
+	private List<Method> methods = new ArrayList<Method> ();
 
-	private Gee.List<Comment> comments = new ArrayList<Comment> ();
+	private List<Comment> comments = new ArrayList<Comment> ();
 
-	private Gee.List<string> cprefixes = new ArrayList<string> ();
+	private List<string> cprefixes = new ArrayList<string> ();
 	private string lower_case_cprefix;
 	
-	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
+	private List<string> cheader_filenames = new ArrayList<string> ();
 
-	private Gee.List<Namespace> namespaces = new ArrayList<Namespace> ();
+	private List<Namespace> namespaces = new ArrayList<Namespace> ();
 
-	private Gee.List<UsingDirective> using_directives = new ArrayList<UsingDirective> ();
+	private List<UsingDirective> using_directives = new ArrayList<UsingDirective> ();
 
 	/**
 	 * Creates a new namespace.
@@ -78,7 +77,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return comment list
 	 */
-	public Gee.List<Comment> get_comments () {
+	public List<Comment> get_comments () {
 		return new ReadOnlyList<Comment> (comments);
 	}
 
@@ -142,7 +141,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return namespace list
 	 */
-	public Gee.List<Namespace> get_namespaces () {
+	public List<Namespace> get_namespaces () {
 		return new ReadOnlyList<Namespace> (namespaces);
 	}
 	
@@ -251,7 +250,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return struct list
 	 */
-	public Gee.List<Struct> get_structs () {
+	public List<Struct> get_structs () {
 		return new ReadOnlyList<Struct> (structs);
 	}
 
@@ -260,7 +259,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return class list
 	 */
-	public Gee.List<Class> get_classes () {
+	public List<Class> get_classes () {
 		return new ReadOnlyList<Class> (classes);
 	}
 	
@@ -269,7 +268,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return interface list
 	 */
-	public Gee.List<Interface> get_interfaces () {
+	public List<Interface> get_interfaces () {
 		return new ReadOnlyList<Interface> (interfaces);
 	}
 	
@@ -278,7 +277,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return enum list
 	 */
-	public Gee.List<Enum> get_enums () {
+	public List<Enum> get_enums () {
 		return new ReadOnlyList<Enum> (enums);
 	}
 	
@@ -287,7 +286,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return error domain list
 	 */
-	public Gee.List<ErrorDomain> get_error_domains () {
+	public List<ErrorDomain> get_error_domains () {
 		return new ReadOnlyList<ErrorDomain> (error_domains);
 	}
 	
@@ -296,7 +295,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return field list
 	 */
-	public Gee.List<Field> get_fields () {
+	public List<Field> get_fields () {
 		return new ReadOnlyList<Field> (fields);
 	}
 	
@@ -305,7 +304,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return constant list
 	 */
-	public Gee.List<Constant> get_constants () {
+	public List<Constant> get_constants () {
 		return new ReadOnlyList<Constant> (constants);
 	}
 	
@@ -314,7 +313,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return delegate list
 	 */
-	public Gee.List<Delegate> get_delegates () {
+	public List<Delegate> get_delegates () {
 		return new ReadOnlyList<Delegate> (delegates);
 	}
 	
@@ -323,7 +322,7 @@ public class Vala.Namespace : Symbol {
 	 *
 	 * @return method list
 	 */
-	public Gee.List<Method> get_methods () {
+	public List<Method> get_methods () {
 		return new ReadOnlyList<Method> (methods);
 	}
 	
@@ -468,7 +467,7 @@ public class Vala.Namespace : Symbol {
 		}
 	}
 
-	public Gee.List<string> get_cprefixes () {
+	public List<string> get_cprefixes () {
 		if (0 == cprefixes.size && null != name)
 			cprefixes.add (name);
 
@@ -518,7 +517,7 @@ public class Vala.Namespace : Symbol {
 		this.lower_case_cprefix = cprefix;
 	}
 
-	public override Gee.List<string> get_cheader_filenames () {
+	public override List<string> get_cheader_filenames () {
 		return new ReadOnlyList<string> (cheader_filenames);
 	}
 

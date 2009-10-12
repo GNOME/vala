@@ -21,14 +21,13 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents an error domain declaration in the source code.
  */
 public class Vala.ErrorDomain : TypeSymbol {
-	private Gee.List<ErrorCode> codes = new ArrayList<ErrorCode> ();
-	private Gee.List<Method> methods = new ArrayList<Method> ();
+	private List<ErrorCode> codes = new ArrayList<ErrorCode> ();
+	private List<Method> methods = new ArrayList<Method> ();
 	private string cname;
 	private string cprefix;
 	private string lower_case_cprefix;
@@ -81,7 +80,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 	 *
 	 * @return list of error codes
 	 */
-	public Gee.List<ErrorCode> get_codes () {
+	public List<ErrorCode> get_codes () {
 		return new ReadOnlyList<ErrorCode> (codes);
 	}
 
@@ -90,7 +89,7 @@ public class Vala.ErrorDomain : TypeSymbol {
 	 *
 	 * @return list of methods
 	 */
-	public Gee.List<Method> get_methods () {
+	public List<Method> get_methods () {
 		return new ReadOnlyList<Method> (methods);
 	}
 

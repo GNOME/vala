@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a late bound property.
@@ -34,7 +33,7 @@ public class Vala.DynamicProperty : Property {
 		this.dynamic_type = dynamic_type;
 	}
 
-	public override Gee.List<string> get_cheader_filenames () {
+	public override List<string> get_cheader_filenames () {
 		return new ArrayList<string> ();
 	}
 

@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a function declaration in the C code.
@@ -47,7 +46,7 @@ public class Vala.CCodeFunction : CCodeNode {
 	 */
 	public CCodeBlock block { get; set; }
 
-	private Gee.List<CCodeFormalParameter> parameters = new ArrayList<CCodeFormalParameter> ();
+	private List<CCodeFormalParameter> parameters = new ArrayList<CCodeFormalParameter> ();
 	
 	public CCodeFunction (string name, string return_type = "void") {
 		this.name = name;

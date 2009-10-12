@@ -21,22 +21,21 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a basic block, i.e. a straight-line piece of code without any
  * jumps or jump targets.
  */
 public class Vala.BasicBlock {
-	private Gee.List<CodeNode> nodes = new ArrayList<CodeNode> ();
+	private List<CodeNode> nodes = new ArrayList<CodeNode> ();
 
 	// control flow graph
-	private Gee.List<weak BasicBlock> predecessors = new ArrayList<weak BasicBlock> ();
-	private Gee.List<BasicBlock> successors = new ArrayList<BasicBlock> ();
+	private List<weak BasicBlock> predecessors = new ArrayList<weak BasicBlock> ();
+	private List<BasicBlock> successors = new ArrayList<BasicBlock> ();
 
 	// dominator tree
 	public BasicBlock parent { get; private set; }
-	Gee.List<BasicBlock> children = new ArrayList<BasicBlock> ();
+	List<BasicBlock> children = new ArrayList<BasicBlock> ();
 	Set<BasicBlock> df = new HashSet<BasicBlock> ();
 
 	Set<PhiFunction> phi_functions = new HashSet<PhiFunction> ();
@@ -54,7 +53,7 @@ public class Vala.BasicBlock {
 		nodes.add (node);
 	}
 
-	public Gee.List<CodeNode> get_nodes () {
+	public List<CodeNode> get_nodes () {
 		return nodes;
 	}
 
@@ -67,11 +66,11 @@ public class Vala.BasicBlock {
 		}
 	}
 
-	public Gee.List<weak BasicBlock> get_predecessors () {
+	public List<weak BasicBlock> get_predecessors () {
 		return new ReadOnlyList<weak BasicBlock> (predecessors);
 	}
 
-	public Gee.List<weak BasicBlock> get_successors () {
+	public List<weak BasicBlock> get_successors () {
 		return new ReadOnlyList<weak BasicBlock> (successors);
 	}
 
@@ -80,7 +79,7 @@ public class Vala.BasicBlock {
 		block.parent = this;
 	}
 
-	public Gee.List<BasicBlock> get_children () {
+	public List<BasicBlock> get_children () {
 		return children;
 	}
 
@@ -88,7 +87,7 @@ public class Vala.BasicBlock {
 		df.add (block);
 	}
 
-	public Gee.Set<BasicBlock> get_dominator_frontier () {
+	public Set<BasicBlock> get_dominator_frontier () {
 		return df;
 	}
 
@@ -96,7 +95,7 @@ public class Vala.BasicBlock {
 		phi_functions.add (phi);
 	}
 
-	public Gee.Set<PhiFunction> get_phi_functions () {
+	public Set<PhiFunction> get_phi_functions () {
 		return phi_functions;
 	}
 }

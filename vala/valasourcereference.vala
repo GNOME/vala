@@ -51,7 +51,7 @@ public class Vala.SourceReference {
 	 */
 	public int last_column { get; set; }
 
-	public Gee.List<UsingDirective> using_directives { get; private set; }
+	public List<UsingDirective> using_directives { get; private set; }
 
 	/**
 	 * Creates a new source reference.

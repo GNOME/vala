@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents an enum declaration in the source code.
@@ -37,8 +36,8 @@ public class Vala.Enum : TypeSymbol {
 	 */
 	public bool has_type_id { get; set; default = true; }
 
-	private Gee.List<EnumValue> values = new ArrayList<EnumValue> ();
-	private Gee.List<Method> methods = new ArrayList<Method> ();
+	private List<EnumValue> values = new ArrayList<EnumValue> ();
+	private List<Method> methods = new ArrayList<Method> ();
 	private string cname;
 	private string cprefix;
 	private string lower_case_cprefix;
@@ -92,7 +91,7 @@ public class Vala.Enum : TypeSymbol {
 	 *
 	 * @return list of enum values
 	 */
-	public Gee.List<EnumValue> get_values () {
+	public List<EnumValue> get_values () {
 		return new ReadOnlyList<EnumValue> (values);
 	}
 
@@ -101,7 +100,7 @@ public class Vala.Enum : TypeSymbol {
 	 *
 	 * @return list of methods
 	 */
-	public Gee.List<Method> get_methods () {
+	public List<Method> get_methods () {
 		return new ReadOnlyList<Method> (methods);
 	}
 

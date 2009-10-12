@@ -22,7 +22,6 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-using Gee;
 
 internal class Vala.GTypeModule : GErrorModule {
 	public GTypeModule (CCodeGenerator codegen, CCodeModule? next) {

@@ -21,13 +21,12 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a switch section in the source code.
  */
 public class Vala.SwitchSection : Block {
-	private Gee.List<SwitchLabel> labels = new ArrayList<SwitchLabel> ();
+	private List<SwitchLabel> labels = new ArrayList<SwitchLabel> ();
 
 	/**
 	 * Creates a new switch section.
@@ -54,7 +53,7 @@ public class Vala.SwitchSection : Block {
 	 *
 	 * @return switch label list
 	 */
-	public Gee.List<SwitchLabel> get_labels () {
+	public List<SwitchLabel> get_labels () {
 		return new ReadOnlyList<SwitchLabel> (labels);
 	}
 	

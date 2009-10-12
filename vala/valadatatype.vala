@@ -23,7 +23,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * A reference to a data type. This is used to specify static types of
@@ -60,8 +59,8 @@ public abstract class Vala.DataType : CodeNode {
 	 */
 	public bool is_dynamic { get; set; }
 
-	private Gee.List<DataType> type_argument_list;
-	private static Gee.List<DataType> _empty_type_list;
+	private List<DataType> type_argument_list;
+	private static List<DataType> _empty_type_list;
 
 	/**
 	 * Appends the specified type as generic type argument.
@@ -81,7 +80,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return type argument list
 	 */
-	public Gee.List<DataType> get_type_arguments () {
+	public List<DataType> get_type_arguments () {
 		if (type_argument_list != null) {
 			return type_argument_list;
 		}
@@ -400,7 +399,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return parameter list
 	 */
-	public virtual Gee.List<FormalParameter>? get_parameters () {
+	public virtual List<FormalParameter>? get_parameters () {
 		return null;
 	}
 
@@ -419,7 +418,7 @@ public abstract class Vala.DataType : CodeNode {
 	 *
 	 * @return symbol list
 	 */
-	public virtual Gee.List<Symbol> get_symbols () {
+	public virtual List<Symbol> get_symbols () {
 		var symbols = new ArrayList<Symbol> ();
 		if (data_type != null) {
 			symbols.add (data_type);

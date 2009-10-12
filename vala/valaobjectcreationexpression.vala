@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents an object creation expression in the source code.
@@ -52,9 +51,9 @@ public class Vala.ObjectCreationExpression : Expression {
 
 	public bool struct_creation { get; set; }
 
-	private Gee.List<Expression> argument_list = new ArrayList<Expression> ();
+	private List<Expression> argument_list = new ArrayList<Expression> ();
 
-	private Gee.List<MemberInitializer> object_initializer = new ArrayList<MemberInitializer> ();
+	private List<MemberInitializer> object_initializer = new ArrayList<MemberInitializer> ();
 
 	private DataType _data_type;
 
@@ -85,7 +84,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 *
 	 * @return argument list
 	 */
-	public Gee.List<Expression> get_argument_list () {
+	public List<Expression> get_argument_list () {
 		return new ReadOnlyList<Expression> (argument_list);
 	}
 
@@ -104,7 +103,7 @@ public class Vala.ObjectCreationExpression : Expression {
 	 *
 	 * @return member initializer list
 	 */
-	public Gee.List<MemberInitializer> get_object_initializer () {
+	public List<MemberInitializer> get_object_initializer () {
 		return new ReadOnlyList<MemberInitializer> (object_initializer);
 	}
 

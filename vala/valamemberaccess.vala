@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents an access to a type member in the source code.
@@ -69,7 +68,7 @@ public class Vala.MemberAccess : Expression {
 	public bool qualified { get; set; }
 
 	private Expression? _inner;
-	private Gee.List<DataType> type_argument_list = new ArrayList<DataType> ();
+	private List<DataType> type_argument_list = new ArrayList<DataType> ();
 	
 	/**
 	 * Creates a new member access expression.
@@ -112,7 +111,7 @@ public class Vala.MemberAccess : Expression {
 	 *
 	 * @return type argument list
 	 */
-	public Gee.List<DataType> get_type_arguments () {
+	public List<DataType> get_type_arguments () {
 		return new ReadOnlyList<DataType> (type_argument_list);
 	}
 

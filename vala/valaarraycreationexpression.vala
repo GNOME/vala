@@ -23,7 +23,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents an array creation expression e.g. "new int[] {1,2,3}".
@@ -48,7 +47,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	/**
 	 * The size for each dimension ascending from left to right.
 	 */
-	private Gee.List<Expression> sizes = new ArrayList<Expression> ();
+	private List<Expression> sizes = new ArrayList<Expression> ();
 	
 	/**
 	 * The root array initializer list.
@@ -76,7 +75,7 @@ public class Vala.ArrayCreationExpression : Expression {
 	/**
 	 * Get the sizes for all dimensions ascending from left to right.
 	 */
-	public Gee.List<Expression> get_sizes () {
+	public List<Expression> get_sizes () {
 		return new ReadOnlyList<Expression> (sizes);
 	}
 	
@@ -117,7 +116,7 @@ public class Vala.ArrayCreationExpression : Expression {
 		}
 	}
 
-	private int create_sizes_from_initializer_list (SemanticAnalyzer analyzer, InitializerList il, int rank, Gee.List<Literal> sl) {
+	private int create_sizes_from_initializer_list (SemanticAnalyzer analyzer, InitializerList il, int rank, List<Literal> sl) {
 		if (sl.size == (this.rank - rank)) {
 			// only add size if this is the first initializer list of the current dimension
 			var init = new IntegerLiteral (il.size.to_string (), il.source_reference);
@@ -164,7 +163,7 @@ public class Vala.ArrayCreationExpression : Expression {
 
 		checked = true;
 
-		Gee.List<Expression> sizes = get_sizes ();
+		List<Expression> sizes = get_sizes ();
 		var initlist = initializer_list;
 
 		if (element_type != null) {

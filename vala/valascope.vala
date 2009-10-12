@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a part of the symbol tree.
@@ -38,7 +37,7 @@ public class Vala.Scope {
 	public weak Scope parent_scope { get; set; }
 
 	private Map<string,Symbol> symbol_table;
-	private Gee.List<Symbol> anonymous_members;
+	private List<Symbol> anonymous_members;
 
 	/**
 	 * Creates a new scope.

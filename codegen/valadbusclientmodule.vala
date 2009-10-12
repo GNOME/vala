@@ -23,7 +23,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * The link between a dynamic method and generated code.
@@ -45,7 +44,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		}
 	}
 
-	bool has_dbus_error (Gee.List<DataType> error_types) {
+	bool has_dbus_error (List<DataType> error_types) {
 		foreach (DataType error_type in error_types) {
 			if (((ErrorType) error_type).error_domain.get_full_name () == "DBus.Error") {
 				return true;
@@ -1642,7 +1641,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		return proxy_name;
 	}
 
-	void generate_client_error_cases (CCodeBlock error_block, Gee.List<DataType> error_types, CCodeExpression dbus_error_name, CCodeExpression result_edomain, CCodeExpression result_ecode) {
+	void generate_client_error_cases (CCodeBlock error_block, List<DataType> error_types, CCodeExpression dbus_error_name, CCodeExpression result_edomain, CCodeExpression result_ecode) {
 		CCodeStatement if_else_if = null;
 		CCodeIfStatement last_statement = null;
 

@@ -23,7 +23,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Code visitor analyzing and checking code.
@@ -127,7 +126,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 
 	// keep replaced alive to make sure they remain valid
 	// for the whole execution of CodeNode.accept
-	public Gee.List<CodeNode> replaced_nodes = new ArrayList<CodeNode> ();
+	public List<CodeNode> replaced_nodes = new ArrayList<CodeNode> ();
 
 	public SemanticAnalyzer () {
 	}
@@ -339,7 +338,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		return type;
 	}
 
-	public bool check_arguments (Expression expr, DataType mtype, Gee.List<FormalParameter> params, Gee.List<Expression> args) {
+	public bool check_arguments (Expression expr, DataType mtype, List<FormalParameter> params, List<Expression> args) {
 		Expression prev_arg = null;
 		Iterator<Expression> arg_it = args.iterator ();
 

@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a for iteration statement in the source code.
@@ -55,8 +54,8 @@ public class Vala.ForStatement : CodeNode, Statement {
 		}
 	}
 
-	private Gee.List<Expression> initializer = new ArrayList<Expression> ();
-	private Gee.List<Expression> iterator = new ArrayList<Expression> ();
+	private List<Expression> initializer = new ArrayList<Expression> ();
+	private List<Expression> iterator = new ArrayList<Expression> ();
 
 	private Expression _condition;
 	private Block _body;
@@ -90,7 +89,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 	 *
 	 * @return initializer list
 	 */
-	public Gee.List<Expression> get_initializer () {
+	public List<Expression> get_initializer () {
 		return new ReadOnlyList<Expression> (initializer);
 	}
 	
@@ -109,7 +108,7 @@ public class Vala.ForStatement : CodeNode, Statement {
 	 *
 	 * @return iterator
 	 */
-	public Gee.List<Expression> get_iterator () {
+	public List<Expression> get_iterator () {
 		return new ReadOnlyList<Expression> (iterator);
 	}
 	

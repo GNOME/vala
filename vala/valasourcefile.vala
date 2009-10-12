@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a Vala source or VAPI package file.
@@ -53,14 +52,14 @@ public class Vala.SourceFile {
 
 	private ArrayList<Comment> comments = new ArrayList<Comment> ();
 
-	public Gee.List<UsingDirective> current_using_directives { get; set; default = new ArrayList<UsingDirective> (); }
+	public List<UsingDirective> current_using_directives { get; set; default = new ArrayList<UsingDirective> (); }
 
-	private Gee.List<CodeNode> nodes = new ArrayList<CodeNode> ();
+	private List<CodeNode> nodes = new ArrayList<CodeNode> ();
 	
 	private string csource_filename = null;
 	private string cinclude_filename = null;
 
-	private Gee.ArrayList<string> source_array = null;
+	private ArrayList<string> source_array = null;
 
 	private MappedFile mapped_file = null;
 
@@ -92,7 +91,7 @@ public class Vala.SourceFile {
 	 *
 	 * @return list of comments
 	 */
-	public Gee.List<Comment> get_comments () {
+	public List<Comment> get_comments () {
 		return new ReadOnlyList<Comment> (comments);
 	}
 
@@ -130,7 +129,7 @@ public class Vala.SourceFile {
 	 *
 	 * @return code node list
 	 */
-	public Gee.List<CodeNode> get_nodes () {
+	public List<CodeNode> get_nodes () {
 		return new ReadOnlyList<CodeNode> (nodes);
 	}
 
@@ -249,7 +248,7 @@ public class Vala.SourceFile {
 
 	private void read_source_lines (string cont)
 	{
-		source_array = new Gee.ArrayList<string> ();
+		source_array = new ArrayList<string> ();
 		string[] lines = cont.split ("\n", 0);
 		int idx;
 		for (idx = 0; lines[idx] != null; ++idx) {

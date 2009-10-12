@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents an invocation expression in the source code.
@@ -42,7 +41,7 @@ public class Vala.MethodCall : Expression {
 
 	public Expression _call;
 	
-	private Gee.List<Expression> argument_list = new ArrayList<Expression> ();
+	private List<Expression> argument_list = new ArrayList<Expression> ();
 
 	/**
 	 * Creates a new invocation expression.
@@ -71,7 +70,7 @@ public class Vala.MethodCall : Expression {
 	 *
 	 * @return argument list
 	 */
-	public Gee.List<Expression> get_argument_list () {
+	public List<Expression> get_argument_list () {
 		return new ReadOnlyList<Expression> (argument_list);
 	}
 

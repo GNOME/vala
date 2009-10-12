@@ -27,7 +27,7 @@ using GLib;
 /**
  * Arrays of arbitrary elements which grow automatically as elements are added.
  */
-public class Gee.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, List<G> {
+public class Vala.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, List<G> {
 	public int size {
 		get { return _size; }
 	}
@@ -51,7 +51,7 @@ public class Gee.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, Li
 		return typeof (G);
 	}
 
-	public Gee.Iterator<G> iterator () {
+	public Vala.Iterator<G> iterator () {
 		return new Iterator<G> (this);
 	}
 
@@ -152,7 +152,7 @@ public class Gee.ArrayList<G> : CollectionObject, Iterable<G>, Collection<G>, Li
 		_items.resize (value);
 	}
 
-	private class Iterator<G> : CollectionObject, Gee.Iterator<G> {
+	private class Iterator<G> : CollectionObject, Vala.Iterator<G> {
 		public ArrayList<G> list {
 			set {
 				_list = value;

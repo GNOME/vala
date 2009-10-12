@@ -23,6 +23,6 @@
 /**
  * A set is a collection without duplicates.
  */
-public interface Gee.Set<G> : Collection<G> {
+public interface Vala.Set<G> : Collection<G> {
 }
 

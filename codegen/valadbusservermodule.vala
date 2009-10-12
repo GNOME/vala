@@ -23,7 +23,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * The link between a dynamic method and generated code.
@@ -421,7 +420,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		return wrapper_name;
 	}
 
-	void generate_server_error_cases (CCodeBlock error_block, Gee.List<DataType> error_types, CCodeExpression error, CCodeExpression message, CCodeExpression reply) {
+	void generate_server_error_cases (CCodeBlock error_block, List<DataType> error_types, CCodeExpression error, CCodeExpression message, CCodeExpression reply) {
 		CCodeStatement if_else_if = null;
 		CCodeIfStatement last_statement = null;
 

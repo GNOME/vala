@@ -20,12 +20,11 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using Gee;
 
 public class Vala.PhiFunction {
 	public LocalVariable original_variable { get; private set; }
 
-	public Gee.List<LocalVariable?> operands { get; private set; }
+	public List<LocalVariable?> operands { get; private set; }
 
 	public PhiFunction (LocalVariable variable, int num_of_ops) {
 		this.original_variable = variable;

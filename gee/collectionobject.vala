@@ -25,6 +25,6 @@ using GLib;
 /**
  * Base class for all collections.
  */
-public class Gee.CollectionObject {
+public class Vala.CollectionObject {
 }
 

@@ -21,25 +21,24 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a class declaration in the source code.
  */
 public class Vala.Interface : ObjectTypeSymbol {
-	private Gee.List<DataType> prerequisites = new ArrayList<DataType> ();
+	private List<DataType> prerequisites = new ArrayList<DataType> ();
 
-	private Gee.List<Method> methods = new ArrayList<Method> ();
-	private Gee.List<Field> fields = new ArrayList<Field> ();
-	private Gee.List<Constant> constants = new ArrayList<Constant> ();
-	private Gee.List<Property> properties = new ArrayList<Property> ();
-	private Gee.List<Signal> signals = new ArrayList<Signal> ();
+	private List<Method> methods = new ArrayList<Method> ();
+	private List<Field> fields = new ArrayList<Field> ();
+	private List<Constant> constants = new ArrayList<Constant> ();
+	private List<Property> properties = new ArrayList<Property> ();
+	private List<Signal> signals = new ArrayList<Signal> ();
 
 	// inner types
-	private Gee.List<Class> classes = new ArrayList<Class> ();
-	private Gee.List<Struct> structs = new ArrayList<Struct> ();
-	private Gee.List<Enum> enums = new ArrayList<Enum> ();
-	private Gee.List<Delegate> delegates = new ArrayList<Delegate> ();
+	private List<Class> classes = new ArrayList<Class> ();
+	private List<Struct> structs = new ArrayList<Struct> ();
+	private List<Enum> enums = new ArrayList<Enum> ();
+	private List<Delegate> delegates = new ArrayList<Delegate> ();
 
 	private string cname;
 	private string lower_case_csuffix;
@@ -51,7 +50,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of classes
 	 */
-	public Gee.List<Class> get_classes () {
+	public List<Class> get_classes () {
 		return new ReadOnlyList<Class> (classes);
 	}
 
@@ -60,7 +59,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of structs
 	 */
-	public Gee.List<Struct> get_structs () {
+	public List<Struct> get_structs () {
 		return new ReadOnlyList<Struct> (structs);
 	}
 
@@ -69,7 +68,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of enums
 	 */
-	public Gee.List<Enum> get_enums () {
+	public List<Enum> get_enums () {
 		return new ReadOnlyList<Enum> (enums);
 	}
 
@@ -78,7 +77,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of delegates
 	 */
-	public Gee.List<Delegate> get_delegates () {
+	public List<Delegate> get_delegates () {
 		return new ReadOnlyList<Delegate> (delegates);
 	}
 
@@ -119,7 +118,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of base types
 	 */
-	public Gee.List<DataType> get_prerequisites () {
+	public List<DataType> get_prerequisites () {
 		return new ReadOnlyList<DataType> (prerequisites);
 	}
 	
@@ -153,7 +152,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of methods
 	 */
-	public override Gee.List<Method> get_methods () {
+	public override List<Method> get_methods () {
 		return new ReadOnlyList<Method> (methods);
 	}
 	
@@ -173,7 +172,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of fields
 	 */
-	public Gee.List<Field> get_fields () {
+	public List<Field> get_fields () {
 		return new ReadOnlyList<Field> (fields);
 	}
 
@@ -192,7 +191,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of constants
 	 */
-	public Gee.List<Constant> get_constants () {
+	public List<Constant> get_constants () {
 		return new ReadOnlyList<Constant> (constants);
 	}
 
@@ -214,7 +213,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of properties
 	 */
-	public override Gee.List<Property> get_properties () {
+	public override List<Property> get_properties () {
 		return new ReadOnlyList<Property> (properties);
 	}
 	
@@ -233,7 +232,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 	 *
 	 * @return list of signals
 	 */
-	public override Gee.List<Signal> get_signals () {
+	public override List<Signal> get_signals () {
 		return new ReadOnlyList<Signal> (signals);
 	}
 

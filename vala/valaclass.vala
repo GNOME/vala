@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a class declaration in the source code.
@@ -128,26 +127,26 @@ public class Vala.Class : ObjectTypeSymbol {
 	private bool _is_compact;
 	private bool _is_immutable;
 
-	private Gee.List<DataType> base_types = new ArrayList<DataType> ();
+	private List<DataType> base_types = new ArrayList<DataType> ();
 
-	private Gee.List<Constant> constants = new ArrayList<Constant> ();
-	private Gee.List<Field> fields = new ArrayList<Field> ();
-	private Gee.List<Method> methods = new ArrayList<Method> ();
-	private Gee.List<Property> properties = new ArrayList<Property> ();
-	private Gee.List<Signal> signals = new ArrayList<Signal> ();
+	private List<Constant> constants = new ArrayList<Constant> ();
+	private List<Field> fields = new ArrayList<Field> ();
+	private List<Method> methods = new ArrayList<Method> ();
+	private List<Property> properties = new ArrayList<Property> ();
+	private List<Signal> signals = new ArrayList<Signal> ();
 
 	// inner types
-	private Gee.List<Class> classes = new ArrayList<Class> ();
-	private Gee.List<Struct> structs = new ArrayList<Struct> ();
-	private Gee.List<Enum> enums = new ArrayList<Enum> ();
-	private Gee.List<Delegate> delegates = new ArrayList<Delegate> ();
+	private List<Class> classes = new ArrayList<Class> ();
+	private List<Struct> structs = new ArrayList<Struct> ();
+	private List<Enum> enums = new ArrayList<Enum> ();
+	private List<Delegate> delegates = new ArrayList<Delegate> ();
 
 	/**
 	 * Returns a copy of the list of classes.
 	 *
 	 * @return list of classes
 	 */
-	public Gee.List<Class> get_classes () {
+	public List<Class> get_classes () {
 		return new ReadOnlyList<Class> (classes);
 	}
 
@@ -156,7 +155,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @return list of structs
 	 */
-	public Gee.List<Struct> get_structs () {
+	public List<Struct> get_structs () {
 		return new ReadOnlyList<Struct> (structs);
 	}
 
@@ -165,7 +164,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @return list of enums
 	 */
-	public Gee.List<Enum> get_enums () {
+	public List<Enum> get_enums () {
 		return new ReadOnlyList<Enum> (enums);
 	}
 
@@ -174,7 +173,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @return list of delegates
 	 */
-	public Gee.List<Delegate> get_delegates () {
+	public List<Delegate> get_delegates () {
 		return new ReadOnlyList<Delegate> (delegates);
 	}
 
@@ -264,7 +263,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @return list of base types
 	 */
-	public Gee.List<DataType> get_base_types () {
+	public List<DataType> get_base_types () {
 		return new ReadOnlyList<DataType> (base_types);
 	}
 
@@ -298,7 +297,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @return list of fields
 	 */
-	public Gee.List<Field> get_fields () {
+	public List<Field> get_fields () {
 		return new ReadOnlyList<Field> (fields);
 	}
 
@@ -307,7 +306,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @return list of constants
 	 */
-	public Gee.List<Constant> get_constants () {
+	public List<Constant> get_constants () {
 		return new ReadOnlyList<Constant> (constants);
 	}
 
@@ -395,7 +394,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @return list of methods
 	 */
-	public override Gee.List<Method> get_methods () {
+	public override List<Method> get_methods () {
 		return new ReadOnlyList<Method> (methods);
 	}
 	
@@ -421,7 +420,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @return list of properties
 	 */
-	public override Gee.List<Property> get_properties () {
+	public override List<Property> get_properties () {
 		return new ReadOnlyList<Property> (properties);
 	}
 	
@@ -440,7 +439,7 @@ public class Vala.Class : ObjectTypeSymbol {
 	 *
 	 * @return list of signals
 	 */
-	public override Gee.List<Signal> get_signals () {
+	public override List<Signal> get_signals () {
 		return new ReadOnlyList<Signal> (signals);
 	}
 
@@ -906,7 +905,7 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 	}
 
-	private void get_all_prerequisites (Interface iface, Gee.List<TypeSymbol> list) {
+	private void get_all_prerequisites (Interface iface, List<TypeSymbol> list) {
 		foreach (DataType prereq in iface.get_prerequisites ()) {
 			TypeSymbol type = prereq.data_type;
 			/* skip on previous errors */
@@ -1066,14 +1065,14 @@ public class Vala.Class : ObjectTypeSymbol {
 		}
 
 		/* gather all prerequisites */
-		Gee.List<TypeSymbol> prerequisites = new ArrayList<TypeSymbol> ();
+		List<TypeSymbol> prerequisites = new ArrayList<TypeSymbol> ();
 		foreach (DataType base_type in get_base_types ()) {
 			if (base_type.data_type is Interface) {
 				get_all_prerequisites ((Interface) base_type.data_type, prerequisites);
 			}
 		}
 		/* check whether all prerequisites are met */
-		Gee.List<string> missing_prereqs = new ArrayList<string> ();
+		List<string> missing_prereqs = new ArrayList<string> ();
 		foreach (TypeSymbol prereq in prerequisites) {
 			if (!class_is_a (this, prereq)) {
 				missing_prereqs.insert (0, prereq.get_full_name ());

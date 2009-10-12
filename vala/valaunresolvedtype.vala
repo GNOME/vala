@@ -22,7 +22,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * An unresolved reference to a data type.

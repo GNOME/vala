@@ -22,7 +22,6 @@
  * 	Philip Van Hoof <pvanhoof@gnome.org>
  */
 
-using Gee;
 
 /**
  * Represents a runtime data type for objects and interfaces. This data type may
@@ -30,15 +29,15 @@ using Gee;
  * Vala API file.
  */
 public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
-	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
+	private List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
 	public ObjectTypeSymbol (string name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference, comment);
 	}
 
-	public abstract Gee.List<Method> get_methods ();
-	public abstract Gee.List<Signal> get_signals ();
-	public abstract Gee.List<Property> get_properties ();
+	public abstract List<Method> get_methods ();
+	public abstract List<Signal> get_signals ();
+	public abstract List<Property> get_properties ();
 
 	/**
 	 * Appends the specified parameter to the list of type parameters.
@@ -55,7 +54,7 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 	 *
 	 * @return list of type parameters
 	 */
-	public Gee.List<TypeParameter> get_type_parameters () {
+	public List<TypeParameter> get_type_parameters () {
 		return new ReadOnlyList<TypeParameter> (type_parameters);
 	}
 

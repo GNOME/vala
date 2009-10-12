@@ -23,13 +23,12 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents an array or struct initializer list in the source code.
  */
 public class Vala.InitializerList : Expression {
-	private Gee.List<Expression> initializers = new ArrayList<Expression> ();
+	private List<Expression> initializers = new ArrayList<Expression> ();
 	
 	/**
 	 * Appends the specified expression to this initializer 
@@ -46,7 +45,7 @@ public class Vala.InitializerList : Expression {
 	 *
 	 * @return expression list
 	 */
-	public Gee.List<Expression> get_initializers () {
+	public List<Expression> get_initializers () {
 		return new ReadOnlyList<Expression> (initializers);
 	}
 

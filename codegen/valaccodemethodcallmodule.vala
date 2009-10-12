@@ -23,7 +23,6 @@
  */
 
 using GLib;
-using Gee;
 
 internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 	public CCodeMethodCallModule (CCodeGenerator codegen, CCodeModule? next) {
@@ -40,7 +39,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 		Method m = null;
 		Delegate deleg = null;
-		Gee.List<FormalParameter> params;
+		List<FormalParameter> params;
 		
 		var ma = expr.call as MemberAccess;
 		

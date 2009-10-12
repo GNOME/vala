@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * The type of an instance of a delegate.
@@ -41,7 +40,7 @@ public class Vala.DelegateType : DataType {
 		return delegate_symbol.return_type;
 	}
 
-	public override Gee.List<FormalParameter>? get_parameters () {
+	public override List<FormalParameter>? get_parameters () {
 		return delegate_symbol.get_parameters ();
 	}
 
@@ -70,7 +69,7 @@ public class Vala.DelegateType : DataType {
 		return delegate_symbol.get_cname ();
 	}
 
-	public override Gee.List<Symbol> get_symbols () {
+	public override List<Symbol> get_symbols () {
 		var symbols = new ArrayList<Symbol> ();
 		symbols.add (delegate_symbol);
 		return symbols;

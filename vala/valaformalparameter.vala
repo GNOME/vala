@@ -23,7 +23,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a formal parameter in method and callback signatures.

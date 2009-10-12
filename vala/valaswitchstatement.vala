@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a switch selection statement in the source code.
@@ -41,7 +40,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 	}
 
 	private Expression _expression;
-	private Gee.List<SwitchSection> sections = new ArrayList<SwitchSection> ();
+	private List<SwitchSection> sections = new ArrayList<SwitchSection> ();
 
 	/**
 	 * Creates a new switch statement.
@@ -70,7 +69,7 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 	 *
 	 * @return section list
 	 */
-	public Gee.List<SwitchSection> get_sections () {
+	public List<SwitchSection> get_sections () {
 		return new ReadOnlyList<SwitchSection> (sections);
 	}
 

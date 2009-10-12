@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a function pointer declarator in the C code.
@@ -32,7 +31,7 @@ public class Vala.CCodeFunctionDeclarator : CCodeDeclarator {
 	 */
 	public string name { get; set; }
 	
-	private Gee.List<CCodeFormalParameter> parameters = new ArrayList<CCodeFormalParameter> ();
+	private List<CCodeFormalParameter> parameters = new ArrayList<CCodeFormalParameter> ();
 	
 	public CCodeFunctionDeclarator (string name) {
 		this.name = name;

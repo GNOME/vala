@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a C code block.
@@ -33,7 +32,7 @@ public class Vala.CCodeBlock : CCodeStatement {
 	 */
 	public bool suppress_newline { get; set; }
 
-	private Gee.List<CCodeNode> statements = new ArrayList<CCodeNode> ();
+	private List<CCodeNode> statements = new ArrayList<CCodeNode> ();
 	
 	/**
 	 * Prepend the specified statement to the list of statements.

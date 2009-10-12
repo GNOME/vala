@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a function call in the C code.
@@ -32,7 +31,7 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 	 */
 	public CCodeExpression? call { get; set; }
 	
-	private Gee.List<CCodeExpression> arguments = new ArrayList<CCodeExpression> ();
+	private List<CCodeExpression> arguments = new ArrayList<CCodeExpression> ();
 	
 	public CCodeFunctionCall (CCodeExpression? call = null) {
 		this.call = call;
@@ -56,7 +55,7 @@ public class Vala.CCodeFunctionCall : CCodeExpression {
 	 *
 	 * @return list of arguments
 	 */
-	public Gee.List<CCodeExpression> get_arguments () {
+	public List<CCodeExpression> get_arguments () {
 		return new ReadOnlyList<CCodeExpression> (arguments);
 	}
 

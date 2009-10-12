@@ -36,11 +36,11 @@ libgee_la_SOURCES = \
 geeincludedir = $(includedir)/vala-1.0
 
 geeinclude_HEADERS = \
-	gee.h \
+	valagee.h \
 	$(NULL)
 
 gee.vapi gee.vala.stamp: $(libgee_la_VALASOURCES)
-	$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 -H gee.h --library gee $^
+	$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 -H valagee.h --library gee $^
 	touch $@
 
 libgee_la_LIBADD = \
@@ -52,7 +52,7 @@ EXTRA_DIST = $(libgee_la_VALASOURCES) gee.vapi gee.vala.stamp
 
 MAINTAINERCLEANFILES = \
 	gee.vapi \
-	gee.h \
+	valagee.h \
 	$(libgee_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 

@@ -27,7 +27,7 @@ using GLib;
 /**
  * Hashtable implementation of the Set interface.
  */
-public class Gee.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set<G> {
+public class Vala.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set<G> {
 	public int size {
 		get { return _nnodes; }
 	}
@@ -78,7 +78,7 @@ public class Gee.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set<
 		return typeof (G);
 	}
 
-	public Gee.Iterator<G> iterator () {
+	public Vala.Iterator<G> iterator () {
 		return new Iterator<G> (this);
 	}
 
@@ -166,7 +166,7 @@ public class Gee.HashSet<G> : CollectionObject, Iterable<G>, Collection<G>, Set<
 		}
 	}
 
-	private class Iterator<G> : CollectionObject, Gee.Iterator<G> {
+	private class Iterator<G> : CollectionObject, Vala.Iterator<G> {
 		public HashSet<G> set {
 			set {
 				_set = value;

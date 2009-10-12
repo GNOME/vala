@@ -227,7 +227,7 @@ public class Vala.ArrayType : ReferenceType {
 		}
 	}
 
-	public override Gee.List<Symbol> get_symbols () {
+	public override List<Symbol> get_symbols () {
 		return element_type.get_symbols ();
 	}
 

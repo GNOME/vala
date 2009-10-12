@@ -22,7 +22,6 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-using Gee;
 
 /**
  * The link between an assignment and generated code.

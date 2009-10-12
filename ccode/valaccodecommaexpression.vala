@@ -21,13 +21,12 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a comma separated expression list in the C code.
  */
 public class Vala.CCodeCommaExpression : CCodeExpression {
-	private Gee.List<CCodeExpression> inner = new ArrayList<CCodeExpression> ();
+	private List<CCodeExpression> inner = new ArrayList<CCodeExpression> ();
 	
 	/**
 	 * Appends the specified expression to the expression list.
@@ -38,7 +37,7 @@ public class Vala.CCodeCommaExpression : CCodeExpression {
 		inner.add (expr);
 	}
 
-	public Gee.List<CCodeExpression> get_inner () {
+	public List<CCodeExpression> get_inner () {
 		return new ReadOnlyList<CCodeExpression> (inner);
 	}
 

@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Base class for all code nodes that might be used as an expression.
@@ -64,7 +63,7 @@ public abstract class Vala.Expression : CodeNode {
 	 */
 	public ArrayList<LocalVariable> temp_vars = new ArrayList<LocalVariable> ();
 
-	private Gee.List<CCodeExpression> array_sizes = new ArrayList<CCodeExpression> ();
+	private List<CCodeExpression> array_sizes = new ArrayList<CCodeExpression> ();
 
 	public CCodeExpression? delegate_target { get; set; }
 	public CCodeExpression? delegate_target_destroy_notify { get; set; }
@@ -101,7 +100,7 @@ public abstract class Vala.Expression : CodeNode {
 	 * Get the C code expression for array sizes for all dimensions
 	 * ascending from left to right.
 	 */
-	public Gee.List<CCodeExpression> get_array_sizes () {
+	public List<CCodeExpression> get_array_sizes () {
 		return new ReadOnlyList<CCodeExpression> (array_sizes);
 	}
 

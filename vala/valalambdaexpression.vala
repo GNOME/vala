@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a lambda expression in the source code. Lambda expressions are
@@ -45,7 +44,7 @@ public class Vala.LambdaExpression : Expression {
 	 */
 	public Method method { get; set; }
 
-	private Gee.List<string> parameters = new ArrayList<string> ();
+	private List<string> parameters = new ArrayList<string> ();
 
 	/**
 	 * Creates a new lambda expression.
@@ -85,7 +84,7 @@ public class Vala.LambdaExpression : Expression {
 	 *
 	 * @return parameter list
 	 */
-	public Gee.List<string> get_parameters () {
+	public List<string> get_parameters () {
 		return new ReadOnlyList<string> (parameters);
 	}
 	

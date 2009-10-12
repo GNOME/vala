@@ -22,7 +22,6 @@
  * 	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-using Gee;
 
 /**
  * Code visitor generating C Code.
@@ -143,11 +142,11 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	/* temporary variables that own their content */
 	public ArrayList<LocalVariable> temp_ref_vars = new ArrayList<LocalVariable> ();
 	/* cache to check whether a certain marshaller has been created yet */
-	public Gee.Set<string> user_marshal_set;
+	public Set<string> user_marshal_set;
 	/* (constant) hash table with all predefined marshallers */
-	public Gee.Set<string> predefined_marshal_set;
+	public Set<string> predefined_marshal_set;
 	/* (constant) hash table with all reserved identifiers in the generated code */
-	Gee.Set<string> reserved_identifiers;
+	Set<string> reserved_identifiers;
 	
 	public int next_temp_var_id = 0;
 	public bool in_creation_method { get { return current_method is CreationMethod; } }
@@ -1023,7 +1022,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					var ma = new MemberAccess (this_access, f.name);
 					ma.symbol_reference = f;
 					
-					Gee.List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
+					List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
 					for (int dim = 1; dim <= array_type.rank; dim++) {
 						var array_len_lhs = head.get_array_length_cexpression (ma, dim);
 						var size = sizes[dim - 1];
@@ -1162,7 +1161,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 							var ma = new MemberAccess.simple (f.name);
 							ma.symbol_reference = f;
 					
-							Gee.List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
+							List<Expression> sizes = ((ArrayCreationExpression) f.initializer).get_sizes ();
 							for (int dim = 1; dim <= array_type.rank; dim++) {
 								var array_len_lhs = head.get_array_length_cexpression (ma, dim);
 								var size = sizes[dim - 1];
@@ -2674,7 +2673,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 		temp_vars.clear ();
 
-		if (((Gee.List<LocalVariable>) temp_ref_vars).size == 0) {
+		if (((List<LocalVariable>) temp_ref_vars).size == 0) {
 			/* nothing to do without temporary variables */
 			return;
 		}
@@ -2704,7 +2703,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		temp_ref_vars.clear ();
 	}
 	
-	public void append_temp_decl (CCodeFragment cfrag, Gee.List<LocalVariable> temp_vars) {
+	public void append_temp_decl (CCodeFragment cfrag, List<LocalVariable> temp_vars) {
 		foreach (LocalVariable local in temp_vars) {
 			if (current_method != null && current_method.coroutine) {
 				closure_struct.add_field (local.variable_type.get_cname (), local.name);
@@ -2773,7 +2772,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		/* free temporary objects */
 
-		if (((Gee.List<LocalVariable>) temp_vars).size == 0
+		if (((List<LocalVariable>) temp_vars).size == 0
 		     && pre_statement_fragment == null) {
 			/* nothing to do without temporary variables */
 			return;
@@ -2802,7 +2801,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		temp_ref_vars.clear ();
 	}
 	
-	public void create_temp_decl (Statement stmt, Gee.List<LocalVariable> temp_vars) {
+	public void create_temp_decl (Statement stmt, List<LocalVariable> temp_vars) {
 		/* declare temporary variables */
 		
 		if (temp_vars.size == 0) {
@@ -3587,7 +3586,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public virtual void generate_error_domain_declaration (ErrorDomain edomain, CCodeDeclarationSpace decl_space) {
 	}
 
-	public void add_generic_type_arguments (Map<int,CCodeExpression> arg_map, Gee.List<DataType> type_args, CodeNode expr, bool is_chainup = false) {
+	public void add_generic_type_arguments (Map<int,CCodeExpression> arg_map, List<DataType> type_args, CodeNode expr, bool is_chainup = false) {
 		int type_param_index = 0;
 		foreach (var type_arg in type_args) {
 			arg_map.set (get_param_pos (0.1 * type_param_index + 0.01), get_type_id_expression (type_arg, is_chainup));

@@ -33,12 +33,12 @@ class Vala.VAPICheck : Object {
 	public SourceFile gidl { get; construct; }
 	public SourceFile metadata { get; construct; }
 
-	private Gee.List<string> _scope;
-	private Gee.Set<string> _symbols;
+	private List<string> _scope;
+	private Set<string> _symbols;
 
 	private void parse_gidl () {
-		_scope = new Gee.ArrayList<string> ();
-		_symbols = new Gee.HashSet<string> (str_hash, str_equal);
+		_scope = new ArrayList<string> ();
+		_symbols = new HashSet<string> (str_hash, str_equal);
 
 		try {
 			foreach (weak IdlModule module in Idl.parse_file (gidl.filename)) {
@@ -72,7 +72,7 @@ class Vala.VAPICheck : Object {
 		_scope.remove_at (_scope.size - 1);
 	}
 
-	private void parse_members (string name, List<IdlNode> members) {
+	private void parse_members (string name, GLib.List<IdlNode> members) {
 		enter_scope (name);
 
 		foreach (weak IdlNode node in members) {
@@ -84,7 +84,7 @@ class Vala.VAPICheck : Object {
 
 				case IdlNodeTypeId.FUNCTION:
 					parse_members (((IdlNodeFunction) node).symbol,
-								   (List<IdlNode>) ((IdlNodeFunction) node).parameters);
+								   (GLib.List<IdlNode>) ((IdlNodeFunction) node).parameters);
 					break;
 
 				case IdlNodeTypeId.BOXED:

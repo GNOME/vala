@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a part of the parsed source code.
@@ -82,8 +81,8 @@ public abstract class Vala.CodeNode {
 		get { return _error_types != null && _error_types.size > 0; }
 	}
 
-	private Gee.List<DataType> _error_types;
-	private static Gee.List<DataType> _empty_type_list;
+	private List<DataType> _error_types;
+	private static List<DataType> _empty_type_list;
 
 	private CCodeNode? _ccodenode;
 
@@ -92,7 +91,7 @@ public abstract class Vala.CodeNode {
 	/**
 	 * Specifies the exceptions that can be thrown by this node or a child node
 	 */
-	public Gee.List<DataType> get_error_types () { 
+	public List<DataType> get_error_types () { 
 		if (_error_types != null) {
 			return _error_types;
 		}
@@ -118,7 +117,7 @@ public abstract class Vala.CodeNode {
 	 * Adds a collection of error types to the exceptions that can be thrown by this node
 	 * or a child node 
 	 */
-	public void add_error_types (Gee.List<DataType> error_types) {
+	public void add_error_types (List<DataType> error_types) {
 		foreach (DataType error_type in error_types) {
 			add_error_type (error_type);
 		}

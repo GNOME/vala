@@ -21,13 +21,12 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a struct or array initializer list in the C code.
  */
 public class Vala.CCodeInitializerList : CCodeExpression {
-	private Gee.List<CCodeExpression> initializers = new ArrayList<CCodeExpression> ();
+	private List<CCodeExpression> initializers = new ArrayList<CCodeExpression> ();
 	
 	/**
 	 * Appends the specified expression to this initializer list.

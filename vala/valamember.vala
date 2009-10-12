@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a general class member.
@@ -29,7 +28,7 @@ using Gee;
 public abstract class Vala.Member : Symbol {
 	public Comment comment { get; set; }
 
-	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
+	private List<string> cheader_filenames = new ArrayList<string> ();
 
 	/**
 	 * Specifies whether this method explicitly hides a member of a base
@@ -46,7 +45,7 @@ public abstract class Vala.Member : Symbol {
 		visitor.visit_member (this);
 	}
 
-	public override Gee.List<string> get_cheader_filenames () {
+	public override List<string> get_cheader_filenames () {
 		if (cheader_filenames.size == 0 && parent_symbol != null) {
 			/* default to header filenames of the namespace */
 			foreach (string filename in parent_symbol.get_cheader_filenames ()) {

@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a function callback type.
@@ -75,9 +74,9 @@ public class Vala.Delegate : TypeSymbol {
 	 */
 	public bool array_null_terminated { get; set; }
 
-	private Gee.List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
+	private List<TypeParameter> type_parameters = new ArrayList<TypeParameter> ();
 
-	private Gee.List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
+	private List<FormalParameter> parameters = new ArrayList<FormalParameter> ();
 	private string cname;
 
 	private DataType _return_type;
@@ -130,7 +129,7 @@ public class Vala.Delegate : TypeSymbol {
 	 *
 	 * @return parameter list
 	 */
-	public Gee.List<FormalParameter> get_parameters () {
+	public List<FormalParameter> get_parameters () {
 		return new ReadOnlyList<FormalParameter> (parameters);
 	}
 	

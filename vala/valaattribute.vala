@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents an attribute specified in the source code.
@@ -35,7 +34,7 @@ public class Vala.Attribute : CodeNode {
 	/**
 	 * Contains all specified attribute arguments.
 	 */
-	public Gee.Map<string,Expression> args = new Gee.HashMap<string,Expression> (str_hash, str_equal);
+	public Vala.Map<string,Expression> args = new HashMap<string,Expression> (str_hash, str_equal);
 
 	/**
 	 * Creates a new attribute.

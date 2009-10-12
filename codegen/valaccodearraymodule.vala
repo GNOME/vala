@@ -22,7 +22,6 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-using Gee;
 
 internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	int next_array_dup_id = 0;
@@ -158,11 +157,11 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 		
 		if (array_expr is ArrayCreationExpression) {
-			Gee.List<Expression> size = ((ArrayCreationExpression) array_expr).get_sizes ();
+			List<Expression> size = ((ArrayCreationExpression) array_expr).get_sizes ();
 			var length_expr = size[dim - 1];
 			return (CCodeExpression) get_ccodenode (length_expr);
 		} else if (array_expr is MethodCall || array_expr is CastExpression) {
-			Gee.List<CCodeExpression> size = array_expr.get_array_sizes ();
+			List<CCodeExpression> size = array_expr.get_array_sizes ();
 			if (size.size >= dim) {
 				return size[dim - 1];
 			}
@@ -317,7 +316,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			} else if (array_expr.symbol_reference is Property) {
 				var prop = (Property) array_expr.symbol_reference;
 				if (!prop.no_array_length) {
-					Gee.List<CCodeExpression> size = array_expr.get_array_sizes ();
+					List<CCodeExpression> size = array_expr.get_array_sizes ();
 					if (size.size >= dim) {
 						return size[dim - 1];
 					}
@@ -385,7 +384,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	public override void visit_element_access (ElementAccess expr) {
 		expr.accept_children (codegen);
 
-		Gee.List<Expression> indices = expr.get_indices ();
+		List<Expression> indices = expr.get_indices ();
 		int rank = indices.size;
 
 		var container_type = expr.container.value_type.data_type;

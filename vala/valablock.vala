@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a source code block.
@@ -35,8 +34,8 @@ public class Vala.Block : Symbol, Statement {
 
 	public bool captured { get; set; }
 
-	private Gee.List<Statement> statement_list = new ArrayList<Statement> ();
-	private Gee.List<LocalVariable> local_variables = new ArrayList<LocalVariable> ();
+	private List<Statement> statement_list = new ArrayList<Statement> ();
+	private List<LocalVariable> local_variables = new ArrayList<LocalVariable> ();
 	
 	/**
 	 * Creates a new block.
@@ -67,7 +66,7 @@ public class Vala.Block : Symbol, Statement {
 	 *
 	 * @return statement list
 	 */
-	public Gee.List<Statement> get_statements () {
+	public List<Statement> get_statements () {
 		var list = new ArrayList<Statement> ();
 		foreach (Statement stmt in statement_list) {
 			var stmt_list = stmt as StatementList;
@@ -108,7 +107,7 @@ public class Vala.Block : Symbol, Statement {
 	 *
 	 * @return variable declarator list
 	 */
-	public Gee.List<LocalVariable> get_local_variables () {
+	public List<LocalVariable> get_local_variables () {
 		return new ReadOnlyList<LocalVariable> (local_variables);
 	}
 

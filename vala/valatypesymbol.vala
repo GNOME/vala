@@ -22,7 +22,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a runtime data type. This data type may be defined in Vala source
@@ -31,7 +30,7 @@ using Gee;
 public abstract class Vala.TypeSymbol : Symbol {
 	public Comment? comment { get; set; }
 
-	private Gee.List<string> cheader_filenames = new ArrayList<string> ();
+	private List<string> cheader_filenames = new ArrayList<string> ();
 
 	public TypeSymbol (string? name, SourceReference? source_reference = null, Comment? comment = null) {
 		base (name, source_reference);
@@ -220,7 +219,7 @@ public abstract class Vala.TypeSymbol : Symbol {
 		return null;
 	}
 
-	public override Gee.List<string> get_cheader_filenames () {
+	public override List<string> get_cheader_filenames () {
 		// parent_symbol can be null on incremental parsing
 		if (cheader_filenames.size == 0 && parent_symbol != null) {
 			/* default to header filenames of the namespace */

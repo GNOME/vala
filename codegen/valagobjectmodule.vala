@@ -22,7 +22,6 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-using Gee;
 
 internal class Vala.GObjectModule : GTypeModule {
 	int dynamic_property_id;

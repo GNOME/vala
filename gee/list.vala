@@ -23,7 +23,7 @@
 /**
  * Represents a collection of items in a well-defined order.
  */
-public interface Gee.List<G> : Collection<G> {
+public interface Vala.List<G> : Collection<G> {
 	/**
 	 * Returns the item at the specified index in this list.
 	 *

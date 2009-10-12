@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a struct declaration in the C code.
@@ -32,7 +31,7 @@ public class Vala.CCodeStruct : CCodeNode {
 	 */
 	public string name { get; set; }
 	
-	private Gee.List<CCodeDeclaration> declarations = new ArrayList<CCodeDeclaration> ();
+	private List<CCodeDeclaration> declarations = new ArrayList<CCodeDeclaration> ();
 	
 	public CCodeStruct (string name) {
 		this.name = name;

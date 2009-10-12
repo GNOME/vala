@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 internal class Vala.GAsyncModule : GSignalModule {
 	public GAsyncModule (CCodeGenerator codegen, CCodeModule? next) {
@@ -517,7 +516,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 
 		/* free temporary objects */
 
-		if (((Gee.List<LocalVariable>) temp_vars).size == 0) {
+		if (((List<LocalVariable>) temp_vars).size == 0) {
 			/* nothing to do without temporary variables */
 			return;
 		}

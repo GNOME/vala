@@ -22,7 +22,6 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  */
 
-using Gee;
 
 internal class Vala.GSignalModule : GObjectModule {
 	public GSignalModule (CCodeGenerator codegen, CCodeModule? next) {
@@ -72,7 +71,7 @@ internal class Vala.GSignalModule : GObjectModule {
 		}
 	}
 	
-	public override string get_marshaller_function (Gee.List<FormalParameter> params, DataType return_type, string? prefix = null, bool dbus = false) {
+	public override string get_marshaller_function (List<FormalParameter> params, DataType return_type, string? prefix = null, bool dbus = false) {
 		var signature = get_marshaller_signature (params, return_type, dbus);
 		string ret;
 
@@ -132,7 +131,7 @@ internal class Vala.GSignalModule : GObjectModule {
 		}
 	}
 	
-	private string get_marshaller_signature (Gee.List<FormalParameter> params, DataType return_type, bool dbus = false) {
+	private string get_marshaller_signature (List<FormalParameter> params, DataType return_type, bool dbus = false) {
 		string signature;
 		
 		signature = "%s:".printf (get_marshaller_type_name (return_type, dbus));
@@ -173,7 +172,7 @@ internal class Vala.GSignalModule : GObjectModule {
 		generate_marshaller (sig.get_parameters (), sig.return_type);
 	}
 
-	public override void generate_marshaller (Gee.List<FormalParameter> params, DataType return_type, bool dbus = false) {
+	public override void generate_marshaller (List<FormalParameter> params, DataType return_type, bool dbus = false) {
 		string signature;
 		int n_params, i;
 		

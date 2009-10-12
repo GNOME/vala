@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Code visitor building the control flow graph.
@@ -80,9 +79,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	private CodeContext context;
 	private BasicBlock current_block;
 	private bool unreachable_reported;
-	private Gee.List<JumpTarget> jump_stack = new ArrayList<JumpTarget> ();
+	private List<JumpTarget> jump_stack = new ArrayList<JumpTarget> ();
 
-	Map<Symbol, Gee.List<LocalVariable>> var_map;
+	Map<Symbol, List<LocalVariable>> var_map;
 	Set<LocalVariable> used_vars;
 	Map<LocalVariable, PhiFunction> phi_functions;
 
@@ -176,13 +175,13 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		check_variables (m.entry_block);
 	}
 
-	Gee.List<BasicBlock> get_depth_first_list (BasicBlock entry_block) {
+	List<BasicBlock> get_depth_first_list (BasicBlock entry_block) {
 		var list = new ArrayList<BasicBlock> ();
 		depth_first_traverse (entry_block, list);
 		return list;
 	}
 
-	void depth_first_traverse (BasicBlock current, Gee.List<BasicBlock> list) {
+	void depth_first_traverse (BasicBlock current, List<BasicBlock> list) {
 		if (current in list) {
 			return;
 		}
@@ -362,7 +361,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	}
 
 	void check_variables (BasicBlock entry_block) {
-		var_map = new HashMap<Symbol, Gee.List<LocalVariable>>();
+		var_map = new HashMap<Symbol, List<LocalVariable>>();
 		used_vars = new HashSet<LocalVariable> ();
 		phi_functions = new HashMap<LocalVariable, PhiFunction> ();
 
@@ -462,7 +461,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
-	LocalVariable process_assignment (Map<Symbol, Gee.List<LocalVariable>> var_map, LocalVariable var_symbol) {
+	LocalVariable process_assignment (Map<Symbol, List<LocalVariable>> var_map, LocalVariable var_symbol) {
 		var variable_stack = var_map.get (var_symbol);
 		if (variable_stack == null) {
 			variable_stack = new ArrayList<LocalVariable> ();
@@ -930,7 +929,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 
 		// remove catch clauses from jump stack
-		Gee.List<JumpTarget> catch_stack = new ArrayList<JumpTarget> ();
+		List<JumpTarget> catch_stack = new ArrayList<JumpTarget> ();
 		for (int i = jump_stack.size - 1; i >= finally_jump_stack_size; i--) {
 			var jump_target = jump_stack[i];
 			catch_stack.add (jump_target);

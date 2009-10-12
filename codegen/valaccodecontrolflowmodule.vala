@@ -23,7 +23,6 @@
  */
 
 using GLib;
-using Gee;
 
 internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 	public CCodeControlFlowModule (CCodeGenerator codegen, CCodeModule? next) {
@@ -101,7 +100,7 @@ internal class Vala.CCodeControlFlowModule : CCodeMethodModule {
 			cswitchblock.append (new CCodeExpressionStatement (free_call));
 		}
 
-		Gee.List<Statement> default_statements = null;
+		List<Statement> default_statements = null;
 		label_count = 0;
 
 		// generate nested if statements		

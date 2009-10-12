@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Code visitor generating .gir file for the public interface.
@@ -84,7 +83,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	private void write_c_includes (Namespace ns) {
 		// Collect C header filenames
-		Gee.Set<string> header_filenames = new Gee.HashSet<string> (str_hash, str_equal);
+		Set<string> header_filenames = new HashSet<string> (str_hash, str_equal);
 		foreach (string c_header_filename in ns.get_cheader_filenames ()) {
 			header_filenames.add (c_header_filename);
 		}
@@ -455,7 +454,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 	}
 
-	private void write_params_and_return (Gee.List<FormalParameter> params, DataType? return_type, bool return_array_length, bool constructor = false, DataType? instance_type = null) {
+	private void write_params_and_return (List<FormalParameter> params, DataType? return_type, bool return_array_length, bool constructor = false, DataType? instance_type = null) {
 		int last_index = 0;
 		if (params.size != 0 || instance_type != null || (return_type is ArrayType && return_array_length) || (return_type is DelegateType)) {
 			write_indent ();
@@ -550,7 +549,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 	}
 
-	private void do_write_signature (Method m, string tag_name, bool instance, string name, string cname, Gee.List<Vala.FormalParameter> params, DataType return_type, bool can_fail) {
+	private void do_write_signature (Method m, string tag_name, bool instance, string name, string cname, List<Vala.FormalParameter> params, DataType return_type, bool can_fail) {
 		write_indent ();
 		stream.printf ("<%s name=\"%s\"", tag_name, name);
 		if (tag_name == "virtual-method") {
@@ -753,7 +752,7 @@ public class Vala.GIRWriter : CodeVisitor {
 			write_indent ();
 			stream.printf ("<type name=\"%s\" c:type=\"%s\"", gi_type_name (type.data_type), type.get_cname ());
 
-			Gee.List<DataType> type_arguments = type.get_type_arguments ();
+			List<DataType> type_arguments = type.get_type_arguments ();
 			if (type_arguments.size == 0) {
 				stream.printf ("/>\n");
 			} else {

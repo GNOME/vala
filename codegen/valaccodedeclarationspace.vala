@@ -20,7 +20,6 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using Gee;
 
 class Vala.CCodeDeclarationSpace {
 	public bool is_header { get; set; }

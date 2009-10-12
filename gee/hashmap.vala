@@ -27,7 +27,7 @@ using GLib;
 /**
  * Hashtable implementation of the Map interface.
  */
-public class Gee.HashMap<K,V> : CollectionObject, Map<K,V> {
+public class Vala.HashMap<K,V> : CollectionObject, Map<K,V> {
 	public int size {
 		get { return _nnodes; }
 	}

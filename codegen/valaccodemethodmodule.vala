@@ -22,7 +22,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * The link between a method and generated code.

@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a try statement in the source code.
@@ -52,7 +51,7 @@ public class Vala.TryStatement : CodeNode, Statement {
 
 	private Block _body;
 	private Block _finally_body;
-	private Gee.List<CatchClause> catch_clauses = new ArrayList<CatchClause> ();
+	private List<CatchClause> catch_clauses = new ArrayList<CatchClause> ();
 
 	/**
 	 * Creates a new try statement.
@@ -83,7 +82,7 @@ public class Vala.TryStatement : CodeNode, Statement {
 	 *
 	 * @return list of catch clauses
 	 */
-	public Gee.List<CatchClause> get_catch_clauses () {
+	public List<CatchClause> get_catch_clauses () {
 		return new ReadOnlyList<CatchClause> (catch_clauses);
 	}
 
@@ -112,12 +111,12 @@ public class Vala.TryStatement : CodeNode, Statement {
 
 		body.check (analyzer);
 
-		var error_types = new Gee.ArrayList<DataType> ();
+		var error_types = new ArrayList<DataType> ();
 		foreach (DataType body_error_type in body.get_error_types ()) {
 			error_types.add (body_error_type);
 		}
 
-		var handled_error_types = new Gee.ArrayList<DataType> ();
+		var handled_error_types = new ArrayList<DataType> ();
 		foreach (CatchClause clause in catch_clauses) {
 			foreach (DataType body_error_type in error_types) {
 				if (clause.error_type == null || body_error_type.compatible (clause.error_type)) {

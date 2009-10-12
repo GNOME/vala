@@ -25,7 +25,7 @@ using GLib;
 /**
  * Represents a read-only collection of items.
  */
-public class Gee.ReadOnlyCollection<G> : CollectionObject, Iterable<G>, Collection<G> {
+public class Vala.ReadOnlyCollection<G> : CollectionObject, Iterable<G>, Collection<G> {
 	public int size {
 		get { return _collection.size; }
 	}
@@ -44,7 +44,7 @@ public class Gee.ReadOnlyCollection<G> : CollectionObject, Iterable<G>, Collecti
 		return typeof (G);
 	}
 
-	public Gee.Iterator<G> iterator () {
+	public Vala.Iterator<G> iterator () {
 		if (_collection == null) {
 			return new Iterator<G> ();
 		}
@@ -72,7 +72,7 @@ public class Gee.ReadOnlyCollection<G> : CollectionObject, Iterable<G>, Collecti
 		assert_not_reached ();
 	}
 
-	private class Iterator<G> : CollectionObject, Gee.Iterator<G> {
+	private class Iterator<G> : CollectionObject, Vala.Iterator<G> {
 		public bool next () {
 			return false;
 		}

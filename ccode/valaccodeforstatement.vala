@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a for iteration statement in the C code.
@@ -37,8 +36,8 @@ public class Vala.CCodeForStatement : CCodeStatement {
 	 */
 	public CCodeStatement body { get; set; }
 	
-	private Gee.List<CCodeExpression> initializer = new ArrayList<CCodeExpression> ();
-	private Gee.List<CCodeExpression> iterator = new ArrayList<CCodeExpression> ();
+	private List<CCodeExpression> initializer = new ArrayList<CCodeExpression> ();
+	private List<CCodeExpression> iterator = new ArrayList<CCodeExpression> ();
 	
 	public CCodeForStatement (CCodeExpression? condition, CCodeStatement? body = null) {
 		this.condition = condition;

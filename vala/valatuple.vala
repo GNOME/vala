@@ -21,13 +21,12 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a fixed-length sequence of expressions in the source code.
  */
 public class Vala.Tuple : Expression {
-	private Gee.List<Expression> expression_list = new ArrayList<Expression> ();
+	private List<Expression> expression_list = new ArrayList<Expression> ();
 
 	public Tuple () {
 	}
@@ -36,7 +35,7 @@ public class Vala.Tuple : Expression {
 		expression_list.add (expr);
 	}
 
-	public Gee.List<Expression> get_expressions () {
+	public List<Expression> get_expressions () {
 		return expression_list;
 	}
 

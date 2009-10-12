@@ -220,7 +220,7 @@ public class Vala.PropertyAccessor : Symbol {
 		}
 	}
 
-	public override Gee.List<string> get_cheader_filenames () {
+	public override List<string> get_cheader_filenames () {
 		return parent_symbol.get_cheader_filenames ();
 	}
 }

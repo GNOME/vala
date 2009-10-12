@@ -21,13 +21,12 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a container for C code nodes.
  */
 public class Vala.CCodeFragment : CCodeNode {
-	private Gee.List<CCodeNode> children = new ArrayList<CCodeNode> ();
+	private List<CCodeNode> children = new ArrayList<CCodeNode> ();
 	
 	/**
 	 * Appends the specified code node to this code fragment.
@@ -43,7 +42,7 @@ public class Vala.CCodeFragment : CCodeNode {
 	 *
 	 * @return children list
 	 */
-	public Gee.List<CCodeNode> get_children () {
+	public List<CCodeNode> get_children () {
 		return new ReadOnlyList<CCodeNode> (children);
 	}
 

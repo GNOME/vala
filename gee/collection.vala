@@ -24,7 +24,7 @@
  * Serves as the base interface for implementing collection classes. Defines
  * size, iteration, and modification methods.
  */
-public interface Gee.Collection<G> : Iterable<G> {
+public interface Vala.Collection<G> : Iterable<G> {
 	/**
 	 * The number of items in this collection.
 	 */

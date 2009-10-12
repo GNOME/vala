@@ -20,10 +20,9 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using Gee;
 
 public class Vala.StatementList : CodeNode, Statement {
-	private Gee.List<Statement> list = new ArrayList<Statement> ();
+	private List<Statement> list = new ArrayList<Statement> ();
 
 	public int length {
 		get { return list.size; }

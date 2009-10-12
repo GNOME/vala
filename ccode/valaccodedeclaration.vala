@@ -21,7 +21,6 @@
  */
 
 using GLib;
-using Gee;
 
 /**
  * Represents a local variable declaration in the C code.
@@ -37,7 +36,7 @@ public class Vala.CCodeDeclaration : CCodeStatement {
 	 */
 	public CCodeModifiers modifiers { get; set; }
 	
-	private Gee.List<CCodeDeclarator> declarators = new ArrayList<CCodeDeclarator> ();
+	private List<CCodeDeclarator> declarators = new ArrayList<CCodeDeclarator> ();
 	
 	public CCodeDeclaration (string type_name) {
 		this.type_name = type_name;
