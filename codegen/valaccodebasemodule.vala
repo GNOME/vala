@@ -240,6 +240,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		reserved_identifiers.add ("_Bool");
 		reserved_identifiers.add ("_Complex");
 		reserved_identifiers.add ("_Imaginary");
+		reserved_identifiers.add ("asm");
 		reserved_identifiers.add ("auto");
 		reserved_identifiers.add ("break");
 		reserved_identifiers.add ("case");
