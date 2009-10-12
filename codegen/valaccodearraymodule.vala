@@ -65,8 +65,15 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			return;
 		}
 
-		var gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
-		gnew.add_argument (new CCodeIdentifier (expr.element_type.get_cname ()));
+		CCodeFunctionCall gnew;
+		if (context.profile == Profile.POSIX) {
+			source_declarations.add_include ("stdlib.h");
+			gnew = new CCodeFunctionCall (new CCodeIdentifier ("calloc"));
+		} else {
+			gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
+			gnew.add_argument (new CCodeIdentifier (expr.element_type.get_cname ()));
+		}
+
 		bool first = true;
 		CCodeExpression cexpr = null;
 
@@ -98,6 +105,12 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 		}
 		
 		gnew.add_argument (cexpr);
+
+		if (context.profile == Profile.POSIX) {
+			var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
+			csizeof.add_argument (new CCodeIdentifier (expr.element_type.get_cname ()));
+			gnew.add_argument (csizeof);
+		}
 
 		if (expr.initializer_list != null) {
 			var ce = new CCodeCommaExpression ();

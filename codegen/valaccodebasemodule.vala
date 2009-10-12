@@ -2470,9 +2470,17 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				return new CCodeIdentifier (func_name);
 			}
 		} else if (type is ArrayType) {
-			return new CCodeIdentifier ("g_free");
+			if (context.profile == Profile.POSIX) {
+				return new CCodeIdentifier ("free");
+			} else {
+				return new CCodeIdentifier ("g_free");
+			}
 		} else if (type is PointerType) {
-			return new CCodeIdentifier ("g_free");
+			if (context.profile == Profile.POSIX) {
+				return new CCodeIdentifier ("free");
+			} else {
+				return new CCodeIdentifier ("g_free");
+			}
 		} else {
 			return new CCodeConstant ("NULL");
 		}
