@@ -138,6 +138,11 @@ public struct time_t {
 [CCode (cname = "char", const_cname = "const char", copy_function = "strdup", free_function = "free", cheader_filename = "stdlib.h,string.h")]
 public class string {
 }
+
+[CCode (cname="printf", cheader_filename = "stdio.h")]
+[PrintfFormat]
+public void print (string format,...);
+
 #endif
 
 [CCode (cprefix = "", lower_case_cprefix = "")]
@@ -1925,5 +1930,32 @@ namespace Posix {
 	public const int MS_INVALIDATE;
 	[CCode (cheader_filename = "sys/mman.h")]
 	public const int MS_SYNC;
+
+	[SimpleType]
+	[CCode (cname = "FILE", free_function = "fclose", cheader_filename = "stdio.h")]
+	public struct FILE {
+		[CCode (cname="fprintf")]
+		public void printf (string format,...);
+		[CCode (cname="fscanf")]
+		public void scanf (string outstr,...);
+		[CCode (cname="fgets", instance_position="3")]
+		public void gets (string outstr, int len); //=strlen(outstr));
+		[CCode (cname="fputs", instance_position="2")]
+		public void puts (string str);
+		[CCode (cname="fputc", instance_position="2")]
+		public void putc (string str);
+		[CCode (cname="fopen")]
+		public static FILE open (string file, string mode);
+		[CCode (cname="fclose")]
+		public int close ();
+		[CCode (cname="fwrite", instance_position="4")]
+		public int write (void *ptr, int size, int nmemb);
+		[CCode (cname="fread", instance_position="4")]
+		public int read (void *ptr, int size, int nmemb);
+	}
+
+	public static FILE stderr;
+	public static FILE stdout;
+	public static FILE stdin;
 }
 
