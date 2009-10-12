@@ -1154,6 +1154,9 @@ public class Vala.Genie.Parser : CodeVisitor {
 			case TokenType.VOID:
 			case TokenType.DYNAMIC:
 			case TokenType.IDENTIFIER:
+			case TokenType.ARRAY:
+			case TokenType.LIST:
+			case TokenType.DICT:
 				var type = parse_type ();
 				if (accept (TokenType.CLOSE_PARENS)) {
 					// check follower to decide whether to create cast expression
