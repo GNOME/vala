@@ -851,6 +851,98 @@ internal class Vala.DBusClientModule : DBusModule {
 		expr.ccodenode = ccall;
 	}
 
+	void generate_proxy_interface_init (Interface main_iface, Interface iface) {
+		// also generate proxy for prerequisites
+		foreach (var prereq in iface.get_prerequisites ()) {
+			if (prereq.data_type is Interface) {
+				generate_proxy_interface_init (main_iface, (Interface) prereq.data_type);
+			}
+		}
+
+		string lower_cname = main_iface.get_lower_case_cprefix () + "dbus_proxy";
+
+		var proxy_iface_init = new CCodeFunction (lower_cname + "_" + iface.get_lower_case_cprefix () + "_interface_init", "void");
+		proxy_iface_init.add_parameter (new CCodeFormalParameter ("iface", iface.get_cname () + "Iface*"));
+
+		var iface_block = new CCodeBlock ();
+
+		foreach (Method m in iface.get_methods ()) {
+			var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), m.vfunc_name);
+			if (!m.coroutine) {
+				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_method (main_iface, iface, m)))));
+			} else {
+				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_async_dbus_proxy_method (main_iface, iface, m)))));
+				vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), m.get_finish_vfunc_name ());
+				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_finish_dbus_proxy_method (main_iface, iface, m)))));
+			}
+		}
+
+		foreach (Property prop in iface.get_properties ()) {
+			if (prop.get_accessor != null) {
+				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "get_" + prop.name);
+				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_get (main_iface, iface, prop)))));
+			}
+			if (prop.set_accessor != null) {
+				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "set_" + prop.name);
+				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_set (main_iface, iface, prop)))));
+			}
+		}
+
+		proxy_iface_init.modifiers = CCodeModifiers.STATIC;
+		source_declarations.add_type_member_declaration (proxy_iface_init.copy ());
+		proxy_iface_init.block = iface_block;
+		source_type_member_definition.append (proxy_iface_init);
+	}
+
+	string implement_interface (CCodeFunctionCall define_type, Interface main_iface, Interface iface) {
+		string result = "";
+
+		// also implement prerequisites
+		foreach (var prereq in iface.get_prerequisites ()) {
+			if (prereq.data_type is Interface) {
+				result += implement_interface (define_type, main_iface, (Interface) prereq.data_type);
+			}
+		}
+
+		result += "G_IMPLEMENT_INTERFACE (%s, %sdbus_proxy_%s_interface_init) ".printf (
+			iface.get_upper_case_cname ("TYPE_"),
+			main_iface.get_lower_case_cprefix (),
+			iface.get_lower_case_cprefix ());
+		return result;
+	}
+
+	void implement_property (CCodeBlock block, Interface main_iface, Interface iface) {
+		// also implement prerequisites
+		foreach (var prereq in iface.get_prerequisites ()) {
+			if (prereq.data_type is Interface) {
+				implement_property (block, main_iface, (Interface) prereq.data_type);
+			}
+		}
+
+		var gobject_class = new CCodeFunctionCall (new CCodeIdentifier ("G_OBJECT_CLASS"));
+		gobject_class.add_argument (new CCodeIdentifier ("klass"));
+
+		foreach (Property prop in iface.get_properties ()) {
+			if (!prop.is_abstract) {
+				continue;
+			}
+
+			if (prop.property_type is ArrayType) {
+				continue;
+			}
+
+			string prop_ev = "%s_dbus_proxy_%s".printf (main_iface.get_lower_case_cname (null), Symbol.camel_case_to_lower_case (prop.name)).up ();
+
+			var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_override_property"));
+			cinst.add_argument (gobject_class);
+			cinst.add_argument (new CCodeConstant (prop_ev));
+			cinst.add_argument (prop.get_canonical_cconstant ());
+			block.add_statement (new CCodeExpressionStatement (cinst));
+
+			prop_enum.add_value (new CCodeEnumValue (prop_ev));
+		}
+	}
+
 	public override void visit_interface (Interface iface) {
 		base.visit_interface (iface);
 
@@ -880,16 +972,12 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		source_declarations.add_type_member_declaration (new CCodeFunction(lower_cname + "_get_type", "GType"));
 
-		var implement = new CCodeFunctionCall (new CCodeIdentifier ("G_IMPLEMENT_INTERFACE"));
-		implement.add_argument (new CCodeIdentifier (iface.get_upper_case_cname ("TYPE_")));
-		implement.add_argument (new CCodeIdentifier (lower_cname + "_interface_init"));
-
 		var define_type = new CCodeFunctionCall (new CCodeIdentifier ("G_DEFINE_TYPE_EXTENDED"));
 		define_type.add_argument (new CCodeIdentifier (cname));
 		define_type.add_argument (new CCodeIdentifier (lower_cname));
 		define_type.add_argument (new CCodeIdentifier ("DBUS_TYPE_G_PROXY"));
 		define_type.add_argument (new CCodeConstant ("0"));
-		define_type.add_argument (implement);
+		define_type.add_argument (new CCodeIdentifier (implement_interface (define_type, iface, iface)));
 
 		source_type_member_definition.append (new CCodeExpressionStatement (define_type));
 
@@ -1066,23 +1154,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		prop_enum = new CCodeEnum ();
 		prop_enum.add_value (new CCodeEnumValue ("%s_DUMMY_PROPERTY".printf (lower_cname.up ())));
 
-		foreach (Property prop in iface.get_properties ()) {
-			if (!prop.is_abstract) {
-				continue;
-			}
-
-			if (prop.property_type is ArrayType) {
-				continue;
-			}
-
-			var cinst = new CCodeFunctionCall (new CCodeIdentifier ("g_object_class_override_property"));
-			cinst.add_argument (gobject_class);
-			cinst.add_argument (new CCodeConstant (prop.get_upper_case_cname ()));
-			cinst.add_argument (prop.get_canonical_cconstant ());
-			proxy_class_init.block.add_statement (new CCodeExpressionStatement (cinst));
-
-			prop_enum.add_value (new CCodeEnumValue (prop.get_upper_case_cname ()));
-		}
+		implement_property (proxy_class_init.block, iface, iface);
 
 		source_declarations.add_type_member_declaration (prop_enum);
 
@@ -1092,37 +1164,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		proxy_instance_init.block = new CCodeBlock ();
 		source_type_member_definition.append (proxy_instance_init);
 
-		var proxy_iface_init = new CCodeFunction (lower_cname + "_interface_init", "void");
-		proxy_iface_init.add_parameter (new CCodeFormalParameter ("iface", iface.get_cname () + "Iface*"));
-
-		var iface_block = new CCodeBlock ();
-
-		foreach (Method m in iface.get_methods ()) {
-			var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), m.vfunc_name);
-			if (!m.coroutine) {
-				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_method (iface, m)))));
-			} else {
-				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_async_dbus_proxy_method (iface, m)))));
-				vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), m.get_finish_vfunc_name ());
-				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_finish_dbus_proxy_method (iface, m)))));
-			}
-		}
-
-		foreach (Property prop in iface.get_properties ()) {
-			if (prop.get_accessor != null) {
-				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "get_" + prop.name);
-				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_get (iface, prop)))));
-			}
-			if (prop.set_accessor != null) {
-				var vfunc_entry = new CCodeMemberAccess.pointer (new CCodeIdentifier ("iface"), "set_" + prop.name);
-				iface_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (vfunc_entry, new CCodeIdentifier (generate_dbus_proxy_property_set (iface, prop)))));
-			}
-		}
-
-		proxy_iface_init.modifiers = CCodeModifiers.STATIC;
-		source_declarations.add_type_member_declaration (proxy_iface_init.copy ());
-		proxy_iface_init.block = iface_block;
-		source_type_member_definition.append (proxy_iface_init);
+		generate_proxy_interface_init (iface, iface);
 
 		// dbus proxy get/set_property stubs
 		// TODO add actual implementation
@@ -1460,8 +1502,8 @@ internal class Vala.DBusClientModule : DBusModule {
 		}
 	}
 
-	string generate_dbus_proxy_method (Interface iface, Method m) {
-		string proxy_name = "%sdbus_proxy_%s".printf (iface.get_lower_case_cprefix (), m.name);
+	string generate_dbus_proxy_method (Interface main_iface, Interface iface, Method m) {
+		string proxy_name = "%sdbus_proxy_%s".printf (main_iface.get_lower_case_cprefix (), m.name);
 
 		string dbus_iface_name = get_dbus_name (iface);
 
@@ -1666,8 +1708,8 @@ internal class Vala.DBusClientModule : DBusModule {
 		error_block.add_statement (if_else_if);
 	}
 
-	string generate_async_dbus_proxy_method (Interface iface, Method m) {
-		string proxy_name = "%sdbus_proxy_%s_async".printf (iface.get_lower_case_cprefix (), m.name);
+	string generate_async_dbus_proxy_method (Interface main_iface, Interface iface, Method m) {
+		string proxy_name = "%sdbus_proxy_%s_async".printf (main_iface.get_lower_case_cprefix (), m.name);
 
 		string dbus_iface_name = get_dbus_name (iface);
 
@@ -1811,8 +1853,8 @@ internal class Vala.DBusClientModule : DBusModule {
 		return proxy_name;
 	}
 
-	string generate_finish_dbus_proxy_method (Interface iface, Method m) {
-		string proxy_name = "%sdbus_proxy_%s_finish".printf (iface.get_lower_case_cprefix (), m.name);
+	string generate_finish_dbus_proxy_method (Interface main_iface, Interface iface, Method m) {
+		string proxy_name = "%sdbus_proxy_%s_finish".printf (main_iface.get_lower_case_cprefix (), m.name);
 
 		string dbus_iface_name = get_dbus_name (iface);
 
@@ -1871,8 +1913,8 @@ internal class Vala.DBusClientModule : DBusModule {
 		return proxy_name;
 	}
 
-	string generate_dbus_proxy_property_get (Interface iface, Property prop) {
-		string proxy_name = "%sdbus_proxy_get_%s".printf (iface.get_lower_case_cprefix (), prop.name);
+	string generate_dbus_proxy_property_get (Interface main_iface, Interface iface, Property prop) {
+		string proxy_name = "%sdbus_proxy_get_%s".printf (main_iface.get_lower_case_cprefix (), prop.name);
 
 		string dbus_iface_name = get_dbus_name (iface);
 
@@ -2018,8 +2060,8 @@ internal class Vala.DBusClientModule : DBusModule {
 		return proxy_name;
 	}
 
-	string generate_dbus_proxy_property_set (Interface iface, Property prop) {
-		string proxy_name = "%sdbus_proxy_set_%s".printf (iface.get_lower_case_cprefix (), prop.name);
+	string generate_dbus_proxy_property_set (Interface main_iface, Interface iface, Property prop) {
+		string proxy_name = "%sdbus_proxy_set_%s".printf (main_iface.get_lower_case_cprefix (), prop.name);
 
 		string dbus_iface_name = get_dbus_name (iface);
 
