@@ -533,7 +533,7 @@ namespace Cairo {
 		public int get_depth ();
 	}
 	
-	[CCode (cname = "cairo_matrix_t")]
+	[CCode (cname = "cairo_matrix_t", has_type_id = "false")]
 	public struct Matrix {
 		[CCode (cname = "cairo_matrix_init")]
 		public Matrix (double xx, double yx, double xy, double yy, double x0, double y0);
@@ -548,7 +548,16 @@ namespace Cairo {
 		public void transform_distance (ref double dx, ref double dy);
 		public void transform_point (ref double x, ref double y);
 	}
-	
+
+	[CCode (cname = "cairo_rectangle_t", has_type_id = "false")]
+	public struct Rectangle
+	{
+		public double x;
+		public double y;
+		public double width;
+		public double height;
+	}
+
 	[CCode (cname = "cairo_status_t")]
 	public enum Status {
 		SUCCESS,
