@@ -1,4 +1,4 @@
-/* table.vala
+/* tablerow.vala
  *
  * Valadoc - a documentation tool for vala.
  * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
@@ -24,31 +24,29 @@
 using GLib;
 using Gee;
 
-public class Valadoc.Content.Table : ContentElement, Block {
-	public Gee.List<TableRow> rows { get { return _rows; } }
+public class Valadoc.Content.TableRow : ContentElement {
+	public Gee.List<TableCell> cells { get { return _cells; } }
 
-	private Gee.List<TableRow> _rows;
+	private Gee.List<TableCell> _cells;
 
-	internal Table () {
+	internal TableRow () {
 		base ();
-		_rows = new ArrayList<TableRow> ();
+		_cells = new ArrayList<TableCell> ();
 	}
 
 	public override void check (Tree api_root, DocumentedElement? container, ErrorReporter reporter) {
-		// Check the table consistency in term of row/column number
-
-		// Check individual rows
-		foreach (var row in _rows) {
-			row.check (api_root, container, reporter);
+		// Check individual cells
+		foreach (var cell in _cells) {
+			cell.check (api_root, container, reporter);
 		}
 	}
 
 	public override void accept (ContentVisitor visitor) {
-		visitor.visit_table (this);
+		visitor.visit_table_row (this);
 	}
 
 	public override void accept_children (ContentVisitor visitor) {
-		foreach (TableRow element in _rows) {
+		foreach (TableCell element in _cells) {
 			element.accept (visitor);
 		}
 	}

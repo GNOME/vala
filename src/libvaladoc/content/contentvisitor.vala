@@ -65,6 +65,9 @@ public abstract class Valadoc.Content.ContentVisitor : Object {
 	public virtual void visit_table_cell (TableCell element) {
 	}
 
+	public virtual void visit_table_row (TableRow element) {
+	}
+
 	public virtual void visit_taglet (Taglet element) {
 	}
 

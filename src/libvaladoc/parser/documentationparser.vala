@@ -379,7 +379,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			})
 			.set_name ("Cell")
 			.set_start (() => { push (_factory.create_table_cell ()); })
-			.set_reduce (() => { ((ArrayList<TableCell>) peek ()).add ((TableCell) pop ()); });
+			.set_reduce (() => { ((TableRow) peek ()).cells.add ((TableCell) pop ()); });
 		Rule table_row =
 			Rule.seq ({
 				TokenType.DOUBLE_PIPE,
@@ -389,8 +389,8 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 				TokenType.EOL
 			})
 			.set_name ("Row")
-			.set_start (() => { push (new ArrayList<TableCell> ()); })
-			.set_reduce (() => { ((Table) peek ()).cells.add ((ArrayList<TableCell>) pop ()); });
+			.set_start (() => { push (_factory.create_table_row ()); })
+			.set_reduce (() => { ((Table) peek ()).rows.add ((TableRow) pop ()); });
 		Rule table =
 			Rule.seq ({
 				Rule.many ({

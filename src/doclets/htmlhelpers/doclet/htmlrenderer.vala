@@ -233,9 +233,24 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	public override void visit_table (Table element) {
+		_stream.printf ("<table class=\"main_table\">");
+		element.accept_children (this);
+		_stream.printf ("</table>");
 	}
 
 	public override void visit_table_cell (TableCell element) {
+		_stream.printf ("<td class=\"main_table\"%s%s>",
+			element.colspan != 1 ? " colspan=\"%d\"".printf (element.colspan) : "",
+			element.rowspan != 1 ? " rowspan=\"%d\"".printf (element.rowspan) : ""
+		);
+		element.accept_children (this);
+		_stream.printf ("</td>");
+	}
+
+	public override void visit_table_row (TableRow element) {
+		_stream.printf ("<tr>");
+		element.accept_children (this);
+		_stream.printf ("</tr>");
 	}
 
 	public override void visit_taglet (Taglet element) {

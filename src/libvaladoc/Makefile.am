@@ -97,6 +97,7 @@ libvaladoc_la_VALASOURCES = \
 	content/symbollink.vala \
 	content/table.vala \
 	content/tablecell.vala \
+	content/tablerow.vala \
 	content/taglet.vala \
 	content/text.vala \
 	parser/commentscanner.vala \

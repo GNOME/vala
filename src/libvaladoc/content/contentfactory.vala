@@ -89,6 +89,10 @@ public class Valadoc.Content.ContentFactory : Object {
 		return (TableCell) configure (new TableCell ());
 	}
 
+	public TableRow create_table_row () {
+		return (TableRow) configure (new TableRow ());
+	}
+
 	public Taglet create_taglet (string name) {
 		return _modules.create_taglet (name);
 	}
