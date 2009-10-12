@@ -137,6 +137,14 @@ public struct time_t {
 [Immutable]
 [CCode (cname = "char", const_cname = "const char", copy_function = "strdup", free_function = "free", cheader_filename = "stdlib.h,string.h")]
 public class string {
+	[CCode (cname="atoi")]
+	public int to_int();
+	[CCode (cname="atol")]
+	public long to_long();
+	[CCode (cname="atoll")]
+	public int64 to_int64();
+	[CCode (cname="strlen")]
+	public int len();
 }
 
 [CCode (cname="printf", cheader_filename = "stdio.h")]
