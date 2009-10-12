@@ -4141,12 +4141,34 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					expr.ccodenode = new CCodeConstant ("%s %s".printf (left, right));
 					return;
 				} else {
-					// convert to g_strconcat (a, b, NULL)
-					var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strconcat"));
-					ccall.add_argument (cleft);
-					ccall.add_argument (cright);
-					ccall.add_argument (new CCodeConstant("NULL"));
-					expr.ccodenode = ccall;
+					if (context.profile == Profile.POSIX) {
+						// convert to strcat(strcpy(malloc(1+strlen(a)+strlen(b)),a),b)
+						var strcat = new CCodeFunctionCall (new CCodeIdentifier ("strcat"));
+						var strcpy = new CCodeFunctionCall (new CCodeIdentifier ("strcpy"));
+						var malloc = new CCodeFunctionCall (new CCodeIdentifier ("malloc"));
+
+						var strlen_a = new CCodeFunctionCall (new CCodeIdentifier ("strlen"));
+						strlen_a.add_argument(cleft);
+						var strlen_b = new CCodeFunctionCall (new CCodeIdentifier ("strlen"));
+						strlen_b.add_argument(cright);
+						var newlength = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, new CCodeIdentifier("1"),
+							new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, strlen_a, strlen_b));
+						malloc.add_argument(newlength);
+
+						strcpy.add_argument(malloc);
+						strcpy.add_argument(cleft);
+
+						strcat.add_argument(strcpy);
+						strcat.add_argument(cright);
+						expr.ccodenode = strcat;
+					} else {
+						// convert to g_strconcat (a, b, NULL)
+						var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_strconcat"));
+						ccall.add_argument (cleft);
+						ccall.add_argument (cright);
+						ccall.add_argument (new CCodeConstant("NULL"));
+						expr.ccodenode = ccall;
+					}
 					return;
 				}
 			} else if (expr.operator == BinaryOperator.EQUALITY
