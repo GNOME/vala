@@ -3395,8 +3395,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (dupid.name == "g_strdup") {
 				dup0_func = dupid.name;
 			} else if (add_wrapper (dup0_func)) {
-				var dup0_fun = new CCodeFunction (dup0_func, "gpointer");
-				dup0_fun.add_parameter (new CCodeFormalParameter ("self", "gpointer"));
+				string pointer_cname = "gpointer";
+				if (context.profile == Profile.POSIX) {
+					pointer_cname = "void*";
+				}
+				var dup0_fun = new CCodeFunction (dup0_func, pointer_cname);
+				dup0_fun.add_parameter (new CCodeFormalParameter ("self", pointer_cname));
 				dup0_fun.modifiers = CCodeModifiers.STATIC;
 				dup0_fun.block = new CCodeBlock ();
 
