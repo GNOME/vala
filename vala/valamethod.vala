@@ -543,6 +543,10 @@ public class Vala.Method : Member {
 				return false;
 			}
 		}
+		if (base_method.coroutine != this.coroutine) {
+			invalid_match = "async mismatch";
+			return false;
+		}
 
 		return true;
 	}
