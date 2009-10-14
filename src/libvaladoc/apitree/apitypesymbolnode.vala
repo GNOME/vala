@@ -1,6 +1,7 @@
-/*
+/* apitypesymbolnode.vala
+ * 
  * Valadoc - a documentation tool for vala.
- * Copyright (C) 2008 Florian Brosch
+ * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,15 +16,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * Author:
+ * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
 using Vala;
-using GLib;
 using Gee;
 
-public interface Valadoc.Visitable : Api.Item {
+public abstract class Valadoc.Api.TypeSymbolNode : Api.SymbolNode {
 
-	protected abstract bool is_type_visitor_accessible (Valadoc.Basic element);
+	public TypeSymbolNode (Settings settings, Vala.TypeSymbol symbol, Api.Node parent, Tree root) {
+		base (settings, symbol, parent, root);
+	}
 
-	public abstract bool is_visitor_accessible ();
+	protected override void parse_comments (DocumentationParser parser) {
+		var source_comment = ((Vala.TypeSymbol) symbol).comment;
+		if (source_comment != null) {
+			documentation = parser.parse (this, source_comment);
+		}
+
+		base.parse_comments (parser);
+	}
 }

@@ -29,6 +29,8 @@ public abstract class Valadoc.DocumentedElement : Basic, Documentation {
 	private string _full_name = null;
 	private int _line = -1;
 
+	public abstract string? name { owned get; }
+
 	public Namespace? nspace {
 		get {
 			if (this._nspace == null) {
@@ -59,7 +61,7 @@ public abstract class Valadoc.DocumentedElement : Basic, Documentation {
 			return this._package;
 		}
 	}
-
+/*
 	public int line {
 		get {
 			if (this._line == -1) {
@@ -69,20 +71,11 @@ public abstract class Valadoc.DocumentedElement : Basic, Documentation {
 			return this._line;
 		}
 	}
-
-	protected Vala.Comment vcomment {
-		get; set;
-	}
+*/
 
 	public Content.Comment? documentation {
 		protected set;
 		get;
-	}
-
-	public virtual string? name {
-		owned get {
-			return this.vsymbol.name;
-		}
 	}
 
 	// rename to get_full_name
@@ -107,29 +100,6 @@ public abstract class Valadoc.DocumentedElement : Basic, Documentation {
 		return this._full_name;
 	}
 
-	public string? get_filename () {
-		SourceReference? sref = this.vsymbol.source_reference;
-		if ( sref == null )
-			return null;
-
-		Vala.SourceFile? file = sref.file;
-		if ( file == null )
-			return null;
-
-		string path = sref.file.filename;
-		return GLib.Path.get_basename ( path );
-	}
-
-	protected void parse_comment_helper ( DocumentationParser docparser ) {
-		this.documentation = docparser.parse ( this );
-	}
-
-	internal virtual DocumentedElement? search_element ( string[] params, int pos ) {
-		return null;
-	}
-
-	internal virtual DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> list, int pos ) {
-		return null;
-	}
+	public abstract string? get_filename ();
 }
 

@@ -190,7 +190,7 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 		weak GLib.FileStream file = (GLib.FileStream)ptr;
 		bool open_bracket = false;
 
-		Gee.ArrayList<FormalParameter> params = thandler.param_list;
+		Gee.List<FormalParameter> params = thandler.param_list;
 		int size = params.size;
 		int i = 0;
 

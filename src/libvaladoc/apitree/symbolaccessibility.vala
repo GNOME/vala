@@ -17,39 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Vala;
 using GLib;
 using Gee;
 
+public interface Valadoc.SymbolAccessibility {
 
-public interface Valadoc.SymbolAccessibility : Basic {
-	public bool is_public {
-		get {
-			Vala.SymbolAccessibility access = vsymbol.access;
-			return ( access == Vala.SymbolAccessibility.PUBLIC );
-		}
-	}
+	public abstract bool is_public { get; }
 
-	public bool is_protected {
-		get {
-			Vala.SymbolAccessibility access = vsymbol.access;
-			return (access == Vala.SymbolAccessibility.PROTECTED);
-		}
-	}
+	public abstract bool is_protected { get; }
 
-	public bool is_internal {
-		get {
-			Vala.SymbolAccessibility access = vsymbol.access;
-			return (access == Vala.SymbolAccessibility.INTERNAL);
-		}
-	}
+	public abstract bool is_internal { get; }
 
-	public bool is_private {
-		get {
-			Vala.SymbolAccessibility access = vsymbol.access;
-			return (access == Vala.SymbolAccessibility.PRIVATE);
-		}
-	}
+	public abstract bool is_private { get; }
 }
-

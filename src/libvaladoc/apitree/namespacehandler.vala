@@ -17,26 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Vala;
 using GLib;
 using Gee;
 
-
-public interface Valadoc.NamespaceHandler : Basic {
-	public abstract Gee.ArrayList<Namespace> namespaces {
-		set;
-		get;
-	}
-
+public interface Valadoc.NamespaceHandler : Api.Node {
 	public Gee.Collection<Namespace> get_namespace_list () {
-			return this.namespaces.read_only_view;
+		return get_children_by_type (Api.NodeType.NAMESPACE);
 	}
 
 	public void visit_namespaces ( Doclet doclet ) {
-		foreach ( Namespace ns in this.namespaces ) {
-			ns.visit ( doclet );
-		}
+		accept_children_by_type (Api.NodeType.NAMESPACE, doclet);
 	}
 
 	private Gee.ArrayList<Vala.Namespace> create_parent_vnamespace_list ( Vala.Symbol vsymbol ) {
@@ -57,7 +48,7 @@ public interface Valadoc.NamespaceHandler : Basic {
 		Namespace ns = this.find_namespace_without_childs ( vns );
 		if ( ns == null ) {
 			ns = new Namespace( this.settings, vns, this, this.head );
-			this.namespaces.add ( ns );
+			add_child ( ns );
 		}
 
 		if ( vnspaces.size == pos+1 ) {
@@ -84,7 +75,7 @@ public interface Valadoc.NamespaceHandler : Basic {
 		}
 		else {
 			var ns = new Namespace( this.settings, vnspace, this, this.head );
-			this.namespaces.add( ns );
+			add_child ( ns );
 			return ns;
 		}
 	}
@@ -94,7 +85,7 @@ public interface Valadoc.NamespaceHandler : Basic {
 		if ( vns == null )
 			return null;
 
-		foreach ( Namespace ns in this.namespaces ) {
+		foreach ( Namespace ns in get_namespace_list () ) {
 			if ( !ns.is_vnspace( vns ) )
 				continue ;
 
@@ -110,7 +101,7 @@ public interface Valadoc.NamespaceHandler : Basic {
 	internal Namespace find_namespace_without_childs ( Vala.Namespace vns ) {
 		Namespace ns2 = null;
 
-		foreach ( Namespace ns in this.namespaces ) {
+		foreach ( Namespace ns in get_namespace_list () ) {
 			if ( ns.is_vnspace(vns) )
 				ns2 = ns;
 		}
@@ -123,17 +114,4 @@ public interface Valadoc.NamespaceHandler : Basic {
 
 		return this.find_vnamespace_helper ( vnspaces, vnspaces.index_of( vns ) );
 	}
-
-	internal void set_namespace_type_references ( ) {
-		foreach ( Namespace ns in this.namespaces ){
-			ns.set_type_references ();
-		}
-	}
-
-	internal void parse_namespace_comments ( DocumentationParser docparser ) {
-		foreach ( Namespace ns in this.namespaces ){
-			ns.parse_comments ( docparser );
-		}
-	}
 }
-

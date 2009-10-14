@@ -17,52 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Vala;
 using GLib;
 using Gee;
 
-
-public interface Valadoc.InterfaceHandler : Basic {
-	protected abstract Gee.ArrayList<Interface> interfaces {
-		set;
-		get;
-	}
-
-	protected DocumentedElement? search_interface_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
-		foreach ( Interface iface in this.interfaces ) {
-			DocumentedElement? element = iface.search_element_vala ( params, pos+1 );
-			if ( element != null )
-				return element;
-		}
-		return null;
-	}
-
-	protected DocumentedElement? search_interface ( string[] params, int pos ) {
-		foreach ( Interface iface in this.interfaces ) {
-			DocumentedElement? element = iface.search_element ( params, pos+1 );
-			if ( element != null )
-				return element;
-		}
-		return null;
-	}
-
+public interface Valadoc.InterfaceHandler : Api.Node {
 	public Gee.Collection<Interface> get_interface_list ( ) {
-		var lst = new Gee.ArrayList<Interface> ();
-		foreach ( Interface iface in this.interfaces ) {
-			if ( !iface.is_type_visitor_accessible ( this ) )
-				continue ;
-
-			lst.add ( iface );
-		}
-
-		return lst.read_only_view;
+		return get_children_by_type (Api.NodeType.INTERFACE);
 	}
 
 	public void visit_interfaces ( Doclet doclet ) {
-		foreach ( Interface iface in this.interfaces ) {
-			iface.visit( doclet );
-		}
+		accept_children_by_type (Api.NodeType.INTERFACE, doclet);
 	}
 
 	protected void add_interfaces ( Gee.Collection<Vala.Interface> vifaces ) {
@@ -73,19 +38,6 @@ public interface Valadoc.InterfaceHandler : Basic {
 
 	internal void add_interface ( Vala.Interface viface ) {
 		var tmp = new Interface ( this.settings, viface, this, this.head );
-		this.interfaces.add ( tmp );
-	}
-
-	protected void set_interface_type_references ( ) {
-		foreach ( Interface iface in this.interfaces ) {
-			iface.set_type_references ( );
-		}
-	}
-
-	protected void parse_interface_comments ( DocumentationParser docparser ) {
-		foreach ( Interface iface in this.interfaces ) {
-			iface.parse_comments ( docparser );
-		}
+		add_child (tmp);
 	}
 }
-

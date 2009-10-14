@@ -60,101 +60,41 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		doclet.initialisation ( this.settings, this );
 	}
 
-	private DocumentedElement? search_symbol_in_type ( DocumentedElement element, string[] params, int params_offset = 0 ) {
-		string[] nparams = null;
-		if ( params[0] != "this" ) {
-			nparams = new string[ params.length+1 ];
-			nparams[0] = "this";
-			for ( int i = 0; params.length > i ; i++ ) {
-				nparams [i+1] = params[i];
+	private Api.Node? search_relative_to (Api.Node element, string[] path) {
+		Api.Node? node = element;
+		foreach (string name in path) {
+			node = node.find_by_name (name);
+			if (node == null) {
+				break;
 			}
-		} else {
-			nparams = params;
 		}
 
-		return this.search_symbol_in_symbol (element, nparams, 0);
+		if (node == null && element.parent != null) {
+			node = search_relative_to ((Api.Node) element.parent, path);
+		}
+
+		return node;
 	}
 
-	private DocumentedElement? search_symbol_in_symbol ( DocumentedElement element, string[] params, int params_offset = 0 ) {
-		if ( element is Class || element is Interface || element is Struct ) {
-			return element.search_element ( params, params_offset );
-		}
-		else if ( element is Enum ) {
-			return element.search_element ( params, params_offset );
-		}
-		else if ( element is ErrorDomain ) {
-			return element.search_element ( params, params_offset );
-		}
-		return null;
-	}
+	public DocumentedElement? search_symbol_str (DocumentedElement? element, string symname) {
+		string[] path = split_name (symname);
 
-	private DocumentedElement? search_symbol_in_global_namespaces ( DocumentedElement? element, string[] params ) {
-		int param_size = 0;
-		for ( param_size = 0; params[param_size] != null; param_size++ );
-
-		string[] global_params = new string[param_size +1];
-
-		global_params[0] = null;
-		for ( int i = 0; params[i-1] != null ; i++ ) {
-			global_params[i+1] = params[i];
-		}
-
-		foreach ( Package pkg in this.packages ) {
-			DocumentedElement? element2 = pkg.search_element ( global_params, 0 );
-			if ( element2 != null )
-				return element2;
-		}
-		return null;
-	}
-
-	private DocumentedElement? search_symbol_in_namespaces ( DocumentedElement? element, string[] params ) {
-		foreach ( Package pkg in this.packages ) {
-			DocumentedElement? element2 = pkg.search_element ( params, 0 );
-			if ( element2 != null )
-				return element2;
-		}
-		return null;
-	}
-
-	private DocumentedElement? search_element ( DocumentedElement? element, string[] params ) {
-		if (element is Field || element is Method || element is Delegate
-		    || element is Signal || element is Property || element is Constant) {
-		    element = (DocumentedElement) element.parent;
-		}
-
-		if ( element != null ) {
-			if ( params[0] == "this" ) {
-				return search_symbol_in_type ( element, params, 1 );
+		if (element == null) {
+			Api.Node? node = null;
+			foreach (Package packgage in packages) {
+				node = search_relative_to (packgage, path);
+				if (node != null) {
+					return (DocumentedElement) node;
+				}
 			}
-
-			var tmp = search_symbol_in_type ( element, params );
-			if ( tmp != null )
-				return tmp;
+			return null;
 		}
 
-		var tmp = search_symbol_in_global_namespaces ( element, params );
-		if ( tmp != null )
-			return tmp;
-
-		tmp = this.search_symbol_in_namespaces ( element, params );
-		if ( tmp != null )
-			return tmp;
-
-		return null;
+		return (DocumentedElement) search_relative_to ((Api.Node) element, path);
 	}
 
-	public DocumentedElement? search_symbol_str ( DocumentedElement? element, string symname ) {
-		var result = this.search_element (element, split_name (symname));
-		while (result == null && element.parent != null) {
-			var parent_name = element.name;
-			result = this.search_element ( element, split_name (parent_name + "." + symname) );
-			element = (DocumentedElement) element.parent;
-		}
-		return result;
-	}
-
-	private string[] split_name (string symname) {
-		string[] params = symname.split( ".", -1 );
+	private string[] split_name (string full_name) {
+		string[] params = full_name.split( ".", -1 );
 		int i = 0; while ( params[i] != null ) i++;
 		params.length = i;
 		return params;
@@ -452,7 +392,7 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		}
 
 		this.context.accept(this);
-		this.set_type_references ();
+		this.resolve_type_references ();
 		this.add_dependencies_to_source_package ();
 		return true;
 	}
@@ -465,9 +405,9 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		return null;
 	}
 
-	private void set_type_references ( ) {
+	private void resolve_type_references () {
 		foreach (Package pkg in this.packages) {
-			pkg.set_type_references( );
+			pkg.resolve_type_references();
 		}
 	}
 
@@ -504,7 +444,14 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 		Vala.SourceFile vfile = vnode.source_reference.file;
 		Package file = this.find_file(vfile);
 
-		return file.search_element_vala (params, 0);
+		Api.Node? node = file;
+		foreach (Symbol symbol in params) {
+			node = node.find_by_symbol (symbol);
+			if (node == null) {
+				return null;
+			}
+		}
+		return node;
 	}
 
 	private Package? get_external_package_by_name (string name) {

@@ -23,7 +23,7 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.Constant : DocumentedElement, SymbolAccessibility, Visitable, ReturnTypeHandler {
+public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 	private Vala.Constant vconst;
 
 	public TypeReference? type_reference {
@@ -35,13 +35,9 @@ public class Valadoc.Constant : DocumentedElement, SymbolAccessibility, Visitabl
 		return ( this.vconst == vconst );
 	}
 
-	public Constant ( Valadoc.Settings settings, Vala.Constant vconst, ConstantHandler parent, Tree head ) {
-		this.vcomment = vconst.comment;
-		this.settings = settings;
-		this.vsymbol = vconst;
-		this.vconst = vconst;
-		this.parent = parent;
-		this.head = head;
+	public Constant (Valadoc.Settings settings, Vala.Constant symbol, ConstantHandler parent, Tree root) {
+		base (settings, symbol, parent, root);
+		this.vconst = symbol;
 
 		var vret = this.vconst.type_reference;
 		this.set_ret_type ( vret );
@@ -51,12 +47,8 @@ public class Valadoc.Constant : DocumentedElement, SymbolAccessibility, Visitabl
 		return this.vconst.get_cname ();
 	}
 
-	internal void set_type_references ( ) {
-		((ReturnTypeHandler)this).set_return_type_references ( );
-	}
-
-	internal void parse_comment ( DocumentationParser docparser ) {
-		this.parse_comment_helper ( docparser );
+	protected override void resolve_type_references () {
+		this.set_return_type_references ( );
 	}
 
 	public void visit ( Doclet doclet, ConstantHandler? parent ) {
@@ -64,6 +56,12 @@ public class Valadoc.Constant : DocumentedElement, SymbolAccessibility, Visitabl
 			return ;
 
 		doclet.visit_constant ( this, parent );
+	}
+
+	public override Api.NodeType node_type { get { return Api.NodeType.CONSTANT; } }
+
+	public override void accept (Doclet doclet) {
+		visit (doclet, (ConstantHandler) parent);
 	}
 
 	public void write ( Langlet langlet, void* ptr, ConstantHandler parent ) {

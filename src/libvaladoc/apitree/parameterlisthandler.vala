@@ -17,33 +17,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Vala;
 using GLib;
 using Gee;
 
-
-public interface Valadoc.ParameterListHandler : Basic {
-	protected abstract Gee.ArrayList<FormalParameter> param_list {
-		protected set;
-		get;
+// TODO Rename FormalParameters
+public interface Valadoc.ParameterListHandler : Api.Node {
+	public Gee.List<FormalParameter> param_list {
+		owned get { return get_parameter_list (); }
 	}
 
-	public Gee.Collection<FormalParameter> get_parameter_list ( ) {
-		return this.param_list.read_only_view;
+	public Gee.List<FormalParameter> get_parameter_list () {
+		return (Gee.List<FormalParameter>) get_children_by_type (Api.NodeType.FORMAL_PARAMETER);
 	}
 
-	protected void add_parameter_list ( Gee.Collection<Vala.FormalParameter> vparams ) {
-		foreach ( Vala.FormalParameter vfparam in vparams ) {
-			var tmp = new FormalParameter ( this.settings, vfparam, this, this.head );
-			this.param_list.add ( tmp );
-		}
-	}
-
-	internal void set_parameter_list_type_references ( ) {
-		foreach ( FormalParameter fparam in this.param_list ) {
-			fparam.set_type_references ( );
+	protected void add_parameter_list (Gee.Collection<Vala.FormalParameter> vparams) {
+		foreach (Vala.FormalParameter vfparam in vparams) {
+			var tmp = new FormalParameter (this.settings, vfparam, this, this.head);
+			add_child (tmp);
 		}
 	}
 }
-

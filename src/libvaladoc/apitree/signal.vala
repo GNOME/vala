@@ -23,28 +23,20 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.Signal : DocumentedElement, ParameterListHandler, SymbolAccessibility, ReturnTypeHandler, Visitable {
+public class Valadoc.Signal : Api.MemberNode, ParameterListHandler, ReturnTypeHandler {
 	private Vala.Signal vsignal;
 
-	public Signal (Valadoc.Settings settings, Vala.Signal vsignal, SignalHandler parent, Tree head) {
+	public Signal (Valadoc.Settings settings, Vala.Signal symbol, SignalHandler parent, Tree root) {
+		base (settings, symbol, parent, root);
+
+		this.vsignal = symbol;
+
 		this.param_list = new Gee.ArrayList<FormalParameter> ();
-
-		this.vcomment = vsignal.comment;
-		this.settings = settings;
-		this.vsymbol = vsignal;
-		this.vsignal = vsignal;
-		this.parent = parent;
-		this.head = head;
-
 		var vparamlst = this.vsignal.get_parameters ();
 		this.add_parameter_list (vparamlst);
 
 		var ret = this.vsignal.return_type;
 		this.set_ret_type (ret);
-	}
-
-	internal bool is_vsignal (Vala.Signal vsig) {
-		return (this.vsignal == vsig);
 	}
 
 	public string? get_cname () {
@@ -61,13 +53,10 @@ public class Valadoc.Signal : DocumentedElement, ParameterListHandler, SymbolAcc
 		get;
 	}
 
-	internal void set_type_references ( ) {
-		this.set_parameter_list_type_references ( );
+	protected override void resolve_type_references () {
 		this.set_return_type_references ( );
-	}
 
-	internal void parse_comment (DocumentationParser docparser) {
-		this.parse_comment_helper (docparser);
+		base.resolve_type_references ( );
 	}
 
 	public bool is_virtual {
@@ -81,6 +70,12 @@ public class Valadoc.Signal : DocumentedElement, ParameterListHandler, SymbolAcc
 			return ;
 
 		doclet.visit_signal (this);
+	}
+
+	public override Api.NodeType node_type { get { return Api.NodeType.SIGNAL; } }
+
+	public override void accept (Doclet doclet) {
+		visit (doclet);
 	}
 
 	public void write (Langlet langlet, void* ptr) {

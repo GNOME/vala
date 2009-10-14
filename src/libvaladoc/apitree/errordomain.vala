@@ -23,20 +23,14 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.ErrorDomain : DocumentedElement, SymbolAccessibility, Visitable, MethodHandler {
-	private Gee.ArrayList<ErrorCode> errcodes = new Gee.ArrayList<ErrorCode> ();
+public class Valadoc.ErrorDomain : Api.TypeSymbolNode, MethodHandler {
 	private Vala.ErrorDomain verrdom;
 
-	public ErrorDomain ( Valadoc.Settings settings, Vala.ErrorDomain verrdom, ErrorDomainHandler parent, Tree head ) {
-		this.vcomment = verrdom.comment;
-		this.settings = settings;
-		this.vsymbol = verrdom;
-		this.verrdom = verrdom;
-		this.parent = parent;
-		this.head = head;
+	public ErrorDomain (Valadoc.Settings settings, Vala.ErrorDomain symbol, ErrorDomainHandler parent, Tree root) {
+		base (settings, symbol, parent, root);
+		this.verrdom = symbol;
 
 		Gee.Collection<Vala.Method> vmethods = this.verrdom.get_methods ();
-		this.methods = new Gee.ArrayList<Method> ();
 		this.add_methods ( vmethods );
 
 		Gee.Collection<Vala.ErrorCode> verrcodes = this.verrdom.get_codes ();
@@ -47,103 +41,12 @@ public class Valadoc.ErrorDomain : DocumentedElement, SymbolAccessibility, Visit
 		return this.verrdom.get_cname();
 	}
 
-	protected Gee.ArrayList<Method> methods {
-		protected set;
-		get;
-	}
-
-	internal bool is_verrordomain ( Vala.ErrorDomain ver ) {
-		return ( this.verrdom == ver );
-	}
-
-	private DocumentedElement? search_error_code ( string[] params, int pos ) {
-		pos++;
-
-		if ( params[pos+1] != null )
-			return null;
-
-		foreach ( ErrorCode errcode in this.errcodes ) {
-			if ( errcode.name == params[pos] )
-				return errcode;
-		}
-		return null;
-	}
-
-	private DocumentedElement? search_error_code_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
-		Vala.Symbol velement = params[pos+1];
-		if ( velement is Vala.ErrorCode == false )
-			return null;
-
-		if ( params.size != pos+2 )
-			return null;
-
-		foreach ( ErrorCode errc in this.errcodes ) {
-			if ( errc.is_verrorcode ( (Vala.ErrorCode)velement ) ) {
-				return errc;
-			}
-		}
-		return null;
-	}
-
-	internal override DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
-		Vala.Symbol velement = params[pos];
-
-		if ( velement is Vala.ErrorDomain == false )
-			return null;
-
-		if ( !this.is_verrordomain ( (Vala.ErrorDomain)velement ) )
-			return null;
-
-		if ( params.size == pos+1 )
-			return this;
-
-		velement = params[pos+1];
-
-		DocumentedElement? element = null;
-
-		if ( velement is Vala.ErrorCode ) {
-			element = this.search_error_code_vala ( params, pos );
-		}
-		else if ( velement is Vala.Method ) {
-			element = this.search_method_vala ( params, pos );
-		}
-		return element;
-	}
-
-	internal override DocumentedElement? search_element ( string[] params, int pos ) {
-		if ( this.name != params[pos] )
-			return null;
-
-		if ( params[pos] == this.name && params[pos+1] == null )
-			return this;
-
-		DocumentedElement? element = this.search_method ( params, pos );
-		if ( element != null )
-			return element;
-
-		element = this.search_error_code ( params, pos );
-		if ( element != null )
-			return element;
-
-		return null;
-	}
-
-	internal void parse_comments ( DocumentationParser docparser ) {
-		this.parse_comment_helper ( docparser );
-		this.parse_method_comments ( docparser );
-
-		foreach ( ErrorCode errcode in this.errcodes ) {
-			errcode.parse_comment ( docparser );
-		}
-	}
-
 	public void visit_error_codes ( Doclet doclet ) {
-		foreach ( ErrorCode errcode in this.errcodes )
-			errcode.visit ( doclet );
+		accept_children_by_type (Api.NodeType.ERROR_CODE, doclet);
 	}
 
-	public Gee.Collection<ErrorCode> get_error_code_list ( ) {
-		return this.errcodes.read_only_view;
+	public Gee.Collection<ErrorCode> get_error_code_list () {
+		return get_children_by_type (Api.NodeType.ERROR_CODE);
 	}
 
 	public void visit ( Doclet doclet ) {
@@ -153,6 +56,12 @@ public class Valadoc.ErrorDomain : DocumentedElement, SymbolAccessibility, Visit
 		doclet.visit_error_domain ( this );
 	}
 
+	public override Api.NodeType node_type { get { return Api.NodeType.ERROR_DOMAIN; } }
+
+	public override void accept (Doclet doclet) {
+		visit (doclet);
+	}
+
 	public void write ( Langlet langlet, void* ptr ) {
 		langlet.write_error_domain ( this, ptr );
 	}
@@ -160,12 +69,8 @@ public class Valadoc.ErrorDomain : DocumentedElement, SymbolAccessibility, Visit
 	private inline void append_error_code ( Gee.Collection<Vala.ErrorCode> verrcodes ) {
 		foreach ( Vala.ErrorCode verrcode in verrcodes ) {
 			var tmp = new ErrorCode ( this.settings, verrcode, this, this.head );
-			this.errcodes.add ( tmp );
+			add_child ( tmp );
 		}
-	}
-
-	internal void set_type_references ( ) {
-		this.set_method_type_references ( );
 	}
 }
 

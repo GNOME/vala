@@ -22,25 +22,6 @@ using GLib;
 using Gee;
 
 
-public abstract class Valadoc.Basic : Object {
-	public Valadoc.Settings settings {
-		protected get;
-		set;
-	}
-
-	public Basic parent {
-		set;
-		get;
-	}
-
-	public Tree head {
-		set;
-		get;
-	}
-
-	protected Vala.Symbol vsymbol {
-		protected get;
-		set;
-	}
+public abstract class Valadoc.Basic : Api.Item {
 }
 

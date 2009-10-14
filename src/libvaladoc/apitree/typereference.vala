@@ -41,7 +41,7 @@ public class Valadoc.TypeReference : Basic {
 	private void set_template_argument_list ( Gee.Collection<Vala.DataType> varguments ) {
 		foreach ( Vala.DataType vdtype in varguments ) {
 			var dtype = new TypeReference ( this.settings, vdtype, this, this.head );
-			dtype.set_type_references ( );
+			dtype.resolve_type_references ( );
 			this.type_arguments.add ( dtype );
 		}
 	}
@@ -185,26 +185,14 @@ public class Valadoc.TypeReference : Basic {
 		}
 	}
 
-	private TypeParameter? find_template_parameter ( GenericType vtyperef ) {
-		Basic? element = this.parent;
-		while ( !(element is TemplateParameterListHandler || element == null) ) {
-			element = element.parent;
-		}
-
-		if ( element == null )
-			return null;
-
-		return ((TemplateParameterListHandler)element).find_vtemplateparameter ( (GenericType)vtyperef );
-	}
-
-	internal void set_type_references ( ) {
+	protected override void resolve_type_references () {
 		if ( this.vtyperef != null ) {
 			if ( this.vtyperef is PointerType )
 				this.data_type = new Pointer ( settings, (Vala.PointerType)this.vtyperef, this, head );
 			else if ( vtyperef is ArrayType )
 				this.data_type = new Array ( settings, (Vala.ArrayType)this.vtyperef, this, head );
 			else if ( vtyperef is GenericType )
-				 this.data_type = find_template_parameter ( (GenericType)vtyperef );
+				 this.data_type = (TypeParameter) this.head.search_vala_symbol (((Vala.ArrayType) this.vtyperef).type_parameter);
 		}
 
 
@@ -228,10 +216,10 @@ public class Valadoc.TypeReference : Basic {
 			}
 		}
 		else if ( this.data_type is Pointer ) {
-			((Pointer)this.data_type).set_type_references ();
+			((Pointer)this.data_type).resolve_type_references ();
 		}
 		else if ( this.data_type is Array ) {
-			((Array)this.data_type).set_type_references ();
+			((Array)this.data_type).resolve_type_references ();
 		}
 	}
 

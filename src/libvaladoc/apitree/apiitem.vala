@@ -1,4 +1,5 @@
-/*
+/* apiitem.vala
+ *
  * Valadoc - a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
@@ -20,10 +21,28 @@
 using Vala;
 using GLib;
 using Gee;
+using Valadoc.Content;
 
-public interface Valadoc.Visitable : Api.Item {
+public abstract class Valadoc.Api.Item : Object {
+	public Valadoc.Settings settings {
+		protected get;
+		set;
+	}
 
-	protected abstract bool is_type_visitor_accessible (Valadoc.Basic element);
+	public Basic parent {
+		protected set;
+		get;
+	}
 
-	public abstract bool is_visitor_accessible ();
+	// TODO rename root
+	public Tree head {
+		protected set;
+		get;
+	}
+
+	protected virtual void resolve_type_references () {
+	}
+
+	protected virtual void parse_comments (DocumentationParser parser) {
+	}
 }

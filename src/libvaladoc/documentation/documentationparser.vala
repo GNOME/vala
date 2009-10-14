@@ -59,18 +59,9 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 	private Parser _parser;
 	private WikiScanner _scanner;
 
-	public Comment? parse (DocumentedElement element) {
-		if (element.documentation != null) {
-			return element.documentation;
-		}
-
-		var comment = element.vcomment as Vala.Comment;
-		if (comment == null) {
-			return null;
-		}
-
-		weak string content = element.vcomment.content;
-		var source_ref = comment.source_reference;
+	public Comment? parse (DocumentedElement element, Vala.Comment source_comment) {
+		weak string content = source_comment.content;
+		var source_ref = source_comment.source_reference;
 		try {
 			Comment doc_comment = parse_comment (content, source_ref.file.filename, source_ref.first_line, source_ref.first_column);
 			doc_comment.check (_tree, element, _reporter);

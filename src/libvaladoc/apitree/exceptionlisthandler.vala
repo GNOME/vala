@@ -17,33 +17,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Vala;
 using GLib;
 using Gee;
 
-
 // rename to ExceptionListHandler
-public interface Valadoc.ExceptionHandler : Basic {
-	protected abstract Gee.ArrayList<DocumentedElement> err_domains {
-		protected set;
-		get;
+public interface Valadoc.ExceptionHandler : Api.Node {
+
+	public Gee.Collection<DocumentedElement> get_error_domains () {
+		return get_children_by_type (Api.NodeType.ERROR_DOMAIN);
 	}
 
-	public Gee.Collection<DocumentedElement> get_error_domains ( ) {
-		return this.err_domains.read_only_view;
-	}
-
-	public void add_exception_list ( Gee.Collection<Vala.DataType> vexceptions ) {
-		foreach ( Vala.DataType vtype in vexceptions  ) {
-				if ( ((Vala.ErrorType)vtype).error_domain == null ) {
-					this.err_domains.add ( glib_error );
-				}
-				else {
-					ErrorDomain type = (ErrorDomain)this.head.search_vala_symbol ( ((Vala.ErrorType)vtype).error_domain );
-					this.err_domains.add ( type );
-				}
+	public void add_exception_list (Gee.Collection<Vala.DataType> vexceptions) {
+		foreach (Vala.DataType vtype in vexceptions) {
+			if (((Vala.ErrorType) vtype).error_domain == null) {
+				add_child ( glib_error );
+			} else {
+				ErrorDomain type = (ErrorDomain) this.head.search_vala_symbol (((Vala.ErrorType) vtype).error_domain);
+				add_child (type);
+			}
 		}
 	}
 }
-

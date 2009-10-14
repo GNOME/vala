@@ -24,17 +24,11 @@ using Gee;
 
 
 
-public class Valadoc.Package : DocumentedElement, NamespaceHandler {
+public class Valadoc.Package : Api.Node, NamespaceHandler {
 	private Gee.ArrayList<Vala.SourceFile> vfiles = new Gee.ArrayList<Vala.SourceFile> ();
 
 	internal void add_file (Vala.SourceFile vfile) {
 		this.vfiles.add (vfile);
-	}
-
-	public Gee.ArrayList<Namespace> namespaces {
-		default = new Gee.ArrayList<Namespace>();
-		private set;
-		private get;
 	}
 
 	public bool is_package {
@@ -91,10 +85,9 @@ public class Valadoc.Package : DocumentedElement, NamespaceHandler {
 		}
 	}
 
-	public Package.with_name (Valadoc.Settings settings, Vala.SourceFile vfile, string name, Tree head, bool is_package = false) {
+	public Package.with_name (Valadoc.Settings settings, Vala.SourceFile vfile, string name, Tree root, bool is_package = false) {
+		base (settings, null, root);
 		this.is_package = is_package;
-		this.settings = settings;
-		this.head = head;
 
 		this.package_name = name;
 
@@ -114,31 +107,15 @@ public class Valadoc.Package : DocumentedElement, NamespaceHandler {
 		}
 	}
 
-	internal override DocumentedElement? search_element (string[] params, int pos) {
-		foreach (Namespace ns in this.namespaces) {
-			DocumentedElement? element = ns.search_element ( params, pos );
-			if (element != null) {
-				return element;
-			}
-		}
-		return null;
-	}
-
-	internal override DocumentedElement? search_element_vala (Gee.ArrayList<Vala.Symbol> params, int pos) {
-		foreach (Namespace ns in this.namespaces) {
-			DocumentedElement? element = ns.search_element_vala (params, pos);
-			if (element != null) {
-				return element;
-			}
-		}
-		return null;
-	}
-
 	internal bool is_vpackage (Vala.SourceFile vfile) {
 		return this.vfiles.contains (vfile);
 	}
 
-	public bool is_visitor_accessible () {
+	protected override bool is_type_visitor_accessible (Valadoc.Basic element) {
+		return true;
+	}
+
+	public override bool is_visitor_accessible () {
 		return !( this.is_package && this.settings.with_deps == false );
 	}
 
@@ -149,12 +126,10 @@ public class Valadoc.Package : DocumentedElement, NamespaceHandler {
 		doclet.visit_package ( this );
 	}
 
-	internal void parse_comments ( DocumentationParser docparser ) {
-		this.parse_namespace_comments ( docparser );
-	}
+	public override Api.NodeType node_type { get { return Api.NodeType.PACKAGE; } }
 
-	internal void set_type_references ( ) {
-		this.set_namespace_type_references ( );
+	public override void accept (Doclet doclet) {
+		visit (doclet);
 	}
 
 	public void write (Langlet langlet, void* ptr) {

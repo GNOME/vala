@@ -17,60 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Vala;
 using GLib;
 using Gee;
 
-
-public interface Valadoc.DelegateHandler : Basic {
-	protected abstract Gee.ArrayList<Delegate> delegates {
-		set;
-		get;
-	}
-
-	protected DocumentedElement? search_delegate_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
-		Vala.Symbol velement = params[pos+1];
-		if ( velement is Vala.Delegate == false )
-			return null;
-
-		foreach ( Delegate del in this.delegates ) {
-			if ( del.is_vdelegate ( (Vala.Delegate)velement ) ) {
-				return del;
-			}
-		}
-		return null;
-	}
-
-	protected DocumentedElement? search_delegate ( string[] params, int pos ) {
-		pos++;
-
-		if ( params[pos+1] != null )
-			return null;
-
-		foreach ( Delegate del in this.delegates ) {
-			if ( del.name == params[pos] )
-				return del;
-		}
-		return null;
-	}
-
+public interface Valadoc.DelegateHandler : Api.Node {
 	public Gee.Collection<Delegate> get_delegate_list ( ) {
-		var lst = new Gee.ArrayList<Delegate> ();
-		foreach ( Delegate del in this.delegates ) {
-			if ( !del.is_type_visitor_accessible ( this ) )
-				continue ;
-
-			lst.add ( del );
-		}
-
-		return lst.read_only_view;
+		return get_children_by_type (Api.NodeType.DELEGATE);
 	}
 
 	public void visit_delegates ( Doclet doclet ) {
-		foreach ( Delegate del in this.delegates ) {
-			del.visit ( doclet );
-		}
+		accept_children_by_type (Api.NodeType.DELEGATE, doclet);
 	}
 
 	public void add_delegates ( Gee.Collection<Vala.Delegate> vdels ) {
@@ -81,19 +38,6 @@ public interface Valadoc.DelegateHandler : Basic {
 
 	public void add_delegate ( Vala.Delegate vdel ) {
 		var tmp = new Delegate ( this.settings, vdel, this, this.head );
-		this.delegates.add ( tmp );
-	}
-
-	public void set_delegate_type_references ( ) {
-		foreach ( Delegate del in this.delegates ) {
-			del.set_type_references ( );
-		}
-	}
-
-	public void parse_delegate_comments ( DocumentationParser docparser ) {
-		foreach ( Delegate del in this.delegates ) {
-			del.parse_comment ( docparser );
-		}
+		add_child ( tmp );
 	}
 }
-

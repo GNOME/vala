@@ -23,16 +23,12 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.ErrorCode : DocumentedElement {
+public class Valadoc.ErrorCode : Api.TypeSymbolNode {
 	private Vala.ErrorCode verrcode;
 
-	public ErrorCode ( Valadoc.Settings settings, Vala.ErrorCode verrcode, ErrorDomain parent, Tree head ) {
-		this.vcomment = verrcode.comment;
-		this.settings = settings;
-		this.verrcode = verrcode;
-		this.vsymbol = verrcode;
-		this.parent = parent;
-		this.head = head;
+	public ErrorCode (Valadoc.Settings settings, Vala.ErrorCode symbol, ErrorDomain parent, Tree root) {
+		base (settings, symbol, parent, root);
+		this.verrcode = symbol;
 	}
 
 	public string get_cname () {
@@ -47,12 +43,14 @@ public class Valadoc.ErrorCode : DocumentedElement {
 		langlet.write_error_code ( this, ptr );
 	}
 
-	public void parse_comment ( DocumentationParser docparser ) {
-		this.parse_comment_helper ( docparser );
-	}
-
 	public void visit ( Doclet doclet ) {
 		doclet.visit_error_code ( this );
+	}
+
+	public override Api.NodeType node_type { get { return Api.NodeType.ERROR_CODE; } }
+
+	public override void accept (Doclet doclet) {
+		visit (doclet);
 	}
 }
 

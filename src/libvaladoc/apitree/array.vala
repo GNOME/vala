@@ -52,11 +52,11 @@ public class Valadoc.Array : Basic {
 		if ( this.data_type == null )
 			/*TODO:possible?*/;
 		else if ( this.data_type is Array )
-			((Array)this.data_type).set_type_references ();
+			((Array)this.data_type).resolve_type_references ();
 		else if ( this.data_type is Pointer )
-			((Pointer)this.data_type).set_type_references ();
+			((Pointer)this.data_type).resolve_type_references ();
 		else
-			((TypeReference)this.data_type).set_type_references ();
+			((TypeReference)this.data_type).resolve_type_references ();
 	}
 }
 

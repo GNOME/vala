@@ -23,22 +23,15 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.Class : DocumentedElement, SymbolAccessibility, Visitable, ClassHandler, StructHandler, SignalHandler, MethodHandler, EnumHandler, PropertyHandler, ConstructionMethodHandler, FieldHandler, DelegateHandler, ConstantHandler, TemplateParameterListHandler {
+public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, SignalHandler, MethodHandler, EnumHandler, PropertyHandler, ConstructionMethodHandler, FieldHandler, DelegateHandler, ConstantHandler, TemplateParameterListHandler {
 	private Gee.ArrayList<Interface> interfaces;
-	private bool inherited = false;
 	private Vala.Class vclass;
 
-	public Class ( Valadoc.Settings settings, Vala.Class vclass, ClassHandler parent, Tree head ) {
-		this.template_param_lst = new Gee.ArrayList<TypeParameter> ();
+	public Class (Valadoc.Settings settings, Vala.Class symbol, ClassHandler parent, Tree root) {
+		base (settings, symbol, parent, root);
 		this.interfaces = new Gee.ArrayList<Interface>();
-		this.methods = new Gee.ArrayList<Method> ();
 
-		this.vcomment = vclass.comment;
-		this.settings = settings;
-		this.vsymbol = vclass;
-		this.vclass = vclass;
-		this.parent = parent;
-		this.head = head;
+		this.vclass = symbol;
 
 		if ( glib_error == null ) {
 			if ( this.full_name () == "GLib.Error" ) {
@@ -50,39 +43,30 @@ public class Valadoc.Class : DocumentedElement, SymbolAccessibility, Visitable, 
 		this.set_template_parameter_list ( vtparams );
 
 		Gee.Collection<Vala.Enum> venums = this.vclass.get_enums ();
-		this.enums = new Gee.ArrayList<Enum> ();
 		this.add_enums ( venums );
 
 		Gee.Collection<Vala.Delegate> vdelegates = this.vclass.get_delegates ();
-		this.delegates = new Gee.ArrayList<Delegate> ();
 		this.add_delegates ( vdelegates );
 
 		Gee.Collection<Vala.Class> vclasses = this.vclass.get_classes();
-		this.classes = new Gee.ArrayList<Class> ();
 		this.add_classes ( vclasses );
 
 		Gee.Collection<Vala.Struct> vstructs = this.vclass.get_structs();
-		this.structs = new Gee.ArrayList<Struct> ();
 		this.add_structs ( vstructs );
 
 		Gee.Collection<Vala.Field> vfields = this.vclass.get_fields();
-		this.fields = new Gee.ArrayList<Field> ();
 		this.add_fields ( vfields );
 
 		Gee.Collection<Vala.Method> vmethods = this.vclass.get_methods ();
-		this.construction_methods = new Gee.ArrayList<Method>();
 		this.add_methods_and_construction_methods ( vmethods );
 
 		Gee.Collection<Vala.Signal> vsignals = this.vclass.get_signals();
-		this.signals = new Gee.ArrayList<Signal>();
 		this.add_signals ( vsignals );
 
 		Gee.Collection<Vala.Property> vproperties = this.vclass.get_properties();
-		this.properties = new Gee.ArrayList<Property>();
 		this.add_properties ( vproperties );
 
 		Gee.Collection<Vala.Constant> vconstants = this.vclass.get_constants();
-		this.constants = new Gee.ArrayList<Constant>();
 		this.add_constants ( vconstants );
 	}
 
@@ -91,166 +75,12 @@ public class Valadoc.Class : DocumentedElement, SymbolAccessibility, Visitable, 
 		get;
 	}
 
-	protected Gee.ArrayList<TypeParameter> template_param_lst {
-		set;
-		get;
-	}
-
-	protected Gee.ArrayList<Method> methods {
-		set;
-		get;
-	}
-
-	protected Gee.ArrayList<Delegate> delegates {
-		private set;
-		get;
-	}
-
-	protected Gee.ArrayList<Enum> enums {
-		private set;
-		get;
-	}
-
-	protected Gee.ArrayList<Field> fields {
-		set;
-		get;
-	}
-
-	protected Gee.ArrayList<Method> construction_methods {
-		set;
-		get;
-	}
-
-	protected Gee.ArrayList<Property> properties {
-		get;
-		set;
-	}
-
-	protected Gee.ArrayList<Class> classes {
-		set;
-		get;
-	}
-
-	protected Gee.ArrayList<Struct> structs {
-		set;
-		get;
-	}
-
-	protected Gee.ArrayList<Signal> signals {
-		get;
-		set;
-	}
-
-	protected Gee.ArrayList<Constant> constants {
-		get;
-		set;
-	}
-
 	public string? get_cname () {
 		return this.vclass.get_cname();
 	}
 
 	public Gee.Collection<Interface> get_implemented_interface_list ( ) {
 		return this.interfaces;
-	}
-
-	internal override DocumentedElement? search_element_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
-		Vala.Symbol velement = params[pos];
-
-		if ( velement is Vala.Class == false )
-			return null;
-
-		if ( !this.is_vclass( (Vala.Class)velement ) )
-			return null;
-
-		if ( params.size == pos+1 )
-			return this;
-
-		velement = params[pos+1];
-
-		DocumentedElement? element = null;
-
-		if ( velement is Vala.Field ) {
-			element = this.search_field_vala ( params, pos );
-		}
-		else if ( velement is Vala.Method ) {
-			element = this.search_method_vala ( params, pos );
-		}
-		else if ( velement is Vala.Delegate ) {
-			element = this.search_delegate_vala ( params, pos );
-		}
-		else if ( velement is Vala.CreationMethod ) {
-			element = this.search_construction_method_vala ( params, pos );
-		}
-		else if ( velement is Vala.Signal ) {
-			element = this.search_signal_vala ( params, pos );
-		}
-		else if ( velement is Vala.Property ) {
-			element = this.search_property_vala ( params, pos );
-		}
-		else if ( velement is Vala.Struct ) {
-			element = this.search_struct_vala ( params, pos );
-		}
-		else if ( velement is Vala.Class ) {
-			element = this.search_class_vala ( params, pos );
-		}
-		else if ( velement is Vala.Enum ) {
-			element = this.search_enum_vala ( params, pos );
-		}
-		else if ( velement is Vala.Constant ) {
-			element = this.search_constant_vala ( params, pos );
-		}
-		return element;
-	}
-
-	internal override DocumentedElement? search_element ( string[] params, int pos ) {
-		if ( !(this.name == params[pos] || params[0] == "this") )
-			return null;
-
-		if ( params[pos] == this.name && params[pos+1] == null )
-			return this;
-
-		DocumentedElement? element = this.search_field ( params, pos );
-		if ( element != null )
-			return element;
-
-		element = this.search_method ( params, pos );
-		if ( element != null )
-			return element;
-
-		element = this.search_delegate ( params, pos );
-		if ( element != null )
-			return element;
-
-		element = this.search_construction_method ( params, pos );
-		if ( element != null )
-			return element;
-
-		element = this.search_signal ( params, pos );
-		if ( element != null )
-			return element;
-
-		element = this.search_property ( params, pos );
-		if ( element != null )
-			return element;
-
-		element = this.search_struct ( params, pos );
-		if ( element != null )
-			return element;
-
-		element = this.search_class ( params, pos );
-		if ( element != null )
-			return element;
-
-		element = this.search_enum ( params, pos );
-		if ( element != null )
-			return element;
-
-		element = this.search_constant ( params, pos );
-		if ( element != null )
-			return element;
-
-		return null;
 	}
 
 	internal bool is_vclass ( Vala.Class vcl ) {
@@ -274,24 +104,10 @@ public class Valadoc.Class : DocumentedElement, SymbolAccessibility, Visitable, 
 		doclet.visit_class ( this );
 	}
 
-	internal void parse_comments ( DocumentationParser docparser ) {
-		if ( this.documentation != null )
-			return ;
+	public override Api.NodeType node_type { get { return Api.NodeType.CLASS; } }
 
-		if ( this.vcomment != null ) {
-			this.parse_comment_helper ( docparser );
-		}
-
-		this.parse_construction_method_comments ( docparser );
-		this.parse_delegate_comments ( docparser );
-		this.parse_constant_comments ( docparser );
-		this.parse_property_comments ( docparser );
-		this.parse_method_comments ( docparser );
-		this.parse_struct_comments ( docparser );
-		this.parse_signal_comments ( docparser );
-		this.parse_class_comments ( docparser );
-		this.parse_field_comments ( docparser );
-		this.parse_enum_comments ( docparser );
+	public override void accept (Doclet doclet) {
+		visit (doclet);
 	}
 
 	private void set_parent_type_references ( Gee.Collection<Vala.DataType> lst ) {
@@ -309,21 +125,11 @@ public class Valadoc.Class : DocumentedElement, SymbolAccessibility, Visitable, 
 		}
 	}
 
-	internal void set_type_references ( ) {
+	protected override void resolve_type_references () {
 		var lst = this.vclass.get_base_types ();
 		this.set_parent_type_references ( lst );
 
-		this.set_template_parameter_list_references ( );
-		this.set_construction_method_references ( );
-		this.set_constant_type_references ( );
-		this.set_delegate_type_references ( );
-		this.set_property_type_references ( );
-		this.set_method_type_references ( );
-		this.set_signal_type_references ( );
-		this.set_field_type_references ( );
-		this.set_enum_type_references ( );
-		this.set_struct_type_references ( );
-		this.set_class_type_references ( );
+		base.resolve_type_references ( );
 	}
 }
 

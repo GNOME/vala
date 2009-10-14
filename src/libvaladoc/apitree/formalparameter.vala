@@ -17,21 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Vala;
 using GLib;
 using Gee;
 
-
-public class Valadoc.FormalParameter : Basic, ReturnTypeHandler {
+public class Valadoc.FormalParameter : Api.SymbolNode, ReturnTypeHandler {
 	private Vala.FormalParameter vformalparam;
 
-	public FormalParameter ( Valadoc.Settings settings, Vala.FormalParameter vformalparam, Basic parent, Tree head ) {
-		this.settings = settings;
-		this.vformalparam = vformalparam;
-		this.vsymbol = vformalparam;
-		this.parent = parent;
-		this.head = head;
+	public FormalParameter (Valadoc.Settings settings, Vala.FormalParameter symbol, ParameterListHandler parent, Tree root) {
+		base (settings, symbol, parent, root);
+		this.vformalparam = symbol;
 
 		var vformparam = this.vformalparam.parameter_type;
 		this.set_ret_type ( vformparam );
@@ -66,17 +61,18 @@ public class Valadoc.FormalParameter : Basic, ReturnTypeHandler {
 		}
 	}
 
-	public string? name {
-		owned get {
-			return ( this.vformalparam.name == null )? "" : this.vformalparam.name;
-		}
+	public override Api.NodeType node_type { get { return Api.NodeType.FORMAL_PARAMETER; } }
+
+	public override void accept (Doclet doclet) {
 	}
 
-	internal void set_type_references ( ) {
-		if ( this.vformalparam.ellipsis )
+	protected override void resolve_type_references () {
+		if (this.vformalparam.ellipsis)
 			return ;
 
-		((ReturnTypeHandler)this).set_return_type_references ( );
+		this.set_return_type_references ();
+
+		base.resolve_type_references ();
 	}
 
 	public void write ( Langlet langlet, void* ptr ) {

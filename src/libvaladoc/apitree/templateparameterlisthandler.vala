@@ -17,45 +17,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Vala;
 using GLib;
 using Gee;
 
-
-public interface Valadoc.TemplateParameterListHandler : Basic {
-	protected abstract Gee.ArrayList<TypeParameter> template_param_lst {
-		set;
-		get;
+public interface Valadoc.TemplateParameterListHandler : Api.Node {
+	public Gee.Collection<TypeParameter> get_template_param_list () {
+		return get_children_by_type (Api.NodeType.TYPE_PARAMETER);
 	}
 
-	public TypeParameter? find_vtemplateparameter ( Vala.GenericType vttype ) {
-		foreach ( TypeParameter tparam in this.template_param_lst ) {
-			if ( tparam.is_vtypeparam ( vttype.type_parameter ) )
-				return tparam;
-		}
-
-		if ( this.parent is TemplateParameterListHandler )
-			return ((TemplateParameterListHandler)this.parent).find_vtemplateparameter ( vttype );
-
-		return null;
-	}
-
-	public Gee.Collection<TypeParameter> get_template_param_list ( ) {
-		return this.template_param_lst.read_only_view;
-	} 
-
-	internal void set_template_parameter_list ( Gee.Collection<Vala.TypeParameter> vtparams ) {
+	internal void set_template_parameter_list (Gee.Collection<Vala.TypeParameter> vtparams) {
 		foreach ( Vala.TypeParameter vtparam in vtparams ) {
-			var tmp = new TypeParameter ( this.settings, vtparam, this, this.head );
-			this.template_param_lst.add ( tmp );
-		}
-	}
-
-	internal void set_template_parameter_list_references ( ) {
-		foreach ( TypeParameter tparam in this.template_param_lst ) {
-			tparam.set_type_reference ( );
+			var tmp = new TypeParameter (this.settings, vtparam, this, this.head);
+			add_child (tmp);
 		}
 	}
 }
-

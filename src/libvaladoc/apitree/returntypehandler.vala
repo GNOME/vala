@@ -17,11 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Vala;
 using GLib;
 using Gee;
-
 
 public interface Valadoc.ReturnTypeHandler : Basic {
 	public abstract TypeReference? type_reference {
@@ -29,11 +27,11 @@ public interface Valadoc.ReturnTypeHandler : Basic {
 		get;
 	}
 
-	internal void set_return_type_references ( ) {
+	internal void set_return_type_references () {
 		if ( this.type_reference == null )
 			return ;
 
-		this.type_reference.set_type_references ( );
+		this.type_reference.resolve_type_references ();
 	}
 
 	// rename
@@ -42,4 +40,3 @@ public interface Valadoc.ReturnTypeHandler : Basic {
 		this.type_reference = tmp;
 	}
 }
-

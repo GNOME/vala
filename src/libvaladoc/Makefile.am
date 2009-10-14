@@ -33,7 +33,12 @@ libvaladoc_la_VALASOURCES = \
 	documentation/documentationparser.vala \
 	documentation/wiki.vala \
 	documentation/wikiscanner.vala \
+	apitree/apiitem.vala \
+	apitree/apimembernode.vala \
+	apitree/apinode.vala \
+	apitree/apisymbolnode.vala \
 	apitree/apitree.vala \
+	apitree/apitypesymbolnode.vala \
 	apitree/array.vala \
 	apitree/basic.vala \
 	apitree/class.vala \

@@ -23,19 +23,10 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.TypeParameter : Basic, ReturnTypeHandler {
-	private Vala.TypeParameter vtypeparam;
+public class Valadoc.TypeParameter : Api.SymbolNode, ReturnTypeHandler {
 
-	public bool is_vtypeparam ( Vala.TypeParameter vtypeparam ) {
-		return this.vtypeparam == vtypeparam;
-	}
-
-	public TypeParameter ( Valadoc.Settings settings, Vala.TypeParameter vtypeparam, Basic parent, Tree head ) {
-		this.vtypeparam = vtypeparam;
-		this.vsymbol = vtypeparam;
-		this.settings = settings;
-		this.parent = parent;
-		this.head = head;
+	public TypeParameter (Valadoc.Settings settings, Vala.TypeParameter symbol, TemplateParameterListHandler parent, Tree root) {
+		base (settings, symbol, parent, root);
 	}
 
 	public TypeReference? type_reference {
@@ -43,17 +34,12 @@ public class Valadoc.TypeParameter : Basic, ReturnTypeHandler {
 		get;
 	}
 
+	public override Api.NodeType node_type { get { return Api.NodeType.TYPE_PARAMETER; } }
+
+	public override void accept (Doclet doclet) {
+	}
+
 	public void write ( Langlet langlet, void* ptr ) {
 		langlet.write_type_parameter ( this, ptr );
 	}
-
-	public string? name {
-		owned get {
-			return this.vtypeparam.name;
-		}
-	}
-
-	internal void set_type_reference ( ) {
-	}
 }
-

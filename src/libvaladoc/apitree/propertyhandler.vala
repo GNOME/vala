@@ -17,49 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Vala;
 using GLib;
 using Gee;
 
-
-public interface Valadoc.PropertyHandler : Basic {
-	protected abstract Gee.ArrayList<Property> properties {
-		get;
-		set;
-	}
-
-	protected DocumentedElement? search_property_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
-		Vala.Symbol velement = params[pos+1];
-		if ( velement is Vala.Property == false )
-			return null;
-
-		if ( params.size != pos+2 )
-			return null;
-
-		foreach ( Property prop in this.properties ) {
-			if ( prop.is_vproperty ( (Vala.Property)velement ) ) {
-				return prop;
-			}
-		}
-		return null;
-	}
-
-	protected DocumentedElement? search_property ( string[] params, int pos ) {
-		pos++;
-
-		if ( params[pos+1] != null )
-			return null;
-
-		foreach ( Property prop in this.properties ) {
-			if ( prop.name == params[pos] )
-				return prop;
-		}
-		return null;
-	}
-
+public interface Valadoc.PropertyHandler : Api.Node {
 	protected bool is_overwritten_property ( Property prop ) {
-		foreach ( Property p in this.properties ) {
+		foreach ( Property p in get_property_list () ) {
 			if ( p.parent != this )
 				continue ;
 
@@ -73,39 +37,17 @@ public interface Valadoc.PropertyHandler : Basic {
 	}
 
 	public Gee.Collection<Property> get_property_list ( ) {
-		var lst = new Gee.ArrayList<Property> ();
-		foreach ( Property p in this.properties ) {
-			if ( !p.is_type_visitor_accessible ( this ) )
-				continue ;
-
-			lst.add ( p );
-		}
-
-		return lst.read_only_view;
-	}
-
-	protected void parse_property_comments ( DocumentationParser docparser ) {
-		foreach ( Property prop in this.properties ) {
-			prop.parse_comment ( docparser );
-		}
+		return get_children_by_type (Api.NodeType.PROPERTY);
 	}
 
 	public void visit_properties ( Doclet doclet ) {
-		foreach ( Property prop in this.get_property_list () )
-			prop.visit ( doclet );
-	}
-
-	protected void set_property_type_references () {
-		foreach ( Property prop in this.properties ) {
-			prop.set_type_references ( );
-		}
+		accept_children_by_type (Api.NodeType.PROPERTY, doclet);
 	}
 
 	protected void add_properties ( Gee.Collection<Vala.Property> vproperties ) {
 		foreach ( Vala.Property vprop in vproperties ) {
 			var tmp = new Property ( this.settings, vprop, this, this.head );
-			this.properties.add ( tmp );
+			add_child ( tmp );
 		}
 	}
 }
-

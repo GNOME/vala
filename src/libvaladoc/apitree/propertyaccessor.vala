@@ -23,63 +23,22 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.PropertyAccessor : Object {
+public class Valadoc.PropertyAccessor : Api.SymbolNode {
 	private Vala.PropertyAccessor vpropacc;
 
-	public PropertyAccessor ( Valadoc.Settings settings, Vala.PropertyAccessor vpropacc, Property parent, Tree head ) {
-		this.settings = settings;
-		this.vpropacc = vpropacc;
-		this.parent = parent;
-		this.head = head;
+	public PropertyAccessor (Valadoc.Settings settings, Vala.PropertyAccessor symbol, Property parent, Tree root) {
+		base (settings, symbol, parent, root);
+		this.vpropacc = symbol;
 	}
 
-	public Tree head {
-		set;
-		get;
-	}
+	public override Api.NodeType node_type { get { return Api.NodeType.PROPERTY_ACCESSOR; } }
 
-	public Settings settings {
-		set;
-		get;
-	}
-
-	public Property parent {
-		private set;
-		get;
-	}
-
-	public Tree tree {
-		set;
-		get;
+	public override void accept (Doclet doclet) {
 	}
 
 	public bool is_construct {
 		get {
 			return this.vpropacc.construction;
-		}
-	}
-
-	public bool is_protected {
-		get {
-			return this.vpropacc.access == Vala.SymbolAccessibility.PROTECTED;
-		}
-	}
-
-	public bool is_public {
-		get {
-			return this.vpropacc.access == Vala.SymbolAccessibility.PUBLIC;
-		}
-	}
-
-	public bool is_private {
-		get {
-			return this.vpropacc.access == Vala.SymbolAccessibility.PRIVATE;
-		}
-	}
-
-	public bool is_internal {
-		get {
-			return this.vpropacc.access == Vala.SymbolAccessibility.INTERNAL;
 		}
 	}
 

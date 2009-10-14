@@ -17,57 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Vala;
 using GLib;
 using Gee;
 
-
-public interface Valadoc.FieldHandler : Basic {
-	protected abstract Gee.ArrayList<Field> fields {
-		protected set;
-		get;
-	}
-
-	protected DocumentedElement? search_field_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
-		Vala.Symbol velement = params[pos+1];
-		if ( velement is Vala.Field == false )
-			return null;
-
-		if ( params.size != pos+2 )
-			return null;
-
-		foreach ( Field f in this.fields ) {
-			if ( f.is_vfield ( (Vala.Field)velement ) ) {
-				return f;
-			}
-		}
-		return null;
-	}
-
-	internal DocumentedElement? search_field ( string[] params, int pos ) {
-		pos++;
-
-		if ( params[pos+1] != null )
-			return null;
-
-		foreach ( Field f in this.fields ) {
-			if ( f.name == params[pos] )
-				return f;
-		}
-		return null;
-	}
-
+public interface Valadoc.FieldHandler : Api.Node {
 	public Gee.Collection<Field> get_field_list ( ) {
-		var lstd = new Gee.ArrayList<Field> ();
-		foreach ( Field f in this.fields ) {
-			if ( !f.is_type_visitor_accessible ( this ) )
-				continue ;
-
-			lstd.add ( f );
-		}
-
-		return lstd.read_only_view;
+		return get_children_by_type (Api.NodeType.FIELD);
 	}
 
 	internal void add_fields ( Gee.Collection<Vala.Field> vfields ) {
@@ -77,29 +33,11 @@ public interface Valadoc.FieldHandler : Basic {
 	}
 
 	internal void add_field ( Vala.Field vf ) {
-		//if ( vf.generated == true )
-		//	return ;
-
 		var tmp = new Field ( this.settings, vf, this, this.head );
-		this.fields.add ( tmp );
-	}
-
-	internal void set_field_type_references ( ) {
-		foreach ( Field field in this.fields ) {
-			field.set_type_references ( );
-		}
-	}
-
-	internal void parse_field_comments ( DocumentationParser docparser ) {
-		foreach ( Field field in this.fields ) {
-			field.parse_comment ( docparser );
-		}
+		add_child ( tmp );
 	}
 
 	public void visit_fields ( Doclet doclet ) {
-		foreach ( Field field in this.get_field_list() ) {
-			field.visit ( doclet, this );
-		}
+		accept_children_by_type (Api.NodeType.FIELD, doclet);
 	}
 }
-

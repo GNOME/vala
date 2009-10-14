@@ -23,16 +23,21 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.EnumValue: DocumentedElement {
+public class Valadoc.EnumValue: Api.SymbolNode {
 	private Vala.EnumValue venval;
 
-	public EnumValue ( Valadoc.Settings settings, Vala.EnumValue venval, Enum parent, Tree head ) {
-		this.vcomment = venval.comment;
-		this.settings = settings;
-		this.vsymbol = venval;
-		this.venval = venval;
-		this.parent = parent;
-		this.head = head;
+	public EnumValue (Valadoc.Settings settings, Vala.EnumValue symbol, Enum parent, Tree root) {
+		base (settings, symbol, parent, root);
+		this.venval = symbol;
+	}
+
+	protected override void parse_comments (DocumentationParser parser) {
+		var source_comment = ((Vala.EnumValue) symbol).comment;
+		if (source_comment != null) {
+			documentation = parser.parse (this, source_comment);
+		}
+
+		base.parse_comments (parser);
 	}
 
 	public string get_cname () {
@@ -43,16 +48,18 @@ public class Valadoc.EnumValue: DocumentedElement {
 		return ( this.venval == venval );
 	}
 
-	public void parse_comment ( DocumentationParser docparser ) {
-		this.parse_comment_helper ( docparser );
-	}
-
 	public void write ( Langlet langlet, void* ptr ) {
 		langlet.write_enum_value ( this, ptr );
 	}
 
 	public void visit ( Doclet doclet ) {
 		doclet.visit_enum_value ( this );
+	}
+
+	public override Api.NodeType node_type { get { return Api.NodeType.ENUM_VALUE; } }
+
+	public override void accept (Doclet doclet) {
+		visit (doclet);
 	}
 }
 

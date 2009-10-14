@@ -23,20 +23,12 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.Method : DocumentedElement, ParameterListHandler, ExceptionHandler, TemplateParameterListHandler, SymbolAccessibility, ReturnTypeHandler, Visitable {
+public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHandler, TemplateParameterListHandler, ReturnTypeHandler {
 	private Vala.Method vmethod;
 
-	public Method (Valadoc.Settings settings, Vala.Method vmethod, MethodHandler parent, Tree head) {
-		this.template_param_lst = new Gee.ArrayList<TypeParameter> ();
-		this.param_list = new Gee.ArrayList<FormalParameter> ();
-		this.err_domains = new Gee.ArrayList<DocumentedElement> ();
-
-		this.vcomment = vmethod.comment;
-		this.settings = settings;
-		this.vsymbol = vmethod;
-		this.vmethod = vmethod;
-		this.parent = parent;
-		this.head = head;
+	public Method (Valadoc.Settings settings, Vala.Method symbol, MethodHandler parent, Tree root) {
+		base (settings, symbol, parent, root);
+		this.vmethod = symbol;
 
 		var vret = this.vmethod.return_type;
 		this.set_ret_type (vret);
@@ -46,10 +38,6 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 
 		var vtparams = this.vmethod.get_type_parameters ();
 		this.set_template_parameter_list (vtparams);
-	}
-
-	internal bool is_vmethod (Vala.Method vm) {
-		return (this.vmethod == vm);
 	}
 
 	public string? get_cname () {
@@ -64,35 +52,6 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 	public TypeReference? type_reference {
 		protected set;
 		get;
-	}
-
-	public Gee.ArrayList<TypeParameter> template_param_lst {
-		protected set;
-		get;
-	}
-
-	public Gee.ArrayList<FormalParameter> param_list {
-		protected set;
-		get;
-	}
-
-	public Gee.ArrayList<DocumentedElement> err_domains {
-		protected set;
-		get;
-	}
-
-	internal bool equals (Method m) {
-		return (m.vmethod == this.vmethod);
-	}
-
-	internal void parse_comment (DocumentationParser docparser) {
-		if (this.documentation != null)
-			return ;
-
-		if (this.vcomment == null)
-			return ;
-
-		this.parse_comment_helper (docparser);
 	}
 
 	public bool is_yields {
@@ -154,7 +113,7 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 		}
 	}
 
-	internal void set_type_references ( ) {
+	protected override void resolve_type_references () {
 		Vala.Method? vm = null;
 		if (vmethod.base_method != null) {
 			vm = vmethod.base_method;
@@ -168,12 +127,12 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 			this.base_method = (Method?) this.head.search_vala_symbol (vm);
 		}
 
-		this.set_return_type_references ();
-		this.set_parameter_list_type_references ();
-		this.set_template_parameter_list_references ();
-
 		var vexceptionlst = this.vmethod.get_error_types ();
 		this.add_exception_list ( vexceptionlst );
+
+		this.set_return_type_references ();
+
+		base.resolve_type_references ( );
 	}
 
 	public void visit ( Doclet doclet, Valadoc.MethodHandler in_type ) {
@@ -181,6 +140,16 @@ public class Valadoc.Method : DocumentedElement, ParameterListHandler, Exception
 			return ;
 
 		doclet.visit_method ( this, in_type );
+	}
+
+	public override Api.NodeType node_type {
+		get {
+			return is_constructor ? Api.NodeType.CREATION_METHOD : Api.NodeType.METHOD;
+		}
+	}
+
+	public override void accept (Doclet doclet) {
+		visit (doclet, (MethodHandler) parent);
 	}
 
 	public void write ( Langlet langlet, void* ptr, Valadoc.MethodHandler parent ) {

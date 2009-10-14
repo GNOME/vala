@@ -23,23 +23,15 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.Field : DocumentedElement, SymbolAccessibility, ReturnTypeHandler, Visitable {
+public class Valadoc.Field : Api.MemberNode, ReturnTypeHandler {
 	private Vala.Field vfield;
 
-	public Field ( Valadoc.Settings settings, Vala.Field vfield, FieldHandler parent, Tree head ) {
-		this.vcomment = vfield.comment;
-		this.settings = settings;
-		this.vsymbol = vfield;
-		this.vfield = vfield;
-		this.parent = parent;
-		this.head = head;
+	public Field (Valadoc.Settings settings, Vala.Field symbol, FieldHandler parent, Tree root) {
+		base (settings, symbol, parent, root);
+		this.vfield = symbol;
 
 		var vret = this.vfield.field_type;
 		this.set_ret_type ( vret );
-	}
-
-	internal bool is_vfield ( Vala.Field vfield ) {
-		return ( this.vfield == vfield );
 	}
 
 	public string? get_cname () {
@@ -66,12 +58,10 @@ public class Valadoc.Field : DocumentedElement, SymbolAccessibility, ReturnTypeH
 		}
 	}
 
-	internal void set_type_references ( ) {
-		((ReturnTypeHandler)this).set_return_type_references ( );
-	}
+	protected override void resolve_type_references () {
+		this.set_return_type_references ();
 
-	internal void parse_comment ( DocumentationParser docparser ) {
-		this.parse_comment_helper ( docparser );
+		base.resolve_type_references ();
 	}
 
 	public void visit ( Doclet doclet, FieldHandler? parent ) {
@@ -79,6 +69,12 @@ public class Valadoc.Field : DocumentedElement, SymbolAccessibility, ReturnTypeH
 			return ;
 
 		doclet.visit_field ( this, parent );
+	}
+
+	public override Api.NodeType node_type { get { return Api.NodeType.FIELD; } }
+
+	public override void accept (Doclet doclet) {
+		visit (doclet, (FieldHandler) parent);
 	}
 
 	public void write ( Langlet langlet, void* ptr, FieldHandler parent ) {

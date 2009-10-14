@@ -23,17 +23,13 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.Property : DocumentedElement, SymbolAccessibility, ReturnTypeHandler, Visitable {
+public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 	private Vala.Property vproperty;
 
-	public Property (Valadoc.Settings settings, Vala.Property vproperty, PropertyHandler parent, Tree head) {
-		this.vcomment = vproperty.comment;
-		this.settings = settings;
-		this.parent = parent;
-		this.head = head;
+	public Property (Valadoc.Settings settings, Vala.Property symbol, PropertyHandler parent, Tree root) {
+		base (settings, symbol, parent, root);
 
-		this.vsymbol = vproperty;
-		this.vproperty = vproperty;
+		this.vproperty = symbol;
 
 		var ret = this.vproperty.property_type;
 		this.set_ret_type (ret);
@@ -97,7 +93,8 @@ public class Valadoc.Property : DocumentedElement, SymbolAccessibility, ReturnTy
 		get;
 	}
 
-	internal void set_type_references ( ) {
+
+	protected override void resolve_type_references () {
 		Vala.Property? vp = null;
 		if (vproperty.base_property != null) {
 			vp = vproperty.base_property;
@@ -113,21 +110,17 @@ public class Valadoc.Property : DocumentedElement, SymbolAccessibility, ReturnTy
 		this.set_return_type_references ( );
 	}
 
-	public void parse_comment (DocumentationParser docparser) {
-		if (this.documentation != null)
-			return ;
-
-		if (this.vcomment == null)
-			return ;
-
-		this.parse_comment_helper (docparser);
-	}
-
 	public void visit (Doclet doclet) {
 		if (!this.is_visitor_accessible ())
 			return ;
 
 		doclet.visit_property (this);
+	}
+
+	public override Api.NodeType node_type { get { return Api.NodeType.PROPERTY; } }
+
+	public override void accept (Doclet doclet) {
+		visit (doclet);
 	}
 
 	public void write (Langlet langlet, void* ptr) {

@@ -51,16 +51,16 @@ public class Valadoc.Pointer : Basic {
 		langlet.write_pointer (this, ptr, parent);
 	}
 
-	public void set_type_references () {
+	protected override void resolve_type_references () {
 		Basic type = this.data_type;
 		if ( type == null )
 			;
 		else if ( type is Array )
-			((Array)type).set_type_references ();
+			((Array)type).resolve_type_references ();
 		else if ( type is Pointer )
-			((Pointer)type ).set_type_references ();
+			((Pointer)type ).resolve_type_references ();
 		else
-			((TypeReference)type).set_type_references ();
+			((TypeReference)type).resolve_type_references ();
 	}
 }
 

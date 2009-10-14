@@ -17,63 +17,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Vala;
 using GLib;
 using Gee;
 
-
-public interface Valadoc.ErrorDomainHandler : Basic {
-	protected abstract Gee.ArrayList<ErrorDomain> errdoms {
-		set;
-		get;
+public interface Valadoc.ErrorDomainHandler : Api.Node {
+	public Gee.Collection<ErrorDomain> get_error_domain_list () {
+		return get_children_by_type (Api.NodeType.ERROR_DOMAIN);
 	}
 
-	protected DocumentedElement? search_error_domain_vala ( Gee.ArrayList<Vala.Symbol> params, int pos ) {
-		foreach ( ErrorDomain errdom in this.errdoms ) {
-			DocumentedElement? element = errdom.search_element_vala ( params, pos+1 );
-			if ( element != null )
-				return element;
-		}
-		return null;
+	public void visit_error_domains (Doclet doclet) {
+		accept_children_by_type (Api.NodeType.ERROR_DOMAIN, doclet);
 	}
 
-	protected DocumentedElement? search_error_domain ( string[] params, int pos ) {
-		foreach ( ErrorDomain errdom in this.errdoms ) {
-			DocumentedElement? element = errdom.search_element ( params, pos+1 );
-			if ( element != null )
-				return element;
-		}
-		return null;
-	}
-
-	public Gee.Collection<ErrorDomain> get_error_domain_list ( ) {
-		var lst = new Gee.ArrayList<ErrorDomain> ();
-		foreach ( ErrorDomain errdom in this.errdoms ) {
-			if ( !errdom.is_type_visitor_accessible ( this ) )
-				continue ;
-
-			lst.add ( errdom );
-		}
-
-		return lst.read_only_view;
-	}
-
-	internal ErrorDomain? find_errordomain ( Vala.ErrorDomain ver ) {
-		foreach ( ErrorDomain errdom in this.errdoms ) {
-			if ( errdom.is_verrordomain( ver ) )
-				return errdom;
-		}
-		return null;
-	}
-
-	public void visit_error_domains ( Doclet doclet ) {
-		foreach ( ErrorDomain errdom in this.errdoms ) {
-			errdom.visit ( doclet );
-		}
-	}
-
-	public void add_error_domains ( Gee.Collection<Vala.ErrorDomain> verrdoms ) {
+	public void add_error_domains (Gee.Collection<Vala.ErrorDomain> verrdoms) {
 		foreach ( Vala.ErrorDomain verrdom in  verrdoms ) {
 			this.add_error_domain ( verrdom );
 		}
@@ -81,19 +38,6 @@ public interface Valadoc.ErrorDomainHandler : Basic {
 
 	public void add_error_domain ( Vala.ErrorDomain verrdom ) {
 		var tmp = new ErrorDomain ( this.settings, verrdom, this, this.head );
-		this.errdoms.add ( tmp );
-	}
-
-	protected void set_errordomain_type_referenes ( ) {
-		foreach ( ErrorDomain errdom in this.errdoms ) {
-			errdom.set_type_references ( );
-		}
-	}
-
-	protected void parse_errordomain_comments ( DocumentationParser docparser ) {
-		foreach ( ErrorDomain errdom in this.errdoms ) {
-			errdom.parse_comments ( docparser );
-		}
+		add_child ( tmp );
 	}
 }
-

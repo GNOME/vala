@@ -23,20 +23,13 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.Delegate : DocumentedElement, SymbolAccessibility, Visitable, ParameterListHandler, ReturnTypeHandler, TemplateParameterListHandler, ExceptionHandler {
+public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, ReturnTypeHandler, TemplateParameterListHandler, ExceptionHandler {
 	private Vala.Delegate vdelegate;
 
-	public Delegate ( Valadoc.Settings settings, Vala.Delegate vdelegate, DelegateHandler parent, Tree head ) {
-		this.template_param_lst = new Gee.ArrayList<TypeParameter> ();
-		this.param_list = new Gee.ArrayList<FormalParameter>();
-		this.err_domains = new Gee.ArrayList<DocumentedElement>();
+	public Delegate (Valadoc.Settings settings, Vala.Delegate symbol, DelegateHandler parent, Tree root) {
+		base (settings, symbol, parent, root);
 
-		this.vcomment = vdelegate.comment;
-		this.settings = settings;
-		this.vdelegate = vdelegate;
-		this.vsymbol = vdelegate;
-		this.parent = parent;
-		this.head = head;
+		this.vdelegate = symbol;
 
 		var ret = this.vdelegate.return_type;
 		this.set_ret_type ( ret );
@@ -61,19 +54,10 @@ public class Valadoc.Delegate : DocumentedElement, SymbolAccessibility, Visitabl
 		doclet.visit_delegate ( this );
 	}
 
-	public Gee.ArrayList<TypeParameter> template_param_lst {
-		protected set;
-		get;
-	}
+	public override Api.NodeType node_type { get { return Api.NodeType.DELEGATE; } }
 
-	protected Gee.ArrayList<FormalParameter> param_list {
-		protected set;
-		get;
-	}
-
-	protected Gee.ArrayList<DocumentedElement> err_domains {
-		protected set;
-		get;
+	public override void accept (Doclet doclet) {
+		visit (doclet);
 	}
 
 	public bool is_static {
@@ -82,20 +66,11 @@ public class Valadoc.Delegate : DocumentedElement, SymbolAccessibility, Visitabl
 		}
 	}
 
-	internal void set_type_references ( ) {
+	protected override void resolve_type_references () {
 		this.set_return_type_references ( );
-		this.set_parameter_list_type_references ( );
 
 		var vexceptionlst = this.vdelegate.get_error_types ();
 		this.add_exception_list ( vexceptionlst );
-	}
-
-	internal void parse_comment ( DocumentationParser docparser ) {
-		this.parse_comment_helper ( docparser );
-	}
-
-	internal bool is_vdelegate (Vala.Delegate vdel) {
-		return (this.vdelegate == vdel);
 	}
 
 	public void write (Langlet langlet, void* ptr) {
