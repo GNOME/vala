@@ -57,6 +57,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		var dynamic_method = (DynamicMethod) method;
 
 		var func = new CCodeFunction (method.get_cname ());
+		func.modifiers = CCodeModifiers.STATIC;
 
 		var cparam_map = new HashMap<int,CCodeFormalParameter> (direct_hash, direct_equal);
 
