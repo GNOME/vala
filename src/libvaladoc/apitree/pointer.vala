@@ -32,18 +32,17 @@ public class Valadoc.Pointer : Basic {
 		get;
 	}
 
-	public Pointer (Valadoc.Settings settings, Vala.PointerType vtyperef, Basic parent) {
-		this.settings = settings;
+	public Pointer (Vala.PointerType vtyperef, Api.Item parent) {
 		this.vtype = vtyperef;
 		this.parent = parent;
 
 		Vala.DataType vntype = vtype.base_type;
 		if (vntype is Vala.PointerType)
-			this.data_type = new Pointer (settings, (Vala.PointerType) vntype, this);
+			this.data_type = new Pointer ((Vala.PointerType) vntype, this);
 		else if (vntype is Vala.ArrayType)
-			this.data_type = new Array (settings, (Vala.ArrayType) vntype, this);
+			this.data_type = new Array ((Vala.ArrayType) vntype, this);
 		else
-			this.data_type = new TypeReference (settings, vntype, this);
+			this.data_type = new TypeReference (vntype, this);
 	}
 
 	public void write (Langlet langlet, void* ptr, DocumentedElement parent) {

@@ -29,15 +29,4 @@ public interface Valadoc.EnumHandler : Api.Node {
 	public void visit_enums ( Doclet doclet ) {
 		accept_children_by_type (Api.NodeType.ENUM, doclet);
 	}
-
-	public void add_enums ( Gee.Collection<Vala.Enum> venums ) {
-		foreach ( Vala.Enum venum in venums ) {
-			this.add_enum ( venum );
-		}
-	}
-
-	public void add_enum ( Vala.Enum venum ) {
-		Enum tmp = new Enum (this.settings, venum, this);
-		add_child (tmp);
-	}
 }

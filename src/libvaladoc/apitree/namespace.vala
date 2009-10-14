@@ -29,8 +29,8 @@ public class Valadoc.Namespace : Api.SymbolNode, MethodHandler, FieldHandler, Na
 {
 	private Comment source_comment;
 
-	public Namespace (Valadoc.Settings settings, Vala.Namespace symbol, NamespaceHandler parent) {
-		base (settings, symbol, parent);
+	public Namespace (Vala.Namespace symbol, NamespaceHandler parent) {
+		base (symbol, parent);
 
 		this.vnspace = symbol;
 
@@ -44,12 +44,12 @@ public class Valadoc.Namespace : Api.SymbolNode, MethodHandler, FieldHandler, Na
 		}
 	}
 
-	protected override void parse_comments (DocumentationParser parser) {
+	protected override void process_comments (Settings settings, DocumentationParser parser) {
 		if (source_comment != null) {
 			documentation = parser.parse (this, source_comment);
 		}
 
-		base.parse_comments (parser);
+		base.process_comments (settings, parser);
 	}
 
 	public void visit (Doclet doclet) {

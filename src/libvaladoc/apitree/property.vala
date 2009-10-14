@@ -26,8 +26,8 @@ using Gee;
 public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 	private Vala.Property vproperty;
 
-	public Property (Valadoc.Settings settings, Vala.Property symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public Property (Vala.Property symbol, Api.Node parent) {
+		base (symbol, parent);
 
 		this.vproperty = symbol;
 
@@ -35,11 +35,11 @@ public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 		this.set_ret_type (ret);
 
 		if (this.vproperty.get_accessor != null) {
-			this.getter = new PropertyAccessor (this.settings, this.vproperty.get_accessor, this);
+			this.getter = new PropertyAccessor (this.vproperty.get_accessor, this);
 		}
 
 		if (this.vproperty.set_accessor != null) {
-			this.setter = new PropertyAccessor (this.settings, this.vproperty.set_accessor, this);
+			this.setter = new PropertyAccessor (this.vproperty.set_accessor, this);
 		}
 	}
 
@@ -111,9 +111,6 @@ public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 	}
 
 	public void visit (Doclet doclet) {
-		if (!this.is_visitor_accessible ())
-			return ;
-
 		doclet.visit_property (this);
 	}
 

@@ -35,8 +35,8 @@ public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 		return ( this.vconst == vconst );
 	}
 
-	public Constant (Valadoc.Settings settings, Vala.Constant symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public Constant (Vala.Constant symbol, Api.Node parent) {
+		base (symbol, parent);
 		this.vconst = symbol;
 
 		var vret = this.vconst.type_reference;
@@ -52,9 +52,6 @@ public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 	}
 
 	public void visit ( Doclet doclet, ConstantHandler? parent ) {
-		if ( !this.is_visitor_accessible ( ) )
-			return ;
-
 		doclet.visit_constant ( this, parent );
 	}
 

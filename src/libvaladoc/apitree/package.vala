@@ -71,32 +71,14 @@ public class Valadoc.Package : Api.Node, NamespaceHandler {
 		return this._dependencies.read_only_view;
 	}
 
-	private static string extract_package_name ( Settings settings, Vala.SourceFile vfile ) {
-		if ( vfile.filename.has_suffix (".vapi") ) {
-			string file_name = GLib.Path.get_basename (vfile.filename);
-			return file_name.ndup ( file_name.size() - ".vapi".size() );
-		}
-		else if ( vfile.filename.has_suffix (".gidl") ) {
-			string file_name = GLib.Path.get_basename (vfile.filename);
-			return file_name.ndup ( file_name.size() - ".gidl".size() );
-		}
-		else {
-			return settings.pkg_name;
-		}
-	}
-
-	public Package.with_name (Valadoc.Settings settings, Vala.SourceFile vfile, string name, bool is_package = false) {
-		base (settings, null);
+	public Package (Vala.SourceFile vfile, string name, bool is_package = false) {
+		base (null);
 		this.is_package = is_package;
 
 		this.package_name = name;
 
 		this.vfiles.add (vfile);
 		this.parent = null;
-	}
-
-	public Package (Valadoc.Settings settings, Vala.SourceFile vfile, bool is_package = false) {
-		this.with_name (settings, vfile, this.extract_package_name (settings, vfile), is_package);
 	}
 
 	private string package_name;
@@ -116,18 +98,11 @@ public class Valadoc.Package : Api.Node, NamespaceHandler {
 		return this.vfiles.contains (source_file);
 	}
 
-	protected override bool is_type_visitor_accessible (Valadoc.Basic element) {
-		return true;
-	}
-
-	public override bool is_visitor_accessible () {
-		return !( this.is_package && this.settings.with_deps == false );
+	public override bool is_visitor_accessible (Settings settings) {
+		return !( this.is_package && settings.with_deps == false );
 	}
 
 	public void visit ( Doclet doclet ) {
-		if ( !this.is_visitor_accessible () ) {
-			return ;
-		}
 		doclet.visit_package ( this );
 	}
 

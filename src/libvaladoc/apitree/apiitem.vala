@@ -24,12 +24,7 @@ using Gee;
 using Valadoc.Content;
 
 public abstract class Valadoc.Api.Item : Object {
-	public Valadoc.Settings settings {
-		protected get;
-		set;
-	}
-
-	public Basic parent {
+	public Api.Item parent {
 		protected set;
 		get;
 	}
@@ -37,6 +32,6 @@ public abstract class Valadoc.Api.Item : Object {
 	protected virtual void resolve_type_references (Tree root) {
 	}
 
-	protected virtual void parse_comments (DocumentationParser parser) {
+	protected virtual void process_comments (Settings settings, DocumentationParser parser) {
 	}
 }

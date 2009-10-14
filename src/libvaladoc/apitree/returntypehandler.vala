@@ -36,7 +36,7 @@ public interface Valadoc.ReturnTypeHandler : Basic {
 
 	// rename
 	internal void set_ret_type ( Vala.DataType? vtref ) {
-		var tmp = new TypeReference (this.settings, vtref, this);
+		var tmp = new TypeReference (vtref, this);
 		this.type_reference = tmp;
 	}
 }

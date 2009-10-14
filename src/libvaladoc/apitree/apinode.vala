@@ -48,6 +48,7 @@ public enum Valadoc.Api.NodeType {
 
 // TODO Drop DocumentedElement
 public abstract class Valadoc.Api.Node : /*Api.Item*/DocumentedElement, Visitable {
+	private bool do_document = false;
 
 	// TODO Drop DocumentElement
 	/* public abstract string? name { owned get; } */
@@ -58,8 +59,7 @@ public abstract class Valadoc.Api.Node : /*Api.Item*/DocumentedElement, Visitabl
 	private Map<Symbol,Node> per_symbol_children;
 	private Map<NodeType?,Gee.List<Node>> per_type_children;
 
-	public Node (Settings settings, Api.Node? parent) {
-		this.settings = settings;
+	public Node (Api.Node? parent) {
 		this.parent = parent;
 
 		per_name_children = new HashMap<string,Node> ();
@@ -69,9 +69,7 @@ public abstract class Valadoc.Api.Node : /*Api.Item*/DocumentedElement, Visitabl
 
 	public abstract void accept (Doclet doclet);
 
-	protected abstract bool is_type_visitor_accessible (Valadoc.Basic element);
-
-	public abstract bool is_visitor_accessible ();
+	public abstract bool is_visitor_accessible (Settings settings);
 
 	public override string? get_filename () {
 		return null;
@@ -102,24 +100,25 @@ public abstract class Valadoc.Api.Node : /*Api.Item*/DocumentedElement, Visitabl
 		}
 	}
 
-	protected override void parse_comments (DocumentationParser parser) {
-		// TODO check is visitable to avoid unuseful processing
+	protected override void process_comments (Settings settings, DocumentationParser parser) {
+		do_document = true;
 
-		foreach (Node node in per_name_children.values) {
-			node.parse_comments (parser);
+		foreach (Node node in per_symbol_children.values) {
+			if (node.is_visitor_accessible (settings)) {
+				node.process_comments (settings, parser);
+			}
 		}
 	}
 
-	public Gee.List<Node> get_children_by_type (NodeType type) {
+	public Gee.List<Node> get_children_by_type (NodeType type, bool filtered = true) {
 		var children = new ArrayList<Node> ();
 
 		Gee.List<Node> all_children = per_type_children.get (type);
 		if (all_children != null) {
-			foreach (Node child in all_children) {
-				if (!child.is_type_visitor_accessible (this))
-					continue ;
-
-				children.add (child);
+			foreach (Node node in all_children) {
+				if (node.do_document || !filtered) {
+					children.add (node);
+				}
 			}
 		}
 
@@ -130,7 +129,9 @@ public abstract class Valadoc.Api.Node : /*Api.Item*/DocumentedElement, Visitabl
 		Gee.List<Node> all_children = per_type_children.get (type);
 		if (all_children != null) {
 			foreach (Node node in all_children) {
-				node.accept (doclet);
+				if (node.do_document) {
+					node.accept (doclet);
+				}
 			}
 		}
 	}

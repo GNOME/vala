@@ -26,18 +26,18 @@ using Gee;
 public class Valadoc.EnumValue: Api.SymbolNode {
 	private Vala.EnumValue venval;
 
-	public EnumValue (Valadoc.Settings settings, Vala.EnumValue symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public EnumValue (Vala.EnumValue symbol, Api.Node parent) {
+		base (symbol, parent);
 		this.venval = symbol;
 	}
 
-	protected override void parse_comments (DocumentationParser parser) {
+	protected override void process_comments (Settings settings, DocumentationParser parser) {
 		var source_comment = ((Vala.EnumValue) symbol).comment;
 		if (source_comment != null) {
 			documentation = parser.parse (this, source_comment);
 		}
 
-		base.parse_comments (parser);
+		base.process_comments (settings, parser);
 	}
 
 	public string get_cname () {

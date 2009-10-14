@@ -24,8 +24,8 @@ using Gee;
 public class Valadoc.FormalParameter : Api.SymbolNode, ReturnTypeHandler {
 	private Vala.FormalParameter vformalparam;
 
-	public FormalParameter (Valadoc.Settings settings, Vala.FormalParameter symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public FormalParameter (Vala.FormalParameter symbol, Api.Node parent) {
+		base (symbol, parent);
 		this.vformalparam = symbol;
 
 		var vformparam = this.vformalparam.parameter_type;

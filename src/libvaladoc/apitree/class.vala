@@ -27,8 +27,8 @@ public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, Si
 	private Gee.ArrayList<Interface> interfaces;
 	private Vala.Class vclass;
 
-	public Class (Valadoc.Settings settings, Vala.Class symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public Class (Vala.Class symbol, Api.Node parent) {
+		base (symbol, parent);
 		this.interfaces = new Gee.ArrayList<Interface>();
 
 		this.vclass = symbol;
@@ -68,9 +68,6 @@ public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, Si
 	}
 
 	public void visit ( Doclet doclet ) {
-		if ( !this.is_visitor_accessible ( ) )
-			return ;
-
 		doclet.visit_class ( this );
 	}
 

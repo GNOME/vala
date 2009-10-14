@@ -26,8 +26,8 @@ using Gee;
 public class Valadoc.Struct : Api.TypeSymbolNode, MethodHandler, ConstructionMethodHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler {
 	private Vala.Struct vstruct;
 
-	public Struct (Valadoc.Settings settings, Vala.Struct symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public Struct (Vala.Struct symbol, Api.Node parent) {
+		base (symbol, parent);
 		this.vstruct = symbol;
 	}
 
@@ -41,9 +41,6 @@ public class Valadoc.Struct : Api.TypeSymbolNode, MethodHandler, ConstructionMet
 	}
 
 	public void visit ( Doclet doclet ) {
-		if ( !this.is_visitor_accessible ( ) )
-			return ;
-
 		doclet.visit_struct (this);
 	}
 

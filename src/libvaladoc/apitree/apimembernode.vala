@@ -26,16 +26,16 @@ using Gee;
 
 public abstract class Valadoc.Api.MemberNode : Api.SymbolNode {
 
-	public MemberNode (Settings settings, Vala.Member symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public MemberNode (Vala.Member symbol, Api.Node parent) {
+		base (symbol, parent);
 	}
 
-	protected override void parse_comments (DocumentationParser parser) {
+	protected override void process_comments (Settings settings, DocumentationParser parser) {
 		var source_comment = ((Vala.Member) symbol).comment;
 		if (source_comment != null) {
 			documentation = parser.parse (this, source_comment);
 		}
 
-		base.parse_comments (parser);
+		base.process_comments (settings, parser);
 	}
 }

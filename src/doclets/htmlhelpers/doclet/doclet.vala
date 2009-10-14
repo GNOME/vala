@@ -718,7 +718,7 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 	public void write_navi_packages_inline ( GLib.FileStream file, Tree tree ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
 		foreach ( Package pkg in tree.get_package_list() ) {
-			if ( pkg.is_visitor_accessible ( ) ) {
+			if (pkg.is_visitor_accessible (settings)) {
 				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>\n", get_html_inline_navigation_link_css_class (pkg), css_navi_link, this.get_link(pkg, null), pkg.name );
 				// brief description
 				file.puts ( "</li>\n" );

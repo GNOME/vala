@@ -36,8 +36,8 @@ public abstract class Valadoc.Api.SymbolNode : Api.Node, SymbolAccessibility {
 		}
 	}
 
-	public SymbolNode (Settings settings, Vala.Symbol symbol, Api.Node parent) {
-		base (settings, parent);
+	public SymbolNode (Vala.Symbol symbol, Api.Node parent) {
+		base (parent);
 		this.symbol = symbol;
 	}
 
@@ -54,30 +54,14 @@ public abstract class Valadoc.Api.SymbolNode : Api.Node, SymbolAccessibility {
 		return GLib.Path.get_basename ( path );
 	}
 
-	protected override bool is_type_visitor_accessible (Valadoc.Basic element) {
-		if (!this.settings._private && is_private)
+	public override bool is_visitor_accessible (Settings settings) {
+		if (!settings._private && this.is_private)
 			return false;
 
-		if (!this.settings._internal && is_internal)
+		if (!settings._internal && this.is_internal)
 			return false;
 
-		if (!this.settings._protected && is_protected)
-			return false;
-
-		if (this.parent != element && !this.settings.add_inherited)
-				return false;
-
-		return true;
-	}
-
-	public override bool is_visitor_accessible () {
-		if (!this.settings._private && this.is_private)
-			return false;
-
-		if (!this.settings._internal && this.is_internal)
-			return false;
-
-		if (!this.settings._protected && this.is_protected)
+		if (!settings._protected && this.is_protected)
 			return false;
 
 		return true;

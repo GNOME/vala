@@ -34,7 +34,7 @@ public abstract class Valadoc.DocumentedElement : Basic, Documentation {
 	public Namespace? nspace {
 		get {
 			if (this._nspace == null) {
-				Valadoc.Basic ast = this;
+				Api.Item ast = this;
 				while (ast is Valadoc.Namespace == false) {
 					ast = ast.parent;
 					if (ast == null)
@@ -50,7 +50,7 @@ public abstract class Valadoc.DocumentedElement : Basic, Documentation {
 	public Package? package {
 		get {
 			if (this._package == null) {
-				Valadoc.Basic ast = this;
+				Api.Item ast = this;
 				while (ast is Valadoc.Package == false) {
 					ast = ast.parent;
 					if (ast == null)
@@ -87,7 +87,7 @@ public abstract class Valadoc.DocumentedElement : Basic, Documentation {
 			GLib.StringBuilder full_name = new GLib.StringBuilder (this.name);
 
 			if (this.parent != null) {
-				for (Basic pos = this.parent; pos is Package == false ; pos = pos.parent) {
+				for (Api.Item pos = this.parent; pos is Package == false ; pos = pos.parent) {
 					string name = ((DocumentedElement)pos).name;
 					if (name != null) {
 						full_name.prepend_unichar ('.');

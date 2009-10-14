@@ -186,7 +186,7 @@ public class Valadoc.Tree {
 		var vfile = new SourceFile (context, package_path, true);
 		context.add_source_file (vfile);
 
-		Package vdpkg = new Package (this.settings, vfile, true);
+		Package vdpkg = new Package (vfile, pkg, true);
 		this.packages.add (vdpkg);
 
 		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
@@ -233,7 +233,7 @@ public class Valadoc.Tree {
 
 
 					if (this.sourcefiles == null) {
-						this.sourcefiles = new Package (this.settings, source_file, false);
+						this.sourcefiles = new Package (source_file, settings.pkg_name, false);
 						this.packages.add (this.sourcefiles);
 					}
 					else {
@@ -254,8 +254,11 @@ public class Valadoc.Tree {
 
 					context.add_source_file (source_file);
 				} else if (source.has_suffix (".vapi")) {
+					string file_name = GLib.Path.get_basename (source);
+					file_name = file_name.ndup ( file_name.size() - ".vapi".size() );
+			
 					var vfile = new SourceFile (context, rpath, true);
-					Package vdpkg = new Package (this.settings, vfile); 
+					Package vdpkg = new Package (vfile, file_name); 
 					context.add_source_file (vfile);
 					this.packages.add (vdpkg);
 				} else if (source.has_suffix (".c")) {
@@ -297,7 +300,7 @@ public class Valadoc.Tree {
 			}
 		}
 
-		Api.NodeBuilder builder = new Api.NodeBuilder (settings, this);
+		Api.NodeBuilder builder = new Api.NodeBuilder (this);
 		this.context.accept(builder);
 		this.resolve_type_references ();
 		this.add_dependencies_to_source_package ();
@@ -318,12 +321,16 @@ public class Valadoc.Tree {
 		}
 	}
 
+	// TODO Rename to process_comments
 	public void parse_comments (DocumentationParser docparser) {
+		// TODO Move Wiki tree parse to Package
 		this.wikitree = new WikiPageTree(this.reporter, this.settings);
 		wikitree.create_tree (docparser);
 
 		foreach (Package pkg in this.packages) {
-			pkg.parse_comments(docparser);
+			if (pkg.is_visitor_accessible (settings)) {
+				pkg.process_comments(settings, docparser);
+			}
 		}
 	}
 

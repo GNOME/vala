@@ -31,16 +31,15 @@ public class Valadoc.Array : Basic {
 		get;
 	}
 
-	public Array (Valadoc.Settings settings, Vala.ArrayType vtyperef, Basic parent) {
-		this.settings = settings;
+	public Array (Vala.ArrayType vtyperef, Api.Item parent) {
 		this.vtype = vtyperef;
 		this.parent = parent;
 
 		Vala.DataType vntype = vtyperef.element_type;
 		if ( vntype is Vala.ArrayType )
-			this.data_type = new Array (settings, (Vala.ArrayType)vntype, this);
+			this.data_type = new Array ((Vala.ArrayType) vntype, this);
 		else
-			this.data_type = new TypeReference (settings, vntype, this);
+			this.data_type = new TypeReference (vntype, this);
 	}
 
 	public void write (Langlet langlet, void* ptr, DocumentedElement parent) {

@@ -26,8 +26,8 @@ using Gee;
 public class Valadoc.Signal : Api.MemberNode, ParameterListHandler, ReturnTypeHandler {
 	private Vala.Signal vsignal;
 
-	public Signal (Valadoc.Settings settings, Vala.Signal symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public Signal (Vala.Signal symbol, Api.Node parent) {
+		base (symbol, parent);
 
 		this.vsignal = symbol;
 
@@ -57,9 +57,6 @@ public class Valadoc.Signal : Api.MemberNode, ParameterListHandler, ReturnTypeHa
 	}
 
 	public void visit (Doclet doclet) {
-		if ( !this.is_visitor_accessible () )
-			return ;
-
 		doclet.visit_signal (this);
 	}
 

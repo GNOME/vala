@@ -22,8 +22,8 @@ using GLib;
 using Gee;
 
 public interface Valadoc.NamespaceHandler : Api.Node {
-	public Gee.Collection<Namespace> get_namespace_list () {
-		return get_children_by_type (Api.NodeType.NAMESPACE);
+	public Gee.Collection<Namespace> get_namespace_list (bool filtered = true) {
+		return get_children_by_type (Api.NodeType.NAMESPACE, filtered);
 	}
 
 	public void visit_namespaces ( Doclet doclet ) {
@@ -47,7 +47,7 @@ public interface Valadoc.NamespaceHandler : Api.Node {
 
 		Namespace ns = this.find_namespace_without_childs ( vns );
 		if ( ns == null ) {
-			ns = new Namespace (this.settings, vns, this);
+			ns = new Namespace (vns, this);
 			add_child ( ns );
 		}
 
@@ -74,7 +74,7 @@ public interface Valadoc.NamespaceHandler : Api.Node {
 			return this.get_namespace_helper ( node, vnspaces, 1 );
 		}
 		else {
-			var ns = new Namespace (this.settings, vnspace, this);
+			var ns = new Namespace (vnspace, this);
 			add_child ( ns );
 			return ns;
 		}
@@ -85,7 +85,7 @@ public interface Valadoc.NamespaceHandler : Api.Node {
 		if ( vns == null )
 			return null;
 
-		foreach ( Namespace ns in get_namespace_list () ) {
+		foreach ( Namespace ns in get_namespace_list (false) ) {
 			if ( !ns.is_vnspace( vns ) )
 				continue ;
 
@@ -101,7 +101,7 @@ public interface Valadoc.NamespaceHandler : Api.Node {
 	internal Namespace find_namespace_without_childs ( Vala.Namespace vns ) {
 		Namespace ns2 = null;
 
-		foreach ( Namespace ns in get_namespace_list () ) {
+		foreach ( Namespace ns in get_namespace_list (false) ) {
 			if ( ns.is_vnspace(vns) )
 				ns2 = ns;
 		}

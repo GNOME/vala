@@ -26,8 +26,8 @@ using Gee;
 public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHandler, TemplateParameterListHandler, ReturnTypeHandler {
 	private Vala.Method vmethod;
 
-	public Method (Valadoc.Settings settings, Vala.Method symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public Method (Vala.Method symbol, Api.Node parent) {
+		base (symbol, parent);
 		this.vmethod = symbol;
 
 		var vret = this.vmethod.return_type;
@@ -130,9 +130,6 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 	}
 
 	public void visit ( Doclet doclet, Valadoc.MethodHandler in_type ) {
-		if ( !this.is_visitor_accessible ( ) )
-			return ;
-
 		doclet.visit_method ( this, in_type );
 	}
 

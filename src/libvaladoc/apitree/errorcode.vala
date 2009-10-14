@@ -26,8 +26,8 @@ using Gee;
 public class Valadoc.ErrorCode : Api.TypeSymbolNode {
 	private Vala.ErrorCode verrcode;
 
-	public ErrorCode (Valadoc.Settings settings, Vala.ErrorCode symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public ErrorCode (Vala.ErrorCode symbol, Api.Node parent) {
+		base (symbol, parent);
 		this.verrcode = symbol;
 	}
 

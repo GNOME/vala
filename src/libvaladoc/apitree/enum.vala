@@ -24,8 +24,8 @@ using Gee;
 
 
 public class Valadoc.Enum : Api.TypeSymbolNode, MethodHandler {
-	public Enum (Valadoc.Settings settings, Vala.Enum symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public Enum (Vala.Enum symbol, Api.Node parent) {
+		base (symbol, parent);
 		this.venum = symbol;
 	}
 
@@ -43,9 +43,6 @@ public class Valadoc.Enum : Api.TypeSymbolNode, MethodHandler {
 	}
 
 	public void visit ( Doclet doclet ) {
-		if ( !this.is_visitor_accessible ( ) )
-			return ;
-
 		doclet.visit_enum ( this );
 	}
 

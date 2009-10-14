@@ -26,8 +26,8 @@ using Gee;
 public class Valadoc.Field : Api.MemberNode, ReturnTypeHandler {
 	private Vala.Field vfield;
 
-	public Field (Valadoc.Settings settings, Vala.Field symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public Field (Vala.Field symbol, Api.Node parent) {
+		base (symbol, parent);
 		this.vfield = symbol;
 
 		var vret = this.vfield.field_type;
@@ -65,9 +65,6 @@ public class Valadoc.Field : Api.MemberNode, ReturnTypeHandler {
 	}
 
 	public void visit ( Doclet doclet, FieldHandler? parent ) {
-		if ( !this.is_visitor_accessible ( ) )
-			return ;
-
 		doclet.visit_field ( this, parent );
 	}
 

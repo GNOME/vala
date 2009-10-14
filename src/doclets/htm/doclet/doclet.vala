@@ -26,13 +26,13 @@ using Gee;
 namespace Valadoc {
 	public string? get_html_link ( Settings settings, Documentation element, Documentation? pos ) {
 		if ( element is Visitable ) {
-			if ( ((Visitable)element).is_visitor_accessible () == false ) {
+			if (! ((Visitable) element).is_visitor_accessible (settings)) {
 				return null;
 			}
 		}
 
 		if ( element is DocumentedElement ) {
-			if ( ((DocumentedElement)element).package.is_visitor_accessible () == false ) {
+			if (! ((DocumentedElement) element).package.is_visitor_accessible (settings)) {
 				return null;
 			}
 		}

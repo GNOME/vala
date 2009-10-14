@@ -21,9 +21,9 @@ using Vala;
 using GLib;
 using Gee;
 
+// Rename to Browsable
 public interface Valadoc.Visitable : Api.Item {
 
-	protected abstract bool is_type_visitor_accessible (Valadoc.Basic element);
-
-	public abstract bool is_visitor_accessible ();
+	// Rename to is_browsable
+	public abstract bool is_visitor_accessible (Settings settings);
 }

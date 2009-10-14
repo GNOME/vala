@@ -26,8 +26,8 @@ using Gee;
 public class Valadoc.PropertyAccessor : Api.SymbolNode {
 	private Vala.PropertyAccessor vpropacc;
 
-	public PropertyAccessor (Valadoc.Settings settings, Vala.PropertyAccessor symbol, Property parent) {
-		base (settings, symbol, parent);
+	public PropertyAccessor (Vala.PropertyAccessor symbol, Property parent) {
+		base (symbol, parent);
 		this.vpropacc = symbol;
 	}
 

@@ -26,8 +26,8 @@ using Gee;
 public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, ReturnTypeHandler, TemplateParameterListHandler, ExceptionHandler {
 	private Vala.Delegate vdelegate;
 
-	public Delegate (Valadoc.Settings settings, Vala.Delegate symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public Delegate (Vala.Delegate symbol, Api.Node parent) {
+		base (symbol, parent);
 
 		this.vdelegate = symbol;
 
@@ -45,9 +45,6 @@ public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, Return
 	}
 
 	public void visit ( Doclet doclet ) {
-		if ( !this.is_visitor_accessible ( ) )
-			return ;
-
 		doclet.visit_delegate ( this );
 	}
 

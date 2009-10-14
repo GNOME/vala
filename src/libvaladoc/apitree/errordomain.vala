@@ -24,8 +24,8 @@ using Gee;
 public class Valadoc.ErrorDomain : Api.TypeSymbolNode, MethodHandler {
 	private Vala.ErrorDomain verrdom;
 
-	public ErrorDomain (Valadoc.Settings settings, Vala.ErrorDomain symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public ErrorDomain (Vala.ErrorDomain symbol, Api.Node parent) {
+		base (symbol, parent);
 		this.verrdom = symbol;
 	}
 
@@ -42,9 +42,6 @@ public class Valadoc.ErrorDomain : Api.TypeSymbolNode, MethodHandler {
 	}
 
 	public void visit (Doclet doclet) {
-		if ( !this.is_visitor_accessible ( ) )
-			return ;
-
 		doclet.visit_error_domain ( this );
 	}
 

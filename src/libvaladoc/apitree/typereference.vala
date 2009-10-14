@@ -27,8 +27,7 @@ public class Valadoc.TypeReference : Basic {
 	private Gee.ArrayList<TypeReference> type_arguments = new Gee.ArrayList<TypeReference> ();
 	private Vala.DataType? vtyperef;
 
-	public TypeReference (Valadoc.Settings settings, Vala.DataType? vtyperef, Basic parent) {
-		this.settings = settings;
+	public TypeReference (Vala.DataType? vtyperef, Api.Item parent) {
 		this.vtyperef = vtyperef;
 		this.parent = parent;
 	}
@@ -39,7 +38,7 @@ public class Valadoc.TypeReference : Basic {
 
 	private void set_template_argument_list (Tree root, Gee.Collection<Vala.DataType> varguments) {
 		foreach ( Vala.DataType vdtype in varguments ) {
-			var dtype = new TypeReference (this.settings, vdtype, this);
+			var dtype = new TypeReference (vdtype, this);
 			dtype.resolve_type_references (root);
 			this.type_arguments.add ( dtype );
 		}
@@ -187,9 +186,9 @@ public class Valadoc.TypeReference : Basic {
 	protected override void resolve_type_references (Tree root) {
 		if ( this.vtyperef != null ) {
 			if ( this.vtyperef is PointerType )
-				this.data_type = new Pointer (settings, (Vala.PointerType) this.vtyperef, this);
+				this.data_type = new Pointer ((Vala.PointerType) this.vtyperef, this);
 			else if ( vtyperef is ArrayType )
-				this.data_type = new Array (settings, (Vala.ArrayType) this.vtyperef, this);
+				this.data_type = new Array ((Vala.ArrayType) this.vtyperef, this);
 			else if ( vtyperef is GenericType )
 				 this.data_type = (TypeParameter) root.search_vala_symbol (((Vala.GenericType) this.vtyperef).type_parameter);
 		}

@@ -26,16 +26,16 @@ using Gee;
 
 public abstract class Valadoc.Api.TypeSymbolNode : Api.SymbolNode {
 
-	public TypeSymbolNode (Settings settings, Vala.TypeSymbol symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public TypeSymbolNode (Vala.TypeSymbol symbol, Api.Node parent) {
+		base (symbol, parent);
 	}
 
-	protected override void parse_comments (DocumentationParser parser) {
+	protected override void process_comments (Settings settings, DocumentationParser parser) {
 		var source_comment = ((Vala.TypeSymbol) symbol).comment;
 		if (source_comment != null) {
 			documentation = parser.parse (this, source_comment);
 		}
 
-		base.parse_comments (parser);
+		base.process_comments (settings, parser);
 	}
 }

@@ -24,8 +24,8 @@ using Gee;
 
 
 public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler, MethodHandler, DelegateHandler, EnumHandler, StructHandler, ClassHandler {
-	public Interface (Valadoc.Settings settings, Vala.Interface symbol, Api.Node parent) {
-		base (settings, symbol, parent);
+	public Interface (Vala.Interface symbol, Api.Node parent) {
+		base (symbol, parent);
 		this.vinterface = symbol;
 	}
 
@@ -47,9 +47,6 @@ public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHand
 	private Vala.Interface vinterface;
 
 	public void visit ( Doclet doclet ) {
-		if ( !this.is_visitor_accessible ( ) )
-			return ;
-
 		doclet.visit_interface ( this );
 	}
 
