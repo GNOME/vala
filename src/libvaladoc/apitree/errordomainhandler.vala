@@ -29,15 +29,4 @@ public interface Valadoc.ErrorDomainHandler : Api.Node {
 	public void visit_error_domains (Doclet doclet) {
 		accept_children_by_type (Api.NodeType.ERROR_DOMAIN, doclet);
 	}
-
-	public void add_error_domains (Gee.Collection<Vala.ErrorDomain> verrdoms) {
-		foreach ( Vala.ErrorDomain verrdom in  verrdoms ) {
-			this.add_error_domain ( verrdom );
-		}
-	}
-
-	public void add_error_domain ( Vala.ErrorDomain verrdom ) {
-		var tmp = new ErrorDomain ( this.settings, verrdom, this, this.head );
-		add_child ( tmp );
-	}
 }

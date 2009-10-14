@@ -22,22 +22,11 @@ using GLib;
 using Gee;
 
 public interface Valadoc.MethodHandler : Api.Node {
-	protected void add_method ( Vala.Method vmethod ) {
-		var tmp = new Method ( this.settings, vmethod, this, this.head );
-		add_child ( tmp );
-	}
-
-	protected void add_methods ( Gee.Collection<Vala.Method> vmethods ) {
-		foreach ( Vala.Method vm in vmethods ) {
-			this.add_method ( vm );
-		}
-	}
-
-	public void visit_methods ( Doclet doclet ) {
+	public void visit_methods (Doclet doclet) {
 		accept_children_by_type (Api.NodeType.METHOD, doclet);
 	}
 
-	public Gee.Collection<Method> get_method_list ( ) {
+	public Gee.Collection<Method> get_method_list () {
 		return get_children_by_type (Api.NodeType.METHOD);
 	}
 }

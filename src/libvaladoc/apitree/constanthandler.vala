@@ -17,30 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Vala;
 using GLib;
 using Gee;
 
-
 public interface Valadoc.ConstantHandler : Api.Node {
-	public Gee.Collection<Constant> get_constant_list ( ) {
+	public Gee.Collection<Constant> get_constant_list () {
 		return get_children_by_type (Api.NodeType.CONSTANT);
 	}
 
-	internal void add_constants (Gee.Collection<Vala.Constant> vconstants) {
-		foreach (Vala.Constant vc in vconstants) {
-			this.add_constant (vc);
-		}
-	}
-
-	internal void add_constant (Vala.Constant vc) {
-		var tmp = new Constant (this.settings, vc, this, this.head);
-		add_child ( tmp );
-	}
-
-	public void visit_constants ( Doclet doclet ) {
+	public void visit_constants (Doclet doclet) {
 		accept_children_by_type (Api.NodeType.CONSTANT, doclet);
 	}
 }
-

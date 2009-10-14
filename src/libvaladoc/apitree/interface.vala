@@ -24,39 +24,9 @@ using Gee;
 
 
 public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler, MethodHandler, DelegateHandler, EnumHandler, StructHandler, ClassHandler {
-	public Interface (Valadoc.Settings settings, Vala.Interface symbol, InterfaceHandler parent, Tree root) {
+	public Interface (Valadoc.Settings settings, Vala.Interface symbol, Api.Node parent, Tree root) {
 		base (settings, symbol, parent, root);
 		this.vinterface = symbol;
-
-		var vtparams = this.vinterface.get_type_parameters ();
-		this.set_template_parameter_list (vtparams);
-
-		Gee.Collection<Vala.Method> methods = this.vinterface.get_methods ();
-		this.add_methods (methods);
-
-		Gee.Collection<Vala.Delegate> delegates = this.vinterface.get_delegates ();
-		this.add_delegates (delegates);
-
-		Gee.Collection<Vala.Signal> signals = this.vinterface.get_signals();
-		this.add_signals (signals);
-
-		Gee.Collection<Vala.Property> properties = this.vinterface.get_properties();
-		this.add_properties (properties);
-
-		Gee.Collection<Vala.Field> fields = this.vinterface.get_fields();
-		this.add_fields (fields);
-
-		Gee.Collection<Vala.Struct> structs = this.vinterface.get_structs();
-		this.add_structs (structs);
-
-		Gee.Collection<Vala.Class> classes = this.vinterface.get_classes();
-		this.add_classes (classes);
-
-		Gee.Collection<Vala.Enum> enums = this.vinterface.get_enums();
-		this.add_enums (enums);
-
-		Gee.Collection<Vala.Constant> constants = this.vinterface.get_constants();
-		this.add_constants ( constants );
 	}
 
 	private Gee.ArrayList<Interface> interfaces = new Gee.ArrayList<Interface>();

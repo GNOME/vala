@@ -38,17 +38,6 @@ public interface Valadoc.ClassHandler : Api.Node {
 		return get_children_by_type (Api.NodeType.CLASS);
 	}
 
-	internal void add_class ( Vala.Class vcl ) {
-		Class cl = new Class ( this.settings, vcl, this, this.head );
-		add_child ( cl );
-	}
-
-	public void add_classes ( Gee.Collection<Vala.Class> vclasses ) {
-		foreach ( Vala.Class vcl in vclasses ) {
-			this.add_class ( vcl );
-		}
-	}
-
 	public void visit_classes ( Doclet doclet ) {
 		accept_children_by_type (Api.NodeType.CLASS, doclet);
 	}

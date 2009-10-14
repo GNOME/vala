@@ -30,11 +30,4 @@ public interface Valadoc.ParameterListHandler : Api.Node {
 	public Gee.List<FormalParameter> get_parameter_list () {
 		return (Gee.List<FormalParameter>) get_children_by_type (Api.NodeType.FORMAL_PARAMETER);
 	}
-
-	protected void add_parameter_list (Gee.Collection<Vala.FormalParameter> vparams) {
-		foreach (Vala.FormalParameter vfparam in vparams) {
-			var tmp = new FormalParameter (this.settings, vfparam, this, this.head);
-			add_child (tmp);
-		}
-	}
 }

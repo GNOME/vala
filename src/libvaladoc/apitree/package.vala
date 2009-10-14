@@ -107,8 +107,13 @@ public class Valadoc.Package : Api.Node, NamespaceHandler {
 		}
 	}
 
+	// TODO Remove
 	internal bool is_vpackage (Vala.SourceFile vfile) {
 		return this.vfiles.contains (vfile);
+	}
+
+	internal bool is_package_for_file (Vala.SourceFile source_file) {
+		return this.vfiles.contains (source_file);
 	}
 
 	protected override bool is_type_visitor_accessible (Valadoc.Basic element) {

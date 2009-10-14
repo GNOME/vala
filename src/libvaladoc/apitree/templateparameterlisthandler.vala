@@ -25,11 +25,4 @@ public interface Valadoc.TemplateParameterListHandler : Api.Node {
 	public Gee.Collection<TypeParameter> get_template_param_list () {
 		return get_children_by_type (Api.NodeType.TYPE_PARAMETER);
 	}
-
-	internal void set_template_parameter_list (Gee.Collection<Vala.TypeParameter> vtparams) {
-		foreach ( Vala.TypeParameter vtparam in vtparams ) {
-			var tmp = new TypeParameter (this.settings, vtparam, this, this.head);
-			add_child (tmp);
-		}
-	}
 }

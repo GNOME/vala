@@ -22,22 +22,11 @@ using GLib;
 using Gee;
 
 public interface Valadoc.FieldHandler : Api.Node {
-	public Gee.Collection<Field> get_field_list ( ) {
+	public Gee.Collection<Field> get_field_list () {
 		return get_children_by_type (Api.NodeType.FIELD);
 	}
 
-	internal void add_fields ( Gee.Collection<Vala.Field> vfields ) {
-		foreach ( Vala.Field vf in vfields ) {
-			this.add_field ( vf );
-		}
-	}
-
-	internal void add_field ( Vala.Field vf ) {
-		var tmp = new Field ( this.settings, vf, this, this.head );
-		add_child ( tmp );
-	}
-
-	public void visit_fields ( Doclet doclet ) {
+	public void visit_fields (Doclet doclet) {
 		accept_children_by_type (Api.NodeType.FIELD, doclet);
 	}
 }

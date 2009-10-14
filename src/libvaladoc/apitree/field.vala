@@ -26,7 +26,7 @@ using Gee;
 public class Valadoc.Field : Api.MemberNode, ReturnTypeHandler {
 	private Vala.Field vfield;
 
-	public Field (Valadoc.Settings settings, Vala.Field symbol, FieldHandler parent, Tree root) {
+	public Field (Valadoc.Settings settings, Vala.Field symbol, Api.Node parent, Tree root) {
 		base (settings, symbol, parent, root);
 		this.vfield = symbol;
 

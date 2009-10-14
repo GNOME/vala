@@ -27,7 +27,7 @@ using Gee;
 public Valadoc.Class glib_error = null;
 
 
-public class Valadoc.Tree : Vala.CodeVisitor {
+public class Valadoc.Tree {
 	private Gee.ArrayList<Package> packages = new Gee.ArrayList<Package>();
 	private Package source_package = null;
 	private Valadoc.Settings settings;
@@ -94,104 +94,10 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 	}
 
 	private string[] split_name (string full_name) {
-		string[] params = full_name.split( ".", -1 );
-		int i = 0; while ( params[i] != null ) i++;
+		string[] params = full_name.split (".", -1);
+		int i = 0; while (params[i] != null) i++;
 		params.length = i;
 		return params;
-	}
-
-	public override void visit_namespace ( Vala.Namespace vns ) {
-		vns.accept_children ( this );
-	}
-
-	public override void visit_class ( Vala.Class vcl ) {
-		if ( vcl.parent_symbol is Vala.Namespace == false )
-			return ;
-
-		Vala.SourceFile vfile = vcl.source_reference.file;
-		Package file = this.find_file(vfile);
-		Namespace ns = file.get_namespace (vcl);
-		ns.add_class ( vcl );
-	}
-
-	public override void visit_interface ( Vala.Interface viface ) {
-		if ( viface.parent_symbol is Vala.Namespace == false )
-			return ;
-
-		Vala.SourceFile vfile = viface.source_reference.file;
-		Package file = this.find_file( vfile );
-		Namespace ns = file.get_namespace ( viface );
-		ns.add_interface ( viface );
-	}
-
-	public override void visit_struct ( Vala.Struct vstru ) {
-		if ( vstru.parent_symbol is Vala.Namespace == false )
-			return ;
-
-		Vala.SourceFile vfile = vstru.source_reference.file;
-		Package file = this.find_file( vfile );
-		Namespace ns = file.get_namespace ( vstru );
-		ns.add_struct ( vstru );
-	}
-
-	public override void visit_field ( Vala.Field vf ) {
-		if ( vf.parent_symbol is Vala.Namespace == false )
-			return ;
-
-		Vala.SourceFile vfile = vf.source_reference.file;
-		Package file = this.find_file( vfile );
-		Namespace ns = file.get_namespace ( vf );
-		ns.add_field ( vf );
-	}
-
-	public override void visit_method ( Vala.Method vm ) {
-		if ( vm.parent_symbol is Vala.Namespace == false )
-			return ;
-
-		Vala.SourceFile vfile = vm.source_reference.file;
-		Package file = this.find_file( vfile );
-		Namespace ns = file.get_namespace ( vm );
-		ns.add_method ( vm );
-	}
-
-	public override void visit_delegate ( Vala.Delegate vd ) {
-		if ( vd.parent_symbol is Vala.Namespace == false )
-			return ;
-
-		Vala.SourceFile vfile = vd.source_reference.file;
-		Package file = this.find_file( vfile );
-		Namespace ns = file.get_namespace ( vd );
-		ns.add_delegate ( vd );
-	}
-
-	public override void visit_enum ( Vala.Enum venum ) {
-		if ( venum.parent_symbol is Vala.Namespace == false )
-			return ;
-
-		Vala.SourceFile vfile = venum.source_reference.file;
-		Package file = this.find_file( vfile );
-		Namespace ns = file.get_namespace ( venum );
-		ns.add_enum ( venum );
-	}
-
-	public override void visit_constant ( Vala.Constant vc ) {
-		if ( vc.parent_symbol is Vala.Namespace == false )
-			return ;
-
-		Vala.SourceFile vfile = vc.source_reference.file;
-		Package file = this.find_file( vfile );
-		Namespace ns = file.get_namespace ( vc );
-		ns.add_constant ( vc );
-	}
-
-	public override void visit_error_domain ( Vala.ErrorDomain verrdom ) {
-		if ( verrdom.parent_symbol is Vala.Namespace == false )
-			return ;
-
-		Vala.SourceFile vfile = verrdom.source_reference.file;
-		Package file = this.find_file( vfile );
-		Namespace ns = file.get_namespace ( verrdom );
-		ns.add_error_domain ( verrdom );
 	}
 
 	public Tree ( Valadoc.ErrorReporter reporter, Valadoc.Settings settings) {
@@ -391,7 +297,8 @@ public class Valadoc.Tree : Vala.CodeVisitor {
 			}
 		}
 
-		this.context.accept(this);
+		Api.NodeBuilder builder = new Api.NodeBuilder (settings, this);
+		this.context.accept(builder);
 		this.resolve_type_references ();
 		this.add_dependencies_to_source_package ();
 		return true;

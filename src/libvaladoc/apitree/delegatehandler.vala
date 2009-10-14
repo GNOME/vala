@@ -29,15 +29,4 @@ public interface Valadoc.DelegateHandler : Api.Node {
 	public void visit_delegates ( Doclet doclet ) {
 		accept_children_by_type (Api.NodeType.DELEGATE, doclet);
 	}
-
-	public void add_delegates ( Gee.Collection<Vala.Delegate> vdels ) {
-		foreach ( Vala.Delegate vdel in vdels ) {
-			this.add_delegate ( vdel );
-		}
-	}
-
-	public void add_delegate ( Vala.Delegate vdel ) {
-		var tmp = new Delegate ( this.settings, vdel, this, this.head );
-		add_child ( tmp );
-	}
 }

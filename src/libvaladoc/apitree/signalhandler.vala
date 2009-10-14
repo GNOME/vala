@@ -22,14 +22,7 @@ using GLib;
 using Gee;
 
 public interface Valadoc.SignalHandler : Api.Node {
-	internal void add_signals ( Gee.Collection<Vala.Signal> vsignals ) {
-		foreach ( Vala.Signal vsig in vsignals ) {
-			var tmp = new Signal ( this.settings, vsig, this, this.head );
-			add_child ( tmp );
-		}
-	}
-
-	public void visit_signals ( Doclet doclet ) {
+	public void visit_signals (Doclet doclet) {
 		accept_children_by_type (Api.NodeType.SIGNAL, doclet);
 	}
 

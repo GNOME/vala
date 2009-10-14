@@ -24,15 +24,9 @@ using Gee;
 
 
 public class Valadoc.Enum : Api.TypeSymbolNode, MethodHandler {
-	public Enum (Valadoc.Settings settings, Vala.Enum symbol, EnumHandler parent, Tree root) {
+	public Enum (Valadoc.Settings settings, Vala.Enum symbol, Api.Node parent, Tree root) {
 		base (settings, symbol, parent, root);
 		this.venum = symbol;
-
-		Gee.Collection<Vala.Method> vmethods = this.venum.get_methods ();
-		this.add_methods ( vmethods );
-
-		Gee.Collection<Vala.EnumValue> venvals = this.venum.get_values ();
-		this.add_enum_values ( venvals );
 	}
 
 	public string? get_cname () {
@@ -42,13 +36,6 @@ public class Valadoc.Enum : Api.TypeSymbolNode, MethodHandler {
 	// rename: get_enum_value_list
 	public Gee.Collection<EnumValue> get_enum_values () {
 		return get_children_by_type (Api.NodeType.ENUM_VALUE);
-	}
-
-	private inline void add_enum_values ( Gee.Collection<Vala.EnumValue> venvals ) {
-		foreach ( Vala.EnumValue venval in venvals ) {
-			var tmp = new EnumValue ( this.settings, venval, this, this.head );
-			add_child ( tmp );
-		}
 	}
 
 	public void visit_enum_values ( Doclet doclet ) {

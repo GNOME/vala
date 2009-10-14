@@ -26,14 +26,10 @@ using Gee;
 public class Valadoc.Signal : Api.MemberNode, ParameterListHandler, ReturnTypeHandler {
 	private Vala.Signal vsignal;
 
-	public Signal (Valadoc.Settings settings, Vala.Signal symbol, SignalHandler parent, Tree root) {
+	public Signal (Valadoc.Settings settings, Vala.Signal symbol, Api.Node parent, Tree root) {
 		base (settings, symbol, parent, root);
 
 		this.vsignal = symbol;
-
-		this.param_list = new Gee.ArrayList<FormalParameter> ();
-		var vparamlst = this.vsignal.get_parameters ();
-		this.add_parameter_list (vparamlst);
 
 		var ret = this.vsignal.return_type;
 		this.set_ret_type (ret);
@@ -44,11 +40,6 @@ public class Valadoc.Signal : Api.MemberNode, ParameterListHandler, ReturnTypeHa
 	}
 
 	public TypeReference? type_reference {
-		protected set;
-		get;
-	}
-
-	protected Gee.ArrayList<FormalParameter> param_list {
 		protected set;
 		get;
 	}

@@ -22,22 +22,11 @@ using GLib;
 using Gee;
 
 public interface Valadoc.InterfaceHandler : Api.Node {
-	public Gee.Collection<Interface> get_interface_list ( ) {
+	public Gee.Collection<Interface> get_interface_list () {
 		return get_children_by_type (Api.NodeType.INTERFACE);
 	}
 
-	public void visit_interfaces ( Doclet doclet ) {
+	public void visit_interfaces (Doclet doclet) {
 		accept_children_by_type (Api.NodeType.INTERFACE, doclet);
-	}
-
-	protected void add_interfaces ( Gee.Collection<Vala.Interface> vifaces ) {
-		foreach ( Vala.Interface viface in vifaces ) {
-			this.add_interface ( viface );
-		}
-	}
-
-	internal void add_interface ( Vala.Interface viface ) {
-		var tmp = new Interface ( this.settings, viface, this, this.head );
-		add_child (tmp);
 	}
 }

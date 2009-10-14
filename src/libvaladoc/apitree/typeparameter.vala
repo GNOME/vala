@@ -25,7 +25,7 @@ using Gee;
 
 public class Valadoc.TypeParameter : Api.SymbolNode, ReturnTypeHandler {
 
-	public TypeParameter (Valadoc.Settings settings, Vala.TypeParameter symbol, TemplateParameterListHandler parent, Tree root) {
+	public TypeParameter (Valadoc.Settings settings, Vala.TypeParameter symbol, Api.Node parent, Tree root) {
 		base (settings, symbol, parent, root);
 	}
 

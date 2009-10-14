@@ -26,7 +26,7 @@ using Gee;
 public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 	private Vala.Property vproperty;
 
-	public Property (Valadoc.Settings settings, Vala.Property symbol, PropertyHandler parent, Tree root) {
+	public Property (Valadoc.Settings settings, Vala.Property symbol, Api.Node parent, Tree root) {
 		base (settings, symbol, parent, root);
 
 		this.vproperty = symbol;

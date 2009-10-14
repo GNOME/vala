@@ -26,18 +26,12 @@ using Gee;
 public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHandler, TemplateParameterListHandler, ReturnTypeHandler {
 	private Vala.Method vmethod;
 
-	public Method (Valadoc.Settings settings, Vala.Method symbol, MethodHandler parent, Tree root) {
+	public Method (Valadoc.Settings settings, Vala.Method symbol, Api.Node parent, Tree root) {
 		base (settings, symbol, parent, root);
 		this.vmethod = symbol;
 
 		var vret = this.vmethod.return_type;
 		this.set_ret_type (vret);
-
-		var vparamlst = this.vmethod.get_parameters ();
-		this.add_parameter_list (vparamlst);
-
-		var vtparams = this.vmethod.get_type_parameters ();
-		this.set_template_parameter_list (vtparams);
 	}
 
 	public string? get_cname () {

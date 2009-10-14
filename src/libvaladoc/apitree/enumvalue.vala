@@ -26,7 +26,7 @@ using Gee;
 public class Valadoc.EnumValue: Api.SymbolNode {
 	private Vala.EnumValue venval;
 
-	public EnumValue (Valadoc.Settings settings, Vala.EnumValue symbol, Enum parent, Tree root) {
+	public EnumValue (Valadoc.Settings settings, Vala.EnumValue symbol, Api.Node parent, Tree root) {
 		base (settings, symbol, parent, root);
 		this.venval = symbol;
 	}

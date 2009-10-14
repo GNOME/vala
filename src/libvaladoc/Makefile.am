@@ -36,6 +36,7 @@ libvaladoc_la_VALASOURCES = \
 	apitree/apiitem.vala \
 	apitree/apimembernode.vala \
 	apitree/apinode.vala \
+	apitree/apinodebuilder.vala \
 	apitree/apisymbolnode.vala \
 	apitree/apitree.vala \
 	apitree/apitypesymbolnode.vala \

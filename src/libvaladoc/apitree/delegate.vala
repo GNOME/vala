@@ -26,16 +26,13 @@ using Gee;
 public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, ReturnTypeHandler, TemplateParameterListHandler, ExceptionHandler {
 	private Vala.Delegate vdelegate;
 
-	public Delegate (Valadoc.Settings settings, Vala.Delegate symbol, DelegateHandler parent, Tree root) {
+	public Delegate (Valadoc.Settings settings, Vala.Delegate symbol, Api.Node parent, Tree root) {
 		base (settings, symbol, parent, root);
 
 		this.vdelegate = symbol;
 
 		var ret = this.vdelegate.return_type;
 		this.set_ret_type ( ret );
-
-		var vparamlst = this.vdelegate.get_parameters ();
-		this.add_parameter_list ( vparamlst );
 	}
 
 	public string? get_cname () {

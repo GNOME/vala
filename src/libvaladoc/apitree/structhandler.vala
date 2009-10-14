@@ -22,22 +22,11 @@ using GLib;
 using Gee;
 
 public interface Valadoc.StructHandler : Api.Node {
-	public Gee.Collection<Struct> get_struct_list ( ) {
+	public Gee.Collection<Struct> get_struct_list () {
 		return get_children_by_type (Api.NodeType.STRUCT);
 	}
 
-	public void add_struct ( Vala.Struct vstru ) {
-		Struct stru = new Struct ( this.settings, vstru, this, this.head );
-		add_child (stru);
-	}
-
-	public void add_structs ( Gee.Collection<Vala.Struct> vstructs ) {
-		foreach ( Vala.Struct vstru in vstructs ) {
-			this.add_struct ( vstru );
-		}
-	}
-
-	public void visit_structs ( Doclet doclet ) {
+	public void visit_structs (Doclet doclet) {
 		accept_children_by_type (Api.NodeType.STRUCT, doclet);
 	}
 }

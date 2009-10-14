@@ -27,7 +27,7 @@ public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, Si
 	private Gee.ArrayList<Interface> interfaces;
 	private Vala.Class vclass;
 
-	public Class (Valadoc.Settings settings, Vala.Class symbol, ClassHandler parent, Tree root) {
+	public Class (Valadoc.Settings settings, Vala.Class symbol, Api.Node parent, Tree root) {
 		base (settings, symbol, parent, root);
 		this.interfaces = new Gee.ArrayList<Interface>();
 
@@ -38,36 +38,6 @@ public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, Si
 				glib_error = this;
 			}
 		}
-
-		var vtparams = this.vclass.get_type_parameters ();
-		this.set_template_parameter_list ( vtparams );
-
-		Gee.Collection<Vala.Enum> venums = this.vclass.get_enums ();
-		this.add_enums ( venums );
-
-		Gee.Collection<Vala.Delegate> vdelegates = this.vclass.get_delegates ();
-		this.add_delegates ( vdelegates );
-
-		Gee.Collection<Vala.Class> vclasses = this.vclass.get_classes();
-		this.add_classes ( vclasses );
-
-		Gee.Collection<Vala.Struct> vstructs = this.vclass.get_structs();
-		this.add_structs ( vstructs );
-
-		Gee.Collection<Vala.Field> vfields = this.vclass.get_fields();
-		this.add_fields ( vfields );
-
-		Gee.Collection<Vala.Method> vmethods = this.vclass.get_methods ();
-		this.add_methods_and_construction_methods ( vmethods );
-
-		Gee.Collection<Vala.Signal> vsignals = this.vclass.get_signals();
-		this.add_signals ( vsignals );
-
-		Gee.Collection<Vala.Property> vproperties = this.vclass.get_properties();
-		this.add_properties ( vproperties );
-
-		Gee.Collection<Vala.Constant> vconstants = this.vclass.get_constants();
-		this.add_constants ( vconstants );
 	}
 
 	protected Class? base_type {

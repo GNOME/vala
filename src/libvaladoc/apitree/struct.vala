@@ -26,21 +26,9 @@ using Gee;
 public class Valadoc.Struct : Api.TypeSymbolNode, MethodHandler, ConstructionMethodHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler {
 	private Vala.Struct vstruct;
 
-	public Struct (Valadoc.Settings settings, Vala.Struct symbol, StructHandler parent, Tree root) {
+	public Struct (Valadoc.Settings settings, Vala.Struct symbol, Api.Node parent, Tree root) {
 		base (settings, symbol, parent, root);
 		this.vstruct = symbol;
-
-		var vtparams = this.vstruct.get_type_parameters ();
-		this.set_template_parameter_list (vtparams);
-
-		Gee.Collection<Vala.Field> vfields = this.vstruct.get_fields();
-		this.add_fields (vfields);
-
-		Gee.Collection<Vala.Constant> vconstants = this.vstruct.get_constants();
-		this.add_constants (vconstants);
-
-		Gee.Collection<Vala.Method> vmethods = this.vstruct.get_methods ();
-		this.add_methods_and_construction_methods (vmethods);
 	}
 
 	protected Struct? base_type {

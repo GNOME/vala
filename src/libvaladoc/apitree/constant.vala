@@ -35,7 +35,7 @@ public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 		return ( this.vconst == vconst );
 	}
 
-	public Constant (Valadoc.Settings settings, Vala.Constant symbol, ConstantHandler parent, Tree root) {
+	public Constant (Valadoc.Settings settings, Vala.Constant symbol, Api.Node parent, Tree root) {
 		base (settings, symbol, parent, root);
 		this.vconst = symbol;
 

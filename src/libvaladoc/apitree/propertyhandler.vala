@@ -22,32 +22,25 @@ using GLib;
 using Gee;
 
 public interface Valadoc.PropertyHandler : Api.Node {
-	protected bool is_overwritten_property ( Property prop ) {
-		foreach ( Property p in get_property_list () ) {
-			if ( p.parent != this )
+	protected bool is_overwritten_property (Property prop) {
+		foreach (Property p in get_property_list ()) {
+			if (p.parent != this)
 				continue ;
 
-			if ( !p.is_override )
+			if (!p.is_override)
 				continue ;
 
-			if ( p.equals ( prop ) )
+			if (p.equals (prop))
 				return true;
 		}
 		return false;
 	}
 
-	public Gee.Collection<Property> get_property_list ( ) {
+	public Gee.Collection<Property> get_property_list () {
 		return get_children_by_type (Api.NodeType.PROPERTY);
 	}
 
-	public void visit_properties ( Doclet doclet ) {
+	public void visit_properties (Doclet doclet) {
 		accept_children_by_type (Api.NodeType.PROPERTY, doclet);
-	}
-
-	protected void add_properties ( Gee.Collection<Vala.Property> vproperties ) {
-		foreach ( Vala.Property vprop in vproperties ) {
-			var tmp = new Property ( this.settings, vprop, this, this.head );
-			add_child ( tmp );
-		}
 	}
 }
