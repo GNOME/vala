@@ -26,8 +26,8 @@ using Gee;
 public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 	private Vala.Property vproperty;
 
-	public Property (Valadoc.Settings settings, Vala.Property symbol, Api.Node parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public Property (Valadoc.Settings settings, Vala.Property symbol, Api.Node parent) {
+		base (settings, symbol, parent);
 
 		this.vproperty = symbol;
 
@@ -35,11 +35,11 @@ public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 		this.set_ret_type (ret);
 
 		if (this.vproperty.get_accessor != null) {
-			this.getter = new PropertyAccessor (this.settings, this.vproperty.get_accessor, this, this.head);
+			this.getter = new PropertyAccessor (this.settings, this.vproperty.get_accessor, this);
 		}
 
 		if (this.vproperty.set_accessor != null) {
-			this.setter = new PropertyAccessor (this.settings, this.vproperty.set_accessor, this, this.head);
+			this.setter = new PropertyAccessor (this.settings, this.vproperty.set_accessor, this);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 	}
 
 
-	protected override void resolve_type_references () {
+	protected override void resolve_type_references (Tree root) {
 		Vala.Property? vp = null;
 		if (vproperty.base_property != null) {
 			vp = vproperty.base_property;
@@ -105,9 +105,9 @@ public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 			vp = vproperty.base_interface_property;
 		}
 		if (vp != null) {
-			this.base_property = (Property?) this.head.search_vala_symbol (vp);
+			this.base_property = (Property?) root.search_vala_symbol (vp);
 		}
-		this.set_return_type_references ( );
+		this.set_return_type_references (root);
 	}
 
 	public void visit (Doclet doclet) {

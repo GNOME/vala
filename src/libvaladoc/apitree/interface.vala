@@ -24,8 +24,8 @@ using Gee;
 
 
 public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler, MethodHandler, DelegateHandler, EnumHandler, StructHandler, ClassHandler {
-	public Interface (Valadoc.Settings settings, Vala.Interface symbol, Api.Node parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public Interface (Valadoc.Settings settings, Vala.Interface symbol, Api.Node parent) {
+		base (settings, symbol, parent);
 		this.vinterface = symbol;
 	}
 
@@ -63,12 +63,12 @@ public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHand
 		langlet.write_interface ( this, ptr );
 	}
 
-	private void set_prerequisites ( Gee.Collection<Vala.DataType> lst ) {
+	private void set_prerequisites (Tree root, Gee.Collection<Vala.DataType> lst) {
 		if ( ((Gee.Collection)this.interfaces).size != 0 )
 			return ;
 
 		foreach ( Vala.DataType vtyperef in lst ) {
-			Basic? element = this.head.search_vala_symbol ( vtyperef.data_type );
+			Basic? element = root.search_vala_symbol ( vtyperef.data_type );
 			if ( element is Class )
 				this.base_type = (Class)element;
 			else
@@ -76,11 +76,11 @@ public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHand
 		}
 	}
 
-	protected override void resolve_type_references () {
-		var lst = this.vinterface.get_prerequisites ( );
-		this.set_prerequisites ( lst );
+	protected override void resolve_type_references (Tree root) {
+		var lst = this.vinterface.get_prerequisites ();
+		this.set_prerequisites (root, lst);
 
-		base.resolve_type_references ();
+		base.resolve_type_references (root);
 	}
 }
 

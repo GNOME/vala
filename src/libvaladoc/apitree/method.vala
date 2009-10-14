@@ -26,8 +26,8 @@ using Gee;
 public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHandler, TemplateParameterListHandler, ReturnTypeHandler {
 	private Vala.Method vmethod;
 
-	public Method (Valadoc.Settings settings, Vala.Method symbol, Api.Node parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public Method (Valadoc.Settings settings, Vala.Method symbol, Api.Node parent) {
+		base (settings, symbol, parent);
 		this.vmethod = symbol;
 
 		var vret = this.vmethod.return_type;
@@ -107,7 +107,7 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 		}
 	}
 
-	protected override void resolve_type_references () {
+	protected override void resolve_type_references (Tree root) {
 		Vala.Method? vm = null;
 		if (vmethod.base_method != null) {
 			vm = vmethod.base_method;
@@ -118,15 +118,15 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 			vm = vmethod.base_interface_method;
 		}
 		if (vm != null) {
-			this.base_method = (Method?) this.head.search_vala_symbol (vm);
+			this.base_method = (Method?) root.search_vala_symbol (vm);
 		}
 
 		var vexceptionlst = this.vmethod.get_error_types ();
-		this.add_exception_list ( vexceptionlst );
+		this.add_exception_list (root, vexceptionlst);
 
-		this.set_return_type_references ();
+		this.set_return_type_references (root);
 
-		base.resolve_type_references ( );
+		base.resolve_type_references (root);
 	}
 
 	public void visit ( Doclet doclet, Valadoc.MethodHandler in_type ) {

@@ -24,8 +24,8 @@ using Gee;
 public class Valadoc.ErrorDomain : Api.TypeSymbolNode, MethodHandler {
 	private Vala.ErrorDomain verrdom;
 
-	public ErrorDomain (Valadoc.Settings settings, Vala.ErrorDomain symbol, Api.Node parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public ErrorDomain (Valadoc.Settings settings, Vala.ErrorDomain symbol, Api.Node parent) {
+		base (settings, symbol, parent);
 		this.verrdom = symbol;
 	}
 

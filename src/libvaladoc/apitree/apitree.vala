@@ -186,7 +186,7 @@ public class Valadoc.Tree {
 		var vfile = new SourceFile (context, package_path, true);
 		context.add_source_file (vfile);
 
-		Package vdpkg = new Package (this.settings, vfile, this, true);
+		Package vdpkg = new Package (this.settings, vfile, true);
 		this.packages.add (vdpkg);
 
 		var deps_filename = Path.build_filename (Path.get_dirname (package_path), "%s.deps".printf (pkg));
@@ -233,7 +233,7 @@ public class Valadoc.Tree {
 
 
 					if (this.sourcefiles == null) {
-						this.sourcefiles = new Package (this.settings, source_file, this, false);
+						this.sourcefiles = new Package (this.settings, source_file, false);
 						this.packages.add (this.sourcefiles);
 					}
 					else {
@@ -255,7 +255,7 @@ public class Valadoc.Tree {
 					context.add_source_file (source_file);
 				} else if (source.has_suffix (".vapi")) {
 					var vfile = new SourceFile (context, rpath, true);
-					Package vdpkg = new Package (this.settings, vfile, this); 
+					Package vdpkg = new Package (this.settings, vfile); 
 					context.add_source_file (vfile);
 					this.packages.add (vdpkg);
 				} else if (source.has_suffix (".c")) {
@@ -314,7 +314,7 @@ public class Valadoc.Tree {
 
 	private void resolve_type_references () {
 		foreach (Package pkg in this.packages) {
-			pkg.resolve_type_references();
+			pkg.resolve_type_references (this);
 		}
 	}
 

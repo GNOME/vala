@@ -24,8 +24,8 @@ using Gee;
 public class Valadoc.FormalParameter : Api.SymbolNode, ReturnTypeHandler {
 	private Vala.FormalParameter vformalparam;
 
-	public FormalParameter (Valadoc.Settings settings, Vala.FormalParameter symbol, Api.Node parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public FormalParameter (Valadoc.Settings settings, Vala.FormalParameter symbol, Api.Node parent) {
+		base (settings, symbol, parent);
 		this.vformalparam = symbol;
 
 		var vformparam = this.vformalparam.parameter_type;
@@ -66,13 +66,13 @@ public class Valadoc.FormalParameter : Api.SymbolNode, ReturnTypeHandler {
 	public override void accept (Doclet doclet) {
 	}
 
-	protected override void resolve_type_references () {
+	protected override void resolve_type_references (Tree root) {
 		if (this.vformalparam.ellipsis)
 			return ;
 
-		this.set_return_type_references ();
+		this.set_return_type_references (root);
 
-		base.resolve_type_references ();
+		base.resolve_type_references (root);
 	}
 
 	public void write ( Langlet langlet, void* ptr ) {

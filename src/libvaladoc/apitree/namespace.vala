@@ -29,8 +29,8 @@ public class Valadoc.Namespace : Api.SymbolNode, MethodHandler, FieldHandler, Na
 {
 	private Comment source_comment;
 
-	public Namespace (Valadoc.Settings settings, Vala.Namespace symbol, NamespaceHandler parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public Namespace (Valadoc.Settings settings, Vala.Namespace symbol, NamespaceHandler parent) {
+		base (settings, symbol, parent);
 
 		this.vnspace = symbol;
 

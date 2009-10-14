@@ -26,8 +26,8 @@ using Gee;
 public class Valadoc.Field : Api.MemberNode, ReturnTypeHandler {
 	private Vala.Field vfield;
 
-	public Field (Valadoc.Settings settings, Vala.Field symbol, Api.Node parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public Field (Valadoc.Settings settings, Vala.Field symbol, Api.Node parent) {
+		base (settings, symbol, parent);
 		this.vfield = symbol;
 
 		var vret = this.vfield.field_type;
@@ -58,10 +58,10 @@ public class Valadoc.Field : Api.MemberNode, ReturnTypeHandler {
 		}
 	}
 
-	protected override void resolve_type_references () {
-		this.set_return_type_references ();
+	protected override void resolve_type_references (Tree root) {
+		this.set_return_type_references (root);
 
-		base.resolve_type_references ();
+		base.resolve_type_references (root);
 	}
 
 	public void visit ( Doclet doclet, FieldHandler? parent ) {

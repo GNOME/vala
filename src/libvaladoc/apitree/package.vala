@@ -85,8 +85,8 @@ public class Valadoc.Package : Api.Node, NamespaceHandler {
 		}
 	}
 
-	public Package.with_name (Valadoc.Settings settings, Vala.SourceFile vfile, string name, Tree root, bool is_package = false) {
-		base (settings, null, root);
+	public Package.with_name (Valadoc.Settings settings, Vala.SourceFile vfile, string name, bool is_package = false) {
+		base (settings, null);
 		this.is_package = is_package;
 
 		this.package_name = name;
@@ -95,8 +95,8 @@ public class Valadoc.Package : Api.Node, NamespaceHandler {
 		this.parent = null;
 	}
 
-	public Package (Valadoc.Settings settings, Vala.SourceFile vfile, Tree head, bool is_package = false) {
-		this.with_name (settings, vfile, this.extract_package_name (settings, vfile), head, is_package);
+	public Package (Valadoc.Settings settings, Vala.SourceFile vfile, bool is_package = false) {
+		this.with_name (settings, vfile, this.extract_package_name (settings, vfile), is_package);
 	}
 
 	private string package_name;

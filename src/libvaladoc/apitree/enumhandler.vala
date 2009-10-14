@@ -37,7 +37,7 @@ public interface Valadoc.EnumHandler : Api.Node {
 	}
 
 	public void add_enum ( Vala.Enum venum ) {
-		Enum tmp = new Enum ( this.settings, venum, this, this.head );
+		Enum tmp = new Enum (this.settings, venum, this);
 		add_child (tmp);
 	}
 }

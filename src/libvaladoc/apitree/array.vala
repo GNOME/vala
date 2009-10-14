@@ -31,32 +31,31 @@ public class Valadoc.Array : Basic {
 		get;
 	}
 
-	public Array (Valadoc.Settings settings, Vala.ArrayType vtyperef, Basic parent, Tree head) {
+	public Array (Valadoc.Settings settings, Vala.ArrayType vtyperef, Basic parent) {
 		this.settings = settings;
 		this.vtype = vtyperef;
 		this.parent = parent;
-		this.head = head;
 
 		Vala.DataType vntype = vtyperef.element_type;
 		if ( vntype is Vala.ArrayType )
-			this.data_type = new Array (settings, (Vala.ArrayType)vntype, this, head);
+			this.data_type = new Array (settings, (Vala.ArrayType)vntype, this);
 		else
-			this.data_type = new TypeReference (settings, vntype, this, head);
+			this.data_type = new TypeReference (settings, vntype, this);
 	}
 
 	public void write (Langlet langlet, void* ptr, DocumentedElement parent) {
 		langlet.write_array (this, ptr, parent);
 	}
 
-	public void set_type_references () {
+	protected override void resolve_type_references (Tree root) {
 		if ( this.data_type == null )
 			/*TODO:possible?*/;
 		else if ( this.data_type is Array )
-			((Array)this.data_type).resolve_type_references ();
+			((Array)this.data_type).resolve_type_references (root);
 		else if ( this.data_type is Pointer )
-			((Pointer)this.data_type).resolve_type_references ();
+			((Pointer)this.data_type).resolve_type_references (root);
 		else
-			((TypeReference)this.data_type).resolve_type_references ();
+			((TypeReference)this.data_type).resolve_type_references (root);
 	}
 }
 

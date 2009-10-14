@@ -27,16 +27,16 @@ public interface Valadoc.ReturnTypeHandler : Basic {
 		get;
 	}
 
-	internal void set_return_type_references () {
+	internal void set_return_type_references (Tree root) {
 		if ( this.type_reference == null )
 			return ;
 
-		this.type_reference.resolve_type_references ();
+		this.type_reference.resolve_type_references (root);
 	}
 
 	// rename
 	internal void set_ret_type ( Vala.DataType? vtref ) {
-		var tmp = new TypeReference ( this.settings, vtref, this, this.head );
+		var tmp = new TypeReference (this.settings, vtref, this);
 		this.type_reference = tmp;
 	}
 }

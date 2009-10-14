@@ -26,8 +26,8 @@ using Gee;
 
 public abstract class Valadoc.Api.MemberNode : Api.SymbolNode {
 
-	public MemberNode (Settings settings, Vala.Member symbol, Api.Node parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public MemberNode (Settings settings, Vala.Member symbol, Api.Node parent) {
+		base (settings, symbol, parent);
 	}
 
 	protected override void parse_comments (DocumentationParser parser) {

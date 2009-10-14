@@ -47,7 +47,7 @@ public interface Valadoc.NamespaceHandler : Api.Node {
 
 		Namespace ns = this.find_namespace_without_childs ( vns );
 		if ( ns == null ) {
-			ns = new Namespace( this.settings, vns, this, this.head );
+			ns = new Namespace (this.settings, vns, this);
 			add_child ( ns );
 		}
 
@@ -74,7 +74,7 @@ public interface Valadoc.NamespaceHandler : Api.Node {
 			return this.get_namespace_helper ( node, vnspaces, 1 );
 		}
 		else {
-			var ns = new Namespace( this.settings, vnspace, this, this.head );
+			var ns = new Namespace (this.settings, vnspace, this);
 			add_child ( ns );
 			return ns;
 		}

@@ -26,8 +26,8 @@ using Gee;
 
 public abstract class Valadoc.Api.TypeSymbolNode : Api.SymbolNode {
 
-	public TypeSymbolNode (Settings settings, Vala.TypeSymbol symbol, Api.Node parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public TypeSymbolNode (Settings settings, Vala.TypeSymbol symbol, Api.Node parent) {
+		base (settings, symbol, parent);
 	}
 
 	protected override void parse_comments (DocumentationParser parser) {

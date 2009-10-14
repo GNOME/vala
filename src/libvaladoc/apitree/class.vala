@@ -27,8 +27,8 @@ public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, Si
 	private Gee.ArrayList<Interface> interfaces;
 	private Vala.Class vclass;
 
-	public Class (Valadoc.Settings settings, Vala.Class symbol, Api.Node parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public Class (Valadoc.Settings settings, Vala.Class symbol, Api.Node parent) {
+		base (settings, symbol, parent);
 		this.interfaces = new Gee.ArrayList<Interface>();
 
 		this.vclass = symbol;
@@ -80,12 +80,12 @@ public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, Si
 		visit (doclet);
 	}
 
-	private void set_parent_type_references ( Gee.Collection<Vala.DataType> lst ) {
+	private void set_parent_type_references (Tree root, Gee.Collection<Vala.DataType> lst) {
 		if (this.interfaces.size != 0)
 			return ;
 
 		foreach ( Vala.DataType vtyperef in lst ) {
-			Basic? element = this.head.search_vala_symbol ( vtyperef.data_type );
+			Basic? element = root.search_vala_symbol ( vtyperef.data_type );
 			if ( element is Class ) {
 				this.base_type = (Class)element;
 			}
@@ -95,11 +95,11 @@ public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, Si
 		}
 	}
 
-	protected override void resolve_type_references () {
+	protected override void resolve_type_references (Tree root) {
 		var lst = this.vclass.get_base_types ();
-		this.set_parent_type_references ( lst );
+		this.set_parent_type_references (root, lst);
 
-		base.resolve_type_references ( );
+		base.resolve_type_references (root);
 	}
 }
 

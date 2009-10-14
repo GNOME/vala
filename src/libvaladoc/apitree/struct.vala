@@ -26,8 +26,8 @@ using Gee;
 public class Valadoc.Struct : Api.TypeSymbolNode, MethodHandler, ConstructionMethodHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler {
 	private Vala.Struct vstruct;
 
-	public Struct (Valadoc.Settings settings, Vala.Struct symbol, Api.Node parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public Struct (Valadoc.Settings settings, Vala.Struct symbol, Api.Node parent) {
+		base (settings, symbol, parent);
 		this.vstruct = symbol;
 	}
 
@@ -57,18 +57,18 @@ public class Valadoc.Struct : Api.TypeSymbolNode, MethodHandler, ConstructionMet
 		langlet.write_struct (this, ptr);
 	}
 
-	private void set_parent_references ( ) {
-		Vala.ValueType? basetype = (Vala.ValueType?)this.vstruct.base_type;
+	private void set_parent_references (Tree root) {
+		Vala.ValueType? basetype = this.vstruct.base_type as Vala.ValueType;
 		if (basetype == null)
 			return ;
 
-		this.base_type = (Struct?)this.head.search_vala_symbol ( (Vala.Struct)basetype.type_symbol );
+		this.base_type = (Struct?) root.search_vala_symbol ((Vala.Struct) basetype.type_symbol);
 	}
 
-	protected override void resolve_type_references () {
-		this.set_parent_references ( );
+	protected override void resolve_type_references (Tree root) {
+		this.set_parent_references (root);
 
-		base.resolve_type_references ( );
+		base.resolve_type_references (root);
 	}
 }
 

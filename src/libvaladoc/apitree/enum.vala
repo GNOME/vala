@@ -24,8 +24,8 @@ using Gee;
 
 
 public class Valadoc.Enum : Api.TypeSymbolNode, MethodHandler {
-	public Enum (Valadoc.Settings settings, Vala.Enum symbol, Api.Node parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public Enum (Valadoc.Settings settings, Vala.Enum symbol, Api.Node parent) {
+		base (settings, symbol, parent);
 		this.venum = symbol;
 	}
 

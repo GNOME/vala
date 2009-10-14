@@ -58,10 +58,9 @@ public abstract class Valadoc.Api.Node : /*Api.Item*/DocumentedElement, Visitabl
 	private Map<Symbol,Node> per_symbol_children;
 	private Map<NodeType?,Gee.List<Node>> per_type_children;
 
-	public Node (Settings settings, Api.Node? parent, Tree root) {
+	public Node (Settings settings, Api.Node? parent) {
 		this.settings = settings;
 		this.parent = parent;
-		this.head = root;
 
 		per_name_children = new HashMap<string,Node> ();
 		per_symbol_children = new HashMap<Symbol,Node> ();
@@ -97,9 +96,9 @@ public abstract class Valadoc.Api.Node : /*Api.Item*/DocumentedElement, Visitabl
 		children.add (child);
 	}
 
-	protected override void resolve_type_references () {
+	protected override void resolve_type_references (Tree root) {
 		foreach (Node node in per_name_children.values) {
-			node.resolve_type_references ();
+			node.resolve_type_references (root);
 		}
 	}
 

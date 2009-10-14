@@ -27,21 +27,20 @@ public class Valadoc.TypeReference : Basic {
 	private Gee.ArrayList<TypeReference> type_arguments = new Gee.ArrayList<TypeReference> ();
 	private Vala.DataType? vtyperef;
 
-	public TypeReference ( Valadoc.Settings settings, Vala.DataType? vtyperef, Basic parent, Tree head ) {
+	public TypeReference (Valadoc.Settings settings, Vala.DataType? vtyperef, Basic parent) {
 		this.settings = settings;
 		this.vtyperef = vtyperef;
 		this.parent = parent;
-		this.head = head;
 	}
 
 	public Gee.Collection<TypeReference> get_type_arguments ( ) {
 		return this.type_arguments.read_only_view;
 	}
 
-	private void set_template_argument_list ( Gee.Collection<Vala.DataType> varguments ) {
+	private void set_template_argument_list (Tree root, Gee.Collection<Vala.DataType> varguments) {
 		foreach ( Vala.DataType vdtype in varguments ) {
-			var dtype = new TypeReference ( this.settings, vdtype, this, this.head );
-			dtype.resolve_type_references ( );
+			var dtype = new TypeReference (this.settings, vdtype, this);
+			dtype.resolve_type_references (root);
 			this.type_arguments.add ( dtype );
 		}
 	}
@@ -185,41 +184,41 @@ public class Valadoc.TypeReference : Basic {
 		}
 	}
 
-	protected override void resolve_type_references () {
+	protected override void resolve_type_references (Tree root) {
 		if ( this.vtyperef != null ) {
 			if ( this.vtyperef is PointerType )
-				this.data_type = new Pointer ( settings, (Vala.PointerType)this.vtyperef, this, head );
+				this.data_type = new Pointer (settings, (Vala.PointerType) this.vtyperef, this);
 			else if ( vtyperef is ArrayType )
-				this.data_type = new Array ( settings, (Vala.ArrayType)this.vtyperef, this, head );
+				this.data_type = new Array (settings, (Vala.ArrayType) this.vtyperef, this);
 			else if ( vtyperef is GenericType )
-				 this.data_type = (TypeParameter) this.head.search_vala_symbol (((Vala.ArrayType) this.vtyperef).type_parameter);
+				 this.data_type = (TypeParameter) root.search_vala_symbol (((Vala.GenericType) this.vtyperef).type_parameter);
 		}
 
 
 		if ( this.data_type == null ) {
 			Vala.DataType vtype = this.vtyperef;
-			this.set_template_argument_list ( vtype.get_type_arguments ()  );
+			this.set_template_argument_list (root, vtype.get_type_arguments ());
 			// still necessary?
 			if ( vtype is Vala.ErrorType ) {
 				Vala.ErrorDomain verrdom = ((Vala.ErrorType)vtype).error_domain;
 				if ( verrdom != null )
-					this.data_type = this.head.search_vala_symbol ( verrdom );
+					this.data_type = root.search_vala_symbol ( verrdom );
 				else
 					this.data_type = glib_error;
 			}
 			// necessary?
 			else if (vtype is Vala.DelegateType ) {
-				this.data_type = this.head.search_vala_symbol ( ((Vala.DelegateType)vtype).delegate_symbol );
+				this.data_type = root.search_vala_symbol ( ((Vala.DelegateType)vtype).delegate_symbol );
 			}
 			else {
-				this.data_type = this.head.search_vala_symbol ( vtype.data_type );
+				this.data_type = root.search_vala_symbol ( vtype.data_type );
 			}
 		}
 		else if ( this.data_type is Pointer ) {
-			((Pointer)this.data_type).resolve_type_references ();
+			((Pointer)this.data_type).resolve_type_references (root);
 		}
 		else if ( this.data_type is Array ) {
-			((Array)this.data_type).resolve_type_references ();
+			((Array)this.data_type).resolve_type_references (root);
 		}
 	}
 

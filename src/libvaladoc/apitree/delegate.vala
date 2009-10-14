@@ -26,8 +26,8 @@ using Gee;
 public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, ReturnTypeHandler, TemplateParameterListHandler, ExceptionHandler {
 	private Vala.Delegate vdelegate;
 
-	public Delegate (Valadoc.Settings settings, Vala.Delegate symbol, Api.Node parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public Delegate (Valadoc.Settings settings, Vala.Delegate symbol, Api.Node parent) {
+		base (settings, symbol, parent);
 
 		this.vdelegate = symbol;
 
@@ -63,11 +63,11 @@ public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, Return
 		}
 	}
 
-	protected override void resolve_type_references () {
-		this.set_return_type_references ( );
+	protected override void resolve_type_references (Tree root) {
+		this.set_return_type_references (root);
 
 		var vexceptionlst = this.vdelegate.get_error_types ();
-		this.add_exception_list ( vexceptionlst );
+		this.add_exception_list (root, vexceptionlst);
 	}
 
 	public void write (Langlet langlet, void* ptr) {

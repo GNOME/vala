@@ -36,8 +36,8 @@ public abstract class Valadoc.Api.SymbolNode : Api.Node, SymbolAccessibility {
 		}
 	}
 
-	public SymbolNode (Settings settings, Vala.Symbol symbol, Api.Node parent, Tree root) {
-		base (settings, parent, root);
+	public SymbolNode (Settings settings, Vala.Symbol symbol, Api.Node parent) {
+		base (settings, parent);
 		this.symbol = symbol;
 	}
 

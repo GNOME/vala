@@ -34,13 +34,7 @@ public abstract class Valadoc.Api.Item : Object {
 		get;
 	}
 
-	// TODO rename root
-	public Tree head {
-		protected set;
-		get;
-	}
-
-	protected virtual void resolve_type_references () {
+	protected virtual void resolve_type_references (Tree root) {
 	}
 
 	protected virtual void parse_comments (DocumentationParser parser) {

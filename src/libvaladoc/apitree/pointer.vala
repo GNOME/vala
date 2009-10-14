@@ -32,35 +32,34 @@ public class Valadoc.Pointer : Basic {
 		get;
 	}
 
-	public Pointer (Valadoc.Settings settings, Vala.PointerType vtyperef, Basic parent, Tree head) {
+	public Pointer (Valadoc.Settings settings, Vala.PointerType vtyperef, Basic parent) {
 		this.settings = settings;
 		this.vtype = vtyperef;
 		this.parent = parent;
-		this.head = head;
 
 		Vala.DataType vntype = vtype.base_type;
 		if (vntype is Vala.PointerType)
-			this.data_type = new Pointer (settings, (Vala.PointerType)vntype, this, head);
+			this.data_type = new Pointer (settings, (Vala.PointerType) vntype, this);
 		else if (vntype is Vala.ArrayType)
-			this.data_type = new Array (settings, (Vala.ArrayType)vntype, this, head);
+			this.data_type = new Array (settings, (Vala.ArrayType) vntype, this);
 		else
-			this.data_type = new TypeReference (settings, vntype, this, head);
+			this.data_type = new TypeReference (settings, vntype, this);
 	}
 
 	public void write (Langlet langlet, void* ptr, DocumentedElement parent) {
 		langlet.write_pointer (this, ptr, parent);
 	}
 
-	protected override void resolve_type_references () {
+	protected override void resolve_type_references (Tree root) {
 		Basic type = this.data_type;
 		if ( type == null )
 			;
 		else if ( type is Array )
-			((Array)type).resolve_type_references ();
+			((Array) type).resolve_type_references (root);
 		else if ( type is Pointer )
-			((Pointer)type ).resolve_type_references ();
+			((Pointer) type ).resolve_type_references (root);
 		else
-			((TypeReference)type).resolve_type_references ();
+			((TypeReference) type).resolve_type_references (root);
 	}
 }
 

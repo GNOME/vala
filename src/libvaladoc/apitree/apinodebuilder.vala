@@ -70,7 +70,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_class (Vala.Class element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new Class (settings, element, parent, root);
+		SymbolNode node = new Class (settings, element, parent);
 		parent.add_child (node);
 
 		process_children (node, element);
@@ -79,7 +79,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_interface (Vala.Interface element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new Interface (settings, element, parent, root);
+		SymbolNode node = new Interface (settings, element, parent);
 		parent.add_child (node);
 
 		process_children (node, element);
@@ -88,7 +88,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_struct (Vala.Struct element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new Struct (settings, element, parent, root);
+		SymbolNode node = new Struct (settings, element, parent);
 		parent.add_child (node);
 
 		process_children (node, element);
@@ -97,7 +97,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_field (Vala.Field element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new Field (settings, element, parent, root);
+		SymbolNode node = new Field (settings, element, parent);
 		parent.add_child (node);
 
 		// Process field type
@@ -108,7 +108,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_property (Vala.Property element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new Property (settings, element, parent, root);
+		SymbolNode node = new Property (settings, element, parent);
 		parent.add_child (node);
 
 		// Process property type
@@ -119,7 +119,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_method (Vala.Method element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new Method (settings, element, parent, root);
+		SymbolNode node = new Method (settings, element, parent);
 		parent.add_child (node);
 
 		// Process error types
@@ -131,7 +131,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_signal (Vala.Signal element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new Signal (settings, element, parent, root);
+		SymbolNode node = new Signal (settings, element, parent);
 		parent.add_child (node);
 
 		// Process return type
@@ -142,7 +142,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_delegate (Vala.Delegate element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new Delegate (settings, element, parent, root);
+		SymbolNode node = new Delegate (settings, element, parent);
 		parent.add_child (node);
 
 		// Process error types
@@ -154,7 +154,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_enum (Vala.Enum element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new Enum (settings, element, parent, root);
+		SymbolNode node = new Enum (settings, element, parent);
 		parent.add_child (node);
 
 		process_children (node, element);
@@ -163,7 +163,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_enum_value (Vala.EnumValue element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new EnumValue (settings, element, parent, root);
+		SymbolNode node = new EnumValue (settings, element, parent);
 		parent.add_child (node);
 
 		process_children (node, element);
@@ -172,7 +172,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_constant (Vala.Constant element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new Constant (settings, element, parent, root);
+		SymbolNode node = new Constant (settings, element, parent);
 		parent.add_child (node);
 
 		process_children (node, element);
@@ -181,7 +181,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_error_domain (Vala.ErrorDomain element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new ErrorDomain (settings, element, parent, root);
+		SymbolNode node = new ErrorDomain (settings, element, parent);
 		parent.add_child (node);
 
 		process_children (node, element);
@@ -190,7 +190,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_error_code (Vala.ErrorCode element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new ErrorCode (settings, element, parent, root);
+		SymbolNode node = new ErrorCode (settings, element, parent);
 		parent.add_child (node);
 
 		process_children (node, element);
@@ -199,7 +199,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_type_parameter (Vala.TypeParameter element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new TypeParameter (settings, element, parent, root);
+		SymbolNode node = new TypeParameter (settings, element, parent);
 		parent.add_child (node);
 
 		process_children (node, element);
@@ -208,7 +208,7 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 	public override void visit_formal_parameter (Vala.FormalParameter element) {
 		Node parent = get_parent_node_for (element);
 
-		SymbolNode node = new FormalParameter (settings, element, parent, root);
+		SymbolNode node = new FormalParameter (settings, element, parent);
 		parent.add_child (node);
 
 		process_children (node, element);

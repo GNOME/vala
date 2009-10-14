@@ -28,12 +28,12 @@ public interface Valadoc.ExceptionHandler : Api.Node {
 		return get_children_by_type (Api.NodeType.ERROR_DOMAIN);
 	}
 
-	public void add_exception_list (Gee.Collection<Vala.DataType> vexceptions) {
+	public void add_exception_list (Tree root, Gee.Collection<Vala.DataType> vexceptions) {
 		foreach (Vala.DataType vtype in vexceptions) {
 			if (((Vala.ErrorType) vtype).error_domain == null) {
 				add_child ( glib_error );
 			} else {
-				ErrorDomain type = (ErrorDomain) this.head.search_vala_symbol (((Vala.ErrorType) vtype).error_domain);
+				ErrorDomain type = (ErrorDomain) root.search_vala_symbol (((Vala.ErrorType) vtype).error_domain);
 				add_child (type);
 			}
 		}

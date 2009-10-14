@@ -35,8 +35,8 @@ public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 		return ( this.vconst == vconst );
 	}
 
-	public Constant (Valadoc.Settings settings, Vala.Constant symbol, Api.Node parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public Constant (Valadoc.Settings settings, Vala.Constant symbol, Api.Node parent) {
+		base (settings, symbol, parent);
 		this.vconst = symbol;
 
 		var vret = this.vconst.type_reference;
@@ -47,8 +47,8 @@ public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 		return this.vconst.get_cname ();
 	}
 
-	protected override void resolve_type_references () {
-		this.set_return_type_references ( );
+	protected override void resolve_type_references (Tree root) {
+		this.set_return_type_references (root);
 	}
 
 	public void visit ( Doclet doclet, ConstantHandler? parent ) {

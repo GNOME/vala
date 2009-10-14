@@ -26,8 +26,8 @@ using Gee;
 public class Valadoc.Signal : Api.MemberNode, ParameterListHandler, ReturnTypeHandler {
 	private Vala.Signal vsignal;
 
-	public Signal (Valadoc.Settings settings, Vala.Signal symbol, Api.Node parent, Tree root) {
-		base (settings, symbol, parent, root);
+	public Signal (Valadoc.Settings settings, Vala.Signal symbol, Api.Node parent) {
+		base (settings, symbol, parent);
 
 		this.vsignal = symbol;
 
@@ -44,10 +44,10 @@ public class Valadoc.Signal : Api.MemberNode, ParameterListHandler, ReturnTypeHa
 		get;
 	}
 
-	protected override void resolve_type_references () {
-		this.set_return_type_references ( );
+	protected override void resolve_type_references (Tree root) {
+		this.set_return_type_references (root);
 
-		base.resolve_type_references ( );
+		base.resolve_type_references (root);
 	}
 
 	public bool is_virtual {
