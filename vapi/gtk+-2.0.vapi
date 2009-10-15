@@ -4759,7 +4759,7 @@ namespace Gtk {
 		public void set_level_indentation (int indentation);
 		public void set_model (Gtk.TreeModel? model);
 		public void set_reorderable (bool reorderable);
-		public void set_row_separator_func (Gtk.TreeViewRowSeparatorFunc func, void* data, GLib.DestroyNotify destroy);
+		public void set_row_separator_func (owned Gtk.TreeViewRowSeparatorFunc func);
 		public void set_rubber_banding (bool enable);
 		public void set_rules_hint (bool setting);
 		public void set_search_column (int column);
