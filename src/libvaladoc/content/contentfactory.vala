@@ -53,10 +53,6 @@ public class Valadoc.Content.ContentFactory : Object {
 		return (Headline) configure (new Headline ());
 	}
 
-	public Highlighted create_highlighted (Highlighted.Style style) {
-		return (Highlighted) configure (new Highlighted (style));
-	}
-
 	public Link create_link () {
 		return (Link) configure (new Link ());
 	}
@@ -75,6 +71,10 @@ public class Valadoc.Content.ContentFactory : Object {
 
 	public Paragraph create_paragraph () {
 		return (Paragraph) configure (new Paragraph ());
+	}
+
+	public Run create_run (Run.Style style) {
+		return (Run) configure (new Run (style));
 	}
 
 	public SourceCode create_source_code () {

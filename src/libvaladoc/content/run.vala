@@ -1,4 +1,4 @@
-/* highlighted.vala
+/* run.vala
  *
  * Valadoc - a documentation tool for vala.
  * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
@@ -24,19 +24,22 @@
 using GLib;
 using Gee;
 
-public class Valadoc.Content.Highlighted : InlineContent, Inline {
+public class Valadoc.Content.Run : InlineContent, Inline {
 	public enum Style {
 		NONE,
 		BOLD,
 		ITALIC,
 		UNDERLINED,
 		MONOSPACED,
-		STROKE
+		STROKE,
+		LANG_KEYWORD,
+		LANG_LITERAL,
+		LANG_TYPE
 	}
 
 	public Style style { get; set; }
 
-	internal Highlighted (Style style) {
+	internal Run (Style style) {
 		base ();
 		_style = style;
 	}
@@ -47,6 +50,6 @@ public class Valadoc.Content.Highlighted : InlineContent, Inline {
 	}
 
 	public override void accept (ContentVisitor visitor) {
-		visitor.visit_highlighted (this);
+		visitor.visit_run (this);
 	}
 }

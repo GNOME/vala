@@ -89,7 +89,6 @@ libvaladoc_la_VALASOURCES = \
 	content/contentvisitor.vala \
 	content/embedded.vala \
 	content/headline.vala \
-	content/highlighted.vala \
 	content/inline.vala \
 	content/inlinetaglet.vala \
 	content/inlinecontent.vala \
@@ -99,6 +98,7 @@ libvaladoc_la_VALASOURCES = \
 	content/page.vala \
 	content/paragraph.vala \
 	content/resourcelocator.vala \
+	content/run.vala \
 	content/sourcecode.vala \
 	content/styleattributes.vala \
 	content/symbollink.vala \

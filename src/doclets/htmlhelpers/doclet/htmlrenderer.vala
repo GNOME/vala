@@ -171,34 +171,6 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		_stream.printf ("</h%d>", element.level);
 	}
 
-	public override void visit_highlighted (Highlighted element) {
-		string tag = null;
-		switch (element.style) {
-		case Highlighted.Style.BOLD:
-			tag = "b";
-			break;
-		case Highlighted.Style.ITALIC:
-			tag = "i";
-			break;
-		case Highlighted.Style.UNDERLINED:
-			tag = "u";
-			break;
-		case Highlighted.Style.MONOSPACED:
-			tag = "code";
-			break;
-		case Highlighted.Style.STROKE:
-			tag = "stroke";
-			break;
-		}
-		if (tag != null) {
-			_stream.printf ("<%s>", tag);
-		}
-		element.accept_children (this);
-		if (tag != null) {
-			_stream.printf ("</%s>", tag);
-		}
-	}
-
 	public override void visit_link (Link element) {
 		var label = element.label;
 		_stream.printf ("<a href=\"%s\">%s</a>",
@@ -224,6 +196,34 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		_stream.printf ("<p>");
 		element.accept_children (this);
 		_stream.printf ("</p>");
+	}
+
+	public override void visit_run (Run element) {
+		string tag = null;
+		switch (element.style) {
+		case Run.Style.BOLD:
+			tag = "b";
+			break;
+		case Run.Style.ITALIC:
+			tag = "i";
+			break;
+		case Run.Style.UNDERLINED:
+			tag = "u";
+			break;
+		case Run.Style.MONOSPACED:
+			tag = "code";
+			break;
+		case Run.Style.STROKE:
+			tag = "stroke";
+			break;
+		}
+		if (tag != null) {
+			_stream.printf ("<%s>", tag);
+		}
+		element.accept_children (this);
+		if (tag != null) {
+			_stream.printf ("</%s>", tag);
+		}
 	}
 
 	public override void visit_source_code (SourceCode element) {

@@ -35,9 +35,6 @@ public abstract class Valadoc.Content.ContentVisitor : Object {
 	public virtual void visit_headline (Headline element) {
 	}
 
-	public virtual void visit_highlighted (Highlighted element) {
-	}
-
 	public virtual void visit_link (Link element) {
 	}
 
@@ -54,6 +51,9 @@ public abstract class Valadoc.Content.ContentVisitor : Object {
 	}
 
 	public virtual void visit_page (Page element) {
+	}
+
+	public virtual void visit_run (Run element) {
 	}
 
 	public virtual void visit_source_code (SourceCode element) {

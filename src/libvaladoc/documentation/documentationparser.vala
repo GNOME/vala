@@ -206,19 +206,19 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		Rule bold =
 			Rule.seq ({ TokenType.SINGLE_QUOTE_2, run, TokenType.SINGLE_QUOTE_2 })
 				.set_name ("Bold")
-				.set_start (() => { push (_factory.create_highlighted (Highlighted.Style.BOLD)); });
+				.set_start (() => { push (_factory.create_run (Run.Style.BOLD)); });
 		Rule italic =
 			Rule.seq ({ TokenType.SLASH_2, run, TokenType.SLASH_2 })
 				.set_name ("Italic")
-				.set_start (() => { push (_factory.create_highlighted (Highlighted.Style.ITALIC)); });
+				.set_start (() => { push (_factory.create_run (Run.Style.ITALIC)); });
 		Rule underlined =
 			Rule.seq ({ TokenType.UNDERSCORE_2, run, TokenType.UNDERSCORE_2 })
 				.set_name ("Underlined")
-				.set_start (() => { push (_factory.create_highlighted (Highlighted.Style.UNDERLINED)); });
+				.set_start (() => { push (_factory.create_run (Run.Style.UNDERLINED)); });
 		Rule monospace =
 			Rule.seq ({ TokenType.BACK_QUOTE, run, TokenType.BACK_QUOTE })
 				.set_name ("Monospace")
-				.set_start (() => { push (_factory.create_highlighted (Highlighted.Style.MONOSPACED)); });
+				.set_start (() => { push (_factory.create_run (Run.Style.MONOSPACED)); });
 
 		Rule embedded =
 			Rule.seq ({

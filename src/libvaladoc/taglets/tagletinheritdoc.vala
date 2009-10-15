@@ -53,7 +53,7 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 		if (_inherited != null) {
 			Paragraph inherited_paragraph = _inherited.documentation.content.get (0) as Paragraph;
 
-			Highlighted paragraph = new Highlighted (Highlighted.Style.NONE);
+			Run paragraph = new Run (Run.Style.NONE);
 			foreach (var element in inherited_paragraph.content) {
 				paragraph.content.add (element);
 			}
