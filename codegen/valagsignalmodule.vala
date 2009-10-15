@@ -162,6 +162,16 @@ internal class Vala.GSignalModule : GObjectModule {
 			return;
 		}
 
+		if (cl != null) {
+			foreach (DataType base_type in cl.get_base_types ()) {
+				if (SemanticAnalyzer.symbol_lookup_inherited (base_type.data_type, sig.name) is Signal) {
+					sig.error = true;
+					Report.error (sig.source_reference, "Signals with the same name as a signal in a base type are not supported");
+					return;
+				}
+			}
+		}
+
 		sig.accept_children (codegen);
 
 		// declare parameter type
