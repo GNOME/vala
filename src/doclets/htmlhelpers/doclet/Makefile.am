@@ -14,7 +14,7 @@ AM_CFLAGS =                   \
 BUILT_SOURCES = libhtmlhelpers.vala.stamp
 
 
-htmlhelpersdir = $(libdir)/valadoc/plugins/htmlhelpers/
+htmlhelpersdir = $(libdir)/valadoc/plugins/htmlhelpers//
 
 
 htmlhelpers_LTLIBRARIES =   \
