@@ -97,9 +97,9 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 		owned get {
 			if (this.is_constructor) {
 				if (this.vmethod.name == ".new")
-					return ((DocumentedElement)this.parent).name;
+					return ((Api.Node)this.parent).name;
 				else
-					return ((DocumentedElement)this.parent).name + "." + this.vmethod.name;
+					return ((Api.Node)this.parent).name + "." + this.vmethod.name;
 			}
 			else {
 				return this.vmethod.name;

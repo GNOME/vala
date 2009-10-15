@@ -22,11 +22,11 @@ using GLib;
 
 // deprecated
 public abstract class Valadoc.Langlet : Object {
-	public abstract void write_pointer (Pointer param, void* ptr, DocumentedElement pos);
-	public abstract void write_array (Array param, void* ptr, DocumentedElement pos);
+	public abstract void write_pointer (Pointer param, void* ptr, Api.Node pos);
+	public abstract void write_array (Array param, void* ptr, Api.Node pos);
 	public abstract void write_type_parameter (TypeParameter param, void* ptr);
 	public abstract void write_template_parameters (TemplateParameterListHandler thandler, void* ptr);
-	public abstract void write_inheritance_list (DocumentedElement dtype, void* ptr);
+	public abstract void write_inheritance_list (Api.Node dtype, void* ptr);
 	public abstract void write_parameter_list (ParameterListHandler thandler, void* ptr);
 	public abstract void write_field (Valadoc.Field field, Valadoc.FieldHandler pos, void* ptr);
 	public abstract void write_constant (Valadoc.Constant constant, Valadoc.ConstantHandler parent, void* ptr);

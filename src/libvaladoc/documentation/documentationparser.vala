@@ -59,7 +59,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 	private Parser _parser;
 	private WikiScanner _scanner;
 
-	public Comment? parse (DocumentedElement element, Vala.Comment source_comment) {
+	public Comment? parse (Api.Node element, Vala.Comment source_comment) {
 		weak string content = source_comment.content;
 		var source_ref = source_comment.source_reference;
 		try {

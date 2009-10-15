@@ -65,7 +65,7 @@ public class Valadoc.ValadocOrg.ParameterTaglet : Valadoc.MainTaglet {
 		return true;
 	}
 
-	public override bool parse (Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg) {
+	public override bool parse (Settings settings, Tree tree, Api.Node me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg) {
 		if (me is Valadoc.ParameterListHandler == false) {
 			errmsg = "Tag @param cannot be used in this context";
 			errlvl = ErrorLevel.ERROR;

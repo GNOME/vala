@@ -32,9 +32,9 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 		this.settings = settings;
 	}
 
-	private DocumentedElement position = null;
+	private Api.Node position = null;
 
-	private string get_link ( DocumentedElement element, DocumentedElement? position ) {
+	private string get_link ( Api.Node element, Api.Node? position ) {
 		return get_html_link ( this.settings, element, position );
 	}
 
@@ -52,14 +52,14 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 		return false;
 	}
 
-	private void write_type_name ( DocumentedElement? datatype, GLib.FileStream file ) {
+	private void write_type_name ( Api.Node? datatype, GLib.FileStream file ) {
 		if ( datatype == null ) {
 			file.printf ( "<font class=\"%s\">void</font>", css_keyword );
 			return ;
 		}
 
 		string typename = datatype.full_name ();
-		if ( ((DocumentedElement)datatype.parent).name == null && (datatype is Class || datatype is Struct) ) {
+		if ( ((Api.Node)datatype.parent).name == null && (datatype is Class || datatype is Struct) ) {
 			if ( this.is_basic_type ( typename ) ) {
 				string link = this.get_link(datatype, this.position );
 				if ( link == null )
@@ -97,13 +97,13 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 		file.puts ( ">" );
 	}
 
-	private void write_type ( Basic? type, DocumentedElement? pos, GLib.FileStream file ) {
+	private void write_type ( Api.Item? type, Api.Node? pos, GLib.FileStream file ) {
 		if ( type == null ) {
 			file.printf ( "<font class=\"%s\">void</font>", css_keyword );
 		}
-		else if ( type is DocumentedElement ) {
-			DocumentedElement dtype = (DocumentedElement)type;
-			weak string css = (dtype.package.name == "glib-2.0" && ((DocumentedElement)dtype.parent).name == null)? css_basic_type : css_other_type;
+		else if ( type is Api.Node ) {
+			Api.Node dtype = (Api.Node)type;
+			weak string css = (dtype.package.name == "glib-2.0" && ((Api.Node)dtype.parent).name == null)? css_basic_type : css_other_type;
 			string? link = this.get_link ( dtype, pos );
 			if ( link == null)
 				file.printf ( "<font class=\"%s\">%s</font>", css, dtype.name );
@@ -124,16 +124,16 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 		}
 	}
 
-	public override void write_pointer ( Pointer ptr, void* fptr, DocumentedElement pos ) {
+	public override void write_pointer ( Pointer ptr, void* fptr, Api.Node pos ) {
 		weak GLib.FileStream file = (GLib.FileStream)fptr;
-		Basic type = ptr.data_type;
+		Api.Item type = ptr.data_type;
 		this.write_type ( type, pos, file );
 		file.putc ( '*' );
 	}
 
-	public override void write_array ( Array arr, void* fptr, DocumentedElement pos ) {
+	public override void write_array ( Array arr, void* fptr, Api.Node pos ) {
 		weak GLib.FileStream file = (GLib.FileStream)fptr;
-		Basic type =arr.data_type;
+		Api.Item type =arr.data_type;
 		this.write_type ( type, pos, file );
 		file.puts ( "[]" );
 	}
@@ -160,7 +160,7 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 
 		modifiers = null;
 
-		Basic? type = type_reference.data_type;
+		Api.Item? type = type_reference.data_type;
 		this.write_type ( type, this.position, file ); //TODO: this.position -> pos-parameter
 		this.write_type_reference_template_arguments ( type_reference, file );
 	}
@@ -217,7 +217,7 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 	}
 
 	private void write_exception_list ( ExceptionHandler exception_handler, GLib.FileStream file ) {
-		Gee.Collection<DocumentedElement> error_domains = exception_handler.get_error_domains ();
+		Gee.Collection<Api.Node> error_domains = exception_handler.get_error_domains ();
 		int size = error_domains.size;
 		int i = 1;
 
@@ -226,7 +226,7 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 
 		file.printf ( " <span class=\"%s\">throws</span> ", css_keyword );
 
-		foreach ( DocumentedElement type in error_domains ) {
+		foreach ( Api.Node type in error_domains ) {
 			this.write_type_name ( type, file );
 			if ( error_domains.size > i ) {
 				file.puts ( ", " );
@@ -447,11 +447,11 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 		this.write_inheritance_list ( stru, file );
 	}
 
-	public override void write_inheritance_list ( DocumentedElement dtype, void* ptr ) {
+	public override void write_inheritance_list ( Api.Node dtype, void* ptr ) {
 		weak GLib.FileStream file = (GLib.FileStream)ptr;
 
 		Gee.Collection<Interface> lst = null;
-		DocumentedElement? base_type = null;
+		Api.Node? base_type = null;
 		int size = 0;
 		int i = 1;
 
@@ -476,7 +476,7 @@ public class Valadoc.Html.BasicLanglet : Valadoc.Langlet {
 		file.puts ( " : " );
 
 		if ( base_type != null ) {
-			this.write_type_name ( (DocumentedElement)base_type, file );
+			this.write_type_name ( (Api.Node)base_type, file );
 			if ( size > 0 ) {
 				file.puts ( ", " );
 			}

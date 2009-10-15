@@ -29,14 +29,14 @@ public class Valadoc.Html.ValaApiWriter : ApiWriter {
 		return span;
 	}
 
-	private Entry parents (DocumentedElement type) {
+	private Entry parents (Api.Node type) {
 		Span span = new Span ();
 		span.add_attribute (this.cssparentlist);
 
 		Gee.Collection<Interface>? interfaces = null;
-		Basic? basetype = null;
+		Api.Item? basetype = null;
 
-		bool documentedelement;
+		bool Api.Node;
 
 		if (type is Interface) {
 			interfaces = ((Interface)type).get_implemented_interface_list ();
@@ -55,7 +55,7 @@ public class Valadoc.Html.ValaApiWriter : ApiWriter {
 		}
 
 		if (basetype != null) {
-			span.add_child (this.type (basetype, out documentedelement));
+			span.add_child (this.type (basetype, out Api.Node));
 		}
 
 		if (interfaces != null) {
@@ -65,7 +65,7 @@ public class Valadoc.Html.ValaApiWriter : ApiWriter {
 
 			int i = 0;
 			foreach (Interface iface in interfaces) {
-				span.add_child (this.type (iface, out documentedelement));
+				span.add_child (this.type (iface, out Api.Node));
 				if (interfaces.size < ++i) {
 					span.add_child (new String (", "));
 				}
@@ -75,10 +75,10 @@ public class Valadoc.Html.ValaApiWriter : ApiWriter {
 		return span;
 	}
 
-	private Entry type (Basic? type, out bool documentedelement) {
+	private Entry type (Api.Item? type, out bool Api.Node) {
 		ArrayList<Entry> elements = new ArrayList<Entry> ();
 		weak Attribute css = this.csstype;
-		documentedelement = false;
+		Api.Node = false;
 
 		while (true) {
 			if (type == null) {
@@ -98,8 +98,8 @@ public class Valadoc.Html.ValaApiWriter : ApiWriter {
 				elements.insert (0, new String (((TypeParameter)type).name));
 				break;
 			}
-			else if (type is DocumentedElement) {
-				weak DocumentedElement dtype = (DocumentedElement)type;
+			else if (type is Api.Node) {
+				weak Api.Node dtype = (Api.Node)type;
 				if (dtype.package.name == "glib-2.0" && dtype.nspace.name == null && (dtype is Struct || dtype is Class)) {
 					css = this.cssbasictype;
 				}
@@ -107,7 +107,7 @@ public class Valadoc.Html.ValaApiWriter : ApiWriter {
 				HyperLink link = new HyperLink ("/%s/%s.html".printf (dtype.package.name, dtype.full_name ()), new String (dtype.name));
 				link.add_attribute (csslink);
 				elements.insert (0, link);
-				documentedelement = true;
+				Api.Node = true;
 				break;
 			}
 			else { // typereference
@@ -154,7 +154,7 @@ public class Valadoc.Html.ValaApiWriter : ApiWriter {
 
 	private ArrayList<Entry> type_reference (TypeReference typeref) {
 		ArrayList<Entry> list = new ArrayList<Entry> ();
-		bool documentedelement;
+		bool Api.Node;
 
 		StringBuilder str = new StringBuilder ();
 		//if(typeref.pass_ownership) {
@@ -180,7 +180,7 @@ public class Valadoc.Html.ValaApiWriter : ApiWriter {
 			list.add (this.keyword (str.str));
 		}
 
-		list.add (this.type (typeref.data_type, out documentedelement));
+		list.add (this.type (typeref.data_type, out Api.Node));
 
 		Collection<TypeReference> typeargs = typeref.get_type_arguments ();
 		if (typeargs.size != 0) {
@@ -200,7 +200,7 @@ public class Valadoc.Html.ValaApiWriter : ApiWriter {
 			list.add (new String (">"));
 		}
 
-		if(typeref.is_nullable && documentedelement) {
+		if(typeref.is_nullable && Api.Node) {
 			list.add(new String("?"));
 		}
 
@@ -279,14 +279,14 @@ public class Valadoc.Html.ValaApiWriter : ApiWriter {
 		}
 	}
 
-	private Entry exception (DocumentedElement element) {
+	private Entry exception (Api.Node element) {
 		Span span = new Span();
 		span.add_child (new String (element.full_name()));
 		return span;
 	}
 
 	private Entry? exceptions (ExceptionHandler exh) {
-		Collection<DocumentedElement> errs = exh.get_error_domains ();
+		Collection<Api.Node> errs = exh.get_error_domains ();
 		if (errs.size == 0) {
 			return null;
 		}
@@ -296,7 +296,7 @@ public class Valadoc.Html.ValaApiWriter : ApiWriter {
 
 		span.add_child (this.keyword(" throws "));
 
-		foreach (DocumentedElement type in errs) {
+		foreach (Api.Node type in errs) {
 			span.add_child (this.exception(type));
 		}
 

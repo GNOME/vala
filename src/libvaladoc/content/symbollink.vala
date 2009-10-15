@@ -25,10 +25,10 @@ using GLib;
 using Gee;
 
 public class Valadoc.Content.SymbolLink : ContentElement, Inline {
-	public DocumentedElement symbol { get; set; }
+	public Api.Node symbol { get; set; }
 	public string label { get; set; }
 
-	internal SymbolLink (DocumentedElement? symbol = null, string? label = null) {
+	internal SymbolLink (Api.Node? symbol = null, string? label = null) {
 		base ();
 		_symbol = symbol;
 		_label = label;
@@ -37,7 +37,7 @@ public class Valadoc.Content.SymbolLink : ContentElement, Inline {
 	public override void configure (Settings settings, ResourceLocator locator) {
 	}
 
-	public override void check (Tree api_root, DocumentedElement? container, ErrorReporter reporter) {
+	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
 	}
 
 	public override void accept (ContentVisitor visitor) {

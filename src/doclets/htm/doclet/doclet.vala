@@ -31,8 +31,8 @@ namespace Valadoc {
 			}
 		}
 
-		if ( element is DocumentedElement ) {
-			if (! ((DocumentedElement) element).package.is_visitor_accessible (settings)) {
+		if ( element is Api.Node ) {
+			if (! ((Api.Node) element).package.is_visitor_accessible (settings)) {
 				return null;
 			}
 		}
@@ -41,8 +41,8 @@ namespace Valadoc {
 			if ( element is Package ) {
 				return Path.build_filename(((Package)element).name, "index.htm");
 			}
-			else if ( element is DocumentedElement ) {
-				return Path.build_filename( ((DocumentedElement)element).package.name, ((DocumentedElement)element).full_name()+".html" );
+			else if ( element is Api.Node ) {
+				return Path.build_filename( ((Api.Node)element).package.name, ((Api.Node)element).full_name()+".html" );
 			}
 			else if ( element is WikiPage ) {
 				if ( pos == element ) {
@@ -56,12 +56,12 @@ namespace Valadoc {
 				}
 			}
 		}
-		else if ( pos is DocumentedElement ) {
+		else if ( pos is Api.Node ) {
 			if ( element is Package ) {
 				return Path.build_filename("..", ((Package)element).name, "index.htm");
 			}
-			else if ( element is DocumentedElement ) {
-				return Path.build_filename( "..", ((DocumentedElement)element).package.name, ((DocumentedElement)element).full_name()+".html" );
+			else if ( element is Api.Node ) {
+				return Path.build_filename( "..", ((Api.Node)element).package.name, ((Api.Node)element).full_name()+".html" );
 			}
 			else if ( element is WikiPage ) {
 				string wikiname = ((WikiPage)element).name;
@@ -79,8 +79,8 @@ namespace Valadoc {
 			if ( element is Package ) {
 				return Path.build_filename("..", ((Package)element).name, "index.htm");
 			}
-			else if ( element is DocumentedElement ) {
-				return Path.build_filename( "..", ((DocumentedElement)element).package.name, ((DocumentedElement)element).full_name()+".html" );
+			else if ( element is Api.Node ) {
+				return Path.build_filename( "..", ((Api.Node)element).package.name, ((Api.Node)element).full_name()+".html" );
 			}
 			else if ( element is WikiPage ) {
 				string wikiname = ((WikiPage)element).name;
@@ -105,7 +105,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 	private const string css_path_wiki = "../style.css";
 	private const string css_path = "../style.css";
 
-	private string get_real_path ( DocumentedElement element ) {
+	private string get_real_path ( Api.Node element ) {
 		return GLib.Path.build_filename ( this.settings.path, element.package.name, element.full_name () + ".html" );
 	}
 

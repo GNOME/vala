@@ -36,7 +36,7 @@ public class Valadoc.ValadocOrg.TypeLinkInlineTaglet : Valadoc.InlineTaglet {
 	}
 
 	protected override bool parse (Settings settings, Tree tree, Documentation self, string content, ref ErrorLevel errlvl, out string? errmsg) {
-		Valadoc.DocumentedElement? element = tree.search_symbol_str ( (self is DocumentedElement)? (DocumentedElement)self : null, content.strip() );
+		Valadoc.Api.Node? element = tree.search_symbol_str ( (self is Api.Node)? (Api.Node)self : null, content.strip() );
 		if (element == null) {
 			errmsg = "Linked type is not available";
 			errlvl = ErrorLevel.ERROR;

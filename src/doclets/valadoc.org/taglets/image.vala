@@ -32,8 +32,8 @@ public class Valadoc.ValadocOrg.ImageDocElement : Valadoc.ImageDocElement {
 			return false;
 		}
 
-		this.imgpath = (pos is DocumentedElement)?
-			Path.build_filename (settings.path, ((DocumentedElement)pos).package.name, "wiki-images", Path.get_basename (path)) :
+		this.imgpath = (pos is Api.Node)?
+			Path.build_filename (settings.path, ((Api.Node)pos).package.name, "wiki-images", Path.get_basename (path)) :
 			Path.build_filename (settings.path, settings.pkg_name, "wiki-images", Path.get_basename (path));
 
 		this.path = path;

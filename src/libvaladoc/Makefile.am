@@ -41,7 +41,6 @@ libvaladoc_la_VALASOURCES = \
 	apitree/apitree.vala \
 	apitree/apitypesymbolnode.vala \
 	apitree/array.vala \
-	apitree/basic.vala \
 	apitree/class.vala \
 	apitree/classhandler.vala \
 	apitree/constant.vala \
@@ -49,7 +48,6 @@ libvaladoc_la_VALASOURCES = \
 	apitree/constructionmethodhandler.vala \
 	apitree/delegate.vala \
 	apitree/delegatehandler.vala \
-	apitree/documentedelement.vala \
 	apitree/enum.vala \
 	apitree/enumhandler.vala \
 	apitree/enumvalue.vala \

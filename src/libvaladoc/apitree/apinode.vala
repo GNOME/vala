@@ -46,12 +46,10 @@ public enum Valadoc.Api.NodeType {
 	TYPE_PARAMETER
 }
 
-// TODO Drop DocumentedElement
-public abstract class Valadoc.Api.Node : /*Api.Item*/DocumentedElement, Visitable {
+public abstract class Valadoc.Api.Node : Api.Item, Visitable, Documentation {
 	private bool do_document = false;
 
-	// TODO Drop DocumentElement
-	/* public abstract string? name { owned get; } */
+	public abstract string? name { owned get; }
 
 	public abstract NodeType node_type { get; }
 
@@ -71,7 +69,7 @@ public abstract class Valadoc.Api.Node : /*Api.Item*/DocumentedElement, Visitabl
 
 	public abstract bool is_visitor_accessible (Settings settings);
 
-	public override string? get_filename () {
+	public virtual string? get_filename () {
 		return null;
 	}
 
@@ -150,5 +148,66 @@ public abstract class Valadoc.Api.Node : /*Api.Item*/DocumentedElement, Visitabl
 		return per_symbol_children.get (symbol);
 	}
 
-	
+	private Namespace? _nspace = null;
+	private Package? _package = null;
+	private string _full_name = null;
+	private int _line = -1;
+
+	public Namespace? nspace {
+		get {
+			if (this._nspace == null) {
+				Api.Item ast = this;
+				while (ast is Valadoc.Namespace == false) {
+					ast = ast.parent;
+					if (ast == null)
+						return null;
+				}
+				this._nspace = (Valadoc.Namespace)ast;
+			}
+			return this._nspace;
+		}
+	}
+
+
+	public Package? package {
+		get {
+			if (this._package == null) {
+				Api.Item ast = this;
+				while (ast is Valadoc.Package == false) {
+					ast = ast.parent;
+					if (ast == null)
+						return null;
+				}
+				this._package = (Valadoc.Package)ast;
+			}
+			return this._package;
+		}
+	}
+
+	public Content.Comment? documentation {
+		protected set;
+		get;
+	}
+
+	// rename to get_full_name
+	public string? full_name () {
+		if (this._full_name == null) {
+			if (this.name == null)
+				return null;
+
+			GLib.StringBuilder full_name = new GLib.StringBuilder (this.name);
+
+			if (this.parent != null) {
+				for (Api.Item pos = this.parent; pos is Package == false ; pos = pos.parent) {
+					string name = ((Api.Node)pos).name;
+					if (name != null) {
+						full_name.prepend_unichar ('.');
+						full_name.prepend (name);
+					}
+				}
+			}
+			this._full_name = full_name.str;
+		}
+		return this._full_name;
+	}
 }

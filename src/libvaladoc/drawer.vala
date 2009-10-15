@@ -8,7 +8,7 @@ using Gee;
 
 namespace Valadoc.Diagrams {
 	// replace with .full_name
-	private static inline string get_diagram_node_name ( DocumentedElement type ) {
+	private static inline string get_diagram_node_name ( Api.Node type ) {
 		string name = "";
 		if ( type.nspace.full_name() != null ) {
 			name = type.nspace.full_name() + ".";

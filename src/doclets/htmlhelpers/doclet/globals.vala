@@ -151,18 +151,18 @@ namespace Valadoc.Html {
 
 		bool tmp2 = (element is WikiPage)? ((WikiPage)element).name!="index.valadoc" : element != pos;
 		if ( tmp2 == true ) {
-			prefix =  "../" + ((DocumentedElement)element).package.name;
+			prefix =  "../" + ((Api.Node)element).package.name;
 		}
 
 		if ( element is Valadoc.EnumValue || element is Valadoc.ErrorCode ) {
-			tmp = "#" + ((DocumentedElement)element).name;
-			element = (DocumentedElement)((DocumentedElement)element).parent;
+			tmp = "#" + ((Api.Node)element).name;
+			element = (Api.Node)((Api.Node)element).parent;
 		}
 
-		return prefix + "/" + ((DocumentedElement)element).full_name() + ".html" + tmp;
+		return prefix + "/" + ((Api.Node)element).full_name() + ".html" + tmp;
 	}
 
-	public string get_html_content_link_css_class ( Valadoc.Basic element ) {
+	public string get_html_content_link_css_class ( Valadoc.Api.Item element ) {
 		if ( element is Namespace ) {
 			return css_content_link_namespace;
 		}
@@ -225,7 +225,7 @@ namespace Valadoc.Html {
 		return "";
 	}
 
-	public string get_html_inline_navigation_link_css_class ( Valadoc.Basic element ) {
+	public string get_html_inline_navigation_link_css_class ( Valadoc.Api.Item element ) {
 		if ( element is Namespace ) {
 			return css_inline_navigation_namespace;
 		}

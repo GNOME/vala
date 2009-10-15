@@ -30,7 +30,7 @@ public class Valadoc.Taglets.Return : InlineContent, Taglet, Block {
 		return run_rule;
 	}
 
-	public override void check (Tree api_root, DocumentedElement? container, ErrorReporter reporter) {
+	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		// TODO check for the existence of a return type
 
 		base.check (api_root, container, reporter);

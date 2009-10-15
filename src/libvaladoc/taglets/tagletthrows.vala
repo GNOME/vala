@@ -27,7 +27,7 @@ using Valadoc.Content;
 
 public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 	public string error_domain_name { private set; get; }
-	public DocumentedElement error_domain { private set; get; }
+	public Api.Node error_domain { private set; get; }
 
 	public Rule? get_parser_rule (Rule run_rule) {
 		return Rule.seq ({
@@ -37,7 +37,7 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 		});
 	}
 
-	public override void check (Tree api_root, DocumentedElement? container, ErrorReporter reporter) {
+	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		error_domain = api_root.search_symbol_str (container, error_domain_name);
 		if (error_domain == null) {
 			// TODO use ContentElement's source reference

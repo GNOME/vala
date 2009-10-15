@@ -32,7 +32,7 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet {
 	private FileStream file;
 	private bool run;
 
-	private void write_documentation (DocumentedElement element) {
+	private void write_documentation (Api.Node element) {
 		if(element.documentation == null) {
 			return ;
 		}
@@ -63,7 +63,7 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet {
 		}
 	}
 
-	private string get_image_path (DocumentedElement element) {
+	private string get_image_path (Api.Node element) {
 		return Path.build_filename (this.settings.path, element.package.name, element.package.name, element.full_name () + ".png");
 	}
 
@@ -74,7 +74,7 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet {
 	}
 
 	// get_type_path()
-	private void write_insert_into_valadoc_element (DocumentedElement element) {
+	private void write_insert_into_valadoc_element (Api.Node element) {
 		string name = element.name;
 		string fullname;
 
@@ -101,15 +101,15 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet {
 	}
 
 	// get_type_path()
-	private void write_insert_into_code_element (DocumentedElement element) {
+	private void write_insert_into_code_element (Api.Node element) {
 		string api = this.langwriter.from_documented_element (element).to_string (0, "");
 		string parentnodepkgname;
 		string parentnodename;
 
-		Basic parent = element.parent;
-		if (parent is DocumentedElement) {
-			parentnodepkgname = ((DocumentedElement)parent).package.name;
-			parentnodename = ((DocumentedElement)parent).full_name();
+		Api.Item parent = element.parent;
+		if (parent is Api.Node) {
+			parentnodepkgname = ((Api.Node)parent).package.name;
+			parentnodename = ((Api.Node)parent).full_name();
 			if (parentnodename == null) {
 				parentnodename = parentnodepkgname;
 			}
@@ -761,7 +761,7 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet {
 		this.write_documentation (m);
 	}
 
-	private string get_type_path (DocumentedElement element) {
+	private string get_type_path (Api.Node element) {
 		if(element.name == null) {
 			return element.package.name;
 		}

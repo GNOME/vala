@@ -26,7 +26,7 @@ public class Valadoc.ValadocOrg.ReturnTaglet : Valadoc.MainTaglet {
 	public override int order { get { return 300; } }
 	private Gee.Collection<DocElement> content;
 
-	public override bool parse (Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg) {
+	public override bool parse (Settings settings, Tree tree, Api.Node me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg) {
 		if (!(me is Valadoc.Method || me is Valadoc.Signal || me is Valadoc.Delegate)) {
 			errmsg = "Tag @return cannot be used in this context";
 			errlvl = ErrorLevel.ERROR;

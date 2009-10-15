@@ -65,7 +65,7 @@ public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHand
 			return ;
 
 		foreach ( Vala.DataType vtyperef in lst ) {
-			Basic? element = root.search_vala_symbol ( vtyperef.data_type );
+			Api.Item? element = root.search_vala_symbol ( vtyperef.data_type );
 			if ( element is Class )
 				this.base_type = (Class)element;
 			else

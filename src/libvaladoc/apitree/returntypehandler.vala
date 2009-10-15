@@ -21,7 +21,7 @@ using Vala;
 using GLib;
 using Gee;
 
-public interface Valadoc.ReturnTypeHandler : Basic {
+public interface Valadoc.ReturnTypeHandler : Api.Item {
 	public abstract TypeReference? type_reference {
 		protected set;
 		get;

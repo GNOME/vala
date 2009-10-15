@@ -76,7 +76,7 @@ public class Valadoc.Tree {
 		return node;
 	}
 
-	public DocumentedElement? search_symbol_str (DocumentedElement? element, string symname) {
+	public Api.Node? search_symbol_str (Api.Node? element, string symname) {
 		string[] path = split_name (symname);
 
 		if (element == null) {
@@ -84,13 +84,13 @@ public class Valadoc.Tree {
 			foreach (Package packgage in packages) {
 				node = search_relative_to (packgage, path);
 				if (node != null) {
-					return (DocumentedElement) node;
+					return (Api.Node) node;
 				}
 			}
 			return null;
 		}
 
-		return (DocumentedElement) search_relative_to ((Api.Node) element, path);
+		return (Api.Node) search_relative_to ((Api.Node) element, path);
 	}
 
 	private string[] split_name (string full_name) {
@@ -334,7 +334,7 @@ public class Valadoc.Tree {
 		}
 	}
 
-	internal DocumentedElement? search_vala_symbol (Vala.Symbol? vnode) {
+	internal Api.Node? search_vala_symbol (Vala.Symbol? vnode) {
 		if (vnode == null)
 			return null;
 

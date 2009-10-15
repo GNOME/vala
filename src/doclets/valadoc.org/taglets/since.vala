@@ -41,7 +41,7 @@ public class Valadoc.ValadocOrg.SinceTaglet : Valadoc.MainTaglet {
 		return true;
 	}
 
-	public override bool parse (Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg) {
+	public override bool parse (Settings settings, Tree tree, Api.Node me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg) {
 		if (content.size != 1) {
 			errmsg = "Version name was expected";
 			errlvl = ErrorLevel.ERROR;

@@ -36,7 +36,7 @@ public abstract class Valadoc.Content.BlockContent : ContentElement {
 	public override void configure (Settings settings, ResourceLocator locator) {
 	}
 
-	public override void check (Tree api_root, DocumentedElement? container, ErrorReporter reporter) {
+	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		foreach (Block element in _content) {
 			element.check (api_root, container, reporter);
 		}

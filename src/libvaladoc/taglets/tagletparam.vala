@@ -36,7 +36,7 @@ public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
 		});
 	}
 
-	public override void check (Tree api_root, DocumentedElement? container, ErrorReporter reporter) {
+	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		// TODO check for the existence of such a parameter
 
 		base.check (api_root, container, reporter);

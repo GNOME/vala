@@ -48,7 +48,7 @@ public abstract class Valadoc.Html.ApiWriter {
 	public abstract Div from_interface (Interface iface);
 	public abstract Div from_property (Property prop);
 
-	public Div from_documented_element (DocumentedElement el) {
+	public Div from_documented_element (Api.Node el) {
 		if (el is Method) {
 			return this.from_method ((Method)el);
 		}

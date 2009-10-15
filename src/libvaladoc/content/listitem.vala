@@ -44,7 +44,7 @@ public class Valadoc.Content.ListItem : InlineContent {
 		_level = 0;
 	}
 
-	public override void check (Tree api_root, DocumentedElement? container, ErrorReporter reporter) {
+	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		// TODO report error if level == 0 ?
 
 		// Check inline content

@@ -27,7 +27,7 @@ public class Valadoc.ValadocOrg.ExceptionTaglet : Valadoc.MainTaglet {
 	private Gee.ArrayList<DocElement> content;
 	private string paramname;
 
-	public override bool parse ( Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg ) {
+	public override bool parse ( Settings settings, Tree tree, Api.Node me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg ) {
 		if ( me is Valadoc.ExceptionHandler == false ) {
 			errmsg = "Tag @throws cannot be used in this context";
 			errlvl = ErrorLevel.ERROR;
@@ -92,7 +92,7 @@ public class Valadoc.ValadocOrg.ExceptionTaglet : Valadoc.MainTaglet {
 	private bool check_exception_parameter_name ( Valadoc.ExceptionHandler me, string paramname ) {
 		string paramname2 = "."+paramname;
 
-		foreach ( DocumentedElement param in me.get_error_domains() ) {
+		foreach ( Api.Node param in me.get_error_domains() ) {
 			if ( param.name == paramname || param.full_name() == paramname || param.full_name().has_suffix(paramname2) ) {
 				return true;
 			}

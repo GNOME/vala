@@ -37,7 +37,7 @@ public class Valadoc.Content.Comment : BlockContent {
 	public override void configure (Settings settings, ResourceLocator locator) {
 	}
 
-	public override void check (Tree api_root, DocumentedElement? container, ErrorReporter reporter) {
+	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		base.check (api_root, container, reporter);
 
 		foreach (Taglet element in _taglets) {
@@ -57,7 +57,7 @@ public class Valadoc.Content.Comment : BlockContent {
 		}
 	}
 
-	public Gee.List<Taglet> find_taglets (DocumentedElement? container, Type taglet_type) {
+	public Gee.List<Taglet> find_taglets (Api.Node? container, Type taglet_type) {
 		Gee.List<Taglet> selected_taglets = new ArrayList<Taglet> ();
 
 		// TODO inherit stuff if needed

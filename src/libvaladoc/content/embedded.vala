@@ -42,7 +42,7 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 		_locator = locator;
 	}
 
-	public override void check (Tree api_root, DocumentedElement? container, ErrorReporter reporter) {
+	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		// Check the image exists if it a local resource
 	}
 

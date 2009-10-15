@@ -24,7 +24,7 @@ using Gee;
 // rename to ExceptionListHandler
 public interface Valadoc.ExceptionHandler : Api.Node {
 
-	public Gee.Collection<DocumentedElement> get_error_domains () {
+	public Gee.Collection<Api.Node> get_error_domains () {
 		return get_children_by_type (Api.NodeType.ERROR_DOMAIN);
 	}
 

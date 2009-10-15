@@ -24,10 +24,10 @@ using Gee;
 
 
 
-public class Valadoc.Pointer : Basic {
+public class Valadoc.Pointer : Api.Item {
 	private Vala.PointerType vtype;
 
-	public Basic data_type {
+	public Api.Item data_type {
 		private set;
 		get;
 	}
@@ -45,12 +45,12 @@ public class Valadoc.Pointer : Basic {
 			this.data_type = new TypeReference (vntype, this);
 	}
 
-	public void write (Langlet langlet, void* ptr, DocumentedElement parent) {
+	public void write (Langlet langlet, void* ptr, Api.Node parent) {
 		langlet.write_pointer (this, ptr, parent);
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		Basic type = this.data_type;
+		Api.Item type = this.data_type;
 		if ( type == null )
 			;
 		else if ( type is Array )

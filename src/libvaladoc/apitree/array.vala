@@ -23,10 +23,10 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.Array : Basic {
+public class Valadoc.Array : Api.Item {
 	private Vala.ArrayType vtype;
 
-	public Basic data_type {
+	public Api.Item data_type {
 		private set;
 		get;
 	}
@@ -42,7 +42,7 @@ public class Valadoc.Array : Basic {
 			this.data_type = new TypeReference (vntype, this);
 	}
 
-	public void write (Langlet langlet, void* ptr, DocumentedElement parent) {
+	public void write (Langlet langlet, void* ptr, Api.Node parent) {
 		langlet.write_array (this, ptr, parent);
 	}
 

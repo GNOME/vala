@@ -50,11 +50,11 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		element.accept_children (this);
 	}
 
-	private string get_url (DocumentedElement symbol) {
+	private string get_url (Api.Node symbol) {
 		return get_html_link (_doclet.settings, symbol, _container);
 	}
 
-	private void write_symbol_link (DocumentedElement symbol, string label) {
+	private void write_symbol_link (Api.Node symbol, string label) {
 		var url = get_url (symbol);
 		_stream.printf ("<a href=\"%s\">%s</a>",
 		                url,
@@ -82,7 +82,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	public override void visit_comment (Comment element) {
 		Gee.List<Taglet> taglets;
 
-		taglets = element.find_taglets ((DocumentedElement) _container, typeof (Taglets.Deprecated));
+		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Deprecated));
 		write_taglets (
 			"<p class=\"main_title\"><b>Deprecated:</b> ",
 			"</p>",
@@ -96,7 +96,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		// Write description
 		element.accept_children (this);
 
-		taglets = element.find_taglets ((DocumentedElement) _container, typeof (Taglets.Param));
+		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Param));
 		write_taglets (
 			"<h2 class=\"main_title\">Parameters:</h2>\n<table class=\"main_parameter_table\">",
 			"</table>",
@@ -109,7 +109,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 				_stream.printf ("</td></tr>");
 			});
 
-		taglets = element.find_taglets ((DocumentedElement) _container, typeof (Taglets.Return));
+		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Return));
 		write_taglets (
 			"<h2 class=\"main_title\">Returns:</h2>\n<table class=\"main_parameter_table\">",
 			"</table>",
@@ -122,7 +122,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 				_stream.printf ("</td></tr>");
 			});
 
-		taglets = element.find_taglets ((DocumentedElement) _container, typeof (Taglets.Throws));
+		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Throws));
 		write_taglets (
 			"<h2 class=\"main_title\">Throws:</h2>\n<table class=\"main_parameter_table\">",
 			"</table>",
@@ -135,7 +135,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 				_stream.printf ("</td></tr>");
 			});
 
-		taglets = element.find_taglets ((DocumentedElement) _container, typeof (Taglets.Since));
+		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Since));
 		write_taglets (
 			"<h2 class=\"main_title\">Since:</h2>\n<p>",
 			"</p>",
@@ -146,7 +146,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 				_stream.printf ("%s", since.version);
 			});
 
-		taglets = element.find_taglets ((DocumentedElement) _container, typeof (Taglets.See));
+		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.See));
 		write_taglets (
 			"<h2 class=\"main_title\">See also:</h2>\n<p>",
 			"</p>",

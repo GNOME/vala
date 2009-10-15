@@ -28,7 +28,7 @@ using Valadoc.Content;
 public class Valadoc.Taglets.Link : InlineTaglet {
 	public string symbol_name { private set; get; }
 
-	private DocumentedElement _symbol;
+	private Api.Node _symbol;
 
 	public override Rule? get_parser_rule (Rule run_rule) {
 		return Rule.seq ({
@@ -36,7 +36,7 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 		});
 	}
 
-	public override void check (Tree api_root, DocumentedElement? container, ErrorReporter reporter) {
+	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		_symbol = api_root.search_symbol_str (container, symbol_name);
 		if (_symbol == null) {
 			// TODO use ContentElement's source reference

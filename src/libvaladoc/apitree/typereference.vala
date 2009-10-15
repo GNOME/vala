@@ -23,7 +23,7 @@ using GLib;
 using Gee;
 
 
-public class Valadoc.TypeReference : Basic {
+public class Valadoc.TypeReference : Api.Item {
 	private Gee.ArrayList<TypeReference> type_arguments = new Gee.ArrayList<TypeReference> ();
 	private Vala.DataType? vtyperef;
 
@@ -44,7 +44,7 @@ public class Valadoc.TypeReference : Basic {
 		}
 	}
 
-	public Basic? data_type {
+	public Api.Item? data_type {
 		private set;
 		get;
 	}

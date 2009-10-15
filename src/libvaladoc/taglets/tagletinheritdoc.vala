@@ -26,13 +26,13 @@ using Gee;
 using Valadoc.Content;
 
 public class Valadoc.Taglets.InheritDoc : InlineTaglet {
-	private DocumentedElement? _inherited;
+	private Api.Node? _inherited;
 
 	public override Rule? get_parser_rule (Rule run_rule) {
 		return null;
 	}
 
-	public override void check (Tree api_root, DocumentedElement? container, ErrorReporter reporter) {
+	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		// TODO Check that the container is an override of an abstract symbol
 		// Also retrieve that abstract symbol _inherited
 

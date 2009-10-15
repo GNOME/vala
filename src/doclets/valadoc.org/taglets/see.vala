@@ -40,7 +40,7 @@ public class Valadoc.ValadocOrg.SeeTaglet : MainTaglet {
 		return true;
 	}
 
-	public override bool parse (Settings settings, Tree tree, DocumentedElement me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg) {
+	public override bool parse (Settings settings, Tree tree, Api.Node me, Gee.Collection<DocElement> content, ref ErrorLevel errlvl, out string errmsg) {
 		if (content.size != 1) {
 			errmsg = "Type name was expected";
 			errlvl = ErrorLevel.ERROR;
@@ -57,7 +57,7 @@ public class Valadoc.ValadocOrg.SeeTaglet : MainTaglet {
 			return false;
 		}
 
-		Valadoc.DocumentedElement? node = tree.search_symbol_str (me, ((StringTaglet)element).content.strip ());
+		Valadoc.Api.Node? node = tree.search_symbol_str (me, ((StringTaglet)element).content.strip ());
 		if (node == null) {
 			errmsg = "Linked type is not available";
 			errlvl = ErrorLevel.ERROR;
