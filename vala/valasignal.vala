@@ -265,6 +265,12 @@ public class Vala.Signal : Member, Lockable {
 			cl.add_hidden_method (default_handler);
 			default_handler.check (analyzer);
 		}
+
+
+		if (!external_package && !hides && get_hidden_member () != null) {
+			Report.warning (source_reference, "%s hides inherited signal `%s'. Use the `new' keyword if hiding was intentional".printf (get_full_name (), get_hidden_member ().get_full_name ()));
+		}
+
 		return !error;
 	}
 }
