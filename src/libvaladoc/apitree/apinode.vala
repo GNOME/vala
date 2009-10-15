@@ -21,8 +21,8 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using Vala;
 using Gee;
+
 
 public enum Valadoc.Api.NodeType {
 	CLASS,
@@ -54,15 +54,15 @@ public abstract class Valadoc.Api.Node : Api.Item, Visitable, Documentation {
 	public abstract NodeType node_type { get; }
 
 	private Map<string,Node> per_name_children;
-	private Map<Symbol,Node> per_symbol_children;
-	private Map<NodeType?,Gee.List<Node>> per_type_children;
+	private Map<Vala.Symbol, Node> per_symbol_children;
+	private Map<NodeType?, Gee.List<Node>> per_type_children;
 
 	public Node (Api.Node? parent) {
 		this.parent = parent;
 
 		per_name_children = new HashMap<string,Node> ();
-		per_symbol_children = new HashMap<Symbol,Node> ();
-		per_type_children = new HashMap<NodeType?,Gee.List<Node>> (int_hash, int_equal);
+		per_symbol_children = new HashMap<Vala.Symbol, Node> ();
+		per_type_children = new HashMap<NodeType?, Gee.List<Node>> (int_hash, int_equal);
 	}
 
 	public abstract void accept (Doclet doclet);
@@ -144,7 +144,7 @@ public abstract class Valadoc.Api.Node : Api.Item, Visitable, Documentation {
 		return per_name_children.get (name);
 	}
 
-	public Node? find_by_symbol (Symbol symbol) {
+	public Node? find_by_symbol (Vala.Symbol symbol) {
 		return per_symbol_children.get (symbol);
 	}
 
@@ -211,3 +211,4 @@ public abstract class Valadoc.Api.Node : Api.Item, Visitable, Documentation {
 		return this._full_name;
 	}
 }
+

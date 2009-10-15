@@ -21,8 +21,8 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using Vala;
 using Gee;
+
 
 public abstract class Valadoc.Api.SymbolNode : Api.Node, SymbolAccessibility {
 
@@ -42,28 +42,30 @@ public abstract class Valadoc.Api.SymbolNode : Api.Node, SymbolAccessibility {
 	}
 
 	public override string? get_filename () {
-		SourceReference? sref = symbol.source_reference;
-		if ( sref == null )
+		Vala.SourceReference? sref = symbol.source_reference;
+		if (sref == null) {
 			return null;
+		}
 
 		Vala.SourceFile? file = sref.file;
-		if ( file == null )
+		if (file == null) {
 			return null;
+		}
 
 		string path = sref.file.filename;
-		return GLib.Path.get_basename ( path );
+		return GLib.Path.get_basename (path);
 	}
 
 	public override bool is_visitor_accessible (Settings settings) {
-		if (!settings._private && this.is_private)
+		if (!settings._private && this.is_private) {
 			return false;
-
-		if (!settings._internal && this.is_internal)
+		}
+		if (!settings._internal && this.is_internal) {
 			return false;
-
-		if (!settings._protected && this.is_protected)
+		}
+		if (!settings._protected && this.is_protected) {
 			return false;
-
+		}
 		return true;
 	}
 
@@ -91,3 +93,4 @@ public abstract class Valadoc.Api.SymbolNode : Api.Node, SymbolAccessibility {
 		}
 	}
 }
+

@@ -17,9 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Vala;
-using GLib;
 using Gee;
+
 
 public interface Valadoc.ReturnTypeHandler : Api.Item {
 	public abstract TypeReference? type_reference {
@@ -40,3 +39,4 @@ public interface Valadoc.ReturnTypeHandler : Api.Item {
 		this.type_reference = tmp;
 	}
 }
+

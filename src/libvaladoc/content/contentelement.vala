@@ -22,7 +22,7 @@
  */
 
 using GLib;
-using Gee;
+
 
 public abstract class Valadoc.Content.ContentElement : Object {
 
@@ -36,3 +36,4 @@ public abstract class Valadoc.Content.ContentElement : Object {
 	public virtual void accept_children (ContentVisitor visitor) {
 	}
 }
+

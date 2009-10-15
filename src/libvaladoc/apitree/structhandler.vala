@@ -17,12 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Vala;
-using GLib;
 using Gee;
 
+
 public interface Valadoc.StructHandler : Api.Node {
-	public Gee.Collection<Struct> get_struct_list () {
+	public Collection<Struct> get_struct_list () {
 		return get_children_by_type (Api.NodeType.STRUCT);
 	}
 

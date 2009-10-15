@@ -17,9 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Vala;
-using GLib;
 using Gee;
+
 
 // TODO Rename FormalParameters
 public interface Valadoc.ParameterListHandler : Api.Node {
@@ -31,3 +30,4 @@ public interface Valadoc.ParameterListHandler : Api.Node {
 		return (Gee.List<FormalParameter>) get_children_by_type (Api.NodeType.FORMAL_PARAMETER);
 	}
 }
+

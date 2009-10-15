@@ -21,9 +21,9 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
 using Valadoc.Content;
+
 
 public class Valadoc.Taglets.See : ContentElement, Taglet, Block {
 	public string symbol_name { private set; get; }

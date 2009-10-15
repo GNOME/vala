@@ -17,9 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Vala;
-using GLib;
 using Gee;
+
 
 public interface Valadoc.SymbolAccessibility {
 
@@ -31,3 +30,4 @@ public interface Valadoc.SymbolAccessibility {
 
 	public abstract bool is_private { get; }
 }
+

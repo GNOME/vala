@@ -6,6 +6,7 @@ AM_CFLAGS =                             \
 	-DPACKAGE_VERSION=\"$(VERSION)\"    \
 	-I ../libvaladoc/                   \
 	$(GLIB_CFLAGS)                      \
+	$(LIBGEE_CFLAGS)                    \
 	$(LIBVALA_CFLAGS)                   \
 	$(GMODULE_CFLAGS)                   \
 	$(LIBGVC_CFLAGS)                    \
@@ -35,11 +36,12 @@ valadoc_LDADD =                 \
 	$(LIBVALA_LIBS)             \
 	$(GMODULE_LIBS)             \
 	$(LIBGVC_LIBS)              \
+	$(LIBGEE_LIBS)              \
 	$(NULL)
 
 
 valadoc.vala.stamp: $(libvaladoc_VALASOURCES)
-	$(VALAC) -C -H valadoc.h --pkg gmodule-2.0 --pkg config --vapidir ../vapi --pkg valadoc-1.0 --basedir $(top_srcdir)/src/valadoc/ valadoc.vala --save-temps $^
+	$(VALAC) -C -H valadoc.h --pkg gee-1.0 --pkg gmodule-2.0 --pkg config --vapidir ../vapi --pkg valadoc-1.0 --basedir $(top_srcdir)/src/valadoc/ valadoc.vala --save-temps $^
 	touch $@
 
 

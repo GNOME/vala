@@ -17,12 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Vala;
-using GLib;
 using Gee;
 
+
 public interface Valadoc.ErrorDomainHandler : Api.Node {
-	public Gee.Collection<ErrorDomain> get_error_domain_list () {
+	public Collection<ErrorDomain> get_error_domain_list () {
 		return get_children_by_type (Api.NodeType.ERROR_DOMAIN);
 	}
 

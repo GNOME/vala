@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
@@ -56,9 +53,9 @@ public class Valadoc.Struct : Api.TypeSymbolNode, MethodHandler, ConstructionMet
 
 	private void set_parent_references (Tree root) {
 		Vala.ValueType? basetype = this.vstruct.base_type as Vala.ValueType;
-		if (basetype == null)
+		if (basetype == null) {
 			return ;
-
+		}
 		this.base_type = (Struct?) root.search_vala_symbol ((Vala.Struct) basetype.type_symbol);
 	}
 

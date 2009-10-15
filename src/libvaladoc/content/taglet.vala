@@ -21,10 +21,11 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
+
 
 public interface Valadoc.Content.Taglet : ContentElement {
 
 	public abstract Rule? get_parser_rule (Rule run_rule);
 }
+

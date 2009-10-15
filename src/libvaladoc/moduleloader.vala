@@ -18,7 +18,6 @@
  */
 
 using GLib.Path;
-using GLib;
 using Gee;
 
 
@@ -29,14 +28,14 @@ public static delegate  void Valadoc.TagletRegisterFunction (ModuleLoader loader
 public class Valadoc.ModuleLoader : Object {
 	public Doclet doclet;
 
-	public Gee.HashMap<string, GLib.Type> taglets = new Gee.HashMap<string, Type> (GLib.str_hash, GLib.str_equal);
+	public HashMap<string, GLib.Type> taglets = new HashMap<string, Type> (GLib.str_hash, GLib.str_equal);
 
 	private Module docletmodule;
 	private Type doclettype;
 
-	public bool load ( string path ) {
-		bool tmp = this.load_doclet ( path );
-		if ( tmp == false ) {
+	public bool load (string path) {
+		bool tmp = this.load_doclet (path);
+		if (tmp == false) {
 			return false;
 		}
 		return true;
@@ -46,7 +45,7 @@ public class Valadoc.ModuleLoader : Object {
 		return (Content.Taglet) GLib.Object.new (taglets.get (keyword));
 	}
 
-	private bool load_doclet ( string path ) {
+	private bool load_doclet (string path) {
 		void* function;
 
 		docletmodule = Module.open ( build_filename(path, "libdoclet.so"), ModuleFlags.BIND_LAZY);
@@ -54,14 +53,15 @@ public class Valadoc.ModuleLoader : Object {
 			return false;
 		}
 
-		docletmodule.symbol( "register_plugin", out function );
-		if ( function == null ) {
+		docletmodule.symbol("register_plugin", out function);
+		if (function == null) {
 			return false;
 		}
 
 		Valadoc.DocletRegisterFunction doclet_register_function = (Valadoc.DocletRegisterFunction) function;
-		doclettype = doclet_register_function ( );
+		doclettype = doclet_register_function ();
 		this.doclet = (Doclet)GLib.Object.new (doclettype);
 		return true;
 	}
 }
+

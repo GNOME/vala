@@ -22,7 +22,7 @@
  */
 
 using GLib;
-using Gee;
+
 
 public abstract class Valadoc.Content.ContentRenderer : ContentVisitor {
 
@@ -30,3 +30,4 @@ public abstract class Valadoc.Content.ContentRenderer : ContentVisitor {
 
 	public abstract void render_children (ContentElement element);
 }
+

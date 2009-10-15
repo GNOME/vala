@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
@@ -31,8 +28,8 @@ public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 		get;
 	}
 
-	public bool is_vconstant ( Vala.Constant vconst ) {
-		return ( this.vconst == vconst );
+	public bool is_vconstant (Vala.Constant vconst) {
+		return (this.vconst == vconst);
 	}
 
 	public Constant (Vala.Constant symbol, Api.Node parent) {
@@ -40,7 +37,7 @@ public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 		this.vconst = symbol;
 
 		var vret = this.vconst.type_reference;
-		this.set_ret_type ( vret );
+		this.set_ret_type (vret);
 	}
 
 	public string get_cname () {
@@ -51,18 +48,18 @@ public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 		this.set_return_type_references (root);
 	}
 
-	public void visit ( Doclet doclet, ConstantHandler? parent ) {
-		doclet.visit_constant ( this, parent );
+	public void visit (Doclet doclet, ConstantHandler? parent) {
+		doclet.visit_constant (this, parent);
 	}
 
 	public override Api.NodeType node_type { get { return Api.NodeType.CONSTANT; } }
 
 	public override void accept (Doclet doclet) {
-		visit (doclet, (ConstantHandler) parent);
+		visit (doclet, (ConstantHandler)parent);
 	}
 
-	public void write ( Langlet langlet, void* ptr, ConstantHandler parent ) {
-		langlet.write_constant ( this, parent, ptr );
+	public void write (Langlet langlet, void* ptr, ConstantHandler parent) {
+		langlet.write_constant (this, parent, ptr);
 	}
 }
 

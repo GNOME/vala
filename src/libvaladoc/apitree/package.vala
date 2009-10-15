@@ -17,15 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
-
 public class Valadoc.Package : Api.Node, NamespaceHandler {
-	private Gee.ArrayList<Vala.SourceFile> vfiles = new Gee.ArrayList<Vala.SourceFile> ();
+	private ArrayList<Vala.SourceFile> vfiles = new ArrayList<Vala.SourceFile> ();
 
 	internal void add_file (Vala.SourceFile vfile) {
 		this.vfiles.add (vfile);
@@ -36,35 +32,36 @@ public class Valadoc.Package : Api.Node, NamespaceHandler {
 		 get;
 	}
 
-	internal void set_dependency_list ( Gee.ArrayList<Package> list ) {
+	internal void set_dependency_list (ArrayList<Package> list) {
 		this._dependencies = list;
 	}
 
-	private Gee.ArrayList<Package> _dependencies;
+	private ArrayList<Package> _dependencies;
 
-	public Gee.Collection<Package> get_full_dependency_list () {
-		Gee.ArrayList<Package> list = new Gee.ArrayList<Package> ();
+	public Collection<Package> get_full_dependency_list () {
+		ArrayList<Package> list = new ArrayList<Package> ();
 
-		if ( this._dependencies == null )
+		if (this._dependencies == null) {
 			return list.read_only_view;
+		}
 
-		foreach ( Package pkg in this._dependencies ) {
-			if ( list.contains ( pkg ) == false ) {
-				list.add ( pkg );
+		foreach (Package pkg in this._dependencies) {
+			if (list.contains ( pkg ) == false) {
+				list.add (pkg);
 			}
 
 			var pkg_list = pkg.get_full_dependency_list ();
-			foreach ( Package pkg2 in pkg_list ) {
-				if ( list.contains ( pkg2 ) == false ) {
-					list.add ( pkg2 );
+			foreach (Package pkg2 in pkg_list) {
+				if (list.contains (pkg2) == false) {
+					list.add (pkg2);
 				}
 			}
 		}
 		return list.read_only_view;
 	}
 
-	public Gee.Collection<Package> get_dependency_list () {
-		if ( this._dependencies == null ) {
+	public Collection<Package> get_dependency_list () {
+		if (this._dependencies == null) {
 			return Collection.empty<Package> ();
 		}
 

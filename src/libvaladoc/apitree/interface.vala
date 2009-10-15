@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
@@ -29,14 +26,14 @@ public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHand
 		this.vinterface = symbol;
 	}
 
-	private Gee.ArrayList<Interface> interfaces = new Gee.ArrayList<Interface>();
+	private ArrayList<Interface> interfaces = new ArrayList<Interface> ();
 
-	public Gee.Collection<Interface> get_implemented_interface_list ( ) {
+	public Collection<Interface> get_implemented_interface_list () {
 		return this.interfaces;
 	}
 
 	public string? get_cname () {
-		return this.vinterface.get_cname();
+		return this.vinterface.get_cname ();
 	}
 
 	protected Class? base_type {
@@ -46,8 +43,8 @@ public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHand
 
 	private Vala.Interface vinterface;
 
-	public void visit ( Doclet doclet ) {
-		doclet.visit_interface ( this );
+	public void visit (Doclet doclet) {
+		doclet.visit_interface (this);
 	}
 
 	public override Api.NodeType node_type { get { return Api.NodeType.INTERFACE; } }
@@ -56,20 +53,22 @@ public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHand
 		visit (doclet);
 	}
 
-	public void write ( Langlet langlet, void* ptr ) {
-		langlet.write_interface ( this, ptr );
+	public void write (Langlet langlet, void* ptr) {
+		langlet.write_interface (this, ptr);
 	}
 
-	private void set_prerequisites (Tree root, Gee.Collection<Vala.DataType> lst) {
-		if ( ((Gee.Collection)this.interfaces).size != 0 )
-			return ;
+	private void set_prerequisites (Tree root, Vala.Collection<Vala.DataType> lst) {
+		if (this.interfaces.size != 0) {
+			return;
+		}
 
-		foreach ( Vala.DataType vtyperef in lst ) {
-			Api.Item? element = root.search_vala_symbol ( vtyperef.data_type );
-			if ( element is Class )
+		foreach (Vala.DataType vtyperef in lst) {
+			Api.Item? element = root.search_vala_symbol (vtyperef.data_type);
+			if (element is Class) {
 				this.base_type = (Class)element;
-			else
-				this.interfaces.add ( (Interface)element );
+			} else {
+				this.interfaces.add ((Interface)element);
+			}
 		}
 	}
 

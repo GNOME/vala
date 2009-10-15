@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
@@ -74,9 +71,9 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 
 	public bool is_static {
 		get {
-			if (this.parent is Namespace || this.is_constructor)
+			if (this.parent is Namespace || this.is_constructor) {
 				return false;
-
+			}
 			return this.vmethod.binding == MemberBinding.STATIC;
 		}
 	}
@@ -96,10 +93,11 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 	public override string? name {
 		owned get {
 			if (this.is_constructor) {
-				if (this.vmethod.name == ".new")
+				if (this.vmethod.name == ".new") {
 					return ((Api.Node)this.parent).name;
-				else
+				} else {
 					return ((Api.Node)this.parent).name + "." + this.vmethod.name;
+				}
 			}
 			else {
 				return this.vmethod.name;
@@ -129,8 +127,8 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 		base.resolve_type_references (root);
 	}
 
-	public void visit ( Doclet doclet, Valadoc.MethodHandler in_type ) {
-		doclet.visit_method ( this, in_type );
+	public void visit (Doclet doclet, Valadoc.MethodHandler in_type) {
+		doclet.visit_method (this, in_type);
 	}
 
 	public override Api.NodeType node_type {
@@ -143,8 +141,8 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 		visit (doclet, (MethodHandler) parent);
 	}
 
-	public void write ( Langlet langlet, void* ptr, Valadoc.MethodHandler parent ) {
-		langlet.write_method ( ptr, this, parent );
+	public void write (Langlet langlet, void* ptr, Valadoc.MethodHandler parent) {
+		langlet.write_method (ptr, this, parent);
 	}
 }
 

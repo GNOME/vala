@@ -17,26 +17,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Vala;
-using GLib;
 using Gee;
+
 
 public interface Valadoc.PropertyHandler : Api.Node {
 	protected bool is_overwritten_property (Property prop) {
 		foreach (Property p in get_property_list ()) {
-			if (p.parent != this)
+			if (p.parent != this) {
 				continue ;
-
-			if (!p.is_override)
+			}
+			if (!p.is_override) {
 				continue ;
-
-			if (p.equals (prop))
+			}
+			if (p.equals (prop)) {
 				return true;
+			}
 		}
 		return false;
 	}
 
-	public Gee.Collection<Property> get_property_list () {
+	public Collection<Property> get_property_list () {
 		return get_children_by_type (Api.NodeType.PROPERTY);
 	}
 
@@ -44,3 +44,4 @@ public interface Valadoc.PropertyHandler : Api.Node {
 		accept_children_by_type (Api.NodeType.PROPERTY, doclet);
 	}
 }
+

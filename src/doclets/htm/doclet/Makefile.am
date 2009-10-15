@@ -7,6 +7,7 @@ AM_CFLAGS =  -g                                             \
 	-I ../../htmlhelpers/doclet/                            \
 	-I ../                                                  \
 	$(GLIB_CFLAGS)                                          \
+	$(LIBGEE_CFLAGS)                                        \
 	$(LIBVALA_CFLAGS)                                       \
 	$(NULL)
 
@@ -38,7 +39,7 @@ libdoclet_la_SOURCES =      \
 
 
 libdoclet.vala.stamp: $(libdoclet_la_VALASOURCES)
-	$(VALAC) -C --vapidir ../../htmlhelpers/doclet --pkg libhtmlhelpers-1.0 --vapidir ../../../vapi --pkg valadoc-1.0 --vapidir . --pkg docletconfig --basedir . $^
+	$(VALAC) -C --vapidir ../../htmlhelpers/doclet --pkg libhtmlhelpers-1.0 --vapidir ../../../vapi --pkg valadoc-1.0 --pkg gee-1.0 --vapidir . --pkg docletconfig --basedir . $^
 	touch $@
 
 
@@ -46,6 +47,7 @@ libdoclet_la_LIBADD =                          \
 	../../../libvaladoc/libvaladoc.la          \
 	../../htmlhelpers/doclet/libhtmlhelpers.la \
 	$(GLIB_LIBS)                               \
+	$(LIBGEE_LIBS)                             \
 	$(LIBVALA_LIBS)                            \
 	$(NULL)
 

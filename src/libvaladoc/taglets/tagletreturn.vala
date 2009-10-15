@@ -21,9 +21,9 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
 using Valadoc.Content;
+
 
 public class Valadoc.Taglets.Return : InlineContent, Taglet, Block {
 	public Rule? get_parser_rule (Rule run_rule) {

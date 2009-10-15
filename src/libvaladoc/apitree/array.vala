@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
@@ -36,10 +33,11 @@ public class Valadoc.Array : Api.Item {
 		this.parent = parent;
 
 		Vala.DataType vntype = vtyperef.element_type;
-		if ( vntype is Vala.ArrayType )
+		if (vntype is Vala.ArrayType) {
 			this.data_type = new Array ((Vala.ArrayType) vntype, this);
-		else
+		} else {
 			this.data_type = new TypeReference (vntype, this);
+		}
 	}
 
 	public void write (Langlet langlet, void* ptr, Api.Node parent) {
@@ -47,14 +45,15 @@ public class Valadoc.Array : Api.Item {
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		if ( this.data_type == null )
+		if (this.data_type == null) {
 			/*TODO:possible?*/;
-		else if ( this.data_type is Array )
+		} else if (this.data_type is Array) {
 			((Array)this.data_type).resolve_type_references (root);
-		else if ( this.data_type is Pointer )
+		} else if (this.data_type is Pointer) {
 			((Pointer)this.data_type).resolve_type_references (root);
-		else
+		} else {
 			((TypeReference)this.data_type).resolve_type_references (root);
+		}
 	}
 }
 

@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using Gee;
 
 public class Valadoc.WikiPage : Object, Documentation {
 	public Content.Page documentation {
@@ -40,21 +41,20 @@ public class Valadoc.WikiPage : Object, Documentation {
 	}
 
 	public string? get_filename () {
-		return Path.get_basename( this.path );
+		return Path.get_basename(this.path);
 	}
 
-	public WikiPage ( string name, string path ) {
+	public WikiPage (string name, string path) {
 		this.name = name;
 		this.path = path;
 	}
 
-	public void read ( ) throws GLib.FileError {
+	public void read () throws GLib.FileError {
 		try {
 			string content;
 			FileUtils.get_contents (this.path, out content);
 			this.documentation_str = content;
-		}
-		catch (FileError err) {
+		} catch (FileError err) {
 			throw err;
 		}
 	}
@@ -67,26 +67,26 @@ public class Valadoc.WikiPage : Object, Documentation {
 
 
 public class Valadoc.WikiPageTree : Object {
-	private Gee.ArrayList<WikiPage> wikipages;
+	private ArrayList<WikiPage> wikipages;
 	private ErrorReporter reporter;
 	private Settings settings;
 
-	public WikiPageTree ( ErrorReporter reporter, Settings settings ) {
+	public WikiPageTree (ErrorReporter reporter, Settings settings) {
 		this.reporter = reporter;
 		this.settings = settings;
 	}
 
-	public Gee.Collection<WikiPage> get_pages () {
-		return this.wikipages == null ? Gee.Collection.empty<WikiPage> () : this.wikipages.read_only_view;
+	public Collection<WikiPage> get_pages () {
+		return this.wikipages == null ? Collection.empty<WikiPage> () : this.wikipages.read_only_view;
 	}
 
-	public WikiPage? search ( string name ) {
-		if ( this.wikipages == null ) {
+	public WikiPage? search (string name) {
+		if (this.wikipages == null) {
 			return null;
 		}
 
-		foreach ( WikiPage page in this.wikipages ) {
-			if ( page.name == name ) {
+		foreach (WikiPage page in this.wikipages ) {
+			if (page.name == name) {
 				return page;
 			}
 		}
@@ -102,25 +102,24 @@ public class Valadoc.WikiPageTree : Object {
 				WikiPage wikipage = new WikiPage( (nameoffset!=null)?Path.build_filename (nameoffset, curname):curname, filename );
 				this.wikipages.add(wikipage);
 				wikipage.read ();
-			}
-			else if ( FileUtils.test(filename, FileTest.IS_DIR) ) {
+			} else if (FileUtils.test(filename, FileTest.IS_DIR)) {
 				this.create_tree_from_path (docparser, filename, (nameoffset!=null)?Path.build_filename (nameoffset, curname):curname);
 			}
 		}
 	}
 
-	public void create_tree ( DocumentationParser docparser ) throws GLib.FileError {
+	public void create_tree (DocumentationParser docparser) throws GLib.FileError {
 		try {
 			weak string path = this.settings.wiki_directory;
 			if (path == null) {
 				return ;
 			}
 
-			this.wikipages = new Gee.ArrayList<WikiPage> ();
+			this.wikipages = new ArrayList<WikiPage> ();
 			this.create_tree_from_path (docparser, path);
 
-			foreach ( WikiPage page in this.wikipages ) {
-				page.parse ( docparser );
+			foreach (WikiPage page in this.wikipages) {
+				page.parse (docparser);
 			}
 		}
 		catch (FileError err) {

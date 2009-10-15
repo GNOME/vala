@@ -21,8 +21,8 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
+
 
 public class Valadoc.Content.Run : InlineContent, Inline {
 	public enum Style {
@@ -53,3 +53,4 @@ public class Valadoc.Content.Run : InlineContent, Inline {
 		visitor.visit_run (this);
 	}
 }
+

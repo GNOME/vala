@@ -17,12 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Vala;
-using GLib;
 using Gee;
 
+
 public interface Valadoc.TemplateParameterListHandler : Api.Node {
-	public Gee.Collection<TypeParameter> get_template_param_list () {
+	public Collection<TypeParameter> get_template_param_list () {
 		return get_children_by_type (Api.NodeType.TYPE_PARAMETER);
 	}
 }
+

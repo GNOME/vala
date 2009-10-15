@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using GLib;
-
-
 public class Valadoc.Settings : Object {
 	public string path = "documentation/";
 	public string pkg_name = null;
@@ -46,6 +43,4 @@ public class Valadoc.Settings : Object {
 	public string[] defines;
 	public string[] vapi_directories;
 }
-
-
 

@@ -21,8 +21,9 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using Gee;
 using Valadoc.Content;
+using Gee;
+
 
 public class Valadoc.DocumentationParser : Object, ResourceLocator {
 

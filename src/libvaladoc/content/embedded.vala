@@ -21,8 +21,8 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
+
 
 public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes {
 	public string url { get; set; }
@@ -50,3 +50,4 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 		visitor.visit_embedded (this);
 	}
 }
+

@@ -17,9 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Vala;
-using GLib;
 using Gee;
+
 
 public class Valadoc.FormalParameter : Api.SymbolNode, ReturnTypeHandler {
 	private Vala.FormalParameter vformalparam;
@@ -29,18 +28,18 @@ public class Valadoc.FormalParameter : Api.SymbolNode, ReturnTypeHandler {
 		this.vformalparam = symbol;
 
 		var vformparam = this.vformalparam.parameter_type;
-		this.set_ret_type ( vformparam );
+		this.set_ret_type (vformparam);
 	}
 
 	public bool is_out {
 		get {
-			return this.vformalparam.direction == ParameterDirection.OUT;
+			return this.vformalparam.direction == Vala.ParameterDirection.OUT;
 		}
 	}
 
 	public bool is_ref {
 		get {
-			return this.vformalparam.direction == ParameterDirection.REF;
+			return this.vformalparam.direction == Vala.ParameterDirection.REF;
 		}
 	}
 
@@ -67,16 +66,17 @@ public class Valadoc.FormalParameter : Api.SymbolNode, ReturnTypeHandler {
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		if (this.vformalparam.ellipsis)
-			return ;
+		if (this.vformalparam.ellipsis) {
+			return;
+		}
 
 		this.set_return_type_references (root);
 
 		base.resolve_type_references (root);
 	}
 
-	public void write ( Langlet langlet, void* ptr ) {
-		langlet.write_formal_parameter ( this, ptr );
+	public void write (Langlet langlet, void* ptr) {
+		langlet.write_formal_parameter (this, ptr);
 	}
 }
 

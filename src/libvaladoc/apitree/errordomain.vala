@@ -17,9 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Vala;
-using GLib;
 using Gee;
+
 
 public class Valadoc.ErrorDomain : Api.TypeSymbolNode, MethodHandler {
 	private Vala.ErrorDomain verrdom;
@@ -37,12 +36,12 @@ public class Valadoc.ErrorDomain : Api.TypeSymbolNode, MethodHandler {
 		accept_children_by_type (Api.NodeType.ERROR_CODE, doclet);
 	}
 
-	public Gee.Collection<ErrorCode> get_error_code_list () {
+	public Collection<ErrorCode> get_error_code_list () {
 		return get_children_by_type (Api.NodeType.ERROR_CODE);
 	}
 
 	public void visit (Doclet doclet) {
-		doclet.visit_error_domain ( this );
+		doclet.visit_error_domain (this);
 	}
 
 	public override Api.NodeType node_type { get { return Api.NodeType.ERROR_DOMAIN; } }
@@ -51,7 +50,7 @@ public class Valadoc.ErrorDomain : Api.TypeSymbolNode, MethodHandler {
 		visit (doclet);
 	}
 
-	public void write ( Langlet langlet, void* ptr ) {
-		langlet.write_error_domain ( this, ptr );
+	public void write (Langlet langlet, void* ptr) {
+		langlet.write_error_domain (this, ptr);
 	}
 }

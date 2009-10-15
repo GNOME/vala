@@ -21,8 +21,8 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
+
 
 public class Valadoc.Content.TableCell : InlineContent, StyleAttributes {
 	public HorizontalAlign? horizontal_align { get; set; }
@@ -46,3 +46,4 @@ public class Valadoc.Content.TableCell : InlineContent, StyleAttributes {
 		visitor.visit_table_cell (this);
 	}
 }
+

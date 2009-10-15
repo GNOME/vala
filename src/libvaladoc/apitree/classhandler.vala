@@ -17,28 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Vala;
-using GLib;
 using Gee;
 
-public interface Valadoc.ClassHandler : Api.Node {
-	protected Class? find_vclass ( Vala.Class vcl ) {
-		foreach ( Class cl in get_class_list () ) {
-			if ( cl.is_vclass ( vcl ) )
-				return cl;
 
-			var tmp = cl.find_vclass ( vcl );
-			if ( tmp != null )
+public interface Valadoc.ClassHandler : Api.Node {
+	protected Class? find_vclass (Vala.Class vcl) {
+		foreach (Class cl in get_class_list ()) {
+			if (cl.is_vclass (vcl)) {
+				return cl;
+			}
+
+			var tmp = cl.find_vclass (vcl);
+			if (tmp != null) {
 				return tmp;
+			}
 		}
 		return null;
 	}
 
-	public Gee.Collection<Class> get_class_list ( ) {
+	public Gee.Collection<Class> get_class_list () {
 		return get_children_by_type (Api.NodeType.CLASS);
 	}
 
-	public void visit_classes ( Doclet doclet ) {
+	public void visit_classes (Doclet doclet) {
 		accept_children_by_type (Api.NodeType.CLASS, doclet);
 	}
 }
+

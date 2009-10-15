@@ -17,9 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using GLib;
 using Gee;
 
 public interface Valadoc.Documentation : Object {
 	public abstract string? get_filename ();
 }
+

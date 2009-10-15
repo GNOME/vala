@@ -17,43 +17,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using GLib;
-
+using Gee;
 
 
 namespace Valadoc {
-	public bool copy_file ( string src, string dest ) {
-		GLib.FileStream fsrc = GLib.FileStream.open ( src, "rb" );
-		if ( fsrc == null ) {
+	public bool copy_file (string src, string dest) {
+		GLib.FileStream fsrc = GLib.FileStream.open (src, "rb");
+		if (fsrc == null) {
 			return false;
 		}
 
-		GLib.FileStream fdest = GLib.FileStream.open ( dest, "wb" );
-		if ( fdest == null ) {
+		GLib.FileStream fdest = GLib.FileStream.open (dest, "wb");
+		if (fdest == null) {
 			return false;
 		}
 
-		for ( int c = fsrc.getc() ; !fsrc.eof() ; c = fsrc.getc() ) {
-			fdest.putc ( (char)c );
+		for (int c = fsrc.getc() ; !fsrc.eof() ; c = fsrc.getc()) {
+			fdest.putc ((char)c);
 		}
 
 		return true;
 	}
 
-	public bool copy_directory ( string src, string dest ) {
-		string _src = (  src.has_suffix ( "/" ) )? src : src + "/";
-		string _dest = ( dest.has_suffix ( "/" ) )? dest : dest + "/";
+	public bool copy_directory (string src, string dest) {
+		string _src = (src.has_suffix ( "/" ))? src : src + "/";
+		string _dest = (dest.has_suffix ( "/" ))? dest : dest + "/";
 
 		try {
-			GLib.Dir dir = GLib.Dir.open ( _src );
-			for ( weak string name = dir.read_name (); name != null ; name = dir.read_name () ) {
-				if ( !copy_file ( _src+name, _dest+name ) ) {
+			GLib.Dir dir = GLib.Dir.open (_src);
+			for (weak string name = dir.read_name (); name != null ; name = dir.read_name ()) {
+				if (!copy_file (_src+name, _dest+name)) {
 					return false;
 				}
 			}
 		}
-		catch ( GLib.FileError err ) {
+		catch (GLib.FileError err) {
 			return false;
 		}
 		return true;

@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
@@ -51,8 +48,8 @@ public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 		return this.vproperty.nick;
 	}
 
-	public bool equals ( Property p ) {
-		return this.vproperty.equals ( p.vproperty );
+	public bool equals (Property p) {
+		return this.vproperty.equals (p.vproperty);
 	}
 
 	public TypeReference? type_reference {

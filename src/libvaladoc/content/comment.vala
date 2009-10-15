@@ -21,8 +21,8 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
+
 
 public class Valadoc.Content.Comment : BlockContent {
 	public Gee.List<Taglet> taglets { get { return _taglets; } }
@@ -71,3 +71,4 @@ public class Valadoc.Content.Comment : BlockContent {
 		return selected_taglets;
 	}
 }
+

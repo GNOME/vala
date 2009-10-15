@@ -21,9 +21,9 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
 using Valadoc.Content;
+
 
 public class Valadoc.Taglets.Param : InlineContent, Taglet, Block {
 	public string parameter_name { private set; get; }

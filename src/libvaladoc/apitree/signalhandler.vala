@@ -17,16 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Vala;
-using GLib;
 using Gee;
+
 
 public interface Valadoc.SignalHandler : Api.Node {
 	public void visit_signals (Doclet doclet) {
 		accept_children_by_type (Api.NodeType.SIGNAL, doclet);
 	}
 
-	public Gee.Collection<Signal> get_signal_list () {
+	public Collection<Signal> get_signal_list () {
 		return get_children_by_type (Api.NodeType.SIGNAL);
 	}
 }

@@ -393,3 +393,4 @@ public class Valadoc.WikiScanner : Object, Scanner {
 		}
 	}
 }
+

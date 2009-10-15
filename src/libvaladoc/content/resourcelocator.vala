@@ -22,8 +22,9 @@
  */
 
 using GLib;
-using Gee;
+
 
 public interface Valadoc.ResourceLocator : Object {
 	public abstract string resolve (string path);
 }
+

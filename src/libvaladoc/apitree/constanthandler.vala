@@ -17,12 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Vala;
-using GLib;
 using Gee;
 
+
 public interface Valadoc.ConstantHandler : Api.Node {
-	public Gee.Collection<Constant> get_constant_list () {
+	public Collection<Constant> get_constant_list () {
 		return get_children_by_type (Api.NodeType.CONSTANT);
 	}
 

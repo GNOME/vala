@@ -17,16 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Vala;
-using GLib;
 using Gee;
+
 
 public interface Valadoc.MethodHandler : Api.Node {
 	public void visit_methods (Doclet doclet) {
 		accept_children_by_type (Api.NodeType.METHOD, doclet);
 	}
 
-	public Gee.Collection<Method> get_method_list () {
+	public Collection<Method> get_method_list () {
 		return get_children_by_type (Api.NodeType.METHOD);
 	}
 }
+

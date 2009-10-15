@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
@@ -44,16 +41,16 @@ public class Valadoc.EnumValue: Api.SymbolNode {
 		return this.venval.get_cname ();
 	}
 
-	public bool is_venumvalue ( Vala.EnumValue venval ) {
-		return ( this.venval == venval );
+	public bool is_venumvalue (Vala.EnumValue venval) {
+		return this.venval == venval;
 	}
 
-	public void write ( Langlet langlet, void* ptr ) {
-		langlet.write_enum_value ( this, ptr );
+	public void write (Langlet langlet, void* ptr) {
+		langlet.write_enum_value (this, ptr);
 	}
 
-	public void visit ( Doclet doclet ) {
-		doclet.visit_enum_value ( this );
+	public void visit (Doclet doclet) {
+		doclet.visit_enum_value (this);
 	}
 
 	public override Api.NodeType node_type { get { return Api.NodeType.ENUM_VALUE; } }

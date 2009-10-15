@@ -20,7 +20,6 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-using GLib;
 
 /**
  * Represents a position in a source file.

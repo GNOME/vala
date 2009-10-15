@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
@@ -31,7 +28,7 @@ public class Valadoc.Field : Api.MemberNode, ReturnTypeHandler {
 		this.vfield = symbol;
 
 		var vret = this.vfield.field_type;
-		this.set_ret_type ( vret );
+		this.set_ret_type (vret);
 	}
 
 	public string? get_cname () {
@@ -45,8 +42,9 @@ public class Valadoc.Field : Api.MemberNode, ReturnTypeHandler {
 
 	public bool is_static {
 		get {
-			if ( this.parent is Namespace )
+			if (this.parent is Namespace) {
 				return false;
+			}
 
 			return this.vfield.binding == MemberBinding.STATIC;
 		}
@@ -64,8 +62,8 @@ public class Valadoc.Field : Api.MemberNode, ReturnTypeHandler {
 		base.resolve_type_references (root);
 	}
 
-	public void visit ( Doclet doclet, FieldHandler? parent ) {
-		doclet.visit_field ( this, parent );
+	public void visit (Doclet doclet, FieldHandler? parent) {
+		doclet.visit_field (this, parent);
 	}
 
 	public override Api.NodeType node_type { get { return Api.NodeType.FIELD; } }
@@ -74,8 +72,8 @@ public class Valadoc.Field : Api.MemberNode, ReturnTypeHandler {
 		visit (doclet, (FieldHandler) parent);
 	}
 
-	public void write ( Langlet langlet, void* ptr, FieldHandler parent ) {
-		langlet.write_field ( this, parent, ptr );
+	public void write (Langlet langlet, void* ptr, FieldHandler parent) {
+		langlet.write_field (this, parent, ptr);
 	}
 }
 

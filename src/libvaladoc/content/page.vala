@@ -21,8 +21,8 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
+
 
 public class Valadoc.Content.Page : BlockContent {
 	internal Page () {
@@ -33,3 +33,4 @@ public class Valadoc.Content.Page : BlockContent {
 		visitor.visit_page (this);
 	}
 }
+

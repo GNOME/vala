@@ -21,8 +21,8 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
+
 
 public abstract class Valadoc.Content.InlineTaglet : ContentElement, Taglet, Inline {
 	protected Settings settings;
@@ -59,3 +59,4 @@ public abstract class Valadoc.Content.InlineTaglet : ContentElement, Taglet, Inl
 		element.accept (visitor);
 	}
 }
+

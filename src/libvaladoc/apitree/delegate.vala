@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
@@ -32,11 +29,11 @@ public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, Return
 		this.vdelegate = symbol;
 
 		var ret = this.vdelegate.return_type;
-		this.set_ret_type ( ret );
+		this.set_ret_type (ret);
 	}
 
 	public string? get_cname () {
-		return this.vdelegate.get_cname();
+		return this.vdelegate.get_cname ();
 	}
 
 	public TypeReference? type_reference {
@@ -44,8 +41,8 @@ public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, Return
 		get;
 	}
 
-	public void visit ( Doclet doclet ) {
-		doclet.visit_delegate ( this );
+	public void visit (Doclet doclet) {
+		doclet.visit_delegate (this);
 	}
 
 	public override Api.NodeType node_type { get { return Api.NodeType.DELEGATE; } }

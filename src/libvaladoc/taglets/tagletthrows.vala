@@ -21,9 +21,9 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
 using Valadoc.Content;
+
 
 public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 	public string error_domain_name { private set; get; }

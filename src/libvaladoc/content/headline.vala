@@ -21,8 +21,8 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
+
 
 public class Valadoc.Content.Headline : Block, InlineContent {
 	public int level { get; set; }
@@ -43,3 +43,4 @@ public class Valadoc.Content.Headline : Block, InlineContent {
 		visitor.visit_headline (this);
 	}
 }
+

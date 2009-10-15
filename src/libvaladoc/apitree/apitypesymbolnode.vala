@@ -21,8 +21,8 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using Vala;
 using Gee;
+
 
 public abstract class Valadoc.Api.TypeSymbolNode : Api.SymbolNode {
 
@@ -39,3 +39,4 @@ public abstract class Valadoc.Api.TypeSymbolNode : Api.SymbolNode {
 		base.process_comments (settings, parser);
 	}
 }
+

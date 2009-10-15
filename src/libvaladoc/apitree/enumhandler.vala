@@ -17,16 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Vala;
-using GLib;
 using Gee;
 
+
 public interface Valadoc.EnumHandler : Api.Node {
-	public Gee.Collection<Enum> get_enum_list () {
+	public Collection<Enum> get_enum_list () {
 		return get_children_by_type (Api.NodeType.ENUM);
 	}
 
-	public void visit_enums ( Doclet doclet ) {
+	public void visit_enums (Doclet doclet) {
 		accept_children_by_type (Api.NodeType.ENUM, doclet);
 	}
 }
+

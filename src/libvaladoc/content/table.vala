@@ -21,8 +21,8 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
+
 
 public class Valadoc.Content.Table : ContentElement, Block {
 	public Gee.List<TableRow> rows { get { return _rows; } }
@@ -53,3 +53,4 @@ public class Valadoc.Content.Table : ContentElement, Block {
 		}
 	}
 }
+

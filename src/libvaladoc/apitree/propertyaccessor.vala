@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
@@ -64,3 +61,4 @@ public class Valadoc.PropertyAccessor : Api.SymbolNode {
 		langlet.write_property_accessor (this, ptr);
 	}
 }
+

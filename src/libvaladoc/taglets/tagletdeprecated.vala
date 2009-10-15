@@ -21,7 +21,6 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
 using Valadoc.Content;
 

@@ -20,7 +20,6 @@
 using GLib.Path;
 using Valadoc;
 using Config;
-using GLib;
 using Gee;
 
 

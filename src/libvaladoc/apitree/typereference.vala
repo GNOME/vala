@@ -18,13 +18,11 @@
  */
 
 
-using Vala;
-using GLib;
 using Gee;
 
 
 public class Valadoc.TypeReference : Api.Item {
-	private Gee.ArrayList<TypeReference> type_arguments = new Gee.ArrayList<TypeReference> ();
+	private ArrayList<TypeReference> type_arguments = new ArrayList<TypeReference> ();
 	private Vala.DataType? vtyperef;
 
 	public TypeReference (Vala.DataType? vtyperef, Api.Item parent) {
@@ -32,15 +30,15 @@ public class Valadoc.TypeReference : Api.Item {
 		this.parent = parent;
 	}
 
-	public Gee.Collection<TypeReference> get_type_arguments ( ) {
+	public Gee.Collection<TypeReference> get_type_arguments () {
 		return this.type_arguments.read_only_view;
 	}
 
-	private void set_template_argument_list (Tree root, Gee.Collection<Vala.DataType> varguments) {
-		foreach ( Vala.DataType vdtype in varguments ) {
+	private void set_template_argument_list (Tree root, Vala.Collection<Vala.DataType> varguments) {
+		foreach (Vala.DataType vdtype in varguments) {
 			var dtype = new TypeReference (vdtype, this);
 			dtype.resolve_type_references (root);
-			this.type_arguments.add ( dtype );
+			this.type_arguments.add (dtype);
 		}
 	}
 
@@ -52,15 +50,14 @@ public class Valadoc.TypeReference : Api.Item {
 	public bool pass_ownership {
 		get {
 			Vala.CodeNode? node = this.vtyperef.parent_node;
-			if ( node == null )
+			if (node == null) {
 				return false;
-
-			if ( node is Vala.FormalParameter ) {
-				return ( ((Vala.FormalParameter)node).direction == ParameterDirection.IN &&
-					((Vala.FormalParameter)node).parameter_type.value_owned );
 			}
-
-			if ( node is Vala.Property ) {
+			if (node is Vala.FormalParameter) {
+				return (((Vala.FormalParameter)node).direction == Vala.ParameterDirection.IN &&
+					((Vala.FormalParameter)node).parameter_type.value_owned);
+			}
+			if (node is Vala.Property) {
 				return ((Vala.Property)node).property_type.value_owned;
 			}
 
@@ -73,10 +70,10 @@ public class Valadoc.TypeReference : Api.Item {
 			Vala.CodeNode parent = this.vtyperef.parent_node;
 
 			// parameter:
-			if ( parent is Vala.FormalParameter ) {
-				if ( ((Vala.FormalParameter)parent).direction != ParameterDirection.IN )
+			if (parent is Vala.FormalParameter) {
+				if (((Vala.FormalParameter)parent).direction != Vala.ParameterDirection.IN) {
 					return false;
-
+				}
 				return ((Vala.FormalParameter)parent).parameter_type.value_owned;
 			}
 			return false;
@@ -88,20 +85,19 @@ public class Valadoc.TypeReference : Api.Item {
 			Vala.CodeNode parent = this.vtyperef.parent_node;
 
 			// parameter:
-			if ( parent is Vala.FormalParameter ) {
-				if ( ((Vala.FormalParameter)parent).direction == ParameterDirection.IN )
+			if (parent is Vala.FormalParameter) {
+				if (((Vala.FormalParameter)parent).direction == Vala.ParameterDirection.IN) {
 					return false;
-
+				}
 				return this.is_weak_helper ( ((Vala.FormalParameter)parent).parameter_type );
 			}
-
 			return false;
 		}
 	}
 
 
 	// from vala/valacodewriter.vala
-	private bool is_weak_helper ( Vala.DataType type ) {
+	private bool is_weak_helper (Vala.DataType type) {
 		if (type.value_owned) {
 			return false;
 		} else if (type is Vala.VoidType || type is Vala.PointerType) {
@@ -134,16 +130,16 @@ public class Valadoc.TypeReference : Api.Item {
 			}
 
 			if (parent is Vala.Method == true) {
-				return this.is_weak_helper ( ((Vala.Method)parent).return_type );
+				return this.is_weak_helper (((Vala.Method)parent).return_type);
 			}
 			else if (parent is Vala.Signal == true) {
-				return this.is_weak_helper ( ((Vala.Signal)parent).return_type );
+				return this.is_weak_helper (((Vala.Signal)parent).return_type);
 			}
 			else if (parent is Vala.Delegate == true) {
-				return this.is_weak_helper ( ((Vala.Delegate)parent).return_type );
+				return this.is_weak_helper (((Vala.Delegate)parent).return_type);
 			}
 
-			return ( this.vtyperef.parent_node is Field )? this.is_weak_helper( this.vtyperef ) : false;
+			return ( this.vtyperef.parent_node is Field )? this.is_weak_helper(this.vtyperef) : false;
 		}
 	}
 
@@ -155,74 +151,73 @@ public class Valadoc.TypeReference : Api.Item {
 
 	// remove
 	private string extract_type_name ( Vala.DataType vdtype ) {
-			if ( vdtype is Vala.VoidType ) {
-				return "void";
-			}
-			else if ( vdtype is Vala.PointerType ) {
-				return this.extract_type_name ( ((Vala.PointerType)vdtype).base_type );
-			}
-			else if ( vdtype is Vala.DelegateType ) {
-				return ((Vala.DelegateType)this.vtyperef).delegate_symbol.name;
-			}
-			else if ( vdtype is Vala.MethodType ) {
-				return ((Vala.MethodType)this.vtyperef).method_symbol.name;
-			}
-			else if ( vdtype is Vala.SignalType ) {
-				return ((Vala.SignalType)this.vtyperef).signal_symbol.name;
-			}
-			else if ( vdtype is Vala.ArrayType ) {
-				this.extract_type_name ( ((Vala.ArrayType)vdtype).element_type );
-			}
-			return vtyperef.to_string();
+		if (vdtype is Vala.VoidType) {
+			return "void";
+		}
+		else if (vdtype is Vala.PointerType) {
+			return this.extract_type_name (((Vala.PointerType)vdtype).base_type);
+		}
+		else if (vdtype is Vala.DelegateType) {
+			return ((Vala.DelegateType)this.vtyperef).delegate_symbol.name;
+		}
+		else if (vdtype is Vala.MethodType) {
+			return ((Vala.MethodType)this.vtyperef).method_symbol.name;
+		}
+		else if (vdtype is Vala.SignalType) {
+			return ((Vala.SignalType)this.vtyperef).signal_symbol.name;
+		}
+		else if (vdtype is Vala.ArrayType) {
+			this.extract_type_name (((Vala.ArrayType)vdtype).element_type);
+		}
+		return vtyperef.to_string ();
 	}
 
 	// remove
 	public string type_name {
 		owned get {
-			return this.extract_type_name ( this.vtyperef );
+			return this.extract_type_name (this.vtyperef);
 		}
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		if ( this.vtyperef != null ) {
-			if ( this.vtyperef is PointerType )
+		if (this.vtyperef != null) {
+			if ( this.vtyperef is Vala.PointerType) {
 				this.data_type = new Pointer ((Vala.PointerType) this.vtyperef, this);
-			else if ( vtyperef is ArrayType )
+			} else if (vtyperef is Vala.ArrayType) {
 				this.data_type = new Array ((Vala.ArrayType) this.vtyperef, this);
-			else if ( vtyperef is GenericType )
+			} else if (vtyperef is Vala.GenericType) {
 				 this.data_type = (TypeParameter) root.search_vala_symbol (((Vala.GenericType) this.vtyperef).type_parameter);
+			}
 		}
 
 
-		if ( this.data_type == null ) {
+		if (this.data_type == null) {
 			Vala.DataType vtype = this.vtyperef;
 			this.set_template_argument_list (root, vtype.get_type_arguments ());
 			// still necessary?
 			if ( vtype is Vala.ErrorType ) {
 				Vala.ErrorDomain verrdom = ((Vala.ErrorType)vtype).error_domain;
-				if ( verrdom != null )
-					this.data_type = root.search_vala_symbol ( verrdom );
-				else
+				if (verrdom != null) {
+					this.data_type = root.search_vala_symbol (verrdom);
+				} else {
 					this.data_type = glib_error;
+				}
 			}
 			// necessary?
-			else if (vtype is Vala.DelegateType ) {
-				this.data_type = root.search_vala_symbol ( ((Vala.DelegateType)vtype).delegate_symbol );
+			else if (vtype is Vala.DelegateType) {
+				this.data_type = root.search_vala_symbol (((Vala.DelegateType)vtype).delegate_symbol);
+			} else {
+				this.data_type = root.search_vala_symbol (vtype.data_type);
 			}
-			else {
-				this.data_type = root.search_vala_symbol ( vtype.data_type );
-			}
-		}
-		else if ( this.data_type is Pointer ) {
+		} else if (this.data_type is Pointer) {
 			((Pointer)this.data_type).resolve_type_references (root);
-		}
-		else if ( this.data_type is Array ) {
+		} else if (this.data_type is Array) {
 			((Array)this.data_type).resolve_type_references (root);
 		}
 	}
 
-	public void write ( Langlet langlet, void* ptr ) {
-		langlet.write_type_reference ( this, ptr );
+	public void write (Langlet langlet, void* ptr) {
+		langlet.write_type_reference (this, ptr);
 	}
 }
 

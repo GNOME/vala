@@ -21,12 +21,12 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using Vala;
 using Gee;
 
-internal class Valadoc.Api.NodeBuilder : CodeVisitor {
+
+internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 	private Tree root;
-	private Gee.Collection<Package> packages;
+	private Collection<Package> packages;
 	private Node current_node;
 
 	internal NodeBuilder (Tree root) {
@@ -212,3 +212,4 @@ internal class Valadoc.Api.NodeBuilder : CodeVisitor {
 		process_children (node, element);
 	}
 }
+

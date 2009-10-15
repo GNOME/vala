@@ -21,8 +21,8 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
+
 
 public enum Valadoc.Content.HorizontalAlign {
 	LEFT,
@@ -41,3 +41,4 @@ public interface Valadoc.Content.StyleAttributes : ContentElement {
 	public abstract VerticalAlign? vertical_align { get; set; }
 	public abstract string? style { get; set; }
 }
+

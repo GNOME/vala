@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
@@ -27,7 +24,7 @@ public class Valadoc.Namespace : Api.SymbolNode, MethodHandler, FieldHandler, Na
                                  EnumHandler, ClassHandler, StructHandler, InterfaceHandler,
                                  DelegateHandler, ConstantHandler
 {
-	private Comment source_comment;
+	private Vala.Comment source_comment;
 
 	public Namespace (Vala.Namespace symbol, NamespaceHandler parent) {
 		base (symbol, parent);
@@ -35,7 +32,7 @@ public class Valadoc.Namespace : Api.SymbolNode, MethodHandler, FieldHandler, Na
 		this.vnspace = symbol;
 
 		if (vnspace.source_reference != null) {
-			foreach (Comment c in vnspace.get_comments()) {
+			foreach (Vala.Comment c in vnspace.get_comments()) {
 				if (this.package.is_vpackage (c.source_reference.file)) {
 					this.source_comment = c;
 					break;
@@ -67,8 +64,8 @@ public class Valadoc.Namespace : Api.SymbolNode, MethodHandler, FieldHandler, Na
 		set;
 	}
 
-	internal bool is_vnspace ( Vala.Namespace vns ) {
-		return (this.vnspace == vns);
+	internal bool is_vnspace (Vala.Namespace vns) {
+		return this.vnspace == vns;
 	}
 
 	public void write (Langlet langlet, void* ptr) {

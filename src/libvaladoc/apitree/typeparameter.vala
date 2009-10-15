@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
@@ -39,7 +36,8 @@ public class Valadoc.TypeParameter : Api.SymbolNode, ReturnTypeHandler {
 	public override void accept (Doclet doclet) {
 	}
 
-	public void write ( Langlet langlet, void* ptr ) {
-		langlet.write_type_parameter ( this, ptr );
+	public void write (Langlet langlet, void* ptr) {
+		langlet.write_type_parameter (this, ptr);
 	}
 }
+

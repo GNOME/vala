@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
@@ -28,10 +25,10 @@ public Valadoc.Class glib_error = null;
 
 
 public class Valadoc.Tree {
-	private Gee.ArrayList<Package> packages = new Gee.ArrayList<Package>();
+	private ArrayList<Package> packages = new ArrayList<Package>();
 	private Package source_package = null;
 	private Valadoc.Settings settings;
-	private CodeContext context;
+	private Vala.CodeContext context;
 	private ErrorReporter reporter;
 	private Package sourcefiles = null;
 
@@ -40,24 +37,24 @@ public class Valadoc.Tree {
 		get;
 	}
 
-	public Gee.Collection<Package> get_package_list () {
+	public Collection<Package> get_package_list () {
 		return this.packages.read_only_view;
 	}
 
 	private void add_dependencies_to_source_package () {
 		if ( this.source_package != null ) {
-			Gee.ArrayList<Package> deplst = new Gee.ArrayList<Package> ();
-			foreach ( Package pkg in this.packages ) {
-				if ( pkg != this.source_package ) {
-					deplst.add ( pkg );
+			ArrayList<Package> deplst = new ArrayList<Package> ();
+			foreach (Package pkg in this.packages) {
+				if (pkg != this.source_package) {
+					deplst.add (pkg);
 				}
-			}		
-			this.source_package.set_dependency_list ( deplst );
+			}
+			this.source_package.set_dependency_list (deplst);
 		}
 	}
 
-	public void visit ( Doclet doclet ) {
-		doclet.initialisation ( this.settings, this );
+	public void visit (Doclet doclet) {
+		doclet.initialisation (this.settings, this);
 	}
 
 	private Api.Node? search_relative_to (Api.Node element, string[] path) {
@@ -100,9 +97,9 @@ public class Valadoc.Tree {
 		return params;
 	}
 
-	public Tree ( Valadoc.ErrorReporter reporter, Valadoc.Settings settings) {
+	public Tree (Valadoc.ErrorReporter reporter, Valadoc.Settings settings) {
 		this.context = new Vala.CodeContext ( );
-		CodeContext.push (context);
+		Vala.CodeContext.push (context);
 
 		this.settings = settings;
 		this.reporter = reporter;
@@ -129,7 +126,7 @@ public class Valadoc.Tree {
 		}
 
 		if (settings.profile == "gobject-2.0" || settings.profile == "gobject" || settings.profile == null) {
-			context.profile = Profile.GOBJECT;
+			context.profile = Vala.Profile.GOBJECT;
 			context.add_define ("GOBJECT");
 		}
 
@@ -139,13 +136,13 @@ public class Valadoc.Tree {
 			}
 		}
 
-		if (context.profile == Profile.POSIX) {
+		if (context.profile == Vala.Profile.POSIX) {
 			/* default package */
 			if (!add_package ("posix")) {
-				Report.error (null, "posix not found in specified Vala API directories");
+				Vala.Report.error (null, "posix not found in specified Vala API directories");
 			}
 		}
-		else if (context.profile == Profile.GOBJECT) {
+		else if (context.profile == Vala.Profile.GOBJECT) {
 			int glib_major = 2;
 			int glib_minor = 12;
 
@@ -153,16 +150,16 @@ public class Valadoc.Tree {
 			context.target_glib_major = glib_major;
 			context.target_glib_minor = glib_minor;
 			if (context.target_glib_major != 2) {
-				Report.error (null, "This version of valac only supports GLib 2");
+				Vala.Report.error (null, "This version of valac only supports GLib 2");
 			}
 
 			/* default packages */
 			if (!this.add_package ("glib-2.0")) { //
-				Report.error (null, "glib-2.0 not found in specified Vala API directories");
+				Vala.Report.error (null, "glib-2.0 not found in specified Vala API directories");
 			}
 
 			if (!this.add_package ("gobject-2.0")) { //
-				Report.error (null, "gobject-2.0 not found in specified Vala API directories");
+				Vala.Report.error (null, "gobject-2.0 not found in specified Vala API directories");
 			}
 		}
 	}
@@ -183,7 +180,7 @@ public class Valadoc.Tree {
 		context.add_package (pkg);
 
 
-		var vfile = new SourceFile (context, package_path, true);
+		var vfile = new Vala.SourceFile (context, package_path, true);
 		context.add_source_file (vfile);
 
 		Package vdpkg = new Package (vfile, pkg, true);
@@ -199,12 +196,12 @@ public class Valadoc.Tree {
 					dep.strip ();
 					if (dep != "") {
 						if (!add_package (dep)) {
-							Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg));
+							Vala.Report.error (null, "%s, dependency of %s, not found in specified Vala API directories".printf (dep, pkg));
 						}
 					}
 				}
 			} catch (FileError e) {
-				Report.error (null, "Unable to read dependency file: %s".printf (e.message));
+				Vala.Report.error (null, "Unable to read dependency file: %s".printf (e.message));
 			}
 		}
 		
@@ -215,59 +212,58 @@ public class Valadoc.Tree {
 	public void add_depencies (string[] packages) {
 		foreach (string package in packages) {
 			if (!add_package (package)) {
-				Report.error (null, "%s not found in specified Vala API directories".printf (package));
+				Vala.Report.error (null, "%s not found in specified Vala API directories".printf (package));
 			}
 		}
 	}
 
 	public void add_documented_file (string[] sources) {
 		if (sources == null) {
-			return ;
+			return;
 		}
 
 		foreach (string source in sources) {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
 				var rpath = realpath (source);
 				if (source.has_suffix (".vala") || source.has_suffix (".gs")) {
-					var source_file = new SourceFile (context, rpath);
+					var source_file = new Vala.SourceFile (context, rpath);
 
 
 					if (this.sourcefiles == null) {
 						this.sourcefiles = new Package (source_file, settings.pkg_name, false);
 						this.packages.add (this.sourcefiles);
-					}
-					else {
+					} else {
 						this.sourcefiles.add_file (source_file);
 					}
 
-					if (context.profile == Profile.POSIX) {
+					if (context.profile == Vala.Profile.POSIX) {
 						// import the Posix namespace by default (namespace of backend-specific standard library)
-						var ns_ref = new UsingDirective (new UnresolvedSymbol (null, "Posix", null));
+						var ns_ref = new Vala.UsingDirective (new Vala.UnresolvedSymbol (null, "Posix", null));
 						source_file.add_using_directive (ns_ref);
 						context.root.add_using_directive (ns_ref);
-					} else if (context.profile == Profile.GOBJECT) {
+					} else if (context.profile == Vala.Profile.GOBJECT) {
 						// import the GLib namespace by default (namespace of backend-specific standard library)
-						var ns_ref = new UsingDirective (new UnresolvedSymbol (null, "GLib", null));
+						var ns_ref = new Vala.UsingDirective (new Vala.UnresolvedSymbol (null, "GLib", null));
 						source_file.add_using_directive (ns_ref);
 						context.root.add_using_directive (ns_ref);
 					}
 
 					context.add_source_file (source_file);
 				} else if (source.has_suffix (".vapi")) {
-					string file_name = GLib.Path.get_basename (source);
+					string file_name = Path.get_basename (source);
 					file_name = file_name.ndup ( file_name.size() - ".vapi".size() );
 			
-					var vfile = new SourceFile (context, rpath, true);
+					var vfile = new Vala.SourceFile (context, rpath, true);
 					Package vdpkg = new Package (vfile, file_name); 
 					context.add_source_file (vfile);
 					this.packages.add (vdpkg);
 				} else if (source.has_suffix (".c")) {
 					context.add_c_source_file (rpath);
 				} else {
-					Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.".printf (source));
+					Vala.Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.".printf (source));
 				}
 			} else {
-				Report.error (null, "%s not found".printf (source));
+				Vala.Report.error (null, "%s not found".printf (source));
 			}
 		}
 	}
@@ -279,20 +275,20 @@ public class Valadoc.Tree {
 			return false;
 		}
 
-		Vala.SymbolResolver resolver = new SymbolResolver ();
+		Vala.SymbolResolver resolver = new Vala.SymbolResolver ();
 		resolver.resolve(this.context);
 		if (this.context.report.get_errors () > 0) {
 			return false;
 		}
 
-		Vala.SemanticAnalyzer analyzer = new SemanticAnalyzer ( );
+		Vala.SemanticAnalyzer analyzer = new Vala.SemanticAnalyzer ( );
 		analyzer.analyze(this.context);
 		if (this.context.report.get_errors () > 0) {
 			return false;
 		}
 
 		if (context.non_null_experimental) {
-			Vala.NullChecker null_checker = new NullChecker ();
+			Vala.NullChecker null_checker = new Vala.NullChecker ();
 			null_checker.check (this.context);
 
 			if (this.context.report.get_errors () > 0) {
@@ -335,19 +331,22 @@ public class Valadoc.Tree {
 	}
 
 	internal Api.Node? search_vala_symbol (Vala.Symbol? vnode) {
-		if (vnode == null)
+		if (vnode == null) {
 			return null;
-
-		Gee.ArrayList<Vala.Symbol> params = new Gee.ArrayList<Vala.Symbol> ();
-		for (Vala.Symbol iter = vnode; iter != null ; iter = iter.parent_symbol) {
-			if (iter is Vala.DataType)
-				params.insert (0, ((Vala.DataType)iter).data_type);
-			else
-				params.insert (0, iter);
 		}
 
-		if (params.size == 0)
+		ArrayList<Vala.Symbol> params = new ArrayList<Vala.Symbol> ();
+		for (Vala.Symbol iter = vnode; iter != null; iter = iter.parent_symbol) {
+			if (iter is Vala.DataType) {
+ 				params.insert (0, ((Vala.DataType)iter).data_type);
+			} else {
+				params.insert (0, iter);
+			}
+		}
+
+		if (params.size == 0) {
 			return null;
+		}
 
 		if (params.size >= 2) {
 			if (params.get(1) is Vala.Namespace) {
@@ -359,7 +358,7 @@ public class Valadoc.Tree {
 		Package file = this.find_file(vfile);
 
 		Api.Node? node = file;
-		foreach (Symbol symbol in params) {
+		foreach (Vala.Symbol symbol in params) {
 			node = node.find_by_symbol (symbol);
 			if (node == null) {
 				return null;

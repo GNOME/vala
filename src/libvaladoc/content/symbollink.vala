@@ -21,8 +21,8 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
+
 
 public class Valadoc.Content.SymbolLink : ContentElement, Inline {
 	public Api.Node symbol { get; set; }
@@ -44,3 +44,4 @@ public class Valadoc.Content.SymbolLink : ContentElement, Inline {
 		visitor.visit_symbol_link (this);
 	}
 }
+

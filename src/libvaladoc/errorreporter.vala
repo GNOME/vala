@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using Gee;
 
 public enum Valadoc.ErrorLevel {
 	ASSUMPTION,
@@ -60,10 +61,10 @@ public class Valadoc.ErrorReporter : Object {
 		ERROR
 	}
 
-	private inline void msg ( ErrorType type, string file, long line, long startpos, long endpos, string errline, string msg ) {
-		this.stream.printf ( "%s:%lu.%lu-%lu.%lu: %s: %s\n", file, line, startpos, line, endpos, (type == ErrorType.ERROR)? "error" : "warning", msg );
+	private inline void msg (ErrorType type, string file, long line, long startpos, long endpos, string errline, string msg) {
+		this.stream.printf ("%s:%lu.%lu-%lu.%lu: %s: %s\n", file, line, startpos, line, endpos, (type == ErrorType.ERROR)? "error" : "warning", msg);
 		if (startpos <= endpos) {
-			this.stream.printf ( "%s\n", errline );
+			this.stream.printf ("%s\n", errline);
 			for (int i = 0; i < errline.length; i++) {
 				if (errline[i] == '\t') {
 					this.stream.printf ("\t");
@@ -77,25 +78,25 @@ public class Valadoc.ErrorReporter : Object {
 		}
 	}
 
-	public void simple_warning ( string msg ) {
-		this.stream.puts ( msg );
-		this.stream.putc ( '\n' );
+	public void simple_warning (string msg) {
+		this.stream.puts (msg);
+		this.stream.putc ('\n');
 		this._warnings++;
 	}
 
-	public void simple_error ( string msg ) {
-		this.stream.puts ( msg );
-		this.stream.putc ( '\n' );
+	public void simple_error (string msg) {
+		this.stream.puts (msg);
+		this.stream.putc ('\n');
 		this._errors++;
 	}
 
-	public void error ( string file, long line, long startpos, long endpos, string errline, string msg ) {
-		this.msg ( ErrorType.ERROR, file, line, startpos, endpos, errline, msg );
+	public void error (string file, long line, long startpos, long endpos, string errline, string msg) {
+		this.msg (ErrorType.ERROR, file, line, startpos, endpos, errline, msg);
 		this._errors++;
 	}
 
-	public void warning ( string file, long line, long startpos, long endpos, string errline, string msg ) {
-		this.msg ( ErrorType.WARNING, file, line, startpos, endpos, errline, msg );
+	public void warning (string file, long line, long startpos, long endpos, string errline, string msg) {
+		this.msg (ErrorType.WARNING, file, line, startpos, endpos, errline, msg);
 		this._warnings++;
 	}
 }

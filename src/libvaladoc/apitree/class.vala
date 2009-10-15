@@ -17,24 +17,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
 public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, SignalHandler, MethodHandler, EnumHandler, PropertyHandler, ConstructionMethodHandler, FieldHandler, DelegateHandler, ConstantHandler, TemplateParameterListHandler {
-	private Gee.ArrayList<Interface> interfaces;
+	private ArrayList<Interface> interfaces;
 	private Vala.Class vclass;
 
 	public Class (Vala.Class symbol, Api.Node parent) {
 		base (symbol, parent);
-		this.interfaces = new Gee.ArrayList<Interface>();
+		this.interfaces = new ArrayList<Interface> ();
 
 		this.vclass = symbol;
 
-		if ( glib_error == null ) {
-			if ( this.full_name () == "GLib.Error" ) {
+		if (glib_error == null) {
+			if (this.full_name () == "GLib.Error") {
 				glib_error = this;
 			}
 		}
@@ -49,16 +46,16 @@ public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, Si
 		return this.vclass.get_cname();
 	}
 
-	public Gee.Collection<Interface> get_implemented_interface_list ( ) {
+	public Collection<Interface> get_implemented_interface_list () {
 		return this.interfaces;
 	}
 
-	internal bool is_vclass ( Vala.Class vcl ) {
+	internal bool is_vclass (Vala.Class vcl) {
 		return this.vclass == vcl;
 	}
 
-	public void write ( Langlet langlet, void* ptr ) {
-		langlet.write_class ( this, ptr );
+	public void write (Langlet langlet, void* ptr) {
+		langlet.write_class (this, ptr);
 	}
 
 	public bool is_abstract {
@@ -77,17 +74,18 @@ public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, Si
 		visit (doclet);
 	}
 
-	private void set_parent_type_references (Tree root, Gee.Collection<Vala.DataType> lst) {
-		if (this.interfaces.size != 0)
-			return ;
+	private void set_parent_type_references (Tree root, Vala.Collection<Vala.DataType> lst) {
+		if (this.interfaces.size != 0) {
+			return;
+		}
 
-		foreach ( Vala.DataType vtyperef in lst ) {
-			Api.Item? element = root.search_vala_symbol ( vtyperef.data_type );
-			if ( element is Class ) {
+		foreach (Vala.DataType vtyperef in lst) {
+			Api.Item? element = root.search_vala_symbol (vtyperef.data_type);
+			if (element is Class) {
 				this.base_type = (Class)element;
 			}
 			else {
-				this.interfaces.add ( (Interface)element );
+				this.interfaces.add ((Interface)element);
 			}
 		}
 	}

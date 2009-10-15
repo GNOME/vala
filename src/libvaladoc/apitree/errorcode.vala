@@ -17,9 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Vala;
-using GLib;
 using Gee;
 
 
@@ -35,16 +32,16 @@ public class Valadoc.ErrorCode : Api.TypeSymbolNode {
 		return this.verrcode.get_cname ();
 	}
 
-	public bool is_verrorcode ( Vala.ErrorCode verrcode ) {
-		return ( this.verrcode == verrcode );
+	public bool is_verrorcode (Vala.ErrorCode verrcode) {
+		return this.verrcode == verrcode;
 	}
 
-	public void write ( Langlet langlet, void* ptr ) {
-		langlet.write_error_code ( this, ptr );
+	public void write (Langlet langlet, void* ptr) {
+		langlet.write_error_code (this, ptr);
 	}
 
-	public void visit ( Doclet doclet ) {
-		doclet.visit_error_code ( this );
+	public void visit (Doclet doclet) {
+		doclet.visit_error_code (this);
 	}
 
 	public override Api.NodeType node_type { get { return Api.NodeType.ERROR_CODE; } }

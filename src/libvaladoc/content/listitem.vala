@@ -21,8 +21,8 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
 using Gee;
+
 
 public class Valadoc.Content.ListItem : InlineContent {
 	public enum Bullet {
@@ -55,3 +55,4 @@ public class Valadoc.Content.ListItem : InlineContent {
 		visitor.visit_list_item (this);
 	}
 }
+

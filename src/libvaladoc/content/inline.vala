@@ -21,8 +21,6 @@
  * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using GLib;
-using Gee;
 
 public interface Valadoc.Content.Inline : ContentElement {
 }
