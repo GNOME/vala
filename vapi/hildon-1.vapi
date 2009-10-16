@@ -487,6 +487,8 @@ namespace Hildon {
 		[NoAccessorMethod]
 		public string icon { owned get; set; }
 		[NoAccessorMethod]
+		public Hildon.NoteType note_type { get; set construct; }
+		[NoAccessorMethod]
 		public Gtk.ProgressBar progressbar { owned get; set; }
 		[NoAccessorMethod]
 		public string stock_icon { owned get; set; }
