@@ -1278,7 +1278,12 @@ internal class Vala.GTypeModule : GErrorModule {
 			init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.base_interface_method.vfunc_name), cfunc)));
 
 			if (m.coroutine) {
-				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.base_interface_method.get_finish_vfunc_name ()), new CCodeIdentifier (m.get_finish_real_cname ()))));
+				if (m.is_abstract || m.is_virtual) {
+					cfunc = new CCodeIdentifier (m.get_finish_cname ());
+				} else {
+					cfunc = new CCodeIdentifier (m.get_finish_real_cname ());
+				}
+				init_block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (ciface, m.base_interface_method.get_finish_vfunc_name ()), cfunc)));
 			}
 		}
 
