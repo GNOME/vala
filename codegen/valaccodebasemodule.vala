@@ -3777,7 +3777,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			if (expr.tree_can_fail) {
 				// method can fail
 				current_method_inner_error = true;
-				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_inner_error_")));
+				creation_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
 			}
 
 			if (ellipsis) {
