@@ -5,4 +5,6 @@ hildon_color_button_get_color.color is_out="1"
 hildon_color_chooser_get_color.color is_out="1"
 hildon_color_chooser_dialog_get_color.color is_out="1"
 hildon_find_toolbar_get_active_iter.iter is_out="1"
+hildon_gtk_init.argc hidden="1"
+hildon_gtk_init.argv is_array="1" is_ref="1" array_length_pos="0.9"
 

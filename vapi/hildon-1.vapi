@@ -1157,7 +1157,7 @@ namespace Hildon {
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public static void gtk_icon_view_set_ui_mode (Gtk.IconView iconview, Hildon.UIMode mode);
 	[CCode (cheader_filename = "hildon/hildon.h")]
-	public static void gtk_init (int argc, out unowned string argv);
+	public static void gtk_init ([CCode (array_length_pos = 0.9)] ref unowned string[] argv);
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public static unowned Gtk.Widget gtk_menu_new ();
 	[CCode (cheader_filename = "hildon/hildon.h")]
