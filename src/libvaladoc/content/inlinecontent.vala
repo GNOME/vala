@@ -36,7 +36,7 @@ public abstract class Valadoc.Content.InlineContent : ContentElement {
 	internal InlineContent () {
 	}
 
-	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		foreach (Inline element in _content) {
 			element.check (api_root, container, reporter);
 		}

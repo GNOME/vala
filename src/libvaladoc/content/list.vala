@@ -34,7 +34,7 @@ public class Valadoc.Content.List : ContentElement, Block {
 		_items = new ArrayList<ListItem> ();
 	}
 
-	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		// Check the list consistency in terms of successive item levels ?
 
 		// Check individual list items

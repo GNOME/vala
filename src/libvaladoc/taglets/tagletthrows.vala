@@ -24,7 +24,6 @@
 using Gee;
 using Valadoc.Content;
 
-
 public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 	public string error_domain_name { private set; get; }
 	public Api.Node error_domain { private set; get; }
@@ -37,7 +36,7 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 		});
 	}
 
-	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		error_domain = api_root.search_symbol_str (container, error_domain_name);
 		if (error_domain == null) {
 			// TODO use ContentElement's source reference

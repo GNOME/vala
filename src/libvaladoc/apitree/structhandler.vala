@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,12 +20,12 @@
 using Gee;
 
 
-public interface Valadoc.StructHandler : Api.Node {
+public interface Valadoc.Api.StructHandler : Node {
 	public Collection<Struct> get_struct_list () {
-		return get_children_by_type (Api.NodeType.STRUCT);
+		return get_children_by_type (NodeType.STRUCT);
 	}
 
 	public void visit_structs (Doclet doclet) {
-		accept_children_by_type (Api.NodeType.STRUCT, doclet);
+		accept_children_by_type (NodeType.STRUCT, doclet);
 	}
 }

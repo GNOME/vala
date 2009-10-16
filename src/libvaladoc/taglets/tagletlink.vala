@@ -36,7 +36,7 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 		});
 	}
 
-	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		_symbol = api_root.search_symbol_str (container, symbol_name);
 		if (_symbol == null) {
 			// TODO use ContentElement's source reference

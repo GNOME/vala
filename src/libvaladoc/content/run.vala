@@ -44,7 +44,7 @@ public class Valadoc.Content.Run : InlineContent, Inline {
 		_style = style;
 	}
 
-	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		// Check inline content
 		base.check (api_root, container, reporter);
 	}

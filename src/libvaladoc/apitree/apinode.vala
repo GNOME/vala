@@ -1,6 +1,6 @@
 /* apinode.vala
  * 
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
  * 
  * This program is free software; you can redistribute it and/or
@@ -46,7 +46,7 @@ public enum Valadoc.Api.NodeType {
 	TYPE_PARAMETER
 }
 
-public abstract class Valadoc.Api.Node : Api.Item, Visitable, Documentation {
+public abstract class Valadoc.Api.Node : Item, Visitable, Documentation {
 	private bool do_document = false;
 
 	public abstract string? name { owned get; }
@@ -57,7 +57,7 @@ public abstract class Valadoc.Api.Node : Api.Item, Visitable, Documentation {
 	private Map<Vala.Symbol, Node> per_symbol_children;
 	private Map<NodeType?, Gee.List<Node>> per_type_children;
 
-	public Node (Api.Node? parent) {
+	public Node (Node? parent) {
 		this.parent = parent;
 
 		per_name_children = new HashMap<string,Node> ();
@@ -157,12 +157,12 @@ public abstract class Valadoc.Api.Node : Api.Item, Visitable, Documentation {
 		get {
 			if (this._nspace == null) {
 				Api.Item ast = this;
-				while (ast is Valadoc.Namespace == false) {
+				while (ast is Valadoc.Api.Namespace == false) {
 					ast = ast.parent;
 					if (ast == null)
 						return null;
 				}
-				this._nspace = (Valadoc.Namespace)ast;
+				this._nspace = (Valadoc.Api.Namespace)ast;
 			}
 			return this._nspace;
 		}
@@ -173,12 +173,12 @@ public abstract class Valadoc.Api.Node : Api.Item, Visitable, Documentation {
 		get {
 			if (this._package == null) {
 				Api.Item ast = this;
-				while (ast is Valadoc.Package == false) {
+				while (ast is Valadoc.Api.Package == false) {
 					ast = ast.parent;
 					if (ast == null)
 						return null;
 				}
-				this._package = (Valadoc.Package)ast;
+				this._package = (Valadoc.Api.Package)ast;
 			}
 			return this._package;
 		}
@@ -198,8 +198,8 @@ public abstract class Valadoc.Api.Node : Api.Item, Visitable, Documentation {
 			GLib.StringBuilder full_name = new GLib.StringBuilder (this.name);
 
 			if (this.parent != null) {
-				for (Api.Item pos = this.parent; pos is Package == false ; pos = pos.parent) {
-					string name = ((Api.Node)pos).name;
+				for (Item pos = this.parent; pos is Package == false ; pos = pos.parent) {
+					string name = ((Node)pos).name;
 					if (name != null) {
 						full_name.prepend_unichar ('.');
 						full_name.prepend (name);

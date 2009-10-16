@@ -1,6 +1,6 @@
 /* apiitem.vala
  *
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ using Gee;
 public abstract class Valadoc.Api.Item : Object {
 	private Inline _signature;
 
-	public Api.Item parent {
+	public Item parent {
 		protected set;
 		get;
 	}

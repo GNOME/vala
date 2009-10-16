@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,9 +20,9 @@
 using Gee;
 
 
-public interface Valadoc.TemplateParameterListHandler : Api.Node {
+public interface Valadoc.Api.TemplateParameterListHandler : Node {
 	public Collection<TypeParameter> get_template_param_list () {
-		return get_children_by_type (Api.NodeType.TYPE_PARAMETER, false);
+		return get_children_by_type (NodeType.TYPE_PARAMETER, false);
 	}
 }
 

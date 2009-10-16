@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 using Gee;
 
 
-public interface Valadoc.ClassHandler : Api.Node {
+public interface Valadoc.Api.ClassHandler : Node {
 	protected Class? find_vclass (Vala.Class vcl) {
 		foreach (Class cl in get_class_list ()) {
 			if (cl.is_vclass (vcl)) {
@@ -36,11 +36,11 @@ public interface Valadoc.ClassHandler : Api.Node {
 	}
 
 	public Gee.Collection<Class> get_class_list () {
-		return get_children_by_type (Api.NodeType.CLASS);
+		return get_children_by_type (NodeType.CLASS);
 	}
 
 	public void visit_classes (Doclet doclet) {
-		accept_children_by_type (Api.NodeType.CLASS, doclet);
+		accept_children_by_type (NodeType.CLASS, doclet);
 	}
 }
 

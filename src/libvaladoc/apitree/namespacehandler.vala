@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,13 +20,13 @@
 using Gee;
 
 
-public interface Valadoc.NamespaceHandler : Api.Node {
+public interface Valadoc.Api.NamespaceHandler : Node {
 	public Collection<Namespace> get_namespace_list (bool filtered = true) {
-		return get_children_by_type (Api.NodeType.NAMESPACE, filtered);
+		return get_children_by_type (NodeType.NAMESPACE, filtered);
 	}
 
 	public void visit_namespaces (Doclet doclet) {
-		accept_children_by_type (Api.NodeType.NAMESPACE, doclet);
+		accept_children_by_type (NodeType.NAMESPACE, doclet);
 	}
 
 	private ArrayList<Vala.Namespace> create_parent_vnamespace_list (Vala.Symbol vsymbol) {

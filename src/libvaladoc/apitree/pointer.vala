@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,15 +20,15 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Pointer : Api.Item {
+public class Valadoc.Api.Pointer : Item {
 	private Vala.PointerType vtype;
 
-	public Api.Item data_type {
+	public Item data_type {
 		private set;
 		get;
 	}
 
-	public Pointer (Vala.PointerType vtyperef, Api.Item parent) {
+	public Pointer (Vala.PointerType vtyperef, Item parent) {
 		this.vtype = vtyperef;
 		this.parent = parent;
 
@@ -56,7 +56,7 @@ public class Valadoc.Pointer : Api.Item {
 	}
 
 	protected override Inline build_signature () {
-		return new Api.SignatureBuilder ()
+		return new SignatureBuilder ()
 			.append_content (data_type.signature)
 			.append ("*", false)
 			.get ();

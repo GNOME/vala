@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,11 +20,11 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.TypeReference : Api.Item {
+public class Valadoc.Api.TypeReference : Item {
 	private ArrayList<TypeReference> type_arguments = new ArrayList<TypeReference> ();
 	private Vala.DataType? vtyperef;
 
-	public TypeReference (Vala.DataType? vtyperef, Api.Item parent) {
+	public TypeReference (Vala.DataType? vtyperef, Item parent) {
 		this.vtyperef = vtyperef;
 		this.parent = parent;
 	}
@@ -41,7 +41,7 @@ public class Valadoc.TypeReference : Api.Item {
 		}
 	}
 
-	public Api.Item? data_type {
+	public Item? data_type {
 		private set;
 		get;
 	}
@@ -208,7 +208,7 @@ public class Valadoc.TypeReference : Api.Item {
 	}
 
 	protected override Inline build_signature () {
-		var signature = new Api.SignatureBuilder ();
+		var signature = new SignatureBuilder ();
 
 		if (is_dynamic) {
 			signature.append_keyword ("dynamic");
@@ -224,8 +224,8 @@ public class Valadoc.TypeReference : Api.Item {
 
 		if (data_type == null) {
 			signature.append_keyword ("void");
-		} else if (data_type is Api.SymbolNode) {
-			signature.append_type ((Api.SymbolNode) data_type);
+		} else if (data_type is SymbolNode) {
+			signature.append_type ((SymbolNode) data_type);
 		} else {
 			signature.append_content (data_type.signature);
 		}
@@ -233,7 +233,7 @@ public class Valadoc.TypeReference : Api.Item {
 		if (type_arguments.size > 0) {
 			signature.append ("<", false);
 			bool first = true;
-			foreach (Api.Item param in type_arguments) {
+			foreach (Item param in type_arguments) {
 				if (!first) {
 					signature.append (",", false);
 				}

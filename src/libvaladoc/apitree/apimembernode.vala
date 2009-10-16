@@ -1,6 +1,6 @@
 /* apitypesymbolnode.vala
  * 
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
  * 
  * This program is free software; you can redistribute it and/or
@@ -23,10 +23,9 @@
 
 using Gee;
 
+public abstract class Valadoc.Api.MemberNode : SymbolNode {
 
-public abstract class Valadoc.Api.MemberNode : Api.SymbolNode {
-
-	public MemberNode (Vala.Member symbol, Api.Node parent) {
+	public MemberNode (Vala.Member symbol, Node parent) {
 		base (symbol, parent);
 	}
 
@@ -39,4 +38,3 @@ public abstract class Valadoc.Api.MemberNode : Api.SymbolNode {
 		base.process_comments (settings, parser);
 	}
 }
-

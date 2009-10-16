@@ -17,9 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using GLib;
 using Valadoc.Content;
+using Valadoc.Api;
 
 public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 	protected Settings settings;
@@ -68,7 +68,7 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 			this.write_navi_entry_html_template ( file, style, name );
 	}
 
-	protected void write_wiki_pages (Tree tree, string css_path_wiki, string contentp) {
+	protected void write_wiki_pages (Api.Tree tree, string css_path_wiki, string contentp) {
 		if ( tree.wikitree == null ) {
 			return ;
 		}
@@ -266,10 +266,10 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 	}
 
 	protected void write_navi_enum_inline ( GLib.FileStream file, Enum en, Api.Node? mself ) {
-		Gee.Collection<EnumValue> enum_values = en.get_enum_values ( );
+		Gee.Collection<Api.EnumValue> enum_values = en.get_enum_values ( );
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
 
-		foreach ( EnumValue env in enum_values ) {
+		foreach ( Api.EnumValue env in enum_values ) {
 			this.write_navi_entry ( file, env, en, css_navi_enval, true );
 		}
 
@@ -377,7 +377,7 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	protected void write_navi_signal ( GLib.FileStream file, Signal sig ) {
+	protected void write_navi_signal ( GLib.FileStream file, Api.Signal sig ) {
 		Api.Node parent = (Api.Node)sig.parent;
 
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
@@ -527,10 +527,10 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		this.write_navi_child_construction_methods_collection ( file, methods, mself );
 	}
 
-	protected void write_navi_child_signals ( GLib.FileStream file, SignalHandler sh, Api.Node? mself ) {
-		Gee.Collection<Signal> signals = sh.get_signal_list ( );
+	protected void write_navi_child_signals ( GLib.FileStream file, Api.SignalHandler sh, Api.Node? mself ) {
+		Gee.Collection<Api.Signal> signals = sh.get_signal_list ( );
 
-		foreach ( Signal sig in signals ) {
+		foreach ( Api.Signal sig in signals ) {
 			if ( sig == mself )
 				this.write_navi_entry ( file, sig, mself, css_navi_sig, false );
 			else
@@ -720,7 +720,7 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		_renderer.render (element.signature);
 	}
 
-	public void write_navi_packages_inline ( GLib.FileStream file, Tree tree ) {
+	public void write_navi_packages_inline ( GLib.FileStream file, Api.Tree tree ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
 		foreach ( Package pkg in tree.get_package_list() ) {
 			if (pkg.is_visitor_accessible (settings)) {
@@ -735,13 +735,13 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.puts ( "</li>\n" );
 	}
 
-	public void write_navi_packages ( GLib.FileStream file, Tree tree ) {
+	public void write_navi_packages ( GLib.FileStream file, Api.Tree tree ) {
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
 		this.write_navi_packages_inline ( file, tree );
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	public void write_packages_content ( GLib.FileStream file, Tree tree ) {
+	public void write_packages_content ( GLib.FileStream file, Api.Tree tree ) {
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">Packages:</h1>\n", css_title );
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
@@ -759,7 +759,7 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	public void write_method_content ( GLib.FileStream file, Method m , Valadoc.MethodHandler parent ) {
+	public void write_method_content ( GLib.FileStream file, Method m , Api.MethodHandler parent ) {
 		string full_name = m.full_name ( );
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
@@ -801,7 +801,7 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		}
 	}
 
-	public void write_signal_content ( GLib.FileStream file, Signal sig ) {
+	public void write_signal_content ( GLib.FileStream file, Api.Signal sig ) {
 		string full_name = sig.full_name ( );
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
@@ -923,11 +923,11 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 	}
 
 	private void write_child_enum_values ( GLib.FileStream file, Enum en ) {
-		Gee.Collection<EnumValue> enum_values = en.get_enum_values ();
+		Gee.Collection<Api.EnumValue> enum_values = en.get_enum_values ();
 		if ( enum_values.size > 0 ) {
 			file.printf ( "<h3 class=\"%s\">Enum Values:</h3>\n", css_title );
 			file.printf ( "<table class=\"%s\">\n", css_enum_table );
-			foreach ( EnumValue enval in enum_values ) {
+			foreach ( Api.EnumValue enval in enum_values ) {
 				file.puts ( "<tr>\n" );
 				file.printf ( "\t<td class=\"%s\" id=\"%s\">%s</td>\n", css_enum_table_name, enval.name, enval.name );
 				file.printf ( "\t<td class=\"%s\">\n", css_enum_table_text );
@@ -1266,12 +1266,12 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		}
 	}
 
-	protected void write_child_signals ( GLib.FileStream file, SignalHandler sh, Api.Node? mself ) {
-		Gee.Collection<Signal> signals = sh.get_signal_list ();
+	protected void write_child_signals ( GLib.FileStream file, Api.SignalHandler sh, Api.Node? mself ) {
+		Gee.Collection<Api.Signal> signals = sh.get_signal_list ();
 		if ( signals.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Signals:</h3>\n", css_title );
+			file.printf ( "<h3 class=\"%s\">Api.Signals:</h3>\n", css_title );
 			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Signal sig in signals ) {
+			foreach ( Api.Signal sig in signals ) {
 				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (sig), css_navi_link, this.get_link(sig, mself), sig.name );
 				this.write_brief_description ( file, sig, mself );
 				file.printf ( "</li>\n" );

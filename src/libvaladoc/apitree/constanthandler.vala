@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,12 +20,12 @@
 using Gee;
 
 
-public interface Valadoc.ConstantHandler : Api.Node {
+public interface Valadoc.Api.ConstantHandler : Node {
 	public Collection<Constant> get_constant_list () {
-		return get_children_by_type (Api.NodeType.CONSTANT);
+		return get_children_by_type (NodeType.CONSTANT);
 	}
 
 	public void visit_constants (Doclet doclet) {
-		accept_children_by_type (Api.NodeType.CONSTANT, doclet);
+		accept_children_by_type (NodeType.CONSTANT, doclet);
 	}
 }

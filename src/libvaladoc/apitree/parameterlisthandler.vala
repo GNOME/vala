@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -21,13 +21,13 @@ using Gee;
 
 
 // TODO Rename FormalParameters
-public interface Valadoc.ParameterListHandler : Api.Node {
+public interface Valadoc.Api.ParameterListHandler : Node {
 	public Gee.List<FormalParameter> param_list {
 		owned get { return get_parameter_list (); }
 	}
 
 	public Gee.List<FormalParameter> get_parameter_list () {
-		return (Gee.List<FormalParameter>) get_children_by_type (Api.NodeType.FORMAL_PARAMETER);
+		return (Gee.List<FormalParameter>) get_children_by_type (NodeType.FORMAL_PARAMETER);
 	}
 }
 

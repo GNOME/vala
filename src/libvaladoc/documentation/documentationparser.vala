@@ -27,7 +27,7 @@ using Gee;
 
 public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
-	public DocumentationParser (Settings settings, ErrorReporter reporter, Tree tree, ModuleLoader modules) {
+	public DocumentationParser (Settings settings, ErrorReporter reporter, Api.Tree tree, ModuleLoader modules) {
 		_settings = settings;
 		_reporter = reporter;
 		_tree = tree;
@@ -48,7 +48,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 	private Settings _settings;
 	private ErrorReporter _reporter;
-	private Tree _tree;
+	private Api.Tree _tree;
 	private ModuleLoader _modules;
 
 	private ContentFactory _factory;

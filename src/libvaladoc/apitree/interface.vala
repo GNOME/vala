@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler, MethodHandler, DelegateHandler, EnumHandler, StructHandler, ClassHandler {
-	public Interface (Vala.Interface symbol, Api.Node parent) {
+public class Valadoc.Api.Interface : TypeSymbolNode, SignalHandler, PropertyHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler, MethodHandler, DelegateHandler, EnumHandler, StructHandler, ClassHandler {
+	public Interface (Vala.Interface symbol, Node parent) {
 		base (symbol, parent);
 		this.vinterface = symbol;
 	}
@@ -47,7 +47,7 @@ public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHand
 		doclet.visit_interface (this);
 	}
 
-	public override Api.NodeType node_type { get { return Api.NodeType.INTERFACE; } }
+	public override NodeType node_type { get { return NodeType.INTERFACE; } }
 
 	public override void accept (Doclet doclet) {
 		visit (doclet);
@@ -78,17 +78,17 @@ public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHand
 	}
 
 	protected override Inline build_signature () {
-		var signature = new Api.SignatureBuilder ();
+		var signature = new SignatureBuilder ();
 
 		signature.append_keyword (get_accessibility_modifier ());
 		signature.append_keyword ("interface");
 		signature.append_symbol (this);
 
-		var type_parameters = get_children_by_type (Api.NodeType.TYPE_PARAMETER, false);
+		var type_parameters = get_children_by_type (NodeType.TYPE_PARAMETER, false);
 		if (type_parameters.size > 0) {
 			signature.append ("<", false);
 			bool first = true;
-			foreach (Api.Item param in type_parameters) {
+			foreach (Item param in type_parameters) {
 				if (!first) {
 					signature.append (",", false);
 				}
@@ -111,7 +111,7 @@ public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHand
 				signature.append (":");
 			}
 
-			foreach (Api.Item implemented_interface in interfaces) {
+			foreach (Item implemented_interface in interfaces) {
 				if (!first) {
 					signature.append (",", false);
 				}

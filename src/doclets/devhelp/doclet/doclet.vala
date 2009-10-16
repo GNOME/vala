@@ -19,10 +19,9 @@
 
 
 using Valadoc;
-using GLib;
+using Valadoc.Api;
 using Xml;
 using Gee;
-
 
 namespace Valadoc.Devhelp {
 	public string? get_html_link ( Settings settings, Documentation element, Documentation? pos ) {
@@ -202,7 +201,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	private const string css_path = "wikistyle.css";
 	private string package_dir_name = ""; // remove
 	private DevhelpFormat devhelp;
-	private Tree tree;
+	private Api.Tree tree;
 
 	private string get_path ( Api.Node element ) {
 		return element.full_name () + ".html";
@@ -212,7 +211,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		return GLib.Path.build_filename ( this.settings.path, this.package_dir_name, element.full_name () + ".html" );
 	}
 
-	public override void initialisation ( Settings settings, Tree tree ) {
+	public override void initialisation ( Settings settings, Api.Tree tree ) {
 		this.settings = settings;
 		this.tree = tree;
 
@@ -451,7 +450,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	public override void visit_error_code ( ErrorCode errcode ) {
 	}
 
-	public override void visit_enum_value ( EnumValue enval ) {
+	public override void visit_enum_value ( Api.EnumValue enval ) {
 	}
 
 	public override void visit_delegate ( Delegate del ) {
@@ -468,7 +467,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		file = null;
 	}
 
-	public override void visit_signal ( Signal sig ) {
+	public override void visit_signal ( Api.Signal sig ) {
 		string rpath = this.get_real_path ( sig );
 		string path = this.get_path ( sig );
 
@@ -482,7 +481,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		file = null;
 	}
 
-	public override void visit_method ( Method m, Valadoc.MethodHandler parent ) {
+	public override void visit_method ( Method m, Api.MethodHandler parent ) {
 		string rpath = this.get_real_path ( m );
 		string path = this.get_path ( m );
 

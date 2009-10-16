@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ using Gee;
 
 
 // Rename to Browsable
-public interface Valadoc.Visitable : Api.Item {
+public interface Valadoc.Api.Visitable : Item {
 
 	// Rename to is_browsable
 	public abstract bool is_visitor_accessible (Settings settings);

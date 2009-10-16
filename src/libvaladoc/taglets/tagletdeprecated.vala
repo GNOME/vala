@@ -29,7 +29,7 @@ public class Valadoc.Taglets.Deprecated : InlineContent, Taglet, Block {
 		return run_rule;
 	}
 
-	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		base.check (api_root, container, reporter);
 	}
 

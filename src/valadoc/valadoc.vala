@@ -179,7 +179,7 @@ public class ValaDoc : Object {
 		}
 
 
-		Valadoc.Tree doctree = new Valadoc.Tree (reporter, settings);
+		Valadoc.Api.Tree doctree = new Valadoc.Api.Tree (reporter, settings);
 		Valadoc.DocumentationParser docparser = new Valadoc.DocumentationParser (settings, reporter, doctree, modules);
 		if (reporter.errors > 0) {
 			return quit (reporter);

@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,13 +20,13 @@
 using Gee;
 
 
-public interface Valadoc.EnumHandler : Api.Node {
+public interface Valadoc.Api.EnumHandler : Node {
 	public Collection<Enum> get_enum_list () {
-		return get_children_by_type (Api.NodeType.ENUM);
+		return get_children_by_type (NodeType.ENUM);
 	}
 
 	public void visit_enums (Doclet doclet) {
-		accept_children_by_type (Api.NodeType.ENUM, doclet);
+		accept_children_by_type (NodeType.ENUM, doclet);
 	}
 }
 

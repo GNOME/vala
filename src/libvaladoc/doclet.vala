@@ -18,27 +18,25 @@
  */
 
 using Gee;
+using Valadoc.Api;
 
-
-public static delegate Type Valadoc.DocletRegisterFunction ( );
-
+public static delegate Type Valadoc.DocletRegisterFunction ();
 
 public abstract class Valadoc.Doclet : GLib.Object {
-	public abstract void initialisation (Settings settings, Tree tree);
-	public abstract void visit_package (Package pkg);
-	public abstract void visit_namespace (Namespace ns);
-	public abstract void visit_interface (Interface iface);
-	public abstract void visit_class (Class cl);
-	public abstract void visit_struct (Struct stru);
-	public abstract void visit_error_domain (ErrorDomain errdom);
-	public abstract void visit_enum (Enum en);
-	public abstract void visit_property (Property prop);
-	public abstract void visit_field (Field field, FieldHandler parent);
-	public abstract void visit_constant (Constant constant, ConstantHandler parent);
-	public abstract void visit_error_code (ErrorCode errcode);
-	public abstract void visit_enum_value (EnumValue enval);
-	public abstract void visit_delegate (Delegate del);
-	public abstract void visit_signal (Signal sig);
-	public abstract void visit_method (Method m, Valadoc.MethodHandler parent);
+	public abstract void initialisation (Settings settings, Api.Tree tree);
+	public abstract void visit_package (Api.Package pkg);
+	public abstract void visit_namespace (Api.Namespace ns);
+	public abstract void visit_interface (Api.Interface iface);
+	public abstract void visit_class (Api.Class cl);
+	public abstract void visit_struct (Api.Struct stru);
+	public abstract void visit_error_domain (Api.ErrorDomain errdom);
+	public abstract void visit_enum (Api.Enum en);
+	public abstract void visit_property (Api.Property prop);
+	public abstract void visit_field (Api.Field field, Api.FieldHandler parent);
+	public abstract void visit_constant (Api.Constant constant, Api.ConstantHandler parent);
+	public abstract void visit_error_code (Api.ErrorCode errcode);
+	public abstract void visit_enum_value (Api.EnumValue enval);
+	public abstract void visit_delegate (Api.Delegate del);
+	public abstract void visit_signal (Api.Signal sig);
+	public abstract void visit_method (Api.Method m, Api.MethodHandler parent);
 }
-

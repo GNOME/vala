@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,10 +20,10 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Struct : Api.TypeSymbolNode, MethodHandler, ConstructionMethodHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler {
+public class Valadoc.Api.Struct : TypeSymbolNode, MethodHandler, ConstructionMethodHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler {
 	private Vala.Struct vstruct;
 
-	public Struct (Vala.Struct symbol, Api.Node parent) {
+	public Struct (Vala.Struct symbol, Node parent) {
 		base (symbol, parent);
 		this.vstruct = symbol;
 	}
@@ -41,7 +41,7 @@ public class Valadoc.Struct : Api.TypeSymbolNode, MethodHandler, ConstructionMet
 		doclet.visit_struct (this);
 	}
 
-	public override Api.NodeType node_type { get { return Api.NodeType.STRUCT; } }
+	public override NodeType node_type { get { return NodeType.STRUCT; } }
 
 	public override void accept (Doclet doclet) {
 		visit (doclet);
@@ -63,17 +63,17 @@ public class Valadoc.Struct : Api.TypeSymbolNode, MethodHandler, ConstructionMet
 	}
 
 	protected override Inline build_signature () {
-		var signature = new Api.SignatureBuilder ();
+		var signature = new SignatureBuilder ();
 
 		signature.append_keyword (get_accessibility_modifier ());
 		signature.append_keyword ("struct");
 		signature.append_symbol (this);
 
-		var type_parameters = get_children_by_type (Api.NodeType.TYPE_PARAMETER, false);
+		var type_parameters = get_children_by_type (NodeType.TYPE_PARAMETER, false);
 		if (type_parameters.size > 0) {
 			signature.append ("<", false);
 			bool first = true;
-			foreach (Api.Item param in type_parameters) {
+			foreach (Item param in type_parameters) {
 				if (!first) {
 					signature.append (",", false);
 				}

@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,10 +20,10 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.ErrorCode : Api.TypeSymbolNode {
+public class Valadoc.Api.ErrorCode : TypeSymbolNode {
 	private Vala.ErrorCode verrcode;
 
-	public ErrorCode (Vala.ErrorCode symbol, Api.Node parent) {
+	public ErrorCode (Vala.ErrorCode symbol, Node parent) {
 		base (symbol, parent);
 		this.verrcode = symbol;
 	}
@@ -40,14 +40,14 @@ public class Valadoc.ErrorCode : Api.TypeSymbolNode {
 		doclet.visit_error_code (this);
 	}
 
-	public override Api.NodeType node_type { get { return Api.NodeType.ERROR_CODE; } }
+	public override NodeType node_type { get { return NodeType.ERROR_CODE; } }
 
 	public override void accept (Doclet doclet) {
 		visit (doclet);
 	}
 
 	protected override Inline build_signature () {
-		return new Api.SignatureBuilder ()
+		return new SignatureBuilder ()
 			.append_symbol (this)
 			.get ();
 	}

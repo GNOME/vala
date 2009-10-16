@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,10 +20,10 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHandler, TemplateParameterListHandler, ReturnTypeHandler {
+public class Valadoc.Api.Method : MemberNode, ParameterListHandler, ExceptionHandler, TemplateParameterListHandler, ReturnTypeHandler {
 	private Vala.Method vmethod;
 
-	public Method (Vala.Method symbol, Api.Node parent) {
+	public Method (Vala.Method symbol, Node parent) {
 		base (symbol, parent);
 		this.vmethod = symbol;
 
@@ -94,9 +94,9 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 		owned get {
 			if (this.is_constructor) {
 				if (this.vmethod.name == ".new") {
-					return ((Api.Node)this.parent).name;
+					return ((Node)this.parent).name;
 				} else {
-					return ((Api.Node)this.parent).name + "." + this.vmethod.name;
+					return ((Node)this.parent).name + "." + this.vmethod.name;
 				}
 			}
 			else {
@@ -128,7 +128,7 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 	}
 
 	protected override Inline build_signature () {
-		var signature = new Api.SignatureBuilder ();
+		var signature = new SignatureBuilder ();
 
 		signature.append_keyword (get_accessibility_modifier ());
 		if (is_static) {
@@ -150,11 +150,11 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 		signature.append_content (type_reference.signature);
 		signature.append_symbol (this);
 
-		var type_parameters = get_children_by_type (Api.NodeType.TYPE_PARAMETER, false);
+		var type_parameters = get_children_by_type (NodeType.TYPE_PARAMETER, false);
 		if (type_parameters.size > 0) {
 			signature.append ("<", false);
 			bool first = true;
-			foreach (Api.Item param in type_parameters) {
+			foreach (Item param in type_parameters) {
 				if (!first) {
 					signature.append (",", false);
 				}
@@ -167,7 +167,7 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 		signature.append ("(");
 
 		bool first = true;
-		foreach (Api.Node param in get_children_by_type (Api.NodeType.FORMAL_PARAMETER)) {
+		foreach (Node param in get_children_by_type (NodeType.FORMAL_PARAMETER)) {
 			if (!first) {
 				signature.append (",", false);
 			}
@@ -177,11 +177,11 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 
 		signature.append (")", false);
 
-		var exceptions = get_children_by_type (Api.NodeType.ERROR_DOMAIN);
+		var exceptions = get_children_by_type (NodeType.ERROR_DOMAIN);
 		if (exceptions.size > 0) {
 			signature.append_keyword ("throws");
 
-			foreach (Api.Node param in exceptions) {
+			foreach (Node param in exceptions) {
 				if (!first) {
 					signature.append (",", false);
 				}
@@ -193,13 +193,13 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 		return signature.get ();
 	}
 
-	public void visit (Doclet doclet, Valadoc.MethodHandler in_type) {
+	public void visit (Doclet doclet, Valadoc.Api.MethodHandler in_type) {
 		doclet.visit_method (this, in_type);
 	}
 
-	public override Api.NodeType node_type {
+	public override NodeType node_type {
 		get {
-			return is_constructor ? Api.NodeType.CREATION_METHOD : Api.NodeType.METHOD;
+			return is_constructor ? NodeType.CREATION_METHOD : NodeType.METHOD;
 		}
 	}
 

@@ -1,6 +1,6 @@
 /* apinodebuilder.vala
  * 
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
  * 
  * This program is free software; you can redistribute it and/or

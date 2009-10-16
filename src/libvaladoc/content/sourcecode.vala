@@ -39,7 +39,7 @@ public class Valadoc.Content.SourceCode : ContentElement, Block {
 		_language = Language.VALA;
 	}
 
-	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
 	}
 
 	public override void accept (ContentVisitor visitor) {

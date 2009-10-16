@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 using Gee;
 
 
-public interface Valadoc.PropertyHandler : Api.Node {
+public interface Valadoc.Api.PropertyHandler : Node {
 	protected bool is_overwritten_property (Property prop) {
 		foreach (Property p in get_property_list ()) {
 			if (p.parent != this) {
@@ -37,11 +37,11 @@ public interface Valadoc.PropertyHandler : Api.Node {
 	}
 
 	public Collection<Property> get_property_list () {
-		return get_children_by_type (Api.NodeType.PROPERTY);
+		return get_children_by_type (NodeType.PROPERTY);
 	}
 
 	public void visit_properties (Doclet doclet) {
-		accept_children_by_type (Api.NodeType.PROPERTY, doclet);
+		accept_children_by_type (NodeType.PROPERTY, doclet);
 	}
 }
 

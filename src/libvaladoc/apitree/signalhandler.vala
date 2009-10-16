@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,12 +20,12 @@
 using Gee;
 
 
-public interface Valadoc.SignalHandler : Api.Node {
+public interface Valadoc.Api.SignalHandler : Node {
 	public void visit_signals (Doclet doclet) {
-		accept_children_by_type (Api.NodeType.SIGNAL, doclet);
+		accept_children_by_type (NodeType.SIGNAL, doclet);
 	}
 
 	public Collection<Signal> get_signal_list () {
-		return get_children_by_type (Api.NodeType.SIGNAL);
+		return get_children_by_type (NodeType.SIGNAL);
 	}
 }

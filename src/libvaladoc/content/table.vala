@@ -34,7 +34,7 @@ public class Valadoc.Content.Table : ContentElement, Block {
 		_rows = new ArrayList<TableRow> ();
 	}
 
-	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		// Check the table consistency in term of row/column number
 
 		// Check individual rows

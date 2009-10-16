@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -21,10 +21,10 @@ using Gee;
 
 
 // rename to ExceptionListHandler
-public interface Valadoc.ExceptionHandler : Api.Node {
+public interface Valadoc.Api.ExceptionHandler : Node {
 
 	public Collection<Api.Node> get_error_domains () {
-		return get_children_by_type (Api.NodeType.ERROR_DOMAIN);
+		return get_children_by_type (NodeType.ERROR_DOMAIN);
 	}
 
 	public void add_exception_list (Tree root, Vala.Collection<Vala.DataType> vexceptions) {

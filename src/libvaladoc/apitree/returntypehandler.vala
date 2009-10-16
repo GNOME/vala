@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 using Gee;
 
 
-public interface Valadoc.ReturnTypeHandler : Api.Item {
+public interface Valadoc.Api.ReturnTypeHandler : Item {
 	public abstract TypeReference? type_reference {
 		protected set;
 		get;

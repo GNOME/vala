@@ -17,9 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using GLib;
-
+using Valadoc.Api;
 
 namespace Valadoc.Html {
 	public const string css_inline_navigation = "main_inline_navigation";
@@ -154,7 +152,7 @@ namespace Valadoc.Html {
 			prefix =  "../" + ((Api.Node)element).package.name;
 		}
 
-		if ( element is Valadoc.EnumValue || element is Valadoc.ErrorCode ) {
+		if ( element is Api.EnumValue || element is Api.ErrorCode ) {
 			tmp = "#" + ((Api.Node)element).name;
 			element = (Api.Node)((Api.Node)element).parent;
 		}
@@ -199,7 +197,7 @@ namespace Valadoc.Html {
 			else
 				return css_content_link_method;
 		}
-		else if ( element is Signal ) {
+		else if ( element is Api.Signal ) {
 			return css_content_link_signal;
 		}
 		else if ( element is Property ) {
@@ -216,7 +214,7 @@ namespace Valadoc.Html {
 		else if ( element is Constant ) {
 			return css_content_link_constant;
 		}
-		else if ( element is EnumValue ) {
+		else if ( element is Api.EnumValue ) {
 			return css_content_link_enumvalue;
 		}
 		else if ( element is ErrorCode ) {
@@ -261,7 +259,7 @@ namespace Valadoc.Html {
 			else
 				return css_inline_navigation_method;
 		}
-		else if ( element is Signal ) {
+		else if ( element is Api.Signal ) {
 			return css_inline_navigation_signal;
 		}
 		else if ( element is Property ) {
@@ -278,7 +276,7 @@ namespace Valadoc.Html {
 		else if ( element is Constant ) {
 			return css_inline_navigation_constant;
 		}
-		else if ( element is EnumValue ) {
+		else if ( element is Api.EnumValue ) {
 			return css_inline_navigation_enumvalue;
 		}
 		else if ( element is ErrorCode ) {

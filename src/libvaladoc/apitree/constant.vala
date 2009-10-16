@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
+public class Valadoc.Api.Constant : MemberNode, ReturnTypeHandler {
 	private Vala.Constant vconst;
 
 	public TypeReference? type_reference {
@@ -32,7 +32,7 @@ public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 		return (this.vconst == vconst);
 	}
 
-	public Constant (Vala.Constant symbol, Api.Node parent) {
+	public Constant (Vala.Constant symbol, Node parent) {
 		base (symbol, parent);
 		this.vconst = symbol;
 
@@ -49,7 +49,7 @@ public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 	}
 
 	protected override Inline build_signature () {
-		return new Api.SignatureBuilder ()
+		return new SignatureBuilder ()
 			.append_keyword (get_accessibility_modifier ())
 			.append_keyword ("const")
 			.append_content (type_reference.signature)
@@ -61,7 +61,7 @@ public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 		doclet.visit_constant (this, parent);
 	}
 
-	public override Api.NodeType node_type { get { return Api.NodeType.CONSTANT; } }
+	public override NodeType node_type { get { return NodeType.CONSTANT; } }
 
 	public override void accept (Doclet doclet) {
 		visit (doclet, (ConstantHandler)parent);

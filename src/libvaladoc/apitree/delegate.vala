@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,10 +20,10 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, ReturnTypeHandler, TemplateParameterListHandler, ExceptionHandler {
+public class Valadoc.Api.Delegate : TypeSymbolNode, ParameterListHandler, ReturnTypeHandler, TemplateParameterListHandler, ExceptionHandler {
 	private Vala.Delegate vdelegate;
 
-	public Delegate (Vala.Delegate symbol, Api.Node parent) {
+	public Delegate (Vala.Delegate symbol, Node parent) {
 		base (symbol, parent);
 
 		this.vdelegate = symbol;
@@ -45,7 +45,7 @@ public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, Return
 		doclet.visit_delegate (this);
 	}
 
-	public override Api.NodeType node_type { get { return Api.NodeType.DELEGATE; } }
+	public override NodeType node_type { get { return NodeType.DELEGATE; } }
 
 	public override void accept (Doclet doclet) {
 		visit (doclet);
@@ -67,7 +67,7 @@ public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, Return
 	}
 
 	protected override Inline build_signature () {
-		var signature = new Api.SignatureBuilder ();
+		var signature = new SignatureBuilder ();
 
 		signature.append_keyword (get_accessibility_modifier ());
 		if (is_static) {
@@ -77,11 +77,11 @@ public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, Return
 		signature.append_content (type_reference.signature);
 		signature.append_symbol (this);
 
-		var type_parameters = get_children_by_type (Api.NodeType.TYPE_PARAMETER);
+		var type_parameters = get_children_by_type (NodeType.TYPE_PARAMETER);
 		if (type_parameters.size > 0) {
 			signature.append ("<", false);
 			bool first = true;
-			foreach (Api.Item param in type_parameters) {
+			foreach (Item param in type_parameters) {
 				if (!first) {
 					signature.append (",", false);
 				}
@@ -94,7 +94,7 @@ public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, Return
 		signature.append ("(");
 
 		bool first = true;
-		foreach (Api.Node param in get_children_by_type (Api.NodeType.FORMAL_PARAMETER)) {
+		foreach (Node param in get_children_by_type (NodeType.FORMAL_PARAMETER)) {
 			if (!first) {
 				signature.append (",", false);
 			}
@@ -104,11 +104,11 @@ public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, Return
 
 		signature.append (")", false);
 
-		var exceptions = get_children_by_type (Api.NodeType.ERROR_DOMAIN);
+		var exceptions = get_children_by_type (NodeType.ERROR_DOMAIN);
 		if (exceptions.size > 0) {
 			signature.append_keyword ("throws");
 
-			foreach (Api.Node param in exceptions) {
+			foreach (Node param in exceptions) {
 				if (!first) {
 					signature.append (",", false);
 				}

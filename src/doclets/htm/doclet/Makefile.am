@@ -39,7 +39,7 @@ libdoclet_la_SOURCES =      \
 
 
 libdoclet.vala.stamp: $(libdoclet_la_VALASOURCES)
-	$(VALAC) -C --vapidir ../../htmlhelpers/doclet --pkg libhtmlhelpers-1.0 --vapidir ../../../vapi --pkg valadoc-1.0 --pkg gee-1.0 --vapidir . --pkg docletconfig --basedir . $^
+	$(VALAC) -C --vapidir ../../htmlhelpers/doclet --pkg libhtmlhelpers-1.0 --vapidir ../../../vapi --vapidir ../../../libvaladoc --pkg valadoc-1.0 --pkg gee-1.0 --vapidir . --pkg docletconfig --basedir . $^
 	touch $@
 
 

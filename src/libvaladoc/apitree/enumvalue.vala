@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,10 +20,10 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.EnumValue: Api.SymbolNode {
+public class Valadoc.Api.EnumValue: SymbolNode {
 	private Vala.EnumValue venval;
 
-	public EnumValue (Vala.EnumValue symbol, Api.Node parent) {
+	public EnumValue (Vala.EnumValue symbol, Node parent) {
 		base (symbol, parent);
 		this.venval = symbol;
 	}
@@ -49,14 +49,14 @@ public class Valadoc.EnumValue: Api.SymbolNode {
 		doclet.visit_enum_value (this);
 	}
 
-	public override Api.NodeType node_type { get { return Api.NodeType.ENUM_VALUE; } }
+	public override NodeType node_type { get { return NodeType.ENUM_VALUE; } }
 
 	public override void accept (Doclet doclet) {
 		visit (doclet);
 	}
 
 	protected override Inline build_signature () {
-		return new Api.SignatureBuilder ()
+		return new SignatureBuilder ()
 			.append_symbol (this)
 			.append ("=")
 			.append (this.venval.value.to_string ())

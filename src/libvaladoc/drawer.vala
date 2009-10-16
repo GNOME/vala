@@ -19,7 +19,7 @@
 
 using Graphviz;
 using Gee;
-
+using Valadoc.Api;
 
 namespace Valadoc.Diagrams {
 	// replace with .full_name

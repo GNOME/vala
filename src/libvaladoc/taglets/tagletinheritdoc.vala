@@ -24,7 +24,6 @@
 using Gee;
 using Valadoc.Content;
 
-
 public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 	private Api.Node? _inherited;
 
@@ -32,14 +31,14 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 		return null;
 	}
 
-	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		// TODO Check that the container is an override of an abstract symbol
 		// Also retrieve that abstract symbol _inherited
 
-		if (container is Method) {
-			_inherited = ((Method) container).base_method;
-		} else if (container is Property) {
-			_inherited = ((Property) container).base_property;
+		if (container is Api.Method) {
+			_inherited = ((Api.Method) container).base_method;
+		} else if (container is Api.Property) {
+			_inherited = ((Api.Property) container).base_property;
 		}
 
 		// TODO report error if inherited is null

@@ -29,7 +29,7 @@ public abstract class Valadoc.Content.ContentElement : Object {
 	public virtual void configure (Settings settings, ResourceLocator locator) {
 	}
 
-	public abstract void check (Tree api_root, Api.Node? container, ErrorReporter reporter);
+	public abstract void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter);
 
 	public abstract void accept (ContentVisitor visitor);
 

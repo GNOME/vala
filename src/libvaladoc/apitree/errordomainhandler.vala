@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,12 +20,12 @@
 using Gee;
 
 
-public interface Valadoc.ErrorDomainHandler : Api.Node {
+public interface Valadoc.Api.ErrorDomainHandler : Node {
 	public Collection<ErrorDomain> get_error_domain_list () {
-		return get_children_by_type (Api.NodeType.ERROR_DOMAIN);
+		return get_children_by_type (NodeType.ERROR_DOMAIN);
 	}
 
 	public void visit_error_domains (Doclet doclet) {
-		accept_children_by_type (Api.NodeType.ERROR_DOMAIN, doclet);
+		accept_children_by_type (NodeType.ERROR_DOMAIN, doclet);
 	}
 }

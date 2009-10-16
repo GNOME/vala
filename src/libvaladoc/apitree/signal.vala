@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,10 +20,10 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Signal : Api.MemberNode, ParameterListHandler, ReturnTypeHandler {
+public class Valadoc.Api.Signal : MemberNode, ParameterListHandler, ReturnTypeHandler {
 	private Vala.Signal vsignal;
 
-	public Signal (Vala.Signal symbol, Api.Node parent) {
+	public Signal (Vala.Signal symbol, Node parent) {
 		base (symbol, parent);
 
 		this.vsignal = symbol;
@@ -54,7 +54,7 @@ public class Valadoc.Signal : Api.MemberNode, ParameterListHandler, ReturnTypeHa
 	}
 
 	protected override Inline build_signature () {
-		var signature = new Api.SignatureBuilder ();
+		var signature = new SignatureBuilder ();
 
 		signature.append_keyword (get_accessibility_modifier ());
 		if (is_virtual) {
@@ -66,7 +66,7 @@ public class Valadoc.Signal : Api.MemberNode, ParameterListHandler, ReturnTypeHa
 		signature.append ("(");
 
 		bool first = true;
-		foreach (Api.Node param in get_children_by_type (Api.NodeType.FORMAL_PARAMETER)) {
+		foreach (Node param in get_children_by_type (NodeType.FORMAL_PARAMETER)) {
 			if (!first) {
 				signature.append (",", false);
 			}
@@ -83,7 +83,7 @@ public class Valadoc.Signal : Api.MemberNode, ParameterListHandler, ReturnTypeHa
 		doclet.visit_signal (this);
 	}
 
-	public override Api.NodeType node_type { get { return Api.NodeType.SIGNAL; } }
+	public override NodeType node_type { get { return NodeType.SIGNAL; } }
 
 	public override void accept (Doclet doclet) {
 		visit (doclet);

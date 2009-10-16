@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -19,15 +19,13 @@
 
 using Gee;
 
-
 // private
-public Valadoc.Class glib_error = null;
+public Valadoc.Api.Class glib_error = null;
 
-
-public class Valadoc.Tree {
+public class Valadoc.Api.Tree {
 	private ArrayList<Package> packages = new ArrayList<Package>();
 	private Package source_package = null;
-	private Valadoc.Settings settings;
+	private Settings settings;
 	private Vala.CodeContext context;
 	private ErrorReporter reporter;
 	private Package sourcefiles = null;
@@ -57,7 +55,7 @@ public class Valadoc.Tree {
 		doclet.initialisation (this.settings, this);
 	}
 
-	private Api.Node? search_relative_to (Api.Node element, string[] path) {
+	private Node? search_relative_to (Node element, string[] path) {
 		Api.Node? node = element;
 		foreach (string name in path) {
 			node = node.find_by_name (name);
@@ -67,13 +65,13 @@ public class Valadoc.Tree {
 		}
 
 		if (node == null && element.parent != null) {
-			node = search_relative_to ((Api.Node) element.parent, path);
+			node = search_relative_to ((Node) element.parent, path);
 		}
 
 		return node;
 	}
 
-	public Api.Node? search_symbol_str (Api.Node? element, string symname) {
+	public Node? search_symbol_str (Node? element, string symname) {
 		string[] path = split_name (symname);
 
 		if (element == null) {
@@ -81,13 +79,13 @@ public class Valadoc.Tree {
 			foreach (Package packgage in packages) {
 				node = search_relative_to (packgage, path);
 				if (node != null) {
-					return (Api.Node) node;
+					return (Node) node;
 				}
 			}
 			return null;
 		}
 
-		return (Api.Node) search_relative_to ((Api.Node) element, path);
+		return (Node) search_relative_to ((Node) element, path);
 	}
 
 	private string[] split_name (string full_name) {
@@ -97,7 +95,7 @@ public class Valadoc.Tree {
 		return params;
 	}
 
-	public Tree (Valadoc.ErrorReporter reporter, Valadoc.Settings settings) {
+	public Tree (ErrorReporter reporter, Settings settings) {
 		this.context = new Vala.CodeContext ( );
 		Vala.CodeContext.push (context);
 
@@ -296,7 +294,7 @@ public class Valadoc.Tree {
 			}
 		}
 
-		Api.NodeBuilder builder = new Api.NodeBuilder (this);
+		Api.NodeBuilder builder = new NodeBuilder (this);
 		this.context.accept(builder);
 		this.resolve_type_references ();
 		this.add_dependencies_to_source_package ();
@@ -330,7 +328,7 @@ public class Valadoc.Tree {
 		}
 	}
 
-	internal Api.Node? search_vala_symbol (Vala.Symbol? vnode) {
+	internal Node? search_vala_symbol (Vala.Symbol? vnode) {
 		if (vnode == null) {
 			return null;
 		}

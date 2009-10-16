@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,10 +20,10 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
+public class Valadoc.Api.Property : MemberNode, ReturnTypeHandler {
 	private Vala.Property vproperty;
 
-	public Property (Vala.Property symbol, Api.Node parent) {
+	public Property (Vala.Property symbol, Node parent) {
 		base (symbol, parent);
 
 		this.vproperty = symbol;
@@ -107,7 +107,7 @@ public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 	}
 
 	protected override Inline build_signature () {
-		var signature = new Api.SignatureBuilder ();
+		var signature = new SignatureBuilder ();
 
 		signature.append_keyword (get_accessibility_modifier ());
 		if (is_abstract) {
@@ -139,7 +139,7 @@ public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 		doclet.visit_property (this);
 	}
 
-	public override Api.NodeType node_type { get { return Api.NodeType.PROPERTY; } }
+	public override NodeType node_type { get { return NodeType.PROPERTY; } }
 
 	public override void accept (Doclet doclet) {
 		visit (doclet);

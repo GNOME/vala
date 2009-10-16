@@ -37,7 +37,7 @@ public class Valadoc.Content.Comment : BlockContent {
 	public override void configure (Settings settings, ResourceLocator locator) {
 	}
 
-	public override void check (Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
 		base.check (api_root, container, reporter);
 
 		foreach (Taglet element in _taglets) {

@@ -44,7 +44,7 @@ libhtmlhelpersincludedir = $(includedir)/vala-1.0
 
 
 libhtmlhelpers.vala.stamp: $(libhtmlhelpers_la_VALASOURCES)
-	$(VALAC) -C -H libhtmlhelpers-1.0.h --library libhtmlhelpers-1.0 --basedir . --vapidir ../../../vapi --pkg valadoc-1.0 --pkg gee-1.0 --save-temps $^
+	$(VALAC) -C -H libhtmlhelpers-1.0.h --library libhtmlhelpers-1.0 --basedir . --vapidir ../../../vapi --vapidir ../../../libvaladoc --pkg valadoc-1.0 --pkg gee-1.0 --save-temps $^
 	touch $@
 
 

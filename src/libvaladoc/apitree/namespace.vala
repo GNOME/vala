@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Namespace : Api.SymbolNode, MethodHandler, FieldHandler, NamespaceHandler, ErrorDomainHandler,
+public class Valadoc.Api.Namespace : SymbolNode, MethodHandler, FieldHandler, NamespaceHandler, ErrorDomainHandler,
                                  EnumHandler, ClassHandler, StructHandler, InterfaceHandler,
                                  DelegateHandler, ConstantHandler
 {
@@ -50,7 +50,7 @@ public class Valadoc.Namespace : Api.SymbolNode, MethodHandler, FieldHandler, Na
 	}
 
 	protected override Inline build_signature () {
-		return new Api.SignatureBuilder ()
+		return new SignatureBuilder ()
 			.append_keyword (get_accessibility_modifier ())
 			.append_keyword ("namespace")
 			.append_symbol (this)
@@ -61,7 +61,7 @@ public class Valadoc.Namespace : Api.SymbolNode, MethodHandler, FieldHandler, Na
 		doclet.visit_namespace (this);
 	}
 
-	public override Api.NodeType node_type { get { return Api.NodeType.NAMESPACE; } }
+	public override NodeType node_type { get { return NodeType.NAMESPACE; } }
 
 	public override void accept (Doclet doclet) {
 		visit (doclet);

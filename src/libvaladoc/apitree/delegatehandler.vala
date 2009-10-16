@@ -1,5 +1,5 @@
 /*
- * Valadoc - a documentation tool for vala.
+ * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
  * This program is free software; you can redistribute it and/or
@@ -20,13 +20,13 @@
 using Gee;
 
 
-public interface Valadoc.DelegateHandler : Api.Node {
+public interface Valadoc.Api.DelegateHandler : Node {
 	public Gee.Collection<Delegate> get_delegate_list () {
-		return get_children_by_type (Api.NodeType.DELEGATE);
+		return get_children_by_type (NodeType.DELEGATE);
 	}
 
 	public void visit_delegates (Doclet doclet) {
-		accept_children_by_type (Api.NodeType.DELEGATE, doclet);
+		accept_children_by_type (NodeType.DELEGATE, doclet);
 	}
 }
 
