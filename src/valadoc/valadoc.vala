@@ -32,7 +32,7 @@ public class ValaDoc : Object {
 	private static string pkg_name = null;
 
 	private static bool add_inherited = false;
-	private static bool _protected = false;
+	private static bool _protected = true;
 	private static bool _internal = false;
 	private static bool with_deps = false;
 	private static bool _private = false;
@@ -76,7 +76,7 @@ public class ValaDoc : Object {
 		{ "deps", 0, 0, OptionArg.NONE, ref with_deps, "Adds packages to the documentation", null },
 		{ "doclet", 0, 0, OptionArg.STRING, ref pluginpath, "plugin", "Name of an included doclet or path to custom doclet" },
 
-		{ "protected", 0, 0, OptionArg.NONE, ref _protected, "Adds protected elements to documentation", null },
+		{ "no-protected", 0, OptionFlags.REVERSE, OptionArg.NONE, ref _protected, "Removes protected elements from documentation", null },
 		{ "internal", 0, 0, OptionArg.NONE, ref _internal, "Adds internal elements to documentation", null },
 		{ "private", 0, 0, OptionArg.NONE, ref _private, "Adds private elements to documentation", null },
 //		{ "inherit", 0, 0, OptionArg.NONE, ref add_inherited, "Adds inherited elements to a class", null },
