@@ -5,7 +5,6 @@ NULL =
 
 SUBDIRS = \
     libvaladoc \
-    vapi \
     valadoc \
 	doclets \
     $(NULL)

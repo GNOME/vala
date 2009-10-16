@@ -174,3 +174,9 @@ MAINTAINERCLEANFILES =                    \
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = valadoc-1.0.pc
 
+vapidir = $(datadir)/vala/vapi
+vapi_DATA =     \
+	valadoc-1.0.vapi \
+	valadoc-1.0.deps \
+	$(NULL)
+
