@@ -18,6 +18,7 @@
  */
 
 using Gee;
+using Valadoc.Content;
 
 
 public class Valadoc.ErrorDomain : Api.TypeSymbolNode, MethodHandler {
@@ -50,7 +51,11 @@ public class Valadoc.ErrorDomain : Api.TypeSymbolNode, MethodHandler {
 		visit (doclet);
 	}
 
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_error_domain (this, ptr);
+	protected override Inline build_signature () {
+		return new Api.SignatureBuilder ()
+			.append_keyword (get_accessibility_modifier ())
+			.append_keyword ("errordomain")
+			.append_symbol (this)
+			.get ();
 	}
 }

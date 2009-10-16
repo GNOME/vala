@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 	private Vala.Constant vconst;
@@ -48,6 +48,15 @@ public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 		this.set_return_type_references (root);
 	}
 
+	protected override Inline build_signature () {
+		return new Api.SignatureBuilder ()
+			.append_keyword (get_accessibility_modifier ())
+			.append_keyword ("const")
+			.append_content (type_reference.signature)
+			.append_symbol (this)
+			.get ();
+	}
+
 	public void visit (Doclet doclet, ConstantHandler? parent) {
 		doclet.visit_constant (this, parent);
 	}
@@ -57,9 +66,4 @@ public class Valadoc.Constant : Api.MemberNode, ReturnTypeHandler {
 	public override void accept (Doclet doclet) {
 		visit (doclet, (ConstantHandler)parent);
 	}
-
-	public void write (Langlet langlet, void* ptr, ConstantHandler parent) {
-		langlet.write_constant (this, parent, ptr);
-	}
 }
-

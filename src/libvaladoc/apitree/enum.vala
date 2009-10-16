@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.Enum : Api.TypeSymbolNode, MethodHandler {
 	public Enum (Vala.Enum symbol, Api.Node parent) {
@@ -51,8 +51,11 @@ public class Valadoc.Enum : Api.TypeSymbolNode, MethodHandler {
 
 	private Vala.Enum venum;
 
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_enum (this, ptr);
+	protected override Inline build_signature () {
+		return new Api.SignatureBuilder ()
+			.append_keyword (get_accessibility_modifier ())
+			.append_keyword ("enum")
+			.append_symbol (this)
+			.get ();
 	}
 }
-

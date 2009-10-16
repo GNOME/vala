@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.Struct : Api.TypeSymbolNode, MethodHandler, ConstructionMethodHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler {
 	private Vala.Struct vstruct;
@@ -28,7 +28,7 @@ public class Valadoc.Struct : Api.TypeSymbolNode, MethodHandler, ConstructionMet
 		this.vstruct = symbol;
 	}
 
-	protected Struct? base_type {
+	protected TypeReference? base_type {
 		protected set;
 		get;
 	}
@@ -47,16 +47,13 @@ public class Valadoc.Struct : Api.TypeSymbolNode, MethodHandler, ConstructionMet
 		visit (doclet);
 	}
 
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_struct (this, ptr);
-	}
-
 	private void set_parent_references (Tree root) {
 		Vala.ValueType? basetype = this.vstruct.base_type as Vala.ValueType;
 		if (basetype == null) {
 			return ;
 		}
-		this.base_type = (Struct?) root.search_vala_symbol ((Vala.Struct) basetype.type_symbol);
+		this.base_type = new TypeReference (basetype, this);
+		this.base_type.resolve_type_references (root);
 	}
 
 	protected override void resolve_type_references (Tree root) {
@@ -64,5 +61,34 @@ public class Valadoc.Struct : Api.TypeSymbolNode, MethodHandler, ConstructionMet
 
 		base.resolve_type_references (root);
 	}
-}
 
+	protected override Inline build_signature () {
+		var signature = new Api.SignatureBuilder ();
+
+		signature.append_keyword (get_accessibility_modifier ());
+		signature.append_keyword ("struct");
+		signature.append_symbol (this);
+
+		var type_parameters = get_children_by_type (Api.NodeType.TYPE_PARAMETER, false);
+		if (type_parameters.size > 0) {
+			signature.append ("<", false);
+			bool first = true;
+			foreach (Api.Item param in type_parameters) {
+				if (!first) {
+					signature.append (",", false);
+				}
+				signature.append_content (param.signature, false);
+				first = false;
+			}
+			signature.append (">", false);
+		}
+
+		if (base_type != null) {
+			signature.append (":");
+
+			signature.append_content (base_type.signature);
+		}
+
+		return signature.get ();
+	}
+}

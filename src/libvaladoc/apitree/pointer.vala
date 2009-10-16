@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.Pointer : Api.Item {
 	private Vala.PointerType vtype;
@@ -42,10 +42,6 @@ public class Valadoc.Pointer : Api.Item {
 		}
 	}
 
-	public void write (Langlet langlet, void* ptr, Api.Node parent) {
-		langlet.write_pointer (this, ptr, parent);
-	}
-
 	protected override void resolve_type_references (Tree root) {
 		Api.Item type = this.data_type;
 		if (type == null) {
@@ -58,5 +54,11 @@ public class Valadoc.Pointer : Api.Item {
 			((TypeReference) type).resolve_type_references (root);
 		}
 	}
-}
 
+	protected override Inline build_signature () {
+		return new Api.SignatureBuilder ()
+			.append_content (data_type.signature)
+			.append ("*", false)
+			.get ();
+	}
+}

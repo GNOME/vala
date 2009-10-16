@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 	private Vala.Property vproperty;
@@ -90,7 +90,6 @@ public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 		get;
 	}
 
-
 	protected override void resolve_type_references (Tree root) {
 		Vala.Property? vp = null;
 		if (vproperty.base_property != null) {
@@ -107,6 +106,35 @@ public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 		this.set_return_type_references (root);
 	}
 
+	protected override Inline build_signature () {
+		var signature = new Api.SignatureBuilder ();
+
+		signature.append_keyword (get_accessibility_modifier ());
+		if (is_abstract) {
+			signature.append_keyword ("abstract");
+		} else if (is_override) {
+			signature.append_keyword ("override");
+		} else if (is_virtual) {
+			signature.append_keyword ("virtual");
+		}
+
+		signature.append_content (type_reference.signature);
+		signature.append_symbol (this);
+		signature.append ("{");
+
+		if (setter != null) {
+			signature.append_content (setter.signature);
+		}
+
+		if (getter != null) {
+			signature.append_content (getter.signature);
+		}
+
+		signature.append ("}");
+
+		return signature.get ();
+	}
+
 	public void visit (Doclet doclet) {
 		doclet.visit_property (this);
 	}
@@ -116,9 +144,4 @@ public class Valadoc.Property : Api.MemberNode, ReturnTypeHandler {
 	public override void accept (Doclet doclet) {
 		visit (doclet);
 	}
-
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_property (this, ptr);
-	}
 }
-

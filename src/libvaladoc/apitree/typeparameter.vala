@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.TypeParameter : Api.SymbolNode, ReturnTypeHandler {
 
@@ -31,13 +31,14 @@ public class Valadoc.TypeParameter : Api.SymbolNode, ReturnTypeHandler {
 		get;
 	}
 
+	protected override Inline build_signature () {
+		return new Api.SignatureBuilder ()
+			.append (name)
+			.get ();
+	}
+
 	public override Api.NodeType node_type { get { return Api.NodeType.TYPE_PARAMETER; } }
 
 	public override void accept (Doclet doclet) {
 	}
-
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_type_parameter (this, ptr);
-	}
 }
-

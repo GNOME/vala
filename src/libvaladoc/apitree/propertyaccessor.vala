@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.PropertyAccessor : Api.SymbolNode {
 	private Vala.PropertyAccessor vpropacc;
@@ -57,8 +57,26 @@ public class Valadoc.PropertyAccessor : Api.SymbolNode {
 		}
 	}
 
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_property_accessor (this, ptr);
+	protected override Inline build_signature () {
+		var signature = new Api.SignatureBuilder ();
+
+		if (!is_public) {
+			signature.append_keyword (get_accessibility_modifier ());
+		}
+		if (is_set || is_construct) {
+			if (is_construct) {
+				signature.append_keyword ("construct");
+			}
+			if (is_set) {
+				signature.append_keyword ("set");
+			}
+		} else if (is_get) {
+			if (is_owned) {
+				signature.append_keyword ("owned");
+			}
+			signature.append_keyword ("get");
+		}
+
+		return signature.get ();
 	}
 }
-

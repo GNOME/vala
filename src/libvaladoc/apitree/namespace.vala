@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.Namespace : Api.SymbolNode, MethodHandler, FieldHandler, NamespaceHandler, ErrorDomainHandler,
                                  EnumHandler, ClassHandler, StructHandler, InterfaceHandler,
@@ -49,6 +49,14 @@ public class Valadoc.Namespace : Api.SymbolNode, MethodHandler, FieldHandler, Na
 		base.process_comments (settings, parser);
 	}
 
+	protected override Inline build_signature () {
+		return new Api.SignatureBuilder ()
+			.append_keyword (get_accessibility_modifier ())
+			.append_keyword ("namespace")
+			.append_symbol (this)
+			.get ();
+	}
+
 	public void visit (Doclet doclet) {
 		doclet.visit_namespace (this);
 	}
@@ -67,11 +75,4 @@ public class Valadoc.Namespace : Api.SymbolNode, MethodHandler, FieldHandler, Na
 	internal bool is_vnspace (Vala.Namespace vns) {
 		return this.vnspace == vns;
 	}
-
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_namespace (this, ptr);
-	}
 }
-
-
-

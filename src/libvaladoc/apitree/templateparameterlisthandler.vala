@@ -22,7 +22,7 @@ using Gee;
 
 public interface Valadoc.TemplateParameterListHandler : Api.Node {
 	public Collection<TypeParameter> get_template_param_list () {
-		return get_children_by_type (Api.NodeType.TYPE_PARAMETER);
+		return get_children_by_type (Api.NodeType.TYPE_PARAMETER, false);
 	}
 }
 

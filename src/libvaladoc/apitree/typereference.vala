@@ -17,9 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.TypeReference : Api.Item {
 	private ArrayList<TypeReference> type_arguments = new ArrayList<TypeReference> ();
@@ -180,44 +179,74 @@ public class Valadoc.TypeReference : Api.Item {
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		if (this.vtyperef != null) {
-			if ( this.vtyperef is Vala.PointerType) {
-				this.data_type = new Pointer ((Vala.PointerType) this.vtyperef, this);
-			} else if (vtyperef is Vala.ArrayType) {
-				this.data_type = new Array ((Vala.ArrayType) this.vtyperef, this);
-			} else if (vtyperef is Vala.GenericType) {
-				 this.data_type = (TypeParameter) root.search_vala_symbol (((Vala.GenericType) this.vtyperef).type_parameter);
+		if ( this.vtyperef is Vala.PointerType) {
+			this.data_type = new Pointer ((Vala.PointerType) this.vtyperef, this);
+		} else if (vtyperef is Vala.ArrayType) {
+			this.data_type = new Array ((Vala.ArrayType) this.vtyperef, this);
+		} else if (vtyperef is Vala.GenericType) {
+			 this.data_type = root.search_vala_symbol (((Vala.GenericType) this.vtyperef).type_parameter);
+		} else if (vtyperef is Vala.ErrorType) {
+			Vala.ErrorDomain verrdom = ((Vala.ErrorType) vtyperef).error_domain;
+			if (verrdom != null) {
+				this.data_type = root.search_vala_symbol (verrdom);
+			} else {
+				this.data_type = glib_error;
 			}
+		} else if (vtyperef is Vala.DelegateType) {
+			this.data_type = root.search_vala_symbol (((Vala.DelegateType) vtyperef).delegate_symbol);
+		} else {
+			this.data_type = root.search_vala_symbol (vtyperef.data_type);
 		}
 
+		this.set_template_argument_list (root, vtyperef.get_type_arguments ());
 
-		if (this.data_type == null) {
-			Vala.DataType vtype = this.vtyperef;
-			this.set_template_argument_list (root, vtype.get_type_arguments ());
-			// still necessary?
-			if ( vtype is Vala.ErrorType ) {
-				Vala.ErrorDomain verrdom = ((Vala.ErrorType)vtype).error_domain;
-				if (verrdom != null) {
-					this.data_type = root.search_vala_symbol (verrdom);
-				} else {
-					this.data_type = glib_error;
-				}
-			}
-			// necessary?
-			else if (vtype is Vala.DelegateType) {
-				this.data_type = root.search_vala_symbol (((Vala.DelegateType)vtype).delegate_symbol);
-			} else {
-				this.data_type = root.search_vala_symbol (vtype.data_type);
-			}
-		} else if (this.data_type is Pointer) {
+		if (this.data_type is Pointer) {
 			((Pointer)this.data_type).resolve_type_references (root);
 		} else if (this.data_type is Array) {
 			((Array)this.data_type).resolve_type_references (root);
 		}
 	}
 
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_type_reference (this, ptr);
+	protected override Inline build_signature () {
+		var signature = new Api.SignatureBuilder ();
+
+		if (is_dynamic) {
+			signature.append_keyword ("dynamic");
+		}
+
+		if (is_weak) {
+			signature.append_keyword ("weak");
+		} else if (is_owned) {
+			signature.append_keyword ("owned");
+		} else if (is_unowned) {
+			signature.append_keyword ("unowned");
+		}
+
+		if (data_type == null) {
+			signature.append_keyword ("void");
+		} else if (data_type is Api.SymbolNode) {
+			signature.append_type ((Api.SymbolNode) data_type);
+		} else {
+			signature.append_content (data_type.signature);
+		}
+
+		if (type_arguments.size > 0) {
+			signature.append ("<", false);
+			bool first = true;
+			foreach (Api.Item param in type_arguments) {
+				if (!first) {
+					signature.append (",", false);
+				}
+				signature.append_content (param.signature, false);
+				first = false;
+			}
+			signature.append (">", false);
+		}
+
+		if (is_nullable) {
+			signature.append ("?", false);
+		}
+
+		return signature.get ();
 	}
 }
-

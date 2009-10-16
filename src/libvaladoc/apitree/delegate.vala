@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, ReturnTypeHandler, TemplateParameterListHandler, ExceptionHandler {
 	private Vala.Delegate vdelegate;
@@ -62,10 +62,61 @@ public class Valadoc.Delegate : Api.TypeSymbolNode, ParameterListHandler, Return
 
 		var vexceptionlst = this.vdelegate.get_error_types ();
 		this.add_exception_list (root, vexceptionlst);
+
+		base.resolve_type_references (root);
 	}
 
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_delegate (this, ptr);
+	protected override Inline build_signature () {
+		var signature = new Api.SignatureBuilder ();
+
+		signature.append_keyword (get_accessibility_modifier ());
+		if (is_static) {
+			signature.append_keyword ("static");
+		}
+
+		signature.append_content (type_reference.signature);
+		signature.append_symbol (this);
+
+		var type_parameters = get_children_by_type (Api.NodeType.TYPE_PARAMETER);
+		if (type_parameters.size > 0) {
+			signature.append ("<", false);
+			bool first = true;
+			foreach (Api.Item param in type_parameters) {
+				if (!first) {
+					signature.append (",", false);
+				}
+				signature.append_content (param.signature, false);
+				first = false;
+			}
+			signature.append (">", false);
+		}
+
+		signature.append ("(");
+
+		bool first = true;
+		foreach (Api.Node param in get_children_by_type (Api.NodeType.FORMAL_PARAMETER)) {
+			if (!first) {
+				signature.append (",", false);
+			}
+			signature.append_content (param.signature, !first);
+			first = false;
+		}
+
+		signature.append (")", false);
+
+		var exceptions = get_children_by_type (Api.NodeType.ERROR_DOMAIN);
+		if (exceptions.size > 0) {
+			signature.append_keyword ("throws");
+
+			foreach (Api.Node param in exceptions) {
+				if (!first) {
+					signature.append (",", false);
+				}
+				signature.append_content (param.signature, !first);
+				first = false;
+			}
+		}
+
+		return signature.get ();
 	}
 }
-

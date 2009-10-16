@@ -23,6 +23,8 @@ using Gee;
 
 
 public abstract class Valadoc.Api.Item : Object {
+	private Inline _signature;
+
 	public Api.Item parent {
 		protected set;
 		get;
@@ -33,5 +35,16 @@ public abstract class Valadoc.Api.Item : Object {
 
 	protected virtual void process_comments (Settings settings, DocumentationParser parser) {
 	}
+
+	public Inline signature {
+		get {
+			if (_signature == null) {
+				_signature = build_signature ();
+			}
+			return _signature;
+		}
+	}
+
+	protected abstract Inline build_signature ();
 }
 

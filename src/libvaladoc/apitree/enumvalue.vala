@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.EnumValue: Api.SymbolNode {
 	private Vala.EnumValue venval;
@@ -45,10 +45,6 @@ public class Valadoc.EnumValue: Api.SymbolNode {
 		return this.venval == venval;
 	}
 
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_enum_value (this, ptr);
-	}
-
 	public void visit (Doclet doclet) {
 		doclet.visit_enum_value (this);
 	}
@@ -58,5 +54,12 @@ public class Valadoc.EnumValue: Api.SymbolNode {
 	public override void accept (Doclet doclet) {
 		visit (doclet);
 	}
-}
 
+	protected override Inline build_signature () {
+		return new Api.SignatureBuilder ()
+			.append_symbol (this)
+			.append ("=")
+			.append (this.venval.value.to_string ())
+			.get ();
+	}
+}

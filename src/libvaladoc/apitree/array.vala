@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.Array : Api.Item {
 	private Vala.ArrayType vtype;
@@ -40,10 +40,6 @@ public class Valadoc.Array : Api.Item {
 		}
 	}
 
-	public void write (Langlet langlet, void* ptr, Api.Node parent) {
-		langlet.write_array (this, ptr, parent);
-	}
-
 	protected override void resolve_type_references (Tree root) {
 		if (this.data_type == null) {
 			/*TODO:possible?*/;
@@ -55,5 +51,11 @@ public class Valadoc.Array : Api.Item {
 			((TypeReference)this.data_type).resolve_type_references (root);
 		}
 	}
-}
 
+	protected override Inline build_signature () {
+		return new Api.SignatureBuilder ()
+			.append_content (data_type.signature)
+			.append ("[]", false)
+			.get ();
+	}
+}

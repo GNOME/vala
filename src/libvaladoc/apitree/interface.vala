@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler, MethodHandler, DelegateHandler, EnumHandler, StructHandler, ClassHandler {
 	public Interface (Vala.Interface symbol, Api.Node parent) {
@@ -26,9 +26,9 @@ public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHand
 		this.vinterface = symbol;
 	}
 
-	private ArrayList<Interface> interfaces = new ArrayList<Interface> ();
+	private ArrayList<TypeReference> interfaces = new ArrayList<TypeReference> ();
 
-	public Collection<Interface> get_implemented_interface_list () {
+	public Collection<TypeReference> get_implemented_interface_list () {
 		return this.interfaces;
 	}
 
@@ -36,7 +36,7 @@ public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHand
 		return this.vinterface.get_cname ();
 	}
 
-	protected Class? base_type {
+	protected TypeReference? base_type {
 		private set;
 		get;
 	}
@@ -53,21 +53,19 @@ public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHand
 		visit (doclet);
 	}
 
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_interface (this, ptr);
-	}
-
 	private void set_prerequisites (Tree root, Vala.Collection<Vala.DataType> lst) {
 		if (this.interfaces.size != 0) {
 			return;
 		}
 
 		foreach (Vala.DataType vtyperef in lst) {
-			Api.Item? element = root.search_vala_symbol (vtyperef.data_type);
-			if (element is Class) {
-				this.base_type = (Class)element;
+			var inherited = new TypeReference (vtyperef, this);
+			inherited.resolve_type_references (root);
+
+			if (inherited.data_type is Class) {
+				this.base_type = inherited;
 			} else {
-				this.interfaces.add ((Interface)element);
+				this.interfaces.add (inherited);
 			}
 		}
 	}
@@ -78,6 +76,50 @@ public class Valadoc.Interface : Api.TypeSymbolNode, SignalHandler, PropertyHand
 
 		base.resolve_type_references (root);
 	}
+
+	protected override Inline build_signature () {
+		var signature = new Api.SignatureBuilder ();
+
+		signature.append_keyword (get_accessibility_modifier ());
+		signature.append_keyword ("interface");
+		signature.append_symbol (this);
+
+		var type_parameters = get_children_by_type (Api.NodeType.TYPE_PARAMETER, false);
+		if (type_parameters.size > 0) {
+			signature.append ("<", false);
+			bool first = true;
+			foreach (Api.Item param in type_parameters) {
+				if (!first) {
+					signature.append (",", false);
+				}
+				signature.append_content (param.signature, false);
+				first = false;
+			}
+			signature.append (">", false);
+		}
+
+		bool first = true;
+		if (base_type != null) {
+			signature.append (":");
+
+			signature.append_content (base_type.signature);
+			first = false;
+		}
+
+		if (interfaces.size > 0) {
+			if (first) {
+				signature.append (":");
+			}
+
+			foreach (Api.Item implemented_interface in interfaces) {
+				if (!first) {
+					signature.append (",", false);
+				}
+				signature.append_content (implemented_interface.signature);
+				first = false;
+			}
+		}
+
+		return signature.get ();
+	}
 }
-
-

@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.Package : Api.Node, NamespaceHandler {
 	private ArrayList<Vala.SourceFile> vfiles = new ArrayList<Vala.SourceFile> ();
@@ -109,8 +109,10 @@ public class Valadoc.Package : Api.Node, NamespaceHandler {
 		visit (doclet);
 	}
 
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_file (this, ptr);
+	protected override Inline build_signature () {
+		return new Api.SignatureBuilder ()
+			.append_keyword ("package")
+			.append (name)
+			.get ();
 	}
 }
-

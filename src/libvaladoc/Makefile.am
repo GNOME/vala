@@ -26,7 +26,6 @@ libvaladoc_la_VALASOURCES = \
 	drawer.vala \
 	errorreporter.vala \
 	filehelper.vala \
-	langlet.vala \
 	moduleloader.vala \
 	settings.vala \
 	documentation/commentscanner.vala \
@@ -74,6 +73,7 @@ libvaladoc_la_VALASOURCES = \
 	apitree/returntypehandler.vala \
 	apitree/signal.vala \
 	apitree/signalhandler.vala \
+	apitree/signaturebuilder.vala \
 	apitree/struct.vala \
 	apitree/structhandler.vala \
 	apitree/symbolaccessibility.vala \

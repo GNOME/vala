@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHandler, TemplateParameterListHandler, ReturnTypeHandler {
 	private Vala.Method vmethod;
@@ -127,6 +127,72 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 		base.resolve_type_references (root);
 	}
 
+	protected override Inline build_signature () {
+		var signature = new Api.SignatureBuilder ();
+
+		signature.append_keyword (get_accessibility_modifier ());
+		if (is_static) {
+			signature.append_keyword ("static");
+		} else if (is_abstract) {
+			signature.append_keyword ("abstract");
+		} else if (is_override) {
+			signature.append_keyword ("override");
+		} else if (is_virtual) {
+			signature.append_keyword ("virtual");
+		}
+		if (is_inline) {
+			signature.append_keyword ("inline");
+		}
+		if (is_yields) {
+			signature.append_keyword ("async");
+		}
+
+		signature.append_content (type_reference.signature);
+		signature.append_symbol (this);
+
+		var type_parameters = get_children_by_type (Api.NodeType.TYPE_PARAMETER, false);
+		if (type_parameters.size > 0) {
+			signature.append ("<", false);
+			bool first = true;
+			foreach (Api.Item param in type_parameters) {
+				if (!first) {
+					signature.append (",", false);
+				}
+				signature.append_content (param.signature, false);
+				first = false;
+			}
+			signature.append (">", false);
+		}
+
+		signature.append ("(");
+
+		bool first = true;
+		foreach (Api.Node param in get_children_by_type (Api.NodeType.FORMAL_PARAMETER)) {
+			if (!first) {
+				signature.append (",", false);
+			}
+			signature.append_content (param.signature, !first);
+			first = false;
+		}
+
+		signature.append (")", false);
+
+		var exceptions = get_children_by_type (Api.NodeType.ERROR_DOMAIN);
+		if (exceptions.size > 0) {
+			signature.append_keyword ("throws");
+
+			foreach (Api.Node param in exceptions) {
+				if (!first) {
+					signature.append (",", false);
+				}
+				signature.append_content (param.signature, !first);
+				first = false;
+			}
+		}
+
+		return signature.get ();
+	}
+
 	public void visit (Doclet doclet, Valadoc.MethodHandler in_type) {
 		doclet.visit_method (this, in_type);
 	}
@@ -140,9 +206,4 @@ public class Valadoc.Method : Api.MemberNode, ParameterListHandler, ExceptionHan
 	public override void accept (Doclet doclet) {
 		visit (doclet, (MethodHandler) parent);
 	}
-
-	public void write (Langlet langlet, void* ptr, Valadoc.MethodHandler parent) {
-		langlet.write_method (ptr, this, parent);
-	}
 }
-

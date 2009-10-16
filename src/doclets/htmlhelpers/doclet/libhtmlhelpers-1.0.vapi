@@ -7,7 +7,6 @@ namespace Valadoc {
 		[CCode (cheader_filename = "libhtmlhelpers-1.0.h")]
 		public abstract class BasicDoclet : Valadoc.Doclet {
 			protected Valadoc.Html.HtmlRenderer _renderer;
-			protected Valadoc.Langlet langlet;
 			protected Valadoc.Settings settings;
 			public BasicDoclet ();
 			protected void fetch_subnamespace_names (Valadoc.NamespaceHandler pos, Gee.ArrayList<Valadoc.Namespace> lst);
@@ -104,35 +103,6 @@ namespace Valadoc {
 			protected void write_top_element_template (GLib.FileStream file, string link);
 			protected void write_top_elements (GLib.FileStream file, Valadoc.Api.Node element, Valadoc.Api.Node? mself);
 			protected void write_wiki_pages (Valadoc.Tree tree, string css_path_wiki, string contentp);
-		}
-		[CCode (cheader_filename = "libhtmlhelpers-1.0.h")]
-		public class BasicLanglet : Valadoc.Langlet {
-			public BasicLanglet (Valadoc.Settings settings);
-			public override void write_array (Valadoc.Array arr, void* fptr, Valadoc.Api.Node pos);
-			public override void write_class (Valadoc.Class cl, void* ptr);
-			public override void write_constant (Valadoc.Constant constant, Valadoc.ConstantHandler parent, void* ptr);
-			public override void write_delegate (Valadoc.Delegate del, void* ptr);
-			public override void write_enum (Valadoc.Enum en, void* ptr);
-			public override void write_enum_value (Valadoc.EnumValue enval, void* ptr);
-			public override void write_error_code (Valadoc.ErrorCode errcode, void* ptr);
-			public override void write_error_domain (Valadoc.ErrorDomain errdom, void* ptr);
-			public override void write_field (Valadoc.Field field, Valadoc.FieldHandler parent, void* ptr);
-			public override void write_file (Valadoc.Package file, void* ptr);
-			public override void write_formal_parameter (Valadoc.FormalParameter param, void* ptr);
-			public override void write_inheritance_list (Valadoc.Api.Node dtype, void* ptr);
-			public override void write_interface (Valadoc.Interface iface, void* ptr);
-			public override void write_method (void* ptr, Valadoc.Method m, Valadoc.MethodHandler parent);
-			public override void write_namespace (Valadoc.Namespace ns, void* ptr);
-			public override void write_parameter_list (Valadoc.ParameterListHandler thandler, void* ptr);
-			public override void write_pointer (Valadoc.Pointer ptr, void* fptr, Valadoc.Api.Node pos);
-			public override void write_property (Valadoc.Property prop, void* ptr);
-			public override void write_property_accessor (Valadoc.PropertyAccessor propac, void* ptr);
-			public override void write_signal (Valadoc.Signal sig, void* ptr);
-			public override void write_struct (Valadoc.Struct stru, void* ptr);
-			public override void write_template_parameters (Valadoc.TemplateParameterListHandler thandler, void* ptr);
-			public override void write_type_parameter (Valadoc.TypeParameter param, void* ptr);
-			public override void write_type_reference (Valadoc.TypeReference type_reference, void* ptr);
-			public Valadoc.Settings settings { get; set construct; }
 		}
 		[CCode (cheader_filename = "libhtmlhelpers-1.0.h")]
 		public class HtmlRenderer : Valadoc.Content.ContentRenderer {

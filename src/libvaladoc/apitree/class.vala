@@ -18,15 +18,15 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, SignalHandler, MethodHandler, EnumHandler, PropertyHandler, ConstructionMethodHandler, FieldHandler, DelegateHandler, ConstantHandler, TemplateParameterListHandler {
-	private ArrayList<Interface> interfaces;
+	private ArrayList<TypeReference> interfaces;
 	private Vala.Class vclass;
 
 	public Class (Vala.Class symbol, Api.Node parent) {
 		base (symbol, parent);
-		this.interfaces = new ArrayList<Interface> ();
+		this.interfaces = new ArrayList<TypeReference> ();
 
 		this.vclass = symbol;
 
@@ -37,7 +37,7 @@ public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, Si
 		}
 	}
 
-	protected Class? base_type {
+	protected TypeReference? base_type {
 		private set;
 		get;
 	}
@@ -46,16 +46,12 @@ public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, Si
 		return this.vclass.get_cname();
 	}
 
-	public Collection<Interface> get_implemented_interface_list () {
+	public Collection<TypeReference> get_implemented_interface_list () {
 		return this.interfaces;
 	}
 
 	internal bool is_vclass (Vala.Class vcl) {
 		return this.vclass == vcl;
-	}
-
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_class (this, ptr);
 	}
 
 	public bool is_abstract {
@@ -80,12 +76,13 @@ public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, Si
 		}
 
 		foreach (Vala.DataType vtyperef in lst) {
-			Api.Item? element = root.search_vala_symbol (vtyperef.data_type);
-			if (element is Class) {
-				this.base_type = (Class)element;
-			}
-			else {
-				this.interfaces.add ((Interface)element);
+			var inherited = new TypeReference (vtyperef, this);
+			inherited.resolve_type_references (root);
+
+			if (inherited.data_type is Class) {
+				this.base_type = inherited;
+			} else {
+				this.interfaces.add (inherited);
 			}
 		}
 	}
@@ -96,5 +93,53 @@ public class Valadoc.Class : Api.TypeSymbolNode, ClassHandler, StructHandler, Si
 
 		base.resolve_type_references (root);
 	}
-}
 
+	protected override Inline build_signature () {
+		var signature = new Api.SignatureBuilder ();
+
+		signature.append_keyword (get_accessibility_modifier ());
+		if (is_abstract) {
+			signature.append_keyword ("abstract");
+		}
+		signature.append_keyword ("class");
+		signature.append_symbol (this);
+
+		var type_parameters = get_children_by_type (Api.NodeType.TYPE_PARAMETER, false);
+		if (type_parameters.size > 0) {
+			signature.append ("<", false);
+			bool first = true;
+			foreach (Api.Item param in type_parameters) {
+				if (!first) {
+					signature.append (",", false);
+				}
+				signature.append_content (param.signature, false);
+				first = false;
+			}
+			signature.append (">", false);
+		}
+
+		bool first = true;
+		if (base_type != null) {
+			signature.append (":");
+
+			signature.append_content (base_type.signature);
+			first = false;
+		}
+
+		if (interfaces.size > 0) {
+			if (first) {
+				signature.append (":");
+			}
+
+			foreach (Api.Item implemented_interface in interfaces) {
+				if (!first) {
+					signature.append (",", false);
+				}
+				signature.append_content (implemented_interface.signature);
+				first = false;
+			}
+		}
+
+		return signature.get ();
+	}
+}

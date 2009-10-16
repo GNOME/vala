@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.Field : Api.MemberNode, ReturnTypeHandler {
 	private Vala.Field vfield;
@@ -62,6 +62,22 @@ public class Valadoc.Field : Api.MemberNode, ReturnTypeHandler {
 		base.resolve_type_references (root);
 	}
 
+	protected override Inline build_signature () {
+		var signature = new Api.SignatureBuilder ();
+
+		signature.append_keyword (get_accessibility_modifier ());
+		if (is_static) {
+			signature.append_keyword ("static");
+		}
+		if (is_volatile) {
+			signature.append_keyword ("volatile");
+		}
+
+		signature.append_content (type_reference.signature);
+		signature.append_symbol (this);
+		return signature.get ();
+	}
+
 	public void visit (Doclet doclet, FieldHandler? parent) {
 		doclet.visit_field (this, parent);
 	}
@@ -71,9 +87,4 @@ public class Valadoc.Field : Api.MemberNode, ReturnTypeHandler {
 	public override void accept (Doclet doclet) {
 		visit (doclet, (FieldHandler) parent);
 	}
-
-	public void write (Langlet langlet, void* ptr, FieldHandler parent) {
-		langlet.write_field (this, parent, ptr);
-	}
 }
-

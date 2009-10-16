@@ -218,7 +218,6 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		DirUtils.create ( this.settings.path, 0777 );
 
-		this.langlet = new Valadoc.Html.BasicLanglet ( settings );
 		this.devhelp = new DevhelpFormat ( settings.pkg_name, "" );
 
 		this.write_wiki_pages ( tree, css_path_wiki, Path.build_filename(this.settings.path, this.settings.pkg_name, "content") );

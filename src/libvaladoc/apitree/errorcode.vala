@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.ErrorCode : Api.TypeSymbolNode {
 	private Vala.ErrorCode verrcode;
@@ -36,10 +36,6 @@ public class Valadoc.ErrorCode : Api.TypeSymbolNode {
 		return this.verrcode == verrcode;
 	}
 
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_error_code (this, ptr);
-	}
-
 	public void visit (Doclet doclet) {
 		doclet.visit_error_code (this);
 	}
@@ -49,5 +45,10 @@ public class Valadoc.ErrorCode : Api.TypeSymbolNode {
 	public override void accept (Doclet doclet) {
 		visit (doclet);
 	}
-}
 
+	protected override Inline build_signature () {
+		return new Api.SignatureBuilder ()
+			.append_symbol (this)
+			.get ();
+	}
+}

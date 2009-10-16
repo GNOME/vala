@@ -18,7 +18,7 @@
  */
 
 using Gee;
-
+using Valadoc.Content;
 
 public class Valadoc.Signal : Api.MemberNode, ParameterListHandler, ReturnTypeHandler {
 	private Vala.Signal vsignal;
@@ -53,6 +53,32 @@ public class Valadoc.Signal : Api.MemberNode, ParameterListHandler, ReturnTypeHa
 		}
 	}
 
+	protected override Inline build_signature () {
+		var signature = new Api.SignatureBuilder ();
+
+		signature.append_keyword (get_accessibility_modifier ());
+		if (is_virtual) {
+			signature.append_keyword ("virtual");
+		}
+
+		signature.append_content (type_reference.signature);
+		signature.append_symbol (this);
+		signature.append ("(");
+
+		bool first = true;
+		foreach (Api.Node param in get_children_by_type (Api.NodeType.FORMAL_PARAMETER)) {
+			if (!first) {
+				signature.append (",", false);
+			}
+			signature.append_content (param.signature, !first);
+			first = false;
+		}
+
+		signature.append (")", false);
+
+		return signature.get ();
+	}
+
 	public void visit (Doclet doclet) {
 		doclet.visit_signal (this);
 	}
@@ -62,9 +88,4 @@ public class Valadoc.Signal : Api.MemberNode, ParameterListHandler, ReturnTypeHa
 	public override void accept (Doclet doclet) {
 		visit (doclet);
 	}
-
-	public void write (Langlet langlet, void* ptr) {
-		langlet.write_signal (this, ptr);
-	}
 }
-

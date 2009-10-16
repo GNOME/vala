@@ -179,7 +179,13 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	public override void visit_symbol_link (SymbolLink element) {
-		write_symbol_link (element.symbol, element.label);
+		if (element.symbol == _container
+		    || !element.symbol.is_visitor_accessible (_doclet.settings)
+		    || !element.symbol.package.is_visitor_accessible (_doclet.settings)) {
+			_stream.printf (element.label);
+		} else {
+			write_symbol_link (element.symbol, element.label);
+		}
 	}
 
 	public override void visit_list (Content.List element) {
@@ -200,6 +206,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	public override void visit_run (Run element) {
 		string tag = null;
+		string css_type = null;
 		switch (element.style) {
 		case Run.Style.BOLD:
 			tag = "b";
@@ -216,9 +223,21 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		case Run.Style.STROKE:
 			tag = "stroke";
 			break;
+		case Run.Style.LANG_KEYWORD:
+			tag = "span";
+			css_type = "main_keyword";
+			break;
+		case Run.Style.LANG_LITERAL:
+			tag = "span";
+			css_type = "main_optional_parameter";
+			break;
+		case Run.Style.LANG_TYPE:
+			tag = "span";
+			css_type = "main_basic_type";
+			break;
 		}
 		if (tag != null) {
-			_stream.printf ("<%s>", tag);
+			_stream.printf ("<%s%s>", tag, css_type != null ? " class=\"" + css_type + "\"" : "");
 		}
 		element.accept_children (this);
 		if (tag != null) {

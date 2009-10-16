@@ -92,5 +92,17 @@ public abstract class Valadoc.Api.SymbolNode : Api.Node, SymbolAccessibility {
 			return symbol.access == Vala.SymbolAccessibility.PRIVATE;
 		}
 	}
+
+	protected string get_accessibility_modifier () {
+		if (is_public) {
+			return "public";
+		} else if (is_protected) {
+			return "protected";
+		} else if (is_internal) {
+			return "internal";
+		} else {
+			return "private";
+		}
+	}
 }
 

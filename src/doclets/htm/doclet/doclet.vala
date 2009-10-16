@@ -124,9 +124,6 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		this.write_file_footer ( file );
 		file = null;
 
-
-		this.langlet = new Valadoc.Html.BasicLanglet ( settings );
-
 		Gee.Collection<Package> packages = tree.get_package_list ();
 		foreach ( Package pkg in packages ) {
 			pkg.visit ( this );

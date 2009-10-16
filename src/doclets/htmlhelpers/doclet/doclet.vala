@@ -22,7 +22,6 @@ using GLib;
 using Valadoc.Content;
 
 public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
-	protected Valadoc.Langlet langlet;
 	protected Settings settings;
 	protected HtmlRenderer _renderer;
 
@@ -715,6 +714,12 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		_renderer.render (doctree);
 	}
 
+	private void write_signature ( GLib.FileStream file, Api.Node element , Api.Node? pos ) {
+		_renderer.set_container (pos);
+		_renderer.set_filestream (file);
+		_renderer.render (element.signature);
+	}
+
 	public void write_navi_packages_inline ( GLib.FileStream file, Tree tree ) {
 		file.printf ( "<ul class=\"%s\">\n", css_navi );
 		foreach ( Package pkg in tree.get_package_list() ) {
@@ -762,7 +767,7 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
 
-		this.langlet.write_method ( file, m, parent );
+		this.write_signature (file, m, m);
 
 		file.printf ( "\n\t\t\t\t</div>\n" );
 
@@ -803,7 +808,9 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
-		this.langlet.write_signal ( sig, file );
+
+		this.write_signature (file, sig, sig);
+
 		file.printf ( "\n\t\t\t\t</div>\n" );
 		this.write_documentation ( file, sig, sig );
 		file.puts ( "\t\t\t</div>\n" );
@@ -816,7 +823,9 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
-		this.langlet.write_delegate ( del, file );
+
+		this.write_signature (file, del, del);
+
 		file.printf ( "\n\t\t\t\t</div>\n" );
 
 		this.write_documentation ( file, del, del );
@@ -837,7 +846,9 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
-		this.langlet.write_field ( field, parent, file );
+
+		this.write_signature (file, field, field);
+
 		file.printf ( "\n\t\t\t\t</div>\n" );
 
 		this.write_documentation ( file, field, field );
@@ -858,7 +869,9 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
-		this.langlet.write_constant ( constant, parent, file );
+
+		this.write_signature (file, constant, constant);
+
 		file.printf ( "\n\t\t\t\t</div>\n" );
 
 		this.write_documentation ( file, constant, constant );
@@ -879,7 +892,9 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
-		this.langlet.write_property ( prop, file );
+
+		this.write_signature (file, prop, prop);
+
 		file.printf ( "\n\t\t\t\t</div>\n" );
 		this.write_documentation ( file, prop, prop );
 		file.puts ( "\t\t\t</div>\n" );
@@ -1029,7 +1044,9 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		this.write_image_block ( file, cl );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
-		this.langlet.write_class ( cl, file );
+
+		this.write_signature (file, cl, cl);
+
 		file.printf ( "\n\t\t\t\t</div>\n" );
 
 		this.write_documentation ( file, cl, cl );
@@ -1062,7 +1079,9 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		this.write_image_block ( file, iface );
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
-		this.langlet.write_interface ( iface, file );
+
+		this.write_signature (file, iface, iface);
+
 		file.printf ( "\n\t\t\t\t</div>\n" );
 
 		this.write_documentation ( file, iface, iface );
@@ -1116,7 +1135,9 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
 
 		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
-		this.langlet.write_struct ( stru, file );
+
+		this.write_signature (file, stru, stru);
+
 		file.printf ( "\n\t\t\t\t</div>\n" );
 
 		this.write_documentation ( file, stru, stru );

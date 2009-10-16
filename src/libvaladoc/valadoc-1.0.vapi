@@ -7,9 +7,11 @@ namespace Valadoc {
 		[CCode (cheader_filename = "valadoc-1.0.h")]
 		public abstract class Item : GLib.Object {
 			public Item ();
+			protected abstract Valadoc.Content.Inline build_signature ();
 			protected virtual void process_comments (Valadoc.Settings settings, Valadoc.DocumentationParser parser);
 			protected virtual void resolve_type_references (Valadoc.Tree root);
 			public Valadoc.Api.Item parent { get; set; }
+			public Valadoc.Content.Inline signature { get; }
 		}
 		[CCode (cheader_filename = "valadoc-1.0.h")]
 		public abstract class MemberNode : Valadoc.Api.SymbolNode {
@@ -37,9 +39,22 @@ namespace Valadoc {
 			public Valadoc.Namespace? nspace { get; }
 			public Valadoc.Package? package { get; }
 		}
+		[CCode (ref_function = "valadoc_api_signature_builder_ref", unref_function = "valadoc_api_signature_builder_unref", cheader_filename = "valadoc-1.0.h")]
+		public class SignatureBuilder {
+			public SignatureBuilder ();
+			public Valadoc.Api.SignatureBuilder append (string text, bool spaced = true);
+			public Valadoc.Api.SignatureBuilder append_content (Valadoc.Content.Inline content, bool spaced = true);
+			public Valadoc.Api.SignatureBuilder append_keyword (string keyword, bool spaced = true);
+			public Valadoc.Api.SignatureBuilder append_literal (string literal, bool spaced = true);
+			public Valadoc.Api.SignatureBuilder append_symbol (Valadoc.Api.Node node, bool spaced = true);
+			public Valadoc.Api.SignatureBuilder append_type (Valadoc.Api.Node node, bool spaced = true);
+			public Valadoc.Api.SignatureBuilder append_type_name (string name, bool spaced = true);
+			public Valadoc.Content.Run @get ();
+		}
 		[CCode (cheader_filename = "valadoc-1.0.h")]
 		public abstract class SymbolNode : Valadoc.Api.Node, Valadoc.SymbolAccessibility {
 			public SymbolNode (Vala.Symbol symbol, Valadoc.Api.Node parent);
+			protected string get_accessibility_modifier ();
 			public override string? get_filename ();
 			public override bool is_visitor_accessible (Valadoc.Settings settings);
 			public override string? name { owned get; }
@@ -385,20 +400,20 @@ namespace Valadoc {
 	[CCode (cheader_filename = "valadoc-1.0.h")]
 	public class Array : Valadoc.Api.Item {
 		public Array (Vala.ArrayType vtyperef, Valadoc.Api.Item parent);
+		protected override Valadoc.Content.Inline build_signature ();
 		protected override void resolve_type_references (Valadoc.Tree root);
-		public void write (Valadoc.Langlet langlet, void* ptr, Valadoc.Api.Node parent);
 		public Valadoc.Api.Item data_type { get; set; }
 	}
 	[CCode (cheader_filename = "valadoc-1.0.h")]
 	public class Class : Valadoc.Api.TypeSymbolNode, Valadoc.ClassHandler, Valadoc.StructHandler, Valadoc.SignalHandler, Valadoc.MethodHandler, Valadoc.EnumHandler, Valadoc.PropertyHandler, Valadoc.ConstructionMethodHandler, Valadoc.FieldHandler, Valadoc.DelegateHandler, Valadoc.ConstantHandler, Valadoc.TemplateParameterListHandler {
 		public Class (Vala.Class symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		public string? get_cname ();
-		public Gee.Collection<Valadoc.Interface> get_implemented_interface_list ();
+		public Gee.Collection<Valadoc.TypeReference> get_implemented_interface_list ();
 		protected override void resolve_type_references (Valadoc.Tree root);
 		public void visit (Valadoc.Doclet doclet);
-		public void write (Valadoc.Langlet langlet, void* ptr);
-		protected Valadoc.Class? base_type { get; set; }
+		protected Valadoc.TypeReference? base_type { get; set; }
 		public bool is_abstract { get; }
 		public override Valadoc.Api.NodeType node_type { get; }
 	}
@@ -413,21 +428,21 @@ namespace Valadoc {
 	public class Constant : Valadoc.Api.MemberNode, Valadoc.ReturnTypeHandler {
 		public Constant (Vala.Constant symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		public string get_cname ();
 		public bool is_vconstant (Vala.Constant vconst);
 		protected override void resolve_type_references (Valadoc.Tree root);
 		public void visit (Valadoc.Doclet doclet, Valadoc.ConstantHandler? parent);
-		public void write (Valadoc.Langlet langlet, void* ptr, Valadoc.ConstantHandler parent);
 		public override Valadoc.Api.NodeType node_type { get; }
 	}
 	[CCode (cheader_filename = "valadoc-1.0.h")]
 	public class Delegate : Valadoc.Api.TypeSymbolNode, Valadoc.ParameterListHandler, Valadoc.ReturnTypeHandler, Valadoc.TemplateParameterListHandler, Valadoc.ExceptionHandler {
 		public Delegate (Vala.Delegate symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		public string? get_cname ();
 		protected override void resolve_type_references (Valadoc.Tree root);
 		public void visit (Valadoc.Doclet doclet);
-		public void write (Valadoc.Langlet langlet, void* ptr);
 		public bool is_static { get; }
 		public override Valadoc.Api.NodeType node_type { get; }
 	}
@@ -461,43 +476,43 @@ namespace Valadoc {
 	public class Enum : Valadoc.Api.TypeSymbolNode, Valadoc.MethodHandler {
 		public Enum (Vala.Enum symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		public string? get_cname ();
 		public Gee.Collection<Valadoc.EnumValue> get_enum_values ();
 		public void visit (Valadoc.Doclet doclet);
 		public void visit_enum_values (Valadoc.Doclet doclet);
-		public void write (Valadoc.Langlet langlet, void* ptr);
 		public override Valadoc.Api.NodeType node_type { get; }
 	}
 	[CCode (cheader_filename = "valadoc-1.0.h")]
 	public class EnumValue : Valadoc.Api.SymbolNode {
 		public EnumValue (Vala.EnumValue symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		public string get_cname ();
 		public bool is_venumvalue (Vala.EnumValue venval);
 		protected override void process_comments (Valadoc.Settings settings, Valadoc.DocumentationParser parser);
 		public void visit (Valadoc.Doclet doclet);
-		public void write (Valadoc.Langlet langlet, void* ptr);
 		public override Valadoc.Api.NodeType node_type { get; }
 	}
 	[CCode (cheader_filename = "valadoc-1.0.h")]
 	public class ErrorCode : Valadoc.Api.TypeSymbolNode {
 		public ErrorCode (Vala.ErrorCode symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		public string get_cname ();
 		public bool is_verrorcode (Vala.ErrorCode verrcode);
 		public void visit (Valadoc.Doclet doclet);
-		public void write (Valadoc.Langlet langlet, void* ptr);
 		public override Valadoc.Api.NodeType node_type { get; }
 	}
 	[CCode (cheader_filename = "valadoc-1.0.h")]
 	public class ErrorDomain : Valadoc.Api.TypeSymbolNode, Valadoc.MethodHandler {
 		public ErrorDomain (Vala.ErrorDomain symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		public string? get_cname ();
 		public Gee.Collection<Valadoc.ErrorCode> get_error_code_list ();
 		public void visit (Valadoc.Doclet doclet);
 		public void visit_error_codes (Valadoc.Doclet doclet);
-		public void write (Valadoc.Langlet langlet, void* ptr);
 		public override Valadoc.Api.NodeType node_type { get; }
 	}
 	[CCode (cheader_filename = "valadoc-1.0.h")]
@@ -516,10 +531,10 @@ namespace Valadoc {
 	public class Field : Valadoc.Api.MemberNode, Valadoc.ReturnTypeHandler {
 		public Field (Vala.Field symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		public string? get_cname ();
 		protected override void resolve_type_references (Valadoc.Tree root);
 		public void visit (Valadoc.Doclet doclet, Valadoc.FieldHandler? parent);
-		public void write (Valadoc.Langlet langlet, void* ptr, Valadoc.FieldHandler parent);
 		public bool is_static { get; }
 		public bool is_volatile { get; }
 		public override Valadoc.Api.NodeType node_type { get; }
@@ -528,8 +543,8 @@ namespace Valadoc {
 	public class FormalParameter : Valadoc.Api.SymbolNode, Valadoc.ReturnTypeHandler {
 		public FormalParameter (Vala.FormalParameter symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		protected override void resolve_type_references (Valadoc.Tree root);
-		public void write (Valadoc.Langlet langlet, void* ptr);
 		public bool ellipsis { get; }
 		public bool has_default_value { get; }
 		public bool is_out { get; }
@@ -540,50 +555,22 @@ namespace Valadoc {
 	public class Interface : Valadoc.Api.TypeSymbolNode, Valadoc.SignalHandler, Valadoc.PropertyHandler, Valadoc.FieldHandler, Valadoc.ConstantHandler, Valadoc.TemplateParameterListHandler, Valadoc.MethodHandler, Valadoc.DelegateHandler, Valadoc.EnumHandler, Valadoc.StructHandler, Valadoc.ClassHandler {
 		public Interface (Vala.Interface symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		public string? get_cname ();
-		public Gee.Collection<Valadoc.Interface> get_implemented_interface_list ();
+		public Gee.Collection<Valadoc.TypeReference> get_implemented_interface_list ();
 		protected override void resolve_type_references (Valadoc.Tree root);
 		public void visit (Valadoc.Doclet doclet);
-		public void write (Valadoc.Langlet langlet, void* ptr);
-		protected Valadoc.Class? base_type { get; set; }
+		protected Valadoc.TypeReference? base_type { get; set; }
 		public override Valadoc.Api.NodeType node_type { get; }
-	}
-	[CCode (cheader_filename = "valadoc-1.0.h")]
-	public abstract class Langlet : GLib.Object {
-		public Langlet ();
-		public abstract void write_array (Valadoc.Array param, void* ptr, Valadoc.Api.Node pos);
-		public abstract void write_class (Valadoc.Class cl, void* ptr);
-		public abstract void write_constant (Valadoc.Constant constant, Valadoc.ConstantHandler parent, void* ptr);
-		public abstract void write_delegate (Valadoc.Delegate del, void* ptr);
-		public abstract void write_enum (Valadoc.Enum en, void* ptr);
-		public abstract void write_enum_value (Valadoc.EnumValue enval, void* ptr);
-		public abstract void write_error_code (Valadoc.ErrorCode errcode, void* ptr);
-		public abstract void write_error_domain (Valadoc.ErrorDomain errdom, void* ptr);
-		public abstract void write_field (Valadoc.Field field, Valadoc.FieldHandler pos, void* ptr);
-		public abstract void write_file (Valadoc.Package file, void* ptr);
-		public abstract void write_formal_parameter (Valadoc.FormalParameter param, void* ptr);
-		public abstract void write_inheritance_list (Valadoc.Api.Node dtype, void* ptr);
-		public abstract void write_interface (Valadoc.Interface iface, void* ptr);
-		public abstract void write_method (void* ptr, Valadoc.Method m, Valadoc.MethodHandler pos);
-		public abstract void write_namespace (Valadoc.Namespace ns, void* ptr);
-		public abstract void write_parameter_list (Valadoc.ParameterListHandler thandler, void* ptr);
-		public abstract void write_pointer (Valadoc.Pointer param, void* ptr, Valadoc.Api.Node pos);
-		public abstract void write_property (Valadoc.Property prop, void* ptr);
-		public abstract void write_property_accessor (Valadoc.PropertyAccessor propac, void* ptr);
-		public abstract void write_signal (Valadoc.Signal sig, void* ptr);
-		public abstract void write_struct (Valadoc.Struct stru, void* ptr);
-		public abstract void write_template_parameters (Valadoc.TemplateParameterListHandler thandler, void* ptr);
-		public abstract void write_type_parameter (Valadoc.TypeParameter param, void* ptr);
-		public abstract void write_type_reference (Valadoc.TypeReference tref, void* ptr);
 	}
 	[CCode (cheader_filename = "valadoc-1.0.h")]
 	public class Method : Valadoc.Api.MemberNode, Valadoc.ParameterListHandler, Valadoc.ExceptionHandler, Valadoc.TemplateParameterListHandler, Valadoc.ReturnTypeHandler {
 		public Method (Vala.Method symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		public string? get_cname ();
 		protected override void resolve_type_references (Valadoc.Tree root);
 		public void visit (Valadoc.Doclet doclet, Valadoc.MethodHandler in_type);
-		public void write (Valadoc.Langlet langlet, void* ptr, Valadoc.MethodHandler parent);
 		public Valadoc.Method? base_method { get; set; }
 		public bool is_abstract { get; }
 		public bool is_constructor { get; }
@@ -607,9 +594,9 @@ namespace Valadoc {
 	public class Namespace : Valadoc.Api.SymbolNode, Valadoc.MethodHandler, Valadoc.FieldHandler, Valadoc.NamespaceHandler, Valadoc.ErrorDomainHandler, Valadoc.EnumHandler, Valadoc.ClassHandler, Valadoc.StructHandler, Valadoc.InterfaceHandler, Valadoc.DelegateHandler, Valadoc.ConstantHandler {
 		public Namespace (Vala.Namespace symbol, Valadoc.NamespaceHandler parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		protected override void process_comments (Valadoc.Settings settings, Valadoc.DocumentationParser parser);
 		public void visit (Valadoc.Doclet doclet);
-		public void write (Valadoc.Langlet langlet, void* ptr);
 		public override Valadoc.Api.NodeType node_type { get; }
 		public Vala.Namespace vnspace { get; set; }
 	}
@@ -617,11 +604,11 @@ namespace Valadoc {
 	public class Package : Valadoc.Api.Node, Valadoc.NamespaceHandler {
 		public Package (Vala.SourceFile vfile, string name, bool is_package = false);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		public Gee.Collection<Valadoc.Package> get_dependency_list ();
 		public Gee.Collection<Valadoc.Package> get_full_dependency_list ();
 		public override bool is_visitor_accessible (Valadoc.Settings settings);
 		public void visit (Valadoc.Doclet doclet);
-		public void write (Valadoc.Langlet langlet, void* ptr);
 		public bool is_package { get; set; }
 		public override string? name { owned get; }
 		public override Valadoc.Api.NodeType node_type { get; }
@@ -636,20 +623,20 @@ namespace Valadoc {
 	[CCode (cheader_filename = "valadoc-1.0.h")]
 	public class Pointer : Valadoc.Api.Item {
 		public Pointer (Vala.PointerType vtyperef, Valadoc.Api.Item parent);
+		protected override Valadoc.Content.Inline build_signature ();
 		protected override void resolve_type_references (Valadoc.Tree root);
-		public void write (Valadoc.Langlet langlet, void* ptr, Valadoc.Api.Node parent);
 		public Valadoc.Api.Item data_type { get; set; }
 	}
 	[CCode (cheader_filename = "valadoc-1.0.h")]
 	public class Property : Valadoc.Api.MemberNode, Valadoc.ReturnTypeHandler {
 		public Property (Vala.Property symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		public bool equals (Valadoc.Property p);
 		public string? get_cname ();
 		public bool is_vproperty (Vala.Property vprop);
 		protected override void resolve_type_references (Valadoc.Tree root);
 		public void visit (Valadoc.Doclet doclet);
-		public void write (Valadoc.Langlet langlet, void* ptr);
 		public Valadoc.Property base_property { get; set; }
 		public Valadoc.PropertyAccessor getter { get; set; }
 		public bool is_abstract { get; }
@@ -662,7 +649,7 @@ namespace Valadoc {
 	public class PropertyAccessor : Valadoc.Api.SymbolNode {
 		public PropertyAccessor (Vala.PropertyAccessor symbol, Valadoc.Property parent);
 		public override void accept (Valadoc.Doclet doclet);
-		public void write (Valadoc.Langlet langlet, void* ptr);
+		protected override Valadoc.Content.Inline build_signature ();
 		public bool is_construct { get; }
 		public bool is_get { get; }
 		public bool is_owned { get; }
@@ -728,10 +715,10 @@ namespace Valadoc {
 	public class Signal : Valadoc.Api.MemberNode, Valadoc.ParameterListHandler, Valadoc.ReturnTypeHandler {
 		public Signal (Vala.Signal symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		public string? get_cname ();
 		protected override void resolve_type_references (Valadoc.Tree root);
 		public void visit (Valadoc.Doclet doclet);
-		public void write (Valadoc.Langlet langlet, void* ptr);
 		public bool is_virtual { get; }
 		public override Valadoc.Api.NodeType node_type { get; }
 	}
@@ -739,11 +726,11 @@ namespace Valadoc {
 	public class Struct : Valadoc.Api.TypeSymbolNode, Valadoc.MethodHandler, Valadoc.ConstructionMethodHandler, Valadoc.FieldHandler, Valadoc.ConstantHandler, Valadoc.TemplateParameterListHandler {
 		public Struct (Vala.Struct symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
+		protected override Valadoc.Content.Inline build_signature ();
 		public string? get_cname ();
 		protected override void resolve_type_references (Valadoc.Tree root);
 		public void visit (Valadoc.Doclet doclet);
-		public void write (Valadoc.Langlet langlet, void* ptr);
-		protected Valadoc.Struct? base_type { get; set; }
+		protected Valadoc.TypeReference? base_type { get; set; }
 		public override Valadoc.Api.NodeType node_type { get; }
 	}
 	[CCode (cheader_filename = "valadoc-1.0.h")]
@@ -838,15 +825,15 @@ namespace Valadoc {
 	public class TypeParameter : Valadoc.Api.SymbolNode, Valadoc.ReturnTypeHandler {
 		public TypeParameter (Vala.TypeParameter symbol, Valadoc.Api.Node parent);
 		public override void accept (Valadoc.Doclet doclet);
-		public void write (Valadoc.Langlet langlet, void* ptr);
+		protected override Valadoc.Content.Inline build_signature ();
 		public override Valadoc.Api.NodeType node_type { get; }
 	}
 	[CCode (cheader_filename = "valadoc-1.0.h")]
 	public class TypeReference : Valadoc.Api.Item {
 		public TypeReference (Vala.DataType? vtyperef, Valadoc.Api.Item parent);
+		protected override Valadoc.Content.Inline build_signature ();
 		public Gee.Collection<Valadoc.TypeReference> get_type_arguments ();
 		protected override void resolve_type_references (Valadoc.Tree root);
-		public void write (Valadoc.Langlet langlet, void* ptr);
 		public Valadoc.Api.Item? data_type { get; set; }
 		public bool is_dynamic { get; }
 		public bool is_nullable { get; }

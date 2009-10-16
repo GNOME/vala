@@ -54,7 +54,7 @@ namespace Valadoc.Diagrams {
 	}
 
 	private static void draw_struct_parents (Struct stru, Graphviz.Graph g, Graphviz.Node me) {
-		Struct? parent = (Struct?)stru.base_type;
+		Struct? parent = stru.base_type != null ? (Struct) stru.base_type.data_type : null;
 		if (parent != null) {
 			weak Graphviz.Node stru2 = draw_struct (g, parent, me);
 			draw_struct_parents (parent, g, stru2);
@@ -84,15 +84,15 @@ namespace Valadoc.Diagrams {
 	}
 
 	private static void draw_interface_parents (Interface iface, Graphviz.Graph g, Graphviz.Node me) {
-		Collection<Interface> parentlst = iface.get_implemented_interface_list ();
-		Class? cl = (Class?)iface.base_type;
+		Collection<TypeReference> parentlst = iface.get_implemented_interface_list ();
+		Class? cl = iface.base_type != null ? (Class) iface.base_type.data_type : null;
 		if (cl != null) {
 			weak Graphviz.Node cln = draw_class (g, cl, me);
 			draw_class_parents (cl, g, cln);
 		}
 
-		foreach (Interface type in parentlst) {
-			draw_interface (g, (Interface)type, me);
+		foreach (TypeReference type in parentlst) {
+			draw_interface (g, (Interface) type.data_type, me);
 		}
 	}
 
@@ -176,16 +176,16 @@ namespace Valadoc.Diagrams {
 	}
 
 	private static void draw_class_parents (Class cl, Graphviz.Graph g, Graphviz.Node me) {
-		Collection<Interface> parents = cl.get_implemented_interface_list ();
-		Class? pcl = (Class?)cl.base_type;
+		Collection<TypeReference> parents = cl.get_implemented_interface_list ();
+		Class? pcl = cl.base_type != null ? (Class) cl.base_type.data_type : null;
 
 		if (pcl != null) {
 			weak Graphviz.Node node = draw_class (g, pcl, me);
 			draw_class_parents (pcl, g, node);
 		}
 
-		foreach (Interface type in parents) {
-			draw_interface (g, (Valadoc.Interface)type, me);
+		foreach (TypeReference type in parents) {
+			draw_interface (g, (Interface) type.data_type, me);
 		}
 	}
 }
