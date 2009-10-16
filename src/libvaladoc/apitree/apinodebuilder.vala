@@ -114,6 +114,18 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 
+	public override void visit_creation_method (Vala.CreationMethod element) {
+		Node parent = get_parent_node_for (element);
+
+		SymbolNode node = new Method (element, parent);
+		parent.add_child (node);
+
+		// Process error types
+		// Process return type
+
+		process_children (node, element);
+	}
+
 	public override void visit_method (Vala.Method element) {
 		Node parent = get_parent_node_for (element);
 
