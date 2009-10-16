@@ -25,7 +25,7 @@ public interface Valadoc.Api.ErrorDomainHandler : Node {
 		return get_children_by_type (NodeType.ERROR_DOMAIN);
 	}
 
-	public void visit_error_domains (Doclet doclet) {
-		accept_children_by_type (NodeType.ERROR_DOMAIN, doclet);
+	public void visit_error_domains (Visitor visitor) {
+		accept_children_by_type (NodeType.ERROR_DOMAIN, visitor);
 	}
 }

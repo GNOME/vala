@@ -57,13 +57,9 @@ public class Valadoc.Api.Constant : Member, ReturnTypeHandler {
 			.get ();
 	}
 
-	public void visit (Doclet doclet, ConstantHandler? parent) {
-		doclet.visit_constant (this, parent);
-	}
-
 	public override NodeType node_type { get { return NodeType.CONSTANT; } }
 
-	public override void accept (Doclet doclet) {
-		visit (doclet, (ConstantHandler)parent);
+	public override void accept (Visitor visitor) {
+		visitor.visit_constant (this);
 	}
 }

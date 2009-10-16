@@ -36,14 +36,10 @@ public class Valadoc.Api.ErrorCode : TypeSymbol {
 		return this.verrcode == verrcode;
 	}
 
-	public void visit (Doclet doclet) {
-		doclet.visit_error_code (this);
-	}
-
 	public override NodeType node_type { get { return NodeType.ERROR_CODE; } }
 
-	public override void accept (Doclet doclet) {
-		visit (doclet);
+	public override void accept (Visitor visitor) {
+		visitor.visit_error_code (this);
 	}
 
 	protected override Inline build_signature () {

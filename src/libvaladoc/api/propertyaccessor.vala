@@ -30,7 +30,7 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 
 	public override NodeType node_type { get { return NodeType.PROPERTY_ACCESSOR; } }
 
-	public override void accept (Doclet doclet) {
+	public override void accept (Visitor visitor) {
 	}
 
 	public bool is_construct {

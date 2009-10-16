@@ -78,13 +78,9 @@ public class Valadoc.Api.Field : Member, ReturnTypeHandler {
 		return signature.get ();
 	}
 
-	public void visit (Doclet doclet, FieldHandler? parent) {
-		doclet.visit_field (this, parent);
-	}
-
 	public override NodeType node_type { get { return NodeType.FIELD; } }
 
-	public override void accept (Doclet doclet) {
-		visit (doclet, (FieldHandler) parent);
+	public override void accept (Visitor visitor) {
+		visitor.visit_field (this);
 	}
 }

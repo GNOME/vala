@@ -25,8 +25,8 @@ public interface Valadoc.Api.ConstructionMethodHandler : Node {
 		return get_children_by_type (NodeType.CREATION_METHOD);
 	}
 
-	public void visit_construction_methods ( Doclet doclet ) {
-		accept_children_by_type (NodeType.CREATION_METHOD, doclet);
+	public void visit_construction_methods (Visitor visitor) {
+		accept_children_by_type (NodeType.CREATION_METHOD, visitor);
 	}
 }
 

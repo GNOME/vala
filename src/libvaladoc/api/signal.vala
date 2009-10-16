@@ -79,13 +79,9 @@ public class Valadoc.Api.Signal : Member, ParameterListHandler, ReturnTypeHandle
 		return signature.get ();
 	}
 
-	public void visit (Doclet doclet) {
-		doclet.visit_signal (this);
-	}
-
 	public override NodeType node_type { get { return NodeType.SIGNAL; } }
 
-	public override void accept (Doclet doclet) {
-		visit (doclet);
+	public override void accept (Visitor visitor) {
+		visitor.visit_signal (this);
 	}
 }

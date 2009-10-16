@@ -211,7 +211,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		return GLib.Path.build_filename ( this.settings.path, this.package_dir_name, element.full_name () + ".html" );
 	}
 
-	public override void initialisation ( Settings settings, Api.Tree tree ) {
+	public override void process (Settings settings, Api.Tree tree) {
 		this.settings = settings;
 		this.tree = tree;
 
@@ -223,7 +223,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		Gee.Collection<Package> packages = tree.get_package_list ();
 		foreach ( Package pkg in packages ) {
-			pkg.visit ( this );
+			pkg.accept (this);
 		}
 	}
 
@@ -419,7 +419,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		file = null;
 	}
 
-	public override void visit_constant ( Constant constant, ConstantHandler parent ) {
+	public override void visit_constant (Constant constant) {
 		string rpath = this.get_real_path ( constant );
 		string path = this.get_path ( constant );
 
@@ -428,12 +428,12 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		this.write_file_header ( file, this.css_path, constant.full_name() );
-		this.write_constant_content ( file, constant, parent );
+		this.write_constant_content (file, constant);
 		this.write_file_footer ( file );
 		file = null;
 	}
 
-	public override void visit_field ( Field field, FieldHandler parent ) {
+	public override void visit_field (Field field) {
 		string rpath = this.get_real_path ( field );
 		string path = this.get_path ( field );
 
@@ -442,7 +442,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		this.write_file_header ( file, this.css_path, field.full_name() );
-		this.write_field_content ( file, field, parent );
+		this.write_field_content (file, field);
 		this.write_file_footer ( file );
 		file = null;
 	}
@@ -481,7 +481,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		file = null;
 	}
 
-	public override void visit_method ( Method m, Api.MethodHandler parent ) {
+	public override void visit_method (Method m) {
 		string rpath = this.get_real_path ( m );
 		string path = this.get_path ( m );
 
@@ -490,7 +490,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		this.write_file_header ( file, this.css_path, m.full_name() );
-		this.write_method_content ( file, m, parent );
+		this.write_method_content (file, m);
 		this.write_file_footer ( file );
 		file = null;
 	}

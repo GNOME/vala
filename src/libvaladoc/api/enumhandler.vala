@@ -25,8 +25,8 @@ public interface Valadoc.Api.EnumHandler : Node {
 		return get_children_by_type (NodeType.ENUM);
 	}
 
-	public void visit_enums (Doclet doclet) {
-		accept_children_by_type (NodeType.ENUM, doclet);
+	public void visit_enums (Visitor visitor) {
+		accept_children_by_type (NodeType.ENUM, visitor);
 	}
 }
 

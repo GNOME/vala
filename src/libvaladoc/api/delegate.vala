@@ -41,14 +41,10 @@ public class Valadoc.Api.Delegate : TypeSymbol, ParameterListHandler, ReturnType
 		get;
 	}
 
-	public void visit (Doclet doclet) {
-		doclet.visit_delegate (this);
-	}
-
 	public override NodeType node_type { get { return NodeType.DELEGATE; } }
 
-	public override void accept (Doclet doclet) {
-		visit (doclet);
+	public override void accept (Visitor visitor) {
+		visitor.visit_delegate (this);
 	}
 
 	public bool is_static {

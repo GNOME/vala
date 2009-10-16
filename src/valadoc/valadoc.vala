@@ -203,7 +203,7 @@ public class ValaDoc : Object {
 		if (reporter.errors > 0)
 			return quit (reporter);
 
-		doctree.visit (modules.doclet);
+		modules.doclet.process (settings, doctree);
 		return quit (reporter);
 	}
 

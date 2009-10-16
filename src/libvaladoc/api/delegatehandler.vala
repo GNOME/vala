@@ -19,14 +19,12 @@
 
 using Gee;
 
-
 public interface Valadoc.Api.DelegateHandler : Node {
 	public Gee.Collection<Delegate> get_delegate_list () {
 		return get_children_by_type (NodeType.DELEGATE);
 	}
 
-	public void visit_delegates (Doclet doclet) {
-		accept_children_by_type (NodeType.DELEGATE, doclet);
+	public void visit_delegates (Visitor visitor) {
+		accept_children_by_type (NodeType.DELEGATE, visitor);
 	}
 }
-

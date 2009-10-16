@@ -19,10 +19,9 @@
 
 using Gee;
 
-
 public interface Valadoc.Api.SignalHandler : Node {
-	public void visit_signals (Doclet doclet) {
-		accept_children_by_type (NodeType.SIGNAL, doclet);
+	public void visit_signals (Visitor visitor) {
+		accept_children_by_type (NodeType.SIGNAL, visitor);
 	}
 
 	public Collection<Signal> get_signal_list () {

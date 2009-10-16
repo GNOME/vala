@@ -52,8 +52,8 @@ public class Valadoc.Api.Tree {
 		}
 	}
 
-	public void visit (Doclet doclet) {
-		doclet.initialisation (this.settings, this);
+	public void accept (Visitor visitor) {
+		visitor.visit_tree (this);
 	}
 
 	private Node? search_relative_to (Node element, string[] path) {

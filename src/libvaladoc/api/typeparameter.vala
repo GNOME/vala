@@ -39,6 +39,7 @@ public class Valadoc.Api.TypeParameter : Symbol, ReturnTypeHandler {
 
 	public override NodeType node_type { get { return NodeType.TYPE_PARAMETER; } }
 
-	public override void accept (Doclet doclet) {
+	public override void accept (Visitor visitor) {
+		visitor.visit_type_parameter (this);
 	}
 }

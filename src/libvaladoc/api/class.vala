@@ -60,14 +60,10 @@ public class Valadoc.Api.Class : TypeSymbol, ClassHandler, StructHandler, Signal
 		}
 	}
 
-	public void visit ( Doclet doclet ) {
-		doclet.visit_class ( this );
-	}
-
 	public override NodeType node_type { get { return NodeType.CLASS; } }
 
-	public override void accept (Doclet doclet) {
-		visit (doclet);
+	public override void accept (Visitor visitor) {
+		visitor.visit_class (this);
 	}
 
 	private void set_parent_type_references (Tree root, Vala.Collection<Vala.DataType> lst) {

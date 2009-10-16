@@ -45,14 +45,10 @@ public class Valadoc.Api.EnumValue: Symbol {
 		return this.venval == venval;
 	}
 
-	public void visit (Doclet doclet) {
-		doclet.visit_enum_value (this);
-	}
-
 	public override NodeType node_type { get { return NodeType.ENUM_VALUE; } }
 
-	public override void accept (Doclet doclet) {
-		visit (doclet);
+	public override void accept (Visitor visitor) {
+		visitor.visit_enum_value (this);
 	}
 
 	protected override Inline build_signature () {

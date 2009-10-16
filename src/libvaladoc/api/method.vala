@@ -193,17 +193,13 @@ public class Valadoc.Api.Method : Member, ParameterListHandler, ExceptionHandler
 		return signature.get ();
 	}
 
-	public void visit (Doclet doclet, Valadoc.Api.MethodHandler in_type) {
-		doclet.visit_method (this, in_type);
-	}
-
 	public override NodeType node_type {
 		get {
 			return is_constructor ? NodeType.CREATION_METHOD : NodeType.METHOD;
 		}
 	}
 
-	public override void accept (Doclet doclet) {
-		visit (doclet, (MethodHandler) parent);
+	public override void accept (Visitor visitor) {
+		visitor.visit_method (this);
 	}
 }

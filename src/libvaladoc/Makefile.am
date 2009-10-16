@@ -81,6 +81,7 @@ libvaladoc_la_VALASOURCES = \
 	api/typereference.vala \
 	api/typesymbol.vala \
 	api/visitable.vala \
+	api/visitor.vala \
 	content/block.vala \
 	content/blockcontent.vala \
 	content/comment.vala \

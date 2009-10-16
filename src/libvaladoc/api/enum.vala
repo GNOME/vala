@@ -35,18 +35,14 @@ public class Valadoc.Api.Enum : TypeSymbol, MethodHandler {
 		return get_children_by_type (NodeType.ENUM_VALUE);
 	}
 
-	public void visit_enum_values (Doclet doclet) {
-		accept_children_by_type (NodeType.ENUM_VALUE, doclet);
-	}
-
-	public void visit (Doclet doclet) {
-		doclet.visit_enum (this);
+	public void visit_enum_values (Visitor visitor) {
+		accept_children_by_type (NodeType.ENUM_VALUE, visitor);
 	}
 
 	public override NodeType node_type { get { return NodeType.ENUM; } }
 
-	public override void accept (Doclet doclet) {
-		visit (doclet);
+	public override void accept (Visitor visitor) {
+		visitor.visit_enum (this);
 	}
 
 	private Vala.Enum venum;

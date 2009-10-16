@@ -25,7 +25,7 @@ public interface Valadoc.Api.ConstantHandler : Node {
 		return get_children_by_type (NodeType.CONSTANT);
 	}
 
-	public void visit_constants (Doclet doclet) {
-		accept_children_by_type (NodeType.CONSTANT, doclet);
+	public void visit_constants (Visitor visitor) {
+		accept_children_by_type (NodeType.CONSTANT, visitor);
 	}
 }

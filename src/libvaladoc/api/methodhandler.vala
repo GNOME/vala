@@ -19,14 +19,12 @@
 
 using Gee;
 
-
 public interface Valadoc.Api.MethodHandler : Node {
-	public void visit_methods (Doclet doclet) {
-		accept_children_by_type (NodeType.METHOD, doclet);
+	public void visit_methods (Visitor visitor) {
+		accept_children_by_type (NodeType.METHOD, visitor);
 	}
 
 	public Collection<Method> get_method_list () {
 		return get_children_by_type (NodeType.METHOD);
 	}
 }
-

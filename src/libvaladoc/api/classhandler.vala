@@ -39,8 +39,8 @@ public interface Valadoc.Api.ClassHandler : Node {
 		return get_children_by_type (NodeType.CLASS);
 	}
 
-	public void visit_classes (Doclet doclet) {
-		accept_children_by_type (NodeType.CLASS, doclet);
+	public void visit_classes (Visitor visitor) {
+		accept_children_by_type (NodeType.CLASS, visitor);
 	}
 }
 

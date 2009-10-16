@@ -37,14 +37,10 @@ public class Valadoc.Api.Struct : TypeSymbol, MethodHandler, ConstructionMethodH
 		return this.vstruct.get_cname();
 	}
 
-	public void visit ( Doclet doclet ) {
-		doclet.visit_struct (this);
-	}
-
 	public override NodeType node_type { get { return NodeType.STRUCT; } }
 
-	public override void accept (Doclet doclet) {
-		visit (doclet);
+	public override void accept (Visitor visitor) {
+		visitor.visit_struct (this);
 	}
 
 	private void set_parent_references (Tree root) {

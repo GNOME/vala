@@ -57,14 +57,10 @@ public class Valadoc.Api.Namespace : Symbol, MethodHandler, FieldHandler, Namesp
 			.get ();
 	}
 
-	public void visit (Doclet doclet) {
-		doclet.visit_namespace (this);
-	}
-
 	public override NodeType node_type { get { return NodeType.NAMESPACE; } }
 
-	public override void accept (Doclet doclet) {
-		visit (doclet);
+	public override void accept (Visitor visitor) {
+		visitor.visit_namespace (this);
 	}
 
 	public Vala.Namespace vnspace {

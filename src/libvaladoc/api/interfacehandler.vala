@@ -25,7 +25,7 @@ public interface Valadoc.Api.InterfaceHandler : Node {
 		return get_children_by_type (NodeType.INTERFACE);
 	}
 
-	public void visit_interfaces (Doclet doclet) {
-		accept_children_by_type (NodeType.INTERFACE, doclet);
+	public void visit_interfaces (Visitor visitor) {
+		accept_children_by_type (NodeType.INTERFACE, visitor);
 	}
 }

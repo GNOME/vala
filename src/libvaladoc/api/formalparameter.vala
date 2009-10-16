@@ -62,7 +62,8 @@ public class Valadoc.Api.FormalParameter : Symbol, ReturnTypeHandler {
 
 	public override NodeType node_type { get { return NodeType.FORMAL_PARAMETER; } }
 
-	public override void accept (Doclet doclet) {
+	public override void accept (Visitor visitor) {
+		visitor.visit_formal_parameter (this);
 	}
 
 	protected override void resolve_type_references (Tree root) {

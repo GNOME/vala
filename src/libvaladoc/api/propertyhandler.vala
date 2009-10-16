@@ -19,7 +19,6 @@
 
 using Gee;
 
-
 public interface Valadoc.Api.PropertyHandler : Node {
 	protected bool is_overwritten_property (Property prop) {
 		foreach (Property p in get_property_list ()) {
@@ -40,8 +39,7 @@ public interface Valadoc.Api.PropertyHandler : Node {
 		return get_children_by_type (NodeType.PROPERTY);
 	}
 
-	public void visit_properties (Doclet doclet) {
-		accept_children_by_type (NodeType.PROPERTY, doclet);
+	public void visit_properties (Visitor visitor) {
+		accept_children_by_type (NodeType.PROPERTY, visitor);
 	}
 }
-

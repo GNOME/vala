@@ -135,13 +135,9 @@ public class Valadoc.Api.Property : Member, ReturnTypeHandler {
 		return signature.get ();
 	}
 
-	public void visit (Doclet doclet) {
-		doclet.visit_property (this);
-	}
-
 	public override NodeType node_type { get { return NodeType.PROPERTY; } }
 
-	public override void accept (Doclet doclet) {
-		visit (doclet);
+	public override void accept (Visitor visitor) {
+		visitor.visit_property (this);
 	}
 }

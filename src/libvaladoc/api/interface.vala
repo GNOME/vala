@@ -43,14 +43,10 @@ public class Valadoc.Api.Interface : TypeSymbol, SignalHandler, PropertyHandler,
 
 	private Vala.Interface vinterface;
 
-	public void visit (Doclet doclet) {
-		doclet.visit_interface (this);
-	}
-
 	public override NodeType node_type { get { return NodeType.INTERFACE; } }
 
-	public override void accept (Doclet doclet) {
-		visit (doclet);
+	public override void accept (Visitor visitor) {
+		visitor.visit_interface (this);
 	}
 
 	private void set_prerequisites (Tree root, Vala.Collection<Vala.DataType> lst) {

@@ -64,7 +64,7 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation {
 		per_type_children = new HashMap<NodeType?, Gee.List<Node>> (int_hash, int_equal);
 	}
 
-	public abstract void accept (Doclet doclet);
+	public abstract void accept (Visitor visitor);
 
 	public abstract bool is_visitor_accessible (Settings settings);
 
@@ -122,20 +122,20 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation {
 		return children.read_only_view;
 	}
 
-	public void accept_children_by_type (NodeType type, Doclet doclet) {
+	public void accept_children_by_type (NodeType type, Visitor visitor) {
 		Gee.List<Node> all_children = per_type_children.get (type);
 		if (all_children != null) {
 			foreach (Node node in all_children) {
 				if (node.do_document) {
-					node.accept (doclet);
+					node.accept (visitor);
 				}
 			}
 		}
 	}
 
-	public void accept_children (NodeType[] types, Doclet doclet) {
+	public void accept_children (NodeType[] types, Visitor visitor) {
 		foreach (NodeType type in types) {
-			accept_children_by_type (type, doclet);
+			accept_children_by_type (type, visitor);
 		}
 	}
 

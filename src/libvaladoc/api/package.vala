@@ -99,14 +99,10 @@ public class Valadoc.Api.Package : Node, NamespaceHandler {
 		return !( this.is_package && settings.with_deps == false );
 	}
 
-	public void visit ( Doclet doclet ) {
-		doclet.visit_package ( this );
-	}
-
 	public override NodeType node_type { get { return NodeType.PACKAGE; } }
 
-	public override void accept (Doclet doclet) {
-		visit (doclet);
+	public override void accept (Visitor visitor) {
+		visitor.visit_package (this);
 	}
 
 	protected override Inline build_signature () {

@@ -33,22 +33,18 @@ public class Valadoc.Api.ErrorDomain : TypeSymbol, MethodHandler {
 		return this.verrdom.get_cname();
 	}
 
-	public void visit_error_codes (Doclet doclet) {
-		accept_children_by_type (NodeType.ERROR_CODE, doclet);
+	public void visit_error_codes (Visitor visitor) {
+		accept_children_by_type (NodeType.ERROR_CODE, visitor);
 	}
 
 	public Collection<ErrorCode> get_error_code_list () {
 		return get_children_by_type (NodeType.ERROR_CODE);
 	}
 
-	public void visit (Doclet doclet) {
-		doclet.visit_error_domain (this);
-	}
-
 	public override NodeType node_type { get { return NodeType.ERROR_DOMAIN; } }
 
-	public override void accept (Doclet doclet) {
-		visit (doclet);
+	public override void accept (Visitor visitor) {
+		visitor.visit_error_domain (this);
 	}
 
 	protected override Inline build_signature () {

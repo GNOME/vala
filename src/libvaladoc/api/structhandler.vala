@@ -19,13 +19,12 @@
 
 using Gee;
 
-
 public interface Valadoc.Api.StructHandler : Node {
 	public Collection<Struct> get_struct_list () {
 		return get_children_by_type (NodeType.STRUCT);
 	}
 
-	public void visit_structs (Doclet doclet) {
-		accept_children_by_type (NodeType.STRUCT, doclet);
+	public void visit_structs (Visitor visitor) {
+		accept_children_by_type (NodeType.STRUCT, visitor);
 	}
 }

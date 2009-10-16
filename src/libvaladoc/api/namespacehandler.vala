@@ -19,14 +19,13 @@
 
 using Gee;
 
-
 public interface Valadoc.Api.NamespaceHandler : Node {
 	public Collection<Namespace> get_namespace_list (bool filtered = true) {
 		return get_children_by_type (NodeType.NAMESPACE, filtered);
 	}
 
-	public void visit_namespaces (Doclet doclet) {
-		accept_children_by_type (NodeType.NAMESPACE, doclet);
+	public void visit_namespaces (Visitor visitor) {
+		accept_children_by_type (NodeType.NAMESPACE, visitor);
 	}
 
 	private ArrayList<Vala.Namespace> create_parent_vnamespace_list (Vala.Symbol vsymbol) {
@@ -117,4 +116,3 @@ public interface Valadoc.Api.NamespaceHandler : Node {
 		return this.find_vnamespace_helper (vnspaces, vnspaces.index_of (vns));
 	}
 }
-

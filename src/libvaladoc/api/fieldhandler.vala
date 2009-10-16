@@ -25,7 +25,7 @@ public interface Valadoc.Api.FieldHandler : Node {
 		return get_children_by_type (NodeType.FIELD);
 	}
 
-	public void visit_fields (Doclet doclet) {
-		accept_children_by_type (NodeType.FIELD, doclet);
+	public void visit_fields (Visitor visitor) {
+		accept_children_by_type (NodeType.FIELD, visitor);
 	}
 }

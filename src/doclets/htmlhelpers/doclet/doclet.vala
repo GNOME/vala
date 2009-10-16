@@ -21,13 +21,15 @@ using GLib;
 using Valadoc.Content;
 using Valadoc.Api;
 
-public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
+public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected Settings settings;
 	protected HtmlRenderer _renderer;
 
 	construct {
 		_renderer = new HtmlRenderer (this);
 	}
+
+	public abstract void process (Settings settings, Api.Tree tree);
 
 	protected string? get_link ( Api.Node element, Api.Node? pos ) {
 		return get_html_link ( this.settings, element, pos );
@@ -759,7 +761,7 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	public void write_method_content ( GLib.FileStream file, Method m , Api.MethodHandler parent ) {
+	public void write_method_content (GLib.FileStream file, Method m) {
 		string full_name = m.full_name ( );
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
@@ -839,7 +841,7 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	public void write_field_content ( GLib.FileStream file, Field field, FieldHandler parent ) {
+	public void write_field_content (GLib.FileStream file, Field field) {
 		string full_name = field.full_name ( );
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
@@ -862,7 +864,7 @@ public abstract class Valadoc.Html.BasicDoclet : Valadoc.Doclet {
 		file.puts ( "\t\t\t</div>\n" );
 	}
 
-	public void write_constant_content ( GLib.FileStream file, Constant constant, ConstantHandler parent ) {
+	public void write_constant_content (GLib.FileStream file, Constant constant) {
 		string full_name = constant.full_name ( );
 		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
 		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
