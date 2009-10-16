@@ -613,6 +613,24 @@ namespace Hildon {
 		INVALID_DATE,
 		INVALID_TIME
 	}
+	[CCode (cprefix = "HILDON_GTK_INPUT_MODE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
+	public enum GtkInputMode {
+		ALPHA,
+		NUMERIC,
+		SPECIAL,
+		HEXA,
+		TELE,
+		FULL,
+		MULTILINE,
+		INVISIBLE,
+		AUTOCAP,
+		DICTIONARY
+	}
+	[CCode (cprefix = "HILDON_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
+	public enum Mode {
+		DIABLO,
+		FREMANTLE
+	}
 	[CCode (cprefix = "HILDON_NOTE_TYPE_", has_type_id = "0", cheader_filename = "hildon/hildon.h")]
 	public enum NoteType {
 		CONFIRMATION,
@@ -626,6 +644,21 @@ namespace Hildon {
 		MAXIMUM_VALUE_EXCEED,
 		MINIMUM_VALUE_EXCEED,
 		ERRONEOUS_VALUE
+	}
+	[CCode (cprefix = "HILDON_SIZE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
+	public enum SizeType {
+		AUTO_WIDTH,
+		HALFSCREEN_WIDTH,
+		FULLSCREEN_WIDTH,
+		AUTO_HEIGHT,
+		FINGER_HEIGHT,
+		THUMB_HEIGHT,
+		AUTO
+	}
+	[CCode (cprefix = "HILDON_UI_MODE_", has_type_id = "0", cheader_filename = "gtk/gtk.h")]
+	public enum UIMode {
+		NORMAL,
+		EDIT
 	}
 	[CCode (cprefix = "HILDON_WINDOW_CO_", has_type_id = "0", cheader_filename = "hildon/hildon.h")]
 	public enum WindowClipboardOperation {
@@ -658,6 +691,8 @@ namespace Hildon {
 	public const int WINDOW_LONG_PRESS_TIME;
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public static int get_icon_pixel_size (Gtk.IconSize size);
+	[CCode (cheader_filename = "gtk/gtk.h")]
+	public static void gtk_widget_set_theme_size (Gtk.Widget widget, Hildon.SizeType size);
 	[CCode (cheader_filename = "hildon/hildon.h")]
 	public static bool helper_event_button_is_finger (Gdk.EventButton event);
 	[CCode (cheader_filename = "hildon/hildon.h")]
