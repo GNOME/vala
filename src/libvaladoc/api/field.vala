@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Field : MemberNode, ReturnTypeHandler {
+public class Valadoc.Api.Field : Member, ReturnTypeHandler {
 	private Vala.Field vfield;
 
 	public Field (Vala.Field symbol, Node parent) {

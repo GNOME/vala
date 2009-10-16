@@ -1,4 +1,4 @@
-/* apisymbolnode.vala
+/* symbol.vala
  * 
  * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
@@ -23,8 +23,7 @@
 
 using Gee;
 
-
-public abstract class Valadoc.Api.SymbolNode : Node, SymbolAccessibility {
+public abstract class Valadoc.Api.Symbol : Node, SymbolAccessibility {
 
 	protected Vala.Symbol symbol { private set; get; }
 	// TODO Drop DocumentedElement
@@ -36,7 +35,7 @@ public abstract class Valadoc.Api.SymbolNode : Node, SymbolAccessibility {
 		}
 	}
 
-	public SymbolNode (Vala.Symbol symbol, Node parent) {
+	public Symbol (Vala.Symbol symbol, Node parent) {
 		base (parent);
 		this.symbol = symbol;
 	}
@@ -105,4 +104,3 @@ public abstract class Valadoc.Api.SymbolNode : Node, SymbolAccessibility {
 		}
 	}
 }
-

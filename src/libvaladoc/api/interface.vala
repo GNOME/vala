@@ -20,48 +20,59 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Delegate : TypeSymbolNode, ParameterListHandler, ReturnTypeHandler, TemplateParameterListHandler, ExceptionHandler {
-	private Vala.Delegate vdelegate;
-
-	public Delegate (Vala.Delegate symbol, Node parent) {
+public class Valadoc.Api.Interface : TypeSymbol, SignalHandler, PropertyHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler, MethodHandler, DelegateHandler, EnumHandler, StructHandler, ClassHandler {
+	public Interface (Vala.Interface symbol, Node parent) {
 		base (symbol, parent);
+		this.vinterface = symbol;
+	}
 
-		this.vdelegate = symbol;
+	private ArrayList<TypeReference> interfaces = new ArrayList<TypeReference> ();
 
-		var ret = this.vdelegate.return_type;
-		this.set_ret_type (ret);
+	public Collection<TypeReference> get_implemented_interface_list () {
+		return this.interfaces;
 	}
 
 	public string? get_cname () {
-		return this.vdelegate.get_cname ();
+		return this.vinterface.get_cname ();
 	}
 
-	public TypeReference? type_reference {
-		protected set;
+	protected TypeReference? base_type {
+		private set;
 		get;
 	}
 
+	private Vala.Interface vinterface;
+
 	public void visit (Doclet doclet) {
-		doclet.visit_delegate (this);
+		doclet.visit_interface (this);
 	}
 
-	public override NodeType node_type { get { return NodeType.DELEGATE; } }
+	public override NodeType node_type { get { return NodeType.INTERFACE; } }
 
 	public override void accept (Doclet doclet) {
 		visit (doclet);
 	}
 
-	public bool is_static {
-		get {
-			return this.vdelegate.has_target;
+	private void set_prerequisites (Tree root, Vala.Collection<Vala.DataType> lst) {
+		if (this.interfaces.size != 0) {
+			return;
+		}
+
+		foreach (Vala.DataType vtyperef in lst) {
+			var inherited = new TypeReference (vtyperef, this);
+			inherited.resolve_type_references (root);
+
+			if (inherited.data_type is Class) {
+				this.base_type = inherited;
+			} else {
+				this.interfaces.add (inherited);
+			}
 		}
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		this.set_return_type_references (root);
-
-		var vexceptionlst = this.vdelegate.get_error_types ();
-		this.add_exception_list (root, vexceptionlst);
+		var lst = this.vinterface.get_prerequisites ();
+		this.set_prerequisites (root, lst);
 
 		base.resolve_type_references (root);
 	}
@@ -70,14 +81,10 @@ public class Valadoc.Api.Delegate : TypeSymbolNode, ParameterListHandler, Return
 		var signature = new SignatureBuilder ();
 
 		signature.append_keyword (get_accessibility_modifier ());
-		if (is_static) {
-			signature.append_keyword ("static");
-		}
-
-		signature.append_content (type_reference.signature);
+		signature.append_keyword ("interface");
 		signature.append_symbol (this);
 
-		var type_parameters = get_children_by_type (NodeType.TYPE_PARAMETER);
+		var type_parameters = get_children_by_type (NodeType.TYPE_PARAMETER, false);
 		if (type_parameters.size > 0) {
 			signature.append ("<", false);
 			bool first = true;
@@ -91,28 +98,24 @@ public class Valadoc.Api.Delegate : TypeSymbolNode, ParameterListHandler, Return
 			signature.append (">", false);
 		}
 
-		signature.append ("(");
-
 		bool first = true;
-		foreach (Node param in get_children_by_type (NodeType.FORMAL_PARAMETER)) {
-			if (!first) {
-				signature.append (",", false);
-			}
-			signature.append_content (param.signature, !first);
+		if (base_type != null) {
+			signature.append (":");
+
+			signature.append_content (base_type.signature);
 			first = false;
 		}
 
-		signature.append (")", false);
+		if (interfaces.size > 0) {
+			if (first) {
+				signature.append (":");
+			}
 
-		var exceptions = get_children_by_type (NodeType.ERROR_DOMAIN);
-		if (exceptions.size > 0) {
-			signature.append_keyword ("throws");
-
-			foreach (Node param in exceptions) {
+			foreach (Item implemented_interface in interfaces) {
 				if (!first) {
 					signature.append (",", false);
 				}
-				signature.append_content (param.signature, !first);
+				signature.append_content (implemented_interface.signature);
 				first = false;
 			}
 		}

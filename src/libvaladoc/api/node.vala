@@ -23,7 +23,6 @@
 
 using Gee;
 
-
 public enum Valadoc.Api.NodeType {
 	CLASS,
 	CONSTANT,
@@ -73,7 +72,7 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation {
 		return null;
 	}
 
-	protected void add_child (SymbolNode child) {
+	protected void add_child (Symbol child) {
 		if (child.name != null) {
 			per_name_children.set (child.name, child);
 		} else {
@@ -211,4 +210,3 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation {
 		return this._full_name;
 	}
 }
-

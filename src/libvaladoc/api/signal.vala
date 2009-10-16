@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Signal : MemberNode, ParameterListHandler, ReturnTypeHandler {
+public class Valadoc.Api.Signal : Member, ParameterListHandler, ReturnTypeHandler {
 	private Vala.Signal vsignal;
 
 	public Signal (Vala.Signal symbol, Node parent) {

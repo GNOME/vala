@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.PropertyAccessor : SymbolNode {
+public class Valadoc.Api.PropertyAccessor : Symbol {
 	private Vala.PropertyAccessor vpropacc;
 
 	public PropertyAccessor (Vala.PropertyAccessor symbol, Property parent) {

@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Property : MemberNode, ReturnTypeHandler {
+public class Valadoc.Api.Property : Member, ReturnTypeHandler {
 	private Vala.Property vproperty;
 
 	public Property (Vala.Property symbol, Node parent) {

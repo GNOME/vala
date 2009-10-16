@@ -20,42 +20,50 @@
 using Gee;
 using Valadoc.Content;
 
+public class Valadoc.Api.Constant : Member, ReturnTypeHandler {
+	private Vala.Constant vconst;
 
-public class Valadoc.Api.ErrorDomain : TypeSymbolNode, MethodHandler {
-	private Vala.ErrorDomain verrdom;
+	public TypeReference? type_reference {
+		protected set;
+		get;
+	}
 
-	public ErrorDomain (Vala.ErrorDomain symbol, Node parent) {
+	public bool is_vconstant (Vala.Constant vconst) {
+		return (this.vconst == vconst);
+	}
+
+	public Constant (Vala.Constant symbol, Node parent) {
 		base (symbol, parent);
-		this.verrdom = symbol;
+		this.vconst = symbol;
+
+		var vret = this.vconst.type_reference;
+		this.set_ret_type (vret);
 	}
 
-	public string? get_cname () {
-		return this.verrdom.get_cname();
+	public string get_cname () {
+		return this.vconst.get_cname ();
 	}
 
-	public void visit_error_codes (Doclet doclet) {
-		accept_children_by_type (NodeType.ERROR_CODE, doclet);
-	}
-
-	public Collection<ErrorCode> get_error_code_list () {
-		return get_children_by_type (NodeType.ERROR_CODE);
-	}
-
-	public void visit (Doclet doclet) {
-		doclet.visit_error_domain (this);
-	}
-
-	public override NodeType node_type { get { return NodeType.ERROR_DOMAIN; } }
-
-	public override void accept (Doclet doclet) {
-		visit (doclet);
+	protected override void resolve_type_references (Tree root) {
+		this.set_return_type_references (root);
 	}
 
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
 			.append_keyword (get_accessibility_modifier ())
-			.append_keyword ("errordomain")
+			.append_keyword ("const")
+			.append_content (type_reference.signature)
 			.append_symbol (this)
 			.get ();
+	}
+
+	public void visit (Doclet doclet, ConstantHandler? parent) {
+		doclet.visit_constant (this, parent);
+	}
+
+	public override NodeType node_type { get { return NodeType.CONSTANT; } }
+
+	public override void accept (Doclet doclet) {
+		visit (doclet, (ConstantHandler)parent);
 	}
 }

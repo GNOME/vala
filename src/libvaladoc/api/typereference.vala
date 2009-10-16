@@ -224,8 +224,8 @@ public class Valadoc.Api.TypeReference : Item {
 
 		if (data_type == null) {
 			signature.append_keyword ("void");
-		} else if (data_type is SymbolNode) {
-			signature.append_type ((SymbolNode) data_type);
+		} else if (data_type is Symbol) {
+			signature.append_type ((Symbol) data_type);
 		} else {
 			signature.append_content (data_type.signature);
 		}

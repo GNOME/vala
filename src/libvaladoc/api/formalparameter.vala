@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.FormalParameter : SymbolNode, ReturnTypeHandler {
+public class Valadoc.Api.FormalParameter : Symbol, ReturnTypeHandler {
 	private Vala.FormalParameter vformalparam;
 
 	public FormalParameter (Vala.FormalParameter symbol, Node parent) {

@@ -20,42 +20,25 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Enum : TypeSymbolNode, MethodHandler {
-	public Enum (Vala.Enum symbol, Node parent) {
+public class Valadoc.Api.TypeParameter : Symbol, ReturnTypeHandler {
+
+	public TypeParameter (Vala.TypeParameter symbol, Node parent) {
 		base (symbol, parent);
-		this.venum = symbol;
 	}
 
-	public string? get_cname () {
-		return this.venum.get_cname();
+	public TypeReference? type_reference {
+		protected set;
+		get;
 	}
-
-	// rename: get_enum_value_list
-	public Collection<EnumValue> get_enum_values () {
-		return get_children_by_type (NodeType.ENUM_VALUE);
-	}
-
-	public void visit_enum_values (Doclet doclet) {
-		accept_children_by_type (NodeType.ENUM_VALUE, doclet);
-	}
-
-	public void visit (Doclet doclet) {
-		doclet.visit_enum (this);
-	}
-
-	public override NodeType node_type { get { return NodeType.ENUM; } }
-
-	public override void accept (Doclet doclet) {
-		visit (doclet);
-	}
-
-	private Vala.Enum venum;
 
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
-			.append_keyword (get_accessibility_modifier ())
-			.append_keyword ("enum")
-			.append_symbol (this)
+			.append (name)
 			.get ();
+	}
+
+	public override NodeType node_type { get { return NodeType.TYPE_PARAMETER; } }
+
+	public override void accept (Doclet doclet) {
 	}
 }

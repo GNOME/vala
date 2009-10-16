@@ -1,7 +1,7 @@
-/* apiitem.vala
- *
+/* typesymbol.vala
+ * 
  * Valadoc.Api.- a documentation tool for vala.
- * Copyright (C) 2008 Florian Brosch
+ * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,35 +16,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * Author:
+ * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
  */
 
-using Valadoc.Content;
 using Gee;
 
+public abstract class Valadoc.Api.TypeSymbol : Symbol {
 
-public abstract class Valadoc.Api.Item : Object {
-	private Inline _signature;
-
-	public Item parent {
-		protected set;
-		get;
+	public TypeSymbol (Vala.TypeSymbol symbol, Node parent) {
+		base (symbol, parent);
 	}
 
-	protected virtual void resolve_type_references (Tree root) {
-	}
-
-	protected virtual void process_comments (Settings settings, DocumentationParser parser) {
-	}
-
-	public Inline signature {
-		get {
-			if (_signature == null) {
-				_signature = build_signature ();
-			}
-			return _signature;
+	protected override void process_comments (Settings settings, DocumentationParser parser) {
+		var source_comment = ((Vala.TypeSymbol) symbol).comment;
+		if (source_comment != null) {
+			documentation = parser.parse (this, source_comment);
 		}
+
+		base.process_comments (settings, parser);
 	}
-
-	protected abstract Inline build_signature ();
 }
-

@@ -20,36 +20,27 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.EnumValue: SymbolNode {
-	private Vala.EnumValue venval;
+public class Valadoc.Api.ErrorCode : TypeSymbol {
+	private Vala.ErrorCode verrcode;
 
-	public EnumValue (Vala.EnumValue symbol, Node parent) {
+	public ErrorCode (Vala.ErrorCode symbol, Node parent) {
 		base (symbol, parent);
-		this.venval = symbol;
-	}
-
-	protected override void process_comments (Settings settings, DocumentationParser parser) {
-		var source_comment = ((Vala.EnumValue) symbol).comment;
-		if (source_comment != null) {
-			documentation = parser.parse (this, source_comment);
-		}
-
-		base.process_comments (settings, parser);
+		this.verrcode = symbol;
 	}
 
 	public string get_cname () {
-		return this.venval.get_cname ();
+		return this.verrcode.get_cname ();
 	}
 
-	public bool is_venumvalue (Vala.EnumValue venval) {
-		return this.venval == venval;
+	public bool is_verrorcode (Vala.ErrorCode verrcode) {
+		return this.verrcode == verrcode;
 	}
 
 	public void visit (Doclet doclet) {
-		doclet.visit_enum_value (this);
+		doclet.visit_error_code (this);
 	}
 
-	public override NodeType node_type { get { return NodeType.ENUM_VALUE; } }
+	public override NodeType node_type { get { return NodeType.ERROR_CODE; } }
 
 	public override void accept (Doclet doclet) {
 		visit (doclet);
@@ -58,8 +49,6 @@ public class Valadoc.Api.EnumValue: SymbolNode {
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
 			.append_symbol (this)
-			.append ("=")
-			.append (this.venval.value.to_string ())
 			.get ();
 	}
 }

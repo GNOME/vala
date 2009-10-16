@@ -20,28 +20,16 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Namespace : SymbolNode, MethodHandler, FieldHandler, NamespaceHandler, ErrorDomainHandler,
-                                 EnumHandler, ClassHandler, StructHandler, InterfaceHandler,
-                                 DelegateHandler, ConstantHandler
-{
-	private Vala.Comment source_comment;
+public class Valadoc.Api.EnumValue: Symbol {
+	private Vala.EnumValue venval;
 
-	public Namespace (Vala.Namespace symbol, NamespaceHandler parent) {
+	public EnumValue (Vala.EnumValue symbol, Node parent) {
 		base (symbol, parent);
-
-		this.vnspace = symbol;
-
-		if (vnspace.source_reference != null) {
-			foreach (Vala.Comment c in vnspace.get_comments()) {
-				if (this.package.is_vpackage (c.source_reference.file)) {
-					this.source_comment = c;
-					break;
-				}
-			}
-		}
+		this.venval = symbol;
 	}
 
 	protected override void process_comments (Settings settings, DocumentationParser parser) {
+		var source_comment = ((Vala.EnumValue) symbol).comment;
 		if (source_comment != null) {
 			documentation = parser.parse (this, source_comment);
 		}
@@ -49,30 +37,29 @@ public class Valadoc.Api.Namespace : SymbolNode, MethodHandler, FieldHandler, Na
 		base.process_comments (settings, parser);
 	}
 
-	protected override Inline build_signature () {
-		return new SignatureBuilder ()
-			.append_keyword (get_accessibility_modifier ())
-			.append_keyword ("namespace")
-			.append_symbol (this)
-			.get ();
+	public string get_cname () {
+		return this.venval.get_cname ();
+	}
+
+	public bool is_venumvalue (Vala.EnumValue venval) {
+		return this.venval == venval;
 	}
 
 	public void visit (Doclet doclet) {
-		doclet.visit_namespace (this);
+		doclet.visit_enum_value (this);
 	}
 
-	public override NodeType node_type { get { return NodeType.NAMESPACE; } }
+	public override NodeType node_type { get { return NodeType.ENUM_VALUE; } }
 
 	public override void accept (Doclet doclet) {
 		visit (doclet);
 	}
 
-	public Vala.Namespace vnspace {
-		private get;
-		set;
-	}
-
-	internal bool is_vnspace (Vala.Namespace vns) {
-		return this.vnspace == vns;
+	protected override Inline build_signature () {
+		return new SignatureBuilder ()
+			.append_symbol (this)
+			.append ("=")
+			.append (this.venval.value.to_string ())
+			.get ();
 	}
 }

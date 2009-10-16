@@ -1,4 +1,5 @@
-/*
+/* tree.vala
+ *
  * Valadoc.Api.- a documentation tool for vala.
  * Copyright (C) 2008 Florian Brosch
  * 
@@ -373,6 +374,4 @@ public class Valadoc.Api.Tree {
 		}
 		return null;
 	}
-
 }
-

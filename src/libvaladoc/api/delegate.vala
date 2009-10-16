@@ -20,44 +20,48 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Struct : TypeSymbolNode, MethodHandler, ConstructionMethodHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler {
-	private Vala.Struct vstruct;
+public class Valadoc.Api.Delegate : TypeSymbol, ParameterListHandler, ReturnTypeHandler, TemplateParameterListHandler, ExceptionHandler {
+	private Vala.Delegate vdelegate;
 
-	public Struct (Vala.Struct symbol, Node parent) {
+	public Delegate (Vala.Delegate symbol, Node parent) {
 		base (symbol, parent);
-		this.vstruct = symbol;
+
+		this.vdelegate = symbol;
+
+		var ret = this.vdelegate.return_type;
+		this.set_ret_type (ret);
 	}
 
-	protected TypeReference? base_type {
+	public string? get_cname () {
+		return this.vdelegate.get_cname ();
+	}
+
+	public TypeReference? type_reference {
 		protected set;
 		get;
 	}
 
-	public string? get_cname () {
-		return this.vstruct.get_cname();
+	public void visit (Doclet doclet) {
+		doclet.visit_delegate (this);
 	}
 
-	public void visit ( Doclet doclet ) {
-		doclet.visit_struct (this);
-	}
-
-	public override NodeType node_type { get { return NodeType.STRUCT; } }
+	public override NodeType node_type { get { return NodeType.DELEGATE; } }
 
 	public override void accept (Doclet doclet) {
 		visit (doclet);
 	}
 
-	private void set_parent_references (Tree root) {
-		Vala.ValueType? basetype = this.vstruct.base_type as Vala.ValueType;
-		if (basetype == null) {
-			return ;
+	public bool is_static {
+		get {
+			return this.vdelegate.has_target;
 		}
-		this.base_type = new TypeReference (basetype, this);
-		this.base_type.resolve_type_references (root);
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		this.set_parent_references (root);
+		this.set_return_type_references (root);
+
+		var vexceptionlst = this.vdelegate.get_error_types ();
+		this.add_exception_list (root, vexceptionlst);
 
 		base.resolve_type_references (root);
 	}
@@ -66,10 +70,14 @@ public class Valadoc.Api.Struct : TypeSymbolNode, MethodHandler, ConstructionMet
 		var signature = new SignatureBuilder ();
 
 		signature.append_keyword (get_accessibility_modifier ());
-		signature.append_keyword ("struct");
+		if (is_static) {
+			signature.append_keyword ("static");
+		}
+
+		signature.append_content (type_reference.signature);
 		signature.append_symbol (this);
 
-		var type_parameters = get_children_by_type (NodeType.TYPE_PARAMETER, false);
+		var type_parameters = get_children_by_type (NodeType.TYPE_PARAMETER);
 		if (type_parameters.size > 0) {
 			signature.append ("<", false);
 			bool first = true;
@@ -83,10 +91,30 @@ public class Valadoc.Api.Struct : TypeSymbolNode, MethodHandler, ConstructionMet
 			signature.append (">", false);
 		}
 
-		if (base_type != null) {
-			signature.append (":");
+		signature.append ("(");
 
-			signature.append_content (base_type.signature);
+		bool first = true;
+		foreach (Node param in get_children_by_type (NodeType.FORMAL_PARAMETER)) {
+			if (!first) {
+				signature.append (",", false);
+			}
+			signature.append_content (param.signature, !first);
+			first = false;
+		}
+
+		signature.append (")", false);
+
+		var exceptions = get_children_by_type (NodeType.ERROR_DOMAIN);
+		if (exceptions.size > 0) {
+			signature.append_keyword ("throws");
+
+			foreach (Node param in exceptions) {
+				if (!first) {
+					signature.append (",", false);
+				}
+				signature.append_content (param.signature, !first);
+				first = false;
+			}
 		}
 
 		return signature.get ();

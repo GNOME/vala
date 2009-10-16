@@ -20,59 +20,44 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Interface : TypeSymbolNode, SignalHandler, PropertyHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler, MethodHandler, DelegateHandler, EnumHandler, StructHandler, ClassHandler {
-	public Interface (Vala.Interface symbol, Node parent) {
+public class Valadoc.Api.Struct : TypeSymbol, MethodHandler, ConstructionMethodHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler {
+	private Vala.Struct vstruct;
+
+	public Struct (Vala.Struct symbol, Node parent) {
 		base (symbol, parent);
-		this.vinterface = symbol;
-	}
-
-	private ArrayList<TypeReference> interfaces = new ArrayList<TypeReference> ();
-
-	public Collection<TypeReference> get_implemented_interface_list () {
-		return this.interfaces;
-	}
-
-	public string? get_cname () {
-		return this.vinterface.get_cname ();
+		this.vstruct = symbol;
 	}
 
 	protected TypeReference? base_type {
-		private set;
+		protected set;
 		get;
 	}
 
-	private Vala.Interface vinterface;
-
-	public void visit (Doclet doclet) {
-		doclet.visit_interface (this);
+	public string? get_cname () {
+		return this.vstruct.get_cname();
 	}
 
-	public override NodeType node_type { get { return NodeType.INTERFACE; } }
+	public void visit ( Doclet doclet ) {
+		doclet.visit_struct (this);
+	}
+
+	public override NodeType node_type { get { return NodeType.STRUCT; } }
 
 	public override void accept (Doclet doclet) {
 		visit (doclet);
 	}
 
-	private void set_prerequisites (Tree root, Vala.Collection<Vala.DataType> lst) {
-		if (this.interfaces.size != 0) {
-			return;
+	private void set_parent_references (Tree root) {
+		Vala.ValueType? basetype = this.vstruct.base_type as Vala.ValueType;
+		if (basetype == null) {
+			return ;
 		}
-
-		foreach (Vala.DataType vtyperef in lst) {
-			var inherited = new TypeReference (vtyperef, this);
-			inherited.resolve_type_references (root);
-
-			if (inherited.data_type is Class) {
-				this.base_type = inherited;
-			} else {
-				this.interfaces.add (inherited);
-			}
-		}
+		this.base_type = new TypeReference (basetype, this);
+		this.base_type.resolve_type_references (root);
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		var lst = this.vinterface.get_prerequisites ();
-		this.set_prerequisites (root, lst);
+		this.set_parent_references (root);
 
 		base.resolve_type_references (root);
 	}
@@ -81,7 +66,7 @@ public class Valadoc.Api.Interface : TypeSymbolNode, SignalHandler, PropertyHand
 		var signature = new SignatureBuilder ();
 
 		signature.append_keyword (get_accessibility_modifier ());
-		signature.append_keyword ("interface");
+		signature.append_keyword ("struct");
 		signature.append_symbol (this);
 
 		var type_parameters = get_children_by_type (NodeType.TYPE_PARAMETER, false);
@@ -98,26 +83,10 @@ public class Valadoc.Api.Interface : TypeSymbolNode, SignalHandler, PropertyHand
 			signature.append (">", false);
 		}
 
-		bool first = true;
 		if (base_type != null) {
 			signature.append (":");
 
 			signature.append_content (base_type.signature);
-			first = false;
-		}
-
-		if (interfaces.size > 0) {
-			if (first) {
-				signature.append (":");
-			}
-
-			foreach (Item implemented_interface in interfaces) {
-				if (!first) {
-					signature.append (",", false);
-				}
-				signature.append_content (implemented_interface.signature);
-				first = false;
-			}
 		}
 
 		return signature.get ();
