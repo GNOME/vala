@@ -161,7 +161,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				}
 				return delegate_target;
 			} else if (get_this_type () != null || in_constructor) {
-				CCodeExpression delegate_target = new CCodeIdentifier ("self");
+				CCodeExpression delegate_target = get_result_cexpression ("self");
 				if (expr_owned) {
 					if (get_this_type () != null) {
 						var ref_call = new CCodeFunctionCall (get_dup_func_expression (get_this_type (), delegate_expr.source_reference));
