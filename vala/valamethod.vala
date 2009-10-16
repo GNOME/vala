@@ -299,6 +299,10 @@ public class Vala.Method : Member {
 	}
 
 	public override void accept_children (CodeVisitor visitor) {
+		foreach (TypeParameter p in get_type_parameters ()) {
+			p.accept (visitor);
+		}
+
 		if (return_type != null) {
 			return_type.accept (visitor);
 		}
