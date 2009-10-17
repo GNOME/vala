@@ -1956,37 +1956,43 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		generate_type_declaration (local.variable_type, source_declarations);
 
-		if (local.variable_type is ArrayType) {
-			// create variables to store array dimensions
-			var array_type = (ArrayType) local.variable_type;
+		if (!local.captured) {
+			if (local.variable_type is ArrayType) {
+				// create variables to store array dimensions
+				var array_type = (ArrayType) local.variable_type;
 
-			if (!array_type.fixed_length) {
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					var len_var = new LocalVariable (int_type.copy (), head.get_array_length_cname (get_variable_cname (local.name), dim));
-					temp_vars.insert (0, len_var);
-				}
+				if (!array_type.fixed_length) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						var len_var = new LocalVariable (int_type.copy (), head.get_array_length_cname (get_variable_cname (local.name), dim));
+						temp_vars.insert (0, len_var);
+					}
 
-				if (array_type.rank == 1) {
-					var size_var = new LocalVariable (int_type.copy (), head.get_array_size_cname (get_variable_cname (local.name)));
-					temp_vars.insert (0, size_var);
+					if (array_type.rank == 1) {
+						var size_var = new LocalVariable (int_type.copy (), head.get_array_size_cname (get_variable_cname (local.name)));
+						temp_vars.insert (0, size_var);
+					}
 				}
-			}
-		} else if (local.variable_type is DelegateType) {
-			var deleg_type = (DelegateType) local.variable_type;
-			var d = deleg_type.delegate_symbol;
-			if (d.has_target) {
-				// create variable to store delegate target
-				var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (get_variable_cname (local.name)));
-				temp_vars.insert (0, target_var);
-				if (deleg_type.value_owned) {
-					var target_destroy_notify_var = new LocalVariable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")), get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
-					temp_vars.insert (0, target_destroy_notify_var);
+			} else if (local.variable_type is DelegateType) {
+				var deleg_type = (DelegateType) local.variable_type;
+				var d = deleg_type.delegate_symbol;
+				if (d.has_target) {
+					// create variable to store delegate target
+					var target_var = new LocalVariable (new PointerType (new VoidType ()), get_delegate_target_cname (get_variable_cname (local.name)));
+					temp_vars.insert (0, target_var);
+					if (deleg_type.value_owned) {
+						var target_destroy_notify_var = new LocalVariable (new DelegateType ((Delegate) context.root.scope.lookup ("GLib").scope.lookup ("DestroyNotify")), get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
+						temp_vars.insert (0, target_destroy_notify_var);
+					}
 				}
 			}
 		}
 	
 		CCodeExpression rhs = null;
 		if (local.initializer != null && local.initializer.ccodenode != null) {
+			var ma = new MemberAccess.simple (local.name);
+			ma.symbol_reference = local;
+			ma.value_type = local.variable_type.copy ();
+
 			rhs = (CCodeExpression) local.initializer.ccodenode;
 
 			if (local.variable_type is ArrayType) {
@@ -2002,13 +2008,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
 					for (int dim = 1; dim <= array_type.rank; dim++) {
-						var lhs_array_len = get_variable_cexpression (head.get_array_length_cname (get_variable_cname (local.name), dim));
+						var lhs_array_len = head.get_array_length_cexpression (ma, dim);
 						var rhs_array_len = head.get_array_length_cexpression (local.initializer, dim);
 						ccomma.append_expression (new CCodeAssignment (lhs_array_len, rhs_array_len));
 					}
-					if (array_type.rank == 1) {
-						var lhs_array_size = get_variable_cexpression (head.get_array_size_cname (get_variable_cname (local.name)));
-						var rhs_array_len = get_variable_cexpression (head.get_array_length_cname (get_variable_cname (local.name), 1));
+					if (array_type.rank == 1 && !local.captured) {
+						var lhs_array_size = head.get_array_size_cexpression (ma);
+						var rhs_array_len = head.get_array_length_cexpression (ma, 1);
 						ccomma.append_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
 					}
 				
@@ -2026,7 +2032,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					temp_vars.insert (0, temp_var);
 					ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), rhs));
 
-					var lhs_delegate_target = get_variable_cexpression (get_delegate_target_cname (get_variable_cname (local.name)));
+					CCodeExpression lhs_delegate_target_destroy_notify;
+					var lhs_delegate_target = get_delegate_target_cexpression (ma, out lhs_delegate_target_destroy_notify);
 					if (local.captured) {
 						var block = (Block) local.parent_symbol;
 						lhs_delegate_target = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_cname (local.name));
@@ -2036,7 +2043,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 					ccomma.append_expression (new CCodeAssignment (lhs_delegate_target, rhs_delegate_target));
 
 					if (deleg_type.value_owned) {
-						var lhs_delegate_target_destroy_notify = get_variable_cexpression (get_delegate_target_destroy_notify_cname (get_variable_cname (local.name)));
 						if (local.captured) {
 							var block = (Block) local.parent_symbol;
 							lhs_delegate_target = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_delegate_target_destroy_notify_cname (local.name));
