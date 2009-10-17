@@ -23,8 +23,6 @@ BUILT_SOURCES = vapigen.vala.stamp vapicheck.vala.stamp
 
 vapigen_VALASOURCES = \
 	valagidlparser.vala \
-	valagirparser.vala \
-	valamarkupreader.vala \
 	valavapigen.vala \
 	$(NULL)
 

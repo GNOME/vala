@@ -26,8 +26,6 @@ using GLib;
  * Code visitor parsing all Vala source files.
  */
 public class Vala.GirParser : CodeVisitor {
-	public string package_name { get; private set; }
-
 	MarkupReader reader;
 
 	CodeContext context;
@@ -39,6 +37,7 @@ public class Vala.GirParser : CodeVisitor {
 	MarkupTokenType current_token;
 
 	string[] cheader_filenames;
+	string[] package_names;
 
 	HashMap<string,string> attributes_map = new HashMap<string,string> (str_hash, str_equal);
 
@@ -160,7 +159,7 @@ public class Vala.GirParser : CodeVisitor {
 
 	void parse_package () {
 		start_element ("package");
-		package_name = reader.get_attribute ("name");
+		add_package_name (reader.get_attribute ("name"));
 		next ();
 		end_element ("package");
 	}
@@ -1124,6 +1123,24 @@ public class Vala.GirParser : CodeVisitor {
 		} else {
 			Report.error (null, "Metadata file `%s' not found".printf (metadata_filename));
 		}
+	}
+
+	void add_package_name (string name) {
+		if (package_names == null) {
+			package_names = new string[0];
+		}
+
+		foreach (var existing in package_names) {
+			if (name == existing) {
+				return;
+			}
+		}
+
+		package_names += name;
+	}
+
+	public string[]? get_package_names () {
+		return package_names;
 	}
 }
 

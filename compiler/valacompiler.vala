@@ -33,6 +33,9 @@ class Vala.Compiler {
 	[CCode (array_length = false, array_null_terminated = true)]
 	[NoArrayLength]
 	static string[] vapi_directories;
+	[CCode (array_length = false, array_null_terminated = true)]
+	[NoArrayLength]
+	static string[] gir_directories;
 	static string vapi_filename;
 	static string library;
 	static string gir;
@@ -76,6 +79,7 @@ class Vala.Compiler {
 	private CodeContext context;
 
 	const OptionEntry[] options = {
+		{ "girdir", 0, 0, OptionArg.FILENAME_ARRAY, ref gir_directories, "Look for .gir files in DIRECTORY", "DIRECTORY..." },
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
 		{ "pkg", 0, 0, OptionArg.STRING_ARRAY, ref packages, "Include binding for PACKAGE", "PACKAGE..." },
 		{ "vapi", 0, 0, OptionArg.FILENAME, ref vapi_filename, "Output VAPI file name", "FILE" },
@@ -130,6 +134,18 @@ class Vala.Compiler {
 			}
 			return 1;
 		}
+	}
+
+	private bool add_gir (CodeContext context, string gir) {
+		var gir_path = context.get_gir_path (gir, gir_directories);
+
+		if (gir_path == null) {
+			return false;
+		}
+
+		context.add_source_file (new SourceFile (context, gir_path, true));
+
+		return true;
 	}
 	
 	private bool add_package (CodeContext context, string pkg) {
@@ -265,8 +281,8 @@ class Vala.Compiler {
 
 		if (packages != null) {
 			foreach (string package in packages) {
-				if (!add_package (context, package)) {
-					Report.error (null, "%s not found in specified Vala API directories".printf (package));
+				if (!add_package (context, package) && !add_gir (context, package)) {
+					Report.error (null, "%s not found in specified Vala API directories or GObject-Introspection GIR directories".printf (package));
 				}
 			}
 			packages = null;
@@ -295,7 +311,7 @@ class Vala.Compiler {
 					}
 
 					context.add_source_file (source_file);
-				} else if (source.has_suffix (".vapi")) {
+				} else if (source.has_suffix (".vapi") || source.has_suffix (".gir")) {
 					context.add_source_file (new SourceFile (context, rpath, true));
 				} else if (source.has_suffix (".c")) {
 					context.add_c_source_file (rpath);
@@ -317,6 +333,15 @@ class Vala.Compiler {
 
 		var genie_parser = new Genie.Parser ();
 		genie_parser.parse (context);
+
+		var gir_parser = new GirParser ();
+		gir_parser.parse (context);
+
+		if (gir_parser.get_package_names != null) {
+			foreach (var pkg in gir_parser.get_package_names ()) {
+				context.add_package (pkg);
+			}
+		}
 
 		if (context.report.get_errors () > 0) {
 			return quit ();

@@ -74,6 +74,7 @@ libvalacore_la_VALASOURCES = \
 	valaforeachstatement.vala \
 	valaformalparameter.vala \
 	valaforstatement.vala \
+	valagirparser.vala \
 	valagenerictype.vala \
 	valagenieparser.vala \
 	valageniescanner.vala \
@@ -91,6 +92,7 @@ libvalacore_la_VALASOURCES = \
 	valalockable.vala \
 	valalockstatement.vala \
 	valaloop.vala \
+	valamarkupreader.vala \
 	valamember.vala \
 	valamemberaccess.vala \
 	valamemberinitializer.vala \

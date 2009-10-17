@@ -298,26 +298,38 @@ public class Vala.CodeContext {
 		return (define in defines);
 	}
 
-	public string? get_package_path (string pkg, string[] vapi_directories) {
-		string basename = "%s.vapi".printf (pkg);
+	public string? get_package_path (string pkg, string[] directories) {
+		var path = get_file_path (pkg + ".vapi", "vala/vapi", directories);
+
+		if (path == null) {
+			/* last chance: try the package compiled-in vapi dir */
+			var filename = Path.build_filename (Config.PACKAGE_DATADIR, "vapi", pkg + ".vapi");
+			if (FileUtils.test (filename, FileTest.EXISTS)) {
+				path = filename;
+			}
+		}
+
+		return path;
+	}
+
+	public string? get_gir_path (string gir, string[] directories) {
+		return get_file_path (gir + ".gir", "gir-1.0", directories);
+	}
+
+	string? get_file_path (string basename, string data_dir, string[] directories) {
 		string filename = null;
 
-		if (vapi_directories != null) {
-			foreach (string vapidir in vapi_directories) {
-				filename = Path.build_filename (vapidir, basename);
+		if (directories != null) {
+			foreach (string dir in directories) {
+				filename = Path.build_filename (dir, basename);
 				if (FileUtils.test (filename, FileTest.EXISTS)) {
 					return filename;
 				}
 			}
 		}
 
-		filename = Path.build_filename (Config.PACKAGE_DATADIR, "vapi", basename);
-		if (FileUtils.test (filename, FileTest.EXISTS)) {
-			return filename;
-		}
-
-		foreach (string vapidir in Environment.get_system_data_dirs ()) {
-			filename = Path.build_filename (vapidir, "vala/vapi", basename);
+		foreach (string dir in Environment.get_system_data_dirs ()) {
+			filename = Path.build_filename (dir, data_dir, basename);
 			if (FileUtils.test (filename, FileTest.EXISTS)) {
 				return filename;
 			}

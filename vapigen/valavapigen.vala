@@ -226,8 +226,15 @@ class Vala.VAPIGen : Object {
 			return quit ();
 		}
 		
-		if (library == null && girparser.package_name != null) {
-			library = girparser.package_name;
+		if (library == null && girparser.get_package_names () != null) {
+			var names = girparser.get_package_names ();
+
+			if (names.length != 1) {
+				Report.error (null, "multiple packages encountered and no library name given");
+				return quit ();
+			}
+
+			library = names[0];
 		}
 
 		if (library != null) {
