@@ -161,7 +161,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	public override void visit_embedded (Embedded element) {
 		var caption = element.caption;
 		if (caption == null) {
-			_stream.printf ("<img src=\"%s\" alt=\"%s\" />", element.url);
+			_stream.printf ("<img src=\"%s\" />", element.url);
 		} else {
 			_stream.printf ("<img src=\"%s\" alt=\"%s\" />", element.url, caption);
 		}

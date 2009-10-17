@@ -4,7 +4,7 @@ AC_INIT(Valadoc, 0.2, flo.brosch@gmail.com)
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([src/valadoc/valadoc.vala])
 AC_CONFIG_HEADER([config.h])
-
+AM_MAINTAINER_MODE
 
 AC_PROG_CC
 AC_PROG_LIBTOOL
@@ -72,8 +72,6 @@ AC_CONFIG_FILES([Makefile
                  src/doclets/htm/Makefile
                  src/doclets/htm/doclet/Makefile
                  src/doclets/valadoc.org/Makefile
-                 src/doclets/valadoc.org/doclet/Makefile
-                 src/doclets/valadoc.org/taglets/Makefile
                  src/doclets/devhelp/Makefile
                  src/doclets/devhelp/doclet/Makefile
                  src/valadoc/Makefile])
