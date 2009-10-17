@@ -823,7 +823,9 @@ public class Vala.GirParser : CodeVisitor {
 		if (ctype != null && (parent_ctype == null || ctype != parent_ctype + "*")) {
 			m.custom_return_type_cname = ctype;
 		}
-		if (m.name.has_prefix ("new_")) {
+		if (m.name == "new") {
+			m.name = null;
+		} else if (m.name.has_prefix ("new_")) {
 			m.name = m.name.offset ("new_".len ());
 		}
 		if (current_token == MarkupTokenType.START_ELEMENT && reader.name == "parameters") {
