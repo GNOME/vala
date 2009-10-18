@@ -26,7 +26,6 @@ using Gee;
 public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet, Api.Visitor {
 	private ValadocOrg.WikiRenderer _renderer = new ValadocOrg.WikiRenderer ();
 	private Settings settings;
-	private FileStream types;
 	private FileStream file;
 	private bool run;
 

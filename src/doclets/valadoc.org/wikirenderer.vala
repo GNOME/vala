@@ -149,8 +149,8 @@ public class Valadoc.ValadocOrg.WikiRenderer : ContentRenderer {
 	}
 
 	public override void visit_paragraph (Paragraph element) {
-		_stream.printf ("\n\n");
 		element.accept_children (this);
+		_stream.printf ("\n\n");
 	}
 
 	public override void visit_run (Run element) {
@@ -180,13 +180,12 @@ public class Valadoc.ValadocOrg.WikiRenderer : ContentRenderer {
 	}
 
 	public override void visit_source_code (SourceCode element) {
-		_stream.printf ("\n{{{\n");
+		_stream.printf ("{{{\n");
 		_stream.printf (element.code);
-		_stream.printf ("\n}}}\n");
+		_stream.printf ("\n}}}\n\n");
 	}
 
 	public override void visit_table (Table element) {
-		_stream.putc ('\n');
 		element.accept_children (this);
 		_stream.putc ('\n');
 	}
@@ -198,6 +197,7 @@ public class Valadoc.ValadocOrg.WikiRenderer : ContentRenderer {
 	}
 
 	public override void visit_table_row (TableRow element) {
+		_stream.puts (" ||");
 		element.accept_children (this);
 		_stream.putc ('\n');
 	}
