@@ -297,6 +297,10 @@ public abstract class Vala.DataType : CodeNode {
 	}
 
 	public virtual bool compatible (DataType target_type) {
+		if (CodeContext.get ().experimental_non_null && nullable && !target_type.nullable) {
+			return false;
+		}
+
 		if (target_type.get_type_id () == "G_TYPE_VALUE" && get_type_id () != null) {
 			// allow implicit conversion to GValue
 			return true;

@@ -1,6 +1,6 @@
 /* valanulltype.vala
  *
- * Copyright (C) 2007-2008  Jürg Billeter
+ * Copyright (C) 2007-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,10 +27,15 @@ using GLib;
  */
 public class Vala.NullType : ReferenceType {
 	public NullType (SourceReference source_reference) {
+		this.nullable = true;
 		this.source_reference = source_reference;
 	}
 
 	public override bool compatible (DataType target_type) {
+		if (CodeContext.get ().experimental_non_null) {
+			return target_type.nullable;
+		}
+
 		if (!(target_type is PointerType) && (target_type is NullType || (target_type.data_type == null && target_type.type_parameter == null))) {
 			return true;
 		}
@@ -63,5 +68,9 @@ public class Vala.NullType : ReferenceType {
 
 	public override bool is_disposable () {
 		return false;
+	}
+
+	public override string to_qualified_string (Scope? scope = null) {
+		return "null";
 	}
 }

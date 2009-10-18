@@ -2484,7 +2484,7 @@ namespace GLib {
 
 		public string? read_line () {
 			int c;
-			StringBuilder ret = null;
+			StringBuilder? ret = null;
 			while ((c = getc ()) != EOF) {
 				if (ret == null) {
 					ret = new StringBuilder ();
@@ -2494,7 +2494,11 @@ namespace GLib {
 				}
 				ret.append_c ((char) c);
 			}
-			return ret == null ? null : ret.str;
+			if (ret == null) {
+				return null;
+			} else {
+				return ret.str;
+			}
 		}
 	}
 

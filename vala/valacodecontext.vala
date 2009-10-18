@@ -49,7 +49,7 @@ public class Vala.CodeContext {
 	/**
 	 * Enable experimental enhancements for non-null types.
 	 */
-	public bool non_null_experimental { get; set; }
+	public bool experimental_non_null { get; set; }
 
 	/**
 	 * Enable transformation of D-Bus member names in dynamic client support.

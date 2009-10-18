@@ -55,7 +55,7 @@ class Vala.Compiler {
 	static bool enable_checking;
 	static bool deprecated;
 	static bool experimental;
-	static bool non_null_experimental;
+	static bool experimental_non_null;
 	static bool disable_dbus_transformation;
 	static bool disable_warnings;
 	static string cc_command;
@@ -101,7 +101,7 @@ class Vala.Compiler {
 		{ "enable-deprecated", 0, 0, OptionArg.NONE, ref deprecated, "Enable deprecated features", null },
 		{ "enable-experimental", 0, 0, OptionArg.NONE, ref experimental, "Enable experimental features", null },
 		{ "disable-warnings", 0, 0, OptionArg.NONE, ref disable_warnings, "Disable warnings", null },
-		{ "enable-non-null-experimental", 0, 0, OptionArg.NONE, ref non_null_experimental, "Enable experimental enhancements for non-null types", null },
+		{ "enable-experimental-non-null", 0, 0, OptionArg.NONE, ref experimental_non_null, "Enable experimental enhancements for non-null types", null },
 		{ "disable-dbus-transformation", 0, 0, OptionArg.NONE, ref disable_dbus_transformation, "Disable transformation of D-Bus member names", null },
 		{ "cc", 0, 0, OptionArg.STRING, ref cc_command, "Use COMMAND as C compiler command", "COMMAND" },
 		{ "Xcc", 'X', 0, OptionArg.STRING_ARRAY, ref cc_options, "Pass OPTION to the C compiler", "OPTION..." },
@@ -188,7 +188,7 @@ class Vala.Compiler {
 		context.checking = enable_checking;
 		context.deprecated = deprecated;
 		context.experimental = experimental;
-		context.non_null_experimental = non_null_experimental;
+		context.experimental_non_null = experimental || experimental_non_null;
 		context.dbus_transformation = !disable_dbus_transformation;
 		context.report.enable_warnings = !disable_warnings;
 		context.report.set_verbose_errors (!quiet_mode);
@@ -353,15 +353,6 @@ class Vala.Compiler {
 
 		if (context.report.get_errors () > 0) {
 			return quit ();
-		}
-
-		if (context.non_null_experimental) {
-			var null_checker = new NullChecker ();
-			null_checker.check (context);
-
-			if (context.report.get_errors () > 0) {
-				return quit ();
-			}
 		}
 
 		context.codegen.emit (context);
