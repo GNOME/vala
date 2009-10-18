@@ -117,6 +117,11 @@ public class Vala.LocalVariable : Variable {
 			variable_type.value_owned = true;
 			variable_type.floating_reference = false;
 
+			var bool_type = variable_type as BooleanType;
+			if (bool_type != null) {
+				bool_type.value_set = false;
+			}
+
 			initializer.target_type = variable_type;
 		}
 
@@ -150,9 +155,13 @@ public class Vala.LocalVariable : Variable {
 			}
 
 			if (!initializer.value_type.compatible (variable_type)) {
-				error = true;
-				Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), variable_type.to_string ()));
-				return false;
+				if (analyzer.context.abstract_interpreter && initializer.symbol_reference is LocalVariable) {
+					((Statement) parent_node).assume ((LocalVariable) initializer.symbol_reference, variable_type);
+				} else {
+					error = true;
+					Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (initializer.value_type.to_string (), variable_type.to_string ()));
+					return false;
+				}
 			}
 
 			if (initializer.value_type.is_disposable ()) {

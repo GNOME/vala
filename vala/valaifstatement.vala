@@ -139,4 +139,12 @@ public class Vala.IfStatement : CodeNode, Statement {
 
 		return !error;
 	}
+
+	public override void get_defined_variables (Collection<LocalVariable> collection) {
+		condition.get_defined_variables (collection);
+	}
+
+	public override void get_used_variables (Collection<LocalVariable> collection) {
+		condition.get_used_variables (collection);
+	}
 }

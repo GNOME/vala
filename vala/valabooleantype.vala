@@ -26,6 +26,9 @@ using GLib;
  * A boolean type.
  */
 public class Vala.BooleanType : ValueType {
+	public bool value { get; set; }
+	public bool value_set { get; set; }
+
 	public BooleanType (Struct type_symbol) {
 		base (type_symbol);
 	}
@@ -35,6 +38,32 @@ public class Vala.BooleanType : ValueType {
 		result.source_reference = source_reference;
 		result.value_owned = value_owned;
 		result.nullable = nullable;
+		result.value = value;
+		result.value_set = value_set;
 		return result;
+	}
+
+	public override bool compatible (DataType target_type) {
+		if (CodeContext.get ().experimental_non_null && nullable && !target_type.nullable) {
+			return false;
+		}
+
+		if (target_type.get_type_id () == "G_TYPE_VALUE") {
+			// allow implicit conversion to GValue
+			return true;
+		}
+
+		var bool_target_type = target_type as BooleanType;
+		if (bool_target_type != null) {
+			if (!bool_target_type.value_set) {
+				return true;
+			} else if (!value_set) {
+				return false;
+			} else {
+				return (this.value == bool_target_type.value);
+			}
+		}
+
+		return false;
 	}
 }

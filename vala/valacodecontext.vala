@@ -47,6 +47,11 @@ public class Vala.CodeContext {
 	public bool experimental { get; set; }
 
 	/**
+	 * Enable experimental abstract interpreter.
+	 */
+	public bool abstract_interpreter { get; set; }
+
+	/**
 	 * Enable experimental enhancements for non-null types.
 	 */
 	public bool experimental_non_null { get; set; }

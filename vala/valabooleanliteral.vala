@@ -1,6 +1,6 @@
 /* valabooleanliteral.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2009  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -68,7 +68,10 @@ public class Vala.BooleanLiteral : Literal {
 
 		checked = true;
 
-		value_type = analyzer.bool_type;
+		var bool_type = (BooleanType) analyzer.bool_type.copy ();
+		bool_type.value = this.value;
+		bool_type.value_set = true;
+		value_type = bool_type;
 
 		return !error;
 	}

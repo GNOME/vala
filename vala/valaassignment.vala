@@ -350,9 +350,13 @@ public class Vala.Assignment : Expression {
 				 * i.e. {left|right}.value_type == null, skip type check */
 
 				if (!right.value_type.compatible (left.value_type)) {
-					error = true;
-					Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (right.value_type.to_string (), left.value_type.to_string ()));
-					return false;
+					if (analyzer.context.abstract_interpreter && right.symbol_reference is LocalVariable) {
+						parent_statement.assume ((LocalVariable) right.symbol_reference, left.value_type);
+					} else {
+						error = true;
+						Report.error (source_reference, "Assignment: Cannot convert from `%s' to `%s'".printf (right.value_type.to_string (), left.value_type.to_string ()));
+						return false;
+					}
 				}
 
 				if (!(ma.symbol_reference is Property)) {

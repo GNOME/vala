@@ -15,6 +15,7 @@ noinst_LTLIBRARIES = \
 	$(NULL)
 
 libvalacore_la_VALASOURCES = \
+	valaabstractinterpreter.vala \
 	valaaddressofexpression.vala \
 	valaarraycreationexpression.vala \
 	valaarraylengthfield.vala \

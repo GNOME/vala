@@ -507,8 +507,12 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		} else if (arg.target_type != null
 		           && (direction == ParameterDirection.IN || direction == ParameterDirection.REF)
 		           && !arg.value_type.compatible (arg.target_type)) {
-			Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.value_type.to_string (), arg.target_type.to_string ()));
-			return false;
+			if (context.abstract_interpreter && arg.symbol_reference is LocalVariable) {
+				arg.parent_statement.assume ((LocalVariable) arg.symbol_reference, arg.target_type);
+			} else {
+				Report.error (arg.source_reference, "Argument %d: Cannot convert from `%s' to `%s'".printf (i + 1, arg.value_type.to_string (), arg.target_type.to_string ()));
+				return false;
+			}
 		} else if (arg.target_type != null
 		           && (direction == ParameterDirection.REF || direction == ParameterDirection.OUT)
 		           && !arg.target_type.compatible (arg.value_type)

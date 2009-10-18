@@ -194,4 +194,29 @@ public abstract class Vala.CodeNode {
 	public static string get_temp_name () {
 		return "." + (++last_temp_nr).to_string ();
 	}
+
+	List<LocalVariable> assumption_variables;
+	List<DataType> assumption_types;
+
+	// we should probably generate AssumeStatement objects instead that can be inserted before the current statement
+	// source reference could be copied from the original expression
+	public void assume (LocalVariable local, DataType type) {
+		if (assumption_variables == null) {
+			assumption_variables = new ArrayList<LocalVariable> ();
+			assumption_types = new ArrayList<DataType> ();
+		}
+		assumption_variables.add (local);
+		assumption_types.add (type);
+	}
+
+	public void get_assumptions (List<LocalVariable> variables, List<DataType> types) {
+		if (assumption_variables != null) {
+			foreach (var local in assumption_variables) {
+				variables.add (local);
+			}
+			foreach (var type in assumption_types) {
+				types.add (type);
+			}
+		}
+	}
 }

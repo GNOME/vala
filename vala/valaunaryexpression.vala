@@ -178,7 +178,14 @@ public class Vala.UnaryExpression : Expression {
 				return false;
 			}
 
-			value_type = inner.value_type;
+			var bool_type = inner.value_type as BooleanType;
+			if (bool_type.value_set) {
+				bool_type = (BooleanType) bool_type.copy ();
+				bool_type.value = !bool_type.value;
+				value_type = bool_type;
+			} else {
+				value_type = inner.value_type;
+			}
 		} else if (operator == UnaryOperator.BITWISE_COMPLEMENT) {
 			// integer type
 			if (!is_integer_type (inner.value_type) && !(inner.value_type is EnumValueType)) {
