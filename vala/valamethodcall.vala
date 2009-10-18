@@ -39,6 +39,8 @@ public class Vala.MethodCall : Expression {
 
 	public bool is_yield_expression { get; set; }
 
+	public bool is_assert { get; private set; }
+
 	public Expression _call;
 	
 	private List<Expression> argument_list = new ArrayList<Expression> ();
@@ -130,6 +132,10 @@ public class Vala.MethodCall : Expression {
 
 			if (ma.inner != null) {
 				target_object_type = ma.inner.value_type;
+			}
+
+			if (ma.symbol_reference != null && ma.symbol_reference.get_attribute ("Assert") != null) {
+				this.is_assert = true;
 			}
 		}
 

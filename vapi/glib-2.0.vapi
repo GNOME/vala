@@ -1672,6 +1672,7 @@ namespace GLib {
 	public static void warn_if_fail (bool expr);
 	public static void warn_if_reached ();
 
+	[Assert]
 	public static void assert (bool expr);
 	[NoReturn]
 	public static void assert_not_reached ();
