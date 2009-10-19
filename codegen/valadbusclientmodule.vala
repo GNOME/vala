@@ -1502,6 +1502,47 @@ internal class Vala.DBusClientModule : DBusModule {
 		}
 	}
 
+	void check_error_reply (Method m, CCodeBlock block) {
+		var error_types = m.get_error_types ();
+		if (!has_dbus_error (error_types)) {
+			Report.error (m.source_reference, "D-Bus methods must throw DBus.Error");
+			return;
+		}
+
+		var dbus_error = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_dbus_error"));
+
+		var error_block = new CCodeBlock ();
+
+		var cdecl = new CCodeDeclaration ("GQuark");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_edomain"));
+		error_block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("gint");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_ecode"));
+		error_block.add_statement (cdecl);
+
+		generate_client_error_cases (error_block, error_types, new CCodeMemberAccess (new CCodeIdentifier ("_dbus_error"), "name"), new CCodeIdentifier ("_edomain"), new CCodeIdentifier ("_ecode"));
+
+		var g_set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error_literal"));
+		g_set_error.add_argument (new CCodeIdentifier ("error"));
+		g_set_error.add_argument (new CCodeIdentifier ("_edomain"));
+		g_set_error.add_argument (new CCodeIdentifier ("_ecode"));
+		g_set_error.add_argument (new CCodeMemberAccess (new CCodeIdentifier ("_dbus_error"), "message"));
+		error_block.add_statement (new CCodeExpressionStatement (g_set_error));
+
+		var dbus_error_free = new CCodeFunctionCall (new CCodeIdentifier ("dbus_error_free"));
+		dbus_error_free.add_argument (dbus_error);
+		error_block.add_statement (new CCodeExpressionStatement (dbus_error_free));
+
+		if (!(m.return_type is VoidType)) {
+			error_block.add_statement (new CCodeReturnStatement (default_value_for_type (m.return_type, false)));
+		}
+
+		var dbus_error_is_set = new CCodeFunctionCall (new CCodeIdentifier ("dbus_error_is_set"));
+		dbus_error_is_set.add_argument (dbus_error);
+		block.add_statement (new CCodeIfStatement (dbus_error_is_set, error_block));
+	}
+
 	string generate_dbus_proxy_method (Interface main_iface, Interface iface, Method m) {
 		string proxy_name = "%sdbus_proxy_%s".printf (main_iface.get_lower_case_cprefix (), m.name);
 
@@ -1589,41 +1630,8 @@ internal class Vala.DBusClientModule : DBusModule {
 		message_unref.add_argument (new CCodeIdentifier ("_message"));
 		block.add_statement (new CCodeExpressionStatement (message_unref));
 
-		var error_types = m.get_error_types ();
-		if (!has_dbus_error (error_types)) {
-			Report.error (m.source_reference, "D-Bus methods must throw DBus.Error");
-		} else {
-			var error_block = new CCodeBlock ();
-
-			cdecl = new CCodeDeclaration ("GQuark");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("_edomain"));
-			error_block.add_statement (cdecl);
-
-			cdecl = new CCodeDeclaration ("gint");
-			cdecl.add_declarator (new CCodeVariableDeclarator ("_ecode"));
-			error_block.add_statement (cdecl);
-
-			generate_client_error_cases (error_block, error_types, new CCodeMemberAccess (new CCodeIdentifier ("_dbus_error"), "name"), new CCodeIdentifier ("_edomain"), new CCodeIdentifier ("_ecode"));
-
-			var g_set_error = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error_literal"));
-			g_set_error.add_argument (new CCodeIdentifier ("error"));
-			g_set_error.add_argument (new CCodeIdentifier ("_edomain"));
-			g_set_error.add_argument (new CCodeIdentifier ("_ecode"));
-			g_set_error.add_argument (new CCodeMemberAccess (new CCodeIdentifier ("_dbus_error"), "message"));
-			error_block.add_statement (new CCodeExpressionStatement (g_set_error));
-
-			var dbus_error_free = new CCodeFunctionCall (new CCodeIdentifier ("dbus_error_free"));
-			dbus_error_free.add_argument (dbus_error);
-			error_block.add_statement (new CCodeExpressionStatement (dbus_error_free));
-
-			if (!(m.return_type is VoidType)) {
-				error_block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
-			}
-
-			var dbus_error_is_set = new CCodeFunctionCall (new CCodeIdentifier ("dbus_error_is_set"));
-			dbus_error_is_set.add_argument (dbus_error);
-			block.add_statement (new CCodeIfStatement (dbus_error_is_set, error_block));
-		}
+		check_error_reply (m, block);
+		check_reply_signature (m, block);
 
 		block.add_statement (postfragment);
 
@@ -1853,6 +1861,49 @@ internal class Vala.DBusClientModule : DBusModule {
 		return proxy_name;
 	}
 
+	CCodeConstant get_reply_signature (Method m) {
+		// expected type signature for output parameters
+		string type_signature = "";
+
+		foreach (FormalParameter param in m.get_parameters ()) {
+			if (param.direction == ParameterDirection.OUT) {
+				type_signature += get_type_signature (param.parameter_type);
+			}
+		}
+
+		if (!(m.return_type is VoidType)) {
+			type_signature += get_type_signature (m.return_type);
+		}
+
+		return (new CCodeConstant ("\"%s\"".printf (type_signature)));
+	}
+
+	void check_reply_signature (Method m, CCodeBlock block) {
+		var reply_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		reply_unref.add_argument (new CCodeIdentifier ("_reply"));
+
+		var message_signature = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_get_signature"));
+		message_signature.add_argument (new CCodeIdentifier ("_reply"));
+
+		var signature_check = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+		signature_check.add_argument (message_signature);
+		signature_check.add_argument (get_reply_signature (m));
+
+		var signature_error_block = new CCodeBlock ();
+		var set_error_call = new CCodeFunctionCall (new CCodeIdentifier ("g_set_error"));
+		set_error_call.add_argument (new CCodeIdentifier ("error"));
+		set_error_call.add_argument (new CCodeIdentifier ("DBUS_GERROR"));
+		set_error_call.add_argument (new CCodeIdentifier ("DBUS_GERROR_INVALID_SIGNATURE"));
+		set_error_call.add_argument (new CCodeConstant ("\"Invalid signature, expected \\\"%s\\\", got \\\"%s\\\"\""));
+		set_error_call.add_argument (get_reply_signature (m));
+		set_error_call.add_argument (message_signature);
+		signature_error_block.add_statement (new CCodeExpressionStatement (set_error_call));
+		signature_error_block.add_statement (new CCodeExpressionStatement (reply_unref));
+		signature_error_block.add_statement (new CCodeReturnStatement (default_value_for_type (m.return_type, false)));
+
+		block.add_statement (new CCodeIfStatement (signature_check, signature_error_block));
+	}
+
 	string generate_finish_dbus_proxy_method (Interface main_iface, Interface iface, Method m) {
 		string proxy_name = "%sdbus_proxy_%s_finish".printf (main_iface.get_lower_case_cprefix (), m.name);
 
@@ -1878,6 +1929,12 @@ internal class Vala.DBusClientModule : DBusModule {
 		cdecl.add_declarator (new CCodeVariableDeclarator ("_data_"));
 		block.add_statement (cdecl);
 
+		cdecl = new CCodeDeclaration ("DBusError");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_dbus_error"));
+		block.add_statement (cdecl);
+
+		var dbus_error = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_dbus_error"));
+
 		cdecl = new CCodeDeclaration ("DBusMessage");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("*_reply"));
 		block.add_statement (cdecl);
@@ -1890,9 +1947,21 @@ internal class Vala.DBusClientModule : DBusModule {
 		get_source_tag.add_argument (new CCodeCastExpression (new CCodeIdentifier ("_res_"), "GSimpleAsyncResult *"));
 		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_data_"), get_source_tag)));
 
+		var dbus_error_init = new CCodeFunctionCall (new CCodeIdentifier ("dbus_error_init"));
+		dbus_error_init.add_argument (dbus_error);
+		block.add_statement (new CCodeExpressionStatement (dbus_error_init));
+
 		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_pending_call_steal_reply"));
 		ccall.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "pending"));
 		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall)));
+
+		var set_error_from_message = new CCodeFunctionCall (new CCodeIdentifier ("dbus_set_error_from_message"));
+		set_error_from_message.add_argument (dbus_error);
+		set_error_from_message.add_argument (new CCodeIdentifier ("_reply"));
+		block.add_statement (new CCodeExpressionStatement (set_error_from_message));
+
+		check_error_reply (m, block);
+		check_reply_signature (m, block);
 
 		generate_marshalling (m, dbus_iface_name, prefragment, postfragment);
 
