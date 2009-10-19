@@ -25,7 +25,8 @@ htmlhelpers_LTLIBRARIES =   \
 libhtmlhelpers_la_VALASOURCES = \
 	globals.vala                \
 	doclet.vala                 \
-	htmlrenderer.vala                 \
+	htmlrenderer.vala           \
+	markupwriter.vala           \
 	$(NULL)
 
 
@@ -66,4 +67,5 @@ MAINTAINERCLEANFILES =                        \
 	libhtmlhelpers-1.0.h                      \
 	$(libhtmlhelpers_la_VALASOURCES:.vala=.c) \
 	$(NULL)
+
 

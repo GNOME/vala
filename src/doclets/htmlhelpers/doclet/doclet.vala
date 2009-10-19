@@ -24,38 +24,39 @@ using Valadoc.Api;
 public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected Settings settings;
 	protected HtmlRenderer _renderer;
-
-	construct {
-		_renderer = new HtmlRenderer (this);
-	}
+	protected MarkupWriter writer;
 
 	public abstract void process (Settings settings, Api.Tree tree);
 
-	protected string? get_link ( Api.Node element, Api.Node? pos ) {
-		return get_html_link ( this.settings, element, pos );
+	protected string? get_link (Api.Node element, Api.Node? pos) {
+		return get_html_link (this.settings, element, pos);
 	}
 
-	protected void write_navi_entry_html_template ( GLib.FileStream file, string style, string content ) {
-		file.printf ( "\t<li class=\"%s\">%s</li>\n", style, content );
+	protected void write_navi_entry_html_template (string style, string content) {
+		writer.start_tag ("li", style);
+		writer.text (content);
+		writer.end_tag ("li");
 	}
 
-	protected void write_navi_entry_html_template_with_link ( GLib.FileStream file, string style, string link, string content ) {
-		file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", style, css_navi_link, link, content );
+	protected void write_navi_entry_html_template_with_link (string style, string link, string content) {
+		writer.start_tag ("li", style);
+		writer.link (css_navi_link, link, content);
+		writer.end_tag ("li");
 	}
 
-	protected void write_navi_entry ( GLib.FileStream file, Api.Node element, Api.Node? pos, string style, bool link, bool full_name = false ) {
+	protected void write_navi_entry (Api.Node element, Api.Node? pos, string style, bool link, bool full_name = false) {
 		string name;
 
-		if ( element is Class ) {
-			if ( ((Class)element).is_abstract )
+		if (element is Class) {
+			if (((Class)element).is_abstract)
 				name = "<i>" + element.name + "</i>";
 			else
 				name = element.name;
 		}
-		else if ( element is Package ) {
+		else if (element is Package) {
 			name = element.package.name;
 		}
-		else if ( full_name == true && element is Namespace ) {
+		else if (full_name == true && element is Namespace) {
 			string tmp = element.full_name();
 			name = (tmp == null)? "Global Namespace" : tmp;
 		}
@@ -64,23 +65,23 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			name = (tmp == null)? "Global Namespace" : tmp;
 		}
 
-		if ( link == true )
-			this.write_navi_entry_html_template_with_link ( file, style, this.get_link (element, pos), name );
+		if (link == true)
+			this.write_navi_entry_html_template_with_link (style, this.get_link (element, pos), name);
 		else
-			this.write_navi_entry_html_template ( file, style, name );
+			this.write_navi_entry_html_template (style, name);
 	}
 
 	protected void write_wiki_pages (Api.Tree tree, string css_path_wiki, string contentp) {
-		if ( tree.wikitree == null ) {
+		if (tree.wikitree == null) {
 			return ;
 		}
 
-		if ( tree.wikitree == null ) {
+		if (tree.wikitree == null) {
 			return ;
 		}
 
 		Gee.Collection<WikiPage> pages = tree.wikitree.get_pages();
-		if ( pages.size == 0 ) {
+		if (pages.size == 0) {
 			return ;
 		}
 
@@ -88,1348 +89,1379 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		DirUtils.create (Path.build_filename (contentp, "img"), 0777);
 
-		foreach ( WikiPage page in pages ) {
-			if ( page.name != "index.valadoc" ) {
-				GLib.FileStream file = GLib.FileStream.open ( Path.build_filename(contentp, page.name.ndup( page.name.len()-7).replace ("/", ".")+"html"), "w" );
-				this.write_file_header ( file, css_path_wiki, this.settings.pkg_name );
+		foreach (WikiPage page in pages) {
+			if (page.name != "index.valadoc") {
+				GLib.FileStream file = GLib.FileStream.open (Path.build_filename(contentp, page.name.ndup(page.name.len()-7).replace ("/", ".")+"html"), "w");
+				writer = new MarkupWriter (file);
+				_renderer.set_writer (writer);
+				this.write_file_header (css_path_wiki, this.settings.pkg_name);
 				_renderer.set_container (page);
-				_renderer.set_filestream (file);
 				_renderer.render (page.documentation);
-				this.write_file_footer ( file );
+				this.write_file_footer ();
 			}
 		}
 	}
 
-	protected void write_navi_top_entry ( GLib.FileStream file, Api.Node element, Api.Node? mself ) {
+	protected void write_navi_top_entry (Api.Node element, Api.Node? parent) {
 		string name = (element.name == null)? "Global Namespace" : element.name;
 		string style = null;
 
-		if ( element is Namespace )
+		if (element is Namespace)
 			style = css_navi_namespace;
-		else if ( element is Enum )
+		else if (element is Enum)
 			style = css_navi_enum;
-		else if ( element is ErrorDomain )
+		else if (element is ErrorDomain)
 			style = css_navi_error_domain;
-		else if ( element is Struct )
+		else if (element is Struct)
 			style = css_navi_struct;
-		else if ( element is Class )
-			style = ( ((Class)element).is_abstract )? css_navi_abstract_class : css_navi_class;
-		else if ( element is Interface )
+		else if (element is Class)
+			style = (((Class)element).is_abstract)? css_navi_abstract_class : css_navi_class;
+		else if (element is Interface)
 			style = css_navi_iface;
-		else if ( element is Package ) {
+		else if (element is Package) {
 			name = element.package.name;
 			style = css_navi_package;
 		}
 
-		file.printf ( "<ul class=\"%s\">\n", css_navi );
+		writer.start_tag ("ul", css_navi);
 
-		if ( element == mself || mself == null )
-			this.write_navi_entry ( file, element, mself, style, false );
+		if (element == parent || parent == null)
+			this.write_navi_entry (element, parent, style, false);
 		else
-			this.write_navi_entry ( file, element, mself, style, true );
+			this.write_navi_entry (element, parent, style, true);
 
-		file.puts ( "</ul>\n" );
-		file.printf ( "\n<hr class=\"%s\">\n", css_navi_hr );
+		writer.end_tag ("ul");
+		writer.simple_tag ("hr", css_navi_hr);
 	}
 
-	protected void write_top_element_template ( GLib.FileStream file, string link ) {
-		file.printf ( "<ul class=\"%s\">\n\t\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">Packages</a></li>\n</ul>\n<hr class=\"%s\">\n", css_navi, css_navi_package_index, css_navi_link, link, css_navi_hr );
+	protected void write_top_element_template (string link) {
+		writer.start_tag ("ul", css_navi);
+		writer.start_tag ("li", css_navi_package_index);
+		writer.link (css_navi_link, link, "Packages");
+		writer.end_tag ("li");
+		writer.end_tag ("ul");
+		writer.simple_tag ("hr", css_navi_hr);
 	}
 
-	protected void write_top_elements ( GLib.FileStream file, Api.Node element, Api.Node? mself ) {
+	protected void write_top_elements (Api.Node element, Api.Node? parent) {
 		Gee.ArrayList<Api.Node> lst = new Gee.ArrayList<Api.Node> ();
 		Api.Node pos = element;
 
-		this.write_top_element_template ( file, "../index.html" );
+		this.write_top_element_template ("../index.html");
 
-		while ( pos != null ) {
-			lst.add ( pos );
+		while (pos != null) {
+			lst.add (pos);
 			pos = (Api.Node)pos.parent;
 		}
 
-		for ( int i = lst.size-1; i >= 0  ; i-- ) {
-			Api.Node el = lst.get ( i );
+		for (int i = lst.size-1; i >= 0  ; i--) {
+			Api.Node el = lst.get (i);
 
-			if ( el.name != null ) {
-				this.write_navi_top_entry ( file, el, mself );
+			if (el.name != null) {
+				this.write_navi_top_entry (el, parent);
 			}
 		}
 	}
 
-	protected void fetch_subnamespace_names ( NamespaceHandler pos, Gee.ArrayList<Namespace> lst ) {
+	protected void fetch_subnamespace_names (NamespaceHandler pos, Gee.ArrayList<Namespace> lst) {
 		Gee.Collection<Namespace> nspaces = pos.get_namespace_list ();
 
-		foreach ( Namespace ns in nspaces ) {
-			lst.add ( ns );
-			this.fetch_subnamespace_names ( ns, lst );
+		foreach (Namespace ns in nspaces) {
+			lst.add (ns);
+			this.fetch_subnamespace_names (ns, lst);
 		}
 	}
 
-	protected void write_navi_file ( GLib.FileStream file, Package efile, Api.Node? pos ) {
+	protected void write_navi_file (Package efile, Api.Node? pos) {
 		Gee.ArrayList<Namespace> ns_list = new Gee.ArrayList<Namespace> ();
-		this.fetch_subnamespace_names (efile, ns_list );
+		this.fetch_subnamespace_names (efile, ns_list);
 
 
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
+		writer.start_tag ("div", css_style_navigation);
 
 
-		if ( pos == null )
-			this.write_top_elements ( file, efile, null );
-		else if ( pos == efile )
-			this.write_top_elements ( file, efile, efile );
+		if (pos == null)
+			this.write_top_elements (efile, null);
+		else if (pos == efile)
+			this.write_top_elements (efile, efile);
 		else
-			this.write_top_elements ( file, (Api.Node)pos.parent.parent, pos );
+			this.write_top_elements ((Api.Node)pos.parent.parent, pos);
 
-		file.printf ( "\t\t\t\t<ul class=\"%s\">\n", css_navi );
+		writer.start_tag ("ul", css_navi);
 
 
 		Namespace globals = null;
 
-		foreach ( Namespace ns in ns_list ) {
-			if ( ns.name == null )
+		foreach (Namespace ns in ns_list) {
+			if (ns.name == null)
 				globals = ns;
 			else
-				this.write_navi_entry ( file, ns, pos, css_navi_namespace, true, true );
+				this.write_navi_entry (ns, pos, css_navi_namespace, true, true);
 		}
 
-		if ( globals != null ) {
-			this.write_navi_child_namespaces_inline_withouth_block ( file, globals, pos );
+		if (globals != null) {
+			this.write_navi_child_namespaces_inline_withouth_block (globals, pos);
 		}
 
-		file.puts ( "\t\t\t\t</ul>\n" );
-		file.puts ( "\t\t\t</div>\n" );
+		writer.end_tag ("ul");
+		writer.end_tag ("div");
 	}
 
-	protected void write_navi_child_namespaces_inline_withouth_block ( GLib.FileStream file, Namespace ns, Api.Node? mself ) {
-		this.write_navi_child_namespaces_without_childs ( file, ns, mself );
-		this.write_navi_child_classes_without_childs ( file, ns, mself );
-		this.write_navi_child_interfaces_without_childs ( file, ns, mself );
-		this.write_navi_child_structs_without_childs ( file, ns, mself );
-		this.write_navi_child_enums_without_childs ( file, ns, mself );
-		this.write_navi_child_error_domains_without_childs ( file, ns, mself );
-		this.write_navi_child_delegates ( file, ns, mself );
-		this.write_navi_child_static_methods ( file, ns, mself );
-		this.write_navi_child_methods ( file, ns, mself );
-		this.write_navi_child_fields ( file, ns, mself );
-		this.write_navi_child_constants ( file, ns, mself );
+	protected void write_navi_child_namespaces_inline_withouth_block (Namespace ns, Api.Node? parent) {
+		this.write_navi_child_namespaces_without_childs (ns, parent);
+		this.write_navi_child_classes_without_childs (ns, parent);
+		this.write_navi_child_interfaces_without_childs (ns, parent);
+		this.write_navi_child_structs_without_childs (ns, parent);
+		this.write_navi_child_enums_without_childs (ns, parent);
+		this.write_navi_child_error_domains_without_childs (ns, parent);
+		this.write_navi_child_delegates (ns, parent);
+		this.write_navi_child_static_methods (ns, parent);
+		this.write_navi_child_methods (ns, parent);
+		this.write_navi_child_fields (ns, parent);
+		this.write_navi_child_constants (ns, parent);
 	}
 
-	protected void write_navi_child_namespaces_inline ( GLib.FileStream file, Namespace ns, Api.Node? mself ) {
-		file.printf ( "<ul class=\"%s\">\n", css_navi );
+	protected void write_navi_child_namespaces_inline (Namespace ns, Api.Node? parent) {
+		writer.start_tag ("ul", css_navi);
 
-		if ( ns.name == null ) {
-			this.write_navi_child_namespaces_without_childs ( file, (Package)ns.parent, ns );
+		if (ns.name == null) {
+			this.write_navi_child_namespaces_without_childs ((Package)ns.parent, ns);
 		}
 
-		this.write_navi_child_namespaces_inline_withouth_block ( file, ns, mself );
+		this.write_navi_child_namespaces_inline_withouth_block (ns, parent);
 
-		file.puts ( "</ul>\n" );
+		writer.end_tag ("ul");
 	}
 
-	protected void write_navi_child_namespaces ( GLib.FileStream file, Namespace ns, Api.Node? mself ) {
-		this.write_top_elements ( file, ns, mself );
-		this.write_navi_child_namespaces_inline ( file, ns, mself );
+	protected void write_navi_child_namespaces (Namespace ns, Api.Node? parent) {
+		this.write_top_elements (ns, parent);
+		this.write_navi_child_namespaces_inline (ns, parent);
 	}
 
-	protected void write_navi_struct_inline ( GLib.FileStream file, Struct stru, Api.Node? mself ) {
-		file.printf ( "<ul class=\"%s\">\n", css_navi );
-		this.write_navi_child_construction_methods ( file, stru, mself );
-		this.write_navi_child_static_methods ( file, stru, mself );
-		this.write_navi_child_methods ( file, stru, mself );
-		this.write_navi_child_fields ( file, stru, mself );
-		this.write_navi_child_constants ( file, stru, mself );
-		file.puts ( "</ul>\n" );
+	protected void write_navi_struct_inline (Struct stru, Api.Node? parent) {
+		writer.start_tag ("ul", css_navi);
+		this.write_navi_child_construction_methods (stru, parent);
+		this.write_navi_child_static_methods (stru, parent);
+		this.write_navi_child_methods (stru, parent);
+		this.write_navi_child_fields (stru, parent);
+		this.write_navi_child_constants (stru, parent);
+		writer.end_tag ("ul");
 	}
 
-	protected void write_navi_struct ( GLib.FileStream file, Struct stru, Api.Node? mself ) {
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-		this.write_top_elements ( file, stru, mself );
-		this.write_navi_struct_inline ( file, stru, mself );
-		file.puts ( "\t\t\t</div>\n" );
+	protected void write_navi_struct (Struct stru, Api.Node? parent) {
+		writer.start_tag ("div", css_style_navigation);
+		this.write_top_elements (stru, parent);
+		this.write_navi_struct_inline (stru, parent);
+		writer.end_tag ("div");
 	}
 
-	protected void write_navi_interface_inline ( GLib.FileStream file, Interface iface, Api.Node? mself ) {
-		file.printf ( "<ul class=\"%s\">\n", css_navi );
-		this.write_navi_child_static_methods ( file, iface, mself );
-		this.write_navi_child_delegates ( file, iface, mself );
-		this.write_navi_child_methods ( file, iface, mself );
-		this.write_navi_child_signals ( file, iface, mself );
-		this.write_navi_child_properties ( file, iface, mself );
-		this.write_navi_child_fields ( file, iface, mself );
-		this.write_navi_child_constants ( file, iface, mself );
-		file.puts ( "</ul>\n" );
+	protected void write_navi_interface_inline (Interface iface, Api.Node? parent) {
+		writer.start_tag ("ul", css_navi);
+		this.write_navi_child_static_methods (iface, parent);
+		this.write_navi_child_delegates (iface, parent);
+		this.write_navi_child_methods (iface, parent);
+		this.write_navi_child_signals (iface, parent);
+		this.write_navi_child_properties (iface, parent);
+		this.write_navi_child_fields (iface, parent);
+		this.write_navi_child_constants (iface, parent);
+		writer.end_tag ("ul");
 	}
 
-	protected void write_navi_interface ( GLib.FileStream file, Interface iface, Api.Node? mself ) {
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-		this.write_top_elements ( file, iface, mself );
-		this.write_navi_interface_inline ( file, iface, mself );
-		file.puts ( "\t\t\t</div>\n" );
+	protected void write_navi_interface (Interface iface, Api.Node? parent) {
+		writer.start_tag ("div", css_style_navigation);
+		this.write_top_elements (iface, parent);
+		this.write_navi_interface_inline (iface, parent);
+		writer.end_tag ("div");
 	}
 
-	protected void write_navi_enum_inline ( GLib.FileStream file, Enum en, Api.Node? mself ) {
-		Gee.Collection<Api.EnumValue> enum_values = en.get_enum_values ( );
-		file.printf ( "<ul class=\"%s\">\n", css_navi );
+	protected void write_navi_enum_inline (Enum en, Api.Node? parent) {
+		Gee.Collection<Api.EnumValue> enum_values = en.get_enum_values ();
+		writer.start_tag ("ul", css_navi);
 
-		foreach ( Api.EnumValue env in enum_values ) {
-			this.write_navi_entry ( file, env, en, css_navi_enval, true );
+		foreach (Api.EnumValue env in enum_values) {
+			this.write_navi_entry (env, en, css_navi_enval, true);
 		}
 
-		this.write_navi_child_static_methods ( file, en, mself );
-		this.write_navi_child_methods ( file, en, mself );
-		file.puts ( "</ul>\n" );
+		this.write_navi_child_static_methods (en, parent);
+		this.write_navi_child_methods (en, parent);
+		writer.end_tag ("ul");
 	}
 
-	protected void write_navi_enum ( GLib.FileStream file, Enum en, Api.Node? mself ) {
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-		this.write_top_elements ( file, en, mself );
-		this.write_navi_enum_inline ( file, en, mself );
-		file.puts ( "\t\t\t</div>\n" );
+	protected void write_navi_enum (Enum en, Api.Node? parent) {
+		writer.start_tag ("div", css_style_navigation);
+		this.write_top_elements (en, parent);
+		this.write_navi_enum_inline (en, parent);
+		writer.end_tag ("div");
 	}
 
-	protected void write_navi_error_domain_inline ( GLib.FileStream file, ErrorDomain errdom, Api.Node? mself = null ) {
-		Gee.Collection<ErrorCode> error_codes = errdom.get_error_code_list ( );
-		file.printf ( "<ul class=\"%s\">\n", css_navi );
+	protected void write_navi_error_domain_inline (ErrorDomain errdom, Api.Node? parent = null) {
+		Gee.Collection<ErrorCode> error_codes = errdom.get_error_code_list ();
+		writer.start_tag ("ul", css_navi);
 
-		foreach ( ErrorCode ec in error_codes ) {
-			this.write_navi_entry ( file, ec, errdom, css_navi_errdomcode, true );
+		foreach (ErrorCode ec in error_codes) {
+			this.write_navi_entry (ec, errdom, css_navi_errdomcode, true);
 		}
 
-		this.write_navi_child_static_methods ( file, errdom, mself );
-		this.write_navi_child_methods ( file, errdom, mself );
-		file.puts ( "</ul>\n" );
+		this.write_navi_child_static_methods (errdom, parent);
+		this.write_navi_child_methods (errdom, parent);
+		writer.end_tag ("ul");
 	}
 
-	protected void write_navi_namespace ( GLib.FileStream file, Namespace ns ) {
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-		this.write_top_elements ( file, ns, ns );
-		this.write_navi_child_namespaces_inline ( file, ns, ns );
-		file.puts ( "\t\t\t</div>\n" );
+	protected void write_navi_namespace (Namespace ns) {
+		writer.start_tag ("div", css_style_navigation);
+		this.write_top_elements (ns, ns);
+		this.write_navi_child_namespaces_inline (ns, ns);
+		writer.end_tag ("div");
 	}
 
-	protected void write_navi_error_domain ( GLib.FileStream file, ErrorDomain errdom, Api.Node? mself ) {
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-		this.write_top_elements ( file, errdom, mself );
-		this.write_navi_error_domain_inline ( file, errdom, mself );
-		file.puts ( "\t\t\t</div>\n" );
+	protected void write_navi_error_domain (ErrorDomain errdom, Api.Node? parent) {
+		writer.start_tag ("div", css_style_navigation);
+		this.write_top_elements (errdom, parent);
+		this.write_navi_error_domain_inline (errdom, parent);
+		writer.end_tag ("div");
 	}
 
-	protected void write_navi_class_inline ( GLib.FileStream file, Class cl, Api.Node? mself ) {
-		file.printf ( "<ul class=\"%s\">\n", css_navi );
-		this.write_navi_child_construction_methods ( file, cl, mself );
-		this.write_navi_child_static_methods ( file, cl, mself );
-		this.write_navi_child_classes_without_childs ( file, cl, mself );
-		this.write_navi_child_structs_without_childs ( file, cl, mself );
-		this.write_navi_child_enums_without_childs ( file, cl, mself );
-		this.write_navi_child_delegates ( file, cl, mself );
-		this.write_navi_child_methods ( file, cl, mself );
-		this.write_navi_child_signals ( file, cl, mself );
-		this.write_navi_child_properties ( file, cl, mself );
-		this.write_navi_child_fields ( file, cl, mself );
-		this.write_navi_child_constants ( file, cl, mself );
-		file.puts ( "</ul>\n" );
+	protected void write_navi_class_inline (Class cl, Api.Node? parent) {
+		writer.start_tag ("ul", css_navi);
+		this.write_navi_child_construction_methods (cl, parent);
+		this.write_navi_child_static_methods (cl, parent);
+		this.write_navi_child_classes_without_childs (cl, parent);
+		this.write_navi_child_structs_without_childs (cl, parent);
+		this.write_navi_child_enums_without_childs (cl, parent);
+		this.write_navi_child_delegates (cl, parent);
+		this.write_navi_child_methods (cl, parent);
+		this.write_navi_child_signals (cl, parent);
+		this.write_navi_child_properties (cl, parent);
+		this.write_navi_child_fields (cl, parent);
+		this.write_navi_child_constants (cl, parent);
+		writer.end_tag ("ul");
 	}
 
-	protected void write_navi_class ( GLib.FileStream file, Class cl, Api.Node? mself ) {
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-		this.write_top_elements ( file, cl, mself );
-		this.write_navi_class_inline ( file, cl, mself );
-		file.puts ( "\t\t\t</div>\n" );
+	protected void write_navi_class (Class cl, Api.Node? parent) {
+		writer.start_tag ("div", css_style_navigation);
+		this.write_top_elements (cl, parent);
+		this.write_navi_class_inline (cl, parent);
+		writer.end_tag ("div");
 	}
 
-	protected void write_navi_method ( GLib.FileStream file, Method m ) {
+	protected void write_navi_method (Method m) {
 		Api.Node parent = (Api.Node)m.parent;
 
-		if ( parent.name == null ) {
-			this.write_navi_file ( file, (Package)parent.parent, m );
+		if (parent.name == null) {
+			this.write_navi_file ((Package)parent.parent, m);
 		}
 		else {
-			file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
+			writer.start_tag ("div", css_style_navigation);
 
-			this.write_top_elements ( file, parent, m );
+			this.write_top_elements (parent, m);
 
-			if ( parent is Class )
-				this.write_navi_class_inline ( file, (Class)parent, m );
-			else if ( m.parent is Interface )
-				this.write_navi_interface_inline ( file, (Interface)parent, m );
-			else if ( m.parent is Struct )
-				this.write_navi_struct_inline ( file, (Struct)parent, m );
-			else if ( m.parent is Enum )
-				this.write_navi_enum_inline ( file, (Enum)parent, m );
-			else if ( m.parent is ErrorDomain )
-				this.write_navi_error_domain_inline ( file, (ErrorDomain)parent, m );
-			else if ( m.parent is Namespace )
-				this.write_navi_child_namespaces_inline ( file, (Namespace)parent, m );
+			if (parent is Class)
+				this.write_navi_class_inline ((Class)parent, m);
+			else if (m.parent is Interface)
+				this.write_navi_interface_inline ((Interface)parent, m);
+			else if (m.parent is Struct)
+				this.write_navi_struct_inline ((Struct)parent, m);
+			else if (m.parent is Enum)
+				this.write_navi_enum_inline ((Enum)parent, m);
+			else if (m.parent is ErrorDomain)
+				this.write_navi_error_domain_inline ((ErrorDomain)parent, m);
+			else if (m.parent is Namespace)
+				this.write_navi_child_namespaces_inline ((Namespace)parent, m);
 
-			file.puts ( "\t\t\t</div>\n" );
+			writer.end_tag ("div");
 		}
 	}
 
-	protected void write_navi_property ( GLib.FileStream file, Property prop ) {
+	protected void write_navi_property (Property prop) {
 		Api.Node parent = (Api.Node)prop.parent;
 
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-		this.write_top_elements ( file, parent, prop );
+		writer.start_tag ("div", css_style_navigation);
+		this.write_top_elements (parent, prop);
 
-		if ( parent is Class )
-			this.write_navi_class_inline ( file, (Class)parent, prop );
-		else if ( parent is Interface )
-			this.write_navi_interface_inline ( file, (Interface)parent, prop );
+		if (parent is Class)
+			this.write_navi_class_inline ((Class)parent, prop);
+		else if (parent is Interface)
+			this.write_navi_interface_inline ((Interface)parent, prop);
 
-		file.puts ( "\t\t\t</div>\n" );
+		writer.end_tag ("div");
 	}
 
-	protected void write_navi_signal ( GLib.FileStream file, Api.Signal sig ) {
+	protected void write_navi_signal (Api.Signal sig) {
 		Api.Node parent = (Api.Node)sig.parent;
 
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
+		writer.start_tag ("div", css_style_navigation);
 
-		this.write_top_elements ( file, parent, sig );
+		this.write_top_elements (parent, sig);
 
-		if ( parent is Class )
-			this.write_navi_class_inline ( file, (Class)parent, sig );
-		else if ( parent is Interface )
-			this.write_navi_interface_inline ( file, (Interface)parent, sig );
+		if (parent is Class)
+			this.write_navi_class_inline ((Class)parent, sig);
+		else if (parent is Interface)
+			this.write_navi_interface_inline ((Interface)parent, sig);
 
-		file.puts ( "\t\t\t</div>\n" );
+		writer.end_tag ("div");
 	}
 
-	protected void write_navi_constant ( GLib.FileStream file, Constant c ) {
+	protected void write_navi_constant (Constant c) {
 		Api.Node parent = (Api.Node)c.parent;
 
-		if ( parent.name == null ) {
-			this.write_navi_file ( file, (Package)parent.parent, c );
+		if (parent.name == null) {
+			this.write_navi_file ((Package)parent.parent, c);
 		}
 		else {
-			file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-			this.write_top_elements ( file, parent, c );
+			writer.start_tag ("div", css_style_navigation);
+			this.write_top_elements (parent, c);
 
-			if ( parent is Class )
-				this.write_navi_class_inline ( file, (Class)parent, c );
-			else  if ( parent is Struct )
-				this.write_navi_struct_inline ( file, (Struct)parent, c );
-			else  if ( parent is Namespace )
-				this.write_navi_child_namespaces_inline ( file, (Namespace)parent, c );
-			else if ( parent is Interface )
-				this.write_navi_interface_inline ( file, (Interface)parent, c );
+			if (parent is Class)
+				this.write_navi_class_inline ((Class)parent, c);
+			else  if (parent is Struct)
+				this.write_navi_struct_inline ((Struct)parent, c);
+			else  if (parent is Namespace)
+				this.write_navi_child_namespaces_inline ((Namespace)parent, c);
+			else if (parent is Interface)
+				this.write_navi_interface_inline ((Interface)parent, c);
 
-			file.puts ( "\t\t\t</div>\n" );
+			writer.end_tag ("div");
 		}
 	}
 
-	protected void write_navi_field ( GLib.FileStream file, Field f ) {
+	protected void write_navi_field (Field f) {
 		Api.Node parent = (Api.Node)f.parent;
 
-		if ( parent.name == null ) {
-			this.write_navi_file ( file, (Package)parent.parent, f );
+		if (parent.name == null) {
+			this.write_navi_file ((Package)parent.parent, f);
 		}
 		else {
-			file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-			this.write_top_elements ( file, parent, f );
+			writer.start_tag ("div", css_style_navigation);
+			this.write_top_elements (parent, f);
 
-			if ( parent is Class )
-				this.write_navi_class_inline ( file, (Class)parent, f );
-			else if ( parent is Struct )
-				this.write_navi_struct_inline ( file, (Struct)parent, f );
-			else if ( parent is Namespace )
-				this.write_navi_child_namespaces_inline ( file, (Namespace)parent, f );
-			else if ( parent is Interface )
-				this.write_navi_interface_inline ( file, (Interface)parent, f );
+			if (parent is Class)
+				this.write_navi_class_inline ((Class)parent, f);
+			else if (parent is Struct)
+				this.write_navi_struct_inline ((Struct)parent, f);
+			else if (parent is Namespace)
+				this.write_navi_child_namespaces_inline ((Namespace)parent, f);
+			else if (parent is Interface)
+				this.write_navi_interface_inline ((Interface)parent, f);
 
-			file.puts ( "\t\t\t</div>\n" );
+			writer.end_tag ("div");
 		}
 	}
 
-	protected void write_navi_delegate ( GLib.FileStream file, Delegate del ) {
+	protected void write_navi_delegate (Delegate del) {
 		Api.Node parent = (Api.Node)del.parent;
 
-		if ( parent.name == null ) {
-			this.write_navi_file ( file, (Package)parent.parent, del );
+		if (parent.name == null) {
+			this.write_navi_file ((Package)parent.parent, del);
 		}
 		else {
-			file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-			this.write_top_elements ( file, parent, del );
+			writer.start_tag ("div", css_style_navigation);
+			this.write_top_elements (parent, del);
 
-			if ( parent is Namespace )
-				this.write_navi_child_namespaces_inline ( file, (Namespace)parent, del );
-			else if ( parent is Class )
-				this.write_navi_class_inline ( file, (Class)parent, del );
-			else if ( parent is Interface )
-				this.write_navi_interface_inline ( file, (Interface)parent, del );
+			if (parent is Namespace)
+				this.write_navi_child_namespaces_inline ((Namespace)parent, del);
+			else if (parent is Class)
+				this.write_navi_class_inline ((Class)parent, del);
+			else if (parent is Interface)
+				this.write_navi_interface_inline ((Interface)parent, del);
 
-			file.puts ( "\t\t\t</div>\n" );
+			writer.end_tag ("div");
 		}
 	}
 
-	protected void write_navi_child_methods_collection ( GLib.FileStream file, Gee.Collection<Method> methods, Api.Node? mself ) {
-		foreach ( Method m in methods ) {
-			if ( !m.is_static ) {
+	protected void write_navi_child_methods_collection (Gee.Collection<Method> methods, Api.Node? parent) {
+		foreach (Method m in methods) {
+			if (!m.is_static) {
 				string css;
-				if ( m.is_virtual || m.is_override )
+				if (m.is_virtual || m.is_override)
 					css = css_navi_virtual_method;
-				else if ( m.is_abstract )
+				else if (m.is_abstract)
 					css = css_navi_abstract_method;
 				else
 					css = css_navi_method;
 
-				if ( m == mself )
-					this.write_navi_entry ( file, m, mself, css, false );
+				if (m == parent)
+					this.write_navi_entry (m, parent, css, false);
 				else
-					this.write_navi_entry ( file, m, mself, css, true );
+					this.write_navi_entry (m, parent, css, true);
 			}
 		}
 	}
 
-	protected void write_navi_child_construction_methods_collection ( GLib.FileStream file, Gee.Collection<Method> methods, Api.Node? mself ) {
-		foreach ( Method m in methods ) {
-			if ( m == mself )
-				this.write_navi_entry ( file, m, mself, css_navi_construction_method, false );
+	protected void write_navi_child_construction_methods_collection (Gee.Collection<Method> methods, Api.Node? parent) {
+		foreach (Method m in methods) {
+			if (m == parent)
+				this.write_navi_entry (m, parent, css_navi_construction_method, false);
 			else
-				this.write_navi_entry ( file, m, mself, css_navi_construction_method, true );
+				this.write_navi_entry (m, parent, css_navi_construction_method, true);
 		}
 	}
 
-	protected void write_navi_child_static_methods_collection ( GLib.FileStream file, Gee.Collection<Method> methods, Api.Node? mself ) {
-		foreach ( Method m in methods ) {
-			if ( m.is_static ) {
-				if ( m == mself )
-					this.write_navi_entry ( file, m, mself, css_navi_static_method, false );
+	protected void write_navi_child_static_methods_collection (Gee.Collection<Method> methods, Api.Node? parent) {
+		foreach (Method m in methods) {
+			if (m.is_static) {
+				if (m == parent)
+					this.write_navi_entry (m, parent, css_navi_static_method, false);
 				else
-					this.write_navi_entry ( file, m, mself, css_navi_static_method, true );
+					this.write_navi_entry (m, parent, css_navi_static_method, true);
 			}
 		}
 	}
 
-	protected void write_navi_child_methods ( GLib.FileStream file, MethodHandler mh, Api.Node? mself ) {
-		Gee.Collection<Method> methods = mh.get_method_list ( );
-		this.write_navi_child_methods_collection ( file, methods, mself );
+	protected void write_navi_child_methods (MethodHandler mh, Api.Node? parent) {
+		Gee.Collection<Method> methods = mh.get_method_list ();
+		this.write_navi_child_methods_collection (methods, parent);
 	}
 
-	protected void write_navi_child_static_methods ( GLib.FileStream file, MethodHandler mh, Api.Node? mself ) {
-		Gee.Collection<Method> methods = mh.get_method_list ( );
-		this.write_navi_child_static_methods_collection ( file, methods, mself );
+	protected void write_navi_child_static_methods (MethodHandler mh, Api.Node? parent) {
+		Gee.Collection<Method> methods = mh.get_method_list ();
+		this.write_navi_child_static_methods_collection (methods, parent);
 	}
 
-	protected void write_navi_child_classes_without_childs_collection ( GLib.FileStream file, Gee.Collection<Class> classes, Api.Node? mself ) {
-		foreach ( Class cl in classes ) {
-			if ( cl == mself )
-				this.write_navi_entry ( file, cl, mself, (cl.is_abstract)? css_navi_abstract_class : css_navi_class, false );
+	protected void write_navi_child_classes_without_childs_collection (Gee.Collection<Class> classes, Api.Node? parent) {
+		foreach (Class cl in classes) {
+			if (cl == parent)
+				this.write_navi_entry (cl, parent, (cl.is_abstract)? css_navi_abstract_class : css_navi_class, false);
 			else
-				this.write_navi_entry ( file, cl, mself, (cl.is_abstract)? css_navi_abstract_class : css_navi_class, true );
+				this.write_navi_entry (cl, parent, (cl.is_abstract)? css_navi_abstract_class : css_navi_class, true);
 		}
 	}
 
-	protected void write_navi_child_classes_without_childs ( GLib.FileStream file, ClassHandler clh, Api.Node? mself ) {
-		Gee.Collection<Class> classes = clh.get_class_list ( );
-		this.write_navi_child_classes_without_childs_collection ( file, classes, mself );
+	protected void write_navi_child_classes_without_childs (ClassHandler clh, Api.Node? parent) {
+		Gee.Collection<Class> classes = clh.get_class_list ();
+		this.write_navi_child_classes_without_childs_collection (classes, parent);
 	}
 
-	protected void write_navi_child_construction_methods ( GLib.FileStream file, ConstructionMethodHandler cmh, Api.Node? mself ) {
-		Gee.Collection<Method> methods = cmh.get_construction_method_list ( );
-		this.write_navi_child_construction_methods_collection ( file, methods, mself );
+	protected void write_navi_child_construction_methods (ConstructionMethodHandler cmh, Api.Node? parent) {
+		Gee.Collection<Method> methods = cmh.get_construction_method_list ();
+		this.write_navi_child_construction_methods_collection (methods, parent);
 	}
 
-	protected void write_navi_child_signals ( GLib.FileStream file, Api.SignalHandler sh, Api.Node? mself ) {
-		Gee.Collection<Api.Signal> signals = sh.get_signal_list ( );
+	protected void write_navi_child_signals (Api.SignalHandler sh, Api.Node? parent) {
+		Gee.Collection<Api.Signal> signals = sh.get_signal_list ();
 
-		foreach ( Api.Signal sig in signals ) {
-			if ( sig == mself )
-				this.write_navi_entry ( file, sig, mself, css_navi_sig, false );
+		foreach (Api.Signal sig in signals) {
+			if (sig == parent)
+				this.write_navi_entry (sig, parent, css_navi_sig, false);
 			else
-				this.write_navi_entry ( file, sig, mself, css_navi_sig, true );
+				this.write_navi_entry (sig, parent, css_navi_sig, true);
 		}
 	}
 
-	protected void write_navi_child_properties ( GLib.FileStream file, PropertyHandler ph, Api.Node? mself ) {
-		Gee.Collection<Property> properties = ph.get_property_list ( );
+	protected void write_navi_child_properties (PropertyHandler ph, Api.Node? parent) {
+		Gee.Collection<Property> properties = ph.get_property_list ();
 
-		foreach ( Property p in properties ) {
+		foreach (Property p in properties) {
 			string css;
-			if ( p.is_virtual )
+			if (p.is_virtual)
 				css = css_navi_virtual_prop;
-			else if ( p.is_abstract )
+			else if (p.is_abstract)
 				css = css_navi_abstract_prop;
 			else
 				css = css_navi_prop;
 
-			if ( p == mself )
-				this.write_navi_entry ( file, p, mself, css, false );
+			if (p == parent)
+				this.write_navi_entry (p, parent, css, false);
 			else
-				this.write_navi_entry ( file, p, mself, css, true );
+				this.write_navi_entry (p, parent, css, true);
 		}
 	}
 
-	protected void write_navi_child_fields_collection ( GLib.FileStream file, Gee.Collection<Field> fields, Api.Node? mself ) {
-		foreach ( Field f in fields ) {
-			if ( f == mself )
-				this.write_navi_entry ( file, f, mself, css_navi_field, false );
+	protected void write_navi_child_fields_collection (Gee.Collection<Field> fields, Api.Node? parent) {
+		foreach (Field f in fields) {
+			if (f == parent)
+				this.write_navi_entry (f, parent, css_navi_field, false);
 			else
-				this.write_navi_entry ( file, f, mself, css_navi_field, true );
+				this.write_navi_entry (f, parent, css_navi_field, true);
 		}
 	}
 
-	protected void write_navi_child_fields ( GLib.FileStream file, FieldHandler fh, Api.Node? mself ) {
-		Gee.Collection<Field> fields = fh.get_field_list ( );
-		this.write_navi_child_fields_collection ( file, fields, mself );
+	protected void write_navi_child_fields (FieldHandler fh, Api.Node? parent) {
+		Gee.Collection<Field> fields = fh.get_field_list ();
+		this.write_navi_child_fields_collection (fields, parent);
 	}
 
-	protected void write_navi_child_constants_collection ( GLib.FileStream file, Gee.Collection<Constant> constants, Api.Node? mself ) {
-		foreach ( Constant c in constants ) {
-			if ( c == mself )
-				this.write_navi_entry ( file, c, mself, css_navi_constant, false );
+	protected void write_navi_child_constants_collection (Gee.Collection<Constant> constants, Api.Node? parent) {
+		foreach (Constant c in constants) {
+			if (c == parent)
+				this.write_navi_entry (c, parent, css_navi_constant, false);
 			else
-				this.write_navi_entry ( file, c, mself, css_navi_constant, true );
+				this.write_navi_entry (c, parent, css_navi_constant, true);
 		}
 	}
 
-	protected void write_navi_child_constants ( GLib.FileStream file, ConstantHandler ch, Api.Node? mself ) {
-		Gee.Collection<Constant> constants = ch.get_constant_list ( );
-		this.write_navi_child_constants_collection ( file, constants, mself );
+	protected void write_navi_child_constants (ConstantHandler ch, Api.Node? parent) {
+		Gee.Collection<Constant> constants = ch.get_constant_list ();
+		this.write_navi_child_constants_collection (constants, parent);
 	}
 
-	protected void write_navi_child_structs_without_childs_collection ( GLib.FileStream file, Gee.Collection<Struct> structs, Api.Node? mself ) {
-		foreach ( Struct stru in structs ) {
-			if ( stru == mself )
-				this.write_navi_entry ( file, stru, mself, css_navi_struct, false );
+	protected void write_navi_child_structs_without_childs_collection (Gee.Collection<Struct> structs, Api.Node? parent) {
+		foreach (Struct stru in structs) {
+			if (stru == parent)
+				this.write_navi_entry (stru, parent, css_navi_struct, false);
 			else
-				this.write_navi_entry ( file, stru, mself, css_navi_struct, true );
+				this.write_navi_entry (stru, parent, css_navi_struct, true);
 		}
 	}
 
-	protected void write_navi_child_structs_without_childs ( GLib.FileStream file, StructHandler strh, Api.Node? mself ) {
-		Gee.Collection<Struct> structs = strh.get_struct_list ( );
-		this.write_navi_child_structs_without_childs_collection ( file, structs, mself );
+	protected void write_navi_child_structs_without_childs (StructHandler strh, Api.Node? parent) {
+		Gee.Collection<Struct> structs = strh.get_struct_list ();
+		this.write_navi_child_structs_without_childs_collection (structs, parent);
 	}
 
-	protected void write_navi_child_delegates_collection ( GLib.FileStream file, Gee.Collection<Delegate> delegates, Api.Node? mself ) {
-		foreach ( Delegate del in delegates ) {
-			if ( del == mself )
-				this.write_navi_entry ( file, del, mself, css_navi_del, false );
+	protected void write_navi_child_delegates_collection (Gee.Collection<Delegate> delegates, Api.Node? parent) {
+		foreach (Delegate del in delegates) {
+			if (del == parent)
+				this.write_navi_entry (del, parent, css_navi_del, false);
 			else
-				this.write_navi_entry ( file, del, mself, css_navi_del, true );
+				this.write_navi_entry (del, parent, css_navi_del, true);
 		}
 	}
 
-	protected void write_navi_child_delegates ( GLib.FileStream file, DelegateHandler delh, Api.Node? mself ) {
-		Gee.Collection<Delegate> delegates = delh.get_delegate_list ( );
-		this.write_navi_child_delegates_collection ( file, delegates, mself );
+	protected void write_navi_child_delegates (DelegateHandler delh, Api.Node? parent) {
+		Gee.Collection<Delegate> delegates = delh.get_delegate_list ();
+		this.write_navi_child_delegates_collection (delegates, parent);
 	}
 
-	protected void write_navi_child_interfaces_without_childs_collection ( GLib.FileStream file, Gee.Collection<Interface> interfaces, Api.Node? mself ) {
-		foreach ( Interface iface in interfaces ) {
-			if ( iface == mself )
-				this.write_navi_entry ( file, iface, mself, css_navi_iface, false );
+	protected void write_navi_child_interfaces_without_childs_collection (Gee.Collection<Interface> interfaces, Api.Node? parent) {
+		foreach (Interface iface in interfaces) {
+			if (iface == parent)
+				this.write_navi_entry (iface, parent, css_navi_iface, false);
 			else
-				this.write_navi_entry ( file, iface, mself, css_navi_iface, true );
+				this.write_navi_entry (iface, parent, css_navi_iface, true);
 		}
 	}
 
-	protected void write_navi_child_interfaces_without_childs ( GLib.FileStream file, Namespace ifh, Api.Node? mself ) {
-		Gee.Collection<Interface> interfaces = ifh.get_interface_list ( );
-		this.write_navi_child_interfaces_without_childs_collection ( file, interfaces, mself );
+	protected void write_navi_child_interfaces_without_childs (Namespace ifh, Api.Node? parent) {
+		Gee.Collection<Interface> interfaces = ifh.get_interface_list ();
+		this.write_navi_child_interfaces_without_childs_collection (interfaces, parent);
 	}
 
-	protected void write_navi_child_enums_without_childs_collection ( GLib.FileStream file, Gee.Collection<Enum> enums, Api.Node? mself ) {
-		foreach ( Enum en in enums ) {
-			if ( en == mself )
-				this.write_navi_entry ( file, en, mself, css_navi_enum, false );
+	protected void write_navi_child_enums_without_childs_collection (Gee.Collection<Enum> enums, Api.Node? parent) {
+		foreach (Enum en in enums) {
+			if (en == parent)
+				this.write_navi_entry (en, parent, css_navi_enum, false);
 			else
-				this.write_navi_entry ( file, en, mself, css_navi_enum, true );
+				this.write_navi_entry (en, parent, css_navi_enum, true);
 		}
 	}
 
-	protected void write_navi_child_enums_without_childs ( GLib.FileStream file, EnumHandler eh, Api.Node? mself ) {
-		Gee.Collection<Enum> enums = eh.get_enum_list ( );
-		this.write_navi_child_enums_without_childs_collection ( file, enums, mself );
+	protected void write_navi_child_enums_without_childs (EnumHandler eh, Api.Node? parent) {
+		Gee.Collection<Enum> enums = eh.get_enum_list ();
+		this.write_navi_child_enums_without_childs_collection (enums, parent);
 	}
 
-	protected void write_navi_child_error_domains_without_childs_collection ( GLib.FileStream file, Gee.Collection<ErrorDomain> errordomains, Api.Node? mself ) {
-		foreach ( ErrorDomain errdom in errordomains ) {
-			if ( errdom == mself )
-				this.write_navi_entry ( file, errdom, mself, css_navi_error_domain, false );
+	protected void write_navi_child_error_domains_without_childs_collection (Gee.Collection<ErrorDomain> errordomains, Api.Node? parent) {
+		foreach (ErrorDomain errdom in errordomains) {
+			if (errdom == parent)
+				this.write_navi_entry (errdom, parent, css_navi_error_domain, false);
 			else
-				this.write_navi_entry ( file, errdom, mself, css_navi_error_domain, true );
+				this.write_navi_entry (errdom, parent, css_navi_error_domain, true);
 		}
 	}
 
-	protected void write_navi_child_error_domains_without_childs ( GLib.FileStream file, Namespace errdomh, Api.Node? mself ) {
-		Gee.Collection<ErrorDomain> errordomains = errdomh.get_error_domain_list ( );
-		this.write_navi_child_error_domains_without_childs_collection ( file, errordomains, mself );
+	protected void write_navi_child_error_domains_without_childs (Namespace errdomh, Api.Node? parent) {
+		Gee.Collection<ErrorDomain> errordomains = errdomh.get_error_domain_list ();
+		this.write_navi_child_error_domains_without_childs_collection (errordomains, parent);
 	}
 
-	protected void write_navi_child_namespaces_without_childs ( GLib.FileStream file, NamespaceHandler nsh, Api.Node? mself ) {
-		Gee.Collection<Namespace> namespaces = nsh.get_namespace_list ( );
-		foreach ( Namespace ns in namespaces ) {
-			if ( ns.name == null )
+	protected void write_navi_child_namespaces_without_childs (NamespaceHandler nsh, Api.Node? parent) {
+		Gee.Collection<Namespace> namespaces = nsh.get_namespace_list ();
+		foreach (Namespace ns in namespaces) {
+			if (ns.name == null)
 				continue ;
 
-			if ( ns == mself )
-				this.write_navi_entry ( file, ns, mself, css_navi_namespace, false );
+			if (ns == parent)
+				this.write_navi_entry (ns, parent, css_navi_namespace, false);
 			else
-				this.write_navi_entry ( file, ns, mself, css_navi_namespace, true );
+				this.write_navi_entry (ns, parent, css_navi_namespace, true);
 		}
 	}
 
-	protected void write_package_note ( GLib.FileStream file, Api.Node element ) {
+	protected void write_package_note (Api.Node element) {
 		string package = element.package.name;
-		if ( package == null )
+		if (package == null)
 			return ;
 
-		file.printf ( "\n\n<br />\n<b>Package:</b> %s\n\n", package );
+		writer.simple_tag ("br");
+		writer.start_tag ("b").text ("Package:").end_tag ("b");
+		writer.text (package);
 	}
 
-	protected void write_namespace_note ( GLib.FileStream file, Api.Node element ) {
+	protected void write_namespace_note (Api.Node element) {
 		Namespace? ns = element.nspace;
-		if ( ns == null )
+		if (ns == null)
 			return ;
 
-		if ( ns.name == null )
+		if (ns.name == null)
 			return ;
 
-		file.printf ( "\n\n<br />\n<b>Namespace:</b> %s\n\n", ns.full_name() );
+		writer.simple_tag ("br");
+		writer.start_tag ("b").text ("Namespace:").end_tag ("b");
+		writer.text (ns.full_name());
 	}
 
-	private void write_brief_description ( GLib.FileStream file, Api.Node element , Api.Node? pos ) {
+	private void write_brief_description (Api.Node element , Api.Node? pos) {
 		Comment? doctree = element.documentation;
-		if ( doctree == null )
+		if (doctree == null)
 			return ;
 
 		Gee.List<Block> description = doctree.content;
-		if ( description.size > 0 ) {
-			file.printf ( " <span class=\"%s\">- ", css_inline_navigation_brief_description );
+		if (description.size > 0) {
+			writer.start_tag ("span", css_inline_navigation_brief_description);
+			writer.text (" - ");
 
 			_renderer.set_container (pos);
-			_renderer.set_filestream (file);
 			_renderer.render_children (description.get (0));
 
-			file.printf ( " </span>\n" );
+			writer.end_tag ("span");
 		}
 	}
 
-	private void write_documentation ( GLib.FileStream file, Api.Node element , Api.Node? pos ) {
+	private void write_documentation (Api.Node element , Api.Node? pos) {
 		Comment? doctree = element.documentation;
-		if ( doctree == null )
+		if (doctree == null)
 			return ;
 
 		_renderer.set_container (pos);
-		_renderer.set_filestream (file);
 		_renderer.render (doctree);
 	}
 
-	private void write_signature ( GLib.FileStream file, Api.Node element , Api.Node? pos ) {
+	private void write_signature (Api.Node element , Api.Node? pos) {
 		_renderer.set_container (pos);
-		_renderer.set_filestream (file);
 		_renderer.render (element.signature);
 	}
 
-	public void write_navi_packages_inline ( GLib.FileStream file, Api.Tree tree ) {
-		file.printf ( "<ul class=\"%s\">\n", css_navi );
-		foreach ( Package pkg in tree.get_package_list() ) {
+	public void write_navi_packages_inline (Api.Tree tree) {
+		writer.start_tag ("ul", css_navi);
+		foreach (Package pkg in tree.get_package_list()) {
 			if (pkg.is_visitor_accessible (settings)) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>\n", get_html_inline_navigation_link_css_class (pkg), css_navi_link, this.get_link(pkg, null), pkg.name );
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class (pkg));
+				writer.link (css_navi_link, get_link (pkg, null), pkg.name);
 				// brief description
-				file.puts ( "</li>\n" );
+				writer.end_tag ("li");
 			}
 			else {
-				file.printf ( "\t<li class=\"%s\">%s</a></li>\n", get_html_inline_navigation_link_css_class (pkg), pkg.name );
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class (pkg));
+				writer.text (pkg.name);
+				writer.end_tag ("li");
 			}
 		}
-		file.puts ( "</li>\n" );
+		writer.end_tag ("li");
 	}
 
-	public void write_navi_packages ( GLib.FileStream file, Api.Tree tree ) {
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_navigation );
-		this.write_navi_packages_inline ( file, tree );
-		file.puts ( "\t\t\t</div>\n" );
+	public void write_navi_packages (Api.Tree tree) {
+		writer.start_tag ("div", css_style_navigation);
+		this.write_navi_packages_inline (tree);
+		writer.end_tag ("div");
 	}
 
-	public void write_packages_content ( GLib.FileStream file, Api.Tree tree ) {
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "\t\t\t\t<h1 class=\"%s\">Packages:</h1>\n", css_title );
-		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
+	public void write_packages_content (Api.Tree tree) {
+		writer.start_tag ("div", css_style_content);
+		writer.start_tag ("h1", css_title).text ("Packages:").end_tag ("h1");
+		writer.simple_tag ("hr", css_headline_hr);
 
-		WikiPage? wikiindex = (tree.wikitree == null)? null : tree.wikitree.search ( "index.valadoc" );
-		if ( wikiindex != null ) {
+		WikiPage? wikiindex = (tree.wikitree == null)? null : tree.wikitree.search ("index.valadoc");
+		if (wikiindex != null) {
 			_renderer.set_container (null);
-			_renderer.set_filestream (file);
 			_renderer.render (wikiindex.documentation);
 		}
 
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
-		file.printf ( "\t\t\t\t<h3 class=\"%s\">Packages:</h2>\n", css_title );
-		this.write_navi_packages_inline ( file, tree );
-		file.puts ( "\t\t\t</div>\n" );
+		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
+		writer.start_tag ("h3", css_title).text ("Packages:").end_tag ("h3");
+		this.write_navi_packages_inline (tree);
+		writer.end_tag ("div");
 	}
 
-	public void write_method_content (GLib.FileStream file, Method m) {
-		string full_name = m.full_name ( );
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
-		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
-		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
+	public void write_method_content (Method m) {
+		string full_name = m.full_name ();
+		writer.start_tag ("div", css_style_content);
+		writer.start_tag ("h1", css_title, full_name).text (m.name).end_tag ("h1");
+		writer.simple_tag ("hr", css_headline_hr);
+		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
+		writer.start_tag ("div", css_code_definition);
 
-		this.write_signature (file, m, m);
+		this.write_signature (m, m);
 
-		file.printf ( "\n\t\t\t\t</div>\n" );
+		writer.end_tag ("div");
 
-		this.write_documentation ( file, m, m );
+		this.write_documentation (m, m);
 
-		if ( m.parent is Namespace ) {
-			file.puts ( "\t\t\t\t<br />\n" );
-			this.write_namespace_note ( file, m );
-			this.write_package_note ( file, m );
+		if (m.parent is Namespace) {
+			writer.simple_tag ("br");
+			this.write_namespace_note (m);
+			this.write_package_note (m);
 		}
 
-		file.puts ( "\t\t\t</div>\n" );
+		writer.end_tag ("div");
 	}
 
-	public void write_child_error_values ( GLib.FileStream file, ErrorDomain errdom ) {
+	public void write_child_error_values (ErrorDomain errdom) {
 		Gee.Collection<ErrorCode> error_codes = errdom.get_error_code_list ();
-		if ( error_codes.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Error Codes:</h3>\n", css_title );
-			file.printf ( "<table class=\"%s\">\n", css_errordomain_table );
-			foreach ( ErrorCode errcode in error_codes ) {
-				file.puts ( "<tr>\n" );
-				file.printf ( "\t<td class=\"%s\" id=\"%s\">%s</td>\n", css_errordomain_table_name, errcode.name, errcode.name );
-				file.printf ( "\t<td class=\"%s\">\n", css_errordomain_table_text );
+		if (error_codes.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Error Codes:").end_tag ("h3");
+			writer.start_tag ("table", css_errordomain_table);
+			foreach (ErrorCode errcode in error_codes) {
+				writer.start_tag ("tr");
 
-				this.write_documentation ( file, errcode, errcode );
+				writer.start_tag ("td", css_errordomain_table_name, errcode.name);
+				writer.text (errcode.name);
+				writer.end_tag ("td");
 
-				file.puts ( "\t</td>\n" );
-				file.puts ( "</tr>\n" );
+				writer.start_tag ("td", css_errordomain_table_text);
+				this.write_documentation (errcode, errcode);
+				writer.end_tag ("td");
+
+				writer.end_tag ("tr");
 			}
-			file.puts ( "</table>\n" );
+			writer.end_tag ("table");
 		}
 	}
 
-	public void write_signal_content ( GLib.FileStream file, Api.Signal sig ) {
-		string full_name = sig.full_name ( );
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
-		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
-		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
+	public void write_signal_content (Api.Signal sig) {
+		string full_name = sig.full_name ();
+		writer.start_tag ("div", css_style_content);
+		writer.start_tag ("h1", css_title, full_name).text (sig.name).end_tag ("h1");
+		writer.simple_tag ("hr", css_headline_hr);
+		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
+		writer.start_tag ("div", css_code_definition);
 
-		this.write_signature (file, sig, sig);
+		this.write_signature (sig, sig);
 
-		file.printf ( "\n\t\t\t\t</div>\n" );
-		this.write_documentation ( file, sig, sig );
-		file.puts ( "\t\t\t</div>\n" );
+		writer.end_tag ("div");
+		this.write_documentation (sig, sig);
+		writer.end_tag ("div");
 	}
 
-	public void write_delegate_content ( GLib.FileStream file, Delegate del ) {
-		string full_name = del.full_name ( );
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
-		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
-		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
+	public void write_delegate_content (Delegate del) {
+		string full_name = del.full_name ();
+		writer.start_tag ("div", css_style_content);
+		writer.start_tag ("h1", css_title, full_name).text (del.name).end_tag ("h1");
+		writer.simple_tag ("hr", css_headline_hr);
+		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
+		writer.start_tag ("div", css_code_definition);
 
-		this.write_signature (file, del, del);
+		this.write_signature (del, del);
 
-		file.printf ( "\n\t\t\t\t</div>\n" );
+		writer.end_tag ("div");
 
-		this.write_documentation ( file, del, del );
+		this.write_documentation (del, del);
 
-		if ( del.parent is Namespace ) {
-			file.puts ( "\t\t\t\t<br />\n" );
-			this.write_namespace_note ( file, del );
-			this.write_package_note ( file, del );
+		if (del.parent is Namespace) {
+			writer.simple_tag ("br");
+			this.write_namespace_note (del);
+			this.write_package_note (del);
 		}
 
-		file.puts ( "\t\t\t</div>\n" );
+		writer.end_tag ("div");
 	}
 
-	public void write_field_content (GLib.FileStream file, Field field) {
-		string full_name = field.full_name ( );
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
-		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
-		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
+	public void write_field_content (Field field) {
+		string full_name = field.full_name ();
+		writer.start_tag ("div", css_style_content);
+		writer.start_tag ("h1", css_title, full_name).text (field.name).end_tag ("h1");
+		writer.simple_tag ("hr", css_headline_hr);
+		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
+		writer.start_tag ("div", css_code_definition);
 
-		this.write_signature (file, field, field);
+		this.write_signature (field, field);
 
-		file.printf ( "\n\t\t\t\t</div>\n" );
+		writer.end_tag ("div");
 
-		this.write_documentation ( file, field, field );
+		this.write_documentation (field, field);
 
-		if ( field.parent is Namespace ) {
-			file.puts ( "\t\t\t\t<br />\n" );
-			this.write_namespace_note ( file, field );
-			this.write_package_note ( file, field );
+		if (field.parent is Namespace) {
+			writer.simple_tag ("br");
+			this.write_namespace_note (field);
+			this.write_package_note (field);
 		}
 
-		file.puts ( "\t\t\t</div>\n" );
+		writer.end_tag ("div");
 	}
 
-	public void write_constant_content (GLib.FileStream file, Constant constant) {
-		string full_name = constant.full_name ( );
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
-		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
-		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
+	public void write_constant_content (Constant constant) {
+		string full_name = constant.full_name ();
+		writer.start_tag ("div", css_style_content);
+		writer.start_tag ("h1", css_title, full_name).text (constant.name).end_tag ("h1");
+		writer.simple_tag ("hr", css_headline_hr);
+		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
+		writer.start_tag ("div", css_code_definition);
 
-		this.write_signature (file, constant, constant);
+		this.write_signature (constant, constant);
 
-		file.printf ( "\n\t\t\t\t</div>\n" );
+		writer.end_tag ("div");
 
-		this.write_documentation ( file, constant, constant );
+		this.write_documentation (constant, constant);
 
-		if ( constant.parent is Namespace ) {
-			file.puts ( "\t\t\t\t<br />\n" );
-			this.write_namespace_note ( file, constant );
-			this.write_package_note ( file, constant );
+		if (constant.parent is Namespace) {
+			writer.simple_tag ("br");
+			this.write_namespace_note (constant);
+			this.write_package_note (constant);
 		}
 
-		file.puts ( "\t\t\t</div>\n" );
+		writer.end_tag ("div");
 	}
 
-	public void write_property_content ( GLib.FileStream file, Property prop ) {
-		string full_name = prop.full_name ( );
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
-		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
-		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
+	public void write_property_content (Property prop) {
+		string full_name = prop.full_name ();
+		writer.start_tag ("div", css_style_content);
+		writer.start_tag ("h1", css_title, full_name).text (prop.name).end_tag ("h1");
+		writer.simple_tag ("hr", css_headline_hr);
+		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
+		writer.start_tag ("div", css_code_definition);
 
-		this.write_signature (file, prop, prop);
+		this.write_signature (prop, prop);
 
-		file.printf ( "\n\t\t\t\t</div>\n" );
-		this.write_documentation ( file, prop, prop );
-		file.puts ( "\t\t\t</div>\n" );
+		writer.end_tag ("div");
+		this.write_documentation (prop, prop);
+		writer.end_tag ("div");
 	}
 
-	public void write_enum_content ( GLib.FileStream file, Enum en, Api.Node? mself ) {
-		string full_name = en.full_name ( );
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
-		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
+	public void write_enum_content (Enum en, Api.Node? parent) {
+		string full_name = en.full_name ();
+		writer.start_tag ("div", css_style_content);
+		writer.start_tag ("h1", css_title, full_name).text (en.name).end_tag ("h1");
+		writer.simple_tag ("hr", css_headline_hr);
+		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
 
-		this.write_documentation ( file, en, en );
+		this.write_documentation (en, en);
 
-		if ( en.parent is Namespace ) {
-			file.puts ( "\t\t\t\t<br />\n" );
-			this.write_namespace_note ( file, en );
-			this.write_package_note ( file, en );
+		if (en.parent is Namespace) {
+			writer.simple_tag ("br");
+			this.write_namespace_note (en);
+			this.write_package_note (en);
 		}
 
-		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
-		this.write_child_enum_values ( file, en );
-		this.write_child_static_methods ( file, en, mself );
-		this.write_child_methods ( file, en, mself );
-		file.puts ( "\t\t\t</div>\n" );
+		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
+		this.write_child_enum_values (en);
+		this.write_child_static_methods (en, parent);
+		this.write_child_methods (en, parent);
+		writer.end_tag ("div");
 	}
 
-	private void write_child_enum_values ( GLib.FileStream file, Enum en ) {
+	private void write_child_enum_values (Enum en) {
 		Gee.Collection<Api.EnumValue> enum_values = en.get_enum_values ();
-		if ( enum_values.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Enum Values:</h3>\n", css_title );
-			file.printf ( "<table class=\"%s\">\n", css_enum_table );
-			foreach ( Api.EnumValue enval in enum_values ) {
-				file.puts ( "<tr>\n" );
-				file.printf ( "\t<td class=\"%s\" id=\"%s\">%s</td>\n", css_enum_table_name, enval.name, enval.name );
-				file.printf ( "\t<td class=\"%s\">\n", css_enum_table_text );
+		if (enum_values.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Enum Values:").end_tag ("h3");
+			writer.start_tag ("table", css_enum_table);
+			foreach (Api.EnumValue enval in enum_values) {
+				writer.start_tag ("tr");
 
-				this.write_documentation ( file, enval, en );
+				writer.start_tag ("td", css_enum_table_name, enval.name);
+				writer.text (enval.name);
+				writer.end_tag ("td");
 
-				file.puts ( "\t</td>\n" );
-				file.puts ( "</tr>\n" );
+				writer.start_tag ("td", css_enum_table_text);
+				this.write_documentation (enval, en);
+				writer.end_tag ("td");
+
+				writer.end_tag ("tr");
 			}
-			file.puts ( "</table>\n" );
+			writer.end_tag ("table");
 		}
 	}
 
-	protected void write_child_namespaces ( GLib.FileStream file, NamespaceHandler nh, Api.Node? mself ) {
+	protected void write_child_namespaces (NamespaceHandler nh, Api.Node? parent) {
 		Gee.ArrayList<Namespace> nsl = new Gee.ArrayList<Namespace> ();
-		this.fetch_subnamespace_names ( nh, nsl );
+		this.fetch_subnamespace_names (nh, nsl);
 
-		if ( nsl.size == 0 )
+		if (nsl.size == 0)
 			return ;
 
-		if ( nsl.size == 1 ) {
-			if ( nsl.get(0).name == null )
+		if (nsl.size == 1) {
+			if (nsl.get(0).name == null)
 				return ;
 		}
 
-		bool with_childs = (mself == null)? false : mself is Package;
+		bool with_childs = (parent == null)? false : parent is Package;
 
-		file.printf ("<h3 class=\"%s\">Namespaces:</h3>\n", css_title);
-		file.printf ("<ul class=\"%s\">\n", css_inline_navigation);
+		writer.start_tag ("h3", css_title).text ("Namespaces:").end_tag ("h3");
+		writer.start_tag ("ul", css_inline_navigation);
 		foreach (Namespace ns in nsl) {
 			if (ns.name != null) {
-				file.printf ("\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>\n", css_inline_navigation_namespace, css_navi_link, this.get_link(ns, mself), ns.name);
-				this.write_brief_description (file, ns , mself);
-				file.printf ("</li>\n");
+				writer.start_tag ("li", css_inline_navigation_namespace);
+				writer.link (css_navi_link, get_link (ns, parent), ns.name);
+				this.write_brief_description (ns , parent);
+				writer.end_tag ("li");
 				if (with_childs == true) {
-					this.write_child_classes (file, ns, mself);
-					this.write_child_interfaces (file, ns, mself);
-					this.write_child_structs (file, ns, mself);
-					this.write_child_enums (file, ns, mself);
-					this.write_child_errordomains (file, ns, mself);
-					this.write_child_delegates (file, ns, mself);
-					this.write_child_methods (file, ns, mself);
-					this.write_child_fields (file, ns, mself);
-					this.write_child_constants (file, ns, mself);
+					this.write_child_classes (ns, parent);
+					this.write_child_interfaces (ns, parent);
+					this.write_child_structs (ns, parent);
+					this.write_child_enums (ns, parent);
+					this.write_child_errordomains (ns, parent);
+					this.write_child_delegates (ns, parent);
+					this.write_child_methods (ns, parent);
+					this.write_child_fields (ns, parent);
+					this.write_child_constants (ns, parent);
 				}
 			}
 		}
-		file.puts ( "</ul>\n" );
+		writer.end_tag ("ul");
 	}
 
-	protected void write_child_methods ( GLib.FileStream file, MethodHandler mh, Api.Node? mself ) {
+	protected void write_child_methods (MethodHandler mh, Api.Node? parent) {
 		Gee.Collection<Method> methods = mh.get_method_list ();
-		Gee.ArrayList<Method> imethods = new Gee.ArrayList<Method> ( );
-		foreach ( Method m in methods ) {
-			if ( !m.is_static )
-				imethods.add ( m );
+		Gee.ArrayList<Method> imethods = new Gee.ArrayList<Method> ();
+		foreach (Method m in methods) {
+			if (!m.is_static)
+				imethods.add (m);
 		}
 
-		if ( imethods.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Methods:</h3>\n", css_title );
-			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Method m in imethods ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (m), css_navi_link, this.get_link(m, mself), m.name );
-				this.write_brief_description ( file, m , mself );
-				file.printf ( "</li>\n" );
+		if (imethods.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Methods:").end_tag ("h3");
+			writer.start_tag ("ul", css_inline_navigation);
+			foreach (Method m in imethods) {
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class (m));
+				writer.link (css_navi_link, get_link (m, parent), m.name);
+				this.write_brief_description (m , parent);
+				writer.end_tag ("li");
 			}
-			file.puts ( "</ul>\n" );
+			writer.end_tag ("ul");
 		}
 	}
 
-	protected void write_child_dependencies ( GLib.FileStream file, Package package, Api.Node? mself ) {
+	protected void write_child_dependencies (Package package, Api.Node? parent) {
 		Gee.Collection<Package> deps = package.get_full_dependency_list ();
-		if ( deps.size == 0 )
+		if (deps.size == 0)
 			return ;
 
-		file.printf ( "<h2 class=\"%s\">Dependencies:</h2>\n", css_title );
-		file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-		foreach ( Package p in deps ) {
-			string link = this.get_link(p, mself);
-			if ( link == null )
-				file.printf ( "\t<li class=\"%s\">%s</li>\n", css_inline_navigation_package, p.name );
-			else
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a></li>\n", css_inline_navigation_package, css_navi_link, link, p.name );
+		writer.start_tag ("h2", css_title).text ("Dependencies:").end_tag ("h2");
+		writer.start_tag ("ul", css_inline_navigation);
+		foreach (Package p in deps) {
+			string link = this.get_link(p, parent);
+			if (link == null)
+				writer.start_tag ("li", css_inline_navigation_package, p.name).text (p.name).end_tag ("li");
+			else {
+				writer.start_tag ("li", css_inline_navigation_package);
+				writer.link (css_navi_link, get_link (p, parent), p.name);
+				writer.end_tag ("li");
+			}
 		}
-		file.puts ( "</ul>\n" );
+		writer.end_tag ("ul");
 	}
 
-	protected void write_child_static_methods ( GLib.FileStream file, MethodHandler mh, Api.Node? mself ) {
+	protected void write_child_static_methods (MethodHandler mh, Api.Node? parent) {
 		Gee.Collection<Method> methods = mh.get_method_list ();
 
-		Gee.ArrayList<Method> static_methods = new Gee.ArrayList<Method> ( );
-		foreach ( Method m in methods ) {
-			if ( m.is_static )
-				static_methods.add ( m );
+		Gee.ArrayList<Method> static_methods = new Gee.ArrayList<Method> ();
+		foreach (Method m in methods) {
+			if (m.is_static)
+				static_methods.add (m);
 		}
 
-		if ( static_methods.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Static Methods:</h3>\n", css_title );
-			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Method m in static_methods ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (m), css_navi_link, this.get_link(m, mself), m.name );
-				this.write_brief_description ( file, m , mself );
-				file.printf ( "</li>\n" );
+		if (static_methods.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Static Methods:").end_tag ("h3");
+			writer.start_tag ("ul", css_inline_navigation);
+			foreach (Method m in static_methods) {
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class (m));
+				writer.link (css_navi_link, get_link (m, parent), m.name);
+				this.write_brief_description (m , parent);
+				writer.end_tag ("li");
 			}
-			file.puts ( "</ul>\n" );
+			writer.end_tag ("ul");
 		}
 	}
 
-	public void write_class_content ( GLib.FileStream file, Class cl, Api.Node? mself ) {
-		string full_name = cl.full_name ( );
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
-		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
-		this.write_image_block ( file, cl );
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
-		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
+	public void write_class_content (Class cl, Api.Node? parent) {
+		string full_name = cl.full_name ();
+		writer.start_tag ("div", css_style_content);
+		writer.start_tag ("h1", css_title, full_name).text (cl.name).end_tag ("h1");
+		writer.simple_tag ("hr", css_headline_hr);
+		this.write_image_block (cl);
+		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
+		writer.start_tag ("div", css_code_definition);
 
-		this.write_signature (file, cl, cl);
+		this.write_signature (cl, cl);
 
-		file.printf ( "\n\t\t\t\t</div>\n" );
+		writer.end_tag ("div");
 
-		this.write_documentation ( file, cl, cl );
+		this.write_documentation (cl, cl);
 
-		if ( cl.parent is Namespace ) {
-			file.puts ( "\t\t\t\t<br />\n" );
-			this.write_namespace_note ( file, cl );
-			this.write_package_note ( file, cl );
+		if (cl.parent is Namespace) {
+			writer.simple_tag ("br");
+			this.write_namespace_note (cl);
+			this.write_package_note (cl);
 		}
-		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
-		this.write_child_construction_methods ( file, cl, mself );
-		this.write_child_static_methods ( file, cl, mself );
-		this.write_child_classes ( file, cl, mself );
-		this.write_child_structs ( file, cl, mself );
-		this.write_child_enums ( file, cl, mself );
-		this.write_child_delegates ( file, cl, mself );
-		this.write_child_methods ( file, cl, mself );
-		this.write_child_signals ( file, cl, mself );
-		this.write_child_properties ( file, cl, mself );
-		this.write_child_fields ( file, cl, mself );
-		this.write_child_constants ( file, cl, mself );
-		file.puts ( "\t\t\t</div>\n" );
+		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
+		this.write_child_construction_methods (cl, parent);
+		this.write_child_static_methods (cl, parent);
+		this.write_child_classes (cl, parent);
+		this.write_child_structs (cl, parent);
+		this.write_child_enums (cl, parent);
+		this.write_child_delegates (cl, parent);
+		this.write_child_methods (cl, parent);
+		this.write_child_signals (cl, parent);
+		this.write_child_properties (cl, parent);
+		this.write_child_fields (cl, parent);
+		this.write_child_constants (cl, parent);
+		writer.end_tag ("div");
 	}
 
-	public void write_interface_content ( GLib.FileStream file, Interface iface, Api.Node? mself ) {
+	public void write_interface_content (Interface iface, Api.Node? parent) {
 		string full_name = iface.full_name ();
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
-		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
-		this.write_image_block ( file, iface );
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
-		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
+		writer.start_tag ("div", css_style_content);
+		writer.start_tag ("h1", css_title, full_name).text (iface.name).end_tag ("h1");
+		writer.simple_tag ("hr", css_headline_hr);
+		this.write_image_block (iface);
+		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
+		writer.start_tag ("div", css_code_definition);
 
-		this.write_signature (file, iface, iface);
+		this.write_signature (iface, iface);
 
-		file.printf ( "\n\t\t\t\t</div>\n" );
+		writer.end_tag ("div");
 
-		this.write_documentation ( file, iface, iface );
+		this.write_documentation (iface, iface);
 
-		if ( iface.parent is Namespace ) {
-			file.puts ( "\t\t\t\t<br />\n" );
-			this.write_namespace_note ( file, iface );
-			this.write_package_note ( file, iface );
+		if (iface.parent is Namespace) {
+			writer.simple_tag ("br");
+			this.write_namespace_note (iface);
+			this.write_package_note (iface);
 		}
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
-		this.write_child_static_methods ( file, iface, mself );
-		this.write_child_classes ( file, iface, mself );
-		this.write_child_structs ( file, iface, mself );
-		this.write_child_enums ( file, iface, mself );
-		this.write_child_delegates ( file, iface, mself );
-		this.write_child_methods ( file, iface, mself );
-		this.write_child_signals ( file, iface, mself );
-		this.write_child_properties ( file, iface, mself );
-		this.write_child_fields ( file, iface, mself );
-		this.write_child_constants ( file, iface, mself );
-		file.puts ( "\t\t\t</div>\n" );
+		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
+		this.write_child_static_methods (iface, parent);
+		this.write_child_classes (iface, parent);
+		this.write_child_structs (iface, parent);
+		this.write_child_enums (iface, parent);
+		this.write_child_delegates (iface, parent);
+		this.write_child_methods (iface, parent);
+		this.write_child_signals (iface, parent);
+		this.write_child_properties (iface, parent);
+		this.write_child_fields (iface, parent);
+		this.write_child_constants (iface, parent);
+		writer.end_tag ("div");
 	}
 
-	public void write_error_domain_content ( GLib.FileStream file, ErrorDomain errdom, Api.Node? mself ) {
-		string full_name = errdom.full_name ( );
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
-		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
+	public void write_error_domain_content (ErrorDomain errdom, Api.Node? parent) {
+		string full_name = errdom.full_name ();
+		writer.start_tag ("div", css_style_content);
+		writer.start_tag ("h1", css_title, full_name).text (errdom.name).end_tag ("h1");
+		writer.simple_tag ("hr", css_headline_hr);
+		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
 
-		this.write_documentation ( file, errdom, errdom );
+		this.write_documentation (errdom, errdom);
 
-		if ( errdom.parent is Namespace ) {
-			file.puts ( "\t\t\t\t<br />\n" );
-			this.write_namespace_note ( file, errdom );
-			this.write_package_note ( file, errdom );
+		if (errdom.parent is Namespace) {
+			writer.simple_tag ("br");
+			this.write_namespace_note (errdom);
+			this.write_package_note (errdom);
 		}
-		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
-		this.write_child_error_values ( file, errdom );
-		this.write_child_static_methods ( file, errdom, mself );
-		this.write_child_methods ( file, errdom, mself );
-		file.puts ( "\t\t\t</div>\n" );
+		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
+		this.write_child_error_values (errdom);
+		this.write_child_static_methods (errdom, parent);
+		this.write_child_methods (errdom, parent);
+		writer.end_tag ("div");
 	}
 
-	public void write_struct_content ( GLib.FileStream file, Struct stru, Api.Node? mself ) {
-		string full_name = stru.full_name ( );
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, full_name );
-		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
-		this.write_image_block ( file, stru );
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
+	public void write_struct_content (Struct stru, Api.Node? parent) {
+		string full_name = stru.full_name ();
+		writer.start_tag ("div", css_style_content);
+		writer.start_tag ("h1", css_title, full_name).text (stru.name).end_tag ("h1");
+		writer.simple_tag ("hr", css_headline_hr);
+		this.write_image_block (stru);
+		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
 
-		file.printf ( "\t\t\t\t<div class=\"%s\">\n\t", css_code_definition );
+		writer.start_tag ("div", css_code_definition);
 
-		this.write_signature (file, stru, stru);
+		this.write_signature (stru, stru);
 
-		file.printf ( "\n\t\t\t\t</div>\n" );
+		writer.end_tag ("div");
 
-		this.write_documentation ( file, stru, stru );
+		this.write_documentation (stru, stru);
 
-		if ( stru.parent is Namespace ) {
-			file.puts ( "\t\t\t\t<br />\n" );
-			this.write_namespace_note ( file, stru );
-			this.write_package_note ( file, stru );
+		if (stru.parent is Namespace) {
+			writer.simple_tag ("br");
+			this.write_namespace_note (stru);
+			this.write_package_note (stru);
 		}
-		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
-		this.write_child_construction_methods ( file, stru, mself );
-		this.write_child_static_methods ( file, stru, mself );
-		this.write_child_methods ( file, stru, mself );
-		this.write_child_fields ( file, stru, mself );
-		this.write_child_constants ( file, stru, mself );
-		file.puts ( "\t\t\t</div>\n" );
+		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
+		this.write_child_construction_methods (stru, parent);
+		this.write_child_static_methods (stru, parent);
+		this.write_child_methods (stru, parent);
+		this.write_child_fields (stru, parent);
+		this.write_child_constants (stru, parent);
+		writer.end_tag ("div");
 	}
 
-	protected string get_img_path ( Api.Node element ) {
+	protected string get_img_path (Api.Node element) {
 		return "img/" + element.full_name () + ".png";
 	}
 
-	protected string get_img_real_path ( Api.Node element ) {
+	protected string get_img_real_path (Api.Node element) {
 		return this.settings.path + "/" + element.package.name + "/" + "img/" + element.full_name () + ".png";
 	}
 
-	protected void write_child_constants ( GLib.FileStream file, ConstantHandler ch, Api.Node? mself ) {
+	protected void write_child_constants (ConstantHandler ch, Api.Node? parent) {
 		Gee.Collection<Constant> constants = ch.get_constant_list ();
-		if ( constants.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Constants:</h3>\n", css_title );
-			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Constant c in constants ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (c), css_navi_link, this.get_link(c, mself), c.name );
-				this.write_brief_description ( file, c, mself );
-				file.printf ( "</li>\n" );
+		if (constants.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Constants:").end_tag ("h3");
+			writer.start_tag ("ul", css_inline_navigation);
+			foreach (Constant c in constants) {
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class (c));
+				writer.link (css_navi_link, get_link (c, parent), c.name);
+				this.write_brief_description (c, parent);
+				writer.end_tag ("li");
 			}
-			file.puts ( "</ul>\n" );
+			writer.end_tag ("ul");
 		}
 	}
 
-	protected void write_child_enums ( GLib.FileStream file, EnumHandler eh, Api.Node? mself ) {
+	protected void write_child_enums (EnumHandler eh, Api.Node? parent) {
 		Gee.Collection<Enum> enums = eh.get_enum_list ();
-		if ( enums.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Enums:</h3>\n", css_title );
-			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Enum en in enums ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>\n", get_html_inline_navigation_link_css_class (en), css_navi_link, this.get_link(en, mself), en.name );
-				this.write_brief_description ( file, en, mself );
-				file.printf ( "</li>\n" );
+		if (enums.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Enums:").end_tag ("h3");
+			writer.start_tag ("ul", css_inline_navigation);
+			foreach (Enum en in enums) {
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class (en));
+				writer.link (css_navi_link, get_link (en, parent), en.name);
+				this.write_brief_description (en, parent);
+				writer.end_tag ("li");
 			}
-			file.puts ( "</ul>\n" );
+			writer.end_tag ("ul");
 		}
 	}
 
-	protected void write_child_errordomains ( GLib.FileStream file, ErrorDomainHandler eh, Api.Node? mself ) {
+	protected void write_child_errordomains (ErrorDomainHandler eh, Api.Node? parent) {
 		Gee.Collection<ErrorDomain> errdoms = eh.get_error_domain_list ();
-		if ( errdoms.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Errordomains:</h3>\n", css_title );
-			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( ErrorDomain err in errdoms ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (err), css_navi_link,  this.get_link(err, mself), err.name );
-				this.write_brief_description ( file, err, mself );
-				file.printf ( "</li>\n" );
+		if (errdoms.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Errordomains:").end_tag ("h3");
+			writer.start_tag ("ul", css_inline_navigation);
+			foreach (ErrorDomain err in errdoms) {
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class (err));
+				writer.link (css_navi_link, get_link (err, parent), err.name);
+				this.write_brief_description (err, parent);
+				writer.end_tag ("li");
 			}
-			file.puts ( "</ul>\n" );
+			writer.end_tag ("ul");
 		}
 	}
 
-	protected void write_child_construction_methods ( GLib.FileStream file, ConstructionMethodHandler cmh, Api.Node? mself ) {
+	protected void write_child_construction_methods (ConstructionMethodHandler cmh, Api.Node? parent) {
 		Gee.Collection<Method> methods = cmh.get_construction_method_list ();
-		if ( methods.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Construction Methods:</h3>\n", css_title );
-			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Method m in methods ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (m), css_navi_link, this.get_link(m, mself), m.name );
-				this.write_brief_description ( file, m, mself );
-				file.printf ( "</li>\n" );
+		if (methods.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Construction Methods:").end_tag ("h3");
+			writer.start_tag ("ul", css_inline_navigation);
+			foreach (Method m in methods) {
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class (m));
+				writer.link (css_navi_link, get_link (m, parent), m.name);
+				this.write_brief_description (m, parent);
+				writer.end_tag ("li");
 			}
-			file.puts ( "</ul>\n" );
+			writer.end_tag ("ul");
 		}
 	}
 
-	protected void write_image_block ( GLib.FileStream file, Api.Node element ) {
-		string realimgpath = this.get_img_real_path ( element );
-		string imgpath = this.get_img_path ( element );
+	protected void write_image_block (Api.Node element) {
+		string realimgpath = this.get_img_real_path (element);
+		string imgpath = this.get_img_path (element);
 
-		if ( element is Class ) {
-			Diagrams.write_class_diagram ( (Class)element, realimgpath );
+		if (element is Class) {
+			Diagrams.write_class_diagram ((Class)element, realimgpath);
 		}
-		else if ( element is Interface ) {
-			Diagrams.write_interface_diagram ( (Interface)element, realimgpath );
+		else if (element is Interface) {
+			Diagrams.write_interface_diagram ((Interface)element, realimgpath);
 		}
-		else if ( element is Struct ) {
-			Diagrams.write_struct_diagram ( (Struct)element, realimgpath );
+		else if (element is Struct) {
+			Diagrams.write_struct_diagram ((Struct)element, realimgpath);
 		}
 
-		file.printf ( "<h2 cass=\"%s\">Object Hierarchy:</h2>\n", css_title );
-		file.printf ( "<img cass=\"%s\" src=\"%s\"/>\n", css_diagram, imgpath );
+		writer.start_tag ("h2", css_title).text ("Object Hierarchy:").end_tag ("h2");
+		writer.image (css_diagram, imgpath);
 	}
 
-	protected void write_child_fields ( GLib.FileStream file, FieldHandler fh, Api.Node? mself ) {
+	protected void write_child_fields (FieldHandler fh, Api.Node? parent) {
 		Gee.Collection<Field> fields = fh.get_field_list ();
-		if ( fields.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Fields:</h3>\n", css_title );
-			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Field f in fields ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class(f), css_navi_link, this.get_link(f, mself), f.name );
-				this.write_brief_description ( file, f, mself );
-				file.printf ( "</li>\n" );
+		if (fields.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Fields:").end_tag ("h3");
+			writer.start_tag ("ul", css_inline_navigation);
+			foreach (Field f in fields) {
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class(f));
+				writer.link (css_navi_link, get_link (f, parent), f.name);
+				this.write_brief_description (f, parent);
+				writer.end_tag ("li");
 			}
-			file.puts ( "</ul>\n" );
+			writer.end_tag ("ul");
 		}
 	}
 
-	protected void write_child_properties ( GLib.FileStream file, PropertyHandler ph, Api.Node? mself ) {
+	protected void write_child_properties (PropertyHandler ph, Api.Node? parent) {
 		Gee.Collection<Property> properties = ph.get_property_list ();
-		if ( properties.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Properties:</h3>\n", css_title );
-			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Property prop in properties ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (prop), css_navi_link, this.get_link(prop, mself), prop.name );
-				this.write_brief_description ( file, prop, mself );
-				file.printf ( "</li>\n" );
+		if (properties.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Properties:").end_tag ("h3");
+			writer.start_tag ("ul", css_inline_navigation);
+			foreach (Property prop in properties) {
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class (prop));
+				writer.link (css_navi_link, get_link (prop, parent), prop.name);
+				this.write_brief_description (prop, parent);
+				writer.end_tag ("li");
 			}
-			file.puts ( "</ul>\n" );
+			writer.end_tag ("ul");
 		}
 	}
 
-	protected void write_child_signals ( GLib.FileStream file, Api.SignalHandler sh, Api.Node? mself ) {
+	protected void write_child_signals (Api.SignalHandler sh, Api.Node? parent) {
 		Gee.Collection<Api.Signal> signals = sh.get_signal_list ();
-		if ( signals.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Api.Signals:</h3>\n", css_title );
-			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Api.Signal sig in signals ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (sig), css_navi_link, this.get_link(sig, mself), sig.name );
-				this.write_brief_description ( file, sig, mself );
-				file.printf ( "</li>\n" );
+		if (signals.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Api.Signals:").end_tag ("h3");
+			writer.start_tag ("ul", css_inline_navigation);
+			foreach (Api.Signal sig in signals) {
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class (sig));
+				writer.link (css_navi_link, get_link (sig, parent), sig.name);
+				this.write_brief_description (sig, parent);
+				writer.end_tag ("li");
 			}
-			file.puts ( "</ul>\n" );
+			writer.end_tag ("ul");
 		}
 	}
 
-	protected void write_child_classes ( GLib.FileStream file, ClassHandler clh, Api.Node? mself ) {
+	protected void write_child_classes (ClassHandler clh, Api.Node? parent) {
 		Gee.Collection<Class> classes = clh.get_class_list ();
-		if ( classes.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Classes:</h3>\n", css_title );
-			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Class subcl in classes ) {
+		if (classes.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Classes:").end_tag ("h3");
+			writer.start_tag ("ul", css_inline_navigation);
+			foreach (Class subcl in classes) {
 				string name;
-				if ( subcl.is_abstract ) {
+				if (subcl.is_abstract) {
 					name = "<i>" + subcl.name + "</i>";
 				}
 				else {
 					name = subcl.name;
 				}
 
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (subcl), css_navi_link, this.get_link(subcl, mself ), name );
-				this.write_brief_description ( file, subcl, mself );
-				file.printf ( "</li>\n" );
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class (subcl));
+				writer.link (css_navi_link, get_link (subcl, parent), name);
+				this.write_brief_description (subcl, parent);
+				writer.end_tag ("li");
 			}
-			file.puts ( "</ul>\n" );
+			writer.end_tag ("ul");
 		}
 	}
 
-	protected void write_child_interfaces ( GLib.FileStream file, InterfaceHandler ih, Api.Node? mself ) {
-		Gee.Collection<Interface> ifaces = ih.get_interface_list ( );
-		if ( ifaces.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Interfaces:</h3>\n", css_title );
-			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Interface iface in ifaces ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (iface), css_navi_link, this.get_link(iface, mself), iface.name );
-				this.write_brief_description ( file, iface, mself );
-				file.printf ( "</li>\n" );
+	protected void write_child_interfaces (InterfaceHandler ih, Api.Node? parent) {
+		Gee.Collection<Interface> ifaces = ih.get_interface_list ();
+		if (ifaces.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Interfaces:").end_tag ("h3");
+			writer.start_tag ("ul", css_inline_navigation);
+			foreach (Interface iface in ifaces) {
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class (iface));
+				writer.link (css_navi_link, get_link (iface, parent), iface.name);
+				this.write_brief_description (iface, parent);
+				writer.end_tag ("li");
 			}
-			file.puts ( "</ul>\n" );
+			writer.end_tag ("ul");
 		}
 	}
 
-	protected void write_child_delegates ( GLib.FileStream file, DelegateHandler dh, Api.Node? mself ) {
+	protected void write_child_delegates (DelegateHandler dh, Api.Node? parent) {
 		Gee.Collection<Delegate> delegates = dh.get_delegate_list ();
-		if ( delegates.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Delegates:</h3>\n", css_title );
-			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Delegate d in delegates ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class (d), css_navi_link, this.get_link(d, mself), d.name );
-				this.write_brief_description ( file, d, mself );
-				file.printf ( "</li>\n" );
+		if (delegates.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Delegates:").end_tag ("h3");
+			writer.start_tag ("ul", css_inline_navigation);
+			foreach (Delegate d in delegates) {
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class (d));
+				writer.link (css_navi_link, get_link (d, parent), d.name);
+				this.write_brief_description (d, parent);
+				writer.end_tag ("li");
 			}
-			file.puts ( "</ul>\n" );
+			writer.end_tag ("ul");
 		}
 	}
 
-	protected void write_child_structs ( GLib.FileStream file, StructHandler struh, Api.Node? mself ) {
+	protected void write_child_structs (StructHandler struh, Api.Node? parent) {
 		Gee.Collection<Struct> structs = struh.get_struct_list ();
-		if ( structs.size > 0 ) {
-			file.printf ( "<h3 class=\"%s\">Structs:</h3>\n", css_title );
-			file.printf ( "<ul class=\"%s\">\n", css_inline_navigation );
-			foreach ( Struct stru in structs ) {
-				file.printf ( "\t<li class=\"%s\"><a class=\"%s\" href=\"%s\">%s</a>", get_html_inline_navigation_link_css_class ( stru ), css_navi_link, this.get_link(stru, mself), stru.name );
-				this.write_brief_description ( file, stru, mself );
-				file.printf ( "</li>\n" );
+		if (structs.size > 0) {
+			writer.start_tag ("h3", css_title).text ("Structs:").end_tag ("h3");
+			writer.start_tag ("ul", css_inline_navigation);
+			foreach (Struct stru in structs) {
+				writer.start_tag ("li", get_html_inline_navigation_link_css_class (stru));
+				writer.link (css_navi_link, get_link (stru, parent), stru.name);
+				this.write_brief_description (stru, parent);
+				writer.end_tag ("li");
 			}
-			file.puts ( "</ul>\n" );
+			writer.end_tag ("ul");
 		}
 	}
 
-	public void write_namespace_content ( GLib.FileStream file, Namespace ns, Api.Node? mself ) {
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, (ns.name == null)? "Global Namespace" : ns.full_name () );
-		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_hr );
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
+	public void write_namespace_content (Namespace ns, Api.Node? parent) {
+		writer.start_tag ("div", css_style_content);
+		writer.start_tag ("h1", css_title).text (ns.name == null ? "Global Namespace" : ns.full_name ()).end_tag ("h1");
+		writer.simple_tag ("hr", css_hr);
+		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
 
-		this.write_documentation ( file, ns, ns );
+		this.write_documentation (ns, ns);
 
-		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
-		if ( ns.name == null )
-			this.write_child_namespaces ( file, (Package)ns.parent, mself );
+		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
+
+		if (ns.name == null)
+			this.write_child_namespaces ((Package)ns.parent, parent);
 		else
-			this.write_child_namespaces ( file, ns, mself );
+			this.write_child_namespaces (ns, parent);
 
-		this.write_child_classes ( file, ns, mself );
-		this.write_child_interfaces ( file, ns, mself );
-		this.write_child_structs ( file, ns, mself );
-		this.write_child_enums ( file, ns, mself );
-		this.write_child_errordomains ( file, ns, mself );
-		this.write_child_delegates ( file, ns, mself );
-		this.write_child_methods ( file, ns, mself );
-		this.write_child_fields ( file, ns, mself );
-		this.write_child_constants ( file, ns, mself );
-		file.puts ( "\t\t\t</div>\n" );
+		this.write_child_classes (ns, parent);
+		this.write_child_interfaces (ns, parent);
+		this.write_child_structs (ns, parent);
+		this.write_child_enums (ns, parent);
+		this.write_child_errordomains (ns, parent);
+		this.write_child_delegates (ns, parent);
+		this.write_child_methods (ns, parent);
+		this.write_child_fields (ns, parent);
+		this.write_child_constants (ns, parent);
+		writer.end_tag ("div");
 	}
 
-	protected void write_file_content ( GLib.FileStream file, Package f, Api.Node? mself, WikiPage? wikipage = null) {
-		file.printf ( "\t\t\t<div class=\"%s\">\n", css_style_content );
-		file.printf ( "\t\t\t\t<h1 class=\"%s\">%s:</h1>\n", css_title, f.name );
-		file.printf ( "\t\t\t\t<hr class=\"%s\" />\n", css_headline_hr );
-		file.printf ( "\t\t\t\t<h2 class=\"%s\">Description:</h2>\n", css_title );
+	protected void write_file_content (Package f, Api.Node? parent, WikiPage? wikipage = null) {
+		writer.start_tag ("div", css_style_content);
+		writer.start_tag ("h1", css_title, f.name).text (f.name).end_tag ("h1");
+		writer.simple_tag ("hr", css_headline_hr);
+		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
 
 		if (wikipage != null) {
-			_renderer.set_container (mself);
-			_renderer.set_filestream (file);
+			_renderer.set_container (parent);
 			_renderer.render (wikipage.documentation);
 		}
 
-		file.printf ( "\n\t\t\t\t<h2 class=\"%s\">Content:</h2>\n", css_title );
+		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
 
-		this.write_child_namespaces ( file, f, mself );
+		this.write_child_namespaces (f, parent);
 
-		foreach ( Namespace ns in f.get_namespace_list() ) {
-			if ( ns.name == null ) {
-				this.write_child_classes ( file, ns, mself );
-				this.write_child_interfaces ( file, ns, mself );
-				this.write_child_structs ( file, ns, mself );
-				this.write_child_enums ( file, ns, mself );
-				this.write_child_errordomains ( file, ns, mself );
-				this.write_child_delegates ( file, ns, mself );
-				this.write_child_methods ( file, ns, mself );
-				this.write_child_fields ( file, ns, mself );
-				this.write_child_constants ( file, ns, mself );
+		foreach (Namespace ns in f.get_namespace_list()) {
+			if (ns.name == null) {
+				this.write_child_classes (ns, parent);
+				this.write_child_interfaces (ns, parent);
+				this.write_child_structs (ns, parent);
+				this.write_child_enums (ns, parent);
+				this.write_child_errordomains (ns, parent);
+				this.write_child_delegates (ns, parent);
+				this.write_child_methods (ns, parent);
+				this.write_child_fields (ns, parent);
+				this.write_child_constants (ns, parent);
 			}
 		}
 
-		this.write_child_dependencies ( file, f, mself );
-		file.puts ( "\t\t\t</div>\n" );
+		this.write_child_dependencies (f, parent);
+		writer.end_tag ("div");
 	}
 
-	protected void write_file_header ( GLib.FileStream file, string css, string? title ) {
-		file.puts ( "<?xml version=\"1.0\" encoding=\"utf-8\"?>" );
-		file.puts ( "<html>\n" );
-		file.puts ( "\t<head>\n" );
-		file.puts ( "\t\t<title>Vala Binding Reference</title>\n" );
-		file.printf ( "\t\t<link href=\"%s\" rel=\"stylesheet\" type=\"text/css\" />\n", css );
-		file.puts ( "\t</head>\n" );
-		file.puts ( "\t<body>\n\n" );
-		file.printf ( "\t<div class=\"%s\">\n", css_site_header );
-		file.printf ( "\t\t%s Reference Manual\n", (title == null)? "" : title );
-		file.puts ( "\t</div>\n\n" );
-		file.printf ( "\t\t<div class=\"%s\">\n", css_style_body );
+	protected void write_file_header (string css, string? title) {
+		writer.start_tag ("html");
+		writer.start_tag ("head");
+		writer.start_tag ("title").text ("Vala Binding Reference").end_tag ("title");
+		writer.stylesheet_link (css);
+		writer.end_tag ("head");
+		writer.start_tag ("body");
+		writer.start_tag ("div", css_site_header);
+		writer.text ("%s Reference Manual".printf (title == null ? "" : title));
+		writer.end_tag ("div");
+		writer.start_tag ("div", css_style_body);
 	}
 
-	protected void write_file_footer ( GLib.FileStream file ) {
-		file.puts ( "\t</div>\n" );
-		file.puts ( "\t<div style= \"clear: left\">\n" );
-		file.puts ( "\t\t<br />\n" );
-		file.puts ( "\t\t<div class=\"site_foother\">\n" );
-		file.puts ( "\t\t\tcreated by <a href=\"http://www.valadoc.org\">valadoc</a>\n" );
-		file.puts ( "\t\t</div>\n" );
-		file.puts ( "\t</div>\n" );
-		file.puts ( "\t</body>\n" );
-		file.puts ( "</html>" );
+	protected void write_file_footer () {
+		writer.end_tag ("div");
+		writer.simple_tag ("br");
+		writer.start_tag ("div", "site_foother");
+		writer.text ("Generated by ");
+		writer.link ("site_foother", "http://www.valadoc.org/", "Valadoc");
+		writer.end_tag ("div");
+		writer.end_tag ("body");
+		writer.end_tag ("html");
 	}
 }
 

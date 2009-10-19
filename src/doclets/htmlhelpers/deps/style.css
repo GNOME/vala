@@ -12,7 +12,7 @@ ul.external_link {
 .main_diagram {
 	display: block;
 	margin: 0px auto;
-	width: 100px;
+	width: 50%;
 }
 
 .site_navi {
@@ -503,4 +503,5 @@ a.navi_link:hover, a.external_link:hover {
 	font: monospace;
 	color: #ff01ff;
 }
+
 

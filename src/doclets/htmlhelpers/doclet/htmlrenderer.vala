@@ -28,7 +28,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	private BasicDoclet _doclet;
 	private Documentation? _container;
-	private unowned FileStream _stream;
+	private unowned MarkupWriter writer;
 
 	public HtmlRenderer (BasicDoclet doclet) {
 		_doclet = doclet;
@@ -38,8 +38,8 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		_container = container;
 	}
 
-	public void set_filestream (FileStream stream) {
-		_stream = stream;
+	public void set_writer (MarkupWriter writer) {
+		this.writer = writer;
 	}
 
 	public override void render (ContentElement element) {
@@ -56,26 +56,25 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	private void write_symbol_link (Api.Node symbol, string label) {
 		var url = get_url (symbol);
-		_stream.printf ("<a href=\"%s\">%s</a>",
-		                url,
-		                (label == null || label == "") ? symbol.full_name () : label);
+		writer.link ("", url, (label == null || label == "") ? symbol.full_name () : label);
 	}
 
+	private delegate void Write ();
 	private delegate void TagletWrite (Taglet taglet);
 
-	private void write_taglets (string header, string footer, string separator,
+	private void write_taglets (Write header, Write footer, Write separator,
 	                            Gee.List<Taglet> taglets, TagletWrite write) {
 		if (taglets.size > 0) {
-			_stream.printf (header);
+			header ();
 			bool first = true;
 			foreach (var taglet in taglets) {
 				if (!first) {
-					_stream.printf (separator);
+					separator ();
 				}
 				write (taglet);
 				first = false;
 			}
-			_stream.printf (footer);
+			footer ();
 		}
 	}
 
@@ -84,9 +83,14 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Deprecated));
 		write_taglets (
-			"<p class=\"main_title\"><b>Deprecated:</b> ",
-			"</p>",
-			"",
+			() => {
+				writer.start_tag ("p", "main_title");
+				writer.start_tag ("b").text ("Deprecated:").end_tag ("b");
+			},
+			() => {
+				writer.end_tag ("p");
+			},
+			() => {},
 			taglets,
 			(taglet) => {
 				var deprecated = taglet as Taglets.Deprecated;
@@ -98,59 +102,94 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Param));
 		write_taglets (
-			"<h2 class=\"main_title\">Parameters:</h2>\n<table class=\"main_parameter_table\">",
-			"</table>",
-			"",
+			() => {
+				writer.start_tag ("h2", "main_title").text ("Parameters:").end_tag ("h2");
+				writer.start_tag ("table", "main_parameter_table");
+			},
+			() => {
+				writer.end_tag ("table");
+			},
+			() => {},
 			taglets,
 			(taglet) => {
 				var param = taglet as Taglets.Param;
-				_stream.printf ("<tr><td class=\"main_parameter_table_name\">%s</td><td>", param.parameter_name);
+				writer.start_tag ("tr");
+				writer.start_tag ("td", "main_parameter_table_name").text (param.parameter_name).end_tag ("td");
+				writer.start_tag ("td");
 				param.accept_children (this);
-				_stream.printf ("</td></tr>");
+				writer.end_tag ("td");
+				writer.end_tag ("tr");
 			});
 
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Return));
 		write_taglets (
-			"<h2 class=\"main_title\">Returns:</h2>\n<table class=\"main_parameter_table\">",
-			"</table>",
-			"",
+			() => {
+				writer.start_tag ("h2", "main_title").text ("Returns:").end_tag ("h2");
+				writer.start_tag ("table", "main_parameter_table");
+			},
+			() => {
+				writer.end_tag ("table");
+			},
+			() => {},
 			taglets,
 			(taglet) => {
 				var param = taglet as Taglets.Return;
-				_stream.printf ("<tr><td>");
+				writer.start_tag ("tr");
+				writer.start_tag ("td");
 				param.accept_children (this);
-				_stream.printf ("</td></tr>");
+				writer.end_tag ("td");
+				writer.end_tag ("tr");
 			});
 
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Throws));
 		write_taglets (
-			"<h2 class=\"main_title\">Throws:</h2>\n<table class=\"main_parameter_table\">",
-			"</table>",
-			"",
+			() => {
+				writer.start_tag ("h2", "main_title").text ("Returns:").end_tag ("h2");
+				writer.start_tag ("table", "main_parameter_table");
+			},
+			() => {
+				writer.end_tag ("table");
+			},
+			() => {},
 			taglets,
 			(taglet) => {
 				var exception = taglet as Taglets.Throws;
-				_stream.printf ("<tr><td class=\"main_parameter_table_name\">%s</td><td>", exception.error_domain_name);
+				writer.start_tag ("tr");
+				writer.start_tag ("td", "main_parameter_table_name").text (exception.error_domain_name).end_tag ("td");
+				writer.start_tag ("td");
 				exception.accept_children (this);
-				_stream.printf ("</td></tr>");
+				writer.end_tag ("td");
+				writer.end_tag ("tr");
 			});
 
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Since));
 		write_taglets (
-			"<h2 class=\"main_title\">Since:</h2>\n<p>",
-			"</p>",
-			", ",
+			() => {
+				writer.start_tag ("h2", "main_title").text ("Since:").end_tag ("h2");
+				writer.start_tag ("p");
+			},
+			() => {
+				writer.end_tag ("p");
+			},
+			() => {},
 			taglets,
 			(taglet) => {
 				var since = taglet as Taglets.Since;
-				_stream.printf ("%s", since.version);
+				writer.text (since.version);
 			});
 
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.See));
 		write_taglets (
-			"<h2 class=\"main_title\">See also:</h2>\n<p>",
-			"</p>",
-			", ",
+			() => {
+				writer.start_tag ("h2", "main_title").text ("Since:").end_tag ("h2");
+				writer.start_tag ("p");
+			},
+			() => {
+				writer.end_tag ("p");
+			},
+			() => {
+				writer.text (", ");
+			},
 			taglets,
 			(taglet) => {
 				var see = taglet as Taglets.See;
@@ -160,31 +199,25 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	public override void visit_embedded (Embedded element) {
 		var caption = element.caption;
-		if (caption == null) {
-			_stream.printf ("<img src=\"%s\" />", element.url);
-		} else {
-			_stream.printf ("<img src=\"%s\" alt=\"%s\" />", element.url, caption);
-		}
+		writer.image ("", element.url, (caption == null || caption == "") ? "" : caption);
 	}
 
 	public override void visit_headline (Headline element) {
-		_stream.printf ("<h%d>", element.level);
+		writer.start_tag ("h%d".printf (element.level));
 		element.accept_children (this);
-		_stream.printf ("</h%d>", element.level);
+		writer.end_tag ("h%d".printf (element.level));
 	}
 
 	public override void visit_link (Link element) {
 		var label = element.label;
-		_stream.printf ("<a href=\"%s\">%s</a>",
-		                element.url,
-		                (label == null || label == "") ? element.url : label);
+		writer.link ("", element.url, (label == null || label == "") ? element.url : label);
 	}
 
 	public override void visit_symbol_link (SymbolLink element) {
 		if (element.symbol == _container
 		    || !element.symbol.is_visitor_accessible (_doclet.settings)
 		    || !element.symbol.package.is_visitor_accessible (_doclet.settings)) {
-			_stream.printf (element.label);
+			writer.text (element.label);
 		} else {
 			write_symbol_link (element.symbol, element.label);
 		}
@@ -201,9 +234,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	public override void visit_paragraph (Paragraph element) {
-		_stream.printf ("<p>");
+		writer.start_tag ("p");
 		element.accept_children (this);
-		_stream.printf ("</p>");
+		writer.end_tag ("p");
 	}
 
 	public override void visit_run (Run element) {
@@ -239,39 +272,39 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 			break;
 		}
 		if (tag != null) {
-			_stream.printf ("<%s%s>", tag, css_type != null ? " class=\"" + css_type + "\"" : "");
+			writer.start_tag (tag, css_type);
 		}
 		element.accept_children (this);
 		if (tag != null) {
-			_stream.printf ("</%s>", tag);
+			writer.end_tag (tag);
 		}
 	}
 
 	public override void visit_source_code (SourceCode element) {
-		_stream.printf ("<pre>");
-		_stream.printf (element.code);
-		_stream.printf ("</pre>");
+		writer.start_tag ("pre");
+		writer.raw_text (element.code);
+		writer.end_tag ("pre");
 	}
 
 	public override void visit_table (Table element) {
-		_stream.printf ("<table class=\"main_table\">");
+		writer.start_tag ("table", "main_table");
 		element.accept_children (this);
-		_stream.printf ("</table>");
+		writer.end_tag ("table");
 	}
 
 	public override void visit_table_cell (TableCell element) {
-		_stream.printf ("<td class=\"main_table\"%s%s>",
-			element.colspan != 1 ? " colspan=\"%d\"".printf (element.colspan) : "",
-			element.rowspan != 1 ? " rowspan=\"%d\"".printf (element.rowspan) : ""
+		writer.start_tag_with_attrs ("td", "main_table",
+			{ "colspan", "rowspan" },
+			{ element.colspan.to_string (), element.rowspan.to_string () }
 		);
 		element.accept_children (this);
-		_stream.printf ("</td>");
+		writer.end_tag ("td");
 	}
 
 	public override void visit_table_row (TableRow element) {
-		_stream.printf ("<tr>");
+		writer.start_tag ("tr");
 		element.accept_children (this);
-		_stream.printf ("</tr>");
+		writer.end_tag ("tr");
 	}
 
 	public override void visit_taglet (Taglet element) {
@@ -289,27 +322,28 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		for (i = 0; chr != '\0' ; i++, chr = content[i]) {
 			switch (chr) {
 			case '\n':
-				_stream.puts (content.substring (lpos, i-lpos));
-				_stream.puts ("<br />");
+				writer.text (content.substring (lpos, i-lpos));
+				writer.simple_tag ("br");
 				lpos = i+1;
 				break;
 			case '<':
-				_stream.puts (content.substring (lpos, i-lpos));
-				_stream.puts ("&lt;");
+				writer.text (content.substring (lpos, i-lpos));
+				writer.text ("&lt;");
 				lpos = i+1;
 				break;
 			case '>':
-				_stream.puts (content.substring (lpos, i-lpos));
-				_stream.puts ("&gt;");
+				writer.text (content.substring (lpos, i-lpos));
+				writer.text ("&gt;");
 				lpos = i+1;
 				break;
 			case '&':
-				_stream.puts (content.substring (lpos, i-lpos));
-				_stream.puts ("&amp;");
+				writer.text (content.substring (lpos, i-lpos));
+				writer.text ("&amp;");
 				lpos = i+1;
 				break;
 			}
 		}
-		_stream.puts (content.substring (lpos, i-lpos));
+		writer.text (content.substring (lpos, i-lpos));
 	}
 }
+

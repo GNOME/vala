@@ -20,6 +20,7 @@
 
 using Valadoc;
 using Valadoc.Api;
+using Valadoc.Html;
 using Xml;
 using Gee;
 
@@ -227,8 +228,8 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		}
 	}
 
-	public override void visit_package ( Package file ) {
-		string pkg_name = file.name;
+	public override void visit_package (Package package) {
+		string pkg_name = package.name;
 
 		string path = GLib.Path.build_filename ( this.settings.path, pkg_name );
 		string filepath = GLib.Path.build_filename ( path, "index.htm" );
@@ -236,12 +237,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		string devpath = GLib.Path.build_filename ( path, pkg_name + ".devhelp2" );
 
 		WikiPage wikipage = null;
-		if ( this.settings.pkg_name == file.name && this.tree.wikitree != null ) {
+		if ( this.settings.pkg_name == package.name && this.tree.wikitree != null ) {
 			wikipage = this.tree.wikitree.search ("index.valadoc");
 		}
 
 		this.package_dir_name = pkg_name;
-
 
 		var rt = DirUtils.create ( path, 0777 );
 		rt = DirUtils.create ( imgpath, 0777 );
@@ -249,13 +249,15 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		this.devhelp = new DevhelpFormat ( pkg_name, "" );
 
-		GLib.FileStream ifile = GLib.FileStream.open ( filepath, "w" );
-		this.write_file_header ( ifile, this.css_path, pkg_name );
-		this.write_file_content ( ifile, file, file, wikipage );
-		this.write_file_footer ( ifile );
-		ifile = null;
+		GLib.FileStream file = GLib.FileStream.open ( filepath, "w" );
+		writer = new MarkupWriter (file);
+		_renderer.set_writer (writer);
+		this.write_file_header (this.css_path, pkg_name);
+		this.write_file_content (package, package, wikipage);
+		this.write_file_footer ();
+		file = null;
 
-		file.visit_namespaces ( this );
+		package.visit_namespaces ( this );
 
 		this.devhelp.save_file ( devpath );
 	}
@@ -266,9 +268,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 			string path = this.get_path ( ns );
 
 			GLib.FileStream file = GLib.FileStream.open ( rpath, "w" );
-			this.write_file_header ( file, this.css_path, ns.full_name() );
-			this.write_namespace_content ( file, ns, ns );
-			this.write_file_footer ( file );
+			writer = new MarkupWriter (file);
+			_renderer.set_writer (writer);
+			this.write_file_header (this.css_path, ns.full_name());
+			this.write_namespace_content (ns, ns);
+			this.write_file_footer ();
 			file = null;
 
 			this.devhelp.add_keyword ( KeywordType.NAMESPACE, ns.name, path );
@@ -313,9 +317,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		this.devhelp.add_keyword ( KeywordType.INTERFACE, iface.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, this.css_path, iface.full_name() );
-		this.write_interface_content ( file, iface, iface );
-		this.write_file_footer ( file );
+		writer = new MarkupWriter (file);
+		_renderer.set_writer (writer);
+		this.write_file_header (this.css_path, iface.full_name());
+		this.write_interface_content (iface, iface);
+		this.write_file_footer ();
 		file = null;
 	}
 
@@ -342,9 +348,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, this.css_path, cl.full_name() );
-		this.write_class_content ( file, cl, cl );
-		this.write_file_footer ( file );
+		writer = new MarkupWriter (file);
+		_renderer.set_writer (writer);
+		this.write_file_header (this.css_path, cl.full_name());
+		this.write_class_content (cl, cl);
+		this.write_file_footer ();
 		file = null;
 	}
 
@@ -365,10 +373,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, this.css_path, stru.full_name() );
-
-		this.write_struct_content ( file, stru, stru );
-		this.write_file_footer ( file );
+		writer = new MarkupWriter (file);
+		_renderer.set_writer (writer);
+		this.write_file_header (this.css_path, stru.full_name());
+		this.write_struct_content (stru, stru);
+		this.write_file_footer ();
 		file = null;
 	}
 
@@ -382,9 +391,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		this.devhelp.add_chapter ( errdom.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, this.css_path, errdom.full_name() );
-		this.write_error_domain_content ( file, errdom, errdom );
-		this.write_file_footer ( file );
+		writer = new MarkupWriter (file);
+		_renderer.set_writer (writer);
+		this.write_file_header (this.css_path, errdom.full_name());
+		this.write_error_domain_content (errdom, errdom);
+		this.write_file_footer ();
 		file = null;
 	}
 
@@ -399,9 +410,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		this.devhelp.add_chapter ( en.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, this.css_path, en.full_name() );
-		this.write_enum_content ( file, en, en );
-		this.write_file_footer ( file );
+		writer = new MarkupWriter (file);
+		_renderer.set_writer (writer);
+		this.write_file_header (this.css_path, en.full_name());
+		this.write_enum_content (en, en);
+		this.write_file_footer ();
 		file = null;
 	}
 
@@ -413,9 +426,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		this.devhelp.add_chapter ( prop.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, this.css_path, prop.full_name() );
-		this.write_property_content ( file, prop );
-		this.write_file_footer ( file );
+		writer = new MarkupWriter (file);
+		_renderer.set_writer (writer);
+		this.write_file_header (this.css_path, prop.full_name());
+		this.write_property_content (prop);
+		this.write_file_footer ();
 		file = null;
 	}
 
@@ -427,9 +442,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		this.devhelp.add_chapter ( constant.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, this.css_path, constant.full_name() );
-		this.write_constant_content (file, constant);
-		this.write_file_footer ( file );
+		writer = new MarkupWriter (file);
+		_renderer.set_writer (writer);
+		this.write_file_header (this.css_path, constant.full_name());
+		this.write_constant_content (constant);
+		this.write_file_footer ();
 		file = null;
 	}
 
@@ -441,9 +458,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		this.devhelp.add_chapter ( field.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, this.css_path, field.full_name() );
-		this.write_field_content (file, field);
-		this.write_file_footer ( file );
+		writer = new MarkupWriter (file);
+		_renderer.set_writer (writer);
+		this.write_file_header (this.css_path, field.full_name());
+		this.write_field_content (field);
+		this.write_file_footer ();
 		file = null;
 	}
 
@@ -461,9 +480,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		this.devhelp.add_chapter ( del.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, this.css_path, del.full_name() );
-		this.write_delegate_content ( file, del );
-		this.write_file_footer ( file );
+		writer = new MarkupWriter (file);
+		_renderer.set_writer (writer);
+		this.write_file_header (this.css_path, del.full_name());
+		this.write_delegate_content (del);
+		this.write_file_footer ();
 		file = null;
 	}
 
@@ -475,9 +496,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		this.devhelp.add_chapter ( sig.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, this.css_path, sig.full_name() );
-		write_signal_content ( file, sig );
-		this.write_file_footer ( file );
+		writer = new MarkupWriter (file);
+		_renderer.set_writer (writer);
+		this.write_file_header (this.css_path, sig.full_name());
+		write_signal_content (sig);
+		this.write_file_footer ();
 		file = null;
 	}
 
@@ -489,9 +512,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		this.devhelp.add_chapter ( m.name, path );
 
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		this.write_file_header ( file, this.css_path, m.full_name() );
-		this.write_method_content (file, m);
-		this.write_file_footer ( file );
+		writer = new MarkupWriter (file);
+		_renderer.set_writer (writer);
+		this.write_file_header (this.css_path, m.full_name());
+		this.write_method_content (m);
+		this.write_file_footer ();
 		file = null;
 	}
 }
@@ -505,4 +530,5 @@ public Type register_plugin ( ) {
 	Valadoc.Html.get_html_link_imp = Valadoc.Devhelp.get_html_link;
 	return typeof ( Valadoc.Devhelp.Doclet );
 }
+
 
