@@ -86,21 +86,23 @@ public class Valadoc.Html.MarkupWriter {
 		return this;
 	}
 
-	public MarkupWriter link (string css_class, string url, string label) {
+	public MarkupWriter link (string url, string label, string? css_class = null) {
 		indent++;
 		check_column ("a");
-		do_write ("<a class=\"%s\" href=\"%s\">%s</a>".printf (
-			css_class, url, label));
+		do_write ("<a%s href=\"%s\">%s</a>".printf (
+			css_class != null ? " class=\"%s\"".printf (css_class) : "",
+			url, label));
 		indent--;
 		last_was_tag = true;
 		return this;
 	}
 
-	public MarkupWriter image (string css_class, string src, string? caption = null) {
+	public MarkupWriter image (string src, string? caption = null, string? css_class = null) {
 		indent++;
 		check_column ("img");
-		do_write ("<img class=\"%s\" src=\"%s\"%s/>".printf (
-			css_class, src,
+		do_write ("<img%s src=\"%s\"%s/>".printf (
+			css_class != null ? " class=\"%s\"".printf (css_class) : "",
+			src,
 			caption != null ? " alt=\"%s\"".printf (caption) : ""));
 		indent--;
 		last_was_tag = true;
@@ -157,11 +159,15 @@ public class Valadoc.Html.MarkupWriter {
 	}
 
 	public void break_line () {
-		current_column = 0;
-		do_write ("\n%s".printf (get_indent_string ()));
+		stream.printf ("\n");
+		stream.printf (string.nfill (indent * 2, ' '));
+		current_column = indent * 2;
 	}
 
 	public void do_write (string text) {
+		if (current_column + text.length > MAX_COLUMN) {
+			break_line ();
+		}
 		stream.printf (text);
 		current_column += text.length;
 	}
@@ -214,9 +220,5 @@ public class Valadoc.Html.MarkupWriter {
 			|| name == "u"
 			|| name == "stoke";
 	}
-
-	private string get_indent_string () {
-		return current_column == 0 ? string.nfill (indent * 2, ' ') : "";
-	}		
 }
 
