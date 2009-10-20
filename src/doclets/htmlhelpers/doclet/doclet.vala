@@ -167,11 +167,11 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			write_navi_children (globals, Api.NodeType.INTERFACE, package);
 			write_navi_children (globals, Api.NodeType.CLASS, package);
 			write_navi_children (globals, Api.NodeType.STRUCT, package);
-			write_navi_children (globals, Api.NodeType.CREATION_METHOD, package);
-			write_navi_children (globals, Api.NodeType.STATIC_METHOD, package);
 			write_navi_children (globals, Api.NodeType.CONSTANT, package);
 			write_navi_children (globals, Api.NodeType.PROPERTY, package);
 			write_navi_children (globals, Api.NodeType.DELEGATE, package);
+			write_navi_children (globals, Api.NodeType.STATIC_METHOD, package);
+			write_navi_children (globals, Api.NodeType.CREATION_METHOD, package);
 			write_navi_children (globals, Api.NodeType.METHOD, package);
 			write_navi_children (globals, Api.NodeType.SIGNAL, package);
 			write_navi_children (globals, Api.NodeType.FIELD, package);
@@ -204,11 +204,11 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		write_navi_children (node, Api.NodeType.INTERFACE, parent);
 		write_navi_children (node, Api.NodeType.CLASS, parent);
 		write_navi_children (node, Api.NodeType.STRUCT, parent);
-		write_navi_children (node, Api.NodeType.CREATION_METHOD, parent);
-		write_navi_children (node, Api.NodeType.STATIC_METHOD, parent);
 		write_navi_children (node, Api.NodeType.CONSTANT, parent);
 		write_navi_children (node, Api.NodeType.PROPERTY, parent);
 		write_navi_children (node, Api.NodeType.DELEGATE, parent);
+		write_navi_children (node, Api.NodeType.STATIC_METHOD, parent);
+		write_navi_children (node, Api.NodeType.CREATION_METHOD, parent);
 		write_navi_children (node, Api.NodeType.METHOD, parent);
 		write_navi_children (node, Api.NodeType.SIGNAL, parent);
 		write_navi_children (node, Api.NodeType.FIELD, parent);
@@ -364,14 +364,14 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
 			write_children_table (node, Api.NodeType.ERROR_CODE, "Error codes");
 			write_children_table (node, Api.NodeType.ENUM_VALUE, "Enum values");
-			write_children (node, Api.NodeType.CREATION_METHOD, "Creation methods", node);
-			write_children (node, Api.NodeType.STATIC_METHOD, "Static methods", node);
 			write_children (node, Api.NodeType.CLASS, "Classes", node);
 			write_children (node, Api.NodeType.STRUCT, "Structs", node);
 			write_children (node, Api.NodeType.ENUM, "Enums", node);
 			write_children (node, Api.NodeType.CONSTANT, "Constants", node);
 			write_children (node, Api.NodeType.PROPERTY, "Properties", node);
 			write_children (node, Api.NodeType.DELEGATE, "Delegates", node);
+			write_children (node, Api.NodeType.STATIC_METHOD, "Static methods", node);
+			write_children (node, Api.NodeType.CREATION_METHOD, "Creation methods", node);
 			write_children (node, Api.NodeType.METHOD, "Methods", node);
 			write_children (node, Api.NodeType.SIGNAL, "Signals", node);
 			write_children (node, Api.NodeType.FIELD, "Fields", node);
@@ -407,10 +407,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 					write_children (child, Api.NodeType.STRUCT, "Structs", parent);
 					write_children (child, Api.NodeType.ENUM, "Enums", parent);
 					write_children (child, Api.NodeType.ERROR_DOMAIN, "Error domains", parent);
+					write_children (child, Api.NodeType.CONSTANT, "Constants", parent);
 					write_children (child, Api.NodeType.DELEGATE, "Delegates", parent);
 					write_children (child, Api.NodeType.METHOD, "Methods", parent);
 					write_children (child, Api.NodeType.FIELD, "Fields", parent);
-					write_children (child, Api.NodeType.CONSTANT, "Constants", parent);
 				}
 			}
 		}
@@ -532,10 +532,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		write_children (node, Api.NodeType.STRUCT, "Structs", parent);
 		write_children (node, Api.NodeType.ENUM, "Enums", parent);
 		write_children (node, Api.NodeType.ERROR_DOMAIN, "Error domains", parent);
+		write_children (node, Api.NodeType.CONSTANT, "Constants", parent);
 		write_children (node, Api.NodeType.DELEGATE, "Delegates", parent);
 		write_children (node, Api.NodeType.METHOD, "Methods", parent);
 		write_children (node, Api.NodeType.FIELD, "Fields", parent);
-		write_children (node, Api.NodeType.CONSTANT, "Constants", parent);
 		writer.end_tag ("div");
 	}
 
@@ -561,10 +561,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 				write_children (child, Api.NodeType.STRUCT, "Structs", parent);
 				write_children (child, Api.NodeType.ENUM, "Enums", parent);
 				write_children (child, Api.NodeType.ERROR_DOMAIN, "Error domains", parent);
+				write_children (child, Api.NodeType.CONSTANT, "Constants", parent);
 				write_children (child, Api.NodeType.DELEGATE, "Delegates", parent);
 				write_children (child, Api.NodeType.METHOD, "Methods", parent);
 				write_children (child, Api.NodeType.FIELD, "Fields", parent);
-				write_children (child, Api.NodeType.CONSTANT, "Constants", parent);
 			}
 		}
 
