@@ -46,7 +46,7 @@ public enum Valadoc.Api.NodeType {
 	TYPE_PARAMETER
 }
 
-public abstract class Valadoc.Api.Node : Item, Visitable, Documentation {
+public abstract class Valadoc.Api.Node : Item, Visitable, Documentation, Comparable<Node> {
 	private bool do_document = false;
 
 	public abstract string? name { owned get; }
@@ -134,7 +134,7 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation {
 			}
 		}
 
-		return children.read_only_view;
+		return children;
 	}
 
 	public void accept_children_by_type (NodeType type, Visitor visitor) {
@@ -232,6 +232,10 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation {
 			this._full_name = full_name.str;
 		}
 		return this._full_name;
+	}
+
+	public int compare_to (Node node) {
+		return strcmp (name, node.name);
 	}
 }
 
