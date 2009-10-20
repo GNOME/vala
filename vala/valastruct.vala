@@ -532,6 +532,9 @@ public class Vala.Struct : TypeSymbol {
 			}
 			if (is_simple_type ()) {
 				Report.error (source_reference, "The type `%s` doesn't declare a marshaller type name".printf (get_full_name ()));
+				// set marshaller_type_name to avoid multiple errors
+				marshaller_type_name = "";
+				return "";
 			} else if (has_type_id) {
 				return "BOXED";
 			} else {
@@ -555,7 +558,9 @@ public class Vala.Struct : TypeSymbol {
 			}
 			if (is_simple_type ()) {
 				Report.error (source_reference, "The value type `%s` doesn't declare a GValue get function".printf (get_full_name ()));
-				return null;
+				// set get_value_function to avoid multiple errors
+				get_value_function = "";
+				return "";
 			} else if (has_type_id) {
 				return "g_value_get_boxed";
 			} else {
@@ -576,7 +581,9 @@ public class Vala.Struct : TypeSymbol {
 			}
 			if (is_simple_type ()) {
 				Report.error (source_reference, "The value type `%s` doesn't declare a GValue set function".printf (get_full_name ()));
-				return null;
+				// set set_value_function to avoid multiple errors
+				set_value_function = "";
+				return "";
 			} else if (has_type_id) {
 				return "g_value_set_boxed";
 			} else {
