@@ -29,6 +29,7 @@ public class Valadoc.Html.MarkupWriter {
 	private int indent;
 	private long current_column = 0;
 	private bool last_was_tag;
+	private bool wrap = true;
 
 	private const int MAX_COLUMN = 150;
 
@@ -119,7 +120,7 @@ public class Valadoc.Html.MarkupWriter {
 	}
 
 	public MarkupWriter text (string text) {
-		if (text.length + current_column > MAX_COLUMN) {
+		if (wrap && text.length + current_column > MAX_COLUMN) {
 			long wrote = 0;
 			while (wrote < text.length) {
 				long space_pos = -1;
@@ -158,14 +159,18 @@ public class Valadoc.Html.MarkupWriter {
 		return this;
 	}
 
-	public void break_line () {
+	public void set_source_wrap (bool wrap) {
+		this.wrap = wrap;
+	}
+
+	private void break_line () {
 		stream.printf ("\n");
 		stream.printf (string.nfill (indent * 2, ' '));
 		current_column = indent * 2;
 	}
 
-	public void do_write (string text) {
-		if (current_column + text.length > MAX_COLUMN) {
+	private void do_write (string text) {
+		if (wrap && current_column + text.length > MAX_COLUMN) {
 			break_line ();
 		}
 		stream.printf (text);
@@ -173,7 +178,9 @@ public class Valadoc.Html.MarkupWriter {
 	}
 
 	private void check_column (string name, bool end_tag = false) {
-		if (!end_tag && inline (name) && !last_was_tag) {
+		if (!wrap) {
+			return;
+		} else if (!end_tag && inline (name) && !last_was_tag) {
 			return;
 		} else if (end_tag && content_inline (name)) {
 			return;

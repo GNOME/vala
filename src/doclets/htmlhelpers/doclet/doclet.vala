@@ -276,8 +276,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	private void write_signature (Api.Node element , Api.Node? pos) {
+		writer.set_source_wrap (false);
 		_renderer.set_container (pos);
 		_renderer.render (element.signature);
+		writer.set_source_wrap (true);
 	}
 
 	protected bool is_internal_node (Api.Node node) {
