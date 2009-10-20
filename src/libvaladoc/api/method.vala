@@ -195,7 +195,8 @@ public class Valadoc.Api.Method : Member, ParameterListHandler, ExceptionHandler
 
 	public override NodeType node_type {
 		get {
-			return is_constructor ? NodeType.CREATION_METHOD : NodeType.METHOD;
+			return is_constructor ? NodeType.CREATION_METHOD :
+			       is_static ? NodeType.STATIC_METHOD : NodeType.METHOD;
 		}
 	}
 
@@ -203,3 +204,4 @@ public class Valadoc.Api.Method : Member, ParameterListHandler, ExceptionHandler
 		visitor.visit_method (this);
 	}
 }
+

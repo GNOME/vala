@@ -119,15 +119,15 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		DirUtils.create ( this.settings.path, 0777 );
 		copy_directory ( GLib.Path.build_filename ( Config.doclet_path, "deps" ), settings.path );
 
-		this.write_wiki_pages ( tree, css_path_wiki, Path.build_filename(settings.path, "content") );
+		write_wiki_pages ( tree, css_path_wiki, Path.build_filename(settings.path, "content") );
 
 		GLib.FileStream file = GLib.FileStream.open ( GLib.Path.build_filename ( settings.path, "index.html" ), "w" );
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
-		this.write_file_header (this.css_path_package, settings.pkg_name);
-		this.write_navi_packages (tree);
-		this.write_packages_content (tree);
-		this.write_file_footer ();
+		write_file_header (this.css_path_package, settings.pkg_name);
+		write_navi_packages (tree);
+		write_package_index_content (tree);
+		write_file_footer ();
 		file = null;
 
 		Gee.Collection<Package> packages = tree.get_package_list ();
@@ -146,10 +146,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open ( GLib.Path.build_filename ( path, "index.htm" ), "w" );
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
-		this.write_file_header (this.css_path, pkg_name);
-		this.write_navi_file (package, package);
-		this.write_file_content (package, package);
-		this.write_file_footer ();
+		write_file_header (this.css_path, pkg_name);
+		write_navi_file (package, package);
+		write_package_content (package, package);
+		write_file_footer ();
 		file = null;
 
 		package.visit_namespaces ( this );
@@ -162,10 +162,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 			GLib.FileStream file = GLib.FileStream.open ( rpath, "w" );
 			writer = new MarkupWriter (file);
 			_renderer.set_writer (writer);
-			this.write_file_header (this.css_path, ns.full_name());
-			this.write_navi_namespace (ns);
-			this.write_namespace_content (ns, ns);
-			this.write_file_footer ();
+			write_file_header (this.css_path, ns.full_name());
+			write_navi_namespace (ns);
+			write_namespace_content (ns, ns);
+			write_file_footer ();
 			file = null;
 		}
 
@@ -198,10 +198,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
-		this.write_file_header (this.css_path, iface.full_name());
-		this.write_navi_interface (iface, iface);
-		this.write_interface_content (iface, iface);
-		this.write_file_footer ();
+		write_file_header (this.css_path, iface.full_name());
+		write_navi_interface (iface, iface);
+		write_symbol_content (iface);
+		write_file_footer ();
 		file = null;
 	}
 
@@ -222,10 +222,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
-		this.write_file_header (this.css_path, cl.full_name());
-		this.write_navi_class (cl, cl);
-		this.write_class_content (cl, cl);
-		this.write_file_footer ();
+		write_file_header (this.css_path, cl.full_name());
+		write_navi_class (cl, cl);
+		write_symbol_content (cl);
+		write_file_footer ();
 		file = null;
 	}
 
@@ -240,10 +240,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
-		this.write_file_header (this.css_path, stru.full_name());
-		this.write_navi_struct (stru, stru);
-		this.write_struct_content (stru, stru);
-		this.write_file_footer ();
+		write_file_header (this.css_path, stru.full_name());
+		write_navi_struct (stru, stru);
+		write_symbol_content (stru);
+		write_file_footer ();
 		file = null;
 	}
 
@@ -255,10 +255,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
-		this.write_file_header (this.css_path, errdom.full_name());
-		this.write_navi_error_domain (errdom, errdom);
-		this.write_error_domain_content (errdom, errdom);
-		this.write_file_footer ();
+		write_file_header (this.css_path, errdom.full_name());
+		write_navi_error_domain (errdom, errdom);
+		write_symbol_content (errdom);
+		write_file_footer ();
 		file = null;
 	}
 
@@ -271,10 +271,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
-		this.write_file_header (this.css_path, en.full_name());
-		this.write_navi_enum (en, en);
-		this.write_enum_content (en, en);
-		this.write_file_footer ();
+		write_file_header (this.css_path, en.full_name());
+		write_navi_enum (en, en);
+		write_symbol_content (en);
+		write_file_footer ();
 		file = null;
 	}
 
@@ -284,10 +284,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
-		this.write_file_header (this.css_path, prop.full_name());
-		this.write_navi_property (prop);
-		this.write_property_content (prop);
-		this.write_file_footer ();
+		write_file_header (this.css_path, prop.full_name());
+		write_navi_property (prop);
+		write_symbol_content (prop);
+		write_file_footer ();
 		file = null;
 	}
 
@@ -297,10 +297,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
-		this.write_file_header (this.css_path, constant.full_name());
-		this.write_navi_constant (constant);
-		this.write_constant_content (constant);
-		this.write_file_footer ();
+		write_file_header (this.css_path, constant.full_name());
+		write_navi_constant (constant);
+		write_symbol_content (constant);
+		write_file_footer ();
 		file = null;
 	}
 
@@ -310,10 +310,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
-		this.write_file_header (this.css_path, field.full_name());
-		this.write_navi_field (field);
-		this.write_field_content (field);
-		this.write_file_footer ();
+		write_file_header (this.css_path, field.full_name());
+		write_navi_field (field);
+		write_symbol_content (field);
+		write_file_footer ();
 		file = null;
 	}
 
@@ -329,10 +329,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
-		this.write_file_header (this.css_path, del.full_name());
-		this.write_navi_delegate (del);
-		this.write_delegate_content (del);
-		this.write_file_footer ();
+		write_file_header (this.css_path, del.full_name());
+		write_navi_delegate (del);
+		write_symbol_content (del);
+		write_file_footer ();
 		file = null;
 	}
 
@@ -342,10 +342,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
-		this.write_file_header (this.css_path, sig.full_name());
-		this.write_navi_signal (sig);
-		write_signal_content (sig);
-		this.write_file_footer ();
+		write_file_header (this.css_path, sig.full_name());
+		write_navi_signal (sig);
+		write_symbol_content (sig);
+		write_file_footer ();
 		file = null;
 	}
 
@@ -355,10 +355,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
-		this.write_file_header (this.css_path, m.full_name());
-		this.write_navi_method (m);
-		this.write_method_content (m);
-		this.write_file_footer ();
+		write_file_header (this.css_path, m.full_name());
+		write_navi_method (m);
+		write_symbol_content (m);
+		write_file_footer ();
 		file = null;
 	}
 }

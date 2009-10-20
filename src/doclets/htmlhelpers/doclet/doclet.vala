@@ -21,7 +21,6 @@ using GLib;
 using Valadoc.Content;
 using Valadoc.Api;
 
-
 public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected Settings settings;
 	protected HtmlRenderer _renderer;
@@ -723,8 +722,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	private void write_signature (Api.Node element , Api.Node? pos) {
+		writer.start_tag ("div", css_code_definition);
 		_renderer.set_container (pos);
 		_renderer.render (element.signature);
+		writer.end_tag ("div");
 	}
 
 	public void write_navi_packages_inline (Api.Tree tree) {
@@ -751,7 +752,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.end_tag ("div");
 	}
 
-	public void write_packages_content (Api.Tree tree) {
+	public void write_package_index_content (Api.Tree tree) {
 		writer.start_tag ("div", css_style_content);
 		writer.start_tag ("h1", css_title).text ("Packages:").end_tag ("h1");
 		writer.simple_tag ("hr", css_headline_hr);
@@ -768,192 +769,52 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.end_tag ("div");
 	}
 
-	public void write_method_content (Method m) {
-		string full_name = m.full_name ();
+	public void write_symbol_content (Api.Node node) {
+		string full_name = node.full_name ();
 		writer.start_tag ("div", css_style_content);
-		writer.start_tag ("h1", css_title, full_name).text (m.name).end_tag ("h1");
+		writer.start_tag ("h1", css_title, full_name).text (node.name).end_tag ("h1");
 		writer.simple_tag ("hr", css_headline_hr);
+		this.write_image_block (node);
 		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
-		writer.start_tag ("div", css_code_definition);
+		this.write_signature (node, node);
+		this.write_documentation (node, node);
 
-		this.write_signature (m, m);
-
-		writer.end_tag ("div");
-
-		this.write_documentation (m, m);
-
-		if (m.parent is Namespace) {
+		if (node.parent is Namespace) {
 			writer.simple_tag ("br");
-			this.write_namespace_note (m);
-			this.write_package_note (m);
+			this.write_namespace_note (node);
+			this.write_package_note (node);
 		}
-
-		writer.end_tag ("div");
-	}
-
-	public void write_child_error_values (ErrorDomain errdom) {
-		Gee.Collection<ErrorCode> error_codes = errdom.get_error_code_list ();
-		if (error_codes.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Error Codes:").end_tag ("h3");
-			writer.start_tag ("table", css_errordomain_table);
-			foreach (ErrorCode errcode in error_codes) {
-				writer.start_tag ("tr");
-
-				writer.start_tag ("td", css_errordomain_table_name, errcode.name);
-				writer.text (errcode.name);
-				writer.end_tag ("td");
-
-				writer.start_tag ("td", css_errordomain_table_text);
-				this.write_documentation (errcode, errcode);
-				writer.end_tag ("td");
-
-				writer.end_tag ("tr");
-			}
-			writer.end_tag ("table");
+		if (node.has_children ({
+				Api.NodeType.ERROR_CODE,
+				Api.NodeType.ENUM_VALUE,
+				Api.NodeType.CREATION_METHOD,
+				Api.NodeType.STATIC_METHOD,
+				Api.NodeType.CLASS,
+				Api.NodeType.STRUCT,
+				Api.NodeType.ENUM,
+				Api.NodeType.DELEGATE,
+				Api.NodeType.METHOD,
+				Api.NodeType.SIGNAL,
+				Api.NodeType.PROPERTY,
+				Api.NodeType.FIELD,
+				Api.NodeType.CONSTANT
+			})) {
+			writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
+			write_children_table (node, Api.NodeType.ERROR_CODE, "Error codes");
+			write_children_table (node, Api.NodeType.ENUM_VALUE, "Enum values");
+			write_children (node, Api.NodeType.CREATION_METHOD, "Creation methods", node);
+			write_children (node, Api.NodeType.STATIC_METHOD, "Static methods", node);
+			write_children (node, Api.NodeType.CLASS, "Classes", node);
+			write_children (node, Api.NodeType.STRUCT, "Structs", node);
+			write_children (node, Api.NodeType.ENUM, "Enums", node);
+			write_children (node, Api.NodeType.CONSTANT, "Constants", node);
+			write_children (node, Api.NodeType.PROPERTY, "Properties", node);
+			write_children (node, Api.NodeType.DELEGATE, "Delegates", node);
+			write_children (node, Api.NodeType.METHOD, "Methods", node);
+			write_children (node, Api.NodeType.SIGNAL, "Signals", node);
+			write_children (node, Api.NodeType.FIELD, "Fields", node);
 		}
-	}
-
-	public void write_signal_content (Api.Signal sig) {
-		string full_name = sig.full_name ();
-		writer.start_tag ("div", css_style_content);
-		writer.start_tag ("h1", css_title, full_name).text (sig.name).end_tag ("h1");
-		writer.simple_tag ("hr", css_headline_hr);
-		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
-		writer.start_tag ("div", css_code_definition);
-
-		this.write_signature (sig, sig);
-
 		writer.end_tag ("div");
-		this.write_documentation (sig, sig);
-		writer.end_tag ("div");
-	}
-
-	public void write_delegate_content (Delegate del) {
-		string full_name = del.full_name ();
-		writer.start_tag ("div", css_style_content);
-		writer.start_tag ("h1", css_title, full_name).text (del.name).end_tag ("h1");
-		writer.simple_tag ("hr", css_headline_hr);
-		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
-		writer.start_tag ("div", css_code_definition);
-
-		this.write_signature (del, del);
-
-		writer.end_tag ("div");
-
-		this.write_documentation (del, del);
-
-		if (del.parent is Namespace) {
-			writer.simple_tag ("br");
-			this.write_namespace_note (del);
-			this.write_package_note (del);
-		}
-
-		writer.end_tag ("div");
-	}
-
-	public void write_field_content (Field field) {
-		string full_name = field.full_name ();
-		writer.start_tag ("div", css_style_content);
-		writer.start_tag ("h1", css_title, full_name).text (field.name).end_tag ("h1");
-		writer.simple_tag ("hr", css_headline_hr);
-		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
-		writer.start_tag ("div", css_code_definition);
-
-		this.write_signature (field, field);
-
-		writer.end_tag ("div");
-
-		this.write_documentation (field, field);
-
-		if (field.parent is Namespace) {
-			writer.simple_tag ("br");
-			this.write_namespace_note (field);
-			this.write_package_note (field);
-		}
-
-		writer.end_tag ("div");
-	}
-
-	public void write_constant_content (Constant constant) {
-		string full_name = constant.full_name ();
-		writer.start_tag ("div", css_style_content);
-		writer.start_tag ("h1", css_title, full_name).text (constant.name).end_tag ("h1");
-		writer.simple_tag ("hr", css_headline_hr);
-		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
-		writer.start_tag ("div", css_code_definition);
-
-		this.write_signature (constant, constant);
-
-		writer.end_tag ("div");
-
-		this.write_documentation (constant, constant);
-
-		if (constant.parent is Namespace) {
-			writer.simple_tag ("br");
-			this.write_namespace_note (constant);
-			this.write_package_note (constant);
-		}
-
-		writer.end_tag ("div");
-	}
-
-	public void write_property_content (Property prop) {
-		string full_name = prop.full_name ();
-		writer.start_tag ("div", css_style_content);
-		writer.start_tag ("h1", css_title, full_name).text (prop.name).end_tag ("h1");
-		writer.simple_tag ("hr", css_headline_hr);
-		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
-		writer.start_tag ("div", css_code_definition);
-
-		this.write_signature (prop, prop);
-
-		writer.end_tag ("div");
-		this.write_documentation (prop, prop);
-		writer.end_tag ("div");
-	}
-
-	public void write_enum_content (Enum en, Api.Node? parent) {
-		string full_name = en.full_name ();
-		writer.start_tag ("div", css_style_content);
-		writer.start_tag ("h1", css_title, full_name).text (en.name).end_tag ("h1");
-		writer.simple_tag ("hr", css_headline_hr);
-		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
-
-		this.write_documentation (en, en);
-
-		if (en.parent is Namespace) {
-			writer.simple_tag ("br");
-			this.write_namespace_note (en);
-			this.write_package_note (en);
-		}
-
-		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
-		this.write_child_enum_values (en);
-		this.write_child_static_methods (en, parent);
-		this.write_child_methods (en, parent);
-		writer.end_tag ("div");
-	}
-
-	private void write_child_enum_values (Enum en) {
-		Gee.Collection<Api.EnumValue> enum_values = en.get_enum_values ();
-		if (enum_values.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Enum Values:").end_tag ("h3");
-			writer.start_tag ("table", css_enum_table);
-			foreach (Api.EnumValue enval in enum_values) {
-				writer.start_tag ("tr");
-
-				writer.start_tag ("td", css_enum_table_name, enval.name);
-				writer.text (enval.name);
-				writer.end_tag ("td");
-
-				writer.start_tag ("td", css_enum_table_text);
-				this.write_documentation (enval, en);
-				writer.end_tag ("td");
-
-				writer.end_tag ("tr");
-			}
-			writer.end_tag ("table");
-		}
 	}
 
 	protected void write_child_namespaces (NamespaceHandler nh, Api.Node? parent) {
@@ -972,47 +833,26 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		writer.start_tag ("h3", css_title).text ("Namespaces:").end_tag ("h3");
 		writer.start_tag ("ul", css_inline_navigation);
-		foreach (Namespace ns in nsl) {
-			if (ns.name != null) {
+		foreach (Namespace child in nsl) {
+			if (child.name != null) {
 				writer.start_tag ("li", css_namespace);
-				writer.link (get_link (ns, parent), ns.name);
-				this.write_brief_description (ns , parent);
+				writer.link (get_link (child, parent), child.name);
+				this.write_brief_description (child, parent);
 				writer.end_tag ("li");
 				if (with_childs == true) {
-					this.write_child_classes (ns, parent);
-					this.write_child_interfaces (ns, parent);
-					this.write_child_structs (ns, parent);
-					this.write_child_enums (ns, parent);
-					this.write_child_errordomains (ns, parent);
-					this.write_child_delegates (ns, parent);
-					this.write_child_methods (ns, parent);
-					this.write_child_fields (ns, parent);
-					this.write_child_constants (ns, parent);
+					write_children (child, Api.NodeType.INTERFACE, "Interfaces", parent);
+					write_children (child, Api.NodeType.CLASS, "Classes", parent);
+					write_children (child, Api.NodeType.STRUCT, "Structs", parent);
+					write_children (child, Api.NodeType.ENUM, "Enums", parent);
+					write_children (child, Api.NodeType.ERROR_DOMAIN, "Error domains", parent);
+					write_children (child, Api.NodeType.DELEGATE, "Delegates", parent);
+					write_children (child, Api.NodeType.METHOD, "Methods", parent);
+					write_children (child, Api.NodeType.FIELD, "Fields", parent);
+					write_children (child, Api.NodeType.CONSTANT, "Constants", parent);
 				}
 			}
 		}
 		writer.end_tag ("ul");
-	}
-
-	protected void write_child_methods (MethodHandler mh, Api.Node? parent) {
-		Gee.Collection<Method> methods = mh.get_method_list ();
-		Gee.ArrayList<Method> imethods = new Gee.ArrayList<Method> ();
-		foreach (Method m in methods) {
-			if (!m.is_static)
-				imethods.add (m);
-		}
-
-		if (imethods.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Methods:").end_tag ("h3");
-			writer.start_tag ("ul", css_inline_navigation);
-			foreach (Method m in imethods) {
-				writer.start_tag ("li", get_html_css_class (m));
-				writer.link (get_link (m, parent), m.name);
-				this.write_brief_description (m , parent);
-				writer.end_tag ("li");
-			}
-			writer.end_tag ("ul");
-		}
 	}
 
 	protected void write_child_dependencies (Package package, Api.Node? parent) {
@@ -1035,148 +875,6 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.end_tag ("ul");
 	}
 
-	protected void write_child_static_methods (MethodHandler mh, Api.Node? parent) {
-		Gee.Collection<Method> methods = mh.get_method_list ();
-
-		Gee.ArrayList<Method> static_methods = new Gee.ArrayList<Method> ();
-		foreach (Method m in methods) {
-			if (m.is_static)
-				static_methods.add (m);
-		}
-
-		if (static_methods.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Static Methods:").end_tag ("h3");
-			writer.start_tag ("ul", css_inline_navigation);
-			foreach (Method m in static_methods) {
-				writer.start_tag ("li", get_html_css_class (m));
-				writer.link (get_link (m, parent), m.name);
-				this.write_brief_description (m , parent);
-				writer.end_tag ("li");
-			}
-			writer.end_tag ("ul");
-		}
-	}
-
-	public void write_class_content (Class cl, Api.Node? parent) {
-		string full_name = cl.full_name ();
-		writer.start_tag ("div", css_style_content);
-		writer.start_tag ("h1", css_title, full_name).text (cl.name).end_tag ("h1");
-		writer.simple_tag ("hr", css_headline_hr);
-		this.write_image_block (cl);
-		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
-		writer.start_tag ("div", css_code_definition);
-
-		this.write_signature (cl, cl);
-
-		writer.end_tag ("div");
-
-		this.write_documentation (cl, cl);
-
-		if (cl.parent is Namespace) {
-			writer.simple_tag ("br");
-			this.write_namespace_note (cl);
-			this.write_package_note (cl);
-		}
-		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
-		this.write_child_construction_methods (cl, parent);
-		this.write_child_static_methods (cl, parent);
-		this.write_child_classes (cl, parent);
-		this.write_child_structs (cl, parent);
-		this.write_child_enums (cl, parent);
-		this.write_child_delegates (cl, parent);
-		this.write_child_methods (cl, parent);
-		this.write_child_signals (cl, parent);
-		this.write_child_properties (cl, parent);
-		this.write_child_fields (cl, parent);
-		this.write_child_constants (cl, parent);
-		writer.end_tag ("div");
-	}
-
-	public void write_interface_content (Interface iface, Api.Node? parent) {
-		string full_name = iface.full_name ();
-		writer.start_tag ("div", css_style_content);
-		writer.start_tag ("h1", css_title, full_name).text (iface.name).end_tag ("h1");
-		writer.simple_tag ("hr", css_headline_hr);
-		this.write_image_block (iface);
-		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
-		writer.start_tag ("div", css_code_definition);
-
-		this.write_signature (iface, iface);
-
-		writer.end_tag ("div");
-
-		this.write_documentation (iface, iface);
-
-		if (iface.parent is Namespace) {
-			writer.simple_tag ("br");
-			this.write_namespace_note (iface);
-			this.write_package_note (iface);
-		}
-		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
-		this.write_child_static_methods (iface, parent);
-		this.write_child_classes (iface, parent);
-		this.write_child_structs (iface, parent);
-		this.write_child_enums (iface, parent);
-		this.write_child_delegates (iface, parent);
-		this.write_child_methods (iface, parent);
-		this.write_child_signals (iface, parent);
-		this.write_child_properties (iface, parent);
-		this.write_child_fields (iface, parent);
-		this.write_child_constants (iface, parent);
-		writer.end_tag ("div");
-	}
-
-	public void write_error_domain_content (ErrorDomain errdom, Api.Node? parent) {
-		string full_name = errdom.full_name ();
-		writer.start_tag ("div", css_style_content);
-		writer.start_tag ("h1", css_title, full_name).text (errdom.name).end_tag ("h1");
-		writer.simple_tag ("hr", css_headline_hr);
-		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
-
-		this.write_documentation (errdom, errdom);
-
-		if (errdom.parent is Namespace) {
-			writer.simple_tag ("br");
-			this.write_namespace_note (errdom);
-			this.write_package_note (errdom);
-		}
-		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
-		this.write_child_error_values (errdom);
-		this.write_child_static_methods (errdom, parent);
-		this.write_child_methods (errdom, parent);
-		writer.end_tag ("div");
-	}
-
-	public void write_struct_content (Struct stru, Api.Node? parent) {
-		string full_name = stru.full_name ();
-		writer.start_tag ("div", css_style_content);
-		writer.start_tag ("h1", css_title, full_name).text (stru.name).end_tag ("h1");
-		writer.simple_tag ("hr", css_headline_hr);
-		this.write_image_block (stru);
-		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
-
-		writer.start_tag ("div", css_code_definition);
-
-		this.write_signature (stru, stru);
-
-		writer.end_tag ("div");
-
-		this.write_documentation (stru, stru);
-
-		if (stru.parent is Namespace) {
-			writer.simple_tag ("br");
-			this.write_namespace_note (stru);
-			this.write_package_note (stru);
-		}
-		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
-		this.write_child_construction_methods (stru, parent);
-		this.write_child_static_methods (stru, parent);
-		this.write_child_methods (stru, parent);
-		this.write_child_fields (stru, parent);
-		this.write_child_constants (stru, parent);
-		writer.end_tag ("div");
-	}
-
 	protected string get_img_path (Api.Node element) {
 		return "img/" + element.full_name () + ".png";
 	}
@@ -1185,67 +883,48 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		return this.settings.path + "/" + element.package.name + "/" + "img/" + element.full_name () + ".png";
 	}
 
-	protected void write_child_constants (ConstantHandler ch, Api.Node? parent) {
-		Gee.Collection<Constant> constants = ch.get_constant_list ();
-		if (constants.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Constants:").end_tag ("h3");
+	protected void write_children (Api.Node node, Api.NodeType type, string type_string, Api.Node? container) {
+		var children = node.get_children_by_type (type);
+		if (children.size > 0) {
+			writer.start_tag ("h3", css_title).text (type_string).text (":").end_tag ("h3");
 			writer.start_tag ("ul", css_inline_navigation);
-			foreach (Constant c in constants) {
-				writer.start_tag ("li", get_html_css_class (c));
-				writer.link (get_link (c, parent), c.name);
-				this.write_brief_description (c, parent);
+			foreach (Api.Node child in children) {
+				writer.start_tag ("li", get_html_css_class (child));
+				writer.link (get_link (child, container), child.name);
+				this.write_brief_description (child, container);
 				writer.end_tag ("li");
 			}
 			writer.end_tag ("ul");
 		}
 	}
 
-	protected void write_child_enums (EnumHandler eh, Api.Node? parent) {
-		Gee.Collection<Enum> enums = eh.get_enum_list ();
-		if (enums.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Enums:").end_tag ("h3");
-			writer.start_tag ("ul", css_inline_navigation);
-			foreach (Enum en in enums) {
-				writer.start_tag ("li", get_html_css_class (en));
-				writer.link (get_link (en, parent), en.name);
-				this.write_brief_description (en, parent);
-				writer.end_tag ("li");
-			}
-			writer.end_tag ("ul");
-		}
-	}
+	private void write_children_table (Api.Node node, Api.NodeType type, string type_string) {
+		Gee.Collection<Api.Node> children = node.get_children_by_type (Api.NodeType.ENUM_VALUE);
+		if (children.size > 0) {
+			writer.start_tag ("h3", css_title).text (type_string).text (":").end_tag ("h3");
+			writer.start_tag ("table", get_html_css_class (node));
+			foreach (Api.Node child in children) {
+				writer.start_tag ("tr");
 
-	protected void write_child_errordomains (ErrorDomainHandler eh, Api.Node? parent) {
-		Gee.Collection<ErrorDomain> errdoms = eh.get_error_domain_list ();
-		if (errdoms.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Errordomains:").end_tag ("h3");
-			writer.start_tag ("ul", css_inline_navigation);
-			foreach (ErrorDomain err in errdoms) {
-				writer.start_tag ("li", get_html_css_class (err));
-				writer.link (get_link (err, parent), err.name);
-				this.write_brief_description (err, parent);
-				writer.end_tag ("li");
-			}
-			writer.end_tag ("ul");
-		}
-	}
+				writer.start_tag ("td", get_html_css_class (child), child.name);
+				writer.text (child.name);
+				writer.end_tag ("td");
 
-	protected void write_child_construction_methods (ConstructionMethodHandler cmh, Api.Node? parent) {
-		Gee.Collection<Method> methods = cmh.get_construction_method_list ();
-		if (methods.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Construction Methods:").end_tag ("h3");
-			writer.start_tag ("ul", css_inline_navigation);
-			foreach (Method m in methods) {
-				writer.start_tag ("li", get_html_css_class (m));
-				writer.link (get_link (m, parent), m.name);
-				this.write_brief_description (m, parent);
-				writer.end_tag ("li");
+				writer.start_tag ("td");
+				this.write_documentation (child, node);
+				writer.end_tag ("td");
+
+				writer.end_tag ("tr");
 			}
-			writer.end_tag ("ul");
+			writer.end_tag ("table");
 		}
 	}
 
 	protected void write_image_block (Api.Node element) {
+		if (!(element is Class || element is Interface || element is Struct)) {
+			return;
+		}
+
 		string realimgpath = this.get_img_real_path (element);
 		string imgpath = this.get_img_path (element);
 
@@ -1263,141 +942,36 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.image (imgpath, "Object hierarchy for %s".printf (element.name), css_diagram);
 	}
 
-	protected void write_child_fields (FieldHandler fh, Api.Node? parent) {
-		Gee.Collection<Field> fields = fh.get_field_list ();
-		if (fields.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Fields:").end_tag ("h3");
-			writer.start_tag ("ul", css_inline_navigation);
-			foreach (Field f in fields) {
-				writer.start_tag ("li", get_html_css_class(f));
-				writer.link (get_link (f, parent), f.name);
-				this.write_brief_description (f, parent);
-				writer.end_tag ("li");
-			}
-			writer.end_tag ("ul");
-		}
-	}
-
-	protected void write_child_properties (PropertyHandler ph, Api.Node? parent) {
-		Gee.Collection<Property> properties = ph.get_property_list ();
-		if (properties.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Properties:").end_tag ("h3");
-			writer.start_tag ("ul", css_inline_navigation);
-			foreach (Property prop in properties) {
-				writer.start_tag ("li", get_html_css_class (prop));
-				writer.link (get_link (prop, parent), prop.name);
-				this.write_brief_description (prop, parent);
-				writer.end_tag ("li");
-			}
-			writer.end_tag ("ul");
-		}
-	}
-
-	protected void write_child_signals (Api.SignalHandler sh, Api.Node? parent) {
-		Gee.Collection<Api.Signal> signals = sh.get_signal_list ();
-		if (signals.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Api.Signals:").end_tag ("h3");
-			writer.start_tag ("ul", css_inline_navigation);
-			foreach (Api.Signal sig in signals) {
-				writer.start_tag ("li", get_html_css_class (sig));
-				writer.link (get_link (sig, parent), sig.name);
-				this.write_brief_description (sig, parent);
-				writer.end_tag ("li");
-			}
-			writer.end_tag ("ul");
-		}
-	}
-
-	protected void write_child_classes (ClassHandler clh, Api.Node? parent) {
-		Gee.Collection<Class> classes = clh.get_class_list ();
-		if (classes.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Classes:").end_tag ("h3");
-			writer.start_tag ("ul", css_inline_navigation);
-			foreach (Class subcl in classes) {
-				writer.start_tag ("li", get_html_css_class (subcl));
-				writer.link (get_link (subcl, parent), subcl.name);
-				this.write_brief_description (subcl, parent);
-				writer.end_tag ("li");
-			}
-			writer.end_tag ("ul");
-		}
-	}
-
-	protected void write_child_interfaces (InterfaceHandler ih, Api.Node? parent) {
-		Gee.Collection<Interface> ifaces = ih.get_interface_list ();
-		if (ifaces.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Interfaces:").end_tag ("h3");
-			writer.start_tag ("ul", css_inline_navigation);
-			foreach (Interface iface in ifaces) {
-				writer.start_tag ("li", get_html_css_class (iface));
-				writer.link (get_link (iface, parent), iface.name);
-				this.write_brief_description (iface, parent);
-				writer.end_tag ("li");
-			}
-			writer.end_tag ("ul");
-		}
-	}
-
-	protected void write_child_delegates (DelegateHandler dh, Api.Node? parent) {
-		Gee.Collection<Delegate> delegates = dh.get_delegate_list ();
-		if (delegates.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Delegates:").end_tag ("h3");
-			writer.start_tag ("ul", css_inline_navigation);
-			foreach (Delegate d in delegates) {
-				writer.start_tag ("li", get_html_css_class (d));
-				writer.link (get_link (d, parent), d.name);
-				this.write_brief_description (d, parent);
-				writer.end_tag ("li");
-			}
-			writer.end_tag ("ul");
-		}
-	}
-
-	protected void write_child_structs (StructHandler struh, Api.Node? parent) {
-		Gee.Collection<Struct> structs = struh.get_struct_list ();
-		if (structs.size > 0) {
-			writer.start_tag ("h3", css_title).text ("Structs:").end_tag ("h3");
-			writer.start_tag ("ul", css_inline_navigation);
-			foreach (Struct stru in structs) {
-				writer.start_tag ("li", get_html_css_class (stru));
-				writer.link (get_link (stru, parent), stru.name);
-				this.write_brief_description (stru, parent);
-				writer.end_tag ("li");
-			}
-			writer.end_tag ("ul");
-		}
-	}
-
-	public void write_namespace_content (Namespace ns, Api.Node? parent) {
+	public void write_namespace_content (Namespace node, Api.Node? parent) {
 		writer.start_tag ("div", css_style_content);
-		writer.start_tag ("h1", css_title).text (ns.name == null ? "Global Namespace" : ns.full_name ()).end_tag ("h1");
+		writer.start_tag ("h1", css_title).text (node.name == null ? "Global Namespace" : node.full_name ()).end_tag ("h1");
 		writer.simple_tag ("hr", css_hr);
 		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
 
-		this.write_documentation (ns, ns);
+		this.write_documentation (node, parent);
 
 		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
 
-		if (ns.name == null)
-			this.write_child_namespaces ((Package)ns.parent, parent);
+		if (node.name == null)
+			this.write_child_namespaces ((Package) node.parent, parent);
 		else
-			this.write_child_namespaces (ns, parent);
+			this.write_child_namespaces (node, parent);
 
-		this.write_child_classes (ns, parent);
-		this.write_child_interfaces (ns, parent);
-		this.write_child_structs (ns, parent);
-		this.write_child_enums (ns, parent);
-		this.write_child_errordomains (ns, parent);
-		this.write_child_delegates (ns, parent);
-		this.write_child_methods (ns, parent);
-		this.write_child_fields (ns, parent);
-		this.write_child_constants (ns, parent);
+		write_children (node, Api.NodeType.INTERFACE, "Interfaces", parent);
+		write_children (node, Api.NodeType.CLASS, "Classes", parent);
+		write_children (node, Api.NodeType.STRUCT, "Structs", parent);
+		write_children (node, Api.NodeType.ENUM, "Enums", parent);
+		write_children (node, Api.NodeType.ERROR_DOMAIN, "Error domains", parent);
+		write_children (node, Api.NodeType.DELEGATE, "Delegates", parent);
+		write_children (node, Api.NodeType.METHOD, "Methods", parent);
+		write_children (node, Api.NodeType.FIELD, "Fields", parent);
+		write_children (node, Api.NodeType.CONSTANT, "Constants", parent);
 		writer.end_tag ("div");
 	}
 
-	protected void write_file_content (Package f, Api.Node? parent, WikiPage? wikipage = null) {
+	protected void write_package_content (Package node, Api.Node? parent, WikiPage? wikipage = null) {
 		writer.start_tag ("div", css_style_content);
-		writer.start_tag ("h1", css_title, f.name).text (f.name).end_tag ("h1");
+		writer.start_tag ("h1", css_title, node.name).text (node.name).end_tag ("h1");
 		writer.simple_tag ("hr", css_headline_hr);
 		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
 
@@ -1408,23 +982,23 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
 
-		this.write_child_namespaces (f, parent);
+		this.write_child_namespaces (node, parent);
 
-		foreach (Namespace ns in f.get_namespace_list()) {
-			if (ns.name == null) {
-				this.write_child_classes (ns, parent);
-				this.write_child_interfaces (ns, parent);
-				this.write_child_structs (ns, parent);
-				this.write_child_enums (ns, parent);
-				this.write_child_errordomains (ns, parent);
-				this.write_child_delegates (ns, parent);
-				this.write_child_methods (ns, parent);
-				this.write_child_fields (ns, parent);
-				this.write_child_constants (ns, parent);
+		foreach (Api.Node child in node.get_children_by_type (Api.NodeType.NAMESPACE)) {
+			if (child.name == null) {
+				write_children (child, Api.NodeType.INTERFACE, "Interfaces", parent);
+				write_children (child, Api.NodeType.CLASS, "Classes", parent);
+				write_children (child, Api.NodeType.STRUCT, "Structs", parent);
+				write_children (child, Api.NodeType.ENUM, "Enums", parent);
+				write_children (child, Api.NodeType.ERROR_DOMAIN, "Error domains", parent);
+				write_children (child, Api.NodeType.DELEGATE, "Delegates", parent);
+				write_children (child, Api.NodeType.METHOD, "Methods", parent);
+				write_children (child, Api.NodeType.FIELD, "Fields", parent);
+				write_children (child, Api.NodeType.CONSTANT, "Constants", parent);
 			}
 		}
 
-		this.write_child_dependencies (f, parent);
+		this.write_child_dependencies (node, parent);
 		writer.end_tag ("div");
 	}
 

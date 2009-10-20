@@ -41,6 +41,7 @@ public enum Valadoc.Api.NodeType {
 	PROPERTY,
 	PROPERTY_ACCESSOR,
 	SIGNAL,
+	STATIC_METHOD,
 	STRUCT,
 	TYPE_PARAMETER
 }
@@ -105,6 +106,20 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation {
 				node.process_comments (settings, parser);
 			}
 		}
+	}
+
+	public bool has_children_by_type (NodeType type) {
+		Gee.List<Node> all_children = per_type_children.get (type);
+		return all_children != null && !all_children.is_empty;
+	}
+
+	public bool has_children (NodeType[] types) {
+		foreach (NodeType type in types) {
+			if (has_children_by_type (type)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public Gee.List<Node> get_children_by_type (NodeType type, bool filtered = true) {
@@ -210,3 +225,4 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation {
 		return this._full_name;
 	}
 }
+
