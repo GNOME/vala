@@ -28,7 +28,7 @@ public class Valadoc.Api.TypeParameter : Symbol {
 
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()
-			.append (name)
+			.append_symbol (this)
 			.get ();
 	}
 

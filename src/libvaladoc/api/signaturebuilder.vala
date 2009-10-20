@@ -60,7 +60,7 @@ public class Valadoc.Api.SignatureBuilder {
 	}
 
 	public SignatureBuilder append_symbol (Node node, bool spaced = true) {
-		Run inner = new Run (Run.Style.NONE);
+		Run inner = new Run (Run.Style.BOLD);
 		inner.content.add (new SymbolLink (node, node.name));
 		return append_content (inner, spaced);
 	}
@@ -87,3 +87,4 @@ public class Valadoc.Api.SignatureBuilder {
 		return run;
 	}
 }
+
