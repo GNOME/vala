@@ -154,12 +154,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		}
 	}
 
-	protected void fetch_subnamespace_names (NamespaceHandler pos, Gee.ArrayList<Namespace> lst) {
-		Gee.Collection<Namespace> nspaces = pos.get_namespace_list ();
-
-		foreach (Namespace ns in nspaces) {
-			lst.add (ns);
-			this.fetch_subnamespace_names (ns, lst);
+	protected void fetch_subnamespace_names (Api.Node node, Gee.ArrayList<Namespace> namespaces) {
+		foreach (Api.Node child in node.get_children_by_type (Api.NodeType.NAMESPACE)) {
+			namespaces.add ((Namespace) child);
+			this.fetch_subnamespace_names (child, namespaces);
 		}
 	}
 
@@ -387,23 +385,23 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.end_tag ("div");
 	}
 
-	protected void write_child_namespaces (NamespaceHandler nh, Api.Node? parent) {
-		Gee.ArrayList<Namespace> nsl = new Gee.ArrayList<Namespace> ();
-		this.fetch_subnamespace_names (nh, nsl);
+	protected void write_child_namespaces (Api.Node node, Api.Node? parent) {
+		Gee.ArrayList<Namespace> namespaces = new Gee.ArrayList<Namespace> ();
+		this.fetch_subnamespace_names (node, namespaces);
 
-		if (nsl.size == 0)
+		if (namespaces.size == 0)
 			return ;
 
-		if (nsl.size == 1) {
-			if (nsl.get(0).name == null)
+		if (namespaces.size == 1) {
+			if (namespaces.get(0).name == null)
 				return ;
 		}
 
-		bool with_childs = (parent == null)? false : parent is Package;
+		bool with_childs = parent != null && parent is Package;
 
 		writer.start_tag ("h3", css_title).text ("Namespaces:").end_tag ("h3");
 		writer.start_tag ("ul", css_inline_navigation);
-		foreach (Namespace child in nsl) {
+		foreach (Namespace child in namespaces) {
 			if (child.name != null) {
 				writer.start_tag ("li", css_namespace);
 				writer.link (get_link (child, parent), child.name);

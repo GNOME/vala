@@ -20,9 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-
-
-public class Valadoc.Api.Package : Node, NamespaceHandler {
+public class Valadoc.Api.Package : Node {
 	private ArrayList<Vala.SourceFile> vfiles = new ArrayList<Vala.SourceFile> ();
 
 	internal void add_file (Vala.SourceFile vfile) {
@@ -88,7 +86,6 @@ public class Valadoc.Api.Package : Node, NamespaceHandler {
 		}
 	}
 
-	// TODO Remove
 	internal bool is_vpackage (Vala.SourceFile vfile) {
 		return this.vfiles.contains (vfile);
 	}
@@ -113,4 +110,35 @@ public class Valadoc.Api.Package : Node, NamespaceHandler {
 			.append (name)
 			.get ();
 	}
+
+	protected Namespace get_namespace (Tree root, Vala.Symbol symbol) {
+		Vala.Symbol namespace_symbol = symbol;
+		while (!(namespace_symbol is Vala.Namespace)) {
+			namespace_symbol = namespace_symbol.parent_symbol;
+		}
+
+		// Try to find it first
+		var ns = (Namespace) root.search_vala_symbol_in (namespace_symbol, this);
+		if (ns != null) {
+			return ns;
+		}
+
+		// Find parent namespace and use it as parent if existing
+		var parent_namespace_symbol = namespace_symbol.parent_symbol;
+
+		if (parent_namespace_symbol != null) {
+			ns = (Namespace) get_namespace (root, parent_namespace_symbol);
+			if (ns != null) {
+				var new_namespace = new Namespace ((Vala.Namespace) namespace_symbol, ns);
+				add_child (new_namespace);
+				return new_namespace;
+			}
+		}
+
+		// Else take this package as parent
+		var new_namespace = new Namespace ((Vala.Namespace) namespace_symbol, this);
+		add_child (new_namespace);
+		return new_namespace;
+	}
 }
+

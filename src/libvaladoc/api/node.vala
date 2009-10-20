@@ -154,6 +154,16 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation {
 		}
 	}
 
+	public void accept_all_children (Visitor visitor) {
+		foreach (Gee.List<Node> children in per_type_children.values) {
+			foreach (Node node in children) {
+				if (node.do_document) {
+					node.accept (visitor);
+				}
+			}
+		}
+	}
+
 	public Node? find_by_name (string name) {
 		return per_name_children.get (name);
 	}

@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Constant : Member, ReturnTypeHandler {
+public class Valadoc.Api.Constant : Member {
 	private Vala.Constant vconst;
 
 	public TypeReference? type_reference {
@@ -36,8 +36,7 @@ public class Valadoc.Api.Constant : Member, ReturnTypeHandler {
 		base (symbol, parent);
 		this.vconst = symbol;
 
-		var vret = this.vconst.type_reference;
-		this.set_ret_type (vret);
+		type_reference = new TypeReference (symbol.type_reference, this);
 	}
 
 	public string get_cname () {
@@ -45,7 +44,7 @@ public class Valadoc.Api.Constant : Member, ReturnTypeHandler {
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		this.set_return_type_references (root);
+		type_reference.resolve_type_references (root);
 	}
 
 	protected override Inline build_signature () {
@@ -63,3 +62,4 @@ public class Valadoc.Api.Constant : Member, ReturnTypeHandler {
 		visitor.visit_constant (this);
 	}
 }
+

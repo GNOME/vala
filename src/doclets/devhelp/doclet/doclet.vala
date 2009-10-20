@@ -222,10 +222,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		write_wiki_pages ( tree, css_path_wiki, Path.build_filename(this.settings.path, this.settings.pkg_name, "content") );
 
-		Gee.Collection<Package> packages = tree.get_package_list ();
-		foreach ( Package pkg in packages ) {
-			pkg.accept (this);
-		}
+		tree.accept (this);
+	}
+
+	public override void visit_tree (Api.Tree tree) {
+		tree.accept_children (this);
 	}
 
 	public override void visit_package (Package package) {
@@ -257,278 +258,111 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		write_file_footer ();
 		file = null;
 
-		package.visit_namespaces ( this );
+		package.accept_all_children (this);
 
 		this.devhelp.save_file ( devpath );
 	}
 
-	public override void visit_namespace ( Namespace ns ) {
-		if ( ns.name != null ) {
-			string rpath = this.get_real_path ( ns );
-			string path = this.get_path ( ns );
+	private void process_compound_node (Api.Node node, KeywordType type) {
+		string rpath = this.get_real_path (node);
+		string path = this.get_path (node);
 
-			GLib.FileStream file = GLib.FileStream.open ( rpath, "w" );
+		if (node.name != null) {
+			this.devhelp.add_chapter_start (node.name, path);
+	
+			GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 			writer = new MarkupWriter (file);
 			_renderer.set_writer (writer);
-			write_file_header (this.css_path, ns.full_name());
-			write_namespace_content (ns, ns);
+			write_file_header (css_path, node.full_name());
+			write_symbol_content (node);
 			write_file_footer ();
 			file = null;
-
-			this.devhelp.add_keyword ( KeywordType.NAMESPACE, ns.name, path );
-			this.devhelp.add_chapter_start ( ns.name, path );
 		}
 
-		ns.visit_namespaces ( this );
-		ns.visit_classes ( this );
-		ns.visit_interfaces ( this );
-		ns.visit_structs ( this );
-		ns.visit_enums ( this );
-		ns.visit_error_domains ( this );
-		ns.visit_delegates ( this );
-		ns.visit_methods ( this );
-		ns.visit_fields ( this );
-		ns.visit_constants ( this );
+		node.accept_all_children (this);
 
-		if ( ns.name != null ) {
-			this.devhelp.add_chapter_end ( );
+		if (node.name != null) {
+			this.devhelp.add_chapter_end ();
+			this.devhelp.add_keyword (type, node.name, path);
 		}
 	}
 
-	public override void visit_interface ( Interface iface ) {
-		string rpath = this.get_real_path ( iface );
-		string path = this.get_path ( iface );
+	private void process_node (Api.Node node, KeywordType type) {
+		string rpath = this.get_real_path (node);
+		string path = this.get_path (node);
 
-
-		this.devhelp.add_chapter_start ( iface.name, path );
-
-		iface.visit_classes ( this );
-		iface.visit_structs ( this );
-		iface.visit_enums ( this );
-		iface.visit_delegates ( this );
-		iface.visit_methods ( this );
-		iface.visit_signals ( this );
-		iface.visit_properties ( this );
-		iface.visit_fields ( this );
-		iface.visit_constants ( this );
-
-		this.devhelp.add_chapter_end ( );
-
-		this.devhelp.add_keyword ( KeywordType.INTERFACE, iface.name, path );
-
-		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
+		GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
-		write_file_header (this.css_path, iface.full_name());
-		write_symbol_content (iface);
+		write_file_header (css_path, node.full_name());
+		write_symbol_content (node);
 		write_file_footer ();
 		file = null;
+
+		node.accept_all_children (this);
+
+		this.devhelp.add_keyword (type, node.name, path);
+		this.devhelp.add_chapter (node.name, path);
 	}
 
-	public override void visit_class ( Class cl ) {
-		string rpath = this.get_real_path ( cl );
-		string path = this.get_path ( cl );
-
-
-		this.devhelp.add_keyword ( KeywordType.CLASS, cl.name, path );
-		this.devhelp.add_chapter_start ( cl.name, path );
-
-		cl.visit_construction_methods ( this );
-		cl.visit_classes ( this );
-		cl.visit_structs ( this );
-		cl.visit_enums ( this );
-		cl.visit_delegates ( this );
-		cl.visit_methods ( this );
-		cl.visit_signals ( this );
-		cl.visit_properties ( this );
-		cl.visit_fields ( this );
-		cl.visit_constants ( this );
-
-		this.devhelp.add_chapter_end ( );
-
-
-		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		writer = new MarkupWriter (file);
-		_renderer.set_writer (writer);
-		write_file_header (this.css_path, cl.full_name());
-		write_symbol_content (cl);
-		write_file_footer ();
-		file = null;
+	public override void visit_namespace (Namespace item) {
+		process_compound_node (item, KeywordType.NAMESPACE);
 	}
 
-	public override void visit_struct ( Struct stru ) {
-		string rpath = this.get_real_path ( stru );
-		string path = this.get_path ( stru );
-
-
-		this.devhelp.add_keyword ( KeywordType.STRUCT, stru.name, path );
-		this.devhelp.add_chapter_start ( stru.name, path );
-
-		stru.visit_construction_methods ( this );
-		stru.visit_methods ( this );
-		stru.visit_fields ( this );
-		stru.visit_constants ( this );
-
-		this.devhelp.add_chapter_end ( );
-
-
-		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		writer = new MarkupWriter (file);
-		_renderer.set_writer (writer);
-		write_file_header (this.css_path, stru.full_name());
-		write_symbol_content (stru);
-		write_file_footer ();
-		file = null;
+	public override void visit_interface (Interface item) {
+		process_compound_node (item, KeywordType.INTERFACE);
 	}
 
-	public override void visit_error_domain ( ErrorDomain errdom ) {
-		string rpath = this.get_real_path ( errdom );
-		string path = this.get_path ( errdom );
-
-		errdom.visit_methods ( this );
-
-		this.devhelp.add_keyword ( KeywordType.ERRORDOMAIN, errdom.name, path );
-		this.devhelp.add_chapter ( errdom.name, path );
-
-		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		writer = new MarkupWriter (file);
-		_renderer.set_writer (writer);
-		write_file_header (this.css_path, errdom.full_name());
-		write_symbol_content (errdom);
-		write_file_footer ();
-		file = null;
+	public override void visit_class (Class item) {
+		process_compound_node (item, KeywordType.CLASS);
 	}
 
-	public override void visit_enum ( Enum en ) {
-		string rpath = this.get_real_path ( en );
-		string path = this.get_path ( en );
-
-		en.visit_enum_values ( this );
-		en.visit_methods ( this );
-
-		this.devhelp.add_keyword ( KeywordType.ENUM, en.name, path );
-		this.devhelp.add_chapter ( en.name, path );
-
-		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		writer = new MarkupWriter (file);
-		_renderer.set_writer (writer);
-		write_file_header (this.css_path, en.full_name());
-		write_symbol_content (en);
-		write_file_footer ();
-		file = null;
+	public override void visit_struct (Struct item) {
+		process_compound_node (item, KeywordType.STRUCT);
 	}
 
-	public override void visit_property ( Property prop ) {
-		string rpath = this.get_real_path ( prop );
-		string path = this.get_path ( prop );
-
-		this.devhelp.add_keyword ( KeywordType.PROPERTY, prop.name, path );
-		this.devhelp.add_chapter ( prop.name, path );
-
-		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		writer = new MarkupWriter (file);
-		_renderer.set_writer (writer);
-		write_file_header (this.css_path, prop.full_name());
-		write_symbol_content (prop);
-		write_file_footer ();
-		file = null;
+	public override void visit_error_domain (ErrorDomain item) {
+		process_node (item, KeywordType.ERRORDOMAIN);
 	}
 
-	public override void visit_constant (Constant constant) {
-		string rpath = this.get_real_path ( constant );
-		string path = this.get_path ( constant );
-
-		this.devhelp.add_keyword ( KeywordType.VARIABLE, constant.name, path );
-		this.devhelp.add_chapter ( constant.name, path );
-
-		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		writer = new MarkupWriter (file);
-		_renderer.set_writer (writer);
-		write_file_header (this.css_path, constant.full_name());
-		write_symbol_content (constant);
-		write_file_footer ();
-		file = null;
+	public override void visit_enum ( Enum item) {
+		process_node (item, KeywordType.ENUM);
 	}
 
-	public override void visit_field (Field field) {
-		string rpath = this.get_real_path ( field );
-		string path = this.get_path ( field );
-
-		this.devhelp.add_keyword ( KeywordType.VARIABLE, field.name, path );
-		this.devhelp.add_chapter ( field.name, path );
-
-		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		writer = new MarkupWriter (file);
-		_renderer.set_writer (writer);
-		write_file_header (this.css_path, field.full_name());
-		write_symbol_content (field);
-		write_file_footer ();
-		file = null;
+	public override void visit_property (Property item) {
+		process_node (item, KeywordType.PROPERTY);
 	}
 
-	public override void visit_error_code ( ErrorCode errcode ) {
+	public override void visit_constant (Constant item) {
+		process_node (item, KeywordType.VARIABLE);
 	}
 
-	public override void visit_enum_value ( Api.EnumValue enval ) {
+	public override void visit_field (Field item) {
+		process_node (item, KeywordType.VARIABLE);
 	}
 
-	public override void visit_delegate ( Delegate del ) {
-		string rpath = this.get_real_path ( del );
-		string path = this.get_path ( del );
-
-		this.devhelp.add_keyword ( KeywordType.DELEGATE, del.name, path );
-		this.devhelp.add_chapter ( del.name, path );
-
-		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		writer = new MarkupWriter (file);
-		_renderer.set_writer (writer);
-		write_file_header (this.css_path, del.full_name());
-		write_symbol_content (del);
-		write_file_footer ();
-		file = null;
+	public override void visit_error_code (ErrorCode item) {
 	}
 
-	public override void visit_signal ( Api.Signal sig ) {
-		string rpath = this.get_real_path ( sig );
-		string path = this.get_path ( sig );
-
-		this.devhelp.add_keyword ( KeywordType.SIGNAL, sig.name, path );
-		this.devhelp.add_chapter ( sig.name, path );
-
-		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		writer = new MarkupWriter (file);
-		_renderer.set_writer (writer);
-		write_file_header (this.css_path, sig.full_name());
-		write_symbol_content (sig);
-		write_file_footer ();
-		file = null;
+	public override void visit_enum_value (Api.EnumValue item) {
 	}
 
-	public override void visit_method (Method m) {
-		string rpath = this.get_real_path ( m );
-		string path = this.get_path ( m );
+	public override void visit_delegate (Delegate item) {
+		process_node (item, KeywordType.DELEGATE);
+	}
 
-		this.devhelp.add_keyword ( KeywordType.FUNCTION, m.name, path );
-		this.devhelp.add_chapter ( m.name, path );
+	public override void visit_signal (Api.Signal item) {
+		process_node (item, KeywordType.SIGNAL);
+	}
 
-		GLib.FileStream file = GLib.FileStream.open ( rpath, "w");
-		writer = new MarkupWriter (file);
-		_renderer.set_writer (writer);
-		write_file_header (this.css_path, m.full_name());
-		write_symbol_content (m);
-		write_file_footer ();
-		file = null;
+	public override void visit_method (Method item) {
+		process_node (item, KeywordType.FUNCTION);
 	}
 }
-
-
-
-
 
 [ModuleInit]
 public Type register_plugin ( ) {
 	Valadoc.Html.get_html_link_imp = Valadoc.Devhelp.get_html_link;
 	return typeof ( Valadoc.Devhelp.Doclet );
 }
-
 

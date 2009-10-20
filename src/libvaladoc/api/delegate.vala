@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Delegate : TypeSymbol, ParameterListHandler, ReturnTypeHandler, TemplateParameterListHandler, ExceptionHandler {
+public class Valadoc.Api.Delegate : TypeSymbol {
 	private Vala.Delegate vdelegate;
 
 	public Delegate (Vala.Delegate symbol, Node parent) {
@@ -28,8 +28,7 @@ public class Valadoc.Api.Delegate : TypeSymbol, ParameterListHandler, ReturnType
 
 		this.vdelegate = symbol;
 
-		var ret = this.vdelegate.return_type;
-		this.set_ret_type (ret);
+		type_reference = new TypeReference (symbol.return_type, this);
 	}
 
 	public string? get_cname () {
@@ -54,10 +53,7 @@ public class Valadoc.Api.Delegate : TypeSymbol, ParameterListHandler, ReturnType
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		this.set_return_type_references (root);
-
-		var vexceptionlst = this.vdelegate.get_error_types ();
-		this.add_exception_list (root, vexceptionlst);
+		type_reference.resolve_type_references (root);
 
 		base.resolve_type_references (root);
 	}
@@ -116,3 +112,4 @@ public class Valadoc.Api.Delegate : TypeSymbol, ParameterListHandler, ReturnType
 		return signature.get ();
 	}
 }
+

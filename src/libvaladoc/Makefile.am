@@ -35,47 +35,30 @@ libvaladoc_la_VALASOURCES = \
 	documentation/wikiscanner.vala \
 	api/array.vala \
 	api/class.vala \
-	api/classhandler.vala \
 	api/constant.vala \
-	api/constanthandler.vala \
-	api/constructionmethodhandler.vala \
 	api/delegate.vala \
-	api/delegatehandler.vala \
 	api/enum.vala \
-	api/enumhandler.vala \
 	api/enumvalue.vala \
 	api/errorcode.vala \
 	api/errordomain.vala \
-	api/errordomainhandler.vala \
-	api/exceptionlisthandler.vala \
 	api/field.vala \
-	api/fieldhandler.vala \
 	api/formalparameter.vala \
 	api/interface.vala \
-	api/interfacehandler.vala \
 	api/item.vala \
 	api/member.vala \
 	api/method.vala \
-	api/methodhandler.vala \
 	api/namespace.vala \
-	api/namespacehandler.vala \
 	api/node.vala \
 	api/nodebuilder.vala \
 	api/package.vala \
-	api/parameterlisthandler.vala \
 	api/pointer.vala \
 	api/property.vala \
 	api/propertyaccessor.vala \
-	api/propertyhandler.vala \
-	api/returntypehandler.vala \
 	api/signal.vala \
-	api/signalhandler.vala \
 	api/signaturebuilder.vala \
 	api/struct.vala \
-	api/structhandler.vala \
 	api/symbol.vala \
 	api/symbolaccessibility.vala \
-	api/templateparameterlisthandler.vala \
 	api/tree.vala \
 	api/typeparameter.vala \
 	api/typereference.vala \
@@ -180,4 +163,5 @@ vapi_DATA =     \
 	valadoc-1.0.vapi \
 	valadoc-1.0.deps \
 	$(NULL)
+
 

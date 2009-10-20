@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Property : Member, ReturnTypeHandler {
+public class Valadoc.Api.Property : Member {
 	private Vala.Property vproperty;
 
 	public Property (Vala.Property symbol, Node parent) {
@@ -28,8 +28,7 @@ public class Valadoc.Api.Property : Member, ReturnTypeHandler {
 
 		this.vproperty = symbol;
 
-		var ret = this.vproperty.property_type;
-		this.set_ret_type (ret);
+		type_reference = new TypeReference (symbol.property_type, this);
 
 		if (this.vproperty.get_accessor != null) {
 			this.getter = new PropertyAccessor (this.vproperty.get_accessor, this);
@@ -103,7 +102,8 @@ public class Valadoc.Api.Property : Member, ReturnTypeHandler {
 		if (vp != null) {
 			this.base_property = (Property?) root.search_vala_symbol (vp);
 		}
-		this.set_return_type_references (root);
+
+		type_reference.resolve_type_references (root);
 	}
 
 	protected override Inline build_signature () {
@@ -141,3 +141,4 @@ public class Valadoc.Api.Property : Member, ReturnTypeHandler {
 		visitor.visit_property (this);
 	}
 }
+

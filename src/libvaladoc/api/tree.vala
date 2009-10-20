@@ -56,6 +56,12 @@ public class Valadoc.Api.Tree {
 		visitor.visit_tree (this);
 	}
 
+	public void accept_children (Visitor visitor) {
+		foreach (Node node in packages) {
+			node.accept (visitor);
+		}
+	}
+
 	private Node? search_relative_to (Node element, string[] path) {
 		Api.Node? node = element;
 		foreach (string name in path) {
@@ -153,11 +159,11 @@ public class Valadoc.Api.Tree {
 			}
 
 			/* default packages */
-			if (!this.add_package ("glib-2.0")) { //
+			if (!this.add_package ("glib-2.0")) {
 				Vala.Report.error (null, "glib-2.0 not found in specified Vala API directories");
 			}
 
-			if (!this.add_package ("gobject-2.0")) { //
+			if (!this.add_package ("gobject-2.0")) {
 				Vala.Report.error (null, "gobject-2.0 not found in specified Vala API directories");
 			}
 		}
@@ -329,13 +335,15 @@ public class Valadoc.Api.Tree {
 		}
 	}
 
-	internal Node? search_vala_symbol (Vala.Symbol? vnode) {
-		if (vnode == null) {
-			return null;
-		}
+	internal Symbol? search_vala_symbol (Vala.Symbol symbol) {
+		Vala.SourceFile source_file = symbol.source_reference.file;
+		Package package = this.find_file (source_file);
+		return search_vala_symbol_in (symbol, package);
+	}
 
+	internal Symbol? search_vala_symbol_in (Vala.Symbol symbol, Package package) {
 		ArrayList<Vala.Symbol> params = new ArrayList<Vala.Symbol> ();
-		for (Vala.Symbol iter = vnode; iter != null; iter = iter.parent_symbol) {
+		for (Vala.Symbol iter = symbol; iter != null; iter = iter.parent_symbol) {
 			if (iter is Vala.DataType) {
  				params.insert (0, ((Vala.DataType)iter).data_type);
 			} else {
@@ -353,17 +361,14 @@ public class Valadoc.Api.Tree {
 			}
 		}
 
-		Vala.SourceFile vfile = vnode.source_reference.file;
-		Package file = this.find_file(vfile);
-
-		Api.Node? node = file;
-		foreach (Vala.Symbol symbol in params) {
-			node = node.find_by_symbol (symbol);
+		Api.Node? node = package;
+		foreach (Vala.Symbol a_symbol in params) {
+			node = node.find_by_symbol (a_symbol);
 			if (node == null) {
 				return null;
 			}
 		}
-		return node;
+		return (Symbol) node;
 	}
 
 	private Package? get_external_package_by_name (string name) {
@@ -375,3 +380,4 @@ public class Valadoc.Api.Tree {
 		return null;
 	}
 }
+

@@ -20,15 +20,14 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Field : Member, ReturnTypeHandler {
+public class Valadoc.Api.Field : Member {
 	private Vala.Field vfield;
 
 	public Field (Vala.Field symbol, Node parent) {
 		base (symbol, parent);
 		this.vfield = symbol;
 
-		var vret = this.vfield.field_type;
-		this.set_ret_type (vret);
+		type_reference = new TypeReference (symbol.field_type, this);
 	}
 
 	public string? get_cname () {
@@ -57,7 +56,7 @@ public class Valadoc.Api.Field : Member, ReturnTypeHandler {
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		this.set_return_type_references (root);
+		type_reference.resolve_type_references (root);
 
 		base.resolve_type_references (root);
 	}
@@ -84,3 +83,4 @@ public class Valadoc.Api.Field : Member, ReturnTypeHandler {
 		visitor.visit_field (this);
 	}
 }
+

@@ -103,4 +103,18 @@ public abstract class Valadoc.Api.Symbol : Node, SymbolAccessibility {
 			return "private";
 		}
 	}
+
+	protected override void resolve_type_references (Tree root) {
+		base.resolve_type_references (root);
+
+		foreach (Vala.DataType type in symbol.get_error_types ()) {
+			var error_type = type as Vala.ErrorType;
+			if (error_type.error_domain == null) {
+				add_child (glib_error);
+			} else {
+				add_child (root.search_vala_symbol (error_type.error_domain));
+			}
+		}
+	}
 }
+

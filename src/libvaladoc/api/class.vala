@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Class : TypeSymbol, ClassHandler, StructHandler, SignalHandler, MethodHandler, EnumHandler, PropertyHandler, ConstructionMethodHandler, FieldHandler, DelegateHandler, ConstantHandler, TemplateParameterListHandler {
+public class Valadoc.Api.Class : TypeSymbol {
 	private ArrayList<TypeReference> interfaces;
 	private Vala.Class vclass;
 
@@ -48,10 +48,6 @@ public class Valadoc.Api.Class : TypeSymbol, ClassHandler, StructHandler, Signal
 
 	public Collection<TypeReference> get_implemented_interface_list () {
 		return this.interfaces;
-	}
-
-	internal bool is_vclass (Vala.Class vcl) {
-		return this.vclass == vcl;
 	}
 
 	public bool is_abstract {
@@ -139,3 +135,4 @@ public class Valadoc.Api.Class : TypeSymbol, ClassHandler, StructHandler, Signal
 		return signature.get ();
 	}
 }
+

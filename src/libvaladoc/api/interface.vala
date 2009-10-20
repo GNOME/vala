@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Interface : TypeSymbol, SignalHandler, PropertyHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler, MethodHandler, DelegateHandler, EnumHandler, StructHandler, ClassHandler {
+public class Valadoc.Api.Interface : TypeSymbol {
 	public Interface (Vala.Interface symbol, Node parent) {
 		base (symbol, parent);
 		this.vinterface = symbol;
@@ -119,3 +119,4 @@ public class Valadoc.Api.Interface : TypeSymbol, SignalHandler, PropertyHandler,
 		return signature.get ();
 	}
 }
+

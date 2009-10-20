@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Struct : TypeSymbol, MethodHandler, ConstructionMethodHandler, FieldHandler, ConstantHandler, TemplateParameterListHandler {
+public class Valadoc.Api.Struct : TypeSymbol {
 	private Vala.Struct vstruct;
 
 	public Struct (Vala.Struct symbol, Node parent) {
@@ -88,3 +88,4 @@ public class Valadoc.Api.Struct : TypeSymbol, MethodHandler, ConstructionMethodH
 		return signature.get ();
 	}
 }
+

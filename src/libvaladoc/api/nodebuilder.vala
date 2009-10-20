@@ -48,8 +48,7 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 
 		Vala.SourceFile source_file = element.source_reference.file;
 		Package package = find_package_for (source_file);
-		Namespace ns = package.get_namespace (element);
-		return ns;
+		return package.get_namespace (root, element);
 	}
 
 	private Package? find_package_for (Vala.SourceFile source_file) {
@@ -223,4 +222,5 @@ internal class Valadoc.Api.NodeBuilder : Vala.CodeVisitor {
 		process_children (node, element);
 	}
 }
+
 

@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Enum : TypeSymbol, MethodHandler {
+public class Valadoc.Api.Enum : TypeSymbol {
 	public Enum (Vala.Enum symbol, Node parent) {
 		base (symbol, parent);
 		this.venum = symbol;
@@ -28,15 +28,6 @@ public class Valadoc.Api.Enum : TypeSymbol, MethodHandler {
 
 	public string? get_cname () {
 		return this.venum.get_cname();
-	}
-
-	// rename: get_enum_value_list
-	public Collection<EnumValue> get_enum_values () {
-		return get_children_by_type (NodeType.ENUM_VALUE);
-	}
-
-	public void visit_enum_values (Visitor visitor) {
-		accept_children_by_type (NodeType.ENUM_VALUE, visitor);
 	}
 
 	public override NodeType node_type { get { return NodeType.ENUM; } }
@@ -55,3 +46,4 @@ public class Valadoc.Api.Enum : TypeSymbol, MethodHandler {
 			.get ();
 	}
 }
+

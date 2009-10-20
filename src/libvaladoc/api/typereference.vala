@@ -194,7 +194,7 @@ public class Valadoc.Api.TypeReference : Item {
 			}
 		} else if (vtyperef is Vala.DelegateType) {
 			this.data_type = root.search_vala_symbol (((Vala.DelegateType) vtyperef).delegate_symbol);
-		} else {
+		} else if (vtyperef.data_type != null) {
 			this.data_type = root.search_vala_symbol (vtyperef.data_type);
 		}
 
@@ -250,3 +250,4 @@ public class Valadoc.Api.TypeReference : Item {
 		return signature.get ();
 	}
 }
+

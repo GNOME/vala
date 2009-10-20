@@ -20,15 +20,14 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.FormalParameter : Symbol, ReturnTypeHandler {
+public class Valadoc.Api.FormalParameter : Symbol {
 	private Vala.FormalParameter vformalparam;
 
 	public FormalParameter (Vala.FormalParameter symbol, Node parent) {
 		base (symbol, parent);
 		this.vformalparam = symbol;
 
-		var vformparam = this.vformalparam.parameter_type;
-		this.set_ret_type (vformparam);
+		type_reference = new TypeReference (symbol.parameter_type, this);
 	}
 
 	public bool is_out {
@@ -71,7 +70,7 @@ public class Valadoc.Api.FormalParameter : Symbol, ReturnTypeHandler {
 			return;
 		}
 
-		this.set_return_type_references (root);
+		type_reference.resolve_type_references (root);
 
 		base.resolve_type_references (root);
 	}
@@ -100,3 +99,4 @@ public class Valadoc.Api.FormalParameter : Symbol, ReturnTypeHandler {
 		return signature.get ();
 	}
 }
+

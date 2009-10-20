@@ -21,7 +21,7 @@ using Gee;
 using Valadoc.Content;
 
 
-public class Valadoc.Api.ErrorDomain : TypeSymbol, MethodHandler {
+public class Valadoc.Api.ErrorDomain : TypeSymbol {
 	private Vala.ErrorDomain verrdom;
 
 	public ErrorDomain (Vala.ErrorDomain symbol, Node parent) {
@@ -31,14 +31,6 @@ public class Valadoc.Api.ErrorDomain : TypeSymbol, MethodHandler {
 
 	public string? get_cname () {
 		return this.verrdom.get_cname();
-	}
-
-	public void visit_error_codes (Visitor visitor) {
-		accept_children_by_type (NodeType.ERROR_CODE, visitor);
-	}
-
-	public Collection<ErrorCode> get_error_code_list () {
-		return get_children_by_type (NodeType.ERROR_CODE);
 	}
 
 	public override NodeType node_type { get { return NodeType.ERROR_DOMAIN; } }
@@ -55,3 +47,4 @@ public class Valadoc.Api.ErrorDomain : TypeSymbol, MethodHandler {
 			.get ();
 	}
 }
+

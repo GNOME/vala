@@ -20,15 +20,10 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.TypeParameter : Symbol, ReturnTypeHandler {
+public class Valadoc.Api.TypeParameter : Symbol {
 
 	public TypeParameter (Vala.TypeParameter symbol, Node parent) {
 		base (symbol, parent);
-	}
-
-	public TypeReference? type_reference {
-		protected set;
-		get;
 	}
 
 	protected override Inline build_signature () {
@@ -43,3 +38,4 @@ public class Valadoc.Api.TypeParameter : Symbol, ReturnTypeHandler {
 		visitor.visit_type_parameter (this);
 	}
 }
+

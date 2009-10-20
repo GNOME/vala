@@ -20,15 +20,14 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Method : Member, ParameterListHandler, ExceptionHandler, TemplateParameterListHandler, ReturnTypeHandler {
+public class Valadoc.Api.Method : Member {
 	private Vala.Method vmethod;
 
 	public Method (Vala.Method symbol, Node parent) {
 		base (symbol, parent);
 		this.vmethod = symbol;
 
-		var vret = this.vmethod.return_type;
-		this.set_ret_type (vret);
+		type_reference = new TypeReference (symbol.return_type, this);
 	}
 
 	public string? get_cname () {
@@ -119,10 +118,7 @@ public class Valadoc.Api.Method : Member, ParameterListHandler, ExceptionHandler
 			this.base_method = (Method?) root.search_vala_symbol (vm);
 		}
 
-		var vexceptionlst = this.vmethod.get_error_types ();
-		this.add_exception_list (root, vexceptionlst);
-
-		this.set_return_type_references (root);
+		type_reference.resolve_type_references (root);
 
 		base.resolve_type_references (root);
 	}

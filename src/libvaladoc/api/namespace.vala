@@ -20,13 +20,10 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Namespace : Symbol, MethodHandler, FieldHandler, NamespaceHandler, ErrorDomainHandler,
-                                 EnumHandler, ClassHandler, StructHandler, InterfaceHandler,
-                                 DelegateHandler, ConstantHandler
-{
+public class Valadoc.Api.Namespace : Symbol {
 	private Vala.Comment source_comment;
 
-	public Namespace (Vala.Namespace symbol, NamespaceHandler parent) {
+	public Namespace (Vala.Namespace symbol, Api.Node parent) {
 		base (symbol, parent);
 
 		this.vnspace = symbol;
@@ -67,8 +64,5 @@ public class Valadoc.Api.Namespace : Symbol, MethodHandler, FieldHandler, Namesp
 		private get;
 		set;
 	}
-
-	internal bool is_vnspace (Vala.Namespace vns) {
-		return this.vnspace == vns;
-	}
 }
+

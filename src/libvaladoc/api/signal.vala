@@ -20,7 +20,7 @@
 using Gee;
 using Valadoc.Content;
 
-public class Valadoc.Api.Signal : Member, ParameterListHandler, ReturnTypeHandler {
+public class Valadoc.Api.Signal : Member {
 	private Vala.Signal vsignal;
 
 	public Signal (Vala.Signal symbol, Node parent) {
@@ -28,8 +28,7 @@ public class Valadoc.Api.Signal : Member, ParameterListHandler, ReturnTypeHandle
 
 		this.vsignal = symbol;
 
-		var ret = this.vsignal.return_type;
-		this.set_ret_type (ret);
+		type_reference = new TypeReference (symbol.return_type, this);
 	}
 
 	public string? get_cname () {
@@ -42,7 +41,7 @@ public class Valadoc.Api.Signal : Member, ParameterListHandler, ReturnTypeHandle
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		this.set_return_type_references (root);
+		type_reference.resolve_type_references (root);
 
 		base.resolve_type_references (root);
 	}
@@ -85,3 +84,4 @@ public class Valadoc.Api.Signal : Member, ParameterListHandler, ReturnTypeHandle
 		visitor.visit_signal (this);
 	}
 }
+
