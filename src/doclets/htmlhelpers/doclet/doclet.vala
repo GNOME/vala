@@ -55,10 +55,12 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			name = (tmp == null)? "Global Namespace" : tmp;
 		}
 
-		if (link == true)
+		if (link == true) {
 			this.write_navi_entry_html_template_with_link (style, this.get_link (element, pos), name);
-		else
+		}
+		else {
 			this.write_navi_entry_html_template (style, name);
+		}
 	}
 
 	protected void write_wiki_pages (Api.Tree tree, string css_path_wiki, string contentp) {
@@ -97,10 +99,11 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		writer.start_tag ("ul", css_navi);
 
-		if (element == parent || parent == null)
+		if (element == parent || parent == null) {
 			this.write_navi_entry (element, parent, style, false);
-		else
+		} else {
 			this.write_navi_entry (element, parent, style, true);
+		}
 
 		writer.end_tag ("ul");
 		writer.simple_tag ("hr", css_navi_hr);
@@ -217,7 +220,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	protected void write_navi_children (Api.Node node, Api.NodeType type, Api.Node? parent) {
 		var children = node.get_children_by_type (type);
-		children.sort ();
+		//children.sort ();
 		foreach (Api.Node child in children) {
 			write_navi_entry (child, parent, get_html_css_class (child), child != parent);
 		}
@@ -225,8 +228,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	protected void write_package_note (Api.Node element) {
 		string package = element.package.name;
-		if (package == null)
-			return ;
+		if (package == null) {
+			return;
+		}
 
 		writer.simple_tag ("br");
 		writer.start_tag ("b").text ("Package:").end_tag ("b");
@@ -235,11 +239,13 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	protected void write_namespace_note (Api.Node element) {
 		Namespace? ns = element.nspace;
-		if (ns == null)
-			return ;
+		if (ns == null) {
+			return;
+		}
 
-		if (ns.name == null)
-			return ;
+		if (ns.name == null) {
+			return;
+		}
 
 		writer.simple_tag ("br");
 		writer.start_tag ("b").text ("Namespace:").end_tag ("b");
@@ -248,8 +254,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	private void write_brief_description (Api.Node element , Api.Node? pos) {
 		Comment? doctree = element.documentation;
-		if (doctree == null)
-			return ;
+		if (doctree == null) {
+			return;
+		}
 
 		Gee.List<Block> description = doctree.content;
 		if (description.size > 0) {
@@ -264,8 +271,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	private void write_documentation (Api.Node element , Api.Node? pos) {
 		Comment? doctree = element.documentation;
-		if (doctree == null)
-			return ;
+		if (doctree == null) {
+			return;
+		}
 
 		writer.start_tag ("div", css_description);
 
@@ -385,12 +393,14 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		Gee.ArrayList<Namespace> namespaces = new Gee.ArrayList<Namespace> ();
 		this.fetch_subnamespace_names (node, namespaces);
 
-		if (namespaces.size == 0)
-			return ;
+		if (namespaces.size == 0) {
+			return;
+		}
 
 		if (namespaces.size == 1) {
-			if (namespaces.get(0).name == null)
-				return ;
+			if (namespaces.get(0).name == null) {
+				return;
+			}
 		}
 
 		bool with_childs = parent != null && parent is Package;
@@ -421,16 +431,17 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	protected void write_child_dependencies (Package package, Api.Node? parent) {
 		Gee.Collection<Package> deps = package.get_full_dependency_list ();
-		if (deps.size == 0)
-			return ;
+		if (deps.size == 0) {
+			return;
+		}
 
 		writer.start_tag ("h2", css_title).text ("Dependencies:").end_tag ("h2");
 		writer.start_tag ("ul", css_inline_navigation);
 		foreach (Package p in deps) {
 			string link = this.get_link(p, parent);
-			if (link == null)
+			if (link == null) {
 				writer.start_tag ("li", css_package, p.name).text (p.name).end_tag ("li");
-			else {
+			} else {
 				writer.start_tag ("li", css_package);
 				writer.link (get_link (p, parent), p.name);
 				writer.end_tag ("li");
@@ -524,10 +535,11 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		writer.start_tag ("h2", css_title).text ("Content:").end_tag ("h2");
 
-		if (node.name == null)
+		if (node.name == null) {
 			this.write_child_namespaces ((Package) node.parent, parent);
-		else
+		} else {
 			this.write_child_namespaces (node, parent);
+		}
 
 		write_children (node, Api.NodeType.INTERFACE, "Interfaces", parent);
 		write_children (node, Api.NodeType.CLASS, "Classes", parent);
