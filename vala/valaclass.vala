@@ -974,6 +974,18 @@ public class Vala.Class : ObjectTypeSymbol {
 				Report.error (source_reference, "base type `%s` is less accessible than class `%s`".printf (base_type_reference.to_string (), get_full_name ()));
 				return false;
 			}
+
+			int n_type_args = base_type_reference.get_type_arguments ().size;
+			int n_type_params = ((ObjectTypeSymbol) base_type_reference.data_type).get_type_parameters ().size;
+			if (n_type_args < n_type_params) {
+				error = true;
+				Report.error (base_type_reference.source_reference, "too few type arguments");
+				return false;
+			} else if (n_type_args > n_type_params) {
+				error = true;
+				Report.error (base_type_reference.source_reference, "too many type arguments");
+				return false;
+			}
 		}
 
 		foreach (DataType type in base_types) {
