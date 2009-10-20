@@ -163,7 +163,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		}
 	}
 
-	protected void write_navi_file (Package efile, Api.Node? pos) {
+	protected void write_navi_package (Package efile, Api.Node? pos) {
 		Gee.ArrayList<Namespace> ns_list = new Gee.ArrayList<Namespace> ();
 		this.fetch_subnamespace_names (efile, ns_list);
 
@@ -191,480 +191,50 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		}
 
 		if (globals != null) {
-			this.write_navi_child_namespaces_inline_withouth_block (globals, pos);
+			write_navi_children (globals, Api.NodeType.NAMESPACE, pos);
 		}
 
 		writer.end_tag ("ul");
 		writer.end_tag ("div");
 	}
 
-	protected void write_navi_child_namespaces_inline_withouth_block (Namespace ns, Api.Node? parent) {
-		this.write_navi_child_namespaces_without_childs (ns, parent);
-		this.write_navi_child_classes_without_childs (ns, parent);
-		this.write_navi_child_interfaces_without_childs (ns, parent);
-		this.write_navi_child_structs_without_childs (ns, parent);
-		this.write_navi_child_enums_without_childs (ns, parent);
-		this.write_navi_child_error_domains_without_childs (ns, parent);
-		this.write_navi_child_delegates (ns, parent);
-		this.write_navi_child_static_methods (ns, parent);
-		this.write_navi_child_methods (ns, parent);
-		this.write_navi_child_fields (ns, parent);
-		this.write_navi_child_constants (ns, parent);
+	protected void write_navi_symbol (Api.Node node) {
+		writer.start_tag ("div", css_style_navigation);
+		write_top_elements (node, node);
+		write_navi_symbol_inline (node, node);
+		writer.end_tag ("div");
 	}
 
-	protected void write_navi_child_namespaces_inline (Namespace ns, Api.Node? parent) {
+	protected void write_navi_leaf_symbol (Api.Node node) {
+		writer.start_tag ("div", css_style_navigation);
+		write_top_elements ((Api.Node) node.parent, node);
+		write_navi_symbol_inline ((Api.Node) node.parent, node);
+		writer.end_tag ("div");
+	}
+
+	protected void write_navi_symbol_inline (Api.Node node, Api.Node? parent) {
 		writer.start_tag ("ul", css_navi);
-
-		if (ns.name == null) {
-			this.write_navi_child_namespaces_without_childs ((Package)ns.parent, ns);
-		}
-
-		this.write_navi_child_namespaces_inline_withouth_block (ns, parent);
-
+		write_navi_children (node, Api.NodeType.NAMESPACE, parent);
+		write_navi_children (node, Api.NodeType.ERROR_CODE, parent);
+		write_navi_children (node, Api.NodeType.ENUM_VALUE, parent);
+		write_navi_children (node, Api.NodeType.ENUM, parent);
+		write_navi_children (node, Api.NodeType.INTERFACE, parent);
+		write_navi_children (node, Api.NodeType.CLASS, parent);
+		write_navi_children (node, Api.NodeType.STRUCT, parent);
+		write_navi_children (node, Api.NodeType.CREATION_METHOD, parent);
+		write_navi_children (node, Api.NodeType.STATIC_METHOD, parent);
+		write_navi_children (node, Api.NodeType.CONSTANT, parent);
+		write_navi_children (node, Api.NodeType.PROPERTY, parent);
+		write_navi_children (node, Api.NodeType.DELEGATE, parent);
+		write_navi_children (node, Api.NodeType.METHOD, parent);
+		write_navi_children (node, Api.NodeType.SIGNAL, parent);
+		write_navi_children (node, Api.NodeType.FIELD, parent);
 		writer.end_tag ("ul");
 	}
 
-	protected void write_navi_child_namespaces (Namespace ns, Api.Node? parent) {
-		this.write_top_elements (ns, parent);
-		this.write_navi_child_namespaces_inline (ns, parent);
-	}
-
-	protected void write_navi_struct_inline (Struct stru, Api.Node? parent) {
-		writer.start_tag ("ul", css_navi);
-		this.write_navi_child_construction_methods (stru, parent);
-		this.write_navi_child_static_methods (stru, parent);
-		this.write_navi_child_methods (stru, parent);
-		this.write_navi_child_fields (stru, parent);
-		this.write_navi_child_constants (stru, parent);
-		writer.end_tag ("ul");
-	}
-
-	protected void write_navi_struct (Struct stru, Api.Node? parent) {
-		writer.start_tag ("div", css_style_navigation);
-		this.write_top_elements (stru, parent);
-		this.write_navi_struct_inline (stru, parent);
-		writer.end_tag ("div");
-	}
-
-	protected void write_navi_interface_inline (Interface iface, Api.Node? parent) {
-		writer.start_tag ("ul", css_navi);
-		this.write_navi_child_static_methods (iface, parent);
-		this.write_navi_child_delegates (iface, parent);
-		this.write_navi_child_methods (iface, parent);
-		this.write_navi_child_signals (iface, parent);
-		this.write_navi_child_properties (iface, parent);
-		this.write_navi_child_fields (iface, parent);
-		this.write_navi_child_constants (iface, parent);
-		writer.end_tag ("ul");
-	}
-
-	protected void write_navi_interface (Interface iface, Api.Node? parent) {
-		writer.start_tag ("div", css_style_navigation);
-		this.write_top_elements (iface, parent);
-		this.write_navi_interface_inline (iface, parent);
-		writer.end_tag ("div");
-	}
-
-	protected void write_navi_enum_inline (Enum en, Api.Node? parent) {
-		Gee.Collection<Api.EnumValue> enum_values = en.get_enum_values ();
-		writer.start_tag ("ul", css_navi);
-
-		foreach (Api.EnumValue env in enum_values) {
-			this.write_navi_entry (env, en, css_enumvalue, true);
-		}
-
-		this.write_navi_child_static_methods (en, parent);
-		this.write_navi_child_methods (en, parent);
-		writer.end_tag ("ul");
-	}
-
-	protected void write_navi_enum (Enum en, Api.Node? parent) {
-		writer.start_tag ("div", css_style_navigation);
-		this.write_top_elements (en, parent);
-		this.write_navi_enum_inline (en, parent);
-		writer.end_tag ("div");
-	}
-
-	protected void write_navi_error_domain_inline (ErrorDomain errdom, Api.Node? parent = null) {
-		Gee.Collection<ErrorCode> error_codes = errdom.get_error_code_list ();
-		writer.start_tag ("ul", css_navi);
-
-		foreach (ErrorCode ec in error_codes) {
-			this.write_navi_entry (ec, errdom, css_errorcode, true);
-		}
-
-		this.write_navi_child_static_methods (errdom, parent);
-		this.write_navi_child_methods (errdom, parent);
-		writer.end_tag ("ul");
-	}
-
-	protected void write_navi_namespace (Namespace ns) {
-		writer.start_tag ("div", css_style_navigation);
-		this.write_top_elements (ns, ns);
-		this.write_navi_child_namespaces_inline (ns, ns);
-		writer.end_tag ("div");
-	}
-
-	protected void write_navi_error_domain (ErrorDomain errdom, Api.Node? parent) {
-		writer.start_tag ("div", css_style_navigation);
-		this.write_top_elements (errdom, parent);
-		this.write_navi_error_domain_inline (errdom, parent);
-		writer.end_tag ("div");
-	}
-
-	protected void write_navi_class_inline (Class cl, Api.Node? parent) {
-		writer.start_tag ("ul", css_navi);
-		this.write_navi_child_construction_methods (cl, parent);
-		this.write_navi_child_static_methods (cl, parent);
-		this.write_navi_child_classes_without_childs (cl, parent);
-		this.write_navi_child_structs_without_childs (cl, parent);
-		this.write_navi_child_enums_without_childs (cl, parent);
-		this.write_navi_child_delegates (cl, parent);
-		this.write_navi_child_methods (cl, parent);
-		this.write_navi_child_signals (cl, parent);
-		this.write_navi_child_properties (cl, parent);
-		this.write_navi_child_fields (cl, parent);
-		this.write_navi_child_constants (cl, parent);
-		writer.end_tag ("ul");
-	}
-
-	protected void write_navi_class (Class cl, Api.Node? parent) {
-		writer.start_tag ("div", css_style_navigation);
-		this.write_top_elements (cl, parent);
-		this.write_navi_class_inline (cl, parent);
-		writer.end_tag ("div");
-	}
-
-	protected void write_navi_method (Method m) {
-		Api.Node parent = (Api.Node)m.parent;
-
-		if (parent.name == null) {
-			this.write_navi_file ((Package)parent.parent, m);
-		}
-		else {
-			writer.start_tag ("div", css_style_navigation);
-
-			this.write_top_elements (parent, m);
-
-			if (parent is Class)
-				this.write_navi_class_inline ((Class)parent, m);
-			else if (m.parent is Interface)
-				this.write_navi_interface_inline ((Interface)parent, m);
-			else if (m.parent is Struct)
-				this.write_navi_struct_inline ((Struct)parent, m);
-			else if (m.parent is Enum)
-				this.write_navi_enum_inline ((Enum)parent, m);
-			else if (m.parent is ErrorDomain)
-				this.write_navi_error_domain_inline ((ErrorDomain)parent, m);
-			else if (m.parent is Namespace)
-				this.write_navi_child_namespaces_inline ((Namespace)parent, m);
-
-			writer.end_tag ("div");
-		}
-	}
-
-	protected void write_navi_property (Property prop) {
-		Api.Node parent = (Api.Node)prop.parent;
-
-		writer.start_tag ("div", css_style_navigation);
-		this.write_top_elements (parent, prop);
-
-		if (parent is Class)
-			this.write_navi_class_inline ((Class)parent, prop);
-		else if (parent is Interface)
-			this.write_navi_interface_inline ((Interface)parent, prop);
-
-		writer.end_tag ("div");
-	}
-
-	protected void write_navi_signal (Api.Signal sig) {
-		Api.Node parent = (Api.Node)sig.parent;
-
-		writer.start_tag ("div", css_style_navigation);
-
-		this.write_top_elements (parent, sig);
-
-		if (parent is Class)
-			this.write_navi_class_inline ((Class)parent, sig);
-		else if (parent is Interface)
-			this.write_navi_interface_inline ((Interface)parent, sig);
-
-		writer.end_tag ("div");
-	}
-
-	protected void write_navi_constant (Constant c) {
-		Api.Node parent = (Api.Node)c.parent;
-
-		if (parent.name == null) {
-			this.write_navi_file ((Package)parent.parent, c);
-		}
-		else {
-			writer.start_tag ("div", css_style_navigation);
-			this.write_top_elements (parent, c);
-
-			if (parent is Class)
-				this.write_navi_class_inline ((Class)parent, c);
-			else  if (parent is Struct)
-				this.write_navi_struct_inline ((Struct)parent, c);
-			else  if (parent is Namespace)
-				this.write_navi_child_namespaces_inline ((Namespace)parent, c);
-			else if (parent is Interface)
-				this.write_navi_interface_inline ((Interface)parent, c);
-
-			writer.end_tag ("div");
-		}
-	}
-
-	protected void write_navi_field (Field f) {
-		Api.Node parent = (Api.Node)f.parent;
-
-		if (parent.name == null) {
-			this.write_navi_file ((Package)parent.parent, f);
-		}
-		else {
-			writer.start_tag ("div", css_style_navigation);
-			this.write_top_elements (parent, f);
-
-			if (parent is Class)
-				this.write_navi_class_inline ((Class)parent, f);
-			else if (parent is Struct)
-				this.write_navi_struct_inline ((Struct)parent, f);
-			else if (parent is Namespace)
-				this.write_navi_child_namespaces_inline ((Namespace)parent, f);
-			else if (parent is Interface)
-				this.write_navi_interface_inline ((Interface)parent, f);
-
-			writer.end_tag ("div");
-		}
-	}
-
-	protected void write_navi_delegate (Delegate del) {
-		Api.Node parent = (Api.Node)del.parent;
-
-		if (parent.name == null) {
-			this.write_navi_file ((Package)parent.parent, del);
-		}
-		else {
-			writer.start_tag ("div", css_style_navigation);
-			this.write_top_elements (parent, del);
-
-			if (parent is Namespace)
-				this.write_navi_child_namespaces_inline ((Namespace)parent, del);
-			else if (parent is Class)
-				this.write_navi_class_inline ((Class)parent, del);
-			else if (parent is Interface)
-				this.write_navi_interface_inline ((Interface)parent, del);
-
-			writer.end_tag ("div");
-		}
-	}
-
-	protected void write_navi_child_methods_collection (Gee.Collection<Method> methods, Api.Node? parent) {
-		foreach (Method m in methods) {
-			if (!m.is_static) {
-				string css;
-				if (m.is_virtual || m.is_override)
-					css = css_virtual_method;
-				else if (m.is_abstract)
-					css = css_abstract_method;
-				else
-					css = css_method;
-
-				if (m == parent)
-					this.write_navi_entry (m, parent, css, false);
-				else
-					this.write_navi_entry (m, parent, css, true);
-			}
-		}
-	}
-
-	protected void write_navi_child_construction_methods_collection (Gee.Collection<Method> methods, Api.Node? parent) {
-		foreach (Method m in methods) {
-			if (m == parent)
-				this.write_navi_entry (m, parent, css_creation_method, false);
-			else
-				this.write_navi_entry (m, parent, css_creation_method, true);
-		}
-	}
-
-	protected void write_navi_child_static_methods_collection (Gee.Collection<Method> methods, Api.Node? parent) {
-		foreach (Method m in methods) {
-			if (m.is_static) {
-				if (m == parent)
-					this.write_navi_entry (m, parent, css_static_method, false);
-				else
-					this.write_navi_entry (m, parent, css_static_method, true);
-			}
-		}
-	}
-
-	protected void write_navi_child_methods (MethodHandler mh, Api.Node? parent) {
-		Gee.Collection<Method> methods = mh.get_method_list ();
-		this.write_navi_child_methods_collection (methods, parent);
-	}
-
-	protected void write_navi_child_static_methods (MethodHandler mh, Api.Node? parent) {
-		Gee.Collection<Method> methods = mh.get_method_list ();
-		this.write_navi_child_static_methods_collection (methods, parent);
-	}
-
-	protected void write_navi_child_classes_without_childs_collection (Gee.Collection<Class> classes, Api.Node? parent) {
-		foreach (Class cl in classes) {
-			if (cl == parent)
-				this.write_navi_entry (cl, parent, (cl.is_abstract)? css_abstract_class : css_class, false);
-			else
-				this.write_navi_entry (cl, parent, (cl.is_abstract)? css_abstract_class : css_class, true);
-		}
-	}
-
-	protected void write_navi_child_classes_without_childs (ClassHandler clh, Api.Node? parent) {
-		Gee.Collection<Class> classes = clh.get_class_list ();
-		this.write_navi_child_classes_without_childs_collection (classes, parent);
-	}
-
-	protected void write_navi_child_construction_methods (ConstructionMethodHandler cmh, Api.Node? parent) {
-		Gee.Collection<Method> methods = cmh.get_construction_method_list ();
-		this.write_navi_child_construction_methods_collection (methods, parent);
-	}
-
-	protected void write_navi_child_signals (Api.SignalHandler sh, Api.Node? parent) {
-		Gee.Collection<Api.Signal> signals = sh.get_signal_list ();
-
-		foreach (Api.Signal sig in signals) {
-			if (sig == parent)
-				this.write_navi_entry (sig, parent, css_signal, false);
-			else
-				this.write_navi_entry (sig, parent, css_signal, true);
-		}
-	}
-
-	protected void write_navi_child_properties (PropertyHandler ph, Api.Node? parent) {
-		Gee.Collection<Property> properties = ph.get_property_list ();
-
-		foreach (Property p in properties) {
-			string css;
-			if (p.is_virtual)
-				css = css_virtual_property;
-			else if (p.is_abstract)
-				css = css_abstract_property;
-			else
-				css = css_property;
-
-			if (p == parent)
-				this.write_navi_entry (p, parent, css, false);
-			else
-				this.write_navi_entry (p, parent, css, true);
-		}
-	}
-
-	protected void write_navi_child_fields_collection (Gee.Collection<Field> fields, Api.Node? parent) {
-		foreach (Field f in fields) {
-			if (f == parent)
-				this.write_navi_entry (f, parent, css_field, false);
-			else
-				this.write_navi_entry (f, parent, css_field, true);
-		}
-	}
-
-	protected void write_navi_child_fields (FieldHandler fh, Api.Node? parent) {
-		Gee.Collection<Field> fields = fh.get_field_list ();
-		this.write_navi_child_fields_collection (fields, parent);
-	}
-
-	protected void write_navi_child_constants_collection (Gee.Collection<Constant> constants, Api.Node? parent) {
-		foreach (Constant c in constants) {
-			if (c == parent)
-				this.write_navi_entry (c, parent, css_constant, false);
-			else
-				this.write_navi_entry (c, parent, css_constant, true);
-		}
-	}
-
-	protected void write_navi_child_constants (ConstantHandler ch, Api.Node? parent) {
-		Gee.Collection<Constant> constants = ch.get_constant_list ();
-		this.write_navi_child_constants_collection (constants, parent);
-	}
-
-	protected void write_navi_child_structs_without_childs_collection (Gee.Collection<Struct> structs, Api.Node? parent) {
-		foreach (Struct stru in structs) {
-			if (stru == parent)
-				this.write_navi_entry (stru, parent, css_struct, false);
-			else
-				this.write_navi_entry (stru, parent, css_struct, true);
-		}
-	}
-
-	protected void write_navi_child_structs_without_childs (StructHandler strh, Api.Node? parent) {
-		Gee.Collection<Struct> structs = strh.get_struct_list ();
-		this.write_navi_child_structs_without_childs_collection (structs, parent);
-	}
-
-	protected void write_navi_child_delegates_collection (Gee.Collection<Delegate> delegates, Api.Node? parent) {
-		foreach (Delegate del in delegates) {
-			if (del == parent)
-				this.write_navi_entry (del, parent, css_delegate, false);
-			else
-				this.write_navi_entry (del, parent, css_delegate, true);
-		}
-	}
-
-	protected void write_navi_child_delegates (DelegateHandler delh, Api.Node? parent) {
-		Gee.Collection<Delegate> delegates = delh.get_delegate_list ();
-		this.write_navi_child_delegates_collection (delegates, parent);
-	}
-
-	protected void write_navi_child_interfaces_without_childs_collection (Gee.Collection<Interface> interfaces, Api.Node? parent) {
-		foreach (Interface iface in interfaces) {
-			if (iface == parent)
-				this.write_navi_entry (iface, parent, css_interface, false);
-			else
-				this.write_navi_entry (iface, parent, css_interface, true);
-		}
-	}
-
-	protected void write_navi_child_interfaces_without_childs (Namespace ifh, Api.Node? parent) {
-		Gee.Collection<Interface> interfaces = ifh.get_interface_list ();
-		this.write_navi_child_interfaces_without_childs_collection (interfaces, parent);
-	}
-
-	protected void write_navi_child_enums_without_childs_collection (Gee.Collection<Enum> enums, Api.Node? parent) {
-		foreach (Enum en in enums) {
-			if (en == parent)
-				this.write_navi_entry (en, parent, css_enum, false);
-			else
-				this.write_navi_entry (en, parent, css_enum, true);
-		}
-	}
-
-	protected void write_navi_child_enums_without_childs (EnumHandler eh, Api.Node? parent) {
-		Gee.Collection<Enum> enums = eh.get_enum_list ();
-		this.write_navi_child_enums_without_childs_collection (enums, parent);
-	}
-
-	protected void write_navi_child_error_domains_without_childs_collection (Gee.Collection<ErrorDomain> errordomains, Api.Node? parent) {
-		foreach (ErrorDomain errdom in errordomains) {
-			if (errdom == parent)
-				this.write_navi_entry (errdom, parent, css_errordomain, false);
-			else
-				this.write_navi_entry (errdom, parent, css_errordomain, true);
-		}
-	}
-
-	protected void write_navi_child_error_domains_without_childs (Namespace errdomh, Api.Node? parent) {
-		Gee.Collection<ErrorDomain> errordomains = errdomh.get_error_domain_list ();
-		this.write_navi_child_error_domains_without_childs_collection (errordomains, parent);
-	}
-
-	protected void write_navi_child_namespaces_without_childs (NamespaceHandler nsh, Api.Node? parent) {
-		Gee.Collection<Namespace> namespaces = nsh.get_namespace_list ();
-		foreach (Namespace ns in namespaces) {
-			if (ns.name == null)
-				continue ;
-
-			if (ns == parent)
-				this.write_navi_entry (ns, parent, css_namespace, false);
-			else
-				this.write_navi_entry (ns, parent, css_namespace, true);
+	protected void write_navi_children (Api.Node node, Api.NodeType type, Api.Node? parent) {
+		foreach (Api.Node child in node.get_children_by_type (type)) {
+			write_navi_entry (child, parent, get_html_css_class (child), child != parent);
 		}
 	}
 

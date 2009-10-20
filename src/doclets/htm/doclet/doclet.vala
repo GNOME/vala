@@ -147,7 +147,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, pkg_name);
-		write_navi_file (package, package);
+		write_navi_package (package, package);
 		write_package_content (package, package);
 		write_file_footer ();
 		file = null;
@@ -163,7 +163,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 			writer = new MarkupWriter (file);
 			_renderer.set_writer (writer);
 			write_file_header (this.css_path, ns.full_name());
-			write_navi_namespace (ns);
+			write_navi_symbol (ns);
 			write_namespace_content (ns, ns);
 			write_file_footer ();
 			file = null;
@@ -199,7 +199,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, iface.full_name());
-		write_navi_interface (iface, iface);
+		write_navi_symbol (iface);
 		write_symbol_content (iface);
 		write_file_footer ();
 		file = null;
@@ -223,7 +223,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, cl.full_name());
-		write_navi_class (cl, cl);
+		write_navi_symbol (cl);
 		write_symbol_content (cl);
 		write_file_footer ();
 		file = null;
@@ -241,7 +241,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, stru.full_name());
-		write_navi_struct (stru, stru);
+		write_navi_symbol (stru);
 		write_symbol_content (stru);
 		write_file_footer ();
 		file = null;
@@ -256,7 +256,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, errdom.full_name());
-		write_navi_error_domain (errdom, errdom);
+		write_navi_symbol (errdom);
 		write_symbol_content (errdom);
 		write_file_footer ();
 		file = null;
@@ -272,7 +272,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, en.full_name());
-		write_navi_enum (en, en);
+		write_navi_symbol (en);
 		write_symbol_content (en);
 		write_file_footer ();
 		file = null;
@@ -285,7 +285,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, prop.full_name());
-		write_navi_property (prop);
+		write_navi_leaf_symbol (prop);
 		write_symbol_content (prop);
 		write_file_footer ();
 		file = null;
@@ -298,7 +298,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, constant.full_name());
-		write_navi_constant (constant);
+		write_navi_leaf_symbol (constant);
 		write_symbol_content (constant);
 		write_file_footer ();
 		file = null;
@@ -311,7 +311,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, field.full_name());
-		write_navi_field (field);
+		write_navi_leaf_symbol (field);
 		write_symbol_content (field);
 		write_file_footer ();
 		file = null;
@@ -330,7 +330,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, del.full_name());
-		write_navi_delegate (del);
+		write_navi_leaf_symbol (del);
 		write_symbol_content (del);
 		write_file_footer ();
 		file = null;
@@ -343,7 +343,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, sig.full_name());
-		write_navi_signal (sig);
+		write_navi_leaf_symbol (sig);
 		write_symbol_content (sig);
 		write_file_footer ();
 		file = null;
@@ -356,7 +356,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, m.full_name());
-		write_navi_method (m);
+		write_navi_leaf_symbol (m);
 		write_symbol_content (m);
 		write_file_footer ();
 		file = null;
