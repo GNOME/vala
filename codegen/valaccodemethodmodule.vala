@@ -206,6 +206,60 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		}
 	}
 
+	void register_plugin_types (CCodeFragment module_init_fragment, Symbol sym, Set<Symbol> registered_types) {
+		var ns = sym as Namespace;
+		var cl = sym as Class;
+		var iface = sym as Interface;
+		if (ns != null) {
+			foreach (var ns_ns in ns.get_namespaces ()) {
+				register_plugin_types (module_init_fragment, ns_ns, registered_types);
+			}
+			foreach (var ns_cl in ns.get_classes ()) {
+				register_plugin_types (module_init_fragment, ns_cl, registered_types);
+			}
+			foreach (var ns_iface in ns.get_interfaces ()) {
+				register_plugin_types (module_init_fragment, ns_iface, registered_types);
+			}
+		} else if (cl != null) {
+			register_plugin_type (module_init_fragment, cl, registered_types);
+			foreach (var cl_cl in cl.get_classes ()) {
+				register_plugin_types (module_init_fragment, cl_cl, registered_types);
+			}
+		} else if (iface != null) {
+			register_plugin_type (module_init_fragment, iface, registered_types);
+			foreach (var iface_cl in iface.get_classes ()) {
+				register_plugin_types (module_init_fragment, iface_cl, registered_types);
+			}
+		}
+	}
+
+	void register_plugin_type (CCodeFragment module_init_fragment, ObjectTypeSymbol type_symbol, Set<Symbol> registered_types) {
+		if (type_symbol.external_package) {
+			return;
+		}
+
+		if (!registered_types.add (type_symbol)) {
+			// already registered
+			return;
+		}
+
+		var cl = type_symbol as Class;
+		if (cl != null) {
+			if (cl.is_compact) {
+				return;
+			}
+
+			// register base types first
+			foreach (var base_type in cl.get_base_types ()) {
+				register_plugin_type (module_init_fragment, (ObjectTypeSymbol) base_type.data_type, registered_types);
+			}
+		}
+
+		var register_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_register_type".printf (type_symbol.get_lower_case_cname (null))));
+		register_call.add_argument (new CCodeIdentifier (module_init_param_name));
+		module_init_fragment.append (new CCodeExpressionStatement (register_call));
+	}
+
 	public override void visit_method (Method m) {
 		var old_symbol = current_symbol;
 		bool old_method_inner_error = current_method_inner_error;
@@ -632,7 +686,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 
 				if (context.module_init_method == m && in_plugin) {
 					// GTypeModule-based plug-in, register types
-					cinit.append (module_init_fragment);
+					register_plugin_types (cinit, context.root, new HashSet<Symbol> ());
 				}
 
 				foreach (Expression precondition in m.get_preconditions ()) {

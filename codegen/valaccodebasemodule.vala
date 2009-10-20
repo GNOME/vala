@@ -126,7 +126,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public CCodeFragment instance_init_fragment;
 	public CCodeFragment instance_finalize_fragment;
 	public CCodeFragment source_signal_marshaller_definition;
-	public CCodeFragment module_init_fragment;
 	
 	public CCodeStruct param_spec_struct;
 	public CCodeStruct closure_struct;
@@ -337,7 +336,6 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			type_module_type = (TypeSymbol) glib_ns.scope.lookup ("TypeModule");
 
 			if (context.module_init_method != null) {
-				module_init_fragment = new CCodeFragment ();
 				foreach (FormalParameter parameter in context.module_init_method.get_parameters ()) {
 					if (parameter.parameter_type.data_type == type_module_type) {
 						in_plugin = true;

@@ -563,13 +563,6 @@ internal class Vala.GTypeModule : GErrorModule {
 			type_fun.init_from_type (in_plugin);
 			source_declarations.add_type_member_declaration (type_fun.get_source_declaration ());
 			source_type_member_definition.append (type_fun.get_definition ());
-			
-			if (in_plugin) {
-				// FIXME resolve potential dependency issues, i.e. base types have to be registered before derived types
-				var register_call = new CCodeFunctionCall (new CCodeIdentifier ("%s_register_type".printf (cl.get_lower_case_cname (null))));
-				register_call.add_argument (new CCodeIdentifier (module_init_param_name));
-				module_init_fragment.append (new CCodeExpressionStatement (register_call));
-			}
 
 			if (is_fundamental) {
 				var ref_fun = new CCodeFunction (cl.get_lower_case_cprefix () + "ref", "gpointer");
