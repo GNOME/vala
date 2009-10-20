@@ -21,20 +21,14 @@ using Gee;
 using Valadoc.Content;
 
 public class Valadoc.Api.Struct : TypeSymbol {
-	private Vala.Struct vstruct;
-
 	public Struct (Vala.Struct symbol, Node parent) {
 		base (symbol, parent);
-		this.vstruct = symbol;
 	}
 
-	protected TypeReference? base_type {
-		protected set;
-		get;
-	}
+	protected TypeReference? base_type { private set; get; }
 
 	public string? get_cname () {
-		return this.vstruct.get_cname();
+		return ((Vala.Struct) symbol).get_cname();
 	}
 
 	public override NodeType node_type { get { return NodeType.STRUCT; } }
@@ -44,7 +38,7 @@ public class Valadoc.Api.Struct : TypeSymbol {
 	}
 
 	private void set_parent_references (Tree root) {
-		Vala.ValueType? basetype = this.vstruct.base_type as Vala.ValueType;
+		Vala.ValueType? basetype = ((Vala.Struct) symbol).base_type as Vala.ValueType;
 		if (basetype == null) {
 			return ;
 		}

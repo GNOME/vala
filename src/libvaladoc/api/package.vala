@@ -86,10 +86,6 @@ public class Valadoc.Api.Package : Node {
 		}
 	}
 
-	internal bool is_vpackage (Vala.SourceFile vfile) {
-		return this.vfiles.contains (vfile);
-	}
-
 	internal bool is_package_for_file (Vala.SourceFile source_file) {
 		return this.vfiles.contains (source_file);
 	}

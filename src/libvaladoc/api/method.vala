@@ -21,104 +21,96 @@ using Gee;
 using Valadoc.Content;
 
 public class Valadoc.Api.Method : Member {
-	private Vala.Method vmethod;
-
 	public Method (Vala.Method symbol, Node parent) {
 		base (symbol, parent);
-		this.vmethod = symbol;
-
-		type_reference = new TypeReference (symbol.return_type, this);
+		return_type = new TypeReference (symbol.return_type, this);
 	}
 
 	public string? get_cname () {
-		return this.vmethod.get_cname ();
+		return ((Vala.Method) symbol).get_cname ();
 	}
 
-	public Method? base_method {
-		private set;
-		get;
-	}
+	public Method? base_method { private set; get; }
 
-	public TypeReference? type_reference {
-		protected set;
-		get;
-	}
+	public TypeReference? return_type { private set; get; }
 
 	public bool is_yields {
 		get {
-			return this.vmethod.coroutine;
+			return ((Vala.Method) symbol).coroutine;
 		}
 	}
 
 	public bool is_abstract {
 		get {
-			return this.vmethod.is_abstract;
+			return ((Vala.Method) symbol).is_abstract;
 		}
 	}
 
 	public bool is_virtual {
 		get {
-			return this.vmethod.is_virtual;
+			return ((Vala.Method) symbol).is_virtual;
 		}
 	}
 
 	public bool is_override {
 		get {
-			return this.vmethod.overrides;
+			return ((Vala.Method) symbol).overrides;
 		}
 	}
 
 	public bool is_static {
 		get {
-			if (this.parent is Namespace || this.is_constructor) {
+			if (this.parent is Namespace || is_constructor) {
 				return false;
 			}
-			return this.vmethod.binding == MemberBinding.STATIC;
+			return ((Vala.Method) symbol).binding == MemberBinding.STATIC;
 		}
 	}
 
 	public bool is_constructor {
 		get {
-			return ( this.vmethod is Vala.CreationMethod );
+			return symbol is Vala.CreationMethod;
 		}
 	}
 
 	public bool is_inline {
 		get {
-			return this.vmethod.is_inline;
+			return ((Vala.Method) symbol).is_inline;
 		}
 	}
 
 	public override string? name {
 		owned get {
 			if (this.is_constructor) {
-				if (this.vmethod.name == ".new") {
-					return ((Node)this.parent).name;
+				if (symbol.name == ".new") {
+					return ((Node) parent).name;
 				} else {
-					return ((Node)this.parent).name + "." + this.vmethod.name;
+					return ((Node) parent).name + "." + symbol.name;
 				}
 			}
 			else {
-				return this.vmethod.name;
+				return symbol.name;
 			}
 		}
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		Vala.Method? vm = null;
-		if (vmethod.base_method != null) {
-			vm = vmethod.base_method;
-		} else if (vmethod.base_interface_method != null) {
-			vm = vmethod.base_interface_method;
+		Vala.Method vala_method = symbol as Vala.Method;
+		Vala.Method? base_vala_method = null;
+		if (vala_method.base_method != null) {
+			base_vala_method = vala_method.base_method;
+		} else if (vala_method.base_interface_method != null) {
+			base_vala_method = vala_method.base_interface_method;
 		}
-		if (vm == vmethod && vmethod.base_interface_method != null) {
-			vm = vmethod.base_interface_method;
+		if (base_vala_method == vala_method
+		    && vala_method.base_interface_method != null) {
+			base_vala_method = vala_method.base_interface_method;
 		}
-		if (vm != null) {
-			this.base_method = (Method?) root.search_vala_symbol (vm);
+		if (base_vala_method != null) {
+			this.base_method = (Method?) root.search_vala_symbol (base_vala_method);
 		}
 
-		type_reference.resolve_type_references (root);
+		return_type.resolve_type_references (root);
 
 		base.resolve_type_references (root);
 	}
@@ -143,7 +135,7 @@ public class Valadoc.Api.Method : Member {
 			signature.append_keyword ("async");
 		}
 
-		signature.append_content (type_reference.signature);
+		signature.append_content (return_type.signature);
 		signature.append_symbol (this);
 
 		var type_parameters = get_children_by_type (NodeType.TYPE_PARAMETER, false);

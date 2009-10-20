@@ -21,34 +21,26 @@ using Gee;
 using Valadoc.Content;
 
 public class Valadoc.Api.Signal : Member {
-	private Vala.Signal vsignal;
-
 	public Signal (Vala.Signal symbol, Node parent) {
 		base (symbol, parent);
-
-		this.vsignal = symbol;
-
-		type_reference = new TypeReference (symbol.return_type, this);
+		return_type = new TypeReference (symbol.return_type, this);
 	}
 
 	public string? get_cname () {
-		return this.vsignal.get_cname();
+		return ((Vala.Signal) symbol).get_cname();
 	}
 
-	public TypeReference? type_reference {
-		protected set;
-		get;
-	}
+	public TypeReference? return_type { protected set; get; }
 
 	protected override void resolve_type_references (Tree root) {
-		type_reference.resolve_type_references (root);
+		return_type.resolve_type_references (root);
 
 		base.resolve_type_references (root);
 	}
 
 	public bool is_virtual {
 		get {
-			return this.vsignal.is_virtual;
+			return ((Vala.Signal) symbol).is_virtual;
 		}
 	}
 
@@ -60,7 +52,7 @@ public class Valadoc.Api.Signal : Member {
 			signature.append_keyword ("virtual");
 		}
 
-		signature.append_content (type_reference.signature);
+		signature.append_content (return_type.signature);
 		signature.append_symbol (this);
 		signature.append ("(");
 

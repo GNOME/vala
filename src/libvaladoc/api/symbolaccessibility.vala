@@ -19,7 +19,6 @@
 
 using Gee;
 
-
 public interface Valadoc.Api.SymbolAccessibility {
 
 	public abstract bool is_public { get; }

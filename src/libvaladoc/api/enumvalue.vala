@@ -21,11 +21,8 @@ using Gee;
 using Valadoc.Content;
 
 public class Valadoc.Api.EnumValue: Symbol {
-	private Vala.EnumValue venval;
-
 	public EnumValue (Vala.EnumValue symbol, Node parent) {
 		base (symbol, parent);
-		this.venval = symbol;
 	}
 
 	protected override void process_comments (Settings settings, DocumentationParser parser) {
@@ -38,11 +35,7 @@ public class Valadoc.Api.EnumValue: Symbol {
 	}
 
 	public string get_cname () {
-		return this.venval.get_cname ();
-	}
-
-	public bool is_venumvalue (Vala.EnumValue venval) {
-		return this.venval == venval;
+		return ((Vala.EnumValue) symbol).get_cname ();
 	}
 
 	public override NodeType node_type { get { return NodeType.ENUM_VALUE; } }
@@ -55,7 +48,8 @@ public class Valadoc.Api.EnumValue: Symbol {
 		return new SignatureBuilder ()
 			.append_symbol (this)
 			.append ("=")
-			.append (this.venval.value.to_string ())
+			.append (((Vala.EnumValue) symbol).value.to_string ())
 			.get ();
 	}
 }
+

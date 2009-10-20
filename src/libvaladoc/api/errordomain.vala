@@ -22,15 +22,12 @@ using Valadoc.Content;
 
 
 public class Valadoc.Api.ErrorDomain : TypeSymbol {
-	private Vala.ErrorDomain verrdom;
-
 	public ErrorDomain (Vala.ErrorDomain symbol, Node parent) {
 		base (symbol, parent);
-		this.verrdom = symbol;
 	}
 
 	public string? get_cname () {
-		return this.verrdom.get_cname();
+		return ((Vala.ErrorDomain) symbol).get_cname();
 	}
 
 	public override NodeType node_type { get { return NodeType.ERROR_DOMAIN; } }

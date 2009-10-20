@@ -23,7 +23,6 @@ using Valadoc.Content;
 public class Valadoc.Api.Interface : TypeSymbol {
 	public Interface (Vala.Interface symbol, Node parent) {
 		base (symbol, parent);
-		this.vinterface = symbol;
 	}
 
 	private ArrayList<TypeReference> interfaces = new ArrayList<TypeReference> ();
@@ -33,15 +32,10 @@ public class Valadoc.Api.Interface : TypeSymbol {
 	}
 
 	public string? get_cname () {
-		return this.vinterface.get_cname ();
+		return ((Vala.Interface) symbol).get_cname ();
 	}
 
-	protected TypeReference? base_type {
-		private set;
-		get;
-	}
-
-	private Vala.Interface vinterface;
+	protected TypeReference? base_type { private set; get; }
 
 	public override NodeType node_type { get { return NodeType.INTERFACE; } }
 
@@ -67,8 +61,8 @@ public class Valadoc.Api.Interface : TypeSymbol {
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		var lst = this.vinterface.get_prerequisites ();
-		this.set_prerequisites (root, lst);
+		var prerequisites = ((Vala.Interface) symbol).get_prerequisites ();
+		this.set_prerequisites (root, prerequisites);
 
 		base.resolve_type_references (root);
 	}

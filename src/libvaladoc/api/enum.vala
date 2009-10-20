@@ -23,11 +23,10 @@ using Valadoc.Content;
 public class Valadoc.Api.Enum : TypeSymbol {
 	public Enum (Vala.Enum symbol, Node parent) {
 		base (symbol, parent);
-		this.venum = symbol;
 	}
 
 	public string? get_cname () {
-		return this.venum.get_cname();
+		return ((Vala.Enum) symbol).get_cname ();
 	}
 
 	public override NodeType node_type { get { return NodeType.ENUM; } }
@@ -35,8 +34,6 @@ public class Valadoc.Api.Enum : TypeSymbol {
 	public override void accept (Visitor visitor) {
 		visitor.visit_enum (this);
 	}
-
-	private Vala.Enum venum;
 
 	protected override Inline build_signature () {
 		return new SignatureBuilder ()

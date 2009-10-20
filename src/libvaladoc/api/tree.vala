@@ -159,11 +159,11 @@ public class Valadoc.Api.Tree {
 			}
 
 			/* default packages */
-			if (!this.add_package ("glib-2.0")) {
+			if (!this.add_package ("glib-2.0")) { //
 				Vala.Report.error (null, "glib-2.0 not found in specified Vala API directories");
 			}
 
-			if (!this.add_package ("gobject-2.0")) {
+			if (!this.add_package ("gobject-2.0")) { //
 				Vala.Report.error (null, "gobject-2.0 not found in specified Vala API directories");
 			}
 		}
@@ -308,9 +308,9 @@ public class Valadoc.Api.Tree {
 		return true;
 	}
 
-	internal Package? find_file (Vala.SourceFile vfile) {
+	private Package? find_package_for_file (Vala.SourceFile vfile) {
 		foreach (Package pkg in this.packages) {
-			if (pkg.is_vpackage(vfile))
+			if (pkg.is_package_for_file (vfile))
 				return pkg;
 		}
 		return null;
@@ -337,7 +337,7 @@ public class Valadoc.Api.Tree {
 
 	internal Symbol? search_vala_symbol (Vala.Symbol symbol) {
 		Vala.SourceFile source_file = symbol.source_reference.file;
-		Package package = this.find_file (source_file);
+		Package package = find_package_for_file (source_file);
 		return search_vala_symbol_in (symbol, package);
 	}
 
@@ -369,15 +369,6 @@ public class Valadoc.Api.Tree {
 			}
 		}
 		return (Symbol) node;
-	}
-
-	private Package? get_external_package_by_name (string name) {
-		foreach (Package pkg in this.packages) {
-			if (name == pkg.name) {
-				return pkg;
-			}
-		}
-		return null;
 	}
 }
 

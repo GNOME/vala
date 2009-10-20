@@ -24,10 +24,7 @@ using Gee;
 public abstract class Valadoc.Api.Item : Object {
 	private Inline _signature;
 
-	public Item parent {
-		protected set;
-		get;
-	}
+	public Item parent { protected set; get; }
 
 	protected virtual void resolve_type_references (Tree root) {
 	}
@@ -46,3 +43,4 @@ public abstract class Valadoc.Api.Item : Object {
 
 	protected abstract Inline build_signature ();
 }
+

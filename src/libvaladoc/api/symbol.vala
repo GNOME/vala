@@ -26,8 +26,6 @@ using Gee;
 public abstract class Valadoc.Api.Symbol : Node, SymbolAccessibility {
 
 	protected Vala.Symbol symbol { private set; get; }
-	// TODO Drop DocumentedElement
-	/* protected Vala.Comment vcomment { private set; get; } */
 
 	public override string? name {
 		owned get {

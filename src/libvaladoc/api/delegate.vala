@@ -21,24 +21,16 @@ using Gee;
 using Valadoc.Content;
 
 public class Valadoc.Api.Delegate : TypeSymbol {
-	private Vala.Delegate vdelegate;
-
 	public Delegate (Vala.Delegate symbol, Node parent) {
 		base (symbol, parent);
-
-		this.vdelegate = symbol;
-
-		type_reference = new TypeReference (symbol.return_type, this);
+		return_type = new TypeReference (symbol.return_type, this);
 	}
 
 	public string? get_cname () {
-		return this.vdelegate.get_cname ();
+		return ((Vala.Delegate) symbol).get_cname ();
 	}
 
-	public TypeReference? type_reference {
-		protected set;
-		get;
-	}
+	public TypeReference? return_type { private set; get; }
 
 	public override NodeType node_type { get { return NodeType.DELEGATE; } }
 
@@ -48,12 +40,12 @@ public class Valadoc.Api.Delegate : TypeSymbol {
 
 	public bool is_static {
 		get {
-			return this.vdelegate.has_target;
+			return ((Vala.Delegate) symbol).has_target;
 		}
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		type_reference.resolve_type_references (root);
+		return_type.resolve_type_references (root);
 
 		base.resolve_type_references (root);
 	}
@@ -66,7 +58,7 @@ public class Valadoc.Api.Delegate : TypeSymbol {
 			signature.append_keyword ("static");
 		}
 
-		signature.append_content (type_reference.signature);
+		signature.append_content (return_type.signature);
 		signature.append_symbol (this);
 
 		var type_parameters = get_children_by_type (NodeType.TYPE_PARAMETER);

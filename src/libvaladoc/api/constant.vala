@@ -21,26 +21,15 @@ using Gee;
 using Valadoc.Content;
 
 public class Valadoc.Api.Constant : Member {
-	private Vala.Constant vconst;
-
-	public TypeReference? type_reference {
-		protected set;
-		get;
-	}
-
-	public bool is_vconstant (Vala.Constant vconst) {
-		return (this.vconst == vconst);
-	}
+	public TypeReference type_reference { private set; get; }
 
 	public Constant (Vala.Constant symbol, Node parent) {
 		base (symbol, parent);
-		this.vconst = symbol;
-
 		type_reference = new TypeReference (symbol.type_reference, this);
 	}
 
 	public string get_cname () {
-		return this.vconst.get_cname ();
+		return ((Vala.Constant) symbol).get_cname ();
 	}
 
 	protected override void resolve_type_references (Tree root) {

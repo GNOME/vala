@@ -175,7 +175,6 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation {
 	private Namespace? _nspace = null;
 	private Package? _package = null;
 	private string _full_name = null;
-	private int _line = -1;
 
 	public Namespace? nspace {
 		get {

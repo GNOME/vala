@@ -26,12 +26,10 @@ public class Valadoc.Api.Namespace : Symbol {
 	public Namespace (Vala.Namespace symbol, Api.Node parent) {
 		base (symbol, parent);
 
-		this.vnspace = symbol;
-
-		if (vnspace.source_reference != null) {
-			foreach (Vala.Comment c in vnspace.get_comments()) {
-				if (this.package.is_vpackage (c.source_reference.file)) {
-					this.source_comment = c;
+		if (symbol.source_reference != null) {
+			foreach (Vala.Comment c in symbol.get_comments()) {
+				if (package.is_package_for_file (c.source_reference.file)) {
+					source_comment = c;
 					break;
 				}
 			}
@@ -58,11 +56,6 @@ public class Valadoc.Api.Namespace : Symbol {
 
 	public override void accept (Visitor visitor) {
 		visitor.visit_namespace (this);
-	}
-
-	public Vala.Namespace vnspace {
-		private get;
-		set;
 	}
 }
 

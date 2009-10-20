@@ -21,41 +21,34 @@ using Gee;
 using Valadoc.Content;
 
 public class Valadoc.Api.FormalParameter : Symbol {
-	private Vala.FormalParameter vformalparam;
-
 	public FormalParameter (Vala.FormalParameter symbol, Node parent) {
 		base (symbol, parent);
-		this.vformalparam = symbol;
-
-		type_reference = new TypeReference (symbol.parameter_type, this);
+		parameter_type = new TypeReference (symbol.parameter_type, this);
 	}
 
 	public bool is_out {
 		get {
-			return this.vformalparam.direction == Vala.ParameterDirection.OUT;
+			return ((Vala.FormalParameter) symbol).direction == Vala.ParameterDirection.OUT;
 		}
 	}
 
 	public bool is_ref {
 		get {
-			return this.vformalparam.direction == Vala.ParameterDirection.REF;
+			return ((Vala.FormalParameter) symbol).direction == Vala.ParameterDirection.REF;
 		}
 	}
 
 	public bool has_default_value {
 		get {
-			return this.vformalparam.default_expression != null;
+			return ((Vala.FormalParameter) symbol).default_expression != null;
 		}
 	}
 
-	public TypeReference? type_reference {
-		protected set;
-		get;
-	}
+	public TypeReference? parameter_type { private set; get; }
 
 	public bool ellipsis {
 		get {
-			return this.vformalparam.ellipsis;
+			return ((Vala.FormalParameter) symbol).ellipsis;
 		}
 	}
 
@@ -66,11 +59,11 @@ public class Valadoc.Api.FormalParameter : Symbol {
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		if (this.vformalparam.ellipsis) {
+		if (ellipsis) {
 			return;
 		}
 
-		type_reference.resolve_type_references (root);
+		parameter_type.resolve_type_references (root);
 
 		base.resolve_type_references (root);
 	}
@@ -87,12 +80,12 @@ public class Valadoc.Api.FormalParameter : Symbol {
 				signature.append_keyword ("ref");
 			}
 
-			signature.append_content (type_reference.signature);
+			signature.append_content (parameter_type.signature);
 			signature.append (name);
 
 			if (has_default_value) {
 				signature.append ("=");
-				signature.append (this.vformalparam.default_expression.to_string ());
+				signature.append (((Vala.FormalParameter) symbol).default_expression.to_string ());
 			}
 		}
 

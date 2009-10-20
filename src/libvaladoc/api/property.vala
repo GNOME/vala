@@ -21,89 +21,67 @@ using Gee;
 using Valadoc.Content;
 
 public class Valadoc.Api.Property : Member {
-	private Vala.Property vproperty;
-
 	public Property (Vala.Property symbol, Node parent) {
 		base (symbol, parent);
 
-		this.vproperty = symbol;
+		property_type = new TypeReference (symbol.property_type, this);
 
-		type_reference = new TypeReference (symbol.property_type, this);
-
-		if (this.vproperty.get_accessor != null) {
-			this.getter = new PropertyAccessor (this.vproperty.get_accessor, this);
+		if (symbol.get_accessor != null) {
+			this.getter = new PropertyAccessor (symbol.get_accessor, this);
 		}
 
-		if (this.vproperty.set_accessor != null) {
-			this.setter = new PropertyAccessor (this.vproperty.set_accessor, this);
+		if (symbol.set_accessor != null) {
+			this.setter = new PropertyAccessor (symbol.set_accessor, this);
 		}
-	}
-
-	public bool is_vproperty (Vala.Property vprop) {
-		return (this.vproperty == vprop);
 	}
 
 	public string? get_cname () {
-		return this.vproperty.nick;
+		return ((Vala.Property) symbol).nick;
 	}
 
-	public bool equals (Property p) {
-		return this.vproperty.equals (p.vproperty);
-	}
-
-	public TypeReference? type_reference {
-		protected set;
-		get;
-	}
+	public TypeReference? property_type { private set; get;}
 
 	public bool is_virtual {
 		get {
-			return this.vproperty.is_virtual;
+			return ((Vala.Property) symbol).is_virtual;
 		}
 	}
 
 	public bool is_abstract {
 		get {
-			return this.vproperty.is_abstract;
+			return ((Vala.Property) symbol).is_abstract;
 		}
 	}
 
 	public bool is_override {
 		get {
-			return this.vproperty.overrides;
+			return ((Vala.Property) symbol).overrides;
 		}
 	}
 
-	public PropertyAccessor setter {
-		private set;
-		get;
-	}
+	public PropertyAccessor setter { private set; get; }
 
-	public PropertyAccessor getter {
-		private set;
-		get;
-	}
+	public PropertyAccessor getter { private set; get; }
 
-	public Property base_property {
-		private set;
-		get;
-	}
+	public Property base_property { private set; get; }
 
 	protected override void resolve_type_references (Tree root) {
-		Vala.Property? vp = null;
-		if (vproperty.base_property != null) {
-			vp = vproperty.base_property;
-		} else if (vproperty.base_interface_property != null) {
-			vp = vproperty.base_interface_property;
+		Vala.Property vala_property = symbol as Vala.Property;
+		Vala.Property? base_vala_property = null;
+		if (vala_property.base_property != null) {
+			base_vala_property = vala_property.base_property;
+		} else if (vala_property.base_interface_property != null) {
+			base_vala_property = vala_property.base_interface_property;
 		}
-		if (vp == vproperty && vproperty.base_interface_property != null) {
-			vp = vproperty.base_interface_property;
+		if (base_vala_property == vala_property
+		    && vala_property.base_interface_property != null) {
+			base_vala_property = vala_property.base_interface_property;
 		}
-		if (vp != null) {
-			this.base_property = (Property?) root.search_vala_symbol (vp);
+		if (base_vala_property != null) {
+			base_property = (Property?) root.search_vala_symbol (base_vala_property);
 		}
 
-		type_reference.resolve_type_references (root);
+		property_type.resolve_type_references (root);
 	}
 
 	protected override Inline build_signature () {
@@ -118,7 +96,7 @@ public class Valadoc.Api.Property : Member {
 			signature.append_keyword ("virtual");
 		}
 
-		signature.append_content (type_reference.signature);
+		signature.append_content (property_type.signature);
 		signature.append_symbol (this);
 		signature.append ("{");
 

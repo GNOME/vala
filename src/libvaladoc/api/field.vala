@@ -21,23 +21,16 @@ using Gee;
 using Valadoc.Content;
 
 public class Valadoc.Api.Field : Member {
-	private Vala.Field vfield;
-
 	public Field (Vala.Field symbol, Node parent) {
 		base (symbol, parent);
-		this.vfield = symbol;
-
-		type_reference = new TypeReference (symbol.field_type, this);
+		field_type = new TypeReference (symbol.field_type, this);
 	}
 
 	public string? get_cname () {
-		return this.vfield.get_cname();
+		return ((Vala.Field) symbol).get_cname();
 	}
 
-	public TypeReference? type_reference {
-		protected set;
-		get;
-	}
+	public TypeReference? field_type { private set; get; }
 
 	public bool is_static {
 		get {
@@ -45,18 +38,18 @@ public class Valadoc.Api.Field : Member {
 				return false;
 			}
 
-			return this.vfield.binding == MemberBinding.STATIC;
+			return ((Vala.Field) symbol).binding == MemberBinding.STATIC;
 		}
 	}
 
 	public bool is_volatile {
 		get {
-			return this.vfield.is_volatile;
+			return ((Vala.Field) symbol).is_volatile;
 		}
 	}
 
 	protected override void resolve_type_references (Tree root) {
-		type_reference.resolve_type_references (root);
+		field_type.resolve_type_references (root);
 
 		base.resolve_type_references (root);
 	}
@@ -72,7 +65,7 @@ public class Valadoc.Api.Field : Member {
 			signature.append_keyword ("volatile");
 		}
 
-		signature.append_content (type_reference.signature);
+		signature.append_content (field_type.signature);
 		signature.append_symbol (this);
 		return signature.get ();
 	}

@@ -21,19 +21,12 @@ using Gee;
 using Valadoc.Content;
 
 public class Valadoc.Api.ErrorCode : TypeSymbol {
-	private Vala.ErrorCode verrcode;
-
 	public ErrorCode (Vala.ErrorCode symbol, Node parent) {
 		base (symbol, parent);
-		this.verrcode = symbol;
 	}
 
 	public string get_cname () {
-		return this.verrcode.get_cname ();
-	}
-
-	public bool is_verrorcode (Vala.ErrorCode verrcode) {
-		return this.verrcode == verrcode;
+		return ((Vala.ErrorCode) symbol).get_cname ();
 	}
 
 	public override NodeType node_type { get { return NodeType.ERROR_CODE; } }
@@ -48,3 +41,4 @@ public class Valadoc.Api.ErrorCode : TypeSymbol {
 			.get ();
 	}
 }
+
