@@ -2811,11 +2811,11 @@ namespace GLib {
 	public delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error);
 	
 	public struct MarkupParser {
-		public MarkupParserStartElementFunc start_element;
-		public MarkupParserEndElementFunc end_element;
-		public MarkupParserTextFunc text;
-		public MarkupParserPassthroughFunc passthrough;
-		public MarkupParserErrorFunc error;
+		public unowned MarkupParserStartElementFunc start_element;
+		public unowned MarkupParserEndElementFunc end_element;
+		public unowned MarkupParserTextFunc text;
+		public unowned MarkupParserPassthroughFunc passthrough;
+		public unowned MarkupParserErrorFunc error;
 	}
 
 	namespace Markup {
