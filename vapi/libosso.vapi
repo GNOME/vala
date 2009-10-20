@@ -224,10 +224,34 @@ namespace Osso {
         public DevMode sig_device_mode_ind;
     }
 
-    [CCode (unref_function = "osso_rpc_free_val", cname = "osso_rpc_t")]
+    [CCode (destroy_function = "osso_rpc_free_val", cname = "osso_rpc_t")]
     public struct Rpc {
         public int type;
-        public GLib.Value value;
+        [CCode (cname = "value.u")]
+        private uint32 u;
+        [CCode (cname = "value.i")]
+        private int32 i;
+        [CCode (cname = "value.b")]
+        private bool b;
+        [CCode (cname = "value.d")]
+        private double d;
+	[CCode (cname = "value.s")]
+        private string s;
+	public uint32 to_uint32 () requires (type == 'u') {
+            return u;
+	}
+	public int32 to_int32 () requires (type == 'i') {
+            return i;
+	}
+	public bool to_bool () requires (type == 'b') {
+            return b;
+	}
+	public double to_double () requires (type == 'd') {
+            return d;
+	}
+        public unowned string to_string () requires (type == 's') {
+            return s;
+        }
     }
 
     /* Enums */
