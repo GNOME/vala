@@ -192,14 +192,6 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		node.accept_all_children (this);
 	}
 
-	private bool is_internal_node (Api.Node node) {
-		return node is Package
-		       || node is Namespace
-		       || node is Interface
-		       || node is Class
-		       || node is Struct;
-	}
-
 	public override void visit_interface (Interface item) {
 		process_node (item);
 	}

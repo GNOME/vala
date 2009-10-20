@@ -252,7 +252,6 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		Gee.List<Block> description = doctree.content;
 		if (description.size > 0) {
 			writer.start_tag ("span", css_brief_description);
-			writer.text (" - ");
 
 			_renderer.set_container (pos);
 			_renderer.render_children (description.get (0));
@@ -275,10 +274,16 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	private void write_signature (Api.Node element , Api.Node? pos) {
-		writer.start_tag ("div", css_code_definition);
 		_renderer.set_container (pos);
 		_renderer.render (element.signature);
-		writer.end_tag ("div");
+	}
+
+	protected bool is_internal_node (Api.Node node) {
+		return node is Package
+		       || node is Namespace
+		       || node is Interface
+		       || node is Class
+		       || node is Struct;
 	}
 
 	public void write_navi_packages_inline (Api.Tree tree) {
@@ -329,7 +334,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.simple_tag ("hr", css_headline_hr);
 		this.write_image_block (node);
 		writer.start_tag ("h2", css_title).text ("Description:").end_tag ("h2");
+		writer.start_tag ("div", css_code_definition);
 		this.write_signature (node, node);
+		writer.end_tag ("div");
 		this.write_documentation (node, node);
 
 		if (node.parent is Namespace) {
@@ -443,8 +450,16 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("ul", css_inline_navigation);
 			foreach (Api.Node child in children) {
 				writer.start_tag ("li", get_html_css_class (child));
-				writer.link (get_link (child, container), child.name);
-				this.write_brief_description (child, container);
+				if (is_internal_node (child)) {
+					writer.link (get_link (child, container), child.name);
+					writer.text (" - ");
+					write_brief_description (child, container);
+				} else {
+					write_signature (child, container);
+					writer.start_tag ("div", css_leaf_brief_description);
+					write_brief_description (child, container);
+					writer.end_tag ("div");
+				}
 				writer.end_tag ("li");
 			}
 			writer.end_tag ("ul");

@@ -153,8 +153,10 @@ div.main_code_definition {
 	margin: 10px;
 }
 
-
-
+div.leaf_brief_description {
+	display: block;
+	margin-left: 40px;
+}
 
 
 h1.main_title {

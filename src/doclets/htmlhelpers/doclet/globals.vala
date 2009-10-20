@@ -48,6 +48,7 @@ namespace Valadoc.Html {
 	public const string css_package_index = "package_index";
 	public const string css_brief_description = "brief_description";
 	public const string css_description = "description";
+	public const string css_leaf_brief_description = "leaf_brief_description";
 
 	public const string css_site_header = "site_header";
 	public const string css_navi = "navi_main";
