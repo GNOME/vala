@@ -183,7 +183,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.See));
 		write_taglets (
 			() => {
-				writer.start_tag ("h2", "main_title").text ("Since:").end_tag ("h2");
+				writer.start_tag ("h2", "main_title").text ("See also:").end_tag ("h2");
 				writer.start_tag ("p");
 			},
 			() => {
