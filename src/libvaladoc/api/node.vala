@@ -47,7 +47,7 @@ public enum Valadoc.Api.NodeType {
 }
 
 public abstract class Valadoc.Api.Node : Item, Visitable, Documentation, Comparable<Node> {
-	private bool do_document = false;
+	protected bool do_document { private set; get; default = false; }
 
 	public abstract string? name { owned get; }
 

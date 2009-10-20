@@ -84,6 +84,18 @@ public class Valadoc.Api.Property : Member {
 		property_type.resolve_type_references (root);
 	}
 
+	protected override void process_comments (Settings settings, DocumentationParser parser) {
+		if (getter != null && getter.is_visitor_accessible (settings)) {
+			getter.process_comments (settings, parser);
+		}
+
+		if (setter != null && setter.is_visitor_accessible (settings)) {
+			setter.process_comments (settings, parser);
+		}
+
+		base.process_comments (settings, parser);
+	}
+
 	protected override Inline build_signature () {
 		var signature = new SignatureBuilder ();
 
@@ -100,11 +112,11 @@ public class Valadoc.Api.Property : Member {
 		signature.append_symbol (this);
 		signature.append ("{");
 
-		if (setter != null) {
+		if (setter != null && setter.do_document) {
 			signature.append_content (setter.signature);
 		}
 
-		if (getter != null) {
+		if (getter != null && getter.do_document) {
 			signature.append_content (getter.signature);
 		}
 
