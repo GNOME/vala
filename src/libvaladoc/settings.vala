@@ -33,7 +33,7 @@ public class Valadoc.Settings : Object {
 	public bool enable_checking;
 	public bool deprecated;
 	public bool experimental;
-	public bool non_null_experimental;
+	public bool experimental_non_null;
 	public bool disable_dbus_transformation;
 
 	public string? profile;
@@ -43,4 +43,5 @@ public class Valadoc.Settings : Object {
 	public string[] defines;
 	public string[] vapi_directories;
 }
+
 

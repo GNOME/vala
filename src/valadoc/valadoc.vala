@@ -46,7 +46,7 @@ public class ValaDoc : Object {
 	private static bool enable_checking;
 	private static bool deprecated;
 	private static bool experimental;
-	private static bool non_null_experimental = false;
+	private static bool experimental_non_null = false;
 	private static bool disable_dbus_transformation;
 	private static string profile;
 
@@ -63,7 +63,7 @@ public class ValaDoc : Object {
 		{ "enable-checking", 0, 0, OptionArg.NONE, ref enable_checking, "Enable additional run-time checks", null },
 		{ "enable-deprecated", 0, 0, OptionArg.NONE, ref deprecated, "Enable deprecated features", null },
 		{ "enable-experimental", 0, 0, OptionArg.NONE, ref experimental, "Enable experimental features", null },
-		{ "enable-non-null-experimental", 0, 0, OptionArg.NONE, ref non_null_experimental, "Enable experimental enhancements for non-null types", null },
+		{ "enable-experimental-non-null", 0, 0, OptionArg.NONE, ref experimental_non_null, "Enable experimental enhancements for non-null types", null },
 		{ "disable-dbus-transformation", 0, 0, OptionArg.NONE, ref disable_dbus_transformation, "Disable transformation of D-Bus member names", null },
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
 		{ "profile", 0, 0, OptionArg.STRING, ref profile, "Use the given profile instead of the default", "PROFILE" },
@@ -141,7 +141,7 @@ public class ValaDoc : Object {
 		settings.enable_checking = enable_checking;
 		settings.deprecated = deprecated;
 		settings.experimental = experimental;
-		settings.non_null_experimental = non_null_experimental;
+		settings.experimental_non_null = experimental_non_null;
 		settings.disable_dbus_transformation = disable_dbus_transformation;
 		settings.basedir = basedir;
 		settings.directory = directory;
@@ -293,4 +293,5 @@ public class ValaDoc : Object {
 		return valadoc.run (reporter);
 	}
 }
+
 

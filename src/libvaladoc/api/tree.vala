@@ -114,7 +114,7 @@ public class Valadoc.Api.Tree {
 		this.context.checking = settings.enable_checking;
 		this.context.deprecated = settings.deprecated;
 		this.context.experimental = settings.experimental;
-//		this.context.non_null_experimental = settings.non_null_experimental;
+		this.context.experimental_non_null = settings.experimental || settings.experimental_non_null;
 		this.context.dbus_transformation = !settings.disable_dbus_transformation;
 
 
@@ -291,15 +291,6 @@ public class Valadoc.Api.Tree {
 		if (this.context.report.get_errors () > 0) {
 			return false;
 		}
-
-//		if (context.non_null_experimental) {
-//			Vala.NullChecker null_checker = new Vala.NullChecker ();
-//			null_checker.check (this.context);
-
-//			if (this.context.report.get_errors () > 0) {
-//				return false;
-//			}
-//		}
 
 		Api.NodeBuilder builder = new NodeBuilder (this);
 		this.context.accept(builder);
