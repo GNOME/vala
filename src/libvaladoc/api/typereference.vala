@@ -144,7 +144,9 @@ public class Valadoc.Api.TypeReference : Item {
 
 	public bool is_nullable {
 		get {
-			return this.vtyperef.nullable && this.vtyperef is Vala.PointerType == false;
+			return this.vtyperef.nullable
+			       && !(this.vtyperef is Vala.GenericType)
+			       && !(this.vtyperef is Vala.PointerType);
 		}
 	}
 
