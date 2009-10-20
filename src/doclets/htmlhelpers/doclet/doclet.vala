@@ -21,6 +21,7 @@ using GLib;
 using Valadoc.Content;
 using Valadoc.Api;
 
+
 public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected Settings settings;
 	protected HtmlRenderer _renderer;
@@ -40,23 +41,14 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	protected void write_navi_entry_html_template_with_link (string style, string link, string content) {
 		writer.start_tag ("li", style);
-		writer.link (css_navi_link, link, content);
+		writer.link (link, content);
 		writer.end_tag ("li");
 	}
 
 	protected void write_navi_entry (Api.Node element, Api.Node? pos, string style, bool link, bool full_name = false) {
 		string name;
 
-		if (element is Class) {
-			if (((Class)element).is_abstract)
-				name = "<i>" + element.name + "</i>";
-			else
-				name = element.name;
-		}
-		else if (element is Package) {
-			name = element.package.name;
-		}
-		else if (full_name == true && element is Namespace) {
+		if (full_name == true && element is Namespace) {
 			string tmp = element.full_name();
 			name = (tmp == null)? "Global Namespace" : tmp;
 		}
@@ -107,20 +99,20 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		string style = null;
 
 		if (element is Namespace)
-			style = css_navi_namespace;
+			style = css_namespace;
 		else if (element is Enum)
-			style = css_navi_enum;
+			style = css_enum;
 		else if (element is ErrorDomain)
-			style = css_navi_error_domain;
+			style = css_errordomain;
 		else if (element is Struct)
-			style = css_navi_struct;
+			style = css_struct;
 		else if (element is Class)
-			style = (((Class)element).is_abstract)? css_navi_abstract_class : css_navi_class;
+			style = (((Class)element).is_abstract)? css_abstract_class : css_class;
 		else if (element is Interface)
-			style = css_navi_iface;
+			style = css_interface;
 		else if (element is Package) {
 			name = element.package.name;
-			style = css_navi_package;
+			style = css_package;
 		}
 
 		writer.start_tag ("ul", css_navi);
@@ -136,8 +128,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	protected void write_top_element_template (string link) {
 		writer.start_tag ("ul", css_navi);
-		writer.start_tag ("li", css_navi_package_index);
-		writer.link (css_navi_link, link, "Packages");
+		writer.start_tag ("li", css_package_index);
+		writer.link (link, "Packages");
 		writer.end_tag ("li");
 		writer.end_tag ("ul");
 		writer.simple_tag ("hr", css_navi_hr);
@@ -196,7 +188,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			if (ns.name == null)
 				globals = ns;
 			else
-				this.write_navi_entry (ns, pos, css_navi_namespace, true, true);
+				this.write_navi_entry (ns, pos, css_namespace, true, true);
 		}
 
 		if (globals != null) {
@@ -279,7 +271,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.start_tag ("ul", css_navi);
 
 		foreach (Api.EnumValue env in enum_values) {
-			this.write_navi_entry (env, en, css_navi_enval, true);
+			this.write_navi_entry (env, en, css_enumvalue, true);
 		}
 
 		this.write_navi_child_static_methods (en, parent);
@@ -299,7 +291,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.start_tag ("ul", css_navi);
 
 		foreach (ErrorCode ec in error_codes) {
-			this.write_navi_entry (ec, errdom, css_navi_errdomcode, true);
+			this.write_navi_entry (ec, errdom, css_errorcode, true);
 		}
 
 		this.write_navi_child_static_methods (errdom, parent);
@@ -473,11 +465,11 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			if (!m.is_static) {
 				string css;
 				if (m.is_virtual || m.is_override)
-					css = css_navi_virtual_method;
+					css = css_virtual_method;
 				else if (m.is_abstract)
-					css = css_navi_abstract_method;
+					css = css_abstract_method;
 				else
-					css = css_navi_method;
+					css = css_method;
 
 				if (m == parent)
 					this.write_navi_entry (m, parent, css, false);
@@ -490,9 +482,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected void write_navi_child_construction_methods_collection (Gee.Collection<Method> methods, Api.Node? parent) {
 		foreach (Method m in methods) {
 			if (m == parent)
-				this.write_navi_entry (m, parent, css_navi_construction_method, false);
+				this.write_navi_entry (m, parent, css_creation_method, false);
 			else
-				this.write_navi_entry (m, parent, css_navi_construction_method, true);
+				this.write_navi_entry (m, parent, css_creation_method, true);
 		}
 	}
 
@@ -500,9 +492,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		foreach (Method m in methods) {
 			if (m.is_static) {
 				if (m == parent)
-					this.write_navi_entry (m, parent, css_navi_static_method, false);
+					this.write_navi_entry (m, parent, css_static_method, false);
 				else
-					this.write_navi_entry (m, parent, css_navi_static_method, true);
+					this.write_navi_entry (m, parent, css_static_method, true);
 			}
 		}
 	}
@@ -520,9 +512,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected void write_navi_child_classes_without_childs_collection (Gee.Collection<Class> classes, Api.Node? parent) {
 		foreach (Class cl in classes) {
 			if (cl == parent)
-				this.write_navi_entry (cl, parent, (cl.is_abstract)? css_navi_abstract_class : css_navi_class, false);
+				this.write_navi_entry (cl, parent, (cl.is_abstract)? css_abstract_class : css_class, false);
 			else
-				this.write_navi_entry (cl, parent, (cl.is_abstract)? css_navi_abstract_class : css_navi_class, true);
+				this.write_navi_entry (cl, parent, (cl.is_abstract)? css_abstract_class : css_class, true);
 		}
 	}
 
@@ -541,9 +533,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		foreach (Api.Signal sig in signals) {
 			if (sig == parent)
-				this.write_navi_entry (sig, parent, css_navi_sig, false);
+				this.write_navi_entry (sig, parent, css_signal, false);
 			else
-				this.write_navi_entry (sig, parent, css_navi_sig, true);
+				this.write_navi_entry (sig, parent, css_signal, true);
 		}
 	}
 
@@ -553,11 +545,11 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		foreach (Property p in properties) {
 			string css;
 			if (p.is_virtual)
-				css = css_navi_virtual_prop;
+				css = css_virtual_property;
 			else if (p.is_abstract)
-				css = css_navi_abstract_prop;
+				css = css_abstract_property;
 			else
-				css = css_navi_prop;
+				css = css_property;
 
 			if (p == parent)
 				this.write_navi_entry (p, parent, css, false);
@@ -569,9 +561,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected void write_navi_child_fields_collection (Gee.Collection<Field> fields, Api.Node? parent) {
 		foreach (Field f in fields) {
 			if (f == parent)
-				this.write_navi_entry (f, parent, css_navi_field, false);
+				this.write_navi_entry (f, parent, css_field, false);
 			else
-				this.write_navi_entry (f, parent, css_navi_field, true);
+				this.write_navi_entry (f, parent, css_field, true);
 		}
 	}
 
@@ -583,9 +575,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected void write_navi_child_constants_collection (Gee.Collection<Constant> constants, Api.Node? parent) {
 		foreach (Constant c in constants) {
 			if (c == parent)
-				this.write_navi_entry (c, parent, css_navi_constant, false);
+				this.write_navi_entry (c, parent, css_constant, false);
 			else
-				this.write_navi_entry (c, parent, css_navi_constant, true);
+				this.write_navi_entry (c, parent, css_constant, true);
 		}
 	}
 
@@ -597,9 +589,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected void write_navi_child_structs_without_childs_collection (Gee.Collection<Struct> structs, Api.Node? parent) {
 		foreach (Struct stru in structs) {
 			if (stru == parent)
-				this.write_navi_entry (stru, parent, css_navi_struct, false);
+				this.write_navi_entry (stru, parent, css_struct, false);
 			else
-				this.write_navi_entry (stru, parent, css_navi_struct, true);
+				this.write_navi_entry (stru, parent, css_struct, true);
 		}
 	}
 
@@ -611,9 +603,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected void write_navi_child_delegates_collection (Gee.Collection<Delegate> delegates, Api.Node? parent) {
 		foreach (Delegate del in delegates) {
 			if (del == parent)
-				this.write_navi_entry (del, parent, css_navi_del, false);
+				this.write_navi_entry (del, parent, css_delegate, false);
 			else
-				this.write_navi_entry (del, parent, css_navi_del, true);
+				this.write_navi_entry (del, parent, css_delegate, true);
 		}
 	}
 
@@ -625,9 +617,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected void write_navi_child_interfaces_without_childs_collection (Gee.Collection<Interface> interfaces, Api.Node? parent) {
 		foreach (Interface iface in interfaces) {
 			if (iface == parent)
-				this.write_navi_entry (iface, parent, css_navi_iface, false);
+				this.write_navi_entry (iface, parent, css_interface, false);
 			else
-				this.write_navi_entry (iface, parent, css_navi_iface, true);
+				this.write_navi_entry (iface, parent, css_interface, true);
 		}
 	}
 
@@ -639,9 +631,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected void write_navi_child_enums_without_childs_collection (Gee.Collection<Enum> enums, Api.Node? parent) {
 		foreach (Enum en in enums) {
 			if (en == parent)
-				this.write_navi_entry (en, parent, css_navi_enum, false);
+				this.write_navi_entry (en, parent, css_enum, false);
 			else
-				this.write_navi_entry (en, parent, css_navi_enum, true);
+				this.write_navi_entry (en, parent, css_enum, true);
 		}
 	}
 
@@ -653,9 +645,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected void write_navi_child_error_domains_without_childs_collection (Gee.Collection<ErrorDomain> errordomains, Api.Node? parent) {
 		foreach (ErrorDomain errdom in errordomains) {
 			if (errdom == parent)
-				this.write_navi_entry (errdom, parent, css_navi_error_domain, false);
+				this.write_navi_entry (errdom, parent, css_errordomain, false);
 			else
-				this.write_navi_entry (errdom, parent, css_navi_error_domain, true);
+				this.write_navi_entry (errdom, parent, css_errordomain, true);
 		}
 	}
 
@@ -671,9 +663,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 				continue ;
 
 			if (ns == parent)
-				this.write_navi_entry (ns, parent, css_navi_namespace, false);
+				this.write_navi_entry (ns, parent, css_namespace, false);
 			else
-				this.write_navi_entry (ns, parent, css_navi_namespace, true);
+				this.write_navi_entry (ns, parent, css_namespace, true);
 		}
 	}
 
@@ -684,7 +676,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		writer.simple_tag ("br");
 		writer.start_tag ("b").text ("Package:").end_tag ("b");
-		writer.text (package);
+		writer.text (" ").text (package);
 	}
 
 	protected void write_namespace_note (Api.Node element) {
@@ -697,7 +689,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		writer.simple_tag ("br");
 		writer.start_tag ("b").text ("Namespace:").end_tag ("b");
-		writer.text (ns.full_name());
+		writer.text (" ").text (ns.full_name());
 	}
 
 	private void write_brief_description (Api.Node element , Api.Node? pos) {
@@ -707,7 +699,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		Gee.List<Block> description = doctree.content;
 		if (description.size > 0) {
-			writer.start_tag ("span", css_inline_navigation_brief_description);
+			writer.start_tag ("span", css_brief_description);
 			writer.text (" - ");
 
 			_renderer.set_container (pos);
@@ -722,8 +714,12 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		if (doctree == null)
 			return ;
 
+		writer.start_tag ("div", css_description);
+
 		_renderer.set_container (pos);
 		_renderer.render (doctree);
+
+		writer.end_tag ("div");
 	}
 
 	private void write_signature (Api.Node element , Api.Node? pos) {
@@ -735,13 +731,13 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.start_tag ("ul", css_navi);
 		foreach (Package pkg in tree.get_package_list()) {
 			if (pkg.is_visitor_accessible (settings)) {
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class (pkg));
-				writer.link (css_navi_link, get_link (pkg, null), pkg.name);
+				writer.start_tag ("li", get_html_css_class (pkg));
+				writer.link (get_link (pkg, null), pkg.name);
 				// brief description
 				writer.end_tag ("li");
 			}
 			else {
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class (pkg));
+				writer.start_tag ("li", get_html_css_class (pkg));
 				writer.text (pkg.name);
 				writer.end_tag ("li");
 			}
@@ -978,8 +974,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.start_tag ("ul", css_inline_navigation);
 		foreach (Namespace ns in nsl) {
 			if (ns.name != null) {
-				writer.start_tag ("li", css_inline_navigation_namespace);
-				writer.link (css_navi_link, get_link (ns, parent), ns.name);
+				writer.start_tag ("li", css_namespace);
+				writer.link (get_link (ns, parent), ns.name);
 				this.write_brief_description (ns , parent);
 				writer.end_tag ("li");
 				if (with_childs == true) {
@@ -1010,8 +1006,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h3", css_title).text ("Methods:").end_tag ("h3");
 			writer.start_tag ("ul", css_inline_navigation);
 			foreach (Method m in imethods) {
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class (m));
-				writer.link (css_navi_link, get_link (m, parent), m.name);
+				writer.start_tag ("li", get_html_css_class (m));
+				writer.link (get_link (m, parent), m.name);
 				this.write_brief_description (m , parent);
 				writer.end_tag ("li");
 			}
@@ -1029,10 +1025,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		foreach (Package p in deps) {
 			string link = this.get_link(p, parent);
 			if (link == null)
-				writer.start_tag ("li", css_inline_navigation_package, p.name).text (p.name).end_tag ("li");
+				writer.start_tag ("li", css_package, p.name).text (p.name).end_tag ("li");
 			else {
-				writer.start_tag ("li", css_inline_navigation_package);
-				writer.link (css_navi_link, get_link (p, parent), p.name);
+				writer.start_tag ("li", css_package);
+				writer.link (get_link (p, parent), p.name);
 				writer.end_tag ("li");
 			}
 		}
@@ -1052,8 +1048,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h3", css_title).text ("Static Methods:").end_tag ("h3");
 			writer.start_tag ("ul", css_inline_navigation);
 			foreach (Method m in static_methods) {
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class (m));
-				writer.link (css_navi_link, get_link (m, parent), m.name);
+				writer.start_tag ("li", get_html_css_class (m));
+				writer.link (get_link (m, parent), m.name);
 				this.write_brief_description (m , parent);
 				writer.end_tag ("li");
 			}
@@ -1195,8 +1191,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h3", css_title).text ("Constants:").end_tag ("h3");
 			writer.start_tag ("ul", css_inline_navigation);
 			foreach (Constant c in constants) {
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class (c));
-				writer.link (css_navi_link, get_link (c, parent), c.name);
+				writer.start_tag ("li", get_html_css_class (c));
+				writer.link (get_link (c, parent), c.name);
 				this.write_brief_description (c, parent);
 				writer.end_tag ("li");
 			}
@@ -1210,8 +1206,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h3", css_title).text ("Enums:").end_tag ("h3");
 			writer.start_tag ("ul", css_inline_navigation);
 			foreach (Enum en in enums) {
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class (en));
-				writer.link (css_navi_link, get_link (en, parent), en.name);
+				writer.start_tag ("li", get_html_css_class (en));
+				writer.link (get_link (en, parent), en.name);
 				this.write_brief_description (en, parent);
 				writer.end_tag ("li");
 			}
@@ -1225,8 +1221,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h3", css_title).text ("Errordomains:").end_tag ("h3");
 			writer.start_tag ("ul", css_inline_navigation);
 			foreach (ErrorDomain err in errdoms) {
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class (err));
-				writer.link (css_navi_link, get_link (err, parent), err.name);
+				writer.start_tag ("li", get_html_css_class (err));
+				writer.link (get_link (err, parent), err.name);
 				this.write_brief_description (err, parent);
 				writer.end_tag ("li");
 			}
@@ -1240,8 +1236,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h3", css_title).text ("Construction Methods:").end_tag ("h3");
 			writer.start_tag ("ul", css_inline_navigation);
 			foreach (Method m in methods) {
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class (m));
-				writer.link (css_navi_link, get_link (m, parent), m.name);
+				writer.start_tag ("li", get_html_css_class (m));
+				writer.link (get_link (m, parent), m.name);
 				this.write_brief_description (m, parent);
 				writer.end_tag ("li");
 			}
@@ -1264,7 +1260,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		}
 
 		writer.start_tag ("h2", css_title).text ("Object Hierarchy:").end_tag ("h2");
-		writer.image (css_diagram, imgpath);
+		writer.image (imgpath, "Object hierarchy for %s".printf (element.name), css_diagram);
 	}
 
 	protected void write_child_fields (FieldHandler fh, Api.Node? parent) {
@@ -1273,8 +1269,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h3", css_title).text ("Fields:").end_tag ("h3");
 			writer.start_tag ("ul", css_inline_navigation);
 			foreach (Field f in fields) {
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class(f));
-				writer.link (css_navi_link, get_link (f, parent), f.name);
+				writer.start_tag ("li", get_html_css_class(f));
+				writer.link (get_link (f, parent), f.name);
 				this.write_brief_description (f, parent);
 				writer.end_tag ("li");
 			}
@@ -1288,8 +1284,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h3", css_title).text ("Properties:").end_tag ("h3");
 			writer.start_tag ("ul", css_inline_navigation);
 			foreach (Property prop in properties) {
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class (prop));
-				writer.link (css_navi_link, get_link (prop, parent), prop.name);
+				writer.start_tag ("li", get_html_css_class (prop));
+				writer.link (get_link (prop, parent), prop.name);
 				this.write_brief_description (prop, parent);
 				writer.end_tag ("li");
 			}
@@ -1303,8 +1299,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h3", css_title).text ("Api.Signals:").end_tag ("h3");
 			writer.start_tag ("ul", css_inline_navigation);
 			foreach (Api.Signal sig in signals) {
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class (sig));
-				writer.link (css_navi_link, get_link (sig, parent), sig.name);
+				writer.start_tag ("li", get_html_css_class (sig));
+				writer.link (get_link (sig, parent), sig.name);
 				this.write_brief_description (sig, parent);
 				writer.end_tag ("li");
 			}
@@ -1318,16 +1314,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h3", css_title).text ("Classes:").end_tag ("h3");
 			writer.start_tag ("ul", css_inline_navigation);
 			foreach (Class subcl in classes) {
-				string name;
-				if (subcl.is_abstract) {
-					name = "<i>" + subcl.name + "</i>";
-				}
-				else {
-					name = subcl.name;
-				}
-
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class (subcl));
-				writer.link (css_navi_link, get_link (subcl, parent), name);
+				writer.start_tag ("li", get_html_css_class (subcl));
+				writer.link (get_link (subcl, parent), subcl.name);
 				this.write_brief_description (subcl, parent);
 				writer.end_tag ("li");
 			}
@@ -1341,8 +1329,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h3", css_title).text ("Interfaces:").end_tag ("h3");
 			writer.start_tag ("ul", css_inline_navigation);
 			foreach (Interface iface in ifaces) {
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class (iface));
-				writer.link (css_navi_link, get_link (iface, parent), iface.name);
+				writer.start_tag ("li", get_html_css_class (iface));
+				writer.link (get_link (iface, parent), iface.name);
 				this.write_brief_description (iface, parent);
 				writer.end_tag ("li");
 			}
@@ -1356,8 +1344,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h3", css_title).text ("Delegates:").end_tag ("h3");
 			writer.start_tag ("ul", css_inline_navigation);
 			foreach (Delegate d in delegates) {
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class (d));
-				writer.link (css_navi_link, get_link (d, parent), d.name);
+				writer.start_tag ("li", get_html_css_class (d));
+				writer.link (get_link (d, parent), d.name);
 				this.write_brief_description (d, parent);
 				writer.end_tag ("li");
 			}
@@ -1371,8 +1359,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			writer.start_tag ("h3", css_title).text ("Structs:").end_tag ("h3");
 			writer.start_tag ("ul", css_inline_navigation);
 			foreach (Struct stru in structs) {
-				writer.start_tag ("li", get_html_inline_navigation_link_css_class (stru));
-				writer.link (css_navi_link, get_link (stru, parent), stru.name);
+				writer.start_tag ("li", get_html_css_class (stru));
+				writer.link (get_link (stru, parent), stru.name);
 				this.write_brief_description (stru, parent);
 				writer.end_tag ("li");
 			}
@@ -1458,7 +1446,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.simple_tag ("br");
 		writer.start_tag ("div", "site_foother");
 		writer.text ("Generated by ");
-		writer.link ("site_foother", "http://www.valadoc.org/", "Valadoc");
+		writer.link ("http://www.valadoc.org/", "Valadoc");
 		writer.end_tag ("div");
 		writer.end_tag ("body");
 		writer.end_tag ("html");

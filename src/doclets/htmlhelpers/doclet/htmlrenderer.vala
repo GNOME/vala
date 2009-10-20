@@ -56,7 +56,9 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	private void write_symbol_link (Api.Node symbol, string label) {
 		var url = get_url (symbol);
-		writer.link ("", url, (label == null || label == "") ? symbol.full_name () : label);
+		writer.link (url,
+		             (label == null || label == "") ? symbol.full_name () : label,
+		             get_html_css_class (symbol));
 	}
 
 	private delegate void Write ();
@@ -199,7 +201,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	public override void visit_embedded (Embedded element) {
 		var caption = element.caption;
-		writer.image ("", element.url, (caption == null || caption == "") ? "" : caption);
+		writer.image (element.url, (caption == null || caption == "") ? "" : caption);
 	}
 
 	public override void visit_headline (Headline element) {
@@ -210,7 +212,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	public override void visit_link (Link element) {
 		var label = element.label;
-		writer.link ("", element.url, (label == null || label == "") ? element.url : label);
+		writer.link (element.url, (label == null || label == "") ? element.url : label);
 	}
 
 	public override void visit_symbol_link (SymbolLink element) {

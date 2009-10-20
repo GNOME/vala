@@ -20,57 +20,37 @@
 using Valadoc.Api;
 
 namespace Valadoc.Html {
-	public const string css_inline_navigation = "main_inline_navigation";
-	public const string css_inline_navigation_errorcode = "main_inline_navigation_errorcode";
-	public const string css_inline_navigation_enumvalue = "main_inline_navigation_enumvalue";
-	public const string css_inline_navigation_property = "main_inline_navigation_property";
-	public const string css_inline_navigation_virtual_property = "main_inline_navigation_virtual_property";
-	public const string css_inline_navigation_abstract_property = "main_inline_navigation_abstract_property";
-	public const string css_inline_navigation_method = "main_inline_navigation_method";
-	public const string css_inline_navigation_static_method = "main_inline_navigation_static_method";
-	public const string css_inline_navigation_virtual_method = "main_inline_navigation_virtual_method";
-	public const string css_inline_navigation_abstract_method = "main_inline_navigation_abstract_method";
-	public const string css_inline_navigation_construction_method = "main_inline_navigation_construction_method";
-	public const string css_inline_navigation_brief_description = "main_inline_navigation_brief_description";
-	public const string css_inline_navigation_signal = "main_inline_navigation_signal";
-	public const string css_inline_navigation_fields = "main_inline_navigation_fields";
-	public const string css_inline_navigation_abstract_class = "main_inline_navigation_abstract_class";
-	public const string css_inline_navigation_class = "main_inline_navigation_class";
-	public const string css_inline_navigation_enum = "main_inline_navigation_enum";
-	public const string css_inline_navigation_struct = "main_inline_navigation_struct";
-	public const string css_inline_navigation_delegate = "main_inline_navigation_delegate";
-	public const string css_inline_navigation_constant = "main_inline_navigation_constant";
-	public const string css_inline_navigation_namespace = "main_inline_navigation_namespace";
-	public const string css_inline_navigation_package = "main_inline_navigation_package";
-	public const string css_inline_navigation_interface = "main_navigation_interface";
-	public const string css_inline_navigation_errordomain = "main_inline_navigation_errordomain";
+	public const string css_inline_navigation = "navi_inline";
+
+	public const string css_errorcode = "errorcode";
+	public const string css_enumvalue = "enumvalue";
+	public const string css_property = "property";
+	public const string css_virtual_property = "virtual_property";
+	public const string css_abstract_property = "abstract_property";
+	public const string css_method = "method";
+	public const string css_static_method = "static_method";
+	public const string css_virtual_method = "virtual_method";
+	public const string css_abstract_method = "abstract_method";
+	public const string css_creation_method = "creation_method";
+	public const string css_signal = "signal";
+	public const string css_field = "field";
+	public const string css_abstract_class = "abstract_class";
+	public const string css_class = "class";
+	public const string css_enum = "enum";
+	public const string css_struct = "struct";
+	public const string css_delegate = "delegate";
+	public const string css_constant = "constant";
+	public const string css_namespace = "namespace";
+	public const string css_package = "package";
+	public const string css_interface = "interface";
+	public const string css_errordomain = "errordomain";
+
+	public const string css_package_index = "package_index";
+	public const string css_brief_description = "brief_description";
+	public const string css_description = "description";
+
 	public const string css_site_header = "site_header";
-	public const string css_navi_package_index = "navi_package_index";
-	public const string css_navi_package = "navi_package";
-	public const string css_navi_creation_method = "navi_creation_method";
-	public const string css_navi_error_domain = "navi_error_domain";
-	public const string css_navi_namespace = "navi_namespace";
-	public const string css_navi_abstract_method = "navi_abstract_method";
-	public const string css_navi_virtual_method = "navi_virtual_method";
-	public const string css_navi_static_method = "navi_static_method";
-	public const string css_navi_construction_method = "navi_construction_method";
-	public const string css_navi_method = "navi_method";
-	public const string css_navi_struct = "navi_struct";
-	public const string css_navi_iface = "navi_iface";
-	public const string css_navi_field = "navi_field";
-	public const string css_navi_class = "navi_class";
-	public const string css_navi_abstract_class = "navi_abstract_class";
-	public const string css_navi_enum = "navi_enum";
-	public const string css_navi_link = "navi_link";
-	public const string css_navi_constant = "navi_constant";
-	public const string css_navi_prop = "navi_prop";
-	public const string css_navi_abstract_prop = "navi_abstract_prop";
-	public const string css_navi_virtual_prop = "navi_virtual_prop";
-	public const string css_navi_del = "navi_del";
-	public const string css_navi_sig = "navi_sig";
 	public const string css_navi = "navi_main";
-	public const string css_navi_enval = "main_navi_enval";
-	public const string css_navi_errdomcode = "main_navi_errdomcode";
 	public const string css_navi_hr = "navi_hr";
 	public const string css_errordomain_table_name = "main_errordomain_table_name";
 	public const string css_errordomain_table_text = "main_errordomain_table_text";
@@ -109,28 +89,6 @@ namespace Valadoc.Html {
 	public const string css_style_navigation = "site_navigation";
 	public const string css_style_content = "site_content";
 	public const string css_style_body = "site_body";
-	public const string css_content_link_constant = "css_content_link_constant";
-	public const string css_content_link_namespace = "css_content_link_namespace";
-	public const string css_content_link_struct = "css_content_link_struct";
-	public const string css_content_link_interface = "css_content_link_interface";
-	public const string css_content_link_enum = "css_content_link_enum";
-	public const string css_content_link_errordomain = "css_content_link_errordomain";
-	public const string css_content_link_delegate = "css_content_link_delegate";
-	public const string css_content_link_signal = "css_content_link_signal";
-	public const string css_content_link_field = "css_content_link_field";
-	public const string css_content_link_enumvalue = "css_content_link_enumvalue";
-	public const string css_content_link_errorcode = "css_content_link_errorcode";
-	public const string css_content_link_class = "css_content_link_class";
-	public const string css_content_link_abstract_class = "css_content_link_abstract_class";
-	public const string css_content_link_property = "css_content_link_property";
-	public const string css_content_link_virtual_property = "css_content_link_virtual_property";
-	public const string css_content_link_abstract_property = "css_content_link_abstract_property";
-	public const string css_content_link_method = "css_content_link_method";
-	public const string css_content_link_static_method = "css_content_link_static_method";
-	public const string css_content_link_virtual_method = "css_content_link_virtual_method";
-	public const string css_content_link_abstract_method = "css_content_link_abstract_method";
-	public const string css_content_link_construction_method = "css_content_link_construction_method";
-	public const string css_content_literal = "css_content_literal";
 
 
 	public delegate string? HtmlLink (Settings settings, Documentation element, Documentation? pos);
@@ -160,134 +118,72 @@ namespace Valadoc.Html {
 		return prefix + "/" + ((Api.Node)element).full_name() + ".html" + tmp;
 	}
 
-	public string get_html_content_link_css_class ( Valadoc.Api.Item element ) {
+	public string get_html_css_class (Valadoc.Api.Item element) {
 		if ( element is Namespace ) {
-			return css_content_link_namespace;
+			return css_namespace;
 		}
 		else if ( element is Struct ) {
-			return css_content_link_struct;
+			return css_struct;
 		}
 		else if ( element is Interface ) {
-			return css_content_link_interface;
+			return css_interface;
 		}
 		else if ( element is Class ) {
-			if ( ((Class)element).is_abstract )
-				return css_content_link_abstract_class;
-			else
-				return css_content_link_class;
+			return (((Class)element).is_abstract)? css_abstract_class : css_class;
 		}
 		else if ( element is Enum ) {
-			return css_content_link_enum;
+			return css_enum;
 		}
 		else if ( element is ErrorDomain ) {
-			return css_content_link_errordomain;
+			return css_errordomain;
 		}
 		else if ( element is Delegate ) {
-			return css_content_link_delegate;
-		}
-		else if ( element is Method ) {
-			if ( ((Method)element).is_constructor )
-				return css_content_link_construction_method;
-			else if ( ((Method)element).is_abstract )
-				return css_content_link_abstract_method;
-			else if ( ((Method)element).is_override || ((Method)element).is_override )
-				return css_content_link_virtual_method;
-			else if ( ((Method)element).is_static )
-				return css_content_link_static_method;
-			else
-				return css_content_link_method;
-		}
-		else if ( element is Api.Signal ) {
-			return css_content_link_signal;
-		}
-		else if ( element is Property ) {
-			if ( ((Property)element).is_virtual || ((Property)element).is_override )
-				return css_content_link_virtual_property;
-			else if ( ((Property)element).is_abstract )
-				return css_content_link_abstract_property;
-			else
-				return css_content_link_property;
-		}
-		else if ( element is Field ) {
-			return css_content_link_field;
-		}
-		else if ( element is Constant ) {
-			return css_content_link_constant;
-		}
-		else if ( element is Api.EnumValue ) {
-			return css_content_link_enumvalue;
-		}
-		else if ( element is ErrorCode ) {
-			return css_content_link_errorcode;
-		}
-		return "";
-	}
-
-	public string get_html_inline_navigation_link_css_class ( Valadoc.Api.Item element ) {
-		if ( element is Namespace ) {
-			return css_inline_navigation_namespace;
-		}
-		else if ( element is Struct ) {
-			return css_inline_navigation_struct;
-		}
-		else if ( element is Interface ) {
-			return css_inline_navigation_interface;
-		}
-		else if ( element is Class ) {
-			return (((Class)element).is_abstract)? css_inline_navigation_abstract_class : css_inline_navigation_class;
-		}
-		else if ( element is Enum ) {
-			return css_inline_navigation_enum;
-		}
-		else if ( element is ErrorDomain ) {
-			return css_inline_navigation_errordomain;
-		}
-		else if ( element is Delegate ) {
-			return css_inline_navigation_delegate;
+			return css_delegate;
 		}
 		else if ( element is Method ) {
 			if ( ((Method)element).is_static )
-				return css_inline_navigation_static_method;
+				return css_static_method;
 			else if ( ((Method)element).is_static )
-				return css_inline_navigation_static_method;
+				return css_static_method;
 			else if ( ((Method)element).is_constructor )
-				return css_inline_navigation_construction_method;
+				return css_creation_method;
 			else if ( ((Method)element).is_abstract )
-				return css_inline_navigation_abstract_method;
+				return css_abstract_method;
 			else if ( ((Method)element).is_virtual || ((Method)element).is_override )
-				return css_inline_navigation_virtual_method;
+				return css_virtual_method;
 			else
-				return css_inline_navigation_method;
+				return css_method;
 		}
 		else if ( element is Api.Signal ) {
-			return css_inline_navigation_signal;
+			return css_signal;
 		}
 		else if ( element is Property ) {
 			if ( ((Property)element).is_virtual || ((Property)element).is_override )
-				return css_inline_navigation_virtual_property;
+				return css_virtual_property;
 			else if ( ((Property)element).is_abstract )
-				return css_inline_navigation_abstract_property;
+				return css_abstract_property;
 			else
-				return css_inline_navigation_property;
+				return css_property;
 		}
 		else if ( element is Field ) {
-			return css_inline_navigation_fields;
+			return css_field;
 		}
 		else if ( element is Constant ) {
-			return css_inline_navigation_constant;
+			return css_constant;
 		}
 		else if ( element is Api.EnumValue ) {
-			return css_inline_navigation_enumvalue;
+			return css_enumvalue;
 		}
 		else if ( element is ErrorCode ) {
-			return css_inline_navigation_errorcode;
+			return css_errorcode;
 		}
 		else if ( element is Package ) {
-			return css_inline_navigation_package;
+			return css_package;
 		}
 		return "";
 	}
 }
+
 
 
 
