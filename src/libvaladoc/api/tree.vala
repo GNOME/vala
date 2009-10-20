@@ -355,12 +355,6 @@ public class Valadoc.Api.Tree {
 			return null;
 		}
 
-		if (params.size >= 2) {
-			if (params.get(1) is Vala.Namespace) {
-				params.remove_at (0);
-			}
-		}
-
 		Api.Node? node = package;
 		foreach (Vala.Symbol a_symbol in params) {
 			node = node.find_by_symbol (a_symbol);

@@ -126,7 +126,7 @@ public class Valadoc.Api.Package : Node {
 			ns = (Namespace) get_namespace (root, parent_namespace_symbol);
 			if (ns != null) {
 				var new_namespace = new Namespace ((Vala.Namespace) namespace_symbol, ns);
-				add_child (new_namespace);
+				ns.add_child (new_namespace);
 				return new_namespace;
 			}
 		}

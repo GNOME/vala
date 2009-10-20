@@ -148,7 +148,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		writer = new MarkupWriter (file);
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, pkg_name);
-		write_navi_package (package, package);
+		write_navi_package (package);
 		write_package_content (package, package);
 		write_file_footer ();
 		file = null;

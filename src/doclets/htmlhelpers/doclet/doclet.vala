@@ -50,8 +50,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		if (full_name == true && element is Namespace) {
 			string tmp = element.full_name();
 			name = (tmp == null)? "Global Namespace" : tmp;
-		}
-		else {
+		} else {
 			string tmp = element.name;
 			name = (tmp == null)? "Global Namespace" : tmp;
 		}
@@ -94,7 +93,6 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	protected void write_navi_top_entry (Api.Node element, Api.Node? parent) {
-		string name = (element.name == null)? "Global Namespace" : element.name;
 		string style = get_html_css_class (element);
 
 		writer.start_tag ("ul", css_navi);
@@ -144,35 +142,39 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		}
 	}
 
-	protected void write_navi_package (Package efile, Api.Node? pos) {
+	protected void write_navi_package (Package package) {
 		Gee.ArrayList<Namespace> ns_list = new Gee.ArrayList<Namespace> ();
-		this.fetch_subnamespace_names (efile, ns_list);
-
+		this.fetch_subnamespace_names (package, ns_list);
 
 		writer.start_tag ("div", css_style_navigation);
-
-
-		if (pos == null)
-			this.write_top_elements (efile, null);
-		else if (pos == efile)
-			this.write_top_elements (efile, efile);
-		else
-			this.write_top_elements ((Api.Node)pos.parent.parent, pos);
-
+		write_top_elements (package, package);
 		writer.start_tag ("ul", css_navi);
-
 
 		Namespace globals = null;
 
 		foreach (Namespace ns in ns_list) {
-			if (ns.name == null)
+			if (ns.name == null) {
 				globals = ns;
-			else
-				this.write_navi_entry (ns, pos, css_namespace, true, true);
+			} else {
+				this.write_navi_entry (ns, package, css_namespace, true, true);
+			}
 		}
 
 		if (globals != null) {
-			write_navi_children (globals, Api.NodeType.NAMESPACE, pos);
+			write_navi_children (globals, Api.NodeType.ERROR_CODE, package);
+			write_navi_children (globals, Api.NodeType.ENUM_VALUE, package);
+			write_navi_children (globals, Api.NodeType.ENUM, package);
+			write_navi_children (globals, Api.NodeType.INTERFACE, package);
+			write_navi_children (globals, Api.NodeType.CLASS, package);
+			write_navi_children (globals, Api.NodeType.STRUCT, package);
+			write_navi_children (globals, Api.NodeType.CREATION_METHOD, package);
+			write_navi_children (globals, Api.NodeType.STATIC_METHOD, package);
+			write_navi_children (globals, Api.NodeType.CONSTANT, package);
+			write_navi_children (globals, Api.NodeType.PROPERTY, package);
+			write_navi_children (globals, Api.NodeType.DELEGATE, package);
+			write_navi_children (globals, Api.NodeType.METHOD, package);
+			write_navi_children (globals, Api.NodeType.SIGNAL, package);
+			write_navi_children (globals, Api.NodeType.FIELD, package);
 		}
 
 		writer.end_tag ("ul");
