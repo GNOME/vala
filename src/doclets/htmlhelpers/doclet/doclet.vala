@@ -95,24 +95,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	protected void write_navi_top_entry (Api.Node element, Api.Node? parent) {
 		string name = (element.name == null)? "Global Namespace" : element.name;
-		string style = null;
-
-		if (element is Namespace)
-			style = css_namespace;
-		else if (element is Enum)
-			style = css_enum;
-		else if (element is ErrorDomain)
-			style = css_errordomain;
-		else if (element is Struct)
-			style = css_struct;
-		else if (element is Class)
-			style = (((Class)element).is_abstract)? css_abstract_class : css_class;
-		else if (element is Interface)
-			style = css_interface;
-		else if (element is Package) {
-			name = element.package.name;
-			style = css_package;
-		}
+		string style = get_html_css_class (element);
 
 		writer.start_tag ("ul", css_navi);
 
