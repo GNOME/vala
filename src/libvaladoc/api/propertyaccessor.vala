@@ -76,7 +76,9 @@ public class Valadoc.Api.PropertyAccessor : Symbol {
 			}
 			signature.append_keyword ("get");
 		}
+		signature.append (";", false);
 
 		return signature.get ();
 	}
 }
+
