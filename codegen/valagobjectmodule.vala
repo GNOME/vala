@@ -711,5 +711,30 @@ internal class Vala.GObjectModule : GTypeModule {
 
 		return true;
 	}
+
+	public override void visit_method_call (MethodCall expr) {
+		if (expr.call is MemberAccess && expr.call.symbol_reference == gobject_type) {
+			// Object (...) chain up
+			// check it's only used with valid properties
+			foreach (var arg in expr.get_argument_list ()) {
+				var named_argument = arg as NamedArgument;
+				if (named_argument == null) {
+					Report.error (arg.source_reference, "Named argument expected");
+					break;
+				}
+				var prop = SemanticAnalyzer.symbol_lookup_inherited (current_class, named_argument.name) as Property;
+				if (prop == null) {
+					Report.error (arg.source_reference, "Property `%s' not found in `%s'".printf (named_argument.name, current_class.get_full_name ()));
+					break;
+				}
+				if (!arg.value_type.compatible (prop.property_type)) {
+					Report.error (arg.source_reference, "Cannot convert from `%s' to `%s'".printf (arg.value_type.to_string (), prop.property_type.to_string ()));
+					break;
+				}
+			}
+		}
+
+		base.visit_method_call (expr);
+	}
 }
 
