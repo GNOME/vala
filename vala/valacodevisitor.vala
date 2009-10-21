@@ -557,6 +557,14 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
+	 * Visit operation called for named arguments.
+	 *
+	 * @param expr a named argument
+	 */
+	public virtual void visit_named_argument (NamedArgument expr) {
+	}
+
+	/**
 	 * Visit operation called for pointer indirections.
 	 *
 	 * @param expr a pointer indirection

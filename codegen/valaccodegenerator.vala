@@ -303,7 +303,11 @@ public class Vala.CCodeGenerator : CodeGenerator {
 	public override void visit_cast_expression (CastExpression expr) {
 		head.visit_cast_expression (expr);
 	}
-	
+
+	public override void visit_named_argument (NamedArgument expr) {
+		head.visit_named_argument (expr);
+	}
+
 	public override void visit_pointer_indirection (PointerIndirection expr) {
 		head.visit_pointer_indirection (expr);
 	}

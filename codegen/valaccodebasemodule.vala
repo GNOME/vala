@@ -4020,6 +4020,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 	
+	public override void visit_named_argument (NamedArgument expr) {
+		expr.accept_children (codegen);
+
+		expr.ccodenode = expr.inner.ccodenode;
+	}
+
 	public override void visit_pointer_indirection (PointerIndirection expr) {
 		expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, (CCodeExpression) expr.inner.ccodenode);
 	}

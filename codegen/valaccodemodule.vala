@@ -282,7 +282,11 @@ public abstract class Vala.CCodeModule {
 	public virtual void visit_cast_expression (CastExpression expr) {
 		next.visit_cast_expression (expr);
 	}
-	
+
+	public virtual void visit_named_argument (NamedArgument expr) {
+		next.visit_named_argument (expr);
+	}
+
 	public virtual void visit_pointer_indirection (PointerIndirection expr) {
 		next.visit_pointer_indirection (expr);
 	}

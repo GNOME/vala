@@ -99,6 +99,7 @@ libvalacore_la_VALASOURCES = \
 	valamethod.vala \
 	valamethodcall.vala \
 	valamethodtype.vala \
+	valanamedargument.vala \
 	valanamespace.vala \
 	valanullliteral.vala \
 	valanulltype.vala \

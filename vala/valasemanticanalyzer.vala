@@ -447,6 +447,9 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		if (arg.error) {
 			// ignore inner error
 			return false;
+		} else if (arg is NamedArgument) {
+			Report.error (arg.source_reference, "Named arguments are not supported yet");
+			return false;
 		} else if (arg.value_type == null) {
 			// disallow untyped arguments except for type inference of callbacks
 			if (!(arg.target_type is DelegateType) || !(arg.symbol_reference is Method)) {

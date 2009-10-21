@@ -390,6 +390,12 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 			carg_map.set (arg_pos, cexpr);
 
+			if (arg is NamedArgument && ellipsis) {
+				var named_arg = (NamedArgument) arg;
+				string name = string.joinv ("-", named_arg.name.split ("_"));
+				carg_map.set (get_param_pos (i - 0.1, ellipsis), new CCodeConstant ("\"%s\"".printf (name)));
+			}
+
 			i++;
 		}
 		if (params_it.next ()) {
