@@ -23,6 +23,11 @@ using Valadoc.Api;
 using Valadoc.Html;
 using Gee;
 
+
+[CCode (cname = "PACKAGE_PLUGINDIR")]
+public extern const string doclet_path;
+
+
 namespace Valadoc {
 	public string? get_html_link ( Settings settings, Documentation element, Documentation? pos ) {
 		if ( element is Visitable ) {
@@ -117,7 +122,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		this.settings = settings;
 
 		DirUtils.create (this.settings.path, 0777);
-		copy_directory (GLib.Path.build_filename ( Config.doclet_path, "deps"), settings.path);
+		copy_directory (GLib.Path.build_filename (doclet_path, "deps"), settings.path);
 
 		write_wiki_pages (tree, css_path_wiki, Path.build_filename(settings.path, "content"));
 

@@ -24,6 +24,11 @@ using Valadoc.Html;
 using Xml;
 using Gee;
 
+
+[CCode (cname = "PACKAGE_PLUGINDIR")]
+public extern const string doclet_path;
+
+
 namespace Valadoc.Devhelp {
 	public string? get_html_link ( Settings settings, Documentation element, Documentation? pos ) {
 		if ( element is Visitable ) {
@@ -250,7 +255,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		var rt = DirUtils.create (path, 0777);
 		rt = DirUtils.create (imgpath, 0777);
-		copy_directory (Config.doclet_path + "deps/", path);
+		copy_directory (doclet_path + "deps/", path);
 
 		this.devhelp = new DevhelpFormat (pkg_name, "");
 
