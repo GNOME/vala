@@ -141,7 +141,7 @@ public class Vala.MethodCall : Expression {
 
 		var mtype = call.value_type;
 
-		if (mtype is ObjectType) {
+		if (mtype is ObjectType || (analyzer.context.profile == Profile.GOBJECT && call.symbol_reference == analyzer.object_type)) {
 			// constructor chain-up
 			var cm = analyzer.find_current_method () as CreationMethod;
 			if (cm == null) {
@@ -155,17 +155,29 @@ public class Vala.MethodCall : Expression {
 			}
 			cm.chain_up = true;
 
-			var otype = (ObjectType) mtype;
-			var cl = (Class) otype.type_symbol;
-			var base_cm = cl.default_construction_method;
-			if (base_cm == null) {
-				error = true;
-				Report.error (source_reference, "chain up to `%s' not supported".printf (cl.get_full_name ()));
-				return false;
-			} else if (!base_cm.has_construct_function) {
-				error = true;
-				Report.error (source_reference, "chain up to `%s' not supported".printf (base_cm.get_full_name ()));
-				return false;
+			if (mtype is ObjectType) {
+				var otype = (ObjectType) mtype;
+				var cl = (Class) otype.type_symbol;
+				var base_cm = cl.default_construction_method;
+				if (base_cm == null) {
+					error = true;
+					Report.error (source_reference, "chain up to `%s' not supported".printf (cl.get_full_name ()));
+					return false;
+				} else if (!base_cm.has_construct_function) {
+					error = true;
+					Report.error (source_reference, "chain up to `%s' not supported".printf (base_cm.get_full_name ()));
+					return false;
+				}
+			} else {
+				// GObject chain up
+				var cl = cm.parent_symbol as Class;
+				if (cl == null || !cl.is_subtype_of (analyzer.object_type)) {
+					error = true;
+					Report.error (source_reference, "chain up to `GLib.Object' not supported");
+					return false;
+				}
+				call.value_type = new ObjectType (analyzer.object_type);
+				mtype = call.value_type;
 			}
 		}
 
