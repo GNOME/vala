@@ -26,7 +26,7 @@ using GLib;
  * Simple reader for a subset of XML.
  */
 public class Vala.MarkupReader : Object {
-	public string filename { get; construct; }
+	public string filename { get; private set; }
 
 	public string name { get; private set; }
 

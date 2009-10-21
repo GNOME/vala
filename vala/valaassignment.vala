@@ -273,6 +273,10 @@ public class Vala.Assignment : Expression {
 					ma.error = true;
 					Report.error (ma.source_reference, "Property `%s' is read-only".printf (prop.get_full_name ()));
 					return false;
+				} else if (!analyzer.context.deprecated
+				           && !prop.set_accessor.writable
+				           && analyzer.find_current_method () is CreationMethod) {
+					Report.warning (ma.source_reference, "assigning to construct-only properties is deprecated, use Object (property: value) constructor chain up");
 				}
 			} else if (ma.symbol_reference is LocalVariable && right.value_type == null) {
 				var local = (LocalVariable) ma.symbol_reference;

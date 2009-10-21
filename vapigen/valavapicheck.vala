@@ -29,9 +29,9 @@ class Vala.VAPICheck : Object {
 		this.context = context;
 	}
 
-	public CodeContext context { get; construct; }
-	public SourceFile gidl { get; construct; }
-	public SourceFile metadata { get; construct; }
+	public CodeContext context { get; private set; }
+	public SourceFile gidl { get; private set; }
+	public SourceFile metadata { get; private set; }
 
 	private List<string> _scope;
 	private Set<string> _symbols;
