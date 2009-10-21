@@ -3955,6 +3955,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {
+		if (expr.is_non_null_cast) {
+			// TODO add NULL runtime check
+			expr.ccodenode = expr.inner.ccodenode;
+			return;
+		}
+
 		if (expr.inner.value_type != null && gvalue_type != null && expr.inner.value_type.data_type == gvalue_type
 		    && expr.type_reference.get_type_id () != null) {
 			// explicit conversion from GValue

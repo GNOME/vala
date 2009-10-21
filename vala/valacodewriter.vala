@@ -1446,6 +1446,12 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {
+		if (expr.is_non_null_cast) {
+			write_string ("(!) ");
+			expr.inner.accept (this);
+			return;
+		}
+
 		if (!expr.is_silent_cast) {
 			write_string ("(");
 			write_type (expr.type_reference);

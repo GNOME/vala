@@ -54,6 +54,8 @@ public class Vala.CastExpression : Expression {
 	 */
 	public bool is_silent_cast { get; set; }
 
+	public bool is_non_null_cast { get; set; }
+
 	private Expression _inner;
 
 	private DataType _data_type;
@@ -71,10 +73,18 @@ public class Vala.CastExpression : Expression {
 		this.is_silent_cast = is_silent_cast;
 		this.inner = inner;
 	}
-	
+
+	public CastExpression.non_null (Expression inner, SourceReference source_reference) {
+		this.inner = inner;
+		this.is_non_null_cast = true;
+		this.source_reference = source_reference;
+	}
+
 	public override void accept (CodeVisitor visitor) {
 		inner.accept (visitor);
-		type_reference.accept (visitor);
+		if (!is_non_null_cast) {
+			type_reference.accept (visitor);
+		}
 
 		visitor.visit_cast_expression (this);
 
@@ -107,6 +117,16 @@ public class Vala.CastExpression : Expression {
 		if (!inner.check (analyzer)) {
 			error = true;
 			return false;
+		}
+
+		if (is_non_null_cast) {
+			// (!) non-null cast
+			value_type = inner.value_type.copy ();
+			value_type.nullable = false;
+
+			inner.target_type = inner.value_type.copy ();
+
+			return !error;
 		}
 
 		type_reference.check (analyzer);
