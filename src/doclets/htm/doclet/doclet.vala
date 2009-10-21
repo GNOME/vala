@@ -123,6 +123,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 
 		GLib.FileStream file = GLib.FileStream.open ( GLib.Path.build_filename ( settings.path, "index.html" ), "w" );
 		writer = new MarkupWriter (file);
+		writer.xml_declaration ();
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path_package, settings.pkg_name);
 		write_navi_packages (tree);
@@ -146,6 +147,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 
 		GLib.FileStream file = GLib.FileStream.open ( GLib.Path.build_filename ( path, "index.htm" ), "w" );
 		writer = new MarkupWriter (file);
+		writer.xml_declaration ();
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, pkg_name);
 		write_navi_package (package);
@@ -162,6 +164,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		if ( ns.name != null ) {
 			GLib.FileStream file = GLib.FileStream.open ( rpath, "w" );
 			writer = new MarkupWriter (file);
+			writer.xml_declaration ();
 			_renderer.set_writer (writer);
 			write_file_header (this.css_path, ns.full_name());
 			write_navi_symbol (ns);
@@ -178,6 +181,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 
 		GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 		writer = new MarkupWriter (file);
+		writer.xml_declaration ();
 		_renderer.set_writer (writer);
 		write_file_header (css_path, node.full_name());
 		if (is_internal_node (node)) {
@@ -188,7 +192,6 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		write_symbol_content (node);
 		write_file_footer ();
 		file = null;
-
 		node.accept_all_children (this);
 	}
 

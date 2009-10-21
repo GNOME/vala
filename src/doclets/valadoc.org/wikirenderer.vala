@@ -209,3 +209,4 @@ public class Valadoc.ValadocOrg.WikiRenderer : ContentRenderer {
 		_stream.puts (element.content);
 	}
 }
+

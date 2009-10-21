@@ -19,13 +19,21 @@
 
 using Valadoc.Diagrams;
 using Valadoc.Content;
+using Valadoc.Html;
 using Valadoc.Api;
 using Gee;
 
+namespace Valadoc.ValadocOrg {
+	public string? get_html_link (Settings settings, Documentation element, Documentation? pos) {
+		if (element is Api.Node) {
+			return Path.build_filename("/"+((Api.Node)element).package.name, ((Api.Node)element).full_name () + ".html");
+		}
+		return null;
+	}
+}
 
-public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet, Api.Visitor {
-	private ValadocOrg.WikiRenderer _renderer = new ValadocOrg.WikiRenderer ();
-	private Settings settings;
+public class Valadoc.ValadocOrg.Doclet : BasicDoclet {
+	private WikiRenderer _wikirenderer;
 	private FileStream file;
 	private bool run;
 
@@ -41,14 +49,20 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet, Api.Visitor {
 			return;
 		}
 
-		_renderer.set_container (element);
-		_renderer.set_filestream (file);
-		_renderer.render (element.documentation);
+		_wikirenderer.set_container (element);
+		_wikirenderer.set_filestream (file);
+		_wikirenderer.render (element.documentation);
 	}
 
-	public void process (Settings settings, Api.Tree tree) {
+	public override void process (Settings settings, Api.Tree tree) {
 		this.settings = settings;
 		this.run = true;
+
+		//writer
+
+		_wikirenderer = new ValadocOrg.WikiRenderer ();
+		_renderer = new HtmlRenderer (this);
+
 
 		DirUtils.create (this.settings.path, 0777);
 		Gee.Collection<Package> packages = tree.get_package_list ();
@@ -61,13 +75,11 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet, Api.Visitor {
 		return Path.build_filename (this.settings.path, element.package.name, element.package.name, element.full_name () + ".png");
 	}
 
-	// get_type_path()
 	private void write_insert_into_valadoc_element_str (string name, string pkgname, string fullname) {
 		string fullname2 = (pkgname == fullname)? pkgname : pkgname+"/"+fullname;
 		this.file.printf ("INSERT INTO `ValadocApiElement` (`name`, `fullname`) VALUES ('%s', '%s');\n", name, fullname2);
 	}
 
-	// get_type_path()
 	private void write_insert_into_valadoc_element (Api.Node element) {
 		string name = element.name;
 		string fullname;
@@ -87,17 +99,12 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet, Api.Visitor {
 		this.file.printf ("INSERT INTO `ValadocPackage` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE `fullname`='%s' LIMIT 1));\n", pkg.name);
 	}
 
-	// get_type_path()
-	private void write_insert_into_code_element_str (string fullname, string pkgname, string valaapi, string parentnodepkgname, string parentnodefullname) {
-		string parentnodetypepath = (parentnodepkgname == parentnodefullname)? parentnodepkgname : parentnodepkgname+"/"+parentnodefullname;
-		string typepath = pkgname+"/"+fullname;
-		this.file.printf ("INSERT INTO `ValadocCodeElement` (`id`, `parent`, `valaapi`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1), (SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1), '%s');\n", typepath, parentnodetypepath, valaapi);
-	}
 
-	// get_type_path()
+
+
 	private void write_insert_into_code_element (Api.Node element) {
-/*
-		string api = this.langwriter.from_documented_element (element).to_string (0, "");
+		string fullname = element.full_name ();
+		string pkgname = element.package.name;
 		string parentnodepkgname;
 		string parentnodename;
 
@@ -114,10 +121,16 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet, Api.Visitor {
 			parentnodename = parentnodepkgname;
 		}
 
-		this.write_insert_into_code_element_str(element.full_name(), element.package.name, api, parentnodepkgname, parentnodename);
-*/
+		string parentnodetypepath = (parentnodepkgname == parentnodename)? parentnodepkgname : parentnodepkgname+"/"+parentnodename;
+		string typepath = pkgname+"/"+fullname;
+		this.file.printf ("INSERT INTO `ValadocCodeElement` (`id`, `parent`, `valaapi`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1), (SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1), '", typepath, parentnodetypepath);
+		var writer = new MarkupWriter (file);
+		writer.set_source_wrap (false);
+		_renderer.set_writer (writer);
+		_renderer.set_container (element);
+		_renderer.render (element.signature);
+		this.file.puts ("');\n");
 	}
-
 
 	public override void visit_package (Package pkg) {
 		string path = Path.build_filename(this.settings.path, pkg.name);
@@ -153,7 +166,7 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet, Api.Visitor {
 			return;
 		}
 
-		pkg.visit_namespaces (this);
+		pkg.accept_all_children (this);
 	}
 
 	public override void visit_namespace (Namespace ns) {
@@ -169,16 +182,7 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet, Api.Visitor {
 			}
 		}
 
-		ns.visit_namespaces ( this );
-		ns.visit_classes ( this );
-		ns.visit_interfaces ( this );
-		ns.visit_structs ( this );
-		ns.visit_enums ( this );
-		ns.visit_error_domains ( this );
-		ns.visit_delegates ( this );
-		ns.visit_methods ( this );
-		ns.visit_fields ( this );
-		ns.visit_constants (this);
+		ns.accept_all_children (this);
 
 		this.file.printf ("INSERT INTO `ValadocNamespaces` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(ns));
 		this.write_documentation (ns);
@@ -197,15 +201,7 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet, Api.Visitor {
 			return;
 		}
 
-		iface.visit_classes ( this );
-		iface.visit_structs ( this );
-		iface.visit_enums ( this );
-		iface.visit_delegates ( this );
-		iface.visit_methods ( this );
-		iface.visit_signals ( this );
-		iface.visit_properties ( this );
-		iface.visit_fields ( this );
-		iface.visit_constants ( this );
+		iface.accept_all_children (this);
 
 		this.file.printf ("INSERT INTO `ValadocInterfaces` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(iface));
 		this.write_documentation (iface);
@@ -224,16 +220,7 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet, Api.Visitor {
 			return;
 		}
 
-		cl.visit_construction_methods ( this );
-		cl.visit_classes ( this );
-		cl.visit_structs ( this );
-		cl.visit_enums ( this );
-		cl.visit_delegates ( this );
-		cl.visit_methods ( this );
-		cl.visit_signals ( this );
-		cl.visit_properties ( this );
-		cl.visit_fields ( this );
-		cl.visit_constants ( this );
+		cl.accept_all_children (this);
 
 		string modifier;
 		if (cl.is_abstract) {
@@ -260,10 +247,7 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet, Api.Visitor {
 			return;
 		}
 
-		stru.visit_construction_methods ( this );
-		stru.visit_methods ( this );
-		stru.visit_fields ( this );
-		stru.visit_constants ( this );
+		stru.accept_all_children (this);
 
 		this.file.printf ("INSERT INTO `ValadocStructs` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(stru));
 		this.write_documentation (stru);
@@ -280,8 +264,7 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet, Api.Visitor {
 			return;
 		}
 
-		errdom.visit_error_codes ( this );
-		errdom.visit_methods ( this );
+		errdom.accept_all_children (this);
 
 		this.file.printf ("INSERT INTO `ValadocErrordomains` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(errdom));
 		this.write_documentation (errdom);
@@ -298,8 +281,7 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet, Api.Visitor {
 			return;
 		}
 
-		en.visit_enum_values ( this );
-		en.visit_methods ( this );
+		en.accept_all_children (this);
 
 		this.file.printf ("INSERT INTO `ValadocEnum` (`id`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1));\n", this.get_type_path(en));
 		this.write_documentation (en);
@@ -488,6 +470,7 @@ public class Valadoc.ValdocOrg.Doclet : Valadoc.Doclet, Api.Visitor {
 
 [ModuleInit]
 public Type register_plugin ( ) {
-	return typeof (Valadoc.ValdocOrg.Doclet);
+	Valadoc.Html.get_html_link_imp = Valadoc.ValadocOrg.get_html_link;
+	return typeof (Valadoc.ValadocOrg.Doclet);
 }
 
