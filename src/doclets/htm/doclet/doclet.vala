@@ -116,12 +116,12 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 	public override void process (Settings settings, Api.Tree tree) {
 		this.settings = settings;
 
-		DirUtils.create ( this.settings.path, 0777 );
-		copy_directory ( GLib.Path.build_filename ( Config.doclet_path, "deps" ), settings.path );
+		DirUtils.create (this.settings.path, 0777);
+		copy_directory (GLib.Path.build_filename ( Config.doclet_path, "deps"), settings.path);
 
-		write_wiki_pages ( tree, css_path_wiki, Path.build_filename(settings.path, "content") );
+		write_wiki_pages (tree, css_path_wiki, Path.build_filename(settings.path, "content"));
 
-		GLib.FileStream file = GLib.FileStream.open ( GLib.Path.build_filename ( settings.path, "index.html" ), "w" );
+		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename ( settings.path, "index.html" ), "w");
 		writer = new MarkupWriter (file);
 		writer.xml_declaration ();
 		_renderer.set_writer (writer);
@@ -142,10 +142,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		string pkg_name = package.name;
 		string path = GLib.Path.build_filename ( this.settings.path, pkg_name );
 
-		var rt = DirUtils.create ( path, 0777 );
-		rt = DirUtils.create ( GLib.Path.build_filename ( path, "img" ), 0777 );
+		var rt = DirUtils.create (path, 0777);
+		rt = DirUtils.create (GLib.Path.build_filename ( path, "img" ), 0777);
 
-		GLib.FileStream file = GLib.FileStream.open ( GLib.Path.build_filename ( path, "index.htm" ), "w" );
+		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename ( path, "index.htm" ), "w");
 		writer = new MarkupWriter (file);
 		writer.xml_declaration ();
 		_renderer.set_writer (writer);
@@ -158,15 +158,15 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		package.accept_all_children (this);
 	}
 
-	public override void visit_namespace ( Namespace ns ) {
-		string rpath = this.get_real_path ( ns );
+	public override void visit_namespace (Namespace ns) {
+		string rpath = this.get_real_path (ns);
 
-		if ( ns.name != null ) {
-			GLib.FileStream file = GLib.FileStream.open ( rpath, "w" );
+		if (ns.name != null) {
+			GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 			writer = new MarkupWriter (file);
 			writer.xml_declaration ();
 			_renderer.set_writer (writer);
-			write_file_header (this.css_path, ns.full_name());
+			write_file_header (this.css_path, ns.full_name ());
 			write_navi_symbol (ns);
 			write_namespace_content (ns, ns);
 			write_file_footer ();

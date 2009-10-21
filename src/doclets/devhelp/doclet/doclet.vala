@@ -204,23 +204,27 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	private DevhelpFormat devhelp;
 	private Api.Tree tree;
 
-	private string get_path ( Api.Node element ) {
+	construct {
+		_renderer = new HtmlRenderer (this);
+	}
+
+	private string get_path (Api.Node element) {
 		return element.full_name () + ".html";
 	}
 
-	private string get_real_path ( Api.Node element ) {
-		return GLib.Path.build_filename ( this.settings.path, this.package_dir_name, element.full_name () + ".html" );
+	private string get_real_path (Api.Node element) {
+		return GLib.Path.build_filename (this.settings.path, this.package_dir_name, element.full_name () + ".html");
 	}
 
 	public override void process (Settings settings, Api.Tree tree) {
 		this.settings = settings;
 		this.tree = tree;
 
-		DirUtils.create ( this.settings.path, 0777 );
+		DirUtils.create (this.settings.path, 0777);
 
-		this.devhelp = new DevhelpFormat ( settings.pkg_name, "" );
+		this.devhelp = new DevhelpFormat (settings.pkg_name, "");
 
-		write_wiki_pages ( tree, css_path_wiki, Path.build_filename(this.settings.path, this.settings.pkg_name, "content") );
+		write_wiki_pages (tree, css_path_wiki, Path.build_filename (this.settings.path, this.settings.pkg_name, "content"));
 
 		tree.accept (this);
 	}
@@ -232,25 +236,25 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	public override void visit_package (Package package) {
 		string pkg_name = package.name;
 
-		string path = GLib.Path.build_filename ( this.settings.path, pkg_name );
-		string filepath = GLib.Path.build_filename ( path, "index.htm" );
-		string imgpath = GLib.Path.build_filename ( path, "img" );
-		string devpath = GLib.Path.build_filename ( path, pkg_name + ".devhelp2" );
+		string path = GLib.Path.build_filename (this.settings.path, pkg_name);
+		string filepath = GLib.Path.build_filename (path, "index.htm");
+		string imgpath = GLib.Path.build_filename (path, "img");
+		string devpath = GLib.Path.build_filename (path, pkg_name + ".devhelp2");
 
 		WikiPage wikipage = null;
-		if ( this.settings.pkg_name == package.name && this.tree.wikitree != null ) {
+		if (this.settings.pkg_name == package.name && this.tree.wikitree != null) {
 			wikipage = this.tree.wikitree.search ("index.valadoc");
 		}
 
 		this.package_dir_name = pkg_name;
 
-		var rt = DirUtils.create ( path, 0777 );
-		rt = DirUtils.create ( imgpath, 0777 );
-		copy_directory ( Config.doclet_path + "deps/", path );
+		var rt = DirUtils.create (path, 0777);
+		rt = DirUtils.create (imgpath, 0777);
+		copy_directory (Config.doclet_path + "deps/", path);
 
-		this.devhelp = new DevhelpFormat ( pkg_name, "" );
+		this.devhelp = new DevhelpFormat (pkg_name, "");
 
-		GLib.FileStream file = GLib.FileStream.open ( filepath, "w" );
+		GLib.FileStream file = GLib.FileStream.open (filepath, "w");
 		writer = new MarkupWriter (file);
 		writer.xml_declaration ();
 		_renderer.set_writer (writer);
@@ -261,7 +265,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		package.accept_all_children (this);
 
-		this.devhelp.save_file ( devpath );
+		this.devhelp.save_file (devpath);
 	}
 
 	private void process_compound_node (Api.Node node, KeywordType type) {
@@ -275,7 +279,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 			writer = new MarkupWriter (file);
 			writer.xml_declaration ();
 			_renderer.set_writer (writer);
-			write_file_header (css_path, node.full_name());
+			write_file_header (css_path, node.full_name ());
 			write_symbol_content (node);
 			write_file_footer ();
 			file = null;
@@ -364,8 +368,8 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 }
 
 [ModuleInit]
-public Type register_plugin ( ) {
+public Type register_plugin () {
 	Valadoc.Html.get_html_link_imp = Valadoc.Devhelp.get_html_link;
-	return typeof ( Valadoc.Devhelp.Doclet );
+	return typeof (Valadoc.Devhelp.Doclet);
 }
 

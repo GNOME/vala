@@ -221,7 +221,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	protected void write_navi_children (Api.Node node, Api.NodeType type, Api.Node? parent) {
 		var children = node.get_children_by_type (type);
-		//children.sort ();
+		//children.sort (); // ref counter err
 		foreach (Api.Node child in children) {
 			write_navi_entry (child, parent, get_html_css_class (child), child != parent);
 		}
