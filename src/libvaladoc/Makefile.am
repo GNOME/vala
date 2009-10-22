@@ -1,13 +1,14 @@
 NULL =
 
 
-AM_CFLAGS =             \
-	$(LIBGVC_CFLAGS)    \
-	$(LIBXML2_CFLAGS)   \
-	$(GLIB_CFLAGS)      \
-	$(LIBGEE_CFLAGS)    \
-	$(LIBVALA_CFLAGS)   \
-	$(GMODULE_CFLAGS)   \
+AM_CFLAGS = \
+	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
+	$(LIBGVC_CFLAGS) \
+	$(LIBXML2_CFLAGS) \
+	$(GLIB_CFLAGS) \
+	$(LIBGEE_CFLAGS) \
+	$(LIBVALA_CFLAGS) \
+	$(GMODULE_CFLAGS) \
 	$(NULL)
 
 
@@ -113,6 +114,10 @@ libvaladoc_la_VALASOURCES = \
 	taglets/tagletsee.vala \
 	taglets/tagletsince.vala \
 	taglets/tagletthrows.vala \
+	html-doclet/html-doclet.vala \
+	html-doclet/html-globals.vala \
+	html-doclet/html-markupwriter.vala \
+	html-doclet/html-renderer.vala \
 	$(NULL)
 
 

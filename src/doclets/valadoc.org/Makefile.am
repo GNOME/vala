@@ -11,7 +11,7 @@ BUILT_SOURCES = libdoclet.vala.stamp
 
 
 libdoclet.vala.stamp: $(libdoclet_VALASOURCES)
-	$(VALAC) -C --vapidir ../htmlhelpers/doclet/ --pkg libhtmlhelpers-1.0 --vapidir ../../libvaladoc/ --vapidir ../../vapi/ --pkg valadoc-1.0 --pkg gee-1.0 --basedir . --save-temps $^
+	$(VALAC) -C --vapidir ../../libvaladoc/ --vapidir ../../vapi/ --pkg valadoc-1.0 --pkg gee-1.0 --basedir . --save-temps $^
 	touch $@
 
 
@@ -30,8 +30,8 @@ libdoclet_la_SOURCES = \
 
 
 AM_CFLAGS =  -g \
+	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
 	-I ../../libvaladoc/ \
-	-I ../htmlhelpers/doclet/ \
 	$(GLIB_CFLAGS) \
 	$(LIBGEE_CFLAGS) \
 	$(LIBVALA_CFLAGS) \
@@ -44,7 +44,6 @@ libdoclet_la_LDFLAGS = -module -avoid-version \
 
 libdoclet_la_LIBADD = \
 	../../libvaladoc/libvaladoc.la \
-	../htmlhelpers/doclet/libhtmlhelpers.la \
 	$(GLIB_LIBS)  \
 	$(LIBGEE_LIBS) \
 	$(LIBVALA_LIBS) \

@@ -2,9 +2,8 @@ NULL =
 
 
 AM_CFLAGS =  -g \
-	-DPACKAGE_PLUGINDIR=\"$(libdir)/valadoc/plugins/html/\" \
+	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
 	-I ../../libvaladoc/ \
-	-I ../htmlhelpers/doclet/ \
 	$(GLIB_CFLAGS) \
 	$(LIBGEE_CFLAGS) \
 	$(LIBVALA_CFLAGS) \
@@ -38,13 +37,12 @@ libdoclet_la_SOURCES =  \
 
 
 libdoclet.vala.stamp: $(libdoclet_la_VALASOURCES)
-	$(VALAC) -C --vapidir ../htmlhelpers/doclet --pkg libhtmlhelpers-1.0 --vapidir ../../vapi --vapidir ../../libvaladoc --pkg valadoc-1.0 --pkg gee-1.0 --basedir . $^
+	$(VALAC) -C --vapidir ../../vapi --vapidir ../../libvaladoc --pkg valadoc-1.0 --pkg gee-1.0 --basedir . $^
 	touch $@
 
 
 libdoclet_la_LIBADD = \
 	../../libvaladoc/libvaladoc.la \
-	../htmlhelpers/doclet/libhtmlhelpers.la \
 	$(GLIB_LIBS) \
 	$(LIBGEE_LIBS) \
 	$(LIBVALA_LIBS) \
@@ -58,7 +56,4 @@ MAINTAINERCLEANFILES = \
 	$(libdoclet_la_VALASOURCES:.vala=.c) \
 	$(NULL)
 
-
-install-data-hook:
-	cd $(libdir)/valadoc/plugins/html/ && if test -d deps; then unlink deps; fi && ln -s ../htmlhelpers/deps 
 

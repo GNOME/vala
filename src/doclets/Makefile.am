@@ -3,8 +3,7 @@
 NULL =
 
 
-SUBDIRS = htmlhelpers \
-          htm \
+SUBDIRS = htm \
           devhelp \
           valadoc.org \
           $(NULL)

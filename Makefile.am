@@ -1,2 +1,8 @@
 # Makefile.am
-SUBDIRS = src 
+
+NULL = 
+
+
+SUBDIRS = src \
+          icons \
+          $(NULL)

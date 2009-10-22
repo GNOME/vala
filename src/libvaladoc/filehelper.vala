@@ -21,6 +21,9 @@ using Gee;
 
 
 namespace Valadoc {
+	[CCode (cprefix = "", cname = "PACKAGE_ICONDIR")]
+	public extern const string icons_dir;
+
 	public bool copy_file (string src, string dest) {
 		GLib.FileStream fsrc = GLib.FileStream.open (src, "rb");
 		if (fsrc == null) {
