@@ -1,7 +1,7 @@
 NULL =
 
 
-vapidir = $(libdir)/valadoc/plugins/htmlhelpers/deps
+vapidir = $(datadir)/valadoc/icons
 
 
 dist_vapi_DATA =         \
