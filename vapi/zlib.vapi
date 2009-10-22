@@ -20,105 +20,92 @@
  *	Raffaele Sandrini <raffaele@sandrini.ch>
  * 	Jürg Billeter <j@bitron.ch>
  * 	Evan Nemerson <evan@polussystems.com>
+ * 	Jörn Magens <joernmagens@gmx.de>
  */
 
 using GLib;
 
 [CCode (lower_case_cprefix = "", cheader_filename = "zlib.h")]
 namespace ZLib {
-	[CCode (cprefix = "ZLIB_VER_")]
+	[CCode (cname="int", cprefix="Z_")]
+	public enum Flush {
+		NO_FLUSH = 0,
+		SYNC_FLUSH = 2,
+		FULL_FLUSH = 3,
+		FINISH = 4,
+		BLOCK = 5
+	}
+	[CCode (cname="int", cprefix="Z_")]
+	public enum Status {
+		OK = 0,
+		STREAM_END = 1,
+		NEED_DICT = 2,
+		ERRNO = (-1),
+		STREAM_ERROR = (-2),
+		DATA_ERROR = (-3),
+		MEM_ERROR = (-4),
+		BUF_ERROR = (-5),
+		VERSION_ERROR = (-6)
+	}
+	[CCode (cname="int", cprefix="Z_")]
+	public enum Level {
+		NO_COMPRESSION = 0,
+		BEST_SPEED = 1,
+		BEST_COMPRESSION = 9,
+		DEFAULT_COMPRESSION = (-1)
+	}
+	[CCode (cname="int", cprefix="Z_")]
+	public enum Strategy {
+		DEFAULT_STRATEGY = 0,
+		FILTERED = 1,
+		HUFFMAN_ONLY = 2,
+		RLE = 3,
+		FIXED = 4
+	}
+	[CCode (cname="int", cprefix="Z_")]
+	public enum Data {
+		BINARY = 0,
+		ASCII = 1,
+		UNKNOWN = 2
+	}
+	[CCode (cname="int", cprefix="Z_")]
+	public enum Algorithm {
+		DEFLATED = 8
+	}
+	[CCode (cname="int", cprefix="Z_")]
+	public enum Initial {
+		NULL = 0
+	}
 	namespace VERSION {
 		[CCode (cname = "ZLIB_VERSION")]
 		public const string STRING;
 		[CCode (cname = "ZLIB_VERNUM")]
 		public const int NUMBER;
+		[CCode (cname = "ZLIB_VER_MAJOR")]
 		public const int MAJOR;
+		[CCode (cname = "ZLIB_VER_MINOR")]
 		public const int MINOR;
+		[CCode (cname = "ZLIB_VER_REVISION")]
 		public const int REVISION;
 	}
-
-	[CCode (cprefix = "Z_")]
-	namespace Flush {
-		[CCode (cname = "Z_NO_FLUSH")]
-		public const int NONE;
-		[CCode (cname = "Z_SYNC_FLUSH")]
-		public const int SYNC;
-		[CCode (cname = "Z_FULL_FLUSH")]
-		public const int FULL;
-		public const int FINISH;
-		public const int BLOCK;
-	}
-
-	[CCode (cprefix = "Z_")]
-	namespace Status {
-		public const int OK;
-		public const int STREAM_END;
-		public const int NEED_DICT;
-		public const int ERRNO;
-		public const int STREAM_ERROR;
-		public const int DATA_ERROR;
-		public const int MEM_ERROR;
-		public const int BUF_ERROR;
-		public const int VERSION_ERROR;
-	}
-
-	namespace Compression {
-		[CCode (cname = "Z_NO_COMPRESSION")]
-		public const int NONE;
-		[CCode (cname = "Z_BEST_SPEED")]
-		public const int BEST_SPEED;
-		[CCode (cname = "Z_BEST_COMPRESSION")]
-		public const int BEST_COMPRESSION;
-		[CCode (cname = "Z_DEFAULT_COMPRESSION")]
-		public const int DEFAULT;
-	}
-
-	[CCode (cprefix = "Z_")]
-	namespace Strategy {
-		public const int FILTERED;
-		public const int HUFFMAN_ONLY;
-		public const int RLE;
-		public const int FIXED;
-		[CCode (cname = "Z_DEFAULT_STRATEGY")]
-		public const int DEFAULT;
-	}
-
-	[CCode (cprefix = "Z_")]
-	namespace Data {
-		public const int BINARY;
-		public const int TEXT;
-		public const int ASCII;
-		public const int UNKNOWN;
-	}
-
-	[CCode (cprefix = "Z_")]
-	namespace Algorithm {
-		public const int DEFLATED;
-	}
-
 	[CCode (cname = "z_stream", destroy_function = "deflateEnd")]
 	public struct Stream {
-		[CCode (array_length_cname = "avail_in", array_length_type = "guint")]
-		public uchar[] next_in;
+		public uchar* next_in;
+		public uint avail_in;
 		public ulong total_in;
-
-		[CCode (array_length_cname = "avail_out", array_length_type = "guint")]
-		public uchar[] next_out;
+		public uchar* next_out;
+		public uint avail_out;
 		public ulong total_out;
-
 		public string? msg;
-
 		public int data_type;
 		public ulong adler;
 	}
-
 	[CCode (cname = "z_stream", destroy_function = "deflateEnd")]
 	public struct DeflateStream : Stream {
 		[CCode (cname = "deflateInit")]
-		public DeflateStream (int level = Compression.DEFAULT);
+		public DeflateStream (int level = Level.DEFAULT_COMPRESSION);
 		[CCode (cname = "deflateInit2")]
-		public DeflateStream.full (int level, int method, int windowBits, int memLevel, int strategy);
-
+		public DeflateStream.full (int level = Level.DEFAULT_COMPRESSION, int method = Algorithm.DEFLATED, int windowBits = 15, int memLevel = 8, int strategy = Strategy.DEFAULT_STRATEGY);
 		[CCode (cname = "deflate")]
 		public int deflate (int flush);
 		[CCode (cname = "deflateSetDictionary")]
@@ -138,14 +125,12 @@ namespace ZLib {
 		[CCode (cname = "deflateSetHeader")]
 		public int set_header (GZHeader head);
 	}
-
 	[CCode (cname = "z_stream", destroy_function = "inflateEnd")]
 	public struct InflateStream : Stream {
 		[CCode (cname = "inflateInit")]
 		public InflateStream ();
 		[CCode (cname = "inflateInit2")]
 		public InflateStream.full (int windowBits);
-
 		[CCode (cname = "inflate")]
 		public int inflate (int flush);
 		[CCode (cname = "inflateSetDictionary")]
@@ -156,16 +141,13 @@ namespace ZLib {
 		public int prime (int bits, int value);
 		public int get_header (out GZHeader head);
 	}
-
 	namespace Utility {
 		[CCode (cname = "compress2")]
-		public static int compress ([CCode (array_length_type = "gulong")] uchar[] dest, [CCode (array_length_type = "gulong")] uchar[] source, int level = Compression.DEFAULT);
+		public static int compress ([CCode (array_length_type = "gulong")] uchar[] dest, [CCode (array_length_type = "gulong")] uchar[] source, int level = Level.DEFAULT_COMPRESSION);
 		[CCode (cname = "compressBound")]
 		public static int compress_bound (ulong sourceLen);
-
 		public static int uncompress ([CCode (array_length_type = "gulong")] uchar[] dest, [CCode (array_length_type = "gulong")] uchar[] source);
 	}
-
 	[CCode (cname = "gz_header")]
 	public struct GZHeader {
 		public int text;
@@ -183,10 +165,9 @@ namespace ZLib {
 		public int hcrc;
 		public int done;
 	}
-
 	[CCode (cname = "gzFile", cprefix = "gz", free_function = "gzclose")]
 	public class GZFileStream {
-		public static GZFileStream open (string path, string mode);
+		public static GZFileStream open (string path, string mode = "rb");
 		public static GZFileStream dopen (int fd, string mode);
 		public int setparams (int level, int strategy);
 		public int read (char[] buf);
@@ -201,3 +182,4 @@ namespace ZLib {
 		public bool direct ();
 	}
 }
+
