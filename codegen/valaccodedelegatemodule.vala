@@ -368,6 +368,14 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		var d_params = d.get_parameters ();
 		foreach (FormalParameter param in d_params) {
+			if (dynamic_sig != null
+			    && param.parameter_type is ArrayType
+			    && ((ArrayType) param.parameter_type).element_type.data_type == string_type.data_type) {
+				// use null-terminated string arrays for dynamic signals for compatibility reasons
+				param.no_array_length = true;
+				param.array_null_terminated = true;
+			}
+
 			generate_parameter (param, source_declarations, cparam_map, null);
 		}
 		if (!d.no_array_length && d.return_type is ArrayType) {
