@@ -24,175 +24,38 @@
 using GLib;
 using Valadoc.Content;
 
-public class Valadoc.Html.MarkupWriter {
-	private unowned FileStream stream;
-	private int indent;
-	private long current_column = 0;
-	private bool last_was_tag;
-	private bool wrap = true;
-
-	private const int MAX_COLUMN = 150;
-
+public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
 	public MarkupWriter (FileStream stream) {
-		this.stream = stream;
-		last_was_tag = true;
+		base (stream);
 	}
 
-	public void xml_declaration () {
-		do_write ("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-		indent = -1;
-		last_was_tag = true;
-	}
-
-	public MarkupWriter start_tag (string name, string? css_class = null, string? id = null) {
-		indent++;
-		check_column (name);
-		do_write ("<%s%s%s>".printf (
-			name,
-			css_class != null ? " class=\"%s\"".printf (css_class) : "",
-			id != null ? " id=\"%s\"".printf (id) : ""));
-		last_was_tag = true;
-		return this;
-	}
-
-	public MarkupWriter start_tag_with_attrs (string name, string? css_class = null, string[] names, string[] values) {
-		indent++;
-		check_column (name);
-
-		var content = "<%s%s".printf (
-			name,
-			css_class != null ? " class=\"%s\"".printf (css_class) : "");
-		for (int i = 0; i < names.length; i++) {
-			content += " %s=\"%s\"".printf (names[i], values[i]);
-		}
-		content += ">";
-
-		do_write (content);
-		last_was_tag = true;
-		return this;
-	}
-
-	public MarkupWriter end_tag (string name) {
-		check_column (name, true);
-		do_write ("</%s>".printf (name));
-		indent--;
-		last_was_tag = true;
-		return this;
-	}
-
-	public MarkupWriter simple_tag (string name, string? css_class = null) {
-		indent++;
-		check_column (name);
-		do_write ("<%s%s/>".printf (
-			name,
-			css_class != null ? " class=\"%s\"".printf (css_class) : ""));
-		indent--;
-		last_was_tag = true;
-		return this;
-	}
-
+	// edit
 	public MarkupWriter link (string url, string label, string? css_class = null) {
-		indent++;
-		check_column ("a");
-		do_write ("<a%s href=\"%s\">%s</a>".printf (
-			css_class != null ? " class=\"%s\"".printf (css_class) : "",
-			url, label));
-		indent--;
-		last_was_tag = true;
+		if (css_class == null) {
+			start_tag ("a", {"href", url});
+		} else {
+			start_tag ("a", {"href", url, "class", css_class});
+		}
+		text (label);
+		end_tag ("a");
 		return this;
 	}
 
 	public MarkupWriter image (string src, string? caption = null, string? css_class = null) {
-		indent++;
-		check_column ("img");
-		do_write ("<img%s src=\"%s\"%s/>".printf (
-			css_class != null ? " class=\"%s\"".printf (css_class) : "",
-			src,
-			caption != null ? " alt=\"%s\"".printf (caption) : ""));
-		indent--;
-		last_was_tag = true;
+		if (css_class == null) {
+			simple_tag ("img", {"src", src, "alt", caption});
+		} else {
+			simple_tag ("img", {"src", src, "alt", caption, "class", css_class});
+		}
 		return this;
 	}
 
 	public MarkupWriter stylesheet_link (string url) {
-		indent++;
-		check_column ("link");
-		do_write ("<link href=\"%s\" rel=\"stylesheet\" type=\"text/css\" />".printf (url));
-		indent--;
-		last_was_tag = true;
+		simple_tag ("link", {"href", url, "rel", "stylesheet", "type", "text/css"});
 		return this;
 	}
 
-	public MarkupWriter text (string text) {
-		if (wrap && text.length + current_column > MAX_COLUMN) {
-			long wrote = 0;
-			while (wrote < text.length) {
-				long space_pos = -1;
-				for (long i = wrote + 1; i < text.length; i++) {
-					if (text[i] == ' ') {
-						if (i - wrote + current_column > MAX_COLUMN) {
-							break;
-						}
-						space_pos = i;
-					}
-				}
-				if (text.length - wrote + current_column <= MAX_COLUMN) {
-					do_write (text.substring (wrote));
-					wrote = text.length + 1;
-				} else if (space_pos == -1) {
-					// Force line break
-				} else {
-					do_write (text.substring (wrote, space_pos - wrote));
-					wrote = space_pos + 1;
-				}
-				if (wrote < text.length) {
-					break_line ();
-					do_write ("  ");
-				}
-			}
-		} else {
-			do_write (text);
-		}
-		last_was_tag = false;
-		return this;
-	}
-
-	public MarkupWriter raw_text (string text) {
-		do_write (text);
-		last_was_tag = false;
-		return this;
-	}
-
-	public void set_source_wrap (bool wrap) {
-		this.wrap = wrap;
-	}
-
-	private void break_line () {
-		stream.printf ("\n");
-		stream.printf (string.nfill (indent * 2, ' '));
-		current_column = indent * 2;
-	}
-
-	private void do_write (string text) {
-		if (wrap && current_column + text.length > MAX_COLUMN) {
-			break_line ();
-		}
-		stream.printf (text);
-		current_column += text.length;
-	}
-
-	private void check_column (string name, bool end_tag = false) {
-		if (!wrap) {
-			return;
-		} else if (!end_tag && inline (name) && !last_was_tag) {
-			return;
-		} else if (end_tag && content_inline (name)) {
-			return;
-		}
-		break_line ();
-	}
-
-	private bool inline (string name) {
+	private override bool inline_element (string name) {
 		return name != "html"
 			&& name != "head"
 			&& name != "title"
@@ -215,7 +78,7 @@ public class Valadoc.Html.MarkupWriter {
 			&& name != "img";
 	}
 
-	private bool content_inline (string name) {
+	private override bool content_inline_element (string name) {
 		return name == "title"
 			|| name == "p"
 			|| name == "a"

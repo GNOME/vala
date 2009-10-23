@@ -123,7 +123,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		write_wiki_pages (tree, css_path_wiki, Path.build_filename(settings.path, "content"));
 
 		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename ( settings.path, "index.html" ), "w");
-		writer = new MarkupWriter (file);
+		writer = new Html.MarkupWriter (file);
 		writer.xml_declaration ();
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path_package, settings.pkg_name);
@@ -147,7 +147,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		rt = DirUtils.create (GLib.Path.build_filename ( path, "img" ), 0777);
 
 		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename ( path, "index.htm" ), "w");
-		writer = new MarkupWriter (file);
+		writer = new Html.MarkupWriter (file);
 		writer.xml_declaration ();
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, pkg_name);
@@ -164,7 +164,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 
 		if (ns.name != null) {
 			GLib.FileStream file = GLib.FileStream.open (rpath, "w");
-			writer = new MarkupWriter (file);
+			writer = new Html.MarkupWriter (file);
 			writer.xml_declaration ();
 			_renderer.set_writer (writer);
 			write_file_header (this.css_path, ns.full_name ());
@@ -181,7 +181,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		string rpath = this.get_real_path (node);
 
 		GLib.FileStream file = GLib.FileStream.open (rpath, "w");
-		writer = new MarkupWriter (file);
+		writer = new Html.MarkupWriter (file);
 		writer.xml_declaration ();
 		_renderer.set_writer (writer);
 		write_file_header (css_path, node.full_name());

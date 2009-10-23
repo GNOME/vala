@@ -29,6 +29,7 @@ libvaladoc_la_VALASOURCES = \
 	filehelper.vala \
 	moduleloader.vala \
 	settings.vala \
+	markupwriter.vala \
 	documentation/commentscanner.vala \
 	documentation/documentation.vala \
 	documentation/documentationparser.vala \

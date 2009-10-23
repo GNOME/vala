@@ -86,7 +86,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Deprecated));
 		write_taglets (
 			() => {
-				writer.start_tag ("p", "main_title");
+				writer.start_tag ("p", {"class", "main_title"});
 				writer.start_tag ("b").text ("Deprecated:").end_tag ("b");
 			},
 			() => {
@@ -105,8 +105,8 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Param));
 		write_taglets (
 			() => {
-				writer.start_tag ("h2", "main_title").text ("Parameters:").end_tag ("h2");
-				writer.start_tag ("table", "main_parameter_table");
+				writer.start_tag ("h2", {"class", "main_title"}).text ("Parameters:").end_tag ("h2");
+				writer.start_tag ("table", {"class", "main_parameter_table"});
 			},
 			() => {
 				writer.end_tag ("table");
@@ -116,7 +116,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 			(taglet) => {
 				var param = taglet as Taglets.Param;
 				writer.start_tag ("tr");
-				writer.start_tag ("td", "main_parameter_table_name").text (param.parameter_name).end_tag ("td");
+				writer.start_tag ("td", {"class", "main_parameter_table_name"}).text (param.parameter_name).end_tag ("td");
 				writer.start_tag ("td");
 				param.accept_children (this);
 				writer.end_tag ("td");
@@ -126,8 +126,8 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Return));
 		write_taglets (
 			() => {
-				writer.start_tag ("h2", "main_title").text ("Returns:").end_tag ("h2");
-				writer.start_tag ("table", "main_parameter_table");
+				writer.start_tag ("h2", {"class", "main_title"}).text ("Returns:").end_tag ("h2");
+				writer.start_tag ("table", {"class", "main_parameter_table"});
 			},
 			() => {
 				writer.end_tag ("table");
@@ -146,8 +146,8 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Throws));
 		write_taglets (
 			() => {
-				writer.start_tag ("h2", "main_title").text ("Returns:").end_tag ("h2");
-				writer.start_tag ("table", "main_parameter_table");
+				writer.start_tag ("h2", {"class", "main_title"}).text ("Returns:").end_tag ("h2");
+				writer.start_tag ("table", {"class", "main_parameter_table"});
 			},
 			() => {
 				writer.end_tag ("table");
@@ -157,7 +157,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 			(taglet) => {
 				var exception = taglet as Taglets.Throws;
 				writer.start_tag ("tr");
-				writer.start_tag ("td", "main_parameter_table_name").text (exception.error_domain_name).end_tag ("td");
+				writer.start_tag ("td", {"class", "main_parameter_table_name"}).text (exception.error_domain_name).end_tag ("td");
 				writer.start_tag ("td");
 				exception.accept_children (this);
 				writer.end_tag ("td");
@@ -167,7 +167,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Since));
 		write_taglets (
 			() => {
-				writer.start_tag ("h2", "main_title").text ("Since:").end_tag ("h2");
+				writer.start_tag ("h2", {"class", "main_title"}).text ("Since:").end_tag ("h2");
 				writer.start_tag ("p");
 			},
 			() => {
@@ -183,7 +183,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.See));
 		write_taglets (
 			() => {
-				writer.start_tag ("h2", "main_title").text ("See also:").end_tag ("h2");
+				writer.start_tag ("h2", {"class", "main_title"}).text ("See also:").end_tag ("h2");
 				writer.start_tag ("p");
 			},
 			() => {
@@ -274,7 +274,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 			break;
 		}
 		if (tag != null) {
-			writer.start_tag (tag, css_type);
+			writer.start_tag (tag, {"class", css_type});
 		}
 		element.accept_children (this);
 		if (tag != null) {
@@ -289,16 +289,15 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	public override void visit_table (Table element) {
-		writer.start_tag ("table", "main_table");
+		writer.start_tag ("table", {"class", "main_table"});
 		element.accept_children (this);
 		writer.end_tag ("table");
 	}
 
 	public override void visit_table_cell (TableCell element) {
-		writer.start_tag_with_attrs ("td", "main_table",
-			{ "colspan", "rowspan" },
-			{ element.colspan.to_string (), element.rowspan.to_string () }
-		);
+		writer.start_tag ("td", {"class", "main_table",
+								 "colspan", element.colspan.to_string (),
+								 "rowspan", element.rowspan.to_string ()});
 		element.accept_children (this);
 		writer.end_tag ("td");
 	}

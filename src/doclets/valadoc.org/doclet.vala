@@ -124,8 +124,8 @@ public class Valadoc.ValadocOrg.Doclet : BasicDoclet {
 		string parentnodetypepath = (parentnodepkgname == parentnodename)? parentnodepkgname : parentnodepkgname+"/"+parentnodename;
 		string typepath = pkgname+"/"+fullname;
 		this.file.printf ("INSERT INTO `ValadocCodeElement` (`id`, `parent`, `valaapi`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1), (SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1), '", typepath, parentnodetypepath);
-		var writer = new MarkupWriter (file);
-		writer.set_source_wrap (false);
+		var writer = new Html.MarkupWriter (file);
+		writer.set_wrap (false);
 		_renderer.set_writer (writer);
 		_renderer.set_container (element);
 		_renderer.render (element.signature);
