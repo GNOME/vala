@@ -1597,6 +1597,8 @@ namespace Posix {
 	public int ftruncate(int fd, off_t length);
 	[CCode (cheader_filename = "unistd.h")]
 	public int truncate(string path, off_t length);
+	[CCode (cheader_filename = "unistd.h")]
+	public int nice (int inc);
 
 	[SimpleType]
 	[CCode (cname = "cc_t", cheader_filename = "termios.h")]
