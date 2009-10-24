@@ -816,6 +816,13 @@ namespace Posix {
 	public unowned Passwd? getpwent ();
 	public void setpwent ();
 
+	[CCode (cheader_filename = "sys/resource.h")]
+	public const int PRIO_PROCESS;
+	[CCode (cheader_filename = "sys/resource.h")]
+	public const int PRIO_PGRP;
+	[CCode (cheader_filename = "sys/resource.h")]
+	public const int PRIO_USER;
+
 	[CCode (cheader_filename = "signal.h")]
 	public const int SIGABRT;
 	[CCode (cheader_filename = "signal.h")]
@@ -1439,6 +1446,11 @@ namespace Posix {
 		public time_t tv_sec;
 		public long tv_nsec;
 	}
+
+	[CCode (cheader_filename = "sys/time.h,sys/resource.h")]
+	public int getpriority (int which, int who);
+	[CCode (cheader_filename = "sys/time.h,sys/resource.h")]
+	public int setpriority (int which, int who, int prio);
 
 	[CCode (cheader_filename = "unistd.h")]
 	public int close (int fd);
