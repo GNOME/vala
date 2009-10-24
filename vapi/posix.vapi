@@ -1245,7 +1245,13 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/socket.h")]
 	public const int AF_UNIX;
 	[CCode (cheader_filename = "sys/socket.h", sentinel = "")]
+	public int accept (int sfd, ... );
+	[CCode (cheader_filename = "sys/socket.h", sentinel = "")]
 	public int bind (int sockfd, ...);
+	[CCode (cheader_filename = "sys/socket.h",  sentinel = "")]
+	public int connect(int sfd, ... );
+	[CCode (cheader_filename = "sys/socket.h")]
+	public int listen (int sfd, int backlog);
 	[CCode (cheader_filename = "sys/socket.h")]
 	public int socket (int domain, int type, int protocol);
 
