@@ -470,6 +470,19 @@ namespace Posix {
 	public unowned Group? getgrent ();
 	public void setgrent ();
 
+	[CCode (cheader_filename = "arpa/inet.h")]
+	public uint32 inet_addr (string host);
+	[CCode (cheader_filename = "arpa/inet.h")]
+	public weak string inet_ntoa (InAddr addr);
+	[CCode (cheader_filename = "arpa/inet.h")]
+	public uint32 htonl (uint32 hostlong);
+	[CCode (cheader_filename = "arpa/inet.h")]
+	public uint32 ntohl (uint32 netlong);
+	[CCode (cheader_filename = "arpa/inet.h")]
+	public uint16 htons (uint16 hostshort);
+	[CCode (cheader_filename = "arpa/inet.h")]
+	public uint16 ntohs (uint16 netshort);
+
 	[CCode (cheader_filename = "math.h")]
 	public double acos (double x);
 	[CCode (cheader_filename = "math.h")]
@@ -1238,6 +1251,11 @@ namespace Posix {
 
 	[CCode (cheader_filename = "sys/socket.h")]
 	public int socketpair (int domain, int type, int protocol, int[] sv);
+
+	[CCode (cname = "struct in_addr", cheader_filename = "sys/socket.h", destroy_function = "")]
+	public struct InAddr {
+		public uint32 s_addr;
+	}
 
 	[CCode (cname = "struct sock_addr", cheader_filename = "sys/socket.h", destroy_function = "")]
 	public struct SockAddr {
