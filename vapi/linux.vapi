@@ -96,6 +96,31 @@ namespace Linux {
     /*
      * Misc non-posix additions
      */
+    [CCode (cheader_filename = "arpa/inet.h")]
+    public int inet_aton(string cp, out Posix.InAddr addr);
+
+    [CCode (cname = "struct winsize", cheader_filename = "termios.h", destroy_function = "")]
+    public struct winsize {
+        public ushort ws_row;
+        public ushort ws_col;
+        public ushort ws_xpixel;
+        public ushort ws_ypixel;
+    }
+
+    [CCode (cheader_filename = "pty.h")]
+    public Posix.pid_t forkpty (out int amaster,
+                                out int aslave,
+                                [CCode (array_length=false, array_null_terminated=true)] char[] name,
+                                Posix.termios? termp,
+                                winsize? winp);
+
+    [CCode (cheader_filename = "pty.h")]
+    public int openpty (out int amaster,
+                        out int aslave,
+                        [CCode (array_length=false, array_null_terminated=true)] char[] name,
+                        Posix.termios? termp,
+                        winsize? winp);
+
     [CCode (cprefix = "CLONE_", cheader_filename = "sched.h")]
     public enum CloneFlags {
         FILES,
@@ -108,6 +133,9 @@ namespace Linux {
 
     [CCode (cheader_filename = "time.h")]
     public time_t timegm (GLib.Time t);
+
+    [CCode (cheader_filename = "utmp.h")]
+    public int login_tty (int fd);
 
     // mremap(2)
     [CCode (cprefix = "MREMAP_", cheader_filename = "sys/mman.h")]
