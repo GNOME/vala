@@ -337,9 +337,16 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 			closure_struct.add_field ("GError *", variable_name);
 			cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (variable_name), get_variable_cexpression ("_inner_error_"))));
 		} else {
-			var cdecl = new CCodeDeclaration ("GError *");
-			cdecl.add_declarator (new CCodeVariableDeclarator (variable_name, get_variable_cexpression ("_inner_error_")));
-			cblock.add_statement (cdecl);
+			if (clause.variable_name != null) {
+				var cdecl = new CCodeDeclaration ("GError *");
+				cdecl.add_declarator (new CCodeVariableDeclarator (variable_name, get_variable_cexpression ("_inner_error_")));
+				cblock.add_statement (cdecl);
+			} else {
+				// error object is not used within catch statement, clear it
+				var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));
+				cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+				cblock.add_statement (new CCodeExpressionStatement (cclear));
+			}
 		}
 		cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression ("_inner_error_"), new CCodeConstant ("NULL"))));
 
