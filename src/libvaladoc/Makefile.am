@@ -115,10 +115,10 @@ libvaladoc_la_VALASOURCES = \
 	taglets/tagletsee.vala \
 	taglets/tagletsince.vala \
 	taglets/tagletthrows.vala \
-	html-doclet/html-doclet.vala \
-	html-doclet/html-globals.vala \
-	html-doclet/html-markupwriter.vala \
-	html-doclet/html-renderer.vala \
+	html/basicdoclet.vala \
+	html/globals.vala \
+	html/htmlmarkupwriter.vala \
+	html/htmlrenderer.vala \
 	$(NULL)
 
 
