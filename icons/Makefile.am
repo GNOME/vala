@@ -1,14 +1,15 @@
 NULL =
 
 
-vapidir = $(datadir)/valadoc/icons
+iconsdir = $(datadir)/valadoc/icons
 
 
-dist_vapi_DATA =         \
-    warning.png          \
-    abstractclass.png    \
-    abstractmethod.png   \
-    staticmethod.png     \
+dist_icons_DATA =         \
+	warning.png          \
+	abstractclass.png    \
+	abstractmethod.png   \
+	staticmethod.png     \
+	devhelpstyle.css     \
 	wikistyle.css        \
 	style.css            \
 	class.png            \
@@ -31,9 +32,6 @@ dist_vapi_DATA =         \
 	virtualproperty.png  \
 	$(NULL)
 
-
-dist_noinst_DATA =  \
-	$(NULL)
 
 
 

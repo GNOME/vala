@@ -103,8 +103,8 @@ namespace Valadoc.Devhelp {
 
 
 public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
-	private const string css_path_wiki = "../wikistyle.css";
-	private const string css_path = "wikistyle.css";
+	private const string css_path_wiki = "../devhelpstyle.css";
+	private const string css_path = "devhelpstyle.css";
 
 	private ArrayList<Api.Node> nodes = new ArrayList<Api.Node> ();
 	private string package_dir_name = ""; // remove
