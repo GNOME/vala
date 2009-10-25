@@ -21,7 +21,6 @@
 using Valadoc;
 using Valadoc.Api;
 using Valadoc.Html;
-using Xml;
 using Gee;
 
 
@@ -103,107 +102,15 @@ namespace Valadoc.Devhelp {
 
 
 
-public enum Valadoc.Devhelp.KeywordType {
-	NAMESPACE = 0,
-	CLASS = 1,
-	DELEGATE = 2,
-	INTERFACE = 3,
-	ERRORDOMAIN = 4,
-
-	CONSTANT = 5,
-	ENUM = 6,
-	FUNCTION = 7,
-	MACRO = 8,
-	PROPERTY = 9,
-	SIGNAL = 10,
-	STRUCT = 11,
-	TYPEDEF = 12,
-	UNION = 13,
-	VARIABLE = 14,
-	UNSET = 15
-}
-
-public class Valadoc.Devhelp.DevhelpFormat : Object {
-	private Xml.Doc* devhelp = null;
-	private Xml.Node* functions = null;
-	private Xml.Node* chapters = null;
-	private Xml.Node* current = null;
-/*
-	~DevhelpFormat ( ) {
-		delete this.devhelp;
-	}
-*/
-	public void save_file ( string path ) {
-		Xml.Doc.save_format_file ( path, this.devhelp, 1 );
-	}
-
-	public DevhelpFormat ( string name, string version ) {
-		this.devhelp = new Xml.Doc ( "1.0" );
-		Xml.Node* root = new Xml.Node ( null, "book" );
-		this.devhelp->set_root_element( root );
-		root->new_prop ( "xmlns", "http://www.devhelp.net/book" );
-		root->new_prop ( "title", name + " Reference Manual" );
-		root->new_prop ( "language", "vala" );
-		root->new_prop ( "link", "index.htm" );
-		root->new_prop ( "name", version );
-		root->new_prop ( "version", "2" );
-		root->new_prop ( "author", "" );
-
-		this.current = root->new_child ( null, "chapters" );
-		this.functions = root->new_child ( null, "functions" );
-		this.chapters = this.current;
-	}
-
-	private const string[] keyword_type_strings = {
-		"", // namespace
-		"", // class
-		"", // delegate
-		"", // interface
-		"", // errordomain
-		"constant",
-		"enum",
-		"function",
-		"macro",
-		"property",
-		"signal",
-		"struct",
-		"typedef",
-		"union",
-		"variable",
-		""
-	};
-
-	public void add_chapter_start ( string name, string link ) {
-		this.current = this.current->new_child ( null, "sub" );
-		this.current->new_prop ( "name", name );
-		this.current->new_prop ( "link", link );
-	}
-
-	public void add_chapter_end () {
-		this.current = this.current->parent;
-	}
-
-	public void add_chapter ( string name, string link ) {
-		this.add_chapter_start ( name, link );
-		this.add_chapter_end ();
-	}
-
-	public void add_keyword ( KeywordType type, string name, string link ) {
-		Xml.Node* keyword = this.functions->new_child ( null, "keyword" );
-		keyword->new_prop ( "type", keyword_type_strings[(int)type] );
-		keyword->new_prop ( "name", name );
-		keyword->new_prop ( "link", link );
-	}
-}
-
-
-
 public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	private const string css_path_wiki = "../wikistyle.css";
 	private const string css_path = "wikistyle.css";
+
+	private ArrayList<Api.Node> nodes = new ArrayList<Api.Node> ();
 	private string package_dir_name = ""; // remove
-	private DevhelpFormat devhelp;
 	private Api.Tree tree;
+
+	private Devhelp.MarkupWriter _devhelpwriter;
 
 	construct {
 		_renderer = new HtmlRenderer (this);
@@ -223,10 +130,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		DirUtils.create (this.settings.path, 0777);
 
-		this.devhelp = new DevhelpFormat (settings.pkg_name, "");
-
 		write_wiki_pages (tree, css_path_wiki, Path.build_filename (this.settings.path, this.settings.pkg_name, "content"));
-
 		tree.accept (this);
 	}
 
@@ -242,6 +146,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		string imgpath = GLib.Path.build_filename (path, "img");
 		string devpath = GLib.Path.build_filename (path, pkg_name + ".devhelp2");
 
+
 		WikiPage wikipage = null;
 		if (this.settings.pkg_name == package.name && this.tree.wikitree != null) {
 			wikipage = this.tree.wikitree.search ("index.valadoc");
@@ -253,7 +158,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		rt = DirUtils.create (imgpath, 0777);
 		copy_directory (icons_dir, path);
 
-		this.devhelp = new DevhelpFormat (pkg_name, "");
+		var devfile = FileStream.open (devpath, "w");
+		_devhelpwriter = new Devhelp.MarkupWriter (devfile);
+		_devhelpwriter.xml_declaration ();
+
+		_devhelpwriter.start_book (pkg_name+" Reference Manual", "vala", "index.htm", "", "", "");
 
 		GLib.FileStream file = GLib.FileStream.open (filepath, "w");
 		writer = new Html.MarkupWriter (file);
@@ -264,18 +173,43 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		write_file_footer ();
 		file = null;
 
-		package.accept_all_children (this);
 
-		this.devhelp.save_file (devpath);
+		_devhelpwriter.start_chapters ();
+		package.accept_all_children (this);
+		_devhelpwriter.end_chapters ();
+
+
+		_devhelpwriter.start_functions ();
+		foreach (Api.Node node in this.nodes) {
+			string typekeyword = "";
+			if (node is Enum) {
+				typekeyword = "enum";
+			} else if (node is Constant) {
+				typekeyword = "constant";
+			} else if (node is Method) {
+				typekeyword = "function";
+			} else if (node is Field) {
+				typekeyword = "variable";
+			} else if (node is Property) {
+				typekeyword = "property";
+			} else if (node is Api.Signal) {
+				typekeyword = "signal";
+			} else if (node is Struct) {
+				typekeyword = "struct";
+			}
+
+			_devhelpwriter.simple_tag ("keyword", {"type", typekeyword, "name", node.name, "link", get_html_link_imp (settings, node, null)});
+		}
+		_devhelpwriter.end_functions ();
+
+		_devhelpwriter.end_book ();
 	}
 
-	private void process_compound_node (Api.Node node, KeywordType type) {
+	private void process_compound_node (Api.Node node) {
 		string rpath = this.get_real_path (node);
 		string path = this.get_path (node);
 
 		if (node.name != null) {
-			this.devhelp.add_chapter_start (node.name, path);
-	
 			GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 			writer = new Html.MarkupWriter (file);
 			writer.xml_declaration ();
@@ -286,15 +220,17 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 			file = null;
 		}
 
-		node.accept_all_children (this);
-
 		if (node.name != null) {
-			this.devhelp.add_chapter_end ();
-			this.devhelp.add_keyword (type, node.name, path);
+			_devhelpwriter.start_sub (node.name, path);
+			node.accept_all_children (this);
+			_devhelpwriter.end_sub ();
+			this.nodes.add (node);
+		} else {
+			node.accept_all_children (this);
 		}
 	}
 
-	private void process_node (Api.Node node, KeywordType type) {
+	private void process_node (Api.Node node) {
 		string rpath = this.get_real_path (node);
 		string path = this.get_path (node);
 
@@ -307,46 +243,45 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		write_file_footer ();
 		file = null;
 
+		_devhelpwriter.start_sub (node.name, path);
 		node.accept_all_children (this);
-
-		this.devhelp.add_keyword (type, node.name, path);
-		this.devhelp.add_chapter (node.name, path);
+		_devhelpwriter.end_sub ();
 	}
 
 	public override void visit_namespace (Namespace item) {
-		process_compound_node (item, KeywordType.NAMESPACE);
+		process_compound_node (item);
 	}
 
 	public override void visit_interface (Interface item) {
-		process_compound_node (item, KeywordType.INTERFACE);
+		process_compound_node (item);
 	}
 
 	public override void visit_class (Class item) {
-		process_compound_node (item, KeywordType.CLASS);
+		process_compound_node (item);
 	}
 
 	public override void visit_struct (Struct item) {
-		process_compound_node (item, KeywordType.STRUCT);
+		process_compound_node (item);
 	}
 
 	public override void visit_error_domain (ErrorDomain item) {
-		process_node (item, KeywordType.ERRORDOMAIN);
+		process_node (item);
 	}
 
 	public override void visit_enum ( Enum item) {
-		process_node (item, KeywordType.ENUM);
+		process_node (item);
 	}
 
 	public override void visit_property (Property item) {
-		process_node (item, KeywordType.PROPERTY);
+		process_node (item);
 	}
 
 	public override void visit_constant (Constant item) {
-		process_node (item, KeywordType.VARIABLE);
+		process_node (item);
 	}
 
 	public override void visit_field (Field item) {
-		process_node (item, KeywordType.VARIABLE);
+		process_node (item);
 	}
 
 	public override void visit_error_code (ErrorCode item) {
@@ -356,15 +291,15 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	}
 
 	public override void visit_delegate (Delegate item) {
-		process_node (item, KeywordType.DELEGATE);
+		process_node (item);
 	}
 
 	public override void visit_signal (Api.Signal item) {
-		process_node (item, KeywordType.SIGNAL);
+		process_node (item);
 	}
 
 	public override void visit_method (Method item) {
-		process_node (item, KeywordType.FUNCTION);
+		process_node (item);
 	}
 }
 

@@ -6,7 +6,6 @@ AM_CFLAGS =  -g \
 	-I ../../libvaladoc/ \
 	$(GLIB_CFLAGS) \
 	$(LIBGEE_CFLAGS) \
-	$(LIBXML2_CFLAGS) \
 	$(LIBVALA_CFLAGS) \
 	$(NULL)
 
@@ -35,14 +34,13 @@ libdoclet_la_SOURCES =      \
 
 
 libdoclet.vala.stamp: $(libdoclet_la_VALASOURCES)
-	$(VALAC) -C --vapidir ../../vapi --vapidir ../../libvaladoc --pkg valadoc-1.0 --pkg libxml-2.0 --pkg gee-1.0 --basedir . $^
+	$(VALAC) -C --vapidir ../../vapi --vapidir ../../libvaladoc --pkg valadoc-1.0 --pkg gee-1.0 --basedir . $^
 	touch $@
 
 
 libdoclet_la_LIBADD = \
 	../../libvaladoc/libvaladoc.la \
 	$(GLIB_LIBS) \
-	$(LIBXML2_LIBS) \
 	$(LIBVALA_LIBS) \
 	$(LIBGEE_LIBS) \
 	$(NULL)

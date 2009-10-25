@@ -4,7 +4,6 @@ NULL =
 AM_CFLAGS = \
 	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
 	$(LIBGVC_CFLAGS) \
-	$(LIBXML2_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(LIBGEE_CFLAGS) \
 	$(LIBVALA_CFLAGS) \
@@ -30,6 +29,7 @@ libvaladoc_la_VALASOURCES = \
 	moduleloader.vala \
 	settings.vala \
 	markupwriter.vala \
+	devhelp-markupwriter.vala \
 	documentation/commentscanner.vala \
 	documentation/documentation.vala \
 	documentation/documentationparser.vala \
@@ -137,13 +137,12 @@ libvaladocincludedir = $(includedir)/
 
 
 libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES)
-	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-1.0 --pkg vala-1.0 --pkg gmodule-2.0 --vapidir ../vapi --pkg libxml-2.0 --pkg libgvc --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
+	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-1.0 --pkg vala-1.0 --pkg gmodule-2.0 --vapidir ../vapi --pkg libgvc --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
 	touch $@
 
 
 libvaladoc_la_LIBADD = \
 	$(LIBGVC_LIBS)     \
-	$(LIBXML2_LIBS)    \
 	$(LIBGEE_LIBS)     \
 	$(GLIB_LIBS)       \
 	$(LIBVALA_LIBS)    \
