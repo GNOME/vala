@@ -122,13 +122,13 @@ namespace Wnck {
 		public bool get_showing_desktop ();
 		public int get_width ();
 		public unowned string get_window_manager_name ();
-		public unowned GLib.List get_windows ();
+		public unowned GLib.List<Wnck.Window> get_windows ();
 		public unowned GLib.List get_windows_stacked ();
 		public unowned Wnck.Workspace get_workspace (int workspace);
 		public int get_workspace_count ();
 		public int get_workspace_index (Wnck.Workspace space);
 		public unowned Wnck.Workspace get_workspace_neighbor (Wnck.Workspace space, Wnck.MotionDirection direction);
-		public unowned GLib.List get_workspaces ();
+		public unowned GLib.List<Wnck.Workspace> get_workspaces ();
 		public void move_viewport (int x, int y);
 		public bool net_wm_supports (string atom);
 		[NoWrapper]
@@ -208,7 +208,7 @@ namespace Wnck {
 		public unowned Wnck.Application get_application ();
 		public unowned Wnck.ClassGroup get_class_group ();
 		public void get_client_window_geometry (int xp, int yp, int widthp, int heightp);
-		public void get_geometry (int xp, int yp, int widthp, int heightp);
+		public void get_geometry (out int xp, out int yp, out int widthp, out int heightp);
 		public ulong get_group_leader ();
 		public unowned Gdk.Pixbuf get_icon ();
 		public bool get_icon_is_fallback ();
