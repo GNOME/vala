@@ -232,7 +232,7 @@ public class Valadoc.ValadocOrg.Doclet : BasicDoclet {
 		else {
 			modifier = "NORMAL";
 		}
-	
+
 		this.file.printf ("INSERT INTO `ValadocClasses` (`id`, `modifier`) VALUES ((SELECT `id` FROM `ValadocApiElement` WHERE BINARY `fullname`='%s' LIMIT 1),'%s');\n", this.get_type_path(cl), modifier);
 		this.write_documentation (cl);
 	}

@@ -215,7 +215,7 @@ public class Valadoc.WikiScanner : Object, Scanner {
 			case '#':
 				emit_token (TokenType.SHARP);
 				break;
-				
+
 			case '-':
 				if (_last_char.isalnum () || get_next_char ().isalnum ()) {
 					append_char (c);

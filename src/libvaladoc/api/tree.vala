@@ -177,9 +177,9 @@ public class Valadoc.Api.Tree {
 			// ignore multiple occurences of the same package
 			return true;
 		}
-	
+
 		var package_path = context.get_package_path (pkg, settings.vapi_directories);
-		
+
 		if (package_path == null) {
 			return false;
 		}
@@ -211,7 +211,7 @@ public class Valadoc.Api.Tree {
 				Vala.Report.error (null, "Unable to read dependency file: %s".printf (e.message));
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -259,9 +259,9 @@ public class Valadoc.Api.Tree {
 				} else if (source.has_suffix (".vapi")) {
 					string file_name = Path.get_basename (source);
 					file_name = file_name.ndup ( file_name.size() - ".vapi".size() );
-			
+
 					var vfile = new Vala.SourceFile (context, rpath, true);
-					Package vdpkg = new Package (vfile, file_name); 
+					Package vdpkg = new Package (vfile, file_name);
 					context.add_source_file (vfile);
 					this.packages.add (vdpkg);
 				} else if (source.has_suffix (".c")) {

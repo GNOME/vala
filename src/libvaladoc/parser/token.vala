@@ -53,7 +53,7 @@ public class Valadoc.Token : Object {
 				return false;
 			} else if (_word[0] == '0' && _word.length > 1) {
 				return false;
-			} 
+			}
 			for (int i = 0; i < _word.length; i++) {
 				if (_word[i] < '0' || _word[i] > '9') {
 					return false;

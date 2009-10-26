@@ -116,7 +116,7 @@ public class Valadoc.Api.TypeReference : Item {
 
 		return true;
 	}
-	
+
 	public bool is_dynamic {
 		get {
 			return this.vtyperef.is_dynamic;

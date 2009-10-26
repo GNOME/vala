@@ -25,7 +25,7 @@ using Gee;
 
 public class Valadoc.Content.List : ContentElement, Block {
 	public Gee.List<ListItem> items { get { return _items; } }
-	
+
 	private Gee.List<ListItem> _items;
 
 	internal List () {
