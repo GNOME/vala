@@ -99,6 +99,9 @@ namespace X {
 		[CCode (cname = "XGrabButton")]
 		public int grab_button (uint button, uint modifiers, Window grab_window, bool owner_events, uint event_mask, int pointer_mode, int keyboard_mode, Window confine_to, uint cursor);
 
+		[CCode (cname = "XGrabKey")]
+		public int grab_key (int keycode, uint modifiers, Window grab_window, bool owner_events, int pointer_mode, int keyboard_mode);
+
 		[CCode (cname = "XGrabPointer")]
 		public int grab_pointer (Window grab_window, bool owner_events, uint event_mask, int pointer_mode, int keyboard_mode, Window confine_to, uint cursor, int time);
 
@@ -119,6 +122,9 @@ namespace X {
 
 		[CCode (cname = "XDisplayKeycodes")]
 		public int keycodes (ref int min_keycodes_return, ref int max_keycodes_return);
+
+		[CCode (cname = "XKeysymToKeycode")]
+		public int keysym_to_keycode (uint keysym);
 
 		[CCode (cname = "XLastKnownRequestProcessed")]
 		public ulong last_known_request_processed ();
