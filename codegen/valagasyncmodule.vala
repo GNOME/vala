@@ -305,7 +305,6 @@ internal class Vala.GAsyncModule : GSignalModule {
 
 			if (!m.is_abstract) {
 				var data = generate_data_struct (m);
-				append_struct (data);
 
 				append_function (generate_free_function (m));
 				source_type_member_definition.append (generate_async_function (m));
@@ -316,6 +315,10 @@ internal class Vala.GAsyncModule : GSignalModule {
 				closure_struct = data;
 				base.visit_method (m);
 				closure_struct = null;
+
+				// only append data struct here to make sure all struct member
+				// types are declared before the struct definition
+				append_struct (data);
 			}
 
 			if (m.is_abstract || m.is_virtual) {
