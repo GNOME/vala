@@ -82,17 +82,8 @@ public class Valadoc.Api.TypeReference : Item {
 		}
 	}
 
-	public bool is_unowned {
+	public bool is_weak {
 		get {
-			Vala.CodeNode parent = this.vtyperef.parent_node;
-
-			// parameter:
-			if (parent is Vala.FormalParameter) {
-				if (((Vala.FormalParameter)parent).direction == Vala.ParameterDirection.IN) {
-					return false;
-				}
-				return this.is_weak_helper ( ((Vala.FormalParameter)parent).parameter_type );
-			}
 			return false;
 		}
 	}
@@ -123,7 +114,7 @@ public class Valadoc.Api.TypeReference : Item {
 		}
 	}
 
-	public bool is_weak {
+	public bool is_unowned {
 		get {
 			Vala.CodeNode parent = this.vtyperef.parent_node;
 
