@@ -145,13 +145,18 @@ div.main_code_definition {
 	padding-top: 5px;
 
 	font: monospace;
-	font-size: 10;
 	border-color: #aaaaff;
 	background-color: #eeeeff;
 	border-style: solid;
 	border-width: 1px;
 	margin: 10px;
 }
+
+
+span.leaf_code_definition {
+	font: monospace;
+}
+
 
 div.leaf_brief_description {
 	display: block;
@@ -490,4 +495,6 @@ a.navi_link:hover, a.external_link:hover {
 	color: #ff01ff;
 }
 
-
+.main_code_definition a, .leaf_code_definition a {
+	color: inherit;
+}

@@ -473,7 +473,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 					writer.text (" - ");
 					write_brief_description (child, container);
 				} else {
+					writer.start_tag ("span", {"class", css_leaf_code_definition});
 					write_signature (child, container);
+					writer.end_tag ("span");
+
 					writer.start_tag ("div", {"class", css_leaf_brief_description});
 					write_brief_description (child, container);
 					writer.end_tag ("div");
