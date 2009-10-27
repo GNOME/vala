@@ -55,7 +55,9 @@ public class Valadoc.MarkupWriter {
 		var content = new StringBuilder ("<");
 		content.append (name);
 		for (int i = 0; i < attributes.length; i=i+2) {
-			content.append_printf (" %s=\"%s\"", attributes[i], attributes[i+1]);
+			if (attributes[i+1] != null) {
+				content.append_printf (" %s=\"%s\"", attributes[i], attributes[i+1]);
+			}
 		}
 		content.append (">");
 
@@ -76,7 +78,9 @@ public class Valadoc.MarkupWriter {
 		var content = new StringBuilder ("<");
 		content.append (name);
 		for (int i = 0; i < attributes.length; i=i+2) {
-			content.append_printf (" %s=\"%s\"", attributes[i], attributes[i+1]);
+			if (attributes[i+1] != null) {
+				content.append_printf (" %s=\"%s\"", attributes[i], attributes[i+1]);
+			}
 		}
 		content.append ("/>");
 
