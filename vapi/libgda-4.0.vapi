@@ -1511,8 +1511,8 @@ namespace Gda {
 		public int get_n_columns ();
 		public int get_n_rows ();
 		public int get_row_from_values (GLib.SList values, int cols_index);
-		public GLib.Value get_typed_value_at (int col, int row, GLib.Type expected_type, bool nullok) throws GLib.Error;
-		public GLib.Value get_value_at (int col, int row) throws GLib.Error;
+		public unowned GLib.Value? get_typed_value_at (int col, int row, GLib.Type expected_type, bool nullok) throws GLib.Error;
+		public unowned GLib.Value? get_value_at (int col, int row) throws GLib.Error;
 		[NoWrapper]
 		public abstract int i_append_row () throws GLib.Error;
 		[NoWrapper]
