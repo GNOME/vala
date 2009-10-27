@@ -3235,7 +3235,7 @@ namespace Gtk {
 		public int digits { get; set; }
 		public bool draw_value { get; set; }
 		public Gtk.PositionType value_pos { get; set; }
-		public virtual signal unowned string format_value (double value);
+		public virtual signal string format_value (double value);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ScaleButton : Gtk.Button, Gtk.Activatable, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {

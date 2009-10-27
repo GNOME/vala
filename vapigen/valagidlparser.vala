@@ -2050,6 +2050,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						return null;
 					}
+				} else if (nv[0] == "transfer_ownership") {
+					if (eval (nv[1]) == "1") {
+						sig.return_type.value_owned = true;
+					}
 				}
 			}
 		}
