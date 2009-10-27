@@ -298,7 +298,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		       || node is Namespace
 		       || node is Interface
 		       || node is Class
-		       || node is Struct;
+		       || node is Struct
+		       || node is Enum
+		       || node is ErrorDomain;
 	}
 
 	public void write_navi_packages_inline (Api.Tree tree) {
