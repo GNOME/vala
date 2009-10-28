@@ -220,7 +220,8 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				}
 			}
 
-			if (prop.get_accessor.automatic_body &&
+			if (prop.binding == MemberBinding.INSTANCE &&
+			    prop.get_accessor.automatic_body &&
 			    current_type_symbol == prop.parent_symbol &&
 			    prop.base_property == null &&
 			    prop.base_interface_property == null &&
