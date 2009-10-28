@@ -267,9 +267,13 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 			tag = "span";
 			css_type = "main_optional_parameter";
 			break;
-		case Run.Style.LANG_TYPE:
+		case Run.Style.LANG_BASIC_TYPE:
 			tag = "span";
 			css_type = "main_basic_type";
+			break;
+		case Run.Style.LANG_TYPE:
+			tag = "span";
+			css_type = "main_type";
 			break;
 		}
 		if (tag != null) {

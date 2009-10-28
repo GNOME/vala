@@ -65,7 +65,12 @@ public class Valadoc.Api.SignatureBuilder {
 	}
 
 	public SignatureBuilder append_type (Node node, bool spaced = true) {
-		Run inner = new Run (Run.Style.LANG_TYPE);
+		Run.Style style = Run.Style.LANG_TYPE;
+		if (node is TypeSymbol && ((TypeSymbol)node).is_basic_type) {
+			style = Run.Style.LANG_BASIC_TYPE;
+		}
+
+		Run inner = new Run (style);
 		inner.content.add (new SymbolLink (node, node.name));
 		return append_content (inner, spaced);
 	}

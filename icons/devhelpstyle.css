@@ -105,7 +105,7 @@ div.site_body {
 }
 
 
-.main_other_type {
+.main_type {
 	text-decoration: none;
 	font-style: italic;
 	color: #000000;
@@ -482,5 +482,11 @@ a.navi_link:hover, a.external_link:hover {
 }
 
 .main_code_definition a, .leaf_code_definition a {
+	text-decoration: none;
 	color: inherit;
 }
+
+.main_code_definition a:hover, .leaf_code_definition a:hover {
+	text-decoration: underline;
+}
+

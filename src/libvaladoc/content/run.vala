@@ -33,6 +33,7 @@ public class Valadoc.Content.Run : InlineContent, Inline {
 		STROKE,
 		LANG_KEYWORD,
 		LANG_LITERAL,
+		LANG_BASIC_TYPE,
 		LANG_TYPE
 	}
 

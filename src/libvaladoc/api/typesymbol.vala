@@ -28,6 +28,19 @@ public abstract class Valadoc.Api.TypeSymbol : Symbol {
 		base (symbol, parent);
 	}
 
+	public bool is_basic_type {
+		get {
+			if (this.symbol is Vala.Struct) {
+				unowned Vala.Struct mystruct = (Vala.Struct) this.symbol;
+				return mystruct.base_type == null && (mystruct.is_boolean_type () || mystruct.is_floating_type () || mystruct.is_integer_type ());
+			} else if (this.symbol is Vala.Class) {
+				unowned Vala.Class myclass = (Vala.Class) this.symbol;
+				return myclass.base_class == null && myclass.name == "string";
+			}
+			return false;
+		}
+	}
+
 	protected override void process_comments (Settings settings, DocumentationParser parser) {
 		var source_comment = ((Vala.TypeSymbol) symbol).comment;
 		if (source_comment != null) {
