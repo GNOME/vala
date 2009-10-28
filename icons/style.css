@@ -388,7 +388,7 @@ h3.main_title {
 .navi_main .abstract_method, .navi_inline .abstract_method {
 	list-style-image: url( abstractmethod.png );
 }
-.navi_main .construction_method, .navi_inline .construction_method, .main_list_m {
+.navi_main .creation_method, .navi_inline .creation_method, .main_list_m {
 	list-style-image: url(constructor.png);
 }
 .navi_main .static_method, .navi_inline .static_method {
