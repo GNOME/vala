@@ -28,6 +28,30 @@ public class Valadoc.Api.ErrorCode : TypeSymbol {
 		base (symbol, parent);
 	}
 
+	public override bool is_public {
+		get {
+			return ((ErrorDomain)parent).is_public;
+		}
+	}
+
+	public override bool is_protected {
+		get {
+			return ((ErrorDomain)parent).is_protected;
+		}
+	}
+
+	public override bool is_internal {
+		get {
+			return ((ErrorDomain)parent).is_internal;
+		}
+	}
+
+	public override bool is_private {
+		get {
+			return ((ErrorDomain)parent).is_private;
+		}
+	}
+
 	public string get_cname () {
 		return ((Vala.ErrorCode) symbol).get_cname ();
 	}

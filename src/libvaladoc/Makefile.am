@@ -60,7 +60,6 @@ libvaladoc_la_VALASOURCES = \
 	api/signaturebuilder.vala \
 	api/struct.vala \
 	api/symbol.vala \
-	api/symbolaccessibility.vala \
 	api/tree.vala \
 	api/typeparameter.vala \
 	api/typereference.vala \

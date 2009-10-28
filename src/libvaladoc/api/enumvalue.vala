@@ -28,6 +28,30 @@ public class Valadoc.Api.EnumValue: Symbol {
 		base (symbol, parent);
 	}
 
+	public override bool is_public {
+		get {
+			return ((Enum)parent).is_public;
+		}
+	}
+
+	public override bool is_protected {
+		get {
+			return ((Enum)parent).is_protected;
+		}
+	}
+
+	public override bool is_internal {
+		get {
+			return ((Enum)parent).is_internal;
+		}
+	}
+
+	public override bool is_private {
+		get {
+			return ((Enum)parent).is_private;
+		}
+	}
+
 	protected override void process_comments (Settings settings, DocumentationParser parser) {
 		var source_comment = ((Vala.EnumValue) symbol).comment;
 		if (source_comment != null) {
@@ -48,11 +72,15 @@ public class Valadoc.Api.EnumValue: Symbol {
 	}
 
 	protected override Inline build_signature () {
-		return new SignatureBuilder ()
-			.append_symbol (this)
-			.append ("=")
-			.append (((Vala.EnumValue) symbol).value.to_string ())
-			.get ();
+		var builder = new SignatureBuilder ()
+				.append_symbol (this);
+
+		if (((Vala.EnumValue) symbol).value != null) {
+			builder.append ("=")
+				.append (((Vala.EnumValue) symbol).value.to_string ());
+		}
+
+		return builder.get ();
 	}
 }
 

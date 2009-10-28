@@ -227,9 +227,11 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 	}
 
 	public override void visit_error_code (ErrorCode item) {
+		process_node (item);
 	}
 
 	public override void visit_enum_value (Api.EnumValue item) {
+		process_node (item);
 	}
 
 	public override void visit_delegate (Delegate item) {

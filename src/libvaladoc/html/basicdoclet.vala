@@ -299,7 +299,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		       || node is Class
 		       || node is Struct
 		       || node is Enum
-		       || node is ErrorDomain;
+		       || node is Api.EnumValue
+		       || node is ErrorDomain
+		       || node is ErrorCode;
 	}
 
 	public void write_navi_packages_inline (Api.Tree tree) {
@@ -376,8 +378,8 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 				Api.NodeType.CONSTANT
 			})) {
 			writer.start_tag ("h2", {"class", css_title}).text ("Content:").end_tag ("h2");
-			write_children_table (node, Api.NodeType.ERROR_CODE, "Error codes");
-			write_children_table (node, Api.NodeType.ENUM_VALUE, "Enum values");
+			write_children (node, Api.NodeType.ERROR_CODE, "Error codes", node);
+			write_children (node, Api.NodeType.ENUM_VALUE, "Enum values", node);
 			write_children (node, Api.NodeType.CLASS, "Classes", node);
 			write_children (node, Api.NodeType.STRUCT, "Structs", node);
 			write_children (node, Api.NodeType.ENUM, "Enums", node);
@@ -485,27 +487,6 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 				writer.end_tag ("li");
 			}
 			writer.end_tag ("ul");
-		}
-	}
-
-	private void write_children_table (Api.Node node, Api.NodeType type, string type_string) {
-		Gee.Collection<Api.Node> children = node.get_children_by_type (Api.NodeType.ENUM_VALUE);
-		if (children.size > 0) {
-			writer.start_tag ("h3", {"class", css_title}).text (type_string).text (":").end_tag ("h3");
-			writer.start_tag ("table", {"class", get_html_css_class (node)});
-			foreach (Api.Node child in children) {
-				writer.start_tag ("tr");
-				writer.start_tag ("td", {"class", get_html_css_class (child), "id", child.name});
-				writer.text (child.name);
-				writer.end_tag ("td");
-
-				writer.start_tag ("td");
-				this.write_documentation (child, node);
-				writer.end_tag ("td");
-
-				writer.end_tag ("tr");
-			}
-			writer.end_tag ("table");
 		}
 	}
 

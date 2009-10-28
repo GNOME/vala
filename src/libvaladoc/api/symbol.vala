@@ -22,7 +22,7 @@
 
 using Gee;
 
-public abstract class Valadoc.Api.Symbol : Node, SymbolAccessibility {
+public abstract class Valadoc.Api.Symbol : Node {
 
 	protected Vala.Symbol symbol { private set; get; }
 
@@ -65,25 +65,25 @@ public abstract class Valadoc.Api.Symbol : Node, SymbolAccessibility {
 		return true;
 	}
 
-	public bool is_public {
+	public virtual bool is_public {
 		get {
 			return symbol.access == Vala.SymbolAccessibility.PUBLIC;
 		}
 	}
 
-	public bool is_protected {
+	public virtual bool is_protected {
 		get {
 			return symbol.access == Vala.SymbolAccessibility.PROTECTED;
 		}
 	}
 
-	public bool is_internal {
+	public virtual bool is_internal {
 		get {
 			return symbol.access == Vala.SymbolAccessibility.INTERNAL;
 		}
 	}
 
-	public bool is_private {
+	public virtual bool is_private {
 		get {
 			return symbol.access == Vala.SymbolAccessibility.PRIVATE;
 		}
