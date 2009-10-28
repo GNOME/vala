@@ -23,6 +23,7 @@ dist_icons_DATA =         \
 	namespace.png        \
 	signal.png           \
 	enum.png             \
+	enumvalue.png        \
 	field.png            \
 	package.png          \
 	struct.png           \
