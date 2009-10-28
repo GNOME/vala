@@ -20,6 +20,7 @@ dist_icons_DATA =         \
 	property.png         \
 	delegate.png         \
 	errordomain.png      \
+	errorcode.png        \
 	namespace.png        \
 	signal.png           \
 	enum.png             \
