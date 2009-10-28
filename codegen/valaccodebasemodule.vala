@@ -2718,44 +2718,57 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	
 	public void append_temp_decl (CCodeFragment cfrag, List<LocalVariable> temp_vars) {
 		foreach (LocalVariable local in temp_vars) {
+			var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
+
+			var vardecl = new CCodeVariableDeclarator (local.name, null, local.variable_type.get_cdeclarator_suffix ());
+			// sets #line
+			local.ccodenode = vardecl;
+			cdecl.add_declarator (vardecl);
+
+			var st = local.variable_type.data_type as Struct;
+			var array_type = local.variable_type as ArrayType;
+
+			if (local.name.has_prefix ("*")) {
+				// do not dereference unintialized variable
+				// initialization is not needed for these special
+				// pointer temp variables
+				// used to avoid side-effects in assignments
+			} else if (local.no_init) {
+				// no initialization necessary for this temp var
+			} else if (!local.variable_type.nullable &&
+			           (st != null && !st.is_simple_type ()) ||
+			           (array_type != null && array_type.fixed_length)) {
+				// 0-initialize struct with struct initializer { 0 }
+				// necessary as they will be passed by reference
+				var clist = new CCodeInitializerList ();
+				clist.append (new CCodeConstant ("0"));
+
+				vardecl.initializer = clist;
+				vardecl.init0 = true;
+			} else if (local.variable_type.is_reference_type_or_type_parameter () ||
+			       local.variable_type.nullable) {
+				vardecl.initializer = new CCodeConstant ("NULL");
+				vardecl.init0 = true;
+			}
+
 			if (current_method != null && current_method.coroutine) {
 				closure_struct.add_field (local.variable_type.get_cname (), local.name);
 
-				// no initialization necessary, closure struct is zeroed
-			} else {
-				var cdecl = new CCodeDeclaration (local.variable_type.get_cname ());
-		
-				var vardecl = new CCodeVariableDeclarator (local.name, null, local.variable_type.get_cdeclarator_suffix ());
-				// sets #line
-				local.ccodenode = vardecl;
-				cdecl.add_declarator (vardecl);
+				// even though closure struct is zerod, we need to initialize temporary variables
+				// as they might be used multiple times when declared in a loop
 
-				var st = local.variable_type.data_type as Struct;
-				var array_type = local.variable_type as ArrayType;
-
-				if (local.name.has_prefix ("*")) {
-					// do not dereference unintialized variable
-					// initialization is not needed for these special
-					// pointer temp variables
-					// used to avoid side-effects in assignments
-				} else if (local.no_init) {
-					// no initialization necessary for this temp var
-				} else if (!local.variable_type.nullable &&
-				           (st != null && !st.is_simple_type ()) ||
-				           (array_type != null && array_type.fixed_length)) {
-					// 0-initialize struct with struct initializer { 0 }
-					// necessary as they will be passed by reference
-					var clist = new CCodeInitializerList ();
-					clist.append (new CCodeConstant ("0"));
-
-					vardecl.initializer = clist;
-					vardecl.init0 = true;
-				} else if (local.variable_type.is_reference_type_or_type_parameter () ||
-				       local.variable_type.nullable) {
-					vardecl.initializer = new CCodeConstant ("NULL");
-					vardecl.init0 = true;
+				if (vardecl.initializer  is CCodeInitializerList) {
+					// C does not support initializer lists in assignments, use memset instead
+					source_declarations.add_include ("string.h");
+					var memset_call = new CCodeFunctionCall (new CCodeIdentifier ("memset"));
+					memset_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (local.name)));
+					memset_call.add_argument (new CCodeConstant ("0"));
+					memset_call.add_argument (new CCodeIdentifier ("sizeof (%s)".printf (local.variable_type.get_cname ())));
+					cfrag.append (new CCodeExpressionStatement (memset_call));
+				} else if (vardecl.initializer != null) {
+					cfrag.append (new CCodeExpressionStatement (new CCodeAssignment (get_variable_cexpression (local.name), vardecl.initializer)));
 				}
-			
+			} else {
 				cfrag.append (cdecl);
 			}
 		}
