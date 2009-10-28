@@ -21,8 +21,8 @@
  */
 
 public class Valadoc.Devhelp.MarkupWriter : Valadoc.MarkupWriter {
-	public MarkupWriter (FileStream stream) {
-		base (stream);
+	public MarkupWriter (FileStream stream, bool  xml_declaration = true) {
+		base (stream, xml_declaration);
 	}
 
 	protected override bool inline_element (string name) {

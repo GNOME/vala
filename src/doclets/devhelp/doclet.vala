@@ -162,13 +162,11 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		var devfile = FileStream.open (devpath, "w");
 		_devhelpwriter = new Devhelp.MarkupWriter (devfile);
-		_devhelpwriter.xml_declaration ();
 
 		_devhelpwriter.start_book (pkg_name+" Reference Manual", "vala", "index.htm", "", "", "");
 
 		GLib.FileStream file = GLib.FileStream.open (filepath, "w");
 		writer = new Html.MarkupWriter (file);
-		writer.xml_declaration ();
 		_renderer.set_writer (writer);
 		write_file_header (this.css_path, pkg_name);
 		write_package_content (package, package, wikipage);
@@ -214,7 +212,6 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		if (node.name != null) {
 			GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 			writer = new Html.MarkupWriter (file);
-			writer.xml_declaration ();
 			_renderer.set_writer (writer);
 			write_file_header (css_path, node.full_name ());
 			write_symbol_content (node);
@@ -238,7 +235,6 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 		writer = new Html.MarkupWriter (file);
-		writer.xml_declaration ();
 		_renderer.set_writer (writer);
 		write_file_header (css_path, node.full_name());
 		write_symbol_content (node);

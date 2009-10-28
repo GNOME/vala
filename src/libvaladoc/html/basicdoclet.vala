@@ -87,7 +87,6 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			if (page.name != "index.valadoc") {
 				GLib.FileStream file = GLib.FileStream.open (Path.build_filename(contentp, page.name.ndup(page.name.len()-7).replace ("/", ".")+"html"), "w");
 				writer = new MarkupWriter (file);
-				writer.xml_declaration ();
 				_renderer.set_writer (writer);
 				this.write_file_header (css_path_wiki, this.settings.pkg_name);
 				_renderer.set_container (page);

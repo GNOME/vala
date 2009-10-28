@@ -31,13 +31,11 @@ public class Valadoc.MarkupWriter {
 
 	private const int MAX_COLUMN = 150;
 
-	public MarkupWriter (FileStream stream) {
+	public MarkupWriter (FileStream stream, bool xml_declaration = true) {
 		this.stream = stream;
-		last_was_tag = true;
-	}
-
-	public void xml_declaration () {
-		do_write ("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+		if (xml_declaration) {
+			do_write ("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+		}
 		indent = -1;
 		last_was_tag = true;
 	}

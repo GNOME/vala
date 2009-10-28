@@ -24,8 +24,8 @@ using GLib;
 using Valadoc.Content;
 
 public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
-	public MarkupWriter (FileStream stream) {
-		base (stream);
+	public MarkupWriter (FileStream stream, bool xml_declaration = true) {
+		base (stream, xml_declaration);
 	}
 
 	// edit
