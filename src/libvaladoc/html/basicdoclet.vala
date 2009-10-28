@@ -562,7 +562,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	protected void write_package_content (Package node, Api.Node? parent, WikiPage? wikipage = null) {
 		writer.start_tag ("div", {"class", css_style_content});
-		writer.start_tag ("h1", {"class", css_title, node.name}).text (node.name).end_tag ("h1");
+		writer.start_tag ("h1", {"class", css_title, "id", node.name}).text (node.name).end_tag ("h1");
 		writer.simple_tag ("hr", {"class", css_headline_hr});
 		writer.start_tag ("h2", {"class", css_title}).text ("Description:").end_tag ("h2");
 
