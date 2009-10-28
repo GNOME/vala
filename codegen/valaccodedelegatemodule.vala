@@ -38,6 +38,11 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		string return_type_cname = d.return_type.get_cname ();
 
+		if (d.return_type.is_real_non_null_struct_type ()) {
+			// structs are returned via out parameter
+			return_type_cname = "void";
+		}
+
 		if (return_type_cname == d.get_cname ()) {
 			// recursive delegate
 			return_type_cname = "GCallback";
@@ -91,6 +96,9 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				var cparam = new CCodeFormalParameter (get_delegate_target_cname ("result"), "void**");
 				cfundecl.add_parameter (cparam);
 			}
+		} else if (d.return_type.is_real_non_null_struct_type ()) {
+			var cparam = new CCodeFormalParameter ("result", "%s*".printf (d.return_type.get_cname ()));
+			cfundecl.add_parameter (cparam);
 		}
 		if (d.has_target) {
 			var cparam = new CCodeFormalParameter ("user_data", "void*");
@@ -350,7 +358,14 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 
 		// declaration
 
-		var function = new CCodeFunction (wrapper_name, m.return_type.get_cname ());
+		string return_type_cname = d.return_type.get_cname ();
+
+		if (d.return_type.is_real_non_null_struct_type ()) {
+			// structs are returned via out parameter
+			return_type_cname = "void";
+		}
+
+		var function = new CCodeFunction (wrapper_name, return_type_cname);
 		function.modifiers = CCodeModifiers.STATIC;
 		m.ccodenode = function;
 
@@ -394,6 +409,9 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				var cparam = new CCodeFormalParameter (get_delegate_target_cname ("result"), "void**");
 				cparam_map.set (get_param_pos (d.cdelegate_target_parameter_position), cparam);
 			}
+		} else if (d.return_type.is_real_non_null_struct_type ()) {
+			var cparam = new CCodeFormalParameter ("result", "%s*".printf (d.return_type.get_cname ()));
+			cparam_map.set (get_param_pos (-3), cparam);
 		}
 
 		if (m.get_error_types ().size > 0) {
@@ -497,6 +515,8 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				var ctarget = new CCodeIdentifier (get_delegate_target_cname ("result"));
 				carg_map.set (get_param_pos (m.cdelegate_target_parameter_position), ctarget);
 			}
+		} else if (m.return_type.is_real_non_null_struct_type ()) {
+			carg_map.set (get_param_pos (-3), new CCodeIdentifier ("result"));
 		}
 
 		if (m.get_error_types ().size > 0) {
@@ -522,7 +542,7 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 		}
 
 		var block = new CCodeBlock ();
-		if (m.return_type is VoidType) {
+		if (m.return_type is VoidType || m.return_type.is_real_non_null_struct_type ()) {
 			block.add_statement (new CCodeExpressionStatement (ccall));
 		} else {
 			block.add_statement (new CCodeReturnStatement (ccall));
