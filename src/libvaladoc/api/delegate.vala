@@ -94,12 +94,12 @@ public class Valadoc.Api.Delegate : TypeSymbol {
 		var exceptions = get_children_by_type (NodeType.ERROR_DOMAIN);
 		if (exceptions.size > 0) {
 			signature.append_keyword ("throws");
-
+			first = true;
 			foreach (Node param in exceptions) {
 				if (!first) {
 					signature.append (",", false);
 				}
-				signature.append_content (param.signature, !first);
+				signature.append_type (param);
 				first = false;
 			}
 		}
