@@ -30,12 +30,12 @@ public abstract class Valadoc.Api.TypeSymbol : Symbol {
 
 	public bool is_basic_type {
 		get {
-			if (this.symbol is Vala.Struct) {
-				unowned Vala.Struct mystruct = (Vala.Struct) this.symbol;
-				return mystruct.base_type == null && (mystruct.is_boolean_type () || mystruct.is_floating_type () || mystruct.is_integer_type ());
-			} else if (this.symbol is Vala.Class) {
-				unowned Vala.Class myclass = (Vala.Class) this.symbol;
-				return myclass.base_class == null && myclass.name == "string";
+			if (symbol is Vala.Struct) {
+				var vala_struct = symbol as Vala.Struct;
+				return vala_struct.base_type == null && (vala_struct.is_boolean_type () || vala_struct.is_floating_type () || vala_struct.is_integer_type ());
+			} else if (symbol is Vala.Class) {
+				var vala_class = symbol as Vala.Class;
+				return vala_class.base_class == null && vala_class.name == "string";
 			}
 			return false;
 		}
