@@ -4005,7 +4005,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		    && expr.type_reference.get_type_id () != null) {
 			// explicit conversion from GValue
 			var ccall = new CCodeFunctionCall (get_value_getter_function (expr.type_reference));
-			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) expr.inner.ccodenode));
+			CCodeExpression gvalue;
+			if (expr.inner.value_type.nullable) {
+				// cast from Value?, no need to get address
+				gvalue = (CCodeExpression) expr.inner.ccodenode;
+			} else {
+				// value getter function expects pointer to GValue, get address of non-null Value
+				gvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) expr.inner.ccodenode);
+			}
+			ccall.add_argument (gvalue);
 			expr.ccodenode = ccall;
 			if (expr.type_reference is ArrayType) {
 				// null-terminated string array
