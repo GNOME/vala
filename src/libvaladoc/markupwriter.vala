@@ -162,6 +162,8 @@ public class Valadoc.MarkupWriter {
 			return;
 		} else if (end_tag && content_inline_element (name)) {
 			return;
+		} else if (end_tag && !last_was_tag) {
+			return;
 		}
 		break_line ();
 	}
