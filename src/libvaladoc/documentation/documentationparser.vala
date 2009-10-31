@@ -115,9 +115,9 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		_stack.add (element);
 	}
 
-	private Object peek () {
-		assert (_stack.size > 0);
-		return _stack.get (_stack.size - 1);
+	private Object peek (int offset = -1) {
+		assert (_stack.size >= - offset);
+		return _stack.get (_stack.size + offset);
 	}
 
 	private Object pop () {
@@ -127,6 +127,86 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 	}
 
 	private Rule multiline_run;
+	private int current_level = 0;
+	private int[] levels = new int[0];
+
+	private void new_list_item (Content.List.Bullet bullet) throws ParserError {
+		var new_item = _factory.create_list_item ();
+
+		Content.List list = null;
+		if (levels.length >= 1) {
+			if (current_level > levels[levels.length - 1]) {
+				list = _factory.create_list ();
+				list.bullet = bullet;
+
+				var current_item = peek () as ListItem;
+				current_item.sub_list = list;
+				push (list);
+
+				levels += current_level;
+			} else {
+				bool poped_some_lists = false;
+				while (current_level < levels[levels.length - 1]) {
+					// Pop current item and list
+					pop ();
+					pop ();
+					levels.resize (levels.length - 1);
+					poped_some_lists = true;
+				}
+				list = peek (-2) as Content.List;
+
+				if (!poped_some_lists && bullet == Content.List.Bullet.NONE) {
+					((InlineContent) peek ()).content.add (_factory.create_text (" "));
+					return;
+				} else if (list.bullet != bullet) {
+					_parser.error ("Invalid bullet type '%s': expected '%s'".printf (bullet_type_string (bullet), bullet_type_string (list.bullet)));
+					return;
+				}
+
+				pop ();
+			}
+		} else {
+			list = _factory.create_list ();
+			list.bullet = bullet;
+
+			((BlockContent) peek ()).content.add (list);
+			push (list);
+
+			levels = new int[0];
+			levels += current_level;
+		}
+
+		list.items.add (new_item);
+		push (new_item);
+	}
+
+	private string bullet_type_string (Content.List.Bullet bullet) {
+		switch (bullet) {
+		case Content.List.Bullet.NONE:
+			return ".";
+		case Content.List.Bullet.UNORDERED:
+			return "*";
+		case Content.List.Bullet.ORDERED_NUMBER:
+			return "1.";
+		case Content.List.Bullet.ORDERED_LOWER_CASE_ALPHA:
+			return "a.";
+		case Content.List.Bullet.ORDERED_UPPER_CASE_ALPHA:
+			return "A.";
+		case Content.List.Bullet.ORDERED_LOWER_CASE_ROMAN:
+			return "i.";
+		case Content.List.Bullet.ORDERED_UPPER_CASE_ROMAN:
+			return "I.";
+		}
+		return "";
+	}
+
+	private void finish_list () {
+		while (peek () is ListItem) {
+			pop ();
+			pop ();
+			levels.resize (levels.length - 1);
+		}
+	}
 
 	private void init_rules () {
 		// Inline rules
@@ -153,8 +233,6 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					Rule.many ({
 						Rule.one_of ({
 							word,
-							TokenType.STAR.action (add_text),
-							TokenType.SHARP.action (add_text),
 							TokenType.LESS_THAN.action (add_text),
 							TokenType.GREATER_THAN.action (add_text),
 							TokenType.ALIGN_RIGHT.action (add_text),
@@ -287,36 +365,37 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			.set_start (() => { push (_factory.create_source_code ()); })
 			.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
 
-		Rule list_item =
+		Rule indented_item =
 			Rule.seq ({
 				Rule.many ({
-					TokenType.SPACE.action ((token) => { ((ListItem) peek ()).level++; })
+					TokenType.SPACE.action ((token) => { current_level++; })
 				}),
-				Rule.one_of ({
-					TokenType.STAR.action ((token) => { ((ListItem) peek ()).bullet = ListItem.Bullet.UNORDERED; }),
-					TokenType.SHARP.action ((token) => { ((ListItem) peek ()).bullet = ListItem.Bullet.ORDERED; }),
-					TokenType.str (".").action ((token) => { ((ListItem) peek ()).bullet = ListItem.Bullet.NONE; }),
-					TokenType.str ("I.").action ((token) => { ((ListItem) peek ()).bullet = ListItem.Bullet.ORDERED_LATIN; }),
-					TokenType.str ("A.").action ((token) => { ((ListItem) peek ()).bullet = ListItem.Bullet.ORDERED_CAPITAL; }),
-					TokenType.str ("1.").action ((token) => { ((ListItem) peek ()).bullet = ListItem.Bullet.ORDERED_NUMBER; }),
-					TokenType.str ("a.").action ((token) => { ((ListItem) peek ()).bullet = ListItem.Bullet.ORDERED_LOWER_CASE; })
-				}),
+				Rule.option ({
+					Rule.one_of ({
+						TokenType.str (".").action ((token) => { new_list_item (Content.List.Bullet.NONE); }),
+						TokenType.str ("*").action ((token) => { new_list_item (Content.List.Bullet.UNORDERED); }),
+						TokenType.str ("#").action ((token) => { new_list_item (Content.List.Bullet.ORDERED); }),
+						TokenType.str ("1.").action ((token) => { new_list_item (Content.List.Bullet.ORDERED_NUMBER); }),
+						TokenType.str ("a.").action ((token) => { new_list_item (Content.List.Bullet.ORDERED_LOWER_CASE_ALPHA); }),
+						TokenType.str ("A.").action ((token) => { new_list_item (Content.List.Bullet.ORDERED_UPPER_CASE_ALPHA); }),
+						TokenType.str ("i.").action ((token) => { new_list_item (Content.List.Bullet.ORDERED_LOWER_CASE_ROMAN); }),
+						TokenType.str ("I.").action ((token) => { new_list_item (Content.List.Bullet.ORDERED_UPPER_CASE_ROMAN); })
+					}),
+					TokenType.SPACE
+				})
+				.set_skip (() => { new_list_item (Content.List.Bullet.NONE); }),
 				run,
 				TokenType.EOL
 			})
-			.set_name ("ListItem")
-			.set_start (() => { push (_factory.create_list_item ()); })
-			.set_reduce (() => { ((Content.List) peek ()).items.add ((ListItem) pop ()); });
-		Rule list =
-			Rule.seq ({
-				Rule.many ({
-					list_item
-				}),
-				TokenType.EOL
+			.set_name ("IndentedItem")
+			.set_start (() => { current_level = 0; });
+
+		Rule indented_blocks =
+			Rule.many ({
+				indented_item
 			})
-			.set_name ("List")
-			.set_start (() => { push (_factory.create_list ()); })
-			.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
+			.set_name ("IndentedBlocks")
+			.set_reduce (() => { finish_list (); });
 
 		Rule table_cell_attributes =
 			Rule.seq ({
@@ -432,7 +511,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		Rule blocks =
 			Rule.one_of ({
 				source_code,
-				list,
+				indented_blocks,
 				table,
 				headline,
 				paragraph

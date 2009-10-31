@@ -86,6 +86,7 @@ public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
 			|| name == "h3"
 			|| name == "h4"
 			|| name == "h5"
+			|| name == "li"
 			|| name == "span"
 			|| name == "code"
 			|| name == "b"

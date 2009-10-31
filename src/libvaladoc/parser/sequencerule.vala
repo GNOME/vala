@@ -91,6 +91,8 @@ internal class Valadoc.SequenceRule : Rule {
 			}
 			if (!is_optional_rule (scheme_element)) {
 				break;
+			} else {
+				((Rule) scheme_element).do_skip (parser);
 			}
 			state.index++;
 		} while (state.index < _scheme.length);

@@ -38,8 +38,6 @@ public class Valadoc.TokenType : Object {
 	public static TokenType EQUAL_4;
 	public static TokenType EQUAL_5;
 	public static TokenType MINUS;
-	public static TokenType STAR;
-	public static TokenType SHARP;
 	public static TokenType LESS_THAN;
 	public static TokenType GREATER_THAN;
 	public static TokenType ALIGN_TOP;
@@ -79,8 +77,6 @@ public class Valadoc.TokenType : Object {
 			EQUAL_4 = new TokenType.basic ("=====");
 			EQUAL_5 = new TokenType.basic ("======");
 			MINUS = new TokenType.basic ("-");
-			STAR = new TokenType.basic ("*");
-			SHARP = new TokenType.basic ("#");
 			LESS_THAN = new TokenType.basic ("<");
 			GREATER_THAN = new TokenType.basic (">");
 			ALIGN_TOP = new TokenType.basic ("^");

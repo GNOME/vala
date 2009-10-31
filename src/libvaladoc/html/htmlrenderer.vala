@@ -225,9 +225,50 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 	}
 
 	public override void visit_list (Content.List element) {
+		string list_type = null;
+		string bullet_type = null;
+		string css_class = null;
+		switch (element.bullet) {
+		case Content.List.Bullet.NONE:
+			list_type = "ul";
+			css_class = "no_bullet";
+			break;
+		case Content.List.Bullet.UNORDERED:
+			list_type = "ul";
+			break;
+		case Content.List.Bullet.ORDERED:
+			list_type = "ol";
+			break;
+		case Content.List.Bullet.ORDERED_NUMBER:
+			list_type = "ol";
+			bullet_type = "1";
+			break;
+		case Content.List.Bullet.ORDERED_LOWER_CASE_ALPHA:
+			list_type = "ol";
+			bullet_type = "a";
+			break;
+		case Content.List.Bullet.ORDERED_UPPER_CASE_ALPHA:
+			list_type = "ol";
+			bullet_type = "A";
+			break;
+		case Content.List.Bullet.ORDERED_LOWER_CASE_ROMAN:
+			list_type = "ol";
+			bullet_type = "i";
+			break;
+		case Content.List.Bullet.ORDERED_UPPER_CASE_ROMAN:
+			list_type = "ol";
+			bullet_type = "I";
+			break;
+		}
+		writer.start_tag (list_type, {"class", css_class, "type", bullet_type});
+		element.accept_children (this);
+		writer.end_tag (list_type);
 	}
 
 	public override void visit_list_item (ListItem element) {
+		writer.start_tag ("li");
+		element.accept_children (this);
+		writer.end_tag ("li");
 	}
 
 	public override void visit_page (Page element) {

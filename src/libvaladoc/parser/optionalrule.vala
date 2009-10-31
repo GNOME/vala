@@ -57,7 +57,7 @@ internal class Valadoc.OptionalRule : Rule {
 			if (try_to_apply (_scheme, token, parser, out handled)) {
 				return handled;
 			} else {
-				do_reduce (parser);
+				do_skip (parser);
 				return false;
 			}
 		} else {

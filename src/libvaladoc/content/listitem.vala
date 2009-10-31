@@ -24,34 +24,30 @@ using Gee;
 
 
 public class Valadoc.Content.ListItem : InlineContent {
-	public enum Bullet {
-		NONE,
-		UNORDERED,
-		ORDERED,
-		ORDERED_LATIN,
-		ORDERED_CAPITAL,
-		ORDERED_NUMBER,
-		ORDERED_LOWER_CASE
-	}
-
-	public Bullet bullet { get; set; }
-	public int level { get; set; }
+	public List? sub_list { get; set; }
 
 	internal ListItem () {
 		base ();
-		_bullet = Bullet.UNORDERED;
-		_level = 0;
 	}
 
 	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
-		// TODO report error if level == 0 ?
-
 		// Check inline content
 		base.check (api_root, container, reporter);
+
+		if (sub_list != null) {
+			sub_list.check (api_root, container, reporter);
+		}
 	}
 
 	public override void accept (ContentVisitor visitor) {
 		visitor.visit_list_item (this);
 	}
-}
 
+	public override void accept_children (ContentVisitor visitor) {
+		base.accept_children (visitor);
+
+		if (sub_list != null) {
+			sub_list.accept (visitor);
+		}
+	}
+}

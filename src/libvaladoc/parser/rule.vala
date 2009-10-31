@@ -54,6 +54,7 @@ public abstract class Valadoc.Rule : Object {
 	private string? _name = null;
 	private Action _start_action;
 	private Action _reduce_action;
+	private Action _skip_action;
 
 	public string name { get { return _name; } }
 
@@ -71,6 +72,11 @@ public abstract class Valadoc.Rule : Object {
 
 	public Rule set_reduce (Action action) {
 		_reduce_action = action;
+		return this;
+	}
+
+	public Rule set_skip (Action action) {
+		_skip_action = action;
 		return this;
 	}
 
@@ -146,5 +152,11 @@ public abstract class Valadoc.Rule : Object {
 			_reduce_action ();
 		}
 		parser.reduce ();
+	}
+
+	protected void do_skip (ParserCallback parser) throws ParserError {
+		if (_skip_action != null) {
+			_skip_action ();
+		}
 	}
 }
