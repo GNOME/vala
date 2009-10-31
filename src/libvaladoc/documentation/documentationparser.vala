@@ -306,11 +306,12 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		Rule embedded =
 			Rule.seq ({
 				TokenType.DOUBLE_OPEN_BRACE.action (() => { _scanner.set_url_escape_mode (true); }),
-				TokenType.any_word (),
+				TokenType.any_word ().action ((token) => { ((Embedded) peek ()).url = token.to_string (); }),
 				Rule.option ({
 					TokenType.PIPE.action (() => { _scanner.set_url_escape_mode (false); }),
-					run
-				}),
+					text
+				})
+				.set_reduce (() => { var caption = pop () as Text; ((Embedded) peek ()).caption = caption.content; }),
 				TokenType.DOUBLE_CLOSED_BRACE.action (() => { _scanner.set_url_escape_mode (false); })
 			})
 			.set_name ("Embedded")

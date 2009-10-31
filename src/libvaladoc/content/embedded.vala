@@ -25,7 +25,7 @@ using Gee;
 
 public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes {
 	public string url { get; set; }
-	public string caption { get; set; }
+	public string? caption { get; set; }
 
 	public HorizontalAlign? horizontal_align { get; set; }
 	public VerticalAlign? vertical_align { get; set; }
@@ -49,4 +49,3 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 		visitor.visit_embedded (this);
 	}
 }
-
