@@ -213,7 +213,7 @@ public abstract class Vala.TypeSymbol : Symbol {
 	 * Returns the default value for the given type. Returning null means
 	 * there is no default value (i.e. not that the default name is NULL).
 	 *
-	 * @return	the name of the default value
+	 * @return the name of the default value
 	 */
 	public virtual string? get_default_value () {
 		return null;

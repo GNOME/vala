@@ -23,7 +23,7 @@
 using GLib;
 
 /**
- * Represents a lock statement e.g. "lock (a) { f(a) }".
+ * Represents a lock statement e.g. {{{ lock (a) { f(a) } }}}.
  */
 public class Vala.LockStatement : CodeNode, Statement {
 	/**

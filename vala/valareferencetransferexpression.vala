@@ -22,7 +22,7 @@
 
 
 /**
- * Represents a reference transfer expression in the source code, e.g. `#foo'.
+ * Represents a reference transfer expression in the source code, e.g. `#foo`.
  */
 public class Vala.ReferenceTransferExpression : Expression {
 	/**

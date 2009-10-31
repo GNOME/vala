@@ -23,7 +23,7 @@
 using GLib;
 
 /**
- * Represents an address-of expression in the source code, e.g. `&foo'.
+ * Represents an address-of expression in the source code, e.g. `&foo`.
  */
 public class Vala.AddressofExpression : Expression {
 	/**

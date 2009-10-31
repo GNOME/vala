@@ -32,7 +32,7 @@ public class Vala.Constructor : Symbol {
 	public Block body { get; set; }
 	
 	/**
-	 * Specifies the generated `this' parameter for instance methods.
+	 * Specifies the generated `this` parameter for instance methods.
 	 */
 	public FormalParameter this_parameter { get; set; }
 

@@ -23,7 +23,7 @@
 using GLib;
 
 /**
- * Represents a type check (`is') expression in the source code.
+ * Represents a type check (`is`) expression in the source code.
  */
 public class Vala.TypeCheck : Expression {
 	/**

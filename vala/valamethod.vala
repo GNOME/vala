@@ -151,12 +151,12 @@ public class Vala.Method : Member {
 	public bool entry_point { get; private set; }
 
 	/**
-	 * Specifies the generated `this' parameter for instance methods.
+	 * Specifies the generated `this` parameter for instance methods.
 	 */
 	public FormalParameter this_parameter { get; set; }
 
 	/**
-	 * Specifies the generated `result' variable for postconditions.
+	 * Specifies the generated `result` variable for postconditions.
 	 */
 	public LocalVariable result_var { get; set; }
 

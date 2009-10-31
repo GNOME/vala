@@ -22,7 +22,7 @@
 
 
 /**
- * Represents a pointer indirection in the source code, e.g. `*pointer'.
+ * Represents a pointer indirection in the source code, e.g. `*pointer`.
  */
 public class Vala.PointerIndirection : Expression {
 	/**

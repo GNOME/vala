@@ -67,12 +67,12 @@ public class Vala.Property : Member, Lockable {
 	}
 	
 	/**
-	 * Represents the generated ´this' parameter in this property.
+	 * Represents the generated `this` parameter in this property.
 	 */
 	public FormalParameter this_parameter { get; set; }
 
 	/**
-	 * Specifies whether a `notify' signal should be emitted on property
+	 * Specifies whether a `notify` signal should be emitted on property
 	 * changes.
 	 */
 	public bool notify { get; set; default = true; }

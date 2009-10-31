@@ -23,7 +23,7 @@
 using GLib;
 
 /**
- * Represents a literal `null' in the source code.
+ * Represents a literal `null` in the source code.
  */
 public class Vala.NullLiteral : Literal {
 	/**
