@@ -22,8 +22,7 @@
 
 using Gee;
 
-
-public class Valadoc.Content.SourceCode : ContentElement, Block {
+public class Valadoc.Content.SourceCode : ContentElement, Inline {
 	public enum Language {
 		GENIE,
 		VALA,

@@ -329,10 +329,19 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			.set_name ("Link")
 			.set_start (() => { push (_factory.create_link ()); });
 
+		Rule source_code =
+			Rule.seq ({
+				TokenType.TRIPLE_OPEN_BRACE.action ((token) => { _scanner.set_code_escape_mode (true); }),
+				TokenType.any_word ().action ((token) => { ((SourceCode) peek ()).code = token.to_string (); }),
+				TokenType.TRIPLE_CLOSED_BRACE.action ((token) => { _scanner.set_code_escape_mode (false); })
+			})
+			.set_name ("SourceCode")
+			.set_start (() => { push (_factory.create_source_code ()); });
+
 		run.set_rule (
 			Rule.many ({
 				Rule.one_of ({
-					text, inline_taglet, bold, italic, underlined, monospace, embedded, link
+					text, inline_taglet, bold, italic, underlined, monospace, embedded, link, source_code
 				})
 				.set_reduce (() => { ((InlineContent) peek ()).content.add ((Inline) pop ()); }),
 				Rule.option ({ space })
@@ -358,17 +367,6 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 			})
 			.set_name ("Paragraph")
 			.set_start (() => { push (_factory.create_paragraph ()); })
-			.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
-
-		Rule source_code =
-			Rule.seq ({
-				TokenType.TRIPLE_OPEN_BRACE.action ((token) => { _scanner.set_code_escape_mode (true); }),
-				TokenType.any_word ().action ((token) => { ((SourceCode) peek ()).code = token.to_string (); }),
-				TokenType.TRIPLE_CLOSED_BRACE.action ((token) => { _scanner.set_code_escape_mode (false); }),
-				TokenType.EOL
-			})
-			.set_name ("SourceCode")
-			.set_start (() => { push (_factory.create_source_code ()); })
 			.set_reduce (() => { ((BlockContent) peek ()).content.add ((Block) pop ()); });
 
 		Rule indented_item =
@@ -516,7 +514,6 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 		Rule blocks =
 			Rule.one_of ({
-				source_code,
 				indented_blocks,
 				table,
 				headline,
