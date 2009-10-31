@@ -946,7 +946,7 @@ namespace Posix {
 	[CCode (cheader_filename = "stdlib.h")]
 	public int system (string command);
 
-	public delegate int compar_fn_t (void* key1, void* key2);
+	public static delegate int compar_fn_t (void* key1, void* key2);
 
 	[CCode (cheader_filename = "stdlib.h")]
 	public void* bsearch (void* key, void* base, size_t nmemb, size_t size, compar_fn_t func);
