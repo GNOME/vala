@@ -931,6 +931,15 @@ namespace Posix {
 	public static delegate void sighandler_t (int signal);
 
 	[CCode (cheader_filename = "signal.h")]
+	public sighandler_t SIG_DFL;
+
+	[CCode (cheader_filename = "signal.h")]
+	public sighandler_t SIG_ERR;
+
+	[CCode (cheader_filename = "signal.h")]
+	public sighandler_t SIG_IGN;
+
+	[CCode (cheader_filename = "signal.h")]
 	public sighandler_t signal (int signum, sighandler_t? handler);
 
 	[CCode (cheader_filename = "stdio.h")]
