@@ -238,6 +238,12 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 						Rule.one_of ({
 							word,
 							TokenType.BREAK.action ((token) => { add_content_string ("\n"); }),
+							TokenType.MINUS.action (add_text),
+							TokenType.EQUAL_1.action (add_text),
+							TokenType.EQUAL_2.action (add_text),
+							TokenType.PIPE.action (add_text),
+							TokenType.DOUBLE_PIPE.action (add_text),
+							TokenType.ALIGN_TOP.action (add_text),
 							TokenType.LESS_THAN.action (add_text),
 							TokenType.GREATER_THAN.action (add_text),
 							TokenType.ALIGN_RIGHT.action (add_text),
