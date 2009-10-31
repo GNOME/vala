@@ -18,7 +18,7 @@ valadoc_LTLIBRARIES = \
 	libvaladoc.la     \
 	$(NULL)
 
-valadocdir = $(libdir)/valadoc/
+valadocdir = $(libdir)/valadoc
 
 
 libvaladoc_la_VALASOURCES = \

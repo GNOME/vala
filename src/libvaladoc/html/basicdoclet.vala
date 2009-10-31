@@ -319,7 +319,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 				writer.end_tag ("li");
 			}
 		}
-		writer.end_tag ("li");
+		writer.end_tag ("ul");
 	}
 
 	public void write_navi_packages (Api.Tree tree) {

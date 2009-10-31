@@ -15,7 +15,7 @@ libdoclet.vala.stamp: $(libdoclet_VALASOURCES)
 	touch $@
 
 
-docletdir = $(libdir)/valadoc/plugins/valadoc.org/
+docletdir = $(libdir)/valadoc/plugins/valadoc.org
 
 
 doclet_LTLIBRARIES = libdoclet.la
