@@ -226,7 +226,9 @@ public class Valadoc.WikiScanner : Object, Scanner {
 				break;
 
 			case '<':
-				emit_token (TokenType.LESS_THAN);
+				if (!look_for ("<<BR>>", TokenType.BREAK)) {
+					emit_token (TokenType.LESS_THAN);
+				}
 				break;
 
 			case '>':
@@ -382,5 +384,17 @@ public class Valadoc.WikiScanner : Object, Scanner {
 		} else {
 			emit_token (one);
 		}
+	}
+
+	private bool look_for (string str, TokenType type) throws ParserError {
+		for (int i = 1; i < str.length; i++) {
+			if (get_next_char (i) != str[i]) {
+				return false;
+			}
+		}
+
+		emit_token (type);
+		_skip = (int) (str.length - 1);
+		return true;
 	}
 }

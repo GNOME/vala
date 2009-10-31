@@ -29,6 +29,7 @@ public class Valadoc.TokenType : Object {
 	public static TokenType ANY_NUMBER;
 	public static TokenType EOF;
 	public static TokenType EOL;
+	public static TokenType BREAK;
  	public static TokenType AROBASE;
 	public static TokenType SPACE;
 	public static TokenType TAB;
@@ -68,6 +69,7 @@ public class Valadoc.TokenType : Object {
 			ANY_NUMBER = new TokenType.basic ("<any-number>");
 			EOF = new TokenType.basic ("\0", "<end-of-file>");
 			EOL = new TokenType.basic ("\n", "<end-of-line>");
+			BREAK = new TokenType.basic ("<<BR>>");
 			AROBASE = new TokenType.basic ("@");
 			SPACE = new TokenType.basic (" ", "<space>");
 			TAB = new TokenType.basic ("\t", "<tab>");

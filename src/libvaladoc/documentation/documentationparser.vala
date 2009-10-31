@@ -208,6 +208,14 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		}
 	}
 
+	private void add_content_string (string str) {
+		var text = peek () as Text;
+		if (text == null) {
+			push (text = _factory.create_text ());
+		}
+		text.content += str;
+	}
+
 	private void init_rules () {
 		// Inline rules
 
@@ -215,11 +223,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		run.set_name ("Run");
 
 		TokenType.Action add_text = (token) => {
-			var text = peek () as Text;
-			if (text == null) {
-				push (text = _factory.create_text ());
-			}
-			text.content += token.to_string ();
+			add_content_string (token.to_string ());
 		};
 
 		TokenType word = TokenType.any_word ().action (add_text);
@@ -233,6 +237,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 					Rule.many ({
 						Rule.one_of ({
 							word,
+							TokenType.BREAK.action ((token) => { add_content_string ("\n"); }),
 							TokenType.LESS_THAN.action (add_text),
 							TokenType.GREATER_THAN.action (add_text),
 							TokenType.ALIGN_RIGHT.action (add_text),
