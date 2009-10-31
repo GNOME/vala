@@ -68,4 +68,44 @@ public abstract class Vala.ObjectTypeSymbol : TypeSymbol {
 		}
 		return -1;
 	}
+
+	public ObjectType get_this_type () {
+		var result = new ObjectType (this);
+		foreach (var type_parameter in get_type_parameters ()) {
+			var type_arg = new GenericType (type_parameter);
+			type_arg.value_owned = true;
+			result.add_type_argument (type_arg);
+		}
+		return result;
+	}
+
+	/**
+	 * Adds the specified method as a hidden member to this class,
+	 * primarily used for default signal handlers.
+	 *
+	 * The hidden methods are not part of the `methods` collection.
+	 *
+	 * There may also be other use cases, eg, convert array.resize() to
+	 * this type of method?
+	 *
+	 * @param m a method
+	 */
+	public void add_hidden_method (Method m) {
+		if (m.binding == MemberBinding.INSTANCE) {
+			if (m.this_parameter != null) {
+				m.scope.remove (m.this_parameter.name);
+			}
+			m.this_parameter = new FormalParameter ("this", get_this_type ());
+			m.scope.add (m.this_parameter.name, m.this_parameter);
+		}
+		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
+			if (m.result_var != null) {
+				m.scope.remove (m.result_var.name);
+			}
+			m.result_var = new LocalVariable (m.return_type.copy (), "result");
+			m.result_var.is_result = true;
+		}
+
+		scope.add (null, m);
+	}
 }

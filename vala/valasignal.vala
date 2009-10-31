@@ -260,7 +260,7 @@ public class Vala.Signal : Member, Lockable {
 				default_handler.add_parameter (param);
 			}
 
-			var cl = parent_symbol as Class;
+			var cl = parent_symbol as ObjectTypeSymbol;
 
 			cl.add_hidden_method (default_handler);
 			default_handler.check (analyzer);

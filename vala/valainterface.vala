@@ -135,7 +135,7 @@ public class Vala.Interface : ObjectTypeSymbol {
 			return;
 		}
 		if (m.binding == MemberBinding.INSTANCE) {
-			m.this_parameter = new FormalParameter ("this", new ObjectType (this));
+			m.this_parameter = new FormalParameter ("this", get_this_type ());
 			m.scope.add (m.this_parameter.name, m.this_parameter);
 		}
 		if (!(m.return_type is VoidType) && m.get_postconditions ().size > 0) {
