@@ -23,9 +23,8 @@
 using Gee;
 
 
-public class Valadoc.Content.Link : ContentElement, Inline {
+public class Valadoc.Content.Link : InlineContent, Inline {
 	public string url { get; set; }
-	public string label { get; set; }
 
 	internal Link () {
 		base ();
@@ -41,4 +40,3 @@ public class Valadoc.Content.Link : ContentElement, Inline {
 		visitor.visit_link (this);
 	}
 }
-

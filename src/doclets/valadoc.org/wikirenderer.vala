@@ -126,10 +126,12 @@ public class Valadoc.ValadocOrg.WikiRenderer : ContentRenderer {
 	}
 
 	public override void visit_link (Link element) {
-		var label = element.label;
-		_stream.printf ("[[%s|%s]]",
-		                element.url,
-		                (label == null || label == "") ? element.url : label);
+		_stream.printf ("[[%s", element.url);
+		if (element.content.size > 0) {
+			_stream.printf ("|");
+			element.accept_children (this);
+		}
+		_stream.printf ("]]");
 	}
 
 	public override void visit_symbol_link (SymbolLink element) {

@@ -318,7 +318,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		Rule link =
 			Rule.seq ({
 				TokenType.DOUBLE_OPEN_BRACKET.action (() => { _scanner.set_url_escape_mode (true); }),
-				TokenType.any_word (),
+				TokenType.any_word ().action ((token) => { ((Link) peek ()).url = token.to_string (); }),
 				Rule.option ({
 					TokenType.PIPE.action (() => { _scanner.set_url_escape_mode (false); }),
 					run
