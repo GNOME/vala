@@ -549,7 +549,7 @@ namespace Gdk {
 		public void resize (int width, int height);
 		public void scroll (int dx, int dy);
 		public void set_accept_focus (bool accept_focus);
-		public void set_back_pixmap (Gdk.Pixmap pixmap, bool parent_relative);
+		public void set_back_pixmap (Gdk.Pixmap? pixmap, bool parent_relative);
 		public void set_background (Gdk.Color color);
 		public void set_child_input_shapes ();
 		public void set_child_shapes ();
