@@ -173,13 +173,13 @@ namespace Gnome {
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static void clearenv ();
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public static int execute_async (string dir, int argc, string[] argv);
+	public static int execute_async (string dir, [CCode (array_length_pos = 1.9)] string[] argv);
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public static int execute_async_fds (string dir, int argc, string[] argv, bool close_fds);
+	public static int execute_async_fds (string dir, [CCode (array_length_pos = 1.9)] string[] argv, bool close_fds);
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public static int execute_async_with_env (string dir, int argc, string[] argv, int envc, string[] envv);
+	public static int execute_async_with_env (string dir, [CCode (array_length_pos = 1.9)] string[] argv, string[] envv);
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
-	public static int execute_async_with_env_fds (string dir, int argc, string[] argv, int envc, string[] envv, bool close_fds);
+	public static int execute_async_with_env_fds (string dir, [CCode (array_length_pos = 1.9)] string[] argv, [CCode (array_length_pos = 2.9)] string[] envv, bool close_fds);
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
 	public static int execute_shell (string dir, string commandline);
 	[CCode (cheader_filename = "libgnome/libgnome.h")]
