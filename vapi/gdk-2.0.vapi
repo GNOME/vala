@@ -66,7 +66,7 @@ namespace Gdk {
 		public int num_keys;
 		public Gdk.InputSource source;
 		public static void free_history (Gdk.TimeCoord[] events);
-		public bool get_axis (double axes, Gdk.AxisUse use, double value);
+		public bool get_axis ([CCode (array_length = false)] double[] axes, Gdk.AxisUse use, out double value);
 		public static unowned Gdk.Device get_core_pointer ();
 		public bool get_history (Gdk.Window window, uint32 start, uint32 stop, Gdk.TimeCoord[] events);
 		public void get_state (Gdk.Window window, double axes, Gdk.ModifierType mask);
