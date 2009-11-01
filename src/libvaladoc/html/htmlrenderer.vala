@@ -145,7 +145,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		taglets = element.find_taglets ((Api.Node) _container, typeof (Taglets.Throws));
 		write_taglets (
 			() => {
-				writer.start_tag ("h2", {"class", "main_title"}).text ("Returns:").end_tag ("h2");
+				writer.start_tag ("h2", {"class", "main_title"}).text ("Exceptions:").end_tag ("h2");
 				writer.start_tag ("table", {"class", "main_parameter_table"});
 			},
 			() => {
