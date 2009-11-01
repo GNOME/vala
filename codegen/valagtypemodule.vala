@@ -631,11 +631,11 @@ internal class Vala.GTypeModule : GErrorModule {
 
 				var cblock = new CCodeBlock ();
 
-				cblock.add_statement (instance_finalize_fragment);
-
 				if (cl.destructor != null) {
 					cblock.add_statement (cl.destructor.ccodenode);
 				}
+
+				cblock.add_statement (instance_finalize_fragment);
 
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
 				ccall.add_argument (new CCodeIdentifier (cl.get_cname ()));
