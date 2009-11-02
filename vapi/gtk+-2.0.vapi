@@ -1785,7 +1785,7 @@ namespace Gtk {
 		public unowned string get_display_name ();
 		public bool get_embedded_rect (out Gdk.Rectangle rectangle);
 		public unowned string get_filename ();
-		public unowned Gdk.Pixbuf load_icon () throws GLib.Error;
+		public Gdk.Pixbuf load_icon () throws GLib.Error;
 		public void set_raw_coordinates (bool raw_coordinates);
 	}
 	[Compact]
