@@ -3544,6 +3544,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return true;
 		} else if (st == gtype_type) {
 			return true;
+		} else if (type_arg is EnumValueType) {
+			return true;
 		} else {
 			return false;
 		}
