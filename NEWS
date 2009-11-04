@@ -1,3 +1,11 @@
+Vala 0.7.8
+==========
+
+ * Support constructor chain up to GObject using Object (...).
+ * Add syntax for string templates.
+ * Support (!) non-null casts.
+ * Many bug fixes and binding updates.
+
 Vala 0.7.7
 ==========
 
