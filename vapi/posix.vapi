@@ -1267,6 +1267,7 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/socket.h")]
 	public int socketpair (int domain, int type, int protocol, int[] sv);
 
+	[SimpleType]
 	[CCode (cname = "struct in_addr", cheader_filename = "sys/socket.h", destroy_function = "")]
 	public struct InAddr {
 		public uint32 s_addr;
