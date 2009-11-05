@@ -1147,7 +1147,7 @@ internal class Vala.GTypeModule : GErrorModule {
 			var base_type = m.base_method.parent_symbol;
 
 			// there is currently no default handler for abstract async methods
-			if (m.overrides || !m.coroutine) {
+			if (!m.is_abstract || !m.coroutine) {
 				var ccast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (((Class) base_type).get_upper_case_cname (null))));
 				ccast.add_argument (new CCodeIdentifier ("klass"));
 
