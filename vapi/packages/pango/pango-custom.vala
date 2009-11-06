@@ -21,14 +21,21 @@
  */
 
 namespace Pango {
-	[CCode (cprefix = "PANGO_SCALE_", cheader_filename = "pango/pango.h")]
-	public enum Scale {
-		XX_SMALL,
-		X_SMALL,
-		SMALL,
-		MEDIUM,
-		LARGE,
-		X_LARGE,
-		XX_LARGE
+	[CCode (cheader_filename = "pango/pango.h")]
+	namespace Scale {
+		[CCode (cname = "PANGO_SCALE_XX_SMALL")]
+		public const double XX_SMALL;
+		[CCode (cname = "PANGO_SCALE_X_SMALL")]
+		public const double X_SMALL;
+		[CCode (cname = "PANGO_SCALE_SMALL")]
+		public const double SMALL;
+		[CCode (cname = "PANGO_SCALE_MEDIUM")]
+		public const double MEDIUM;
+		[CCode (cname = "PANGO_SCALE_LARGE")]
+		public const double LARGE;
+		[CCode (cname = "PANGO_SCALE_X_LARGE")]
+		public const double X_LARGE;
+		[CCode (cname = "PANGO_SCALE_XX_LARGE")]
+		public const double XX_LARGE;
 	}
 }

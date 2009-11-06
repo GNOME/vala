@@ -2,6 +2,23 @@
 
 [CCode (cprefix = "Pango", lower_case_cprefix = "pango_")]
 namespace Pango {
+	[CCode (cprefix = "PangoScale", lower_case_cprefix = "pango_scale_")]
+	namespace Scale {
+		[CCode (cheader_filename = "pango/pango.h")]
+		public const double LARGE;
+		[CCode (cheader_filename = "pango/pango.h")]
+		public const double MEDIUM;
+		[CCode (cheader_filename = "pango/pango.h")]
+		public const double SMALL;
+		[CCode (cheader_filename = "pango/pango.h")]
+		public const double XX_LARGE;
+		[CCode (cheader_filename = "pango/pango.h")]
+		public const double XX_SMALL;
+		[CCode (cheader_filename = "pango/pango.h")]
+		public const double X_LARGE;
+		[CCode (cheader_filename = "pango/pango.h")]
+		public const double X_SMALL;
+	}
 	[Compact]
 	[CCode (cheader_filename = "pango/pango.h")]
 	public class Analysis {
@@ -658,16 +675,6 @@ namespace Pango {
 		UNDERLINE,
 		STRIKETHROUGH
 	}
-	[CCode (cprefix = "PANGO_SCALE_", cheader_filename = "pango/pango.h")]
-	public enum Scale {
-		XX_SMALL,
-		X_SMALL,
-		SMALL,
-		MEDIUM,
-		LARGE,
-		X_LARGE,
-		XX_LARGE
-	}
 	[CCode (cprefix = "PANGO_SCRIPT_", cheader_filename = "pango/pango.h")]
 	public enum Script {
 		INVALID_CODE,
@@ -836,43 +843,43 @@ namespace Pango {
 	[CCode (cheader_filename = "pango/pango.h")]
 	public const string VERSION_STRING;
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_background_new (uint16 red, uint16 green, uint16 blue);
+	public static Pango.Attribute attr_background_new (uint16 red, uint16 green, uint16 blue);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_fallback_new (bool enable_fallback);
+	public static Pango.Attribute attr_fallback_new (bool enable_fallback);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_family_new (string family);
+	public static Pango.Attribute attr_family_new (string family);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_foreground_new (uint16 red, uint16 green, uint16 blue);
+	public static Pango.Attribute attr_foreground_new (uint16 red, uint16 green, uint16 blue);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_gravity_hint_new (Pango.GravityHint hint);
+	public static Pango.Attribute attr_gravity_hint_new (Pango.GravityHint hint);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_gravity_new (Pango.Gravity gravity);
+	public static Pango.Attribute attr_gravity_new (Pango.Gravity gravity);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_letter_spacing_new (int letter_spacing);
+	public static Pango.Attribute attr_letter_spacing_new (int letter_spacing);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_rise_new (int rise);
+	public static Pango.Attribute attr_rise_new (int rise);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_scale_new (double scale_factor);
+	public static Pango.Attribute attr_scale_new (double scale_factor);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_stretch_new (Pango.Stretch stretch);
+	public static Pango.Attribute attr_stretch_new (Pango.Stretch stretch);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_strikethrough_color_new (uint16 red, uint16 green, uint16 blue);
+	public static Pango.Attribute attr_strikethrough_color_new (uint16 red, uint16 green, uint16 blue);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_strikethrough_new (bool strikethrough);
+	public static Pango.Attribute attr_strikethrough_new (bool strikethrough);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_style_new (Pango.Style style);
+	public static Pango.Attribute attr_style_new (Pango.Style style);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static unowned string attr_type_get_name (Pango.AttrType type);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.AttrType attr_type_register (string name);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_underline_color_new (uint16 red, uint16 green, uint16 blue);
+	public static Pango.Attribute attr_underline_color_new (uint16 red, uint16 green, uint16 blue);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_underline_new (Pango.Underline underline);
+	public static Pango.Attribute attr_underline_new (Pango.Underline underline);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_variant_new (Pango.Variant variant);
+	public static Pango.Attribute attr_variant_new (Pango.Variant variant);
 	[CCode (cheader_filename = "pango/pango.h")]
-	public static unowned Pango.Attribute attr_weight_new (Pango.Weight weight);
+	public static Pango.Attribute attr_weight_new (Pango.Weight weight);
 	[CCode (cheader_filename = "pango/pango.h")]
 	public static Pango.BidiType bidi_type_for_unichar (unichar ch);
 	[CCode (cheader_filename = "pango/pango.h")]
