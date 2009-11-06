@@ -209,7 +209,7 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Caps.simple (string media_type, string fieldname, ...);
 		public unowned Gst.Caps subtract (Gst.Caps subtrahend);
-		public unowned string to_string ();
+		public string to_string ();
 		public void truncate ();
 		public Gst.Caps union (Gst.Caps caps2);
 		public void unref ();
