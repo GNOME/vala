@@ -96,6 +96,19 @@ namespace Linux {
     /*
      * Misc non-posix additions
      */
+    [CCode (cheader_filename = "dirent.h")]
+    public enum DirEntType {
+        DT_UNKNOWN,
+        DT_FIFO,
+        DT_CHR,
+        DT_DIR,
+        DT_BLK,
+        DT_REG,
+        DT_LNK,
+        DT_SOCK,
+        DT_WHT
+    }
+
     [CCode (cheader_filename = "arpa/inet.h")]
     public int inet_aton(string cp, out Posix.InAddr addr);
 
