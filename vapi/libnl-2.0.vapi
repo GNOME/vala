@@ -1,4 +1,4 @@
-/* libnl-1.vapi
+/* libnl-2.0.vapi
  *
  * Copyright (C) 2009 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
  *
@@ -21,7 +21,7 @@
 [CCode (lower_case_cprefix = "nl_", cheader_filename = "netlink/netlink.h")]
 namespace Netlink {
 
-    [CCode (cname = "callback_func_t", instance_pos = 1)]
+    [CCode (instance_pos = -1)]
     public delegate void Callback (Object obj);
 
     [Compact]
@@ -40,11 +40,10 @@ namespace Netlink {
         public void     set_family (int family);
         public int      get_family ();
 
+        public int      get_len ();
+
         public void     set_prefixlen (int len);
         public int      get_prefixlen ();
-
-        public void     set_scope (int scope);
-        public int      get_scope ();
 
         public void     set_flags (uint flags);
         public void     unset_flags (uint flags);
@@ -53,8 +52,12 @@ namespace Netlink {
         public void*    get_binary_addr();
 
         [CCode (cname = "nl_addr2str")]
-        public string   to_string (char[] buf);
+        public weak string to_stringbuf(char[] buf);
 
+        public string to_string() {
+            char[] buf = new char[256];
+            return to_stringbuf( buf );
+        }
     }
 
     [Compact]
@@ -66,7 +69,10 @@ namespace Netlink {
         public void     set_ifindex (int index );
         public int      get_ifindex ();
 
-        public weak RouteAddress get_local();
+        public void     set_scope (int scope);
+        public int      get_scope ();
+
+        public weak Address get_local();
     }
 
     [Compact]
@@ -96,15 +102,15 @@ namespace Netlink {
     }
 
     [Compact]
-    [CCode (cname = "struct nl_handle", free_function = "nl_handle_destroy")]
+    [CCode (cprefix = "nl_socket_", cname = "struct nl_sock", free_function = "nl_socket_free")]
     public class Socket {
-        [CCode (cname = "nl_handle_alloc")]
+        [CCode (cname = "nl_socket_alloc")]
         public Socket();
 
         [CCode (cname = "rtnl_link_alloc_cache")]
-        public LinkCache link_alloc_cache ();
+        public int link_alloc_cache (out LinkCache c);
         [CCode (cname = "rtnl_addr_alloc_cache")]
-        public AddrCache addr_alloc_cache ();
+        public int addr_alloc_cache (out AddrCache c);
 
         [CCode (cname = "nl_connect")]
         public int connect (int family);

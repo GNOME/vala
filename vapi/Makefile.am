@@ -113,6 +113,7 @@ dist_vapi_DATA = \
 	libgsf-1.vapi \
 	libmagic.vapi \
 	libnl-1.vapi \
+	libnl-2.0.vapi \
 	libnotify.deps \
 	libnotify.vapi \
 	liboobs-1.vapi \
