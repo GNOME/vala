@@ -109,6 +109,16 @@ namespace Linux {
         DT_WHT
     }
 
+    [CCode (cheader_filename = "execinfo.h")]
+    public int backtrace (void* buffer, int size);
+
+    [CCode (cheader_filename = "execinfo.h")]
+    [CCode (array_length = false)]
+    public string[] backtrace_symbols (void* buffer, int size);
+
+    [CCode (cheader_filename = "execinfo.h")]
+    public void backtrace_symbols_fd (void* buffer, int size, int fd);
+
     [CCode (cheader_filename = "arpa/inet.h")]
     public int inet_aton(string cp, out Posix.InAddr addr);
 
