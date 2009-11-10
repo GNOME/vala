@@ -1,0 +1,2 @@
+include/clutter-1.0/cogl/
+lib/libclutter-glx-1.0.so

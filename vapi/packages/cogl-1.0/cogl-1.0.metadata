@@ -1,0 +1,63 @@
+Cogl cheader_filename="cogl/cogl.h"
+
+COGLint name="long"
+GLint name="long"
+COGLenum name="long"
+GLenum name="long"
+GLfloat name="float"
+GLuint name="ulong"
+GLvoid name="void"
+GLsizei name="size_t"
+
+CoglAngle is_value_type="1"
+
+CoglBlendStringError errordomain="1"
+cogl_blend_string_error_quark hidden="1"
+
+cogl_bitmap_get_size_from_file hidden="1"
+cogl_bitmap_new_from_file hidden="1"
+
+CoglColor is_value_type="1" free_function="cogl_color_free"
+cogl_color_free hidden="1"
+
+cogl_create_program hidden="1"
+cogl_create_shader hidden="1"
+
+CoglFixed is_value_type="1"
+
+cogl_is_material hidden="1"
+cogl_is_offscreen hidden="1"
+cogl_is_program hidden="1"
+cogl_is_shader hidden="1"
+cogl_is_texture hidden="1"
+cogl_is_vertex_buffer hidden="1"
+
+CoglMatrix is_value_type="1"
+cogl_matrix_get_array is_array="1"
+cogl_matrix_multiply hidden="1"
+cogl_matrix_init_from_array hidden="1"
+cogl_matrix_init_identity hidden="1"
+
+cogl_pop_draw_buffer hidden="1"
+cogl_push_draw_buffer hidden="1"
+
+cogl_program_* hidden="1"
+
+cogl_rectangles.verts is_array="1" no_array_length="1"
+cogl_rectangles_with_texture_coords.verts is_array="1" no_array_length="1"
+
+cogl_set_draw_buffer hidden="1"
+cogl_set_source.material type_name="Material"
+cogl_set_source_texture.texture_handle type_name="Texture"
+
+cogl_shader_* hidden="1"
+
+cogl_texture_* hidden="1"
+
+CoglTextureVertex is_value_type="1"
+
+cogl_material_* hidden="1"
+
+cogl_offscreen_* hidden="1"
+
+cogl_vertex_buffer_* hidden="1"
