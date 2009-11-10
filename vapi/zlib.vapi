@@ -154,7 +154,7 @@ namespace ZLib {
 		public ulong time;
 		public int xflags;
 		public int os;
-		[CCode (array_length_name = "extra_len", array_length_type = "guint")]
+		[CCode (array_length_cname = "extra_len", array_length_type = "guint")]
 		public uchar[] extra;
 		public uint extra_max;
 		public string? name;

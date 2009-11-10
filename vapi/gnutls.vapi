@@ -901,9 +901,9 @@ namespace GnuTLS
 		[CCode (cname = "gnutls_x509_ava_st")]
 		public struct Ava
 		{
-			[CCode (cname = "oid.data", array_length_name = "oid.size")]
+			[CCode (cname = "oid.data", array_length_cname = "oid.size")]
 			uint8[] oid;
-			[CCode (cname = "value.data", array_length_name = "value.size")]
+			[CCode (cname = "value.data", array_length_cname = "value.size")]
 			uint8[] value;
 			ulong value_tag;
 		}
@@ -1723,7 +1723,7 @@ namespace GnuTLS
 	public struct RetrStruct
 	{
 		public CertificateType type;
-		[CCode (cname = "cert.x509", array_length_name = "ncerts", array_length_type = "unsigned int")]
+		[CCode (cname = "cert.x509", array_length_cname = "ncerts", array_length_type = "unsigned int")]
 		public X509.Certificate[] cert_x509;
 		[CCode (cname = "cert.pgp")]
 		public OpenPGP.Certificate cert_pgp;
