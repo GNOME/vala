@@ -1,0 +1,6 @@
+clutter-keysyms.h
+clutter-deprecated.h
+x11/clutter-x11.h
+x11/clutter-x11-texture-pixmap.h
+glx/clutter-glx.h
+glx/clutter-glx-texture-pixmap.h
