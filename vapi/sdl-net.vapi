@@ -56,7 +56,7 @@ namespace SDLNet {
 		 * If 'host' is NULL, the resolved host will be set to INADDR_ANY.
 		 */
 		[CCode (cname="SDLNet_ResolveHost")]
-		public static int from_host(IPAddress address, string host, uint16 port);
+		public static int from_host(out IPAddress address, string? host, uint16 port);
 
 		/**
 		 * Resolve an ip address to a host name in canonical form. 
