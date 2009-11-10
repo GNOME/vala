@@ -1,10 +1,7 @@
-using GLib;
-using SDL;
-
 [CCode (cheader_filename="SDL_ttf.h")]
 namespace SDLTTF {
 	[CCode (cname="TTF_Linked_Version")]
-	public static weak Version linked();
+	public static weak SDL.Version linked();
 
 	[CCode (cname="TTF_ByteSwappedUNICODE")]
 	public static void byteswap_unicode(int swapped);
@@ -82,30 +79,30 @@ namespace SDLTTF {
 		public int size_unicode([CCode (array_length = false)] uint16[] text, ref int w, ref int h);
 
 		[CCode (cname="TTF_RenderText_Solid")]
-		public Surface? render(string text, Color fg);
+		public SDL.Surface? render(string text, SDL.Color fg);
 
 		[CCode (cname="TTF_RenderUTF8_Solid")]
-		public Surface? render_utf8(string text, Color fg);
+		public SDL.Surface? render_utf8(string text, SDL.Color fg);
 
 		[CCode (cname="TTF_RenderUNICODE_Solid")]
-		public Surface? render_unicode([CCode (array_length = false)] uint16[] text, Color fg);
+		public SDL.Surface? render_unicode([CCode (array_length = false)] uint16[] text, SDL.Color fg);
 
 		[CCode (cname="TTF_RenderText_Shaded")]
-		public Surface? render_shaded(string text, Color fg, Color bg);
+		public SDL.Surface? render_shaded(string text, SDL.Color fg, SDL.Color bg);
 
 		[CCode (cname="TTF_RenderUTF8_Shaded")]
-		public Surface? render_shaded_utf8(string text, Color fg, Color bg);
+		public SDL.Surface? render_shaded_utf8(string text, SDL.Color fg, SDL.Color bg);
 
 		[CCode (cname="TTF_RenderUNICODE_Shaded")]
-		public Surface? render_shaded_unicode([CCode (array_length = false)] uint16[] text, Color fg, Color bg);
+		public SDL.Surface? render_shaded_unicode([CCode (array_length = false)] uint16[] text, SDL.Color fg, SDL.Color bg);
 
 		[CCode (cname="TTF_RenderText_Blended")]
-		public Surface? render_blended(string text, Color fg);
+		public SDL.Surface? render_blended(string text, SDL.Color fg);
 
 		[CCode (cname="TTF_RenderUTF8_Blended")]
-		public Surface? render_blended_utf8(string text, Color fg);
+		public SDL.Surface? render_blended_utf8(string text, SDL.Color fg);
 
 		[CCode (cname="TTF_RenderUNICODE_Blended")]
-		public Surface? render_blended_unicode([CCode (array_length = false)] uint16[] text, Color fg);
+		public SDL.Surface? render_blended_unicode([CCode (array_length = false)] uint16[] text, SDL.Color fg);
 	}// Font
 }// SDLTTF

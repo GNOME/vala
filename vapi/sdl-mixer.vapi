@@ -1,10 +1,7 @@
-using GLib;
-using SDL;
-
 [CCode (cheader_filename="SDL_mixer.h")]
 namespace SDLMixer {
 	[CCode (cname="Mix_Linked_Version")]
-	public static weak Version linked();
+	public static weak SDL.Version linked();
 
 	[CCode (cname="Mix_OpenAudio")]
 	public static int open(int frequency, uint16 format, int channels, int chunksize);
@@ -44,7 +41,7 @@ namespace SDLMixer {
 	[Compact]
 	public class Chunk {
 		[CCode (cname="Mix_LoadWAV_RW")]
-		public Chunk.WAV(RWops src, int freesrc=0);
+		public Chunk.WAV(SDL.RWops src, int freesrc=0);
 
 		[CCode (cname="Mix_QuickLoad_WAV")]
 		public Chunk.QuickWAV([CCode (array_length = false)] uchar[] mem);
@@ -105,7 +102,7 @@ namespace SDLMixer {
 		public Music(string file);
 
 		[CCode (cname="Mix_LoadMUS_RW")]
-		public Music.RW(RWops rw);
+		public Music.RW(SDL.RWops rw);
 
 		[CCode (cname="Mix_GetMusicType")]
 		public MusicType type();

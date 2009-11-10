@@ -25,8 +25,6 @@
  * SUCH DAMAGE.
  */
 
-using GLib;
-
 [CCode (lower_case_cprefix = "", cheader_filename = "curses.h")]
 namespace Curses {
 	public const int COLORS;
@@ -65,7 +63,7 @@ namespace Curses {
 		[CCode (cname = "dupwin")]
 		public Window copy();
 		public ulong getbkgd();
-		public static Window getwin(FileStream filep);
+		public static Window getwin(GLib.FileStream filep);
 		public void idcok(bool bf);
 		public int idlok(bool bf);
 		public void immedok(bool bf);
@@ -129,7 +127,7 @@ namespace Curses {
 		public int notimeout(bool bf);
 		public int overlay(Window win);
 		public int overwrite(Window win);
-		public int putwin(FileStream filep);
+		public int putwin(GLib.FileStream filep);
 		public int redrawwin();
 		public int scroll();
 		public int scrollok(bool bf);
@@ -265,7 +263,7 @@ namespace Curses {
 	[CCode (free_function = "delscreen", cname = "SCREEN", cprefix = "")]
 	public class Screen {
 		[CCode (cname = "newterm")]
-		public Screen(string str, FileStream outfd, FileStream infd);
+		public Screen(string str, GLib.FileStream outfd, GLib.FileStream infd);
 		public weak Screen set_term();
 	}
 

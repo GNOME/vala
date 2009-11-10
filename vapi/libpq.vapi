@@ -20,8 +20,6 @@
  * 	Jukka-Pekka Iivonen <jp0409@jippii.fi>
  */
 
-using GLib;
-
 [CCode (cprefix = "PQ", cheader_filename = "postgresql/libpq-fe.h")]
 namespace Postgres {
 

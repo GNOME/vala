@@ -1,10 +1,7 @@
-using GLib;
-using SDL;
-
 [CCode (cprefix="SDLNet_", cheader_filename="SDL_net.h")]
 namespace SDLNet {
 	[CCode (cname="SDLNet_Linked_Version")]
-	public static Version linked();
+	public static SDL.Version linked();
 
 	/**
 	 * Initialize the network API 

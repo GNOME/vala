@@ -1,5 +1,3 @@
-using GLib;
-
 [CCode (cprefix="SDL_", cheader_filename="SDL.h")]
 namespace SDL {
 	///
