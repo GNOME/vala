@@ -12,6 +12,7 @@ dist_vapi_DATA = \
 	cairo.vapi \
 	cairo-xcb.deps \
 	cairo-xcb.vapi \
+	ccss-1.vapi \
 	clutter-1.0.vapi \
 	clutter-1.0.deps \
 	clutter-json-1.0.vapi \
@@ -24,7 +25,6 @@ dist_vapi_DATA = \
 	fuse.deps \
 	fuse.vapi \
 	gconf-2.0.vapi \
-	gl-1.0.vapi \
 	glib-2.0.vapi \
 	gdk-2.0.deps \
 	gdk-2.0.vapi \
