@@ -287,6 +287,10 @@ clutter_redraw hidden="1"
 
 ClutterScrollEvent is_value_type="1"
 
+clutter_shader_get_cogl_fragment_shader hidden="1"
+clutter_shader_get_cogl_program hidden="1"
+clutter_shader_get_cogl_vertex_shader hidden="1"
+
 ClutterShaderFloat hidden="1"
 ClutterShaderInt hidden="1"
 ClutterShaderMatrix hidden="1"

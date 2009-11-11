@@ -78,6 +78,12 @@ namespace Clutter {
 		public ParamSpecUnits (string name, string nick, string blurb, Clutter.Units minimum, Clutter.Units maximum, Clutter.Units default_value, GLib.ParamFlags flags);
 	}
 
+	public class Shader {
+		public Cogl.Shader get_cogl_fragment_shader ();
+		public Cogl.Program get_cogl_program ();
+		public Cogl.Shader get_cogl_vertex_shader ();
+	}
+
 	public class Stage {
 		[CCode (cname = "clutter_redraw")]
 		public void redraw ();

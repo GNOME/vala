@@ -748,9 +748,9 @@ namespace Clutter {
 		public Shader ();
 		public bool compile () throws GLib.Error;
 		public static GLib.Quark error_quark ();
-		public Cogl.Handle get_cogl_fragment_shader ();
-		public Cogl.Handle get_cogl_program ();
-		public Cogl.Handle get_cogl_vertex_shader ();
+		public Cogl.Shader get_cogl_fragment_shader ();
+		public Cogl.Program get_cogl_program ();
+		public Cogl.Shader get_cogl_vertex_shader ();
 		public unowned string get_fragment_source ();
 		public bool get_is_enabled ();
 		public unowned string get_vertex_source ();
