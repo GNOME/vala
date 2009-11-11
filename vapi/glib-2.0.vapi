@@ -2139,6 +2139,7 @@ namespace GLib {
 		public uint next_line;
 		public uint next_position;
 		public ScannerMsgFunc msg_handler;
+		public ScannerConfig? config;
 		public Scanner (ScannerConfig? config_templ);
 		public void input_file (int input_fd);
 		public void sync_file_offset ();
