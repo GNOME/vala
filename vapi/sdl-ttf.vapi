@@ -30,10 +30,10 @@ namespace SDLTTF {
 		public Font.index(string file, int ptsize, long index);
 
 		[CCode (cname="TTF_OpenFontRW")]
-		public Font.RW(RWops src, int freesrc=0, int ptsize);
+		public Font.RW(SDL.RWops src, int freesrc=0, int ptsize);
 
 		[CCode (cname="TTF_OpenFontIndexRW")]
-		public Font.RWindex(RWops src, int freesrc=0, int ptsize, long index);
+		public Font.RWindex(SDL.RWops src, int freesrc=0, int ptsize, long index);
 
 		[CCode (cname="TTF_GetFontStyle")]
 		public FontStyle get_style();
