@@ -118,6 +118,9 @@ namespace GLib {
 		public weak string get_blurb ();
 		public weak string get_name ();
 		public weak string get_nick ();
+
+		[CCode (cname = "g_param_value_set_default")]
+		public void set_value_default (Value value);
 	}
 
 	public class ParamSpecEnum : ParamSpec {
