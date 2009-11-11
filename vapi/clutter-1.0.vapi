@@ -777,7 +777,7 @@ namespace Clutter {
 		public bool event (Clutter.Event event);
 		public unowned Clutter.Actor get_actor_at_pos (Clutter.PickMode pick_mode, int x, int y);
 		public void get_color (out Clutter.Color color);
-		public static unowned Clutter.Actor get_default ();
+		public static unowned Clutter.Stage get_default ();
 		public void get_fog (out Clutter.Fog fog);
 		public bool get_fullscreen ();
 		public unowned Clutter.Actor get_key_focus ();
