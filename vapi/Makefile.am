@@ -160,6 +160,8 @@ dist_vapi_DATA = \
 	taglib_c.vapi \
 	tiff.vapi \
 	tracker-indexer-module-1.0.vapi \
+	twitter-glib-1.0.deps \
+	twitter-glib-1.0.vapi \
 	unique-1.0.deps \
 	unique-1.0.vapi \
 	v4l2.vapi \
