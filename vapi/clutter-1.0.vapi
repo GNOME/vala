@@ -776,9 +776,7 @@ namespace Clutter {
 		public void ensure_viewport ();
 		public bool event (Clutter.Event event);
 		public unowned Clutter.Actor get_actor_at_pos (Clutter.PickMode pick_mode, int x, int y);
-		public void get_color (out Clutter.Color color);
 		public static unowned Clutter.Stage get_default ();
-		public void get_fog (out Clutter.Fog fog);
 		public bool get_fullscreen ();
 		public unowned Clutter.Actor get_key_focus ();
 		public void get_perspective (out Clutter.Perspective perspective);
@@ -789,18 +787,14 @@ namespace Clutter {
 		public unowned uchar[] read_pixels (int x, int y, int width, int height);
 		[CCode (cname = "clutter_redraw")]
 		public void redraw ();
-		public void set_color (Clutter.Color color);
-		public void set_fog (Clutter.Fog fog);
 		public void set_fullscreen (bool fullscreen);
 		public void set_key_focus (Clutter.Actor actor);
 		public void set_perspective (Clutter.Perspective perspective);
 		public void set_throttle_motion_events (bool throttle);
 		public void show_cursor ();
-		[NoAccessorMethod]
 		public Clutter.Color color { get; set; }
 		[NoAccessorMethod]
 		public bool cursor_visible { get; set; }
-		[NoAccessorMethod]
 		public Clutter.Fog fog { get; set; }
 		[NoAccessorMethod]
 		public bool fullscreen_set { get; }
