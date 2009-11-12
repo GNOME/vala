@@ -69,6 +69,15 @@
 				<parameter name="quoted" type="gboolean"/>
 			</parameters>
 		</function>
+		<function name="get_gsf_odf_version" symbol="get_gsf_odf_version">
+			<return-type type="short"/>
+		</function>
+		<function name="get_gsf_odf_version_string" symbol="get_gsf_odf_version_string">
+			<return-type type="char*"/>
+		</function>
+		<function name="get_gsf_ooo_ns" symbol="get_gsf_ooo_ns">
+			<return-type type="GsfXMLInNS*"/>
+		</function>
 		<function name="iconv_close" symbol="gsf_iconv_close">
 			<return-type type="void"/>
 			<parameters>
@@ -210,38 +219,54 @@
 		<function name="open_pkg_error_id" symbol="gsf_open_pkg_error_id">
 			<return-type type="gint"/>
 		</function>
+		<function name="open_pkg_foreach_rel" symbol="gsf_open_pkg_foreach_rel">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="opkg" type="GsfInput*"/>
+				<parameter name="func" type="GsfOpenPkgIter"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</function>
 		<function name="open_pkg_get_rel_by_id" symbol="gsf_open_pkg_get_rel_by_id">
 			<return-type type="GsfInput*"/>
 			<parameters>
-				<parameter name="in" type="GsfInput*"/>
+				<parameter name="opkg" type="GsfInput*"/>
 				<parameter name="id" type="char*"/>
 			</parameters>
 		</function>
 		<function name="open_pkg_get_rel_by_type" symbol="gsf_open_pkg_get_rel_by_type">
 			<return-type type="GsfInput*"/>
 			<parameters>
-				<parameter name="in" type="GsfInput*"/>
+				<parameter name="opkg" type="GsfInput*"/>
 				<parameter name="type" type="char*"/>
 			</parameters>
 		</function>
 		<function name="open_pkg_lookup_rel_by_id" symbol="gsf_open_pkg_lookup_rel_by_id">
 			<return-type type="GsfOpenPkgRel*"/>
 			<parameters>
-				<parameter name="in" type="GsfInput*"/>
+				<parameter name="opkg" type="GsfInput*"/>
 				<parameter name="id" type="char*"/>
 			</parameters>
 		</function>
 		<function name="open_pkg_lookup_rel_by_type" symbol="gsf_open_pkg_lookup_rel_by_type">
 			<return-type type="GsfOpenPkgRel*"/>
 			<parameters>
-				<parameter name="in" type="GsfInput*"/>
+				<parameter name="opkg" type="GsfInput*"/>
 				<parameter name="type" type="char*"/>
+			</parameters>
+		</function>
+		<function name="open_pkg_open_rel" symbol="gsf_open_pkg_open_rel">
+			<return-type type="GsfInput*"/>
+			<parameters>
+				<parameter name="opkg" type="GsfInput*"/>
+				<parameter name="rel" type="GsfOpenPkgRel*"/>
+				<parameter name="err" type="GError**"/>
 			</parameters>
 		</function>
 		<function name="open_pkg_open_rel_by_id" symbol="gsf_open_pkg_open_rel_by_id">
 			<return-type type="GsfInput*"/>
 			<parameters>
-				<parameter name="in" type="GsfInput*"/>
+				<parameter name="opkg" type="GsfInput*"/>
 				<parameter name="id" type="char*"/>
 				<parameter name="err" type="GError**"/>
 			</parameters>
@@ -249,7 +274,7 @@
 		<function name="open_pkg_open_rel_by_type" symbol="gsf_open_pkg_open_rel_by_type">
 			<return-type type="GsfInput*"/>
 			<parameters>
-				<parameter name="in" type="GsfInput*"/>
+				<parameter name="opkg" type="GsfInput*"/>
 				<parameter name="type" type="char*"/>
 				<parameter name="err" type="GError**"/>
 			</parameters>
@@ -361,6 +386,21 @@
 				<parameter name="input" type="GsfInput*"/>
 			</parameters>
 		</function>
+		<function name="xml_probe" symbol="gsf_xml_probe">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="input" type="GsfInput*"/>
+				<parameter name="startElement" type="GsfXMLProbeFunc"/>
+			</parameters>
+		</function>
+		<callback name="GsfOpenPkgIter">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="opkg" type="GsfInput*"/>
+				<parameter name="rel" type="GsfOpenPkgRel*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
 		<callback name="GsfXMLInExtDtor">
 			<return-type type="void"/>
 			<parameters>
@@ -374,6 +414,19 @@
 				<parameter name="xin" type="GsfXMLIn*"/>
 				<parameter name="elem" type="xmlChar*"/>
 				<parameter name="attrs" type="xmlChar**"/>
+			</parameters>
+		</callback>
+		<callback name="GsfXMLProbeFunc">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="name" type="xmlChar*"/>
+				<parameter name="prefix" type="xmlChar*"/>
+				<parameter name="URI" type="xmlChar*"/>
+				<parameter name="nb_namespaces" type="int"/>
+				<parameter name="namespaces" type="xmlChar**"/>
+				<parameter name="nb_attributes" type="int"/>
+				<parameter name="nb_defaulted" type="int"/>
+				<parameter name="attributes" type="xmlChar**"/>
 			</parameters>
 		</callback>
 		<struct name="GsfDocProp">
@@ -494,6 +547,13 @@
 			<field name="node_stack" type="GSList*"/>
 		</struct>
 		<struct name="GsfXMLInDoc">
+			<method name="add_nodes" symbol="gsf_xml_in_doc_add_nodes">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="doc" type="GsfXMLInDoc*"/>
+					<parameter name="nodes" type="GsfXMLInNode*"/>
+				</parameters>
+			</method>
 			<method name="free" symbol="gsf_xml_in_doc_free">
 				<return-type type="void"/>
 				<parameters>
@@ -567,17 +627,34 @@
 					<parameter name="stamp" type="GsfTimestamp*"/>
 				</parameters>
 			</method>
+			<method name="from_string" symbol="gsf_timestamp_from_string">
+				<return-type type="int"/>
+				<parameters>
+					<parameter name="spec" type="char*"/>
+					<parameter name="stamp" type="GsfTimestamp*"/>
+				</parameters>
+			</method>
 			<method name="hash" symbol="gsf_timestamp_hash">
 				<return-type type="guint"/>
 				<parameters>
 					<parameter name="stamp" type="GsfTimestamp*"/>
 				</parameters>
 			</method>
+			<constructor name="new" symbol="gsf_timestamp_new">
+				<return-type type="GsfTimestamp*"/>
+			</constructor>
 			<method name="parse" symbol="gsf_timestamp_parse">
 				<return-type type="int"/>
 				<parameters>
 					<parameter name="spec" type="char*"/>
 					<parameter name="stamp" type="GsfTimestamp*"/>
+				</parameters>
+			</method>
+			<method name="set_time" symbol="gsf_timestamp_set_time">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="stamp" type="GsfTimestamp*"/>
+					<parameter name="t" type="guint64"/>
 				</parameters>
 			</method>
 			<field name="date" type="GDate"/>
@@ -759,6 +836,13 @@
 			</constructor>
 		</object>
 		<object name="GsfInfile" parent="GsfInput" type-name="GsfInfile" get-type="gsf_infile_get_type">
+			<method name="child_by_aname" symbol="gsf_infile_child_by_aname">
+				<return-type type="GsfInput*"/>
+				<parameters>
+					<parameter name="infile" type="GsfInfile*"/>
+					<parameter name="names" type="char*[]"/>
+				</parameters>
+			</method>
 			<method name="child_by_index" symbol="gsf_infile_child_by_index">
 				<return-type type="GsfInput*"/>
 				<parameters>
@@ -773,11 +857,17 @@
 					<parameter name="name" type="char*"/>
 				</parameters>
 			</method>
+			<method name="child_by_vaname" symbol="gsf_infile_child_by_vaname">
+				<return-type type="GsfInput*"/>
+				<parameters>
+					<parameter name="infile" type="GsfInfile*"/>
+					<parameter name="names" type="va_list"/>
+				</parameters>
+			</method>
 			<method name="child_by_vname" symbol="gsf_infile_child_by_vname">
 				<return-type type="GsfInput*"/>
 				<parameters>
 					<parameter name="infile" type="GsfInfile*"/>
-					<parameter name="name" type="char*"/>
 				</parameters>
 			</method>
 			<method name="name_by_index" symbol="gsf_infile_name_by_index">
@@ -840,6 +930,12 @@
 			</constructor>
 		</object>
 		<object name="GsfInfileMSVBA" parent="GsfInfile" type-name="GsfInfileMSVBA" get-type="gsf_infile_msvba_get_type">
+			<method name="get_modules" symbol="gsf_infile_msvba_get_modules">
+				<return-type type="GHashTable*"/>
+				<parameters>
+					<parameter name="vba_stream" type="GsfInfileMSVBA*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="gsf_infile_msvba_new">
 				<return-type type="GsfInfile*"/>
 				<parameters>
@@ -847,6 +943,12 @@
 					<parameter name="err" type="GError**"/>
 				</parameters>
 			</constructor>
+			<method name="steal_modules" symbol="gsf_infile_msvba_steal_modules">
+				<return-type type="GHashTable*"/>
+				<parameters>
+					<parameter name="vba_stream" type="GsfInfileMSVBA*"/>
+				</parameters>
+			</method>
 		</object>
 		<object name="GsfInfileStdio" parent="GsfInfile" type-name="GsfInfileStdio" get-type="gsf_infile_stdio_get_type">
 			<constructor name="new" symbol="gsf_infile_stdio_new">
@@ -856,6 +958,16 @@
 					<parameter name="err" type="GError**"/>
 				</parameters>
 			</constructor>
+		</object>
+		<object name="GsfInfileTar" parent="GsfInfile" type-name="GsfInfileTar" get-type="gsf_infile_tar_get_type">
+			<constructor name="new" symbol="gsf_infile_tar_new">
+				<return-type type="GsfInfile*"/>
+				<parameters>
+					<parameter name="source" type="GsfInput*"/>
+					<parameter name="err" type="GError**"/>
+				</parameters>
+			</constructor>
+			<property name="source" type="GsfInput*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
 		<object name="GsfInfileZip" parent="GsfInfile" type-name="GsfInfileZip" get-type="gsf_infile_zip_get_type">
 			<constructor name="new" symbol="gsf_infile_zip_new">
@@ -908,6 +1020,13 @@
 			</method>
 			<method name="error_id" symbol="gsf_input_error_id">
 				<return-type type="GQuark"/>
+			</method>
+			<method name="find_vba" symbol="gsf_input_find_vba">
+				<return-type type="GsfInfileMSVBA*"/>
+				<parameters>
+					<parameter name="input" type="GsfInput*"/>
+					<parameter name="err" type="GError**"/>
+				</parameters>
 			</method>
 			<method name="mmap_new" symbol="gsf_input_mmap_new">
 				<return-type type="GsfInput*"/>
@@ -1057,6 +1176,29 @@
 			<property name="raw" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="source" type="GsfInput*" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="uncompressed-size" type="gint64" readable="1" writable="1" construct="0" construct-only="1"/>
+		</object>
+		<object name="GsfInputGio" parent="GsfInput" type-name="GsfInputGio" get-type="gsf_input_gio_get_type">
+			<constructor name="new" symbol="gsf_input_gio_new">
+				<return-type type="GsfInput*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+					<parameter name="err" type="GError**"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_for_path" symbol="gsf_input_gio_new_for_path">
+				<return-type type="GsfInput*"/>
+				<parameters>
+					<parameter name="path" type="char*"/>
+					<parameter name="err" type="GError**"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_for_uri" symbol="gsf_input_gio_new_for_uri">
+				<return-type type="GsfInput*"/>
+				<parameters>
+					<parameter name="uri" type="char*"/>
+					<parameter name="err" type="GError**"/>
+				</parameters>
+			</constructor>
 		</object>
 		<object name="GsfInputHTTP" parent="GsfInput" type-name="GsfInputHTTP" get-type="gsf_input_http_get_type">
 			<method name="get_content_type" symbol="gsf_input_http_get_content_type">
@@ -1548,6 +1690,28 @@
 			<property name="raw" type="gboolean" readable="1" writable="1" construct="0" construct-only="1"/>
 			<property name="sink" type="GsfOutput*" readable="1" writable="1" construct="0" construct-only="1"/>
 		</object>
+		<object name="GsfOutputGio" parent="GsfOutput" type-name="GsfOutputGio" get-type="gsf_output_gio_get_type">
+			<constructor name="new" symbol="gsf_output_gio_new">
+				<return-type type="GsfOutput*"/>
+				<parameters>
+					<parameter name="file" type="GFile*"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_for_path" symbol="gsf_output_gio_new_for_path">
+				<return-type type="GsfOutput*"/>
+				<parameters>
+					<parameter name="path" type="char*"/>
+					<parameter name="err" type="GError**"/>
+				</parameters>
+			</constructor>
+			<constructor name="new_for_uri" symbol="gsf_output_gio_new_for_uri">
+				<return-type type="GsfOutput*"/>
+				<parameters>
+					<parameter name="uri" type="char*"/>
+					<parameter name="err" type="GError**"/>
+				</parameters>
+			</constructor>
+		</object>
 		<object name="GsfOutputIOChannel" parent="GsfOutput" type-name="GsfOutputIOChannel" get-type="gsf_output_iochannel_get_type">
 			<constructor name="new" symbol="gsf_output_iochannel_new">
 				<return-type type="GsfOutput*"/>
@@ -1614,6 +1778,27 @@
 					<parameter name="var_args" type="va_list"/>
 				</parameters>
 			</constructor>
+		</object>
+		<object name="GsfSharedMemory" parent="GObject" type-name="GsfSharedMemory" get-type="gsf_shared_memory_get_type">
+			<method name="mmapped_new" symbol="gsf_shared_memory_mmapped_new">
+				<return-type type="GsfSharedMemory*"/>
+				<parameters>
+					<parameter name="buf" type="void*"/>
+					<parameter name="size" type="gsf_off_t"/>
+				</parameters>
+			</method>
+			<constructor name="new" symbol="gsf_shared_memory_new">
+				<return-type type="GsfSharedMemory*"/>
+				<parameters>
+					<parameter name="buf" type="void*"/>
+					<parameter name="size" type="gsf_off_t"/>
+					<parameter name="needs_free" type="gboolean"/>
+				</parameters>
+			</constructor>
+			<field name="buf" type="void*"/>
+			<field name="size" type="gsf_off_t"/>
+			<field name="needs_free" type="gboolean"/>
+			<field name="needs_unmap" type="gboolean"/>
 		</object>
 		<object name="GsfStructuredBlob" parent="GsfInfile" type-name="GsfStructuredBlob" get-type="gsf_structured_blob_get_type">
 			<method name="read" symbol="gsf_structured_blob_read">
