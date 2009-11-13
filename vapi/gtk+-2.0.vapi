@@ -1673,7 +1673,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class HScrollbar : Gtk.Scrollbar, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public HScrollbar (Gtk.Adjustment adjustment);
+		public HScrollbar (Gtk.Adjustment? adjustment);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class HSeparator : Gtk.Separator, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
@@ -5041,7 +5041,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class VScrollbar : Gtk.Scrollbar, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
-		public VScrollbar (Gtk.Adjustment adjustment);
+		public VScrollbar (Gtk.Adjustment? adjustment);
 	}
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class VSeparator : Gtk.Separator, Atk.Implementor, Gtk.Buildable, Gtk.Orientable {
