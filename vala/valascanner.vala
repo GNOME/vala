@@ -624,7 +624,9 @@ public class Vala.Scanner {
 			case '}':
 				type = TokenType.CLOSE_BRACE;
 				current++;
-				state_stack.length--;
+				if (state_stack.length > 0) {
+					state_stack.length--;
+				}
 				break;
 			case '(':
 				type = TokenType.OPEN_PARENS;
@@ -634,7 +636,9 @@ public class Vala.Scanner {
 			case ')':
 				type = TokenType.CLOSE_PARENS;
 				current++;
-				state_stack.length--;
+				if (state_stack.length > 0) {
+					state_stack.length--;
+				}
 				if (in_template ()) {
 					type = TokenType.COMMA;
 				}
@@ -647,7 +651,9 @@ public class Vala.Scanner {
 			case ']':
 				type = TokenType.CLOSE_BRACKET;
 				current++;
-				state_stack.length--;
+				if (state_stack.length > 0) {
+					state_stack.length--;
+				}
 				break;
 			case '.':
 				type = TokenType.DOT;
