@@ -92,7 +92,6 @@ namespace Rest {
 		public virtual bool bind_valist (void* @params);
 		public static GLib.Quark error_quark ();
 		public unowned string get_user_agent ();
-		public virtual Rest.ProxyCall new_call ();
 		public void set_user_agent (string user_agent);
 		public bool simple_run (string payload, int64 len) throws GLib.Error;
 		public virtual bool simple_run_valist (string payload, int64 len, void* @params) throws GLib.Error;
@@ -158,12 +157,12 @@ namespace Rest {
 		PLAINTEXT,
 		HMAC_SHA1
 	}
-	[CCode (cprefix = "REST_PROXY_CALL_", has_type_id = "0", cheader_filename = "rest/rest-proxy-call.h")]
-	public enum ProxyCallError {
-		FAILED
+	[CCode (cprefix = "REST_PROXY_CALL_", cheader_filename = "rest/rest-proxy-call.h")]
+	public errordomain ProxyCallError {
+		FAILED,
 	}
-	[CCode (cprefix = "REST_PROXY_ERROR_", has_type_id = "0", cheader_filename = "rest/rest-proxy.h")]
-	public enum ProxyError {
+	[CCode (cprefix = "REST_PROXY_ERROR_", cheader_filename = "rest/rest-proxy.h")]
+	public errordomain ProxyError {
 		CANCELLED,
 		RESOLUTION,
 		CONNECTION,
@@ -201,7 +200,7 @@ namespace Rest {
 		HTTP_BAD_GATEWAY,
 		HTTP_SERVICE_UNAVAILABLE,
 		HTTP_GATEWAY_TIMEOUT,
-		HTTP_HTTP_VERSION_NOT_SUPPORTED
+		HTTP_HTTP_VERSION_NOT_SUPPORTED,
 	}
 	[CCode (cheader_filename = "rest/oauth-proxy.h")]
 	public delegate void OAuthProxyAuthCallback (Rest.OAuthProxy proxy, GLib.Error error, GLib.Object weak_object);
