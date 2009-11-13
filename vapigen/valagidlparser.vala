@@ -863,6 +863,21 @@ public class Vala.GIdlParser : CodeVisitor {
 		string common_prefix = null;
 		
 		foreach (weak IdlNode value in en_node.values) {
+			var val_attributes = get_attributes (value.name);
+			bool is_hidden = false;
+			if (val_attributes != null) {
+				foreach (string attr in val_attributes) {
+					var nv = attr.split ("=", 2);
+					if (nv[0] == "hidden" && eval(nv[1]) == "1") {
+						is_hidden = true;
+					}
+				}
+			}
+
+			if (is_hidden) {
+				continue;
+			}
+
 			if (common_prefix == null) {
 				common_prefix = value.name;
 				while (common_prefix.len () > 0 && !common_prefix.has_suffix ("_")) {
@@ -919,8 +934,21 @@ public class Vala.GIdlParser : CodeVisitor {
 		en.set_cprefix (common_prefix);
 		
 		foreach (weak IdlNode value2 in en_node.values) {
-			var ev = new EnumValue (value2.name.offset (common_prefix.len ()));
-			en.add_value (ev);
+			var val_attributes = get_attributes (value2.name);
+			bool is_hidden = false;
+			if (val_attributes != null) {
+				foreach (string attr in val_attributes) {
+					var nv = attr.split ("=", 2);
+					if (nv[0] == "hidden" && eval(nv[1]) == "1") {
+						is_hidden = true;
+					}
+				}
+			}
+
+			if (!is_hidden) {
+				var ev = new EnumValue (value2.name.offset (common_prefix.len ()));
+				en.add_value (ev);
+			}
 		}
 
 		if (is_errordomain) {
