@@ -5246,6 +5246,7 @@ namespace Gtk {
 		public void unset_flags (Gtk.WidgetFlags flags);
 		public bool app_paintable { get; set; }
 		public bool can_default { get; set; }
+		[NoAccessorMethod]
 		public bool can_focus { get; set; }
 		[NoAccessorMethod]
 		public bool composite_child { get; }
