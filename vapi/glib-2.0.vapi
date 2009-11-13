@@ -2092,6 +2092,8 @@ namespace GLib {
 		public static string get_dirname (string file_name);
 		[CCode (cname = "g_build_filename")]
 		public static string build_filename (string first_element, ...);
+		[CCode (cname = "g_build_path")]
+		public static string build_path (string separator, string first_element, ...);
 
 		[CCode (cname = "G_DIR_SEPARATOR")]
 		public const char DIR_SEPARATOR;
