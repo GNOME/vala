@@ -364,6 +364,8 @@ clutter_text_set_text hidden="1"
 clutter_text_set_use_markup hidden="1"
 
 ClutterTextureError errordomain="1"
+ClutterTexture:cogl-texture hidden="1"
+ClutterTexture:cogl-material hidden="1"
 clutter_texture_new_from_file hidden="1"
 clutter_texture_get_base_size.* is_out="1"
 clutter_texture_get_cogl_* hidden="1"

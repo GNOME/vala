@@ -892,8 +892,8 @@ namespace Clutter {
 		public bool set_from_rgb_data (uchar[] data, bool has_alpha, int width, int height, int rowstride, int bpp, Clutter.TextureFlags flags) throws GLib.Error;
 		public bool set_from_yuv_data (uchar[] data, int width, int height, Clutter.TextureFlags flags) throws GLib.Error;
 		public void set_repeat (bool repeat_x, bool repeat_y);
-		public Cogl.Handle cogl_material { get; set; }
-		public Cogl.Handle cogl_texture { get; set; }
+		public Cogl.Material cogl_material { get; set; }
+		public Cogl.Texture cogl_texture { get; set; }
 		[NoAccessorMethod]
 		public bool disable_slicing { get; construct; }
 		[NoAccessorMethod]

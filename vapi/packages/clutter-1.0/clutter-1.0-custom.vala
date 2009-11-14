@@ -92,6 +92,8 @@ namespace Clutter {
 	public class Texture {
 		[CCode (type = "ClutterActor*", has_construct_function = false)]
 		public Texture.from_file (string filename) throws TextureError;
+		public Cogl.Material cogl_material { get; set; }
+		public Cogl.Texture cogl_texture { get; set; }
 	}
 
 	[CCode (cheader_filename = "clutter/clutter.h")]
