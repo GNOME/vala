@@ -292,6 +292,8 @@ class Vala.Compiler {
 			return quit ();
 		}
 		
+		bool has_c_files = false;
+
 		foreach (string source in sources) {
 			if (FileUtils.test (source, FileTest.EXISTS)) {
 				var rpath = realpath (source);
@@ -315,6 +317,7 @@ class Vala.Compiler {
 					context.add_source_file (new SourceFile (context, rpath, true));
 				} else if (source.has_suffix (".c")) {
 					context.add_c_source_file (rpath);
+					has_c_files = true;
 				} else {
 					Report.error (null, "%s is not a supported source file type. Only .vala, .vapi, .gs, and .c files are supported.".printf (source));
 				}
@@ -359,7 +362,7 @@ class Vala.Compiler {
 
 		if (!ccode_only && !compile_only && library == null) {
 			// building program, require entry point
-			if (context.entry_point == null) {
+			if (!has_c_files && context.entry_point == null) {
 				Report.error (null, "program does not contain a static `main' method");
 			}
 		}
