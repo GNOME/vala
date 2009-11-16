@@ -110,7 +110,7 @@ namespace Gdk {
 		public PixbufLoader.with_mime_type (string mime_type) throws GLib.Error;
 		[CCode (has_construct_function = false)]
 		public PixbufLoader.with_type (string image_type) throws GLib.Error;
-		public bool write (uchar[] buf) throws GLib.Error;
+		public bool write ([CCode (array_length = false)] uchar[] buf, size_t count) throws GLib.Error;
 		public virtual signal void area_prepared ();
 		public virtual signal void area_updated (int x, int y, int width, int height);
 		public virtual signal void closed ();
