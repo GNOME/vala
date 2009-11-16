@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-[CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "X11/Xlib.h,X11/Xatom.h,X11/Xutil.h")]
+[CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "X11/Xlib.h,X11/Xatom.h,X11/Xutil.h,X11/Xregion.h")]
 namespace X {
 	// Note: must be called before opening a display or calling any other Xlib function,
 	// see http://tronche.com/gui/x/xlib/display/XInitThreads.html
@@ -140,6 +140,9 @@ namespace X {
 
 		[CCode (cname = "XExtendedMaxRequestSize")]
 		public long max_extended_request_size ();
+
+		[CCode (cname = "XEventsQueued")]
+		public int events_queued (int mode);
 
 		[CCode (cname = "XNextEvent")]
 		public int next_event (ref Event event_return);
@@ -263,12 +266,44 @@ namespace X {
 
 	[SimpleType]
 	[IntegerType (rank = 9)]
+	[CCode (cname = "XID", type_id = "G_TYPE_INT",
+		marshaller_type_name = "INT",
+		get_value_function = "g_value_get_int",
+		set_value_function = "g_value_set_int", default_value = "0",
+		type_signature = "i")]
+	public struct ID {
+	}
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "Drawable", type_id = "G_TYPE_INT",
+		marshaller_type_name = "INT",
+		get_value_function = "g_value_get_int",
+		set_value_function = "g_value_set_int", default_value = "0",
+		type_signature = "i")]
+	public struct Drawable : ID
+	{
+	}
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
 	[CCode (cname = "Window", type_id = "G_TYPE_INT",
 		marshaller_type_name = "INT",
 		get_value_function = "g_value_get_int",
 		set_value_function = "g_value_set_int", default_value = "0",
 		type_signature = "i")]
-	public struct Window {
+	public struct Window : Drawable {
+	}
+
+
+	[SimpleType]
+	[IntegerType (rank = 9)]
+	[CCode (cname = "Pixmap", type_id = "G_TYPE_INT",
+		marshaller_type_name = "INT",
+		get_value_function = "g_value_get_int",
+		set_value_function = "g_value_set_int", default_value = "0",
+		type_signature = "i")]
+	public struct Pixmap : Drawable	{
 	}
 
 	public struct Visual {
@@ -752,11 +787,26 @@ namespace X {
 		public ClientMessageEventData data;
 	}
 
+	[CCode (cname = "RECTANGLE", has_type_id = "false")]
+	public struct Rectangle {
+		public short x;
+		public short y;
+		public short width;
+		public short height;
+	}
+
 	// union
 	public struct ClientMessageEventData {
 		public unowned char[] b;
 		public unowned short[] s;
 		public unowned long[] l;
+	}
+
+	[CCode (cprefix = "Queued")]
+	public enum QueuedMode {
+		Already,
+		AfterFlush,
+		AfterReading
 	}
 
 	[CCode (cprefix = "PropMode")]
@@ -863,6 +913,8 @@ namespace X {
 		[CCode (cname = "XWidthOfScreen")]
 		public int width_of_screen ();
 	}
+
+	public const X.ID None;
 
 	public const X.Atom XA_ATOM;
 	public const X.Atom XA_CARDINAL;
