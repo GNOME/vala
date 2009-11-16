@@ -3220,7 +3220,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_base_access (BaseAccess expr) {
-		expr.ccodenode = generate_instance_cast (new CCodeIdentifier ("self"), expr.value_type.data_type);
+		CCodeExpression this_access;
+		if (current_method != null && current_method.coroutine) {
+			// use closure
+			this_access = new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "self");
+		} else {
+			this_access = new CCodeIdentifier ("self");
+		}
+
+		expr.ccodenode = generate_instance_cast (this_access, expr.value_type.data_type);
 	}
 
 	public override void visit_postfix_expression (PostfixExpression expr) {

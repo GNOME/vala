@@ -73,6 +73,24 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			// async call
 
 			async_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_cname ()));
+			var finish_call = new CCodeFunctionCall (new CCodeIdentifier (m.get_finish_cname ()));
+
+			if (ma.inner is BaseAccess) {
+				if (m.base_method != null) {
+					var base_class = (Class) m.base_method.parent_symbol;
+					var vcast = new CCodeFunctionCall (new CCodeIdentifier ("%s_CLASS".printf (base_class.get_upper_case_cname (null))));
+					vcast.add_argument (new CCodeIdentifier ("%s_parent_class".printf (current_class.get_lower_case_cname (null))));
+
+					async_call.call = new CCodeMemberAccess.pointer (vcast, m.vfunc_name);
+					finish_call.call = new CCodeMemberAccess.pointer (vcast, m.get_finish_vfunc_name ());
+				} else if (m.base_interface_method != null) {
+					var base_iface = (Interface) m.base_interface_method.parent_symbol;
+					string parent_iface_var = "%s_%s_parent_iface".printf (current_class.get_lower_case_cname (null), base_iface.get_lower_case_cname (null));
+
+					async_call.call = new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), m.vfunc_name);
+					finish_call.call = new CCodeMemberAccess.pointer (new CCodeIdentifier (parent_iface_var), m.get_finish_vfunc_name ());
+				}
+			}
 
 			if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
 				// no finish call
@@ -80,14 +98,14 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 				params = m.get_async_begin_parameters ();
 			} else if (ma.member_name == "end" && ma.inner.symbol_reference == ma.symbol_reference) {
 				// no async call
-				ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_finish_cname ()));
+				ccall = finish_call;
 				params = m.get_async_end_parameters ();
 			} else if (!expr.is_yield_expression) {
 				// same as .begin, backwards compatible to bindings without async methods
 				ccall = async_call;
 				params = m.get_async_begin_parameters ();
 			} else {
-				ccall = new CCodeFunctionCall (new CCodeIdentifier (m.get_finish_cname ()));
+				ccall = finish_call;
 
 				// output arguments used separately
 				out_arg_map = new HashMap<int,CCodeExpression> (direct_hash, direct_equal);
