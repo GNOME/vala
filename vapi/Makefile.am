@@ -8,6 +8,8 @@ vala-1.0.vapi: ../gee/gee.vapi ../ccode/ccode.vapi ../vala/vala.vapi ../codegen/
 dist_vapi_DATA = \
 	alsa.vapi \
 	atk.vapi \
+	avahi-gobject.deps \
+	avahi-gobject.vapi \
 	bzlib.vapi \
 	cairo.vapi \
 	cairo-xcb.deps \
