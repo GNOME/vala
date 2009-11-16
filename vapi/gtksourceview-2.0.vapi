@@ -66,7 +66,7 @@ namespace Gtk {
 		public unowned string[]? get_language_ids ();
 		[CCode (array_length = false, array_null_terminated = true)]
 		public unowned string[]? get_search_path ();
-		public unowned Gtk.SourceLanguage guess_language (string filename, string content_type);
+		public unowned Gtk.SourceLanguage? guess_language (string? filename, string? content_type);
 		public void set_search_path ([CCode (array_length = false)] string[]? dirs);
 		[CCode (array_length = false, array_null_terminated = true)]
 		public string[] language_ids { get; }
