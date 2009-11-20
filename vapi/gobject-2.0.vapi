@@ -376,6 +376,7 @@ namespace GLib {
 	[CCode (type_id = "G_TYPE_VALUE_ARRAY", copy_function = "g_value_array_copy")]
 	public class ValueArray {
 		public uint n_values;
+		[CCode (array_length_cname = "n_values", array_length_type = "guint")]
 		public Value[] values;
 		public ValueArray (uint n_prealloced);
 		public ValueArray copy ();
