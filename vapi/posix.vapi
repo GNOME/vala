@@ -1993,27 +1993,54 @@ namespace Posix {
 	[CCode (cheader_filename = "sys/mman.h")]
 	public const int MS_SYNC;
 
-	[SimpleType]
+	[Compact]
 	[CCode (cname = "FILE", free_function = "fclose", cheader_filename = "stdio.h")]
-	public struct FILE {
-		[CCode (cname="fprintf")]
-		public void printf (string format,...);
-		[CCode (cname="fscanf")]
-		public void scanf (string outstr,...);
-		[CCode (cname="fgets", instance_position="3")]
-		public void gets (string outstr, int len); //=strlen(outstr));
-		[CCode (cname="fputs", instance_position="2")]
-		public void puts (string str);
-		[CCode (cname="fputc", instance_position="2")]
-		public void putc (string str);
-		[CCode (cname="fopen")]
-		public static FILE open (string file, string mode);
-		[CCode (cname="fclose")]
-		public int close ();
-		[CCode (cname="fwrite", instance_position="4")]
-		public int write (void *ptr, int size, int nmemb);
-		[CCode (cname="fread", instance_position="4")]
-		public int read (void *ptr, int size, int nmemb);
+	public class FILE {
+		[CCode (cname = "EOF", cheader_filename = "stdio.h")]
+		public const int EOF;
+		[CCode (cname = "SEEK_SET", cheader_filename = "stdio.h")]
+		public const int SEEK_SET;
+		[CCode (cname = "SEEK_CUR", cheader_filename = "stdio.h")]
+		public const int SEEK_CUR;
+		[CCode (cname = "SEEK_END", cheader_filename = "stdio.h")]
+		public const int SEEK_END;
+
+		[CCode (cname = "fopen")]
+		public static FILE? open (string path, string mode);
+		[CCode (cname = "fdopen")]
+		public static FILE? fdopen (int fildes, string mode);
+		[CCode (cname = "popen")]
+		public static FILE? popen (string command, string mode);
+
+		[CCode (cname = "fprintf")]
+		[PrintfFormat ()]
+		public void printf (string format, ...);
+		[CCode (cname = "fputc", instance_pos = -1)]
+		public void putc (char c);
+		[CCode (cname = "fputs", instance_pos = -1)]
+		public void puts (string s);
+		[CCode (cname = "fgetc")]
+		public int getc ();
+		[CCode (cname = "fgets", instance_pos = -1)]
+		public weak string gets (char[] s);
+		[CCode (cname = "feof")]
+		public bool eof ();
+		[CCode (cname = "fscanf"), ScanfFormat]
+		public int scanf (string format, ...);
+		[CCode (cname = "fflush")]
+		public int flush ();
+		[CCode (cname = "fseek")]
+		public int seek (long offset, int whence);
+		[CCode (cname = "ftell")]
+		public long tell ();
+		[CCode (cname = "rewind")]
+		public void rewind ();
+		[CCode (cname = "fileno")]
+		public int fileno ();
+		[CCode (cname = "ferror")]
+		public int error ();
+		[CCode (cname = "clearerr")]
+		public void clearerr ();
 	}
 
 	public static FILE stderr;
