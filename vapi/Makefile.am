@@ -150,6 +150,7 @@ dist_vapi_DATA = \
 	posix.vapi \
 	raptor.vapi \
 	rasqal.vapi \
+	readline.vapi \
 	rest.deps \
 	rest.vapi \
 	sdl.vapi \
