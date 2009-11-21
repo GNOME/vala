@@ -2458,7 +2458,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class MenuToolButton : Gtk.ToolButton, Atk.Implementor, Gtk.Buildable, Gtk.Activatable {
 		[CCode (type = "GtkToolItem*", has_construct_function = false)]
-		public MenuToolButton (Gtk.Widget icon_widget, string label);
+		public MenuToolButton (Gtk.Widget? icon_widget, string? label);
 		[CCode (type = "GtkToolItem*", has_construct_function = false)]
 		public MenuToolButton.from_stock (string stock_id);
 		public unowned Gtk.Widget get_menu ();
@@ -3017,7 +3017,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class RadioToolButton : Gtk.ToggleToolButton, Atk.Implementor, Gtk.Buildable, Gtk.Activatable {
 		[CCode (type = "GtkToolItem*", has_construct_function = false)]
-		public RadioToolButton (GLib.SList group);
+		public RadioToolButton (GLib.SList? group);
 		[CCode (type = "GtkToolItem*", has_construct_function = false)]
 		public RadioToolButton.from_stock (GLib.SList group, string stock_id);
 		[CCode (type = "GtkToolItem*", has_construct_function = false)]
@@ -4489,7 +4489,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public class ToolButton : Gtk.ToolItem, Atk.Implementor, Gtk.Buildable, Gtk.Activatable {
 		[CCode (type = "GtkToolItem*", has_construct_function = false)]
-		public ToolButton (Gtk.Widget icon_widget, string label);
+		public ToolButton (Gtk.Widget? icon_widget, string? label);
 		[CCode (type = "GtkToolItem*", has_construct_function = false)]
 		public ToolButton.from_stock (string stock_id);
 		public unowned string get_icon_name ();
