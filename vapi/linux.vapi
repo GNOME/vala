@@ -154,6 +154,54 @@ namespace Linux {
     [CCode (cheader_filename = "sched.h")]
     public int unshare (CloneFlags flags);
 
+    [CCode (cheader_filename = "sys/time.h")]
+    public int adjtime (Posix.timeval delta, Posix.timeval? olddelta = null);
+
+    // adjtimex(2)
+    [CCode (cprefix = "ADJ_", cheader_filename = "sys/timex.h")]
+    public enum AdjustModes {
+        OFFSET,
+        FREQUENCY,
+        MAXERROR,
+        ESTERROR,
+        STATUS,
+        TIMECONST,
+        TICK,
+        OFFSET_SINGLESHOT
+    }
+
+    [CCode (cheader_filename = "sys/timex.h")]
+    public const int TIME_OK;
+    [CCode (cheader_filename = "sys/timex.h")]
+    public const int TIME_INS;
+    [CCode (cheader_filename = "sys/timex.h")]
+    public const int TIME_DEL;
+    [CCode (cheader_filename = "sys/timex.h")]
+    public const int TIME_OOP;
+    [CCode (cheader_filename = "sys/timex.h")]
+    public const int TIME_WAIT;
+    [CCode (cheader_filename = "sys/timex.h")]
+    public const int TIME_BAD;
+
+    // adjtimex(2)
+    [CCode (cname = "struct timex", cheader_filename = "sys/timex.h")]
+    public struct timex {
+        public AdjustModes modes;   /* mode selector */
+        public long offset;         /* time offset (usec) */
+        public long freq;           /* frequency offset (scaled ppm) */
+        public long maxerror;       /* maximum error (usec) */
+        public long esterror;       /* estimated error (usec) */
+        public int status;          /* clock command/status */
+        public long constant;       /* pll time constant */
+        public long precision;      /* clock precision (usec) (read-only) */
+        public long tolerance;      /* clock frequency tolerance (ppm) (read-only) */
+        public Posix.timeval time;  /* current time (read-only) */
+        public long tick;           /* usecs between clock ticks */
+    }
+
+    [CCode (cheader_filename = "sys/timex.h")]
+    public int adjtimex (Linux.timex buf);
+
     [CCode (cheader_filename = "time.h")]
     public time_t timegm (GLib.Time t);
 
