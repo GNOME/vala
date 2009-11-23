@@ -46,6 +46,7 @@ namespace Sqlite {
 		public int prepare_v2 (string sql, int n_bytes, out Statement stmt, out string tail = null);
 		public void trace (TraceCallback? xtrace);
 		public void profile (ProfileCallback? xprofile);
+		public void progress_handler (int n_opcodes, Sqlite.ProgressCallback? progress_handler);
 		public void commit_hook (CommitCallback? commit_hook);
 		public void rollback_hook (RollbackCallback? rollback_hook);
 	}
@@ -54,6 +55,7 @@ namespace Sqlite {
 	public delegate void TraceCallback (string message);
 	[CCode (instance_pos = 0)]
 	public delegate void ProfileCallback (string sql, uint64 time);
+	public delegate int ProgressCallback ();
 	public delegate int CommitCallback ();
 	public delegate void RollbackCallback ();
 
