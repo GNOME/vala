@@ -3352,6 +3352,8 @@ namespace GLib {
 		[CCode (cname = "g_ptr_array_sized_new")]
 		public PtrArray.sized (uint reserved_size);
 		public void add (void* data);
+		[CCode (cname = "g_ptr_array_index")]
+		public void* index(uint index);
 		public bool remove (void* data);
 		public void* remove_index (uint index);
 		public bool remove_fast (void *data);
