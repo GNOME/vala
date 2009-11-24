@@ -3392,6 +3392,7 @@ namespace Gtk {
 		public Gdk.Atom target;
 		public Gdk.Atom type;
 		public Gtk.SelectionData copy ();
+		[CCode (array_length = false)]
 		public unowned uchar[] get_data ();
 		public Gdk.Atom get_data_type ();
 		public unowned Gdk.Display get_display ();
