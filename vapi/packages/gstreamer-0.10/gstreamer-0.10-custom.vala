@@ -98,6 +98,9 @@ namespace Gst {
 	public class MiniObject {
 		[ReturnsModifiedPointer]
 		public void make_writable ();
+
+        public virtual MiniObject copy ();
+        public virtual void finalize ();
 	}
 
 	public class Message {

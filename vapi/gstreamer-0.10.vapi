@@ -100,10 +100,6 @@ namespace Gst {
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
-	public class BufferClass : Gst.MiniObjectClass {
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
 	public class BufferList {
 		[CCode (has_construct_function = false)]
 		public BufferList ();
@@ -111,10 +107,6 @@ namespace Gst {
 		public unowned Gst.Buffer @get (uint group, uint idx);
 		public unowned Gst.BufferListIterator iterate ();
 		public uint n_groups ();
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class BufferListClass {
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
@@ -710,27 +702,18 @@ namespace Gst {
 		[CCode (has_construct_function = false)]
 		public Message.warning (Gst.Object src, GLib.Error error, string debug);
 	}
-	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class MessageClass : Gst.MiniObjectClass {
-	}
 	[CCode (ref_function = "gst_mini_object_ref", unref_function = "gst_mini_object_unref", cheader_filename = "gst/gst.h")]
 	public class MiniObject {
 		public uint flags;
 		public int refcount;
 		[CCode (has_construct_function = false)]
 		public MiniObject (GLib.Type type);
-		public Gst.MiniObject copy ();
+		public virtual Gst.MiniObject copy ();
+		public virtual void finalize ();
 		public bool is_writable ();
 		[ReturnsModifiedPointer]
 		public void make_writable ();
 		public void replace (Gst.MiniObject newdata);
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class MiniObjectClass : GLib.TypeClass {
-		public weak Gst.MiniObjectCopyFunction copy;
-		public weak Gst.MiniObjectFinalizeFunction finalize;
 	}
 	[CCode (ref_function = "gst_object_ref", unref_function = "gst_object_unref", cheader_filename = "gst/gst.h")]
 	public class Object : GLib.Object {
@@ -1112,10 +1095,6 @@ namespace Gst {
 		public static bool types_contains (Gst.QueryType types, Gst.QueryType type);
 		[CCode (has_construct_function = false)]
 		public Query.uri ();
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class QueryClass : Gst.MiniObjectClass {
 	}
 	[Compact]
 	[CCode (cheader_filename = "gst/gst.h")]
