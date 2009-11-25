@@ -52,16 +52,18 @@ namespace Linux {
         NONBLOCK
     }
 
-    [CCode (cprefix = "IN_", cheader_filename = "sys/inotify.h")]
+    [CCode (cname = "int", cprefix = "IN_", cheader_filename = "sys/inotify.h")]
     public enum InotifyMaskFlags {
         ACCESS,
         ATTRIB,
+        CLOSE,
         CLOSE_WRITE,
         CLOSE_NOWRITE,
         CREATE,
         DELETE,
         DELETE_SELF,
         MODIFY,
+        MOVE,
         MOVE_SELF,
         MOVED_FROM,
         MOVED_TO,
