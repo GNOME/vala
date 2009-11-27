@@ -3327,8 +3327,8 @@ namespace GLib {
 		public void append_printf (string format, ...);
 
 		public string str;
-		public size_t len;
-		public size_t allocated_len;
+		public ssize_t len;
+		public ssize_t allocated_len;
 	}
 
 	/* String Chunks */
