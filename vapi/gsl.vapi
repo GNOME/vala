@@ -4258,7 +4258,7 @@ namespace Gsl
 		public MultifitLinearWorkspace (size_t n, size_t p);
 	}
 	
-	[CCcode (lower_case_cprefix="gsl_multifit_", cheader_filename="gsl/gsl_multifit.h")]
+	[CCode (lower_case_cprefix="gsl_multifit_", cheader_filename="gsl/gsl_multifit.h")]
 	namespace Multifit
 	{
 		public static int linear (Matrix X, Vector y, Vector c, Matrix cov, out double chisq, MultifitLinearWorkspace work);

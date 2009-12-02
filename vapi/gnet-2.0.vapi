@@ -425,7 +425,7 @@ namespace GNet {
 	public delegate void ConnHttpFunc(ConnHttp c, ConnHttpEvent event);
 
 	[Compact]
-	[Ccode(free_function = "gnet_conn_http_delete",
+	[CCode(free_function = "gnet_conn_http_delete",
 		   ref_function = "g_object_ref",
 		   unref_function = "g_object_unref")]
 	public class ConnHttp {
