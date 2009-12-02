@@ -214,6 +214,8 @@ ClutterGeometry is_value_type="1"
 
 clutter_get_actor_by_gid hidden="1"
 clutter_get_input_device_for_id hidden="1"
+clutter_get_option_group transfer_ownership="1"
+clutter_get_option_group_without_init transfer_ownership="1"
 
 clutter_init.argc hidden="1"
 clutter_init.argv is_array="1" is_ref="1" array_length_pos="0.9"

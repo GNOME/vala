@@ -1533,9 +1533,9 @@ namespace Clutter {
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static bool get_motion_events_enabled ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
-	public static unowned GLib.OptionGroup get_option_group ();
+	public static GLib.OptionGroup get_option_group ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
-	public static unowned GLib.OptionGroup get_option_group_without_init ();
+	public static GLib.OptionGroup get_option_group_without_init ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
 	public static unowned Clutter.Actor get_pointer_grab ();
 	[CCode (cheader_filename = "clutter/clutter.h")]
