@@ -4,9 +4,9 @@
 namespace Unique {
 	[CCode (cheader_filename = "unique/unique.h")]
 	public class App : GLib.Object {
-		public void add_command (string command_name, int command_id);
 		[CCode (has_construct_function = false)]
 		public App (string name, string? startup_id);
+		public void add_command (string command_name, int command_id);
 		public Unique.Response send_message (int command_id, Unique.MessageData? message_data);
 		public void watch_window (Gtk.Window window);
 		[CCode (has_construct_function = false)]
@@ -14,11 +14,11 @@ namespace Unique {
 		[NoAccessorMethod]
 		public bool is_running { get; }
 		[NoAccessorMethod]
-		public string name { get; construct; }
+		public string name { owned get; construct; }
 		[NoAccessorMethod]
-		public Gdk.Screen screen { get; set construct; }
+		public Gdk.Screen screen { owned get; set construct; }
 		[NoAccessorMethod]
-		public string startup_id { get; construct; }
+		public string startup_id { owned get; construct; }
 		public virtual signal Unique.Response message_received (int command, Unique.MessageData message_data, uint time_);
 	}
 	[CCode (cheader_filename = "unique/unique.h")]
@@ -40,22 +40,25 @@ namespace Unique {
 		public void set_startup_id (string startup_id);
 	}
 	[Compact]
-	[CCode (copy_function = "unique_message_data_copy", cheader_filename = "unique/unique.h")]
+	[CCode (copy_function = "unique_message_data_copy", type_id = "UNIQUE_TYPE_MESSAGE_DATA", cheader_filename = "unique/unique.h")]
 	public class MessageData {
+		[CCode (has_construct_function = false)]
+		public MessageData ();
 		public Unique.MessageData copy ();
+		public unowned uchar[] @get (size_t length);
+		public unowned string get_filename ();
 		public unowned Gdk.Screen get_screen ();
 		public unowned string get_startup_id ();
 		public string get_text ();
 		[CCode (array_length = false)]
 		public string[] get_uris ();
 		public uint get_workspace ();
-		[CCode (has_construct_function = false)]
-		public MessageData ();
-		public void set (uchar[]? data, size_t length);
+		public void @set (uchar[]? data, size_t length);
+		public void set_filename (string filename);
 		public bool set_text (string str, ssize_t length);
 		public bool set_uris ([CCode (array_length = false)] string[] uris);
 	}
-	[CCode (cprefix = "UNIQUE_", has_type_id = "0", cheader_filename = "unique/unique.h")]
+	[CCode (cprefix = "UNIQUE_", cheader_filename = "unique/unique.h")]
 	public enum Command {
 		INVALID,
 		ACTIVATE,
@@ -63,12 +66,13 @@ namespace Unique {
 		OPEN,
 		CLOSE
 	}
-	[CCode (cprefix = "UNIQUE_RESPONSE_", has_type_id = "0", cheader_filename = "unique/unique.h")]
+	[CCode (cprefix = "UNIQUE_RESPONSE_", cheader_filename = "unique/unique.h")]
 	public enum Response {
 		INVALID,
 		OK,
 		CANCEL,
-		FAIL
+		FAIL,
+		PASSTHROUGH
 	}
 	[CCode (cheader_filename = "unique/unique.h")]
 	public const string API_VERSION_S;

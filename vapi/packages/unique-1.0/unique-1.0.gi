@@ -14,6 +14,19 @@
 					<parameter name="message_data" type="UniqueMessageData*"/>
 				</parameters>
 			</method>
+			<method name="get" symbol="unique_message_data_get">
+				<return-type type="guchar*"/>
+				<parameters>
+					<parameter name="message_data" type="UniqueMessageData*"/>
+					<parameter name="length" type="gsize*"/>
+				</parameters>
+			</method>
+			<method name="get_filename" symbol="unique_message_data_get_filename">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="message_data" type="UniqueMessageData*"/>
+				</parameters>
+			</method>
 			<method name="get_screen" symbol="unique_message_data_get_screen">
 				<return-type type="GdkScreen*"/>
 				<parameters>
@@ -55,6 +68,13 @@
 					<parameter name="length" type="gsize"/>
 				</parameters>
 			</method>
+			<method name="set_filename" symbol="unique_message_data_set_filename">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="message_data" type="UniqueMessageData*"/>
+					<parameter name="filename" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="set_text" symbol="unique_message_data_set_text">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -71,18 +91,19 @@
 				</parameters>
 			</method>
 		</boxed>
-		<enum name="UniqueCommand">
+		<enum name="UniqueCommand" type-name="UniqueCommand" get-type="unique_command_get_type">
 			<member name="UNIQUE_INVALID" value="0"/>
 			<member name="UNIQUE_ACTIVATE" value="-1"/>
 			<member name="UNIQUE_NEW" value="-2"/>
 			<member name="UNIQUE_OPEN" value="-3"/>
 			<member name="UNIQUE_CLOSE" value="-4"/>
 		</enum>
-		<enum name="UniqueResponse">
+		<enum name="UniqueResponse" type-name="UniqueResponse" get-type="unique_response_get_type">
 			<member name="UNIQUE_RESPONSE_INVALID" value="0"/>
 			<member name="UNIQUE_RESPONSE_OK" value="1"/>
 			<member name="UNIQUE_RESPONSE_CANCEL" value="2"/>
 			<member name="UNIQUE_RESPONSE_FAIL" value="3"/>
+			<member name="UNIQUE_RESPONSE_PASSTHROUGH" value="4"/>
 		</enum>
 		<object name="UniqueApp" parent="GObject" type-name="UniqueApp" get-type="unique_app_get_type">
 			<method name="add_command" symbol="unique_app_add_command">
@@ -230,11 +251,11 @@
 		</object>
 		<constant name="UNIQUE_API_VERSION_S" type="char*" value="1.0"/>
 		<constant name="UNIQUE_DEFAULT_BACKEND_S" type="char*" value="dbus"/>
-		<constant name="UNIQUE_MAJOR_VERSION" type="int" value="0"/>
-		<constant name="UNIQUE_MICRO_VERSION" type="int" value="5"/>
-		<constant name="UNIQUE_MINOR_VERSION" type="int" value="9"/>
+		<constant name="UNIQUE_MAJOR_VERSION" type="int" value="1"/>
+		<constant name="UNIQUE_MICRO_VERSION" type="int" value="6"/>
+		<constant name="UNIQUE_MINOR_VERSION" type="int" value="1"/>
 		<constant name="UNIQUE_PROTOCOL_VERSION_S" type="char*" value="1.0"/>
 		<constant name="UNIQUE_VERSION_HEX" type="int" value="0"/>
-		<constant name="UNIQUE_VERSION_S" type="char*" value="0.9.5"/>
+		<constant name="UNIQUE_VERSION_S" type="char*" value="1.1.6"/>
 	</namespace>
 </api>
