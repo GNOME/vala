@@ -948,9 +948,9 @@ namespace GLib {
 		public abstract bool can_start ();
 		public abstract bool can_start_degraded ();
 		public abstract bool can_stop ();
-		public abstract void eject (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback? callback);
+		public abstract async bool eject (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool eject_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public abstract void eject_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		public abstract async bool eject_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool eject_with_operation_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract unowned string enumerate_identifiers ();
 		public abstract unowned GLib.Icon get_icon ();
@@ -962,11 +962,11 @@ namespace GLib {
 		public abstract bool has_volumes ();
 		public abstract bool is_media_check_automatic ();
 		public abstract bool is_media_removable ();
-		public abstract void poll_for_media (GLib.Cancellable? cancellable, GLib.AsyncReadyCallback? callback);
+		public abstract async bool poll_for_media (GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool poll_for_media_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public abstract void start (GLib.DriveStartFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		public abstract async bool start (GLib.DriveStartFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool start_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public abstract void stop (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		public abstract async bool stop (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool stop_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public signal void changed ();
 		public signal void disconnected ();
@@ -992,9 +992,9 @@ namespace GLib {
 		[NoWrapper]
 		public abstract bool delete_file (GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract unowned GLib.File dup ();
-		public abstract void eject_mountable (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback? callback);
+		public abstract async bool eject_mountable (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool eject_mountable_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public abstract void eject_mountable_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		public abstract async bool eject_mountable_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool eject_mountable_with_operation_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract GLib.FileEnumerator enumerate_children (string attributes, GLib.FileQueryInfoFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract async GLib.FileEnumerator enumerate_children_async (string attributes, GLib.FileQueryInfoFlags flags, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
@@ -1030,7 +1030,7 @@ namespace GLib {
 		public abstract GLib.FileMonitor monitor_file (GLib.FileMonitorFlags flags, GLib.Cancellable? cancellable = null) throws GLib.IOError;
 		public abstract async bool mount_enclosing_volume (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool mount_enclosing_volume_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public abstract void mount_mountable (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback? callback);
+		public abstract async unowned GLib.File mount_mountable (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract unowned GLib.File mount_mountable_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract bool move (GLib.File destination, GLib.FileCopyFlags flags, GLib.Cancellable? cancellable, GLib.FileProgressCallback? progress_callback) throws GLib.Error;
 		public static GLib.File new_for_commandline_arg (string arg);
@@ -1040,7 +1040,7 @@ namespace GLib {
 		public abstract async unowned GLib.FileIOStream open_readwrite_async (int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract unowned GLib.FileIOStream open_readwrite_finish (GLib.AsyncResult res) throws GLib.Error;
 		public static unowned GLib.File parse_name (string parse_name);
-		public abstract void poll_mountable (GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		public abstract async bool poll_mountable (GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool poll_mountable_finish (GLib.AsyncResult _result) throws GLib.Error;
 		[NoWrapper]
 		public abstract bool prefix_matches (GLib.File file);
@@ -1083,15 +1083,15 @@ namespace GLib {
 		public abstract unowned GLib.File set_display_name (string display_name, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract async unowned GLib.File set_display_name_async (string display_name, int io_priority, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract unowned GLib.File set_display_name_finish (GLib.AsyncResult res) throws GLib.Error;
-		public abstract void start_mountable (GLib.DriveStartFlags flags, GLib.MountOperation start_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		public abstract async bool start_mountable (GLib.DriveStartFlags flags, GLib.MountOperation start_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool start_mountable_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public abstract void stop_mountable (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		public abstract async bool stop_mountable (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool stop_mountable_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public bool supports_thread_contexts ();
 		public abstract bool trash (GLib.Cancellable? cancellable) throws GLib.Error;
-		public abstract void unmount_mountable (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback? callback);
+		public abstract async bool unmount_mountable (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool unmount_mountable_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public abstract void unmount_mountable_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		public abstract async bool unmount_mountable_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool unmount_mountable_with_operation_finish (GLib.AsyncResult _result) throws GLib.Error;
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
@@ -1122,9 +1122,9 @@ namespace GLib {
 	public interface Mount : GLib.Object {
 		public abstract bool can_eject ();
 		public abstract bool can_unmount ();
-		public abstract void eject (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback? callback);
+		public abstract async bool eject (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool eject_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public abstract void eject_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		public abstract async bool eject_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool eject_with_operation_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract unowned GLib.Drive get_drive ();
 		public abstract unowned GLib.Icon get_icon ();
@@ -1132,16 +1132,16 @@ namespace GLib {
 		public abstract unowned GLib.File get_root ();
 		public abstract unowned string get_uuid ();
 		public abstract unowned GLib.Volume get_volume ();
-		public abstract void guess_content_type (bool force_rescan, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		public abstract async unowned string guess_content_type (bool force_rescan, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract unowned string guess_content_type_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract unowned string guess_content_type_sync (bool force_rescan, GLib.Cancellable? cancellable) throws GLib.Error;
 		public bool is_shadowed ();
-		public abstract void remount (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback? callback);
+		public abstract async bool remount (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool remount_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public void shadow ();
-		public abstract void unmount (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback? callback);
+		public abstract async bool unmount (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool unmount_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public abstract void unmount_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		public abstract async bool unmount_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool unmount_with_operation_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public void unshadow ();
 		public signal void changed ();
@@ -1165,9 +1165,9 @@ namespace GLib {
 	public interface Volume : GLib.Object {
 		public abstract bool can_eject ();
 		public abstract bool can_mount ();
-		public abstract void eject (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback? callback);
+		public abstract async bool eject (GLib.MountUnmountFlags flags, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool eject_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public abstract void eject_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
+		public abstract async bool eject_with_operation (GLib.MountUnmountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool eject_with_operation_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public abstract unowned string enumerate_identifiers ();
 		public abstract unowned GLib.File get_activation_root ();
@@ -1177,7 +1177,7 @@ namespace GLib {
 		public abstract unowned GLib.Mount get_mount ();
 		public abstract unowned string get_name ();
 		public abstract unowned string get_uuid ();
-		public void mount (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback? callback);
+		public async bool mount (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable) throws GLib.Error;
 		public abstract bool mount_finish (GLib.AsyncResult _result) throws GLib.Error;
 		[NoWrapper]
 		public abstract void mount_fn (GLib.MountMountFlags flags, GLib.MountOperation? mount_operation, GLib.Cancellable? cancellable, GLib.AsyncReadyCallback callback);
