@@ -184,6 +184,24 @@ public class Vala.GIRWriter : CodeVisitor {
 
 			write_annotations (cl);
 
+			write_indent ();
+			stream.printf ("<field name=\"parent_instance\">\n");
+			indent++;
+			write_indent ();
+			stream.printf ("<type name=\"%s\" c:type=\"%s\"/>\n", gi_type_name (cl.base_class), cl.base_class.get_cname ());
+			indent--;
+			write_indent ();
+			stream.printf("</field>\n");
+
+			write_indent ();
+			stream.printf ("<field name=\"priv\">\n");
+			indent++;
+			write_indent ();
+			stream.printf ("<type name=\"any\" c:type=\"%sPrivate*\"/>\n", cl.get_cname ());
+			indent--;
+			write_indent ();
+			stream.printf("</field>\n");
+
 			cl.accept_children (this);
 
 			indent--;
