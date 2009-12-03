@@ -509,7 +509,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		}
 	}
 
-	private void write_params_and_return (List<FormalParameter> params, DataType? return_type, bool return_array_length, bool constructor = false, DataType? instance_type = null) {
+	private void write_params_and_return (List<FormalParameter> params, DataType? return_type, bool return_array_length, bool constructor = false, DataType? instance_type = null, bool user_data = false) {
 		int last_index = 0;
 		if (params.size != 0 || instance_type != null || (return_type is ArrayType && return_array_length) || (return_type is DelegateType)) {
 			write_indent ();
@@ -529,6 +529,17 @@ public class Vala.GIRWriter : CodeVisitor {
 
 			last_index = index - 1;
 			write_implicit_params (return_type, ref index, return_array_length, "result", ParameterDirection.OUT);
+
+			if (user_data) {
+				write_indent ();
+				stream.printf ("<parameter name=\"user_data\" transfer-ownership=\"none\" closure=\"%d\">\n", index);
+				indent++;
+				write_indent ();
+				stream.printf ("<type name=\"any\" c:type=\"void*\"/>\n");
+				indent--;
+				write_indent ();
+				stream.printf ("</parameter>\n");
+			}
 
 			indent--;
 			write_indent ();
@@ -560,7 +571,7 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		write_annotations (cb);
 
-		write_params_and_return (cb.get_parameters (), cb.return_type, !cb.no_array_length);
+		write_params_and_return (cb.get_parameters (), cb.return_type, !cb.no_array_length, false, null, cb.has_target);
 
 		indent--;
 		write_indent ();
