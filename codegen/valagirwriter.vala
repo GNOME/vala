@@ -579,7 +579,8 @@ public class Vala.GIRWriter : CodeVisitor {
 		if (tag_name == "virtual-method") {
 			stream.printf (" invoker=\"%s\"", name);
 		} else if (tag_name == "callback") {
-			stream.printf (" c:type=\"%s\"", cname);
+			/* this is only used for vfuncs */
+			stream.printf (" c:type=\"%s\"", name);
 		} else {
 			stream.printf (" c:identifier=\"%s\"", cname);
 		}
