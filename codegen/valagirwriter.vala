@@ -197,6 +197,15 @@ public class Vala.GIRWriter : CodeVisitor {
 			stream.printf (">\n");
 			indent++;
 
+			write_indent ();
+			stream.printf ("<field name=\"parent_class\">\n");
+			indent++;
+			write_indent ();
+			stream.printf ("<type name=\"%sClass\" c:type=\"%sClass\"/>\n", gi_type_name (cl.base_class), cl.base_class.get_cname ());
+			indent--;
+			write_indent ();
+			stream.printf ("</field>\n");
+
 			foreach (Method m in cl.get_methods ()) {
 				if (m.is_abstract || m.is_virtual) {
 					write_signature(m, "callback", true);
