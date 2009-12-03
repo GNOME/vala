@@ -208,7 +208,13 @@ public class Vala.GIRWriter : CodeVisitor {
 
 			foreach (Method m in cl.get_methods ()) {
 				if (m.is_abstract || m.is_virtual) {
+					write_indent ();
+					stream.printf("<field name=\"%s\">\n", m.name);
+					indent++;
 					write_signature(m, "callback", true);
+					indent--;
+					write_indent ();
+					stream.printf ("</field>\n");
 				}
 			}
 
