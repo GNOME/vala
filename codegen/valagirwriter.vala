@@ -218,6 +218,19 @@ public class Vala.GIRWriter : CodeVisitor {
 				}
 			}
 
+			foreach (Signal sig in cl.get_signals ()) {
+				if (sig.default_handler != null) {
+					write_indent ();
+					stream.printf ("<field name=\"%s\">\n", sig.name);
+					indent++;
+					write_signature (sig.default_handler, "callback", true);
+					indent--;
+					write_indent ();
+					stream.printf ("</field>\n");
+				}
+			}
+
+
 			indent--;
 			write_indent ();
 			stream.printf ("</record>\n");
