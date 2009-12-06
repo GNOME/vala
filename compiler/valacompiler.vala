@@ -213,6 +213,9 @@ class Vala.Compiler {
 		context.ccode_only = ccode_only;
 		context.compile_only = compile_only;
 		context.header_filename = header_filename;
+		if (header_filename == null && use_header) {
+			Report.error (null, "--use-header may only be used in combination with --header");
+		}
 		context.use_header = use_header;
 		context.internal_header_filename = internal_header_filename;
 		context.includedir = includedir;
