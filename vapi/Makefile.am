@@ -178,7 +178,7 @@ dist_vapi_DATA = \
 	x11.vapi \
 	xcb.vapi \
 	zlib.vapi \
-	$(null)
+	$(NULL)
 
 dist_noinst_DATA = \
 	config.vapi \
