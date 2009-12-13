@@ -499,6 +499,9 @@ public class Vala.MethodCall : Expression {
 		if (may_throw) {
 			if (parent_node is LocalVariable || parent_node is ExpressionStatement) {
 				// simple statements, no side effects after method call
+			} else if (!(analyzer.current_symbol is Block)) {
+				// can't handle errors in field initializers
+				Report.error (source_reference, "Field initializers must not throw errors");
 			} else {
 				// store parent_node as we need to replace the expression in the old parent node later on
 				var old_parent_node = parent_node;
