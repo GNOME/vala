@@ -735,7 +735,14 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			cdecl.add_declarator (cvardecl);
 			var gnew = new CCodeFunctionCall (new CCodeIdentifier ("g_new0"));
 			gnew.add_argument (new CCodeIdentifier (array_type.element_type.get_cname ()));
-			gnew.add_argument (new CCodeIdentifier ("length"));
+
+			CCodeExpression length_expr = new CCodeIdentifier ("length");
+			// add extra item to have array NULL-terminated for all reference types
+			if (array_type.element_type.data_type != null && array_type.element_type.data_type.is_reference_type ()) {
+				length_expr = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, length_expr, new CCodeConstant ("1"));
+			}
+			gnew.add_argument (length_expr);
+
 			cvardecl.initializer = gnew;
 			block.add_statement (cdecl);
 
