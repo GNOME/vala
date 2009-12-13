@@ -710,6 +710,10 @@ public class Vala.CodeWriter : CodeVisitor {
 			var ccode_params = new StringBuilder ();
 			var separator = "";
 
+			if (!float_equal (param.cparameter_position, i)) {
+				ccode_params.append_printf ("%spos = %g", separator, param.cparameter_position);
+				separator = ", ";
+			}
 			if (param.ctype != null) {
 				ccode_params.append_printf ("%stype = \"%s\"", separator, param.ctype);
 				separator = ", ";
