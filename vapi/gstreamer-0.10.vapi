@@ -134,7 +134,8 @@ namespace Gst {
 		public Bus ();
 		public void add_signal_watch ();
 		public void add_signal_watch_full (int priority);
-		public uint add_watch (Gst.BusFunc func);
+		[CCode (cname = "gst_bus_add_watch_full")]
+		public uint add_watch (owned Gst.BusFunc func, [CCode (pos = 0.1)] int priority = GLib.Priority.DEFAULT);
 		public uint add_watch_full (int priority, owned Gst.BusFunc func);
 		public bool async_signal_func (Gst.Message message, void* data);
 		public unowned GLib.TimeoutSource create_watch ();

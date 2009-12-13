@@ -64,6 +64,8 @@ namespace Gst {
 	}
 
 	public class Bus {
+		[CCode (cname = "gst_bus_add_watch_full")]
+		public uint add_watch (owned Gst.BusFunc func, [CCode (pos = 0.1)] int priority = GLib.Priority.DEFAULT);
 		[CCode (instance_pos = -1)]
 		public Gst.BusSyncReply sync_signal_handler (Gst.Bus bus, Gst.Message message);
 	}
