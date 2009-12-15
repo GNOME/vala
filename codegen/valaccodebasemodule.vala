@@ -364,6 +364,21 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			}
 		}
 
+		// generate symbols file for public API
+		if (context.symbols_filename != null) {
+			var stream = FileStream.open (context.symbols_filename, "w");
+
+			foreach (CCodeNode node in header_declarations.type_member_declaration.get_children ()) {
+				if (node is CCodeFunction) {
+					var func = (CCodeFunction) node;
+					stream.puts (func.name);
+					stream.putc ('\n');
+				}
+			}
+
+			stream = null;
+		}
+
 		// generate C header file for public API
 		if (context.header_filename != null) {
 			var writer = new CCodeWriter (context.header_filename);

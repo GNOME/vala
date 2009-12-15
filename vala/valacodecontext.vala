@@ -79,6 +79,11 @@ public class Vala.CodeContext {
 	public string? includedir { get; set; }
 
 	/**
+	 * Output symbols file.
+	 */
+	public string? symbols_filename { get; set; }
+
+	/**
 	 * Compile but do not link.
 	 */
 	public bool compile_only { get; set; }

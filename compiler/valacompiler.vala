@@ -49,6 +49,7 @@ class Vala.Compiler {
 	static bool use_header;
 	static string internal_header_filename;
 	static string internal_vapi_filename;
+	static string symbols_filename;
 	static string includedir;
 	static bool compile_only;
 	static string output;
@@ -94,6 +95,7 @@ class Vala.Compiler {
 		{ "includedir", 0, 0, OptionArg.FILENAME, ref includedir, "Directory used to include the C header file", "DIRECTORY" },
 		{ "internal-header", 'h', 0, OptionArg.FILENAME, ref internal_header_filename, "Output internal C header file", "FILE" },
 		{ "internal-vapi", 0, 0, OptionArg.FILENAME, ref internal_vapi_filename, "Output vapi with internal api", "FILE" },
+		{ "symbols", 0, 0, OptionArg.FILENAME, ref symbols_filename, "Output symbols file", "FILE" },
 		{ "compile", 'c', 0, OptionArg.NONE, ref compile_only, "Compile but do not link", null },
 		{ "output", 'o', 0, OptionArg.FILENAME, ref output, "Place output in file FILE", "FILE" },
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
@@ -218,6 +220,7 @@ class Vala.Compiler {
 		}
 		context.use_header = use_header;
 		context.internal_header_filename = internal_header_filename;
+		context.symbols_filename = symbols_filename;
 		context.includedir = includedir;
 		context.output = output;
 		if (basedir == null) {
