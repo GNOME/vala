@@ -1694,24 +1694,6 @@ namespace Gst {
 		REALTIME,
 		MONOTONIC
 	}
-	[CCode (cprefix = "GST_CORE_ERROR_", cheader_filename = "gst/gst.h")]
-	public enum CoreError {
-		FAILED,
-		TOO_LAZY,
-		NOT_IMPLEMENTED,
-		STATE_CHANGE,
-		PAD,
-		THREAD,
-		NEGOTIATION,
-		EVENT,
-		SEEK,
-		CAPS,
-		TAG,
-		MISSING_PLUGIN,
-		CLOCK,
-		DISABLED,
-		NUM_ERRORS
-	}
 	[CCode (cprefix = "GST_DEBUG_", cheader_filename = "gst/gst.h")]
 	public enum DebugColorFlags {
 		FG_BLACK,
@@ -2160,6 +2142,24 @@ namespace Gst {
 		UNKNOWN,
 		SINK,
 		SRC
+	}
+	[CCode (cprefix = "GST_CORE_ERROR_", cheader_filename = "gst/gst.h")]
+	public errordomain CoreError {
+		FAILED,
+		TOO_LAZY,
+		NOT_IMPLEMENTED,
+		STATE_CHANGE,
+		PAD,
+		THREAD,
+		NEGOTIATION,
+		EVENT,
+		SEEK,
+		CAPS,
+		TAG,
+		MISSING_PLUGIN,
+		CLOCK,
+		DISABLED,
+		NUM_ERRORS,
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public delegate unowned Gst.Buffer BufferListDoFunction (Gst.Buffer buffer);
