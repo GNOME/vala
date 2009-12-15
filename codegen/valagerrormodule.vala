@@ -137,10 +137,14 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		cerror_block.add_statement (free_frag);
 
 		var ccritical = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
-		ccritical.add_argument (new CCodeConstant ("\"file %s: line %d: uncaught error: %s\""));
+		ccritical.add_argument (new CCodeConstant ("\"file %s: line %d: uncaught error: %s (%s, %d)\""));
 		ccritical.add_argument (new CCodeConstant ("__FILE__"));
 		ccritical.add_argument (new CCodeConstant ("__LINE__"));
 		ccritical.add_argument (new CCodeMemberAccess.pointer (inner_error, "message"));
+		var domain_name = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_to_string"));
+		domain_name.add_argument (new CCodeMemberAccess.pointer (inner_error, "domain"));
+		ccritical.add_argument (domain_name);
+		ccritical.add_argument (new CCodeMemberAccess.pointer (inner_error, "code"));
 
 		var cclear = new CCodeFunctionCall (new CCodeIdentifier ("g_clear_error"));
 		cclear.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, inner_error));
