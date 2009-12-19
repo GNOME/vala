@@ -984,6 +984,42 @@ public class string {
 		return start_string.ndup (((char*) start_string.offset (end - start)) - ((char*) start_string));
 	}
 
+	public string splice (long start, long end, string? str = null) {
+		long string_length = this.len ();
+		if (start < 0) {
+			start = string_length + start;
+		}
+		if (end < 0) {
+			end = string_length + end;
+		}
+		GLib.return_val_if_fail (start >= 0 && start <= string_length, null);
+		GLib.return_val_if_fail (end >= 0 && end <= string_length, null);
+		GLib.return_val_if_fail (start <= end, null);
+
+		unowned string start_string = this.offset (start);
+		unowned string end_string = start_string.offset (end - start);
+		size_t str_size;
+		if (str == null) {
+			str_size = 0;
+		} else {
+			str_size = str.size ();
+		}
+
+		string* result = GLib.malloc0 (this.size () - ((char*) end_string - (char*) start_string) + str_size + 1);
+
+		char* dest = result;
+
+		GLib.Memory.copy (dest, this, (char*) start_string - (char*) this);
+		dest += (char*) start_string - (char*) this;
+
+		GLib.Memory.copy (dest, str, str_size);
+		dest += str_size;
+
+		GLib.Memory.copy (dest, end_string, end_string.size ());
+
+		return (owned) result;
+	}
+
 	public bool contains (string needle) {
 		return this.str (needle) != null;
 	}
