@@ -2200,6 +2200,10 @@ namespace GLib {
 		public TokenType peek_next_token ();
 		public TokenType get_next_token ();
 		public bool eof ();
+		public int cur_line ();
+		public int cur_position ();
+		public TokenType cur_token ();
+		public TokenValue cur_value ();
 		public uint set_scope (uint scope_id);
 		public void scope_add_symbol (uint scope_id, string symbol, void* value);
 		public void scope_foreach_symbol (uint scope_id, HFunc func);
@@ -2285,7 +2289,7 @@ namespace GLib {
 		[CCode (cname="v_symbol")]
 		public void* symbol;
 		[CCode (cname="v_identifier")]
-		public string identifier;
+		public unowned string identifier;
 		[CCode (cname="v_binary")]
 		public ulong binary;
 		[CCode (cname="v_octal")]
@@ -2299,9 +2303,9 @@ namespace GLib {
 		[CCode (cname="v_hex")]
 		public ulong hex;
 		[CCode (cname="v_string")]
-		public string string;
+		public unowned string string;
 		[CCode (cname="v_comment")]
-		public string comment;
+		public unowned string comment;
 		[CCode (cname="v_char")]
 		public uchar char;
 		[CCode (cname="v_error")]
