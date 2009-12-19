@@ -25,6 +25,12 @@ void test_integer_array () {
 	assert (b.length == 2);
 	assert (b[0] == 42);
 	assert (b[1] == 23);
+
+	// slices
+	int[] c = a[1:3];
+	assert (c.length == 2);
+	assert (c[0] == 23);
+	assert (c[1] == 11);
 }
 
 void test_string_array () {

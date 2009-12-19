@@ -27,6 +27,12 @@ void test_string () {
 	assert (!(s >= "i"));
 	assert (s > "g");
 	assert (!(s > "i"));
+
+	// slices
+	t = s[2:4];
+	assert (t.length == 2);
+	assert (t[0] == 'l');
+	assert (t[1] == 'l');
 }
 
 void main () {

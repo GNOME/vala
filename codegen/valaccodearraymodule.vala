@@ -173,7 +173,7 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			List<Expression> size = ((ArrayCreationExpression) array_expr).get_sizes ();
 			var length_expr = size[dim - 1];
 			return (CCodeExpression) get_ccodenode (length_expr);
-		} else if (array_expr is MethodCall || array_expr is CastExpression) {
+		} else if (array_expr is MethodCall || array_expr is CastExpression || array_expr is SliceExpression) {
 			List<CCodeExpression> size = array_expr.get_array_sizes ();
 			if (size.size >= dim) {
 				return size[dim - 1];
@@ -432,6 +432,47 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			}
 			expr.ccodenode = new CCodeElementAccess (ccontainer, cindex);
 		}
+	}
+
+	public override void visit_slice_expression (SliceExpression expr) {
+		expr.accept_children (codegen);
+
+		var ccontainer = (CCodeExpression) expr.container.ccodenode;
+		var cstart = (CCodeExpression) expr.start.ccodenode;
+		var cstop = (CCodeExpression) expr.stop.ccodenode;
+
+		var ccomma = new CCodeCommaExpression ();
+
+		var len_var = get_temp_variable (int_type);
+		len_var.source_reference = expr.source_reference;
+		temp_vars.insert (0, len_var);
+
+		var slice_var = get_temp_variable (expr.value_type, true, expr);
+		temp_vars.insert (0, slice_var);
+
+		if (!is_pure_ccode_expression (cstart)) {
+			// avoid double evaluation of start
+			var start_var = get_temp_variable (int_type);
+			temp_vars.insert (0, start_var);
+
+			var start_assignment = new CCodeAssignment (get_variable_cexpression (start_var.name), cstart);
+			ccomma.append_expression (start_assignment);
+
+			cstart = get_variable_cexpression (start_var.name);
+		}
+
+		var cstartpointer = new CCodeBinaryExpression (CCodeBinaryOperator.PLUS, ccontainer, cstart);
+		var slice_assignment = new CCodeAssignment (get_variable_cexpression (slice_var.name), cstartpointer);
+		ccomma.append_expression (slice_assignment);
+
+		var splicelen = new CCodeBinaryExpression (CCodeBinaryOperator.MINUS, cstop, cstart);
+		var len_assignment = new CCodeAssignment (get_variable_cexpression (len_var.name), splicelen);
+		ccomma.append_expression (len_assignment);
+
+		ccomma.append_expression (get_variable_cexpression (slice_var.name));
+
+		expr.ccodenode = ccomma;
+		expr.append_array_size (get_variable_cexpression (len_var.name));
 	}
 
 	private CCodeForStatement get_struct_array_free_loop (Struct st) {

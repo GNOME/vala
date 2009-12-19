@@ -276,6 +276,10 @@ public class Vala.CCodeGenerator : CodeGenerator {
 		head.visit_element_access (expr);
 	}
 
+	public override void visit_slice_expression (SliceExpression expr) {
+		head.visit_slice_expression (expr);
+	}
+
 	public override void visit_base_access (BaseAccess expr) {
 		head.visit_base_access (expr);
 	}

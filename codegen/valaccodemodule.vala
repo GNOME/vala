@@ -255,6 +255,10 @@ public abstract class Vala.CCodeModule {
 		next.visit_element_access (expr);
 	}
 
+	public virtual void visit_slice_expression (SliceExpression expr) {
+		next.visit_slice_expression (expr);
+	}
+
 	public virtual void visit_base_access (BaseAccess expr) {
 		next.visit_base_access (expr);
 	}

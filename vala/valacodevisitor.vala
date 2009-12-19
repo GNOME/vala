@@ -501,6 +501,14 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
+	 * Visit operation called for array slice expressions.
+	 *
+	 * @param expr an array slice expression
+	 */
+	public virtual void visit_slice_expression (SliceExpression expr) {
+	}
+
+	/**
 	 * Visit operation called for base access expressions.
 	 *
 	 * @param expr a base access expression

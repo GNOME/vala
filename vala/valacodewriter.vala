@@ -1374,6 +1374,15 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_string ("]");
 	}
 
+	public override void visit_slice_expression (SliceExpression expr) {
+		expr.container.accept (this);
+		write_string ("[");
+		expr.start.accept (this);
+		write_string ("..");
+		expr.stop.accept (this);
+		write_string ("]");
+	}
+
 	public override void visit_base_access (BaseAccess expr) {
 		write_string ("base");
 	}
