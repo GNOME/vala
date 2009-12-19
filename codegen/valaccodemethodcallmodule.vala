@@ -365,7 +365,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 
 						// call function
 						LocalVariable ret_temp_var = null;
-						if (itype.get_return_type () is VoidType) {
+						if (itype.get_return_type () is VoidType || itype.get_return_type ().is_real_struct_type ()) {
 							ccomma.append_expression (ccall_expr);
 						} else {
 							ret_temp_var = get_temp_variable (itype.get_return_type (), true, null, false);
@@ -389,7 +389,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 						ccomma.append_expression (new CCodeAssignment ((CCodeExpression) unary.inner.ccodenode, cassign_comma));
 
 						// return value
-						if (!(itype.get_return_type () is VoidType)) {
+						if (!(itype.get_return_type () is VoidType || itype.get_return_type ().is_real_struct_type ())) {
 							ccomma.append_expression (get_variable_cexpression (ret_temp_var.name));
 						}
 
