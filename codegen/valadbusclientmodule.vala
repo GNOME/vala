@@ -377,11 +377,11 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		if (!(method.return_type is VoidType)) {
 			// synchronous D-Bus method call with reply
+			ccall.add_argument (get_dbus_g_type (method.return_type));
+
 			var array_type = method.return_type as ArrayType;
 			if (array_type != null && array_type.element_type.data_type != string_type.data_type) {
 				// non-string arrays (use GArray)
-				ccall.add_argument (get_dbus_g_type (array_type));
-
 				CCodeDeclaration cdecl;
 				if (dbus_use_ptr_array (array_type)) {
 					cdecl = new CCodeDeclaration ("GPtrArray*");
@@ -412,11 +412,51 @@ internal class Vala.DBusClientModule : DBusModule {
 
 				// return result->data;
 				block.add_statement (new CCodeReturnStatement (new CCodeCastExpression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), dbus_use_ptr_array (array_type) ? "pdata" : "data"), method.return_type.get_cname ())));
+			} else if (method.return_type.is_real_struct_type ()) {
+				// structs are returned via out parameter
+				var st = (Struct) method.return_type.data_type;
+
+				var cdecl = new CCodeDeclaration ("GValueArray*");
+				cdecl.add_declarator (new CCodeVariableDeclarator ("dbus_result"));
+				block.add_statement (cdecl);
+
+				int i = 0;
+				foreach (Field f in st.get_fields ()) {
+					if (f.binding != MemberBinding.INSTANCE) {
+						continue;
+					}
+
+					var cget_call = new CCodeFunctionCall (new CCodeIdentifier (f.field_type.data_type.get_get_value_function ()));
+					cget_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeElementAccess (new CCodeMemberAccess.pointer (new CCodeIdentifier ("dbus_result"), "values"), new CCodeConstant (i.to_string ()))));
+
+					var converted_value = cget_call;
+
+					if (requires_copy (f.field_type)) {
+						var dupexpr = get_dup_func_expression (f.field_type, expr.source_reference);
+						converted_value = new CCodeFunctionCall (dupexpr);
+						converted_value.add_argument (cget_call);
+					}
+
+					var assign = new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), f.name), converted_value);
+					out_marshalling_fragment.append (new CCodeExpressionStatement (assign));
+
+					i++;
+				}
+
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("dbus_result")));
+				ccall.add_argument (new CCodeIdentifier ("G_TYPE_INVALID"));
+
+				block.add_statement (new CCodeExpressionStatement (ccall));
+
+				// don't access result when error occured
+				var creturnblock = new CCodeBlock ();
+				creturnblock.add_statement (new CCodeReturnStatement ());
+				var cerrorif = new CCodeIfStatement (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("error")), creturnblock);
+				block.add_statement (cerrorif);
+
+				block.add_statement (out_marshalling_fragment);
 			} else {
 				// string arrays or other datatypes
-
-				ccall.add_argument (get_dbus_g_type (method.return_type));
-
 				var cdecl = new CCodeDeclaration (method.return_type.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
 				block.add_statement (cdecl);
