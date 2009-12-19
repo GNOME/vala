@@ -74,6 +74,7 @@ TESTS = \
 	asynchronous/bug601558.vala \
 	dbus/basic-types.test \
 	dbus/arrays.test \
+	dbus/structs.test \
 	dbus/async.test \
 	dbus/bug596862.vala \
 	$(NULL)

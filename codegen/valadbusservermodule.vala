@@ -785,18 +785,26 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			cdecl = new CCodeDeclaration (prop.property_type.get_cname ());
 			cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
 			postfragment.append (cdecl);
-			postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
 
-			var array_type = prop.property_type as ArrayType;
-			if (array_type != null) {
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					string length_cname = get_array_length_cname ("result", dim);
+			if (prop.property_type.is_real_struct_type ()) {
+				// structs are returned via out parameter
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
 
-					cdecl = new CCodeDeclaration ("int");
-					cdecl.add_declarator (new CCodeVariableDeclarator (length_cname));
-					postfragment.append (cdecl);
+				postfragment.append (new CCodeExpressionStatement (ccall));
+			} else {
+				postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
 
-					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
+				var array_type = prop.property_type as ArrayType;
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						string length_cname = get_array_length_cname ("result", dim);
+
+						cdecl = new CCodeDeclaration ("int");
+						cdecl.add_declarator (new CCodeVariableDeclarator (length_cname));
+						postfragment.append (cdecl);
+
+						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
+					}
 				}
 			}
 
@@ -993,18 +1001,26 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			cdecl = new CCodeDeclaration (prop.property_type.get_cname ());
 			cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
 			postfragment.append (cdecl);
-			postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
 
-			var array_type = prop.property_type as ArrayType;
-			if (array_type != null) {
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					string length_cname = get_array_length_cname ("result", dim);
+			if (prop.property_type.is_real_struct_type ()) {
+				// structs are returned via out parameter
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
 
-					cdecl = new CCodeDeclaration ("int");
-					cdecl.add_declarator (new CCodeVariableDeclarator (length_cname));
-					postfragment.append (cdecl);
+				postfragment.append (new CCodeExpressionStatement (ccall));
+			} else {
+				postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("result"), ccall)));
 
-					ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
+				var array_type = prop.property_type as ArrayType;
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						string length_cname = get_array_length_cname ("result", dim);
+
+						cdecl = new CCodeDeclaration ("int");
+						cdecl.add_declarator (new CCodeVariableDeclarator (length_cname));
+						postfragment.append (cdecl);
+
+						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
+					}
 				}
 			}
 
@@ -1168,16 +1184,22 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (prop.set_accessor.get_cname ()));
 			ccall.add_argument (new CCodeIdentifier ("self"));
-			ccall.add_argument (new CCodeIdentifier ("value"));
 
-			var array_type = prop.property_type as ArrayType;
-			if (array_type != null) {
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					cdecl = new CCodeDeclaration ("int");
-					cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname ("value", dim)));
-					prefragment.append (cdecl);
+			if (prop.property_type.is_real_struct_type ()) {
+				// structs are passed by reference
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("value")));
+			} else {
+				ccall.add_argument (new CCodeIdentifier ("value"));
 
-					ccall.add_argument (new CCodeIdentifier (head.get_array_length_cname ("value", dim)));
+				var array_type = prop.property_type as ArrayType;
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						cdecl = new CCodeDeclaration ("int");
+						cdecl.add_declarator (new CCodeVariableDeclarator (head.get_array_length_cname ("value", dim)));
+						prefragment.append (cdecl);
+
+						ccall.add_argument (new CCodeIdentifier (head.get_array_length_cname ("value", dim)));
+					}
 				}
 			}
 

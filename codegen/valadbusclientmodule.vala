@@ -1475,28 +1475,34 @@ internal class Vala.DBusClientModule : DBusModule {
 		}
 
 		if (!(m.return_type is VoidType)) {
-			cdecl = new CCodeDeclaration (m.return_type.get_cname ());
-			cdecl.add_declarator (new CCodeVariableDeclarator ("_result"));
-			postfragment.append (cdecl);
+			if (m.return_type.is_real_struct_type ()) {
+				var target = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
+				var expr = read_expression (postfragment, m.return_type, new CCodeIdentifier ("_iter"), target);
+				postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+			} else {
+				cdecl = new CCodeDeclaration (m.return_type.get_cname ());
+				cdecl.add_declarator (new CCodeVariableDeclarator ("_result"));
+				postfragment.append (cdecl);
 
-			var array_type = m.return_type as ArrayType;
+				var array_type = m.return_type as ArrayType;
 
-			if (array_type != null) {
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					cdecl = new CCodeDeclaration ("int");
-					cdecl.add_declarator (new CCodeVariableDeclarator ("_result_length%d".printf (dim), new CCodeConstant ("0")));
-					postfragment.append (cdecl);
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						cdecl = new CCodeDeclaration ("int");
+						cdecl.add_declarator (new CCodeVariableDeclarator ("_result_length%d".printf (dim), new CCodeConstant ("0")));
+						postfragment.append (cdecl);
+					}
 				}
-			}
 
-			var target = new CCodeIdentifier ("_result");
-			var expr = read_expression (postfragment, m.return_type, new CCodeIdentifier ("_iter"), target);
-			postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+				var target = new CCodeIdentifier ("_result");
+				var expr = read_expression (postfragment, m.return_type, new CCodeIdentifier ("_iter"), target);
+				postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
 
-			if (array_type != null) {
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					// TODO check that parameter is not NULL (out parameters are optional)
-					postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length%d".printf (dim))), new CCodeIdentifier ("_result_length%d".printf (dim)))));
+				if (array_type != null) {
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						// TODO check that parameter is not NULL (out parameters are optional)
+						postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length%d".printf (dim))), new CCodeIdentifier ("_result_length%d".printf (dim)))));
+					}
 				}
 			}
 		}
@@ -1571,7 +1577,7 @@ internal class Vala.DBusClientModule : DBusModule {
 			set_error_call.add_argument (new CCodeConstant ("\"Connection is closed\""));
 			dispose_return_block.add_statement (new CCodeExpressionStatement (set_error_call));
 		}
-		if (m.return_type is VoidType) {
+		if (m.return_type is VoidType || m.return_type.is_real_struct_type ()) {
 			dispose_return_block.add_statement (new CCodeReturnStatement ());
 		} else {
 			dispose_return_block.add_statement (new CCodeReturnStatement (default_value_for_type (m.return_type, false)));
@@ -1639,7 +1645,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		reply_unref.add_argument (new CCodeIdentifier ("_reply"));
 		block.add_statement (new CCodeExpressionStatement (reply_unref));
 
-		if (!(m.return_type is VoidType)) {
+		if (!(m.return_type is VoidType || m.return_type.is_real_struct_type ())) {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 		}
 
@@ -2002,20 +2008,28 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		function.add_parameter (new CCodeFormalParameter ("self", "%s*".printf (iface.get_cname ())));
 
-		if (array_type != null) {
-			for (int dim = 1; dim <= array_type.rank; dim++) {
-				function.add_parameter (new CCodeFormalParameter ("result_length%d".printf (dim), "int*"));
+		if (prop.property_type.is_real_struct_type ()) {
+			function.add_parameter (new CCodeFormalParameter ("result", "%s*".printf (prop.set_accessor.value_type.get_cname ())));
+		} else {
+			if (array_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					function.add_parameter (new CCodeFormalParameter ("result_length%d".printf (dim), "int*"));
+				}
 			}
-		}
 
-		function.return_type = prop.get_accessor.value_type.get_cname ();
+			function.return_type = prop.get_accessor.value_type.get_cname ();
+		}
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
 		var postfragment = new CCodeFragment ();
 
 		var dispose_return_block = new CCodeBlock ();
-		dispose_return_block.add_statement (new CCodeReturnStatement (default_value_for_type (prop.property_type, false)));
+		if (prop.property_type.is_real_struct_type ()) {
+			dispose_return_block.add_statement (new CCodeReturnStatement ());
+		} else {
+			dispose_return_block.add_statement (new CCodeReturnStatement (default_value_for_type (prop.property_type, false)));
+		}
 		block.add_statement (new CCodeIfStatement (new CCodeMemberAccess.pointer (new CCodeCastExpression (new CCodeIdentifier ("self"), iface.get_cname () + "DBusProxy*"), "disposed"), dispose_return_block));
 
 		cdecl = new CCodeDeclaration ("DBusGConnection");
@@ -2061,31 +2075,37 @@ internal class Vala.DBusClientModule : DBusModule {
 		// property name
 		write_expression (prefragment, string_type, new CCodeIdentifier ("_iter"), new CCodeConstant ("\"%s\"".printf (get_dbus_name_for_member (prop))));
 
-		cdecl = new CCodeDeclaration (prop.get_accessor.value_type.get_cname ());
-		cdecl.add_declarator (new CCodeVariableDeclarator ("_result"));
-		postfragment.append (cdecl);
-
-		if (array_type != null) {
-			for (int dim = 1; dim <= array_type.rank; dim++) {
-				cdecl = new CCodeDeclaration ("int");
-				cdecl.add_declarator (new CCodeVariableDeclarator ("_result_length%d".printf (dim), new CCodeConstant ("0")));
-				postfragment.append (cdecl);
-			}
-		}
-
 		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_recurse"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_iter")));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_subiter")));
 		postfragment.append (new CCodeExpressionStatement (iter_call));
 
-		var target = new CCodeIdentifier ("_result");
-		var expr = read_expression (postfragment, prop.get_accessor.value_type, new CCodeIdentifier ("_subiter"), target);
-		postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+		if (prop.property_type.is_real_struct_type ()) {
+			var target = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
+			var expr = read_expression (postfragment, prop.get_accessor.value_type, new CCodeIdentifier ("_subiter"), target);
+			postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+		} else {
+			cdecl = new CCodeDeclaration (prop.get_accessor.value_type.get_cname ());
+			cdecl.add_declarator (new CCodeVariableDeclarator ("_result"));
+			postfragment.append (cdecl);
 
-		if (array_type != null) {
-			for (int dim = 1; dim <= array_type.rank; dim++) {
-				// TODO check that parameter is not NULL (out parameters are optional)
-				postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length%d".printf (dim))), new CCodeIdentifier ("_result_length%d".printf (dim)))));
+			if (array_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					cdecl = new CCodeDeclaration ("int");
+					cdecl.add_declarator (new CCodeVariableDeclarator ("_result_length%d".printf (dim), new CCodeConstant ("0")));
+					postfragment.append (cdecl);
+				}
+			}
+
+			var target = new CCodeIdentifier ("_result");
+			var expr = read_expression (postfragment, prop.get_accessor.value_type, new CCodeIdentifier ("_subiter"), target);
+			postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+
+			if (array_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					// TODO check that parameter is not NULL (out parameters are optional)
+					postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result_length%d".printf (dim))), new CCodeIdentifier ("_result_length%d".printf (dim)))));
+				}
 			}
 		}
 
@@ -2120,7 +2140,11 @@ internal class Vala.DBusClientModule : DBusModule {
 		reply_unref.add_argument (new CCodeIdentifier ("_reply"));
 		block.add_statement (new CCodeExpressionStatement (reply_unref));
 
-		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
+		if (prop.property_type.is_real_struct_type ()) {
+			block.add_statement (new CCodeReturnStatement ());
+		} else {
+			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
+		}
 
 		source_declarations.add_type_member_declaration (function.copy ());
 		function.block = block;
@@ -2142,11 +2166,16 @@ internal class Vala.DBusClientModule : DBusModule {
 		function.modifiers = CCodeModifiers.STATIC;
 
 		function.add_parameter (new CCodeFormalParameter ("self", "%s*".printf (iface.get_cname ())));
-		function.add_parameter (new CCodeFormalParameter ("value", prop.set_accessor.value_type.get_cname ()));
 
-		if (array_type != null) {
-			for (int dim = 1; dim <= array_type.rank; dim++) {
-				function.add_parameter (new CCodeFormalParameter ("value_length%d".printf (dim), "int"));
+		if (prop.property_type.is_real_struct_type ()) {
+			function.add_parameter (new CCodeFormalParameter ("value", "%s*".printf (prop.set_accessor.value_type.get_cname ())));
+		} else {
+			function.add_parameter (new CCodeFormalParameter ("value", prop.set_accessor.value_type.get_cname ()));
+
+			if (array_type != null) {
+				for (int dim = 1; dim <= array_type.rank; dim++) {
+					function.add_parameter (new CCodeFormalParameter ("value_length%d".printf (dim), "int"));
+				}
 			}
 		}
 
@@ -2209,7 +2238,11 @@ internal class Vala.DBusClientModule : DBusModule {
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_subiter")));
 		prefragment.append (new CCodeExpressionStatement (iter_call));
 
-		write_expression (prefragment, prop.set_accessor.value_type, new CCodeIdentifier ("_subiter"), new CCodeIdentifier ("value"));
+		if (prop.property_type.is_real_struct_type ()) {
+			write_expression (prefragment, prop.set_accessor.value_type, new CCodeIdentifier ("_subiter"), new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("value")));
+		} else {
+			write_expression (prefragment, prop.set_accessor.value_type, new CCodeIdentifier ("_subiter"), new CCodeIdentifier ("value"));
+		}
 
 		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_close_container"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_iter")));
