@@ -202,8 +202,8 @@ namespace Gst {
 		public weak Gst.Value? get_fraction_range_max ();
 		public void set_fraction_range_full (int numerator_start, int denominator_start, int numerator_end, int denominator_end);
 
-		public void set_date (Date date);
-		public Date get_date ();
+		public void set_date (GLib.Date date);
+		public GLib.Date get_date ();
 
 		public void set_caps (Caps caps);
 		public Caps get_caps ();

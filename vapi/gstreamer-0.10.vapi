@@ -1544,7 +1544,7 @@ namespace Gst {
 		public static bool fraction_subtract (GLib.Value dest, GLib.Value minuend, GLib.Value subtrahend);
 		public unowned Gst.Buffer get_buffer ();
 		public Gst.Caps get_caps ();
-		public Gst.Date get_date ();
+		public GLib.Date get_date ();
 		public double get_double_range_max ();
 		public double get_double_range_min ();
 		public uint get_fourcc ();
@@ -1573,7 +1573,7 @@ namespace Gst {
 		public string serialize ();
 		public void set_buffer (Gst.Buffer b);
 		public void set_caps (Gst.Caps caps);
-		public void set_date (Gst.Date date);
+		public void set_date (GLib.Date date);
 		public void set_double_range (double start, double end);
 		public void set_fourcc (uint fourcc);
 		public void set_fraction (int numerator, int denominator);
