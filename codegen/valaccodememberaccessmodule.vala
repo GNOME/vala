@@ -102,6 +102,9 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				expr.ccodenode = new CCodeIdentifier (m.get_cname ());
 			}
 		} else if (expr.symbol_reference is ArrayLengthField) {
+			if (expr.value_type is ArrayType && !(expr.parent_node is ElementAccess)) {
+				Report.error (expr.source_reference, "unsupported use of length field of multi-dimensional array");
+			}
 			expr.ccodenode = head.get_array_length_cexpression (expr.inner, 1);
 		} else if (expr.symbol_reference is Field) {
 			var f = (Field) expr.symbol_reference;

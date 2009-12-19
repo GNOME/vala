@@ -411,6 +411,8 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 			if (lit != null && memberaccess != null) {
 				int dim = lit.value.to_int ();
 				expr.ccodenode = head.get_array_length_cexpression (memberaccess.inner, dim + 1);
+			} else {
+				Report.error (expr.source_reference, "only integer literals supported as index");
 			}
 		} else if (container_type == string_type.data_type) {
 			// should be moved to a different module
