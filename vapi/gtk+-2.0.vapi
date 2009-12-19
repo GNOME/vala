@@ -2614,7 +2614,7 @@ namespace Gtk {
 		public virtual signal void page_reordered (Gtk.Widget p0, uint p1);
 		public virtual signal bool reorder_tab (Gtk.DirectionType direction, bool move_to_last);
 		public virtual signal bool select_page (bool move_focus);
-		public virtual signal void switch_page (void* page, uint page_num);
+		public virtual signal void switch_page (Gtk.NotebookPage page, uint page_num);
 	}
 	[Compact]
 	[CCode (cheader_filename = "gtk/gtk.h")]
