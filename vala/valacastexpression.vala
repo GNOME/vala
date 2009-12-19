@@ -119,6 +119,12 @@ public class Vala.CastExpression : Expression {
 			return false;
 		}
 
+		if (inner.value_type == null) {
+			Report.error (source_reference, "Invalid cast expression");
+			error = true;
+			return false;
+		}
+
 		if (is_non_null_cast) {
 			// (!) non-null cast
 			value_type = inner.value_type.copy ();
