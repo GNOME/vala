@@ -3957,6 +3957,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_sizeof_expression (SizeofExpression expr) {
+		generate_type_declaration (expr.type_reference, source_declarations);
+
 		var csizeof = new CCodeFunctionCall (new CCodeIdentifier ("sizeof"));
 		csizeof.add_argument (new CCodeIdentifier (expr.type_reference.get_cname ()));
 		expr.ccodenode = csizeof;
