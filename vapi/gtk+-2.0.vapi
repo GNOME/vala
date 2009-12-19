@@ -7525,7 +7525,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static Gdk.Event get_current_event ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static bool get_current_event_state (Gdk.ModifierType state);
+	public static bool get_current_event_state (out Gdk.ModifierType state);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static uint32 get_current_event_time ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
