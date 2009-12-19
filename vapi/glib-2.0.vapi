@@ -969,6 +969,21 @@ public class string {
 		return start.ndup (((char*) start.offset (len)) - ((char*) start));
 	}
 
+	public string slice (long start, long end) {
+		long string_length = this.len ();
+		if (start < 0) {
+			start = string_length + start;
+		}
+		if (end < 0) {
+			end = string_length + end;
+		}
+		GLib.return_val_if_fail (start >= 0 && start <= string_length, null);
+		GLib.return_val_if_fail (end >= 0 && end <= string_length, null);
+		GLib.return_val_if_fail (start <= end, null);
+		unowned string start_string = this.offset (start);
+		return start_string.ndup (((char*) start_string.offset (end - start)) - ((char*) start_string));
+	}
+
 	public bool contains (string needle) {
 		return this.str (needle) != null;
 	}
