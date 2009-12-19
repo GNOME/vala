@@ -94,13 +94,13 @@ namespace Gst {
 		CUBIC,
 		USER
 	}
-	[CCode (cprefix = "", cheader_filename = "gst/controller/gstlfocontrolsource.h")]
+	[CCode (cprefix = "GST_LFO_WAVEFORM_", cheader_filename = "gst/controller/gstlfocontrolsource.h")]
 	public enum LFOWaveform {
-		Sine waveform (default),
-		Square waveform,
-		Saw waveform,
-		Reverse saw waveform,
-		Triangle waveform
+		SINE,
+		SQUARE,
+		SAW,
+		REVERSE,
+		TRIANGLE
 	}
 	[CCode (cheader_filename = "gst/controller/gstcontroller.h", has_target = false)]
 	public delegate bool ControlSourceBind (Gst.ControlSource _self, GLib.ParamSpec pspec);
