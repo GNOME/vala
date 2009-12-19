@@ -1,3 +1,16 @@
+Vala 0.7.9
+==========
+
+ * Support array and string slicing.
+ * Add --symbols commandline option.
+ * Add avahi-gobject bindings (Sebastian Noack).
+ * Add ccss-1 bindings (Ali Sabil).
+ * Add libarchive bindings (Julian Andres Klode).
+ * Add libmagic bindings (Jens Georg).
+ * Add readline bindings (Jukka-Pekka Iivonen).
+ * Add twitter-glib-1.0 bindings (Adrien Bustany).
+ * Many bug fixes and binding updates.
+
 Vala 0.7.8
 ==========
 
