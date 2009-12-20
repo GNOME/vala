@@ -403,6 +403,15 @@ public class Vala.Struct : TypeSymbol {
 		return rank;
 	}
 
+	/**
+	 * Sets the rank of this integer or floating point type.
+	 *
+	 * @return the rank if this is an integer or floating point type
+	 */
+	public void set_rank (int rank) {
+		this.rank = rank;
+	}
+
 	private void process_ccode_attribute (Attribute a) {
 		if (a.has_argument ("const_cname")) {
 			set_const_cname (a.get_string ("const_cname"));

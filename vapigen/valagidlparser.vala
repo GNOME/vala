@@ -425,6 +425,10 @@ public class Vala.GIdlParser : CodeVisitor {
 							if (eval (nv[1]) == "1") {
 								return;
 							}
+						} else if (nv[0] == "base_type") {
+							st.base_type = parse_type_string (eval (nv[1]));
+						} else if (nv[0] == "rank") {
+							st.set_rank (eval (nv[1]).to_int ());
 						} else if (nv[0] == "simple_type") {
 							if (eval (nv[1]) == "1") {
 								st.set_simple_type (true);
