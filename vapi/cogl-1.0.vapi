@@ -125,7 +125,7 @@ namespace Cogl {
 	[CCode (ref_function = "cogl_texture_ref", unref_function = "cogl_texture_unref", cname = "CoglHandle", cheader_filename = "cogl/cogl.h")]
 	public class Texture : Cogl.Handle {
 		public Texture.from_bitmap (Cogl.Bitmap bmp_handle, Cogl.TextureFlags flags, Cogl.PixelFormat internal_format);
-		public Texture.from_data (uint width, uint height, Cogl.TextureFlags flags, Cogl.PixelFormat format, Cogl.PixelFormat internal_format, uint rowstride, uchar[] data);
+		public Texture.from_data (uint width, uint height, Cogl.TextureFlags flags, Cogl.PixelFormat format, Cogl.PixelFormat internal_format, uint rowstride, [CCode (array_length = false)] uchar[] data);
 		public Texture.from_file (string filename, Cogl.TextureFlags flags, Cogl.PixelFormat internal_format) throws GLib.Error;
 		public int get_data (Cogl.PixelFormat format, uint rowstride, uchar[] data);
 		public Cogl.PixelFormat get_format ();
