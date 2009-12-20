@@ -407,7 +407,7 @@ namespace GLib {
 		[CCode (has_construct_function = false)]
 		public InetAddress.loopback (GLib.SocketFamily family);
 		public virtual uchar to_bytes ();
-		public virtual unowned string to_string ();
+		public virtual string to_string ();
 		[NoAccessorMethod]
 		public void* bytes { get; construct; }
 		public GLib.SocketFamily family { get; construct; }
@@ -568,12 +568,12 @@ namespace GLib {
 		public virtual unowned string lookup_by_address (GLib.InetAddress address, GLib.Cancellable? cancellable) throws GLib.Error;
 		public virtual async unowned string lookup_by_address_async (GLib.InetAddress address, GLib.Cancellable? cancellable) throws GLib.Error;
 		public virtual unowned string lookup_by_address_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public virtual unowned GLib.List lookup_by_name (string hostname, GLib.Cancellable? cancellable) throws GLib.Error;
-		public virtual async unowned GLib.List lookup_by_name_async (string hostname, GLib.Cancellable? cancellable) throws GLib.Error;
-		public virtual unowned GLib.List lookup_by_name_finish (GLib.AsyncResult _result) throws GLib.Error;
-		public virtual unowned GLib.List lookup_service (string service, string protocol, string domain, GLib.Cancellable? cancellable) throws GLib.Error;
-		public virtual async unowned GLib.List lookup_service_async (string service, string protocol, string domain, GLib.Cancellable? cancellable) throws GLib.Error;
-		public virtual unowned GLib.List lookup_service_finish (GLib.AsyncResult _result) throws GLib.Error;
+		public virtual GLib.List<GLib.InetAddress> lookup_by_name (string hostname, GLib.Cancellable? cancellable) throws GLib.Error;
+		public virtual async GLib.List<GLib.InetAddress> lookup_by_name_async (string hostname, GLib.Cancellable? cancellable) throws GLib.Error;
+		public virtual GLib.List<GLib.InetAddress> lookup_by_name_finish (GLib.AsyncResult _result) throws GLib.Error;
+		public virtual GLib.List<GLib.SrvTarget> lookup_service (string service, string protocol, string domain, GLib.Cancellable? cancellable) throws GLib.Error;
+		public virtual async GLib.List<GLib.SrvTarget> lookup_service_async (string service, string protocol, string domain, GLib.Cancellable? cancellable) throws GLib.Error;
+		public virtual GLib.List<GLib.SrvTarget> lookup_service_finish (GLib.AsyncResult _result) throws GLib.Error;
 		public void set_default ();
 	}
 	[CCode (cheader_filename = "gio/gio.h")]
