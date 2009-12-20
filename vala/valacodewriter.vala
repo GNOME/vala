@@ -1378,7 +1378,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		expr.container.accept (this);
 		write_string ("[");
 		expr.start.accept (this);
-		write_string ("..");
+		write_string (":");
 		expr.stop.accept (this);
 		write_string ("]");
 	}
