@@ -292,7 +292,7 @@ namespace Soup {
 		public bool get_content_disposition (out unowned string disposition, GLib.HashTable @params);
 		public int64 get_content_length ();
 		public bool get_content_range (int64 start, int64 end, int64 total_length);
-		public unowned string get_content_type (GLib.HashTable @params);
+		public unowned string get_content_type (out GLib.HashTable @params);
 		public Soup.Encoding get_encoding ();
 		public Soup.Expectation get_expectations ();
 		public bool get_ranges (int64 total_length, out unowned Soup.Range ranges, int length);
