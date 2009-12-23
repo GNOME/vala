@@ -368,7 +368,7 @@ internal class Vala.GAsyncModule : GSignalModule {
 			propagate_error.add_argument (simple_async_result_cast);
 			propagate_error.add_argument (new CCodeIdentifier ("error"));
 			var errorblock = new CCodeBlock ();
-			if (return_type is VoidType) {
+			if (return_type is VoidType || return_type.is_real_non_null_struct_type ()) {
 				errorblock.add_statement (new CCodeReturnStatement ());
 			} else {
 				errorblock.add_statement (new CCodeReturnStatement (default_value_for_type (return_type, false)));
