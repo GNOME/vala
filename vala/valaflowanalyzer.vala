@@ -173,9 +173,11 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	}
 
 	void analyze_body (BasicBlock entry_block) {
-		build_dominator_tree (entry_block);
-		build_dominator_frontier (entry_block);
-		insert_phi_functions (entry_block);
+		var block_list = get_depth_first_list (entry_block);
+
+		build_dominator_tree (block_list, entry_block);
+		build_dominator_frontier (block_list, entry_block);
+		insert_phi_functions (block_list, entry_block);
 		check_variables (entry_block);
 	}
 
@@ -195,10 +197,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
-	void build_dominator_tree (BasicBlock entry_block) {
+	void build_dominator_tree (List<BasicBlock> block_list, BasicBlock entry_block) {
 		// set dom(n) = {E,1,2...,N,X} forall n
 		var dom = new HashMap<BasicBlock, Set<BasicBlock>> ();
-		var block_list = get_depth_first_list (entry_block);
 		foreach (BasicBlock block in block_list) {
 			var block_set = new HashSet<BasicBlock> ();
 			foreach (BasicBlock b in block_list) {
@@ -283,8 +284,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
-	void build_dominator_frontier (BasicBlock entry_block) {
-		var block_list = get_depth_first_list (entry_block);
+	void build_dominator_frontier (List<BasicBlock> block_list, BasicBlock entry_block) {
 		for (int i = block_list.size - 1; i >= 0; i--) {
 			var block = block_list[i];
 
@@ -306,9 +306,9 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
-	Map<LocalVariable, Set<BasicBlock>> get_assignment_map (BasicBlock entry_block) {
+	Map<LocalVariable, Set<BasicBlock>> get_assignment_map (List<BasicBlock> block_list, BasicBlock entry_block) {
 		var map = new HashMap<LocalVariable, Set<BasicBlock>> ();
-		foreach (BasicBlock block in get_depth_first_list (entry_block)) {
+		foreach (BasicBlock block in block_list) {
 			var defined_variables = new ArrayList<LocalVariable> ();
 			foreach (CodeNode node in block.get_nodes ()) {
 				node.get_defined_variables (defined_variables);
@@ -326,15 +326,15 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		return map;
 	}
 
-	void insert_phi_functions (BasicBlock entry_block) {
-		var assign = get_assignment_map (entry_block);
+	void insert_phi_functions (List<BasicBlock> block_list, BasicBlock entry_block) {
+		var assign = get_assignment_map (block_list, entry_block);
 
 		int counter = 0;
 		var work_list = new ArrayList<BasicBlock> ();
 
 		var added = new HashMap<BasicBlock, int> ();
 		var phi = new HashMap<BasicBlock, int> ();
-		foreach (BasicBlock block in get_depth_first_list (entry_block)) {
+		foreach (BasicBlock block in block_list) {
 			added.set (block, 0);
 			phi.set (block, 0);
 		}
