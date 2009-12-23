@@ -41,6 +41,7 @@ public class Vala.BasicBlock {
 	Set<PhiFunction> phi_functions = new HashSet<PhiFunction> ();
 
 	public bool postorder_visited { get; set; }
+	public int postorder_number { get; set; }
 
 	public BasicBlock () {
 	}

@@ -196,66 +196,40 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		foreach (BasicBlock succ in current.get_successors ()) {
 			depth_first_traverse (succ, list);
 		}
+		current.postorder_number = list.size;
 		list.insert (0, current);
 	}
 
 	void build_dominator_tree (List<BasicBlock> block_list, BasicBlock entry_block) {
-		// set dom(n) = {E,1,2...,N,X} forall n
-		var dom = new HashMap<BasicBlock, Set<BasicBlock>> ();
-		foreach (BasicBlock block in block_list) {
-			var block_set = new HashSet<BasicBlock> ();
-			foreach (BasicBlock b in block_list) {
-				block_set.add (b);
-			}
-			dom.set (block, block_set);
-		}
+		// immediate dominators
+		var idoms = new BasicBlock[block_list.size];
+		idoms[entry_block.postorder_number] = entry_block;
 
-		// set dom(E) = {E}
-		var entry_dom_set = new HashSet<BasicBlock> ();
-		entry_dom_set.add (entry_block);
-		dom.set (entry_block, entry_dom_set);
-
-		bool changes = true;
-		while (changes) {
-			changes = false;
+		bool changed = true;
+		while (changed) {
+			changed = false;
 			foreach (BasicBlock block in block_list) {
-				// intersect dom(pred) forall pred: pred = predecessor(s)
-				var dom_set = new HashSet<BasicBlock> ();
+				if (block == entry_block) {
+					continue;
+				}
+
+				// new immediate dominator
+				BasicBlock new_idom = null;
 				bool first = true;
 				foreach (BasicBlock pred in block.get_predecessors ()) {
-					var pred_dom_set = dom.get (pred);
-					if (first) {
-						foreach (BasicBlock dom_block in pred_dom_set) {
-							dom_set.add (dom_block);
-						}
-						first = false;
-					} else {
-						var remove_queue = new ArrayList<BasicBlock> ();
-						foreach (BasicBlock dom_block in dom_set) {
-							if (!(dom_block in pred_dom_set)) {
-								remove_queue.add (dom_block);
-							}
-						}
-						foreach (BasicBlock dom_block in remove_queue) {
-							dom_set.remove (dom_block);
+					if (idoms[pred.postorder_number] != null) {
+						if (first) {
+							new_idom = pred;
+							first = false;
+						} else {
+							new_idom = intersect (idoms, pred, new_idom);
 						}
 					}
 				}
-				// unite with s
-				dom_set.add (block);
-
-				// check for changes
-				if (dom.get (block).size != dom_set.size) {
-					changes = true;
-				} else {
-					foreach (BasicBlock dom_block in dom.get (block)) {
-						if (!(dom_block in dom_set)) {
-							changes = true;
-						}
-					}
+				if (idoms[block.postorder_number] != new_idom) {
+					idoms[block.postorder_number] = new_idom;
+					changed = true;
 				}
-				// update set in map
-				dom.set (block, dom_set);
 			}
 		}
 
@@ -265,25 +239,20 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 				continue;
 			}
 
-			BasicBlock immediate_dominator = null;
-			foreach (BasicBlock dominator in dom.get (block)) {
-				if (dominator == block) {
-					continue;
-				}
-
-				if (immediate_dominator == null) {
-					immediate_dominator = dominator;
-				} else {
-					// if immediate_dominator dominates dominator,
-					// update immediate_dominator
-					if (immediate_dominator in dom.get (dominator)) {
-						immediate_dominator = dominator;
-					}
-				}
-			}
-
-			immediate_dominator.add_child (block);
+			idoms[block.postorder_number].add_child (block);
 		}
+	}
+
+	BasicBlock intersect (BasicBlock[] idoms, BasicBlock b1, BasicBlock b2) {
+		while (b1 != b2) {
+			while (b1.postorder_number < b2.postorder_number) {
+				b1 = idoms[b2.postorder_number];
+			}
+			while (b2.postorder_number < b1.postorder_number) {
+				b2 = idoms[b2.postorder_number];
+			}
+		}
+		return b1;
 	}
 
 	void build_dominator_frontier (List<BasicBlock> block_list, BasicBlock entry_block) {
