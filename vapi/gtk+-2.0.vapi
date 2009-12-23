@@ -3141,7 +3141,7 @@ namespace Gtk {
 		[NoWrapper]
 		public virtual unowned Gtk.RcStyle create_rc_style ();
 		[NoWrapper]
-		public virtual unowned Gtk.Style create_style ();
+		public virtual Gtk.Style create_style ();
 		[NoWrapper]
 		public virtual void merge (Gtk.RcStyle src);
 		[NoWrapper]
