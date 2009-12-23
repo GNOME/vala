@@ -169,10 +169,14 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			current_block.connect (m.exit_block);
 		}
 
-		build_dominator_tree (m.entry_block);
-		build_dominator_frontier (m.entry_block);
-		insert_phi_functions (m.entry_block);
-		check_variables (m.entry_block);
+		analyze_body (m.entry_block);
+	}
+
+	void analyze_body (BasicBlock entry_block) {
+		build_dominator_tree (entry_block);
+		build_dominator_frontier (entry_block);
+		insert_phi_functions (entry_block);
+		check_variables (entry_block);
 	}
 
 	List<BasicBlock> get_depth_first_list (BasicBlock entry_block) {
@@ -508,10 +512,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			current_block.connect (acc.exit_block);
 		}
 
-		build_dominator_tree (acc.entry_block);
-		build_dominator_frontier (acc.entry_block);
-		insert_phi_functions (acc.entry_block);
-		check_variables (acc.entry_block);
+		analyze_body (acc.entry_block);
 	}
 
 	public override void visit_block (Block b) {
