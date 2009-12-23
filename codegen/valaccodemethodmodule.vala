@@ -983,7 +983,7 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 		generate_cparameters (m, source_declarations, cparam_map, vfunc, null, carg_map, vcall, direction);
 
 		CCodeStatement cstmt;
-		if (return_type is VoidType) {
+		if (return_type is VoidType || return_type.is_real_non_null_struct_type ()) {
 			cstmt = new CCodeExpressionStatement (vcall);
 		} else if (m.get_postconditions ().size == 0) {
 			/* pass method return value */
