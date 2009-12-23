@@ -2133,6 +2133,10 @@ public class Vala.GIdlParser : CodeVisitor {
 							param_type.value_owned = true;
 						}
 					} else if (nv[0] == "type_name") {
+						if (!(param_type is UnresolvedType)) {
+							param_type = new UnresolvedType ();
+							p.parameter_type = param_type;
+						}
 						((UnresolvedType) param_type).unresolved_symbol = new UnresolvedSymbol (null, eval (nv[1]));
 					} else if (nv[0] == "namespace_name") {
 						ns_name = eval (nv[1]);
