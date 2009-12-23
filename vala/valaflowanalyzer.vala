@@ -181,6 +181,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		check_variables (entry_block);
 	}
 
+	// generates reverse postorder list
 	List<BasicBlock> get_depth_first_list (BasicBlock entry_block) {
 		var list = new ArrayList<BasicBlock> ();
 		depth_first_traverse (entry_block, list);
@@ -188,13 +189,14 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	}
 
 	void depth_first_traverse (BasicBlock current, List<BasicBlock> list) {
-		if (current in list) {
+		if (current.postorder_visited) {
 			return;
 		}
-		list.add (current);
+		current.postorder_visited = true;
 		foreach (BasicBlock succ in current.get_successors ()) {
 			depth_first_traverse (succ, list);
 		}
+		list.insert (0, current);
 	}
 
 	void build_dominator_tree (List<BasicBlock> block_list, BasicBlock entry_block) {
