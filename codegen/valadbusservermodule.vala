@@ -267,7 +267,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 		if (!(m.return_type is VoidType)) {
 			if (get_type_signature (m.return_type) == null) {
 				Report.error (m.return_type.source_reference, "D-Bus serialization of type `%s' is not supported".printf (m.return_type.to_string ()));
-			} else if (m.return_type.is_real_struct_type ()) {
+			} else if (m.return_type.is_real_non_null_struct_type ()) {
 				cdecl = new CCodeDeclaration (m.return_type.get_cname ());
 				cdecl.add_declarator (new CCodeVariableDeclarator.zero ("result", default_value_for_type (m.return_type, true)));
 				out_prefragment.append (cdecl);
@@ -786,7 +786,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
 			postfragment.append (cdecl);
 
-			if (prop.property_type.is_real_struct_type ()) {
+			if (prop.property_type.is_real_non_null_struct_type ()) {
 				// structs are returned via out parameter
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
 
@@ -1002,7 +1002,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			cdecl.add_declarator (new CCodeVariableDeclarator ("result"));
 			postfragment.append (cdecl);
 
-			if (prop.property_type.is_real_struct_type ()) {
+			if (prop.property_type.is_real_non_null_struct_type ()) {
 				// structs are returned via out parameter
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("result")));
 
@@ -1185,7 +1185,7 @@ internal class Vala.DBusServerModule : DBusClientModule {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier (prop.set_accessor.get_cname ()));
 			ccall.add_argument (new CCodeIdentifier ("self"));
 
-			if (prop.property_type.is_real_struct_type ()) {
+			if (prop.property_type.is_real_non_null_struct_type ()) {
 				// structs are passed by reference
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("value")));
 			} else {

@@ -412,7 +412,7 @@ internal class Vala.DBusClientModule : DBusModule {
 
 				// return result->data;
 				block.add_statement (new CCodeReturnStatement (new CCodeCastExpression (new CCodeMemberAccess.pointer (new CCodeIdentifier ("result"), dbus_use_ptr_array (array_type) ? "pdata" : "data"), method.return_type.get_cname ())));
-			} else if (method.return_type.is_real_struct_type ()) {
+			} else if (method.return_type.is_real_non_null_struct_type ()) {
 				// structs are returned via out parameter
 				var st = (Struct) method.return_type.data_type;
 
@@ -1515,7 +1515,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		}
 
 		if (!(m.return_type is VoidType)) {
-			if (m.return_type.is_real_struct_type ()) {
+			if (m.return_type.is_real_non_null_struct_type ()) {
 				var target = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
 				var expr = read_expression (postfragment, m.return_type, new CCodeIdentifier ("_iter"), target);
 				postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
@@ -1580,7 +1580,9 @@ internal class Vala.DBusClientModule : DBusModule {
 		dbus_error_free.add_argument (dbus_error);
 		error_block.add_statement (new CCodeExpressionStatement (dbus_error_free));
 
-		if (!(m.return_type is VoidType)) {
+		if (m.return_type is VoidType || m.return_type.is_real_non_null_struct_type ()) {
+			error_block.add_statement (new CCodeReturnStatement ());
+		} else {
 			error_block.add_statement (new CCodeReturnStatement (default_value_for_type (m.return_type, false)));
 		}
 
@@ -1617,7 +1619,7 @@ internal class Vala.DBusClientModule : DBusModule {
 			set_error_call.add_argument (new CCodeConstant ("\"Connection is closed\""));
 			dispose_return_block.add_statement (new CCodeExpressionStatement (set_error_call));
 		}
-		if (m.return_type is VoidType || m.return_type.is_real_struct_type ()) {
+		if (m.return_type is VoidType || m.return_type.is_real_non_null_struct_type ()) {
 			dispose_return_block.add_statement (new CCodeReturnStatement ());
 		} else {
 			dispose_return_block.add_statement (new CCodeReturnStatement (default_value_for_type (m.return_type, false)));
@@ -1685,7 +1687,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		reply_unref.add_argument (new CCodeIdentifier ("_reply"));
 		block.add_statement (new CCodeExpressionStatement (reply_unref));
 
-		if (!(m.return_type is VoidType || m.return_type.is_real_struct_type ())) {
+		if (!(m.return_type is VoidType || m.return_type.is_real_non_null_struct_type ())) {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 		}
 
@@ -2017,7 +2019,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		reply_unref.add_argument (new CCodeIdentifier ("_reply"));
 		block.add_statement (new CCodeExpressionStatement (reply_unref));
 
-		if (!(m.return_type is VoidType)) {
+		if (!(m.return_type is VoidType || m.return_type.is_real_non_null_struct_type ())) {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
 		}
 
@@ -2048,7 +2050,7 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		function.add_parameter (new CCodeFormalParameter ("self", "%s*".printf (iface.get_cname ())));
 
-		if (prop.property_type.is_real_struct_type ()) {
+		if (prop.property_type.is_real_non_null_struct_type ()) {
 			function.add_parameter (new CCodeFormalParameter ("result", "%s*".printf (prop.set_accessor.value_type.get_cname ())));
 		} else {
 			if (array_type != null) {
@@ -2065,7 +2067,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		var postfragment = new CCodeFragment ();
 
 		var dispose_return_block = new CCodeBlock ();
-		if (prop.property_type.is_real_struct_type ()) {
+		if (prop.property_type.is_real_non_null_struct_type ()) {
 			dispose_return_block.add_statement (new CCodeReturnStatement ());
 		} else {
 			dispose_return_block.add_statement (new CCodeReturnStatement (default_value_for_type (prop.property_type, false)));
@@ -2120,7 +2122,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_subiter")));
 		postfragment.append (new CCodeExpressionStatement (iter_call));
 
-		if (prop.property_type.is_real_struct_type ()) {
+		if (prop.property_type.is_real_non_null_struct_type ()) {
 			var target = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
 			var expr = read_expression (postfragment, prop.get_accessor.value_type, new CCodeIdentifier ("_subiter"), target);
 			postfragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
@@ -2180,7 +2182,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		reply_unref.add_argument (new CCodeIdentifier ("_reply"));
 		block.add_statement (new CCodeExpressionStatement (reply_unref));
 
-		if (prop.property_type.is_real_struct_type ()) {
+		if (prop.property_type.is_real_non_null_struct_type ()) {
 			block.add_statement (new CCodeReturnStatement ());
 		} else {
 			block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
@@ -2207,7 +2209,7 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		function.add_parameter (new CCodeFormalParameter ("self", "%s*".printf (iface.get_cname ())));
 
-		if (prop.property_type.is_real_struct_type ()) {
+		if (prop.property_type.is_real_non_null_struct_type ()) {
 			function.add_parameter (new CCodeFormalParameter ("value", "%s*".printf (prop.set_accessor.value_type.get_cname ())));
 		} else {
 			function.add_parameter (new CCodeFormalParameter ("value", prop.set_accessor.value_type.get_cname ()));
@@ -2278,7 +2280,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_subiter")));
 		prefragment.append (new CCodeExpressionStatement (iter_call));
 
-		if (prop.property_type.is_real_struct_type ()) {
+		if (prop.property_type.is_real_non_null_struct_type ()) {
 			write_expression (prefragment, prop.set_accessor.value_type, new CCodeIdentifier ("_subiter"), new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("value")));
 		} else {
 			write_expression (prefragment, prop.set_accessor.value_type, new CCodeIdentifier ("_subiter"), new CCodeIdentifier ("value"));
