@@ -1167,7 +1167,7 @@ namespace Gst {
 	}
 	[Compact]
 	[Immutable]
-	[CCode (copy_function = "gst_structure_copy", cheader_filename = "gst/gst.h")]
+	[CCode (copy_function = "gst_structure_copy", type_id = "GST_TYPE_STRUCTURE", cheader_filename = "gst/gst.h")]
 	public class Structure {
 		public weak GLib.Array fields;
 		public GLib.Quark name;
