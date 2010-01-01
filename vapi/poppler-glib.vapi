@@ -238,7 +238,7 @@ namespace Poppler {
 		public static void free_form_field_mapping (GLib.List list);
 		public static void free_image_mapping (GLib.List list);
 		public static void free_link_mapping (GLib.List list);
-		public void get_crop_box (Poppler.Rectangle rect);
+		public void get_crop_box (out Poppler.Rectangle rect);
 		public double get_duration ();
 		public unowned GLib.List get_form_field_mapping ();
 		public unowned GLib.List get_image_mapping ();
