@@ -189,7 +189,7 @@ namespace Poppler {
 	[Compact]
 	[CCode (copy_function = "poppler_form_field_mapping_copy", type_id = "POPPLER_TYPE_FORM_FIELD_MAPPING", cheader_filename = "poppler.h")]
 	public class FormFieldMapping {
-		public weak Poppler.Rectangle area;
+		public Poppler.Rectangle area;
 		public weak Poppler.FormField field;
 		[CCode (has_construct_function = false)]
 		public FormFieldMapping ();
@@ -198,7 +198,7 @@ namespace Poppler {
 	[Compact]
 	[CCode (copy_function = "poppler_image_mapping_copy", type_id = "POPPLER_TYPE_IMAGE_MAPPING", cheader_filename = "poppler.h")]
 	public class ImageMapping {
-		public weak Poppler.Rectangle area;
+		public Poppler.Rectangle area;
 		public weak Gdk.Pixbuf image;
 		[CCode (has_construct_function = false)]
 		public ImageMapping ();
@@ -219,7 +219,7 @@ namespace Poppler {
 	[CCode (copy_function = "poppler_link_mapping_copy", type_id = "POPPLER_TYPE_LINK_MAPPING", cheader_filename = "poppler.h")]
 	public class LinkMapping {
 		public weak Poppler.Action action;
-		public weak Poppler.Rectangle area;
+		public Poppler.Rectangle area;
 		[CCode (has_construct_function = false)]
 		public LinkMapping ();
 		public Poppler.LinkMapping copy ();
@@ -272,16 +272,12 @@ namespace Poppler {
 		public PageTransition ();
 		public Poppler.PageTransition copy ();
 	}
-	[Compact]
-	[CCode (copy_function = "poppler_rectangle_copy", type_id = "POPPLER_TYPE_RECTANGLE", cheader_filename = "poppler.h")]
-	public class Rectangle {
+	[CCode (type_id = "POPPLER_TYPE_RECTANGLE", cheader_filename = "poppler.h")]
+	public struct Rectangle {
 		public double x1;
-		public double x2;
 		public double y1;
+		public double x2;
 		public double y2;
-		[CCode (has_construct_function = false)]
-		public Rectangle ();
-		public Poppler.Rectangle copy ();
 	}
 	[CCode (cprefix = "POPPLER_ACTION_", has_type_id = "0", cheader_filename = "poppler.h")]
 	public enum ActionType {
