@@ -423,6 +423,9 @@ public class Vala.GirParser : CodeVisitor {
 			var element_type = parse_type ();
 			end_element ("array");
 			return new ArrayType (element_type, 1, null);
+		} else if (reader.name == "callback"){
+			var callback = parse_callback ();
+			return new DelegateType (callback);
 		} else {
 			start_element ("type");
 			DataType type = parse_type_from_name (reader.get_attribute ("name"));
