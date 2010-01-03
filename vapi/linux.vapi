@@ -1,5 +1,7 @@
 /**
- * Copyright (C) 2009 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
+ * linux.vapi
+ *
+ * Copyright (C) 2009-2010 Michael 'Mickey' Lauer <mlauer@vanille-media.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,7 +17,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
- */
+ **/
 
 [CCode (cprefix = "", lower_case_cprefix = "")]
 namespace Linux {
@@ -247,6 +249,20 @@ namespace Linux {
     [CCode (cheader_filename = "utmp.h")]
     public int login_tty (int fd);
 
+    // emulate gettid(2) for which no glib wrapper exists via syscall
+    public Posix.pid_t gettid() {
+        return (Posix.pid_t) syscall( SysCall.gettid );
+    }
+
+    // syscall(2)
+    [CCode (cprefix = "SYS_", cname = "int")]
+    public enum SysCall {
+            gettid
+    }
+
+    [CCode (cname = "syscall", cheader_filename = "unistd.h,sys/syscall.h")]
+    public int syscall (int number, ...);
+
     // mremap(2)
     [CCode (cprefix = "MREMAP_", cheader_filename = "sys/mman.h")]
     public enum MremapFlags {
@@ -255,8 +271,7 @@ namespace Linux {
     }
 
     [CCode (cheader_filename = "sys/mman.h")]
-    public void *mremap(void *old_address, size_t old_size, size_t new_size,
-                        MremapFlags flags);
+    public void *mremap(void *old_address, size_t old_size, size_t new_size, MremapFlags flags);
 
     /*
      * Network
@@ -1655,7 +1670,7 @@ namespace Linux {
     /*
      * Netlink subsystem
      */
-    [CCode (cprefix = "", lower_case_cprefix = "")]
+    [CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "linux/netlink.h")]
     namespace Netlink {
 
         [CCode (cheader_filename = "linux/netlink.h")]
@@ -1697,14 +1712,7 @@ namespace Linux {
         [CCode (cheader_filename = "linux/netlink.h")]
         public const int NETLINK_ECRYPTFS;
 
-        // additions to the socket interface (non-posix)
-        [CCode (cheader_filename = "sys/socket.h")]
-        public const int AF_NETLINK;
-        [CCode (cheader_filename = "sys/socket.h")]
-        public const int SOCK_NONBLOCK;
-        [CCode (cheader_filename = "sys/socket.h")]
-        public const int SOCK_CLOEXEC;
-
+        // netlink socket, can be used instead of sockaddr
         [CCode (cname = "struct sockaddr_nl", cheader_filename = "linux/netlink.h", destroy_function = "")]
         public struct SockAddrNl {
             public int nl_family;
@@ -1713,9 +1721,106 @@ namespace Linux {
             public uint32 nl_groups;
         }
 
+        // netlink message header
+        [CCode (cname = "struct nlmsghdr", cheader_filename = "linux/netlink.h", destroy_function = "")]
+        public struct NlMsgHdr {
+            public uint32 nlmsg_len;
+            public uint16 nlmsg_type;
+            public uint16 nlmsg_flags;
+            public uint32 nlmsg_seq;
+            public uint32 nlmsg_pid;
+        }
+
+        // netlink error message
+        [CCode (cname = "struct nlmsgerr", cheader_filename = "linux/netlink.h", destroy_function = "")]
+        public struct NlMsgErr {
+            public int error;
+            public NlMsgHdr msg;
+        }
+
+        // rtnetlink multicast groups ( userland compatibility values )
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_LINK;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_NOTIFY;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_NEIGH;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_TC;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_IPV4_IFADDR;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_IPV4_MROUTE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_IPV4_ROUTE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_IPV4_RULE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_IPV6_IFADDR;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_IPV6_MROUTE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_IPV6_ROUTE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_IPV6_IFINFO;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_DECnet_IFADDR;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_DECnet_ROUTE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTMGRP_IPV6_PREFIX;
+
+        // rtnetlink multicast groups ( 1 << group )
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_NONE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_LINK;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_NOTIFY;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_NEIGH;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_TC;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_IPV4_IFADDR;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_IPV4_MROUTE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_IPV4_ROUTE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_IPV4_RULE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_IPV6_IFADDR;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_IPV6_MROUTE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_IPV6_ROUTE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_IPV6_IFINFO;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_DECnet_IFADDR;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_NOP2;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_DECnet_ROUTE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_DECnet_RULE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_NOP4;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_IPV6_PREFIX;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_IPV6_RULE;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_ND_USEROPT;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_PHONET_IFADDR;
+        [CCode (cheader_filename = "linux/rtnetlink.h")]
+        public const int RTNLGRP_PHONET_ROUTE;
+
         /*
         [CCode (cheader_filename = "sys/socket.h", sentinel = "")]
-        public int bind (int sockfd, SockAddrNl addr, ulong length );
+        public int bind (int sockfd, SockAddrNl addr, ulong length);
         */
     }
 
@@ -1741,6 +1846,26 @@ namespace Linux {
         public const int RTC_WKALM_RD;
         [CCode (cheader_filename = "linux/rtc.h,sys/ioctl.h")]
         public const int RTC_WKALM_SET;
+    }
+
+    /*
+     * Socket extensions (non-posix)
+     */
+    [CCode (cprefix = "", lower_case_cprefix = "")]
+    namespace Socket {
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int AF_NETLINK;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SOCK_NONBLOCK;
+        [CCode (cheader_filename = "sys/socket.h")]
+        public const int SOCK_CLOEXEC;
+
+        [CCode (cname = "struct ucred", cheader_filename = "linux/socket.h", destroy_function = "")]
+        public struct ucred {
+            public uint32 pid;
+            public uint32 uid;
+            public uint32 gid;
+        }
     }
 
     /*
