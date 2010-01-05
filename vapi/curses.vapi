@@ -214,6 +214,8 @@ namespace Curses {
 		public int instr(string str);
 		[CCode (cname = "wmove")]
 		public int move(int y, int x);
+		[CCode (cname = "wresize")]
+		public int resize(int h, int w);
 		[CCode (cname = "wnoutrefresh")]
 		public int noutrefresh();
 		[CCode (cname = "wprintw")]
@@ -442,4 +444,68 @@ namespace Curses {
 	}
 	
 	/* TODO: mouse + wide char support */
+	[CCode (cname="MEVENT")]
+	public struct MouseEvent {
+		short id;
+		int x;
+		int y;
+		int z;
+		long bstate;
+	}
+
+	[CCode (cprefix="")]
+	public enum MouseMask {
+		ALL_MOUSE_EVENTS,
+		REPORT_MOUSE_POSITION
+	}
+
+	public enum Button {
+		SHIFT,
+		CTRL,
+		ALT,
+	}
+
+	public enum Button1 {
+		PRESSED,
+		RELEASED,
+		CLICKED,
+		DOUBLE_CLICKED,
+		TRIPLE_CLICKED
+	}
+
+	public enum Button2 {
+		PRESSED,
+		RELEASED,
+		CLICKED,
+		DOUBLE_CLICKED,
+		TRIPLE_CLICKED
+	}
+
+	public enum Button3 {
+		PRESSED,
+		RELEASED,
+		CLICKED,
+		DOUBLE_CLICKED,
+		TRIPLE_CLICKED
+	}
+
+	public enum Button4 {
+		PRESSED,
+		RELEASED,
+		CLICKED,
+		DOUBLE_CLICKED,
+		TRIPLE_CLICKED
+	}
+
+	public enum Button5 {
+		PRESSED,
+		RELEASED,
+		CLICKED,
+		DOUBLE_CLICKED,
+		TRIPLE_CLICKED
+	}
+
+	public bool getmouse(out MouseEvent me);
+	public int mouseinterval(int erval);
+	public int mousemask(MouseMask @new, out MouseMask old);
 }
