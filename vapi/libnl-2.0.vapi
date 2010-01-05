@@ -101,7 +101,7 @@ namespace Netlink {
     }
 
     [Compact]
-    [CCode (cprefix = "rtnl_addr_", cname = "struct rtnl_addr", free_function = "", cheader_filename = "netlink/route/netlink.h")]
+    [CCode (cprefix = "rtnl_addr_", cname = "struct rtnl_addr", free_function = "", cheader_filename = "netlink/route/addr.h")]
     public class RouteAddress : Address {
         [CCode (cname = "rtnl_addr_alloc")]
         public RouteAddress();
