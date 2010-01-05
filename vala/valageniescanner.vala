@@ -41,6 +41,10 @@ public class Vala.Genie.Scanner {
 	int current_indent_level;
 	int indent_level;
 	int pending_dedents;
+	
+	/* track open parens and braces for automatic line continuations */
+	int open_parens_count;
+	int open_brace_count;
 
 	TokenType last_token;
 	bool parse_started;
@@ -69,6 +73,9 @@ public class Vala.Genie.Scanner {
 		current_indent_level = 0;
 		indent_level = 0;
 		pending_dedents = 0;
+		
+		open_parens_count = 0;
+		open_brace_count = 0;
 
 		parse_started = false;
 		last_token = TokenType.NONE;
@@ -482,12 +489,21 @@ public class Vala.Genie.Scanner {
 			space ();
 		}
 		
-		/* handle line continuation (lines ending with \) */
+		
+		/* handle explicit line continuation (lines ending with "\") */
 		while (current < end && current[0] == '\\' && current[1] == '\n') {
 			current += 2;
 			line++;
 			skip_space_tabs ();
 		}
+		
+		/* handle automatic line continuations (when inside parens or braces) */
+		while (current < end && current[0] == '\n' && (open_parens_count > 0 || open_brace_count > 0)) {
+		    current++;
+			line++;
+			skip_space_tabs ();
+		}
+		
 
 		/* handle non-consecutive new line once parsing is underway - EOL */
 		if (newline () && parse_started && last_token != TokenType.EOL && last_token != TokenType.SEMICOLON) {
@@ -638,18 +654,22 @@ public class Vala.Genie.Scanner {
 			switch (current[0]) {
 			case '{':
 				type = TokenType.OPEN_BRACE;
+				open_brace_count++;
 				current++;
 				break;
 			case '}':
 				type = TokenType.CLOSE_BRACE;
+				open_brace_count--;
 				current++;
 				break;
 			case '(':
 				type = TokenType.OPEN_PARENS;
+				open_parens_count++;
 				current++;
 				break;
 			case ')':
 				type = TokenType.CLOSE_PARENS;
+				open_parens_count--;
 				current++;
 				break;
 			case '[':
