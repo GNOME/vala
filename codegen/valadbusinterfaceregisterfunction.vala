@@ -31,8 +31,8 @@ public class Vala.DBusInterfaceRegisterFunction : InterfaceRegisterFunction {
 		base(iface, context);
 	}
 
-	public override CCodeFragment get_type_interface_init_statements () {
-		var frag = base.get_type_interface_init_statements ();
+	public override CCodeFragment get_type_interface_init_statements (bool plugin) {
+		var frag = base.get_type_interface_init_statements (plugin);
 		
 		var quark_dbus_proxy = new CCodeFunctionCall (new CCodeIdentifier ("g_quark_from_string"));
 		quark_dbus_proxy.add_argument (new CCodeConstant ("\"ValaDBusInterfaceProxyType\""));

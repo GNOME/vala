@@ -77,7 +77,7 @@ public class Vala.InterfaceRegisterFunction : TypeRegisterFunction {
 		return interface_reference.access;
 	}
 
-	public override CCodeFragment get_type_interface_init_statements () {
+	public override CCodeFragment get_type_interface_init_statements (bool plugin) {
 		var frag = new CCodeFragment ();
 		
 		/* register all prerequisites */

@@ -50,7 +50,7 @@ public class Vala.StructRegisterFunction : TypeRegisterFunction {
 		return struct_reference.access;
 	}
 
-	public override CCodeFragment get_type_interface_init_statements () {
+	public override CCodeFragment get_type_interface_init_statements (bool plugin) {
 		return new CCodeFragment ();
 	}
 }

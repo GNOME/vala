@@ -171,7 +171,7 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 		return frag;
 	}
 
-	public override CCodeFragment get_type_interface_init_statements () {
+	public override CCodeFragment get_type_interface_init_statements (bool plugin) {
 		var frag = new CCodeFragment ();
 		
 		foreach (DataType base_type in class_reference.get_base_types ()) {
@@ -182,12 +182,20 @@ public class Vala.ClassRegisterFunction : TypeRegisterFunction {
 			var iface = (Interface) base_type.data_type;
 			
 			var iface_info_name = "%s_info".printf (iface.get_lower_case_cname (null));
-			
-			var reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_interface_static"));
-			reg_call.add_argument (new CCodeIdentifier ("%s_type_id".printf (class_reference.get_lower_case_cname (null))));
-			reg_call.add_argument (new CCodeIdentifier (iface.get_type_id ()));
-			reg_call.add_argument (new CCodeIdentifier ("&%s".printf (iface_info_name)));
-			frag.append (new CCodeExpressionStatement (reg_call));
+			if (!plugin) {
+				var reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_add_interface_static"));
+				reg_call.add_argument (new CCodeIdentifier ("%s_type_id".printf (class_reference.get_lower_case_cname (null))));
+				reg_call.add_argument (new CCodeIdentifier (iface.get_type_id ()));
+				reg_call.add_argument (new CCodeIdentifier ("&%s".printf (iface_info_name)));
+				frag.append (new CCodeExpressionStatement (reg_call));
+			} else {
+				var reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_module_add_interface"));
+				reg_call.add_argument (new CCodeIdentifier ("module"));
+				reg_call.add_argument (new CCodeIdentifier ("%s_type_id".printf (class_reference.get_lower_case_cname (null))));
+				reg_call.add_argument (new CCodeIdentifier (iface.get_type_id ()));
+				reg_call.add_argument (new CCodeIdentifier ("&%s".printf (iface_info_name)));
+				frag.append (new CCodeExpressionStatement (reg_call));
+			}
 		}
 		
 		return frag;

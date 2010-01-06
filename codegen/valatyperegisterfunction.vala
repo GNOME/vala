@@ -35,7 +35,7 @@ public abstract class Vala.TypeRegisterFunction {
 	/**
 	 * Constructs the C function from the specified type.
 	 */
-	public void init_from_type (bool plugin = false) {
+	public void init_from_type (bool plugin) {
 		bool use_thread_safe = context.require_glib_version (2, 14);
 
 		bool fundamental = false;
@@ -169,7 +169,7 @@ public abstract class Vala.TypeRegisterFunction {
 			type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (type_id_name), reg_call)));
 		}
 		
-		type_init.add_statement (get_type_interface_init_statements ());
+		type_init.add_statement (get_type_interface_init_statements (plugin));
 
 		if (!plugin) {
 			CCodeExpression condition; // the condition that guards the type initialisation
@@ -364,7 +364,7 @@ public abstract class Vala.TypeRegisterFunction {
 	 *
 	 * @return C statements
 	 */
-	public abstract CCodeFragment get_type_interface_init_statements ();
+	public abstract CCodeFragment get_type_interface_init_statements (bool plugin);
 	
 	public CCodeFragment get_source_declaration () {
 		return source_declaration_fragment;

@@ -1822,7 +1822,7 @@ internal class Vala.GTypeModule : GErrorModule {
 		decl_space.add_type_definition (type_struct);
 
 		var type_fun = create_interface_register_function (iface);
-		type_fun.init_from_type ();
+		type_fun.init_from_type (in_plugin);
 		decl_space.add_type_member_declaration (type_fun.get_declaration ());
 	}
 
@@ -1849,7 +1849,8 @@ internal class Vala.GTypeModule : GErrorModule {
 		add_interface_base_init_function (iface);
 
 		var type_fun = create_interface_register_function (iface);
-		type_fun.init_from_type ();
+		type_fun.init_from_type (in_plugin);
+		source_declarations.add_type_member_declaration (type_fun.get_source_declaration ());
 		source_type_member_definition.append (type_fun.get_definition ());
 
 		current_symbol = old_symbol;
