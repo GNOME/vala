@@ -2322,9 +2322,26 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	void make_comparable_cexpression (DataType left_type, ref CCodeExpression cleft, DataType right_type, ref CCodeExpression cright) {
+	void make_comparable_cexpression (ref DataType left_type, ref CCodeExpression cleft, ref DataType right_type, ref CCodeExpression cright) {
 		var left_type_as_struct = left_type.data_type as Struct;
 		var right_type_as_struct = right_type.data_type as Struct;
+
+		// GValue support
+		var valuecast = try_cast_value_to_type (cleft, left_type, right_type);
+		if (valuecast != null) {
+			cleft = valuecast;
+			left_type = right_type;
+			make_comparable_cexpression (ref left_type, ref cleft, ref right_type, ref cright);
+			return;
+		}
+
+		valuecast = try_cast_value_to_type (cright, right_type, left_type);
+		if (valuecast != null) {
+			cright = valuecast;
+			right_type = left_type;
+			make_comparable_cexpression (ref left_type, ref cleft, ref right_type, ref cright);
+			return;
+		}
 
 		if (left_type.data_type is Class && !((Class) left_type.data_type).is_compact &&
 		    right_type.data_type is Class && !((Class) right_type.data_type).is_compact) {
@@ -2412,7 +2429,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			CCodeExpression cexp; // if (cexp) return FALSE;
 			var s1 = (CCodeExpression) new CCodeMemberAccess.pointer (new CCodeIdentifier ("s1"), f.name); // s1->f
 			var s2 = (CCodeExpression) new CCodeMemberAccess.pointer (new CCodeIdentifier ("s2"), f.name); // s2->f
-			make_comparable_cexpression (f.field_type, ref s1, f.field_type, ref s2);
+
+			var field_type = f.field_type.copy ();
+			make_comparable_cexpression (ref field_type, ref s1, ref field_type, ref s2);
 
 			if (!(f.field_type is NullType) && f.field_type.compatible (string_type)) {
 				requires_strcmp0 = true;
@@ -4283,10 +4302,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		
 		if (expr.operator == BinaryOperator.EQUALITY ||
 		    expr.operator == BinaryOperator.INEQUALITY) {
-			make_comparable_cexpression (expr.left.value_type, ref cleft, expr.right.value_type, ref cright);
+			var left_type = expr.left.value_type;
+			var right_type = expr.right.value_type;
+			make_comparable_cexpression (ref left_type, ref cleft, ref right_type, ref cright);
 
-			if (expr.left.value_type is StructValueType && expr.right.value_type is StructValueType) {
-				var equalfunc = generate_struct_equal_function ((Struct) expr.left.value_type.data_type as Struct);
+			if (left_type is StructValueType && right_type is StructValueType) {
+				var equalfunc = generate_struct_equal_function ((Struct) left_type.data_type as Struct);
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
 				ccall.add_argument (cleft);
 				ccall.add_argument (cright);
