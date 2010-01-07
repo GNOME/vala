@@ -4120,6 +4120,31 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		expr.ccodenode = new CCodeUnaryExpression (op, (CCodeExpression) expr.inner.ccodenode);
 	}
 
+	public CCodeExpression? try_cast_value_to_type (CCodeExpression ccodeexpr, DataType from, DataType to, Expression? expr = null) {
+		if (from == null || gvalue_type == null || from.data_type != gvalue_type || to.get_type_id () == null) {
+			return null;
+		}
+
+		// explicit conversion from GValue
+		var ccall = new CCodeFunctionCall (get_value_getter_function (to));
+		CCodeExpression gvalue;
+		if (from.nullable) {
+			gvalue = ccodeexpr;
+		} else {
+			gvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, ccodeexpr);
+		}
+		ccall.add_argument (gvalue);
+
+		if (expr != null && to is ArrayType) {
+			// null-terminated string array
+			var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
+			len_call.add_argument (ccall);
+			expr.append_array_size (len_call);
+		}
+
+		return ccall;
+	}
+
 	public override void visit_cast_expression (CastExpression expr) {
 		if (expr.is_non_null_cast) {
 			// TODO add NULL runtime check
@@ -4127,26 +4152,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			return;
 		}
 
-		if (expr.inner.value_type != null && gvalue_type != null && expr.inner.value_type.data_type == gvalue_type
-		    && expr.type_reference.get_type_id () != null) {
-			// explicit conversion from GValue
-			var ccall = new CCodeFunctionCall (get_value_getter_function (expr.type_reference));
-			CCodeExpression gvalue;
-			if (expr.inner.value_type.nullable) {
-				// cast from Value?, no need to get address
-				gvalue = (CCodeExpression) expr.inner.ccodenode;
-			} else {
-				// value getter function expects pointer to GValue, get address of non-null Value
-				gvalue = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) expr.inner.ccodenode);
-			}
-			ccall.add_argument (gvalue);
-			expr.ccodenode = ccall;
-			if (expr.type_reference is ArrayType) {
-				// null-terminated string array
-				var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
-				len_call.add_argument (ccall);
-				expr.append_array_size (len_call);
-			}
+		var valuecast = try_cast_value_to_type ((CCodeExpression) expr.inner.ccodenode, expr.inner.value_type, expr.type_reference, expr);
+		if (valuecast != null) {
+			expr.ccodenode = valuecast;
 			return;
 		}
 
