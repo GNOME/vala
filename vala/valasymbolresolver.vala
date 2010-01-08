@@ -255,6 +255,23 @@ public class Vala.SymbolResolver : CodeVisitor {
 		}
 	}
 
+	DataType get_type_for_struct (Struct st, Struct base_struct) {
+		if (base_struct.base_struct != null) {
+			return get_type_for_struct (st, base_struct.base_struct);
+		}
+
+		// attributes are not processed yet, access them directly
+		if (base_struct.get_attribute ("BooleanType") != null) {
+			return new BooleanType (st);
+		} else if (base_struct.get_attribute ("IntegerType") != null) {
+			return new IntegerType (st);
+		} else if (base_struct.get_attribute ("FloatingType") != null) {
+			return new FloatingType (st);
+		} else {
+			return new StructValueType (st);
+		}
+	}
+
 	private DataType resolve_type (UnresolvedType unresolved_type) {
 		DataType type = null;
 
@@ -287,17 +304,7 @@ public class Vala.SymbolResolver : CodeVisitor {
 			} else if (sym is Interface) {
 				type = new ObjectType ((Interface) sym);
 			} else if (sym is Struct) {
-				var st = (Struct) sym;
-				// attributes are not processed yet, access them directly
-				if (st.get_attribute ("BooleanType") != null) {
-					type = new BooleanType (st);
-				} else if (st.get_attribute ("IntegerType") != null) {
-					type = new IntegerType (st);
-				} else if (st.get_attribute ("FloatingType") != null) {
-					type = new FloatingType (st);
-				} else {
-					type = new StructValueType (st);
-				}
+				type = get_type_for_struct ((Struct) sym, (Struct) sym);
 			} else if (sym is Enum) {
 				type = new EnumValueType ((Enum) sym);
 			} else if (sym is ErrorDomain) {
