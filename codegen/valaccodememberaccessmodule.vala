@@ -275,7 +275,7 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 
 				// Property access to real struct types is handled differently
 				// The value is returned by out parameter
-				if (base_property.property_type.is_real_struct_type ()) {
+				if (base_property.property_type.is_real_non_null_struct_type ()) {
 					var ccomma = new CCodeCommaExpression ();
 					var temp_var = get_temp_variable (base_property.get_accessor.value_type);
 					var ctemp = get_variable_cexpression (temp_var.name);

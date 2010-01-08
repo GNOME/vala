@@ -55,7 +55,7 @@ internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 			CCodeExpression cexpr = (CCodeExpression) assignment.right.ccodenode;
 
 			if (!prop.no_accessor_method) {
-				if (prop.property_type.is_real_struct_type ()) {
+				if (prop.property_type.is_real_non_null_struct_type ()) {
 					cexpr = get_address_of_expression (assignment.right, cexpr);
 				}
 			}
