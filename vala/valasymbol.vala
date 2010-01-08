@@ -162,8 +162,8 @@ public abstract class Vala.Symbol : CodeNode {
 		if (parent_symbol.get_full_name () == null) {
 			return name;
 		}
-		
-		return "%s.%s".printf (parent_symbol.get_full_name (), name);
+
+		return "%s.%s".printf (parent_symbol.get_full_name (), name.replace (".", ""));
 	}
 
 	/**
