@@ -894,6 +894,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		c.accept_children (codegen);
 
 		if (!c.external) {
+			generate_type_declaration (c.type_reference, decl_space);
+
 			if (c.initializer is InitializerList) {
 				var cdecl = new CCodeDeclaration (c.type_reference.get_const_cname ());
 				var arr = "";
