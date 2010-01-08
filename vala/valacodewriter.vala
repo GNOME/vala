@@ -1273,16 +1273,42 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_indent ();
 		write_string ("try");
 		stmt.body.accept (this);
+		foreach (var clause in stmt.get_catch_clauses ()) {
+			clause.accept (this);
+		}
+		if (stmt.finally_body != null) {
+			write_string (" finally");
+			stmt.finally_body.accept (this);
+		}
 		write_newline ();
 	}
 
 	public override void visit_catch_clause (CatchClause clause) {
+		var type_name = clause.error_type == null ? "GLib.Error" : clause.error_type.to_string ();
+		var var_name = clause.variable_name == null ? "_" : clause.variable_name;
+		write_string (" catch (%s %s)".printf (type_name, var_name));
+		clause.body.accept (this);
 	}
 
 	public override void visit_lock_statement (LockStatement stmt) {
+		write_indent ();
+		write_string ("lock (");
+		stmt.resource.accept (this);
+		write_string (")");
+		if (stmt.body == null) {
+			write_string (";");
+		} else {
+			stmt.body.accept (this);
+		}
+		write_newline ();
 	}
 
 	public override void visit_delete_statement (DeleteStatement stmt) {
+		write_indent ();
+		write_string ("delete ");
+		stmt.expression.accept (this);
+		write_string (";");
+		write_newline ();
 	}
 
 	public override void visit_array_creation_expression (ArrayCreationExpression expr) {
@@ -1577,6 +1603,21 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	public override void visit_lambda_expression (LambdaExpression expr) {
+		write_string ("(");
+		var params = expr.get_parameters ();
+		if (params.size != 0) {
+			for (var i = 0; i < params.size - 1; ++ i) {
+				write_string (params[i]);
+				write_string (", ");
+			}
+			write_string (params[params.size - 1]);
+		}
+		write_string (") =>");
+		if (expr.statement_body != null) {
+			expr.statement_body.accept (this);
+		} else if (expr.expression_body != null) {
+			expr.expression_body.accept (this);
+		}
 	}
 
 	public override void visit_assignment (Assignment a) {
