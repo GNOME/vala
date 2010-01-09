@@ -38,4 +38,12 @@ public class Vala.EnumValueType : ValueType {
 
 		return result;
 	}
+
+	public override Symbol? get_member (string member_name) {
+		var result = base.get_member (member_name);
+		if (result == null) {
+			result = CodeContext.get ().root.scope.lookup ("GLib").scope.lookup ("Enum").scope.lookup (member_name);
+		}
+		return result;
+	}
 }

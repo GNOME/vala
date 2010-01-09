@@ -242,6 +242,11 @@ namespace GLib {
 	public class InitiallyUnowned : Object {
 	}
 
+	[CCode (cname = "int")]
+	public struct Enum : int {
+		public unowned string to_string ();
+	}
+
 	[CCode (lower_case_csuffix = "enum")]
 	public class EnumClass : TypeClass {
 		public weak EnumValue? get_value (int value);

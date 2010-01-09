@@ -1924,4 +1924,23 @@ internal class Vala.GTypeModule : GErrorModule {
 			source_type_member_definition.append (type_fun.get_definition ());
 		}
 	}
+
+	public override void visit_method_call (MethodCall expr) {
+		var ma = expr.call as MemberAccess;
+		var mtype = expr.call.value_type as MethodType;
+		if (mtype == null || mtype.method_symbol.get_full_name () != "GLib.Enum.to_string" ||
+		    ma == null || ma.inner.value_type.get_type_id () == null) {
+			base.visit_method_call (expr);
+			return;
+		}
+
+		var class_ref = new CCodeFunctionCall (new CCodeIdentifier ("g_type_class_ref"));
+		class_ref.add_argument (new CCodeIdentifier (ma.inner.value_type.get_type_id ()));
+
+		var get_value = new CCodeFunctionCall (new CCodeIdentifier ("g_enum_get_value"));
+		get_value.add_argument (class_ref);
+		get_value.add_argument ((CCodeExpression) get_ccodenode (((MemberAccess) expr.call).inner));
+		var value_nick = new CCodeMemberAccess.pointer (get_value, "value_nick");
+		expr.ccodenode = value_nick;
+	}
 }
