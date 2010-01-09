@@ -119,6 +119,11 @@ public class Vala.CodeContext {
 	public bool thread { get; set; }
 
 	/**
+	 * Enable memory profiler.
+	 */
+	public bool mem_profiler { get; set; }
+
+	/**
 	 * Specifies the optional module initialization method.
 	 */
 	public Method module_init_method { get; set; }

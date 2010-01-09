@@ -756,7 +756,14 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 					var thread_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_thread_init"));
 					thread_init_call.line = cmain.line;
 					thread_init_call.add_argument (new CCodeConstant ("NULL"));
-					main_block.add_statement (new CCodeExpressionStatement (thread_init_call)); 
+					main_block.add_statement (new CCodeExpressionStatement (thread_init_call));
+				}
+
+				if (context.mem_profiler) {
+					var mem_profiler_init_call = new CCodeFunctionCall (new CCodeIdentifier ("g_mem_set_vtable"));
+					mem_profiler_init_call.line = cmain.line;
+					mem_profiler_init_call.add_argument (new CCodeConstant ("glib_mem_profiler_table"));
+					main_block.add_statement (new CCodeExpressionStatement (mem_profiler_init_call));
 				}
 
 				var type_init_call = new CCodeExpressionStatement (new CCodeFunctionCall (new CCodeIdentifier ("g_type_init")));

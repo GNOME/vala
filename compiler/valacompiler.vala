@@ -55,6 +55,7 @@ class Vala.Compiler {
 	static string output;
 	static bool debug;
 	static bool thread;
+	static bool mem_profiler;
 	static bool disable_assert;
 	static bool enable_checking;
 	static bool deprecated;
@@ -100,6 +101,7 @@ class Vala.Compiler {
 		{ "output", 'o', 0, OptionArg.FILENAME, ref output, "Place output in file FILE", "FILE" },
 		{ "debug", 'g', 0, OptionArg.NONE, ref debug, "Produce debug information", null },
 		{ "thread", 0, 0, OptionArg.NONE, ref thread, "Enable multithreading support", null },
+		{ "enable-mem-profiler", 0, 0, OptionArg.NONE, ref mem_profiler, "Enable GLib memory profiler", null },
 		{ "define", 'D', 0, OptionArg.STRING_ARRAY, ref defines, "Define SYMBOL", "SYMBOL..." },
 		{ "main", 0, 0, OptionArg.STRING, ref entry_point, "Use SYMBOL as entry point", "SYMBOL..." },
 		{ "disable-assert", 0, 0, OptionArg.NONE, ref disable_assert, "Disable assertions", null },
@@ -235,6 +237,7 @@ class Vala.Compiler {
 		}
 		context.debug = debug;
 		context.thread = thread;
+		context.mem_profiler = mem_profiler;
 		context.save_temps = save_temps;
 		if (profile == "posix") {
 			context.profile = Profile.POSIX;
