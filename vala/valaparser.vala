@@ -1634,18 +1634,12 @@ public class Vala.Parser : CodeVisitor {
 				do {
 					initializer_list.add (parse_statement_expression ());
 				} while (accept (TokenType.COMMA));
+				expect (TokenType.SEMICOLON);
 			} else {
+				// variable declaration in initializer
 				block = new Block (get_src (begin));
-				DataType variable_type;
-				if (accept (TokenType.VAR)) {
-					variable_type = null;
-				} else {
-					variable_type = parse_type ();
-				}
-				var local = parse_local_variable (variable_type);
-				block.add_statement (new DeclarationStatement (local, local.source_reference));
+				parse_local_variable_declarations (block);
 			}
-			expect (TokenType.SEMICOLON);
 		}
 		Expression condition = null;
 		if (current () != TokenType.SEMICOLON) {
