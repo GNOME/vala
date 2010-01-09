@@ -469,6 +469,14 @@ public abstract class Vala.CodeVisitor {
 	}
 
 	/**
+	 * Visit operation called for string templates.
+	 *
+	 * @param tmpl a string template
+	 */
+	public virtual void visit_template (Template tmpl) {
+	}
+
+	/**
 	 * Visit operation called for null literals.
 	 *
 	 * @param lit a null literal

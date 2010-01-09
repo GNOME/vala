@@ -27,6 +27,16 @@ public class Vala.Template : Expression {
 	public Template () {
 	}
 
+	public override void accept (CodeVisitor visitor) {
+		visitor.visit_template (this);
+	}
+
+	public override void accept_children (CodeVisitor visitor) {
+		foreach (var expr in expression_list) {
+			expr.accept (visitor);
+		}
+	}
+
 	public void add_expression (Expression expr) {
 		expression_list.add (expr);
 	}

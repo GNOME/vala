@@ -439,6 +439,10 @@ public class Vala.SymbolResolver : CodeVisitor {
 		e.accept_children (this);
 	}
 
+	public override void visit_template (Template tmpl) {
+		tmpl.accept_children (this);
+	}
+
 	public override void visit_member_access (MemberAccess expr) {
 		expr.accept_children (this);
 	}
