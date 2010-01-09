@@ -1940,7 +1940,7 @@ internal class Vala.GTypeModule : GErrorModule {
 		var get_value = new CCodeFunctionCall (new CCodeIdentifier ("g_enum_get_value"));
 		get_value.add_argument (class_ref);
 		get_value.add_argument ((CCodeExpression) get_ccodenode (((MemberAccess) expr.call).inner));
-		var value_nick = new CCodeMemberAccess.pointer (get_value, "value_nick");
-		expr.ccodenode = value_nick;
+		var value_name = new CCodeMemberAccess.pointer (get_value, "value_name");
+		expr.ccodenode = value_name;
 	}
 }
