@@ -1332,8 +1332,8 @@ namespace GLib {
 		public static bool remove_by_data (void* data);
 	}
 
-	[SimpleType]
 	[CCode (default_value = "0")]
+	[IntegerType (rank = 6)]
 	public struct Pid {
 	}
 
