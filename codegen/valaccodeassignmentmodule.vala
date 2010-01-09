@@ -156,8 +156,9 @@ internal class Vala.CCodeAssignmentModule : CCodeMemberAccessModule {
 				}
 				if (array_type.rank == 1) {
 					var array_var = assignment.left.symbol_reference;
+					var array_local = array_var as LocalVariable;
 					if (array_var != null && array_var.is_internal_symbol ()
-					    && (array_var is LocalVariable || array_var is Field)) {
+					    && ((array_var is LocalVariable && !array_local.captured) || array_var is Field)) {
 						var lhs_array_size = head.get_array_size_cexpression (assignment.left);
 						var rhs_array_len = head.get_array_length_cexpression (assignment.left, 1);
 						ccomma.append_expression (new CCodeAssignment (lhs_array_size, rhs_array_len));
