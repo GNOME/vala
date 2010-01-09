@@ -182,7 +182,7 @@ public class Vala.UnaryExpression : Expression {
 			value_type = inner.value_type;
 		} else if (operator == UnaryOperator.BITWISE_COMPLEMENT) {
 			// integer type
-			if (!is_integer_type (inner.value_type)) {
+			if (!is_integer_type (inner.value_type) && !(inner.value_type is EnumValueType)) {
 				error = true;
 				Report.error (source_reference, "Operator not supported for `%s'".printf (inner.value_type.to_string ()));
 				return false;
