@@ -1,6 +1,50 @@
 <?xml version="1.0"?>
 <api version="1.0">
 	<namespace name="Json">
+		<function name="boxed_can_deserialize" symbol="json_boxed_can_deserialize">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="gboxed_type" type="GType"/>
+				<parameter name="node_type" type="JsonNodeType"/>
+			</parameters>
+		</function>
+		<function name="boxed_can_serialize" symbol="json_boxed_can_serialize">
+			<return-type type="gboolean"/>
+			<parameters>
+				<parameter name="gboxed_type" type="GType"/>
+				<parameter name="node_type" type="JsonNodeType*"/>
+			</parameters>
+		</function>
+		<function name="boxed_deserialize" symbol="json_boxed_deserialize">
+			<return-type type="gpointer"/>
+			<parameters>
+				<parameter name="gboxed_type" type="GType"/>
+				<parameter name="node" type="JsonNode*"/>
+			</parameters>
+		</function>
+		<function name="boxed_register_deserialize_func" symbol="json_boxed_register_deserialize_func">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="gboxed_type" type="GType"/>
+				<parameter name="node_type" type="JsonNodeType"/>
+				<parameter name="deserialize_func" type="JsonBoxedDeserializeFunc"/>
+			</parameters>
+		</function>
+		<function name="boxed_register_serialize_func" symbol="json_boxed_register_serialize_func">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="gboxed_type" type="GType"/>
+				<parameter name="node_type" type="JsonNodeType"/>
+				<parameter name="serialize_func" type="JsonBoxedSerializeFunc"/>
+			</parameters>
+		</function>
+		<function name="boxed_serialize" symbol="json_boxed_serialize">
+			<return-type type="JsonNode*"/>
+			<parameters>
+				<parameter name="gboxed_type" type="GType"/>
+				<parameter name="boxed" type="gconstpointer"/>
+			</parameters>
+		</function>
 		<function name="construct_gobject" symbol="json_construct_gobject">
 			<return-type type="GObject*"/>
 			<parameters>
@@ -10,6 +54,35 @@
 				<parameter name="error" type="GError**"/>
 			</parameters>
 		</function>
+		<function name="gobject_deserialize" symbol="json_gobject_deserialize">
+			<return-type type="GObject*"/>
+			<parameters>
+				<parameter name="gtype" type="GType"/>
+				<parameter name="node" type="JsonNode*"/>
+			</parameters>
+		</function>
+		<function name="gobject_from_data" symbol="json_gobject_from_data">
+			<return-type type="GObject*"/>
+			<parameters>
+				<parameter name="gtype" type="GType"/>
+				<parameter name="data" type="gchar*"/>
+				<parameter name="length" type="gssize"/>
+				<parameter name="error" type="GError**"/>
+			</parameters>
+		</function>
+		<function name="gobject_serialize" symbol="json_gobject_serialize">
+			<return-type type="JsonNode*"/>
+			<parameters>
+				<parameter name="gobject" type="GObject*"/>
+			</parameters>
+		</function>
+		<function name="gobject_to_data" symbol="json_gobject_to_data">
+			<return-type type="gchar*"/>
+			<parameters>
+				<parameter name="gobject" type="GObject*"/>
+				<parameter name="length" type="gsize*"/>
+			</parameters>
+		</function>
 		<function name="serialize_gobject" symbol="json_serialize_gobject">
 			<return-type type="gchar*"/>
 			<parameters>
@@ -17,12 +90,126 @@
 				<parameter name="length" type="gsize*"/>
 			</parameters>
 		</function>
+		<callback name="JsonArrayForeach">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="array" type="JsonArray*"/>
+				<parameter name="index_" type="guint"/>
+				<parameter name="element_node" type="JsonNode*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
+		<callback name="JsonBoxedDeserializeFunc">
+			<return-type type="gpointer"/>
+			<parameters>
+				<parameter name="node" type="JsonNode*"/>
+			</parameters>
+		</callback>
+		<callback name="JsonBoxedSerializeFunc">
+			<return-type type="JsonNode*"/>
+			<parameters>
+				<parameter name="boxed" type="gconstpointer"/>
+			</parameters>
+		</callback>
+		<callback name="JsonObjectForeach">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="object" type="JsonObject*"/>
+				<parameter name="member_name" type="gchar*"/>
+				<parameter name="member_node" type="JsonNode*"/>
+				<parameter name="user_data" type="gpointer"/>
+			</parameters>
+		</callback>
 		<boxed name="JsonArray" type-name="JsonArray" get-type="json_array_get_type">
+			<method name="add_array_element" symbol="json_array_add_array_element">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="value" type="JsonArray*"/>
+				</parameters>
+			</method>
+			<method name="add_boolean_element" symbol="json_array_add_boolean_element">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="add_double_element" symbol="json_array_add_double_element">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="value" type="gdouble"/>
+				</parameters>
+			</method>
 			<method name="add_element" symbol="json_array_add_element">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="array" type="JsonArray*"/>
 					<parameter name="node" type="JsonNode*"/>
+				</parameters>
+			</method>
+			<method name="add_int_element" symbol="json_array_add_int_element">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="value" type="gint64"/>
+				</parameters>
+			</method>
+			<method name="add_null_element" symbol="json_array_add_null_element">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+				</parameters>
+			</method>
+			<method name="add_object_element" symbol="json_array_add_object_element">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="value" type="JsonObject*"/>
+				</parameters>
+			</method>
+			<method name="add_string_element" symbol="json_array_add_string_element">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="dup_element" symbol="json_array_dup_element">
+				<return-type type="JsonNode*"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="index_" type="guint"/>
+				</parameters>
+			</method>
+			<method name="foreach_element" symbol="json_array_foreach_element">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="func" type="JsonArrayForeach"/>
+					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="get_array_element" symbol="json_array_get_array_element">
+				<return-type type="JsonArray*"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="index_" type="guint"/>
+				</parameters>
+			</method>
+			<method name="get_boolean_element" symbol="json_array_get_boolean_element">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="index_" type="guint"/>
+				</parameters>
+			</method>
+			<method name="get_double_element" symbol="json_array_get_double_element">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="index_" type="guint"/>
 				</parameters>
 			</method>
 			<method name="get_element" symbol="json_array_get_element">
@@ -38,10 +225,38 @@
 					<parameter name="array" type="JsonArray*"/>
 				</parameters>
 			</method>
+			<method name="get_int_element" symbol="json_array_get_int_element">
+				<return-type type="gint64"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="index_" type="guint"/>
+				</parameters>
+			</method>
 			<method name="get_length" symbol="json_array_get_length">
 				<return-type type="guint"/>
 				<parameters>
 					<parameter name="array" type="JsonArray*"/>
+				</parameters>
+			</method>
+			<method name="get_null_element" symbol="json_array_get_null_element">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="index_" type="guint"/>
+				</parameters>
+			</method>
+			<method name="get_object_element" symbol="json_array_get_object_element">
+				<return-type type="JsonObject*"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="index_" type="guint"/>
+				</parameters>
+			</method>
+			<method name="get_string_element" symbol="json_array_get_string_element">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="array" type="JsonArray*"/>
+					<parameter name="index_" type="guint"/>
 				</parameters>
 			</method>
 			<constructor name="new" symbol="json_array_new">
@@ -123,7 +338,13 @@
 				</parameters>
 			</method>
 			<method name="get_int" symbol="json_node_get_int">
-				<return-type type="gint"/>
+				<return-type type="gint64"/>
+				<parameters>
+					<parameter name="node" type="JsonNode*"/>
+				</parameters>
+			</method>
+			<method name="get_node_type" symbol="json_node_get_node_type">
+				<return-type type="JsonNodeType"/>
 				<parameters>
 					<parameter name="node" type="JsonNode*"/>
 				</parameters>
@@ -159,6 +380,12 @@
 					<parameter name="node" type="JsonNode*"/>
 				</parameters>
 			</method>
+			<method name="is_null" symbol="json_node_is_null">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="node" type="JsonNode*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="json_node_new">
 				<return-type type="JsonNode*"/>
 				<parameters>
@@ -190,7 +417,7 @@
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="node" type="JsonNode*"/>
-					<parameter name="value" type="gint"/>
+					<parameter name="value" type="gint64"/>
 				</parameters>
 			</method>
 			<method name="set_object" symbol="json_node_set_object">
@@ -198,6 +425,13 @@
 				<parameters>
 					<parameter name="node" type="JsonNode*"/>
 					<parameter name="object" type="JsonObject*"/>
+				</parameters>
+			</method>
+			<method name="set_parent" symbol="json_node_set_parent">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="node" type="JsonNode*"/>
+					<parameter name="parent" type="JsonNode*"/>
 				</parameters>
 			</method>
 			<method name="set_string" symbol="json_node_set_string">
@@ -234,9 +468,6 @@
 					<parameter name="node" type="JsonNode*"/>
 				</parameters>
 			</method>
-			<field name="type" type="JsonNodeType"/>
-			<field name="data" type="gpointer"/>
-			<field name="parent" type="JsonNode*"/>
 		</boxed>
 		<boxed name="JsonObject" type-name="JsonObject" get-type="json_object_get_type">
 			<method name="add_member" symbol="json_object_add_member">
@@ -245,6 +476,49 @@
 					<parameter name="object" type="JsonObject*"/>
 					<parameter name="member_name" type="gchar*"/>
 					<parameter name="node" type="JsonNode*"/>
+				</parameters>
+			</method>
+			<method name="dup_member" symbol="json_object_dup_member">
+				<return-type type="JsonNode*"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="foreach_member" symbol="json_object_foreach_member">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="func" type="JsonObjectForeach"/>
+					<parameter name="data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="get_array_member" symbol="json_object_get_array_member">
+				<return-type type="JsonArray*"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_boolean_member" symbol="json_object_get_boolean_member">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_double_member" symbol="json_object_get_double_member">
+				<return-type type="gdouble"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_int_member" symbol="json_object_get_int_member">
+				<return-type type="gint64"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_member" symbol="json_object_get_member">
@@ -260,10 +534,31 @@
 					<parameter name="object" type="JsonObject*"/>
 				</parameters>
 			</method>
+			<method name="get_null_member" symbol="json_object_get_null_member">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="get_object_member" symbol="json_object_get_object_member">
+				<return-type type="JsonObject*"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="get_size" symbol="json_object_get_size">
 				<return-type type="guint"/>
 				<parameters>
 					<parameter name="object" type="JsonObject*"/>
+				</parameters>
+			</method>
+			<method name="get_string_member" symbol="json_object_get_string_member">
+				<return-type type="gchar*"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
 				</parameters>
 			</method>
 			<method name="get_values" symbol="json_object_get_values">
@@ -295,6 +590,69 @@
 					<parameter name="member_name" type="gchar*"/>
 				</parameters>
 			</method>
+			<method name="set_array_member" symbol="json_object_set_array_member">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
+					<parameter name="value" type="JsonArray*"/>
+				</parameters>
+			</method>
+			<method name="set_boolean_member" symbol="json_object_set_boolean_member">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
+					<parameter name="value" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="set_double_member" symbol="json_object_set_double_member">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
+					<parameter name="value" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="set_int_member" symbol="json_object_set_int_member">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
+					<parameter name="value" type="gint64"/>
+				</parameters>
+			</method>
+			<method name="set_member" symbol="json_object_set_member">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
+					<parameter name="node" type="JsonNode*"/>
+				</parameters>
+			</method>
+			<method name="set_null_member" symbol="json_object_set_null_member">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
+				</parameters>
+			</method>
+			<method name="set_object_member" symbol="json_object_set_object_member">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
+					<parameter name="value" type="JsonObject*"/>
+				</parameters>
+			</method>
+			<method name="set_string_member" symbol="json_object_set_string_member">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="JsonObject*"/>
+					<parameter name="member_name" type="gchar*"/>
+					<parameter name="value" type="gchar*"/>
+				</parameters>
+			</method>
 			<method name="unref" symbol="json_object_unref">
 				<return-type type="void"/>
 				<parameters>
@@ -302,23 +660,15 @@
 				</parameters>
 			</method>
 		</boxed>
-		<enum name="JsonNodeType">
+		<enum name="JsonNodeType" type-name="JsonNodeType" get-type="json_node_type_get_type">
 			<member name="JSON_NODE_OBJECT" value="0"/>
 			<member name="JSON_NODE_ARRAY" value="1"/>
 			<member name="JSON_NODE_VALUE" value="2"/>
 			<member name="JSON_NODE_NULL" value="3"/>
 		</enum>
-		<enum name="JsonParserError">
+		<enum name="JsonParserError" type-name="JsonParserError" get-type="json_parser_error_get_type">
 			<member name="JSON_PARSER_ERROR_PARSE" value="0"/>
 			<member name="JSON_PARSER_ERROR_UNKNOWN" value="1"/>
-		</enum>
-		<enum name="JsonTokenType">
-			<member name="JSON_TOKEN_INVALID" value="270"/>
-			<member name="JSON_TOKEN_TRUE" value="271"/>
-			<member name="JSON_TOKEN_FALSE" value="272"/>
-			<member name="JSON_TOKEN_NULL" value="273"/>
-			<member name="JSON_TOKEN_VAR" value="274"/>
-			<member name="JSON_TOKEN_LAST" value="275"/>
 		</enum>
 		<object name="JsonGenerator" parent="GObject" type-name="JsonGenerator" get-type="json_generator_get_type">
 			<constructor name="new" symbol="json_generator_new">
@@ -347,6 +697,7 @@
 				</parameters>
 			</method>
 			<property name="indent" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="indent-char" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pretty" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="root" type="JsonNode*" readable="1" writable="1" construct="0" construct-only="0"/>
 		</object>
@@ -384,7 +735,7 @@
 				<parameters>
 					<parameter name="parser" type="JsonParser*"/>
 					<parameter name="data" type="gchar*"/>
-					<parameter name="length" type="gsize"/>
+					<parameter name="length" type="gssize"/>
 					<parameter name="error" type="GError**"/>
 				</parameters>
 			</method>
@@ -462,6 +813,25 @@
 			</signal>
 		</object>
 		<interface name="JsonSerializable" type-name="JsonSerializable" get-type="json_serializable_get_type">
+			<method name="default_deserialize_property" symbol="json_serializable_default_deserialize_property">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="serializable" type="JsonSerializable*"/>
+					<parameter name="property_name" type="gchar*"/>
+					<parameter name="value" type="GValue*"/>
+					<parameter name="pspec" type="GParamSpec*"/>
+					<parameter name="property_node" type="JsonNode*"/>
+				</parameters>
+			</method>
+			<method name="default_serialize_property" symbol="json_serializable_default_serialize_property">
+				<return-type type="JsonNode*"/>
+				<parameters>
+					<parameter name="serializable" type="JsonSerializable*"/>
+					<parameter name="property_name" type="gchar*"/>
+					<parameter name="value" type="GValue*"/>
+					<parameter name="pspec" type="GParamSpec*"/>
+				</parameters>
+			</method>
 			<method name="deserialize_property" symbol="json_serializable_deserialize_property">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -503,8 +873,8 @@
 		</interface>
 		<constant name="JSON_MAJOR_VERSION" type="int" value="0"/>
 		<constant name="JSON_MICRO_VERSION" type="int" value="0"/>
-		<constant name="JSON_MINOR_VERSION" type="int" value="4"/>
+		<constant name="JSON_MINOR_VERSION" type="int" value="10"/>
 		<constant name="JSON_VERSION_HEX" type="int" value="0"/>
-		<constant name="JSON_VERSION_S" type="char*" value="0.4.0"/>
+		<constant name="JSON_VERSION_S" type="char*" value="0.10.0"/>
 	</namespace>
 </api>
