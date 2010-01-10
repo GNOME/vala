@@ -320,17 +320,19 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("cname = \"%s\", ".printf (st.get_cname ()));
 		}
 
-		if (!st.is_simple_type () && st.get_type_id () != "G_TYPE_POINTER") {
+		if (!st.has_type_id) {
+			write_string ("has_type_id = false");
+		} else if (!st.is_simple_type () && st.get_type_id () != "G_TYPE_POINTER") {
 			write_string ("type_id = \"%s\", ".printf (st.get_type_id ()));
 		}
 
-                if (!st.has_copy_function) {
-                        write_string ("has_copy_function = false, ");
-                }
+		if (!st.has_copy_function) {
+			write_string ("has_copy_function = false, ");
+		}
 
-                if (!st.has_destroy_function) {
-                        write_string ("has_destroy_function = false, ");
-                }
+		if (!st.has_destroy_function) {
+			write_string ("has_destroy_function = false, ");
+		}
 
 		write_string ("cheader_filename = \"%s\")]".printf (get_cheaders(st)));
 		write_newline ();
@@ -470,7 +472,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_string ("[CCode (cprefix = \"%s\", ".printf (en.get_cprefix ()));
 
 		if (!en.has_type_id) {
-			write_string ("has_type_id = \"%d\", ".printf (en.has_type_id ? 1 : 0));
+			write_string ("has_type_id = false");
 		}
 
 		write_string ("cheader_filename = \"%s\")]".printf (get_cheaders(en)));
