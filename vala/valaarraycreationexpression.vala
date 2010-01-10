@@ -1,6 +1,6 @@
 /* valaarraycreationexpression.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -70,6 +70,9 @@ public class Vala.ArrayCreationExpression : Expression {
 	 */
 	public void append_size (Expression size) {
 		sizes.add (size);
+		if (size != null) {
+			size.parent_node = this;
+		}
 	}
 	
 	/**
@@ -108,6 +111,15 @@ public class Vala.ArrayCreationExpression : Expression {
 
 	public override bool is_pure () {
 		return false;
+	}
+
+	public override void replace_expression (Expression old_node, Expression new_node) {
+		for (int i = 0; i < sizes.size; i++) {
+			if (sizes[i] == old_node) {
+				sizes[i] = new_node;
+				return;
+			}
+		}
 	}
 
 	public override void replace_type (DataType old_type, DataType new_type) {
