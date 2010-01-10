@@ -7,13 +7,13 @@ namespace Json {
 	public class Array {
 		[CCode (has_construct_function = false)]
 		public Array ();
-		public void add_array_element (Json.Array value);
+		public void add_array_element (owned Json.Array value);
 		public void add_boolean_element (bool value);
 		public void add_double_element (double value);
 		public void add_element (owned Json.Node node);
 		public void add_int_element (int64 value);
 		public void add_null_element ();
-		public void add_object_element (Json.Object value);
+		public void add_object_element (owned Json.Object value);
 		public void add_string_element (string value);
 		public unowned Json.Node dup_element (uint index_);
 		public void foreach_element (Json.ArrayForeach func, void* data);
@@ -99,13 +99,13 @@ namespace Json {
 		public GLib.List<weak Json.Node> get_values ();
 		public bool has_member (string member_name);
 		public void remove_member (string member_name);
-		public void set_array_member (string member_name, Json.Array value);
+		public void set_array_member (string member_name, owned Json.Array value);
 		public void set_boolean_member (string member_name, bool value);
 		public void set_double_member (string member_name, double value);
 		public void set_int_member (string member_name, int64 value);
 		public void set_member (string member_name, Json.Node node);
 		public void set_null_member (string member_name);
-		public void set_object_member (string member_name, Json.Object value);
+		public void set_object_member (string member_name, owned Json.Object value);
 		public void set_string_member (string member_name, string value);
 	}
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
