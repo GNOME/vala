@@ -889,8 +889,8 @@ namespace Clutter {
 		public void get_repeat (out bool repeat_x, out bool repeat_y);
 		public bool set_area_from_rgb_data (uchar[] data, bool has_alpha, int x, int y, int width, int height, int rowstride, int bpp, Clutter.TextureFlags flags) throws GLib.Error;
 		public bool set_from_file (string filename) throws GLib.Error;
-		public bool set_from_rgb_data (uchar[] data, bool has_alpha, int width, int height, int rowstride, int bpp, Clutter.TextureFlags flags) throws GLib.Error;
-		public bool set_from_yuv_data (uchar[] data, int width, int height, Clutter.TextureFlags flags) throws GLib.Error;
+		public bool set_from_rgb_data ([CCode (array_length = false)] uchar[] data, bool has_alpha, int width, int height, int rowstride, int bpp, Clutter.TextureFlags flags) throws GLib.Error;
+		public bool set_from_yuv_data ([CCode (array_length = false)] uchar[] data, int width, int height, Clutter.TextureFlags flags) throws GLib.Error;
 		public void set_repeat (bool repeat_x, bool repeat_y);
 		public Cogl.Material cogl_material { get; set; }
 		public Cogl.Texture cogl_texture { get; set; }
