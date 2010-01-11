@@ -1830,8 +1830,8 @@ namespace GLib {
 		public static size_t encode_close (bool break_lines, char* _out, ref int state, ref int save);
 		public static string encode (uchar[] data);
 		public static size_t decode_step (char[] _in, uchar* _out, ref int state, ref uint save);
-		[CCode (array_length = false)]
-		public static uchar[] decode (string text, out size_t out_len);
+		[CCode (array_length_type = "size_t")]
+		public static uchar[] decode (string text);
 	}
 
 	/* Data Checksums */
