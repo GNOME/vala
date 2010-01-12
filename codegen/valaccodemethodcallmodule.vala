@@ -148,7 +148,7 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		if (m != null && m.binding == MemberBinding.INSTANCE && !(m is CreationMethod)) {
 			instance = (CCodeExpression) ma.inner.ccodenode;
 
-			if (ma.member_name == "begin" && ma.inner.symbol_reference == ma.symbol_reference) {
+			if ((ma.member_name == "begin" || ma.member_name == "end") && ma.inner.symbol_reference == ma.symbol_reference) {
 				var inner_ma = (MemberAccess) ma.inner;
 				instance = (CCodeExpression) inner_ma.inner.ccodenode;
 			}
