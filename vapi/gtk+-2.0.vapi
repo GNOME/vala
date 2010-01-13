@@ -7699,7 +7699,7 @@ namespace Gtk {
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static unowned string set_locale ();
 	[CCode (cheader_filename = "gtk/gtk.h")]
-	public static void show_about_dialog (Gtk.Window parent, ...);
+	public static void show_about_dialog (Gtk.Window? parent, ...);
 	[CCode (cheader_filename = "gtk/gtk.h")]
 	public static bool show_uri (Gdk.Screen? screen, string uri, uint32 timestamp) throws GLib.Error;
 	[CCode (cheader_filename = "gtk/gtk.h")]
