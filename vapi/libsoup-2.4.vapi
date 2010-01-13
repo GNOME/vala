@@ -412,14 +412,14 @@ namespace Soup {
 		[CCode (type = "SoupSession*", has_construct_function = false)]
 		public SessionAsync ();
 		[CCode (type = "SoupSession*", has_construct_function = false)]
-		public SessionAsync.with_options (string optname1);
+		public SessionAsync.with_options (string optname1, ...);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class SessionSync : Soup.Session {
 		[CCode (type = "SoupSession*", has_construct_function = false)]
 		public SessionSync ();
 		[CCode (type = "SoupSession*", has_construct_function = false)]
-		public SessionSync.with_options (string optname1);
+		public SessionSync.with_options (string optname1, ...);
 	}
 	[CCode (cheader_filename = "libsoup/soup.h")]
 	public class Socket : GLib.Object {
