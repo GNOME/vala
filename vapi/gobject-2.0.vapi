@@ -109,43 +109,151 @@ namespace GLib {
 		public virtual void unload ();
 	}
 
-	[CCode (ref_function = "g_param_spec_ref", unref_function = "g_param_spec_unref")]
+	[CCode (type_id = "G_TYPE_PARAM", ref_function = "g_param_spec_ref", unref_function = "g_param_spec_unref", param_spec_function = "g_param_spec_param", get_value_function = "g_value_get_param", set_value_function = "g_value_set_param")]
 	public class ParamSpec {
 		public string name;
 		public ParamFlags flags;
 		public Type value_type;
 		public Type owner_type;
+		public ParamSpec.internal (string name, string nick, string blurb);
+		public ParamSpec ref ();
+		public void unref ();
+		public void sink ();
+		public ParamSpec ref_sink ();
+		[CCode (cname = "g_param_value_set_default")]
+		public void set_value_default (Value value);
+		[CCode (cname = "g_param_value_defaults")]
+		public bool value_defaults (Value value);
+		[CCode (cname = "g_param_value_validate")]
+		public bool value_validate (Value value);
+		[CCode (cname = "g_param_value_convert")]
+		public bool value_convert (Value src_value, Value dest_value, bool strict_validation);
+		[CCode (cname = "g_param_values_cmp")]
+		public int values_cmp (Value value1, Value value2);
 		public weak string get_blurb ();
 		public weak string get_name ();
 		public weak string get_nick ();
-
-		[CCode (cname = "g_param_value_set_default")]
-		public void set_value_default (Value value);
-	}
-
-	public class ParamSpecEnum : ParamSpec {
-		[CCode (cname = "g_param_spec_enum")]
-		public ParamSpecEnum (string name, string nick, string blurb, Type enum_type, int default_value, ParamFlags flags);
-	}
-
-	public class ParamSpecFloat : ParamSpec {
-		[CCode (cname = "g_param_spec_float")]
-		public ParamSpecFloat (string name, string nick, string blurb, float minimum, float maximum, float default_value, ParamFlags flags);
-	}
-
-	public class ParamSpecInt : ParamSpec {
-		[CCode (cname = "g_param_spec_int")]
-		public ParamSpecInt (string name, string nick, string blurb, int minimum, int maximum, int default_value, ParamFlags flags);
-	}
-
-	public class ParamSpecUInt : ParamSpec {
-		[CCode (cname = "g_param_spec_uint")]
-		public ParamSpecUInt (string name, string nick, string blurb, uint minimum, uint maximum, uint default_value, ParamFlags flags);
+		public void* get_qdata (Quark quark);
+		public void set_qdata (Quark quark, void* data);
+		public void set_qdata_full (Quark quark, void* data, DestroyNotify destroy);
+		public void* steal_qdata (Quark quark);
+		public ParamSpec get_redirect_target ();
 	}
 
 	public class ParamSpecBoolean : ParamSpec {
 		[CCode (cname = "g_param_spec_boolean")]
 		public ParamSpecBoolean (string name, string nick, string blurb, bool defaultvalue, ParamFlags flags);
+		public bool default_value;
+	}
+
+	public class ParamSpecChar : ParamSpec {
+		[CCode (cname = "g_param_spec_char")]
+		public ParamSpecChar (string name, string nick, string blurb, int8 minimum, int8 maximum, int8 default_value, ParamFlags flags);
+		public int8 minimum;
+		public int8 maximum;
+		public int8 default_value;
+	}
+
+	public class ParamSpecUChar : ParamSpec {
+		[CCode (cname = "g_param_spec_uchar")]
+		public ParamSpecUChar (string name, string nick, string blurb, uint8 minimum, uint8 maximum, uint8 default_value, ParamFlags flags);
+		public uint8 minimum;
+		public uint8 maximum;
+		public uint8 default_value;
+	}
+
+	public class ParamSpecInt : ParamSpec {
+		[CCode (cname = "g_param_spec_int")]
+		public ParamSpecInt (string name, string nick, string blurb, int minimum, int maximum, int default_value, ParamFlags flags);
+		public int minimum;
+		public int maximum;
+		public int default_value;
+	}
+
+	public class ParamSpecUInt : ParamSpec {
+		[CCode (cname = "g_param_spec_uint")]
+		public ParamSpecUInt (string name, string nick, string blurb, uint minimum, uint maximum, uint default_value, ParamFlags flags);
+		public uint minimum;
+		public uint maximum;
+		public uint default_value;
+	}
+
+	public class ParamSpecLong : ParamSpec {
+		[CCode (cname = "g_param_spec_long")]
+		public ParamSpecLong (string name, string nick, string blurb, long minimum, long maximum, long default_value, ParamFlags flags);
+		public long minimum;
+		public long maximum;
+		public long default_value;
+	}
+
+	public class ParamSpecULong : ParamSpec {
+		[CCode (cname = "g_param_spec_ulong")]
+		public ParamSpecULong (string name, string nick, string blurb, ulong minimum, ulong maximum, ulong default_value, ParamFlags flags);
+		public ulong minimum;
+		public ulong maximum;
+		public ulong default_value;
+	}
+
+	public class ParamSpecInt64 : ParamSpec {
+		[CCode (cname = "g_param_spec_int64")]
+		public ParamSpecInt64 (string name, string nick, string blurb, int64 minimum, int64 maximum, int64 default_value, ParamFlags flags);
+		public int64 minimum;
+		public int64 maximum;
+		public int64 default_value;
+	}
+
+	public class ParamSpecUInt64 : ParamSpec {
+		[CCode (cname = "g_param_spec_uint64")]
+		public ParamSpecUInt64 (string name, string nick, string blurb, uint64 minimum, uint64 maximum, uint64 default_value, ParamFlags flags);
+		public uint64 minimum;
+		public uint64 maximum;
+		public uint64 default_value;
+	}
+
+	public class ParamSpecFloat : ParamSpec {
+		[CCode (cname = "g_param_spec_float")]
+		public ParamSpecFloat (string name, string nick, string blurb, float minimum, float maximum, float default_value, ParamFlags flags);
+		public float minimum;
+		public float maximum;
+		public float default_value;
+	}
+
+	public class ParamSpecDouble : ParamSpec {
+		[CCode (cname = "g_param_spec_double")]
+		public ParamSpecDouble (string name, string nick, string blurb, double minimum, double maximum, double default_value, ParamFlags flags);
+		public double minimum;
+		public double maximum;
+		public double default_value;
+	}
+
+	public class ParamSpecEnum : ParamSpec {
+		[CCode (cname = "g_param_spec_enum")]
+		public ParamSpecEnum (string name, string nick, string blurb, Type enum_type, int default_value, ParamFlags flags);
+		public weak EnumClass enum_class;
+		public int default_value;
+	}
+
+	public class ParamSpecFlags : ParamSpec {
+		[CCode (cname = "g_param_spec_flags")]
+		public ParamSpecFlags (string name, string nick, string blurb, Type flags_type, uint default_value, ParamFlags flags);
+		public weak FlagsClass flags_class;
+		public uint default_value;
+	}
+
+	public class ParamSpecString : ParamSpec {
+		[CCode (cname = "g_param_spec_string")]
+		public ParamSpecString (string name, string nick, string blurb, string default_value, ParamFlags flags);
+		public string default_value;
+		public string cset_first;
+		public string cset_nth;
+		public char substitutor;
+		public uint null_fold_if_empty;
+		public uint ensure_non_null;
+	}
+
+	public class ParamSpecParam : ParamSpec {
+		[CCode (cname = "g_param_spec_param")]
+		public ParamSpecParam (string name, string nick, string blurb, Type param_type, ParamFlags flags);
 	}
 
 	[CCode (cprefix = "G_PARAM_", has_type_id = false)]
@@ -252,6 +360,10 @@ namespace GLib {
 		public weak EnumValue? get_value (int value);
 		public weak EnumValue? get_value_by_name (string name);
 		public weak EnumValue? get_value_by_nick (string name);
+		public int minimum;
+		public int maximum;
+		public uint n_values;
+		public weak EnumValue[] values;
 	}
 
 	[Compact]
@@ -266,6 +378,9 @@ namespace GLib {
 		public weak FlagsValue? get_first_value (uint value);
 		public weak FlagsValue? get_value_by_name (string name);
 		public weak FlagsValue? get_value_by_nick (string name);
+		public uint mask;
+		public uint n_values;
+		public FlagsValue[] values;
 	}
 
 	[Compact]
@@ -342,6 +457,10 @@ namespace GLib {
 		public Object dup_object ();
 		public void set_gtype (Type v_gtype);
 		public Type get_gtype ();
+		public void set_param(ParamSpec param);
+		public ParamSpec get_param();
+		public void take_param(out ParamSpec param);
+		public void param_take_ownership(out ParamSpec param);
 	}
 	
 	public struct SignalInvocationHint {
