@@ -20,7 +20,7 @@ namespace GLib {
 		public size_t get_available ();
 		public size_t get_buffer_size ();
 		public size_t peek (void* buffer, size_t offset, size_t count);
-		public void* peek_buffer (size_t count);
+		public void* peek_buffer (out size_t count);
 		public int read_byte (GLib.Cancellable? cancellable) throws GLib.Error;
 		public void set_buffer_size (size_t size);
 		[CCode (type = "GInputStream*", has_construct_function = false)]
