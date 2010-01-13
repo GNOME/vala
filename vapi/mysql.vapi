@@ -26,8 +26,8 @@ namespace Mysql {
 	[Compact]
 	[CCode (free_function = "mysql_close", cname = "MYSQL", cprefix = "mysql_")]
 	public class Database {
-		[CCode (argument0 = "NULL", cname = "mysql_init")]
-		public void init ();
+		[CCode (cname = "mysql_init")]
+		public Database (Database? mysql = null);
 
 		public ulong affected_rows ();
 		public bool autocommit (bool mode);
