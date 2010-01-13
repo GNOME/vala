@@ -187,7 +187,7 @@ namespace Json {
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public static unowned Json.Node gobject_serialize (GLib.Object gobject);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
-	public static unowned string gobject_to_data (GLib.Object gobject, size_t length);
+	public static string gobject_to_data (GLib.Object gobject, out size_t length);
 	[CCode (cheader_filename = "json-glib/json-gobject.h")]
 	public static string serialize_gobject (GLib.Object gobject, out size_t length);
 }
