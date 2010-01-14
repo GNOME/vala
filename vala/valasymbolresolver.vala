@@ -256,6 +256,11 @@ public class Vala.SymbolResolver : CodeVisitor {
 	}
 
 	DataType get_type_for_struct (Struct st, Struct base_struct) {
+		if (st.base_type != null) {
+			// make sure that base type is resolved
+			st.base_type.accept (this);
+		}
+
 		if (base_struct.base_struct != null) {
 			return get_type_for_struct (st, base_struct.base_struct);
 		}
