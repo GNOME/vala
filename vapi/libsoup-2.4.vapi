@@ -95,7 +95,7 @@ namespace Soup {
 		public void* auth_data { get; set; }
 	}
 	[Compact]
-	[CCode (copy_function = "soup_buffer_copy", type_id = "SOUP_TYPE_BUFFER", cheader_filename = "libsoup/soup.h")]
+	[CCode (ref_function = "soup_buffer_copy", unref_function = "soup_buffer_free", type_id = "SOUP_TYPE_BUFFER", cheader_filename = "libsoup/soup.h")]
 	public class Buffer {
 		public weak string data;
 		public size_t length;
