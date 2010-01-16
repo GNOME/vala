@@ -68,7 +68,8 @@ public class Vala.SignalType : DataType {
 
 	Method get_connect_method () {
 		if (connect_method == null) {
-			connect_method = new Method ("connect", new VoidType ());
+			var ulong_type = new IntegerType ((Struct) CodeContext.get ().root.scope.lookup ("ulong"));
+			connect_method = new Method ("connect", ulong_type);
 			connect_method.access = SymbolAccessibility.PUBLIC;
 			connect_method.external = true;
 			connect_method.owner = signal_symbol.scope;
