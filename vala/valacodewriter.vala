@@ -321,7 +321,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		if (!st.has_type_id) {
-			write_string ("has_type_id = false");
+			write_string ("has_type_id = false, ");
 		} else if (!st.is_simple_type () && st.get_type_id () != "G_TYPE_POINTER") {
 			write_string ("type_id = \"%s\", ".printf (st.get_type_id ()));
 		}
@@ -472,7 +472,7 @@ public class Vala.CodeWriter : CodeVisitor {
 		write_string ("[CCode (cprefix = \"%s\", ".printf (en.get_cprefix ()));
 
 		if (!en.has_type_id) {
-			write_string ("has_type_id = false");
+			write_string ("has_type_id = false, ");
 		}
 
 		write_string ("cheader_filename = \"%s\")]".printf (get_cheaders(en)));
