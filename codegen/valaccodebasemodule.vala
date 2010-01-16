@@ -188,6 +188,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	public TypeSymbol garray_type;
 	public TypeSymbol gbytearray_type;
 	public TypeSymbol gptrarray_type;
+	public TypeSymbol gthreadpool_type;
 	public DataType gquark_type;
 	public Struct gvalue_type;
 	public Struct mutex_type;
@@ -328,6 +329,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			garray_type = (TypeSymbol) glib_ns.scope.lookup ("Array");
 			gbytearray_type = (TypeSymbol) glib_ns.scope.lookup ("ByteArray");
 			gptrarray_type = (TypeSymbol) glib_ns.scope.lookup ("PtrArray");
+			gthreadpool_type = (TypeSymbol) glib_ns.scope.lookup ("ThreadPool");
 
 			gquark_type = new IntegerType ((Struct) glib_ns.scope.lookup ("Quark"));
 			gvalue_type = (Struct) glib_ns.scope.lookup ("Value");
@@ -2779,35 +2781,39 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		/* set freed references to NULL to prevent further use */
 		var ccomma = new CCodeCommaExpression ();
 
-		if (context.profile == Profile.GOBJECT
-		    && (type.data_type == gstringbuilder_type
-		        || type.data_type == garray_type
-		        || type.data_type == gbytearray_type
-		        || type.data_type == gptrarray_type)) {
-			ccall.add_argument (new CCodeConstant ("TRUE"));
-		} else if (type is ArrayType) {
-			var array_type = (ArrayType) type;
-			if (requires_destroy (array_type.element_type)) {
-				CCodeExpression csizeexpr = null;
-				bool first = true;
-				for (int dim = 1; dim <= array_type.rank; dim++) {
-					if (first) {
-						csizeexpr = head.get_array_length_cexpression (expr, dim);
-						first = false;
-					} else {
-						csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, head.get_array_length_cexpression (expr, dim));
+		if (context.profile == Profile.GOBJECT) {
+			if (type.data_type == gstringbuilder_type
+			    || type.data_type == garray_type
+			    || type.data_type == gbytearray_type
+			    || type.data_type == gptrarray_type) {
+				ccall.add_argument (new CCodeConstant ("TRUE"));
+			} else if (type.data_type == gthreadpool_type) {
+				ccall.add_argument (new CCodeConstant ("FALSE"));
+				ccall.add_argument (new CCodeConstant ("TRUE"));
+			} else if (type is ArrayType) {
+				var array_type = (ArrayType) type;
+				if (requires_destroy (array_type.element_type)) {
+					CCodeExpression csizeexpr = null;
+					bool first = true;
+					for (int dim = 1; dim <= array_type.rank; dim++) {
+						if (first) {
+							csizeexpr = head.get_array_length_cexpression (expr, dim);
+							first = false;
+						} else {
+							csizeexpr = new CCodeBinaryExpression (CCodeBinaryOperator.MUL, csizeexpr, head.get_array_length_cexpression (expr, dim));
+						}
 					}
-				}
 
-				var st = array_type.element_type.data_type as Struct;
-				if (st != null && !array_type.element_type.nullable) {
-					ccall.call = new CCodeIdentifier (append_struct_array_free (st));
-					ccall.add_argument (csizeexpr);
-				} else {
-					requires_array_free = true;
-					ccall.call = new CCodeIdentifier ("_vala_array_free");
-					ccall.add_argument (csizeexpr);
-					ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), "GDestroyNotify"));
+					var st = array_type.element_type.data_type as Struct;
+					if (st != null && !array_type.element_type.nullable) {
+						ccall.call = new CCodeIdentifier (append_struct_array_free (st));
+						ccall.add_argument (csizeexpr);
+					} else {
+						requires_array_free = true;
+						ccall.call = new CCodeIdentifier ("_vala_array_free");
+						ccall.add_argument (csizeexpr);
+						ccall.add_argument (new CCodeCastExpression (get_destroy_func_expression (array_type.element_type), "GDestroyNotify"));
+					}
 				}
 			}
 		}
