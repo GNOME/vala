@@ -775,6 +775,12 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			current_data_type = null;
 		} else {
+			bool ref_function_void = false;
+			string ref_function = null;
+			string unref_function = null;
+			string copy_function = null;
+			string free_function = null;
+
 			var cl = ns.scope.lookup (name) as Class;
 			if (cl == null) {
 				cl = new Class (name, current_source_reference);
@@ -793,6 +799,18 @@ public class Vala.GIdlParser : CodeVisitor {
 							}
 						} else if (nv[0] == "const_cname") {
 							cl.const_cname = eval (nv[1]);
+						} else if (nv[0] == "free_function") {
+							free_function = eval (nv[1]);
+						} else if (nv[0] == "ref_function") {
+							ref_function = eval (nv[1]);
+						} else if (nv[0] == "unref_function") {
+							unref_function = eval (nv[1]);
+						} else if (nv[0] == "copy_function") {
+							copy_function = eval (nv[1]);
+						} else if (nv[0] == "ref_function_void") {
+							if (eval (nv[1]) == "1") {
+								ref_function_void = true;
+							}
 						}
 					}
 				}
@@ -803,12 +821,6 @@ public class Vala.GIdlParser : CodeVisitor {
 			}
 
 			current_data_type = cl;
-
-			bool ref_function_void = false;
-			string ref_function = null;
-			string unref_function = null;
-			string copy_function = null;
-			string free_function = null;
 
 			foreach (weak IdlNode member in boxed_node.members) {
 				if (member.type == IdlNodeTypeId.FUNCTION) {
