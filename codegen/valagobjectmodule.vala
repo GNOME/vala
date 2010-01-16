@@ -626,7 +626,7 @@ internal class Vala.GObjectModule : GTypeModule {
 		func.add_parameter (new CCodeFormalParameter ("handler", "GCallback"));
 		func.add_parameter (new CCodeFormalParameter ("data", "gpointer"));
 		var block = new CCodeBlock ();
-		generate_gobject_connect_wrapper (sig, block);
+		generate_gobject_connect_wrapper (sig, block, false);
 
 		// append to C source file
 		source_declarations.add_type_member_declaration (func.copy ());
@@ -637,14 +637,41 @@ internal class Vala.GObjectModule : GTypeModule {
 		return connect_wrapper_name;
 	}
 
-	void generate_gobject_connect_wrapper (DynamicSignal sig, CCodeBlock block) {
+	public override string get_dynamic_signal_connect_after_wrapper_name (DynamicSignal sig) {
+		if (sig.dynamic_type.data_type == null
+		    || !sig.dynamic_type.data_type.is_subtype_of (gobject_type)) {
+			return base.get_dynamic_signal_connect_wrapper_name (sig);
+		}
+
+		string connect_wrapper_name = "_%sconnect_after".printf (get_dynamic_signal_cname (sig));
+		var func = new CCodeFunction (connect_wrapper_name, "void");
+		func.add_parameter (new CCodeFormalParameter ("obj", "gpointer"));
+		func.add_parameter (new CCodeFormalParameter ("signal_name", "const char *"));
+		func.add_parameter (new CCodeFormalParameter ("handler", "GCallback"));
+		func.add_parameter (new CCodeFormalParameter ("data", "gpointer"));
+		var block = new CCodeBlock ();
+		generate_gobject_connect_wrapper (sig, block, true);
+
+		// append to C source file
+		source_declarations.add_type_member_declaration (func.copy ());
+
+		func.block = block;
+		source_type_member_definition.append (func);
+
+		return connect_wrapper_name;
+	}
+
+	void generate_gobject_connect_wrapper (DynamicSignal sig, CCodeBlock block, bool after) {
 		var m = (Method) sig.handler.symbol_reference;
 
 		sig.accept (codegen);
 
 		string connect_func = "g_signal_connect_object";
 		if (m.binding != MemberBinding.INSTANCE) {
-			connect_func = "g_signal_connect";
+			if (!after)
+				connect_func = "g_signal_connect";
+			else
+				connect_func = "g_signal_connect_after";
 		}
 
 		var call = new CCodeFunctionCall (new CCodeIdentifier (connect_func));
@@ -654,7 +681,10 @@ internal class Vala.GObjectModule : GTypeModule {
 		call.add_argument (new CCodeIdentifier ("data"));
 
 		if (m.binding == MemberBinding.INSTANCE) {
-			call.add_argument (new CCodeConstant ("0"));
+			if (!after)
+				call.add_argument (new CCodeConstant ("0"));
+			else
+				call.add_argument (new CCodeConstant ("G_CONNECT_AFTER"));
 		}
 
 		block.add_statement (new CCodeExpressionStatement (call));

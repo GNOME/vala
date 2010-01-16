@@ -29,6 +29,7 @@ public class Vala.SignalType : DataType {
 	public Signal signal_symbol { get; set; }
 
 	Method? connect_method;
+	Method? connect_after_method;
 	Method? disconnect_method;
 
 	public SignalType (Signal signal_symbol) {
@@ -78,6 +79,18 @@ public class Vala.SignalType : DataType {
 		return connect_method;
 	}
 
+	Method get_connect_after_method () {
+		if (connect_after_method == null) {
+			var ulong_type = new IntegerType ((Struct) CodeContext.get ().root.scope.lookup ("ulong"));
+			connect_after_method = new Method ("connect_after", ulong_type);
+			connect_after_method.access = SymbolAccessibility.PUBLIC;
+			connect_after_method.external = true;
+			connect_after_method.owner = signal_symbol.scope;
+			connect_after_method.add_parameter (new FormalParameter ("handler", get_handler_type ()));
+		}
+		return connect_after_method;
+	}
+
 	Method get_disconnect_method () {
 		if (disconnect_method == null) {
 			disconnect_method = new Method ("disconnect", new VoidType ());
@@ -92,6 +105,8 @@ public class Vala.SignalType : DataType {
 	public override Symbol? get_member (string member_name) {
 		if (member_name == "connect") {
 			return get_connect_method ();
+		} else if (member_name == "connect_after") {
+			return get_connect_after_method ();
 		} else if (member_name == "disconnect") {
 			return get_disconnect_method ();
 		}

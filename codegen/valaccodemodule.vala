@@ -375,6 +375,10 @@ public abstract class Vala.CCodeModule {
 		return next.get_dynamic_signal_connect_wrapper_name (node);
 	}
 
+	public virtual string get_dynamic_signal_connect_after_wrapper_name (DynamicSignal node) {
+		return next.get_dynamic_signal_connect_after_wrapper_name (node);
+	}
+
 	public virtual string get_dynamic_signal_disconnect_wrapper_name (DynamicSignal node) {
 		return next.get_dynamic_signal_disconnect_wrapper_name (node);
 	}

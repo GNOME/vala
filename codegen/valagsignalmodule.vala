@@ -474,7 +474,7 @@ internal class Vala.GSignalModule : GObjectModule {
 			return null;
 		}
 
-		return connect_signal (sig, assignment.left, assignment.right, disconnect, assignment);
+		return connect_signal (sig, assignment.left, assignment.right, disconnect, false, assignment);
 	}
 
 	public override void visit_assignment (Assignment assignment) {
@@ -550,11 +550,12 @@ internal class Vala.GSignalModule : GObjectModule {
 		handler.accept (codegen);
 
 		bool disconnect = (method_type.method_symbol.name == "disconnect");
+		bool after = (method_type.method_symbol.name == "connect_after");
 
-		expr.ccodenode = connect_signal (sig, signal_access, handler, disconnect, expr);
+		expr.ccodenode = connect_signal (sig, signal_access, handler, disconnect, after, expr);
 	}
 
-	CCodeExpression? connect_signal (Signal sig, Expression signal_access, Expression handler, bool disconnect, CodeNode expr) {
+	CCodeExpression? connect_signal (Signal sig, Expression signal_access, Expression handler, bool disconnect, bool after, CodeNode expr) {
 		string connect_func;
 
 		var m = (Method) handler.symbol_reference;
@@ -562,15 +563,19 @@ internal class Vala.GSignalModule : GObjectModule {
 		if (!disconnect) {
 			// connect
 			if (sig is DynamicSignal) {
-				connect_func = head.get_dynamic_signal_connect_wrapper_name ((DynamicSignal) sig);
+				if (!after)
+					connect_func = head.get_dynamic_signal_connect_wrapper_name ((DynamicSignal) sig);
+				else
+					connect_func = head.get_dynamic_signal_connect_after_wrapper_name ((DynamicSignal) sig);
 			} else {
 				if (m.closure) {
 					connect_func = "g_signal_connect_data";
 				} else if (in_gobject_instance (m)) {
 					connect_func = "g_signal_connect_object";
-				} else {
+				} else if (!after) {
 					connect_func = "g_signal_connect";
-				}
+				} else
+					connect_func = "g_signal_connect_after";
 			}
 		} else {
 			// disconnect
@@ -669,7 +674,10 @@ internal class Vala.GSignalModule : GObjectModule {
 			ccall.add_argument (new CCodeCastExpression (handler_destroy_notify, "GClosureNotify"));
 
 			// sixth argument: connect_flags
-			ccall.add_argument (new CCodeConstant ("0"));
+			if (!after)
+				ccall.add_argument (new CCodeConstant ("0"));
+			else
+				ccall.add_argument (new CCodeConstant ("G_CONNECT_AFTER"));
 		} else if (m.binding == MemberBinding.INSTANCE) {
 			// g_signal_connect_object or g_signal_handlers_disconnect_matched
 			// or dynamic_signal_connect or dynamic_signal_disconnect
@@ -690,10 +698,13 @@ internal class Vala.GSignalModule : GObjectModule {
 				// g_signal_connect_object
 
 				// fifth argument: connect_flags
-				ccall.add_argument (new CCodeConstant ("0"));
+				if (!after)
+					ccall.add_argument (new CCodeConstant ("0"));
+				else
+					ccall.add_argument (new CCodeConstant ("G_CONNECT_AFTER"));
 			}
 		} else {
-			// g_signal_connect or g_signal_handlers_disconnect_matched
+			// g_signal_connect or g_signal_connect_after or g_signal_handlers_disconnect_matched
 			// or dynamic_signal_connect or dynamic_signal_disconnect
 
 			// fourth resp. seventh argument: user_data
