@@ -80,6 +80,14 @@ public class Vala.CreationMethod : Method {
 			error_type.accept (visitor);
 		}
 
+		foreach (Expression precondition in get_preconditions ()) {
+			precondition.accept (visitor);
+		}
+
+		foreach (Expression postcondition in get_postconditions ()) {
+			postcondition.accept (visitor);
+		}
+
 		if (body != null) {
 			body.accept (visitor);
 		}
@@ -151,6 +159,14 @@ public class Vala.CreationMethod : Method {
 
 		foreach (DataType error_type in get_error_types ()) {
 			error_type.check (analyzer);
+		}
+
+		foreach (Expression precondition in get_preconditions ()) {
+			precondition.check (analyzer);
+		}
+
+		foreach (Expression postcondition in get_postconditions ()) {
+			postcondition.check (analyzer);
 		}
 
 		if (body != null) {

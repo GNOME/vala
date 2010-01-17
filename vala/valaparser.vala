@@ -2991,6 +2991,16 @@ public class Vala.Parser : CodeVisitor {
 				method.add_error_type (parse_type ());
 			} while (accept (TokenType.COMMA));
 		}
+		while (accept (TokenType.REQUIRES)) {
+			expect (TokenType.OPEN_PARENS);
+			method.add_precondition (parse_expression ());
+			expect (TokenType.CLOSE_PARENS);
+		}
+		while (accept (TokenType.ENSURES)) {
+			expect (TokenType.OPEN_PARENS);
+			method.add_postcondition (parse_expression ());
+			expect (TokenType.CLOSE_PARENS);
+		}
 		method.access = access;
 		set_attributes (method, attrs);
 		if (!accept (TokenType.SEMICOLON)) {
