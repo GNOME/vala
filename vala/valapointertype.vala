@@ -62,7 +62,22 @@ public class Vala.PointerType : DataType {
 	}
 
 	public override bool compatible (DataType target_type) {
-		if (target_type is PointerType || (target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {
+		if (target_type is PointerType) {
+			var tt = target_type as PointerType;
+
+			if (tt.base_type is VoidType || base_type is VoidType) {
+				return true;
+			}
+
+			/* dereference only if both types are references or not */
+			if (base_type.is_reference_type_or_type_parameter () != tt.base_type.is_reference_type_or_type_parameter ()) {
+				return false;
+			}
+
+			return base_type.compatible (tt.base_type);
+		}
+
+		if ((target_type.data_type != null && target_type.data_type.get_attribute ("PointerType") != null)) {
 			return true;
 		}
 

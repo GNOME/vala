@@ -1007,7 +1007,7 @@ public class string {
 
 		string* result = GLib.malloc0 (this.size () - ((char*) end_string - (char*) start_string) + str_size + 1);
 
-		char* dest = result;
+		char* dest = (char*) result;
 
 		GLib.Memory.copy (dest, this, (char*) start_string - (char*) this);
 		dest += (char*) start_string - (char*) this;
