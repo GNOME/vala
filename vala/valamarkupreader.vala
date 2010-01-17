@@ -44,9 +44,7 @@ public class Vala.MarkupReader : Object {
 
 	public MarkupReader (string filename) {
 		this.filename = filename;
-	}
-	
-	construct {
+
 		try {
 			mapped_file = new MappedFile (filename, false);
 			begin = mapped_file.get_contents ();
