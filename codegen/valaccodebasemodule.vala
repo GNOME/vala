@@ -4225,7 +4225,13 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				}
 			}
 
-			expr.ccodenode = new CCodeCastExpression ((CCodeExpression) expr.inner.ccodenode, expr.type_reference.get_cname ());
+			var innercexpr = (CCodeExpression) expr.inner.ccodenode;
+			if (expr.type_reference.data_type is Struct && !expr.type_reference.nullable &&
+				expr.inner.value_type.data_type is Struct && expr.inner.value_type.nullable) {
+				// nullable integer or float or boolean or struct cast to non-nullable
+				innercexpr = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, innercexpr);
+			}
+			expr.ccodenode = new CCodeCastExpression (innercexpr, expr.type_reference.get_cname ());
 		}
 	}
 	
