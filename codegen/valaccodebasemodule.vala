@@ -4162,14 +4162,32 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 		ccall.add_argument (gvalue);
 
+		CCodeExpression rv = ccall;
+
 		if (expr != null && to is ArrayType) {
 			// null-terminated string array
 			var len_call = new CCodeFunctionCall (new CCodeIdentifier ("g_strv_length"));
-			len_call.add_argument (ccall);
+			len_call.add_argument (rv);
 			expr.append_array_size (len_call);
+		} else if (to is StructValueType) {
+			var temp_decl = get_temp_variable (to, true, null, true);
+			temp_vars.add (temp_decl);
+			var ctemp = get_variable_cexpression (temp_decl.name);
+
+			rv = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeCastExpression (rv, (new PointerType(to)).get_cname ()));
+			var holds = new CCodeFunctionCall (new CCodeIdentifier ("G_VALUE_HOLDS"));
+			holds.add_argument (gvalue);
+			holds.add_argument (new CCodeIdentifier (to.get_type_id ()));
+			var cond = new CCodeBinaryExpression (CCodeBinaryOperator.AND, holds, ccall);
+			var warn = new CCodeFunctionCall (new CCodeIdentifier ("g_warning"));
+			warn.add_argument (new CCodeConstant ("\"Invalid GValue unboxing (wrong type or NULL)\""));
+			var fail = new CCodeCommaExpression ();
+			fail.append_expression (warn);
+			fail.append_expression (ctemp);
+			rv = new CCodeConditionalExpression (cond, rv,  fail);
 		}
 
-		return ccall;
+		return rv;
 	}
 
 	public override void visit_cast_expression (CastExpression expr) {
@@ -4597,8 +4615,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("g_value_init"));
 			if (target_type.nullable) {
 				ccall.add_argument (get_variable_cexpression (decl.name));
-			}
-			else {
+			} else {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name)));
 			}
 			ccall.add_argument (new CCodeIdentifier (expression_type.get_type_id ()));
@@ -4607,11 +4624,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			ccall = new CCodeFunctionCall (get_value_setter_function (expression_type));
 			if (target_type.nullable) {
 				ccall.add_argument (get_variable_cexpression (decl.name));
-			}
-			else {
+			} else {
 				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression (decl.name)));
 			}
-			ccall.add_argument (cexpr);
+			if (expression_type.is_real_non_null_struct_type ()) {
+				ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cexpr));
+			} else {
+				ccall.add_argument (cexpr);
+			}
+
 			ccomma.append_expression (ccall);
 
 			ccomma.append_expression (get_variable_cexpression (decl.name));
