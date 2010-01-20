@@ -4425,7 +4425,20 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		} else if (expr.operator == BinaryOperator.OR) {
 			op = CCodeBinaryOperator.OR;
 		} else if (expr.operator == BinaryOperator.IN) {
-			expr.ccodenode = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeBinaryExpression (CCodeBinaryOperator.BITWISE_AND, cright, cleft), cleft);
+			if (expr.right.value_type is ArrayType) {
+				var array_type = (ArrayType) expr.right.value_type;
+				var node = new CCodeFunctionCall (new CCodeIdentifier (generate_array_contains_wrapper (array_type)));
+				node.add_argument (cright);
+				node.add_argument (get_array_length_cexpression (expr.right));
+				if (array_type.element_type is StructValueType) {
+					node.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, cleft));
+				} else {
+					node.add_argument (cleft);
+				}
+				expr.ccodenode = node;
+			} else {
+				expr.ccodenode = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeBinaryExpression (CCodeBinaryOperator.BITWISE_AND, cright, cleft), cleft);
+			}
 			return;
 		} else {
 			assert_not_reached ();
@@ -4562,6 +4575,66 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			ccheck.add_argument ((CCodeExpression) ccodenode);
 			return ccheck;
 		}
+	}
+
+	string generate_array_contains_wrapper (ArrayType array_type) {
+		string array_contains_func = "_vala_%s_array_contains".printf (array_type.element_type.get_lower_case_cname ());
+
+		if (!add_wrapper (array_contains_func)) {
+			return array_contains_func;
+		}
+
+		var function = new CCodeFunction (array_contains_func, "gboolean");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("stack", array_type.get_cname ()));
+		function.add_parameter (new CCodeFormalParameter ("stack_length", "int"));
+		if (array_type.element_type is StructValueType) {
+			function.add_parameter (new CCodeFormalParameter ("needle", array_type.element_type.get_cname () + "*"));
+		} else {
+			function.add_parameter (new CCodeFormalParameter ("needle", array_type.element_type.get_cname ()));
+		}
+		var block = new CCodeBlock ();
+
+		var idx_decl = new CCodeDeclaration ("int");
+		idx_decl.add_declarator (new CCodeVariableDeclarator ("i"));
+		block.add_statement (idx_decl);
+
+		var celement = new CCodeElementAccess (new CCodeIdentifier ("stack"), new CCodeIdentifier ("i"));
+		var cneedle = new CCodeIdentifier ("needle");
+		CCodeBinaryExpression cif_condition;
+		if (array_type.element_type.compatible (string_type)) {
+			requires_strcmp0 = true;
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier ("_vala_strcmp0"));
+			ccall.add_argument (celement);
+			ccall.add_argument (cneedle);
+			cif_condition = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccall, new CCodeConstant ("0"));
+		} else if (array_type.element_type is StructValueType) {
+			var equalfunc = generate_struct_equal_function ((Struct) array_type.element_type.data_type as Struct);
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
+			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, celement));
+			ccall.add_argument (cneedle);
+			cif_condition = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, ccall, new CCodeConstant ("TRUE"));
+		} else {
+			cif_condition = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, cneedle, celement);
+		}
+		var cif_found = new CCodeBlock ();
+		cif_found.add_statement (new CCodeReturnStatement (new CCodeConstant ("TRUE")));
+		var cloop_body = new CCodeBlock ();
+		cloop_body.add_statement (new CCodeIfStatement (cif_condition, cif_found));
+
+		var cloop_condition = new CCodeBinaryExpression (CCodeBinaryOperator.LESS_THAN, new CCodeIdentifier ("i"), new CCodeIdentifier ("stack_length"));
+		var cloop = new CCodeForStatement (cloop_condition, cloop_body);
+		cloop.add_initializer (new CCodeAssignment (new CCodeIdentifier ("i"), new CCodeConstant ("0")));
+		cloop.add_iterator (new CCodeUnaryExpression (CCodeUnaryOperator.POSTFIX_INCREMENT, new CCodeIdentifier ("i")));
+
+		block.add_statement (cloop);
+		block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+		source_declarations.add_type_member_declaration (function.copy ());
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return array_contains_func;
 	}
 
 	public override void visit_type_check (TypeCheck expr) {

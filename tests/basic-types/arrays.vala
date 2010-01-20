@@ -31,6 +31,10 @@ void test_integer_array () {
 	assert (c.length == 2);
 	assert (c[0] == 23);
 	assert (c[1] == 11);
+
+	// in expressions
+	assert (23 in a);
+	assert (!(-1 in a));
 }
 
 void test_string_array () {

@@ -400,6 +400,10 @@ public class Vala.BinaryExpression : Expression {
 			if (left.value_type.compatible (analyzer.int_type)
 			    && right.value_type.compatible (analyzer.int_type)) {
 				// integers or enums
+			} else if (right.value_type is ArrayType) {
+				if (!left.value_type.compatible (((ArrayType) right.value_type).element_type)) {
+					Report.error (source_reference, "Cannot look for `%s' in `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
+				}
 			} else {
 				// otherwise require a bool contains () method
 				var contains_method = right.value_type.get_member ("contains") as Method;
