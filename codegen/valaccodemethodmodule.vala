@@ -1034,7 +1034,10 @@ internal class Vala.CCodeMethodModule : CCodeStructModule {
 
 		ccheck.add_argument ((CCodeExpression) precondition.ccodenode);
 
-		if (ret_type is VoidType) {
+		if (method_node is CreationMethod) {
+			ccheck.call = new CCodeIdentifier ("g_return_val_if_fail");
+			ccheck.add_argument (new CCodeConstant ("NULL"));
+		} else if (ret_type is VoidType) {
 			/* void function */
 			ccheck.call = new CCodeIdentifier ("g_return_if_fail");
 		} else {
