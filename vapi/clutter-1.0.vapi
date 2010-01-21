@@ -159,7 +159,7 @@ namespace Clutter {
 		public void set_z_rotation_from_gravity (double angle, Clutter.Gravity gravity);
 		public bool should_pick_paint ();
 		public virtual void show_all ();
-		public bool transform_stage_point (float x, float y, float x_out, float y_out);
+		public bool transform_stage_point (float x, float y, out float x_out, out float y_out);
 		public virtual void unmap ();
 		public void unparent ();
 		public void unset_flags (Clutter.ActorFlags flags);

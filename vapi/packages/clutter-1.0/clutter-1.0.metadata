@@ -68,6 +68,8 @@ clutter_actor_set_name hidden="1"
 clutter_actor_set_width hidden="1"
 clutter_actor_set_x hidden="1"
 clutter_actor_set_y hidden="1"
+clutter_actor_transform_stage_point.x_out is_out="1"
+clutter_actor_transform_stage_point.y_out is_out="1"
 
 ClutterActorBox is_value_type="1"
 clutter_actor_box_copy hidden="1"
