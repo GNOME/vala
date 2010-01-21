@@ -2966,6 +2966,33 @@ namespace GLib {
 		KEEP_TRANSLATIONS
 	}
 
+	[CCode (cprefix = "G_KEY_FILE_DESKTOP_")]
+	namespace KeyFileDesktop {
+		public static const string GROUP;
+		public static const string KEY_TYPE;
+		public static const string KEY_VERSION;
+		public static const string KEY_NAME;
+		public static const string KEY_GENERIC_NAME;
+		public static const string KEY_NO_DISPLAY;
+		public static const string KEY_COMMENT;
+		public static const string KEY_ICON;
+		public static const string KEY_HIDDEN;
+		public static const string KEY_ONLY_SHOW_IN;
+		public static const string KEY_NOT_SHOW_IN;
+		public static const string KEY_TRY_EXEC;
+		public static const string KEY_EXEC;
+		public static const string KEY_PATH;
+		public static const string KEY_TERMINAL;
+		public static const string KEY_MIME_TYPE;
+		public static const string KEY_CATEGORIES;
+		public static const string KEY_STARTUP_NOTIFY;
+		public static const string KEY_STARTUP_WM_CLASS;
+		public static const string KEY_URL;
+		public static const string TYPE_APPLICATION;
+		public static const string TYPE_LINK;
+		public static const string TYPE_DIRECTORY;
+	}
+
 	/* Bookmark file parser */
 
 	[Compact]
