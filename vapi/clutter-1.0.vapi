@@ -117,7 +117,7 @@ namespace Clutter {
 		public void get_scale_center (out float center_x, out float center_y);
 		public unowned Clutter.Shader get_shader ();
 		public void get_size (out float width, out float height);
-		public unowned Clutter.Actor get_stage ();
+		public unowned Clutter.Stage get_stage ();
 		public void get_transformation_matrix (Cogl.Matrix matrix);
 		public void get_transformed_position (out float x, out float y);
 		public void get_transformed_size (out float width, out float height);
