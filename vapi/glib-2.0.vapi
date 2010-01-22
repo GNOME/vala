@@ -826,12 +826,10 @@ public class string {
 	[CCode (cname = "g_strcompress")]
 	public string compress ();
 	[CCode (cname = "g_strsplit", array_length = false, array_null_terminated = true)]
-	[NoArrayLength]
 	public string[] split (string delimiter, int max_tokens = 0);
 	[CCode (cname = "g_strsplit_set", array_length = false, array_null_terminated = true)]
 	public string[] split_set (string delimiters, int max_tokens = 0);
 	[CCode (cname = "g_strjoinv")]
-	[NoArrayLength]
 	public static string joinv (string separator, [CCode (array_length = false, array_null_terminated = true)] string[] str_array);
 	[CCode (cname = "g_strjoin")]
 	public static string join (string separator, ...);
@@ -2105,10 +2103,8 @@ namespace GLib {
 		[CCode (cname = "g_get_user_special_dir")]
 		public static weak string get_user_special_dir (UserDirectory directory);
 		[CCode (cname = "g_get_system_data_dirs", array_length = false, array_null_terminated = true)]
-		[NoArrayLength]
 		public static weak string[] get_system_data_dirs ();
 		[CCode (cname = "g_get_system_config_dirs", array_length = false, array_null_terminated = true)]
-		[NoArrayLength]
 		public static weak string[] get_system_config_dirs ();
 		[CCode (cname = "g_get_host_name")]
 		public static weak string get_host_name ();
@@ -2681,7 +2677,6 @@ namespace GLib {
 		public void set_ignore_unknown_options (bool ignore_unknown);
 		public bool get_ignore_unknown_options ();
 		public string get_help (bool main_help, OptionGroup? group);
-		[NoArrayLength]
 		public void add_main_entries ([CCode (array_length = false)] OptionEntry[] entries, string? translation_domain);
 		public void add_group (owned OptionGroup group);
 		public void set_main_group (owned OptionGroup group);

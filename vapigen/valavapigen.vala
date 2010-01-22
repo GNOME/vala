@@ -27,14 +27,11 @@ class Vala.VAPIGen : Object {
 	static bool version;
 	static bool quiet_mode;
 	[CCode (array_length = false, array_null_terminated = true)]
-	[NoArrayLength]
 	static string[] sources;
 	[CCode (array_length = false, array_null_terminated = true)]
-	[NoArrayLength]
 	static string[] vapi_directories;
 	static string library;
 	[CCode (array_length = false, array_null_terminated = true)]
-	[NoArrayLength]
 	static string[] packages;
 	static string metadata_filename;
 	CodeContext context;

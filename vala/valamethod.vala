@@ -475,6 +475,9 @@ public class Vala.Method : Member {
 				printf_format = true;
 			} else if (a.name == "ScanfFormat") {
 				scanf_format = true;
+			} else if (a.name == "NoArrayLength") {
+				Report.warning (source_reference, "NoArrayLength attribute is deprecated, use [CCode (array_length = false)] instead.");
+				no_array_length = true;
 			}
 		}
 	}

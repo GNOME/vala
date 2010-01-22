@@ -28,19 +28,15 @@ class Vala.Compiler {
 	static string directory;
 	static bool version;
 	[CCode (array_length = false, array_null_terminated = true)]
-	[NoArrayLength]
 	static string[] sources;
 	[CCode (array_length = false, array_null_terminated = true)]
-	[NoArrayLength]
 	static string[] vapi_directories;
 	[CCode (array_length = false, array_null_terminated = true)]
-	[NoArrayLength]
 	static string[] gir_directories;
 	static string vapi_filename;
 	static string library;
 	static string gir;
 	[CCode (array_length = false, array_null_terminated = true)]
-	[NoArrayLength]
 	static string[] packages;
 	static string target_glib;
 
@@ -65,12 +61,10 @@ class Vala.Compiler {
 	static bool disable_warnings;
 	static string cc_command;
 	[CCode (array_length = false, array_null_terminated = true)]
-	[NoArrayLength]
 	static string[] cc_options;
 	static string dump_tree;
 	static bool save_temps;
 	[CCode (array_length = false, array_null_terminated = true)]
-	[NoArrayLength]
 	static string[] defines;
 	static bool quiet_mode;
 	static bool verbose_mode;

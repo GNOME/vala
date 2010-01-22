@@ -48,7 +48,6 @@ public class Vala.CCodeCompiler {
 	 *
 	 * @param context a code context
 	 */
-	[NoArrayLength]
 	public void compile (CodeContext context, string? cc_command, string[] cc_options) {
 		bool use_pkgconfig = false;
 

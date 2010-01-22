@@ -14,7 +14,7 @@ namespace GnomeKeyring
 		public extern AttributeList ();
 		public extern Attribute index (int i);
 		
-		[NoArrayLength]
+		[CCode (array_length = false)]
 		public Attribute[] data;
 		public uint len;
 	}
