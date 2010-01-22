@@ -136,7 +136,11 @@ internal class Vala.DBusModule : GAsyncModule {
 		if (id != null) {
 			return new CCodeIdentifier ("%s_length%d".printf (id.name, dim));
 		} else if (ma != null) {
-			return new CCodeMemberAccess.pointer (ma.inner, "%s_length%d".printf (ma.member_name, dim));
+			if (ma.is_pointer) {
+				return new CCodeMemberAccess.pointer (ma.inner, "%s_length%d".printf (ma.member_name, dim));
+			} else {
+				return new CCodeMemberAccess (ma.inner, "%s_length%d".printf (ma.member_name, dim));
+			}
 		}
 		return null;
 	}
