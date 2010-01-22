@@ -3480,7 +3480,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_string_literal (StringLiteral expr) {
-		expr.ccodenode = new CCodeConstant (expr.value);
+		expr.ccodenode = new CCodeConstant.string (expr.value);
 	}
 
 	public override void visit_null_literal (NullLiteral expr) {

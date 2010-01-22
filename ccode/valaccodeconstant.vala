@@ -1,6 +1,6 @@
 /* valaccodeconstant.vala
  *
- * Copyright (C) 2006  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,11 +30,68 @@ public class Vala.CCodeConstant : CCodeExpression {
 	 * The name of this constant.
 	 */
 	public string name { get; set; }
-	
+
 	public CCodeConstant (string _name) {
 		name = _name;
 	}
-	
+
+	const int LINE_LENGTH = 70;
+
+	public CCodeConstant.string (string _name) {
+		assert (_name[0] == '\"');
+
+		if (_name.length <= LINE_LENGTH) {
+			name = _name;
+			return;
+		}
+
+		var builder = new StringBuilder ("\"");
+
+		char* p = _name;
+		char* end = p + _name.size ();
+
+		// remove quotes
+		p++;
+		end--;
+
+		int col = 0;
+		while (p < end) {
+			if (col >= LINE_LENGTH) {
+				builder.append ("\" \\\n\"");
+				col = 0;
+			}
+			if (*p == '\\') {
+				char* begin_of_char = p;
+
+				builder.append_c (p[0]);
+				builder.append_c (p[1]);
+				p += 2;
+				switch (p[-1]) {
+				case 'x':
+					// hexadecimal character
+					while (p < end && p->isxdigit ()) {
+						builder.append_c (*p);
+						p++;
+					}
+					break;
+				case 'n':
+					// break line at \n
+					col = LINE_LENGTH;
+					break;
+				}
+				col += (int) (p - begin_of_char);
+			} else {
+				builder.append_unichar (((string) p).get_char ());
+				p += ((char*) ((string) p).next_char () - p);
+				col++;
+			}
+		}
+
+		builder.append_c ('"');
+
+		this.name = builder.str;
+	}
+
 	public override void write (CCodeWriter writer) {
 		writer.write_string (name);
 	}
