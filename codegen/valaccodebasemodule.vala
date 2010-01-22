@@ -1046,6 +1046,12 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						var size = sizes[dim - 1];
 						instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (array_len_lhs, (CCodeExpression) size.ccodenode)));
 					}
+
+					if (array_type.rank == 1) {
+						var lhs_array_size = head.get_array_size_cexpression (ma);
+						var rhs_array_len = head.get_array_length_cexpression (ma, 1);
+						instance_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs_array_size, rhs_array_len)));
+					}
 				}
 
 				append_temp_decl (instance_init_fragment, temp_vars);
