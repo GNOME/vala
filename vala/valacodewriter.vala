@@ -1425,7 +1425,10 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	public override void visit_object_creation_expression (ObjectCreationExpression expr) {
-		write_string ("new ");
+		if (!expr.struct_creation) {
+			write_string ("new ");
+		}
+
 		write_type (expr.type_reference);
 		write_string (" (");
 
