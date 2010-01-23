@@ -4892,7 +4892,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 	}
 
-	public CCodeFunctionCall get_property_set_call (Property prop, MemberAccess ma, CCodeExpression cexpr, Expression? rhs = null) {
+	public CCodeExpression get_property_set_call (Property prop, MemberAccess ma, CCodeExpression cexpr, Expression? rhs = null) {
 		if (ma.inner is BaseAccess) {
 			if (prop.base_property != null) {
 				var base_class = (Class) prop.base_property.parent_symbol;
@@ -4968,9 +4968,22 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			ccall.add_argument (prop.get_canonical_cconstant ());
 		}
 
-		ccall.add_argument (cexpr);
-
 		var array_type = prop.property_type as ArrayType;
+
+		CCodeExpression rv;
+		if (array_type != null && !prop.no_array_length) {
+			var temp_var = get_temp_variable (prop.property_type, true, null, false);
+			temp_vars.insert (0, temp_var);
+			var ccomma = new CCodeCommaExpression ();
+			ccomma.append_expression (new CCodeAssignment (get_variable_cexpression (temp_var.name), cexpr));
+			ccall.add_argument (get_variable_cexpression (temp_var.name));
+			ccomma.append_expression (ccall);
+			rv = ccomma;
+		} else {
+			ccall.add_argument (cexpr);
+			rv = ccall;
+		}
+
 		if (array_type != null && !prop.no_array_length && rhs != null) {
 			for (int dim = 1; dim <= array_type.rank; dim++) {
 				ccall.add_argument (head.get_array_length_cexpression (rhs, dim));
@@ -4987,7 +5000,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			ccall.add_argument (new CCodeConstant ("NULL"));
 		}
 
-		return ccall;
+		return rv;
 	}
 
 	/* indicates whether a given Expression eligable for an ADDRESS_OF operator
