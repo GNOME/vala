@@ -126,7 +126,15 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 				if (instance_target_type.data_type.is_reference_type () || (expr.inner != null && expr.inner.value_type is PointerType)) {
 					expr.ccodenode = new CCodeMemberAccess.pointer (inst, f.get_cname ());
 				} else {
-					expr.ccodenode = new CCodeMemberAccess (inst, f.get_cname ());
+					if (inst is CCodeCommaExpression) {
+						var ccomma = inst as CCodeCommaExpression;
+						var inner = ccomma.get_inner ();
+						var last = inner.get (inner.size - 1);
+						ccomma.set_expression (inner.size - 1, new CCodeMemberAccess (last, f.get_cname ()));
+						expr.ccodenode = ccomma;
+					} else {
+						expr.ccodenode = new CCodeMemberAccess (inst, f.get_cname ());
+					}
 				}
 			} else if (f.binding == MemberBinding.CLASS) {
 				var cl = (Class) f.parent_symbol;

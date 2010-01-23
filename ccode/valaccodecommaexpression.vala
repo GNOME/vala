@@ -1,6 +1,6 @@
 /* valaccodecommaexpression.vala
  *
- * Copyright (C) 2006-2008  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,6 +35,10 @@ public class Vala.CCodeCommaExpression : CCodeExpression {
 	 */
 	public void append_expression (CCodeExpression expr) {
 		inner.add (expr);
+	}
+
+	public void set_expression (int index, CCodeExpression expr) {
+		inner[index] = expr;
 	}
 
 	public List<CCodeExpression> get_inner () {

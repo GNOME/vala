@@ -4373,7 +4373,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	public override void visit_addressof_expression (AddressofExpression expr) {
-		expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) expr.inner.ccodenode);
+		if (expr.inner.ccodenode is CCodeCommaExpression) {
+			var ccomma = expr.inner.ccodenode as CCodeCommaExpression;
+			var inner = ccomma.get_inner ();
+			var last = inner.get (inner.size - 1);
+			ccomma.set_expression (inner.size - 1, new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) last));
+			expr.ccodenode = ccomma;
+		} else {
+			expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, (CCodeExpression) expr.inner.ccodenode);
+		}
 	}
 
 	public override void visit_reference_transfer_expression (ReferenceTransferExpression expr) {
