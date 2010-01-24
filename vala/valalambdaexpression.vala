@@ -1,6 +1,6 @@
 /* valalambdaexpression.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -133,7 +133,10 @@ public class Vala.LambdaExpression : Expression {
 		}
 
 		var cb = (Delegate) ((DelegateType) target_type).delegate_symbol;
-		method = new Method (get_lambda_name (analyzer), cb.return_type);
+		method = new Method (get_lambda_name (analyzer), cb.return_type, source_reference);
+		// track usage for flow analyzer
+		method.used = true;
+
 		if (!cb.has_target || !analyzer.is_in_instance_method ()) {
 			method.binding = MemberBinding.STATIC;
 		} else {
@@ -211,15 +214,7 @@ public class Vala.LambdaExpression : Expression {
 		/* lambda expressions should be usable like MemberAccess of a method */
 		symbol_reference = method;
 
-		if (method == null) {
-			if (expression_body != null) {
-				expression_body.check (analyzer);
-			} else if (statement_body != null) {
-				statement_body.check (analyzer);
-			}
-		} else {
-			method.check (analyzer);
-		}
+		method.check (analyzer);
 
 		value_type = new MethodType (method);
 		value_type.value_owned = target_type.value_owned;

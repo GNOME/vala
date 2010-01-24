@@ -135,6 +135,25 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		}
 	}
 
+	public override void visit_lambda_expression (LambdaExpression le) {
+		var old_current_block = current_block;
+		var old_unreachable_reported = unreachable_reported;
+		var old_jump_stack = jump_stack;
+		current_block = null;
+		unreachable_reported = false;
+		jump_stack = new ArrayList<JumpTarget> ();
+
+		le.accept_children (this);
+
+		current_block = old_current_block;
+		unreachable_reported = old_unreachable_reported;
+		jump_stack = old_jump_stack;
+	}
+
+	public override void visit_method_call (MethodCall mc) {
+		mc.accept_children (this);
+	}
+
 	public override void visit_method (Method m) {
 		if (m.is_internal_symbol () && !m.used && !m.entry_point
 		    && !m.overrides && (m.base_interface_method == null || m.base_interface_method == m)
@@ -151,6 +170,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 
 		current_block = new BasicBlock ();
 		m.entry_block.connect (current_block);
+		current_block.add_node (m);
 
 		jump_stack.add (new JumpTarget.return_target (m.exit_block));
 
@@ -162,7 +182,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			// end of method body reachable
 
 			if (!(m.return_type is VoidType)) {
-				Report.error (m.source_reference, "missing return statement at end of method body");
+				Report.error (m.source_reference, "missing return statement at end of method or lambda body");
 				m.error = true;
 			}
 
@@ -508,6 +528,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_expression_statement (ExpressionStatement stmt) {
+		stmt.accept_children (this);
+
 		if (unreachable (stmt)) {
 			return;
 		}
@@ -759,6 +781,8 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 	}
 
 	public override void visit_return_statement (ReturnStatement stmt) {
+		stmt.accept_children (this);
+
 		if (unreachable (stmt)) {
 			return;
 		}
