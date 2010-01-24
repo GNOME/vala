@@ -1118,6 +1118,8 @@ public class Vala.Parser : CodeVisitor {
 	Expression parse_relational_expression () throws ParseError {
 		var begin = get_location ();
 		var left = parse_shift_expression ();
+
+		bool first = true;
 		bool found = true;
 		while (found) {
 			var operator = get_binary_operator (current ());
@@ -1128,6 +1130,14 @@ public class Vala.Parser : CodeVisitor {
 				next ();
 				var right = parse_shift_expression ();
 				left = new BinaryExpression (operator, left, right, get_src (begin));
+				if (!first) {
+					var be = (BinaryExpression) left;
+					be.chained = true;
+					if (!context.experimental) {
+						Report.warning (left.source_reference, "chained relational expressions are experimental");
+					}
+				}
+				first = false;
 				break;
 			case BinaryOperator.GREATER_THAN:
 				next ();
@@ -1135,6 +1145,14 @@ public class Vala.Parser : CodeVisitor {
 				if (current () != TokenType.OP_GT && current () != TokenType.OP_GE) {
 					var right = parse_shift_expression ();
 					left = new BinaryExpression (operator, left, right, get_src (begin));
+					if (!first) {
+						var be = (BinaryExpression) left;
+						be.chained = true;
+						if (!context.experimental) {
+							Report.warning (left.source_reference, "chained relational expressions are experimental");
+						}
+					}
+					first = false;
 				} else {
 					prev ();
 					found = false;

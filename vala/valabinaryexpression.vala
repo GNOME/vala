@@ -58,6 +58,8 @@ public class Vala.BinaryExpression : Expression {
 		}
 	}
 	
+	public bool chained;
+
 	private Expression _left;
 	private Expression _right;
 	
@@ -334,7 +336,14 @@ public class Vala.BinaryExpression : Expression {
 				} else if (left.value_type is PointerType && right.value_type is PointerType) {
 					// pointer arithmetic
 			} else {
-				var resulting_type = analyzer.get_arithmetic_result_type (left.value_type, right.value_type);
+				DataType resulting_type;
+
+				if (chained) {
+					var lbe = (BinaryExpression) left;
+					resulting_type = analyzer.get_arithmetic_result_type (lbe.right.value_type, right.value_type);
+				} else {
+					resulting_type = analyzer.get_arithmetic_result_type (left.value_type, right.value_type);
+				}
 
 				if (resulting_type == null) {
 					error = true;

@@ -4499,7 +4499,26 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 
 		var cleft = (CCodeExpression) expr.left.ccodenode;
 		var cright = (CCodeExpression) expr.right.ccodenode;
-		
+
+		CCodeExpression? left_chain = null;
+		if (expr.chained) {
+			var lbe = (BinaryExpression) expr.left;
+
+			var temp_decl = get_temp_variable (lbe.right.value_type, true, null, false);
+			temp_vars.insert (0, temp_decl);
+			var cvar = get_variable_cexpression (temp_decl.name);
+			var ccomma = new CCodeCommaExpression ();
+			var clbe = (CCodeBinaryExpression) lbe.ccodenode;
+			if (lbe.chained) {
+				clbe = (CCodeBinaryExpression) clbe.right;
+			}
+			ccomma.append_expression (new CCodeAssignment (cvar, (CCodeExpression)lbe.right.ccodenode));
+			clbe.right = get_variable_cexpression (temp_decl.name);
+			ccomma.append_expression (cleft);
+			cleft = cvar;
+			left_chain = ccomma;
+		}
+
 		CCodeBinaryOperator op;
 		if (expr.operator == BinaryOperator.PLUS) {
 			op = CCodeBinaryOperator.PLUS;
@@ -4670,6 +4689,9 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 
 		expr.ccodenode = new CCodeBinaryExpression (op, cleft, cright);
+		if (left_chain != null) {
+			expr.ccodenode = new CCodeBinaryExpression (CCodeBinaryOperator.AND, left_chain, (CCodeExpression) expr.ccodenode);
+		}
 	}
 
 	public string? get_type_check_function (TypeSymbol type) {
