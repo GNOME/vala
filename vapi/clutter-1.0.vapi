@@ -979,12 +979,10 @@ namespace Clutter {
 		public GLib.List<weak Clutter.Actor> get_children ();
 		[CCode (cname = "clutter_container_class_list_child_properties")]
 		public class unowned Clutter.ParamSpecColor list_child_properties (uint n_properties);
-		[NoWrapper]
-		public virtual void lower (Clutter.Actor actor, Clutter.Actor? sibling);
-		public void lower_child (Clutter.Actor actor, Clutter.Actor? sibling);
-		[NoWrapper]
-		public virtual void raise (Clutter.Actor actor, Clutter.Actor? sibling);
-		public void raise_child (Clutter.Actor actor, Clutter.Actor? sibling);
+		[CCode (vfunc_name = "lower")]
+		public virtual void lower_child (Clutter.Actor actor, Clutter.Actor? sibling = null);
+		[CCode (vfunc_name = "raise")]
+		public virtual void raise_child (Clutter.Actor actor, Clutter.Actor? sibling = null);
 		public void remove (...);
 		[CCode (vfunc_name = "remove")]
 		public abstract void remove_actor (Clutter.Actor actor);

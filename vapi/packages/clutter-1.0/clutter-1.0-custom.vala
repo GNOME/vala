@@ -40,10 +40,10 @@ namespace Clutter {
 		public virtual void destroy_child_meta (Clutter.Actor actor);
 		public virtual void foreach_with_internals (Clutter.Callback callback);
 		public virtual unowned Clutter.ChildMeta get_child_meta (Clutter.Actor actor);
-		[NoWrapper]
-		public virtual void lower (Clutter.Actor actor, Clutter.Actor? sibling);
-		[NoWrapper]
-		public virtual void raise (Clutter.Actor actor, Clutter.Actor? sibling);
+		[CCode (vfunc_name = "lower")]
+		public virtual void lower_child (Clutter.Actor actor, Clutter.Actor? sibling = null);
+		[CCode (vfunc_name = "raise")]
+		public virtual void raise_child (Clutter.Actor actor, Clutter.Actor? sibling = null);
 		public virtual void sort_depth_order ();
 
 		public GLib.List<weak Clutter.Actor> get_children ();
