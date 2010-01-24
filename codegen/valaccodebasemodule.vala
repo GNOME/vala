@@ -2914,7 +2914,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				vardecl.initializer = clist;
 				vardecl.init0 = true;
 			} else if (local.variable_type.is_reference_type_or_type_parameter () ||
-			       local.variable_type.nullable) {
+			       local.variable_type.nullable ||
+			       local.variable_type is DelegateType) {
 				vardecl.initializer = new CCodeConstant ("NULL");
 				vardecl.init0 = true;
 			}
