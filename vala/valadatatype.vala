@@ -90,6 +90,14 @@ public abstract class Vala.DataType : CodeNode {
 		return _empty_type_list;
 	}
 
+	public bool has_type_arguments () {
+		if (type_argument_list == null) {
+			return false;
+		}
+
+		return type_argument_list.size > 0;
+	}
+
 	/**
 	 * Removes all generic type arguments.
 	 */
@@ -507,7 +515,7 @@ public abstract class Vala.DataType : CodeNode {
 		return false;
 	}
 
-	public DataType get_actual_type (DataType? derived_instance_type, MemberAccess? method_access, CodeNode node_reference) {
+	public virtual DataType get_actual_type (DataType? derived_instance_type, MemberAccess? method_access, CodeNode node_reference) {
 		if (derived_instance_type == null && method_access == null) {
 			return this;
 		}
