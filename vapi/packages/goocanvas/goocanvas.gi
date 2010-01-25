@@ -7,6 +7,25 @@
 			<field name="radius_x" type="gdouble"/>
 			<field name="radius_y" type="gdouble"/>
 		</struct>
+		<struct name="GooCanvasGridData">
+			<field name="x" type="gdouble"/>
+			<field name="y" type="gdouble"/>
+			<field name="width" type="gdouble"/>
+			<field name="height" type="gdouble"/>
+			<field name="x_step" type="gdouble"/>
+			<field name="y_step" type="gdouble"/>
+			<field name="x_offset" type="gdouble"/>
+			<field name="y_offset" type="gdouble"/>
+			<field name="horz_grid_line_width" type="gdouble"/>
+			<field name="vert_grid_line_width" type="gdouble"/>
+			<field name="horz_grid_line_pattern" type="cairo_pattern_t*"/>
+			<field name="vert_grid_line_pattern" type="cairo_pattern_t*"/>
+			<field name="border_width" type="gdouble"/>
+			<field name="border_pattern" type="cairo_pattern_t*"/>
+			<field name="show_horz_grid_lines" type="guint"/>
+			<field name="show_vert_grid_lines" type="guint"/>
+			<field name="vert_grid_lines_on_top" type="guint"/>
+		</struct>
 		<struct name="GooCanvasImageData">
 			<field name="pattern" type="cairo_pattern_t*"/>
 			<field name="x" type="gdouble"/>
@@ -25,39 +44,9 @@
 			<field name="can_focus" type="guint"/>
 			<field name="own_style" type="guint"/>
 			<field name="clip_fill_rule" type="guint"/>
+			<field name="is_static" type="guint"/>
 			<field name="cache_setting" type="guint"/>
 			<field name="has_tooltip" type="guint"/>
-		</struct>
-		<struct name="GooCanvasLineDash">
-			<method name="new" symbol="goo_canvas_line_dash_new">
-				<return-type type="GooCanvasLineDash*"/>
-				<parameters>
-					<parameter name="num_dashes" type="gint"/>
-				</parameters>
-			</method>
-			<method name="newv" symbol="goo_canvas_line_dash_newv">
-				<return-type type="GooCanvasLineDash*"/>
-				<parameters>
-					<parameter name="num_dashes" type="gint"/>
-					<parameter name="dashes" type="double*"/>
-				</parameters>
-			</method>
-			<method name="ref" symbol="goo_canvas_line_dash_ref">
-				<return-type type="GooCanvasLineDash*"/>
-				<parameters>
-					<parameter name="dash" type="GooCanvasLineDash*"/>
-				</parameters>
-			</method>
-			<method name="unref" symbol="goo_canvas_line_dash_unref">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="dash" type="GooCanvasLineDash*"/>
-				</parameters>
-			</method>
-			<field name="ref_count" type="int"/>
-			<field name="num_dashes" type="int"/>
-			<field name="dashes" type="double*"/>
-			<field name="dash_offset" type="double"/>
 		</struct>
 		<struct name="GooCanvasPathData">
 			<field name="path_commands" type="GArray*"/>
@@ -119,8 +108,6 @@
 			<field name="ellipsize" type="guint"/>
 			<field name="wrap" type="guint"/>
 		</struct>
-		<boxed name="GooCairoLineDash" type-name="GooCairoLineDash" get-type="goo_canvas_line_dash_get_type">
-		</boxed>
 		<boxed name="GooCairoMatrix" type-name="GooCairoMatrix" get-type="goo_cairo_matrix_get_type">
 			<method name="copy" symbol="goo_cairo_matrix_copy">
 				<return-type type="cairo_matrix_t*"/>
@@ -142,6 +129,37 @@
 			<field name="y1" type="gdouble"/>
 			<field name="x2" type="gdouble"/>
 			<field name="y2" type="gdouble"/>
+		</boxed>
+		<boxed name="GooCanvasLineDash" type-name="GooCanvasLineDash" get-type="goo_canvas_line_dash_get_type">
+			<constructor name="new" symbol="goo_canvas_line_dash_new">
+				<return-type type="GooCanvasLineDash*"/>
+				<parameters>
+					<parameter name="num_dashes" type="gint"/>
+				</parameters>
+			</constructor>
+			<constructor name="newv" symbol="goo_canvas_line_dash_newv">
+				<return-type type="GooCanvasLineDash*"/>
+				<parameters>
+					<parameter name="num_dashes" type="gint"/>
+					<parameter name="dashes" type="double*"/>
+				</parameters>
+			</constructor>
+			<method name="ref" symbol="goo_canvas_line_dash_ref">
+				<return-type type="GooCanvasLineDash*"/>
+				<parameters>
+					<parameter name="dash" type="GooCanvasLineDash*"/>
+				</parameters>
+			</method>
+			<method name="unref" symbol="goo_canvas_line_dash_unref">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="dash" type="GooCanvasLineDash*"/>
+				</parameters>
+			</method>
+			<field name="ref_count" type="int"/>
+			<field name="num_dashes" type="int"/>
+			<field name="dashes" type="double*"/>
+			<field name="dash_offset" type="double"/>
 		</boxed>
 		<boxed name="GooCanvasPoints" type-name="GooCanvasPoints" get-type="goo_canvas_points_get_type">
 			<constructor name="new" symbol="goo_canvas_points_new">
@@ -166,32 +184,32 @@
 			<field name="num_points" type="int"/>
 			<field name="ref_count" type="int"/>
 		</boxed>
-		<enum name="GooCairoAntialias">
+		<enum name="GooCairoAntialias" type-name="GooCairoAntialias" get-type="goo_cairo_antialias_get_type">
 			<member name="CAIRO_ANTIALIAS_DEFAULT" value="0"/>
 			<member name="CAIRO_ANTIALIAS_NONE" value="1"/>
 			<member name="CAIRO_ANTIALIAS_GRAY" value="2"/>
 			<member name="CAIRO_ANTIALIAS_SUBPIXEL" value="3"/>
 		</enum>
-		<enum name="GooCairoFillRule">
+		<enum name="GooCairoFillRule" type-name="GooCairoFillRule" get-type="goo_cairo_fill_rule_get_type">
 			<member name="CAIRO_FILL_RULE_WINDING" value="0"/>
 			<member name="CAIRO_FILL_RULE_EVEN_ODD" value="1"/>
 		</enum>
-		<enum name="GooCairoHintMetrics">
+		<enum name="GooCairoHintMetrics" type-name="GooCairoHintMetrics" get-type="goo_cairo_hint_metrics_get_type">
 			<member name="CAIRO_HINT_METRICS_DEFAULT" value="0"/>
 			<member name="CAIRO_HINT_METRICS_OFF" value="1"/>
 			<member name="CAIRO_HINT_METRICS_ON" value="2"/>
 		</enum>
-		<enum name="GooCairoLineCap">
+		<enum name="GooCairoLineCap" type-name="GooCairoLineCap" get-type="goo_cairo_line_cap_get_type">
 			<member name="CAIRO_LINE_CAP_BUTT" value="0"/>
 			<member name="CAIRO_LINE_CAP_ROUND" value="1"/>
 			<member name="CAIRO_LINE_CAP_SQUARE" value="2"/>
 		</enum>
-		<enum name="GooCairoLineJoin">
+		<enum name="GooCairoLineJoin" type-name="GooCairoLineJoin" get-type="goo_cairo_line_join_get_type">
 			<member name="CAIRO_LINE_JOIN_MITER" value="0"/>
 			<member name="CAIRO_LINE_JOIN_ROUND" value="1"/>
 			<member name="CAIRO_LINE_JOIN_BEVEL" value="2"/>
 		</enum>
-		<enum name="GooCairoOperator">
+		<enum name="GooCairoOperator" type-name="GooCairoOperator" get-type="goo_cairo_operator_get_type">
 			<member name="CAIRO_OPERATOR_CLEAR" value="0"/>
 			<member name="CAIRO_OPERATOR_SOURCE" value="1"/>
 			<member name="CAIRO_OPERATOR_OVER" value="2"/>
@@ -207,19 +225,19 @@
 			<member name="CAIRO_OPERATOR_ADD" value="12"/>
 			<member name="CAIRO_OPERATOR_SATURATE" value="13"/>
 		</enum>
-		<enum name="GooCanvasAnimateType">
+		<enum name="GooCanvasAnimateType" type-name="GooCanvasAnimateType" get-type="goo_canvas_animate_type_get_type">
 			<member name="GOO_CANVAS_ANIMATE_FREEZE" value="0"/>
 			<member name="GOO_CANVAS_ANIMATE_RESET" value="1"/>
 			<member name="GOO_CANVAS_ANIMATE_RESTART" value="2"/>
 			<member name="GOO_CANVAS_ANIMATE_BOUNCE" value="3"/>
 		</enum>
-		<enum name="GooCanvasItemVisibility">
+		<enum name="GooCanvasItemVisibility" type-name="GooCanvasItemVisibility" get-type="goo_canvas_item_visibility_get_type">
 			<member name="GOO_CANVAS_ITEM_HIDDEN" value="0"/>
 			<member name="GOO_CANVAS_ITEM_INVISIBLE" value="1"/>
 			<member name="GOO_CANVAS_ITEM_VISIBLE" value="2"/>
 			<member name="GOO_CANVAS_ITEM_VISIBLE_ABOVE_THRESHOLD" value="3"/>
 		</enum>
-		<enum name="GooCanvasPathCommandType">
+		<enum name="GooCanvasPathCommandType" type-name="GooCanvasPathCommandType" get-type="goo_canvas_path_command_type_get_type">
 			<member name="GOO_CANVAS_PATH_MOVE_TO" value="0"/>
 			<member name="GOO_CANVAS_PATH_CLOSE_PATH" value="1"/>
 			<member name="GOO_CANVAS_PATH_LINE_TO" value="2"/>
@@ -231,7 +249,7 @@
 			<member name="GOO_CANVAS_PATH_SMOOTH_QUADRATIC_CURVE_TO" value="8"/>
 			<member name="GOO_CANVAS_PATH_ELLIPTICAL_ARC" value="9"/>
 		</enum>
-		<flags name="GooCanvasPointerEvents">
+		<flags name="GooCanvasPointerEvents" type-name="GooCanvasPointerEvents" get-type="goo_canvas_pointer_events_get_type">
 			<member name="GOO_CANVAS_EVENTS_VISIBLE_MASK" value="1"/>
 			<member name="GOO_CANVAS_EVENTS_PAINTED_MASK" value="2"/>
 			<member name="GOO_CANVAS_EVENTS_FILL_MASK" value="4"/>
@@ -251,6 +269,14 @@
 				<interface name="AtkImplementor"/>
 				<interface name="GtkBuildable"/>
 			</implements>
+			<method name="convert_bounds_to_item_space" symbol="goo_canvas_convert_bounds_to_item_space">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="canvas" type="GooCanvas*"/>
+					<parameter name="item" type="GooCanvasItem*"/>
+					<parameter name="bounds" type="GooCanvasBounds*"/>
+				</parameters>
+			</method>
 			<method name="convert_from_item_space" symbol="goo_canvas_convert_from_item_space">
 				<return-type type="void"/>
 				<parameters>
@@ -374,6 +400,18 @@
 					<parameter name="canvas" type="GooCanvas*"/>
 				</parameters>
 			</method>
+			<method name="get_static_root_item" symbol="goo_canvas_get_static_root_item">
+				<return-type type="GooCanvasItem*"/>
+				<parameters>
+					<parameter name="canvas" type="GooCanvas*"/>
+				</parameters>
+			</method>
+			<method name="get_static_root_item_model" symbol="goo_canvas_get_static_root_item_model">
+				<return-type type="GooCanvasItemModel*"/>
+				<parameters>
+					<parameter name="canvas" type="GooCanvas*"/>
+				</parameters>
+			</method>
 			<method name="grab_focus" symbol="goo_canvas_grab_focus">
 				<return-type type="void"/>
 				<parameters>
@@ -399,6 +437,17 @@
 				</parameters>
 			</method>
 			<method name="marshal_BOOLEAN__BOXED" symbol="goo_canvas_marshal_BOOLEAN__BOXED">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="closure" type="GClosure*"/>
+					<parameter name="return_value" type="GValue*"/>
+					<parameter name="n_param_values" type="guint"/>
+					<parameter name="param_values" type="GValue*"/>
+					<parameter name="invocation_hint" type="gpointer"/>
+					<parameter name="marshal_data" type="gpointer"/>
+				</parameters>
+			</method>
+			<method name="marshal_BOOLEAN__DOUBLE_DOUBLE_BOOLEAN_OBJECT" symbol="goo_canvas_marshal_BOOLEAN__DOUBLE_DOUBLE_BOOLEAN_OBJECT">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="closure" type="GClosure*"/>
@@ -485,6 +534,14 @@
 					<parameter name="scale" type="gdouble"/>
 				</parameters>
 			</method>
+			<method name="request_item_redraw" symbol="goo_canvas_request_item_redraw">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="canvas" type="GooCanvas*"/>
+					<parameter name="bounds" type="GooCanvasBounds*"/>
+					<parameter name="is_static" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="request_redraw" symbol="goo_canvas_request_redraw">
 				<return-type type="void"/>
 				<parameters>
@@ -537,6 +594,20 @@
 					<parameter name="scale" type="gdouble"/>
 				</parameters>
 			</method>
+			<method name="set_static_root_item" symbol="goo_canvas_set_static_root_item">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="canvas" type="GooCanvas*"/>
+					<parameter name="item" type="GooCanvasItem*"/>
+				</parameters>
+			</method>
+			<method name="set_static_root_item_model" symbol="goo_canvas_set_static_root_item_model">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="canvas" type="GooCanvas*"/>
+					<parameter name="model" type="GooCanvasItemModel*"/>
+				</parameters>
+			</method>
 			<method name="unregister_item" symbol="goo_canvas_unregister_item">
 				<return-type type="void"/>
 				<parameters>
@@ -563,7 +634,9 @@
 			<property name="background-color-rgb" type="guint" readable="0" writable="1" construct="0" construct-only="0"/>
 			<property name="bounds-from-origin" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="bounds-padding" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="clear-background" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="integer-layout" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="redraw-when-scrolled" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="resolution-x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="resolution-y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="scale" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -610,6 +683,8 @@
 			<field name="integer_layout" type="guint"/>
 			<field name="automatic_bounds" type="guint"/>
 			<field name="bounds_from_origin" type="guint"/>
+			<field name="clear_background" type="guint"/>
+			<field name="redraw_when_scrolled" type="guint"/>
 			<field name="bounds_padding" type="gdouble"/>
 			<field name="pointer_item" type="GooCanvasItem*"/>
 			<field name="pointer_grab_item" type="GooCanvasItem*"/>
@@ -649,8 +724,12 @@
 			</constructor>
 			<property name="center-x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="center-y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="radius-x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="radius-y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="ellipse_data" type="GooCanvasEllipseData*"/>
 		</object>
 		<object name="GooCanvasEllipseModel" parent="GooCanvasItemModelSimple" type-name="GooCanvasEllipseModel" get-type="goo_canvas_ellipse_model_get_type">
@@ -669,9 +748,105 @@
 			</constructor>
 			<property name="center-x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="center-y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="radius-x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="radius-y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="ellipse_data" type="GooCanvasEllipseData"/>
+		</object>
+		<object name="GooCanvasGrid" parent="GooCanvasItemSimple" type-name="GooCanvasGrid" get-type="goo_canvas_grid_get_type">
+			<implements>
+				<interface name="GooCanvasItem"/>
+			</implements>
+			<constructor name="new" symbol="goo_canvas_grid_new">
+				<return-type type="GooCanvasItem*"/>
+				<parameters>
+					<parameter name="parent" type="GooCanvasItem*"/>
+					<parameter name="x" type="gdouble"/>
+					<parameter name="y" type="gdouble"/>
+					<parameter name="width" type="gdouble"/>
+					<parameter name="height" type="gdouble"/>
+					<parameter name="x_step" type="gdouble"/>
+					<parameter name="y_step" type="gdouble"/>
+					<parameter name="x_offset" type="gdouble"/>
+					<parameter name="y_offset" type="gdouble"/>
+				</parameters>
+			</constructor>
+			<property name="border-color" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="border-color-rgba" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="border-pattern" type="GooCairoPattern*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="border-pixbuf" type="GdkPixbuf*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="border-width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="horz-grid-line-color" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="horz-grid-line-color-rgba" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="horz-grid-line-pattern" type="GooCairoPattern*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="horz-grid-line-pixbuf" type="GdkPixbuf*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="horz-grid-line-width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-horz-grid-lines" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-vert-grid-lines" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vert-grid-line-color" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="vert-grid-line-color-rgba" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vert-grid-line-pattern" type="GooCairoPattern*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vert-grid-line-pixbuf" type="GdkPixbuf*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="vert-grid-line-width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vert-grid-lines-on-top" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x-offset" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x-step" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y-offset" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y-step" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<field name="grid_data" type="GooCanvasGridData*"/>
+		</object>
+		<object name="GooCanvasGridModel" parent="GooCanvasItemModelSimple" type-name="GooCanvasGridModel" get-type="goo_canvas_grid_model_get_type">
+			<implements>
+				<interface name="GooCanvasItemModel"/>
+			</implements>
+			<constructor name="new" symbol="goo_canvas_grid_model_new">
+				<return-type type="GooCanvasItemModel*"/>
+				<parameters>
+					<parameter name="parent" type="GooCanvasItemModel*"/>
+					<parameter name="x" type="gdouble"/>
+					<parameter name="y" type="gdouble"/>
+					<parameter name="width" type="gdouble"/>
+					<parameter name="height" type="gdouble"/>
+					<parameter name="x_step" type="gdouble"/>
+					<parameter name="y_step" type="gdouble"/>
+					<parameter name="x_offset" type="gdouble"/>
+					<parameter name="y_offset" type="gdouble"/>
+				</parameters>
+			</constructor>
+			<property name="border-color" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="border-color-rgba" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="border-pattern" type="GooCairoPattern*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="border-pixbuf" type="GdkPixbuf*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="border-width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="horz-grid-line-color" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="horz-grid-line-color-rgba" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="horz-grid-line-pattern" type="GooCairoPattern*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="horz-grid-line-pixbuf" type="GdkPixbuf*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="horz-grid-line-width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-horz-grid-lines" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="show-vert-grid-lines" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vert-grid-line-color" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="vert-grid-line-color-rgba" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vert-grid-line-pattern" type="GooCairoPattern*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vert-grid-line-pixbuf" type="GdkPixbuf*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="vert-grid-line-width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vert-grid-lines-on-top" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x-offset" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x-step" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y-offset" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y-step" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<field name="grid_data" type="GooCanvasGridData"/>
 		</object>
 		<object name="GooCanvasGroup" parent="GooCanvasItemSimple" type-name="GooCanvasGroup" get-type="goo_canvas_group_get_type">
 			<implements>
@@ -683,6 +858,10 @@
 					<parameter name="parent" type="GooCanvasItem*"/>
 				</parameters>
 			</constructor>
+			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="items" type="GPtrArray*"/>
 		</object>
 		<object name="GooCanvasGroupModel" parent="GooCanvasItemModelSimple" type-name="GooCanvasGroupModel" get-type="goo_canvas_group_model_get_type">
@@ -695,6 +874,10 @@
 					<parameter name="parent" type="GooCanvasItemModel*"/>
 				</parameters>
 			</constructor>
+			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="children" type="GPtrArray*"/>
 		</object>
 		<object name="GooCanvasImage" parent="GooCanvasItemSimple" type-name="GooCanvasImage" get-type="goo_canvas_image_get_type">
@@ -713,6 +896,7 @@
 			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pattern" type="GooCairoPattern*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pixbuf" type="GdkPixbuf*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="scale-to-fit" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -734,6 +918,7 @@
 			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pattern" type="GooCairoPattern*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pixbuf" type="GdkPixbuf*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="scale-to-fit" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -747,7 +932,7 @@
 			<property name="clip-fill-rule" type="GooCairoFillRule" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="clip-path" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
 			<property name="fill-color" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
-			<property name="fill-color-rgba" type="guint" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="fill-color-rgba" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="fill-pattern" type="GooCairoPattern*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="fill-pixbuf" type="GdkPixbuf*" readable="0" writable="1" construct="0" construct-only="0"/>
 			<property name="fill-rule" type="GooCairoFillRule" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -755,13 +940,13 @@
 			<property name="font-desc" type="PangoFontDescription*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="hint-metrics" type="GooCairoHintMetrics" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="line-cap" type="GooCairoLineCap" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="line-dash" type="GooCairoLineDash*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="line-dash" type="GooCanvasLineDash*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="line-join" type="GooCairoLineJoin" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="line-join-miter-limit" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="line-width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="operator" type="GooCairoOperator" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stroke-color" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
-			<property name="stroke-color-rgba" type="guint" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="stroke-color-rgba" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stroke-pattern" type="GooCairoPattern*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stroke-pixbuf" type="GdkPixbuf*" readable="0" writable="1" construct="0" construct-only="0"/>
 			<field name="parent" type="GooCanvasItemModel*"/>
@@ -844,7 +1029,7 @@
 			<property name="clip-fill-rule" type="GooCairoFillRule" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="clip-path" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
 			<property name="fill-color" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
-			<property name="fill-color-rgba" type="guint" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="fill-color-rgba" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="fill-pattern" type="GooCairoPattern*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="fill-pixbuf" type="GdkPixbuf*" readable="0" writable="1" construct="0" construct-only="0"/>
 			<property name="fill-rule" type="GooCairoFillRule" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -852,13 +1037,13 @@
 			<property name="font-desc" type="PangoFontDescription*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="hint-metrics" type="GooCairoHintMetrics" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="line-cap" type="GooCairoLineCap" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="line-dash" type="GooCairoLineDash*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="line-dash" type="GooCanvasLineDash*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="line-join" type="GooCairoLineJoin" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="line-join-miter-limit" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="line-width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="operator" type="GooCairoOperator" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stroke-color" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
-			<property name="stroke-color-rgba" type="guint" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="stroke-color-rgba" type="guint" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stroke-pattern" type="GooCairoPattern*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="stroke-pixbuf" type="GdkPixbuf*" readable="0" writable="1" construct="0" construct-only="0"/>
 			<vfunc name="simple_create_path">
@@ -913,6 +1098,10 @@
 				</parameters>
 			</constructor>
 			<property name="data" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="path_data" type="GooCanvasPathData*"/>
 		</object>
 		<object name="GooCanvasPathModel" parent="GooCanvasItemModelSimple" type-name="GooCanvasPathModel" get-type="goo_canvas_path_model_get_type">
@@ -927,6 +1116,10 @@
 				</parameters>
 			</constructor>
 			<property name="data" type="char*" readable="0" writable="1" construct="0" construct-only="0"/>
+			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="path_data" type="GooCanvasPathData"/>
 		</object>
 		<object name="GooCanvasPolyline" parent="GooCanvasItemSimple" type-name="GooCanvasPolyline" get-type="goo_canvas_polyline_get_type">
@@ -956,8 +1149,12 @@
 			<property name="arrow-width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="close-path" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="end-arrow" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="points" type="GooCanvasPoints*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="start-arrow" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="polyline_data" type="GooCanvasPolylineData*"/>
 		</object>
 		<object name="GooCanvasPolylineModel" parent="GooCanvasItemModelSimple" type-name="GooCanvasPolylineModel" get-type="goo_canvas_polyline_model_get_type">
@@ -987,8 +1184,12 @@
 			<property name="arrow-width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="close-path" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="end-arrow" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="points" type="GooCanvasPoints*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="start-arrow" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="polyline_data" type="GooCanvasPolylineData"/>
 		</object>
 		<object name="GooCanvasRect" parent="GooCanvasItemSimple" type-name="GooCanvasRect" get-type="goo_canvas_rect_get_type">
@@ -1101,11 +1302,13 @@
 				</parameters>
 			</constructor>
 			<property name="column-spacing" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="homogeneous-columns" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="homogeneous-rows" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="horz-grid-line-width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="row-spacing" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vert-grid-line-width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x-border-spacing" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y-border-spacing" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="table_data" type="GooCanvasTableData*"/>
 		</object>
 		<object name="GooCanvasTableModel" parent="GooCanvasGroupModel" type-name="GooCanvasTableModel" get-type="goo_canvas_table_model_get_type">
@@ -1119,17 +1322,27 @@
 				</parameters>
 			</constructor>
 			<property name="column-spacing" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="homogeneous-columns" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="homogeneous-rows" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="horz-grid-line-width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="row-spacing" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
-			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="vert-grid-line-width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="x-border-spacing" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="y-border-spacing" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<field name="table_data" type="GooCanvasTableData"/>
 		</object>
 		<object name="GooCanvasText" parent="GooCanvasItemSimple" type-name="GooCanvasText" get-type="goo_canvas_text_get_type">
 			<implements>
 				<interface name="GooCanvasItem"/>
 			</implements>
+			<method name="get_natural_extents" symbol="goo_canvas_text_get_natural_extents">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="text" type="GooCanvasText*"/>
+					<parameter name="ink_rect" type="PangoRectangle*"/>
+					<parameter name="logical_rect" type="PangoRectangle*"/>
+				</parameters>
+			</method>
 			<constructor name="new" symbol="goo_canvas_text_new">
 				<return-type type="GooCanvasItem*"/>
 				<parameters>
@@ -1144,6 +1357,7 @@
 			<property name="alignment" type="PangoAlignment" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="anchor" type="GtkAnchorType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="ellipsize" type="PangoEllipsizeMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="use-markup" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -1171,6 +1385,7 @@
 			<property name="alignment" type="PangoAlignment" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="anchor" type="GtkAnchorType" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="ellipsize" type="PangoEllipsizeMode" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="height" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="text" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="use-markup" type="gboolean" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="width" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
@@ -1314,6 +1529,21 @@
 					<parameter name="var_args" type="va_list"/>
 				</parameters>
 			</method>
+			<method name="get_child_property" symbol="goo_canvas_item_get_child_property">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="item" type="GooCanvasItem*"/>
+					<parameter name="child" type="GooCanvasItem*"/>
+					<parameter name="property_name" type="gchar*"/>
+					<parameter name="value" type="GValue*"/>
+				</parameters>
+			</method>
+			<method name="get_is_static" symbol="goo_canvas_item_get_is_static">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="item" type="GooCanvasItem*"/>
+				</parameters>
+			</method>
 			<method name="get_items_at" symbol="goo_canvas_item_get_items_at">
 				<return-type type="GList*"/>
 				<parameters>
@@ -1358,6 +1588,16 @@
 					<parameter name="item" type="GooCanvasItem*"/>
 					<parameter name="cr" type="cairo_t*"/>
 					<parameter name="width" type="gdouble"/>
+				</parameters>
+			</method>
+			<method name="get_simple_transform" symbol="goo_canvas_item_get_simple_transform">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="item" type="GooCanvasItem*"/>
+					<parameter name="x" type="gdouble*"/>
+					<parameter name="y" type="gdouble*"/>
+					<parameter name="scale" type="gdouble*"/>
+					<parameter name="rotation" type="gdouble*"/>
 				</parameters>
 			</method>
 			<method name="get_style" symbol="goo_canvas_item_get_style">
@@ -1482,6 +1722,22 @@
 					<parameter name="var_args" type="va_list"/>
 				</parameters>
 			</method>
+			<method name="set_child_property" symbol="goo_canvas_item_set_child_property">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="item" type="GooCanvasItem*"/>
+					<parameter name="child" type="GooCanvasItem*"/>
+					<parameter name="property_name" type="gchar*"/>
+					<parameter name="value" type="GValue*"/>
+				</parameters>
+			</method>
+			<method name="set_is_static" symbol="goo_canvas_item_set_is_static">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="item" type="GooCanvasItem*"/>
+					<parameter name="is_static" type="gboolean"/>
+				</parameters>
+			</method>
 			<method name="set_model" symbol="goo_canvas_item_set_model">
 				<return-type type="void"/>
 				<parameters>
@@ -1566,9 +1822,17 @@
 			<property name="parent" type="GooCanvasItem*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pointer-events" type="GooCanvasPointerEvents" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tooltip" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="transform" type="GooCairoMatrix*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="visibility" type="GooCanvasItemVisibility" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="visibility-threshold" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="animation-finished" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="item" type="GooCanvasItem*"/>
+					<parameter name="stopped" type="gboolean"/>
+				</parameters>
+			</signal>
 			<signal name="button-press-event" when="LAST">
 				<return-type type="gboolean"/>
 				<parameters>
@@ -1656,6 +1920,24 @@
 					<parameter name="event" type="GdkEvent*"/>
 				</parameters>
 			</signal>
+			<signal name="query-tooltip" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="item" type="GooCanvasItem*"/>
+					<parameter name="x" type="gdouble"/>
+					<parameter name="y" type="gdouble"/>
+					<parameter name="keyboard_tooltip" type="gboolean"/>
+					<parameter name="tooltip" type="GtkTooltip*"/>
+				</parameters>
+			</signal>
+			<signal name="scroll-event" when="LAST">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="item" type="GooCanvasItem*"/>
+					<parameter name="target" type="GooCanvasItem*"/>
+					<parameter name="event" type="GdkEvent*"/>
+				</parameters>
+			</signal>
 			<vfunc name="add_child">
 				<return-type type="void"/>
 				<parameters>
@@ -1703,6 +1985,12 @@
 					<parameter name="property_id" type="guint"/>
 					<parameter name="value" type="GValue*"/>
 					<parameter name="pspec" type="GParamSpec*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="get_is_static">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="item" type="GooCanvasItem*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="get_items_at">
@@ -1795,16 +2083,6 @@
 					<parameter name="scale" type="gdouble"/>
 				</parameters>
 			</vfunc>
-			<vfunc name="query_tooltip">
-				<return-type type="gboolean"/>
-				<parameters>
-					<parameter name="item" type="GooCanvasItem*"/>
-					<parameter name="x" type="gdouble"/>
-					<parameter name="y" type="gdouble"/>
-					<parameter name="keyboard_tooltip" type="gboolean"/>
-					<parameter name="tooltip" type="gpointer*"/>
-				</parameters>
-			</vfunc>
 			<vfunc name="remove_child">
 				<return-type type="void"/>
 				<parameters>
@@ -1833,6 +2111,13 @@
 					<parameter name="property_id" type="guint"/>
 					<parameter name="value" type="GValue*"/>
 					<parameter name="pspec" type="GParamSpec*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_is_static">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="item" type="GooCanvasItem*"/>
+					<parameter name="is_static" type="gboolean"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="set_model">
@@ -1950,6 +2235,15 @@
 					<parameter name="var_args" type="va_list"/>
 				</parameters>
 			</method>
+			<method name="get_child_property" symbol="goo_canvas_item_model_get_child_property">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="model" type="GooCanvasItemModel*"/>
+					<parameter name="child" type="GooCanvasItemModel*"/>
+					<parameter name="property_name" type="gchar*"/>
+					<parameter name="value" type="GValue*"/>
+				</parameters>
+			</method>
 			<method name="get_n_children" symbol="goo_canvas_item_model_get_n_children">
 				<return-type type="gint"/>
 				<parameters>
@@ -1960,6 +2254,16 @@
 				<return-type type="GooCanvasItemModel*"/>
 				<parameters>
 					<parameter name="model" type="GooCanvasItemModel*"/>
+				</parameters>
+			</method>
+			<method name="get_simple_transform" symbol="goo_canvas_item_model_get_simple_transform">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="model" type="GooCanvasItemModel*"/>
+					<parameter name="x" type="gdouble*"/>
+					<parameter name="y" type="gdouble*"/>
+					<parameter name="scale" type="gdouble*"/>
+					<parameter name="rotation" type="gdouble*"/>
 				</parameters>
 			</method>
 			<method name="get_style" symbol="goo_canvas_item_model_get_style">
@@ -2048,6 +2352,15 @@
 					<parameter name="var_args" type="va_list"/>
 				</parameters>
 			</method>
+			<method name="set_child_property" symbol="goo_canvas_item_model_set_child_property">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="model" type="GooCanvasItemModel*"/>
+					<parameter name="child" type="GooCanvasItemModel*"/>
+					<parameter name="property_name" type="gchar*"/>
+					<parameter name="value" type="GValue*"/>
+				</parameters>
+			</method>
 			<method name="set_parent" symbol="goo_canvas_item_model_set_parent">
 				<return-type type="void"/>
 				<parameters>
@@ -2116,9 +2429,17 @@
 			<property name="parent" type="GooCanvasItemModel*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="pointer-events" type="GooCanvasPointerEvents" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="title" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<property name="tooltip" type="char*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="transform" type="GooCairoMatrix*" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="visibility" type="GooCanvasItemVisibility" readable="1" writable="1" construct="0" construct-only="0"/>
 			<property name="visibility-threshold" type="gdouble" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="animation-finished" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="model" type="GooCanvasItemModel*"/>
+					<parameter name="stopped" type="gboolean"/>
+				</parameters>
+			</signal>
 			<signal name="changed" when="LAST">
 				<return-type type="void"/>
 				<parameters>
