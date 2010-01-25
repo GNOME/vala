@@ -129,7 +129,7 @@ namespace Json {
 		public virtual signal void parse_end ();
 		public virtual signal void parse_start ();
 	}
-	[CCode (cheader_filename = "json-glib/json-gobject.h")]
+	[CCode (cheader_filename = "json-glib/json-glib.h,json-glib/json-gobject.h")]
 	public interface Serializable {
 		public bool default_deserialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec, Json.Node property_node);
 		public unowned Json.Node default_serialize_property (string property_name, GLib.Value value, GLib.ParamSpec pspec);
@@ -178,7 +178,7 @@ namespace Json {
 	public static void boxed_register_serialize_func (GLib.Type gboxed_type, Json.NodeType node_type, Json.BoxedSerializeFunc serialize_func);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public static unowned Json.Node boxed_serialize (GLib.Type gboxed_type, void* boxed);
-	[CCode (cheader_filename = "json-glib/json-gobject.h")]
+	[CCode (cheader_filename = "json-glib/json-glib.h,json-glib/json-gobject.h")]
 	public static GLib.Object construct_gobject (GLib.Type gtype, string data, size_t length) throws GLib.Error;
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public static unowned GLib.Object gobject_deserialize (GLib.Type gtype, Json.Node node);
@@ -188,6 +188,6 @@ namespace Json {
 	public static unowned Json.Node gobject_serialize (GLib.Object gobject);
 	[CCode (cheader_filename = "json-glib/json-glib.h")]
 	public static string gobject_to_data (GLib.Object gobject, out size_t length);
-	[CCode (cheader_filename = "json-glib/json-gobject.h")]
+	[CCode (cheader_filename = "json-glib/json-glib.h,json-glib/json-gobject.h")]
 	public static string serialize_gobject (GLib.Object gobject, out size_t length);
 }
