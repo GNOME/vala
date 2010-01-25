@@ -638,7 +638,7 @@ namespace Gdk {
 		public double x;
 		public double y;
 		public double axes;
-		public uint state;
+		public Gdk.ModifierType state;
 		public uint button;
 		public weak Gdk.Device device;
 		public double x_root;
@@ -677,7 +677,7 @@ namespace Gdk {
 		public Gdk.CrossingMode mode;
 		public Gdk.NotifyType detail;
 		public bool focus;
-		public uint state;
+		public Gdk.ModifierType state;
 	}
 	[CCode (type_id = "GDK_TYPE_EVENT_DND", cheader_filename = "gdk/gdk.h")]
 	public struct EventDND {
@@ -720,7 +720,7 @@ namespace Gdk {
 		public weak Gdk.Window window;
 		public char send_event;
 		public uint32 time;
-		public uint state;
+		public Gdk.ModifierType state;
 		public uint keyval;
 		public int length;
 		[CCode (cname = "string")]
@@ -768,7 +768,7 @@ namespace Gdk {
 		public char send_event;
 		public Gdk.Atom atom;
 		public uint32 time;
-		public uint state;
+		public Gdk.PropertyState state;
 	}
 	[CCode (type_id = "GDK_TYPE_EVENT_PROXIMITY", cheader_filename = "gdk/gdk.h")]
 	public struct EventProximity {
@@ -786,7 +786,7 @@ namespace Gdk {
 		public uint32 time;
 		public double x;
 		public double y;
-		public uint state;
+		public Gdk.ModifierType state;
 		public Gdk.ScrollDirection direction;
 		public weak Gdk.Device device;
 		public double x_root;
