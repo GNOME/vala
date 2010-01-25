@@ -638,7 +638,7 @@ namespace GLib {
 	[CCode (cheader_filename = "gio/gio.h")]
 	public class SimpleAsyncResult : GLib.Object, GLib.AsyncResult {
 		[CCode (has_construct_function = false)]
-		public SimpleAsyncResult (GLib.Object source_object, GLib.AsyncReadyCallback callback, void* source_tag);
+		public SimpleAsyncResult (GLib.Object? source_object, GLib.AsyncReadyCallback callback, void* source_tag);
 		public void complete ();
 		public void complete_in_idle ();
 		[CCode (has_construct_function = false)]
