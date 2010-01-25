@@ -2481,6 +2481,7 @@ namespace Gtk {
 		public void set_markup (string str);
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public MessageDialog.with_markup (Gtk.Window? parent, Gtk.DialogFlags flags, Gtk.MessageType type, Gtk.ButtonsType buttons, string message_format, ...);
+		[NoAccessorMethod]
 		public Gtk.ButtonsType buttons { construct; }
 		public Gtk.Widget image { get; set; }
 		[NoAccessorMethod]
