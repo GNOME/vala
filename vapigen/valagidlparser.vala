@@ -783,6 +783,8 @@ public class Vala.GIdlParser : CodeVisitor {
 
 			var cl = ns.scope.lookup (name) as Class;
 			if (cl == null) {
+				string base_class = null;
+
 				cl = new Class (name, current_source_reference);
 				cl.access = SymbolAccessibility.PUBLIC;
 				cl.is_compact = true;
@@ -793,6 +795,8 @@ public class Vala.GIdlParser : CodeVisitor {
 						var nv = attr.split ("=", 2);
 						if (nv[0] == "cheader_filename") {
 							cl.add_cheader_filename (eval (nv[1]));
+						} else if (nv[0] == "base_class") {
+							base_class = eval (nv[1]);
 						} else if (nv[0] == "is_immutable") {
 							if (eval (nv[1]) == "1") {
 								cl.is_immutable = true;
@@ -818,6 +822,11 @@ public class Vala.GIdlParser : CodeVisitor {
 				ns.add_class (cl);
 				cl.set_type_id (cl.get_upper_case_cname ("TYPE_"));
 				current_source_file.add_node (cl);
+
+				if (base_class != null) {
+					var parent = parse_type_string (base_class);
+					cl.add_base_type (parent);
+				}
 			}
 
 			current_data_type = cl;
