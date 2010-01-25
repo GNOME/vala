@@ -1008,7 +1008,7 @@ namespace Gtk {
 		public void set_column_span_column (int column_span);
 		public void set_focus_on_click (bool focus_on_click);
 		public void set_model (Gtk.TreeModel? model);
-		public void set_row_separator_func (Gtk.TreeViewRowSeparatorFunc func, void* data, GLib.DestroyNotify destroy);
+		public void set_row_separator_func (owned Gtk.TreeViewRowSeparatorFunc func);
 		public void set_row_span_column (int row_span);
 		public void set_title (string title);
 		public void set_wrap_width (int width);
