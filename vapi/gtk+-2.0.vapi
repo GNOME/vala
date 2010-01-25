@@ -1875,7 +1875,7 @@ namespace Gtk {
 		public int get_pixbuf_column ();
 		public bool get_reorderable ();
 		public int get_row_spacing ();
-		public unowned GLib.List get_selected_items ();
+		public GLib.List<Gtk.TreePath> get_selected_items ();
 		public Gtk.SelectionMode get_selection_mode ();
 		public int get_spacing ();
 		public int get_text_column ();
