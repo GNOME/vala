@@ -80,7 +80,6 @@ public enum Vala.Genie.TokenType {
 	FINAL,
 	FINALLY,
 	FOR,
-	FOREACH,
 	GET,
 	HASH,
 	IDENTIFIER,
@@ -223,7 +222,6 @@ public enum Vala.Genie.TokenType {
 		case FINAL: return "`final'";
 		case FINALLY: return "`finally'";
 		case FOR: return "`for'";
-		case FOREACH: return "`foreach'";
 		case GET: return "`get'";
 		case HASH: return "`hash'";
 		case IDENTIFIER: return "identifier";

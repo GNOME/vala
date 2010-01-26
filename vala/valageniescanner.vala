@@ -381,9 +381,6 @@ public class Vala.Genie.Scanner {
 				case 'i':
 					if (matches (begin, "finally")) return TokenType.FINALLY;
 					break;
-				case 'o':
-					if (matches (begin, "foreach")) return TokenType.FOREACH;
-					break;
 				}
 				break;
 			case 'p':

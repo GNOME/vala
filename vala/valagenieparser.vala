@@ -2365,7 +2365,6 @@ public class Vala.Genie.Parser : CodeVisitor {
 			case TokenType.DELETE:
 			case TokenType.DO:
 			case TokenType.FOR:
-			case TokenType.FOREACH:
 			case TokenType.IF:
 			case TokenType.LOCK:
 			case TokenType.RETURN:
