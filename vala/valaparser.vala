@@ -3028,7 +3028,7 @@ public class Vala.Parser : CodeVisitor {
 		if (ModifierFlags.STATIC in flags) {
 			if (!context.deprecated) {
 				// TODO enable warning in future releases
-				// Report.warning (get_last_src (), "deprecated syntax, use [CCode (has_target = false)]");
+				Report.warning (get_last_src (), "deprecated syntax, use [CCode (has_target = false)]");
 			}
 		} else {
 			d.has_target = true;

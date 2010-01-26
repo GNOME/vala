@@ -3360,13 +3360,13 @@ namespace GLib {
 	}
 
 	[CCode (has_target = false)]
-	public static delegate uint HashFunc (void* key);
+	public delegate uint HashFunc (void* key);
 	[CCode (has_target = false)]
-	public static delegate bool EqualFunc (void* a, void* b);
+	public delegate bool EqualFunc (void* a, void* b);
 	public delegate void HFunc (void* key, void* value);
 
 	[CCode (has_target = false)]
-	public static delegate void DestroyNotify (void* data);
+	public delegate void DestroyNotify (void* data);
 
 	[CCode (cname = "g_direct_hash")]
 	public static GLib.HashFunc direct_hash;

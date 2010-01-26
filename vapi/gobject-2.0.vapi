@@ -281,9 +281,12 @@ namespace GLib {
 	public struct ObjectConstructParam {
 	}
 
-	public static delegate void ObjectGetPropertyFunc (Object object, uint property_id, Value value, ParamSpec pspec);
-	public static delegate void ObjectSetPropertyFunc (Object object, uint property_id, Value value, ParamSpec pspec);
-	public static delegate void WeakNotify (void *data, Object object);
+	[CCode (has_target = false)]
+	public delegate void ObjectGetPropertyFunc (Object object, uint property_id, Value value, ParamSpec pspec);
+	[CCode (has_target = false)]
+	public delegate void ObjectSetPropertyFunc (Object object, uint property_id, Value value, ParamSpec pspec);
+	[CCode (has_target = false)]
+	public delegate void WeakNotify (void *data, Object object);
 
 	[CCode (ref_function = "g_object_ref", unref_function = "g_object_unref", marshaller_type_name = "OBJECT", get_value_function = "g_value_get_object", set_value_function = "g_value_set_object", param_spec_function = "g_param_spec_object", cheader_filename = "glib-object.h")]
 	public class Object {
@@ -390,7 +393,8 @@ namespace GLib {
 		public weak string value_nick;
 	}
 
-	public static delegate void ValueTransform (Value src_value, out Value dest_value);
+	[CCode (has_target = false)]
+	public delegate void ValueTransform (Value src_value, out Value dest_value);
 
 	[CCode (copy_function = "g_value_copy", destroy_function = "g_value_unset", type_id = "G_TYPE_VALUE", marshaller_type_name = "BOXED", get_value_function = "g_value_get_boxed", set_value_function = "g_value_set_boxed", type_signature = "v")]
 	public struct Value {
@@ -487,14 +491,16 @@ namespace GLib {
 		SWAPPED
 	}
 
-	public static delegate void Callback ();
+	[CCode (has_target = false)]
+	public delegate void Callback ();
 
 	[Compact]
 	[CCode (type_id = "G_TYPE_CLOSURE")]
 	public class Closure {
 	}
 
-	public static delegate void ClosureNotify (void* data, Closure closure);
+	[CCode (has_target = false)]
+	public delegate void ClosureNotify (void* data, Closure closure);
 
 	[Compact]
 	[CCode (type_id = "G_TYPE_VALUE_ARRAY", copy_function = "g_value_array_copy")]
