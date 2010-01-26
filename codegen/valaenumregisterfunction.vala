@@ -1,6 +1,7 @@
-/* valastructregisterfunction.vala
+/* valaenumregisterfunction.vala
  *
  * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2010  Marc-Andre Lureau
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,31 +24,31 @@
 using GLib;
 
 /**
- * C function to register a struct at runtime.
+ * C function to register an enum at runtime.
  */
-public class Vala.StructRegisterFunction : TypeRegisterFunction {
+public class Vala.EnumRegisterFunction : TypeRegisterFunction {
 	/**
-	 * Specifies the struct to be registered.
+	 * Specifies the enum to be registered.
 	 */
-	public weak Struct struct_reference { get; set; }
+	public weak Enum enum_reference { get; set; }
 
 	/**
-	 * Creates a new C function to register the specified struct at runtime.
+	 * Creates a new C function to register the specified enum at runtime.
 	 *
-	 * @param st a struct
-	 * @return   newly created struct register function
+	 * @param en an enum
+	 * @return   newly created enum register function
 	 */
-	public StructRegisterFunction (Struct st, CodeContext context) {
-		struct_reference = st;
+	public EnumRegisterFunction (Enum en, CodeContext context) {
+		enum_reference = en;
 		this.context = context;
 	}
-	
+
 	public override TypeSymbol get_type_declaration () {
-		return struct_reference;
+		return enum_reference;
 	}
 
 	public override SymbolAccessibility get_accessibility () {
-		return struct_reference.access;
+		return enum_reference.access;
 	}
 
 	public override CCodeFragment get_type_interface_init_statements (bool plugin) {

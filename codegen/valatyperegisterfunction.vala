@@ -141,6 +141,13 @@ public abstract class Vala.TypeRegisterFunction {
 		CCodeFunctionCall reg_call;
 		if (get_type_declaration () is Struct) {
 			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_boxed_type_register_static"));
+		} else if (get_type_declaration () is Enum) {
+			var en = get_type_declaration () as Enum;
+			if (en.is_flags) {
+				reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_flags_register_static"));
+			} else {
+				reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_enum_register_static"));
+			}
 		} else if (fundamental) {
 			reg_call = new CCodeFunctionCall (new CCodeIdentifier ("g_type_register_fundamental"));
 			reg_call.add_argument (new CCodeFunctionCall (new CCodeIdentifier ("g_type_fundamental_next")));
@@ -157,6 +164,39 @@ public abstract class Vala.TypeRegisterFunction {
 			var st = (Struct) get_type_declaration ();
 			reg_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (st.get_dup_function ()), "GBoxedCopyFunc"));
 			reg_call.add_argument (new CCodeCastExpression (new CCodeIdentifier (st.get_free_function ()), "GBoxedFreeFunc"));
+		} else if (get_type_declaration () is Enum) {
+			var en = get_type_declaration () as Enum;
+			var clist = new CCodeInitializerList (); /* or during visit time? */
+
+			CCodeInitializerList clist_ev = null;
+			foreach (EnumValue ev in en.get_values ()) {
+				clist_ev = new CCodeInitializerList ();
+				clist_ev.append (new CCodeConstant (ev.get_cname ()));
+				clist_ev.append (new CCodeIdentifier ("\"%s\"".printf (ev.get_cname ())));
+				clist_ev.append (ev.get_canonical_cconstant ());
+				clist.append (clist_ev);
+			}
+
+			clist_ev = new CCodeInitializerList ();
+			clist_ev.append (new CCodeConstant ("0"));
+			clist_ev.append (new CCodeConstant ("NULL"));
+			clist_ev.append (new CCodeConstant ("NULL"));
+			clist.append (clist_ev);
+
+			var enum_decl = new CCodeVariableDeclarator ("values[]", clist);
+
+			if (en.is_flags) {
+				cdecl = new CCodeDeclaration ("const GFlagsValue");
+			} else {
+				cdecl = new CCodeDeclaration ("const GEnumValue");
+			}
+
+			cdecl.add_declarator (enum_decl);
+			cdecl.modifiers = CCodeModifiers.STATIC;
+
+			type_init.add_statement (cdecl);
+
+			reg_call.add_argument (new CCodeIdentifier ("values"));
 		} else {
 			reg_call.add_argument (new CCodeIdentifier ("&g_define_type_info"));
 			if (fundamental) {
@@ -172,7 +212,7 @@ public abstract class Vala.TypeRegisterFunction {
 		} else {
 			type_init.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier (type_id_name), reg_call)));
 		}
-		
+
 		type_init.add_statement (get_type_interface_init_statements (plugin));
 
 		if (!plugin) {
@@ -192,7 +232,14 @@ public abstract class Vala.TypeRegisterFunction {
 				condition = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, id, zero);
 			}
 
-			var cif = new CCodeIfStatement (condition, type_init);
+			CCodeExpression cond;
+			if (use_thread_safe) {
+				cond = condition;
+			} else {
+				cond = new CCodeFunctionCall (new CCodeIdentifier ("G_UNLIKELY"));
+				(cond as CCodeFunctionCall).add_argument (condition);
+			}
+			var cif = new CCodeIfStatement (cond, type_init);
 			type_block.add_statement (cif);
 		} else {
 			type_block = type_init;

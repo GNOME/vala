@@ -34,6 +34,7 @@ libvala_la_VALASOURCES = \
 	valadbusinterfaceregisterfunction.vala \
 	valadbusmodule.vala \
 	valadbusservermodule.vala \
+	valaenumregisterfunction.vala \
 	valagerrormodule.vala \
 	valagirwriter.vala \
 	valagobjectmodule.vala \

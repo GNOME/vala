@@ -2017,6 +2017,16 @@ internal class Vala.GTypeModule : GErrorModule {
 		}
 	}
 
+	public override void visit_enum (Enum en) {
+		base.visit_enum (en);
+
+		if (en.has_type_id) {
+			var type_fun = new EnumRegisterFunction (en, context);
+			type_fun.init_from_type (false);
+			source_type_member_definition.append (type_fun.get_definition ());
+		}
+	}
+
 	public override void visit_method_call (MethodCall expr) {
 		var ma = expr.call as MemberAccess;
 		var mtype = expr.call.value_type as MethodType;
