@@ -2830,7 +2830,8 @@ namespace GLib {
 		public string[] fetch_all ();
 	}
 
-	/* Simple XML Subset Parser */
+	/* Simple XML Subset Parser
+	   See http://live.gnome.org/Vala/MarkupSample for an example */
 
 	public errordomain MarkupError {
 		BAD_UTF8,
@@ -2860,20 +2861,15 @@ namespace GLib {
 		public void* pop ();
 	}
 	
-	[CCode (cname = "GCallback")]
-	public static delegate void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_names, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_values, void* user_data) throws MarkupError;
+	public delegate void MarkupParserStartElementFunc (MarkupParseContext context, string element_name, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_names, [CCode (array_length = false, array_null_terminated = true)] string[] attribute_values) throws MarkupError;
 	
-	[CCode (cname = "GCallback")]
-	public static delegate void MarkupParserEndElementFunc (MarkupParseContext context, string element_name, void* user_data) throws MarkupError;
+	public delegate void MarkupParserEndElementFunc (MarkupParseContext context, string element_name) throws MarkupError;
 	
-	[CCode (cname = "GCallback")]
-	public static delegate void MarkupParserTextFunc (MarkupParseContext context, string text, size_t text_len, void* user_data) throws MarkupError;
+	public delegate void MarkupParserTextFunc (MarkupParseContext context, string text, size_t text_len) throws MarkupError;
 	
-	[CCode (cname = "GCallback")]
-	public static delegate void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, size_t text_len, void* user_data) throws MarkupError;
+	public delegate void MarkupParserPassthroughFunc (MarkupParseContext context, string passthrough_text, size_t text_len) throws MarkupError;
 	
-	[CCode (cname = "GCallback")]
-	public static delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error, void* user_data);
+	public delegate void MarkupParserErrorFunc (MarkupParseContext context, Error error);
 	
 	public struct MarkupParser {
 		public unowned MarkupParserStartElementFunc start_element;
