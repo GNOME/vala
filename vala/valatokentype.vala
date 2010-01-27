@@ -93,6 +93,7 @@ public enum Vala.TokenType {
 	NULL,
 	OUT,
 	OP_AND,
+	OP_COALESCING,
 	OP_DEC,
 	OP_EQ,
 	OP_GE,

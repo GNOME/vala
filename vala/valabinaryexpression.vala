@@ -24,7 +24,7 @@
 /**
  * Represents an expression with two operands in the source code.
  *
- * Supports +, -, *, /, %, <<, >>, <, >, <=, >=, ==, !=, &, |, ^, &&, ||.
+ * Supports +, -, *, /, %, <<, >>, <, >, <=, >=, ==, !=, &, |, ^, &&, ||, ??.
  */
 public class Vala.BinaryExpression : Expression {
 	/**
@@ -118,6 +118,7 @@ public class Vala.BinaryExpression : Expression {
 		case BinaryOperator.AND: return "&&";
 		case BinaryOperator.OR: return "||";
 		case BinaryOperator.IN: return "in";
+		case BinaryOperator.COALESCE: return "??";
 		}
 
 		assert_not_reached ();
@@ -188,6 +189,38 @@ public class Vala.BinaryExpression : Expression {
 			}
 
 			var if_stmt = new IfStatement (left, true_block, false_block, source_reference);
+
+			insert_statement (analyzer.insert_block, decl);
+			insert_statement (analyzer.insert_block, if_stmt);
+
+			if (!if_stmt.check (analyzer)) {
+				error = true;
+				return false;
+			}
+
+			var ma = new MemberAccess.simple (local.name, source_reference);
+			ma.target_type = target_type;
+			ma.check (analyzer);
+
+			parent_node.replace_expression (this, ma);
+
+			return true;
+		}
+
+		if (operator == BinaryOperator.COALESCE) {
+			var local = new LocalVariable (null, get_temp_name (), left, source_reference);
+			var decl = new DeclarationStatement (local, source_reference);
+			decl.check (analyzer);
+
+			var right_stmt = new ExpressionStatement (new Assignment (new MemberAccess.simple (local.name, right.source_reference), right, AssignmentOperator.SIMPLE, right.source_reference), right.source_reference);
+
+			var true_block = new Block (source_reference);
+
+			true_block.add_statement (right_stmt);
+
+			var cond = new BinaryExpression (BinaryOperator.EQUALITY, new MemberAccess.simple (local.name, left.source_reference), new NullLiteral (source_reference), source_reference);
+
+			var if_stmt = new IfStatement (cond, true_block, null, source_reference);
 
 			insert_statement (analyzer.insert_block, decl);
 			insert_statement (analyzer.insert_block, if_stmt);
@@ -432,5 +465,6 @@ public enum Vala.BinaryOperator {
 	BITWISE_XOR,
 	AND,
 	OR,
-	IN
+	IN,
+	COALESCE
 }

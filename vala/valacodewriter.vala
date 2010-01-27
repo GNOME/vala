@@ -1586,6 +1586,9 @@ public class Vala.CodeWriter : CodeVisitor {
 		case BinaryOperator.IN:
 			write_string (" in ");
 			break;
+		case BinaryOperator.COALESCE:
+			write_string (" ?? ");
+			break;
 		default:
 			assert_not_reached ();
 		}

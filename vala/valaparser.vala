@@ -1217,9 +1217,20 @@ public class Vala.Parser : CodeVisitor {
 		return left;
 	}
 
+	Expression parse_coalescing_expression () throws ParseError {
+		var begin = get_location ();
+		var left = parse_conditional_or_expression ();
+		if (accept (TokenType.OP_COALESCING)) {
+			var right = parse_coalescing_expression ();
+			return new BinaryExpression (BinaryOperator.COALESCE, left, right, get_src (begin));
+		} else {
+			return left;
+		}
+	}
+
 	Expression parse_conditional_expression () throws ParseError {
 		var begin = get_location ();
-		var condition = parse_conditional_or_expression ();
+		var condition = parse_coalescing_expression ();
 		if (accept (TokenType.INTERR)) {
 			var true_expr = parse_expression ();
 			expect (TokenType.COLON);
