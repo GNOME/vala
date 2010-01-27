@@ -2,40 +2,118 @@
 
 [CCode (cprefix = "Tracker", lower_case_cprefix = "tracker_")]
 namespace Tracker {
+	[CCode (cprefix = "TrackerModule", lower_case_cprefix = "tracker_module_")]
+	namespace Module {
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
+		public delegate void FileFreeDataFunc ();
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+		public delegate void* FileGetDataFunc (string path);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+		public delegate unowned Tracker.Metadata FileGetMetadataFunc (Tracker.File file);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+		public delegate unowned string FileGetServiceTypeFunc (Tracker.File file);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+		public delegate unowned string FileGetText (Tracker.File path);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+		public delegate void FileGetUriFunc (Tracker.File file, string dirname, string basename);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+		public delegate bool FileIterContents (Tracker.File path);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+		public delegate unowned string GetDirectoriesFunc ();
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+		public delegate unowned string GetNameFunc ();
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+		public delegate void Init ();
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+		public delegate void Shutdown ();
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
+		public static void file_free_data (void* file_data);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
+		public static void* file_get_data (string path);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
+		public static unowned Tracker.Metadata file_get_metadata (Tracker.File file);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
+		public static unowned string file_get_service_type (Tracker.File file);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
+		public static unowned string file_get_text (Tracker.File file);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
+		public static void file_get_uri (Tracker.File file, string dirname, string basename);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
+		public static bool file_iter_contents (Tracker.File file);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
+		public static unowned string get_name ();
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
+		public static void init ();
+		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
+		public static void shutdown ();
+	}
+	[CCode (cprefix = "TrackerModuleConfig", lower_case_cprefix = "tracker_module_config_")]
+	namespace ModuleConfig {
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static unowned string get_description (string name);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static bool get_enabled (string name);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static unowned GLib.List get_ignored_directories (string name);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static unowned GLib.List get_ignored_directory_patterns (string name);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static unowned GLib.List get_ignored_file_patterns (string name);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static unowned GLib.List get_ignored_files (string name);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static unowned GLib.List get_index_file_patterns (string name);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static unowned GLib.List get_index_files (string name);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static unowned GLib.List get_index_mime_types (string name);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static unowned string get_index_service (string name);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static unowned GLib.List get_modules ();
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static unowned GLib.List get_monitor_directories (string name);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static unowned GLib.List get_monitor_recurse_directories (string name);
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static bool init ();
+		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
+		public static void shutdown ();
+	}
 	[CCode (cprefix = "TrackerOntology", lower_case_cprefix = "tracker_ontology_")]
 	namespace Ontology {
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
 		public static void field_add (Tracker.Field field);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
-		public static weak string field_get_display_name (Tracker.Field field);
+		public static unowned string field_get_display_name (Tracker.Field field);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
-		public static weak string field_get_id (string name);
+		public static unowned string field_get_id (string name);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
 		public static bool field_is_child_of (string child, string parent);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
-		public static weak Tracker.Field get_field_by_id (int id);
+		public static unowned Tracker.Field get_field_by_id (int id);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
-		public static weak Tracker.Field get_field_by_name (string name);
+		public static unowned Tracker.Field get_field_by_name (string name);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
-		public static weak string get_field_name_by_service_name (Tracker.Field field, string service_str);
+		public static unowned string get_field_name_by_service_name (Tracker.Field field, string service_str);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
-		public static weak GLib.SList get_field_names_registered (string service_str);
+		public static unowned GLib.SList get_field_names_registered (string service_str);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
-		public static weak string get_service_by_id (int id);
+		public static unowned string get_service_by_id (int id);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
-		public static weak string get_service_by_mime (string mime);
+		public static unowned string get_service_by_mime (string mime);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
-		public static weak Tracker.Service get_service_by_name (string service_str);
+		public static unowned Tracker.Service get_service_by_name (string service_str);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
 		public static Tracker.DBType get_service_db_by_name (string service_str);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
 		public static int get_service_id_by_name (string service_str);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
-		public static weak GLib.SList get_service_names_registered ();
+		public static unowned GLib.SList get_service_names_registered ();
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
-		public static weak string get_service_parent (string service_str);
+		public static unowned string get_service_parent (string service_str);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
-		public static weak string get_service_parent_by_id (int id);
+		public static unowned string get_service_parent_by_id (int id);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
 		public static int get_service_parent_id_by_id (int id);
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
@@ -61,162 +139,18 @@ namespace Tracker {
 		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-ontology.h")]
 		public static void shutdown ();
 	}
-	[CCode (cprefix = "TrackerModuleConfig", lower_case_cprefix = "tracker_module_config_")]
-	namespace ModuleConfig {
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static weak string get_description (string name);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static bool get_enabled (string name);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static weak GLib.List get_ignored_directories (string name);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static weak GLib.List get_ignored_directory_patterns (string name);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static weak GLib.List get_ignored_file_patterns (string name);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static weak GLib.List get_ignored_files (string name);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static weak GLib.List get_index_file_patterns (string name);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static weak GLib.List get_index_files (string name);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static weak GLib.List get_index_mime_types (string name);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static weak string get_index_service (string name);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static weak GLib.List get_modules ();
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static weak GLib.List get_monitor_directories (string name);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static weak GLib.List get_monitor_recurse_directories (string name);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static bool init ();
-		[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-module-config.h")]
-		public static void shutdown ();
-	}
-	[CCode (cprefix = "TrackerModule", lower_case_cprefix = "tracker_module_")]
-	namespace Module {
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public delegate void FileFreeDataFunc ();
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static delegate void* FileGetDataFunc (string path);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static delegate weak Tracker.Metadata FileGetMetadataFunc (Tracker.File file);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static delegate weak string FileGetServiceTypeFunc (Tracker.File file);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static delegate weak string FileGetText (Tracker.File path);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static delegate void FileGetUriFunc (Tracker.File file, string dirname, string basename);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static delegate bool FileIterContents (Tracker.File path);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static delegate weak string GetDirectoriesFunc ();
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static delegate weak string GetNameFunc ();
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static delegate void Init ();
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static delegate void Shutdown ();
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static void file_free_data (void* file_data);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static void* file_get_data (string path);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static weak Tracker.Metadata file_get_metadata (Tracker.File file);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static weak string file_get_service_type (Tracker.File file);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static weak string file_get_text (Tracker.File file);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static void file_get_uri (Tracker.File file, string dirname, string basename);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static bool file_iter_contents (Tracker.File file);
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static weak string get_name ();
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static void init ();
-		[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-		public static void shutdown ();
-	}
-	[CCode (cprefix = "TRACKER_DB_TYPE_", cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public enum DBType {
-		UNKNOWN,
-		DATA,
-		INDEX,
-		COMMON,
-		CONTENT,
-		EMAIL,
-		FILES,
-		XESAM,
-		CACHE,
-		USER
-	}
-	[CCode (cprefix = "TRACKER_FIELD_TYPE_", cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public enum FieldType {
-		KEYWORD,
-		INDEX,
-		FULLTEXT,
-		STRING,
-		INTEGER,
-		DOUBLE,
-		DATE,
-		BLOB,
-		STRUCT,
-		LINK
-	}
-	[Compact]
-	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public class File {
-		public weak string path;
-		public void* data;
-		public static void close (int fd, bool no_longer_needed);
-		public static weak string get_mime_type (string uri);
-		public static int get_mtime (string uri);
-		public static void get_path_and_name (string uri, string path, string name);
-		public static uint get_size (string uri);
-		public static bool is_directory (string uri);
-		public static bool is_indexable (string uri);
-		public static bool is_valid (string uri);
-		public static int open (string uri, bool readahead);
-		public static bool unlink (string uri);
-	}
-	[Compact]
-	[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-metadata.h")]
-	public class Metadata {
-		public void @foreach (Tracker.MetadataForeach func);
-		public void insert (string field_name, string value);
-		public void insert_multiple_values (string field_name, GLib.List list);
-		public weak string lookup (string field_name);
-		public weak GLib.List lookup_multiple_values (string field_name);
-		public Metadata ();
-		public static weak Tracker.Metadata utils_get_data (string path);
-		public static weak string utils_get_text (string path);
-	}
-	[Compact]
-	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public class Parser {
-		public bool is_stop_word (string word);
-		public Parser (Tracker.Language language, int max_word_length, int min_word_length);
-		public weak string next (int position, int byte_offset_start, int byte_offset_end, bool new_paragraph, bool stop_word, int word_length);
-		public weak string process_word (string word, int length, bool do_strip);
-		public void reset (string txt, int txt_size, bool delimit_words, bool enable_stemmer, bool enable_stop_words, bool parse_reserved_words);
-		public void set_posititon (int position);
-		public static weak GLib.HashTable text (GLib.HashTable word_table, string txt, int weight, Tracker.Language language, int max_words_to_index, int max_word_length, int min_word_length, bool filter_words, bool delimit_words);
-		public static weak GLib.HashTable text_fast (GLib.HashTable word_table, string txt, int weight);
-		public static weak string text_into_array (string text, Tracker.Language language, int max_word_length, int min_word_length);
-		public static weak string text_to_string (string txt, Tracker.Language language, int max_word_length, int min_word_length, bool filter_words, bool filter_numbers, bool delimit);
-	}
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
 	public class Config : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Config ();
 		public void add_crawl_directory_roots (string roots);
 		public void add_disabled_modules (string modules);
 		public void add_no_watch_directory_roots (string roots);
 		public void add_watch_directory_roots (string roots);
-		public weak GLib.SList get_crawl_directory_roots ();
+		public unowned GLib.SList get_crawl_directory_roots ();
 		public bool get_disable_indexing_on_battery ();
 		public bool get_disable_indexing_on_battery_init ();
-		public weak GLib.SList get_disabled_modules ();
+		public unowned GLib.SList get_disabled_modules ();
 		public bool get_enable_content_indexing ();
 		public bool get_enable_indexing ();
 		public bool get_enable_stemmer ();
@@ -227,7 +161,7 @@ namespace Tracker {
 		public bool get_index_mounted_directories ();
 		public bool get_index_removable_devices ();
 		public int get_initial_sleep ();
-		public weak string get_language ();
+		public unowned string get_language ();
 		public int get_low_disk_space_limit ();
 		public bool get_low_memory_mode ();
 		public int get_max_bucket_count ();
@@ -237,12 +171,11 @@ namespace Tracker {
 		public int get_min_bucket_count ();
 		public int get_min_word_length ();
 		public bool get_nfs_locking ();
-		public weak GLib.SList get_no_index_file_types ();
-		public weak GLib.SList get_no_watch_directory_roots ();
+		public unowned GLib.SList get_no_index_file_types ();
+		public unowned GLib.SList get_no_watch_directory_roots ();
 		public int get_throttle ();
 		public int get_verbosity ();
-		public weak GLib.SList get_watch_directory_roots ();
-		public Config ();
+		public unowned GLib.SList get_watch_directory_roots ();
 		public void remove_disabled_modules (string module);
 		public void set_disable_indexing_on_battery (bool value);
 		public void set_disable_indexing_on_battery_init (bool value);
@@ -300,19 +233,20 @@ namespace Tracker {
 	}
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
 	public class Field : GLib.Object {
+		[CCode (has_construct_function = false)]
+		public Field ();
 		public void append_child_id (string id);
-		public weak GLib.SList get_child_ids ();
+		public unowned GLib.SList get_child_ids ();
 		public Tracker.FieldType get_data_type ();
 		public bool get_delimited ();
 		public bool get_embedded ();
-		public weak string get_field_name ();
+		public unowned string get_field_name ();
 		public bool get_filtered ();
-		public weak string get_id ();
+		public unowned string get_id ();
 		public bool get_multiple_values ();
-		public weak string get_name ();
+		public unowned string get_name ();
 		public bool get_store_metadata ();
 		public int get_weight ();
-		public Field ();
 		public void set_child_ids (GLib.SList value);
 		public void set_data_type (Tracker.FieldType value);
 		public void set_delimited (bool value);
@@ -324,7 +258,7 @@ namespace Tracker {
 		public void set_name (string value);
 		public void set_store_metadata (bool value);
 		public void set_weight (int value);
-		public static weak string type_to_string (Tracker.FieldType fieldtype);
+		public static unowned string type_to_string (Tracker.FieldType fieldtype);
 		public void* child_ids { get; set; }
 		public Tracker.FieldType data_type { get; set; }
 		public bool delimited { get; set; }
@@ -337,21 +271,68 @@ namespace Tracker {
 		public bool store_metadata { get; set; }
 		public int weight { get; set; }
 	}
+	[Compact]
+	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
+	public class File {
+		public void* data;
+		public weak string path;
+		public static void close (int fd, bool no_longer_needed);
+		public static unowned string get_mime_type (string uri);
+		public static int32 get_mtime (string uri);
+		public static void get_path_and_name (string uri, string path, string name);
+		public static uint32 get_size (string uri);
+		public static bool is_directory (string uri);
+		public static bool is_indexable (string uri);
+		public static bool is_valid (string uri);
+		public static int open (string uri, bool readahead);
+		public static bool unlink (string uri);
+	}
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
 	public class Language : GLib.Object {
-		public static bool check_exists (string language_code);
-		public weak Tracker.Config get_config ();
-		public static weak string get_default_code ();
-		public weak GLib.HashTable get_stop_words ();
+		[CCode (has_construct_function = false)]
 		public Language (Tracker.Config language);
+		public static bool check_exists (string language_code);
+		public unowned Tracker.Config get_config ();
+		public static unowned string get_default_code ();
+		public unowned GLib.HashTable get_stop_words ();
 		public void set_config (Tracker.Config config);
-		public weak string stem_word (string word, int word_length);
+		public unowned string stem_word (string word, int word_length);
 		public Tracker.Config config { get; set; }
 		public GLib.HashTable stop_words { get; }
 	}
+	[Compact]
+	[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-metadata.h")]
+	public class Metadata {
+		[CCode (has_construct_function = false)]
+		public Metadata ();
+		public void @foreach (Tracker.MetadataForeach func);
+		public void insert (string field_name, string value);
+		public void insert_multiple_values (string field_name, GLib.List list);
+		public unowned string lookup (string field_name);
+		public unowned GLib.List lookup_multiple_values (string field_name);
+		public static unowned Tracker.Metadata utils_get_data (string path);
+		public static unowned string utils_get_text (string path);
+	}
+	[Compact]
+	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
+	public class Parser {
+		[CCode (has_construct_function = false)]
+		public Parser (Tracker.Language language, int max_word_length, int min_word_length);
+		public bool is_stop_word (string word);
+		public unowned string next (int position, int byte_offset_start, int byte_offset_end, bool new_paragraph, bool stop_word, int word_length);
+		public unowned string process_word (string word, int length, bool do_strip);
+		public void reset (string txt, int txt_size, bool delimit_words, bool enable_stemmer, bool enable_stop_words, bool parse_reserved_words);
+		public void set_posititon (int position);
+		public static unowned GLib.HashTable text (GLib.HashTable word_table, string txt, int weight, Tracker.Language language, int max_words_to_index, int max_word_length, int min_word_length, bool filter_words, bool delimit_words);
+		public static unowned GLib.HashTable text_fast (GLib.HashTable word_table, string txt, int weight);
+		public static unowned string text_into_array (string text, Tracker.Language language, int max_word_length, int min_word_length);
+		public static unowned string text_to_string (string txt, Tracker.Language language, int max_word_length, int min_word_length, bool filter_words, bool filter_numbers, bool delimit);
+	}
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
 	public class Service : GLib.Object {
-		public weak string get_content_metadata ();
+		[CCode (has_construct_function = false)]
+		public Service ();
+		public unowned string get_content_metadata ();
 		public Tracker.DBType get_db_type ();
 		public bool get_embedded ();
 		public bool get_enabled ();
@@ -359,13 +340,12 @@ namespace Tracker {
 		public bool get_has_metadata ();
 		public bool get_has_thumbs ();
 		public int get_id ();
-		public weak GLib.SList get_key_metadata ();
-		public weak string get_name ();
-		public weak string get_parent ();
-		public weak string get_property_prefix ();
+		public unowned GLib.SList get_key_metadata ();
+		public unowned string get_name ();
+		public unowned string get_parent ();
+		public unowned string get_property_prefix ();
 		public bool get_show_service_directories ();
 		public bool get_show_service_files ();
-		public Service ();
 		public void set_content_metadata (string value);
 		public void set_db_type (Tracker.DBType value);
 		public void set_embedded (bool value);
@@ -395,64 +375,90 @@ namespace Tracker {
 		public bool show_service_directories { get; set; }
 		public bool show_service_files { get; set; }
 	}
+	[CCode (cprefix = "TRACKER_DB_TYPE_", cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
+	public enum DBType {
+		UNKNOWN,
+		DATA,
+		INDEX,
+		COMMON,
+		CONTENT,
+		EMAIL,
+		FILES,
+		XESAM,
+		CACHE,
+		USER
+	}
+	[CCode (cprefix = "TRACKER_FIELD_TYPE_", cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
+	public enum FieldType {
+		KEYWORD,
+		INDEX,
+		FULLTEXT,
+		STRING,
+		INTEGER,
+		DOUBLE,
+		DATE,
+		BLOB,
+		STRUCT,
+		LINK
+	}
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
 	public delegate void MetadataForeach (Tracker.Field field, void* value);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string date_format (string time_string);
+	public static unowned string date_format (string time_string);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string date_to_string (ulong date_time);
+	public static unowned string date_to_string (ulong date_time);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string date_to_time_string (string date_string);
+	public static unowned string date_to_time_string (string date_string);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
 	public static bool env_check_xdg_dirs ();
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string escape_string (string @in);
+	public static unowned string escape_string (string @in);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string gint32_to_string (int i);
+	public static unowned string gint32_to_string (int32 i);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string gint_to_string (int i);
+	public static unowned string gint_to_string (int i);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string glong_to_string (long i);
+	public static unowned string glong_to_string (long i);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak GLib.SList gslist_copy_with_string_data (GLib.SList list);
+	public static unowned GLib.SList gslist_copy_with_string_data (GLib.SList list);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string gslist_to_string_list (GLib.SList list);
+	public static unowned string gslist_to_string_list (GLib.SList list);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string guint32_to_string (uint i);
+	public static unowned string guint32_to_string (uint32 i);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string guint_to_string (uint i);
+	public static unowned string guint_to_string (uint i);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
 	public static bool is_empty_string (string str);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string path_evaluate_name (string uri);
+	public static unowned string path_evaluate_name (string uri);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
 	public static void path_hash_table_filter_duplicates (GLib.HashTable roots);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
 	public static bool path_is_in_path (string path, string in_path);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak GLib.SList path_list_filter_duplicates (GLib.SList roots);
+	public static unowned GLib.SList path_list_filter_duplicates (GLib.SList roots);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
 	public static void path_remove (string uri);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string seconds_estimate_to_string (double seconds_elapsed, bool short_string, uint items_done, uint items_remaining);
+	public static unowned string seconds_estimate_to_string (double seconds_elapsed, bool short_string, uint items_done, uint items_remaining);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string seconds_to_string (double seconds_elapsed, bool short_string);
+	public static unowned string seconds_to_string (double seconds_elapsed, bool short_string);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string string_boolean_to_string_gint (string value);
+	public static unowned string string_boolean_to_string_gint (string value);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
 	public static int string_in_string_list (string str, string strv);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak GLib.SList string_list_to_gslist (string strv, ulong length);
+	public static unowned GLib.SList string_list_to_gslist (string strv, size_t length);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string string_list_to_string (string strv, ulong length, char sep);
+	public static unowned string string_list_to_string (string strv, size_t length, char sep);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string string_remove (string haystack, string needle);
+	public static unowned string string_remove (string haystack, string needle);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string string_replace (string haystack, string needle, string replacement);
+	public static unowned string string_replace (string haystack, string needle, string replacement);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
 	public static ulong string_to_date (string time_string);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
-	public static weak string string_to_string_list (string str);
+	public static unowned string string_to_string_list (string str);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
 	public static bool string_to_uint (string s, uint ret);
 	[CCode (cheader_filename = "tracker-1.0/libtracker-common/tracker-common.h")]
