@@ -128,8 +128,11 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		return cerror_block;
 	}
 
-	CCodeStatement uncaught_error_statement (CCodeExpression inner_error) {
-		var cerror_block = new CCodeBlock ();
+	CCodeStatement uncaught_error_statement (CCodeExpression inner_error, CCodeBlock? block = null, bool unexpected = false) {
+		var cerror_block = block;
+		if (cerror_block == null) {
+			cerror_block = new CCodeBlock ();
+		}
 
 		// free local variables
 		var free_frag = new CCodeFragment ();
@@ -137,7 +140,7 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		cerror_block.add_statement (free_frag);
 
 		var ccritical = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
-		ccritical.add_argument (new CCodeConstant ("\"file %s: line %d: uncaught error: %s (%s, %d)\""));
+		ccritical.add_argument (new CCodeConstant (unexpected ? "\"file %s: line %d: unexpected error: %s (%s, %d)\"" : "\"file %s: line %d: uncaught error: %s (%s, %d)\""));
 		ccritical.add_argument (new CCodeConstant ("__FILE__"));
 		ccritical.add_argument (new CCodeConstant ("__LINE__"));
 		ccritical.add_argument (new CCodeMemberAccess.pointer (inner_error, "message"));
@@ -185,8 +188,25 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 			append_error_free (current_symbol, free_frag, current_try);
 			cerror_block.add_statement (free_frag);
 
+			var error_types = new ArrayList<DataType> ();
+			foreach (DataType node_error_type in node.get_error_types ()) {
+				error_types.add (node_error_type);
+			}
+
 			if (!is_in_catch) {
+				var handled_error_types = new ArrayList<DataType> ();
 				foreach (CatchClause clause in current_try.get_catch_clauses ()) {
+					// keep track of unhandled error types
+					foreach (DataType node_error_type in error_types) {
+						if (clause.error_type == null || node_error_type.compatible (clause.error_type)) {
+							handled_error_types.add (node_error_type);
+						}
+					}
+					foreach (DataType handled_error_type in handled_error_types) {
+						error_types.remove (handled_error_type);
+					}
+					handled_error_types.clear ();
+
 					// go to catch clause if error domain matches
 					var cgoto_stmt = new CCodeGotoStatement (clause.clabel_name);
 
@@ -219,8 +239,14 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 				}
 			}
 
-			// go to finally clause if no catch clause matches
-			cerror_block.add_statement (new CCodeGotoStatement ("__finally%d".printf (current_try_id)));
+			if (error_types.size > 0) {
+				// go to finally clause if no catch clause matches
+				// and there are still unhandled error types
+				cerror_block.add_statement (new CCodeGotoStatement ("__finally%d".printf (current_try_id)));
+			} else {
+				// should never happen with correct bindings
+				uncaught_error_statement (inner_error, cerror_block, true);
+			}
 
 			cerror_handler = cerror_block;
 		} else if (current_method != null && current_method.get_error_types ().size > 0) {
@@ -256,7 +282,7 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		} else {
 			cerror_handler = uncaught_error_statement (inner_error);
 		}
-		
+
 		var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, inner_error, new CCodeConstant ("NULL"));
 		cfrag.append (new CCodeIfStatement (ccond, cerror_handler));
 	}
