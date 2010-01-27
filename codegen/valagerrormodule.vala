@@ -283,8 +283,14 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 			cerror_handler = uncaught_error_statement (inner_error);
 		}
 
-		var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, inner_error, new CCodeConstant ("NULL"));
-		cfrag.append (new CCodeIfStatement (ccond, cerror_handler));
+		if (node is ThrowStatement) {
+			// inner_error is always set, avoid unnecessary if statement
+			// eliminates C warnings
+			cfrag.append (cerror_handler);
+		} else {
+			var ccond = new CCodeBinaryExpression (CCodeBinaryOperator.INEQUALITY, inner_error, new CCodeConstant ("NULL"));
+			cfrag.append (new CCodeIfStatement (ccond, cerror_handler));
+		}
 	}
 
 	public override void visit_try_statement (TryStatement stmt) {
