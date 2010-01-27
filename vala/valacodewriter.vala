@@ -741,7 +741,7 @@ public class Vala.CodeWriter : CodeVisitor {
 			write_string ("class ");
 		}
 
-		if (is_weak (f.variable_type)) {
+		if (f.variable_type.is_weak ()) {
 			write_string ("weak ");
 		}
 
@@ -836,7 +836,7 @@ public class Vala.CodeWriter : CodeVisitor {
 				} else if (param.direction == ParameterDirection.OUT) {
 					write_string ("out ");
 				}
-				if (is_weak (param.variable_type)) {
+				if (param.variable_type.is_weak ()) {
 					write_string ("unowned ");
 				}
 			}
@@ -1823,29 +1823,11 @@ public class Vala.CodeWriter : CodeVisitor {
 	}
 
 	private void write_return_type (DataType type) {
-		if (is_weak (type)) {
+		if (type.is_weak ()) {
 			write_string ("unowned ");
 		}
 
 		write_type (type);
-	}
-
-	private bool is_weak (DataType type) {
-		if (type.value_owned) {
-			return false;
-		} else if (type is VoidType || type is PointerType) {
-			return false;
-		} else if (type is ValueType) {
-			if (type.nullable) {
-				// nullable structs are heap allocated
-				return true;
-			}
-
-			// TODO return true for structs with destroy
-			return false;
-		}
-
-		return true;
 	}
 
 	private void write_type (DataType type) {

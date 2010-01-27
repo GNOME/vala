@@ -76,4 +76,45 @@ public class Vala.MethodType : DataType {
 		}
 		return null;
 	}
+
+	public string to_prototype_string (bool with_type_parameters = false) {
+		var proto = "%s %s (".printf (get_return_type ().to_string (), this.to_string ());
+
+		int i = 1;
+		foreach (FormalParameter param in get_parameters ()) {
+			if (i > 1) {
+				proto += ", ";
+			}
+
+			if (param.ellipsis) {
+				proto += "...";
+				continue;
+			}
+
+			if (param.direction == ParameterDirection.IN) {
+				if (param.variable_type.value_owned) {
+					proto += "owned ";
+				}
+			} else {
+				if (param.direction == ParameterDirection.REF) {
+					proto += "ref ";
+				} else if (param.direction == ParameterDirection.OUT) {
+					proto += "out ";
+				}
+				if (param.variable_type.is_weak ()) {
+					proto += "unowned ";
+				}
+			}
+
+			proto = "%s%s %s".printf (proto, param.variable_type.to_qualified_string (), param.name);
+
+			if (param.initializer != null) {
+				proto = "%s = %s".printf (proto, param.initializer.to_string ());
+			}
+
+			i++;
+		}
+
+		return proto + ")";
+	}
 }

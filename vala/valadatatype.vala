@@ -520,4 +520,22 @@ public abstract class Vala.DataType : CodeNode {
 
 		return result;
 	}
+
+	public bool is_weak () {
+		if (this.value_owned) {
+			return false;
+		} else if (this is VoidType || this is PointerType) {
+			return false;
+		} else if (this is ValueType) {
+			if (this.nullable) {
+				// nullable structs are heap allocated
+				return true;
+			}
+
+			// TODO return true for structs with destroy
+			return false;
+		}
+
+		return true;
+	}
 }
