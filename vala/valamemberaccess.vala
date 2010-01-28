@@ -549,7 +549,15 @@ public class Vala.MemberAccess : Expression {
 
 		member.used = true;
 
-		if (access == SymbolAccessibility.PRIVATE) {
+		if (access == SymbolAccessibility.PROTECTED) {
+			var subtype = (analyzer.current_class != null && analyzer.current_class.is_subtype_of ((TypeSymbol) member.parent_symbol));
+
+			if (!subtype) {
+				error = true;
+				Report.error (source_reference, "Access to protected member `%s' denied".printf (member.get_full_name ()));
+				return false;
+			}
+		} else if (access == SymbolAccessibility.PRIVATE) {
 			var target_type = member.parent_symbol;
 
 			bool in_target_type = false;
