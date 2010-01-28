@@ -5,7 +5,6 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/gee \
 	-I$(top_srcdir)/ccode \
 	$(GLIB_CFLAGS) \
-	-include config.h \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	$(NULL)
 

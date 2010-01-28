@@ -567,7 +567,7 @@ class Vala.Compiler {
 		}
 		
 		if (version) {
-			stdout.printf ("Vala %s\n", Config.PACKAGE_VERSION);
+			stdout.printf ("Vala %s\n", Config.BUILD_VERSION);
 			return 0;
 		}
 		

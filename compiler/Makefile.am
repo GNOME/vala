@@ -7,7 +7,6 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/vala \
 	-I$(top_srcdir)/codegen \
 	$(GLIB_CFLAGS) \
-	-include config.h \
 	-DPACKAGE_DATADIR=\"$(pkgdatadir)\" \
 	$(NULL)
 

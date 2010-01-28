@@ -25,6 +25,8 @@ ylwrap
 compile
 stamp-h1
 *.pc
+.tarball-version
+.version
 
 *.gcda
 *.gcno
