@@ -544,6 +544,7 @@ public class Vala.MemberAccess : Expression {
 			instance = (prop.binding == MemberBinding.INSTANCE);
 		} else if (member is Signal) {
 			instance = true;
+			access = member.access;
 		}
 
 		member.used = true;
