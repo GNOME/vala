@@ -84,7 +84,7 @@ namespace Rest {
 	[CCode (cheader_filename = "rest/oauth-proxy-call.h")]
 	public class OAuthProxyCall : Rest.ProxyCall {
 	}
-	[CCode (cheader_filename = "rest-custom.h")]
+	[CCode (cheader_filename = "rest/rest-proxy.h")]
 	public class Proxy : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Proxy (string url_format, bool binding_required);
