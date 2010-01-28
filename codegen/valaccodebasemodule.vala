@@ -390,7 +390,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		// generate C header file for public API
 		if (context.header_filename != null) {
 			var writer = new CCodeWriter (context.header_filename);
-			if (!writer.open ()) {
+			if (!writer.open (context.version_header)) {
 				Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
 				return;
 			}
@@ -429,7 +429,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		// generate C header file for internal API
 		if (context.internal_header_filename != null) {
 			var writer = new CCodeWriter (context.internal_header_filename);
-			if (!writer.open ()) {
+			if (!writer.open (context.version_header)) {
 				Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
 				return;
 			}
@@ -677,7 +677,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		}
 		
 		var writer = new CCodeWriter (source_file.get_csource_filename (), source_file.filename);
-		if (!writer.open ()) {
+		if (!writer.open (context.version_header)) {
 			Report.error (null, "unable to open `%s' for writing".printf (writer.filename));
 			return;
 		}

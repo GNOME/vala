@@ -70,6 +70,8 @@ class Vala.Compiler {
 	static bool verbose_mode;
 	static string profile;
 	static bool nostdpkg;
+	static bool enable_version_header;
+	static bool disable_version_header;
 
 	static string entry_point;
 
@@ -115,6 +117,8 @@ class Vala.Compiler {
 		{ "quiet", 'q', 0, OptionArg.NONE, ref quiet_mode, "Do not print messages to the console", null },
 		{ "verbose", 'v', 0, OptionArg.NONE, ref verbose_mode, "Print additional messages to the console", null },
 		{ "target-glib", 0, 0, OptionArg.STRING, ref target_glib, "Target version of glib for code generation", "MAJOR.MINOR" },
+		{ "enable-version-header", 0, 0, OptionArg.NONE, ref enable_version_header, "Write vala build version in generated files", null },
+		{ "disable-version-header", 0, 0, OptionArg.NONE, ref disable_version_header, "Do not write vala build version in generated files", null },
 		{ "", 0, 0, OptionArg.FILENAME_ARRAY, ref sources, null, "FILE..." },
 		{ null }
 	};
@@ -209,6 +213,7 @@ class Vala.Compiler {
 		context.report.enable_warnings = !disable_warnings;
 		context.report.set_verbose_errors (!quiet_mode);
 		context.verbose_mode = verbose_mode;
+		context.version_header = enable_version_header;
 
 		context.ccode_only = ccode_only;
 		context.compile_only = compile_only;
@@ -407,7 +412,7 @@ class Vala.Compiler {
 		}
 
 		context.codegen.emit (context);
-		
+
 		if (context.report.get_errors () > 0) {
 			return quit ();
 		}
