@@ -762,6 +762,12 @@ public class Vala.Method : Member {
 				Report.error (source_reference, "Methods may not be overridden outside of classes");
 				return false;
 			}
+		} else if (access == SymbolAccessibility.PROTECTED) {
+			if (!(parent_symbol is Class) && !(parent_symbol is Interface)) {
+				error = true;
+				Report.error (source_reference, "Protected methods may not be declared outside of classes and interfaces");
+				return false;
+			}
 		}
 
 		if (is_abstract && body != null) {
