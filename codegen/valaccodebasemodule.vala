@@ -1177,7 +1177,25 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				var rhs = (CCodeExpression) f.initializer.ccodenode;
 				if (!is_constant_ccode_expression (rhs)) {
 					if (f.parent_symbol is Class) {
-						class_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, rhs)));
+						if (f.initializer is InitializerList) {
+							var block = new CCodeBlock ();
+							var frag = new CCodeFragment ();
+
+							var temp_decl = get_temp_variable (f.field_type);
+							var cdecl = new CCodeDeclaration (temp_decl.variable_type.get_cname ());
+							var vardecl = new CCodeVariableDeclarator (temp_decl.name, rhs);
+							cdecl.add_declarator (vardecl);
+							vardecl.init0 = true;
+							frag.append (cdecl);
+
+							var tmp = get_variable_cexpression (get_variable_cname (temp_decl.name));
+							frag.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, tmp)));
+
+							block.add_statement (frag);
+							class_init_fragment.append (block);
+						} else {
+							class_init_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (lhs, rhs)));
+						}
 
 						if (f.field_type is ArrayType && !f.no_array_length &&
 						    f.initializer is ArrayCreationExpression) {
