@@ -26,8 +26,8 @@ valac_SOURCES = \
 	$(NULL)
 
 valac.vala.stamp: $(valac_VALASOURCES)
-	$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../codegen --pkg codegen --pkg config $^
-	touch $@
+	$(VALA_V)$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../codegen --pkg codegen --pkg config $^
+	@touch $@
 
 valac_LDADD = \
 	$(COVERAGE_LIBS) \
@@ -41,3 +41,6 @@ MAINTAINERCLEANFILES = \
 	$(valac_VALASOURCES:.vala=.c) \
 	$(NULL)
 
+VALA_V = $(VALA_V_$(V))
+VALA_V_ = $(VALA_V_$(AM_DEFAULT_VERBOSITY))
+VALA_V_0 = @echo "  VALAC " $^;

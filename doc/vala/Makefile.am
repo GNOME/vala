@@ -32,12 +32,12 @@ book_DATA = \
 endif
 
 index.html: $(book_sources) xhtml.xsl
-	$(XSLTPROC) --xinclude $(srcdir)/xhtml.xsl $(srcdir)/index.xml > index.html
+	$(AM_V_GEN)$(XSLTPROC) --xinclude $(srcdir)/xhtml.xsl $(srcdir)/index.xml > index.html
 
 $(chapter_data): index.html
 
 vala.devhelp2: $(book_sources) devhelp.xsl
-	$(XSLTPROC) --xinclude $(srcdir)/devhelp.xsl $(srcdir)/index.xml > vala.devhelp2
+	$(AM_V_GEN)$(XSLTPROC) --xinclude $(srcdir)/devhelp.xsl $(srcdir)/index.xml > vala.devhelp2
 
 book_sources = \
 	index.xml \

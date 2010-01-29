@@ -41,12 +41,12 @@ vapicheck_SOURCES = \
 	$(NULL)
 
 vapigen.vala.stamp: $(vapigen_VALASOURCES)
-	$(VALAC) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
-	touch $@
+	$(VALA_V)$(VALAC) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
+	@touch $@
 
 vapicheck.vala.stamp: $(vapicheck_VALASOURCES)
-	$(VALAC) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
-	touch $@
+	$(VALA_V)$(VALAC) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala --vapidir ../gobject-introspection --pkg gidl --pkg config $^
+	@touch $@
 
 vapigen_LDADD = \
 	$(GLIB_LIBS) \
@@ -67,3 +67,6 @@ MAINTAINERCLEANFILES = \
 	$(vapicheck_VALASOURCES:.vala=.c) \
 	$(NULL)
 
+VALA_V = $(VALA_V_$(V))
+VALA_V_ = $(VALA_V_$(AM_DEFAULT_VERBOSITY))
+VALA_V_0 = @echo "  VALAC " $^;

@@ -57,8 +57,8 @@ codegeninclude_HEADERS = \
 	$(NULL)
 
 codegen.vapi codegen.vala.stamp: $(libvala_la_VALASOURCES)
-	$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala -H valacodegen.h --library codegen $^
-	touch $@
+	$(VALA_V)$(VALAC) $(COVERAGE_VALAFLAGS) $(VALAFLAGS) -C --vapidir $(srcdir)/../vapi --pkg gobject-2.0 --vapidir ../gee --pkg gee --vapidir ../ccode --pkg ccode --vapidir ../vala --pkg vala -H valacodegen.h --library codegen $^
+	@touch $@
 
 libvala_la_LDFLAGS = -no-undefined
 
@@ -75,4 +75,8 @@ MAINTAINERCLEANFILES = \
 	valacodegen.h \
 	$(libvala_la_VALASOURCES:.vala=.c) \
 	$(NULL)
+
+VALA_V = $(VALA_V_$(V))
+VALA_V_ = $(VALA_V_$(AM_DEFAULT_VERBOSITY))
+VALA_V_0 = @echo "  VALAC " $^;
 

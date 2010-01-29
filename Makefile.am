@@ -39,7 +39,7 @@ pkgconfig_DATA = vala-1.0.pc
 .PHONY: bootstrap
 bootstrap: all
 	find $(top_srcdir) -name "*.vala.stamp" | xargs rm -f
-	$(MAKE) $(AM_MAKEFLAGS) all VALAC=$(abs_top_builddir)/compiler/valac
+	$(MAKE) $(AM_MAKEFLAGS) all VALAC=$(abs_top_builddir)/compiler/valac V=$V
 
 .PHONY: test
 test:
