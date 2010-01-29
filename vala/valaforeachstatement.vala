@@ -1,6 +1,6 @@
 /* valaforeachstatement.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -169,6 +169,9 @@ public class Vala.ForeachStatement : Block {
 		
 		if (collection_type.is_array ()) {
 			var array_type = (ArrayType) collection_type;
+
+			// can't use inline-allocated array for temporary variable
+			array_type.inline_allocated = false;
 
 			return check_without_iterator (analyzer, collection_type, array_type.element_type);
 		} else if (collection_type.compatible (analyzer.glist_type) || collection_type.compatible (analyzer.gslist_type)) {
