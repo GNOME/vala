@@ -228,12 +228,17 @@ internal class Vala.DBusServerModule : DBusClientModule {
 
 					cdecl = new CCodeDeclaration ("int");
 					cdecl.add_declarator (new CCodeVariableDeclarator (length_cname, new CCodeConstant ("0")));
-					if (param.direction != ParameterDirection.IN) {
-						out_prefragment.append (cdecl);
-						ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
+					if (!m.coroutine || param.direction == ParameterDirection.IN) {
+						if (param.direction != ParameterDirection.IN) {
+							out_prefragment.append (cdecl);
+							ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
+						} else {
+							in_prefragment.append (cdecl);
+							ccall.add_argument (new CCodeIdentifier (length_cname));
+						}
 					} else {
-						in_prefragment.append (cdecl);
-						ccall.add_argument (new CCodeIdentifier (length_cname));
+						out_prefragment.append (cdecl);
+						finish_ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier (length_cname)));
 					}
 				}
 			}
