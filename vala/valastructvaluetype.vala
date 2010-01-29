@@ -30,6 +30,33 @@ public class Vala.StructValueType : ValueType {
 		base (type_symbol);
 	}
 
+	public override bool is_invokable () {
+		var st = type_symbol as Struct;
+		if (st != null && st.default_construction_method != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public override DataType? get_return_type () {
+		var st = type_symbol as Struct;
+		if (st != null && st.default_construction_method != null) {
+			return st.default_construction_method.return_type;
+		} else {
+			return null;
+		}
+	}
+
+	public override List<FormalParameter>? get_parameters () {
+		var st = type_symbol as Struct;
+		if (st != null && st.default_construction_method != null) {
+			return st.default_construction_method.get_parameters ();
+		} else {
+			return null;
+		}
+	}
+
 	public override DataType copy () {
 		var result = new StructValueType ((Struct) type_symbol);
 		result.source_reference = source_reference;

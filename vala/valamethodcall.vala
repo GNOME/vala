@@ -186,6 +186,15 @@ public class Vala.MethodCall : Expression {
 		    ((call.symbol_reference is CreationMethod
 		      && call.symbol_reference.parent_symbol is Struct)
 		     || call.symbol_reference is Struct)) {
+			var cm = analyzer.find_current_method () as CreationMethod;
+			if (cm != null) {
+				if (cm.chain_up) {
+					error = true;
+					Report.error (source_reference, "Multiple constructor calls in the same constructor are not permitted");
+					return false;
+				}
+				cm.chain_up = true;
+			}
 			var struct_creation_expression = new ObjectCreationExpression ((MemberAccess) call, source_reference);
 			struct_creation_expression.struct_creation = true;
 			foreach (Expression arg in get_argument_list ()) {
