@@ -331,13 +331,13 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				method = method.base_interface_method;
 			}
 
-			return new CCodeIdentifier (generate_delegate_wrapper (method, dt.delegate_symbol));
+			return new CCodeIdentifier (generate_delegate_wrapper (method, dt.delegate_symbol, expr));
 		}
 
 		return base.get_implicit_cast_expression (source_cexpr, expression_type, target_type, expr);
 	}
 
-	private string generate_delegate_wrapper (Method m, Delegate d) {
+	private string generate_delegate_wrapper (Method m, Delegate d, CodeNode? node) {
 		string delegate_name;
 		var sig = d.parent_symbol as Signal;
 		var dynamic_sig = sig as DynamicSignal;
@@ -448,8 +448,13 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				arg = new CCodeIdentifier ("self");
 			} else {
 				// use first delegate parameter as instance
-				arg = new CCodeIdentifier ((d_params.get (0).ccodenode as CCodeFormalParameter).name);
-				i = 1;
+				if (d_params.size == 0) {
+					Report.error (node != null ? node.source_reference : null, "Cannot create delegate without target for instance method or closure");
+					arg = new CCodeConstant ("NULL");
+				} else {
+					arg = new CCodeIdentifier ((d_params.get (0).ccodenode as CCodeFormalParameter).name);
+					i = 1;
+				}
 			}
 			carg_map.set (get_param_pos (m.cinstance_parameter_position), arg);
 		}
