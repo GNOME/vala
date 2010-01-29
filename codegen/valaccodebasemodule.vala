@@ -2471,6 +2471,62 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		return equal_func;
 	}
 
+	private string generate_numeric_equal_function (Struct st) {
+		string equal_func = "_%sequal".printf (st.get_lower_case_cprefix ());
+
+		if (!add_wrapper (equal_func)) {
+			// wrapper already defined
+			return equal_func;
+		}
+		// declaration
+
+		var function = new CCodeFunction (equal_func, "gboolean");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("s1", "const " + st.get_cname () + "*"));
+		function.add_parameter (new CCodeFormalParameter ("s2", "const " + st.get_cname () + "*"));
+
+		// definition
+		var cblock = new CCodeBlock ();
+
+		// if (s1 == s2) return TRUE;
+		{
+			var block = new CCodeBlock ();
+			block.add_statement (new CCodeReturnStatement (new CCodeConstant ("TRUE")));
+
+			var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s1"), new CCodeIdentifier ("s2"));
+			var cif = new CCodeIfStatement (cexp, block);
+			cblock.add_statement (cif);
+		}
+		// if (s1 == NULL || s2 == NULL) return FALSE;
+		{
+			var block = new CCodeBlock ();
+			block.add_statement (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
+
+			var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s1"), new CCodeConstant ("NULL"));
+			var cif = new CCodeIfStatement (cexp, block);
+			cblock.add_statement (cif);
+
+			cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeIdentifier ("s2"), new CCodeConstant ("NULL"));
+			cif = new CCodeIfStatement (cexp, block);
+			cblock.add_statement (cif);
+		}
+		// return (*s1 == *s2);
+		{
+			var cexp = new CCodeBinaryExpression (CCodeBinaryOperator.EQUALITY, new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("s1")), new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("s2")));
+			cblock.add_statement (new CCodeReturnStatement (cexp));
+		}
+
+		// append to file
+
+		source_declarations.add_type_member_declaration (function.copy ());
+
+		function.block = cblock;
+		source_type_member_definition.append (function);
+
+		return equal_func;
+	}
+
 	private string generate_struct_dup_wrapper (ValueType value_type) {
 		string dup_func = "_%sdup".printf (value_type.type_symbol.get_lower_case_cprefix ());
 
@@ -4335,12 +4391,20 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		
 		if (expr.operator == BinaryOperator.EQUALITY ||
 		    expr.operator == BinaryOperator.INEQUALITY) {
-			var left_type = expr.left.value_type;
-			var right_type = expr.right.value_type;
+			var left_type = expr.left.target_type;
+			var right_type = expr.right.target_type;
 			make_comparable_cexpression (ref left_type, ref cleft, ref right_type, ref cright);
 
 			if (left_type is StructValueType && right_type is StructValueType) {
 				var equalfunc = generate_struct_equal_function ((Struct) left_type.data_type as Struct);
+				var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
+				ccall.add_argument (cleft);
+				ccall.add_argument (cright);
+				cleft = ccall;
+				cright = new CCodeConstant ("TRUE");
+			} else if ((left_type is IntegerType || left_type is FloatingType || left_type is BooleanType) && left_type.nullable &&
+			           (right_type is IntegerType || right_type is FloatingType || right_type is BooleanType) && right_type.nullable) {
+				var equalfunc = generate_numeric_equal_function ((Struct) left_type.data_type as Struct);
 				var ccall = new CCodeFunctionCall (new CCodeIdentifier (equalfunc));
 				ccall.add_argument (cleft);
 				ccall.add_argument (cright);

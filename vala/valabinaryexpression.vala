@@ -323,6 +323,20 @@ public class Vala.BinaryExpression : Expression {
 				return false;
 			}
 
+			left.target_type = left.value_type.copy ();
+			left.target_type.value_owned = false;
+			right.target_type = right.value_type.copy ();
+			right.target_type.value_owned = false;
+
+			if (left.value_type.nullable != right.value_type.nullable) {
+				// if only one operand is nullable, make sure the other operand is promoted to nullable as well
+				if (!left.value_type.nullable) {
+					left.target_type.nullable = true;
+				} else if (!right.value_type.nullable) {
+					right.target_type.nullable = true;
+				}
+			}
+
 			if (left.value_type.compatible (analyzer.string_type)
 			    && right.value_type.compatible (analyzer.string_type)) {
 				// string comparison
