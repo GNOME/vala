@@ -1,6 +1,6 @@
 /* valabinaryexpression.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -309,6 +309,13 @@ public class Vala.BinaryExpression : Expression {
 					Report.error (source_reference, "Relational operation not supported for types `%s' and `%s'".printf (left.value_type.to_string (), right.value_type.to_string ()));
 					return false;
 				}
+
+				left.target_type = left.value_type.copy ();
+				left.target_type.nullable = false;
+				left.target_type.value_owned = false;
+				right.target_type = right.value_type.copy ();
+				right.target_type.nullable = false;
+				right.target_type.value_owned = false;
 			}
 
 			value_type = analyzer.bool_type;
