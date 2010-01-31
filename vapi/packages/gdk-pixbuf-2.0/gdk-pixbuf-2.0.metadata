@@ -1,4 +1,4 @@
-Gdk cheader_filename="gdk-pixbuf/gdk-pixdata.h"
+Gdk cheader_filename="gdk-pixbuf/gdk-pixdata.h" gir_namespace="GdkPixbuf" gir_version="2.0"
 gdk_pixbuf_copy transfer_ownership="1"
 gdk_pixbuf_get_file_info.width is_out="1"
 gdk_pixbuf_get_file_info.height is_out="1"

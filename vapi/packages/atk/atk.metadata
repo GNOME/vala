@@ -1,3 +1,3 @@
-Atk cheader_filename="atk/atk.h"
+Atk cheader_filename="atk/atk.h" gir_namespace="Atk" gir_version="1.0"
 AtkRectangle is_value_type="1"
 

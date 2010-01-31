@@ -1,4 +1,4 @@
-Gtk cheader_filename="gtk/gtk.h"
+Gtk cheader_filename="gtk/gtk.h" gir_namespace="Gtk" gir_version="2.0"
 gtk_about_dialog_set_artists.artists is_array="1" no_array_length="1"
 gtk_about_dialog_set_authors.authors is_array="1" no_array_length="1"
 gtk_about_dialog_set_documenters.documenters is_array="1" no_array_length="1"

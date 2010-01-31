@@ -24,7 +24,7 @@
  *	Mathias Hasselmann <mathias.hasselmann@gmx.de>
  */
 
-[CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "glib.h")]
+[CCode (cprefix = "G", lower_case_cprefix = "g_", cheader_filename = "glib.h", gir_namespace = "GObject", gir_version = "2.0")]
 namespace GLib {
 	[CCode (type_id = "G_TYPE_GTYPE", marshaller_type_name = "GTYPE", get_value_function = "g_value_get_gtype", set_value_function = "g_value_set_gtype")]
 	public struct Type : ulong {

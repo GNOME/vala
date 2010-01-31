@@ -1,4 +1,4 @@
-Cogl cheader_filename="cogl/cogl.h"
+Cogl cheader_filename="cogl/cogl.h" gir_namespace="Cogl" gir_version="1.0"
 
 COGLint name="long"
 GLint name="long"

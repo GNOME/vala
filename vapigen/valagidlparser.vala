@@ -219,6 +219,10 @@ public class Vala.GIdlParser : CodeVisitor {
 					}
 				} else if (nv[0] == "lower_case_cprefix") {
 					ns.set_lower_case_cprefix (eval (nv[1]));
+				} else if (nv[0] == "gir_namespace") {
+					ns.source_reference.file.gir_namespace = eval (nv[1]);
+				} else if (nv[0] == "gir_version") {
+					ns.source_reference.file.gir_version = eval (nv[1]);
 				}
 			}
 		}

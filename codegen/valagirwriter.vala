@@ -37,6 +37,69 @@ public class Vala.GIRWriter : CodeVisitor {
 
 	private TypeSymbol gobject_type;
 
+	private class ExternalNamespaceWriter : CodeVisitor {
+		private struct GIRNamespace {
+			public GIRNamespace (string ns, string version) {
+				this.ns = ns; this.version = version;
+			}
+			public string ns;
+			public string version;
+			public bool equal (GIRNamespace g) {
+				return ((ns == g.ns) && (version == g.version));
+			}
+		}
+		private ArrayList<GIRNamespace?> externals = new ArrayList<GIRNamespace?> ((EqualFunc) GIRNamespace.equal);
+		private string gir_namespace;
+		private string gir_version;
+		private GIRWriter gir_writer;
+		private bool in_source_file = false;
+
+		public ExternalNamespaceWriter (GIRWriter gir_writer, string gir_namespace, string gir_version) {
+			this.gir_writer = gir_writer;
+			this.gir_namespace = gir_namespace;
+			this.gir_version = gir_version;
+		}
+
+		public override void visit_namespace (Namespace ns) {
+			if (!in_source_file) {
+				return;
+			}
+
+			if (ns.name == null)  {
+				ns.accept_children (this);
+				return;
+			}
+
+			if (!ns.external_package) {
+				ns.source_reference.file.gir_namespace = gir_namespace;
+				ns.source_reference.file.gir_version = gir_version;
+				return;
+			}
+
+			if (ns.source_reference.file.gir_namespace != null) {
+				GIRNamespace external = GIRNamespace (ns.source_reference.file.gir_namespace, ns.source_reference.file.gir_version);
+				if (!externals.contains (external)) {
+					externals.add (external);
+				}
+			} else {
+				Report.warning (ns.source_reference, "Namespace %s does not have a GIR namespace and version annotation".printf (ns.name));
+			}
+		}
+
+
+		public override void visit_source_file (SourceFile sf) {
+			in_source_file = true;
+			sf.accept_children (this);
+			in_source_file = false;
+		}
+
+		public void write_externals() {
+			foreach (var i in externals) {
+				gir_writer.write_gir_include(i.ns, i.version);
+			}
+		}
+	}
+
 	/**
 	 * Writes the public interface of the specified code context into the
 	 * specified file.
@@ -66,9 +129,9 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream.printf (">\n");
 		indent++;
 
-		// FIXME: find a way to include everything
-		write_gir_include ("GLib", "2.0");
-		write_gir_include ("GObject", "2.0");
+		ExternalNamespaceWriter env = new ExternalNamespaceWriter (this, gir_namespace, gir_version);
+		context.accept (env);
+		env.write_externals();
 
 		write_package (package);
 
@@ -80,7 +143,7 @@ public class Vala.GIRWriter : CodeVisitor {
 		stream = null;
 	}
 
-	private void write_gir_include (string name, string version) {
+	internal void write_gir_include (string name, string version) {
 		write_indent ();
 		stream.printf ("<include name=\"%s\" version=\"%s\"/>\n", name, version);
 	}
@@ -862,6 +925,13 @@ public class Vala.GIRWriter : CodeVisitor {
 	}
 
 	private string gi_type_name (TypeSymbol type_symbol) {
+		Symbol parent = type_symbol.parent_symbol;
+		if (parent is Namespace) {
+			Namespace ns = parent as Namespace;
+			if (ns.name != null && type_symbol.source_reference.file.gir_namespace != null) {
+				return "%s.%s".printf (type_symbol.source_reference.file.gir_namespace, type_symbol.name);
+			}
+		}
 		return vala_to_gi_type_name (type_symbol.get_full_name());
 	}
 
@@ -880,10 +950,6 @@ public class Vala.GIRWriter : CodeVisitor {
 			type_name.append_unichar ('.');
 			for (int i = 1; i < split_name.length; i++) {
 				type_name.append (split_name[i]);
-			}
-
-			if (type_name.str == "GLib.Object") {
-				return "GObject.Object";
 			}
 			return type_name.str;
 		}

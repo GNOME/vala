@@ -20,7 +20,7 @@
  * 	Jürg Billeter <j@bitron.ch>
  */
 
-[CCode (cheader_filename = "cairo.h")]
+[CCode (cheader_filename = "cairo.h", gir_namespace = "cairo", gir_version = "1.0")]
 namespace Cairo {
 	[Compact]
 	[CCode (ref_function = "cairo_reference", unref_function = "cairo_destroy", cname = "cairo_t", cprefix = "cairo_", cheader_filename = "cairo.h")]

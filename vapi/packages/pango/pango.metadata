@@ -1,4 +1,4 @@
-Pango cheader_filename="pango/pango.h"
+Pango cheader_filename="pango/pango.h" gir_namespace="Pango" gir_version="1.0"
 pango_attribute_copy transfer_ownership="1"
 PangoAttrColor base_class="PangoAttribute" free_function="pango_attribute_destroy"
 PangoAttrColor.attr hidden="1"

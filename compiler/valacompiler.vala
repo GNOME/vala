@@ -397,17 +397,6 @@ class Vala.Compiler {
 			vapi_filename = "%s.vapi".printf (library);
 		}
 
-		if (vapi_filename != null) {
-			var interface_writer = new CodeWriter ();
-
-			// put .vapi file in current directory unless -d has been explicitly specified
-			if (directory != null && !Path.is_absolute (vapi_filename)) {
-				vapi_filename = "%s%c%s".printf (context.directory, Path.DIR_SEPARATOR, vapi_filename);
-			}
-
-			interface_writer.write_file (context, vapi_filename);
-		}
-
 		if (library != null) {
 			if (gir != null) {
 				if (context.profile == Profile.GOBJECT) {
@@ -442,6 +431,19 @@ class Vala.Compiler {
 
 			library = null;
 		}
+
+		// The GIRWriter places the gir_namespace and gir_version into the top namespace, so write the vapi after that stage
+		if (vapi_filename != null) {
+			var interface_writer = new CodeWriter ();
+
+			// put .vapi file in current directory unless -d has been explicitly specified
+			if (directory != null && !Path.is_absolute (vapi_filename)) {
+				vapi_filename = "%s%c%s".printf (context.directory, Path.DIR_SEPARATOR, vapi_filename);
+			}
+
+			interface_writer.write_file (context, vapi_filename);
+		}
+
 		if (internal_vapi_filename != null) {
 			if (internal_header_filename == null ||
 			    header_filename == null) {

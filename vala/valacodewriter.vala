@@ -95,7 +95,18 @@ public class Vala.CodeWriter : CodeVisitor {
 		}
 
 		write_indent ();
-		write_string ("[CCode (cprefix = \"%s\", lower_case_cprefix = \"%s\")]".printf (ns.get_cprefix (), ns.get_lower_case_cprefix ()));
+		write_string ("[CCode (cprefix = \"%s\", lower_case_cprefix = \"%s\"".printf (ns.get_cprefix (), ns.get_lower_case_cprefix ()));
+
+		if (ns.source_reference.file.gir_namespace != null) {
+			write_string (", ");
+			write_string ("gir_namespace = \"%s\"".printf (ns.source_reference.file.gir_namespace));
+		}
+		if (ns.source_reference.file.gir_version != null) {
+			write_string(", ");
+			write_string ("gir_version = \"%s\"".printf (ns.source_reference.file.gir_version));
+		}
+
+		write_string (")]");
 		write_newline ();
 
 		write_attributes (ns);

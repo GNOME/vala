@@ -38,6 +38,18 @@ public class Vala.SourceFile {
 	public bool external_package { get; set; }
 
 	/**
+	 *  GIR Namespace for this source file, if it's a VAPI package
+	 */
+
+	public string gir_namespace { get; set; }
+
+	/**
+	 *  GIR Namespace version for this source file, if it's a VAPI package
+	 */
+
+	public string gir_version { get; set; }
+
+	/**
 	 * The context this source file belongs to.
 	 */
 	public weak CodeContext context { get; set; }

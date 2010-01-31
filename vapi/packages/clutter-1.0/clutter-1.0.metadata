@@ -1,4 +1,4 @@
-Clutter cheader_filename="clutter/clutter.h"
+Clutter cheader_filename="clutter/clutter.h" gir_namespace="Clutter" gir_version="1.0"
 
 ClutterActor:clip accessor_method="0"
 ClutterActor:scale_gravity accessor_method="1"

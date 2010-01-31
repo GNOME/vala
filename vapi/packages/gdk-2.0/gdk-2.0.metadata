@@ -1,4 +1,4 @@
-Gdk cheader_filename="gdk/gdk.h"
+Gdk cheader_filename="gdk/gdk.h" gir_namespace="Gdk" gir_version="2.0"
 gdk_add_client_message_filter.data hidden="1"
 GdkAppLaunchContextClass hidden="1"
 GdkAtom is_value_type="1" simple_type="1"

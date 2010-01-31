@@ -562,8 +562,14 @@ public class Vala.Namespace : Symbol {
 				cheader_filenames.add (filename);
 			}
 		}
+		if (a.has_argument ("gir_namespace")) {
+			source_reference.file.gir_namespace = a.get_string ("gir_namespace");
+		}
+		if (a.has_argument ("gir_version")) {
+			source_reference.file.gir_version = a.get_string ("gir_version");
+		}
 	}
-	
+
 	/**
 	 * Process all associated attributes.
 	 */

@@ -1,4 +1,4 @@
-Pango cheader_filename="pango/pangocairo.h"
+Pango cheader_filename="pango/pangocairo.h" gir_namespace="PangoCairo" gir_version="1.0"
 
 pango_cairo_create_context transfer_ownership="1"
 pango_cairo_create_layout transfer_ownership="1"
