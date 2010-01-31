@@ -418,7 +418,7 @@ namespace Cairo {
 		public SurfaceType get_type ();
 
 		public Status write_to_png (string filename);
-		public Status write_to_png_stream (WriteFunc write_func, void* closure);
+		public Status write_to_png_stream (WriteFunc write_func);
 	}
 	
 	[CCode (cname = "cairo_content_t")]
@@ -469,7 +469,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_image_surface_create_from_png")]
 		public ImageSurface.from_png (string filename);
 		[CCode (cname = "cairo_image_surface_create_from_png_stream")]
-		public ImageSurface.from_png_stream (ReadFunc read_func, void* closure);
+		public ImageSurface.from_png_stream (ReadFunc read_func);
 	}
 	
 	[Compact]
@@ -478,12 +478,14 @@ namespace Cairo {
 		[CCode (cname = "cairo_pdf_surface_create")]
 		public PdfSurface (string filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_pdf_surface_create_for_stream")]
-		public PdfSurface.for_stream (WriteFunc write_func, void* closure, double width_in_points, double height_in_points);
+		public PdfSurface.for_stream (WriteFunc write_func, double width_in_points, double height_in_points);
 		public void set_size (double width_in_points, double height_in_points);
 	}
 	
-	public static delegate Status ReadFunc (void* closure, uchar[] data);
-	public static delegate Status WriteFunc (void* closure, uchar[] data);
+	[CCode (instance_pos = 0)]
+	public delegate Status ReadFunc (uchar[] data);
+	[CCode (instance_pos = 0)]
+	public delegate Status WriteFunc (uchar[] data);
 	
 	[Compact]
 	[CCode (cname = "cairo_surface_t", cheader_filename = "cairo-ps.h")]
@@ -491,7 +493,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_ps_surface_create")]
 		public PsSurface (string filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_ps_surface_create_for_stream")]
-		public PsSurface.for_stream (WriteFunc write_func, void* closure, double width_in_points, double height_in_points);
+		public PsSurface.for_stream (WriteFunc write_func, double width_in_points, double height_in_points);
 		public void set_size (double width_in_points, double height_in_points);
 		public void dsc_begin_setup ();
 		public void dsc_begin_page_setup ();
@@ -504,7 +506,7 @@ namespace Cairo {
 		[CCode (cname = "cairo_svg_surface_create")]
 		public SvgSurface (string filename, double width_in_points, double height_in_points);
 		[CCode (cname = "cairo_svg_surface_create_for_stream")]
-		public SvgSurface.for_stream (WriteFunc write_func, void* closure, double width_in_points, double height_in_points);
+		public SvgSurface.for_stream (WriteFunc write_func, double width_in_points, double height_in_points);
 		public void restrict_to_version (SvgVersion version);
 		public static void get_versions (out SvgVersion[] versions);
 	}
