@@ -48,35 +48,60 @@ namespace Fuse {
 		void *private_data;
 	}
 
-	[CCode (cname = "fuse_fill_dir_t")]
-	public static delegate int FillDir (void* buf, string name, Posix.Stat? st, Posix.off_t offset);
+	[CCode (cname = "fuse_fill_dir_t", has_target = false)]
+	public delegate int FillDir (void* buf, string name, Posix.Stat? st, Posix.off_t offset);
 
-	public static delegate int GetAttr (string path, Posix.Stat* st);
-	public static delegate int Access (string path, int mask);
-	public static delegate int ReadLink (string path, char* buf, size_t size);
-	public static delegate int ReadDir (string path, void* buf, FillDir filler, Posix.off_t offset, FileInfo fi);
-	public static delegate int MkNod (string path, Posix.mode_t mode, Posix.dev_t rdev);
-	public static delegate int MkDir (string path, Posix.mode_t mode);
-	public static delegate int Unlink (string path);
-	public static delegate int RmDir (string path);
-	public static delegate int Symlink (string from, string to);
-	public static delegate int Rename (string from, string to);
-	public static delegate int Link (string from, string to);
-	public static delegate int Chmod (string path, Posix.mode_t mode);
-	public static delegate int Chown (string path, Posix.uid_t uid, Posix.gid_t gid);
-	public static delegate int Truncate (string path, Posix.off_t size);
-	public static delegate int Utimens (string path, Posix.timespec[] ts);
-	public static delegate int Open (string path, FileInfo fi);
-	public static delegate int Read (string path, char* buf, size_t size, Posix.off_t offset, FileInfo fi);
-	public static delegate int Write (string path, char* buf, size_t size, Posix.off_t offset, FileInfo fi);
-	public static delegate int StatFs (string path, Posix.statvfs *stbuf);
-	public static delegate int Release (string path, FileInfo fi);
-	public static delegate int Fsync (string path, int isdatasync, FileInfo fi);
+	[CCode (has_target = false)]
+	public delegate int GetAttr (string path, Posix.Stat* st);
+	[CCode (has_target = false)]
+	public delegate int Access (string path, int mask);
+	[CCode (has_target = false)]
+	public delegate int ReadLink (string path, char* buf, size_t size);
+	[CCode (has_target = false)]
+	public delegate int ReadDir (string path, void* buf, FillDir filler, Posix.off_t offset, FileInfo fi);
+	[CCode (has_target = false)]
+	public delegate int MkNod (string path, Posix.mode_t mode, Posix.dev_t rdev);
+	[CCode (has_target = false)]
+	public delegate int MkDir (string path, Posix.mode_t mode);
+	[CCode (has_target = false)]
+	public delegate int Unlink (string path);
+	[CCode (has_target = false)]
+	public delegate int RmDir (string path);
+	[CCode (has_target = false)]
+	public delegate int Symlink (string from, string to);
+	[CCode (has_target = false)]
+	public delegate int Rename (string from, string to);
+	[CCode (has_target = false)]
+	public delegate int Link (string from, string to);
+	[CCode (has_target = false)]
+	public delegate int Chmod (string path, Posix.mode_t mode);
+	[CCode (has_target = false)]
+	public delegate int Chown (string path, Posix.uid_t uid, Posix.gid_t gid);
+	[CCode (has_target = false)]
+	public delegate int Truncate (string path, Posix.off_t size);
+	[CCode (has_target = false)]
+	public delegate int Utimens (string path, Posix.timespec[] ts);
+	[CCode (has_target = false)]
+	public delegate int Open (string path, FileInfo fi);
+	[CCode (has_target = false)]
+	public delegate int Read (string path, char* buf, size_t size, Posix.off_t offset, FileInfo fi);
+	[CCode (has_target = false)]
+	public delegate int Write (string path, char* buf, size_t size, Posix.off_t offset, FileInfo fi);
+	[CCode (has_target = false)]
+	public delegate int StatFs (string path, Posix.statvfs *stbuf);
+	[CCode (has_target = false)]
+	public delegate int Release (string path, FileInfo fi);
+	[CCode (has_target = false)]
+	public delegate int Fsync (string path, int isdatasync, FileInfo fi);
 
-	public static delegate int SetXAttr (string path, string name, char* value, size_t size, int flags);
-	public static delegate int GetXAttr (string path, string name, char* value, size_t size);
-	public static delegate int ListXAttr (string path, char* list, size_t size);
-	public static delegate int RemoveXAttr (string path, string name);
+	[CCode (has_target = false)]
+	public delegate int SetXAttr (string path, string name, char* value, size_t size, int flags);
+	[CCode (has_target = false)]
+	public delegate int GetXAttr (string path, string name, char* value, size_t size);
+	[CCode (has_target = false)]
+	public delegate int ListXAttr (string path, char* list, size_t size);
+	[CCode (has_target = false)]
+	public delegate int RemoveXAttr (string path, string name);
 
 	[CCode (cname = "struct fuse_operations")]
 	public struct Operations {

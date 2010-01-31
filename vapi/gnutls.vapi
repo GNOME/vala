@@ -425,8 +425,8 @@ namespace GnuTLS
 		public bool deinit;
 	}
 
-	[CCode (cname = "gnutls_params_function *")]
-	public static delegate int ParamsFunction (Session session, ParamsType type, Params params);
+	[CCode (cname = "gnutls_params_function *", has_target = false)]
+	public delegate int ParamsFunction (Session session, ParamsType type, Params params);
 
 	[CCode (cname = "gnutls_oprfi_callback_func", instance_pos = "1.2")]
 	public delegate int OprfiCallbackFunc (Session session,
@@ -447,24 +447,24 @@ namespace GnuTLS
 	[CCode (cname = "TLS_RANDOM_SIZE")]
 	public const int TLS_RANDOM_SIZE;
 
-	[CCode (cname = "gnutls_db_store_func")]
-	public static delegate int DBStoreFunc (void* ptr, Datum key, Datum data);
-	[CCode (cname = "gnutls_db_remove_func")]
-	public static delegate int DBRemoveFunc (void* ptr, Datum key);
-	[CCode (cname = "gnutls_db_retr_func")]
-	public static delegate Datum DBRetrieveFunc (void* ptr, Datum key);
+	[CCode (cname = "gnutls_db_store_func", has_target = false)]
+	public delegate int DBStoreFunc (void* ptr, Datum key, Datum data);
+	[CCode (cname = "gnutls_db_remove_func", has_target = false)]
+	public delegate int DBRemoveFunc (void* ptr, Datum key);
+	[CCode (cname = "gnutls_db_retr_func", has_target = false)]
+	public delegate Datum DBRetrieveFunc (void* ptr, Datum key);
 
-	[CCode (cname = "gnutls_handshake_post_client_hello_func")]
-	public static delegate int HandshakePostClientHelloFunc (Session session);
+	[CCode (cname = "gnutls_handshake_post_client_hello_func", has_target = false)]
+	public delegate int HandshakePostClientHelloFunc (Session session);
 
 	// External signing callback.  Experimental.
 	[CCode (cname = "gnutls_sign_func", instance_pos = "1.9")]
 	public delegate int SignFunc (Session session, CertificateType cert_type, /* const */ ref Datum cert, /* const */ ref Datum hash, out Datum signature);
 
-	[CCode (cname = "gnutls_pull_func")]
-	public static delegate ssize_t PullFunc (void* transport_ptr, void* buffer, size_t count);
-	[CCode (cname = "gnutls_push_func")]
-	public static delegate ssize_t PushFunc (void* transport_ptr, void* buffer, size_t count);
+	[CCode (cname = "gnutls_pull_func", has_target = false)]
+	public delegate ssize_t PullFunc (void* transport_ptr, void* buffer, size_t count);
+	[CCode (cname = "gnutls_push_func", has_target = false)]
+	public delegate ssize_t PushFunc (void* transport_ptr, void* buffer, size_t count);
 
 	[Compact]
 	[CCode (cname = "struct gnutls_session_int", free_function = "gnutls_deinit")]
@@ -1290,7 +1290,8 @@ namespace GnuTLS
 		* gnutls_openpgp_set_recv_key_function().
 		*
 		*/
-		public static delegate int RecvKeyFunc (Session session, uint8[] keyfpr, out Datum key);
+		[CCode (has_target = false)]
+		public delegate int RecvKeyFunc (Session session, uint8[] keyfpr, out Datum key);
 
 		[CCode (cname = "gnutls_openpgp_crt_fmt_t", cprefix = "GNUTLS_OPENPGP_FMT_")]
 		public enum CertificateFormat {
@@ -1434,11 +1435,10 @@ namespace GnuTLS
 	}
 
 
-
-	[CCode (cname = "gnutls_certificate_client_retrieve_function *")]
-	public static delegate int ClientCertificateRetrieveFunction (Session session, Datum[] req_ca_rdn, PKAlgorithm[] pk_algos, out RetrStruct st);
-	[CCode (cname = "gnutls_certificate_server_retrieve_function *")]
-	public static delegate int ServerCertificateRetrieveFunction (Session session, out RetrStruct st);
+	[CCode (cname = "gnutls_certificate_client_retrieve_function *", has_target = false)]
+	public delegate int ClientCertificateRetrieveFunction (Session session, Datum[] req_ca_rdn, PKAlgorithm[] pk_algos, out RetrStruct st);
+	[CCode (cname = "gnutls_certificate_server_retrieve_function *", has_target = false)]
+	public delegate int ServerCertificateRetrieveFunction (Session session, out RetrStruct st);
 
 	[Compact]
 	[CCode (cname = "struct gnutls_certificate_credentials_st",
@@ -1525,16 +1525,16 @@ namespace GnuTLS
 	[CCode (cname = "gnutls_strdup")]
 	public string strdup (string str);
 
-	[CCode (cname = "gnutls_alloc_function")]
-	public static delegate void* AllocFunction (size_t size);
-	[CCode (cname = "gnutls_calloc_function")]
-	public static delegate void* CallocFunction (size_t count, size_t block_size);
-	[CCode (cname = "gnutls_is_secure_function")]
-	public static delegate int IsSecureFunction (void* ptr);
-	[CCode (cname = "gnutls_free_function")]
-	public static delegate void FreeFunction (void* ptr);
-	[CCode (cname = "gnutls_realloc_function")]
-	public static delegate void* ReallocFunction (void* ptr, size_t new_size);
+	[CCode (cname = "gnutls_alloc_function", has_target = false)]
+	public delegate void* AllocFunction (size_t size);
+	[CCode (cname = "gnutls_calloc_function", has_target = false)]
+	public delegate void* CallocFunction (size_t count, size_t block_size);
+	[CCode (cname = "gnutls_is_secure_function", has_target = false)]
+	public delegate int IsSecureFunction (void* ptr);
+	[CCode (cname = "gnutls_free_function", has_target = false)]
+	public delegate void FreeFunction (void* ptr);
+	[CCode (cname = "gnutls_realloc_function", has_target = false)]
+	public delegate void* ReallocFunction (void* ptr, size_t new_size);
 
 	public int global_init ();
 	public void global_deinit ();
@@ -1544,8 +1544,8 @@ namespace GnuTLS
 	                               IsSecureFunction is_secure_func, ReallocFunction realloc_func,
 	                               FreeFunction free_func);
 
-	[CCode (cname = "gnutls_log_func")]
-	public static delegate void LogFunc (int level, string msg);
+	[CCode (cname = "gnutls_log_func", has_target = false)]
+	public delegate void LogFunc (int level, string msg);
 	[CCode (cname = "gnutls_global_set_log_function")]
 	public void set_log_function (LogFunc func);
 	[CCode (cname = "gnutls_global_set_log_level")]
@@ -1556,10 +1556,10 @@ namespace GnuTLS
 
 // SRP stuff
 
-	[CCode (cname = "gnutls_srp_server_credentials_function *")]
-	public static delegate int SRPServerCredentialsFunction (Session session, string username,
-	                                                         out Datum salt, out Datum verifier,
-	                                                         out Datum generator, out Datum prime);
+	[CCode (cname = "gnutls_srp_server_credentials_function *", has_target = false)]
+	public delegate int SRPServerCredentialsFunction (Session session, string username,
+                                                       out Datum salt, out Datum verifier,
+                                                       out Datum generator, out Datum prime);
 
 	[Compact]
 	[CCode (cname = "struct gnutls_srp_server_credentials_st", free_function = "gnutls_srp_free_server_credentials")]
@@ -1586,8 +1586,8 @@ namespace GnuTLS
 		public void set_credentials_function (SRPServerCredentialsFunction func);
 	}
 
-	[CCode (cname = "gnutls_srp_client_credentials_function *")]
-	public static delegate int SRPClientCredentialsFunction (Session session, out string username, out string password);
+	[CCode (cname = "gnutls_srp_client_credentials_function *", has_target = false)]
+	public delegate int SRPClientCredentialsFunction (Session session, out string username, out string password);
 
 	[Compact]
 	[CCode (cname = "struct gnutls_srp_client_credentials_st", free_function = "gnutls_srp_free_client_credentials")]
@@ -1652,8 +1652,8 @@ namespace GnuTLS
 		HEX
 	}
 
-	[CCode (cname = "gnutls_psk_server_credentials_function *")]
-	public static delegate int PSKServerCredentialsFunction (Session session, string username, /* const */ ref Datum key);
+	[CCode (cname = "gnutls_psk_server_credentials_function *", has_target = false)]
+	public delegate int PSKServerCredentialsFunction (Session session, string username, /* const */ ref Datum key);
 
 	[Compact]
 	[CCode (cname = "struct gnutls_psk_server_credentials_st", free_function = "gnutls_psk_free_server_credentials")]
@@ -1686,8 +1686,8 @@ namespace GnuTLS
 		public void set_params_function (ParamsFunction func);
 	}
 
-	[CCode (cname = "gnutls_psk_client_credentials_function *")]
-	public static delegate int PSKClientCredentialsFunction (Session session, out string username, out Datum key);
+	[CCode (cname = "gnutls_psk_client_credentials_function *", has_target = false)]
+	public delegate int PSKClientCredentialsFunction (Session session, out string username, out Datum key);
 
 	[Compact]
 	[CCode (cname = "struct gnutls_psk_client_credentials_st", free_function = "gnutls_psk_free_client_credentials")]

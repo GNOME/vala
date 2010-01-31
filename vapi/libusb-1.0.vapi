@@ -303,7 +303,8 @@ namespace LibUSB {
 		public TransferStatus status;
 	}
 
-	public static delegate void transfer_cb_fn (Transfer transfer);
+	[CCode (has_target = false)]
+	public delegate void transfer_cb_fn (Transfer transfer);
 
 	[Compact, CCode (cname = "struct libusb_transfer", cprefix = "libusb_", free_function = "libusb_free_transfer")]
 	public class Transfer {
@@ -346,8 +347,10 @@ namespace LibUSB {
 		public unowned uchar[] get_iso_packet_buffer_simple (int packet);
 	}
 
-	public static delegate void pollfd_added_cb (int fd, short events, void* user_data);
-	public static delegate void pollfd_removed_cb (int fd, void* user_data);
+	[CCode (has_target = false)]
+	public delegate void pollfd_added_cb (int fd, short events, void* user_data);
+	[CCode (has_target = false)]
+	public delegate void pollfd_removed_cb (int fd, void* user_data);
 
 	[Compact, CCode (cname = "struct libusb_pollfd")]
 	public class PollFD {

@@ -22,8 +22,10 @@
 
 [CCode (cheader_filename = "libhal.h", cprefix = "LibHal")]
 namespace Hal {
-	public static delegate void DeviceAdded (Context ctx, string udi);
-	public static delegate void DeviceRemoved (Context ctx, string udi);
+	[CCode (has_target = false)]
+	public delegate void DeviceAdded (Context ctx, string udi);
+	[CCode (has_target = false)]
+	public delegate void DeviceRemoved (Context ctx, string udi);
 
 	[CCode (free_function = "libhal_ctx_free", cprefix = "libhal_ctx_")]
 	[Compact]

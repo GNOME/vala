@@ -146,27 +146,27 @@ namespace Osso {
 	}
 
 	/* Callbacks */
-	[CCode (cname = "osso_rpc_cb_f")]
-	public static delegate int RpcCallback (string iface, string method, GLib.Array arguments, void* data, out Rpc rpc);
-	[CCode (cname = "osso_rpc_async_f")]
-	public static delegate int RpcAsync (string iface, string method, out Rpc rpc, void* data);
+	[CCode (cname = "osso_rpc_cb_f", has_target = false)]
+	public delegate int RpcCallback (string iface, string method, GLib.Array arguments, void* data, out Rpc rpc);
+	[CCode (cname = "osso_rpc_async_f", has_target = false)]
+	public delegate int RpcAsync (string iface, string method, out Rpc rpc, void* data);
 
-	[CCode (cname = "osso_application_top_cb_f")]
-	public static delegate void ApplicationTopCallback (string arguments, void* data);
-	[CCode (cname = "osso_application_autosave_cb_f")]
-	public static delegate void ApplicationAutosaveCallback (void* data);
-	[CCode (cname = "osso_time_cb_f")]
-	public static delegate void TimeCallback (void* data);
-	[CCode (cname = "osso_locale_change_cb_f")]
-	public static delegate void LocaleChangeCallback (string new_locale, void* data);
-	[CCode (cname = "osso_display_event_cb_f")]
-	public static delegate void DisplayEventCallback (DisplayState state, void* data);
+	[CCode (cname = "osso_application_top_cb_f", has_target = false)]
+	public delegate void ApplicationTopCallback (string arguments, void* data);
+	[CCode (cname = "osso_application_autosave_cb_f", has_target = false)]
+	public delegate void ApplicationAutosaveCallback (void* data);
+	[CCode (cname = "osso_time_cb_f", has_target = false)]
+	public delegate void TimeCallback (void* data);
+	[CCode (cname = "osso_locale_change_cb_f", has_target = false)]
+	public delegate void LocaleChangeCallback (string new_locale, void* data);
+	[CCode (cname = "osso_display_event_cb_f", has_target = false)]
+	public delegate void DisplayEventCallback (DisplayState state, void* data);
 
-	[CCode (cname = "osso_hw_cb_f*")]
-	public static delegate void HWCallback (ref HWState state, void* data);
+	[CCode (cname = "osso_hw_cb_f*", has_target = false)]
+	public delegate void HWCallback (ref HWState state, void* data);
 
-	[CCode (cname = "osso_mime_cb_f")]
-	public static delegate void MimeCallback (void* data, string[] args);
+	[CCode (cname = "osso_mime_cb_f", has_target = false)]
+	public delegate void MimeCallback (void* data, string[] args);
 
 	/* Structs */
 	[CCode (cname = "osso_state_t")]

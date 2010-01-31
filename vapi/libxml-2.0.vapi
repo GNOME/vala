@@ -26,11 +26,11 @@
 namespace Xml {
 	/* nanoftp - minimal FTP implementation */
 
-	[CCode (cname = "ftpDataCallback", cheader_filename = "libxml/nanoftp.h")]
-	public static delegate void FtpDataCallback (void* userData, [CCode (array_length = false)] char[] data, int len);
+	[CCode (cname = "ftpDataCallback", cheader_filename = "libxml/nanoftp.h", has_target = false)]
+	public delegate void FtpDataCallback (void* userData, [CCode (array_length = false)] char[] data, int len);
 
-	[CCode (cname = "ftpListCallback", cheader_filename = "libxml/nanoftp.h")]
-	public static delegate void FtpListCallback (void* userData, string filename, string attrib, string owner, string group, ulong size, int links, int year, string month, int day, int hour, int minute);
+	[CCode (cname = "ftpListCallback", cheader_filename = "libxml/nanoftp.h", has_target = false)]
+	public delegate void FtpListCallback (void* userData, string filename, string attrib, string owner, string group, ulong size, int links, int year, string month, int day, int hour, int minute);
 
 	[Compact]
 	[CCode (cname = "void", free_function = "xmlNanoFTPFreeCtxt", cheader_filename = "libxml/nanoftp.h")]
@@ -802,11 +802,11 @@ namespace Xml {
 
 	/* xmlIO - interface for the I/O interfaces used by the parser */
 
-	[CCode (cname = "xmlInputCloseCallback", cheader_filename = "libxml/xmlIO.h")]
-	public static delegate int InputCloseCallback (void* context);
+	[CCode (cname = "xmlInputCloseCallback", cheader_filename = "libxml/xmlIO.h", has_target = false)]
+	public delegate int InputCloseCallback (void* context);
 
-	[CCode (cname = "xmlInputReadCallback", cheader_filename = "libxml/xmlIO.h")]
-	public static delegate int InputReadCallback (void* context, [CCode (array_length = false)] char[] buffer, int len);
+	[CCode (cname = "xmlInputReadCallback", cheader_filename = "libxml/xmlIO.h", has_target = false)]
+	public delegate int InputReadCallback (void* context, [CCode (array_length = false)] char[] buffer, int len);
 
 
 	/* xmlschemas - incomplete XML Schemas structure implementation */
@@ -1101,7 +1101,8 @@ namespace Xml {
 		READING
 	}
 
-	public static delegate void TextReaderErrorFunc (void* arg, string msg, ParserSeverities severity, TextReaderLocator* locator);
+	[CCode (has_target = false)]
+	public delegate void TextReaderErrorFunc (void* arg, string msg, ParserSeverities severity, TextReaderLocator* locator);
 
 
 	/* xpath - XML Path Language implementation */
@@ -1205,98 +1206,98 @@ namespace Xml {
 
 	/* SAX CALLBACKS */
 
-	[CCode (cname = "attributeDeclSAXFunc")]
-	public static delegate void attributeDeclSAXFunc (void* ctx, string elem, string fullname, int type, int def, string defaultValue, Enumeration* tree);
+	[CCode (cname = "attributeDeclSAXFunc", has_target = false)]
+	public delegate void attributeDeclSAXFunc (void* ctx, string elem, string fullname, int type, int def, string defaultValue, Enumeration* tree);
 
-	[CCode (cname = "attributeSAXFunc")]
-	public static delegate void attributeSAXFunc (void* ctx, string name, string value);
+	[CCode (cname = "attributeSAXFunc", has_target = false)]
+	public delegate void attributeSAXFunc (void* ctx, string name, string value);
 
-	[CCode (cname = "cdataBlockSAXFunc")]
-	public static delegate void cdataBlockSAXFunc (void* ctx, string value, int len);
+	[CCode (cname = "cdataBlockSAXFunc", has_target = false)]
+	public delegate void cdataBlockSAXFunc (void* ctx, string value, int len);
 
-	[CCode (cname = "charactersSAXFunc")]
-	public static delegate void charactersSAXFunc (void* ctx, string ch, int len);
+	[CCode (cname = "charactersSAXFunc", has_target = false)]
+	public delegate void charactersSAXFunc (void* ctx, string ch, int len);
 
-	[CCode (cname = "commentsSAXFunc")]
-	public static delegate void commentSAXFunc (void* ctx, string value);
+	[CCode (cname = "commentsSAXFunc", has_target = false)]
+	public delegate void commentSAXFunc (void* ctx, string value);
 
-	[CCode (cname = "elementDeclSAXFunc")]
-	public static delegate void elementDeclSAXFunc (void* ctx, string name, int type, ElementContent content);
+	[CCode (cname = "elementDeclSAXFunc", has_target = false)]
+	public delegate void elementDeclSAXFunc (void* ctx, string name, int type, ElementContent content);
 
-	[CCode (cname = "endDocumentSAXFunc")]
-	public static delegate void endDocumentSAXFunc (void* ctx);
+	[CCode (cname = "endDocumentSAXFunc", has_target = false)]
+	public delegate void endDocumentSAXFunc (void* ctx);
 
-	[CCode (cname = "endElementNsSAX2Func")]
-	public static delegate void endElementNsSAX2Func (void* ctx, string localname, string prefix, string URI);
+	[CCode (cname = "endElementNsSAX2Func", has_target = false)]
+	public delegate void endElementNsSAX2Func (void* ctx, string localname, string prefix, string URI);
 
-	[CCode (cname = "endElementSAXFunc")]
-	public static delegate void endElementSAXFunc (void* ctx, string name);
+	[CCode (cname = "endElementSAXFunc", has_target = false)]
+	public delegate void endElementSAXFunc (void* ctx, string name);
 
-	[CCode (cname = "entityDeclSAXFunc")]
-	public static delegate void entityDeclSAXFunc (void* ctx, string name, int type, string publicId, string systemId, string content);
+	[CCode (cname = "entityDeclSAXFunc", has_target = false)]
+	public delegate void entityDeclSAXFunc (void* ctx, string name, int type, string publicId, string systemId, string content);
 
-	[CCode (cname = "errorSAXFunc")]
-	public static delegate void errorSAXFunc (void* ctx, string msg, ...);
+	[CCode (cname = "errorSAXFunc", has_target = false)]
+	public delegate void errorSAXFunc (void* ctx, string msg, ...);
 
-	[CCode (cname = "externalSubsetSAXFunc")]
-	public static delegate void externalSubsetSAXFunc (void* ctx, string name, string ExternalID, string SystemID);
+	[CCode (cname = "externalSubsetSAXFunc", has_target = false)]
+	public delegate void externalSubsetSAXFunc (void* ctx, string name, string ExternalID, string SystemID);
 
-	[CCode (cname = "fatalErrorSAXFunc")]
-	public static delegate void fatalErrorSAXFunc (void* ctx, string msg, ...);
+	[CCode (cname = "fatalErrorSAXFunc", has_target = false)]
+	public delegate void fatalErrorSAXFunc (void* ctx, string msg, ...);
 
-	[CCode (cname = "getEntitySAXFunc")]
-	public static delegate Entity* getEntitySAXFunc (void* ctx, string name);
+	[CCode (cname = "getEntitySAXFunc", has_target = false)]
+	public delegate Entity* getEntitySAXFunc (void* ctx, string name);
 
-	[CCode (cname = "getParameterEntitySAXFunc")]
-	public static delegate Entity* getParameterEntitySAXFunc (void* ctx, string name);
+	[CCode (cname = "getParameterEntitySAXFunc", has_target = false)]
+	public delegate Entity* getParameterEntitySAXFunc (void* ctx, string name);
 
-	[CCode (cname = "hasExternalSubsetSAXFunc")]
-	public static delegate int hasExternalSubsetSAXFunc (void* ctx);
+	[CCode (cname = "hasExternalSubsetSAXFunc", has_target = false)]
+	public delegate int hasExternalSubsetSAXFunc (void* ctx);
 
-	[CCode (cname = "hasInternalSubsetSAXFunc")]
-	public static delegate int hasInternalSubsetSAXFunc (void* ctx);
+	[CCode (cname = "hasInternalSubsetSAXFunc", has_target = false)]
+	public delegate int hasInternalSubsetSAXFunc (void* ctx);
 
-	[CCode (cname = "ignorableWhitespaceSAXFunc")]
-	public static delegate void ignorableWhitespaceSAXFunc (void* ctx, string ch, int len);
+	[CCode (cname = "ignorableWhitespaceSAXFunc", has_target = false)]
+	public delegate void ignorableWhitespaceSAXFunc (void* ctx, string ch, int len);
 
-	[CCode (cname = "internalSubsetSAXFunc")]
-	public static delegate void internalSubsetSAXFunc (void* ctx, string name, string ExternalID, string SystemID);
+	[CCode (cname = "internalSubsetSAXFunc", has_target = false)]
+	public delegate void internalSubsetSAXFunc (void* ctx, string name, string ExternalID, string SystemID);
 
-	[CCode (cname = "isStandaloneSAXFunc")]
-	public static delegate int isStandaloneSAXFunc (void* ctx);
+	[CCode (cname = "isStandaloneSAXFunc", has_target = false)]
+	public delegate int isStandaloneSAXFunc (void* ctx);
 
-	[CCode (cname = "notationDeclSAXFunc")]
-	public static delegate void notationDeclSAXFunc (void* ctx, string name, string publicId, string systemId);
+	[CCode (cname = "notationDeclSAXFunc", has_target = false)]
+	public delegate void notationDeclSAXFunc (void* ctx, string name, string publicId, string systemId);
 
-	[CCode (cname = "processingInstructionSAXFunc")]
-	public static delegate void processingInstructionSAXFunc (void* ctx, string target, string data);
+	[CCode (cname = "processingInstructionSAXFunc", has_target = false)]
+	public delegate void processingInstructionSAXFunc (void* ctx, string target, string data);
 
-	[CCode (cname = "referenceSAXFunc")]
-	public static delegate void referenceSAXFunc (void* ctx, string name);
+	[CCode (cname = "referenceSAXFunc", has_target = false)]
+	public delegate void referenceSAXFunc (void* ctx, string name);
 
-	// [CCode (cname = "resolveEntitySAXFunc")]
-	// public static delegate ParserInput resolveEntitySAXFunc (void* ctx, string publicId, string systemId);
+	// [CCode (cname = "resolveEntitySAXFunc", has_target = false)]
+	// public delegate ParserInput resolveEntitySAXFunc (void* ctx, string publicId, string systemId);
 
-	// [CCode (cname = "setDocumentLocatorSAXFunc")]
-	// public static delegate void setDocumentLocatorSAXFunc (void* ctx, SAXLocator loc);
+	// [CCode (cname = "setDocumentLocatorSAXFunc", has_target = false)]
+	// public delegate void setDocumentLocatorSAXFunc (void* ctx, SAXLocator loc);
 
-	[CCode (cname = "startDocumentSAXFunc")]
-	public static delegate void startDocumentSAXFunc (void* ctx);
+	[CCode (cname = "startDocumentSAXFunc", has_target = false)]
+	public delegate void startDocumentSAXFunc (void* ctx);
 
-	[CCode (cname = "startElementNsSAX2Func")]
-	public static delegate void startElementNsSAX2Func (void* ctx, string localname, string prefix, string URI, int nb_namespaces, [CCode (array_length = false)] string[] namespaces, int nb_attributes, int nb_defaulted, [CCode (array_length = false)] string[] attributes);
+	[CCode (cname = "startElementNsSAX2Func", has_target = false)]
+	public delegate void startElementNsSAX2Func (void* ctx, string localname, string prefix, string URI, int nb_namespaces, [CCode (array_length = false)] string[] namespaces, int nb_attributes, int nb_defaulted, [CCode (array_length = false)] string[] attributes);
 
-	[CCode (cname = "startElementSAXFunc")]
-	public static delegate void startElementSAXFunc (void* ctx, string name, [CCode (array_length = false)] string[] atts);
+	[CCode (cname = "startElementSAXFunc", has_target = false)]
+	public delegate void startElementSAXFunc (void* ctx, string name, [CCode (array_length = false)] string[] atts);
 
-	[CCode (cname = "unparsedEntityDeclSAXFunc")]
-	public static delegate void unparsedEntityDeclSAXFunc (void* ctx, string name, string publicId, string systemId, string notationName);
+	[CCode (cname = "unparsedEntityDeclSAXFunc", has_target = false)]
+	public delegate void unparsedEntityDeclSAXFunc (void* ctx, string name, string publicId, string systemId, string notationName);
 
-	[CCode (cname = "warningSAXFunc")]
-	public static delegate void warningSAXFunc (void* ctx, string msg, ...);
+	[CCode (cname = "warningSAXFunc", has_target = false)]
+	public delegate void warningSAXFunc (void* ctx, string msg, ...);
 
-	[CCode (cname ="xmlStructuredErrorFunc")]
-	public static delegate void xmlStructuredErrorFunc (void* ctx, Error* error);
+	[CCode (cname ="xmlStructuredErrorFunc", has_target = false)]
+	public delegate void xmlStructuredErrorFunc (void* ctx, Error* error);
 
 	[Compact]
 	[CCode (cname = "xmlSAXHandler")]

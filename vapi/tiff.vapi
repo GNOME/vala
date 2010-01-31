@@ -187,41 +187,42 @@ namespace Tiff {
 	[CCode (cname = "uint32")]
 	public struct ttile_t : uint32 { }
 
-	public static delegate int get (RGBAImage p1, uint32[] p2, uint32 p3, uint32 p4);
-	[CCode (cname= "TIFFCloseProc")]
-	public static delegate int CloseProc (thandle_t p1);
+	[CCode (has_target = false)]
+	public delegate int get (RGBAImage p1, uint32[] p2, uint32 p3, uint32 p4);
+	[CCode (cname = "TIFFCloseProc", has_target = false)]
+	public delegate int CloseProc (thandle_t p1);
 	/* ***********************************************************************************
-	[CCode (cname= "TIFFErrorHandler")]
-	public static delegate void ErrorHandler (string p1, string p2, void* p3);
-	[CCode (cname= "TIFFErrorHandlerExt")]
-	public static delegate void ErrorHandlerExt (thandle_t p1, string p2, string p3, ...);
+	[CCode (cname = "TIFFErrorHandler", has_target = false)]
+	public delegate void ErrorHandler (string p1, string p2, void* p3);
+	[CCode (cname = "TIFFErrorHandlerExt", has_target = false)]
+	public delegate void ErrorHandlerExt (thandle_t p1, string p2, string p3, ...);
 	*********************************************************************************** */
-	[CCode (cname= "TIFFExtendProc")]
-	public static delegate void ExtendProc (TIFF p1);
-	[CCode (cname= "TIFFInitMethod")]
-	public static delegate int InitMethod (TIFF p1, int p2);
-	[CCode (cname= "TIFFMapFileProc")]
-	public static delegate int MapFileProc (thandle_t p1, ref tdata_t p2, ref toff_t p3);
-	[CCode (cname= "TIFFPrintMethod")]
-	public static delegate void PrintMethod (TIFF p1, GLib.FileStream p2, long p3);
-	[CCode (cname= "TIFFReadWriteProc")]
-	public static delegate tsize_t ReadWriteProc (thandle_t p1, tdata_t p2, tsize_t p3);
-	[CCode (cname= "TIFFSeekProc")]
-	public static delegate toff_t SeekProc (thandle_t p1, toff_t p2, int p3);
-	[CCode (cname= "TIFFSizeProc")]
-	public static delegate toff_t SizeProc (thandle_t p1);
-	[CCode (cname= "TIFFUnmapFileProc")]
-	public static delegate void UnmapFileProc (thandle_t p1, tdata_t p2, toff_t p3);
+	[CCode (cname = "TIFFExtendProc", has_target = false)]
+	public delegate void ExtendProc (TIFF p1);
+	[CCode (cname = "TIFFInitMethod", has_target = false)]
+	public delegate int InitMethod (TIFF p1, int p2);
+	[CCode (cname = "TIFFMapFileProc", has_target = false)]
+	public delegate int MapFileProc (thandle_t p1, ref tdata_t p2, ref toff_t p3);
+	[CCode (cname = "TIFFPrintMethod", has_target = false)]
+	public delegate void PrintMethod (TIFF p1, GLib.FileStream p2, long p3);
+	[CCode (cname = "TIFFReadWriteProc", has_target = false)]
+	public delegate tsize_t ReadWriteProc (thandle_t p1, tdata_t p2, tsize_t p3);
+	[CCode (cname = "TIFFSeekProc", has_target = false)]
+	public delegate toff_t SeekProc (thandle_t p1, toff_t p2, int p3);
+	[CCode (cname = "TIFFSizeProc", has_target = false)]
+	public delegate toff_t SizeProc (thandle_t p1);
+	[CCode (cname = "TIFFUnmapFileProc", has_target = false)]
+	public delegate void UnmapFileProc (thandle_t p1, tdata_t p2, toff_t p3);
 	/* *************************************************************
-	[CCode (cname= "TIFFVGetMethod")]
-	public static delegate int VGetMethod (TIFF p1, ttag_t p2, ...);
-	[CCode (cname= "TIFFVSetMethod")]
-	public static delegate int VSetMethod (TIFF p1, ttag_t p2, ...);
+	[CCode (cname = "TIFFVGetMethod", has_target = false)]
+	public delegate int VGetMethod (TIFF p1, ttag_t p2, ...);
+	[CCode (cname = "TIFFVSetMethod", has_target = false)]
+	public delegate int VSetMethod (TIFF p1, ttag_t p2, ...);
 	************************************************************* */
-	[CCode (cname= "tileContigRoutine")]
-	public static delegate void TileContigRoutine (RGBAImage p1, uint32[] p2, uint32 p3, uint32 p4, uint32 p5, uint32 p6, int32 p7, int32 p8, uchar *p9);
-	[CCode (cname= "tileSeparateRoutine")]
-	public static delegate void TileSeparateRoutine (RGBAImage p1, uint32[] p2, uint32 p3, uint32 p4, uint32 p5, uint32 p6, int32 p7, int32 p8, uchar p9, uchar p10, uchar* p11, uchar* p12);
+	[CCode (cname = "tileContigRoutine", has_target = false)]
+	public delegate void TileContigRoutine (RGBAImage p1, uint32[] p2, uint32 p3, uint32 p4, uint32 p5, uint32 p6, int32 p7, int32 p8, uchar *p9);
+	[CCode (cname = "tileSeparateRoutine", has_target = false)]
+	public delegate void TileSeparateRoutine (RGBAImage p1, uint32[] p2, uint32 p3, uint32 p4, uint32 p5, uint32 p6, int32 p7, int32 p8, uchar p9, uchar p10, uchar* p11, uchar* p12);
 
 	public const ttag_t CIELABTORGB_TABLE_RANGE;
 	public const ttag_t CLEANFAXDATA_CLEAN;

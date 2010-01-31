@@ -16,5 +16,6 @@ namespace BonoboUI {
 	{
 	}
 
-	public static delegate void VerbFn (Component component, void* user_data, string cname);
+	[CCode (has_target = false)]
+	public delegate void VerbFn (Component component, void* user_data, string cname);
 }

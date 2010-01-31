@@ -121,8 +121,8 @@ namespace Lua {
 
 	/* Function prototypes */
 
-	[CCode (cname = "lua_CFunction")]
-	public static delegate int CallbackFunc (LuaVM vm);
+	[CCode (cname = "lua_CFunction", has_target = false)]
+	public delegate int CallbackFunc (LuaVM vm);
 
 	// functions that read/write blocks when loading/dumping Lua chunks
 
@@ -142,8 +142,8 @@ namespace Lua {
 	public delegate void* AllocFunc (void* ptr, size_t osize, size_t nsize);
 
 	// Function to be called by the debuger in specific events
-	[CCode (cname = "lua_Hook")]
-	public static delegate void HookFunc (LuaVM vm, ref Debug ar);
+	[CCode (cname = "lua_Hook", has_target = false)]
+	public delegate void HookFunc (LuaVM vm, ref Debug ar);
 
 	[SimpleType]
 	[CCode (cname = "lua_Debug")]
