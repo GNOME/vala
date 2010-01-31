@@ -927,8 +927,8 @@ namespace Posix {
 	[CCode (cheader_filename = "signal.h")]
 	public int sigwait (sigset_t sigset, out int sig);
 
-	[CCode (cheader_filename = "signal.h")]
-	public static delegate void sighandler_t (int signal);
+	[CCode (has_target = false, cheader_filename = "signal.h")]
+	public delegate void sighandler_t (int signal);
 
 	[CCode (cheader_filename = "signal.h")]
 	public sighandler_t SIG_DFL;
@@ -975,7 +975,8 @@ namespace Posix {
 	[CCode (cheader_filename = "stdlib.h")]
 	public int system (string command);
 
-	public static delegate int compar_fn_t (void* key1, void* key2);
+	[CCOde (has_target = false, cheader_filename = "stdlib.h")]
+	public delegate int compar_fn_t (void* key1, void* key2);
 
 	[CCode (cheader_filename = "stdlib.h")]
 	public void* bsearch (void* key, void* base, size_t nmemb, size_t size, compar_fn_t func);
