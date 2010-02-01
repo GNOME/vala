@@ -657,10 +657,13 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 			if (pre_statement_fragment == null) {
 				pre_statement_fragment = new CCodeFragment ();
 			}
-			pre_statement_fragment.append (new CCodeExpressionStatement (async_call));
 
+			// set state before calling async function to support immediate callbacks
 			int state = next_coroutine_state++;
 			pre_statement_fragment.append (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (new CCodeIdentifier ("data"), "_state_"), new CCodeConstant (state.to_string ()))));
+
+			pre_statement_fragment.append (new CCodeExpressionStatement (async_call));
+
 			pre_statement_fragment.append (new CCodeReturnStatement (new CCodeConstant ("FALSE")));
 			pre_statement_fragment.append (new CCodeCaseStatement (new CCodeConstant (state.to_string ())));
 		}
