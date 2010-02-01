@@ -106,6 +106,28 @@ public class Vala.MethodCall : Expression {
 		return false;
 	}
 
+	bool is_chainup () {
+		if (!(call.symbol_reference is CreationMethod)) {
+			return false;
+		}
+
+		var expr = call;
+
+		var ma = (MemberAccess) call;
+		if (ma.inner != null) {
+			expr = ma.inner;
+		}
+
+		ma = expr as MemberAccess;
+		if (ma != null && ma.member_name == "this") {
+			return true;
+		} else if (expr is BaseAccess) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public override bool check (SemanticAnalyzer analyzer) {
 		if (checked) {
 			return !error;
@@ -186,14 +208,16 @@ public class Vala.MethodCall : Expression {
 		    ((call.symbol_reference is CreationMethod
 		      && call.symbol_reference.parent_symbol is Struct)
 		     || call.symbol_reference is Struct)) {
-			var cm = analyzer.find_current_method () as CreationMethod;
-			if (cm != null) {
-				if (cm.chain_up) {
-					error = true;
-					Report.error (source_reference, "Multiple constructor calls in the same constructor are not permitted");
-					return false;
+			if (is_chainup ()) {
+				var cm = analyzer.find_current_method () as CreationMethod;
+				if (cm != null) {
+					if (cm.chain_up) {
+						error = true;
+						Report.error (source_reference, "Multiple constructor calls in the same constructor are not permitted");
+						return false;
+					}
+					cm.chain_up = true;
 				}
-				cm.chain_up = true;
 			}
 			var struct_creation_expression = new ObjectCreationExpression ((MemberAccess) call, source_reference);
 			struct_creation_expression.struct_creation = true;
