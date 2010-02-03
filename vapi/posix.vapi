@@ -1278,6 +1278,13 @@ namespace Posix {
 	public struct SockAddr {
 	}
 
+	[CCode (cname = "struct sockaddr_in", cheader_filename = "netinet/in.h", destroy_function = "")]
+	public struct SockAddrIn {
+		public int sin_family;
+		public uint16 sin_port;
+		public InAddr sin_addr;
+	}
+
 	[CCode (cheader_filename = "sys/stat.h")]
 	public int mkfifo (string filename, mode_t mode);
 
