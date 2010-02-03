@@ -3807,4 +3807,11 @@ namespace GLib {
 		public string markup_print (bool newlines, int indentation, int tabstop);
 		public StringBuilder markup_print_string (StringBuilder ?string, bool newlines, int indentation, int tabstop);
 	}
+
+	[CCode (cname = "G_LIKELY", cheader_filename = "glib.h")]
+	public static bool likely (bool expression);
+	[CCode (cname = "G_UNLIKELY", cheader_filename = "glib.h")]
+	public static bool unlikely (bool expression);
+	[CCode (cname = "G_STATIC_ASSERT", cheader_filename = "glib.h")]
+	public static bool static_assert (bool expression);
 }
