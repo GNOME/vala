@@ -2051,7 +2051,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		function.add_parameter (new CCodeFormalParameter ("self", "%s*".printf (iface.get_cname ())));
 
 		if (prop.property_type.is_real_non_null_struct_type ()) {
-			function.add_parameter (new CCodeFormalParameter ("result", "%s*".printf (prop.set_accessor.value_type.get_cname ())));
+			function.add_parameter (new CCodeFormalParameter ("result", "%s*".printf (prop.get_accessor.value_type.get_cname ())));
 		} else {
 			if (array_type != null) {
 				for (int dim = 1; dim <= array_type.rank; dim++) {
