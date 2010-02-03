@@ -211,6 +211,42 @@ namespace Xml {
 		COMPACT,
 	}
 
+	[CCode (cname = "xmlCharEncoding", cprefix = "XML_CHAR_ENCODING_", cheader_filename = "libxml/encoding.h")]
+	public enum CharEncoding {
+		ERROR,
+		NONE,
+		UTF8,
+		UTF16LE,
+		UTF16BE,
+		UCS4LE,
+		UCS4BE,
+		EBCDIC,
+		UCS4_2143,
+		UCS4_3412,
+		UCS2,
+		[CCode (cname = "XML_CHAR_ENCODING_8859_1")]
+		ISO_8859_1,
+		[CCode (cname = "XML_CHAR_ENCODING_8859_2")]
+		ISO_8859_2,
+		[CCode (cname = "XML_CHAR_ENCODING_8859_3")]
+		ISO_8859_3,
+		[CCode (cname = "XML_CHAR_ENCODING_8859_4")]
+		ISO_8859_4,
+		[CCode (cname = "XML_CHAR_ENCODING_8859_5")]
+		ISO_8859_5,
+		[CCode (cname = "XML_CHAR_ENCODING_8859_6")]
+		ISO_8859_6,
+		[CCode (cname = "XML_CHAR_ENCODING_8859_7")]
+		ISO_8859_7,
+		[CCode (cname = "XML_CHAR_ENCODING_8859_8")]
+		ISO_8859_8,
+		[CCode (cname = "XML_CHAR_ENCODING_8859_9")]
+		ISO_8859_9,
+		ISO_2022_JP,
+		SHIFT_JIS,
+		EUC_JP,
+		ASCII,
+	}
 
 	/* tree - interfaces for tree manipulation */
 
@@ -312,8 +348,12 @@ namespace Xml {
 		[CCode (cname = "xmlCreateIntSubset")]
 		public Dtd* create_int_subset (string name, string external_id, string system_id);
 
-		[CCode (cname = "xmlDocDump")]
-		public static int dump (GLib.FileStream f, Doc* cur);
+		[CCode (cname = "xmlDocDump", instance_pos = -1)]
+#if POSIX
+		public int dump (Posix.FILE f);
+#else
+		public int dump (GLib.FileStream f);
+#endif
 
 		[CCode (cname = "xmlDocDumpFormatMemory")]
 		public void dump_memory_format (out string mem, out int len = null, bool format = true);
@@ -327,8 +367,12 @@ namespace Xml {
 		[CCode (cname = "xmlDocDumpMemoryEnc")]
 		public void dump_memory_enc (out string mem, out int len = null, string enc = "UTF-8");
 
-		[CCode (cname = "xmlDocFormatDump")]
-		public static int dump_format (GLib.FileStream f, Doc* cur, bool format = true);
+		[CCode (cname = "xmlDocFormatDump", instance_pos = 2)]
+#if POSIX
+		public int dump_format (Posix.FILE f, bool format = true);
+#else
+		public int dump_format (GLib.FileStream f, bool format = true);
+#endif
 
 		[CCode (cname = "xmlDocGetRootElement")]
 		public Node* get_root_element();
@@ -336,8 +380,12 @@ namespace Xml {
 		[CCode (cname = "xmlDocSetRootElement")]
 		public Node* set_root_element(Node* root);
 
-		[CCode (cname = "xmlElemDump")]
-		public static void elem_dump (GLib.FileStream f, Doc* doc, Node* cur);
+		[CCode (cname = "xmlElemDump", instance_pos = 2)]
+#if POSIX
+		public void elem_dump (Posix.FILE f, Node* cur);
+#else
+                public void elem_dump (GLib.FileStream f, Node* cur);
+#endif
 
 		[CCode (cname = "xmlGetDocCompressMode")]
 		public int get_compress_mode ();
@@ -382,22 +430,22 @@ namespace Xml {
 		public Node* new_reference (string name);
 
 		[CCode (cname = "xmlNodeListGetRawString")]
-		public string node_list_get_raw_string (Node* list, int _inline);
+		public string node_list_get_raw_string (Node* list, bool in_line);
 
 		[CCode (cname = "xmlNodeListGetString")]
-		public string node_list_get_string (Node* list, int _inline);
+		public string node_list_get_string (Node* list, bool in_line);
 
 		[CCode (cname = "xmlSaveFile", instance_pos = -1)]
 		public int save_file (string filename);
 
-		[CCode (cname = "xmlSaveFileEnc")]
-		public static void save_file_enc (string filename, Doc* cur, string enc = "UTF-8");
+		[CCode (cname = "xmlSaveFileEnc", instance_pos = 2)]
+		public void save_file_enc (string filename, string enc = "UTF-8");
 
-		[CCode (cname = "xmlSaveFormatFile")]
-		public static void save_format_file (string filename, Doc* cur, int format);
+		[CCode (cname = "xmlSaveFormatFile", instance_pos = 2)]
+		public void save_format_file (string filename, int format);
 
-		[CCode (cname = "xmlSaveFormatFileEnc")]
-		public static void save_format_file_enc (string filename, Doc* cur, string enc, int format);
+		[CCode (cname = "xmlSaveFormatFileEnc", instance_pos = 2)]
+		public void save_format_file_enc (string filename, string enc = "UTf-8", bool format = true);
 
 		[CCode (cname = "xmlSetDocCompressMode")]
 		public void set_compress_mode (int mode);
@@ -518,10 +566,13 @@ namespace Xml {
 		public string content;
 		public int length;
 		public EntityType etype;
-		public const string ExternalID;
-		public const string SystemID;
+		[CCode (cname = "ExternalID")]
+		public const string external_id;
+		[CCode (cname = "SystemID")]
+		public const string system_id;
 		public Entity* nexte;
-		public const string URI;
+		[CCode (cname = "URI")]
+		public const string uri;
 		public int owner;
 		public int checked;
 	}
@@ -720,7 +771,7 @@ namespace Xml {
 	[CCode (cname = "xmlNs", cheader_filename = "libxml/tree.h")]
 	public class Ns {
 		[CCode (cname = "xmlNewNs")]
-		public static Ns* create (Xml.Node* node, string href, string prefix);
+		public Ns (Xml.Node* node, string href, string prefix);
 		public Ns* next;
 		public ElementType type;
 		public string href;
@@ -763,7 +814,7 @@ namespace Xml {
 		public static URI parse (string str);
 
 		[CCode (cname = "xmlParseURIRaw")]
-		public static URI parse_raw (string str, int raw);
+		public static URI parse_raw (string str, bool raw);
 
 		[CCode (cname = "xmlParseURIReference")]
 		public int parse_reference (string str);
@@ -772,7 +823,11 @@ namespace Xml {
 		public static string path_to_uri (string path);
 
 		[CCode (cname = "xmlPrintURI", instance_pos = -1)]
+#if POSIX
+		public void print (Posix.FILE stream);
+#else
 		public void print (GLib.FileStream stream);
+#endif
 
 		[CCode (cname = "xmlSaveUri")]
 		public string save ();
@@ -864,34 +919,34 @@ namespace Xml {
 		public TextReader.filename (string uri);
 
 		[CCode (cname = "xmlReaderForDoc")]
-		public TextReader.for_doc (string cur, string url, string? encoding, int options);
+		public TextReader.for_doc (string cur, string url, string? encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReaderForFd")]
-		public TextReader.for_fd (int fd, string url, string? encoding, int options);
+		public TextReader.for_fd (int fd, string url, string? encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReaderForFile")]
-		public TextReader.for_file (string filename, string? encoding, int options);
+		public TextReader.for_file (string filename, string? encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReaderForIO")]
-		public TextReader.for_io (InputReadCallback ioread, InputCloseCallback ioclose, void* ioctx, string url, string encoding, int options);
+		public TextReader.for_io (InputReadCallback ioread, InputCloseCallback ioclose, void* ioctx, string url, string? encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReaderForMemory")]
-		public TextReader.for_memory ([CCode (array_length = false)] char[] buffer, int size, string url, string encoding, int options);
+		public TextReader.for_memory ([CCode (array_length = false)] char[] buffer, int size, string url, string? encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReaderNewDoc")]
-		public int new_doc (string cur, string url, string? encoding, int options);
+		public int new_doc (string cur, string url, string? encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReaderNewFd")]
-		public int new_fd (int fd, string url, string? encoding, int options);
+		public int new_fd (int fd, string url, string? encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReaderNewFile")]
-		public int new_file (string filename, string? encoding, int options);
+		public int new_file (string filename, string? encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReaderNewIO")]
-		public int new_io (InputReadCallback ioread, InputCloseCallback ioclose, void* ioctx, string url, string encoding, int options);
+		public int new_io (InputReadCallback ioread, InputCloseCallback ioclose, void* ioctx, string url, string? encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReaderNewMemory")]
-		public int new_memory ([CCode (array_length = false)] char[] buffer, int size, string url, string? encoding, int options);
+		public int new_memory ([CCode (array_length = false)] char[] buffer, int size, string url, string? encoding = null, int options = 0);
 
 		[CCode (cname = "xmlReaderNewWalker")]
 		public int new_walker (Doc* doc);
@@ -1111,98 +1166,100 @@ namespace Xml {
 	namespace XPath {
 		[CCode (cname = "xmlXPathOrderDocElems")]
 		public static long order_doc_elements (Doc* doc);
+
+		[Compact]
+		[CCode (cname = "xmlNodeSet", cheader_filename = "libxml/xpath.h")]
+		public class NodeSet {
+			[CCode (cname = "xmlXPathNodeSetGetLength")]
+			public int length ();
+
+			[CCode (cname = "xmlXPathNodeSetIsEmpty")]
+			public bool is_empty ();
+
+			[CCode (cname = "xmlXPathNodeSetItem")]
+			public Node* item (int index);
+		}
+
+		[Compact]
+		[CCode (cname = "xmlXPathContext", free_function = "xmlXPathFreeContext", cheader_filename = "libxml/xpath.h")]
+		public class Context {
+			public Doc* doc;
+			public Node* node;
+
+			[CCode (cname = "xmlXPathContextSetCache")]
+			public int set_cache (int active, int value, int options);
+
+			[CCode (cname = "xmlXPathEval", instance_pos = -1)]
+			public Object* eval (string str);
+
+			[CCode (cname = "xmlXPathEvalExpression", instance_pos = -1)]
+			public Object* eval_expression (string str);
+
+			[CCode (cname = "xmlXPathRegisterNs")]
+			public int register_ns (string prefix, string ns_uri);
+
+			[CCode (cname = "xmlXPathNewContext")]
+			public Context (Doc* doc);
+		}
+
+		[CCode (cname = "xmlXPathError", cprefix = "XPATH_", cheader_filename = "libxml/xpath.h")]
+		public enum Error {
+			EXPRESSION_OK,
+			NUMBER_ERROR,
+			UNFINISHED_LITERAL_ERROR,
+			START_LITERAL_ERROR,
+			VARIABLE_REF_ERROR,
+			UNDEF_VARIABLE_ERROR,
+			INVALID_PREDICATE_ERROR,
+			EXPR_ERROR,
+			UNCLOSED_ERROR,
+			UNKNOWN_FUNC_ERROR,
+			INVALID_OPERAND,
+			INVALID_TYPE,
+			INVALID_ARITY,
+			INVALID_CTXT_SIZE,
+			INVALID_CTXT_POSITION,
+			MEMORY_ERROR,
+			[CCode (cname = "XPTR_SYNTAX_ERROR")]
+			XPTR_SYNTAX_ERROR,
+			[CCode (cname = "XPTR_RESOURCE_ERROR")]
+			XPTR_RESOURCE_ERROR,
+			[CCode (cname = "XPTR_SUB_RESOURCE_ERROR")]
+			XPTR_SUB_RESOURCE_ERROR,
+			UNDEF_PREFIX_ERROR,
+			ENCODING_ERROR,
+			INVALID_CHAR_ERROR,
+			INVALID_CTXT
+		}
+
+		[Compact]
+		[CCode (cname = "xmlXPathObject", cheader_filename = "libxml/xpath.h")]
+		public class Object {
+			public ObjectType type;
+			public NodeSet* nodesetval;
+			public int boolval;
+			public double floatval;
+			public string stringval;
+			public void* user;
+			public int index;
+			public void* user2;
+			public int index2;
+		}
+
+		[CCode (cname = "xmlXPathObjectType", cprefix = "XPATH_", cheader_filename = "libxml/xpath.h")]
+		public enum ObjectType {
+			UNDEFINED,
+			NODESET,
+			BOOLEAN,
+			NUMBER,
+			STRING,
+			POINT,
+			RANGE,
+			LOCATIONSET,
+			USERS,
+			XSLT_TREE
+		}
 	}
-
-	[Compact]
-	[CCode (cname = "xmlNodeSet", cheader_filename = "libxml/xpath.h")]
-	public class NodeSet {
-		[CCode (cname = "xmlXPathNodeSetGetLength")]
-		public int length ();
-
-		[CCode (cname = "xmlXPathNodeSetIsEmpty")]
-		public bool is_empty ();
-
-		[CCode (cname = "xmlXPathNodeSetItem")]
-		public Node* item (int index);
-	}
-
-	[Compact]
-	[CCode (cname = "xmlXPathContext", free_function = "xmlXPathFreeContext", cheader_filename = "libxml/xpath.h")]
-	public class XPathContext {
-		public Doc* doc;
-		public Node* node;
-
-		[CCode (cname = "xmlXPathContextSetCache")]
-		public int set_cache (int active, int value, int options);
-
-		[CCode (cname = "xmlXPathEval", instance_pos = -1)]
-		public XPathObject* eval (string str);
-
-		[CCode (cname = "xmlXPathEvalExpression", instance_pos = -1)]
-		public XPathObject* eval_expression (string str);
-
-		[CCode (cname = "xmlXPathRegisterNs")]
-		public int register_ns (string prefix, string ns_uri);
-
-		[CCode (cname = "xmlXPathNewContext")]
-		public XPathContext (Doc* doc);
-	}
-
-	[CCode (cname = "xmlXPathError", cprefix = "", cheader_filename = "libxml/xpath.h")]
-	public enum XPathError {
-		XPATH_EXPRESSION_OK,
-		XPATH_NUMBER_ERROR,
-		XPATH_UNFINISHED_LITERAL_ERROR,
-		XPATH_START_LITERAL_ERROR,
-		XPATH_VARIABLE_REF_ERROR,
-		XPATH_UNDEF_VARIABLE_ERROR,
-		XPATH_INVALID_PREDICATE_ERROR,
-		XPATH_EXPR_ERROR,
-		XPATH_UNCLOSED_ERROR,
-		XPATH_UNKNOWN_FUNC_ERROR,
-		XPATH_INVALID_OPERAND,
-		XPATH_INVALID_TYPE,
-		XPATH_INVALID_ARITY,
-		XPATH_INVALID_CTXT_SIZE,
-		XPATH_INVALID_CTXT_POSITION,
-		XPATH_MEMORY_ERROR,
-		XPTR_SYNTAX_ERROR,
-		XPTR_RESOURCE_ERROR,
-		XPTR_SUB_RESOURCE_ERROR,
-		XPATH_UNDEF_PREFIX_ERROR,
-		XPATH_ENCODING_ERROR,
-		XPATH_INVALID_CHAR_ERROR,
-		XPATH_INVALID_CTXT
-	}
-
-	[Compact]
-	[CCode (cname = "xmlXPathObject", cheader_filename = "libxml/xpath.h")]
-	public class XPathObject {
-		public XPathObjectType type;
-		public NodeSet* nodesetval;
-		public int boolval;
-		public double floatval;
-		public string stringval;
-		public void* user;
-		public int index;
-		public void* user2;
-		public int index2;
-	}
-
-	[CCode (cname = "xmlXPathObjectType", cprefix = "XPATH_", cheader_filename = "libxml/xpath.h")]
-	public enum XPathObjectType {
-		UNDEFINED,
-		NODESET,
-		BOOLEAN,
-		NUMBER,
-		STRING,
-		POINT,
-		RANGE,
-		LOCATIONSET,
-		USERS,
-		XSLT_TREE
-	}
-
 
 	/* SAX CALLBACKS */
 
@@ -1302,43 +1359,64 @@ namespace Xml {
 	[Compact]
 	[CCode (cname = "xmlSAXHandler")]
 	public struct SAXHandler {
+		[CCode (cname = "internalSubset")]
 		public internalSubsetSAXFunc internalSubset;
-		public isStandaloneSAXFunc isStandalone;
+		[CCode (cname = "isStandalone")]
+		public isStandaloneSAXFunc is_standalone;
+		[CCode (cname = "hasInternalSubset")]
 		public hasInternalSubsetSAXFunc hasInternalSubset;
+		[CCode (cname = "hasExternalSubset")]
 		public hasExternalSubsetSAXFunc hasExternalSubset;
 		// public resolveEntitySAXFunc resolveEntity;
+		[CCode (cname = "getEntity")]
 		public getEntitySAXFunc getEntity;
+		[CCode (cname = "entityDecl")]
 		public entityDeclSAXFunc entityDecl;
+		[CCode (cname = "notationDecl")]
 		public notationDeclSAXFunc notationDecl;
+		[CCode (cname = "attributeDecl")]
 		public attributeDeclSAXFunc attributeDecl;
+		[CCode (cname = "elementDecl")]
 		public elementDeclSAXFunc elementDecl;
+		[CCode (cname = "unparsedEntityDecl")]
 		public unparsedEntityDeclSAXFunc unparsedEntityDecl;
 		// public setDocumentLocatorSAXFunc setDocumentLocator;
+		[CCode (cname = "startDocument")]
 		public startDocumentSAXFunc startDocument;
+		[CCode (cname = "endDocument")]
 		public endDocumentSAXFunc endDocument;
+		[CCode (cname = "startElement")]
 		public startElementSAXFunc startElement;
+		[CCode (cname = "endElement")]
 		public endElementSAXFunc endElement;
 		public referenceSAXFunc reference;
 		public charactersSAXFunc characters;
+		[CCode (cname = "ignorableWhitespace")]
 		public ignorableWhitespaceSAXFunc ignorableWhitespace;
+		[CCode (cname = "processingInstruction")]
 		public processingInstructionSAXFunc processingInstruction;
 		public commentSAXFunc comment;
 		public warningSAXFunc warning;
 		public errorSAXFunc error;
+		[CCode (cname = "fatalError")]
 		public fatalErrorSAXFunc  fatalError;
+		[CCode (cname = "getParameterEntity")]
 		public getParameterEntitySAXFunc getParameterEntity;
+		[CCode (cname = "cdataBlock")]
 		public cdataBlockSAXFunc cdataBlock;
+		[CCode (cname = "externalSubset")]
 		public externalSubsetSAXFunc externalSubset;
 		public uint initialized;
+		[CCode (cname = "startElementNs")]
 		public startElementNsSAX2Func startElementNs;
+		[CCode (cname = "endElementNs")]
 		public endElementNsSAX2Func endElementNs;
 		public xmlStructuredErrorFunc serror;
- 	}
 
-	[CCode (lower_case_cprefix = "xmlSAX")]
-	namespace SAXParser {
-		public int UserParseMemory (SAXHandler* sax, void* user_data, string buffer, int size);
-		public int UserParseFile (SAXHandler* sax, void* user_data, string filename);
+		[CCode (cname = "UserParseMemory")]
+		public int user_parse_memory (void* user_data, string buffer, int size);
+		[CCode (cname = "UserParseFile")]
+		public int user_parse_file (void* user_data, string filename);
 	}
 
 
@@ -1370,4 +1448,234 @@ namespace Xml {
 		FATAL = 3
 	}
 
+}
+
+namespace Html {
+	[CCode (cname = "htmlIsBooleanAttr", cheader_filename = "libxml/HTMLtree.h")]
+	public static int is_boolean_attr (string name);
+
+	[CCode (cname = "UTF8ToHtml", cheader_filename = "libxml/HTMLparser.h")]
+	public static int utf8_to_html ([CCode (array_length = false)] char[] outdata, out int outlen, [CCode (array_length = false)] char[] indata, out int inlen);
+
+	[CCode (cname = "htmlEncodeEntities", cheader_filename = "libxml/HTMLparser.h")]
+	public static int encode_entities ([CCode (array_length = false)] char[] outdata, out int outlen, [CCode (array_length = false)] char[] indata, out int inlen, char quote_char = '\0');
+
+	[CCode (cname = "htmlIsScriptAttribute", cheader_filename = "libxml/HTMLparser.h")]
+	public static bool is_script_attribute (string name);
+
+	[CCode (cname = "htmlHandleOmittedElem", cheader_filename = "libxml/HTMLparser.h")]
+	public static bool handle_omitted_elem (bool val);
+
+	[CCode (cname = "htmlParserOption", cprefix = "HTML_PARSE_", cheader_filename = "libxml/HTMLparser.h")]
+	public enum ParserOption {
+		RECOVER,
+		NOERROR,
+		NOWARNING,
+		PEDANTIC,
+		NOBLANKS,
+		NONET,
+		COMPACT,
+	}
+
+	[CCode (cname = "htmlStatus", cprefix = "HTML_", cheader_filename = "libxml/HTMLparser.h")]
+	public enum Status {
+		NA,
+		INVALID,
+		DEPRECATED,
+		VALID,
+		REQUIRED,
+	}
+
+	[Compact]
+	[CCode (cname = "xmlNode", cheader_filename = "libxml/HTMLparser.h")]
+	public class Node : Xml.Node {
+		[CCode (cname = "htmlNodeStatus")]
+		public Status status (bool legacy);
+	}
+
+	[Compact]
+	[CCode (cname = "xmlDoc", cheader_filename = "libxml/HTMLtree.h,libxml/HTMLparser.h")]
+	public class Doc : Xml.Doc {
+		[CCode (cname = "htmlNewDoc")]
+		public Doc (string? uri = null, string? external_id = null);
+
+		[CCode (cname = "htmlNewNoDtD")]
+		public Doc.new_no_dtd (string? uri = null, string? external_id = null);
+
+		[CCode (cname = "htmlSAXParseDoc")]
+		public static Doc* sax_parse_doc (string cur, string? encoding, Xml.SAXHandler* sax, void* user_data = null);
+
+		[CCode (cname = "htmlSAXParseFile")]
+		public static Doc* sax_parse_file (string filename, string? encoding, Xml.SAXHandler* sax, void* user_data = null);
+
+		[CCode (cname = "htmlParseFile")]
+		public static Doc* parse_file (string filename, string? encoding);
+
+		[CCode (cname = "htmlReadDoc")]
+		public static Doc* read_doc (string cur, string url, string? encoding = null, int options = 0);
+
+		[CCode (cname = "htmlReadMemory")]
+		public static Doc* read_memory ([CCode (array_length = false)] char[] buffer, int size, string url, string? encoding = null, int options = 0);
+
+		[CCode (cname = "htmlReadFd")]
+		public static Doc* read_fd (int fd, string url, string? encoding = null, int options = 0);
+
+		[CCode (cname = "htmlReadIO")]
+		public static Doc* read_io (Xml.InputReadCallback ioread, Xml.InputCloseCallback ioclose, void* ioctx, string url, string? encoding = null, int options = 0);
+
+		[CCode (cname = "htmlGetMetaEncoding")]
+		public string get_meta_encoding ();
+
+		[CCode (cname = "htmlSetMetaEncoding")]
+		public int set_meta_encoding (string encoding);
+
+		[CCode (cname = "htmlDocDumpMemory")]
+		public void dump_memory (out string mem, out int len = null);
+
+		[CCode (cname = "htmlDocDumpMemoryFormat")]
+		public void dump_memory_format (out string mem, out int len = null, bool format = true);
+
+		[CCode (cname = "htmlDocDump", instance_pos = -1)]
+#if POSIX
+		public int dump (Posix.FILE f);
+#else
+		public int dump (GLib.FileStream f);
+#endif
+
+		[CCode (cname = "htmlSaveFile", instance_pos = -1)]
+		public int save_file (string filename);
+
+		[CCode (cname = "htmlNodeDumpFile", instance_pos = 2)]
+#if POSIX
+		public int node_dump_file (Posix.FILE file, Xml.Node* node);
+#else
+		public int node_dump_file (GLib.FileStream file, Xml.Node* node);
+#endif
+
+		[CCode (cname = "htmlNodeDumpFileFormat", instance_pos = 2)]
+#if POSIX
+		public int node_dump_file_format (Posix.FILE file, string enc = "UTF-8", bool format = true);
+#else
+		public int node_dump_file_format (GLib.FileStream file, string enc = "UTF-8", bool format = true);
+#endif
+
+		[CCode (cname = "htmlSaveFileEnc", instance_pos = 2)]
+		public int save_file_enc (string filename, string enc = "UTF-8");
+
+		[CCode (cname = "htmlSaveFileFormat", instance_pos = 2)]
+		public int save_file_format (string filename, string enc = "UTF-8", bool format = true);
+
+		[CCode (cname = "htmlIsAutoClosed")]
+		public bool is_auto_closed (Node* elem);
+
+		[CCode (cname = "htmlAutoCloseTag")]
+		public bool auto_close_tag (string name, Node* elem);
+	}
+
+	[Compact]
+	[CCode (cname = "htmlElemDesc", cheader_filename = "libxml/HTMLparser.h")]
+	public class ElemDesc {
+		public weak string name;
+		[CCode (cname = "startTag")]
+		public bool start_tag;
+		[CCode (cname = "endTag")]
+		public bool end_tag;
+		[CCode (cname = "saveEndTag")]
+		public bool save_end_tag;
+		public bool empty;
+		public bool depr;
+		public char dtd;
+		public bool isinline;
+		public weak string desc;
+		public weak string[] subelts;
+		public weak string defaultsubelt;
+		public weak string[] attrs_opt;
+		public weak string[] attrs_depr;
+		public weak string[] attrs_req;
+
+		[CCode (cname = "htmlTagLookup")]
+		public static ElemDesc* tag_lookup (string tag);
+
+		[CCode (cname = "htmlAttrAllowed")]
+		public Status attr_allowed (string attr, bool legacy);
+
+		[CCode (cname = "htmlElementAllowedHere")]
+		public bool allowed_here (string elt);
+
+		[CCode (cname = "htmlElementAllowedHereDesc")]
+		public bool allowed_here_desc (ElemDesc* child);
+
+		[CCode (cname = "htmlElementStatusHere")]
+		public Status status_here (ElemDesc* child);
+
+		[Ccode (cname = "htmlDefaultSubelement")]
+		public weak string default_subelement ();
+
+		[Ccode (cname = "htmlRequiredAttrs")]
+		public weak string[] required_attrs ();
+	}
+
+	[Compact]
+	[CCode (cname = "htmlEntityDesc", cheader_filename = "libxml/HTMLParser.h")]
+	public class EntityDesc
+	{
+		public uint value;
+		public weak string name;
+		public weak string desc;
+
+		[CCode (cname = "htmlEntityDesc")]
+		public static EntityDesc* lookup (string name);
+
+		[CCode (cname = "htmlEntityValueDesc")]
+		public static EntityDesc* value_lookup (uint value);
+	}
+
+	[Compact]
+	[CCode (cname = "htmlParserCtxt", free_function = "htmlFreeParserCtxt", cheader_filename = "libxml/HTMLparser.h")]
+	public class ParserCtxt : Xml.ParserCtxt {
+		[CCode (cname = "htmlNewParserCtxt")]
+		public ParserCtxt ();
+
+		[CCode (cname = "htmlCreateMemoryParserCtxt")]
+		public ParserCtxt.create_memory ([CCode (array_length = false)] char[] buffer, int size);
+
+		[CCode (cname = "htmlCreatePushParserCtxt")]
+		public ParserCtxt.create_push (Xml.SAXHandler* sax, void* user_data, [CCode (array_length = false)] char[] data, int len, string? filename = null, Xml.CharEncoding enc = Xml.CharEncoding.NONE);
+
+		[CCode (cname = "htmlParseChunk")]
+		public int parse_chunk ([CCode (array_length = false)] char[] data, int size, bool terminate);
+
+		[CCode (cname = "htmlParseEntityRef")]
+		public EntityDesc* parse_entity_ref (out string entity_name);
+
+		[CCode (cname = "htmlParseCharRef")]
+		public int parse_char_ref ();
+
+		[CCode (cname = "htmlParseElement")]
+		public void parse_element ();
+
+		[CCode (cname = "htmlParseDocument")]
+		public int parse_document ();
+
+		[CCode (cname = "htmlCtxtReset")]
+		public void reset ();
+
+		[CCode (cname = "htmlCtxtUseOptions")]
+		public int use_options (int options);
+
+		[CCode (cname = "htmlCtxtReadDoc")]
+		public Doc* read_doc (string cur, string url, string? encoding = null, int options = 0);
+
+		[CCode (cname = "htmlCtxtReadFile")]
+		public Doc* read_file (string filename, string? encoding = null, int options = 0);
+
+		[CCode (cname = "htmlCtxtReadMemory")]
+		public Doc* read_memory ([CCode (array_length = false)] char[] buffer, int size, string url, string? encoding = null, int options = 0);
+
+		[CCode (cname = "htmlCtxtReadFd")]
+		public Doc* read_fd (int fd, string url, string? encoding = null, int options = 0);
+
+		[CCode (cname = "htmlCtxtReadIO")]
+		public Doc* read_io (Xml.InputReadCallback ioread, Xml.InputCloseCallback ioclose, void* ioctx, string url, string? encoding = null, int options = 0);
+	}
 }
