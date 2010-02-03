@@ -290,10 +290,10 @@ namespace Soup {
 		public void @foreach (Soup.MessageHeadersForeachFunc func);
 		public void free_ranges (Soup.Range ranges);
 		public unowned string @get (string name);
-		public bool get_content_disposition (out string disposition, out GLib.HashTable @params);
+		public bool get_content_disposition (out string disposition, out GLib.HashTable? @params);
 		public int64 get_content_length ();
 		public bool get_content_range (int64 start, int64 end, int64 total_length);
-		public unowned string get_content_type (out GLib.HashTable @params);
+		public unowned string get_content_type (out GLib.HashTable? @params);
 		public Soup.Encoding get_encoding ();
 		public Soup.Expectation get_expectations ();
 		public bool get_ranges (int64 total_length, out unowned Soup.Range ranges, int length);
