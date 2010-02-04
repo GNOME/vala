@@ -209,6 +209,8 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 				error_types.add (node_error_type);
 			}
 
+			bool has_general_catch_clause = false;
+
 			if (!is_in_catch) {
 				var handled_error_types = new ArrayList<DataType> ();
 				foreach (CatchClause clause in current_try.get_catch_clauses ()) {
@@ -228,6 +230,7 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 
 					if (clause.error_type.equals (gerror_type)) {
 						// general catch clause, this should be the last one
+						has_general_catch_clause = true;
 						cerror_block.add_statement (cgoto_stmt);
 						break;
 					} else {
@@ -255,7 +258,11 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 				}
 			}
 
-			if (error_types.size > 0) {
+			if (has_general_catch_clause) {
+				// every possible error is already caught
+				// as there is a general catch clause
+				// no need to do anything else
+			} else if (error_types.size > 0) {
 				// go to finally clause if no catch clause matches
 				// and there are still unhandled error types
 				cerror_block.add_statement (new CCodeGotoStatement ("__finally%d".printf (current_try_id)));
