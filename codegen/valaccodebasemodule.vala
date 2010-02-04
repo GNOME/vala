@@ -494,6 +494,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 	}
 
 	private void append_vala_strcmp0 () {
+		source_declarations.add_include ("string.h");;
+
 		var fun = new CCodeFunction ("_vala_strcmp0", "int");
 		fun.modifiers = CCodeModifiers.STATIC;
 		fun.add_parameter (new CCodeFormalParameter ("str1", "const char *"));
