@@ -1,6 +1,6 @@
 /* valaccodebasemodule.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -1802,8 +1802,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 			}
 
 			if (b.parent_symbol is Method) {
+				var m = (Method) b.parent_symbol;
+
 				// parameters are captured with the top-level block of the method
-				foreach (var param in ((Method) b.parent_symbol).get_parameters ()) {
+				foreach (var param in m.get_parameters ()) {
 					if (param.captured) {
 						var param_type = param.parameter_type.copy ();
 						param_type.value_owned = true;
@@ -1857,6 +1859,15 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 							}
 						}
 					}
+				}
+
+				if (m.coroutine) {
+					// capture async data to allow invoking callback from inside closure
+					data.add_field ("gpointer", "_async_data_");
+
+					// async method is suspended while waiting for callback,
+					// so we never need to care about memory management of async data
+					cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_async_data_"), new CCodeIdentifier ("data"))));
 				}
 
 				var cfrag = new CCodeFragment ();

@@ -1,6 +1,6 @@
 /* valaccodedelegatemodule.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -296,7 +296,12 @@ internal class Vala.CCodeDelegateModule : CCodeArrayModule {
 				if (m.binding == MemberBinding.STATIC) {
 					return new CCodeConstant ("NULL");
 				} else if (m.is_async_callback) {
-					return new CCodeIdentifier ("data");
+					if (current_method.closure) {
+						var block = ((Method) m.parent_symbol).body;
+						return new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), "_async_data_");
+					} else {
+						return new CCodeIdentifier ("data");
+					}
 				} else {
 					var delegate_target = (CCodeExpression) get_ccodenode (ma.inner);
 					if (expr_owned && ma.inner.value_type.data_type != null && ma.inner.value_type.data_type.is_reference_counting ()) {

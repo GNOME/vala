@@ -1,6 +1,6 @@
 /* valasemanticanalyzer.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -60,6 +60,21 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 		get {
 			var sym = current_symbol;
 			while (sym is Block) {
+				sym = sym.parent_symbol;
+			}
+			return sym as Method;
+		}
+	}
+
+	public Method? current_async_method {
+		get {
+			var sym = current_symbol;
+			while (sym is Block || sym is Method) {
+				var m = sym as Method;
+				if (m != null && m.coroutine) {
+					break;
+				}
+
 				sym = sym.parent_symbol;
 			}
 			return sym as Method;

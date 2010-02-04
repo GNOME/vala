@@ -1,6 +1,6 @@
 /* valamemberaccess.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -471,7 +471,22 @@ public class Vala.MemberAccess : Expression {
 			var m = (Method) member;
 			if (m.is_async_callback) {
 				// ensure to use right callback method for virtual/abstract async methods
-				m = analyzer.current_method.get_callback_method ();
+				// and also for lambda expressions within async methods
+				var async_method = analyzer.current_async_method;
+
+				if (async_method != analyzer.current_method) {
+					Symbol sym = analyzer.current_method;
+					while (sym != async_method) {
+						var method = sym as Method;
+						if (method != null) {
+							method.closure = true;
+						}
+						sym = sym.parent_symbol;
+					}
+					async_method.body.captured = true;
+				}
+
+				m = async_method.get_callback_method ();
 				symbol_reference = m;
 				member = symbol_reference;
 			} else if (m.base_method != null) {

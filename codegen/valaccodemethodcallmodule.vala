@@ -1,6 +1,6 @@
 /* valaccodemethodcallmodule.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -153,7 +153,17 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		}
 
 		CCodeExpression instance = null;
-		if (m != null && m.binding == MemberBinding.INSTANCE && !(m is CreationMethod)) {
+		if (m != null && m.is_async_callback) {
+			if (current_method.closure) {
+				var block = ((Method) m.parent_symbol).body;
+				instance = new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), "_async_data_");
+			} else {
+				instance = new CCodeIdentifier ("data");
+			}
+
+			in_arg_map.set (get_param_pos (m.cinstance_parameter_position), instance);
+			out_arg_map.set (get_param_pos (m.cinstance_parameter_position), instance);
+		} else if (m != null && m.binding == MemberBinding.INSTANCE && !(m is CreationMethod)) {
 			instance = (CCodeExpression) ma.inner.ccodenode;
 
 			if ((ma.member_name == "begin" || ma.member_name == "end") && ma.inner.symbol_reference == ma.symbol_reference) {
