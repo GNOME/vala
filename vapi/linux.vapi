@@ -161,7 +161,42 @@ namespace Linux {
     public void backtrace_symbols_fd (void* buffer, int size, int fd);
 
     [CCode (cheader_filename = "arpa/inet.h")]
-    public int inet_aton(string cp, out Posix.InAddr addr);
+    public int inet_aton (string cp, out Posix.InAddr addr);
+
+    [CCode (cname = "long", cprefix = "", cheader_filename = "sys/mount.h,linux/fs.h")]
+    public enum MountFlags {
+        MS_BIND,
+        MS_DIRSYNC,
+        MS_MANDLOCK,
+        MS_MOVE,
+        MS_NOATIME,
+        MS_NODEV,
+        MS_NODIRATIME,
+        MS_NOEXEC,
+        MS_NOSUID,
+        MS_RDONLY,
+        MS_RELATIME,
+        MS_REMOUNT,
+        MS_SILENT,
+        MS_SYNCHRONOUS,
+        S_WRITE,
+        S_APPEND,
+        S_IMMUTABLE,
+    }
+
+    [CCode (cname = "int", cprefix = "", cheader_filename = "sys/mount.h")]
+    public enum UnmountFlags {
+        MNT_FORCE,                /* Force unmounting.  */
+        MNT_DETACH,               /* Just detach from the tree.  */
+        MNT_EXPIRE                /* Mark for expiry.  */
+    }
+
+    [CCode (cheader_filename = "sys/mount.h")]
+    public int mount (string source, string target, string filesystemtype, MountFlags flags = 0, string options = "");
+    [CCode (cheader_filename = "sys/mount.h")]
+    public int umount (string target);
+    [CCode (cheader_filename = "sys/mount.h")]
+    public int umount2 (string target, UnmountFlags flags);
 
     [CCode (cname = "struct winsize", cheader_filename = "termios.h", destroy_function = "")]
     public struct winsize {
@@ -257,7 +292,7 @@ namespace Linux {
     // syscall(2)
     [CCode (cprefix = "SYS_", cname = "int")]
     public enum SysCall {
-            gettid
+        gettid
     }
 
     [CCode (cname = "syscall", cheader_filename = "unistd.h,sys/syscall.h")]
@@ -271,17 +306,118 @@ namespace Linux {
     }
 
     [CCode (cheader_filename = "sys/mman.h")]
-    public void *mremap(void *old_address, size_t old_size, size_t new_size, MremapFlags flags);
+    public void *mremap (void *old_address, size_t old_size, size_t new_size, MremapFlags flags);
 
     /*
      * Network
      */
     [CCode (cprefix = "", lower_case_cprefix = "")]
     namespace Network {
+
+        // interface consts, structs, and methods
+        [CCode (cheader_filename = "net/if.h")]
+        public const int IF_NAMESIZ;
+
+        [CCode (cheader_filename = "net/if.h")]
+        public uint if_nametoindex (string ifname);
+        [CCode (cheader_filename = "net/if.h")]
+        public unowned string if_indextoname (uint ifindex, string ifname);
+        [CCode (cheader_filename = "net/if.h")]
+        public IfNameindex if_nameindex ();
+
+        [CCode (cname = "int", cprefix = "IFF_", cheader_filename = "net/if.h")]
+        public enum IfFlag {
+            UP,
+            BROADCAST,
+            DEBUG,
+            LOOPBACK,
+            POINTOPOINT,
+            NOTRAILERS,
+            RUNNING,
+            NOARP,
+            PROMISC,
+            ALLMULTI,
+            MASTER,
+            SLAVE,
+            PORTSEL,
+            AUTOMEDIA,
+            DYNAMIC
+        }
+
+        [CCode (cname = "struct if_nameindex", cheader_filename = "net/if.h", destroy_function = "if_freenameindex")]
+        public struct IfNameindex {
+            public uint if_index;
+            public string if_name;
+        }
+
+        [CCode (cname = "struct ifmap", cheader_filename = "net/if.h", destroy_function = "")]
+        public struct IfMap {
+            public ulong mem_start;
+            public ulong mem_end;
+            public short base_addr;
+            public uchar irq;
+            public uchar dma;
+            public uchar port;
+        }
+
         [CCode (cname = "struct ifreq", cheader_filename = "net/if.h", destroy_function = "")]
         public struct IfReq {
             public char[] ifr_name;
             public Posix.SockAddr ifr_addr;
+            public Posix.SockAddr ifr_dstaddr;
+            public Posix.SockAddr ifr_broadaddr;
+            public Posix.SockAddr ifr_netmask;
+            public Posix.SockAddr ifr_hwaddr;
+            public short ifr_flags;
+            public int ifr_metric;
+            public int ifr_mtu;
+            public IfMap ifr_map;
+            public char[] ifr_slave;
+            public string ifr_data;
+            public int ifr_ifindex;
+            public int ifr_bandwidth;
+            public int ifr_qlen;
+            public char[] ifr_newname;
+        }
+
+        [CCode (cname = "struct ifconf", cheader_filename = "net/if.h", destroy_function = "")]
+        public struct IfConf {
+            public int ifc_len;
+            public string ifc_buf;
+            public IfReq ifc_req;
+        }
+
+        // route consts, structs, and methods
+        [CCode (cname = "struct rtentry", cheader_filename = "net/route.h", destroy_function = "")]
+        public struct RtEntry {
+            public Posix.SockAddr rt_dst;
+            public Posix.SockAddr rt_gateway;
+            public Posix.SockAddr rt_genmask;
+            public RtFlag rt_flags;
+            public short rt_metric;
+            public string rt_dev;
+            public ulong rt_mtu;
+            public ulong rt_window;
+            public ushort rt_irtt;
+        }
+
+        [CCode (cname = "ushort", cprefix = "RTF_", cheader_filename = "net/route.h")]
+        public enum RtFlag {
+            UP,
+            GATEWAY,
+            HOST,
+            REINSTATE,
+            DYNAMIC,
+            MODIFIED,
+            MTU,
+            WINDOW,
+            IRTT,
+            REJECT,
+            STATIC,
+            XRESOLVE,
+            NOFORWARD,
+            THROW,
+            NOPMTUDISC
         }
 
         /* ioctls */
