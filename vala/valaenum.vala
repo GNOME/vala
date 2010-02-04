@@ -1,6 +1,6 @@
 /* valaenum.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -301,10 +301,12 @@ public class Vala.Enum : TypeSymbol {
 		process_attributes ();
 
 		var old_source_file = analyzer.current_source_file;
+		var old_symbol = analyzer.current_symbol;
 
 		if (source_reference != null) {
 			analyzer.current_source_file = source_reference.file;
 		}
+		analyzer.current_symbol = this;
 
 		foreach (EnumValue value in values) {
 			value.check (analyzer);
@@ -315,6 +317,7 @@ public class Vala.Enum : TypeSymbol {
 		}
 
 		analyzer.current_source_file = old_source_file;
+		analyzer.current_symbol = old_symbol;
 
 		return !error;
 	}
