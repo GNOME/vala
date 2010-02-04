@@ -258,7 +258,13 @@ public class Vala.SymbolResolver : CodeVisitor {
 	DataType get_type_for_struct (Struct st, Struct base_struct) {
 		if (st.base_type != null) {
 			// make sure that base type is resolved
+
+			var old_scope = current_scope;
+			current_scope = st.scope;
+
 			st.base_type.accept (this);
+
+			current_scope = old_scope;
 		}
 
 		if (base_struct.base_struct != null) {
