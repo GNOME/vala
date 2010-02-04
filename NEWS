@@ -1,3 +1,18 @@
+Vala 0.7.10
+===========
+
+ * Support coalescing operator ??.
+ * Support to_string and bitwise complement with enums.
+ * Return handler id when connecting signal handlers.
+ * Support struct comparison.
+ * Support constructor chaining in structs.
+ * Enforce protected member restrictions.
+ * Improve performance of flow analysis.
+ * Support automatic line continuations in Genie.
+ * Improvements to the .gir reader and writer.
+ * Add --enable-mem-profiler commandline option.
+ * Many bug fixes and binding updates.
+
 Vala 0.7.9
 ==========
 
