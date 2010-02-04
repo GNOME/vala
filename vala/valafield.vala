@@ -311,7 +311,10 @@ public class Vala.Field : Member, Lockable {
 		if (initializer != null) {
 			initializer.target_type = field_type;
 
-			initializer.check (analyzer);
+			if (!initializer.check (analyzer)) {
+				error = true;
+				return false;
+			}
 
 			if (!initializer.value_type.compatible (field_type)) {
 				error = true;
