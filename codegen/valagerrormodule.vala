@@ -176,6 +176,18 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 		return cerror_block;
 	}
 
+	bool in_finally_block (CodeNode node) {
+		var current_node = node;
+		while (current_node != null) {
+			var try_stmt = current_node.parent_node as TryStatement;
+			if (try_stmt != null && try_stmt.finally_body == current_node) {
+				return true;
+			}
+			current_node = current_node.parent_node;
+		}
+		return false;
+	}
+
 	public override void add_simple_check (CodeNode node, CCodeFragment cfrag) {
 		current_method_inner_error = true;
 
@@ -247,6 +259,9 @@ internal class Vala.GErrorModule : CCodeDelegateModule {
 				// go to finally clause if no catch clause matches
 				// and there are still unhandled error types
 				cerror_block.add_statement (new CCodeGotoStatement ("__finally%d".printf (current_try_id)));
+			} else if (in_finally_block (node)) {
+				// do not check unexpected errors happening within finally blocks
+				// as jump out of finally block is not supported
 			} else {
 				// should never happen with correct bindings
 				uncaught_error_statement (inner_error, cerror_block, true);
