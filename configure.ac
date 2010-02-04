@@ -1,4 +1,4 @@
-AC_INIT([vala], [0.7.10], [j@bitron.ch], [vala])
+AC_INIT([vala], [0.7.11], [j@bitron.ch], [vala])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AC_CONFIG_MACRO_DIR([m4])
