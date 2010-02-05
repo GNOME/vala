@@ -1,6 +1,6 @@
 /* valasymbol.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -163,7 +163,11 @@ public abstract class Vala.Symbol : CodeNode {
 			return name;
 		}
 
-		return "%s.%s".printf (parent_symbol.get_full_name (), name.replace (".", ""));
+		if (name.has_prefix (".")) {
+			return "%s%s".printf (parent_symbol.get_full_name (), name);
+		} else {
+			return "%s.%s".printf (parent_symbol.get_full_name (), name);
+		}
 	}
 
 	/**
