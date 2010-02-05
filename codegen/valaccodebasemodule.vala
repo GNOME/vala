@@ -1773,6 +1773,7 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 						for (int dim = 1; dim <= array_type.rank; dim++) {
 							data.add_field ("gint", get_array_length_cname (get_variable_cname (local.name), dim));
 						}
+						data.add_field ("gint", get_array_size_cname (get_variable_cname (local.name)));
 					} else if (local.variable_type is DelegateType) {
 						data.add_field ("gpointer", get_delegate_target_cname (get_variable_cname (local.name)));
 						if (local.variable_type.value_owned) {

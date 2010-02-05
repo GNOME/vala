@@ -363,7 +363,15 @@ internal class Vala.CCodeArrayModule : CCodeMethodCallModule {
 	public override CCodeExpression get_array_size_cexpression (Expression array_expr) {
 		if (array_expr.symbol_reference is LocalVariable) {
 			var local = (LocalVariable) array_expr.symbol_reference;
-			return get_variable_cexpression (get_array_size_cname (get_variable_cname (local.name)));
+			if (local.captured) {
+				// captured variables are stored on the heap
+				var block = (Block) local.parent_symbol;
+				return new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (block))), get_array_size_cname (get_variable_cname (local.name)));
+			} else {
+				var size_expr = get_variable_cexpression (get_array_size_cname (get_variable_cname (local.name)));
+				return size_expr;
+			}
+
 		} else if (array_expr.symbol_reference is Field) {
 			var field = (Field) array_expr.symbol_reference;
 			var ma = (MemberAccess) array_expr;
