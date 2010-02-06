@@ -130,6 +130,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 	public Class value_class;
 	public Class array_class;
 	public Class delegate_class;
+	public Class error_class;
 
 	Set<Symbol> generated_external_symbols;
 
@@ -208,6 +209,7 @@ internal class Vala.DovaBaseModule : CCodeModule {
 		value_class = (Class) dova_ns.scope.lookup ("Value");
 		array_class = (Class) dova_ns.scope.lookup ("Array");
 		delegate_class = (Class) dova_ns.scope.lookup ("Delegate");
+		error_class = (Class) dova_ns.scope.lookup ("Error");
 
 		header_declarations = new CCodeDeclarationSpace ();
 		internal_header_declarations = new CCodeDeclarationSpace ();

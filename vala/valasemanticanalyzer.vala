@@ -155,6 +155,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 	public Class gerror_type;
 	public DataType list_type;
 	public DataType tuple_type;
+	public DataType error_type;
 
 	public int next_lambda_id = 0;
 
@@ -224,6 +225,7 @@ public class Vala.SemanticAnalyzer : CodeVisitor {
 			type_type = new ObjectType ((Class) dova_ns.scope.lookup ("Type"));
 			list_type = new ObjectType ((Class) dova_ns.scope.lookup ("List"));
 			tuple_type = new ObjectType ((Class) dova_ns.scope.lookup ("Tuple"));
+			error_type = new ObjectType ((Class) dova_ns.scope.lookup ("Error"));
 		}
 
 		current_symbol = root_symbol;

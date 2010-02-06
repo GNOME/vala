@@ -39,6 +39,7 @@ libvala_la_VALASOURCES = \
 	valadovabasemodule.vala \
 	valadovacontrolflowmodule.vala \
 	valadovadelegatemodule.vala \
+	valadovaerrormodule.vala \
 	valadovamemberaccessmodule.vala \
 	valadovamethodcallmodule.vala \
 	valadovamethodmodule.vala \

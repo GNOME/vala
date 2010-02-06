@@ -1060,6 +1060,8 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 
 		m.accept_children (codegen);
 
+		bool inner_error = current_method_inner_error;
+
 		current_symbol = old_symbol;
 		current_method_inner_error = old_method_inner_error;
 		next_temp_var_id = old_next_temp_var_id;
@@ -1123,6 +1125,12 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 					cinit.append (cdecl);
 
 					function.block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("result")));
+				}
+
+				if (inner_error) {
+					var cdecl = new CCodeDeclaration ("DovaError *");
+					cdecl.add_declarator (new CCodeVariableDeclarator ("_inner_error_", new CCodeConstant ("NULL")));
+					cinit.append (cdecl);
 				}
 
 				var st = m.parent_symbol as Struct;
@@ -1490,6 +1498,17 @@ internal class Vala.DovaObjectModule : DovaArrayModule {
 			}
 
 			generate_type_declaration (m.return_type, decl_space);
+		}
+
+		if (m.get_error_types ().size > 0 || (m.base_method != null && m.base_method.get_error_types ().size > 0)) {
+			var cparam = new CCodeFormalParameter ("error", "DovaError**");
+			func.add_parameter (cparam);
+			if (vdeclarator != null) {
+				vdeclarator.add_parameter (cparam);
+			}
+			if (vcall != null) {
+				vcall.add_argument (new CCodeIdentifier ("error"));
+			}
 		}
 	}
 

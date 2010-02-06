@@ -33,6 +33,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		public bool is_error_target { get; set; }
 		public ErrorDomain? error_domain { get; set; }
 		public ErrorCode? error_code { get; set; }
+		public Class? error_class { get; set; }
 		public bool is_finally_clause { get; set; }
 		public BasicBlock basic_block { get; set; }
 		public BasicBlock? last_block { get; set; }
@@ -53,11 +54,12 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			is_return_target = true;
 		}
 
-		public JumpTarget.error_target (BasicBlock basic_block, CatchClause catch_clause, ErrorDomain? error_domain, ErrorCode? error_code) {
+		public JumpTarget.error_target (BasicBlock basic_block, CatchClause catch_clause, ErrorDomain? error_domain, ErrorCode? error_code, Class? error_class) {
 			this.basic_block = basic_block;
 			this.catch_clause = catch_clause;
 			this.error_domain = error_domain;
 			this.error_code = error_code;
+			this.error_class = error_class;
 			is_error_target = true;
 		}
 
@@ -836,6 +838,7 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 			// exceptional control flow
 			foreach (DataType error_data_type in node.get_error_types()) {
 				var error_type = error_data_type as ErrorType;
+				var error_class = error_data_type.data_type as Class;
 				current_block = last_block;
 				unreachable_reported = true;
 
@@ -847,20 +850,34 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 						unreachable_reported = false;
 						break;
 					} else if (jump_target.is_error_target) {
-						if (jump_target.error_domain == null
-						    || (jump_target.error_domain == error_type.error_domain
-						        && (jump_target.error_code == null
-						            || jump_target.error_code == error_type.error_code))) {
+						if (context.profile == Profile.GOBJECT) {
+							if (jump_target.error_domain == null
+							    || (jump_target.error_domain == error_type.error_domain
+								&& (jump_target.error_code == null
+								    || jump_target.error_code == error_type.error_code))) {
+								// error can always be caught by this catch clause
+								// following catch clauses cannot be reached by this error
+								current_block.connect (jump_target.basic_block);
+								current_block = null;
+								unreachable_reported = false;
+								break;
+							} else if (error_type.error_domain == null
+								   || (error_type.error_domain == jump_target.error_domain
+								       && (error_type.error_code == null
+								           || error_type.error_code == jump_target.error_code))) {
+								// error might be caught by this catch clause
+								// unknown at compile time
+								// following catch clauses might still be reached by this error
+								current_block.connect (jump_target.basic_block);
+							}
+						} else if (jump_target.error_class == null || jump_target.error_class == error_class) {
 							// error can always be caught by this catch clause
 							// following catch clauses cannot be reached by this error
 							current_block.connect (jump_target.basic_block);
 							current_block = null;
 							unreachable_reported = false;
 							break;
-						} else if (error_type.error_domain == null
-						           || (error_type.error_domain == jump_target.error_domain
-						               && (error_type.error_code == null
-						                   || error_type.error_code == jump_target.error_code))) {
+						} else if (jump_target.error_class.is_subtype_of (error_class)) {
 							// error might be caught by this catch clause
 							// unknown at compile time
 							// following catch clauses might still be reached by this error
@@ -934,10 +951,15 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 		for (int i = catch_clauses.size - 1; i >= 0; i--) {
 			var catch_clause = catch_clauses[i];
 			if (catch_clause.error_type != null) {
-				var error_type = catch_clause.error_type as ErrorType;
-				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, catch_clause.error_type.data_type as ErrorDomain, error_type.error_code));
+				if (context.profile == Profile.GOBJECT) {
+					var error_type = catch_clause.error_type as ErrorType;
+					jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, catch_clause.error_type.data_type as ErrorDomain, error_type.error_code, null));
+				} else {
+					var error_class = catch_clause.error_type.data_type as Class;
+					jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, null, null, error_class));
+				}
 			} else {
-				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, null, null));
+				jump_stack.add (new JumpTarget.error_target (new BasicBlock (), catch_clause, null, null, null));
 			}
 		}
 
@@ -968,8 +990,14 @@ public class Vala.FlowAnalyzer : CodeVisitor {
 					break;
 				}
 
-				if (prev_target.error_domain == jump_target.error_domain &&
-				  prev_target.error_code == jump_target.error_code) {
+				if (context.profile == Profile.GOBJECT) {
+					if (prev_target.error_domain == jump_target.error_domain &&
+					    prev_target.error_code == jump_target.error_code) {
+						Report.error (stmt.source_reference, "double catch clause of same error detected");
+						stmt.error = true;
+						return;
+					}
+				} else if (prev_target.error_class == jump_target.error_class) {
 					Report.error (stmt.source_reference, "double catch clause of same error detected");
 					stmt.error = true;
 					return;

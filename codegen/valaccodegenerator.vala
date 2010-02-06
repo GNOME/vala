@@ -65,8 +65,9 @@ public class Vala.CCodeGenerator : CodeGenerator {
 			head = new DovaArrayModule (this, head);
 			head = new DovaObjectModule (this, head);
 			head = new DovaValueModule (this, head);
-			*/
 			head = new DovaDelegateModule (this, head);
+			*/
+			head = new DovaErrorModule (this, head);
 		} else {
 			/* included by inheritance
 			head = new CCodeBaseModule (this, head);
