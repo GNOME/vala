@@ -1,6 +1,6 @@
 /* valagirwriter.vala
  *
- * Copyright (C) 2008-2009  Jürg Billeter
+ * Copyright (C) 2008-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -87,6 +87,10 @@ public class Vala.GIRWriter : CodeVisitor {
 
 		string filename = "%s%c%s-%s.gir".printf (directory, Path.DIR_SEPARATOR, gir_namespace, gir_version);
 		stream = FileStream.open (filename, "w");
+		if (stream == null) {
+			Report.error (null, "unable to open `%s' for writing".printf (filename));
+			return;
+		}
 
 		stream.printf ("<?xml version=\"1.0\"?>\n");
 

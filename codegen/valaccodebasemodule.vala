@@ -369,6 +369,10 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 		// generate symbols file for public API
 		if (context.symbols_filename != null) {
 			var stream = FileStream.open (context.symbols_filename, "w");
+			if (stream == null) {
+				Report.error (null, "unable to open `%s' for writing".printf (context.symbols_filename));
+				return;
+			}
 
 			foreach (CCodeNode node in header_declarations.type_member_declaration.get_children ()) {
 				if (node is CCodeFunction) {
