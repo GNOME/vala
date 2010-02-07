@@ -4,6 +4,7 @@ NULL =
 
 
 SUBDIRS = htm \
+          xml \
           devhelp \
           valadoc.org \
           $(NULL)
