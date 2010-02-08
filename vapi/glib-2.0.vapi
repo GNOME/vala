@@ -1298,6 +1298,9 @@ namespace GLib {
 		public int depth ();
 		[CCode (cname = "g_main_current_source")]
 		public static weak Source current_source ();
+		public static unowned MainContext get_thread_default ();
+		public void push_thread_default ();
+		public void pop_thread_default ();
 	}
 	
 	[CCode (has_target = false)]
