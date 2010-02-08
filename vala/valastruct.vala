@@ -46,7 +46,6 @@ public class Vala.Struct : TypeSymbol {
 	private string get_value_function;
 	private string set_value_function;
 	private string default_value = null;
-	private string? type_signature;
 	private string copy_function;
 	private string destroy_function;
 
@@ -334,21 +333,6 @@ public class Vala.Struct : TypeSymbol {
 		return get_lower_case_cname (infix).up ();
 	}
 
-	public override string? get_type_signature () {
-		if (type_signature == null) {
-			var str = new StringBuilder ();
-			str.append_c ('(');
-			foreach (Field f in fields) {
-				if (f.binding == MemberBinding.INSTANCE) {
-					str.append (f.field_type.get_type_signature ());
-				}
-			}
-			str.append_c (')');
-			return str.str;
-		}
-		return type_signature;
-	}
-
 	/**
 	 * Returns whether this is a boolean type.
 	 *
@@ -442,9 +426,6 @@ public class Vala.Struct : TypeSymbol {
 		}
 		if (a.has_argument ("default_value")) {
 			set_default_value (a.get_string ("default_value"));
-		}
-		if (a.has_argument ("type_signature")) {
-			type_signature = a.get_string ("type_signature");
 		}
 		if (a.has_argument ("copy_function")) {
 			set_copy_function (a.get_string ("copy_function"));

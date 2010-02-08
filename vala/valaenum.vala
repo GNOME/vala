@@ -283,14 +283,6 @@ public class Vala.Enum : TypeSymbol {
 		return "0";
 	}
 
-	public override string? get_type_signature () {
-		if (is_flags) {
-			return "u";
-		} else {
-			return "i";
-		}
-	}
-
 	public override bool check (SemanticAnalyzer analyzer) {
 		if (checked) {
 			return !error;

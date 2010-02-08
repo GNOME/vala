@@ -1,6 +1,6 @@
 /* valadbusmodule.vala
  *
- * Copyright (C) 2008-2009  Jürg Billeter
+ * Copyright (C) 2008-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -98,11 +98,63 @@ internal class Vala.DBusModule : GAsyncModule {
 		return false;
 	}
 
-	public static string get_type_signature (DataType datatype) {
-		if (is_string_marshalled_enum (datatype.data_type)) {
+	public static string? get_type_signature (DataType datatype) {
+		var array_type = datatype as ArrayType;
+
+		if (array_type != null) {
+			string element_type_signature = get_type_signature (array_type.element_type);
+
+			if (element_type_signature == null) {
+				return null;
+			}
+
+			return string.nfill (array_type.rank, 'a') + element_type_signature;
+		} else if (is_string_marshalled_enum (datatype.data_type)) {
 			return "s";
+		} else if (datatype.data_type != null) {
+			string sig = null;
+
+			var ccode = datatype.data_type.get_attribute ("CCode");
+			if (ccode != null) {
+				sig = ccode.get_string ("type_signature");
+			}
+
+			var st = datatype.data_type as Struct;
+			var en = datatype.data_type as Enum;
+			if (sig == null && st != null) {
+				var str = new StringBuilder ();
+				str.append_c ('(');
+				foreach (Field f in st.get_fields ()) {
+					if (f.binding == MemberBinding.INSTANCE) {
+						str.append (get_type_signature (f.field_type));
+					}
+				}
+				str.append_c (')');
+				sig = str.str;
+			} else if (sig == null && en != null) {
+				if (en.is_flags) {
+					return "u";
+				} else {
+					return "i";
+				}
+			}
+
+			var type_args = datatype.get_type_arguments ();
+			if (sig != null && sig.str ("%s") != null && type_args.size > 0) {
+				string element_sig = "";
+				foreach (DataType type_arg in type_args) {
+					var s = get_type_signature (type_arg);
+					if (s != null) {
+						element_sig += s;
+					}
+				}
+
+				sig = sig.printf (element_sig);
+			}
+
+			return sig;
 		} else {
-			return datatype.get_type_signature ();
+			return null;
 		}
 	}
 

@@ -1,6 +1,6 @@
 /* valadbusclientmodule.vala
  *
- * Copyright (C) 2007-2009  Jürg Billeter
+ * Copyright (C) 2007-2010  Jürg Billeter
 *  Copyright (C) 2008  Philip Van Hoof
  *
  * This library is free software; you can redistribute it and/or
@@ -2276,7 +2276,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		iter_call = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_open_container"));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_iter")));
 		iter_call.add_argument (new CCodeIdentifier ("DBUS_TYPE_VARIANT"));
-		iter_call.add_argument (new CCodeConstant ("\"%s\"".printf (prop.property_type.get_type_signature ())));
+		iter_call.add_argument (new CCodeConstant ("\"%s\"".printf (get_type_signature (prop.property_type))));
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_subiter")));
 		prefragment.append (new CCodeExpressionStatement (iter_call));
 

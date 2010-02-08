@@ -474,32 +474,6 @@ public abstract class Vala.DataType : CodeNode {
 	}
 
 	/**
-	 * Returns type signature as used for GVariant and D-Bus.
-	 */
-	public virtual string? get_type_signature () {
-		if (data_type != null) {
-			string sig = data_type.get_type_signature ();
-
-			var type_args = get_type_arguments ();
-			if (sig != null && sig.str ("%s") != null && type_args.size > 0) {
-				string element_sig = "";
-				foreach (DataType type_arg in type_args) {
-					var s = type_arg.get_type_signature ();
-					if (s != null) {
-						element_sig += s;
-					}
-				}
-
-				sig = sig.printf (element_sig);
-			}
-
-			return sig;
-		} else {
-			return null;
-		}
-	}
-
-	/**
 	 * Returns whether the value needs to be disposed, i.e. whether
 	 * allocated memory or other resources need to be released when
 	 * the value is no longer needed.

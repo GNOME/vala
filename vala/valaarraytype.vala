@@ -207,16 +207,6 @@ public class Vala.ArrayType : ReferenceType {
 		return true;
 	}
 
-	public override string? get_type_signature () {
-		string element_type_signature = element_type.get_type_signature ();
-
-		if (element_type_signature == null) {
-			return null;
-		}
-
-		return string.nfill (rank, 'a') + element_type_signature;
-	}
-
 	public override void accept_children (CodeVisitor visitor) {
 		element_type.accept (visitor);
 	}
