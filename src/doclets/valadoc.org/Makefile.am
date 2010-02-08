@@ -2,8 +2,8 @@
 
 
 libdoclet_VALASOURCES = \
+	htmlrenderer.vala \
 	doclet.vala \
-	wikirenderer.vala \
 	$(NULL)
 
 
