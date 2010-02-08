@@ -150,6 +150,8 @@ dist_vapi_DATA = \
 	poppler-glib.deps \
 	poppler-glib.vapi \
 	posix.vapi \
+	purple.deps \
+	purple.vapi \
 	raptor.vapi \
 	rasqal.vapi \
 	readline.vapi \
