@@ -38,6 +38,13 @@
 				<parameter name="region" type="GdkRegion*"/>
 			</parameters>
 		</function>
+		<function name="cairo_reset_clip" symbol="gdk_cairo_reset_clip">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="cr" type="cairo_t*"/>
+				<parameter name="drawable" type="GdkDrawable*"/>
+			</parameters>
+		</function>
 		<function name="cairo_set_source_color" symbol="gdk_cairo_set_source_color">
 			<return-type type="void"/>
 			<parameters>
@@ -587,14 +594,6 @@
 				<parameter name="time_" type="guint32"/>
 			</parameters>
 		</function>
-		<function name="keyboard_grab_info_libgtk_only" symbol="gdk_keyboard_grab_info_libgtk_only">
-			<return-type type="gboolean"/>
-			<parameters>
-				<parameter name="display" type="GdkDisplay*"/>
-				<parameter name="grab_window" type="GdkWindow**"/>
-				<parameter name="owner_events" type="gboolean*"/>
-			</parameters>
-		</function>
 		<function name="keyboard_ungrab" symbol="gdk_keyboard_ungrab">
 			<return-type type="void"/>
 			<parameters>
@@ -661,6 +660,25 @@
 			<return-type type="void"/>
 			<parameters>
 				<parameter name="startup_id" type="gchar*"/>
+			</parameters>
+		</function>
+		<function name="offscreen_window_get_embedder" symbol="gdk_offscreen_window_get_embedder">
+			<return-type type="GdkWindow*"/>
+			<parameters>
+				<parameter name="window" type="GdkWindow*"/>
+			</parameters>
+		</function>
+		<function name="offscreen_window_get_pixmap" symbol="gdk_offscreen_window_get_pixmap">
+			<return-type type="GdkPixmap*"/>
+			<parameters>
+				<parameter name="window" type="GdkWindow*"/>
+			</parameters>
+		</function>
+		<function name="offscreen_window_set_embedder" symbol="gdk_offscreen_window_set_embedder">
+			<return-type type="void"/>
+			<parameters>
+				<parameter name="window" type="GdkWindow*"/>
+				<parameter name="embedder" type="GdkWindow*"/>
 			</parameters>
 		</function>
 		<function name="pango_context_get" symbol="gdk_pango_context_get">
@@ -921,7 +939,7 @@
 			</parameters>
 		</function>
 		<function name="selection_property_get" symbol="gdk_selection_property_get">
-			<return-type type="gboolean"/>
+			<return-type type="gint"/>
 			<parameters>
 				<parameter name="requestor" type="GdkWindow*"/>
 				<parameter name="data" type="guchar**"/>
@@ -1048,14 +1066,6 @@
 				<parameter name="format" type="gint*"/>
 				<parameter name="ctext" type="guchar**"/>
 				<parameter name="length" type="gint*"/>
-			</parameters>
-		</function>
-		<function name="synthesize_window_state" symbol="gdk_synthesize_window_state">
-			<return-type type="void"/>
-			<parameters>
-				<parameter name="window" type="GdkWindow*"/>
-				<parameter name="unset_flags" type="GdkWindowState"/>
-				<parameter name="set_flags" type="GdkWindowState"/>
 			</parameters>
 		</function>
 		<function name="test_render_sync" symbol="gdk_test_render_sync">
@@ -1523,6 +1533,21 @@
 			<field name="max_aspect" type="gdouble"/>
 			<field name="win_gravity" type="GdkGravity"/>
 		</struct>
+		<struct name="GdkKeyboardGrabInfo">
+			<method name="libgtk_only" symbol="gdk_keyboard_grab_info_libgtk_only">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="display" type="GdkDisplay*"/>
+					<parameter name="grab_window" type="GdkWindow**"/>
+					<parameter name="owner_events" type="gboolean*"/>
+				</parameters>
+			</method>
+			<field name="window" type="GdkWindow*"/>
+			<field name="native_window" type="GdkWindow*"/>
+			<field name="serial" type="gulong"/>
+			<field name="owner_events" type="gboolean"/>
+			<field name="time" type="guint32"/>
+		</struct>
 		<struct name="GdkKeymapKey">
 			<field name="keycode" type="guint"/>
 			<field name="group" type="gint"/>
@@ -1575,6 +1600,15 @@
 		<struct name="GdkPointerHooks">
 			<field name="get_pointer" type="GCallback"/>
 			<field name="window_at_pointer" type="GCallback"/>
+		</struct>
+		<struct name="GdkPointerWindowInfo">
+			<field name="toplevel_under_pointer" type="GdkWindow*"/>
+			<field name="window_under_pointer" type="GdkWindow*"/>
+			<field name="toplevel_x" type="gdouble"/>
+			<field name="toplevel_y" type="gdouble"/>
+			<field name="state" type="guint32"/>
+			<field name="button" type="guint32"/>
+			<field name="motion_hint_serial" type="gulong"/>
 		</struct>
 		<struct name="GdkRegion">
 			<method name="copy" symbol="gdk_region_copy">
@@ -1649,6 +1683,13 @@
 					<parameter name="points" type="GdkPoint*"/>
 					<parameter name="n_points" type="gint"/>
 					<parameter name="fill_rule" type="GdkFillRule"/>
+				</parameters>
+			</method>
+			<method name="rect_equal" symbol="gdk_region_rect_equal">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="region" type="GdkRegion*"/>
+					<parameter name="rectangle" type="GdkRectangle*"/>
 				</parameters>
 			</method>
 			<method name="rect_in" symbol="gdk_region_rect_in">
@@ -1775,35 +1816,6 @@
 			<field name="type_hint" type="GdkWindowTypeHint"/>
 		</struct>
 		<struct name="GdkWindowObject">
-			<field name="parent_instance" type="GdkDrawable"/>
-			<field name="impl" type="GdkDrawable*"/>
-			<field name="parent" type="GdkWindowObject*"/>
-			<field name="user_data" type="gpointer"/>
-			<field name="x" type="gint"/>
-			<field name="y" type="gint"/>
-			<field name="extension_events" type="gint"/>
-			<field name="filters" type="GList*"/>
-			<field name="children" type="GList*"/>
-			<field name="bg_color" type="GdkColor"/>
-			<field name="bg_pixmap" type="GdkPixmap*"/>
-			<field name="paint_stack" type="GSList*"/>
-			<field name="update_area" type="GdkRegion*"/>
-			<field name="update_freeze_count" type="guint"/>
-			<field name="window_type" type="guint8"/>
-			<field name="depth" type="guint8"/>
-			<field name="resize_count" type="guint8"/>
-			<field name="state" type="GdkWindowState"/>
-			<field name="guffaw_gravity" type="guint"/>
-			<field name="input_only" type="guint"/>
-			<field name="modal_hint" type="guint"/>
-			<field name="composited" type="guint"/>
-			<field name="destroyed" type="guint"/>
-			<field name="accept_focus" type="guint"/>
-			<field name="focus_on_map" type="guint"/>
-			<field name="shaped" type="guint"/>
-			<field name="event_mask" type="GdkEventMask"/>
-			<field name="update_and_descendants_freeze_count" type="guint"/>
-			<field name="redirect" type="GdkWindowRedirect*"/>
 		</struct>
 		<struct name="GdkWindowObjectClass">
 			<field name="parent_class" type="GdkDrawableClass"/>
@@ -1967,12 +1979,6 @@
 					<parameter name="event" type="GdkEvent*"/>
 					<parameter name="x_win" type="gdouble*"/>
 					<parameter name="y_win" type="gdouble*"/>
-				</parameters>
-			</method>
-			<method name="get_graphics_expose" symbol="gdk_event_get_graphics_expose">
-				<return-type type="GdkEvent*"/>
-				<parameters>
-					<parameter name="window" type="GdkWindow*"/>
 				</parameters>
 			</method>
 			<method name="get_root_coords" symbol="gdk_event_get_root_coords">
@@ -2305,6 +2311,7 @@
 			<member name="GDK_OWNER_CHANGE" value="34"/>
 			<member name="GDK_GRAB_BROKEN" value="35"/>
 			<member name="GDK_DAMAGE" value="36"/>
+			<member name="GDK_EVENT_LAST" value="37"/>
 		</enum>
 		<enum name="GdkExtensionMode" type-name="GdkExtensionMode" get-type="gdk_extension_mode_get_type">
 			<member name="GDK_EXTENSION_EVENTS_NONE" value="0"/>
@@ -2481,6 +2488,7 @@
 			<member name="GDK_WINDOW_DIALOG" value="3"/>
 			<member name="GDK_WINDOW_TEMP" value="4"/>
 			<member name="GDK_WINDOW_FOREIGN" value="5"/>
+			<member name="GDK_WINDOW_OFFSCREEN" value="6"/>
 		</enum>
 		<enum name="GdkWindowTypeHint" type-name="GdkWindowTypeHint" get-type="gdk_window_type_hint_get_type">
 			<member name="GDK_WINDOW_TYPE_HINT_NORMAL" value="0"/>
@@ -3111,9 +3119,14 @@
 			<field name="core_pointer" type="GdkDevice*"/>
 			<field name="pointer_hooks" type="GdkDisplayPointerHooks*"/>
 			<field name="closed" type="guint"/>
+			<field name="ignore_core_events" type="guint"/>
 			<field name="double_click_distance" type="guint"/>
 			<field name="button_x" type="gint[]"/>
 			<field name="button_y" type="gint[]"/>
+			<field name="pointer_grabs" type="GList*"/>
+			<field name="keyboard_grab" type="GdkKeyboardGrabInfo"/>
+			<field name="pointer_info" type="GdkPointerWindowInfo"/>
+			<field name="last_event_time" type="guint32"/>
 		</object>
 		<object name="GdkDisplayManager" parent="GObject" type-name="GdkDisplayManager" get-type="gdk_display_manager_get_type">
 			<method name="get" symbol="gdk_display_manager_get">
@@ -3243,6 +3256,14 @@
 					<parameter name="colormap" type="GdkColormap*"/>
 				</parameters>
 			</method>
+			<vfunc name="create_cairo_surface">
+				<return-type type="cairo_surface_t*"/>
+				<parameters>
+					<parameter name="drawable" type="GdkDrawable*"/>
+					<parameter name="width" type="int"/>
+					<parameter name="height" type="int"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="create_gc">
 				<return-type type="GdkGC*"/>
 				<parameters>
@@ -3277,6 +3298,21 @@
 					<parameter name="ydest" type="gint"/>
 					<parameter name="width" type="gint"/>
 					<parameter name="height" type="gint"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="draw_drawable_with_src">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="drawable" type="GdkDrawable*"/>
+					<parameter name="gc" type="GdkGC*"/>
+					<parameter name="src" type="GdkDrawable*"/>
+					<parameter name="xsrc" type="gint"/>
+					<parameter name="ysrc" type="gint"/>
+					<parameter name="xdest" type="gint"/>
+					<parameter name="ydest" type="gint"/>
+					<parameter name="width" type="gint"/>
+					<parameter name="height" type="gint"/>
+					<parameter name="original_src" type="GdkDrawable*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="draw_glyphs">
@@ -3469,6 +3505,12 @@
 					<parameter name="height" type="gint*"/>
 				</parameters>
 			</vfunc>
+			<vfunc name="get_source_drawable">
+				<return-type type="GdkDrawable*"/>
+				<parameters>
+					<parameter name="drawable" type="GdkDrawable*"/>
+				</parameters>
+			</vfunc>
 			<vfunc name="get_visible_region">
 				<return-type type="GdkRegion*"/>
 				<parameters>
@@ -3485,6 +3527,13 @@
 				<return-type type="cairo_surface_t*"/>
 				<parameters>
 					<parameter name="drawable" type="GdkDrawable*"/>
+				</parameters>
+			</vfunc>
+			<vfunc name="set_cairo_clip">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="drawable" type="GdkDrawable*"/>
+					<parameter name="cr" type="cairo_t*"/>
 				</parameters>
 			</vfunc>
 			<vfunc name="set_colormap">
@@ -4254,6 +4303,7 @@
 			<field name="closed" type="guint"/>
 			<field name="normal_gcs" type="GdkGC*[]"/>
 			<field name="exposure_gcs" type="GdkGC*[]"/>
+			<field name="subwindow_gcs" type="GdkGC*[]"/>
 			<field name="font_options" type="cairo_font_options_t*"/>
 			<field name="resolution" type="double"/>
 		</object>
@@ -4422,12 +4472,6 @@
 					<parameter name="window" type="GdkWindow*"/>
 				</parameters>
 			</method>
-			<method name="destroy_notify" symbol="gdk_window_destroy_notify">
-				<return-type type="void"/>
-				<parameters>
-					<parameter name="window" type="GdkWindow*"/>
-				</parameters>
-			</method>
 			<method name="enable_synchronized_configure" symbol="gdk_window_enable_synchronized_configure">
 				<return-type type="void"/>
 				<parameters>
@@ -4435,6 +4479,18 @@
 				</parameters>
 			</method>
 			<method name="end_paint" symbol="gdk_window_end_paint">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+				</parameters>
+			</method>
+			<method name="ensure_native" symbol="gdk_window_ensure_native">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+				</parameters>
+			</method>
+			<method name="flush" symbol="gdk_window_flush">
 				<return-type type="void"/>
 				<parameters>
 					<parameter name="window" type="GdkWindow*"/>
@@ -4478,8 +4534,20 @@
 					<parameter name="window" type="GdkWindow*"/>
 				</parameters>
 			</method>
+			<method name="geometry_changed" symbol="gdk_window_geometry_changed">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+				</parameters>
+			</method>
 			<method name="get_children" symbol="gdk_window_get_children">
 				<return-type type="GList*"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+				</parameters>
+			</method>
+			<method name="get_cursor" symbol="gdk_window_get_cursor">
+				<return-type type="GdkCursor*"/>
 				<parameters>
 					<parameter name="window" type="GdkWindow*"/>
 				</parameters>
@@ -4489,6 +4557,14 @@
 				<parameters>
 					<parameter name="window" type="GdkWindow*"/>
 					<parameter name="decorations" type="GdkWMDecoration*"/>
+				</parameters>
+			</method>
+			<method name="get_deskrelative_origin" symbol="gdk_window_get_deskrelative_origin">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+					<parameter name="x" type="gint*"/>
+					<parameter name="y" type="gint*"/>
 				</parameters>
 			</method>
 			<method name="get_events" symbol="gdk_window_get_events">
@@ -4559,6 +4635,16 @@
 					<parameter name="window" type="GdkWindow*"/>
 					<parameter name="x" type="gint*"/>
 					<parameter name="y" type="gint*"/>
+				</parameters>
+			</method>
+			<method name="get_root_coords" symbol="gdk_window_get_root_coords">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+					<parameter name="x" type="gint"/>
+					<parameter name="y" type="gint"/>
+					<parameter name="root_x" type="gint*"/>
+					<parameter name="root_y" type="gint*"/>
 				</parameters>
 			</method>
 			<method name="get_root_origin" symbol="gdk_window_get_root_origin">
@@ -4659,6 +4745,12 @@
 					<parameter name="window" type="GdkWindow*"/>
 					<parameter name="region" type="GdkRegion*"/>
 					<parameter name="invalidate_children" type="gboolean"/>
+				</parameters>
+			</method>
+			<method name="is_destroyed" symbol="gdk_window_is_destroyed">
+				<return-type type="gboolean"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
 				</parameters>
 			</method>
 			<method name="is_viewable" symbol="gdk_window_is_viewable">
@@ -4802,6 +4894,14 @@
 					<parameter name="window" type="GdkWindow*"/>
 					<parameter name="width" type="gint"/>
 					<parameter name="height" type="gint"/>
+				</parameters>
+			</method>
+			<method name="restack" symbol="gdk_window_restack">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="window" type="GdkWindow*"/>
+					<parameter name="sibling" type="GdkWindow*"/>
+					<parameter name="above" type="gboolean"/>
 				</parameters>
 			</method>
 			<method name="scroll" symbol="gdk_window_scroll">
@@ -5109,6 +5209,35 @@
 					<parameter name="window" type="GdkWindow*"/>
 				</parameters>
 			</method>
+			<property name="cursor" type="GdkCursor*" readable="1" writable="1" construct="0" construct-only="0"/>
+			<signal name="from-embedder" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GdkWindow*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+					<parameter name="p2" type="gpointer"/>
+					<parameter name="p3" type="gpointer"/>
+				</parameters>
+			</signal>
+			<signal name="pick-embedded-child" when="LAST">
+				<return-type type="GdkWindow*"/>
+				<parameters>
+					<parameter name="object" type="GdkWindow*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+				</parameters>
+			</signal>
+			<signal name="to-embedder" when="LAST">
+				<return-type type="void"/>
+				<parameters>
+					<parameter name="object" type="GdkWindow*"/>
+					<parameter name="p0" type="gdouble"/>
+					<parameter name="p1" type="gdouble"/>
+					<parameter name="p2" type="gpointer"/>
+					<parameter name="p3" type="gpointer"/>
+				</parameters>
+			</signal>
 		</object>
 		<constant name="GDK_CURRENT_TIME" type="int" value="0"/>
 		<constant name="GDK_MAX_TIMECOORD_AXES" type="int" value="128"/>
