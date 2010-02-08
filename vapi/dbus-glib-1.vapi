@@ -23,6 +23,14 @@
 
 [CCode (cheader_filename = "dbus/dbus-glib-lowlevel.h,dbus/dbus-glib.h")]
 namespace DBus {
+	public const string SERVICE_DBUS;
+	public const string PATH_DBUS;
+	public const string INTERFACE_DBUS;
+
+	public const string INTERFACE_INTROSPECTABLE;
+	public const string INTERFACE_PROPERTIES;
+	public const string INTERFACE_PEER;
+
 	[CCode (cprefix = "DBUS_BUS_")]
 	public enum BusType {
 		SESSION,
