@@ -178,7 +178,7 @@ public class Valadoc.ValadocOrg.Doclet : Valadoc.Html.BasicDoclet {
 			GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 			writer = new Html.MarkupWriter (file, false);
 			_renderer.set_writer (writer);
-			write_symbol_content (node, "/doc/glib-2.0/img/");
+			write_symbol_content (node, Path.build_filename ("/doc/", node.package.name));
 			file = null;
 
 
@@ -200,7 +200,7 @@ public class Valadoc.ValadocOrg.Doclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 		writer = new Html.MarkupWriter (file, false);
 		_renderer.set_writer (writer);
-		write_symbol_content (node, "/doc/glib-2.0/img/");
+		write_symbol_content (node, Path.build_filename ("/doc/", node.package.name));
 		file = null;
 
 
