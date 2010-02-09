@@ -187,7 +187,11 @@ public class Valadoc.ValadocOrg.Doclet : Valadoc.Html.BasicDoclet {
 			file = GLib.FileStream.open (rpath, "w");
 			writer = new Html.MarkupWriter (file, false);
 			_renderer.set_writer (writer);
-			write_navi_symbol (node);
+			if (is_internal_node (node)) {
+				write_navi_symbol (node);
+			} else {
+				write_navi_leaf_symbol (node);
+			}
 			file = null;
 		}
 
@@ -209,7 +213,11 @@ public class Valadoc.ValadocOrg.Doclet : Valadoc.Html.BasicDoclet {
 		file = GLib.FileStream.open (rpath, "w");
 		writer = new Html.MarkupWriter (file, false);
 		_renderer.set_writer (writer);
-		write_navi_symbol (node);
+		if (is_internal_node (node)) {
+			write_navi_symbol (node);
+		} else {
+			write_navi_leaf_symbol (node);
+		}
 		file = null;
 
 
