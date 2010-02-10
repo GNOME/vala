@@ -150,10 +150,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename ( path, "index.htm" ), "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
-//		write_file_header (this.css_path, pkg_name);
+		write_file_header (this.css_path, pkg_name);
 		write_navi_package (package);
 		write_package_content (package, package);
-//		write_file_footer ();
+		write_file_footer ();
 		file = null;
 
 		package.accept_all_children (this);
