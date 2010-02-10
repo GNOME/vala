@@ -53,7 +53,7 @@ public class Valadoc.Xml.Doclet : Api.Visitor, Valadoc.Doclet {
 		}
 
 		// avoid exceptions and signal childs
-		if (node is Class || node is Struct || node is Enum || node is ErrorDomain || node is Namespace) {
+		if (node is Api.Class || node is Api.Struct || node is Api.Enum || node is Api.ErrorDomain || node is Api.Namespace) {
 			node.accept_all_children (this);
 		}
 
@@ -64,7 +64,7 @@ public class Valadoc.Xml.Doclet : Api.Visitor, Valadoc.Doclet {
 		tree.accept_children (this);
 	}
 
-	public override void visit_package (Package package) {
+	public override void visit_package (Api.Package package) {
 		string path = GLib.Path.build_filename (this.settings.path, package.name);
 		DirUtils.create (path, 0777);
 
@@ -78,43 +78,43 @@ public class Valadoc.Xml.Doclet : Api.Visitor, Valadoc.Doclet {
 		file = null;
 	}
 
-	public override void visit_namespace (Namespace ns) {
+	public override void visit_namespace (Api.Namespace ns) {
 		process_node (ns, "namespace");
 	}
 
-	public override void visit_interface (Interface item) {
+	public override void visit_interface (Api.Interface item) {
 		process_node (item, "interface");
 	}
 
-	public override void visit_class (Class item) {
+	public override void visit_class (Api.Class item) {
 		process_node (item, "class");
 	}
 
-	public override void visit_struct (Struct item) {
+	public override void visit_struct (Api.Struct item) {
 		process_node (item, "struct");
 	}
 
-	public override void visit_error_domain (ErrorDomain item) {
+	public override void visit_error_domain (Api.ErrorDomain item) {
 		process_node (item, "error-domain");
 	}
 
-	public override void visit_enum (Enum item) {
+	public override void visit_enum (Api.Enum item) {
 		process_node (item, "enum");
 	}
 
-	public override void visit_property (Property item) {
+	public override void visit_property (Api.Property item) {
 		process_node (item, "property");
 	}
 
-	public override void visit_constant (Constant item) {
+	public override void visit_constant (Api.Constant item) {
 		process_node (item, "constant");
 	}
 
-	public override void visit_field (Field item) {
+	public override void visit_field (Api.Field item) {
 		process_node (item, "field");
 	}
 
-	public override void visit_error_code (ErrorCode item) {
+	public override void visit_error_code (Api.ErrorCode item) {
 		process_node (item, "error-code");
 	}
 
@@ -122,7 +122,7 @@ public class Valadoc.Xml.Doclet : Api.Visitor, Valadoc.Doclet {
 		process_node (item, "enum-value");
 	}
 
-	public override void visit_delegate (Delegate item) {
+	public override void visit_delegate (Api.Delegate item) {
 		process_node (item, "delegate");
 	}
 
@@ -130,7 +130,7 @@ public class Valadoc.Xml.Doclet : Api.Visitor, Valadoc.Doclet {
 		process_node (item, "signal");
 	}
 
-	public override void visit_method (Method item) {
+	public override void visit_method (Api.Method item) {
 		process_node (item, "method");
 	}
 }

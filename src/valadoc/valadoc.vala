@@ -54,6 +54,8 @@ public class ValaDoc : Object {
 	private static string profile;
 
 	[CCode (array_length = false, array_null_terminated = true)]
+	private static string[] docu_directories;
+	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] vapi_directories;
 	[CCode (array_length = false, array_null_terminated = true)]
 	private static string[] tsources;
@@ -69,6 +71,7 @@ public class ValaDoc : Object {
 		{ "enable-experimental-non-null", 0, 0, OptionArg.NONE, ref experimental_non_null, "Enable experimental enhancements for non-null types", null },
 		{ "disable-dbus-transformation", 0, 0, OptionArg.NONE, ref disable_dbus_transformation, "Disable transformation of D-Bus member names", null },
 		{ "vapidir", 0, 0, OptionArg.FILENAME_ARRAY, ref vapi_directories, "Look for package bindings in DIRECTORY", "DIRECTORY..." },
+		{ "docudir", 0, 0, OptionArg.FILENAME_ARRAY, ref docu_directories, "Look for external documentation in DIRECTORY", "DIRECTORY..." },
 		{ "profile", 0, 0, OptionArg.STRING, ref profile, "Use the given profile instead of the default", "PROFILE" },
 
 
@@ -149,6 +152,7 @@ public class ValaDoc : Object {
 		settings.basedir = basedir;
 		settings.directory = directory;
 		settings.vapi_directories = vapi_directories;
+		settings.docu_directories = docu_directories;
 
 		settings.profile = profile;
 		settings.defines = defines;
@@ -184,27 +188,31 @@ public class ValaDoc : Object {
 
 		Valadoc.Api.Tree doctree = new Valadoc.Api.Tree (reporter, settings);
 		Valadoc.DocumentationParser docparser = new Valadoc.DocumentationParser (settings, reporter, doctree, modules);
-		if (reporter.errors > 0) {
-			return quit (reporter);
-		}
+		Valadoc.DocumentationImporter importer = new Valadoc.Xml.DocumentationImporter (doctree, modules, settings, reporter);
 
 		doctree.add_depencies (packages);
 		if (reporter.errors > 0) {
 			return quit (reporter);
 		}
 
-
 		doctree.add_documented_file (tsources);
 		if (reporter.errors > 0) {
 			return quit (reporter);
 		}
 
-		if (!doctree.create_tree())
+		if (!doctree.create_tree()) {
 			return quit (reporter);
+		}
 
 		doctree.parse_comments (docparser);
-		if (reporter.errors > 0)
+		if (reporter.errors > 0) {
 			return quit (reporter);
+		}
+
+		doctree.import_documentation (importer);
+		if (reporter.errors > 0) {
+			return quit (reporter);
+		}
 
 		modules.doclet.process (settings, doctree);
 		return quit (reporter);

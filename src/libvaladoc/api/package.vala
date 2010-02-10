@@ -94,7 +94,7 @@ public class Valadoc.Api.Package : Node {
 	}
 
 	public override bool is_visitor_accessible (Settings settings) {
-		return !( this.is_package && settings.with_deps == false );
+		return !(this.is_package && settings.with_deps == false);
 	}
 
 	public override NodeType node_type { get { return NodeType.PACKAGE; } }
@@ -110,7 +110,11 @@ public class Valadoc.Api.Package : Node {
 			.get ();
 	}
 
-	protected Namespace get_namespace (Tree root, Vala.Symbol symbol) {
+	internal void import_documentation (string path, Settings settings, DocumentationImporter importer) {
+		importer.process (path, settings, this);
+	}
+
+	internal Namespace get_namespace (Tree root, Vala.Symbol symbol) {
 		Vala.Symbol namespace_symbol = symbol;
 		while (!(namespace_symbol is Vala.Namespace)) {
 			namespace_symbol = namespace_symbol.parent_symbol;

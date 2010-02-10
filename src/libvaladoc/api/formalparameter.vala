@@ -61,7 +61,7 @@ public class Valadoc.Api.FormalParameter : Symbol {
 		visitor.visit_formal_parameter (this);
 	}
 
-	protected override void resolve_type_references (Tree root) {
+	internal override void resolve_type_references (Tree root) {
 		if (ellipsis) {
 			return;
 		}

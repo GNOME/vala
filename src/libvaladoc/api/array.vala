@@ -43,7 +43,7 @@ public class Valadoc.Api.Array : Item {
 		}
 	}
 
-	protected override void resolve_type_references (Tree root) {
+	internal override void resolve_type_references (Tree root) {
 		if (this.data_type == null) {
 			/*TODO:possible?*/;
 		} else if (this.data_type is Array) {

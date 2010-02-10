@@ -66,6 +66,7 @@ public class Valadoc.Api.Tree {
 
 	private Node? search_relative_to (Node element, string[] path) {
 		Api.Node? node = element;
+
 		foreach (string name in path) {
 			node = node.find_by_name (name);
 			if (node == null) {
@@ -80,25 +81,49 @@ public class Valadoc.Api.Tree {
 		return node;
 	}
 
+	public Node? search_symbol_path (Node? element, string[] path) {
+		Api.Node? node = null;
+
+		// relative to element
+		if (element != null) {
+			node = search_relative_to (element, path);
+			if (node != null) {
+				return node;
+			}
+		}
+
+
+		// absolute
+		foreach (Package package in packages) {
+			// search in root namespace
+			node = search_relative_to (package.find_by_name (""), path);
+			if (node != null) {
+				return node;
+			}
+		}
+
+		return null;
+	}
+
 	public Node? search_symbol_str (Node? element, string symname) {
 		string[] path = split_name (symname);
 
-		if (element == null) {
-			Api.Node? node = null;
-			foreach (Package packgage in packages) {
-				node = search_relative_to (packgage, path);
-				if (node != null) {
-					return (Node) node;
-				}
-			}
-			return null;
+		var node = search_symbol_path (element, path);
+		if (node != null) {
+			return node;
 		}
 
-		return (Node) search_relative_to ((Node) element, path);
+		if (path.length >= 3 && path[path.length-3] == path[path.length-2]) {
+			path[path.length-2] = path[path.length-2]+"."+path[path.length-1];
+			path.resize (path.length-1);
+			return search_symbol_path (element, path);
+		}
+
+		return null;
 	}
 
 	private string[] split_name (string full_name) {
-		string[] params = full_name.split (".", -1);
+		string[] params = (full_name).split (".", -1);
 		int i = 0; while (params[i] != null) i++;
 		params.length = i;
 		return params;
@@ -215,6 +240,43 @@ public class Valadoc.Api.Tree {
 		return true;
 	}
 
+	// copied from valacodecontext.vala
+	private string? get_file_path (string basename, string data_dir, string[] directories) {
+		string filename = null;
+
+		if (directories != null) {
+			foreach (string dir in directories) {
+				filename = Path.build_filename (dir, basename);
+				if (FileUtils.test (filename, FileTest.EXISTS)) {
+					return filename;
+				}
+			}
+		}
+
+		foreach (string dir in Environment.get_system_data_dirs ()) {
+			filename = Path.build_filename (dir, data_dir, basename);
+			if (FileUtils.test (filename, FileTest.EXISTS)) {
+				return filename;
+			}
+		}
+
+		return null;
+	}
+
+	// copied from valacodecontext.vala
+	private string? get_external_documentation_path (string pkg) {
+		var path = get_file_path (Path.build_filename (pkg, pkg + ".valadoc"), "vala/vapi/documentation", settings.docu_directories);
+
+		if (path == null) {
+			/* last chance: try the package compiled-in vapi dir */
+			var filename = Path.build_filename (Config.vapi_dir, "vapi", "documentation", pkg, pkg + ".valadoc");
+			if (FileUtils.test (filename, FileTest.EXISTS)) {
+				path = filename;
+			}
+		}
+
+		return path;
+	}
 
 	public void add_depencies (string[] packages) {
 		foreach (string package in packages) {
@@ -315,17 +377,45 @@ public class Valadoc.Api.Tree {
 		}
 	}
 
+	private Package? get_source_package () {
+		foreach (Package pkg in packages) {
+			if (!pkg.is_package) {
+				return pkg;
+			}
+		}
+
+		return null;
+	}
+
+	private void process_wiki (DocumentationParser docparser) {
+		this.wikitree = new WikiPageTree(this.reporter, this.settings);
+		var pkg = get_source_package ();
+		if (pkg != null) {
+			wikitree.create_tree (docparser, pkg);
+		}
+	}
+
 	// TODO Rename to process_comments
 	public void parse_comments (DocumentationParser docparser) {
 		// TODO Move Wiki tree parse to Package
-		this.wikitree = new WikiPageTree(this.reporter, this.settings);
-		wikitree.create_tree (docparser);
+		process_wiki (docparser);
 
 		foreach (Package pkg in this.packages) {
 			if (pkg.is_visitor_accessible (settings)) {
 				pkg.process_comments(settings, docparser);
 			}
 		}
+	}
+
+	public void import_documentation (DocumentationImporter importer) {
+		foreach (Package pkg in this.packages) {
+			string? path = (pkg.is_package)? get_external_documentation_path (pkg.name) : null;
+
+			if (pkg.is_visitor_accessible (settings) && path != null) {
+				pkg.import_documentation (path, settings, importer);
+			}
+		}
+
 	}
 
 	internal Symbol? search_vala_symbol (Vala.Symbol symbol) {

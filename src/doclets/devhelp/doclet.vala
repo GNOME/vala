@@ -182,19 +182,19 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		_devhelpwriter.start_functions ();
 		foreach (Api.Node node in this.nodes) {
 			string typekeyword = "";
-			if (node is Enum) {
+			if (node is Api.Enum) {
 				typekeyword = "enum";
-			} else if (node is Constant) {
+			} else if (node is Api.Constant) {
 				typekeyword = "constant";
-			} else if (node is Method) {
+			} else if (node is Api.Method) {
 				typekeyword = "function";
-			} else if (node is Field) {
+			} else if (node is Api.Field) {
 				typekeyword = "variable";
-			} else if (node is Property) {
+			} else if (node is Api.Property) {
 				typekeyword = "property";
 			} else if (node is Api.Signal) {
 				typekeyword = "signal";
-			} else if (node is Struct) {
+			} else if (node is Api.Struct) {
 				typekeyword = "struct";
 			}
 
@@ -266,7 +266,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		process_node (item);
 	}
 
-	public override void visit_enum ( Enum item) {
+	public override void visit_enum (Api.Enum item) {
 		process_node (item);
 	}
 

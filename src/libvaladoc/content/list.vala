@@ -32,7 +32,68 @@ public class Valadoc.Content.List : ContentElement, Block {
 		ORDERED_LOWER_CASE_ALPHA,
 		ORDERED_UPPER_CASE_ALPHA,
 		ORDERED_LOWER_CASE_ROMAN,
-		ORDERED_UPPER_CASE_ROMAN
+		ORDERED_UPPER_CASE_ROMAN;
+
+		public static Bullet? from_string (string? str) {
+			switch (str) {
+			case "none":
+				return Bullet.NONE;
+
+			case "unordered":
+				return Bullet.UNORDERED;
+
+			case "ordered":
+				return Bullet.ORDERED;
+
+			case "ordered-number":
+				return Bullet.ORDERED_NUMBER;
+
+			case "ordered-lower-case-alpa":
+				return Bullet.ORDERED_LOWER_CASE_ALPHA;
+
+			case "ordered-upper-case-alpha":
+				return Bullet.ORDERED_UPPER_CASE_ALPHA;
+
+			case "ordered-lower-case-roman":
+				return Bullet.ORDERED_LOWER_CASE_ROMAN;
+
+			case "ordered-upper-case-roman":
+				return Bullet.ORDERED_UPPER_CASE_ROMAN;
+			}
+
+			return null;
+		}
+
+		public weak string to_string () {
+			switch (this) {
+			case Bullet.NONE:
+				return "none";
+
+			case Bullet.UNORDERED:
+				return "unordered";
+
+			case Bullet.ORDERED:
+				return "ordered";
+
+			case Bullet.ORDERED_NUMBER:
+				return "ordered-number";
+
+			case Bullet.ORDERED_LOWER_CASE_ALPHA:
+				return "ordered-lower-case-alpa";
+
+			case Bullet.ORDERED_UPPER_CASE_ALPHA:
+				return "ordered-upper-case-alpha";
+
+			case Bullet.ORDERED_LOWER_CASE_ROMAN:
+				return "ordered-lower-case-roman";
+
+			case Bullet.ORDERED_UPPER_CASE_ROMAN:
+				return "ordered-upper-case-roman";
+			}
+
+			assert (true);
+			return "";
+		}
 	}
 
 	public Bullet bullet { get; set; }
@@ -47,10 +108,10 @@ public class Valadoc.Content.List : ContentElement, Block {
 		_items = new ArrayList<ListItem> ();
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
 		// Check individual list items
 		foreach (ListItem element in _items) {
-			element.check (api_root, container, reporter);
+			element.check (api_root, container, reporter, settings);
 		}
 	}
 

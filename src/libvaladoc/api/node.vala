@@ -72,7 +72,7 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation, Compara
 		return null;
 	}
 
-	protected void add_child (Symbol child) {
+	internal void add_child (Symbol child) {
 		if (child.name != null) {
 			per_name_children.set (child.name, child);
 		} else {
@@ -91,13 +91,13 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation, Compara
 		children.add (child);
 	}
 
-	protected override void resolve_type_references (Tree root) {
+	internal override void resolve_type_references (Tree root) {
 		foreach (Node node in per_name_children.values) {
 			node.resolve_type_references (root);
 		}
 	}
 
-	protected override void process_comments (Settings settings, DocumentationParser parser) {
+	internal override void process_comments (Settings settings, DocumentationParser parser) {
 		do_document = true;
 
 		foreach (Node node in per_symbol_children.values) {
@@ -207,7 +207,7 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation, Compara
 	}
 
 	public Content.Comment? documentation {
-		protected set;
+		internal set;
 		get;
 	}
 

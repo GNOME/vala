@@ -35,7 +35,7 @@ public class Valadoc.Api.Constant : Member {
 		return ((Vala.Constant) symbol).get_cname ();
 	}
 
-	protected override void resolve_type_references (Tree root) {
+	internal override void resolve_type_references (Tree root) {
 		type_reference.resolve_type_references (root);
 	}
 

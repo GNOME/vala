@@ -41,7 +41,7 @@ public abstract class Valadoc.Api.TypeSymbol : Symbol {
 		}
 	}
 
-	protected override void process_comments (Settings settings, DocumentationParser parser) {
+	internal override void process_comments (Settings settings, DocumentationParser parser) {
 		var source_comment = ((Vala.TypeSymbol) symbol).comment;
 		if (source_comment != null) {
 			documentation = parser.parse (this, source_comment);

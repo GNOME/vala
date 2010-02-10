@@ -31,11 +31,12 @@ public class Valadoc.Content.Headline : Block, InlineContent {
 		_level = 0;
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
 		// TODO report error if level == 0 ?
+		// TODO: content.size == 0?
 
 		// Check inline content
-		base.check (api_root, container, reporter);
+		base.check (api_root, container, reporter, settings);
 	}
 
 	public override void accept (ContentVisitor visitor) {

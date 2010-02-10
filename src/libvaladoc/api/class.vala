@@ -40,7 +40,7 @@ public class Valadoc.Api.Class : TypeSymbol {
 		}
 	}
 
-	protected TypeReference? base_type {
+	public TypeReference? base_type {
 		private set;
 		get;
 	}
@@ -82,7 +82,7 @@ public class Valadoc.Api.Class : TypeSymbol {
 		}
 	}
 
-	protected override void resolve_type_references (Tree root) {
+	internal override void resolve_type_references (Tree root) {
 		var lst = this.vclass.get_base_types ();
 		this.set_parent_type_references (root, lst);
 

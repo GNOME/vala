@@ -47,7 +47,7 @@ public class Valadoc.Api.Delegate : TypeSymbol {
 		}
 	}
 
-	protected override void resolve_type_references (Tree root) {
+	internal override void resolve_type_references (Tree root) {
 		return_type.resolve_type_references (root);
 
 		base.resolve_type_references (root);

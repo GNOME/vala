@@ -39,7 +39,7 @@ public class Valadoc.Api.Namespace : Symbol {
 		}
 	}
 
-	protected override void process_comments (Settings settings, DocumentationParser parser) {
+	internal override void process_comments (Settings settings, DocumentationParser parser) {
 		if (source_comment != null) {
 			documentation = parser.parse (this, source_comment);
 		}

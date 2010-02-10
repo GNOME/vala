@@ -22,7 +22,8 @@
 
 using Gee;
 
-public static delegate Type Valadoc.DocletRegisterFunction ( );
+[CCode (has_target = false)]
+public delegate Type Valadoc.DocletRegisterFunction ( );
 
 public interface Valadoc.Doclet : GLib.Object {
 	public abstract void process (Settings settings, Api.Tree tree);

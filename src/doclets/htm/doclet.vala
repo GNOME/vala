@@ -150,10 +150,10 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename ( path, "index.htm" ), "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
-		write_file_header (this.css_path, pkg_name);
+//		write_file_header (this.css_path, pkg_name);
 		write_navi_package (package);
 		write_package_content (package, package);
-		write_file_footer ();
+//		write_file_footer ();
 		file = null;
 
 		package.accept_all_children (this);
@@ -198,35 +198,35 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		process_node (item);
 	}
 
-	public override void visit_class (Class item) {
+	public override void visit_class (Api.Class item) {
 		process_node (item);
 	}
 
-	public override void visit_struct (Struct item) {
+	public override void visit_struct (Api.Struct item) {
 		process_node (item);
 	}
 
-	public override void visit_error_domain (ErrorDomain item) {
+	public override void visit_error_domain (Api.ErrorDomain item) {
 		process_node (item);
 	}
 
-	public override void visit_enum (Enum item) {
+	public override void visit_enum (Api.Enum item) {
 		process_node (item);
 	}
 
-	public override void visit_property (Property item) {
+	public override void visit_property (Api.Property item) {
 		process_node (item);
 	}
 
-	public override void visit_constant (Constant item) {
+	public override void visit_constant (Api.Constant item) {
 		process_node (item);
 	}
 
-	public override void visit_field (Field item) {
+	public override void visit_field (Api.Field item) {
 		process_node (item);
 	}
 
-	public override void visit_error_code (ErrorCode item) {
+	public override void visit_error_code (Api.ErrorCode item) {
 		process_node (item);
 	}
 
@@ -234,7 +234,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		process_node (item);
 	}
 
-	public override void visit_delegate (Delegate item) {
+	public override void visit_delegate (Api.Delegate item) {
 		process_node (item);
 	}
 
@@ -242,7 +242,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		process_node (item);
 	}
 
-	public override void visit_method (Method item) {
+	public override void visit_method (Api.Method item) {
 		process_node (item);
 	}
 }

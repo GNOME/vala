@@ -68,7 +68,7 @@ public class Valadoc.Api.Property : Member {
 
 	public Property base_property { private set; get; }
 
-	protected override void resolve_type_references (Tree root) {
+	internal override void resolve_type_references (Tree root) {
 		Vala.Property vala_property = symbol as Vala.Property;
 		Vala.Property? base_vala_property = null;
 		if (vala_property.base_property != null) {
@@ -87,7 +87,7 @@ public class Valadoc.Api.Property : Member {
 		property_type.resolve_type_references (root);
 	}
 
-	protected override void process_comments (Settings settings, DocumentationParser parser) {
+	internal override void process_comments (Settings settings, DocumentationParser parser) {
 		if (getter != null && getter.is_visitor_accessible (settings)) {
 			getter.process_comments (settings, parser);
 		}

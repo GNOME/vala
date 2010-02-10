@@ -25,9 +25,9 @@ using Valadoc.Content;
 
 public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
-	private BasicDoclet _doclet;
-	private Documentation? _container;
-	private unowned MarkupWriter writer;
+	protected BasicDoclet _doclet;
+	protected Documentation? _container;
+	protected unowned MarkupWriter writer;
 
 	public HtmlRenderer (BasicDoclet doclet) {
 		_doclet = doclet;
@@ -53,7 +53,7 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 		return get_html_link (_doclet.settings, symbol, _container);
 	}
 
-	private void write_symbol_link (Api.Node symbol, string label) {
+	private void write_symbol_link (Api.Node symbol, string? label) {
 		var url = get_url (symbol);
 		writer.link (url,
 		             (label == null || label == "") ? symbol.full_name () : label,
@@ -200,7 +200,13 @@ public class Valadoc.Html.HtmlRenderer : ContentRenderer {
 
 	public override void visit_embedded (Embedded element) {
 		var caption = element.caption;
-		writer.image (element.url, (caption == null || caption == "") ? "" : caption);
+
+		var absolute_path = Path.build_filename (_doclet.settings.path, element.package.name, "img", Path.get_basename (element.url));
+		var relative_path = Path.build_filename ("img", Path.get_basename (element.url));
+
+		copy_file (element.url, absolute_path);
+
+		writer.image (relative_path, (caption == null || caption == "") ? "" : caption);
 	}
 
 	public override void visit_headline (Headline element) {

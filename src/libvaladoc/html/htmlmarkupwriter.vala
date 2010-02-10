@@ -35,6 +35,7 @@ public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
 		} else {
 			start_tag ("a", {"href", url, "class", css_class});
 		}
+
 		text (label);
 		end_tag ("a");
 		return this;

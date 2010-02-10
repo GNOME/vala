@@ -33,12 +33,12 @@ public class Valadoc.Content.Table : ContentElement, Block {
 		_rows = new ArrayList<TableRow> ();
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
 		// Check the table consistency in term of row/column number
 
 		// Check individual rows
 		foreach (var row in _rows) {
-			row.check (api_root, container, reporter);
+			row.check (api_root, container, reporter, settings);
 		}
 	}
 

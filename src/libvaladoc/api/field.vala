@@ -51,7 +51,7 @@ public class Valadoc.Api.Field : Member {
 		}
 	}
 
-	protected override void resolve_type_references (Tree root) {
+	internal override void resolve_type_references (Tree root) {
 		field_type.resolve_type_references (root);
 
 		base.resolve_type_references (root);

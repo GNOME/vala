@@ -26,13 +26,75 @@ using Gee;
 public enum Valadoc.Content.HorizontalAlign {
 	LEFT,
 	RIGHT,
-	CENTER
+	CENTER;
+
+	public static HorizontalAlign? from_string (string str) {
+		switch (str) {
+		case "left":
+			return HorizontalAlign.LEFT;
+
+		case "right":
+			return HorizontalAlign.RIGHT;
+
+		case "center":
+			return HorizontalAlign.CENTER;
+		}
+
+		return null;
+	}
+
+	public weak string to_string () {
+		switch (this) {
+		case HorizontalAlign.LEFT:
+			return "left";
+
+		case HorizontalAlign.RIGHT:
+			return "right";
+
+		case HorizontalAlign.CENTER:
+			return "center";
+		}
+
+		assert (true);
+		return "";
+	}
 }
 
 public enum Valadoc.Content.VerticalAlign {
 	TOP,
 	MIDDLE,
-	BOTTOM
+	BOTTOM;
+
+	public static VerticalAlign? from_string (string str) {
+		switch (str) {
+		case "top":
+			return VerticalAlign.TOP;
+
+		case "middle":
+			return VerticalAlign.MIDDLE;
+
+		case "bottom":
+			return VerticalAlign.BOTTOM;
+		}
+
+		return null;
+	}
+
+	public weak string to_string () {
+		switch (this) {
+		case VerticalAlign.TOP:
+			return "top";
+
+		case VerticalAlign.MIDDLE:
+			return "middle";
+
+		case VerticalAlign.BOTTOM:
+			return "bottom";
+		}
+
+		assert (true);
+		return "";
+	}
 }
 
 public interface Valadoc.Content.StyleAttributes : ContentElement {

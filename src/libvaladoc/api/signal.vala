@@ -35,7 +35,7 @@ public class Valadoc.Api.Signal : Member {
 
 	public TypeReference? return_type { protected set; get; }
 
-	protected override void resolve_type_references (Tree root) {
+	internal override void resolve_type_references (Tree root) {
 		return_type.resolve_type_references (root);
 
 		base.resolve_type_references (root);

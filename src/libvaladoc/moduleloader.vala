@@ -24,7 +24,8 @@ using GLib.Path;
 using Gee;
 
 
-public static delegate  void Valadoc.TagletRegisterFunction (ModuleLoader loader);
+[CCode (has_target = false)]
+public delegate  void Valadoc.TagletRegisterFunction (ModuleLoader loader);
 
 
 public class Valadoc.ModuleLoader : Object {
@@ -43,8 +44,8 @@ public class Valadoc.ModuleLoader : Object {
 		return true;
 	}
 
-	public Content.Taglet create_taglet (string keyword) {
-		return (Content.Taglet) GLib.Object.new (taglets.get (keyword));
+	public Content.Taglet? create_taglet (string keyword) {
+		return (taglets.has_key (keyword))? (Content.Taglet) GLib.Object.new (taglets.get (keyword)) : null;
 	}
 
 	private bool load_doclet (string path) {

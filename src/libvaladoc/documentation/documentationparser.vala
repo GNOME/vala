@@ -64,14 +64,14 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 		var source_ref = source_comment.source_reference;
 		try {
 			Comment doc_comment = parse_comment (content, source_ref.file.filename, source_ref.first_line, source_ref.first_column);
-			doc_comment.check (_tree, element, _reporter);
+			doc_comment.check (_tree, element, _reporter, _settings);
 			return doc_comment;
 		} catch (ParserError error) {
 			return null;
 		}
 	}
 
-	public Page? parse_wikipage (WikiPage page) {
+	public Page? parse_wikipage (WikiPage page, Api.Package pkg) {
 		if (page.documentation != null) {
 			return page.documentation;
 		}
@@ -82,7 +82,7 @@ public class Valadoc.DocumentationParser : Object, ResourceLocator {
 
 		try {
 			Page documentation = parse_wiki (page.documentation_str, page.get_filename ());
-			documentation.check (_tree, null, _reporter);
+			documentation.check (_tree, pkg, _reporter, _settings);
 			return documentation;
 		} catch (ParserError error) {
 			return null;

@@ -45,7 +45,7 @@ public class Valadoc.Api.Pointer : Item {
 		}
 	}
 
-	protected override void resolve_type_references (Tree root) {
+	internal override void resolve_type_references (Tree root) {
 		Api.Item type = this.data_type;
 		if (type == null) {
 			;

@@ -1,8 +1,11 @@
 NULL =
 
+globalvapidir = `pkg-config vala-1.0 --variable vapidir`
+
 
 AM_CFLAGS = \
 	-DPACKAGE_ICONDIR=\"$(datadir)/valadoc/icons/\" \
+	-DPACKAGE_VAPIDIR=\"$(globalvapidir)\" \
 	$(LIBGVC_CFLAGS) \
 	$(GLIB_CFLAGS) \
 	$(LIBGEE_CFLAGS) \
@@ -35,6 +38,9 @@ libvaladoc_la_VALASOURCES = \
 	documentation/documentationparser.vala \
 	documentation/wiki.vala \
 	documentation/wikiscanner.vala \
+	importer/documentationimporter.vala \
+	importer/valadocdocumentationimporter.vala \
+	importer/valamarkupreader.vala \
 	api/array.vala \
 	api/class.vala \
 	api/constant.vala \
@@ -136,7 +142,7 @@ libvaladocincludedir = $(includedir)/
 
 
 libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES)
-	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-1.0 --pkg vala-1.0 --pkg gmodule-2.0 --vapidir ../vapi --pkg libgvc --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
+	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-1.0 --pkg vala-1.0 --pkg gmodule-2.0 --vapidir ../vapi --pkg libgvc --pkg config --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
 	touch $@
 
 

@@ -97,7 +97,7 @@ public class Valadoc.Api.Method : Member {
 		}
 	}
 
-	protected override void resolve_type_references (Tree root) {
+	internal override void resolve_type_references (Tree root) {
 		Vala.Method vala_method = symbol as Vala.Method;
 		Vala.Method? base_vala_method = null;
 		if (vala_method.base_method != null) {

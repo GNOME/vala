@@ -34,6 +34,8 @@ public abstract class Valadoc.Content.InlineTaglet : ContentElement, Taglet, Inl
 
 	public abstract Rule? get_parser_rule (Rule run_rule);
 
+	public abstract void xml_importer_parer_rule (Xml.DocumentationImporter importer);
+
 	public abstract ContentElement produce_content ();
 
 	private ContentElement get_content () {
@@ -48,9 +50,9 @@ public abstract class Valadoc.Content.InlineTaglet : ContentElement, Taglet, Inl
 		this.locator = locator;
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
 		ContentElement element = get_content ();
-		element.check (api_root, container, reporter);
+		element.check (api_root, container, reporter, settings);
 	}
 
 	public override void accept (ContentVisitor visitor) {

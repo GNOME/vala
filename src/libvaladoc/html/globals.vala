@@ -124,37 +124,37 @@ namespace Valadoc.Html {
 	}
 
 	public string get_html_css_class (Valadoc.Api.Item element) {
-		if ( element is Namespace ) {
+		if ( element is Api.Namespace ) {
 			return css_namespace;
 		}
-		else if ( element is Struct ) {
+		else if ( element is Api.Struct ) {
 			return css_struct;
 		}
-		else if ( element is Interface ) {
+		else if ( element is Api.Interface ) {
 			return css_interface;
 		}
-		else if ( element is Class ) {
+		else if ( element is Api.Class ) {
 			return (((Class)element).is_abstract)? css_abstract_class : css_class;
 		}
-		else if ( element is Enum ) {
+		else if ( element is Api.Enum ) {
 			return css_enum;
 		}
-		else if ( element is ErrorDomain ) {
+		else if ( element is Api.ErrorDomain ) {
 			return css_errordomain;
 		}
-		else if ( element is Delegate ) {
+		else if ( element is Api.Delegate ) {
 			return css_delegate;
 		}
-		else if ( element is Method ) {
-			if ( ((Method)element).is_static )
+		else if ( element is Api.Method ) {
+			if ( ((Api.Method)element).is_static )
 				return css_static_method;
-			else if ( ((Method)element).is_static )
+			else if ( ((Api.Method)element).is_static )
 				return css_static_method;
-			else if ( ((Method)element).is_constructor )
+			else if ( ((Api.Method)element).is_constructor )
 				return css_creation_method;
-			else if ( ((Method)element).is_abstract )
+			else if ( ((Api.Method)element).is_abstract )
 				return css_abstract_method;
-			else if ( ((Method)element).is_virtual || ((Method)element).is_override )
+			else if ( ((Api.Method)element).is_virtual || ((Api.Method)element).is_override )
 				return css_virtual_method;
 			else
 				return css_method;
@@ -162,27 +162,27 @@ namespace Valadoc.Html {
 		else if ( element is Api.Signal ) {
 			return css_signal;
 		}
-		else if ( element is Property ) {
-			if ( ((Property)element).is_virtual || ((Property)element).is_override )
+		else if ( element is Api.Property ) {
+			if ( ((Api.Property)element).is_virtual || ((Property)element).is_override )
 				return css_virtual_property;
-			else if ( ((Property)element).is_abstract )
+			else if ( ((Api.Property)element).is_abstract )
 				return css_abstract_property;
 			else
 				return css_property;
 		}
-		else if ( element is Field ) {
+		else if ( element is Api.Field ) {
 			return css_field;
 		}
-		else if ( element is Constant ) {
+		else if ( element is Api.Constant ) {
 			return css_constant;
 		}
 		else if ( element is Api.EnumValue ) {
 			return css_enumvalue;
 		}
-		else if ( element is ErrorCode ) {
+		else if ( element is Api.ErrorCode ) {
 			return css_errorcode;
 		}
-		else if ( element is Package ) {
+		else if ( element is Api.Package ) {
 			return css_package;
 		}
 		return "";

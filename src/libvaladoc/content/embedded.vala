@@ -30,6 +30,7 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 	public HorizontalAlign? horizontal_align { get; set; }
 	public VerticalAlign? vertical_align { get; set; }
 	public string? style { get; set; }
+	public Api.Package package;
 
 	private ResourceLocator _locator;
 
@@ -41,8 +42,12 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 		_locator = locator;
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
-		// Check the image exists if it a local resource
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
+		if (!FileUtils.test (url, FileTest.EXISTS | FileTest.IS_REGULAR)) {
+			reporter.simple_error ("%s does not exist".printf (url));
+		} else {
+			package = container.package;
+		}
 	}
 
 	public override void accept (ContentVisitor visitor) {

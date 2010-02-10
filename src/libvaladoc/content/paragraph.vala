@@ -32,9 +32,9 @@ public class Valadoc.Content.Paragraph : InlineContent, Block, StyleAttributes {
 		base ();
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
 		// Check inline content
-		base.check (api_root, container, reporter);
+		base.check (api_root, container, reporter, settings);
 	}
 
 	public override void accept (ContentVisitor visitor) {

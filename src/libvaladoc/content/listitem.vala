@@ -30,12 +30,12 @@ public class Valadoc.Content.ListItem : InlineContent {
 		base ();
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
 		// Check inline content
-		base.check (api_root, container, reporter);
+		base.check (api_root, container, reporter, settings);
 
 		if (sub_list != null) {
-			sub_list.check (api_root, container, reporter);
+			sub_list.check (api_root, container, reporter, settings);
 		}
 	}
 

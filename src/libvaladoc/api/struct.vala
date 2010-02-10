@@ -28,7 +28,7 @@ public class Valadoc.Api.Struct : TypeSymbol {
 		base (symbol, parent);
 	}
 
-	protected TypeReference? base_type { private set; get; }
+	public TypeReference? base_type { private set; get; }
 
 	public string? get_cname () {
 		return ((Vala.Struct) symbol).get_cname();
@@ -49,7 +49,7 @@ public class Valadoc.Api.Struct : TypeSymbol {
 		this.base_type.resolve_type_references (root);
 	}
 
-	protected override void resolve_type_references (Tree root) {
+	internal override void resolve_type_references (Tree root) {
 		this.set_parent_references (root);
 
 		base.resolve_type_references (root);

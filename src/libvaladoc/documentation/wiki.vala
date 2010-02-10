@@ -62,8 +62,8 @@ public class Valadoc.WikiPage : Object, Documentation {
 		}
 	}
 
-	public bool parse (DocumentationParser docparser) {
-		documentation = docparser.parse_wikipage ( this );
+	public bool parse (DocumentationParser docparser, Api.Package pkg) {
+		documentation = docparser.parse_wikipage (this, pkg);
 		return true;
 	}
 }
@@ -74,6 +74,7 @@ public class Valadoc.WikiPageTree : Object {
 	private ErrorReporter reporter;
 	private Settings settings;
 
+	//TODO: reporter, settings -> create_tree
 	public WikiPageTree (ErrorReporter reporter, Settings settings) {
 		this.reporter = reporter;
 		this.settings = settings;
@@ -111,7 +112,7 @@ public class Valadoc.WikiPageTree : Object {
 		}
 	}
 
-	public void create_tree (DocumentationParser docparser) throws GLib.FileError {
+	public void create_tree (DocumentationParser docparser, Api.Package pkg) throws GLib.FileError {
 		try {
 			weak string path = this.settings.wiki_directory;
 			if (path == null) {
@@ -122,7 +123,7 @@ public class Valadoc.WikiPageTree : Object {
 			this.create_tree_from_path (docparser, path);
 
 			foreach (WikiPage page in this.wikipages) {
-				page.parse (docparser);
+				page.parse (docparser, pkg);
 			}
 		}
 		catch (FileError err) {

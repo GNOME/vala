@@ -33,10 +33,10 @@ public class Valadoc.Content.TableRow : ContentElement {
 		_cells = new ArrayList<TableCell> ();
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
 		// Check individual cells
 		foreach (var cell in _cells) {
-			cell.check (api_root, container, reporter);
+			cell.check (api_root, container, reporter, settings);
 		}
 	}
 

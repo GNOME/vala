@@ -24,7 +24,7 @@ using Gee;
 
 public abstract class Valadoc.Api.Symbol : Node {
 
-	protected Vala.Symbol symbol { private set; get; }
+	internal Vala.Symbol symbol { private set; get; }
 
 	public override string? name {
 		owned get {
@@ -101,7 +101,7 @@ public abstract class Valadoc.Api.Symbol : Node {
 		}
 	}
 
-	protected override void resolve_type_references (Tree root) {
+	internal override void resolve_type_references (Tree root) {
 		base.resolve_type_references (root);
 
 		foreach (Vala.DataType type in symbol.get_error_types ()) {

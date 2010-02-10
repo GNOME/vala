@@ -24,7 +24,7 @@ using Valadoc.Content;
 using Valadoc.Api;
 
 public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
-	protected Settings settings;
+	public Settings settings { protected set; get; }
 	protected HtmlRenderer _renderer;
 	protected Html.MarkupWriter writer;
 
@@ -294,14 +294,14 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 	protected bool is_internal_node (Api.Node node) {
 		return node is Package
-		       || node is Namespace
-		       || node is Interface
-		       || node is Class
-		       || node is Struct
-		       || node is Enum
+		       || node is Api.Namespace
+		       || node is Api.Interface
+		       || node is Api.Class
+		       || node is Api.Struct
+		       || node is Api.Enum
 		       || node is Api.EnumValue
-		       || node is ErrorDomain
-		       || node is ErrorCode;
+		       || node is Api.ErrorDomain
+		       || node is Api.ErrorCode;
 	}
 
 	public void write_navi_packages_inline (Api.Tree tree) {
@@ -345,12 +345,12 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.end_tag ("div");
 	}
 
-	public void write_symbol_content (Api.Node node) {
+	public void write_symbol_content (Api.Node node, string image_path_prefix = "") {
 		string full_name = node.full_name ();
 		writer.start_tag ("div", {"class", css_style_content});
 		writer.start_tag ("h1", {"class", css_title, full_name}).text (node.name).end_tag ("h1");
 		writer.simple_tag ("hr", {"class", css_headline_hr});
-		this.write_image_block (node);
+		this.write_image_block (node, image_path_prefix);
 		writer.start_tag ("h2", {"class", css_title}).text ("Description:").end_tag ("h2");
 		writer.start_tag ("div", {"class", css_code_definition});
 		this.write_signature (node, node);
@@ -362,6 +362,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			this.write_namespace_note (node);
 			this.write_package_note (node);
 		}
+
 		if (node.has_children ({
 				Api.NodeType.ERROR_CODE,
 				Api.NodeType.ENUM_VALUE,
@@ -490,13 +491,16 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		}
 	}
 
-	protected void write_image_block (Api.Node element) {
+	protected void write_image_block (Api.Node element, string path_prefix = "") {
 		if (!(element is Class || element is Interface || element is Struct)) {
 			return;
 		}
 
 		string realimgpath = this.get_img_real_path (element);
 		string imgpath = this.get_img_path (element);
+		if (path_prefix != null) {
+			imgpath = Path.build_filename (path_prefix, imgpath);
+		}
 
 		if (element is Class) {
 			Diagrams.write_class_diagram ((Class)element, realimgpath);

@@ -26,7 +26,34 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline{
 	public enum Language {
 		GENIE,
 		VALA,
-		C
+		C;
+
+		public static Language? from_string (string str) {
+			switch (str) {
+			case "Genie":
+				return Language.GENIE;
+			case "Vala":
+				return Language.VALA;
+			case "C":
+				return Language.C;
+			}
+
+			return null;
+		}
+
+		public weak string to_string () {
+			switch (this) {
+			case Language.GENIE:
+				return "Genie";
+			case Language.VALA:
+				return "Vala";
+			case Language.C:
+				return "C";
+			}
+
+			assert (true);
+			return "";
+		}
 	}
 
 	public string code { get; set; }
@@ -37,7 +64,7 @@ public class Valadoc.Content.SourceCode : ContentElement, Inline{
 		_language = Language.VALA;
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
 	}
 
 	public override void accept (ContentVisitor visitor) {

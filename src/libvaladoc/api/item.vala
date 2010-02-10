@@ -28,10 +28,10 @@ public abstract class Valadoc.Api.Item : Object {
 
 	public Item parent { protected set; get; }
 
-	protected virtual void resolve_type_references (Tree root) {
+	internal virtual void resolve_type_references (Tree root) {
 	}
 
-	protected virtual void process_comments (Settings settings, DocumentationParser parser) {
+	internal virtual void process_comments (Settings settings, DocumentationParser parser) {
 	}
 
 	public Inline signature {

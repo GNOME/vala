@@ -174,7 +174,7 @@ public class Valadoc.Api.TypeReference : Item {
 		}
 	}
 
-	protected override void resolve_type_references (Tree root) {
+	internal override void resolve_type_references (Tree root) {
 		if ( this.vtyperef is Vala.PointerType) {
 			this.data_type = new Pointer ((Vala.PointerType) this.vtyperef, this);
 		} else if (vtyperef is Vala.ArrayType) {
