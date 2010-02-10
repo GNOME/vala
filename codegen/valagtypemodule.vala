@@ -1,6 +1,6 @@
 /* valagtypemodule.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  *
  * This library is free software; you can redistribute it and/or
@@ -1555,7 +1555,7 @@ internal class Vala.GTypeModule : GErrorModule {
 		if (prop.property_type.data_type is Class || prop.property_type.data_type is Interface) {
 			string param_spec_name = prop.property_type.data_type.get_param_spec_function ();
 			cspec.call = new CCodeIdentifier (param_spec_name);
-			if (prop.property_type.data_type == string_type.data_type) {
+			if (param_spec_name == "g_param_spec_string") {
 				cspec.add_argument (new CCodeConstant ("NULL"));
 			} else if (prop.property_type.data_type.get_type_id () != "G_TYPE_POINTER") {
 				cspec.add_argument (new CCodeIdentifier (prop.property_type.data_type.get_type_id ()));
