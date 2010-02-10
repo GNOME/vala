@@ -215,13 +215,15 @@ public class Vala.UnaryExpression : Expression {
 			assignment.check (analyzer);
 			return true;
 		} else if (operator == UnaryOperator.REF || operator == UnaryOperator.OUT) {
-			if (inner.symbol_reference is Field || inner.symbol_reference is FormalParameter || inner.symbol_reference is LocalVariable) {
-				// ref and out can only be used with fields, parameters, and local variables
+			var ea = inner as ElementAccess;
+			if (inner.symbol_reference is Field || inner.symbol_reference is FormalParameter || inner.symbol_reference is LocalVariable ||
+			    (ea != null && ea.container.value_type is ArrayType)) {
+				// ref and out can only be used with fields, parameters, local variables, and array element access
 				lvalue = true;
 				value_type = inner.value_type;
 			} else {
 				error = true;
-				Report.error (source_reference, "ref and out method arguments can only be used with fields, parameters, and local variables");
+				Report.error (source_reference, "ref and out method arguments can only be used with fields, parameters, local variables, and array element access");
 				return false;
 			}
 		} else {
