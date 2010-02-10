@@ -42,7 +42,7 @@ public class Valadoc.Content.Embedded : ContentElement, Inline, StyleAttributes 
 		_locator = locator;
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 		if (!FileUtils.test (url, FileTest.EXISTS | FileTest.IS_REGULAR)) {
 			reporter.simple_error ("%s does not exist".printf (url));
 		} else {

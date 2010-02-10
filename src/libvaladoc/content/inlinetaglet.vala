@@ -50,7 +50,7 @@ public abstract class Valadoc.Content.InlineTaglet : ContentElement, Taglet, Inl
 		this.locator = locator;
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 		ContentElement element = get_content ();
 		element.check (api_root, container, reporter, settings);
 	}

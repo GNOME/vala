@@ -36,7 +36,7 @@ public class Valadoc.Content.TableCell : InlineContent, StyleAttributes {
 		_rowspan = 1;
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 		// Check inline content
 		base.check (api_root, container, reporter, settings);
 	}

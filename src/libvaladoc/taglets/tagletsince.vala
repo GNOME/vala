@@ -45,7 +45,7 @@ public class Valadoc.Taglets.Since : ContentElement, Taglet, Block {
 		importer.end_element ("taglet");
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 	}
 
 	public override void accept (ContentVisitor visitor) {

@@ -108,7 +108,7 @@ public class Valadoc.Content.List : ContentElement, Block {
 		_items = new ArrayList<ListItem> ();
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 		// Check individual list items
 		foreach (ListItem element in _items) {
 			element.check (api_root, container, reporter, settings);

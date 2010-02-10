@@ -41,7 +41,7 @@ public class Valadoc.Taglets.InheritDoc : InlineTaglet {
 		importer.end_element ("taglet");
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 		// TODO Check that the container is an override of an abstract symbol
 		// Also retrieve that abstract symbol _inherited
 

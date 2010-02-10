@@ -47,7 +47,7 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 		importer.end_element ("taglet");
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 		error_domain = api_root.search_symbol_str (container, error_domain_name);
 		if (error_domain == null) {
 			// TODO use ContentElement's source reference

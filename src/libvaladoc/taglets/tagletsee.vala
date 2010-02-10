@@ -46,7 +46,7 @@ public class Valadoc.Taglets.See : ContentElement, Taglet, Block {
 		importer.end_element ("taglet");
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 		symbol = api_root.search_symbol_str (container, symbol_name);
 		if (symbol == null) {
 			// TODO use ContentElement's source reference

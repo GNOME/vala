@@ -33,7 +33,7 @@ public class Valadoc.Content.Link : InlineContent, Inline {
 	public override void configure (Settings settings, ResourceLocator locator) {
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 		//TODO: check url
 	}
 

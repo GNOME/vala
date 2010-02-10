@@ -36,7 +36,7 @@ public class Valadoc.Content.Text : ContentElement, Inline {
 		}
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
+	public override void check (Api.Tree api_root, Api.Node container, ErrorReporter reporter, Settings settings) {
 	}
 
 	public override void accept (ContentVisitor visitor) {
