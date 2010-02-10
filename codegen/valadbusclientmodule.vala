@@ -1326,6 +1326,7 @@ internal class Vala.DBusClientModule : DBusModule {
 
 		var block = new CCodeBlock ();
 		var prefragment = new CCodeFragment ();
+		var postfragment = new CCodeFragment ();
 
 		cdecl = new CCodeDeclaration ("DBusMessageIter");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("iter"));
@@ -1354,7 +1355,10 @@ internal class Vala.DBusClientModule : DBusModule {
 		string type_signature = "";
 
 		foreach (FormalParameter param in sig.get_parameters ()) {
-			cdecl = new CCodeDeclaration (param.parameter_type.get_cname ());
+			var owned_type = param.parameter_type.copy ();
+			owned_type.value_owned = true;
+
+			cdecl = new CCodeDeclaration (owned_type.get_cname ());
 			cdecl.add_declarator (new CCodeVariableDeclarator.zero (param.name, default_value_for_type (param.parameter_type, true)));
 			prefragment.append (cdecl);
 
@@ -1388,11 +1392,22 @@ internal class Vala.DBusClientModule : DBusModule {
 			var target = new CCodeIdentifier (param.name);
 			var expr = read_expression (prefragment, param.parameter_type, new CCodeIdentifier ("iter"), target);
 			prefragment.append (new CCodeExpressionStatement (new CCodeAssignment (target, expr)));
+
+			if (requires_destroy (owned_type)) {
+				// keep local alive (symbol_reference is weak)
+				var local = new LocalVariable (owned_type, param.name);
+				var ma = new MemberAccess.simple (param.name);
+				ma.symbol_reference = local;
+				var stmt = new CCodeExpressionStatement (get_unref_expression (new CCodeIdentifier (param.name), owned_type, ma));
+				postfragment.append (stmt);
+			}
 		}
 
 		signature_check.add_argument (new CCodeConstant ("\"%s\"".printf (type_signature)));
 
 		block.add_statement (new CCodeExpressionStatement (ccall));
+
+		block.add_statement (postfragment);
 
 		cdecl = new CCodeDeclaration ("DBusMessage*");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("reply"));
