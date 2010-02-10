@@ -802,6 +802,8 @@ public class Vala.CodeWriter : CodeVisitor {
 
 		if (!cb.has_target) {
 			write_string (", has_target = false");
+		} else if (!float_equal (cb.cinstance_parameter_position, 0)) {
+			write_string (", instance_pos = %g".printf (cb.cinstance_parameter_position));
 		}
 
 		write_string (")]");
