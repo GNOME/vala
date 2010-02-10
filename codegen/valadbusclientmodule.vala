@@ -1886,20 +1886,47 @@ internal class Vala.DBusClientModule : DBusModule {
 		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_data_"), new CCodeIdentifier ("user_data"))));
 
 		// complete async call by invoking callback
+		var obj_decl = new CCodeDeclaration ("GObject *");
+		obj_decl.add_declarator (new CCodeVariableDeclarator ("_obj_"));
+		block.add_statement (obj_decl);
+
 		var object_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_object_newv"));
 		object_creation.add_argument (new CCodeConstant ("G_TYPE_OBJECT"));
 		object_creation.add_argument (new CCodeConstant ("0"));
 		object_creation.add_argument (new CCodeConstant ("NULL"));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_obj_"), object_creation)));
+
+		var async_result_decl = new CCodeDeclaration ("GSimpleAsyncResult *");
+		async_result_decl.add_declarator (new CCodeVariableDeclarator ("_res_"));
+		block.add_statement (async_result_decl);
 
 		var async_result_creation = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_new"));
-		async_result_creation.add_argument (object_creation);
+		async_result_creation.add_argument (new CCodeIdentifier ("_obj_"));
 		async_result_creation.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_callback_"));
 		async_result_creation.add_argument (new CCodeMemberAccess.pointer (new CCodeIdentifier ("_data_"), "_user_data_"));
 		async_result_creation.add_argument (new CCodeIdentifier ("_data_"));
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_res_"), async_result_creation)));
 
 		var completecall = new CCodeFunctionCall (new CCodeIdentifier ("g_simple_async_result_complete"));
-		completecall.add_argument (async_result_creation);
+		completecall.add_argument (new CCodeIdentifier ("_res_"));
 		block.add_statement (new CCodeExpressionStatement (completecall));
+
+		var obj_free = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+		obj_free.add_argument (new CCodeIdentifier ("_obj_"));
+		block.add_statement (new CCodeExpressionStatement (obj_free));
+
+		var async_result_free = new CCodeFunctionCall (new CCodeIdentifier ("g_object_unref"));
+		async_result_free.add_argument (new CCodeIdentifier ("_res_"));
+		block.add_statement (new CCodeExpressionStatement (async_result_free));
+
+		var datafree = new CCodeFunctionCall (new CCodeIdentifier ("g_slice_free"));
+		datafree.add_argument (new CCodeIdentifier (dataname));
+		datafree.add_argument (new CCodeIdentifier ("_data_"));
+		block.add_statement (new CCodeExpressionStatement (datafree));
+
+		var pendingfree = new CCodeFunctionCall (new CCodeIdentifier ("dbus_pending_call_unref"));
+		pendingfree.add_argument (new CCodeIdentifier ("pending"));
+		block.add_statement (new CCodeExpressionStatement (pendingfree));
 
 		source_declarations.add_type_member_declaration (function.copy ());
 		function.block = block;
