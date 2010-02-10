@@ -265,6 +265,14 @@ internal class Vala.CCodeMethodCallModule : CCodeAssignmentModule {
 		} else if (m is CreationMethod && context.profile == Profile.GOBJECT && m.parent_symbol is Class) {
 			ccall_expr = new CCodeAssignment (new CCodeIdentifier ("self"), new CCodeCastExpression (ccall, current_class.get_cname () + "*"));
 
+			if (current_method.body.captured) {
+				// capture self after setting it
+				var ref_call = new CCodeFunctionCall (get_dup_func_expression (new ObjectType (current_class), expr.source_reference));
+				ref_call.add_argument (ccall_expr);
+
+				ccall_expr = new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (get_block_id (current_method.body))), "self"), ref_call);
+			}
+
 			if (!current_class.is_compact && current_class.get_type_parameters ().size > 0) {
 				var ccomma = new CCodeCommaExpression ();
 				ccomma.append_expression (ccall_expr);

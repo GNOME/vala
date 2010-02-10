@@ -1800,7 +1800,8 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				ref_call.add_argument (get_variable_cexpression ("_data%d_".printf (parent_block_id)));
 
 				cblock.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeMemberAccess.pointer (get_variable_cexpression ("_data%d_".printf (block_id)), "_data%d_".printf (parent_block_id)), ref_call)));
-			} else if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE)) {
+			} else if (in_constructor || (current_method != null && current_method.binding == MemberBinding.INSTANCE &&
+			                              (!(current_method is CreationMethod) || current_method.body != b))) {
 				var ref_call = new CCodeFunctionCall (get_dup_func_expression (new ObjectType (current_class), b.source_reference));
 				ref_call.add_argument (get_result_cexpression ("self"));
 
