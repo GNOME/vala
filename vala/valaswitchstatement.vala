@@ -1,6 +1,6 @@
 /* valaswitchstatement.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -118,6 +118,8 @@ public class Vala.SwitchStatement : CodeNode, Statement {
 
 		foreach (SwitchSection section in sections) {
 			section.check (analyzer);
+
+			add_error_types (section.get_error_types ());
 		}
 
 		return !error;

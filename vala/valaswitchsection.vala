@@ -1,6 +1,6 @@
 /* valaswitchsection.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -105,6 +105,11 @@ public class Vala.SwitchSection : Block {
 
 		foreach (LocalVariable local in get_local_variables ()) {
 			local.active = false;
+		}
+
+		// use get_statements () instead of statement_list to not miss errors within StatementList objects
+		foreach (Statement stmt in get_statements ()) {
+			add_error_types (stmt.get_error_types ());
 		}
 
 		analyzer.current_symbol = old_symbol;
