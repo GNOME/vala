@@ -28,8 +28,19 @@ public class Valadoc.Taglets.Deprecated : InlineContent, Taglet, Block {
 		return run_rule;
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
-		base.check (api_root, container, reporter);
+	public void xml_importer_parer_rule (Xml.DocumentationImporter importer) {
+		importer.start_element ("taglet");
+		importer.push (this);
+		importer.next ();
+
+		importer.process_text ();
+
+		importer.pop ();
+		importer.end_element ("taglet");
+	}
+
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
+		base.check (api_root, container, reporter, settings);
 	}
 
 	public override void accept (ContentVisitor visitor) {

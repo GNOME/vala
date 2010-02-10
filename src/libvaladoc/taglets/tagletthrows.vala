@@ -35,14 +35,26 @@ public class Valadoc.Taglets.Throws : InlineContent, Taglet, Block {
 		});
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public void xml_importer_parer_rule (Xml.DocumentationImporter importer) {
+		importer.start_element ("taglet");
+		error_domain_name = importer.reader.get_attribute ("type");
+		importer.push (this);
+		importer.next ();
+
+		importer.process_text ();
+
+		importer.pop ();
+		importer.end_element ("taglet");
+	}
+
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
 		error_domain = api_root.search_symbol_str (container, error_domain_name);
 		if (error_domain == null) {
 			// TODO use ContentElement's source reference
 			reporter.simple_error ("%s does not exist".printf (error_domain_name));
 		}
 
-		base.check (api_root, container, reporter);
+		base.check (api_root, container, reporter, settings);
 	}
 
 	public override void accept (ContentVisitor visitor) {

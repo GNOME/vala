@@ -1,4 +1,4 @@
-/* contentelement.vala
+/* resourcelocator.vala
  *
  * Copyright (C) 2008-2009 Florian Brosch, Didier Villevalois
  *
@@ -17,22 +17,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
  *
  * Author:
- * 	Didier 'Ptitjes Villevalois <ptitjes@free.fr>
+ * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
-using GLib;
+
+using Gee;
 
 
-public abstract class Valadoc.Content.ContentElement : Object {
+public abstract class Valadoc.DocumentationImporter : Object, ResourceLocator {
+	protected ErrorReporter errorreporter;
+	protected ModuleLoader modules;
+	protected Settings settings;
+	protected Api.Tree tree;
 
-	public virtual void configure (Settings settings, ResourceLocator locator) {
+	protected Content.ContentFactory factory;
+
+
+	public DocumentationImporter (Api.Tree tree, ModuleLoader modules, Settings settings, ErrorReporter errorreporter) {
+		factory = new Content.ContentFactory (settings, this, modules);
+
+		this.errorreporter = errorreporter;
+		this.settings = settings;
+		this.modules = null;
+		this.tree = tree;
 	}
 
-	public abstract void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings);
-
-	public abstract void accept (ContentVisitor visitor);
-
-	public virtual void accept_children (ContentVisitor visitor) {
+	public virtual string resolve (string path) {
+		return path;
 	}
+
+	public abstract bool process (string filename, Settings settings, Api.Package package);
 }
+
 

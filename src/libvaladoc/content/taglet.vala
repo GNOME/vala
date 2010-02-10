@@ -25,6 +25,8 @@ using Gee;
 
 public interface Valadoc.Content.Taglet : ContentElement {
 
+	public abstract void xml_importer_parer_rule (Xml.DocumentationImporter importer);
+
 	public abstract Rule? get_parser_rule (Rule run_rule);
 }
 

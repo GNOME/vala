@@ -33,7 +33,19 @@ public class Valadoc.Taglets.Since : ContentElement, Taglet, Block {
 		});
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public void xml_importer_parer_rule (Xml.DocumentationImporter importer) {
+		importer.start_element ("taglet");
+		version = importer.reader.get_attribute ("version");
+		importer.push (this);
+		importer.next ();
+
+		importer.process_text ();
+
+		importer.pop ();
+		importer.end_element ("taglet");
+	}
+
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
 	}
 
 	public override void accept (ContentVisitor visitor) {

@@ -35,14 +35,26 @@ public class Valadoc.Taglets.Link : InlineTaglet {
 		});
 	}
 
-	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter) {
+	public override void xml_importer_parer_rule (Xml.DocumentationImporter importer) {
+		importer.start_element ("inline-taglet");
+		symbol_name = importer.reader.get_attribute ("type");
+		importer.push (this);
+		importer.next ();
+
+		importer.process_text ();
+
+		importer.pop ();
+		importer.end_element ("inline-taglet");
+	}
+
+	public override void check (Api.Tree api_root, Api.Node? container, ErrorReporter reporter, Settings settings) {
 		_symbol = api_root.search_symbol_str (container, symbol_name);
 		if (_symbol == null) {
 			// TODO use ContentElement's source reference
 			reporter.simple_error ("%s does not exist".printf (symbol_name));
 		}
 
-		base.check (api_root, container, reporter);
+		base.check (api_root, container, reporter, settings);
 	}
 
 	public override ContentElement produce_content () {

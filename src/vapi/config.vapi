@@ -11,5 +11,8 @@ namespace Config {
 
 	[CCode (cname = "PACKAGE_DATADIR")]
 	public const string plugin_dir;
+
+	[CCode (cname = "PACKAGE_VAPIDIR")]
+	public const string vapi_dir;
 }
 
