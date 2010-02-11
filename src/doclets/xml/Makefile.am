@@ -12,7 +12,7 @@ BUILT_SOURCES = libdoclet.vala.stamp
 
 
 libdoclet.vala.stamp: $(libdoclet_VALASOURCES)
-	$(VALAC) -C --vapidir $(top_srcdir)/src/vapi/ --vapidir ../../libvaladoc --pkg valadoc-1.0 --pkg vala-1.0 --pkg gee-1.0 --basedir . --save-temps $^
+	$(VALAC) -C --vapidir $(top_srcdir)/src/vapi/ --vapidir $(top_srcdir)/src/libvaladoc --pkg valadoc-1.0 --pkg vala-1.0 --pkg gee-1.0 --basedir . --save-temps $^
 	touch $@
 
 

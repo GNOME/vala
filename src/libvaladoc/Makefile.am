@@ -17,11 +17,9 @@ AM_CFLAGS = \
 BUILT_SOURCES = libvaladoc.vala.stamp
 
 
-valadoc_LTLIBRARIES = \
+lib_LTLIBRARIES = \
 	libvaladoc.la     \
 	$(NULL)
-
-valadocdir = $(libdir)/valadoc
 
 
 libvaladoc_la_VALASOURCES = \
@@ -142,8 +140,11 @@ libvaladocincludedir = $(includedir)/
 
 
 libvaladoc.vala.stamp: $(libvaladoc_la_VALASOURCES)
-	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-1.0 --pkg vala-1.0 --pkg gmodule-2.0 --vapidir ../vapi --pkg libgvc --pkg config --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
+	$(VALAC) $(VALAFLAGS) -C -H valadoc-1.0.h --pkg gee-1.0 --pkg vala-1.0 --pkg libgvc --pkg gmodule-2.0 --vapidir $(top_srcdir)/src/vapi --pkg libgvc --pkg config --library valadoc-1.0 --basedir $(top_srcdir)/src/libvaladoc/ --save-temps $^
 	touch $@
+
+
+libvaladoc_la_LDFLAGS = -no-undefined
 
 
 libvaladoc_la_LIBADD = \

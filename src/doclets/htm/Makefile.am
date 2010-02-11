@@ -17,7 +17,7 @@ BUILT_SOURCES = libdoclet.vala.stamp
 docletdir = $(libdir)/valadoc/plugins/html
 
 
-libdoclet_la_LDFLAGS = -module -avoid-version
+libdoclet_la_LDFLAGS = -module -avoid-version -no-undefined
 
 
 doclet_LTLIBRARIES =  \
@@ -37,7 +37,7 @@ libdoclet_la_SOURCES =  \
 
 
 libdoclet.vala.stamp: $(libdoclet_la_VALASOURCES)
-	$(VALAC) -C --vapidir ../../vapi --vapidir ../../libvaladoc --pkg valadoc-1.0 --pkg gee-1.0 --basedir . $^
+	$(VALAC) -C --vapidir $(top_srcdir)/src/vapi --vapidir $(top_srcdir)/src/libvaladoc  --pkg vala-1.0 --pkg gee-1.0 --pkg valadoc-1.0 --basedir . $^
 	touch $@
 
 

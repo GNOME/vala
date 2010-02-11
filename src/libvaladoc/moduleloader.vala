@@ -20,7 +20,6 @@
  * 	Brosch Florian <flo.brosch@gmail.com>
  */
 
-using GLib.Path;
 using Gee;
 
 
@@ -51,7 +50,7 @@ public class Valadoc.ModuleLoader : Object {
 	private bool load_doclet (string path) {
 		void* function;
 
-		docletmodule = Module.open ( build_filename(path, "libdoclet.so"), ModuleFlags.BIND_LAZY);
+		docletmodule = Module.open (Module.build_path (path, "libdoclet"), ModuleFlags.BIND_LAZY);
 		if (docletmodule == null) {
 			return false;
 		}
