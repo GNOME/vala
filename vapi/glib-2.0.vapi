@@ -1,6 +1,6 @@
 /* glib-2.0.vala
  *
- * Copyright (C) 2006-2009  Jürg Billeter
+ * Copyright (C) 2006-2010  Jürg Billeter
  * Copyright (C) 2006-2008  Raffaele Sandrini
  * Copyright (C) 2007  Mathias Hasselmann
  *
@@ -858,7 +858,7 @@ public class string {
 	[CCode (cname = "g_utf8_strreverse")]
 	public string reverse (ssize_t len = -1);
 	[CCode (cname = "g_utf8_validate")]
-	public bool validate (ssize_t max_len = -1, out string end = null);
+	public bool validate (ssize_t max_len = -1, out char* end = null);
 	[CCode (cname = "g_utf8_normalize")]
 	public string normalize (ssize_t len = -1, NormalizeMode mode = NormalizeMode.DEFAULT);
 	
