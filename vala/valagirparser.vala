@@ -867,6 +867,7 @@ public class Vala.GirParser : CodeVisitor {
 	Method parse_method (string element_name) {
 		start_element (element_name);
 		string name = reader.get_attribute ("name");
+		string cname = reader.get_attribute ("c:identifier");
 		string throws_string = reader.get_attribute ("throws");
 		string invoker = reader.get_attribute ("invoker");
 		next ();
@@ -878,6 +879,9 @@ public class Vala.GirParser : CodeVisitor {
 		}
 		var m = new Method (name, return_type, get_current_src ());
 		m.access = SymbolAccessibility.PUBLIC;
+		if (cname != null) {
+			m.set_cname (cname);
+		}
 
 		if (element_name == "virtual-method" || element_name == "callback") {
 			m.is_virtual = true;
