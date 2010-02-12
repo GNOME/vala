@@ -103,7 +103,8 @@ namespace Gtk {
 		public GLib.SList<GLib.File> get_files ();
 	}
 
-	public static delegate void CallbackMarshal (Object object, void* data, Arg[] args);
+	[CCode (has_target = false)]
+	public delegate void CallbackMarshal (Object object, void* data, Arg[] args);
 
 	public delegate void ActionCallback (Action action);
 

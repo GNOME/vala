@@ -138,26 +138,26 @@ namespace Tracker {
 		namespace Module {
 				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
 				public delegate void FileFreeDataFunc ();
-				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-				public static delegate void* FileGetDataFunc (string path);
-				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-				public static delegate weak Tracker.Metadata FileGetMetadataFunc (Tracker.File file);
-				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-				public static delegate weak string FileGetServiceTypeFunc (Tracker.File file);
-				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-				public static delegate weak string FileGetText (Tracker.File path);
-				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-				public static delegate void FileGetUriFunc (Tracker.File file, string dirname, string basename);
-				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-				public static delegate bool FileIterContents (Tracker.File path);
-				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-				public static delegate weak string GetDirectoriesFunc ();
-				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-				public static delegate weak string GetNameFunc ();
-				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-				public static delegate void Init ();
-				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
-				public static delegate void Shutdown ();
+				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+				public delegate void* FileGetDataFunc (string path);
+				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+				public delegate weak Tracker.Metadata FileGetMetadataFunc (Tracker.File file);
+				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+				public delegate weak string FileGetServiceTypeFunc (Tracker.File file);
+				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+				public delegate weak string FileGetText (Tracker.File path);
+				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+				public delegate void FileGetUriFunc (Tracker.File file, string dirname, string basename);
+				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+				public delegate bool FileIterContents (Tracker.File path);
+				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+				public delegate weak string GetDirectoriesFunc ();
+				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+				public delegate weak string GetNameFunc ();
+				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+				public delegate void Init ();
+				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h", has_target = false)]
+				public delegate void Shutdown ();
 
 				[CCode (cheader_filename = "tracker-1.0/libtracker-indexer/tracker-module.h")]
 				public static void file_free_data (void* file_data);
