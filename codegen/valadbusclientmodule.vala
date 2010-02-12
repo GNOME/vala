@@ -1238,10 +1238,122 @@ internal class Vala.DBusClientModule : DBusModule {
 		return new DBusInterfaceRegisterFunction (iface, context);
 	}
 
+	string generate_get_all_function (Method m) {
+		string get_all_func = "_dbus_g_proxy_get_all";
+
+		if (!add_wrapper (get_all_func)) {
+			// wrapper already defined
+			return get_all_func;
+		}
+
+		var function = new CCodeFunction (get_all_func, "GHashTable*");
+		function.modifiers = CCodeModifiers.STATIC;
+
+		function.add_parameter (new CCodeFormalParameter ("self", "DBusGProxy*"));
+		function.add_parameter (new CCodeFormalParameter ("interface_name", "const gchar*"));
+		function.add_parameter (new CCodeFormalParameter ("error", "GError**"));
+
+		var block = new CCodeBlock ();
+		var prefragment = new CCodeFragment ();
+		var postfragment = new CCodeFragment ();
+
+		var cdecl = new CCodeDeclaration ("DBusError");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_dbus_error"));
+		block.add_statement (cdecl);
+
+		var dbus_error = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_dbus_error"));
+
+		cdecl = new CCodeDeclaration ("DBusGConnection");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_connection"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessage");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_message"));
+		cdecl.add_declarator (new CCodeVariableDeclarator ("*_reply"));
+		block.add_statement (cdecl);
+
+		cdecl = new CCodeDeclaration ("DBusMessageIter");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_iter"));
+		block.add_statement (cdecl);
+
+		block.add_statement (prefragment);
+
+		generate_marshalling (m, "org.freedesktop.DBus.Properties", prefragment, postfragment);
+
+		var gconnection = new CCodeFunctionCall (new CCodeIdentifier ("g_object_get"));
+		gconnection.add_argument (new CCodeIdentifier ("self"));
+		gconnection.add_argument (new CCodeConstant ("\"connection\""));
+		gconnection.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_connection")));
+		gconnection.add_argument (new CCodeConstant ("NULL"));
+		block.add_statement (new CCodeExpressionStatement (gconnection));
+
+		var dbus_error_init = new CCodeFunctionCall (new CCodeIdentifier ("dbus_error_init"));
+		dbus_error_init.add_argument (dbus_error);
+		block.add_statement (new CCodeExpressionStatement (dbus_error_init));
+
+		var connection = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_get_connection"));
+		connection.add_argument (new CCodeIdentifier ("_connection"));
+
+		var ccall = new CCodeFunctionCall (new CCodeIdentifier ("dbus_connection_send_with_reply_and_block"));
+		ccall.add_argument (connection);
+		ccall.add_argument (new CCodeIdentifier ("_message"));
+		ccall.add_argument (new CCodeConstant ("-1"));
+		ccall.add_argument (dbus_error);
+		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall)));
+
+		var conn_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_unref"));
+		conn_unref.add_argument (new CCodeIdentifier ("_connection"));
+		block.add_statement (new CCodeExpressionStatement (conn_unref));
+
+		var message_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		message_unref.add_argument (new CCodeIdentifier ("_message"));
+		block.add_statement (new CCodeExpressionStatement (message_unref));
+
+		check_error_reply (m, block);
+		check_reply_signature (m, block);
+
+		block.add_statement (postfragment);
+
+		var reply_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		reply_unref.add_argument (new CCodeIdentifier ("_reply"));
+		block.add_statement (new CCodeExpressionStatement (reply_unref));
+
+		block.add_statement (new CCodeReturnStatement (new CCodeIdentifier ("_result")));
+
+		source_declarations.add_type_member_declaration (function.copy ());
+
+		function.block = block;
+		source_type_member_definition.append (function);
+
+		return get_all_func;
+	}
+
 	public override void visit_method_call (MethodCall expr) {
 		var mtype = expr.call.value_type as MethodType;
-		if (mtype == null || mtype.method_symbol.get_cname () != "dbus_g_proxy_new_from_type") {
+		bool proxy_new_from_type = (mtype != null && mtype.method_symbol.get_cname () == "dbus_g_proxy_new_from_type");
+		bool proxy_get_all = (mtype != null && mtype.method_symbol.get_cname () == "dbus_g_proxy_get_all");
+		if (!proxy_new_from_type && !proxy_get_all) {
 			base.visit_method_call (expr);
+			return;
+		}
+
+		if (proxy_get_all) {
+			var ma = expr.call as MemberAccess;
+			var instance = ma.inner;
+			instance.accept (codegen);
+
+			var args = expr.get_argument_list ();
+			Expression interface_name = args.get (0);
+			interface_name.accept (codegen);
+
+			var ccall = new CCodeFunctionCall (new CCodeIdentifier (generate_get_all_function (mtype.method_symbol)));
+			ccall.add_argument ((CCodeExpression) instance.ccodenode);
+			ccall.add_argument ((CCodeExpression) interface_name.ccodenode);
+
+			current_method_inner_error = true;
+			ccall.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, get_variable_cexpression ("_inner_error_")));
+
+			expr.ccodenode = ccall;
 			return;
 		}
 

@@ -249,6 +249,7 @@ namespace DBus {
 		public weak string get_path ();
 		public weak string get_bus_name ();
 		public weak string get_interface ();
+		public GLib.HashTable<string,GLib.Value?> get_all (string interface_name) throws DBus.Error;
 
 		public signal void destroy ();
 	}
