@@ -319,6 +319,15 @@ internal class Vala.GAsyncModule : GSignalModule {
 				// only append data struct here to make sure all struct member
 				// types are declared before the struct definition
 				append_struct (data);
+			} else {
+				generate_method_declaration (m, source_declarations);
+
+				if (!m.is_internal_symbol ()) {
+					generate_method_declaration (m, header_declarations);
+				}
+				if (!m.is_private_symbol ()) {
+					generate_method_declaration (m, internal_header_declarations);
+				}
 			}
 
 			if (m.is_abstract || m.is_virtual) {
