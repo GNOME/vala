@@ -637,6 +637,13 @@ public class Vala.MemberAccess : Expression {
 
 			bool in_subtype = false;
 			for (Symbol this_symbol = analyzer.current_symbol; this_symbol != null; this_symbol = this_symbol.parent_symbol) {
+				if (this_symbol == target_type) {
+					// required for interfaces with non-abstract methods
+					// accessing protected interface members
+					in_subtype = true;
+					break;
+				}
+
 				var cl = this_symbol as Class;
 				if (cl != null && cl.is_subtype_of (target_type)) {
 					in_subtype = true;
