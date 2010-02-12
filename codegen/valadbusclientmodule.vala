@@ -2072,6 +2072,112 @@ internal class Vala.DBusClientModule : DBusModule {
 		return proxy_name;
 	}
 
+	void check_property_error_reply (PropertyAccessor acc, CCodeBlock block) {
+		var dbus_error = new CCodeIdentifier ("_dbus_error");
+		var dbus_error_ptr = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, dbus_error);
+
+		var error_block = new CCodeBlock ();
+
+		var ccritical = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
+		ccritical.add_argument (new CCodeConstant ("\"file %s: line %d: uncaught error: %s (%s)\""));
+		ccritical.add_argument (new CCodeConstant ("__FILE__"));
+		ccritical.add_argument (new CCodeConstant ("__LINE__"));
+		ccritical.add_argument (new CCodeMemberAccess (dbus_error, "message"));
+		ccritical.add_argument (new CCodeMemberAccess (dbus_error, "name"));
+
+		error_block.add_statement (new CCodeExpressionStatement (ccritical));
+
+		var dbus_error_free = new CCodeFunctionCall (new CCodeIdentifier ("dbus_error_free"));
+		dbus_error_free.add_argument (dbus_error_ptr);
+		error_block.add_statement (new CCodeExpressionStatement (dbus_error_free));
+
+		if (acc.readable && !acc.value_type.is_real_non_null_struct_type ()) {
+			error_block.add_statement (new CCodeReturnStatement (default_value_for_type (acc.value_type, false)));
+		} else {
+			error_block.add_statement (new CCodeReturnStatement ());
+		}
+
+		var dbus_error_is_set = new CCodeFunctionCall (new CCodeIdentifier ("dbus_error_is_set"));
+		dbus_error_is_set.add_argument (dbus_error_ptr);
+		block.add_statement (new CCodeIfStatement (dbus_error_is_set, error_block));
+	}
+
+	CCodeConstant get_property_reply_signature (PropertyAccessor acc) {
+		if (acc.readable) {
+			return new CCodeConstant ("\"v\"");
+		} else {
+			return new CCodeConstant ("\"\"");
+		}
+	}
+
+	CCodeConstant get_property_inner_signature (PropertyAccessor acc) {
+		return new CCodeConstant ("\"%s\"".printf (get_type_signature (acc.value_type)));
+	}
+
+	void check_property_reply_signature (PropertyAccessor acc, CCodeBlock block) {
+		var reply_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		reply_unref.add_argument (new CCodeIdentifier ("_reply"));
+
+		var message_signature = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_get_signature"));
+		message_signature.add_argument (new CCodeIdentifier ("_reply"));
+
+		var signature_check = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+		signature_check.add_argument (message_signature);
+		signature_check.add_argument (get_property_reply_signature (acc));
+
+		var signature_error_block = new CCodeBlock ();
+
+		var ccritical = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
+		ccritical.add_argument (new CCodeConstant ("\"file %s: line %d: Invalid signature, expected \\\"%s\\\", got \\\"%s\\\"\""));
+		ccritical.add_argument (new CCodeConstant ("__FILE__"));
+		ccritical.add_argument (new CCodeConstant ("__LINE__"));
+		ccritical.add_argument (get_property_reply_signature (acc));
+		ccritical.add_argument (message_signature);
+
+		signature_error_block.add_statement (new CCodeExpressionStatement (ccritical));
+		signature_error_block.add_statement (new CCodeExpressionStatement (reply_unref));
+
+		if (acc.readable && !acc.value_type.is_real_non_null_struct_type ()) {
+			signature_error_block.add_statement (new CCodeReturnStatement (default_value_for_type (acc.value_type, false)));
+		} else {
+			signature_error_block.add_statement (new CCodeReturnStatement ());
+		}
+
+		block.add_statement (new CCodeIfStatement (signature_check, signature_error_block));
+	}
+
+	void check_property_inner_signature (PropertyAccessor acc, CCodeFragment fragment) {
+		var reply_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
+		reply_unref.add_argument (new CCodeIdentifier ("_reply"));
+
+		var iter_signature = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_iter_get_signature"));
+		iter_signature.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_subiter")));
+
+		var signature_check = new CCodeFunctionCall (new CCodeIdentifier ("strcmp"));
+		signature_check.add_argument (iter_signature);
+		signature_check.add_argument (get_property_inner_signature (acc));
+
+		var signature_error_block = new CCodeBlock ();
+
+		var ccritical = new CCodeFunctionCall (new CCodeIdentifier ("g_critical"));
+		ccritical.add_argument (new CCodeConstant ("\"file %s: line %d: Invalid signature, expected \\\"%s\\\", got \\\"%s\\\"\""));
+		ccritical.add_argument (new CCodeConstant ("__FILE__"));
+		ccritical.add_argument (new CCodeConstant ("__LINE__"));
+		ccritical.add_argument (get_property_inner_signature (acc));
+		ccritical.add_argument (iter_signature);
+
+		signature_error_block.add_statement (new CCodeExpressionStatement (ccritical));
+		signature_error_block.add_statement (new CCodeExpressionStatement (reply_unref));
+
+		if (!acc.value_type.is_real_non_null_struct_type ()) {
+			signature_error_block.add_statement (new CCodeReturnStatement (default_value_for_type (acc.value_type, false)));
+		} else {
+			signature_error_block.add_statement (new CCodeReturnStatement ());
+		}
+
+		fragment.append (new CCodeIfStatement (signature_check, signature_error_block));
+	}
+
 	string generate_dbus_proxy_property_get (Interface main_iface, Interface iface, Property prop) {
 		string proxy_name = "%sdbus_proxy_get_%s".printf (main_iface.get_lower_case_cprefix (), prop.name);
 
@@ -2115,6 +2221,12 @@ internal class Vala.DBusClientModule : DBusModule {
 			dispose_return_block.add_statement (new CCodeReturnStatement (default_value_for_type (prop.property_type, false)));
 		}
 		block.add_statement (new CCodeIfStatement (new CCodeMemberAccess.pointer (new CCodeCastExpression (new CCodeIdentifier ("self"), iface.get_cname () + "DBusProxy*"), "disposed"), dispose_return_block));
+
+		cdecl = new CCodeDeclaration ("DBusError");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_dbus_error"));
+		block.add_statement (cdecl);
+
+		var dbus_error = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_dbus_error"));
 
 		cdecl = new CCodeDeclaration ("DBusGConnection");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("*_connection"));
@@ -2164,6 +2276,8 @@ internal class Vala.DBusClientModule : DBusModule {
 		iter_call.add_argument (new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_subiter")));
 		postfragment.append (new CCodeExpressionStatement (iter_call));
 
+		check_property_inner_signature (prop.get_accessor, postfragment);
+
 		if (prop.property_type.is_real_non_null_struct_type ()) {
 			var target = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
 			var expr = read_expression (postfragment, prop.get_accessor.value_type, new CCodeIdentifier ("_subiter"), target);
@@ -2200,6 +2314,10 @@ internal class Vala.DBusClientModule : DBusModule {
 		gconnection.add_argument (new CCodeConstant ("NULL"));
 		block.add_statement (new CCodeExpressionStatement (gconnection));
 
+		var dbus_error_init = new CCodeFunctionCall (new CCodeIdentifier ("dbus_error_init"));
+		dbus_error_init.add_argument (dbus_error);
+		block.add_statement (new CCodeExpressionStatement (dbus_error_init));
+
 		var connection = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_get_connection"));
 		connection.add_argument (new CCodeIdentifier ("_connection"));
 
@@ -2207,7 +2325,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		ccall.add_argument (connection);
 		ccall.add_argument (new CCodeIdentifier ("_message"));
 		ccall.add_argument (new CCodeConstant ("-1"));
-		ccall.add_argument (new CCodeConstant ("NULL"));
+		ccall.add_argument (dbus_error);
 		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall)));
 
 		var conn_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_unref"));
@@ -2217,6 +2335,9 @@ internal class Vala.DBusClientModule : DBusModule {
 		var message_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
 		message_unref.add_argument (new CCodeIdentifier ("_message"));
 		block.add_statement (new CCodeExpressionStatement (message_unref));
+
+		check_property_error_reply (prop.get_accessor, block);
+		check_property_reply_signature (prop.get_accessor, block);
 
 		block.add_statement (postfragment);
 
@@ -2270,6 +2391,12 @@ internal class Vala.DBusClientModule : DBusModule {
 		var dispose_return_block = new CCodeBlock ();
 		dispose_return_block.add_statement (new CCodeReturnStatement ());
 		block.add_statement (new CCodeIfStatement (new CCodeMemberAccess.pointer (new CCodeCastExpression (new CCodeIdentifier ("self"), iface.get_cname () + "DBusProxy*"), "disposed"), dispose_return_block));
+
+		cdecl = new CCodeDeclaration ("DBusError");
+		cdecl.add_declarator (new CCodeVariableDeclarator ("_dbus_error"));
+		block.add_statement (cdecl);
+
+		var dbus_error = new CCodeUnaryExpression (CCodeUnaryOperator.ADDRESS_OF, new CCodeIdentifier ("_dbus_error"));
 
 		cdecl = new CCodeDeclaration ("DBusGConnection");
 		cdecl.add_declarator (new CCodeVariableDeclarator ("*_connection"));
@@ -2340,6 +2467,10 @@ internal class Vala.DBusClientModule : DBusModule {
 		gconnection.add_argument (new CCodeConstant ("NULL"));
 		block.add_statement (new CCodeExpressionStatement (gconnection));
 
+		var dbus_error_init = new CCodeFunctionCall (new CCodeIdentifier ("dbus_error_init"));
+		dbus_error_init.add_argument (dbus_error);
+		block.add_statement (new CCodeExpressionStatement (dbus_error_init));
+
 		var connection = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_get_connection"));
 		connection.add_argument (new CCodeIdentifier ("_connection"));
 
@@ -2347,7 +2478,7 @@ internal class Vala.DBusClientModule : DBusModule {
 		ccall.add_argument (connection);
 		ccall.add_argument (new CCodeIdentifier ("_message"));
 		ccall.add_argument (new CCodeConstant ("-1"));
-		ccall.add_argument (new CCodeConstant ("NULL"));
+		ccall.add_argument (dbus_error);
 		block.add_statement (new CCodeExpressionStatement (new CCodeAssignment (new CCodeIdentifier ("_reply"), ccall)));
 
 		var conn_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_g_connection_unref"));
@@ -2357,6 +2488,9 @@ internal class Vala.DBusClientModule : DBusModule {
 		var message_unref = new CCodeFunctionCall (new CCodeIdentifier ("dbus_message_unref"));
 		message_unref.add_argument (new CCodeIdentifier ("_message"));
 		block.add_statement (new CCodeExpressionStatement (message_unref));
+
+		check_property_error_reply (prop.set_accessor, block);
+		check_property_reply_signature (prop.set_accessor, block);
 
 		block.add_statement (postfragment);
 
