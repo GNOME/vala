@@ -285,8 +285,8 @@ namespace GLib {
 	public delegate void ObjectGetPropertyFunc (Object object, uint property_id, Value value, ParamSpec pspec);
 	[CCode (has_target = false)]
 	public delegate void ObjectSetPropertyFunc (Object object, uint property_id, Value value, ParamSpec pspec);
-	[CCode (has_target = false)]
-	public delegate void WeakNotify (void *data, Object object);
+	[CCode (instance_pos = 0)]
+	public delegate void WeakNotify (Object object);
 
 	[CCode (ref_function = "g_object_ref", unref_function = "g_object_unref", marshaller_type_name = "OBJECT", get_value_function = "g_value_get_object", set_value_function = "g_value_set_object", param_spec_function = "g_param_spec_object", cheader_filename = "glib-object.h")]
 	public class Object {
@@ -307,8 +307,8 @@ namespace GLib {
 		public weak Object @ref ();
 		public void unref ();
 		public Object ref_sink ();
-		public void weak_ref (WeakNotify notify, void *data);
-		public void weak_unref (WeakNotify notify, void *data);
+		public void weak_ref (WeakNotify notify);
+		public void weak_unref (WeakNotify notify);
 		public void add_weak_pointer (void **data);
 		public void remove_weak_pointer (void **data);
 		public void get (string first_property_name, ...);
