@@ -34,6 +34,8 @@ dist_vapi_DATA = \
 	gdk-pixbuf-2.0.vapi \
 	gdk-x11-2.0.deps \
 	gdk-x11-2.0.vapi \
+	gdl-1.0.deps \
+	gdl-1.0.vapi \
 	gio-2.0.vapi \
 	gio-unix-2.0.deps \
 	gio-unix-2.0.vapi \
