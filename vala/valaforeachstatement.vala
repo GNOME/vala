@@ -209,40 +209,86 @@ public class Vala.ForeachStatement : Block {
 			error = true;
 			return false;
 		}
+
+		var iterator_call = new MethodCall (new MemberAccess (collection, "iterator"));
+		add_statement (new DeclarationStatement (new LocalVariable (iterator_type, "_%s_it".printf (variable_name), iterator_call, source_reference), source_reference));
+
+		var next_value_method = iterator_type.get_member ("next_value") as Method;
 		var next_method = iterator_type.get_member ("next") as Method;
-		if (next_method == null) {
-			Report.error (collection.source_reference, "`%s' does not have a `next' method".printf (iterator_type.to_string ()));
-			error = true;
-			return false;
-		}
-		if (next_method.get_parameters ().size != 0) {
-			Report.error (collection.source_reference, "`%s' must not have any parameters".printf (next_method.get_full_name ()));
-			error = true;
-			return false;
-		}
-		if (!next_method.return_type.compatible (analyzer.bool_type)) {
-			Report.error (collection.source_reference, "`%s' must return a boolean value".printf (next_method.get_full_name ()));
-			error = true;
-			return false;
-		}
-		var get_method = iterator_type.get_member ("get") as Method;
-		if (get_method == null) {
-			Report.error (collection.source_reference, "`%s' does not have a `get' method".printf (iterator_type.to_string ()));
-			error = true;
-			return false;
-		}
-		if (get_method.get_parameters ().size != 0) {
-			Report.error (collection.source_reference, "`%s' must not have any parameters".printf (get_method.get_full_name ()));
-			error = true;
-			return false;
-		}
-		var element_type = get_method.return_type.get_actual_type (iterator_type, null, this);
-		if (element_type is VoidType) {
-			Report.error (collection.source_reference, "`%s' must return an element".printf (get_method.get_full_name ()));
+		if (next_value_method != null) {
+			if (next_value_method.get_parameters ().size != 0) {
+				Report.error (collection.source_reference, "`%s' must not have any parameters".printf (next_value_method.get_full_name ()));
+				error = true;
+				return false;
+			}
+			var element_type = next_value_method.return_type.get_actual_type (iterator_type, null, this);
+			if (!element_type.nullable) {
+				Report.error (collection.source_reference, "return type of `%s' must be nullable".printf (next_value_method.get_full_name ()));
+				error = true;
+				return false;
+			}
+
+			if (!analyze_element_type (element_type)) {
+				return false;
+			}
+
+			add_statement (new DeclarationStatement (new LocalVariable (type_reference, variable_name, null, source_reference), source_reference));
+
+			var next_value_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("_%s_it".printf (variable_name), source_reference), "next_value", source_reference), source_reference);
+			var assignment = new Assignment (new MemberAccess (null, variable_name, source_reference), next_value_call, AssignmentOperator.SIMPLE, source_reference);
+			var conditional = new BinaryExpression (BinaryOperator.INEQUALITY, assignment, new NullLiteral (source_reference), source_reference);
+			var loop = new WhileStatement (conditional, body, source_reference);
+			add_statement (loop);
+		} else if (next_method != null) {
+			if (next_method.get_parameters ().size != 0) {
+				Report.error (collection.source_reference, "`%s' must not have any parameters".printf (next_method.get_full_name ()));
+				error = true;
+				return false;
+			}
+			if (!next_method.return_type.compatible (analyzer.bool_type)) {
+				Report.error (collection.source_reference, "`%s' must return a boolean value".printf (next_method.get_full_name ()));
+				error = true;
+				return false;
+			}
+			var get_method = iterator_type.get_member ("get") as Method;
+			if (get_method == null) {
+				Report.error (collection.source_reference, "`%s' does not have a `get' method".printf (iterator_type.to_string ()));
+				error = true;
+				return false;
+			}
+			if (get_method.get_parameters ().size != 0) {
+				Report.error (collection.source_reference, "`%s' must not have any parameters".printf (get_method.get_full_name ()));
+				error = true;
+				return false;
+			}
+			var element_type = get_method.return_type.get_actual_type (iterator_type, null, this);
+			if (element_type is VoidType) {
+				Report.error (collection.source_reference, "`%s' must return an element".printf (get_method.get_full_name ()));
+				error = true;
+				return false;
+			}
+
+			if (!analyze_element_type (element_type)) {
+				return false;
+			}
+
+			var next_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("_%s_it".printf (variable_name), source_reference), "next", source_reference), source_reference);
+			var loop = new WhileStatement (next_call, body, source_reference);
+			add_statement (loop);
+
+			var get_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("_%s_it".printf (variable_name), source_reference), "get", source_reference), source_reference);
+			body.insert_statement (0, new DeclarationStatement (new LocalVariable (type_reference, variable_name, get_call, source_reference), source_reference));
+		} else {
+			Report.error (collection.source_reference, "`%s' does not have a `next_value' or `next' method".printf (iterator_type.to_string ()));
 			error = true;
 			return false;
 		}
 
+		checked = false;
+		return base.check (analyzer);
+	}
+
+	bool analyze_element_type (DataType element_type) {
 		// analyze element type
 		if (type_reference == null) {
 			// var type
@@ -257,18 +303,7 @@ public class Vala.ForeachStatement : Block {
 			return false;
 		}
 
-		var iterator_call = new MethodCall (new MemberAccess (collection, "iterator"));
-		add_statement (new DeclarationStatement (new LocalVariable (iterator_type, "_%s_it".printf (variable_name), iterator_call, source_reference), source_reference));
-
-		var next_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("_%s_it".printf (variable_name), source_reference), "next", source_reference), source_reference);
-		var loop = new WhileStatement (next_call, body, source_reference);
-		add_statement (loop);
-
-		var get_call = new MethodCall (new MemberAccess (new MemberAccess.simple ("_%s_it".printf (variable_name), source_reference), "get", source_reference), source_reference);
-		body.insert_statement (0, new DeclarationStatement (new LocalVariable (type_reference, variable_name, get_call, source_reference), source_reference));
-
-		checked = false;
-		return base.check (analyzer);
+		return true;
 	}
 
 	bool check_without_iterator (SemanticAnalyzer analyzer, DataType collection_type, DataType element_type) {
