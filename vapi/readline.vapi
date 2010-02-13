@@ -23,25 +23,44 @@ namespace Readline {
 	[CCode (cname = "free", cheader_filename = "stdlib.h")]
 	private void _free (void* p);
 
+	[CCode (cname = "rl_command_func_t", has_target = false)]
 	public delegate int      CommandFunc (int a, int b);
+	[CCode (cname = "rl_completion_func_t", has_target = false)]
 	public delegate string[] CompletionFunc (string str, int a, int b);
-	public delegate string   CompentryFunc (string str, int a);
+	[CCode (cname = "rl_quote_func_t", has_target = false)]
+	public delegate string?  CompentryFunc (string str, int a);
+	[CCode (cname = "rl_quote_func_t", has_target = false)]
 	public delegate string   QuoteFunc (string str, int a, string b);
+	[CCode (cname = "rl_dequote_func_t", has_target = false)]
 	public delegate string   DequoteFunc (string str, int a);
+	[CCode (cname = "rl_compignore_func_t", has_target = false)]
 	public delegate int      CompignoreFunc (string[] strs);
+	[CCode (cname = "rl_compdisp_func_t", has_target = false)]
 	public delegate void     CompdispFunc (string[] s, int a, int b);
+	[CCode (cname = "rl_hook_func_t", has_target = false)]
 	public delegate int      HookFunc ();
+	[CCode (cname = "rl_getc_func_t", has_target = false)]
 	public delegate int      GetcFunc (GLib.FileStream s);
+	[CCode (cname = "rl_linebuf_func_t", has_target = false)]
 	public delegate int      LinebufFunc (string s, int a);
+	[CCode (cname = "rl_int_func_t", has_target = false)]
 	public delegate int      IntFunc (int a);
+	[CCode (cname = "rl_icp_func_t", has_target = false)]
 	public delegate int      IcpFunc (string s);
+	[CCode (cname = "rl_icpp_func_t", has_target = false)]
 	public delegate int      IcppFunc (string[] s);
+	[CCode (cname = "rl_void_func_t", has_target = false)]
 	public delegate void     VoidFunc ();
+	[CCode (cname = "rl_vint_func_t", has_target = false)]
 	public delegate void     VintFunc (int a);
+	[CCode (cname = "rl_vcp_func_t", has_target = false)]
 	public delegate void     VcpFunc (string s);
+	[CCode (cname = "rl_vcpp_func_t", has_target = false)]
 	public delegate void     VcppFunc (string[] s);
-	public delegate string   CpvFunc ();
-	public delegate string   CpiFunc (int s);
+	[CCode (cname = "rl_cpv_func_t", has_target = false)]
+	public delegate unowned string?   CpvFunc ();
+	[CCode (cname = "rl_cpi_func_t", has_target = false)]
+	public delegate unowned string?   CpiFunc (int s);
 
 	[CCode (cname = "KEYMAP_ENTRY")]
 	public struct KeyMap {
@@ -629,7 +648,7 @@ namespace Readline {
 	public int read_init_file (string filename);
 
 	[CCode (cname = "rl_parse_and_bind")]
-	public int parse_and_bind (string line);
+	public int parse_and_bind (owned string line);
 
 	[CCode (cname = "rl_make_bare_keymap")]
 	public KeyMap make_bare_keymap ();
@@ -961,29 +980,29 @@ namespace Readline {
 	[CCode (cname = "rl_ignore_some_completions_function")]
 	public CompignoreFunc ignore_some_completions_function;
 
-	[CCode (cname = "rl_attempt_compltion_function")]
+	[CCode (cname = "rl_attempt_completion_function")]
 	public CompletionFunc attempted_completion_function;
 
 	[CCode (cname = "rl_basic_word_break_characters")]
-	public string basic_word_break_characters;
+	public string* basic_word_break_characters;
 
-	[CCode (cname = "rl_complter_word_break_characters")]
-	public string completer_word_break_characters;
+	[CCode (cname = "rl_completer_word_break_characters")]
+	public string* completer_word_break_characters;
 
 	[CCode (cname = "rl_completion_word_break_hook")]
 	public CpvFunc completion_word_break_hook;
 
-	[CCode (cname = "rl_competer_quote_characters")]
-	public string completer_quote_characters;
+	[CCode (cname = "rl_completer_quote_characters")]
+	public string* completer_quote_characters;
 
 	[CCode (cname = "rl_basic_quote_characters")]
-	public string basic_quote_characters;
+	public string* basic_quote_characters;
 
 	[CCode (cname = "rl_filename_quote_characters")]
-	public string filename_quote_characters;
+	public string* filename_quote_characters;
 
 	[CCode (cname = "rl_special_prefixes")]
-	public string special_prefixes;
+	public string* special_prefixes;
 
 	[CCode (cname = "rl_directory_completion_hook")]
 	public IcppFunc directory_completion_hook;
