@@ -765,6 +765,15 @@ namespace Xml {
 
 		[CCode (cname = "xmlUnsetProp")]
 		public int unset_prop (string name);
+
+		[CCode (cname = "xmlNextElementSibling")]
+		public Node* next_element_sibling ();
+
+		[CCode (cname = "xmlFirstElementChild")]
+		public Node* first_element_child ();
+
+		[CCode (cname = "xmlChildElementCount")]
+		public ulong child_element_count ();
 	}
 
 	[Compact]
