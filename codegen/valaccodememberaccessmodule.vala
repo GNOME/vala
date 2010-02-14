@@ -355,7 +355,12 @@ internal class Vala.CCodeMemberAccessModule : CCodeControlFlowModule {
 			var local = (LocalVariable) expr.symbol_reference;
 			if (local.is_result) {
 				// used in postconditions
-				expr.ccodenode = new CCodeIdentifier ("result");
+				// structs are returned as out parameter
+				if (local.variable_type != null && local.variable_type.is_real_non_null_struct_type ()) {
+					expr.ccodenode = new CCodeUnaryExpression (CCodeUnaryOperator.POINTER_INDIRECTION, new CCodeIdentifier ("result"));
+				} else {
+					expr.ccodenode = new CCodeIdentifier ("result");
+				}
 			} else if (local.captured) {
 				// captured variables are stored on the heap
 				var block = (Block) local.parent_symbol;
