@@ -367,7 +367,7 @@ namespace Xml {
 		[CCode (cname = "xmlDocDumpMemoryEnc")]
 		public void dump_memory_enc (out string mem, out int len = null, string enc = "UTF-8");
 
-		[CCode (cname = "xmlDocFormatDump", instance_pos = 2)]
+		[CCode (cname = "xmlDocFormatDump", instance_pos = 1.1)]
 #if POSIX
 		public int dump_format (Posix.FILE f, bool format = true);
 #else
@@ -380,11 +380,11 @@ namespace Xml {
 		[CCode (cname = "xmlDocSetRootElement")]
 		public Node* set_root_element(Node* root);
 
-		[CCode (cname = "xmlElemDump", instance_pos = 2)]
+		[CCode (cname = "xmlElemDump", instance_pos = 1.1)]
 #if POSIX
 		public void elem_dump (Posix.FILE f, Node* cur);
 #else
-                public void elem_dump (GLib.FileStream f, Node* cur);
+		public void elem_dump (GLib.FileStream f, Node* cur);
 #endif
 
 		[CCode (cname = "xmlGetDocCompressMode")]
@@ -438,13 +438,13 @@ namespace Xml {
 		[CCode (cname = "xmlSaveFile", instance_pos = -1)]
 		public int save_file (string filename);
 
-		[CCode (cname = "xmlSaveFileEnc", instance_pos = 2)]
+		[CCode (cname = "xmlSaveFileEnc", instance_pos = 1.1)]
 		public void save_file_enc (string filename, string enc = "UTF-8");
 
-		[CCode (cname = "xmlSaveFormatFile", instance_pos = 2)]
+		[CCode (cname = "xmlSaveFormatFile", instance_pos = 1.1)]
 		public void save_format_file (string filename, int format);
 
-		[CCode (cname = "xmlSaveFormatFileEnc", instance_pos = 2)]
+		[CCode (cname = "xmlSaveFormatFileEnc", instance_pos = 1.1)]
 		public void save_format_file_enc (string filename, string enc = "UTf-8", bool format = true);
 
 		[CCode (cname = "xmlSetDocCompressMode")]
@@ -890,7 +890,7 @@ namespace Xml {
 		ERROR
 	}
 
-	[CCode (cname = "xmlReaderTypes",  cheader_filename = "libxml/xmlreader.h")]
+	[CCode (cname = "xmlReaderTypes", cheader_filename = "libxml/xmlreader.h")]
 	public enum ReaderType {
 		NONE,
 		ELEMENT,
@@ -1399,7 +1399,7 @@ namespace Xml {
 		public warningSAXFunc warning;
 		public errorSAXFunc error;
 		[CCode (cname = "fatalError")]
-		public fatalErrorSAXFunc  fatalError;
+		public fatalErrorSAXFunc fatalError;
 		[CCode (cname = "getParameterEntity")]
 		public getParameterEntitySAXFunc getParameterEntity;
 		[CCode (cname = "cdataBlock")]
@@ -1545,24 +1545,24 @@ namespace Html {
 		[CCode (cname = "htmlSaveFile", instance_pos = -1)]
 		public int save_file (string filename);
 
-		[CCode (cname = "htmlNodeDumpFile", instance_pos = 2)]
+		[CCode (cname = "htmlNodeDumpFile", instance_pos = 1.1)]
 #if POSIX
 		public int node_dump_file (Posix.FILE file, Xml.Node* node);
 #else
 		public int node_dump_file (GLib.FileStream file, Xml.Node* node);
 #endif
 
-		[CCode (cname = "htmlNodeDumpFileFormat", instance_pos = 2)]
+		[CCode (cname = "htmlNodeDumpFileFormat", instance_pos = 1.1)]
 #if POSIX
 		public int node_dump_file_format (Posix.FILE file, string enc = "UTF-8", bool format = true);
 #else
 		public int node_dump_file_format (GLib.FileStream file, string enc = "UTF-8", bool format = true);
 #endif
 
-		[CCode (cname = "htmlSaveFileEnc", instance_pos = 2)]
+		[CCode (cname = "htmlSaveFileEnc", instance_pos = 1.1)]
 		public int save_file_enc (string filename, string enc = "UTF-8");
 
-		[CCode (cname = "htmlSaveFileFormat", instance_pos = 2)]
+		[CCode (cname = "htmlSaveFileFormat", instance_pos = 1.1)]
 		public int save_file_format (string filename, string enc = "UTF-8", bool format = true);
 
 		[CCode (cname = "htmlIsAutoClosed")]
