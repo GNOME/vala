@@ -26,10 +26,10 @@
 namespace Xml {
 	/* nanoftp - minimal FTP implementation */
 
-	[CCode (cname = "ftpDataCallback", cheader_filename = "libxml/nanoftp.h", has_target = false)]
+	[CCode (has_target = false, cname = "ftpDataCallback", cheader_filename = "libxml/nanoftp.h")]
 	public delegate void FtpDataCallback (void* userData, [CCode (array_length = false)] char[] data, int len);
 
-	[CCode (cname = "ftpListCallback", cheader_filename = "libxml/nanoftp.h", has_target = false)]
+	[CCode (has_target = false, cname = "ftpListCallback", cheader_filename = "libxml/nanoftp.h")]
 	public delegate void FtpListCallback (void* userData, string filename, string attrib, string owner, string group, ulong size, int links, int year, string month, int day, int hour, int minute);
 
 	[Compact]
@@ -857,10 +857,10 @@ namespace Xml {
 
 	/* xmlIO - interface for the I/O interfaces used by the parser */
 
-	[CCode (cname = "xmlInputCloseCallback", cheader_filename = "libxml/xmlIO.h", has_target = false)]
+	[CCode (has_target = false, cname = "xmlInputCloseCallback", cheader_filename = "libxml/xmlIO.h")]
 	public delegate int InputCloseCallback (void* context);
 
-	[CCode (cname = "xmlInputReadCallback", cheader_filename = "libxml/xmlIO.h", has_target = false)]
+	[CCode (has_target = false, cname = "xmlInputReadCallback", cheader_filename = "libxml/xmlIO.h")]
 	public delegate int InputReadCallback (void* context, [CCode (array_length = false)] char[] buffer, int len);
 
 
