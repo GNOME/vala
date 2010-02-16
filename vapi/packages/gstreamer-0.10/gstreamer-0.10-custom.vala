@@ -250,4 +250,19 @@ namespace Gst {
 		public bool parse_file(string fname, string root);
 		public unowned Element get_element(string name);
 	}
+
+	[CCode (cheader_filename = "gst/gst.h")]
+	public struct PluginDesc {
+		public int major_version;
+		public int minor_version;
+		public weak string name;
+		public weak string description;
+		public weak Gst.PluginInitFunc plugin_init;
+		public weak string version;
+		public weak string license;
+		public weak string source;
+		public weak string package;
+		public weak string origin;
+		void *_gst_reserved[];
+	}
 }

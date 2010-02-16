@@ -954,13 +954,13 @@ namespace Gst {
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class Plugin : Gst.Object {
 		public weak string basename;
-		public weak Gst.PluginDesc desc;
+		public Gst.PluginDesc desc;
 		public ulong file_mtime;
 		public int64 file_size;
 		public weak string filename;
 		public uint flags;
 		public weak GLib.Module module;
-		public weak Gst.PluginDesc orig_desc;
+		public Gst.PluginDesc orig_desc;
 		public bool registered;
 		public void add_dependency (string env_vars, string paths, string names, Gst.PluginDependencyFlags flags);
 		public void add_dependency_simple (string env_vars, string paths, string names, Gst.PluginDependencyFlags flags);
@@ -984,20 +984,6 @@ namespace Gst {
 		public static bool register_static (int major_version, int minor_version, string name, string description, Gst.PluginInitFunc init_func, string version, string license, string source, string package, string origin);
 		public static bool register_static_full (int major_version, int minor_version, string name, string description, Gst.PluginInitFullFunc init_full_func, string version, string license, string source, string package, string origin);
 		public void set_cache_data (Gst.Structure cache_data);
-	}
-	[Compact]
-	[CCode (cheader_filename = "gst/gst.h")]
-	public class PluginDesc {
-		public weak string description;
-		public weak string license;
-		public int major_version;
-		public int minor_version;
-		public weak string name;
-		public weak string origin;
-		public weak string package;
-		public weak Gst.PluginInitFunc plugin_init;
-		public weak string source;
-		public weak string version;
 	}
 	[CCode (cheader_filename = "gst/gst.h")]
 	public class PluginFeature : Gst.Object {
@@ -1537,6 +1523,20 @@ namespace Gst {
 	}
 	[CCode (type_id = "GST_TYPE_LIST", cheader_filename = "gst/gst.h")]
 	public struct List {
+	}
+	[CCode (type_id = "GST_TYPE_PLUGIN_DESC", cheader_filename = "gst/gst.h")]
+	public struct PluginDesc {
+		public int major_version;
+		public int minor_version;
+		public weak string name;
+		public weak string description;
+		public weak Gst.PluginInitFunc plugin_init;
+		public weak string version;
+		public weak string license;
+		public weak string source;
+		public weak string package;
+		public weak string origin;
+		public weak void*[] _gst_reserved;
 	}
 	[CCode (type_id = "GST_TYPE_STATIC_CAPS", cheader_filename = "gst/gst.h")]
 	public struct StaticCaps {
