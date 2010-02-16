@@ -910,8 +910,20 @@ internal class Vala.CCodeBaseModule : CCodeModule {
 				if (c.type_reference is ArrayType) {
 					arr = "[]";
 				}
-				cdecl.add_declarator (new CCodeVariableDeclarator ("%s%s".printf (c.get_cname (), arr), (CCodeExpression) c.initializer.ccodenode));
-				cdecl.modifiers = CCodeModifiers.STATIC;
+
+				var cinitializer = (CCodeExpression) c.initializer.ccodenode;
+				if (decl_space != source_declarations) {
+					// never output value in header
+					// special case needed as this method combines declaration and definition
+					cinitializer = null;
+				}
+
+				cdecl.add_declarator (new CCodeVariableDeclarator ("%s%s".printf (c.get_cname (), arr), cinitializer));
+				if (c.is_private_symbol ()) {
+					cdecl.modifiers = CCodeModifiers.STATIC;
+				} else {
+					cdecl.modifiers = CCodeModifiers.EXTERN;
+				}
 		
 				decl_space.add_constant_declaration (cdecl);
 			} else {
