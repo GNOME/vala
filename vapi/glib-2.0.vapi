@@ -2541,9 +2541,9 @@ namespace GLib {
 		[CCode (cname = "clearerr")]
 		public void clearerr ();
 		[CCode (cname = "fread", instance_pos = -1)]
-		public size_t read ([CCode (array_length_pos = 2.1)] char[] buf, int size = 1);
+		public size_t read ([CCode (array_length_pos = 2.1)] uint8[] buf, size_t size = 1);
 		[CCode (cname = "fwrite", instance_pos = -1)]
-		public size_t write ([CCode (array_length_pos = 2.1)] char[] buf, int size = 1);
+		public size_t write ([CCode (array_length_pos = 2.1)] uint8[] buf, size_t size = 1);
 
 		public string? read_line () {
 			int c;
