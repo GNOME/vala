@@ -120,6 +120,14 @@ public class Vala.SymbolResolver : CodeVisitor {
 			}
 		}
 
+		if (context.profile == Profile.DOVA) {
+			// all interfaces require Object
+			if (iface.get_prerequisites ().size == 0) {
+				var object_class = (Class) root_symbol.scope.lookup ("Dova").scope.lookup ("Object");
+				iface.add_prerequisite (new ObjectType (object_class));
+			}
+		}
+
 		current_scope = current_scope.parent_scope;
 	}
 
