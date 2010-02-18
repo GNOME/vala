@@ -801,7 +801,7 @@ namespace GLib {
 		public bool is_active ();
 		public void start ();
 		public void stop ();
-		public virtual signal bool incoming (GLib.SocketConnection connection, GLib.Object source_object);
+		public virtual signal bool incoming (GLib.SocketConnection connection, GLib.Object? source_object);
 	}
 	[Compact]
 	[CCode (copy_function = "g_srv_target_copy", type_id = "G_TYPE_SRV_TARGET", cheader_filename = "gio/gio.h")]
@@ -1416,19 +1416,19 @@ namespace GLib {
 		NOT_INITIALIZED,
 		ADDRESS_IN_USE,
 	}
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", instance_pos = -2)]
 	public delegate void AsyncReadyCallback (GLib.Object? source_object, GLib.AsyncResult res);
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", instance_pos = -2)]
 	public delegate void FileProgressCallback (int64 current_num_bytes, int64 total_num_bytes);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
 	public delegate bool FileReadMoreCallback (string file_contents, int64 file_size, void* callback_data);
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", instance_pos = -2)]
 	public delegate bool IOSchedulerJobFunc (GLib.IOSchedulerJob job, GLib.Cancellable cancellable);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
 	public delegate void* ReallocFunc (void* data, size_t size);
 	[CCode (cheader_filename = "gio/gio.h", has_target = false)]
 	public delegate void SimpleAsyncThreadFunc (GLib.SimpleAsyncResult res, GLib.Object object, GLib.Cancellable cancellable);
-	[CCode (cheader_filename = "gio/gio.h")]
+	[CCode (cheader_filename = "gio/gio.h", instance_pos = -2)]
 	public delegate bool SocketSourceFunc (GLib.Socket socket, GLib.IOCondition condition);
 	[CCode (cheader_filename = "gio/gio.h")]
 	public static GLib.EqualFunc file_equal;

@@ -158,3 +158,5 @@ g_settings_list_list is_array="1" transfer_ownership="1" array_length_pos="1"
 g_settings_list_list.n_items hidden="1"
 
 g_simple_async_result_new.source_object nullable="1"
+
+GSocketService::incoming.source_object nullable="1"
