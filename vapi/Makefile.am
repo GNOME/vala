@@ -117,6 +117,7 @@ dist_vapi_DATA = \
 	libgnomeui-2.0.vapi \
 	libgsf-1.deps \
 	libgsf-1.vapi \
+	libgvc.vapi \
 	libmagic.vapi \
 	libnl-1.vapi \
 	libnl-2.0.vapi \
