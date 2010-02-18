@@ -1973,6 +1973,7 @@ public class Vala.GIdlParser : CodeVisitor {
 
 		string cheader_filename = null;
 		string ctype = null;
+		string array_length_cname = null;
 		bool array_null_terminated = false;
 
 		var attributes = get_attributes ("%s.%s".printf (current_data_type.get_cname (), node.name));
@@ -2010,6 +2011,8 @@ public class Vala.GIdlParser : CodeVisitor {
 					if (eval (nv[1]) == "1") {
 						array_null_terminated = true;
 					}
+				} else if (nv[0] == "array_length_cname") {
+					array_length_cname = eval (nv[1]);
 				}
 			}
 		}
@@ -2043,9 +2046,14 @@ public class Vala.GIdlParser : CodeVisitor {
 			field.add_cheader_filename (cheader_filename);
 		}
 
-		field.no_array_length = true;
 		if (array_null_terminated) {
 			field.array_null_terminated = true;
+		}
+
+		if (array_length_cname != null) {
+			field.set_array_length_cname (array_length_cname);
+		} else {
+			field.no_array_length = true;
 		}
 
 		return field;

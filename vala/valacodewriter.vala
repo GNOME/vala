@@ -627,7 +627,8 @@ public class Vala.CodeWriter : CodeVisitor {
 		bool custom_cname = (f.get_cname () != f.get_default_cname ());
 		bool custom_ctype = (f.get_ctype () != null);
 		bool custom_cheaders = (f.parent_symbol is Namespace);
-		if (custom_cname || custom_ctype || custom_cheaders || (f.no_array_length && f.field_type is ArrayType)) {
+		bool custom_array_length_cname = (f.get_array_length_cname () != null);
+		if (custom_cname || custom_ctype || custom_cheaders || custom_array_length_cname || (f.no_array_length && f.field_type is ArrayType)) {
 			write_indent ();
 			write_string ("[CCode (");
 
@@ -651,15 +652,23 @@ public class Vala.CodeWriter : CodeVisitor {
 				write_string ("cheader_filename = \"%s\"".printf (get_cheaders(f)));
 			}
 
-			if (f.no_array_length && f.field_type is ArrayType) {
-				if (custom_cname || custom_ctype || custom_cheaders) {
-					write_string (", ");
-				}
+			if (f.field_type is ArrayType) {
+				if (f.no_array_length) {
+					if (custom_cname || custom_ctype || custom_cheaders) {
+						write_string (", ");
+					}
 
-				write_string ("array_length = false");
+					write_string ("array_length = false");
 
-				if (f.array_null_terminated) {
-					write_string (", array_null_terminated = true");
+					if (f.array_null_terminated) {
+						write_string (", array_null_terminated = true");
+					}
+				} else if (custom_array_length_cname) {
+					if (custom_cname || custom_ctype || custom_cheaders) {
+						write_string (", ");
+					}
+
+					write_string ("array_length_cname = \"%s\"".printf (f.get_array_length_cname ()));
 				}
 			}
 
