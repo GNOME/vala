@@ -1,6 +1,6 @@
 /* valaerrortype.vala
  *
- * Copyright (C) 2008  Jürg Billeter
+ * Copyright (C) 2008-2010  Jürg Billeter
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -77,11 +77,19 @@ public class Vala.ErrorType : ReferenceType {
 	}
 
 	public override string to_qualified_string (Scope? scope) {
+		string result;
+
 		if (error_domain == null) {
-			return "GLib.Error";
+			result = "GLib.Error";
 		} else {
-			return error_domain.get_full_name ();
+			result = error_domain.get_full_name ();
 		}
+
+		if (nullable) {
+			result += "?";
+		}
+
+		return result;
 	}
 
 	public override DataType copy () {
