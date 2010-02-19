@@ -3405,7 +3405,7 @@ namespace GLib {
 		public weak StringBuilder prepend_unichar (unichar wc);
 		public weak StringBuilder prepend_len (string val, ssize_t len);
 		public weak StringBuilder insert (ssize_t pos, string val);
-		public weak StringBuilder erase (ssize_t pos, ssize_t len);
+		public weak StringBuilder erase (ssize_t pos = 0, ssize_t len = -1);
 		public weak StringBuilder truncate (size_t len);
 
 		[PrintfFormat]
