@@ -335,6 +335,8 @@ namespace GLib {
 		public void notify_property (string property_name);
 
 		public weak Object connect (string signal_spec, ...);
+		[CCode (cname = "g_signal_handler_disconnect")]
+		public void disconnect (ulong handler_id);
 
 		public void add_toggle_ref (ToggleNotify notify);
 		public void remove_toggle_ref (ToggleNotify notify);
