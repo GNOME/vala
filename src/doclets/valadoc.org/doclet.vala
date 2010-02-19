@@ -97,9 +97,6 @@ namespace Valadoc.ValadocOrg {
 
 
 public class Valadoc.ValadocOrg.Doclet : Valadoc.Html.BasicDoclet {
-	private const string css_path_wiki = "../../wiki-style.css";
-	private const string css_path = "../reference-style.css";
-
 	private ArrayList<Api.Node> nodes = new ArrayList<Api.Node> ();
 	private string package_dir_name = ""; // remove
 	private Api.Tree tree;
@@ -122,7 +119,7 @@ public class Valadoc.ValadocOrg.Doclet : Valadoc.Html.BasicDoclet {
 
 		DirUtils.create (this.settings.path, 0777);
 
-		write_wiki_pages (tree, css_path_wiki, Path.build_filename (this.settings.path, this.settings.pkg_name, "content"));
+		write_wiki_pages (tree, "", "", Path.build_filename (this.settings.path, this.settings.pkg_name, "content"));
 		tree.accept (this);
 	}
 
@@ -136,6 +133,7 @@ public class Valadoc.ValadocOrg.Doclet : Valadoc.Html.BasicDoclet {
 		string path = GLib.Path.build_filename (this.settings.path, pkg_name);
 		string imgpath = GLib.Path.build_filename (path, "img");
 
+		chart_directory = Path.build_filename ("/doc/", pkg_name);
 
 		var rt = DirUtils.create (path, 0777);
 		rt = DirUtils.create (imgpath, 0777);
@@ -178,7 +176,7 @@ public class Valadoc.ValadocOrg.Doclet : Valadoc.Html.BasicDoclet {
 			GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 			writer = new Html.MarkupWriter (file, false);
 			_renderer.set_writer (writer);
-			write_symbol_content (node, Path.build_filename ("/doc/", node.package.name));
+			write_symbol_content (node);
 			file = null;
 
 
@@ -204,7 +202,7 @@ public class Valadoc.ValadocOrg.Doclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 		writer = new Html.MarkupWriter (file, false);
 		_renderer.set_writer (writer);
-		write_symbol_content (node, Path.build_filename ("/doc/", node.package.name));
+		write_symbol_content (node);
 		file = null;
 
 
@@ -222,6 +220,14 @@ public class Valadoc.ValadocOrg.Doclet : Valadoc.Html.BasicDoclet {
 
 
 		node.accept_all_children (this);
+	}
+
+	protected override void write_wiki_page (WikiPage page, string contentp, string css_path, string js_path, string pkg_name) {
+		GLib.FileStream file = GLib.FileStream.open (Path.build_filename(contentp, page.name.ndup(page.name.len()-7).replace ("/", ".")+"wiki.tpl"), "w");
+		writer = new Html.MarkupWriter (file);
+		_renderer.set_writer (writer);
+		_renderer.set_container (page);
+		_renderer.render (page.documentation);
 	}
 
 	public override void visit_namespace (Api.Namespace item) {

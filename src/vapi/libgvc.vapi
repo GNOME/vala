@@ -6,7 +6,7 @@ namespace Graphviz {
 
 //check the headerfile, 	// rename
 [CCode (cprefix = "", cheader_filename="gvc.h")]
-public enum GraphType {
+public enum GraphType { // => GraphKind
 	AGDIGRAPHSTRICT,
 	AGRAPHSTRICT,
 	AGDIGRAPH,
@@ -369,7 +369,7 @@ public class Context {
 	public int parse_args ( [CCode (array_length_pos = 0.9)] string[] argv );
 
 	[CCode (cname = "gvContext")]
-	public static Context context ( );
+	public static Context context ( ); // => GraphKind
 
 	[CCode (cname = "gvLayout")]
 	public int layout ( Graph g, string engine );

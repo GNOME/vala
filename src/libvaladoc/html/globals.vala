@@ -51,6 +51,7 @@ namespace Valadoc.Html {
 	public const string css_package_index = "package_index";
 	public const string css_brief_description = "brief_description";
 	public const string css_description = "description";
+	public const string css_known_list = "known_nodes";
 	public const string css_leaf_brief_description = "leaf_brief_description";
 	public const string css_leaf_code_definition = "leaf_code_definition";
 
@@ -95,6 +96,15 @@ namespace Valadoc.Html {
 	public const string css_style_content = "site_content";
 	public const string css_style_body = "site_body";
 
+	public const string css_box_headline_text = "text";
+	public const string css_box_headline_toggle = "toggle";
+	public const string css_box_headline = "headline";
+	public const string css_box_content = "content";
+	public const string css_box_column = "column";
+	public const string css_box = "box";
+
+	public const string css_namespace_note = "namespace_note";
+	public const string css_package_note = "package_note";
 
 	public delegate string? HtmlLink (Settings settings, Documentation element, Documentation? pos);
 	public HtmlLink get_html_link_imp;

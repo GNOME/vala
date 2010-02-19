@@ -1,6 +1,6 @@
-/* item.vala
+/* markupwriter.vala
  *
- * Copyright (C) 2008  Florian Brosch
+ * Copyright (C) 2008-2009 Florian Brosch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,32 +20,27 @@
  * 	Florian Brosch <flo.brosch@gmail.com>
  */
 
-using Valadoc.Content;
-using Gee;
-
-public abstract class Valadoc.Api.Item : Object {
-	private Inline _signature;
-
-	public Item parent { protected set; get; }
-
-	internal virtual void resolve_type_references (Tree root) {
+function get_path (path) {
+	var pos = path.lastIndexOf ('/');
+	if (pos < 0) {
+		return '';
 	}
 
-	internal virtual void resolve_children (Tree root) {
+	return path.substring (pos, -1) + '/';
+}
+
+function toggle_box (self, id) {
+	var element = document.getElementById (id);
+	if (element == null) {
+		return ;
 	}
 
-	internal virtual void process_comments (Settings settings, DocumentationParser parser) {
+	if (element.style.display == 'block') {
+		element.style.display = 'none';
+		self.src = get_path (self.src) + 'coll_open.png';
+	} else {
+		element.style.display = 'block';
+		self.src = get_path (self.src) + 'coll_close.png';
 	}
-
-	public Inline signature {
-		get {
-			if (_signature == null) {
-				_signature = build_signature ();
-			}
-			return _signature;
-		}
-	}
-
-	protected abstract Inline build_signature ();
 }
 

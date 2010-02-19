@@ -108,6 +108,10 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 	private const string css_path_wiki = "../devhelpstyle.css";
 	private const string css_path = "devhelpstyle.css";
 
+	private const string js_path_wiki = "../scripts.js";
+	private const string js_path = "scripts.js";
+
+
 	private ArrayList<Api.Node> nodes = new ArrayList<Api.Node> ();
 	private string package_dir_name = ""; // remove
 	private Api.Tree tree;
@@ -132,7 +136,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 
 		DirUtils.create (this.settings.path, 0777);
 
-		write_wiki_pages (tree, css_path_wiki, Path.build_filename (this.settings.path, this.settings.pkg_name, "content"));
+		write_wiki_pages (tree, css_path_wiki, js_path_wiki, Path.build_filename (this.settings.path, this.settings.pkg_name, "content"));
 		tree.accept (this);
 	}
 
@@ -168,7 +172,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open (filepath, "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
-		write_file_header (this.css_path, pkg_name);
+		write_file_header (this.css_path, this.js_path, pkg_name);
 		write_package_content (package, package, wikipage);
 		write_file_footer ();
 		file = null;
@@ -213,7 +217,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 			GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 			writer = new Html.MarkupWriter (file);
 			_renderer.set_writer (writer);
-			write_file_header (css_path, node.full_name ());
+			write_file_header (css_path, js_path, node.full_name ());
 			write_symbol_content (node);
 			write_file_footer ();
 			file = null;
@@ -236,7 +240,7 @@ public class Valadoc.Devhelp.Doclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
-		write_file_header (css_path, node.full_name());
+		write_file_header (css_path, js_path, node.full_name());
 		write_symbol_content (node);
 		write_file_footer ();
 		file = null;

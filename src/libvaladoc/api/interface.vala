@@ -34,6 +34,22 @@ public class Valadoc.Api.Interface : TypeSymbol {
 		return this.interfaces;
 	}
 
+
+	private Collection<TypeReference> _full_implemented_interfaces = null;
+
+	public Collection<TypeReference> get_all_implemented_interface_list () {
+		if (_full_implemented_interfaces == null) {
+			_full_implemented_interfaces = new HashSet<TypeReference> ();
+			_full_implemented_interfaces.add_all (this.interfaces);
+
+			if (base_type != null) {
+				_full_implemented_interfaces.add_all (((Class) base_type.data_type).get_full_implemented_interface_list ());
+			}
+		}
+
+		return _full_implemented_interfaces;
+	}
+
 	public string? get_cname () {
 		return ((Vala.Interface) symbol).get_cname ();
 	}
@@ -61,6 +77,37 @@ public class Valadoc.Api.Interface : TypeSymbol {
 				this.interfaces.add (inherited);
 			}
 		}
+	}
+
+	private Set<Interface> _known_related_interfaces = new TreeSet<Interface> ();
+	private Set<Class> _known_implementations = new TreeSet<Class> ();
+
+	public Collection<Class> get_known_implementations () {
+		return _known_implementations;
+	}
+
+	public Collection<Interface> get_known_related_interfaces () {
+		return _known_related_interfaces;
+	}
+
+	internal void register_related_interface (Interface iface) {
+		_known_related_interfaces.add (iface);
+	}
+
+	internal void register_implementation (Class cl) {
+		_known_implementations.add (cl);
+	}
+
+	internal override void resolve_children (Tree root) {
+		if (base_type != null) {
+			((Class) this.base_type.data_type).register_derived_interface (this);
+		}
+
+		foreach (var iface in get_all_implemented_interface_list ()) {
+			((Interface) iface.data_type).register_related_interface (this);
+		}
+
+		base.resolve_children (root);
 	}
 
 	internal override void resolve_type_references (Tree root) {

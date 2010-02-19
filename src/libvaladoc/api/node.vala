@@ -91,6 +91,36 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation, Compara
 		children.add (child);
 	}
 
+	internal override void resolve_children (Tree root) {
+		var list = per_type_children.get (NodeType.NAMESPACE);
+		if (list != null) {
+			foreach (Node node in list) {
+				node.resolve_children (root);
+			}
+		}
+
+		list = per_type_children.get (NodeType.STRUCT);
+		if (list != null) {
+			foreach (Node node in list) {
+				node.resolve_children (root);
+			}
+		}
+
+		list = per_type_children.get (NodeType.CLASS);
+		if (list != null) {
+			foreach (Node node in list) {
+				node.resolve_children (root);
+			}
+		}
+
+		list = per_type_children.get (NodeType.INTERFACE);
+		if (list != null) {
+			foreach (Node node in list) {
+				node.resolve_children (root);
+			}
+		}
+	}
+
 	internal override void resolve_type_references (Tree root) {
 		foreach (Node node in per_name_children.values) {
 			node.resolve_type_references (root);
@@ -200,8 +230,7 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation, Compara
 					if (ast == null)
 						return null;
 				}
-				this._package = (Valadoc.Api.Package)ast;
-			}
+				this._package = (Valadoc.Api.Package)ast;			}
 			return this._package;
 		}
 	}
@@ -237,4 +266,3 @@ public abstract class Valadoc.Api.Node : Item, Visitable, Documentation, Compara
 		return strcmp (name, node.name);
 	}
 }
-

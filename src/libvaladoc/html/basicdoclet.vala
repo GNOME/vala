@@ -28,6 +28,9 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	protected HtmlRenderer _renderer;
 	protected Html.MarkupWriter writer;
 
+	protected string chart_directory = "img";
+	protected string icon_directory = "..";
+
 	public abstract void process (Settings settings, Api.Tree tree);
 
 	protected string? get_link (Api.Node element, Api.Node? pos) {
@@ -65,7 +68,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		}
 	}
 
-	protected void write_wiki_pages (Api.Tree tree, string css_path_wiki, string contentp) {
+	protected void write_wiki_pages (Api.Tree tree, string css_path_wiki, string js_path_wiki, string contentp) {
 		if (tree.wikitree == null) {
 			return ;
 		}
@@ -85,15 +88,19 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 
 		foreach (WikiPage page in pages) {
 			if (page.name != "index.valadoc") {
-				GLib.FileStream file = GLib.FileStream.open (Path.build_filename(contentp, page.name.ndup(page.name.len()-7).replace ("/", ".")+"html"), "w");
-				writer = new MarkupWriter (file);
-				_renderer.set_writer (writer);
-				this.write_file_header (css_path_wiki, this.settings.pkg_name);
-				_renderer.set_container (page);
-				_renderer.render (page.documentation);
-				this.write_file_footer ();
+				write_wiki_page (page, contentp, css_path_wiki, js_path_wiki, this.settings.pkg_name);
 			}
 		}
+	}
+
+	protected virtual void write_wiki_page (WikiPage page, string contentp, string css_path, string js_path, string pkg_name) {
+		GLib.FileStream file = GLib.FileStream.open (Path.build_filename(contentp, page.name.ndup(page.name.len()-7).replace ("/", ".")+"html"), "w");
+		writer = new MarkupWriter (file);
+		_renderer.set_writer (writer);
+		this.write_file_header (css_path, js_path, pkg_name);
+		_renderer.set_container (page);
+		_renderer.render (page.documentation);
+		this.write_file_footer ();
 	}
 
 	protected void write_navi_top_entry (Api.Node element, Api.Node? parent) {
@@ -234,9 +241,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			return;
 		}
 
-		writer.simple_tag ("br");
+		writer.start_tag ("div", {"class", css_package_note});
 		writer.start_tag ("b").text ("Package:").end_tag ("b");
 		writer.text (" ").text (package);
+		writer.end_tag ("div");
 	}
 
 	protected void write_namespace_note (Api.Node element) {
@@ -249,9 +257,10 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			return;
 		}
 
-		writer.simple_tag ("br");
+		writer.start_tag ("div", {"class", css_namespace_note});
 		writer.start_tag ("b").text ("Namespace:").end_tag ("b");
 		writer.text (" ").text (ns.full_name());
+		writer.end_tag ("div");
 	}
 
 	private void write_brief_description (Api.Node element , Api.Node? pos) {
@@ -345,17 +354,80 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.end_tag ("div");
 	}
 
-	public void write_symbol_content (Api.Node node, string image_path_prefix = "") {
+	private int html_id_counter = 0;
+
+	private void write_known_symbols_node (Gee.Collection<Api.Node> nodes, Api.Node container, string headline) {
+		if (nodes.size > 0) {
+			var html_id = "box-content-" + html_id_counter.to_string ();
+			html_id_counter++;
+
+
+			writer.start_tag ("div", {"class", css_box});
+
+			// headline:
+			writer.start_tag ("div", {"class", css_box_headline});
+			writer.start_tag ("div", {"class", css_box_headline_text}).text (headline).end_tag ("div");
+			writer.start_tag ("div", {"class", css_box_headline_toggle});
+			writer.start_tag ("img", {"onclick", "toggle_box  (this, '" + html_id + "')", "src", Path.build_filename (icon_directory, "coll_open.png")});
+			writer.raw_text ("&nbsp;");
+			writer.end_tag ("div");
+			writer.end_tag ("div");
+
+
+			// content:
+			int[] list_sizes = {0, 0, 0};
+			list_sizes[0] = nodes.size;
+			list_sizes[2] = list_sizes[0]/3;
+			list_sizes[0] -= list_sizes[2];
+			list_sizes[1] = list_sizes[0]/2;
+			list_sizes[0] -= list_sizes[1];
+
+			writer.start_tag ("div", {"class", css_box_content, "id", html_id});
+
+			var iter = nodes.iterator ();
+
+			for (int i = 0; i < list_sizes.length; i++) {
+				writer.start_tag ("div", {"class", css_box_column});
+				writer.start_tag ("ul", {"class", css_inline_navigation});
+
+				for (int p = 0; p < list_sizes[i] && iter.next (); p++) {
+					var node = iter.get ();
+					writer.start_tag ("li", {"class", get_html_css_class (node)});
+					writer.link (get_link (node, container), node.name);
+					writer.end_tag ("li");
+				}
+
+				writer.end_tag ("ul");
+				writer.end_tag ("div");
+			}
+
+			writer.end_tag ("div"); // end content
+
+			writer.end_tag ("div"); // end box
+		}
+	}
+
+	public void write_symbol_content (Api.Node node) {
 		string full_name = node.full_name ();
 		writer.start_tag ("div", {"class", css_style_content});
 		writer.start_tag ("h1", {"class", css_title, full_name}).text (node.name).end_tag ("h1");
 		writer.simple_tag ("hr", {"class", css_headline_hr});
-		this.write_image_block (node, image_path_prefix);
+		this.write_image_block (node);
 		writer.start_tag ("h2", {"class", css_title}).text ("Description:").end_tag ("h2");
 		writer.start_tag ("div", {"class", css_code_definition});
 		this.write_signature (node, node);
 		writer.end_tag ("div");
 		this.write_documentation (node, node);
+
+		if (node is Class) {
+			var cl = node as Class;
+			write_known_symbols_node (cl.get_known_child_classes (), cl, "All known sub-classes:");
+			write_known_symbols_node (cl.get_known_derived_interfaces (), cl, "Required by:");
+		} else if (node is Interface) {
+			var iface = node as Interface;
+			write_known_symbols_node (iface.get_known_implementations (), iface, "All known implementing classes:");
+			write_known_symbols_node (iface.get_known_related_interfaces (), iface, "All known sub-interfaces:");
+		}
 
 		if (node.parent is Namespace) {
 			writer.simple_tag ("br");
@@ -393,6 +465,7 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 			write_children (node, Api.NodeType.SIGNAL, "Signals", node);
 			write_children (node, Api.NodeType.FIELD, "Fields", node);
 		}
+
 		writer.end_tag ("div");
 	}
 
@@ -458,11 +531,11 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 	}
 
 	protected string get_img_path (Api.Node element) {
-		return "img/" + element.full_name () + ".png";
+		return Path.build_filename (chart_directory, element.full_name () + ".png");
 	}
 
 	protected string get_img_real_path (Api.Node element) {
-		return this.settings.path + "/" + element.package.name + "/" + "img/" + element.full_name () + ".png";
+		return Path.build_filename (settings.path, element.package.name, chart_directory, element.full_name () + ".png");
 	}
 
 	protected void write_children (Api.Node node, Api.NodeType type, string type_string, Api.Node? container) {
@@ -491,16 +564,13 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		}
 	}
 
-	protected void write_image_block (Api.Node element, string path_prefix = "") {
+	protected void write_image_block (Api.Node element) {
 		if (!(element is Class || element is Interface || element is Struct)) {
 			return;
 		}
 
 		string realimgpath = this.get_img_real_path (element);
 		string imgpath = this.get_img_path (element);
-		if (path_prefix != null) {
-			imgpath = Path.build_filename (path_prefix, imgpath);
-		}
 
 		if (element is Class) {
 			Diagrams.write_class_diagram ((Class)element, realimgpath);
@@ -577,11 +647,12 @@ public abstract class Valadoc.Html.BasicDoclet : Api.Visitor, Doclet {
 		writer.end_tag ("div");
 	}
 
-	protected void write_file_header (string css, string? title) {
+	protected void write_file_header (string css, string js, string? title) {
 		writer.start_tag ("html");
 		writer.start_tag ("head");
 		writer.start_tag ("title").text ("Vala Binding Reference").end_tag ("title");
 		writer.stylesheet_link (css);
+		writer.javascript_link (js);
 		writer.end_tag ("head");
 		writer.start_tag ("body");
 		writer.start_tag ("div", {"class", css_site_header});

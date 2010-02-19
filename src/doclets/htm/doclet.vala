@@ -108,6 +108,11 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 	private const string css_path_wiki = "../style.css";
 	private const string css_path = "../style.css";
 
+
+	private const string js_path_package = "scripts.js";
+	private const string js_path_wiki = "../scripts.js";
+	private const string js_path = "../scripts.js";
+
 	construct {
 		_renderer = new HtmlRenderer (this);
 	}
@@ -122,12 +127,12 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		DirUtils.create (this.settings.path, 0777);
 		copy_directory (icons_dir, settings.path);
 
-		write_wiki_pages (tree, css_path_wiki, Path.build_filename(settings.path, "content"));
+		write_wiki_pages (tree, css_path_wiki, js_path_wiki, Path.build_filename(settings.path, "content"));
 
 		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename ( settings.path, "index.html" ), "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
-		write_file_header (this.css_path_package, settings.pkg_name);
+		write_file_header (this.css_path_package, this.js_path_package, settings.pkg_name);
 		write_navi_packages (tree);
 		write_package_index_content (tree);
 		write_file_footer ();
@@ -150,7 +155,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open (GLib.Path.build_filename ( path, "index.htm" ), "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
-		write_file_header (this.css_path, pkg_name);
+		write_file_header (this.css_path, this.js_path, pkg_name);
 		write_navi_package (package);
 		write_package_content (package, package);
 		write_file_footer ();
@@ -166,7 +171,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 			GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 			writer = new Html.MarkupWriter (file);
 			_renderer.set_writer (writer);
-			write_file_header (this.css_path, ns.full_name ());
+			write_file_header (this.css_path, this.js_path, ns.full_name ());
 			write_navi_symbol (ns);
 			write_namespace_content (ns, ns);
 			write_file_footer ();
@@ -182,7 +187,7 @@ public class Valadoc.HtmlDoclet : Valadoc.Html.BasicDoclet {
 		GLib.FileStream file = GLib.FileStream.open (rpath, "w");
 		writer = new Html.MarkupWriter (file);
 		_renderer.set_writer (writer);
-		write_file_header (css_path, node.full_name());
+		write_file_header (css_path, js_path, node.full_name());
 		if (is_internal_node (node)) {
 			write_navi_symbol (node);
 		} else {

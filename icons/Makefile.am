@@ -4,7 +4,7 @@ NULL =
 iconsdir = $(datadir)/valadoc/icons
 
 
-dist_icons_DATA =         \
+dist_icons_DATA =        \
 	warning.png          \
 	abstractclass.png    \
 	abstractmethod.png   \
@@ -32,6 +32,9 @@ dist_icons_DATA =         \
 	constructor.png      \
 	virtualmethod.png    \
 	virtualproperty.png  \
+	scripts.js           \
+	coll_close.png       \
+	coll_open.png        \
 	$(NULL)
 
 

@@ -359,6 +359,7 @@ public class Valadoc.Api.Tree {
 		Api.NodeBuilder builder = new NodeBuilder (this);
 		this.context.accept(builder);
 		this.resolve_type_references ();
+		this.resolve_children ();
 		this.add_dependencies_to_source_package ();
 		return true;
 	}
@@ -374,6 +375,12 @@ public class Valadoc.Api.Tree {
 	private void resolve_type_references () {
 		foreach (Package pkg in this.packages) {
 			pkg.resolve_type_references (this);
+		}
+	}
+
+	private void resolve_children () {
+		foreach (Package pkg in packages) {
+			pkg.resolve_children (this);
 		}
 	}
 

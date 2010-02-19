@@ -302,7 +302,7 @@ h3.main_title {
 	background-position:center right;
 	border:0px;
 }
-.description a.abstract_class, .brief_description a.abstract_class {
+a.abstract_class, .description a.abstract_class, .brief_description a.abstract_class {
 	background-image:url(abstractclass.png);
 	display:inline-block;
 	padding-right:17px;
@@ -351,7 +351,7 @@ h3.main_title {
 	background-position:center right;
 	border:0px;
 }
-.description a.virtual_method, .brief_description a.virtual_method {
+a.virtual_method, .description a.virtual_method, .brief_description a.virtual_method {
 	background-image:url(virtualmethod.png);
 	display:inline-block;
 	padding-right:17px;
@@ -466,8 +466,7 @@ h3.main_title {
 
 
 
-.navi_main a, .navi_inline a,
-a.external_link
+.navi_main a, .navi_inline a, a.external_link
 {
 	text-decoration: none;
 	color: 	#214b87;
@@ -485,7 +484,6 @@ ul.no_bullet > li {
 	list-style-type: none;
 }
 
-
 .main_see_list {
 }
 
@@ -496,13 +494,50 @@ ul.no_bullet > li {
 	font: monospace;
 	color: #ff01ff;
 }
-
 .main_code_definition a, .leaf_code_definition a {
 	text-decoration: none;
 	color: inherit;
 }
-
 .main_code_definition a:hover, .leaf_code_definition a:hover {
 	text-decoration: underline;
+}
+
+
+.box {
+}
+.box .headline {
+	background-color: #eeeeff;
+	border-color: #aaaaff;
+	border-style: solid;
+	border-width: 1px;
+	margin: auto;
+	width: 90%;
+	margin-top: 20px;
+}
+.box .text {
+	font-weight: bold;  
+	float: left;
+}
+.box .toggle {
+	text-align: right;
+	float: clear;
+}
+.box .content {
+	border-color: #aaaaff;
+	border-width: 0 1 1 1;
+	border-style: solid;
+	overflow: auto;
+	display: none;
+	margin: auto;
+	width: 90%;
+}
+.box .column {
+	float: left;
+	width: 33%;
+}
+
+.namespace_note {
+}
+.package_note {
 }
 

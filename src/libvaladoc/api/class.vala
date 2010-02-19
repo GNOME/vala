@@ -53,6 +53,21 @@ public class Valadoc.Api.Class : TypeSymbol {
 		return this.interfaces;
 	}
 
+	private Collection<TypeReference> _full_implemented_interfaces = null;
+
+	public Collection<TypeReference> get_full_implemented_interface_list () {
+		if (_full_implemented_interfaces == null) {
+			_full_implemented_interfaces = new HashSet<TypeReference> ();
+			_full_implemented_interfaces.add_all (this.interfaces);
+
+			if (base_type != null) {
+				_full_implemented_interfaces.add_all (((Class) base_type.data_type).get_full_implemented_interface_list ());
+			}
+		}
+
+		return _full_implemented_interfaces;
+	}
+
 	public bool is_abstract {
 		get {
 			return this.vclass.is_abstract;
@@ -80,6 +95,43 @@ public class Valadoc.Api.Class : TypeSymbol {
 				this.interfaces.add (inherited);
 			}
 		}
+	}
+
+	private Set<Interface> _known_derived_interfaces = new TreeSet<Interface> ();
+	private Set<Class> _known_child_classes = new TreeSet<Class> ();
+
+	public Collection<Class> get_known_child_classes () {
+		return _known_child_classes.read_only_view;
+	}
+
+	public Collection<Interface> get_known_derived_interfaces () {
+		return _known_derived_interfaces.read_only_view;
+	}
+
+	internal void register_derived_interface (Interface iface) {
+		_known_derived_interfaces.add (iface);
+	}
+
+	internal void register_child_class (Class cl) {
+		if (this.base_type != null) {
+			((Class) this.base_type.data_type).register_child_class (cl);
+		}
+
+		_known_child_classes.add (cl);
+	}
+
+	internal override void resolve_children (Tree root) {
+		// base class:
+		if (this.base_type != null)	{
+			((Class) this.base_type.data_type).register_child_class (this);
+		}
+
+		// implemented interfaces:
+		foreach (var iface in get_full_implemented_interface_list ()) {
+			((Interface) iface.data_type).register_implementation (this);
+		}
+
+		base.resolve_children (root);
 	}
 
 	internal override void resolve_type_references (Tree root) {

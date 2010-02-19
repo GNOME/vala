@@ -55,6 +55,12 @@ public class Valadoc.Html.MarkupWriter : Valadoc.MarkupWriter {
 		return this;
 	}
 
+	public MarkupWriter javascript_link (string url) {
+		start_tag ("script", {"src", url, "type", "text/javascript"});
+		end_tag ("script");
+		return this;
+	}
+
 	private override bool inline_element (string name) {
 		return name != "html"
 			&& name != "head"
